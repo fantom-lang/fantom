@@ -40,7 +40,7 @@ public class ComboPeer
     fan.fwt.Combo self = (fan.fwt.Combo)this.self;
 
     int style = self.dropDown.val ? SWT.DROP_DOWN : SWT.SIMPLE;
-    if (self.editable.val) style |= SWT.READ_ONLY;
+    if (!self.editable.val) style |= SWT.READ_ONLY;
     Combo c = new Combo((Composite)parent, style);
     control = c;
     c.addListener(SWT.DefaultSelection, this);
@@ -58,7 +58,7 @@ public class ComboPeer
   public final Prop.StrProp text = new Prop.StrProp(this, "")
   {
     public String get(Widget w) { return ((Combo)w).getText(); }
-    public void set(Widget w, String v) { ((Combo)w).setText(v);  }
+    public void set(Widget w, String v) { ((Combo)w).setText(v); }
   };
 
   // Obj[] items := Obj[,]
@@ -75,6 +75,15 @@ public class ComboPeer
   public final Prop.FontProp font = new Prop.FontProp(this)
   {
     public void set(Widget w, Font v) { ((Combo)w).setFont(v); }
+  };
+
+  // Int selectedIndex := 0
+  public Int selectedIndex(fan.fwt.Combo self) { return selectedIndex.get(); }
+  public void selectedIndex(fan.fwt.Combo self, Int v) { selectedIndex.set(v); }
+  public final Prop.IntProp selectedIndex = new Prop.IntProp(this, 0, true)
+  {
+    public int get(Widget w) { return ((Combo)w).getSelectionIndex(); }
+    public void set(Widget w, int v) { ((Combo)w).select(v); }
   };
 
 //////////////////////////////////////////////////////////////////////////
