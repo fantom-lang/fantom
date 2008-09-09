@@ -37,6 +37,7 @@ class FwtDemo : Test
           Tab { text = "EdgePane";       InsetPane { makeEdgePane } }
           Tab { text = "GridPane";       InsetPane { makeGridPane } }
           Tab { text = "Tree and Table"; InsetPane { makeTreeAndTable } }
+          Tab { text = "Window";         InsetPane { makeWindow } }
           Tab { text = "Serialization";  InsetPane { makeSerialization } }
           Tab { text = "Eventing";       InsetPane { makeEventing } }
           Tab { text = "Graphics";       InsetPane { makeGraphics } }
@@ -216,7 +217,7 @@ class FwtDemo : Test
         Label { text="Combo" }
         Combo { items=nums; onAction.add(ecb); onModify.add(ccb) }
 
-        Label { text="Combo editable=false" }
+        Label { text="Combo editable=true" }
         Combo { editable=true; items=nums; onAction.add(ecb); onModify.add(ccb) }
 
         Label { text="Combo dropDown=false" }
@@ -326,6 +327,39 @@ class FwtDemo : Test
       weights = [1,3]
       add(tree)
       add(table)
+    }
+  }
+
+  **
+  ** Build a pane showing how the various window options work
+  **
+  Widget makeWindow()
+  {
+    mode := Combo  { items = WindowMode.values; editable=false }
+    alwaysOnTop := Button { mode = ButtonMode.check; text = "alwaysOnTop" }
+    resizable := Button { mode = ButtonMode.check; text = "resizable" }
+
+    open := |,|
+    {
+      close := Button { text="Close Me" }
+      w := Window
+      {
+        mode = mode.selected
+        alwaysOnTop = alwaysOnTop.selected
+        resizable = resizable.selected
+        GridPane { halignPane = Halign.center; valignPane = Valign.center; add(close) }
+        size = Size(200,200)
+      }
+      close.onAction.add(&w.close)
+      w.open(mode.window)
+    }
+
+    return GridPane
+    {
+      add(mode)
+      add(alwaysOnTop)
+      add(resizable)
+      Button { text="Open"; onAction.add(open) }
     }
   }
 

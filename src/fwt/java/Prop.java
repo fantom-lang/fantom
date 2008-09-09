@@ -76,7 +76,8 @@ public abstract class Prop
 
   static abstract class IntProp extends Prop
   {
-    IntProp(WidgetPeer peer, int def)
+    IntProp(WidgetPeer peer, int def) { this(peer, def, false); }
+    IntProp(WidgetPeer peer, int def, boolean negIsNull)
     {
       super(peer);
       this.val = Int.make(def);
@@ -87,7 +88,10 @@ public abstract class Prop
     Int get()
     {
       Widget w = peer.control;
-      return w == null ? val : Int.make(get(w));
+      if (w == null) return val;
+      int i = get(w);
+      if (negIsNull && i < 0) return null;
+      return Int.make(i);
     }
 
     void set(Int v)
@@ -103,6 +107,7 @@ public abstract class Prop
     public abstract void set(Widget w, int v);
 
     Int val;
+    boolean negIsNull;
   }
 
 //////////////////////////////////////////////////////////////////////////
