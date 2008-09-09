@@ -1,0 +1,157 @@
+//
+// Copyright (c) 2008, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   10 Mar 08  Brian Frank  Creation
+//
+package fanx.util;
+
+import java.util.HashMap;
+import fan.sys.*;
+
+/**
+ * ScriptUtil manages script caching and compilation.
+ */
+public class ScriptUtil
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Public
+//////////////////////////////////////////////////////////////////////////
+
+  public static Type compile(File file, Map options)
+  {
+    // normalize the file path as our cache key
+    file = file.normalize();
+
+    // unless force=true, check the cache
+    if (!getOption(options, strForce, false))
+    {
+      CachedScript c = getCache(file);
+
+      // if cached, try to lookup type (it might have been GCed)
+      if (c != null)
+      {
+        Type t = Type.find(c.typeName, false);
+        if (t != null) return t;
+      }
+    }
+
+    // generate a unique pod name
+    String podName = generatePodName(file);
+
+    // compile the script
+    Pod pod = compile(podName, file, options);
+
+    // get the primary type
+    List types = pod.types();
+    Type t = null;
+    for (int i=0; i<types.sz(); ++i)
+    {
+      t = (Type)types.get(i);
+      if (t.isPublic().val) break;
+    }
+    if (t == null)
+      throw Err.make("Script file defines no public classes: " +  file).val;
+
+    // put it into the cache
+    putCache(file, t);
+
+    return t;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  private static String generatePodName(File f)
+  {
+    String base = f.basename().val;
+    StringBuilder s = new StringBuilder(base.length()+6);
+    for (int i=0; i<base.length(); ++i)
+    {
+      int c = base.charAt(i);
+      if ('a' <= c && c <= 'z') { s.append((char)c); continue; }
+      if ('A' <= c && c <= 'Z') { s.append((char)c); continue; }
+      if (i > 0 && '0' <= c && c <= '9') { s.append((char)c); continue; }
+    }
+    synchronized (counterLock) { s.append('_').append(counter++); }
+    return s.toString();
+  }
+
+  private static Pod compile(String podName, File f, Map options)
+  {
+    // use Fan reflection to run compiler::Main.compileScript(File)
+    Method m = Slot.findMethod("compiler::Main.compileScript", true);
+    return (Pod)m.call3(Str.make(podName), f, options);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// CachedScript
+//////////////////////////////////////////////////////////////////////////
+
+  static CachedScript getCache(File file)
+  {
+    synchronized (cache)
+    {
+      // check cache
+      String key = cacheKey(file);
+      CachedScript c = (CachedScript)cache.get(key);
+      if (c == null) return null;
+
+      // check that timestamp and size still the same
+      if (OpUtil.compareEQz(c.modified, file.modified()) &&
+          OpUtil.compareEQz(c.size, file.size()))
+        return c;
+
+      // nuke from cache
+      cache.remove(key);
+      return null;
+    }
+  }
+
+  static void putCache(File file, Type t)
+  {
+    CachedScript c = new CachedScript();
+    c.modified = file.modified();
+    c.size     = file.size();
+    c.typeName = t.qname().val;
+
+    synchronized (cache) { cache.put(cacheKey(file), c); }
+  }
+
+  static String cacheKey(File f)
+  {
+    return f.toStr().val;
+  }
+
+  static class CachedScript
+  {
+    DateTime modified;
+    Int size;
+    String typeName;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Option Utils
+//////////////////////////////////////////////////////////////////////////
+
+  static boolean getOption(Map options, Str key, boolean def)
+  {
+    if (options == null) return def;
+    Bool x = (Bool)options.get(key);
+    if (x == null) return def;
+    return x.val;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  static HashMap cache = new HashMap(300);
+  static Str strForce = Str.make("force");
+  static Object counterLock = new Object();
+  static int counter = 0;
+
+}

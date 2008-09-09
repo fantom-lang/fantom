@@ -1,0 +1,84 @@
+**************************************************************************
+** title:      Fant
+** author:     Brian Frank
+** created:    05 Jan 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Fan includes a unit test framework baked right into the runtime - it is
+very similar to common test frameworks such as [JUnit]`http://www.junit.org/`.
+The key concepts for testing:
+
+  - Write *test classes* which subclass `sys::Test`
+  - Write *test methods* which start with "test"
+  - Assert *test conditions* via the "verifyXXX" methods
+  - Run the tests the 'fant' command line tool
+
+Organizing Tests [#organizing]
+******************************
+By convention test classes are organized directly within their
+associated pod using the following directory structure:
+
+  myPod/
+    build.fan
+    fan/
+      ClassA.fan
+      ClassB.fan
+    test/
+      TestClassA.fan
+      TestClassB.fan
+
+Writing Tests [#writing]
+************************
+Any concrete class within a pod which extends from `sys::Test`
+is considered a *test class*.  Any method which starts with "test"
+in a test class is considered a *test method*.  Test methods
+must be public instance methods with no parameters.  Test methods
+assert conditions using the *verify* methods.  Three of the
+most commonly used verify methods:
+
+  - [verify]`sys::Test.verify`: assert a boolean condition is true
+  - [verifyEq]`sys::Test.verifyEq`: assert two objects are equal
+  - [verifyErr]`sys::Test.verifyErr`: assert an exception is thrown
+
+Here is an example of a test class:
+
+  class SampleTest : Test
+  {
+    Void testStuff()
+    {
+      verify('A'.isUpper)
+      verifyEq('A'.lower, 'a')
+      verifyErr(ParseErr#) |,| { Int.fromStr("@#!") }
+    }
+  }
+
+Running Tests [#running]
+************************
+The 'fant' launcher is used to run tests.  You can pass a pod
+name, type qname, or slot qname to run any test in any installed
+pod.  You can also pass "-all" to run all tests in all pods:
+
+  fant -all
+  fant testSys
+  fant testSys::StrTest
+  fant testSys::StrTest.testEach
+
+The test results will be printed to standard out.  Any test
+failures will be raised as exceptions.
+
+Test Lifecycle [#lifecycle]
+***************************
+When running tests, each test method is executed as follows:
+
+  1. A fresh instance of the test class is instantiated via 'make'
+  2. [Test.setup]`sys::Test.setup` is called
+  3. The test method is called with no arguments
+  4. Any exceptions raised are trapped and the test is marked failed
+  5. [Test.teardown]`sys::Test.teardown` is guaranteed to be called
+
+Any exception raised by the test method is considered a failure.
+Calls to 'verify' which fail will just raise an exception.

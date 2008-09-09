@@ -1,0 +1,359 @@
+**************************************************************************
+** title:      TypeSystem
+** author:     Brian Frank
+** created:    2 Jun 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The Fan type system serves two primary purposes:
+  - Encapsulation: a mechanism to group fields and methods together
+  - Contracts: a mechanism to model semantics
+
+Encapsulation [#encapsulation]
+==============================
+Types encapsulate a set of uniquely named [slots]`Structure#slot`.
+There are two types of slots: *fields* store state and *methods* model
+behavior.  Grouping a set of slots together enables us to create
+packaged units of software which match our domain model.
+
+This encapsulations serves several purposes:
+  - [Contracts]`#contracts`: it enables the explicit contracts discussed next
+  - `Structure`: it enables the three part namespace of 'pod::type.slot'
+  - `Inheritance`: grouping slots together enable reuse through inheritance
+
+Contracts [#contracts]
+======================
+Types are also used to specify an explicit and implicit *contract*.  The
+explicit contract specifies what the class can do by the set of fields
+and methods it exposes.  For example given a `sys::File`, we know that
+it will support an explicit set of methods like 'exists', 'isDir', and
+'size'.  This set of methods defines the contract for what we can and
+cannot do with a 'File'.  The compiler can use this information to
+perform type checking and report errors if you are attempting to
+use unknown slots.  Sometimes you'll find compile time type checking
+gets in the way - in that case you simply switch from the '.' operator to
+the '->' operator to delay type checking until runtime (or do something
+clever in your [trap]`sys::Obj.trap` method).
+
+The implicit contract specifies semantics that a human can understand - if
+I tell you a variable is a 'File', then you probably have a good understanding
+of what that variable is modeling.  Programming is largely about mapping
+a problem domain into code - type systems help us annotate our code
+with domain specific terminology.
+
+Types [#types]
+**************
+There are three kinds of types in Fan:
+  - Classes
+  - Mixins
+  - Dynamic Types
+
+Classes [#classes]
+==================
+Classes are the primary mechanism for specifying types.  All objects
+are instances of exactly one class which can be queried at runtime via
+the `sys::Obj.type` method.  Classes support single [inheritance]`Inheritance`
+just like Java or C#.
+
+Mixins [#mixins]
+================
+A mixin is a kind of type which is not designed to be used stand alone.
+Instead a mixin packages a group of slots together to be inherited into
+a class (or another mixin).
+
+Mixins are similar to interfaces in Java or C#, but much more flexible.
+A Java or C# interface is purely a type definition of abstract methods, it
+can't actually include any behavior itself.  Fan mixins can declare
+concrete methods which provide a lot more power.
+
+You can't create instances of a mixin - they are an abstract type designed
+to provide reuse when inherited into classes.  Mixins also can't store
+state - although they can contain [abstract fields]`Fields#abstract` to
+define a type contract which requires a field signature.
+
+Dynamic Types [#dynamicTypes]
+=============================
+Dynamic types are types constructed at runtime.  They are discussed later
+in `DynamicTypes`.
+
+Pure Object Oriented [#pureOO]
+******************************
+Fan is fundamentally an object-oriented language.  It is a pure-OO language
+in the sense that everything is an object including core types such 'Int'.
+For example in Java there is a set of primitive types such as 'boolean', 'int',
+and 'float' which are disjoint from the 'java.lang.Object' type system.  C# handles
+this situation more elegantly with value types - however value types must still
+be boxed and unboxed when an object reference is required.  In Fan *all*
+variables are a reference to a `sys::Obj` instance.  For example consider
+the following code:
+
+  Bool b := true
+  Int i := 5
+
+In the code above, the variable 'b' is a reference to the 'Bool' object
+which represents 'true'.  The variable 'x' is a reference to an 'Int'
+instance representing the integer value of 5.  Both 'Bool' and 'Int' are
+normal subclasses of 'Obj'.  Fan doesn't use boxing or unboxing because
+everything is a reference from the start.
+
+Arrays are another type system anomaly not supported by Fan.  For example,
+in Java arrays are reference types which can be used as a 'java.lang.Object'
+type, but they aren't proper classes with nice OO methods.  In most
+circumstances, the `sys::List` class is used instead of arrays.  Plus
+you will use `sys::Buf` instead of 'byte[]' and `sys::StrBuf` instead of
+'char[]'.
+
+Null [#null]
+************
+In Fan, all variables are a reference to an object.  The side-effect of
+this design is that all variables can be null.  Java programmers may find
+this a bit startling that even an 'Int' variable can be null (especially
+fields which default to 'null').  C# 2.0 introduced *nullable types* which
+allow value types to be optionally null - but this isn't handled consistently
+across the type system.
+
+Fan makes things really simple:  every variable is a reference and every
+variable can be null.  You'll find this unified approach to the type
+system quite handy.  For example, often in a Java API which returns an
+'int' such as 'String.indexOf()' or 'InputStream.read()' a special value
+of -1 will be used to indicate a non-normal result.  This can be especially
+problematic when the -1 is a valid result.  In Fan APIs we just use 'null'
+instead of a special value like -1.
+
+Statically Typed [#staticallyType]
+**********************************
+Fan is statically typed - all method and fields signatures require
+type declarations.  This is a religious issue for many developers, but
+we believe type declarations just add too much value for code analysis
+and readability to throw them out for a bit of code compression.
+
+However there are definitely times when a static type system gets in
+the way of an elegant solution.  So Fan provides some dynamic typing
+features too:
+  - the '->' [dynamic invoke]`Methods#dynamicInvoke` operator lets
+    you call any method with runtime checking
+  - The compiler will [implicitly cast]`#implicitCasts` in most cases for you
+  - Type inference is supported for [local variables]`Statements#localDef`,
+    [lists]`Literals#list`, and [maps]`Literals#map`
+
+Implicit Casts [#implicitCasts]
+*******************************
+Anyplace where a compile time type check would typically require a cast
+in Java or C#, the compiler will implicitly insert a cast for you.  The
+cast ensures that the JVM or CLR generates a runtime exception if the
+type check fails.  If the compiler knows that the types are incompatible,
+then it will generate a compile time error.
+
+Formally the rules are expressed as anytime where Type A is used
+and Type B is expected:
+
+   1. If A.fits(B) the call is statically known to be correct
+   2. Otherwise if B.fits(A) then we insert an implicit cast
+   3. Otherwise it is a compile time error
+
+For example:
+
+  Int func(Int x) { ... }
+
+  Int i := 5
+  Num n := 5
+  Str s := "foo"
+
+  // statically correct as is: Int.fits(Int)
+  func(i)  =>  func(i)
+
+  // implicit cast inserted: Int.fits(Num)
+  func(n)  =>  func((Int)n)
+
+  // compile time error: !Int.fits(Str)
+  func(s)  =>  error
+
+This feature allows you to use 'Obj' as a wildcard type which is assignable
+to anything.  This is often used with in conjunction with dynamic invokes
+which return 'Obj':
+
+  Str name := x->person->name
+  if (test->isTrue) {...}
+  File(x->uri)
+
+Type Signatures [#signatures]
+*****************************
+We call the syntax used to express a type declaration a *type signature*.
+Type signatures are used extensively in your source code, in the fcode
+formats, and in the reflection APIs.  The formal signature for a type is
+its qualified name or [qname]`Structure#type`.  Although in source code,
+we typically use the simple name in combination with the
+[using]`CompilationUnits#using` statement.  There is also a special syntax
+for expressing signatures of [generic types]`#generics`.
+
+Collections [#collections]
+**************************
+There are two primary classes for managing collections: `sys::List`
+and `sys::Map`.  Both of these types have a special literal syntax
+and a special type signature syntax.
+
+List [#list]
+============
+Lists are a sequential collection of objects with fast integer indexing.
+A Fan list is very similar to an 'ArrayList' in Java or C# with similar
+performance tradeoffs: fast indexing and appending, but slower inserts
+and removes from the middle.  Lists have a [literal]`Literals#list` syntax
+and a special [type signature]`#listSignature` syntax.
+
+Map [#map]
+============
+Maps are a hashmap of key-value pair, very similar to an 'HashMap' or
+'Hashtable' in Java or C#.  Maps have a [literal]`Literals#map` syntax
+and a special [type signature]`#mapSignature` syntax.
+
+Generics [#generics]
+********************
+Another feature eschewed by Fan is user defined generics.  We fall into
+that camp which finds generics a wicked, complicated solution to a
+narrow range of problems.  For example generics are great for collections,
+but the mental gymnastics required to digest declarations like
+'Class Enum<E extends Enum<E>>' are too much for us.
+
+Although there isn't a general purpose generics mechanism, Fan does use
+generics in a limited fashion.  Specifically three classes use generics:
+
+  - [List]`#listSignature`
+  - [Map]`#mapSignature`
+  - [Func]`#funcSignature`
+
+These are the only three *generic types* in Fan.  Each generic type
+uses a set of *generic parameters* in its method signatures.
+Generic parameters are always one of the following single ASCII
+letters: 'A-H', 'L', 'M', 'R', and 'V'.  The meaning of each generic
+parameter is discussed below.
+
+To use a generic we have to specify a type for each of the generic
+parameters - we call this process *parameterization*.  Fan doesn't use
+a general purpose parameterization syntax like 'List<Str>' as used by
+Java and C#.  Instead each of the three generic types has its own custom
+parameterization syntax discussed below.
+
+List Type Signatures [#listSignature]
+====================================
+The `sys::List` class uses two generic parameters:
+
+  - 'V': type of item stored by the list
+  - 'L': type of the parameterized list
+
+The parameterization syntax of 'List' is designed to mimic the
+array syntax of Java and C#:
+
+  // format
+  V[]
+
+  // examples
+  Str[]     // list of Strs
+  Int[]     // list of Ints
+  Int[][]   // list of Int[] (list of a list of Ints)
+
+The 'L' generic parameter is used to indicate the parameterized
+type itself.  For example the following is the signature of
+the `sys::List.add` method:
+
+  L add(V item)
+
+Given type 'Str[]', then 'V' maps to 'Str' and 'L' maps to 'Str[]'.
+So the 'add' method for 'Str[]' is parameterized as:
+
+  Str[] add(Str item)
+
+Map Type Signatures [#mapSignature]
+===================================
+The `sys::Map` class uses three generic parameters:
+
+  - 'K': type of key stored by the map
+  - 'V': type of value stored by the map
+  - 'M': type of the parameterized map
+
+The parameterization syntax of 'Map' is designed to mimic
+the [map literal]`Literals#map` syntax:
+
+  // format
+  [K:V]          // formal signature
+  K:V            // brackets are optional in most cases
+
+  // examples
+  [Str:User]     // map of Users keyed by Str
+  Str:User       // same as above without optional brackets
+  Uri:File       // map of Files keyed by Uri
+  Str:File[]     // map of File[] keyed by Str
+  [Str:File][]   // list of Str:File (brackets not optional)
+
+The formal syntax for 'Map' parameterization is '[K:V]'.  Typically
+the brackets are optional, and by convention left off.  But in
+some complicated type declarations you will need to use the brackets
+such as the '[Str:File][]' example above.  Brackets are always used
+in APIs which return formal signatures.
+
+Func Type Signature [#funcSignature]
+====================================
+The `sys::Func` class uses nine generic parameters:
+  - 'A' to 'H': the function parameter types
+  - 'R': the function return types
+
+The parameterization syntax of 'Func' is designed to match
+the syntax used by [closures]`Closures`:
+
+  // format
+  |A a, B b ... H h -> R|
+
+  // examples
+  |Int a, Int b->Str|  // function which takes two Int args and returns a Str
+  |Int, Int->Str|      // same as above omitting parameter names
+  |->Bool|             // function which takes zero args and returns Bool
+  |Str s->Void|        // function which takes one Str arg and returns void
+  |Str s|              // same as above, omitting optional void return
+  |->Void|             // function which takes no arguments and returns void
+  |,|                  // shortcut for above
+
+Function signatures are used extensively in functional programming
+and closures.  It can be a bit tricky to grasp at first, but what we
+are parameterizing is the `sys::Func` class itself - the arguments
+passed to the function and the return type.
+
+To understand this a bit better, let's consider a Java example.  We often
+want to declare the type of a "callback method" - in Java we typically do
+this by creating an interface.  We then use that interface type whenever
+we need to specify a method that requires that callback:
+
+  interface Comparator
+  {
+    int compare(Object a, Object b);
+  }
+
+  void sort(Comparator comparator)
+
+In Fan we skip the interface part and just declare the callback type
+using an in-place function signature:
+
+  Void sort(|Obj a, Obj b->Int| comparator)
+
+This signature says that 'sort' takes one argument called 'comparator'
+which references a 'Func' that takes two 'Objs' and returns an 'Int'.
+
+But typically we are sorting a 'List' which itself has been parameterized.
+'List' comes with a built-in [sort]`sys::List.sort` method which
+has the actual signature:
+
+  L sort(|V a, V b->Int| c := null)
+
+This method combines List's generic 'V' parameter with a function
+signature.  So given a list of type 'Str[]', then the parameterized
+version of 'sort' would be:
+
+  Str[] sort(|Str a, Str b->Int| c := null)
+
+Function signatures are covered in yet more detail in the `Functions`
+chapter.
+
+
+
+

@@ -1,0 +1,629 @@
+//
+// Copyright (c) 2006, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   4 Jan 06  Brian Frank  Creation
+//
+
+**
+** List represents an liner sequence of Objects indexed by an Int.
+**
+** See `docCookbook::Lists` for coding examples.
+**
+final class List
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Constructor with of type and initial capacity.
+  **
+  new make(Type of, Int capacity)
+
+  **
+  ** Constructor for Obj[] with initial capacity.
+  **
+  new makeObj(Int capacity)
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Two Lists are equal if they have the same number of items and all
+  ** the items at each index return true for equals().
+  **
+  override Bool equals(Obj that)
+
+  **
+  ** Return platform dependent hashcode based a hash of the items
+  ** of the list.
+  **
+  override Int hash()
+
+  **
+  ** Get the item Type of this List.
+  **
+  ** Examples:
+  **   ["hi"].of    =>  Str#
+  **   [[2, 3]].of  =>  Int[]#
+  **
+  Type of()
+
+//////////////////////////////////////////////////////////////////////////
+// Access
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return if size == 0.  This method is idempotent.
+  **
+  Bool isEmpty()
+
+  **
+  ** The number of items in the list.  If the size is set greater than
+  ** the current size then the list is automatically grown to be a sparse
+  ** list with new items defaulting to null.  If the size is set less than
+  ** the current size then any items with indices past the new size are
+  ** automatically removed.  Changing size automatically allocates new
+  ** storage so that capacity exactly matches the new size.  Getting size
+  ** is idempotent, setting size throws ReadonlyErr if readonly.
+  **
+  Int size
+
+  **
+  ** The number of items this list can hold without allocating more memory.
+  ** Capacity is always greater or equal to size.  If adding a large
+  ** number of items, it may be more efficient to manually set capacity.
+  ** See the trim() method to automatically set capacity to size.  Throw
+  ** ArgErr if attempting to set capacity less than size.  Getting capacity
+  ** is idempotent, setting capacity throws ReadonlyErr if readonly.
+  **
+  Int capacity
+
+  **
+  ** Get is used to return the item at the specified the index.  A
+  ** negative index may be used to access an index from the end of the
+  ** list.  For example get(-1) is translated into get(size()-1).  The
+  ** get method is accessed via the [] shortcut operator.  Throw
+  ** IndexErr if index is out of range.  This method is idempotent.
+  **
+  V get(Int index)
+
+  **
+  ** Return a sub-list based on the specified range.  Negative indexes
+  ** may be used to access from the end of the list.  This method
+  ** is accessed via the [] operator.  This method is idempotent.
+  ** Throw IndexErr if range illegal.
+  **
+  ** Examples:
+  **   list := [0, 1, 2, 3]
+  **   list[0..2]   => [0, 1, 2]
+  **   list[3..3]   => [3]
+  **   list[-2..-1] => [2, 3]
+  **   list[0...2]  => [0, 1]
+  **   list[1..-2]  => [1, 2]
+  **
+  L slice(Range range)
+
+  **
+  ** Return if this list contains the specified item using
+  ** the == operator (shortcut for equals method) to check
+  ** for equality.  This method is idempotent.
+  **
+  Bool contains(V item)
+
+  **
+  ** Return if this list contains the specified item using
+  ** the === same operator.  This method is idempotent.
+  **
+  Bool containsSame(V item)
+
+  **
+  ** Return if this list contains every item in the specified
+  ** list using the == operator (shortcut for equals method).
+  ** This method is idempotent.
+  **
+  Bool containsAll(L list)
+
+  **
+  ** Return if this list contains every item in the specified
+  ** list using the === same operator.  This method is idempotent.
+  **
+  Bool containsAllSame(L list)
+
+  **
+  ** Return the integer index of the specified item using
+  ** the == operator (shortcut for equals method) to check
+  ** for equality.  Use `indexSame` to find with === operator.
+  ** The search starts at the specified offset and returns
+  ** the first match.  The offset may be negative to access
+  ** from end of list.  Throw IndexErr if offset is out of
+  ** range.  If the item is not found return null.  This method
+  ** is idempotent.
+  **
+  Int index(V item, Int offset := 0)
+
+  **
+  ** Return integer index just like `List.index` except
+  ** use === same operator instead of the == equals operator.
+  **
+  Int indexSame(V item, Int offset := 0)
+
+  **
+  ** Return the item at index 0, or if empty return null.
+  ** This method is idempotent.
+  **
+  V first()
+
+  **
+  ** Return the item at index-1, or if empty return null.
+  ** This method is idempotent.
+  **
+  V last()
+
+  **
+  ** Create a shallow duplicate copy of this List.  The items
+  ** themselves are not duplicated.  This method is idempotent.
+  **
+  L dup()
+
+//////////////////////////////////////////////////////////////////////////
+// Modification
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Set is used to overwrite the item at the specified the index.  A
+  ** negative index may be used to access an index from the end of the
+  ** list.  The set method is accessed via the []= shortcut operator.
+  ** If you wish to use List as a sparse array and set values greater
+  ** then size, then manually set size larger.  Return this.  Throw
+  ** IndexErr if index is out of range.  Throw ReadonlyErr if readonly.
+  **
+  L set(Int index, V item)
+
+  **
+  ** Add the specified item to the end of the list.  The item will have
+  ** an index of size.  Size is incremented by 1.  Return this.  Throw
+  ** ReadonlyErr if readonly.
+  **
+  L add(V item)
+
+  **
+  ** Add all the items in the specified list to the end of this list.
+  ** Size is incremented by list.size.  Return this.  Throw ReadonlyErr
+  ** if readonly.
+  **
+  L addAll(L list)
+
+  **
+  ** Insert the item at the specified index.  A negative index may be
+  ** used to access an index from the end of the list.  Size is incremented
+  ** by 1.  Return this.  Throw IndexErr if index is out of range.  Throw
+  ** ReadonlyErr if readonly.
+  **
+  L insert(Int index, V item)
+
+  **
+  ** Insert all the items in the specified list into this list at the
+  ** specified index.  A negative index may be used to access an index
+  ** from the end of the list.  Size is incremented by list.size.  Return
+  ** this.  Throw IndexErr if index is out of range.  Throw ReadonlyErr
+  ** if readonly.
+  **
+  L insertAll(Int index, L list)
+
+  **
+  ** Remove the specified value from the list.  The value is compared
+  ** using the == operator (shortcut for equals method).  Use `removeSame`
+  ** to remove with the === operator.  Return the removed value and
+  ** decrement size by 1.  If the value is not found, then return null.
+  ** Throw ReadonlyErr if readonly.
+  **
+  V remove(V item)
+
+  **
+  ** Remove the item just like `remove` except use
+  ** the === operator instead of the == equals operator.
+  **
+  V removeSame(V item)
+
+  **
+  ** Remove the object at the specified index.  A negative index may be
+  ** used to access an index from the end of the list.  Size is decremented
+  ** by 1.  Return the item removed.  Throw IndexErr if index is out of
+  ** range.  Throw ReadonlyErr if readonly.
+  **
+  V removeAt(Int index)
+
+  **
+  ** Remove a range of indices from this list.  Negative indexes
+  ** may be used to access from the end of the list.  Throw
+  ** ReadonlyErr if readonly.  Throw IndexErr if range illegal.
+  ** Return this (*not* the removed items).
+  **
+  This removeRange(Range r)
+
+  **
+  ** Remove all items from the list and set size to 0.  Return this.
+  ** Throw ReadonlyErr if readonly.
+  **
+  L clear()
+
+  **
+  ** Trim the capacity such that the underlying storage is optimized
+  ** for the current size.  Return this.  Throw ReadonlyErr if readonly.
+  **
+  L trim()
+
+//////////////////////////////////////////////////////////////////////////
+// Stack
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return the item at index-1, or if empty return null.
+  ** This method has the same semantics as last().  This method
+  ** is idempotent.
+  **
+  V peek()
+
+  **
+  ** Remove the last item and return it, or return null if the list
+  ** is empty.  This method as the same semantics as remove(-1), with
+  ** the exception of has an empty list is handled.  Throw ReadonlyErr
+  ** if readonly.
+  **
+  V pop()
+
+  **
+  ** Add the specified item to the end of the list.  Return this.
+  ** This method has the same semantics as add(item).  Throw ReadonlyErr
+  ** if readonly.
+  **
+  L push(V item)
+
+//////////////////////////////////////////////////////////////////////////
+// Iterators
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Call the specified function for every item in the list starting
+  ** with index 0 and incrementing up to size-1.  This method is
+  ** idempotent.
+  **
+  ** Example:
+  **   ["a", "b", "c"].each |Str s| { echo(s) }
+  **
+  Void each(|V item, Int index| c)
+
+  **
+  ** Reverse each - call the specified function for every item in
+  ** the list starting with index size-1 and decrementing down
+  ** to 0.  This method is idempotent.
+  **
+  ** Example:
+  **   ["a", "b", "c"].eachr |Str s| { echo(s) }
+  **
+  Void eachr(|V item, Int index| c)
+
+  **
+  ** Return the first item in the list for which c returns true.
+  ** If c returns false for every item, then return null.  This
+  ** method is idempotent.
+  **
+  ** Example:
+  **   list := [0, 1, 2, 3, 4]
+  **   list.find |Int v->Bool| { return v.toStr == "3" } => 3
+  **   list.find |Int v->Bool| { return v.toStr == "7" } => null
+  **
+  V find(|V item, Int index->Bool| c)
+
+  **
+  ** Return the first item in the list for which c returns true
+  ** and return the item's index.  If c returns false for every
+  ** item, then return null.  This method is idempotent.
+  **
+  ** Example:
+  **   list := [5, 6, 7]
+  **   list.findIndex |Int v->Bool| { return v.toStr == "7" } => 2
+  **   list.findIndex |Int v->Bool| { return v.toStr == "9" } => null
+  **
+  Int findIndex(|V item, Int index->Bool| c)
+
+  **
+  ** Return a new list containing the items for which c returns
+  ** true.  If c returns false for every item, then return an
+  ** empty list.  The inverse of this method is exclude().  This
+  ** method is idempotent.
+  **
+  ** Example:
+  **   list := [0, 1, 2, 3, 4]
+  **   list.findAll |Int v->Bool| { return v%2==0 } => [0, 2, 4]
+  **
+  L findAll(|V item, Int index->Bool| c)
+
+  **
+  ** Return a new list containing all the items which are an instance
+  ** of the specified type such that item.type.fits(t) is true.  Any null
+  ** items are automatically excluded.  If none of the items are instance
+  ** of the specified type, then an empty list is returned.  The returned
+  ** list will be a list of t.  This method is idempotent.
+  **
+  ** Example:
+  **   list := ["a", 3, "foo", 5sec, null]
+  **   list.findType(Str#) => Str["a", "foo"]
+  **
+  L findType(Type t)
+
+  **
+  ** Return a new list containing the items for which c returns
+  ** false.  If c returns true for every item, then return an
+  ** empty list.  The inverse of this method is findAll().  This
+  ** method is idempotent.
+  **
+  ** Example:
+  **   list := [0, 1, 2, 3, 4]
+  **   list.exclude |Int v->Bool| { return v%2==0 } => [1, 3]
+  **
+  L exclude(|V item, Int index->Bool| c)
+
+  **
+  ** Return true if c returns true for any of the items in
+  ** the list.  If the list is empty, return false.  This method
+  ** is idempotent.
+  **
+  ** Example:
+  **   list := ["ant", "bear"]
+  **   list.any |Str v->Bool| { return v.size >= 4 } => true
+  **   list.any |Str v->Bool| { return v.size >= 5 } => false
+  **
+  Bool any(|V item, Int index->Bool| c)
+
+  **
+  ** Return true if c returns true for all of the items in
+  ** the list.  If the list is empty, return true.  This method
+  ** is idempotent.
+  **
+  ** Example:
+  **   list := ["ant", "bear"]
+  **   list.all |Str v->Bool| { return v.size >= 3 } => true
+  **   list.all |Str v->Bool| { return v.size >= 4 } => false
+  **
+  Bool all(|V item, Int index->Bool| c)
+
+  **
+  ** Append to acc the result of calling c for every item in
+  ** this list.  Return acc.  This method is idempotent.
+  **
+  ** Example:
+  **   list := [3, 4, 5]
+  **   list.map(Int[,]) |Int v->Obj| { return v*2 } => [6, 8, 10]
+  **
+  List map(List acc, |V item, Int index->Obj| c)
+
+  **
+  ** Reduce is used to iterate through every item in the list
+  ** to reduce the list into a single value called the reduction.
+  ** The initial value of the reduction is passed in as the init
+  ** parameter, then passed back to the closure along with each
+  ** item.  This method is idempotent.
+  **
+  ** Example:
+  **   list := [1, 2, 3]
+  **   list.reduce(0) |Obj r, Int v->Obj| { return (Int)r + v } => 6
+  **
+  Obj reduce(Obj init, |Obj reduction, V item, Int index->Obj| c)
+
+  **
+  ** Return the minimum value of the list.  If c is provided, then it
+  ** implements the comparator returning -1, 0, or 1.  If c is null
+  ** then the <=> operator is used (shortcut for compare method).  If
+  ** the list is empty, return null.  This method is idempotent.
+  **
+  ** Example:
+  **   list := ["albatross", "dog", "horse"]
+  **   list.min => "albatross"
+  **   list.min |Str a, Str b->Int| { return a.size <=> b.size } => "dog"
+  **
+  V min(|V a, V b->Int| c := null)
+
+  **
+  ** Return the maximum value of the list.  If c is provided, then it
+  ** implements the comparator returning -1, 0, or 1.  If c is null
+  ** then the <=> operator is used (shortcut for compare method).  If
+  ** the list is empty, return null.  This method is idempotent.
+  **
+  ** Example:
+  **   list := ["albatross", "dog", "horse"]
+  **   list.max => "horse"
+  **   list.max |Str a, Str b->Int| { return a.size <=> b.size } => "albatross"
+  **
+  V max(|V a, V b->Int| c := null)
+
+  **
+  ** Returns a new list with all duplicate items removed such that the
+  ** resulting list is a proper set.  Duplicates are detected using hash()
+  ** and the == operator (shortcut for equals method).  This method is
+  ** idempotent.
+  **
+  ** Example:
+  **   ["a", "a", "b", "c", "b", "b"].unique => ["a", "b", "c"]
+  **
+  L unique()
+
+  **
+  ** Return a new list which is the union of this list and the given list.
+  ** The union is defined as the unique items which are in *either* list.
+  ** The resulting list is ordered first by this list's order, and secondarily
+  ** by that's order.  The new list is guaranteed to be unique with no duplicate
+  ** values.  Equality is determined using hash() and the == operator
+  ** (shortcut for equals method).  This method is idempotent.
+  **
+  ** Example:
+  **   [1, 2].union([3, 2]) => [1, 2, 3]
+  **
+  L union(L that)
+
+  **
+  ** Return a new list which is the intersection of this list and the
+  ** given list.  The intersection is defined as the unique items which
+  ** are in *both* lists.  The new list will be ordered according to this
+  ** list's order.  The new list is guaranteed to be unique with no duplicate
+  ** values.  Equality is determined using hash() and the == operator
+  ** (shortcut for equals method).  This method is idempotent.
+  **
+  ** Example:
+  **   [0, 1, 2, 3].intersection([5, 3, 1]) => [1, 3]
+  **   [0, null, 2].intersection([null, 0, 1, 2, 3]) => [0, null, 2]
+  **
+  L intersection(L that)
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Perform an in-place sort on this list.  If a method is provided
+  ** it implements the comparator returning -1, 0, or 1.  If the
+  ** comparator method is null then sorting is based on the
+  ** value's <=> operator (shortcut for 'compare' method).  Return this.
+  ** Throw ReadonlyErr if readonly.
+  **
+  ** Example:
+  **   s := ["candy", "ate", "he"]
+  **
+  **   s.sort
+  **   // s now evaluates to [ate, candy, he]
+  **
+  **   s.sort |Str a, Str b->Int| { return a.size <=> b.size }
+  **   // s now evaluates to ["he", "ate", "candy"]
+  **
+  L sort(|V a, V b->Int| c := null)
+
+  **
+  ** Reverse sort - perform an in-place reverse sort on this list.  If
+  ** a method is provided it implements the comparator returning -1,
+  ** 0, or 1.  If the comparator method is null then sorting is based
+  ** on the items <=> operator (shortcut for 'compare' method).  Return
+  ** this.  Throw ReadonlyErr if readonly.
+  **
+  ** Example:
+  **   [3, 2, 4, 1].sortr =>  [4, 3, 2, 1]
+  **
+  L sortr(|V a, V b->Int| c := null)
+
+  **
+  ** Search the list for the index of the specified key using a binary
+  ** search algorithm.  The list must be sorted in ascending order according
+  ** to the specified comparator function.  If the list contains multiple
+  ** matches for key, no guarantee is made to which one is returned.  If
+  ** the comparator is null then then it is assumed to be the '<=>'
+  ** operator (shortcut for the 'compare' method).  If the key is not found,
+  ** then return a negative value which is '-(insertation point) - 1'.
+  **
+  Int binarySearch(V key, |V a, V b->Int| c := null)
+
+  **
+  ** Reverse the order of the items of this list in-place.  Return this.
+  ** Throw ReadonlyErr if readonly.
+  **
+  ** Example:
+  **   [1, 2, 3, 4].sort  =>  [4, 3, 2, 1]
+  **
+  L reverse()
+
+  **
+  ** Swap the items at the two specified indexes.  Negative indexes may
+  ** used to access an index from the end of the list.  Return this.
+  ** Throw ReadonlyErr if readonly.
+  **
+  L swap(Int indexA, Int indexB)
+
+  **
+  ** Return a new list which recursively flattens any list items into
+  ** a one-dimensional result.  This method is idempotent.
+  **
+  ** Examples:
+  **   [1,2,3].flatten        =>  [1,2,3]
+  **   [[1,2],[3]].flatten    =>  [1,2,3]
+  **   [1,[2,[3]],4].flatten  =>  [1,2,3,4]
+  **
+  Obj[] flatten()
+
+//////////////////////////////////////////////////////////////////////////
+// Conversion
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return a string representation the list.  This method is idempotent.
+  **
+  override Str toStr()
+
+  **
+  ** Return a string by concatenating each item's toStr result
+  ** using the the specified separator string.  If c is non-null
+  ** then it is used to format each item into a string, otherwise
+  ** Obj.toStr is used.  This method is idempotent.
+  **
+  ** Example:
+  **   ["a", "b", "c"].join => "abc"
+  **   ["a", "b", "c"].join("-") => "a-b-c"
+  **   ["a", "b", "c"].join("-") |Str s->Str| { return "($s)" } => "(a)-(b)-(c)"
+  **
+  Str join(Str separator := "", |V item, Int index->Str| c := null)
+
+  // TODO
+  //   flatten, fill, binarySearch
+
+//////////////////////////////////////////////////////////////////////////
+// Readonly
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return if this List is readonly.  A readonly List is guaranteed to
+  ** be immutable (although its items may be mutable themselves).  Any
+  ** attempt to  modify a readonly List will result in ReadonlyErr.  Use
+  ** rw() to get a read-write List from a readonly List.  Methods
+  ** documented as idempotent may be used safely with a readonly List.
+  ** This method is idempotent.
+  **
+  Bool isRO()
+
+  **
+  ** Return if this List is read-write.  A read-write List is mutable
+  ** and may be modified.  Use ro() to get a readonly List from a
+  ** read-write List.  This method is idempotent.
+  **
+  Bool isRW()
+
+  **
+  ** Get a readonly, immutable List instance with the same contents
+  ** as this List (although the items may be mutable themselves).  If
+  ** this List is already readonly, then return this.  Only methods
+  ** documented as idempotent may be used safely with a readonly List,
+  ** all others will throw ReadonlyErr.  This method is idempotent.
+  ** See isImmutable and toImmutable for deep immutability.
+  **
+  L ro()
+
+  **
+  ** Get a read-write, mutable List instance with the same contents
+  ** as this List.  If this List is already read-write, then return this.
+  ** This method is idempotent.
+  **
+  L rw()
+
+  **
+  ** Return an immutable List which returns true for Obj.isImmtable.
+  ** If this List is already immutable, then return this.  This method
+  ** is effectively a "deep ro()" which guarantees that if any items
+  ** are Lists or Maps, then they are made immutable by recursively calling
+  ** toImmutable.  All other items must return true for Obj.isImmutable,
+  ** otherwise NotImmutableErr is thrown.  This method must be used
+  ** whenever setting a const List field.  This method is idempotent.
+  **
+  L toImmutable()
+
+}

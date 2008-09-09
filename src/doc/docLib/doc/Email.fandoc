@@ -1,0 +1,143 @@
+**************************************************************************
+** title:      Email
+** author:     Brian Frank
+** created:    16 May 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The [email]`email::index` pod provides APIs for working with electronic
+mail.  The following features are supported:
+
+  - [Email]`email::Email` is used to model MIME multipart messages
+  - [SmtpClient]`email::SmtpClient` implements the client side of the
+    Simple Mail Tranfer Protocol
+
+Note: at the current time there is no support for incoming email such
+as POP3 or IMAP.  If you need this functionality, please let us know.
+
+SMTP [#smtp]
+************
+The [SmtpClient]`email::SmtpClient` class lets you relay mail to a SMTP
+server.  An instance of SmtpClient is configured with a host (and port if
+not using 25).  If you wish to use SMTP authentication you will also need
+to configure the username and password:
+
+  mailer := SmtpClient { host = "mail.foo.com"; username = "bob"; password = "pw" }
+
+The following authentication mechanisms are currently supported:
+CRAM-MD5, LOGIN, and PLAIN.  If you need another auth mechanism please
+let us know.
+
+Once the SmtpClient is configured you can open a session, send emails,
+and then close the session:
+
+  mailer.open
+  try
+  {
+    emails.each |Email email| { mailer.send(email) }
+  }
+  finally
+  {
+    mailer.close
+  }
+
+If you just have one email to send, the 'send' method will automatically
+open and close the session for you:
+
+  mailer.send(email)
+
+If you run into trouble, you can turn on tracing:
+
+  mailer.log.level = LogLevel.trace
+
+See [docCookbook]`docCookbook::Email` for examples.
+
+Email [#email]
+**************
+The [Email]`email::Email` class is used to model a MIME message.  Typical
+use is to construct a Email instance using [with-blocks]`docLang::Expressions#withBlocks`:
+
+  email := Email
+  {
+    to = ["foo@somewhere.com"]
+    from = "bob@foo.com"
+    subject = "hi"
+    body = TextPart { text = "hello world" }
+  }
+
+The email recipients are configured in the [to]`email::Email.to`,
+[cc]`email::Email.cc`, [bcc]`email::Email.bcc` fields which are a list
+of Str email addresses.
+
+The [body]`email::Email.body` can be a simple part such as
+[TextPart]`email::TextPart` or can be a multipart via
+[MultiPart]`email::MultiPart`.  All email parts have a set of
+[headers]`email::EmailPart.headers` which define how they are encoded.
+The [validate]`email::EmailPart.validate` method is called before
+sending an email which checks that headers are correctly configured
+and performs header normalization.
+
+See [docCookbook]`docCookbook::Email` for examples.
+
+TextPart [#textPart]
+********************
+The [TextPart]`email::TextPart` is used to represent text via a Str.
+By default a TextPart defaults to "text/plain":
+
+  TextPart { text = "some text" }
+
+Override the "Content-Type" header to specify another MIME type:
+
+  TextPart
+  {
+    headers["Content-Type"] = "text/html"
+    text = "this is <b>bold</b> and <i>italics</i>!"
+  }
+
+By default a TextPart is encoded using an 8bit transfer encoding and
+the UTF-8 charset.  If a charset is not explicitly defined it defaults
+to UTF-8 in the [validate]`email::TextPart.validate` method.  Or you
+can define an explicit charset yourself in the "Content-Type" header:
+
+  TextPart
+  {
+    headers["Content-Type"] = "text/plain; charset=us-ascii"
+    text = "hello world"
+  }
+
+MultiPart [#multiPart]
+**********************
+The [MultiPart]`email::MultiPart` class is used to encode MIME multiparts.
+By default the "Content-Type" defaults "multipart/mixed".  Mixed is typically
+used with file attachments.  The "multipart/alternative" is used when
+sending HTML email and you wish you provide a plain text fallback.
+The multipart boundary is automatically generated in the
+[validate]`email::MultiPart.validate` method.
+
+See [docCookbook]`docCookbook::Email#htmlMultipart` for examples.
+
+FilePart [#filePart]
+********************
+The [FilePart]`email::FilePart` class is used to encode a binary attachment from
+a File instance.  If you don't provide a "Content-Type", it will automatically
+default to [File.mimeType]`sys::File.mimeType`.  If you don't specify a name
+parameter and the file name is ASCII, then a name parameter will be automatically
+defined:
+
+  part := FilePart { file = `image.jpg`.toFile }
+  part.validate
+  part.headers["Content-Type"]  =>  "image/jpeg; name="image.jpg"
+
+FileParts are transfered as base64 - you may not override the
+"Content-Transfer-Encoding" header.
+
+See [docCookbook]`docCookbook::Email#fileAttachments` for examples.
+
+
+
+
+
+

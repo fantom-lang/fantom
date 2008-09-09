@@ -1,0 +1,118 @@
+**************************************************************************
+** title:      Facets
+** author:     Brian Frank
+** created:    09 Sep 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Facets are a mechanism to annotate types and slots with arbitrary
+meta-data.  Facets are similar to Java *annotations* or C# *attributes*,
+but aren't statically typed like those technologies.  A facet is simply
+a name/value pair where the name is an Str identifier and the value is
+any [serializable]`Serialization` object.
+
+Fan differs from Java/C# in that facets are untyped name/value pairs.  You
+can use any name with any value type without creating associated static types
+as you do in Java/C#.  However many names have reserved semantics used by
+the runtime system.  You should use a unique prefix for your own facet
+identifiers to prevent naming collisions.
+
+Syntax [#syntax]
+****************
+Facets are defined as "@name=value" prefixed before a type or slot definition:
+
+  @serializable
+  @icon=`/icons/account.png`
+  @version=Version("1.2")
+  @table=Table { name="Accounts" autoCreate=true }
+  @todo=["fix it", "really fix it"]
+  class Account
+  {
+  }
+
+In the example above we have a list of name/value pair facets.  If the value
+is omitted as it is for 'serializable', then the value is assumed to be 'true'.
+The other facets illustrate various value types: 'icon' is a 'Uri' literal,
+'version' is a [simple]`Serialization#syntaxSimples`, 'table' is a
+[complex]`Serialization#syntaxComplex`, and 'todo' is a list.  You can create
+arbitrarily complex facet values through the [serialization]`Serialization`
+syntax.
+
+API [#api]
+**********
+Facets are available at runtime via the following methods:
+  - `sys::Type.facet`
+  - `sys::Type.facets`
+  - `sys::Slot.facet`
+  - `sys::Slot.facets`
+
+Always prefer the 'facet' method over 'facets' since it is much more
+efficient.  Some examples:
+
+  // get a description string
+  obj.type.facet("description")
+
+  // check if an object implements the simple facet
+  obj.type.facet("simple", false) == true
+
+If querying type facets, you can use the 'inherited' parameter
+to search facets in the inheritance chain:
+
+  // check if an object or any of its super-types has the obsolete facet
+  obj.type.facet("obsolete", null, true)
+
+Facet Indexing [#indexing]
+**************************
+Type facets can be indexed in the type database to allow efficient queries
+on the installed types.  See [Facet Indexing]`TypeDatabase#facetIndexing`
+for details.
+
+Standard Facets [#std]
+**********************
+The following facets are defined by the system runtime:
+
+transient (Bool, on Fields) [#transient]
+================================================
+Transient is a facet used to annotate fields which should not be
+serialized inside a [serializable]`#serializable` type.  See the
+[Serialization Doc]`docLang::Serialization` for details.
+
+serializable (Bool, on Types, inherited) [#serializable]
+========================================================
+Serializable is a Bool marker facet used to annotate types which can be
+serialized.  Objects are serialized via `sys::OutStream.writeObj` and
+deserialized via `sys::InStream.readObj`.  Types which implement this facet
+or inherit it are serialized as a *complex*.  If a type should be serialized
+atomically as a simple then implement the [simple]`#simple` facet (never
+implement both).  See the [Serialization Doc]`docLang::Serialization` for
+details.
+
+simple (Bool, on Types, not inherited) [#simple]
+================================================
+Simple is a Bool marker facet used to annotate types which are serialized
+automatically via a string representation.  All types which implement this
+facet must follow these rules:
+
+   - Override `sys::Obj.toStr` to return a suitable string representation
+     of the object.
+   - Must declare a static method called 'fromStr' which takes one 'Str'
+     parameter and returns an instance of the declaring type.  The 'fromStr'
+     method may contain additional parameters if they declare defaults.
+
+collection (Bool, on Types, inherited) [#collection]
+====================================================
+Collection is a Bool marker facet used to annotate serializable
+types as a collection of child objects.  All types which implement
+this facet must follow these rules where 'Item' is the item type:
+
+   - Provide an 'add(Item)' method to add child items during 'readObj'
+   - Provide an 'each(|Item| f)' method to iterate children item
+     during 'writeObj'
+
+See the [Serialization Doc]`docLang::Serialization` for details.
+
+
+

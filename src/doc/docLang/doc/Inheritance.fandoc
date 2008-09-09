@@ -1,0 +1,167 @@
+**************************************************************************
+** title:      Inheritance
+** author:     Brian Frank
+** created:    22 Jun 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Inheritance is the mechanism used to reuse existing types when
+defining a new type.  We use inheritance for two purposes:
+  - [contract specialization]`#specialization`
+  - [implementation reuse]`#implReuse`
+
+Contract Specialization [#specialization]
+=========================================
+Types define an explicit and implicit [contract]`TypeSystem#contracts`.
+The implicit contract defines semantics to help humans understand
+the code.  The explicit contract is defined by the set of public
+slots.  Let's look at an example:
+
+  class File
+  {
+    virtual Int size() {...}
+    private Void checkNotDir() {...}
+  }
+
+In the code above the class File declares a method called 'size'
+which returns an 'Int'.  This is part of the type's contract - given
+an instance of 'File', we always know there will be a method called
+'size' that returns an 'Int' for the number of bytes in the file.
+
+On the other hand, the 'checkNotDir' method is not part of the type's
+contract because it is private.  It is an implementation detail of
+the class, rather than a public API.
+
+When we create a subclass of File, we are specializing the contract:
+
+  class HttpFile : File
+  {
+    Str:Str httpHeaders
+  }
+
+By subclassing 'File', the 'HttpFile' class inherits the contract
+of 'File' and must support all the same public slots.  However we
+also specialize the base class by adding HTTP specific features such
+as exposing the HTTP headers.
+
+Implementation Reuse [#implReuse]
+=================================
+If a type declares only abstract slots, then a subclass is inheriting
+purely the type contract - this is what happens in Java or C# when
+declaring an interface.  However, in Fan both classes and mixins can
+declare an implementation for their slots.  Subclasses can then
+inherit the implementation of their super type slots.  We call this
+technique *implementation reuse* - it gives us a convenient mechanism
+to organize our code and keep things nice and [DRY]`http://www.artima.com/intv/dry.html`.
+
+Syntax [#syntax]
+****************
+The syntax for inheritance is to include zero or more type
+definitions in the class declaration after a colon:
+
+  // inheriting from Obj
+  class SubObj {}
+  class SubObj : sys::Obj {}
+
+  // class inheritance
+  class SubClassA : BaseClass {}
+  class SubClassB : MixinA, MixinB {}
+  class SubClassC : BaseClass, MixinA, MixinB {}
+
+  // mixin inheritance
+  mixin MixinC : MixinA {}
+  mixin MixinD : MixinA, MixinB {}
+
+The order of the declaration does matter in some cases.  If the
+inheritance types include a class and one or more mixins, then
+the class type must be declared first.
+
+Inheritance Rules [#rules]
+**************************
+The following rules define how slots are inherited by a subtype:
+  1.  Constructors are never inherited
+  2.  Private slots are never inherited
+  3.  Internal slots are inherited only by types within the same pod
+  4.  All other slots are inherited
+
+These rules follow the logic laid out in when discussing
+[contract specialization]`#specialization`.  Private and internal
+slots are implementation details, so they don't become part of
+the type's contract.  Constructors are always tied exactly to
+their declaring class, so they are not inherited either.  These
+rules are applied by both the compiler and the reflection APIs
+to determine the slot namespace of a given type.
+
+Inheritance Restrictions [#restrictions]
+****************************************
+The inheritance rules listed above define which slots get inherited
+into a subtype's slot namespace.  Remember that a type's slots
+are keyed only by name, so under no circumstances can a type have
+two different slots with the same name.  Because of this axiom,
+there are cases which prevent creating a subtype from conflicting
+super types:
+  1. Two types with static methods of the same name can't be
+     combined into a subtype
+  2. Two types with const fields (either instance or static) of
+     the same name can't be combined into a subtype
+  3. Two types with instance slots of the same name and different
+     signatures can't be combined into a subtype
+  4. Two types with instance slots of the same name and same
+     signature can be combined provided the following holds true:
+     a. One is concrete and the other is abstract
+     b. Both are virtual and the subtype overrides to provide unambiguous definition
+
+Using the rules above, Fan avoids the diamond inheritance problem.  First
+mixins can't declare concrete fields, which mean they never store state.
+Second any ambiguity that arises from diamond inheritance or otherwise
+requires the subclass to explicitly disambiguate (or if the inherited
+slots are not virtual, then the subtype simply cannot be created).
+
+Overrides [#overrides]
+**********************
+When inheriting slots from one or more super types, a type has
+the option to override any of the super type's virtual slots.
+There are three mechanisms of override:
+  1. Method overrides Method (see [virtual methods]`Methods#virtual`)
+  2. Field overrides Field (see [virtual fields]`Fields#virtual`)
+  3. Field overrides Method (see [overriding a method]`Fields#overrideMethod`)
+
+Covariance [#covariance]
+************************
+Typically when overriding a slot, the signature of the override
+must match the super type's signature exactly.  However in some
+cases, the return type of a method may be narrowed - this feature
+is called *covariance*.  Covariance is a technique of specialization
+because the super type's contract remains intact, we've only
+narrowed the contract of the subtype.  The following details the
+covariance support:
+  1. Method overrides Method: supported - [details]`Methods#covariance`
+  2. Field overrides Field: unsupported
+  3. Field overrides Method: supported - [details]`Fields#overrideMethod`
+
+Super [#super]
+**************
+Often when overriding a method or field, it is desirable to call
+the super type's implementation.  This is done using the 'super'
+keyword.  There are two ways to use 'super':
+
+  // unnamed super
+  super.someMethod()
+
+  // named super
+  BaseType.super.someMethod()
+
+The following rules define the use of 'super':
+
+  1. An unnamed super is always on the super class, never a super mixin
+  2. Obviously you can't use a named super on something which isn't one
+     of your super types
+  3. Named supers allow you to jump up multiple levels of inheritance
+  4. Mixins cannot use unnamed super because that would be a non-virtual
+     call on Obj (which is itself really just a problem with Java's lame
+     rules on 'invokespecial')
+  5. Mixins can use named supers on their super mixins
+

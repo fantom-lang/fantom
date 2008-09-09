@@ -1,0 +1,442 @@
+**************************************************************************
+** title:      Change Log
+** author:     Brian Frank
+** created:    1 Sep 05
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+*Sep 05*
+- Begin work on Java version of Fan parser
+- Compiler emits straight to Java bytecode or .NET IL
+- Basic expr compilation
+- Basic class, method support
+
+*Oct 05*
+- Original jblock and nblock native method design
+- Methods
+- Fields
+- Type checking
+- Method argument overloading (since removed)
+- New operator (since removed)
+- If, throw statements
+- Class aliasing (original Java/.NET integration strategy)
+
+*Nov 05*
+- Casting
+- Primitive operators and auto-boxing (since removed)
+- String concat, unary operators, assignment operators
+- Local variables
+
+*Dec 05*
+- Redesign to use pure OO (everything boxed)
+- Type inference for locals
+- Duration literals
+- Shortcut operator overloading
+- Static initializers
+- Comparision operators
+- Constructors
+
+*Jan 06*
+- Generic types
+- Support for 'is' and 'as' operators
+- Type literals
+- Method parameter defaults
+- Unit test harness
+
+*Feb 06*
+- Refactor to use fcode intermediate format
+- Refactor local variables for .NET emit
+- Fandoc comments
+
+*Mar 06*
+- Native methods
+- Superclass constructor chaining
+- Closures
+- I/O, List, and Map APIs
+- Mixins
+
+*Apr 06*
+- Tomcat integration
+- Field accessors
+- Enums
+- Charset I/O support
+
+*May 06*
+- Refactor Err to use Fan type system
+- Math methods for Int, Float
+- Switch statement
+- New character methods for Int, Str
+
+*Jun 06*
+- Dynamic '->' call operator
+- Try/catch blocks
+- Initial web API
+- String interpolation
+- CompareNull, CompareNotNull opcodes
+- Tokenizer rewritten in Fan
+
+*Jul 06*
+- Parser rewritten in Fan
+- Version API
+- Using/import statements
+- Facets
+- Uri API, refactor File to use Uri
+- Stub Time API
+
+*Aug 06*
+- Fan compiler does first end-to-end compile
+- Fanp disassembler ported from Java to Fan
+- Zip API
+
+*Sep 06*
+- First Fandoc goes live on fandev.org
+- Precompiled Java bytecode mode
+
+*Oct 06*
+- Props file and Sys.env
+- Constant folding in compiler
+- Compiler can finally compile itself!
+
+*Nov 06*
+- Deprecate DupDown (dup_x1) opcode
+- Nested closure support
+- List.dup(), Map.dup()
+- Not a statement checking
+- Protection scope checking
+
+*Dec 06*
+- CLR protected region support
+- Try finally blocks
+- Virtual fields (mixins support abstract fields)
+- Mixin reflection
+- Covariant return types
+- Change inheritance syntax to use colon
+- Named super calls
+- Const fields and const classes
+- Launcher C++ executables for Win32
+- Transition from Ruby build scripts to Fan build scripts
+
+*Build 1.0.1 (1 Jan 07)*
+- First official build
+- Both old Ruby build scripts and new Fan build scripts
+
+*Build 1.0.2 (1 Jan 07)*
+- New pod format for pod meta-data and facets
+
+*Build 1.0.3 (8 Jan 07)*
+- Fan launcher options (--v and --D)
+- Refactor Sys methods into respective classes
+- Field storage '@' operator
+- Storage fcode flag
+
+*Build 1.0.4 (14 Jan 07)*
+- Virtual fields
+- Move field accessor generation to Parser
+- Fix closures in field accessor methods
+- Fix multiple static initializer closures and scoping
+- Optimize if(true), if(false)
+- Fix indirect mixin router emitting
+
+*Build 1.0.5 (21 Jan 07)*
+- Use () operator on sys::Methods as callx() shortcut
+- Curried methods
+- Use soft references for pod cache
+- InStream, OutStream.charset changed to abstract field
+- Float constants changed to static const fields
+- Fan.exe now uses Fan compiler to run scripts
+
+*Build 1.0.6 (5 Feb 07)*
+- Make sys::Err const
+- Obj.isImmutable, List.toImmutable, Map.toImmutable
+- Slot.isConst for thread-safe methods
+- Thread API
+
+*Build 1.0.7 (12 May 07)*
+- New inet pod
+- IpAddress, TcpSocket, TcpServerSocket
+- Str.equalsIgnoreCase, compareIgnoreCase, any, all
+- Time.now with tolerance
+- Time.parseHttp, formatHttp
+- InStream.readLine max parameter
+- Map cannot have null keys
+- Map.caseInsensitive
+- New fandoc pod to parse fandoc into DOM
+- New docCompiler pod to generate HTML documentation
+- Doc chapters: docIntro::Overview, docLang::Literal
+- .NET runtime support for most of sysTest
+
+*Build 1.0.8 (30 Jun 07)*
+- Add doc target to buildall script
+- Add StrBuf.remove, buff up test suite
+- DocLang chapters: Expressions, Statements, Exceptions,
+  TypeSystem, CompilationUnits, Fields, Methods
+- InStream peek, peekChar, readStrToken
+- Changes to web API
+- New wisp pod with simple web server implementation
+
+*Build 1.0.9 (1 Jul 07)*
+- Add: List.containsAll
+- Remove: Type.sourceFile, Type.lineNumber, Slot.lineNumber
+- Hidden: Field.getter, Field.setter
+- Dynamic types
+- Dynamic types emitter for subclass with type per instance
+- Dynamic fields
+- New sql pod using JDBC
+- New chapters: docLang::DynamicTypes, docLib::Sql
+
+*Build 1.0.10 (7 Jul 07)*
+- Remove all the old Java based compiler code
+- Change Int intern to -256 to 1024
+- Major refactoring of compiler - fcode now implements namespace mixins
+- Ability to compile against any arbitrary dependsDir
+
+*Build 1.0.11 (10 Jul 07)*
+- Java runtime dependency checking
+- Compiler dependency checking
+- MethodParam->Param, fieldField->of, paramType->of, returnType->returns
+- Split Func out of Method
+
+*Build 1.0.12 (17 Jul 07)*
+- InStream.eachLine
+- Covariant field overrides of methods
+
+*Build 1.0.13 (4 Aug 07)*
+- Indexed assignment expressions: x[y] += z
+- Buf no longer mixins InStream and OutStream
+- InStream and OutStream changed from mixins to classes
+- Fix case insensitive Map equality/hash
+- FileWeblet with ETag and Last-Modified support
+- Rewrite Uri with custom parser
+- Allow escape sequence in Uri literals
+- Uri decoding/encoding
+- Fix maxLocals, maxStack in emitter
+
+*Build 1.0.14 (12 Aug 07)*
+- Add maxStack to fcode format
+
+*Build 1.0.15 (5 Sep 07)*
+- Serialization support
+- Simple literals
+- With-blocks
+- Refactor fcode attributes
+- New facet design
+
+*Build 1.0.16 (11 Sep 07)*
+- Facets completed
+- Override implies virtual fix
+- Roll fcode version to support method var attributes
+
+*Build 1.0.17 (5 Nov 07)*
+- Obj auto-casts to anything
+- Use serialization for thread messaging when not immutable
+- Dynamic methods
+- Buf: hex, base64, digest support
+- TimeZone database and buildtz script for importing Olsen database
+- Rename Time -> DateTime
+- DateTime ticks to date/time calculations
+- Locale API
+- Rename parse -> fromStr
+
+*Build 1.0.18 (13 Dec 07)*
+- Int, Str, Month, Weekday, DateTime localization methods
+- DateTime string encoding/decoding
+- Resource and MemResource APIs
+- Support final override modifiers
+- Int.random
+- Pretty stack traces
+- Tons of new documentation
+
+*Build 1.0.19 (30 Dec 07)*
+- Basic fand bootstrap
+- Tweaks to InStream.readObj
+- Logging APIs
+- File now subclasses Resource
+- WebService pipeline
+- Refactor Resource implementation
+- SysResources
+- Sys.appDir
+- Raw string literals
+- Regex regular expression API
+- Optimize pod/type lazy loading
+- Pod level user defined facets
+- Type database
+
+*Build 1.0.20 (13 Jan 08)*
+- Fan shell
+- Type literal support in serialization syntax
+- More docs (docTools, docIntro)
+- Rework build scripts to use facets
+
+*Build 1.0.21 (10 Mar 08)*
+- Haven ORM engine
+- Type immutability
+- Doc meta-data, doc default expressions
+- File copyTo, copyInto, moveTo, moveInto, rename, open, mmap
+- Buf redesign -> MemBuf, FileBuf, MmapBuf
+- Redesign Resource -> Namespace
+- Uri pathOnly, relToAuth, plusName, tail -> slice, minus -> relTo
+- Allow const field set in ctor with-block
+- Rename test pods: testSys, testNatives, testCompiler
+- Move Windows executables from bin/win/ to bin/
+- Sys.compile and script caching
+- Coverage for .NET sysTests 364/375 - 97%
+
+*Build 1.0.22 (30 Mar 08)*
+- web::Cookie support
+- WebSession support
+- Once methods
+- Func.curry
+- Slot, Field, and Method are now const
+- Make parameter names optional in function signatures
+- New Cookbook chapters: Reflection
+- Unix launcher scripts
+
+*Build 1.0.23 (14 Apr 08)*
+- Weekday, Month increment/decrement
+- Enhance webapp steps
+- File support for checkSlash
+- New docs: Namespaces, Fandoc, Web, WebApp, Widget, Maps
+- LogStep for W3C extended log format
+- Haven enhancements - prepared statements
+- Duration boot, uptime, toLocale
+- Sys.diagnostics (mem, threads, classes)
+- Uri queryPlus and escaping fixes
+
+*Build 1.0.24 (14 Apr 08)*
+- Cleanup old ruby scripts
+- Cleanup docs
+
+*Build 1.0.25 (16 Apr 08)*
+- Fix Unix build problems
+- Sys.env is now case insensitive map
+- File.pathSep
+- Skip .NET compiles if not on Windows
+
+*Build 1.0.26 (26 Apr 08)*
+- Require f suffix for float literals
+- Decimal type and literal syntax
+- Decimal API enhancements: InStream, OutStream, Num, Str
+- This return types
+- Update APIs to use return This return
+- Fix Firefox3 form handling
+- Allow this and super keywords in string interpolation
+- Fix various fandoc bugs seen on discussion forum
+
+*Build 1.0.27 (28 May 08)*
+- Fix this return for mixins
+- Sanity check for bootstrap build
+- sys::MimeType, Uri.mimeType, File.mimeType
+- New email pod for MIME and SMTP support
+- Charset.make => fromStr (now serializable simple)
+- Thread.isService, findService
+- Fix fandoc blockquotes
+- Native fields
+- Allow non-storage fields in const class
+- Fix constructor, field init ordering
+- Allow single statement for try, catch, finally
+- Log.setLevel() => Log.modified
+- File.setModified() => File.modified
+
+*Build 1.0.28 (25 Jun 08)*
+- Fix bug in threading flow control
+- Map.def
+- Update unix scripts to use bash
+- Fix timezone on unix when GMT offset
+- Require call open paren on same line
+- With-blocks support implicit call to add
+- Support @collection facet in readObj and writeObj
+- C# fixes including filtered catch blocks
+- Launcher exe and bash support for lib/java/ext
+- Fix closures inside once methods
+- Improved support for calling main
+- Rename some of the shortcut operators methods
+- New fwt pod which wraps SWT
+
+*Build 1.0.29 (18 Jul 08)*
+- New isnot operator
+- New null convenience operators: ?: ?. ?->
+- New FWT widgets: WebBrowser, Text, InsetPane, SashPane
+- FWT graphics: Pen, Brush, Gradient
+- FWT serialization support
+- New icons pod
+- Web view priorities
+- Require indexing open bracket on same line
+- Allow |->Int|  to fit |->Void|
+- Sys.idHash
+- List.findIndex, indexSame, containsSame, containsAllSame, removeSame
+- Pod.log, Type.log
+- Str.split(Str) => Str.split(Int,Bool)
+- Compiler implicitly generates toImmutable for const List/Map/Type fields
+
+*Build 1.0.30 (30 Jul 08)*
+- Short construction call syntax Type(args)
+- FWT widgets: Combo, Tree, RichText
+- fwt::Command
+- GridPane enhanced, see tab in demo
+- File.listDirs, listFiles, walk, osRoots
+- Expand auto-cast to include any assignable type
+- Weblet.doGet,doPost,... =>  Weblet.onGet,onPost,...
+- webapp::Widget API changes
+- Add field default to fandoc
+- Change Uri.name to return "" instead of null
+- Rework sample code apps/ to examples/
+- List.binarySearch
+- New type literal syntax: Type#
+- Slot literals: Type#slot or #slot
+
+*Build 1.0.31 (24 Aug 08)*
+- New leading whitespace rules for multi-line Str literals
+- Upgrade SWT to 3.4
+- Using statement support in serialization files
+- List.removeRange
+- Range.toList
+- Str.containsChar, trimStart, trimEnd, numNewlines, splitLines
+- StrBuf.join
+- Relax rules for const field types to allow Obj, Obj[], Obj:Obj
+- Change fwt callbacks to be EventListeners
+- Enhance fwt eventing
+- Key eventing and accelerators
+- New fwt::CommandStack API
+
+*Build 1.0.32 (working)*
+- Remove support for old type literal syntax
+- Add adm/tools with fan support for various editors
+- Remove haven pod
+- Fix thread queue notify bug
+- Fix infinite loop in compiler bug
+- Fix race condition loading $Pod class
+- Fix win32 launchers to not require .NET
+- Fix compiler handling of unparameterized generic types like List
+- Fix adm/unixsetup script (mostly)
+- Breaking change to Uri.get (inserted base parameter before checked)
+- Breaking change Locale.prop -> get
+- List.flatten
+- Uri.sliceToPathAbs, isPathOnly
+- Pod.uri, loc
+- Type.loc
+- File.normalize now includes file: scheme
+- Require Namespace uris to be path only
+- New UriScheme naming design
+- New docLang chapters: Naming, Conventions
+- New docTool chapters: Flux
+- New docLib chapters: Flux
+- Refactor native methods in fwt
+- fwt::Command localization
+- fwt::Font metrics
+- New fwt::Display API
+- New fwt::TextWidget base class for Text and RichText
+- New fwt text selection and clipboard APIs
+
+
+
+
+
+
+
+
+
+
+
+
+

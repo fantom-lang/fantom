@@ -1,0 +1,86 @@
+**************************************************************************
+** title:      Naming
+** author:     Brian Frank
+** created:    27 Aug 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+A "name" is a set of conventions and rules for using strings as identifiers.
+Good names are typically human readable, although that isn't necessarily
+required.  Fan provides a unified naming design based on the `sys::Uri` class.
+Uris are a good choice for naming because they provide:
+  - Ability to transcribe the name into an ASCII string (with appropriate escaping)
+  - Well defined model for plugging in "protocol" (scheme) handlers
+  - Well defined model for path hierarchies
+  - Well defined model for name/value pairs via queries
+  - Well defined rules for relativization and normalization
+  - Uris map cleanly to web based applications
+  - Uris are widely supported in alternate languages and platforms
+
+Resolving Uris [#resolving]
+***************************
+In Fan anything of interest we might wish to identify with a name
+is assigned a Uri.  We resolve Uris to 'sys::Obj' instances.  The
+actual object type is dependent on the Uri.  For example all "file:"
+Uris will resolve to a 'sys::File'.  Resolving a Uri is done via
+the [Uri.get]`sys::Uri.get` method:
+
+  File f := `file:/dir/file.txt`.get
+
+If the file cannot be resolved, then UnresolvedErr is thrown.  You
+can pass false for the 'checked' parameter to return null if the Uri
+cannot be resolved.
+
+The default behavior of 'Uri.get' on a relative Uri (null scheme)
+is to throw UnresolvedErr.  But you can pass in optional base
+object.  If the Uri is relative, then we attempt to resolve the
+base object's uri via the dynamic call 'base->uri'.  If the base's
+uri is absolute, then resolve we 'base->uri + uri':
+
+  base := `file:/dir/`.get
+  `file.txt`.get(base)  =>  resolves to `file:/dir/file.txt`
+
+Uri Schemes [#uriSchemes]
+*************************
+The `sys::UriScheme` class is used to plug in handling for new
+Uri schemes.  The standard fan runtime provides support for the
+following schemes:
+  - **fan**: resolves to the 'Namespace' APIs (discussed below)
+  - **file**: resolves to 'File' instances on the local file system
+  - **http**: not done yet, but coming soon...
+  - **flux**: application specific uris for [flux]`docTools::Flux` (like
+    "about:" in Firefox)
+
+You can plug in your own scheme handling by subclassing 'UriScheme':
+
+  @uriScheme="custom"
+  const class CustomScheme : UriScheme
+  {
+    override Obj get(Uri uri, Obj base) { ... }
+  }
+
+The indexed '@uriScheme' facet is used to bind your class to a specific
+scheme - this string must be lower case.  You override the 'get' method
+to implement uri to object resolution.
+
+Fan Scheme [#fanScheme]
+***********************
+The Fan runtime includes support for the "fan:" scheme which resolves
+Uris via the [Namespace]`Namespaces` API.  The "fan:" scheme is designed
+to name everything of interest inside the Fan VM.  You can use the
+'Namespace' API to plug in your own application specific name mappings:
+
+  Sys.ns.create(`/myapp/hello`, "Hi")
+  `fan:/myapp/hello`.get => "Hi"
+
+Predefined Sys Names [#sysNames]
+================================
+The runtime predefines an extensive set of name mappings under "fan:/sys/":
+
+  fan:/sys/pod/{name}         =>  Pod.find(name)
+  fan:/sys/pod/{name}/{path}  =>  Pod.find(name).files[path]
+  fan:/sys/service/{qname}    =>  Thread.findService(qname)
+

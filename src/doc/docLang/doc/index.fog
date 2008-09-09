@@ -1,0 +1,49 @@
+**************************************************************************
+** title:      Index
+** author:     Brian Frank
+** created:    7 May 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+[
+"Fundamentals",
+  [`Structure`,     "pod::type.slot program structure"],
+  [`Literals`,      "syntax for literal types"],
+  [`Expressions`,   "syntax for expressions"],
+  [`Statements`,    "syntax for statements"],
+  [`Exceptions`,    "exception handling"],
+"Type System",
+  [`TypeSystem`,    "static/dynamic hybrid type system"],
+  [`CompilationUnits`, "organization of source code"],
+  [`Classes`,       "creating class types"],
+  [`Mixins`,        "creating mixin types"],
+  [`Enums`,         "creating enum types"],
+  [`Slots`,         "slot model"],
+  [`Methods`,       "deep dive into method slots"],
+  [`Fields`,        "deep dive into field slots"],
+  [`Inheritance`,   "rules for slot inheritance"],
+  [`DynamicTypes`,  "generating types at runtime"],
+"Functions",
+  [`Functions`,     "functional programming"],
+  [`Closures`,      "deep dive into closures"],
+"Advanced",
+  [`Deployment`,    "how to deploy pods and applications"],
+  [`Serialization`, "reading/writing objects"],
+  [`Facets`,        "annotating types and slots with meta-data"],
+  [`Concurrency`,   "model for sharing data between threads"],
+  [`Threading`,     "working with threads and message passing"],
+  [`Naming`,        "URI naming system"],
+  [`Namespaces`,    "Using and creating custom namespaces"],
+  [`TypeDatabase`,  "indexing and querying installed types"],
+  [`Logging`,       "logging APIs"],
+  [`Localization`,  "localization APIs"],
+"Appendix",
+  [`Conventions`,   "coding conventions we use"],
+  [`Grammar`,       "formal BNF syntax grammar"],
+"TODO",
+  `Natives`
+]
+
+// type compatibility
+// variable scoping

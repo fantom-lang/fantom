@@ -1,0 +1,102 @@
+//
+// Copyright (c) 2006, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   19 Jul 06  Brian Frank  Creation
+//
+
+**
+** Block is a list of zero or more Stmts
+**
+class Block : Node
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
+  new make(Location location)
+    : super(location)
+  {
+    stmts = Stmt[,]
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Stmts
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return is there are no statements
+  **
+  Bool isEmpty() { return stmts.isEmpty }
+
+  **
+  ** Return number of statements
+  **
+  Int size() { return stmts.size }
+
+  **
+  ** Does this block always cause us to exit the method (does the
+  ** last statement return true for Stmt.isExit)
+  **
+  Bool isExit()
+  {
+    if (stmts.isEmpty) return false
+    return stmts.last.isExit
+  }
+
+  **
+  ** Append a statement
+  **
+  Void add(Stmt stmt)
+  {
+    stmts.add(stmt)
+  }
+
+  **
+  ** Append a list of statements
+  **
+  Void addAll(Stmt[] stmts)
+  {
+    this.stmts.addAll(stmts)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Tree
+//////////////////////////////////////////////////////////////////////////
+
+  Void walkExpr(|Expr expr->Expr| closure)
+  {
+    walk(ExprVisitor.make(closure), VisitDepth.expr)
+  }
+
+  Void walk(Visitor v, VisitDepth depth)
+  {
+    v.enterBlock(this)
+    stmts.each |Stmt stmt| { stmt.walk(v, depth) }
+    v.visitBlock(this)
+    v.exitBlock(this)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Debug
+//////////////////////////////////////////////////////////////////////////
+
+  override Void print(AstWriter out) { printOpt(out) }
+
+  Void printOpt(AstWriter out, Bool braces := true)
+  {
+    if (braces) out.w("{").nl
+    out.indent
+    stmts.each |Stmt stmt| { stmt.print(out) }
+    out.unindent
+    if (braces) out.w("}").nl
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  Stmt[] stmts
+}

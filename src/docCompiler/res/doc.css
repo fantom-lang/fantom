@@ -1,0 +1,240 @@
+/*
+// Copyright (c) 2007, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   8 May 07  Andy Frank  Creation
+//   6 Dec 07  Andy Frank  Redesign
+*/
+
+/*************************************************************************
+ * Overrides
+ ************************************************************************/
+
+body
+{
+  font: 10pt "Lucida Grande", Verdana, Arial, sans-serif;
+  margin: 0 0 3em 0; padding: 0;
+}
+input { font: 10pt "Lucida Grande", Verdana, Arial, sans-serif; }
+code,pre,textarea { font: 9pt Monaco, "Courier New", monospace; }
+a { color: #00f; }
+blockquote
+{
+  margin: 1em 0;
+  padding-left: 1em;
+  color: #a0a;
+  border-left: 1px solid #ccc;
+}
+
+h1,h2,h3,h4,h5 { font-family: Arial, sans-serif; }
+h1.title { font-size: 22pt; color: #566981; }
+h1 { font-size: 18pt; color: #ad4e00; }
+h2 { font-size: 14pt; color: #25272a; }
+h3 { font-size: 12pt; }
+h4 { font-size: 10pt; }
+h5 { font-size: 10pt; }
+
+table { border-collapse: collapse; border-spacing: 0; width: 100%; }
+table tr.even { background: #f2f6f8; }
+table th { padding: 5px; font-weight: bold; text-align: left; }
+table td { border: 1px solid #d0dae5; padding: 5px; }
+table td:first-child  { width: 25%; }
+
+/*************************************************************************
+ * Header
+ ************************************************************************/
+
+div.header
+{
+  background: #25272a;
+  color: #fff;
+  border-bottom: 5px solid #566981;
+}
+div.header > div
+{
+  width: 850px;
+  margin: 0 auto;
+  padding: 10px 0 35px 0;
+  position: relative;
+}
+div.header h1
+{
+  height: 1.2em;
+  font-size:22pt;
+  margin:0;
+  padding:0;
+}
+div.header h1 a
+{
+  background: url(fanLogo.png) no-repeat 0 0;
+  float: left;
+  width: 50px;
+  height: 25px;
+  margin-top: 2px;
+  overflow: hidden;
+  text-indent: -9999px;
+  outline-style: none;
+}
+div.header p
+{
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 10px;
+  right: 0;
+  color: #eec;
+}
+div.header p a { color: #eec; }
+div.header form { display: inline; }
+div.header form p { top: 40px; }
+div.header ul
+{
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+}
+div.header li { display: inline; font-size: 11pt; }
+div.header li a
+{
+  float: left;
+  padding: 6px 12px;
+  margin-right: 2px;
+  background: #394455;
+  color: #fff;
+  text-decoration: none;
+  outline: none;
+}
+div.header li a:hover { background: #414f61; }
+div.header li.active a { background: #566981; }
+
+/*************************************************************************
+ * SubHeader
+ ************************************************************************/
+
+div.subHeader { background: #d0dae5 url(subHeaderBg.png) repeat-x; }
+div.subHeader > div { width: 850px; margin: 0 auto 1em auto; }
+div.subHeader ul
+{
+  margin: 0;
+  padding: 10px;
+  list-style-type: none;
+  white-space: nowrap;
+}
+div.subHeader a { color: #3a415a; }
+div.subHeader li { display: inline; padding-right: 10px; }
+
+/*************************************************************************
+ * Footer
+ ************************************************************************/
+
+div.footer > div
+{
+  width: 850px;
+  margin: 3em auto 1em auto;
+  font-size: 8pt;
+  color: #3a415a;
+}
+
+/*************************************************************************
+ * Content
+ ************************************************************************/
+
+div.content > div
+{
+  width: 850px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/**** Fandoc ****/
+div.fandoc { width: 630px; }
+div.fandoc code { color: #080; white-space: nowrap; }
+div.fandoc blockquote code { color: #808; }
+div.fandoc pre
+{
+  color: #555;
+  background: #f5f5f5;
+  border: 1px dashed #aaa;
+  padding: 10px;
+}
+div.prevNext { position: relative; height: 30px; }
+div.prevNext img { border: 0; vertical-align: middle; }
+div.prevNext div.prev { position: absolute; top: 5px; left: 5px; }
+div.prevNext div.next { position: absolute; top: 5px; right: 5px; }
+div.prevNext + h1.title { margin-top: 0.5em; }
+
+/**** Sidebar ****/
+div.sidebar
+{
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 200px;
+}
+div.sidebar ul { margin: 0 0 0 1.5em; padding: 0; }
+div.sidebar ul.clean { list-style: none; margin: 0 0 0 1em; }
+div.sidebar li { margin: 3px 3px 3px 0; }
+
+/*************************************************************************
+ * API
+ ************************************************************************/
+
+.todo, .TODO { color: blue; }
+
+.type .overview h1 { margin-top: 0; }
+.type .overview h2 { color: #ad4e00; margin: 0; }
+
+.slots .overview li.hidden { display: none; }
+.slots .overview li.hidden a { color: #f00; }
+.slots .detail dd { margin: 1em 0 2em 1em; }
+.slots .detail dt
+{
+  font: bold 11pt "Lucida Grande", Arial;
+  background: url(slotBg.png) repeat-x;
+  padding: 5px;
+  margin-bottom: -0.5em;
+  position: relative;
+}
+.slots .detail dt a
+{
+  color: #7aa3c0;
+  font-size: 8pt;
+  font-weight: normal;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+.slots .detail dt.hidden
+{
+  background: url(slotHiddenBg.png) repeat-x;
+  display: none;
+}
+.slots .detail dd.hidden { display: none; }
+
+/*************************************************************************
+ * Source Code
+ ************************************************************************/
+
+div.src { margin: 1em 0; }
+div.src pre
+{
+  font: 9pt Monaco, "Courier New";
+  background: none;
+  border: none;
+  color: #000;
+  padding: 5px;
+}
+.src .b { color: #f00; }     /* bracket       */
+.src .k { color: #00f; }     /* keyword       */
+.src .s { color: #008080; }  /* string        */
+.src .c { color: #008080; }  /* char          */
+.src .u { color: #008080; }  /* uri           */
+.src .x { color: #888; }     /* blockComment  */
+.src .y { color: #888; }     /* lineComment   */
+.src .z { color: #080; }     /* fandocComment */
+

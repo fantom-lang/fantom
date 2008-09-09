@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#
+# fan: launcher for Fan using an alternate installation 
+#      this script is used during bootstrap build
+#
+
+if [ -z "$FAN_SUBSTITUTE" -o ! -d "$FAN_SUBSTITUTE" ] ; then
+  echo ERROR: must export the FAN_SUBSTITUTE env variable
+  exit 1
+fi 
+
+export FAN_HOME=$FAN_SUBSTITUTE
+
+. "${0%/*}/fanlaunch" 
+fanlaunch Fan "$@"

@@ -1,0 +1,222 @@
+**************************************************************************
+** title:      Closures
+** author:     Brian Frank
+** created:    13 Dec 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Closures are an expression to create a [function]`Functions` inside
+the body of a method.  Closures have the ability to reference local
+variables from their enclosing scope.  This ability to create inline
+functions which access local scope makes it easy to use closures as
+method arguments.  For instance closures are used extensively
+as an [iteration]`#iteration` mechanism.
+
+Syntax [#syntax]
+****************
+The basic syntax of a closure:
+
+  |A a, B b...->R| { stmts }
+
+The start of a closure is its signature which reuses the same
+syntax as [function types]`Functions#signatures`.  The body of the
+closure is a series of zero or more statements.  The 'return' statement
+is used to return a result and exit out of the closure (Fan doesn't
+support any other way to jump out of a closure other than 'return' or
+'throw').  Let's look a simple example:
+
+  f := |,| { echo("hi there") }
+  f()
+  f()
+
+The code above creates a closure that prints a message to the console.
+If we run the code above "hi there" is printed twice.  We are assigning
+the closure to the variable 'f'.  The closure itself is an expression
+which creates an instance of [Func]`sys::Func` - just like '8' is
+an expression which creates an [Int]`sys::Int`.  The signature of the
+function is '|,|' which means that the function takes no arguments
+and returns 'Void'.  Once the closure is assigned to 'f', we can
+[call]`Functions#calling` 'f' like any other function.
+
+Here is another example:
+
+  f := |Int a, Int b->Int| { return a + b }
+  nine := f(4, 5)
+
+The code above declares a closure which accepts two 'Ints' and
+returns their sum.  Notice the closure uses the 'return' statement
+to return the result.
+
+Note: you might ask yourself why we didn't let you write a no
+arg closure using just curly braces like this:
+
+  f := { echo("hi there") }
+
+What's up with that '|,|' syntax anyways?  The reason is
+because the curly brace syntax is used for [with blocks]`Expressions#withBlocks`
+to allow in-place [serialization]`Serialization`.  We picked
+the '|,|' because it seemed to jive with '[,]' and '[:]' - although
+any good ideas on alternate syntax are welcome!
+
+Binding Locals [#bindingLocals]
+*******************************
+The real power of a closure is its ability to bind to the local
+variables in its enclosing scope.  Consider this example:
+
+  counter := 0
+  f := |->Int| { return ++counter }
+  echo(f())
+  echo(f())
+  echo(f())
+  echo(counter)
+
+This example creates a function which returns an 'Int' and then
+calls the function three times.  Note how the body of the closure
+uses the local variable 'counter'.  The closure has access to both
+read and write any variable in its enclosing scope - just like
+an 'if' statement or a 'while' loop.  So the output of the code above
+is to print "1", "2", "3", and "3".
+
+Scope Lifetime [#scopeLifetime]
+===============================
+When a closure binds to a local variable in its outer scope,
+that variable lives as long as the closure lives.  Remember that
+closures are just 'Func' objects which can be passed outside of
+the original scope.  Consider this example:
+
+  static Func createFunc()
+  {
+    counter := 0
+    return |->Int| { return ++counter }
+  }
+
+  static Void main()
+  {
+    f := createFunc
+    echo(f())
+    echo(f())
+    echo(f())
+  }
+
+The 'createFunc' method returns a closure function bound to the local
+variable 'counter'.  The local variable will exist as long as the
+closure exists.  In this case the 'main' method assigns the function
+to the variable 'f' then calls it three times.  The output will
+print "1", "2", and "3".  Effectively this allows closures to store
+their own state between invocations.
+
+Binding This [#bindingThis]
+===========================
+If a closure is declared inside an instance method, then a closure
+can bind 'this' variable just like any other local:
+
+  Str first := "Bart"
+  Str last  := "Simpson"
+
+  Void test()
+  {
+    f := |->Str| { return first + " " + this.last }
+    echo(f())
+  }
+
+The code above illustrates binding to two local slots.  The
+closure binds to 'first' with an implicit 'this'.  The closure
+uses an explicit 'this' to bind to 'last'.  Note that the 'this'
+keyword references the enclosing method's instance, *not* the
+the closure object.  This also means generic 'Obj' methods
+like 'toStr' and 'type' reference the enclosing method instance,
+not the closure instance.
+
+Multiple Closures [#multipleClosures]
+=====================================
+When a method declares multiple closures, the closures all
+share the same local variables:
+
+  counter := 0
+  f := |->Int| { return ++counter }
+  g := |->Int| { return ++counter }
+  echo(f())
+  echo(g())
+  echo(f())
+  echo(g())
+
+The code above prints "1", "2", "3", "4" because both 'f' and 'g'
+share the same binding to 'counter'.
+
+Note: in the current implementation all closures share the same
+set of locals.  This means that any closure holding a reference to
+those locals will prevent garbage collection of all closure
+variables.
+
+Closure Parameters [#closureParameters]
+***************************************
+A closure is just a normal expression and can be passed as an
+argument to a method call which expects a 'Func' parameter.
+Many key APIs are designed to work with functions.  For example
+consider the [List.findAll]`sys::List.findAll` method which
+returns a sub-list of every item matching a criteria.  Since we
+want to leave the match criteria open ended, 'findAll' lets you
+pass in an arbitrary function to determine matches.
+
+Let's consider an example for finding all the even numbers in
+a list:
+
+  list := [0, 1, 2, 3, 4]
+  f := |Int v->Bool| { return v%2==0 }
+  evens := list.findAll(f)
+
+The code above creates a function, then passes it to the 'findAll'
+method.  Since the closure is just an expression we could also rewrite
+the code as:
+
+  evens := list.findAll(|Int v->Bool| { return v%2==0 })
+
+Since closures are used heavily in this way, Fan supports a
+special syntax borrowed from Ruby.  If a closure is the last
+argument to a method call, then the closure can be pulled out as
+a suffix to the call:
+
+  evens := list.findAll() |Int v->Bool| { return v%2==0 }
+
+Since we aren't passing any arguments other than the closure we
+can simplify this code even further by removing the parens:
+
+  evens := list.findAll |Int v->Bool| { return v%2==0 }
+
+Iteration [#iteration]
+**********************
+Closures are designed to be the primary mechanism of iteration.
+Key methods which accept a function parameter:
+
+  - `sys::List.each`: iterate a list
+  - `sys::List.eachr`: reverse iterate a list
+  - `sys::Map.each`: iterate a map
+
+When iterating a list both the value and the integer index are
+passed to the closure:
+
+  list := ["one", "two", "three"]
+  list.each |Str val, Int index| { echo("$index = $val") }
+
+But remember that we don't have to [use all]`Functions#arityCompatibility`
+the arguments provided to the function.  For example if we don't
+care about the integer index:
+
+  list := ["one", "two", "three"]
+  list.each |Str val| { echo(val) }
+
+Map iteration works the same way:
+
+  map := [1:"one", 3:"three", 5:"five"]
+  map.each |Str val, Int key| { echo("$key=$val") }
+  map.each |Str val| { echo(val) }
+
+
+
+
+
+
+

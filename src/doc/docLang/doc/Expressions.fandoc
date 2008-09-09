@@ -1,0 +1,408 @@
+**************************************************************************
+** title:      Expressions
+** author:     Brian Frank
+** created:    9 May 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Operator Precedence [#precedence]
+*********************************
+Fan's expression syntax is very similar to C, Java, C# and company.
+Operators in order of precedence:
+
+  - Primary: '(x)   x.y   x.y()   x->y()   x?.y   x?.y()   x?->y()   x[y]'
+  - Unary: '++x   --x   x++   x--   ~x   !x   +x   -x   (T)x   &x()   @x'
+  - Multiplicative: '*   /   %'
+  - Additive: '+   -'
+  - Shift: '<<   >>'
+  - Bitwise And: '&'
+  - Bitwise Or: '|   ^'
+  - Range: '..   ...'
+  - Elvis: 'x ?: y'
+  - Relational: '<   <=   >=   >   <=>   is   isnot   as'
+  - Equality: '==   !=   ===   !=='
+  - Conditional And: '&&'
+  - Conditional Or: '||'
+  - Ternary: 'x ? t : f'
+  - Assignment: '=   *=   /=   %=   +=   -=   <<=   >>=   &=   ^=   |='
+
+Fan breaks with C convention in that the bitwise operators are
+a higher precedence than the relational operators.  This makes writing
+bitwise expressions more intuitive:
+
+  isCool := flags & Flags.cool != 0
+
+Shortcut Operators [#shortcuts]
+*******************************
+Fan is a pure object oriented language in that everything is an
+object - even primitives such as 'Bool' and 'Int'.  As such almost
+all the operators are really just method calls.  We call these operators
+the *shortcut operators* because they are just syntax sugar for calling
+a specific method:
+
+   a + b    => a.plus(b)
+   a - b    => a.minus(b)
+   a * b    => a.mult(b)
+   a / b    => a.div(b)
+   a % b    => a.mod(b)
+   a[b]     => a.get(b)
+   a[b] = c => a.set(b, c)
+   a[b]     => a.slice(b) if b is Range
+   a << b   => a.lshift(b)
+   a >> b   => a.rshift(b)
+   a & b    => a.and(b)
+   a | b    => a.or(b)
+   a ^ b    => a.xor(b)
+   ~a       => a.inverse()
+   -a       => a.negate()
+   ++a, a++ => a = a.increment()
+   --a, a-- => a = a.decrement()
+   a == b   => a.equals(b)
+   a != b   => !a.equals(b)
+   a <=>    => a.compare(b)
+   a > b    => a.compare(b) > 0
+   a >= b   => a.compare(b) >= 0
+   a < b    => a.compare(b) < 0
+   a <= b   => a.compare(b) <= 0
+
+For example say we have two variables 'a' and 'b' both of type 'Int'.
+Then the expression 'a+b' is really just syntax sugar for calling
+`sys::Int.plus` as 'a.plus(b)'.  'Bool', 'Int', 'Float', and 'Decimal'
+map all the shortcut operators just as you would expect them.  If you
+try to use a shortcut operator with a type that doesn't support the
+corresponding method or with an invalid parameter type, then you
+will get a likewise compiler error.
+
+Prefix and Postfix Operators [#prefixPostfix]
+=============================================
+The '++' and '--' operators can be prefix or postfix just like C
+family languages.  Both of these operators assign the result of
+the call to 'increment' or 'decrement' to the operand variable.
+If prefix then the expression evaluates to the assignment.  If
+postfix then the expression evaluates to the value of the operand
+before 'increment' or 'decrement' is assigned.
+
+Equality Operators [#equality]
+==============================
+The equality operators '==' and '!=' both make use of the `sys::Obj.equals`
+virtual method.  Most types override this method to compare value equality.
+If 'equals' is not overridden, then the default behavior is to compare
+reference equality.
+
+Relational Operators [#relational]
+==================================
+The relational operators like '<' and '>' all use the `sys::Obj.compare`
+virtual method.  Many types with the notation of ordering will override
+this method to return -1, 0, or 1.  If 'compare' is not overridden, then
+the default implementation will compare the result of the operands 'toStr'
+method.
+
+The compiler translates the numeric return into a boolean condition based
+on which operator was used.  The special '<=>' operator returns the 'Int'
+value of -1, 0, 1 directly.  You will commonly use the '<=>' operator
+for custom sorts with a closure:
+
+  people.sort |Person a, Person b->Int| { return a.age <=> b.age }
+
+If that code doesn't make any sense to you, then don't worry - just keep
+reading until we cover [closures]`Closures`.
+
+Comparisons with Null [#comparisonsWithNull]
+============================================
+The equality and relational operators have special handling if either
+operand is 'null' such that a 'NullErr' exception is never raised.
+For equality a non-null and null are never equal, but two nulls are
+always equal.  For relational operators, null is always less than a non-null
+object.  Special handling for null does *not* apply if the 'equals'
+or 'compare' method is used as a normal method call.  Nor does this
+special handling apply for other shortcut operators.
+
+Same Operators [#same]
+**********************
+The '===' and '!==' operators are called the *same* and *not same*
+operators.  These operators are used to check if two variables
+reference the same object instance in memory.  Unlike the '==' and '!='
+shortcut operators, the same and not same operators do not result
+in the 'equals' method call.
+
+Conditional Operators [#cond]
+*****************************
+The conditional '!', '&&', and '||' operators are used with boolean
+expressions.  Use '&&' to perform a logical 'and' and '||' to
+perform a logical 'or'.  Both of these operators are short circuiting
+in that the second test is skipped if the first test is conclusive ('false'
+for '&&' and 'true' for '||').  The '!' operator performs a logical 'not'.
+Code examples for the conditional operators:
+
+  t := true
+  f := false
+  t && f  => evaluates to false
+  t && t  => evaluates to true
+  f || t  => evaluates to true
+  !t      => evaluates to false
+
+Ternary Operator [#ternary]
+***************************
+The ternary operator combines three expressions as a convenient way
+to assign a value based on an if/else condition:
+
+  condExpr ? trueExpr : falseExpr
+
+The 'condExpr' must evaluate to a boolean.  If 'condExpr' evaluates
+to 'true' then the whole expression evaluates to 'trueExpr', otherwise
+to 'falseExpr'.  Examples:
+
+  3 > 4 ? "yes" : "no"  => evaluates to "no"
+  6 > 4 ? "yes" : "no"  => evaluates to "yes"
+
+Null Convenience Operators [#nullConvenience]
+*********************************************
+Fan supports several of the operators found in Groovy to make
+working with null more convenient:
+  - **Elvis Operator** 'x ?: y'  (look at it sideways as a "smiley" face)
+  - **Safe Invoke** 'x?.y'
+  - **Safe Dynamic Invoke** 'x?->y'
+
+Elvis Operator [#elvis]
+=======================
+The elvis operator evaluates the left hand side.  If it is non-null
+then it is result of the whole expression.  If it is null, then the
+result of the whole expression is the right hand side expression.
+The right hand side expression is short circuited if the left hand
+side evaluates to non-null.  It is similar to how you might use the
+ternary operator:
+
+  // hard way
+  file != null ? file : defaultFile
+
+  // easy way
+  file ?: defaultFile
+
+Safe Invoke [#safeInvoke]
+=========================
+The safe invoke operators are designed to short circuit if
+the target of method call or field access is null.  If short
+circuited, then the whole expression evaluates to null.  It
+is quite useful to skip checking a bunch of values for null
+during a call chain:
+
+  // hard way
+  Str email := null
+  if (userList != null)
+  {
+    user := userList.findUser("bob")
+    if (user != null) email = user.email
+  }
+
+  // easy way
+  email := userList?.findUser("bob")?.email
+
+If at any point in a null-safe call chain we detect null, then
+the whole expression is short circuited and the expression evaluates
+to null.  You can use '?->' as a null-safe version of the
+[dynamic invoke operator]`Methods#dynamicInvoke`.
+
+Type Checking [#typeChecking]
+*****************************
+The cast operator is used perform a type conversion.  The cast syntax uses
+parenthesis like C languages - such as '(Int)x'.  If a type cast fails
+at runtime, then a `sys::CastErr` exception is raised.
+
+The 'is', 'isnot', and 'as' operators are used check an object's type at
+runtime:
+  - 'is' operator returns a 'Bool' if the operand implements the
+    specified type (like Java's 'instanceof' operator).  If target is
+    null, then evaluates to false.
+  - 'isnot' operator is semantically equivalent to '!(x is Type)'.
+    If target is null then evaluates to true.
+  - The 'as' operator returns the object cast to the specified type
+    or 'null' it not an instance of that type (like C#):
+
+  Obj obj := 123
+  obj is Str     =>  evaluates to false
+  obj is Num     =>  evaluates to true
+  obj isnot Str  =>  evaluates to true
+  obj isnot Num  =>  evaluates to false
+  obj as Float   =>  evaluates to null
+  obj as Int     =>  evaluates to 6 (expr is typed as Int)
+
+Indexing [#indexing]
+********************
+Depending on how it is used, the '[]' operator maps to three different shortcuts:
+
+   a[b]     => a.get(b)
+   a[b] = c => a.set(b, c)
+   a[b]     => a.slice(b) if b is Range
+
+Typically 'a[b]' is a shortcut for calling 'a.get(b)'.  For example the
+`sys::List.get` method allows you to lookup a list item by it's 'Int'
+index.  Whenever a class supports a 'get' method with one argument you
+can use '[]' as a shortcut.  Consider this code:
+
+  list := ["a", "b", "c"]
+  list.get(2)
+  list[2]
+  list.get("2")  // error
+  list["2"]      // error
+
+The expression 'list[2]' is exactly the same code as 'list.get(2)'.  The
+last line two lines result in a compiler error because we are attempting
+to pass a 'Str' when an 'Int' is expected.
+
+When the indexing shortcut is used on the left hand side of an assignment
+such as 'a[b] = c' then the index operator maps to 'a.set(b, c)'.  For example
+these two lines of code have identical behavior:
+
+  map.set("tmj", "Too Much Joy")
+  map["tmj"] = "Too Much Joy"
+
+If the '[]' operator is used with a `sys::Range` index, then we
+map to the 'a.slice(b)' method rather than 'a.get(b)'.  Slicing is
+used to create sub-strings and sub-lists.  Some example code which
+creates sub-strings:
+
+  s := "abcd"
+  s[0..2]  => "abc"
+  s[3..3]  => "d"
+  s[0...2] => "ab"
+
+  start := 0; end := 2
+  s[start...end] => "ab"
+
+We use '..' to specify an inclusive end index, and '...' to specify
+an exclusive start index.  Also note how we can use any arbitrary expression
+with the range operators to define compact slice expressions.
+
+By convention Fan APIs which support integer indexing allow the use of negative
+integers to index from the end of the list.  For example '-1' can be used to
+index the last item of a list (or the last character of a string).  Using
+negative indexes works with all three shortcuts:
+
+  list := ["a", "b", "c", "d"]
+  list[-2]           =>  evaluates to "c"
+  list[-1] = "last"  =>  replaces list[3] with "last"
+  list[1..-1]        =>  evaluates to ["b", "c", "last"]
+
+Use of negative indexes applies to most methods on 'List' and 'Str'
+which take an index argument.
+
+Serialization Expressions [#serialization]
+******************************************
+Fan supports two expression constructs which are designed to make the
+programming language a true superset of the [serialization]`Serialization`
+syntax:
+  - Simples
+  - With-Blocks
+
+Simples [#simples]
+==================
+[Simples]`Serialization#simple` are special serializable types which serialize
+via a string represenation.  Fan allows the use of a simple
+expression:
+
+   <type>(<str>)
+
+   // for example:
+   Version("3.2")
+
+   // is syntax sugar for
+   Version.fromStr("3.2")
+
+To use this expression, the type must have a static method called 'fromStr' which
+takes a 'Str' parameter and returns an instance of itself.  The method may contain
+additional parameters if they have default values.  The type does not have to
+implement the [simple]`Facets#simple` facet to use this expression (although it does
+if you want to serialize it).  Simple expressions are a subset of [construction
+calls]`Methods#constructionCalls`.
+
+With-Blocks [#withBlocks]
+=========================
+With-blocks enable you write compound expressions - they are typically used to initialize
+an instance.  This feature is a clean a superset of how [complex]`Serialization#syntaxComplex`
+types are serialized.  An example with-block expression:
+
+  Address.make
+  {
+    street = "123 Happy Lane"
+    city   = "Houston"
+    state  = "TX"
+  }
+
+  // is syntax sugar for
+  temp := Address.make
+  temp.street = "123 Happy Lane"
+  temp.city   = "Houston"
+  temp.state  = "TX"
+
+A with-block may be appended to any expression using curly braces and may contain
+zero or more with sub-expressions which operate on the instance of the base expression.
+The example above shows how the assignments inside the with-block are implied against
+the value of the base expression (we don't actually use a temp variable, we just dup
+the stack in fcode).  The sub-expressions are limited to field assignment and instance
+method calls.  The sub-expressions in a with-block are terminated like normal statements:
+semicolon, newline, or by the end of block.
+
+You can omit the 'make' if you specify a type signature immediately followed by an
+opening curly brace:
+
+  Address { street = "123 Happy Lane"; city = "Houston"; state = "TX" }
+
+You are permitted to set [const fields]`Fields#const` using a constructor
+based with-block as part of the construction process.
+
+Collections [#collections]
+==========================
+With-blocks may also be used to initialize a collection if the base expression
+of a with-block supports a method called "add".  Any expression inside the
+with-block which doesn't resolve to a field setter or method call on the base
+expression is assumed to be an argument to 'base.add()'.  An example:
+
+  Menu
+  {
+    Menu
+    {
+      text = "File"
+      MenuItem { text = "Open"; onSelect=&open }
+      MenuItem { text = "Save"; onSelect=&save }
+    }
+    Menu
+    {
+      text = "Help"
+      MenuItem { text = "About"; onSelect=&about }
+    }
+  }
+
+  // is syntax sugar for
+  Menu
+  {
+    add(Menu
+    {
+      text = "File"
+      add(MenuItem { text = "Open"; onSelect=&open })
+      add(MenuItem { text = "Save"; onSelect=&save })
+    })
+    add(Menu
+    {
+      text = "Help"
+      add(MenuItem { text = "About"; onSelect=&about })
+    })
+  }
+
+Advanced Operators [#advances]
+******************************
+Fan has a couple other operators which will be discussed later:
+
+  - `Closures` are expressions which create a new function inside
+    a method body.
+
+  - [Curry]`Functions#currying` operator '&' is used to create a new functions
+    via supplying partial arguments.
+
+  - [Call]`Functions#calling` operator '()' is used to invoke a function variable.
+
+  - [Dynamic invoke]`Methods#dynamicInvoke` operator '->' is used to call
+    a method without compile time type checking.
+
+  - [Field storage]`Fields#accessors` operator '@' is used to access a field's
+    raw storage without going through its getter/setter methods.

@@ -1,0 +1,130 @@
+**************************************************************************
+** title:      Lists
+** author:     Brian Frank
+** created:    14 Aug 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Literals [#literals]
+********************
+  Int[10, 20, 30]   // list of the three Ints 10, 20, and 30
+  [10, 20, 30]      // same as above using type inference
+  Int[,]            // empty list of Ints
+  [,]               // empty list of Objs
+  [1, 2f, 3]        // evaluates to Num[]
+  Num[1, 2, 3]      // evaluates to Num[]
+
+See [docLang]`docLang::Literals#list` for details.
+
+Access [#access]
+****************
+  list := ["a", "b", "c", "d"]
+  list.size             // get number of items, returns 4
+  list.isEmpty          // convenience for size == 0
+  list.index("c")       // index of "c", returns 2
+  list.index("x")       // index of "x", returns null
+  list.contains("c")    // does list contain "c", returns true
+  list.first            // returns "a"
+  list.last             // returns "d"
+  list.get(2)           // return item at index 2, returns "c"
+  list[2]               // convenience for list.get(2), returns "c"
+  list[-3]              // return item at size-3, returns "b"
+  list.slice(0..2)      // return sub-list from 0 to 1 inclusive, returns ["a",b","c"]
+  list[0..2]            // convenience for list.slice(0..2)
+  list[0...2]           // return sub-list from 0 to 2 exclusive, returns ["a","b"]
+  list[-3..-1]          // return sub-list from size-3 to size-1 inclusive, returns ["b","c","d"]
+
+Modify [#modify]
+****************
+  list := ["one", "two", "three"]
+  list.add("four")        // add "four" to end of list
+  list.remove("four")     // remove "four" from list
+  list.removeAt(0)        // remove item at index 0
+  list.insert(0, "x")     // insert at index 0
+  list.index(-1, "y")     // insert at end of list
+  list.addAll(["a", "b"]) // add "a" and "b" to end of list
+  list.set(2, "z")        // set item at index 2 to "z"
+  list[2] = "z"           // convenience for list.set(2, "z")
+  list.clear              // remove all the items from the list
+
+Using as a Stack [#stack]
+*************************
+  stack := Str[,]
+  stack.push("a")    // ["a"]
+  stack.push("b")    // ["a", "b"]
+  stack.peek         // returns "b"
+  stack.pop          // returns "b"
+  stack.pop          // returns "a"
+  stack.pop          // returns null
+
+Each (Iteration) [#each]
+************************
+  list := ["a", "b", "c"]
+  list.each |Str s| { echo(s) }
+  list.each |Str s, Int i| { echo("value at $i is $s") }
+  list.eachr |Str s| { echo(s) } // reverse iteration
+
+Searching [#search]
+*******************
+  x := [0, 1, 2, 3, 4]
+  x.find |Int v->Bool| { return v.toStr == "3" }  // returns 3
+  x.find |Int v->Bool| { return v.toStr == "7" }  // returns null
+  x.findAll |Int v->Bool| { return v%2==0 }       // returns [0, 2, 4]
+  x.exclude |Int v->Bool| { return v%2==0 }       // returns [1, 3]
+
+  y := ["a", 3, "foo", 5sec, null]
+  y.findType(Str#)                                // returns Str["a", "foo"]
+
+  z := ["albatross", "dog", "horse"]
+  z.max                                           // returns "horse"
+  z.min                                           // returns "albatross"
+  z.min |Str a, Str b->Int| { return a.size <=> b.size }  // returns "dog"
+
+Join [#join]
+************
+  x := ['a', 'b', 'c']
+  x.join                                        // returns "979899"
+  x.join(",")                                   // returns "97,98,99"
+  x.join(",") |Int v->Str| { return v.toChar }  // returns "a,b,c"
+  x.join("-", &Int.toChar)                      // returns "a-b-c"
+
+Map [#map]
+**********
+  x := [12, 13, 14]
+  x.map(Str[,]) |Int v->Str| { return v.toHex }
+    => [c, d, e]
+
+Reduce [#reduce]
+****************
+  x := [12, 13, 14]
+  x.reduce(0) |Obj r, Int v->Obj| { return v + r }
+    => 39
+
+Sorting [#sorting]
+******************
+  s := ["candy", "ate", "he"]
+
+  s.sort
+    => [ate, candy, he]
+
+  s.sort |Str a, Str b->Int| { return a.size <=> b.size }
+    => ["he", "ate", "candy"]
+
+Readonly [#ro]
+**************
+  q := ["a", "b", "c"]
+  r := q.rw      // rw() on read/write always returns this (r === q)
+  s := q.ro      // s is readonly list with items in q
+  t := s.ro      // ro() on readonly always return this (t === s)
+  u := s.rw      // returns read/write list with items in s (u !== s)
+  s.isRO         // returns true
+  s.isRW         // return false
+
+More Info [#moreInfo]
+*********************
+- See [List API]`sys::List`: API reference for 'sys::List'.
+- See [Literals]`docLang::Literals#list`: literals and type inference rules.
+- See [Signature]`docLang::TypeSystem#listSignature`: for generic type signature.
+
+

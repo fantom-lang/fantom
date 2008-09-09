@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#
+# flux: Fan Developer UI
+#
+
+. "${0%/*}/fanlaunch" 
+fanlaunch Fan flux "$@"

@@ -1,0 +1,52 @@
+**************************************************************************
+** title:      Logging
+** author:     Brian Frank
+** created:    23 Jul 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Log Creation [#creation]
+************************
+  // get or create a log named "acme"
+  const static Log log = Log.get("acme")
+
+  // find an existing log
+  Log.find("acme")          // throw exception if not found
+  Log.find("acme", false)   // return null if not found
+
+  // list all the active logs
+  Log.list
+
+  // get the standard log for a type's pod
+  pod.log
+  type.log
+  obj.type.log
+
+See [docLang]`docLang::Logging#creation` for details.
+
+Logging Statements [#statements]
+********************************
+  log.error("The freaking file didn't load", err)
+  log.info("CatchRoadRoader service started on port $port")
+
+  // this code performs string concatenation on every call
+  log.debug("The values are x=$x, y=$y, and z=$z")
+
+  // this code performs string concatenation only when needed
+  if (log.isDebug)
+    log.debug("The values are x=$x, y=$y, and z=$z")
+
+See [docLang]`docLang::Logging#statements` for details.
+
+Handlers [#handlers]
+********************
+  Log.addHandler |LogRecord rec| { echo("My Handler: $rec") }
+
+See [docLang]`docLang::Logging#handlers` for details.
+
+
+
+
+
+

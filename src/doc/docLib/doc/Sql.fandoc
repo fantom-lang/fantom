@@ -1,0 +1,159 @@
+**************************************************************************
+** title:      Sql
+** author:     Brian Frank
+** created:    01 Jul 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+
+The [sql]`sql::index` pod provides a standardized, low level API to work
+with relational databases.  Its basic goals in life:
+
+ - Connections: manage interaction with the database
+ - Statements: execute SQL statements
+ - Map Queries: map query results into Fan objects
+
+NOTE: the 'sql' API is pretty basic right now - it is just enough
+to get us started.  Please let us know which enhancements would
+be the most beneficial.
+
+Test Setup [#testSetup]
+***********************
+The Sql tests use the following environment variables to
+determine the database configuration:
+  - 'sql.test.connection': connection/jdbc url string, defaults
+    to "jdbc:mysql://localhost:3306/fantest"
+  - 'sql.test.username': defaults to "fantest"
+  - 'sql.test.password': defaults to "fantest"
+  - 'sql.test.dialect': qname for dialect type, defaults
+    to "sql::MySqlDialect"
+
+You can change these defaults via "lib/sys.props".
+
+We've been testing with MySql 5.0.41 running InnoDB using "fantest"
+for the database name, user name, and password.  You can configure
+InnoDB as the default storage engine with this line in your "my.cfg":
+  default-storage-engine=INNODB
+
+To setup the fantest database and user account via the mysql command line:
+  mysql -u root -p
+  mysql> create user fantest identified by 'fantest';
+  mysql> create database fantest;
+  mysql> grant all privileges on fantest.* to fantest identified by 'fantest';
+
+
+Connections [#connections]
+**************************
+Connections are managed by the SqlService.  A SqlService instance
+represents a database instance.  To open and close connections to the
+database, simply call the SqlService [open]`sql::SqlService.open` and
+[close]`sql::SqlService.close` methods.  A thread may only open an
+instance of SqlService once.  Subsequent calls to [open]`sql::SqlService.open`
+in the same thread simply increment the open count for the database.  A call to
+[close]`sql::SqlService.close` decrements the open count.  When the
+open count for a thread is zero, the connection to the database
+is closed.
+
+Connections in Java [#java]
+===========================
+When running in a Java VM, Fan uses JDBC under the covers.  Using
+MySQL as an example, follow these steps to open a connection in
+the JVM:
+
+1.  Ensure your JDBC driver is installed and available via
+the system class path.  The best place to stick it is in
+the "jre/lib/ext" directory.  You can use 'fan -version' to
+locate your JRE directory.  For MySQL the driver is packaged
+up as something like "mysql-connector-java-5.0.6-bin.jar".
+
+2.  Ensure the JDBC class is loaded into memory.  The simplest
+way to preload the class is to define "sql.driver" in
+Fan's "lib/sys.props".  For MySQL the sys prop would be:
+      sql.mysql.driver=com.mysql.jdbc.Driver
+
+3.  Create and start a SqlService instance using the JDBC URL for the
+'connection' parameter to the make method.
+For example to create a SqlService for MySQL:
+      db := SqlService("mysql",
+                       "jdbc:mysql://localhost:3306/mysql",
+                       "fantest",
+                       "fantest").start
+
+4. Open the database for the current thread.
+      db.open
+
+Connections in .NET [#net]
+==========================
+TODO
+
+Statements [#statements]
+************************
+SQL statements are created using the [SqlService.sql]`sql::SqlService.sql`
+method.  After a statement has been created, it can be executed immediately
+by calling [execute]`sql::Statement.execute` or it can be prepared for later
+execution by calling [prepare]`sql::Statement.prepare`.
+
+For example, to create a table in MySQL:
+      db.sql("create table Books (
+              id integer auto_increment not null,
+              title varchar(128) not null,
+              author varchar(128) not null,
+              year integer,
+              primary key (id))").execute
+
+Prepared statements can be parameterized by including named parameters
+in the SQL text.  For example:
+      addBook := db.sql("insert into Books (title, author, year)
+                         values (@title, @author, @year)").prepare
+
+This statement can then be executed multiple times with different
+parameters.
+      addBook.execute(["title":"David Copperfield", "author":"Charles Dickens", "year":1850])
+      addBook.execute(["title":"Hard Times", "author":"Charles Dickens", "year":1854])
+      addBook.execute(["title":"The Jungle Book", "author":"Rudyard Kipling", "year":1894])
+      addBook.execute(["title":"Captains Courageous", "author":"Rudyard Kipling", "year":1897])
+
+Queries [#queries]
+******************
+The result of an SQL query is always a relational table described
+by fixed columns with zero or more rows.  Fan supports two different
+mechanisms  for retrieving query results: as a list of [Rows]`sql::Row`
+or by iterating the rows with a closure.
+
+To fetch as a list of rows:
+      stmt := db.sql("select title, year from Books
+                      where author = @author" and year > @year").prepare
+      dickensNovels := stmt.query(["author":"Charles Dickens", "year":1850])
+      kiplingNovels := stmt.query(["author":"Rudyard Kipling", "year":1890])
+
+Or to iterate through the rows:
+      lastPublished := 0
+      stmt.queryEach(["author":"Charles Dickens", "year":0]) |Row row|
+      {
+        lastPublished = lastPublished.max(row->year)
+      }
+
+
+sql::Row [#row]
+===============
+The rows for a given query result all share a
+[dynamic type]`docLang::DynamicTypes` which describes the meta-data.
+To get the columns, just use normal reflection to get the fields -
+each field will actually be a subclass of `sql::Col`.  To examine the
+results of the query from above:
+
+  // using dynamic invoke
+  dickensNovels.each |Obj book| { echo("${book->title}, ${book->year}") }
+
+  // using reflection
+  title := rows.of.field("title")
+  year  := rows.of.field("year")
+  dickensNovels.each |Obj book| { echo("${title[book]}, ${year[book]}") }
+
+The dynamic type system is used to map the query result columns into
+normal fields.  So we can access the row's cells using either the
+'->' dynamic invoke operator or normal reflection.  If you have a large query
+result, using reflection provides a little better performance.

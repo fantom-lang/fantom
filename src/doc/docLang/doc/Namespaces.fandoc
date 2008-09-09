@@ -1,0 +1,135 @@
+**************************************************************************
+** title:      Namespaces
+** author:     Brian Frank
+** created:    1 Apr 08
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+**WARNING**: the namespace subsystem is still evolving and
+will likely have design changes as it gets flushed out
+
+The basics of Uri naming are covered in the `Naming` chapter.  This
+chapter covers the APIs related to managing "fan:" uris.
+
+Fan defines a standard naming system influenced by the
+[REST]`http://en.wikipedia.org/wiki/Representational_State_Transfer`
+architecture of the World Wide Web:
+  - Resources are represented as Fan objects
+  - Resources are identified with [Uris]`sys::Uri`
+  - Resources are managed using a small set of "verbs"
+  - Resources are transfered between threads safely
+
+The `sys::Namespace` class defines a namespace of Uri to resource
+mappings with a small set of [CRUD]`http://en.wikipedia.org/wiki/Create,_read,_update_and_delete`
+methods:
+  - [Namespace.get]`sys::Namespace.get`: lookup a resource by Uri
+  - [Namespace.create]`sys::Namespace.create`: create a Uri resource mapping
+  - [Namespace.put]`sys::Namespace.create`: update a Uri resource mapping
+  - [Namespace.delete]`sys::Namespace.delete`: delete a Uri resource mapping
+
+Fan's namespace is managed much like a Unix file system.  The namespace
+is managed as a tree of Uri paths.  By default the *root namespace*
+manages everything under "/".  The root namespace implements its CRUD
+interface using a simple memory store.  Alternate namespace implementations
+can be mounted to handle branches in the Uri path tree using
+[Sys.mount]`sys::Sys.mount`.
+
+Root Namespace [#root]
+**********************
+By default all Uris within the namespace are managed by the *root
+namespace*.  The root namespace provides a thread safe memory backing
+store for resources.  Example:
+
+  Sys.ns.create(`/hello`, "hi")
+  Sys.ns[`/hello`]               => "hi"
+  Sys.ns.put(`/hello`, "hola")
+  Sys.ns[`/hello`]               => "hola"
+  Sys.ns.delete(`/hello`)
+  Sys.ns[`/hello`]               => raises UnresolvedErr
+  Sys.ns.get(`/hello`, false)    => null
+
+In this example the namespace is really just a fancy Uri to Obj map.
+But under the covers the namespace is doing special work to ensure that
+everything is thread safe.  This allows threads to share information
+safely - this design pattern is sometimes called a *whiteboard*.
+
+In order to ensure thread safety the resources managed by the root
+namespaces must be either [immutable]`Concurrency#immutability` or
+[serializable]`Serialization`.  If the resource isn't immutable, then
+what you read out is a copy of the object - changes to it aren't
+seen by other threads until it is written back via 'put'.  Consider
+this example:
+
+  Sys.ns.create(`/var`, [0, 1, 2])
+  var := Sys.ns[`/var`]   =>  [0, 1, 2]     // local copy made
+  var.add(3)                                // local copy is changed
+  Sys.ns[`/var`]          =>  [0, 1, 2]     // ns copy is unchanged
+  Sys.ns.put(`/var`, var)                   // save local back to ns
+  Sys.ns[`/var`]          =>  [0, 1, 2, 3]  // ns copy is now changed
+
+Custom Namespaces [#custom]
+***************************
+You can create your own subclasses of 'sys::Namespace' to create
+custom handlers for mapping Uris to resources.  For example this
+is how you typically manage navigation of your data model in flux
+and web applications.
+
+The only method you are required to override is 'get'; most other
+methods will provide a default implementation which throws UnsupportedErr.
+For example to create a namespace which returns the current time:
+
+  const class TimeNamespace : Namespace
+  {
+    override Obj get(Uri uri, Bool checked := true)
+    {
+      uri = uri.relTo(this.uri)
+      if (uri.path.isEmpty) return DateTime.now
+      else return DateTime.now.trap(uri.path[0], [,])
+    }
+  }
+
+  Sys.mount(`/time`, TimeNamespace.make)
+  echo(Sys.ns[`/time`])        => 2008-04-07T21:47:21.078-04:00 New_York
+  echo(Sys.ns[`/time/year`])   => 2008
+  echo(Sys.ns[`/time/month`])  => apr
+
+Note the first line of code calles [Uri.relTo]`sys::Uri.relTo`.  We
+mount the TimeNamespace under "/time" - which means it will handle
+all Uris which begin with "/time".  The uri passed into 'get' is
+absolute - so to make it flexible where TimeNamespace is mounted,
+we always relativize to the [uri]`sys::Namespace.uri` of the namespace
+itself.
+
+Dir Namespaces [#dir]
+*********************
+The factory method [Namespace.makeDir]`sys::Namespace.makeDir` creates
+a custom namespace instance which allows you to mount a file system
+directory into the Fan namespace:
+
+  Sys.mount(`/fandocs`, Namespace.makeDir(Sys.homeDir+`doc/`))
+  Sys.ns[`/fandocs/`]            =>  sys::File for doc directory
+  Sys.ns[`/fandocs/index.html`]  =>  sys::File for doc/index.html
+
+Mounting [#mounting]
+********************
+When a custom namespace is mounted via [Sys.mount]`sys::Sys.mount`
+it assumes responsibility for all the Uri paths under it.  If no
+custom namespaces are responsible for a given Uri, then responsbility
+always defaults to the [root namespace]`#root`.  You can query which
+Namespace instance is responsible for a given Uri using
+the [Sys.ns]`sys::Sys.ns` method:
+
+  Sys.mount(`/apple`, x)
+  Sys.mount(`/a`,     y)
+  Sys.mount(`/a/b/c`, z)
+
+  Sys.ns(`/app`)        => sys::RootNamespace
+  Sys.ns(`/apple`)      => x
+  Sys.ns(`/a`)          => y
+  Sys.ns(`/a/b`)        => y
+  Sys.ns(`/a/b/chump`)  => y
+  Sys.ns(`/a/b/c`)      => z
+  Sys.ns(`/a/b/c/d`)    => z

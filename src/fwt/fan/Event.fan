@@ -1,0 +1,182 @@
+//
+// Copyright (c) 2008, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   16 Jun 08  Brian Frank  Creation
+//
+
+**
+** Event models a user input event for callbacks.
+**
+class Event
+{
+
+  **
+  ** Type identifier of the event.  This field is always available.
+  **
+  EventId id
+
+  **
+  ** Widget which generated the event.  This will be null for model events.
+  **
+  Widget widget
+
+  **
+  ** Index for list based events. For table events this
+  ** is the row index.
+  **
+  Int index
+
+  **
+  ** Used as the zero based text offset for text
+  ** and rich text widget events.
+  **
+  Int offset
+
+  **
+  ** Number of characters for text and rich text widget events.
+  **
+  Int size
+
+  **
+  ** Mouse button number pressed
+  **
+  Int button
+
+  **
+  ** Unicode character represented by a key event.
+  **
+  Int keyChar
+
+  **
+  ** Key code and modifiers.
+  **
+  Key key
+
+  **
+  ** Coordinate of event.  For mouse events this is the mouse
+  ** coordinate relative to the widget.
+  **
+  Point pos
+
+  **
+  ** Number of mouse clicks.
+  **
+  Int count
+
+  **
+  ** Event specific user data.
+  **
+  Obj data
+
+  **
+  ** Has this event been "consumed"?  Once an event
+  ** is consumed it ceases to propagate or be processed.
+  ** Also see `consume`.
+  **
+  Bool consumed := false
+
+  **
+  ** Convenience for setting `consumed` to true.
+  **
+  Void consume() { consumed = true }
+
+  override Str toStr()
+  {
+    s := StrBuf()
+    s.add("Event { id=").add(id)
+    if (index != null)   s.join("index=").add(index)
+    if (offset != null)  s.join("offset=").add(offset)
+    if (size != null)    s.join("size=").add(size)
+    if (button != null)  s.join("button=").add(button)
+    if (keyChar != null) s.join("keyChar=").add(keyChar.toChar.toCode('\'', true))
+    if (key != null)     s.join("key=").add(key)
+    if (pos != null)     s.join("pos=").add(pos)
+    if (count != null)   s.join("count=").add(count)
+    if (data != null)    s.join("data=").add(data)
+    if (consumed)        s.join("consumed")
+    s.add(" }")
+    return s.toStr
+  }
+}
+
+**************************************************************************
+** EventId
+**************************************************************************
+
+**
+** EventId identifies the type of widget `Event`.
+**
+enum EventId
+{
+  // Widget.onFocus events
+  focusGained,
+  focusLost,
+
+  // Widget.onKey events
+  keyDown,
+  keyUp,
+
+  // Widget.onMouse events
+  mouseDown,
+  mouseUp,
+
+  // General purpose widget events
+  action,
+  modified,
+  verify,
+  verifyKey,
+  select,
+  caret,
+  hyperlink
+}
+
+**************************************************************************
+** EventListeners
+**************************************************************************
+
+**
+** EventListeners manages a list of event callback functions.
+**
+class EventListeners
+{
+  ** Get the list of registered callback functions.
+  |Event|[] list() { return listeners.ro }
+
+  ** Return if `size` is zero.
+  Bool isEmpty() { return listeners.isEmpty }
+
+  ** Return number of registered callback functions.
+  Int size() { return listeners.size }
+
+  ** Add a listener callback function
+  Void add(|Event| cb) { listeners.add(cb) }
+
+  ** Remove a listener callback function
+  Void remove(|Event| cb) { listeners.remove(cb) }
+
+  ** Fire the event to all the listeners
+  Void fire(Event event)
+  {
+    listeners.each | |Event| cb |
+    {
+      try
+      {
+        if (event == null || !event.consumed)
+          cb(event)
+      }
+      catch (Err e)
+      {
+        echo("event: $event")
+        e.trace
+      }
+    }
+  }
+
+  ** List of listeners
+  private |Event|[] listeners := |Event|[,]
+
+  ** Callback when list of listeners is modified
+  internal |EventListeners| onModify
+}

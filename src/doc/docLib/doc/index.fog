@@ -1,0 +1,23 @@
+**************************************************************************
+** title:      Index
+** author:     Brian Frank
+** created:    01 Jul 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+[
+"Utilities",
+  [`Fandoc`,    "text formatting language"],
+  [`Fand`,      "daemon server scripts"],
+  [`Email`,     "MIME and SMTP email support"],
+  [`Sql`,       "relational database APIs"],
+"Desktop Applications",
+  [`Fwt`,       "Fan widget toolkit"],
+  [`Flux`,      "Framework for building browser based fwt applications"],
+"Web Applications",
+  [`Web`,       "web client and server APIs"],
+  [`WebApp`,    "web application framework"],
+  [`WebWidget`, "web application widgets"],
+  [`Wisp`,      "Fan's built-in web server"],
+]

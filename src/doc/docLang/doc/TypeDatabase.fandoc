@@ -1,0 +1,100 @@
+**************************************************************************
+** title:      TypeDatabase
+** author:     Brian Frank
+** created:    31 Dec 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview
+********
+The *type database* is a feature of the Fan runtime which automatically
+maintains a database of all the installed pods and types.  The type
+database itself is stored in a binary file called "lib/types.db".  It
+is automatically rebuilt as needed if the runtime detects that the
+installed pods have been modified.
+
+Facet Indexing [#facetIndexing]
+*******************************
+The most important job of the type database is to provide a mechanism
+to index facet name/value pairs to types.  Facet indexing lets us build
+pluggable features without a bunch of complicated setup - a pod file
+gets dropped into the runtime, and any plugins are automatically
+registered.
+
+For example, let's say we want to map file extensions to a fictional
+parser type.  First we need to pick a facet name - in this case
+we will call it "parserForExt".  Facets are only indexed if a pod
+declares them indexed via pod level facets.  Typically this is done
+in pod's build file:
+
+  podFacets  = ["indexFacets":["parserForExt"]]
+
+The value of "indexFacets" should be a 'Str[]' containing the list
+of facet names to index.
+
+Now we annotate our types with the facet:
+
+  @parserForExt="xml"
+  class XmlParser {}
+
+  @parserForExt=["csv", "txt"]
+  class CsvParser {}
+
+Indexed facets can be any value type except a List.  Lists are treated
+specially such that each value of the list is indexed separately.  In the
+example cdoe above, we would index both "csv" and "txt" to 'CsvParser'.
+
+The type database will automatically build an index so that we can
+efficiently query this facet:
+
+  // query all the types annotated with parserForExt="xml"
+  parsers := Type.findByFacet("parserForExt", "xml")
+
+  // query just one
+  parser := Type.findByFacet("parserForExt", "txt").first
+
+If we want to add more parsers, we only need to drop in new pods - the
+type database automatically takes care of everything else.
+
+Type Relationships [#typeRelationships]
+***************************************
+A very common use case is creating late binding type-to-type relationships.
+For example let's say we want to declare an 'IntEditor' for 'Int', 'EnumEditor'
+for 'Enums', etc.  We create these relationships using [facet indexing]`#facetIndexing`,
+where the value of the facet is type literals:
+
+  @myEditor=Int#
+  class IntEditor {}
+
+  @myEditor=Enum#
+  class EnumEditor {}
+
+Often when performing a query, we want to use relationships established via
+the inheritance hierarchy.  For example 'EnumEditor' is bound to the base 'Enum'
+class - we can use an optional argument to 'findByFacet' to search up the
+hierarchy:
+
+  // this line returns an empty list
+  Type.findByFacet("myEditor", Month#)
+
+  // this line returns [EnumEditor#]
+  Type.findByFacet("myEditor", Month#, true)
+
+Later we might to create a custom editor for 'Month':
+
+  @myEditor=Month#
+  class MonthEditor {}
+
+Now when we query for month we will actually pick up both types:
+
+  // this line now returns [MonthEditor#, EnumEditor#]
+  Type.findByFacet("myEditor", Month#, true)
+
+But since the [inheritance]`sys::Type.inheritance` hiearchy is searched
+in order, the most specified binding will always come first in the list:
+
+  // this line returns MonthEditor#
+  Type.findByFacet("myEditor", Month#, true).first
+
+

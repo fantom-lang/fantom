@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#
+# fan: launcher for Fan programs
+#
+
+. "${0%/*}/fanlaunch" 
+fanlaunch Fan "$@"

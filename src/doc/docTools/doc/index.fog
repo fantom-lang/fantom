@@ -1,0 +1,18 @@
+**************************************************************************
+** title:      Index
+** author:     Brian Frank
+** created:    01 Jul 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+[
+  [`Setup`,      "how to get everything setup"],
+  [`Fan`,        "fan launcher"],
+  [`Fansh`,      "interactive shell for exploring"],
+  [`Fant`,       "unit testing framework"],
+  [`Fanp`,       "fcode disassembler"],
+  [`Build`,      "build toolkit"],
+  [`Bootstrap`,  "how to recompile the runtime and compiler itself"],
+  [`Flux`,       "using Flux as a Fan \"IDE\""],
+]

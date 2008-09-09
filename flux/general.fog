@@ -1,0 +1,13 @@
+//
+// General purpose options.
+//
+// History:
+//   09 Aug 08  Brian Frank  Creation
+//
+
+flux::GeneralOptions
+{
+  ** Default uri to display on startup.  If not specified,
+  ** then we use fan home directory as home.
+  // homePage = `/foo`
+}

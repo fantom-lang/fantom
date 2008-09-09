@@ -1,0 +1,62 @@
+//
+// sys::en.props
+//
+
+//////////////////////////////////////////////////////////////////////////
+// DateTime
+//////////////////////////////////////////////////////////////////////////
+
+// default DateTime.toLocale pattern
+dateTime=D-MMM-YYYY WWW hh:mm:ss zzz
+
+//////////////////////////////////////////////////////////////////////////
+// Month
+//////////////////////////////////////////////////////////////////////////
+
+janAbbr=Jan
+febAbbr=Feb
+marAbbr=Mar
+aprAbbr=Apr
+mayAbbr=May
+junAbbr=Jun
+julAbbr=Jul
+augAbbr=Aug
+sepAbbr=Sep
+octAbbr=Oct
+novAbbr=Nov
+decAbbr=Dec
+
+janFull=January
+febFull=February
+marFull=March
+aprFull=April
+mayFull=May
+junFull=June
+julFull=July
+augFull=August
+sepFull=September
+octFull=October
+novFull=November
+decFull=December
+
+//////////////////////////////////////////////////////////////////////////
+// Weekday
+//////////////////////////////////////////////////////////////////////////
+
+weekdayStart=sun
+
+sunAbbr=Sun
+monAbbr=Mon
+tueAbbr=Tue
+wedAbbr=Wed
+thuAbbr=Thu
+friAbbr=Fri
+satAbbr=Sat
+
+sunFull=Sunday
+monFull=Monday
+tueFull=Tuesday
+wedFull=Wednesday
+thuFull=Thursday
+friFull=Friday
+satFull=Saturday

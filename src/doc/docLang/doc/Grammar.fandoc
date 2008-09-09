@@ -1,0 +1,230 @@
+**************************************************************************
+** title:      Grammar
+** author:     Brian Frank
+** created:    23 Aug 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Legend [#legend]
+****************
+Legend for Fan BNF Grammar:
+
+  :=      is defined as
+  <x>     non-terminal
+  "x"     literal
+  [x]     optional
+  (x)     grouping
+  x*      zero or more times
+  x|x     or
+
+Compilation Unit [#compilationUnit]
+***********************************
+
+  <compilationUnit> :=  <using>* <typeDef>*
+
+  <using>          :=  <usingPod> | <usingType> | <usingAs>
+  <usingPod>       :=  "using" <id> <eos>
+  <usingType>      :=  "using" <id> "::" <id> <eos>
+  <usingAs>        :=  "using" <id> "::" <id> "as" <id> <eos>
+
+Type Def [#typeDef]
+*******************
+
+  <typeDef>        :=  <classDef> | <mixinDef> | <enumDef>
+
+  <classDef>       :=  <classHeader> <classBody>
+  <classHeader>    :=  [<doc>] <facets> <classFlags> "class" [<inheritance>]
+  <classFlags>     :=  [<protection>] ["abstract"] ["final"] ["const"]
+  <classBody>      :=  "{" <slotDefs> "}"
+
+  <enumDef>        :=  <enumHeader> <enumBody>
+  <enumHeader>     :=  [<doc>] <facets> [<protection>] "enum" [<inheritance>]
+  <enumBody>       :=  "{" <enumDefs> <slotDefs> "}"
+
+  <mixinDef>       :=  <enumHeader> <enumBody>
+  <mixinHeader>    :=  [<doc>] <facets> [<protection>] "mixin" [<inheritance>]
+  <mixinBody>      :=  "{" <slotDefs> "}"
+
+  <protection>     :=  "public" | "protected" | "private" | "internal"
+  <inheritance>    :=  ":" <typeList>
+
+Slot Def [#slotDef]
+*******************
+
+  <enumDefs>       :=  <enumDef> ("," <enumDef>)* <eos>
+  <enumDef>        :=  <id> ["(" <args> ")"]
+
+  <slotDefs>       :=  <slotDef>*
+  <slotDef>        :=  <fieldDef> | <methodDef> | <ctorDef>
+
+  <fieldDef>       :=  <facets> <fieldFlags> [<type>] <id> [":=" <expr>]
+                       [ "{" [<fieldGetter>] [<fieldSetter>] "}" ] <eos>
+  <fieldFlags>     :=  [<protection>] ["readonly"] ["static"]
+  <fieldGetter>    :=  "get" (<eos> | <block>)
+  <fieldSetter>    :=  <protection> "set" (<eos> | <block>)
+
+  <methodDef>      :=  <facets> <methodFlags> <type> <id> "(" <params> ")" <methodBody>
+  <methodFlags>    :=  [<protection>] ["virtual"] ["override"] ["abstract"] ["static"] ["once"]
+  <params>         :=  [<param> ("," <param>)*]
+  <param>          :=  <type> <id> [":=" <expr>]
+  <methodBody>     :=  <eos> | ( "{" <stmts> "}" )
+
+  <ctorDef>        :=  <facets> <ctorFlags> "new" <id> "(" <params> ")" [ctorChain] <methodBody>
+  <ctorFlags>      :=  [<protection>]
+  <ctorChain>      :=  <ctorChainThis> | <ctorChainSuper>
+  <ctorChainThis>  :=  "this" "." <id> "(" <args> ")"
+  <ctorChainSuper> :=  "super" ["." <id>] "(" <args> ")"
+
+Stmt [#stmt]
+************
+
+  <block>          :=  <stmt> | ( "{" <stmts> "}" )
+  <stmts>          :=  <stmt>*
+  <stmt>           :=  <break> | <continue> | <for> | <if> | <return> | <switch> |
+                       <throw> | <while> | <try> | <exprStmt> | <localDef>
+  <break>          :=  "break" <eos>
+  <continue>       :=  "continue" <eos>
+  <for>            :=  "for" "(" [<forInit> ";" [<expr>] ";" [<expr>] ")" <block>
+  <forInit>        :=  <expr> | <localDef>
+  <if>             :=  "if" "(" <expr> ")" <block> [ "else" <block> ]
+  <return>         :=  "return" [<expr>] <eos>
+  <throw>          :=  "throw" <expr> <eos>
+  <while>          :=  "while" "(" <expr> ")" <block>
+  <exprStmt>       :=  <expr> <eos>
+  <localDef>       :=  [<type>] <id> [":=" <expr>] <eos>
+
+  <try>            :=  "try" "{" <stmt>* "}" <catch>* [<finally>]
+  <catch>          :=  "catch" [<catchDef>] "{" <stmt>* "}"
+  <catchDef>       :=  "(" <type> <id> ")"
+  <finally>        :=  "finally" "{" <stmt>* "}"
+
+  <switch>         :=  "switch" "(" <expr> ")" "{" <case>* [<default>] "}"
+  <case>           :=  "case" <expr> ":" <stmts>
+  <default>        :=  "default" ":" <stmts>
+
+Expr [#expr]
+************
+
+  <expr>           :=  <assignExpr>
+  <assignExpr>     :=  <condOrExpr> [<assignOp> <assignExpr>]
+  <assignOp>       :=  "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>="  |
+                       "&=" | "^=" | "|="
+  <ternaryExpr>    :=  <condOrExpr> "?" <condOrExpr> ":" <condOrExpr>
+  <condOrExpr>     :=  <condAndExpr>  ("||" <condAndExpr>)*
+  <condAndExpr>    :=  <equalityExpr> ("&&" <equalityExpr>)*
+  <equalityExpr>   :=  <relationalExpr> (("==" | "!=" | "===" | "!==") <relationalExpr>)*
+  <relationalExpr> :=  <elvisExpr> (("is" | "as" | "isnot" | "<" | "<=" | ">" |
+                       ">=" | "<=>") <elvisExpr>)*
+  <elvisExpr>      :=  <rangeExpr> "?:" <rangeExpr>
+  <rangeExpr>      :=  <bitOrExpr> ((".." | "...") <bitOrExpr>)*
+  <bitOrExpr>      :=  <bitAndExpr> (("^" | "|") <bitAndExpr>)*
+  <bitAndExpr>     :=  <shiftExpr> (("&" <shiftExpr>)*
+  <shiftExpr>      :=  <addExpr> (("<<" | ">>") <addExpr>)*
+  <addExpr>        :=  <multExpr> (("+" | "-") <multExpr>)*
+  <multExpr>       :=  <parenExpr> (("*" | "/" | "%") <parenExpr>)*
+  <parenExpr>      :=  <unaryExpr> | <castExpr> | <groupedExpr>
+  <castExpr>       :=  "(" <type> ")" <parenExpr>
+  <groupedExpr>    :=  "(" <expr> ")" <termChain>*
+  <unaryExpr>      :=  <prefixExpr> | <termExpr> | <postfixExpr>
+  <prefixExpr>     :=  ("!" | "+" | "-" | "~" | "&" | "++" | "--") <parenExpr>
+  <postfixExpr>    :=  <termExpr> ("++" | "--")
+  <termExpr>       :=  <termBase> <termChain>* [withBlock]
+  <termBase>       :=  <literal> | <idExpr> | <closure>
+  <termChain>      :=  <dotCall> | <dynCall> | <safeDotCall> | <safeDynCall> |
+                       <indexExpr> | <callOp>
+  <withBlock>      :=  "{" <withSub>* "}"
+  <withSub>        :=  <expr> <eos>    // expr is restricted
+  <dotCall>        :=  "." <idExpr>
+  <dynCall>        :=  "->" <idExpr>
+  <safeDotCall>    :=  "?." <idExpr>
+  <safeDynCall>    :=  "?->" <idExpr>
+  <idExpr>         :=  <local> | <field> | <call>
+  <local>          :=  <id>
+  <field>          :=  ["@"] <id>
+  <call>           :=  <id> ["(" <args> ")"] [<closure>]
+  <args>           :=  [<expr> ("," <expr>)*]
+  <closure>        :=  <funcType> "{" <stmts> "}"
+  <indexExpr>      :=  "[" <expr> "]"
+  <callOp>         :=  "(" <args> ")" [<closure>]
+  <literal>        :=  "null" | "this" | "super" | <namedSuper> | <bool> | <int> |
+                       <float> | <decimal> | <str> | <duration> | <uri> | <list> |
+                       <map> | <simple>
+  <namedSuper>     :=  <type> "." "super"
+  <list>           :=  [<type>] "[" <listItems> "]"
+  <listItems>      :=  "," | (<expr> ("," <expr>)*)
+  <map>            :=  [<mapType>] "[" <mapItems> "]"
+  <mapItems>       :=  ":" | (<mapPair> ("," <mapPair>)*)
+  <mapPair>        :=  <expr> ":" <expr>
+  <simple>         :=  <type> "(" <expr> ")"
+
+Type [#type]
+************
+
+  <type>           :=  <simpleType> | <listType> | <mapType> | <funcType>
+  <typeList>       :=  <type> ("," <type>)*
+  <simpleType>     :=  <id> ["::" <id>]
+  <listType>       :=  <type> "[]"
+  <mapType>        :=  ["["] <type> ":" <type> ["]"]
+  <funcType>       :=  "|" <formals> ["->" <type> "|"
+  <formals>        :=  [<formal> ("," <formal>)*]
+  <formal>         :=  <type> [id]
+
+Misc [#misc]
+************
+
+  <id>             := <idStart> (idChar)*
+  <idStart>        := A-Z | a-z | _
+  <idChar>         := A-Z | a-z | _ | 0-9
+  <eos>            := ; | \n | }
+
+Keywords [#keywords]
+********************
+  abstract      for             readonly
+  as            foreach         return
+  assert        goto            static
+  break         if              super
+  case          internal        switch
+  catch         is              this
+  class         isnot           throw
+  const         mixin           true
+  continue      native          try
+  default       new             using
+  do            null            virtual
+  else          once            volatile
+  enum          override        void
+  false         private         while
+  final         protected
+  finally       public
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

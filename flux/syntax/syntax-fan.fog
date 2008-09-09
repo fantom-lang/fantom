@@ -1,0 +1,81 @@
+//
+// Syntax rules for Fan
+//
+// History:
+//   10 Aug 08  Brian Frank  Creation
+//
+
+using fluxText
+
+SyntaxRules
+{
+  // list of end of line comment tokens
+  comments = ["**", "//"]
+
+  // block comments
+  blockCommentStart = "/*"
+  blockCommentEnd   = "*/"
+  blockCommentsNest = true
+
+  // string and character literals
+  strs =
+  [
+    SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = true }, // Str
+    SyntaxStr { delimiter = "r\""; delimiterEnd = "\""; multiLine = true }, // raw Str
+    SyntaxStr { delimiter = "`"; escape = '\\'; multiLine = false }, // Uri
+    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }  // Int
+  ]
+
+  // keyword list
+  keywords =
+  [
+    "abstract",
+    "as",
+    "assert",
+    "break",
+    "case",
+    "catch",
+    "class",
+    "const",
+    "continue",
+    "default",
+    "do",
+    "else",
+    "enum",
+    "false",
+    "final",
+    "finally",
+    "for",
+    "foreach",
+    "if",
+    "internal",
+    "is",
+    "isnot",
+    "mixin",
+    "native",
+    "new",
+    "null",
+    "once",
+    "override",
+    "private",
+    "protected",
+    "public",
+    "readonly",
+    "return",
+    "static",
+    "super",
+    "switch",
+    "this",
+    "throw",
+    "true",
+    "try",
+    "using",
+    "virtual",
+    "volatile",
+    "void",
+    "while",
+  ]
+}
+
+
+

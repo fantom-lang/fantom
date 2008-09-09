@@ -1,0 +1,56 @@
+//
+// Copyright (c) 2006, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   19 Jul 06  Brian Frank  Creation
+//
+
+**
+** ParamDef models the definition of a method parameter.
+**
+class ParamDef : Node, CParam
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
+  new make(Location location, CType paramType := null, Str name := null, Expr def := null)
+    : super(location)
+  {
+    this.paramType = paramType
+    this.name = name
+    this.def  = def
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// CParam
+//////////////////////////////////////////////////////////////////////////
+
+  override Bool hasDefault() { return def != null }
+
+//////////////////////////////////////////////////////////////////////////
+// Debug
+//////////////////////////////////////////////////////////////////////////
+
+  override Str toStr()
+  {
+    return "$paramType $name"
+  }
+
+  override Void print(AstWriter out)
+  {
+    out.w(paramType).w(" ").w(name)
+    if (def != null) { out.w(" := "); def.print(out) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  override CType paramType   // type of parameter
+  override Str name          // local variable name
+  Expr def                   // default expression
+
+}

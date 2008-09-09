@@ -1,0 +1,144 @@
+**************************************************************************
+** title:      Bootstrap
+** author:     Brian Frank
+** created:    05 Jan 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The Fan compiler is written in Fan itself - which presents a chicken
+and the egg problem.  How do you compile the compiler without having
+a compiler?  To solve this problem, the bootstrap process requires
+two Fan installations:
+
+  1.  *rel*: known good Fan installation (typically the last build)
+  2.  *dev*: development environment to build
+
+By convention we structure our development directory tree like this:
+
+  dev/
+    rel/
+      bin/
+      lib/
+      ...
+    fan/
+      bin/
+      lib/
+      src/
+      ...
+
+The "rel" directory always contains the last released build.  The "fan"
+directory contains our main development code branch.  We call our top
+level directory "dev", but for the purposes of this discussion "fan"
+is the development directory.
+
+Dev Home [#devHome]
+*******************
+By default the build assumes *devHome* to be the home directory
+of Fan installation.  For example if you rebuild jfan, then the output
+goes into "devHome/lib/java/sys.jar".  In the case of the *rel*
+installation we don't want this default because we will overwrite
+ourselves (which leads to some nasty problems).  So you need to set
+the *devHome* property in "lib/sys.props" of your *rel* installation
+to reference the *dev* directory using a URI (not OS path):
+
+  fan.build.devHome=/C:/dev/fan/
+
+If you forget to do this, then you will likely get IO exceptions -
+or worse it might corrupt your rel install and you will need to
+do a fresh installation.
+
+Substitutes [#substitutes]
+**************************
+On a clean machine with only source code, we don't have any pods compiled
+such as 'sys', 'build', or 'compiler'.  In order to run the build scripts
+to compile these pods, we need to use our *rel* installation.
+
+Windows Substitutes [#subsWindows]
+==================================
+To make this all work seamlessly on Windows, the Fan launcher will
+look in "sys.props" to see if a substitute runtime should be used.
+For example in our environment we map the following scripts to
+use the *rel* installation:
+
+  fan.runtime.substitutes=                             \
+    /C:/dev/fan/src/buildall.fan       = C:\\dev\\rel  \
+    /C:/dev/fan/src/buildboot.fan      = C:\\dev\\rel  \
+    /C:/dev/fan/src/jfan/build.fan     = C:\\dev\\rel  \
+    /C:/dev/fan/src/sys/build.fan      = C:\\dev\\rel  \
+    /C:/dev/fan/src/compiler/build.fan = C:\\dev\\rel  \
+    /C:/dev/fan/src/build/build.fan    = C:\\dev\\rel
+
+The launcher will check if any script being run matches one of those
+files.  If a match is made, then it will route to the alternate
+runtime specified.  Turn on [launcher debugging]`Setup#debugging`
+to see exactly what is happening under the covers.
+
+Unix Substitutes [#subsUnix]
+============================
+Unix substitution is implemented by the bootstrap build scripts
+using the following shebang:
+
+  #! /usr/bin/env fansubstitute
+
+The fansubstitute script explictly sets FAN_HOME to the value
+of the FAN_SUBSTITUTE variable before launching.  So you will
+need to export FAN_SUBSTITUTE to reference your "rel" installation.
+And of course you have to run your scripts as executables so
+that the shebang takes effect.
+
+Also note that building on Unix will skip any .NET targets.
+
+Buildall [#buildall]
+********************
+The "buildall.fan" script is the top level build script for compiling
+the Fan distribution.  We commonly run this command to rebuild everything
+and run tests on every pod:
+
+  buildall full test
+
+The "buildall" script is executed by the *rel* substitute runtime and
+in turn launches two sub-scripts.  The "buildboot.fan" script manages
+rebuilding the core runtime modules:
+
+  sys/build.fan
+  jfan/build.fan
+  nfan/build.fan
+  compiler/build.fan
+  build/build.fan
+
+Once the bootstrap modules are compiled, the development environment is
+self hosting and can be used to compile the remainder of itself.  This
+is done via the "buildpods.fan" script.
+
+Dependencies [#dependencies]
+****************************
+The bootstrap issue can cause some confusing dependency issues which
+are summarized here:
+
+  - The rel compiler will be generating the 'sys', 'compiler', and 'build'
+    pod files.  This means that the rel compiler must be able to
+    generate fcode that the dev runtime can read.  It also means that
+    the rel compiler must be able to read any new syntax used by dev
+    versions of 'sys', 'compiler', and 'build'.
+
+  - The rel compiler will actually use the dev versions of the pods
+    to resolve dependencies.  For example dev compiler can reference
+    new sys APIs defined in dev but not rel.  Under the covers this
+    works because the 'compiler' and 'build' pod's build scripts specify
+    a non-default [dependsDir]`build::BuildPod.dependsDir`.
+
+Because of these restrictions, adding new language features and fcode
+changes require some careful planning.
+
+Summary [#summmary]
+*******************
+In summary, you want to make sure of four key things:
+
+  1. setup your rel installation and never touch it (consider it readonly)
+  2. ensure rel/lib/sys.props devHome points to your dev installation
+  3. make sure your FAN_SUBSTITUTE env points to the rel installation
+  4. always run your scripts from the dev installation
+

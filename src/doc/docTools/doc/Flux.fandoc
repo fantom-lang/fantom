@@ -1,0 +1,142 @@
+**************************************************************************
+** title:      Flux
+** author:     Brian Frank
+** created:    29 Aug 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The Fan distribution includes a desktop tool called *flux*.  Flux
+is a framework for building general purpose desktop applications
+with the [fwt]`docLib::Fwt` toolkit.  Fan includes with a set of
+flux plugins which provide basic IDE support for Fan.
+
+On Window's you launch flux with the "flux.exe" executable.  On
+Unix use the "flux" bash script.  Both of these are just conveniences
+for running "fan flux::Main".  You can pass an optional filename
+to open on startup:
+  flux
+  flux Foo.fan
+
+The Fan installation used to run flux defines the set of plugins
+available.  By convention the flux plugins included in the standard
+distribution are prefixed with "flux".  You can add new plugins by
+dropping new pods into your "lib/fan" directory.
+
+Navigation Model [#navModel]
+****************************
+Flux is based on a browser based paradigm.  Users hyperlink from
+one Uri to another.  They can navigate back or forward in their
+navigation history just like a browser.
+
+Unlike a normal browser, we leverage Fan's built-in [naming]`docLang::Naming`
+framework.  This means we can use Flux to browser any Uri mapped into
+the Fan's namespace including the file system, "fan:" namespaces, or any
+of the protocols plugged into Fan via 'UriScheme'.
+
+When a user navigates to a uri, the uri is resolved into a Fan object
+via the standard [naminging]`docLang::Naming` subsystem.  We call the
+resolved object a *resource*.  Then the runtime looks in the
+[type database]`docLang::TypeDatabase` to find all the *views* registered
+to view and edit the resource.  It is not uncommon for a resource to
+have multiple views, in which case the user can switch between them
+using the navigation bar.
+
+See `docLib::Flux` for the details regarding the navigation and
+the various APIs and framework hooks.
+
+Text Editor [#textEditor]
+*************************
+The [fluxText]`fluxText::index` pod provides a text editor plugin for
+working with files mapped to a "text/*" MIME type.  The flux editor is
+pretty basic if you are used to working with a monster like Eclipse.
+But you'll find quite a number of useful features:
+  - [syntax]`#syntaxOptions` color coding
+  - auto indent
+  - block indent and unindent
+  - brace matching
+  - various [options]`#textEditorOptions` for whitespace handling
+  - TODO actually pretty lame list right now...
+
+Options [#options]
+******************
+Flux options are stored in plain text fog files under "{homeDir}/flux".
+In most cases editing the text file will be reloaded the next time a
+view is loaded.
+
+Key Bindings [#keyOptions]
+=========================
+All the commands in flux have a globally unique string id.  Common
+predefined commands have an id like "cut" or "save".  By default commands are
+configured as [localized props]`fwt::Command.makeLocale`.  But you
+can custom the key binding for any command via [KeyOptions]`flux::KeyOptions`.
+
+Text Editor [#textEditorOptions]
+================================
+See the [TextEditorOptions]`fluxText::TextEditorOptions` to configure
+general options when working with text files:
+  - char encoding
+  - Unix or Window's newline
+  - convert tabs to spaces
+  - tab spacing
+  - strip trailing whitespace on save
+
+Syntax Color Coding [#syntaxOptions]
+====================================
+You can add syntax color coding for new languages easily through
+the options.  First step is to map file extensions to a syntax
+definition via [SyntaxOptions]`fluxText::SyntaxOptions`.  You also
+use SytnaxOptions to configure your font and color preferences.
+
+For example let's say we want to add support for "foolang".  First
+we edit "flux/syntax.fog" to map the file extensions "foo" and
+"foolang" to the definition stored in "flux/syntax/foolang.fog":
+
+  extToRules =
+  [
+    ...
+    "foolang": "foolang",
+    "foo": "foolang",
+    ...
+
+Next we create the syntax rules in "flux/syntax/foolang.fog"
+using [SyntaxRules]`fluxText::SyntaxRules`.  This is where we
+define our keywords and syntax for comments and string literals.
+It is easiest to start off with a definition for a language
+you are already familiar with.  For example Java's syntax rules
+are:
+
+  // java syntax rules
+  SyntaxRules
+  {
+    // list of end of line comment tokens
+    comments = ["//"]
+
+    // block comments
+    blockCommentStart = "/*"
+    blockCommentEnd   = "*/"
+    blockCommentsNest = false
+
+    // string and character literals
+    strs =
+    [
+      SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = false }, // String
+      SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }   // char
+    ]
+
+    // keyword list
+    keywords =
+    [
+      "abstract",
+      "assert",
+      "boolean",
+      ...
+
+
+Developing for Flux [#dev]
+**************************
+Flux is itself a framework designed to be customized and extended with
+its plugin architecture.  See the `docLib::Flux` to learn how to use
+the 'flux' APIs for creating your own plugins.

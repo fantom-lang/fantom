@@ -1,0 +1,87 @@
+#!/bin/bash
+#
+# fanlaunch: common code for unix scripts
+#
+
+# Operating system
+osExt="unix"
+cygwin=false;
+darwin=false;
+linux=false;
+case "`uname`" in
+    CYGWIN*) 
+      cygwin=true 
+      osExt="win" 
+      ;;
+    Darwin*) 
+      darwin=true 
+      osExt="mac" 
+      ;;
+    Linux*)  
+      linux=true 
+      osExt="linux" 
+      ;;
+esac
+
+# MAC OS X we have to set to set a special flag 
+# to ensure that SWT will run correctly
+if $darwin; then
+  osFlags="-XstartOnFirstThread"
+fi
+
+# Set FAN_HOME if it is not already set (from Groovy)
+if [ -z "$FAN_HOME" -o ! -d "$FAN_HOME" ] ; then
+  # Resolve links: $0 may be a link
+  PRG="$0"
+  # Need this for relative symlinks.
+  while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+      PRG="$link"
+    else
+      PRG=`dirname "$PRG"`"/$link"
+    fi
+  done
+  SAVED="`pwd`"
+  cd "`dirname \"$PRG\"`/.."
+  FAN_HOME="`pwd -P`"
+  cd "$SAVED"
+fi
+
+# Set FAN_CP classpath if not already set
+if [ -z "$FAN_CP" -o ! -d "$FAN_CP" ] ; then
+  # always put sys.jar in classpath
+  FAN_CP=$FAN_HOME/lib/java/sys.jar 
+
+  # add every jar file in lib/java/ext to cp
+  extDir="$FAN_HOME"/lib/java/ext
+  if [ -d $extDir ] ; then
+    for ext in `ls -b "$extDir"` ; do
+      if [ ${ext##*.} == "jar" ] ; then
+        FAN_CP="$FAN_CP:$extDir/$ext"
+      fi
+    done  
+  fi
+  
+  # add every jar file in lib/java/ext/{os} to cp
+  extDir="$FAN_HOME"/lib/java/ext/$osExt
+  if [ -d $extDir ] ; then
+    libPath=-Djava.library.path=$extDir
+    for ext in `ls -b "$extDir"` ; do
+      if [ ${ext##*.} == "jar" ] ; then
+        FAN_CP="$FAN_CP:$extDir/$ext"
+      fi
+    done  
+  fi  
+  
+fi
+
+# Launcher function
+fanlaunch()
+{
+  export FAN_HOME
+  FAN_MAIN=fanx.tools.$1
+  shift
+  java $osFlags $libPath -cp "$FAN_CP" -Dfan.home="$FAN_HOME" $FAN_MAIN "$@"
+}

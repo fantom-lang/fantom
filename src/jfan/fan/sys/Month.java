@@ -1,0 +1,98 @@
+//
+// Copyright (c) 2006, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   19 Sep 06  Brian Frank  Creation
+//
+package fan.sys;
+
+/**
+ * Month
+ */
+public final class Month
+  extends Enum
+{
+
+  public static final Month jan = new Month(0,  "jan");
+  public static final Month feb = new Month(1,  "feb");
+  public static final Month mar = new Month(2,  "mar");
+  public static final Month apr = new Month(3,  "apr");
+  public static final Month may = new Month(4,  "may");
+  public static final Month jun = new Month(5,  "jun");
+  public static final Month jul = new Month(6,  "jul");
+  public static final Month aug = new Month(7,  "aug");
+  public static final Month sep = new Month(8,  "sep");
+  public static final Month oct = new Month(9,  "oct");
+  public static final Month nov = new Month(10, "nov");
+  public static final Month dec = new Month(11, "dec");
+
+  static final Month[] array =
+  {
+    jan, feb, mar, apr, may, jun,
+    jul, aug, sep, oct, nov, dec
+  };
+
+  public static final List values = new List(Sys.MonthType, array).ro();
+
+  private Month(int ordinal, String name)
+  {
+    Enum.make$(this, Int.pos[ordinal], Str.make(name).intern());
+    this.ord = ordinal;
+    this.localeAbbrKey = Str.make(name + "Abbr");
+    this.localeFullKey = Str.make(name + "Full");
+  }
+
+  public static Month fromStr(Str name) { return fromStr(name, Bool.True); }
+  public static Month fromStr(Str name, Bool checked)
+  {
+    return (Month)doFromStr(Sys.MonthType, name, checked);
+  }
+
+  public Type type() { return Sys.MonthType; }
+
+  public Month increment() { return array[(ord+1)%array.length]; }
+
+  public Month decrement() { return ord == 0 ? array[array.length-1] : array[ord-1]; }
+
+  public Int numDays(Int year)
+  {
+    if (DateTime.isLeapYear((int)year.val))
+      return Int.pos[DateTime.daysInMonLeap[ord]];
+    else
+      return Int.pos[DateTime.daysInMon[ord]];
+  }
+
+  public Str toLocale() { return toLocale(null); }
+  public Str toLocale(Str pattern)
+  {
+    if (pattern == null) return localeAbbr();
+    if (pattern.isEveryChar('M'))
+    {
+      switch (pattern.val.length())
+      {
+        case 1: return Str.make(String.valueOf(ord+1));
+        case 2: return Str.make(ord < 9 ? "0" + (ord+1) : String.valueOf(ord+1));
+        case 3: return localeAbbr();
+        case 4: return localeFull();
+      }
+    }
+    throw ArgErr.make("Invalid pattern: " + pattern).val;
+  }
+
+  public Str localeAbbr() { return abbr(Locale.current()); }
+  public Str abbr(Locale locale)
+  {
+    return locale.get(Str.sysStr, localeAbbrKey);
+  }
+
+  public Str localeFull() { return full(Locale.current()); }
+  public Str full(Locale locale)
+  {
+    return locale.get(Str.sysStr, localeFullKey);
+  }
+
+  final int ord;
+  final Str localeAbbrKey;
+  final Str localeFullKey;
+}
