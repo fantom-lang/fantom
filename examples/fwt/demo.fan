@@ -615,18 +615,40 @@ class GraphicsDemo : Widget
     g.drawImage(img, 220, 30)
     g.copyImage(img, Rect { x=0; y=0; w=img.size.w; h=img.size.h }, Rect { x=250; y=30; w=64; h=64})
 
-    g.brush = Gradient.makeLinear(
-      Point.make(300,120), Color.blue,
-      Point.make(300+200,120+200), Color.red)
-    g.pen = Pen { width=20; join = Pen.joinRound }
-    g.drawRect(310, 130, 180, 180)
-    6.times |Int i| { g.drawText("Gradients!", 340, 150+i*20) }
+    // system font/colors
+    y := 20
+    g.font = Font.sys
+    g.brush = Color.black
+    g.drawText(Font.sys.toStr, 480, y)
+    y += 20
+    g.font = Font.make("Arial", 9)
+    y = sysColor(g, y, Color.sysDarkShadow, "sysDarkShadow")
+    y = sysColor(g, y, Color.sysNormShadow, "sysNormShadow")
+    y = sysColor(g, y, Color.sysLightShadow, "sysLightShadow")
+    y = sysColor(g, y, Color.sysHighlightShadow, "sysHighlightShadow")
+    y = sysColor(g, y, Color.sysFg, "sysFg")
+    y = sysColor(g, y, Color.sysBg, "sysBg")
+    y = sysColor(g, y, Color.sysBorder, "sysBorder")
+    y = sysColor(g, y, Color.sysListBg, "sysListBg")
+    y = sysColor(g, y, Color.sysListFg, "sysListFg")
+    y = sysColor(g, y, Color.sysListSelBg, "sysListSelBg")
+    y = sysColor(g, y, Color.sysListSelFg, "sysListSelFg")
 
+    // rect/text with gradients
+    g.brush = Gradient.makeLinear(
+      Point.make(260,120), Color.blue,
+      Point.make(260+200,120+200), Color.red)
+    g.pen = Pen { width=20; join = Pen.joinRound }
+    g.drawRect(270, 130, 180, 180)
+    6.times |Int i| { g.drawText("Gradients!", 300, 150+i*20) }
+
+    // translate for font metric box
     g.translate(50, 250)
     g.pen = Pen.def
     g.brush = Color.yellow
     g.fillRect(0, 0, 200, 100)
 
+    // font metric box with ascent, descent, baseline
     tw := g.font.width("Font Metrics")
     tx := (200-tw)/2
     ty := 30
@@ -641,5 +663,14 @@ class GraphicsDemo : Widget
     my += g.font.descent; g.drawLine(tx, my, tx+tw, my)
     g.brush = Color.black
     g.drawText("Font Metrics", tx, ty)
+  }
+
+  Int sysColor(Graphics g, Int y, Color c, Str name)
+  {
+    g.brush = c
+    g.fillRect(480, y, 140, 20)
+    g.brush = Color.green
+    g.drawText(name, 490, y+3)
+    return y + 20
   }
 }
