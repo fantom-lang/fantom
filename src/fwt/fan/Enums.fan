@@ -54,7 +54,7 @@ enum Orientation
 **************************************************************************
 
 **
-** Button mode.
+** Enum for `Button.mode`.
 **
 enum ButtonMode
 {
@@ -70,7 +70,7 @@ enum ButtonMode
 **************************************************************************
 
 **
-** MenuItem mode.
+** Enum for `MenuItem.mode`.
 **
 enum MenuItemMode
 {
@@ -79,4 +79,19 @@ enum MenuItemMode
   radio,
   sep,
   menu
+}
+
+**************************************************************************
+** WindowMode.
+**************************************************************************
+
+**
+** Enum for `Window.mode`.
+**
+enum WindowMode
+{
+  modeless,
+  windowModal,
+  appModal,
+  sysModal
 }

@@ -14,6 +14,30 @@ class Window : ContentPane
 {
 
   **
+  ** Window mode defines the modal state of the window:
+  **   - modeless: no blocking of other windows
+  **   - windowModal: input is blocked to parent window
+  **   - appModal: input is blocked to all other windows of application
+  **   - sysModal: input is blocked to all windows of all applications
+  ** The default is modeless.  This field cannot be changed
+  ** once the window is constructed.
+  **
+  const WindowMode mode := WindowMode.modeless
+
+  **
+  ** Force window to always be on top of the desktop.  Default
+  ** is false.  This field cannot be changed once the window is
+  ** constructed.
+  **
+  const Bool alwaysOnTop := false
+
+  **
+  ** Can this window be resizable.  Default is true.  This field
+  ** cannot be changed once the window is constructed.
+  **
+  const Bool resizable := true
+
+  **
   ** Child menu bar widget if top level frame.
   **
   Menu menuBar { set { remove(@menuBar); Widget.super.add(val); @menuBar= val } }
@@ -31,11 +55,11 @@ class Window : ContentPane
   **
   ** Open the window.
   **
-  native This open()
+  native Void open(Window parent := null)
 
   **
   ** Close the window.
   **
-  native This close()
+  native Void close()
 
 }

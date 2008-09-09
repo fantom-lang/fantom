@@ -62,20 +62,36 @@ public class WindowPeer extends PanePeer
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  public Window open(Window self)
+  int style(Window self)
   {
-    if (control != null) return self;
+    int style = SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX;
+
+    if (self.mode == WindowMode.modeless)         style |= SWT.MODELESS;
+    else if (self.mode == WindowMode.windowModal) style |= SWT.PRIMARY_MODAL;
+    else if (self.mode == WindowMode.appModal)    style |= SWT.APPLICATION_MODAL;
+    else if (self.mode == WindowMode.sysModal)    style |= SWT.SYSTEM_MODAL;
+
+    if (self.alwaysOnTop.val) style |= SWT.ON_TOP;
+
+    if (self.resizable.val) style |= SWT.RESIZE;
+
+    return style;
+  }
+
+  public void open(Window self, Window parent)
+  {
+    if (control != null) return;
 
     Env env = null;
     Shell shell;
-    if (parent() == null)
+    if (parent == null)
     {
       env = Env.get();
-      shell = new Shell(env.display);
+      shell = new Shell(env.display, style(self));
     }
     else
     {
-      shell = new Shell((Shell)parentControl());
+      shell = new Shell((Shell)parent.peer.control, style(self));
     }
     shell.setLayout(new FillLayout());
     attachTo(shell);
@@ -83,16 +99,14 @@ public class WindowPeer extends PanePeer
     shell.open();
 
     if (env != null) env.eventLoop(shell);
-    return self;
   }
 
-  public Window close(Window self)
+  public void close(Window self)
   {
-    if (control == null) return self;
+    if (control == null) return;
     Shell shell = (Shell)control;
     shell.close();
     detach(self);
-    return self;
   }
 
 //////////////////////////////////////////////////////////////////////////
