@@ -43,6 +43,7 @@ class Combo : Widget
 
   **
   ** Set to true to display editing of the combo's text field.
+  ** Default is false.
   **
   const Bool editable := false
 
@@ -61,5 +62,27 @@ class Combo : Widget
   ** Font for text. Defaults to null (system default).
   **
   native Font font
+
+  **
+  ** The currently selected index of `items`.
+  **
+  native Int selectedIndex
+
+  **
+  ** The currently selected item.  Items are matched
+  ** to the `items` list using `index`.
+  **
+  Obj selected
+  {
+    get { i := selectedIndex; return i == null ? null : items[i] }
+    set { i := index(val); if (i != null) selectedIndex = i }
+  }
+
+  **
+  ** Get the index of the specified item. Items are matched
+  ** to indices via 'Obj.equals'.  See `sys::List.index`.
+  **
+  Int index(Obj item) { return items.index(item) }
+
 
 }
