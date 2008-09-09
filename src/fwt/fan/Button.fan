@@ -56,6 +56,15 @@ class Button : Widget
   native Font font
 
   **
+  ** Insets to apply for padding between the button's border
+  ** and its image and text.  Insets are only applied to push and
+  ** toggle butttons; they are not applied to checks, radio, sep, or
+  ** toolbar buttons.
+  **
+  const Insets insets := defInsets
+  private const static Insets defInsets := Insets(0, 4, 0, 4)
+
+  **
   ** Command associated with this button.  Setting the
   ** command automatically maps the text, icon, enable state,
   ** and eventing to the command.
@@ -75,6 +84,17 @@ class Button : Widget
         val.register(this)
       }
     }
+  }
+
+  override Size prefSize(Hints hints := Hints.def)
+  {
+    pref := super.prefSize(hints)
+    if (mode === ButtonMode.push || mode === ButtonMode.toggle)
+    {
+      i := this.insets
+      pref = Size(i.left + pref.w + i.right, i.top + pref.h + i.bottom)
+    }
+    return pref
   }
 
 }
