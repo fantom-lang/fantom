@@ -50,6 +50,34 @@ const class Color : Brush
   const static Color purple := make(0x80_00_80)
 
 //////////////////////////////////////////////////////////////////////////
+// System Colors
+//////////////////////////////////////////////////////////////////////////
+
+  ** System color for dark shadow on widgets
+  static native Color sysDarkShadow()
+  ** System color for normal shadow on widgets
+  static native Color sysNormShadow()
+  ** System color for light shadow on widgets
+  static native Color sysLightShadow()
+  ** System color for highlight shadow on widgets
+  static native Color sysHighlightShadow()
+  ** System color for foreground and text on widgets
+  static native Color sysFg()
+  ** System color for background on widgets
+  static native Color sysBg()
+  ** System color for borders on widgets
+  static native Color sysBorder()
+
+  ** System color for list text.
+  static native Color sysListFg()
+  ** System color for list background.
+  static native Color sysListBg()
+  ** System color for list selection text.
+  static native Color sysListSelFg()
+  ** System color for list selection background.
+  static native Color sysListSelBg()
+
+//////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 

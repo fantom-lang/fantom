@@ -8,6 +8,9 @@ lib/net/sys.dll
 lib/fan/*.pod
 lib/types.db
 
+# doc/
+doc/*
+
 # src/
 src/jfan/temp/*
 

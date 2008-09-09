@@ -8,6 +8,8 @@
 package fan.fwt;
 
 import fan.sys.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 
 public class FontPeer
@@ -56,5 +58,16 @@ public class FontPeer
   {
     Env.get().dispose(f);
   }
+
+  public static fan.fwt.Font sys()
+  {
+    if (sys == null)
+    {
+      FontData data = Env.get().display.getSystemFont().getFontData()[0];
+      sys = fan.fwt.Font.make(Str.make(data.getName()), Int.make(data.getHeight()));
+    }
+    return sys;
+  }
+  private static fan.fwt.Font sys;
 
 }
