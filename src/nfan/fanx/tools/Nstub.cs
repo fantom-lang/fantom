@@ -31,8 +31,8 @@ namespace Fanx.Tools
     {
       writeLine("    .NET Stub [" + podName + "]");
 
-      // TODO!
-      string podPath = "c:\\dev\\fan\\lib\\fan\\" + podName + ".pod";
+      string fanHome = SysProps.getProperty("fan.home");
+      string podPath = fanHome + "\\lib\\fan\\" + podName + ".pod";
       string target = new FileInfo(outDir + "\\" + podName + ".dll").FullName;
 
       if (verbose)
