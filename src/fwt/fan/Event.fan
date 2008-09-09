@@ -23,6 +23,11 @@ class Event
   Widget widget
 
   **
+  ** Convenience for 'widget?.window'.
+  **
+  Window window() { return widget?.window }
+
+  **
   ** Index for list based events. For table events this
   ** is the row index.
   **

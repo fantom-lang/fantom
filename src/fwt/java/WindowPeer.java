@@ -64,7 +64,7 @@ public class WindowPeer extends PanePeer
 
   int style(Window self)
   {
-    int style = SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX;
+    int style = defaultStyle();
 
     if (self.mode == WindowMode.modeless)         style |= SWT.MODELESS;
     else if (self.mode == WindowMode.windowModal) style |= SWT.PRIMARY_MODAL;
@@ -78,12 +78,15 @@ public class WindowPeer extends PanePeer
     return style;
   }
 
-  public void open(Window self, Window parent)
+  int defaultStyle() { return SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX; }
+
+  public Obj open(Window self)
   {
-    if (control != null) return;
+    if (control != null) return null;
 
     Env env = null;
     Shell shell;
+    fan.fwt.Widget parent = self.parent();
     if (parent == null)
     {
       env = Env.get();
@@ -99,6 +102,7 @@ public class WindowPeer extends PanePeer
     shell.open();
 
     if (env != null) env.eventLoop(shell);
+    return null;
   }
 
   public void close(Window self)
@@ -108,11 +112,5 @@ public class WindowPeer extends PanePeer
     shell.close();
     detach(self);
   }
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  Shell shell;
 
 }

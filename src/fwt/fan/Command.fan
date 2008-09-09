@@ -97,7 +97,7 @@ class Command
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Enabled
+// Methods
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -133,6 +133,11 @@ class Command
   ** this method if you are developing a custom widget.
   **
   Void unregister(Widget w) { registry.removeSame(w) }
+
+  **
+  ** Return name.
+  **
+  override Str toStr() { return name }
 
   private Widget[] registry := Widget[,]
 

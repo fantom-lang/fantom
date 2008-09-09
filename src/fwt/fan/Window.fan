@@ -53,9 +53,14 @@ class Window : ContentPane
   native Str title
 
   **
-  ** Open the window.
+  ** Construct the window with an option parent window.
   **
-  native Void open(Window parent := null)
+  new make(Window parent := null) { setParent(parent) }
+
+  **
+  ** Open the window.  If this is a dialog, then return result.
+  **
+  native Obj open()
 
   **
   ** Close the window.

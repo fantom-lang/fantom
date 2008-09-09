@@ -24,6 +24,7 @@ class Build : BuildPod
     srcDirs     = [`fan/`, `test/`]
     javaDirs    = [`java/`]
     //netDirs   = [`net/`]
+    resDirs     = [`locale/`]
   }
 
 }
