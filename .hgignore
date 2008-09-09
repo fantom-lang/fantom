@@ -1,0 +1,15 @@
+# ignore files for fan
+syntax: glob
+
+# lib/
+lib/java/*.jar
+lib/net/*.pdb
+lib/net/sys.dll
+lib/fan/*.pod
+lib/types.db
+
+# src/
+src/jfan/temp/*
+
+# tmp/
+tmp/*
