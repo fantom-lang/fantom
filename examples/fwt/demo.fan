@@ -102,6 +102,18 @@ class FwtDemo : Test
         MenuItem { text = "Radio 2"; accelerator=Key.alt+Key.num2; mode = MenuItemMode.radio; onAction.add(&cb); selected = true  }
       }
 
+      Menu
+      {
+        text = "Dialogs"
+        MenuItem { text = "Info"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "Test information!")) } }
+        MenuItem { text = "Warn"; onAction.add |Event e| { echo(Dialog.openWarn(e.window, "Test warning!")) } }
+        MenuItem { text = "Err"; onAction.add |Event e| { echo(Dialog.openErr(e.window, "Test error!")) } }
+        MenuItem { text = "Question"; onAction.add |Event e| { echo(Dialog.openQuestion(e.window, "Test question?")) } }
+        MenuItem { mode = MenuItemMode.sep }
+        MenuItem { text = "Ok/Cancel"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "OK/Cancel", Dialog.okCancel)) } }
+        MenuItem { text = "Yes/No"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "Yes/No", Dialog.yesNo)) } }
+      }
+
     }
   }
 
@@ -342,7 +354,7 @@ class FwtDemo : Test
     open := |,|
     {
       close := Button { text="Close Me" }
-      w := Window
+      w := Window(mode.window)
       {
         mode = mode.selected
         alwaysOnTop = alwaysOnTop.selected
@@ -351,7 +363,7 @@ class FwtDemo : Test
         size = Size(200,200)
       }
       close.onAction.add(&w.close)
-      w.open(mode.window)
+      w.open
     }
 
     return GridPane

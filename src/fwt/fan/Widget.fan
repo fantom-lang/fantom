@@ -142,6 +142,7 @@ abstract class Widget
   ** Get this widget's parent or null if not mounted.
   **
   @transient readonly Widget parent
+  internal Void setParent(Widget p) { parent = p } // for Window.make
 
   **
   ** Get this widget's parent window or null if not
