@@ -87,7 +87,7 @@ public class MenuItemPeer
   public void accelerator (fan.fwt.MenuItem self, fan.fwt.Key v) { accelerator.set(v); }
   public final Prop.KeyProp accelerator = new Prop.KeyProp (this)
   {
-    public void set(Widget w, int v) { if (w instanceof MenuItem) ((MenuItem)w).setAccelerator(v); }
+    public void set(Widget w, int v) { if (w instanceof MenuItem && !isTopMenu()) ((MenuItem)w).setAccelerator(v); }
   };
 
   // Image image := null
@@ -95,7 +95,7 @@ public class MenuItemPeer
   public void image(fan.fwt.MenuItem self, fan.fwt.Image v) { image.set(v); }
   public final Prop.ImageProp image = new Prop.ImageProp(this)
   {
-    public void set(Widget w, Image v) { if (w instanceof MenuItem) ((MenuItem)w).setImage(v); }
+    public void set(Widget w, Image v) { if (w instanceof MenuItem && !isTopMenu()) ((MenuItem)w).setImage(v); }
   };
 
 //////////////////////////////////////////////////////////////////////////
@@ -117,6 +117,12 @@ public class MenuItemPeer
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  boolean isTopMenu()
+  {
+    // return if this is a Menu under a Menu
+    return self instanceof fan.fwt.Menu && self.parent() instanceof fan.fwt.Menu;
+  }
+
   static int mode(MenuItemMode mode)
   {
     if (mode == MenuItemMode.push)  return SWT.PUSH;
@@ -125,4 +131,5 @@ public class MenuItemPeer
     if (mode == MenuItemMode.sep)   return SWT.SEPARATOR;
     throw new IllegalStateException(""+mode);
   }
+
 }
