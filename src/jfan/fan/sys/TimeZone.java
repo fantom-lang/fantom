@@ -1,0 +1,545 @@
+//
+// Copyright (c) 2007, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   28 Sep 07  Brian Frank  Creation
+//
+package fan.sys;
+
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Arrays;
+import java.util.HashMap;
+
+/**
+ * TimeZone
+ */
+public final class TimeZone
+  extends FanObj
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Constructors
+//////////////////////////////////////////////////////////////////////////
+
+  public static List listNames()
+  {
+    List list = new List(Sys.StrType);
+    for (int i=0; i<indexNames.length; ++i)
+      if ((indexTypes[i] & 0x01) != 0)
+        list.add(Str.make(indexNames[i]));
+    return list.ro();
+  }
+
+  public static List listFullNames()
+  {
+    List list = new List(Sys.StrType);
+    for (int i=0; i<indexNames.length; ++i)
+      if ((indexTypes[i] & 0x02) != 0)
+        list.add(Str.make(indexNames[i]));
+    return list.ro();
+  }
+
+  public static TimeZone fromStr(Str name) { return fromStr(name.val, true); }
+  public static TimeZone fromStr(Str name, Bool checked) { return fromStr(name.val, checked.val); }
+  public static TimeZone fromStr(String name, boolean checked)
+  {
+    // check cache first
+    TimeZone tz;
+    synchronized (cache)
+    {
+      tz = (TimeZone)cache.get(name);
+      if (tz != null) return tz;
+    }
+
+    // try to load from database
+    try
+    {
+      tz = loadTimeZone(name);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      throw IOErr.make("Cannot load from timezone database: " + name).val;
+    }
+
+    // if found, then cache and return
+    if (tz != null)
+    {
+      synchronized (cache)
+      {
+        cache.put(tz.name.val, tz);
+        cache.put(tz.fullName.val, tz);
+        return tz;
+      }
+    }
+
+    // not found
+    if (checked) throw ParseErr.make("TimeZone not found: " + name).val;
+    return null;
+  }
+
+  public static TimeZone utc()
+  {
+    return utc;
+  }
+
+  public static TimeZone current()
+  {
+    return current;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Obj
+//////////////////////////////////////////////////////////////////////////
+
+  public Str toStr() { return name; }
+
+  public Type type() { return Sys.TimeZoneType; }
+
+//////////////////////////////////////////////////////////////////////////
+// Methods
+//////////////////////////////////////////////////////////////////////////
+
+  public Str name()
+  {
+    return name;
+  }
+
+  public Str fullName()
+  {
+    return fullName;
+  }
+
+  public Duration offset(Int year)
+  {
+    return Duration.make(rule((int)year.val).offset * Duration.nsPerSec);
+  }
+
+  public Duration dstOffset(Int year)
+  {
+    Rule r = rule((int)year.val);
+    if (r.dstOffset == 0) return null;
+    return Duration.make(r.dstOffset * Duration.nsPerSec);
+  }
+
+  public Str stdAbbr(Int year)
+  {
+    return Str.make(rule((int)year.val).stdAbbr);
+  }
+
+  public Str dstAbbr(Int year)
+  {
+    return Str.make(rule((int)year.val).dstAbbr);
+  }
+
+  public String abbr(int year, boolean inDST)
+  {
+    return inDST ? rule(year).dstAbbr : rule(year).stdAbbr;
+  }
+
+  final Rule rule(int year)
+  {
+    // most hits should be in latest rule
+    Rule rule = rules[0];
+    if (year >= rule.startYear) return rule;
+
+    // check historical time zones
+    for (int i=1; i<rules.length; ++i)
+      if (year >= (rule = rules[i]).startYear) return rule;
+
+    // return oldest rule
+    return rules[rules.length-1];
+  }
+
+  // This is mostly for testing right.
+  java.util.TimeZone java()
+  {
+    return java.util.TimeZone.getTimeZone(name.val);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Database
+//////////////////////////////////////////////////////////////////////////
+
+  //
+  // TimeZone database format:
+  //
+  // ftz
+  // {
+  //   u8  magic ("fantz 01")
+  //   utf summary
+  //   u4  numIndexItems
+  //   indexItems[]
+  //   {
+  //     utf  name
+  //     u1   0x01=simple name, 0x02=full name
+  //     u4   fileOffset
+  //   }
+  //   timeZones[]
+  //   {
+  //     utf  name
+  //     utf  fullName
+  //     u2   numRules
+  //     rules[]
+  //     {
+  //       u2   startYear
+  //       i4   utcOffset (seconds)
+  //       utf  stdAbbr
+  //       i4   dstOffset (seconds); if zero rest is skipped
+  //       [
+  //         utf       dstAbbr
+  //         dstTime   dstStart
+  //         dstTime   dstEnd
+  //       ]
+  //     }
+  //   }
+  //
+  //   dstTime
+  //   {
+  //     u1  month
+  //     u1  onMode 'd', 'l', '>', '<' (date, last, >=, and <=)
+  //     u1  onWeekday (0-6)
+  //     u1  onDay
+  //     i4  atTime (seconds)
+  //     u1  atMode 'w' , 's', 'u' (wall, standad, universal)
+  //   }
+  //
+  //  The timezone database is generated by the "/adm/buildtz.fan"
+  //  script.  Refer to the "zic.8.txt" source file the code
+  //  distribution of the Olsen database to further describe
+  //  model of the original data.
+  //
+
+  /**
+   * Load the name and file offset list from file into memory.
+   */
+  static void loadIndex()
+    throws IOException
+  {
+    DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(dbFile)));
+    try
+    {
+      // check magic "fantz 01"
+      long magic = in.readLong();
+      if (magic != 0x66616e747a203031L)
+        throw new java.io.IOException("Invalid magic 0x" + Long.toHexString(magic));
+      in.readUTF();
+
+      // load the name/offset pairs and verify in sort order
+      int num = in.readInt();
+      indexNames   = new String[num];
+      indexTypes   = new byte[num];
+      indexOffsets = new int[num];
+      for (int i=0; i<num; ++i)
+      {
+        indexNames[i]   = in.readUTF();
+        indexTypes[i]   = (byte)in.read();
+        indexOffsets[i] = in.readInt();
+        if (i != 0 && indexNames[i-1].compareTo(indexNames[i]) >= 0)
+          throw new java.io.IOException("Index not sorted");
+      }
+    }
+    finally
+    {
+      in.close();
+    }
+  }
+
+  /**
+   * Find the specified name in the index and load a time zone
+   * definition.  If the name is not found then return null.
+   */
+  static TimeZone loadTimeZone(String name)
+    throws IOException
+  {
+    // find index, which maps the file offset
+    int ix = Arrays.binarySearch(indexNames, name);
+    if (ix < 0) return null;
+    int seekOffset = indexOffsets[ix];
+
+    // create time zone instance
+    TimeZone tz = new TimeZone();
+
+    // read time zone definition from database file
+    RandomAccessFile f = new RandomAccessFile(dbFile, "r");
+    try
+    {
+      f.seek(seekOffset);
+      tz.name      = Str.make(f.readUTF());
+      tz.fullName  = Str.make(f.readUTF());
+      int numRules = f.readUnsignedShort();
+      tz.rules = new Rule[numRules];
+      for (int i=0; i<numRules; ++i)
+      {
+        Rule r = tz.rules[i] = new Rule();
+        r.startYear = f.readUnsignedShort();
+        r.offset    = f.readInt();
+        r.stdAbbr   = f.readUTF();
+        r.dstOffset = f.readInt();
+        if (r.dstOffset == 0) continue;
+        r.dstAbbr   = f.readUTF();
+        r.dstStart  = loadDstTime(f);
+        r.dstEnd    = loadDstTime(f);
+        if (i != 0 && tz.rules[i-1].startYear <= r.startYear)
+          throw new java.io.IOException("TimeZone rules not sorted: " + name);
+      }
+    }
+    finally
+    {
+      f.close();
+    }
+    return tz;
+  }
+
+  static DstTime loadDstTime(RandomAccessFile f)
+    throws IOException
+  {
+    DstTime t = new DstTime();
+    t.mon       = f.readByte();
+    t.onMode    = f.readByte();
+    t.onWeekday = f.readByte();
+    t.onDay     = f.readByte();
+    t.atTime    = f.readInt();
+    t.atMode    = f.readByte();
+    return t;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// DST Calculations
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Compute the daylight savings time offset (in seconds)
+   * for the specified parameters:
+   *  - Rule:    the rule for a given year
+   *  - mon:     month 0-11
+   *  - day:     day 1-31
+   *  - weekday: 0-6
+   *  - time:    seconds since midnight
+   */
+  static int dstOffset(Rule rule, int year, int mon, int day, int time)
+  {
+    DstTime start = rule.dstStart;
+    DstTime end   = rule.dstEnd;
+
+    if (start == null) return 0;
+
+    int s = compare(rule, start, year, mon, day, time);
+    int e = compare(rule, end,   year, mon, day, time);
+
+    // if end month comes earlier than start month,
+    // then this is dst in southern hemisphere
+    if (end.mon < start.mon)
+    {
+      if (e > 0 || s <= 0) return rule.dstOffset;
+    }
+    else
+    {
+      if (s <= 0 && e > 0) return rule.dstOffset;
+    }
+
+    return 0;
+  }
+
+  /**
+   * Compare the specified time to the dst start/end time.
+   * Return -1 if x < specified time and +1 if x > specified time.
+   */
+  static int compare(Rule rule, DstTime x, int year, int mon, int day, int time)
+  {
+    int c = compareMonth(x, mon);
+    if (c != 0) return c;
+
+    c = compareOnDay(rule, x, year, mon, day);
+    if (c != 0) return c;
+
+    return compareAtTime(rule, x, time);
+  }
+
+  /**
+   * Compare month
+   */
+  static int compareMonth(DstTime x, int mon)
+  {
+    if (x.mon < mon) return -1;
+    if (x.mon > mon) return +1;
+    return 0;
+  }
+
+  /**
+   * Compare on day.
+   *     'd'  5        the fifth of the month
+   *     'l'  lastSun  the last Sunday in the month
+   *     'l'  lastMon  the last Monday in the month
+   *     '>'  Sun>=8   first Sunday on or after the eighth
+   *     '<'  Sun<=25  last Sunday on or before the 25th (not used)
+   */
+  static int compareOnDay(Rule rule, DstTime x, int year, int mon, int day)
+  {
+    // universal atTime might push us into the previous day
+    if (x.atMode == 'u' && rule.offset + x.atTime < 0)
+      ++day;
+
+    switch (x.onMode)
+    {
+      case 'd':
+        if (x.onDay < day) return -1;
+        if (x.onDay > day) return +1;
+        return 0;
+
+      case 'l':
+        int last = DateTime.weekdayInMonth(year, mon, x.onWeekday, -1);
+        if (last < day) return -1;
+        if (last > day) return +1;
+        return 0;
+
+      case '>':
+        int start = DateTime.weekdayInMonth(year, mon, x.onWeekday, 1);
+        while (start < x.onDay) start += 7;
+        if (start < day) return -1;
+        if (start > day) return +1;
+        return 0;
+
+      default:
+        throw new IllegalStateException(""+(char)x.onMode);
+    }
+  }
+
+  /**
+   * Compare at time.
+   */
+  static int compareAtTime(Rule rule, DstTime x, int time)
+  {
+    int atTime = x.atTime;
+
+    // if universal time, then we need to move atTime back to
+    // local time (we might cross into the previous day)
+    if (x.atMode == 'u')
+    {
+      if (rule.offset + x.atTime < 0)
+        atTime = 24*60*60 + rule.offset + x.atTime;
+      else
+        atTime += rule.offset;
+    }
+
+    if (atTime < time) return -1;
+    if (atTime > time) return +1;
+    return 0;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Rule
+//////////////////////////////////////////////////////////////////////////
+
+  static class Rule
+  {
+    /**
+     * Return if this rule is wall time based.  We take a shortcut
+     * and assume that both start/end both use the same atMode - right
+     * now (2007) it appears this is a valid assumption with the
+     * single obscure exception being "Pacific/Tongatapu"
+     */
+    boolean isWallTime() { return dstStart.atMode == 'w'; }
+
+    int startYear;     // year rule took effect
+    int offset;        // UTC offset in seconds
+    String stdAbbr;    // standard time abbreviation
+    int dstOffset;     // seconds
+    String dstAbbr;    // daylight time abbreviation
+    DstTime dstStart;  // starting time
+    DstTime dstEnd;    // end time
+  }
+
+  static class DstTime
+  {
+    byte  mon;          // month (0-11)
+    byte  onMode;       // 'd', 'l', '>', '<' (date, last, >=, and <=)
+    byte  onWeekday;    // weekday (0-6)
+    byte  onDay;        // weekday (0-6)
+    int   atTime;       // seconds
+    byte  atMode;       // 'w' , 's', 'u' (wall, standard, universal)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Database Index
+//////////////////////////////////////////////////////////////////////////
+
+  static File dbFile = new File(Sys.HomeDir, "lib" + java.io.File.separator + "timezones.ftz");
+  static String[] indexNames = new String[0];
+  static byte[] indexTypes   = new byte[0];
+  static int[] indexOffsets  = new int[0];
+
+  static HashMap cache = new HashMap(); // Str -> TimeZone
+  static TimeZone utc;
+  static TimeZone current;
+
+  static
+  {
+    try
+    {
+      loadIndex();
+    }
+    catch (Throwable e)
+    {
+      System.out.println("ERROR: Cannot load timezone database");
+      e.printStackTrace();
+    }
+
+    try
+    {
+      utc = fromStr(Str.make("Etc/UTC"));
+    }
+    catch (Throwable e)
+    {
+      System.out.println("ERROR: Cannot init UTC timezone");
+      e.printStackTrace();
+
+      utc.name = utc.fullName = Str.make("UTC");
+      utc.rules = new Rule[] { new Rule() };
+    }
+
+    try
+    {
+      // first check system property
+      Str sysProp = (Str)Sys.env().get(Str.make("fan.timezone"));
+      if (sysProp != null)
+      {
+        current = fromStr(sysProp);
+      }
+
+      // Java mostly uses Olsen name, except for some Unix
+      // variants which use GMT+/-hh:mm which we map to Etc
+      else
+      {
+        String javatz = java.util.TimeZone.getDefault().getID();
+        if (javatz.equals("GMT0"))
+          javatz = "Etc/UTC";
+        else if (javatz.startsWith("GMT") && javatz.endsWith(":00"))
+          javatz = javatz.substring(0, javatz.length()-3);
+        current = fromStr(Str.make(javatz));
+      }
+    }
+    catch (Throwable e)
+    {
+      System.out.println("ERROR: Cannot init current timezone");
+      e.printStackTrace();
+
+      current = utc;
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  private Str name;        // time zone identifer
+  private Str fullName;    // identifer in zoneinfo database
+  private Rule[] rules;    // reverse sorted by year
+
+}

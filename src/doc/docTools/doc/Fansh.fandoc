@@ -1,0 +1,63 @@
+**************************************************************************
+** title:      Fansh
+** author:     Brian Frank
+** created:    05 Jan 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The 'fansh' is a very simple interactive shell for exploring Fan.  The
+shell allows you enter a one line statement or expression.  If the
+result of the expression is non-void, then it will print the result
+via the 'Obj.toStr' method.  Enter "quit" to exit:
+
+  C:\dev\fan\bin>fansh
+  Fan Shell v1.0.19 ('?' for help)
+  fansh> 3 + 4
+  7
+  fansh> "3" + 4
+  34
+  fansh> [3, 2, 9, 1].sort.join("|")
+  1|2|3|9
+  fansh> quit
+
+Scope [#scope]
+**************
+If you enter a statement which declares a local variable or assigns
+a local variable, the shell will make that variable available to subsequent
+evaluations.  You can enter the "scope" command to list the current
+local variables.  An example:
+
+  C:\dev\fan\bin>fansh
+  Fan Shell v1.0.19 ('?' for help)
+  fansh> x := 5
+  5
+  fansh> y := 7
+  7
+  fansh> z := [x, y]
+  [5, 7]
+  fansh> scope
+
+  Current Scope:
+    sys::Int[] z = [5, 7]
+    sys::Int y = 7
+    sys::Int x = 5
+
+Using Pods [#pods]
+******************
+You can use a fully qualified type name to import a pod:
+
+  fansh> inet::IpAddress("www.google.com").numeric
+  64.233.161.147
+
+Limitations [#limitations]
+**************************
+Currently the Fan shell is quite limited compared to the shells of many
+other languages.  You cannot enter a multi-line statement or expression.
+Also you cannot enter full type definitions.  If you wish to explore the
+language using more than simple line statements, run your Fan code
+as a [script]`Fan#scripts`.
+
+

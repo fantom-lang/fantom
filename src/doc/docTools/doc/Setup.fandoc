@@ -1,0 +1,157 @@
+**************************************************************************
+** title:      Setup
+** author:     Brian Frank
+** created:    04 Jan 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Unix Setup [#unix]
+******************
+The Fan distribution is packaged as a zip file.  Once unpacked
+you should add "fan/bin" into your path:
+
+  PATH=$PATH:/applications/fan/bin
+
+The Fan launchers are implemented as a set of Bash shell
+scripts which all route to common code sourced in "bin/fanlaunch".
+The current implementation is pretty simple and requires that
+you have a "java" command available in your environment (we
+haven't tried Mono with Fan yet).
+
+If the unpacked zip file doesn't have the executable permission
+set on script files, then the "adm/unixsetup" script will
+automatically call "chmod +x" on all the shell scripts and Fan
+build scripts:
+
+  bash adm/unixsetup
+
+Executable Scripts [#executableUnix]
+=====================================
+Fan allows the first line of a source file to start with "#!" to run
+as a Unix shell script:
+
+  #! /usr/bin/env fan
+  class Script { static Void main() { echo("hi") } }
+
+  chmod +x myscript.fan
+  ./myscript.fan
+
+Windows Setup [#windows]
+************************
+The Fan distribution includes a set of Win32 executables which
+allow you to configure which version of Java or .NET is being
+used via "lib/sys.props".
+
+Executable Scripts [#executableWindows]
+=======================================
+You can always use the [fan]`Fan` launcher to run a script by passing
+it on the command line.  But ideally you will want to setup your environment
+so that you can call fan scripts directly as an executable file:
+
+  fan build.fan    // call using fan launcher explicitly
+  build            // call as executable script
+
+The following series of console commands will make ".fan" files
+executable assuming we installed to "c:\dev\fan":
+
+  assoc .fan=Fan
+  ftype Fan=c:\dev\fan\bin\fan.exe "%1" %*
+  set pathext=%pathext%;.fan
+
+Selecting Java or .NET Runtime [#runtime]
+=========================================
+Fan is designed to be run on either a Java VM or a .NET CLR.  You
+can test which runtime is being used via "fan -version":
+
+  C:\dev\fan>fan -version
+  Fan Launcher
+  Copyright (c) 2006-2008, Brian Frank and Andy Frank
+  Licensed under the Academic Free License version 3.0
+
+  Java Runtime:
+    java.vm.name:    Java HotSpot(TM) Client VM
+    java.vm.vendor:  Sun Microsystems Inc.
+    java.vm.version: 1.6.0_03-b05
+    java.home:       C:\Program Files\Java\jre1.6.0_03
+    fan.home:        c:\dev\fan
+    sys.version:     1.0.19
+
+Use "lib/sys.props" to configure which runtime is used by default.
+The value must be "java" or "net":
+
+  // runtime - either "java" or "net"
+  fan.runtime=java
+
+You can override the system property using the "--D" option:
+
+  C:\dev\fan>fan -version --Dfan.runtime=net
+
+You can also override the system property via the "fan_runtime"
+environmental variable:
+
+  C:\dev\fan>set fan_runtime=net
+  C:\dev\fan>fan -version
+
+Java Runtime [#javaRuntime]
+===========================
+If running on Windows, the Fan launcher will attempt to locate the current
+Java VM via the registry key "SOFTWARE\\JavaSoft\\Java Runtime Environment.CurrentVersion"
+similar to how "java.exe" works.  You can specify the path to the "jvm.dll"
+to use explicitly via the "fan.java.jvm" system property.  You can use
+"fan.java.options" to pass through options to the JVM such as memory
+settings.
+
+  // lib/sys.props
+  fan.runtime=java
+  fan.java.jvm=c:\\dev\\tools\\java\\jre\\bin\\client\\jvm.dll
+  fan.java.options=-Xmx128M
+
+Fan currently requires Java version 1.5 or greater.
+
+You can also run Fan directly without the launcher by adding "sys.jar"
+to your classpath and ensuring either the "fan_home" environment variable
+is set or the "fan.home" Java system property is set:
+
+  // via env var
+  C:\>set fan_home=c:\dev\fan
+  C:\>java -cp %fan_home%\lib\java\sys.jar fanx.tools.Fan -version
+
+  // via system property
+  C:\>java -cp c:\dev\fan\lib\java\sys.jar -Dfan.home=%fan_home% fanx.tools.Fan -version
+
+Each of the tools maps to a different class, for example to run 'fant' then run
+the Java class 'fanx.tools.Fant'.
+
+.NET Runtime [#netRuntime]
+==========================
+The Fan launcher will attempt to use the latest version of .NET installed.
+
+Fan currently requires .NET version 2.0 or greater.
+
+TODO: Support manually specifying version, running without launcher
+
+Substitutes [#substitutes]
+==========================
+Another feature of the launcher executables is the ability to map
+specific script files to use an alternate Fan runtime.  This technique
+is used to manage the [bootstrap build]`Bootstrap#substitutes` process.
+
+Launcher Debugger [#debugging]
+===-==========================
+You can set the "fan_launcher_debug" to "true" to debug the launcher
+code.  This can be helpful if you are having problems getting your Java
+or .NET environment working:
+
+  C:\dev\fan\src>set fan_launcher_debug=true
+
+  C:\dev\fan\src>fan -version
+  -- launcher version 1.0 3-Jan-07
+  --   args[0] = "fan"
+  --   args[1] = "-version"
+  -- init
+  --   fanHome = c:\dev\fan
+  --   sys.props:
+  --     fan.runtime=java
+  ...
+

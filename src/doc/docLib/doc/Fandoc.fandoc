@@ -1,0 +1,277 @@
+**************************************************************************
+** title:      Fandoc
+** author:     Brian Frank
+** created:    10 Apr 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Fandoc is documentation format written in plaintext similiar to
+[Markdown]`http://daringfireball.net/projects/markdown/`.  Fandoc
+is the format used for:
+  - Fan source code documentation via the '**' [comment]`docLang::CompilationUnits#comments`
+  - All the documentation manuals (including this document itself)
+  - Comments on fandev.org discussion groups
+
+You can use the [fandoc APIs]`#api` to parse fandoc plaintext
+into a document object model and generate HTML.
+
+Inline Formatting [#inline]
+***************************
+pre>
+  - Inline code: 'FandocParser'
+  - Strong: **foo bar**
+  - Emphasis: *foo bar*
+  - Hyperlink: `http://fandev.org/`
+  - Hyperlink: [Fan Home Page]`http://fandev.org/`
+<pre
+
+  - Code inline: 'FandocParser'
+  - Strong: **foo bar**
+  - Emphasis: *foo bar*
+  - Hyperlink: `http://fandev.org/`
+  - Hyperlink: [Fan Home Page]`http://fandev.org/`
+
+Paragraphs [#p]
+***************
+Paragraphs are separated by a blank line:
+
+pre>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat.
+<pre
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat.
+
+Preformatted [#pre]
+*******************
+When documenting a programming language, you tend to include
+lots of code snippets.  Anything indented two or more spaces is
+considered preformatted (like the pre tag in HTML).  Preformatted
+code cannot start with a dash/space, number/dot/space, or
+letter/dot/space otherwise it considerded a list:
+
+pre>
+  Examples:
+    "abcd"[0..2]   => "abc"
+    "abcd"[3..3]   => "d"
+    "abcd"[-2..-1] => "cd"
+<pre
+
+Examples:
+  "abcd"[0..2]   => "abc"
+  "abcd"[3..3]   => "d"
+  "abcd"[-2..-1] => "cd"
+
+You can also denote a block of text as preformatted by wrapping
+it with the special tokens 'pre>' and '<pre':
+
+pre>
+  pre>
+  - No markup
+  - I mean it!
+  <pre
+<pre
+
+pre>
+- No markup
+- I mean it!
+<pre
+
+Unordered List [#ul]
+********************
+Unordered lists use a dash followed by a space.  Use indentation
+to indicate list hierarchy (two or more spaces):
+
+pre>
+  - item 1
+  - item 2
+  - item 3
+     - sub 3a
+     - sub 3b
+  - item 4
+<pre
+
+  - item 1
+  - item 2
+  - item 3
+     - sub 3a
+     - sub 3b
+  - item 4
+
+Ordered List [#ol]
+******************
+Ordered lists use an identifier followed by a dot and space.  The identifier
+can be a number, letter, or roman numeral (lower or upper case).  Use
+indentation to indicate list hierarchy (two or more spaces):
+
+pre>
+ I. Chapter I
+   1. Section 1
+   2. Section 2
+     a. Subsection a
+     b. Subsection b
+ II. Chapter II
+   A. Section A
+   B. Section B
+     i. Subsection i
+     ii.Subsection ii
+<pre
+
+ I. Chapter I
+   1. Section 1
+   2. Section 2
+     a. Subsection a
+     b. Subsection b
+ II. Chapter II
+   A. Section A
+   B. Section B
+     i. Subsection i
+     ii. Subsection ii
+
+Block Quotes [#blockQuotes]
+***************************
+Block quotes start the first line (or every line) of the paragraph
+with the ">" character followed by a space:
+
+pre>
+  > Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+  > sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+  > Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+  nisi ut aliquip ex ea commodo consequat.
+<pre
+
+> Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+> sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat.
+
+Images [#images]
+****************
+Images use the same syntax as a hyperlink with anchor text, but
+are prefixed with a bang:
+
+pre>
+  ![fan logo]`http://fandev.org/doc/eximg.png`
+<pre
+
+![fan logo]`http://fandev.org/doc/eximg.png`
+
+Headings [#headings]
+********************
+Headings are a title line followed by an "underline".  Documentation
+should define an anchor id for each heading:
+
+pre>
+  Ex Heading 1 [#h1]
+  ******************
+
+  Ex Heading 2 [#h2]
+  ==================
+
+  Ex Heading 3 [#h3]
+  ------------------
+<pre
+
+Ex Heading 1 [#h1]
+******************
+
+Ex Heading 2 [#h2]
+==================
+
+Ex Heading 3 [#h3]
+------------------
+
+Hyperlinks [#hyperlinks]
+************************
+The [docCompiler]`docCompiler::index` pod is used to compile API or stand-alone
+documentation.  It allows you to use abstract uris to create cross reference
+hyperlinks.  During the compilation these uris are translated into relative links
+to the appropiate HTML files.  Hyperlinks to types and slots are automatically
+formatted as inline code.
+
+pre>
+  **APIs:**
+  - `sys::index`:  pod index
+  - `sys::Str`: API for type
+  - `sys::Str.slice`: API for slot
+  - `Int`: API for type (internal to pod)
+  - `Int.toHex` API for slot (internal to pod)
+  - [now]`sys::Duration.now` API with achor text
+
+  **Manuals:**
+  - `docLang::index`: pod index
+  - `docLang::Closures`: chapter
+  - `docLang::Closures#syntax`: anchor within chapter
+  - `WebApp`: chapter (internal to pod)
+  - `WebApp#LogStep`: anchor within chapter (internal to pod)
+<pre
+
+**APIs:**
+  - `sys::index`:  pod index
+  - `sys::Str`: API for type
+  - `sys::Str.slice`: API for slot
+  - `sys::Int`: API for type (internal to pod)
+  - `sys::Int.toHex` API for slot (internal to pod)
+  - [now]`sys::Duration.now` API with achor text
+
+**Manuals:**
+  - `docLang::index`: pod index
+  - `docLang::Closures`: chapter
+  - `docLang::Closures#syntax`: anchor within chapter
+  - `WebApp`: chapter (internal to pod)
+  - `WebApp#logStep`: anchor within chapter (internal to pod)
+
+Fandoc API [#api]
+*****************
+The [FandocParser]`fandoc::FandocParser` class is used to parse fandoc
+plaintext into a document object model.  The [DocNode]`fandoc::DocNode` is
+the base class of all nodes in the document tree.  The tree is organized
+as subclasses of [DocElems]`fandoc::DocElem`.  The leaves of the
+tree which contain the actual text content are [DocText]`fandoc::DocText`.
+
+Once a tree has been parsed into a DOM, you can translate into alternate
+formats via the [DocWriter]`fandoc::DocWriter` class.  You can use
+[HtmlDocWriter]`fandoc::HtmlDocWriter` to translate to XHTML:
+
+  // parse into document tree
+  doc := FandocParser.make.parseStr("you want to do *what*!")
+
+  // write as html snippet (we don't write the
+  // document itself, just its children)
+  doc.writeChildren(HtmlDocWriter.make)
+
+  // outputs
+  <p>you want to do <em>what</em>!</p>
+
+  // write as full html document with head/body tags
+  doc.write(HtmlDocWriter.make)
+
+  // outputs
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  <html>
+  <head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+  </head>
+  <body>
+  <p>you want to do <em>what</em>!</p>
+  </body>
+
+
+
+
+
+
+

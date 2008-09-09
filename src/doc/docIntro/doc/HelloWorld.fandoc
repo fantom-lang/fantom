@@ -1,0 +1,226 @@
+**************************************************************************
+** title:      HelloWorld
+** author:     Brian Frank
+** created:    4 Jan 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Setup [#setup]
+**************
+Fan is distributed as a simple zip file you will need to unzip to
+your local machine.  Make sure the correct binary directory is included
+in your path:
+  {fan.home}/bin
+
+When you first install Fan it will automatically try to run using
+your currently configured Java VM (requires Java 1.5 or greater).
+If things are working correctly you should be able to run "fan -version":
+
+  C:\dev\fan\bin>fan -version
+  Fan Launcher
+  Copyright (c) 2006-2008, Brian Frank and Andy Frank
+  Licensed under the Academic Free License version 3.0
+
+  Java Runtime:
+    java.vm.name:    Java HotSpot(TM) Client VM
+    java.vm.vendor:  Sun Microsystems Inc.
+    java.vm.version: 1.6.0_03-b05
+    java.home:       C:\Program Files\Java\jre1.6.0_03
+    fan.home:        c:\dev\fan
+    sys.version:     1.0.19
+
+If that doesn't work then try these options:
+  1. Review [setup]`docTools::Setup` instructions
+  2. Install Java 1.5 or greater and retry
+  3. Explicitly [configure]`docTools::Setup#javaRuntime` where
+     your JVM is installed
+  4. [Switch]`docTools::Setup#runtime` to use the .NET runtime
+  5. Turn on [launcher debugging]`docTools::Setup#debugging`
+
+Fan Shell [#fansh]
+******************
+The Fan shell is a command line tool for evaluating expressions and
+statements.  It is a great way to test things out.  To launch the
+shell run the 'fansh' executable and call the [Obj.echo]`sys::Obj.echo`
+method:
+
+  C:\dev\fan\bin>fansh
+  Fan Shell v1.0.22 ('?' for help)
+  fansh> echo("hello world #1")
+  hello world #1
+  fansh> quit
+
+Checkout `docTools::Fansh` for more details on the fan shell.
+
+Fan Script [#script]
+********************
+You can also execute any file with the ".fan" extension as a script
+file.  The script must contain a full class definition with a
+method called "main".  Create a file called "hello.fan":
+
+  class Hello
+  {
+    static Void main() { echo("hello world #2") }
+  }
+
+Pass the script file name to the 'fan' executable:
+
+  C:\dev\fan\bin>fan hello.fan
+  hello world #2
+
+Note that unlike Java or C# the arguments aren't required to be
+passed as a parameter to main.  You can declare a 'Str[]' parameter
+if you want or you can access them via [Sys.args]`sys::Sys.args`.
+
+Checkout `docTools::Fan` for more details running fan scripts.
+Also see [unix setup]`docTools::Setup#executableUnix` and
+[windows setup]`docTools::Setup#executableWindows` to make fan
+scripts executable without calling the launcher explicitly.
+
+Fan Pod [#pod]
+**************
+For production systems, you typically organize your code into precompiled
+modules called [pods]`docLang::Structure#pod`.  Pods are built using
+Fan's [build toolkit]`docTools::Build`.  To build a new pod called "hello"
+create a directory structure organized as follows:
+
+  hello/
+    build.fan
+    fan/
+      Main.fan
+
+The contents of "build.fan" is the build script.  It declares the
+meta-data for your pod and which directories contain Fan source files:
+
+  using build
+
+  class Build : BuildPod
+  {
+    override Void setup()
+    {
+      podName     = "hello"
+      version     = Version("1.0")
+      description = "hello world example"
+      depends     = ["sys 1.0"]
+      srcDirs     = [`fan/`]
+    }
+  }
+
+The "fan/Main.fan" file declares a single class called "Main":
+
+  class Main
+  {
+    static Void main() { echo("hello world #3") }
+  }
+
+The build file itself is just a normal Fan script file which will
+compile the pod:
+
+  C:\dev\fan\src\hello>fan build.fan
+  compile [hello]
+    Compile [hello]
+      FindSourceFiles [1 files]
+      WritePod [/C:/dev/fan/lib/fan/hello.pod]
+  BUILD SUCCESS [70ms]!
+
+If you look in your "lib/fan" directory you should now see a file
+called "hello.pod".  Assuming you called your method "main" in a
+class called "Main" you can run the main method using the 'fan'
+executable:
+
+  C:\dev\fan>fan hello
+  hello world #3
+
+  C:\dev\fan>fan hello::Main
+  hello world #3
+
+  C:\dev\fan>fan hello::Main.main
+  hello world #3
+
+Checkout `docTools::Fan` for more details running methods in a
+pod, and `docTools::Build` for details on the build toolkit.
+
+Fan FWT [#fwt]
+**************
+The [Fan Widget Toolkit]`fwt::index` makes it easy to create
+desktop applications.  The following script will launch a simple
+window (this script is available under "examples/fwt/hello.fan"):
+
+  using fwt
+
+  class FwtHello : Test
+  {
+    Void main()
+    {
+      Window { Label { text = "Hello world" } }.open
+    }
+  }
+
+Fan makes declarative work like UI definition easy because
+[serialized objects]`docLang::Serialization` can be used as normal
+expressions.
+
+Fan WebApp [#webapp]
+********************
+To create a very simple hello world web application:
+  - Create a daemon boot script
+  - Configure the web server with a simple pipeline
+  - Write a simple weblet
+  - Mount the weblet into the namespace
+
+Let's look at some example code (this script is available under
+"examples/web/hello.fan"):
+
+  using fand
+  using web
+  using webapp
+  using wisp
+
+  class Boot : BootScript
+  {
+    override Thread[] services :=
+    [
+      WispService("web")
+      {
+        port = 8080
+        pipeline = [FindResourceStep {}, FindViewStep {}, ServiceViewStep {}]
+      }
+    ]
+
+    override Void setup()
+    {
+      Sys.ns.create(`/homePage`, Hello.make)
+    }
+  }
+
+  @serializable
+  class Hello : Weblet
+  {
+    override Void doGet()
+    {
+      res.headers["Content-Type"] = "text/plain"
+      res.out.printLine("hello world #4")
+    }
+  }
+
+The boot script contains two classes.  The first class 'Boot' subclasses
+[BootScript]`fand::BootScript` which provides the standard plumbing for
+writing scripts to boot a Fan daemon.  It's primary purpose is to configure
+the web server to run on port 8080 and to use a simple pipeline which
+defines how to process HTTP requests.  The pipeline is configured using
+some prebuilt steps provided by the [webapp]`docLib::WebApp` framework.
+
+The 'Hello' class subclasses [Weblet]`docLib::Web#weblet` which is Fan's
+"servlet" API for servicing web requests.  It doesn't do much - sets
+the content type and writes the response text.  Lastly we mount this
+weblet into our namespace as the home page.  [Namespaces]`docLang::Namespaces`
+define how we map URIs to resources.
+
+If you run this script:
+
+  C:\dev\fan\bin>fan ../examples/web/hello.fan
+  [09:57:40 11-Apr-08] [info] [fand] booting...
+  [09:57:40 11-Apr-08] [info] [web] WispService started on port 8080
+
+You should be able to "http://localhost:8080/" with your browser!

@@ -1,0 +1,387 @@
+**************************************************************************
+** title:      Methods
+** author:     Brian Frank
+** created:    7 May 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+A method is a slot which defines a function within a class or mixin:
+
+  class Boo
+  {
+    static Int add(Int a, Int b) { return a + b }
+    Int incr() { return count++ }
+    Int count := 0
+  }
+
+In the example above 'add' and 'incr' are method slots on the class 'Boo'.
+The 'incr' method is an instance method which means it is always invoked
+on an instance of 'Boo'.  The 'add' method is static and is not invoked
+on an instance:
+
+  b := Boo.make
+  x := b.incr()
+  y := Boo.add(3, 4)
+
+Method invocation is performed using the '.' dot operator on a *target*.
+The target for instance methods is an instance of the type; for static
+methods the target is the type name.
+
+Methods in your own type (or types you inherit) are automatically scoped
+such that the target type or instance is implied.  For example:
+
+  class Foo : Boo
+  {
+    Int more() { return incr() + add(3, 4) }
+  }
+
+If the method does not take any parameters, then we can leave off the '()' empty
+parenthesis.  By convention the empty parenthesis are *always* omitted:
+
+  b.incr  // same as b.incr()
+
+You can also the '?.' operator to safely handle a null target.  See
+[safe invokes]`Expressions#safeInvoke`.
+
+This [#this]
+************
+Instance methods always have an implied first parameter which is the instance
+itself identified via the keyword 'this'.  The definitions of 'a' and 'b' are
+identical in the following example:
+
+  class Foo : Boo
+  {
+    Int a() { return incr }
+    Int b() { return this.incr }
+  }
+
+Constructors [#ctor]
+********************
+Constructors are special methods used to create new instances of a class.  In
+Fan, constructors are named methods.  The difference is that they use the 'new'
+keyword in their definition instead of a return type (the return type is implied
+to be an instance of the type):
+
+  class MissingPerson
+  {
+    new make(Str name) { this.name = name }
+    Str name
+  }
+
+By convention, the primary constructor should be called 'make' and other
+constructors should be prefixed with 'make'.  Like other slots, constructors
+must be uniquely named within their type.  To create an instance, you call
+the constructor like a static method:
+
+  jack := MissingPerson.make("Jack Shephard")
+
+You can also use the [shorthand syntax]`#constructionCalls` for calling
+a constructor called "make":
+
+  sayid := MissingPerson("Sayid Jarrah")
+
+From a client perspective, constructors look just like named factory methods (in
+fact switching between a static method and constructor maintains source level
+compatibility, but not binary compatibility).  Constructors have the unusual
+property of acting like a static method on the outside and an instance
+method on the inside.  On the outside you call a constructor like a static method
+and get back an instance of the type.  On the inside of a constructor, the
+instance has already been allocated and is available using the 'this' keyword.
+
+If you do not declare a constructor on your class, then the compiler will
+automatically generate a public no arg constructor called 'make'.
+
+Only classes can have constructors.  It is a compile time error to declare
+a constructor on a mixin.
+
+Construction Calls [#constructionCalls]
+=======================================
+Fan supports a special syntax called *construction calls* with
+the syntax 'Type(args)'.  These calls are resolved as follows:
+
+  1. bind to 'Type.fromStr' *if* there is exactly one Str argument *and*
+     'Type.fromStr' exists (see [simple literals]`Expressions#simples`)
+  2. otherwise bind to 'Type.make'
+
+The construction operator works on static methods or constructors.
+So you can use it when 'make' is a constructor or when 'make' is a factory
+method.  The method of construction call 'Foo(...)' must return 'Foo'.
+
+Convention is to always prefer a construction call to using 'make'
+explicitly:
+
+  ArgErr.make   // non-preferred
+  ArgErr()      // preferred
+
+  ArgErr.make("bad arg")   // non-preferred
+  ArgErr("bad arg")        // preferred
+
+Constructor Chaining [#ctorChaining]
+====================================
+When creating subclasses, you must call one of your parent class constructors
+or another of your own constructors using a syntax called *constructor
+chaining*.  The syntax to call a parent constructor is based on C++ and C#
+using the ':' after the formal parameters, but before the method body:
+
+  class Foo
+  {
+    new make() {}
+    new makeName(Str name) {}
+  }
+
+  class Bar : Foo
+  {
+    new make() : super() {}
+    new makeFullName(Str first, Str last) : super.makeName(last) {}
+    new makeLastName(Str last) : this.makeFullName(null, last) {}
+  }
+
+All constructor chains start with the 'this' or 'super' keyword.  Use
+'this' to chain to one of your own constructors or 'super' to call a parent
+constructor.  Then the constructor to call is specified as a normal method
+call with the name and argument list.  As a shortcut, you can omit the
+name if the parent constructor being called has the same name.
+
+In the example above, 'Bar.make' illustrates calling 'Foo.make'- omitting
+the name implies calling a parent of the same name - 'make' in this case.
+'Bar.makeFullName' illustrates calling a super class constructor by name.
+'Bar.makeLastName' shows how to call a peer constructor on your own class - this
+is useful for ensuring all your initialization code is centralized in one
+constructor.
+
+Static Constructors [#staticCtor]
+*********************************
+Static constructors are methods executed to initialize the class
+itself.  They are typically used to initialize [static fields]`Fields#static`.
+Static constructors use a Java like syntax:
+
+  class Foo
+  {
+    static { echo("initializing Foo...") }
+  }
+
+Assignment to static fields is done in an auto-generated static
+initializer.  It is permissible to have multiple static initializers,
+in which case they are run in the order of declaration:
+
+  class Foo
+  {
+    static const Int a := 10
+    static { echo("1st a=$a b=$b") }
+    static const Int b := 20
+    static { echo("2nd a=$a b=$b") }
+    static { a = 30 }
+    static { echo("3rd a=$a b=$b") }
+  }
+
+  // outputs
+  1st a=10 b=null
+  2nd a=10 b=20
+  3rd a=30 b=20
+
+Default Parameters [#defaultParams]
+***********************************
+You can specify a default argument for parameters.  Defaults can be
+applied to the last zero or more parameters (right to left).  For
+example:
+
+  static Int add(Int a, Int b, Int c := 0, Int d := 0)
+  {
+    return a + b + c + d
+  }
+
+In this example the last two parameters 'c' and 'd' default to zero.
+This allows you to call the 'add' method with 2, 3, or 4 arguments:
+
+  add(3, 4, 5, 6)
+  add(3, 4, 5)     // same as add(3, 4, 5, 0)
+  add(3, 4)        // same as add(3, 4, 0, 0)
+
+Shortcuts [#shortcuts]
+**********************
+Fan supports operator overloading using *shortcut methods*.  Basically
+any method that uses one of the predefined shortcut method signatures
+can be invoked via its associated operator.  For example if you wish
+to create a class that supports 'Str' indexing using the '[]' operator
+you would just write a 'get' and 'set' method:
+
+  class FlightManifest
+  {
+    Passenger get(Str name) { ... }
+    Void set(Str name, Passenger p) { ...}
+  }
+
+  kate := flight815["Kate Austen"]  // kate := flight815.get("Kate Austen")
+  flight815["Hugo Reyes"] = hugo    // flight815.set("Hugo Reyes", hugo)
+
+See [Shortcut Operators]`Expressions#shortcuts` for the full mapping of
+operators to method signatures.
+
+Virtual Methods [#virtual]
+**************************
+Virtual methods are designed to be overridden by a subclass to enable
+polymorphism.  Methods must be marked using the 'virtual' keyword before
+they can be overridden by subclasses.  Subclasses must declare they
+are overriding a method using the 'override' keyword:
+
+  class Animal
+  {
+    virtual Void talk() { echo("generic") }
+  }
+
+  class Cat : Animal
+  {
+    override Void talk() { echo("meow") }
+  }
+
+  Animal.make.talk   // prints generic
+  Cat.make.talk      // prints meow
+
+Abstract Methods [#abstract]
+****************************
+Abstract methods are virtual methods without an implementation.  They
+are declared using the 'abstract' keyword.  Abstract methods are implied
+to be virtual - it is an error to use both the 'abstract' and 'virtual'
+keyword.  Abstract methods must not provide a method body.  If declared
+within a [class]`Classes#abstract`, then the containing class must
+also be 'abstract'.
+
+Once Methods [#once]
+********************
+The 'once' keyword can be used to declare *once methods*.  A once
+method only computes its result the first time it is called and
+then returns a cached value on subsequent calls.  Once methods are
+a great technique for lazily creating state without a lot of boiler
+plate code:
+
+  // hard way
+  Str fullName
+  {
+    get
+    {
+      if (@fullName == null) @fullName = "$firstName  $lastName"
+      return @fullName
+    }
+  }
+
+  // easy way
+  once Str fullName() { return "$firstName  $lastName" }
+
+Restrictions for once methods:
+  - Must not be declared within a const class
+  - Must not be declared within a mixin
+  - Must not be a constructor
+  - Must not be static
+  - Must not be abstract
+  - Must return non-Void
+  - Must have no parameters
+
+If a once method throws an exception, then there is no cached
+value - subsequent calls will re-execute the method until it
+returns a value.
+
+Covariance [#covariance]
+************************
+Fan supports [covariance]`Inheritance#covariance` - which allows
+an overridden method to narrow the return type of the inherited
+method:
+
+  abstract class Animal
+  {
+    abstract Animal mommy()
+    abstract Animal daddy()
+  }
+
+  class Cat : Animal
+  {
+    override Cat mommy() {...}
+    override Cat daddy() {...}
+  }
+
+This Returns [#thisReturns]
+***************************
+A method declared to return 'This' is a special case of covariance
+which always returns the type being used.  This technique is typically
+used by methods which return 'this' to enable method chaining.
+Consider this example:
+
+  class Connection
+  {
+    Connection open() { return this }
+  }
+
+  class MyConnection : Connection
+  {
+    MyConnection talk() { return this }
+  }
+
+The APIs are written to allow method chaining, so we'd like
+to be able to write something like this:
+
+  MyConnection.make.open.talk
+
+If you actually tried to compile that code you'd get an error like
+"Unknown slot Connection.talk".  We could write code without method
+chaining, or we could even use the "->" operator.  But this technique
+is so commonly used, that Fan allows you to declare the return
+type as 'This':
+
+  class Connection
+  {
+    This open() { return this }
+  }
+
+  class MyConnection : Connection
+  {
+    This talk() { return this }
+  }
+
+The 'This' type is a special marker type like 'Void'.  It indicates
+that a method is guaranteed to always return an instance of the
+target type.  In our example above, the expression 'x.open' will
+always evaluate to an instance of 'x.type'.
+
+Use of 'This' is restricted to the return type of non-static
+methods.  You can't use it for static methods, parameter types,
+local variable types, or for fields.  Overrides of a methods
+which return 'This' must also return 'This'.
+
+Dynamic Invoke [#dynamicInvoke]
+*******************************
+As any dynamic language proponent can tell you - sometimes static
+typing can be a real pain.  So Fan supports a hybrid static/dynamic
+design by providing two call operators.  The '.' dot operator accesses
+a slot using static typing - if the slot cannot be resolved at compile
+time, then it results in a compile time error.
+
+The '->' dynamic invoke operator lets you perform calls with no compile
+time type checking.  What dynamic invoke actually does it generate a call
+to the `sys::Obj.trap` method.  By default the 'trap' method uses reflection
+to lookup and call the method.  If the name maps to a field, then 'trap'
+will get or set the field depending on the number of arguments:
+
+  a->x        a.trap("x", [,])
+  a->x = b    a.trap("x", [b])
+  a->x(b)     a.trap("x", [b])
+  a->x(b, c)  a.trap("x", [b, c])
+
+In the simplest case, the '->' operator is syntax sugar to by-pass static
+type checking and use reflection.  But the ability to override the 'trap'
+method is a powerful technique in the Fan toolkit for building dynamic
+solutions.
+
+You can also the '?->' operator to safely handle a null target.  See
+[safe invokes]`Expressions#safeInvoke`.
+
+Native Methods [#native]
+************************
+Native methods are implemented in an alternate language which is "native"
+for each target platform.  Native methods are typically written in Java
+for the Java VM and C# for the .NET CLR.  Native methods use the 'native'
+keyword and must not have a method body (like abstract methods).  The
+infrastructure for supporting native methods is discussed in the `Natives`
+chapter.
+

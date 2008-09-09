@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#
+# fanp: fcode disassembler
+#
+
+. "${0%/*}/fanlaunch" 
+fanlaunch Fanp "$@"

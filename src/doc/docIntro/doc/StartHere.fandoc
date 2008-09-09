@@ -1,0 +1,61 @@
+**************************************************************************
+** title:      StartHere
+** author:     Brian Frank
+** created:    9 Jan 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Learn More [#learnMore]
+***********************
+Try these links to learn more about Fan:
+  - `Tour`: quick introduction to Fan's features by code example
+  - `WhyFan`: why we're crazy enough to build Fan
+  - Hello world five different ways:
+      - [fan shell]`HelloWorld#fansh`: interactive shell
+      - [fan script]`HelloWorld#script`: executable scripts
+      - [fan pod]`HelloWorld#pod`: precompiled modules
+      - [fan fwt]`HelloWorld#fwt`: desktop application
+      - [fan web app]`HelloWorld#webapp`: web application libraries
+
+Quick Start [#quickStart]
+*************************
+If you want to jump right in and start coding:
+
+  - [Download]`http://www.fandev.org` the latest build
+  - [Setup]`docTools::Setup`: your environment
+  - `HelloWorld`: try your hand at hello world
+  - [docCookbook]`docCookbook::index`: snippets of example
+    code for common tasks
+
+Documentation Organization [#organization]
+******************************************
+All documentation and APIs are organized into modules called *pods*.
+The doc index is organized by *manuals* and *APIs*.  APIs are the
+reference documentation for each public type generated from source (like
+Javadoc).  Manuals group a set of chapters on a subject:
+
+  - [docIntro]`docIntro::index`: general purpose introductory material
+  - [docLang]`docLang::index`: covers the language in depth
+  - [docTools]`docTools::index`: command line tools, unit testing, build toolkit
+  - [docLib]`docLib::index`: details on various pod libraries
+  - [docCookbook]`docCookbook::index`: example snippets of source code
+
+Learning Fan [#learningFan]
+***************************
+If you want to dig deep, then you'll probably want to look over
+[docIntro]`docIntro::index` to get a background.  At some point you
+should consider reading [docLang]`docLang::index` front to back - it is
+designed to be read as book.  Once you start writing code, you'll
+find [docCookbook]`docCookbook::index` and the reference APIs handy as
+you learn the standard libraries.  When you start to develop real applications
+make sure to review how to write [unit tests]`docTools::Fant` and
+[build scripts]`docTools::Build`.
+
+Getting Involved [#gettingInvolved]
+***********************************
+The place to ask questions and submit feedback is the
+[discussion group]`http://www.fandev.org/sidewalk/topic/`.
+Or you can [contact us]`Faq#contact` directly.  Let us know
+what you think!
+

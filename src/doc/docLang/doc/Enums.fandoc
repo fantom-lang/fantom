@@ -1,0 +1,113 @@
+**************************************************************************
+** title:      Enums
+** author:     Brian Frank
+** created:    24 Aug 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Enums are a special type of class that define a discrete range
+of possible values:
+
+  - Enums are normal [classes]`Classes` with all associated
+    characteristics
+  - Enums are implied const
+  - Enums are implied final
+  - Enums have a fixed range of instances
+  - Enums can contain declare zero or more uniquely named slots
+  - Enums always always inherit from `sys::Enum`
+  - Enums may inherit zero or more mixins
+  - Enums must have private constructors
+
+Enums are declared using the 'enum' keyword and must declare
+their range of values before any other slot declarations:
+
+  enum Color { red, blue, green }
+
+Range [#range]
+**************
+The *range* of an enum is its discrete set of instances.  Each
+instance of the range has the following characteristics:
+  - is identified by a unique zero based ordinal
+  - is identified by a unique name
+  - is accessed via a static const field by its name
+  - is an instance of the declaring enum class
+  - is immutable (enums are implied const)
+
+The compiler automatically generates two helper slots:
+  - 'values' is a list of all the values in the
+    range indexed by ordinal
+  - 'fromStr' is used to resolve by name
+
+Consider this example to illustrate what happens under
+the covers:
+
+  // what you write
+  enum Color { red, blue, green }
+
+  // what the compiler generates
+  class Color : Enum
+  {
+    static const Color red   = make(0, "red")
+    static const Color blue  = make(1, "blue")
+    static const Color green = make(2, "green")
+
+    static const Color[] values = [red, blue, green].toImmutable
+
+    static Color fromStr(Str s) { ... }
+
+    private new make(Int ord, Str name) : super(ord, name) {}
+  }
+
+Enum Constructors [#ctor]
+*************************
+Enums can declare their own constructor to initialize additional
+fields.  Remember that an enum is const, which means that all its
+fields must also be const.  This in turn means that all fields
+must be initialized in the constructor.  Enum constructors must be
+private.  The following syntax is used to declare and call an
+enum constructor:
+
+  enum Suits
+  {
+    clubs("black"),
+    diamonds("red"),
+    hearts("red"),
+    spades("black")
+
+    private new make(Str color) { this.color = color; }
+
+    const Str color;
+  }
+
+Note that the declaring class doesn't actually manage its own
+ordinals and names, this is always done by the compiler.
+
+Enum Modifiers [#modifiers]
+****************************
+Enums can be annotated with the 'public' or 'internal' modifiers
+just like [classes]`Classes#protection`.  It is a compile time
+error to use the 'abstract', 'final', or 'const' modifiers with
+a enum - 'final' and 'const' are implied.
+
+Reflection [#reflection]
+************************
+Enums are keyed by both an zero based integer ordinal and a
+string name.  The following summarizes slots often used to
+work with enums (using 'Month' as an example):
+
+  - `sys::Enum.ordinal`: the 'Int' ordinal key
+  - `sys::Enum.name`: the 'Str' name key
+  - `sys::Month.values`: lookup instance by ordinal
+  - `sys::Month.fromStr`: lookup instance by name
+
+Example code:
+
+  apr := Month.apr              // direct access
+  jun := Month.values[5]        // lookup by ordinal
+  aug := Month.fromStr("aug")   // lookup by name
+  Month.fromStr("bad")          // throws ParseErr
+  Month.fromStr("bad", false)   // returns null
+

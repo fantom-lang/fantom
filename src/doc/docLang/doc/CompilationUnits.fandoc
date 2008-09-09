@@ -1,0 +1,120 @@
+**************************************************************************
+** title:      CompilationUnits
+** author:     Brian Frank
+** created:    3 Jun 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Organization [#organization]
+****************************
+Fan source code for pods is organized into one or more directories on
+the file system.  By convention the source tree of a pod is structured
+as follows:
+
+  podxyz/
+    +- fan/       // ".fan" source files
+    +- java/      // ".java" Java native peers
+    +- net/       // ".cs" C# native peers
+    +- res/       // resources to bundle with pod
+    +- test/      // ".fan" unit tests
+    +- build.fan  // build script for pod
+
+Each of those directories may contain arbitrary sub-directories under it,
+although it is not required.
+
+Fan source code is stored in plain text files using a ".fan" extension.  Each
+source file can contain one or more [class]`Classes` or [mixin]`Mixins`
+definitions.  Unlike Java, there is no restriction that each type must be
+in its own source file.  Although by convention we put each class into a
+source file with a matching name.  However if you have lots of little
+classes, then it is best to combine them intelligently.
+
+Char Encoding [#charEncoding]
+*****************************
+There is only one simple rule to follow - all Fan source files must be
+in UTF-8 encoding.  Even better, if you want to ensure that your source
+code is drop-dead easy to use in any editor then use standard 7-bit ASCII
+characters (which is a clean subset of UTF-8).  End of story, enough said.
+
+Anatomy of Source File [#anatomy]
+*********************************
+Compiler writers like to use the fancy term *compilation unit* to describe
+the text of a source file.  A compilation unit has a pretty simple structure:
+
+  1.  Zero or more 'using' statements
+  2.  One or more type definitions
+
+The [using]`#using` statements import types from external pods into the
+compilation unit's namespace.  The type definitions are the actual
+classes and mixins.
+
+Using [#using]
+**************
+Every compilation unit can specify zero or more 'using' statements to
+import types into the unit's namespace.  Importing types into the namespace
+lets you use simple type names in your [type signatures]`TypeSystem#signatures`
+instead of qualified names.
+
+The simplest form of the 'using' statement is to import *all* the types
+of a pod into your namespace:
+
+  using inet
+
+The statement above allows you to use any type defined in the 'inet'
+pod via its simple name.  For example the simple type name 'TcpSocket'
+will now resolve to 'inet::TcpSocket'.
+
+We can also import a single type into the namespace.  For example to just
+import 'inet::TcpSocket' without importing all the other types from
+the 'inet' pod we use this syntax:
+
+  using inet::TcpSocket
+
+In large scale projects it is inevitable that two different pods will
+reuse the same type name.  If we need to use both types in a compilation
+unit, then we could use the qualified name - although it can be a bit
+verbose.  Another option is to use the 'using as' statement.  For example,
+given a naming collision between 'red::Foo' and 'blue::Foo', we can
+import 'blue::Foo' as 'BlueFoo' with this syntax:
+
+  using blue::Foo as BlueFoo
+
+The 'using as' statement is for naming collisions - don't use it for
+bone-headed things like importing 'sys::Str' as 'S' (we've tried to keep
+key type names short to being with).
+
+The 'sys' pod is automatically imported into every compilation unit - in
+fact it is a compiler error is you try to import manually.
+
+Comments [#comments]
+********************
+Fan supports three styles of comments:
+
+  - '/* */' block comments are used to comment out a block of text which
+    can span multiple lines.  You can nest '/* */' comments as a handy
+    way to comment out large sections of code
+  - '//' end of line comments ignore everything to the end
+    of the line
+  - '**' fandoc comments
+
+The '**' comment is used for documentation.  Like '//' comments, it
+comments everything to the end of the line.  Fandoc comments are similar
+to '/** */' Javadoc or '///' C# documentation comments.  You prefix one
+more lines of '**' comments to specify the documentation for a type
+or slot definition:
+
+  ** This class is really cool
+  class Cool
+  {
+    ** When you gotta just do it!
+    Void justDoIt() {}
+  }
+
+The documentation is written in plain text using a special set of rules
+for structure called [fandoc]`docLib::Fandoc`.  Fandoc allows you to write
+documentation that looks good in plain text source files, but can be
+translated into other formats such as nicely formatted HTML.
+
+
+

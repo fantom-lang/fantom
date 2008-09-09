@@ -1,0 +1,56 @@
+//
+// Copyright (c) 2008, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   18 Aug 08  Brian Frank  Creation
+//
+
+**
+** KeyTest
+**
+class KeyTest : Test
+{
+
+  Void testMake()
+  {
+    v := Version("1.0")
+    verifyKey(Key.a, "A", [Key.a])
+    verifyKey(Key.alt, "Alt", [Key.alt])
+    verifyKey(Key.num7+Key.alt, "Alt+7", [Key.alt,Key.num7])
+    verifyKey(Key.ctrl+Key.f3, "Ctrl+F3", [Key.ctrl,Key.f3])
+    verifyKey(Key("Alt+Command+R"), "Alt+Command+R", [Key.alt, Key.command, Key.r])
+  }
+
+  Void testPlus()
+  {
+    verifyKey(Key.shift+Key.alt+Key.x, "Shift+Alt+X", [Key.shift, Key.alt, Key.x])
+    verifyKey(Key.x+Key.shift+Key.alt, "Shift+Alt+X", [Key.shift, Key.alt, Key.x])
+    verifyKey(Key.shift+Key.x+Key.alt, "Shift+Alt+X", [Key.shift, Key.alt, Key.x])
+    verifyErr(ArgErr#) |,| { k := Key.x + Key.y }
+  }
+
+  Void testParse()
+  {
+    eq := Key("=")
+    verifyKey(eq, "=", [eq])
+    verifyKey(Key("Command+="), "Command+=", [Key.command, eq])
+
+    verifyEq(Key.fromStr("", false), null)
+    verifyEq(Key.fromStr("==", false), null)
+    verifyEq(Key.fromStr("e", false), null)
+    verifyEq(Key.fromStr("Foo", false), null)
+    verifyEq(Key.fromStr("R+W", false), null)
+
+    verifyErr(ParseErr#) |,| { Key("R+W") }
+    verifyErr(ParseErr#) |,| { Key.fromStr("2+3+4", true) }
+  }
+
+  Void verifyKey(Key k, Str s, Key[] ks)
+  {
+    verifyEq(k.toStr, s)
+    verifyEq(k.list,  ks)
+    verifyEq(Key.fromStr(s), k)
+  }
+
+}

@@ -1,0 +1,1445 @@
+//
+// Copyright (c) 2006, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   28 Jun 06  Brian Frank  Creation
+//   01 Aug 07  Brian        Rewrite with our own parser/encoder
+//
+package fan.sys;
+
+import fanx.serial.*;
+import fanx.util.*;
+
+/**
+ * Uri is used to immutably represent a Universal Resource Identifier.
+ */
+public final class Uri
+  extends FanObj
+  implements Literal
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
+  public static Uri fromStr(String s) { return fromStr(Str.make(s), Bool.True); }
+  public static Uri fromStr(Str s) { return fromStr(s, Bool.True); }
+  public static Uri fromStr(Str s, Bool checked)
+  {
+    try
+    {
+      return new Uri(new Decoder(s.val, false).decode());
+    }
+    catch (ParseErr.Val e)
+    {
+      if (!checked.val) return null;
+      throw ParseErr.make("Uri",  s, e.err.message()).val;
+    }
+    catch (Exception e)
+    {
+      if (!checked.val) return null;
+      throw ParseErr.make("Uri",  s).val;
+    }
+  }
+
+  public static Uri decode(String s) { return decode(Str.make(s), Bool.True); }
+  public static Uri decode(Str s) { return decode(s, Bool.True); }
+  public static Uri decode(Str s, Bool checked)
+  {
+    try
+    {
+      return new Uri(new Decoder(s.val, true).decode());
+    }
+    catch (ParseErr.Val e)
+    {
+      if (!checked.val) return null;
+      throw ParseErr.make("Uri",  s, e.err.message()).val;
+    }
+    catch (Exception e)
+    {
+      if (!checked.val) return null;
+      throw ParseErr.make("Uri",  s).val;
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  public static Map decodeQuery(Str s)
+  {
+    try
+    {
+      return new Decoder(s.val, true).decodeQuery();
+    }
+    catch (ArgErr.Val e)
+    {
+      throw ArgErr.make("Invalid Uri query: `" + s + "`: " + e.err.message()).val;
+    }
+    catch (Exception e)
+    {
+      throw ArgErr.make("Invalid Uri query: `" + s + "`").val;
+    }
+  }
+
+  public static Str encodeQuery(Map map)
+  {
+    StringBuilder buf = new StringBuilder(256);
+    java.util.Iterator it = map.keysIterator();
+    while (it.hasNext())
+    {
+      Str key = (Str)it.next();
+      Str val = (Str)map.get(key);
+      if (buf.length() > 0) buf.append('&');
+      encodeQueryStr(buf, key.val);
+      if (val != null)
+      {
+        buf.append('=');
+        encodeQueryStr(buf, val.val);
+      }
+    }
+    return Str.make(buf.toString());
+  }
+
+  static void encodeQueryStr(StringBuilder buf, String str)
+  {
+    for (int i=0; i<str.length(); ++i)
+    {
+      int c = str.charAt(i);
+      if (c < 128 && (charMap[c] & QUERY) != 0 && (delimEscMap[c] & QUERY) == 0)
+        buf.append((char)c);
+      else
+        percentEncodeChar(buf, c);
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Java Constructors
+//////////////////////////////////////////////////////////////////////////
+
+  private Uri(Sections x)
+  {
+    scheme   = x.scheme;
+    userInfo = x.userInfo;
+    host     = x.host;
+    port     = x.port;
+    pathStr  = x.pathStr;
+    path     = x.path.ro();
+    queryStr = x.queryStr;
+    query    = x.query.ro();
+    frag     = x.frag;
+    str      = x.str != null ? x.str : new Encoder(this, false).encode();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Sections
+//////////////////////////////////////////////////////////////////////////
+
+  static class Sections
+  {
+    void setAuth(Uri x)  { userInfo = x.userInfo; host = x.host; port = x.port; }
+    void setPath(Uri x)  { pathStr = x.pathStr; path = x.path; }
+    void setQuery(Uri x) { queryStr = x.queryStr; query = x.query; }
+    void setFrag(Uri x)  { frag = x.frag; }
+
+    void normalize()
+    {
+      normalizeHttp();
+      normalizePath();
+      normalizeQuery();
+    }
+
+    private void normalizeHttp()
+    {
+      if (scheme == null || !scheme.val.equals("http"))
+        return;
+
+      // port 80 -> null
+      if (port != null && port.val == 80) port = null;
+
+      // if path is "" -> "/"
+      if (pathStr == null || pathStr.val.length() == 0)
+      {
+        pathStr = Str.ascii['/'];
+        if (path == null) path = emptyPath();
+      }
+    }
+
+    private void normalizePath()
+    {
+      if (path == null) return;
+
+      boolean isAbs = pathStr.val.startsWith("/");
+      boolean isDir = pathStr.val.endsWith("/");
+      boolean dotLast = false;
+      boolean modified = false;
+      for (int i=0; i<path.sz(); ++i)
+      {
+        Str seg = (Str)path.get(i);
+        if (seg.val.equals(".") && (path.sz() > 1 || host != null))
+        {
+          path.removeAt(Int.make(i));
+          modified = true;
+          dotLast = true;
+          i -= 1;
+        }
+        else if (seg.val.equals("..") && i > 0 && !path.get(i-1).toString().equals(".."))
+        {
+          path.removeAt(Int.make(i));
+          path.removeAt(Int.make(i-1));
+          modified = true;
+          i -= 2;
+          dotLast = true;
+        }
+        else
+        {
+          dotLast = false;
+        }
+      }
+
+      if (modified)
+      {
+        if (dotLast) isDir = true;
+        if (path.sz() == 0 || path.last().toString().equals("..")) isDir = false;
+        pathStr = toPathStr(isAbs, path, isDir);
+      }
+    }
+
+    private void normalizeQuery()
+    {
+      if (query == null)
+        query = emptyQuery();
+    }
+
+    Str scheme;
+    Str host;
+    Str userInfo;
+    Int port;
+    Str pathStr;
+    List path;
+    Str queryStr;
+    Map query;
+    Str frag;
+    Str str;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Decoder
+//////////////////////////////////////////////////////////////////////////
+
+  static class Decoder extends Sections
+  {
+    Decoder(String str, boolean decoding)
+    {
+      this.str = str;
+      this.decoding = decoding;
+    }
+
+    Decoder decode()
+    {
+      String str = this.str;
+      int len = str.length();
+      int pos = 0;
+
+      // ==== scheme ====
+
+      // scan the string from the beginning looking for either a
+      // colon or any character which doesn't fit a valid scheme
+      boolean hasUpper = false;
+      for (int i=0; i<len; ++i)
+      {
+        int c = str.charAt(i);
+        if (isScheme(c)) { hasUpper |= isUpper(c); continue; }
+        if (c != ':') break;
+
+        // at this point we have a scheme; if we detected
+        // any upper case characters normalize to lowercase
+        pos = i + 1;
+        String scheme = str.substring(0, i);
+        if (hasUpper) scheme = Str.lower(scheme);
+        this.scheme = Str.make(scheme);
+      }
+
+      // ==== authority ====
+
+      // authority must start with //
+      if (pos+1 < len && str.charAt(pos) == '/' && str.charAt(pos+1) == '/')
+      {
+        // find end of authority which is /, ?, #, or end of string;
+        // while we're scanning look for @ and last colon which isn't
+        // inside an [] IPv6 literal
+        int authStart = pos+2, authEnd = len, at = -1, colon = -1;
+        for (int i=authStart; i<len; ++i)
+        {
+          int c = str.charAt(i);
+          if (c == '/' || c == '?' || c == '#') { authEnd = i; break; }
+          else if (c == '@' && at < 0) { at = i; colon = -1; }
+          else if (c == ':') colon = i;
+          else if (c == ']') colon = -1;
+        }
+
+        // start with assumption that there is no userinfo or port
+        int hostStart = authStart, hostEnd = authEnd;
+
+        // if we found an @ symbol, parse out userinfo
+        if (at > 0)
+        {
+          this.userInfo = substr(authStart, at, USER);
+          hostStart = at+1;
+        }
+
+        // if we found an colon, parse out port
+        if (colon > 0)
+        {
+          this.port = Int.make(Integer.parseInt(str.substring(colon+1, authEnd)));
+          hostEnd = colon;
+        }
+
+        // host is everything left in the authority
+        this.host = substr(hostStart, hostEnd, HOST);
+        pos = authEnd;
+      }
+
+      // ==== path ====
+
+      // scan the string looking '?' or '#' which ends the path
+      // section; while we're scanning count the number of slashes
+      int pathStart = pos, pathEnd = len, numSegs = 1, prev = 0;
+      for (int i=pathStart; i<len; ++i)
+      {
+        int c = str.charAt(i);
+        if (prev != '\\')
+        {
+          if (c == '?' || c == '#') { pathEnd = i; break; }
+          if (i != pathStart && c == '/') ++numSegs;
+          prev = c;
+        }
+        else
+        {
+          prev = (c != '\\') ? c : 0;
+        }
+      }
+
+      // we now have the complete path section
+      this.pathStr = substr(pathStart, pathEnd, PATH);
+      this.path = pathSegments(pathStr.val, numSegs);
+      pos = pathEnd;
+
+      // ==== query ====
+
+      if (pos < len && str.charAt(pos) == '?')
+      {
+        // look for end of query which is # or end of string
+        int queryStart = pos+1, queryEnd = len; prev = 0;
+        for (int i=queryStart; i<len; ++i)
+        {
+          int c = str.charAt(i);
+          if (prev != '\\')
+          {
+            if (c == '#') { queryEnd = i; break; }
+            prev = c;
+          }
+          else
+          {
+            prev = (c != '\\') ? c : 0;
+          }
+        }
+
+        // we now have the complete query section
+        this.queryStr = substr(queryStart, queryEnd, QUERY);
+        this.query = parseQuery(queryStr.val);
+        pos = queryEnd;
+      }
+
+      // ==== frag ====
+
+      if (pos < len  && str.charAt(pos) == '#')
+      {
+        this.frag = substr(pos+1, len, FRAG);
+      }
+
+      // === normalize ===
+      normalize();
+      return this;
+    }
+
+    private List pathSegments(String pathStr, int numSegs)
+    {
+      // if pathStr is "/" then path si the empty list
+      int len = pathStr.length();
+      if (len == 0 || (len == 1 && pathStr.charAt(0) == '/'))
+        return emptyPath();
+
+      // check for trailing slash
+      if (len > 1 && pathStr.charAt(len-1) == '/')
+      {
+        numSegs--;
+        len--;
+      }
+
+      // parse the segments
+      Str[] path = new Str[numSegs];
+      int n = 0;
+      int segStart = 0, prev = 0;
+      for (int i=0; i<pathStr.length(); ++i)
+      {
+        int c = pathStr.charAt(i);
+        if (prev != '\\')
+        {
+          if (c == '/')
+          {
+            if (i > 0) path[n++] = Str.make(pathStr.substring(segStart, i));
+            segStart = i+1;
+          }
+          prev = c;
+        }
+        else
+        {
+          prev = (c != '\\') ? c : 0;
+        }
+      }
+      if (segStart < len)
+        path[n++] = Str.make(pathStr.substring(segStart, pathStr.length()));
+
+      return new List(Sys.StrType, path);
+    }
+
+    Map decodeQuery()
+    {
+      return parseQuery(substring(0, str.length(), QUERY));
+    }
+
+    private Map parseQuery(String q)
+    {
+      if (q == null) return null;
+      Map map = new Map(Sys.StrType, Sys.StrType);
+
+      try
+      {
+        int start = 0, eq = 0, len = q.length(), prev = 0;
+        boolean escaped = false;
+        for (int i=0; i<len; ++i)
+        {
+          int ch = q.charAt(i);
+          if (prev != '\\')
+          {
+            if (ch == '=') eq = i;
+            if (ch != '&' && ch != ';') { prev = ch; continue; }
+          }
+          else
+          {
+            escaped = true;
+            prev = (ch != '\\') ? ch : 0;
+            continue;
+          }
+
+          if (start < i)
+          {
+            addQueryParam(map, q, start, eq, i, escaped);
+            escaped = false;
+          }
+
+          start = eq = i+1;
+        }
+
+        if (start < len)
+          addQueryParam(map, q, start, eq, len, escaped);
+      }
+      catch (Exception e)
+      {
+        // don't let internal error bring down whole uri
+        e.printStackTrace();
+      }
+
+      return map;
+    }
+
+    private void addQueryParam(Map map, String q, int start, int eq, int end, boolean escaped)
+    {
+      if (start == eq)
+        map.set(toQueryStr(q, start, end, escaped), Bool.True.toStr());
+      else
+        map.set(toQueryStr(q, start, eq, escaped), toQueryStr(q, eq+1, end, escaped));
+    }
+
+    private Str toQueryStr(String q, int start, int end, boolean escaped)
+    {
+      if (!escaped) return Str.make(q.substring(start, end));
+      StringBuilder s = new StringBuilder(end-start);
+      int prev = 0;
+      for (int i=start; i<end; ++i)
+      {
+        int c = q.charAt(i);
+        if (c != '\\')
+        {
+          s.append((char)c);
+          prev = c;
+        }
+        else
+        {
+          if (prev == '\\') { s.append((char)c); prev = 0; }
+          else prev = c;
+        }
+      }
+      return Str.make(s.toString());
+    }
+
+    private Str substr(int start, int end, int section)
+    {
+      return Str.make(substring(start, end, section));
+    }
+
+    private String substring(int start, int end, int section)
+    {
+      if (!decoding) return str.substring(start, end);
+
+      StringBuilder buf = new StringBuilder(end-start);
+      dpos = start;
+      while (dpos < end)
+      {
+        int ch = nextChar(section);
+        if (nextCharWasEscaped && ch < delimEscMap.length && (delimEscMap[ch] & section) != 0)
+          buf.append('\\');
+        buf.append((char)ch);
+      }
+      return buf.toString();
+    }
+
+    private int nextChar(int section)
+    {
+      int c = nextOctet(section);
+      if (c < 0) return -1;
+      int c2, c3;
+      switch (c >> 4)
+      {
+        case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+          /* 0xxxxxxx*/
+          return c;
+        case 12: case 13:
+          /* 110x xxxx   10xx xxxx*/
+          c2 = nextOctet(section);
+          if ((c2 & 0xC0) != 0x80)
+            throw err("Invalid UTF-8 encoding");
+          return ((c & 0x1F) << 6) | (c2 & 0x3F);
+        case 14:
+          /* 1110 xxxx  10xx xxxx  10xx xxxx */
+          c2 = nextOctet(section);
+          c3 = nextOctet(section);
+          if (((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80))
+            throw err("Invalid UTF-8 encoding");
+          return (((c & 0x0F) << 12) | ((c2 & 0x3F) << 6) | ((c3 & 0x3F) << 0));
+        default:
+          throw err("Invalid UTF-8 encoding");
+      }
+    }
+
+    private int nextOctet(int section)
+    {
+      int c = str.charAt(dpos++);
+
+      // if percent encoded applied to all sections except
+      // scheme which should never never use this method
+      if (c == '%')
+      {
+        nextCharWasEscaped = true;
+        return (hexNibble(str.charAt(dpos++)) << 4) | hexNibble(str.charAt(dpos++));
+      }
+      else
+      {
+        nextCharWasEscaped = false;
+      }
+
+      // + maps to space only in query
+      if (c == '+' && section == QUERY)
+        return ' ';
+
+      // verify character ok
+      if (c >= charMap.length || (charMap[c] & section) == 0)
+        throw err("Invalid char in " + toSection(section) + " at index " + (dpos-1));
+
+      // return character as is
+      return c;
+    }
+
+    String str;
+    boolean decoding;
+    int dpos;
+    boolean nextCharWasEscaped;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Encoder
+//////////////////////////////////////////////////////////////////////////
+
+  static class Encoder
+  {
+    Encoder(Uri uri, boolean encoding)
+    {
+      this.uri = uri;
+      this.encoding = encoding;
+      this.buf = new StringBuilder();
+    }
+
+    Str encode()
+    {
+      Uri uri = this.uri;
+      StringBuilder buf = this.buf;
+
+      // scheme
+      if (uri.scheme != null) buf.append(uri.scheme.val).append(':');
+
+      // authority
+      if (uri.userInfo != null || uri.host != null || uri.port != null)
+      {
+        buf.append('/').append('/');
+        if (uri.userInfo != null) encode(uri.userInfo, USER).append('@');
+        if (uri.host != null) encode(uri.host, HOST);
+        if (uri.port != null) buf.append(':').append(uri.port.val);
+      }
+
+      // path
+      if (uri.pathStr != null)
+        encode(uri.pathStr, PATH);
+
+      // query
+      if (uri.queryStr != null)
+        { buf.append('?'); encode(uri.queryStr, QUERY); }
+
+      // frag
+      if (uri.frag != null)
+        { buf.append('#'); encode(uri.frag, FRAG); }
+
+      return Str.make(buf.toString());
+    }
+
+    StringBuilder encode(Str str, int section)
+    {
+      if (!encoding) return buf.append(str.val);
+
+      StringBuilder buf = this.buf;
+      String s = str.val;
+      int len = s.length();
+      int c = 0, prev;
+      for (int i=0; i<len; ++i)
+      {
+        prev = c;
+        c = s.charAt(i);
+
+        // unreserved character
+        if (c < 128 && (charMap[c] & section) != 0 && prev != '\\')
+        {
+          buf.append((char)c);
+          continue;
+        }
+
+        // the backslash esc itself doesn't get encoded
+        if (c == '\\' && prev != '\\') continue;
+
+        // we have a reserved, escaped, or non-ASCII
+
+        // encode
+        if (c == ' ' && section == QUERY)
+          buf.append('+');
+        else
+          percentEncodeChar(buf, c);
+
+        // if we just encoded backslash, then it
+        // doesn't escape the next char
+        if (c == '\\') c = 0;
+      }
+      return buf;
+    }
+
+    Uri uri;
+    boolean encoding;
+    StringBuilder buf;
+  }
+
+  static void percentEncodeChar(StringBuilder buf, int c)
+  {
+    if (c <= 0x007F)
+    {
+      percentEncodeByte(buf, c);
+    }
+    else if (c > 0x07FF)
+    {
+      percentEncodeByte(buf, 0xE0 | ((c >> 12) & 0x0F));
+      percentEncodeByte(buf, 0x80 | ((c >>  6) & 0x3F));
+      percentEncodeByte(buf, 0x80 | ((c >>  0) & 0x3F));
+    }
+    else
+    {
+      percentEncodeByte(buf, 0xC0 | ((c >>  6) & 0x1F));
+      percentEncodeByte(buf, 0x80 | ((c >>  0) & 0x3F));
+    }
+  }
+
+  static void percentEncodeByte(StringBuilder buf, int c)
+  {
+    buf.append('%');
+    int hi = (c >> 4) & 0xf;
+    int lo = c & 0xf;
+    buf.append((char)(hi < 10 ? '0'+hi : 'A'+(hi-10)));
+    buf.append((char)(lo < 10 ? '0'+lo : 'A'+(lo-10)));
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+  public final Bool equals(Obj obj)
+  {
+    if (obj instanceof Uri)
+    {
+      return str.equals(((Uri)obj).str);
+    }
+    return Bool.False;
+  }
+
+  public int hashCode()
+  {
+    return str.hashCode();
+  }
+
+  public Int hash()
+  {
+    return str.hash();
+  }
+
+  public Str toStr()
+  {
+    return str;
+  }
+
+  public void encode(ObjEncoder out)
+  {
+    out.wStrLiteral(str.val, '`');
+  }
+
+  public Type type()
+  {
+    return Sys.UriType;
+  }
+
+  public Str encode()
+  {
+    Str x = encoded;
+    if (x != null) return x;
+    return encoded = new Encoder(this, true).encode();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Components
+//////////////////////////////////////////////////////////////////////////
+
+  public Bool isAbs()
+  {
+    return scheme != null ? Bool.True : Bool.False;
+  }
+
+  public Bool isRel()
+  {
+    return scheme == null ? Bool.True : Bool.False;
+  }
+
+  public Bool isDir()
+  {
+    if (pathStr != null)
+    {
+      String p = pathStr.val;
+      int len = p.length();
+      if (len > 0 && p.charAt(len-1) == '/')
+        return Bool.True;
+    }
+    return Bool.False;
+  }
+
+  public Str scheme()
+  {
+    return scheme;
+  }
+
+  public Str auth()
+  {
+    if (host == null) return null;
+    if (port == null)
+    {
+      if (userInfo == null) return host;
+      else return Str.make(userInfo.val + '@' + host.val);
+    }
+    else
+    {
+      if (userInfo == null) return Str.make(host.val + ':' + port);
+      else return Str.make(userInfo.val + '@' + host.val + ':' + port);
+    }
+  }
+
+  public Str host()
+  {
+    return host;
+  }
+
+  public Str userInfo()
+  {
+    return userInfo;
+  }
+
+  public Int port()
+  {
+    return port;
+  }
+
+  public final String path(int depth) { return ((Str)path.get(depth)).val; }
+  public List path()
+  {
+    return path;
+  }
+
+  public Str pathStr()
+  {
+    return pathStr;
+  }
+
+  public Bool isPathAbs()
+  {
+    if (pathStr == null || pathStr.val.length() == 0)
+      return Bool.False;
+    else
+      return pathStr.val.charAt(0) == '/' ? Bool.True : Bool.False;
+  }
+
+  public Bool isPathOnly()
+  {
+    return Bool.make(scheme == null && host == null && port == null &&
+      userInfo == null && queryStr == null && frag == null);
+  }
+
+  public Str name()
+  {
+    if (path.sz() == 0) return Str.Empty;
+    return (Str)path.last();
+  }
+
+  public Str basename()
+  {
+    Str name = name();
+    String n = name.val;
+    int dot = n.lastIndexOf('.');
+    if (dot < 2)
+    {
+      if (dot < 0) return name;
+      if (n.equals(".")) return name;
+      if (n.equals("..")) return name;
+    }
+    return Str.make(n.substring(0, dot));
+  }
+
+  public Str ext()
+  {
+    Str name = name();
+    String n = name.val;
+    int dot = n.lastIndexOf('.');
+    if (dot < 2)
+    {
+      if (dot < 0) return null;
+      if (n.equals(".")) return null;
+      if (n.equals("..")) return null;
+    }
+    return Str.make(n.substring(dot+1));
+  }
+
+  public MimeType mimeType()
+  {
+    if (isDir().val) return MimeType.dir;
+    return MimeType.forExt(ext());
+  }
+
+  public Map query()
+  {
+    return query;
+  }
+
+  public Str queryStr()
+  {
+    return queryStr;
+  }
+
+  public Str frag()
+  {
+    return frag;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  public Uri parent()
+  {
+    // if no path bail
+    if (path.sz() == 0) return null;
+
+    // if just a simple filename, then no parent
+    String p = pathStr.val;
+    if (path.sz() == 1 && !isPathAbs().val && !isDir().val) return null;
+
+    // use slice
+    return slice(parentRange);
+  }
+
+  public Uri pathOnly()
+  {
+    if (pathStr == null)
+      throw Err.make("Uri has no path: " + this).val;
+
+    if (scheme == null && userInfo == null && host == null &&
+        port == null && queryStr == null && frag == null)
+      return this;
+
+    Sections t = new Sections();
+    t.path     = this.path;
+    t.pathStr  = this.pathStr;
+    t.query    = emptyQuery();
+    t.str      = this.pathStr;
+    return new Uri(t);
+  }
+
+  public Uri slice(Range range) { return slice(range, false); }
+
+  public Uri sliceToPathAbs(Range range) { return slice(range, true); }
+
+  private Uri slice(Range range, boolean forcePathAbs)
+  {
+    if (pathStr == null)
+      throw Err.make("Uri has no path: " + this).val;
+
+    int size = path.sz();
+    int s = range.start(size);
+    int e = range.end(size);
+    int n = e - s + 1;
+    if (n < 0) throw IndexErr.make(range).val;
+
+    boolean head = (s == 0);
+    boolean tail = (e == size-1);
+    if (head && tail && (!forcePathAbs || isPathAbs().val)) return this;
+
+    Sections t = new Sections();
+    t.path = path.slice(range);
+
+    StringBuilder sb = new StringBuilder(pathStr.val.length());
+    if ((head && isPathAbs().val) || forcePathAbs) sb.append('/');
+    for (int i=0; i<t.path.sz(); ++i)
+    {
+      if (i > 0) sb.append('/');
+      sb.append(t.path.get(i));
+    }
+    if (t.path.sz() > 0 && (!tail || isDir().val)) sb.append('/');
+    t.pathStr = Str.make(sb.toString());
+
+    if (head)
+    {
+      t.scheme   = scheme;
+      t.userInfo = userInfo;
+      t.host     = host;
+      t.port     = port;
+    }
+
+    if (tail)
+    {
+      t.queryStr = queryStr;
+      t.query    = query;
+      t.frag     = frag;
+    }
+    else
+    {
+      t.query    = emptyQuery();
+    }
+
+    if (!head && !tail)
+    {
+      t.str = t.pathStr;
+    }
+
+    return new Uri(t);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Relativize
+//////////////////////////////////////////////////////////////////////////
+
+  public Uri relTo(Uri base)
+  {
+    if (!OpUtil.compareEQz(this.scheme,   base.scheme) ||
+        !OpUtil.compareEQz(this.userInfo, base.userInfo) ||
+        !OpUtil.compareEQz(this.host,     base.host) ||
+        !OpUtil.compareEQz(this.port,     base.port))
+      return this;
+
+    // at this point we know we have the same scheme and auth, and
+    // we're going to create a new URI which is a subset of this one
+    Sections t = new Sections();
+    t.query    = this.query;
+    t.queryStr = this.queryStr;
+    t.frag     = this.frag;
+
+    // find divergence
+    int d=0;
+    int len = Math.min(this.path.sz(), base.path.sz());
+    for (; d<len; ++d)
+      if (!this.path.get(d).equals(base.path.get(d)).val)
+        break;
+
+    // if diverenge is at root, then no commonality
+    if (d == 0)
+    {
+      t.path = this.path;
+      t.pathStr = this.pathStr;
+    }
+
+    // if paths are exactly the same
+    else if (d == this.path.sz() && d == base.path.sz())
+    {
+      t.path = emptyPath();
+      t.pathStr = Str.Empty;
+    }
+
+    // create sub-path at divergence point
+    else
+    {
+      // slice my path
+      t.path = this.path.slice(Range.makeInclusive(Int.make(d), Int.NegOne));
+
+      // insert .. backup if needed
+      int backup = base.path.sz() - d;
+      if (!base.isDir().val) backup--;
+      while (backup-- > 0) t.path.insert(Int.Zero, dotDot);
+
+      // format the new path string
+      t.pathStr = toPathStr(false, t.path, this.isDir().val);
+    }
+
+    return new Uri(t);
+  }
+
+  public Uri relToAuth()
+  {
+    if (scheme == null && userInfo == null &&
+        host == null && port == null)
+      return this;
+
+    Sections t = new Sections();
+    t.path     = this.path;
+    t.pathStr  = this.pathStr;
+    t.query    = this.query;
+    t.queryStr = this.queryStr;
+    t.frag     = this.frag;
+    return new Uri(t);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Plus
+//////////////////////////////////////////////////////////////////////////
+
+  public Uri plus(Uri r)
+  {
+    // if r is more or equal as absolute as base, return r
+    if (r.scheme != null) return r;
+    if (r.host != null && this.scheme == null) return r;
+    if (r.isPathAbs().val && this.host == null) return r;
+
+    // this algorthm is lifted straight from
+    // RFC 3986 (5.2.2) Transform References;
+    Uri base = this;
+    Sections t = new Sections();
+    if (r.host != null)
+    {
+      t.setAuth(r);
+      t.setPath(r);
+      t.setQuery(r);
+    }
+    else
+    {
+      if (r.pathStr == null || r.pathStr.val.equals(""))
+      {
+        t.setPath(base);
+        if (r.queryStr != null)
+          t.setQuery(r);
+        else
+          t.setQuery(base);
+      }
+      else
+      {
+        if (r.pathStr.val.startsWith("/"))
+          t.setPath(r);
+        else
+          merge(t, base, r);
+        t.setQuery(r);
+      }
+      t.setAuth(base);
+    }
+    t.scheme = base.scheme;
+    t.frag   = r.frag;
+    t.normalize();
+    return new Uri(t);
+  }
+
+  static void merge(Sections t, Uri base, Uri r)
+  {
+    boolean baseIsAbs = base.isPathAbs().val;
+    boolean baseIsDir = base.isDir().val;
+    boolean rIsDir    = r.isDir().val;
+    List rPath        = r.path;
+    boolean dotLast   = false;
+
+    // compute the target path taking into account whether
+    // the base is a dir and any dot segments in relative ref
+    List tPath;
+    if (base.path.sz() == 0)
+    {
+      tPath = r.path;
+    }
+    else
+    {
+      tPath = base.path.rw();
+      if (!baseIsDir) tPath.pop();
+      for (int i=0; i<rPath.sz(); ++i)
+      {
+        Str rSeg = (Str)rPath.get(i);
+        if (rSeg.val.equals(".")) { dotLast = true; continue; }
+        if (rSeg.val.equals(".."))
+        {
+          if (!tPath.isEmpty().val) { tPath.pop(); dotLast = true; continue; }
+          if (baseIsAbs) continue;
+        }
+        tPath.add(rSeg); dotLast = false;
+      }
+    }
+
+    t.path = tPath;
+    t.pathStr = toPathStr(baseIsAbs, tPath, rIsDir || dotLast);
+  }
+
+  static Str toPathStr(boolean isAbs, List path, boolean isDir)
+  {
+    StringBuilder buf = new StringBuilder();
+    if (isAbs) buf.append('/');
+    for (int i=0; i<path.sz(); ++i)
+    {
+      if (i > 0) buf.append('/');
+      buf.append(path.get(i));
+    }
+    if (isDir && !(buf.length() > 0 && buf.charAt(buf.length()-1) == '/'))
+      buf.append('/');
+    return Str.make(buf.toString());
+  }
+
+  public Uri plusName(String name, boolean isDir) { return plusName(Str.make(name), Bool.make(isDir)); }
+  public Uri plusName(Str name) { return plusName(name, Bool.False); }
+  public Uri plusName(Str name, Bool asDir)
+  {
+    int size         = path.sz();
+    boolean isDir    = isDir().val;
+    int newSize      = isDir ? size + 1 : size;
+    Str[] temp       = (Str[])path.toArray(new Str[newSize]);
+    temp[newSize-1]  = name;
+
+    Sections t = new Sections();
+    t.scheme   = this.scheme;
+    t.userInfo = this.userInfo;
+    t.host     = this.host;
+    t.port     = this.port;
+    t.query    = emptyQuery();
+    t.queryStr = null;
+    t.frag     = null;
+    t.path     = new List(Sys.StrType, temp);
+    t.pathStr  = toPathStr(isPathAbs().val, t.path, asDir.val);
+    return new Uri(t);
+  }
+
+  public Uri plusSlash()
+  {
+    if (isDir().val) return this;
+    Sections t = new Sections();
+    t.scheme   = this.scheme;
+    t.userInfo = this.userInfo;
+    t.host     = this.host;
+    t.port     = this.port;
+    t.query    = this.query;
+    t.queryStr = this.queryStr;
+    t.frag     = this.frag;
+    t.path     = this.path;
+    t.pathStr  = Str.make(this.pathStr.val + "/");
+    return new Uri(t);
+  }
+
+  public Uri plusQuery(Map q)
+  {
+    if (q == null || q.isEmpty().val) return this;
+
+    Map merge = this.query.dup().setAll(q);
+
+    StringBuilder s = new StringBuilder(256);
+    java.util.Iterator it = merge.pairsIterator();
+    while (it.hasNext())
+    {
+      if (s.length() > 0) s.append('&');
+      java.util.Map.Entry e = (java.util.Map.Entry)it.next();
+      String key = ((Str)e.getKey()).val;
+      String val = ((Str)e.getValue()).val;
+      appendQueryStr(s, key);
+      s.append('=');
+      appendQueryStr(s, val);
+    }
+
+    Sections t = new Sections();
+    t.scheme   = this.scheme;
+    t.userInfo = this.userInfo;
+    t.host     = this.host;
+    t.port     = this.port;
+    t.frag     = this.frag;
+    t.pathStr  = this.pathStr;
+    t.path     = this.path;
+    t.query    = merge.ro();
+    t.queryStr = Str.make(s.toString());
+    return new Uri(t);
+  }
+
+  static void appendQueryStr(StringBuilder buf, String str)
+  {
+    for (int i=0; i<str.length(); ++i)
+    {
+      int c = str.charAt(i);
+      if (c < delimEscMap.length && (delimEscMap[c] & QUERY) != 0)
+        buf.append('\\');
+      buf.append((char)c);
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Resolution
+//////////////////////////////////////////////////////////////////////////
+
+  public File toFile()
+  {
+    return File.make(this);
+  }
+
+  public Obj get() { return get(null, Bool.True); }
+  public Obj get(Obj base) { return get(base, Bool.True); }
+  public Obj get(Obj base, Bool checked)
+  {
+    // if we have a relative uri, we need to resolve against
+    // the base object's uri
+    Uri uri = this;
+    if (scheme == null)
+    {
+      if (base == null) throw UnresolvedErr.make("Relative uri with no base: " + this).val;
+      Uri baseUri = null;
+      try
+      {
+        baseUri = (Uri)base.trap(Str.uriStr, null);
+        if (baseUri == null)
+          throw UnresolvedErr.make("Base object's uri is null: " + this).val;
+      }
+      catch (Throwable e)
+      {
+        throw UnresolvedErr.make("Cannot access base '" + base.type() + ".uri' to normalize: " + this, e).val;
+      }
+      if (baseUri.scheme == null)
+        throw UnresolvedErr.make("Base object's uri is not absolute: " + baseUri).val;
+      uri = baseUri.plus(this);
+    }
+
+    // resolve scheme handler
+    UriScheme scheme = UriScheme.find(uri.scheme);
+
+    // route to scheme
+    try
+    {
+      return scheme.get(uri, base);
+    }
+    catch (UnresolvedErr.Val e)
+    {
+      if (checked.val) throw e;
+      return null;
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  public static Bool isName(Str name)
+  {
+    String n = name.val;
+    int len = n.length();
+
+    // must be at least one character long
+    if (len == 0) return Bool.False;
+
+    // check for "." and ".."
+    if (n.charAt(0) == '.' && len <= 2)
+    {
+      if (len == 1) return Bool.False;
+      if (n.charAt(1) == '.') return Bool.False;
+    }
+
+    // check that each char is unreserved
+    for (int i=0; i<len; ++i)
+    {
+      int c = n.charAt(i);
+      if (c < 128 && nameMap[c]) continue;
+      return Bool.False;
+    }
+
+    return Bool.True;
+  }
+
+  public static void checkName(Str name)
+  {
+    if (!isName(name).val)
+      throw NameErr.make(name).val;
+  }
+
+  static boolean isUpper(int c)
+  {
+    return 'A' <= c && c <= 'Z';
+  }
+
+  static int hexNibble(int ch)
+  {
+    if ((charMap[ch] & HEX) == 0) throw err("Invalid percent encoded hex: '" + (char)ch);
+    if (ch <= '9') return ch - '0';
+    if (ch <= 'Z') return (ch - 'A') + 10;
+    return (ch - 'a') + 10;
+  }
+
+  static RuntimeException err(String msg)
+  {
+    return ParseErr.make(msg).val;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Character Map
+//////////////////////////////////////////////////////////////////////////
+
+  static String toSection(int section)
+  {
+    switch (section)
+    {
+      case SCHEME: return "scheme";
+      case USER:   return "userInfo";
+      case HOST:   return "host";
+      case PATH:   return "path";
+      case QUERY:  return "query";
+      case FRAG:   return "frag";
+      default:     return "uri";
+    }
+  }
+
+  static boolean isScheme(int c) { return c < 128 ? (charMap[c] & SCHEME) != 0 : false; }
+
+  static final byte[] charMap     = new byte[128];
+  static final boolean[] nameMap  = new boolean[128];
+  static final byte[] delimEscMap = new byte[128];
+  static final int SCHEME     = 0x01;
+  static final int USER       = 0x02;
+  static final int HOST       = 0x04;
+  static final int PATH       = 0x08;
+  static final int QUERY      = 0x10;
+  static final int FRAG       = 0x20;
+  static final int DIGIT      = 0x40;
+  static final int HEX        = 0x80;
+  static
+  {
+    // alpha/digits characters
+    byte unreserved = SCHEME | USER | HOST | PATH | QUERY | FRAG;
+    for (int i='a'; i<='z'; ++i) { charMap[i] = unreserved; nameMap[i] = true; }
+    for (int i='A'; i<='Z'; ++i) { charMap[i] = unreserved; nameMap[i] = true; }
+    for (int i='0'; i<='9'; ++i) { charMap[i] = unreserved; nameMap[i] = true; }
+
+    // unreserved symbols
+    charMap['-'] = unreserved; nameMap['-'] = true;
+    charMap['.'] = unreserved; nameMap['.'] = true;
+    charMap['_'] = unreserved; nameMap['_'] = true;
+    charMap['~'] = unreserved; nameMap['~'] = true;
+
+    // hex
+    for (int i='0'; i<='9'; ++i) charMap[i] |= HEX | DIGIT;
+    for (int i='a'; i<='f'; ++i) charMap[i] |= HEX;
+    for (int i='A'; i<='F'; ++i) charMap[i] |= HEX;
+
+    // sub-delimiter symbols
+    charMap['!']  = USER | HOST | PATH | QUERY | FRAG;
+    charMap['$']  = USER | HOST | PATH | QUERY | FRAG;
+    charMap['&']  = USER | HOST | PATH | QUERY | FRAG;
+    charMap['\''] = USER | HOST | PATH | QUERY | FRAG;
+    charMap['(']  = USER | HOST | PATH | QUERY | FRAG;
+    charMap[')']  = USER | HOST | PATH | QUERY | FRAG;
+    charMap['*']  = USER | HOST | PATH | QUERY | FRAG;
+    charMap['+']  = SCHEME | USER | HOST | PATH | FRAG;
+    charMap[',']  = USER | HOST | PATH | QUERY | FRAG;
+    charMap[';']  = USER | HOST | PATH | QUERY | FRAG;
+    charMap['=']  = USER | HOST | PATH | QUERY | FRAG;
+
+    // gen-delimiter symbols
+    charMap[':'] = PATH | USER | QUERY | FRAG;
+    charMap['/'] = PATH | QUERY | FRAG;
+    charMap['?'] = QUERY | FRAG;
+    charMap['#'] = 0;
+    charMap['['] = 0;
+    charMap[']'] = 0;
+    charMap['@'] = PATH | QUERY | FRAG;
+
+    // delimiter escape map - which characters need to
+    // be backslashed escaped in each section
+    delimEscMap[':']  = PATH;
+    delimEscMap['/']  = PATH;
+    delimEscMap['?']  = PATH;
+    delimEscMap['#']  = PATH | QUERY;
+    delimEscMap['&']  = QUERY;
+    delimEscMap[';']  = QUERY;
+    delimEscMap['=']  = QUERY;
+    delimEscMap['\\'] = SCHEME | USER | HOST | PATH | QUERY | FRAG;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Empty Path/Query
+//////////////////////////////////////////////////////////////////////////
+
+  static List emptyPath()
+  {
+    List p = emptyPath;
+    if (p == null) p = emptyPath = new List(Sys.StrType).toImmutable();
+    return p;
+  }
+  static List emptyPath;
+
+  static Map emptyQuery()
+  {
+    Map q = emptyQuery;
+    if (q == null) q = emptyQuery = new Map(Sys.StrType, Sys.StrType).toImmutable();
+    return q;
+  }
+  static Map emptyQuery;
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  static final Range parentRange = Range.make(Int.Zero, Int.NegTwo, Bool.False);
+  static final Str dotDot = Str.make("..");
+
+  final Str str;
+  final Str scheme;
+  final Str userInfo;
+  final Str host;
+  final Int port;
+  final List path;
+  final Str pathStr;
+  final Map query;
+  final Str queryStr;
+  final Str frag;
+  Str encoded;
+
+}

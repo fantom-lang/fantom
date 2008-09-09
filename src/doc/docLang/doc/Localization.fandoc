@@ -1,0 +1,97 @@
+**************************************************************************
+** title:      Localization
+** author:     Brian Frank
+** created:    5 Nov 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Locale [#locale]
+****************
+The `sys::Locale` class is the hub API for Fan's localization
+infrastructure.  Locales are used to represent a language via
+an ISO 639 two letter code.  A locale may also optionally represent
+a specific country or region via a ISO 3166 two letter code.  Common
+locales include:
+
+    Language Only:
+      en     English
+      es     Spanish
+      fr     French
+      de     German
+      it     Italian
+      ja     Japanese
+      ko     Korean
+      zh     Chinese
+    Language and Country:
+      en-US  United States
+      en-GB  United Kingdom
+      es-ES  Spain
+      es-MX  Mexico
+      fr-FR  France
+      de-DE  Germany
+      en-CA  Canada (English)
+      fr-CA  Canada (French)
+      zh-CN  China (Simplified)
+      zh-TW  Taiwan
+
+When the Fan VM is started it will create a default locale based on the
+underlying platform.  For example on a Java VM, the default Fan locale
+will be initialized from 'java.util.Locale.getDefault' (which in turn is
+initialized from the operating system's default locale).
+
+Locales are configured as a thread local variable.  Use `sys::Locale.current`
+and `sys::Locale.setCurrent` to get and set the current thread's locale.
+
+By convention 'Locale' is never passed as a parameter to Fan APIs.  Rather
+the locale is implied by the current thread.  As a general rule APIs which
+are locale sensitive will include the term 'locale' in their method name.
+
+Localized Properties [#props]
+*****************************
+All the strings displayed to users should typically be pulled out into
+*localized props files* to enable easy language translation.  Each pod may
+define one localized property map with as many keys are desired.
+Localized properties are defined in [props files]`sys::InStream.readProps` as
+pod resource files under the '/locale' directory.  An example set of localized
+props files:
+
+   /locale/en.props
+   /locale/en-US.props
+   /locale/en-CA.props
+   /locale/fr.props
+   /locale/fr-CA.props
+
+The `sys::Locale.get` API is used to lookup a localized property.  Assuming
+your pod name is "myApp", the following code would lookup some localized
+properties:
+
+  loc := Locale.current
+  Button(loc.get("myApp", "ok"))
+  Button(loc.get("myApp", "cancel"))
+
+You can also use the [Pod.loc]`sys::Pod.loc` and [Type.loc]`sys::Type.loc`
+convenience methods to lookup a localized property for the current thread's
+locale:
+
+  pod.loc("key")
+  type.loc("key")
+  FooBar#.loc("key")
+
+The following rules are used to resolve a localized property:
+   1. Find the pod and use its resource files
+   2. Lookup via '/locale/{Locale.toStr}.props'
+   3. Lookup via '/locale/{Locale.lang}.props'
+   4. Lookup via '/locale/en.props'
+   5. If all else fails return the 'def' parameter which defaults to 'pod::key'
+
+Best practice is to ensure that all properties are mapped in 'en.props' file
+as your fallback defaults.  Then store localized translations in language
+files such as 'fr.props', 'de.props', etc.  Typically you will only use
+country specific files such as 'en-US' or 'en-GB' for regional terms.
+
+TODO: currently there is a plan to embed localized properties directly
+into string interpolation such as:
+
+  "<input name='$^submit' />"
+  "<input name='$^myApp::submit' />"

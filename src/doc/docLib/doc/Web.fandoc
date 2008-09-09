@@ -1,0 +1,153 @@
+**************************************************************************
+** title:      Web
+** author:     Brian Frank
+** created:    06 Apr 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The [web]`web::index` pod defines the standard APIs used to handle
+both client and server side HTTP requests.
+
+TODO: Client side HTTP requests aren't implemented yet, but will
+be organized into two primary classes:
+
+  - 'WebClient': handles the HTTP client side protocol
+  - 'WebFile': models a client side HTTP 'sys::File'
+
+Server side web APIs are organized into the primary classes:
+
+  - [Weblet]`web::Weblet`: an entity which processes a web
+    request - it is very much like a Java servlet.
+  - [WebReq]`web::WebReq`: models an incoming web request such
+    as the method, uri, request headers, and input stream.
+  - [WebRes]`web::WebRes`: models the outgoing web response
+    such as the status code, response headers, and output stream.
+  - [WebService]`web::WebService`: base class for the HTTP server
+    implementations and used to configure the web pipeline.
+
+Weblets [#weblet]
+*****************
+Pretty much anything that touches a HTTP request should be a subclass
+of `web::Weblet`.  The lifecycle of a Weblet is quite simple:
+  - all web requests are guaranteed to be called on their own
+    thread with the thread locals "web.req" and "web.res"
+  - 'make': the constructor automatically initializes the 'req'
+    and 'res' fields with the current thread's 'WebReq' and
+    'WebRes' - so there no need to pass the request and response
+    around
+  - 'service': the 'service' method can be overridden directly to
+    handle the request, or the default implementation will route
+    to the 'doGet', 'doPost', etc methods
+
+WebReq [#webReq]
+****************
+The `web::WebReq` class models the request side of a HTTP request.
+Common methods you will use include:
+  - [method]`web::WebReq.method`: HTTP method such as "GET" or "POST"
+  - [uri]`web::WebReq.uri`: the request URI parsed into a `sys::Uri`
+    which allows you access the parsed path and query segments.
+  - [headers]`web::WebReq.headers`: a case insensitive 'Str:Str' map
+    of the request HTTP headers
+  - [in]`web::WebReq.in`: access to the raw input stream of the request
+  - [form]`web::WebReq.form`:  access to the parsed form data
+  - [cookies]`web::WebReq.cookies`: a 'Str:Str' map of cookies
+  - [session]`web::WebReq.session`: a 'Str:Obj' map used to stash
+    stuff for the browser "connection" between HTTP requests
+  - [stash]`web::WebReq.stash`: a 'Str:Obj' map used to stash stuff
+    only for the life of request
+  - [resource]`web::WebReq.resource`: the [webapp]`WebApp` resource
+  - [userAgent]`web::WebReq.userAgent`: access the parsed "User-Agent"
+    header
+
+WebRes [#webRes]
+****************
+The `web::WebRes` class models the response side of a HTTP request.
+A 'WebRes' has the following lifecycle:
+  - **Uncommitted**: at this point nothing has been written back on the
+    TCP socket and 'statusCode', 'headers', and 'cookies' are
+    still configurable
+  - **Committed**: at this point the HTTP response headers have been
+    written, and you can write the response content via the out
+    stream.  Once a response is committed, attempts to access 'statusCode',
+    'headers', 'cookies', 'redirect', or 'sendError' will raise an exception
+  - **Done**: at this point the response is complete - for example once
+    the 'redirect' or 'sendError' method is called, the response
+    is done
+
+Common methods you will use include:
+  - [statusCode]`web::WebRes.statusCode`: sets the HTTP status
+    code - must be set before commit
+  - [headers]`web::WebRes.headers`: a 'Str:Str' map of HTTP
+    headers - must be set before commit
+  - [cookies]`web::WebRes.cookies`: used to set the cookie
+    header - must be set before commit
+  - [out]`web::WebRes.out`: the output stream for writing
+    the content - first call commits the response
+  - [isCommitted]`web::WebRes.isCommitted`: check commit state
+  - [isDone]`web::WebRes.isDone`: check done state
+  - [sendError]`web::WebRes.sendError`: used to send an error status code
+  - [redirect]`web::WebRes.redirect`: used to send a redirect status code
+
+WebRes is a fairly low level API which requires the commit state
+model to avoid buffering the content.  The [Widget]`WebWidget` API provides a
+higher level model which buffers the response to provide more flexibility.
+
+WebSessions [#sessions]
+***********************
+The `web::WebSession` class models the client session which allows you to
+persist state between HTTP requests.  WebSessions in Fan are cookie
+based using the cookie name "fanws".  The default session implementation
+stores sessions in memory for up to one hour, then clears them from
+the cache - session state is not persisted between VM restarts.
+
+WebSession provides a 'Str:Obj' map to store arbitrary name/value pairs.
+You can use the [map]`web::WebSession.map`, [get]`web::WebSession.get`,
+or [set]`web::WebSession.set` methods to manage session state.  You
+can use [delete]`web::WebSession.delete` to explicitly delete the session
+cookie and server side state.  The values stored in a WebSession should
+always be [serializable]`docLang::Serialization` objects.
+
+WebSessions are created and accessed via the [WebReq.session]`web::WebReq.session`
+method.  The first time a session is accessed it sets the cookie header
+in the response - therefore sessions should always be accessed before the
+response is committed.  Deleting a session also requires setting the cookie
+header and must done before the response is committed.
+
+Example of storing a counter in a session:
+
+  override Void doGet()
+  {
+    Int count := req.session.get("counter", 0)
+    req.session["counter"] = count + 1
+
+    res.headers["Content-Type"] = "text/plain"
+    res.statusCode = 200
+    res.out.printLine("session counter=$count")
+  }
+
+WebServices [#webServices]
+**************************
+The `web::WebService` class is the base class for plugging in
+web server implementations.  Fan comes bundled with the `wisp::WispService`
+which implements a web server purely in Fan code - so you can use
+it without the fuss of setting up additional software.  The plan
+is over time to add implementations for plugging into a Java
+Servlet container, into IIS, and to have a fan_mod for Apache.  Most
+important is that all Fan code written to the web pod APIs should be
+insulated from the web server implementation.
+
+WebStep Pipeline [#pipeline]
+****************************
+The [WebService.pipeline]`web::WebService.pipeline` field defines how
+web requests are processed using a *pipeline* of [WebSteps]`web::WebStep`.
+WebSteps are just like Weblets, but are const so that they can be
+configured on the const WebService.  The web pod itself is a low
+layer API and doesn't define any WebSteps itself.  The [webapp]`WebApp`
+pod is layered above the web pod and defines a whole mini-framework
+of steps you can use.
+
+
+

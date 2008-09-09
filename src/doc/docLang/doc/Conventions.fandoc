@@ -1,0 +1,86 @@
+**************************************************************************
+** title:      Conventions
+** author:     Brian Frank
+** created:    27 Aug 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+These are the coding conventions we've used in the Fan code base.
+By no means are you required to follow our conventions - they are
+documented just in case you care.  However these conventions are
+enforced if contributing code for the core distribution.
+
+Source Files [#sourceFiles]
+***************************
+  - Use 7-bit safe ASCII as clean subset of UTF-8
+  - Use Unix "\n" line endings
+  - Prefer putting class 'FooBar' in a source file called "FooBar.fan"
+  - If you have a bunch of little classes, coalesce into a single source
+  - Separate test classes into separate "test/" directory
+
+Indention [#indention]
+**********************
+  - Do not use tab characters, use spaces only
+  - Use two space indention
+  - Use Allman styling braces:
+      if (cond)
+      {
+        doTrue
+      }
+      else
+      {
+        doFalse
+      }
+
+  - Prefer a single statement on each line with no semicolon
+  - Collapse statements onto a single line if they are short and
+    it aids readability
+  - Leave one space between keyword and opening paren in 'if', 'for',
+    'while', 'switch', and 'catch' statements
+
+Statements [#stmts]
+*******************
+  - Always omit '()' for method calls with no arguments
+  - Prefer 'Foo(...)' style constructor with arguments
+  - Prefer 'Foo {...}' style constructor when using with-block
+  - Prefer type inference for local variables
+  - Prefer implicit casting to explicit casting
+  - Prefer 'Obj[]' to 'List' and 'Obj:Obj' to 'Map'
+
+Comments [#comments]
+********************
+  - Use '/* */' comments only for commenting out sections of code
+  - Prefer to use a leading and trailing '**' line in a fandoc
+    comment unless the comment is short:
+      class Foo
+      {
+        **
+        ** This is a very well written comment
+        **
+        Void doSomethingCool() {}
+      }
+
+  - Break logical sections up using line of 75 '/' chars:
+      //////////////////////////////////////////////////////////////////////////
+      // Section
+      //////////////////////////////////////////////////////////////////////////
+
+  - Use line of 75 '*' chars to separate classes in a single source file:
+      **************************************************************************
+      ** NewClass
+      **************************************************************************
+  - We use the following comment at the top of each source file (obviously
+    the names will be different for you):
+
+      //
+      // Copyright (c) 2008, Brian Frank and Andy Frank
+      // Licensed under the Academic Free License version 3.0
+      //
+      // History:
+      //   28 Aug 08  Brian Frank  Creation
+      //
+
+

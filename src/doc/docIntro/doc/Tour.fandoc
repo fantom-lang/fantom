@@ -1,0 +1,384 @@
+**************************************************************************
+** title:      Tour
+** author:     Brian Frank
+** created:    7 Dec 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Hello World [#helloWorld]
+*************************
+We start our whirlwind tour of Fan's features, with the
+quintessential hello world:
+
+  class HelloWorld
+  {
+    static Void main()
+    {
+      echo("hello world")
+    }
+  }
+
+Minor differences from Java or C# include:
+  - all type names are capitalized including 'Void' (Fan
+    doesn't have primitives nor primitive keywords).
+  - Class and method protection scope default to 'public'.
+  - Fan sports the 'echo' method for writing to the console or
+    you can use 'Sys.out'.
+  - Statements can be terminated with a newline (you can use
+    a semicolon too)
+
+Literals [#literals]
+********************
+Fan supports the same primitive [literals]`docLang::Literals`
+as Java or C#, plus some that are typically found in higher
+level scripting languages:
+
+  true                // Bool literal
+  123                 // Int literal
+  0xcafe_babe         // Int hex, can use _ as separator
+  '\n'                // Int character literal
+  "hi"                // Str literal
+  3.4f                // Float literal
+  3.4d                // Decimal literal
+  5sec                // Duration literal
+  `/dir/file.txt`     // Uri literal
+  [0, 1, 2]           // List literal
+  [1:"one", 2:"two"]  // Map literal
+  Int#                // Type literal
+  Int#plus            // Slot literal
+
+Expressions [#expressions]
+**************************
+Fan reuses most the same [expression]`docLang::Expressions`
+syntax as Java and C#:
+
+  obj.toStr()   // call the toStr method
+  obj.toStr     // parenthesis are optional
+  obj.field     // access field
+  x && y        // logical and
+  x === y       // reference equality
+  x == y        // shortcut for x.equals(y)
+  x < y         // shortcut for x.compare(y) < 0
+  x <=> y       // shortcut for x.compare(y)
+  x + y         // shortcut for x.plus(y)
+  x = y         // assignment
+  a ? b : c     // ternary operator
+  a is Str      // instance of operator
+  a isnot Str   // convenience for !(a is Str)
+  a as Str      // like C# as operator
+  a?.func()     // safe invoke operator (like Groovy)
+
+Most operators are actually just syntax sugar for a
+method call.  For example:
+  3 + 4  =>  3.plus(4)
+
+Strings [#strings]
+******************
+Strings support [interpolation]`docLang::Literals#str` which
+allows you to embed expressions via the "$" character:
+
+  // string interpolation
+  "$x + $y = ${x+y}"
+
+  // longhand for above
+  x.toStr + " + " + y.toStr + " = " + (x+y).toStr
+
+A simple variable or dotted expression can just be prefixed
+with "$", but more complicated expressions are wrapped in curly
+braces.
+
+Statements [#statements]
+**************************
+[Statements]`docLang::Statements` are also mostly like
+Java and C#:
+
+  Str s := "hello"    // local variable declaration
+  s := "hello"        // type inference
+  if (x) {} else {}   // if/else statement
+  while(x) {}         // while
+
+The most noticeable difference is the use of ':=' to declare
+a local variable.  Fan uses type inference, so you can
+omit a local's type declaration.
+
+Fields [#fields]
+****************
+[Fields]`docLang::Fields` automatically include support for accessor
+methods without a lot of verbosity:
+
+  class Person
+  {
+    Str name
+    Int age
+  }
+
+The code above is basically equivalent to this Java code:
+
+  public class Person
+  {
+    public String name() { return name; }
+    public void name(String x) { name = x; }
+
+    public int age() { return age; }
+    public void age(int x) { age = x; }
+
+    private String name;
+    private int age;
+  }
+
+The reason Java and C# programmers write such tortured code is
+on the off-chance that they want to trap when a field is get
+or set.  In Fan, fields are always accessed via an auto-generated
+getter or setter which you can override:
+
+  class Person
+  {
+    Str name
+    Int age { set { checkAge(val); @age = val } }
+  }
+
+The variable 'val' denotes the value being used to set the field.  The
+syntax '@age' denotes that we are setting the actual storage location
+for the age field (not using the setter).
+
+Methods [#methods]
+******************
+[Method]`docLang::Methods` arguments can have default values:
+
+  class Person
+  {
+    Int yearsToRetirement(Int retire := 65) { return retire - age }
+
+    Int age
+  }
+
+[Once methods]`docLang::Methods#once` only compute their result the
+first time they are called and then return a cached value on subsequent
+calls:
+
+  once Str fullName() { return "$firstName  $lastName" }
+
+Constructors [#ctor]
+********************
+One thing different about Fan is that [constructors]`docLang::Methods#ctor`
+are named methods:
+
+  class Point
+  {
+    new make(Int x, Int y) { this.x = x; this.y = y; }
+    Int x
+    Int y
+  }
+
+  // make a point
+  pt := Point.make(30, 40)   // longhand
+  pt := Point(30, 40)        // shorthand
+
+By convention, the primary constructor is called 'make' and other
+constructors are prefixed with "make".  If you don't provide a
+constructor, the compiler will auto-generate one for you called 'make'.
+
+Inheritance [#inheritance]
+**************************
+The syntax for [inheritance]`docLang::Inheritance` looks just like C#:
+
+  class Animal
+  {
+    virtual Void talk() { echo("talk") }
+  }
+
+  class Dog : Animal
+  {
+    override Void talk() { echo("bark") }
+  }
+
+Note the use of 'virtual' and 'override' keywords.  Unlike
+Java methods must be explicitly marked virtual.
+
+Mixins [#mixins]
+****************
+Java and C# use interfaces to implement multiple type inheritance.
+Fan [mixins]`docLang::Mixins` are like interfaces but can declare
+method implementations:
+
+  mixin Audio
+  {
+    abstract Int volume
+    Void incrementVolume() { volume += 1 }
+    Void decrementVolume() { volume -= 1 }
+  }
+
+  class Television : Audio
+  {
+    override Int volume := 0
+  }
+
+The best way to explain what the Fan code does above is to map
+it to its Java equivalent:
+
+  interface Audio
+  {
+    int volume();
+    void volume(int volume);
+    void incrementVolume();
+    void decrementVolume();
+  }
+
+  class AudioImpl
+  {
+    static void incrementVolume(Audio self) { self.volume(self.volume() + 1); }
+    static void decrementVolume(Audio self) { self.volume(self.volume() - 1); }
+  }
+
+  class Television implements Audio
+  {
+    int volume() { return volume; }
+    void volume(int x) { volume = x; }
+
+    void incrementVolume() { AudioImpl.incrementVolume(this); }
+    void decrementVolume() { AudioImpl.incrementVolume(this); }
+
+    private int volume = 0;
+  }
+
+Notice the use of an abstract field.  Like interfaces, a mixin
+can't actually contain any state.  But mixins can declare abstract
+fields which define getters and setters, but no actual storage.
+
+Closures [#closures]
+********************
+Fan supports first class [functions]`docLang::Functions` and
+[closures]`docLang::Closures` - the standard APIs make heavy
+use of functional programming.  Closure syntax kind of, sort of
+looks like Ruby.  For example iteration over collections is almost
+always done using closures:
+
+  // print a list of strings
+  list := ["red", "yellow", "orange"]
+  list.each |Str color| { echo(color) }
+
+  // print 0 to 9
+  10.times |Int i| { echo(i) }
+
+Closures are also used to pass chunks of code into standard
+methods:
+
+  // sort a list of files by timestamp
+  files = files.sort |File a, File b->Int|
+  {
+    return a.modified <=> b.modified
+  }
+
+Closures are really just an expression that creates a [Func]`sys::Func`
+instance:
+
+  // create a function that adds two integers
+  add := |Int a, Int b->Int| { return a + b }
+  nine := add(4, 5)
+
+Dynamic Programming [#dynamic]
+******************************
+Fan provides some key features to break free from the shackles
+of strong typing when needed.  When you access a field or method
+using the "." dot operator the compiler does type checking.
+But you can also use the "->" dynamic call operator to skip
+type checking:
+
+  obj->foo         // obj.trap("foo", [,])
+  obj->foo(2, 3)   // obj.trap("foo", [2, 3])
+  obj->foo = 7     // obj.trap("foo", [7])
+
+The "->" operator is really just syntax sugar for invoking
+the 'Obj.trap' method which by default uses reflection to
+call a method or access a field.  But you can also override
+the 'trap' method to handle dynamic calls in imaginative ways.
+
+Another feature to make dynamic programming nice is the use
+of 'Obj' as a wildcard.  You can assign 'Obj' to anything or
+pass it to a method call without an explicit cast:
+
+  Obj obj
+  Str s := obj->foo     // Str s := (Str)obj->foo
+  Int.fromStr(obj)      // Int.fromStr((Str)obj)
+
+You can also create [dynamic types]`docLang::DynamicTypes`
+at runtime.
+
+Serialization [#serialization]
+******************************
+The [serialization]`docLang::Serialization` syntax of Fan is a
+subset of the actual programming language.  This means you use
+serialization to build up arbitrarily complex object structures
+in code.  Plus it makes serialized objects easy for us humans
+to read and write:
+
+  @serializable class Person
+  {
+    Str name
+    Int age
+    Person[] children
+  }
+
+  // built up tree of objects in code (or from file)
+  homer := Person
+  {
+    name = "Homer Simpson"
+    age  = 39
+    children =
+    [
+      Person { name = "Bart";   age = 7 },
+      Person { name = "Lisa";   age = 5 },
+      Person { name = "Maggie"; age = 1 }
+    ]
+  }
+
+  // dump serialized structure to console
+  Sys.out.writeObj(homer, ["indent":2])
+
+Immutability [#immutability]
+****************************
+Classes may be declared 'const' to create
+[immutable]`docLang::Concurrency#immutability` classes:
+
+  const class Point
+  {
+    new make(Int x, Int y) { this.x = x; this.y = y }
+    const Int x
+    const Int y
+  }
+
+Const classes contain only fields which are themselves const
+and set in the constructor.  To prevent threads from sharing
+state, static fields must always be const:
+
+  const static Point origin := Point(0, 0)
+
+Lists and Maps can be declared immutable using the 'toImmutable'
+method:
+
+  vowels := ['a','e','i','o','u'].toImmutable
+
+Threads [#threads]
+******************
+All Fan [threads]`docLang::Threading` include support for
+message passing:
+
+  // make a thread which receives messages, prints
+  // them, and then returns them back to the caller
+  r := Thread("reflector") |Thread t|
+  {
+    t.loop |Obj msg->Obj|
+    {
+      echo("reflector received $msg")
+      return msg
+    }
+  }
+  r.start
+
+  // send some messages to the thread
+  for (i:=0; i<5; ++i)
+  {
+    Thread.sleep(500ms)
+    echo("ping -> " + r.sendSync(i))
+  }

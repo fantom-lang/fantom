@@ -1,0 +1,17 @@
+**************************************************************************
+** title:      Fand
+** author:     Brian Frank
+** created:    14 Mar 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The [fand]`fand::index` pod defines a set of classes used to write
+daemon server scripts.  Fand scripts are based upon:
+
+  - Subclassing `fand::BootScript`
+  - Defining a set of *service* threads
+
+

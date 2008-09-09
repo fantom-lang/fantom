@@ -1,0 +1,152 @@
+**************************************************************************
+** title:      Flux
+** author:     Brian Frank
+** created:    29 Aug 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Flux is a framework for building general purpose desktop applications
+with the [fwt]`docLib::Fwt` toolkit.  This chapter covers how to use
+the flux APIs for creating new applications and plugins. See
+[docTools]`docTools::Flux` for how to setup and use flux as an IDE.
+
+Flux is based on a browser navigation model.  Users navigate
+Uris which are resolved to *resources*.  Users interact with
+resources through *views* which are used to view and edit the resources.
+The next sections cover *resources* and *views* in detail.
+
+Resources [#resources]
+**********************
+Resources are the objects a user browses, views, and edits in a flux
+application.  Resources are modeled by the `flux::Resource` class.
+The 'Resource' class typically wraps some other Fan object to define
+how it is presented in the user interface such as its name, icon,
+the available views, and children if tree structured.
+
+The most common resource is [FileResource]`flux::FileResource` which
+is used to wrap a `sys::File` instance.  FileResource uses MIME type
+to map files to their icon and available views.
+
+Views [#views]
+**************
+Views are user interface components which subclass from `fwt::ContentPane`.
+A view is how a user interacts with a resource for visualizing and/or editing.
+Views are model by the `flux::View` class.
+
+View Lifecycle [#viewLifecycle]
+===============================
+The view lifecycle typically involves these steps:
+  1. **Construction**: when your view's constructor is called you
+     don't have access to the parent frame or resource; so typically
+     you won't do much in your constructor.
+  2. **onLoad**: the 'onLoad' callback is invoked when the view
+     should load its UI state from the resource.  At this point
+     both [View.frame]`flux::View.frame` and [View.resource]`flux::View.resource`
+     are available.
+  3. **dirty**: if your view is an editor, then you should set the
+     [dirty]`flux::View.dirty` field to true when the user makes a modification
+     to the resource.
+  4. **onSave**: the framework will determine when the user wishes
+     to save your view.  This might happen from the Save or Save All
+     commands, or might occur from a close prompt.  The view should save
+     the UI state back to the actual resource - for example if editing a
+     file, then the view will rewrite the file.  Once 'onSave' completes,
+     the dirty flag is set back to false.
+  5. **onUnload**: this callback is invoked when the view is being unloaded,
+     typically because navigating to a new resource or view.
+
+Navigation [#navigation]
+************************
+When a user navigates to a Uri, the flux runtime performs the following
+process to resolve the resource and views:
+
+Uri Resolution [#uriResolution]
+===============================
+The step of navigation is to resolve the Uri to a normal Fan 'Obj' using
+the standard [naming facilities]`docLang::Naming`.  This means that
+any Uri which has been mapped via a 'UriScheme' or into the
+[Namespace API]`docLang::Namespaces` is available for navigation.  You
+can plug application specific resources into flux using either of
+these techniques.
+
+Resource Resolution [#resourceResolution]
+=========================================
+Uri resolution maps the Uri to a normal Fan object. But we really want
+a 'Resource' instance so that we know how to display the object in our UI.
+If the object from uri resolution is already an instance of Resource, then
+we don't need to do anything special.
+
+If the object from uri resolution is not a Resource, then we search the
+type database for a Resource keyed by the '@fluxResource' facet for
+the object's type.  The 'FileResource' class is automatically registered
+to handle 'sys::File'.  For example to map an instance of 'AppRecord' to
+'AppResource':
+
+  @fluxResource=AppRecord#
+  class AppResource : Resource
+  {
+    new (Uri uri, AppRecord rec) { this.uri = uri; this.rec = rec }
+    override Uri uri
+    override Str name() { ... }
+    override Image icon() { ... }
+    AppRecord rec
+  }
+
+If you map a Resource subclass using the '@fluxResource' facet,
+then you need to ensure that your 'make' constructor takes Uri as its
+first parameter, and the mapped object as its second parameter.
+
+View Resolution [#viewResolution]
+=================================
+Once we've resolved the uri to a resource instance, the next step is
+to discover which views are available to view and edit the resource.
+The list of available views is deferred to the [Resource.views]`flux::Resource.views`
+method.  The first view in the list should be default view.
+
+The default strategy for resolving views by 'Resource.views' is to
+query the type database for any 'View' keyed by the '@fluxView' facet on
+the resource's type.  For example to register 'AppView' on 'AppResource':
+
+  @fluxView=AppResource#
+  class AppView : View
+  {
+    override Void onLoad() { ... }
+  }
+
+If working with files, then you typically register a view
+[by MIME type]`flux::FileResource.views`:
+
+  // register on text/*
+  @fluxViewMimeType="text"
+  internal class MyTextView : View
+
+  // register on text/xml
+  @fluxViewMimeType="text/xml"
+  internal class MyXmlView : View
+
+  // register on multiple MIME types
+  @fluxViewMimeType=["text/xml", "text/html"]
+  internal class MyHtmlView : View
+
+View Query [#viewQuery]
+=======================
+The default view used to work with a resource is the first view in
+the list returned by 'Resource.views'.  Alternate views are selected
+in the Uri's query map with a 'view' key and qualified view typename
+as the value:
+
+  file:/home/file.txt?view=fluxText::TextEditor
+
+Typically the flux chrome will handle displaying the list of available
+views and allowing the user to choose alternate views.
+
+
+
+
+
+
+
+

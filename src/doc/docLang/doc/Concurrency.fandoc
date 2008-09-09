@@ -1,0 +1,109 @@
+**************************************************************************
+** title:      Concurrency
+** author:     Brian Frank
+** created:    8 Dec 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Fan tackles concurrency using a very different path from Java
+and C#.  Java and C# use a shared memory model - all threads have access
+to each other's memory space.  Synchronization locks are required to ensure
+that threads share data in a consistent manner.  This concurrency model
+is quite powerful, but operates at a low level of abstraction.  As such,
+even skilled programmers have a hard time writing code which is free
+of both race conditions and deadlocks.  This model also makes it very
+hard to create composable systems because all system components must
+orchestrate their use of locking consistently.
+
+The Fan model of concurrency is based upon the following principles:
+
+ - **No Shared Mutable State**: threads never share mutable state
+   under any circumstances;
+
+ - **Immutability**: the notion of immutability is embedded into
+   the language itself.  Immutable data can be efficiently and safely
+   shared between threads (for example via a static field);
+
+ - **Message Passing**: the threading API is built around the
+   idea of [passing messages]`Threading` between threads;
+
+ - **REST**: Fan applications are built using a [namespace]`Namespaces`
+   of resources identified with URIs.  This namespace provides a
+   *whiteboard* mechanism for multiple threads to share state.  You
+   might think of Fan's REST model as coarsely grained transactional
+   memory (although it is much more than that).
+
+Immutability [#immutability]
+****************************
+An object is said to be *immutable* if we can guarantee that once
+constructed it never changes state.  Fan supports these types of
+immutable objects:
+
+  - Any object instance of a [const class]`Classes#const`
+  - A [non-dynamic]`DynamicTypes#overview` Type instance
+  - Some `sys::Func` instances are immutable
+  - The result of [List.toImmutable]`sys::List.toImmutable`
+    or [Map.toImmutable]`sys::Map.toImmutable`
+
+By definition a const class is immutable - the compiler verifies
+that all the instance fields are themselves immutable and only
+set in the object's constructor.
+
+'Func' objects are determined as mutable or immutable by the
+compiler depending on if the function captures mutable state
+from its environment.  See [Functions]`Functions#immutable` for
+more details.
+
+The 'toImmutable' method supported by 'List' and 'Map' is a
+mechanism to return a readonly, deep copy of the collection which
+ensures all that all values and keys are themselves immutable.  The
+compiler will allow assignment to const List/Map fields during
+construction, but it implicitly makes a call to 'toImmutable'.  For
+example to declare a const list of strings:
+
+  // what you write
+  class SouthPark
+  {
+    const static Str[] names := ["Stan", "Cartman", "Kenny"]
+  }
+
+  // what the compiler generates
+  class SouthPark
+  {
+    const static Str[] names := ["Stan", "Cartman", "Kenny"]?.toImmutable
+  }
+
+If assigning to a 'const Type' field, then the compiler will
+also implicitly insert a call to 'toImmutable'.
+
+You can check if an object is immutable via the
+[Obj.isImmutable]`sys::Obj.isImmutable` method.
+
+Shared Objects [#sharedObjects]
+*******************************
+Both message passing and resources provide a mechanism to share objects
+between threads.  For example, specific APIs which will pass an object
+to another thread include:
+
+  - [Thread.sendAsync]`sys::Thread.sendAsync`
+  - [Thread.sendSync]`sys::Thread.sendSync`
+  - [Namespace.create]`sys::Namespace.create`
+  - [Namespace.put]`sys::Namespace.put`
+
+All of these APIs use the same pattern to safely pass an object
+between threads.  If an object is immutable then we can safely
+it to another thread by reference.  Otherwise we assume the object
+is [serializable]`Serialization` and pass a serialized copy of the
+object to another thread.  Both of these approaches have their
+pros and cons to consider in your application design :
+
+  - immutable:
+     - ideal for simple structures if fast to create
+     - deeply structured objects expensive to change inside a single thread
+     - always extremely efficient to pass between threads
+  - serializable:
+     - deeply structured objects can be modified efficiently in a single thread
+     - moderately expensive to pass between threads

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#
+# fansh: interactive shell
+#
+
+. "${0%/*}/fanlaunch" 
+fanlaunch Fan fansh "$@"

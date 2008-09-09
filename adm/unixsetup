@@ -1,0 +1,36 @@
+#! /bin/bash
+
+#
+# unixsetup: chmod +x on all fan scripts
+#
+# TODO: need to add examples/ scripts
+#
+
+. "${0%/*}/../bin/fanlaunch"
+echo "###"
+echo "### FAN_HOME=$FAN_HOME"
+echo "###"
+
+for f in `find $FAN_HOME/bin ! -name "*.exe"`
+do
+  echo "### chmod +x $f"
+  chmod +x "$f"
+done
+
+for f in `find $FAN_HOME -name build*.fan`
+do
+  echo "### chmod +x $f"
+  chmod +x "$f"
+done
+
+for f in `find $FAN_HOME -name boot*.fan`
+do
+  echo "### chmod +x $f"
+  chmod +x "$f"
+done
+
+for f in `find $FAN_HOME/examples -name "*.fan"`
+do
+  echo "### chmod +x $f"
+  chmod +x "$f"
+done

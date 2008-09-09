@@ -1,0 +1,169 @@
+**************************************************************************
+** title:      Roadmap
+** author:     Brian Frank
+** created:    9 Jan 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Current Status [#status]
+************************
+Fan is currently in development of its initial 1.0 release.  The core
+language and Java runtime are quite stable.  The .Net runtime is almost
+there, but not quite.  At this point, we are building out system APIs
+for concurrency, database access, and web applications.
+
+Stability [#stability]
+**********************
+The functionality in each build should be stable.  We are very committed
+to fixing bugs and getting existing code solid before moving on to new
+features.  However Fan is still new, and like all software platforms it
+still needs to be wrung out in lots of different applications.
+
+We can't promise that we won't make breaking language or API changes.  We
+need the freedom to change things as we learn what does and does not work.
+However in practice, we've made very few breaking changes over the past
+year.  Be aware of APIs which are still evolving such as concurrency,
+namespaces, and webapp - these are the most likely to change.
+
+New Features [#newFeatures]
+***************************
+The list of features on our radar for the next year or two (in no
+particular order):
+
+Namespaces [#namespaces]
+========================
+The namespace APIs are a work in progress.  These APIs and the
+design will evolve as we plug new implementations into this framework
+such as HTTP-REST and cloud computing.
+
+.NET Runtime [#dotNot]
+======================
+Some of the .NET runtime is incomplete:
+  - Get sys tests passing 100%
+  - We need to get the 'sql' APIs working on .NET.
+  - Performance needs to be improved
+
+Threadlocals [#threadlocals]
+============================
+As we start to design libraries and applications with Fan, it is clear
+that we are relying on thread locals to a much greater extent than in
+our past lives.  Today thread locals are stored in a big map which
+is ok, but we can do better.  The plan is to add support for a 'threadlocal'
+keyword which will let you declare thread locals much like you would
+a static field.  With that feature, many APIs can be reworked - for
+example Weblet can declare req/res as thread locals.
+
+See [design proposal]`http://www.fandev.org/sidewalk/topic/204`
+
+Native Java/.NET Integration [#nativeIntegration]
+=================================================
+Our main focus has been on making Fan APIs portable between both
+Java and .NET.  As a result little effort has been made to easily
+allow Fan code to call out to native Java or .NET APIs.  From a simple
+perspective it would be nice to access native Objects and work with
+them dynamically using the '->' operator.  Other efforts might include
+tools to generate Fan stubs for Java or .NET class libraries.  But
+there is definitely a lot we can do to make Fan suitable as an alternative
+language using the existing Java or .NET class libraries.
+
+XML [#xml]
+==========
+We need basic XML parsing/writing APIs which will likely will be based
+on [uxparser]`http://sourceforge.net/projects/uxparser`.  The API will
+provide both memory-tree and pull-parser support.  We'll probably also
+include some higher level APIs such as XPath support.
+
+JSON [#json]
+============
+A library to read/write Fan objects to JavaScript object notation
+would be handy.
+
+Email [#email]
+==============
+Basic support for SMTP, POP3, and probably IMAP is required.  This
+work will include standardized APIs for modeling multi-part email
+messages.  Current plan is to write these protocols cleanly from
+scratch rather than wrap something like JavaMail.  SMTP is done,
+still need POP3 and MIME decoding.
+
+Sys APIs [#sys]
+===============
+Some of the 'sys' APIs are imcomplete, such as 'Process' and 'Regex'.
+
+Web APIs [#web]
+===============
+The 'web' APIs are incomplete, such as client side HTTP support and HTTPS.
+
+Web App [#webapp]
+===============
+The web application framework is just an early prototype and will
+be evolving.
+
+Crypto [#crypto]
+================
+We need standardized APIs for cryptographic operations and algorithms.
+This work will include support for the SSL protocol.
+
+Closure Type Inference [#closureTypeInference]
+==============================================
+It would be ideal to allow closures passed as arguments to a
+method to infer their argument types.  The biggest issue with
+this feature is parsing the grammar unambiguously - which we
+should be able to do with our two-pass parser by looking for
+the closing "| {".
+
+IDE Support [#ide]
+==================
+We aren't IDE users ourselves, so this isn't our highest priority.
+But we realize it is a requirement for a successful ecosystem, so
+we'll be keeping our eye on this one.
+
+Web Server Integration [#webServers]
+====================================
+All of our initial work with the 'web' API has been with our
+own web server implementation (wisp).  Although the plan is to
+eventually plug the 'web' API into Java servlet based containers,
+into IIS, and to have a mod_fan for Apache.
+
+Investigate Nulls [#nulls]
+==========================
+Can we find a simple solution to enhance the type system to
+support nullable/non-nullable types?  It would be nice to have
+some syntax sugar for checking nulls. See [discussion]`http://www.fandev.org/sidewalk/topic/200`
+
+Tuples/Pattern Matching/Anonymous Types [#tuples]
+=================================================
+It would be nice to have some type of tuples or anonymous types
+with support for pattern matching.  See [discussion]`http://www.fandev.org/sidewalk/topic/224`.
+
+Simplified Constructors [#simplifiedCtors]
+==========================================
+Can we simplify constructors?  There is a proposal to get rid of
+named constructors so that each class only has one constructor.
+See [discussion]`http://www.fandev.org/sidewalk/topic/249`.
+
+Closure Syntax [#closureSyntax]
+===============================
+Currently no-arg closures require the ugly syntax of '|,| {...}'.
+The reason is so that the parser can tell the difference between a
+with-block versus a closure.  It would be desirable to just use '{...}'
+for closures which would allow custom control structures which weren't
+so ugly.  See [discussion]`http://www.fandev.org/sidewalk/topic/251`.
+
+Grouping [#grouping]
+===============================
+Original [discussion]`http://www.fandev.org/sidewalk/topic/25` was
+on grouping tests, but seems like a way to group pods, types, and
+slots in a generic way would be valuable for many application: testing,
+IDE navigation, reflection, etc.
+
+
+
+
+
+
+
+
+
+

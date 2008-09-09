@@ -1,0 +1,96 @@
+**************************************************************************
+** title:      Fan
+** author:     Brian Frank
+** created:    04 Jan 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The 'fan' launcher is used to run Fan code.  It can be used in
+two ways:
+
+  1. to execute a method in a precompiled pod
+  2. to run a script file ending with the ".fan" extension
+
+The 'fan' executable also has a couple options useful to get
+version information.  The "-version" option will print the current
+version of the runtime being used.  You can use the "-pods"
+option to list all the installed pods.
+
+Running Scripts [#scripts]
+**************************
+If the first parameter passed to the 'fan' executable is a filename
+which ends with ".fan" then the launcher will attempt to execute
+the script using the following steps:
+
+  1. compile the script file
+  2. find the a class which defines a method called "main"
+  3. if the method is not static then call on an instance
+     created via [Type.make]`sys::Type.make`
+  4. if the method has a 'Str[]' parameter then invoke it
+     with 'Sys.args', otherwise invoke with no arguments.
+  5. if main returns an Int, return that as exit code
+
+The script file can declare more than one type declaration, however
+only one type can define a method called "main".  A script can declare
+'using' statements or use fully qualified type names to access types
+from any pod.  However at this time a script cannot import types from
+another script file.
+
+See [HelloWorld]`docIntro::HelloWorld#script` for an example of
+how run a script file.
+
+Also see [unix setup]`Setup#executableUnix` and [windows setup]`Setup#executableWindows`
+to make fan scripts executable without calling the launcher explicitly.
+
+Running Pods [#pods]
+********************
+You can use any of the following formats to execute a method
+in an installed pod:
+
+  fan <pod> [args]
+  fan <pod>::<type> [args]
+  fan <pod>::<type>.<method> [args]
+
+The following steps are take to execute the method:
+
+  1. if only a pod name is specified then assume '<pod>::Main.main'
+  2. if only a type name is specified then assume '<pod>::<type>.main'
+  3. resolve the qualified name of the method
+  4. if the method is not static then call on an instance
+     created via [Type.make]`sys::Type.make`
+  5. if the method has a 'Str[]' parameter then invoke it
+     with 'Sys.args', otherwise invoke with no arguments.
+  6. if main returns an Int, return that as exit code
+
+See [HelloWorld]`docIntro::HelloWorld#pod` for an example of how
+to build and run a method in a pod.
+
+Main [#main]
+************
+The main method can return Void or Int.  If the main method returns
+an Int, then it is returned as the exit code of the process, otherwise
+zero is returned (or non-zero if an exception is raised).
+
+The main method either takes no arguments or 'Str[]'.  You can access
+any arguments passed on the command line via  the [Sys.args]`sys::Sys.args`
+method.  All of these are valid main methods:
+
+  Void make()
+  Void make(Str[] args)
+  Void make(Str[] args, Bool defaultsOk := true)
+  Int make()
+  Int make(Str[] args)
+  Int make(Str[] args, Bool defA := true, Int defB := null)
+
+All of the main method signatures above can be static or instance based.
+If the main method is static then it is simply invoked using reflection.
+However if the main method is instance based, a new instance is created
+via [Type.make]`sys::Type.make` to use for the main method.  This
+technique can be used perform common initialization via a base
+class - in fact it is used by the [build]`Build` scripts themselves.
+
+
+

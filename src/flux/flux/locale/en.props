@@ -1,0 +1,87 @@
+//
+// Copyright (c) 2008, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   29 Aug 08  Brian Frank  Creation
+//
+
+//////////////////////////////////////////////////////////////////////////
+// File menu
+//////////////////////////////////////////////////////////////////////////
+
+file.name=File
+
+save.name=Save
+save.icon=fan:/sys/pod/icons/x16/document-save.png
+save.accelerator=Ctrl+S
+
+exit.name=Exit
+
+//////////////////////////////////////////////////////////////////////////
+// Edit menu
+//////////////////////////////////////////////////////////////////////////
+
+edit.name=Edit
+
+undo.name=Undo
+undo.icon=fan:/sys/pod/icons/x16/edit-undo.png
+undo.accelerator=Ctrl+Z
+
+redo.name=Redo
+redo.icon=fan:/sys/pod/icons/x16/edit-redo.png
+redo.accelerator=Shift+Ctrl+Z
+
+cut.name=Cut
+cut.icon=fan:/sys/pod/icons/x16/edit-cut.png
+cut.accelerator=Ctrl+X
+
+copy.name=Copy
+copy.icon=fan:/sys/pod/icons/x16/edit-copy.png
+copy.accelerator=Ctrl+C
+
+paste.name=Paste
+paste.icon=fan:/sys/pod/icons/x16/edit-paste.png
+paste.accelerator=Ctrl+V
+
+//////////////////////////////////////////////////////////////////////////
+// View menu
+//////////////////////////////////////////////////////////////////////////
+
+view.name=View
+
+back.name=Back
+back.icon=fan:/sys/pod/icons/x16/go-previous.png
+back.accelerator=Alt+Left
+
+forward.name=Forward
+forward.icon=fan:/sys/pod/icons/x16/go-next.png
+forward.accelerator=Alt+Right
+
+refresh.name=Refresh
+refresh.icon=fan:/sys/pod/icons/x16/view-refresh.png
+refresh.accelerator=F5
+
+up.name=Up
+up.icon=fan:/sys/pod/icons/x16/go-up.png
+up.accelerator=Alt+Up
+
+location.name=Location
+location.accelerator=Ctrl+L
+
+//////////////////////////////////////////////////////////////////////////
+// Tools menu
+//////////////////////////////////////////////////////////////////////////
+
+tools.name=Tools
+
+options.name=Options
+
+//////////////////////////////////////////////////////////////////////////
+// Help menu
+//////////////////////////////////////////////////////////////////////////
+
+help.name=Help
+
+about.name=About
+

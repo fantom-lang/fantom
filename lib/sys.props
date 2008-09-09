@@ -1,0 +1,80 @@
+//
+// sys.props
+//
+
+//////////////////////////////////////////////////////////////////////////
+// Fan
+//////////////////////////////////////////////////////////////////////////
+
+// runtime - either "java" or "net"
+fan.runtime=java
+
+// Default timezone to use for VM - can be either the simple name
+// or the full name.  If not set explicitly, then the we will
+// attempt to q0.uery the timezone from the Java or .NET runtime
+// fan.timezone=New_York
+
+//////////////////////////////////////////////////////////////////////////
+// Java Runtime
+//////////////////////////////////////////////////////////////////////////
+
+// Set this property to specify a jvm.dll path to explicitly
+// select the jvm runtime to use; if not set then we lookup
+// the Java VM to use in the registry under:
+//   \HKEY_LOCAL_MACHINE\Software\JavaSoft\JavaRuntimeEnvironment.CurrentVersion
+// fan.java.jvm=C:\\Program Files\\Java\\jre1.5.0_06\\bin\\client\\jvm.dll
+// fan.java.jvm=C:\\dev\\tools\\jdk16\\jre\\bin\\server\\jvm.dll
+
+// Set this property to pass additional command line options to the Java VM.
+// The options should be listed together separated with a space.
+fan.java.options=-Xmx128M
+
+//////////////////////////////////////////////////////////////////////////
+// Sql/Haven
+//////////////////////////////////////////////////////////////////////////
+
+// drivers
+sql.mysql.driver=com.mysql.jdbc.Driver
+
+// test setup
+sql.test.connection=jdbc:mysql://localhost:3306/fantest
+sql.test.username=fantest
+sql.test.password=fantest
+sql.test.dialect=sql::MySqlDialect
+
+//////////////////////////////////////////////////////////////////////////
+// Build
+//////////////////////////////////////////////////////////////////////////
+
+// we substitute the runtime used for these build scripts
+// which are used to boot build the core pods needed to
+// build the rest of the system - we assume that a previous
+// stable "released" version of fan is installed at /dev/rel/
+// used only for Windows launcher, Unix uses fansubstitute script
+fan.runtime.substitutes=                             \
+  /C:/dev/fan/src/buildall.fan       = C:\\dev\\rel  \
+  /C:/dev/fan/src/buildboot.fan      = C:\\dev\\rel  \
+  /C:/dev/fan/src/jfan/build.fan     = C:\\dev\\rel  \
+  /C:/dev/fan/src/nfan/build.fan     = C:\\dev\\rel  \
+  /C:/dev/fan/src/sys/build.fan      = C:\\dev\\rel  \
+  /C:/dev/fan/src/compiler/build.fan = C:\\dev\\rel  \
+  /C:/dev/fan/src/build/build.fan    = C:\\dev\\rel
+
+// used to change version for all pods at once
+fan.build.globalVersion=1.0.31
+
+// Must be configured boot build in substitute/release installation
+//fan.build.devHome=/C:/dev/fan/
+//fan.build.devHome=/home/dev/fan/rel/
+
+// Windows setup
+fan.build.jdkHome=/C:/dev/tools/java/
+fan.build.netHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
+
+// Mac setup
+//fan.build.jdkHome=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/
+
+
+
+
+

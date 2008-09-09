@@ -1,0 +1,328 @@
+//
+// Copyright (c) 2006, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   3 Jul 06  Brian Frank  Creation
+//
+
+**
+** DateTime represents an absolute instance in time.  Fan time is
+** normalized as nanosecond ticks since 1 Jan 2000 UTC with a
+** supported range of 1901 to 2099.  Fan time does not support
+** leap seconds (same as Java and UNIX).  An instance of DateTime
+** also models the date and time of an absolute instance against
+** a specific `TimeZone`.
+**
+@simple
+const final class DateTime
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return the current time using `TimeZone.current`.  The tolerance
+  ** parameter specifies that you are willing to use a cached DateTime
+  ** instance as long as (now - cached <= tolerance).  If tolerance is null,
+  ** then this method always creates a new DateTime instance.  Using
+  ** tolerance can increase performance and save memory.  The
+  ** tolerance default is 250ms.
+  **
+  ** If you are using time to calculate relative time periods,
+  ** then use `Duration.now` instead.  Duration is more efficient
+  ** and won't cause you grief when the system clock is modified.
+  **
+  static DateTime now(Duration tolerance := 250ms)
+
+  **
+  ** Return the current time using `TimeZone.utc`.
+  ** See `now` for a description of the tolerance parameter.
+  **
+  static DateTime nowUtc(Duration tolerance := 250ms)
+
+  **
+  ** Make for nanosecond ticks since 1 Jan 2000 GMT.  Throw
+  ** ArgErr if ticks represent a year out of the range 1901
+  ** to 2099.
+  **
+  static DateTime makeTicks(Int ticks, TimeZone tz := TimeZone.current)
+
+  **
+  ** Make for the specified date and time values:
+  **  - year:  1901-2099
+  **  - month: Month enumeration
+  **  - day:   1-31
+  **  - hour:  0-23
+  **  - min:   0-59
+  **  - sec:   0-59
+  **  - ns:    0-999_999_999
+  **  - tz:    time zone used to map date/time to ns ticks
+  **
+  ** Throw ArgErr is any of the parameters are out of range.
+  **
+  static DateTime make(Int year, Month month, Int day, Int hour, Int min, Int sec := 0, Int ns := 0, TimeZone tz := TimeZone.current)
+
+  **
+  ** Parse the string into a DateTime from the programmatic encoding
+  ** defined by `toStr`.  If the string cannot be parsed into a valid
+  ** DateTime and checked is false then return null, otherwise throw
+  ** ParseErr.
+  **
+  static DateTime fromStr(Str s, Bool checked := true)
+
+  **
+  ** Get the boot time of the Fan VM with `TimeZone.current`
+  **
+  static DateTime boot()
+
+  **
+  ** Private constructor.
+  **
+  private new privateMake()
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Two times are equal if have identical nanosecond ticks.
+  **
+  override Bool equals(Obj that)
+
+  **
+  ** Return nanosecond ticks for the hashcode.
+  **
+  override Int hash()
+
+  **
+  ** Compare based on nanosecond ticks.
+  **
+  override Int compare(Obj obj)
+
+  **
+  ** Return programmatic string encoding formatted as follows:
+  **   "YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz"
+  **
+  ** See `toLocale` for the pattern legend.  The base of the
+  ** string encoding conforms to ISO 8601 and XML Schema
+  ** Part 2.  The Fan format also appends the timezone name to
+  ** avoid the ambiguities associated with interpretting the time
+  ** zone offset.
+  **
+  ** Examples:
+  **   "2000-04-03T00:00:00.123Z UTC"
+  **   "2006-10-31T01:02:03-05:00 New_York"
+  **   "2009-03-10T11:33:20Z London"
+  **   "2009-03-01T12:00:00+01:00 Amsterdam"
+  **
+  override Str toStr()
+
+//////////////////////////////////////////////////////////////////////////
+// Access
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return number of nanosecond ticks since 1 Jan 2000 UTC.
+  ** Dates before this epoch will return a negative integer.
+  **
+  Int ticks()
+
+  **
+  ** Get the year as a number such as 2007.
+  **
+  Int year()
+
+  **
+  ** Get the month of this date.
+  **
+  Month month()
+
+  **
+  ** Get the day of the month as a number between 1 and 31.
+  **
+  Int day()
+
+  **
+  ** Get the hour of the time as a number between 0 and 23.
+  **
+  Int hour()
+
+  **
+  ** Get the minutes of the time as a number between 0 and 59.
+  **
+  Int min()
+
+  **
+  ** Get the whole seconds of the time as a number between 0 and 59.
+  **
+  Int sec()
+
+  **
+  ** Get the number of nanoseconds (the fraction of seconds) as
+  ** a number between 0 and 999,999,999.
+  **
+  Int nanoSec()
+
+  **
+  ** Get the day of the week for this time.
+  **
+  Weekday weekday()
+
+  **
+  ** Get the time zone associated with this date time.
+  **
+  TimeZone timeZone()
+
+  **
+  ** Return if this time is within daylight savings time
+  ** for its associated time zone.
+  **
+  Bool dst()
+
+  **
+  ** Get the time zone's abbreviation for this time.
+  ** See `TimeZone.stdAbbr` and `TimeZone.dstAbbr`.
+  **
+  Str timeZoneAbbr()
+
+  **
+  ** Return the day of the year as a number between
+  ** 1 and 365 (or 1 to 366 if a leap year).
+  **
+  Int dayOfYear()
+
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Format this time according to the specified pattern.  If
+  ** pattern is null, then a localized default is used.  Any
+  ** ASCII letter in the pattern is interpreted as follows:
+  **
+  **   YY     Two digit year             07
+  **   YYYY   Four digit year            2007
+  **   M      One/two digit month        6, 11
+  **   MM     Two digit month            06, 11
+  **   MMM    Three letter abbr month    Jun, Nov
+  **   MMMM   Full month                 June, November
+  **   D      One/two digit day          5, 28
+  **   DD     Two digit day              05, 28
+  **   WWW    Three letter abbr weekday  Tue
+  **   WWWW   Full weekday               Tuesday
+  **   h      One digit 24 hour (0-23)   3, 22
+  **   hh     Two digit 24 hour (0-23)   03, 22
+  **   k      One digit 12 hour (1-12)   3, 11
+  **   kk     Two digit 12 hour (1-12)   03, 11
+  **   m      One digit minutes (0-59)   4, 45
+  **   mm     Two digit minutes (0-59)   04, 45
+  **   s      One digit seconds (0-59)   4, 45
+  **   ss     Two digit seconds (0-59)   04, 45
+  **   f*     Fractional secs trailing zeros
+  **   F*     Fractional secs no trailing zeros
+  **   a      AM/PM marker               AM, PM
+  **   z      Time zone offset           Z, +03:00 (ISO 8601, XML Schema)
+  **   zzz    Time zone abbr             EST, EDT
+  **   zzzz   Time zone name             New_York
+  **   'xyz'  Literal characters
+  **
+  ** A symbol immediately preceding a "F" pattern with a no
+  ** fraction to print is skipped.
+  **
+  Str toLocale(Str pattern := null)
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Convert this DateTime to the specific timezone.  The
+  ** absolute point time as ticks remains the same, but the
+  ** date and time fields will be converted to represent the
+  ** new time zone.
+  **
+  DateTime toTimeZone(TimeZone tz)
+
+  **
+  ** Convenience for 'toTimeZone(TimeZone.utc)'.
+  **
+  DateTime toUtc()
+
+  **
+  ** Return the delta between this and the given time.
+  ** If you wish to subtract a Duration, use the `plus`
+  ** method with a negative duration.
+  **
+  ** Example:
+  **   elapsed   := DateTime.now - startTime
+  **   yesterday := DateTime.now + -1day
+  **
+  Duration minus(DateTime time)
+
+  **
+  ** Add (or subtract if duration is negative) a duration
+  ** to compute a new time.
+  **
+  ** Example:
+  **   tomorrow  := DateTime.now + 1day
+  **   yesterday := DateTime.now + -1day
+  **
+  DateTime plus(Duration duration)
+
+  **
+  ** Return a new DateTime with this time's nanosecond ticks truncated
+  ** according to the specified accuracy.  For example 'floor(1min)'
+  ** will truncate this time to the minute such that seconds
+  ** are 0.0.  This method is strictly based on absolute ticks,
+  ** it does not take into account wall-time rollovers.
+  **
+  DateTime floor(Duration accuracy)
+
+  **
+  ** Return if the specified year is a leap year.
+  **
+  static Bool isLeapYear(Int year)
+
+  **
+  ** This method computes the day of month (1-31) for a given
+  ** weekday.  The pos parameter specifies the first, second,
+  ** third, or fourth occurence of the weekday.  A negative pos
+  ** is used to compute the last (or second to last, etc) weekday
+  ** in the month.
+  **
+  ** Examples:
+  **   // compute the second monday in Apr 2007
+  **   weekdayInMonth(2007, Month.apr, Weekday.mon, 2)
+  **
+  **   // compute the last sunday in Oct 2007
+  **   weekdayInMonth(2007, Month.oct, Weekday.sun, -1)
+  **
+  static Int weekdayInMonth(Int year, Month mon, Weekday weekday, Int pos)
+
+//////////////////////////////////////////////////////////////////////////
+// HTTP
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Parse an HTTP date according to the RFC 2616 section 3.3.1.  If
+  ** invalid format and checked is false return null, otherwise
+  ** throw ParseErr.  The following date formats are supported:
+  **
+  **   Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
+  **   Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
+  **   Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
+  **
+  static DateTime fromHttpStr(Str s, Bool checked := true)
+
+  **
+  ** Format this time for use in an MIME or HTTP message
+  ** according to RFC 2616 using the RFC 1123 format:
+  **
+  **   Sun, 06 Nov 1994 08:49:37 GMT
+  **
+  Str toHttpStr()
+
+
+}

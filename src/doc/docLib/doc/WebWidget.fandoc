@@ -1,0 +1,279 @@
+**************************************************************************
+** title:      WebWidget
+** author:     Andy Frank
+** created:    06 Apr 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+**WARNING**: the webapp framework is still an early prototype, so will
+be going through many changes during development
+
+[Widget]`webapp::Widget` extends [Weblet]`web::Weblet` with a few
+features to make it easier to build reusable UI widgets:
+
+ - [Composable]`#compose` widget trees
+ - Client-side function [invocation]`#invoke`
+ - [Flash]`#flash` short term storage
+ - [Chroming]`#chrome` for easy themeing
+
+Head, Body, Complete [#headBodyComplete]
+****************************************
+The primary feature Widget adds is the ability to compose multiple
+Widgets into the resulting HTML page.  Since all widgets need to have
+the opportunity to insert content into the '<head>' tag, Widget buffers
+its output using the [head]`webapp::Widget.head` and
+[body]`webapp::Widget.body` fields.  You should *never* call 'res.out'
+directly from a Widget.  Here's a Weblet compared to the equivalent
+Widget:
+
+  class MyWeblet : Weblet
+  {
+    override Void onGet()
+    {
+      // write using res.out
+      res.out.html
+      res.out.head.title("My title!").headEnd
+      res.out.body.h1("This is my weblet!").bodyEnd
+      res.out.htmlEnd
+    }
+  }
+
+  class MyWidget : Widget
+  {
+    override Void onGet()
+    {
+      // always use head and body bufs
+      head.title("My title!")
+      body.h1("This is my widget!")
+    }
+  }
+
+There is another notable difference here. MyWeblet explicity wrote the
+start and end tags for '<html>', '<head>' and '<body>', where MyWidget
+did not.  Since each Widget should only be responsible for writing the
+content it needs, the outer skeleton markup is delegated to the
+[complete]`webapp::Widget.complete` method.  Here's the output from
+the above examples:
+
+  MyWeblet:
+
+    <html>
+    <head>
+    <title>My title!</title>
+    </head>
+    <body>
+    <h1>This is my weblet</h1>
+    </body>
+    </html>
+
+  MyWidget:
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+    <head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <title>My title!</title>
+    </head>
+    <body>
+    <h1>This is my widget!</h1>
+    </body>
+    </html>
+
+You can see that 'complete' handles generating the boilerplate HTML
+markup for the page.  'complete' is called at the end of every request,
+and is responsible for piping the 'head' and 'body' buffers to the actual
+'res.out' OutStream. However, the skeleton markup is only produced for
+GET requests.  All other requests should pipe the buffers directly to
+'res.out'.
+
+
+Composing Widgets [#compose]
+****************************
+
+To compose multiple widgets together, simply add them to your widget
+tree inside your constructor using [add]`webapp::Widget.add`:
+
+  class MyWidget : Widget
+  {
+    new make()
+    {
+      add(WidgetA("Alpah"))
+      add(WidgetB("Beta"))
+      add(WidgetC("Gamma"))
+    }
+
+    override Void onGet()
+    {
+      each |Widget w| { w.onGet }
+    }
+  }
+
+Widget also supports using with blocks to declaratively build your
+widget tree:
+
+  class MyWidget : Widget
+  {
+    new make()
+    {
+      content = Grid
+      {
+        Label("Alpha")
+        Label("Beta")
+        Label("Gamma")
+        Grid
+        {
+          Label { text="SubA"; color="#f00" }
+          Label { text="SubB"; color="#0f0" }
+          Label { text="SubC"; color="#00f" }
+        }
+      }
+    }
+
+    override Void onGet()
+    {
+      content.onGet
+    }
+
+    Widget content
+  }
+
+Client-Side Function Invocation [#invoke]
+*****************************************
+
+Besides the normal HTTP requests that Widget inherits from Weblet, the
+client can also invoke specific functions on the server using the
+[toInvoke]`webapp::Widget.toInvoke` and [invoke]`webapp::Widget.invoke`
+methods.
+
+  class MyWidget : Widget
+  {
+    override Void onGet()
+    {
+      uri := toInvoke(&onSubmit)
+      body.form("method='post' action='$uri'")
+      body.p.textField("name='foo'").pEnd
+      body.p.submit.pEnd
+      body.formEnd
+    }
+
+    Void onSubmit()
+    {
+      echo("foo=" + req.form["foo"])
+      res.redirect(req.uri)
+    }
+  }
+
+These invocations must be performed on a POST request and are identified
+by the 'invoke' query paramter which maps to a widget instance. The
+default implementation will try to call the instance method that matches
+the function name.
+
+As in the above example, client-side function invocation can be used to
+route multiple form submissions back to the same widget, but its also
+useful with Ajax requests:
+
+  class MyWidget : Widget
+  {
+    override Void onGet()
+    {
+      uri := toInvoke(&onMarkAllRead)
+      body.p
+      boyd.a(`#`, "onclick='myFavJsLib.ajax.post(\"$uri\"); return false;")
+      body.w("Mark all read")
+      body.aEnd
+      body.pEnd
+    }
+
+    Void onMarkAllRead()
+    {
+      ...
+    }
+  }
+
+Flash [#flash]
+**************
+The [flash]`webapp::Widget.flash` field is a short-term Map that
+only exists for a single GET request, and is then automatically
+cleaned up.  It is convenient for passing notifications following a
+POST.
+
+  class MyWidget : Widget
+  {
+    override Void onGet()
+    {
+      if (flash["foo"] != null)
+        body.p.esc(flash["foo"]).pEnd
+
+      form("method='post' action='$req.uri'")
+      body.p
+      body.textField("name='bar'")
+      body.submit
+      body.pEnd
+      body.formEnd
+    }
+
+    override Void onPost()
+    {
+      flash["foo"] = "Did something with " + req.form["bar"];
+      redirect(`/myWidget`)
+    }
+  }
+
+So the flash message will only be displayed directly after the
+form submission, and never otherwise.
+
+Since the flash map is stored as a session object, any widget can
+access the entries.  A simple way to target your message to a
+particular widget instance is to append [uri]`webapp::Widget.uri`:
+
+  class MyWidget : Widget
+  {
+    override Void onGet()
+    {
+      if (flash["hello.$uri"] != null)
+        ...
+    }
+
+    override Void onPost()
+    {
+      flash["hello.$uri"] = "Hello, World"
+      ...
+    }
+  }
+
+Chrome Widgets [#chrome]
+************************
+
+For a [chrome]`docLib::WebApp#findChromeStep` widget to work correctly
+you must follow a few rules:
+
+  1. Add the 'view' widget to its tree.
+  2. Route onGet to 'view'
+  3. Route onPost to 'view'
+
+This is the bare-bones skeleton for a Chrome widget you can use as a
+starting point:
+
+  class Chrome : Widget
+  {
+    new make()
+    {
+      add(view = req.stash["webapp.view"])
+    }
+
+    override Void onGet()
+    {
+      view.onGet
+    }
+
+    override Void onPost()
+    {
+      view.onPost
+    }
+
+    Widget view
+  }

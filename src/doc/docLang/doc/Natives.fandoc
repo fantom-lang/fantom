@@ -1,0 +1,39 @@
+**************************************************************************
+** title:      Native
+** author:     Brian Frank
+** created:    22 Jun 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview
+********
+TODO: Native
+
+Native Peers [#peers]
+*********************
+TODO
+ - peer factory
+ - how subclasses with natives can use single peer (fwt style)
+
+Native Fields [#fields]
+***********************
+Native fields are similar to abstract fields in that they generate a
+getter and setter, but no actual storage.  The emit process will route
+the Fan getter/setter to the peer class:
+
+  class Native
+  {
+    native Int f
+  }
+
+  class NativePeer
+  {
+    public static NativePeer make(Native t) { return new NativePeer(); }
+    public Int f(Native t) { return f; }
+    public void f(Native t, Int v) { f = v; }
+    Int f;
+  }
+
+Native fields can be virtual or override a superclass, but
+cannot be const, static, or abstract.

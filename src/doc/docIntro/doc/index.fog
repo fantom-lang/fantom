@@ -1,0 +1,18 @@
+**************************************************************************
+** title:      Index
+** author:     Brian Frank
+** created:    3 Jun 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+[
+  [`StartHere`,  "learn how to get started and use the documentation"],
+  [`Tour`,       "whirlwind tour of Fan's features"],
+  [`WhyFan`,     "why we built Fan and what problems we desire to solve"],
+  [`HelloWorld`, "getting started with hello world"],
+  [`Roadmap`,    "current development status and future plans"],
+  [`Faq`,        "frequently asked questions"],
+  [`License`,    "Academic Free License 3.0"],
+  [`ChangeLog`,  "list of changes in each build"]
+]

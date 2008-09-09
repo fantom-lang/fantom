@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!DOCTYPE MODE SYSTEM "xmode.dtd">
+<!-- Chris Grindstaff adapted from Java mode -->
+<MODE>
+	<PROPS>
+    
+		<PROPERTY NAME="lineComment" VALUE="//"/>
+		<PROPERTY NAME="lineComment" VALUE="**"/>
+		<PROPERTY NAME="wordBreakChars" VALUE=",+-=&lt;&gt;/?^&amp;*"/>
+
+		<!-- Auto indent -->
+		<PROPERTY NAME="indentOpenBrackets" VALUE="{"/>
+		<PROPERTY NAME="indentCloseBrackets" VALUE="}"/>
+		<PROPERTY NAME="unalignedOpenBrackets" VALUE="("/>
+		<PROPERTY NAME="unalignedCloseBrackets" VALUE=")"/>
+		<PROPERTY NAME="indentNextLine" VALUE="\s*(((if|while)\s*\(|else\s*|else\s+if\s*\(|for\s*\(.*\))[^{;]*)"/>
+		<PROPERTY NAME="unindentThisLine" VALUE="^.*(default:\s*|case.*:.*)$"/>
+		<PROPERTY NAME="electricKeys" VALUE=":"/>
+	</PROPS>
+	<RULES IGNORE_CASE="FALSE" HIGHLIGHT_DIGITS="TRUE" DIGIT_RE="(0[lL]?|[1-9]\d{0,9}(\d{0,9}[lL])?|0[xX]\p{XDigit}{1,8}(\p{XDigit}{0,8}[lL])?|0[0-7]{1,11}([0-7]{0,11}[lL])?|([0-9]+\.[0-9]*|\.[0-9]+)([eE][+-]?[0-9]+)?[fFdD]?|[0-9]+([eE][+-]?[0-9]+[fFdD]?|([eE][+-]?[0-9]+)?[fFdD]))">
+
+		<!-- Silly comment -->
+		<SEQ TYPE="COMMENT1">/**/</SEQ>
+
+        <!-- Java comment (C style) -->
+		<SPAN TYPE="COMMENT1">
+			<BEGIN>/*</BEGIN>
+			<END>*/</END>
+		</SPAN>
+        
+		<EOL_SPAN TYPE="COMMENT1">**</EOL_SPAN>
+
+		<SPAN TYPE="LITERAL1" ESCAPE="\" NO_LINE_BREAK="TRUE">
+			<BEGIN>r"</BEGIN>
+			<END>"</END>
+		</SPAN>
+		<SPAN TYPE="LITERAL1" ESCAPE="\" NO_LINE_BREAK="TRUE">
+			<BEGIN>'</BEGIN>
+			<END>'</END>
+		</SPAN>
+
+		<EOL_SPAN TYPE="COMMENT2">//</EOL_SPAN>
+
+		<SEQ TYPE="OPERATOR">=</SEQ>
+		<SEQ TYPE="OPERATOR">!</SEQ>
+		<SEQ TYPE="OPERATOR">&gt;=</SEQ>
+		<SEQ TYPE="OPERATOR">&lt;=</SEQ>
+		<SEQ TYPE="OPERATOR">+</SEQ>
+		<SEQ TYPE="OPERATOR">-</SEQ>
+		<SEQ TYPE="OPERATOR">/</SEQ>
+		<SEQ TYPE="OPERATOR">&lt;&lt;</SEQ>
+		<SEQ TYPE="OPERATOR">&gt;&gt;</SEQ>
+
+		<!-- workaround to stop "*" from being colorized
+		     in import statements. -->
+		<SEQ TYPE="NULL">.*</SEQ>
+
+		<SEQ TYPE="OPERATOR">*</SEQ>
+		<SEQ TYPE="OPERATOR">&gt;</SEQ>
+		<SEQ TYPE="OPERATOR">&lt;</SEQ>
+		<SEQ TYPE="OPERATOR">%</SEQ>
+		<SEQ TYPE="OPERATOR">&amp;</SEQ>
+		<SEQ TYPE="OPERATOR">|</SEQ>
+		<SEQ TYPE="OPERATOR">^</SEQ>
+		<SEQ TYPE="OPERATOR">~</SEQ>
+		<SEQ TYPE="OPERATOR">}</SEQ>
+		<SEQ TYPE="OPERATOR">{</SEQ>
+		<MARK_PREVIOUS TYPE="LABEL" MATCH_TYPE="OPERATOR" AT_WHITESPACE_END="TRUE">:</MARK_PREVIOUS>
+
+		<!-- Function calls -->
+		<MARK_PREVIOUS TYPE="FUNCTION" MATCH_TYPE="OPERATOR">(</MARK_PREVIOUS>
+		<SEQ TYPE="OPERATOR">)</SEQ>
+
+		<KEYWORDS>
+            <KEYWORD1>abstract</KEYWORD1>
+            <KEYWORD1>as</KEYWORD1>
+            <KEYWORD1>break</KEYWORD1>
+            <KEYWORD1>case</KEYWORD1>
+            <KEYWORD1>catch</KEYWORD1>
+            <KEYWORD1>class</KEYWORD1>
+            <KEYWORD1>const</KEYWORD1>
+            <KEYWORD1>continue</KEYWORD1>
+            <KEYWORD1>default</KEYWORD1>
+            <KEYWORD1>do</KEYWORD1>
+            <KEYWORD1>else</KEYWORD1>
+            <KEYWORD1>enum</KEYWORD1>
+            <KEYWORD1>false</KEYWORD1>
+            <KEYWORD1>final</KEYWORD1>
+            <KEYWORD1>finally</KEYWORD1>
+            <KEYWORD1>for</KEYWORD1>
+            <KEYWORD1>if</KEYWORD1>
+            <KEYWORD1>internal</KEYWORD1>
+            <KEYWORD1>is</KEYWORD1>
+            <KEYWORD1>isnot</KEYWORD1>
+            <KEYWORD1>mixin</KEYWORD1>
+            <KEYWORD1>native</KEYWORD1>
+            <KEYWORD1>new</KEYWORD1>
+            <KEYWORD1>null</KEYWORD1>
+            <KEYWORD1>once</KEYWORD1>
+            <KEYWORD1>override</KEYWORD1>
+            <KEYWORD1>private</KEYWORD1>
+            <KEYWORD1>protected</KEYWORD1>
+            <KEYWORD1>public</KEYWORD1>
+            <KEYWORD1>readonly</KEYWORD1>
+            <KEYWORD1>return</KEYWORD1>
+            <KEYWORD1>static</KEYWORD1>
+            <KEYWORD1>super</KEYWORD1>
+            <KEYWORD1>switch</KEYWORD1>
+            <KEYWORD1>this</KEYWORD1>
+            <KEYWORD1>throw</KEYWORD1>
+            <KEYWORD1>true</KEYWORD1>
+            <KEYWORD1>try</KEYWORD1>
+            <KEYWORD1>using</KEYWORD1>
+            <KEYWORD1>virtual</KEYWORD1>
+            <KEYWORD1>void</KEYWORD1>
+            <KEYWORD1>while</KEYWORD1>
+
+			<LITERAL2>false</LITERAL2>
+			<LITERAL2>null</LITERAL2>
+			<LITERAL2>this</LITERAL2>
+			<LITERAL2>true</LITERAL2>
+
+		</KEYWORDS>
+	</RULES>
+</MODE>

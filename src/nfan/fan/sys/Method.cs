@@ -1,0 +1,537 @@
+//
+// Copyright (c) 2006, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   27 Sep 06  Andy Frank  Creation
+//
+
+using System;
+using System.Reflection;
+using System.Text;
+using Fanx.Fcode;
+using Fanx.Util;
+
+namespace Fan.Sys
+{
+  /// <summary>
+  /// Method is an invocable operation on a Type.
+  /// </summary>
+  public class Method : Slot
+  {
+
+  //////////////////////////////////////////////////////////////////////////
+  // Fan Constructor
+  //////////////////////////////////////////////////////////////////////////
+
+    public static Method make(Str name, Func func) { return make(name, func, null); }
+    public static Method make(Str name, Func func, Map facets)
+    {
+      Method m = new Method();
+      make_(m, name, func, facets);
+      return m;
+    }
+
+    public static void make_(Method self, Str name, Func func) { make_(self, name, func, null); }
+    public static void make_(Method self, Str name, Func func, Map facets)
+    {
+      if (name == null) throw NullErr.make("name is null").val;
+      if (func == null) throw NullErr.make("func is null").val;
+
+      self.m_flags  = FConst.Public;
+      self.m_name   = name;
+      self.m_qname  = name;
+      self.m_func   = func;
+      self.m_params = func.m_params;
+      self.m_facets = Facets.make(facets);
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // C# Constructor
+  //////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Constructor used by Type.reflect.
+     */
+    public Method(Type parent, Str name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars)
+     : this(parent, name, flags, facets, lineNum, returns, inheritedReturns, pars, null)
+    {
+    }
+
+    /**
+     * Constructor used by GenericType and we are given the generic
+     * method that is being parameterized.
+     */
+    public Method(Type parent, Str name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars, Method generic)
+      : base(parent, name, flags, facets, lineNum)
+    {
+      List fparams = pars.ro();
+      if ((flags & (FConst.Static|FConst.Ctor)) == 0)
+      {
+        Obj[] temp = new Obj[pars.sz()+1];
+        temp[0] = new Param(Str.thisStr, parent, 0);
+        pars.copyInto(temp, 1, pars.sz());
+        fparams = new List(Sys.ParamType, temp);
+      }
+
+      this.m_func = new MethodFunc(this, returns, fparams);
+      this.m_params = pars;
+      this.m_inheritedReturns = inheritedReturns;
+      this.m_mask = (generic != null) ? 0 : toMask(parent, returns, pars);
+      this.m_generic = generic;
+    }
+
+    /**
+     * Default constructor used by make
+     */
+    public Method() {}
+
+    /**
+     * Compute if the method signature contains generic parameter types.
+     */
+    private static int toMask(Type parent, Type returns, List pars)
+    {
+      // we only use generics in Sys
+      if (parent.pod() != Sys.SysPod) return 0;
+
+      int p = returns.isGenericParameter() ? 1 : 0;
+      for (int i=0; i<pars.sz(); ++i)
+        p |= ((Param)pars.get(i)).m_of.isGenericParameter() ? 1 : 0;
+
+      int mask = 0;
+      if (p != 0) mask |= GENERIC;
+      return mask;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Methods
+  //////////////////////////////////////////////////////////////////////////
+
+    public override Type type() { return Sys.MethodType; }
+
+    public Type returns() { return m_func.returns(); }
+
+    public Type inheritedReturns() { return m_inheritedReturns; }
+
+    public List @params() { return m_params.ro(); }
+
+    public Func func() { return m_func; }
+
+    public override Str signature()
+    {
+      StringBuilder s = new StringBuilder();
+      s.Append(m_func.m_returns).Append(' ').Append(m_name).Append('(');
+      for (int i=0; i<m_params.sz(); ++i)
+      {
+        if (i > 0) s.Append(", ");
+        Param p = (Param)m_params.get(i);
+        s.Append(p.m_of).Append(' ').Append(p.m_name);
+      }
+      s.Append(')');
+      return Str.make(s.ToString());
+    }
+
+    public override Obj trap(Str name, List args)
+    {
+      // private undocumented access
+      if (name.val == "inheritedReturnType")
+        return m_inheritedReturns;
+      else
+        return base.trap(name, args);
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Generics
+  //////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Return if this method contains generic parameters in it's signature.
+     */
+    public bool isGenericMethod()
+    {
+      return (m_mask & GENERIC) != 0;
+    }
+
+    /**
+     * Return if this method is the parameterization of a generic method,
+     * with all the generic parameters filled in with real types.
+     */
+    public bool isGenericInstance()
+    {
+      return m_generic != null;
+    }
+
+    /**
+     * If isGenericInstance is true, then return the generic method which
+     * this method instantiates.  The generic method may be used to access
+     * the actual signatures used in the Java code (via getRawType).  If
+     * this method is not a generic instance, return null.
+     */
+    public Method getGenericMethod()
+    {
+      return m_generic;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Call Conveniences
+  //////////////////////////////////////////////////////////////////////////
+
+    public Obj call(List args) { return m_func.call(args); }
+    public Obj callOn(Obj target, List args) { return m_func.callOn(target, args); }
+    public Obj call0() { return m_func.call0(); }
+    public Obj call1(Obj a) { return m_func.call1(a); }
+    public Obj call2(Obj a, Obj b) { return m_func.call2(a,b); }
+    public Obj call3(Obj a, Obj b, Obj c) { return m_func.call3(a,b,c); }
+    public Obj call4(Obj a, Obj b, Obj c, Obj d) { return m_func.call4(a,b,c,d); }
+    public Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { return m_func.call5(a,b,c,d,e); }
+    public Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return m_func.call6(a,b,c,d,e,f); }
+    public Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return m_func.call7(a,b,c,d,e,f,g); }
+    public Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return m_func.call8(a,b,c,d,e,f,g,h); }
+
+  //////////////////////////////////////////////////////////////////////////
+  // MethodFunc
+  //////////////////////////////////////////////////////////////////////////
+
+    internal class MethodFunc : Func
+    {
+      internal MethodFunc(Method method, Type returns, List pars)
+        : base (returns, pars)
+      {
+        this.m = method;
+      }
+      private Method m;
+
+      public override Method method() { return m; }
+
+      public override Bool isImmutable()
+      {
+        return Bool.make(m.isStatic().val || m.m_parent.isConst().val);
+      }
+
+      public override Obj call(List args)
+      {
+        int argsSize = args == null ? 0 : args.sz();
+
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        int p = checkArgs(argsSize, isStatic, false);
+        Obj[] a = new Obj[p];
+
+        if (isStatic)
+        {
+          if (args != null && a.Length > 0) args.toArray(a, 0, a.Length);
+          return m.invoke(null, a);
+        }
+        else
+        {
+          Obj i = args.get(0);
+          if (a.Length > 0) args.toArray(a, 1, a.Length);
+          return m.invoke(i, a);
+        }
+      }
+
+      public override Obj callOn(Obj target, List args)
+      {
+        int argsSize = args == null ? 0 : args.sz();
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+
+        // we don't include target as part of arguments
+        int p = checkArgs(argsSize, isStatic, true);
+
+        Obj[] a = new Obj[p];
+        if (args != null && a.Length > 0) args.toArray(a, 0, a.Length);
+        return m.invoke(target, a);
+      }
+
+      public override Obj call0()
+      {
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        checkArgs(0, isStatic, false);
+        return m.invoke(null, noArgs);
+      }
+
+      public override Obj call1(Obj a)
+      {
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        int p = checkArgs(1, isStatic, false);
+        Obj[] args;
+        if (isStatic)
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = a;
+          return m.invoke(null, args);
+        }
+        else
+        {
+          args = new Obj[p];
+          return m.invoke(a, args);
+        }
+      }
+
+      public override Obj call2(Obj a, Obj b)
+      {
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        int p = checkArgs(2, isStatic, false);
+        Obj[] args;
+        if (isStatic)
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = a;
+          if (p > 1) args[1] = b;
+          return m.invoke(null, args);
+        }
+        else
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = b;
+          return m.invoke(a, args);
+        }
+      }
+
+      public override Obj call3(Obj a, Obj b, Obj c)
+      {
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        int p = checkArgs(3, isStatic, false);
+        Obj[] args;
+        if (isStatic)
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = a;
+          if (p > 1) args[1] = b;
+          if (p > 2) args[2] = c;
+          return m.invoke(null, args);
+        }
+        else
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = b;
+          if (p > 1) args[1] = c;
+          return m.invoke(a, args);
+        }
+      }
+
+      public override Obj call4(Obj a, Obj b, Obj c, Obj d)
+      {
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        int p = checkArgs(4, isStatic, false);
+        Obj[] args;
+        if (isStatic)
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = a;
+          if (p > 1) args[1] = b;
+          if (p > 2) args[2] = c;
+          if (p > 3) args[3] = d;
+          return m.invoke(null, args);
+        }
+        else
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = b;
+          if (p > 1) args[1] = c;
+          if (p > 2) args[2] = d;
+          return m.invoke(a, args);
+        }
+      }
+
+      public override Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e)
+      {
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        int p = checkArgs(5, isStatic, false);
+        Obj[] args;
+        if (isStatic)
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = a;
+          if (p > 1) args[1] = b;
+          if (p > 2) args[2] = c;
+          if (p > 3) args[3] = d;
+          if (p > 4) args[4] = e;
+          return m.invoke(null, args);
+        }
+
+
+        else
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = b;
+          if (p > 1) args[1] = c;
+          if (p > 2) args[2] = d;
+          if (p > 3) args[3] = e;
+          return m.invoke(a, args);
+        }
+      }
+
+      public override Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f)
+      {
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        int p = checkArgs(6, isStatic, false);
+        Obj[] args;
+        if (isStatic)
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = a;
+          if (p > 1) args[1] = b;
+          if (p > 2) args[2] = c;
+          if (p > 3) args[3] = d;
+          if (p > 4) args[4] = e;
+          if (p > 5) args[5] = f;
+          return m.invoke(null, args);
+        }
+        else
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = b;
+          if (p > 1) args[1] = c;
+          if (p > 2) args[2] = d;
+          if (p > 3) args[3] = e;
+          if (p > 4) args[4] = f;
+          return m.invoke(a, args);
+        }
+      }
+
+      public override Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g)
+      {
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        int p = checkArgs(7, isStatic, false);
+        Obj[] args;
+        if (isStatic)
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = a;
+          if (p > 1) args[1] = b;
+          if (p > 2) args[2] = c;
+          if (p > 3) args[3] = d;
+          if (p > 4) args[4] = e;
+          if (p > 5) args[5] = f;
+          if (p > 6) args[6] = g;
+          return m.invoke(null, args);
+        }
+        else
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = b;
+          if (p > 1) args[1] = c;
+          if (p > 2) args[2] = d;
+          if (p > 3) args[3] = e;
+          if (p > 4) args[4] = f;
+          if (p > 5) args[5] = g;
+          return m.invoke(a, args);
+        }
+      }
+
+      public override Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h)
+      {
+        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        int p = checkArgs(8, isStatic, false);
+        Obj[] args;
+        if (isStatic)
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = a;
+          if (p > 1) args[1] = b;
+          if (p > 2) args[2] = c;
+          if (p > 3) args[3] = d;
+          if (p > 4) args[4] = e;
+          if (p > 5) args[5] = f;
+          if (p > 6) args[6] = g;
+          if (p > 7) args[7] = h;
+          return m.invoke(null, args);
+        }
+        else
+        {
+          args = new Obj[p];
+          if (p > 0) args[0] = b;
+          if (p > 1) args[1] = c;
+          if (p > 2) args[2] = d;
+          if (p > 3) args[3] = e;
+          if (p > 4) args[4] = f;
+          if (p > 5) args[5] = g;
+          if (p > 6) args[6] = h;
+          return m.invoke(a, args);
+        }
+      }
+
+      private int checkArgs(int args, bool isStatic, bool isCallOn)
+      {
+        // ensure parent has finished emitting so that reflect is populated
+        m.m_parent.finish();
+
+        // compuate min/max parameters - reflect contains all the method versions
+        // with full pars at index zero, and full defaults at reflect.Length-1
+        int max = m_params.sz();
+        if (!isStatic) max--;
+        int min = max-m.m_reflect.Length+1;
+
+        // do checking
+        if (isStatic || isCallOn)
+        {
+          if (args < min) throw ArgErr.make("Too few arguments: " + args + " < " + min+".."+max).val;
+        }
+        else
+        {
+          if (args < min+1) throw ArgErr.make("Too few arguments: " + args + " < instance+" + min+".."+max).val;
+          args--;
+        }
+
+        // return size of arguments to pass to java method
+        return args <= max ? args : max;
+      }
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Reflection
+  //////////////////////////////////////////////////////////////////////////
+
+    internal Obj invoke(object instance, object[] args)
+    {
+      if (m_reflect == null) m_parent.finish();
+      
+      try
+      {
+        // zero index is full signature up to using max defaults
+        int index = m_params.sz()-args.Length;
+        if (index < 0) index = 0;
+        return (Obj)m_reflect[index].Invoke(instance, args);
+      }
+      catch (ArgumentException e)
+      {
+        throw ArgErr.make(e).val;
+      }
+      catch (TargetInvocationException e)
+      {
+        Err err = Err.make(e.InnerException);
+        err.m_stack = e.InnerException.StackTrace;
+        throw err.val;
+      }
+      catch (Exception e)
+      {
+        if (m_reflect == null)
+          throw Err.make("Method not mapped to System.Reflection.MethodInfo correctly " + m_qname).val;
+
+        //System.Console.WriteLine("ERROR:      " + signature());
+        //System.Console.WriteLine("  instance: " + instance);
+        //System.Console.WriteLine("  args:     " + (args == null ? "null" : ""+args.Length));
+        //for (int i=0; args != null && i<args.Length; ++i)
+        //  System.Console.WriteLine("    args[" + i + "] = " + args[i]);
+        //Err.dumpStack(e);
+
+        throw Err.make("Cannot call '" + this + "': " + e).val;
+      }
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Fields
+  //////////////////////////////////////////////////////////////////////////
+
+    internal static readonly int GENERIC = 0x01;  // is this a generic method
+    internal static readonly Object[] noArgs = new Object[0];
+
+    internal Func m_func;
+    internal List m_params;           // might be different from func.params is instance method
+    internal Type m_inheritedReturns; // for covariance
+    internal int m_mask;
+    internal Method m_generic;
+    internal MethodInfo[] m_reflect;
+
+  }
+}
