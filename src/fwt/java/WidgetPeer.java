@@ -107,6 +107,7 @@ public class WidgetPeer
   {
     if (!(control instanceof Control)) { this.pos = pos; return; }
     ((Control)control).setLocation((int)pos.x.val, (int)pos.y.val);
+    onPosChange();
   }
 
   public final Size size(fan.fwt.Widget self)
@@ -119,6 +120,7 @@ public class WidgetPeer
   {
     if (!(control instanceof Control)) { this.size = size; return; }
     ((Control)control).setSize((int)size.w.val, (int)size.h.val);
+    onSizeChange();
   }
 
   public final Rect bounds(fan.fwt.Widget self)
@@ -131,6 +133,8 @@ public class WidgetPeer
   {
     if (!(control instanceof Control)) { pos = b.pos(); size = b.size(); return; }
     ((Control)control).setBounds((int)b.x.val, (int)b.y.val, (int)b.w.val, (int)b.h.val);
+    onPosChange();
+    onSizeChange();
   }
 
   public Size prefSize(fan.fwt.Widget self, Hints hints)
@@ -166,6 +170,9 @@ public class WidgetPeer
         c.redraw((int)r.x.val, (int)r.y.val, (int)r.w.val, (int)r.h.val, true);
     }
   }
+
+  void onPosChange() {}
+  void onSizeChange() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Focus Eventing

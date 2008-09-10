@@ -24,6 +24,7 @@ class RichTextDemo : Test
 
     Window
     {
+      title = "RichText Demo"
       InsetPane
       {
         RichText
@@ -35,6 +36,7 @@ class RichTextDemo : Test
           //onSelect.add |Event e| { echo(e) }
         }
       }
+      size = Size(600,600)
     }.open
   }
 

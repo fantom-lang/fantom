@@ -23,6 +23,7 @@ internal class Main
     f.loadUri(uri)
 
     // open the frame and let's get this party started!
+    f.size = Size(800, 600)
     f.open
   }
 

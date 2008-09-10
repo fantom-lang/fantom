@@ -16,6 +16,10 @@ class FwtHello : Test
 {
   Void main()
   {
-    Window { Label { text = "Hello world" } }.open
+    Window
+    {
+      size = Size(300,200)
+      Label { text = "Hello world"; halign=Halign.center }
+    }.open
   }
 }
