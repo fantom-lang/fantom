@@ -1,36 +1,18 @@
 **************************************************************************
 ** title:      Index
 ** author:     Brian Frank
-** created:    19 Jul 07
+** created:    14 Aug 07
 ** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-- [Statements]`Stmts`
-  - [Local Declaration]`Stmts#localDef`
-  - [If/Else]`Stmts#if`
-  - [While]`Stmts#while`
-  - [For]`Stmts#for`
-  - [Switch]`Stmts#switch`
-  - [Throw]`Stmts#throw`
-  - [Try/Catch]`Stmts#tryCatch`
-  - [Try/Finally]`Stmts#tryFinally`
-
-- [Lists]`Lists`
-  - [Literals]`Lists#literals`
-  - [Access]`Lists#access`
-  - [Modify]`Lists#modify`
-  - [Using as a Stack]`Lists#stack`
-  - [Each (Iteration)]`Lists#each`
-  - [Searching]`Lists#search`
-  - [Sorting]`Lists#sorting`
-  - [Readonly]`Lists#ro`
-  - [More Info]`Lists#moreInfo`
-
-- [Files]`Files`
-  - [File Constructors]`Files#constructors`
-  - [File Naming]`Files#naming`
-  - [Working with Directories]`Files#dir`
-  - [Reading Files]`Files#reading`
-  - [Writing Files]`Files#writing`
+[
+  [`Statements`, "sample code for each statement syntax"],
+  [`Lists`,      "sample code for sys::List"],
+  [`Maps`,       "sample code for sys::Map"],
+  [`Files`,      "sample code for sys::File"],
+  [`Reflection`, "sample code for pod, type, and slot reflection"],
+  [`Logging`,    "sample code for sys::Log"],
+  [`Email`,      "sample code for email pod"],
+]
 
