@@ -17,7 +17,15 @@ internal class NavSideBar : SideBar
   new make()
   {
     tree.onAction.add(&onAction)
-    content = tree
+    content = EdgePane
+    {
+      top = InsetPane(2,0,2,0) {
+        Combo {
+          items = ["My Computer"]
+        }
+      }
+      center = tree
+    }
   }
 
   internal Void onAction(Event event)

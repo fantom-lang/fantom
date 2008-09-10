@@ -90,6 +90,7 @@ internal class Commands
       Button { command = forward; text="" }
       Button { command = refresh; text="" }
       Button { command = up; text="" }
+      /*
       Button { mode = ButtonMode.sep }
       Button { command = save; text="" }
       Button { mode = ButtonMode.sep }
@@ -99,6 +100,7 @@ internal class Commands
       Button { mode = ButtonMode.sep }
       Button { command = undo; text="" }
       Button { command = redo; text="" }
+      */
     }
   }
 

@@ -26,8 +26,8 @@ class Frame : Window
     {
       top = EdgePane
       {
-        top=InsetPane(2,2,2,2) { commands.buildToolBar }
-        bottom=InsetPane(0,4,4,4) { buildLocatorBar }
+        left=InsetPane(2,2,2,2) { commands.buildToolBar }
+        center=InsetPane(2,2,2,2) { buildLocatorBar }
       }
       center = SashPane
       {
