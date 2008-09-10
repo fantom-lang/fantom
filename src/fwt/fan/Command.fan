@@ -101,6 +101,20 @@ class Command
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Get the window associated with this command.  If this
+  ** command is being used as the action of a dialog, then
+  ** return the dialog.  Otherwise try to map to a window
+  ** via one of the widgets bound to this command.  Return
+  ** null if no associated window can be found.
+  **
+  Window window()
+  {
+    if (assocDialog != null) return assocDialog
+    return widgets.eachBreak |Widget w->Window| { return w.window }
+  }
+  internal Dialog assocDialog
+
+  **
   ** The enable state of the command automatically controls
   ** the enabled state of all the registered widgets.
   **

@@ -64,6 +64,24 @@ class Dialog : Window
   **
   static native Obj openQuestion(Window parent, Str msg, Command[] commands := [ok])
 
+  **
+  ** Open a prompt for the user to enter a string with an ok and cancel
+  ** button. Return the string value or null if the dialog is canceled.
+  ** The text field is populated with the 'def' string which defaults
+  ** to "".
+  **
+  static Str openPromptStr(Window parent, Str msg, Str def := "")
+  {
+    field := Text { text = def }
+    pane := GridPane { numCols = 2; Label { text=msg }; add(field) }
+    ok := Dialog.ok
+    cancel := Dialog.cancel
+    dialog := Dialog(parent, pane, [ok, cancel])
+    field.onAction.add |,| { dialog.close(ok) }
+    if (dialog.open != ok) return null
+    return field.text
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
@@ -71,7 +89,12 @@ class Dialog : Window
   **
   ** Make a standard option dialog.  If content is a string, then
   ** it is displayed as a lable, otherwise content must be a Widget.
+  **
   ** The commands are mapped to buttons along the bottom of the dialog.
+  ** If a predefined command such as `ok` is passed, then it closes
+  ** the dialog and is returned as the result.  If a custom command
+  ** is passed, then it should close the dialog as appropiate with
+  ** the result object.
   **
   new make(Window parent, Obj content := null, Command[] commands := null)
     : super(parent)
@@ -90,7 +113,11 @@ class Dialog : Window
       uniformRows = true
       uniformCols = true
     }
-    commands.each |Command c| {  buttons.add(Button { command = c }) }
+    commands.each |Command c|
+    {
+      c.assocDialog = this
+      buttons.add(Button { command = c })
+    }
 
     // build overall
     this.content = GridPane
@@ -119,6 +146,11 @@ internal class DialogCommand : Command
     : super.makeLocale(Dialog#.pod, id.name)
   {
     this.id = id
+  }
+
+  override Void invoke(Event e)
+  {
+    window?.close(this)
   }
 
   override Int hash() { return id.hash }

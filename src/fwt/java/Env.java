@@ -48,6 +48,16 @@ public class Env
 // Display
 //////////////////////////////////////////////////////////////////////////
 
+  public void mainEventLoop(Shell shell)
+  {
+    eventLoop(shell);
+    display.dispose();
+    disposeAllColors();
+    disposeAllFonts();
+    disposeAllImages();
+    disposeScratchGC();
+  }
+
   public void eventLoop(Shell shell)
   {
     while (!shell.isDisposed())
@@ -62,11 +72,6 @@ public class Env
         e.printStackTrace();
       }
     }
-    display.dispose();
-    disposeAllColors();
-    disposeAllFonts();
-    disposeAllImages();
-    disposeScratchGC();
   }
 
 //////////////////////////////////////////////////////////////////////////
