@@ -94,19 +94,20 @@ public class WindowPeer extends PanePeer
     // if already open
     if (control != null) throw Err.make("Window already open").val;
 
+    // initialize with clean slate
+    result = null;
+
     // create SWT shell
-    Env env = null, main = null;
+    Env env = Env.get();
     Shell shell;
     fan.fwt.Widget parent = self.parent();
     Shell parentShell = parent == null ? null : (Shell)parent.peer.control;
     if (parentShell == null)
     {
-      main = env = Env.get();
-      shell = new Shell(main.display, style(self));
+      shell = new Shell(env.display, style(self));
     }
     else
     {
-      env = Env.get();
       shell = new Shell(parentShell, style(self));
     }
     shell.setLayout(new FillLayout());
@@ -154,17 +155,19 @@ public class WindowPeer extends PanePeer
     // open
     shell.open();
 
-    // block in event loop if this is first window
-    if (main != null) main.eventLoop(shell);
+    // block until dialog is closed
+    env.eventLoop(shell);
 
-    // closing
+    // cleanup
+    detach(self);
     explicitPos = explicitSize = false;
-    return null;
+    return result;
   }
 
-  public void close(Window self)
+  public void close(Window self, Obj result)
   {
     if (control == null) return;
+    this.result = result;
     Shell shell = (Shell)control;
     shell.close();
     detach(self);
@@ -181,4 +184,5 @@ public class WindowPeer extends PanePeer
 
   boolean explicitPos;    // has pos been explicitly configured?
   boolean explicitSize;   // has size been explicitly configured?
+  Obj result;
 }

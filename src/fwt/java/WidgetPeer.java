@@ -386,11 +386,20 @@ public class WidgetPeer
 
   public void detach(fan.fwt.Widget self)
   {
-    if (control == null) return;
-    control.dispose();
+    // dispose the control and null it out
+    if (control != null) control.dispose();
     control = null;
-  }
 
+    // recursively attach my children - disposing this control
+    // above will dispose its children, but will not
+    // null the control on the peer; so recurse ourselves
+    List kids = self.kids;
+    for (int i=0; i<kids.sz(); ++i)
+    {
+      fan.fwt.Widget kid = (fan.fwt.Widget)kids.get(i);
+      kid.peer.detach(kid);
+    }
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Widget/Control synchronization
