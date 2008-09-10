@@ -10,6 +10,8 @@ package fan.fwt;
 import fan.sys.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swt.layout.*;
@@ -59,6 +61,13 @@ public class WindowPeer extends PanePeer
   };
 
 //////////////////////////////////////////////////////////////////////////
+// Sizing
+//////////////////////////////////////////////////////////////////////////
+
+  void onPosChange()  { explicitPos = true;  }
+  void onSizeChange() { explicitSize = true; }
+
+//////////////////////////////////////////////////////////////////////////
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
@@ -82,29 +91,74 @@ public class WindowPeer extends PanePeer
 
   public Obj open(Window self)
   {
-    if (control != null) return null;
+    // if already open
+    if (control != null) throw Err.make("Window already open").val;
 
-    Env env = null;
+    // create SWT shell
+    Env env = null, main = null;
     Shell shell;
     fan.fwt.Widget parent = self.parent();
-    if (parent == null)
+    Shell parentShell = parent == null ? null : (Shell)parent.peer.control;
+    if (parentShell == null)
     {
-      env = Env.get();
-      shell = new Shell(env.display, style(self));
+      main = env = Env.get();
+      shell = new Shell(main.display, style(self));
     }
     else
     {
-      shell = new Shell((Shell)parent.peer.control, style(self));
+      env = Env.get();
+      shell = new Shell(parentShell, style(self));
     }
     shell.setLayout(new FillLayout());
     attachTo(shell);
 
-// TODO
-if (self instanceof fan.fwt.Dialog) shell.pack();
+    // if not explicitly sized, then use prefSize - but
+    // make sure not bigger than monitor (at this point we
+    // don't know which monitor so assume primary monitor)
+    if (!explicitSize)
+    {
+      shell.pack();
+      Rectangle mb = shell.getBounds();
+      Rectangle pb = env.display.getPrimaryMonitor().getClientArea();
+      int pw = Math.min(mb.width, pb.width-50);
+      int ph = Math.min(mb.height, pb.height-50);
+      shell.setSize(pw, ph);
+    }
 
+    // if not explicitly positioned, then center on
+    // parent shell (or primary monitor)
+    if (!explicitPos)
+    {
+      Rectangle pb = parentShell == null ?
+        env.display.getPrimaryMonitor().getClientArea() :
+        parentShell.getBounds();
+      Rectangle mb = shell.getBounds();
+      int cx = pb.x + (pb.width - mb.width)/2;
+      int cy = pb.y + (pb.height - mb.height)/2;
+      shell.setLocation(cx, cy);
+    }
+
+    // ensure that window isn't off the display; this
+    // still might cover multiple monitors though, but
+    // provides a safe sanity check
+    Rectangle mb = shell.getBounds();
+    Rectangle db = env.display.getClientArea();
+    if (mb.width > db.width) mb.width = db.width;
+    if (mb.height > db.height) mb.height = db.height;
+    if (mb.x + mb.width > db.x + db.width) mb.x = db.x + db.width - mb.width;
+    if (mb.x < db.x) mb.x = db.x;
+    if (mb.y + mb.height > db.y + db.height) mb.y = db.y + db.height - mb.height;
+    if (mb.y < db.y) mb.y = db.y;
+    shell.setBounds(mb);
+
+    // open
     shell.open();
 
-    if (env != null) env.eventLoop(shell);
+    // block in event loop if this is first window
+    if (main != null) main.eventLoop(shell);
+
+    // closing
+    explicitPos = explicitSize = false;
     return null;
   }
 
@@ -116,4 +170,15 @@ if (self instanceof fan.fwt.Dialog) shell.pack();
     detach(self);
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  boolean explicitPos;    // has pos been explicitly configured?
+  boolean explicitSize;   // has size been explicitly configured?
 }

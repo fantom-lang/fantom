@@ -19,10 +19,11 @@ class Window : ContentPane
   **   - windowModal: input is blocked to parent window
   **   - appModal: input is blocked to all other windows of application
   **   - sysModal: input is blocked to all windows of all applications
-  ** The default is modeless.  This field cannot be changed
-  ** once the window is constructed.
+  ** The default is appModel for Dialogs and modeless for all other
+  ** window types.  This field cannot be changed once the window
+  ** is constructed.
   **
-  const WindowMode mode := WindowMode.modeless
+  const WindowMode mode := this is Dialog ? WindowMode.appModal : WindowMode.modeless
 
   **
   ** Force window to always be on top of the desktop.  Default
@@ -59,6 +60,10 @@ class Window : ContentPane
 
   **
   ** Open the window.  If this is a dialog, then return result.
+  ** If the windows hasn't had its size explicitly set, then it
+  ** is packed to use its preferred size.  If the position is
+  ** not explicitly set, then the windows is centered over its
+  ** parent window (or primary monitor if no parent).
   **
   native Obj open()
 

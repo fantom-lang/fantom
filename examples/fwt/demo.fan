@@ -23,7 +23,7 @@ class FwtDemo : Test
     Window
     {
       title = "FWT Demo"
-      bounds = Rect { x = 100; y = 100; w = 800; h = 600 }
+      size = Size(800, 600)
       menuBar = makeMenuBar
       content = EdgePane
       {
