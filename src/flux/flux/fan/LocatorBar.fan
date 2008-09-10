@@ -17,11 +17,10 @@ internal class LocatorBar : GridPane
   new make(Frame frame)
   {
     this.frame = frame
-    numCols = 3
+    numCols = 2
     halignCells=Halign.fill
     valignCells=Valign.center
-    expandCol=1
-    add(Label { text="Uri" })
+    expandCol=0
     add(uriText)
     add(viewsButton)
   }
