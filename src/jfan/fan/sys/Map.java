@@ -259,6 +259,18 @@ public final class Map
     }
   }
 
+  public final Obj eachBreak(Func f)
+  {
+    Iterator it = map.pairs().iterator();
+    while (it.hasNext())
+    {
+      Entry e = (Entry)it.next();
+      Obj r = f.call2((Obj)e.getValue(), (Obj)e.getKey());
+      if (r != null) return r;
+    }
+    return null;
+  }
+
   public final Obj find(Func f)
   {
     Iterator it = map.pairs().iterator();

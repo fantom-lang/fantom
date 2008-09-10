@@ -501,6 +501,16 @@ public final class List
       f.call2(values[i], Int.pos(i));
   }
 
+  public final Obj eachBreak(Func f)
+  {
+    for (int i=0; i<size; ++i)
+    {
+      Obj r = f.call2(values[i], Int.pos(i));
+      if (r != null) return r;
+    }
+    return null;
+  }
+
   public final Obj find(Func f)
   {
     for (int i=0; i<size; ++i)

@@ -411,7 +411,8 @@
 - Fix adm/unixsetup script (mostly)
 - Breaking change to Uri.get (inserted base parameter before checked)
 - Breaking change Locale.prop -> get
-- List.flatten
+- List.eachBreak, flatten
+- Map.eachBreak
 - Uri.sliceToPathAbs, isPathOnly
 - Pod.uri, loc
 - Type.loc

@@ -173,6 +173,15 @@ final class Map
   Void each(|V value, K key| c)
 
   **
+  ** Iterate every key/value pair in the map until the function
+  ** returns non-null.  If function returns non-null, then break
+  ** the iteration and return the resulting object.  Return null
+  ** if the function returns null for every key/value pair.
+  ** This method is idempotent.
+  **
+  Obj eachBreak(|V item, K key->Obj| c)
+
+  **
   ** Return the first value in the map for which c returns true.
   ** If c returns false for every pair, then return null.  This
   ** method is idempotent.

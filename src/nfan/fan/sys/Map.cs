@@ -289,6 +289,19 @@ namespace Fan.Sys
       }
     }
 
+    public Obj eachBreak(Func f)
+    {
+      IDictionaryEnumerator en = m_map.GetEnumerator();
+      while (en.MoveNext())
+      {
+        Obj key = (Obj)en.Key;
+        Obj val = (Obj)en.Value;
+        Obj r = f.call2(val, key);
+        if (r != null) return r;
+      }
+      return null;
+    }
+
     public Obj find(Func f)
     {
       IDictionaryEnumerator en = m_map.GetEnumerator();
