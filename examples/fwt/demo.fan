@@ -112,6 +112,9 @@ class FwtDemo : Test
         MenuItem { mode = MenuItemMode.sep }
         MenuItem { text = "Ok/Cancel"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "OK/Cancel", Dialog.okCancel)) } }
         MenuItem { text = "Yes/No"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "Yes/No", Dialog.yesNo)) } }
+        MenuItem { mode = MenuItemMode.sep }
+        MenuItem { text = "Option A"; onAction.add |Event e| { echo(Dialog(e.window, "Str message", [Dialog.ok]).open) } }
+        MenuItem { text = "Option B"; onAction.add |Event e| { echo(Dialog(e.window, Button { text="BIG!" }, Dialog.okCancel).open) } }
       }
 
     }
@@ -310,6 +313,8 @@ class FwtDemo : Test
       Label { text="valignPane" };   Combo { items=Valign.values; onModify.add(&setEnum(grid, "valignPane")) }
       Label { text="expandRow" };    Text { text="null"; onModify.add(&setInt(grid, "expandRow")) }
       Label { text="expandCol" };    Text { text="null"; onModify.add(&setInt(grid, "expandCol")) }
+      Label { text="uniformCols" };  Combo { items=[false,true]; onModify.add(&setBool(grid, "uniformCols")) }
+      Label { text="uniformRows" };  Combo { items=[false,true]; onModify.add(&setBool(grid, "uniformRows")) }
     }
 
     return EdgePane { left=controls; center=InsetPane { content=grid } }
@@ -452,6 +457,15 @@ class FwtDemo : Test
     Str text := e.widget->text
     int := text.toInt(10, false)
     if (int != null || text=="null") f.set(obj, int)
+    obj.relayout
+  }
+
+  static Void setBool(Widget obj, Str field, Event e)
+  {
+    f := obj.type.field(field)
+    Str text := e.widget->text
+    b := text.toBool(false)
+    if (b != null) f.set(obj, b)
     obj.relayout
   }
 

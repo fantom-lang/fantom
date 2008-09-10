@@ -71,6 +71,22 @@ class GridPane : Pane
   **
   Int expandCol := null
 
+  **
+  ** If true, then all columns are given a uniform width which
+  ** is computed from the widest column.  If false then columns
+  ** might be laid out with variable widths based on the width
+  ** of the cells.  Default is false.
+  **
+  Bool uniformCols := false
+
+  **
+  ** If true, then all rows are given a uniform height which
+  ** is computed from the highest row.  If false then rows
+  ** might be laid out with variable heights based on the highest
+  ** of the cells.  Default is false.
+  **
+  Bool uniformRows:= false
+
   override Size prefSize(Hints hints := Hints.def)
   {
     return GridPaneSizes(this, children).prefPane
@@ -151,6 +167,7 @@ internal class GridPaneSizes
 {
   new make(GridPane grid, Widget[] kids)
   {
+    // compute colw and rowh lists
     col := 0; row := 0
     kids.each |Widget kid|
     {
@@ -166,12 +183,19 @@ internal class GridPaneSizes
       if (++col >= grid.numCols) { col = 0; row++ }
     }
 
+    // if uniform rows/cols
+    if (grid.uniformCols) { max := colw.max; colw.size.times |Int i| { colw[i] = max } }
+    if (grid.uniformRows) { max := rowh.max; rowh.size.times |Int i| { rowh[i] = max } }
+
+    // compute prefw
     prefw := (grid.numCols - 1) * grid.hgap
     grid.numCols.times |Int c| { prefw += colw[c] }
 
+    // compute prefh
     prefh := (numRows - 1) * grid.vgap
     numRows.times |Int r| { prefh += rowh[r] }
 
+    // prefPane
     prefPane = Size(prefw, prefh)
   }
 
