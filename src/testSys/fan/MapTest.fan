@@ -671,6 +671,19 @@ class MapTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// EachBreak
+//////////////////////////////////////////////////////////////////////////
+
+  Void testEachBreak()
+  {
+    x := [0:"0", 1:"1", 2:"2", 3:"3"]
+    verifyEq(x.eachBreak |Str v->Str| { return v == "2" ? "!" : null }, "!")
+    verifyEq(x.eachBreak |Str v->Str| { return v == "9" ? "!" : null }, null)
+    verifyEq(x.eachBreak |Str v, Int k->Str| { return k == 3 ? v : null }, "3")
+    verifyEq(x.eachBreak |Str v, Int k->Str| { return k == 9 ? v : null }, null)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Find
 //////////////////////////////////////////////////////////////////////////
 

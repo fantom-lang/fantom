@@ -309,6 +309,15 @@ final class List
   Void eachr(|V item, Int index| c)
 
   **
+  ** Iterate every item in the list starting with index 0 up to
+  ** size-1 until the function returns non-null.  If function
+  ** returns non-null, then break the iteration and return the
+  ** resulting object.  Return null if the function returns
+  ** null for every item.  This method is idempotent.
+  **
+  Obj eachBreak(|V item, Int index->Obj| c)
+
+  **
   ** Return the first item in the list for which c returns true.
   ** If c returns false for every item, then return null.  This
   ** method is idempotent.

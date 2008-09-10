@@ -500,6 +500,16 @@ namespace Fan.Sys
         f.call2(m_values[i], Int.pos(i));
     }
 
+    public Obj eachBreak(Func f)
+    {
+      for (int i=0; i<m_size; i++)
+      {
+        Obj r = f.call2(m_values[i], Int.pos(i));
+        if (r != null) return r;
+      }
+      return null;
+    }
+
     public Obj find(Func f)
     {
       for (int i=0; i<m_size; i++)
