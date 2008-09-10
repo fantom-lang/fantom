@@ -52,13 +52,13 @@ sql.test.dialect=sql::MySqlDialect
 // stable "released" version of fan is installed at /dev/rel/
 // used only for Windows launcher, Unix uses fansubstitute script
 fan.runtime.substitutes=                             \
-  /C:/dev/fan/src/buildall.fan       = C:\\dev\\rel  \
-  /C:/dev/fan/src/buildboot.fan      = C:\\dev\\rel  \
-  /C:/dev/fan/src/jfan/build.fan     = C:\\dev\\rel  \
-  /C:/dev/fan/src/nfan/build.fan     = C:\\dev\\rel  \
-  /C:/dev/fan/src/sys/build.fan      = C:\\dev\\rel  \
-  /C:/dev/fan/src/compiler/build.fan = C:\\dev\\rel  \
-  /C:/dev/fan/src/build/build.fan    = C:\\dev\\rel
+  /C:/dev/fan-1.0/src/buildall.fan       = C:\\dev\\rel  \
+  /C:/dev/fan-1.0/src/buildboot.fan      = C:\\dev\\rel  \
+  /C:/dev/fan-1.0/src/jfan/build.fan     = C:\\dev\\rel  \
+  /C:/dev/fan-1.0/src/nfan/build.fan     = C:\\dev\\rel  \
+  /C:/dev/fan-1.0/src/sys/build.fan      = C:\\dev\\rel  \
+  /C:/dev/fan-1.0/src/compiler/build.fan = C:\\dev\\rel  \
+  /C:/dev/fan-1.0/src/build/build.fan    = C:\\dev\\rel
 
 // used to change version for all pods at once
 fan.build.globalVersion=1.0.31
