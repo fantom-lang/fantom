@@ -1,6 +1,10 @@
 # ignore files for fan
 syntax: glob
 
+# general
+Thumbs.db
+.DS_Store
+
 # lib/
 lib/java/*.jar
 lib/net/*.pdb
