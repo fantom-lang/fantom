@@ -68,10 +68,40 @@ class Dialog : Window
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
+  **
+  ** Make a standard option dialog.  If content is a string, then
+  ** it is displayed as a lable, otherwise content must be a Widget.
+  ** The commands are mapped to buttons along the bottom of the dialog.
+  **
   new make(Window parent, Obj content := null, Command[] commands := null)
     : super(parent)
   {
-    // TODO
+    if (content == null || commands == null) return
+
+    // build content widget if necessary
+    if (content is Str) content = Label { text = content.toStr }
+
+    // build buttons from commands
+    buttons := GridPane
+    {
+      numCols = commands.size
+      halignCells = Halign.fill
+      halignPane = Halign.right
+      uniformRows = true
+      uniformCols = true
+    }
+    commands.each |Command c| {  buttons.add(Button { command = c }) }
+
+    // build overall
+    this.content = GridPane
+    {
+      expandCol = 0
+      expandRow = 0
+      valignCells = Valign.fill
+      halignCells = Halign.fill
+      InsetPane { add(content) }
+      InsetPane { insets = Insets(0, 10, 10, 10); add(buttons) }
+    }
   }
 
 }

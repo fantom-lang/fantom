@@ -99,6 +99,9 @@ public class WindowPeer extends PanePeer
     shell.setLayout(new FillLayout());
     attachTo(shell);
 
+// TODO
+if (self instanceof fan.fwt.Dialog) shell.pack();
+
     shell.open();
 
     if (env != null) env.eventLoop(shell);
