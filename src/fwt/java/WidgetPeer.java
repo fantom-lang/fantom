@@ -28,7 +28,7 @@ import org.eclipse.swt.events.*;
  * Native methods for Widget
  */
 public class WidgetPeer
-  implements PaintListener, KeyListener, FocusListener, MouseListener
+  implements PaintListener, KeyListener, FocusListener, MouseListener, DisposeListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -360,7 +360,8 @@ public class WidgetPeer
     checkFocusListeners(self);
     checkKeyListeners(self);
     checkMouseListeners(self);
-    syncProps();
+    control.addDisposeListener(this);
+    syncPropsToControl();
 
     // stick myself in data field
     control.setData(self);
@@ -386,26 +387,26 @@ public class WidgetPeer
 
   public void detach(fan.fwt.Widget self)
   {
-    // dispose the control and null it out
+    // dipose the control which automatically disposes all the
+    // children; we do cleanup in the widgetDisposed callback.
     if (control != null) control.dispose();
     control = null;
+  }
 
-    // recursively attach my children - disposing this control
-    // above will dispose its children, but will not
-    // null the control on the peer; so recurse ourselves
-    List kids = self.kids;
-    for (int i=0; i<kids.sz(); ++i)
-    {
-      fan.fwt.Widget kid = (fan.fwt.Widget)kids.get(i);
-      kid.peer.detach(kid);
-    }
+  public void widgetDisposed(DisposeEvent e)
+  {
+    syncPropsFromControl();
+    control = null;
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Widget/Control synchronization
 //////////////////////////////////////////////////////////////////////////
 
-  public void syncProps()
+  public void syncPropsToControl() { syncProps(true); }
+  public void syncPropsFromControl(){ syncProps(false); }
+
+  private void syncProps(boolean to)
   {
     try
     {
@@ -416,7 +417,13 @@ public class WidgetPeer
         try
         {
           if (Prop.class.isAssignableFrom(f.getType()))
-            ((Prop)f.get(this)).init();
+          {
+            Prop prop = (Prop)f.get(this);
+            if (to)
+              prop.syncToControl();
+            else
+              prop.syncFromControl();
+          }
         }
         catch (Exception e)
         {
