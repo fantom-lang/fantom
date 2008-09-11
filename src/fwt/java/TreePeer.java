@@ -94,22 +94,46 @@ public class TreePeer
     TreeItem item = (TreeItem)event.item;
     TreeItem parentItem = item.getParentItem();
 
-    // root
+    // map the event to a node
     Obj node;
     if (parentItem == null)
+    {
+      // if no parent item, then this is a root node
       node = model.roots().get(event.index);
+    }
     else
-      node = ((Data)parentItem.getData()).children.get(event.index);
+    {
+      // first check that've loaded the parent's children
+      Data parentData = (Data)parentItem.getData();
+      if (parentData.children == null)
+      {
+        List kids = model.children(parentData.node);
+        parentData.children = kids;
+        parentItem.setItemCount(kids.sz());
+        if (event.index >= kids.sz()) return;
+      }
+      node = parentData.children.get(event.index);
+    }
 
     Data data = new Data();
     data.node = node;
-    data.children = model.children(node);
 
-    List kids = model.children(node);
     item.setText(model.text(node).val);
     item.setImage(env.image(model.image(node)));
     item.setData(data);
-    item.setItemCount(kids.sz());
+    if (parentItem == null)
+    {
+      // if root, then load children one level deep because
+      // expanding a root with no children seems to crash SWT
+      data.children = model.children(node);
+      item.setItemCount(data.children.sz());
+    }
+    else
+    {
+      // otherwise assume we only have one child to prevent the
+      // SWT from loading the children until the node is expanded
+      item.setItemCount(model.hasChildren(node).val ? 1 : 0);
+    }
   }
 
   private void handleDefaultSelection(Event event)

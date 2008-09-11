@@ -41,5 +41,6 @@ internal class NavModel : TreeModel
   override Obj[] roots := Resource.roots
   override Str text(Obj node) { return ((Resource)node).name }
   override Image image(Obj node) { return ((Resource)node).icon }
+  override Bool hasChildren(Obj node) { return ((Resource)node).hasChildren }
   override Obj[] children(Obj node) { return ((Resource)node).children }
 }
