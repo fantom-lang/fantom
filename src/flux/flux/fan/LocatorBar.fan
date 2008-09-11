@@ -26,7 +26,7 @@ internal class LocatorBar : Widget
   Void load(Resource r)
   {
     uriText.text = r.uri.toStr
-    view = frame.viewTab.view?.type?.name ?: "Error"
+    view = frame.view.type.name
     repaint
   }
 
@@ -43,7 +43,7 @@ internal class LocatorBar : Widget
     vx := size.w - vw
     if (event.pos.x > vx && event.pos.x < vx+vw)
     {
-      views := frame.viewTab.resource?.views
+      views := frame.view.tab.resource.views
       if (views == null || views.isEmpty) return
       menu := Menu {}
       views.each |Type t|

@@ -36,8 +36,11 @@ internal class Commands
       Menu
       {
         text = type.loc("file.name")
+        MenuItem { command = newWindow }
+        MenuItem { command = newTab }
         MenuItem { command = start }
         MenuItem { command = openLocation }
+        MenuItem { mode = MenuItemMode.sep }
         MenuItem { command = save }
         MenuItem { mode = MenuItemMode.sep }
         MenuItem { command = exit }
@@ -114,7 +117,7 @@ internal class Commands
 
   Void update()
   {
-    tab := frame.viewTab
+    tab := frame.view.tab
     back.enabled = tab.backEnabled
     forward.enabled = tab.forwardEnabled
     up.enabled = tab.upEnabled
@@ -124,14 +127,14 @@ internal class Commands
 
   Void updateEdit()
   {
-    tab := frame.viewTab
+    tab := frame.view.tab
     undo.enabled = tab.undoEnabled
     redo.enabled = tab.redoEnabled
   }
 
   Void updateSave()
   {
-    tab := frame.viewTab
+    tab := frame.view.tab
     save.enabled = tab.dirty
   }
 
@@ -142,6 +145,8 @@ internal class Commands
   readonly Frame frame
 
   // File
+  readonly Command newWindow := NewWindowCommand()
+  readonly Command newTab := NewTabCommand()
   readonly Command start := StartCommand()
   readonly Command openLocation := OpenLocationCommand()
   readonly Command save := SaveCommand()
@@ -171,6 +176,26 @@ internal class Commands
 // File
 //////////////////////////////////////////////////////////////////////////
 
+** Open a new frame.
+internal class NewWindowCommand : FluxCommand
+{
+  new make() : super(CommandId.newWindow) {}
+  override Void invoke(Event event)
+  {
+    frame.loadUri(`flux:start`, LoadMode { newWindow=true })
+  }
+}
+
+** Open a new view tab.
+internal class NewTabCommand : FluxCommand
+{
+  new make() : super(CommandId.newTab) {}
+  override Void invoke(Event event)
+  {
+    frame.loadUri(`flux:start`, LoadMode { newTab=true })
+  }
+}
+
 ** Hyperlink to the flux:start
 internal class StartCommand : FluxCommand
 {
@@ -189,7 +214,7 @@ internal class OpenLocationCommand : FluxCommand
 internal class SaveCommand : FluxCommand
 {
   new make() : super(CommandId.save) {}
-  override Void invoke(Event event) { frame.viewTab.view?.save }
+  override Void invoke(Event event) { frame.view.tab.save }
 }
 
 ** Exit the application
@@ -207,14 +232,14 @@ internal class ExitCommand : FluxCommand
 internal class UndoCommand : FluxCommand
 {
   new make() : super(CommandId.undo) {}
-  override Void invoke(Event event) { frame.viewTab.undo }
+  override Void invoke(Event event) { frame.view.tab.undo }
 }
 
 ** Redo last undone command
 internal class RedoCommand : FluxCommand
 {
   new make() : super(CommandId.redo) {}
-  override Void invoke(Event event) { frame.viewTab.redo }
+  override Void invoke(Event event) { frame.view.tab.redo }
 }
 
 ** Cut command routes to 'focus?.cut'
@@ -255,7 +280,7 @@ internal class PasteCommand : FluxCommand
 internal class ReloadCommand : FluxCommand
 {
   new make() : super(CommandId.reload) {}
-  override Void invoke(Event event) { frame.viewTab.reload }
+  override Void invoke(Event event) { frame.view.tab.reload }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -266,21 +291,21 @@ internal class ReloadCommand : FluxCommand
 internal class BackCommand : FluxCommand
 {
   new make() : super(CommandId.back) {}
-  override Void invoke(Event event) { frame.viewTab.back }
+  override Void invoke(Event event) { frame.view.tab.back }
 }
 
 ** Hyperlink forward in history
 internal class ForwardCommand : FluxCommand
 {
   new make() : super(CommandId.forward) {}
-  override Void invoke(Event event) { frame.viewTab.forward }
+  override Void invoke(Event event) { frame.view.tab.forward }
 }
 
 ** Hyperlink up a level in the hierarchy
 internal class UpCommand : FluxCommand
 {
   new make() : super(CommandId.up) {}
-  override Void invoke(Event event) { frame.viewTab.up }
+  override Void invoke(Event event) { frame.view.tab.up }
 }
 
 //////////////////////////////////////////////////////////////////////////

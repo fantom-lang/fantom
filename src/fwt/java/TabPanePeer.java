@@ -62,7 +62,7 @@ public class TabPanePeer
   {
     TabFolder control = (TabFolder)this.control;
     TabPane self = (TabPane)this.self;
-    fan.fwt.Event fe = event(EventId.action);
+    fan.fwt.Event fe = event(EventId.select);
     fe.index = Int.make(control.getSelectionIndex());
     fe.data  = self.tabs().get(fe.index);
     self.onSelect().fire(fe);
