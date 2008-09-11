@@ -3,50 +3,64 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   12 Jun 08  Brian Frank  Creation
+//   10 Sep 08  Brian Frank  Creation
 //
 package fan.fwt;
 
 import fan.sys.*;
+import fan.sys.List;
 import org.eclipse.swt.*;
-import org.eclipse.swt.browser.*;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Widget;
 
-public class DisplayPeer
+public class MonitorPeer
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Peer
+// Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static DisplayPeer make(fan.fwt.Display self)
+  public static MonitorPeer make(fan.fwt.Monitor self)
   {
-    return new DisplayPeer(Env.get());
+    return new MonitorPeer();
   }
 
-  DisplayPeer(Env env) { this.env = env; }
+  static fan.fwt.Monitor make(Monitor swt)
+  {
+    fan.fwt.Monitor self = fan.fwt.Monitor.make();
+    self.peer.swt = swt;
+    return self;
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Native methods
 //////////////////////////////////////////////////////////////////////////
 
-  public static fan.fwt.Display current()
+  public static List list()
   {
-    Env env = Env.get();
-    if (env.fanDisplay == null) env.fanDisplay = fan.fwt.Display.make();
-    return env.fanDisplay;
+    return Env.get().monitors();
   }
 
-  public fan.fwt.Widget focus(fan.fwt.Display self)
+  public static fan.fwt.Monitor primary()
   {
-    return WidgetPeer.toFanWidget(env.display.getFocusControl());
+    return Env.get().primaryMonitor();
+  }
+
+  public Rect bounds(fan.fwt.Monitor self)
+  {
+    return WidgetPeer.rect(swt.getClientArea());
+  }
+
+  public Rect screenBounds(fan.fwt.Monitor self)
+  {
+    return WidgetPeer.rect(swt.getBounds());
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Env env;
+  Monitor swt;
+
 }
