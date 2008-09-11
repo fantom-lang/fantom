@@ -168,6 +168,7 @@ internal class ViewTab : EdgePane //Tab
     if (dirty) name += " *"
     this.text = name
     frame.commands.updateSave
+    parent?.relayout
   }
 
 //////////////////////////////////////////////////////////////////////////
