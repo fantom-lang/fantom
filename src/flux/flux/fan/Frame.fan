@@ -53,7 +53,7 @@ class Frame : Window
 
   internal Widget buildSideBar() { return NavSideBar {} }
 
-  internal Widget buildViewPane() { return TabPane { viewTab } }
+  internal Widget buildViewPane() { return ViewTabPane { viewTab } }
 
   internal Commands commands := Commands(this)
   internal LocatorBar locator := LocatorBar(this)
