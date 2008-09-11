@@ -11,9 +11,85 @@ using fwt
 **
 ** ViewTabPane manages ViewTabs.
 **
-internal class ViewTabPane : Pane
+internal class ViewTabPane : ContentPane
 {
 
+  **
+  ** Construct with one default tab.
+  **
+  new make(Frame frame)
+  {
+    this.frame = frame
+    this.tabs = [ ViewTab(frame) ]
+    this.active = tabs[0]
+    this.content = this.pane = TabPane() // TODO
+    {
+      this.active
+      onSelect.add(&onSelect)
+    }
+  }
+
+  **
+  ** Associated flux frame.
+  **
+  readonly Frame frame
+
+  **
+  ** Get the active tab.
+  **
+  readonly ViewTab active
+
+  **
+  ** Get a listing of all the tabs.
+  **
+  readonly ViewTab[] tabs
+
+  **
+  ** Get a listing of all the tabs mapped to views.
+  **
+  View[] views()
+  {
+    return tabs.map(View[,]) |ViewTab t->View| { return t.view }
+  }
+
+  **
+  ** Create a new tab.  The new tab is not selected.  It
+  ** is up the caller to select it once loading is complete.
+  **
+  ViewTab newTab()
+  {
+    tab := ViewTab(frame)
+    tabs.add(tab)
+    select(tab)
+    pane.add(tab) // TODO
+    return tab
+  }
+
+  **
+  ** Select the specified view tab as the new active tab.
+  **
+  Void select(ViewTab tab)
+  {
+    pane.selected = tab // TODO
+    onSelect(Event { data=tab })
+  }
+
+  **
+  ** Handle new tab selection
+  **
+  Void onSelect(Event event)
+  {
+    oldActive := this.active
+    this.active = pane.selected
+    if (active === oldActive) return
+    oldActive.deactivate
+    active.activate
+  }
+
+  TabPane pane // TODO
+
+
+/* TODO: custom painting/layout code
   new make()
   {
     add(tabs = TabBar())
@@ -42,6 +118,7 @@ internal class ViewTabPane : Pane
 
   TabBar tabs
   Widget active
+*/
 
 }
 

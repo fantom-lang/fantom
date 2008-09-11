@@ -12,6 +12,11 @@
 
 file.name=File
 
+newWindow.name=New Window
+
+newTab.name=New Tab
+newTab.accelerator=Ctrl+T
+
 start.name=Start Page
 
 openLocation.name=Open Location
