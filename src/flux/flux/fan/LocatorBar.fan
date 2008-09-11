@@ -11,18 +11,14 @@ using fwt
 **
 ** LocatorBar is used to display/edit the current Uri
 **
-internal class LocatorBar : GridPane
+internal class LocatorBar : Widget
 {
 
   new make(Frame frame)
   {
     this.frame = frame
-    numCols = 2
-    halignCells=Halign.fill
-    valignCells=Valign.center
-    expandCol=0
     add(uriText)
-    add(viewsButton)
+    onMouse.add(&onViewPopup)
   }
 
   readonly Frame frame
@@ -30,8 +26,8 @@ internal class LocatorBar : GridPane
   Void load(Resource r)
   {
     uriText.text = r.uri.toStr
-    viewsButton.text = frame.viewTab.view?.type?.name ?: "Error"
-    relayout
+    view = frame.viewTab.view?.type?.name ?: "Error"
+    repaint
   }
 
   Void go(Type view, Event event)
@@ -43,14 +39,19 @@ internal class LocatorBar : GridPane
 
   Void onViewPopup(Event event)
   {
-    views := frame.viewTab.resource?.views
-    if (views == null || views.isEmpty) return
-    menu := Menu {}
-    views.each |Type t|
+    vw := Font.sys.width(view) + viewInsets.left + viewInsets.right
+    vx := size.w - vw
+    if (event.pos.x > vx && event.pos.x < vx+vw)
     {
-      menu.add(MenuItem { text=t.name; onAction.add(&go(t)) })
+      views := frame.viewTab.resource?.views
+      if (views == null || views.isEmpty) return
+      menu := Menu {}
+      views.each |Type t|
+      {
+        menu.add(MenuItem { text=t.name; onAction.add(&go(t)) })
+      }
+      menu.open(this, Point(vx, size.h-1))
     }
-    menu.open(viewsButton, Point(0, viewsButton.size.h))
   }
 
   Void onLocation(Event event)
@@ -59,6 +60,42 @@ internal class LocatorBar : GridPane
     uriText.selectAll
   }
 
-  Text uriText := Text { onAction.add(&go(null)) }
-  Button viewsButton := Button { text="Views"; onAction.add(&onViewPopup) }
+  override Size prefSize(Hints hints := Hints.def)
+  {
+    ph := uriText.prefSize.h + textInsets.top + textInsets.bottom
+    return Size(100, ph)
+  }
+
+  override Void onPaint(Graphics g)
+  {
+    vw := Font.sys.width(view) + viewInsets.left + viewInsets.right
+    vh := Font.sys.height + viewInsets.top + viewInsets.bottom
+    vx := size.w - vw
+
+    g.brush = Color.sysListBg
+    g.fillRect(0, 0, size.w-vw, size.h)
+    g.brush = Color.sysBg
+    g.fillRect(vx, 0, vw, size.h)
+
+    g.brush = Color.sysNormShadow
+    g.drawRect(0, 0, size.w-1, size.h-1)
+    g.drawRect(vx, 0, vx, size.h-1)
+
+    g.brush = Color.sysFg
+    g.drawText(view, vx+viewInsets.left, (vh-Font.sys.height)/2)
+
+    tp := uriText.prefSize
+    tx := textInsets.left
+    ty := textInsets.top
+    tw := size.w - vw - textInsets.left - textInsets.right
+    th := size.h - textInsets.top - textInsets.bottom
+    uriText.bounds = Rect(tx, ty, tw, th)
+  }
+
+  const Insets textInsets := Insets(5,5,5,5)
+  const Insets viewInsets := Insets(5,5,5,5)
+  Text uriText := Text { onAction.add(&go(null)); border = false }
+  Str view := "Views"
+
 }
+
