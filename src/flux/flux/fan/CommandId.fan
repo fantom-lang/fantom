@@ -13,8 +13,10 @@
 class CommandId
 {
   // file menu
-  static const Str save       := "save"
-  static const Str exit       := "exit"
+  static const Str start        := "start"
+  static const Str openLocation := "openLocation"
+  static const Str save         := "save"
+  static const Str exit         := "exit"
 
   // edit menu
   static const Str undo       := "undo"
@@ -24,11 +26,12 @@ class CommandId
   static const Str paste      := "paste"
 
   // view menu
+  static const Str reload     := "refresh"
+
+  // history menu
   static const Str back       := "back"
   static const Str forward    := "forward"
-  static const Str refresh    := "refresh"
   static const Str up         := "up"
-  static const Str location   := "location"
 
   // tools menu
   static const Str options    := "options"

@@ -37,6 +37,8 @@ internal class Commands
       Menu
       {
         text = type.loc("file.name")
+        MenuItem { command = start }
+        MenuItem { command = openLocation }
         MenuItem { command = save }
         MenuItem { mode = MenuItemMode.sep }
         MenuItem { command = exit }
@@ -56,12 +58,15 @@ internal class Commands
       Menu
       {
         text = type.loc("view.name")
+        MenuItem { command = reload }
+      }
+
+      Menu
+      {
+        text = type.loc("history.name")
         MenuItem { command = back }
         MenuItem { command = forward }
-        MenuItem { command = refresh }
         MenuItem { command = up }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { command = locator }
       }
 
       Menu
@@ -88,7 +93,7 @@ internal class Commands
     {
       Button { command = back; text="" }
       Button { command = forward; text="" }
-      Button { command = refresh; text="" }
+      Button { command = reload; text="" }
       Button { command = up; text="" }
       /*
       Button { mode = ButtonMode.sep }
@@ -138,6 +143,8 @@ internal class Commands
   readonly Frame frame
 
   // File
+  readonly Command start := StartCommand()
+  readonly Command openLocation := OpenLocationCommand()
   readonly Command save := SaveCommand()
   readonly Command exit := ExitCommand()
 
@@ -151,9 +158,8 @@ internal class Commands
   // View
   readonly Command back := BackCommand()
   readonly Command forward := ForwardCommand()
-  readonly Command refresh := RefreshCommand()
+  readonly Command reload  := ReloadCommand()
   readonly Command up := UpCommand()
-  readonly Command locator := LocatorCommand()
 
   // Tools
   readonly Command options := OptionsCommand()
@@ -165,6 +171,20 @@ internal class Commands
 //////////////////////////////////////////////////////////////////////////
 // File
 //////////////////////////////////////////////////////////////////////////
+
+** Hyperlink to the flux:start
+internal class StartCommand : FluxCommand
+{
+  new make() : super(CommandId.start) {}
+  override Void invoke(Event event) { frame.loadUri(`flux:start`) }
+}
+
+** Focus the uri location field
+internal class OpenLocationCommand : FluxCommand
+{
+  new make() : super(CommandId.openLocation) {}
+  override Void invoke(Event event) { frame.locator.onLocation(event) }
+}
 
 ** Save current view
 internal class SaveCommand : FluxCommand
@@ -232,6 +252,17 @@ internal class PasteCommand : FluxCommand
 // View
 //////////////////////////////////////////////////////////////////////////
 
+** Reload the current view
+internal class ReloadCommand : FluxCommand
+{
+  new make() : super(CommandId.reload) {}
+  override Void invoke(Event event) { frame.viewTab.reload }
+}
+
+//////////////////////////////////////////////////////////////////////////
+// History
+//////////////////////////////////////////////////////////////////////////
+
 ** Hyperlink back in history
 internal class BackCommand : FluxCommand
 {
@@ -246,25 +277,11 @@ internal class ForwardCommand : FluxCommand
   override Void invoke(Event event) { frame.viewTab.forward }
 }
 
-** Refresh the current view
-internal class RefreshCommand : FluxCommand
-{
-  new make() : super(CommandId.refresh) {}
-  override Void invoke(Event event) { frame.viewTab.refresh }
-}
-
 ** Hyperlink up a level in the hierarchy
 internal class UpCommand : FluxCommand
 {
   new make() : super(CommandId.up) {}
   override Void invoke(Event event) { frame.viewTab.up }
-}
-
-** Focus the uri location field
-internal class LocatorCommand : FluxCommand
-{
-  new make() : super(CommandId.location) {}
-  override Void invoke(Event event) { frame.locator.onLocation(event) }
 }
 
 //////////////////////////////////////////////////////////////////////////
