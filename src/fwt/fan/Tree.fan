@@ -70,6 +70,14 @@ mixin TreeModel
   virtual Image image(Obj node) { return null }
 
   **
+  ** Return if this has or might have children.  This
+  ** is an optimization to display an expansion control
+  ** without actually loading all the children.  The
+  ** default returns '!children.isEmpty'.
+  **
+  virtual Bool hasChildren(Obj node) { return !children(node).isEmpty }
+
+  **
   ** Get the children of the specified node.  If no
   ** children return null or the empty list.
   ** Default returns null.
