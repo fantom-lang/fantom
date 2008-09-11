@@ -12,7 +12,7 @@ using fwt
 **
 ** FwtDemo displays the FWT sampler program.
 **
-class FwtDemo : Test
+class FwtDemo
 {
 
   **

@@ -204,7 +204,7 @@ internal class CutCommand : FluxCommand
   new make() : super(CommandId.cut) {}
   override Void invoke(Event event)
   {
-    try { Display.current.focus?->cut } catch (UnknownSlotErr e) {}
+    try { Desktop.focus?->cut } catch (UnknownSlotErr e) {}
   }
 }
 
@@ -214,7 +214,7 @@ internal class CopyCommand : FluxCommand
   new make() : super(CommandId.copy) {}
   override Void invoke(Event event)
   {
-    try { Display.current.focus?->copy } catch (UnknownSlotErr e) {}
+    try { Desktop.focus?->copy } catch (UnknownSlotErr e) {}
   }
 }
 
@@ -224,7 +224,7 @@ internal class PasteCommand : FluxCommand
   new make() : super(CommandId.paste) {}
   override Void invoke(Event event)
   {
-    try { Display.current.focus?->paste } catch (UnknownSlotErr e) {}
+    try { Desktop.focus?->paste } catch (UnknownSlotErr e) {}
   }
 }
 
