@@ -24,6 +24,6 @@ const class GeneralOptions
   **
   ** Default uri to display on startup.
   **
-  const Uri homePage := `flux:about`
+  const Uri homePage := `flux:start`
 
 }
