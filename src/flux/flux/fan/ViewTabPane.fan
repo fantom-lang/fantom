@@ -11,7 +11,7 @@ using fwt
 **
 ** ViewTabPane manages ViewTabs.
 **
-class ViewTabPane : Pane
+internal class ViewTabPane : Pane
 {
 
   new make()
@@ -61,8 +61,8 @@ internal class TabBar : Widget
     w := size.w
     h := size.h
 
-    bg   := Color("#d4d2c6")
-    outline := Color("#aca899")
+    bg := Gradient.makeLinear(Point(0,0), Color.sysLightShadow, Point(0,h), Color.sysBg)
+    outline := Color.sysNormShadow
 
     icon := parent->active->image as Image
     text := parent->active->text as Str
