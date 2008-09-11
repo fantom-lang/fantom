@@ -3,9 +3,8 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   21 Jul 08  Brian Frank  Creation
+//   21 Jul 08  Br ian Frank  Creation
 //
-
 using fwt
 
 ** Manages all the main window's commands
@@ -95,9 +94,9 @@ internal class Commands
       Button { command = forward; text="" }
       Button { command = reload; text="" }
       Button { command = up; text="" }
-      /*
-      Button { mode = ButtonMode.sep }
+      //Button { mode = ButtonMode.sep }
       Button { command = save; text="" }
+      /*
       Button { mode = ButtonMode.sep }
       Button { command = cut; text="" }
       Button { command = copy; text="" }
