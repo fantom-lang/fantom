@@ -20,6 +20,7 @@ internal class DirView : View
     content = Table
     {
       onAction.add(&onAction)
+      border = false
       model = this.model
     }
   }

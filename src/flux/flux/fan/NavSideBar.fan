@@ -33,7 +33,7 @@ internal class NavSideBar : SideBar
     frame.load(event.data)
   }
 
-  Tree tree := Tree { model = NavModel.make }
+  Tree tree := Tree { model = NavModel.make; border = false }
 }
 
 internal class NavModel : TreeModel
