@@ -33,7 +33,7 @@ const class SyntaxOptions
 // Styling
 //////////////////////////////////////////////////////////////////////////
 
-  const Font font                   := Font("Courier New", 9)
+  const Font font                   := Font.sysMonospace
   const RichTextStyle text          := RichTextStyle { fg = Color(0x00_00_00) }
   const RichTextStyle bracket       := RichTextStyle { fg = Color(0xff_00_00) }
   const RichTextStyle bracketMatch  := RichTextStyle { fg = Color(0xff_00_00); bg=Color(0xff_ff_00); }

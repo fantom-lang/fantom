@@ -70,4 +70,16 @@ public class FontPeer
   }
   private static fan.fwt.Font sys;
 
+  public static fan.fwt.Font sysMonospace()
+  {
+    if (sysMonospace == null)
+    {
+      String name = "Courier New"; int size = 9;
+      if (Env.isMac()) { name = "Monaco"; size = 12; }
+      sysMonospace = fan.fwt.Font.make(Str.make(name), Int.make(size));
+    }
+    return sysMonospace;
+  }
+  private static fan.fwt.Font sysMonospace;
+
 }

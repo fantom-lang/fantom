@@ -171,7 +171,7 @@ class FwtDemo
       Label { text = "Text Only" }
       Label { image = stopIcon }
       Label { text = "Both"; image = folderIcon }
-      Label { text = "Courier"; font = Font { name = "Courier"; size=10 } }
+      Label { text = "Monospace"; font = Font.sysMonospace }
       Label { text = "Colors"; image = folderIcon; fg = Color.red; bg = Color.yellow }
       Label { text = "Left"; halign = Halign.left }
       Label { text = "Center"; halign = Halign.center }
@@ -189,7 +189,7 @@ class FwtDemo
       numCols = 3
       hgap = 20
       Button { text = "B1"; image = stopIcon; onAction.add(&cb) }
-      Button { text = "Button 2"; font = Font { name = "Courier"; size=10 }; onAction.add(&cb) }
+      Button { text = "Monospace"; font = Font.sysMonospace; onAction.add(&cb) }
       Button { mode = ButtonMode.toggle; text = "Button 3"; onAction.add(&cb) }
       Button { mode = ButtonMode.check; text = "B4"; onAction.add(&cb) }
       Button { mode = ButtonMode.radio; text = "Button 5"; onAction.add(&cb) }
@@ -207,7 +207,7 @@ class FwtDemo
     area := Text
     {
       multiLine = true
-      font = Font { name = "Courier"; size=10 }
+      font = Font.sysMonospace
       text ="Press button above to serialize this entire demo here"
     }
 
@@ -225,8 +225,8 @@ class FwtDemo
         Label { text="Single" }
         Text { onAction.add(ecb); onModify.add(ccb) }
 
-        Label { text="Courier";  }
-        Text { font = Font { name ="Courier" }; onAction.add(ecb); onModify.add(ccb)  }
+        Label { text="Monospace";  }
+        Text { font = Font.sysMonospace; onAction.add(ecb); onModify.add(ccb)  }
 
         Label { text="Password" }
         Text { password = true; onAction.add(ecb); onModify.add(ccb) }
@@ -390,7 +390,7 @@ class FwtDemo
     area := Text
     {
       multiLine = true
-      font = Font { name = "Courier"; size=10 }
+      font = Font.sysMonospace
       text =
         "fwt::EdgePane\n" +
         "{\n" +
@@ -671,7 +671,7 @@ class GraphicsDemo : Widget
     g.brush = Color.blue; g.drawArc(120, 120, 120, 90, 45, 90)
 
     g.brush = Color.purple; g.drawText("Hello World!", 70, 50)
-    g.font = Font { name="Courier"; size=16; bold=true }; g.drawText("Hello World!", 70, 70)
+    g.font = Font.sysMonospace.toSize(16).toBold; g.drawText("Hello World!", 70, 70)
 
     img := demo.folderIcon
     g.drawImage(img, 220, 30)
