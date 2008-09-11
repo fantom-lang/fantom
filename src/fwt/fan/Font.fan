@@ -75,6 +75,11 @@ const class Font
   **
   static native Font sys()
 
+  **
+  ** Get the default system mono-spaced font.
+  **
+  static native Font sysMonospace()
+
 //////////////////////////////////////////////////////////////////////////
 // Font
 //////////////////////////////////////////////////////////////////////////
@@ -147,6 +152,51 @@ const class Font
     if (!s.isEmpty) s.add(" ")
     s.add(size).add("pt ").add(name)
     return s.toStr
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return this font, but with the specified point size.
+  ** If thsi font already has the given size return this.
+  **
+  Font toSize(Int size)
+  {
+    if (this.size == size) return this
+    return Font(name, size, bold, italic)
+  }
+
+  **
+  ** Return this font, but with a plain styling (neither
+  ** bold, nor italic).  If this font is already plain
+  ** then return this.
+  **
+  Font toPlain()
+  {
+    if (!bold && !italic) return this
+    return Font(name, size, false, false)
+  }
+
+  **
+  ** Return this font, but with a bold styling.  If
+  ** this font is already bold then return this.
+  **
+  Font toBold()
+  {
+    if (bold) return this
+    return Font(name, size, true, italic)
+  }
+
+  **
+  ** Return this font, but with a italic styling.  If
+  ** this font is already italic then return this.
+  **
+  Font toItalic()
+  {
+    if (italic) return this
+    return Font(name, size, bold, true)
   }
 
 //////////////////////////////////////////////////////////////////////////
