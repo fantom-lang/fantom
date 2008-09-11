@@ -192,7 +192,7 @@ internal class ViewTab : EdgePane //Tab
 
   Bool forwardEnabled() { return !historyForward.isEmpty }
 
-  Void refresh()
+  Void reload()
   {
     load(resource, false)
   }
