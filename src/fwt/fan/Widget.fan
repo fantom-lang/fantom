@@ -183,7 +183,7 @@ abstract class Widget
       throw ArgErr("Child already parented: $child")
     child.parent = this
     kids.add(child)
-    child.attach
+    try { child.attach } catch (Err e) { e.trace }
     return this
   }
 
@@ -195,7 +195,7 @@ abstract class Widget
   virtual This remove(Widget child)
   {
     if (child == null) return this
-    child.detach
+    try { child.detach } catch (Err e) { e.trace }
     if (kids.removeSame(child) == null)
       throw ArgErr("not my child: $child")
     return this
