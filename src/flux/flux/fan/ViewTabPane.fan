@@ -88,10 +88,19 @@ internal class ViewTabPane : ContentPane
   **
   override Void onLayout()
   {
-    th := tbar.prefSize.h
-    tbar.bounds = Rect(0, 0, size.w, th)
-    tbar.relayout
-    tbar.repaint
+    th := 0
+
+    if (tabs.size == 1)
+    {
+      tbar.bounds = Rect(0,0,0,0)
+    }
+    else
+    {
+      th = tbar.prefSize.h
+      tbar.bounds = Rect(0, 0, size.w, th)
+      tbar.relayout
+      tbar.repaint
+    }
 
     content.bounds = Rect(0, th, size.w, size.h-th)
     content.relayout
