@@ -6,12 +6,26 @@
 //   11 Sep 08  Brian Frank  Creation
 //
 
+using fwt
+
 **
 ** LoadMode is used to configure how a resource is
 ** loaded into view such as whether to use a new tab.
 **
 class LoadMode
 {
+
+  **
+  ** Construct with an optional user event.  If the user
+  ** was holding down the Ctrl key (Command for Macs), then
+  ** set newTab to true.
+  **
+  new make(Event event := null)
+  {
+    key := event?.key
+    if (key != null)
+      newTab = Desktop.isMac ? key.isCommand : key.isCtrl
+  }
 
   **
   ** If true, then load using a new window.
