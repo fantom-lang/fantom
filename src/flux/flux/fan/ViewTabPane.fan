@@ -11,7 +11,7 @@ using fwt
 **
 ** ViewTabPane manages ViewTabs.
 **
-internal class ViewTabPane : ContentPane
+internal class ViewTabPane : Pane
 {
 
   **
@@ -22,8 +22,9 @@ internal class ViewTabPane : ContentPane
     this.frame = frame
     this.tabs = [ ViewTab(frame) ]
     this.active = tabs[0]
-    this.content = active
+
     add(tbar = TabBar(this))
+    add(active)
   }
 
   **
@@ -56,9 +57,29 @@ internal class ViewTabPane : ContentPane
   ViewTab newTab()
   {
     tab := ViewTab(frame)
+    add(tab)
     tabs.add(tab)
     select(tab)
     return tab
+  }
+
+  **
+  ** Close the specified view tab.
+  **
+  Void close(ViewTab tab)
+  {
+    ViewTab newActive := null
+    if (tab === active)
+    {
+      i := tabs.index(tab)
+      if (i == 0) newActive = tabs[1]
+      else if (i == tabs.size-1) newActive = tabs[-2]
+      else newActive = tabs[i+1]
+    }
+    remove(tab)
+    tabs.remove(tab)
+    if (newActive != null) select(newActive)
+    else relayout
   }
 
   **
@@ -79,7 +100,8 @@ internal class ViewTabPane : ContentPane
     if (active === oldActive) return
     oldActive.deactivate
     active.activate
-    content = active
+    oldActive.visible = false
+    active.visible = true
     relayout
   }
 
@@ -102,9 +124,8 @@ internal class ViewTabPane : ContentPane
       tbar.repaint
     }
 
-    content.bounds = Rect(0, th, size.w, size.h-th)
-    content.relayout
-    content.repaint
+    active.bounds = Rect(0, th, size.w, size.h-th)
+    active.relayout
   }
 
   private TabBar tbar
@@ -151,13 +172,16 @@ internal class TabBar : Widget
 
       // use active font for layout to keep width consistent
       iw := icon.size.w
-      tw := fontActive.width(text) + iw + iconGap + tabInsets.left + tabInsets.right
+      cw := iconClose.size.w
+      tw := fontActive.width(text) + tabInsets.left + tabInsets.right + iw + iconGap + cw + iconGap
       th := prefSize.h
       ty := h - th
       ix := tx + tabInsets.left
       iy := (th - icon.size.h) / 2
       lx := ix + iw + iconGap
       ly := (th - font.height) / 2
+      cx := tx + tw - tabInsets.right - cw
+      cy := (th - iconClose.size.h) / 2
 
       g.brush = bg
       g.fillRect(tx, ty, tw, th)
@@ -171,6 +195,7 @@ internal class TabBar : Widget
       g.brush = Color.sysFg
       g.drawImage(icon, ix, iy)
       g.drawText(text, lx, ly)
+      g.drawImage(iconClose, cx, cy)
 
       g.brush = outline
       g.drawLine(0, th-1, w-1, th-1)
@@ -189,18 +214,33 @@ internal class TabBar : Widget
   {
     if (event.id == EventId.mouseDown && event.button == 1)
     {
-      tab := tabBounds.eachBreak |Rect r, Int i->Obj| {
-        return r.contains(event.pos.x, event.pos.y) ? i : null
+      close := false
+      tab := tabBounds.eachBreak |Rect r, Int i->Obj|
+      {
+        if (r.contains(event.pos.x, event.pos.y))
+        {
+          if (event.pos.x > r.x + r.w - tabInsets.right - iconClose.size.w)
+            close = true
+          return i
+        }
+        return null
       }
-      if (tab != null) pane.select(pane.tabs[tab])
+
+      if (tab != null)
+      {
+        t := pane.tabs[tab]
+        if (close) pane.close(t)
+        else pane.select(t)
+      }
     }
   }
 
   ViewTabPane pane
   Rect[] tabBounds := Rect[,]
+  Image iconClose  := Image(`fan:/sys/pod/icons/x16/tab-close.png`.get)
 
-  const Int iconGap       := 5
-  const Insets tabInsets  := Insets(5,10,5,5)
+  const Int iconGap       := 3
+  const Insets tabInsets  := Insets(5,5,5,5)
   const Font fontActive   := Font.sys.toBold
   const Font fontInactive := Font.sys
 }
