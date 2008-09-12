@@ -22,11 +22,8 @@ internal class ViewTabPane : ContentPane
     this.frame = frame
     this.tabs = [ ViewTab(frame) ]
     this.active = tabs[0]
-    this.content = this.pane = TabPane() // TODO
-    {
-      this.active
-      onSelect.add(&onSelect)
-    }
+    this.content = active
+    add(tbar = TabBar(this))
   }
 
   **
@@ -61,7 +58,6 @@ internal class ViewTabPane : ContentPane
     tab := ViewTab(frame)
     tabs.add(tab)
     select(tab)
-    pane.add(tab) // TODO
     return tab
   }
 
@@ -70,7 +66,6 @@ internal class ViewTabPane : ContentPane
   **
   Void select(ViewTab tab)
   {
-    pane.selected = tab // TODO
     onSelect(Event { data=tab })
   }
 
@@ -80,45 +75,30 @@ internal class ViewTabPane : ContentPane
   Void onSelect(Event event)
   {
     oldActive := this.active
-    this.active = pane.selected
+    this.active = event.data
     if (active === oldActive) return
     oldActive.deactivate
     active.activate
+    content = active
+    relayout
   }
 
-  TabPane pane // TODO
-
-
-/* TODO: custom painting/layout code
-  new make()
-  {
-    add(tabs = TabBar())
-  }
-
+  **
+  ** Layout widget.
+  **
   override Void onLayout()
   {
-    th := tabs.prefSize.h
-    tabs.bounds = Rect(0, 0, size.w, th)
-    tabs.relayout
-    tabs.repaint
+    th := tbar.prefSize.h
+    tbar.bounds = Rect(0, 0, size.w, th)
+    tbar.relayout
+    tbar.repaint
 
-    if (children.size == 1) active = null
-    else
-    {
-      active = children[1]
-      active.bounds = Rect(0, th, size.w, size.h-th)
-      active.relayout
-    }
+    content.bounds = Rect(0, th, size.w, size.h-th)
+    content.relayout
+    content.repaint
   }
 
-  override Void onPaint(Graphics g)
-  {
-    active?.onPaint(g)
-  }
-
-  TabBar tabs
-  Widget active
-*/
+  private TabBar tbar
 
 }
 
@@ -127,6 +107,12 @@ internal class ViewTabPane : ContentPane
 **************************************************************************
 internal class TabBar : Widget
 {
+  new make(ViewTabPane pane)
+  {
+    this.pane = pane
+    onMouse.add(&pressed)
+  }
+
   override Size prefSize(Hints hints := Hints.def)
   {
     ph := tabInsets.top + 16.max(fontActive.height) + tabInsets.bottom
@@ -135,46 +121,78 @@ internal class TabBar : Widget
 
   override Void onPaint(Graphics g)
   {
-    w := size.w
-    h := size.h
-
-    bg := Gradient.makeLinear(Point(0,0), Color.sysLightShadow, Point(0,h), Color.sysBg)
-    outline := Color.sysNormShadow
-
-    icon := parent->active->image as Image
-    text := parent->active->text as Str
-    font := fontActive
-
-    iw := icon.size.w
-    tw := font.width(text) + iw + iconGap + tabInsets.left + tabInsets.right
-    th := prefSize.h
+    w  := size.w
+    h  := size.h
     tx := 0
-    ty := h - th
-    ix := tabInsets.left
-    iy := (th - icon.size.h) / 2
-    lx := ix + iw + iconGap
-    ly := (th - font.height) / 2
 
-    g.brush = bg
-    g.fillRect(tx, ty, tw, th)
+    outline := Color.sysNormShadow
+    bgActive := gradient(Color.sysLightShadow, Color.sysBg, h)
+    bgInactive := gradient(Color.sysBg, Color.sysNormShadow, h)
 
-    g.brush = outline
-    g.drawLine(tx, ty, tx, th)
-    g.drawLine(tx, ty, tw, tx)
-    g.drawLine(tw, ty, tw, th)
+    tabBounds.clear
 
-    g.font = font
-    g.brush = Color.sysFg
-    g.drawImage(icon, ix, iy)
-    g.drawText(text, lx, ly)
+    pane.tabs.each |ViewTab tab|
+    {
+      icon := tab.image
+      text := tab.text
 
-    g.brush = outline
-    g.drawLine(tw, th-1, w-1, th-1)
+      active := tab === pane.active
+      font   := active ? fontActive : fontInactive
+      bg     := active ? bgActive : bgInactive
+
+      // use active font for layout to keep width consistent
+      iw := icon.size.w
+      tw := fontActive.width(text) + iw + iconGap + tabInsets.left + tabInsets.right
+      th := prefSize.h
+      ty := h - th
+      ix := tx + tabInsets.left
+      iy := (th - icon.size.h) / 2
+      lx := ix + iw + iconGap
+      ly := (th - font.height) / 2
+
+      g.brush = bg
+      g.fillRect(tx, ty, tw, th)
+
+      g.brush = outline
+      g.drawLine(tx,    ty, tx,    th)
+      g.drawLine(tx,    ty, tx+tw, ty)
+      g.drawLine(tx+tw, ty, tx+tw, th)
+
+      g.font = font
+      g.brush = Color.sysFg
+      g.drawImage(icon, ix, iy)
+      g.drawText(text, lx, ly)
+
+      g.brush = outline
+      g.drawLine(0, th-1, w-1, th-1)
+
+      tabBounds.add(Rect(tx,ty,tw,th))
+      tx += tw
+    }
   }
+
+  Gradient gradient(Color c1, Color c2, Int h)
+  {
+    return Gradient.makeLinear(Point(0,0), c1, Point(0,h), c2)
+  }
+
+  Void pressed(Event event)
+  {
+    if (event.id == EventId.mouseDown && event.button == 1)
+    {
+      tab := tabBounds.eachBreak |Rect r, Int i->Obj| {
+        return r.contains(event.pos.x, event.pos.y) ? i : null
+      }
+      if (tab != null) pane.select(pane.tabs[tab])
+    }
+  }
+
+  ViewTabPane pane
+  Rect[] tabBounds := Rect[,]
 
   const Int iconGap       := 5
   const Insets tabInsets  := Insets(5,10,5,5)
-  const Font fontActive   := Font(Font.sys.name, Font.sys.size, true)
+  const Font fontActive   := Font.sys.toBold
   const Font fontInactive := Font.sys
 }
 
