@@ -364,6 +364,8 @@ public class LocalFile
   {
     try
     {
+      java.io.File parent = file.getParentFile();
+      if (!parent.exists()) parent.mkdirs();
       return SysOutStream.make(new java.io.FileOutputStream(file, append.val), bufSize);
     }
     catch (java.io.IOException e)

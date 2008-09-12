@@ -12,6 +12,16 @@
 
 file.name=File
 
+newWindow.name=New Window
+
+newTab.name=New Tab
+newTab.accelerator=Ctrl+T
+
+start.name=Start Page
+
+openLocation.name=Open Location
+openLocation.accelerator=Ctrl+L
+
 save.name=Save
 save.icon=fan:/sys/pod/icons/x16/document-save.png
 save.accelerator=Ctrl+S
@@ -49,6 +59,17 @@ paste.accelerator=Ctrl+V
 //////////////////////////////////////////////////////////////////////////
 
 view.name=View
+views.name=Views
+
+refresh.name=Reload View
+refresh.icon=fan:/sys/pod/icons/x16/view-refresh.png
+refresh.accelerator=F5
+
+//////////////////////////////////////////////////////////////////////////
+// History menu
+//////////////////////////////////////////////////////////////////////////
+
+history.name=History
 
 back.name=Back
 back.icon=fan:/sys/pod/icons/x16/go-previous.png
@@ -58,16 +79,9 @@ forward.name=Forward
 forward.icon=fan:/sys/pod/icons/x16/go-next.png
 forward.accelerator=Alt+Right
 
-refresh.name=Refresh
-refresh.icon=fan:/sys/pod/icons/x16/view-refresh.png
-refresh.accelerator=F5
-
 up.name=Up
 up.icon=fan:/sys/pod/icons/x16/go-up.png
 up.accelerator=Alt+Up
-
-location.name=Location
-location.accelerator=Ctrl+L
 
 //////////////////////////////////////////////////////////////////////////
 // Tools menu
@@ -83,5 +97,5 @@ options.name=Options
 
 help.name=Help
 
-about.name=About
+about.name=About Flux
 

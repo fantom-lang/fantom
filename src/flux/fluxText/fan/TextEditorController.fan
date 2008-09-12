@@ -59,7 +59,8 @@ internal class TextEditorController : TextEditorSupport
 
   Void onFocus(Event event)
   {
-    checkFileOutOfDate
+    if (event.id == EventId.focusGained)
+      checkFileOutOfDate
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -209,10 +210,14 @@ internal class TextEditorController : TextEditorSupport
     // on focus always check if the file has been modified
     // from out from under us and ask user if they want to reload
     if (editor.fileTimeAtLoad == editor.file.modified) return
-
-    // TODO, need message box
-    echo("WARNING: File modified $editor.fileTimeAtLoad != $editor.file.modified")
     editor.fileTimeAtLoad = editor.file.modified
+
+    // prompt user to reload
+    r := Dialog.openQuestion(editor.window,
+          "File has been modified by another application:
+             $editor.file.name
+           Reload the file?", Dialog.yesNo)
+    if (r == Dialog.yes) editor.frame.load(editor.resource)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -10,14 +10,16 @@ package fan.fwt;
 import fan.sys.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.Widget;
 
 public class TreePeer
   extends WidgetPeer
-  implements Listener
+  implements Listener, SelectionListener, MenuListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,11 +40,17 @@ public class TreePeer
     fan.fwt.Tree self = (fan.fwt.Tree)this.self;
 
     int style = SWT.VIRTUAL;
+    if (self.multi.val)
+      style |= SWT.MULTI;
+    else
+      style |= SWT.SINGLE;
     if (self.border.val)  style |= SWT.BORDER;
 
     Tree t = new Tree((Composite)parent, style);
     t.addListener(SWT.SetData, this);
-    t.addListener(SWT.DefaultSelection, this);
+    t.addSelectionListener(this);
+    t.setMenu(new Menu(t));
+    t.getMenu().addMenuListener(this);
 
     if (Env.isWindows())
     {
@@ -80,7 +88,6 @@ public class TreePeer
     switch (event.type)
     {
       case SWT.SetData:          handleSetData(event); break;
-      case SWT.DefaultSelection: handleDefaultSelection(event); break;
       default: System.out.println("WARNING: TreePeer.handleEvent: " + event);
     }
   }
@@ -94,36 +101,91 @@ public class TreePeer
     TreeItem item = (TreeItem)event.item;
     TreeItem parentItem = item.getParentItem();
 
-    // root
+    // map the event to a node
     Obj node;
     if (parentItem == null)
+    {
+      // if no parent item, then this is a root node
       node = model.roots().get(event.index);
+    }
     else
-      node = ((Data)parentItem.getData()).children.get(event.index);
+    {
+      // first check that've loaded the parent's children
+      Data parentData = (Data)parentItem.getData();
+      if (parentData.children == null)
+      {
+        List kids = model.children(parentData.node);
+        parentData.children = kids;
+        parentItem.setItemCount(kids.sz());
+        if (event.index >= kids.sz()) return;
+      }
+      node = parentData.children.get(event.index);
+    }
 
     Data data = new Data();
     data.node = node;
-    data.children = model.children(node);
 
-    List kids = model.children(node);
     item.setText(model.text(node).val);
     item.setImage(env.image(model.image(node)));
     item.setData(data);
-    item.setItemCount(kids.sz());
+    if (parentItem == null)
+    {
+      // if root, then load children one level deep because
+      // expanding a root with no children seems to crash SWT
+      data.children = model.children(node);
+      item.setItemCount(data.children.sz());
+    }
+    else
+    {
+      // otherwise assume we only have one child to prevent the
+      // SWT from loading the children until the node is expanded
+      item.setItemCount(model.hasChildren(node).val ? 1 : 0);
+    }
   }
 
-  private void handleDefaultSelection(Event event)
+  public void widgetDefaultSelected(SelectionEvent se)
   {
     fan.fwt.Tree self = (fan.fwt.Tree)this.self;
-    TreeItem item = (TreeItem)event.item;
-    Data data = (Data)item.getData();
+    TreeItem item = (TreeItem)se.item;
     if (self.onAction().isEmpty().val)
     {
       item.setExpanded(!item.getExpanded());
     }
     else
     {
-      self.onAction().fire(event(EventId.action, data.node));
+      self.onAction().fire(event(EventId.action, node(item)));
+    }
+  }
+
+  public void widgetSelected(SelectionEvent se)
+  {
+    Tree tree = (Tree)this.control;
+    fan.fwt.Tree self = (fan.fwt.Tree)this.self;
+    TreeItem item = (TreeItem)se.item;
+    self.onSelect().fire(event(EventId.select, node(item)));
+  }
+
+  public void menuHidden(MenuEvent se) {} // unused
+
+  public void menuShown(MenuEvent se)
+  {
+    Tree tree = (Tree)this.control;
+    final fan.fwt.Tree self = (fan.fwt.Tree)this.self;
+
+    fan.fwt.Event fe = event(EventId.popup);
+    fe.data = node(tree.getSelection()[0]);
+    self.onPopup().fire(fe);
+
+    // we don't use the event menu - that is just a dummy
+    // menu to hook into SWT's painful popup eventing;
+    // if the event provided a fwt::Menu then open it async
+    final fan.fwt.Menu popup = fe.popup();
+    if (popup != null)
+    {
+      Env.get().display.asyncExec(new Runnable()
+      {
+        public void run() { popup.open(self); }
+      });
     }
   }
 
@@ -143,6 +205,14 @@ public class TreePeer
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+  Obj node(TreeItem item)
+  {
+    if (item == null) return null;
+    Data data = (Data)item.getData();
+    if (data == null) return null;
+    return data.node;
+  }
 
   public TreeModel model()
   {

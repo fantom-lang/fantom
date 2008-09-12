@@ -27,9 +27,8 @@ class Flux
   **
   ** Read an options file into memory.  An option file is a
   ** serialized object stored at "{fluxHome}/{name}.fog".
-  ** The serialized object can be any const class; by
-  ** convention flux option classes end in "Options".  If
-  ** the options file is not found, then return 't?.make'.
+  ** By convention flux option classes end in "Options".
+  ** If the options file is not found, then return 't?.make'.
   **
   static Obj loadOptions(Str name, Type t)
   {
@@ -62,6 +61,27 @@ class Flux
     options[name] = CachedOptions(file, value)
 
     return value
+  }
+
+  **
+  ** Save options back to file. An option file is a
+  ** serialized object stored at "{fluxName}/{name}.fog".
+  ** Return true on success, false on failure.
+  **
+  static Bool saveOptions(Str name, Obj options)
+  {
+    file := Flux.homeDir + "${name}.fog".toUri
+    try
+    {
+      log.debug("Save options: $file")
+      file.writeObj(options, ["indent":2, "skipDefaults":true])
+      return true
+    }
+    catch (Err e)
+    {
+      log.error("Cannot save options: $file", e)
+      return false
+    }
   }
 
   // convenience for icons

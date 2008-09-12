@@ -15,7 +15,12 @@ internal const class FluxScheme : UriScheme
 
   override Obj get(Uri uri, Obj base)
   {
-    return AboutResource(uri)
+    switch (uri.pathStr)
+    {
+      case "about": return AboutResource(uri)
+      case "start": return StartResource(uri)
+      default: return null
+    }
   }
 
 }

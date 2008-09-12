@@ -33,7 +33,9 @@ public abstract class Prop
     this.peer = peer;
   }
 
-  abstract void init();
+  abstract void syncToControl();
+
+  abstract void syncFromControl();
 
 //////////////////////////////////////////////////////////////////////////
 // BoolProp
@@ -47,7 +49,9 @@ public abstract class Prop
       this.val = Bool.make(def);
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() { val = get(); }
 
     Bool get()
     {
@@ -83,7 +87,9 @@ public abstract class Prop
       this.val = Int.make(def);
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() { val = get(); }
 
     Int get()
     {
@@ -122,7 +128,9 @@ public abstract class Prop
       this.val = Str.make(def);
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() { val = get(); }
 
     Str get()
     {
@@ -156,7 +164,9 @@ public abstract class Prop
       super(peer);
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() {}
 
     List get() { return val; }
 
@@ -184,7 +194,9 @@ public abstract class Prop
       super(peer);
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() { val = get(); }
 
     List get()
     {
@@ -221,7 +233,9 @@ public abstract class Prop
       super(peer);
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() {}
 
     fan.fwt.Color get() { return val; }
 
@@ -249,7 +263,9 @@ public abstract class Prop
       super(peer);
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() {}
 
     fan.fwt.Image get() { return val; }
 
@@ -277,7 +293,9 @@ public abstract class Prop
       super(peer);
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() {}
 
     fan.fwt.Font get() { return val; }
 
@@ -305,7 +323,9 @@ public abstract class Prop
       super(peer);
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() {}
 
     fan.fwt.Key get() { return val; }
 
@@ -334,7 +354,9 @@ public abstract class Prop
       this.val = def;
     }
 
-    void init() { set(val); }
+    void syncToControl() { set(val); }
+
+    void syncFromControl() {}
 
     Halign get() { return val;  }
 

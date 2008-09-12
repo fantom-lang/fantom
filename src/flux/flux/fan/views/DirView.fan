@@ -19,14 +19,24 @@ internal class DirView : View
     model = DirViewModel { files=((FileResource)resource).children }
     content = Table
     {
+      multi = true
       onAction.add(&onAction)
+      onPopup.add(&onPopup)
+      border = false
       model = this.model
     }
   }
 
   internal Void onAction(Event event)
   {
-    frame.load(model.files[event.index])
+    file := model.file(event.index)
+    if (file != null)
+      frame.load(file, LoadMode(event))
+  }
+
+  internal Void onPopup(Event event)
+  {
+    event.popup = model.file(event.index)?.popup(frame, event)
   }
 
   DirViewModel model
@@ -36,6 +46,8 @@ internal class DirViewModel : TableModel
 {
   FileResource[] files
   Str[] headers := ["Name", "Size", "Modified"]
+
+  FileResource file(Int i) { return i == null ? null : files[i] }
 
   override Int numCols() { return 3 }
   override Int numRows() { return files.size }

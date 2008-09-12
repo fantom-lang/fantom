@@ -12,7 +12,7 @@ using fwt
 **
 ** FwtDemo displays the FWT sampler program.
 **
-class FwtDemo : Test
+class FwtDemo
 {
 
   **
@@ -113,6 +113,8 @@ class FwtDemo : Test
         MenuItem { text = "Ok/Cancel"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "OK/Cancel", Dialog.okCancel)) } }
         MenuItem { text = "Yes/No"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "Yes/No", Dialog.yesNo)) } }
         MenuItem { mode = MenuItemMode.sep }
+        MenuItem { text = "Prompt Str"; onAction.add |Event e| { echo("--> " + Dialog.openPromptStr(e.window, "Enter a string:")) } }
+        MenuItem { mode = MenuItemMode.sep }
         MenuItem { text = "Option A"; onAction.add |Event e| { echo(Dialog(e.window, "Str message", [Dialog.ok]).open) } }
         MenuItem { text = "Option B"; onAction.add |Event e| { echo(Dialog(e.window, Button { text="BIG!" }, Dialog.okCancel).open) } }
       }
@@ -169,7 +171,7 @@ class FwtDemo : Test
       Label { text = "Text Only" }
       Label { image = stopIcon }
       Label { text = "Both"; image = folderIcon }
-      Label { text = "Courier"; font = Font { name = "Courier"; size=10 } }
+      Label { text = "Monospace"; font = Font.sysMonospace }
       Label { text = "Colors"; image = folderIcon; fg = Color.red; bg = Color.yellow }
       Label { text = "Left"; halign = Halign.left }
       Label { text = "Center"; halign = Halign.center }
@@ -187,7 +189,7 @@ class FwtDemo : Test
       numCols = 3
       hgap = 20
       Button { text = "B1"; image = stopIcon; onAction.add(&cb) }
-      Button { text = "Button 2"; font = Font { name = "Courier"; size=10 }; onAction.add(&cb) }
+      Button { text = "Monospace"; font = Font.sysMonospace; onAction.add(&cb) }
       Button { mode = ButtonMode.toggle; text = "Button 3"; onAction.add(&cb) }
       Button { mode = ButtonMode.check; text = "B4"; onAction.add(&cb) }
       Button { mode = ButtonMode.radio; text = "Button 5"; onAction.add(&cb) }
@@ -205,7 +207,7 @@ class FwtDemo : Test
     area := Text
     {
       multiLine = true
-      font = Font { name = "Courier"; size=10 }
+      font = Font.sysMonospace
       text ="Press button above to serialize this entire demo here"
     }
 
@@ -223,8 +225,8 @@ class FwtDemo : Test
         Label { text="Single" }
         Text { onAction.add(ecb); onModify.add(ccb) }
 
-        Label { text="Courier";  }
-        Text { font = Font { name ="Courier" }; onAction.add(ecb); onModify.add(ccb)  }
+        Label { text="Monospace";  }
+        Text { font = Font.sysMonospace; onAction.add(ecb); onModify.add(ccb)  }
 
         Label { text="Password" }
         Text { password = true; onAction.add(ecb); onModify.add(ccb) }
@@ -327,12 +329,20 @@ class FwtDemo : Test
   {
     tree := Tree
     {
+      multi = true
       model = DirTreeModel { demo = this }
+      onAction.add |Event e| { echo(e) }
+      onSelect.add |Event e| { echo(e) }
+      onPopup.add |Event e|  { echo(e); e.popup = makePopup }
     }
 
     table := Table
     {
+      multi = true
       model = DirTableModel { demo = this; dir = File.os(".").list }
+      onAction.add |Event e| { echo(e) }
+      onSelect.add |Event e| { echo(e) }
+      onPopup.add |Event e|  { echo(e); e.popup = makePopup }
     }
 
     updateTable := |File dir| { table.model->dir = dir.list; table.updateAll }
@@ -388,7 +398,7 @@ class FwtDemo : Test
     area := Text
     {
       multiLine = true
-      font = Font { name = "Courier"; size=10 }
+      font = Font.sysMonospace
       text =
         "fwt::EdgePane\n" +
         "{\n" +
@@ -485,12 +495,17 @@ class FwtDemo : Test
 
   static Void popup(Bool withPos, Event event)
   {
-    Menu
+    makePopup.open(event.widget, withPos ? Point.make(0, event.widget.size.h) : null)
+  }
+
+  static Menu makePopup()
+  {
+    return Menu
     {
       MenuItem { text = "Popup 1"; onAction.add(&cb) }
       MenuItem { text = "Popup 2"; onAction.add(&cb) }
       MenuItem { text = "Popup 3"; onAction.add(&cb) }
-    }.open(event.widget, withPos ? Point.make(0, event.widget.size.h) : null)
+    }
   }
 
   WebBrowser browser := WebBrowser {}
@@ -669,7 +684,7 @@ class GraphicsDemo : Widget
     g.brush = Color.blue; g.drawArc(120, 120, 120, 90, 45, 90)
 
     g.brush = Color.purple; g.drawText("Hello World!", 70, 50)
-    g.font = Font { name="Courier"; size=16; bold=true }; g.drawText("Hello World!", 70, 70)
+    g.font = Font.sysMonospace.toSize(16).toBold; g.drawText("Hello World!", 70, 70)
 
     img := demo.folderIcon
     g.drawImage(img, 220, 30)

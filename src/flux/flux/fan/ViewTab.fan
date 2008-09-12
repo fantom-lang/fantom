@@ -11,20 +11,25 @@ using fwt
 **
 ** ViewTab manages the history and state of a single view tab.
 **
-internal class ViewTab : Tab
+internal class ViewTab : ContentPane
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Frame frame) { this.frame = frame }
+  new make(Frame frame)
+  {
+    this.frame = frame
+    this.view = ErrView("init")  // dummy startup view
+    this.view.tab = this
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Load
 //////////////////////////////////////////////////////////////////////////
 
-  Void loadUri(Uri uri, Bool addToHistory)
+  Void loadUri(Uri uri, LoadMode mode)
   {
     try
     {
@@ -39,26 +44,26 @@ internal class ViewTab : Tab
         rtype := Type.findByFacet("fluxResource", obj.type, true).first
         if (rtype == null)
         {
-          loadErr(ErrResource(uri), "Uknown resource mapping: $obj.type", addToHistory)
+          loadErr(ErrResource(uri), "Uknown resource mapping: $obj.type", mode)
           return
         }
         r = rtype.make([uri, obj])
       }
 
       // load with mapped resource
-      load(r, addToHistory)
+      load(r, mode)
     }
     catch (UnresolvedErr err)
     {
-      loadErr(ErrResource(uri), "Resource not found", addToHistory, err)
+      loadErr(ErrResource(uri), "Resource not found", mode, err)
     }
     catch (Err err)
     {
-      loadErr(ErrResource(uri), "Cannot load view", addToHistory, err)
+      loadErr(ErrResource(uri), "Cannot load view", mode, err)
     }
   }
 
-  Void load(Resource r, Bool addToHistory)
+  Void load(Resource r, LoadMode mode)
   {
     if (r == null) throw ArgErr("resource is null")
     try
@@ -72,7 +77,7 @@ internal class ViewTab : Tab
         viewType = Type.find(qname, false)
         if (viewType == null)
         {
-          loadErr(r, "Unknown view type '$qname'", addToHistory)
+          loadErr(r, "Unknown view type '$qname'", mode)
           return
         }
       }
@@ -81,7 +86,7 @@ internal class ViewTab : Tab
         viewType = r.views?.first
         if (viewType == null)
         {
-          loadErr(r, "No views registered", addToHistory)
+          loadErr(r, "No views registered", mode)
           return
         }
       }
@@ -90,28 +95,28 @@ internal class ViewTab : Tab
       view := viewType.make as View
       if (view == null)
       {
-        loadErr(r, "Incorrect view type: '$viewType' is not 'flux::View'", addToHistory)
+        loadErr(r, "Incorrect view type: '$viewType' is not 'flux::View'", mode)
         return
       }
 
       // load view
       view.load(r)
-      doLoad(r, view, addToHistory)
+      doLoad(r, view, mode)
     }
     catch (Err err)
     {
-      loadErr(r, "Cannot load view", addToHistory, err)
+      loadErr(r, "Cannot load view", mode, err)
     }
   }
 
-  Void loadErr(Resource r, Str msg, Bool addToHistory, Err cause := null)
+  Void loadErr(Resource r, Str msg, LoadMode mode, Err cause := null)
   {
     view := ErrView(msg, cause)
     view.load(r)
-    doLoad(r, view, addToHistory)
+    doLoad(r, view, mode)
   }
 
-  private Void doLoad(Resource r, View newView, Bool addToHistory)
+  private Void doLoad(Resource r, View newView, LoadMode mode)
   {
     if (newView == null) throw ArgErr("newView is null")
     oldView := this.view
@@ -121,12 +126,20 @@ internal class ViewTab : Tab
 
     // unload old view
     try { oldView.onUnload  } catch (Err e) { e.trace }
+    oldView.tab = null
 
-    // add to history if needed
-    if (resource != null && addToHistory)
+    // add to histories
+    if (mode.addToHistory)
     {
-      push(historyBack, resource)
-      historyForward.clear
+      // add old resource to tab bac/forward history
+      if (resource != null)
+      {
+        push(historyBack, resource)
+        historyForward.clear
+      }
+
+      // add to most recent history
+      History.load.push(r).save
     }
 
     // update my state
@@ -134,8 +147,9 @@ internal class ViewTab : Tab
     this.image = r.icon
     this.resource = r
     this.view = newView
-    removeAll.add(newView)
-    relayout
+    newView.tab = this
+    content = newView
+    parent?.relayout
 
     // resume dirty handling
     newView.dirty = false
@@ -155,8 +169,26 @@ internal class ViewTab : Tab
   }
 
 //////////////////////////////////////////////////////////////////////////
-// View Callbacks
+// Activation
 //////////////////////////////////////////////////////////////////////////
+
+  Void activate()
+  {
+    frame.commands.update
+  }
+
+  Void deactivate()
+  {
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Save and Dirty
+//////////////////////////////////////////////////////////////////////////
+
+  Void save()
+  {
+    view.save
+  }
 
   Bool dirty() { return view != null ? view.dirty : false }
 
@@ -167,6 +199,7 @@ internal class ViewTab : Tab
     if (dirty) name += " *"
     this.text = name
     frame.commands.updateSave
+    parent?.relayout
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -191,16 +224,16 @@ internal class ViewTab : Tab
 
   Bool forwardEnabled() { return !historyForward.isEmpty }
 
-  Void refresh()
+  Void reload()
   {
-    load(resource, false)
+    load(resource, LoadMode { addToHistory=false })
   }
 
   Void up()
   {
     parent := resource.uri.parent
     if (parent == null) return
-    loadUri(parent, true)
+    loadUri(parent, LoadMode { addToHistory=true})
   }
 
   Void back()
@@ -209,7 +242,7 @@ internal class ViewTab : Tab
     oldr := resource
     newr := historyBack.pop
     push(historyForward, oldr)
-    load(newr, false)
+    load(newr, LoadMode { addToHistory=false})
   }
 
   Void forward()
@@ -218,7 +251,7 @@ internal class ViewTab : Tab
     oldr := resource
     newr := historyForward.pop
     push(historyBack, oldr)
-    load(newr, false)
+    load(newr, LoadMode { addToHistory=false})
   }
 
   private Void push(Resource[] list, Resource r)
@@ -233,6 +266,9 @@ internal class ViewTab : Tab
 //////////////////////////////////////////////////////////////////////////
 
   internal const static Int historyLimit := 100
+
+  internal Str text
+  internal Image image
 
   internal Frame frame
   internal Resource resource

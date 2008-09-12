@@ -43,6 +43,17 @@ abstract class Resource
   virtual Image icon() { return Flux.icon(`/x16/text-x-generic.png`) }
 
   **
+  ** Return if this resource has or might have children.  This
+  ** is an optimization to display the expansion control in a tree
+  ** without loading all the children.  The default calls 'children'.
+  **
+  virtual Bool hasChildren()
+  {
+    c := children
+    return c != null ? !c.isEmpty : false
+  }
+
+  **
   ** Get the navigation children of the resource.  Return an
   ** empty list or null to indicate no children.  Default
   ** returns null.
@@ -60,6 +71,31 @@ abstract class Resource
     acc := Type.findByFacet("fluxView", type, true)
     acc = acc.exclude |Type t->Bool| { return t.isAbstract }
     return acc
+  }
+
+  **
+  ** Make a popup menu for this resource or return null.
+  ** The default popup menu returns the `viewsMenu`.
+  **
+  virtual Menu popup(Frame frame, Event event)
+  {
+    return Menu { viewsMenu(frame, event) }
+  }
+
+  **
+  ** Return a menu to hyperlink to the views supported
+  ** by this resource.
+  **
+  virtual Menu viewsMenu(Frame frame, Event event)
+  {
+    menu := Menu { text = type.loc("views.name") }
+    views.each |Type v, Int i|
+    {
+      viewUri := i == 0 ? uri : uri.plusQuery(["view":v.qname])
+      c := Command(v.name, null, &frame.loadUri(viewUri, LoadMode(event)))
+      menu.add(MenuItem { command = c })
+    }
+    return menu
   }
 
   **
