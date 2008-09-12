@@ -11,7 +11,7 @@ using fwt
 **
 ** ViewTab manages the history and state of a single view tab.
 **
-internal class ViewTab : Tab
+internal class ViewTab : ContentPane
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -141,9 +141,8 @@ internal class ViewTab : Tab
     this.resource = r
     this.view = newView
     newView.tab = this
-removeAll.add(newView)
-//    center = newView
-//    parent?.relayout
+    content = newView
+    parent?.relayout
 
     // resume dirty handling
     newView.dirty = false
@@ -261,8 +260,8 @@ removeAll.add(newView)
 
   internal const static Int historyLimit := 100
 
-//  internal Str text
-//  internal Image image
+  internal Str text
+  internal Image image
 
   internal Frame frame
   internal Resource resource
