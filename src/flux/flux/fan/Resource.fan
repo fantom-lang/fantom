@@ -74,6 +74,31 @@ abstract class Resource
   }
 
   **
+  ** Make a popup menu for this resource or return null.
+  ** The default popup menu returns the `viewsMenu`.
+  **
+  virtual Menu popup(Frame frame)
+  {
+    return Menu { viewsMenu(frame) }
+  }
+
+  **
+  ** Return a menu to hyperlink to the views supported
+  ** by this resource.
+  **
+  virtual Menu viewsMenu(Frame frame)
+  {
+    menu := Menu { text = type.loc("views.name") }
+    views.each |Type v, Int i|
+    {
+      viewUri := i == 0 ? uri : uri.plusQuery(["view":v.qname])
+      c := Command(v.name, null, &frame.loadUri(viewUri, LoadMode()))
+      menu.add(MenuItem { command = c })
+    }
+    return menu
+  }
+
+  **
   ** Return `uri`.
   **
   override Str toStr() { return uri.toStr }

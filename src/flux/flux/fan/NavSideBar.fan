@@ -17,6 +17,7 @@ internal class NavSideBar : SideBar
   new make()
   {
     tree.onAction.add(&onAction)
+    tree.onPopup.add(&onPopup)
     content = EdgePane
     {
       top = InsetPane(2,0,2,0) {
@@ -31,6 +32,12 @@ internal class NavSideBar : SideBar
   internal Void onAction(Event event)
   {
     frame.load(event.data)
+  }
+
+  internal Void onPopup(Event event)
+  {
+    r := event.data as Resource
+    event.popup = r?.popup(frame)
   }
 
   Tree tree := Tree { model = NavModel.make; border = false }
