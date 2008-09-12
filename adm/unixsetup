@@ -11,7 +11,7 @@ echo "###"
 echo "### FAN_HOME=$FAN_HOME"
 echo "###"
 
-chmod +x $FAN_HOME/bin/fan
+chmod +x $FAN_HOME/bin/*
 find $FAN_HOME \
     \( -name "*.exe" -o -name "build*.fan" -o -name 'boot*.fan' \) \
     -exec chmod +x {} \;
