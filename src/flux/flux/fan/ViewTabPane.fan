@@ -11,7 +11,7 @@ using fwt
 **
 ** ViewTabPane manages ViewTabs.
 **
-internal class ViewTabPane : ContentPane
+internal class ViewTabPane : Pane
 {
 
   **
@@ -22,8 +22,9 @@ internal class ViewTabPane : ContentPane
     this.frame = frame
     this.tabs = [ ViewTab(frame) ]
     this.active = tabs[0]
-    this.content = active
+
     add(tbar = TabBar(this))
+    add(active)
   }
 
   **
@@ -56,6 +57,7 @@ internal class ViewTabPane : ContentPane
   ViewTab newTab()
   {
     tab := ViewTab(frame)
+    add(tab)
     tabs.add(tab)
     select(tab)
     return tab
@@ -79,7 +81,8 @@ internal class ViewTabPane : ContentPane
     if (active === oldActive) return
     oldActive.deactivate
     active.activate
-    content = active
+    oldActive.visible = false
+    active.visible = true
     relayout
   }
 
@@ -102,9 +105,8 @@ internal class ViewTabPane : ContentPane
       tbar.repaint
     }
 
-    content.bounds = Rect(0, th, size.w, size.h-th)
-    content.relayout
-    content.repaint
+    active.bounds = Rect(0, th, size.w, size.h-th)
+    active.relayout
   }
 
   private TabBar tbar
