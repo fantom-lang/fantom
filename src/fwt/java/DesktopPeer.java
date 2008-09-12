@@ -29,6 +29,15 @@ public class DesktopPeer
 // Native methods
 //////////////////////////////////////////////////////////////////////////
 
+  public static Str platform()
+  {
+    if (Env.isWindows()) return windows;
+    if (Env.isMac()) return mac;
+    return Str.make(SWT.getPlatform());
+  }
+  static final Str windows = Str.make("windows");
+  static final Str mac = Str.make("mac");
+
   public static Bool isWindows()
   {
     return Bool.make(Env.isWindows());
