@@ -15,6 +15,11 @@ class Desktop
 {
 
   **
+  ** Get the platform name: "windows", "mac"
+  **
+  static native Str platform()
+
+  **
   ** Is the desktop running a version of Microsoft Windows.
   **
   static native Bool isWindows()
