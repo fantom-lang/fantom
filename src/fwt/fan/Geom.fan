@@ -151,6 +151,13 @@ const class Rect
   ** Get the w, h size of this rectangle.
   Size size() { return Size(w, h) }
 
+  ** Return true if x,y is inside the bounds of this rectangle.
+  Bool contains(Int x, Int y)
+  {
+    return x >= this.x && x <= this.x+w &&
+           y >= this.y && y <= this.y+h
+  }
+
   ** Return '"x,y,w,h"'
   override Str toStr() { return "$x,$y,$w,$h" }
 
