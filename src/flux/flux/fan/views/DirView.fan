@@ -29,12 +29,14 @@ internal class DirView : View
 
   internal Void onAction(Event event)
   {
-    frame.load(model.files[event.index])
+    file := model.file(event.index)
+    if (file != null)
+      frame.load(file, LoadMode(event))
   }
 
   internal Void onPopup(Event event)
   {
-    event.popup = model.file(event.index)?.popup(frame)
+    event.popup = model.file(event.index)?.popup(frame, event)
   }
 
   DirViewModel model
