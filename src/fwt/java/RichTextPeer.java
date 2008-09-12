@@ -7,6 +7,7 @@
 //
 package fan.fwt;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import fan.sys.*;
 import fan.sys.List;
@@ -61,6 +62,13 @@ public class RichTextPeer
     t.addVerifyListener(this);
     t.addSelectionListener(this);
 
+    // this is a hack, but seems to be the only way to set
+    // the margins hidden away as private fields in StyledText
+    setField(t, "leftMargin",   8);
+    setField(t, "topMargin",    8);
+    setField(t, "rightMargin",  8);
+    setField(t, "bottomMargin", 8);
+
     // add myself as key/mouse listener for caret movement
     t.addKeyListener(new KeyAdapter()
     {
@@ -74,6 +82,20 @@ public class RichTextPeer
     });
 
     return t;
+  }
+
+  private void setField(StyledText t, String name, int val)
+  {
+    try
+    {
+      Field f = t.getClass().getDeclaredField(name);
+      f.setAccessible(true);
+      f.set(t, val);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
