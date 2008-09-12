@@ -198,6 +198,7 @@ abstract class Widget
     try { child.detach } catch (Err e) { e.trace }
     if (kids.removeSame(child) == null)
       throw ArgErr("not my child: $child")
+    child.parent = null
     return this
   }
 

@@ -76,6 +76,13 @@ class Event
   Obj data
 
   **
+  ** If this a popup event, then this field should be set
+  ** to the menu item to open.  Setting this field to a nonnull
+  ** value implicitly consumes the event.
+  **
+  Menu popup { set { @popup = val; if (val != null) consume } }
+
+  **
   ** Has this event been "consumed"?  Once an event
   ** is consumed it ceases to propagate or be processed.
   ** Also see `consume`.
@@ -134,7 +141,8 @@ enum EventId
   verifyKey,
   select,
   caret,
-  hyperlink
+  hyperlink,
+  popup
 }
 
 **************************************************************************
