@@ -84,7 +84,7 @@ class History
     list.each(f)
   }
 
-  @transient private Int max := 4
+  @transient private Int max := 20
   @transient private HistoryItem[] list := HistoryItem[,]
 }
 
