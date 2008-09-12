@@ -179,7 +179,7 @@ internal class Commands
 ** Open a new frame.
 internal class NewWindowCommand : FluxCommand
 {
-  new make() : super(CommandId.newWindow) {}
+  new make() : super(CommandId.newWindow) { enabled=false }
   override Void invoke(Event event)
   {
     frame.loadUri(`flux:start`, LoadMode { newWindow=true })
