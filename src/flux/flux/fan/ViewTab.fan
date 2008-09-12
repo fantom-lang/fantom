@@ -128,11 +128,18 @@ internal class ViewTab : ContentPane
     try { oldView.onUnload  } catch (Err e) { e.trace }
     oldView.tab = null
 
-    // add to history if needed
-    if (resource != null && mode.addToHistory)
+    // add to histories
+    if (mode.addToHistory)
     {
-      push(historyBack, resource)
-      historyForward.clear
+      // add old resource to tab bac/forward history
+      if (resource != null)
+      {
+        push(historyBack, resource)
+        historyForward.clear
+      }
+
+      // add to most recent history
+      History.load.push(r).save
     }
 
     // update my state
