@@ -17,36 +17,31 @@ internal class StartView : View
 
   override Void onLoad()
   {
-    content = Label { text="Start" }
-
-    /*
-    icon := Pod.find("icons").files[`/x48/flux.png`]
-    copy := Color("#666")
-
-    content = GridPane
-    {
-      halignPane = Halign.center
-      valignPane = Valign.center
-      GridPane
-      {
-        numCols = 2
-        Label { image = Image(icon) }
+    content = ScrollPane {
+      InsetPane(10,10,10,10) {
         GridPane
         {
-          vgap = -4
-          Label { text = "Flux"; font = Font(Font.sys.name, 16, true) }
-          Label { text = "Version $type.pod.version" }
+          vgap = 0
+          InsetPane(0,0,5,0) {
+            Label { text="Recent Files"; font=Font.sys.toBold }
+          }
+          file(`file:/c:/dev/fan/src/flux/flux/fan/Commands.fan`)
+          file(`file:/c:/dev/fan/src/flux/flux/locale/en.props`)
+          file(`file:/c:/dev/fan/src/flux/flux/fan/views/StartView.fan`)
+          file(`file:/c:/dev/fan/src/flux/flux/fan/ViewTabPane.fan`)
         }
       }
-      Label
-      {
-        fg = copy
-        text =
-          "Copyright (c) 2008, Brian Frank and Andy Frank
-           Licensed under the Academic Free License version 3.0"
-      }
     }
-    */
+  }
+
+  private Widget file(Uri uri)
+  {
+    return Label
+    {
+      text = uri.toStr
+      fg   = Color.blue
+      onMouse.add(|Event e| { frame.loadUri(uri) })
+    }
   }
 
 }
