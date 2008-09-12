@@ -12,7 +12,7 @@ using fwt
 **
 ** RichTextDemo illustrates how to use the RichText widget
 **
-class RichTextDemo : Test
+class RichTextDemo
 {
   Void main()
   {

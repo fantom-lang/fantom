@@ -18,7 +18,7 @@ class FluxUtilTest : Test
     // default
     GeneralOptions opt
     opt = Flux.loadOptions("FluxUtilTest", GeneralOptions#)
-    verifyEq(opt.homePage, `flux:about`)
+    verifyEq(opt.homePage, `flux:start`)
 
     // write file
     file.out.print("flux::GeneralOptions { homePage=`/foo` }").close
@@ -38,7 +38,7 @@ class FluxUtilTest : Test
     // cleanup
     file.delete
     opt = Flux.loadOptions("FluxUtilTest", GeneralOptions#)
-    verifyEq(opt.homePage, `flux:about`)
+    verifyEq(opt.homePage, `flux:start`)
   }
 
 }

@@ -76,8 +76,10 @@ SyntaxOptions
 // Styling
 //////////////////////////////////////////////////////////////////////////
 
-  ** default font to use absense font in specific syntax styling
-  font = Font("9pt Courier New")
+  ** default font to use absense font in specific syntax styling;
+  ** if not configured then we use Font.sysMonospace which defaults
+  ** to Monaco on OS X and Courier New on other platforms
+  //font = Font("10pt Courier New")
 
   ** color coding
   text          = RichTextStyle { fg = Color("#000") }

@@ -9,13 +9,20 @@ package fan.fwt;
 
 import fan.sys.*;
 import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Widget;
 
-public class TabPanePeer extends WidgetPeer
+public class TabPanePeer
+  extends WidgetPeer
+  implements SelectionListener
 {
 
-  public static TabPanePeer make(fan.fwt.TabPane self)
+//////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
+  public static TabPanePeer make(TabPane self)
     throws Exception
   {
     TabPanePeer peer = new TabPanePeer();
@@ -26,7 +33,38 @@ public class TabPanePeer extends WidgetPeer
 
   public Widget create(Widget parent)
   {
-    return new TabFolder((Composite)parent, SWT.TOP);
+    TabFolder c = new TabFolder((Composite)parent, SWT.TOP);
+    this.control = c;
+    c.addSelectionListener(this);
+    return c;
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  // Int selectedIndex := 0
+  public Int selectedIndex(TabPane self) { return selectedIndex.get(); }
+  public void selectedIndex(TabPane self, Int v) { selectedIndex.set(v); }
+  public final Prop.IntProp selectedIndex = new Prop.IntProp(this, 0, true)
+  {
+    public int get(Widget w) { return ((TabFolder)w).getSelectionIndex(); }
+    public void set(Widget w, int v) { ((TabFolder)w).setSelection(v); }
+  };
+
+//////////////////////////////////////////////////////////////////////////
+// Eventing
+//////////////////////////////////////////////////////////////////////////
+
+  public void widgetDefaultSelected(SelectionEvent e) {} // unused
+
+  public void widgetSelected(SelectionEvent e)
+  {
+    TabFolder control = (TabFolder)this.control;
+    TabPane self = (TabPane)this.self;
+    fan.fwt.Event fe = event(EventId.select);
+    fe.index = Int.make(control.getSelectionIndex());
+    fe.data  = self.tabs().get(fe.index);
+    self.onSelect().fire(fe);
+  }
 }

@@ -426,7 +426,7 @@
 - fwt::Command localization
 - fwt::Font metrics
 - New fwt::Dialog API
-- New fwt::Display API
+- New fwt::Desktop and Monitor APIs
 - New fwt::TextWidget base class for Text and RichText
 - New fwt text selection and clipboard APIs
 

@@ -69,15 +69,35 @@ class Command
   ** Construct a localized command using the specified pod name
   ** and keyBase.  The command is initialized from the following
   ** [localized]`sys::Locale.get` properties:
-  **   - "{keyBase}.name": text string for the command
-  **   - "{keyBase}.icon": uri for the icon image
-  **   - "{keyBase}.accelerator": string representation of Key
+  **   - "{keyBase}.name.{plat}": text string for the command
+  **   - "{keyBase}.icon.{plat}": uri for the icon image
+  **   - "{keyBase}.accelerator.{plat}": string representation of Key
+  **
+  ** The '{plat}' string comes from `Desktop.platform`.  If the
+  ** paltform specific key is not found, then we attempt to fallback
+  ** to a generic key.  For example:
+  **
+  **    back.name=Back
+  **    back.accelerator=Alt+Left
+  **    back.accelerator.mac=Command+[
+  **
+  ** On all platforms the command name would be "Back".  On Macs
+  ** the accelerator would be 'Command+[', and all others it would
+  ** be 'Alt+Left'.
   **
   new makeLocale(Pod pod, Str keyBase, |Event event| onInvoke := null)
   {
-    this.name = pod.loc("${keyBase}.name")
+    plat := Desktop.platform
 
-    locIcon := pod.loc("${keyBase}.icon", null)
+    // name
+    name = pod.loc("${keyBase}.name.${plat}", null)
+    if (name == null)
+      name = pod.loc("${keyBase}.name")
+
+    // icon
+    locIcon := pod.loc("${keyBase}.icon.${plat}", null)
+    if (locIcon == null)
+      locIcon = pod.loc("${keyBase}.icon", null)
     try
     {
       if (locIcon != null)
@@ -85,7 +105,10 @@ class Command
     }
     catch type.log.error("Command: cannot load '${keyBase}.icon' => $locIcon")
 
-    locAcc := pod.loc("${keyBase}.accelerator", null)
+    // accelerator
+    locAcc := pod.loc("${keyBase}.accelerator.${plat}", null)
+    if (locAcc == null)
+      locAcc = pod.loc("${keyBase}.accelerator", null)
     try
     {
       if (locAcc != null)
@@ -93,12 +116,27 @@ class Command
     }
     catch type.log.error("Command: cannot load '${keyBase}.accelerator ' => $locAcc")
 
+    // onInvoke
     if (onInvoke != null) this.onInvoke.add(onInvoke)
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the window associated with this command.  If this
+  ** command is being used as the action of a dialog, then
+  ** return the dialog.  Otherwise try to map to a window
+  ** via one of the widgets bound to this command.  Return
+  ** null if no associated window can be found.
+  **
+  Window window()
+  {
+    if (assocDialog != null) return assocDialog
+    return widgets.eachBreak |Widget w->Window| { return w.window }
+  }
+  internal Dialog assocDialog
 
   **
   ** The enable state of the command automatically controls

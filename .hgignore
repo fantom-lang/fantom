@@ -15,6 +15,9 @@ lib/types.db
 # doc/
 doc/*
 
+# flux
+flux/session/*
+
 # src/
 src/jfan/temp/*
 

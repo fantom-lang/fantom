@@ -16,7 +16,14 @@ internal class NavSideBar : SideBar
 {
   new make()
   {
-    tree.onAction.add(&onAction)
+    tree = Tree
+    {
+      model = NavModel.make
+      border = false
+      onAction.add(&onAction)
+      onPopup.add(&onPopup)
+    }
+
     content = EdgePane
     {
       top = InsetPane(2,0,2,0) {
@@ -30,10 +37,17 @@ internal class NavSideBar : SideBar
 
   internal Void onAction(Event event)
   {
-    frame.load(event.data)
+    if (event.data != null)
+      frame.load(event.data, LoadMode(event))
   }
 
-  Tree tree := Tree { model = NavModel.make }
+  internal Void onPopup(Event event)
+  {
+    r := event.data as Resource
+    event.popup = r?.popup(frame, event)
+  }
+
+  Tree tree
 }
 
 internal class NavModel : TreeModel
@@ -41,5 +55,6 @@ internal class NavModel : TreeModel
   override Obj[] roots := Resource.roots
   override Str text(Obj node) { return ((Resource)node).name }
   override Image image(Obj node) { return ((Resource)node).icon }
+  override Bool hasChildren(Obj node) { return ((Resource)node).hasChildren }
   override Obj[] children(Obj node) { return ((Resource)node).children }
 }

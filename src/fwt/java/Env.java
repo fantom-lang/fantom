@@ -11,6 +11,7 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
 import fan.sys.*;
+import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -18,6 +19,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Monitor;
 
 /**
  * Env manages the display resources.
@@ -48,6 +50,16 @@ public class Env
 // Display
 //////////////////////////////////////////////////////////////////////////
 
+  public void mainEventLoop(Shell shell)
+  {
+    eventLoop(shell);
+    display.dispose();
+    disposeAllColors();
+    disposeAllFonts();
+    disposeAllImages();
+    disposeScratchGC();
+  }
+
   public void eventLoop(Shell shell)
   {
     while (!shell.isDisposed())
@@ -62,11 +74,6 @@ public class Env
         e.printStackTrace();
       }
     }
-    display.dispose();
-    disposeAllColors();
-    disposeAllFonts();
-    disposeAllImages();
-    disposeScratchGC();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -245,6 +252,34 @@ public class Env
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Monitors
+//////////////////////////////////////////////////////////////////////////
+
+  public List monitors()
+  {
+    if (monitors == null)
+    {
+      Monitor[] m = display.getMonitors();
+      Monitor pm = display.getPrimaryMonitor();
+      List acc = new List(Type.find("fwt::Monitor"));
+      for(int i=0; i<m.length; ++i)
+      {
+        fan.fwt.Monitor f = MonitorPeer.make(m[i]);
+        acc.add(f);
+        if (pm.equals(m[i])) primaryMonitor = f;
+      }
+      monitors = acc.ro();
+    }
+    return monitors;
+  }
+
+  public fan.fwt.Monitor primaryMonitor()
+  {
+    if (primaryMonitor == null) monitors();
+    return primaryMonitor;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Platform
 //////////////////////////////////////////////////////////////////////////
 
@@ -299,10 +334,11 @@ public class Env
 //////////////////////////////////////////////////////////////////////////
 
   Display display = new Display(); // SWT display
-  fan.fwt.Display fanDisplay;      // Fan fwt::Display
   HashMap colors = new HashMap();  // Int rgb   -> Color
   HashMap fonts = new HashMap();   // fwt::Font  -> Font
   HashMap images = new HashMap();  // Uri -> Image
   GC scratchGC;
+  List monitors;
+  fan.fwt.Monitor primaryMonitor;
 
 }

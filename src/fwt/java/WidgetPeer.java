@@ -28,7 +28,7 @@ import org.eclipse.swt.events.*;
  * Native methods for Widget
  */
 public class WidgetPeer
-  implements PaintListener, KeyListener, FocusListener, MouseListener
+  implements PaintListener, KeyListener, FocusListener, MouseListener, DisposeListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -275,24 +275,6 @@ public class WidgetPeer
 // Mouse Eventing
 //////////////////////////////////////////////////////////////////////////
 
-  public void checkMouseListeners(fan.fwt.Widget self)
-  {
-    // if we don't have any onMouse listeners, then I
-    // shouldn't be actively registered as a mouse listener
-    if (!(control instanceof Control)) return;
-    if (self.onMouse().isEmpty().val != activeMouseListener) return;
-    if (activeMouseListener)
-    {
-      ((Control)control).removeMouseListener(this);
-      activeMouseListener  = false;
-    }
-    else
-    {
-      ((Control)control).addMouseListener(this);
-      activeMouseListener = true;
-    }
-  }
-
   public void mouseDoubleClick(MouseEvent se) {}
 
   public void mouseDown(MouseEvent se) { fireOnMouse(EventId.mouseDown, se); }
@@ -301,11 +283,18 @@ public class WidgetPeer
 
   private void fireOnMouse(EventId id, MouseEvent se)
   {
+    // save modifiers on mouse events for future selection, action,
+    // and popup events which might occur;  this allows us to check
+    // for Ctrl down to handle newTab style of eventing
+    Key key = toKey(0, se.stateMask);
+    modifiers = se.stateMask == 0 ? null : key;
+
+    // fire event
     fan.fwt.Event fe = event(id);
     fe.pos    = point(se.x, se.y);
     fe.count  = Int.make(se.count);
     fe.button = Int.make(se.button);
-    fe.key    = toKey(0, se.stateMask);
+    fe.key    = key;
     self.onMouse().fire(fe);
   }
 
@@ -359,8 +348,10 @@ public class WidgetPeer
     if (!visible.val) visible(self, visible);
     checkFocusListeners(self);
     checkKeyListeners(self);
-    checkMouseListeners(self);
-    syncProps();
+    if (control instanceof Control)
+      ((Control)control).addMouseListener(this);
+    control.addDisposeListener(this);
+    syncPropsToControl();
 
     // stick myself in data field
     control.setData(self);
@@ -386,17 +377,26 @@ public class WidgetPeer
 
   public void detach(fan.fwt.Widget self)
   {
-    if (control == null) return;
-    control.dispose();
+    // dipose the control which automatically disposes all the
+    // children; we do cleanup in the widgetDisposed callback.
+    if (control != null) control.dispose();
     control = null;
   }
 
+  public void widgetDisposed(DisposeEvent e)
+  {
+    syncPropsFromControl();
+    control = null;
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Widget/Control synchronization
 //////////////////////////////////////////////////////////////////////////
 
-  public void syncProps()
+  public void syncPropsToControl() { syncProps(true); }
+  public void syncPropsFromControl(){ syncProps(false); }
+
+  private void syncProps(boolean to)
   {
     try
     {
@@ -407,7 +407,13 @@ public class WidgetPeer
         try
         {
           if (Prop.class.isAssignableFrom(f.getType()))
-            ((Prop)f.get(this)).init();
+          {
+            Prop prop = (Prop)f.get(this);
+            if (to)
+              prop.syncToControl();
+            else
+              prop.syncFromControl();
+          }
         }
         catch (Exception e)
         {
@@ -505,6 +511,7 @@ public class WidgetPeer
     f.id(id);
     f.widget(self);
     f.data(data);
+    f.key(modifiers);
     return f;
   }
 
@@ -518,8 +525,7 @@ public class WidgetPeer
   Bool visible = Bool.True;
   fan.fwt.Point pos = fan.fwt.Point.def;
   fan.fwt.Size size = fan.fwt.Size.def;
+  Key modifiers;
   boolean activeKeyListener   = false;
   boolean activeFocusListener = false;
-  boolean activeMouseListener = false;
-
 }

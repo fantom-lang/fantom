@@ -59,8 +59,11 @@ class Window : ContentPane
   new make(Window parent := null) { setParent(parent) }
 
   **
-  ** Open the window.  If this is a dialog, then return result.
-  ** If the windows hasn't had its size explicitly set, then it
+  ** Open the window.  If this is a dialog, then return result
+  ** passed to the `close` method (typically the Command).  Return
+  ** null if canceled or closed without a result.
+  **
+  ** If the windows has not had its size explicitly set, then it
   ** is packed to use its preferred size.  If the position is
   ** not explicitly set, then the windows is centered over its
   ** parent window (or primary monitor if no parent).
@@ -70,6 +73,6 @@ class Window : ContentPane
   **
   ** Close the window.
   **
-  native Void close()
+  native Void close(Obj result := null)
 
 }

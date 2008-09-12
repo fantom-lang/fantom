@@ -12,7 +12,7 @@ using fwt
 **
 ** FwtHello is as simple as it gets
 **
-class FwtHello : Test
+class FwtHello
 {
   Void main()
   {

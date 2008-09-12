@@ -52,6 +52,16 @@ class FileResource : Resource
   override Image icon
 
   **
+  ** If we haven't loaded the children yet, then return
+  ** true for directories and false for normal files.
+  **
+  override Bool hasChildren()
+  {
+    if (kids != null) return !kids.isEmpty
+    return file.isDir
+  }
+
+  **
   ** Get the navigation children of the resource.  Return an
   ** empty list or null to indicate no children.  Default
   ** returns null.

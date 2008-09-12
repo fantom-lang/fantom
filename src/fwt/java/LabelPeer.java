@@ -46,8 +46,8 @@ public class LabelPeer extends WidgetPeer
   public void text(fan.fwt.Label self, Str v) { text.set(v); }
   public final Prop.StrProp text = new Prop.StrProp(this, "")
   {
-    public String get(Widget w) { return ((CLabel)w).getText(); }
-    public void set(Widget w, String v) { ((CLabel)w).setText(v);  }
+    public String get(Widget w) { return text.val.val; } // CLabel doesn't perserve my text
+    public void set(Widget w, String v) { ((CLabel)w).setText(v); }
   };
 
   // Image image := null
