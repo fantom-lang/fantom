@@ -263,6 +263,11 @@ const class Key
   }
 
   **
+  ** Return a Key instance with only the modifiers.
+  **
+  Key modifiers() { return fromMask(mask & modifierMask) }
+
+  **
   ** Is this instance is a modifier which may be combined
   ** with other keys: shift, alt, ctrl, command.
   **
