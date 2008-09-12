@@ -39,7 +39,7 @@ namespace Fan.Sys
     {
       int len = path.Length;
       StringBuilder s = new StringBuilder(path.Length+2);
-      
+
       // if scheme was specified
       if (scheme != null) s.Append(scheme).Append(':');
 
@@ -454,6 +454,10 @@ namespace Fan.Sys
     {
       try
       {
+        // TODO - needed this in java, not sure we need it yet...
+        //java.io.File parent = file.getParentFile();
+        //if (!parent.exists()) parent.mkdirs();
+
         System.IO.Stream stream = (m_file as FileInfo).Open(
           append.val ? System.IO.FileMode.Append : System.IO.FileMode.Create,
           System.IO.FileAccess.Write);
