@@ -52,6 +52,16 @@ class GeomTest : Test
     verifyNotEq(Rect(1, 2, 0, 4), Rect(1, 2, 3, 4))
     verifyNotEq(Rect(1, 2, 3, 0), Rect(1, 2, 3, 4))
 
+    r := Rect(2,2,6,6)
+    verify(r.contains(4,4))
+    verify(r.contains(2,4))
+    verify(r.contains(4,2))
+    verify(r.contains(2,2))
+    verify(r.contains(8,8))
+    verify(!r.contains(1,1))
+    verify(!r.contains(2,9))
+    verify(!r.contains(1,5))
+
     verifyEq(Rect.fromStr("3,4,5,6"), Rect(3,4,5,6))
     verifyEq(Rect.fromStr("-1 , -2, -3  , -4"), Rect(-1,-2,-3,-4))
     verifyEq(Rect.fromStr("3,4,5", false), null)
