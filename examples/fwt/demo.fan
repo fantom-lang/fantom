@@ -329,12 +329,20 @@ class FwtDemo
   {
     tree := Tree
     {
+      multi = true
       model = DirTreeModel { demo = this }
+      onAction.add |Event e| { echo(e) }
+      onSelect.add |Event e| { echo(e) }
+      onPopup.add |Event e|  { echo(e); e.popup = makePopup }
     }
 
     table := Table
     {
+      multi = true
       model = DirTableModel { demo = this; dir = File.os(".").list }
+      onAction.add |Event e| { echo(e) }
+      onSelect.add |Event e| { echo(e) }
+      onPopup.add |Event e|  { echo(e); e.popup = makePopup }
     }
 
     updateTable := |File dir| { table.model->dir = dir.list; table.updateAll }
@@ -487,12 +495,17 @@ class FwtDemo
 
   static Void popup(Bool withPos, Event event)
   {
-    Menu
+    makePopup.open(event.widget, withPos ? Point.make(0, event.widget.size.h) : null)
+  }
+
+  static Menu makePopup()
+  {
+    return Menu
     {
       MenuItem { text = "Popup 1"; onAction.add(&cb) }
       MenuItem { text = "Popup 2"; onAction.add(&cb) }
       MenuItem { text = "Popup 3"; onAction.add(&cb) }
-    }.open(event.widget, withPos ? Point.make(0, event.widget.size.h) : null)
+    }
   }
 
   WebBrowser browser := WebBrowser {}
