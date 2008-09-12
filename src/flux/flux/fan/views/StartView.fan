@@ -17,21 +17,13 @@ internal class StartView : View
 
   override Void onLoad()
   {
-    content = ScrollPane {
-      InsetPane(10,10,10,10) {
-        GridPane
-        {
-          vgap = 0
-          InsetPane(0,0,5,0) {
-            Label { text="Recent Files"; font=Font.sys.toBold }
-          }
-          file(`file:/c:/dev/fan/src/flux/flux/fan/Commands.fan`)
-          file(`file:/c:/dev/fan/src/flux/flux/locale/en.props`)
-          file(`file:/c:/dev/fan/src/flux/flux/fan/views/StartView.fan`)
-          file(`file:/c:/dev/fan/src/flux/flux/fan/ViewTabPane.fan`)
-        }
-      }
+    recent := GridPane
+    {
+      vgap = 0
+      InsetPane(0,0,5,0) { Label { text="Recent Files"; font=Font.sys.toBold }}
     }
+    History.load.items.each |HistoryItem item| { recent.add(file(item.uri)) }
+    content = ScrollPane { InsetPane(10,10,10,10) { add(recent) }}
   }
 
   private Widget file(Uri uri)
