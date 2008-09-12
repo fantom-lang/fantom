@@ -26,10 +26,43 @@ class Tree : Widget
   @transient readonly EventListeners onAction := EventListeners()
 
   **
+  ** Callback when selected nodes change.
+  **
+  ** Event id fired:
+  **   - `EventId.select`
+  **
+  ** Event fields:
+  **   - `Event.data`: the primary selection node object.
+  **
+  @transient readonly EventListeners onSelect := EventListeners()
+
+  **
+  ** Callback when user invokes a right click popup action.
+  ** If the callback wishes to display a popup, then set
+  ** the `Event.popup` field with menu to open.  If multiple
+  ** callbacks are installed, the first one to return a nonnull
+  ** popup consumes the event.
+  **
+  ** Event id fired:
+  **   - `EventId.popup`
+  **
+  ** Event fields:
+  **   - `Event.data`: the primary selection node object.
+  **
+  @transient readonly EventListeners onPopup := EventListeners()
+
+  **
   ** Draw a border around the widget.  Default is true.  This
   ** field cannot be changed once the widget is constructed.
   **
   const Bool border := true
+
+  **
+  ** True to enable multi-node selection, false for single
+  ** node selection.  Default is false.  This field cannot
+  ** be changed once the widget is constructed.
+  **
+  const Bool multi := false
 
   **
   ** Backing data model of tree.

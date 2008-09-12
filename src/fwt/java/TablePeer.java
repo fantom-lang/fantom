@@ -9,15 +9,17 @@ package fan.fwt;
 
 import fan.sys.*;
 import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Widget;
 
 public class TablePeer
   extends WidgetPeer
-  implements Listener
+  implements Listener, SelectionListener, MenuListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,11 +38,20 @@ public class TablePeer
   public Widget create(Widget parent)
   {
     fan.fwt.Table self = (fan.fwt.Table)this.self;
-    int style = SWT.VIRTUAL;
+
+    int style = SWT.VIRTUAL | SWT.FULL_SELECTION;
+    if (self.multi.val)
+      style |= SWT.MULTI;
+    else
+      style |= SWT.SINGLE;
     if (self.border.val)  style |= SWT.BORDER;
+
     Table t = new Table((Composite)parent, style);
     t.addListener(SWT.SetData, this);
-    t.addListener(SWT.DefaultSelection, this);
+    t.addSelectionListener(this);
+    t.setMenu(new Menu(t));
+    t.getMenu().addMenuListener(this);
+
     this.control = t;
     rebuild();
     return t;
@@ -84,7 +95,6 @@ public class TablePeer
     switch (event.type)
     {
       case SWT.SetData:          handleSetData(event); break;
-      case SWT.DefaultSelection: handleDefaultSelection(event); break;
       default: System.out.println("WARNING: TreePeer.handleEvent: " + event);
     }
   }
@@ -107,16 +117,47 @@ public class TablePeer
     }
   }
 
-  private void handleDefaultSelection(Event event)
+  public void widgetDefaultSelected(SelectionEvent se)
   {
     Table table = (Table)this.control;
     fan.fwt.Table self = (fan.fwt.Table)this.self;
-    TableItem item = (TableItem)event.item;
-    if (!self.onAction().isEmpty().val)
+
+    fan.fwt.Event fe = event(EventId.action);
+    fe.index = selectedIndex();
+    self.onAction().fire(fe);
+  }
+
+  public void widgetSelected(SelectionEvent se)
+  {
+    Table table = (Table)this.control;
+    fan.fwt.Table self = (fan.fwt.Table)this.self;
+
+    fan.fwt.Event fe = event(EventId.select);
+    fe.index = selectedIndex();
+    self.onSelect().fire(fe);
+  }
+
+  public void menuHidden(MenuEvent se) {} // unused
+
+  public void menuShown(MenuEvent se)
+  {
+    Table table = (Table)this.control;
+    final fan.fwt.Table self = (fan.fwt.Table)this.self;
+
+    fan.fwt.Event fe = event(EventId.popup);
+    fe.index = selectedIndex();
+    self.onPopup().fire(fe);
+
+    // we don't use the event menu - that is just a dummy
+    // menu to hook into SWT's painful popup eventing;
+    // if the event provided a fwt::Menu then open it async
+    final fan.fwt.Menu popup = fe.popup();
+    if (popup != null)
     {
-      fan.fwt.Event fe = event(EventId.action);
-      fe.index = Int.make(table.getSelectionIndex());
-      self.onAction().fire(fe);
+      Env.get().display.asyncExec(new Runnable()
+      {
+        public void run() { popup.open(self); }
+      });
     }
   }
 
@@ -146,6 +187,13 @@ public class TablePeer
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+  Int selectedIndex()
+  {
+    int i = ((Table)control).getSelectionIndex();
+    if (i < 0) return null;
+    return Int.make(i);
+  }
 
   public TableModel model()
   {
