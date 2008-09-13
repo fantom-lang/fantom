@@ -196,6 +196,8 @@ class FwtDemo
       Button { mode = ButtonMode.radio; text = "B6"; onAction.add(&cb) }
       Button { text = "Popup 1"; onAction.add(&popup(true)) }
       Button { text = "Popup 2"; onAction.add(&popup(false)) }
+      Button { text = "Disabled"; enabled=false }
+      Button { text = "Invisible"; visible=false }
     }
   }
 

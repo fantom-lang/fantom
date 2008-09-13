@@ -126,7 +126,11 @@ abstract class Widget
   ** Position and size of this widget relative to its parent.
   ** If this a window, this is the position on the screen.
   **
-  native Rect bounds
+  Rect bounds
+  {
+    get { return Rect.makePosSize(pos, size) }
+    set { pos = val.pos; size = val.size }
+  }
 
   **
   ** Get the position of this widget on the screen coordinate's

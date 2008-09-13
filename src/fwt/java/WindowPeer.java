@@ -123,7 +123,7 @@ public class WindowPeer extends PanePeer
       Rectangle pb = env.display.getPrimaryMonitor().getClientArea();
       int pw = Math.min(mb.width, pb.width-50);
       int ph = Math.min(mb.height, pb.height-50);
-      shell.setSize(pw, ph);
+      self.size(size(pw, ph));
     }
 
     // if not explicitly positioned, then center on
@@ -136,7 +136,7 @@ public class WindowPeer extends PanePeer
       Rectangle mb = shell.getBounds();
       int cx = pb.x + (pb.width - mb.width)/2;
       int cy = pb.y + (pb.height - mb.height)/2;
-      shell.setLocation(cx, cy);
+      self.pos(point(cx, cy));
     }
 
     // ensure that window isn't off the display; this
@@ -150,7 +150,7 @@ public class WindowPeer extends PanePeer
     if (mb.x < db.x) mb.x = db.x;
     if (mb.y + mb.height > db.y + db.height) mb.y = db.y + db.height - mb.height;
     if (mb.y < db.y) mb.y = db.y;
-    shell.setBounds(mb);
+    self.bounds(rect(mb));
 
     // open
     shell.open();

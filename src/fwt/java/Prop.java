@@ -13,7 +13,9 @@ import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * Props are used to manage a field's value and how they
@@ -151,6 +153,76 @@ public abstract class Prop
     public abstract void set(Widget w, String v);
 
     Str val;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// PosProp
+//////////////////////////////////////////////////////////////////////////
+
+  static class PosProp extends Prop
+  {
+    PosProp(WidgetPeer peer) { super(peer); }
+
+    void syncToControl() { set(val); }
+
+    void syncFromControl() { val = get(); }
+
+    fan.fwt.Point get()
+    {
+      if (peer.control instanceof Control)
+      {
+        Control c = (Control)peer.control;
+        val = WidgetPeer.point(c.getLocation());
+      }
+      return val;
+    }
+
+    void set(fan.fwt.Point v)
+    {
+      val = v;
+      if (peer.control instanceof Control)
+      {
+        Control c = (Control)peer.control;
+        c.setLocation((int)v.x.val, (int)v.y.val);
+      }
+    }
+
+    fan.fwt.Point val = fan.fwt.Point.def;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// SizeProp
+//////////////////////////////////////////////////////////////////////////
+
+  static class SizeProp extends Prop
+  {
+    SizeProp(WidgetPeer peer) { super(peer); }
+
+    void syncToControl() { set(val); }
+
+    void syncFromControl() { val = get(); }
+
+    Size get()
+    {
+      if (peer.control instanceof Control)
+      {
+        Control c = (Control)peer.control;
+        val = WidgetPeer.size(c.getSize());
+      }
+      return val;
+    }
+
+    void set(Size v)
+    {
+      val = v;
+      if (peer.control instanceof Control)
+      {
+        Control c = (Control)peer.control;
+        c.setSize((int)v.w.val, (int)v.h.val);
+      }
+    }
+
+    Size val = Size.def;
   }
 
 //////////////////////////////////////////////////////////////////////////
