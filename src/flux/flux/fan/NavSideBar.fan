@@ -16,23 +16,12 @@ internal class NavSideBar : SideBar
 {
   new make()
   {
-    tree = Tree
-    {
-      model = NavModel.make
-      border = false
-      onAction.add(&onAction)
-      onPopup.add(&onPopup)
-    }
-
     content = EdgePane
     {
-      top = InsetPane(2,0,2,0) {
-        Combo {
-          items = ["My Computer"]
-        }
-      }
-      center = tree
+      top = Combo {}
+      center = NavSideBarPane {}
     }
+    goInto(null)
   }
 
   internal Void onAction(Event event)
@@ -44,17 +33,74 @@ internal class NavSideBar : SideBar
   internal Void onPopup(Event event)
   {
     r := event.data as Resource
-    event.popup = r?.popup(frame, event)
+    menu := r?.popup(frame, event) ?: Menu()
+    if (r is FileResource && r->file->isDir)
+    {
+      menu.add(MenuItem { mode=MenuItemMode.sep })
+      menu.add(MenuItem { text=type.loc("goInto.name"); onAction.add(&goInto(r)) })
+    }
+    event.popup = menu
   }
 
-  Tree tree
+  internal Void goInto(Resource r)
+  {
+    tree := Tree
+    {
+      model = NavModel.make(r==null ? Resource.roots : [r])
+      border = false
+      onAction.add(&onAction)
+      onPopup.add(&onPopup)
+    }
+    trees.add(tree)
+    select(tree, true)
+
+    items := trees.map(Obj[,]) |Tree t->Obj|
+    {
+      roots := t.model.roots
+      return roots.size>1 ? type.loc("navSideBar.root") : roots.first->name
+    }
+    content->top = Combo
+    {
+      items = items
+      selectedIndex = items.size-1
+      onModify.add(|Event e| { select(trees[e.widget->selectedIndex]) })
+    }
+    content.relayout
+  }
+
+  internal Void select(Tree tree, Bool add := false)
+  {
+    if (active === tree) return
+    active = tree
+    pane := content->center as NavSideBarPane
+    if (add) pane.add(tree)
+    if (pane.active != null) pane.active.visible = false
+    pane.active = tree
+    pane.active.visible = true
+    pane.relayout
+  }
+
+  Tree active
+  Tree[] trees := Tree[,]
 }
 
 internal class NavModel : TreeModel
 {
-  override Obj[] roots := Resource.roots
+  new make(Obj[] roots) { this.myRoots = roots }
+  override Obj[] roots() { return myRoots }
   override Str text(Obj node) { return ((Resource)node).name }
   override Image image(Obj node) { return ((Resource)node).icon }
   override Bool hasChildren(Obj node) { return ((Resource)node).hasChildren }
   override Obj[] children(Obj node) { return ((Resource)node).children }
+  private Obj[] myRoots
+}
+
+internal class NavSideBarPane : Pane
+{
+  override Void onLayout()
+  {
+    active.bounds = Rect(0, 0, size.w, size.h)
+    active.relayout
+  }
+  Widget active
 }
