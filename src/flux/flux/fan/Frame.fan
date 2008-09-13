@@ -81,6 +81,19 @@ class Frame : Window
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Commands
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Lookup a predefined command by id or return null if not
+  ** found.  See `CommandId` for the predefined id strings.
+  **
+  FluxCommand command(Str id)
+  {
+    return commands.byId[id]
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
 
@@ -114,7 +127,7 @@ class Frame : Window
       {
         left=InsetPane(4,2,2,2) { commands.buildToolBar }
         center=InsetPane(4,2,2,2) { buildLocatorBar }
-        bottom=ToolbarBorder()
+        bottom=ToolBarBorder()
       }
       center = SashPane
       {
@@ -156,16 +169,31 @@ internal class FrameState
 }
 
 **************************************************************************
-** ToolbarBorder
+** ToolBarBorder
 **************************************************************************
 
-internal class ToolbarBorder : Widget
+internal class ToolBarBorder : Widget
 {
   override Size prefSize(Hints hints := Hints.def) { return Size(100,4) }
   override Void onPaint(Graphics g)
   {
     g.brush = Gradient.makeLinear(Point(0,0), Color.sysBg,
       Point(0,size.h), Color.sysNormShadow);
+    g.fillRect(0, 0, size.w, size.h)
+  }
+}
+
+**************************************************************************
+** StatusBarBorder
+**************************************************************************
+
+internal class StatusBarBorder : Widget
+{
+  override Size prefSize(Hints hints := Hints.def) { return Size(100,4) }
+  override Void onPaint(Graphics g)
+  {
+    g.brush = Gradient.makeLinear(Point(0,0), Color.sysNormShadow,
+      Point(0,size.h), Color.sysBg);
     g.fillRect(0, 0, size.w, size.h)
   }
 }

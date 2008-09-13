@@ -20,9 +20,9 @@ abstract class View : ContentPane
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the top level flux window.
+  ** Get the top level flux frame associated with this view.
   **
-  Frame frame() { return (Frame)window }
+  Frame frame { internal set }
 
   **
   ** Get the command history for undo/redo.
@@ -31,14 +31,9 @@ abstract class View : ContentPane
   internal Void commandStackModified() { frame?.commands?.updateEdit }
 
   **
-  ** Get the parent view tab.
-  **
-  internal ViewTab viewTab() { return parent as ViewTab }
-
-  **
   ** Current resource loaded into this view.
   **
-  readonly Resource resource
+  Resource resource { internal set }
 
   **
   ** The dirty state indicates if unsaved changes have been
@@ -51,35 +46,36 @@ abstract class View : ContentPane
     {
       if (@dirty == val) return
       @dirty = val
-      viewTab?.onDirty(this, val)
+      tab?.onDirty(this, val)
     }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// ToolBar/Menu Merging
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Build a view specific toolbar to merge into the frame.
+  ** This method is called after `onLoad`, but before mounting.
+  ** Return null for no toolbar.  See `Frame.command` if you
+  ** wish to use predefined commands like cut/copy/paste.
+  **
+  virtual Widget buildToolBar() { return null }
+
+  **
+  ** Build a view specific status bar to merge into the frame.
+  ** This method is called after `onLoad`, but before mounting.
+  ** Return null for no status bar.
+  **
+  virtual Widget buildStatusBar() { return null }
 
 //////////////////////////////////////////////////////////////////////////
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Load the specified resource.
-  **
-  internal Void load(Resource r)
-  {
-    resource = r
-    onLoad
-  }
-
-  **
-  ** Save the specified resource.
-  **
-  internal Void save()
-  {
-    if (!dirty) return
-    onSave
-    dirty = false
-  }
-
-  **
-  ** Callback to load the `resource`.
+  ** Callback to load the `resource`.  At this point the
+  ** view can access `frame`, but has not been mounted yet.
   **
   abstract Void onLoad()
 

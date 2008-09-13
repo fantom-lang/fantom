@@ -21,4 +21,28 @@ class ToolBar : Widget
   // to force native peer
   private native Void dummyToolBar()
 
+  **
+  ** Add a button to the toolbar for the specified command.
+  ** Default implementation is to add a button with only an
+  ** icon and no text.
+  **
+  Button addCommand(Command c)
+  {
+    button := Button { command = c; text = "" }
+    add(button)
+    return button
+  }
+
+  **
+  ** Add a separator to the toolbar.
+  **
+  Void addSep()
+  {
+    button := Button
+    {
+      mode = ButtonMode.sep
+    }
+    add(button)
+  }
+
 }

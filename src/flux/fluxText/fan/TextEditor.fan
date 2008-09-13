@@ -21,6 +21,32 @@ class TextEditor : View
 // Loading
 //////////////////////////////////////////////////////////////////////////
 
+  override Widget buildToolBar()
+  {
+    return ToolBar
+    {
+      addCommand(frame.command(CommandId.cut))
+      addCommand(frame.command(CommandId.copy))
+      addCommand(frame.command(CommandId.paste))
+      addSep
+      addCommand(frame.command(CommandId.undo))
+      addCommand(frame.command(CommandId.redo))
+    }
+  }
+
+  override Widget buildStatusBar()
+  {
+    controller.updateCaretField()
+    return GridPane
+    {
+      numCols = 2
+      hgap = 10
+      halignPane = Halign.right
+      add(caretField)
+      add(charsetField)
+    }
+  }
+
   override Void onLoad()
   {
     // init
@@ -31,6 +57,7 @@ class TextEditor : View
 
     // load the document into memory
     loadDoc
+    charsetField.text = charset.toStr
 
     // create rich text widget
     richText = RichText { model = doc; border = false }
@@ -107,4 +134,6 @@ class TextEditor : View
   Doc doc
   TextEditorController controller
   internal DateTime fileTimeAtLoad
+  internal Label caretField := Label()
+  internal Label charsetField := Label()
 }
