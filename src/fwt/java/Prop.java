@@ -256,12 +256,12 @@ public abstract class Prop
   }
 
 //////////////////////////////////////////////////////////////////////////
-// WeightsProp
+// IntsProp
 //////////////////////////////////////////////////////////////////////////
 
-  static abstract class WeightsProp extends Prop
+  static abstract class IntsProp extends Prop
   {
-    WeightsProp(WidgetPeer peer)
+    IntsProp(WidgetPeer peer)
     {
       super(peer);
     }
@@ -443,6 +443,17 @@ public abstract class Prop
     public abstract void set(Widget w, int v);
 
     Halign val;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// CustomProp
+//////////////////////////////////////////////////////////////////////////
+
+  static abstract class Custom extends Prop
+  {
+    Custom(WidgetPeer peer) { super(peer); }
+    abstract Obj get();
+    abstract void set(Obj val);
   }
 
 //////////////////////////////////////////////////////////////////////////

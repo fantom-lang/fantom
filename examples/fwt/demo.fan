@@ -334,7 +334,7 @@ class FwtDemo
       multi = true
       model = DirTreeModel { demo = this }
       onAction.add |Event e| { echo(e) }
-      onSelect.add |Event e| { echo(e) }
+      onSelect.add |Event e| { echo(e); echo("selected=${e->widget->selected}") }
       onPopup.add |Event e|  { echo(e); e.popup = makePopup }
     }
 
@@ -343,7 +343,7 @@ class FwtDemo
       multi = true
       model = DirTableModel { demo = this; dir = File.os(".").list }
       onAction.add |Event e| { echo(e) }
-      onSelect.add |Event e| { echo(e) }
+      onSelect.add |Event e| { echo(e); echo("selected=${e->widget->selected}") }
       onPopup.add |Event e|  { echo(e); e.popup = makePopup }
     }
 

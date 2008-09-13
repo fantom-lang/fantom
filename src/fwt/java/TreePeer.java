@@ -7,6 +7,7 @@
 //
 package fan.fwt;
 
+import java.util.ArrayList;
 import fan.sys.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
@@ -62,6 +63,35 @@ public class TreePeer
     rebuild();
     return t;
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  // Obj[] selected
+  public List selected(fan.fwt.Tree self) { return (List)selected.get(); }
+  public void selected(fan.fwt.Tree self, List v) { selected.set((List)v); }
+  public final Prop.Custom selected = new Prop.Custom(this)
+  {
+    void syncToControl() { set(val); }
+    void syncFromControl() { get(); }
+
+    Obj get()
+    {
+      if (control == null) return val;
+      val = nodes(((Tree)control).getSelection());
+      return val.ro();
+    }
+
+    void set(Obj v)
+    {
+      val = (List)v;
+      if (control == null) return;
+      ((Tree)control).setSelection(items(val));
+    }
+
+    List val = new List(Sys.ObjType);
+  };
 
 //////////////////////////////////////////////////////////////////////////
 // Native Methods
@@ -205,6 +235,37 @@ public class TreePeer
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+  TreeItem[] items(List nodes)
+  {
+    ArrayList acc = new ArrayList(nodes.sz());
+    for (int i=0; i<nodes.sz(); ++i)
+    {
+      TreeItem item = item(nodes.get(i));
+      if (item != null) acc.add(item);
+    }
+    return (TreeItem[])acc.toArray(new TreeItem[acc.size()]);
+  }
+
+  TreeItem item(Obj node)
+  {
+    TreeItem[] items = ((Tree)control).getItems();
+    for (int i=0; i<items.length; ++i)
+    {
+      Data data = (Data)items[i].getData();
+      if (data != null && data.node == node)
+        return items[i];
+    }
+    return null;
+  }
+
+  List nodes(TreeItem[] items)
+  {
+    List acc = new List(Sys.ObjType, items.length);
+    for (int i=0; i<items.length; ++i)
+      acc.add(((Data)items[i].getData()).node);
+    return acc;
+  }
 
   Obj node(TreeItem item)
   {
