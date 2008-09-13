@@ -59,83 +59,64 @@ public class WidgetPeer
   }
 
 //////////////////////////////////////////////////////////////////////////
-// State
+// Fields
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool enabled(fan.fwt.Widget self)
+  // Bool enabled := true
+  public Bool enabled(fan.fwt.Widget self) { return enabled.get(); }
+  public void enabled(fan.fwt.Widget self, Bool v) { enabled.set(v); }
+  public final Prop.BoolProp enabled = new Prop.BoolProp(this, true)
   {
-    // pain in the ass due to SWT's class hierarchy
-    if (control instanceof Control)  return enabled = Bool.make(((Control)control).getEnabled());
-    if (control instanceof MenuItem) return enabled = Bool.make(((MenuItem)control).getEnabled());
-    if (control instanceof ToolItem) return enabled = Bool.make(((ToolItem)control).getEnabled());
-    return enabled;
-  }
+    public boolean get(Widget w)
+    {
+      // pain in the ass due to SWT's class hierarchy
+      if (control instanceof Control)  return ((Control)control).getEnabled();
+      if (control instanceof MenuItem) return ((MenuItem)control).getEnabled();
+      if (control instanceof ToolItem) return ((ToolItem)control).getEnabled();
+      return true;
+    }
+    public void set(Widget w, boolean v)
+    {
+      // pain in the ass due to SWT's class hierarchy
+      if (control instanceof Control)  ((Control)control).setEnabled(v);
+      if (control instanceof MenuItem) ((MenuItem)control).setEnabled(v);
+      if (control instanceof ToolItem) ((ToolItem)control).setEnabled(v);
+    }
+  };
 
-  public final void enabled(fan.fwt.Widget self, Bool b)
+  // Bool visible := true
+  public Bool visible(fan.fwt.Widget self) { return visible.get(); }
+  public void visible(fan.fwt.Widget self, Bool v) { visible.set(v); }
+  public final Prop.BoolProp visible = new Prop.BoolProp(this, true)
   {
-    // pain in the ass due to SWT's class hierarchy
-    enabled = b;
-    if (control instanceof Control)  ((Control)control).setEnabled(b.val);
-    if (control instanceof MenuItem) ((MenuItem)control).setEnabled(b.val);
-    if (control instanceof ToolItem) ((ToolItem)control).setEnabled(b.val);
-  }
+    public boolean get(Widget w)
+    {
+      return (w instanceof Control) ? ((Control)w).getVisible() : true;
+    }
+    public void set(Widget w, boolean v)
+    {
+      // shell always controls its own visibility via open/close
+      if (w instanceof Control && !(w instanceof Shell))
+        ((Control)w).setVisible(v);
+    }
+  };
 
-  public final Bool visible(fan.fwt.Widget self)
-  {
-    if (!(control instanceof Control)) { return visible; }
-    return visible = Bool.make(((Control)control).getVisible());
-  }
+  // Size size
+  public fan.fwt.Point pos(fan.fwt.Widget self) { return pos.get(); }
+  public void pos(fan.fwt.Widget self, fan.fwt.Point v) { pos.set(v); onPosChange(); }
+  public final Prop.PosProp pos = new Prop.PosProp(this);
 
-  public final void visible(fan.fwt.Widget self, Bool b)
-  {
-    visible = b;
-    if (control instanceof Control)
-      ((Control)control).setVisible(b.val);
-  }
+  // Size size
+  public Size size(fan.fwt.Widget self) { return size.get(); }
+  public void size(fan.fwt.Widget self, Size v) { size.set(v); onSizeChange(); }
+  public final Prop.SizeProp size = new Prop.SizeProp(this);
+
+  void onPosChange() {}
+  void onSizeChange() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Layout
 //////////////////////////////////////////////////////////////////////////
-
-  public final fan.fwt.Point pos(fan.fwt.Widget self)
-  {
-    if (!(control instanceof Control)) return pos;
-    return point( ((Control)control).getLocation() );
-  }
-
-  public final void pos(fan.fwt.Widget self, fan.fwt.Point pos)
-  {
-    if (!(control instanceof Control)) { this.pos = pos; return; }
-    ((Control)control).setLocation((int)pos.x.val, (int)pos.y.val);
-    onPosChange();
-  }
-
-  public final Size size(fan.fwt.Widget self)
-  {
-    if (!(control instanceof Control)) return size;
-    return size( ((Control)control).getSize() );
-  }
-
-  public final void size(fan.fwt.Widget self, Size size)
-  {
-    if (!(control instanceof Control)) { this.size = size; return; }
-    ((Control)control).setSize((int)size.w.val, (int)size.h.val);
-    onSizeChange();
-  }
-
-  public final Rect bounds(fan.fwt.Widget self)
-  {
-    if (!(control instanceof Control)) return Rect.make(pos.x, pos.y, size.w, size.h);
-    return rect( ((Control)control).getBounds() );
-  }
-
-  public final void bounds(fan.fwt.Widget self, Rect b)
-  {
-    if (!(control instanceof Control)) { pos = b.pos(); size = b.size(); return; }
-    ((Control)control).setBounds((int)b.x.val, (int)b.y.val, (int)b.w.val, (int)b.h.val);
-    onPosChange();
-    onSizeChange();
-  }
 
   public Size prefSize(fan.fwt.Widget self, Hints hints)
   {
@@ -170,9 +151,6 @@ public class WidgetPeer
         c.redraw((int)r.x.val, (int)r.y.val, (int)r.w.val, (int)r.h.val, true);
     }
   }
-
-  void onPosChange() {}
-  void onSizeChange() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Focus Eventing
@@ -342,10 +320,6 @@ public class WidgetPeer
   {
     // sync with native control
     this.control = control;
-    if (pos != fan.fwt.Point.def) pos(self, pos);
-    if (size != fan.fwt.Size.def) size(self, size);
-    if (!enabled.val) enabled(self, enabled);
-    if (!visible.val) visible(self, visible);
     checkFocusListeners(self);
     checkKeyListeners(self);
     if (control instanceof Control)
@@ -464,6 +438,11 @@ public class WidgetPeer
     return fan.fwt.Point.make(Int.make(pt.x), Int.make(pt.y));
   }
 
+  static fan.fwt.Size size(int w, int h)
+  {
+    return fan.fwt.Size.make(Int.make(w), Int.make(h));
+  }
+
   static fan.fwt.Size size(Point pt)
   {
     return fan.fwt.Size.make(Int.make(pt.x), Int.make(pt.y));
@@ -521,10 +500,6 @@ public class WidgetPeer
 
   fan.fwt.Widget self;
   Widget control;
-  Bool enabled = Bool.True;
-  Bool visible = Bool.True;
-  fan.fwt.Point pos = fan.fwt.Point.def;
-  fan.fwt.Size size = fan.fwt.Size.def;
   Key modifiers;
   boolean activeKeyListener   = false;
   boolean activeFocusListener = false;

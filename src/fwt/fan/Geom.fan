@@ -128,6 +128,10 @@ const class Rect
   new make(Int x := 0, Int y := 0, Int w := 0, Int h := 0)
     { this.x = x; this.y = y; this.w = w; this.h = h }
 
+  ** Construct from a Point and Size instance
+  new makePosSize(Point p, Size s)
+    { this.x = p.x; this.y = p.y; this.w = s.w; this.h= s.h }
+
   ** Parse from string.  If invalid and checked is
   ** true then throw ParseErr otherwise return null.
   static Rect fromStr(Str s, Bool checked := true)
