@@ -8,6 +8,7 @@
 package fan.fwt;
 
 import fan.sys.*;
+import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
@@ -68,6 +69,15 @@ public class TablePeer
   {
     public boolean get(Widget w) { return ((Table)w).getHeaderVisible(); }
     public void set(Widget w, boolean v) { ((Table)w).setHeaderVisible(v); }
+  };
+
+  // Int[] selected
+  public List selected(fan.fwt.Table self) { return selected.get(); }
+  public void selected(fan.fwt.Table self, List v) { selected.set(v); }
+  public final Prop.IntsProp selected = new Prop.IntsProp(this)
+  {
+    public int[] get(Widget w) { return ((Table)w).getSelectionIndices(); }
+    public void set(Widget w, int[] v) { ((Table)w).select(v); }
   };
 
 //////////////////////////////////////////////////////////////////////////

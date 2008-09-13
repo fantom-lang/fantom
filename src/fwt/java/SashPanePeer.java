@@ -46,7 +46,7 @@ public class SashPanePeer extends WidgetPeer
   // of children; just ignore that, we'll try again on childAdded callback
   public List weights(SashPane self) { return weights.get(); }
   public void weights(SashPane self, List v) { weights.set(v); }
-  public final Prop.WeightsProp weights = new Prop.WeightsProp(this)
+  public final Prop.IntsProp weights = new Prop.IntsProp(this)
   {
     public int[] get(Widget w) { return ((SashForm)w).getWeights(); }
     public void set(Widget w, int[] v)

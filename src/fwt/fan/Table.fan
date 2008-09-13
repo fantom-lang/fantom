@@ -77,6 +77,11 @@ class Table : Widget
   ** Update the entire table's contents from the model.
   **
   native Void updateAll()
+
+  **
+  ** Get and set the selected row indices.
+  **
+  native Int[] selected
 }
 
 **************************************************************************

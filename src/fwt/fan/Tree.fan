@@ -70,6 +70,11 @@ class Tree : Widget
   TreeModel model
 
   **
+  ** Get and set the selected nodes.
+  **
+  native Obj[] selected
+
+  **
   ** Update the entire tree's contents from the model.
   **
   native Void updateAll()
