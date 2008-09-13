@@ -93,8 +93,9 @@ class Frame : Window
     {
       top = EdgePane
       {
-        left=InsetPane(2,2,2,2) { commands.buildToolBar }
-        center=InsetPane(2,2,2,2) { buildLocatorBar }
+        left=InsetPane(4,2,2,2) { commands.buildToolBar }
+        center=InsetPane(4,2,2,2) { buildLocatorBar }
+        bottom=ToolbarBorder()
       }
       center = SashPane
       {
@@ -119,4 +120,15 @@ class Frame : Window
   internal ViewTabPane tabPane := ViewTabPane(this)
   internal LocatorBar locator := LocatorBar(this)
   internal Commands commands := Commands(this)
+}
+
+internal class ToolbarBorder : Widget
+{
+  override Size prefSize(Hints hints := Hints.def) { return Size(100,4) }
+  override Void onPaint(Graphics g)
+  {
+    g.brush = Gradient.makeLinear(Point(0,0), Color.sysBg,
+      Point(0,size.h), Color.sysNormShadow);
+    g.fillRect(0, 0, size.w, size.h)
+  }
 }
