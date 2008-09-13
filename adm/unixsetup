@@ -11,6 +11,7 @@ echo "###"
 echo "### FAN_HOME=$FAN_HOME"
 echo "###"
 
+# this is a test comment for email notification, but do i really need .exe?
 chmod +x $FAN_HOME/bin/*
 find $FAN_HOME \
     \( -name "*.exe" -o -name "build*.fan" -o -name 'boot*.fan' \) \
