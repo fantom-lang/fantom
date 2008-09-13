@@ -81,6 +81,25 @@ class Frame : Window
   }
 
 //////////////////////////////////////////////////////////////////////////
+// State
+//////////////////////////////////////////////////////////////////////////
+
+  internal Void loadState()
+  {
+    state := FrameState.load
+    if (state.pos != null)  this.pos = state.pos
+    if (state.size != null) this.size = state.size
+  }
+
+  internal Void saveState()
+  {
+    state := FrameState()
+    state.pos = this.pos
+    state.size = this.size
+    state.save
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Internal Construction
 //////////////////////////////////////////////////////////////////////////
 
@@ -121,6 +140,24 @@ class Frame : Window
   internal LocatorBar locator := LocatorBar(this)
   internal Commands commands := Commands(this)
 }
+
+**************************************************************************
+** FrameState
+**************************************************************************
+
+@serializable
+internal class FrameState
+{
+  static FrameState load() { return Flux.loadOptions("session/frame", FrameState#) }
+  Void save() { Flux.saveOptions("session/frame", this) }
+
+  Point pos := null
+  Size size := Size(800, 600)
+}
+
+**************************************************************************
+** ToolbarBorder
+**************************************************************************
 
 internal class ToolbarBorder : Widget
 {

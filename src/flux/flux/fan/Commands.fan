@@ -221,7 +221,7 @@ internal class SaveCommand : FluxCommand
 internal class ExitCommand : FluxCommand
 {
   new make() : super(CommandId.exit) {}
-  override Void invoke(Event event) { Sys.exit }
+  override Void invoke(Event event) { frame.close }
 }
 
 //////////////////////////////////////////////////////////////////////////
