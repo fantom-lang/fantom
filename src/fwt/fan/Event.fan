@@ -142,7 +142,8 @@ enum EventId
   select,
   caret,
   hyperlink,
-  popup
+  popup,
+  open
 }
 
 **************************************************************************
