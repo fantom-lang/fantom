@@ -54,6 +54,7 @@ internal class TextEditorController : TextEditorSupport
 
   Void onCaret(Event event)
   {
+    updateCaretField
     checkBraceMatch(event)
   }
 
@@ -61,6 +62,23 @@ internal class TextEditorController : TextEditorSupport
   {
     if (event.id == EventId.focusGained)
       checkFileOutOfDate
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Update Caret
+//////////////////////////////////////////////////////////////////////////
+
+  Void updateCaretField()
+  {
+    try
+    {
+      offset := editor.richText.caretPos
+      line := doc.lineAtOffset(offset)
+      col  := offset-doc.offsetAtLine(line)
+      editor.caretField.text = "${(line+1)}:${col+1}"
+      editor.caretField?.parent?.relayout
+    }
+    catch (Err e) e.trace
   }
 
 //////////////////////////////////////////////////////////////////////////

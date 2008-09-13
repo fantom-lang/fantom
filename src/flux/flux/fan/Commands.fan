@@ -18,10 +18,15 @@ internal class Commands
   new make(Frame frame)
   {
     this.frame = frame
+    this.byId = Str:Command[:]
     type.fields.each |Field f|
     {
       cmd := f.get(this) as FluxCommand
-      if (cmd != null) cmd.frame = frame
+      if (cmd != null)
+      {
+        byId.add(cmd.id, cmd)
+        cmd.frame = frame
+      }
     }
   }
 
@@ -36,51 +41,51 @@ internal class Commands
       Menu
       {
         text = type.loc("file.name")
-        MenuItem { command = newWindow }
-        MenuItem { command = newTab }
-        MenuItem { command = start }
-        MenuItem { command = openLocation }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { command = save }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { command = exit }
+        addCommand(newWindow)
+        addCommand(newTab)
+        addCommand(start)
+        addCommand(openLocation)
+        addSep
+        addCommand(save)
+        addSep
+        addCommand(exit)
       }
 
       Menu
       {
         text = type.loc("edit.name")
-        MenuItem { command = undo}
-        MenuItem { command = redo }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { command = cut }
-        MenuItem { command = copy }
-        MenuItem { command = paste }
+        addCommand(undo)
+        addCommand(redo)
+        addSep
+        addCommand(cut)
+        addCommand(copy)
+        addCommand(paste)
       }
 
       Menu
       {
         text = type.loc("view.name")
-        MenuItem { command = reload }
+        addCommand(reload)
       }
 
       Menu
       {
         text = type.loc("history.name")
-        MenuItem { command = back }
-        MenuItem { command = forward }
-        MenuItem { command = up }
+        addCommand(back)
+        addCommand(forward)
+        addCommand(up)
       }
 
       Menu
       {
         text = type.loc("tools.name")
-        MenuItem { command = options }
+        addCommand(options)
       }
 
       Menu
       {
         text = type.loc("help.name")
-        MenuItem { command = about }
+        addCommand(about)
       }
     }
   }
@@ -93,21 +98,11 @@ internal class Commands
   {
     return ToolBar
     {
-      Button { command = back; text="" }
-      Button { command = forward; text="" }
-      Button { command = reload; text="" }
-      Button { command = up; text="" }
-      //Button { mode = ButtonMode.sep }
-      Button { command = save; text="" }
-      /*
-      Button { mode = ButtonMode.sep }
-      Button { command = cut; text="" }
-      Button { command = copy; text="" }
-      Button { command = paste; text="" }
-      Button { mode = ButtonMode.sep }
-      Button { command = undo; text="" }
-      Button { command = redo; text="" }
-      */
+      addCommand(back)
+      addCommand(forward)
+      addCommand(reload)
+      addCommand(up)
+      addCommand(save)
     }
   }
 
@@ -145,31 +140,34 @@ internal class Commands
   readonly Frame frame
 
   // File
-  readonly Command newWindow := NewWindowCommand()
-  readonly Command newTab := NewTabCommand()
-  readonly Command start := StartCommand()
-  readonly Command openLocation := OpenLocationCommand()
-  readonly Command save := SaveCommand()
-  readonly Command exit := ExitCommand()
+  readonly FluxCommand newWindow := NewWindowCommand()
+  readonly FluxCommand newTab := NewTabCommand()
+  readonly FluxCommand start := StartCommand()
+  readonly FluxCommand openLocation := OpenLocationCommand()
+  readonly FluxCommand save := SaveCommand()
+  readonly FluxCommand exit := ExitCommand()
 
   // Edit
-  readonly Command undo := UndoCommand()
-  readonly Command redo := RedoCommand()
-  readonly Command cut  := CutCommand()
-  readonly Command copy := CopyCommand()
-  readonly Command paste := PasteCommand()
+  readonly FluxCommand undo := UndoCommand()
+  readonly FluxCommand redo := RedoCommand()
+  readonly FluxCommand cut  := CutCommand()
+  readonly FluxCommand copy := CopyCommand()
+  readonly FluxCommand paste := PasteCommand()
 
   // View
-  readonly Command back := BackCommand()
-  readonly Command forward := ForwardCommand()
-  readonly Command reload  := ReloadCommand()
-  readonly Command up := UpCommand()
+  readonly FluxCommand back := BackCommand()
+  readonly FluxCommand forward := ForwardCommand()
+  readonly FluxCommand reload  := ReloadCommand()
+  readonly FluxCommand up := UpCommand()
 
   // Tools
-  readonly Command options := OptionsCommand()
+  readonly FluxCommand options := OptionsCommand()
 
   // Help
-  readonly Command about := AboutCommand()
+  readonly FluxCommand about := AboutCommand()
+
+  // map keyed by id
+  readonly Str:FluxCommand byId
 }
 
 //////////////////////////////////////////////////////////////////////////

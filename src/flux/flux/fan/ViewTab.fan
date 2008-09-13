@@ -11,7 +11,7 @@ using fwt
 **
 ** ViewTab manages the history and state of a single view tab.
 **
-internal class ViewTab : ContentPane
+internal class ViewTab : EdgePane
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,8 +99,8 @@ internal class ViewTab : ContentPane
         return
       }
 
-      // load view
-      view.load(r)
+      // view onLoad callback (which might raise exception)
+      doOnLoad(view, r)
       doLoad(r, view, mode)
     }
     catch (Err err)
@@ -112,8 +112,16 @@ internal class ViewTab : ContentPane
   Void loadErr(Resource r, Str msg, LoadMode mode, Err cause := null)
   {
     view := ErrView(msg, cause)
-    view.load(r)
+    doOnLoad(view, r)
     doLoad(r, view, mode)
+  }
+
+  Void doOnLoad(View view, Resource r)
+  {
+    view.frame = frame
+    view.tab = this
+    view.resource = r
+    view.onLoad
   }
 
   private Void doLoad(Resource r, View newView, LoadMode mode)
@@ -127,6 +135,8 @@ internal class ViewTab : ContentPane
     // unload old view
     try { oldView.onUnload  } catch (Err e) { e.trace }
     oldView.tab = null
+    oldView.frame = null
+    oldView.resource = null
 
     // add to histories
     if (mode.addToHistory)
@@ -147,8 +157,9 @@ internal class ViewTab : ContentPane
     this.image = r.icon
     this.resource = r
     this.view = newView
-    newView.tab = this
-    content = newView
+    this.top = doBuildToolBar(newView)
+    this.center = newView
+    this.bottom = doBuildStatusBar(newView)
     parent?.relayout
 
     // resume dirty handling
@@ -158,6 +169,36 @@ internal class ViewTab : ContentPane
     // update frame
     frame.locator.load(r)
     frame.commands.update
+  }
+
+  Widget doBuildToolBar(View v)
+  {
+    try
+    {
+      tb := v.buildToolBar
+      if (tb == null) return tb
+      return EdgePane { top = tb; bottom = ToolBarBorder() }
+    }
+    catch (Err e)
+    {
+      e.trace
+      return null
+    }
+  }
+
+  Widget doBuildStatusBar(View v)
+  {
+    try
+    {
+      sb := v.buildStatusBar
+      if (sb == null) return sb
+      return EdgePane { top = StatusBarBorder(); bottom = sb }
+    }
+    catch (Err e)
+    {
+      e.trace
+      return null
+    }
   }
 
   private Void dumpHistory()
@@ -187,7 +228,9 @@ internal class ViewTab : ContentPane
 
   Void save()
   {
-    view.save
+    if (!view.dirty) return
+    view.onSave
+    view.dirty = false
   }
 
   Bool dirty() { return view != null ? view.dirty : false }

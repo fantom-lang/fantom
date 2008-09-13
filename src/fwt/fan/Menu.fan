@@ -21,6 +21,26 @@ class Menu : MenuItem
   **
   native This open(Widget parent, Point pos := null)
 
+  **
+  ** Add a menu item for the specified command.  Default
+  ** implementation is to add an item without the icon.
+  **
+  MenuItem addCommand(Command c)
+  {
+    item := MenuItem { command = c; image = null }
+    add(item)
+    return item
+  }
+
+  **
+  ** Add a separator to the menu.
+  **
+  Void addSep()
+  {
+    item := MenuItem { mode = MenuItemMode.sep }
+    add(item)
+  }
+
   override This add(Widget kid)
   {
     if (kid isnot MenuItem)

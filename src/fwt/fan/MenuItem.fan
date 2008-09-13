@@ -67,6 +67,7 @@ class MenuItem : Widget
       {
         enabled     = val.enabled
         text        = val.name
+        image       = val.icon
         accelerator = val.accelerator
         onAction.add |Event e| { val.invoke(e) }
         val.register(this)
