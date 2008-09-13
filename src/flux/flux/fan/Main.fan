@@ -15,7 +15,9 @@ internal class Main
 {
   static Void main(Str[] args)
   {
+    // initialize frame
     f := Frame.make
+    f.loadState
 
     // load first uri from configured homePage or command line
     uri := GeneralOptions.load.homePage
@@ -23,8 +25,8 @@ internal class Main
     f.loadUri(uri)
 
     // open the frame and let's get this party started!
-    f.size = Size(800, 600)
     f.open
+    f.saveState
   }
 
 }
