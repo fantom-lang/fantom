@@ -38,55 +38,84 @@ internal class Commands
   {
     return Menu
     {
-      Menu
-      {
-        text = type.loc("file.name")
-        addCommand(newWindow)
-        addCommand(newTab)
-        addCommand(start)
-        addCommand(openLocation)
-        addSep
-        addCommand(save)
-        addSep
-        addCommand(exit)
-      }
+      buildFileMenu
+      buildEditMenu
+      buildViewMenu
+      buildHistoryMenu
+      buildToolsMenu
+      buildHelpMenu
+    }
+  }
 
-      Menu
-      {
-        text = type.loc("edit.name")
-        addCommand(undo)
-        addCommand(redo)
-        addSep
-        addCommand(cut)
-        addCommand(copy)
-        addCommand(paste)
-      }
+  private Menu buildFileMenu()
+  {
+    return Menu
+    {
+      text = type.loc("file.name")
+      addCommand(newWindow)
+      addCommand(newTab)
+      addCommand(start)
+      addCommand(openLocation)
+      addSep
+      addCommand(save)
+      addSep
+      addCommand(exit)
+    }
+  }
 
-      Menu
-      {
-        text = type.loc("view.name")
-        addCommand(reload)
-      }
+  private Menu buildEditMenu()
+  {
+    return Menu
+    {
+      text = type.loc("edit.name")
+      addCommand(undo)
+      addCommand(redo)
+      addSep
+      addCommand(cut)
+      addCommand(copy)
+      addCommand(paste)
+    }
+  }
 
-      Menu
-      {
-        text = type.loc("history.name")
-        addCommand(back)
-        addCommand(forward)
-        addCommand(up)
-      }
+  private Menu buildViewMenu()
+  {
+    return Menu
+    {
+      text = type.loc("view.name")
+      addCommand(reload)
+    }
+  }
 
-      Menu
-      {
-        text = type.loc("tools.name")
-        addCommand(options)
-      }
+  private Menu buildHistoryMenu()
+  {
+    menu := Menu
+    {
+      text = type.loc("history.name")
+      onOpen.add(&onHistoryMenuOpen)
+      addCommand(back)
+      addCommand(forward)
+      addCommand(up)
+      addSep
+    }
+    historyMenuSize = menu.children.size
+    return menu
+  }
 
-      Menu
-      {
-        text = type.loc("help.name")
-        addCommand(about)
-      }
+  private Menu buildToolsMenu()
+  {
+    return Menu
+    {
+      text = type.loc("tools.name")
+      addCommand(options)
+    }
+  }
+
+  private Menu buildHelpMenu()
+  {
+    return Menu
+    {
+      text = type.loc("help.name")
+      addCommand(about)
     }
   }
 
@@ -134,6 +163,41 @@ internal class Commands
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Eventing
+//////////////////////////////////////////////////////////////////////////
+
+  Void onHistoryMenuOpen(Event event)
+  {
+    menu := event.widget
+
+    // remove any old items on the history menu
+    children := menu.children
+    (historyMenuSize...children.size).each |Int i|
+    {
+      menu.remove(children[i])
+    }
+
+    // add most 10 most recent
+    recent := History.load.items
+    if (recent.size > 10) recent = recent[0..9]
+    recent.each |HistoryItem item|
+    {
+      menu.add(toHistoryMenuItem(item))
+    }
+  }
+
+  MenuItem toHistoryMenuItem(HistoryItem item)
+  {
+    name := item.uri.name
+    if (item.uri.isDir) name += "/"
+    return MenuItem
+    {
+      text = name
+      onAction.add |,| { frame.loadUri(item.uri) }
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Commands
 //////////////////////////////////////////////////////////////////////////
 
@@ -166,8 +230,9 @@ internal class Commands
   // Help
   readonly FluxCommand about := AboutCommand()
 
-  // map keyed by id
+  // misc fields
   readonly Str:FluxCommand byId
+  readonly Int historyMenuSize
 }
 
 //////////////////////////////////////////////////////////////////////////

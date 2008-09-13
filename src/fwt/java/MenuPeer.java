@@ -10,6 +10,7 @@ package fan.fwt;
 import fan.sys.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Display;
@@ -17,7 +18,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Widget;
 
-public class MenuPeer extends MenuItemPeer
+public class MenuPeer
+  extends MenuItemPeer
+  implements MenuListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,6 +47,7 @@ public class MenuPeer extends MenuItemPeer
     {
       Menu parentMenu = (((MenuPeer)self.parent.peer).menu);
       menu = new Menu(parentMenu);
+      menu.addMenuListener(this);
       MenuItem item = new MenuItem(parentMenu, SWT.CASCADE);
       item.setMenu(menu);
       return item;
@@ -61,6 +65,18 @@ public class MenuPeer extends MenuItemPeer
 
     throw new IllegalStateException("Unsupported parent for Menu: " + self.parent());
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Eventing
+//////////////////////////////////////////////////////////////////////////
+
+  public void menuShown(MenuEvent event)
+  {
+    fan.fwt.Menu self = (fan.fwt.Menu)this.self;
+    self.onOpen().fire(event(EventId.open));
+  }
+
+  public void menuHidden(MenuEvent event) {} // unused
 
 //////////////////////////////////////////////////////////////////////////
 // Lifecycle
