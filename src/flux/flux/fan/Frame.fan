@@ -119,15 +119,15 @@ class Frame : Window
   internal new make() : super()
   {
     title = "Flux"
-    icon  = Flux.icon(`/x16/flux.png`)
+    icon  = Flux.icon(Desktop.isMac ? `/x256/flux.png` : `/x16/flux.png`)
     menuBar = commands.buildMenuBar
     content = EdgePane
     {
       top = EdgePane
       {
-        left=InsetPane(4,2,2,2) { commands.buildToolBar }
-        center=InsetPane(4,2,2,2) { buildLocatorBar }
-        bottom=ToolBarBorder()
+        left = InsetPane(4,2,2,2) { commands.buildToolBar }
+        center = InsetPane(4,2,2,2) { buildLocatorBar }
+        bottom = Desktop.isMac ? null : ToolBarBorder()
       }
       center = SashPane
       {
