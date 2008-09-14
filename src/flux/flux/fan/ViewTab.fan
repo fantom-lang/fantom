@@ -219,6 +219,7 @@ internal class ViewTab : EdgePane
   {
     frame.title = "Flux - $text"
     frame.commands.update
+    if (resource != null) frame.locator.load(resource)
     try { view.onActive } catch (Err e) { e.trace }
   }
 
