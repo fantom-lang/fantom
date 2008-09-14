@@ -122,19 +122,12 @@ class Event
 **
 enum EventId
 {
-  // Widget.onFocus events
-  focusGained,
-  focusLost,
-
-  // Widget.onKey events
+  focus,
+  blur,
   keyDown,
   keyUp,
-
-  // Widget.onMouse events
   mouseDown,
   mouseUp,
-
-  // General purpose widget events
   action,
   modified,
   verify,

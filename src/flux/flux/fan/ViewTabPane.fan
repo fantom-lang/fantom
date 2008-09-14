@@ -140,7 +140,7 @@ internal class TabBar : Widget
   new make(ViewTabPane pane)
   {
     this.pane = pane
-    onMouse.add(&pressed)
+    onMouseDown.add(&pressed)
   }
 
   override Size prefSize(Hints hints := Hints.def)

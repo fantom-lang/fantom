@@ -49,27 +49,65 @@ abstract class Widget
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Callback for keyboard events on this widget.  To cease propagation
+  ** Callback for key pressed event on this widget.  To cease propagation
   ** and processing of the event, then [consume]`Event.consume` it.
   **
-  ** Event ids fired:
+  ** Event id fired:
   **   - `EventId.keyDown`
+  **
+  ** Event fields:
+  **   - `Event.keyChar`: unicode character represented by key event
+  **   - `Event.key`: key code including the modifiers
+  **
+  @transient readonly EventListeners onKeyDown := EventListeners()
+    { onModify = &checkKeyListeners }
+  internal native Void checkKeyListeners()
+
+  **
+  ** Callback for key released events on this widget.  To cease propagation
+  ** and processing of the event, then [consume]`Event.consume` it.
+  **
+  ** Event id fired:
   **   - `EventId.keyUp`
   **
   ** Event fields:
   **   - `Event.keyChar`: unicode character represented by key event
   **   - `Event.key`: key code including the modifiers
   **
-  @transient readonly EventListeners onKey := EventListeners()
+  @transient readonly EventListeners onKeyUp := EventListeners()
     { onModify = &checkKeyListeners }
-  internal native Void checkKeyListeners()
 
   **
-  ** Callback for focus events on this widget.
+  ** Callback for mouse button pressed event on this widget.
   **
-  ** Event ids fired:
-  **   - `EventId.focusGained`
-  **   - `EventId.focusLost`
+  ** Event id fired:
+  **   - `EventId.mouseDown`
+  **
+  ** Event fields:
+  **   - `Event.pos`
+  **   - `Event.count`
+  **   - `Event.key`: key modifiers
+  **
+  @transient readonly EventListeners onMouseDown := EventListeners()
+
+  **
+  ** Callback for mouse button released event on this widget.
+  **
+  ** Event id fired:
+  **   - `EventId.mouseUp`
+  **
+  ** Event fields:
+  **   - `Event.pos`
+  **   - `Event.count`
+  **   - `Event.key`: key modifiers
+  **
+  @transient readonly EventListeners onMouseUp := EventListeners()
+
+  **
+  ** Callback for focus gained event on this widget.
+  **
+  ** Event id fired:
+  **   - `EventId.focus`
   **
   ** Event fields:
   **   - none
@@ -79,20 +117,20 @@ abstract class Widget
   internal native Void checkFocusListeners()
 
   **
-  ** Callback for mouse events on this widget.
+  ** Callback for focus lost event on this widget.
   **
-  ** Event ids fired:
-  **   - `EventId.mouseDown`
-  **   - `EventId.mouseUp`
+  ** Event id fired:
+  **   - `EventId.blur`
   **
   ** Event fields:
-  **   - `Event.pos`
-  **   - `Event.count`
-  **   - `Event.key`: key modifiers
+  **   - none
   **
-  @transient readonly EventListeners onMouse := EventListeners()
-    { onModify = &checkMouseListeners }
-  internal native Void checkMouseListeners()
+  @transient readonly EventListeners onBlur := EventListeners()
+    { onModify = &checkFocusListeners }
+
+//////////////////////////////////////////////////////////////////////////
+// Focus
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** Return if this widget is the focused widget which

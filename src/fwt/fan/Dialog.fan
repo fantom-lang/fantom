@@ -85,7 +85,7 @@ class Dialog : Window
     cancel := Dialog.cancel
     dialog := Dialog(parent, pane, [ok, cancel])
     field.onAction.add |,| { dialog.close(ok) }
-    field.onFocus.add |Event e| { if (e.id == EventId.focusGained) field.selectAll }
+    field.onFocus.add |,| { field.selectAll }
     dialog.size = Size(200,100)
     if (dialog.open != ok) return null
     return field.text

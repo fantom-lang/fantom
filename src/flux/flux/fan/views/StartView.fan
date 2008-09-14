@@ -32,7 +32,7 @@ internal class StartView : View
     {
       text = uri.toStr
       fg   = Color.blue
-      onMouse.add(|Event e| { frame.loadUri(uri) })
+      onMouseUp.add(|Event e| { frame.loadUri(uri) })
     }
   }
 

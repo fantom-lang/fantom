@@ -18,7 +18,7 @@ internal class LocatorBar : Widget
   {
     this.frame = frame
     add(uriText)
-    onMouse.add(&onViewPopup)
+    onMouseUp.add(&onViewPopup)
   }
 
   readonly Frame frame
