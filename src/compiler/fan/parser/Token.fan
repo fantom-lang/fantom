@@ -104,7 +104,6 @@ enum Token
   finallyKeyword,
   forKeyword,
   foreachKeyword,
-  gotoKeyword,
   ifKeyword,
   internalKeyword,
   isKeyword,

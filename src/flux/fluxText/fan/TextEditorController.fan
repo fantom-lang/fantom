@@ -239,6 +239,46 @@ internal class TextEditorController : TextEditorSupport
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Commands
+//////////////////////////////////////////////////////////////////////////
+
+  Void onFind(Event event)
+  {
+    echo("TODO: onFind")
+  }
+
+  Void onFindNext(Event event)
+  {
+    echo("TODO: onFindNext")
+  }
+
+  Void onFindPrev(Event event)
+  {
+    echo("TODO: onFindPrev")
+  }
+
+  Void onReplace(Event event)
+  {
+    echo("TODO: onReplace")
+  }
+
+  Void onGoto(Event event)
+  {
+    Str last := Thread.locals.get("fluxText.gotoLast", "1")
+    r := Dialog.openPromptStr(frame, "Goto Line:", last)
+    if (r == null) return
+
+    line := r.toInt(10, false)
+    if (line == null) return
+    Thread.locals.set("fluxText.gotoLast", r)
+
+    line -= 1
+    if (line >= doc.lineCount) line = doc.lineCount-1
+    if (line < 0) line = 0
+    richText.select(doc.offsetAtLine(line), 0)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 

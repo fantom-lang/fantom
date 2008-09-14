@@ -18,14 +18,17 @@ internal class Commands
   new make(Frame frame)
   {
     this.frame = frame
-    this.byId = Str:Command[:]
+    this.byId = Str:FluxCommand[:]
+    this.viewManaged = ViewManagedCommand[,]
     type.fields.each |Field f|
     {
       cmd := f.get(this) as FluxCommand
       if (cmd != null)
       {
-        byId.add(cmd.id, cmd)
         cmd.frame = frame
+        byId.add(cmd.id, cmd)
+        if (cmd is ViewManagedCommand)
+          viewManaged.add(cmd)
       }
     }
   }
@@ -40,6 +43,7 @@ internal class Commands
     {
       buildFileMenu
       buildEditMenu
+      buildSearchMenu
       buildViewMenu
       buildHistoryMenu
       buildToolsMenu
@@ -74,6 +78,26 @@ internal class Commands
       addCommand(cut)
       addCommand(copy)
       addCommand(paste)
+    }
+  }
+
+  private Menu buildSearchMenu()
+  {
+    return Menu
+    {
+      text = type.loc("search.name")
+      addCommand(find)
+      addCommand(findNext)
+      addCommand(findPrev)
+      addCommand(findInFiles)
+      addSep
+      addCommand(replace)
+      addCommand(replaceInFiles)
+      addSep
+      addCommand(goto)
+      addSep
+      addCommand(jumpNext)
+      addCommand(jumpPrev)
     }
   }
 
@@ -162,6 +186,11 @@ internal class Commands
     save.enabled = tab.dirty
   }
 
+  Void disableViewManaged()
+  {
+    viewManaged.each |Command c| { c.enabled = false }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Eventing
 //////////////////////////////////////////////////////////////////////////
@@ -214,9 +243,20 @@ internal class Commands
   // Edit
   readonly FluxCommand undo := UndoCommand()
   readonly FluxCommand redo := RedoCommand()
-  readonly FluxCommand cut  := CutCommand()
+  readonly FluxCommand cut := CutCommand()
   readonly FluxCommand copy := CopyCommand()
   readonly FluxCommand paste := PasteCommand()
+
+  // View
+  readonly FluxCommand find := ViewManagedCommand(CommandId.find)
+  readonly FluxCommand findNext := ViewManagedCommand(CommandId.findNext)
+  readonly FluxCommand findPrev := ViewManagedCommand(CommandId.findPrev)
+  readonly FluxCommand findInFiles := FindInFilesCommand()
+  readonly FluxCommand replace := ViewManagedCommand(CommandId.replace)
+  readonly FluxCommand replaceInFiles := ReplaceInFilesCommand()
+  readonly FluxCommand goto := ViewManagedCommand(CommandId.goto)
+  readonly FluxCommand jumpNext := JumpNextCommand()
+  readonly FluxCommand jumpPrev := JumpPrevCommand()
 
   // View
   readonly FluxCommand back := BackCommand()
@@ -231,8 +271,23 @@ internal class Commands
   readonly FluxCommand about := AboutCommand()
 
   // misc fields
+  readonly ViewManagedCommand[] viewManaged
   readonly Str:FluxCommand byId
   readonly Int historyMenuSize
+}
+
+//////////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////
+
+** ViewManagedCommands are managed by the current view
+internal class ViewManagedCommand : FluxCommand
+{
+  new make(Str id) : super(id) { enabled=false }
+  override Void invoke(Event event)
+  {
+    frame.view.onCommand(id, event)
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -333,6 +388,38 @@ internal class PasteCommand : FluxCommand
   {
     try { Desktop.focus?->paste } catch (UnknownSlotErr e) {}
   }
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Search
+//////////////////////////////////////////////////////////////////////////
+
+** Find in files
+internal class FindInFilesCommand : FluxCommand
+{
+  new make() : super(CommandId.findInFiles) {}
+  override Void invoke(Event event) { Dialog.openInfo(frame, "TODO: Find in Files") }
+}
+
+** Replace in files
+internal class ReplaceInFilesCommand : FluxCommand
+{
+  new make() : super(CommandId.replaceInFiles) {}
+  override Void invoke(Event event) { Dialog.openInfo(frame, "TODO: Replace in Files") }
+}
+
+** Jump to next error/search position
+internal class JumpNextCommand : FluxCommand
+{
+  new make() : super(CommandId.jumpNext) {}
+  override Void invoke(Event event) { Dialog.openInfo(frame, "TODO: Jump next") }
+}
+
+** Jump to previous error/search position
+internal class JumpPrevCommand : FluxCommand
+{
+  new make() : super(CommandId.jumpPrev) {}
+  override Void invoke(Event event) { Dialog.openInfo(frame, "TODO: Jump prev") }
 }
 
 //////////////////////////////////////////////////////////////////////////

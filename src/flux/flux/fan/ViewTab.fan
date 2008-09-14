@@ -133,6 +133,7 @@ internal class ViewTab : EdgePane
     ignoreDirty = true
 
     // unload old view
+    deactivate
     try { oldView.onUnload  } catch (Err e) { e.trace }
     oldView.tab = null
     oldView.frame = null
@@ -169,6 +170,7 @@ internal class ViewTab : EdgePane
     // update frame
     frame.locator.load(r)
     frame.commands.update
+    activate
   }
 
   Widget doBuildToolBar(View v)
@@ -216,10 +218,13 @@ internal class ViewTab : EdgePane
   Void activate()
   {
     frame.commands.update
+    try { view.onActive } catch (Err e) { e.trace }
   }
 
   Void deactivate()
   {
+    try { view.onInactive } catch (Err e) { e.trace }
+    frame.commands.disableViewManaged
   }
 
 //////////////////////////////////////////////////////////////////////////
