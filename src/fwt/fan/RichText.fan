@@ -227,6 +227,7 @@ abstract class RichTextModel
 ** Defines the font and color styling of a text
 ** segment in a `RichTextModel`.
 **
+@serializable
 const class RichTextStyle
 {
   ** Foreground color
@@ -238,21 +239,11 @@ const class RichTextStyle
   ** Font of text segment
   const Font font
 
-  /* Waiting for Eclipse 3.4...
-
-  ** Underline style: `underlineNone`, `underlineSingle`,
-  **  `underlineDouble`, `underlineError`, underlineSquiggle`
-  const Int underline := underlineNone
-
-  static const Int underlineNone     := 0
-  static const Int underlineSingle   := 1
-  static const Int underlineDouble   := 2
-  static const Int underlineError    := 3
-  static const Int underlineSquiggle := 4
-
-  ** Underline color
+  ** Underline color, if null then use fg color.
   const Color underlineColor
-  */
+
+  ** Underline style or none for no underline.
+  const RichTextUnderline underline := RichTextUnderline.none
 
   override Str toStr()
   {
@@ -260,6 +251,22 @@ const class RichTextStyle
     if (fg != null) s.add("fg=$fg")
     if (bg != null) s.add(" bg=$bg")
     if (font != null) s.add(" font=$font")
+    if (underline != null) s.add(" underline=$underline")
+    if (underlineColor != null) s.add(" underlineColor=$underlineColor")
     return s.toStr.trim
   }
+}
+
+**************************************************************************
+** RichTextUnderline
+**************************************************************************
+
+**
+** Defines how to paint the underline of a RichText segment.
+**
+enum RichTextUnderline
+{
+  none,
+  single,
+  squiggle
 }

@@ -396,21 +396,23 @@ public class RichTextPeer
     r.background     = env.color(s.bg);
     r.font           = env.font(s.font);
     if (r.font == null) r.font = defFont;
-
-    /* waiting for Eclipse 3.4...
-    if (s.underlineStyle != null && s.underlineStyle != Int.Zero)
+    if (s.underline != null && s.underline != RichTextUnderline.none)
     {
-      switch (s.underlineStyle.val)
-      {
-        case 1: r.underlineStyle = SWT.UNDERLINE_SINGLE;   break;
-        case 2: r.underlineStyle = SWT.UNDERLINE_DOUBLE;   break;
-        case 3: r.underlineStyle = SWT.UNDERLINE_ERROR;    break;
-        case 4: r.underlineStyle = SWT.UNDERLINE_SQUIGGLE; break;
-      }
+      r.underline = true;
+      r.underlineStyle = underlineStyle(s.underline);
+      if (s.underlineColor == null)
+        r.underlineColor = r.foreground;
+      else
+        r.underlineColor = env.color(s.underlineColor);
     }
-    */
-
     return r;
+  }
+
+  int underlineStyle(RichTextUnderline u)
+  {
+    if (u == RichTextUnderline.single)   return SWT.UNDERLINE_SINGLE;
+    if (u == RichTextUnderline.squiggle) return SWT.UNDERLINE_SQUIGGLE;
+    throw new IllegalStateException();
   }
 
 //////////////////////////////////////////////////////////////////////////
