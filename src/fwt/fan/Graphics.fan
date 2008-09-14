@@ -124,6 +124,19 @@ class Graphics
   native This clip(Rect r)
 
   **
+  ** Push the current graphics state onto an internal
+  ** stack.  Reset the state back to its current state
+  ** via `pop`.
+  **
+  native Void push()
+
+  **
+  ** Pop the graphics stack and reset the state to the
+  ** the last push.
+  **
+  native Void pop()
+
+  **
   ** Free any operating system resources used by this instance.
   **
   native Void dispose()

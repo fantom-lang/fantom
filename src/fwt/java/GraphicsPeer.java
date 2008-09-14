@@ -7,6 +7,7 @@
 //
 package fan.fwt;
 
+import java.util.Stack;
 import fan.sys.Bool;
 import fan.sys.Int;
 import fan.sys.Str;
@@ -198,7 +199,8 @@ public class GraphicsPeer
 
   public Graphics translate(Graphics self, Int x, Int y)
   {
-    Transform t = new Transform(Env.get().display);
+    Transform t = new Transform(gc.getDevice());
+    gc.getTransform(t);
     t.translate((int)x.val, (int)y.val);
     gc.setTransform(t);
     t.dispose();
@@ -228,9 +230,56 @@ public class GraphicsPeer
     gc.dispose();
   }
 
+//////////////////////////////////////////////////////////////////////////
+// State
+//////////////////////////////////////////////////////////////////////////
+
+  public void push(Graphics self)
+  {
+    State s = new State();
+    s.pen   = pen;
+    s.brush = brush;
+    s.font  = font;
+    s.antialias = gc.getAntialias();
+    s.textAntialias = gc.getTextAntialias();
+    s.transform = new Transform(gc.getDevice());
+    gc.getTransform(s.transform);
+    s.clip = gc.getClipping();
+    stack.push(s);
+  }
+
+  public void pop(Graphics self)
+  {
+    State s = (State)stack.pop();
+    pen(self, s.pen);
+    brush(self, s.brush);
+    font(self, s.font);
+    gc.setAntialias(s.antialias);
+    gc.setTextAntialias(s.textAntialias);
+    gc.setTransform(s.transform);
+    s.transform.dispose();
+    gc.setClipping(s.clip);
+  }
+
+  static class State
+  {
+    Pen pen;
+    Brush brush;
+    Font font;
+    int antialias;
+    int textAntialias;
+    Transform transform;
+    Rectangle clip;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
   GC gc;
   Pen pen = Pen.def;
   Brush brush = Color.black;
   Font font;
+  Stack stack = new Stack();
 
 }
