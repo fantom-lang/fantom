@@ -17,6 +17,8 @@ internal mixin TextEditorSupport
 
   abstract TextEditor editor()
 
+  Frame frame() { return editor.frame }
+
   TextEditorOptions options() { return editor.options }
 
   SyntaxOptions syntax() { return editor.syntax }
