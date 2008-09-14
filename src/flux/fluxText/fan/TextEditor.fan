@@ -18,7 +18,7 @@ class TextEditor : View
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Loading
+// Construction
 //////////////////////////////////////////////////////////////////////////
 
   override Widget buildToolBar()
@@ -31,6 +31,13 @@ class TextEditor : View
       addSep
       addCommand(frame.command(CommandId.undo))
       addCommand(frame.command(CommandId.redo))
+      addSep
+      addCommand(frame.command(CommandId.find))
+      addCommand(frame.command(CommandId.replace))
+      addCommand(frame.command(CommandId.findInFiles))
+      addSep
+      addCommand(frame.command(CommandId.jumpPrev))
+      addCommand(frame.command(CommandId.jumpNext))
     }
   }
 
@@ -46,6 +53,28 @@ class TextEditor : View
       add(charsetField)
     }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Commands
+//////////////////////////////////////////////////////////////////////////
+
+  override Void onActive()
+  {
+    frame.command(CommandId.find).enabled = true
+    frame.command(CommandId.findNext).enabled = true
+    frame.command(CommandId.findPrev).enabled = true
+    frame.command(CommandId.replace).enabled = true
+    frame.command(CommandId.goto).enabled = true
+  }
+
+  override Void onCommand(Str id, Event event)
+  {
+    controller.trap("on${id.capitalize}", [event])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Loading
+//////////////////////////////////////////////////////////////////////////
 
   override Void onLoad()
   {

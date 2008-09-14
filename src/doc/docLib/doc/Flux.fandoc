@@ -45,7 +45,8 @@ The view lifecycle typically involves these steps:
   2. **onLoad**: the 'onLoad' callback is invoked when the view
      should load its UI state from the resource.  At this point
      both [View.frame]`flux::View.frame` and [View.resource]`flux::View.resource`
-     are available.
+     are available.  However your view has not been mounted into the
+     into the widget tree yet.
   3. **dirty**: if your view is an editor, then you should set the
      [dirty]`flux::View.dirty` field to true when the user makes a modification
      to the resource.
@@ -57,6 +58,11 @@ The view lifecycle typically involves these steps:
      the dirty flag is set back to false.
   5. **onUnload**: this callback is invoked when the view is being unloaded,
      typically because navigating to a new resource or view.
+
+In addition to the above, views receive the 'onActive' and
+'onInactive' callbacks when the view is selected and unselected
+as the active tab.  The 'onActive' callback is used to enable
+predefined view managed commands such as find and replace.
 
 Navigation [#navigation]
 ************************

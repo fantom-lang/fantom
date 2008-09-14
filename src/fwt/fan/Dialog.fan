@@ -73,11 +73,20 @@ class Dialog : Window
   static Str openPromptStr(Window parent, Str msg, Str def := "")
   {
     field := Text { text = def }
-    pane := GridPane { numCols = 2; Label { text=msg }; add(field) }
+    pane := GridPane
+    {
+      numCols = 2
+      expandCol=1
+      halignCells=Halign.fill
+      Label { text=msg }
+      add(field)
+    }
     ok := Dialog.ok
     cancel := Dialog.cancel
     dialog := Dialog(parent, pane, [ok, cancel])
     field.onAction.add |,| { dialog.close(ok) }
+    field.onFocus.add |Event e| { if (e.id == EventId.focusGained) field.selectAll }
+    dialog.size = Size(200,100)
     if (dialog.open != ok) return null
     return field.text
   }
