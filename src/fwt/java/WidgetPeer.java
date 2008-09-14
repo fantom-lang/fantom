@@ -175,7 +175,8 @@ public class WidgetPeer
     // if we don't have any onFocus listeners, then I
     // shouldn't be actively registered as a focus listener
     if (!(control instanceof Control)) return;
-    if (self.onFocus().isEmpty().val != activeFocusListener) return;
+    boolean now = self.onFocus().isEmpty().val && self.onBlur().isEmpty().val;
+    if (now != activeFocusListener) return;
     if (activeFocusListener)
     {
       ((Control)control).removeFocusListener(this);
@@ -190,12 +191,12 @@ public class WidgetPeer
 
   public void focusGained(FocusEvent se)
   {
-    self.onFocus().fire(event(EventId.focusGained));
+    self.onFocus().fire(event(EventId.focus));
   }
 
   public void focusLost(FocusEvent se)
   {
-    self.onFocus().fire(event(EventId.focusLost));
+    self.onBlur().fire(event(EventId.blur));
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -207,7 +208,8 @@ public class WidgetPeer
     // if we don't have any onKey listeners, then I
     // shouldn't be actively registered as a key listener
     if (!(control instanceof Control)) return;
-    if (self.onKey().isEmpty().val != activeKeyListener) return;
+    boolean now = self.onKeyDown().isEmpty().val && self.onKeyUp().isEmpty().val;
+    if (now != activeKeyListener) return;
     if (activeKeyListener)
     {
       ((Control)control).removeKeyListener(this);
@@ -222,12 +224,12 @@ public class WidgetPeer
 
   public void keyPressed(KeyEvent se)
   {
-    fireKeyEvent(self.onKey(), EventId.keyDown, se);
+    fireKeyEvent(self.onKeyDown(), EventId.keyDown, se);
   }
 
   public void keyReleased(KeyEvent se)
   {
-    fireKeyEvent(self.onKey(), EventId.keyUp, se);
+    fireKeyEvent(self.onKeyUp(), EventId.keyUp, se);
   }
 
   void fireKeyEvent(EventListeners listeners, EventId id, KeyEvent se)
@@ -255,17 +257,24 @@ public class WidgetPeer
 
   public void mouseDoubleClick(MouseEvent se) {}
 
-  public void mouseDown(MouseEvent se) { fireOnMouse(EventId.mouseDown, se); }
+  public void mouseDown(MouseEvent se)
+  {
+    fireMouseEvent(self.onMouseDown(), EventId.mouseDown, se);
+  }
 
-  public void mouseUp(MouseEvent se)  { fireOnMouse(EventId.mouseUp, se); }
+  public void mouseUp(MouseEvent se)
+  {
+    fireMouseEvent(self.onMouseUp(), EventId.mouseUp, se);
+  }
 
-  private void fireOnMouse(EventId id, MouseEvent se)
+  private void fireMouseEvent(EventListeners listeners, EventId id, MouseEvent se)
   {
     // save modifiers on mouse events for future selection, action,
     // and popup events which might occur;  this allows us to check
     // for Ctrl down to handle newTab style of eventing
-    Key key = toKey(0, se.stateMask);
-    modifiers = se.stateMask == 0 ? null : key;
+    int mask = se.stateMask & SWT.MODIFIER_MASK;
+    Key key = toKey(0, mask);
+    modifiers = mask == 0 ? null : key;
 
     // fire event
     fan.fwt.Event fe = event(id);
@@ -273,7 +282,7 @@ public class WidgetPeer
     fe.count  = Int.make(se.count);
     fe.button = Int.make(se.button);
     fe.key    = key;
-    self.onMouse().fire(fe);
+    listeners.fire(fe);
   }
 
 //////////////////////////////////////////////////////////////////////////

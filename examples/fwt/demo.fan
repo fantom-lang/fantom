@@ -608,9 +608,12 @@ class EventDemo : Widget
 {
   new make()
   {
-    onKey.add(&dump)
     onFocus.add(&dump)
-    onMouse.add(&dump)
+    onBlur.add(&dump)
+    onKeyUp.add(&dump)
+    onKeyDown.add(&dump)
+    onMouseUp.add(&dump)
+    onMouseDown.add(&dump)
   }
 
   override Size prefSize(Hints hints := null) { return Size.make(100, 100) }
@@ -634,7 +637,7 @@ class EventDemo : Widget
 
   Void dump(Event event)
   {
-    if (event.id == EventId.focusLost || event.id == EventId.focusGained)
+    if (event.id == EventId.focus || event.id == EventId.blur)
       repaint
 
     echo("$name> $event")

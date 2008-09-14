@@ -60,8 +60,7 @@ internal class TextEditorController : TextEditorSupport
 
   Void onFocus(Event event)
   {
-    if (event.id == EventId.focusGained)
-      checkFileOutOfDate
+    checkFileOutOfDate
   }
 
 //////////////////////////////////////////////////////////////////////////
