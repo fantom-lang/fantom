@@ -217,6 +217,7 @@ internal class ViewTab : EdgePane
 
   Void activate()
   {
+    frame.title = "Flux - $text"
     frame.commands.update
     try { view.onActive } catch (Err e) { e.trace }
   }
@@ -246,6 +247,7 @@ internal class ViewTab : EdgePane
     name := resource.name
     if (dirty) name += " *"
     this.text = name
+    frame.title = "Flux - $text"
     frame.commands.updateSave
     parent?.relayout
   }
