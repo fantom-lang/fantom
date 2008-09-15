@@ -81,6 +81,30 @@ class Frame : Window
   }
 
 //////////////////////////////////////////////////////////////////////////
+// SideBar
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the sidebars which are currently created for this frame.
+  ** This list includes both showing and hidden sidebars.
+  **
+  SideBar[] sideBars()
+  {
+    return sideBarPane.sideBars.ro
+  }
+
+  **
+  ** Get the sidebar for the specified SideBar type.  If the
+  ** sidebar has already been created for this frame then return
+  ** that instance.  Otherwise if make is true, then create a
+  ** new sidebar for this frame.  If make is false return null.
+  **
+  SideBar sideBar(Type t, Bool make := true)
+  {
+    return sideBarPane.sideBar(t, make)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Commands
 //////////////////////////////////////////////////////////////////////////
 
@@ -126,31 +150,21 @@ class Frame : Window
       top = EdgePane
       {
         left = InsetPane(4,2,2,2) { commands.buildToolBar }
-        center = InsetPane(4,2,2,2) { buildLocatorBar }
+        center = InsetPane(4,2,2,2) { add(locator) }
         bottom = Desktop.isMac ? null : ToolBarBorder()
       }
-      center = SashPane
-      {
-        weights = [1, 3]
-        buildSideBar
-        buildViewTabPane
-      }
+      center = sideBarPane
     }
     commands.update
   }
-
-  internal Widget buildLocatorBar() { return locator }
-
-  internal Widget buildSideBar() { return NavSideBar {} }
-
-  internal Widget buildViewTabPane() { return tabPane }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  internal ViewTabPane tabPane := ViewTabPane(this)
   internal LocatorBar locator := LocatorBar(this)
+  internal ViewTabPane tabPane := ViewTabPane(this)
+  internal SideBarPane sideBarPane := SideBarPane(this, tabPane)
   internal Commands commands := Commands(this)
 }
 
