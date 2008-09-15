@@ -111,7 +111,9 @@ internal class Commands
       addSep
     }
 
-    Type.findByFacet("fluxSideBar", true).each |Type t|
+    types := Type.findByFacet("fluxSideBar", true)
+    types = types.dup.sort |Type a, Type b->Int| { return a.name <=> b.name }
+    types.each |Type t|
     {
       menu.addCommand(SideBarCommand(frame, t))
     }
