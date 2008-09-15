@@ -18,6 +18,10 @@ Uris which are resolved to *resources*.  Users interact with
 resources through *views* which are used to view and edit the resources.
 The next sections cover *resources* and *views* in detail.
 
+The Flux chrome works very much like a traditional browser.  It
+handles navigation, history, and view tabs.  It provides a plugin
+model for adding sidebars which used independently of views.
+
 Resources [#resources]
 **********************
 Resources are the objects a user browses, views, and edits in a flux
@@ -149,6 +153,39 @@ as the value:
 Typically the flux chrome will handle displaying the list of available
 views and allowing the user to choose alternate views.
 
+SideBars [#sideBars]
+********************
+A `flux::SideBar` is a plugin which exists independent of resources
+and views.  Sidebars are widgets which may be opened along the left,
+bottom, or right edges of the view pane.  SideBars are registered
+with the '@fluxSideBar' facet.  A very simple sidebar:
+
+  @fluxSideBar
+  class ExampleSideBar : SideBar
+  {
+    new make() { content = Label {"Example SideBar" } }
+  }
+
+There is one instance of a SideBar per registered type for each Frame.
+The SideBar is instantiated in memory the first time the user shows it
+within a given frame.  After that the instance is mounted and unmounted
+from the frame using [show]`flux::SideBar.show` and [hide]`flux::SideBar.hide`.
+
+Typically the user manages the sidebars via the View menu.  The id for
+each sidebar command on the View menu is that SideBar's type name, and
+localization is based on the type's pod.  You can setup icons and
+accelerators using the normal conventions via localization.
+
+SideBars receive a set of callbacks to manage their lifecycle and
+respond to view selections:
+  - **onLoad**: called when loaded into memory; good place to load
+    persistent state
+  - **onUnload**: called when unloaded from memory; good place to save
+    persistent state
+  - **onShow**: called when shown on frame
+  - **onHide**: called when hidden on frame
+  - **onActive**: called when user links to new resource or selects new tab
+  - **onInactive**: called when current view is replaced with new view or tab
 
 
 
