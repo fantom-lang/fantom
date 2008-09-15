@@ -126,6 +126,7 @@ class Frame : Window
     state := FrameState.load
     if (state.pos != null)  this.pos = state.pos
     if (state.size != null) this.size = state.size
+    sideBar(NavBar#).show // TODO: eventually need to persistent open sidebars
   }
 
   internal Void saveState()
