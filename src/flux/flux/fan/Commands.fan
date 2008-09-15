@@ -103,11 +103,20 @@ internal class Commands
 
   private Menu buildViewMenu()
   {
-    return Menu
+    menu := Menu
     {
       text = type.loc("view.name")
+      onOpen.add(&onViewMenuOpen)
       addCommand(reload)
+      addSep
     }
+
+    Type.findByFacet("fluxSideBar", true).each |Type t|
+    {
+      menu.addCommand(SideBarCommand(frame, t))
+    }
+
+    return menu
   }
 
   private Menu buildHistoryMenu()
@@ -195,6 +204,18 @@ internal class Commands
 // Eventing
 //////////////////////////////////////////////////////////////////////////
 
+  Void onViewMenuOpen(Event event)
+  {
+    event.widget.each |Widget w|
+    {
+      if (w is MenuItem && w->command is SideBarCommand)
+      {
+        cmd := w->command as SideBarCommand
+        cmd.update
+      }
+    }
+  }
+
   Void onHistoryMenuOpen(Event event)
   {
     menu := event.widget
@@ -247,7 +268,7 @@ internal class Commands
   readonly FluxCommand copy := CopyCommand()
   readonly FluxCommand paste := PasteCommand()
 
-  // View
+  // Search
   readonly FluxCommand find := ViewManagedCommand(CommandId.find)
   readonly FluxCommand findNext := ViewManagedCommand(CommandId.findNext)
   readonly FluxCommand findPrev := ViewManagedCommand(CommandId.findPrev)
@@ -259,9 +280,11 @@ internal class Commands
   readonly FluxCommand jumpPrev := JumpPrevCommand()
 
   // View
+  readonly FluxCommand reload  := ReloadCommand()
+
+  // History
   readonly FluxCommand back := BackCommand()
   readonly FluxCommand forward := ForwardCommand()
-  readonly FluxCommand reload  := ReloadCommand()
   readonly FluxCommand up := UpCommand()
 
   // Tools
@@ -277,7 +300,7 @@ internal class Commands
 }
 
 //////////////////////////////////////////////////////////////////////////
-//
+// Util Commands
 //////////////////////////////////////////////////////////////////////////
 
 ** ViewManagedCommands are managed by the current view
@@ -431,6 +454,35 @@ internal class ReloadCommand : FluxCommand
 {
   new make() : super(CommandId.reload) {}
   override Void invoke(Event event) { frame.view.tab.reload }
+}
+
+** Toggle sidebar shown/hidden
+internal class SideBarCommand : FluxCommand
+{
+  new make(Frame f, Type sbType) : super(sbType.name, sbType.pod)
+  {
+    this.frame = f
+    this.sbType = sbType
+    this.name = sbType.name
+  }
+
+  override Void invoke(Event event)
+  {
+    sb := frame.sideBar(sbType)
+    if (sb.showing) sb.hide; else sb.show
+  }
+
+  Void update()
+  {
+    sb := frame.sideBar(sbType, false)
+    if (sb == null || !sb.showing)
+      name = "Show $sbType.name"
+    else
+      name = "Hide $sbType.name"
+    widgets.each |Widget w| { w->text = name }
+  }
+
+  const Type sbType
 }
 
 //////////////////////////////////////////////////////////////////////////

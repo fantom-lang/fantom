@@ -21,11 +21,17 @@ class Build : BuildPod
     version     = globalVersion
     description = "Flux: Core Application"
     depends     = ["sys 1.0", "fwt 1.0"]
-    srcDirs     = [`fan/`, `fan/views/`, `test/`]
+    srcDirs     = [`fan/`, `fan/views/`, `fan/sidebars/`, `test/`]
     resDirs     = [`locale/`]
     podFacets =
     [
-      "indexFacets": ["fluxResource", "fluxView", "fluxViewMimeType"]
+      "indexFacets":
+      [
+        "fluxResource",
+        "fluxSideBar",
+        "fluxView",
+        "fluxViewMimeType"
+      ]
     ]
   }
 

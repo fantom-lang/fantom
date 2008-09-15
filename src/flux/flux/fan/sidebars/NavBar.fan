@@ -9,10 +9,10 @@
 using fwt
 
 **
-** NavSideBar is the primary top level tree based
-** navigation side bar.
+** NavBar is the primary top level tree based navigation side bar.
 **
-internal class NavSideBar : SideBar
+@fluxSideBar
+internal class NavBar : SideBar
 {
   new make()
   {
@@ -57,7 +57,7 @@ internal class NavSideBar : SideBar
     items := trees.map(Obj[,]) |Tree t->Obj|
     {
       roots := t.model.roots
-      return roots.size>1 ? type.loc("navSideBar.root") : roots.first->name
+      return roots.size>1 ? type.loc("navBar.root") : roots.first->name
     }
     content->top = Combo
     {
@@ -97,6 +97,7 @@ internal class NavModel : TreeModel
 
 internal class NavSideBarPane : Pane
 {
+  override Size prefSize(Hints hints := Hints.def) { return Size(100,100) }
   override Void onLayout()
   {
     active.bounds = Rect(0, 0, size.w, size.h)

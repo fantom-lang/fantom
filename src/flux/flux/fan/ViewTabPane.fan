@@ -106,6 +106,14 @@ internal class ViewTabPane : Pane
   }
 
   **
+  ** Use pref size
+  **
+  override Size prefSize(Hints hints := Hints.def)
+  {
+    return Size(100, 100)
+  }
+
+  **
   ** Layout widget.
   **
   override Void onLayout()
