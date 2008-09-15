@@ -148,6 +148,7 @@ class TextEditor : View
       doc.save(out)
     finally
       out.close
+    fileTimeAtLoad = file.modified
   }
 
 //////////////////////////////////////////////////////////////////////////

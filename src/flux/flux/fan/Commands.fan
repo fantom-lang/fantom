@@ -56,12 +56,12 @@ internal class Commands
     return Menu
     {
       text = type.loc("file.name")
-      addCommand(newWindow)
       addCommand(newTab)
       addCommand(start)
       addCommand(openLocation)
       addSep
       addCommand(save)
+      addCommand(saveAll)
       addSep
       addCommand(exit)
     }
@@ -195,6 +195,7 @@ internal class Commands
   {
     tab := frame.view.tab
     save.enabled = tab.dirty
+    saveAll.enabled = frame.views.any |View v->Bool| { return v.dirty }
   }
 
   Void disableViewManaged()
@@ -256,11 +257,11 @@ internal class Commands
   readonly Frame frame
 
   // File
-  readonly FluxCommand newWindow := NewWindowCommand()
   readonly FluxCommand newTab := NewTabCommand()
   readonly FluxCommand start := StartCommand()
   readonly FluxCommand openLocation := OpenLocationCommand()
   readonly FluxCommand save := SaveCommand()
+  readonly FluxCommand saveAll := SaveAllCommand()
   readonly FluxCommand exit := ExitCommand()
 
   // Edit
@@ -319,16 +320,6 @@ internal class ViewManagedCommand : FluxCommand
 // File
 //////////////////////////////////////////////////////////////////////////
 
-** Open a new frame.
-internal class NewWindowCommand : FluxCommand
-{
-  new make() : super(CommandId.newWindow) { enabled=false }
-  override Void invoke(Event event)
-  {
-    frame.loadUri(`flux:start`, LoadMode { newWindow=true })
-  }
-}
-
 ** Open a new view tab.
 internal class NewTabCommand : FluxCommand
 {
@@ -360,11 +351,31 @@ internal class SaveCommand : FluxCommand
   override Void invoke(Event event) { frame.view.tab.save }
 }
 
+** Save every dirty view
+internal class SaveAllCommand : FluxCommand
+{
+  new make() : super(CommandId.saveAll) {}
+  override Void invoke(Event event)
+  {
+    frame.views.each |View view| { view.tab.save }
+  }
+}
+
 ** Exit the application
 internal class ExitCommand : FluxCommand
 {
   new make() : super(CommandId.exit) {}
-  override Void invoke(Event event) { frame.close }
+  override Void invoke(Event event)
+  {
+    dirty := frame.views.findAll |View v->Bool| { return v.dirty }
+    if (dirty.size > 0)
+    {
+      // TODO
+      r := Dialog.openQuestion(frame, "TODO: Close with $dirty.size views?", Dialog.yesNo)
+      if (r != Dialog.yes) return
+    }
+    frame.close
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////

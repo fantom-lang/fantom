@@ -68,6 +68,7 @@ internal class ViewTabPane : Pane
   **
   Void close(ViewTab tab)
   {
+    if (!tab.confirmClose) return
     ViewTab newActive := null
     if (tab === active)
     {

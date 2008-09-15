@@ -238,8 +238,17 @@ internal class ViewTab : EdgePane
   Void save()
   {
     if (!view.dirty) return
-    view.onSave
-    view.dirty = false
+    try
+    {
+      view.onSave
+      view.dirty = false
+    }
+    catch (Err e)
+    {
+      e.trace
+      Dialog.openErr(frame, "Cannot save view $resource.name")
+      // TODO: need standard error dialog
+    }
   }
 
   Bool dirty() { return view != null ? view.dirty : false }
@@ -253,6 +262,16 @@ internal class ViewTab : EdgePane
     frame.title = "Flux - $text"
     frame.commands.updateSave
     parent?.relayout
+  }
+
+  Bool confirmClose()
+  {
+    if (!dirty) return true
+    r := Dialog.openQuestion(frame, "Save changes to $resource.name?",
+      [Dialog.yes, Dialog.no, Dialog.cancel])
+    if (r == Dialog.cancel) return false
+    if (r == Dialog.yes) save
+    return true
   }
 
 //////////////////////////////////////////////////////////////////////////

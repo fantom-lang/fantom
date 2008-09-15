@@ -28,11 +28,6 @@ class LoadMode
   }
 
   **
-  ** If true, then load using a new window.
-  **
-  Bool newWindow := false
-
-  **
   ** If true, then load using a new tab in the current window.
   **
   Bool newTab := false

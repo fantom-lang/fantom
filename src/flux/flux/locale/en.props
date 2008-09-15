@@ -12,8 +12,6 @@
 
 file.name=File
 
-newWindow.name=New Window
-
 newTab.name=New Tab
 newTab.accelerator=Ctrl+T
 
@@ -25,6 +23,9 @@ openLocation.accelerator=Ctrl+L
 save.name=Save
 save.icon=fan:/sys/pod/icons/x16/document-save.png
 save.accelerator=Ctrl+S
+
+saveAll.name=Save All
+saveAll.accelerator=Ctrl+Shift+S
 
 exit.name=Exit
 

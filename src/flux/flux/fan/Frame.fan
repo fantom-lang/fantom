@@ -57,13 +57,6 @@ class Frame : Window
   **
   internal static Void doLoad(Frame frame, Obj target, LoadMode mode)
   {
-    // get window to load
-    if (mode.newWindow)
-    {
-      echo("TODO: new window not done yet")
-      mode.newTab = true
-    }
-
     // get tab to load
     tab := frame.view.tab
     if (mode.newTab || frame.view.dirty)
