@@ -24,6 +24,19 @@ internal class NavBar : SideBar
     goInto(null)
   }
 
+  override Void onLoad()
+  {
+    // TODO
+    state := NavBarState.load
+  }
+
+  override Void onUnload()
+  {
+    // TODO
+    state := NavBarState { goInto = [`file:/dev/`, `file:/dev/fan/src`] }
+    state.save
+  }
+
   internal Void onAction(Event event)
   {
     if (event.data != null)
@@ -93,6 +106,15 @@ internal class NavModel : TreeModel
   override Bool hasChildren(Obj node) { return ((Resource)node).hasChildren }
   override Obj[] children(Obj node) { return ((Resource)node).children }
   private Obj[] myRoots
+}
+
+@serializable
+internal class NavBarState
+{
+  static NavBarState load() { return Flux.loadOptions("session/navBar", NavBarState#) }
+  Void save() { Flux.saveOptions("session/navBar", this) }
+
+  Uri[] goInto := [,]
 }
 
 internal class NavSideBarPane : Pane

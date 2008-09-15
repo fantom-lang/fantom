@@ -221,12 +221,14 @@ internal class ViewTab : EdgePane
     frame.commands.update
     if (resource != null) frame.locator.load(resource)
     try { view.onActive } catch (Err e) { e.trace }
+    if (view isnot ErrView) frame.sideBarPane.onActive(view)
   }
 
   Void deactivate()
   {
     try { view.onInactive } catch (Err e) { e.trace }
     frame.commands.disableViewManaged
+    if (view isnot ErrView) frame.sideBarPane.onInactive(view)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -134,6 +134,7 @@ class Frame : Window
     state.pos = this.pos
     state.size = this.size
     state.save
+    sideBarPane.onUnload
   }
 
 //////////////////////////////////////////////////////////////////////////

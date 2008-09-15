@@ -15,6 +15,10 @@ using fwt
 abstract class SideBar : ContentPane
 {
 
+//////////////////////////////////////////////////////////////////////////
+// State
+//////////////////////////////////////////////////////////////////////////
+
   **
   ** Get the top level flux window.
   **
@@ -53,6 +57,45 @@ abstract class SideBar : ContentPane
     showing=false
     frame.sideBarPane.hide(this)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Eventing
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Callback when sidebar is first loaded into memory.
+  ** This is the time to load persistent state.
+  **
+  virtual Void onLoad() {}
+
+  **
+  ** Callback when sidebar is being unloaded from memory.
+  ** This is the time to save persistent state.  This is
+  ** called no matter whether the sidebar is shown or hidden.
+  **
+  virtual Void onUnload() {}
+
+  **
+  ** Callback when sidebar is shown in the frame.
+  **
+  virtual Void onShow() {}
+
+  **
+  ** Callback when sidebar is hidden in the frame.
+  **
+  virtual Void onHide() {}
+
+  **
+  ** Callback when specified view is selected as the
+  ** active tab.  This callback is invoked only if showing.
+  **
+  virtual Void onActive(View view) {}
+
+  **
+  ** Callback when specified view is unselected as the
+  ** active tab.  This callback is invoked only if showing.
+  **
+  virtual Void onInactive(View view) {}
 
 }
 

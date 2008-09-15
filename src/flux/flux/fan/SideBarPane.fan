@@ -41,6 +41,7 @@ internal class SideBarPane : ContentPane
       sb = t.make
       sb.frame = frame
       sideBars.add(sb)
+      try { sb.onLoad } catch (Err e) { e.trace }
     }
     return sb
   }
@@ -68,10 +69,12 @@ internal class SideBarPane : ContentPane
     sb.parent.visible = true
     sb.parent.relayout
     sb.parent.parent.relayout
+    try { sb.onShow } catch (Err e) { e.trace }
   }
 
   Void hide(SideBar sb)
   {
+    try { sb.onHide } catch (Err e) { e.trace }
     parent := sb.parent
     if (parent == null) return
     if (parent is ContentPane)
@@ -81,6 +84,30 @@ internal class SideBarPane : ContentPane
     parent.visible = !parent.children.isEmpty
     parent.relayout
     parent.parent.relayout
+  }
+
+  Void onActive(View view)
+  {
+    sideBars.each |SideBar sb|
+    {
+      try { if (sb.showing) sb.onActive(view) } catch (Err e) { e.trace }
+    }
+  }
+
+  Void onInactive(View view)
+  {
+    sideBars.each |SideBar sb|
+    {
+      try { if (sb.showing) sb.onInactive(view) } catch (Err e) { e.trace }
+    }
+  }
+
+  Void onUnload()
+  {
+    sideBars.each |SideBar sb|
+    {
+      try { sb.onUnload } catch (Err e) { e.trace }
+    }
   }
 
   readonly Frame frame
