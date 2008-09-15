@@ -14,10 +14,10 @@ class CommandId
 {
   // file menu
   static const Str start          := "start"
-  static const Str newWindow      := "newWindow"
   static const Str newTab         := "newTab"
   static const Str openLocation   := "openLocation"
   static const Str save           := "save"
+  static const Str saveAll        := "saveAll"
   static const Str exit           := "exit"
 
   // edit menu
