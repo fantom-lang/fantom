@@ -17,7 +17,6 @@ internal const class FluxScheme : UriScheme
   {
     switch (uri.pathStr)
     {
-      case "about": return AboutResource(uri)
       case "start": return StartResource(uri)
       default: return null
     }
