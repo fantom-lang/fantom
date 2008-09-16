@@ -545,15 +545,16 @@ internal class AboutCommand : FluxCommand
   override Void invoke(Event event)
   {
     icon  := Pod.find("icons").files[`/x48/flux.png`]
-    small := Font(Font.sys.name, Font.sys.size-1, false)
+    big   := Font(Font.sys.name, Font.sys.size+(Desktop.isMac ? 2 : 3), true)
+    small := Font(Font.sys.name, Font.sys.size-(Desktop.isMac ? 3 : 1), false)
     content := GridPane
     {
       halignCells = Halign.center
       Label { image = Image(icon) }
-      Label { text = "Flux"; font = Font.sys.toBold }
+      Label { text = "Flux"; font = big }
       Label { text = "Version $type.pod.version"; font = small }
       Label { font = small; text =
-        "Copyright (c) 2008, Brian Frank and Andy Frank
+        "   Copyright (c) 2008, Brian Frank and Andy Frank
          Licensed under the Academic Free License version 3.0"
       }
     }
