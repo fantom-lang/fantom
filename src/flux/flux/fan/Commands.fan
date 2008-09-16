@@ -542,5 +542,22 @@ internal class OptionsCommand : FluxCommand
 internal class AboutCommand : FluxCommand
 {
   new make() : super(CommandId.about) {}
-  override Void invoke(Event event) { frame.loadUri(`flux:about`) }
+  override Void invoke(Event event)
+  {
+    icon  := Pod.find("icons").files[`/x48/flux.png`]
+    small := Font(Font.sys.name, Font.sys.size-1, false)
+    content := GridPane
+    {
+      halignCells = Halign.center
+      Label { image = Image(icon) }
+      Label { text = "Flux"; font = Font.sys.toBold }
+      Label { text = "Version $type.pod.version"; font = small }
+      Label { font = small; text =
+        "Copyright (c) 2008, Brian Frank and Andy Frank
+         Licensed under the Academic Free License version 3.0"
+      }
+    }
+    d := Dialog(frame, content, [Dialog.ok]) { title="About Flux" }
+    d.open
+  }
 }
