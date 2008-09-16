@@ -31,6 +31,7 @@ class InsetPane : ContentPane
   override Size prefSize(Hints hints := Hints.def)
   {
     if (content == null) return Size.def
+    if (!visible) return Size.def
     insetSize := insets.toSize
     pref := content.prefSize(hints - insetSize)
     return Size(pref.w + insetSize.w, pref.h + insetSize.h)
