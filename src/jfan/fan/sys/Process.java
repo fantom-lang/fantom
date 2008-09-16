@@ -62,7 +62,7 @@ public class Process
   public File dir() { return dir; }
   public void dir(File v)
   {
-    if (proc != null) throw Err.make("Cannot set Process.dir while running").val;
+    checkRun();
     if (v != null && (!v.exists().val || !v.isDir().val))
       throw ArgErr.make("Invalid working directory: " + v).val;
     this.dir = v;
@@ -86,27 +86,16 @@ public class Process
   }
 
   public Bool mergeErr() { return Bool.make(mergeErr); }
-  public void mergeErr(Bool v) { mergeErr = v.val;  }
+  public void mergeErr(Bool v) { checkRun(); mergeErr = v.val;  }
 
   public OutStream out() { return out; }
-  public void out(OutStream out)
-  {
-    if (proc != null) throw Err.make("Cannot set Process.out while running").val;
-    this.out = out;
-  }
+  public void out(OutStream out) { checkRun(); this.out = out; }
 
   public OutStream err() { return err; }
-  public void err(OutStream err)
-  {
-    if (proc != null) throw Err.make("Cannot set Process.err while running").val;
-    this.err = err;
-  }
+  public void err(OutStream err) { checkRun(); this.err = err; }
 
   public InStream in() { return in; }
-  public void in(InStream in)
-  {
-    if (proc != null)  throw Err.make("Cannot set Process.in while running").val;
-    this.in = in;
+  public void in(InStream in) { checkRun(); this.in = in;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -115,7 +104,7 @@ public class Process
 
   public final Process run()
   {
-    if (proc != null) throw Err.make("Process already running").val;
+    checkRun();
     try
     {
       // commands
@@ -176,10 +165,11 @@ public class Process
     {
       throw Err.make(e).val;
     }
-    finally
-    {
-      proc = null;
-    }
+  }
+
+  private void checkRun()
+  {
+    if (proc != null) throw Err.make("Process already run").val;
   }
 
 //////////////////////////////////////////////////////////////////////////
