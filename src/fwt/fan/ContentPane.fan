@@ -40,6 +40,7 @@ class ContentPane : Pane
   override Size prefSize(Hints hints := Hints.def)
   {
     if (content == null) return Size.def
+    if (!visible) return Size.def
     return content.prefSize(hints)
   }
 
