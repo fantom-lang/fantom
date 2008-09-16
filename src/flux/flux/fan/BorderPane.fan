@@ -12,7 +12,7 @@ using fwt
 ** BorderPane provides a callback to use for drawing a custom
 ** border around a content widget.
 **
-class BorderPane : Widget
+internal class BorderPane : Widget
 {
 
   **

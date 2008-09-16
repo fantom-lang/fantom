@@ -125,7 +125,7 @@ class Dialog : Window
     commands.each |Command c|
     {
       c.assocDialog = this
-      buttons.add(Button { command = c })
+      buttons.add(Button { command = c; insets=Insets(0, 10, 0, 10) })
     }
 
     // build overall
