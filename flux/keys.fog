@@ -14,11 +14,9 @@ flux::KeyOptions
   ** are string representations of `Key`.  If a command is not mapped
   ** in this table, then it defaults to the accelerator defined by
   ** the command's localized props.
-  /*
   bindings =
   [
-    "back": "Command+[",
-    "forward": "Command+]",
+    "tools.Build": "F9",
+    "tools.DebugDump": "F12",
   ]
-  */
 }

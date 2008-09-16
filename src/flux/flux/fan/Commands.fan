@@ -138,11 +138,17 @@ internal class Commands
 
   private Menu buildToolsMenu()
   {
-    return Menu
+    menu := Menu
     {
       text = type.loc("tools.name")
       addCommand(options)
+      addCommand(refreshTools)
+      addSep
     }
+    toolsMenuSize = menu.children.size
+    toolsMenu = menu
+    refreshToolsMenu
+    return menu
   }
 
   private Menu buildHelpMenu()
@@ -221,9 +227,8 @@ internal class Commands
 
   Void onHistoryMenuOpen(Event event)
   {
-    menu := event.widget
-
     // remove any old items on the history menu
+    menu := event.widget
     children := menu.children
     (historyMenuSize...children.size).each |Int i|
     {
@@ -247,6 +252,32 @@ internal class Commands
     {
       text = name
       onAction.add |,| { frame.loadUri(item.uri) }
+    }
+  }
+
+  Void refreshToolsMenu()
+  {
+    // remove any old items on the tools menu
+    children := toolsMenu.children
+    (toolsMenuSize...children.size).each |Int i|
+    {
+      toolsMenu.remove(children[i])
+    }
+
+    // add new menu items
+    addToolScripts(toolsMenu, toolsDir, true)
+  }
+
+  Void addToolScripts(Menu menu, File f, Bool top := false)
+  {
+    if (f.isDir)
+    {
+      if (!top) { sub := Menu { text=f.name }; menu.add(sub); menu = sub }
+      FileResource.sortFiles(f.list).each |File k| { addToolScripts(menu, k) }
+    }
+    else
+    {
+      if (f.ext == "fan") menu.addCommand(ToolScriptCommand(frame, f))
     }
   }
 
@@ -292,6 +323,7 @@ internal class Commands
 
   // Tools
   readonly FluxCommand options := OptionsCommand()
+  readonly FluxCommand refreshTools := RefreshToolsCommand()
 
   // Help
   readonly FluxCommand about := AboutCommand()
@@ -300,6 +332,9 @@ internal class Commands
   readonly ViewManagedCommand[] viewManaged
   readonly Str:FluxCommand byId
   readonly Int historyMenuSize
+  readonly Menu toolsMenu
+  readonly Int toolsMenuSize
+  readonly File toolsDir := Flux.homeDir+`tools/`
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -534,8 +569,43 @@ internal class OptionsCommand : FluxCommand
   override Void invoke(Event event) { frame.loadUri(Flux.homeDir.uri) }
 }
 
+** Refresh the tools menu
+internal class RefreshToolsCommand : FluxCommand
+{
+  new make() : super("refreshTools") {}
+  override Void invoke(Event event) { frame.commands.refreshToolsMenu }
+}
+
+** Invoke a tool script
+internal class ToolScriptCommand : FluxCommand
+{
+  new make(Frame frame, File file) : super("tools.${file.basename}")
+  {
+    this.frame = frame
+    this.file  = file
+    this.name  = file.basename
+  }
+
+  override Void invoke(Event event)
+  {
+    try
+    {
+      FluxCommand cmd := Sys.compile(file).make([id])
+      cmd.frame = frame
+      cmd.invoke(event)
+    }
+    catch (Err e)
+    {
+      e.trace
+      // TODO
+      Dialog.openErr(frame, "Cannot invoke tool: $file")
+    }
+  }
+  const File file
+}
+
 //////////////////////////////////////////////////////////////////////////
-// Tools
+// Help
 //////////////////////////////////////////////////////////////////////////
 
 ** Hyperlink to the flux:about

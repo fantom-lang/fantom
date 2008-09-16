@@ -48,6 +48,7 @@ class CommandId
 
   // tools menu
   static const Str options        := "options"
+  static const Str refreshTools   := "refreshTools"
 
   // help menu
   static const Str about          := "about"

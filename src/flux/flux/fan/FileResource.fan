@@ -70,11 +70,7 @@ class FileResource : Resource
   {
     if (kids != null) return kids
 
-    files := file.list.sort |File a, File b->Int|
-    {
-      if (a.isDir != b.isDir) return a.isDir ? -1 : 1
-      return a.name.localeCompare(b.name)
-    }
+    files := sortFiles(file.list)
     kids = files.map(FileResource[,]) |File f->Obj| { return makeFile(f.normalize) }
     return kids
   }
@@ -120,6 +116,19 @@ class FileResource : Resource
   private static const Int kb := 1024
   private static const Int mb := 1024*1024
   private static const Int gb := 1024*1024*1024
+
+  **
+  ** Sort files in-place for display.  Directories are always
+  ** sorted before normal files using locale name comparison.
+  **
+  static File[] sortFiles(File[] files)
+  {
+    return files.sort |File a, File b->Int|
+    {
+      if (a.isDir != b.isDir) return a.isDir ? -1 : 1
+      return a.name.localeCompare(b.name)
+    }
+  }
 
   **
   ** Get the icon for the specified file based on its mime type.
