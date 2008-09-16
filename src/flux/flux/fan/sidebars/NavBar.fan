@@ -26,14 +26,21 @@ internal class NavBar : SideBar
 
   override Void onLoad()
   {
-    // TODO
     state := NavBarState.load
+    state.goInto.each |Uri uri|
+    {
+      goInto(FileResource.makeFile(uri.toFile))
+    }
   }
 
   override Void onUnload()
   {
-    // TODO
-    state := NavBarState { goInto = [`file:/dev/`, `file:/dev/fan/src`] }
+    state := NavBarState()
+    trees.each |Tree t|
+    {
+      if (t.model.roots.size == 1)
+        state.goInto.add(t.model.roots.first->uri)
+    }
     state.save
   }
 
