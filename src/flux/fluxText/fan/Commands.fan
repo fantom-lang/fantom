@@ -9,7 +9,7 @@
 using fwt
 using flux
 
-internal class TextEditorCommand : FluxCommand, TextEditorSupport
+internal class TextEditorCommand : FluxCommand
 {
   new make(TextEditor editor, Str id)
     : super(id, type.pod)
@@ -17,7 +17,13 @@ internal class TextEditorCommand : FluxCommand, TextEditorSupport
     this.editor = editor
   }
 
-  override readonly TextEditor editor
+  TextEditorController controller() { return editor.controller }
+
+  RichText richText() { return editor.richText }
+
+  Doc doc() { return editor.doc }
+
+  readonly TextEditor editor
 }
 
 **************************************************************************

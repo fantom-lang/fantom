@@ -5,7 +5,9 @@
 // History:
 //   21 Jul 08  Br ian Frank  Creation
 //
+
 using fwt
+using compiler
 
 ** Manages all the main window's commands
 internal class Commands
@@ -593,6 +595,11 @@ internal class ToolScriptCommand : FluxCommand
       FluxCommand cmd := Sys.compile(file).make([id])
       cmd.frame = frame
       cmd.invoke(event)
+    }
+    catch (CompilerErr e)
+    {
+      // TODO: show errors in dialog
+      Dialog.openErr(frame, "Cannot compile tool: $file")
     }
     catch (Err e)
     {
