@@ -18,7 +18,16 @@ internal class NavBar : SideBar
   {
     content = EdgePane
     {
-      top = Combo {}
+      top = BorderPane
+      {
+        content  = Combo {}
+        insets   = Insets(4,4,6,4)
+        onBorder = |Graphics g, Insets insets, Size size|
+        {
+          g.brush = Color.sysNormShadow
+          g.drawLine(0, size.h-1, size.w, size.h-1)
+        }
+      }
       center = NavSideBarPane {}
     }
     goInto(null)
@@ -79,7 +88,7 @@ internal class NavBar : SideBar
       roots := t.model.roots
       return roots.size>1 ? type.loc("navBar.root") : roots.first->name
     }
-    content->top = Combo
+    content->top->content = Combo
     {
       items = items
       selectedIndex = items.size-1
