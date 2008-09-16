@@ -17,22 +17,40 @@ internal class StartView : View
 
   override Void onLoad()
   {
-    recent := GridPane
-    {
-      vgap = 0
-      InsetPane(0,0,5,0) { Label { text="Recent Files"; font=Font.sys.toBold }}
-    }
-    History.load.items.each |HistoryItem item| { recent.add(file(item.uri)) }
-    content = ScrollPane { InsetPane(10,10,10,10) { add(recent) }}
-  }
+    html := StrBuf()
+    html.add(
+     "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
+       \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
+      <html xmlns='http://www.w3.org/1999/xhtml'>
+      <head>
+       <title>StartView</title>
+       <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+       <style type='text/css'>
+         body
+         {
+           font: 11px 'Lucida Grande', 'Segoe UI', Tahoma, sans-serif;
+           margin: 1em; padding: 0;
+         }
+         a { color: #00f; }
+         ul.clean { list-style: none; margin: 0; }
+         ul.clean li { margin: 0.5em 0; padding:0; }
+       </style>
+      </head>
+      <body>")
 
-  private Widget file(Uri uri)
-  {
-    return Label
+    html.add("<p><b>Recently Viewed</b></p>\n")
+    html.add("<ul class='clean'>\n")
+    History.load.items.each |HistoryItem item|
     {
-      text = uri.toStr
-      fg   = Color.blue
-      onMouseUp.add(|Event e| { frame.loadUri(uri) })
+      html.add("<li><a href='$item.uri'>$item.uri<a></li>\n")
+    }
+    html.add("</ul>\n")
+
+    html.add("</body>\n</html>")
+    content = WebBrowser
+    {
+      onHyperlink.add |Event e| { frame.loadUri(e.data); e.data = null }
+      loadStr(html.toStr)
     }
   }
 
