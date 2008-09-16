@@ -56,5 +56,9 @@ class FluxCommand : Command
   **
   const Str id
 
-  internal Frame frame
+  **
+  ** Get the flux Frame associated with this command.
+  **
+  Frame frame { internal set }
+
 }
