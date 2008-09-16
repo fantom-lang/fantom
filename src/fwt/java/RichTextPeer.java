@@ -65,7 +65,7 @@ public class RichTextPeer
     // this is a hack, but seems to be the only way to set
     // the margins hidden away as private fields in StyledText
     setField(t, "leftMargin",   8);
-    setField(t, "topMargin",    8);
+    setField(t, "topMargin",    0);
     setField(t, "rightMargin",  8);
     setField(t, "bottomMargin", 8);
 

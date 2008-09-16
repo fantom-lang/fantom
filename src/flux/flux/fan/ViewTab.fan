@@ -179,7 +179,16 @@ internal class ViewTab : EdgePane
     {
       tb := v.buildToolBar
       if (tb == null) return tb
-      return EdgePane { top = tb; bottom = ToolBarBorder() }
+      return BorderPane
+      {
+        content  = tb
+        insets   = Insets(4,4,5,4)
+        onBorder = |Graphics g, Insets insets, Size size|
+        {
+          g.brush = Color.sysNormShadow
+          g.drawLine(0, size.h-1, size.w, size.h-1)
+        }
+      }
     }
     catch (Err e)
     {
@@ -193,8 +202,9 @@ internal class ViewTab : EdgePane
     try
     {
       sb := v.buildStatusBar
-      if (sb == null) return sb
-      return EdgePane { top = StatusBarBorder(); bottom = sb }
+      return sb
+      //if (sb == null) return sb
+      //return EdgePane { top = StatusBarBorder(); bottom = sb }
     }
     catch (Err e)
     {

@@ -73,16 +73,19 @@ internal class LocatorBar : Widget
     vx := size.w - vw
 
     g.brush = Color.sysListBg
-    g.fillRect(0, 0, size.w-vw, size.h)
-    g.brush = Color.sysBg
-    g.fillRect(vx, 0, vw, size.h)
+    g.fillRect(0, 0, size.w, size.h)
 
     g.brush = Color.sysNormShadow
     g.drawRect(0, 0, size.w-1, size.h-1)
-    g.drawRect(vx, 0, vx, size.h-1)
 
     g.brush = Color.sysFg
     g.drawText(view, vx+viewInsets.left, (vh-Font.sys.height)/2)
+
+    ax := size.w - viewInsets.right + 3
+    ay := (size.h - 3) / 2
+    g.drawLine(ax  , ay,   ax+4, ay)
+    g.drawLine(ax+1, ay+1, ax+3, ay+1)
+    g.drawLine(ax+2, ay+2, ax+2, ay+2)
 
     tp := uriText.prefSize
     tx := textInsets.left
@@ -93,7 +96,7 @@ internal class LocatorBar : Widget
   }
 
   const Insets textInsets := Insets(5,5,5,5)
-  const Insets viewInsets := Insets(5,5,5,5)
+  const Insets viewInsets := Insets(5,13,5,5)
   Text uriText := Text { onAction.add(&go(null)); border = false }
   Str view := "Views"
 
