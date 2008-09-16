@@ -24,7 +24,7 @@ class Exec : Task
     try
     {
       log.info("Exec [$cmd]")
-      result := process.run
+      result := process.run.join
       if (result != 0) throw Err.make
     }
     catch (Err err)

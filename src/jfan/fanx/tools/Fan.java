@@ -201,17 +201,17 @@ public class Fan
         if (a == "-help" || a == "-h" || a == "-?")
         {
           help();
-          return -1;
+          return 2;
         }
         else if (a == "-version")
         {
           version("Fan Launcher");
-          return -1;
+          return 3;
         }
         else if (a == "-pods")
         {
           pods("Fan Launcher");
-          return -1;
+          return 4;
         }
         else if (a.charAt(0) == '-')
         {
@@ -227,12 +227,12 @@ public class Fan
       }
 
       help();
-      return -1;
+      return 2;
     }
     catch (Throwable e)
     {
       e.printStackTrace();
-      return -1;
+      return 1;
     }
   }
 

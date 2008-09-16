@@ -411,6 +411,7 @@
 - Fix adm/unixsetup script (mostly)
 - Breaking change to Uri.get (inserted base parameter before checked)
 - Breaking change Locale.prop -> get
+- Process API enhanced: join, out, err, in, mergeErr, and env
 - List.eachBreak, flatten
 - Map.eachBreak
 - Uri.sliceToPathAbs, isPathOnly
