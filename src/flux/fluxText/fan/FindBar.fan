@@ -81,6 +81,7 @@ internal class FindBar : ContentPane
     q := findText.text
     if (q.size == 0)
     {
+      setMsg("")
       cmdPrev.enabled = false
       cmdNext.enabled = false
       return
