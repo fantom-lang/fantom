@@ -15,8 +15,6 @@ file.name=File
 newTab.name=New Tab
 newTab.accelerator=Ctrl+T
 
-start.name=Start Page
-
 openLocation.name=Open Location
 openLocation.accelerator=Ctrl+L
 
@@ -122,6 +120,10 @@ forward.accelerator=Alt+Right
 up.name=Up
 up.icon=fan:/sys/pod/icons/x16/go-up.png
 up.accelerator=Alt+Up
+
+home.name=Home
+home.icon=fan:/sys/pod/icons/x16/go-home.png
+home.accelerator=Alt+Home
 
 //////////////////////////////////////////////////////////////////////////
 // Tools menu
