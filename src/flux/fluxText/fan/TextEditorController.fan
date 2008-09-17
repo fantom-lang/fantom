@@ -241,20 +241,9 @@ internal class TextEditorController : TextEditorSupport
 // Commands
 //////////////////////////////////////////////////////////////////////////
 
-  Void onFind(Event event)
-  {
-    echo("TODO: onFind")
-  }
-
-  Void onFindNext(Event event)
-  {
-    echo("TODO: onFindNext")
-  }
-
-  Void onFindPrev(Event event)
-  {
-    echo("TODO: onFindPrev")
-  }
+  Void onFind(Event event)     { editor.find.show }
+  Void onFindNext(Event event) { editor.find.next }
+  Void onFindPrev(Event event) { editor.find.prev }
 
   Void onReplace(Event event)
   {
