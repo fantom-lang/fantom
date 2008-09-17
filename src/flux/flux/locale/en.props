@@ -20,6 +20,9 @@ start.name=Start Page
 openLocation.name=Open Location
 openLocation.accelerator=Ctrl+L
 
+closeTab.name=Close Tab
+closeTab.accelerator=Ctrl+W
+
 save.name=Save
 save.icon=fan:/sys/pod/icons/x16/document-save.png
 save.accelerator=Ctrl+S
