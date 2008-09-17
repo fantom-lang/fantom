@@ -155,5 +155,6 @@ Console.accelerator=Alt+C
 
 NavBar.accelerator=Alt+N
 navBar.root=My Computer
+openIn.name=Open in Explorer
 goInto.name=Go Into
 
