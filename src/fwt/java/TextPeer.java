@@ -52,6 +52,19 @@ public class TextPeer
     control = t;
     t.addModifyListener(this);
     t.addSelectionListener(this);
+
+    // auto selectAll on focus for single line text fields
+    if (!self.multiLine.val)
+    {
+      t.addFocusListener(new FocusAdapter()
+      {
+        public void focusGained(FocusEvent e)
+        {
+          ((fan.fwt.Text)TextPeer.this.self).selectAll();
+        }
+      });
+    }
+
     return t;
   }
 
