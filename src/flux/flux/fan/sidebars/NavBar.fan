@@ -65,9 +65,8 @@ internal class NavBar : SideBar
     menu := r?.popup(frame, event) ?: Menu()
     if (r is FileResource && r->file->isDir)
     {
-      menu.add(MenuItem { text=type.loc("openIn.name"); onAction.add(&openIn(r->file)) })
       menu.add(MenuItem { mode=MenuItemMode.sep })
-      menu.add(MenuItem { text=type.loc("goInto.name"); onAction.add(&goInto(r)) })
+      menu.add(MenuItem { command=Command.makeLocale(NavBar#.pod, "goInto", &goInto(r)) })
     }
     event.popup = menu
   }
@@ -114,19 +113,6 @@ internal class NavBar : SideBar
     pane.active = tree
     pane.active.visible = true
     pane.relayout
-  }
-
-  **
-  ** Open the given directory using the OS specific directory
-  ** browser (i.e. Windows Explorer or Mac Finder)
-  **
-  internal Void openIn(File dir)
-  {
-    if (Desktop.isWindows)
-    {
-      Process(["explorer", dir.osPath]).run
-    }
-    else echo("Not yet implemented")
   }
 
   Tree active
