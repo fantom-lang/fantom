@@ -18,6 +18,7 @@ class Build : FluxCommand
 
   override Void invoke(Event event)
   {
+    frame.command(CommandId.save).invoke(event)
     if (!findBuildFile) return
     if (!findFanHome) return
     if (!checkFanHome) return
