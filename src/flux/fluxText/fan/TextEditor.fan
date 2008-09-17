@@ -23,22 +23,7 @@ class TextEditor : View
 
   override Widget buildToolBar()
   {
-    return ToolBar
-    {
-      addCommand(frame.command(CommandId.cut))
-      addCommand(frame.command(CommandId.copy))
-      addCommand(frame.command(CommandId.paste))
-      addSep
-      addCommand(frame.command(CommandId.undo))
-      addCommand(frame.command(CommandId.redo))
-      addSep
-      addCommand(frame.command(CommandId.find))
-      addCommand(frame.command(CommandId.replace))
-      addCommand(frame.command(CommandId.findInFiles))
-      addSep
-      addCommand(frame.command(CommandId.jumpPrev))
-      addCommand(frame.command(CommandId.jumpNext))
-    }
+    return find
   }
 
   override Widget buildStatusBar()
@@ -99,6 +84,7 @@ class TextEditor : View
     controller.register
 
     // update ui
+    find = FindBar(richText) { visible = false }
     content = richText
   }
 
@@ -163,6 +149,7 @@ class TextEditor : View
   RichText richText
   Doc doc
   TextEditorController controller
+  internal FindBar find
   internal DateTime fileTimeAtLoad
   internal Label caretField := Label()
   internal Label charsetField := Label()
