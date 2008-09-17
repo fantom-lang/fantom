@@ -13,7 +13,6 @@
 class CommandId
 {
   // file menu
-  static const Str start          := "start"
   static const Str newTab         := "newTab"
   static const Str openLocation   := "openLocation"
   static const Str closeTab       := "closeTab"
@@ -46,6 +45,7 @@ class CommandId
   static const Str back           := "back"
   static const Str forward        := "forward"
   static const Str up             := "up"
+  static const Str home           := "home"
 
   // tools menu
   static const Str options        := "options"

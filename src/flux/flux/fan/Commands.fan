@@ -58,7 +58,6 @@ internal class Commands
     {
       text = type.loc("file.name")
       addCommand(newTab)
-      addCommand(start)
       addCommand(openLocation)
       addCommand(closeTab)
       addSep
@@ -125,6 +124,7 @@ internal class Commands
       addCommand(back)
       addCommand(forward)
       addCommand(up)
+      addCommand(home)
       addSep
     }
     historyMenuSize = menu.children.size
@@ -285,7 +285,6 @@ internal class Commands
 
   // File
   readonly FluxCommand newTab := NewTabCommand()
-  readonly FluxCommand start := StartCommand()
   readonly FluxCommand openLocation := OpenLocationCommand()
   readonly FluxCommand closeTab := CloseTabCommand()
   readonly FluxCommand save := SaveCommand()
@@ -317,6 +316,7 @@ internal class Commands
   readonly FluxCommand back := BackCommand()
   readonly FluxCommand forward := ForwardCommand()
   readonly FluxCommand up := UpCommand()
+  readonly FluxCommand home := HomeCommand()
 
   // Tools
   readonly FluxCommand options := OptionsCommand()
@@ -360,13 +360,6 @@ internal class NewTabCommand : FluxCommand
   {
     frame.loadUri(`flux:start`, LoadMode { newTab=true })
   }
-}
-
-** Hyperlink to the flux:start
-internal class StartCommand : FluxCommand
-{
-  new make() : super(CommandId.start) {}
-  override Void invoke(Event event) { frame.loadUri(`flux:start`) }
 }
 
 ** Focus the uri location field
@@ -564,6 +557,13 @@ internal class UpCommand : FluxCommand
 {
   new make() : super(CommandId.up) {}
   override Void invoke(Event event) { frame.view.tab.up }
+}
+
+** Hyperlink to the home page
+internal class HomeCommand : FluxCommand
+{
+  new make() : super(CommandId.home) {}
+  override Void invoke(Event event) { frame.loadUri(GeneralOptions.load.homePage) }
 }
 
 //////////////////////////////////////////////////////////////////////////
