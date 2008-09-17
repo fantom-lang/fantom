@@ -114,6 +114,14 @@ abstract class View : ContentPane
   **
   virtual Void onCommand(Str id, Event event) {}
 
+  **
+  ** Callback when the view should jump to the specified
+  ** mark.  The mark's uri will always be the same as this
+  ** view's resource.  But the mark might also specify a
+  ** specific line number and column number.
+  **
+  virtual Void onGotoMark(Mark mark) {}
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

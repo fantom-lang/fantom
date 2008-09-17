@@ -116,6 +116,12 @@ class RichText : TextWidget
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Map a coordinate on the widget to an offset in the text,
+  ** or return null if no mapping at specified point.
+  **
+  native Int offsetAtPos(Int x, Int y)
+
+  **
   ** Convenience for `RichTextModel.modify`.
   **
   override Void modify(Int start, Int replaceLen, Str newText)

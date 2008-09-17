@@ -30,6 +30,7 @@ class Console : SideBar
       model = model
       editable = false
       font = Font.sysMonospace
+      onMouseUp.add(&onRichTextMouseDown)
     }
     content = richText
   }
@@ -116,6 +117,29 @@ class Console : SideBar
     c := Frame.findById(frameId).console
     c.busy = false
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Eventing
+//////////////////////////////////////////////////////////////////////////
+
+  internal Void onRichTextMouseDown(Event event)
+  {
+    // map event to line and check if line has mark
+    offset := richText.offsetAtPos(event.pos.x, event.pos.y)
+    if (offset == null) return
+    line := model.lines[model.lineAtOffset(offset)]
+    if (line.mark == null) return
+
+    // select the entire line
+    richText.select(line.offset, line.text.size)
+
+    // hyperlink to view
+    frame.loadMark(line.mark, LoadMode(event))
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
 
   internal ConsoleModel model
   internal RichText richText
@@ -214,13 +238,32 @@ internal class ConsoleModel : RichTextModel
 
   ConsoleLine parseLine(Str t)
   {
-    return ConsoleLine { text = t; mark = Mark(t) }
+    Obj[] s := null
+    mp := MarkParser(t)
+    m := mp.parse
+    if (m != null && !m.uri.toStr.contains("bin"))
+    {
+      start := mp.fileStart
+      t = t[0...start] + m.uri.name + t[mp.fileEnd+1..-1]
+      if (start == 0)
+        s = [0, link, start+m.uri.name.size, norm]
+      else
+        s = [0, norm, start, link, start+m.uri.name.size, norm]
+    }
+    return ConsoleLine { text = t; mark = m; styling = s }
+  }
+
+  override Obj[] lineStyling(Int lineIndex)
+  {
+    return lines[lineIndex].styling
   }
 
   Int maxLines := 10
   Int size := 0
   ConsoleLine[] lines := [ConsoleLine { offset=0; text="" }]
   Str delimiter := "\n"
+  RichTextStyle norm := RichTextStyle {}
+  RichTextStyle link := RichTextStyle { fg=Color.blue; underline = RichTextUnderline.single; }
 }
 
 **************************************************************************
@@ -241,6 +284,9 @@ internal class ConsoleLine
 
   ** If we matched a file location from text
   const Mark mark
+
+  ** Styling
+  Obj[] styling
 }
 
 **************************************************************************

@@ -15,17 +15,35 @@ using fwt
 const class Mark
 {
 
-//////////////////////////////////////////////////////////////////////////
-// Identity
-//////////////////////////////////////////////////////////////////////////
+  **
+  ** Attempt to parse an arbitrary line of text into a mark.
+  ** We attempt to match anything that looks like a absolute
+  ** file name.  If we match a filename, then we look for an
+  ** optional line and column number no more than a few chars
+  ** from the filename.  This will correctly handle output from
+  ** various compilers including Fan compilers, javac, and the
+  ** C# compiler.  Return null if file path found.
+  **
+  static Mark fromStr(Str text)
+  {
+    return MarkParser(text).parse
+  }
 
+  **
   ** Uri of the resource
+  **
   const Uri uri
 
-  ** One based line number or null if unknown
+  **
+  ** One based line number or null if unknown.
+  ** Note that fwt widgets are zero based.
+  **
   const Int line
 
+  **
   ** One based line column or null if unknown
+  ** Note that fwt widgets are zero based.
+  **
   const Int col
 
   **
@@ -40,22 +58,25 @@ const class Mark
     return s
   }
 
-//////////////////////////////////////////////////////////////////////////
-// From Str
-//////////////////////////////////////////////////////////////////////////
+}
 
-  **
-  ** Attempt to parse an arbitrary line of text into a mark.
-  ** We attempt to match anything that looks like a absolute
-  ** file name.  If we match a filename, then we look for an
-  ** optional line and column number no more than a few chars
-  ** from the filename.  This will correctly handle output from
-  ** various compilers including Fan compilers, javac, and the
-  ** C# compiler.  Return null if file path found.
-  **
-  static Mark fromStr(Str text)
+**************************************************************************
+** MarkParser
+**************************************************************************
+
+**
+** MarkParser is used to implement Mark.fromStr.
+** It also keeps track of the string indices for
+** the filename so console can shrink it.
+**
+internal class MarkParser
+{
+  new make(Str text) { this.text = text }
+
+  Mark parse()
   {
     // use case insensitive compare on windows
+    text := this.text
     if (Desktop.isWindows) text = text.lower
 
     // attempt to match one of the root indices
@@ -88,6 +109,8 @@ const class Mark
       f = f + n.toUri
       e += n.size
     }
+    fileStart = s
+    fileEnd = e
 
     // we now have our uri
     Uri uri := null
@@ -142,4 +165,7 @@ const class Mark
     return roots
   }
 
+  Str text
+  Int fileStart
+  Int fileEnd
 }
