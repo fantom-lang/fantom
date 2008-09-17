@@ -45,6 +45,7 @@ class FluxUtilTest : Test
   {
     f := Sys.homeDir + `lib/sys.props`
     verifyMark("${f.osPath}", f)
+    verifyMark("${f.osPath} ${Sys.homeDir}", f)
     verifyMark("(${f.osPath})", f)
     verifyMark("---${f.osPath}---", f)
     verifyMark("${f.osPath}:8", f, 8)

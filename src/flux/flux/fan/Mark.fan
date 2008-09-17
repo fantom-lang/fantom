@@ -65,14 +65,17 @@ const class Mark
 
     // match up anything that looks like a directory
     e := s + root.size
+    f := File.os(text[s..e])
     while (text[e] == '/' || text[e] == '\\')
     {
       slash := text.index("/", e+1)
       if (slash == null) slash = text.index("\\", e+1)
       if (slash == null) break
+      testf := File.os(text[s..slash])
+      if (!testf.exists) break
+      f = testf
       e = slash
     }
-    f := File.os(text[s..e])
 
     // try and find the longest matching file name in that directory
     rest := text[e+1..-1]
@@ -87,7 +90,8 @@ const class Mark
     }
 
     // we now have our uri
-    uri := f.normalize.uri
+    Uri uri := null
+    try { uri = f.normalize.uri } catch { return null }
 
     // try to find a number for line
     Int num := null
