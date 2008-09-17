@@ -24,7 +24,14 @@ class Console : SideBar
   **
   new make()
   {
-    content = text
+    model = ConsoleModel()
+    richText = RichText
+    {
+      model = model
+      editable = false
+      font = Font.sysMonospace
+    }
+    content = richText
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,6 +42,20 @@ class Console : SideBar
   ** Console is aligned at the bottom of the frame.
   **
   override Obj prefAlign() { return Valign.bottom }
+
+//////////////////////////////////////////////////////////////////////////
+// Write
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Write the string to the end of the console
+  **
+  internal Void write(Str s)
+  {
+    model.modify(model.size, 0, s)
+    richText.repaint
+    richText.select(model.size, 0)
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Exec
@@ -53,7 +74,8 @@ class Console : SideBar
   This exec(Str[] command, File dir := null)
   {
     if (busy) throw Err("Console is busy")
-    text.text = text.text + "\r\n------------------------------\r\n"
+    model.text = command.join(" ") + "\n"
+    richText.repaint
     busy = true
     params := ExecParams
     {
@@ -81,13 +103,9 @@ class Console : SideBar
   ** Called on UI thread by ConsoleOutStream when the
   ** process writes to stdout.
   **
-  internal static Void write(Str frameId, Str str)
+  internal static Void execWrite(Str frameId, Str str)
   {
-    str = str.replace("\n", "\r\n") // TODO
-    c := Frame.findById(frameId).console
-    newText := c.text.text + str
-    c.text.text = newText
-    c.text.select(newText.size, 0)
+    Frame.findById(frameId).console.write(str)
   }
 
   **
@@ -99,7 +117,127 @@ class Console : SideBar
     c.busy = false
   }
 
-  internal Text text := Text { multiLine=true; editable=false }
+  internal ConsoleModel model
+  internal RichText richText
+}
+
+**************************************************************************
+** ConsoleModel
+**************************************************************************
+
+internal class ConsoleModel : RichTextModel
+{
+  override Str text
+  {
+    get { return lines.join(delimiter) |ConsoleLine line->Str| { return line.text } }
+    set { modify(0, size, val) }
+  }
+
+  override Int charCount() { return size }
+
+  override Int lineCount() { return lines.size }
+
+  override Str line(Int lineIndex) { return lines[lineIndex].text }
+
+  override Int offsetAtLine(Int lineIndex) { return lines[lineIndex].offset }
+
+  override Int lineAtOffset(Int offset)
+  {
+    // binary search by offset, returns '-insertationPoint-1'
+    key := ConsoleLine { offset = offset }
+    line := lines.binarySearch(key) |ConsoleLine a, ConsoleLine b->Int| { return a.offset <=> b.offset }
+    if (line < 0) line = -(line + 2)
+    if (line >= lines.size) line = lines.size-1
+    return line
+  }
+
+  override Void modify(Int startOffset, Int len, Str newText)
+  {
+    // compute the lines being replaced
+    endOffset      := startOffset + len
+    startLineIndex := lineAtOffset(startOffset)
+    endLineIndex   := lineAtOffset(endOffset)
+    startLine      := lines[startLineIndex]
+    endLine        := lines[endLineIndex]
+    oldText        := textRange(startOffset, len)
+
+    // compute the new text of the lines being replaced
+    offsetInStart := startOffset - startLine.offset
+    offsetInEnd   := endOffset - endLine.offset
+    newLinesText  := startLine.text[0...offsetInStart] + newText + endLine.text[offsetInEnd..-1]
+
+    // split new text into new lines
+    newLines := ConsoleLine[,] { capacity=32 }
+    newLinesText.splitLines.each |Str s|
+    {
+      newLines.add(parseLine(s))
+    }
+
+    // merge in new lines
+    lines.removeRange(startLineIndex..endLineIndex)
+    lines.insertAll(startLineIndex, newLines)
+
+    // update total size, line offsets, and multi-line comments/strings
+    updateLines(lines)
+
+    // fire modification event
+    tc := TextChange
+    {
+      startOffset    = startOffset
+      startLine      = startLineIndex
+      oldText        = oldText
+      newText        = newText
+      oldNumNewlines = oldText.numNewlines
+      newNumNewlines = newLines.size - 1
+    }
+    onModify.fire(Event { id =EventId.modified; data = tc })
+  }
+
+  private Void updateLines(ConsoleLine[] lines)
+  {
+    n := 0
+    lastIndex := lines.size-1
+    delimiterSize := delimiter.size
+
+    // walk the lines
+    lines.each |ConsoleLine line, Int i|
+    {
+      // update offset and total running size
+      line.offset = n
+      n += line.text.size
+      if (i != lastIndex) n += delimiterSize
+    }
+
+    // update total size
+    size = n
+  }
+
+  ConsoleLine parseLine(Str text)
+  {
+    return ConsoleLine { text = text }
+  }
+
+  Int maxLines := 10
+  Int size := 0
+  ConsoleLine[] lines := [ConsoleLine { offset=0; text="" }]
+  Str delimiter := "\n"
+}
+
+**************************************************************************
+** ConsoleLine
+**************************************************************************
+
+internal class ConsoleLine
+{
+  ** Return 'text'.
+  override Str toStr() { return text }
+
+  ** Zero based offset from start of document (this
+  ** field is managed by the Doc).
+  Int offset { internal set; }
+
+  ** Text of line (without delimiter)
+  const Str text
 }
 
 **************************************************************************
@@ -113,14 +251,14 @@ internal class ConsoleOutStream : OutStream
   override This write(Int b)
   {
     str := Buf().write(b).flip.readAllStr
-    Desktop.callAsync(&Console.write(frameId, str))
+    Desktop.callAsync(&Console.execWrite(frameId, str))
     return this
   }
 
   override This writeBuf(Buf b, Int n := b.remaining)
   {
     str := Buf().writeBuf(b, n).flip.readAllStr
-    Desktop.callAsync(&Console.write(frameId, str))
+    Desktop.callAsync(&Console.execWrite(frameId, str))
     return this
   }
 

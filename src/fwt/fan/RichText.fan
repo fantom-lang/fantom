@@ -201,8 +201,61 @@ abstract class RichTextModel
 
   **
   ** Returns a string representing the content at the given range.
+  ** The default implementation of textRange is optimized to assume
+  ** the backing store is based on lines.
   **
-  abstract Str textRange(Int start, Int len)
+  virtual Str textRange(Int start, Int len)
+  {
+    // map offsets to line, if the offset is the line's
+    // delimiter itself, then offsetInLine will be negative
+    lineIndex := lineAtOffset(start)
+    lineOffset := offsetAtLine(lineIndex)
+    lineText := line(lineIndex)
+    offsetInLine := start-lineOffset
+
+    // if this is a range within a single line, then use normal Str slice
+    if (offsetInLine+len <= lineText.size)
+    {
+      return lineText[offsetInLine...offsetInLine+len]
+    }
+
+    // the range spans multiple lines
+    buf := StrBuf(len)
+    n := len
+
+    // if the start offset is in the delimiter, then make sure
+    // we start at next line, otherwise add the slice of the
+    // first line to our buffer
+    if (offsetInLine >= 0)
+    {
+      buf.add(lineText[offsetInLine..-1])
+      n -= buf.size
+    }
+
+    // add delimiter of first line
+    delimiter := lineDelimiter
+    if (n > 0) { buf.add(delimiter);  n -= delimiter.size }
+
+    // keep adding lines until we've gotten the full len
+    while (n > 0)
+    {
+      lineText = line(++lineIndex)
+      // full line (and maybe its delimiter)
+      if (n >= lineText.size)
+      {
+        buf.add(lineText)
+        n -= lineText.size
+        if (n > 0) { buf.add(delimiter);  n -= delimiter.size }
+      }
+      // partial line
+      else
+      {
+        buf.add(lineText[0...n])
+        break
+      }
+    }
+    return buf.toStr
+  }
 
   **
   ** Replace the text with 'newText' starting at position 'start'
