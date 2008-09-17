@@ -59,16 +59,20 @@ paste.accelerator=Ctrl+V
 find.name=Find
 find.accelerator=Ctrl+F
 find.icon=fan:/sys/pod/icons/x16/edit-find.png
-
 find.notFound=Not Found
 find.wrapToTop=Reached end of file, continued from top
 find.wrapToBottom=Reached beginning of file, continued from bottom
 
+findHide.name=Hide Find
+findHide.icon=fan:/sys/pod/icons/x16/tab-close.png
+
 findNext.name=Find Next
 findNext.accelerator=F3
+findNext.icon=fan:/sys/pod/icons/x16/go-next.png
 
 findPrev.name=Find Prev
 findPrev.accelerator=Shift+F3
+findPrev.icon=fan:/sys/pod/icons/x16/go-previous.png
 
 findInFiles.name=Find in Files
 findInFiles.accelerator=Ctrl+Shift+F
