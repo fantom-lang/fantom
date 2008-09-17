@@ -41,4 +41,13 @@ class Desktop
   **
   static native Widget focus()
 
+  **
+  ** Call the specified function on the UI thread's event loop.
+  ** If this call is being made on a thread which is not the
+  ** UI thread, then the function must be immutable.  If
+  ** on the UI thread, then it is ok for the function to be
+  ** mutable.
+  **
+  static native Void callAsync(|,| f)
+
 }

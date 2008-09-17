@@ -19,10 +19,9 @@ class Build : FluxCommand
   override Void invoke(Event event)
   {
     if (!findBuildFile) return
-echo("buildFile: $buildFile")
     if (!findFanHome) return
-echo("fanHome: $fanHome")
     if (!checkFanHome) return
+    exec
   }
 
   **
@@ -99,6 +98,16 @@ echo("fanHome: $fanHome")
 
     Dialog.openErr(frame, "Cannot compile core pod using Fan installation for Flux itself: $fanHome")
     return false
+  }
+
+  **
+  ** Execute the build.fan script.
+  **
+  Void exec()
+  {
+    fan := fanHome + (Desktop.isWindows ? `bin/fan.exe` : `bin/fan`)
+    cmd := [fan.osPath, buildFile.osPath]
+    frame.console.show.exec(cmd)
   }
 
   static const Str[] corePods := ["sys", "jfan", "nfan",

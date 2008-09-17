@@ -8,6 +8,7 @@
 package fan.fwt;
 
 import fan.sys.*;
+import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Display;
@@ -56,6 +57,33 @@ public class DesktopPeer
   public static fan.fwt.Widget focus()
   {
     return WidgetPeer.toFanWidget(Env.get().display.getFocusControl());
+  }
+
+  public static void callAsync(final Func func)
+  {
+    // check if running on UI thread
+    Env env = Env.main();
+    if (java.lang.Thread.currentThread() != env.display.getThread())
+    {
+      if (!func.isImmutable().val)
+        throw NotImmutableErr.make("callAsync func must be immutable if not on UI thread").val;
+    }
+
+    // enqueue on main UI thread's display
+    env.display.asyncExec(new Runnable()
+    {
+      public void run()
+      {
+        try
+        {
+          func.call0();
+        }
+        catch (Throwable e)
+        {
+          e.printStackTrace();
+        }
+      }
+    });
   }
 
 }

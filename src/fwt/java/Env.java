@@ -39,9 +39,24 @@ public class Env
     return (Env)threadlocal.get();
   }
 
+  /**
+   * Get the main UI thread display.
+   */
+  public static Env main()
+  {
+    if (mainEnv == null) throw new IllegalStateException("Main UI thread not running");
+    return mainEnv;
+  }
+
+  private static volatile Env mainEnv;
   private static ThreadLocal threadlocal = new ThreadLocal()
   {
-    protected Object initialValue() { return new Env(); }
+    protected Object initialValue()
+    {
+      Env env = new Env();
+      if (mainEnv == null) mainEnv = env;
+      return env;
+    }
   };
 
   private Env() {}
