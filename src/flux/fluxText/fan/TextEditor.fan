@@ -40,7 +40,7 @@ class TextEditor : View
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Commands
+// Eventing
 //////////////////////////////////////////////////////////////////////////
 
   override Void onActive()
@@ -55,6 +55,11 @@ class TextEditor : View
   override Void onCommand(Str id, Event event)
   {
     controller.trap("on${id.capitalize}", [event])
+  }
+
+  override Void onGotoMark(Mark mark)
+  {
+    controller.onGotoMark(mark)
   }
 
 //////////////////////////////////////////////////////////////////////////

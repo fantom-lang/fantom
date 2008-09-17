@@ -92,9 +92,22 @@ class Frame : Window
   }
 
   **
+  ** Load the specified mark's Uri in the active tab.
+  ** If the current tab is already at the specified uri,
+  ** then it is not reloaded.
+  **
+  Void loadMark(Mark mark, LoadMode mode := LoadMode())
+  {
+    tab := view.tab
+    if (mark.uri != view.resource.uri)
+      tab = doLoad(this, mark.uri, mode)
+    tab.view.onGotoMark(mark)
+  }
+
+  **
   ** Internal common implementation for loading.
   **
-  internal static Void doLoad(Frame frame, Obj target, LoadMode mode)
+  internal static ViewTab doLoad(Frame frame, Obj target, LoadMode mode)
   {
     // get tab to load
     tab := frame.view.tab
@@ -110,6 +123,7 @@ class Frame : Window
     // select the tab once loading is done to deactivate old
     // tab and activate this one (if we switched tabs)
     frame.tabPane.select(tab)
+    return tab
   }
 
 //////////////////////////////////////////////////////////////////////////
