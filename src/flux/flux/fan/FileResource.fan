@@ -101,6 +101,33 @@ class FileResource : Resource
   }
 
   **
+  ** Add command specific Files.
+  **
+  override Menu popup(Frame frame, Event event)
+  {
+    menu := super.popup(frame, event)
+    if (file.isDir)
+    {
+      menu.add(MenuItem { command=Command.makeLocale(Flux#.pod, "openIn", &openIn(file)) })
+    }
+    return menu
+  }
+
+  **
+  ** Open the given directory using the OS specific directory
+  ** browser (i.e. Windows Explorer or Mac Finder)
+  **
+  internal Void openIn(File dir)
+  {
+    if (Desktop.isWindows)
+    {
+      Process(["explorer", dir.osPath]).run
+    }
+    else echo("Not yet implemented")
+  }
+
+
+  **
   ** Given a file size in bytes return a suitable string
   ** representation for display.  If size is null return "".
   **
