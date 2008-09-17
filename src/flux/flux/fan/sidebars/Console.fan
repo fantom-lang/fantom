@@ -212,9 +212,9 @@ internal class ConsoleModel : RichTextModel
     size = n
   }
 
-  ConsoleLine parseLine(Str text)
+  ConsoleLine parseLine(Str t)
   {
-    return ConsoleLine { text = text }
+    return ConsoleLine { text = t; mark = Mark(t) }
   }
 
   Int maxLines := 10
@@ -238,6 +238,9 @@ internal class ConsoleLine
 
   ** Text of line (without delimiter)
   const Str text
+
+  ** If we matched a file location from text
+  const Mark mark
 }
 
 **************************************************************************
