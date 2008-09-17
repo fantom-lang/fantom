@@ -60,6 +60,7 @@ internal class Commands
       addCommand(newTab)
       addCommand(start)
       addCommand(openLocation)
+      addCommand(closeTab)
       addSep
       addCommand(save)
       addCommand(saveAll)
@@ -180,6 +181,7 @@ internal class Commands
     back.enabled = tab.backEnabled
     forward.enabled = tab.forwardEnabled
     up.enabled = tab.upEnabled
+    closeTab.enabled = frame.views.size > 1
     updateEdit
     updateSave
   }
@@ -285,6 +287,7 @@ internal class Commands
   readonly FluxCommand newTab := NewTabCommand()
   readonly FluxCommand start := StartCommand()
   readonly FluxCommand openLocation := OpenLocationCommand()
+  readonly FluxCommand closeTab := CloseTabCommand()
   readonly FluxCommand save := SaveCommand()
   readonly FluxCommand saveAll := SaveAllCommand()
   readonly FluxCommand exit := ExitCommand()
@@ -371,6 +374,17 @@ internal class OpenLocationCommand : FluxCommand
 {
   new make() : super(CommandId.openLocation) {}
   override Void invoke(Event event) { frame.locator.onLocation(event) }
+}
+
+** Close current view tab.
+internal class CloseTabCommand : FluxCommand
+{
+  new make() : super(CommandId.closeTab) {}
+  override Void invoke(Event event)
+  {
+    if (frame.views.size > 1)
+      frame.tabPane.close(frame.view.tab)
+  }
 }
 
 ** Save current view
