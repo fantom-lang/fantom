@@ -45,7 +45,6 @@ internal class Commands
     {
       buildFileMenu
       buildEditMenu
-      buildSearchMenu
       buildViewMenu
       buildHistoryMenu
       buildToolsMenu
@@ -80,14 +79,7 @@ internal class Commands
       addCommand(cut)
       addCommand(copy)
       addCommand(paste)
-    }
-  }
-
-  private Menu buildSearchMenu()
-  {
-    return Menu
-    {
-      text = type.loc("search.name")
+      addSep
       addCommand(find)
       addCommand(findNext)
       addCommand(findPrev)

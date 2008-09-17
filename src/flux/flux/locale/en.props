@@ -55,32 +55,30 @@ paste.name=Paste
 paste.icon=fan:/sys/pod/icons/x16/edit-paste.png
 paste.accelerator=Ctrl+V
 
-//////////////////////////////////////////////////////////////////////////
-// Search menu
-//////////////////////////////////////////////////////////////////////////
-
-search.name=Search
-
 find.name=Find
-find.accelerator=F5
+find.accelerator=Ctrl+F
 find.icon=fan:/sys/pod/icons/x16/edit-find.png
 
+find.notFound=Not Found
+find.wrapToTop=Reached end of file, continued from top
+find.wrapToBottom=Reached beginning of file, continued from bottom
+
 findNext.name=Find Next
-findNext.accelerator=Ctrl+F
+findNext.accelerator=F3
 
 findPrev.name=Find Prev
-findPrev.accelerator=Ctrl+Shift+F
+findPrev.accelerator=Shift+F3
 
 findInFiles.name=Find in Files
-findInFiles.accelerator=Ctrl+F5
+findInFiles.accelerator=Ctrl+Shift+F
 findInFiles.icon=fan:/sys/pod/icons/x16/edit-find.png
 
 replace.name=Replace
-replace.accelerator=F6
+replace.accelerator=Ctrl+R
 replace.icon=fan:/sys/pod/icons/x16/edit-find-replace.png
 
 replaceInFiles.name=Replace in Files
-replaceInFiles.accelerator=Ctrl+F6
+replaceInFiles.accelerator=Ctrl+Shift+R
 
 goto.name=Goto
 goto.accelerator=Ctrl+G
