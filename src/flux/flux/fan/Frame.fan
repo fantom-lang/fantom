@@ -15,6 +15,45 @@ class Frame : Window
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the id of this frame within the VM.  The id may be used
+  ** as an immutable pointer to the frame to pass between threads.
+  ** See `findById` to resolve a frame by id.  The id is an opaque
+  ** string, no attempt should be made to interpret the format.
+  **
+  const Str id
+
+  **
+  ** Lookup a frame by its id within the VM.  If the frame
+  ** cannot be found and checked is true then throw an Err,
+  ** otherwise return null.  This method can only be called
+  ** on the UI thread.
+  **
+  static Frame findById(Str id, Bool checked := true)
+  {
+    Frame f := Thread.locals["flux.$id"]
+    if (f != null) return f
+    if (!checked) return null
+    throw Err("Frame not found $id")
+  }
+
+  **
+  ** Internal id initialization
+  **
+  internal Str initId()
+  {
+    // allocate next id and register as thread local
+    Int idInt := Thread.locals.get("flux.nextFrameId", 0)
+    Thread.locals.set("flux.nextFrameId", idInt+1)
+    id := "Frame-$idInt"
+    Thread.locals["flux.$id"] = this
+    return id
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Views
 //////////////////////////////////////////////////////////////////////////
 
@@ -97,6 +136,14 @@ class Frame : Window
     return sideBarPane.sideBar(t, make)
   }
 
+  **
+  ** Convenience for getting the console sidebar.
+  **
+  Console console()
+  {
+    return sideBar(Console#)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Commands
 //////////////////////////////////////////////////////////////////////////
@@ -137,6 +184,7 @@ class Frame : Window
 
   internal new make() : super()
   {
+    id = initId
     title = "Flux"
     icon  = Flux.icon(Desktop.isMac ? `/x256/flux.png` : `/x16/flux.png`)
     menuBar = commands.buildMenuBar

@@ -31,6 +31,12 @@ abstract class TextWidget : Widget
   const Bool multiLine := this is RichText
 
   **
+  ** False to make the text widget read only.  Default is true.
+  ** This field cannot be changed once the widget is constructed.
+  **
+  const Bool editable := true
+
+  **
   ** True to make wrap the text of a multiLine text widget.
   ** Default is false.  This field cannot be changed once the
   ** widget is constructed.

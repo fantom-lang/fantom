@@ -41,21 +41,23 @@ abstract class SideBar : ContentPane
   **
   ** Show this sidebar in the frame.
   **
-  Void show()
+  This show()
   {
-    if (showing) return
+    if (showing) return this
     showing=true
     frame.sideBarPane.show(this)
+    return this
   }
 
   **
   ** Hide this sidebar in the frame.
   **
-  Void hide()
+  This hide()
   {
-    if (!showing) return
+    if (!showing) return this
     showing=false
     frame.sideBarPane.hide(this)
+    return this
   }
 
 //////////////////////////////////////////////////////////////////////////

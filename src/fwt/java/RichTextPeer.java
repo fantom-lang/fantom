@@ -48,10 +48,11 @@ public class RichTextPeer
     if (model == null) throw Err.make("RichText.model is null").val;
 
     int style = self.multiLine.val ? SWT.MULTI: SWT.SINGLE;
-    if (self.border.val)   style |= SWT.BORDER;
-    if (self.wrap.val)     style |= SWT.WRAP;
-    if (self.hscroll.val)  style |= SWT.H_SCROLL;
-    if (self.vscroll.val)  style |= SWT.V_SCROLL;
+    if (!self.editable.val) style |= SWT.READ_ONLY;
+    if (self.border.val)    style |= SWT.BORDER;
+    if (self.wrap.val)      style |= SWT.WRAP;
+    if (self.hscroll.val)   style |= SWT.H_SCROLL;
+    if (self.vscroll.val)   style |= SWT.V_SCROLL;
 
     StyledText t = new StyledText((Composite)parent, style);
     control = t;
