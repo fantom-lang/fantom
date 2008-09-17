@@ -177,6 +177,8 @@ internal class ViewTab : EdgePane
   {
     try
     {
+      return v.buildToolBar
+      /*
       tb := v.buildToolBar
       if (tb == null) return tb
       return BorderPane
@@ -189,6 +191,7 @@ internal class ViewTab : EdgePane
           g.drawLine(0, size.h-1, size.w, size.h-1)
         }
       }
+      */
     }
     catch (Err e)
     {
@@ -201,10 +204,13 @@ internal class ViewTab : EdgePane
   {
     try
     {
+      return v.buildStatusBar
+      /*
       sb := v.buildStatusBar
       return sb
       //if (sb == null) return sb
       //return EdgePane { top = StatusBarBorder(); bottom = sb }
+      */
     }
     catch (Err e)
     {
