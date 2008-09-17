@@ -56,57 +56,6 @@ class Doc : RichTextModel
     return line
   }
 
-  override Str textRange(Int start, Int len)
-  {
-    // map offsets to line, if the offset is the line's
-    // delimiter itself, then offsetInLine will be negative
-    lineIndex := lineAtOffset(start)
-    line := lines[lineIndex]
-    offsetInLine := start-line.offset
-
-    // if this is a range within a single line, then use normal Str slice
-    if (offsetInLine+len <= line.text.size)
-    {
-      return line.text[offsetInLine...offsetInLine+len]
-    }
-
-    // the range spans multiple lines
-    buf := StrBuf(len)
-    n := len
-
-    // if the start offset is in the delimiter, then make sure
-    // we start at next line, otherwise add the slice of the
-    // first line to our buffer
-    if (offsetInLine >= 0)
-    {
-      buf.add(line.text[offsetInLine..-1])
-      n -= buf.size
-    }
-
-    // add delimiter of first line
-    if (n > 0) { buf.add(delimiter);  n -= delimiter.size }
-
-    // keep adding lines until we've gotten the full len
-    while (n > 0)
-    {
-      line = lines[++lineIndex]
-      // full line (and maybe its delimiter)
-      if (n >= line.text.size)
-      {
-        buf.add(line.text)
-        n -= line.text.size
-        if (n > 0) { buf.add(delimiter);  n -= delimiter.size }
-      }
-      // partial line
-      else
-      {
-        buf.add(line.text[0...n])
-        break
-      }
-    }
-    return buf.toStr
-  }
-
   override Void modify(Int startOffset, Int len, Str newText)
   {
     // compute the lines being replaced
