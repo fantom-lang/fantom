@@ -29,14 +29,17 @@ internal class FindBar : ContentPane
       {
         center = GridPane
         {
-          numCols = 5
+          numCols = 4
           Label { text="Find" }
           add(Temp { findText })
-          Button { text="prev"; onAction.add(&prev) }
-          Button { text="next"; onAction.add(&next) }
+          ToolBar
+          {
+            addCommand(cmdNext)
+            addCommand(cmdPrev)
+          }
           add(msg)
         }
-        right = Button { text="close"; onAction.add(&hide) }
+        right = ToolBar { addCommand(cmdHide) }
       }
     }
   }
@@ -76,11 +79,20 @@ internal class FindBar : ContentPane
   internal Void find(Int fromPos, Bool forward := true)
   {
     q := findText.text
-    if (q.size == 0) return
+    if (q.size == 0)
+    {
+      setMsg("")
+      cmdPrev.enabled = false
+      cmdNext.enabled = false
+      return
+    }
 
     pos  := fromPos ?: caretPos
     text := richText.text
     off  := (forward) ? text.index(q, pos) : text.indexr(q, pos-q.size-1)
+
+    cmdPrev.enabled = true
+    cmdNext.enabled = true
 
     // if found select next occurance
     if (off != null)
@@ -117,6 +129,8 @@ internal class FindBar : ContentPane
     // not found
     richText.selectClear
     setMsg(Flux#.loc("find.notFound"))
+    cmdPrev.enabled = false
+    cmdNext.enabled = false
   }
 
   **
@@ -144,9 +158,12 @@ internal class FindBar : ContentPane
   }
 
   private RichText richText
+  private Int caretPos
   private Text findText
   private Label msg := Label()
-  private Int caretPos
+  private Command cmdNext := Command.makeLocale(Flux#.pod, "findPrev", &prev)
+  private Command cmdPrev := Command.makeLocale(Flux#.pod, "findNext", &next)
+  private Command cmdHide := Command.makeLocale(Flux#.pod, "findHide", &hide)
 }
 
 internal class Temp : ContentPane
