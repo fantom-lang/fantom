@@ -21,19 +21,27 @@ internal class NavBar : SideBar
 
   new make()
   {
-    content = EdgePane {
-      top = BorderPane {
-        content = EdgePane {
+    content = EdgePane
+    {
+      top = InsetPane(5,0,4,4)
+      {
+        EdgePane
+        {
           center = InsetPane(0,4,0,0) { combo }
           right  = ToolBar { addCommand(closeCmd) }
         }
-        insets   = Insets(4,0,6,4)
-        onBorder = |Graphics g, Insets insets, Size size| {
+      }
+      center = BorderPane
+      {
+        content  = treePane
+        insets   = Insets(1,1,0,0)
+        onBorder = |Graphics g, Insets insets, Size size|
+        {
           g.brush = Color.sysNormShadow
-          g.drawLine(0, size.h-1, size.w, size.h-1)
+          g.drawLine(0, 0, size.w, 0)
+          g.drawLine(size.w-1, 0, size.w-1, size.h-1)
         }
       }
-      center = treePane
     }
 
     // always add root as first tree
