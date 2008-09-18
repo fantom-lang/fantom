@@ -255,6 +255,63 @@ public final class Str
     return Int.make(r);
   }
 
+  public final Int indexIgnoreCase(Str s) { return indexIgnoreCase(s, Int.Zero); }
+  public final Int indexIgnoreCase(Str s, Int off)
+  {
+    String val  = this.val, sval = s.val;
+    int vlen = val.length(), slen = sval.length();
+    int r = -1;
+
+    int i = (int)off.val;
+    if (i < 0) i = vlen+i;
+
+    int first = sval.charAt(0) | 0x20;
+    for (; i<=vlen-slen; ++i)
+    {
+      // test first char
+      if (first != (val.charAt(i) | 0x20)) continue;
+
+      // test remainder of chars
+      r = i;
+      for (int si=1, vi=i+1; si<slen; ++si, ++vi)
+        if ((sval.charAt(si) | 0x20) != (val.charAt(vi) | 0x20))
+          { r = -1; break; }
+      if (r >= 0) break;
+    }
+
+    if (r < 0) return null;
+    return Int.make(r);
+  }
+
+  public final Int indexrIgnoreCase(Str s) { return indexrIgnoreCase(s, Int.NegOne); }
+  public final Int indexrIgnoreCase(Str s, Int off)
+  {
+    String val  = this.val, sval = s.val;
+    int vlen = val.length(), slen = sval.length();
+    int r = -1;
+
+    int i = (int)off.val;
+    if (i < 0) i = vlen+i;
+    if (i+slen >= vlen) i = vlen-slen;
+
+    int first = sval.charAt(0) | 0x20;
+    for (; i>=0; --i)
+    {
+      // test first char
+      if (first != (val.charAt(i) | 0x20)) continue;
+
+      // test remainder of chars
+      r = i;
+      for (int si=1, vi=i+1; si<slen; ++si, ++vi)
+        if ((sval.charAt(si) | 0x20) != (val.charAt(vi) | 0x20))
+          { r = -1; break; }
+      if (r >= 0) break;
+    }
+
+    if (r < 0) return null;
+    return Int.make(r);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Iterators
 //////////////////////////////////////////////////////////////////////////

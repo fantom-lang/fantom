@@ -279,6 +279,12 @@ const final class Int : Num
   **
   Int fromDigit(Int radix := 10)
 
+  **
+  ** Return if the two Unicode chars are equal without regard
+  ** to ASCII case.
+  **
+  Bool equalsIgnoreCase(Int ch)
+
 /////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
