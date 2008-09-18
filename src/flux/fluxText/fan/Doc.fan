@@ -288,6 +288,58 @@ class Doc : RichTextModel
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Find the specified string in the document starting the
+  ** search at the document offset and looking forward.
+  ** Return null is not found.  Note we don't currently
+  ** support searching across multiple lines.
+  **
+  Int findNext(Str s, Int offset, Bool ignoreCase)
+  {
+    offset = offset.max(0).min(size)
+    lineIndex := lineAtOffset(offset)
+    offsetInLine := offset - lines[lineIndex].offset
+
+    while (lineIndex < lines.size)
+    {
+      line := lines[lineIndex]
+      r := ignoreCase ?
+        line.text.indexIgnoreCase(s, offsetInLine) :
+        line.text.index(s, offsetInLine)
+      if (r != null) return line.offset+r
+      offsetInLine = 0 // after first line we always start at zero
+      lineIndex++
+    }
+
+    return null
+  }
+
+  **
+  ** Find the specified string in the document starting the
+  ** search at the document offset and looking backward.
+  ** Return null is not found.  Note we don't currently
+  ** support searching across multiple lines.
+  **
+  Int findPrev(Str s, Int offset, Bool ignoreCase)
+  {
+    offset = offset.max(0).min(size)
+    lineIndex := lineAtOffset(offset)
+    offsetInLine := offset - lines[lineIndex].offset
+
+    while (lineIndex >= 0)
+    {
+      line := lines[lineIndex]
+      r := ignoreCase ?
+        line.text.indexrIgnoreCase(s, offsetInLine) :
+        line.text.indexr(s, offsetInLine)
+      if (r != null) return line.offset+r
+      offsetInLine = -1 // after first line we always start at end
+      lineIndex--
+    }
+
+    return null
+  }
+
+  **
   ** Highlight all the marks found in this document.
   **
   internal Void updateMarks(Mark[] marks)
