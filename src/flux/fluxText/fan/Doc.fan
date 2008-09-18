@@ -293,7 +293,7 @@ class Doc : RichTextModel
   ** Return null is not found.  Note we don't currently
   ** support searching across multiple lines.
   **
-  Int findNext(Str s, Int offset, Bool ignoreCase)
+  Int findNext(Str s, Int offset, Bool matchCase)
   {
     offset = offset.max(0).min(size)
     lineIndex := lineAtOffset(offset)
@@ -302,9 +302,9 @@ class Doc : RichTextModel
     while (lineIndex < lines.size)
     {
       line := lines[lineIndex]
-      r := ignoreCase ?
-        line.text.indexIgnoreCase(s, offsetInLine) :
-        line.text.index(s, offsetInLine)
+      r := matchCase ?
+        line.text.index(s, offsetInLine) :
+        line.text.indexIgnoreCase(s, offsetInLine)
       if (r != null) return line.offset+r
       offsetInLine = 0 // after first line we always start at zero
       lineIndex++
@@ -319,7 +319,7 @@ class Doc : RichTextModel
   ** Return null is not found.  Note we don't currently
   ** support searching across multiple lines.
   **
-  Int findPrev(Str s, Int offset, Bool ignoreCase)
+  Int findPrev(Str s, Int offset, Bool matchCase)
   {
     offset = offset.max(0).min(size)
     lineIndex := lineAtOffset(offset)
@@ -328,9 +328,9 @@ class Doc : RichTextModel
     while (lineIndex >= 0)
     {
       line := lines[lineIndex]
-      r := ignoreCase ?
-        line.text.indexrIgnoreCase(s, offsetInLine) :
-        line.text.indexr(s, offsetInLine)
+      r := matchCase ?
+        line.text.indexr(s, offsetInLine) :
+        line.text.indexrIgnoreCase(s, offsetInLine)
       if (r != null) return line.offset+r
       offsetInLine = -1 // after first line we always start at end
       lineIndex--
