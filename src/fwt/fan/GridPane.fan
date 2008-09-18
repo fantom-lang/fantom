@@ -171,7 +171,7 @@ internal class GridPaneSizes
     col := 0; row := 0
     kids.each |Widget kid|
     {
-      pref := kid.prefSize
+      pref := kid.visible ? kid.prefSize : Size.def
       prefs.add(pref)
 
       if (col >= colw.size) colw.add(pref.w)

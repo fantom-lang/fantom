@@ -262,8 +262,7 @@ internal class ViewTab : EdgePane
     catch (Err e)
     {
       e.trace
-      Dialog.openErr(frame, "Cannot save view $resource.name")
-      // TODO: need standard error dialog
+      Dialog.openErr(frame, "Cannot save view $resource.name", e)
     }
   }
 

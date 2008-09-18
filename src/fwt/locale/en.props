@@ -10,3 +10,16 @@ ok.name=OK
 cancel.name=Cancel
 yes.name=Yes
 no.name=No
+details.name=Details
+
+err.name=Error
+err.icon=fan:/sys/pod/icons/x32/err.png
+
+warn.name=Warning
+warn.icon=fan:/sys/pod/icons/x32/warn.png
+
+info.name=Info
+info.icon=fan:/sys/pod/icons/x32/info.png
+
+question.name=Question
+question.icon=fan:/sys/pod/icons/x32/question.png

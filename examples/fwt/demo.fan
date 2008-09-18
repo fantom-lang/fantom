@@ -113,6 +113,8 @@ class FwtDemo
         MenuItem { text = "Ok/Cancel"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "OK/Cancel", Dialog.okCancel)) } }
         MenuItem { text = "Yes/No"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "Yes/No", Dialog.yesNo)) } }
         MenuItem { mode = MenuItemMode.sep }
+        MenuItem { text = "Details Err"; onAction.add |Event e| { echo(Dialog.openErr(e.window, "Something bad", ArgErr())) } }
+        MenuItem { mode = MenuItemMode.sep }
         MenuItem { text = "Prompt Str 1"; onAction.add |Event e| { echo("--> " + Dialog.openPromptStr(e.window, "Enter a string:")) } }
         MenuItem { text = "Prompt Str 2"; onAction.add |Event e| { echo("--> " + Dialog.openPromptStr(e.window, "Enter a string:", "123", 4)) } }
         MenuItem { mode = MenuItemMode.sep }
