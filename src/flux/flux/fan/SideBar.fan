@@ -99,5 +99,16 @@ abstract class SideBar : ContentPane
   **
   virtual Void onInactive(View view) {}
 
+  **
+  ** Callback when the frame's list of marks is updated.
+  **
+  virtual Void onMarks(Mark[] marks) {}
+
+  **
+  ** Callback before the current view is jumped to
+  ** the specified mark.
+  **
+  virtual Void onGotoMark(Mark mark) {}
+
 }
 

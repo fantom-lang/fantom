@@ -75,6 +75,7 @@ class Console : SideBar
   This exec(Str[] command, File dir := null)
   {
     if (busy) throw Err("Console is busy")
+    frame.marks = Mark[,]
     model.text = command.join(" ") + "\n"
     richText.repaint
     busy = true
@@ -114,13 +115,26 @@ class Console : SideBar
   **
   internal static Void execDone(Str frameId)
   {
-    c := Frame.findById(frameId).console
-    c.busy = false
+    frame := Frame.findById(frameId)
+    console := frame.console
+    console.busy = false
+    frame.marks = console.model.toMarks
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Eventing
 //////////////////////////////////////////////////////////////////////////
+
+  override Void onGotoMark(Mark mark)
+  {
+    // highlight the line with the current mark
+    line := model.lines.find |ConsoleLine line->Bool|
+    {
+      return line.mark === mark
+    }
+    if (line != null)
+      richText.select(line.offset, line.text.size)
+  }
 
   internal Void onRichTextMouseDown(Event event)
   {
@@ -244,11 +258,11 @@ internal class ConsoleModel : RichTextModel
     if (m != null && !m.uri.toStr.contains("bin"))
     {
       start := mp.fileStart
-      t = t[0...start] + m.uri.name + t[mp.fileEnd+1..-1]
+      //t = t[0...start] + m.uri.name + t[mp.fileEnd+1..-1]
       if (start == 0)
-        s = [0, link, start+m.uri.name.size, norm]
+        s = [0, link, mp.fileEnd+1, norm]
       else
-        s = [0, norm, start, link, start+m.uri.name.size, norm]
+        s = [0, norm, start, link, mp.fileEnd+1, norm]
     }
     return ConsoleLine { text = t; mark = m; styling = s }
   }
@@ -256,6 +270,16 @@ internal class ConsoleModel : RichTextModel
   override Obj[] lineStyling(Int lineIndex)
   {
     return lines[lineIndex].styling
+  }
+
+  Mark[] toMarks()
+  {
+    marks := Mark[,]
+    lines.each |ConsoleLine line, Int i|
+    {
+      if (line.mark != null && i != 0) marks.add(line.mark)
+    }
+    return marks
   }
 
   Int maxLines := 10
@@ -283,7 +307,7 @@ internal class ConsoleLine
   const Str text
 
   ** If we matched a file location from text
-  const Mark mark
+  Mark mark
 
   ** Styling
   Obj[] styling

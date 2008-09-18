@@ -115,6 +115,15 @@ abstract class View : ContentPane
   virtual Void onCommand(Str id, Event event) {}
 
   **
+  ** Callback when the frame's list of marks is updated.
+  ** This callback can be used for the view to highlight
+  ** mark locations.  The list of marks is the same as
+  ** `Frame.marks` and might contain marks outside of
+  ** this view's uri.
+  **
+  virtual Void onMarks(Mark[] marks) {}
+
+  **
   ** Callback when the view should jump to the specified
   ** mark.  The mark's uri will always be the same as this
   ** view's resource.  But the mark might also specify a
