@@ -114,7 +114,7 @@ class TextEditor : View
     controller.register
 
     // update ui
-    find = FindBar(richText) { visible = false }
+    find = FindBar(this) { visible = false }
     content = BorderPane
     {
       content  = richText

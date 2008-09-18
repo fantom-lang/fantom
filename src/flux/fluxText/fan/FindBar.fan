@@ -12,11 +12,11 @@ using flux
 **
 ** FindBar finds text in the current TextEditor.
 **
-internal class FindBar : ContentPane
+internal class FindBar : ContentPane, TextEditorSupport
 {
-  new make(RichText richText)
+  new make(TextEditor editor)
   {
-    this.richText = richText
+    this.editor = editor
 
     findText = Text()
     findText.onFocus.add |Event e| { caretPos = richText.caretPos }
@@ -97,14 +97,9 @@ internal class FindBar : ContentPane
 
     match := matchCase.selected
     pos   := fromPos ?: caretPos
-    text  := richText.text
-    off   := (forward)
-      ? (match
-        ? text.index(q, pos)
-        : text.indexIgnoreCase(q, pos))
-      : (match
-        ? text.indexr(q, pos-q.size-1)
-        : text.indexrIgnoreCase(q, pos-q.size-1))
+    off   := forward ?
+      doc.findNext(q, pos, match) :
+      doc.findPrev(q, pos-q.size-1, match)
 
     cmdPrev.enabled = true
     cmdNext.enabled = true
@@ -120,7 +115,7 @@ internal class FindBar : ContentPane
     // if not found, try from beginning of file
     if (pos > 0 && forward)
     {
-      off = match ? text.index(q, 0) : text.indexIgnoreCase(q, 0)
+      off = doc.findNext(q, 0, match)
       if (off != null)
       {
         richText.select(off, q.size)
@@ -130,9 +125,9 @@ internal class FindBar : ContentPane
     }
 
     // if not found, try from end of file
-    if (pos < text.size && !forward)
+    if (pos < doc.size && !forward)
     {
-      off = match ? text.indexr(q, text.size) : text.indexrIgnoreCase(q, text.size)
+      off = doc.findPrev(q, doc.size, match)
       if (off != null)
       {
         richText.select(off, q.size)
@@ -172,7 +167,7 @@ internal class FindBar : ContentPane
     msg.parent.relayout
   }
 
-  private RichText richText
+  override readonly TextEditor editor
   private Int caretPos
   private Text findText
   private Button matchCase
