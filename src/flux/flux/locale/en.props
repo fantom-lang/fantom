@@ -166,5 +166,9 @@ openIn.name.mac=Open in Finder
 
 NavBar.accelerator=Alt+N
 navBar.root=My Computer
-goInto.name=Go Into
+
+navBar.close.name=Close
+navBar.close.icon=fan:/sys/pod/icons/x16/tab-close.png
+
+navBar.goInto.name=Go Into
 

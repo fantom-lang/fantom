@@ -14,43 +14,151 @@ using fwt
 @fluxSideBar
 internal class NavBar : SideBar
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
   new make()
   {
-    content = EdgePane
-    {
-      top = BorderPane
-      {
-        content  = Combo {}
-        insets   = Insets(4,4,6,4)
-        onBorder = |Graphics g, Insets insets, Size size|
-        {
+    content = EdgePane {
+      top = BorderPane {
+        content = EdgePane {
+          center = InsetPane(0,4,0,0) { combo }
+          right  = ToolBar { addCommand(closeCmd) }
+        }
+        insets   = Insets(4,0,6,4)
+        onBorder = |Graphics g, Insets insets, Size size| {
           g.brush = Color.sysNormShadow
           g.drawLine(0, size.h-1, size.w, size.h-1)
         }
       }
-      center = NavSideBarPane {}
+      center = treePane
     }
-    goInto(null)
+
+    // always add root as first tree
+    addTree(null)
+    select(0)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// State
+//////////////////////////////////////////////////////////////////////////
 
   override Void onLoad()
   {
     state := NavBarState.load
-    state.goInto.each |Uri uri|
-    {
-      goInto(FileResource.makeFile(uri.toFile))
-    }
+    state.roots.each |Uri uri| { addTree(FileResource.makeFile(uri.toFile)) }
+    if (state.selected != null) select(state.selected)
   }
 
   override Void onUnload()
   {
     state := NavBarState()
-    trees.each |Tree t|
+    trees.each |Tree t, Int i|
     {
-      if (t.model.roots.size == 1)
-        state.goInto.add(t.model.roots.first->uri)
+      // never store root
+      if (i > 0) state.roots.add(t.model.roots.first->uri)
     }
+    state.selected = combo.selectedIndex
     state.save
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Methods
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Add a new tree rooted at the given resource. If null
+  ** is passed, use the root of the file system for the
+  ** tree root.
+  **
+  Void addTree(Resource r)
+  {
+    // create new tree for r
+    tree := Tree
+    {
+      model = NavTreeModel.make(r == null ? Resource.roots : [r])
+      border = false
+      onAction.add(&onAction)
+      onPopup.add(&onPopup)
+    }
+
+    // add tree
+    trees.add(tree)
+    treePane.add(tree)
+
+    // ignore onModify events while we update combo
+    ignore = true
+    old  := combo.selectedIndex
+    name := r == null ? type.loc("navBar.root") : r.name
+    combo.items = combo.items.dup.add(name)
+    if (old >= 0) combo.selectedIndex = old
+    ignore = false
+  }
+
+  **
+  ** Select the tree with the given index.
+  **
+  Void select(Int index)
+  {
+    if (index < 0 || index >= trees.size)
+      throw ArgErr("Index out of bounds: $index")
+
+    // bail if already selected
+    tree := trees[index]
+    if (active === tree) return
+
+    // update tree pane
+    active = tree
+    if (treePane.active != null)
+      treePane.active.visible = false
+    treePane.active = tree
+    treePane.active.visible = true
+    treePane.relayout
+
+    // update combo
+    ignore = true
+    combo.selectedIndex = index
+    ignore = false
+
+    // update cmd state
+    closeCmd.enabled = tree != trees.first
+  }
+
+  **
+  ** Close the current tree. If there is only one tree
+  ** open, then this method has no effect.
+  **
+  Void close()
+  {
+    index := combo.selectedIndex
+    if (index == 0) return // can't close root
+
+    // remove tree
+    tree := trees.removeAt(index)
+    treePane.remove(tree)
+
+    // remove combo item
+    ignore = true
+    items := combo.items.dup
+    items.removeAt(index)
+    combo.items = items
+    ignore = false
+
+    // select prev tree
+    select(index-1)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Events
+//////////////////////////////////////////////////////////////////////////
+
+  internal Void onModify(Event event)
+  {
+    if (ignore) return
+    index := event.widget->selectedIndex
+    if (index >= 0) select(index)
   }
 
   internal Void onAction(Event event)
@@ -65,61 +173,50 @@ internal class NavBar : SideBar
     menu := r?.popup(frame, event) ?: Menu()
     if (r is FileResource && r->file->isDir)
     {
-      menu.add(MenuItem { mode=MenuItemMode.sep })
-      menu.add(MenuItem { command=Command.makeLocale(NavBar#.pod, "goInto", &goInto(r)) })
+      menu.add(MenuItem { mode = MenuItemMode.sep })
+      menu.add(MenuItem {
+        command = Command.makeLocale(NavBar#.pod, "navBar.goInto", &onGoInto(r))
+      })
     }
     event.popup = menu
   }
 
-  **
-  ** Open a new subtree to view the given resource.
-  **
-  internal Void goInto(Resource r)
+  internal Void onGoInto(Resource r)
   {
-    tree := Tree
-    {
-      model = NavModel.make(r==null ? Resource.roots : [r])
-      border = false
-      onAction.add(&onAction)
-      onPopup.add(&onPopup)
-    }
-    trees.add(tree)
-    select(tree, true)
-
-    items := trees.map(Obj[,]) |Tree t->Obj|
-    {
-      roots := t.model.roots
-      return roots.size>1 ? type.loc("navBar.root") : roots.first->name
-    }
-    content->top->content = Combo
-    {
-      items = items
-      selectedIndex = items.size-1
-      onModify.add(|Event e| { select(trees[e.widget->selectedIndex]) })
-    }
-    content.relayout
+    addTree(r)
+    select(trees.size-1)
   }
 
-  **
-  ** Select the given tree to view in the sidebar.
-  **
-  internal Void select(Tree tree, Bool add := false)
-  {
-    if (active === tree) return
-    active = tree
-    pane := content->center as NavSideBarPane
-    if (add) pane.add(tree)
-    if (pane.active != null) pane.active.visible = false
-    pane.active = tree
-    pane.active.visible = true
-    pane.relayout
-  }
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
 
   Tree active
   Tree[] trees := Tree[,]
+  Bool ignore  := true
+  Combo combo  := Combo() { onModify.add(&onModify) }
+  NavTreePane treePane := NavTreePane()
+  Command closeCmd := Command.makeLocale(NavBar#.pod, "navBar.close", &close)
 }
 
-internal class NavModel : TreeModel
+**************************************************************************
+** NavBarState
+**************************************************************************
+
+@serializable
+internal class NavBarState
+{
+  static NavBarState load() { return Flux.loadOptions("session/navBar", NavBarState#) }
+  Void save() { Flux.saveOptions("session/navBar", this) }
+  Uri[] roots := [,]
+  Int selected := null
+}
+
+**************************************************************************
+** NavTreeModel
+**************************************************************************
+
+internal class NavTreeModel : TreeModel
 {
   new make(Obj[] roots) { this.myRoots = roots }
   override Obj[] roots() { return myRoots }
@@ -130,22 +227,20 @@ internal class NavModel : TreeModel
   private Obj[] myRoots
 }
 
-@serializable
-internal class NavBarState
-{
-  static NavBarState load() { return Flux.loadOptions("session/navBar", NavBarState#) }
-  Void save() { Flux.saveOptions("session/navBar", this) }
+**************************************************************************
+** NavTreePane
+**************************************************************************
 
-  Uri[] goInto := [,]
-}
-
-internal class NavSideBarPane : Pane
+internal class NavTreePane : Pane
 {
   override Size prefSize(Hints hints := Hints.def) { return Size(100,100) }
   override Void onLayout()
   {
-    active.bounds = Rect(0, 0, size.w, size.h)
-    active.relayout
+    if (active != null)
+    {
+      active.bounds = Rect(0, 0, size.w, size.h)
+      active.relayout
+    }
   }
   Widget active
 }
