@@ -107,7 +107,9 @@ class Command
   **
   ** On all platforms the command name would be "Back".  On Macs
   ** the accelerator would be 'Command+[', and all others it would
-  ** be 'Alt+Left'.
+  ** be 'Alt+Left'.  If running on a Mac and an explicit ".mac"
+  ** property was not specified, then automatically swizzle Ctrl
+  ** to Command.
   **
   new makeLocale(Pod pod, Str keyBase, |Event event| onInvoke := null)
   {
@@ -131,12 +133,20 @@ class Command
 
     // accelerator
     locAcc := pod.loc("${keyBase}.accelerator.${plat}", null)
+    locAccPlat := locAcc != null
     if (locAcc == null)
       locAcc = pod.loc("${keyBase}.accelerator", null)
     try
     {
       if (locAcc != null)
+      {
         this.accelerator = Key.fromStr(locAcc)
+
+        // if on a Mac and an explicit .mac prop was not defined,
+        // then automatically swizzle Ctrl to Command
+        if (!locAccPlat && Desktop.isMac)
+          this.accelerator = this.accelerator.replace(Key.ctrl, Key.command)
+      }
     }
     catch type.log.error("Command: cannot load '${keyBase}.accelerator ' => $locAcc")
 
