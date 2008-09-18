@@ -33,7 +33,8 @@ public class PanePeer extends WidgetPeer
 
   public Widget create(Widget parent)
   {
-    Composite c = new Composite((Composite)parent, 0);
+    Canvas  c = new Canvas((Composite)parent, 0);
+    c.addPaintListener(this);
     c.setLayout(new PaneLayout());
     return c;
   }
