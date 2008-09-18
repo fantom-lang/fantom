@@ -22,7 +22,7 @@ class Console : SideBar
   **
   ** Use `Frame.console` to get the console.
   **
-  new make()
+  override Void onLoad()
   {
     model = ConsoleModel()
     richText = RichText
@@ -33,15 +33,34 @@ class Console : SideBar
       font = Font.sysMonospace
       onMouseUp.add(&onRichTextMouseDown)
     }
-    content = BorderPane
+    content = EdgePane
     {
-      content = richText
-      insets  = Insets(1,0,0,1)
-      onBorder = |Graphics g, Insets insets, Size size|
+      top = InsetPane(4,4,4,4)
       {
-        g.brush = Color.sysNormShadow
-        g.drawLine(0, 0, size.w, 0)
-        g.drawLine(0, 0, 0, size.h)
+        EdgePane
+        {
+          left = ToolBar
+          {
+            addCommand(copyCmd)
+            addCommand(frame.command(CommandId.jumpPrev))
+            addCommand(frame.command(CommandId.jumpNext))
+          }
+          right = ToolBar
+          {
+            addCommand(hideCmd)
+          }
+        }
+      }
+      center = BorderPane
+      {
+        content = richText
+        insets  = Insets(1,0,0,1)
+        onBorder = |Graphics g, Insets insets, Size size|
+        {
+          g.brush = Color.sysNormShadow
+          g.drawLine(0, 0, size.w, 0)
+          g.drawLine(0, 0, 0, size.h)
+        }
       }
     }
   }
@@ -162,12 +181,27 @@ class Console : SideBar
     frame.loadMark(line.mark, LoadMode(event))
   }
 
+  internal Void onCopy()
+  {
+    richText.selectAll
+    richText.copy
+  }
+
+  internal Void onClose()
+  {
+    hide
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   internal ConsoleModel model
   internal RichText richText
+
+  private Command copyCmd := Command.makeLocale(Flux#.pod, "copy", &onCopy)
+  private Command hideCmd := Command.makeLocale(Flux#.pod, "navBar.close", &onClose)
+
 }
 
 **************************************************************************
