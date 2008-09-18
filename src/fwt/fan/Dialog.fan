@@ -70,9 +70,9 @@ class Dialog : Window
   ** The text field is populated with the 'def' string which defaults
   ** to "".
   **
-  static Str openPromptStr(Window parent, Str msg, Str def := "")
+  static Str openPromptStr(Window parent, Str msg, Str def := "", Int prefCols := 20)
   {
-    field := Text { text = def }
+    field := Text { text = def; prefCols = prefCols }
     pane := GridPane
     {
       numCols = 2
@@ -85,7 +85,6 @@ class Dialog : Window
     cancel := Dialog.cancel
     dialog := Dialog(parent, pane, [ok, cancel])
     field.onAction.add |,| { dialog.close(ok) }
-    dialog.size = Size(200,100)
     if (dialog.open != ok) return null
     return field.text
   }
