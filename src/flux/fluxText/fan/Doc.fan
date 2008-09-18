@@ -7,6 +7,7 @@
 //
 
 using fwt
+using flux
 
 **
 ** Doc is the model for text edited in a `TextEditor`
@@ -287,6 +288,15 @@ class Doc : RichTextModel
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Highlight all the marks found in this document.
+  **
+  internal Void updateMarks(Mark[] marks)
+  {
+    echo("-- Doc.updateMarks --")
+    marks.each |Mark m| { echo(m) }
+  }
+
+  **
   ** Attempt to find the matching bracket the specified
   ** offset.  If the bracket is an opening bracket then
   ** we search forward for the closing bracket taking into
@@ -386,7 +396,6 @@ class Doc : RichTextModel
     out.printLine("")
     out.flush
   }
-
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

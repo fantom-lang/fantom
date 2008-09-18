@@ -110,6 +110,22 @@ internal class SideBarPane : ContentPane
     }
   }
 
+  Void onMarks(Mark[] marks)
+  {
+    sideBars.each |SideBar sb|
+    {
+      try { if (sb.showing) sb.onMarks(marks) } catch (Err e) { e.trace }
+    }
+  }
+
+  Void onGotoMark(Mark mark)
+  {
+    sideBars.each |SideBar sb|
+    {
+      try { if (sb.showing) sb.onGotoMark(mark) } catch (Err e) { e.trace }
+    }
+  }
+
   readonly Frame frame
   SideBar[] sideBars := SideBar[,]
   SashPane left  := SashPane { visible=false; orientation = Orientation.vertical }

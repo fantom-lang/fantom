@@ -101,7 +101,9 @@ class Frame : Window
     tab := view.tab
     if (mark.uri != view.resource.uri)
       tab = doLoad(this, mark.uri, mode)
-    tab.view.onGotoMark(mark)
+    sideBarPane.onGotoMark(mark)
+    tab.onGotoMark(mark)
+    try { curMark = marks.indexSame(mark) } catch {}
   }
 
   **
@@ -170,6 +172,34 @@ class Frame : Window
   {
     return commands.byId[id]
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Mark
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** The current mark list for the frame.  This is the
+  ** list of uris with optional line/col numbers which the
+  ** user can currently cycle thru using the jumpPrev and
+  ** jumpNext commands.  This list is always readonly, set
+  ** the field to update the marks and invoke the onMarks
+  ** callback for each view.
+  **
+  Mark[] marks := Mark[,].ro
+  {
+    set
+    {
+      @marks = val.ro
+      curMark = null
+      sideBarPane.onMarks(@marks)
+      tabPane.tabs.each |ViewTab tab| { tab.onMarks(@marks) }
+    }
+  }
+
+  **
+  ** Index into marks for current mark
+  **
+  internal Int curMark
 
 //////////////////////////////////////////////////////////////////////////
 // State

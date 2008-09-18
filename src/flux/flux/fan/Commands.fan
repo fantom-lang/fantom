@@ -484,14 +484,46 @@ internal class ReplaceInFilesCommand : FluxCommand
 internal class JumpNextCommand : FluxCommand
 {
   new make() : super(CommandId.jumpNext) {}
-  override Void invoke(Event event) { Dialog.openInfo(frame, "TODO: Jump next") }
+  override Void invoke(Event event)
+  {
+    if (frame.marks.isEmpty) return
+
+    if (frame.curMark == null)
+      frame.curMark = 0
+    else
+      frame.curMark++
+
+    if (frame.curMark >= frame.marks.size)
+    {
+      frame.curMark = frame.marks.size-1
+      return
+    }
+
+    frame.loadMark(frame.marks[frame.curMark])
+  }
 }
 
 ** Jump to previous error/search position
 internal class JumpPrevCommand : FluxCommand
 {
   new make() : super(CommandId.jumpPrev) {}
-  override Void invoke(Event event) { Dialog.openInfo(frame, "TODO: Jump prev") }
+  override Void invoke(Event event)
+  {
+    if (frame.marks.isEmpty) return
+
+    if (frame.curMark == null)
+      frame.curMark = frame.marks.size-1
+    else
+      frame.curMark--
+
+    if (frame.curMark < 0)
+    {
+      frame.curMark = 0
+      return
+    }
+
+    frame.loadMark(frame.marks[frame.curMark])
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////

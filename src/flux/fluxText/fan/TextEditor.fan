@@ -57,6 +57,11 @@ class TextEditor : View
     controller.trap("on${id.capitalize}", [event])
   }
 
+  override Void onMarks(Mark[] marks)
+  {
+    doc.updateMarks(marks)
+  }
+
   override Void onGotoMark(Mark mark)
   {
     controller.onGotoMark(mark)
