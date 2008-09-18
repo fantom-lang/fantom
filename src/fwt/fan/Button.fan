@@ -15,6 +15,18 @@ class Button : Widget
 {
 
   **
+  ** Make a button the specified command.
+  **
+  static Button makeCommand(Command c)
+  {
+    return Button
+    {
+      mode = c.mode.toButtonMode
+      command = c
+    }
+  }
+
+  **
   ** Callback function when button is pressed or selection is changed.
   **
   ** Event id fired:
@@ -80,7 +92,12 @@ class Button : Widget
         enabled  = val.enabled
         text     = val.name
         image    = val.icon
-        onAction.add |Event e| { val.invoke(e) }
+        selected = val.selected
+        onAction.add |Event e|
+        {
+          val.selected = this.selected
+          val.invoke(e)
+        }
         val.register(this)
       }
     }

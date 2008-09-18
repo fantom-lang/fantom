@@ -49,6 +49,30 @@ class Command
   **
   @transient readonly EventListeners onInvoke := EventListeners()
 
+  **
+  ** The command mode determines who associated widgets are
+  ** visualized.  The CommandMode maps to the `ButtonMode`
+  ** and `MenuItemMode`.  The default is 'push'.
+  **
+  CommandMode mode := CommandMode.push
+
+  **
+  ** If this command is using toggle mode, then set the
+  ** selected state and update all the registered widgets.
+  **
+  Bool selected := false
+  {
+    set
+    {
+      if (mode != CommandMode.toggle) return
+      @selected = val
+      widgets.each |Widget w|
+      {
+        try { w->selected = val } catch {}
+      }
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////

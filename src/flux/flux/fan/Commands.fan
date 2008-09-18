@@ -109,7 +109,9 @@ internal class Commands
     types = types.dup.sort |Type a, Type b->Int| { return a.name <=> b.name }
     types.each |Type t|
     {
-      menu.addCommand(SideBarCommand(frame, t))
+      cmd := SideBarCommand(frame, t)
+      byId.add(cmd.id, cmd)
+      menu.addCommand(cmd)
     }
 
     return menu
@@ -541,6 +543,7 @@ internal class SideBarCommand : FluxCommand
 {
   new make(Frame f, Type sbType) : super(sbType.name, sbType.pod)
   {
+    this.mode = CommandMode.toggle
     this.frame = f
     this.sbType = sbType
     this.name = sbType.name
@@ -555,11 +558,7 @@ internal class SideBarCommand : FluxCommand
   Void update()
   {
     sb := frame.sideBar(sbType, false)
-    if (sb == null || !sb.showing)
-      name = "Show $sbType.name"
-    else
-      name = "Hide $sbType.name"
-    widgets.each |Widget w| { w->text = name }
+    selected = sb != null && sb.showing
   }
 
   const Type sbType
