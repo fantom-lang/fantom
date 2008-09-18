@@ -50,7 +50,7 @@ internal class FindBar : ContentPane
   Void show()
   {
     visible = true
-    parent?.parent?.relayout
+    parent?.parent?.parent?.relayout
 
     // make sure text is focued and selected
     findText.focus
@@ -66,7 +66,7 @@ internal class FindBar : ContentPane
   Void hide()
   {
     visible = false
-    parent?.parent?.relayout
+    parent?.parent?.parent?.relayout
   }
 
   **
