@@ -29,10 +29,21 @@ class Console : SideBar
     {
       model = model
       editable = false
+      border = false
       font = Font.sysMonospace
       onMouseUp.add(&onRichTextMouseDown)
     }
-    content = richText
+    content = BorderPane
+    {
+      content = richText
+      insets  = Insets(1,0,0,1)
+      onBorder = |Graphics g, Insets insets, Size size|
+      {
+        g.brush = Color.sysNormShadow
+        g.drawLine(0, 0, size.w, 0)
+        g.drawLine(0, 0, 0, size.h)
+      }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

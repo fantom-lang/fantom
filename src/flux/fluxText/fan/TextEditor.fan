@@ -23,33 +23,26 @@ class TextEditor : View
 
   override Widget buildToolBar()
   {
-    return BorderPane
+    return EdgePane
     {
-      content =  EdgePane {
-        top = InsetPane(4,4,5,4) {
-          ToolBar
-          {
-            addCommand(frame.command(CommandId.save))
-            addSep
-            addCommand(frame.command(CommandId.cut))
-            addCommand(frame.command(CommandId.copy))
-            addCommand(frame.command(CommandId.paste))
-            addSep
-            addCommand(frame.command(CommandId.undo))
-            addCommand(frame.command(CommandId.redo))
-            addSep
-            addCommand(frame.command(CommandId.jumpPrev))
-            addCommand(frame.command(CommandId.jumpNext))
-          }
-        }
-        bottom = find
-      }
-      insets   = Insets(0,0,1,0)
-      onBorder = |Graphics g, Insets insets, Size size|
+      top = InsetPane(4,4,5,4)
       {
-        g.brush = Color.sysNormShadow
-        g.drawLine(0, size.h-1, size.w, size.h-1)
+        ToolBar
+        {
+          addCommand(frame.command(CommandId.save))
+          addSep
+          addCommand(frame.command(CommandId.cut))
+          addCommand(frame.command(CommandId.copy))
+          addCommand(frame.command(CommandId.paste))
+          addSep
+          addCommand(frame.command(CommandId.undo))
+          addCommand(frame.command(CommandId.redo))
+          addSep
+          addCommand(frame.command(CommandId.jumpPrev))
+          addCommand(frame.command(CommandId.jumpNext))
+        }
       }
+      bottom = find
     }
   }
 
@@ -122,7 +115,18 @@ class TextEditor : View
 
     // update ui
     find = FindBar(richText) { visible = false }
-    content = richText
+    content = BorderPane
+    {
+      content  = richText
+      insets   = Insets(1,0,1,1)
+      onBorder = |Graphics g, Insets insets, Size size|
+      {
+        g.brush = Color.sysNormShadow
+        g.drawLine(0, 0, size.w, 0)
+        g.drawLine(0, 0, 0, size.h-1)
+        g.drawLine(0, size.h-1, size.w, size.h-1)
+      }
+    }
   }
 
   internal Void loadDoc()
