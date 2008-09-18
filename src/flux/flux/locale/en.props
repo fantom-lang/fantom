@@ -59,6 +59,8 @@ paste.accelerator=Ctrl+V
 find.name=Find
 find.accelerator=Ctrl+F
 find.icon=fan:/sys/pod/icons/x16/edit-find.png
+
+find.matchCase=Match case
 find.notFound=Not Found
 find.wrapToTop=Reached end of file, continued from top
 find.wrapToBottom=Reached beginning of file, continued from bottom
