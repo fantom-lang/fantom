@@ -314,6 +314,16 @@ const class Key
     return makeNew(mask|x.mask, null)
   }
 
+  **
+  ** Replace one modifier with another modifer.  If
+  ** modFrom is not defined in this key, then return this.
+  **
+  Key replace(Key modFrom, Key modTo)
+  {
+    if ((mask & modFrom.mask) == 0) return this;
+    return makeNew((mask & ~modFrom.mask)|modTo.mask, null);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

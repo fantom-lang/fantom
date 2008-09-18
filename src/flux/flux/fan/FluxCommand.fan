@@ -41,12 +41,17 @@ class FluxCommand : Command
   {
     this.id = id
 
+    // check for explicit binding
     binding := KeyOptions.load.bindings[id]
     try
     {
       if (binding != null) accelerator = Key(binding)
     }
     catch type.log.error("FluxCommand: invalid syntax in keys.fog '$id:$binding'")
+
+    // if on Mac, then swizzle Ctrl to Command
+    if (Desktop.isMac && accelerator != null)
+      accelerator = accelerator.replace(Key.ctrl, Key.command)
   }
 
   **
