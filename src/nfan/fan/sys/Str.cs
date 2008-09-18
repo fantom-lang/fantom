@@ -266,6 +266,63 @@ namespace Fan.Sys
       return Int.make(r);
     }
 
+    public Int indexIgnoreCase(Str s) { return indexIgnoreCase(s, Int.Zero); }
+    public Int indexIgnoreCase(Str s, Int off)
+    {
+      string val  = this.val, sval = s.val;
+      int vlen = val.Length, slen = sval.Length;
+      int r = -1;
+
+      int i = (int)off.val;
+      if (i < 0) i = vlen+i;
+
+      int first = sval[0] | 0x20;
+      for (; i<=vlen-slen; ++i)
+      {
+        // test first char
+        if (first != (val[i] | 0x20)) continue;
+
+        // test remainder of chars
+        r = i;
+        for (int si=1, vi=i+1; si<slen; ++si, ++vi)
+          if ((sval[si] | 0x20) != (val[vi] | 0x20))
+            { r = -1; break; }
+        if (r >= 0) break;
+      }
+
+      if (r < 0) return null;
+      return Int.make(r);
+    }
+
+    public Int indexrIgnoreCase(Str s) { return indexrIgnoreCase(s, Int.NegOne); }
+    public Int indexrIgnoreCase(Str s, Int off)
+    {
+      string val  = this.val, sval = s.val;
+      int vlen = val.Length, slen = sval.Length;
+      int r = -1;
+
+      int i = (int)off.val;
+      if (i < 0) i = vlen+i;
+      if (i+slen >= vlen) i = vlen-slen;
+
+      int first = sval[0] | 0x20;
+      for (; i>=0; --i)
+      {
+        // test first char
+        if (first != (val[i] | 0x20)) continue;
+
+        // test remainder of chars
+        r = i;
+        for (int si=1, vi=i+1; si<slen; ++si, ++vi)
+          if ((sval[si] | 0x20) != (val[vi] | 0x20))
+            { r = -1; break; }
+        if (r >= 0) break;
+      }
+
+      if (r < 0) return null;
+      return Int.make(r);
+    }
+
     private bool nStartsWith(string s, string pre, int off)
     {
       if (off >= s.Length) return false;
