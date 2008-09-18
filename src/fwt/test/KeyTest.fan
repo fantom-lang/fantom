@@ -53,4 +53,13 @@ class KeyTest : Test
     verifyEq(Key.fromStr(s), k)
   }
 
+  Void testReplace()
+  {
+    x := Key("Ctrl+T")
+    verifySame(x.replace(Key.shift, Key.alt), x)
+    verifyEq(x.replace(Key.ctrl, Key.command), Key("Command+T"))
+    x = Key("Shift+Ctrl+Left")
+    verifyEq(x.replace(Key.ctrl, Key.command), Key("Shift+Command+Left"))
+  }
+
 }
