@@ -37,9 +37,6 @@ class TextEditor : View
           addSep
           addCommand(frame.command(CommandId.undo))
           addCommand(frame.command(CommandId.redo))
-          addSep
-          addCommand(frame.command(CommandId.jumpPrev))
-          addCommand(frame.command(CommandId.jumpNext))
         }
       }
       bottom = find

@@ -92,11 +92,11 @@ goto.accelerator=Ctrl+G
 
 jumpNext.name=Jump Next
 jumpNext.accelerator=F8
-jumpNext.icon=fan:/sys/pod/icons/x16/jump-next.png
+jumpNext.icon=fan:/sys/pod/icons/x16/go-next.png
 
 jumpPrev.name=Jump Prev
 jumpPrev.accelerator=Shift+F8
-jumpPrev.icon=fan:/sys/pod/icons/x16/jump-prev.png
+jumpPrev.icon=fan:/sys/pod/icons/x16/go-previous.png
 
 //////////////////////////////////////////////////////////////////////////
 // View menu
