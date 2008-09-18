@@ -39,7 +39,7 @@ class Menu : MenuItem
   **
   MenuItem addCommand(Command c)
   {
-    item := MenuItem { command = c; image = null }
+    item := MenuItem.makeCommand(c) { image = null }
     add(item)
     return item
   }

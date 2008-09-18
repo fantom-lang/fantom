@@ -50,6 +50,29 @@ enum Orientation
 }
 
 **************************************************************************
+** CommandMode.
+**************************************************************************
+
+**
+** Enum for `Command.mode`.
+**
+enum CommandMode
+{
+  push,
+  toggle
+
+  ButtonMode toButtonMode()
+  {
+    return this == push ? ButtonMode.push : ButtonMode.toggle
+  }
+
+  MenuItemMode toMenuItemMode()
+  {
+    return this == push ? MenuItemMode.push : MenuItemMode.check
+  }
+}
+
+**************************************************************************
 ** ButtonMode.
 **************************************************************************
 
