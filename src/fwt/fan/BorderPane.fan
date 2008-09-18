@@ -34,7 +34,7 @@ class BorderPane : Widget
   **
   ** The callback to paint the custom border.
   **
-  |Graphics g| onBorder := null
+  |Graphics g, Insets insets, Size size| onBorder := null
 
   **
   ** Insets to leave around the edge of the content.
