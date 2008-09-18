@@ -118,7 +118,7 @@ abstract class View : ContentPane
   ** Callback when the frame's list of marks is updated.
   ** This callback can be used for the view to highlight
   ** mark locations.  The list of marks is the same as
-  ** `Frame.marks` and might contain marks outside of
+  ** `flux::Frame.marks` and might contain marks outside of
   ** this view's uri.
   **
   virtual Void onMarks(Mark[] marks) {}
