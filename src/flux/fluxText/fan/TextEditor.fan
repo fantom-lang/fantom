@@ -23,7 +23,31 @@ class TextEditor : View
 
   override Widget buildToolBar()
   {
-    return find
+    return BorderPane
+    {
+      content =  EdgePane {
+        top = InsetPane(4,4,5,4) {
+          ToolBar
+          {
+            addCommand(frame.command(CommandId.save))
+            addSep
+            addCommand(frame.command(CommandId.cut))
+            addCommand(frame.command(CommandId.copy))
+            addCommand(frame.command(CommandId.paste))
+            addSep
+            addCommand(frame.command(CommandId.undo))
+            addCommand(frame.command(CommandId.redo))
+          }
+        }
+        bottom = find
+      }
+      insets   = Insets(0,0,1,0)
+      onBorder = |Graphics g, Insets insets, Size size|
+      {
+        g.brush = Color.sysNormShadow
+        g.drawLine(0, size.h-1, size.w, size.h-1)
+      }
+    }
   }
 
   override Widget buildStatusBar()

@@ -167,7 +167,6 @@ internal class Commands
       addCommand(forward)
       addCommand(reload)
       addCommand(up)
-      addCommand(save)
     }
   }
 
