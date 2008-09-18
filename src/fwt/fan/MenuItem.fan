@@ -13,15 +13,17 @@ class MenuItem : Widget
 {
 
   **
+  ** Default constructor.
+  **
+  new make() {}
+
+  **
   ** Make a menu item for the specified command.
   **
-  static MenuItem makeCommand(Command c)
+  new makeCommand(Command c)
   {
-    return MenuItem
-    {
-      mode = c.mode.toMenuItemMode
-      command = c
-    }
+    mode = c.mode.toMenuItemMode
+    command = c
   }
 
   **

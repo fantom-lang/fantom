@@ -13,17 +13,18 @@
 **
 class Button : Widget
 {
+  **
+  ** Default constructor.
+  **
+  new make() {}
 
   **
   ** Make a button the specified command.
   **
-  static Button makeCommand(Command c)
+  new makeCommand(Command c)
   {
-    return Button
-    {
-      mode = c.mode.toButtonMode
-      command = c
-    }
+    mode = c.mode.toButtonMode
+    command = c
   }
 
   **

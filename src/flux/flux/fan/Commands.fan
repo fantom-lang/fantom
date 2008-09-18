@@ -634,14 +634,12 @@ internal class ToolScriptCommand : FluxCommand
     }
     catch (CompilerErr e)
     {
-      // TODO: show errors in dialog
-      Dialog.openErr(frame, "Cannot compile tool: $file")
+      Dialog.openErr(frame, "Cannot compile tool: $file", e)
     }
     catch (Err e)
     {
       e.trace
-      // TODO
-      Dialog.openErr(frame, "Cannot invoke tool: $file")
+      Dialog.openErr(frame, "Cannot invoke tool: $file", e)
     }
   }
   const File file

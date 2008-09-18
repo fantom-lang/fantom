@@ -14,6 +14,11 @@ class Menu : MenuItem
 {
 
   **
+  ** Default constructor.
+  **
+  new make() : super.make() {}
+
+  **
   ** Callback function when menu is opened.  This callback
   ** provides a change to build a lazily populated menu.
   **
