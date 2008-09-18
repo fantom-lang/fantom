@@ -36,7 +36,8 @@ internal class DirView : View
 
   internal Void onPopup(Event event)
   {
-    event.popup = model.file(event.index)?.popup(frame, event)
+    r := model.file(event.index) ?: resource
+    event.popup = r.popup(frame, event)
   }
 
   DirViewModel model

@@ -351,6 +351,11 @@ namespace Fan.Sys
       return null;
     }
 
+    public Bool equalsIgnoreCase(Int ch)
+    {
+      return (val | 0x20L) == (ch.val | 0x20L) ? Bool.True : Bool.False;
+    }
+
     internal static readonly byte[] charMap = new byte[128];
     internal static readonly byte SPACE = 0x01;
     internal static readonly byte UPPER = 0x02;
