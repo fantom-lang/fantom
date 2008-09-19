@@ -125,7 +125,13 @@ abstract class BuildPod : BuildScript
   **
   ** Default target is `compile`.
   **
-  override Target defaultTarget() { return target("compile") }
+  override Target defaultTarget()
+  {
+    if (javaDirs == null && netDirs == null)
+      return target("compile")
+    else
+      return target("full")
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Compile
