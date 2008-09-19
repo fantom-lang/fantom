@@ -136,7 +136,12 @@ enum EventId
   caret,
   hyperlink,
   popup,
-  open
+  open,
+  close,
+  active,
+  inactive,
+  iconified,
+  deiconified
 }
 
 **************************************************************************

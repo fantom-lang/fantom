@@ -9,6 +9,7 @@ package fan.fwt;
 
 import fan.sys.*;
 import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -16,7 +17,9 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swt.layout.*;
 
-public class WindowPeer extends PanePeer
+public class WindowPeer
+  extends PanePeer
+  implements ShellListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,6 +71,42 @@ public class WindowPeer extends PanePeer
   void onSizeChange() { explicitSize = true; }
 
 //////////////////////////////////////////////////////////////////////////
+// Eventing
+//////////////////////////////////////////////////////////////////////////
+
+ public void shellClosed(ShellEvent se)
+ {
+   Window self = (Window)this.self;
+   fan.fwt.Event fe = event(EventId.close);
+   self.onClose().fire(fe);
+   if (fe.consumed.val) se.doit = false;
+ }
+
+ public void shellActivated(ShellEvent se)
+ {
+   Window self = (Window)this.self;
+   self.onActive().fire(event(EventId.active));
+ }
+
+ public void shellDeactivated(ShellEvent se)
+ {
+   Window self = (Window)this.self;
+   self.onInactive().fire(event(EventId.inactive));
+ }
+
+ public void shellDeiconified(ShellEvent se)
+ {
+   Window self = (Window)this.self;
+   self.onDeiconified().fire(event(EventId.deiconified));
+ }
+
+ public void shellIconified(ShellEvent se)
+ {
+   Window self = (Window)this.self;
+   self.onIconified().fire(event(EventId.iconified));
+ }
+
+//////////////////////////////////////////////////////////////////////////
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
@@ -111,6 +150,7 @@ public class WindowPeer extends PanePeer
       shell = new Shell(parentShell, style(self));
     }
     shell.setLayout(new FillLayout());
+    shell.addShellListener(this);
     attachTo(shell);
 
     // if not explicitly sized, then use prefSize - but

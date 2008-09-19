@@ -411,7 +411,7 @@ internal class ExitCommand : FluxCommand
       r := Dialog.openQuestion(frame, "TODO: Close with $dirty.size views?", Dialog.yesNo)
       if (r != Dialog.yes) return
     }
-    frame.close
+    flux::Main.exit(frame)
   }
 }
 
