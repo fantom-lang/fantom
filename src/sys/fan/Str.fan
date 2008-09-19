@@ -134,6 +134,18 @@ const final class Str
   Int indexr(Str s, Int offset := -1)
 
   **
+  ** Find the index just like `index`, but ignoring case for
+  ** ASCII chars only.
+  **
+  Int indexIgnoreCase(Str s, Int offset := 0)
+
+  **
+  ** Find the index just like `indexr`, but ignoring case for
+  ** ASCII chars only.
+  **
+  Int indexrIgnoreCase(Str s, Int offset := -1)
+
+  **
   ** Return if this string contains the specified string.
   ** Convenience for index(s) != null
   **

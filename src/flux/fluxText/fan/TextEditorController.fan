@@ -268,7 +268,7 @@ internal class TextEditorController : TextEditorSupport
   Void onGoto(Event event)
   {
     Str last := Thread.locals.get("fluxText.gotoLast", "1")
-    r := Dialog.openPromptStr(frame, "Goto Line:", last)
+    r := Dialog.openPromptStr(frame, "Goto Line:", last, 6)
     if (r == null) return
 
     line := r.toInt(10, false)

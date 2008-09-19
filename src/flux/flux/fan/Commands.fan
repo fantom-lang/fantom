@@ -109,7 +109,9 @@ internal class Commands
     types = types.dup.sort |Type a, Type b->Int| { return a.name <=> b.name }
     types.each |Type t|
     {
-      menu.addCommand(SideBarCommand(frame, t))
+      cmd := SideBarCommand(frame, t)
+      byId.add(cmd.id, cmd)
+      menu.addCommand(cmd)
     }
 
     return menu
@@ -167,7 +169,6 @@ internal class Commands
       addCommand(forward)
       addCommand(reload)
       addCommand(up)
-      addCommand(save)
     }
   }
 
@@ -410,7 +411,7 @@ internal class ExitCommand : FluxCommand
       r := Dialog.openQuestion(frame, "TODO: Close with $dirty.size views?", Dialog.yesNo)
       if (r != Dialog.yes) return
     }
-    frame.close
+    flux::Main.exit(frame)
   }
 }
 
@@ -542,6 +543,7 @@ internal class SideBarCommand : FluxCommand
 {
   new make(Frame f, Type sbType) : super(sbType.name, sbType.pod)
   {
+    this.mode = CommandMode.toggle
     this.frame = f
     this.sbType = sbType
     this.name = sbType.name
@@ -556,11 +558,7 @@ internal class SideBarCommand : FluxCommand
   Void update()
   {
     sb := frame.sideBar(sbType, false)
-    if (sb == null || !sb.showing)
-      name = "Show $sbType.name"
-    else
-      name = "Hide $sbType.name"
-    widgets.each |Widget w| { w->text = name }
+    selected = sb != null && sb.showing
   }
 
   const Type sbType
@@ -636,14 +634,12 @@ internal class ToolScriptCommand : FluxCommand
     }
     catch (CompilerErr e)
     {
-      // TODO: show errors in dialog
-      Dialog.openErr(frame, "Cannot compile tool: $file")
+      Dialog.openErr(frame, "Cannot compile tool: $file", e)
     }
     catch (Err e)
     {
       e.trace
-      // TODO
-      Dialog.openErr(frame, "Cannot invoke tool: $file")
+      Dialog.openErr(frame, "Cannot invoke tool: $file", e)
     }
   }
   const File file

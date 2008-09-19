@@ -12,16 +12,23 @@ using flux
 **
 ** FindBar finds text in the current TextEditor.
 **
-internal class FindBar : ContentPane
+internal class FindBar : ContentPane, TextEditorSupport
 {
-  new make(RichText richText)
+  new make(TextEditor editor)
   {
-    this.richText = richText
+    this.editor = editor
 
     findText = Text()
     findText.onFocus.add |Event e| { caretPos = richText.caretPos }
     findText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
-    findText.onModify.add(&find(null,true))
+    findText.onModify.add(&find(null, true))
+
+    matchCase = Button
+    {
+      mode = ButtonMode.check
+      text = Flux#.loc("find.matchCase")
+      onAction.add(&find(null, true))
+    }
 
     content = InsetPane(4,4,4,4)
     {
@@ -29,9 +36,10 @@ internal class FindBar : ContentPane
       {
         center = GridPane
         {
-          numCols = 4
-          Label { text="Find" }
+          numCols = 5
+          Label { text = Flux#.loc("find.name") }
           add(Temp { findText })
+          InsetPane(0,0,0,8) { add(matchCase) }
           ToolBar
           {
             addCommand(cmdNext)
@@ -50,7 +58,7 @@ internal class FindBar : ContentPane
   Void show()
   {
     visible = true
-    parent?.parent?.relayout
+    parent?.parent?.parent?.relayout
 
     // make sure text is focued and selected
     findText.focus
@@ -66,7 +74,7 @@ internal class FindBar : ContentPane
   Void hide()
   {
     visible = false
-    parent?.parent?.relayout
+    parent?.parent?.parent?.relayout
   }
 
   **
@@ -87,9 +95,11 @@ internal class FindBar : ContentPane
       return
     }
 
-    pos  := fromPos ?: caretPos
-    text := richText.text
-    off  := (forward) ? text.index(q, pos) : text.indexr(q, pos-q.size-1)
+    match := matchCase.selected
+    pos   := fromPos ?: caretPos
+    off   := forward ?
+      doc.findNext(q, pos, match) :
+      doc.findPrev(q, pos-q.size-1, match)
 
     cmdPrev.enabled = true
     cmdNext.enabled = true
@@ -105,7 +115,7 @@ internal class FindBar : ContentPane
     // if not found, try from beginning of file
     if (pos > 0 && forward)
     {
-      off = text.index(q, 0)
+      off = doc.findNext(q, 0, match)
       if (off != null)
       {
         richText.select(off, q.size)
@@ -115,9 +125,9 @@ internal class FindBar : ContentPane
     }
 
     // if not found, try from end of file
-    if (pos < text.size && !forward)
+    if (pos < doc.size && !forward)
     {
-      off = text.indexr(q, text.size)
+      off = doc.findPrev(q, doc.size, match)
       if (off != null)
       {
         richText.select(off, q.size)
@@ -157,9 +167,10 @@ internal class FindBar : ContentPane
     msg.parent.relayout
   }
 
-  private RichText richText
+  override readonly TextEditor editor
   private Int caretPos
   private Text findText
+  private Button matchCase
   private Label msg := Label()
   private Command cmdNext := Command.makeLocale(Flux#.pod, "findPrev", &prev)
   private Command cmdPrev := Command.makeLocale(Flux#.pod, "findNext", &next)

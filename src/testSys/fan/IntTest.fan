@@ -378,6 +378,24 @@ class IntTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// EqualsIgnoreCase
+//////////////////////////////////////////////////////////////////////////
+
+  Void testEqualsIgnoreCase()
+  {
+    verifyEq('a'.equalsIgnoreCase('a'), true)
+    verifyEq('a'.equalsIgnoreCase('b'), false)
+    verifyEq('a'.equalsIgnoreCase('A'), true)
+    verifyEq('Z'.equalsIgnoreCase('z'), true)
+    verifyEq('Z'.equalsIgnoreCase('!'), false)
+    Locale.fromStr("tr").with |,|
+    {
+      verifyEq('I'.equalsIgnoreCase('i'), true)
+      verifyEq('i'.equalsIgnoreCase('I'), true)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // ToChar
 //////////////////////////////////////////////////////////////////////////
 

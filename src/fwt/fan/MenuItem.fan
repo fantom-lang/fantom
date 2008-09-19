@@ -13,6 +13,20 @@ class MenuItem : Widget
 {
 
   **
+  ** Default constructor.
+  **
+  new make() {}
+
+  **
+  ** Make a menu item for the specified command.
+  **
+  new makeCommand(Command c)
+  {
+    mode = c.mode.toMenuItemMode
+    command = c
+  }
+
+  **
   ** Callback function when menu is selected.
   **
   ** Event id fired:
@@ -69,7 +83,12 @@ class MenuItem : Widget
         text        = val.name
         image       = val.icon
         accelerator = val.accelerator
-        onAction.add |Event e| { val.invoke(e) }
+        selected = val.selected
+        onAction.add |Event e|
+        {
+          val.selected = this.selected
+          val.invoke(e)
+        }
         val.register(this)
       }
     }

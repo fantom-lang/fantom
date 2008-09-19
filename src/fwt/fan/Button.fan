@@ -13,6 +13,19 @@
 **
 class Button : Widget
 {
+  **
+  ** Default constructor.
+  **
+  new make() {}
+
+  **
+  ** Make a button the specified command.
+  **
+  new makeCommand(Command c)
+  {
+    mode = c.mode.toButtonMode
+    command = c
+  }
 
   **
   ** Callback function when button is pressed or selection is changed.
@@ -80,7 +93,12 @@ class Button : Widget
         enabled  = val.enabled
         text     = val.name
         image    = val.icon
-        onAction.add |Event e| { val.invoke(e) }
+        selected = val.selected
+        onAction.add |Event e|
+        {
+          val.selected = this.selected
+          val.invoke(e)
+        }
         val.register(this)
       }
     }

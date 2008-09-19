@@ -26,7 +26,12 @@ internal class Main
 
     // open the frame and let's get this party started!
     f.open
+  }
+
+  static Void exit(Frame f)
+  {
     f.saveState
+    Sys.exit(0)
   }
 
 }

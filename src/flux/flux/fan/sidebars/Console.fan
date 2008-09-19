@@ -22,17 +22,47 @@ class Console : SideBar
   **
   ** Use `Frame.console` to get the console.
   **
-  new make()
+  override Void onLoad()
   {
     model = ConsoleModel()
     richText = RichText
     {
       model = model
       editable = false
+      border = false
       font = Font.sysMonospace
       onMouseUp.add(&onRichTextMouseDown)
     }
-    content = richText
+    content = EdgePane
+    {
+      top = InsetPane(4,4,4,4)
+      {
+        EdgePane
+        {
+          left = ToolBar
+          {
+            addCommand(copyCmd)
+            addCommand(frame.command(CommandId.jumpPrev))
+            addCommand(frame.command(CommandId.jumpNext))
+          }
+          right = ToolBar
+          {
+            addCommand(hideCmd)
+          }
+        }
+      }
+      center = BorderPane
+      {
+        content = richText
+        insets  = Insets(1,0,0,1)
+        onBorder = |Graphics g, Insets insets, Size size|
+        {
+          g.brush = Color.sysNormShadow
+          g.drawLine(0, 0, size.w, 0)
+          g.drawLine(0, 0, 0, size.h)
+        }
+      }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -151,12 +181,27 @@ class Console : SideBar
     frame.loadMark(line.mark, LoadMode(event))
   }
 
+  internal Void onCopy()
+  {
+    richText.selectAll
+    richText.copy
+  }
+
+  internal Void onClose()
+  {
+    hide
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   internal ConsoleModel model
   internal RichText richText
+
+  private Command copyCmd := Command.makeLocale(Flux#.pod, "copy", &onCopy)
+  private Command hideCmd := Command.makeLocale(Flux#.pod, "navBar.close", &onClose)
+
 }
 
 **************************************************************************
@@ -348,67 +393,3 @@ internal const class ExecParams
   const Str[] command
   const File dir
 }
-
-//////////////////////////////////////////////////////////////////////////
-// TODO
-//////////////////////////////////////////////////////////////////////////
-
-/*
-@fluxSideBar
-internal class LeftGreen : SideBar
-{
-  new make() { content = FooBox { bg = Color.green } }
-  override Obj prefAlign() { return Halign.left }
-}
-
-@fluxSideBar
-internal class LeftRed : SideBar
-{
-  new make() { content = FooBox { bg = Color.red } }
-  override Obj prefAlign() { return Halign.left }
-}
-
-@fluxSideBar
-internal class RightYellow : SideBar
-{
-  new make() { content = FooBox { bg = Color.yellow } }
-  override Obj prefAlign() { return Halign.right }
-}
-
-@fluxSideBar
-internal class RightBlue : SideBar
-{
-  new make() { content = FooBox { bg = Color.blue } }
-  override Obj prefAlign() { return Halign.right }
-}
-
-@fluxSideBar
-internal class BottomGray : SideBar
-{
-  new make() { content = FooBox { bg = Color.gray } }
-  override Obj prefAlign() { return Valign.bottom }
-}
-
-@fluxSideBar
-internal class BottomOrange : SideBar
-{
-  new make() { content = FooBox { bg = Color.orange } }
-  override Obj prefAlign() { return Valign.bottom }
-}
-
-internal class FooBox : Widget
-{
-  Color bg
-  override Void onPaint(Graphics g)
-  {
-    w := size.w
-    h := size.h
-    g.brush = bg
-    g.fillRect(0, 0, w, h)
-    g.brush = Color.black
-    g.drawRect(1, 1, w-2, h-2)
-  }
-}
-
-*/
-

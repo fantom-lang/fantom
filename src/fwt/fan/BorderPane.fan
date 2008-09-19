@@ -6,13 +6,14 @@
 //   15 Sep 08  Andy Frank  Creation
 //
 
-using fwt
-
 **
 ** BorderPane provides a callback to use for drawing a custom
-** border around a content widget.
+** border around a content widget.  You must specifiy non-zero
+** insets to leave room to render your border.
 **
-internal class BorderPane : Widget
+** TODO: Design imcomplete.
+**
+class BorderPane : Widget
 {
 
   **
@@ -33,7 +34,7 @@ internal class BorderPane : Widget
   **
   ** The callback to paint the custom border.
   **
-  |Graphics g| onBorder := null
+  |Graphics g, Insets insets, Size size| onBorder := null
 
   **
   ** Insets to leave around the edge of the content.

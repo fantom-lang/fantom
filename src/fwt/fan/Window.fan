@@ -14,6 +14,64 @@ class Window : ContentPane
 {
 
   **
+  ** Callback function when window is closed.  Consume
+  ** the event to prevent the window from closing.
+  **
+  ** Event id fired:
+  **  - `EventId.close`
+  **
+  ** Event fields:
+  **   - none
+  **
+  @transient readonly EventListeners onClose := EventListeners()
+
+  **
+  ** Callback function when window becomes the active window
+  ** on the desktop with focus.
+  **
+  ** Event id fired:
+  **  - `EventId.active`
+  **
+  ** Event fields:
+  **   - none
+  **
+  @transient readonly EventListeners onActive := EventListeners()
+
+  **
+  ** Callback function when window becomes an inactive window
+  ** on the desktop and loses focus.
+  **
+  ** Event id fired:
+  **  - `EventId.inactive`
+  **
+  ** Event fields:
+  **   - none
+  **
+  @transient readonly EventListeners onInactive := EventListeners()
+
+  **
+  ** Callback function when window is iconified to the taskbar.
+  **
+  ** Event id fired:
+  **  - `EventId.iconified`
+  **
+  ** Event fields:
+  **   - none
+  **
+  @transient readonly EventListeners onIconified := EventListeners()
+
+  **
+  ** Callback function when window is deiconified from the taskbar.
+  **
+  ** Event id fired:
+  **  - `EventId.iconified`
+  **
+  ** Event fields:
+  **   - none
+  **
+  @transient readonly EventListeners onDeiconified := EventListeners()
+
+  **
   ** Window mode defines the modal state of the window:
   **   - modeless: no blocking of other windows
   **   - windowModal: input is blocked to parent window

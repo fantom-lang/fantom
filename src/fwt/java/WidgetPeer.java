@@ -134,10 +134,18 @@ public class WidgetPeer
     return point(pt);
   }
 
-  public void relayout(fan.fwt.Widget self)
+  public fan.fwt.Widget relayout(fan.fwt.Widget self)
   {
     if (control instanceof Composite)
       ((Composite)control).layout(true);
+    return self;
+  }
+
+  public fan.fwt.Widget pack(fan.fwt.Widget self)
+  {
+    if (control instanceof Control)
+      ((Control)control).pack();
+    return self;
   }
 
   public void repaint(fan.fwt.Widget self, Rect r)

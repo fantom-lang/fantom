@@ -389,61 +389,97 @@ class StrTest : Test
 
   Void testIndex()
   {
-    verifyEq("abcd".index("a"), 0)
-    verifyEq("abcd".index("b"), 1)
-    verifyEq("abcd".index("c"), 2)
-    verifyEq("abcd".index("d"), 3)
-    verifyEq("abcd".index("e"), null)
-    verifyEq("abcd".index("ab"), 0)
-    verifyEq("abcd".index("bcd"), 1)
-    verifyEq("abcd".index("cd"), 2)
-    verifyEq("abcd".index("cdx"), null)
-    verifyEq("abcd".index("a", 1), null)
-    verifyEq("abcd".index("a", -1), null)
-    verifyEq("abcd".index("a", -3), null)
-    verifyEq("abcd".index("a", -4), 0)
+    verifyIndex("abcd", "a", null, 0)
+    verifyIndex("abcd", "b", null, 1)
+    verifyIndex("abcd", "c", null, 2)
+    verifyIndex("abcd", "d", null, 3)
+    verifyIndex("abcd", "e", null, null)
+    verifyIndex("abcd", "ab", null, 0)
+    verifyIndex("abcd", "bcd", null, 1)
+    verifyIndex("abcd", "cd", null, 2)
+    verifyIndex("abcd", "cdx", null, null)
+    verifyIndex("abcd", "a", 1, null)
+    verifyIndex("abcd", "a", -1, null)
+    verifyIndex("abcd", "a", -3, null)
+    verifyIndex("abcd", "a", -4, 0)
 
-    verifyEq("billy bob".index("b"), 0)
-    verifyEq("billy bob".index("b", 1), 6)
-    verifyEq("billy bob".index("b", 7), 8)
-    verifyEq("billy bob".index("b", 9), null)
+    verifyIndex("billy bob", "b", null, 0)
+    verifyIndex("billy bob", "b", 1, 6)
+    verifyIndex("billy bob", "b", 7, 8)
+    verifyIndex("billy bob", "b", 9, null)
 
-    verifyEq("billy bob".index("b", -1), 8)
-    verifyEq("billy bob".index("b", -2), 8)
-    verifyEq("billy bob".index("b", -4), 6)
+    verifyIndex("billy bob", "b", -1, 8)
+    verifyIndex("billy bob", "b", -2, 8)
+    verifyIndex("billy bob", "b", -4, 6)
 
     // fandoc examples
-    verifyEq("abcabc".index("b"), 1)
-    verifyEq("abcabc".index("b", 1), 1)
-    verifyEq("abcabc".index("b", 3), 4)
-    verifyEq("abcabc".index("b", -3), 4)
-    verifyEq("abcabc".index("x"), null)
+    verifyIndex("abcabc", "b", null, 1)
+    verifyIndex("abcabc", "b", 1, 1)
+    verifyIndex("abcabc", "b", 3, 4)
+    verifyIndex("abcabc", "b", -3, 4)
+    verifyIndex("abcabc", "x", null, null)
   }
+
+  Void verifyIndex(Str base, Str sub, Int off, Int expected)
+  {
+    if (off == null)
+    {
+      verifyEq(base.index(sub), expected)
+      verifyEq(base.lower.indexIgnoreCase(sub.upper), expected)
+      verifyEq(base.upper.indexIgnoreCase(sub.lower), expected)
+    }
+    else
+    {
+      verifyEq(base.index(sub, off), expected)
+      verifyEq(base.lower.indexIgnoreCase(sub.upper, off), expected)
+      verifyEq(base.upper.indexIgnoreCase(sub.lower, off), expected)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Indexr
+//////////////////////////////////////////////////////////////////////////
 
   Void testIndexr()
   {
-    verifyEq("abcd".indexr("a"), 0)
-    verifyEq("abcd".indexr("b"), 1)
-    verifyEq("abcd".indexr("c"), 2)
-    verifyEq("abcd".indexr("d"), 3)
-    verifyEq("abcd".indexr("e"), null)
-    verifyEq("abcd".indexr("ab"), 0)
-    verifyEq("abcd".indexr("bcd"), 1)
-    verifyEq("abcd".indexr("cd"), 2)
-    verifyEq("abcd".indexr("cdx"), null)
-    verifyEq("abcd".indexr("a", 1), 0)
-    verifyEq("abcd".indexr("a", -1), 0)
-    verifyEq("abcd".indexr("a", -3), 0)
-    verifyEq("abcd".indexr("a", -4), 0)
+    verifyIndexr("abcd", "a", null, 0)
+    verifyIndexr("abcd", "b", null, 1)
+    verifyIndexr("abcd", "c", null, 2)
+    verifyIndexr("abcd", "d", null, 3)
+    verifyIndexr("abcd", "e", null, null)
+    verifyIndexr("abcd", "ab", null, 0)
+    verifyIndexr("abcd", "bcd", null, 1)
+    verifyIndexr("abcd", "cd", null, 2)
+    verifyIndexr("abcd", "cdx", null, null)
+    verifyIndexr("abcd", "a", 1, 0)
+    verifyIndexr("abcd", "a", -1, 0)
+    verifyIndexr("abcd", "a", -3, 0)
+    verifyIndexr("abcd", "a", -4, 0)
 
-    verifyEq("bee hee".indexr("ee", -1), 5)
-    verifyEq("bee hee".indexr("ee", -2), 5)
-    verifyEq("bee hee".indexr("ee", -3), 1)
+    verifyIndexr("bee hee", "ee", -1, 5)
+    verifyIndexr("bee hee", "ee", -2, 5)
+    verifyIndexr("bee hee", "ee", -3, 1)
 
     // fandoc examples
-    verifyEq("abcabc".indexr("b"), 4)
-    verifyEq("abcabc".indexr("b", -3), 1)
-    verifyEq("abcabc".indexr("b", 0), null)
+    verifyIndexr("abcabc", "b", null, 4)
+    verifyIndexr("abcabc", "b", -3, 1)
+    verifyIndexr("abcabc", "b", 0, null)
+  }
+
+  Void verifyIndexr(Str base, Str sub, Int off, Int expected)
+  {
+    if (off == null)
+    {
+      verifyEq(base.indexr(sub), expected)
+      verifyEq(base.lower.indexrIgnoreCase(sub.upper), expected)
+      verifyEq(base.upper.indexrIgnoreCase(sub.lower), expected)
+    }
+    else
+    {
+      verifyEq(base.indexr(sub, off), expected)
+      verifyEq(base.lower.indexrIgnoreCase(sub.upper, off), expected)
+      verifyEq(base.upper.indexrIgnoreCase(sub.lower, off), expected)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
