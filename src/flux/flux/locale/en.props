@@ -162,6 +162,8 @@ Console.accelerator=Alt+C
 openIn.name=Open in Explorer
 openIn.name.mac=Open in Finder
 
+newDir.name=New Folder
+
 //////////////////////////////////////////////////////////////////////////
 // NavBar
 //////////////////////////////////////////////////////////////////////////
@@ -171,6 +173,8 @@ navBar.root=My Computer
 
 navBar.close.name=Close
 navBar.close.icon=fan:/sys/pod/icons/x16/tab-close.png
+
+navBar.refresh.name=Refresh
 
 navBar.goInto.name=Go Into
 
