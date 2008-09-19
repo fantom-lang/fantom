@@ -108,7 +108,9 @@ class FileResource : Resource
     menu := super.popup(frame, event)
     if (file.isDir)
     {
-      menu.add(MenuItem { command=Command.makeLocale(Flux#.pod, "openIn", &openIn(file)) })
+      menu.add(MenuItem { command=Command.makeLocale(type.pod, "openIn", &openIn(file)) })
+      menu.addSep
+      menu.add(MenuItem { command=Command.makeLocale(type.pod, "newDir", &newDir(frame,file)) })
     }
     return menu
   }
@@ -119,13 +121,32 @@ class FileResource : Resource
   **
   internal Void openIn(File dir)
   {
-    if (Desktop.isWindows)
-    {
-      Process(["explorer", dir.osPath]).run
-    }
+    if (!dir.isDir) throw ArgErr("Not a directory: $dir")
+    if (Desktop.isWindows)  Process(["explorer", dir.osPath]).run
+    else if (Desktop.isMac) Process(["open", dir.osPath]).run
     else echo("Not yet implemented")
   }
 
+  **
+  ** Create a new diretory under the current directory.
+  **
+  internal Void newDir(Frame frame, File dir)
+  {
+    if (!dir.isDir) throw ArgErr("Not a directory: $dir")
+    newDir := Dialog.openPromptStr(frame, type.loc("newDir.name"))
+    if (newDir != null)
+    {
+      try
+      {
+        uri := dir.uri + "$newDir/".toUri
+        File(uri).create
+      }
+      catch (Err err)
+      {
+        Dialog.openErr(frame, "Error", err)
+      }
+    }
+  }
 
   **
   ** Given a file size in bytes return a suitable string
