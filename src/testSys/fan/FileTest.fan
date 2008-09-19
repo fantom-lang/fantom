@@ -130,7 +130,7 @@ class FileTest : Test
   Void testCreateAndDelete()
   {
     // create file - no extension
-    f := (tempDir + `file`).create
+    f := tempDir.createFile("file")
     verify(!f.isDir)
     verify(f.list.isEmpty)
     verify(f.listFiles.isEmpty)
@@ -163,7 +163,7 @@ class FileTest : Test
     verifyEq(tempDir.listFiles.sort, [f, e])
 
     // create dir
-    d := (tempDir + `dir/`).create
+    d := tempDir.createDir("dir")
     verify(d.isDir)
     verify(d.list.isEmpty)
     verifyEq(d.name, "dir")

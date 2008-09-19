@@ -189,6 +189,17 @@ namespace Fan.Sys
 
     public abstract File create();
 
+    public File createFile(Str name)
+    {
+      return this.plus(name.toUri()).create();
+    }
+
+    public File createDir(Str name)
+    {
+      if (!name.val.EndsWith("/")) name = Str.make(name.val + "/");
+      return this.plus(name.toUri()).create();
+    }
+
     public abstract void delete();
 
     public abstract File deleteOnExit();

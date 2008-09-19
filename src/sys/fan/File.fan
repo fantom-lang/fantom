@@ -226,6 +226,18 @@ abstract const class File
   abstract File create()
 
   **
+  ** Convenience for `create`:
+  **   return (this+name.toUri).create
+  **
+  File createFile(Str name)
+
+  **
+  ** Convenience for `create`:
+  **   return (this+name/.toUri).create
+  **
+  File createDir(Str name)
+
+  **
   ** Copy this file or directory to the new specified location.
   ** If this file represents a directory, then it recursively
   ** copies the entire directory tree.
