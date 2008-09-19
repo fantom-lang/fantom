@@ -232,6 +232,7 @@ class Frame : Window
     title = "Flux"
     icon  = Flux.icon(Desktop.isMac ? `/x256/flux.png` : `/x16/flux.png`)
     menuBar = commands.buildMenuBar
+    onClose.add |Event e| { e.consume; commands.exit.invoke(e) }
     content = EdgePane
     {
       top = EdgePane
