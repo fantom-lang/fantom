@@ -127,6 +127,7 @@ internal class Commands
       addCommand(forward)
       addCommand(up)
       addCommand(home)
+      addCommand(recent)
       addSep
     }
     historyMenuSize = menu.children.size
@@ -318,6 +319,7 @@ internal class Commands
   readonly FluxCommand forward := ForwardCommand()
   readonly FluxCommand up := UpCommand()
   readonly FluxCommand home := HomeCommand()
+  readonly FluxCommand recent := RecentCommand()
 
   // Tools
   readonly FluxCommand options := OptionsCommand()
@@ -594,6 +596,36 @@ internal class HomeCommand : FluxCommand
 {
   new make() : super(CommandId.home) {}
   override Void invoke(Event event) { frame.loadUri(GeneralOptions.load.homePage) }
+}
+
+** Open recent history dialog
+internal class RecentCommand : FluxCommand
+{
+  new make() : super(CommandId.recent) {}
+  override Void invoke(Event event)
+  {
+    Dialog dlg
+    model := RecentTableModel()
+    table := Table
+    {
+      headerVisible = false
+      model = model
+      onAction.add |Event e|
+      {
+        frame.loadUri(model.items[e.index].uri, LoadMode(e))
+        dlg.close
+      }
+    }
+    dlg = Dialog(frame, table, [Dialog.ok, Dialog.cancel]) { title = "Recent" }
+    dlg.open
+  }
+}
+
+internal class RecentTableModel : TableModel
+{
+  HistoryItem[] items := History.load.items
+  override Int numRows() { return items.size }
+  override Str text(Int col, Int row) { return items[row].uri.name }
 }
 
 //////////////////////////////////////////////////////////////////////////
