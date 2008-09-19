@@ -136,8 +136,8 @@ public class WidgetPeer
 
   public fan.fwt.Widget relayout(fan.fwt.Widget self)
   {
-    if (control instanceof Composite)
-      ((Composite)control).layout(true);
+    if (control instanceof Composite) ((Composite)control).layout(true);
+    //if (control instanceof Control) ((Control)control).redraw();
     return self;
   }
 
