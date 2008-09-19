@@ -35,20 +35,29 @@ class Console : SideBar
     }
     content = EdgePane
     {
-      top = InsetPane(4,4,4,4)
+      top = BorderPane
       {
-        EdgePane
+        InsetPane(4,4,4,4)
         {
-          left = ToolBar
+          EdgePane
           {
-            addCommand(copyCmd)
-            addCommand(frame.command(CommandId.jumpPrev))
-            addCommand(frame.command(CommandId.jumpNext))
+            left = ToolBar
+            {
+              addCommand(copyCmd)
+              addCommand(frame.command(CommandId.jumpPrev))
+              addCommand(frame.command(CommandId.jumpNext))
+            }
+            right = ToolBar
+            {
+              addCommand(hideCmd)
+            }
           }
-          right = ToolBar
-          {
-            addCommand(hideCmd)
-          }
+        }
+        insets  = Insets(1,0,0,1)
+        onBorder = |Graphics g, Insets insets, Size size|
+        {
+          g.brush = Color.sysNormShadow
+          g.drawLine(0, 0, size.w, 0)
         }
       }
       center = BorderPane
