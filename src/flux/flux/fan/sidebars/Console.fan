@@ -53,11 +53,13 @@ class Console : SideBar
             }
           }
         }
-        insets  = Insets(1,0,0,1)
+        insets  = Insets(2,0,0,0)
         onBorder = |Graphics g, Insets insets, Size size|
         {
           g.brush = Color.sysNormShadow
           g.drawLine(0, 0, size.w, 0)
+          g.brush = Color.sysHighlightShadow
+          g.drawLine(0, 1, size.w, 1)
         }
       }
       center = BorderPane
