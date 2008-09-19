@@ -52,15 +52,15 @@ namespace Fan.Sys
         }
       }
       if (seg >= 0) segments.add(Int.pos(seg));
-      
-      if (!valid || segments.sz() == 0) 
+
+      if (!valid || segments.sz() == 0)
       {
         if (check)
           throw ParseErr.make("Version", s).val;
         else
           return null;
       }
-      
+
       return new Version(segments);
     }
 

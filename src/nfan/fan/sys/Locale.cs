@@ -128,14 +128,14 @@ namespace Fan.Sys
   // Properties
   //////////////////////////////////////////////////////////////////////////
 
-    public Str get(Str podName, Str key) 
-    { 
-      return doGet(Pod.find(podName, Bool.False), podName, key, m_getNoDef); 
+    public Str get(Str podName, Str key)
+    {
+      return doGet(Pod.find(podName, Bool.False), podName, key, m_getNoDef);
     }
-    
-    public Str get(Str podName, Str key, Str def) 
-    { 
-      return doGet(Pod.find(podName, Bool.False), podName, key, def); 
+
+    public Str get(Str podName, Str key, Str def)
+    {
+      return doGet(Pod.find(podName, Bool.False), podName, key, def);
     }
 
     /**

@@ -86,7 +86,7 @@ namespace Fanx.Serial
       string podName = consumeId("Expecting pod name");
       Pod pod = Pod.find(podName, false);
       if (pod == null) throw err("Unknown pod: " + podName);
-      if (curt != Token.DOUBLE_COLON) 
+      if (curt != Token.DOUBLE_COLON)
       {
         endOfStmt(line);
         return new UsingPod(pod);

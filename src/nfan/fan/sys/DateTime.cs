@@ -62,7 +62,7 @@ namespace Fan.Sys
     }
 
     public static DateTime boot()  { return m_boot; }
-  
+
   //////////////////////////////////////////////////////////////////////////
   // Constructor - Values
   //////////////////////////////////////////////////////////////////////////
@@ -853,7 +853,7 @@ namespace Fan.Sys
 
       fillInDayOfYear(monForDayOfYear, dayForDayOfYear, daysInMon);
       fillInDayOfYear(monForDayOfYearLeap, dayForDayOfYearLeap, daysInMonLeap);
-      
+
       m_boot = now();
     }
 

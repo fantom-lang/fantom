@@ -485,7 +485,7 @@ namespace Fan.Sys
     internal Obj invoke(object instance, object[] args)
     {
       if (m_reflect == null) m_parent.finish();
-      
+
       try
       {
         // zero index is full signature up to using max defaults
