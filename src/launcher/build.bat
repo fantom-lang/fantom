@@ -29,8 +29,8 @@ rem compile each executable
 %compile% /DFAN_TOOL="\"Fanp\""  /Fe%fan_home%\bin\fanp.exe
 %compile% /DFAN_TOOL="\"Jstub\"" /Fe%fan_home%\bin\jstub.exe
 %compile% /DFAN_TOOL="\"Nstub\"" /Fe%fan_home%\bin\nstub.exe
-%compile% /DFAN_TOOL="\"Fan\""  /DFAN_MAIN="\"fansh\"" /Fe%fan_home%\bin\fansh.exe
-%compile% /DFAN_TOOL="\"Fan\""  /DFAN_MAIN="\"flux\""  /Fe%fan_home%\bin\flux.exe
+%compile% /DFAN_TOOL="\"Fan\""  /DFAN_MAIN="\"fansh::Main\"" /Fe%fan_home%\bin\fansh.exe
+%compile% /DFAN_TOOL="\"Fan\""  /DFAN_MAIN="\"flux::Main\""  /Fe%fan_home%\bin\flux.exe
 
 rem cleanup
 del *.obj
