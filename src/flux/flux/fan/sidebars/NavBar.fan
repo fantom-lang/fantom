@@ -190,7 +190,8 @@ internal class NavBar : SideBar
 
   internal Void onRefresh(Resource r)
   {
-    echo("TODO: refresh")
+    r.refresh
+    active.refreshNode(r)
   }
 
   internal Void onGoInto(Resource r)

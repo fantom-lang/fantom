@@ -350,7 +350,7 @@ class FwtDemo
       onPopup.add |Event e|  { echo(e); e.popup = makePopup }
     }
 
-    updateTable := |File dir| { table.model->dir = dir.list; table.updateAll }
+    updateTable := |File dir| { table.model->dir = dir.list; table.refreshAll }
     tree.onAction.add  |Event e| { updateTable(e.data) }
     table.onAction.add |Event e| { updateTable(table.model->dir->get(e.index)) }
 

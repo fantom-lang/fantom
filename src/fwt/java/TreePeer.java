@@ -97,7 +97,7 @@ public class TreePeer
 // Native Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public void updateAll(fan.fwt.Tree self)
+  public void refreshAll(fan.fwt.Tree self)
   {
     Tree c = (Tree)this.control;
 
@@ -107,6 +107,21 @@ public class TreePeer
     c.removeAll();
     c.setItemCount(model.roots().sz());
     c.clearAll(true);
+  }
+
+  public void refreshNode(fan.fwt.Tree self, Obj node)
+  {
+    Tree c = (Tree)this.control;
+
+    TreeModel model = model();
+    if (model == null) return;
+
+    TreeItem item = item(node);
+    if (item == null) return;
+    Data data = (Data)item.getData();
+    data.children = null;
+
+    c.clear(c.indexOf(item), true);
   }
 
 //////////////////////////////////////////////////////////////////////////
