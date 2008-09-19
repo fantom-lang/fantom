@@ -260,8 +260,7 @@ abstract class Widget
   **
   ** Relayout this widget.  This method is called when something
   ** has changed and we need to recompute the layout of this
-  ** widget's children.  Relayout will implicitly call repaint also.
-  ** Return this.
+  ** widget's children.  Return this.
   **
   native This relayout()
 
