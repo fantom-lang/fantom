@@ -328,6 +328,7 @@ internal class ViewTab : EdgePane
   Void reload()
   {
     if (!confirmClose) return
+    resource.refresh
     load(resource, LoadMode { addToHistory=false })
   }
 
