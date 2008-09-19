@@ -77,15 +77,17 @@ findPrev.accelerator=Ctrl+Shift+F
 findPrev.icon=fan:/sys/pod/icons/x16/go-previous.png
 
 findInFiles.name=Find in Files
-findInFiles.accelerator=Ctrl+Shift+F
+findInFiles.accelerator=Ctrl+F5
 findInFiles.icon=fan:/sys/pod/icons/x16/edit-find.png
 
 replace.name=Replace
-replace.accelerator=Ctrl+R
+replace.accelerator=F6
 replace.icon=fan:/sys/pod/icons/x16/edit-find-replace.png
 
+replaceAll.name=Replace All
+
 replaceInFiles.name=Replace in Files
-replaceInFiles.accelerator=Ctrl+Shift+R
+replaceInFiles.accelerator=Ctrl+F6
 
 goto.name=Goto
 goto.accelerator=Ctrl+G

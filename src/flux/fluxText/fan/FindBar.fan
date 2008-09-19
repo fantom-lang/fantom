@@ -14,6 +14,11 @@ using flux
 **
 internal class FindBar : ContentPane, TextEditorSupport
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
   new make(TextEditor editor)
   {
     this.editor = editor
@@ -30,33 +35,84 @@ internal class FindBar : ContentPane, TextEditorSupport
       onAction.add(&find(null, true))
     }
 
-    content = InsetPane(4,4,4,4)
+    findPane = InsetPane(4,4,4,4)
     {
       EdgePane
       {
         center = GridPane
         {
           numCols = 5
-          Label { text = Flux#.loc("find.name") }
-          add(Temp { findText })
-          InsetPane(0,0,0,8) { add(matchCase) }
+          Temp(50) { Label { text = Flux#.loc("find.name") }}
+          Temp(200) { findText }
+          InsetPane(0,0,0,8) { matchCase }
           ToolBar
           {
             addCommand(cmdNext)
             addCommand(cmdPrev)
           }
-          add(msg)
+          msg
         }
         right = ToolBar { addCommand(cmdHide) }
       }
     }
+
+    replaceText = Text()
+    replaceText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
+    replaceText.onModify.add |Event e|
+    {
+      v := findText.text.size > 0 && replaceText.text.size > 0
+      cmdReplace.enabled = cmdReplaceAll.enabled = v
+    }
+
+    replacePane = InsetPane(0,4,4,4)
+    {
+      GridPane
+      {
+        numCols = 3
+        Temp(50) { Label { text = Flux#.loc("replace.name") } }
+        Temp(200) { replaceText }
+        InsetPane(0,0,0,8)
+        {
+          GridPane
+          {
+            numCols = 2
+            Button { command = cmdReplace;    image = null }
+            Button { command = cmdReplaceAll; image = null }
+          }
+        }
+      }
+    }
+
+    content = EdgePane
+    {
+      top    = findPane
+      bottom = replacePane
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Methods
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Show the FindBar with find only in the parent widget.
+  **
+  Void showFind()
+  {
+    show(false)
   }
 
   **
-  ** Show the FindBar in the parent widget.
+  ** Show the FindBar with find and replace in the parent widget.
   **
-  Void show()
+  Void showFindReplace()
   {
+    show(true)
+  }
+
+  private Void show(Bool showReplace := false)
+  {
+    replacePane.visible = showReplace
     visible = true
     parent?.parent?.parent?.relayout
 
@@ -77,6 +133,10 @@ internal class FindBar : ContentPane, TextEditorSupport
     parent?.parent?.parent?.relayout
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Support
+//////////////////////////////////////////////////////////////////////////
+
   **
   ** Find the current query string in the text document,
   ** starting at the given caret pos.  If pos is null,
@@ -86,61 +146,67 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void find(Int fromPos, Bool forward := true)
   {
-    q := findText.text
-    if (q.size == 0)
+    enabled := false
+    try
     {
-      setMsg("")
-      cmdPrev.enabled = false
-      cmdNext.enabled = false
-      return
-    }
+      q := findText.text
+      if (q.size == 0)
+      {
+        setMsg("")
+        return
+      }
 
-    match := matchCase.selected
-    pos   := fromPos ?: caretPos
-    off   := forward ?
-      doc.findNext(q, pos, match) :
-      doc.findPrev(q, pos-q.size-1, match)
+      enabled = true
+      match := matchCase.selected
+      pos   := fromPos ?: caretPos
+      off   := forward ?
+        doc.findNext(q, pos, match) :
+        doc.findPrev(q, pos-q.size-1, match)
 
-    cmdPrev.enabled = true
-    cmdNext.enabled = true
-
-    // if found select next occurance
-    if (off != null)
-    {
-      richText.select(off, q.size)
-      setMsg("")
-      return
-    }
-
-    // if not found, try from beginning of file
-    if (pos > 0 && forward)
-    {
-      off = doc.findNext(q, 0, match)
+      // if found select next occurance
       if (off != null)
       {
         richText.select(off, q.size)
-        setMsg(Flux#.loc("find.wrapToTop"))
+        setMsg("")
         return
       }
-    }
 
-    // if not found, try from end of file
-    if (pos < doc.size && !forward)
-    {
-      off = doc.findPrev(q, doc.size, match)
-      if (off != null)
+      // if not found, try from beginning of file
+      if (pos > 0 && forward)
       {
-        richText.select(off, q.size)
-        setMsg(Flux#.loc("find.wrapToBottom"))
-        return
+        off = doc.findNext(q, 0, match)
+        if (off != null)
+        {
+          richText.select(off, q.size)
+          setMsg(Flux#.loc("find.wrapToTop"))
+          return
+        }
       }
-    }
 
-    // not found
-    richText.selectClear
-    setMsg(Flux#.loc("find.notFound"))
-    cmdPrev.enabled = false
-    cmdNext.enabled = false
+      // if not found, try from end of file
+      if (pos < doc.size && !forward)
+      {
+        off = doc.findPrev(q, doc.size, match)
+        if (off != null)
+        {
+          richText.select(off, q.size)
+          setMsg(Flux#.loc("find.wrapToBottom"))
+          return
+        }
+      }
+
+      // not found
+      richText.selectClear
+      setMsg(Flux#.loc("find.notFound"))
+      enabled = false
+    }
+    finally
+    {
+      cmdPrev.enabled       = enabled
+      cmdNext.enabled       = enabled
+      cmdReplace.enabled    = enabled
+      cmdReplaceAll.enabled = enabled
+    }
   }
 
   **
@@ -161,27 +227,57 @@ internal class FindBar : ContentPane, TextEditorSupport
     find(richText.caretPos, false)
   }
 
+  **
+  ** Replace the current query string with the replace string.
+  **
+  internal Void replace()
+  {
+    echo("TODO: replace")
+  }
+
+  **
+  ** Replace all occurences of the current query string with
+  ** the replace string.
+  **
+  internal Void replaceAll()
+  {
+    echo("TODO: replaceAll")
+  }
+
   private Void setMsg(Str text)
   {
     msg.text = text
     msg.parent.relayout
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
   override readonly TextEditor editor
   private Int caretPos
+
+  private Widget findPane
+  private Widget replacePane
   private Text findText
+  private Text replaceText
   private Button matchCase
   private Label msg := Label()
+
   private Command cmdNext := Command.makeLocale(Flux#.pod, "findPrev", &prev)
   private Command cmdPrev := Command.makeLocale(Flux#.pod, "findNext", &next)
   private Command cmdHide := Command.makeLocale(Flux#.pod, "findHide", &hide)
+  private Command cmdReplace    := Command.makeLocale(Flux#.pod, "replace",    &replace)
+  private Command cmdReplaceAll := Command.makeLocale(Flux#.pod, "replaceAll", &replaceAll)
 }
 
 internal class Temp : ContentPane
 {
+  Int pw
+  new make(Int pw) { this.pw = pw }
   override Size prefSize(Hints hints := Hints.def)
   {
     ps := super.prefSize(hints)
-    return Size(200, ps.h)
+    return Size(pw, ps.h)
   }
 }
