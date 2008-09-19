@@ -41,6 +41,7 @@ class FluxCommand : Command
   {
     this.id = id
 
+    // check for explicit binding
     binding := KeyOptions.load.bindings[id]
     try
     {

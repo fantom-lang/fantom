@@ -78,8 +78,8 @@ class Build : FluxCommand
       f = f.parent
     }
 
-    Dialog.openErr(frame, "Build file is not under fan installation: $buildFile")
-    return false
+    fanHome = Sys.homeDir
+    return true
   }
 
   **

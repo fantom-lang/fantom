@@ -260,9 +260,14 @@ abstract class Widget
   **
   ** Relayout this widget.  This method is called when something
   ** has changed and we need to recompute the layout of this
-  ** widget's children.
+  ** widget's children.  Return this.
   **
-  native Void relayout()
+  native This relayout()
+
+  **
+  ** Set this widget's size to its preferred size.  Return this.
+  **
+  native This pack()
 
   **
   ** Compute the preferred size of this widget.  The hints indicate

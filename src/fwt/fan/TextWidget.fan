@@ -74,6 +74,19 @@ abstract class TextWidget : Widget
   **
   virtual native Font font
 
+  **
+  ** The preferred number of character columns to
+  ** use in calculating prefSize.
+  **
+  Int prefCols := 20
+
+  **
+  ** The preferred number of character rows to
+  ** use in calculating prefSize if multiLine, otherwise
+  ** this field is ignored.
+  **
+  Int prefRows := 10
+
 //////////////////////////////////////////////////////////////////////////
 // Selection
 //////////////////////////////////////////////////////////////////////////
@@ -109,8 +122,27 @@ abstract class TextWidget : Widget
   virtual native Void selectClear()
 
 //////////////////////////////////////////////////////////////////////////
-// Utils
+// Methods
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return the preferred size based on `prefCols` and
+  ** `prefRows`.
+  **
+  override Size prefSize(Hints hints := Hints.def)
+  {
+    // this isn't very exact right now
+    inset := 10
+    scroll := 20
+    superPref := super.prefSize(hints)
+    font = this.font ?: Font.sys
+    if (multiLine)
+      return Size(inset + font.width("m")*prefCols + scroll,
+                  inset + font.height*prefRows + scroll)
+    else
+      return Size(inset + font.width("m")*prefCols ,
+                  superPref.h)
+  }
 
   **
   ** Replace the text with 'newText' starting at position 'start'

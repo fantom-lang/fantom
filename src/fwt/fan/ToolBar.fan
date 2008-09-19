@@ -28,7 +28,8 @@ class ToolBar : Widget
   **
   Button addCommand(Command c)
   {
-    button := Button { command = c; text = "" }
+    button := Button.makeCommand(c)
+    if (c.icon != null) button.text = ""
     add(button)
     return button
   }

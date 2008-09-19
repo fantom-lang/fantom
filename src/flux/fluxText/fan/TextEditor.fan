@@ -23,7 +23,24 @@ class TextEditor : View
 
   override Widget buildToolBar()
   {
-    return find
+    return EdgePane
+    {
+      top = InsetPane(4,4,5,4)
+      {
+        ToolBar
+        {
+          addCommand(frame.command(CommandId.save))
+          addSep
+          addCommand(frame.command(CommandId.cut))
+          addCommand(frame.command(CommandId.copy))
+          addCommand(frame.command(CommandId.paste))
+          addSep
+          addCommand(frame.command(CommandId.undo))
+          addCommand(frame.command(CommandId.redo))
+        }
+      }
+      bottom = find
+    }
   }
 
   override Widget buildStatusBar()
@@ -94,8 +111,19 @@ class TextEditor : View
     controller.register
 
     // update ui
-    find = FindBar(richText) { visible = false }
-    content = richText
+    find = FindBar(this) { visible = false }
+    content = BorderPane
+    {
+      content  = richText
+      insets   = Insets(1,0,1,1)
+      onBorder = |Graphics g, Insets insets, Size size|
+      {
+        g.brush = Color.sysNormShadow
+        g.drawLine(0, 0, size.w, 0)
+        g.drawLine(0, 0, 0, size.h-1)
+        g.drawLine(0, size.h-1, size.w, size.h-1)
+      }
+    }
   }
 
   internal Void loadDoc()

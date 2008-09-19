@@ -244,7 +244,7 @@ public abstract class Prop
 
     void set(List v)
     {
-      val = v;
+      val = v.ro();
       Widget w = peer.control;
       if (w != null)
         set(w, val.toStrings());
@@ -252,7 +252,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, String[] v);
 
-    List val = new List(Sys.ObjType);
+    List val = new List(Sys.ObjType).ro();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -283,7 +283,7 @@ public abstract class Prop
     void set(List v)
     {
       Widget w = peer.control;
-      val = v;
+      val = v == null ? null : v.ro();
       if (w != null)
         set(w, val == null ? null : val.toInts());
     }
@@ -291,7 +291,7 @@ public abstract class Prop
     public abstract int[] get(Widget w);
     public abstract void set(Widget w, int[] v);
 
-    List val = new List(Sys.IntType);
+    List val = new List(Sys.IntType).ro();
   }
 
 //////////////////////////////////////////////////////////////////////////

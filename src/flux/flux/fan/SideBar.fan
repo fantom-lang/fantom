@@ -46,6 +46,7 @@ abstract class SideBar : ContentPane
     if (showing) return this
     showing=true
     frame.sideBarPane.show(this)
+    content?.relayout
     return this
   }
 

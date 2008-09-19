@@ -90,7 +90,7 @@ class CallResolver : CompilerSupport
       if (stypes != null)
       {
         if (stypes.size > 1)
-          err("Ambiguous type: " + stypes.join(", "), location)
+          throw err("Ambiguous type: " + stypes.join(", "), location)
         else
           result = StaticTargetExpr.make(location, stypes.first)
         return true

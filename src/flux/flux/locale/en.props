@@ -59,6 +59,8 @@ paste.accelerator=Ctrl+V
 find.name=Find
 find.accelerator=Ctrl+F
 find.icon=fan:/sys/pod/icons/x16/edit-find.png
+
+find.matchCase=Match case
 find.notFound=Not Found
 find.wrapToTop=Reached end of file, continued from top
 find.wrapToBottom=Reached beginning of file, continued from bottom
@@ -90,11 +92,11 @@ goto.accelerator=Ctrl+G
 
 jumpNext.name=Jump Next
 jumpNext.accelerator=F8
-jumpNext.icon=fan:/sys/pod/icons/x16/jump-next.png
+jumpNext.icon=fan:/sys/pod/icons/x16/go-next.png
 
 jumpPrev.name=Jump Prev
 jumpPrev.accelerator=Shift+F8
-jumpPrev.icon=fan:/sys/pod/icons/x16/jump-prev.png
+jumpPrev.icon=fan:/sys/pod/icons/x16/go-previous.png
 
 //////////////////////////////////////////////////////////////////////////
 // View menu
@@ -166,5 +168,9 @@ openIn.name.mac=Open in Finder
 
 NavBar.accelerator=Alt+N
 navBar.root=My Computer
-goInto.name=Go Into
+
+navBar.close.name=Close
+navBar.close.icon=fan:/sys/pod/icons/x16/tab-close.png
+
+navBar.goInto.name=Go Into
 
