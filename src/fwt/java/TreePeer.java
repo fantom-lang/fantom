@@ -48,6 +48,7 @@ public class TreePeer
     if (self.border.val)  style |= SWT.BORDER;
 
     Tree t = new Tree((Composite)parent, style);
+    t.addListener(SWT.Expand, this);
     t.addListener(SWT.SetData, this);
     t.addSelectionListener(this);
     t.setMenu(new Menu(t));
@@ -132,9 +133,21 @@ public class TreePeer
   {
     switch (event.type)
     {
-      case SWT.SetData:          handleSetData(event); break;
+      case SWT.Expand:   handleExpand(event); break;
+      case SWT.SetData:  handleSetData(event); break;
       default: System.out.println("WARNING: TreePeer.handleEvent: " + event);
     }
+  }
+
+  private void handleExpand(Event event)
+  {
+    TreeModel model = model();
+    if (model == null) return;
+
+    TreeItem item = (TreeItem)event.item;
+    Data itemData = (Data)item.getData();
+    List kids = model.children(itemData.node);
+    if (kids.sz() == 0) item.setItemCount(0);
   }
 
   private void handleSetData(Event event)
