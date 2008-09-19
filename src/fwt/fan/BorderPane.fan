@@ -13,7 +13,7 @@
 **
 ** TODO: Design imcomplete.
 **
-class BorderPane : Widget
+class BorderPane : Pane
 {
 
   **
@@ -49,17 +49,21 @@ class BorderPane : Widget
     return Size(pref.w + insetSize.w, pref.h + insetSize.h)
   }
 
+  override Void onLayout()
+  {
+    if (content == null) return
+    content.bounds = Rect
+    {
+      x = insets.left
+      y = insets.top
+      w = size.w - insets.left - insets.right
+      h = size.h - insets.top - insets.bottom
+    }
+  }
+
   override Void onPaint(Graphics g)
   {
     onBorder?.call([g, insets, size])
-    if (content != null)
-      content.bounds = Rect
-      {
-        x = insets.left
-        y = insets.top
-        w = size.w - insets.left - insets.right
-        h = size.h - insets.top - insets.bottom
-      }
   }
 
 }
