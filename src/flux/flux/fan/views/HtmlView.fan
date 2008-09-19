@@ -20,7 +20,16 @@ internal class HtmlView : View
     {
       onHyperlink.add(&onHyperlink)
     }
-    content = browser
+    content = BorderPane
+    {
+      content  = browser
+      insets   = Insets(0,0,0,1)
+      onBorder = |Graphics g, Insets i, Size s|
+      {
+        g.brush = Color.sysNormShadow
+        g.drawLine(0, 0, 0, s.h)
+      }
+    }
     browser.load(resource.uri)
   }
 
