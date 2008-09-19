@@ -663,7 +663,13 @@ internal class AboutCommand : FluxCommand
       halignCells = Halign.center
       Label { image = Image(icon) }
       Label { text = "Flux"; font = big }
-      Label { text = "Version $type.pod.version"; font = small }
+      GridPane
+      {
+        halignCells = Halign.center
+        vgap = 0
+        Label { text = "Version $type.pod.version"; font = small }
+        Label { text = "Fan Home ${Sys.homeDir}"; font = small }
+      }
       Label { font = small; text =
         "   Copyright (c) 2008, Brian Frank and Andy Frank
          Licensed under the Academic Free License version 3.0"

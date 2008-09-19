@@ -74,6 +74,12 @@ abstract class Resource
   }
 
   **
+  ** Refresh this resource - update any cached state.
+  ** Return this.
+  **
+  virtual This refresh() { return this }
+
+  **
   ** Make a popup menu for this resource or return null.
   ** The default popup menu returns the `viewsMenu`.
   **

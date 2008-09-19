@@ -77,7 +77,12 @@ class Tree : Widget
   **
   ** Update the entire tree's contents from the model.
   **
-  native Void updateAll()
+  native Void refreshAll()
+
+  **
+  ** Update the specified node from the model.
+  **
+  native Void refreshNode(Obj node)
 
 }
 

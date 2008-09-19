@@ -77,6 +77,15 @@ class FileResource : Resource
   private FileResource[] kids
 
   **
+  ** Refresh this resource - update any cached state.
+  **
+  override This refresh()
+  {
+    this.kids = null
+    return this
+  }
+
+  **
   ** View types are based on mime type.  Register a file view
   ** using the facet "fluxViewMimeType" with a Str value for the
   ** MIME type such as "image/png".  You can also register with
