@@ -46,6 +46,7 @@ class CommandId
   static const Str forward        := "forward"
   static const Str up             := "up"
   static const Str home           := "home"
+  static const Str recent         := "recent"
 
   // tools menu
   static const Str options        := "options"
