@@ -75,6 +75,19 @@ internal class MarkParser
 
   Mark parse()
   {
+    try
+    {
+      return doParse
+    }
+    catch (Err e)
+    {
+      e.trace
+      return null
+    }
+  }
+
+  private Mark doParse()
+  {
     // use case insensitive compare on windows
     text := this.text
     if (Desktop.isWindows) text = text.lower
@@ -106,7 +119,7 @@ internal class MarkParser
     Str n := names.eachBreak |Str n->Str| { return rest.startsWith(n) ? n : null }
     if (n != null)
     {
-      f = f + n.toUri
+      f = File.make(f.uri + n.toUri, false)
       e += n.size
     }
     fileStart = s

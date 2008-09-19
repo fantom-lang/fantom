@@ -134,6 +134,46 @@ are:
       "boolean",
       ...
 
+Tools [#tools]
+**************
+You can add your own commands into the Tools menu.  Tools are nothing
+but a Fan script file which declares a `flux::FluxCommand` class.  The
+Tools menu structure reflects the "flux/tools/" directory.  Sub-directories
+are represented as sub-menus and scripts ending in ".fan" are the command
+menu items.  When the command is executed the script is compiled if out
+of date and the 'FluxCommand.invoke' is invoked.  Here is an example
+tool script:
+
+  using fwt
+  using flux
+
+  class HelloWorld : FluxCommand
+  {
+    new make(Str id) : super(id) {}
+
+    override Void invoke(Event event)
+    {
+      Dialog.openInfo(frame, "Hello world tool!")
+    }
+  }
+
+A common use of tools is to spawn an external program such as a compiler.
+You can do this via the console sidebar.  For example assuming "fan" is
+your path, the following will run "fan -version" and show the output in
+the console:
+
+  override Void invoke(Event event)
+  {
+    frame.console.show.exec(["fan", "-version"])
+  }
+
+If you wish to have an accelerator to your tool, then add the command
+to your "flux/keys.fog" file, where the key is "tools.{filename}":
+
+  bindings =
+  [
+    "tools.HelloWorld": "Ctrl+F9",
+    ...
 
 Developing for Flux [#dev]
 **************************
