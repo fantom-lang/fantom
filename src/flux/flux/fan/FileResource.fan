@@ -142,18 +142,23 @@ class FileResource : Resource
   internal Void newDir(Frame frame, File dir)
   {
     if (!dir.isDir) throw ArgErr("Not a directory: $dir")
-    newDir := Dialog.openPromptStr(frame, type.loc("newDir.name"))
-    if (newDir != null)
+    newDir := ""
+    while (true)
     {
+      newDir = Dialog.openPromptStr(frame, type.loc("newDir.name"), newDir)
+      if (newDir == null) return
       try
       {
+        if (!Uri.isName(newDir))
+        {
+          Dialog.openErr(frame, "Invalid name: $newDir")
+          continue
+        }
         uri := dir.uri + "$newDir/".toUri
         File(uri).create
+        return
       }
-      catch (Err err)
-      {
-        Dialog.openErr(frame, "Error", err)
-      }
+      catch (Err err) { Dialog.openErr(frame, "Error", err) }
     }
   }
 
