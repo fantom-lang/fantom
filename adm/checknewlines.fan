@@ -2,14 +2,22 @@
 class CheckNewlines
 {
 
-  static Void check(File f)
+  Str[] exts := ["fan", "java", "cs", "fandoc", "props", "fog" ]
+
+  Void check(File f)
   {
-    if (f.ext != "fan") return
+    if (!exts.contains(f.ext)) return
     s := f.readAllStr(false)
     if (s.containsChar('\r'))
-      echo("Invalid newlines: $f")
+    {
+      echo("Fix newlines: $f")
+      lines := f.readAllLines
+      out := f.out
+      lines.each |Str line| { out.print(line.trimEnd).print("\n") }
+      out.close
+    }
   }
 
-  static Void main() { Sys.homeDir.walk(&check) }
+  Void main() { Sys.homeDir.walk(&check) }
 
 }

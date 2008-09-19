@@ -27,7 +27,7 @@ namespace Fan.Sys
       this.m_lock   = new object();
       this.m_mem    = new Hashtable(4096);
       this.m_mounts = new Hashtable(1024);
-      mount(Uri.fromStr("/sys"), new SysNamespace());    
+      mount(Uri.fromStr("/sys"), new SysNamespace());
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ namespace Fan.Sys
     public override Obj get(Uri uri, Bool check)
     {
       checkUri(uri);
-      
+
       Namespace sub = ns(uri);
       if (sub != this) return sub.get(uri, check);
 
@@ -112,7 +112,7 @@ namespace Fan.Sys
     public override void delete(Uri uri)
     {
       checkUri(uri);
-      
+
       Namespace sub = ns(uri);
       if (sub != this) { sub.delete(uri); return; }
 

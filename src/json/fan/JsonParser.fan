@@ -78,7 +78,7 @@ class JsonParser
     else if (this.cur.isDigit || this.cur == '-') return number
     else if (this.cur == JsonToken.OBJECT_START) return parseObject
     else if (this.cur == JsonToken.ARRAY_START) return array
-    else if (this.cur == 't') 
+    else if (this.cur == 't')
     {
       "true".size.times |Int i|{ consume }
       return true
@@ -93,7 +93,7 @@ class JsonParser
       "null".size.times |Int i|{ consume }
       return null
     }
-    
+
     throw Err("Finish this method!")
   }
 
@@ -138,7 +138,7 @@ class JsonParser
       }
     }
     rewind
-    if (fractional.size > 0) 
+    if (fractional.size > 0)
       return Decimal.fromStr(integral.toStr+"."+fractional.toStr+exponent.toStr)
     else if (exponent.size > 0)
       return Decimal.fromStr(integral.toStr+exponent.toStr)
@@ -179,7 +179,7 @@ class JsonParser
   private Void skipWhitespace()
   {
     consume
-    while (this.cur.isSpace) 
+    while (this.cur.isSpace)
     {
       consume
     }
@@ -215,5 +215,5 @@ class JsonParser
   private Int cur := -1
   private Int pos := 0
   private static const Str KEY_ATOM := "key_atom"
-  private static const Str VALUE_ATOM := "value_atom"  
+  private static const Str VALUE_ATOM := "value_atom"
 }
