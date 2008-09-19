@@ -84,7 +84,7 @@ public class TablePeer
 // Native Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public void updateAll(fan.fwt.Table self)
+  public void refreshAll(fan.fwt.Table self)
   {
     Table c = (Table)this.control;
 
