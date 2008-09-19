@@ -182,11 +182,15 @@ internal class NavBar : SideBar
     if (r is FileResource && r->file->isDir)
     {
       menu.add(MenuItem { mode = MenuItemMode.sep })
-      menu.add(MenuItem {
-        command = Command.makeLocale(NavBar#.pod, "navBar.goInto", &onGoInto(r))
-      })
+      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.refresh", &onRefresh(r)) })
+      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.goInto", &onGoInto(r)) })
     }
     event.popup = menu
+  }
+
+  internal Void onRefresh(Resource r)
+  {
+    echo("TODO: refresh")
   }
 
   internal Void onGoInto(Resource r)
@@ -204,7 +208,7 @@ internal class NavBar : SideBar
   Bool ignore  := true
   Combo combo  := Combo() { onModify.add(&onModify) }
   NavTreePane treePane := NavTreePane()
-  Command closeCmd := Command.makeLocale(NavBar#.pod, "navBar.close", &close)
+  Command closeCmd := Command.makeLocale(type.pod, "navBar.close", &close)
 }
 
 **************************************************************************
