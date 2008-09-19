@@ -125,10 +125,16 @@ class Console : SideBar
   **
   internal static Void execRun(ExecParams params)
   {
-    proc := Process(params.command, params.dir)
-    proc.out = ConsoleOutStream(params.frameId)
-    proc.run.join
-    Desktop.callAsync(&execDone(params.frameId))
+    try
+    {
+      proc := Process(params.command, params.dir)
+      proc.out = ConsoleOutStream(params.frameId)
+      proc.run.join
+    }
+    finally
+    {
+      Desktop.callAsync(&execDone(params.frameId))
+    }
   }
 
   **
