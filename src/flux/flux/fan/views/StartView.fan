@@ -37,7 +37,6 @@ internal class StartView : View
        </style>
       </head>
       <body>")
-
     html.add("<p><b>Recently Viewed</b></p>\n")
     html.add("<ul class='clean'>\n")
     History.load.items.each |HistoryItem item|
@@ -45,12 +44,21 @@ internal class StartView : View
       html.add("<li><a href='$item.uri'>$item.uri<a></li>\n")
     }
     html.add("</ul>\n")
-
     html.add("</body>\n</html>")
-    content = WebBrowser
+
+    content = BorderPane
     {
-      onHyperlink.add |Event e| { frame.loadUri(e.data); e.data = null }
-      loadStr(html.toStr)
+      content = WebBrowser
+      {
+        onHyperlink.add |Event e| { frame.loadUri(e.data); e.data = null }
+        loadStr(html.toStr)
+      }
+      insets   = Insets(0,0,0,1)
+      onBorder = |Graphics g, Insets i, Size s|
+      {
+        g.brush = Color.sysNormShadow
+        g.drawLine(0, 0, 0, s.h)
+      }
     }
   }
 
