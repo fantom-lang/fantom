@@ -50,7 +50,7 @@ internal class StartView : View
     {
       content = WebBrowser
       {
-        onHyperlink.add |Event e| { frame.loadUri(e.data); e.data = null }
+        onHyperlink.add |Event e| { frame.load(e.data); e.data = null }
         loadStr(html.toStr)
       }
       insets   = Insets(0,0,0,1)

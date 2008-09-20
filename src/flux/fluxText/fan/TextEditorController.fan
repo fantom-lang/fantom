@@ -234,7 +234,7 @@ internal class TextEditorController : TextEditorSupport
           "File has been modified by another application:
              $editor.file.name
            Reload the file?", Dialog.yesNo)
-    if (r == Dialog.yes) editor.frame.load(editor.resource)
+    if (r == Dialog.yes) editor.reload
   }
 
 //////////////////////////////////////////////////////////////////////////

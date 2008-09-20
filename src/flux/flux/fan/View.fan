@@ -36,6 +36,15 @@ abstract class View : ContentPane
   Resource resource { internal set }
 
   **
+  ** Reload this view.
+  **
+  Void reload()
+  {
+    if (frame.view !== this) throw Err("Current view not this")
+    frame.load(resource.uri)
+  }
+
+  **
   ** The dirty state indicates if unsaved changes have been
   ** made to the view.  Views should set dirty to true on
   ** modification.  Dirty is automatically cleared `onSave`.

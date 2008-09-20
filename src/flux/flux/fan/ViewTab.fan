@@ -29,94 +29,62 @@ internal class ViewTab : EdgePane
 // Load
 //////////////////////////////////////////////////////////////////////////
 
-  Void loadUri(Uri uri, LoadMode mode)
+  Void load(Uri uri, LoadMode mode)
   {
     try
     {
-      // resolve uri
-      obj := uri.get
-
-      // if the obj isn't already a resource, we need to wrap
-      // as a resource
-      r := obj as Resource
-      if (r == null)
-      {
-        rtype := Type.findByFacet("fluxResource", obj.type, true).first
-        if (rtype == null)
-        {
-          loadErr(ErrResource(uri), "Uknown resource mapping: $obj.type", mode)
-          return
-        }
-        r = rtype.make([uri, obj])
-      }
-
-      // load with mapped resource
-      load(r, mode)
+      r := loadResource(uri)
+      v := loadView(r)
+      doOnLoad(v, r)
+      doLoad(r, v, mode)
     }
-    catch (UnresolvedErr err)
-    {
-      loadErr(ErrResource(uri), "Resource not found", mode, err)
-    }
+    catch (ViewLoadErr err)
+      loadErr(ErrResource(uri), err.message, mode, err.cause)
     catch (Err err)
-    {
       loadErr(ErrResource(uri), "Cannot load view", mode, err)
-    }
   }
 
-  Void load(Resource r, LoadMode mode)
+  private Resource loadResource(Uri uri)
   {
-    if (r == null) throw ArgErr("resource is null")
     try
-    {
-      // check for explicit view query param, otherwise
-      // default to first registered view on resource type
-      Type viewType
-      qname := r.uri.query["view"]
-      if (qname != null)
-      {
-        viewType = Type.find(qname, false)
-        if (viewType == null)
-        {
-          loadErr(r, "Unknown view type '$qname'", mode)
-          return
-        }
-      }
-      else
-      {
-        viewType = r.views?.first
-        if (viewType == null)
-        {
-          loadErr(r, "No views registered", mode)
-          return
-        }
-      }
-
-      // create view
-      view := viewType.make as View
-      if (view == null)
-      {
-        loadErr(r, "Incorrect view type: '$viewType' is not 'flux::View'", mode)
-        return
-      }
-
-      // view onLoad callback (which might raise exception)
-      doOnLoad(view, r)
-      doLoad(r, view, mode)
-    }
-    catch (Err err)
-    {
-      loadErr(r, "Cannot load view", mode, err)
-    }
+      return Resource.resolve(uri)
+    catch (UnresolvedErr err)
+      throw ViewLoadErr("Resource not found", err)
+    catch (UnsupportedErr err)
+      throw ViewLoadErr("Resource type not supported", err)
   }
 
-  Void loadErr(Resource r, Str msg, LoadMode mode, Err cause := null)
+  private View loadView(Resource r)
+  {
+    // check for explicit view query param, otherwise
+    // default to first registered view on resource type
+    Type viewType
+    qname := r.uri.query["view"]
+    if (qname != null)
+    {
+      viewType = Type.find(qname, false)
+      if (viewType == null) throw ViewLoadErr("Unknown view type '$qname'")
+    }
+    else
+    {
+      viewType = r.views?.first
+      if (viewType == null) throw ViewLoadErr("No views registered")
+    }
+
+    // create view
+    view := viewType.make as View
+    if (view == null) throw ViewLoadErr("Incorrect view type: '$viewType' is not 'flux::View'")
+    return view
+  }
+
+  private Void loadErr(Resource r, Str msg, LoadMode mode, Err cause := null)
   {
     view := ErrView(msg, cause)
     doOnLoad(view, r)
     doLoad(r, view, mode)
   }
 
-  Void doOnLoad(View view, Resource r)
+  private Void doOnLoad(View view, Resource r)
   {
     view.frame = frame
     view.tab = this
@@ -328,15 +296,14 @@ internal class ViewTab : EdgePane
   Void reload()
   {
     if (!confirmClose) return
-    resource.refresh
-    load(resource, LoadMode { addToHistory=false })
+    load(resource.uri, LoadMode { addToHistory=false })
   }
 
   Void up()
   {
     parent := resource.uri.parent
     if (parent == null) return
-    loadUri(parent, LoadMode { addToHistory=true})
+    load(parent, LoadMode { addToHistory=true})
   }
 
   Void back()
@@ -345,7 +312,7 @@ internal class ViewTab : EdgePane
     oldr := resource
     newr := historyBack.pop
     push(historyForward, oldr)
-    load(newr, LoadMode { addToHistory=false})
+    load(newr.uri, LoadMode { addToHistory=false})
   }
 
   Void forward()
@@ -354,7 +321,7 @@ internal class ViewTab : EdgePane
     oldr := resource
     newr := historyForward.pop
     push(historyBack, oldr)
-    load(newr, LoadMode { addToHistory=false})
+    load(newr.uri, LoadMode { addToHistory=false})
   }
 
   private Void push(Resource[] list, Resource r)
@@ -380,4 +347,9 @@ internal class ViewTab : EdgePane
   internal Resource[] historyForward := Resource[,]
   internal Bool ignoreDirty := true
 
+}
+
+internal const class ViewLoadErr : Err
+{
+  new make(Str msg, Err cause := null) : super.make(msg, cause) {}
 }

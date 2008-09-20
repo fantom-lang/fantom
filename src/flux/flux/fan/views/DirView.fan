@@ -31,7 +31,7 @@ internal class DirView : View
   {
     file := model.file(event.index)
     if (file != null)
-      frame.load(file, LoadMode(event))
+      frame.load(file.uri, LoadMode(event))
   }
 
   internal Void onPopup(Event event)

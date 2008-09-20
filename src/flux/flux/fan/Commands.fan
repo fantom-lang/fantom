@@ -249,7 +249,7 @@ internal class Commands
     return MenuItem
     {
       text = name
-      onAction.add |,| { frame.loadUri(item.uri) }
+      onAction.add |,| { frame.load(item.uri) }
     }
   }
 
@@ -361,7 +361,7 @@ internal class NewTabCommand : FluxCommand
   new make() : super(CommandId.newTab) {}
   override Void invoke(Event event)
   {
-    frame.loadUri(`flux:start`, LoadMode { newTab=true })
+    frame.load(`flux:start`, LoadMode { newTab=true })
   }
 }
 
@@ -595,7 +595,7 @@ internal class UpCommand : FluxCommand
 internal class HomeCommand : FluxCommand
 {
   new make() : super(CommandId.home) {}
-  override Void invoke(Event event) { frame.loadUri(GeneralOptions.load.homePage) }
+  override Void invoke(Event event) { frame.load(GeneralOptions.load.homePage) }
 }
 
 ** Open recent history dialog
@@ -612,7 +612,7 @@ internal class RecentCommand : FluxCommand
       model = model
       onAction.add |Event e|
       {
-        frame.loadUri(model.items[e.index].uri, LoadMode(e))
+        frame.load(model.items[e.index].uri, LoadMode(e))
         dlg.close
       }
     }
@@ -636,7 +636,7 @@ internal class RecentTableModel : TableModel
 internal class OptionsCommand : FluxCommand
 {
   new make() : super(CommandId.options) {}
-  override Void invoke(Event event) { frame.loadUri(Flux.homeDir.uri) }
+  override Void invoke(Event event) { frame.load(Flux.homeDir.uri) }
 }
 
 ** Refresh the tools menu

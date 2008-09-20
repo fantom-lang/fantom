@@ -74,21 +74,22 @@ class Frame : Window
   Void select(View view) { tabPane.select(view.tab) }
 
   **
-  ** Load the specified resource in the active tab.
-  ** The default mode will replace the current tab.
-  **
-  Void load(Resource r, LoadMode mode := LoadMode())
-  {
-    doLoad(this, r, mode)
-  }
-
-  **
   ** Load the specified resource Uri in the active tab.
   ** The default mode will replace the current tab.
   **
-  Void loadUri(Uri uri, LoadMode mode := LoadMode())
+  Void load(Uri uri, LoadMode mode := LoadMode())
   {
-    doLoad(this, uri, mode)
+    // get tab to load
+    tab := view.tab
+    if (mode.newTab || view.dirty)
+      tab = tabPane.newTab
+
+    // load the tab
+    tab.load(uri, mode)
+
+    // select the tab once loading is done to deactivate old
+    // tab and activate this one (if we switched tabs)
+    tabPane.select(tab)
   }
 
   **
@@ -98,34 +99,11 @@ class Frame : Window
   **
   Void loadMark(Mark mark, LoadMode mode := LoadMode())
   {
-    tab := view.tab
     if (mark.uri != view.resource.uri)
-      tab = doLoad(this, mark.uri, mode)
+      load(mark.uri, mode)
     sideBarPane.onGotoMark(mark)
-    tab.onGotoMark(mark)
+    view.tab.onGotoMark(mark)
     try { curMark = marks.indexSame(mark) } catch {}
-  }
-
-  **
-  ** Internal common implementation for loading.
-  **
-  internal static ViewTab doLoad(Frame frame, Obj target, LoadMode mode)
-  {
-    // get tab to load
-    tab := frame.view.tab
-    if (mode.newTab || frame.view.dirty)
-     tab = frame.tabPane.newTab
-
-    // load the tab
-    if (target is Uri)
-      tab.loadUri(target, mode)
-    else
-      tab.load(target, mode)
-
-    // select the tab once loading is done to deactivate old
-    // tab and activate this one (if we switched tabs)
-    frame.tabPane.select(tab)
-    return tab
   }
 
 //////////////////////////////////////////////////////////////////////////

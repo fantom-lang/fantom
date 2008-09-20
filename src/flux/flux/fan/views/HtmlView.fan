@@ -40,7 +40,7 @@ internal class HtmlView : View
     // navigation
     Uri uri := event.data
     event.data = null
-    frame.loadUri(uri)
+    frame.load(uri)
   }
 
 }
