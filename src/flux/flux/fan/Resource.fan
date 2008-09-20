@@ -28,6 +28,29 @@ abstract class Resource
   }
 
   **
+  ** Resolve a uri into a resource:
+  **   1.  Resolve uri to obj via `sys::Uri.get`
+  **   2.  If obj is Resource, return it
+  **   3.  Resolve to obj type to resource type via '@fluxResource' facet
+  **
+  ** Throw UnresolvedErr if the uri can't be resolved, and UnsupportedErr
+  ** if resource can't be mapped to a resource.
+  **
+  static Resource resolve(Uri uri)
+  {
+    // 1. resolve uri
+    obj := uri.get
+
+    // 2. if already resource return it
+    if (obj is Resource) return obj
+
+    // 3. map via fluxResource facet
+    rtype := Type.findByFacet("fluxResource", obj.type, true).first
+    if (rtype == null) throw UnsupportedErr("No resource mapping for $obj.type")
+    return rtype.make([uri, obj])
+  }
+
+  **
   ** Get the absolute Uri of this resource.
   **
   abstract Uri uri()
@@ -74,12 +97,6 @@ abstract class Resource
   }
 
   **
-  ** Refresh this resource - update any cached state.
-  ** Return this.
-  **
-  virtual This refresh() { return this }
-
-  **
   ** Make a popup menu for this resource or return null.
   ** The default popup menu returns the `viewsMenu`.
   **
@@ -98,7 +115,7 @@ abstract class Resource
     views.each |Type v, Int i|
     {
       viewUri := i == 0 ? uri : uri.plusQuery(["view":v.qname])
-      c := Command(v.name, null, &frame.loadUri(viewUri, LoadMode(event)))
+      c := Command(v.name, null, &frame.load(viewUri, LoadMode(event)))
       menu.add(MenuItem { command = c })
     }
     return menu

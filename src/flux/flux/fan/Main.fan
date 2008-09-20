@@ -22,7 +22,7 @@ internal class Main
     // load first uri from configured homePage or command line
     uri := GeneralOptions.load.homePage
     if (!args.isEmpty) uri = `./`.toFile.normalize.uri + args.first.toUri
-    f.loadUri(uri)
+    f.load(uri)
 
     // open the frame and let's get this party started!
     f.open

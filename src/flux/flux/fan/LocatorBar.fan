@@ -34,7 +34,7 @@ internal class LocatorBar : Widget
   {
     uri := uriText.text.toUri
     if (view != null) uri = uri.plusQuery(["view":view.qname])
-    frame.loadUri(uri)
+    frame.load(uri)
   }
 
   Void onViewPopup(Event event)
@@ -101,4 +101,3 @@ internal class LocatorBar : Widget
   Str view := "Views"
 
 }
-

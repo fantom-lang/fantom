@@ -172,7 +172,7 @@ internal class NavBar : SideBar
   internal Void onAction(Event event)
   {
     if (event.data != null)
-      frame.load(event.data, LoadMode(event))
+      frame.load(event.data->uri, LoadMode(event))
   }
 
   internal Void onPopup(Event event)
@@ -190,7 +190,7 @@ internal class NavBar : SideBar
 
   internal Void onRefresh(Resource r)
   {
-    r.refresh
+    r = Resource.resolve(r.uri)
     active.refreshNode(r)
   }
 
