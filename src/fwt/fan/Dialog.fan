@@ -128,13 +128,17 @@ class Dialog : Window
     }
 
     // build main pane
-    pane := GridPane
+    pane := ConstraintPane
     {
-      numCols = 2
-      expandCol = 1
-      halignCells=Halign.fill
-      Label { image = icon }
-      add(content)
+      minw = (details == null) ? 200 : 320
+      content = GridPane
+      {
+        numCols = 2
+        expandCol = 1
+        halignCells=Halign.fill
+        Label { image = icon }
+        add(content)
+      }
     }
 
     dialog := Dialog(parent, pane, commands) { title = title }
@@ -200,7 +204,11 @@ class Dialog : Window
     commands.each |Command c|
     {
       c.assocDialog = this
-      buttons.add(Button.makeCommand(c) { insets=Insets(0, 10, 0, 10) })
+      buttons.add(ConstraintPane
+      {
+        minw = 70
+        Button.makeCommand(c) { insets=Insets(0, 10, 0, 10) }
+      })
     }
 
     // build overall
