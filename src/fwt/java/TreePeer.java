@@ -122,7 +122,9 @@ public class TreePeer
     Data data = (Data)item.getData();
     data.children = null;
 
-    c.clear(c.indexOf(item), true);
+    item.removeAll();
+    lazyLoadChildren(item);
+    item.clearAll(true);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -145,9 +147,21 @@ public class TreePeer
     if (model == null) return;
 
     TreeItem item = (TreeItem)event.item;
-    Data itemData = (Data)item.getData();
-    List kids = model.children(itemData.node);
-    if (kids.sz() == 0) item.setItemCount(0);
+    lazyLoadChildren(item);
+  }
+
+  private void lazyLoadChildren(TreeItem item)
+  {
+    // in handleSetData we set the number of children to 1
+    // if we might have children, but we don't actually
+    // load the children until the user attempts to expand
+    Data data = (Data)item.getData();
+    if (data.children == null)
+    {
+      List kids = model().children(data.node);
+      data.children = kids;
+      item.setItemCount(kids.sz());
+    }
   }
 
   private void handleSetData(Event event)
@@ -168,15 +182,10 @@ public class TreePeer
     }
     else
     {
-      // first check that've loaded the parent's children
+      // check that've loaded the parent's children, then lookup node
       Data parentData = (Data)parentItem.getData();
-      if (parentData.children == null)
-      {
-        List kids = model.children(parentData.node);
-        parentData.children = kids;
-        parentItem.setItemCount(kids.sz());
-        if (event.index >= kids.sz()) return;
-      }
+      lazyLoadChildren(parentItem);
+      if (event.index >= parentData.children.sz()) return;
       node = parentData.children.get(event.index);
     }
 
@@ -186,19 +195,10 @@ public class TreePeer
     item.setText(model.text(node).val);
     item.setImage(env.image(model.image(node)));
     item.setData(data);
-    if (parentItem == null)
-    {
-      // if root, then load children one level deep because
-      // expanding a root with no children seems to crash SWT
-      data.children = model.children(node);
-      item.setItemCount(data.children.sz());
-    }
-    else
-    {
-      // otherwise assume we only have one child to prevent the
-      // SWT from loading the children until the node is expanded
-      item.setItemCount(model.hasChildren(node).val ? 1 : 0);
-    }
+
+    // assume we only have one child to prevent the SWT from loading
+    // the children until the node is expanded; see lazyLoadChildren
+    item.setItemCount(model.hasChildren(node).val ? 1 : 0);
   }
 
   public void widgetDefaultSelected(SelectionEvent se)
@@ -280,9 +280,21 @@ public class TreePeer
     TreeItem[] items = ((Tree)control).getItems();
     for (int i=0; i<items.length; ++i)
     {
-      Data data = (Data)items[i].getData();
-      if (data != null && data.node == node)
-        return items[i];
+      TreeItem r = item(node, items[i]);
+      if (r != null) return r;
+    }
+    return null;
+  }
+
+  TreeItem item(Obj node, TreeItem item)
+  {
+    Data data = (Data)item.getData();
+    if (data == null) return null;
+    if (data.node == node) return item;
+    for (int i=0; i<item.getItemCount(); ++i)
+    {
+      TreeItem r = item(node, item.getItem(i));
+      if (r != null) return r;
     }
     return null;
   }
