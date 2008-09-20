@@ -99,10 +99,18 @@ class Frame : Window
   **
   Void loadMark(Mark mark, LoadMode mode := LoadMode())
   {
-    if (mark.uri != view.resource.uri)
+    // find existing tab for uri, otherwise load it
+    v := views.find |View v->Bool| { return v.resource.uri == mark.uri }
+    if (v != null)
+      select(v)
+    else
       load(mark.uri, mode)
+
+    // onGotoMark callbacks
     sideBarPane.onGotoMark(mark)
     view.tab.onGotoMark(mark)
+
+    // update curMark
     try { curMark = marks.indexSame(mark) } catch {}
   }
 
