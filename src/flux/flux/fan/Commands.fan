@@ -616,7 +616,13 @@ internal class RecentCommand : FluxCommand
         dlg.close
       }
     }
-    dlg = Dialog(frame, table, [Dialog.ok, Dialog.cancel]) { title = "Recent" }
+    pane := ConstraintPane
+    {
+      minw = 300
+      maxh = 300
+      add(table)
+    }
+    dlg = Dialog(frame, pane, [Dialog.ok, Dialog.cancel]) { title = "Recent" }
     dlg.open
   }
 }
