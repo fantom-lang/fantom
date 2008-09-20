@@ -177,26 +177,27 @@ internal class NavBar : SideBar
 
   internal Void onPopup(Event event)
   {
-    r := event.data as Resource
+    n := event.data as NavNode
+    r := n?.resource
     menu := r?.popup(frame, event) ?: Menu()
     if (r is FileResource && r->file->isDir)
     {
       menu.add(MenuItem { mode = MenuItemMode.sep })
-      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.refresh", &onRefresh(r)) })
-      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.goInto", &onGoInto(r)) })
+      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.refresh", &onRefresh(n)) })
+      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.goInto", &onGoInto(n)) })
     }
     event.popup = menu
   }
 
-  internal Void onRefresh(Resource r)
+  internal Void onRefresh(NavNode n)
   {
-    r = Resource.resolve(r.uri)
-    active.refreshNode(r)
+    n.refresh
+    active.refreshNode(n)
   }
 
-  internal Void onGoInto(Resource r)
+  internal Void onGoInto(NavNode n)
   {
-    addTree(r)
+    addTree(n.resource)
     select(trees.size-1)
   }
 
@@ -231,13 +232,55 @@ internal class NavBarState
 
 internal class NavTreeModel : TreeModel
 {
-  new make(Obj[] roots) { this.myRoots = roots }
+  new make(Resource[] roots) { this.myRoots = NavNode.map(roots) }
   override Obj[] roots() { return myRoots }
-  override Str text(Obj node) { return ((Resource)node).name }
-  override Image image(Obj node) { return ((Resource)node).icon }
-  override Bool hasChildren(Obj node) { return ((Resource)node).hasChildren }
-  override Obj[] children(Obj node) { return ((Resource)node).children }
-  private Obj[] myRoots
+  override Str text(Obj node) { return ((NavNode)node).name }
+  override Image image(Obj node) { return ((NavNode)node).icon }
+  override Bool hasChildren(Obj node) { return ((NavNode)node).hasChildren }
+  override Obj[] children(Obj node) { return ((NavNode)node).children }
+  private NavNode[] myRoots
+}
+
+**************************************************************************
+** NavNode
+**************************************************************************
+
+@serializable
+internal class NavNode
+{
+  static NavNode[] map(Resource[] r)
+  {
+    return r.map(NavNode[,]) |Resource x->Obj| { return NavNode(x) }
+  }
+
+  new make(Resource r) { resource = r }
+
+  Resource resource
+
+  override Str toStr() { return resource.toStr }
+
+  Uri uri() { return resource.uri }
+
+  Str name() { return resource.name }
+
+  Image icon() { return resource.icon }
+
+  Bool hasChildren() { return resource.hasChildren }
+
+  NavNode[] children
+  {
+    get
+    {
+      if (@children == null) @children = map(resource.children)
+      return @children
+    }
+  }
+
+  Void refresh()
+  {
+    resource = Resource.resolve(resource.uri)
+    children = null
+  }
 }
 
 **************************************************************************
