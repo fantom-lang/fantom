@@ -86,7 +86,7 @@ SyntaxOptions
   bracket       = RichTextStyle { fg = Color("#f00") }
   bracketMatch  = RichTextStyle { fg = Color("#f00"); bg=Color("#ff0") }
   keyword       = RichTextStyle { fg = Color("#00f") }
-  literal       = RichTextStyle { fg = Color("#707") }
+  literal       = RichTextStyle { fg = Color("#077") }
   comment       = RichTextStyle { fg = Color("#070") }
 
 }

@@ -38,7 +38,7 @@ const class SyntaxOptions
   const RichTextStyle bracket       := RichTextStyle { fg = Color(0xff_00_00) }
   const RichTextStyle bracketMatch  := RichTextStyle { fg = Color(0xff_00_00); bg=Color(0xff_ff_00); }
   const RichTextStyle keyword       := RichTextStyle { fg = Color(0x00_00_ff) }
-  const RichTextStyle literal       := RichTextStyle { fg = Color(0x77_00_77) }
+  const RichTextStyle literal       := RichTextStyle { fg = Color(0x00_77_77) }
   const RichTextStyle comment       := RichTextStyle { fg = Color(0x00_77_00) }
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,6 +50,5 @@ const class SyntaxOptions
     return Flux.loadOptions("syntax", SyntaxOptions#)
   }
 }
-
 
 
