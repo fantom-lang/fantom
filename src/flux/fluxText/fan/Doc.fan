@@ -262,6 +262,7 @@ class Doc : RichTextModel
     {
       lines.add(parser.parseLine(str))
     }
+    if (lines.isEmpty) lines.add(parser.parseLine(""))
     updateLines(lines)
   }
 
@@ -572,5 +573,4 @@ internal abstract class Block
   ** or str.  Return null if this instance doesn't close open.
   abstract Line closes(Line line, Block open)
 }
-
 
