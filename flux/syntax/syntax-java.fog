@@ -57,6 +57,7 @@ SyntaxRules
     "long",
     "native",
     "new",
+    "null",
     "package",
     "private",
     "protected",
@@ -79,6 +80,5 @@ SyntaxRules
     "while",
   ]
 }
-
 
 
