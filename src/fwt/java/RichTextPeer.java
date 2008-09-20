@@ -112,9 +112,10 @@ public class RichTextPeer
       // for whatever reason this call only works if used in an
       // async action; found this tip on the discussion group:
       // http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg26461.html
+      // suppress exceptions, b/c something the widget gets disposed out under us
       Env.get().display.asyncExec(new Runnable()
       {
-        public void run() { ((StyledText)w).setCaretOffset(v); }
+        public void run() { try { ((StyledText)w).setCaretOffset(v); } catch (SWTException e) {} }
       });
     }
   };
