@@ -35,10 +35,10 @@ public abstract class TextWidgetPeer extends WidgetPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  // Int caretPos := 0
-  public Int caretPos(TextWidget self) { return caretPos().get(); }
-  public void caretPos(TextWidget self, Int v) { caretPos().set(v); }
-  abstract Prop.IntProp caretPos();
+  // Int caretOffset := 0
+  public Int caretOffset(TextWidget self) { return caretOffset().get(); }
+  public void caretOffset(TextWidget self, Int v) { caretOffset().set(v); }
+  abstract Prop.IntProp caretOffset();
 
   // Font font := null
   public fan.fwt.Font font(TextWidget self) { return font().get(); }

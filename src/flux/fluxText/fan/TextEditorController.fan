@@ -71,7 +71,7 @@ internal class TextEditorController : TextEditorSupport
   {
     try
     {
-      offset := editor.richText.caretPos
+      offset := editor.richText.caretOffset
       line := doc.lineAtOffset(offset)
       col  := offset-doc.offsetAtLine(line)
       editor.caretField.text = "${(line+1)}:${col+1}"
@@ -249,7 +249,7 @@ internal class TextEditorController : TextEditorSupport
     if (mark.col != null) offset += mark.col-1 // col num is one based
     richText.focus
     richText.select(offset, 0)
-    richText.caretPos = offset
+    richText.caretOffset = offset
   }
 
 //////////////////////////////////////////////////////////////////////////

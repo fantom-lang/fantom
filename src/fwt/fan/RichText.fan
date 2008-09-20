@@ -103,6 +103,12 @@ class RichText : TextWidget
   native Int tabSpacing
 
   **
+  ** The zero based line index which is currently at the
+  ** top of the scrolling viewport.
+  **
+  virtual native Int topLine
+
+  **
   ** Convenience for 'model.text' (model must be installed).
   **
   override Str text
