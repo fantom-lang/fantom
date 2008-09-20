@@ -24,7 +24,7 @@ internal class FindBar : ContentPane, TextEditorSupport
     this.editor = editor
 
     findText = Text()
-    findText.onFocus.add |Event e| { caretPos = richText.caretPos }
+    findText.onFocus.add |Event e| { caretPos = richText.caretOffset }
     findText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
     findText.onModify.add(&find(null, true))
 
@@ -215,7 +215,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void next()
   {
-    find(richText.caretPos)
+    find(richText.caretOffset)
   }
 
   **
@@ -224,7 +224,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void prev()
   {
-    find(richText.caretPos, false)
+    find(richText.caretOffset, false)
   }
 
   **

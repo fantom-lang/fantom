@@ -67,7 +67,7 @@ abstract class TextWidget : Widget
   ** from start of text.  Note that SWT doesn't allow
   ** setting of caret position for native widgets.
   **
-  virtual native Int caretPos
+  virtual native Int caretOffset
 
   **
   ** Font for text. Defaults to null (system default).
@@ -237,7 +237,7 @@ class TextChange
   Void undo(TextWidget widget)
   {
     widget.modify(startOffset, newText.size, oldText)
-    widget.caretPos = startOffset + oldText.size
+    widget.caretOffset = startOffset + oldText.size
   }
 
   **
@@ -246,7 +246,7 @@ class TextChange
   Void redo(TextWidget widget)
   {
     widget.modify(startOffset, oldText.size, newText)
-    widget.caretPos = startOffset + newText.size
+    widget.caretOffset = startOffset + newText.size
   }
 
 }

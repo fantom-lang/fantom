@@ -73,8 +73,8 @@ public class TextPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Prop.IntProp caretPos() { return caretPos; }
-  public final Prop.IntProp caretPos = new Prop.IntProp(this, 0)
+  Prop.IntProp caretOffset() { return caretOffset; }
+  public final Prop.IntProp caretOffset = new Prop.IntProp(this, 0)
   {
     public int get(Widget w) { return ((Text)w).getCaretPosition(); }
     public void set(Widget w, int v) { /* not supported */ }

@@ -103,8 +103,8 @@ public class RichTextPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Prop.IntProp caretPos() { return caretPos; }
-  public final Prop.IntProp caretPos = new Prop.IntProp(this, 0)
+  Prop.IntProp caretOffset() { return caretOffset; }
+  public final Prop.IntProp caretOffset = new Prop.IntProp(this, 0)
   {
     public int get(Widget w) { return ((StyledText)w).getCaretOffset(); }
     public void set(final Widget w, final int v)
@@ -115,7 +115,15 @@ public class RichTextPeer
       // suppress exceptions, b/c something the widget gets disposed out under us
       Env.get().display.asyncExec(new Runnable()
       {
-        public void run() { try { ((StyledText)w).setCaretOffset(v); } catch (SWTException e) {} }
+        public void run()
+        {
+          try
+          {
+            ((StyledText)w).setCaretOffset(v);
+            checkCaretPos();
+          }
+          catch (SWTException e) {}
+        }
       });
     }
   };
@@ -124,6 +132,15 @@ public class RichTextPeer
   public final Prop.FontProp font = new Prop.FontProp(this)
   {
     public void set(Widget w, Font v) { ((StyledText)w).setFont(v); }
+  };
+
+  // Int topLine := 0
+  public Int topLine(RichText self) { return topLine.get(); }
+  public void topLine(RichText self, Int v) { topLine.set(v); }
+  public final Prop.IntProp topLine = new Prop.IntProp(this, 0)
+  {
+    public int get(Widget w) { return ((StyledText)w).getTopIndex(); }
+    public void set(Widget w, int v) { ((StyledText)w).setTopIndex(v);  }
   };
 
   // Int tabSpacing := 2
