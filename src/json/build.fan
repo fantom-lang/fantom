@@ -17,7 +17,7 @@ class Build : BuildPod
 
   override Void setup()
   {
-    podName     = "json"
+    podName     = "JSON"
     version     = globalVersion
     description = "JSON (Javascript Object Notation) serialization"
     depends     = ["sys 1.0"]
