@@ -183,11 +183,13 @@ public abstract class File
 
   public File createFile(Str name)
   {
+    if (!isDir().val) throw IOErr.make("Not a directory: " + this).val;
     return this.plus(name.toUri()).create();
   }
 
   public File createDir(Str name)
   {
+    if (!isDir().val) throw IOErr.make("Not a directory: " + this).val;
     if (!name.val.endsWith("/")) name = Str.make(name.val + "/");
     return this.plus(name.toUri()).create();
   }
