@@ -12,13 +12,13 @@
 ** See [docLib]`docLib::Json` for details.
 ** See [docCookbook]`docCookbook::Json` for coding examples.
 **
-class JsonToken
+internal class JsonToken
 {
-  public static const Int OBJECT_START := '{'
-  public static const Int OBJECT_END := '}'
-  public static const Int COLON := ':'
-  public static const Int ARRAY_START := '['
-  public static const Int ARRAY_END := ']'
-  public static const Int COMMA := ','
-  public static const Int QUOTE := '"'
+  internal static const Int OBJECT_START := '{'
+  internal static const Int OBJECT_END := '}'
+  internal static const Int COLON := ':'
+  internal static const Int ARRAY_START := '['
+  internal static const Int ARRAY_END := ']'
+  internal static const Int COMMA := ','
+  internal static const Int QUOTE := '"'
 }
