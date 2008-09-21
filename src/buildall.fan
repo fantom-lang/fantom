@@ -140,6 +140,7 @@ class Build : BuildGroup
     Delete.make(this, devHomeDir+`lib/types.db`).run
     Delete.make(this, devHomeDir+`lib/tmp`).run
     Delete.make(this, devHomeDir+`src/jfan/temp/`).run
+    Delete.make(this, devHomeDir+`flux/session/`).run
 
     libJavaDir.list.each |File f|
     {
