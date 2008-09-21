@@ -226,14 +226,19 @@ abstract const class File
   abstract File create()
 
   **
-  ** Convenience for `create`:
+  ** Create a file under this directory.  Convenience for `create`:
   **   return (this+name.toUri).create
+  ** Throw IOErr is this file is not a directory or if there is a
+  ** error creating the new file.  Return the file created.
   **
   File createFile(Str name)
 
   **
-  ** Convenience for `create`:
+  ** Create a sub-directory under this directory.  Convenience
+  ** for `create`:
   **   return (this+name/.toUri).create
+  ** Throw IOErr is this file is not a directory or if there is a
+  ** error creating the new directory.  Return the directory created.
   **
   File createDir(Str name)
 
