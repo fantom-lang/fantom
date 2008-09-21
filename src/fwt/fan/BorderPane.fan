@@ -11,7 +11,7 @@
 ** border around a content widget.  You must specifiy non-zero
 ** insets to leave room to render your border.
 **
-** TODO: Design imcomplete.
+** TODO: Design imcomplete, this API might change.
 **
 class BorderPane : Pane
 {

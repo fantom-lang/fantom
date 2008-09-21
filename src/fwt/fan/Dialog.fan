@@ -11,6 +11,9 @@
 ** input information from the user.  Dialog also contains
 ** convenience routines for opening message boxes.
 **
+** TODO: the make and openMsgBox methods are going to be
+**   redesigned to make this API more flexible
+**
 class Dialog : Window
 {
 
@@ -96,6 +99,8 @@ class Dialog : Window
   **
   ** The command invoked to close message box is returned.  If the
   ** dialog is canceled using the window manager then null is returned.
+  **
+  ** TODO: this API going to change
   **
   static Obj openMsgBox(Pod pod, Str keyBase, Window parent, Obj content,
                         Obj details := null, Command[] commands := [ok])
@@ -183,6 +188,8 @@ class Dialog : Window
   ** the dialog and is returned as the result.  If a custom command
   ** is passed, then it should close the dialog as appropiate with
   ** the result object.
+  **
+  ** TODO: this API going to change
   **
   new make(Window parent, Obj content := null, Command[] commands := null)
     : super(parent)

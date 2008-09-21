@@ -10,6 +10,9 @@
 ** GridPane is a container which lays out its children in a grid
 ** from left to right with a new row started based on 'numCols'.
 **
+** TODO: this API going to change, most likely there will be a
+**   switch to per col/per row configuration
+**
 class GridPane : Pane
 {
 
