@@ -12,7 +12,7 @@
 ** See [docLib]`docLib::Json` for details.
 ** See [docCookbook]`docCookbook::Json` for coding examples.
 **
-class JsonParser
+internal class JsonParser
 {
   new make(Str buf)
   {
@@ -20,7 +20,7 @@ class JsonParser
   }
 
   // FIXIT need one to parse to Obj as well, doing Map for now
-  public Str:Obj parse()
+  internal Str:Obj parse()
   {
     return parseObject
   }
