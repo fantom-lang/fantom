@@ -399,7 +399,7 @@
 - Key eventing and accelerators
 - New fwt::CommandStack API
 
-*Build 1.0.32 (working)*
+*Build 1.0.32 (20 Sep 08)*
 - Remove support for old type literal syntax
 - Add adm/tools with fan support for various editors
 - Remove haven pod
@@ -432,8 +432,7 @@
 - New fwt::Desktop and Monitor APIs
 - New fwt::TextWidget base class for Text and RichText
 - New fwt text selection and clipboard APIs
-
-
+- Flux prototype!
 
 
 

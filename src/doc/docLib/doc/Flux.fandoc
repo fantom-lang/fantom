@@ -20,7 +20,7 @@ The next sections cover *resources* and *views* in detail.
 
 The Flux chrome works very much like a traditional browser.  It
 handles navigation, history, and view tabs.  It provides a plugin
-model for adding sidebars which used independently of views.
+model for adding sidebars which are used independently of views.
 
 Resources [#resources]
 **********************
@@ -186,7 +186,6 @@ respond to view selections:
   - **onHide**: called when hidden on frame
   - **onActive**: called when user links to new resource or selects new tab
   - **onInactive**: called when current view is replaced with new view or tab
-
 
 
 
