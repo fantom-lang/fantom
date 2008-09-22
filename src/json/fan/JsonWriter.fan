@@ -17,21 +17,21 @@ internal class JsonWriter
 {
   internal static Void writeMap(Str:Obj map, OutStream buf)
   {
-    buf.print(JsonToken.OBJECT_START.toChar)
+    buf.print(JsonToken.objectStart.toChar)
     notFirst := false
     map.each |Obj val, Str key|
     {
-      if (notFirst) buf.print(JsonToken.COMMA.toChar)
+      if (notFirst) buf.print(JsonToken.comma.toChar)
       writePair(key, val, buf)
       notFirst = true
     }
-    buf.print(JsonToken.OBJECT_END.toChar)
+    buf.print(JsonToken.objectEnd.toChar)
   }
 
   private static Void writePair(Str key, Obj val, OutStream buf)
   {
       writeKey(key, buf)
-      buf.print(JsonToken.COLON.toChar)
+      buf.print(JsonToken.colon.toChar)
       writeValue(val, buf)
   }
 
@@ -54,22 +54,22 @@ internal class JsonWriter
 
   private static Void writeArray(Obj[] array, OutStream buf)
   {
-    buf.print(JsonToken.ARRAY_START.toChar)
+    buf.print(JsonToken.arrayStart.toChar)
     notFirst := false
     array.each |Obj o|
     {
-      if (notFirst) buf.print(JsonToken.COMMA.toChar)
+      if (notFirst) buf.print(JsonToken.comma.toChar)
       writeValue(o, buf)
       notFirst = true
     }
-    buf.print(JsonToken.ARRAY_END.toChar)
+    buf.print(JsonToken.arrayEnd.toChar)
   }
 
   private static Void writeString(Str str, OutStream buf)
   {
-    buf.print(JsonToken.QUOTE.toChar)
+    buf.print(JsonToken.quote.toChar)
     buf.print(str)
-    buf.print(JsonToken.QUOTE.toChar)
+    buf.print(JsonToken.quote.toChar)
   }
 
   private static Void writeNumber(Num num, OutStream buf)
