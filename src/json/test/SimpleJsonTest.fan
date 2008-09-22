@@ -15,19 +15,25 @@ class SimpleJsonTest : Test
   Void testString()
   {
     map := doTest(["key":"value"])
-    verify(map["key"] == "value")
+    verifyEq(map["key"], "value")
   }
 
   Void testInt()
   {
     map := doTest(["k1":123])
-    verify(map["k1"] == 123)
+    verifyEq(map["k1"], 123)
   }
 
   Void testIntShort()
   {
     map := doTest(["k1":6])
-    verify(map["k1"] == 6)
+    verifyEq(map["k1"], 6)
+  }
+
+  Void testNegative()
+  {
+    map := doTest(["k1":-69])
+    verifyEq(map["k1"], -69)
   }
 
   Void testFloat()
@@ -55,9 +61,12 @@ class SimpleJsonTest : Test
   {
     // don't call doTest since value is null for myNull
     buf := StrBuf.make
+    stream := OutStream.makeForStrBuf(buf)
     obj := ["myTrue":true,"myFalse":false,"myNull":null]
-    Json.write(obj, buf)
-    newObj := Json.read(buf)
+    Json.write(obj, stream)
+    stream.close
+    ins := InStream.makeForStr(buf.toStr)
+    newObj := Json.read(ins)
     verify(newObj["myTrue"])
     verify(!newObj["myFalse"])
     verify(newObj["myNull"] == null)
@@ -74,8 +83,11 @@ class SimpleJsonTest : Test
   private Str:Obj doTest(Str:Obj map)
   {
     buf := StrBuf.make
-    Json.write(map, buf)
-    newMap := Json.read(buf)
+    stream := OutStream.makeForStrBuf(buf)
+    Json.write(map, stream)
+    stream.close
+    ins := InStream.makeForStr(buf.toStr)
+    newMap := Json.read(ins)
     validate(map, newMap)
     return newMap
   }
