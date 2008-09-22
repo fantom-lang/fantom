@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2008, Brian Frank and Andy Frank
+// Copyright (c) 2008, Kevin McIntire
 // Licensed under the Academic Free License version 3.0
 //
 // History:
@@ -14,7 +14,7 @@
 **
 internal class JsonParser
 {
-  new make(Str buf)
+  new make(InStream buf)
   {
     this.buf = buf
   }
@@ -22,6 +22,7 @@ internal class JsonParser
   // FIXIT need one to parse to Obj as well, doing Map for now
   internal Str:Obj parse()
   {
+    consume
     return parseObject
   }
 
@@ -30,6 +31,7 @@ internal class JsonParser
     pairs := Str:Obj[:]
 
     skipWhitespace
+
     expect(JsonToken.OBJECT_START)
 
     while (true)
@@ -50,9 +52,10 @@ internal class JsonParser
   private Str:Obj parsePair()
   {
     map := Str:Obj[:]
-    skipWhitespace
 
+    skipWhitespace
     key := key
+
     skipWhitespace
 
     expect(JsonToken.COLON)
@@ -105,12 +108,12 @@ internal class JsonParser
     if (maybe('-'))
       integral.add("-")
 
-    consume
     while (this.cur.isDigit)
     {
       integral.add(this.cur.toChar)
       consume
     }
+
     if (this.cur == '.')
     {
       decimal := true
@@ -137,7 +140,6 @@ internal class JsonParser
 	consume
       }
     }
-    rewind
     if (fractional.size > 0)
       return Decimal.fromStr(integral.toStr+"."+fractional.toStr+exponent.toStr)
     else if (exponent.size > 0)
@@ -149,13 +151,11 @@ internal class JsonParser
   {
     s := StrBuf.make
     expect(JsonToken.QUOTE)
-    consume
-    while (this.cur != JsonToken.QUOTE && this.buf[this.pos-1] != '\\')
+    while (this.cur != JsonToken.QUOTE && this.prev != '\\')
     {
       s.add(this.cur.toChar)
       consume
     }
-    rewind
     expect(JsonToken.QUOTE)
     return s.toStr
   }
@@ -178,41 +178,41 @@ internal class JsonParser
 
   private Void skipWhitespace()
   {
-    consume
     while (this.cur.isSpace)
-    {
       consume
-    }
-    rewind
   }
 
   private Void expect(Int tt)
   {
-    consume
     if (this.cur != tt) throw Err("Expected "+tt.toChar+", got "+
                                    this.cur.toChar)
+    consume
   }
 
   private Bool maybe(Int tt)
   {
+    if (this.cur != tt) return false
     consume
-    if (this.cur == tt) return true
-    rewind
-    return false
+    return true
   }
 
   private Void consume()
   {
-    this.cur = this.buf[this.pos++]
+    this.prev = this.cur
+    this.cur = this.buf.read
+    this.peek = this.buf.peek
   }
 
   private Void rewind()
   {
-    this.cur = this.buf[--this.pos]
+    this.peek = this.cur
+    this.cur = this.prev
   }
 
-  private Str buf
-  private Int cur := -1
+  private InStream buf
+  private Int cur := '?'
+  private Int peek := '?'
+  private Int prev := '?'
   private Int pos := 0
   private static const Str KEY_ATOM := "key_atom"
   private static const Str VALUE_ATOM := "value_atom"
