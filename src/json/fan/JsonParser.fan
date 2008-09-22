@@ -32,19 +32,22 @@ internal class JsonParser
 
     skipWhitespace
 
-    expect(JsonToken.OBJECT_START)
+    expect(JsonToken.objectStart)
 
     while (true)
     {
+      skipWhitespace
+      if (maybe(JsonToken.objectEnd)) return pairs
+
       // FIXIT would like pair to be a 2-tuple
       // OR a map with atom/symbol keys!
       // FIXIT what about empty object?
       pair := parsePair
-      pairs.add(pair[KEY_ATOM], pair[VALUE_ATOM])
-      if (!maybe(JsonToken.COMMA)) break
+      pairs.add(pair[keyAtom], pair[valueAtom])
+      if (!maybe(JsonToken.comma)) break
     }
 
-    expect(JsonToken.OBJECT_END)
+    expect(JsonToken.objectEnd)
 
     return pairs
   }
@@ -58,14 +61,14 @@ internal class JsonParser
 
     skipWhitespace
 
-    expect(JsonToken.COLON)
+    expect(JsonToken.colon)
     skipWhitespace
 
     val := value
     skipWhitespace
 
-    map.add(KEY_ATOM, key)
-    map.add(VALUE_ATOM, val)
+    map.add(keyAtom, key)
+    map.add(valueAtom, val)
 
     return map
   }
@@ -77,10 +80,10 @@ internal class JsonParser
 
   private Obj value()
   {
-    if (this.cur == JsonToken.QUOTE) return string
+    if (this.cur == JsonToken.quote) return string
     else if (this.cur.isDigit || this.cur == '-') return number
-    else if (this.cur == JsonToken.OBJECT_START) return parseObject
-    else if (this.cur == JsonToken.ARRAY_START) return array
+    else if (this.cur == JsonToken.objectStart) return parseObject
+    else if (this.cur == JsonToken.arrayStart) return array
     else if (this.cur == 't')
     {
       "true".size.times |Int i|{ consume }
@@ -150,29 +153,32 @@ internal class JsonParser
   private Str string()
   {
     s := StrBuf.make
-    expect(JsonToken.QUOTE)
-    while (this.cur != JsonToken.QUOTE && this.prev != '\\')
+    expect(JsonToken.quote)
+    while (this.cur != JsonToken.quote && this.prev != '\\')
     {
       s.add(this.cur.toChar)
       consume
     }
-    expect(JsonToken.QUOTE)
+    expect(JsonToken.quote)
     return s.toStr
   }
 
   private List array()
   {
     array := [,]
-    expect(JsonToken.ARRAY_START)
+    expect(JsonToken.arrayStart)
+    skipWhitespace
+    if (maybe(JsonToken.arrayEnd)) return array
+
     while (true)
     {
       skipWhitespace
       val := value
       array.add(val)
-      if (!maybe(JsonToken.COMMA)) break
+      if (!maybe(JsonToken.comma)) break
     }
     skipWhitespace
-    expect(JsonToken.ARRAY_END)
+    expect(JsonToken.arrayEnd)
     return array
   }
 
@@ -214,6 +220,6 @@ internal class JsonParser
   private Int peek := '?'
   private Int prev := '?'
   private Int pos := 0
-  private static const Str KEY_ATOM := "key_atom"
-  private static const Str VALUE_ATOM := "value_atom"
+  private static const Str keyAtom := "key_atom"
+  private static const Str valueAtom := "value_atom"
 }
