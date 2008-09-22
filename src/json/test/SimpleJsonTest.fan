@@ -90,6 +90,7 @@ class SimpleJsonTest : Test
     doTest(["k1":[,]])
   }
 
+
   Void testBoolsAndNull()
   {
     // don't call doTest since value is null for myNull
@@ -118,7 +119,16 @@ class SimpleJsonTest : Test
     validate(input, map)
   }
 
-  // FIXIT test mixture of all of these of course in 1 obj
+  Void testRawJson()
+  {
+    buf := StrBuf.make
+    buf.add("\n{\n  \"type\"\n:\n\"Foobar\",\n \n\n\"age\"\n:\n34,    \n\n\n\n")
+    buf.add("\t\"nested\"\t:  \n{\t \"ids\":[3.28, 3.14, 2.14],  \t\t\"dead\":false\n\n,")
+    buf.add("\t\n \"friends\"\t:\n null\t  \n}\n\t\n}")
+    ins := InStream.makeForStr(buf.toStr)
+    map := Json.read(ins)
+    verifyEq(map["type"], "Foobar") 
+  }
 
   private Str:Obj doTest(Str:Obj map)
   {
