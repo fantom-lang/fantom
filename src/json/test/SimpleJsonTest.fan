@@ -14,14 +14,42 @@ class SimpleJsonTest : Test
 
   Void testString()
   {
-    map := doTest(["key":"value"])
-    verifyEq(map["key"], "value")
+    key := "key"
+    val := "value"
+    map := doTest([key:val])
+    verifyEq(map[key], val)
+  }
+
+  Void testEmptyString()
+  {
+    key := "key"
+    val := ""
+    map := doTest([key:val])
+    verifyEq(map[key], val)
+  }
+
+  Void testEscapesString()
+  {
+    key := "key"
+    val := "\b\t\f\r\n"
+    map := doTest([key:val])
+    verifyEq(map[key], val)
+  }
+
+  Void testIntString()
+  {
+    key := "key"
+    val := "314"
+    map := doTest([key:val])
+    verifyEq(map[key], val)
   }
 
   Void testInt()
   {
-    map := doTest(["k1":123])
-    verifyEq(map["k1"], 123)
+    key := "k1"
+    val := 123
+    map := doTest([key:val])
+    verifyEq(map[key], val)
   }
 
   Void testIntShort()
@@ -57,6 +85,11 @@ class SimpleJsonTest : Test
     doTest(["k1":["foo","bar","quux"]])
   }
 
+  Void testEmptyArray()
+  {
+    doTest(["k1":[,]])
+  }
+
   Void testBoolsAndNull()
   {
     // don't call doTest since value is null for myNull
@@ -76,6 +109,13 @@ class SimpleJsonTest : Test
   {
     map:=doTest(["type":"Girl","stats":["age":38,"location":"Fan","cute":true]])
     verify(((Map)map["stats"])["cute"])
+  }
+
+  Void testEmptyObject()
+  {
+    input := [:]
+    map:=doTest(input)
+    validate(input, map)
   }
 
   // FIXIT test mixture of all of these of course in 1 obj
