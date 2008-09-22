@@ -16,15 +16,16 @@
 class Json
 {
   // FIXIT only map entry point currently, need Obj/slots
-  public static Void write(Str:Obj map, StrBuf buf)
+  public static Void write(Str:Obj map, OutStream out)
   {
-    JsonWriter.writeMap(map, buf)
+    JsonWriter.writeMap(map, out)
+    out.flush
   }
 
   // FIXIT need instream entry point
-  public static Str:Obj read(StrBuf buf)
+  public static Str:Obj read(InStream buf)
   {
-    json := JsonParser.make(buf.toStr)
+    json := JsonParser.make(buf)
     return json.parse
   }
 }
