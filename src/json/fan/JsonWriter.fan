@@ -15,34 +15,34 @@
 **
 internal class JsonWriter
 {
-  internal static Void writeMap(Str:Obj map, StrBuf buf)
+  internal static Void writeMap(Str:Obj map, OutStream buf)
   {
-    buf.add(JsonToken.OBJECT_START.toChar)
+    buf.print(JsonToken.OBJECT_START.toChar)
     notFirst := false
     map.each |Obj val, Str key|
     {
-      if (notFirst) buf.add(JsonToken.COMMA.toChar)
+      if (notFirst) buf.print(JsonToken.COMMA.toChar)
       writePair(key, val, buf)
       notFirst = true
     }
-    buf.add(JsonToken.OBJECT_END.toChar)
+    buf.print(JsonToken.OBJECT_END.toChar)
   }
 
-  private static Void writePair(Str key, Obj val, StrBuf buf)
+  private static Void writePair(Str key, Obj val, OutStream buf)
   {
       writeKey(key, buf)
-      buf.add(JsonToken.COLON.toChar)
+      buf.print(JsonToken.COLON.toChar)
       writeValue(val, buf)
   }
 
-  private static Void writeKey(Str key, StrBuf buf)
+  private static Void writeKey(Str key, OutStream buf)
   {
     writeString(key, buf)
   }
 
   // FIXIT actually need to write values out for number, obj, array, true, 
   // false, null
-  private static Void writeValue(Obj val, StrBuf buf)
+  private static Void writeValue(Obj val, OutStream buf)
   {
     if (val is Str) writeString(val as Str, buf)
     else if (val is Num) writeNumber(val as Num, buf)
@@ -52,39 +52,39 @@ internal class JsonWriter
     else writeMap(val, buf) // FIXIT stick with map for now
   }
 
-  private static Void writeArray(Obj[] array, StrBuf buf)
+  private static Void writeArray(Obj[] array, OutStream buf)
   {
-    buf.add(JsonToken.ARRAY_START.toChar)
+    buf.print(JsonToken.ARRAY_START.toChar)
     notFirst := false
     array.each |Obj o|
     {
-      if (notFirst) buf.add(JsonToken.COMMA.toChar)
+      if (notFirst) buf.print(JsonToken.COMMA.toChar)
       writeValue(o, buf)
       notFirst = true
     }
-    buf.add(JsonToken.ARRAY_END.toChar)
+    buf.print(JsonToken.ARRAY_END.toChar)
   }
 
-  private static Void writeString(Str str, StrBuf buf)
+  private static Void writeString(Str str, OutStream buf)
   {
-    buf.add(JsonToken.QUOTE.toChar)
-    buf.add(str)
-    buf.add(JsonToken.QUOTE.toChar)
+    buf.print(JsonToken.QUOTE.toChar)
+    buf.print(str)
+    buf.print(JsonToken.QUOTE.toChar)
   }
 
-  private static Void writeNumber(Num num, StrBuf buf)
+  private static Void writeNumber(Num num, OutStream buf)
   {
-    buf.add(num)
+    buf.print(num)
   }
 
-  private static Void writeBoolean(Bool bool, StrBuf buf)
+  private static Void writeBoolean(Bool bool, OutStream buf)
   {
-    buf.add(bool)
+    buf.print(bool)
   }
 
-  private static Void writeNull(StrBuf buf)
+  private static Void writeNull(OutStream buf)
   {
-    buf.add("null")
+    buf.print("null")
   }
 
 }
