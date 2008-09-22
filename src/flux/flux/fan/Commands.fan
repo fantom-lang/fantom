@@ -409,12 +409,43 @@ internal class ExitCommand : FluxCommand
     dirty := frame.views.findAll |View v->Bool| { return v.dirty }
     if (dirty.size > 0)
     {
-      // TODO
-      r := Dialog.openQuestion(frame, "TODO: Close with $dirty.size views?", Dialog.yesNo)
-      if (r != Dialog.yes) return
+      grid := GridPane { Label { text=type.pod.loc("saveChanges"); font=Font.sys.toBold }}
+      dirty.each |View v|
+      {
+        grid.add(InsetPane(0,0,0,8) {
+         Button { mode=ButtonMode.check; text=v.resource.uri.toStr; selected=true }
+        })
+      }
+      saveSel  := ExitSaveCommand(type.pod, "saveSelected")
+      saveNone := ExitSaveCommand(type.pod, "saveNone")
+      cancel   := ExitSaveCommand(Command#.pod, "cancel")
+      pane := ConstraintPane
+      {
+        minw = 400
+        add(InsetPane(0,0,12,0).add(grid))
+      }
+      d := Dialog(frame, pane, [saveSel,saveNone,cancel]) { title="Save" }
+      r := d.open
+      if (r == cancel) return
+      if (r == saveSel)
+      {
+        grid.children.each |Widget w, Int i|
+        {
+          if (w isnot InsetPane) return
+          c := w.children.first as Button
+          v := dirty[i-1]
+          if (c.selected) v.tab.save
+        }
+      }
     }
     flux::Main.exit(frame)
   }
+}
+
+internal class ExitSaveCommand : Command
+{
+  new make(Pod pod, Str keyBase) : super.makeLocale(pod, keyBase) {}
+  override Void invoke(Event e) { window?.close(this) }
 }
 
 //////////////////////////////////////////////////////////////////////////
