@@ -14,11 +14,11 @@
 **
 internal class JsonToken
 {
-  internal static const Int OBJECT_START := '{'
-  internal static const Int OBJECT_END := '}'
-  internal static const Int COLON := ':'
-  internal static const Int ARRAY_START := '['
-  internal static const Int ARRAY_END := ']'
-  internal static const Int COMMA := ','
-  internal static const Int QUOTE := '"'
+  internal static const Int objectStart := '{'
+  internal static const Int objectEnd := '}'
+  internal static const Int colon := ':'
+  internal static const Int arrayStart := '['
+  internal static const Int arrayEnd := ']'
+  internal static const Int comma := ','
+  internal static const Int quote := '"'
 }
