@@ -134,48 +134,45 @@ class FileResource : Resource
   internal Void newDir(Frame frame, File dir)
   {
     if (!dir.isDir) throw ArgErr("Not a directory: $dir")
-    newDir := ""
-    while (true)
-    {
-      newDir = Dialog.openPromptStr(frame, type.loc("newDir.name"), newDir)
-      if (newDir == null) return
-      try
-      {
-        if (!Uri.isName(newDir))
-        {
-          Dialog.openErr(frame, "Invalid name: $newDir")
-          continue
-        }
-        uri := dir.uri + "$newDir/".toUri
-        File(uri).create
-        return
-      }
-      catch (Err err) { Dialog.openErr(frame, "Error", err) }
-    }
+    newDir := promptFileName(frame, type.loc("newDir.name"), "")
+    if (newDir == null) return
+    uri := dir.uri + "$newDir/".toUri
+    File(uri).create
   }
 
   **
-  ** Prompt the user to rename the given file.
+  ** Rename the given file.
   **
   internal Void rename(Frame frame, File file)
   {
-    name := file.name
+    name := promptFileName(frame, type.loc("rename.name"), file.name)
+    if (name == null) return
+    file.rename(name)
+  }
+
+  **
+  ** Prompt the user for a new valid filename, returns the new
+  ** filename, or null if the dialog was canceled.
+  **
+  private Str promptFileName(Frame frame, Str label, Str oldName)
+  {
+    newName := oldName
     while (true)
     {
-      name = Dialog.openPromptStr(frame, type.loc("rename.name"), name)
-      if (name == null) return
+      newName = Dialog.openPromptStr(frame, label, newName)
+      if (newName == null) return null
       try
       {
-        if (!Uri.isName(name))
+        if (!Uri.isName(newName))
         {
-          Dialog.openErr(frame, "Invalid name: $name")
+          Dialog.openErr(frame, "Invalid name: $newName")
           continue
         }
-        file.rename(name)
-        return
+        return newName
       }
       catch (Err err) { Dialog.openErr(frame, "Error", err) }
     }
+    return null
   }
 
   **
