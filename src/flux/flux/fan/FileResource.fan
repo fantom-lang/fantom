@@ -112,6 +112,7 @@ class FileResource : Resource
       menu.addSep
       menu.add(MenuItem { command=Command.makeLocale(type.pod, "newDir", &newDir(frame,file)) })
     }
+    menu.add(MenuItem { command=Command.makeLocale(type.pod, "rename", &rename(frame,file)) })
     return menu
   }
 
@@ -147,6 +148,30 @@ class FileResource : Resource
         }
         uri := dir.uri + "$newDir/".toUri
         File(uri).create
+        return
+      }
+      catch (Err err) { Dialog.openErr(frame, "Error", err) }
+    }
+  }
+
+  **
+  ** Prompt the user to rename the given file.
+  **
+  internal Void rename(Frame frame, File file)
+  {
+    name := file.name
+    while (true)
+    {
+      name = Dialog.openPromptStr(frame, type.loc("rename.name"), name)
+      if (name == null) return
+      try
+      {
+        if (!Uri.isName(name))
+        {
+          Dialog.openErr(frame, "Invalid name: $name")
+          continue
+        }
+        file.rename(name)
         return
       }
       catch (Err err) { Dialog.openErr(frame, "Error", err) }
