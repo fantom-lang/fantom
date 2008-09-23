@@ -170,10 +170,9 @@ Console.accelerator=Alt+C
 
 openIn.name=Open in Explorer
 openIn.name.mac=Open in Finder
-
 newDir.name=New Folder
-
 rename.name=Rename
+duplicate.name=Duplicate
 
 //////////////////////////////////////////////////////////////////////////
 // NavBar

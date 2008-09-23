@@ -112,6 +112,8 @@ class FileResource : Resource
       menu.addSep
       menu.add(MenuItem { command=Command.makeLocale(type.pod, "newDir", &newDir(frame,file)) })
     }
+    else menu.addSep
+    menu.add(MenuItem { command=Command.makeLocale(type.pod, "duplicate", &duplicate(frame,file)) })
     menu.add(MenuItem { command=Command.makeLocale(type.pod, "rename", &rename(frame,file)) })
     return menu
   }
@@ -134,27 +136,38 @@ class FileResource : Resource
   internal Void newDir(Frame frame, File dir)
   {
     if (!dir.isDir) throw ArgErr("Not a directory: $dir")
-    newDir := promptFileName(frame, type.loc("newDir.name"), "")
+    newDir := promptFileName(frame, type.loc("newDir.name"), dir, "")
     if (newDir == null) return
     uri := dir.uri + "$newDir/".toUri
     File(uri).create
   }
 
   **
+  ** Duplicate the given file.
+  **
+  internal Void duplicate(Frame frame, File src)
+  {
+    name := promptFileName(frame, type.loc("duplicate.name"), src.parent, src.name)
+    if (name == null) return
+    target := src.parent + (src.isDir ? "$name/".toUri : name.toUri)
+    src.copyTo(target)
+  }
+
+  **
   ** Rename the given file.
   **
-  internal Void rename(Frame frame, File file)
+  internal Void rename(Frame frame, File src)
   {
-    name := promptFileName(frame, type.loc("rename.name"), file.name)
+    name := promptFileName(frame, type.loc("rename.name"), src.parent, src.name)
     if (name == null) return
-    file.rename(name)
+    src.rename(name)
   }
 
   **
   ** Prompt the user for a new valid filename, returns the new
   ** filename, or null if the dialog was canceled.
   **
-  private Str promptFileName(Frame frame, Str label, Str oldName)
+  private Str promptFileName(Frame frame, Str label, File dir, Str oldName)
   {
     newName := oldName
     while (true)
@@ -166,6 +179,18 @@ class FileResource : Resource
         if (!Uri.isName(newName))
         {
           Dialog.openErr(frame, "Invalid name: $newName")
+          continue
+        }
+        try
+        {
+          // TODO - need to clean up sys::File to make this easier;
+          // if file exists as a dir, this throws an exception b/c
+          // the uri is missing a trailing slash
+          if ((dir+newName.toUri).exists) throw Err()
+        }
+        catch (Err err)
+        {
+          Dialog.openErr(frame, "File already exists: $newName")
           continue
         }
         return newName
