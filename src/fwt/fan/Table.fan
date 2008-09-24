@@ -124,4 +124,23 @@ mixin TableModel
   ** Get the image to display for specified cell or null.
   **
   virtual Image image(Int col, Int row) { return null }
+
+  **
+  ** Get the font used to render the text for this cell.
+  ** If null, use the default system font.
+  **
+  virtual Font font(Int col, Int row) { return null }
+
+  **
+  ** Get the foreground color for this cell. If null, use
+  ** the default foreground color.
+  **
+  virtual Color fg(Int col, Int row) { return null }
+
+  **
+  ** Get the background color for this cell. If null, use
+  ** the default background color.
+  **
+  virtual Color bg(Int col, Int row) { return null }
+
 }

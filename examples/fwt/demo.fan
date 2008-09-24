@@ -565,6 +565,9 @@ class DirTableModel : TableModel
   override Int numRows() { return dir.size }
   override Str header(Int col) { return headers[col] }
   override Halign halign(Int col) { return col == 1 ? Halign.right : Halign.left }
+  override Font font(Int col, Int row) { return col == 2 ? Font(Font.sys.name, Font.sys.size-1) : null }
+  override Color fg(Int col, Int row)  { return col == 2 ? Color("#666") : null }
+  override Color bg(Int col, Int row)  { return col == 2 ? Color("#eee") : null }
   override Str text(Int col, Int row)
   {
     f := dir[row]
