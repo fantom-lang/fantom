@@ -646,6 +646,17 @@ internal class RecentCommand : FluxCommand
         frame.load(model.items[e.index].uri, LoadMode(e))
         dlg.close
       }
+      onKeyDown.add |Event e|
+      {
+        code := e.keyChar
+        if (code >= 97 && code <= 122) code -= 32
+        code -= 65
+        if (code >= 0 && code < 26 && code < model.numRows)
+        {
+          frame.load(model.items[code].uri, LoadMode(e))
+          dlg.close
+        }
+      }
     }
     pane := ConstraintPane
     {
@@ -661,8 +672,19 @@ internal class RecentCommand : FluxCommand
 internal class RecentTableModel : TableModel
 {
   HistoryItem[] items := History.load.items
+  override Int numCols() { return 2 }
   override Int numRows() { return items.size }
-  override Str text(Int col, Int row) { return items[row].uri.name }
+  override Image image(Int col, Int row) { return col==0 ? def : null }
+  override Str text(Int col, Int row)
+  {
+    switch (col)
+    {
+      case 0:  return items[row].uri.name
+      case 1:  return (row < 26) ? (row+65).toChar : ""
+      default: return ""
+    }
+  }
+  Image def := Flux.icon(`/x16/text-x-generic.png`)
 }
 
 //////////////////////////////////////////////////////////////////////////
