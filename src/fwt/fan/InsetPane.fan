@@ -22,7 +22,7 @@ class InsetPane : ContentPane
 
   **
   ** Construct with optional top, right, bottom, left insets.  If
-  ** only one side is specified, that value is reflected from the
+  ** one side is not specified, that value is reflected from the
   ** opposite side:
   **
   **   InsetPane(5)     === InsetPane(5,5,5,5)
