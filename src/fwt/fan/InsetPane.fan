@@ -18,13 +18,22 @@ class InsetPane : ContentPane
   **
   Insets insets := defInsets
 
-  private const static Insets defInsets := Insets(10, 10, 10, 10)
+  private const static Insets defInsets := Insets(10)
 
   **
-  ** Construct with optional top, right, bottom, left insets
+  ** Construct with optional top, right, bottom, left insets.  If
+  ** only one side is specified, that value is reflected from the
+  ** opposite side:
   **
-  new make(Int top := 10, Int right := 10, Int bottom := 10, Int left := 10)
+  **   InsetPane(5)     === InsetPane(5,5,5,5)
+  **   InsetPane(5,6)   === InsetPane(5,6,5,6)
+  **   InsetPane(5,6,7) === InsetPane(5,6,7,6)
+  **
+  new make(Int top := 10, Int right := null, Int bottom := null, Int left := null)
   {
+    if (right == null) right = top
+    if (bottom == null) bottom = top
+    if (left == null) left = right
     insets = Insets(top, right, bottom, left)
   }
 
