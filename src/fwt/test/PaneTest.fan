@@ -24,6 +24,10 @@ class PaneTest : Test
     x.size = Size(20,20)
     x.onLayout
     verifyEq(x.content.bounds, Rect(4,1,14,16))
+
+    verifyEq(InsetPane(5).insets, Insets(5,5,5,5))
+    verifyEq(InsetPane(5,6).insets, Insets(5,6,5,6))
+    verifyEq(InsetPane(5,6,7).insets, Insets(5,6,7,6))
   }
 
   Void testEdgePane()
