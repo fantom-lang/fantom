@@ -124,7 +124,7 @@ public class TablePeer
       Int col = Int.make(i);
       item.setText(i, model.text(col, row).val);
       item.setImage(i, env.image(model.image(col, row)));
-      item.setFont(i, Env.get().font(model.font(col, row)));
+      item.setFont(i, env.font(model.font(col, row)));
       item.setForeground(i, env.color(model.fg(col, row)));
       item.setBackground(i, env.color(model.bg(col, row)));
     }
@@ -190,7 +190,7 @@ public class TablePeer
       Int col = Int.make(i);
       TableColumn tc = new TableColumn(table, style(model.halign(col)));
       tc.setText(model.header(col).val);
-      tc.setWidth(100);
+      tc.setWidth(200);
     }
 
     // rows
