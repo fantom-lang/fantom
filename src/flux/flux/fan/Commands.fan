@@ -675,6 +675,8 @@ internal class RecentTableModel : TableModel
   override Int numCols() { return 2 }
   override Int numRows() { return items.size }
   override Image image(Int col, Int row) { return col==0 ? def : null }
+  override Font font(Int col, Int row) { return col==1 ? accFont : null }
+  override Color fg(Int col, Int row)  { return col==1 ? accColor : null }
   override Str text(Int col, Int row)
   {
     switch (col)
@@ -685,6 +687,8 @@ internal class RecentTableModel : TableModel
     }
   }
   Image def := Flux.icon(`/x16/text-x-generic.png`)
+  Font accFont := Font.sys.toSize(Font.sys.size-1)
+  Color accColor := Color("#666")
 }
 
 //////////////////////////////////////////////////////////////////////////
