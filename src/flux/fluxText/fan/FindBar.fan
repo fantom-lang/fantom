@@ -116,6 +116,10 @@ internal class FindBar : ContentPane, TextEditorSupport
     visible = true
     parent?.parent?.parent?.relayout
 
+    // use current selection if it exists
+    cur := richText.selectText
+    if (cur.size > 0) findText.text = cur
+
     // make sure text is focued and selected
     findText.focus
     findText.selectAll
@@ -215,6 +219,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void next()
   {
+    if (!visible) show
     find(richText.caretOffset)
   }
 
@@ -224,6 +229,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void prev()
   {
+    if (!visible) show
     find(richText.caretOffset, false)
   }
 
