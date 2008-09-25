@@ -26,7 +26,7 @@ internal class FindBar : ContentPane, TextEditorSupport
     findText = Text()
     findText.onFocus.add |Event e| { caretPos = richText.caretOffset }
     findText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
-    findText.onModify.add(&find(null, true))
+    findText.onModify.add |Event e| { find(null, true) }
 
     matchCase = Button
     {
@@ -112,9 +112,18 @@ internal class FindBar : ContentPane, TextEditorSupport
 
   private Void show(Bool showReplace := false)
   {
-    replacePane.visible = showReplace
+    ignore = true
+    oldVisible := visible
     visible = true
+    replacePane.visible = showReplace
     parent?.parent?.parent?.relayout
+
+    // bail if we were already visible
+    if (oldVisible)
+    {
+      ignore = false
+      return
+    }
 
     // use current selection if it exists
     cur := richText.selectText
@@ -126,6 +135,7 @@ internal class FindBar : ContentPane, TextEditorSupport
 
     // clear any old msg text
     setMsg("")
+    ignore = false
   }
 
   **
@@ -150,6 +160,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void find(Int fromPos, Bool forward := true)
   {
+    if (!visible || ignore) return
     enabled := false
     try
     {
@@ -206,10 +217,11 @@ internal class FindBar : ContentPane, TextEditorSupport
     }
     finally
     {
+      replaceEnabled := enabled && replaceText.text.size > 0
       cmdPrev.enabled       = enabled
       cmdNext.enabled       = enabled
-      cmdReplace.enabled    = enabled
-      cmdReplaceAll.enabled = enabled
+      cmdReplace.enabled    = replaceEnabled
+      cmdReplaceAll.enabled = replaceEnabled
     }
   }
 
@@ -238,7 +250,11 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void replace()
   {
-    echo("TODO: replace")
+    newText := replaceText.text
+    start   := richText.selectStart
+    len     := richText.selectSize
+    richText.modify(start, len, newText)
+    richText.select(start, newText.size)
   }
 
   **
@@ -269,6 +285,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   private Text replaceText
   private Button matchCase
   private Label msg := Label()
+  private Bool ignore := false
 
   private Command cmdNext := Command.makeLocale(Flux#.pod, "findPrev", &prev)
   private Command cmdPrev := Command.makeLocale(Flux#.pod, "findNext", &next)
