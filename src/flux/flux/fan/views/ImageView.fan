@@ -17,7 +17,7 @@ internal class ImageView : View
   override Void onLoad()
   {
     image = Image(resource->file)
-    content = Label { halign=Halign.center; image = image }
+    content = ImageViewWidget(image)
   }
 
   override Void onUnload()
@@ -25,5 +25,15 @@ internal class ImageView : View
     image?.dispose
   }
 
+  Image image
+}
+
+internal class ImageViewWidget : Widget
+{
+  new make(Image image) { this.image = image }
+  override Void onPaint(Graphics g)
+  {
+    g.drawImage(image, 8, 8)
+  }
   Image image
 }
