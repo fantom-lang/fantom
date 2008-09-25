@@ -91,7 +91,7 @@ internal class FindBar : ContentPane, TextEditorSupport
         bottom = replacePane
       }
       insets = Insets(2,0,0,0)
-      onBorder = |Graphics g, Insets i, Size s|
+      onBorder = |Graphics g, Size size|
       {
         g.brush = Color.sysNormShadow
         g.drawLine(0, 0, size.w, 0)
