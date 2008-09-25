@@ -35,7 +35,7 @@ internal class NavBar : SideBar
       {
         content  = treePane
         insets   = Insets(1,1,0,0)
-        onBorder = |Graphics g, Insets insets, Size size|
+        onBorder = |Graphics g, Size size|
         {
           g.brush = Color.sysNormShadow
           g.drawLine(0, 0, size.w, 0)

@@ -34,7 +34,7 @@ class BorderPane : Pane
   **
   ** The callback to paint the custom border.
   **
-  |Graphics g, Insets insets, Size size| onBorder := null
+  |Graphics g, Size size, Insets insets| onBorder := null
 
   **
   ** Insets to leave around the edge of the content.
@@ -63,7 +63,7 @@ class BorderPane : Pane
 
   override Void onPaint(Graphics g)
   {
-    onBorder?.call([g, insets, size])
+    onBorder?.call([g, size, insets])
   }
 
 }
