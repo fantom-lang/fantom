@@ -83,10 +83,21 @@ internal class FindBar : ContentPane, TextEditorSupport
       }
     }
 
-    content = EdgePane
+    content = BorderPane
     {
-      top    = findPane
-      bottom = replacePane
+      content = EdgePane
+      {
+        top    = findPane
+        bottom = replacePane
+      }
+      insets = Insets(2,0,0,0)
+      onBorder = |Graphics g, Insets i, Size s|
+      {
+        g.brush = Color.sysNormShadow
+        g.drawLine(0, 0, size.w, 0)
+        g.brush = Color.sysHighlightShadow
+        g.drawLine(0, 1, size.w, 1)
+      }
     }
   }
 
