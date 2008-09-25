@@ -124,8 +124,8 @@ internal class FindBar : ContentPane, TextEditorSupport
     findText.focus
     findText.selectAll
 
-    // if old text still in there, force find
-    if (findText.text.size > 0) find(null)
+    // clear any old msg text
+    setMsg("")
   }
 
   **
