@@ -42,8 +42,8 @@ internal class FindBar : ContentPane, TextEditorSupport
         center = GridPane
         {
           numCols = 5
-          Temp(50) { Label { text = Flux#.loc("find.name") }}
-          Temp(200) { findText }
+          ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("find.name") }}
+          ConstraintPane { minw=200; maxw=200; add(findText) }
           InsetPane(0,0,0,8) { matchCase }
           ToolBar
           {
@@ -69,8 +69,8 @@ internal class FindBar : ContentPane, TextEditorSupport
       GridPane
       {
         numCols = 3
-        Temp(50) { Label { text = Flux#.loc("replace.name") } }
-        Temp(200) { replaceText }
+        ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("replace.name") } }
+        ConstraintPane { minw=200; maxw=200; add(replaceText) }
         InsetPane(0,0,0,8)
         {
           GridPane
@@ -143,6 +143,13 @@ internal class FindBar : ContentPane, TextEditorSupport
     // make sure text is focued and selected
     findText.focus
     findText.selectAll
+
+    // if text empty, make sure prev/next disabled
+    if (findText.text.size == 0)
+    {
+      cmdPrev.enabled = false
+      cmdNext.enabled = false
+    }
 
     // clear any old msg text
     setMsg("")
@@ -303,15 +310,4 @@ internal class FindBar : ContentPane, TextEditorSupport
   private Command cmdHide := Command.makeLocale(Flux#.pod, "findHide", &hide)
   private Command cmdReplace    := Command.makeLocale(Flux#.pod, "replace",    &replace)
   private Command cmdReplaceAll := Command.makeLocale(Flux#.pod, "replaceAll", &replaceAll)
-}
-
-internal class Temp : ContentPane
-{
-  Int pw
-  new make(Int pw) { this.pw = pw }
-  override Size prefSize(Hints hints := Hints.def)
-  {
-    ps := super.prefSize(hints)
-    return Size(pw, ps.h)
-  }
 }
