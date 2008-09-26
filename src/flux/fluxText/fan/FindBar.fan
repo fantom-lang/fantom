@@ -26,13 +26,13 @@ internal class FindBar : ContentPane, TextEditorSupport
     findText = Text()
     findText.onFocus.add |Event e| { caretPos = richText.caretOffset }
     findText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
-    findText.onModify.add |Event e| { find(null, true) }
+    findText.onModify.add |Event e| { find(null, true, true) }
 
     matchCase = Button
     {
       mode = ButtonMode.check
       text = Flux#.loc("find.matchCase")
-      onAction.add(&find(null, true))
+      onAction.add(&find(null, true, true))
     }
 
     findPane = InsetPane(4,4,4,4)
@@ -174,9 +174,11 @@ internal class FindBar : ContentPane, TextEditorSupport
   ** starting at the given caret pos.  If pos is null,
   ** the caretPos recorded when the FindBar was focued
   ** will be used.  If forward is false, the document
-  ** is searched backwards starting at pos.
+  ** is searched backwards starting at pos.  If calcTotal
+  ** is true, the document is searched for the total
+  ** number of occurances of the query string.
   **
-  internal Void find(Int fromPos, Bool forward := true)
+  internal Void find(Int fromPos, Bool forward := true, Bool calcTotal := false)
   {
     if (!visible || ignore) return
     enabled := false
@@ -196,11 +198,22 @@ internal class FindBar : ContentPane, TextEditorSupport
         doc.findNext(q, pos, match) :
         doc.findPrev(q, pos-q.size-1, match)
 
+      // find total matches
+      if (calcTotal)
+      {
+        total = 0
+        temp := 0
+        while ((temp = doc.findNext(q, temp, match)) != null) { total++; temp++ }
+      }
+      matchStr := total == 1
+        ? "1 " + Flux#.loc("find.match")
+        : "$total " + Flux#.loc("find.matches")
+
       // if found select next occurance
       if (off != null)
       {
         richText.select(off, q.size)
-        setMsg("")
+        setMsg(matchStr)
         return
       }
 
@@ -211,7 +224,7 @@ internal class FindBar : ContentPane, TextEditorSupport
         if (off != null)
         {
           richText.select(off, q.size)
-          setMsg(Flux#.loc("find.wrapToTop"))
+          setMsg("$matchStr - " + Flux#.loc("find.wrapToTop"))
           return
         }
       }
@@ -223,7 +236,7 @@ internal class FindBar : ContentPane, TextEditorSupport
         if (off != null)
         {
           richText.select(off, q.size)
-          setMsg(Flux#.loc("find.wrapToBottom"))
+          setMsg("$matchStr - " + Flux#.loc("find.wrapToBottom"))
           return
         }
       }
@@ -302,6 +315,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   private Text findText
   private Text replaceText
   private Button matchCase
+  private Int total
   private Label msg := Label()
   private Bool ignore := false
 

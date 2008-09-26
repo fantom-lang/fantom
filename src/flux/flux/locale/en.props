@@ -64,10 +64,12 @@ find.name=Find
 find.accelerator=F5
 find.icon=fan:/sys/pod/icons/x16/edit-find.png
 
+find.match=match
+find.matches=matches
 find.matchCase=Match case
 find.notFound=Not Found
-find.wrapToTop=Reached end of file, continued from top
-find.wrapToBottom=Reached beginning of file, continued from bottom
+find.wrapToTop=Wrapped to top
+find.wrapToBottom=Wrapped to bottom
 
 findHide.name=Hide Find
 findHide.icon=fan:/sys/pod/icons/x16/tab-close.png
