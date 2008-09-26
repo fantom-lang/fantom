@@ -154,13 +154,11 @@ public class TablePeer
   public void handleMenuDetect(Event event)
   {
     Table table = (Table)this.control;
+    TableItem item = table.getItem(table.toControl(event.x, event.y));
     final fan.fwt.Table self = (fan.fwt.Table)this.self;
 
-    TableItem item = table.getItem(table.toControl(event.x, event.y));
-    if (item == null) return;
-
     fan.fwt.Event fe = event(EventId.popup);
-    fe.index = selectedIndex();
+    if (item != null) fe.index = selectedIndex();
     self.onPopup().fire(fe);
 
     // we don't use the event menu - that is just a dummy
