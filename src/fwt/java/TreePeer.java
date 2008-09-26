@@ -227,13 +227,11 @@ public class TreePeer
   public void handleMenuDetect(Event event)
   {
     Tree tree = (Tree)this.control;
+    TreeItem item = tree.getItem(tree.toControl(event.x, event.y));
     final fan.fwt.Tree self = (fan.fwt.Tree)this.self;
 
-    TreeItem item = tree.getItem(tree.toControl(event.x, event.y));
-    if (item == null) return;
-
     fan.fwt.Event fe = event(EventId.popup);
-    fe.data = node(item);
+    if (item != null) fe.data = node(item);
     self.onPopup().fire(fe);
 
     // we don't use the event menu - that is just a dummy
