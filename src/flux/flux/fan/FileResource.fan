@@ -242,6 +242,12 @@ class FileResource : Resource
 
     if (mimeType.mediaType == "text")
     {
+      switch (f.ext)
+      {
+        case "cs":   return Flux.icon(`/x16/fileCs.png`)
+        case "fan":  return Flux.icon(`/x16/fileFan.png`)
+        case "java": return Flux.icon(`/x16/fileJava.png`)
+      }
       switch (mimeType.subType)
       {
         case "html": return Flux.icon(`/x16/text-html.png`)
