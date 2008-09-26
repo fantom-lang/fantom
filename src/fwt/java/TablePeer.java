@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Widget;
 
 public class TablePeer
   extends WidgetPeer
-  implements Listener, SelectionListener, MenuListener
+  implements Listener, SelectionListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,9 @@ public class TablePeer
 
     Table t = new Table((Composite)parent, style);
     t.addListener(SWT.SetData, this);
+    t.addListener(SWT.MenuDetect, this);
     t.addSelectionListener(this);
     t.setMenu(new Menu(t));
-    t.getMenu().addMenuListener(this);
 
     this.control = t;
     rebuild();
@@ -104,7 +104,8 @@ public class TablePeer
   {
     switch (event.type)
     {
-      case SWT.SetData:          handleSetData(event); break;
+      case SWT.SetData:     handleSetData(event); break;
+      case SWT.MenuDetect:  handleMenuDetect(event); break;
       default: System.out.println("WARNING: TreePeer.handleEvent: " + event);
     }
   }
@@ -150,12 +151,13 @@ public class TablePeer
     self.onSelect().fire(fe);
   }
 
-  public void menuHidden(MenuEvent se) {} // unused
-
-  public void menuShown(MenuEvent se)
+  public void handleMenuDetect(Event event)
   {
     Table table = (Table)this.control;
     final fan.fwt.Table self = (fan.fwt.Table)this.self;
+
+    TableItem item = table.getItem(table.toControl(event.x, event.y));
+    if (item == null) return;
 
     fan.fwt.Event fe = event(EventId.popup);
     fe.index = selectedIndex();
