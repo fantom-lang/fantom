@@ -304,7 +304,24 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void replaceAll()
   {
-    echo("TODO: replaceAll")
+    query   := findText.text
+    replace := replaceText.text
+    match   := matchCase.selected
+    pos     := 0
+    off     := doc.findNext(query, pos, match)
+
+    while (off != null)
+    {
+      richText.modify(off, query.size, replace)
+      pos = off + replace.size
+      off = doc.findNext(query, pos, match)
+    }
+
+    cmdPrev.enabled       = false
+    cmdNext.enabled       = false
+    cmdReplace.enabled    = false
+    cmdReplaceAll.enabled = false
+    setMsg(Flux#.loc("find.notFound"))
   }
 
   private Void setMsg(Str text)
