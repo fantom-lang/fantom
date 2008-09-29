@@ -17,7 +17,31 @@ internal class ImageView : View
   override Void onLoad()
   {
     image = Image(resource->file)
-    content = ImageViewWidget(image)
+    details := BorderPane
+    {
+      content = InsetPane(6)
+      {
+        GridPane
+        {
+          numCols = 2
+          Label { text="Size"; font=Font.sys.toBold }
+          Label { text="${image.size.w}px x ${image.size.h}px" }
+        }
+      }
+      insets  = Insets(0,0,2,0)
+      onBorder = |Graphics g, Size size|
+      {
+        g.brush = Color.sysNormShadow
+        g.drawLine(0, size.h-2, size.w, size.h-2)
+        g.brush = Color.sysHighlightShadow
+        g.drawLine(0, size.h-1, size.w, size.h-1)
+      }
+    }
+    content = EdgePane
+    {
+      top = details
+      center = ImageViewWidget(image)
+    }
   }
 
   override Void onUnload()
