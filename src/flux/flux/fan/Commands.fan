@@ -92,6 +92,8 @@ internal class Commands
       addSep
       addCommand(jumpNext)
       addCommand(jumpPrev)
+      addSep
+      addCommand(selectAll)
     }
   }
 
@@ -299,8 +301,6 @@ internal class Commands
   readonly FluxCommand cut := CutCommand()
   readonly FluxCommand copy := CopyCommand()
   readonly FluxCommand paste := PasteCommand()
-
-  // Search
   readonly FluxCommand find := ViewManagedCommand(CommandId.find)
   readonly FluxCommand findNext := ViewManagedCommand(CommandId.findNext)
   readonly FluxCommand findPrev := ViewManagedCommand(CommandId.findPrev)
@@ -310,6 +310,7 @@ internal class Commands
   readonly FluxCommand goto := ViewManagedCommand(CommandId.goto)
   readonly FluxCommand jumpNext := JumpNextCommand()
   readonly FluxCommand jumpPrev := JumpPrevCommand()
+  readonly FluxCommand selectAll := SelectAllCommand()
 
   // View
   readonly FluxCommand reload  := ReloadCommand()
@@ -493,6 +494,16 @@ internal class PasteCommand : FluxCommand
   override Void invoke(Event event)
   {
     try { Desktop.focus?->paste } catch (UnknownSlotErr e) {}
+  }
+}
+
+** Copy command routes to 'focus?.selectAll'
+internal class SelectAllCommand : FluxCommand
+{
+  new make() : super(CommandId.selectAll) {}
+  override Void invoke(Event event)
+  {
+    try { Desktop.focus?->selectAll } catch (UnknownSlotErr e) {}
   }
 }
 

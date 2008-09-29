@@ -26,8 +26,6 @@ class CommandId
   static const Str cut            := "cut"
   static const Str copy           := "copy"
   static const Str paste          := "paste"
-
-  // search menu
   static const Str find           := "find"             // view managed
   static const Str findNext       := "findNext"         // view managed
   static const Str findPrev       := "findPrev"         // view managed
@@ -37,6 +35,7 @@ class CommandId
   static const Str goto           := "goto"             // view managed
   static const Str jumpNext       := "jumpNext"
   static const Str jumpPrev       := "jumpPrev"
+  static const Str selectAll      := "selectAll"
 
   // view menu
   static const Str reload         := "refresh"
