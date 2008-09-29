@@ -133,6 +133,8 @@ internal class FindBar : ContentPane, TextEditorSupport
     if (oldVisible)
     {
       ignore = false
+      findText.focus
+      findText.selectAll
       return
     }
 
@@ -205,9 +207,7 @@ internal class FindBar : ContentPane, TextEditorSupport
         temp := 0
         while ((temp = doc.findNext(q, temp, match)) != null) { total++; temp++ }
       }
-      matchStr := total == 1
-        ? "1 " + Flux#.loc("find.match")
-        : "$total " + Flux#.loc("find.matches")
+      matchStr := msgTotal
 
       // if found select next occurance
       if (off != null)
@@ -286,7 +286,17 @@ internal class FindBar : ContentPane, TextEditorSupport
     len     := richText.selectSize
     richText.modify(start, len, newText)
     richText.select(start, newText.size)
-  }
+    total--
+    if (total > 0) setMsg(msgTotal)
+    else
+    {
+      cmdPrev.enabled       = false
+      cmdNext.enabled       = false
+      cmdReplace.enabled    = false
+      cmdReplaceAll.enabled = false
+      setMsg(Flux#.loc("find.notFound"))
+    }
+ }
 
   **
   ** Replace all occurences of the current query string with
@@ -301,6 +311,13 @@ internal class FindBar : ContentPane, TextEditorSupport
   {
     msg.text = text
     msg.parent.relayout
+  }
+
+  private Str msgTotal()
+  {
+    return total == 1
+      ? "1 " + Flux#.loc("find.match")
+      : "$total " + Flux#.loc("find.matches")
   }
 
 //////////////////////////////////////////////////////////////////////////
