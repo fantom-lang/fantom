@@ -434,7 +434,8 @@
 - New fwt text selection and clipboard APIs
 - Flux prototype!
 
-
+*Build 1.0.33 (working)*
+- Add build::CreateZip task, buildall.fan handles dist zip
 
 
 
