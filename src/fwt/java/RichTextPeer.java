@@ -218,6 +218,7 @@ public class RichTextPeer
   public void verifyKey(VerifyEvent se)
   {
     fireKeyEvent(((RichText)self).onVerifyKey(), EventId.verifyKey, se);
+    if (se.doit) checkHomeEnd(se);
   }
 
   public void verifyText(VerifyEvent se)
@@ -265,6 +266,53 @@ public class RichTextPeer
     fan.fwt.Event fe = event(EventId.caret);
     fe.offset = Int.make(newCaretPos);
     ((RichText)self).onCaret().fire(fe);
+  }
+
+  public void checkHomeEnd(KeyEvent event)
+  {
+    // make home/end work right by first going to home/end of
+    // non-whitespace, then to actual beginning/end
+    StyledText st = (StyledText)control;
+    boolean home = event.keyCode == st.getKeyBinding(ST.LINE_START);
+    boolean end  = event.keyCode == st.getKeyBinding(ST.LINE_END);
+    if (!home && !end) return;
+
+    // consume the event so StyledText doesn't process it
+    event.doit = false;
+
+    // gather all the crap we need
+    int oldCaret   = st.getCaretOffset();
+    int lineNum = content.getLineAtOffset(oldCaret);
+    int lineOff = content.getOffsetAtLine(lineNum);
+    int linePos = oldCaret - lineOff;  // offset inside this line
+    String text = content.getLine(lineNum);
+
+    // compute new offset inside this line based on non-whitespace
+    int newPos;
+    if (home)
+    {
+      int nonws = 0;
+      while (nonws < text.length() && Int.isSpace(text.charAt(nonws))) nonws++;
+      newPos = linePos <= nonws ? 0 : nonws;
+    }
+    else
+    {
+      int nonws = text.length();
+      while (nonws-1 >= 0 && Int.isSpace(text.charAt(nonws-1))) nonws--;
+      newPos = linePos >= nonws ? text.length() : nonws;
+    }
+
+    // include into selection if shift is down, otherwise just move caret
+    int newCaret = lineOff + newPos;
+    if ((event.stateMask & SWT.SHIFT) != 0)
+    {
+      Point sel = st.getSelection();
+      st.setSelection(home ? sel.y : sel.x, newCaret);
+    }
+    else
+    {
+      st.setCaretOffset(newCaret);
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

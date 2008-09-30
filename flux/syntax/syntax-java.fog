@@ -43,6 +43,7 @@ SyntaxRules
     "double",
     "else",
     "extends",
+    "false",
     "final",
     "finally",
     "float",
@@ -80,5 +81,4 @@ SyntaxRules
     "while",
   ]
 }
-
 
