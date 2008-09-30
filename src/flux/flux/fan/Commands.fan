@@ -73,6 +73,7 @@ internal class Commands
     return Menu
     {
       text = type.loc("edit.name")
+      onOpen.add(&onEditMenuOpen)
       addCommand(undo)
       addCommand(redo)
       addSep
@@ -212,6 +213,20 @@ internal class Commands
 //////////////////////////////////////////////////////////////////////////
 // Eventing
 //////////////////////////////////////////////////////////////////////////
+
+  Void onEditMenuOpen(Event event)
+  {
+    undo := type.loc("undo.name")
+    redo := type.loc("redo.name")
+
+    stack := frame.view.commandStack
+    if (stack.listUndo.size > 0) undo = "$undo $stack.listUndo.last.name"
+    if (stack.listRedo.size > 0) redo = "$redo $stack.listRedo.last.name"
+
+    kids := event.widget.children
+    kids[0]->text = undo
+    kids[1]->text = redo
+  }
 
   Void onViewMenuOpen(Event event)
   {
