@@ -40,6 +40,7 @@ class DocCompiler
     SourceToHtml(this).run
     FandocToHtml(this).run
     PodIndexToHtml(this).run
+    CopyResources(this, pod, podDir).run
     if (!errors.isEmpty) throw errors.last
   }
 
@@ -48,7 +49,7 @@ class DocCompiler
     log.info("DocCompiler [top index]")
     TopIndexToHtml(this).run
     BuildSearchIndex(this).run
-    CopyResources(this).run
+    CopyResources(this, DocCompiler#.pod, outDir).run
     if (!errors.isEmpty) throw errors.last
   }
 

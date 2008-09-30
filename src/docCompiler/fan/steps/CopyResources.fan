@@ -16,33 +16,25 @@ using fandoc
 class CopyResources : DocCompilerSupport
 {
 
-  new make(DocCompiler compiler)
+  new make(DocCompiler compiler, Pod pod, File outDir)
     : super(compiler)
   {
+    this.pod = pod
+    this.outDir = outDir
   }
 
   Void run()
   {
-    copy(`/res/doc.css`, compiler.outDir)
-    copy(`/res/doc.js`, compiler.outDir)
-    copy(`/res/go-previous.png`, compiler.outDir)
-    copy(`/res/go-next.png`, compiler.outDir)
-    copy(`/res/eximg.png`, compiler.outDir)
-    copy(`/res/fanLogo.png`, compiler.outDir)
-    copy(`/res/slotBg.png`, compiler.outDir)
-    copy(`/res/slotHiddenBg.png`, compiler.outDir)
-    copy(`/res/subHeaderBg.png`, compiler.outDir)
+    exts := ["png", "gif", "jpg", "jpeg", "css", "js"]
+    pod.files.each |File f|
+    {
+      if (exts.contains(f.ext)) copy(f)
+    }
   }
 
-  Void copy(Uri uri, File dir)
+  Void copy(File from)
   {
-    from := type.pod.files[uri]
-    to := dir + uri.name.toUri
-    if (from == null)
-    {
-      log.warn("Missing resource file $uri")
-      return
-    }
+    to := outDir + from.uri.name.toUri
 
     log.debug("  Copy [$to]")
 
@@ -52,4 +44,6 @@ class CopyResources : DocCompilerSupport
     out.close
   }
 
+  Pod pod
+  File outDir
 }
