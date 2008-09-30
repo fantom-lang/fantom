@@ -24,7 +24,7 @@ internal class FindBar : ContentPane, TextEditorSupport
     this.editor = editor
 
     findText = Text()
-    findText.onFocus.add |Event e| { caretPos = richText.caretOffset }
+    findText.onFocus.add |Event e| { caretPos = richText.selectStart }
     findText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
     findText.onModify.add |Event e| { find(null, true, true) }
 
@@ -111,6 +111,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   Void showFind()
   {
     show(false)
+    find(null, true, true)
   }
 
   **
@@ -119,6 +120,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   Void showFindReplace()
   {
     show(true)
+    find(null, true, true)
   }
 
   private Void show(Bool showReplace := false)
@@ -128,15 +130,6 @@ internal class FindBar : ContentPane, TextEditorSupport
     visible = true
     replacePane.visible = showReplace
     parent?.parent?.parent?.relayout
-
-    // bail if we were already visible
-    if (oldVisible)
-    {
-      ignore = false
-      findText.focus
-      findText.selectAll
-      return
-    }
 
     // use current selection if it exists
     cur := richText.selectText
