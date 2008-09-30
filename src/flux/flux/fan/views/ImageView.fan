@@ -16,7 +16,7 @@ internal class ImageView : View
 {
   override Void onLoad()
   {
-    image = Image(resource->file)
+    image = Image.makeFile(resource->file)
     details := BorderPane
     {
       content = InsetPane(6)
