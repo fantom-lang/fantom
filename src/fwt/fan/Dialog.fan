@@ -199,6 +199,10 @@ class Dialog : Window
     // build content widget if necessary
     if (content is Str) content = Label { text = content.toStr }
 
+    // default my icon to parent's icon
+    if (parent != null)
+      icon = parent.icon
+
     // build buttons from commands
     buttons := GridPane
     {
