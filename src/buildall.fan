@@ -135,6 +135,7 @@ class Build : BuildGroup
         if (f.name == ".hg")       return false
         if (f.name == ".hgignore") return false
         if (f.name == "tmp")       return false
+        // TODO: ship fandoc pod files?
         if (f.isDir) log.info("  $path")
         return true
       }
