@@ -246,7 +246,7 @@ internal class TabBar : Widget
 
   ViewTabPane pane
   Rect[] tabBounds := Rect[,]
-  Image iconClose  := Image(`fan:/sys/pod/icons/x16/tab-close.png`.get)
+  Image iconClose  := Flux.icon(`/x16/tab-close.png`)
 
   const Int iconGap       := 3
   const Insets tabInsets  := Insets(5,5,5,5)

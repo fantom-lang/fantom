@@ -85,8 +85,10 @@ class Flux
   }
 
   // convenience for icons
-  internal const static Uri:File icons := Pod.find("icons").files
-  internal static Image icon(Uri uri) { return Image(icons[uri]) }
+  internal static Image icon(Uri uri)
+  {
+    return Image(("fan:/sys/pod/icons"+uri).toUri)
+  }
 
 }
 

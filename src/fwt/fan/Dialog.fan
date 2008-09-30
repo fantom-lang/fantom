@@ -109,7 +109,7 @@ class Dialog : Window
     title := pod.loc("${keyBase}.name")
     locIcon := pod.loc("${keyBase}.icon")
     Image icon
-    try { icon = Image(locIcon.toUri.get) } catch {}
+    try { icon = Image(locIcon.toUri) } catch {}
 
     // build content
     if (content is Str) content = Label { text = content }

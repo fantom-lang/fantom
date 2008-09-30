@@ -682,10 +682,19 @@ internal class RecentCommand : FluxCommand
 
 internal class RecentTableModel : TableModel
 {
-  HistoryItem[] items := History.load.items
+  new make()
+  {
+    items = History.load.items
+    icons = Image[,]
+    items.map(icons) |HistoryItem item->Obj|
+    {
+      return Image(item.iconUri, false) ?: def
+    }
+  }
+
   override Int numCols() { return 2 }
   override Int numRows() { return items.size }
-  override Image image(Int col, Int row) { return col==0 ? def : null }
+  override Image image(Int col, Int row) { return col==0 ? icons[row] : null }
   override Font font(Int col, Int row) { return col==1 ? accFont : null }
   override Color fg(Int col, Int row)  { return col==1 ? accColor : null }
   override Str text(Int col, Int row)
@@ -697,6 +706,8 @@ internal class RecentTableModel : TableModel
       default: return ""
     }
   }
+  HistoryItem[] items
+  Image[] icons
   Image def := Flux.icon(`/x16/text-x-generic.png`)
   Font accFont := Font.sys.toSize(Font.sys.size-1)
   Color accColor := Color("#666")
@@ -767,7 +778,7 @@ internal class AboutCommand : FluxCommand
     content := GridPane
     {
       halignCells = Halign.center
-      Label { image = Image(icon) }
+      Label { image = Image.makeFile(icon) }
       Label { text = "Flux"; font = big }
       GridPane
       {
