@@ -32,6 +32,7 @@ class FwtDemo
         {
           Tab { text = "Buttons";        InsetPane { makeButtons } }
           Tab { text = "Labels";         InsetPane { makeLabels } }
+          Tab { text = "ProgessBar";     InsetPane { makeProgressBar } }
           Tab { text = "WebBrowser";     InsetPane { makeWebBrowser } }
           Tab { text = "Text";           InsetPane { makeText} }
           Tab { text = "EdgePane";       InsetPane { makeEdgePane } }
@@ -179,6 +180,24 @@ class FwtDemo
       Label { text = "Left"; halign = Halign.left }
       Label { text = "Center"; halign = Halign.center }
       Label { text = "Right"; halign = Halign.right }
+    }
+  }
+
+  **
+  ** Build a pane of various progress bars
+  **
+  Widget makeProgressBar()
+  {
+    return GridPane
+    {
+      numCols = 1
+      hgap = 20
+      halignCells = Halign.fill
+      ProgressBar { value=25; }
+      ProgressBar { min=0; max=100; value=75; }
+      ProgressBar { min=-100; max=100; value=80; }
+      ProgressBar { min=-100; max=100; value=25; }
+      ProgressBar { indeterminate = true }
     }
   }
 
