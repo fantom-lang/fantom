@@ -620,6 +620,11 @@ class EventDemo : Widget
     onKeyDown.add(&dump)
     onMouseUp.add(&dump)
     onMouseDown.add(&dump)
+    onMouseEnter.add(&dump)
+    onMouseExit.add(&dump)
+    onMouseMove.add(&dump)
+    onMouseHover.add(&dump)
+    onMouseWheel.add(&dump)
   }
 
   override Size prefSize(Hints hints := null) { return Size.make(100, 100) }
