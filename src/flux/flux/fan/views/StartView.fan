@@ -32,10 +32,19 @@ internal class StartView : View
 
 internal class StartRecentTableModel : TableModel
 {
-  HistoryItem[] items := History.load.items
+  new make()
+  {
+    items = History.load.items
+    icons = Image[,]
+    items.map(icons) |HistoryItem item->Obj|
+    {
+      return Image(item.iconUri, false) ?: def
+    }
+  }
+
   override Int numCols() { return 2 }
   override Int numRows() { return items.size }
-  override Image image(Int col, Int row) { return col==0 ? def : null }
+  override Image image(Int col, Int row) { return col==0 ? icons[row] : null }
   override Color fg(Int col, Int row)  { return col==1 ? pathCol : null }
   override Str header(Int col) { return headers[col] }
   override Str text(Int col, Int row)
@@ -47,6 +56,8 @@ internal class StartRecentTableModel : TableModel
       default: return ""
     }
   }
+  HistoryItem[] items
+  Image[] icons
   Str[] headers := ["Resource", "Uri"]
   Image def := Flux.icon(`/x16/text-x-generic.png`)
   Color pathCol := Color("#666")
