@@ -188,9 +188,10 @@ public class TablePeer
     for (int i=0; i<numCols; ++i)
     {
       Int col = Int.make(i);
+      Int pw = model.prefWidth(col);
       TableColumn tc = new TableColumn(table, style(model.halign(col)));
       tc.setText(model.header(col).val);
-      tc.setWidth(200);
+      tc.setWidth(pw == null ? 100 : (int)pw.val);
     }
 
     // rows
