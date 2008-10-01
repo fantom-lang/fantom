@@ -117,6 +117,13 @@ mixin TableModel
   virtual Halign halign(Int col) { return Halign.left }
 
   **
+  ** Return the preferred width in pixels for this column.
+  ** Return null (the default) to use the Tables default
+  ** width.
+  **
+  virtual Int prefWidth(Int col) { return null }
+
+  **
   ** Get the text to display for specified cell.
   **
   abstract Str text(Int col, Int row)
