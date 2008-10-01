@@ -44,6 +44,15 @@ internal class StartRecentTableModel : TableModel
 
   override Int numCols() { return 2 }
   override Int numRows() { return items.size }
+  override Int prefWidth(Int col)
+  {
+    switch (col)
+    {
+      case 0: return 175
+      case 1: return 300
+      default: return null
+    }
+  }
   override Image image(Int col, Int row) { return col==0 ? icons[row] : null }
   override Color fg(Int col, Int row)  { return col==1 ? pathCol : null }
   override Str header(Int col) { return headers[col] }

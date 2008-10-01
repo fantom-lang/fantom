@@ -530,7 +530,7 @@ internal class SelectAllCommand : FluxCommand
 internal class FindInFilesCommand : FluxCommand
 {
   new make() : super(CommandId.findInFiles) {}
-  override Void invoke(Event event) { Dialog.openInfo(frame, "TODO: Find in Files") }
+  override Void invoke(Event event) { FindInFiles.open(frame) }
 }
 
 ** Replace in files
@@ -709,6 +709,15 @@ internal class RecentTableModel : TableModel
 
   override Int numCols() { return 2 }
   override Int numRows() { return items.size }
+  override Int prefWidth(Int col)
+  {
+    switch (col)
+    {
+      case 0: return 250
+      case 1: return 20
+      default: return null
+    }
+  }
   override Image image(Int col, Int row) { return col==0 ? icons[row] : null }
   override Font font(Int col, Int row) { return col==1 ? accFont : null }
   override Color fg(Int col, Int row)  { return col==1 ? accColor : null }
