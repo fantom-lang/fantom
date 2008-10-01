@@ -118,7 +118,6 @@ views.name=Views
 
 refresh.name=Reload View
 refresh.icon=fan:/sys/pod/icons/x16/view-refresh.png
-refresh.accelerator=F5
 
 //////////////////////////////////////////////////////////////////////////
 // History menu
