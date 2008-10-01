@@ -273,8 +273,11 @@ public class RichTextPeer
     // make home/end work right by first going to home/end of
     // non-whitespace, then to actual beginning/end
     StyledText st = (StyledText)control;
-    boolean home = event.keyCode == st.getKeyBinding(ST.LINE_START);
-    boolean end  = event.keyCode == st.getKeyBinding(ST.LINE_END);
+    int lineStart = st.getKeyBinding(ST.LINE_START);
+    int lineEnd   = st.getKeyBinding(ST.LINE_END);
+    int mask = event.stateMask & ~SWT.SHIFT;
+    boolean home = (event.keyCode | mask) == lineStart;
+    boolean end  = (event.keyCode | mask) == lineEnd;
     if (!home && !end) return;
 
     // consume the event so StyledText doesn't process it
@@ -311,7 +314,7 @@ public class RichTextPeer
     }
     else
     {
-      st.setCaretOffset(newCaret);
+      st.setSelection(newCaret, newCaret);
     }
   }
 
