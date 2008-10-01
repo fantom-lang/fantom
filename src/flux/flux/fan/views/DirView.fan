@@ -55,6 +55,17 @@ internal class DirViewModel : TableModel
   override Str header(Int col) { return headers[col] }
   override Halign halign(Int col) { return col == 1 ? Halign.right : Halign.left }
 
+  override Int prefWidth(Int col)
+  {
+    switch (col)
+    {
+      case 0:  return 175
+      case 1:  return 75
+      case 2:  return 175
+      default: return null
+    }
+  }
+
   override Str text(Int col, Int row)
   {
     f := files[row]
