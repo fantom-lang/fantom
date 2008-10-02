@@ -11,11 +11,47 @@
 ** input information from the user.  Dialog also contains
 ** convenience routines for opening message boxes.
 **
-** TODO: the make and openMsgBox methods are going to be
-**   redesigned to make this API more flexible
-**
 class Dialog : Window
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Image to the left of the body when building content.
+  ** See `buildContent`.
+  **
+  Image image
+
+  **
+  ** Main body of the content:
+  **   - Str: displays string as label
+  **   - Widget: used as main content
+  ** See `buildContent`.
+  **
+  Obj body
+
+  **
+  ** The details parameter is hidden by default, but may be displayed by
+  ** the user via the "Details" button.  The details button is implicitly
+  ** added to the command set if details is non-null.  Details may be any
+  ** of the following
+  **   - Str: displays string as label
+  **   - Err: displays error trace as string
+  **   - Widget: mounted as main content of details box
+  ** See `buildContent`.
+  **
+  Obj details
+
+  **
+  ** The commands are mapped to buttons along the bottom of the dialog.
+  ** If a predefined command such as `ok` is passed, then it closes
+  ** the dialog and is returned as the result.  If a custom command
+  ** is passed, then it should close the dialog as appropiate with
+  ** the result object.
+  **
+  Command[] commands := [ok]
 
 //////////////////////////////////////////////////////////////////////////
 // Predefined Commands
@@ -84,69 +120,33 @@ class Dialog : Window
   **   - "{keyBase}.name": title of the message box
   **   - "{keyBase}.icon": icon for the message box
   **
-  ** The content parameter may be any of the following:
-  **   - Str: displays string as label
-  **   - Widget: mounted as main content of message box
-
-  ** The details parameter is hidden by default, but may be displayed by
-  ** the user via the "Details" button.  The details button is implicitly
-  ** added to the command set if details is non-null.  Details may be any
-  ** of the following
-  **   - Err: displays error trace as string
-  **   - Str: displays string as label
-  **   - Widget: mounted as main content of details box
-  **   - Command[]: you may pass in the command list via the details parameter
+  ** See `buildContent` for a description of the body, details, and
+  ** commands.  You may pass commands as the details parameter if
+  ** details are null.
   **
   ** The command invoked to close message box is returned.  If the
   ** dialog is canceled using the window manager then null is returned.
   **
-  ** TODO: this API going to change
-  **
-  static Obj openMsgBox(Pod pod, Str keyBase, Window parent, Obj content,
+  static Obj openMsgBox(Pod pod, Str keyBase, Window parent, Obj body,
                         Obj details := null, Command[] commands := [ok])
   {
     // get localized props
     title := pod.loc("${keyBase}.name")
-    locIcon := pod.loc("${keyBase}.icon")
-    Image icon
-    try { icon = Image(locIcon.toUri) } catch {}
+    locImage := pod.loc("${keyBase}.image")
+    Image image
+    try { image = Image(locImage.toUri) } catch {}
 
-    // build content
-    if (content is Str) content = Label { text = content }
-    if (content isnot Widget) throw ArgErr("content not Str or Widget: " + content?.type)
-
-    // details
+    // swizzle details if passed commands
     if (details is Command[]) { commands = details; details = null }
-    if (details != null)
-    {
-      if (details is Err) details = ((Err)details).traceToStr
-      if (details is Str) details = Text
-      {
-        multiLine=true
-        editable=false
-        prefRows=20
-        font=Font.sysMonospace
-        text=details.toStr
-      }
-      if (details isnot Widget) throw ArgErr("details not Err, Str, or Widget: " + details.type)
-      commands = commands.dup.add(DialogCommand(DialogCommandId.details, details))
-    }
 
-    // build main pane
-    pane := ConstraintPane
+    dialog := Dialog(parent)
     {
-      minw = (details == null) ? 200 : 320
-      content = GridPane
-      {
-        numCols = 2
-        expandCol = 1
-        halignCells=Halign.fill
-        Label { image = icon }
-        add(content)
-      }
+      title    = title
+      image    = image
+      body     = body
+      details  = details
+      commands = commands
     }
-
-    dialog := Dialog(parent, pane, commands) { title = title }
     return dialog.open
   }
 
@@ -180,30 +180,69 @@ class Dialog : Window
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Make a standard option dialog.  If content is a string, then
-  ** it is displayed as a lable, otherwise content must be a Widget.
+  ** Construct dialog.
   **
-  ** The commands are mapped to buttons along the bottom of the dialog.
-  ** If a predefined command such as `ok` is passed, then it closes
-  ** the dialog and is returned as the result.  If a custom command
-  ** is passed, then it should close the dialog as appropiate with
-  ** the result object.
-  **
-  ** TODO: this API going to change
-  **
-  new make(Window parent, Obj content := null, Command[] commands := null)
+  new make(Window parent)
     : super(parent)
   {
-    if (content == null || commands == null) return
+    if (parent != null) icon = parent.icon
+  }
 
-    // build content widget if necessary
-    if (content is Str) content = Label { text = content.toStr }
+  **
+  ** If the content field is null, then construct is via `buildContent`.
+  **
+  override Obj open()
+  {
+    if (content == null) buildContent
+    return super.open
+  }
 
-    // default my icon to parent's icon
-    if (parent != null)
-      icon = parent.icon
+  **
+  ** Build the dialog content using the `image`, `body`,
+  ** `details`, and `commands` fields.  Return this.
+  ** This method is automatically called by `open` if
+  ** the content field is null.
+  **
+  virtual This buildContent()
+  {
+    // build body widget if necessary
+    body := this.body
+    if (body == null) body = Label {}
+    if (body is Str) body = Label { text = body.toStr }
+    if (body isnot Widget) throw Err("body is not Str or Widget: $body.type")
+
+    // combine body with image if specified
+    bodyAndImage := body as Widget
+    if (image != null)
+    {
+      bodyAndImage = GridPane
+      {
+        numCols = 2
+        expandCol = 1
+        halignCells=Halign.fill
+        Label { image = image }
+        add(body)
+      }
+    }
+
+    // details
+    if (details != null)
+    {
+      if (details is Err) details = ((Err)details).traceToStr
+      if (details is Str) details = Text
+      {
+        multiLine=true
+        editable=false
+        prefRows=20
+        font=Font.sysMonospace
+        text=details.toStr
+      }
+      if (details isnot Widget) throw ArgErr("details not Err, Str, or Widget: " + details.type)
+      commands = commands.dup.add(DialogCommand(DialogCommandId.details, details))
+    }
 
     // build buttons from commands
+    if (commands == null) commands := Command[,]
     buttons := GridPane
     {
       numCols = commands.size
@@ -229,10 +268,20 @@ class Dialog : Window
       expandRow = 0
       valignCells = Valign.fill
       halignCells = Halign.fill
-      InsetPane { add(content) }
+      InsetPane
+      {
+        ConstraintPane
+        {
+          minw = (details == null) ? 200 : 350
+          add(bodyAndImage)
+        }
+      }
       InsetPane { insets = Insets(0, 10, 10, 10); add(buttons) }
     }
+
+    return this
   }
+
 
   // to force native peer
   private native Void dummyDialog()
