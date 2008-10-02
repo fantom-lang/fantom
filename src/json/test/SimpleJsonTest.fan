@@ -70,6 +70,42 @@ class SimpleJsonTest : Test
     verify(map["k1"] == 123.45)
   }
 
+  Void testDurationNs()
+  {
+    map := doTest(["k1":123ns])
+    verify(map["k1"] == 123ns)
+  }
+
+  Void testDurationMs()
+  {
+    map := doTest(["k1":123ms])
+    verify(map["k1"] == 123ms)
+  }
+
+  Void testDurationSec()
+  {
+    map := doTest(["k1":123sec])
+    verify(map["k1"] == 123sec)
+  }
+
+  Void testDurationMin()
+  {
+    map := doTest(["k1":120min])
+    verify(map["k1"] == 120min)
+  }
+
+  Void testDurationHr()
+  {
+    map := doTest(["k1":24hr])
+    verify(map["k1"] == 24hr)
+  }
+
+  Void testDurationDay()
+  {
+    map := doTest(["k1":365day])
+    verify(map["k1"] == 365day)
+  }
+
   Void testExp()
   {
     doTest(["k1":1.23e11])
@@ -90,6 +126,10 @@ class SimpleJsonTest : Test
     doTest(["k1":[,]])
   }
 
+  Void testUri()
+  {
+    doTest(["kuri":`http://fandev.org`]) 
+  }
 
   Void testBoolsAndNull()
   {
@@ -136,6 +176,7 @@ class SimpleJsonTest : Test
     stream := OutStream.makeForStrBuf(buf)
     Json.write(map, stream)
     stream.close
+    echo(buf.toStr)
     ins := InStream.makeForStr(buf.toStr)
     newMap := Json.read(ins)
     validate(map, newMap)
