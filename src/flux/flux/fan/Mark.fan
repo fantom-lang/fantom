@@ -102,8 +102,8 @@ internal class MarkParser
     f := File.os(text[s..e])
     while (text[e] == '/' || text[e] == '\\')
     {
-      slash := text.index("/", e+1)
-      if (slash == null) slash = text.index("\\", e+1)
+      slash := Desktop.isWindows ? text.index("\\", e+1) : null
+      if (slash == null) slash = text.index("/", e+1)
       if (slash == null) break
       testf := File.os(text[s..slash])
       if (!testf.exists) break
