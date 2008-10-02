@@ -16,9 +16,9 @@
 class Json
 {
   // FIXIT only map entry point currently, need Obj/slots
-  public static Void write(Str:Obj map, OutStream out)
+  public static Void write(Obj obj, OutStream out)
   {
-    JsonWriter.writeMap(map, out)
+    JsonWriter.write(obj, out)    
     out.flush
   }
 
