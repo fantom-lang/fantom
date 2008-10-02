@@ -11,7 +11,7 @@ using fwt
 **
 ** FindInFiles searches a set of files for a query string.
 **
-class FindInFiles
+internal class FindInFiles
 {
   **
   ** Open the dialog.
@@ -28,8 +28,14 @@ class FindInFiles
       Label { text="In Folder" }
       Text  { text="file:/C:/dev/fan/src/flux/flux/fan/"; prefCols=30 }
     }
-    dlg := Dialog(parent, content, [Dialog.ok, Dialog.cancel])
-      { title = FindInFiles#.loc("findInFiles.name") }
+
+    dlg := Dialog(parent)
+    {
+      title = FindInFiles#.loc("findInFiles.name")
+      body=content
+      commands=[Dialog.ok, Dialog.cancel]
+    }
+
     if (Dialog.ok != dlg.open) return
 
     content2 := GridPane
@@ -37,8 +43,14 @@ class FindInFiles
       Label { text = "Doesn't actually do anything yet..." }
       ProgressBar { indeterminate = true }
     }
-    dlg = Dialog(parent, content2, [Dialog.cancel])
-      { title = FindInFiles#.loc("findInFiles.name") }
+
+    dlg = Dialog(parent)
+    {
+      title = FindInFiles#.loc("findInFiles.name")
+      body = content2
+      commands=[Dialog.cancel]
+    }
+
     dlg.open
   }
 

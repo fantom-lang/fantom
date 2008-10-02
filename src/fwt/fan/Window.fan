@@ -126,11 +126,11 @@ class Window : ContentPane
   ** not explicitly set, then the windows is centered over its
   ** parent window (or primary monitor if no parent).
   **
-  native Obj open()
+  virtual native Obj open()
 
   **
   ** Close the window.
   **
-  native Void close(Obj result := null)
+  virtual native Void close(Obj result := null)
 
 }
