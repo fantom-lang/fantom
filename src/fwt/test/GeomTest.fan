@@ -85,6 +85,10 @@ class GeomTest : Test
     verifyNotEq(Insets(1, 2, 0, 4), Insets(1, 2, 3, 4))
     verifyNotEq(Insets(1, 2, 3, 0), Insets(1, 2, 3, 4))
 
+    verifyEq(Insets(1), Insets(1,1,1,1))
+    verifyEq(Insets(1,2), Insets(1,2,1,2))
+    verifyEq(Insets(1,2,3), Insets(1,2,3,2))
+
     verifyEq(Insets.fromStr("3,4,5,6"), Insets(3,4,5,6))
     verifyEq(Insets.fromStr("10"), Insets(10,10,10,10))
     verifyEq(Insets.fromStr("-1 , -2, -3  , -4"), Insets(-1,-2,-3,-4))

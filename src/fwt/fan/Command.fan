@@ -127,7 +127,7 @@ class Command
     try
     {
       if (locIcon != null)
-        this.icon = Image.make(locIcon.toUri.get)
+        this.icon = Image.make(locIcon.toUri)
     }
     catch type.log.error("Command: cannot load '${keyBase}.icon' => $locIcon")
 

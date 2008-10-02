@@ -46,7 +46,8 @@ class Table : Widget
   **   - `EventId.popup`
   **
   ** Event fields:
-  **   - `Event.index`: the row index.
+  **   - `Event.index`: the row index, or 'null' if this is a
+  **     background popup.
   **
   @transient readonly EventListeners onPopup := EventListeners()
 
@@ -116,6 +117,13 @@ mixin TableModel
   virtual Halign halign(Int col) { return Halign.left }
 
   **
+  ** Return the preferred width in pixels for this column.
+  ** Return null (the default) to use the Tables default
+  ** width.
+  **
+  virtual Int prefWidth(Int col) { return null }
+
+  **
   ** Get the text to display for specified cell.
   **
   abstract Str text(Int col, Int row)
@@ -124,4 +132,23 @@ mixin TableModel
   ** Get the image to display for specified cell or null.
   **
   virtual Image image(Int col, Int row) { return null }
+
+  **
+  ** Get the font used to render the text for this cell.
+  ** If null, use the default system font.
+  **
+  virtual Font font(Int col, Int row) { return null }
+
+  **
+  ** Get the foreground color for this cell. If null, use
+  ** the default foreground color.
+  **
+  virtual Color fg(Int col, Int row) { return null }
+
+  **
+  ** Get the background color for this cell. If null, use
+  ** the default background color.
+  **
+  virtual Color bg(Int col, Int row) { return null }
+
 }

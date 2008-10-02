@@ -224,13 +224,14 @@ final class Map
   **
   ** Create a new map with the same keys, but apply the specified
   ** closure to generate new values.  This method is idempotent.
+  ** Return the acc parameter.
   **
   ** Example:
   **   m := [2:2, 3:3, 4:4]
   **   x := m.map(Str:Int[:]) |Int v->Obj| { return v*2 }
   **   x => [2:4, 3:6, 4:8]
   **
-  M map(Map acc, |V item, K key->Obj| c)
+  Map map(Map acc, |V item, K key->Obj| c)
 
 //////////////////////////////////////////////////////////////////////////
 // Readonly

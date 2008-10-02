@@ -16,10 +16,11 @@
 //   - FileDialog
 //   - DirDialog
 // Eventing
-//   - mouse eventing (have up/down, need move)
 //   - focus management
 // Graphics:
 //   - affine transformations
+//   - buffered image
+//   - Image.resize / draw resized
 //
 
 **
@@ -84,8 +85,8 @@ abstract class Widget
   **   - `EventId.mouseDown`
   **
   ** Event fields:
-  **   - `Event.pos`
-  **   - `Event.count`
+  **   - `Event.pos`: coordinate of mouse
+  **   - `Event.count`: number of clicks
   **   - `Event.key`: key modifiers
   **
   @transient readonly EventListeners onMouseDown := EventListeners()
@@ -97,11 +98,67 @@ abstract class Widget
   **   - `EventId.mouseUp`
   **
   ** Event fields:
-  **   - `Event.pos`
-  **   - `Event.count`
+  **   - `Event.pos`: coordinate of mouse
+  **   - `Event.count`: number of clicks
   **   - `Event.key`: key modifiers
   **
   @transient readonly EventListeners onMouseUp := EventListeners()
+
+  **
+  ** Callback when mouse enters this widget's bounds.
+  **
+  ** Event id fired:
+  **   - `EventId.mouseEnter`
+  **
+  ** Event fields:
+  **   - `Event.pos`: coordinate of mouse
+  **
+  @transient readonly EventListeners onMouseEnter := EventListeners()
+
+  **
+  ** Callback when mouse exits this widget's bounds.
+  **
+  ** Event id fired:
+  **   - `EventId.mouseExit`
+  **
+  ** Event fields:
+  **   - `Event.pos`: coordinate of mouse
+  **
+  @transient readonly EventListeners onMouseExit := EventListeners()
+
+  **
+  ** Callback when mouse hovers for a moment over this widget.
+  **
+  ** Event id fired:
+  **   - `EventId.mouseHover`
+  **
+  ** Event fields:
+  **   - `Event.pos`: coordinate of mouse
+  **
+  @transient readonly EventListeners onMouseHover := EventListeners()
+
+  **
+  ** Callback when mouse moves over this widget.
+  **
+  ** Event id fired:
+  **   - `EventId.mouseMove`
+  **
+  ** Event fields:
+  **   - `Event.pos`: coordinate of mouse
+  **
+  @transient readonly EventListeners onMouseMove := EventListeners()
+
+  **
+  ** Callback when mouse wheel is scrolled and this widget has focus.
+  **
+  ** Event id fired:
+  **   - `EventId.mouseWheel`
+  **
+  ** Event fields:
+  **   - `Event.pos`: coordinate of mouse
+  **   - `Event.count`: positive or negative number of scroll
+  **
+  @transient readonly EventListeners onMouseWheel := EventListeners()
 
   **
   ** Callback for focus gained event on this widget.

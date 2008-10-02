@@ -28,7 +28,9 @@ import org.eclipse.swt.events.*;
  * Native methods for Widget
  */
 public class WidgetPeer
-  implements PaintListener, KeyListener, FocusListener, MouseListener, DisposeListener
+  implements PaintListener, KeyListener, FocusListener,
+             MouseListener, MouseMoveListener, MouseTrackListener, MouseWheelListener,
+             DisposeListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -275,6 +277,31 @@ public class WidgetPeer
     fireMouseEvent(self.onMouseUp(), EventId.mouseUp, se);
   }
 
+  public void mouseMove(MouseEvent se)
+  {
+    fireMouseEvent(self.onMouseMove(), EventId.mouseMove, se);
+  }
+
+  public void mouseEnter(MouseEvent se)
+  {
+    fireMouseEvent(self.onMouseEnter(), EventId.mouseEnter, se);
+  }
+
+  public void mouseExit(MouseEvent se)
+  {
+    fireMouseEvent(self.onMouseExit(), EventId.mouseExit, se);
+  }
+
+  public void mouseHover(MouseEvent se)
+  {
+    fireMouseEvent(self.onMouseHover(), EventId.mouseHover, se);
+  }
+
+  public void mouseScrolled(MouseEvent se)
+  {
+    fireMouseEvent(self.onMouseWheel(), EventId.mouseWheel, se);
+  }
+
   private void fireMouseEvent(EventListeners listeners, EventId id, MouseEvent se)
   {
     // save modifiers on mouse events for future selection, action,
@@ -340,7 +367,12 @@ public class WidgetPeer
     checkFocusListeners(self);
     checkKeyListeners(self);
     if (control instanceof Control)
+    {
       ((Control)control).addMouseListener(this);
+      ((Control)control).addMouseMoveListener(this);
+      ((Control)control).addMouseTrackListener(this);
+      ((Control)control).addMouseWheelListener(this);
+    }
     control.addDisposeListener(this);
     syncPropsToControl();
 

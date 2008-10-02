@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Widget;
 
 public class TreePeer
   extends WidgetPeer
-  implements Listener, SelectionListener, MenuListener
+  implements Listener, SelectionListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,9 +50,9 @@ public class TreePeer
     Tree t = new Tree((Composite)parent, style);
     t.addListener(SWT.Expand, this);
     t.addListener(SWT.SetData, this);
+    t.addListener(SWT.MenuDetect, this);
     t.addSelectionListener(this);
     t.setMenu(new Menu(t));
-    t.getMenu().addMenuListener(this);
 
     if (Env.isWindows())
     {
@@ -135,8 +135,9 @@ public class TreePeer
   {
     switch (event.type)
     {
-      case SWT.Expand:   handleExpand(event); break;
-      case SWT.SetData:  handleSetData(event); break;
+      case SWT.Expand:     handleExpand(event); break;
+      case SWT.SetData:    handleSetData(event); break;
+      case SWT.MenuDetect: handleMenuDetect(event); break;
       default: System.out.println("WARNING: TreePeer.handleEvent: " + event);
     }
   }
@@ -223,15 +224,14 @@ public class TreePeer
     self.onSelect().fire(event(EventId.select, node(item)));
   }
 
-  public void menuHidden(MenuEvent se) {} // unused
-
-  public void menuShown(MenuEvent se)
+  public void handleMenuDetect(Event event)
   {
     Tree tree = (Tree)this.control;
+    TreeItem item = tree.getItem(tree.toControl(event.x, event.y));
     final fan.fwt.Tree self = (fan.fwt.Tree)this.self;
 
     fan.fwt.Event fe = event(EventId.popup);
-    fe.data = node(tree.getSelection()[0]);
+    if (item != null) fe.data = node(item);
     self.onPopup().fire(fe);
 
     // we don't use the event menu - that is just a dummy

@@ -24,15 +24,15 @@ internal class FindBar : ContentPane, TextEditorSupport
     this.editor = editor
 
     findText = Text()
-    findText.onFocus.add |Event e| { caretPos = richText.caretOffset }
+    findText.onFocus.add |Event e| { caretPos = richText.selectStart }
     findText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
-    findText.onModify.add(&find(null, true))
+    findText.onModify.add |Event e| { find(null, true, true) }
 
     matchCase = Button
     {
       mode = ButtonMode.check
       text = Flux#.loc("find.matchCase")
-      onAction.add(&find(null, true))
+      onAction.add(&find(null, true, true))
     }
 
     findPane = InsetPane(4,4,4,4)
@@ -42,8 +42,8 @@ internal class FindBar : ContentPane, TextEditorSupport
         center = GridPane
         {
           numCols = 5
-          Temp(50) { Label { text = Flux#.loc("find.name") }}
-          Temp(200) { findText }
+          ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("find.name") }}
+          ConstraintPane { minw=200; maxw=200; add(findText) }
           InsetPane(0,0,0,8) { matchCase }
           ToolBar
           {
@@ -69,8 +69,8 @@ internal class FindBar : ContentPane, TextEditorSupport
       GridPane
       {
         numCols = 3
-        Temp(50) { Label { text = Flux#.loc("replace.name") } }
-        Temp(200) { replaceText }
+        ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("replace.name") } }
+        ConstraintPane { minw=200; maxw=200; add(replaceText) }
         InsetPane(0,0,0,8)
         {
           GridPane
@@ -83,10 +83,21 @@ internal class FindBar : ContentPane, TextEditorSupport
       }
     }
 
-    content = EdgePane
+    content = BorderPane
     {
-      top    = findPane
-      bottom = replacePane
+      content = EdgePane
+      {
+        top    = findPane
+        bottom = replacePane
+      }
+      insets = Insets(2,0,0,0)
+      onBorder = |Graphics g, Size size|
+      {
+        g.brush = Color.sysNormShadow
+        g.drawLine(0, 0, size.w, 0)
+        g.brush = Color.sysHighlightShadow
+        g.drawLine(0, 1, size.w, 1)
+      }
     }
   }
 
@@ -100,6 +111,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   Void showFind()
   {
     show(false)
+    find(null, true, true)
   }
 
   **
@@ -108,20 +120,35 @@ internal class FindBar : ContentPane, TextEditorSupport
   Void showFindReplace()
   {
     show(true)
+    find(null, true, true)
   }
 
   private Void show(Bool showReplace := false)
   {
-    replacePane.visible = showReplace
+    ignore = true
+    oldVisible := visible
     visible = true
+    replacePane.visible = showReplace
     parent?.parent?.parent?.relayout
+
+    // use current selection if it exists
+    cur := richText.selectText
+    if (cur.size > 0) findText.text = cur
 
     // make sure text is focued and selected
     findText.focus
     findText.selectAll
 
-    // if old text still in there, force find
-    if (findText.text.size > 0) find(null)
+    // if text empty, make sure prev/next disabled
+    if (findText.text.size == 0)
+    {
+      cmdPrev.enabled = false
+      cmdNext.enabled = false
+    }
+
+    // clear any old msg text
+    setMsg("")
+    ignore = false
   }
 
   **
@@ -142,10 +169,13 @@ internal class FindBar : ContentPane, TextEditorSupport
   ** starting at the given caret pos.  If pos is null,
   ** the caretPos recorded when the FindBar was focued
   ** will be used.  If forward is false, the document
-  ** is searched backwards starting at pos.
+  ** is searched backwards starting at pos.  If calcTotal
+  ** is true, the document is searched for the total
+  ** number of occurances of the query string.
   **
-  internal Void find(Int fromPos, Bool forward := true)
+  internal Void find(Int fromPos, Bool forward := true, Bool calcTotal := false)
   {
+    if (!visible || ignore) return
     enabled := false
     try
     {
@@ -163,11 +193,20 @@ internal class FindBar : ContentPane, TextEditorSupport
         doc.findNext(q, pos, match) :
         doc.findPrev(q, pos-q.size-1, match)
 
+      // find total matches
+      if (calcTotal)
+      {
+        total = 0
+        temp := 0
+        while ((temp = doc.findNext(q, temp, match)) != null) { total++; temp++ }
+      }
+      matchStr := msgTotal
+
       // if found select next occurance
       if (off != null)
       {
         richText.select(off, q.size)
-        setMsg("")
+        setMsg(matchStr)
         return
       }
 
@@ -178,7 +217,7 @@ internal class FindBar : ContentPane, TextEditorSupport
         if (off != null)
         {
           richText.select(off, q.size)
-          setMsg(Flux#.loc("find.wrapToTop"))
+          setMsg("$matchStr - " + Flux#.loc("find.wrapToTop"))
           return
         }
       }
@@ -190,7 +229,7 @@ internal class FindBar : ContentPane, TextEditorSupport
         if (off != null)
         {
           richText.select(off, q.size)
-          setMsg(Flux#.loc("find.wrapToBottom"))
+          setMsg("$matchStr - " + Flux#.loc("find.wrapToBottom"))
           return
         }
       }
@@ -202,10 +241,11 @@ internal class FindBar : ContentPane, TextEditorSupport
     }
     finally
     {
+      replaceEnabled := enabled && replaceText.text.size > 0
       cmdPrev.enabled       = enabled
       cmdNext.enabled       = enabled
-      cmdReplace.enabled    = enabled
-      cmdReplaceAll.enabled = enabled
+      cmdReplace.enabled    = replaceEnabled
+      cmdReplaceAll.enabled = replaceEnabled
     }
   }
 
@@ -215,6 +255,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void next()
   {
+    if (!visible) show
     find(richText.caretOffset)
   }
 
@@ -224,6 +265,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void prev()
   {
+    if (!visible) show
     find(richText.caretOffset, false)
   }
 
@@ -232,8 +274,22 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void replace()
   {
-    echo("TODO: replace")
-  }
+    newText := replaceText.text
+    start   := richText.selectStart
+    len     := richText.selectSize
+    richText.modify(start, len, newText)
+    richText.select(start, newText.size)
+    total--
+    if (total > 0) setMsg(msgTotal)
+    else
+    {
+      cmdPrev.enabled       = false
+      cmdNext.enabled       = false
+      cmdReplace.enabled    = false
+      cmdReplaceAll.enabled = false
+      setMsg(Flux#.loc("find.notFound"))
+    }
+ }
 
   **
   ** Replace all occurences of the current query string with
@@ -241,13 +297,37 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void replaceAll()
   {
-    echo("TODO: replaceAll")
+    query   := findText.text
+    replace := replaceText.text
+    match   := matchCase.selected
+    pos     := 0
+    off     := doc.findNext(query, pos, match)
+
+    while (off != null)
+    {
+      richText.modify(off, query.size, replace)
+      pos = off + replace.size
+      off = doc.findNext(query, pos, match)
+    }
+
+    cmdPrev.enabled       = false
+    cmdNext.enabled       = false
+    cmdReplace.enabled    = false
+    cmdReplaceAll.enabled = false
+    setMsg(Flux#.loc("find.notFound"))
   }
 
   private Void setMsg(Str text)
   {
     msg.text = text
     msg.parent.relayout
+  }
+
+  private Str msgTotal()
+  {
+    return total == 1
+      ? "1 " + Flux#.loc("find.match")
+      : "$total " + Flux#.loc("find.matches")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -262,22 +342,13 @@ internal class FindBar : ContentPane, TextEditorSupport
   private Text findText
   private Text replaceText
   private Button matchCase
+  private Int total
   private Label msg := Label()
+  private Bool ignore := false
 
   private Command cmdNext := Command.makeLocale(Flux#.pod, "findPrev", &prev)
   private Command cmdPrev := Command.makeLocale(Flux#.pod, "findNext", &next)
   private Command cmdHide := Command.makeLocale(Flux#.pod, "findHide", &hide)
   private Command cmdReplace    := Command.makeLocale(Flux#.pod, "replace",    &replace)
   private Command cmdReplaceAll := Command.makeLocale(Flux#.pod, "replaceAll", &replaceAll)
-}
-
-internal class Temp : ContentPane
-{
-  Int pw
-  new make(Int pw) { this.pw = pw }
-  override Size prefSize(Hints hints := Hints.def)
-  {
-    ps := super.prefSize(hints)
-    return Size(pw, ps.h)
-  }
 }

@@ -206,9 +206,17 @@ const class Insets
   ** Default instance 0, 0, 0, 0.
   const static Insets def := Insets()
 
-  ** Construct with optional top, right, bottom, left
-  new make(Int top := 0, Int right := 0, Int bottom := 0, Int left := 0)
+  ** Construct with optional top, right, bottom, left.  If one side
+  ** is not specified, it is reflected from the opposite side:
+  **
+  **   Insets(5)     === Insets(5,5,5,5)
+  **   Insets(5,6)   === Insets(5,6,5,6)
+  **   Insets(5,6,7) === Insets(5,6,7,6)
+  new make(Int top := 0, Int right := null, Int bottom := null, Int left := null)
   {
+    if (right == null) right = top
+    if (bottom == null) bottom = top
+    if (left == null) left = right
     this.top = top
     this.right = right
     this.bottom = bottom

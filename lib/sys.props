@@ -11,7 +11,7 @@ fan.runtime=java
 
 // Default timezone to use for VM - can be either the simple name
 // or the full name.  If not set explicitly, then the we will
-// attempt to q0.uery the timezone from the Java or .NET runtime
+// attempt to query the timezone from the Java or .NET runtime
 // fan.timezone=New_York
 
 //////////////////////////////////////////////////////////////////////////
