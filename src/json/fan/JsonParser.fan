@@ -80,8 +80,10 @@ internal class JsonParser
 
   private Obj value()
   {
-    if (this.cur == JsonToken.quote) return string
-    else if (this.cur.isDigit || this.cur == '-') return number
+    if (this.cur == JsonToken.quote && this.peek == JsonToken.grave) 
+      return uri
+    else if (this.cur == JsonToken.quote) return string
+    else if (this.cur.isDigit || this.cur == '-') return digits
     else if (this.cur == JsonToken.objectStart) return parseObject
     else if (this.cur == JsonToken.arrayStart) return array
     else if (this.cur == 't')
@@ -103,7 +105,8 @@ internal class JsonParser
     throw Err("Finish this method!")
   }
 
-  private Num number()
+  // parse number, duration(FIXIT, or range)
+  private Obj digits()
   {
     integral := StrBuf.make
     fractional := StrBuf.make
@@ -143,11 +146,64 @@ internal class JsonParser
 	consume
       }
     }
+
+    Num num := null
     if (fractional.size > 0)
-      return Decimal.fromStr(integral.toStr+"."+fractional.toStr+exponent.toStr)
+      num = Decimal.fromStr(integral.toStr+"."+fractional.toStr+exponent.toStr)
     else if (exponent.size > 0)
-      return Decimal.fromStr(integral.toStr+exponent.toStr)
-    return Int.fromStr(integral.toStr)
+      num = Decimal.fromStr(integral.toStr+exponent.toStr)
+    else num = Int.fromStr(integral.toStr)
+
+    Int dur := maybeDuration
+    if (dur > 0)
+      return Duration.make(dur*num);
+    else 
+      return num;
+  }
+
+  private Int maybeDuration()
+  {
+    Int dur := -1
+    if (cur == 'n' && peek == 's') 
+    { 
+      consume(); // n
+      consume(); // s
+      dur = 1; 
+    }
+    if (cur == 'm' && peek == 's') 
+    { 
+      consume(); // m
+      consume(); // s
+      dur = 1000000; 
+    }
+    if (cur == 's' && peek == 'e') 
+    { 
+      consume(); // s
+      consume(); // e
+      expect('c'); 
+      dur = 1000000000; 
+    }
+    if (cur == 'm' && peek == 'i') 
+    { 
+      consume(); // m
+      consume(); // i
+      expect('n'); 
+      dur = 60000000000; 
+    }
+    if (cur == 'h' && peek == 'r')
+    { 
+      consume(); // h
+      consume(); // r
+      dur = 3600000000000;
+    }
+    if (cur == 'd' && peek == 'a') 
+    { 
+      consume(); // d
+      consume(); // a
+      expect('y'); 
+      dur = 86400000000000; 
+    }
+    return dur
   }
 
   private Str string()
@@ -161,6 +217,21 @@ internal class JsonParser
     }
     expect(JsonToken.quote)
     return s.toStr
+  }
+
+  private Uri uri()
+  {
+    expect(JsonToken.quote)
+    expect(JsonToken.grave)
+    s := StrBuf.make
+    while (this.cur != JsonToken.grave && this.prev != '\\')
+    {
+      s.add(this.cur.toChar)
+      consume
+    }
+    expect(JsonToken.grave)
+    expect(JsonToken.quote)
+    return Uri.fromStr(s.toStr)
   }
 
   private List array()
