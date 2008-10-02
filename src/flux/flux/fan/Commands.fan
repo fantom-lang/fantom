@@ -440,7 +440,7 @@ internal class ExitCommand : FluxCommand
         minw = 400
         add(InsetPane(0,0,12,0).add(grid))
       }
-      d := Dialog(frame, pane, [saveSel,saveNone,cancel]) { title="Save" }
+      d := Dialog(frame) { title="Save"; body=pane; commands=[saveSel,saveNone,cancel] }
       r := d.open
       if (r == cancel) return
       if (r == saveSel)
@@ -690,7 +690,7 @@ internal class RecentCommand : FluxCommand
       maxh = 300
       add(table)
     }
-    dlg = Dialog(frame, pane, [Dialog.ok, Dialog.cancel]) { title = "Recent" }
+    dlg = Dialog(frame) { title="Recent"; body=pane; commands=[Dialog.ok, Dialog.cancel] }
     dlg.open
   }
 }
@@ -816,7 +816,7 @@ internal class AboutCommand : FluxCommand
          Licensed under the Academic Free License version 3.0"
       }
     }
-    d := Dialog(frame, content, [Dialog.ok]) { title="About Flux" }
+    d := Dialog(frame) { title="About Flux"; body=content; commands=[Dialog.ok] }
     d.open
   }
 }

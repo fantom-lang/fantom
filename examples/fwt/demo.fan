@@ -119,8 +119,8 @@ class FwtDemo
         MenuItem { text = "Prompt Str 1"; onAction.add |Event e| { echo("--> " + Dialog.openPromptStr(e.window, "Enter a string:")) } }
         MenuItem { text = "Prompt Str 2"; onAction.add |Event e| { echo("--> " + Dialog.openPromptStr(e.window, "Enter a string:", "123", 4)) } }
         MenuItem { mode = MenuItemMode.sep }
-        MenuItem { text = "Option A"; onAction.add |Event e| { echo(Dialog(e.window, "Str message", [Dialog.ok]).open) } }
-        MenuItem { text = "Option B"; onAction.add |Event e| { echo(Dialog(e.window, Button { text="BIG!" }, Dialog.okCancel).open) } }
+        MenuItem { text = "Option A"; onAction.add |Event e| { echo((Dialog(e.window) {body="Str message"; commands=[Dialog.ok]}).open) } }
+        MenuItem { text = "Option B"; onAction.add |Event e| { echo((Dialog(e.window) {body=Button { text="BIG!" }; commands=Dialog.okCancel}).open) } }
       }
 
     }
