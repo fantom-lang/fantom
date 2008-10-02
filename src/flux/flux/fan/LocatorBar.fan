@@ -25,6 +25,7 @@ internal class LocatorBar : Widget
 
   Void load(Resource r)
   {
+    icon = r.icon
     uriText.text = r.uri.toStr
     view = frame.view.type.name
     repaint
@@ -62,15 +63,15 @@ internal class LocatorBar : Widget
 
   override Size prefSize(Hints hints := Hints.def)
   {
-    ph := uriText.prefSize.h + textInsets.top + textInsets.bottom
+    ph := uriText.prefSize.h.max(icon.size.h) + textInsets.top + textInsets.bottom
     return Size(100, ph)
   }
 
   override Void onPaint(Graphics g)
   {
     vw := Font.sys.width(view) + viewInsets.left + viewInsets.right
-    vh := Font.sys.height + viewInsets.top + viewInsets.bottom
     vx := size.w - vw
+    vy := (size.h - Font.sys.height) / 2
 
     g.brush = Color.sysListBg
     g.fillRect(0, 0, size.w, size.h)
@@ -78,8 +79,10 @@ internal class LocatorBar : Widget
     g.brush = Color.sysNormShadow
     g.drawRect(0, 0, size.w-1, size.h-1)
 
+    g.drawImage(icon, 4, 4)
+
     g.brush = Color.sysFg
-    g.drawText(view, vx+viewInsets.left, (vh-Font.sys.height)/2)
+    g.drawText(view, vx+viewInsets.left, vy)
 
     ax := size.w - viewInsets.right + 3
     ay := (size.h - 3) / 2
@@ -89,14 +92,15 @@ internal class LocatorBar : Widget
 
     tp := uriText.prefSize
     tx := textInsets.left
-    ty := textInsets.top
+    ty := (size.h - uriText.prefSize.h) / 2
     tw := size.w - vw - textInsets.left - textInsets.right
     th := size.h - textInsets.top - textInsets.bottom
     uriText.bounds = Rect(tx, ty, tw, th)
   }
 
-  const Insets textInsets := Insets(5,5,5,5)
-  const Insets viewInsets := Insets(5,13,5,5)
+  const Insets textInsets := Insets(4,4,4,22)
+  const Insets viewInsets := Insets(4,13,4,4)
+  Image icon
   Text uriText := Text { onAction.add(&go(null)); border = false }
   Str view := "Views"
 

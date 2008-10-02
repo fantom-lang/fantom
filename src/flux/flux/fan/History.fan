@@ -42,7 +42,12 @@ class History
     if (r.uri.scheme == "flux") return this
 
     // map resource to item
-    item := HistoryItem { uri = r.uri; time = DateTime.now }
+    item := HistoryItem
+    {
+      uri = r.uri
+      iconUri = r.icon?.uri
+      time = DateTime.now
+    }
 
     // push as most recent (remove old record for uri if found)
     dup := items.findIndex |HistoryItem i->Bool| { return i.uri == r.uri }
@@ -107,6 +112,11 @@ const class HistoryItem
   ** Last time of access.
   **
   const DateTime time
+
+  **
+  ** Uri for icon of resource or null.
+  **
+  const Uri iconUri
 
   **
   ** Return uri string.

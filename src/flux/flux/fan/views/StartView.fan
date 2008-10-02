@@ -14,54 +14,62 @@ using fwt
 @fluxView=StartResource#
 internal class StartView : View
 {
-
   override Void onLoad()
   {
-    html := StrBuf()
-    html.add(
-     "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
-       \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
-      <html xmlns='http://www.w3.org/1999/xhtml'>
-      <head>
-       <title>StartView</title>
-       <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
-       <style type='text/css'>
-         body
-         {
-           font: 11px 'Lucida Grande', 'Segoe UI', Tahoma, sans-serif;
-           margin: 1em; padding: 0;
-         }
-         a { color: #00f; }
-         ul.clean { list-style: none; margin: 0; }
-         ul.clean li { margin: 0.5em 0; padding:0; }
-       </style>
-      </head>
-      <body>")
-    html.add("<p><b>Recently Viewed</b></p>\n")
-    html.add("<ul class='clean'>\n")
-    History.load.items.each |HistoryItem item|
+    model := StartRecentTableModel()
+    content = EdgePane
     {
-      html.add("<li><a href='$item.uri'>$item.uri<a></li>\n")
-    }
-    html.add("</ul>\n")
-    html.add("</body>\n</html>")
-
-    content = BorderPane
-    {
-      content = WebBrowser
+      top = InsetPane(4) { Label { text = "Recently Viewed"; font = Font.sys.toBold }}
+      center = Table
       {
-        onHyperlink.add |Event e| { frame.load(e.data); e.data = null }
-        loadStr(html.toStr)
-      }
-      insets   = Insets(0,0,0,1)
-      onBorder = |Graphics g, Insets i, Size s|
-      {
-        g.brush = Color.sysNormShadow
-        g.drawLine(0, 0, 0, s.h)
+        model = model
+        border = false
+        onAction.add |Event e| { frame.load(model.items[e.index].uri, LoadMode(e)) }
       }
     }
   }
+}
 
+internal class StartRecentTableModel : TableModel
+{
+  new make()
+  {
+    items = History.load.items
+    icons = Image[,]
+    items.map(icons) |HistoryItem item->Obj|
+    {
+      return Image(item.iconUri, false) ?: def
+    }
+  }
+
+  override Int numCols() { return 2 }
+  override Int numRows() { return items.size }
+  override Int prefWidth(Int col)
+  {
+    switch (col)
+    {
+      case 0: return 175
+      case 1: return 300
+      default: return null
+    }
+  }
+  override Image image(Int col, Int row) { return col==0 ? icons[row] : null }
+  override Color fg(Int col, Int row)  { return col==1 ? pathCol : null }
+  override Str header(Int col) { return headers[col] }
+  override Str text(Int col, Int row)
+  {
+    switch (col)
+    {
+      case 0:  return items[row].uri.name
+      case 1:  return items[row].uri.toStr
+      default: return ""
+    }
+  }
+  HistoryItem[] items
+  Image[] icons
+  Str[] headers := ["Resource", "Uri"]
+  Image def := Flux.icon(`/x16/text-x-generic.png`)
+  Color pathCol := Color("#666")
 }
 
 **

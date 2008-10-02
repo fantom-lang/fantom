@@ -54,7 +54,7 @@ class Console : SideBar
           }
         }
         insets  = Insets(2,0,0,0)
-        onBorder = |Graphics g, Insets insets, Size size|
+        onBorder = |Graphics g, Size size|
         {
           g.brush = Color.sysNormShadow
           g.drawLine(0, 0, size.w, 0)
@@ -66,7 +66,7 @@ class Console : SideBar
       {
         content = richText
         insets  = Insets(1,0,0,1)
-        onBorder = |Graphics g, Insets insets, Size size|
+        onBorder = |Graphics g, Size size|
         {
           g.brush = Color.sysNormShadow
           g.drawLine(0, 0, size.w, 0)

@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Widget;
 
 public class TablePeer
   extends WidgetPeer
-  implements Listener, SelectionListener, MenuListener
+  implements Listener, SelectionListener
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,9 @@ public class TablePeer
 
     Table t = new Table((Composite)parent, style);
     t.addListener(SWT.SetData, this);
+    t.addListener(SWT.MenuDetect, this);
     t.addSelectionListener(this);
     t.setMenu(new Menu(t));
-    t.getMenu().addMenuListener(this);
 
     this.control = t;
     rebuild();
@@ -104,7 +104,8 @@ public class TablePeer
   {
     switch (event.type)
     {
-      case SWT.SetData:          handleSetData(event); break;
+      case SWT.SetData:     handleSetData(event); break;
+      case SWT.MenuDetect:  handleMenuDetect(event); break;
       default: System.out.println("WARNING: TreePeer.handleEvent: " + event);
     }
   }
@@ -124,6 +125,9 @@ public class TablePeer
       Int col = Int.make(i);
       item.setText(i, model.text(col, row).val);
       item.setImage(i, env.image(model.image(col, row)));
+      item.setFont(i, env.font(model.font(col, row)));
+      item.setForeground(i, env.color(model.fg(col, row)));
+      item.setBackground(i, env.color(model.bg(col, row)));
     }
   }
 
@@ -147,15 +151,14 @@ public class TablePeer
     self.onSelect().fire(fe);
   }
 
-  public void menuHidden(MenuEvent se) {} // unused
-
-  public void menuShown(MenuEvent se)
+  public void handleMenuDetect(Event event)
   {
     Table table = (Table)this.control;
+    TableItem item = table.getItem(table.toControl(event.x, event.y));
     final fan.fwt.Table self = (fan.fwt.Table)this.self;
 
     fan.fwt.Event fe = event(EventId.popup);
-    fe.index = selectedIndex();
+    if (item != null) fe.index = selectedIndex();
     self.onPopup().fire(fe);
 
     // we don't use the event menu - that is just a dummy
@@ -185,9 +188,10 @@ public class TablePeer
     for (int i=0; i<numCols; ++i)
     {
       Int col = Int.make(i);
+      Int pw = model.prefWidth(col);
       TableColumn tc = new TableColumn(table, style(model.halign(col)));
       tc.setText(model.header(col).val);
-      tc.setWidth(100);
+      tc.setWidth(pw == null ? 100 : (int)pw.val);
     }
 
     // rows

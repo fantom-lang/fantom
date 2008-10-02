@@ -32,6 +32,7 @@ class FwtDemo
         {
           Tab { text = "Buttons";        InsetPane { makeButtons } }
           Tab { text = "Labels";         InsetPane { makeLabels } }
+          Tab { text = "ProgessBar";     InsetPane { makeProgressBar } }
           Tab { text = "WebBrowser";     InsetPane { makeWebBrowser } }
           Tab { text = "Text";           InsetPane { makeText} }
           Tab { text = "EdgePane";       InsetPane { makeEdgePane } }
@@ -179,6 +180,24 @@ class FwtDemo
       Label { text = "Left"; halign = Halign.left }
       Label { text = "Center"; halign = Halign.center }
       Label { text = "Right"; halign = Halign.right }
+    }
+  }
+
+  **
+  ** Build a pane of various progress bars
+  **
+  Widget makeProgressBar()
+  {
+    return GridPane
+    {
+      numCols = 1
+      hgap = 20
+      halignCells = Halign.fill
+      ProgressBar { value=25; }
+      ProgressBar { min=0; max=100; value=75; }
+      ProgressBar { min=-100; max=100; value=80; }
+      ProgressBar { min=-100; max=100; value=25; }
+      ProgressBar { indeterminate = true }
     }
   }
 
@@ -518,21 +537,20 @@ class FwtDemo
 
   File scriptDir  := File.make(type->sourceFile.toStr.toUri).parent
 
-  Uri:File icons    := Pod.find("icons").files
-  Image backIcon    := Image.make(icons[`/x16/go-previous.png`])
-  Image nextIcon    := Image.make(icons[`/x16/go-next.png`])
-  Image cutIcon     := Image.make(icons[`/x16/edit-cut.png`])
-  Image copyIcon    := Image.make(icons[`/x16/edit-copy.png`])
-  Image pasteIcon   := Image.make(icons[`/x16/edit-paste.png`])
-  Image folderIcon  := Image.make(icons[`/x16/folder.png`])
-  Image fileIcon    := Image.make(icons[`/x16/text-x-generic.png`])
-  Image audioIcon   := Image.make(icons[`/x16/audio-x-generic.png`])
-  Image imageIcon   := Image.make(icons[`/x16/image-x-generic.png`])
-  Image videoIcon   := Image.make(icons[`/x16/video-x-generic.png`])
-  Image sysIcon     := Image.make(icons[`/x16/applications-system.png`])
-  Image prefsIcon   := Image.make(icons[`/x16/preferences-system.png`])
-  Image refreshIcon := Image.make(icons[`/x16/view-refresh.png`])
-  Image stopIcon    := Image.make(icons[`/x16/process-stop.png`])
+  Image backIcon    := Image(`fan:/sys/pod/icons/x16/go-previous.png`)
+  Image nextIcon    := Image(`fan:/sys/pod/icons/x16/go-next.png`)
+  Image cutIcon     := Image(`fan:/sys/pod/icons/x16/edit-cut.png`)
+  Image copyIcon    := Image(`fan:/sys/pod/icons/x16/edit-copy.png`)
+  Image pasteIcon   := Image(`fan:/sys/pod/icons/x16/edit-paste.png`)
+  Image folderIcon  := Image(`fan:/sys/pod/icons/x16/folder.png`)
+  Image fileIcon    := Image(`fan:/sys/pod/icons/x16/text-x-generic.png`)
+  Image audioIcon   := Image(`fan:/sys/pod/icons/x16/audio-x-generic.png`)
+  Image imageIcon   := Image(`fan:/sys/pod/icons/x16/image-x-generic.png`)
+  Image videoIcon   := Image(`fan:/sys/pod/icons/x16/video-x-generic.png`)
+  Image sysIcon     := Image(`fan:/sys/pod/icons/x16/applications-system.png`)
+  Image prefsIcon   := Image(`fan:/sys/pod/icons/x16/preferences-system.png`)
+  Image refreshIcon := Image(`fan:/sys/pod/icons/x16/view-refresh.png`)
+  Image stopIcon    := Image(`fan:/sys/pod/icons/x16/process-stop.png`)
 }
 
 **************************************************************************
@@ -565,6 +583,9 @@ class DirTableModel : TableModel
   override Int numRows() { return dir.size }
   override Str header(Int col) { return headers[col] }
   override Halign halign(Int col) { return col == 1 ? Halign.right : Halign.left }
+  override Font font(Int col, Int row) { return col == 2 ? Font(Font.sys.name, Font.sys.size-1) : null }
+  override Color fg(Int col, Int row)  { return col == 2 ? Color("#666") : null }
+  override Color bg(Int col, Int row)  { return col == 2 ? Color("#eee") : null }
   override Str text(Int col, Int row)
   {
     f := dir[row]
@@ -617,6 +638,11 @@ class EventDemo : Widget
     onKeyDown.add(&dump)
     onMouseUp.add(&dump)
     onMouseDown.add(&dump)
+    onMouseEnter.add(&dump)
+    onMouseExit.add(&dump)
+    onMouseMove.add(&dump)
+    onMouseHover.add(&dump)
+    onMouseWheel.add(&dump)
   }
 
   override Size prefSize(Hints hints := null) { return Size.make(100, 100) }

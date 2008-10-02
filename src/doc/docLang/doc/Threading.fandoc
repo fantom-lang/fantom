@@ -15,7 +15,7 @@ based on a [concurrency]`Concurrency` model with no shared mutable state.
 
 Current Thread [#current]
 *************************
-You can get a reference the currently running thread using the
+You can get a reference to the currently running thread using the
 [Thread.current]`sys::Thread.current` method.  For example to dump
 the stack trace of the current thread:
 
@@ -181,4 +181,3 @@ collisions, you should prefix your map keys with your pod name:
 
     // get a thread local
     Thread.locals["acme.global"]
-

@@ -119,6 +119,32 @@ class Build : BuildGroup
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Zip
+//////////////////////////////////////////////////////////////////////////
+
+  /* TODO
+  @target="create build zip file"
+  Void zip()
+  {
+    zip := CreateZip(this)
+    {
+      outFile = Sys.homeDir + ("fan-" + Pod.find("sys").version + ".zip").toUri
+      inDir = devHomeDir
+      filter = |File f, Str path->Bool|
+      {
+        if (f.name == ".hg")       return false
+        if (f.name == ".hgignore") return false
+        if (f.name == "tmp")       return false
+        // TODO: ship fandoc pod files?
+        if (f.isDir) log.info("  $path")
+        return true
+      }
+    }
+    zip.run
+  }
+  */
+
+//////////////////////////////////////////////////////////////////////////
 // Dist
 //////////////////////////////////////////////////////////////////////////
 

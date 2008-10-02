@@ -109,7 +109,7 @@ class Dialog : Window
     title := pod.loc("${keyBase}.name")
     locIcon := pod.loc("${keyBase}.icon")
     Image icon
-    try { icon = Image(locIcon.toUri.get) } catch {}
+    try { icon = Image(locIcon.toUri) } catch {}
 
     // build content
     if (content is Str) content = Label { text = content }
@@ -198,6 +198,10 @@ class Dialog : Window
 
     // build content widget if necessary
     if (content is Str) content = Label { text = content.toStr }
+
+    // default my icon to parent's icon
+    if (parent != null)
+      icon = parent.icon
 
     // build buttons from commands
     buttons := GridPane

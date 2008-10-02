@@ -223,8 +223,8 @@ class Frame : Window
     {
       top = EdgePane
       {
-        left = InsetPane(4,2,2,2) { commands.buildToolBar }
-        center = InsetPane(4,2,2,2) { add(locator) }
+        left = InsetPane(4,2) { commands.buildToolBar }
+        center = InsetPane(4,2) { add(locator) }
         bottom = Desktop.isMac ? null : ToolBarBorder()
       }
       center = sideBarPane
@@ -262,12 +262,13 @@ internal class FrameState
 
 internal class ToolBarBorder : Widget
 {
-  override Size prefSize(Hints hints := Hints.def) { return Size(100,4) }
+  override Size prefSize(Hints hints := Hints.def) { return Size(100,2) }
   override Void onPaint(Graphics g)
   {
-    g.brush = Gradient.makeLinear(Point(0,0), Color.sysBg,
-      Point(0,size.h), Color.sysNormShadow);
-    g.fillRect(0, 0, size.w, size.h)
+    g.brush = Color.sysNormShadow
+    g.drawLine(0, 0, size.w, 0)
+    g.brush = Color.sysHighlightShadow
+    g.drawLine(0, 1, size.w, 1)
   }
 }
 

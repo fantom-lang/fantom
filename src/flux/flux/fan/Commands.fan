@@ -73,6 +73,7 @@ internal class Commands
     return Menu
     {
       text = type.loc("edit.name")
+      onOpen.add(&onEditMenuOpen)
       addCommand(undo)
       addCommand(redo)
       addSep
@@ -92,6 +93,8 @@ internal class Commands
       addSep
       addCommand(jumpNext)
       addCommand(jumpPrev)
+      addSep
+      addCommand(selectAll)
     }
   }
 
@@ -211,6 +214,20 @@ internal class Commands
 // Eventing
 //////////////////////////////////////////////////////////////////////////
 
+  Void onEditMenuOpen(Event event)
+  {
+    undo := type.loc("undo.name")
+    redo := type.loc("redo.name")
+
+    stack := frame.view.commandStack
+    if (stack.listUndo.size > 0) undo = "$undo $stack.listUndo.last.name"
+    if (stack.listRedo.size > 0) redo = "$redo $stack.listRedo.last.name"
+
+    kids := event.widget.children
+    kids[0]->text = undo
+    kids[1]->text = redo
+  }
+
   Void onViewMenuOpen(Event event)
   {
     event.widget.each |Widget w|
@@ -299,8 +316,6 @@ internal class Commands
   readonly FluxCommand cut := CutCommand()
   readonly FluxCommand copy := CopyCommand()
   readonly FluxCommand paste := PasteCommand()
-
-  // Search
   readonly FluxCommand find := ViewManagedCommand(CommandId.find)
   readonly FluxCommand findNext := ViewManagedCommand(CommandId.findNext)
   readonly FluxCommand findPrev := ViewManagedCommand(CommandId.findPrev)
@@ -310,6 +325,7 @@ internal class Commands
   readonly FluxCommand goto := ViewManagedCommand(CommandId.goto)
   readonly FluxCommand jumpNext := JumpNextCommand()
   readonly FluxCommand jumpPrev := JumpPrevCommand()
+  readonly FluxCommand selectAll := SelectAllCommand()
 
   // View
   readonly FluxCommand reload  := ReloadCommand()
@@ -496,6 +512,16 @@ internal class PasteCommand : FluxCommand
   }
 }
 
+** Copy command routes to 'focus?.selectAll'
+internal class SelectAllCommand : FluxCommand
+{
+  new make() : super(CommandId.selectAll) {}
+  override Void invoke(Event event)
+  {
+    try { Desktop.focus?->selectAll } catch (UnknownSlotErr e) {}
+  }
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Search
 //////////////////////////////////////////////////////////////////////////
@@ -504,7 +530,7 @@ internal class PasteCommand : FluxCommand
 internal class FindInFilesCommand : FluxCommand
 {
   new make() : super(CommandId.findInFiles) {}
-  override Void invoke(Event event) { Dialog.openInfo(frame, "TODO: Find in Files") }
+  override Void invoke(Event event) { FindInFiles.open(frame) }
 }
 
 ** Replace in files
@@ -646,6 +672,17 @@ internal class RecentCommand : FluxCommand
         frame.load(model.items[e.index].uri, LoadMode(e))
         dlg.close
       }
+      onKeyDown.add |Event e|
+      {
+        code := e.keyChar
+        if (code >= 97 && code <= 122) code -= 32
+        code -= 65
+        if (code >= 0 && code < 26 && code < model.numRows)
+        {
+          frame.load(model.items[code].uri, LoadMode(e))
+          dlg.close
+        }
+      }
     }
     pane := ConstraintPane
     {
@@ -660,9 +697,44 @@ internal class RecentCommand : FluxCommand
 
 internal class RecentTableModel : TableModel
 {
-  HistoryItem[] items := History.load.items
+  new make()
+  {
+    items = History.load.items
+    icons = Image[,]
+    items.map(icons) |HistoryItem item->Obj|
+    {
+      return Image(item.iconUri, false) ?: def
+    }
+  }
+
+  override Int numCols() { return 2 }
   override Int numRows() { return items.size }
-  override Str text(Int col, Int row) { return items[row].uri.name }
+  override Int prefWidth(Int col)
+  {
+    switch (col)
+    {
+      case 0: return 250
+      case 1: return 20
+      default: return null
+    }
+  }
+  override Image image(Int col, Int row) { return col==0 ? icons[row] : null }
+  override Font font(Int col, Int row) { return col==1 ? accFont : null }
+  override Color fg(Int col, Int row)  { return col==1 ? accColor : null }
+  override Str text(Int col, Int row)
+  {
+    switch (col)
+    {
+      case 0:  return items[row].uri.name
+      case 1:  return (row < 26) ? (row+65).toChar : ""
+      default: return ""
+    }
+  }
+  HistoryItem[] items
+  Image[] icons
+  Image def := Flux.icon(`/x16/text-x-generic.png`)
+  Font accFont := Font.sys.toSize(Font.sys.size-1)
+  Color accColor := Color("#666")
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -730,7 +802,7 @@ internal class AboutCommand : FluxCommand
     content := GridPane
     {
       halignCells = Halign.center
-      Label { image = Image(icon) }
+      Label { image = Image.makeFile(icon) }
       Label { text = "Flux"; font = big }
       GridPane
       {

@@ -130,7 +130,7 @@ class TextEditor : View
     {
       content  = richText
       insets   = Insets(1,0,1,1)
-      onBorder = |Graphics g, Insets insets, Size size|
+      onBorder = |Graphics g, Size size|
       {
         g.brush = Color.sysNormShadow
         g.drawLine(0, 0, size.w, 0)
