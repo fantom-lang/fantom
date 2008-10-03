@@ -71,9 +71,26 @@ class Tree : Widget
   TreeModel model
 
   **
+  ** Select the given item in the tree.
+  **
+  native Void select(Obj node)
+
+  **
   ** Get and set the selected nodes.
   **
   native Obj[] selected
+
+  **
+  ** Set the expanded state for this node.
+  **
+  native Void setExpanded(Obj node, Bool expanded)
+
+  **
+  ** Shows the node. If the node is already showing in the
+  ** tree, this method simply returns. Otherwise, the items
+  ** are scrolled and expanded until the node is visible
+  **
+  native Void show(Obj node)
 
   **
   ** Update the entire tree's contents from the model.
