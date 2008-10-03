@@ -530,7 +530,7 @@ internal class SelectAllCommand : FluxCommand
 internal class FindInFilesCommand : FluxCommand
 {
   new make() : super(CommandId.findInFiles) {}
-  override Void invoke(Event event) { FindInFiles.open(frame) }
+  override Void invoke(Event event) { FindInFiles.dialog(frame) }
 }
 
 ** Replace in files

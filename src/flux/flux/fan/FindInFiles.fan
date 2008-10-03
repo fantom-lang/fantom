@@ -13,45 +13,101 @@ using fwt
 **
 internal class FindInFiles
 {
+
   **
-  ** Open the dialog.
+  ** Create a new instance to search for the given query
+  ** in the given file or directory.
   **
-  static Void open(Frame parent)
+  new make(File file, Str query)
   {
+    this.query  = query
+    this.file = file
+  }
+
+  **
+  ** Return the occurances of the query in the assocated dir.
+  ** If a function is passed in, that function is called each
+  ** time a match is found.
+  **
+  Mark[] find(|Mark m| func := null)
+  {
+    if (file == null) throw ArgErr("File cannot be null")
+    if (!file.exists) throw ArgErr("File does not exist")
+    if (query == null) throw ArgErr("Query cannot be null")
+    if (query.size == 0) throw ArgErr("Query cannot be empty")
+
+    marks := Mark[,]
+    file.walk |File f|
+    {
+      if (f.isDir) return
+      in := f.in
+      try
+      {
+        line := 0
+        str  := in.readLine
+        while (str!= null)
+        {
+          col := str.indexIgnoreCase(query)
+          while (col != null)
+          {
+            mark := Mark { uri=f.uri; line=line; col=col }
+            func?.call([mark])
+            marks.add(mark)
+            col = str.indexIgnoreCase(query, ++col)
+          }
+          line++
+          str = in.readLine
+        }
+      }
+      catch (IOErr err) {} // skip files we can't read
+      finally in?.close
+    }
+    return marks
+  }
+
+  readonly File file
+  readonly Str query
+
+  **
+  ** Open FindInFiles in a dialog.
+  **
+  static Void dialog(Frame frame)
+  {
+    query := Text  { prefCols=30 }
+    uri   := Text  { text="file:/C:/dev/fan/src/flux/flux/fan/"; prefCols=30 }
     content := GridPane
     {
       numCols = 2
       Label { text="Find" }
-      Text  { prefCols=30 }
-      Label { text="In Files" }
-      Text  { text="*.fan"; prefCols=30 }
+      add(query)
       Label { text="In Folder" }
-      Text  { text="file:/C:/dev/fan/src/flux/flux/fan/"; prefCols=30 }
+      add(uri)
     }
-
-    dlg := Dialog(parent)
+    dlg := Dialog(frame)
     {
       title = FindInFiles#.loc("findInFiles.name")
-      body=content
-      commands=[Dialog.ok, Dialog.cancel]
+      body  = content
+      commands = [Dialog.ok, Dialog.cancel]
     }
-
-    if (Dialog.ok != dlg.open) return
-
-    content2 := GridPane
+    if (Dialog.ok == dlg.open)
     {
-      Label { text = "Doesn't actually do anything yet..." }
-      ProgressBar { indeterminate = true }
+      try
+      {
+        File f := uri.text.toUri.toFile
+        Str  q := query.text
+        frame.console.show
+        frame.marks = Mark[,]
+        Console.execWrite(frame.id, "Files containing \"$q\"...\n")
+        marks := FindInFiles(f, q).find |Mark m|
+        {
+          path := m.uri.toFile.osPath
+          Console.execWrite(frame.id, "$path(${m.line+1},${m.col+1})\n")
+        }
+        Console.execWrite(frame.id, "$marks.size results found\n")
+        frame.marks = marks
+      }
+      catch (Err err) { Dialog.openErr(frame, err.message, err) }
     }
-
-    dlg = Dialog(parent)
-    {
-      title = FindInFiles#.loc("findInFiles.name")
-      body = content2
-      commands=[Dialog.cancel]
-    }
-
-    dlg.open
   }
 
 }
