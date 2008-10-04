@@ -92,8 +92,8 @@ public final class FPod
 
       // equals => _equals (since we can't override
       // Object.equals by return type)
-      if (!explicitSelf && name.equals("equals"))
-        name = "_equals";
+      if (!explicitSelf)
+        name = FanUtil.toJavaMethodName(name);
 
       StringBuilder s = new StringBuilder();
       s.append(parent);
@@ -160,22 +160,9 @@ public final class FPod
       FTypeRef ref = typeRef(index);
       String podName = name(ref.podName);
       String typeName = name(ref.typeName);
-      if (podName.equals("sys") && typeName.equals("Obj"))
-        n = "java/lang/Object";
-      else
-        n = "fan/" + podName + '/' + typeName;
-      jnames[index] = n;
+      jnames[index] = n = FanUtil.toJavaTypeSig(podName, typeName);
     }
     return n;
-  }
-
-  public static final StringBuilder jname(StringBuilder s, Type t)
-  {
-    if (t == Sys.ObjType)
-      s.append("Ljava/lang/Object");
-    else
-      s.append("Lfan/").append(t.pod().name()).append('/').append(t.name());
-    return s;
   }
 
 //////////////////////////////////////////////////////////////////////////

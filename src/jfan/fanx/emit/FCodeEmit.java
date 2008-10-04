@@ -423,21 +423,17 @@ public class FCodeEmit
 // Calls
 //////////////////////////////////////////////////////////////////////////
 
-  private void invoke(int index, int fop, int jop)
+  private void call(int index, int fanOp, int javaOp)
   {
-    FPod.JCall jcall = pod.jcall(index, fop);
+    FPod.JCall jcall = pod.jcall(index, fanOp);
     int method = emit.method(jcall.sig);
-    if (jcall.invokestatic) jop = INVOKESTATIC;
-    code.op2(jop, method);
+    if (jcall.invokestatic) javaOp = INVOKESTATIC;
+    code.op2(javaOp, method);
   }
 
   private void callNew()
   {
-    // constructors are implemented as static factory methods
-    String sig = pod.jcall(u2(), CallNew).sig;
-    int method = emit.method(sig);
-    code.op2(INVOKESTATIC, method);
-//    invoke(u2(), CallNew, INVOKESTATIC);
+    call(u2(), CallNew, INVOKESTATIC);
   }
 
   private void callCtor()
@@ -462,37 +458,12 @@ public class FCodeEmit
 
   private void callStatic()
   {
-    String sig = pod.jcall(u2(), CallStatic).sig;
-    int method = emit.method(sig);
-    code.op2(INVOKESTATIC, method);
-//    invoke(u2(), CallStatic, INVOKESTATIC);
+    call(u2(), CallStatic, INVOKESTATIC);
   }
 
   private void callVirtual()
   {
-    int index = u2();
-    FPod.JCall jcall = pod.jcall(index, CallVirtual);
-
-    // if this is a virtual invoke on Obj then we to make it an
-    // interface invoke because the Java runtime models Obj
-    // as an interface to deal with mixins cleanly
-/*
-    if (jcall.sig.startsWith("fan/sys/Obj."))
-    {
-      int[] m = pod.methodRef(index).val;
-      int nargs = m.length-3;
-      int method = emit.interfaceRef(jcall.sig);
-      code.op2(INVOKEINTERFACE, method);
-      code.info.u1(nargs+1);
-      code.info.u1(0);
-    }
-    else
-    {
-*/
-      int method = emit.method(jcall.sig);
-      code.op2(jcall.invokestatic ? INVOKESTATIC : INVOKEVIRTUAL, method);
-//      code.op2(INVOKEVIRTUAL, method);
-//    }
+    call(u2(), CallVirtual, INVOKEVIRTUAL);
   }
 
   private void callNonVirtual()
@@ -500,18 +471,12 @@ public class FCodeEmit
     // invokespecial in Java is really queer - it can only
     // be used for calls in the declaring class (basically
     // for private methods or super call)
-//    String sig = pod.jcall(u2(), CallNonVirtual).sig;
-//    int method = emit.method(sig);
-//    code.op2(INVOKESPECIAL, method);
-    invoke(u2(), CallNonVirtual, INVOKESPECIAL);
+    call(u2(), CallNonVirtual, INVOKESPECIAL);
   }
 
   private void callMixinStatic()
   {
-    String sig = pod.jcall(u2(), CallMixinStatic).sig;
-    int method = emit.method(sig);
-    code.op2(INVOKESTATIC, method);
-//    invoke(u2(), CallMixinStatic, INVOKESTATIC);
+    call(u2(), CallMixinStatic, INVOKESTATIC);
   }
 
   private void callMixinVirtual()
