@@ -81,7 +81,7 @@ public abstract class Namespace
   public static Obj safe(Obj obj)
   {
     if (obj == null) return null;
-    if (obj.isImmutable().val) return obj;
+    if (isImmutable(obj).val) return obj;
     Buf buf = new MemBuf(512);
     buf.out.writeObj(obj);
     buf.flip();

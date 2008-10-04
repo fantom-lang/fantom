@@ -166,7 +166,7 @@ public final class Depend
   public Bool equals(Obj obj)
   {
     if (obj instanceof Depend)
-      return toStr().equals(obj.toStr());
+      return toStr().equals(toStr(obj));
     else
       return Bool.False;
   }

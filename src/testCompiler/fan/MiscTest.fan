@@ -874,7 +874,7 @@ class MiscTest : CompilerTest
   {
     // problem reported on forum
     compile("class Foo { Bool foo(List x) { return x[0] == 7 } }")
-    compiler.fpod.dump
+    //compiler.fpod.dump
 
     obj := pod.types.first.make
     verifyEq(obj->foo(["x"]), false)

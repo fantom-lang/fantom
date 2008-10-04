@@ -986,7 +986,7 @@ public final class Uri
     int d=0;
     int len = Math.min(this.path.sz(), base.path.sz());
     for (; d<len; ++d)
-      if (!this.path.get(d).equals(base.path.get(d)).val)
+      if (!this.path.get(d).equals(base.path.get(d)))
         break;
 
     // if diverenge is at root, then no commonality
@@ -1237,13 +1237,13 @@ public final class Uri
       Uri baseUri = null;
       try
       {
-        baseUri = (Uri)base.trap(Str.uriStr, null);
+        baseUri = (Uri)trap(base, Str.uriStr, null);
         if (baseUri == null)
           throw UnresolvedErr.make("Base object's uri is null: " + this).val;
       }
       catch (Throwable e)
       {
-        throw UnresolvedErr.make("Cannot access base '" + base.type() + ".uri' to normalize: " + this, e).val;
+        throw UnresolvedErr.make("Cannot access base '" + FanObj.type(base) + ".uri' to normalize: " + this, e).val;
       }
       if (baseUri.scheme == null)
         throw UnresolvedErr.make("Base object's uri is not absolute: " + baseUri).val;

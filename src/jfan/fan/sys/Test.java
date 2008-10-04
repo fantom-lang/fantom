@@ -81,11 +81,11 @@ public class Test
     }
     if (expected != null && actual != null)
     {
-      if (expected.hash().val != actual.hash().val)
+      if (hash(expected).val != hash(actual).val)
       {
         fail(Str.make("Equal but different hash codes: " +
-          expected + " (0x" + expected.hash().toHex() + ") ?= " +
-          actual   + " (0x" + actual.hash().toHex() + ")"));
+          expected + " (0x" + hash(expected).toHex() + ") ?= " +
+          actual   + " (0x" + hash(actual).toHex() + ")"));
       }
     }
     verifyCount++;
@@ -164,7 +164,7 @@ public class Test
   {
     if (obj == null) return "null";
     if (obj instanceof Str) return ((Str)obj).toCode().val;
-    return obj.toStr().val;
+    return toStr(obj).val;
   }
 
 //////////////////////////////////////////////////////////////////////////

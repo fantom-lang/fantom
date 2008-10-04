@@ -172,7 +172,7 @@ public final class Str
   public final Str plus(Obj obj)
   {
     if (obj == null) return make(val.concat("null"));
-    Str x = obj.toStr();
+    Str x = FanObj.toStr(obj);
     if (x.val == "") return this;
     return make(val.concat(x.val));
   }

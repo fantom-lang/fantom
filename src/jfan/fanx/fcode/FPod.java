@@ -65,27 +65,35 @@ public final class FPod
   /**
    * Map a fcode method signature to a Java method emit signature.
    */
-  public final String jcall(int index, int opcode)
+  public final JCall jcall(int index, int opcode)
   {
-    if (jcalls == null) jcalls = new String[methodRefs.size()];
-    String jcall = jcalls[index];
-    if (jcall == null)
+    if (jcalls == null) jcalls = new JCall[methodRefs.size()];
+    JCall jcall = jcalls[index];
+    if (jcall == null || opcode == CallNonVirtual) // don't use cache on nonvirt (see below)
     {
       int[] m = methodRef(index).val;
       String parent = jname(m[0]);
       String name = name(m[1]);
       boolean onObj = parent.equals("fan/sys/Obj");
+      boolean explicitSelf = false;
 
-      // static methods on sys::Obj are really FanObj
-      if (onObj && (opcode == CallStatic || opcode == CallNonVirtual))
+      // methods on sys::Obj are static methods on FanObj
+      if (onObj)
       {
         parent = "fan/sys/FanObj";
+        explicitSelf = opcode == CallVirtual;
+      }
+      else
+      {
+        // if no object method then ok to use cache
+        if (jcall != null) return jcall;
       }
 
       StringBuilder s = new StringBuilder();
       s.append(parent);
       if (opcode == CallMixinStatic) s.append('$');
       s.append('.').append(name).append('(');
+      if (explicitSelf) s.append("Ljava/lang/Object;");
       for (int i=3; i<m.length; ++i)
         s.append('L').append(jname(m[i])).append(';');
       s.append(')');
@@ -95,10 +103,23 @@ public final class FPod
       else if (ret.equals("fan/sys/Void")) s.append('V');
       else s.append('L').append(ret).append(';');
 
-      jcall = s.toString();
-      if (!onObj) jcalls[index] = jcall;
+      jcall = new JCall();
+      jcall.invokestatic = explicitSelf;
+      jcall.sig = s.toString();
+
+      // we don't cache nonvirtuals on Obj b/c of conflicting signatures:
+      //  - CallVirtual:     Obj.toStr => static FanObj.toStr(Object)
+      //  - CallNonVirtual:  Obj.toStr => FanObj.toStr()
+      if (!onObj || opcode != CallNonVirtual)
+        jcalls[index] = jcall;
     }
     return jcall;
+  }
+
+  public class JCall
+  {
+    public boolean invokestatic;
+    public String sig;
   }
 
   /**
@@ -274,7 +295,7 @@ public final class FPod
   public FTable methodRefs;  // methods refs: [parent,name,ret,params*]
   public FLiterals literals; // literal constants (on read fully or lazy load)
   private String[] jnames;   // cached fan typeRef   -> java name
-  private String[] jcalls;   // cached fan methodRef -> java method signatures
   private String[] jfields;  // cached fan fieldRef  -> java field signatures
+  private JCall[] jcalls;    // cached fan methodRef -> java method signatures
 
 }

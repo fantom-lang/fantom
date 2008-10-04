@@ -11,6 +11,7 @@ import java.util.Stack;
 import fan.sys.Bool;
 import fan.sys.Int;
 import fan.sys.Str;
+import fan.sys.FanObj;
 import fan.sys.ArgErr;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -56,7 +57,7 @@ public class GraphicsPeer
       }
       else
       {
-        throw ArgErr.make("Unsupported brush type: " + brush.type()).val;
+        throw ArgErr.make("Unsupported brush type: " + FanObj.type(brush)).val;
       }
     }
     finally

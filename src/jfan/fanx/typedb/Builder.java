@@ -10,6 +10,7 @@ package fanx.typedb;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
+import fan.sys.FanObj;
 import fan.sys.Obj;
 import fan.sys.List;
 import fan.sys.Log;
@@ -568,7 +569,7 @@ class Builder
       Obj v = getObj(name);
       if (v == null) return null;
       if (v instanceof Str) return (Str)v;
-      log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + v.type());
+      log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + FanObj.type(v));
       return null;
     }
 
@@ -577,10 +578,10 @@ class Builder
       Obj v = getObj(name);
       if (v == null) return null;
       if (v instanceof List && ((List)v).of() == Sys.StrType) return (List)v;
-      log.warn("Expecting '" + loc + "@" + name + "' to be Str[], not " + v.type());
+      log.warn("Expecting '" + loc + "@" + name + "' to be Str[], not " + FanObj.type(v));
       return null;
     }
-    
+
     void dump()
     {
       Iterator keys = map.keySet().iterator();

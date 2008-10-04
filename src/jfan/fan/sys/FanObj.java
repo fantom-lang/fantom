@@ -43,14 +43,38 @@ public class FanObj
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
+  public static Bool equals(Object self, Obj x)
+  {
+    if (self instanceof FanObj)
+      return ((FanObj)self).equals((Obj)x);
+    else
+      return Bool.make(self.equals(x));
+  }
+
   public Bool equals(Obj obj)
   {
     return this == obj ? Bool.True : Bool.False;
   }
 
+  public static Int compare(Object self, Obj x)
+  {
+    if (self instanceof FanObj)
+      return ((FanObj)self).compare((Obj)x);
+    else
+      return toStr(self).compare(toStr(x));
+  }
+
   public Int compare(Obj obj)
   {
-    return toStr().compare(obj.toStr());
+    return toStr(this).compare(toStr(obj));
+  }
+
+  public static Int hash(Object self)
+  {
+    if (self instanceof FanObj)
+      return ((FanObj)self).hash();
+    else
+      return Int.make(self.hashCode());
   }
 
   public Int hash()
@@ -58,9 +82,25 @@ public class FanObj
     return Int.make(super.hashCode());
   }
 
+  public static Str toStr(Object self)
+  {
+    if (self instanceof FanObj)
+      return ((FanObj)self).toStr();
+    else
+      return Str.make(self.toString());
+  }
+
   public Str toStr()
   {
     return Str.make(super.toString());
+  }
+
+  public static Bool isImmutable(Object self)
+  {
+    if (self instanceof FanObj)
+      return ((FanObj)self).isImmutable();
+    else
+      return Bool.False;
   }
 
   public Bool isImmutable()
@@ -68,9 +108,19 @@ public class FanObj
     return type().isConst();
   }
 
+  public static Type type(Object self)
+  {
+    return ((FanObj)self).type();
+  }
+
   public Type type()
   {
     return Sys.ObjType;
+  }
+
+  public static Obj trap(Object self, Str name, List args)
+  {
+    return ((FanObj)self).trap(name, args);
   }
 
   public Obj trap(Str name, List args)

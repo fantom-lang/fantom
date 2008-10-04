@@ -77,7 +77,7 @@ public class StrBuf
 
   public StrBuf add(Obj x)
   {
-    String s = (x == null) ? "null" : x.toStr().val;
+    String s = (x == null) ? "null" : toStr(x).val;
     sb.append(s);
     return this;
   }
@@ -91,7 +91,7 @@ public class StrBuf
   public StrBuf join(Obj x) { return join(x, Str.ascii[' ']); }
   public StrBuf join(Obj x, Str sep)
   {
-    String s = (x == null) ? "null" : x.toStr().val;
+    String s = (x == null) ? "null" : toStr(x).val;
     if (sb.length() > 0) sb.append(sep.val);
     sb.append(s);
     return this;
@@ -99,7 +99,7 @@ public class StrBuf
 
   public StrBuf insert(Int index, Obj x)
   {
-    String s = (x == null) ? "null" : x.toStr().val;
+    String s = (x == null) ? "null" : toStr(x).val;
     int i = (int)index.val;
     if (i < 0) i = sb.length()+i;
     if (i > sb.length()) throw IndexErr.make(index).val;
