@@ -314,7 +314,7 @@ public final class DateTime
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool equals(Obj obj)
+  public final Bool _equals(Obj obj)
   {
     if (obj instanceof DateTime)
     {

@@ -206,11 +206,11 @@ public final class Map
     this.def = v;
   }
 
-  public final Bool equals(Obj that)
+  public final Bool _equals(Obj that)
   {
     if (that instanceof Map)
     {
-      return Bool.make(type.equals(type(that)).val &&
+      return Bool.make(type.equals(type(that)) &&
                        map.equals(((Map)that).map));
     }
     return Bool.False;

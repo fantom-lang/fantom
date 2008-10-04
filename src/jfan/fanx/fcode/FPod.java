@@ -89,6 +89,11 @@ public final class FPod
         if (jcall != null) return jcall;
       }
 
+      // equals => _equals (since we can't override
+      // Object.equals by return type)
+      if (!explicitSelf && name.equals("equals"))
+        name = "_equals";
+
       StringBuilder s = new StringBuilder();
       s.append(parent);
       if (opcode == CallMixinStatic) s.append('$');

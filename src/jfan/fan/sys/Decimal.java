@@ -48,7 +48,7 @@ public final class Decimal
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool equals(Obj obj)
+  public Bool _equals(Obj obj)
   {
     if (obj instanceof Decimal)
     {

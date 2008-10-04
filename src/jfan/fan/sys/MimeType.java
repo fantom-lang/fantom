@@ -162,14 +162,14 @@ public final class MimeType
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool equals(Obj obj)
+  public Bool _equals(Obj obj)
   {
     if (!(obj instanceof MimeType)) return Bool.False;
     MimeType x = (MimeType)obj;
     return Bool.make(
       mediaType.val.equals(x.mediaType.val) &&
       subType.val.equals(x.subType.val) &&
-      params.equals(x.params).val);
+      params.equals(x.params));
   }
 
   public int hashCode()

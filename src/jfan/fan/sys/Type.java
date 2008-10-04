@@ -903,7 +903,9 @@ public class Type
   private void finishMethod(java.lang.reflect.Method m, boolean staticOnly)
   {
     this.finishing = m.getName();
-    Slot slot = slot(m.getName(), false);
+    String name = m.getName();
+    if (name.equals("_equals")) name = "equals";
+    Slot slot = slot(name, false);
     if (slot == null) return;
     if (slot.parent() != this) return;
     if (staticOnly && !slot.isStatic().val) return;

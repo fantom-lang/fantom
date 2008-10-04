@@ -688,11 +688,11 @@ public final class Uri
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool equals(Obj obj)
+  public final Bool _equals(Obj obj)
   {
     if (obj instanceof Uri)
     {
-      return str.equals(((Uri)obj).str);
+      return str._equals(((Uri)obj).str);
     }
     return Bool.False;
   }

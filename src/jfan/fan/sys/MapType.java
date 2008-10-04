@@ -41,12 +41,12 @@ public class MapType
     return signature().hash();
   }
 
-  public Bool equals(Obj obj)
+  public Bool _equals(Obj obj)
   {
     if (obj instanceof MapType)
     {
       MapType x = (MapType)obj;
-      return Bool.make(k.equals(x.k).val && v.equals(x.v).val);
+      return Bool.make(k.equals(x.k) && v.equals(x.v));
     }
     return Bool.False;
   }

@@ -228,7 +228,7 @@ public class ObjEncoder
 
     // figure out if we can use an inferred type
     boolean inferred = false;
-    if (t.equals(curFieldType).val || (t.k == Sys.ObjType && t.v == Sys.ObjType))
+    if (t.equals(curFieldType) || (t.k == Sys.ObjType && t.v == Sys.ObjType))
     {
       inferred = true;
     }

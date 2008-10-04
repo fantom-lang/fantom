@@ -292,12 +292,12 @@ public final class List
     return Int.make(hash);
   }
 
-  public final Bool equals(Obj that)
+  public final Bool _equals(Obj that)
   {
     if (that instanceof List)
     {
       List x = (List)that;
-      if (!of.equals(x.of).val) return Bool.False;
+      if (!of.equals(x.of)) return Bool.False;
       if (size != x.size) return Bool.False;
       for (int i=0; i<size; ++i)
         if (!OpUtil.compareEQ(values[i], x.values[i]).val) return Bool.False;

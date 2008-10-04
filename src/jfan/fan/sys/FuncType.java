@@ -48,15 +48,15 @@ public class FuncType
     return signature().hash();
   }
 
-  public Bool equals(Obj obj)
+  public Bool _equals(Obj obj)
   {
     if (obj instanceof FuncType)
     {
       FuncType x = (FuncType)obj;
       if (params.length != x.params.length) return Bool.False;
       for (int i=0; i<params.length; ++i)
-        if (!params[i].equals(x.params[i]).val) return Bool.False;
-      return ret.equals(x.ret);
+        if (!params[i].equals(x.params[i])) return Bool.False;
+      return ret._equals(x.ret);
     }
     return Bool.False;
   }

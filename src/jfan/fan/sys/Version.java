@@ -82,10 +82,10 @@ public final class Version
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool equals(Obj obj)
+  public Bool _equals(Obj obj)
   {
     if (obj instanceof Version)
-      return toStr().equals(((Version)obj).toStr());
+      return toStr()._equals(((Version)obj).toStr());
     else
       return Bool.False;
   }
