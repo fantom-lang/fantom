@@ -391,7 +391,7 @@ public class FMethodEmit
    */
   private static void toSig(StringBuilder s, Type t)
   {
-    s.append("Lfan/").append(t.pod().name().val).append('/').append(t.name().val).append(';');
+    FPod.jname(s, t).append(';');
   }
 
 //////////////////////////////////////////////////////////////////////////

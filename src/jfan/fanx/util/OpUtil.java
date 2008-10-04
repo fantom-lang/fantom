@@ -19,42 +19,42 @@ public class OpUtil
 // Comparisions -> boolean
 //////////////////////////////////////////////////////////////////////////
 
-  public static boolean compareEQz(Obj a, Obj b)
+  public static boolean compareEQz(Object a, Object b)
   {
     if (a == null) return (b == null);
     if (b == null) return false;
     return a.equals(b);
   }
 
-  public static boolean compareNEz(Obj a, Obj b)
+  public static boolean compareNEz(Object a, Object b)
   {
     if (a == null) return (b != null);
     if (b == null) return true;
     return !a.equals(b);
   }
 
-  public static boolean compareLTz(Obj a, Obj b)
+  public static boolean compareLTz(Object a, Object b)
   {
     if (a == null) return (b != null);
     if (b == null) return false;
     return FanObj.compare(a, b).val < 0;
   }
 
-  public static boolean compareLEz(Obj a, Obj b)
+  public static boolean compareLEz(Object a, Object b)
   {
     if (a == null) return true;
     if (b == null) return false;
     return FanObj.compare(a, b).val <= 0;
   }
 
-  public static boolean compareGEz(Obj a, Obj b)
+  public static boolean compareGEz(Object a, Object b)
   {
     if (a == null) return (b == null);
     if (b == null) return true;
     return FanObj.compare(a, b).val >= 0;
   }
 
-  public static boolean compareGTz(Obj a, Obj b)
+  public static boolean compareGTz(Object a, Object b)
   {
     if (a == null) return false;
     if (b == null) return true;
@@ -65,49 +65,49 @@ public class OpUtil
 // Comparisions -> Bool
 //////////////////////////////////////////////////////////////////////////
 
-  public static Bool compareEQ(Obj a, Obj b)
+  public static Bool compareEQ(Object a, Object b)
   {
     if (a == null) return (b == null) ? Bool.True : Bool.False;
     if (b == null) return Bool.False;
     return a.equals(b) ? Bool.True : Bool.False;
   }
 
-  public static Bool compareNE(Obj a, Obj b)
+  public static Bool compareNE(Object a, Object b)
   {
     if (a == null) return (b == null) ? Bool.False : Bool.True;
     if (b == null) return Bool.True;
     return a.equals(b) ? Bool.False : Bool.True;
   }
 
-  public static Int compare(Obj a, Obj b)
+  public static Int compare(Object a, Object b)
   {
     if (a == null) return (b == null) ? Int.EQ : Int.LT;
     if (b == null) return Int.GT;
     return FanObj.compare(a, b);
   }
 
-  public static Bool compareLT(Obj a, Obj b)
+  public static Bool compareLT(Object a, Object b)
   {
     if (a == null) return (b == null) ? Bool.False : Bool.True;
     if (b == null) return Bool.False;
     return FanObj.compare(a, b).val < 0 ? Bool.True : Bool.False;
   }
 
-  public static Bool compareLE(Obj a, Obj b)
+  public static Bool compareLE(Object a, Object b)
   {
     if (a == null) return Bool.True;
     if (b == null) return Bool.False;
     return FanObj.compare(a, b).val <= 0 ? Bool.True : Bool.False;
   }
 
-  public static Bool compareGE(Obj a, Obj b)
+  public static Bool compareGE(Object a, Object b)
   {
     if (a == null) return (b == null) ? Bool.True : Bool.False;
     if (b == null) return Bool.True;
     return FanObj.compare(a, b).val >= 0 ? Bool.True : Bool.False;
   }
 
-  public static Bool compareGT(Obj a, Obj b)
+  public static Bool compareGT(Object a, Object b)
   {
     if (a == null) return Bool.False;
     if (b == null) return Bool.True;
@@ -138,19 +138,19 @@ public class OpUtil
 // Is/As
 //////////////////////////////////////////////////////////////////////////
 
-  public static Bool is(Obj instance, Type type)
+  public static Bool is(Object instance, Type type)
   {
     if (instance == null) return Bool.False;
     return FanObj.type(instance).fits(type);
   }
 
-  public static Obj as(Obj instance, Type type)
+  public static Object as(Object instance, Type type)
   {
     if (instance == null) return null;
     return FanObj.type(instance).is(type) ? instance : null;
   }
 
-  public static Obj toImmutable(Obj obj)
+  public static Object toImmutable(Object obj)
   {
     if (obj == null) return null;
     if (FanObj.isImmutable(obj).val) return obj;

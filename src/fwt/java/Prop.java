@@ -452,8 +452,8 @@ public abstract class Prop
   static abstract class Custom extends Prop
   {
     Custom(WidgetPeer peer) { super(peer); }
-    abstract Obj get();
-    abstract void set(Obj val);
+    abstract Object get();
+    abstract void set(Object val);
   }
 
 //////////////////////////////////////////////////////////////////////////

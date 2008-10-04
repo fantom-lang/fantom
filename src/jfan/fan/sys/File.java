@@ -78,7 +78,7 @@ public abstract class File
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Obj obj)
+  public final Bool _equals(Object obj)
   {
     if (obj instanceof File)
     {
@@ -215,7 +215,7 @@ public abstract class File
     }
 
     // options
-    Obj exclude = null, overwrite = null;
+    Object exclude = null, overwrite = null;
     if (options != null)
     {
       exclude = options.get(optExclude);
@@ -227,7 +227,7 @@ public abstract class File
     return to;
   }
 
-  private void doCopyTo(File to, Obj exclude, Obj overwrite)
+  private void doCopyTo(File to, Object exclude, Object overwrite)
   {
     // check exclude
     if (exclude instanceof Regex)
@@ -363,8 +363,8 @@ public abstract class File
     out(Bool.False, Int.Chunk).writeProps(props, Bool.True);
   }
 
-  public final Obj readObj() { return readObj(null); }
-  public final Obj readObj(Map options)
+  public final Object readObj() { return readObj(null); }
+  public final Object readObj(Map options)
   {
     InStream in = in();
     try
@@ -377,8 +377,8 @@ public abstract class File
     }
   }
 
-  public final void writeObj(Obj obj) { writeObj(obj, null); }
-  public final void writeObj(Obj obj, Map options)
+  public final void writeObj(Object obj) { writeObj(obj, null); }
+  public final void writeObj(Object obj, Map options)
   {
     OutStream out = out();
     try

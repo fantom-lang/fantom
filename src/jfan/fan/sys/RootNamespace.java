@@ -42,17 +42,17 @@ public final class RootNamespace
 // Namespace
 //////////////////////////////////////////////////////////////////////////
 
-  public Obj get(Uri uri, Bool checked)
+  public Object get(Uri uri, Bool checked)
   {
     checkUri(uri);
 
     Namespace sub = ns(uri);
     if (sub != this) return sub.get(uri, checked);
 
-    Obj val = null;
+    Object val = null;
     synchronized (lock)
     {
-      val = (Obj)mem.get(uri.str.val);
+      val = mem.get(uri.str.val);
       if (val == null)
       {
         if (!checked.val) return null;
@@ -62,7 +62,7 @@ public final class RootNamespace
     return safe(val);
   }
 
-  public Uri create(Uri uri, Obj obj)
+  public Uri create(Uri uri, Object obj)
   {
     if (obj == null) throw ArgErr.make("obj is null").val;
 
@@ -73,7 +73,7 @@ public final class RootNamespace
       if (sub != this) return sub.create(uri, obj);
     }
 
-    Obj safe = safe(obj);
+    Object safe = safe(obj);
     synchronized (lock)
     {
       if (uri == null)
@@ -90,7 +90,7 @@ public final class RootNamespace
     }
   }
 
-  public void put(Uri uri, Obj obj)
+  public void put(Uri uri, Object obj)
   {
     checkUri(uri);
     if (obj == null) throw ArgErr.make("obj is null").val;
@@ -98,7 +98,7 @@ public final class RootNamespace
     Namespace sub = ns(uri);
     if (sub != this) { sub.put(uri, obj); return; }
 
-    Obj safe = safe(obj);
+    Object safe = safe(obj);
     synchronized (lock)
     {
       Object old = mem.put(uri.str.val, safe);

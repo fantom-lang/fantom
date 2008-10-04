@@ -22,7 +22,7 @@ public class ObjEncoder
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-  public static String encode(Obj obj)
+  public static String encode(Object obj)
   {
     StrBufOutStream out = new StrBufOutStream();
     new ObjEncoder(out, null).writeObj(obj);
@@ -43,7 +43,7 @@ public class ObjEncoder
 // Write
 //////////////////////////////////////////////////////////////////////////
 
-  public void writeObj(Obj obj)
+  public void writeObj(Object obj)
   {
     if (obj == null)
     {
@@ -79,7 +79,7 @@ public class ObjEncoder
 // Simple
 //////////////////////////////////////////////////////////////////////////
 
-  private void writeSimple(Type type, Obj obj)
+  private void writeSimple(Type type, Object obj)
   {
     wType(type).w('(').wStrLiteral(FanObj.toStr(obj).val, '"').w(')');
   }
@@ -88,12 +88,12 @@ public class ObjEncoder
 // Complex
 //////////////////////////////////////////////////////////////////////////
 
-  private void writeComplex(Type type, Obj obj)
+  private void writeComplex(Type type, Object obj)
   {
     wType(type);
 
     boolean first = true;
-    Obj defObj = null;
+    Object defObj = null;
     if (skipDefaults) defObj = FanObj.type(obj).make();
 
     List fields = type.fields();
@@ -107,12 +107,12 @@ public class ObjEncoder
         continue;
 
       // get the value
-      Obj val = f.get(obj);
+      Object val = f.get(obj);
 
       // if skipping defaults
       if (defObj != null)
       {
-        Obj defVal = f.get(defObj);
+        Object defVal = f.get(defObj);
         if (OpUtil.compareEQz(val, defVal)) continue;
       }
 
@@ -142,7 +142,7 @@ public class ObjEncoder
 // Collection (@collection)
 //////////////////////////////////////////////////////////////////////////
 
-  private boolean writeCollectionItems(Type type, Obj obj, boolean first)
+  private boolean writeCollectionItems(Type type, Object obj, boolean first)
   {
     // lookup each method
     Method m = type.method("each", false);
@@ -159,7 +159,7 @@ public class ObjEncoder
   class EachIterator extends Func.Indirect1
   {
     EachIterator (boolean first) { super(eachIteratorType); this.first = first; }
-    public Obj call1(Obj obj)
+    public Object call1(Object obj)
     {
       if (first) { w('\n').wIndent().w('{').w('\n'); level++; first = false; }
       wIndent();
@@ -252,8 +252,8 @@ public class ObjEncoder
       Entry e = (Entry)it.next();
       if (first) first = false; else w(',');
       if (nl) w('\n').wIndent();
-      Obj key = (Obj)e.getKey();
-      Obj val = (Obj)e.getValue();
+      Object key = e.getKey();
+      Object val = e.getValue();
       writeObj(key); w(':'); writeObj(val);
     }
     w(']');

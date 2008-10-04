@@ -43,7 +43,7 @@ public final class Bool
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Obj obj)
+  public final Bool _equals(Object obj)
   {
     return this == obj ? Bool.True : Bool.False;
   }

@@ -117,7 +117,7 @@ public class Fan
     else if (((Param)params.get(0)).of().is(Sys.StrType.toListOf()) &&
              (params.sz() == 1 || ((Param)params.get(1)).hasDefault().val))
     {
-      args = new List(Sys.ObjType, new Obj[] { Sys.args() });
+      args = new List(Sys.ObjType, new Object[] { Sys.args() });
     }
     else
     {
@@ -262,7 +262,7 @@ public class Fan
   {
     new Thread(Str.make("main"))
     {
-      public Obj run()
+      public Object run()
       {
         System.exit(new Fan().run(args));
         return null;

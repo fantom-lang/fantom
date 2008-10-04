@@ -162,7 +162,7 @@ public final class MimeType
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Obj obj)
+  public Bool _equals(Object obj)
   {
     if (!(obj instanceof MimeType)) return Bool.False;
     MimeType x = (MimeType)obj;

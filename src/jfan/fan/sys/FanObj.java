@@ -9,11 +9,9 @@ package fan.sys;
 
 /**
  * FanObj is the root class of all classes in Fan - it is the class
- * representation of Obj which manifests itself as both an interface
- * called Obj and this class.
+ * representation of Obj.
  */
 public class FanObj
-  implements Obj
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -28,10 +26,7 @@ public class FanObj
 
   public final boolean equals(Object obj)
   {
-    if (obj instanceof Obj)
-      return _equals((Obj)obj).val;
-    else
-      return false;
+    return _equals(obj).val;
   }
 
   public final String toString()
@@ -43,29 +38,28 @@ public class FanObj
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Bool equals(Object self, Obj x)
+  public static Bool equals(Object self, Object x)
   {
     if (self instanceof FanObj)
-      return ((FanObj)self)._equals((Obj)x);
+      return ((FanObj)self)._equals(x);
     else
       return Bool.make(self.equals(x));
   }
 
-  //public final Bool equals(Obj obj) { throw new RuntimeException(); }
-  public Bool _equals(Obj obj)
+  public Bool _equals(Object obj)
   {
     return this == obj ? Bool.True : Bool.False;
   }
 
-  public static Int compare(Object self, Obj x)
+  public static Int compare(Object self, Object x)
   {
     if (self instanceof FanObj)
-      return ((FanObj)self).compare((Obj)x);
+      return ((FanObj)self).compare(x);
     else
       return toStr(self).compare(toStr(x));
   }
 
-  public Int compare(Obj obj)
+  public Int compare(Object obj)
   {
     return toStr(this).compare(toStr(obj));
   }
@@ -119,12 +113,12 @@ public class FanObj
     return Sys.ObjType;
   }
 
-  public static Obj trap(Object self, Str name, List args)
+  public static Object trap(Object self, Str name, List args)
   {
     return ((FanObj)self).trap(name, args);
   }
 
-  public Obj trap(Str name, List args)
+  public Object trap(Str name, List args)
   {
     Slot slot = type().slot(name, Bool.True);
     if (slot instanceof Method)
@@ -143,7 +137,7 @@ public class FanObj
 
       if (argSize == 1)
       {
-        Obj val = args.get(0);
+        Object val = args.get(0);
         f.set(this, val);
         return val;
       }
@@ -152,40 +146,11 @@ public class FanObj
     }
   }
 
-  /* TODO
-  public Obj trapUri(Uri uri)
-  {
-    // sanity checks
-    List path = uri.path();
-    if (path == null) throw ArgErr.make("Path is null: '" + uri + "'").val;
-
-    // if path is empty, return this
-    if (path.sz() == 0) return this;
-
-    // get next level of path
-    Str nextName = (Str)path.first();
-    Obj obj = null;
-    try
-    {
-      if (emptyList == null) emptyList = new List(Sys.ObjType).ro();
-      obj = trap(nextName, emptyList);
-    }
-    catch (UnknownSlotErr.Val e)
-    {
-    }
-    if (obj == null) return null;
-
-    // recurse
-    return obj.trapUri(uri.tail());
-  }
-  private static List emptyList;
-  */
-
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public static void echo(Obj obj)
+  public static void echo(Object obj)
   {
     System.out.println(obj);
   }

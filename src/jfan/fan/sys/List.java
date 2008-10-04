@@ -37,7 +37,7 @@ public final class List
     return new List(Sys.ObjType, (int)capacity.val);
   }
 
-  public List(Type of, Obj[] values)
+  public List(Type of, Object[] values)
   {
     if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
     this.of = of;
@@ -45,7 +45,7 @@ public final class List
     this.size = values.length;
   }
 
-  public List(Type of, Obj[] values, int size)
+  public List(Type of, Object[] values, int size)
   {
     if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
     this.of = of;
@@ -57,7 +57,7 @@ public final class List
   {
     if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
     this.of = of;
-    this.values = capacity == 0 ? empty : new Obj[capacity];
+    this.values = capacity == 0 ? empty : new Object[capacity];
   }
 
   public List(Type of)
@@ -72,13 +72,13 @@ public final class List
     if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
     this.of = of;
     this.size = collection.size();
-    this.values = (Obj[])collection.toArray(new Obj[size]);
+    this.values = collection.toArray(new Object[size]);
   }
 
   public List(String[] values)
   {
     this.of = Sys.StrType;
-    this.values = new Obj[values.length];
+    this.values = new Object[values.length];
     this.size = values.length;
     for (int i=0; i<values.length; ++i)
       this.values[i] = Str.make(values[i]);
@@ -118,14 +118,14 @@ public final class List
     int newSize = (int)s.val;
     if (newSize > size)
     {
-      Obj[] temp = new Obj[newSize];
+      Object[] temp = new Object[newSize];
       System.arraycopy(values, 0, temp, 0, size);
       values = temp;
       size = newSize;
     }
     else
     {
-      Obj[] temp = new Obj[newSize];
+      Object[] temp = new Object[newSize];
       System.arraycopy(values, 0, temp, 0, newSize);
       values = temp;
       size = newSize;
@@ -142,12 +142,12 @@ public final class List
     modify();
     int newCapacity = (int)c.val;
     if (newCapacity < size) throw ArgErr.make("capacity < size").val;
-    Obj[] temp = new Obj[newCapacity];
+    Object[] temp = new Object[newCapacity];
     System.arraycopy(values, 0, temp, 0, size);
     values = temp;
   }
 
-  public final Obj get(Int index)
+  public final Object get(Int index)
   {
     try
     {
@@ -182,12 +182,12 @@ public final class List
     }
   }
 
-  public final Bool contains(Obj value)
+  public final Bool contains(Object value)
   {
     return Bool.make(index(value) != null);
   }
 
-  public final Bool containsSame(Obj value)
+  public final Bool containsSame(Object value)
   {
     return Bool.make(indexSame(value) != null);
   }
@@ -208,8 +208,8 @@ public final class List
     return Bool.True;
   }
 
-  public final Int index(Obj value) { return index(value, Int.Zero); }
-  public final Int index(Obj value, Int off)
+  public final Int index(Object value) { return index(value, Int.Zero); }
+  public final Int index(Object value, Int off)
   {
     if (size == 0) return null;
     int start = (int)off.val;
@@ -228,7 +228,7 @@ public final class List
       {
         for (int i=start; i<size; ++i)
         {
-          Obj obj = values[i];
+          Object obj = values[i];
           if (obj != null && obj.equals(value))
             return Int.pos(i);
         }
@@ -241,8 +241,8 @@ public final class List
     }
   }
 
-  public final Int indexSame(Obj value) { return indexSame(value, Int.Zero); }
-  public final Int indexSame(Obj value, Int off)
+  public final Int indexSame(Object value) { return indexSame(value, Int.Zero); }
+  public final Int indexSame(Object value, Int off)
   {
     if (size == 0) return null;
     int start = (int)off.val;
@@ -262,13 +262,13 @@ public final class List
     }
   }
 
-  public final Obj first()
+  public final Object first()
   {
     if (size == 0) return null;
     return values[0];
   }
 
-  public final Obj last()
+  public final Object last()
   {
     if (size == 0) return null;
     return values[size-1];
@@ -276,7 +276,7 @@ public final class List
 
   public final List dup()
   {
-    Obj[] dup = new Obj[size];
+    Object[] dup = new Object[size];
     System.arraycopy(values, 0, dup, 0, size);
     return new List(of, dup);
   }
@@ -286,13 +286,13 @@ public final class List
     long hash = 33;
     for (int i=0; i<size; ++i)
     {
-      Obj obj = values[i];
+      Object obj = values[i];
       if (obj != null) hash ^= hash(obj).val;
     }
     return Int.make(hash);
   }
 
-  public final Bool _equals(Obj that)
+  public final Bool _equals(Object that)
   {
     if (that instanceof List)
     {
@@ -310,7 +310,7 @@ public final class List
 // Modification
 //////////////////////////////////////////////////////////////////////////
 
-  public final List set(Int index, Obj value)
+  public final List set(Int index, Object value)
   {
     modify();
     try
@@ -327,7 +327,7 @@ public final class List
     }
   }
 
-  public final List add(Obj value)
+  public final List add(Object value)
   {
     // modify in insert(int, Obj)
     return insert(size, value);
@@ -339,7 +339,7 @@ public final class List
     return insertAll(size, list);
   }
 
-  public final List insert(Int index, Obj value)
+  public final List insert(Int index, Object value)
   {
     // modify in insert(int, Obj)
     int i = (int)index.val;
@@ -348,7 +348,7 @@ public final class List
     return insert(i, value);
   }
 
-  private List insert(int i, Obj value)
+  private List insert(int i, Object value)
   {
     modify();
     if (values.length <= size)
@@ -382,7 +382,7 @@ public final class List
     return this;
   }
 
-  public final Obj remove(Obj val)
+  public final Object remove(Object val)
   {
     // modify in removeAt(Int)
     Int index = index(val);
@@ -390,7 +390,7 @@ public final class List
     return removeAt(index);
   }
 
-  public final Obj removeSame(Obj val)
+  public final Object removeSame(Object val)
   {
     // modify in removeAt(Int)
     Int index = indexSame(val);
@@ -398,13 +398,13 @@ public final class List
     return removeAt(index);
   }
 
-  public final Obj removeAt(Int index)
+  public final Object removeAt(Int index)
   {
     modify();
     int i = (int)index.val;
     if (i < 0) i = size + i;
     if (i >= size) throw IndexErr.make(index).val;
-    Obj old = values[i];
+    Object old = values[i];
     if (i < size-1)
       System.arraycopy(values, i+1, values, i, size-i-1);
     size--;
@@ -432,7 +432,7 @@ public final class List
     if (desired < 1) throw Err.make("desired " + desired + " < 1").val;
     int newSize = Math.max(desired, size*2);
     if (newSize < 10) newSize = 10;
-    Obj[] temp = new Obj[newSize];
+    Object[] temp = new Object[newSize];
     System.arraycopy(values, 0, temp, 0, size);
     values = temp;
   }
@@ -446,7 +446,7 @@ public final class List
     }
     else if (values.length != size)
     {
-      Obj[] temp = new Obj[size];
+      Object[] temp = new Object[size];
       System.arraycopy(values, 0, temp, 0, size);
       values = temp;
     }
@@ -466,20 +466,20 @@ public final class List
 // Stack
 //////////////////////////////////////////////////////////////////////////
 
-  public final Obj peek()
+  public final Object peek()
   {
     if (size == 0) return null;
     return values[size-1];
   }
 
-  public final Obj pop()
+  public final Object pop()
   {
     // modify in removeAt()
     if (size == 0) return null;
     return removeAt(Int.NegOne);
   }
 
-  public final List push(Obj obj)
+  public final List push(Object obj)
   {
     // modify in add()
     return add(obj);
@@ -501,17 +501,17 @@ public final class List
       f.call2(values[i], Int.pos(i));
   }
 
-  public final Obj eachBreak(Func f)
+  public final Object eachBreak(Func f)
   {
     for (int i=0; i<size; ++i)
     {
-      Obj r = f.call2(values[i], Int.pos(i));
+      Object r = f.call2(values[i], Int.pos(i));
       if (r != null) return r;
     }
     return null;
   }
 
-  public final Obj find(Func f)
+  public final Object find(Func f)
   {
     for (int i=0; i<size; ++i)
       if (f.call2(values[i], Int.pos(i)) == Bool.True)
@@ -544,7 +544,7 @@ public final class List
     List acc = new List(t, size);
     for (int i=0; i<size; ++i)
     {
-      Obj item = values[i];
+      Object item = values[i];
       if (item != null && type(item).is(t))
         acc.add(item);
     }
@@ -576,7 +576,7 @@ public final class List
     return Bool.True;
   }
 
-  public final Obj reduce(Obj reduction, Func f)
+  public final Object reduce(Object reduction, Func f)
   {
     for (int i=0; i<size; ++i)
       reduction = f.call3(reduction, values[i], Int.pos(i));
@@ -591,24 +591,24 @@ public final class List
     return acc;
   }
 
-  public final Obj max() { return max(null); }
-  public final Obj max(Func f)
+  public final Object max() { return max(null); }
+  public final Object max(Func f)
   {
     if (size == 0) return null;
     Comparator c = toComparator(f);
-    Obj max = values[0];
+    Object max = values[0];
     for (int i=1; i<size; ++i)
       if (c.compare(values[i], max) > 0)
         max = values[i];
     return max;
   }
 
-  public final Obj min() { return min(null); }
-  public final Obj min(Func f)
+  public final Object min() { return min(null); }
+  public final Object min(Func f)
   {
     if (size == 0) return null;
     Comparator c = toComparator(f);
-    Obj min = values[0];
+    Object min = values[0];
     for (int i=1; i<size; ++i)
       if (c.compare(values[i], min) < 0)
         min = values[i];
@@ -621,7 +621,7 @@ public final class List
     List acc = new List(of, size);
     for (int i=0; i<size; ++i)
     {
-      Obj v = values[i];
+      Object v = values[i];
       if (dups.get(v) == null)
       {
         dups.put(v, this);
@@ -640,7 +640,7 @@ public final class List
     // first me
     for (int i=0; i<size; ++i)
     {
-      Obj v = values[i];
+      Object v = values[i];
       if (dups.get(v) == null)
       {
         dups.put(v, this);
@@ -651,7 +651,7 @@ public final class List
     // then him
     for (int i=0; i<that.size; ++i)
     {
-      Obj v = that.values[i];
+      Object v = that.values[i];
       if (dups.get(v) == null)
       {
         dups.put(v, this);
@@ -674,7 +674,7 @@ public final class List
     List acc = new List(of, size);
     for (int i=0; i<size; ++i)
     {
-      Obj v = values[i];
+      Object v = values[i];
       if (dups.get(v) != null)
       {
         acc.add(v);
@@ -704,11 +704,11 @@ public final class List
     return this;
   }
 
-  public final Int binarySearch(Obj key) { return binarySearch(key, null); }
-  public final Int binarySearch(Obj key, Func f)
+  public final Int binarySearch(Object key) { return binarySearch(key, null); }
+  public final Int binarySearch(Object key, Func f)
   {
     Comparator c = toComparator(f);
-    Obj[] values = this.values;
+    Object[] values = this.values;
     int low = 0, high = size-1;
     while (low <= high)
     {
@@ -727,13 +727,13 @@ public final class List
   public final List reverse()
   {
     modify();
-    Obj[] values = this.values;
+    Object[] values = this.values;
     int size = this.size;
     int mid   = size/2;
     for (int i=0; i<mid; ++i)
     {
-      Obj a = values[i];
-      Obj b = values[size-i-1];
+      Object a = values[i];
+      Object b = values[size-i-1];
       values[i] = b;
       values[size-i-1] = a;
     }
@@ -743,7 +743,7 @@ public final class List
   public final List swap(Int a, Int b)
   {
     // modify in set()
-    Obj temp = get(a);
+    Object temp = get(a);
     set(a, get(b));
     set(b, temp);
     return this;
@@ -760,7 +760,7 @@ public final class List
   {
     for (int i=0; i<size; ++i)
     {
-      Obj item = values[i];
+      Object item = values[i];
       if (item instanceof List)
         ((List)item).doFlatten(acc);
       else
@@ -780,7 +780,7 @@ public final class List
 
     if (size == 1)
     {
-      Obj v = values[0];
+      Object v = values[0];
       if (f != null) return (Str)f.call2(v, Int.Zero);
       if (v == null) return Str.nullStr;
       return toStr(v);
@@ -827,7 +827,7 @@ public final class List
     return size;
   }
 
-  public final Obj get(int i)
+  public final Object get(int i)
   {
     try
     {
@@ -840,10 +840,10 @@ public final class List
     }
   }
 
-  public final Obj[] toArray()
+  public final Object[] toArray()
   {
     if (values.length == size) return values;
-    Obj[] r = new Obj[size];
+    Object[] r = new Object[size];
     System.arraycopy(values, 0, r, 0, size);
     return r;
   }
@@ -892,7 +892,7 @@ public final class List
     String[] a = new String[size];
     for (int i=0; i<size; ++i)
     {
-      Obj obj = get(i);
+      Object obj = get(i);
       if (obj == null) a[i] = "null";
       else a[i] = toStr(obj).val;
     }
@@ -915,12 +915,12 @@ public final class List
     if (f == null) return defaultComparator;
     return new Comparator()
     {
-      public int compare(Object a, Object b) { return (int)((Int)f.call2((Obj)a, (Obj)b)).val; }
+      public int compare(Object a, Object b) { return (int)((Int)f.call2(a, b)).val; }
     };
   }
   static final Comparator defaultComparator = new Comparator()
   {
-    public int compare(Object a, Object b) { return (int)OpUtil.compare((Obj)a, (Obj)b).val; }
+    public int compare(Object a, Object b) { return (int)OpUtil.compare(a, b).val; }
   };
 
   static Comparator toReverseComparator(final Func f)
@@ -928,12 +928,12 @@ public final class List
     if (f == null) return defaultReverseComparator;
     return new Comparator()
     {
-      public int compare(Object a, Object b) { return (int)((Int)f.call2((Obj)b, (Obj)a)).val; }
+      public int compare(Object a, Object b) { return (int)((Int)f.call2(b, a)).val; }
     };
   }
   static final Comparator defaultReverseComparator = new Comparator()
   {
-    public int compare(Object a, Object b) { return (int)OpUtil.compare((Obj)b, (Obj)a).val; }
+    public int compare(Object a, Object b) { return (int)OpUtil.compare(b, a).val; }
   };
 
 //////////////////////////////////////////////////////////////////////////
@@ -954,7 +954,7 @@ public final class List
   {
     if (!readonly) return this;
 
-    Obj[] temp = new Obj[size];
+    Object[] temp = new Object[size];
     System.arraycopy(values, 0, temp, 0, size);
 
     List rw = new List(of);
@@ -989,10 +989,10 @@ public final class List
     if (immutable) return this;
 
     // make safe copy
-    Obj[] temp = new Obj[size];
+    Object[] temp = new Object[size];
     for (int i=0; i<size; ++i)
     {
-      Obj item = values[i];
+      Object item = values[i];
       if (item != null)
       {
         if (item instanceof List)
@@ -1022,7 +1022,7 @@ public final class List
     // it so it remains immutable
     if (readonlyList != null)
     {
-      Obj[] temp = new Obj[size];
+      Object[] temp = new Object[size];
       System.arraycopy(values, 0, temp, 0, size);
       readonlyList.values = temp;
       readonlyList = null;
@@ -1033,10 +1033,10 @@ public final class List
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private static final Obj[] empty = new Obj[0];
+  private static final Object[] empty = new Object[0];
 
   private Type of;
-  private Obj[] values;
+  private Object[] values;
   private int size;
   private boolean readonly;
   private boolean immutable;

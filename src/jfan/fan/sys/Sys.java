@@ -63,7 +63,7 @@ public class Sys
 
   public static void gc() { System.gc(); }
 
-  public static Int idHash(Obj obj)
+  public static Int idHash(Object obj)
   {
     return Int.make(System.identityHashCode(obj));
   }

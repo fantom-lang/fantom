@@ -55,12 +55,12 @@ public abstract class Enum
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Obj obj)
+  public final Bool _equals(Object obj)
   {
     return this == obj ? Bool.True : Bool.False;
   }
 
-  public final Int compare(Obj obj)
+  public final Int compare(Object obj)
   {
     return ordinal.compare(((Enum)obj).ordinal);
   }

@@ -82,7 +82,7 @@ public final class Version
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Obj obj)
+  public Bool _equals(Object obj)
   {
     if (obj instanceof Version)
       return toStr()._equals(((Version)obj).toStr());
@@ -90,7 +90,7 @@ public final class Version
       return Bool.False;
   }
 
-  public Int compare(Obj obj)
+  public Int compare(Object obj)
   {
     Version that = (Version)obj;
     List a = this.segments;

@@ -41,7 +41,7 @@ public class MapType
     return signature().hash();
   }
 
-  public Bool _equals(Obj obj)
+  public Bool _equals(Object obj)
   {
     if (obj instanceof MapType)
     {

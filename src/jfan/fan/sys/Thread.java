@@ -217,7 +217,7 @@ public class Thread
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Obj obj)
+  public final Bool _equals(Object obj)
   {
     return this == obj ? Bool.True : Bool.False;
   }
@@ -308,8 +308,8 @@ public class Thread
     return this;
   }
 
-  public final Obj join() { return join(null); }
-  public final synchronized Obj join(Duration duration)
+  public final Object join() { return join(null); }
+  public final synchronized Object join(Duration duration)
   {
     try
     {
@@ -323,7 +323,7 @@ public class Thread
           while (state == RUNNING) wait();
       }
 
-      Obj r = runResult;
+      Object r = runResult;
       runResult = null;
       return r;
     }
@@ -446,7 +446,7 @@ public class Thread
         Thread attached = this.thread;
         try
         {
-          Obj result = null;
+          Object result = null;
           try
           {
             attached.onStart();
@@ -509,7 +509,7 @@ public class Thread
 // Run
 //////////////////////////////////////////////////////////////////////////
 
-  public Obj run()
+  public Object run()
     throws InterruptedException
   {
     if (run != null)
@@ -555,7 +555,7 @@ public class Thread
   {
     try
     {
-      Obj result = received.call1(msg.obj);
+      Object result = received.call1(msg.obj);
 
       result = Namespace.safe(result);
 
@@ -575,7 +575,7 @@ public class Thread
 // Messaging
 //////////////////////////////////////////////////////////////////////////
 
-  public final Obj sendSync(Obj obj)
+  public final Object sendSync(Object obj)
   {
     obj = Namespace.safe(obj);
 
@@ -591,7 +591,7 @@ public class Thread
     }
   }
 
-  public final Thread sendAsync(Obj obj)
+  public final Thread sendAsync(Object obj)
   {
     obj = Namespace.safe(obj);
 
@@ -610,8 +610,8 @@ public class Thread
 // Timer
 //////////////////////////////////////////////////////////////////////////
 
-  public final Obj sendLater(Duration dur, Obj obj) { return sendLater(dur, obj, Bool.False); }
-  public final Obj sendLater(Duration dur, Obj obj, Bool repeat)
+  public final Object sendLater(Duration dur, Object obj) { return sendLater(dur, obj, Bool.False); }
+  public final Object sendLater(Duration dur, Object obj, Bool repeat)
   {
     obj = Namespace.safe(obj);
 
@@ -646,7 +646,7 @@ public class Thread
     }
   }
 
-  public final void cancelLater(Obj ticket)
+  public final void cancelLater(Object ticket)
   {
     synchronized (this)
     {
@@ -665,7 +665,7 @@ public class Thread
   {
     long deadline;   // nanoTime expiration
     long duration;   // -1 for non-repeating
-    Obj msg;         // message to send
+    Object msg;         // message to send
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -757,13 +757,13 @@ public class Thread
 
   static class Message
   {
-    Message(int state, Obj obj)
+    Message(int state, Object obj)
     {
       this.state = state;
       this.obj = obj;
     }
 
-    synchronized Obj waitUntilFinished()
+    synchronized Object waitUntilFinished()
       throws InterruptedException
     {
       if (state == MSG_SYNC) wait();
@@ -778,7 +778,7 @@ public class Thread
       }
     }
 
-    void finish(int newState, Obj obj)
+    void finish(int newState, Object obj)
     {
       if (this.state == MSG_ASYNC)
       {
@@ -797,7 +797,7 @@ public class Thread
     }
 
     int state;       // sync/async in, ok/err out
-    Obj obj;         // message in, return/err out
+    Object obj;         // message in, return/err out
     Message next;    // queue linked list
   }
 
@@ -846,6 +846,6 @@ public class Thread
   private int size, peek;            // message queue size
   private Timer[] timers = noTimers; // timers for sendLater
   private Func run;                  // run method
-  private Obj runResult;             // return of run method
+  private Object runResult;          // return of run method
 
 }

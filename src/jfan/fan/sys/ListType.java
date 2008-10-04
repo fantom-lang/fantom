@@ -40,7 +40,7 @@ public class ListType
     return signature().hash();
   }
 
-  public final Bool _equals(Obj obj)
+  public final Bool _equals(Object obj)
   {
     if (obj instanceof ListType)
     {

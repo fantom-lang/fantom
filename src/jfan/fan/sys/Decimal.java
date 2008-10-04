@@ -48,7 +48,7 @@ public final class Decimal
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Obj obj)
+  public Bool _equals(Object obj)
   {
     if (obj instanceof Decimal)
     {
@@ -57,7 +57,7 @@ public final class Decimal
     return Bool.False;
   }
 
-  public Int compare(Obj obj)
+  public Int compare(Object obj)
   {
     return Int.make(val.compareTo(((Decimal)obj).val));
   }

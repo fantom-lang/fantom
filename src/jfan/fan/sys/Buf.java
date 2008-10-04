@@ -51,7 +51,7 @@ public abstract class Buf
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Obj that)
+  public final Bool _equals(Object that)
   {
     return this == that ? Bool.True : Bool.False;
   }
@@ -250,13 +250,13 @@ public abstract class Buf
   public final Buf writeChars(Str s, Int off) { out.writeChars(s, off); return this; }
   public final Buf writeChars(Str s, Int off, Int len) { out.writeChars(s, off, len); return this; }
 
-  public final Buf print(Obj obj) { out.print(obj); return this; }
+  public final Buf print(Object obj) { out.print(obj); return this; }
 
   public final Buf printLine() { out.printLine(); return this; }
-  public final Buf printLine(Obj obj) { out.printLine(obj); return this; }
+  public final Buf printLine(Object obj) { out.printLine(obj); return this; }
 
-  public final Buf writeObj(Obj obj) { out.writeObj(obj); return this; }
-  public final Buf writeObj(Obj obj, Map opt) { out.writeObj(obj, opt); return this; }
+  public final Buf writeObj(Object obj) { out.writeObj(obj); return this; }
+  public final Buf writeObj(Object obj, Map opt) { out.writeObj(obj, opt); return this; }
 
 //////////////////////////////////////////////////////////////////////////
 // InStream
@@ -320,7 +320,7 @@ public abstract class Buf
   public final Str readAllStr() { return in.readAllStr(); }
   public final Str readAllStr(Bool normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
 
-  public final Obj readObj() { return in.readObj(); }
+  public final Object readObj() { return in.readObj(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Hex

@@ -61,7 +61,7 @@ public final class Float
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Obj obj)
+  public Bool _equals(Object obj)
   {
     if (obj instanceof Float)
     {
@@ -86,7 +86,7 @@ public final class Float
     return Math.abs(val - that.val) <= t ? Bool.True : Bool.False;
   }
 
-  public Int compare(Obj obj)
+  public Int compare(Object obj)
   {
     double that = ((Float)obj).val;
     if (Double.isNaN(val))

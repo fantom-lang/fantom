@@ -56,8 +56,8 @@ public class Type
     return pod.findType(typeName, checked);
   }
 
-  public static List findByFacet(Str facetName, Obj facetVal) { return findByFacet(facetName, facetVal, null); }
-  public static List findByFacet(Str facetName, Obj facetVal, Obj options)
+  public static List findByFacet(Str facetName, Object facetVal) { return findByFacet(facetName, facetVal, null); }
+  public static List findByFacet(Str facetName, Object facetVal, Object options)
   {
     return TypeDb.get().findByFacet(facetName, facetVal, options);
   }
@@ -113,7 +113,7 @@ public class Type
   public final Bool isPublic() { return Bool.make(flags & FConst.Public); }
   public final Bool isSynthetic() { return Bool.make(flags & FConst.Synthetic); }
 
-  public Obj trap(Str name, List args)
+  public Object trap(Str name, List args)
   {
     // private undocumented access
     String n = name.val;
@@ -351,14 +351,14 @@ public class Type
       methods.remove(slot);
   }
 
-  public final Obj make() { return make(null); }
-  public final Obj make(List args)
+  public final Object make() { return make(null); }
+  public final Object make(List args)
   {
     if (dynamic) return makeDynamicInstance();
     return method("make", true).func.call(args);
   }
 
-  private Obj makeDynamicInstance()
+  private Object makeDynamicInstance()
   {
     // dynamic make requires generation of a special subclass which can
     // store the type per instance.  Once generated we keep a reference
@@ -382,7 +382,7 @@ public class Type
       }
 
       // use our special subclass which can store type per instance
-      return (Obj)dynamicCtor.newInstance(new Object[] { this });
+      return dynamicCtor.newInstance(new Object[] { this });
     }
     catch (Err.Val e)
     {
@@ -463,13 +463,13 @@ public class Type
    * share,or at worst return sys::Obj.  This method does not take into
    * account interfaces, only extends class inheritance.
    */
-  public static Type common(Obj[] objs, int n)
+  public static Type common(Object[] objs, int n)
   {
     if (objs.length == 0) return Sys.ObjType;
     Type best = type(objs[0]);
     for (int i=1; i<n; ++i)
     {
-      Obj obj = objs[i];
+      Object obj = objs[i];
       if (obj == null) continue;
       Type t = type(obj);
       while (!t.is(best))
@@ -502,18 +502,18 @@ public class Type
         {
           Entry e = (Entry)it.next();
           Str key = (Str)e.getKey();
-          if (map.get(key) == null) map.add(key, (Obj)e.getValue());
+          if (map.get(key) == null) map.add(key, e.getValue());
         }
       }
     }
     return map;
   }
 
-  public final Obj facet(Str name) { return facet(name, null, Bool.False); }
-  public final Obj facet(Str name, Obj def) { return facet(name, def, Bool.False); }
-  public final Obj facet(Str name, Obj def, Bool inherited)
+  public final Object facet(Str name) { return facet(name, null, Bool.False); }
+  public final Object facet(Str name, Object def) { return facet(name, def, Bool.False); }
+  public final Object facet(Str name, Object def, Bool inherited)
   {
-    Obj val = reflect().facets.get(name, null);
+    Object val = reflect().facets.get(name, null);
     if (val != null) return val;
     if (!inherited.val) return def;
     List inheritance = inheritance();
@@ -700,10 +700,10 @@ public class Type
     {
       // if the slot is inherited from Obj, then we can
       // safely ignore it as an override - the dup is most
-      // likely already the same Obj method inherited from
+      // likely already the same Object method inherited from
       // a mixin; but the dup might actually be a more specific
       // override in which case we definitely don't want to
-      // override with the sys::Obj version
+      // override with the sys::Object version
       if (slot.parent() == Sys.ObjType)
         return;
 
@@ -859,7 +859,7 @@ public class Type
       finishSlots(cls, false);
       if (isMixin().val) finishSlots(auxCls, true);
     }
-    catch (Exception e)
+    catch (Throwable e)
     {
       e.printStackTrace();
       throw Err.make("Cannot emitFinish: " + qname + "." + finishing, e).val;
@@ -930,7 +930,12 @@ public class Type
       // get parameters, if sys we need to skip the
       // methods that use non-Fan signatures
       Class[] params = m.getParameterTypes();
-      if (pod == Sys.SysPod && !checkAllFan(params)) return;
+      if (pod == Sys.SysPod)
+      {
+        if (!checkAllFan(params)) return;
+        if (this == Sys.ObjType && Modifier.isStatic(m.getModifiers()) &&
+            !name.equals("echo")) return;
+      }
 
       // zero index is full signature up to using max defaults
       method.reflect[method.params().sz()-params.length] = m;
@@ -956,8 +961,11 @@ public class Type
   boolean checkAllFan(Class[] params)
   {
     for (int i=0; i<params.length; ++i)
-      if (!params[i].getName().startsWith("fan."))
+    {
+      String p = params[i].getName();
+      if (!p.startsWith("fan.") && !p.equals("java.lang.Object"))
         return false;
+    }
     return true;
   }
 

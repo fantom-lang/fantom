@@ -688,7 +688,7 @@ public final class Uri
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Obj obj)
+  public final Bool _equals(Object obj)
   {
     if (obj instanceof Uri)
     {
@@ -1224,9 +1224,9 @@ public final class Uri
     return File.make(this);
   }
 
-  public Obj get() { return get(null, Bool.True); }
-  public Obj get(Obj base) { return get(base, Bool.True); }
-  public Obj get(Obj base, Bool checked)
+  public Object get() { return get(null, Bool.True); }
+  public Object get(Object base) { return get(base, Bool.True); }
+  public Object get(Object base, Bool checked)
   {
     // if we have a relative uri, we need to resolve against
     // the base object's uri

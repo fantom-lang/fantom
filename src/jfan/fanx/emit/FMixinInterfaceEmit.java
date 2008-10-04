@@ -42,10 +42,9 @@ public class FMixinInterfaceEmit
 
   String[] mixins()
   {
-    String[] mixins = new String[type.mixins.length+1];
-    mixins[0] = "fan/sys/Obj";
-    for (int i=1; i<mixins.length; ++i)
-      mixins[i] = jname(type.mixins[i-1]);
+    String[] mixins = new String[type.mixins.length];
+    for (int i=0; i<mixins.length; ++i)
+      mixins[i] = jname(type.mixins[i]);
     return mixins;
   }
 

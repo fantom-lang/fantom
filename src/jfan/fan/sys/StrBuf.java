@@ -43,13 +43,6 @@ public class StrBuf
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  /*
-  public Bool equals(Obj obj)
-  {
-    return val.equals(((Str)obj).val) ? Bool.True : Bool.False;
-  }
-  */
-
   public Bool isEmpty()
   {
     return sb.length() == 0 ? Bool.True : Bool.False;
@@ -75,7 +68,7 @@ public class StrBuf
     return this;
   }
 
-  public StrBuf add(Obj x)
+  public StrBuf add(Object x)
   {
     String s = (x == null) ? "null" : toStr(x).val;
     sb.append(s);
@@ -88,8 +81,8 @@ public class StrBuf
     return this;
   }
 
-  public StrBuf join(Obj x) { return join(x, Str.ascii[' ']); }
-  public StrBuf join(Obj x, Str sep)
+  public StrBuf join(Object x) { return join(x, Str.ascii[' ']); }
+  public StrBuf join(Object x, Str sep)
   {
     String s = (x == null) ? "null" : toStr(x).val;
     if (sb.length() > 0) sb.append(sep.val);
@@ -97,7 +90,7 @@ public class StrBuf
     return this;
   }
 
-  public StrBuf insert(Int index, Obj x)
+  public StrBuf insert(Int index, Object x)
   {
     String s = (x == null) ? "null" : toStr(x).val;
     int i = (int)index.val;

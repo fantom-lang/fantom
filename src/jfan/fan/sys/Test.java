@@ -24,7 +24,7 @@ public class Test
   public static void make$(Test t) {}
 
 //////////////////////////////////////////////////////////////////////////
-// Obj Overrides
+// Object Overrides
 //////////////////////////////////////////////////////////////////////////
 
   public Type type()
@@ -71,8 +71,8 @@ public class Test
     verifyCount++;
   }
 
-  public void verifyEq(Obj expected, Obj actual) { verifyEq(expected, actual, null); }
-  public void verifyEq(Obj expected, Obj actual, Str msg)
+  public void verifyEq(Object expected, Object actual) { verifyEq(expected, actual, null); }
+  public void verifyEq(Object expected, Object actual, Str msg)
   {
     if (!OpUtil.compareEQ(expected, actual).val)
     {
@@ -91,8 +91,8 @@ public class Test
     verifyCount++;
   }
 
-  public void verifyNotEq(Obj expected, Obj actual) { verifyNotEq(expected, actual, null); }
-  public void verifyNotEq(Obj expected, Obj actual, Str msg)
+  public void verifyNotEq(Object expected, Object actual) { verifyNotEq(expected, actual, null); }
+  public void verifyNotEq(Object expected, Object actual, Str msg)
   {
     if (!OpUtil.compareNE(expected, actual).val)
     {
@@ -102,8 +102,8 @@ public class Test
     verifyCount++;
   }
 
-  public void verifySame(Obj expected, Obj actual) { verifySame(expected, actual, null); }
-  public void verifySame(Obj expected, Obj actual, Str msg)
+  public void verifySame(Object expected, Object actual) { verifySame(expected, actual, null); }
+  public void verifySame(Object expected, Object actual, Str msg)
   {
     if (!OpUtil.compareSame(expected, actual).val)
     {
@@ -113,8 +113,8 @@ public class Test
     verifyCount++;
   }
 
-  public void verifyNotSame(Obj expected, Obj actual) { verifyNotSame(expected, actual, null); }
-  public void verifyNotSame(Obj expected, Obj actual, Str msg)
+  public void verifyNotSame(Object expected, Object actual) { verifyNotSame(expected, actual, null); }
+  public void verifyNotSame(Object expected, Object actual, Str msg)
   {
     if (OpUtil.compareSame(expected, actual).val)
     {
@@ -160,7 +160,7 @@ public class Test
       return TestErr.make("Test failed: " + msg.val).val;
   }
 
-  static String s(Obj obj)
+  static String s(Object obj)
   {
     if (obj == null) return "null";
     if (obj instanceof Str) return ((Str)obj).toCode().val;
