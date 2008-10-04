@@ -29,7 +29,7 @@ public class FanObj
   public final boolean equals(Object obj)
   {
     if (obj instanceof Obj)
-      return equals((Obj)obj).val;
+      return _equals((Obj)obj).val;
     else
       return false;
   }
@@ -46,12 +46,13 @@ public class FanObj
   public static Bool equals(Object self, Obj x)
   {
     if (self instanceof FanObj)
-      return ((FanObj)self).equals((Obj)x);
+      return ((FanObj)self)._equals((Obj)x);
     else
       return Bool.make(self.equals(x));
   }
 
-  public Bool equals(Obj obj)
+  //public final Bool equals(Obj obj) { throw new RuntimeException(); }
+  public Bool _equals(Obj obj)
   {
     return this == obj ? Bool.True : Bool.False;
   }

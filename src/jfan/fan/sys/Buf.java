@@ -51,7 +51,7 @@ public abstract class Buf
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool equals(Obj that)
+  public final Bool _equals(Obj that)
   {
     return this == that ? Bool.True : Bool.False;
   }

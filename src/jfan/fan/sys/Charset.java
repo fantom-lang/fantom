@@ -277,7 +277,7 @@ public class Charset
 
   public Int hash() { return Int.make(charset.hashCode()); }
 
-  public Bool equals(Obj obj)
+  public Bool _equals(Obj obj)
   {
     if (obj instanceof Charset)
     {

@@ -48,7 +48,7 @@ public final class Str
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool equals(Obj obj)
+  public final Bool _equals(Obj obj)
   {
     if (obj instanceof Str)
       return val.equals(((Str)obj).val) ? Bool.True : Bool.False;

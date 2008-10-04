@@ -35,10 +35,10 @@ public final class Regex
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool equals(Obj obj)
+  public final Bool _equals(Obj obj)
   {
     if (obj instanceof Regex)
-      return ((Regex)obj).source.equals(this.source);
+      return ((Regex)obj).source._equals(this.source);
     else
       return Bool.False;
   }

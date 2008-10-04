@@ -117,7 +117,7 @@ public final class Duration
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool equals(Obj obj)
+  public final Bool _equals(Obj obj)
   {
     if (obj instanceof Duration)
       return ticks == ((Duration)obj).ticks ? Bool.True : Bool.False;

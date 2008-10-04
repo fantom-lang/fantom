@@ -61,7 +61,7 @@ public final class Float
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool equals(Obj obj)
+  public Bool _equals(Obj obj)
   {
     if (obj instanceof Float)
     {
@@ -76,7 +76,7 @@ public final class Float
   public Bool approx(Float that, Float tolerance)
   {
     // need this to check +inf, -inf, and nan
-    if (equals(that).val) return Bool.True;
+    if (equals(that)) return Bool.True;
 
     double t;
     if (tolerance == null)
