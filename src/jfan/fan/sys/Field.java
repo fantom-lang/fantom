@@ -116,7 +116,7 @@ public class Field
     {
       if (checkConst)
         throw ReadonlyErr.make("Cannot set const field " + qname()).val;
-      else if (value != null && !value.isImmutable().val)
+      else if (value != null && !isImmutable(value).val)
         throw ReadonlyErr.make("Cannot set const field " + qname() + " with mutable value").val;
     }
 
@@ -127,8 +127,8 @@ public class Field
     // check generic type (the Java runtime will check non-generics)
     if (of.isGenericInstance() && value != null)
     {
-      if (!of.is(value.type()))
-        throw ArgErr.make("Wrong type for field " + qname() + ": " + of + " != " + value.type()).val;
+      if (!of.is(type(value)))
+        throw ArgErr.make("Wrong type for field " + qname() + ": " + of + " != " + type(value)).val;
     }
 
     if (setter != null)

@@ -466,12 +466,12 @@ public class Type
   public static Type common(Obj[] objs, int n)
   {
     if (objs.length == 0) return Sys.ObjType;
-    Type best = objs[0].type();
+    Type best = type(objs[0]);
     for (int i=1; i<n; ++i)
     {
       Obj obj = objs[i];
       if (obj == null) continue;
-      Type t = obj.type();
+      Type t = type(obj);
       while (!t.is(best))
       {
         best = best.base;
@@ -782,7 +782,8 @@ public class Type
       {
         try
         {
-          this.cls = Class.forName("fan." + podName + "." + name.val);
+          String name = (this == Sys.ObjType) ? "FanObj" : this.name.val;
+          this.cls = Class.forName("fan." + podName + "." + name);
         }
         catch (Exception e)
         {

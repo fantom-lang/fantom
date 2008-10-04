@@ -14,18 +14,18 @@ package fan.sys;
 public interface Obj
 {
 
-  public Bool equals(Obj obj);
+  //public Bool equals(Obj obj);
 
-  public Int compare(Obj obj);
+  //public Int compare(Obj obj);
 
-  public Int hash();
+  //public Int hash();
 
-  public Str toStr();
+  //public Str toStr();
 
-  public Bool isImmutable();
+  //public Bool isImmutable();
 
-  public Type type();
+  //public Type type();
 
-  public Obj trap(Str name, List args);
+  //public Obj trap(Str name, List args);
 
 }

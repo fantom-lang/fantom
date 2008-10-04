@@ -54,7 +54,7 @@ public final class Facets
       Entry e = (Entry)it.next();
       Str key = (Str)e.getKey();
       Obj val = (Obj)e.getValue();
-      if (val.isImmutable().val)
+      if (FanObj.isImmutable(val).val)
         src.put(key, val);
       else
         src.put(key, ObjEncoder.encode(val));
@@ -97,7 +97,7 @@ public final class Facets
 
   private Obj toImmutable(Obj obj)
   {
-    if (obj.isImmutable().val) return obj;
+    if (FanObj.isImmutable(obj).val) return obj;
 
     if (obj instanceof List)
     {
@@ -135,7 +135,7 @@ public final class Facets
       Str name = (Str)it.next();
       Obj val = get(name, null);
       map.set(name, val);
-      allImmutable &= val.isImmutable().val;
+      allImmutable &= FanObj.isImmutable(val).val;
     }
 
     // if all the values were immutable, then we

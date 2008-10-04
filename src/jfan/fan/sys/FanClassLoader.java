@@ -80,7 +80,7 @@ public class FanClassLoader
     // if it was pending, then use that to define new class
     if (pending != null)
     {
-//if (name.endsWith("")) dumpToFile(name, pending);
+//if (name.endsWith("Test") || name.endsWith("Dynamic")) dumpToFile(name, pending);
       Class cls = defineClass(name, pending.buf, 0, pending.len);
       return cls;
     }

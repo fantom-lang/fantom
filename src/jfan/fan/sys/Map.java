@@ -112,8 +112,8 @@ public final class Map
     modify();
     if (key == null)
       throw NullErr.make("key is null").val;
-    if (!key.isImmutable().val)
-      throw NotImmutableErr.make("key is not immutable: " + key.type()).val;
+    if (!isImmutable(key).val)
+      throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
     map.put(key, value);
     return this;
   }
@@ -123,8 +123,8 @@ public final class Map
     modify();
     if (key == null)
       throw NullErr.make("key is null").val;
-    if (!key.isImmutable().val)
-      throw NotImmutableErr.make("key is not immutable: " + key.type()).val;
+    if (!isImmutable(key).val)
+      throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
     Object old = map.put(key, value);
     if (old != null)
     {
@@ -201,8 +201,8 @@ public final class Map
   public final void def(Obj v)
   {
     modify();
-    if (v != null && !v.isImmutable().val)
-      throw NotImmutableErr.make("def must be immutable: " + v.type()).val;
+    if (v != null && !isImmutable(v).val)
+      throw NotImmutableErr.make("def must be immutable: " + type(v)).val;
     this.def = v;
   }
 
@@ -210,7 +210,7 @@ public final class Map
   {
     if (that instanceof Map)
     {
-      return Bool.make(type.equals(that.type()).val &&
+      return Bool.make(type.equals(type(that)).val &&
                        map.equals(((Map)that).map));
     }
     return Bool.False;
@@ -408,8 +408,8 @@ public final class Map
           val = ((List)val).toImmutable();
         else if (val instanceof Map)
           val = ((Map)val).toImmutable();
-        else if (!val.isImmutable().val)
-          throw NotImmutableErr.make("Item [" + key + "] not immutable " + val.type()).val;
+        else if (!isImmutable(val).val)
+          throw NotImmutableErr.make("Item [" + key + "] not immutable " + type(val)).val;
       }
 
       temp.put(key, val);

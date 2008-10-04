@@ -229,7 +229,7 @@ public final class List
         for (int i=start; i<size; ++i)
         {
           Obj obj = values[i];
-          if (obj != null && obj.equals(value).val)
+          if (obj != null && obj.equals(value))
             return Int.pos(i);
         }
       }
@@ -287,7 +287,7 @@ public final class List
     for (int i=0; i<size; ++i)
     {
       Obj obj = values[i];
-      if (obj != null) hash ^= obj.hash().val;
+      if (obj != null) hash ^= hash(obj).val;
     }
     return Int.make(hash);
   }
@@ -545,7 +545,7 @@ public final class List
     for (int i=0; i<size; ++i)
     {
       Obj item = values[i];
-      if (item != null && item.type().is(t))
+      if (item != null && type(item).is(t))
         acc.add(item);
     }
     return acc;
@@ -783,7 +783,7 @@ public final class List
       Obj v = values[0];
       if (f != null) return (Str)f.call2(v, Int.Zero);
       if (v == null) return Str.nullStr;
-      return v.toStr();
+      return toStr(v);
     }
 
     StringBuilder s = new StringBuilder(32+size*32);
@@ -894,7 +894,7 @@ public final class List
     {
       Obj obj = get(i);
       if (obj == null) a[i] = "null";
-      else a[i] = obj.toStr().val;
+      else a[i] = toStr(obj).val;
     }
     return a;
   }
@@ -999,8 +999,8 @@ public final class List
           item = ((List)item).toImmutable();
         else if (item instanceof Map)
           item = ((Map)item).toImmutable();
-        else if (!item.isImmutable().val)
-          throw NotImmutableErr.make("Item [" + i + "] not immutable " + item.type()).val;
+        else if (!isImmutable(item).val)
+          throw NotImmutableErr.make("Item [" + i + "] not immutable " + type(item)).val;
       }
       temp[i] = item;
     }

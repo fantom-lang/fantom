@@ -230,14 +230,14 @@ public class OutStream
 
   public OutStream print(Obj obj)
   {
-    Str s = obj == null ? Str.nullStr : obj.toStr();
+    Str s = obj == null ? Str.nullStr : toStr(obj);
     return writeChars(s, Int.Zero, s.size());
   }
 
   public OutStream printLine() { return printLine(Str.Empty); }
   public OutStream printLine(Obj obj)
   {
-    Str s = obj == null ? Str.nullStr : obj.toStr();
+    Str s = obj == null ? Str.nullStr : toStr(obj);
     writeChars(s, Int.Zero, s.size());
     return writeChar(Int.pos['\n']);
   }
