@@ -26,7 +26,7 @@ final class SysNamespace
 // Namespace
 //////////////////////////////////////////////////////////////////////////
 
-  public Obj get(Uri uri, Bool checked)
+  public Object get(Uri uri, Bool checked)
   {
     // sanity check
     if (!uri.path.get(0).toString().equals("sys"))
@@ -43,7 +43,7 @@ final class SysNamespace
     return unresolved(uri, checked);
   }
 
-  private Obj pod(Uri uri, Bool checked)
+  private Object pod(Uri uri, Bool checked)
   {
     // /sys/pod/{name}
     String name = uri.path().get(2).toString();
@@ -59,7 +59,7 @@ final class SysNamespace
     return unresolved(uri, checked);
   }
 
-  private Obj service(Uri uri, Bool checked)
+  private Object service(Uri uri, Bool checked)
   {
     // /sys/service/qname
     if (uri.path().sz() == 3)
@@ -72,7 +72,7 @@ final class SysNamespace
     return unresolved(uri, checked);
   }
 
-  private Obj unresolved(Uri uri, Bool checked)
+  private Object unresolved(Uri uri, Bool checked)
   {
     if (!checked.val) return null;
     throw UnresolvedErr.make(uri).val;

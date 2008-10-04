@@ -314,7 +314,7 @@ public final class DateTime
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Obj obj)
+  public final Bool _equals(Object obj)
   {
     if (obj instanceof DateTime)
     {
@@ -323,7 +323,7 @@ public final class DateTime
     return Bool.False;
   }
 
-  public Int compare(Obj obj)
+  public Int compare(Object obj)
   {
     long that = ((DateTime)obj).ticks;
     if (ticks < that) return Int.LT; return ticks  == that ? Int.EQ : Int.GT;

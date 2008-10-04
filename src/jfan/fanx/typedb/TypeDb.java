@@ -84,7 +84,7 @@ public class TypeDb
   /**
    * Implementation of 'Type.findByFacet'
    */
-  public synchronized List findByFacet(Str name, Obj val, Obj options)
+  public synchronized List findByFacet(Str name, Object val, Object options)
   {
     // process options
     if (options == Bool.True && val instanceof Type)
@@ -110,7 +110,7 @@ public class TypeDb
   /**
    * Find all the types declared by the specified facet name/value pair.
    */
-  private List doFindByFacet(Str name, Obj val)
+  private List doFindByFacet(Str name, Object val)
   {
     try
     {
@@ -449,7 +449,7 @@ public class TypeDb
   static class FacetIndex
   {
     String name;           // facet name
-    HashMap valueToTypes;  // facet values Obj -> int[]/Type[]
+    HashMap valueToTypes;  // facet values Object -> int[]/Type[]
     int pos;               // file offset
   }
 

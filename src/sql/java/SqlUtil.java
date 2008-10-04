@@ -56,7 +56,7 @@ public class SqlUtil
   /**
    * Map an java.sql.ResultSet column to a Fan object.
    */
-  public static Obj toObj(ResultSet rs, int col)
+  public static Object toObj(ResultSet rs, int col)
     throws SQLException
   {
     switch (rs.getMetaData().getColumnType(col))
@@ -97,7 +97,7 @@ public class SqlUtil
         return Str.make(String.valueOf(rs.getObject(col)));
     }
   }
-  
+
   /**
    * Map an java.sql.ResultSet column to a Fan object.
    */
@@ -141,22 +141,22 @@ public class SqlUtil
 
   public abstract static class SqlToFan
   {
-    public abstract Obj toObj(ResultSet rs, int col)
+    public abstract Object toObj(ResultSet rs, int col)
       throws SQLException;
   }
-  
+
   public static class ToFanStr extends SqlToFan
   {
-    public Obj toObj(ResultSet rs, int col)
+    public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
       return Str.make(rs.getString(col));
     }
   }
-  
+
   public static class ToFanBool extends SqlToFan
   {
-    public Obj toObj(ResultSet rs, int col)
+    public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
       boolean b = rs.getBoolean(col);
@@ -167,7 +167,7 @@ public class SqlUtil
 
   public static class ToFanInt extends SqlToFan
   {
-    public Obj toObj(ResultSet rs, int col)
+    public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
       long i = rs.getLong(col);
@@ -175,10 +175,10 @@ public class SqlUtil
       return Int.make(i);
     }
   }
-  
+
   public static class ToFanFloat extends SqlToFan
   {
-    public Obj toObj(ResultSet rs, int col)
+    public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
       double f = rs.getDouble(col);
@@ -189,7 +189,7 @@ public class SqlUtil
 
   public static class ToFanBuf extends SqlToFan
   {
-    public Obj toObj(ResultSet rs, int col)
+    public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
       byte[] buf = rs.getBytes(col);
@@ -197,10 +197,10 @@ public class SqlUtil
       return new MemBuf(buf);
     }
   }
-  
+
   public static class ToDefFanStr extends SqlToFan
   {
-    public Obj toObj(ResultSet rs, int col)
+    public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
       return Str.make(String.valueOf(rs.getObject(col)));

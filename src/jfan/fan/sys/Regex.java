@@ -35,7 +35,7 @@ public final class Regex
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Obj obj)
+  public final Bool _equals(Object obj)
   {
     if (obj instanceof Regex)
       return ((Regex)obj).source._equals(this.source);

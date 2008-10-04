@@ -75,7 +75,7 @@ public abstract class UriScheme
 
   public Str scheme() { return scheme; }
 
-  public abstract Obj get(Uri uri, Obj base);
+  public abstract Object get(Uri uri, Object base);
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

@@ -41,17 +41,17 @@ public abstract class Func
 
   public abstract Method method();
 
-  public abstract Obj call(List args);
-  public abstract Obj callOn(Obj target, List args);
-  public abstract Obj call0();
-  public abstract Obj call1(Obj a);
-  public abstract Obj call2(Obj a, Obj b);
-  public abstract Obj call3(Obj a, Obj b, Obj c);
-  public abstract Obj call4(Obj a, Obj b, Obj c, Obj d);
-  public abstract Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e);
-  public abstract Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f);
-  public abstract Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g);
-  public abstract Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h);
+  public abstract Object call(List args);
+  public abstract Object callOn(Object target, List args);
+  public abstract Object call0();
+  public abstract Object call1(Object a);
+  public abstract Object call2(Object a, Object b);
+  public abstract Object call3(Object a, Object b, Object c);
+  public abstract Object call4(Object a, Object b, Object c, Object d);
+  public abstract Object call5(Object a, Object b, Object c, Object d, Object e);
+  public abstract Object call6(Object a, Object b, Object c, Object d, Object e, Object f);
+  public abstract Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g);
+  public abstract Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h);
 
 //////////////////////////////////////////////////////////////////////////
 // Indirect
@@ -85,7 +85,7 @@ public abstract class Func
     public Method method() { return null; }
     public Err.Val tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + type.params.length).val; }
 
-    public final Obj callOn(Obj obj, List args)
+    public final Object callOn(Object obj, List args)
     {
       List flat = args.dup();
       flat.insert(Int.Zero, obj);
@@ -98,151 +98,151 @@ public abstract class Func
   public static abstract class Indirect0 extends Indirect
   {
     protected Indirect0(FuncType type) { super(type); }
-    public final Obj call(List args) { return call0(); }
-    public abstract Obj call0();
-    public final Obj call1(Obj a) { return call0(); }
-    public final Obj call2(Obj a, Obj b) { return call0(); }
-    public final Obj call3(Obj a, Obj b, Obj c) { return call0(); }
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { return call0(); }
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { return call0(); }
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return call0(); }
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return call0(); }
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return call0(); }
+    public final Object call(List args) { return call0(); }
+    public abstract Object call0();
+    public final Object call1(Object a) { return call0(); }
+    public final Object call2(Object a, Object b) { return call0(); }
+    public final Object call3(Object a, Object b, Object c) { return call0(); }
+    public final Object call4(Object a, Object b, Object c, Object d) { return call0(); }
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { return call0(); }
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return call0(); }
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return call0(); }
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call0(); }
   }
 
   public static abstract class Indirect1 extends Indirect
   {
     protected Indirect1(FuncType type) { super(type); }
-    public final Obj call(List args) { return call1(args.get(0)); }
-    public final Obj call0() { throw tooFewArgs(0); }
-    public abstract Obj call1(Obj a);
-    public final Obj call2(Obj a, Obj b) { return call1(a); }
-    public final Obj call3(Obj a, Obj b, Obj c) { return call1(a); }
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { return call1(a); }
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { return call1(a); }
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return call1(a); }
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return call1(a); }
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return call1(a); }
+    public final Object call(List args) { return call1(args.get(0)); }
+    public final Object call0() { throw tooFewArgs(0); }
+    public abstract Object call1(Object a);
+    public final Object call2(Object a, Object b) { return call1(a); }
+    public final Object call3(Object a, Object b, Object c) { return call1(a); }
+    public final Object call4(Object a, Object b, Object c, Object d) { return call1(a); }
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { return call1(a); }
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return call1(a); }
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return call1(a); }
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call1(a); }
   }
 
   public static abstract class Indirect2 extends Indirect
   {
     protected Indirect2(FuncType type) { super(type); }
-    public final Obj call(List args) { return call2(args.get(0), args.get(1)); }
-    public final Obj call0() { throw tooFewArgs(0); }
-    public final Obj call1(Obj a) { throw tooFewArgs(1); }
-    public abstract Obj call2(Obj a, Obj b);
-    public final Obj call3(Obj a, Obj b, Obj c) { return call2(a, b); }
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { return call2(a, b); }
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { return call2(a, b); }
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return call2(a, b); }
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return call2(a, b); }
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return call2(a, b); }
+    public final Object call(List args) { return call2(args.get(0), args.get(1)); }
+    public final Object call0() { throw tooFewArgs(0); }
+    public final Object call1(Object a) { throw tooFewArgs(1); }
+    public abstract Object call2(Object a, Object b);
+    public final Object call3(Object a, Object b, Object c) { return call2(a, b); }
+    public final Object call4(Object a, Object b, Object c, Object d) { return call2(a, b); }
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { return call2(a, b); }
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return call2(a, b); }
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return call2(a, b); }
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call2(a, b); }
   }
 
   public static abstract class Indirect3 extends Indirect
   {
     protected Indirect3(FuncType type) { super(type); }
-    public final Obj call(List args) { return call3(args.get(0), args.get(1), args.get(2)); }
-    public final Obj call0() { throw tooFewArgs(0); }
-    public final Obj call1(Obj a) { throw tooFewArgs(1); }
-    public final Obj call2(Obj a, Obj b)  { throw tooFewArgs(2); }
-    public abstract Obj call3(Obj a, Obj b, Obj c);
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { return call3(a, b, c); }
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { return call3(a, b, c); }
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return call3(a, b, c); }
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return call3(a, b, c); }
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return call3(a, b, c); }
+    public final Object call(List args) { return call3(args.get(0), args.get(1), args.get(2)); }
+    public final Object call0() { throw tooFewArgs(0); }
+    public final Object call1(Object a) { throw tooFewArgs(1); }
+    public final Object call2(Object a, Object b)  { throw tooFewArgs(2); }
+    public abstract Object call3(Object a, Object b, Object c);
+    public final Object call4(Object a, Object b, Object c, Object d) { return call3(a, b, c); }
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { return call3(a, b, c); }
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return call3(a, b, c); }
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return call3(a, b, c); }
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call3(a, b, c); }
   }
 
   public static abstract class Indirect4 extends Indirect
   {
     protected Indirect4(FuncType type) { super(type); }
-    public final Obj call(List args) { return call4(args.get(0), args.get(1), args.get(2), args.get(3)); }
-    public final Obj call0() { throw tooFewArgs(0); }
-    public final Obj call1(Obj a) { throw tooFewArgs(1); }
-    public final Obj call2(Obj a, Obj b)  { throw tooFewArgs(2); }
-    public final Obj call3(Obj a, Obj b, Obj c) { throw tooFewArgs(3); }
-    public abstract Obj call4(Obj a, Obj b, Obj c, Obj d);
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { return call4(a, b, c, d); }
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return call4(a, b, c, d); }
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return call4(a, b, c, d); }
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return call4(a, b, c, d); }
+    public final Object call(List args) { return call4(args.get(0), args.get(1), args.get(2), args.get(3)); }
+    public final Object call0() { throw tooFewArgs(0); }
+    public final Object call1(Object a) { throw tooFewArgs(1); }
+    public final Object call2(Object a, Object b)  { throw tooFewArgs(2); }
+    public final Object call3(Object a, Object b, Object c) { throw tooFewArgs(3); }
+    public abstract Object call4(Object a, Object b, Object c, Object d);
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { return call4(a, b, c, d); }
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return call4(a, b, c, d); }
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return call4(a, b, c, d); }
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call4(a, b, c, d); }
   }
 
   public static abstract class Indirect5 extends Indirect
   {
     protected Indirect5(FuncType type) { super(type); }
-    public final Obj call(List args) { return call5(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)); }
-    public final Obj call0() { throw tooFewArgs(0); }
-    public final Obj call1(Obj a) { throw tooFewArgs(1); }
-    public final Obj call2(Obj a, Obj b)  { throw tooFewArgs(2); }
-    public final Obj call3(Obj a, Obj b, Obj c) { throw tooFewArgs(3); }
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { throw tooFewArgs(4); }
-    public abstract Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e);
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return call5(a, b, c, d, e); }
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return call5(a, b, c, d, e); }
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return call5(a, b, c, d, e); }
+    public final Object call(List args) { return call5(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)); }
+    public final Object call0() { throw tooFewArgs(0); }
+    public final Object call1(Object a) { throw tooFewArgs(1); }
+    public final Object call2(Object a, Object b)  { throw tooFewArgs(2); }
+    public final Object call3(Object a, Object b, Object c) { throw tooFewArgs(3); }
+    public final Object call4(Object a, Object b, Object c, Object d) { throw tooFewArgs(4); }
+    public abstract Object call5(Object a, Object b, Object c, Object d, Object e);
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return call5(a, b, c, d, e); }
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return call5(a, b, c, d, e); }
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call5(a, b, c, d, e); }
   }
 
   public static abstract class Indirect6 extends Indirect
   {
     protected Indirect6(FuncType type) { super(type); }
-    public final Obj call(List args) { return call6(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5)); }
-    public final Obj call0() { throw tooFewArgs(0); }
-    public final Obj call1(Obj a) { throw tooFewArgs(1); }
-    public final Obj call2(Obj a, Obj b)  { throw tooFewArgs(2); }
-    public final Obj call3(Obj a, Obj b, Obj c) { throw tooFewArgs(3); }
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { throw tooFewArgs(4); }
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { throw tooFewArgs(5); }
-    public abstract Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f);
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return call6(a, b, c, d, e, f); }
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return call6(a, b, c, d, e, f); }
+    public final Object call(List args) { return call6(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5)); }
+    public final Object call0() { throw tooFewArgs(0); }
+    public final Object call1(Object a) { throw tooFewArgs(1); }
+    public final Object call2(Object a, Object b)  { throw tooFewArgs(2); }
+    public final Object call3(Object a, Object b, Object c) { throw tooFewArgs(3); }
+    public final Object call4(Object a, Object b, Object c, Object d) { throw tooFewArgs(4); }
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { throw tooFewArgs(5); }
+    public abstract Object call6(Object a, Object b, Object c, Object d, Object e, Object f);
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return call6(a, b, c, d, e, f); }
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call6(a, b, c, d, e, f); }
   }
 
   public static abstract class Indirect7 extends Indirect
   {
     protected Indirect7(FuncType type) { super(type); }
-    public final Obj call(List args) { return call7(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6)); }
-    public final Obj call0() { throw tooFewArgs(0); }
-    public final Obj call1(Obj a) { throw tooFewArgs(1); }
-    public final Obj call2(Obj a, Obj b)  { throw tooFewArgs(2); }
-    public final Obj call3(Obj a, Obj b, Obj c) { throw tooFewArgs(3); }
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { throw tooFewArgs(4); }
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { throw tooFewArgs(5); }
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { throw tooFewArgs(6); }
-    public abstract Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g);
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return call7(a, b, c, d, e, f, g); }
+    public final Object call(List args) { return call7(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6)); }
+    public final Object call0() { throw tooFewArgs(0); }
+    public final Object call1(Object a) { throw tooFewArgs(1); }
+    public final Object call2(Object a, Object b)  { throw tooFewArgs(2); }
+    public final Object call3(Object a, Object b, Object c) { throw tooFewArgs(3); }
+    public final Object call4(Object a, Object b, Object c, Object d) { throw tooFewArgs(4); }
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { throw tooFewArgs(5); }
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { throw tooFewArgs(6); }
+    public abstract Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g);
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call7(a, b, c, d, e, f, g); }
   }
 
   public static abstract class Indirect8 extends Indirect
   {
     protected Indirect8(FuncType type) { super(type); }
-    public final Obj call(List args) { return call8(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6), args.get(7)); }
-    public final Obj call0() { throw tooFewArgs(0); }
-    public final Obj call1(Obj a) { throw tooFewArgs(1); }
-    public final Obj call2(Obj a, Obj b)  { throw tooFewArgs(2); }
-    public final Obj call3(Obj a, Obj b, Obj c) { throw tooFewArgs(3); }
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { throw tooFewArgs(4); }
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { throw tooFewArgs(5); }
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { throw tooFewArgs(6); }
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { throw tooFewArgs(7); }
-    public abstract Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h);
+    public final Object call(List args) { return call8(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6), args.get(7)); }
+    public final Object call0() { throw tooFewArgs(0); }
+    public final Object call1(Object a) { throw tooFewArgs(1); }
+    public final Object call2(Object a, Object b)  { throw tooFewArgs(2); }
+    public final Object call3(Object a, Object b, Object c) { throw tooFewArgs(3); }
+    public final Object call4(Object a, Object b, Object c, Object d) { throw tooFewArgs(4); }
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { throw tooFewArgs(5); }
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { throw tooFewArgs(6); }
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { throw tooFewArgs(7); }
+    public abstract Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h);
   }
 
   public static abstract class IndirectX extends Indirect
   {
     protected IndirectX(FuncType type) { super(type); }
-    public abstract Obj call(List args);
-    public final Obj call0() { throw tooFewArgs(0); }
-    public final Obj call1(Obj a) { throw tooFewArgs(1); }
-    public final Obj call2(Obj a, Obj b)  { throw tooFewArgs(2); }
-    public final Obj call3(Obj a, Obj b, Obj c) { throw tooFewArgs(3); }
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { throw tooFewArgs(4); }
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { throw tooFewArgs(5); }
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { throw tooFewArgs(6); }
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { throw tooFewArgs(7); }
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { throw tooFewArgs(8); }
+    public abstract Object call(List args);
+    public final Object call0() { throw tooFewArgs(0); }
+    public final Object call1(Object a) { throw tooFewArgs(1); }
+    public final Object call2(Object a, Object b)  { throw tooFewArgs(2); }
+    public final Object call3(Object a, Object b, Object c) { throw tooFewArgs(3); }
+    public final Object call4(Object a, Object b, Object c, Object d) { throw tooFewArgs(4); }
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { throw tooFewArgs(5); }
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { throw tooFewArgs(6); }
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { throw tooFewArgs(7); }
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { throw tooFewArgs(8); }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -279,31 +279,31 @@ public abstract class Func
     public Method method() { return null; }
 
     // this isn't a very optimized implementation
-    public final Obj call0() { return call(new List(Sys.ObjType, new Obj[] {})); }
-    public final Obj call1(Obj a) { return call(new List(Sys.ObjType, new Obj[] {a})); }
-    public final Obj call2(Obj a, Obj b) { return call(new List(Sys.ObjType, new Obj[] {a,b})); }
-    public final Obj call3(Obj a, Obj b, Obj c) { return call(new List(Sys.ObjType, new Obj[] {a,b,c})); }
-    public final Obj call4(Obj a, Obj b, Obj c, Obj d) { return call(new List(Sys.ObjType, new Obj[] {a,b,c,d})); }
-    public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { return call(new List(Sys.ObjType, new Obj[] {a,b,c,d,e})); }
-    public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return call(new List(Sys.ObjType, new Obj[] {a,b,c,d,e,f})); }
-    public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return call(new List(Sys.ObjType, new Obj[] {a,b,c,d,e,f,g})); }
-    public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return call(new List(Sys.ObjType, new Obj[] {a,b,c,d,e,f,g,h})); }
+    public final Object call0() { return call(new List(Sys.ObjType, new Object[] {})); }
+    public final Object call1(Object a) { return call(new List(Sys.ObjType, new Object[] {a})); }
+    public final Object call2(Object a, Object b) { return call(new List(Sys.ObjType, new Object[] {a,b})); }
+    public final Object call3(Object a, Object b, Object c) { return call(new List(Sys.ObjType, new Object[] {a,b,c})); }
+    public final Object call4(Object a, Object b, Object c, Object d) { return call(new List(Sys.ObjType, new Object[] {a,b,c,d})); }
+    public final Object call5(Object a, Object b, Object c, Object d, Object e) { return call(new List(Sys.ObjType, new Object[] {a,b,c,d,e})); }
+    public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return call(new List(Sys.ObjType, new Object[] {a,b,c,d,e,f})); }
+    public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return call(new List(Sys.ObjType, new Object[] {a,b,c,d,e,f,g})); }
+    public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call(new List(Sys.ObjType, new Object[] {a,b,c,d,e,f,g,h})); }
 
-    public Obj call(List args)
+    public Object call(List args)
     {
       int origSize = orig.params.sz();
       if (origSize == bound.sz()) return orig.call(bound);
 
-      Obj[] temp = new Obj[origSize];
+      Object[] temp = new Object[origSize];
       bound.copyInto(temp, 0, bound.sz());
       args.copyInto(temp, bound.sz(), temp.length-bound.sz());
       return orig.call(new List(Sys.ObjType, temp));
     }
 
-    public final Obj callOn(Obj obj, List args)
+    public final Object callOn(Object obj, List args)
     {
       int origSize = orig.params.sz();
-      Obj[] temp = new Obj[origSize];
+      Object[] temp = new Object[origSize];
       bound.copyInto(temp, 0, bound.sz());
       temp[bound.sz()] = obj;
       args.copyInto(temp, bound.sz()+1, temp.length-bound.sz()-1);

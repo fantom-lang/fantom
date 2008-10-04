@@ -513,8 +513,8 @@ public class InStream
     }
   }
 
-  public Obj readObj() { return readObj(null); }
-  public Obj readObj(Map options)
+  public Object readObj() { return readObj(null); }
+  public Object readObj(Map options)
   {
     return new ObjDecoder(this, options).readObj();
   }

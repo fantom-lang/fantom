@@ -228,22 +228,22 @@ public class OutStream
     return this;
   }
 
-  public OutStream print(Obj obj)
+  public OutStream print(Object obj)
   {
     Str s = obj == null ? Str.nullStr : toStr(obj);
     return writeChars(s, Int.Zero, s.size());
   }
 
   public OutStream printLine() { return printLine(Str.Empty); }
-  public OutStream printLine(Obj obj)
+  public OutStream printLine(Object obj)
   {
     Str s = obj == null ? Str.nullStr : toStr(obj);
     writeChars(s, Int.Zero, s.size());
     return writeChar(Int.pos['\n']);
   }
 
-  public OutStream writeObj(Obj obj) { return writeObj(obj, null); }
-  public OutStream writeObj(Obj obj, Map options)
+  public OutStream writeObj(Object obj) { return writeObj(obj, null); }
+  public OutStream writeObj(Object obj, Map options)
   {
     new ObjEncoder(this, options).writeObj(obj);
     return this;

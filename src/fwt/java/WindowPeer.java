@@ -128,7 +128,7 @@ public class WindowPeer
 
   int defaultStyle() { return SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX; }
 
-  public Obj open(Window self)
+  public Object open(Window self)
   {
     // if already open
     if (control != null) throw Err.make("Window already open").val;
@@ -204,7 +204,7 @@ public class WindowPeer
     return result;
   }
 
-  public void close(Window self, Obj result)
+  public void close(Window self, Object result)
   {
     if (control == null) return;
     this.result = result;
@@ -224,5 +224,5 @@ public class WindowPeer
 
   boolean explicitPos;    // has pos been explicitly configured?
   boolean explicitSize;   // has size been explicitly configured?
-  Obj result;
+  Object result;
 }

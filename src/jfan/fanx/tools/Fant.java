@@ -152,7 +152,7 @@ public class Fant
     try
     {
       test = (Test)type.make();
-      args = new List(Sys.ObjType, new Obj[] {test});
+      args = new List(Sys.ObjType, new Object[] {test});
     }
     catch (Throwable e)
     {
@@ -288,7 +288,7 @@ public class Fant
     System.getProperties().put("fan.appDir", "$home/tmp/test/");
     new Thread(Str.make("main"))
     {
-      public Obj run()
+      public Object run()
       {
         int r = new Fant().run(args);
         System.exit(r);

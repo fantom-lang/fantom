@@ -74,7 +74,7 @@ public final class Int
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Obj obj)
+  public Bool _equals(Object obj)
   {
     if (obj instanceof Int)
       return val == ((Int)obj).val ? Bool.True : Bool.False;
@@ -82,7 +82,7 @@ public final class Int
       return Bool.False;
   }
 
-  public Int compare(Obj obj)
+  public Int compare(Object obj)
   {
     long that = ((Int)obj).val;
     if (val < that) return LT; return val == that ? EQ : GT;

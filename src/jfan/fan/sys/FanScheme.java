@@ -28,7 +28,7 @@ public class FanScheme
 
   public Type type() { return Sys.FanSchemeType; }
 
-  public Obj get(Uri uri, Obj base)
+  public Object get(Uri uri, Object base)
   {
     return Sys.ns().get(uri.pathOnly(), Bool.True);
   }

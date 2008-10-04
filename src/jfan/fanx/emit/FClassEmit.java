@@ -51,7 +51,7 @@ public class FClassEmit
     else
     {
       String base = jname(type.base);
-      if (base.equals("fan/sys/Obj")) return "fan/sys/FanObj";
+      if (base.equals("java/lang/Object")) return "fan/sys/FanObj";
       return base;
     }
   }

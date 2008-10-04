@@ -28,7 +28,7 @@ public class FileScheme
 
   public Type type() { return Sys.FileSchemeType; }
 
-  public Obj get(Uri uri, Obj base)
+  public Object get(Uri uri, Object base)
   {
     File f = File.make(uri, Bool.False);
     if (f.exists().val) return f;

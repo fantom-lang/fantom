@@ -67,7 +67,7 @@ public class Method
     List fparams = params.ro();
     if ((flags & (FConst.Static|FConst.Ctor)) == 0)
     {
-      Obj[] temp = new Obj[params.sz()+1];
+      Object[] temp = new Object[params.sz()+1];
       temp[0] = new Param(Str.thisStr, parent, 0);
       params.copyInto(temp, 1, params.sz());
       fparams = new List(Sys.ParamType, temp);
@@ -130,7 +130,7 @@ public class Method
     return Str.make(s.toString());
   }
 
-  public Obj trap(Str name, List args)
+  public Object trap(Str name, List args)
   {
     // private undocumented access
     if (name.val.equals("inheritedReturnType"))
@@ -175,17 +175,17 @@ public class Method
 // Call Conveniences
 //////////////////////////////////////////////////////////////////////////
 
-  public final Obj call(List args) { return func.call(args); }
-  public final Obj callOn(Obj target, List args) { return func.callOn(target, args); }
-  public final Obj call0() { return func.call0(); }
-  public final Obj call1(Obj a) { return func.call1(a); }
-  public final Obj call2(Obj a, Obj b) { return func.call2(a,b); }
-  public final Obj call3(Obj a, Obj b, Obj c) { return func.call3(a,b,c); }
-  public final Obj call4(Obj a, Obj b, Obj c, Obj d) { return func.call4(a,b,c,d); }
-  public final Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { return func.call5(a,b,c,d,e); }
-  public final Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return func.call6(a,b,c,d,e,f); }
-  public final Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return func.call7(a,b,c,d,e,f,g); }
-  public final Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return func.call8(a,b,c,d,e,f,g,h); }
+  public final Object call(List args) { return func.call(args); }
+  public final Object callOn(Object target, List args) { return func.callOn(target, args); }
+  public final Object call0() { return func.call0(); }
+  public final Object call1(Object a) { return func.call1(a); }
+  public final Object call2(Object a, Object b) { return func.call2(a,b); }
+  public final Object call3(Object a, Object b, Object c) { return func.call3(a,b,c); }
+  public final Object call4(Object a, Object b, Object c, Object d) { return func.call4(a,b,c,d); }
+  public final Object call5(Object a, Object b, Object c, Object d, Object e) { return func.call5(a,b,c,d,e); }
+  public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return func.call6(a,b,c,d,e,f); }
+  public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return func.call7(a,b,c,d,e,f,g); }
+  public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return func.call8(a,b,c,d,e,f,g,h); }
 
 //////////////////////////////////////////////////////////////////////////
 // MethodFunc
@@ -202,13 +202,13 @@ public class Method
       return Bool.make(isStatic().val || parent.isConst().val);
     }
 
-    public Obj call(List args)
+    public Object call(List args)
     {
       int argsSize = args == null ? 0 : args.sz();
 
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       int p = checkArgs(argsSize, isStatic, false);
-      Obj[] a = new Obj[p];
+      Object[] a = new Object[p];
 
       if (isStatic)
       {
@@ -217,13 +217,13 @@ public class Method
       }
       else
       {
-        Obj i = args.get(0);
+        Object i = args.get(0);
         if (a.length > 0) args.toArray(a, 1, a.length);
         return invoke(i, a);
       }
     }
 
-    public Obj callOn(Obj target, List args)
+    public Object callOn(Object target, List args)
     {
       int argsSize = args == null ? 0 : args.sz();
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
@@ -231,23 +231,23 @@ public class Method
       // we don't include target as part of arguments
       int p = checkArgs(argsSize, isStatic, true);
 
-      Obj[] a = new Obj[p];
+      Object[] a = new Object[p];
       if (args != null && a.length > 0) args.toArray(a, 0, a.length);
       return invoke(target, a);
     }
 
-    public Obj call0()
+    public Object call0()
     {
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       checkArgs(0, isStatic, false);
       return invoke(null, noArgs);
     }
 
-    public Obj call1(Obj a)
+    public Object call1(Object a)
     {
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       int p = checkArgs(1, isStatic, false);
-      Obj[] args = new Obj[p];
+      Object[] args = new Object[p];
       if (isStatic)
       {
         switch (p)
@@ -262,11 +262,11 @@ public class Method
       }
     }
 
-    public Obj call2(Obj a, Obj b)
+    public Object call2(Object a, Object b)
     {
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       int p = checkArgs(2, isStatic, false);
-      Obj[] args = new Obj[p];
+      Object[] args = new Object[p];
       if (isStatic)
       {
         switch (p)
@@ -286,11 +286,11 @@ public class Method
       }
     }
 
-    public Obj call3(Obj a, Obj b, Obj c)
+    public Object call3(Object a, Object b, Object c)
     {
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       int p = checkArgs(3, isStatic, false);
-      Obj[] args = new Obj[p];
+      Object[] args = new Object[p];
       if (isStatic)
       {
         switch (p)
@@ -312,11 +312,11 @@ public class Method
       }
     }
 
-    public Obj call4(Obj a, Obj b, Obj c, Obj d)
+    public Object call4(Object a, Object b, Object c, Object d)
     {
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       int p = checkArgs(4, isStatic, false);
-      Obj[] args = new Obj[p];
+      Object[] args = new Object[p];
       if (isStatic)
       {
         switch (p)
@@ -340,11 +340,11 @@ public class Method
       }
     }
 
-    public Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e)
+    public Object call5(Object a, Object b, Object c, Object d, Object e)
     {
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       int p = checkArgs(5, isStatic, false);
-      Obj[] args = new Obj[p];
+      Object[] args = new Object[p];
       if (isStatic)
       {
         switch (p)
@@ -370,11 +370,11 @@ public class Method
       }
     }
 
-    public Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f)
+    public Object call6(Object a, Object b, Object c, Object d, Object e, Object f)
     {
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       int p = checkArgs(6, isStatic, false);
-      Obj[] args = new Obj[p];
+      Object[] args = new Object[p];
       if (isStatic)
       {
         switch (p)
@@ -402,11 +402,11 @@ public class Method
       }
     }
 
-    public Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g)
+    public Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g)
     {
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       int p = checkArgs(7, isStatic, false);
-      Obj[] args = new Obj[p];
+      Object[] args = new Object[p];
       if (isStatic)
       {
         switch (p)
@@ -436,11 +436,11 @@ public class Method
       }
     }
 
-    public Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h)
+    public Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h)
     {
       boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
       int p = checkArgs(8, isStatic, false);
-      Obj[] args = new Obj[p];
+      Object[] args = new Object[p];
       if (isStatic)
       {
         switch (p)
@@ -503,7 +503,7 @@ public class Method
 // Reflection
 //////////////////////////////////////////////////////////////////////////
 
-  public Obj invoke(Object instance, Object[] args)
+  public Object invoke(Object instance, Object[] args)
   {
     if (reflect == null) parent.finish();
 
@@ -512,7 +512,7 @@ public class Method
       // zero index is full signature up to using max defaults
       int index = params.sz()-args.length;
       if (index < 0) index = 0;
-      return (Obj)reflect[index].invoke(instance, (Object[])args);
+      return reflect[index].invoke(instance, args);
     }
     catch (IllegalArgumentException e)
     {

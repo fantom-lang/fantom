@@ -533,7 +533,7 @@ public class WidgetPeer
 //////////////////////////////////////////////////////////////////////////
 
   fan.fwt.Event event(EventId id) { return event(id, null); }
-  fan.fwt.Event event(EventId id, Obj data)
+  fan.fwt.Event event(EventId id, Object data)
   {
     fan.fwt.Event f = fan.fwt.Event.make();
     f.id(id);

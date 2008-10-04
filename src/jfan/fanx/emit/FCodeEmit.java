@@ -476,6 +476,7 @@ public class FCodeEmit
     // if this is a virtual invoke on Obj then we to make it an
     // interface invoke because the Java runtime models Obj
     // as an interface to deal with mixins cleanly
+/*
     if (jcall.sig.startsWith("fan/sys/Obj."))
     {
       int[] m = pod.methodRef(index).val;
@@ -487,10 +488,11 @@ public class FCodeEmit
     }
     else
     {
+*/
       int method = emit.method(jcall.sig);
       code.op2(jcall.invokestatic ? INVOKESTATIC : INVOKEVIRTUAL, method);
 //      code.op2(INVOKEVIRTUAL, method);
-    }
+//    }
   }
 
   private void callNonVirtual()
@@ -601,21 +603,21 @@ public class FCodeEmit
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareEQz == 0) parent.CompareEQz = emit.method("fanx/util/OpUtil.compareEQz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareEQz == 0) parent.CompareEQz = emit.method("fanx/util/OpUtil.compareEQz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareEQz);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareEQz == 0) parent.CompareEQz = emit.method("fanx/util/OpUtil.compareEQz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareEQz == 0) parent.CompareEQz = emit.method("fanx/util/OpUtil.compareEQz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareEQz);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareEQ == 0) parent.CompareEQ = emit.method("fanx/util/OpUtil.compareEQ(Lfan/sys/Obj;Lfan/sys/Obj;)Lfan/sys/Bool;");
+       if (parent.CompareEQ == 0) parent.CompareEQ = emit.method("fanx/util/OpUtil.compareEQ(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
        code.op2(INVOKESTATIC, parent.CompareEQ);
     }
   }
@@ -626,28 +628,28 @@ public class FCodeEmit
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareNEz == 0) parent.CompareNEz = emit.method("fanx/util/OpUtil.compareNEz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareNEz == 0) parent.CompareNEz = emit.method("fanx/util/OpUtil.compareNEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareNEz);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareNEz == 0) parent.CompareNEz = emit.method("fanx/util/OpUtil.compareNEz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareNEz == 0) parent.CompareNEz = emit.method("fanx/util/OpUtil.compareNEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareNEz);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareNE == 0) parent.CompareNE = emit.method("fanx/util/OpUtil.compareNE(Lfan/sys/Obj;Lfan/sys/Obj;)Lfan/sys/Bool;");
+       if (parent.CompareNE == 0) parent.CompareNE = emit.method("fanx/util/OpUtil.compareNE(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
        code.op2(INVOKESTATIC, parent.CompareNE);
     }
   }
 
   private void compare()
   {
-    if (parent.Compare == 0) parent.Compare = emit.method("fanx/util/OpUtil.compare(Lfan/sys/Obj;Lfan/sys/Obj;)Lfan/sys/Int;");
+    if (parent.Compare == 0) parent.Compare = emit.method("fanx/util/OpUtil.compare(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Int;");
     code.op2(INVOKESTATIC, parent.Compare);
   }
 
@@ -657,21 +659,21 @@ public class FCodeEmit
     switch (peek)
     {
      case JumpFalse:
-        if (parent.CompareLTz == 0) parent.CompareLTz = emit.method("fanx/util/OpUtil.compareLTz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareLTz == 0) parent.CompareLTz = emit.method("fanx/util/OpUtil.compareLTz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareLTz);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareLTz == 0) parent.CompareLTz = emit.method("fanx/util/OpUtil.compareLTz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareLTz == 0) parent.CompareLTz = emit.method("fanx/util/OpUtil.compareLTz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareLTz);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
      default:
-       if (parent.CompareLT == 0) parent.CompareLT = emit.method("fanx/util/OpUtil.compareLT(Lfan/sys/Obj;Lfan/sys/Obj;)Lfan/sys/Bool;");
+       if (parent.CompareLT == 0) parent.CompareLT = emit.method("fanx/util/OpUtil.compareLT(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
        code.op2(INVOKESTATIC, parent.CompareLT);
     }
   }
@@ -682,21 +684,21 @@ public class FCodeEmit
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareLEz == 0) parent.CompareLEz = emit.method("fanx/util/OpUtil.compareLEz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareLEz == 0) parent.CompareLEz = emit.method("fanx/util/OpUtil.compareLEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareLEz);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareLEz == 0) parent.CompareLEz = emit.method("fanx/util/OpUtil.compareLEz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareLEz == 0) parent.CompareLEz = emit.method("fanx/util/OpUtil.compareLEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareLEz);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareLE == 0) parent.CompareLE = emit.method("fanx/util/OpUtil.compareLE(Lfan/sys/Obj;Lfan/sys/Obj;)Lfan/sys/Bool;");
+       if (parent.CompareLE == 0) parent.CompareLE = emit.method("fanx/util/OpUtil.compareLE(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
        code.op2(INVOKESTATIC, parent.CompareLE);
     }
   }
@@ -707,21 +709,21 @@ public class FCodeEmit
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareGEz == 0) parent.CompareGEz = emit.method("fanx/util/OpUtil.compareGEz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareGEz == 0) parent.CompareGEz = emit.method("fanx/util/OpUtil.compareGEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareGEz);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareGEz == 0) parent.CompareGEz = emit.method("fanx/util/OpUtil.compareGEz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareGEz == 0) parent.CompareGEz = emit.method("fanx/util/OpUtil.compareGEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareGEz);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareGE == 0) parent.CompareGE = emit.method("fanx/util/OpUtil.compareGE(Lfan/sys/Obj;Lfan/sys/Obj;)Lfan/sys/Bool;");
+       if (parent.CompareGE == 0) parent.CompareGE = emit.method("fanx/util/OpUtil.compareGE(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
        code.op2(INVOKESTATIC, parent.CompareGE);
     }
   }
@@ -732,21 +734,21 @@ public class FCodeEmit
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareGTz == 0) parent.CompareGTz = emit.method("fanx/util/OpUtil.compareGTz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareGTz == 0) parent.CompareGTz = emit.method("fanx/util/OpUtil.compareGTz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareGTz);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareGTz == 0) parent.CompareGTz = emit.method("fanx/util/OpUtil.compareGTz(Lfan/sys/Obj;Lfan/sys/Obj;)Z");
+        if (parent.CompareGTz == 0) parent.CompareGTz = emit.method("fanx/util/OpUtil.compareGTz(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareGTz);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareGT == 0) parent.CompareGT = emit.method("fanx/util/OpUtil.compareGT(Lfan/sys/Obj;Lfan/sys/Obj;)Lfan/sys/Bool;");
+       if (parent.CompareGT == 0) parent.CompareGT = emit.method("fanx/util/OpUtil.compareGT(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
        code.op2(INVOKESTATIC, parent.CompareGT);
     }
   }
@@ -848,7 +850,7 @@ public class FCodeEmit
     // otherwise we can use straight bytecode
     if (pod.typeRef(typeRef).isGenericInstance())
     {
-      if (parent.IsViaType == 0) parent.IsViaType = emit.method("fanx/util/OpUtil.is(Lfan/sys/Obj;Lfan/sys/Type;)Lfan/sys/Bool;");
+      if (parent.IsViaType == 0) parent.IsViaType = emit.method("fanx/util/OpUtil.is(Ljava/lang/Object;Lfan/sys/Type;)Lfan/sys/Bool;");
       loadType(typeRef);
       code.op2(INVOKESTATIC, parent.IsViaType);
     }
@@ -870,7 +872,7 @@ public class FCodeEmit
     // otherwise we can use straight bytecode
     if (pod.typeRef(typeRef).isGenericInstance())
     {
-      if (parent.AsViaType == 0) parent.AsViaType = emit.method("fanx/util/OpUtil.as(Lfan/sys/Obj;Lfan/sys/Type;)Lfan/sys/Obj;");
+      if (parent.AsViaType == 0) parent.AsViaType = emit.method("fanx/util/OpUtil.as(Ljava/lang/Object;Lfan/sys/Type;)Ljava/lang/Object;");
       loadType(typeRef);
       code.op2(INVOKESTATIC, parent.AsViaType);
       code.op2(CHECKCAST, cls);

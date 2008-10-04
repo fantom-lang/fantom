@@ -11,7 +11,6 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 import fan.sys.FanObj;
-import fan.sys.Obj;
 import fan.sys.List;
 import fan.sys.Log;
 import fan.sys.Str;
@@ -305,7 +304,7 @@ class Builder
     // we add each list item to the index
     if (val.endsWith("]"))
     {
-      Obj obj = t.facets.getObj(index.name);
+      Object obj = t.facets.getObj(index.name);
       if (obj instanceof List)
       {
         List list = (List)obj;
@@ -549,7 +548,7 @@ class Builder
       return (String)map.get(name);
     }
 
-    Obj getObj(String name)
+    Object getObj(String name)
     {
       String val = get(name);
       if (val == null) return null;
@@ -566,7 +565,7 @@ class Builder
 
     Str getStr(String name)
     {
-      Obj v = getObj(name);
+      Object v = getObj(name);
       if (v == null) return null;
       if (v instanceof Str) return (Str)v;
       log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + FanObj.type(v));
@@ -575,7 +574,7 @@ class Builder
 
     List getStrList(String name)
     {
-      Obj v = getObj(name);
+      Object v = getObj(name);
       if (v == null) return null;
       if (v instanceof List && ((List)v).of() == Sys.StrType) return (List)v;
       log.warn("Expecting '" + loc + "@" + name + "' to be Str[], not " + FanObj.type(v));

@@ -74,10 +74,11 @@ public final class FPod
       int[] m = methodRef(index).val;
       String parent = jname(m[0]);
       String name = name(m[1]);
-      boolean onObj = parent.equals("fan/sys/Obj");
+      boolean onObj = parent.equals("java/lang/Object");
       boolean explicitSelf = false;
 
-      // methods on sys::Obj are static methods on FanObj
+      // methods on java.lang.Object/sys::Obj are
+      // static methods on FanObj
       if (onObj)
       {
         parent = "fan/sys/FanObj";
@@ -157,9 +158,24 @@ public final class FPod
     if (n == null)
     {
       FTypeRef ref = typeRef(index);
-      n = jnames[index] = "fan/" + name(ref.podName) + '/' + name(ref.typeName);
+      String podName = name(ref.podName);
+      String typeName = name(ref.typeName);
+      if (podName.equals("sys") && typeName.equals("Obj"))
+        n = "java/lang/Object";
+      else
+        n = "fan/" + podName + '/' + typeName;
+      jnames[index] = n;
     }
     return n;
+  }
+
+  public static final StringBuilder jname(StringBuilder s, Type t)
+  {
+    if (t == Sys.ObjType)
+      s.append("Ljava/lang/Object");
+    else
+      s.append("Lfan/").append(t.pod().name()).append('/').append(t.name());
+    return s;
   }
 
 //////////////////////////////////////////////////////////////////////////

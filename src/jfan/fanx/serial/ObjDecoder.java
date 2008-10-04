@@ -20,7 +20,7 @@ public class ObjDecoder
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-  public static Obj decode(String s)
+  public static Object decode(String s)
   {
     return new ObjDecoder(InStream.makeForStr(s), null).readObj();
   }
@@ -46,7 +46,7 @@ public class ObjDecoder
   /**
    * Read an object from the stream.
    */
-  public final Obj readObj()
+  public final Object readObj()
   {
     readHeader();
     return readObj(null, null, true);
@@ -108,12 +108,12 @@ public class ObjDecoder
   /**
    * obj := literal | simple | complex
    */
-  private Obj readObj(Field curField, Type peekType, boolean root)
+  private Object readObj(Field curField, Type peekType, boolean root)
   {
     // literals are stand alone
     if (Token.isLiteral(curt))
     {
-      Obj val = (Obj)tokenizer.val;
+      Object val = tokenizer.val;
       consume();
       return val;
     }
@@ -145,7 +145,7 @@ public class ObjDecoder
   /**
    * typeLiteral := type "#"
    */
-  private Obj readTypeLiteral(int line, Type t)
+  private Object readTypeLiteral(int line, Type t)
   {
     consume(Token.POUND, "Expected '#' for type literal");
     return t;
@@ -154,7 +154,7 @@ public class ObjDecoder
   /**
    * simple := type "(" str ")"
    */
-  private Obj readSimple(int line, Type t)
+  private Object readSimple(int line, Type t)
   {
     // parse: type(str)
     consume(Token.LPAREN, "Expected ( in simple");
@@ -187,16 +187,16 @@ public class ObjDecoder
    * fields  := "{" field (eos field)* "}"
    * field   := name "=" obj
    */
-  private Obj readComplex(int line, Type t, boolean root)
+  private Object readComplex(int line, Type t, boolean root)
   {
     // make instance
-    Obj obj = null;
+    Object obj = null;
     try
     {
       List args = null;
       if (root && options != null)
         args = (List)options.get(optMakeArgs);
-      obj = (Obj)t.make(args);
+      obj = t.make(args);
     }
     catch (Throwable e)
     {
@@ -241,9 +241,9 @@ public class ObjDecoder
     return obj;
   }
 
-  void readComplexAdd(Type t, Obj obj, int line)
+  void readComplexAdd(Type t, Object obj, int line)
   {
-    Obj val = readObj(null, null, false);
+    Object val = readObj(null, null, false);
     Method m = t.method("add", false);
     if (m == null) throw err("Method not found: " + t.qname() + ".add", line);
     try
@@ -256,14 +256,14 @@ public class ObjDecoder
     }
   }
 
-  void readComplexField(Type t, Obj obj, int line, String name)
+  void readComplexField(Type t, Object obj, int line, String name)
   {
     // resolve field
     Field field = t.field(name, false);
     if (field == null) throw err("Field not found: " + t.qname() + "." + name, line);
 
     // parse value
-    Obj val = readObj(field, null, false);
+    Object val = readObj(field, null, false);
 
     // set field value (skip const check)
     try
@@ -286,7 +286,7 @@ public class ObjDecoder
   /**
    * collection := list | map
    */
-  private Obj readCollection(Field curField, Type t)
+  private Object readCollection(Field curField, Type t)
   {
     // opening [
     consume(Token.LBRACKET, "Expecting '['");
@@ -330,7 +330,7 @@ public class ObjDecoder
     }
 
     // read first list item or first map key
-    Obj first = readObj(null, peekType, false);
+    Object first = readObj(null, peekType, false);
 
     // now we can distinguish b/w list and map
     if (curt == Token.COLON)
@@ -342,10 +342,10 @@ public class ObjDecoder
   /**
    * list := "[" obj ("," obj)* "]"
    */
-  private Obj readList(Type of, Obj first)
+  private Object readList(Type of, Object first)
   {
     // setup accumulator
-    Obj[] acc = new Obj[8];
+    Object[] acc = new Object[8];
     int n = 0;
     acc[n++] = first;
 
@@ -356,7 +356,7 @@ public class ObjDecoder
       if (curt == Token.RBRACKET) break;
       if (n >= acc.length)
       {
-        Obj[] temp = new Obj[n*2];
+        Object[] temp = new Object[n*2];
         System.arraycopy(acc, 0, temp, 0, n);
         acc = temp;
       }
@@ -374,7 +374,7 @@ public class ObjDecoder
    * map     := "[" mapPair ("," mapPair)* "]"
    * mapPair := obj ":" + obj
    */
-  private Obj readMap(MapType mapType, Obj firstKey)
+  private Object readMap(MapType mapType, Object firstKey)
   {
     // setup accumulator
     Map.FanHashMap map = new Map.FanHashMap();
@@ -388,9 +388,9 @@ public class ObjDecoder
     {
       consume(Token.COMMA, "Expected ','");
       if (curt == Token.RBRACKET) break;
-      Obj key = readObj(null, null, false);
+      Object key = readObj(null, null, false);
       consume(Token.COLON, "Expected ':'");
-      Obj val = readObj(null, null, false);
+      Object val = readObj(null, null, false);
       map.put(key, val);
     }
     consume(Token.RBRACKET, "Expected ']'");
@@ -399,8 +399,8 @@ public class ObjDecoder
     if (mapType == null)
     {
       int size = map.size();
-      Type k = Type.common((Obj[])map.keySet().toArray(new Obj[size]), size);
-      Type v = Type.common((Obj[])map.values().toArray(new Obj[size]), size);
+      Type k = Type.common(map.keySet().toArray(new Object[size]), size);
+      Type v = Type.common(map.values().toArray(new Object[size]), size);
       mapType = new MapType(k, v);
     }
 

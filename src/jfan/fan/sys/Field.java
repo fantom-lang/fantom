@@ -64,7 +64,7 @@ public class Field
 
   public Str signature() { return Str.make(of.toStr().val + " " + Str.make(name.val)); }
 
-  public Obj trap(Str name, List args)
+  public Object trap(Str name, List args)
   {
     // private undocumented access
     if (name.val.equals("getter")) return getter;
@@ -76,8 +76,8 @@ public class Field
 // Reflection
 //////////////////////////////////////////////////////////////////////////
 
-  public Obj get() { return get(null); }
-  public Obj get(Obj instance)
+  public Object get() { return get(null); }
+  public Object get(Object instance)
   {
     parent.finish();
 
@@ -88,7 +88,7 @@ public class Field
 
     try
     {
-      return (Obj)reflect.get(instance);
+      return reflect.get(instance);
     }
     catch (Exception e)
     {
@@ -102,12 +102,12 @@ public class Field
     }
   }
 
-  public void set(Obj instance, Obj value)
+  public void set(Object instance, Object value)
   {
     set(instance, value, true);
   }
 
-  public void set(Obj instance, Obj value, boolean checkConst)
+  public void set(Object instance, Object value, boolean checkConst)
   {
     parent.finish();
 
@@ -133,7 +133,7 @@ public class Field
 
     if (setter != null)
     {
-      setter.invoke(instance, new Obj[] { value });
+      setter.invoke(instance, new Object[] { value });
       return;
     }
 

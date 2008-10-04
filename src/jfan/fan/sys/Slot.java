@@ -107,7 +107,7 @@ public abstract class Slot
   public final Bool isSynthetic() { return Bool.make(flags & FConst.Synthetic); }
   public final Bool isVirtual()   { return Bool.make(flags & FConst.Virtual); }
 
-  public Obj trap(Str name, List args)
+  public Object trap(Str name, List args)
   {
     // private undocumented access
     String n = name.val;
@@ -121,8 +121,8 @@ public abstract class Slot
 //////////////////////////////////////////////////////////////////////////
 
   public Map facets() { return facets.map(); }
-  public Obj facet(Str name) { return facets.get(name, null); }
-  public Obj facet(Str name, Obj def) { return facets.get(name, def); }
+  public Object facet(Str name) { return facets.get(name, null); }
+  public Object facet(Str name, Object def) { return facets.get(name, def); }
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

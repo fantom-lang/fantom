@@ -26,12 +26,12 @@ public class RowPeer
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Obj get(Row row, Col col)
+  public Object get(Row row, Col col)
   {
     return cells[(int)col.index.val];
   }
 
-  public void set(Row row, Col col, Obj val)
+  public void set(Row row, Col col, Object val)
   {
     cells[(int)col.index.val] = val;
   }
@@ -40,6 +40,6 @@ public class RowPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  public Obj[] cells;  // set in ConnectionPeer.query
+  public Object[] cells;  // set in ConnectionPeer.query
 
 }

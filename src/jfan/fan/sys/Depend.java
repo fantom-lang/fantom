@@ -163,7 +163,7 @@ public final class Depend
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Obj obj)
+  public Bool _equals(Object obj)
   {
     if (obj instanceof Depend)
       return toStr()._equals(toStr(obj));

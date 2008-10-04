@@ -53,7 +53,7 @@ public final class Facets
     {
       Entry e = (Entry)it.next();
       Str key = (Str)e.getKey();
-      Obj val = (Obj)e.getValue();
+      Object val = e.getValue();
       if (FanObj.isImmutable(val).val)
         src.put(key, val);
       else
@@ -76,26 +76,26 @@ public final class Facets
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  final synchronized Obj get(Str name, Obj def)
+  final synchronized Object get(Str name, Object def)
   {
     Object val = src.get(name);
     if (val == null) return def;
 
     // if we've already decoded, go with it
-    if (val instanceof Obj) return (Obj)val;
+    if (val instanceof FanObj) return val;
 
     // decode into an object
-    Obj obj = ObjDecoder.decode((String)val);
+    Object obj = ObjDecoder.decode((String)val);
 
     // if the object is immutable, then it
     // safe to reuse for future gets
-    Obj x = toImmutable(obj);
+    Object x = toImmutable(obj);
     if (x == null) return obj;
     src.put(name, x);
     return x;
   }
 
-  private Obj toImmutable(Obj obj)
+  private Object toImmutable(Object obj)
   {
     if (FanObj.isImmutable(obj).val) return obj;
 
@@ -133,7 +133,7 @@ public final class Facets
     while (it.hasNext())
     {
       Str name = (Str)it.next();
-      Obj val = get(name, null);
+      Object val = get(name, null);
       map.set(name, val);
       allImmutable &= FanObj.isImmutable(val).val;
     }
@@ -160,6 +160,6 @@ public final class Facets
   private static Facets empty;
 
   private HashMap src;     // Str -> String or immutable Obj
-  private Map immutable;   // immutable Str:Obj Fan map
+  private Map immutable;   // immutable Str:Object Fan map
 
 }

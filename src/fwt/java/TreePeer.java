@@ -77,14 +77,14 @@ public class TreePeer
     void syncToControl() { set(val); }
     void syncFromControl() { get(); }
 
-    Obj get()
+    Object get()
     {
       if (control == null) return val;
       val = nodes(((Tree)control).getSelection());
       return val.ro();
     }
 
-    void set(Obj v)
+    void set(Object v)
     {
       val = (List)v;
       if (control == null) return;
@@ -110,7 +110,7 @@ public class TreePeer
     c.clearAll(true);
   }
 
-  public void refreshNode(fan.fwt.Tree self, Obj node)
+  public void refreshNode(fan.fwt.Tree self, Object node)
   {
     Tree c = (Tree)this.control;
 
@@ -175,7 +175,7 @@ public class TreePeer
     TreeItem parentItem = item.getParentItem();
 
     // map the event to a node
-    Obj node;
+    Object node;
     if (parentItem == null)
     {
       // if no parent item, then this is a root node
@@ -275,7 +275,7 @@ public class TreePeer
     return (TreeItem[])acc.toArray(new TreeItem[acc.size()]);
   }
 
-  TreeItem item(Obj node)
+  TreeItem item(Object node)
   {
     TreeItem[] items = ((Tree)control).getItems();
     for (int i=0; i<items.length; ++i)
@@ -286,7 +286,7 @@ public class TreePeer
     return null;
   }
 
-  TreeItem item(Obj node, TreeItem item)
+  TreeItem item(Object node, TreeItem item)
   {
     Data data = (Data)item.getData();
     if (data == null) return null;
@@ -307,7 +307,7 @@ public class TreePeer
     return acc;
   }
 
-  Obj node(TreeItem item)
+  Object node(TreeItem item)
   {
     if (item == null) return null;
     Data data = (Data)item.getData();
@@ -326,7 +326,7 @@ public class TreePeer
 
   static class Data
   {
-    Obj node;
+    Object node;
     List children;
   }
 

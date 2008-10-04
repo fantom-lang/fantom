@@ -224,8 +224,8 @@ public class Pod
 //////////////////////////////////////////////////////////////////////////
 
   public Map facets() { return toFacets().map(); }
-  public Obj facet(Str name) { return toFacets().get(name, null); }
-  public Obj facet(Str name, Obj def) { return toFacets().get(name, def); }
+  public Object facet(Str name) { return toFacets().get(name, null); }
+  public Object facet(Str name, Object def) { return toFacets().get(name, def); }
 
   private Facets toFacets()
   {

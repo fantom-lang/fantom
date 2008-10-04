@@ -100,7 +100,7 @@ public class Locale
 
   public Int hash() { return str.hash(); }
 
-  public Bool _equals(Obj obj)
+  public Bool _equals(Object obj)
   {
     if (obj instanceof Locale)
     {

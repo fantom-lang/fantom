@@ -48,7 +48,7 @@ public final class Str
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Obj obj)
+  public final Bool _equals(Object obj)
   {
     if (obj instanceof Str)
       return val.equals(((Str)obj).val) ? Bool.True : Bool.False;
@@ -77,7 +77,7 @@ public final class Str
     return Bool.True;
   }
 
-  public final Int compare(Obj obj)
+  public final Int compare(Object obj)
   {
     int cmp = val.compareTo(((Str)obj).val);
     if (cmp < 0) return Int.LT;
@@ -169,7 +169,7 @@ public final class Str
     return make(val.substring(s, e+1));
   }
 
-  public final Str plus(Obj obj)
+  public final Str plus(Object obj)
   {
     if (obj == null) return make(val.concat("null"));
     Str x = FanObj.toStr(obj);

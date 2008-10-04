@@ -51,15 +51,15 @@ public abstract class Namespace
 
   public final Uri uri() { return uri; }
 
-  public Obj get(Uri uri) { return get(uri, Bool.True); }
-  public abstract Obj get(Uri uri, Bool checked);
+  public Object get(Uri uri) { return get(uri, Bool.True); }
+  public abstract Object get(Uri uri, Bool checked);
 
-  public Uri create(Uri uri, Obj obj)
+  public Uri create(Uri uri, Object obj)
   {
     throw UnsupportedErr.make(type() + ".create").val;
   }
 
-  public void put(Uri uri, Obj obj)
+  public void put(Uri uri, Object obj)
   {
     throw UnsupportedErr.make(type() + ".put").val;
   }
@@ -78,7 +78,7 @@ public abstract class Namespace
    * If it is immutable, then just return it; otherwise
    * we make a serialized copy.
    */
-  public static Obj safe(Obj obj)
+  public static Object safe(Object obj)
   {
     if (obj == null) return null;
     if (isImmutable(obj).val) return obj;

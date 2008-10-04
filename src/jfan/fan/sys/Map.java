@@ -74,31 +74,31 @@ public final class Map
     return Int.pos(map.size());
   }
 
-  public final Obj get(Obj key)
+  public final Object get(Object key)
   {
-    Obj val = (Obj)map.get(key);
+    Object val = map.get(key);
     if (val != null) return val;
     return this.def;
   }
 
-  public final Obj get(Obj key, Obj def)
+  public final Object get(Object key, Object def)
   {
-    Obj val = (Obj)map.get(key);
+    Object val = map.get(key);
     if (val != null) return val;
     return def;
   }
 
-  public final Bool containsKey(Obj key)
+  public final Bool containsKey(Object key)
   {
     return Bool.make(map.containsKey(key));
   }
 
   public final List keys()
   {
-    Obj[] keys = new Obj[map.size()];
+    Object[] keys = new Object[map.size()];
     Iterator it = map.pairs().iterator();
     for (int i=0; it.hasNext(); ++i)
-      keys[i] = (Obj)((Entry)it.next()).getKey();
+      keys[i] = ((Entry)it.next()).getKey();
     return new List(type.k, keys);
   }
 
@@ -107,7 +107,7 @@ public final class Map
     return new List(type.v, map.values());
   }
 
-  public final Map set(Obj key, Obj value)
+  public final Map set(Object key, Object value)
   {
     modify();
     if (key == null)
@@ -118,7 +118,7 @@ public final class Map
     return this;
   }
 
-  public final Map add(Obj key, Obj value)
+  public final Map add(Object key, Object value)
   {
     modify();
     if (key == null)
@@ -153,15 +153,15 @@ public final class Map
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      add((Obj)e.getKey(), (Obj)e.getValue());
+      add(e.getKey(), e.getValue());
     }
     return this;
   }
 
-  public final Obj remove(Obj key)
+  public final Object remove(Object key)
   {
     modify();
-    return (Obj)map.remove(key);
+    return map.remove(key);
   }
 
   public final Map dup()
@@ -197,8 +197,8 @@ public final class Map
       map = new FanHashMap();
   }
 
-  public final Obj def() { return def; }
-  public final void def(Obj v)
+  public final Object def() { return def; }
+  public final void def(Object v)
   {
     modify();
     if (v != null && !isImmutable(v).val)
@@ -206,7 +206,7 @@ public final class Map
     this.def = v;
   }
 
-  public final Bool _equals(Obj that)
+  public final Bool _equals(Object that)
   {
     if (that instanceof Map)
     {
@@ -255,30 +255,30 @@ public final class Map
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      f.call2((Obj)e.getValue(), (Obj)e.getKey());
+      f.call2(e.getValue(), e.getKey());
     }
   }
 
-  public final Obj eachBreak(Func f)
+  public final Object eachBreak(Func f)
   {
     Iterator it = map.pairs().iterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      Obj r = f.call2((Obj)e.getValue(), (Obj)e.getKey());
+      Object r = f.call2(e.getValue(), e.getKey());
       if (r != null) return r;
     }
     return null;
   }
 
-  public final Obj find(Func f)
+  public final Object find(Func f)
   {
     Iterator it = map.pairs().iterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      Obj key = (Obj)e.getKey();
-      Obj val = (Obj)e.getValue();
+      Object key = e.getKey();
+      Object val = e.getValue();
       if (f.call2(val, key) == Bool.True)
         return val;
     }
@@ -292,8 +292,8 @@ public final class Map
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      Obj key = (Obj)e.getKey();
-      Obj val = (Obj)e.getValue();
+      Object key = e.getKey();
+      Object val = e.getValue();
       if (f.call2(val, key) == Bool.True)
         acc.set(key, val);
     }
@@ -307,22 +307,22 @@ public final class Map
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      Obj key = (Obj)e.getKey();
-      Obj val = (Obj)e.getValue();
+      Object key = e.getKey();
+      Object val = e.getValue();
       if (f.call2(val, key) == Bool.False)
         acc.set(key, val);
     }
     return acc;
   }
 
-  public final Obj reduce(Obj reduction, Func f)
+  public final Object reduce(Object reduction, Func f)
   {
     Iterator it = map.pairs().iterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      Obj key = (Obj)e.getKey();
-      Obj val = (Obj)e.getValue();
+      Object key = e.getKey();
+      Object val = e.getValue();
       reduction = f.call3(reduction, val, key);
     }
     return reduction;
@@ -334,8 +334,8 @@ public final class Map
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      Obj key = (Obj)e.getKey();
-      Obj val = (Obj)e.getValue();
+      Object key = e.getKey();
+      Object val = e.getValue();
       acc.set(key, f.call2(val, key));
     }
     return acc;
@@ -398,8 +398,8 @@ public final class Map
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      Obj key = (Obj)e.getKey();
-      Obj val = (Obj)e.getValue();
+      Object key = e.getKey();
+      Object val = e.getValue();
 
       if (val != null)
       {
@@ -494,7 +494,7 @@ public final class Map
       {
         CIEntry entry = (CIEntry)it.next();
         Object thatVal = that.get(entry.key);
-        if (!OpUtil.compareEQz((Obj)entry.val, (Obj)thatVal)) return false;
+        if (!OpUtil.compareEQz(entry.val, thatVal)) return false;
       }
       return true;
     }
@@ -550,6 +550,6 @@ public final class Map
   private boolean readonly;
   private boolean immutable;
   private boolean caseInsensitive;
-  private Obj def;
+  private Object def;
 
 }

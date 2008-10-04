@@ -127,7 +127,7 @@ public class StatementPeer
 
     Row row = (Row)of.make();
     int numCols = rs.getMetaData().getColumnCount();
-    Obj[] cells = new Obj[numCols];
+    Object[] cells = new Object[numCols];
     row.peer.cells = cells;
     for (int i=0; i<numCols; ++i)
       cells[i] = converters[i].toObj(rs, i+1);
@@ -137,11 +137,11 @@ public class StatementPeer
   /**
    * Update an existing row with new values from the specified result set.
    */
-  Obj updateDynamicRow(ResultSet rs, Row row, SqlUtil.SqlToFan[] converters)
+  Object updateDynamicRow(ResultSet rs, Row row, SqlUtil.SqlToFan[] converters)
     throws SQLException
   {
     int numCols = rs.getMetaData().getColumnCount();
-    Obj[] cells = row.peer.cells;
+    Object[] cells = row.peer.cells;
     for (int i=0; i<numCols; ++i)
       cells[i] = converters[i].toObj(rs, i+1);
     return row;
@@ -254,7 +254,7 @@ public class StatementPeer
       {
         java.util.Map.Entry entry = (java.util.Map.Entry)i.next();
         Str key = (Str)entry.getKey();
-        Obj value = params.get(key);
+        Object value = params.get(key);
         Object jobj = fanToJava(value);
         int[] locs = (int[])entry.getValue();
         for (int j = 0; j < locs.length; j++)
@@ -273,7 +273,7 @@ public class StatementPeer
   /**
    * Get a Java object for the specified fan object.
    */
-  private Object fanToJava(Obj value)
+  private Object fanToJava(Object value)
   {
     Object jobj = value;
 

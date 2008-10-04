@@ -83,7 +83,7 @@ public class ConnectionPeer
                            null,          // schema pattern
                            tableName.val, // table name pattern
                            null);         // types
-      
+
       boolean exists = tables.next();
       tables.close();
       return Bool.make(exists);
@@ -104,7 +104,7 @@ public class ConnectionPeer
                          null,  // schema pattern
                          null,  // table name pattern
                          null); // types
-    
+
       int nameIndex = tables.findColumn("TABLE_NAME");
       List tableList = new List(Sys.StrType, 32);
       while (tables.next())
@@ -113,7 +113,7 @@ public class ConnectionPeer
         tableList.add(Str.make(tableName));
       }
       tables.close();
-    
+
       return tableList.ro();
     }
     catch(SQLException ex)
@@ -121,17 +121,17 @@ public class ConnectionPeer
       throw err(ex);
     }
   }
-  
-  public Obj tableRow(Connection self, Str tableName)
+
+  public Object tableRow(Connection self, Str tableName)
   {
     try
     {
       DatabaseMetaData dbData = jconn.getMetaData();
       ResultSet columns = dbData.getColumns(null, null, tableName.val, null);
-  
+
       // map the meta-data to a dynamic type
       Type t = Type.makeDynamic(listOfRow);
-      
+
       int nameIndex = columns.findColumn("COLUMN_NAME");
       int typeIndex = columns.findColumn("DATA_TYPE");
       int typeNameIndex = columns.findColumn("TYPE_NAME");
@@ -148,12 +148,12 @@ public class ConnectionPeer
         }
         t.add(Col.make(Int.pos(colIndex++), Str.make(name), fanType, Str.make(typeName), null));
       }
-      
+
       if (colIndex == 0)
         throw SqlErr.make(Str.make("Table not found: " + tableName)).val;
-      
+
       Row row = (Row)t.make();
-      row.peer.cells = new Obj[t.fields().sz()];;
+      row.peer.cells = new Object[t.fields().sz()];;
       return row;
     }
     catch(SQLException ex)
@@ -167,7 +167,7 @@ public class ConnectionPeer
    */
   public Int lastAutoKey(Connection self)
   {
-    return lastAutoGen; 
+    return lastAutoGen;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -230,7 +230,7 @@ public class ConnectionPeer
   {
     return Int.make(++openCount);
   }
-  
+
   public Int decrement(Connection self)
   {
     if (openCount != 0) openCount--;
@@ -256,7 +256,7 @@ public class ConnectionPeer
         String keyVal = key.val;
         if (!keyVal.startsWith("sql.")) continue;
         if (!keyVal.endsWith(".driver")) continue;
-        
+
         String driver = ((Str)Sys.env().get(key)).val;
         try
         {
