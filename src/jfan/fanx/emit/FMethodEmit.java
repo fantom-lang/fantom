@@ -34,7 +34,7 @@ public class FMethodEmit
     this.emit     = emit;
     this.method   = method;
     this.code     = method.code;
-    this.name     = normalizeName(method.name);
+    this.name     = FanUtil.toJavaMethodName(method.name);
     this.jflags   = FTypeEmit.jflags(method.flags);
     this.paramLen = method.paramCount;
     this.isStatic = (method.flags & FConst.Static) != 0;
@@ -51,15 +51,6 @@ public class FMethodEmit
   public FMethodEmit(FTypeEmit emit)
   {
     this.emit = emit;
-  }
-
-  /**
-   * Get the Java method name to use for a Fan method.
-   */
-  String normalizeName(String name)
-  {
-    if (name.equals("equals")) return "_equals";
-    return name;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -226,7 +217,7 @@ public class FMethodEmit
   public void emitMixinRouter(Method m)
   {
     String parent  = "fan/" + m.parent().pod().name().val + "/" + m.parent().name().val;
-    String name    = normalizeName(m.name().val);
+    String name    = FanUtil.toJavaMethodName(m.name().val);
     int jflags     = emit.jflags(m.flags());
     List params    = m.params();
     int paramCount = params.sz();
@@ -391,7 +382,7 @@ public class FMethodEmit
    */
   private static void toSig(StringBuilder s, Type t)
   {
-    FPod.jname(s, t).append(';');
+    s.append('L').append(FanUtil.toJavaTypeSig(t)).append(';');
   }
 
 //////////////////////////////////////////////////////////////////////////

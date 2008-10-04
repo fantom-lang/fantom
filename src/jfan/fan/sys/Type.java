@@ -903,8 +903,7 @@ public class Type
   private void finishMethod(java.lang.reflect.Method m, boolean staticOnly)
   {
     this.finishing = m.getName();
-    String name = m.getName();
-    if (name.equals("_equals")) name = "equals";
+    String name = FanUtil.toFanMethodName(m.getName());
     Slot slot = slot(name, false);
     if (slot == null) return;
     if (slot.parent() != this) return;
