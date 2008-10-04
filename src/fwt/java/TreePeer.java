@@ -98,6 +98,50 @@ public class TreePeer
 // Native Methods
 //////////////////////////////////////////////////////////////////////////
 
+  public void select(fan.fwt.Tree self, Object node)
+  {
+    Tree c = (Tree)this.control;
+
+    TreeModel model = model();
+    if (model == null) return;
+
+    TreeItem item = item(node);
+    if (item == null) return;
+    c.select(item);
+  }
+
+  public void setExpanded(fan.fwt.Tree self, Object node, Bool expanded)
+  {
+    Tree c = (Tree)this.control;
+
+    TreeModel model = model();
+    if (model == null) return;
+
+    TreeItem item = item(node);
+    if (item == null) return;
+
+    lazyLoadChildren(item);
+    for (int i=0; i<item.getItemCount(); i++)
+    {
+      TreeItem child = item.getItem(i);
+      if (child.getData() == null)
+        setData(model.children(node).get(i), child);
+    }
+    item.setExpanded(expanded.val);
+  }
+
+  public void show(fan.fwt.Tree self, Object node)
+  {
+    Tree c = (Tree)this.control;
+
+    TreeModel model = model();
+    if (model == null) return;
+
+    TreeItem item = item(node);
+    if (item == null) return;
+    c.showItem(item);
+  }
+
   public void refreshAll(fan.fwt.Tree self)
   {
     Tree c = (Tree)this.control;
@@ -170,7 +214,6 @@ public class TreePeer
     TreeModel model = model();
     if (model == null) return;
 
-    Env env = Env.get();
     TreeItem item = (TreeItem)event.item;
     TreeItem parentItem = item.getParentItem();
 
@@ -190,9 +233,18 @@ public class TreePeer
       node = parentData.children.get(event.index);
     }
 
+    setData(node, item);
+  }
+
+  private void setData(Object node, TreeItem item)
+  {
+    TreeModel model = model();
+    if (model == null) return;
+
     Data data = new Data();
     data.node = node;
 
+    Env env = Env.get();
     item.setText(model.text(node).val);
     item.setImage(env.image(model.image(node)));
     item.setData(data);
