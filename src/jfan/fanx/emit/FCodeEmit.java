@@ -266,7 +266,7 @@ public class FCodeEmit
   private void loadFloat()
   {
     int index = u2();
-    int field = emit.field(podClass + ".F" + index + ":Lfan/sys/Float;");
+    int field = emit.field(podClass + ".F" + index + ":Ljava/lang/Double;");
     code.op2(GETSTATIC, field);
   }
 

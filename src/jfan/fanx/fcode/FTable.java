@@ -11,7 +11,6 @@ import java.io.*;
 import java.util.*;
 import fanx.util.*;
 import fan.sys.*;
-import fan.sys.Float;
 
 /**
  * FTable is a 16-bit indexed lookup table for pod constants.
@@ -224,7 +223,7 @@ public abstract class FTable
        size = in.u2();
        table = new Object[size];
        for (int i=0; i<size; ++i)
-         table[i] = Float.make( in.f8() );
+         table[i] = Double.valueOf( in.f8() );
        return this;
     }
   }

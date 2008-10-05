@@ -11,7 +11,6 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 import fan.sys.*;
-import fan.sys.Float;
 import fanx.util.*;
 
 /**
@@ -72,16 +71,15 @@ public final class FPod
     if (jcall == null || opcode == CallNonVirtual) // don't use cache on nonvirt (see below)
     {
       int[] m = methodRef(index).val;
-      String parent = jname(m[0]);
+      String type = jname(m[0]);
       String name = name(m[1]);
-      boolean onObj = parent.equals("java/lang/Object");
-      boolean explicitSelf = false;
 
-      // methods on java.lang.Object/sys::Obj are
-      // static methods on FanObj
-      if (onObj)
+      // if the type signature is java/lang then we route
+      // to static methods on FanObj, FanFloat, etc
+      String impl = FanUtil.toJavaImplSig(type);
+      boolean explicitSelf = false;
+      if (type != impl)
       {
-        parent = "fan/sys/FanObj";
         explicitSelf = opcode == CallVirtual;
       }
       else
@@ -96,16 +94,16 @@ public final class FPod
         name = FanUtil.toJavaMethodName(name);
 
       StringBuilder s = new StringBuilder();
-      s.append(parent);
+      s.append(impl);
       if (opcode == CallMixinStatic) s.append('$');
       s.append('.').append(name).append('(');
-      if (explicitSelf) s.append("Ljava/lang/Object;");
+      if (explicitSelf) s.append('L').append(type).append(';');
       for (int i=3; i<m.length; ++i)
         s.append('L').append(jname(m[i])).append(';');
       s.append(')');
 
       String ret = jname(m[2]);
-      if (opcode == CallNew) s.append('L').append(parent).append(';'); // factory
+      if (opcode == CallNew) s.append('L').append(type).append(';'); // factory
       else if (ret.equals("fan/sys/Void")) s.append('V');
       else s.append('L').append(ret).append(';');
 
@@ -116,7 +114,7 @@ public final class FPod
       // we don't cache nonvirtuals on Obj b/c of conflicting signatures:
       //  - CallVirtual:     Obj.toStr => static FanObj.toStr(Object)
       //  - CallNonVirtual:  Obj.toStr => FanObj.toStr()
-      if (!onObj || opcode != CallNonVirtual)
+      if (type == impl || opcode != CallNonVirtual)
         jcalls[index] = jcall;
     }
     return jcall;
@@ -139,7 +137,7 @@ public final class FPod
     {
       int[] f = fieldRef(index).val;
       StringBuilder s = new StringBuilder();
-      s.append(jname(f[0]));
+      s.append(FanUtil.toJavaImplSig(jname(f[0])));
       if (mixin) s.append('$');
       s.append('.').append(name(f[1]))
        .append(':').append('L').append(jname(f[2])).append(';');

@@ -20,11 +20,16 @@ class FloatTest : Test
   {
     Obj x := 3.0f
     verify(x.type === Float#)
+    verify(x.isImmutable)
 
     verify(x is Obj)
-    verify(x is Num)
+    //verify(x is Num) TODO
     verify(x is Float)
     verifyFalse(x is Int)
+
+    y := -4f
+    verify(y.type === Float#)
+    verify(y.isImmutable)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,7 +70,7 @@ class FloatTest : Test
   {
     verify(2.0f < 3.0f)
     verify(null < 3.0f)
-    verify(Float.nan < 0.1f)
+    verify(0.1f < Float.nan)
     verifyFalse(3.0f < 3.0f)
     verifyFalse(6.0f < 4.0f)
     verifyFalse(3.0f < null)
@@ -73,7 +78,7 @@ class FloatTest : Test
     verify(3.0f <= 3.0f)
     verify(3.0f <= 3.0f)
     verify(null <= 3f)
-    verify(Float.nan <= 0.1f)
+    verify(0.1f <= Float.nan)
     verify(Float.nan <= Float.nan)
     verify(Float.posInf <= Float.posInf)
     verifyFalse(6f <= 5f)
@@ -84,17 +89,17 @@ class FloatTest : Test
     verify(-2f > null)
     verify(Float.posInf > 1e17f)
     verify(Float.posInf > Float.negInf)
-    verify(Float.posInf > Float.nan)
+    verify(Float.nan > Float.posInf)
     verifyFalse(null > 77f)
     verifyFalse(3f > 4f)
-    verifyFalse(Float.nan >= 0f)
+    verifyFalse(0f >= Float.nan)
 
     verify(-3f >= -4f)
     verify(-3f >= -3f)
     verify(-3f >= null)
     verifyFalse(null >= 4f)
     verifyFalse(-3f >= -2f)
-    verifyFalse(Float.nan >= 0f)
+    verifyFalse(0f >= Float.nan)
 
     verifyEq(3f <=> 4f, -1)
     verifyEq(3f <=> 3f, 0)
@@ -106,15 +111,14 @@ class FloatTest : Test
     verifyEq(Float.negInf <=> 99f, -1)
     verifyEq(Float.negInf <=> 0f, -1)
 
-    // NaN is just less than null
-    verifyEq(Float.nan <=> 0f, -1)
+    verifyEq(Float.nan <=> 0f, 1)
     verifyEq(Float.nan <=> Float.nan, 0)
-    verifyEq(9e10f <=> Float.nan, 1)
+    verifyEq(9e10f <=> Float.nan, -1)
     verifyEq(null <=> Float.nan, -1)
     verifyEq(Float.nan <=> null, 1)
-    verifyEq(Float.posInf <=> Float.nan, 1)
-    verifyEq(Float.negInf <=> Float.nan, 1)
-    verifyEq(Float.nan <=> -9999f, -1)
+    verifyEq(Float.posInf <=> Float.nan, -1)
+    verifyEq(Float.negInf <=> Float.nan, -1)
+    verifyEq(Float.nan <=> -9999f, 1)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -375,6 +379,22 @@ class FloatTest : Test
     verifyEq(Float.fromStr("foo", false),  null)
     verifyErr(ParseErr#) |,| { Float.fromStr("no way!") }
     verifyErr(ParseErr#) |,| { Float.fromStr("%\$##", true) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Reflect
+//////////////////////////////////////////////////////////////////////////
+
+  Void testReflect()
+  {
+    verifyEq(Float#fromStr.call(["3.0"]), 3.0f)
+    verifyEq(Float#fromStr.call1("3.0"), 3.0f)
+    verifyEq(Float#fromStr.call2("xxx", false), null)
+
+    verifyEq(Float#minus.call([5f, 3f]), 2f)
+    verifyEq(Float#minus.call2(5f, 3f), 2f)
+    verifyEq(Float#minus.callOn(5f, [3f]), 2f)
+    verifyEq(Float#negate.callOn(5f, null), -5f)
   }
 
 }

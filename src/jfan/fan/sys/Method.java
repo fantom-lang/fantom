@@ -199,14 +199,14 @@ public class Method
 
     public Bool isImmutable()
     {
-      return Bool.make(isStatic().val || parent.isConst().val);
+      return Bool.make(Method.this.isStatic().val || parent.isConst().val);
     }
 
     public Object call(List args)
     {
       int argsSize = args == null ? 0 : args.sz();
 
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       int p = checkArgs(argsSize, isStatic, false);
       Object[] a = new Object[p];
 
@@ -226,26 +226,39 @@ public class Method
     public Object callOn(Object target, List args)
     {
       int argsSize = args == null ? 0 : args.sz();
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean javaStatic = isStatic();
+      boolean fanStatic = ((flags & (FConst.Static|FConst.Ctor)) != 0);
 
-      // we don't include target as part of arguments
-      int p = checkArgs(argsSize, isStatic, true);
-
-      Object[] a = new Object[p];
-      if (args != null && a.length > 0) args.toArray(a, 0, a.length);
-      return invoke(target, a);
+      if (javaStatic && !fanStatic)
+      {
+        // if Java static doesn't match Fan static, then this is
+        // a FanXXX method which we need to call as Java static
+        int p = checkArgs(argsSize, false, true);
+        Object[] a = new Object[p+1];
+        a[0] = target;
+        if (args != null && a.length > 0) args.copyInto(a, 1, a.length-1);
+        return invoke(null, a);
+      }
+      else
+      {
+        // we don't include target as part of arguments
+        int p = checkArgs(argsSize, javaStatic, true);
+        Object[] a = new Object[p];
+        if (args != null && a.length > 0) args.toArray(a, 0, a.length);
+        return invoke(target, a);
+      }
     }
 
     public Object call0()
     {
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       checkArgs(0, isStatic, false);
       return invoke(null, noArgs);
     }
 
     public Object call1(Object a)
     {
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       int p = checkArgs(1, isStatic, false);
       Object[] args = new Object[p];
       if (isStatic)
@@ -264,7 +277,7 @@ public class Method
 
     public Object call2(Object a, Object b)
     {
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       int p = checkArgs(2, isStatic, false);
       Object[] args = new Object[p];
       if (isStatic)
@@ -288,7 +301,7 @@ public class Method
 
     public Object call3(Object a, Object b, Object c)
     {
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       int p = checkArgs(3, isStatic, false);
       Object[] args = new Object[p];
       if (isStatic)
@@ -314,7 +327,7 @@ public class Method
 
     public Object call4(Object a, Object b, Object c, Object d)
     {
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       int p = checkArgs(4, isStatic, false);
       Object[] args = new Object[p];
       if (isStatic)
@@ -342,7 +355,7 @@ public class Method
 
     public Object call5(Object a, Object b, Object c, Object d, Object e)
     {
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       int p = checkArgs(5, isStatic, false);
       Object[] args = new Object[p];
       if (isStatic)
@@ -372,7 +385,7 @@ public class Method
 
     public Object call6(Object a, Object b, Object c, Object d, Object e, Object f)
     {
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       int p = checkArgs(6, isStatic, false);
       Object[] args = new Object[p];
       if (isStatic)
@@ -404,7 +417,7 @@ public class Method
 
     public Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g)
     {
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       int p = checkArgs(7, isStatic, false);
       Object[] args = new Object[p];
       if (isStatic)
@@ -438,7 +451,7 @@ public class Method
 
     public Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h)
     {
-      boolean isStatic = (flags & (FConst.Static|FConst.Ctor)) != 0;
+      boolean isStatic = isStatic();
       int p = checkArgs(8, isStatic, false);
       Object[] args = new Object[p];
       if (isStatic)
@@ -472,11 +485,24 @@ public class Method
       }
     }
 
+    private boolean isStatic()
+    {
+      try
+      {
+        // ensure parent has finished emitting so that reflect is populated
+        parent.finish();
+
+        // return if Java method(s) is static
+        return Modifier.isStatic(reflect[0].getModifiers());
+      }
+      catch (Exception e)
+      {
+        throw Err.make("Method not mapped to java.lang.reflect correctly " + qname()).val;
+      }
+    }
+
     private int checkArgs(int args, boolean isStatic, boolean isCallOn)
     {
-      // ensure parent has finished emitting so that reflect is populated
-      parent.finish();
-
       // compuate min/max parameters - reflect contains all the method versions
       // with full params at index zero, and full defaults at reflect.length-1
       int max = params.sz();

@@ -9,7 +9,6 @@ package fan.sql;
 
 import java.sql.*;
 import fan.sys.*;
-import fan.sys.Float;
 
 public class SqlUtil
 {
@@ -84,7 +83,7 @@ public class SqlUtil
       case Types.DOUBLE:
         double f = rs.getDouble(col);
         if (rs.wasNull()) return null;
-        return Float.make(f);
+        return Double.valueOf(f);
 
       case Types.BINARY:
       case Types.VARBINARY:
@@ -183,7 +182,7 @@ public class SqlUtil
     {
       double f = rs.getDouble(col);
       if (rs.wasNull()) return null;
-      return Float.make(f);
+      return Double.valueOf(f);
     }
   }
 

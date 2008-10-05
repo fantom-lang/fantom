@@ -170,14 +170,14 @@ public final class Duration
     return make(ticks - x.ticks);
   }
 
-  public final Duration mult(Float x)
+  public final Duration mult(Double x)
   {
-    return make((long)(ticks * x.val));
+    return make((long)(ticks * x.doubleValue()));
   }
 
-  public final Duration div(Float x)
+  public final Duration div(Double x)
   {
-    return make((long)(ticks / x.val));
+    return make((long)(ticks / x.doubleValue()));
   }
 
   public final Duration floor(Duration accuracy)

@@ -7,6 +7,8 @@
 //
 package fan.sys;
 
+import fanx.util.*;
+
 /**
  * FanObj is the root class of all classes in Fan - it is the class
  * representation of Obj.
@@ -55,6 +57,8 @@ public class FanObj
   {
     if (self instanceof FanObj)
       return ((FanObj)self).compare(x);
+    else if (self instanceof Comparable)
+      return Int.make(((Comparable)self).compareTo(x));
     else
       return toStr(self).compare(toStr(x));
   }
@@ -95,7 +99,7 @@ public class FanObj
     if (self instanceof FanObj)
       return ((FanObj)self).isImmutable();
     else
-      return Bool.False;
+      return Bool.make(FanUtil.isJavaImmutable(self.getClass()));
   }
 
   public Bool isImmutable()
@@ -105,7 +109,10 @@ public class FanObj
 
   public static Type type(Object self)
   {
-    return ((FanObj)self).type();
+    if (self instanceof FanObj)
+      return ((FanObj)self).type();
+    else
+      return FanUtil.toFanType(self.getClass(), true);
   }
 
   public Type type()

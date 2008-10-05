@@ -10,7 +10,6 @@ package fanx.serial;
 
 import java.math.*;
 import fan.sys.*;
-import fan.sys.Float;
 import fanx.util.StrUtil;
 
 /**
@@ -253,9 +252,9 @@ public class Tokenizer
       if (floatSuffix)
       {
         if (s == null)
-          this.val = Float.make((double)whole);
+          this.val = Double.valueOf((double)whole);
         else
-          this.val = Float.make(Double.parseDouble(s.toString()));
+          this.val = Double.valueOf(Double.parseDouble(s.toString()));
         return Token.FLOAT_LITERAL;
       }
 

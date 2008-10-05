@@ -51,6 +51,11 @@ public class ObjEncoder
       return;
     }
 
+    if (obj instanceof Number)
+    {
+      if (obj instanceof Double) { FanFloat.encode((Double)obj, this); return; }
+    }
+
     if (obj instanceof Literal)
     {
       ((Literal)obj).encode(this);

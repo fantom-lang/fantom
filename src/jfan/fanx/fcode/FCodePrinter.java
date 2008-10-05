@@ -120,7 +120,7 @@ public class FCodePrinter
 
   static final int None     = -1;
   static final int Int      = 0;
-  static final int Float     = 1;
+  static final int Float    = 1;
   static final int Str      = 2;
   static final int Dur      = 3;
   static final int Uri      = 4;

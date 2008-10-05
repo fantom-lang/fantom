@@ -435,12 +435,12 @@
 - Flux prototype!
 
 *Build 1.0.33 (working)*
-- Refactor Java runtime to replace fan.sys.Obj with java.lang.Object
+- Java runtime: fan.sys.Obj -> java.lang.Object
+- Java runtime: fan.sys.Float -> java.lang.Double
 - Add build::CreateZip task, buildall.fan handles dist zip
 - Fix RichText editor home/end to take whitespace into account
 - Change fwt::Image constructors
 - Add icons to flux history items
-
 
 
 
