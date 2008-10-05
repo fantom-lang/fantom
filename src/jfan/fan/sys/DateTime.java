@@ -66,12 +66,12 @@ public final class DateTime
 // Constructor - Values
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime make(Int year, Month month, Int day, Int hour, Int min) { return make(year, month, day, hour, min, Int.Zero, Int.Zero, TimeZone.current); }
-  public static DateTime make(Int year, Month month, Int day, Int hour, Int min, Int sec) { return make(year, month, day, hour, min, sec, Int.Zero, TimeZone.current); }
-  public static DateTime make(Int year, Month month, Int day, Int hour, Int min, Int sec, Int ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.current); }
-  public static DateTime make(Int year, Month month, Int day, Int hour, Int min, Int sec, Int ns, TimeZone tz)
+  public static DateTime make(Long year, Month month, Long day, Long hour, Long min) { return make(year, month, day, hour, min, 0L, 0L, TimeZone.current); }
+  public static DateTime make(Long year, Month month, Long day, Long hour, Long min, Long sec) { return make(year, month, day, hour, min, sec, 0L, TimeZone.current); }
+  public static DateTime make(Long year, Month month, Long day, Long hour, Long min, Long sec, Long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.current); }
+  public static DateTime make(Long year, Month month, Long day, Long hour, Long min, Long sec, Long ns, TimeZone tz)
   {
-    return new DateTime((int)year.val, month.ord, (int)day.val, (int)hour.val, (int)min.val, (int)sec.val, ns.val, Integer.MAX_VALUE, tz);
+    return new DateTime(year.intValue(), month.ord, day.intValue(), hour.intValue(), min.intValue(), sec.intValue(), ns.longValue(), Integer.MAX_VALUE, tz);
   }
 
   private DateTime(int year, int month, int day,
@@ -135,8 +135,8 @@ public final class DateTime
 // Constructor - Ticks
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime makeTicks(Int ticks) { return makeTicks(ticks.val, TimeZone.current); }
-  public static DateTime makeTicks(Int ticks, TimeZone tz) { return makeTicks(ticks.val, tz); }
+  public static DateTime makeTicks(Long ticks) { return makeTicks(ticks.longValue(), TimeZone.current); }
+  public static DateTime makeTicks(Long ticks, TimeZone tz) { return makeTicks(ticks.longValue(), tz); }
   public static DateTime makeTicks(long ticks, TimeZone tz)
   {
     return new DateTime(ticks, tz);
@@ -323,10 +323,10 @@ public final class DateTime
     return false;
   }
 
-  public Int compare(Object obj)
+  public Long compare(Object obj)
   {
     long that = ((DateTime)obj).ticks;
-    if (ticks < that) return Int.LT; return ticks  == that ? Int.EQ : Int.GT;
+    if (ticks < that) return FanInt.LT; return ticks  == that ? FanInt.EQ : FanInt.GT;
   }
 
   public int hashCode()
@@ -334,9 +334,9 @@ public final class DateTime
     return (int)(ticks ^ (ticks >>> 32));
   }
 
-  public Int hash()
+  public Long hash()
   {
-    return Int.make(ticks);
+    return Long.valueOf(ticks);
   }
 
   public Type type()
@@ -348,31 +348,31 @@ public final class DateTime
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public final Int ticks() { return Int.make(ticks); }
+  public final Long ticks() { return Long.valueOf(ticks); }
   public final long getTicks() { return ticks; }
 
-  public final Int year() { return Int.make((fields & 0xff) + 1900); }
+  public final Long year() { return Long.valueOf((fields & 0xff) + 1900); }
   public final int getYear() { return (fields & 0xff) + 1900; }
 
   public final Month month() { return Month.array[(fields >> 8) & 0xf]; }
 
-  public final Int day() { return Int.pos[(fields >> 12) & 0x1f]; }
+  public final Long day() { return FanInt.pos[(fields >> 12) & 0x1f]; }
   public final int getDay() { return (fields >> 12) & 0x1f; }
 
-  public final Int hour() { return Int.pos[(fields >> 17) & 0x1f]; }
+  public final Long hour() { return FanInt.pos[(fields >> 17) & 0x1f]; }
   public final int getHour() { return (fields >> 17) & 0x1f; }
 
-  public final Int min() { return Int.pos[(fields >> 22) & 0x3f]; }
+  public final Long min() { return FanInt.pos[(fields >> 22) & 0x3f]; }
   public final int getMin() { return (fields >> 22) & 0x3f; }
 
-  public final Int sec() { return Int.pos[getSec()]; }
+  public final Long sec() { return FanInt.pos[getSec()]; }
   public final int getSec()
   {
     long rem = ticks >= 0 ? ticks : ticks - yearTicks[0];
     return (int)((rem % nsPerMin) / nsPerSec);
   }
 
-  public final Int nanoSec() { return Int.make(getNanoSec()); }
+  public final Long nanoSec() { return Long.valueOf(getNanoSec()); }
   public final int getNanoSec()
   {
     long rem = ticks >= 0 ? ticks : ticks - yearTicks[0];
@@ -388,7 +388,7 @@ public final class DateTime
 
   public final Str timeZoneAbbr() { return getDST() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
 
-  public final Int dayOfYear() { return Int.pos(dayOfYear(getYear(), month().ord, getDay())+1); }
+  public final Long dayOfYear() { return Long.valueOf(dayOfYear(getYear(), month().ord, getDay())+1); }
 
 //////////////////////////////////////////////////////////////////////////
 // Locale
@@ -587,7 +587,7 @@ public final class DateTime
           break;
 
         default:
-          if (Int.isAlpha(c))
+          if (FanInt.isAlpha(c))
             throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
 
           // don't display symbol between ss.FFF if fractions is zero
@@ -648,16 +648,16 @@ public final class DateTime
     return Str.make(toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz"));
   }
 
-  public static Boolean isLeapYear(Int year) { return isLeapYear((int)year.val); }
+  public static Boolean isLeapYear(Long year) { return isLeapYear(year.intValue()); }
   public static boolean isLeapYear(int year)
   {
     if ((year & 3) != 0) return false;
     return (year % 100 != 0) || (year % 400 == 0);
   }
 
-  public static Int weekdayInMonth(Int year, Month mon, Weekday weekday, Int pos)
+  public static Long weekdayInMonth(Long year, Month mon, Weekday weekday, Long pos)
   {
-    return Int.pos(weekdayInMonth((int)year.val, mon.ord, weekday.ord, (int)pos.val));
+    return Long.valueOf(weekdayInMonth(year.intValue(), mon.ord, weekday.ord, pos.intValue()));
   }
   public static int weekdayInMonth(int year, int mon, int weekday, int pos)
   {

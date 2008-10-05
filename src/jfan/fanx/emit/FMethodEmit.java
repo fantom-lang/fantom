@@ -74,10 +74,10 @@ public class FMethodEmit
    * factory methods, so that that CallNew can just push args
    * and invoke them
    *   fan:
-   *     class Foo { new make(Int a) { ... } }
+   *     class Foo { new make(Long a) { ... } }
    *   java:
-   *     static Foo make(Int a) { return make$(new Foo(), a) }
-   *     static Foo make$(Foo self, Int a) { ... return self }
+   *     static Foo make(Long a) { return make$(new Foo(), a) }
+   *     static Foo make$(Foo self, Long a) { ... return self }
    *
    * We call the first method "make" the "factory" and the
    * second method "make$" the "body".  CallNew opcodes are

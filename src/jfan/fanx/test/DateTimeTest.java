@@ -150,19 +150,19 @@ public class DateTimeTest
   {
     Date date = new Date(millis);
     cal.setTime(date);
-    DateTime dt = DateTime.makeTicks(Int.make((millis-946684800000L)*1000000L), tzFan);
+    DateTime dt = DateTime.makeTicks(Long.valueOf((millis-946684800000L)*1000000L), tzFan);
     int year = cal.get(Calendar.YEAR);
     String name = tzFan.name().val;
 
     try
     {
-      verifyEq(year,                             dt.year().val);
-      verifyEq(cal.get(Calendar.MONTH),          dt.month().ordinal().val);
-      verifyEq(cal.get(Calendar.DAY_OF_MONTH),   dt.day().val);
-      verifyEq(cal.get(Calendar.HOUR_OF_DAY),    dt.hour().val);
-      verifyEq(cal.get(Calendar.MINUTE),         dt.min().val);
-      verifyEq(cal.get(Calendar.SECOND),         dt.sec().val);
-      verifyEq(cal.get(Calendar.DAY_OF_WEEK)-1,  dt.weekday().ordinal().val);
+      verifyEq(year,                             dt.year().longValue());
+      verifyEq(cal.get(Calendar.MONTH),          dt.month().ordinal().longValue());
+      verifyEq(cal.get(Calendar.DAY_OF_MONTH),   dt.day().longValue());
+      verifyEq(cal.get(Calendar.HOUR_OF_DAY),    dt.hour().longValue());
+      verifyEq(cal.get(Calendar.MINUTE),         dt.min().longValue());
+      verifyEq(cal.get(Calendar.SECOND),         dt.sec().longValue());
+      verifyEq(cal.get(Calendar.DAY_OF_WEEK)-1,  dt.weekday().ordinal().longValue());
       verifyEq(cal.getTimeZone().inDaylightTime(date), dt.dst());
     }
     catch (RuntimeException e)

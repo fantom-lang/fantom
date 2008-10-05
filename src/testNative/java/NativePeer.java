@@ -22,37 +22,37 @@ public class NativePeer
     return peer;
   }
 
-  public static Int doStaticA()
+  public static Long doStaticA()
   {
-    return Int.make(2006);
+    return 2006L;
   }
 
-  public static Int doStaticB(Int a, Int b)
+  public static Long doStaticB(Long a, Long b)
   {
-    return a.plus(b);
+    return Long.valueOf(a.longValue() + b.longValue());
   }
 
-  public Int fX(Native t) { return t.x; }
-  public void fX(Native t, Int x) { t.x = x; }
+  public Long fX(Native t) { return t.x; }
+  public void fX(Native t, Long x) { t.x = x; }
 
-  public Int fA(Native t) { return fA; }
-  public void fA(Native t, Int x) { fA = x; }
+  public Long fA(Native t) { return fA; }
+  public void fA(Native t, Long x) { fA = x; }
 
   public Str fV(Native t) { return fV; }
   public void fV(Native t, Str x) { fV = x; }
 
-  public Int getPeerZ(Native t)
+  public Long getPeerZ(Native t)
   {
     return z;
   }
 
-  public void setPeerZ(Native t, Int z)
+  public void setPeerZ(Native t, Long z)
   {
     if (t.peer != this) throw new RuntimeException();
     this.z = z;
   }
 
-  public Int getCtorY(Native t)
+  public Long getCtorY(Native t)
   {
     return ctorY;
   }
@@ -65,9 +65,9 @@ public class NativePeer
   public static Str sdefs2(Str a, Str b) { return Str.make(a.val+b.val);  }
   public static Str sdefs3(Str a, Str b, Str c) { return Str.make(a.val+b.val+c.val);  }
 
-  Int ctorY;  // value of y during make()
-  Int z;
-  Int fA = Int.make(444);
+  Long ctorY;  // value of y during make()
+  Long z;
+  Long fA = 444L;
   Str fV = Str.make("fV");
 
 }

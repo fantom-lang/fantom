@@ -37,28 +37,28 @@ public class OpUtil
   {
     if (a == null) return (b != null);
     if (b == null) return false;
-    return FanObj.compare(a, b).val < 0;
+    return FanObj.compare(a, b).longValue() < 0;
   }
 
   public static boolean compareLEz(Object a, Object b)
   {
     if (a == null) return true;
     if (b == null) return false;
-    return FanObj.compare(a, b).val <= 0;
+    return FanObj.compare(a, b).longValue() <= 0;
   }
 
   public static boolean compareGEz(Object a, Object b)
   {
     if (a == null) return (b == null);
     if (b == null) return true;
-    return FanObj.compare(a, b).val >= 0;
+    return FanObj.compare(a, b).longValue() >= 0;
   }
 
   public static boolean compareGTz(Object a, Object b)
   {
     if (a == null) return false;
     if (b == null) return true;
-    return FanObj.compare(a, b).val > 0;
+    return FanObj.compare(a, b).longValue() > 0;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -79,10 +79,10 @@ public class OpUtil
     return !a.equals(b);
   }
 
-  public static Int compare(Object a, Object b)
+  public static Long compare(Object a, Object b)
   {
-    if (a == null) return (b == null) ? Int.EQ : Int.LT;
-    if (b == null) return Int.GT;
+    if (a == null) return (b == null) ? FanInt.EQ : FanInt.LT;
+    if (b == null) return FanInt.GT;
     return FanObj.compare(a, b);
   }
 
@@ -90,28 +90,28 @@ public class OpUtil
   {
     if (a == null) return (b != null);
     if (b == null) return false;
-    return FanObj.compare(a, b).val < 0;
+    return FanObj.compare(a, b).longValue() < 0;
   }
 
   public static Boolean compareLE(Object a, Object b)
   {
     if (a == null) return true;
     if (b == null) return false;
-    return FanObj.compare(a, b).val <= 0;
+    return FanObj.compare(a, b).longValue() <= 0;
   }
 
   public static Boolean compareGE(Object a, Object b)
   {
     if (a == null) return (b == null);
     if (b == null) return true;
-    return FanObj.compare(a, b).val >= 0;
+    return FanObj.compare(a, b).longValue() >= 0;
   }
 
   public static Boolean compareGT(Object a, Object b)
   {
     if (a == null) return false;
     if (b == null) return true;
-    return FanObj.compare(a, b).val > 0;
+    return FanObj.compare(a, b).longValue() > 0;
   }
 
   public static Boolean compareSame(Object a, Object b) // need to use Object for mixins

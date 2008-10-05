@@ -154,12 +154,12 @@ public class Process
     }
   }
 
-  public final Int join()
+  public final Long join()
   {
     if (proc == null) throw Err.make("Process not running").val;
     try
     {
-      return Int.make(proc.waitFor());
+      return Long.valueOf(proc.waitFor());
     }
     catch (Throwable e)
     {

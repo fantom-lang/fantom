@@ -76,7 +76,7 @@ public final class Duration
     }
   }
 
-  public static Duration make(Int ticks) { return make(ticks.val); }
+  public static Duration make(Long ticks) { return make(ticks.longValue()); }
   public static Duration make(long ticks)
   {
     if (ticks == 0) return Zero;
@@ -125,10 +125,10 @@ public final class Duration
       return false;
   }
 
-  public final Int compare(Object obj)
+  public final Long compare(Object obj)
   {
     long that = ((Duration)obj).ticks;
-    if (ticks < that) return Int.LT; return ticks  == that ? Int.EQ : Int.GT;
+    if (ticks < that) return FanInt.LT; return ticks  == that ? FanInt.EQ : FanInt.GT;
   }
 
   public final int hashCode()
@@ -136,14 +136,14 @@ public final class Duration
     return (int)(ticks ^ (ticks >>> 32));
   }
 
-  public final Int hash()
+  public final Long hash()
   {
-    return Int.make(ticks);
+    return Long.valueOf(ticks);
   }
 
-  public final Int ticks()
+  public final Long ticks()
   {
-    return Int.make(ticks);
+    return Long.valueOf(ticks);
   }
 
   public final Type type()
@@ -218,29 +218,29 @@ public final class Duration
     return ns + "ns";
   }
 
-  public final Int toMillis()
+  public final Long toMillis()
   {
-    return Int.make(ticks/nsPerMilli);
+    return Long.valueOf(ticks/nsPerMilli);
   }
 
-  public final Int toSec()
+  public final Long toSec()
   {
-    return Int.make(ticks/nsPerSec);
+    return Long.valueOf(ticks/nsPerSec);
   }
 
-  public final Int toMin()
+  public final Long toMin()
   {
-    return Int.make(ticks/nsPerMin);
+    return Long.valueOf(ticks/nsPerMin);
   }
 
-  public final Int toHour()
+  public final Long toHour()
   {
-    return Int.make(ticks/nsPerHr);
+    return Long.valueOf(ticks/nsPerHr);
   }
 
-  public final Int toDay()
+  public final Long toDay()
   {
-    return Int.make(ticks/nsPerDay);
+    return Long.valueOf(ticks/nsPerDay);
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -180,12 +180,12 @@ public class MmapBuf
 // Buf API
 //////////////////////////////////////////////////////////////////////////
 
-  public Int capacity()
+  public Long capacity()
   {
     return size();
   }
 
-  public void capacity(Int x)
+  public void capacity(Long x)
   {
     throw UnsupportedErr.make("mmap capacity fixed").val;
   }
@@ -228,16 +228,16 @@ public class MmapBuf
 
   class MmapBufOutStream extends OutStream
   {
-    public final OutStream write(Int v) { return w((int)v.val); }
+    public final OutStream write(Long v) { return w(v.intValue()); }
     public final OutStream w(int v)
     {
       mmap.put((byte)v);
       return this;
     }
 
-    public OutStream writeBuf(Buf other, Int n)
+    public OutStream writeBuf(Buf other, Long n)
     {
-      other.pipeTo(mmap, (int)n.val);
+      other.pipeTo(mmap, n.intValue());
       return this;
     }
 
@@ -254,29 +254,29 @@ public class MmapBuf
 
   class MmapBufInStream extends InStream
   {
-    public Int read() { int n = r(); return n < 0 ? null : Int.pos[n]; }
+    public Long read() { int n = r(); return n < 0 ? null : FanInt.pos[n]; }
     public int r()
     {
       return mmap.get() & 0xff;
     }
 
-    public Int readBuf(Buf other, Int n)
+    public Long readBuf(Buf other, Long n)
     {
-      int read = other.pipeFrom(mmap, (int)n.val);
+      int read = other.pipeFrom(mmap, n.intValue());
       if (read < 0) return null;
-      return Int.pos(read);
+      return Long.valueOf(read);
     }
 
-    public InStream unread(Int n) { return unread((int)n.val); }
+    public InStream unread(Long n) { return unread(n.intValue()); }
     public InStream unread(int n)
     {
       mmap.put(mmap.position()-1, (byte)n);
       return this;
     }
 
-    public Int peek()
+    public Long peek()
     {
-      return Int.pos[mmap.get(mmap.position())];
+      return FanInt.pos[mmap.get(mmap.position())];
     }
   }
 

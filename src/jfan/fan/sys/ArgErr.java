@@ -19,7 +19,7 @@ public class ArgErr
 //////////////////////////////////////////////////////////////////////////
 
   public static ArgErr make(String msg)  { return make(Str.make(msg)); }
-  public static ArgErr make(Int index)   { return make(Str.make(String.valueOf(index))); }
+  public static ArgErr make(Long index)   { return make(Str.make(String.valueOf(index))); }
   public static ArgErr make(Range index) { return make(Str.make(String.valueOf(index))); }
 
 //////////////////////////////////////////////////////////////////////////

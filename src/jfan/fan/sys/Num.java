@@ -8,13 +8,13 @@
 package fan.sys;
 
 /**
- * Num is the base class for numbers including Int and Float.
+ * Num is the base class for numbers including Long and Float.
  */
 public abstract class Num
   extends FanObj
 {
 
-  public abstract Int toInt();
+  public abstract Long toInt();
 
   public abstract Double toFloat();
 

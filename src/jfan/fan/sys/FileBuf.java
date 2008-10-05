@@ -362,7 +362,7 @@ public class FileBuf
 
   class FileBufOutStream extends OutStream
   {
-    public final OutStream write(Int v) { return w((int)v.val); }
+    public final OutStream write(Long v) { return w(v.intValue()); }
     public final OutStream w(int v)
     {
       try
@@ -376,11 +376,11 @@ public class FileBuf
       }
     }
 
-    public OutStream writeBuf(Buf other, Int n)
+    public OutStream writeBuf(Buf other, Long n)
     {
       try
       {
-        other.pipeTo(fp, n.val);
+        other.pipeTo(fp, n.longValue());
         return this;
       }
       catch (IOException e)
@@ -402,7 +402,7 @@ public class FileBuf
 
   class FileBufInStream extends InStream
   {
-    public Int read() { int n = r(); return n < 0 ? null : Int.pos[n]; }
+    public Long read() { int n = r(); return n < 0 ? null : FanInt.pos[n]; }
     public int r()
     {
       try
@@ -415,13 +415,13 @@ public class FileBuf
       }
     }
 
-    public Int readBuf(Buf other, Int n)
+    public Long readBuf(Buf other, Long n)
     {
       try
       {
-        long read = other.pipeFrom(fp, n.val);
+        long read = other.pipeFrom(fp, n.longValue());
         if (read < 0) return null;
-        return Int.pos(read);
+        return Long.valueOf(read);
       }
       catch (IOException e)
       {
@@ -429,7 +429,7 @@ public class FileBuf
       }
     }
 
-    public InStream unread(Int n) { return unread((int)n.val); }
+    public InStream unread(Long n) { return unread(n.intValue()); }
     public InStream unread(int n)
     {
       try
@@ -446,14 +446,14 @@ public class FileBuf
       }
     }
 
-    public Int peek()
+    public Long peek()
     {
       try
       {
         long pos = getPos();
         int n = fp.read();
         setPos(pos);
-        return n < 0 ? null : Int.pos[n];
+        return n < 0 ? null : FanInt.pos[n];
       }
       catch (IOException e)
       {

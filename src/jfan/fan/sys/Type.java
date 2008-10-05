@@ -117,8 +117,8 @@ public class Type
   {
     // private undocumented access
     String n = name.val;
-    if (n.equals("flags"))      return Int.make(flags);
-    if (n.equals("lineNumber")) { reflect(); return Int.make(lineNum); }
+    if (n.equals("flags"))      return Long.valueOf(flags);
+    if (n.equals("lineNumber")) { reflect(); return Long.valueOf(lineNum); }
     if (n.equals("sourceFile")) { reflect(); return Str.make(sourceFile); }
     return super.trap(name, args);
   }
@@ -671,7 +671,7 @@ public class Type
    * Merge the inherit's slots into my slot maps.
    *  slots:       Slot[] by order
    *  nameToSlot:  String name -> Slot
-   *  nameToIndex: String name -> Int index of slots
+   *  nameToIndex: String name -> Long index of slots
    */
   private void merge(Type inheritedType, List slots, HashMap nameToSlot, HashMap nameToIndex)
   {
@@ -687,7 +687,7 @@ public class Type
    * and my slots in the right order)
    *  slots:       Slot[] by order
    *  nameToSlot:  String name -> Slot
-   *  nameToIndex: String name -> Int index of slots
+   *  nameToIndex: String name -> Long index of slots
    */
   private void merge(Slot slot, List slots, HashMap nameToSlot, HashMap nameToIndex)
   {
@@ -695,7 +695,7 @@ public class Type
     if (slot.isCtor() && slot.parent != this) return;
 
     String name = slot.name.val;
-    Int dup = (Int)nameToIndex.get(name);
+    Long dup = (Long)nameToIndex.get(name);
     if (dup != null)
     {
       // if the slot is inherited from Obj, then we can
@@ -728,7 +728,7 @@ public class Type
     {
       nameToSlot.put(name, slot);
       slots.add(slot);
-      nameToIndex.put(name, Int.make(slots.sz()-1));
+      nameToIndex.put(name, Long.valueOf(slots.sz()-1));
     }
   }
 

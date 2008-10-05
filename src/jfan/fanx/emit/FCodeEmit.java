@@ -259,7 +259,7 @@ public class FCodeEmit
   private void loadInt()
   {
     int index = u2();
-    int field = emit.field(podClass + ".I" + index + ":Lfan/sys/Int;");
+    int field = emit.field(podClass + ".I" + index + ":Ljava/lang/Long;");
     code.op2(GETSTATIC, field);
   }
 
@@ -614,7 +614,7 @@ public class FCodeEmit
 
   private void compare()
   {
-    if (parent.Compare == 0) parent.Compare = emit.method("fanx/util/OpUtil.compare(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Int;");
+    if (parent.Compare == 0) parent.Compare = emit.method("fanx/util/OpUtil.compare(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Long;");
     code.op2(INVOKESTATIC, parent.Compare);
   }
 
@@ -962,8 +962,8 @@ public class FCodeEmit
 
   private void loadIntVal()
   {
-    if (parent.IntVal == 0) parent.IntVal = emit.field("fan/sys/Int.val:J");
-    code.op2(GETFIELD, parent.IntVal);
+    if (parent.IntVal == 0) parent.IntVal = emit.method("java/lang/Long.longValue()J");
+    code.op2(INVOKEVIRTUAL, parent.IntVal);
   }
 
   private void boolMake()

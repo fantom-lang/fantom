@@ -34,7 +34,7 @@ public class LogLevel
 
   private LogLevel(int ord, String name)
   {
-    Enum.make$(this, Int.pos[ord], Str.make(name).intern());
+    Enum.make$(this, FanInt.pos[ord], Str.make(name).intern());
     this.ord = ord;
   }
 

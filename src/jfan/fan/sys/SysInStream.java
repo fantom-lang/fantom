@@ -20,12 +20,12 @@ public class SysInStream
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public static SysInStream make(java.io.InputStream in, Int bufSize)
+  public static SysInStream make(java.io.InputStream in, Long bufSize)
   {
-    if (bufSize == null || bufSize.val == 0)
+    if (bufSize == null || bufSize.longValue() == 0)
       return new SysInStream(in);
     else
-      return new SysInStream(new java.io.BufferedInputStream(in, (int)bufSize.val));
+      return new SysInStream(new java.io.BufferedInputStream(in, bufSize.intValue()));
   }
 
   public SysInStream(InputStream in)
@@ -43,7 +43,7 @@ public class SysInStream
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-  public Int read() { int n = r(); return n < 0 ? null : Int.pos[n]; }
+  public Long read() { int n = r(); return n < 0 ? null : FanInt.pos[n]; }
   public int r()
   {
     try
@@ -56,13 +56,13 @@ public class SysInStream
     }
   }
 
-  public Int readBuf(Buf buf, Int n)
+  public Long readBuf(Buf buf, Long n)
   {
     try
     {
-      long read = buf.pipeFrom(in, n.val);
+      long read = buf.pipeFrom(in, n.longValue());
       if (read < 0) return null;
-      return Int.pos(read);
+      return Long.valueOf(read);
     }
     catch (IOException e)
     {
@@ -70,7 +70,7 @@ public class SysInStream
     }
   }
 
-  public InStream unread(Int n) { return unread((int)n.val); }
+  public InStream unread(Long n) { return unread(n.intValue()); }
   public InStream unread(int n)
   {
     try
@@ -88,13 +88,13 @@ public class SysInStream
     }
   }
 
-  public Int skip(Int n)
+  public Long skip(Long n)
   {
     try
     {
-      long skipped = in.skip(n.val);
-      if (skipped < 0) return Int.Zero;
-      return Int.pos(skipped);
+      long skipped = in.skip(n.longValue());
+      if (skipped < 0) return FanInt.Zero;
+      return Long.valueOf(skipped);
     }
     catch (IOException e)
     {
@@ -144,10 +144,10 @@ public class SysInStream
       buf.buf = b;
       buf.pos = off;
       buf.size = b.length;
-      Int n = in.readBuf(buf, Int.make(len));
+      Long n = in.readBuf(buf, Long.valueOf(len));
       buf.buf = null;
       if (n == null) return -1;
-      return (int)n.val;
+      return n.intValue();
     }
 
     public void close() { in.close(); }

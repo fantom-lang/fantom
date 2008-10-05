@@ -98,7 +98,7 @@ public class Locale
 
   public int hashCode() { return str.hashCode(); }
 
-  public Int hash() { return str.hash(); }
+  public Long hash() { return str.hash(); }
 
   public Boolean _equals(Object obj)
   {

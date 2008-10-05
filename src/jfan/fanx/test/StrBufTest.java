@@ -35,19 +35,19 @@ public class StrBufTest
     Str a = Str.make("foobar ");
     Str b = Str.make(" yippee!");
 
-    System.out.println("Java: " + java(a, b, Int.Zero));
-    System.out.println("Fan:  " +  fan(a, b, Int.Zero));
+    System.out.println("Java: " + java(a, b, 0L));
+    System.out.println("Fan:  " +  fan(a, b, 0L));
 
     long t1 = System.nanoTime();
-    for (int i=0; i<100000; ++i) java(a, b, Int.make(i % Int.POS));
+    for (int i=0; i<100000; ++i) java(a, b, Long.valueOf(i % FanInt.POS));
     long t2 = System.nanoTime();
-    for (int i=0; i<100000; ++i) fan(a, b, Int.make(i % Int.POS));
+    for (int i=0; i<100000; ++i) fan(a, b, Long.valueOf(i % FanInt.POS));
     long t3 = System.nanoTime();
 
     long t4 = System.nanoTime();
-    for (int i=0; i<1000000; ++i) fan(a, b, Int.make(i % Int.POS));
+    for (int i=0; i<1000000; ++i) fan(a, b, Long.valueOf(i % FanInt.POS));
     long t5 = System.nanoTime();
-    for (int i=0; i<1000000; ++i) java(a, b, Int.make(i % Int.POS));
+    for (int i=0; i<1000000; ++i) java(a, b, Long.valueOf(i % FanInt.POS));
     long t6 = System.nanoTime();
 
     System.out.println("Java: " + (t2-t1) + "ns");
@@ -57,14 +57,14 @@ public class StrBufTest
     System.out.println("Fan:  " + (t5-t4) + "ns");
   }
 
-  public Str java(Str a, Str b, Int i)
+  public Str java(Str a, Str b, Long i)
   {
     StringBuilder s = new StringBuilder();
-    s.append(a.val).append(i.val).append(b.val);
+    s.append(a).append(i).append(b);
     return Str.make(s.toString());
   }
 
-  public Str fan(Str a, Str b, Int i)
+  public Str fan(Str a, Str b, Long i)
   {
     StrBuf s = new StrBuf(new StringBuilder());
     s.add(a).add(i).add(b);

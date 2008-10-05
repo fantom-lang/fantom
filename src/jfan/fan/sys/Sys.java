@@ -54,8 +54,8 @@ public class Sys
 
   public static Str userName() { return userName; }
 
-  public static void exit() { exit(Int.Zero); }
-  public static void exit(Int status) { System.exit((int)status.val); }
+  public static void exit() { exit(0L); }
+  public static void exit(Long status) { System.exit(status.intValue()); }
 
   public static InStream  in()  { return StdIn; }
   public static OutStream out() { return StdOut; }
@@ -63,9 +63,9 @@ public class Sys
 
   public static void gc() { System.gc(); }
 
-  public static Int idHash(Object obj)
+  public static Long idHash(Object obj)
   {
-    return Int.make(System.identityHashCode(obj));
+    return Long.valueOf(System.identityHashCode(obj));
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,13 +78,13 @@ public class Sys
 
     // memory
     MemoryMXBean mem = ManagementFactory.getMemoryMXBean();
-    d.add(Str.make("mem.heap"),    Int.make(mem.getHeapMemoryUsage().getUsed()));
-    d.add(Str.make("mem.nonHeap"), Int.make(mem.getNonHeapMemoryUsage().getUsed()));
+    d.add(Str.make("mem.heap"),    Long.valueOf(mem.getHeapMemoryUsage().getUsed()));
+    d.add(Str.make("mem.nonHeap"), Long.valueOf(mem.getNonHeapMemoryUsage().getUsed()));
 
     // threads
     ThreadMXBean thread = ManagementFactory.getThreadMXBean();
     long[] threadIds = thread.getAllThreadIds();
-    d.add(Str.make("thread.size"), Int.make(threadIds.length));
+    d.add(Str.make("thread.size"), Long.valueOf(threadIds.length));
     for (int i=0; i<threadIds.length; ++i)
     {
       ThreadInfo ti = thread.getThreadInfo(threadIds[i]);
@@ -95,9 +95,9 @@ public class Sys
 
     // class loading
     ClassLoadingMXBean cls = ManagementFactory.getClassLoadingMXBean();
-    d.add(Str.make("classes.loaded"),   Int.make(cls.getLoadedClassCount()));
-    d.add(Str.make("classes.total"),    Int.make(cls.getTotalLoadedClassCount()));
-    d.add(Str.make("classes.unloaded"), Int.make(cls.getUnloadedClassCount()));
+    d.add(Str.make("classes.loaded"),   Long.valueOf(cls.getLoadedClassCount()));
+    d.add(Str.make("classes.total"),    Long.valueOf(cls.getTotalLoadedClassCount()));
+    d.add(Str.make("classes.unloaded"), Long.valueOf(cls.getUnloadedClassCount()));
 
     return d;
   }
@@ -441,7 +441,7 @@ public class Sys
 //////////////////////////////////////////////////////////////////////////
 
   /** Are we running 1.6 or greater */
-  public static boolean isJava1_6() { return javaVersion.compare(v1_6).val >= 0; }
+  public static boolean isJava1_6() { return javaVersion.compare(v1_6).intValue() >= 0; }
 
   public static final Version javaVersion;
   public static final Version v1_6 = Version.fromStr("1.6");

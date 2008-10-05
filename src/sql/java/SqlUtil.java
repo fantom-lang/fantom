@@ -76,7 +76,7 @@ public class SqlUtil
       case Types.BIGINT:
         long i = rs.getLong(col);
         if (rs.wasNull()) return null;
-        return Int.make(i);
+        return Long.valueOf(i);
 
       case Types.REAL:
       case Types.FLOAT:
@@ -171,7 +171,7 @@ public class SqlUtil
     {
       long i = rs.getLong(col);
       if (rs.wasNull()) return null;
-      return Int.make(i);
+      return Long.valueOf(i);
     }
   }
 

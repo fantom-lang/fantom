@@ -104,7 +104,7 @@ public class Env
     Color x = (Color)colors.get(c.argb);
     if (x == null)
     {
-      int argb = (int)c.argb.val;
+      int argb = c.argb.intValue();
       x = new Color(display, (argb >> 16) & 0xff, (argb >> 8) & 0xff, argb & 0xff);
       colors.put(c.argb, x);
     }
@@ -151,7 +151,7 @@ public class Env
       int style = SWT.NORMAL;
       if (f.bold) style |= SWT.BOLD;
       if (f.italic) style |= SWT.ITALIC;
-      x = new Font(display, f.name.val, (int)f.size.val, style);
+      x = new Font(display, f.name.val, f.size.intValue(), style);
       fonts.put(f, x);
     }
     return x;

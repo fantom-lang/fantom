@@ -54,7 +54,7 @@ public final class MimeType
           if (c == '=' && !inQuotes)
           {
             eq = i++;
-            while (Int.isSpace(sub.charAt(i))) ++i;
+            while (FanInt.isSpace(sub.charAt(i))) ++i;
             if (sub.charAt(i) == '"') { inQuotes = true; ++i; }
             else inQuotes = false;
             valStart = i;
@@ -129,7 +129,7 @@ public final class MimeType
     {
       LocalFile f = new LocalFile(new java.io.File(Sys.HomeDir, "lib" + File.sep + "ext2mime.props"));
       Map props = f.readProps();
-      HashMap map = new HashMap((int)props.size().val * 3);
+      HashMap map = new HashMap(props.size().intValue() * 3);
       Iterator it = props.pairsIterator();
       while (it.hasNext())
       {
@@ -178,9 +178,9 @@ public final class MimeType
            params.hashCode();
   }
 
-  public Int hash()
+  public Long hash()
   {
-    return Int.make(hashCode());
+    return Long.valueOf(hashCode());
   }
 
   public Str toStr()

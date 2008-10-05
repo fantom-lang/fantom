@@ -27,14 +27,14 @@ public final class List
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static List make(Type of, Int capacity)
+  public static List make(Type of, Long capacity)
   {
-    return new List(of, (int)capacity.val);
+    return new List(of, capacity.intValue());
   }
 
-  public static List makeObj(Int capacity)
+  public static List makeObj(Long capacity)
   {
-    return new List(Sys.ObjType, (int)capacity.val);
+    return new List(Sys.ObjType, capacity.intValue());
   }
 
   public List(Type of, Object[] values)
@@ -107,15 +107,15 @@ public final class List
     return size == 0;
   }
 
-  public final Int size()
+  public final Long size()
   {
-    return Int.pos(size);
+    return Long.valueOf(size);
   }
 
-  public final void size(Int s)
+  public final void size(Long s)
   {
     modify();
-    int newSize = (int)s.val;
+    int newSize = s.intValue();
     if (newSize > size)
     {
       Object[] temp = new Object[newSize];
@@ -132,26 +132,26 @@ public final class List
     }
   }
 
-  public final Int capacity()
+  public final Long capacity()
   {
-    return Int.pos(values.length);
+    return Long.valueOf(values.length);
   }
 
-  public final void capacity(Int c)
+  public final void capacity(Long c)
   {
     modify();
-    int newCapacity = (int)c.val;
+    int newCapacity = c.intValue();
     if (newCapacity < size) throw ArgErr.make("capacity < size").val;
     Object[] temp = new Object[newCapacity];
     System.arraycopy(values, 0, temp, 0, size);
     values = temp;
   }
 
-  public final Object get(Int index)
+  public final Object get(Long index)
   {
     try
     {
-      int i = (int)index.val;
+      int i = index.intValue();
       if (i < 0) i = size + i;
       if (i >= size) throw IndexErr.make(index).val;
       return values[i];
@@ -208,11 +208,11 @@ public final class List
     return true;
   }
 
-  public final Int index(Object value) { return index(value, Int.Zero); }
-  public final Int index(Object value, Int off)
+  public final Long index(Object value) { return index(value, 0L); }
+  public final Long index(Object value, Long off)
   {
     if (size == 0) return null;
-    int start = (int)off.val;
+    int start = off.intValue();
     if (start < 0) start = size + start;
     if (start >= size) throw IndexErr.make(off).val;
 
@@ -222,7 +222,7 @@ public final class List
       {
         for (int i=start; i<size; ++i)
           if (values[i] == null)
-            return Int.pos(i);
+            return Long.valueOf(i);
       }
       else
       {
@@ -230,7 +230,7 @@ public final class List
         {
           Object obj = values[i];
           if (obj != null && obj.equals(value))
-            return Int.pos(i);
+            return Long.valueOf(i);
         }
       }
       return null;
@@ -241,11 +241,11 @@ public final class List
     }
   }
 
-  public final Int indexSame(Object value) { return indexSame(value, Int.Zero); }
-  public final Int indexSame(Object value, Int off)
+  public final Long indexSame(Object value) { return indexSame(value, 0L); }
+  public final Long indexSame(Object value, Long off)
   {
     if (size == 0) return null;
-    int start = (int)off.val;
+    int start = off.intValue();
     if (start < 0) start = size + start;
     if (start >= size) throw IndexErr.make(off).val;
 
@@ -253,7 +253,7 @@ public final class List
     {
       for (int i=start; i<size; ++i)
         if (value == values[i])
-          return Int.pos(i);
+          return Long.valueOf(i);
       return null;
     }
     catch (ArrayIndexOutOfBoundsException e)
@@ -281,15 +281,15 @@ public final class List
     return new List(of, dup);
   }
 
-  public final Int hash()
+  public final Long hash()
   {
     long hash = 33;
     for (int i=0; i<size; ++i)
     {
       Object obj = values[i];
-      if (obj != null) hash ^= hash(obj).val;
+      if (obj != null) hash ^= hash(obj).longValue();
     }
-    return Int.make(hash);
+    return Long.valueOf(hash);
   }
 
   public final Boolean _equals(Object that)
@@ -310,12 +310,12 @@ public final class List
 // Modification
 //////////////////////////////////////////////////////////////////////////
 
-  public final List set(Int index, Object value)
+  public final List set(Long index, Object value)
   {
     modify();
     try
     {
-      int i = (int)index.val;
+      int i = index.intValue();
       if (i < 0) i = size + i;
       if (i >= size) throw IndexErr.make(index).val;
       values[i] = value;
@@ -339,10 +339,10 @@ public final class List
     return insertAll(size, list);
   }
 
-  public final List insert(Int index, Object value)
+  public final List insert(Long index, Object value)
   {
     // modify in insert(int, Obj)
-    int i = (int)index.val;
+    int i = index.intValue();
     if (i < 0) i = size + i;
     if (i > size) throw IndexErr.make(index).val;
     return insert(i, value);
@@ -360,10 +360,10 @@ public final class List
     return this;
   }
 
-  public final List insertAll(Int index, List list)
+  public final List insertAll(Long index, List list)
   {
     // modify in insertAll(int, List)
-    int i = (int)index.val;
+    int i = index.intValue();
     if (i < 0) i = size + i;
     if (i > size) throw IndexErr.make(index).val;
     return insertAll(i, list);
@@ -385,7 +385,7 @@ public final class List
   public final Object remove(Object val)
   {
     // modify in removeAt(Int)
-    Int index = index(val);
+    Long index = index(val);
     if (index == null) return null;
     return removeAt(index);
   }
@@ -393,15 +393,15 @@ public final class List
   public final Object removeSame(Object val)
   {
     // modify in removeAt(Int)
-    Int index = indexSame(val);
+    Long index = indexSame(val);
     if (index == null) return null;
     return removeAt(index);
   }
 
-  public final Object removeAt(Int index)
+  public final Object removeAt(Long index)
   {
     modify();
-    int i = (int)index.val;
+    int i = index.intValue();
     if (i < 0) i = size + i;
     if (i >= size) throw IndexErr.make(index).val;
     Object old = values[i];
@@ -476,7 +476,7 @@ public final class List
   {
     // modify in removeAt()
     if (size == 0) return null;
-    return removeAt(Int.NegOne);
+    return removeAt(FanInt.NegOne);
   }
 
   public final List push(Object obj)
@@ -492,20 +492,20 @@ public final class List
   public final void each(Func f)
   {
     for (int i=0; i<size; ++i)
-      f.call2(values[i], Int.pos(i));
+      f.call2(values[i], Long.valueOf(i));
   }
 
   public final void eachr(Func f)
   {
     for (int i=size-1; i>=0; --i)
-      f.call2(values[i], Int.pos(i));
+      f.call2(values[i], Long.valueOf(i));
   }
 
   public final Object eachBreak(Func f)
   {
     for (int i=0; i<size; ++i)
     {
-      Object r = f.call2(values[i], Int.pos(i));
+      Object r = f.call2(values[i], Long.valueOf(i));
       if (r != null) return r;
     }
     return null;
@@ -514,16 +514,16 @@ public final class List
   public final Object find(Func f)
   {
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) == Boolean.TRUE)
+      if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
         return values[i];
     return null;
   }
 
-  public final Int findIndex(Func f)
+  public final Long findIndex(Func f)
   {
     for (int i=0; i<size; ++i)
     {
-      Int pos = Int.pos(i);
+      Long pos = Long.valueOf(i);
       if (f.call2(values[i], pos) == Boolean.TRUE)
         return pos;
     }
@@ -534,7 +534,7 @@ public final class List
   {
     List acc = new List(of, size);
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) == Boolean.TRUE)
+      if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
         acc.add(values[i]);
     return acc;
   }
@@ -555,7 +555,7 @@ public final class List
   {
     List acc = new List(of, size);
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) != Boolean.TRUE)
+      if (f.call2(values[i], Long.valueOf(i)) != Boolean.TRUE)
         acc.add(values[i]);
     return acc;
   }
@@ -563,7 +563,7 @@ public final class List
   public final Boolean any(Func f)
   {
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) == Boolean.TRUE)
+      if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
         return true;
     return false;
   }
@@ -571,7 +571,7 @@ public final class List
   public final Boolean all(Func f)
   {
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) != Boolean.TRUE)
+      if (f.call2(values[i], Long.valueOf(i)) != Boolean.TRUE)
         return false;
     return true;
   }
@@ -579,7 +579,7 @@ public final class List
   public final Object reduce(Object reduction, Func f)
   {
     for (int i=0; i<size; ++i)
-      reduction = f.call3(reduction, values[i], Int.pos(i));
+      reduction = f.call3(reduction, values[i], Long.valueOf(i));
     return reduction;
   }
 
@@ -587,7 +587,7 @@ public final class List
   {
     if (acc.size == 0) acc.capacity(size());
     for (int i=0; i<size; ++i)
-      acc.add(f.call2(values[i], Int.pos(i)));
+      acc.add(f.call2(values[i], Long.valueOf(i)));
     return acc;
   }
 
@@ -704,8 +704,8 @@ public final class List
     return this;
   }
 
-  public final Int binarySearch(Object key) { return binarySearch(key, null); }
-  public final Int binarySearch(Object key, Func f)
+  public final Long binarySearch(Object key) { return binarySearch(key, null); }
+  public final Long binarySearch(Object key, Func f)
   {
     Comparator c = toComparator(f);
     Object[] values = this.values;
@@ -719,9 +719,9 @@ public final class List
       else if (cmp > 0)
         high = probe - 1;
       else
-        return Int.pos(probe);
+        return Long.valueOf(probe);
     }
-    return Int.make(-(low + 1));
+    return Long.valueOf(-(low + 1));
   }
 
   public final List reverse()
@@ -740,7 +740,7 @@ public final class List
     return this;
   }
 
-  public final List swap(Int a, Int b)
+  public final List swap(Long a, Long b)
   {
     // modify in set()
     Object temp = get(a);
@@ -781,7 +781,7 @@ public final class List
     if (size == 1)
     {
       Object v = values[0];
-      if (f != null) return (Str)f.call2(v, Int.Zero);
+      if (f != null) return (Str)f.call2(v, 0L);
       if (v == null) return Str.nullStr;
       return toStr(v);
     }
@@ -793,7 +793,7 @@ public final class List
       if (f == null)
         s.append(values[i]);
       else
-        s.append(f.call2(values[i], Int.pos(i)));
+        s.append(f.call2(values[i], Long.valueOf(i)));
     }
     return Str.make(s.toString());
   }
@@ -902,7 +902,7 @@ public final class List
   public final int[] toInts()
   {
     int[] a = new int[size];
-    for (int i=0; i<size; ++i) a[i] = (int)((Int)get(i)).val;
+    for (int i=0; i<size; ++i) a[i] = ((Long)get(i)).intValue();
     return a;
   }
 
@@ -915,12 +915,12 @@ public final class List
     if (f == null) return defaultComparator;
     return new Comparator()
     {
-      public int compare(Object a, Object b) { return (int)((Int)f.call2(a, b)).val; }
+      public int compare(Object a, Object b) { return ((Long)f.call2(a, b)).intValue(); }
     };
   }
   static final Comparator defaultComparator = new Comparator()
   {
-    public int compare(Object a, Object b) { return (int)OpUtil.compare(a, b).val; }
+    public int compare(Object a, Object b) { return OpUtil.compare(a, b).intValue(); }
   };
 
   static Comparator toReverseComparator(final Func f)
@@ -928,12 +928,12 @@ public final class List
     if (f == null) return defaultReverseComparator;
     return new Comparator()
     {
-      public int compare(Object a, Object b) { return (int)((Int)f.call2(b, a)).val; }
+      public int compare(Object a, Object b) { return ((Long)f.call2(b, a)).intValue(); }
     };
   }
   static final Comparator defaultReverseComparator = new Comparator()
   {
-    public int compare(Object a, Object b) { return (int)OpUtil.compare(b, a).val; }
+    public int compare(Object a, Object b) { return OpUtil.compare(b, a).intValue(); }
   };
 
 //////////////////////////////////////////////////////////////////////////

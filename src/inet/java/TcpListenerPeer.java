@@ -62,25 +62,25 @@ public class TcpListenerPeer
     return IpAddressPeer.make(addr);
   }
 
-  public Int localPort(TcpListener fan)
+  public Long localPort(TcpListener fan)
   {
     if (!isBound()) return null;
     int port = getLocalPort();
     if (port <= 0) return null;
-    return Int.make(port);
+    return Long.valueOf(port);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public TcpListener bind(TcpListener fan, IpAddress addr, Int port, Int backlog)
+  public TcpListener bind(TcpListener fan, IpAddress addr, Long port, Long backlog)
   {
     try
     {
       InetAddress javaAddr = (addr == null) ? null : addr.peer.java;
-      int javaPort = (port == null) ? 0 : (int)port.val;
-      bind(new InetSocketAddress(javaAddr, javaPort), (int)backlog.val);
+      int javaPort = (port == null) ? 0 : port.intValue();
+      bind(new InetSocketAddress(javaAddr, javaPort), backlog.intValue());
       return fan;
     }
     catch (IOException e)
@@ -121,11 +121,11 @@ public class TcpListenerPeer
 // Socket Options
 //////////////////////////////////////////////////////////////////////////
 
-  public Int getReceiveBufferSize(TcpListener fan)
+  public Long getReceiveBufferSize(TcpListener fan)
   {
     try
     {
-      return Int.make(getReceiveBufferSize());
+      return Long.valueOf(getReceiveBufferSize());
     }
     catch (IOException e)
     {
@@ -133,11 +133,11 @@ public class TcpListenerPeer
     }
   }
 
-  public void setReceiveBufferSize(TcpListener fan, Int v)
+  public void setReceiveBufferSize(TcpListener fan, Long v)
   {
     try
     {
-      setReceiveBufferSize((int)v.val);
+      setReceiveBufferSize(v.intValue());
     }
     catch (IOException e)
     {

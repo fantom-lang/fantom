@@ -9,7 +9,6 @@ package fanx.test;
 
 import java.io.*;
 import java.util.*;
-import fan.sys.Int;
 import fan.sys.MemBuf;
 import fan.sys.SysInStream;
 import fan.sys.SysOutStream;
@@ -136,14 +135,14 @@ public class FileUtilTest
     out.write(new byte[] { 'a', 'b', 'c' }, 1, 1);
     out.write(new byte[] { '0', '1', '2', '3' }, 2, 2);
     out.close();
-    verify(buf.size().val == 7);
-    verify(buf.get(Int.make(0)).val == 0xFF);
-    verify(buf.get(Int.make(1)).val == 'a');
-    verify(buf.get(Int.make(2)).val == 'b');
-    verify(buf.get(Int.make(3)).val == 'c');
-    verify(buf.get(Int.make(4)).val == 'b');
-    verify(buf.get(Int.make(5)).val == '2');
-    verify(buf.get(Int.make(6)).val == '3');
+    verify(buf.size().longValue() == 7);
+    verify(buf.get(Long.valueOf(0)).longValue() == 0xFF);
+    verify(buf.get(Long.valueOf(1)).longValue() == 'a');
+    verify(buf.get(Long.valueOf(2)).longValue() == 'b');
+    verify(buf.get(Long.valueOf(3)).longValue() == 'c');
+    verify(buf.get(Long.valueOf(4)).longValue() == 'b');
+    verify(buf.get(Long.valueOf(5)).longValue() == '2');
+    verify(buf.get(Long.valueOf(6)).longValue() == '3');
   }
 
 //////////////////////////////////////////////////////////////////////////

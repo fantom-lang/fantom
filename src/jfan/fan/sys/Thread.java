@@ -227,7 +227,7 @@ public class Thread
     return name.hashCode();
   }
 
-  public final Int hash()
+  public final Long hash()
   {
     return name.hash();
   }
@@ -642,7 +642,7 @@ public class Thread
       timers[id] = t;
 
       // return ticket which is index into timers array
-      return Int.make(id);
+      return Long.valueOf(id);
     }
   }
 
@@ -652,7 +652,7 @@ public class Thread
     {
       try
       {
-        timers[(int)((Int)ticket).val] = null;
+        timers[((Long)ticket).intValue()] = null;
       }
       catch (Exception e)
       {

@@ -37,7 +37,7 @@ public final class Month
 
   private Month(int ordinal, String name)
   {
-    Enum.make$(this, Int.pos[ordinal], Str.make(name).intern());
+    Enum.make$(this, FanInt.pos[ordinal], Str.make(name).intern());
     this.ord = ordinal;
     this.localeAbbrKey = Str.make(name + "Abbr");
     this.localeFullKey = Str.make(name + "Full");
@@ -55,12 +55,12 @@ public final class Month
 
   public Month decrement() { return ord == 0 ? array[array.length-1] : array[ord-1]; }
 
-  public Int numDays(Int year)
+  public Long numDays(Long year)
   {
-    if (DateTime.isLeapYear((int)year.val))
-      return Int.pos[DateTime.daysInMonLeap[ord]];
+    if (DateTime.isLeapYear(year.intValue()))
+      return FanInt.pos[DateTime.daysInMonLeap[ord]];
     else
-      return Int.pos[DateTime.daysInMon[ord]];
+      return FanInt.pos[DateTime.daysInMon[ord]];
   }
 
   public Str toLocale() { return toLocale(null); }

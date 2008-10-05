@@ -543,6 +543,3 @@ class NetChild4 : NetBase3, NetMixin2 {}
 mixin NetDefMixin { abstract Int foo(Int a := 3, Int b := 5) }
 class NetDefBase  { Int foo(Int a := 3, Int b := 5) { return a + b } }
 class NetDefChild : NetDefBase, NetDefMixin {}
-
-
-

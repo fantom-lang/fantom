@@ -129,7 +129,7 @@ public class ScriptUtil
   static class CachedScript
   {
     DateTime modified;
-    Int size;
+    Long size;
     String typeName;
   }
 

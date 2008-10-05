@@ -39,9 +39,9 @@ public final class FanBool
     return self == obj;
   }
 
-  public static Int hash(Boolean self)
+  public static Long hash(Boolean self)
   {
-    return self ? Int.make(1231) : Int.make(1237);
+    return self ? Long.valueOf(1231) : Long.valueOf(1237);
   }
 
   public static Type type(Boolean self)

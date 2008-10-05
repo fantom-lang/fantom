@@ -56,14 +56,14 @@ public class OutStream
    */
   public OutStream w(int b)
   {
-    return write(Int.make(b));
+    return write(Long.valueOf(b));
   }
 
 //////////////////////////////////////////////////////////////////////////
 // OutStream
 //////////////////////////////////////////////////////////////////////////
 
-  public OutStream write(Int x)
+  public OutStream write(Long x)
   {
     try
     {
@@ -80,7 +80,7 @@ public class OutStream
   }
 
   public OutStream writeBuf(Buf buf) { return writeBuf(buf, buf.remaining()); }
-  public OutStream writeBuf(Buf buf, Int n)
+  public OutStream writeBuf(Buf buf, Long n)
   {
     try
     {
@@ -96,14 +96,14 @@ public class OutStream
     }
   }
 
-  public OutStream writeI2(Int x)
+  public OutStream writeI2(Long x)
   {
-    int v = (int)x.val;
+    int v = x.intValue();
     return this.w((v >>> 8) & 0xFF)
                .w((v >>> 0) & 0xFF);
   }
 
-  public OutStream writeI4(Int x) { return writeI4((int)x.val); }
+  public OutStream writeI4(Long x) { return writeI4(x.intValue()); }
   public OutStream writeI4(int v)
   {
     return this.w((v >>> 24) & 0xFF)
@@ -112,7 +112,7 @@ public class OutStream
                .w((v >>> 0)  & 0xFF);
   }
 
-  public OutStream writeI8(Int x) { return writeI8(x.val); }
+  public OutStream writeI8(Long x) { return writeI8(x.longValue()); }
   public OutStream writeI8(long v)
   {
     return this.w((int)(v >>> 56) & 0xFF)
@@ -204,9 +204,9 @@ public class OutStream
     this.charset = charset;
   }
 
-  public OutStream writeChar(Int c)
+  public OutStream writeChar(Long c)
   {
-    charsetEncoder.encode((char)c.val, this);
+    charsetEncoder.encode((char)c.longValue(), this);
     return this;
   }
 
@@ -217,8 +217,8 @@ public class OutStream
   }
 
   public OutStream writeChars(Str s) { return writeChars(s.val, 0, s.val.length()); }
-  public OutStream writeChars(Str s, Int off) { return writeChars(s.val, (int)off.val, s.val.length()-(int)off.val); }
-  public OutStream writeChars(Str s, Int off, Int len) { return writeChars(s.val, (int)off.val, (int)len.val); }
+  public OutStream writeChars(Str s, Long off) { return writeChars(s.val, off.intValue(), s.val.length()-off.intValue()); }
+  public OutStream writeChars(Str s, Long off, Long len) { return writeChars(s.val, off.intValue(), len.intValue()); }
   public OutStream writeChars(String s) { return writeChars(s, 0, s.length()); }
   public OutStream writeChars(String s, int off, int len)
   {
@@ -231,15 +231,15 @@ public class OutStream
   public OutStream print(Object obj)
   {
     Str s = obj == null ? Str.nullStr : toStr(obj);
-    return writeChars(s, Int.Zero, s.size());
+    return writeChars(s, 0L, s.size());
   }
 
   public OutStream printLine() { return printLine(Str.Empty); }
   public OutStream printLine(Object obj)
   {
     Str s = obj == null ? Str.nullStr : toStr(obj);
-    writeChars(s, Int.Zero, s.size());
-    return writeChar(Int.pos['\n']);
+    writeChars(s, 0L, s.size());
+    return writeChar(FanInt.pos['\n']);
   }
 
   public OutStream writeObj(Object obj) { return writeObj(obj, null); }
@@ -258,8 +258,8 @@ public class OutStream
     {
       List keys = props.keys().sort();
       int size = keys.sz();
-      Int eq = Int.pos['='];
-      Int nl = Int.pos['\n'];
+      Long eq = FanInt.pos['='];
+      Long nl = FanInt.pos['\n'];
       for (int i=0; i<size; ++i)
       {
         Str key = (Str)keys.get(i);
@@ -289,26 +289,26 @@ public class OutStream
       // escape special chars
       switch (ch)
       {
-        case '\n': writeChar(Int.pos['\\']).writeChar(Int.pos['n']); continue;
-        case '\r': writeChar(Int.pos['\\']).writeChar(Int.pos['r']); continue;
-        case '\t': writeChar(Int.pos['\\']).writeChar(Int.pos['t']); continue;
-        case '\\': writeChar(Int.pos['\\']).writeChar(Int.pos['\\']); continue;
+        case '\n': writeChar(FanInt.pos['\\']).writeChar(FanInt.pos['n']); continue;
+        case '\r': writeChar(FanInt.pos['\\']).writeChar(FanInt.pos['r']); continue;
+        case '\t': writeChar(FanInt.pos['\\']).writeChar(FanInt.pos['t']); continue;
+        case '\\': writeChar(FanInt.pos['\\']).writeChar(FanInt.pos['\\']); continue;
       }
 
       // escape control chars, comments, and =
       if ((ch < ' ') || (ch == '/' && (peek == '/' || peek == '*')) || (ch == '='))
       {
-        Int nib1 = Int.pos[(ch>>4)&0xf].toDigit(Int.pos[16]);
-        Int nib2 = Int.pos[(ch>>0)&0xf].toDigit(Int.pos[16]);
+        Long nib1 = FanInt.toDigit(FanInt.pos[(ch>>4)&0xf], FanInt.pos[16]);
+        Long nib2 = FanInt.toDigit(FanInt.pos[(ch>>0)&0xf], FanInt.pos[16]);
 
-        this.writeChar(Int.pos['\\']).writeChar(Int.pos['u'])
-            .writeChar(Int.pos['0']).writeChar(Int.pos['0'])
+        this.writeChar(FanInt.pos['\\']).writeChar(FanInt.pos['u'])
+            .writeChar(FanInt.pos['0']).writeChar(FanInt.pos['0'])
             .writeChar(nib1).writeChar(nib2);
         continue;
       }
 
       // normal character
-      writeChar(Int.pos(ch));
+      writeChar(Long.valueOf(ch));
     }
   }
 

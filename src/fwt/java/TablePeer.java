@@ -92,7 +92,7 @@ public class TablePeer
     if (model == null) return;
 
     c.removeAll();
-    c.setItemCount((int)model.numRows().val);
+    c.setItemCount(model.numRows().intValue());
     c.clearAll();
   }
 
@@ -118,11 +118,11 @@ public class TablePeer
     Env env = Env.get();
     TableItem item = (TableItem)event.item;
 
-    int numCols = (int)model.numCols().val;
-    Int row = Int.make(event.index);
+    int numCols = model.numCols().intValue();
+    Long row = Long.valueOf(event.index);
     for (int i=0; i<numCols; ++i)
     {
-      Int col = Int.make(i);
+      Long col = Long.valueOf(i);
       item.setText(i, model.text(col, row).val);
       item.setImage(i, env.image(model.image(col, row)));
       item.setFont(i, env.font(model.font(col, row)));
@@ -184,29 +184,29 @@ public class TablePeer
     if (model == null) return;
 
     // build columns
-    int numCols = (int)model.numCols().val;
+    int numCols = model.numCols().intValue();
     for (int i=0; i<numCols; ++i)
     {
-      Int col = Int.make(i);
-      Int pw = model.prefWidth(col);
+      Long col = Long.valueOf(i);
+      Long pw = model.prefWidth(col);
       TableColumn tc = new TableColumn(table, style(model.halign(col)));
       tc.setText(model.header(col).val);
-      tc.setWidth(pw == null ? 100 : (int)pw.val);
+      tc.setWidth(pw == null ? 100 : pw.intValue());
     }
 
     // rows
-    table.setItemCount((int)model.numRows().val);
+    table.setItemCount(model.numRows().intValue());
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  Int selectedIndex()
+  Long selectedIndex()
   {
     int i = ((Table)control).getSelectionIndex();
     if (i < 0) return null;
-    return Int.make(i);
+    return Long.valueOf(i);
   }
 
   public TableModel model()

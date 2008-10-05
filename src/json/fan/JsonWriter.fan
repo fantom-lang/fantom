@@ -63,12 +63,12 @@ internal class JsonWriter
     buf.print(JsonToken.objectEnd.toChar)
   }
 
-  private static Void writeMap(Str:Obj map, OutStream buf) 
+  private static Void writeMap(Str:Obj map, OutStream buf)
   {
     buf.print(JsonToken.objectStart.toChar)
 
     // FIXIT do we want a type??
-    
+
     notFirst := false
     map.each |Obj val, Str key|
     {
@@ -79,7 +79,7 @@ internal class JsonWriter
     buf.print(JsonToken.objectEnd.toChar)
   }
 
-  // FIXIT actually need to write values out for number, obj, array, true, 
+  // FIXIT actually need to write values out for number, obj, array, true,
   // false, null
   private static Void writeValue(Obj val, OutStream buf)
   {

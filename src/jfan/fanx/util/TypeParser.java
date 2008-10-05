@@ -188,7 +188,7 @@ public class TypeParser
 
   public static boolean isIdChar(int ch)
   {
-    return Int.isAlphaNum(ch) || ch == '_';
+    return FanInt.isAlphaNum(ch) || ch == '_';
   }
 
   private void consume(int expected)

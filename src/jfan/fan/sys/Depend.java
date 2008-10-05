@@ -113,7 +113,7 @@ public final class Depend
         }
         else
         {
-          segs.add(Int.pos(seg));
+          segs.add(Long.valueOf(seg));
           seg = 0;
           if (cur != '.') break;
           else consume();
@@ -176,7 +176,7 @@ public final class Depend
     return toStr().hashCode();
   }
 
-  public Int hash()
+  public Long hash()
   {
     return toStr().hash();
   }
@@ -214,33 +214,33 @@ public final class Depend
     return name;
   }
 
-  public final Int size()
+  public final Long size()
   {
-    return Int.pos(constraints.length);
+    return Long.valueOf(constraints.length);
   }
 
-  public final Version version() { return version(Int.Zero); }
-  public final Version version(Int index)
+  public final Version version() { return version(0L); }
+  public final Version version(Long index)
   {
-    return constraints[(int)index.val].version;
+    return constraints[index.intValue()].version;
   }
 
-  public final Boolean isPlus() { return isPlus(Int.Zero); }
-  public final Boolean isPlus(Int index)
+  public final Boolean isPlus() { return isPlus(0L); }
+  public final Boolean isPlus(Long index)
   {
-    return constraints[(int)index.val].isPlus;
+    return constraints[index.intValue()].isPlus;
   }
 
-  public final Boolean isRange() { return isRange(Int.Zero); }
-  public final Boolean isRange(Int index)
+  public final Boolean isRange() { return isRange(0L); }
+  public final Boolean isRange(Long index)
   {
-    return constraints[(int)index.val].endVersion != null;
+    return constraints[index.intValue()].endVersion != null;
   }
 
-  public final Version endVersion() { return endVersion(Int.Zero); }
-  public final Version endVersion(Int index)
+  public final Version endVersion() { return endVersion(0L); }
+  public final Version endVersion(Long index)
   {
-    return constraints[(int)index.val].endVersion;
+    return constraints[index.intValue()].endVersion;
   }
 
   public final Boolean match(Version v)
@@ -251,14 +251,14 @@ public final class Depend
       if (c.isPlus)
       {
         // versionPlus
-        if (c.version.compare(v).val <= 0)
+        if (c.version.compare(v).longValue() <= 0)
           return true;
       }
       else if (c.endVersion != null)
       {
         // versionRange
-        if (c.version.compare(v).val <= 0 &&
-            (c.endVersion.compare(v).val >= 0 || doMatch(c.endVersion, v)))
+        if (c.version.compare(v).longValue() <= 0 &&
+            (c.endVersion.compare(v).longValue() >= 0 || doMatch(c.endVersion, v)))
           return true;
       }
       else

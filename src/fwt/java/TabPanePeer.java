@@ -44,8 +44,8 @@ public class TabPanePeer
 //////////////////////////////////////////////////////////////////////////
 
   // Int selectedIndex := 0
-  public Int selectedIndex(TabPane self) { return selectedIndex.get(); }
-  public void selectedIndex(TabPane self, Int v) { selectedIndex.set(v); }
+  public Long selectedIndex(TabPane self) { return selectedIndex.get(); }
+  public void selectedIndex(TabPane self, Long v) { selectedIndex.set(v); }
   public final Prop.IntProp selectedIndex = new Prop.IntProp(this, 0, true)
   {
     public int get(Widget w) { return ((TabFolder)w).getSelectionIndex(); }
@@ -63,7 +63,7 @@ public class TabPanePeer
     TabFolder control = (TabFolder)this.control;
     TabPane self = (TabPane)this.self;
     fan.fwt.Event fe = event(EventId.select);
-    fe.index = Int.make(control.getSelectionIndex());
+    fe.index = Long.valueOf(control.getSelectionIndex());
     fe.data  = self.tabs().get(fe.index);
     self.onSelect().fire(fe);
   }

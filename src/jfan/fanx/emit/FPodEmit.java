@@ -101,7 +101,7 @@ public class FPodEmit
     // generate constant fields other types will reference, we don't
     // initialize them, rather we do that later via reflection
     for (int i=0; i<literals.ints.size(); ++i)
-      emitField("I" + i, "Lfan/sys/Int;", EmitConst.PUBLIC | EmitConst.STATIC);
+      emitField("I" + i, "Ljava/lang/Long;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.floats.size(); ++i)
       emitField("F" + i, "Ljava/lang/Double;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.decimals.size(); ++i)

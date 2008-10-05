@@ -29,9 +29,9 @@ public class StrBuf
   /**
    * Create with specified capacity.
    */
-  public static StrBuf make(Int capacity)
+  public static StrBuf make(Long capacity)
   {
-    return new StrBuf(new StringBuilder((int)capacity.val));
+    return new StrBuf(new StringBuilder(capacity.intValue()));
   }
 
   public StrBuf(StringBuilder sb)
@@ -48,23 +48,23 @@ public class StrBuf
     return sb.length() == 0;
   }
 
-  public Int size()
+  public Long size()
   {
-    return Int.pos(sb.length());
+    return Long.valueOf(sb.length());
   }
 
-  public Int get(Int index)
+  public Long get(Long index)
   {
-    int i = (int)index.val;
+    int i = index.intValue();
     if (i < 0) i = sb.length()+i;
-    return Int.pos(sb.charAt(i));
+    return Long.valueOf(sb.charAt(i));
   }
 
-  public StrBuf set(Int index, Int ch)
+  public StrBuf set(Long index, Long ch)
   {
-    int i = (int)index.val;
+    int i = index.intValue();
     if (i < 0) i = sb.length()+i;
-    sb.setCharAt(i, (char)ch.val);
+    sb.setCharAt(i, (char)ch.longValue());
     return this;
   }
 
@@ -75,9 +75,9 @@ public class StrBuf
     return this;
   }
 
-  public StrBuf addChar(Int ch)
+  public StrBuf addChar(Long ch)
   {
-    sb.append((char)ch.val);
+    sb.append((char)ch.longValue());
     return this;
   }
 
@@ -90,28 +90,28 @@ public class StrBuf
     return this;
   }
 
-  public StrBuf insert(Int index, Object x)
+  public StrBuf insert(Long index, Object x)
   {
     String s = (x == null) ? "null" : toStr(x).val;
-    int i = (int)index.val;
+    int i = index.intValue();
     if (i < 0) i = sb.length()+i;
     if (i > sb.length()) throw IndexErr.make(index).val;
     sb.insert(i, s);
     return this;
   }
 
-  public StrBuf remove(Int index)
+  public StrBuf remove(Long index)
   {
-    int i = (int)index.val;
+    int i = index.intValue();
     if (i < 0) i = sb.length()+i;
     if (i >= sb.length()) throw IndexErr.make(index).val;
     sb.delete(i, i+1);
     return this;
   }
 
-  public StrBuf grow(Int size)
+  public StrBuf grow(Long size)
   {
-    sb.ensureCapacity((int)size.val);
+    sb.ensureCapacity(size.intValue());
     return this;
   }
 

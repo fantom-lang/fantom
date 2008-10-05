@@ -34,8 +34,8 @@ public final class Str
   {
     int start = 0;
     int end = s.length();
-    while (start < end) if (Int.isSpace(s.charAt(start))) start++; else break;
-    while (end > start) if (Int.isSpace(s.charAt(end-1))) end--; else break;
+    while (start < end) if (FanInt.isSpace(s.charAt(start))) start++; else break;
+    while (end > start) if (FanInt.isSpace(s.charAt(end-1))) end--; else break;
     return make(s.substring(start, end));
   }
 
@@ -77,16 +77,16 @@ public final class Str
     return true;
   }
 
-  public final Int compare(Object obj)
+  public final Long compare(Object obj)
   {
     int cmp = val.compareTo(((Str)obj).val);
-    if (cmp < 0) return Int.LT;
-    return cmp == 0 ? Int.EQ : Int.GT;
+    if (cmp < 0) return FanInt.LT;
+    return cmp == 0 ? FanInt.EQ : FanInt.GT;
   }
 
-  public final Int compareIgnoreCase(Str s)
+  public final Long compareIgnoreCase(Str s)
   {
-    if (s == this) return Int.Zero;
+    if (s == this) return FanInt.Zero;
 
     String a = this.val;
     String b = s.val;
@@ -99,11 +99,11 @@ public final class Str
       int bc = b.charAt(i);
       if ('A' <= ac && ac <= 'Z') ac |= 0x20;
       if ('A' <= bc && bc <= 'Z') bc |= 0x20;
-      if (ac != bc) return ac < bc ? Int.LT : Int.GT;
+      if (ac != bc) return ac < bc ? FanInt.LT : FanInt.GT;
     }
 
-    if (an == bn) return Int.Zero;
-    return an < bn ? Int.LT : Int.GT;
+    if (an == bn) return FanInt.Zero;
+    return an < bn ? FanInt.LT : FanInt.GT;
   }
 
   public final int hashCode()
@@ -111,9 +111,9 @@ public final class Str
     return val.hashCode();
   }
 
-  public final Int hash()
+  public final Long hash()
   {
-    return Int.make(val.hashCode());
+    return Long.valueOf(val.hashCode());
   }
 
   public final int caseInsensitiveHash()
@@ -151,11 +151,11 @@ public final class Str
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  public final Int get(Int index)
+  public final Long get(Long index)
   {
-    int i = (int)index.val;
+    int i = index.intValue();
     if (i < 0) i = val.length()+i;
-    return Int.pos(val.charAt(i));
+    return Long.valueOf(val.charAt(i));
   }
 
   public final Str slice(Range r)
@@ -196,9 +196,9 @@ public final class Str
     return val.length() == 0;
   }
 
-  public final Int size()
+  public final Long size()
   {
-    return Int.pos(val.length());
+    return Long.valueOf(val.length());
   }
 
   public final Boolean startsWith(Str s)
@@ -213,18 +213,18 @@ public final class Str
 
   public final Boolean contains(Str s)
   {
-    return index(s, Int.Zero) != null;
+    return index(s, 0L) != null;
   }
 
-  public final Boolean containsChar(Int ch)
+  public final Boolean containsChar(Long ch)
   {
-    return val.indexOf((int)ch.val) >= 0;
+    return val.indexOf(ch.intValue()) >= 0;
   }
 
-  public final Int index(Str s) { return index(s, Int.Zero); }
-  public final Int index(Str s, Int off)
+  public final Long index(Str s) { return index(s, 0L); }
+  public final Long index(Str s, Long off)
   {
-    int i = (int)off.val;
+    int i = off.intValue();
     if (i < 0) i = val.length()+i;
 
     int r;
@@ -235,13 +235,13 @@ public final class Str
       r = val.indexOf(sval, i);
 
     if (r < 0) return null;
-    return Int.make(r);
+    return Long.valueOf(r);
   }
 
-  public final Int indexr(Str s) { return indexr(s, Int.NegOne); }
-  public final Int indexr(Str s, Int off)
+  public final Long indexr(Str s) { return indexr(s, -1L); }
+  public final Long indexr(Str s, Long off)
   {
-    int i = (int)off.val;
+    int i = off.intValue();
     if (i < 0) i = val.length()+i;
 
     int r;
@@ -252,17 +252,17 @@ public final class Str
       r = val.lastIndexOf(sval, i);
 
     if (r < 0) return null;
-    return Int.make(r);
+    return Long.valueOf(r);
   }
 
-  public final Int indexIgnoreCase(Str s) { return indexIgnoreCase(s, Int.Zero); }
-  public final Int indexIgnoreCase(Str s, Int off)
+  public final Long indexIgnoreCase(Str s) { return indexIgnoreCase(s, 0L); }
+  public final Long indexIgnoreCase(Str s, Long off)
   {
     String val  = this.val, sval = s.val;
     int vlen = val.length(), slen = sval.length();
     int r = -1;
 
-    int i = (int)off.val;
+    int i = off.intValue();
     if (i < 0) i = vlen+i;
 
     int first = sval.charAt(0) | 0x20;
@@ -280,17 +280,17 @@ public final class Str
     }
 
     if (r < 0) return null;
-    return Int.make(r);
+    return Long.valueOf(r);
   }
 
-  public final Int indexrIgnoreCase(Str s) { return indexrIgnoreCase(s, Int.NegOne); }
-  public final Int indexrIgnoreCase(Str s, Int off)
+  public final Long indexrIgnoreCase(Str s) { return indexrIgnoreCase(s, -1L); }
+  public final Long indexrIgnoreCase(Str s, Long off)
   {
     String val  = this.val, sval = s.val;
     int vlen = val.length(), slen = sval.length();
     int r = -1;
 
-    int i = (int)off.val;
+    int i = off.intValue();
     if (i < 0) i = vlen+i;
     if (i+slen >= vlen) i = vlen-slen;
 
@@ -309,7 +309,7 @@ public final class Str
     }
 
     if (r < 0) return null;
-    return Int.make(r);
+    return Long.valueOf(r);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -321,14 +321,14 @@ public final class Str
     String val = this.val;
     int len = val.length();
     for (int i=0; i<len ; ++i)
-      f.call2(Int.pos(val.charAt(i)), Int.pos(i));
+      f.call2(Long.valueOf(val.charAt(i)), Long.valueOf(i));
   }
 
   public final void eachr(Func f)
   {
     String val = this.val;
     for (int i=val.length()-1; i>=0; --i)
-      f.call2(Int.pos(val.charAt(i)), Int.pos(i));
+      f.call2(Long.valueOf(val.charAt(i)), Long.valueOf(i));
   }
 
   public final Boolean any(Func f)
@@ -336,7 +336,7 @@ public final class Str
     String val = this.val;
     int len = val.length();
     for (int i=0; i<len ; ++i)
-      if (f.call2(Int.pos(val.charAt(i)), Int.pos(i)) == Boolean.TRUE)
+      if (f.call2(Long.valueOf(val.charAt(i)), Long.valueOf(i)) == Boolean.TRUE)
         return true;
     return false;
   }
@@ -346,7 +346,7 @@ public final class Str
     String val = this.val;
     int len = val.length();
     for (int i=0; i<len ; ++i)
-      if (f.call2(Int.pos(val.charAt(i)), Int.pos(i)) == Boolean.FALSE)
+      if (f.call2(Long.valueOf(val.charAt(i)), Long.valueOf(i)) == Boolean.FALSE)
         return false;
     return true;
   }
@@ -355,11 +355,11 @@ public final class Str
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public static Str spaces(Int n)
+  public static Str spaces(Long n)
   {
     // do an array lookup for reasonable length
     // strings since that is the common case
-    int count = (int)n.val;
+    int count = n.intValue();
     try { return spaces[count]; } catch (ArrayIndexOutOfBoundsException e) {}
 
     // otherwise we build a new one
@@ -439,10 +439,10 @@ public final class Str
     return this;
   }
 
-  public final Str justl(Int width)
+  public final Str justl(Long width)
   {
     String val = this.val;
-    int w = (int)width.val;
+    int w = width.intValue();
     if (val.length() >= w) return this;
     StringBuilder s = new StringBuilder(w);
     s.append(val);
@@ -451,10 +451,10 @@ public final class Str
     return make(s.toString());
   }
 
-  public final Str justr(Int width)
+  public final Str justr(Long width)
   {
     String val = this.val;
-    int w = (int)width.val;
+    int w = width.intValue();
     if (val.length() >= w) return this;
     StringBuilder s = new StringBuilder(w);
     for (int i=val.length(); i<w; ++i)
@@ -505,12 +505,12 @@ public final class Str
   }
 
   public final List split() { return split(null, true); }
-  public final List split(Int separator) { return split(separator, true); }
-  public final List split(Int separator, Boolean trimmed)
+  public final List split(Long separator) { return split(separator, true); }
+  public final List split(Long separator, Boolean trimmed)
   {
     String val = this.val;
     if (separator == null) return splitws(val);
-    int sep = (int)separator.val;
+    int sep = separator.intValue();
     boolean trim = trimmed;
     List toks = new List(Sys.StrType, 16);
     int len = val.length();
@@ -581,7 +581,7 @@ public final class Str
     return make(StrUtil.replace(val, from.val, to.val));
   }
 
-  public Int numNewlines() { return Int.pos(numNewlines(val)); }
+  public Long numNewlines() { return Long.valueOf(numNewlines(val)); }
   public static int numNewlines(String val)
   {
     int numLines = 0;
@@ -615,7 +615,7 @@ public final class Str
     for (int i=0; i<len; ++i)
     {
       int ch = val.charAt(i);
-      if (ch >= 128 || (Int.charMap[ch] & Int.SPACE) == 0)
+      if (ch >= 128 || (FanInt.charMap[ch] & FanInt.SPACE) == 0)
         return false;
     }
     return true;
@@ -628,7 +628,7 @@ public final class Str
     for (int i=0; i<len; ++i)
     {
       int ch = val.charAt(i);
-      if (ch >= 128 || (Int.charMap[ch] & Int.UPPER) == 0)
+      if (ch >= 128 || (FanInt.charMap[ch] & FanInt.UPPER) == 0)
         return false;
     }
     return true;
@@ -641,7 +641,7 @@ public final class Str
     for (int i=0; i<len; ++i)
     {
       int ch = val.charAt(i);
-      if (ch >= 128 || (Int.charMap[ch] & Int.LOWER) == 0)
+      if (ch >= 128 || (FanInt.charMap[ch] & FanInt.LOWER) == 0)
         return false;
     }
     return true;
@@ -660,11 +660,11 @@ public final class Str
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public final Int localeCompare(Str x)
+  public final Long localeCompare(Str x)
   {
     int cmp = Locale.current().collator().compare(val, x.val);
-    if (cmp < 0) return Int.LT;
-    return cmp == 0 ? Int.EQ : Int.GT;
+    if (cmp < 0) return FanInt.LT;
+    return cmp == 0 ? FanInt.EQ : FanInt.GT;
   }
 
   public final Str localeLower()
@@ -718,9 +718,9 @@ public final class Str
   public final Boolean toBool() { return FanBool.fromStr(this, true); }
   public final Boolean toBool(Boolean checked) { return FanBool.fromStr(this, checked); }
 
-  public final Int toInt() { return Int.fromStr(this, Int.Ten, true); }
-  public final Int toInt(Int radix) { return Int.fromStr(this, radix, true); }
-  public final Int toInt(Int radix, Boolean checked) { return Int.fromStr(this, radix, checked); }
+  public final Long toInt() { return FanInt.fromStr(this, FanInt.Ten, true); }
+  public final Long toInt(Long radix) { return FanInt.fromStr(this, radix, true); }
+  public final Long toInt(Long radix, Boolean checked) { return FanInt.fromStr(this, radix, checked); }
 
   public final Double toFloat() { return FanFloat.fromStr(this, true); }
   public final Double toFloat(Boolean checked) { return FanFloat.fromStr(this, checked); }
@@ -730,9 +730,9 @@ public final class Str
 
   public final Uri toUri() { return Uri.fromStr(this); }
 
-  public final Str toCode() { return toCode(Int.pos['"'], false); }
-  public final Str toCode(Int quote) { return toCode(quote, false); }
-  public final Str toCode(Int quote, Boolean escapeUnicode)
+  public final Str toCode() { return toCode(FanInt.pos['"'], false); }
+  public final Str toCode(Long quote) { return toCode(quote, false); }
+  public final Str toCode(Long quote, Boolean escapeUnicode)
   {
     StringBuilder s = new StringBuilder(val.length()+10);
 
@@ -741,7 +741,7 @@ public final class Str
     int q = 0;
     if (quote != null)
     {
-      q = (int)quote.val;
+      q = quote.intValue();
       s.append((char)q);
     }
 

@@ -111,8 +111,8 @@ public abstract class Slot
   {
     // private undocumented access
     String n = name.val;
-    if (n.equals("flags")) return Int.make(flags);
-    if (n.equals("lineNumber")) return Int.make(lineNum);
+    if (n.equals("flags")) return Long.valueOf(flags);
+    if (n.equals("lineNumber")) return Long.valueOf(lineNum);
     return super.trap(name, args);
   }
 
