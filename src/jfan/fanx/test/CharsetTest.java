@@ -134,7 +134,7 @@ public class CharsetTest
     // decode with Buf
     String bufStr = "";
     buf.flip();
-    while (buf.more().val) bufStr += (char)buf.readChar().val;
+    while (buf.more()) bufStr += (char)buf.readChar().val;
     verify(buf.readChar() == null);
     verify(bufStr.equals(string));
 

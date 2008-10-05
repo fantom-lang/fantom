@@ -392,7 +392,7 @@ public class Sys
   {
     try
     {
-      env.caseInsensitive(Bool.True);
+      env.caseInsensitive(true);
 
       // environment variables
       java.util.Map getenv = System.getenv();
@@ -415,7 +415,7 @@ public class Sys
 
       // sys.properties
       LocalFile f = new LocalFile(new File(HomeDir, "lib" + File.separator + "sys.props"));
-      if (f.exists().val)
+      if (f.exists())
       {
         try
         {

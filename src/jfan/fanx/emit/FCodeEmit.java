@@ -245,14 +245,14 @@ public class FCodeEmit
 
   private void loadFalse()
   {
-    if (parent.BoolFalse == 0) parent.BoolFalse = emit.field("fan/sys/Bool.False:Lfan/sys/Bool;");
+    if (parent.BoolFalse == 0) parent.BoolFalse = emit.field("java/lang/Boolean.FALSE:Ljava/lang/Boolean;");
     code.op2(GETSTATIC, parent.BoolFalse);
   }
 
   private void loadTrue()
   {
     // TODO: optimize while (true) either here or in compiler
-    if (parent.BoolTrue == 0) parent.BoolTrue = emit.field("fan/sys/Bool.True:Lfan/sys/Bool;");
+    if (parent.BoolTrue == 0) parent.BoolTrue = emit.field("java/lang/Boolean.TRUE:Ljava/lang/Boolean;");
     code.op2(GETSTATIC, parent.BoolTrue);
   }
 
@@ -582,7 +582,7 @@ public class FCodeEmit
         branch();
         break;
       default:
-       if (parent.CompareEQ == 0) parent.CompareEQ = emit.method("fanx/util/OpUtil.compareEQ(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
+       if (parent.CompareEQ == 0) parent.CompareEQ = emit.method("fanx/util/OpUtil.compareEQ(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareEQ);
     }
   }
@@ -607,7 +607,7 @@ public class FCodeEmit
         branch();
         break;
       default:
-       if (parent.CompareNE == 0) parent.CompareNE = emit.method("fanx/util/OpUtil.compareNE(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
+       if (parent.CompareNE == 0) parent.CompareNE = emit.method("fanx/util/OpUtil.compareNE(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareNE);
     }
   }
@@ -638,7 +638,7 @@ public class FCodeEmit
         branch();
         break;
      default:
-       if (parent.CompareLT == 0) parent.CompareLT = emit.method("fanx/util/OpUtil.compareLT(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
+       if (parent.CompareLT == 0) parent.CompareLT = emit.method("fanx/util/OpUtil.compareLT(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareLT);
     }
   }
@@ -663,7 +663,7 @@ public class FCodeEmit
         branch();
         break;
       default:
-       if (parent.CompareLE == 0) parent.CompareLE = emit.method("fanx/util/OpUtil.compareLE(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
+       if (parent.CompareLE == 0) parent.CompareLE = emit.method("fanx/util/OpUtil.compareLE(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareLE);
     }
   }
@@ -688,7 +688,7 @@ public class FCodeEmit
         branch();
         break;
       default:
-       if (parent.CompareGE == 0) parent.CompareGE = emit.method("fanx/util/OpUtil.compareGE(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
+       if (parent.CompareGE == 0) parent.CompareGE = emit.method("fanx/util/OpUtil.compareGE(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareGE);
     }
   }
@@ -713,7 +713,7 @@ public class FCodeEmit
         branch();
         break;
       default:
-       if (parent.CompareGT == 0) parent.CompareGT = emit.method("fanx/util/OpUtil.compareGT(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
+       if (parent.CompareGT == 0) parent.CompareGT = emit.method("fanx/util/OpUtil.compareGT(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareGT);
     }
   }
@@ -734,7 +734,7 @@ public class FCodeEmit
         branch();
         break;
       default:
-       if (parent.CompareSame == 0) parent.CompareSame = emit.method("fanx/util/OpUtil.compareSame(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
+       if (parent.CompareSame == 0) parent.CompareSame = emit.method("fanx/util/OpUtil.compareSame(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareSame);
     }
   }
@@ -755,7 +755,7 @@ public class FCodeEmit
         branch();
         break;
       default:
-        if (parent.CompareNotSame == 0) parent.CompareNotSame = emit.method("fanx/util/OpUtil.compareNotSame(Ljava/lang/Object;Ljava/lang/Object;)Lfan/sys/Bool;");
+        if (parent.CompareNotSame == 0) parent.CompareNotSame = emit.method("fanx/util/OpUtil.compareNotSame(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
         code.op2(INVOKESTATIC, parent.CompareNotSame);
     }
   }
@@ -776,7 +776,7 @@ public class FCodeEmit
         branch();
         break;
       default:
-       if (parent.CompareNull == 0) parent.CompareNull = emit.method("fanx/util/OpUtil.compareNull(Ljava/lang/Object;)Lfan/sys/Bool;");
+       if (parent.CompareNull == 0) parent.CompareNull = emit.method("fanx/util/OpUtil.compareNull(Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareNull);
     }
   }
@@ -797,7 +797,7 @@ public class FCodeEmit
         branch();
         break;
       default:
-       if (parent.CompareNotNull == 0) parent.CompareNotNull = emit.method("fanx/util/OpUtil.compareNotNull(Ljava/lang/Object;)Lfan/sys/Bool;");
+       if (parent.CompareNotNull == 0) parent.CompareNotNull = emit.method("fanx/util/OpUtil.compareNotNull(Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareNotNull);
     }
   }
@@ -815,7 +815,7 @@ public class FCodeEmit
     // otherwise we can use straight bytecode
     if (pod.typeRef(typeRef).isGenericInstance())
     {
-      if (parent.IsViaType == 0) parent.IsViaType = emit.method("fanx/util/OpUtil.is(Ljava/lang/Object;Lfan/sys/Type;)Lfan/sys/Bool;");
+      if (parent.IsViaType == 0) parent.IsViaType = emit.method("fanx/util/OpUtil.is(Ljava/lang/Object;Lfan/sys/Type;)Ljava/lang/Boolean;");
       loadType(typeRef);
       code.op2(INVOKESTATIC, parent.IsViaType);
     }
@@ -956,8 +956,8 @@ public class FCodeEmit
 
   private void loadBoolVal()
   {
-    if (parent.BoolVal == 0) parent.BoolVal = emit.field("fan/sys/Bool.val:Z");
-    code.op2(GETFIELD, parent.BoolVal);
+    if (parent.BoolVal == 0) parent.BoolVal = emit.method("java/lang/Boolean.booleanValue()Z");
+    code.op2(INVOKEVIRTUAL, parent.BoolVal);
   }
 
   private void loadIntVal()
@@ -968,7 +968,7 @@ public class FCodeEmit
 
   private void boolMake()
   {
-    if (parent.BoolMake == 0) parent.BoolMake = emit.method("fan/sys/Bool.make(Z)Lfan/sys/Bool;");
+    if (parent.BoolMake == 0) parent.BoolMake = emit.method("java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
     code.op2(INVOKESTATIC, parent.BoolMake);
   }
 

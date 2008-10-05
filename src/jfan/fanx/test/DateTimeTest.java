@@ -163,7 +163,7 @@ public class DateTimeTest
       verifyEq(cal.get(Calendar.MINUTE),         dt.min().val);
       verifyEq(cal.get(Calendar.SECOND),         dt.sec().val);
       verifyEq(cal.get(Calendar.DAY_OF_WEEK)-1,  dt.weekday().ordinal().val);
-      verifyEq(cal.getTimeZone().inDaylightTime(date), dt.dst().val);
+      verifyEq(cal.getTimeZone().inDaylightTime(date), dt.dst());
     }
     catch (RuntimeException e)
     {

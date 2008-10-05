@@ -18,11 +18,11 @@ public abstract class File
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static File make(Uri uri) { return make(uri, Bool.True); }
-  public static File make(Uri uri, Bool checkSlash)
+  public static File make(Uri uri) { return make(uri, true); }
+  public static File make(Uri uri, Boolean checkSlash)
   {
     java.io.File f = LocalFile.uriToFile(uri);
-    if (f.isDirectory() && !checkSlash.val && !uri.isDir().val)
+    if (f.isDirectory() && !checkSlash && !uri.isDir())
       uri = uri.plusSlash();
     return new LocalFile(uri, f);
   }
@@ -78,13 +78,13 @@ public abstract class File
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Object obj)
+  public final Boolean _equals(Object obj)
   {
     if (obj instanceof File)
     {
       return uri._equals(((File)obj).uri);
     }
-    return Bool.False;
+    return false;
   }
 
   public final int hashCode() { return uri.hashCode(); }
@@ -101,7 +101,7 @@ public abstract class File
 
   public final Uri uri() { return uri; }
 
-  public final Bool isDir() { return uri.isDir();   }
+  public final Boolean isDir() { return uri.isDir();   }
 
   public final List path() { return uri.path(); }
 
@@ -119,7 +119,7 @@ public abstract class File
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public abstract Bool exists();
+  public abstract Boolean exists();
 
   public abstract Int size();
 
@@ -136,7 +136,7 @@ public abstract class File
   {
     List list = list();
     for (int i=list.sz()-1; i>=0; --i)
-      if (!((File)list.get(i)).isDir().val)
+      if (!((File)list.get(i)).isDir())
         list.removeAt(Int.make(i));
     return list;
   }
@@ -145,7 +145,7 @@ public abstract class File
   {
     List list = list();
     for (int i=list.sz()-1; i>=0; --i)
-      if (((File)list.get(i)).isDir().val)
+      if (((File)list.get(i)).isDir())
         list.removeAt(Int.make(i));
     return list;
   }
@@ -153,7 +153,7 @@ public abstract class File
   public void walk(Func c)
   {
     c.call1(this);
-    if (isDir().val)
+    if (isDir())
     {
       List list = list();
       for (int i=0; i<list.sz(); ++i)
@@ -163,15 +163,15 @@ public abstract class File
 
   public abstract File normalize();
 
-  public File plus(Uri uri) { return plus(uri, Bool.True); }
-  public abstract File plus(Uri uri, Bool checkSlash);
+  public File plus(Uri uri) { return plus(uri, true); }
+  public abstract File plus(Uri uri, Boolean checkSlash);
 
   File plus(String uri) { return plus(Uri.fromStr(uri)); }
 
   File plusNameOf(File x)
   {
     String name = x.name().val;
-    if (x.isDir().val) name += "/";
+    if (x.isDir()) name += "/";
     return plus(name);
   }
 
@@ -183,13 +183,13 @@ public abstract class File
 
   public File createFile(Str name)
   {
-    if (!isDir().val) throw IOErr.make("Not a directory: " + this).val;
+    if (!isDir()) throw IOErr.make("Not a directory: " + this).val;
     return this.plus(name.toUri()).create();
   }
 
   public File createDir(Str name)
   {
-    if (!isDir().val) throw IOErr.make("Not a directory: " + this).val;
+    if (!isDir()) throw IOErr.make("Not a directory: " + this).val;
     if (!name.val.endsWith("/")) name = Str.make(name.val + "/");
     return this.plus(name.toUri()).create();
   }
@@ -208,7 +208,7 @@ public abstract class File
     // sanity
     if (isDir() != to.isDir())
     {
-      if (isDir().val)
+      if (isDir())
         throw ArgErr.make("copyTo must be dir `" + to + "`").val;
       else
         throw ArgErr.make("copyTo must not be dir `" + to + "`").val;
@@ -232,23 +232,23 @@ public abstract class File
     // check exclude
     if (exclude instanceof Regex)
     {
-      if (((Regex)exclude).matches(uri.toStr()).val) return;
+      if (((Regex)exclude).matches(uri.toStr())) return;
     }
     else if (exclude instanceof Func)
     {
-      if (((Func)exclude).call1(this) == Bool.True) return;
+      if (((Func)exclude).call1(this) == Boolean.TRUE) return;
     }
 
     // check for overwrite
-    if (to.exists().val)
+    if (to.exists())
     {
-      if (overwrite instanceof Bool)
+      if (overwrite instanceof Boolean)
       {
-        if (overwrite == Bool.False) return;
+        if (overwrite == Boolean.FALSE) return;
       }
       else if (overwrite instanceof Func)
       {
-        if (((Func)overwrite).call1(this) == Bool.False) return;
+        if (((Func)overwrite).call1(this) == Boolean.FALSE) return;
       }
       else
       {
@@ -257,7 +257,7 @@ public abstract class File
     }
 
     // copy directory
-    if (isDir().val)
+    if (isDir())
     {
       to.create();
       List kids = list();
@@ -286,7 +286,7 @@ public abstract class File
   public final File copyInto(File dir) { return copyInto(dir, null); }
   public File copyInto(File dir, Map options)
   {
-    if (!dir.isDir().val)
+    if (!dir.isDir())
       throw ArgErr.make("Not a dir: `" + dir + "`").val;
 
     return copyTo(dir.plusNameOf(this), options);
@@ -300,7 +300,7 @@ public abstract class File
 
   public File moveInto(File dir)
   {
-    if (!dir.isDir().val)
+    if (!dir.isDir())
       throw ArgErr.make("Not a dir: `" + dir + "`").val;
 
     return moveTo(dir.plusNameOf(this));
@@ -309,7 +309,7 @@ public abstract class File
   public File rename(Str newName)
   {
     String n = newName.val;
-    if (isDir().val) n += "/";
+    if (isDir()) n += "/";
     return moveTo(parent().plus(n));
   }
 
@@ -328,9 +328,9 @@ public abstract class File
   public final InStream in() { return in(Int.Chunk); }
   public abstract InStream in(Int bufSize);
 
-  public final OutStream out() { return out(Bool.False, Int.Chunk); }
-  public final OutStream out(Bool append) { return out(append, Int.Chunk); }
-  public abstract OutStream out(Bool append, Int bufSize);
+  public final OutStream out() { return out(false, Int.Chunk); }
+  public final OutStream out(Boolean append) { return out(append, Int.Chunk); }
+  public abstract OutStream out(Boolean append, Int bufSize);
 
   public final Buf readAllBuf()
   {
@@ -347,8 +347,8 @@ public abstract class File
     in(Int.Chunk).eachLine(f);
   }
 
-  public final Str readAllStr() { return readAllStr(Bool.True); }
-  public final Str readAllStr(Bool normalizeNewlines)
+  public final Str readAllStr() { return readAllStr(true); }
+  public final Str readAllStr(Boolean normalizeNewlines)
   {
     return in(Int.Chunk).readAllStr(normalizeNewlines);
   }
@@ -360,7 +360,7 @@ public abstract class File
 
   public final void writeProps(Map props)
   {
-    out(Bool.False, Int.Chunk).writeProps(props, Bool.True);
+    out(false, Int.Chunk).writeProps(props, true);
   }
 
   public final Object readObj() { return readObj(null); }

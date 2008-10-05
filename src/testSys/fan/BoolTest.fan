@@ -16,9 +16,12 @@ class BoolTest : Test
 // Equals
 //////////////////////////////////////////////////////////////////////////
 
-  Void testEquals()
+  Void testIdentity()
   {
     Obj x := true
+    verify(x.isImmutable)
+    verify(x.type === Bool#)
+    verify(true.isImmutable)
     verify(true == true)
     verify(false == false)
     verify(true != false)

@@ -43,11 +43,11 @@ public class ConnectionPeer
     }
   }
 
-  public Bool isClosed(Connection self)
+  public Boolean isClosed(Connection self)
   {
     try
     {
-      return Bool.make(jconn.isClosed());
+      return jconn.isClosed();
     }
     catch (SQLException e)
     {
@@ -55,17 +55,17 @@ public class ConnectionPeer
     }
   }
 
-  public Bool close(Connection self)
+  public Boolean close(Connection self)
   {
     try
     {
       jconn.close();
-      return Bool.True;
+      return true;
     }
     catch (Throwable e)
     {
       e.printStackTrace();
-      return Bool.False;
+      return false;
     }
   }
 
@@ -73,7 +73,7 @@ public class ConnectionPeer
 // Database metadata
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool tableExists(Connection self, Str tableName)
+  public Boolean tableExists(Connection self, Str tableName)
   {
     try
     {
@@ -86,7 +86,7 @@ public class ConnectionPeer
 
       boolean exists = tables.next();
       tables.close();
-      return Bool.make(exists);
+      return exists;
     }
     catch(SQLException ex)
     {
@@ -174,11 +174,11 @@ public class ConnectionPeer
 // Transactions
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool getAutoCommit(Connection self)
+  public Boolean getAutoCommit(Connection self)
   {
     try
     {
-      return Bool.make(jconn.getAutoCommit());
+      return jconn.getAutoCommit();
     }
     catch (SQLException e)
     {
@@ -186,11 +186,11 @@ public class ConnectionPeer
     }
   }
 
-  public void setAutoCommit(Connection self, Bool b)
+  public void setAutoCommit(Connection self, Boolean b)
   {
     try
     {
-      jconn.setAutoCommit(b.val);
+      jconn.setAutoCommit(b);
     }
     catch (SQLException e)
     {

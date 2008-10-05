@@ -51,9 +51,9 @@ public abstract class Buf
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Object that)
+  public final Boolean _equals(Object that)
   {
-    return this == that ? Bool.True : Bool.False;
+    return this == that;
   }
 
   public Str toStr()
@@ -89,9 +89,9 @@ public abstract class Buf
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool empty()
+  public final Boolean empty()
   {
-    return getSize() == 0 ? Bool.True : Bool.False;
+    return getSize() == 0;
   }
 
   public Int capacity()
@@ -123,9 +123,9 @@ public abstract class Buf
     return Int.make(getSize()-getPos());
   }
 
-  public final Bool more()
+  public final Boolean more()
   {
-    return getSize()-getPos() > 0 ? Bool.True : Bool.False;
+    return getSize()-getPos() > 0;
   }
 
   public final Buf seek(Int pos)
@@ -201,9 +201,9 @@ public abstract class Buf
     return this;
   }
 
-  public Bool close()
+  public Boolean close()
   {
-    return Bool.True;
+    return true;
   }
 
   public final Charset charset()
@@ -240,7 +240,7 @@ public abstract class Buf
 
   public final Buf writeDecimal(Decimal x) { out.writeDecimal(x); return this; }
 
-  public final Buf writeBool(Bool x) { out.writeBool(x); return this; }
+  public final Buf writeBool(Boolean x) { out.writeBool(x); return this; }
 
   public final Buf writeUtf(Str x) { out.writeUtf(x); return this; }
 
@@ -296,7 +296,7 @@ public abstract class Buf
 
   public final Decimal readDecimal() { return in.readDecimal(); }
 
-  public final Bool readBool() { return in.readBool(); }
+  public final Boolean readBool() { return in.readBool(); }
 
   public final Str readUtf() { return in.readUtf(); }
 
@@ -318,7 +318,7 @@ public abstract class Buf
   public final void eachLine(Func f) { in.eachLine(f); }
 
   public final Str readAllStr() { return in.readAllStr(); }
-  public final Str readAllStr(Bool normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
+  public final Str readAllStr(Boolean normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
 
   public final Object readObj() { return in.readObj(); }
 

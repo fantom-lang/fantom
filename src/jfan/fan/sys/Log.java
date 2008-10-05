@@ -29,14 +29,14 @@ public class Log
     }
   }
 
-  public static Log find(Str name) { return find(name, Bool.True); }
-  public static Log find(Str name, Bool checked)
+  public static Log find(Str name) { return find(name, true); }
+  public static Log find(Str name, Boolean checked)
   {
     synchronized (lock)
     {
       Log log = (Log)byName.get(name);
       if (log != null) return log;
-      if (checked.val) throw Err.make("Unknown log: " + name).val;
+      if (checked) throw Err.make("Unknown log: " + name).val;
       return null;
     }
   }
@@ -123,18 +123,18 @@ public class Log
     return this.level.ord <= level.ord;
   }
 
-  public final Bool isEnabled(LogLevel level)
+  public final Boolean isEnabled(LogLevel level)
   {
-    return enabled(level) ? Bool.True : Bool.False;
+    return enabled(level);
   }
 
-  public final Bool isError() { return isEnabled(LogLevel.error); }
+  public final Boolean isError() { return isEnabled(LogLevel.error); }
 
-  public final Bool isWarn()  { return isEnabled(LogLevel.warn); }
+  public final Boolean isWarn()  { return isEnabled(LogLevel.warn); }
 
-  public final Bool isInfo()  { return isEnabled(LogLevel.info); }
+  public final Boolean isInfo()  { return isEnabled(LogLevel.info); }
 
-  public final Bool isDebug() { return isEnabled(LogLevel.debug); }
+  public final Boolean isDebug() { return isEnabled(LogLevel.debug); }
 
 //////////////////////////////////////////////////////////////////////////
 // Logging
@@ -201,7 +201,7 @@ public class Log
 
   public static void addHandler(Func func)
   {
-    if (!func.isImmutable().val)
+    if (!func.isImmutable())
       throw NotImmutableErr.make("handler must be immutable").val;
 
     synchronized (lock)
@@ -245,7 +245,7 @@ public class Log
     try
     {
       File f  = Sys.homeDir().plus("lib/log.props");
-      if (f.exists().val)
+      if (f.exists())
       {
         Map props = logProps = f.readProps();
         List keys = props.keys();
@@ -253,7 +253,7 @@ public class Log
         {
           Str key = (Str)keys.get(i);
           Str val = (Str)props.get(key);
-          if (LogLevel.fromStr(val, Bool.False) == null)
+          if (LogLevel.fromStr(val, false) == null)
           {
             System.out.println("ERROR: Invalid level lib/log.props#" + key + " = " + val);
             props.remove(key);

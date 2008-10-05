@@ -38,7 +38,7 @@ public class Pod
 //////////////////////////////////////////////////////////////////////////
 
   public static Pod find(Str name) { return find(name.val, true, null, null); }
-  public static Pod find(Str name, Bool checked) { return find(name.val, checked.val, null, null); }
+  public static Pod find(Str name, Boolean checked) { return find(name.val, checked, null, null); }
   public static Pod find(String name, boolean checked) { return find(name, checked, null, null); }
   public static Pod find(String name, boolean checked, FPod fpod, HashMap resolving)
   {
@@ -75,7 +75,7 @@ public class Pod
             Pod dpod = find(d.name().val, false, null, resolving);
             if (dpod == null)
               throw new Exception("Missing dependency for '" + name + "': " + d);
-            if (!d.match(dpod.version()).val)
+            if (!d.match(dpod.version()))
               throw new Exception("Missing dependency for '" + name + "': " + dpod.name() + " " + dpod.version() + " != " + d);
           }
 
@@ -240,7 +240,7 @@ public class Pod
   public List types() { return new List(Sys.TypeType, types); }
 
   public Type findType(Str name) { return findType(name.val, true); }
-  public Type findType(Str name, Bool checked) { return findType(name.val, checked.val); }
+  public Type findType(Str name, Boolean checked) { return findType(name.val, checked.booleanValue()); }
   public Type findType(String name, boolean checked)
   {
     Type type = (Type)typesByName.get(name);

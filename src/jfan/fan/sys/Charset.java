@@ -24,7 +24,7 @@ public class Charset
 //////////////////////////////////////////////////////////////////////////
 
   public static Charset fromStr(Str name) { return fromStr(name.val, true); }
-  public static Charset fromStr(Str name, Bool checked) { return fromStr(name.val, checked.val); }
+  public static Charset fromStr(Str name, Boolean checked) { return fromStr(name.val, checked.booleanValue()); }
   public static Charset fromStr(String name, boolean checked)
   {
     try
@@ -277,13 +277,13 @@ public class Charset
 
   public Int hash() { return Int.make(charset.hashCode()); }
 
-  public Bool _equals(Object obj)
+  public Boolean _equals(Object obj)
   {
     if (obj instanceof Charset)
     {
-      return ((Charset)obj).charset.equals(this.charset) ? Bool.True : Bool.False;
+      return ((Charset)obj).charset.equals(this.charset);
     }
-    return Bool.False;
+    return false;
   }
 
   public Str toStr() { return name; }

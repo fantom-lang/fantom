@@ -59,8 +59,8 @@ public class ButtonPeer
 //////////////////////////////////////////////////////////////////////////
 
   // Bool selected := false
-  public Bool selected(fan.fwt.Button self) { return selected.get(); }
-  public void selected(fan.fwt.Button self, Bool v) { selected.set(v); }
+  public Boolean selected(fan.fwt.Button self) { return selected.get(); }
+  public void selected(fan.fwt.Button self, Boolean v) { selected.set(v); }
   public final Prop.BoolProp selected = new Prop.BoolProp(this, false)
   {
     public boolean get(Widget w) { return (w instanceof Button) ? ((Button)w).getSelection() : ((ToolItem)w).getSelection(); }

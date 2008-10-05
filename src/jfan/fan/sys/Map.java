@@ -64,9 +64,9 @@ public final class Map
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool isEmpty()
+  public final Boolean isEmpty()
   {
-    return map.size() == 0 ? Bool.True : Bool.False;
+    return map.size() == 0;
   }
 
   public final Int size()
@@ -88,9 +88,9 @@ public final class Map
     return def;
   }
 
-  public final Bool containsKey(Object key)
+  public final Boolean containsKey(Object key)
   {
-    return Bool.make(map.containsKey(key));
+    return map.containsKey(key);
   }
 
   public final List keys()
@@ -112,7 +112,7 @@ public final class Map
     modify();
     if (key == null)
       throw NullErr.make("key is null").val;
-    if (!isImmutable(key).val)
+    if (!isImmutable(key))
       throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
     map.put(key, value);
     return this;
@@ -123,7 +123,7 @@ public final class Map
     modify();
     if (key == null)
       throw NullErr.make("key is null").val;
-    if (!isImmutable(key).val)
+    if (!isImmutable(key))
       throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
     Object old = map.put(key, value);
     if (old != null)
@@ -177,8 +177,8 @@ public final class Map
     map.clear();
   }
 
-  public final Bool caseInsensitive() { return Bool.make(caseInsensitive); }
-  public final void caseInsensitive(Bool v)
+  public final Boolean caseInsensitive() { return caseInsensitive; }
+  public final void caseInsensitive(Boolean v)
   {
     modify();
 
@@ -188,8 +188,8 @@ public final class Map
     if (map.size() != 0)
       throw UnsupportedErr.make("Map not empty").val;
 
-    if (this.caseInsensitive == v.val) return;
-    this.caseInsensitive = v.val;
+    if (this.caseInsensitive == v) return;
+    this.caseInsensitive = v;
 
     if (caseInsensitive)
       map = new CIHashMap();
@@ -201,19 +201,18 @@ public final class Map
   public final void def(Object v)
   {
     modify();
-    if (v != null && !isImmutable(v).val)
+    if (v != null && !isImmutable(v))
       throw NotImmutableErr.make("def must be immutable: " + type(v)).val;
     this.def = v;
   }
 
-  public final Bool _equals(Object that)
+  public final Boolean _equals(Object that)
   {
     if (that instanceof Map)
     {
-      return Bool.make(type.equals(type(that)) &&
-                       map.equals(((Map)that).map));
+      return type.equals(type(that)) && map.equals(((Map)that).map);
     }
-    return Bool.False;
+    return false;
   }
 
   public final Int hash()
@@ -279,7 +278,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call2(val, key) == Bool.True)
+      if (f.call2(val, key) == Boolean.TRUE)
         return val;
     }
     return null;
@@ -294,7 +293,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call2(val, key) == Bool.True)
+      if (f.call2(val, key) == Boolean.TRUE)
         acc.set(key, val);
     }
     return acc;
@@ -309,7 +308,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call2(val, key) == Bool.False)
+      if (f.call2(val, key) == Boolean.FALSE)
         acc.set(key, val);
     }
     return acc;
@@ -345,14 +344,14 @@ public final class Map
 // Readonly
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool isRW()
+  public final Boolean isRW()
   {
-    return readonly ? Bool.False : Bool.True;
+    return !readonly;
   }
 
-  public final Bool isRO()
+  public final Boolean isRO()
   {
-    return readonly ? Bool.True : Bool.False;
+    return readonly;
   }
 
   public final Map rw()
@@ -383,9 +382,9 @@ public final class Map
     return readonlyMap;
   }
 
-  public final Bool isImmutable()
+  public final Boolean isImmutable()
   {
-    return Bool.make(immutable);
+    return immutable;
   }
 
   public final Map toImmutable()
@@ -408,7 +407,7 @@ public final class Map
           val = ((List)val).toImmutable();
         else if (val instanceof Map)
           val = ((Map)val).toImmutable();
-        else if (!isImmutable(val).val)
+        else if (!isImmutable(val))
           throw NotImmutableErr.make("Item [" + key + "] not immutable " + type(val)).val;
       }
 
@@ -534,7 +533,7 @@ public final class Map
   {
     CIKey(Str key) { this.key  = key; this.hash = key.caseInsensitiveHash(); }
     public final int hashCode() { return hash; }
-    public final boolean equals(Object obj) { return key.equalsIgnoreCase(((CIKey)obj).key).val; }
+    public final boolean equals(Object obj) { return key.equalsIgnoreCase(((CIKey)obj).key); }
     public final String toString() { return key.val; }
     final Str key;
     final int hash;

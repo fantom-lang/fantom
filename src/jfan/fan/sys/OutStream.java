@@ -140,9 +140,9 @@ public class OutStream
     return writeUtfString(x.val.toString());
   }
 
-  public OutStream writeBool(Bool x)
+  public OutStream writeBool(Boolean x)
   {
-    return w(x.val ? 1 : 0);
+    return w(x ? 1 : 0);
   }
 
   public OutStream writeUtf(Str x) { return writeUtfString(x.val); }
@@ -249,8 +249,8 @@ public class OutStream
     return this;
   }
 
-  public OutStream writeProps(Map props) { return writeProps(props, Bool.True); }
-  public OutStream writeProps(Map props, Bool close)
+  public OutStream writeProps(Map props) { return writeProps(props, true); }
+  public OutStream writeProps(Map props, Boolean close)
   {
     Charset origCharset = charset();
     charset(Charset.utf8());
@@ -273,7 +273,7 @@ public class OutStream
     }
     finally
     {
-      try { if (close.val) close(); } catch (Exception e) { e.printStackTrace(); }
+      try { if (close) close(); } catch (Exception e) { e.printStackTrace(); }
       charset(origCharset);
     }
   }
@@ -318,10 +318,10 @@ public class OutStream
     return this;
   }
 
-  public Bool close()
+  public Boolean close()
   {
     if (out != null) return out.close();
-    return Bool.True;
+    return true;
   }
 
 //////////////////////////////////////////////////////////////////////////

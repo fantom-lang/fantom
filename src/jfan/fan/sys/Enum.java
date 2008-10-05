@@ -33,7 +33,7 @@ public abstract class Enum
     self.name    = name;
   }
 
-  protected static Enum doFromStr(Type t, Str name, Bool checked)
+  protected static Enum doFromStr(Type t, Str name, Boolean checked)
   {
     // the compiler marks the value fields with the Enum flag
     Slot slot = t.slot(name.val, false);
@@ -47,7 +47,7 @@ public abstract class Enum
       {
       }
     }
-    if (!checked.val) return null;
+    if (!checked) return null;
     throw ParseErr.make(t.qname().val, name).val;
   }
 
@@ -55,9 +55,9 @@ public abstract class Enum
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Object obj)
+  public final Boolean _equals(Object obj)
   {
-    return this == obj ? Bool.True : Bool.False;
+    return this == obj;
   }
 
   public final Int compare(Object obj)

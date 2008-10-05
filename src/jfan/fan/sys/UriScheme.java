@@ -20,8 +20,8 @@ public abstract class UriScheme
 // Lookup
 //////////////////////////////////////////////////////////////////////////
 
-  public static UriScheme find(Str scheme) { return find(scheme, Bool.True); }
-  public static UriScheme find(Str scheme, Bool checked)
+  public static UriScheme find(Str scheme) { return find(scheme, true); }
+  public static UriScheme find(Str scheme, Boolean checked)
   {
     // check cache
     synchronized (cache)
@@ -33,7 +33,7 @@ public abstract class UriScheme
     try
     {
       // lookup scheme type
-      Type t = (Type)Type.findByFacet(Str.make("uriScheme"), scheme, Bool.True).first();
+      Type t = (Type)Type.findByFacet(Str.make("uriScheme"), scheme, true).first();
       if (t == null) throw new Exception();
 
       // allocate instance
@@ -52,7 +52,7 @@ public abstract class UriScheme
     }
     catch (Throwable e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw UnresolvedErr.make("Unknown scheme: " + scheme).val;
     }
   }

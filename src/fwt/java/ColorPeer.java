@@ -61,7 +61,7 @@ public class ColorPeer
     {
       Color sys = Env.get().display.getSystemColor(swtId);
       int rgb = (sys.getRed() << 16) | (sys.getGreen() << 8) | sys.getBlue();
-      c = sysColors[index] = fan.fwt.Color.make(Int.make(rgb), Bool.False);
+      c = sysColors[index] = fan.fwt.Color.make(Int.make(rgb), false);
     }
     return c;
   }

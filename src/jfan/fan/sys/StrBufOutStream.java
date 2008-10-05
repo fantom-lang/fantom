@@ -74,9 +74,9 @@ public class StrBufOutStream
     return this;
   }
 
-  public Bool close()
+  public Boolean close()
   {
-    return Bool.True;
+    return true;
   }
 
 //////////////////////////////////////////////////////////////////////////

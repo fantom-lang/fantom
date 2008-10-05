@@ -28,7 +28,7 @@ public class FanObj
 
   public final boolean equals(Object obj)
   {
-    return _equals(obj).val;
+    return _equals(obj);
   }
 
   public final String toString()
@@ -40,17 +40,17 @@ public class FanObj
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Bool equals(Object self, Object x)
+  public static Boolean equals(Object self, Object x)
   {
     if (self instanceof FanObj)
       return ((FanObj)self)._equals(x);
     else
-      return Bool.make(self.equals(x));
+      return self.equals(x);
   }
 
-  public Bool _equals(Object obj)
+  public Boolean _equals(Object obj)
   {
-    return this == obj ? Bool.True : Bool.False;
+    return this == obj;
   }
 
   public static Int compare(Object self, Object x)
@@ -94,15 +94,15 @@ public class FanObj
     return Str.make(super.toString());
   }
 
-  public static Bool isImmutable(Object self)
+  public static Boolean isImmutable(Object self)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).isImmutable();
     else
-      return Bool.make(FanUtil.isJavaImmutable(self.getClass()));
+      return FanUtil.isJavaImmutable(self.getClass());
   }
 
-  public Bool isImmutable()
+  public Boolean isImmutable()
   {
     return type().isConst();
   }
@@ -127,7 +127,7 @@ public class FanObj
 
   public Object trap(Str name, List args)
   {
-    Slot slot = type().slot(name, Bool.True);
+    Slot slot = type().slot(name, true);
     if (slot instanceof Method)
     {
       Method m = (Method)slot;

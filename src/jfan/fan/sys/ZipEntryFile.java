@@ -42,14 +42,14 @@ public class ZipEntryFile
 // File
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool exists()
+  public Boolean exists()
   {
-    return Bool.True;
+    return true;
   }
 
   public Int size()
   {
-    if (isDir().val) return null;
+    if (isDir()) return null;
     long size = entry.getSize();
     if (size < 0) return null;
     return Int.pos(size);
@@ -85,7 +85,7 @@ public class ZipEntryFile
     return this;
   }
 
-  public File plus(Uri uri, Bool checkSlash)
+  public File plus(Uri uri, Boolean checkSlash)
   {
     // TODO
     throw UnsupportedErr.make("ZipEntryFile.plus").val;
@@ -157,7 +157,7 @@ public class ZipEntryFile
     }
   }
 
-  public OutStream out(Bool append, Int bufSize)
+  public OutStream out(Boolean append, Int bufSize)
   {
     throw IOErr.make("ZipEntryFile is readonly").val;
   }

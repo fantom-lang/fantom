@@ -40,13 +40,13 @@ public class ListType
     return signature().hash();
   }
 
-  public final Bool _equals(Object obj)
+  public final Boolean _equals(Object obj)
   {
     if (obj instanceof ListType)
     {
       return v._equals(((ListType)obj).v);
     }
-    return Bool.False;
+    return false;
   }
 
   public final Type base()

@@ -41,11 +41,11 @@ public class TreePeer
     fan.fwt.Tree self = (fan.fwt.Tree)this.self;
 
     int style = SWT.VIRTUAL;
-    if (self.multi.val)
+    if (self.multi)
       style |= SWT.MULTI;
     else
       style |= SWT.SINGLE;
-    if (self.border.val)  style |= SWT.BORDER;
+    if (self.border)  style |= SWT.BORDER;
 
     Tree t = new Tree((Composite)parent, style);
     t.addListener(SWT.Expand, this);
@@ -110,7 +110,7 @@ public class TreePeer
     c.select(item);
   }
 
-  public void setExpanded(fan.fwt.Tree self, Object node, Bool expanded)
+  public void setExpanded(fan.fwt.Tree self, Object node, Boolean expanded)
   {
     Tree c = (Tree)this.control;
 
@@ -127,7 +127,7 @@ public class TreePeer
       if (child.getData() == null)
         setData(model.children(node).get(i), child);
     }
-    item.setExpanded(expanded.val);
+    item.setExpanded(expanded);
   }
 
   public void show(fan.fwt.Tree self, Object node)
@@ -251,14 +251,14 @@ public class TreePeer
 
     // assume we only have one child to prevent the SWT from loading
     // the children until the node is expanded; see lazyLoadChildren
-    item.setItemCount(model.hasChildren(node).val ? 1 : 0);
+    item.setItemCount(model.hasChildren(node) ? 1 : 0);
   }
 
   public void widgetDefaultSelected(SelectionEvent se)
   {
     fan.fwt.Tree self = (fan.fwt.Tree)this.self;
     TreeItem item = (TreeItem)se.item;
-    if (self.onAction().isEmpty().val)
+    if (self.onAction().isEmpty())
     {
       item.setExpanded(!item.getExpanded());
     }

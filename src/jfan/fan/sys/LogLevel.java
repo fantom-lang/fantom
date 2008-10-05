@@ -38,8 +38,8 @@ public class LogLevel
     this.ord = ord;
   }
 
-  public static LogLevel fromStr(Str name) { return fromStr(name, Bool.True); }
-  public static LogLevel fromStr(Str name, Bool checked)
+  public static LogLevel fromStr(Str name) { return fromStr(name, true); }
+  public static LogLevel fromStr(Str name, Boolean checked)
   {
     return (LogLevel)doFromStr(Sys.LogLevelType, name, checked);
   }

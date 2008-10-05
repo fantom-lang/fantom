@@ -102,9 +102,9 @@ public final class List
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool isEmpty()
+  public final Boolean isEmpty()
   {
-    return size == 0 ? Bool.True : Bool.False;
+    return size == 0;
   }
 
   public final Int size()
@@ -182,30 +182,30 @@ public final class List
     }
   }
 
-  public final Bool contains(Object value)
+  public final Boolean contains(Object value)
   {
-    return Bool.make(index(value) != null);
+    return index(value) != null;
   }
 
-  public final Bool containsSame(Object value)
+  public final Boolean containsSame(Object value)
   {
-    return Bool.make(indexSame(value) != null);
+    return indexSame(value) != null;
   }
 
-  public final Bool containsAll(List list)
+  public final Boolean containsAll(List list)
   {
     for (int i=0; i<list.sz(); ++i)
       if (index(list.get(i)) == null)
-        return Bool.False;
-    return Bool.True;
+        return false;
+    return true;
   }
 
-  public final Bool containsAllSame(List list)
+  public final Boolean containsAllSame(List list)
   {
     for (int i=0; i<list.sz(); ++i)
       if (indexSame(list.get(i)) == null)
-        return Bool.False;
-    return Bool.True;
+        return false;
+    return true;
   }
 
   public final Int index(Object value) { return index(value, Int.Zero); }
@@ -292,18 +292,18 @@ public final class List
     return Int.make(hash);
   }
 
-  public final Bool _equals(Object that)
+  public final Boolean _equals(Object that)
   {
     if (that instanceof List)
     {
       List x = (List)that;
-      if (!of.equals(x.of)) return Bool.False;
-      if (size != x.size) return Bool.False;
+      if (!of.equals(x.of)) return false;
+      if (size != x.size) return false;
       for (int i=0; i<size; ++i)
-        if (!OpUtil.compareEQ(values[i], x.values[i]).val) return Bool.False;
-      return Bool.True;
+        if (!OpUtil.compareEQ(values[i], x.values[i])) return false;
+      return true;
     }
-    return Bool.False;
+    return false;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -514,7 +514,7 @@ public final class List
   public final Object find(Func f)
   {
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) == Bool.True)
+      if (f.call2(values[i], Int.pos(i)) == Boolean.TRUE)
         return values[i];
     return null;
   }
@@ -524,7 +524,7 @@ public final class List
     for (int i=0; i<size; ++i)
     {
       Int pos = Int.pos(i);
-      if (f.call2(values[i], pos) == Bool.True)
+      if (f.call2(values[i], pos) == Boolean.TRUE)
         return pos;
     }
     return null;
@@ -534,7 +534,7 @@ public final class List
   {
     List acc = new List(of, size);
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) == Bool.True)
+      if (f.call2(values[i], Int.pos(i)) == Boolean.TRUE)
         acc.add(values[i]);
     return acc;
   }
@@ -555,25 +555,25 @@ public final class List
   {
     List acc = new List(of, size);
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) != Bool.True)
+      if (f.call2(values[i], Int.pos(i)) != Boolean.TRUE)
         acc.add(values[i]);
     return acc;
   }
 
-  public final Bool any(Func f)
+  public final Boolean any(Func f)
   {
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) == Bool.True)
-        return Bool.True;
-    return Bool.False;
+      if (f.call2(values[i], Int.pos(i)) == Boolean.TRUE)
+        return true;
+    return false;
   }
 
-  public final Bool all(Func f)
+  public final Boolean all(Func f)
   {
     for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Int.pos(i)) != Bool.True)
-        return Bool.False;
-    return Bool.True;
+      if (f.call2(values[i], Int.pos(i)) != Boolean.TRUE)
+        return false;
+    return true;
   }
 
   public final Object reduce(Object reduction, Func f)
@@ -940,14 +940,14 @@ public final class List
 // Readonly
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool isRW()
+  public final Boolean isRW()
   {
-    return readonly ? Bool.False : Bool.True;
+    return !readonly;
   }
 
-  public final Bool isRO()
+  public final Boolean isRO()
   {
-    return readonly ? Bool.True : Bool.False;
+    return readonly;
   }
 
   public final List rw()
@@ -979,9 +979,9 @@ public final class List
     return readonlyList;
   }
 
-  public final Bool isImmutable()
+  public final Boolean isImmutable()
   {
-    return Bool.make(immutable);
+    return immutable;
   }
 
   public final List toImmutable()
@@ -999,7 +999,7 @@ public final class List
           item = ((List)item).toImmutable();
         else if (item instanceof Map)
           item = ((Map)item).toImmutable();
-        else if (!isImmutable(item).val)
+        else if (!isImmutable(item))
           throw NotImmutableErr.make("Item [" + i + "] not immutable " + type(item)).val;
       }
       temp[i] = item;

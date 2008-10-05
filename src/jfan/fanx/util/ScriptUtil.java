@@ -50,7 +50,7 @@ public class ScriptUtil
     for (int i=0; i<types.sz(); ++i)
     {
       t = (Type)types.get(i);
-      if (t.isPublic().val) break;
+      if (t.isPublic()) break;
     }
     if (t == null)
       throw Err.make("Script file defines no public classes: " +  file).val;
@@ -140,9 +140,9 @@ public class ScriptUtil
   static boolean getOption(Map options, Str key, boolean def)
   {
     if (options == null) return def;
-    Bool x = (Bool)options.get(key);
+    Boolean x = (Boolean)options.get(key);
     if (x == null) return def;
-    return x.val;
+    return x;
   }
 
 //////////////////////////////////////////////////////////////////////////

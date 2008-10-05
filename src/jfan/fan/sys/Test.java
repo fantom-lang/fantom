@@ -57,24 +57,24 @@ public class Test
 // Verify
 //////////////////////////////////////////////////////////////////////////
 
-  public void verify(Bool cond) { verify(cond, null); }
-  public void verify(Bool cond, Str msg)
+  public void verify(Boolean cond) { verify(cond, null); }
+  public void verify(Boolean cond, Str msg)
   {
-    if (!cond.val) fail(msg);
+    if (!cond) fail(msg);
     verifyCount++;
   }
 
-  public void verifyFalse(Bool cond) { verifyFalse(cond, null); }
-  public void verifyFalse(Bool cond, Str msg)
+  public void verifyFalse(Boolean cond) { verifyFalse(cond, null); }
+  public void verifyFalse(Boolean cond, Str msg)
   {
-    if (cond.val) fail(msg);
+    if (cond) fail(msg);
     verifyCount++;
   }
 
   public void verifyEq(Object expected, Object actual) { verifyEq(expected, actual, null); }
   public void verifyEq(Object expected, Object actual, Str msg)
   {
-    if (!OpUtil.compareEQ(expected, actual).val)
+    if (!OpUtil.compareEQ(expected, actual))
     {
       if (msg == null) msg = Str.make(s(expected) + " != " + s(actual));
       fail(msg);
@@ -94,7 +94,7 @@ public class Test
   public void verifyNotEq(Object expected, Object actual) { verifyNotEq(expected, actual, null); }
   public void verifyNotEq(Object expected, Object actual, Str msg)
   {
-    if (!OpUtil.compareNE(expected, actual).val)
+    if (!OpUtil.compareNE(expected, actual))
     {
       if (msg == null) msg = Str.make(s(expected) + " == " + s(actual));
       fail(msg);
@@ -105,7 +105,7 @@ public class Test
   public void verifySame(Object expected, Object actual) { verifySame(expected, actual, null); }
   public void verifySame(Object expected, Object actual, Str msg)
   {
-    if (!OpUtil.compareSame(expected, actual).val)
+    if (!OpUtil.compareSame(expected, actual))
     {
       if (msg == null) msg = Str.make(s(expected) + " !== " + s(actual));
       fail(msg);
@@ -116,7 +116,7 @@ public class Test
   public void verifyNotSame(Object expected, Object actual) { verifyNotSame(expected, actual, null); }
   public void verifyNotSame(Object expected, Object actual, Str msg)
   {
-    if (OpUtil.compareSame(expected, actual).val)
+    if (OpUtil.compareSame(expected, actual))
     {
       if (msg == null) msg = Str.make(s(expected) + " === " + s(actual));
       fail(msg);

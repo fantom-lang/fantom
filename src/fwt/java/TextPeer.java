@@ -41,13 +41,13 @@ public class TextPeer
   {
     fan.fwt.Text self = (fan.fwt.Text)this.self;
 
-    int style = self.multiLine.val ? SWT.MULTI: SWT.SINGLE;
-    if (!self.editable.val) style |= SWT.READ_ONLY;
-    if (self.border.val)    style |= SWT.BORDER;
-    if (self.wrap.val)      style |= SWT.WRAP;
-    if (self.password.val)  style |= SWT.PASSWORD;
-    if (self.hscroll.val)   style |= SWT.H_SCROLL;
-    if (self.vscroll.val)   style |= SWT.V_SCROLL;
+    int style = self.multiLine ? SWT.MULTI: SWT.SINGLE;
+    if (!self.editable) style |= SWT.READ_ONLY;
+    if (self.border)    style |= SWT.BORDER;
+    if (self.wrap)      style |= SWT.WRAP;
+    if (self.password)  style |= SWT.PASSWORD;
+    if (self.hscroll)   style |= SWT.H_SCROLL;
+    if (self.vscroll)   style |= SWT.V_SCROLL;
 
     Text t = new Text((Composite)parent, style);
     control = t;
@@ -55,7 +55,7 @@ public class TextPeer
     t.addSelectionListener(this);
 
     // auto selectAll on focus for single line text fields
-    if (!self.multiLine.val)
+    if (!self.multiLine)
     {
       t.addFocusListener(new FocusAdapter()
       {

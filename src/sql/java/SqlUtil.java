@@ -68,7 +68,7 @@ public class SqlUtil
       case Types.BIT:
         boolean b = rs.getBoolean(col);
         if (rs.wasNull()) return null;
-        return Bool.make(b);
+        return Boolean.valueOf(b);
 
       case Types.TINYINT:
       case Types.SMALLINT:
@@ -160,7 +160,7 @@ public class SqlUtil
     {
       boolean b = rs.getBoolean(col);
       if (rs.wasNull()) return null;
-      return Bool.make(b);
+      return Boolean.valueOf(b);
     }
   }
 

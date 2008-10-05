@@ -47,7 +47,7 @@ public class Type
 
   public static Type find(Str sig) { return TypeParser.load(sig.val, true, null); }
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
-  public static Type find(Str sig, Bool checked) { return TypeParser.load(sig.val, checked.val, null); }
+  public static Type find(Str sig, Boolean checked) { return TypeParser.load(sig.val, checked, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
   public static Type find(String podName, String typeName, boolean checked)
   {
@@ -103,15 +103,15 @@ public class Type
 // Flags
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool isAbstract() { return Bool.make(flags & FConst.Abstract); }
-  public final Bool isClass() { return Bool.make((flags & (FConst.Enum|FConst.Mixin)) == 0); }
-  public final Bool isConst() { return Bool.make(flags & FConst.Const); }
-  public final Bool isEnum() { return Bool.make(flags & FConst.Enum); }
-  public final Bool isFinal() { return Bool.make(flags & FConst.Final); }
-  public final Bool isInternal() { return Bool.make(flags & FConst.Internal); }
-  public final Bool isMixin() { return Bool.make(flags & FConst.Mixin); }
-  public final Bool isPublic() { return Bool.make(flags & FConst.Public); }
-  public final Bool isSynthetic() { return Bool.make(flags & FConst.Synthetic); }
+  public final Boolean isAbstract() { return (flags & FConst.Abstract) != 0; }
+  public final Boolean isClass() { return (flags & (FConst.Enum|FConst.Mixin)) == 0; }
+  public final Boolean isConst() { return (flags & FConst.Const) != 0; }
+  public final Boolean isEnum() { return (flags & FConst.Enum) != 0; }
+  public final Boolean isFinal() { return (flags & FConst.Final) != 0; }
+  public final Boolean isInternal() { return (flags & FConst.Internal) != 0; }
+  public final Boolean isMixin() { return (flags & FConst.Mixin) != 0; }
+  public final Boolean isPublic() { return (flags & FConst.Public) != 0; }
+  public final Boolean isSynthetic() { return (flags & FConst.Synthetic) != 0; }
 
   public Object trap(Str name, List args)
   {
@@ -143,7 +143,7 @@ public class Type
 
     // check that first is a class type
     t.base = (Type)supers.get(0);
-    if (t.base.isMixin().val) throw ArgErr.make("Not a class: " + t.base).val;
+    if (t.base.isMixin()) throw ArgErr.make("Not a class: " + t.base).val;
     t.base.checkOkForDynamic();
 
     // TODO: we don't support mixins yet
@@ -155,7 +155,7 @@ public class Type
     for (int i=1; i<supers.sz(); ++i)
     {
       Type m = (Type)supers.get(i);
-      if (!m.isMixin().val) throw ArgErr.make("Not mixin: " + m).val;
+      if (!m.isMixin()) throw ArgErr.make("Not mixin: " + m).val;
       m.checkOkForDynamic();
       mixins.add(m);
     }
@@ -183,7 +183,7 @@ public class Type
     this.dynamic = true;
   }
 
-  public Bool isDynamic() { return Bool.make(dynamic); }
+  public Boolean isDynamic() { return dynamic; }
 
 //////////////////////////////////////////////////////////////////////////
 // Generics
@@ -242,9 +242,9 @@ public class Type
     return Sys.ObjType;
   }
 
-  public final Bool isGeneric()
+  public final Boolean isGeneric()
   {
-    return isGenericType() ? Bool.True : Bool.False;
+    return isGenericType();
   }
 
   public Map params()
@@ -304,15 +304,15 @@ public class Type
   public final List slots()   { return reflect().slots.ro(); }
 
   public final Field field(Str name) { return (Field)slot(name.val, true); }
-  public final Field field(Str name, Bool checked) { return (Field)slot(name.val, checked.val); }
+  public final Field field(Str name, Boolean checked) { return (Field)slot(name.val, checked.booleanValue()); }
   public final Field field(String name, boolean checked) { return (Field)slot(name, checked); }
 
   public final Method method(Str name) { return (Method)slot(name.val, true); }
-  public final Method method(Str name, Bool checked) { return (Method)slot(name.val, checked.val); }
+  public final Method method(Str name, Boolean checked) { return (Method)slot(name.val, checked.booleanValue()); }
   public final Method method(String name, boolean checked) { return (Method)slot(name, checked); }
 
   public final Slot slot(Str name) { return slot(name.val, true); }
-  public final Slot slot(Str name, Bool checked) { return slot(name.val, checked.val); }
+  public final Slot slot(Str name, Boolean checked) { return slot(name.val, checked.booleanValue()); }
   public final Slot slot(String name, boolean checked)
   {
     Slot slot = (Slot)reflect().slotsByName.get(name);
@@ -373,7 +373,7 @@ public class Type
       {
         // check for no-arg make on base class
         Method make = base.method("make", true);
-        if (!make.isCtor().val || make.params().sz() != 0)
+        if (!make.isCtor() || make.params().sz() != 0)
           throw Err.make("Dynamic base type requires no arg make ctor: " + base).val;
 
         // generate the class and store the Java constructor
@@ -447,7 +447,7 @@ public class Type
     }
   }
 
-  public final Bool fits(Type type) { return is(type) ? Bool.True : Bool.False; }
+  public final Boolean fits(Type type) { return is(type); }
   public boolean is(Type type)
   {
     if (type == this || (type == Sys.ObjType && this != Sys.VoidType))
@@ -485,18 +485,18 @@ public class Type
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  public final Map facets() { return facets(Bool.False); }
-  public final Map facets(Bool inherited)
+  public final Map facets() { return facets(false); }
+  public final Map facets(Boolean inherited)
   {
     Map map = reflect().facets.map();
-    if (inherited.val)
+    if (inherited)
     {
       map = map.rw();
       List inheritance = inheritance();
       for (int i=0; i<inheritance.sz(); ++i)
       {
-        Map x = ((Type)inheritance.get(i)).facets(Bool.False);
-        if (x.isEmpty().val) continue;
+        Map x = ((Type)inheritance.get(i)).facets(false);
+        if (x.isEmpty()) continue;
         Iterator it = x.pairsIterator();
         while (it.hasNext())
         {
@@ -509,17 +509,17 @@ public class Type
     return map;
   }
 
-  public final Object facet(Str name) { return facet(name, null, Bool.False); }
-  public final Object facet(Str name, Object def) { return facet(name, def, Bool.False); }
-  public final Object facet(Str name, Object def, Bool inherited)
+  public final Object facet(Str name) { return facet(name, null, false); }
+  public final Object facet(Str name, Object def) { return facet(name, def, false); }
+  public final Object facet(Str name, Object def, Boolean inherited)
   {
     Object val = reflect().facets.get(name, null);
     if (val != null) return val;
-    if (!inherited.val) return def;
+    if (!inherited) return def;
     List inheritance = inheritance();
     for (int i=0; i<inheritance.sz(); ++i)
     {
-      val = ((Type)inheritance.get(i)).facet(name, null, Bool.False);
+      val = ((Type)inheritance.get(i)).facet(name, null, false);
       if (val != null) return val;
     }
     return def;
@@ -556,7 +556,7 @@ public class Type
 
   public Str toStr() { return signature(); }
 
-  public Bool isImmutable() { return dynamic ? Bool.False : Bool.True; }
+  public Boolean isImmutable() { return !dynamic; }
 
   public final Type toImmutable()
   {
@@ -692,7 +692,7 @@ public class Type
   private void merge(Slot slot, List slots, HashMap nameToSlot, HashMap nameToIndex)
   {
     // skip constructors which aren't mine
-    if (slot.isCtor().val && slot.parent != this) return;
+    if (slot.isCtor() && slot.parent != this) return;
 
     String name = slot.name.val;
     Int dup = (Int)nameToIndex.get(name);
@@ -822,7 +822,7 @@ public class Type
     this.cls = cls;
     try
     {
-      if (isMixin().val)
+      if (isMixin())
         this.auxCls = cls.getClassLoader().loadClass(cls.getName()+"$");
       else if (is(Sys.ErrType))
         this.auxCls = cls.getClassLoader().loadClass(cls.getName()+"$Val");
@@ -856,7 +856,7 @@ public class Type
       // mixin then we do this for both the interface and
       // the static methods only of the implementation class
       finishSlots(cls, false);
-      if (isMixin().val) finishSlots(auxCls, true);
+      if (isMixin()) finishSlots(auxCls, true);
 
 /*
 System.out.println("---- Finish " + qname());
@@ -922,7 +922,7 @@ catch (Exception e) { e.printStackTrace(); }
     Slot slot = slot(name, false);
     if (slot == null) return;
     if (slot.parent() != this) return;
-    if (staticOnly && !slot.isStatic().val) return;
+    if (staticOnly && !slot.isStatic()) return;
     m.setAccessible(true);
     if (slot instanceof Method)
     {
@@ -935,7 +935,7 @@ catch (Exception e) { e.printStackTrace(); }
         int n = 1;
         for (int j=method.params().sz()-1; j>=0; --j)
         {
-          if (((Param)method.params().get(j)).hasDefault().val) n++;
+          if (((Param)method.params().get(j)).hasDefault()) n++;
           else break;
         }
         method.reflect = new java.lang.reflect.Method[n];
@@ -950,7 +950,7 @@ catch (Exception e) { e.printStackTrace(); }
         if (!checkAllFan(params)) return;
         boolean javaStatic = Modifier.isStatic(m.getModifiers());
         if (javaStatic && this == Sys.ObjType && !name.equals("echo")) return;
-        if (javaStatic && !method.isStatic().val && !method.isCtor().val) --numParams;
+        if (javaStatic && !method.isStatic() && !method.isCtor()) --numParams;
       }
 
       // zero index is full signature up to using max defaults

@@ -86,16 +86,16 @@ public class SysOutStream
     }
   }
 
-  public Bool close()
+  public Boolean close()
   {
     try
     {
       if (out != null) out.close();
-      return Bool.True;
+      return true;
     }
     catch (IOException e)
     {
-      return Bool.False;
+      return false;
     }
   }
 

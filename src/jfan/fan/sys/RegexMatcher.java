@@ -35,14 +35,14 @@ public final class RegexMatcher
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool matches()
+  public final Boolean matches()
   {
-    return Bool.make(matcher.matches());
+    return matcher.matches();
   }
 
-  public final Bool find()
+  public final Boolean find()
   {
-    return Bool.make(matcher.find());
+    return matcher.find();
   }
 
   public final Int groupCount()

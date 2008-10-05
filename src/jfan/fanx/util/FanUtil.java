@@ -30,8 +30,9 @@ public class FanUtil
   private static HashMap javaToFanTypes = new HashMap();
   static
   {
-    javaToFanTypes.put("java.lang.Object", Sys.ObjType);
-    javaToFanTypes.put("java.lang.Double", Sys.FloatType);
+    javaToFanTypes.put("java.lang.Object",  Sys.ObjType);
+    javaToFanTypes.put("java.lang.Boolean", Sys.BoolType);
+    javaToFanTypes.put("java.lang.Double",  Sys.FloatType);
   }
 
   /**
@@ -45,7 +46,8 @@ public class FanUtil
   private static HashMap javaImmutables = new HashMap();
   static
   {
-    javaImmutables.put("java.lang.Double", Boolean.TRUE);
+    javaImmutables.put("java.lang.Boolean", Boolean.TRUE);
+    javaImmutables.put("java.lang.Double",  Boolean.TRUE);
   }
 
   /**
@@ -77,6 +79,9 @@ public class FanUtil
     {
       switch (typeName.charAt(0))
       {
+        case 'B':
+          if (typeName.equals("Bool")) return "java.lang.Boolean";
+          break;
         case 'F':
           if (typeName.equals("Float")) return "java.lang.Double";
           break;
@@ -100,6 +105,9 @@ public class FanUtil
     {
       switch (typeName.charAt(0))
       {
+        case 'B':
+          if (typeName.equals("Bool")) return "fan.sys.FanBool";
+          break;
         case 'F':
           if (typeName.equals("Float")) return "fan.sys.FanFloat";
           break;
@@ -122,6 +130,9 @@ public class FanUtil
     {
       switch (typeName.charAt(0))
       {
+        case 'B':
+          if (typeName.equals("Bool")) return "java/lang/Boolean";
+          break;
         case 'F':
           if (typeName.equals("Float")) return "java/lang/Double";
           break;
@@ -152,8 +163,9 @@ public class FanUtil
   {
     if (jsig.charAt(0) == 'j')
     {
-      if (jsig.equals("java/lang/Object")) return "fan/sys/FanObj";
-      if (jsig.equals("java/lang/Double")) return "fan/sys/FanFloat";
+      if (jsig.equals("java/lang/Object"))  return "fan/sys/FanObj";
+      if (jsig.equals("java/lang/Boolean")) return "fan/sys/FanBool";
+      if (jsig.equals("java/lang/Double"))  return "fan/sys/FanFloat";
     }
     return jsig;
   }

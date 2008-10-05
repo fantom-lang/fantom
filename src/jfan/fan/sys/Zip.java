@@ -132,16 +132,16 @@ public final class Zip
       zipOut.putNextEntry(entry);
       return new SysOutStream(zipOut)
       {
-        public Bool close()
+        public Boolean close()
         {
           try
           {
             zipOut.closeEntry();
-            return Bool.True;
+            return true;
           }
           catch (java.io.IOException e)
           {
-            return Bool.False;
+            return false;
           }
         }
       };
@@ -152,32 +152,32 @@ public final class Zip
     }
   }
 
-  public Bool finish()
+  public Boolean finish()
   {
     if (zipOut == null) throw UnsupportedErr.make("Zip not opened for writing").val;
     try
     {
       zipOut.finish();
-      return Bool.True;
+      return true;
     }
     catch (java.io.IOException e)
     {
-      return Bool.False;
+      return false;
     }
   }
 
-  public Bool close()
+  public Boolean close()
   {
     try
     {
       if (zipFile != null) zipFile.close();
       if (zipIn != null)   zipIn.close();
       if (zipOut != null)  zipOut.close();
-      return Bool.True;
+      return true;
     }
     catch (java.io.IOException e)
     {
-      return Bool.False;
+      return false;
     }
   }
 

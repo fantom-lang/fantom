@@ -23,9 +23,9 @@ public final class Uri
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Uri fromStr(String s) { return fromStr(Str.make(s), Bool.True); }
-  public static Uri fromStr(Str s) { return fromStr(s, Bool.True); }
-  public static Uri fromStr(Str s, Bool checked)
+  public static Uri fromStr(String s) { return fromStr(Str.make(s), true); }
+  public static Uri fromStr(Str s) { return fromStr(s, true); }
+  public static Uri fromStr(Str s, Boolean checked)
   {
     try
     {
@@ -33,19 +33,19 @@ public final class Uri
     }
     catch (ParseErr.Val e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw ParseErr.make("Uri",  s, e.err.message()).val;
     }
     catch (Exception e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw ParseErr.make("Uri",  s).val;
     }
   }
 
-  public static Uri decode(String s) { return decode(Str.make(s), Bool.True); }
-  public static Uri decode(Str s) { return decode(s, Bool.True); }
-  public static Uri decode(Str s, Bool checked)
+  public static Uri decode(String s) { return decode(Str.make(s), true); }
+  public static Uri decode(Str s) { return decode(s, true); }
+  public static Uri decode(Str s, Boolean checked)
   {
     try
     {
@@ -53,12 +53,12 @@ public final class Uri
     }
     catch (ParseErr.Val e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw ParseErr.make("Uri",  s, e.err.message()).val;
     }
     catch (Exception e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw ParseErr.make("Uri",  s).val;
     }
   }
@@ -458,7 +458,7 @@ public final class Uri
     private void addQueryParam(Map map, String q, int start, int eq, int end, boolean escaped)
     {
       if (start == eq)
-        map.set(toQueryStr(q, start, end, escaped), Bool.True.toStr());
+        map.set(toQueryStr(q, start, end, escaped), FanBool.trueStr);
       else
         map.set(toQueryStr(q, start, eq, escaped), toQueryStr(q, eq+1, end, escaped));
     }
@@ -688,13 +688,13 @@ public final class Uri
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Object obj)
+  public final Boolean _equals(Object obj)
   {
     if (obj instanceof Uri)
     {
       return str._equals(((Uri)obj).str);
     }
-    return Bool.False;
+    return false;
   }
 
   public int hashCode()
@@ -733,26 +733,26 @@ public final class Uri
 // Components
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool isAbs()
+  public Boolean isAbs()
   {
-    return scheme != null ? Bool.True : Bool.False;
+    return scheme != null;
   }
 
-  public Bool isRel()
+  public Boolean isRel()
   {
-    return scheme == null ? Bool.True : Bool.False;
+    return scheme == null;
   }
 
-  public Bool isDir()
+  public Boolean isDir()
   {
     if (pathStr != null)
     {
       String p = pathStr.val;
       int len = p.length();
       if (len > 0 && p.charAt(len-1) == '/')
-        return Bool.True;
+        return true;
     }
-    return Bool.False;
+    return false;
   }
 
   public Str scheme()
@@ -801,18 +801,18 @@ public final class Uri
     return pathStr;
   }
 
-  public Bool isPathAbs()
+  public Boolean isPathAbs()
   {
     if (pathStr == null || pathStr.val.length() == 0)
-      return Bool.False;
+      return false;
     else
-      return pathStr.val.charAt(0) == '/' ? Bool.True : Bool.False;
+      return pathStr.val.charAt(0) == '/';
   }
 
-  public Bool isPathOnly()
+  public Boolean isPathOnly()
   {
-    return Bool.make(scheme == null && host == null && port == null &&
-      userInfo == null && queryStr == null && frag == null);
+    return scheme == null && host == null && port == null &&
+           userInfo == null && queryStr == null && frag == null;
   }
 
   public Str name()
@@ -851,7 +851,7 @@ public final class Uri
 
   public MimeType mimeType()
   {
-    if (isDir().val) return MimeType.dir;
+    if (isDir()) return MimeType.dir;
     return MimeType.forExt(ext());
   }
 
@@ -881,7 +881,7 @@ public final class Uri
 
     // if just a simple filename, then no parent
     String p = pathStr.val;
-    if (path.sz() == 1 && !isPathAbs().val && !isDir().val) return null;
+    if (path.sz() == 1 && !isPathAbs() && !isDir()) return null;
 
     // use slice
     return slice(parentRange);
@@ -921,19 +921,19 @@ public final class Uri
 
     boolean head = (s == 0);
     boolean tail = (e == size-1);
-    if (head && tail && (!forcePathAbs || isPathAbs().val)) return this;
+    if (head && tail && (!forcePathAbs || isPathAbs())) return this;
 
     Sections t = new Sections();
     t.path = path.slice(range);
 
     StringBuilder sb = new StringBuilder(pathStr.val.length());
-    if ((head && isPathAbs().val) || forcePathAbs) sb.append('/');
+    if ((head && isPathAbs()) || forcePathAbs) sb.append('/');
     for (int i=0; i<t.path.sz(); ++i)
     {
       if (i > 0) sb.append('/');
       sb.append(t.path.get(i));
     }
-    if (t.path.sz() > 0 && (!tail || isDir().val)) sb.append('/');
+    if (t.path.sz() > 0 && (!tail || isDir())) sb.append('/');
     t.pathStr = Str.make(sb.toString());
 
     if (head)
@@ -1011,11 +1011,11 @@ public final class Uri
 
       // insert .. backup if needed
       int backup = base.path.sz() - d;
-      if (!base.isDir().val) backup--;
+      if (!base.isDir()) backup--;
       while (backup-- > 0) t.path.insert(Int.Zero, dotDot);
 
       // format the new path string
-      t.pathStr = toPathStr(false, t.path, this.isDir().val);
+      t.pathStr = toPathStr(false, t.path, this.isDir());
     }
 
     return new Uri(t);
@@ -1045,7 +1045,7 @@ public final class Uri
     // if r is more or equal as absolute as base, return r
     if (r.scheme != null) return r;
     if (r.host != null && this.scheme == null) return r;
-    if (r.isPathAbs().val && this.host == null) return r;
+    if (r.isPathAbs() && this.host == null) return r;
 
     // this algorthm is lifted straight from
     // RFC 3986 (5.2.2) Transform References;
@@ -1085,9 +1085,9 @@ public final class Uri
 
   static void merge(Sections t, Uri base, Uri r)
   {
-    boolean baseIsAbs = base.isPathAbs().val;
-    boolean baseIsDir = base.isDir().val;
-    boolean rIsDir    = r.isDir().val;
+    boolean baseIsAbs = base.isPathAbs();
+    boolean baseIsDir = base.isDir();
+    boolean rIsDir    = r.isDir();
     List rPath        = r.path;
     boolean dotLast   = false;
 
@@ -1108,7 +1108,7 @@ public final class Uri
         if (rSeg.val.equals(".")) { dotLast = true; continue; }
         if (rSeg.val.equals(".."))
         {
-          if (!tPath.isEmpty().val) { tPath.pop(); dotLast = true; continue; }
+          if (!tPath.isEmpty()) { tPath.pop(); dotLast = true; continue; }
           if (baseIsAbs) continue;
         }
         tPath.add(rSeg); dotLast = false;
@@ -1133,12 +1133,12 @@ public final class Uri
     return Str.make(buf.toString());
   }
 
-  public Uri plusName(String name, boolean isDir) { return plusName(Str.make(name), Bool.make(isDir)); }
-  public Uri plusName(Str name) { return plusName(name, Bool.False); }
-  public Uri plusName(Str name, Bool asDir)
+  public Uri plusName(String name, boolean isDir) { return plusName(Str.make(name), Boolean.valueOf(isDir)); }
+  public Uri plusName(Str name) { return plusName(name, false); }
+  public Uri plusName(Str name, Boolean asDir)
   {
     int size         = path.sz();
-    boolean isDir    = isDir().val;
+    boolean isDir    = isDir();
     int newSize      = isDir ? size + 1 : size;
     Str[] temp       = (Str[])path.toArray(new Str[newSize]);
     temp[newSize-1]  = name;
@@ -1152,13 +1152,13 @@ public final class Uri
     t.queryStr = null;
     t.frag     = null;
     t.path     = new List(Sys.StrType, temp);
-    t.pathStr  = toPathStr(isPathAbs().val, t.path, asDir.val);
+    t.pathStr  = toPathStr(isPathAbs(), t.path, asDir);
     return new Uri(t);
   }
 
   public Uri plusSlash()
   {
-    if (isDir().val) return this;
+    if (isDir()) return this;
     Sections t = new Sections();
     t.scheme   = this.scheme;
     t.userInfo = this.userInfo;
@@ -1174,7 +1174,7 @@ public final class Uri
 
   public Uri plusQuery(Map q)
   {
-    if (q == null || q.isEmpty().val) return this;
+    if (q == null || q.isEmpty()) return this;
 
     Map merge = this.query.dup().setAll(q);
 
@@ -1224,9 +1224,9 @@ public final class Uri
     return File.make(this);
   }
 
-  public Object get() { return get(null, Bool.True); }
-  public Object get(Object base) { return get(base, Bool.True); }
-  public Object get(Object base, Bool checked)
+  public Object get() { return get(null, true); }
+  public Object get(Object base) { return get(base, true); }
+  public Object get(Object base, Boolean checked)
   {
     // if we have a relative uri, we need to resolve against
     // the base object's uri
@@ -1260,7 +1260,7 @@ public final class Uri
     }
     catch (UnresolvedErr.Val e)
     {
-      if (checked.val) throw e;
+      if (checked) throw e;
       return null;
     }
   }
@@ -1269,19 +1269,19 @@ public final class Uri
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public static Bool isName(Str name)
+  public static Boolean isName(Str name)
   {
     String n = name.val;
     int len = n.length();
 
     // must be at least one character long
-    if (len == 0) return Bool.False;
+    if (len == 0) return false;
 
     // check for "." and ".."
     if (n.charAt(0) == '.' && len <= 2)
     {
-      if (len == 1) return Bool.False;
-      if (n.charAt(1) == '.') return Bool.False;
+      if (len == 1) return false;
+      if (n.charAt(1) == '.') return false;
     }
 
     // check that each char is unreserved
@@ -1289,15 +1289,15 @@ public final class Uri
     {
       int c = n.charAt(i);
       if (c < 128 && nameMap[c]) continue;
-      return Bool.False;
+      return false;
     }
 
-    return Bool.True;
+    return true;
   }
 
   public static void checkName(Str name)
   {
-    if (!isName(name).val)
+    if (!isName(name))
       throw NameErr.make(name).val;
   }
 
@@ -1427,7 +1427,7 @@ public final class Uri
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static final Range parentRange = Range.make(Int.Zero, Int.NegTwo, Bool.False);
+  static final Range parentRange = Range.make(Int.Zero, Int.NegTwo, false);
   static final Str dotDot = Str.make("..");
 
   final Str str;

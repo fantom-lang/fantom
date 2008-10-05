@@ -39,14 +39,14 @@ public class DesktopPeer
   static final Str windows = Str.make("windows");
   static final Str mac = Str.make("mac");
 
-  public static Bool isWindows()
+  public static Boolean isWindows()
   {
-    return Bool.make(Env.isWindows());
+    return Env.isWindows();
   }
 
-  public static Bool isMac()
+  public static Boolean isMac()
   {
-    return Bool.make(Env.isMac());
+    return Env.isMac();
   }
 
   public static Rect bounds()
@@ -65,7 +65,7 @@ public class DesktopPeer
     Env env = Env.main();
     if (java.lang.Thread.currentThread() != env.display.getThread())
     {
-      if (!func.isImmutable().val)
+      if (!func.isImmutable())
         throw NotImmutableErr.make("callAsync func must be immutable if not on UI thread").val;
     }
 

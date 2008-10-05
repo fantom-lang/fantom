@@ -34,8 +34,8 @@ public final class Weekday
     this.localeFullKey  = Str.make(name + "Full");
   }
 
-  public static Weekday fromStr(Str name) { return fromStr(name, Bool.True); }
-  public static Weekday fromStr(Str name, Bool checked)
+  public static Weekday fromStr(Str name) { return fromStr(name, true); }
+  public static Weekday fromStr(Str name, Boolean checked)
   {
     return (Weekday)doFromStr(Sys.WeekdayType, name, checked);
   }

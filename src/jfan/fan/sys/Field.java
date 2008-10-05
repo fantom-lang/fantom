@@ -116,7 +116,7 @@ public class Field
     {
       if (checkConst)
         throw ReadonlyErr.make("Cannot set const field " + qname()).val;
-      else if (value != null && !isImmutable(value).val)
+      else if (value != null && !isImmutable(value))
         throw ReadonlyErr.make("Cannot set const field " + qname() + " with mutable value").val;
     }
 

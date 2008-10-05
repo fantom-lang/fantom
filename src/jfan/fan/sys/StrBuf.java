@@ -43,9 +43,9 @@ public class StrBuf
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool isEmpty()
+  public Boolean isEmpty()
   {
-    return sb.length() == 0 ? Bool.True : Bool.False;
+    return sb.length() == 0;
   }
 
   public Int size()

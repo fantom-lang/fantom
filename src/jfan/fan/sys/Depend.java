@@ -163,12 +163,12 @@ public final class Depend
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Object obj)
+  public Boolean _equals(Object obj)
   {
     if (obj instanceof Depend)
       return toStr()._equals(toStr(obj));
     else
-      return Bool.False;
+      return false;
   }
 
   public int hashCode()
@@ -225,16 +225,16 @@ public final class Depend
     return constraints[(int)index.val].version;
   }
 
-  public final Bool isPlus() { return isPlus(Int.Zero); }
-  public final Bool isPlus(Int index)
+  public final Boolean isPlus() { return isPlus(Int.Zero); }
+  public final Boolean isPlus(Int index)
   {
-    return constraints[(int)index.val].isPlus ? Bool.True : Bool.False;
+    return constraints[(int)index.val].isPlus;
   }
 
-  public final Bool isRange() { return isRange(Int.Zero); }
-  public final Bool isRange(Int index)
+  public final Boolean isRange() { return isRange(Int.Zero); }
+  public final Boolean isRange(Int index)
   {
-    return constraints[(int)index.val].endVersion != null ? Bool.True : Bool.False;
+    return constraints[(int)index.val].endVersion != null;
   }
 
   public final Version endVersion() { return endVersion(Int.Zero); }
@@ -243,7 +243,7 @@ public final class Depend
     return constraints[(int)index.val].endVersion;
   }
 
-  public final Bool match(Version v)
+  public final Boolean match(Version v)
   {
     for (int i=0; i<constraints.length; ++i)
     {
@@ -252,23 +252,23 @@ public final class Depend
       {
         // versionPlus
         if (c.version.compare(v).val <= 0)
-          return Bool.True;
+          return true;
       }
       else if (c.endVersion != null)
       {
         // versionRange
         if (c.version.compare(v).val <= 0 &&
             (c.endVersion.compare(v).val >= 0 || doMatch(c.endVersion, v)))
-          return Bool.True;
+          return true;
       }
       else
       {
         // versionSimple
         if (doMatch(c.version, v))
-          return Bool.True;
+          return true;
       }
     }
-    return Bool.False;
+    return false;
   }
 
   private static boolean doMatch(Version a, Version b)

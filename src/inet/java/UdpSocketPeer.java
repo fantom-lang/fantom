@@ -42,19 +42,19 @@ public class UdpSocketPeer
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool isBound(UdpSocket fan)
+  public Boolean isBound(UdpSocket fan)
   {
-    return Bool.make(isBound());
+    return isBound();
   }
 
-  public Bool isConnected(UdpSocket fan)
+  public Boolean isConnected(UdpSocket fan)
   {
-    return Bool.make(isConnected());
+    return isConnected();
   }
 
-  public Bool isClosed(UdpSocket fan)
+  public Boolean isClosed(UdpSocket fan)
   {
-    return Bool.make(isClosed());
+    return isClosed();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -202,16 +202,16 @@ public class UdpSocketPeer
     return fan;
   }
 
-  public Bool close(UdpSocket fan)
+  public Boolean close(UdpSocket fan)
   {
     try
     {
       close();
-      return Bool.True;
+      return true;
     }
     catch (Exception e)
     {
-      return Bool.False;
+      return false;
     }
   }
 
@@ -225,11 +225,11 @@ public class UdpSocketPeer
     return options;
   }
 
-  public Bool getBroadcast(UdpSocket fan)
+  public Boolean getBroadcast(UdpSocket fan)
   {
     try
     {
-      return Bool.make(getBroadcast());
+      return getBroadcast();
     }
     catch (IOException e)
     {
@@ -237,11 +237,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setBroadcast(UdpSocket fan, Bool v)
+  public void setBroadcast(UdpSocket fan, Boolean v)
   {
     try
     {
-      setBroadcast(v.val);
+      setBroadcast(v);
     }
     catch (IOException e)
     {
@@ -297,11 +297,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Bool getReuseAddress(UdpSocket fan)
+  public Boolean getReuseAddress(UdpSocket fan)
   {
     try
     {
-      return Bool.make(getReuseAddress());
+      return getReuseAddress();
     }
     catch (IOException e)
     {
@@ -309,11 +309,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setReuseAddress(UdpSocket fan, Bool v)
+  public void setReuseAddress(UdpSocket fan, Boolean v)
   {
     try
     {
-      setReuseAddress(v.val);
+      setReuseAddress(v);
     }
     catch (IOException e)
     {

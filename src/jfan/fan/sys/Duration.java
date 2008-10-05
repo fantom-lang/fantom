@@ -21,8 +21,8 @@ public final class Duration
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Duration fromStr(Str s) { return fromStr(s, Bool.True); }
-  public static Duration fromStr(Str s, Bool checked)
+  public static Duration fromStr(Str s) { return fromStr(s, true); }
+  public static Duration fromStr(Str s, Boolean checked)
   {
     //   ns:   nanoseconds  (x 1)
     //   ms:   milliseconds (x 1,000,000)
@@ -71,7 +71,7 @@ public final class Duration
     }
     catch (Exception e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw ParseErr.make("Duration",  s).val;
     }
   }
@@ -117,12 +117,12 @@ public final class Duration
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Object obj)
+  public final Boolean _equals(Object obj)
   {
     if (obj instanceof Duration)
-      return ticks == ((Duration)obj).ticks ? Bool.True : Bool.False;
+      return ticks == ((Duration)obj).ticks;
     else
-      return Bool.False;
+      return false;
   }
 
   public final Int compare(Object obj)

@@ -47,12 +47,12 @@ public class RichTextPeer
     this.model = self.model();
     if (model == null) throw Err.make("RichText.model is null").val;
 
-    int style = self.multiLine.val ? SWT.MULTI: SWT.SINGLE;
-    if (!self.editable.val) style |= SWT.READ_ONLY;
-    if (self.border.val)    style |= SWT.BORDER;
-    if (self.wrap.val)      style |= SWT.WRAP;
-    if (self.hscroll.val)   style |= SWT.H_SCROLL;
-    if (self.vscroll.val)   style |= SWT.V_SCROLL;
+    int style = self.multiLine ? SWT.MULTI: SWT.SINGLE;
+    if (!self.editable) style |= SWT.READ_ONLY;
+    if (self.border)    style |= SWT.BORDER;
+    if (self.wrap)      style |= SWT.WRAP;
+    if (self.hscroll)   style |= SWT.H_SCROLL;
+    if (self.vscroll)   style |= SWT.V_SCROLL;
 
     StyledText t = new StyledText((Composite)parent, style);
     control = t;
@@ -225,7 +225,7 @@ public class RichTextPeer
   {
     RichText self = (RichText)this.self;
     List cbs = self.onVerify().list();
-    if (cbs.isEmpty().val) return;
+    if (cbs.isEmpty()) return;
 
     TextChange tc = TextChange.make();
     tc.startOffset = Int.make(se.start);
@@ -361,7 +361,7 @@ public class RichTextPeer
     content.fireTextChanged(new TextChangedEvent(content));
 
     // if onModify callback register, fire event
-    if (!self.onModify().isEmpty().val)
+    if (!self.onModify().isEmpty())
     {
       fan.fwt.Event modevt = event(EventId.modified, tc);
       self.onModify().fire(modevt);

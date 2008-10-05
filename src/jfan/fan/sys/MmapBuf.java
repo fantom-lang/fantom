@@ -196,10 +196,10 @@ public class MmapBuf
     return this;
   }
 
-  public final Bool close()
+  public final Boolean close()
   {
     // Java doesn't support closing mmap
-    return Bool.True;
+    return true;
   }
 
   public final Str toHex()

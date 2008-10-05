@@ -35,13 +35,13 @@ public class Thread
   {
     // if service, get inheritance types before acquiring lock
     List serviceTypes = null;
-    if (t.isService().val)
+    if (t.isService())
       serviceTypes = t.type().inheritance();
 
     synchronized (topLock)
     {
       // check run method
-      if (run != null && !run.isImmutable().val)
+      if (run != null && !run.isImmutable())
         throw NotImmutableErr.make("Run method not const: " + run).val;
 
       // auto generate name if null
@@ -94,14 +94,14 @@ public class Thread
 // Management
 //////////////////////////////////////////////////////////////////////////
 
-  public static Thread find(Str name) { return find(name, Bool.True); }
-  public static Thread find(Str name, Bool checked)
+  public static Thread find(Str name) { return find(name, true); }
+  public static Thread find(Str name, Boolean checked)
   {
     synchronized (topLock)
     {
       Thread thread = (Thread)byName.get(name);
       if (thread != null) return thread;
-      if (checked.val) throw UnknownThreadErr.make(name).val;
+      if (checked) throw UnknownThreadErr.make(name).val;
       return null;
     }
   }
@@ -140,7 +140,7 @@ public class Thread
 //////////////////////////////////////////////////////////////////////////
 
   public static Thread findService(Type t) { return findService(t.qname().val, true); }
-  public static Thread findService(Type t, Bool checked) { return findService(t.qname().val, checked.val); }
+  public static Thread findService(Type t, Boolean checked) { return findService(t.qname().val, checked.booleanValue()); }
   public static Thread findService(String qname, boolean checked)
   {
     synchronized (topLock)
@@ -152,9 +152,9 @@ public class Thread
     }
   }
 
-  public Bool isService()
+  public Boolean isService()
   {
-    return Bool.False;
+    return false;
   }
 
   // must be holding topLock
@@ -210,16 +210,16 @@ public class Thread
 
   static boolean isServiceType(Type t)
   {
-    return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic().val;
+    return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic();
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Object obj)
+  public final Boolean _equals(Object obj)
   {
-    return this == obj ? Bool.True : Bool.False;
+    return this == obj;
   }
 
   public final int hashCode()
@@ -265,19 +265,19 @@ public class Thread
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public final synchronized Bool isNew()
+  public final synchronized Boolean isNew()
   {
-    return Bool.make(state == NEW);
+    return state == NEW;
   }
 
-  public final synchronized Bool isRunning()
+  public final synchronized Boolean isRunning()
   {
-    return Bool.make(state == RUNNING);
+    return state == RUNNING;
   }
 
-  public final synchronized Bool isDead()
+  public final synchronized Boolean isDead()
   {
-    return Bool.make(state == DEAD);
+    return state == DEAD;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -300,7 +300,7 @@ public class Thread
     synchronized (topLock)
     {
       byName.remove(name);
-      if (isService().val) unmountService(this);
+      if (isService()) unmountService(this);
     }
     stopMessages();
     notifyAll();
@@ -610,8 +610,8 @@ public class Thread
 // Timer
 //////////////////////////////////////////////////////////////////////////
 
-  public final Object sendLater(Duration dur, Object obj) { return sendLater(dur, obj, Bool.False); }
-  public final Object sendLater(Duration dur, Object obj, Bool repeat)
+  public final Object sendLater(Duration dur, Object obj) { return sendLater(dur, obj, false); }
+  public final Object sendLater(Duration dur, Object obj, Boolean repeat)
   {
     obj = Namespace.safe(obj);
 
@@ -637,7 +637,7 @@ public class Thread
       // allocate timer structure
       Timer t = new Timer();
       t.deadline = System.nanoTime() + dur.ticks;
-      t.duration = repeat.val ? dur.ticks : -1;
+      t.duration = repeat ? dur.ticks : -1;
       t.msg = obj;
       timers[id] = t;
 

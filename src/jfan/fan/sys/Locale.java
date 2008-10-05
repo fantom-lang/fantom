@@ -27,7 +27,7 @@ public class Locale
     {
       if (len == 2)
       {
-        if (str.isLower().val)
+        if (str.isLower())
           return new Locale(str, str, null);
       }
 
@@ -35,7 +35,7 @@ public class Locale
       {
         Str lang = Str.make(s.substring(0, 2));
         Str country = Str.make(s.substring(3, 5));
-        if (lang.isLower().val && country.isUpper().val && s.charAt(2) == '-')
+        if (lang.isLower() && country.isUpper() && s.charAt(2) == '-')
           return new Locale(str, lang, country);
       }
     }
@@ -100,13 +100,13 @@ public class Locale
 
   public Int hash() { return str.hash(); }
 
-  public Bool _equals(Object obj)
+  public Boolean _equals(Object obj)
   {
     if (obj instanceof Locale)
     {
       return ((Locale)obj).str._equals(str);
     }
-    return Bool.False;
+    return false;
   }
 
   public Str toStr() { return str; }
@@ -134,12 +134,12 @@ public class Locale
 
   public Str get(Str podName, Str key)
   {
-    return doGet(Pod.find(podName, Bool.False), podName, key, getNoDef);
+    return doGet(Pod.find(podName, false), podName, key, getNoDef);
   }
 
   public Str get(Str podName, Str key, Str def)
   {
-    return doGet(Pod.find(podName, Bool.False), podName, key, def);
+    return doGet(Pod.find(podName, false), podName, key, def);
   }
 
   /**

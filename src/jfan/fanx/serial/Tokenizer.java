@@ -137,13 +137,13 @@ public class Tokenizer
         if (val.equals("as")) { return Token.AS; }
         break;
       case 'f':
-        if (val.equals("false")) { this.val = Bool.False; return Token.BOOL_LITERAL; }
+        if (val.equals("false")) { this.val = false; return Token.BOOL_LITERAL; }
         break;
       case 'n':
         if (val.equals("null")) { this.val = null; return Token.NULL_LITERAL; }
         break;
       case 't':
-        if (val.equals("true")) { this.val = Bool.True; return Token.BOOL_LITERAL; }
+        if (val.equals("true")) { this.val = true; return Token.BOOL_LITERAL; }
         break;
       case 'u':
         if (val.equals("using")) { return Token.USING; }

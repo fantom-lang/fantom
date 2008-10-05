@@ -24,8 +24,8 @@ public final class MimeType
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static MimeType fromStr(Str s) { return fromStr(s, Bool.True); }
-  public static MimeType fromStr(Str s, Bool checked)
+  public static MimeType fromStr(Str s) { return fromStr(s, true); }
+  public static MimeType fromStr(Str s, Boolean checked)
   {
     try
     {
@@ -38,7 +38,7 @@ public final class MimeType
       if (semi > 0)
       {
         params = new Map(Sys.StrType, Sys.StrType);
-        params.caseInsensitive(Bool.True);
+        params.caseInsensitive(true);
         boolean inQuotes = false;
         int keyStart = semi+1;
         int valStart = -1;
@@ -99,12 +99,12 @@ public final class MimeType
     }
     catch (ParseErr.Val e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw e;
     }
     catch (Exception e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw ParseErr.make("MimeType",  s).val;
     }
   }
@@ -162,14 +162,13 @@ public final class MimeType
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Object obj)
+  public Boolean _equals(Object obj)
   {
-    if (!(obj instanceof MimeType)) return Bool.False;
+    if (!(obj instanceof MimeType)) return false;
     MimeType x = (MimeType)obj;
-    return Bool.make(
-      mediaType.val.equals(x.mediaType.val) &&
-      subType.val.equals(x.subType.val) &&
-      params.equals(x.params));
+    return mediaType.val.equals(x.mediaType.val) &&
+           subType.val.equals(x.subType.val) &&
+           params.equals(x.params);
   }
 
   public int hashCode()
@@ -223,7 +222,7 @@ public final class MimeType
     if (q == null)
     {
       q = new Map(Sys.StrType, Sys.StrType);
-      q.caseInsensitive(Bool.True);
+      q.caseInsensitive(true);
       q = q.toImmutable();
       emptyQuery = q;
     }

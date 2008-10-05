@@ -118,12 +118,12 @@ public class IpAddressPeer
     return Int.make(java.hashCode());
   }
 
-  public Bool _equals(IpAddress fan, Object obj)
+  public Boolean _equals(IpAddress fan, Object obj)
   {
     if (obj instanceof IpAddress)
-      return Bool.make(this.java.equals(((IpAddress)obj).peer.java));
+      return this.java.equals(((IpAddress)obj).peer.java);
     else
-      return Bool.False;
+      return false;
   }
 
   public Str toStr(IpAddress fan)
@@ -135,14 +135,14 @@ public class IpAddressPeer
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool isIPv4(IpAddress fan)
+  public Boolean isIPv4(IpAddress fan)
   {
-    return Bool.make(java instanceof Inet4Address);
+    return java instanceof Inet4Address;
   }
 
-  public Bool isIPv6(IpAddress fan)
+  public Boolean isIPv6(IpAddress fan)
   {
-    return Bool.make(java instanceof Inet6Address);
+    return java instanceof Inet6Address;
   }
 
   public Buf bytes(IpAddress fan)

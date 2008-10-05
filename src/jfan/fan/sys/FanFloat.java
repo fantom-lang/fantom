@@ -4,7 +4,7 @@
 //
 // History:
 //   4 Dec 05  Brian Frank  Creation
-//   4 Oct 08  Brian Frank  Refactor Double into FanFloat
+//   4 Oct 08  Brian Frank  Refactor Float into Double/FanFloat
 //
 package fan.sys;
 
@@ -16,15 +16,14 @@ import fanx.serial.*;
  */
 public final class FanFloat
 //  extends Num
-//  implements Literal
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Double fromStr(Str s) { return fromStr(s, Bool.True); }
-  public static Double fromStr(Str s, Bool checked)
+  public static Double fromStr(Str s) { return fromStr(s, true); }
+  public static Double fromStr(Str s, Boolean checked)
   {
     try
     {
@@ -36,7 +35,7 @@ public final class FanFloat
     }
     catch (NumberFormatException e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw ParseErr.make("Float",  s).val;
     }
   }
@@ -55,30 +54,30 @@ public final class FanFloat
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Bool equals(Double self, Object obj)
+  public static Boolean equals(Double self, Object obj)
   {
     if (obj instanceof Double)
     {
       double val = self.doubleValue();
       double x = ((Double)obj).doubleValue();
-      if (Double.isNaN(val)) return Bool.make(Double.isNaN(x));
-      return val == x ? Bool.True : Bool.False;
+      if (Double.isNaN(val)) return Double.isNaN(x);
+      return val == x;
     }
-    return Bool.False;
+    return false;
   }
 
-  public static Bool approx(Double self, Double that) { return approx(self, that, null); }
-  public static Bool approx(Double self, Double that, Double tolerance)
+  public static Boolean approx(Double self, Double that) { return approx(self, that, null); }
+  public static Boolean approx(Double self, Double that, Double tolerance)
   {
     // need this to check +inf, -inf, and nan
-    if (equals(self, that).val) return Bool.True;
+    if (equals(self, that)) return true;
 
     double t;
     if (tolerance == null)
       t = Math.min( Math.abs(self.doubleValue()/1e6), Math.abs(that.doubleValue()/1e6) );
     else
       t = tolerance.doubleValue();
-    return Math.abs(self.doubleValue() - that.doubleValue()) <= t ? Bool.True : Bool.False;
+    return Math.abs(self.doubleValue() - that.doubleValue()) <= t;
   }
 
   public static Int compare(Double self, Object obj)
