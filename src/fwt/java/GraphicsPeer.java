@@ -8,7 +8,6 @@
 package fan.fwt;
 
 import java.util.Stack;
-import fan.sys.Bool;
 import fan.sys.Int;
 import fan.sys.Str;
 import fan.sys.FanObj;
@@ -117,14 +116,14 @@ public class GraphicsPeer
     this.gc.setFont(Env.get().font(font));
   }
 
-  public Bool antialias(Graphics self)
+  public Boolean antialias(Graphics self)
   {
-    return Bool.make(gc.getAntialias() == SWT.ON);
+    return gc.getAntialias() == SWT.ON;
   }
 
-  public void antialias(Graphics self, Bool on)
+  public void antialias(Graphics self, Boolean on)
   {
-    int val = on.val ? SWT.ON : SWT.OFF;
+    int val = on ? SWT.ON : SWT.OFF;
     gc.setAntialias(val);
     gc.setTextAntialias(val);
   }

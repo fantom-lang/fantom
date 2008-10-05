@@ -35,12 +35,12 @@ public final class Regex
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Object obj)
+  public final Boolean _equals(Object obj)
   {
     if (obj instanceof Regex)
       return ((Regex)obj).source._equals(this.source);
     else
-      return Bool.False;
+      return false;
   }
 
   public final int hashCode() { return source.hashCode(); }
@@ -55,9 +55,9 @@ public final class Regex
 // Regular expression
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool matches(Str s)
+  public Boolean matches(Str s)
   {
-    return Bool.make(pattern.matcher(s.val).matches());
+    return pattern.matcher(s.val).matches();
   }
 
   public RegexMatcher matcher(Str s)

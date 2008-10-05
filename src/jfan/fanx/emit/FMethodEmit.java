@@ -225,7 +225,7 @@ public class FMethodEmit
     // find first param with default value
     int firstDefault = paramCount;
     for (int i=0; i<paramCount; ++i)
-      if (((Param)params.get(i)).hasDefault().val)
+      if (((Param)params.get(i)).hasDefault())
         { firstDefault = i; break; }
 
     // generate routers

@@ -117,7 +117,7 @@ public class Fant
     for (int i=0; i<all.sz(); ++i)
     {
       Type x = (Type)all.get(i);
-      if (x.is(Sys.TestType) && !x.isAbstract().val) acc.add(x);
+      if (x.is(Sys.TestType) && !x.isAbstract()) acc.add(x);
     }
     return (Type[])acc.toArray(new Type[acc.size()]);
   }
@@ -133,7 +133,7 @@ public class Fant
     for (int i=0; i<all.sz(); ++i)
     {
       Method m = (Method)all.get(i);
-      if (m.name().val.startsWith("test") && !m.isAbstract().val) acc.add(m);
+      if (m.name().val.startsWith("test") && !m.isAbstract()) acc.add(m);
     }
     return (Method[])acc.toArray(new Method[acc.size()]);
 

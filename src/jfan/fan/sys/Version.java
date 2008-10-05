@@ -21,7 +21,7 @@ public final class Version
 //////////////////////////////////////////////////////////////////////////
 
   public static Version fromStr(Str str) { return fromStr(str.val, true); }
-  public static Version fromStr(Str str, Bool checked) { return fromStr(str.val, checked.val); }
+  public static Version fromStr(Str str, Boolean checked) { return fromStr(str.val, checked.booleanValue()); }
   public static Version fromStr(String s) { return fromStr(s, true); }
   public static Version fromStr(String s, boolean checked)
   {
@@ -82,12 +82,12 @@ public final class Version
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Object obj)
+  public Boolean _equals(Object obj)
   {
     if (obj instanceof Version)
       return toStr()._equals(((Version)obj).toStr());
     else
-      return Bool.False;
+      return false;
   }
 
   public Int compare(Object obj)

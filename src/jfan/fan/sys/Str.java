@@ -48,23 +48,23 @@ public final class Str
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Object obj)
+  public final Boolean _equals(Object obj)
   {
     if (obj instanceof Str)
-      return val.equals(((Str)obj).val) ? Bool.True : Bool.False;
+      return val.equals(((Str)obj).val);
     else
-      return Bool.False;
+      return false;
   }
 
-  public final Bool equalsIgnoreCase(Str s)
+  public final Boolean equalsIgnoreCase(Str s)
   {
-    if (s == this) return Bool.True;
+    if (s == this) return true;
 
     String a = this.val;
     String b = s.val;
     int an   = a.length();
     int bn   = b.length();
-    if (an != bn) return Bool.False;
+    if (an != bn) return false;
 
     for (int i=0; i<an; ++i)
     {
@@ -72,9 +72,9 @@ public final class Str
       int bc = b.charAt(i);
       if ('A' <= ac && ac <= 'Z') ac |= 0x20;
       if ('A' <= bc && bc <= 'Z') bc |= 0x20;
-      if (ac != bc) return Bool.False;
+      if (ac != bc) return false;
     }
-    return Bool.True;
+    return true;
   }
 
   public final Int compare(Object obj)
@@ -191,9 +191,9 @@ public final class Str
     }
   }
 
-  public final Bool isEmpty()
+  public final Boolean isEmpty()
   {
-    return val.length() == 0 ? Bool.True : Bool.False;
+    return val.length() == 0;
   }
 
   public final Int size()
@@ -201,24 +201,24 @@ public final class Str
     return Int.pos(val.length());
   }
 
-  public final Bool startsWith(Str s)
+  public final Boolean startsWith(Str s)
   {
-    return Bool.make(val.startsWith(s.val, 0));
+    return val.startsWith(s.val, 0);
   }
 
-  public final Bool endsWith(Str s)
+  public final Boolean endsWith(Str s)
   {
-    return Bool.make(val.endsWith(s.val));
+    return val.endsWith(s.val);
   }
 
-  public final Bool contains(Str s)
+  public final Boolean contains(Str s)
   {
-    return index(s, Int.Zero) != null ? Bool.True : Bool.False;
+    return index(s, Int.Zero) != null;
   }
 
-  public final Bool containsChar(Int ch)
+  public final Boolean containsChar(Int ch)
   {
-    return val.indexOf((int)ch.val) >= 0 ? Bool.True : Bool.False;
+    return val.indexOf((int)ch.val) >= 0;
   }
 
   public final Int index(Str s) { return index(s, Int.Zero); }
@@ -331,24 +331,24 @@ public final class Str
       f.call2(Int.pos(val.charAt(i)), Int.pos(i));
   }
 
-  public final Bool any(Func f)
+  public final Boolean any(Func f)
   {
     String val = this.val;
     int len = val.length();
     for (int i=0; i<len ; ++i)
-      if (f.call2(Int.pos(val.charAt(i)), Int.pos(i)) == Bool.True)
-        return Bool.True;
-    return Bool.False;
+      if (f.call2(Int.pos(val.charAt(i)), Int.pos(i)) == Boolean.TRUE)
+        return true;
+    return false;
   }
 
-  public final Bool all(Func f)
+  public final Boolean all(Func f)
   {
     String val = this.val;
     int len = val.length();
     for (int i=0; i<len ; ++i)
-      if (f.call2(Int.pos(val.charAt(i)), Int.pos(i)) == Bool.False)
-        return Bool.False;
-    return Bool.True;
+      if (f.call2(Int.pos(val.charAt(i)), Int.pos(i)) == Boolean.FALSE)
+        return false;
+    return true;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -504,14 +504,14 @@ public final class Str
     return make(val.substring(0, pos+1));
   }
 
-  public final List split() { return split(null, Bool.True); }
-  public final List split(Int separator) { return split(separator, Bool.True); }
-  public final List split(Int separator, Bool trimmed)
+  public final List split() { return split(null, true); }
+  public final List split(Int separator) { return split(separator, true); }
+  public final List split(Int separator, Boolean trimmed)
   {
     String val = this.val;
     if (separator == null) return splitws(val);
     int sep = (int)separator.val;
-    boolean trim = trimmed.val;
+    boolean trim = trimmed;
     List toks = new List(Sys.StrType, 16);
     int len = val.length();
     int x = 0;
@@ -599,16 +599,16 @@ public final class Str
     return numLines;
   }
 
-  public Bool isAscii()
+  public Boolean isAscii()
   {
     String val = this.val;
     int len = val.length();
     for (int i=0; i<len; ++i)
-      if (val.charAt(i) >= 128) return Bool.False;
-    return Bool.True;
+      if (val.charAt(i) >= 128) return false;
+    return true;
   }
 
-  public Bool isSpace()
+  public Boolean isSpace()
   {
     String val = this.val;
     int len = val.length();
@@ -616,12 +616,12 @@ public final class Str
     {
       int ch = val.charAt(i);
       if (ch >= 128 || (Int.charMap[ch] & Int.SPACE) == 0)
-        return Bool.False;
+        return false;
     }
-    return Bool.True;
+    return true;
   }
 
-  public Bool isUpper()
+  public Boolean isUpper()
   {
     String val = this.val;
     int len = val.length();
@@ -629,12 +629,12 @@ public final class Str
     {
       int ch = val.charAt(i);
       if (ch >= 128 || (Int.charMap[ch] & Int.UPPER) == 0)
-        return Bool.False;
+        return false;
     }
-    return Bool.True;
+    return true;
   }
 
-  public Bool isLower()
+  public Boolean isLower()
   {
     String val = this.val;
     int len = val.length();
@@ -642,9 +642,9 @@ public final class Str
     {
       int ch = val.charAt(i);
       if (ch >= 128 || (Int.charMap[ch] & Int.LOWER) == 0)
-        return Bool.False;
+        return false;
     }
-    return Bool.True;
+    return true;
   }
 
   public boolean isEveryChar(int ch)
@@ -715,29 +715,29 @@ public final class Str
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool toBool() { return Bool.fromStr(this, Bool.True); }
-  public final Bool toBool(Bool checked) { return Bool.fromStr(this, checked); }
+  public final Boolean toBool() { return FanBool.fromStr(this, true); }
+  public final Boolean toBool(Boolean checked) { return FanBool.fromStr(this, checked); }
 
-  public final Int toInt() { return Int.fromStr(this, Int.Ten, Bool.True); }
-  public final Int toInt(Int radix) { return Int.fromStr(this, radix, Bool.True); }
-  public final Int toInt(Int radix, Bool checked) { return Int.fromStr(this, radix, checked); }
+  public final Int toInt() { return Int.fromStr(this, Int.Ten, true); }
+  public final Int toInt(Int radix) { return Int.fromStr(this, radix, true); }
+  public final Int toInt(Int radix, Boolean checked) { return Int.fromStr(this, radix, checked); }
 
-  public final Double toFloat() { return FanFloat.fromStr(this, Bool.True); }
-  public final Double toFloat(Bool checked) { return FanFloat.fromStr(this, checked); }
+  public final Double toFloat() { return FanFloat.fromStr(this, true); }
+  public final Double toFloat(Boolean checked) { return FanFloat.fromStr(this, checked); }
 
-  public final Decimal toDecimal() { return Decimal.fromStr(this, Bool.True); }
-  public final Decimal toDecimal(Bool checked) { return Decimal.fromStr(this, checked); }
+  public final Decimal toDecimal() { return Decimal.fromStr(this, true); }
+  public final Decimal toDecimal(Boolean checked) { return Decimal.fromStr(this, checked); }
 
   public final Uri toUri() { return Uri.fromStr(this); }
 
-  public final Str toCode() { return toCode(Int.pos['"'], Bool.False); }
-  public final Str toCode(Int quote) { return toCode(quote, Bool.False); }
-  public final Str toCode(Int quote, Bool escapeUnicode)
+  public final Str toCode() { return toCode(Int.pos['"'], false); }
+  public final Str toCode(Int quote) { return toCode(quote, false); }
+  public final Str toCode(Int quote, Boolean escapeUnicode)
   {
     StringBuilder s = new StringBuilder(val.length()+10);
 
     // opening quote
-    boolean escu = escapeUnicode.val;
+    boolean escu = escapeUnicode;
     int q = 0;
     if (quote != null)
     {

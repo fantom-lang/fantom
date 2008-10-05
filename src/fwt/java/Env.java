@@ -149,8 +149,8 @@ public class Env
     if (x == null)
     {
       int style = SWT.NORMAL;
-      if (f.bold.val) style |= SWT.BOLD;
-      if (f.italic.val) style |= SWT.ITALIC;
+      if (f.bold) style |= SWT.BOLD;
+      if (f.italic) style |= SWT.ITALIC;
       x = new Font(display, f.name.val, (int)f.size.val, style);
       fonts.put(f, x);
     }

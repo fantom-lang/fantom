@@ -38,9 +38,9 @@ public final class Range
     return new Range(start, end, true);
   }
 
-  public static final Range make(Int start, Int end, Bool exclusive)
+  public static final Range make(Int start, Int end, Boolean exclusive)
   {
-    return new Range(start, end, exclusive.val);
+    return new Range(start, end, exclusive);
   }
 
   private Range(Int start, Int end, boolean exclusive)
@@ -65,22 +65,22 @@ public final class Range
     return end;
   }
 
-  public final Bool inclusive()
+  public final Boolean inclusive()
   {
-    return exclusive ? Bool.False : Bool.True;
+    return !exclusive;
   }
 
-  public final Bool exclusive()
+  public final Boolean exclusive()
   {
-    return exclusive ? Bool.True : Bool.False;
+    return exclusive;
   }
 
-  public final Bool contains(Int i)
+  public final Boolean contains(Int i)
   {
     if (exclusive)
-      return Bool.make(start.val <= i.val && i.val < end.val);
+      return start.val <= i.val && i.val < end.val;
     else
-      return Bool.make(start.val <= i.val && i.val <= end.val);
+      return start.val <= i.val && i.val <= end.val;
   }
 
   public final void each(Func f)
@@ -114,16 +114,16 @@ public final class Range
     return acc;
   }
 
-  public final Bool _equals(Object object)
+  public final Boolean _equals(Object object)
   {
     if (object instanceof Range)
     {
       Range that = (Range)object;
-      return Bool.make(this.start.val == that.start.val &&
-                       this.end.val == that.end.val &&
-                       this.exclusive == that.exclusive);
+      return this.start.val == that.start.val &&
+             this.end.val == that.end.val &&
+             this.exclusive == that.exclusive;
     }
-    return Bool.False;
+    return false;
   }
 
   public final int hashCode()

@@ -39,8 +39,8 @@ public class ComboPeer
   {
     fan.fwt.Combo self = (fan.fwt.Combo)this.self;
 
-    int style = self.dropDown.val ? SWT.DROP_DOWN : SWT.SIMPLE;
-    if (!self.editable.val) style |= SWT.READ_ONLY;
+    int style = self.dropDown ? SWT.DROP_DOWN : SWT.SIMPLE;
+    if (!self.editable) style |= SWT.READ_ONLY;
     Combo c = new Combo((Composite)parent, style);
     control = c;
     c.addListener(SWT.DefaultSelection, this);

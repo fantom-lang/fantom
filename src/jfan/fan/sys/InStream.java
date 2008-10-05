@@ -274,11 +274,11 @@ public class InStream
     return Decimal.fromStr(readUtfString(), true);
   }
 
-  public Bool readBool()
+  public Boolean readBool()
   {
     int n = r();
     if (n < 0) throw IOErr.make("Unexpected end of stream").val;
-    return n == 0 ? Bool.False : Bool.True;
+    return n != 0;
   }
 
   public Str readUtf() { return Str.make(readUtfString()); }
@@ -419,7 +419,7 @@ public class InStream
       if (f == null)
         terminate = Int.isSpace(c);
       else
-        terminate = ((Bool)f.call1(Int.pos(c))).val;
+        terminate = (Boolean)f.call1(Int.pos(c));
       if (terminate)
       {
         unreadChar(c);
@@ -467,14 +467,14 @@ public class InStream
     }
   }
 
-  public Str readAllStr() { return readAllStr(Bool.True); }
-  public Str readAllStr(Bool normalizeNewlines)
+  public Str readAllStr() { return readAllStr(true); }
+  public Str readAllStr(Boolean normalizeNewlines)
   {
     try
     {
       char[] buf  = new char[4096];
       int n = 0;
-      boolean normalize = normalizeNewlines.val;
+      boolean normalize = normalizeNewlines;
 
       // read characters
       int last = -1;
@@ -655,9 +655,9 @@ public class InStream
     return -1;
   }
 
-  public Int pipe(OutStream out) { return pipe(out, null, Bool.True); }
-  public Int pipe(OutStream out, Int n) { return pipe(out, n, Bool.True); }
-  public Int pipe(OutStream out, Int toPipe, Bool close)
+  public Int pipe(OutStream out) { return pipe(out, null, true); }
+  public Int pipe(OutStream out, Int n) { return pipe(out, n, true); }
+  public Int pipe(OutStream out, Int toPipe, Boolean close)
   {
     try
     {
@@ -690,14 +690,14 @@ public class InStream
     }
     finally
     {
-      if (close.val) close();
+      if (close) close();
     }
   }
 
-  public Bool close()
+  public Boolean close()
   {
     if (in != null) return in.close();
-    return Bool.True;
+    return true;
   }
 
 //////////////////////////////////////////////////////////////////////////

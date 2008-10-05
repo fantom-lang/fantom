@@ -121,12 +121,12 @@ public class LocalFile
     {
       if (file.isDirectory())
       {
-        if (!uri.isDir().val)
+        if (!uri.isDir())
           throw IOErr.make("Must use trailing slash for dir: " + uri).val;
       }
       else
       {
-        if (uri.isDir().val)
+        if (uri.isDir())
           throw IOErr.make("Cannot use trailing slash for file: " + uri).val;
       }
     }
@@ -142,9 +142,9 @@ public class LocalFile
 // File
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool exists()
+  public Boolean exists()
   {
-    return file.exists() ? Bool.True : Bool.False;
+    return file.exists();
   }
 
   public Int size()
@@ -203,7 +203,7 @@ public class LocalFile
     }
   }
 
-  public File plus(Uri uri, Bool checkSlash)
+  public File plus(Uri uri, Boolean checkSlash)
   {
     return make(this.uri.plus(uri), checkSlash);
   }
@@ -214,7 +214,7 @@ public class LocalFile
 
   public File create()
   {
-    if (isDir().val)
+    if (isDir())
       createDir();
     else
       createFile();
@@ -265,7 +265,7 @@ public class LocalFile
   {
     if (isDir() != to.isDir())
     {
-      if (isDir().val)
+      if (isDir())
         throw ArgErr.make("moveTo must be dir `" + to + "`").val;
       else
         throw ArgErr.make("moveTo must not be dir `" + to + "`").val;
@@ -275,7 +275,7 @@ public class LocalFile
       throw IOErr.make("Cannot move LocalFile to " + to.type()).val;
     LocalFile dest = (LocalFile)to;
 
-    if (dest.exists().val)
+    if (dest.exists())
       throw IOErr.make("moveTo already exists: " + to).val;
 
     if (!file.renameTo(dest.file))
@@ -286,7 +286,7 @@ public class LocalFile
 
   public void delete()
   {
-    if (!exists().val) return;
+    if (!exists()) return;
 
     if (file.isDirectory())
     {
@@ -360,13 +360,13 @@ public class LocalFile
     }
   }
 
-  public OutStream out(Bool append, Int bufSize)
+  public OutStream out(Boolean append, Int bufSize)
   {
     try
     {
       java.io.File parent = file.getParentFile();
       if (!parent.exists()) parent.mkdirs();
-      return SysOutStream.make(new java.io.FileOutputStream(file, append.val), bufSize);
+      return SysOutStream.make(new java.io.FileOutputStream(file, append), bufSize);
     }
     catch (java.io.IOException e)
     {

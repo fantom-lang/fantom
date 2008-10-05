@@ -43,8 +43,8 @@ public final class Month
     this.localeFullKey = Str.make(name + "Full");
   }
 
-  public static Month fromStr(Str name) { return fromStr(name, Bool.True); }
-  public static Month fromStr(Str name, Bool checked)
+  public static Month fromStr(Str name) { return fromStr(name, true); }
+  public static Month fromStr(Str name, Boolean checked)
   {
     return (Month)doFromStr(Sys.MonthType, name, checked);
   }

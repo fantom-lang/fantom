@@ -21,9 +21,9 @@ public final class Int
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Int fromStr(Str s) { return fromStr(s, Ten, Bool.True); }
-  public static Int fromStr(Str s, Int radix) { return fromStr(s, radix, Bool.True); }
-  public static Int fromStr(Str s, Int radix, Bool checked)
+  public static Int fromStr(Str s) { return fromStr(s, Ten, true); }
+  public static Int fromStr(Str s, Int radix) { return fromStr(s, radix, true); }
+  public static Int fromStr(Str s, Int radix, Boolean checked)
   {
     try
     {
@@ -31,7 +31,7 @@ public final class Int
     }
     catch (NumberFormatException e)
     {
-      if (!checked.val) return null;
+      if (!checked) return null;
       throw ParseErr.make("Int",  s).val;
     }
   }
@@ -44,7 +44,7 @@ public final class Int
     if (v < 0) v = -v;
     long start = r.start().val;
     long end   = r.end().val;
-    if (r.inclusive().val) ++end;
+    if (r.inclusive()) ++end;
     return make(start + (v % (end-start)));
   }
   static final java.util.Random random = new java.security.SecureRandom();
@@ -74,12 +74,12 @@ public final class Int
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Object obj)
+  public Boolean _equals(Object obj)
   {
     if (obj instanceof Int)
-      return val == ((Int)obj).val ? Bool.True : Bool.False;
+      return val == ((Int)obj).val;
     else
-      return Bool.False;
+      return false;
   }
 
   public Int compare(Object obj)
@@ -154,14 +154,14 @@ public final class Int
     return that;
   }
 
-  public Bool isEven()
+  public Boolean isEven()
   {
-    return (val % 2) == 0 ? Bool.True : Bool.False;
+    return (val % 2) == 0;
   }
 
-  public Bool isOdd()
+  public Boolean isOdd()
   {
-    return (val % 2) != 0 ? Bool.True : Bool.False;
+    return (val % 2) != 0;
   }
 
 /////////////////////////////////////////////////////////////////////////
@@ -169,20 +169,20 @@ public final class Int
 //////////////////////////////////////////////////////////////////////////
 
 
-  public Bool isSpace()
+  public Boolean isSpace()
   {
     try
     {
       if (val < 128 && (charMap[(int)val] & SPACE) != 0)
-        return Bool.True;
+        return true;
       else
-        return Bool.False;
+        return false;
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
       // should be very rare to use this method with negative
       // numbers, so don't take the hit every call
-      return Bool.False;
+      return false;
     }
   }
 
@@ -200,28 +200,11 @@ public final class Int
     }
   }
 
-  public Bool isAlpha()
+  public Boolean isAlpha()
   {
     try
     {
-      if (val < 128 && (charMap[(int)val] & (UPPER|LOWER)) != 0)
-        return Bool.True;
-      else
-        return Bool.False;
-    }
-    catch (ArrayIndexOutOfBoundsException e)
-    {
-      // should be very rare to use this method with negative
-      // numbers, so don't take the hit every call
-      return Bool.False;
-    }
-  }
-
-  public static boolean isAlpha(int val)
-  {
-    try
-    {
-      return (val < 128 && (charMap[val] & (UPPER|LOWER)) != 0);
+      return (val < 128 && (charMap[(int)val] & (UPPER|LOWER)) != 0);
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
@@ -231,20 +214,31 @@ public final class Int
     }
   }
 
-  public Bool isAlphaNum()
+  public static boolean isAlpha(int val)
   {
     try
     {
-      if (val < 128 && (charMap[(int)val] & (UPPER|LOWER|DIGIT)) != 0)
-        return Bool.True;
-      else
-        return Bool.False;
+      return val < 128 && (charMap[val] & (UPPER|LOWER)) != 0;
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
       // should be very rare to use this method with negative
       // numbers, so don't take the hit every call
-      return Bool.False;
+      return false;
+    }
+  }
+
+  public Boolean isAlphaNum()
+  {
+    try
+    {
+      return val < 128 && (charMap[(int)val] & (UPPER|LOWER|DIGIT)) != 0;
+    }
+    catch (ArrayIndexOutOfBoundsException e)
+    {
+      // should be very rare to use this method with negative
+      // numbers, so don't take the hit every call
+      return false;
     }
   }
 
@@ -262,14 +256,14 @@ public final class Int
     }
   }
 
-  public Bool isUpper()
+  public Boolean isUpper()
   {
-    return 'A' <= val && val <= 'Z' ? Bool.True : Bool.False;
+    return 'A' <= val && val <= 'Z';
   }
 
-  public Bool isLower()
+  public Boolean isLower()
   {
-    return 'a' <= val && val <= 'z' ? Bool.True : Bool.False;
+    return 'a' <= val && val <= 'z';
   }
 
   public Int upper()
@@ -288,38 +282,38 @@ public final class Int
       return this;
   }
 
-  public Bool isDigit()
+  public Boolean isDigit()
   {
-    return '0' <= val && val <= '9' ? Bool.True : Bool.False;
+    return '0' <= val && val <= '9';
   }
 
-  public Bool isDigit(Int radix)
+  public Boolean isDigit(Int radix)
   {
-    if (val < 0 || val >= 128) return Bool.False;
+    if (val < 0 || val >= 128) return false;
     int val = (int)this.val;
     int r   = (int)radix.val;
 
     if (r == 10)
     {
-      return ((charMap[val] & DIGIT) != 0) ? Bool.True : Bool.False;
+      return ((charMap[val] & DIGIT) != 0);
     }
 
     if (r == 16)
     {
-      return ((charMap[val] & HEX) != 0) ? Bool.True : Bool.False;
+      return ((charMap[val] & HEX) != 0);
     }
 
     if (r <= 10)
     {
-      return '0' <= val && val <= ('0'+r) ?  Bool.True : Bool.False;
+      return '0' <= val && val <= ('0'+r);
     }
     else
     {
-      if ((charMap[val] & DIGIT) != 0) return Bool.True;
+      if ((charMap[val] & DIGIT) != 0) return true;
       int x = val-10;
-      if ('a' <= val && val <= 'a'+x) return Bool.True;
-      if ('A' <= val && val <= 'A'+x) return Bool.True;
-      return Bool.False;
+      if ('a' <= val && val <= 'a'+x) return true;
+      if ('A' <= val && val <= 'A'+x) return true;
+      return false;
     }
   }
 
@@ -362,9 +356,9 @@ public final class Int
     return null;
   }
 
-  public Bool equalsIgnoreCase(Int ch)
+  public Boolean equalsIgnoreCase(Int ch)
   {
-    return (val | 0x20L) == (ch.val | 0x20L) ? Bool.True : Bool.False;
+    return (val | 0x20L) == (ch.val | 0x20L);
   }
 
   static final byte[] charMap = new byte[128];
@@ -398,14 +392,14 @@ public final class Int
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool localeIsUpper()
+  public Boolean localeIsUpper()
   {
-    return Character.isUpperCase((int)val) ? Bool.True : Bool.False;
+    return Character.isUpperCase((int)val);
   }
 
-  public Bool localeIsLower()
+  public Boolean localeIsLower()
   {
-    return Character.isLowerCase((int)val) ? Bool.True : Bool.False;
+    return Character.isLowerCase((int)val);
   }
 
   public Int localeUpper()

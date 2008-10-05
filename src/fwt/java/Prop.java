@@ -48,32 +48,32 @@ public abstract class Prop
     BoolProp(WidgetPeer peer, boolean def)
     {
       super(peer);
-      this.val = Bool.make(def);
+      this.val = def;
     }
 
     void syncToControl() { set(val); }
 
     void syncFromControl() { val = get(); }
 
-    Bool get()
+    Boolean get()
     {
       Widget w = peer.control;
-      return w == null ? val : Bool.make(get(w));
+      return w == null ? val : get(w);
     }
 
-    void set(Bool v)
+    void set(Boolean v)
     {
       Widget w = peer.control;
       if (w == null)
         val = v;
       else
-        set(w, v.val);
+        set(w, v);
     }
 
     public abstract boolean get(Widget w);
     public abstract void set(Widget w, boolean v);
 
-    Bool val;
+    Boolean val;
   }
 
 //////////////////////////////////////////////////////////////////////////

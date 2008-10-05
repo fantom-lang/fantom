@@ -23,7 +23,7 @@ public final class Decimal
 //////////////////////////////////////////////////////////////////////////
 
   public static Decimal fromStr(Str s) { return fromStr(s.val, true); }
-  public static Decimal fromStr(Str s, Bool checked) { return fromStr(s.val, checked.val); }
+  public static Decimal fromStr(Str s, Boolean checked) { return fromStr(s.val, checked); }
   public static Decimal fromStr(String s, boolean checked)
   {
     try
@@ -48,13 +48,13 @@ public final class Decimal
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool _equals(Object obj)
+  public Boolean _equals(Object obj)
   {
     if (obj instanceof Decimal)
     {
-      return val.equals(((Decimal)obj).val) ? Bool.True : Bool.False;
+      return val.equals(((Decimal)obj).val);
     }
-    return Bool.False;
+    return false;
   }
 
   public Int compare(Object obj)

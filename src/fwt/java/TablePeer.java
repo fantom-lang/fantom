@@ -41,11 +41,11 @@ public class TablePeer
     fan.fwt.Table self = (fan.fwt.Table)this.self;
 
     int style = SWT.VIRTUAL | SWT.FULL_SELECTION;
-    if (self.multi.val)
+    if (self.multi)
       style |= SWT.MULTI;
     else
       style |= SWT.SINGLE;
-    if (self.border.val)  style |= SWT.BORDER;
+    if (self.border)  style |= SWT.BORDER;
 
     Table t = new Table((Composite)parent, style);
     t.addListener(SWT.SetData, this);
@@ -63,8 +63,8 @@ public class TablePeer
 //////////////////////////////////////////////////////////////////////////
 
   // Bool headerVisible := true
-  public Bool headerVisible(fan.fwt.Table self) { return headerVisible.get(); }
-  public void headerVisible(fan.fwt.Table self, Bool v) { headerVisible.set(v); }
+  public Boolean headerVisible(fan.fwt.Table self) { return headerVisible.get(); }
+  public void headerVisible(fan.fwt.Table self, Boolean v) { headerVisible.set(v); }
   public final Prop.BoolProp headerVisible = new Prop.BoolProp(this, true)
   {
     public boolean get(Widget w) { return ((Table)w).getHeaderVisible(); }

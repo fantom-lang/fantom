@@ -65,18 +65,18 @@ public class OpUtil
 // Comparisions -> Bool
 //////////////////////////////////////////////////////////////////////////
 
-  public static Bool compareEQ(Object a, Object b)
+  public static Boolean compareEQ(Object a, Object b)
   {
-    if (a == null) return (b == null) ? Bool.True : Bool.False;
-    if (b == null) return Bool.False;
-    return a.equals(b) ? Bool.True : Bool.False;
+    if (a == null) return (b == null);
+    if (b == null) return false;
+    return a.equals(b);
   }
 
-  public static Bool compareNE(Object a, Object b)
+  public static Boolean compareNE(Object a, Object b)
   {
-    if (a == null) return (b == null) ? Bool.False : Bool.True;
-    if (b == null) return Bool.True;
-    return a.equals(b) ? Bool.False : Bool.True;
+    if (a == null) return (b != null);
+    if (b == null) return true;
+    return !a.equals(b);
   }
 
   public static Int compare(Object a, Object b)
@@ -86,61 +86,61 @@ public class OpUtil
     return FanObj.compare(a, b);
   }
 
-  public static Bool compareLT(Object a, Object b)
+  public static Boolean compareLT(Object a, Object b)
   {
-    if (a == null) return (b == null) ? Bool.False : Bool.True;
-    if (b == null) return Bool.False;
-    return FanObj.compare(a, b).val < 0 ? Bool.True : Bool.False;
+    if (a == null) return (b != null);
+    if (b == null) return false;
+    return FanObj.compare(a, b).val < 0;
   }
 
-  public static Bool compareLE(Object a, Object b)
+  public static Boolean compareLE(Object a, Object b)
   {
-    if (a == null) return Bool.True;
-    if (b == null) return Bool.False;
-    return FanObj.compare(a, b).val <= 0 ? Bool.True : Bool.False;
+    if (a == null) return true;
+    if (b == null) return false;
+    return FanObj.compare(a, b).val <= 0;
   }
 
-  public static Bool compareGE(Object a, Object b)
+  public static Boolean compareGE(Object a, Object b)
   {
-    if (a == null) return (b == null) ? Bool.True : Bool.False;
-    if (b == null) return Bool.True;
-    return FanObj.compare(a, b).val >= 0 ? Bool.True : Bool.False;
+    if (a == null) return (b == null);
+    if (b == null) return true;
+    return FanObj.compare(a, b).val >= 0;
   }
 
-  public static Bool compareGT(Object a, Object b)
+  public static Boolean compareGT(Object a, Object b)
   {
-    if (a == null) return Bool.False;
-    if (b == null) return Bool.True;
-    return FanObj.compare(a, b).val > 0 ? Bool.True : Bool.False;
+    if (a == null) return false;
+    if (b == null) return true;
+    return FanObj.compare(a, b).val > 0;
   }
 
-  public static Bool compareSame(Object a, Object b) // need to use Object for mixins
+  public static Boolean compareSame(Object a, Object b) // need to use Object for mixins
   {
-    return a == b ? Bool.True : Bool.False;
+    return a == b;
   }
 
-  public static Bool compareNotSame(Object a, Object b) // need to use Object for mixins
+  public static Boolean compareNotSame(Object a, Object b) // need to use Object for mixins
   {
-    return a != b ? Bool.True : Bool.False;
+    return a != b;
   }
 
-  public static Bool compareNull(Object a) // need to use Object for mixins
+  public static Boolean compareNull(Object a) // need to use Object for mixins
   {
-    return a == null ? Bool.True : Bool.False;
+    return a == null;
   }
 
-  public static Bool compareNotNull(Object a) // need to use Object for mixins
+  public static Boolean compareNotNull(Object a) // need to use Object for mixins
   {
-    return a != null ? Bool.True : Bool.False;
+    return a != null;
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Is/As
 //////////////////////////////////////////////////////////////////////////
 
-  public static Bool is(Object instance, Type type)
+  public static Boolean is(Object instance, Type type)
   {
-    if (instance == null) return Bool.False;
+    if (instance == null) return false;
     return FanObj.type(instance).fits(type);
   }
 
@@ -153,7 +153,7 @@ public class OpUtil
   public static Object toImmutable(Object obj)
   {
     if (obj == null) return null;
-    if (FanObj.isImmutable(obj).val) return obj;
+    if (FanObj.isImmutable(obj)) return obj;
     if (obj instanceof List)   return ((List)obj).toImmutable();
     if (obj instanceof Map)    return ((Map)obj).toImmutable();
     throw NotImmutableErr.make(FanObj.type(obj).toStr()).val;

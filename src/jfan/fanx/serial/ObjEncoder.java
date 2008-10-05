@@ -51,8 +51,10 @@ public class ObjEncoder
       return;
     }
 
-    if (obj instanceof Number)
+    if (obj.getClass().getName().charAt(0) == 'j')
     {
+      if (obj == Boolean.TRUE)   { w("true"); return; }
+      if (obj == Boolean.FALSE)  { w("false"); return; }
       if (obj instanceof Double) { FanFloat.encode((Double)obj, this); return; }
     }
 
@@ -63,11 +65,11 @@ public class ObjEncoder
     }
 
     Type type = FanObj.type(obj);
-    if (type.facet(facetSimple, null, Bool.False) == Bool.True)
+    if (type.facet(facetSimple, null, false) == Boolean.TRUE)
     {
       writeSimple(type, obj);
     }
-    else if (type.facet(facetSerializable, null, Bool.True) == Bool.True)
+    else if (type.facet(facetSerializable, null, true) == Boolean.TRUE)
     {
       writeComplex(type, obj);
     }
@@ -107,8 +109,8 @@ public class ObjEncoder
       Field f = (Field)fields.get(i);
 
       // skip static, transient, and synthetic (once) fields
-      if (f.isStatic().val || f.isSynthetic().val ||
-          f.facet(facetTransient, Bool.False) == Bool.True)
+      if (f.isStatic() || f.isSynthetic() ||
+          f.facet(facetTransient, false) == Boolean.TRUE)
         continue;
 
       // get the value
@@ -136,7 +138,7 @@ public class ObjEncoder
     }
 
     // if collection
-    if (type.facet(facetCollection, null, Bool.True) == Bool.True)
+    if (type.facet(facetCollection, null, true) == Boolean.TRUE)
       first = writeCollectionItems(type, obj, first);
 
     // if we output fields, then close braces
@@ -245,7 +247,7 @@ public class ObjEncoder
     if (!inferred) wType(t);
 
     // handle empty map
-    if (map.isEmpty().val) { w("[:]"); return; }
+    if (map.isEmpty()) { w("[:]"); return; }
 
     // items
     level++;
@@ -344,9 +346,9 @@ public class ObjEncoder
 
   private static boolean option(Map options, Str name, boolean def)
   {
-    Bool val = (Bool)options.get(name);
+    Boolean val = (Boolean)options.get(name);
     if (val == null) return def;
-    return val.val;
+    return val;
   }
 
 //////////////////////////////////////////////////////////////////////////

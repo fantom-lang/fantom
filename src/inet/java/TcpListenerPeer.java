@@ -40,14 +40,14 @@ public class TcpListenerPeer
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool isBound(TcpListener fan)
+  public Boolean isBound(TcpListener fan)
   {
-    return Bool.make(isBound());
+    return isBound();
   }
 
-  public Bool isClosed(TcpListener fan)
+  public Boolean isClosed(TcpListener fan)
   {
-    return Bool.make(isClosed());
+    return isClosed();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -104,16 +104,16 @@ public class TcpListenerPeer
     }
   }
 
-  public Bool close(TcpListener fan)
+  public Boolean close(TcpListener fan)
   {
     try
     {
       close();
-      return Bool.True;
+      return true;
     }
     catch (Exception e)
     {
-      return Bool.False;
+      return false;
     }
   }
 
@@ -145,11 +145,11 @@ public class TcpListenerPeer
     }
   }
 
-  public Bool getReuseAddress(TcpListener fan)
+  public Boolean getReuseAddress(TcpListener fan)
   {
     try
     {
-      return Bool.make(getReuseAddress());
+      return getReuseAddress();
     }
     catch (IOException e)
     {
@@ -157,11 +157,11 @@ public class TcpListenerPeer
     }
   }
 
-  public void setReuseAddress(TcpListener fan, Bool v)
+  public void setReuseAddress(TcpListener fan, Boolean v)
   {
     try
     {
-      setReuseAddress(v.val);
+      setReuseAddress(v);
     }
     catch (IOException e)
     {

@@ -51,8 +51,8 @@ public abstract class Namespace
 
   public final Uri uri() { return uri; }
 
-  public Object get(Uri uri) { return get(uri, Bool.True); }
-  public abstract Object get(Uri uri, Bool checked);
+  public Object get(Uri uri) { return get(uri, true); }
+  public abstract Object get(Uri uri, Boolean checked);
 
   public Uri create(Uri uri, Object obj)
   {
@@ -81,7 +81,7 @@ public abstract class Namespace
   public static Object safe(Object obj)
   {
     if (obj == null) return null;
-    if (isImmutable(obj).val) return obj;
+    if (isImmutable(obj)) return obj;
     Buf buf = new MemBuf(512);
     buf.out.writeObj(obj);
     buf.flip();

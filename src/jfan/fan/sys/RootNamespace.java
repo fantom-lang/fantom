@@ -42,7 +42,7 @@ public final class RootNamespace
 // Namespace
 //////////////////////////////////////////////////////////////////////////
 
-  public Object get(Uri uri, Bool checked)
+  public Object get(Uri uri, Boolean checked)
   {
     checkUri(uri);
 
@@ -55,7 +55,7 @@ public final class RootNamespace
       val = mem.get(uri.str.val);
       if (val == null)
       {
-        if (!checked.val) return null;
+        if (!checked) return null;
         throw UnresolvedErr.make(uri).val;
       }
     }
@@ -129,7 +129,7 @@ public final class RootNamespace
 
   private void checkUri(Uri uri)
   {
-    if (!uri.isPathOnly().val)
+    if (!uri.isPathOnly())
       throw ArgErr.make("Uri not path only: " + uri).val;
   }
 
@@ -161,7 +161,7 @@ public final class RootNamespace
   {
     if (uri.auth() != null || uri.queryStr != null ||
         uri.frag != null   || uri.path == null ||
-        uri.path.sz() == 0 || !uri.isPathAbs().val)
+        uri.path.sz() == 0 || !uri.isPathAbs())
       throw ArgErr.make("Invalid Uri for mount: " + uri).val;
 
     if (ns.uri != null)

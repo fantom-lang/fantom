@@ -115,7 +115,7 @@ public class Fan
       args = null;
     }
     else if (((Param)params.get(0)).of().is(Sys.StrType.toListOf()) &&
-             (params.sz() == 1 || ((Param)params.get(1)).hasDefault().val))
+             (params.sz() == 1 || ((Param)params.get(1)).hasDefault()))
     {
       args = new List(Sys.ObjType, new Object[] { Sys.args() });
     }
@@ -128,7 +128,7 @@ public class Fan
     // invoke
     try
     {
-      if (m.isStatic().val)
+      if (m.isStatic())
         return toResult(m.call(args));
       else
         return toResult(m.callOn(t.make(), args));

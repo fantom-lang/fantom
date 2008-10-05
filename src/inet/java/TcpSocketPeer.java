@@ -36,19 +36,19 @@ public class TcpSocketPeer
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool isBound(TcpSocket fan)
+  public Boolean isBound(TcpSocket fan)
   {
-    return Bool.make(isBound());
+    return isBound();
   }
 
-  public Bool isConnected(TcpSocket fan)
+  public Boolean isConnected(TcpSocket fan)
   {
-    return Bool.make(isConnected());
+    return isConnected();
   }
 
-  public Bool isClosed(TcpSocket fan)
+  public Boolean isClosed(TcpSocket fan)
   {
-    return Bool.make(isClosed());
+    return isClosed();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -140,16 +140,16 @@ public class TcpSocketPeer
     return out;
   }
 
-  public Bool close(TcpSocket fan)
+  public Boolean close(TcpSocket fan)
   {
     try
     {
       close();
-      return Bool.True;
+      return true;
     }
     catch (Exception e)
     {
-      return Bool.False;
+      return false;
     }
   }
 
@@ -263,11 +263,11 @@ public class TcpSocketPeer
     return options;
   }
 
-  public Bool getKeepAlive(TcpSocket fan)
+  public Boolean getKeepAlive(TcpSocket fan)
   {
     try
     {
-      return Bool.make(getKeepAlive());
+      return getKeepAlive();
     }
     catch (IOException e)
     {
@@ -275,11 +275,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setKeepAlive(TcpSocket fan, Bool v)
+  public void setKeepAlive(TcpSocket fan, Boolean v)
   {
     try
     {
-      setKeepAlive(v.val);
+      setKeepAlive(v);
     }
     catch (IOException e)
     {
@@ -335,11 +335,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Bool getReuseAddress(TcpSocket fan)
+  public Boolean getReuseAddress(TcpSocket fan)
   {
     try
     {
-      return Bool.make(getReuseAddress());
+      return getReuseAddress();
     }
     catch (IOException e)
     {
@@ -347,11 +347,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setReuseAddress(TcpSocket fan, Bool v)
+  public void setReuseAddress(TcpSocket fan, Boolean v)
   {
     try
     {
-      setReuseAddress(v.val);
+      setReuseAddress(v);
     }
     catch (IOException e)
     {
@@ -417,11 +417,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Bool getNoDelay(TcpSocket fan)
+  public Boolean getNoDelay(TcpSocket fan)
   {
     try
     {
-      return Bool.make(getTcpNoDelay());
+      return getTcpNoDelay();
     }
     catch (IOException e)
     {
@@ -429,11 +429,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setNoDelay(TcpSocket fan, Bool v)
+  public void setNoDelay(TcpSocket fan, Boolean v)
   {
     try
     {
-      setTcpNoDelay(v.val);
+      setTcpNoDelay(v);
     }
     catch (IOException e)
     {

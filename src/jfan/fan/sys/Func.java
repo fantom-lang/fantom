@@ -37,7 +37,7 @@ public abstract class Func
 
   public List params() { return params.ro(); }
 
-  public abstract Bool isImmutable();
+  public abstract Boolean isImmutable();
 
   public abstract Method method();
 
@@ -81,7 +81,7 @@ public abstract class Func
     public Str  name()  { return Str.make(getClass().getName()); }
     public Type type()  { return type; }
     public Str  toStr() { return type.signature(); }
-    public Bool isImmutable() { return Bool.False; }
+    public Boolean isImmutable() { return false; }
     public Method method() { return null; }
     public Err.Val tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + type.params.length).val; }
 
@@ -275,7 +275,7 @@ public abstract class Func
     public Str  name()  { return Str.make(getClass().getName()); }
     public Type type()  { return type; }
     public Str  toStr() { return type.signature(); }
-    public Bool isImmutable() { return Bool.False; }
+    public Boolean isImmutable() { return false; }
     public Method method() { return null; }
 
     // this isn't a very optimized implementation

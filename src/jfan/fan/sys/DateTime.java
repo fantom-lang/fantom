@@ -243,7 +243,7 @@ public final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   public static DateTime fromStr(Str s) { return fromStr(s.val, true); }
-  public static DateTime fromStr(Str s, Bool checked) { return fromStr(s.val, checked.val); }
+  public static DateTime fromStr(Str s, Boolean checked) { return fromStr(s.val, checked.booleanValue()); }
   public static DateTime fromStr(String s, boolean checked)
   {
     try
@@ -314,13 +314,13 @@ public final class DateTime
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool _equals(Object obj)
+  public final Boolean _equals(Object obj)
   {
     if (obj instanceof DateTime)
     {
-      return ticks == ((DateTime)obj).ticks ? Bool.True : Bool.False;
+      return ticks == ((DateTime)obj).ticks;
     }
-    return Bool.False;
+    return false;
   }
 
   public Int compare(Object obj)
@@ -383,7 +383,7 @@ public final class DateTime
 
   public final TimeZone timeZone() { return timeZone; }
 
-  public final Bool dst() { return ((fields >> 31) & 0x1) != 0 ? Bool.True : Bool.False; }
+  public final Boolean dst() { return ((fields >> 31) & 0x1) != 0; }
   public final boolean getDST()  { return ((fields >> 31) & 0x1) != 0; }
 
   public final Str timeZoneAbbr() { return getDST() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
@@ -648,7 +648,7 @@ public final class DateTime
     return Str.make(toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz"));
   }
 
-  public static Bool isLeapYear(Int year) { return Bool.make(isLeapYear((int)year.val)); }
+  public static Boolean isLeapYear(Int year) { return isLeapYear((int)year.val); }
   public static boolean isLeapYear(int year)
   {
     if ((year & 3) != 0) return false;
@@ -750,8 +750,8 @@ public final class DateTime
 // HTTP
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime fromHttpStr(Str s) { return fromHttpStr(s, Bool.True); }
-  public static DateTime fromHttpStr(Str s, Bool checked)
+  public static DateTime fromHttpStr(Str s) { return fromHttpStr(s, true); }
+  public static DateTime fromHttpStr(Str s, Boolean checked)
   {
     for (int i=0; i<httpFormats.length; ++i)
     {
@@ -765,7 +765,7 @@ public final class DateTime
       }
     }
 
-    if (!checked.val) return null;
+    if (!checked) return null;
     throw ParseErr.make("Invalid HTTP DateTime: '" + s + "'").val;
   }
 

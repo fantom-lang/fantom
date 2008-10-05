@@ -63,7 +63,7 @@ public class Process
   public void dir(File v)
   {
     checkRun();
-    if (v != null && (!v.exists().val || !v.isDir().val))
+    if (v != null && (!v.exists() || !v.isDir()))
       throw ArgErr.make("Invalid working directory: " + v).val;
     this.dir = v;
   }
@@ -85,8 +85,8 @@ public class Process
     return env;
   }
 
-  public Bool mergeErr() { return Bool.make(mergeErr); }
-  public void mergeErr(Bool v) { checkRun(); mergeErr = v.val;  }
+  public Boolean mergeErr() { return mergeErr; }
+  public void mergeErr(Boolean v) { checkRun(); mergeErr = v;  }
 
   public OutStream out() { return out; }
   public void out(OutStream out) { checkRun(); this.out = out; }

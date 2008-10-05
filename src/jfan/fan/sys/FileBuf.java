@@ -269,16 +269,16 @@ public class FileBuf
     }
   }
 
-  public final Bool close()
+  public final Boolean close()
   {
     try
     {
       fp.close();
-      return Bool.True;
+      return true;
     }
     catch (Exception e)
     {
-      return Bool.False;
+      return false;
     }
   }
 

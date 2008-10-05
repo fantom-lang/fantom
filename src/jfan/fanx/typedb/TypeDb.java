@@ -87,7 +87,7 @@ public class TypeDb
   public synchronized List findByFacet(Str name, Object val, Object options)
   {
     // process options
-    if (options == Bool.True && val instanceof Type)
+    if (options == Boolean.TRUE && val instanceof Type)
       return findByFacetInheritance(name, (Type)val);
 
     // no options

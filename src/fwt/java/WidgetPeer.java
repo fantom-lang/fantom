@@ -65,8 +65,8 @@ public class WidgetPeer
 //////////////////////////////////////////////////////////////////////////
 
   // Bool enabled := true
-  public Bool enabled(fan.fwt.Widget self) { return enabled.get(); }
-  public void enabled(fan.fwt.Widget self, Bool v) { enabled.set(v); }
+  public Boolean enabled(fan.fwt.Widget self) { return enabled.get(); }
+  public void enabled(fan.fwt.Widget self, Boolean v) { enabled.set(v); }
   public final Prop.BoolProp enabled = new Prop.BoolProp(this, true)
   {
     public boolean get(Widget w)
@@ -87,8 +87,8 @@ public class WidgetPeer
   };
 
   // Bool visible := true
-  public Bool visible(fan.fwt.Widget self) { return visible.get(); }
-  public void visible(fan.fwt.Widget self, Bool v) { visible.set(v); }
+  public Boolean visible(fan.fwt.Widget self) { return visible.get(); }
+  public void visible(fan.fwt.Widget self, Boolean v) { visible.set(v); }
   public final Prop.BoolProp visible = new Prop.BoolProp(this, true)
   {
     public boolean get(Widget w)
@@ -166,12 +166,12 @@ public class WidgetPeer
 // Focus Eventing
 //////////////////////////////////////////////////////////////////////////
 
-  public Bool hasFocus(fan.fwt.Widget self)
+  public Boolean hasFocus(fan.fwt.Widget self)
   {
     if (control instanceof Control)
-      return Bool.make(((Control)control).isFocusControl());
+      return ((Control)control).isFocusControl();
     else
-      return Bool.False;
+      return false;
   }
 
   public void focus(fan.fwt.Widget self)
@@ -185,7 +185,7 @@ public class WidgetPeer
     // if we don't have any onFocus listeners, then I
     // shouldn't be actively registered as a focus listener
     if (!(control instanceof Control)) return;
-    boolean now = self.onFocus().isEmpty().val && self.onBlur().isEmpty().val;
+    boolean now = self.onFocus().isEmpty() && self.onBlur().isEmpty();
     if (now != activeFocusListener) return;
     if (activeFocusListener)
     {
@@ -218,7 +218,7 @@ public class WidgetPeer
     // if we don't have any onKey listeners, then I
     // shouldn't be actively registered as a key listener
     if (!(control instanceof Control)) return;
-    boolean now = self.onKeyDown().isEmpty().val && self.onKeyUp().isEmpty().val;
+    boolean now = self.onKeyDown().isEmpty() && self.onKeyUp().isEmpty();
     if (now != activeKeyListener) return;
     if (activeKeyListener)
     {
@@ -248,7 +248,7 @@ public class WidgetPeer
     fe.keyChar = Int.make(se.character);
     fe.key     = toKey(se.keyCode, se.stateMask);
     listeners.fire(fe);
-    if (fe.consumed.val) se.doit = false;
+    if (fe.consumed) se.doit = false;
   }
 
   static Key toKey(int keyCode, int stateMask)
@@ -324,9 +324,9 @@ public class WidgetPeer
 // Attachment
 //////////////////////////////////////////////////////////////////////////
 
-  public final Bool attached(fan.fwt.Widget self)
+  public final Boolean attached(fan.fwt.Widget self)
   {
-    return control != null ? Bool.True : Bool.False;
+    return control != null;
   }
 
   public final void attach(fan.fwt.Widget self)

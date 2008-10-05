@@ -33,7 +33,7 @@ public class ProgressBarPeer
   public Widget create(Widget parent)
   {
     fan.fwt.ProgressBar self = (fan.fwt.ProgressBar)this.self;
-    int style = self.indeterminate.val ? SWT.INDETERMINATE : 0;
+    int style = self.indeterminate ? SWT.INDETERMINATE : 0;
     return new ProgressBar((Composite)parent, style);
   }
 

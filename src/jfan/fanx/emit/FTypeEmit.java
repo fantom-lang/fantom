@@ -242,7 +242,7 @@ public abstract class FTypeEmit
 
     // set $Type field with type (if we this is a function,
     // then the FuncType will be the type exposed)
-    if (!parent.isMixin().val)
+    if (!parent.isMixin())
     {
       Type t = parent;
       if (parent.base() instanceof FuncType) t = parent.base();
@@ -279,7 +279,7 @@ public abstract class FTypeEmit
   private void emitMixinRouters()
   {
     // short circuit if no direct mixins implemented
-    if (parent.mixins().isEmpty().val) return;
+    if (parent.mixins().isEmpty()) return;
 
     // first we have to find all the mixins I inherit thru my
     // direct mixin inheritances (but not my class extension) - these
@@ -301,7 +301,7 @@ public abstract class FTypeEmit
   {
     // if mixin I haven't seen add to accumulator
     String qname = t.qname().val;
-    if (t.isMixin().val && acc.get(qname) == null)
+    if (t.isMixin() && acc.get(qname) == null)
       acc.put(qname, t);
 
     // recurse
@@ -318,7 +318,7 @@ public abstract class FTypeEmit
       Method m = (Method)methods.get(i);
 
       // only emit router for non-abstract instance methods
-      if (m.isStatic().val || m.isAbstract().val) continue;
+      if (m.isStatic() || m.isAbstract()) continue;
 
       // only emit the router unless this is the exact one I inherit
       String name = m.name().val;
@@ -352,7 +352,7 @@ public abstract class FTypeEmit
   }
 
   /**
-   * Given a Fan qname index, map to a Java class name: sys/Bool
+   * Given a Fan qname index, map to a Java class name: fan/sys/Version
    */
   String jname(int index)
   {

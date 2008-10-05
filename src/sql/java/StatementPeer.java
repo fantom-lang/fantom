@@ -121,7 +121,7 @@ public class StatementPeer
   Row makeDynamicRow(ResultSet rs, Type of, SqlUtil.SqlToFan[] converters)
     throws SQLException
   {
-    if (!of.isDynamic().val)
+    if (!of.isDynamic())
       throw SqlErr.make("Expecting dynamic type, not " + of).val;
 
     Row row = (Row)of.make();
@@ -280,8 +280,8 @@ public class StatementPeer
     // probably shake out in the ORM design
     if (value instanceof Double)
       jobj = value;
-    else if (value instanceof Bool)
-      jobj = new Boolean(((Bool)value).val);
+    else if (value instanceof Boolean)
+      jobj = value;
     else if (value instanceof Int)
       jobj = new Long(((Int)value).val);
     else if (value instanceof Str)

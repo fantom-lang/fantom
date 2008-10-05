@@ -45,7 +45,7 @@ public final class Facets
 
   public static Facets make(Map map)
   {
-    if (map == null || map.isEmpty().val) return empty();
+    if (map == null || map.isEmpty()) return empty();
 
     HashMap src = new HashMap();
     Iterator it = map.pairsIterator();
@@ -54,7 +54,7 @@ public final class Facets
       Entry e = (Entry)it.next();
       Str key = (Str)e.getKey();
       Object val = e.getValue();
-      if (FanObj.isImmutable(val).val)
+      if (FanObj.isImmutable(val))
         src.put(key, val);
       else
         src.put(key, ObjEncoder.encode(val));
@@ -97,12 +97,12 @@ public final class Facets
 
   private Object toImmutable(Object obj)
   {
-    if (FanObj.isImmutable(obj).val) return obj;
+    if (FanObj.isImmutable(obj)) return obj;
 
     if (obj instanceof List)
     {
       List list = (List)obj;
-      if (list.of().isConst().val)
+      if (list.of().isConst())
         return list.toImmutable();
     }
 
@@ -110,7 +110,7 @@ public final class Facets
     {
       Map map = (Map)obj;
       MapType mapType = (MapType)map.type();
-      if (mapType.k.isConst().val && mapType.v.isConst().val)
+      if (mapType.k.isConst() && mapType.v.isConst())
         return map.toImmutable();
     }
 
@@ -135,7 +135,7 @@ public final class Facets
       Str name = (Str)it.next();
       Object val = get(name, null);
       map.set(name, val);
-      allImmutable &= FanObj.isImmutable(val).val;
+      allImmutable &= FanObj.isImmutable(val);
     }
 
     // if all the values were immutable, then we

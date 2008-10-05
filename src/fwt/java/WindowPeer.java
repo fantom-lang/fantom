@@ -79,7 +79,7 @@ public class WindowPeer
    Window self = (Window)this.self;
    fan.fwt.Event fe = event(EventId.close);
    self.onClose().fire(fe);
-   if (fe.consumed.val) se.doit = false;
+   if (fe.consumed) se.doit = false;
  }
 
  public void shellActivated(ShellEvent se)
@@ -119,9 +119,9 @@ public class WindowPeer
     else if (self.mode == WindowMode.appModal)    style |= SWT.APPLICATION_MODAL;
     else if (self.mode == WindowMode.sysModal)    style |= SWT.SYSTEM_MODAL;
 
-    if (self.alwaysOnTop.val) style |= SWT.ON_TOP;
+    if (self.alwaysOnTop) style |= SWT.ON_TOP;
 
-    if (self.resizable.val) style |= SWT.RESIZE;
+    if (self.resizable) style |= SWT.RESIZE;
 
     return style;
   }
