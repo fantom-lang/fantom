@@ -17,9 +17,9 @@ abstract const class Num
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Protected constructor.
+  ** internal constructor.
   **
-  protected new make()
+  internal new make()
 
 //////////////////////////////////////////////////////////////////////////
 // Virtuals
@@ -28,16 +28,16 @@ abstract const class Num
   **
   ** Convert this number to an Int.
   **
-  virtual Int toInt()
+  Int toInt()
 
   **
   ** Convert this number to a Float.
   **
-  virtual Float toFloat()
+  Float toFloat()
 
   **
   ** Convert this number to a Decimal.
   **
-  virtual Decimal toDecimal()
+  Decimal toDecimal()
 
 }

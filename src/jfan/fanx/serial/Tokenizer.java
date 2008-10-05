@@ -271,7 +271,7 @@ public class Tokenizer
         }
         else
         {
-          this.val = Decimal.make(num);
+          this.val = num;
           return Token.DECIMAL_LITERAL;
         }
       }

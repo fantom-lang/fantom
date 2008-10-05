@@ -23,7 +23,7 @@ class FloatTest : Test
     verify(x.isImmutable)
 
     verify(x is Obj)
-    //verify(x is Num) TODO
+    verify(x is Num)
     verify(x is Float)
     verifyFalse(x is Int)
 
@@ -178,7 +178,7 @@ class FloatTest : Test
   Void testNum()
   {
     verifyEq(3.0f.toInt, 3)
-    verifyEq(3.1f.toInt, 3)
+    verifyEq(((Num)3.1f).toInt, 3)
     verifyEq(3.9f.toInt, 3)
     verifyEq(4.0f.toInt, 4)
     verify(73939.9555f.toFloat === 73939.9555f)

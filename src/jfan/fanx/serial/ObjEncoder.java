@@ -7,6 +7,7 @@
 //
 package fanx.serial;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import fan.sys.*;
@@ -57,6 +58,7 @@ public class ObjEncoder
       if (obj == Boolean.FALSE)  { w("false"); return; }
       if (obj instanceof Long)   { w(obj.toString()); return; }
       if (obj instanceof Double) { FanFloat.encode((Double)obj, this); return; }
+      if (obj instanceof BigDecimal) { FanDecimal.encode((BigDecimal)obj, this); return; }
     }
 
     if (obj instanceof Literal)

@@ -8,6 +8,7 @@
 package fan.sys;
 
 import java.io.*;
+import java.math.*;
 import java.nio.*;
 
 /**
@@ -238,7 +239,7 @@ public abstract class Buf
 
   public final Buf writeF8(Double x) { out.writeF8(x); return this; }
 
-  public final Buf writeDecimal(Decimal x) { out.writeDecimal(x); return this; }
+  public final Buf writeDecimal(BigDecimal x) { out.writeDecimal(x); return this; }
 
   public final Buf writeBool(Boolean x) { out.writeBool(x); return this; }
 
@@ -294,7 +295,7 @@ public abstract class Buf
 
   public final Double readF8() { return in.readF8(); }
 
-  public final Decimal readDecimal() { return in.readDecimal(); }
+  public final BigDecimal readDecimal() { return in.readDecimal(); }
 
   public final Boolean readBool() { return in.readBool(); }
 

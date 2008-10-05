@@ -529,6 +529,8 @@ public class Method
 // Reflection
 //////////////////////////////////////////////////////////////////////////
 
+  private boolean isInstance() { return (flags & (FConst.Static|FConst.Ctor)) == 0; }
+
   public Object invoke(Object instance, Object[] args)
   {
     if (reflect == null) parent.finish();
@@ -537,7 +539,18 @@ public class Method
     {
       // zero index is full signature up to using max defaults
       int index = params.sz()-args.length;
+      if (parent.javaRepr && isInstance()) index++;
       if (index < 0) index = 0;
+/*
+System.out.println("invoke " + qname() + " index=" + index + " java=" + parent.javaRepr + " isInstance" + isInstance());
+System.out.println("  instance=" + instance);
+System.out.println("  args.length=" + args.length);
+for (int i=0; i<args.length; ++i)
+  System.out.println("  args[" + i + "] " + args[i]);
+System.out.println("  reflect.length=" + reflect.length);
+for (int i=0; i<reflect.length; ++i)
+  System.out.println("  reflect[" + i + "] " + reflect[i]);
+*/
       return reflect[index].invoke(instance, args);
     }
     catch (IllegalArgumentException e)

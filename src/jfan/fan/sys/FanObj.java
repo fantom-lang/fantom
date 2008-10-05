@@ -7,6 +7,7 @@
 //
 package fan.sys;
 
+import java.math.*;
 import fanx.util.*;
 
 /**
@@ -122,16 +123,21 @@ public class FanObj
 
   public static Object trap(Object self, Str name, List args)
   {
-    return ((FanObj)self).trap(name, args);
+    if (self instanceof FanObj)
+      return ((FanObj)self).trap(name, args);
+    else
+      return doTrap(self, name, args, type(self));
   }
 
-  public Object trap(Str name, List args)
+  public Object trap(Str name, List args) { return doTrap(this, name, args, type()); }
+
+  private static Object doTrap(Object self, Str name, List args, Type type)
   {
-    Slot slot = type().slot(name, true);
+    Slot slot = type.slot(name, true);
     if (slot instanceof Method)
     {
       Method m = (Method)slot;
-      return m.func.callOn(this, args);
+      return m.func.callOn(self, args);
     }
     else
     {
@@ -139,13 +145,13 @@ public class FanObj
       int argSize = (args == null) ? 0 : args.sz();
       if (argSize == 0)
       {
-        return f.get(this);
+        return f.get(self);
       }
 
       if (argSize == 1)
       {
         Object val = args.get(0);
-        f.set(this, val);
+        f.set(self, val);
         return val;
       }
 

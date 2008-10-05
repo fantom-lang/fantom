@@ -7,6 +7,7 @@
 //
 package fan.sys;
 
+import java.math.*;
 import fanx.serial.*;
 
 /**
@@ -269,9 +270,9 @@ public class InStream
     return Double.valueOf(Double.longBitsToDouble(readLong()));
   }
 
-  public Decimal readDecimal()
+  public BigDecimal readDecimal()
   {
-    return Decimal.fromStr(readUtfString(), true);
+    return FanDecimal.fromStr(readUtfString(), true);
   }
 
   public Boolean readBool()

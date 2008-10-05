@@ -439,10 +439,11 @@
 - Java runtime: fan.sys.Bool -> java.lang.Boolean
 - Java runtime: fan.sys.Int -> java.lang.Long
 - Java runtime: fan.sys.Float -> java.lang.Double
+- Java runtime: fan.sys.Num -> java.lang.Number
+- Java runtime: fan.sys.Decimal -> java.math.BigDecimal
 - Add build::CreateZip task, buildall.fan handles dist zip
 - Fix RichText editor home/end to take whitespace into account
 - Change fwt::Image constructors
 - Add icons to flux history items
-
 
 

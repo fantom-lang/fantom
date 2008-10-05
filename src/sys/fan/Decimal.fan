@@ -113,27 +113,6 @@ const final class Decimal : Num
   **
   Decimal max(Decimal that)
 
-/////////////////////////////////////////////////////////////////////////
-// Num
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Convert to 64-bit Int, and fractional part if truncated.
-  ** If too big for an Int, then only the low-order 64 bits are
-  ** returned.
-  **
-  override Int toInt()
-
-  **
-  ** Convert to 64-bit Float - precision may be lost.
-  **
-  override Float toFloat()
-
-  **
-  ** Return this.
-  **
-  override Decimal toDecimal()
-
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////

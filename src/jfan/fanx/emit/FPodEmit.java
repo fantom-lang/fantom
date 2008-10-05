@@ -105,7 +105,7 @@ public class FPodEmit
     for (int i=0; i<literals.floats.size(); ++i)
       emitField("F" + i, "Ljava/lang/Double;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.decimals.size(); ++i)
-      emitField("D" + i, "Lfan/sys/Decimal;", EmitConst.PUBLIC | EmitConst.STATIC);
+      emitField("D" + i, "Ljava/math/BigDecimal;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.strs.size(); ++i)
       emitField("S" + i, "Lfan/sys/Str;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.durations.size(); ++i)

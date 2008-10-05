@@ -8,6 +8,7 @@
 package fanx.fcode;
 
 import java.io.*;
+import java.math.*;
 import java.util.*;
 import java.util.zip.*;
 import fan.sys.*;
@@ -57,7 +58,7 @@ public final class FLiterals
 
   public final Long integer(int index)      { return (Long)ints.get(index); }
   public final Double floats(int index)     { return (Double)floats.get(index); }
-  public final Decimal decimals(int index)  { return (Decimal)decimals.get(index); }
+  public final BigDecimal decimals(int index) { return (BigDecimal)decimals.get(index); }
   public final Str str(int index)           { return (Str)strs.get(index); }
   public final Duration duration(int index) { return (Duration)durations.get(index); }
   public final Uri uri(int index)           { return (Uri)uris.get(index); }

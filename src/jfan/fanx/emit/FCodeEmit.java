@@ -273,7 +273,7 @@ public class FCodeEmit
   private void loadDecimal()
   {
     int index = u2();
-    int field = emit.field(podClass + ".D" + index + ":Lfan/sys/Decimal;");
+    int field = emit.field(podClass + ".D" + index + ":Ljava/math/BigDecimal;");
     code.op2(GETSTATIC, field);
   }
 

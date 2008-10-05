@@ -7,6 +7,7 @@
 //
 package fan.sys;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import fanx.serial.*;
 import fanx.util.StrUtil;
@@ -725,8 +726,8 @@ public final class Str
   public final Double toFloat() { return FanFloat.fromStr(this, true); }
   public final Double toFloat(Boolean checked) { return FanFloat.fromStr(this, checked); }
 
-  public final Decimal toDecimal() { return Decimal.fromStr(this, true); }
-  public final Decimal toDecimal(Boolean checked) { return Decimal.fromStr(this, checked); }
+  public final BigDecimal toDecimal() { return FanDecimal.fromStr(this, true); }
+  public final BigDecimal toDecimal(Boolean checked) { return FanDecimal.fromStr(this, checked); }
 
   public final Uri toUri() { return Uri.fromStr(this); }
 

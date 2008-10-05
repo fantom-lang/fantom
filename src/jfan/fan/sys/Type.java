@@ -68,24 +68,24 @@ public class Type
 
   Type(Pod pod, FType ftype)
   {
-    this.pod     = pod;
-    this.ftype   = ftype;
-    this.name    = Str.make(pod.fpod.name(pod.fpod.typeRef(ftype.self).typeName));
-    this.qname   = Str.make(pod.name.val + "::" + name.val);
-    this.flags   = ftype.flags;
-    this.dynamic = false;
+    this.pod      = pod;
+    this.ftype    = ftype;
+    this.name     = Str.make(pod.fpod.name(pod.fpod.typeRef(ftype.self).typeName));
+    this.qname    = Str.make(pod.name.val + "::" + name.val);
+    this.flags    = ftype.flags;
+    this.dynamic  = false;
     if (Debug) System.out.println("-- init:   " + qname);
   }
 
   // parameterized type constructor
   public Type(Pod pod, String name, int flags, Facets facets)
   {
-    this.pod     = pod;
-    this.name    = Str.make(name);
-    this.qname   = Str.make(pod.name.val + "::" + name);
-    this.flags   = flags;
-    this.dynamic = false;
-    this.facets  = facets;
+    this.pod      = pod;
+    this.name     = Str.make(name);
+    this.qname    = Str.make(pod.name.val + "::" + name);
+    this.flags    = flags;
+    this.dynamic  = false;
+    this.facets   = facets;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -782,6 +782,7 @@ public class Type
       {
         try
         {
+          this.javaRepr = FanUtil.isJavaRepresentation(this);
           this.cls = Class.forName(FanUtil.toJavaImplClassName(podName, name.val));
         }
         catch (Exception e)
@@ -948,9 +949,12 @@ catch (Exception e) { e.printStackTrace(); }
       if (pod == Sys.SysPod)
       {
         if (!checkAllFan(params)) return;
-        boolean javaStatic = Modifier.isStatic(m.getModifiers());
-        if (javaStatic && this == Sys.ObjType && !name.equals("echo")) return;
-        if (javaStatic && !method.isStatic() && !method.isCtor()) --numParams;
+        if (javaRepr)
+        {
+          boolean javaStatic = Modifier.isStatic(m.getModifiers());
+          if (!javaStatic) return;
+          if (!method.isStatic() && !method.isCtor()) --numParams;
+        }
       }
 
       // zero index is full signature up to using max defaults
@@ -1025,5 +1029,6 @@ catch (Exception e) { e.printStackTrace(); }
   // misc
   Type listOf;
   Constructor dynamicCtor;  // enabled to store a type per instance
+  boolean javaRepr;         // if representation a Java type, such as java.lang.Long
 
 }

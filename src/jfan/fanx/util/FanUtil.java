@@ -31,10 +31,12 @@ public class FanUtil
   private static HashMap javaToFanTypes = new HashMap();
   static
   {
-    javaToFanTypes.put("java.lang.Object",  Sys.ObjType);
-    javaToFanTypes.put("java.lang.Boolean", Sys.BoolType);
-    javaToFanTypes.put("java.lang.Long",    Sys.IntType);
-    javaToFanTypes.put("java.lang.Double",  Sys.FloatType);
+    javaToFanTypes.put("java.lang.Object",     Sys.ObjType);
+    javaToFanTypes.put("java.lang.Boolean",    Sys.BoolType);
+    javaToFanTypes.put("java.lang.Number",     Sys.NumType);
+    javaToFanTypes.put("java.lang.Long",       Sys.IntType);
+    javaToFanTypes.put("java.lang.Double",     Sys.FloatType);
+    javaToFanTypes.put("java.math.BigDecimal", Sys.DecimalType);
   }
 
   /**
@@ -49,9 +51,25 @@ public class FanUtil
   private static HashMap javaImmutables = new HashMap();
   static
   {
-    javaImmutables.put("java.lang.Boolean", Boolean.TRUE);
-    javaImmutables.put("java.lang.Long",    Boolean.TRUE);
-    javaImmutables.put("java.lang.Double",  Boolean.TRUE);
+    javaImmutables.put("java.lang.Boolean",    Boolean.TRUE);
+    javaImmutables.put("java.lang.Long",       Boolean.TRUE);
+    javaImmutables.put("java.lang.Double",     Boolean.TRUE);
+    javaImmutables.put("java.math.BigDecimal", Boolean.TRUE);
+  }
+
+  /**
+   * Return if the Fan Type is represented as a Java class
+   * such as sys::Int as java.lang.Long.
+   */
+  public static boolean isJavaRepresentation(Type t)
+  {
+    if (t.pod() != Sys.SysPod) return false;
+    return t == Sys.ObjType   ||
+           t == Sys.BoolType  ||
+           t == Sys.IntType   ||
+           t == Sys.FloatType ||
+           t == Sys.NumType   ||
+           t == Sys.DecimalType;
   }
 
   /**
@@ -86,11 +104,17 @@ public class FanUtil
         case 'B':
           if (typeName.equals("Bool")) return "java.lang.Boolean";
           break;
+        case 'D':
+          if (typeName.equals("Decimal")) return "java.math.BigDecimal";
+          break;
         case 'F':
           if (typeName.equals("Float")) return "java.lang.Double";
           break;
         case 'I':
           if (typeName.equals("Int")) return "java.lang.Long";
+          break;
+        case 'N':
+          if (typeName.equals("Num")) return "java.lang.Number";
           break;
         case 'O':
           if (typeName.equals("Obj")) return "java.lang.Object";
@@ -115,11 +139,17 @@ public class FanUtil
         case 'B':
           if (typeName.equals("Bool")) return "fan.sys.FanBool";
           break;
+        case 'D':
+          if (typeName.equals("Decimal")) return "fan.sys.FanDecimal";
+          break;
         case 'F':
           if (typeName.equals("Float")) return "fan.sys.FanFloat";
           break;
         case 'I':
           if (typeName.equals("Int")) return "fan.sys.FanInt";
+          break;
+        case 'N':
+          if (typeName.equals("Num")) return "fan.sys.FanNum";
           break;
         case 'O':
           if (typeName.equals("Obj")) return "fan.sys.FanObj";
@@ -143,11 +173,17 @@ public class FanUtil
         case 'B':
           if (typeName.equals("Bool")) return "java/lang/Boolean";
           break;
+        case 'D':
+          if (typeName.equals("Decimal")) return "java/math/BigDecimal";
+          break;
         case 'F':
           if (typeName.equals("Float")) return "java/lang/Double";
           break;
         case 'I':
           if (typeName.equals("Int")) return "java/lang/Long";
+          break;
+        case 'N':
+          if (typeName.equals("Num")) return "java/lang/Number";
           break;
         case 'O':
           if (typeName.equals("Obj")) return "java/lang/Object";
@@ -180,6 +216,8 @@ public class FanUtil
       if (jsig.equals("java/lang/Boolean")) return "fan/sys/FanBool";
       if (jsig.equals("java/lang/Long"))    return "fan/sys/FanInt";
       if (jsig.equals("java/lang/Double"))  return "fan/sys/FanFloat";
+      if (jsig.equals("java/lang/Number"))  return "fan/sys/FanNum";
+      if (jsig.equals("java/math/BigDecimal")) return "fan/sys/FanDecimal";
     }
     return jsig;
   }

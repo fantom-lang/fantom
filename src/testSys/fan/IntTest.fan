@@ -36,7 +36,7 @@ class IntTest : Test
     verify(8.isImmutable)
 
     verify(x is Obj)
-//    verify(x is Num) TODO
+    verify(x is Num)
     verify(x is Int)
     verifyFalse(x is Float)
   }
@@ -501,6 +501,30 @@ class IntTest : Test
     }
     verifyEq(acc.size, 10)
 
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Reflect
+//////////////////////////////////////////////////////////////////////////
+
+  Void testReflect()
+  {
+    verifyEq(Int#fromStr.call(["3"]), 3)
+    verifyEq(Int#fromStr.call1("3"), 3)
+    verifyEq(Int#fromStr.call3("xxx", 10, false), null)
+
+    verifyEq(Int#toHex.call([0xab]), "ab")
+    verifyEq(Int#toHex.call2(0xab, 4), "00ab")
+    verifyEq(Int#toHex.callOn(0xab, null), "ab")
+    verifyEq(Int#toHex.callOn(0xab, [3]), "0ab")
+
+    verifyEq(Obj#hash.call([66]), 66)
+    verifyEq(Obj#toStr.callOn(66, null), "66")
+
+    Obj x := 10
+    verifyEq(x->toStr, "10")
+    verifyEq(x->toHex, "a")
+    verifyEq(x->toHex(2), "0a")
   }
 
 }
