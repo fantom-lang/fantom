@@ -147,10 +147,10 @@ public class LocalFile
     return file.exists();
   }
 
-  public Int size()
+  public Long size()
   {
     if (file.isDirectory()) return null;
-    return Int.pos(file.length());
+    return Long.valueOf(file.length());
   }
 
   public DateTime modified()
@@ -321,7 +321,7 @@ public class LocalFile
     }
   }
 
-  public Buf mmap(Str mode, Int pos, Int size)
+  public Buf mmap(Str mode, Long pos, Long size)
   {
     try
     {
@@ -338,7 +338,7 @@ public class LocalFile
       // traverse the various Java APIs
       RandomAccessFile fp = new RandomAccessFile(file, rw);
       FileChannel chan = fp.getChannel();
-      MappedByteBuffer mmap = chan.map(mm, pos.val, size.val);
+      MappedByteBuffer mmap = chan.map(mm, pos.longValue(), size.longValue());
 
       return new MmapBuf(this, mmap);
     }
@@ -348,7 +348,7 @@ public class LocalFile
     }
   }
 
-  public InStream in(Int bufSize)
+  public InStream in(Long bufSize)
   {
     try
     {
@@ -360,7 +360,7 @@ public class LocalFile
     }
   }
 
-  public OutStream out(Boolean append, Int bufSize)
+  public OutStream out(Boolean append, Long bufSize)
   {
     try
     {

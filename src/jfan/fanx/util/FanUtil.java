@@ -21,6 +21,7 @@ public class FanUtil
    */
   public static Type toFanType(Class cls, boolean checked)
   {
+    // TODO: optimize performance
     Type t = (Type)javaToFanTypes.get(cls.getName());
     if (t != null) return t;
     if (!checked) return null;
@@ -32,6 +33,7 @@ public class FanUtil
   {
     javaToFanTypes.put("java.lang.Object",  Sys.ObjType);
     javaToFanTypes.put("java.lang.Boolean", Sys.BoolType);
+    javaToFanTypes.put("java.lang.Long",    Sys.IntType);
     javaToFanTypes.put("java.lang.Double",  Sys.FloatType);
   }
 
@@ -40,6 +42,7 @@ public class FanUtil
    */
   public static boolean isJavaImmutable(Class cls)
   {
+    // TODO: optimize performance
     return javaImmutables.get(cls.getName()) != null;
   }
 
@@ -47,6 +50,7 @@ public class FanUtil
   static
   {
     javaImmutables.put("java.lang.Boolean", Boolean.TRUE);
+    javaImmutables.put("java.lang.Long",    Boolean.TRUE);
     javaImmutables.put("java.lang.Double",  Boolean.TRUE);
   }
 
@@ -85,6 +89,9 @@ public class FanUtil
         case 'F':
           if (typeName.equals("Float")) return "java.lang.Double";
           break;
+        case 'I':
+          if (typeName.equals("Int")) return "java.lang.Long";
+          break;
         case 'O':
           if (typeName.equals("Obj")) return "java.lang.Object";
           break;
@@ -111,6 +118,9 @@ public class FanUtil
         case 'F':
           if (typeName.equals("Float")) return "fan.sys.FanFloat";
           break;
+        case 'I':
+          if (typeName.equals("Int")) return "fan.sys.FanInt";
+          break;
         case 'O':
           if (typeName.equals("Obj")) return "fan.sys.FanObj";
           break;
@@ -136,6 +146,9 @@ public class FanUtil
         case 'F':
           if (typeName.equals("Float")) return "java/lang/Double";
           break;
+        case 'I':
+          if (typeName.equals("Int")) return "java/lang/Long";
+          break;
         case 'O':
           if (typeName.equals("Obj")) return "java/lang/Object";
           break;
@@ -156,7 +169,7 @@ public class FanUtil
    * Given a Java type signature, return the implementation
    * class signature for methods and fields:
    *   java/lang/Object  =>  fan/sys/FanObj
-   *   java/lang/Double  =>  fan/sys/FanFloat
+   *   java/lang/Long    =>  fan/sys/FanInt
    * Anything returns itself.
    */
   public static String toJavaImplSig(String jsig)
@@ -165,6 +178,7 @@ public class FanUtil
     {
       if (jsig.equals("java/lang/Object"))  return "fan/sys/FanObj";
       if (jsig.equals("java/lang/Boolean")) return "fan/sys/FanBool";
+      if (jsig.equals("java/lang/Long"))    return "fan/sys/FanInt";
       if (jsig.equals("java/lang/Double"))  return "fan/sys/FanFloat";
     }
     return jsig;

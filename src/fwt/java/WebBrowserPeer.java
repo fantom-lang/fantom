@@ -120,7 +120,7 @@ public class WebBrowserPeer
     // will be interpretted as a scheme
     String loc = event.location;
     Uri uri = Uri.fromStr(loc);
-    if (uri.scheme() == null || uri.scheme().size().val == 1)
+    if (uri.scheme() == null || uri.scheme().size().intValue() == 1)
       uri = File.os(Str.make(loc)).normalize().uri();
 
     fan.fwt.WebBrowser self = (fan.fwt.WebBrowser)this.self;

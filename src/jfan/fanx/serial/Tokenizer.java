@@ -285,7 +285,7 @@ public class Tokenizer
       }
       else
       {
-        this.val = Int.make(num);
+        this.val = Long.valueOf(num);
         return Token.INT_LITERAL;
       }
     }
@@ -323,7 +323,7 @@ public class Tokenizer
       consume();
     }
 
-    this.val = Int.make(val);
+    this.val = Long.valueOf(val);
     return type;
   }
 
@@ -390,7 +390,7 @@ public class Tokenizer
     if (cur != '\'') throw err("Expecting ' close of char literal");
     consume();
 
-    this.val = Int.make(c);
+    this.val = Long.valueOf(c);
     return Token.INT_LITERAL;
   }
 

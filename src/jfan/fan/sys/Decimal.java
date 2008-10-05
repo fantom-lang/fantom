@@ -57,9 +57,9 @@ public final class Decimal
     return false;
   }
 
-  public Int compare(Object obj)
+  public Long compare(Object obj)
   {
-    return Int.make(val.compareTo(((Decimal)obj).val));
+    return Long.valueOf(val.compareTo(((Decimal)obj).val));
   }
 
   public int hashCode()
@@ -67,9 +67,9 @@ public final class Decimal
     return val.hashCode();
   }
 
-  public Int hash()
+  public Long hash()
   {
-    return Int.make(val.hashCode());
+    return Long.valueOf(val.hashCode());
   }
 
   public Type type()
@@ -94,7 +94,7 @@ public final class Decimal
 // Num
 //////////////////////////////////////////////////////////////////////////
 
-  public Int toInt() { return Int.make(val.longValue()); }
+  public Long toInt() { return Long.valueOf(val.longValue()); }
 
   public Double toFloat() { return Double.valueOf(val.doubleValue()); }
 

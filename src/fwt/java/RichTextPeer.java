@@ -135,8 +135,8 @@ public class RichTextPeer
   };
 
   // Int topLine := 0
-  public Int topLine(RichText self) { return topLine.get(); }
-  public void topLine(RichText self, Int v) { topLine.set(v); }
+  public Long topLine(RichText self) { return topLine.get(); }
+  public void topLine(RichText self, Long v) { topLine.set(v); }
   public final Prop.IntProp topLine = new Prop.IntProp(this, 0)
   {
     public int get(Widget w) { return ((StyledText)w).getTopIndex(); }
@@ -144,8 +144,8 @@ public class RichTextPeer
   };
 
   // Int tabSpacing := 2
-  public Int tabSpacing(RichText self) { return tabSpacing.get(); }
-  public void tabSpacing(RichText self, Int v) { tabSpacing.set(v); }
+  public Long tabSpacing(RichText self) { return tabSpacing.get(); }
+  public void tabSpacing(RichText self, Long v) { tabSpacing.set(v); }
   public final Prop.IntProp tabSpacing = new Prop.IntProp(this, 2)
   {
     public int get(Widget w) { return ((StyledText)w).getTabs(); }
@@ -180,24 +180,24 @@ public class RichTextPeer
 // Painting
 //////////////////////////////////////////////////////////////////////////
 
-  public void repaintRange(RichText self, Int start, Int len)
+  public void repaintRange(RichText self, Long start, Long len)
   {
     if (control == null) return;
-    ((StyledText)control).redrawRange((int)start.val, (int)len.val, false);
+    ((StyledText)control).redrawRange(start.intValue(), len.intValue(), false);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public Int offsetAtPos(RichText self, Int x, Int y)
+  public Long offsetAtPos(RichText self, Long x, Long y)
   {
     if (control == null) return null;
     try
     {
-      int off = ((StyledText)control).getOffsetAtLocation(new Point((int)x.val, (int)y.val));
+      int off = ((StyledText)control).getOffsetAtLocation(new Point(x.intValue(), y.intValue()));
       if (off < 0) return null;
-      return Int.make(off);
+      return Long.valueOf(off);
     }
     catch (IllegalArgumentException e)
     {
@@ -228,9 +228,9 @@ public class RichTextPeer
     if (cbs.isEmpty()) return;
 
     TextChange tc = TextChange.make();
-    tc.startOffset = Int.make(se.start);
+    tc.startOffset = Long.valueOf(se.start);
     tc.startLine   = model.lineAtOffset(tc.startOffset);
-    tc.oldText     = model.textRange(tc.startOffset, Int.make(se.end-se.start));
+    tc.oldText     = model.textRange(tc.startOffset, Long.valueOf(se.end-se.start));
     tc.newText     = Str.make(se.text);
 
     fan.fwt.Event fe = event(EventId.verify, tc);
@@ -253,8 +253,8 @@ public class RichTextPeer
   public void widgetSelected(SelectionEvent se)
   {
     fan.fwt.Event fe = event(EventId.select);
-    fe.offset = Int.make(se.x);
-    fe.size   = Int.make(se.y - se.x);
+    fe.offset = Long.valueOf(se.x);
+    fe.size   = Long.valueOf(se.y - se.x);
     ((RichText)self).onSelect().fire(fe);
   }
 
@@ -264,7 +264,7 @@ public class RichTextPeer
     if (newCaretPos == oldCaretPos) return;
     oldCaretPos = newCaretPos;
     fan.fwt.Event fe = event(EventId.caret);
-    fe.offset = Int.make(newCaretPos);
+    fe.offset = Long.valueOf(newCaretPos);
     ((RichText)self).onCaret().fire(fe);
   }
 
@@ -295,13 +295,13 @@ public class RichTextPeer
     if (home)
     {
       int nonws = 0;
-      while (nonws < text.length() && Int.isSpace(text.charAt(nonws))) nonws++;
+      while (nonws < text.length() && FanInt.isSpace(text.charAt(nonws))) nonws++;
       newPos = linePos <= nonws ? 0 : nonws;
     }
     else
     {
       int nonws = text.length();
-      while (nonws-1 >= 0 && Int.isSpace(text.charAt(nonws-1))) nonws--;
+      while (nonws-1 >= 0 && FanInt.isSpace(text.charAt(nonws-1))) nonws--;
       newPos = linePos >= nonws ? text.length() : nonws;
     }
 
@@ -329,12 +329,12 @@ public class RichTextPeer
 
     // map Fan model event to SWT event
     TextChangingEvent te = new TextChangingEvent(content);
-    te.start            = (int)tc.startOffset.val;
-    te.replaceCharCount = (int)tc.oldText.size().val;
-    te.replaceLineCount = (int)tc.oldNumNewlines.val;
+    te.start            = tc.startOffset.intValue();
+    te.replaceCharCount = tc.oldText.size().intValue();
+    te.replaceLineCount = tc.oldNumNewlines.intValue();
     te.newText          = tc.newText.val;
-    te.newCharCount     = (int)tc.newText.size().val;
-    te.newLineCount     = (int)tc.newNumNewlines.val;
+    te.newCharCount     = tc.newText.size().intValue();
+    te.newLineCount     = tc.newNumNewlines.intValue();
 
     // fire SWT changing event
     content.fireTextChanging(te);
@@ -352,8 +352,8 @@ public class RichTextPeer
     else if (tc.repaintLen != null)
     {
       int repaintStart = te.start;
-      if (tc.repaintStart != null) repaintStart = (int)tc.repaintStart.val;
-      int repaintLen = (int)tc.repaintLen.val;
+      if (tc.repaintStart != null) repaintStart = tc.repaintStart.intValue();
+      int repaintLen = tc.repaintLen.intValue();
       styledText.redrawRange(repaintStart, repaintLen, false);
     }
 
@@ -373,31 +373,31 @@ public class RichTextPeer
     // Return the number of characters in the content.
     public int getCharCount()
     {
-      return (int)model.charCount().val;
+      return model.charCount().intValue();
     }
 
     // Return the number of lines.
     public int getLineCount()
     {
-      return (int)model.lineCount().val;
+      return model.lineCount().intValue();
     }
 
     // Return the line at the given line index without delimiters.
     public String getLine(int lineIndex)
     {
-      return model.line(Int.pos(lineIndex)).val;
+      return model.line(Long.valueOf(lineIndex)).val;
     }
 
     // Return the line index at the given character offset.
     public int getLineAtOffset(int offset)
     {
-      return (int)model.lineAtOffset(Int.pos(offset)).val;
+      return model.lineAtOffset(Long.valueOf(offset)).intValue();
     }
 
     // Return the character offset of the first character of the given line.
     public int getOffsetAtLine(int lineIndex)
     {
-      return (int)model.offsetAtLine(Int.pos(lineIndex)).val;
+      return model.offsetAtLine(Long.valueOf(lineIndex)).intValue();
     }
 
     // Return the line delimiter that should be used by the StyledText widget when inserting new lines.
@@ -409,13 +409,13 @@ public class RichTextPeer
     // Returns a string representing the content at the given range.
     public String getTextRange(int start, int len)
     {
-      return model.textRange(Int.pos(start), Int.pos(len)).val;
+      return model.textRange(Long.valueOf(start), Long.valueOf(len)).val;
     }
 
     // Replace the text with "newText" starting at position "start" for a length of "len".
     public void replaceTextRange(int start, int len, String newText)
     {
-      model.modify(Int.pos(start), Int.pos(len), Str.make(newText));
+      model.modify(Long.valueOf(start), Long.valueOf(len), Str.make(newText));
     }
 
     // Set text to "text".
@@ -468,7 +468,7 @@ public class RichTextPeer
     Font defFont = env.font(self.font());
 
     // get Int/RichTextStyle list where Int is offset in line
-    List list = model.lineStyling(model.lineAtOffset(Int.pos(lineOffset)));
+    List list = model.lineStyling(model.lineAtOffset(Long.valueOf(lineOffset)));
     if (list == null) return;
 
     // map Int/RichTextStyle list to StyleRange array
@@ -476,9 +476,9 @@ public class RichTextPeer
     StyleRange[] results = event.styles = new StyleRange[num];
     for (int i=0; i<num; ++i)
     {
-      Int offsetInLine = (Int)list.get(i*2);
+      Long offsetInLine = (Long)list.get(i*2);
       RichTextStyle s = (RichTextStyle)list.get(i*2+1);
-      results[i] = toStyleRange(env, s, lineOffset+(int)offsetInLine.val, defFont);
+      results[i] = toStyleRange(env, s, lineOffset+offsetInLine.intValue(), defFont);
       if (i > 0) results[i-1].length = results[i].start - results[i-1].start;
     }
     if (num > 0)

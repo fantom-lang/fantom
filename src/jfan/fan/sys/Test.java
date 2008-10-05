@@ -81,11 +81,11 @@ public class Test
     }
     if (expected != null && actual != null)
     {
-      if (hash(expected).val != hash(actual).val)
+      if (hash(expected).longValue() != hash(actual).longValue())
       {
         fail(Str.make("Equal but different hash codes: " +
-          expected + " (0x" + hash(expected).toHex() + ") ?= " +
-          actual   + " (0x" + hash(actual).toHex() + ")"));
+          expected + " (0x" + FanInt.toHex(hash(expected)) + ") ?= " +
+          actual   + " (0x" + FanInt.toHex(hash(actual)) + ")"));
       }
     }
     verifyCount++;

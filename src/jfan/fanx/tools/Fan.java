@@ -142,7 +142,7 @@ public class Fan
 
   static int toResult(Object obj)
   {
-    if (obj instanceof Int) return (int)((Int)obj).val;
+    if (obj instanceof Long) return ((Long)obj).intValue();
     return 0;
   }
 
@@ -179,7 +179,7 @@ public class Fan
     for (int i=0; i<pods.sz(); ++i)
     {
       Pod pod = (Pod)pods.get(i);
-      System.out.println("  " + pod.name().justl(Int.make(14)) + "  " + pod.version());
+      System.out.println("  " + pod.name().justl(Long.valueOf(14)) + "  " + pod.version());
     }
   }
 

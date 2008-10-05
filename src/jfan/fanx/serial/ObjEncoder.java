@@ -55,6 +55,7 @@ public class ObjEncoder
     {
       if (obj == Boolean.TRUE)   { w("true"); return; }
       if (obj == Boolean.FALSE)  { w("false"); return; }
+      if (obj instanceof Long)   { w(obj.toString()); return; }
       if (obj instanceof Double) { FanFloat.encode((Double)obj, this); return; }
     }
 
@@ -339,9 +340,9 @@ public class ObjEncoder
 
   private static int option(Map options, Str name, int def)
   {
-    Int val = (Int)options.get(name);
+    Long val = (Long)options.get(name);
     if (val == null) return def;
-    return (int)val.val;
+    return val.intValue();
   }
 
   private static boolean option(Map options, Str name, boolean def)

@@ -35,7 +35,7 @@ public final class Version
       if (c == '.')
       {
         if (seg < 0 || i+1>=len) { valid = false; break; }
-        segments.add(Int.pos(seg));
+        segments.add(Long.valueOf(seg));
         seg = -1;
       }
       else
@@ -51,7 +51,7 @@ public final class Version
         }
       }
     }
-    if (seg >= 0) segments.add(Int.pos(seg));
+    if (seg >= 0) segments.add(Long.valueOf(seg));
 
     if (!valid || segments.sz() == 0)
     {
@@ -68,7 +68,7 @@ public final class Version
   {
     boolean valid = segments.sz() > 0;
     for (int i=0; i<segments.sz(); ++i)
-      if (((Int)segments.get(i)).val < 0) valid = false;
+      if (((Long)segments.get(i)).longValue() < 0) valid = false;
     if (!valid) throw ArgErr.make("Invalid Version: '" + segments + "'").val;
     return new Version(segments);
   }
@@ -90,21 +90,21 @@ public final class Version
       return false;
   }
 
-  public Int compare(Object obj)
+  public Long compare(Object obj)
   {
     Version that = (Version)obj;
     List a = this.segments;
     List b = that.segments;
     for (int i=0; i<a.sz() && i<b.sz(); ++i)
     {
-      long ai = ((Int)a.get(i)).val;
-      long bi = ((Int)b.get(i)).val;
-      if (ai < bi) return Int.LT;
-      if (ai > bi) return Int.GT;
+      long ai = (Long)a.get(i);
+      long bi = (Long)b.get(i);
+      if (ai < bi) return FanInt.LT;
+      if (ai > bi) return FanInt.GT;
     }
-    if (a.sz() < b.sz()) return Int.LT;
-    if (a.sz() > b.sz()) return Int.GT;
-    return Int.EQ;
+    if (a.sz() < b.sz()) return FanInt.LT;
+    if (a.sz() > b.sz()) return FanInt.GT;
+    return FanInt.EQ;
   }
 
   public int hashCode()
@@ -112,7 +112,7 @@ public final class Version
     return toStr().hashCode();
   }
 
-  public Int hash()
+  public Long hash()
   {
     return toStr().hash();
   }
@@ -130,7 +130,7 @@ public final class Version
       for (int i=0; i<segments.sz(); ++i)
       {
         if (i > 0) s.append('.');
-        s.append(((Int)segments.get(i)).val);
+        s.append(segments.get(i));
       }
       str = Str.make(s.toString());
     }
@@ -148,30 +148,30 @@ public final class Version
 
   public int segment(int index)
   {
-    return (int)((Int)segments.get(index)).val;
+    return ((Long)segments.get(index)).intValue();
   }
 
-  public Int major()
+  public Long major()
   {
-    return (Int)segments.get(0);
+    return (Long)segments.get(0);
   }
 
-  public Int minor()
+  public Long minor()
   {
     if (segments.sz() < 2) return null;
-    return (Int)segments.get(1);
+    return (Long)segments.get(1);
   }
 
-  public Int build()
+  public Long build()
   {
     if (segments.sz() < 3) return null;
-    return (Int)segments.get(2);
+    return (Long)segments.get(2);
   }
 
-  public Int patch()
+  public Long patch()
   {
     if (segments.sz() < 4) return null;
-    return (Int)segments.get(3);
+    return (Long)segments.get(3);
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -22,12 +22,12 @@ public class SysOutStream
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public static SysOutStream make(java.io.OutputStream out, Int bufSize)
+  public static SysOutStream make(java.io.OutputStream out, Long bufSize)
   {
-    if (bufSize == null || bufSize.val == 0)
+    if (bufSize == null || bufSize.longValue() == 0)
       return new SysOutStream(out);
     else
-      return new SysOutStream(new java.io.BufferedOutputStream(out, (int)bufSize.val));
+      return new SysOutStream(new java.io.BufferedOutputStream(out, bufSize.intValue()));
   }
 
   public SysOutStream(OutputStream out)
@@ -45,7 +45,7 @@ public class SysOutStream
 // OutStream
 //////////////////////////////////////////////////////////////////////////
 
-  public final OutStream write(Int b) { return w((int)b.val); }
+  public final OutStream write(Long b) { return w(b.intValue()); }
   public OutStream w(int v)
   {
     try
@@ -60,11 +60,11 @@ public class SysOutStream
   }
 
   public final OutStream writeBuf(Buf buf) { return writeBuf(buf, buf.remaining()); }
-  public OutStream writeBuf(Buf buf, Int n)
+  public OutStream writeBuf(Buf buf, Long n)
   {
     try
     {
-      buf.pipeTo(out, n.val);
+      buf.pipeTo(out, n.longValue());
       return this;
     }
     catch (IOException e)
@@ -117,13 +117,13 @@ public class SysOutStream
   static class JavaOutputStream extends OutputStream
   {
     JavaOutputStream(OutStream out) { this.out = out; }
-    public void write(int b) { out.write(Int.make(b)); }
+    public void write(int b) { out.write(Long.valueOf(b)); }
     public void write(byte[] b, int off, int len)
     {
       buf.buf = b;
       buf.pos = off;
       buf.size = b.length;
-      out.writeBuf(buf, Int.make(len));
+      out.writeBuf(buf, Long.valueOf(len));
       buf.buf = null;
     }
     public void close() { out.close(); }

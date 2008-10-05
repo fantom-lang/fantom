@@ -36,7 +36,7 @@ public class MapType
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public Int hash()
+  public Long hash()
   {
     return signature().hash();
   }

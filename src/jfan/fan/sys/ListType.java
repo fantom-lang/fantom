@@ -35,7 +35,7 @@ public class ListType
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public final Int hash()
+  public final Long hash()
   {
     return signature().hash();
   }

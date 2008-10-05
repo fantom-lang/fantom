@@ -113,9 +113,9 @@ public class IpAddressPeer
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Int hash(IpAddress fan)
+  public Long hash(IpAddress fan)
   {
-    return Int.make(java.hashCode());
+    return Long.valueOf(java.hashCode());
   }
 
   public Boolean _equals(IpAddress fan, Object obj)

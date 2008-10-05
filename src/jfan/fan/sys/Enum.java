@@ -20,13 +20,13 @@ public abstract class Enum
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Enum make(Int ordinal, Str name)
+  public static Enum make(Long ordinal, Str name)
   {
     // should never be used
     throw new IllegalStateException();
   }
 
-  public static void make$(Enum self, Int ordinal, Str name)
+  public static void make$(Enum self, Long ordinal, Str name)
   {
     if (ordinal == null || name == null) throw new NullErr().val;
     self.ordinal = ordinal;
@@ -60,9 +60,9 @@ public abstract class Enum
     return this == obj;
   }
 
-  public final Int compare(Object obj)
+  public final Long compare(Object obj)
   {
-    return ordinal.compare(((Enum)obj).ordinal);
+    return FanInt.compare(ordinal, ((Enum)obj).ordinal);
   }
 
   public Type type()
@@ -75,7 +75,7 @@ public abstract class Enum
     return name;
   }
 
-  public final Int ordinal()
+  public final Long ordinal()
   {
     return ordinal;
   }
@@ -89,7 +89,7 @@ public abstract class Enum
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Int ordinal;
+  private Long ordinal;
   private Str name;
 
 }

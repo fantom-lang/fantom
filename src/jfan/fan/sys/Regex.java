@@ -45,7 +45,7 @@ public final class Regex
 
   public final int hashCode() { return source.hashCode(); }
 
-  public final Int hash() { return source.hash(); }
+  public final Long hash() { return source.hash(); }
 
   public Str toStr() { return source; }
 
@@ -65,10 +65,10 @@ public final class Regex
     return new RegexMatcher(pattern.matcher(s.val));
   }
 
-  public List split(Str s) { return split(s, Int.Zero); }
-  public List split(Str s, Int limit)
+  public List split(Str s) { return split(s, 0L); }
+  public List split(Str s, Long limit)
   {
-    return new List(pattern.split(s.val, (int)limit.val));
+    return new List(pattern.split(s.val, limit.intValue()));
   }
 
 //////////////////////////////////////////////////////////////////////////

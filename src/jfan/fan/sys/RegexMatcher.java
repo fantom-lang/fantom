@@ -45,17 +45,17 @@ public final class RegexMatcher
     return matcher.find();
   }
 
-  public final Int groupCount()
+  public final Long groupCount()
   {
-    return Int.make(matcher.groupCount());
+    return Long.valueOf(matcher.groupCount());
   }
 
-  public final Str group() { return group(Int.Zero); }
-  public final Str group(Int group)
+  public final Str group() { return group(0L); }
+  public final Str group(Long group)
   {
     try
     {
-      return Str.make(matcher.group((int)group.val));
+      return Str.make(matcher.group(group.intValue()));
     }
     catch (IllegalStateException e)
     {
@@ -67,12 +67,12 @@ public final class RegexMatcher
     }
   }
 
-  public final Int start() { return start(Int.Zero); }
-  public final Int start(Int group)
+  public final Long start() { return start(0L); }
+  public final Long start(Long group)
   {
     try
     {
-      return Int.make(matcher.start((int)group.val));
+      return Long.valueOf(matcher.start(group.intValue()));
     }
     catch (IllegalStateException e)
     {
@@ -84,12 +84,12 @@ public final class RegexMatcher
     }
   }
 
-  public final Int end() { return end(Int.Zero); }
-  public final Int end(Int group)
+  public final Long end() { return end(0L); }
+  public final Long end(Long group)
   {
     try
     {
-      return Int.make(matcher.end((int)group.val));
+      return Long.valueOf(matcher.end(group.intValue()));
     }
     catch (IllegalStateException e)
     {

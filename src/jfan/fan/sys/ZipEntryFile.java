@@ -47,12 +47,12 @@ public class ZipEntryFile
     return true;
   }
 
-  public Int size()
+  public Long size()
   {
     if (isDir()) return null;
     long size = entry.getSize();
     if (size < 0) return null;
-    return Int.pos(size);
+    return Long.valueOf(size);
   }
 
   public DateTime modified()
@@ -124,12 +124,12 @@ public class ZipEntryFile
     throw UnsupportedErr.make("ZipEntryFile.open").val;
   }
 
-  public Buf mmap(Str mode, Int pos, Int size)
+  public Buf mmap(Str mode, Long pos, Long size)
   {
     throw UnsupportedErr.make("ZipEntryFile.mmap").val;
   }
 
-  public InStream in(Int bufSize)
+  public InStream in(Long bufSize)
   {
     try
     {
@@ -144,8 +144,8 @@ public class ZipEntryFile
         in = ((java.util.zip.ZipFile)parent).getInputStream(entry);
 
         // buffer if specified
-        if (bufSize != null && bufSize.val != 0)
-          in = new java.io.BufferedInputStream(in, (int)bufSize.val);
+        if (bufSize != null && bufSize.longValue() != 0)
+          in = new java.io.BufferedInputStream(in, bufSize.intValue());
       }
 
       // return as fan stream
@@ -157,7 +157,7 @@ public class ZipEntryFile
     }
   }
 
-  public OutStream out(Boolean append, Int bufSize)
+  public OutStream out(Boolean append, Long bufSize)
   {
     throw IOErr.make("ZipEntryFile is readonly").val;
   }

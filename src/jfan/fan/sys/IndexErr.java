@@ -19,7 +19,7 @@ public class IndexErr
 //////////////////////////////////////////////////////////////////////////
 
   public static IndexErr make(String msg)  { return make(Str.make(msg)); }
-  public static IndexErr make(Int index)   { return make(Str.make(String.valueOf(index))); }
+  public static IndexErr make(Long index)   { return make(Str.make(String.valueOf(index))); }
   public static IndexErr make(Range index) { return make(Str.make(String.valueOf(index))); }
 
 //////////////////////////////////////////////////////////////////////////

@@ -123,8 +123,8 @@ public class WidgetPeer
   public Size prefSize(fan.fwt.Widget self, Hints hints)
   {
     if (!(control instanceof Control)) return Size.def;
-    int w = (hints.w == null) ? SWT.DEFAULT : (int)hints.w.val;
-    int h = (hints.h == null) ? SWT.DEFAULT : (int)hints.h.val;
+    int w = (hints.w == null) ? SWT.DEFAULT : hints.w.intValue();
+    int h = (hints.h == null) ? SWT.DEFAULT : hints.h.intValue();
     Point s = ((Control)control).computeSize(w, h, true);
     return size(s);
   }
@@ -158,7 +158,7 @@ public class WidgetPeer
       if (r == null)
         c.redraw();
       else
-        c.redraw((int)r.x.val, (int)r.y.val, (int)r.w.val, (int)r.h.val, true);
+        c.redraw(r.x.intValue(), r.y.intValue(), r.w.intValue(), r.h.intValue(), true);
     }
   }
 
@@ -245,7 +245,7 @@ public class WidgetPeer
   void fireKeyEvent(EventListeners listeners, EventId id, KeyEvent se)
   {
     fan.fwt.Event fe = event(id);
-    fe.keyChar = Int.make(se.character);
+    fe.keyChar = Long.valueOf(se.character);
     fe.key     = toKey(se.keyCode, se.stateMask);
     listeners.fire(fe);
     if (fe.consumed) se.doit = false;
@@ -253,7 +253,7 @@ public class WidgetPeer
 
   static Key toKey(int keyCode, int stateMask)
   {
-    Key key = Key.fromMask(Int.make(keyCode));
+    Key key = Key.fromMask(Long.valueOf(keyCode));
     if ((stateMask & SWT.SHIFT) != 0)   key = key.plus(Key.shift);
     if ((stateMask & SWT.ALT) != 0)     key = key.plus(Key.alt);
     if ((stateMask & SWT.CTRL) != 0)    key = key.plus(Key.ctrl);
@@ -314,8 +314,8 @@ public class WidgetPeer
     // fire event
     fan.fwt.Event fe = event(id);
     fe.pos    = point(se.x, se.y);
-    fe.count  = Int.make(se.count);
-    fe.button = Int.make(se.button);
+    fe.count  = Long.valueOf(se.count);
+    fe.button = Long.valueOf(se.button);
     fe.key    = key;
     listeners.fire(fe);
   }
@@ -479,32 +479,32 @@ public class WidgetPeer
 
   static fan.fwt.Point point(int x, int y)
   {
-    return fan.fwt.Point.make(Int.make(x), Int.make(y));
+    return fan.fwt.Point.make(Long.valueOf(x), Long.valueOf(y));
   }
 
   static fan.fwt.Point point(Point pt)
   {
-    return fan.fwt.Point.make(Int.make(pt.x), Int.make(pt.y));
+    return fan.fwt.Point.make(Long.valueOf(pt.x), Long.valueOf(pt.y));
   }
 
   static fan.fwt.Size size(int w, int h)
   {
-    return fan.fwt.Size.make(Int.make(w), Int.make(h));
+    return fan.fwt.Size.make(Long.valueOf(w), Long.valueOf(h));
   }
 
   static fan.fwt.Size size(Point pt)
   {
-    return fan.fwt.Size.make(Int.make(pt.x), Int.make(pt.y));
+    return fan.fwt.Size.make(Long.valueOf(pt.x), Long.valueOf(pt.y));
   }
 
   static fan.fwt.Rect rect(Rectangle r)
   {
-    return fan.fwt.Rect.make(Int.make(r.x), Int.make(r.y), Int.make(r.width), Int.make(r.height));
+    return fan.fwt.Rect.make(Long.valueOf(r.x), Long.valueOf(r.y), Long.valueOf(r.width), Long.valueOf(r.height));
   }
 
   static Rectangle rect(fan.fwt.Rect r)
   {
-    return new Rectangle((int)r.x.val, (int)r.y.val, (int)r.w.val, (int)r.h.val);
+    return new Rectangle(r.x.intValue(), r.y.intValue(), r.w.intValue(), r.h.intValue());
   }
 
   static int style(Halign halign)
@@ -525,7 +525,7 @@ public class WidgetPeer
   static int accelerator(Key key)
   {
     if (key == null) return 0;
-    return (int)key.mask.val;
+    return key.mask.intValue();
   }
 
 //////////////////////////////////////////////////////////////////////////

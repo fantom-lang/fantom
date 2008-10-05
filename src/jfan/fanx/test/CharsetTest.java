@@ -119,7 +119,7 @@ public class CharsetTest
     MemBuf buf = new MemBuf(1024);
     buf.charset(cs);
     for (int i=0; i<string.length(); ++i)
-      buf.writeChar(Int.make(string.charAt(i)));
+      buf.writeChar(Long.valueOf(string.charAt(i)));
     verify(control.toByteArray(), buf.bytes());
 
     // encode with OutStream
@@ -127,14 +127,14 @@ public class CharsetTest
     OutStream out = new SysOutStream(bout);
     out.charset(cs);
     for (int i=0; i<string.length(); ++i)
-      out.writeChar(Int.make(string.charAt(i)));
+      out.writeChar(Long.valueOf(string.charAt(i)));
     out.flush();
     verify(control.toByteArray(), bout.toByteArray());
 
     // decode with Buf
     String bufStr = "";
     buf.flip();
-    while (buf.more()) bufStr += (char)buf.readChar().val;
+    while (buf.more()) bufStr += (char)buf.readChar().longValue();
     verify(buf.readChar() == null);
     verify(bufStr.equals(string));
 
@@ -144,9 +144,9 @@ public class CharsetTest
     in.charset(cs);
     while (true)
     {
-      Int c = in.readChar();
+      Long c = in.readChar();
       if (c == null) break;
-      inStr += (char)c.val;
+      inStr += (char)c.longValue();
     }
     verify(inStr.equals(string));
   }

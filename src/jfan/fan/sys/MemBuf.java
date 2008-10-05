@@ -170,14 +170,14 @@ public final class MemBuf
 // Buf API
 //////////////////////////////////////////////////////////////////////////
 
-  public final Int capacity()
+  public final Long capacity()
   {
-    return Int.pos(buf.length);
+    return Long.valueOf(buf.length);
   }
 
-  public final void capacity(Int c)
+  public final void capacity(Long c)
   {
-    int newCapacity = (int)c.val;
+    int newCapacity = c.intValue();
     if (newCapacity < size) throw ArgErr.make("capacity < size").val;
     byte[] temp = new byte[newCapacity];
     System.arraycopy(buf, 0, temp, 0, newCapacity);
@@ -311,7 +311,7 @@ public final class MemBuf
 
   class MemBufOutStream extends OutStream
   {
-    public final OutStream write(Int v) { return w((int)v.val); }
+    public final OutStream write(Long v) { return w(v.intValue()); }
     public final OutStream w(int v)
     {
       if (pos+1 >= buf.length) grow(pos+1);
@@ -320,9 +320,9 @@ public final class MemBuf
       return this;
     }
 
-    public OutStream writeBuf(Buf other, Int n)
+    public OutStream writeBuf(Buf other, Long n)
     {
-      int len = (int)n.val;
+      int len = n.intValue();
       grow(pos+len);
       other.pipeTo(buf, pos, len);
       pos += len;
@@ -337,23 +337,23 @@ public final class MemBuf
 
   class MemBufInStream extends InStream
   {
-    public Int read() { int n = r(); return n < 0 ? null : Int.pos[n]; }
+    public Long read() { int n = r(); return n < 0 ? null : FanInt.pos[n]; }
     public int r()
     {
       if (pos >= size) return -1;
       return buf[pos++] & 0xFF;
     }
 
-    public Int readBuf(Buf other, Int n)
+    public Long readBuf(Buf other, Long n)
     {
       if (pos >= size) return null;
-      int len = Math.min(size-pos, (int)n.val);
+      int len = Math.min(size-pos, n.intValue());
       other.pipeFrom(buf, pos, len);
       pos += len;
-      return Int.pos(len);
+      return Long.valueOf(len);
     }
 
-    public InStream unread(Int n) { return unread((int)n.val); }
+    public InStream unread(Long n) { return unread(n.intValue()); }
     public InStream unread(int n)
     {
       // unreading a buffer is a bit weird - the typical case
@@ -375,19 +375,19 @@ public final class MemBuf
       return this;
     }
 
-    public Int peek()
+    public Long peek()
     {
       if (pos >= size) return null;
-      return Int.pos[buf[pos] & 0xFF];
+      return FanInt.pos[buf[pos] & 0xFF];
     }
 
-    public Int skip(Int n)
+    public Long skip(Long n)
     {
       int oldPos = pos;
-      pos += n.val;
+      pos += n;
       if (pos < size) return n;
       pos = size;
-      return Int.pos(pos-oldPos);
+      return Long.valueOf(pos-oldPos);
     }
 
   }

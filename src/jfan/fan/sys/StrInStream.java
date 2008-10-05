@@ -43,24 +43,24 @@ public class StrInStream
     return rChar();
   }
 
-  public Int read()
+  public Long read()
   {
-    int b = r(); return (b < 0) ? null : Int.pos[b & 0xFF];
+    int b = r(); return (b < 0) ? null : FanInt.pos[b & 0xFF];
   }
 
-  public Int readBuf(Buf buf, Int n)
+  public Long readBuf(Buf buf, Long n)
   {
-    int nval = (int)n.val;
+    int nval = n.intValue();
     for (int i=0; i<nval; ++i)
     {
       int c = rChar();
-      if (c < 0) return Int.make(i);
+      if (c < 0) return Long.valueOf(i);
       buf.out.w(c);
     }
     return n;
   }
 
-  public InStream unread(Int c)
+  public InStream unread(Long c)
   {
     return unreadChar(c);
   }
@@ -68,20 +68,20 @@ public class StrInStream
   public int rChar()
   {
     if (pushback != null && pushback.sz() > 0)
-      return (int)((Int)pushback.pop()).val;
+      return ((Long)pushback.pop()).intValue();
     if (pos >= size) return -1;
     return str.charAt(pos++);
   }
 
-  public Int readChar()
+  public Long readChar()
   {
     if (pushback != null && pushback.sz() > 0)
-      return (Int)pushback.pop();
+      return (Long)pushback.pop();
     if (pos >= size) return null;
-    return Int.pos(str.charAt(pos++));
+    return Long.valueOf(str.charAt(pos++));
   }
 
-  public InStream unreadChar(Int c)
+  public InStream unreadChar(Long c)
   {
     if (pushback == null) pushback = new List(Sys.IntType, 8);
     pushback.push(c);

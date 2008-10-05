@@ -43,7 +43,7 @@ public class FuncType
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public Int hash()
+  public Long hash()
   {
     return signature().hash();
   }

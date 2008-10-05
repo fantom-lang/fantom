@@ -389,7 +389,7 @@ public class TokenizerTest
 //////////////////////////////////////////////////////////////////////////
 
   public Tok id(String v)  { return new Tok(Token.ID, v); }
-  public Tok i(long v)     { return new Tok(Token.INT_LITERAL,   Int.make(v));    }
+  public Tok i(long v)     { return new Tok(Token.INT_LITERAL,   Long.valueOf(v));    }
   public Tok f(double v)   { return new Tok(Token.FLOAT_LITERAL, Double.valueOf(v));  }
   public Tok s(String v)   { return new Tok(Token.STR_LITERAL,   Str.make(v)); }
   public Tok dec(String v) { return new Tok(Token.DECIMAL_LITERAL,  Decimal.fromStr(Str.make(v))); }

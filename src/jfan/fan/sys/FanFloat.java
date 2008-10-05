@@ -15,7 +15,6 @@ import fanx.serial.*;
  * class used for representation is java.lang.Double.
  */
 public final class FanFloat
-//  extends Num
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -40,14 +39,14 @@ public final class FanFloat
     }
   }
 
-  public static Double makeBits(Int bits)
+  public static Double makeBits(Long bits)
   {
-    return Double.valueOf(Double.longBitsToDouble(bits.val));
+    return Double.valueOf(Double.longBitsToDouble(bits.longValue()));
   }
 
-  public static Double makeBits32(Int bits)
+  public static Double makeBits32(Long bits)
   {
-    return Double.valueOf(Float.intBitsToFloat((int)bits.val));
+    return Double.valueOf(Float.intBitsToFloat(bits.intValue()));
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -80,37 +79,37 @@ public final class FanFloat
     return Math.abs(self.doubleValue() - that.doubleValue()) <= t;
   }
 
-  public static Int compare(Double self, Object obj)
+  public static Long compare(Double self, Object obj)
   {
     double val = self.doubleValue();
     double that = ((Double)obj).doubleValue();
     if (Double.isNaN(val))
     {
-      return (Double.isNaN(that)) ? Int.EQ : Int.LT;
+      return (Double.isNaN(that)) ? FanInt.EQ : FanInt.LT;
     }
     else if (Double.isNaN(that))
     {
-      return Int.GT;
+      return FanInt.GT;
     }
     else
     {
-      if (val < that) return Int.LT; return val == that ? Int.EQ : Int.GT;
+      if (val < that) return FanInt.LT; return val == that ? FanInt.EQ : FanInt.GT;
     }
   }
 
-  public static Int hash(Double self)
+  public static Long hash(Double self)
   {
     return bits(self);
   }
 
-  public static Int bits(Double self)
+  public static Long bits(Double self)
   {
-    return Int.make(Double.doubleToLongBits(self.doubleValue()));
+    return Long.valueOf(Double.doubleToLongBits(self.doubleValue()));
   }
 
-  public static Int bits32(Double self)
+  public static Long bits32(Double self)
   {
-    return Int.make(Float.floatToIntBits(self.floatValue()) & 0xFFFFFFFFL);
+    return Long.valueOf(Float.floatToIntBits(self.floatValue()) & 0xFFFFFFFFL);
   }
 
   public static Type type(Double self)
@@ -166,9 +165,9 @@ public final class FanFloat
 // Num
 //////////////////////////////////////////////////////////////////////////
 
-  public static Int toInt(Double self)
+  public static Long toInt(Double self)
   {
-    return Int.make(self.longValue());
+    return Long.valueOf(self.longValue());
   }
 
   public static Double toFloat(Double self)

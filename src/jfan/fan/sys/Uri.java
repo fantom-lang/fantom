@@ -156,7 +156,7 @@ public final class Uri
         return;
 
       // port 80 -> null
-      if (port != null && port.val == 80) port = null;
+      if (port != null && port.longValue() == 80) port = null;
 
       // if path is "" -> "/"
       if (pathStr == null || pathStr.val.length() == 0)
@@ -179,15 +179,15 @@ public final class Uri
         Str seg = (Str)path.get(i);
         if (seg.val.equals(".") && (path.sz() > 1 || host != null))
         {
-          path.removeAt(Int.make(i));
+          path.removeAt(Long.valueOf(i));
           modified = true;
           dotLast = true;
           i -= 1;
         }
         else if (seg.val.equals("..") && i > 0 && !path.get(i-1).toString().equals(".."))
         {
-          path.removeAt(Int.make(i));
-          path.removeAt(Int.make(i-1));
+          path.removeAt(Long.valueOf(i));
+          path.removeAt(Long.valueOf(i-1));
           modified = true;
           i -= 2;
           dotLast = true;
@@ -215,7 +215,7 @@ public final class Uri
     Str scheme;
     Str host;
     Str userInfo;
-    Int port;
+    Long port;
     Str pathStr;
     List path;
     Str queryStr;
@@ -292,7 +292,7 @@ public final class Uri
         // if we found an colon, parse out port
         if (colon > 0)
         {
-          this.port = Int.make(Integer.parseInt(str.substring(colon+1, authEnd)));
+          this.port = Long.valueOf(Integer.parseInt(str.substring(colon+1, authEnd)));
           hostEnd = colon;
         }
 
@@ -595,7 +595,7 @@ public final class Uri
         buf.append('/').append('/');
         if (uri.userInfo != null) encode(uri.userInfo, USER).append('@');
         if (uri.host != null) encode(uri.host, HOST);
-        if (uri.port != null) buf.append(':').append(uri.port.val);
+        if (uri.port != null) buf.append(':').append(uri.port.longValue());
       }
 
       // path
@@ -702,7 +702,7 @@ public final class Uri
     return str.hashCode();
   }
 
-  public Int hash()
+  public Long hash()
   {
     return str.hash();
   }
@@ -785,7 +785,7 @@ public final class Uri
     return userInfo;
   }
 
-  public Int port()
+  public Long port()
   {
     return port;
   }
@@ -1007,12 +1007,12 @@ public final class Uri
     else
     {
       // slice my path
-      t.path = this.path.slice(Range.makeInclusive(Int.make(d), Int.NegOne));
+      t.path = this.path.slice(Range.makeInclusive(Long.valueOf(d), FanInt.NegOne));
 
       // insert .. backup if needed
       int backup = base.path.sz() - d;
       if (!base.isDir()) backup--;
-      while (backup-- > 0) t.path.insert(Int.Zero, dotDot);
+      while (backup-- > 0) t.path.insert(0L, dotDot);
 
       // format the new path string
       t.pathStr = toPathStr(false, t.path, this.isDir());
@@ -1427,14 +1427,14 @@ public final class Uri
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static final Range parentRange = Range.make(Int.Zero, Int.NegTwo, false);
+  static final Range parentRange = Range.make(0L, -2L, false);
   static final Str dotDot = Str.make("..");
 
   final Str str;
   final Str scheme;
   final Str userInfo;
   final Str host;
-  final Int port;
+  final Long port;
   final List path;
   final Str pathStr;
   final Map query;

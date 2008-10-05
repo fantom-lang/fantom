@@ -89,7 +89,7 @@ public abstract class File
 
   public final int hashCode() { return uri.hashCode(); }
 
-  public final Int hash() { return uri.hash(); }
+  public final Long hash() { return uri.hash(); }
 
   public final Str toStr() { return uri.toStr(); }
 
@@ -121,7 +121,7 @@ public abstract class File
 
   public abstract Boolean exists();
 
-  public abstract Int size();
+  public abstract Long size();
 
   public abstract DateTime modified();
   public abstract void modified(DateTime time);
@@ -137,7 +137,7 @@ public abstract class File
     List list = list();
     for (int i=list.sz()-1; i>=0; --i)
       if (!((File)list.get(i)).isDir())
-        list.removeAt(Int.make(i));
+        list.removeAt(Long.valueOf(i));
     return list;
   }
 
@@ -146,7 +146,7 @@ public abstract class File
     List list = list();
     for (int i=list.sz()-1; i>=0; --i)
       if (((File)list.get(i)).isDir())
-        list.removeAt(Int.make(i));
+        list.removeAt(Long.valueOf(i));
     return list;
   }
 
@@ -320,47 +320,47 @@ public abstract class File
   public final Buf open() { return open(rwStr); }
   public abstract Buf open(Str mode);
 
-  public final Buf mmap() { return mmap(rwStr, Int.Zero, null); }
-  public final Buf mmap(Str mode) { return mmap(mode, Int.Zero, null); }
-  public final Buf mmap(Str mode, Int pos) { return mmap(mode, pos, null); }
-  public abstract Buf mmap(Str mode, Int pos, Int size);
+  public final Buf mmap() { return mmap(rwStr, 0L, null); }
+  public final Buf mmap(Str mode) { return mmap(mode, 0L, null); }
+  public final Buf mmap(Str mode, Long pos) { return mmap(mode, pos, null); }
+  public abstract Buf mmap(Str mode, Long pos, Long size);
 
-  public final InStream in() { return in(Int.Chunk); }
-  public abstract InStream in(Int bufSize);
+  public final InStream in() { return in(FanInt.Chunk); }
+  public abstract InStream in(Long bufSize);
 
-  public final OutStream out() { return out(false, Int.Chunk); }
-  public final OutStream out(Boolean append) { return out(append, Int.Chunk); }
-  public abstract OutStream out(Boolean append, Int bufSize);
+  public final OutStream out() { return out(false, FanInt.Chunk); }
+  public final OutStream out(Boolean append) { return out(append, FanInt.Chunk); }
+  public abstract OutStream out(Boolean append, Long bufSize);
 
   public final Buf readAllBuf()
   {
-    return in(Int.Chunk).readAllBuf();
+    return in(FanInt.Chunk).readAllBuf();
   }
 
   public final List readAllLines()
   {
-    return in(Int.Chunk).readAllLines();
+    return in(FanInt.Chunk).readAllLines();
   }
 
   public final void eachLine(Func f)
   {
-    in(Int.Chunk).eachLine(f);
+    in(FanInt.Chunk).eachLine(f);
   }
 
   public final Str readAllStr() { return readAllStr(true); }
   public final Str readAllStr(Boolean normalizeNewlines)
   {
-    return in(Int.Chunk).readAllStr(normalizeNewlines);
+    return in(FanInt.Chunk).readAllStr(normalizeNewlines);
   }
 
   public final Map readProps()
   {
-    return in(Int.Chunk).readProps();
+    return in(FanInt.Chunk).readProps();
   }
 
   public final void writeProps(Map props)
   {
-    out(false, Int.Chunk).writeProps(props, true);
+    out(false, FanInt.Chunk).writeProps(props, true);
   }
 
   public final Object readObj() { return readObj(null); }

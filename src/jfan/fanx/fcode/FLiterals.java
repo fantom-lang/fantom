@@ -55,7 +55,7 @@ public final class FLiterals
 // Tables
 //////////////////////////////////////////////////////////////////////////
 
-  public final Int integer(int index)       { return (Int)ints.get(index); }
+  public final Long integer(int index)      { return (Long)ints.get(index); }
   public final Double floats(int index)     { return (Double)floats.get(index); }
   public final Decimal decimals(int index)  { return (Decimal)decimals.get(index); }
   public final Str str(int index)           { return (Str)strs.get(index); }
@@ -67,7 +67,7 @@ public final class FLiterals
 //////////////////////////////////////////////////////////////////////////
 
   public FPod fpod;         // parent pod
-  public FTable ints;       // Int literals
+  public FTable ints;       // Long literals
   public FTable floats;     // Float literals
   public FTable decimals;   // Decimal literals
   public FTable strs;       // Str literals

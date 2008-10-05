@@ -63,12 +63,12 @@ public class TcpSocketPeer
     return IpAddressPeer.make(addr);
   }
 
-  public Int localPort(TcpSocket fan)
+  public Long localPort(TcpSocket fan)
   {
     if (!isBound()) return null;
     int port = getLocalPort();
     if (port <= 0) return null;
-    return Int.make(port);
+    return Long.valueOf(port);
   }
 
   public IpAddress remoteAddress(TcpSocket fan)
@@ -77,22 +77,22 @@ public class TcpSocketPeer
     return remoteAddr;
   }
 
-  public Int remotePort(TcpSocket fan)
+  public Long remotePort(TcpSocket fan)
   {
     if (!isConnected()) return null;
-    return Int.make(remotePort);
+    return Long.valueOf(remotePort);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Communication
 //////////////////////////////////////////////////////////////////////////
 
-  public TcpSocket bind(TcpSocket fan, IpAddress addr, Int port)
+  public TcpSocket bind(TcpSocket fan, IpAddress addr, Long port)
   {
     try
     {
       InetAddress javaAddr = (addr == null) ? null : addr.peer.java;
-      int javaPort = (port == null) ? 0 : (int)port.val;
+      int javaPort = (port == null) ? 0 : port.intValue();
       bind(new InetSocketAddress(javaAddr, javaPort));
       return fan;
     }
@@ -102,13 +102,13 @@ public class TcpSocketPeer
     }
   }
 
-  public TcpSocket connect(TcpSocket fan, IpAddress addr, Int port, Duration timeout)
+  public TcpSocket connect(TcpSocket fan, IpAddress addr, Long port, Duration timeout)
   {
     try
     {
       // connect
       int javaTimeout = (timeout == null) ? 0 : (int)timeout.millis();
-      connect(new InetSocketAddress(addr.peer.java, (int)port.val), javaTimeout);
+      connect(new InetSocketAddress(addr.peer.java, port.intValue()), javaTimeout);
       connected(fan);
       return fan;
     }
@@ -231,26 +231,26 @@ public class TcpSocketPeer
 // Streaming Options
 //////////////////////////////////////////////////////////////////////////
 
-  public Int getInBufferSize(TcpSocket fan)
+  public Long getInBufferSize(TcpSocket fan)
   {
-    return (inBufSize <= 0) ? null : Int.make(inBufSize);
+    return (inBufSize <= 0) ? null : Long.valueOf(inBufSize);
   }
 
-  public void setInBufferSize(TcpSocket fan, Int v)
+  public void setInBufferSize(TcpSocket fan, Long v)
   {
     if (in != null) throw Err.make("Must set inBufferSize before connection").val;
-    inBufSize = (v == null) ? 0 : (int)v.val;
+    inBufSize = (v == null) ? 0 : v.intValue();
   }
 
-  public Int getOutBufferSize(TcpSocket fan)
+  public Long getOutBufferSize(TcpSocket fan)
   {
-    return (outBufSize <= 0) ? null : Int.make(outBufSize);
+    return (outBufSize <= 0) ? null : Long.valueOf(outBufSize);
   }
 
-  public void setOutBufferSize(TcpSocket fan, Int v)
+  public void setOutBufferSize(TcpSocket fan, Long v)
   {
     if (in != null) throw Err.make("Must set outBufSize before connection").val;
-    outBufSize = (v == null) ? 0 : (int)v.val;
+    outBufSize = (v == null) ? 0 : v.intValue();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -287,11 +287,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Int getReceiveBufferSize(TcpSocket fan)
+  public Long getReceiveBufferSize(TcpSocket fan)
   {
     try
     {
-      return Int.make(getReceiveBufferSize());
+      return Long.valueOf(getReceiveBufferSize());
     }
     catch (IOException e)
     {
@@ -299,11 +299,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setReceiveBufferSize(TcpSocket fan, Int v)
+  public void setReceiveBufferSize(TcpSocket fan, Long v)
   {
     try
     {
-      setReceiveBufferSize((int)v.val);
+      setReceiveBufferSize(v.intValue());
     }
     catch (IOException e)
     {
@@ -311,11 +311,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Int getSendBufferSize(TcpSocket fan)
+  public Long getSendBufferSize(TcpSocket fan)
   {
     try
     {
-      return Int.make(getSendBufferSize());
+      return Long.valueOf(getSendBufferSize());
     }
     catch (IOException e)
     {
@@ -323,11 +323,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setSendBufferSize(TcpSocket fan, Int v)
+  public void setSendBufferSize(TcpSocket fan, Long v)
   {
     try
     {
-      setSendBufferSize((int)v.val);
+      setSendBufferSize(v.intValue());
     }
     catch (IOException e)
     {
@@ -441,11 +441,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Int getTrafficClass(TcpSocket fan)
+  public Long getTrafficClass(TcpSocket fan)
   {
     try
     {
-      return Int.make(getTrafficClass());
+      return Long.valueOf(getTrafficClass());
     }
     catch (IOException e)
     {
@@ -453,11 +453,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setTrafficClass(TcpSocket fan, Int v)
+  public void setTrafficClass(TcpSocket fan, Long v)
   {
     try
     {
-      setTrafficClass((int)v.val);
+      setTrafficClass(v.intValue());
     }
     catch (IOException e)
     {

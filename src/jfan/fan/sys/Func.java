@@ -88,7 +88,7 @@ public abstract class Func
     public final Object callOn(Object obj, List args)
     {
       List flat = args.dup();
-      flat.insert(Int.Zero, obj);
+      flat.insert(0L, obj);
       return call(flat);
     }
 

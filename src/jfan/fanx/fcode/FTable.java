@@ -204,7 +204,7 @@ public abstract class FTable
        size = in.u2();
        table = new Object[size];
        for (int i=0; i<size; ++i)
-         table[i] = Int.make( in.u8() );
+         table[i] = Long.valueOf( in.u8() );
        return this;
     }
   }

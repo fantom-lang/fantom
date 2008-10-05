@@ -69,12 +69,12 @@ public class UdpSocketPeer
     return IpAddressPeer.make(addr);
   }
 
-  public Int localPort(UdpSocket fan)
+  public Long localPort(UdpSocket fan)
   {
     if (!isBound()) return null;
     int port = getLocalPort();
     if (port <= 0) return null;
-    return Int.make(port);
+    return Long.valueOf(port);
   }
 
   public IpAddress remoteAddress(UdpSocket fan)
@@ -83,22 +83,22 @@ public class UdpSocketPeer
     return remoteAddr;
   }
 
-  public Int remotePort(UdpSocket fan)
+  public Long remotePort(UdpSocket fan)
   {
     if (!isConnected()) return null;
-    return Int.make(remotePort);
+    return Long.valueOf(remotePort);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Communication
 //////////////////////////////////////////////////////////////////////////
 
-  public UdpSocket bind(UdpSocket fan, IpAddress addr, Int port)
+  public UdpSocket bind(UdpSocket fan, IpAddress addr, Long port)
   {
     try
     {
       InetAddress javaAddr = (addr == null) ? null : addr.peer.java;
-      int javaPort = (port == null) ? 0 : (int)port.val;
+      int javaPort = (port == null) ? 0 : port.intValue();
       bind(new InetSocketAddress(javaAddr, javaPort));
       return fan;
     }
@@ -108,13 +108,13 @@ public class UdpSocketPeer
     }
   }
 
-  public UdpSocket connect(UdpSocket fan, IpAddress addr, Int port)
+  public UdpSocket connect(UdpSocket fan, IpAddress addr, Long port)
   {
     try
     {
-      connect(new InetSocketAddress(addr.peer.java, (int)port.val));
+      connect(new InetSocketAddress(addr.peer.java, port.intValue()));
       this.remoteAddr = addr;
-      this.remotePort = (int)port.val;
+      this.remotePort = port.intValue();
       return fan;
     }
     catch (IOException e)
@@ -134,7 +134,7 @@ public class UdpSocketPeer
 
     // map address, port
     IpAddress addr = packet.address();
-    Int port = packet.port();
+    Long port = packet.port();
     if (isConnected())
     {
       if (addr != null || port != null)
@@ -145,7 +145,7 @@ public class UdpSocketPeer
       if (addr == null || port == null)
         throw ArgErr.make("Address or port is null").val;
       datagram.setAddress(addr.peer.java);
-      datagram.setPort((int)port.val);
+      datagram.setPort(port.intValue());
     }
 
     // send
@@ -187,7 +187,7 @@ public class UdpSocketPeer
 
     // update packet with received message
     packet.address(IpAddressPeer.make(datagram.getAddress()));
-    packet.port(Int.make(datagram.getPort()));
+    packet.port(Long.valueOf(datagram.getPort()));
     data.pos  += datagram.getLength();
     data.size += datagram.getLength();
 
@@ -249,11 +249,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Int getReceiveBufferSize(UdpSocket fan)
+  public Long getReceiveBufferSize(UdpSocket fan)
   {
     try
     {
-      return Int.make(getReceiveBufferSize());
+      return Long.valueOf(getReceiveBufferSize());
     }
     catch (IOException e)
     {
@@ -261,11 +261,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setReceiveBufferSize(UdpSocket fan, Int v)
+  public void setReceiveBufferSize(UdpSocket fan, Long v)
   {
     try
     {
-      setReceiveBufferSize((int)v.val);
+      setReceiveBufferSize(v.intValue());
     }
     catch (IOException e)
     {
@@ -273,11 +273,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Int getSendBufferSize(UdpSocket fan)
+  public Long getSendBufferSize(UdpSocket fan)
   {
     try
     {
-      return Int.make(getSendBufferSize());
+      return Long.valueOf(getSendBufferSize());
     }
     catch (IOException e)
     {
@@ -285,11 +285,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setSendBufferSize(UdpSocket fan, Int v)
+  public void setSendBufferSize(UdpSocket fan, Long v)
   {
     try
     {
-      setSendBufferSize((int)v.val);
+      setSendBufferSize(v.intValue());
     }
     catch (IOException e)
     {
@@ -350,11 +350,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Int getTrafficClass(UdpSocket fan)
+  public Long getTrafficClass(UdpSocket fan)
   {
     try
     {
-      return Int.make(getTrafficClass());
+      return Long.valueOf(getTrafficClass());
     }
     catch (IOException e)
     {
@@ -362,11 +362,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setTrafficClass(UdpSocket fan, Int v)
+  public void setTrafficClass(UdpSocket fan, Long v)
   {
     try
     {
-      setTrafficClass((int)v.val);
+      setTrafficClass(v.intValue());
     }
     catch (IOException e)
     {

@@ -20,30 +20,30 @@ public final class Range
 
   public static final Range makeInclusive(int start, int end)
   {
-    return makeInclusive(Int.make(start), Int.make(end));
+    return makeInclusive(Long.valueOf(start), Long.valueOf(end));
   }
 
-  public static final Range makeInclusive(Int start, Int end)
+  public static final Range makeInclusive(Long start, Long end)
   {
     return new Range(start, end, false);
   }
 
   public static final Range makeExclusive(int start, int end)
   {
-    return makeExclusive(Int.make(start), Int.make(end));
+    return makeExclusive(Long.valueOf(start), Long.valueOf(end));
   }
 
-  public static final Range makeExclusive(Int start, Int end)
+  public static final Range makeExclusive(Long start, Long end)
   {
     return new Range(start, end, true);
   }
 
-  public static final Range make(Int start, Int end, Boolean exclusive)
+  public static final Range make(Long start, Long end, Boolean exclusive)
   {
     return new Range(start, end, exclusive);
   }
 
-  private Range(Int start, Int end, boolean exclusive)
+  private Range(Long start, Long end, boolean exclusive)
   {
     if (start == null || end == null) throw NullErr.make().val;
     this.start = start;
@@ -55,12 +55,12 @@ public final class Range
 // Range
 //////////////////////////////////////////////////////////////////////////
 
-  public final Int start()
+  public final Long start()
   {
     return start;
   }
 
-  public final Int end()
+  public final Long end()
   {
     return end;
   }
@@ -75,41 +75,41 @@ public final class Range
     return exclusive;
   }
 
-  public final Boolean contains(Int i)
+  public final Boolean contains(Long i)
   {
     if (exclusive)
-      return start.val <= i.val && i.val < end.val;
+      return start.longValue() <= i.longValue() && i.longValue() < end.longValue();
     else
-      return start.val <= i.val && i.val <= end.val;
+      return start.longValue() <= i.longValue() && i.longValue() <= end.longValue();
   }
 
   public final void each(Func f)
   {
-    int start = (int)this.start.val;
-    int end = (int)this.end.val;
+    long start = this.start;
+    long end = this.end;
     if (!exclusive) end++;
-    for (int i=start; i<end; ++i)
-      f.call1(Int.make(i));
+    for (long i=start; i<end; ++i)
+      f.call1(Long.valueOf(i));
   }
 
   public final List toList()
   {
-    int start = (int)this.start.val;
-    int end = (int)this.end.val;
+    long start = this.start;
+    long end = this.end;
     List acc = new List(Sys.IntType);
     if (start < end)
     {
       if (exclusive) --end;
-      acc.capacity(Int.make(end-start));
-      for (int i=start; i<=end; ++i)
-        acc.add(Int.make(i));
+      acc.capacity(Long.valueOf(end-start));
+      for (long i=start; i<=end; ++i)
+        acc.add(Long.valueOf(i));
     }
     else
     {
       if (exclusive) ++end;
-      acc.capacity(Int.make(start-end));
-      for (int i=start; i>=end; --i)
-        acc.add(Int.make(i));
+      acc.capacity(Long.valueOf(start-end));
+      for (long i=start; i>=end; --i)
+        acc.add(Long.valueOf(i));
     }
     return acc;
   }
@@ -119,8 +119,8 @@ public final class Range
     if (object instanceof Range)
     {
       Range that = (Range)object;
-      return this.start.val == that.start.val &&
-             this.end.val == that.end.val &&
+      return this.start.longValue() == that.start.longValue()&&
+             this.end.longValue() == that.end.longValue() &&
              this.exclusive == that.exclusive;
     }
     return false;
@@ -131,17 +131,17 @@ public final class Range
     return start.hashCode() ^ end.hashCode();
   }
 
-  public final Int hash()
+  public final Long hash()
   {
-    return Int.make(start.val ^ end.val);
+    return (start.longValue() << 24) ^ end.longValue();
   }
 
   public Str toStr()
   {
     if (exclusive)
-      return Str.make(start.toStr().val + "..." + end.toStr().val);
+      return Str.make(start + "..." + end);
     else
-      return Str.make(start.toStr().val + ".." + end.toStr().val);
+      return Str.make(start + ".." + end);
   }
 
   public Type type() { return Sys.RangeType; }
@@ -152,7 +152,7 @@ public final class Range
 
   final int start(int size)
   {
-    int x = (int)start.val;
+    int x = start.intValue();
     if (x < 0) x = size + x;
     if (x > size) throw IndexErr.make(this).val;
     return x;
@@ -160,7 +160,7 @@ public final class Range
 
   final long start(long size)
   {
-    long x = start.val;
+    long x = start;
     if (x < 0) x = size + x;
     if (x > size) throw IndexErr.make(this).val;
     return x;
@@ -168,7 +168,7 @@ public final class Range
 
   final int end(int size)
   {
-    int x = (int)end.val;
+    int x = end.intValue();
     if (x < 0) x = size + x;
     if (exclusive) x--;
     if (x >= size) throw IndexErr.make(this).val;
@@ -177,7 +177,7 @@ public final class Range
 
   final long end(long size)
   {
-    long x = end.val;
+    long x = end;
     if (x < 0) x = size + x;
     if (exclusive) x--;
     if (x >= size) throw IndexErr.make(this).val;
@@ -188,6 +188,6 @@ public final class Range
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Int start, end;
+  private Long start, end;
   private boolean exclusive;
 }

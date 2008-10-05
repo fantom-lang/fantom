@@ -61,9 +61,9 @@ public class InStream
    */
   public int r()
   {
-    Int n = read();
+    Long n = read();
     if (n == null) return -1;
-    return (int)n.val;
+    return n.intValue();
   }
 
   /**
@@ -73,7 +73,7 @@ public class InStream
    */
   public InStream unread(int b)
   {
-    return unread(Int.make(b));
+    return unread(Long.valueOf(b));
   }
 
   /**
@@ -89,14 +89,14 @@ public class InStream
    */
   public InStream unreadChar(int b)
   {
-    return unreadChar(Int.make(b));
+    return unreadChar(Long.valueOf(b));
   }
 
 //////////////////////////////////////////////////////////////////////////
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-  public Int read()
+  public Long read()
   {
     try
     {
@@ -111,7 +111,7 @@ public class InStream
     }
   }
 
-  public Int readBuf(Buf buf, Int n)
+  public Long readBuf(Buf buf, Long n)
   {
     try
     {
@@ -126,7 +126,7 @@ public class InStream
     }
   }
 
-  public InStream unread(Int n)
+  public InStream unread(Long n)
   {
     try
     {
@@ -142,13 +142,13 @@ public class InStream
     }
   }
 
-  public Int skip(Int n)
+  public Long skip(Long n)
   {
     if (in != null) return in.skip(n);
 
-    long nval = n.val;
+    long nval = n;
     for (int i=0; i<nval; ++i)
-      if (r() < 0) return Int.pos(i);
+      if (r() < 0) return Long.valueOf(i);
     return n;
   }
 
@@ -156,7 +156,7 @@ public class InStream
   {
     try
     {
-      Int size = Int.Chunk;
+      Long size = FanInt.Chunk;
       Buf buf = Buf.make(size);
       while (readBuf(buf, size) != null);
       buf.flip();
@@ -168,71 +168,71 @@ public class InStream
     }
   }
 
-  public Buf readBufFully(Buf buf, Int n)
+  public Buf readBufFully(Buf buf, Long n)
   {
     if (buf == null) buf = Buf.make(n);
 
-    long total = n.val;
+    long total = n;
     long got = 0;
     while (got < total)
     {
-      Int r = readBuf(buf, Int.make(total-got));
-      if (r == null || r.val == 0) throw IOErr.make("Unexpected end of stream").val;
-      got += r.val;
+      Long r = readBuf(buf, Long.valueOf(total-got));
+      if (r == null || r.longValue() == 0) throw IOErr.make("Unexpected end of stream").val;
+      got += r.longValue();
     }
 
     buf.flip();
     return buf;
   }
 
-  public Int peek()
+  public Long peek()
   {
-    Int x = read();
+    Long x = read();
     if (x != null) unread(x);
     return x;
   }
 
-  public Int readU1()
+  public Long readU1()
   {
     int c = r();
     if (c < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Int.make(c);
+    return Long.valueOf(c);
   }
 
-  public Int readS1()
+  public Long readS1()
   {
     int c = r();
     if (c < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Int.make((byte)c);
+    return Long.valueOf((byte)c);
   }
 
-  public Int readU2()
+  public Long readU2()
   {
     int c1 = r();
     int c2 = r();
     if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Int.make(c1 << 8 | c2);
+    return Long.valueOf(c1 << 8 | c2);
   }
 
-  public Int readS2()
+  public Long readS2()
   {
     int c1 = r();
     int c2 = r();
     if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Int.make((short)(c1 << 8 | c2));
+    return Long.valueOf((short)(c1 << 8 | c2));
   }
 
-  public Int readU4()
+  public Long readU4()
   {
     long c1 = r();
     long c2 = r();
     long c3 = r();
     long c4 = r();
     if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Int.make((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
+    return Long.valueOf((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
   }
 
-  public Int readS4() { return Int.make(readInt()); }
+  public Long readS4() { return Long.valueOf(readInt()); }
   public int readInt()
   {
     int c1 = r();
@@ -243,7 +243,7 @@ public class InStream
     return ((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
   }
 
-  public Int readS8() { return Int.make(readLong()); }
+  public Long readS8() { return Long.valueOf(readLong()); }
   public long readLong()
   {
     long c1 = r();
@@ -343,30 +343,30 @@ public class InStream
     this.charset = charset;
   }
 
-  public Int readChar()
+  public Long readChar()
   {
     int ch = charsetDecoder.decode(this);
-    return ch < 0 ? null : Int.pos(ch);
+    return ch < 0 ? null : Long.valueOf(ch);
   }
 
-  public InStream unreadChar(Int c)
+  public InStream unreadChar(Long c)
   {
-    charsetEncoder.encode((char)c.val, this);
+    charsetEncoder.encode((char)c.longValue(), this);
     return this;
   }
 
-  public Int peekChar()
+  public Long peekChar()
   {
-    Int x = readChar();
+    Long x = readChar();
     if (x != null) unreadChar(x);
     return x;
   }
 
-  public Str readLine() { return readLine(Int.Chunk); }
-  public Str readLine(Int max)
+  public Str readLine() { return readLine(FanInt.Chunk); }
+  public Str readLine(Long max)
   {
     // max limit
-    int maxChars = (max != null) ? (int)max.val : Integer.MAX_VALUE;
+    int maxChars = (max != null) ? max.intValue(): Integer.MAX_VALUE;
     if (maxChars <= 0) return Str.Empty;
 
     // read first char, if at end of file bail
@@ -398,12 +398,12 @@ public class InStream
     return Str.make(buf.toString());
   }
 
-  public Str readStrToken() { return readStrToken(Int.Chunk, null); }
-  public Str readStrToken(Int max) { return readStrToken(max, null); }
-  public Str readStrToken(Int max, Func f)
+  public Str readStrToken() { return readStrToken(FanInt.Chunk, null); }
+  public Str readStrToken(Long max) { return readStrToken(max, null); }
+  public Str readStrToken(Long max, Func f)
   {
     // max limit
-    int maxChars = (max != null) ? (int)max.val : Integer.MAX_VALUE;
+    int maxChars = (max != null) ? max.intValue() : Integer.MAX_VALUE;
     if (maxChars <= 0) return Str.Empty;
 
     // read first char, if at end of file bail
@@ -417,9 +417,9 @@ public class InStream
       // check for \n, \r\n, or \r
       boolean terminate;
       if (f == null)
-        terminate = Int.isSpace(c);
+        terminate = FanInt.isSpace(c);
       else
-        terminate = (Boolean)f.call1(Int.pos(c));
+        terminate = (Boolean)f.call1(Long.valueOf(c));
       if (terminate)
       {
         unreadChar(c);
@@ -577,7 +577,7 @@ public class InStream
         }
 
         // comment
-        if (c == '/' && Int.isSpace(last))
+        if (c == '/' && FanInt.isSpace(last))
         {
           int peek = rChar();
           if (peek < 0) break;
@@ -655,38 +655,38 @@ public class InStream
     return -1;
   }
 
-  public Int pipe(OutStream out) { return pipe(out, null, true); }
-  public Int pipe(OutStream out, Int n) { return pipe(out, n, true); }
-  public Int pipe(OutStream out, Int toPipe, Boolean close)
+  public Long pipe(OutStream out) { return pipe(out, null, true); }
+  public Long pipe(OutStream out, Long n) { return pipe(out, n, true); }
+  public Long pipe(OutStream out, Long toPipe, Boolean close)
   {
     try
     {
-      Int bufSize = Int.Chunk;
+      Long bufSize = FanInt.Chunk;
       Buf buf = Buf.make(bufSize);
       long total = 0;
       if (toPipe == null)
       {
         while (true)
         {
-          Int n = readBuf(buf.clear(), bufSize);
+          Long n = readBuf(buf.clear(), bufSize);
           if (n == null) break;
           out.writeBuf(buf.flip(), buf.remaining());
-          total += n.val;
+          total += n;
         }
       }
       else
       {
-        long toPipeVal = toPipe.val;
+        long toPipeVal = toPipe;
         while (total < toPipeVal)
         {
-          if (toPipeVal - total < bufSize.val) bufSize = Int.make(toPipeVal - total);
-          Int n = readBuf(buf.clear(), bufSize);
+          if (toPipeVal - total < bufSize.longValue()) bufSize = Long.valueOf(toPipeVal - total);
+          Long n = readBuf(buf.clear(), bufSize);
           if (n == null) throw IOErr.make("Unexpected end of stream").val;
           out.writeBuf(buf.flip(), buf.remaining());
-          total += n.val;
+          total += n;
         }
       }
-      return Int.make(total);
+      return Long.valueOf(total);
     }
     finally
     {

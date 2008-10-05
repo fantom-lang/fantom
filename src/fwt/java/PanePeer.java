@@ -48,11 +48,11 @@ public class PanePeer extends WidgetPeer
     protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache)
     {
       Hints hints = Hints.make(
-        wHint == SWT.DEFAULT ? null : Int.make(wHint),
-        hHint == SWT.DEFAULT ? null : Int.make(hHint));
+        wHint == SWT.DEFAULT ? null : Long.valueOf(wHint),
+        hHint == SWT.DEFAULT ? null : Long.valueOf(hHint));
       Size s = ((Pane)self).prefSize(hints);
       if (s == null) return new Point(20, 20);
-      return new Point((int)s.w.val, (int)s.h.val);
+      return new Point(s.w.intValue(), s.h.intValue());
     }
 
     protected void layout(Composite composite, boolean flushCache)

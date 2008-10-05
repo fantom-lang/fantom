@@ -86,35 +86,35 @@ public abstract class Prop
     IntProp(WidgetPeer peer, int def, boolean negIsNull)
     {
       super(peer);
-      this.val = Int.make(def);
+      this.val = Long.valueOf(def);
     }
 
     void syncToControl() { set(val); }
 
     void syncFromControl() { val = get(); }
 
-    Int get()
+    Long get()
     {
       Widget w = peer.control;
       if (w == null) return val;
       int i = get(w);
       if (negIsNull && i < 0) return null;
-      return Int.make(i);
+      return Long.valueOf(i);
     }
 
-    void set(Int v)
+    void set(Long v)
     {
       Widget w = peer.control;
       if (w == null)
         val = v;
       else
-        set(w, (int)v.val);
+        set(w, v.intValue());
     }
 
     public abstract int get(Widget w);
     public abstract void set(Widget w, int v);
 
-    Int val;
+    Long val;
     boolean negIsNull;
   }
 
@@ -183,7 +183,7 @@ public abstract class Prop
       if (peer.control instanceof Control)
       {
         Control c = (Control)peer.control;
-        c.setLocation((int)v.x.val, (int)v.y.val);
+        c.setLocation(v.x.intValue(), v.y.intValue());
       }
     }
 
@@ -218,7 +218,7 @@ public abstract class Prop
       if (peer.control instanceof Control)
       {
         Control c = (Control)peer.control;
-        c.setSize((int)v.w.val, (int)v.h.val);
+        c.setSize(v.w.intValue(), v.h.intValue());
       }
     }
 
@@ -276,7 +276,7 @@ public abstract class Prop
       if (w == null) return val;
       int[] ints = get(w);
       val = new List(Sys.IntType);
-      for (int i=0; i<ints.length; ++i) val.add(Int.make(ints[i]));
+      for (int i=0; i<ints.length; ++i) val.add(Long.valueOf(ints[i]));
       return val;
     }
 

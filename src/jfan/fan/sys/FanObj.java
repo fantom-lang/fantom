@@ -22,7 +22,7 @@ public class FanObj
 
   public int hashCode()
   {
-    long hash = hash().val;
+    long hash = hash();
     return (int)(hash ^ (hash >>> 32));
   }
 
@@ -53,32 +53,32 @@ public class FanObj
     return this == obj;
   }
 
-  public static Int compare(Object self, Object x)
+  public static Long compare(Object self, Object x)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).compare(x);
     else if (self instanceof Comparable)
-      return Int.make(((Comparable)self).compareTo(x));
+      return Long.valueOf(((Comparable)self).compareTo(x));
     else
       return toStr(self).compare(toStr(x));
   }
 
-  public Int compare(Object obj)
+  public Long compare(Object obj)
   {
     return toStr(this).compare(toStr(obj));
   }
 
-  public static Int hash(Object self)
+  public static Long hash(Object self)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).hash();
     else
-      return Int.make(self.hashCode());
+      return Long.valueOf(self.hashCode());
   }
 
-  public Int hash()
+  public Long hash()
   {
-    return Int.make(super.hashCode());
+    return Long.valueOf(super.hashCode());
   }
 
   public static Str toStr(Object self)

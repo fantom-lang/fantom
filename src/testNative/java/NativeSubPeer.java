@@ -35,12 +35,12 @@ public class NativeSubPeer extends NativePeer
     return Str.make("subNative working");
   }
 
-  public Int subfX(NativeSub self)
+  public Long subfX(NativeSub self)
   {
     return fX(self);
   }
 
-  public Int subGetPeerZ(NativeSub self)
+  public Long subGetPeerZ(NativeSub self)
   {
     return getPeerZ(self);
   }

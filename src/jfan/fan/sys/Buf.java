@@ -22,16 +22,16 @@ public abstract class Buf
 //////////////////////////////////////////////////////////////////////////
 
   public static Buf make() { return new MemBuf(1024); }
-  public static Buf make(Int capacity) { return new MemBuf((int)capacity.val); }
+  public static Buf make(Long capacity) { return new MemBuf(capacity.intValue()); }
 
-  public static Buf random(Int s)
+  public static Buf random(Long s)
   {
-    int size = (int)s.val;
+    int size = s.intValue();
     byte[] buf = new byte[size];
 
     for (int i=0; i<size;)
     {
-      int x = Int.random.nextInt();
+      int x = FanInt.random.nextInt();
       buf[i++] = (byte)(x >> 24);
       if (i < size)
       {
@@ -94,33 +94,33 @@ public abstract class Buf
     return getSize() == 0;
   }
 
-  public Int capacity()
+  public Long capacity()
   {
-    return Int.maxValue;
+    return FanInt.maxValue;
   }
 
-  public void capacity(Int c)
+  public void capacity(Long c)
   {
   }
 
-  public final Int size()
+  public final Long size()
   {
-    return Int.make(getSize());
+    return Long.valueOf(getSize());
   }
 
-  public final void size(Int s)
+  public final void size(Long s)
   {
-    setSize(s.val);
+    setSize(s.longValue());
   }
 
-  public final Int pos()
+  public final Long pos()
   {
-    return Int.make(getPos());
+    return Long.valueOf(getPos());
   }
 
-  public final Int remaining()
+  public final Long remaining()
   {
-    return Int.make(getSize()-getPos());
+    return Long.valueOf(getSize()-getPos());
   }
 
   public final Boolean more()
@@ -128,9 +128,9 @@ public abstract class Buf
     return getSize()-getPos() > 0;
   }
 
-  public final Buf seek(Int pos)
+  public final Buf seek(Long pos)
   {
-    long p = pos.val;
+    long p = pos;
     long size = getSize();
     if (p < 0) p = size + p;
     if (p < 0 || p > size) throw IndexErr.make(pos).val;
@@ -145,13 +145,13 @@ public abstract class Buf
     return this;
   }
 
-  public final Int get(Int pos)
+  public final Long get(Long pos)
   {
-    long p = pos.val;
+    long p = pos.longValue();
     long size = getSize();
     if (p < 0) p = size + p;
     if (p < 0 || p >= size) throw IndexErr.make(pos).val;
-    return Int.pos[getByte(p)];
+    return FanInt.pos[getByte(p)];
   }
 
   public final Buf slice(Range range)
@@ -174,13 +174,13 @@ public abstract class Buf
 // Modification
 //////////////////////////////////////////////////////////////////////////
 
-  public final Buf set(Int pos, Int b)
+  public final Buf set(Long pos, Long b)
   {
-    long p = pos.val;
+    long p = pos.longValue();
     long size = getSize();
     if (p < 0) p = size + p;
     if (p < 0 || p >= size) throw IndexErr.make(pos).val;
-    setByte(p, (int)b.val);
+    setByte(p, b.intValue());
     return this;
   }
 
@@ -223,16 +223,16 @@ public abstract class Buf
 
   public final OutStream out() { return out; }
 
-  public final Buf write(Int b) { out.write(b); return this; }
+  public final Buf write(Long b) { out.write(b); return this; }
 
   public final Buf writeBuf(Buf other) { out.writeBuf(other); return this; }
-  public final Buf writeBuf(Buf other, Int n) { out.writeBuf(other, n); return this; }
+  public final Buf writeBuf(Buf other, Long n) { out.writeBuf(other, n); return this; }
 
-  public final Buf writeI2(Int x) { out.writeI2(x); return this; }
+  public final Buf writeI2(Long x) { out.writeI2(x); return this; }
 
-  public final Buf writeI4(Int x) { out.writeI4(x); return this; }
+  public final Buf writeI4(Long x) { out.writeI4(x); return this; }
 
-  public final Buf writeI8(Int x) { out.writeI8(x); return this; }
+  public final Buf writeI8(Long x) { out.writeI8(x); return this; }
 
   public final Buf writeF4(Double x) { out.writeF4(x); return this; }
 
@@ -244,11 +244,11 @@ public abstract class Buf
 
   public final Buf writeUtf(Str x) { out.writeUtf(x); return this; }
 
-  public final Buf writeChar(Int c) { out.writeChar(c); return this; }
+  public final Buf writeChar(Long c) { out.writeChar(c); return this; }
 
   public final Buf writeChars(Str s) { out.writeChars(s); return this; }
-  public final Buf writeChars(Str s, Int off) { out.writeChars(s, off); return this; }
-  public final Buf writeChars(Str s, Int off, Int len) { out.writeChars(s, off, len); return this; }
+  public final Buf writeChars(Str s, Long off) { out.writeChars(s, off); return this; }
+  public final Buf writeChars(Str s, Long off, Long len) { out.writeChars(s, off, len); return this; }
 
   public final Buf print(Object obj) { out.print(obj); return this; }
 
@@ -264,31 +264,31 @@ public abstract class Buf
 
   public final InStream in() { return in; }
 
-  public final Int read() {  return in.read(); }
+  public final Long read() {  return in.read(); }
 
-  public final Int readBuf(Buf other, Int n) { return in.readBuf(other, n); }
+  public final Long readBuf(Buf other, Long n) { return in.readBuf(other, n); }
 
-  public final Buf unread(Int n) { in.unread(n); return this; }
+  public final Buf unread(Long n) { in.unread(n); return this; }
 
-  public final Buf readBufFully(Buf buf, Int n) { return in.readBufFully(buf, n); }
+  public final Buf readBufFully(Buf buf, Long n) { return in.readBufFully(buf, n); }
 
   public final Buf readAllBuf() { return in.readAllBuf(); }
 
-  public final Int peek() { return in.peek(); }
+  public final Long peek() { return in.peek(); }
 
-  public final Int readU1() { return in.readU1(); }
+  public final Long readU1() { return in.readU1(); }
 
-  public final Int readS1() { return in.readS1(); }
+  public final Long readS1() { return in.readS1(); }
 
-  public final Int readU2() { return in.readU2(); }
+  public final Long readU2() { return in.readU2(); }
 
-  public final Int readS2() { return in.readS2(); }
+  public final Long readS2() { return in.readS2(); }
 
-  public final Int readU4() { return in.readU4(); }
+  public final Long readU4() { return in.readU4(); }
 
-  public final Int readS4() { return in.readS4(); }
+  public final Long readS4() { return in.readS4(); }
 
-  public final Int readS8() { return in.readS8(); }
+  public final Long readS8() { return in.readS8(); }
 
   public final Double readF4() { return in.readF4(); }
 
@@ -300,18 +300,18 @@ public abstract class Buf
 
   public final Str readUtf() { return in.readUtf(); }
 
-  public final Int readChar() { return in.readChar(); }
+  public final Long readChar() { return in.readChar(); }
 
-  public final Buf unreadChar(Int c) { in.unreadChar(c); return this; }
+  public final Buf unreadChar(Long c) { in.unreadChar(c); return this; }
 
-  public final Int peekChar() { return in.peekChar(); }
+  public final Long peekChar() { return in.peekChar(); }
 
   public final Str readLine() { return in.readLine(); }
-  public final Str readLine(Int max) { return in.readLine(max); }
+  public final Str readLine(Long max) { return in.readLine(max); }
 
   public final Str readStrToken() { return in.readStrToken(); }
-  public final Str readStrToken(Int max) { return in.readStrToken(max); }
-  public final Str readStrToken(Int max, Func f) { return in.readStrToken(Int.Chunk, f); }
+  public final Str readStrToken(Long max) { return in.readStrToken(max); }
+  public final Str readStrToken(Long max, Func f) { return in.readStrToken(FanInt.Chunk, f); }
 
   public final List readAllLines() { return in.readAllLines(); }
 

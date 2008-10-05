@@ -31,9 +31,12 @@ class IntTest : Test
     Obj x := 3
 
     verify(x.type === Int#)
+    verify(3.type === Int#)
+    verify(x.isImmutable)
+    verify(8.isImmutable)
 
     verify(x is Obj)
-    verify(x is Num)
+//    verify(x is Num) TODO
     verify(x is Int)
     verifyFalse(x is Float)
   }
@@ -68,9 +71,9 @@ class IntTest : Test
     verify('z' === 'z')
     verify('z' !== 'Z')
 
-    // everything from -256 to 1024 must be interned to use ===
-    j := -256
-    for (Int i := -256; i<=1024; ++i)
+    // everything from -100 to 100 must be interned to use ===
+    j := -100
+    for (Int i := -100; i<=100; ++i)
     {
       verifySame(i, j)
       j++

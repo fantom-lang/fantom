@@ -78,8 +78,8 @@ public class ComboPeer
   };
 
   // Int selectedIndex := 0
-  public Int selectedIndex(fan.fwt.Combo self) { return selectedIndex.get(); }
-  public void selectedIndex(fan.fwt.Combo self, Int v) { selectedIndex.set(v); }
+  public Long selectedIndex(fan.fwt.Combo self) { return selectedIndex.get(); }
+  public void selectedIndex(fan.fwt.Combo self, Long v) { selectedIndex.set(v); }
   public final Prop.IntProp selectedIndex = new Prop.IntProp(this, 0, true)
   {
     public int get(Widget w) { return ((Combo)w).getSelectionIndex(); }

@@ -26,7 +26,7 @@ public class ImagePeer
     Image x = Env.get().image(f);
     if (x == null) return Size.def;
     Rectangle r = x.getBounds();
-    return Size.make(Int.make(r.width), Int.make(r.height));
+    return Size.make(Long.valueOf(r.width), Long.valueOf(r.height));
   }
 
   public void dispose(fan.fwt.Image f)

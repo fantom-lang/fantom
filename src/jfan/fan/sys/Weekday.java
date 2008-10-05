@@ -28,7 +28,7 @@ public final class Weekday
 
   private Weekday(int ordinal, String name)
   {
-    Enum.make$(this, Int.pos[ordinal], Str.make(name).intern());
+    Enum.make$(this, FanInt.pos[ordinal], Str.make(name).intern());
     this.ord = ordinal;
     this.localeAbbrKey  = Str.make(name + "Abbr");
     this.localeFullKey  = Str.make(name + "Full");

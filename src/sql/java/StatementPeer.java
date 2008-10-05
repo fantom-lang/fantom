@@ -108,7 +108,7 @@ public class StatementPeer
         System.out.println("WARNING: Cannot map " + typeName + " to Fan type");
         fanType = Sys.StrType;
       }
-      t.add(Col.make(Int.pos(i), Str.make(name), fanType, Str.make(typeName), null));
+      t.add(Col.make(Long.valueOf(i), Str.make(name), fanType, Str.make(typeName), null));
     }
 
     return t;
@@ -202,7 +202,7 @@ public class StatementPeer
     }
   }
 
-  public Int execute(Statement self, Map params)
+  public Long execute(Statement self, Map params)
   {
     self.conn.peer.lastAutoGen = null;
     try
@@ -210,9 +210,9 @@ public class StatementPeer
       if (prepared)
       {
         setParameters(params);
-        Int rows = Int.make(((PreparedStatement)stmt).executeUpdate());
+        Long rows = Long.valueOf(((PreparedStatement)stmt).executeUpdate());
         ResultSet keys = stmt.getGeneratedKeys();
-        if (keys.next()) self.conn.peer.lastAutoGen = Int.make(keys.getInt(1));
+        if (keys.next()) self.conn.peer.lastAutoGen = Long.valueOf(keys.getInt(1));
         return rows;
       }
       else
@@ -222,8 +222,8 @@ public class StatementPeer
         {
           int rc = stmt.executeUpdate(self.sql.val, java.sql.Statement.RETURN_GENERATED_KEYS);
           ResultSet keys = stmt.getGeneratedKeys();
-          if (keys.next()) self.conn.peer.lastAutoGen = Int.make(keys.getInt(1));
-          return Int.make(rc);
+          if (keys.next()) self.conn.peer.lastAutoGen = Long.valueOf(keys.getInt(1));
+          return Long.valueOf(rc);
         }
         finally
         {
@@ -282,8 +282,8 @@ public class StatementPeer
       jobj = value;
     else if (value instanceof Boolean)
       jobj = value;
-    else if (value instanceof Int)
-      jobj = new Long(((Int)value).val);
+    else if (value instanceof Long)
+      jobj = value;
     else if (value instanceof Str)
       jobj = ((Str)value).val;
     else if (value instanceof MemBuf)
