@@ -13,7 +13,6 @@ import java.lang.reflect.Method;
 import java.io.File;
 import java.io.FileOutputStream;
 import fan.sys.*;
-import fan.sys.Float;
 import fanx.emit.*;
 import fanx.util.*;
 
@@ -72,11 +71,11 @@ public class EmitTest
     // float
     int f = e.floatConst(2.3f);
     verify(e.floatConst(2.3f) == f);
-    int fNan = e.floatConst(java.lang.Float.NaN);
-    verify(e.floatConst(java.lang.Float.NaN) == fNan);
-    verify(e.floatConst(java.lang.Float.NaN) == fNan);
-    int fInf = e.floatConst(java.lang.Float.POSITIVE_INFINITY);
-    verify(e.floatConst(java.lang.Float.POSITIVE_INFINITY) == fInf );
+    int fNan = e.floatConst(Float.NaN);
+    verify(e.floatConst(Float.NaN) == fNan);
+    verify(e.floatConst(Float.NaN) == fNan);
+    int fInf = e.floatConst(Float.POSITIVE_INFINITY);
+    verify(e.floatConst(Float.POSITIVE_INFINITY) == fInf );
 
     // double
     int d = e.doubleConst(Double.MAX_VALUE);

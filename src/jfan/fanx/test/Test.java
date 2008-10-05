@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import fanx.util.*;
 import fan.sys.*;
-import fan.sys.Float;
 
 /**
  * Test is the base class of test cases as well as the

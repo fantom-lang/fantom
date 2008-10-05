@@ -128,7 +128,7 @@ public final class Int
 
   public Int toInt() { return this; }
 
-  public Float toFloat() { return Float.make(val); }
+  public Double toFloat() { return Double.valueOf(val); }
 
   public Decimal toDecimal() { return Decimal.make(new java.math.BigDecimal(val)); }
 

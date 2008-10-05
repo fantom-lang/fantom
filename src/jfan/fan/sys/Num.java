@@ -16,7 +16,7 @@ public abstract class Num
 
   public abstract Int toInt();
 
-  public abstract Float toFloat();
+  public abstract Double toFloat();
 
   public abstract Decimal toDecimal();
 

@@ -11,7 +11,6 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import fan.sys.*;
-import fan.sys.Float;
 import fan.sql.Connection;
 import fan.sql.Statement;
 
@@ -279,8 +278,8 @@ public class StatementPeer
 
     // TODO: there's got to be a better way, it'll
     // probably shake out in the ORM design
-    if (value instanceof Float)
-      jobj = new Double(((Float)value).val);
+    if (value instanceof Double)
+      jobj = value;
     else if (value instanceof Bool)
       jobj = new Boolean(((Bool)value).val);
     else if (value instanceof Int)

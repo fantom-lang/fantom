@@ -782,8 +782,7 @@ public class Type
       {
         try
         {
-          String name = (this == Sys.ObjType) ? "FanObj" : this.name.val;
-          this.cls = Class.forName("fan." + podName + "." + name);
+          this.cls = Class.forName(FanUtil.toJavaImplClassName(podName, name.val));
         }
         catch (Exception e)
         {
@@ -858,6 +857,22 @@ public class Type
       // the static methods only of the implementation class
       finishSlots(cls, false);
       if (isMixin().val) finishSlots(auxCls, true);
+
+/*
+System.out.println("---- Finish " + qname());
+try
+{
+for (int i=0; i<methods().sz(); ++i)
+{
+  Method m = (Method)methods().get(i);
+  System.out.println("  " + m.name());
+  for (int j=0; m.reflect != null && j<m.reflect.length; ++j)
+    System.out.println("    [" + j + "] " + m.reflect[j]);
+}
+}
+catch (Exception e) { e.printStackTrace(); }
+*/
+
     }
     catch (Throwable e)
     {
@@ -929,15 +944,17 @@ public class Type
       // get parameters, if sys we need to skip the
       // methods that use non-Fan signatures
       Class[] params = m.getParameterTypes();
+      int numParams = params.length;
       if (pod == Sys.SysPod)
       {
         if (!checkAllFan(params)) return;
-        if (this == Sys.ObjType && Modifier.isStatic(m.getModifiers()) &&
-            !name.equals("echo")) return;
+        boolean javaStatic = Modifier.isStatic(m.getModifiers());
+        if (javaStatic && this == Sys.ObjType && !name.equals("echo")) return;
+        if (javaStatic && !method.isStatic().val && !method.isCtor().val) --numParams;
       }
 
       // zero index is full signature up to using max defaults
-      method.reflect[method.params().sz()-params.length] = m;
+      method.reflect[method.params().sz()-numParams ] = m;
     }
     else
     {
@@ -961,8 +978,8 @@ public class Type
   {
     for (int i=0; i<params.length; ++i)
     {
-      String p = params[i].getName();
-      if (!p.startsWith("fan.") && !p.equals("java.lang.Object"))
+      Class p = params[i];
+      if (!p.getName().startsWith("fan.") && FanUtil.toFanType(p, false) == null)
         return false;
     }
     return true;

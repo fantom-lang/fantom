@@ -96,7 +96,7 @@ public final class Decimal
 
   public Int toInt() { return Int.make(val.longValue()); }
 
-  public Float toFloat() { return Float.make(val.doubleValue()); }
+  public Double toFloat() { return Double.valueOf(val.doubleValue()); }
 
   public Decimal toDecimal() { return this; }
 

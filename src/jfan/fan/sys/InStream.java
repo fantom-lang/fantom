@@ -259,14 +259,14 @@ public class InStream
             (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
   }
 
-  public Float readF4()
+  public Double readF4()
   {
-    return Float.make(java.lang.Float.intBitsToFloat(readInt()));
+    return Double.valueOf(Float.intBitsToFloat(readInt()));
   }
 
-  public Float readF8()
+  public Double readF8()
   {
-    return Float.make(Double.longBitsToDouble(readLong()));
+    return Double.valueOf(Double.longBitsToDouble(readLong()));
   }
 
   public Decimal readDecimal()

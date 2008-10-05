@@ -82,7 +82,7 @@ public final class Facets
     if (val == null) return def;
 
     // if we've already decoded, go with it
-    if (val instanceof FanObj) return val;
+    if (!(val instanceof String)) return val;
 
     // decode into an object
     Object obj = ObjDecoder.decode((String)val);

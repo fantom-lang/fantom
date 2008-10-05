@@ -11,7 +11,6 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 import fan.sys.*;
-import fan.sys.Float;
 import fanx.util.*;
 
 /**
@@ -57,7 +56,7 @@ public final class FLiterals
 //////////////////////////////////////////////////////////////////////////
 
   public final Int integer(int index)       { return (Int)ints.get(index); }
-  public final Float floats(int index)      { return (Float)floats.get(index); }
+  public final Double floats(int index)     { return (Double)floats.get(index); }
   public final Decimal decimals(int index)  { return (Decimal)decimals.get(index); }
   public final Str str(int index)           { return (Str)strs.get(index); }
   public final Duration duration(int index) { return (Duration)durations.get(index); }

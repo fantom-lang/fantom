@@ -722,8 +722,8 @@ public final class Str
   public final Int toInt(Int radix) { return Int.fromStr(this, radix, Bool.True); }
   public final Int toInt(Int radix, Bool checked) { return Int.fromStr(this, radix, checked); }
 
-  public final Float toFloat() { return Float.fromStr(this, Bool.True); }
-  public final Float toFloat(Bool checked) { return Float.fromStr(this, checked); }
+  public final Double toFloat() { return FanFloat.fromStr(this, Bool.True); }
+  public final Double toFloat(Bool checked) { return FanFloat.fromStr(this, checked); }
 
   public final Decimal toDecimal() { return Decimal.fromStr(this, Bool.True); }
   public final Decimal toDecimal(Bool checked) { return Decimal.fromStr(this, checked); }
