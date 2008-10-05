@@ -7,6 +7,7 @@
 //
 package fan.sys;
 
+import java.math.*;
 import fanx.serial.*;
 
 /**
@@ -135,9 +136,9 @@ public class OutStream
     return writeI8(Double.doubleToLongBits(x.doubleValue()));
   }
 
-  public OutStream writeDecimal(Decimal x)
+  public OutStream writeDecimal(BigDecimal x)
   {
-    return writeUtfString(x.val.toString());
+    return writeUtfString(x.toString());
   }
 
   public OutStream writeBool(Boolean x)

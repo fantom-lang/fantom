@@ -392,7 +392,7 @@ public class TokenizerTest
   public Tok i(long v)     { return new Tok(Token.INT_LITERAL,   Long.valueOf(v));    }
   public Tok f(double v)   { return new Tok(Token.FLOAT_LITERAL, Double.valueOf(v));  }
   public Tok s(String v)   { return new Tok(Token.STR_LITERAL,   Str.make(v)); }
-  public Tok dec(String v) { return new Tok(Token.DECIMAL_LITERAL,  Decimal.fromStr(Str.make(v))); }
+  public Tok dec(String v) { return new Tok(Token.DECIMAL_LITERAL,  FanDecimal.fromStr(Str.make(v))); }
   public Tok dur(long v)   { return new Tok(Token.DURATION_LITERAL,  Duration.make(v)); }
   public Tok uri(String v) { return new Tok(Token.URI_LITERAL,   Uri.fromStr(v)); }
 
