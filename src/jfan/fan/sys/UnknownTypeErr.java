@@ -15,18 +15,12 @@ public class UnknownTypeErr
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Java Convenience
-//////////////////////////////////////////////////////////////////////////
-
-  public static UnknownTypeErr make(String msg)  { return make(Str.make(msg)); }
-
-//////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnknownTypeErr make() { return make((Str)null, (Err)null); }
-  public static UnknownTypeErr make(Str msg) { return make(msg, null); }
-  public static UnknownTypeErr make(Str msg, Err cause)
+  public static UnknownTypeErr make() { return make((String)null, (Err)null); }
+  public static UnknownTypeErr make(String msg) { return make(msg, (Err)null); }
+  public static UnknownTypeErr make(String msg, Err cause)
   {
     UnknownTypeErr err = new UnknownTypeErr();
     make$(err, msg, cause);
@@ -34,8 +28,8 @@ public class UnknownTypeErr
   }
 
   public static void make$(UnknownTypeErr self) { make$(self, null);  }
-  public static void make$(UnknownTypeErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(UnknownTypeErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(UnknownTypeErr self, String msg) { make$(self, msg, null); }
+  public static void make$(UnknownTypeErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

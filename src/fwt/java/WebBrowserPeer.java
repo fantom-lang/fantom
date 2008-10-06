@@ -61,14 +61,14 @@ public class WebBrowserPeer
     }
   }
 
-  public WebBrowser loadStr(WebBrowser self, Str html)
+  public WebBrowser loadStr(WebBrowser self, String html)
   {
     Browser b = (Browser)this.control;
     if (b == null) { loadStr = html; return self; }
     explicitLoad = true;
     try
     {
-      b.setText(html.val);
+      b.setText(html);
       return self;
     }
     finally
@@ -120,8 +120,8 @@ public class WebBrowserPeer
     // will be interpretted as a scheme
     String loc = event.location;
     Uri uri = Uri.fromStr(loc);
-    if (uri.scheme() == null || uri.scheme().size().intValue() == 1)
-      uri = File.os(Str.make(loc)).normalize().uri();
+    if (uri.scheme() == null || uri.scheme().length() == 1)
+      uri = File.os(loc).normalize().uri();
 
     fan.fwt.WebBrowser self = (fan.fwt.WebBrowser)this.self;
     fan.fwt.Event fe = event(EventId.hyperlink, uri);
@@ -146,6 +146,6 @@ public class WebBrowserPeer
 //////////////////////////////////////////////////////////////////////////
 
   Uri loadUri;
-  Str loadStr;
+  String loadStr;
   boolean explicitLoad;
 }

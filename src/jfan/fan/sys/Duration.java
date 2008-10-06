@@ -21,8 +21,8 @@ public final class Duration
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Duration fromStr(Str s) { return fromStr(s, true); }
-  public static Duration fromStr(Str s, Boolean checked)
+  public static Duration fromStr(String s) { return fromStr(s, true); }
+  public static Duration fromStr(String s, Boolean checked)
   {
     //   ns:   nanoseconds  (x 1)
     //   ms:   milliseconds (x 1,000,000)
@@ -32,12 +32,11 @@ public final class Duration
     //   day:  days         (x 86,400,000,000,000)
     try
     {
-      String str = s.val;
-      int len = str.length();
-      int x1 = str.charAt(len-1);
-      int x2 = str.charAt(len-2);
-      int x3 = str.charAt(len-3);
-      boolean dot = str.indexOf('.') > 0;
+      int len = s.length();
+      int x1 = s.charAt(len-1);
+      int x2 = s.charAt(len-2);
+      int x3 = s.charAt(len-3);
+      boolean dot = s.indexOf('.') > 0;
 
       long mult = -1;
       int suffixLen  = -1;
@@ -63,11 +62,11 @@ public final class Duration
 
       if (mult < 0) throw new Exception();
 
-      str = str.substring(0, len-suffixLen);
+      s = s.substring(0, len-suffixLen);
       if (dot)
-        return make((long)(Double.parseDouble(str)*(double)mult));
+        return make((long)(Double.parseDouble(s)*(double)mult));
       else
-        return make(Long.parseLong(str)*mult);
+        return make(Long.parseLong(s)*mult);
     }
     catch (Exception e)
     {
@@ -190,10 +189,9 @@ public final class Duration
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toStr()
+  public String toStr()
   {
-    if (ticks == 0) return ZeroStr;
-    return Str.make(str());
+    return str();
   }
 
   public void encode(ObjEncoder out)
@@ -203,6 +201,8 @@ public final class Duration
 
   public String str()
   {
+    if (ticks == 0) return "0ns";
+
     // if clean millisecond boundary
     long ns = ticks;
     if (ns % nsPerMilli == 0)
@@ -247,12 +247,12 @@ public final class Duration
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toLocale()
+  public String toLocale()
   {
     long ticks = this.ticks;
 
     // less than 1000ns Xns
-    if (ticks < 1000L) return Str.make(ticks + "ns");
+    if (ticks < 1000L) return ticks + "ns";
 
     // less than 2ms X.XXXms
     if (ticks < 2*nsPerMilli)
@@ -268,14 +268,14 @@ public final class Duration
       if (s.charAt(s.length()-1) == '0') s.setLength(s.length()-1);
       if (s.charAt(s.length()-1) == '0') s.setLength(s.length()-1);
       s.append("ms");
-      return Str.make(s.toString());
+      return s.toString();
     }
 
     // less than 2sec Xms
-    if (ticks < 2L*nsPerSec)   return Str.make(ticks/nsPerMilli + "ms");
+    if (ticks < 2L*nsPerSec)   return (ticks/nsPerMilli) + "ms";
 
     // less than 2min Xsec
-    if (ticks < 1L*nsPerMin)   return Str.make(ticks/nsPerSec+ "sec");
+    if (ticks < 1L*nsPerMin)   return (ticks/nsPerSec) + "sec";
 
     // [Xdays] [Xhr] Xmin Xsec
     long days  = ticks/nsPerDay; ticks -= days*nsPerDay;
@@ -288,7 +288,7 @@ public final class Duration
     if (days > 0 || hr > 0) s.append(hr).append("hr ");
     s.append(min).append("min ");
     s.append(sec).append("sec");
-    return Str.make(s.toString());
+    return s.toString();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -310,7 +310,6 @@ public final class Duration
 //////////////////////////////////////////////////////////////////////////
 
   public static final Duration Zero = new Duration(0);
-  public static final Str ZeroStr = Str.make("0ns");
   public static final long nsPerDay   = 86400000000000L;
   public static final long nsPerHr    = 3600000000000L;
   public static final long nsPerMin   = 60000000000L;
@@ -319,6 +318,6 @@ public final class Duration
   private static final Duration boot = now();
 
   public final long ticks;
-  private Str str;
+  private String str;
 
 }

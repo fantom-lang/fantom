@@ -216,8 +216,8 @@ public class FMethodEmit
    */
   public void emitMixinRouter(Method m)
   {
-    String parent  = "fan/" + m.parent().pod().name().val + "/" + m.parent().name().val;
-    String name    = FanUtil.toJavaMethodName(m.name().val);
+    String parent  = "fan/" + m.parent().pod().name() + "/" + m.parent().name();
+    String name    = FanUtil.toJavaMethodName(m.name());
     int jflags     = emit.jflags(m.flags());
     List params    = m.params();
     int paramCount = params.sz();

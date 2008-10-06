@@ -50,7 +50,7 @@ public class TypeParser
       {
         throw ArgErr.make("Invalid type signature '" + sig + "', use <pod>::<type>").val;
       }
-      if (loadingPod != null && podName.equals(loadingPod.name().val))
+      if (loadingPod != null && podName.equals(loadingPod.name()))
         return loadingPod.findType(typeName, checked);
       else
         return Type.find(podName, typeName, checked);
@@ -169,7 +169,7 @@ public class TypeParser
       if (type != null) return type;
     }
 
-    if (loadingPod != null && podName.equals(loadingPod.name().val))
+    if (loadingPod != null && podName.equals(loadingPod.name()))
       return loadingPod.findType(typeName, checked);
     else
       return Type.find(podName, typeName, checked);

@@ -56,6 +56,7 @@ public class ObjEncoder
     {
       if (obj == Boolean.TRUE)   { w("true"); return; }
       if (obj == Boolean.FALSE)  { w("false"); return; }
+      if (obj instanceof String) { wStrLiteral(obj.toString(), '"'); return; }
       if (obj instanceof Long)   { w(obj.toString()); return; }
       if (obj instanceof Double) { FanFloat.encode((Double)obj, this); return; }
       if (obj instanceof BigDecimal) { FanDecimal.encode((BigDecimal)obj, this); return; }
@@ -68,18 +69,18 @@ public class ObjEncoder
     }
 
     Type type = FanObj.type(obj);
-    if (type.facet(facetSimple, null, false) == Boolean.TRUE)
+    if (type.facet("simple", null, false) == Boolean.TRUE)
     {
       writeSimple(type, obj);
     }
-    else if (type.facet(facetSerializable, null, true) == Boolean.TRUE)
+    else if (type.facet("serializable", null, true) == Boolean.TRUE)
     {
       writeComplex(type, obj);
     }
     else
     {
       if (skipErrors)
-        w("null /* Not serializable: ").w(type.qname().val).w(" */");
+        w("null /* Not serializable: ").w(type.qname()).w(" */");
       else
         throw IOErr.make("Not serializable: " + type).val;
     }
@@ -91,7 +92,7 @@ public class ObjEncoder
 
   private void writeSimple(Type type, Object obj)
   {
-    wType(type).w('(').wStrLiteral(FanObj.toStr(obj).val, '"').w(')');
+    wType(type).w('(').wStrLiteral(FanObj.toStr(obj), '"').w(')');
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -113,7 +114,7 @@ public class ObjEncoder
 
       // skip static, transient, and synthetic (once) fields
       if (f.isStatic() || f.isSynthetic() ||
-          f.facet(facetTransient, false) == Boolean.TRUE)
+          f.facet("transient", false) == Boolean.TRUE)
         continue;
 
       // get the value
@@ -130,7 +131,7 @@ public class ObjEncoder
       if (first) { w('\n').wIndent().w('{').w('\n'); level++; first = false; }
 
       // field name =
-      wIndent().w(f.name().val).w('=');
+      wIndent().w(f.name()).w('=');
 
       // field value
       curFieldType = f.of();
@@ -141,7 +142,7 @@ public class ObjEncoder
     }
 
     // if collection
-    if (type.facet(facetCollection, null, true) == Boolean.TRUE)
+    if (type.facet("collection", null, true) == Boolean.TRUE)
       first = writeCollectionItems(type, obj, first);
 
     // if we output fields, then close braces
@@ -281,14 +282,14 @@ public class ObjEncoder
 
   public final ObjEncoder wType(Type t)
   {
-    return w(t.signature().val);
+    return w(t.signature());
   }
 
   public final ObjEncoder wStrLiteral(String s, char quote)
   {
     int len = s.length();
     w(quote);
-    // NOTE: these escape sequences are duplicated in Str.toCode()
+    // NOTE: these escape sequences are duplicated in FanStr.toCode()
     for (int i=0; i<len; ++i)
     {
       char c = s.charAt(i);
@@ -335,19 +336,19 @@ public class ObjEncoder
 
   private void initOptions(Map options)
   {
-    indent = option(options, optIndent, indent);
-    skipDefaults = option(options, optSkipDefaults, skipDefaults);
-    skipErrors = option(options, optSkipErrors, skipErrors);
+    indent = option(options, "indent", indent);
+    skipDefaults = option(options, "skipDefaults", skipDefaults);
+    skipErrors = option(options, "skipErrors", skipErrors);
   }
 
-  private static int option(Map options, Str name, int def)
+  private static int option(Map options, String name, int def)
   {
     Long val = (Long)options.get(name);
     if (val == null) return def;
     return val.intValue();
   }
 
-  private static boolean option(Map options, Str name, boolean def)
+  private static boolean option(Map options, String name, boolean def)
   {
     Boolean val = (Boolean)options.get(name);
     if (val == null) return def;
@@ -357,14 +358,6 @@ public class ObjEncoder
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  static final Str optIndent         = Str.make("indent");
-  static final Str optSkipDefaults   = Str.make("skipDefaults");
-  static final Str optSkipErrors     = Str.make("skipErrors");
-  static final Str facetSimple       = Str.make("simple");
-  static final Str facetSerializable = Str.make("serializable");
-  static final Str facetCollection   = Str.make("collection");
-  static final Str facetTransient    = Str.make("transient");
 
   OutStream out;
   int level  = 0;

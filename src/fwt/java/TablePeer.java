@@ -123,7 +123,7 @@ public class TablePeer
     for (int i=0; i<numCols; ++i)
     {
       Long col = Long.valueOf(i);
-      item.setText(i, model.text(col, row).val);
+      item.setText(i, model.text(col, row));
       item.setImage(i, env.image(model.image(col, row)));
       item.setFont(i, env.font(model.font(col, row)));
       item.setForeground(i, env.color(model.fg(col, row)));
@@ -190,7 +190,7 @@ public class TablePeer
       Long col = Long.valueOf(i);
       Long pw = model.prefWidth(col);
       TableColumn tc = new TableColumn(table, style(model.halign(col)));
-      tc.setText(model.header(col).val);
+      tc.setText(model.header(col));
       tc.setWidth(pw == null ? 100 : pw.intValue());
     }
 

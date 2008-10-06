@@ -127,32 +127,32 @@ public abstract class Prop
     StrProp(WidgetPeer peer, String def)
     {
       super(peer);
-      this.val = Str.make(def);
+      this.val = def;
     }
 
     void syncToControl() { set(val); }
 
     void syncFromControl() { val = get(); }
 
-    Str get()
+    String get()
     {
       Widget w = peer.control;
-      return w == null ? val : Str.make(get(w));
+      return w == null ? val : get(w);
     }
 
-    void set(Str v)
+    void set(String v)
     {
       Widget w = peer.control;
       if (w == null)
         val = v;
       else
-        set(w, v == null ? null : v.val);
+        set(w, v == null ? null : v);
     }
 
     public abstract String get(Widget w);
     public abstract void set(Widget w, String v);
 
-    Str val;
+    String val;
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -53,8 +53,8 @@ public class ComboPeer
 //////////////////////////////////////////////////////////////////////////
 
   // Str text := ""
-  public Str text(fan.fwt.Combo self) { return text.get(); }
-  public void text(fan.fwt.Combo self, Str v) { text.set(v); }
+  public String text(fan.fwt.Combo self) { return text.get(); }
+  public void text(fan.fwt.Combo self, String v) { text.set(v); }
   public final Prop.StrProp text = new Prop.StrProp(this, "")
   {
     public String get(Widget w) { return ((Combo)w).getText(); }

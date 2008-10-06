@@ -29,6 +29,7 @@ class BoolTest : Test
     verify(x != "wow")
     verify(true != null)
     verify(null != false)
+    verify(true.equals(true))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,6 +73,7 @@ class BoolTest : Test
     verifyEq(true <=> false, 1)
     verifyEq(true <=> true, 0)
     verifyEq(null <=> false, -1)
+    verifyEq(true.compare(false), 1)
   }
 
 //////////////////////////////////////////////////////////////////////////

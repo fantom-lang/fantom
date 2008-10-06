@@ -136,12 +136,12 @@ public final class Range
     return (start.longValue() << 24) ^ end.longValue();
   }
 
-  public Str toStr()
+  public String toStr()
   {
     if (exclusive)
-      return Str.make(start + "..." + end);
+      return start + "..." + end;
     else
-      return Str.make(start + ".." + end);
+      return start + ".." + end;
   }
 
   public Type type() { return Sys.RangeType; }

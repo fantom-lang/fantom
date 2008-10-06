@@ -68,8 +68,8 @@ public class MenuItemPeer
   };
 
   // Str text := ""
-  public Str text(fan.fwt.MenuItem self) { return text.get(); }
-  public void text(fan.fwt.MenuItem self, Str v) { text.set(v); }
+  public String text(fan.fwt.MenuItem self) { return text.get(); }
+  public void text(fan.fwt.MenuItem self, String v) { text.set(v); }
   public final Prop.StrProp text = new Prop.StrProp(this, "")
   {
     public String get(Widget w) { return (w instanceof MenuItem) ? ((MenuItem)w).getText() : ""; }

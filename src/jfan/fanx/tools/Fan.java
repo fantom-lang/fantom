@@ -27,7 +27,7 @@ public class Fan
   {
     // args
     for (int i=0; i<args.length; ++i)
-      Sys.args.add(Str.make(args[i]));
+      Sys.args.add(args[i]);
 
     // first try as file name
     File file = new File(target);
@@ -179,7 +179,7 @@ public class Fan
     for (int i=0; i<pods.sz(); ++i)
     {
       Pod pod = (Pod)pods.get(i);
-      System.out.println("  " + pod.name().justl(Long.valueOf(14)) + "  " + pod.version());
+      System.out.println("  " + FanStr.justl(pod.name(), 14L) + "  " + pod.version());
     }
   }
 
@@ -260,7 +260,7 @@ public class Fan
   public static void main(final String[] args)
     throws Exception
   {
-    new Thread(Str.make("main"))
+    new Thread("FanMain")
     {
       public Object run()
       {

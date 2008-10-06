@@ -18,34 +18,32 @@ public class Locale
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Locale fromStr(String s) { return fromStr(Str.make(s)); }
-  public static Locale fromStr(Str str)
+  public static Locale fromStr(String s)
   {
-    String s = str.val;
     int len = s.length();
     try
     {
       if (len == 2)
       {
-        if (str.isLower())
-          return new Locale(str, str, null);
+        if (FanStr.isLower(s))
+          return new Locale(s, s, null);
       }
 
       if (len == 5)
       {
-        Str lang = Str.make(s.substring(0, 2));
-        Str country = Str.make(s.substring(3, 5));
-        if (lang.isLower() && country.isUpper() && s.charAt(2) == '-')
-          return new Locale(str, lang, country);
+        String lang = s.substring(0, 2);
+        String country = s.substring(3, 5);
+        if (FanStr.isLower(lang) && FanStr.isUpper(country) && s.charAt(2) == '-')
+          return new Locale(s, lang, country);
       }
     }
     catch (Exception e)
     {
     }
-    throw ParseErr.make("Locale",  str).val;
+    throw ParseErr.make("Locale", s).val;
   }
 
-  private Locale(Str str, Str lang, Str country)
+  private Locale(String str, String lang, String country)
   {
     this.str     = str;
     this.lang    = lang;
@@ -90,31 +88,31 @@ public class Locale
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Str lang() { return lang; }
+  public String lang() { return lang; }
 
-  public Str country() { return country; }
+  public String country() { return country; }
 
   public Type type() { return Sys.LocaleType; }
 
   public int hashCode() { return str.hashCode(); }
 
-  public Long hash() { return str.hash(); }
+  public Long hash() { return FanStr.hash(str); }
 
   public Boolean _equals(Object obj)
   {
     if (obj instanceof Locale)
     {
-      return ((Locale)obj).str._equals(str);
+      return ((Locale)obj).str.equals(str);
     }
     return false;
   }
 
-  public Str toStr() { return str; }
+  public String toStr() { return str; }
 
   public java.util.Locale java()
   {
     if (javaLocale == null)
-      javaLocale = new java.util.Locale(lang.val, country == null ? "" : country.val);
+      javaLocale = new java.util.Locale(lang, country == null ? "" : country);
     return javaLocale;
   }
 
@@ -132,12 +130,12 @@ public class Locale
 // Properties
 //////////////////////////////////////////////////////////////////////////
 
-  public Str get(Str podName, Str key)
+  public String get(String podName, String key)
   {
     return doGet(Pod.find(podName, false), podName, key, getNoDef);
   }
 
-  public Str get(Str podName, Str key, Str def)
+  public String get(String podName, String key, String def)
   {
     return doGet(Pod.find(podName, false), podName, key, def);
   }
@@ -149,13 +147,13 @@ public class Locale
    *   4. Lookup via '/locale/en.props'
    *   5. If all else fails return 'pod::key'
    */
-  Str doGet(Pod pod, Str podName, Str key, Str def)
+  String doGet(Pod pod, String podName, String key, String def)
   {
     // 1. Find the pod and use its resource files
     if (pod != null)
     {
       // 2. Lookup via '/locale/{toStr}.props'
-      Str val = tryProp(pod, key, str);
+      String val = tryProp(pod, key, str);
       if (val != null) return val;
 
       // 3. Lookup via '/locale/{lang}.props'
@@ -166,19 +164,19 @@ public class Locale
       }
 
       // 4. Lookup via '/locale/en.props'
-      if (!str.val.equals("en"))
+      if (!str.equals("en"))
       {
-        val = tryProp(pod, key, en);
+        val = tryProp(pod, key, "en");
         if (val != null) return val;
       }
     }
 
     // 5. If all else fails return def, which defaults to pod::key
-    if (def == getNoDef) return Str.make(podName + "::" + key);
+    if (def == getNoDef) return podName + "::" + key;
     return def;
   }
 
-  Str tryProp(Pod pod, Str key, Str locale)
+  String tryProp(Pod pod, String key, String locale)
   {
     // get the props for the locale
     Map props;
@@ -188,7 +186,7 @@ public class Locale
     }
 
     // if already loaded, lookup key
-    if (props != null) return (Str)props.get(key);
+    if (props != null) return (String)props.get(key);
 
     // the props for this locale is not
     // loaded yet, so let's load it!
@@ -218,11 +216,10 @@ public class Locale
     }
 
     // return result
-    return (Str)props.get(key);
+    return (String)props.get(key);
   }
 
   static final Map noProps = new Map(Sys.StrType, Sys.StrType).ro();
-  static final Str en = Str.make("en");
 
 //////////////////////////////////////////////////////////////////////////
 // Default Locale
@@ -244,7 +241,7 @@ public class Locale
     catch (Exception e)
     {
       e.printStackTrace();
-      x = fromStr(Str.make("en"));
+      x = fromStr("en");
     }
     defaultLocale = x;
   }
@@ -254,11 +251,11 @@ public class Locale
 //////////////////////////////////////////////////////////////////////////
 
   // use predefined string to avoid unnecessary string concat
-  static final Str getNoDef = Str.make("_locale_nodef_");
+  static final String getNoDef = "_locale_nodef_";
 
-  final Str str;
-  final Str lang;
-  final Str country;
+  final String str;
+  final String lang;
+  final String country;
   java.util.Locale javaLocale;
   java.text.Collator javaCollator;
 

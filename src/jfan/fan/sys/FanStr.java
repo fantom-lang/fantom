@@ -1,0 +1,776 @@
+//
+// Copyright (c) 2006, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   4 Dec 05  Brian Frank  Creation
+//   6 Oct 08  Brian Frank  Refactor String into String/FanStr
+//
+package fan.sys;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import fanx.serial.*;
+import fanx.util.StrUtil;
+
+/**
+ * FanString defines the methods for sys::Str.  The actual
+ * class used for representation is java.lang.String.
+ */
+public class FanStr
+{
+
+  public static String makeTrim(StringBuilder s)
+  {
+    int start = 0;
+    int end = s.length();
+    while (start < end) if (FanInt.isSpace(s.charAt(start))) start++; else break;
+    while (end > start) if (FanInt.isSpace(s.charAt(end-1))) end--; else break;
+    return s.substring(start, end);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+  public static Boolean equals(String self, Object obj)
+  {
+    return self.equals(obj);
+  }
+
+  public static Boolean equalsIgnoreCase(String a, String b)
+  {
+    if (a == b) return true;
+
+    int an = a.length();
+    int bn = b.length();
+    if (an != bn) return false;
+
+    for (int i=0; i<an; ++i)
+    {
+      int ac = a.charAt(i);
+      int bc = b.charAt(i);
+      if ('A' <= ac && ac <= 'Z') ac |= 0x20;
+      if ('A' <= bc && bc <= 'Z') bc |= 0x20;
+      if (ac != bc) return false;
+    }
+    return true;
+  }
+
+  public static Long compare(String a, Object b)
+  {
+    int cmp = a.compareTo((String)b);
+    if (cmp < 0) return FanInt.LT;
+    return cmp == 0 ? FanInt.EQ : FanInt.GT;
+  }
+
+  public static Long compareIgnoreCase(String a, String b)
+  {
+    if (a == b) return FanInt.Zero;
+
+    int an = a.length();
+    int bn = b.length();
+
+    for (int i=0; i<an && i<bn; ++i)
+    {
+      int ac = a.charAt(i);
+      int bc = b.charAt(i);
+      if ('A' <= ac && ac <= 'Z') ac |= 0x20;
+      if ('A' <= bc && bc <= 'Z') bc |= 0x20;
+      if (ac != bc) return ac < bc ? FanInt.LT : FanInt.GT;
+    }
+
+    if (an == bn) return FanInt.Zero;
+    return an < bn ? FanInt.LT : FanInt.GT;
+  }
+
+  public static Long hash(String self)
+  {
+    return Long.valueOf(self.hashCode());
+  }
+
+  public static int caseInsensitiveHash(String self)
+  {
+    int n = self.length();
+    int hash = 0;
+
+    for (int i=0; i<n; ++i)
+    {
+      int c = self.charAt(i);
+      if ('A' <= c && c <= 'Z') c |= 0x20;
+      hash = 31*hash + c;
+    }
+
+    return hash;
+  }
+
+  public static String toStr(String self)
+  {
+    return self;
+  }
+
+  public static Type type(String self)
+  {
+    return Sys.StrType;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Operators
+//////////////////////////////////////////////////////////////////////////
+
+  public static Long get(String self, Long index)
+  {
+    int i = index.intValue();
+    if (i < 0) i = self.length()+i;
+    return Long.valueOf(self.charAt(i));
+  }
+
+  public static String slice(String self, Range r)
+  {
+    int size = self.length();
+
+    int s = r.start(size);
+    int e = r.end(size);
+    if (e+1 < s) throw IndexErr.make(r).val;
+
+    return self.substring(s, e+1);
+  }
+
+  public static String plus(String self, Object obj)
+  {
+    if (obj == null) return self.concat("null");
+    String x = FanObj.toStr(obj);
+    if (x.length() == 0) return self;
+    return self.concat(x);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+  public static String intern(String self)
+  {
+    return self.intern();
+  }
+
+  public static Boolean isEmpty(String self)
+  {
+    return self.length() == 0;
+  }
+
+  public static Long size(String self)
+  {
+    return Long.valueOf(self.length());
+  }
+
+  public static Boolean startsWith(String self, String s)
+  {
+    return self.startsWith(s, 0);
+  }
+
+  public static Boolean endsWith(String self, String s)
+  {
+    return self.endsWith(s);
+  }
+
+  public static Boolean contains(String self, String s)
+  {
+    return index(self, s, 0L) != null;
+  }
+
+  public static Boolean containsChar(String self, Long ch)
+  {
+    return self.indexOf(ch.intValue()) >= 0;
+  }
+
+  public static Long index(String self, String s) { return index(self, s, 0L); }
+  public static Long index(String self, String s, Long off)
+  {
+    int i = off.intValue();
+    if (i < 0) i = self.length()+i;
+
+    int r;
+    if (s.length() == 1)
+      r = self.indexOf(s.charAt(0), i);
+    else
+      r = self.indexOf(s, i);
+
+    if (r < 0) return null;
+    return Long.valueOf(r);
+  }
+
+  public static Long indexr(String self, String s) { return indexr(self, s, -1L); }
+  public static Long indexr(String self, String s, Long off)
+  {
+    int i = off.intValue();
+    if (i < 0) i = self.length()+i;
+
+    int r;
+    if (s.length() == 1)
+      r = self.lastIndexOf(s.charAt(0), i);
+    else
+      r = self.lastIndexOf(s, i);
+
+    if (r < 0) return null;
+    return Long.valueOf(r);
+  }
+
+  public static Long indexIgnoreCase(String self, String s) { return indexIgnoreCase(self, s, 0L); }
+  public static Long indexIgnoreCase(String self, String s, Long off)
+  {
+    int len = self.length(), slen = s.length();
+    int r = -1;
+
+    int i = off.intValue();
+    if (i < 0) i = len+i;
+
+    int first = s.charAt(0) | 0x20;
+    for (; i<=len-slen; ++i)
+    {
+      // test first char
+      if (first != (self.charAt(i) | 0x20)) continue;
+
+      // test remainder of chars
+      r = i;
+      for (int si=1, vi=i+1; si<slen; ++si, ++vi)
+        if ((s.charAt(si) | 0x20) != (self.charAt(vi) | 0x20))
+          { r = -1; break; }
+      if (r >= 0) break;
+    }
+
+    if (r < 0) return null;
+    return Long.valueOf(r);
+  }
+
+  public static Long indexrIgnoreCase(String self, String s) { return indexrIgnoreCase(self, s, -1L); }
+  public static Long indexrIgnoreCase(String self, String s, Long off)
+  {
+    int len = self.length(), slen = s.length();
+    int r = -1;
+
+    int i = off.intValue();
+    if (i < 0) i = len+i;
+    if (i+slen >= len) i = len-slen;
+
+    int first = s.charAt(0) | 0x20;
+    for (; i>=0; --i)
+    {
+      // test first char
+      if (first != (self.charAt(i) | 0x20)) continue;
+
+      // test remainder of chars
+      r = i;
+      for (int si=1, vi=i+1; si<slen; ++si, ++vi)
+        if ((s.charAt(si) | 0x20) != (self.charAt(vi) | 0x20))
+          { r = -1; break; }
+      if (r >= 0) break;
+    }
+
+    if (r < 0) return null;
+    return Long.valueOf(r);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Iterators
+//////////////////////////////////////////////////////////////////////////
+
+  public static void each(String self, Func f)
+  {
+    int len = self.length();
+    for (int i=0; i<len ; ++i)
+      f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i));
+  }
+
+  public static void eachr(String self, Func f)
+  {
+    for (int i=self.length()-1; i>=0; --i)
+      f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i));
+  }
+
+  public static Boolean any(String self, Func f)
+  {
+    int len = self.length();
+    for (int i=0; i<len ; ++i)
+      if (f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.TRUE)
+        return true;
+    return false;
+  }
+
+  public static Boolean all(String self, Func f)
+  {
+    int len = self.length();
+    for (int i=0; i<len ; ++i)
+      if (f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.FALSE)
+        return false;
+    return true;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  public static String spaces(Long n)
+  {
+    // do an array lookup for reasonable length
+    // strings since that is the common case
+    int count = n.intValue();
+    try { return spaces[count]; } catch (ArrayIndexOutOfBoundsException e) {}
+
+    // otherwise we build a new one
+    StringBuilder s = new StringBuilder(spaces[spaces.length-1]);
+    for (int i=spaces.length-1; i<count; ++i)
+      s.append(' ');
+    return s.toString();
+  }
+  static String[] spaces = new String[20];
+  static
+  {
+    StringBuilder s = new StringBuilder();
+    for (int i=0; i<spaces.length; ++i)
+    {
+      spaces[i] = s.toString();
+      s.append(' ');
+    }
+  }
+
+  public static String lower(String self)
+  {
+    StringBuilder s = new StringBuilder(self.length());
+    for (int i=0; i<self.length(); ++i)
+    {
+      int ch = self.charAt(i);
+      if ('A' <= ch && ch <= 'Z') ch |= 0x20;
+      s.append((char)ch);
+    }
+    return s.toString();
+  }
+
+  public static String upper(String self)
+  {
+    StringBuilder s = new StringBuilder(self.length());
+    for (int i=0; i<self.length(); ++i)
+    {
+      int ch = self.charAt(i);
+      if ('a' <= ch && ch <= 'z') ch &= ~0x20;
+      s.append((char)ch);
+    }
+    return s.toString();
+  }
+
+  public static String capitalize(String self)
+  {
+    if (self.length() > 0)
+    {
+      int ch = self.charAt(0);
+      if ('a' <= ch && ch <= 'z')
+      {
+        StringBuilder s = new StringBuilder(self.length());
+        s.append((char)(ch & ~0x20));
+        s.append(self, 1, self.length());
+        return s.toString();
+      }
+    }
+    return self;
+  }
+
+  public static String decapitalize(String self)
+  {
+    if (self.length() > 0)
+    {
+      int ch = self.charAt(0);
+      if ('A' <= ch && ch <= 'Z')
+      {
+        StringBuilder s = new StringBuilder(self.length());
+        s.append((char)(ch | 0x20));
+        s.append(self, 1, self.length());
+        return s.toString();
+      }
+    }
+    return self;
+  }
+
+  public static String justl(String self, Long width)
+  {
+    int w = width.intValue();
+    if (self.length() >= w) return self;
+    StringBuilder s = new StringBuilder(w);
+    s.append(self);
+    for (int i=self.length(); i<w; ++i)
+      s.append(' ');
+    return s.toString();
+  }
+
+  public static String justr(String self, Long width)
+  {
+    int w = width.intValue();
+    if (self.length() >= w) return self;
+    StringBuilder s = new StringBuilder(w);
+    for (int i=self.length(); i<w; ++i)
+      s.append(' ');
+    s.append(self);
+    return s.toString();
+  }
+
+  public static String reverse(String self)
+  {
+    if (self.length() < 2) return self;
+    StringBuilder s = new StringBuilder(self.length());
+    for (int i=self.length()-1; i>=0; --i)
+      s.append(self.charAt(i));
+    return s.toString();
+  }
+
+  public static String trim(String self)
+  {
+    int len = self.length();
+    if (len == 0) return self;
+    if (self.charAt(0) > ' ' && self.charAt(len-1) > ' ') return self;
+    return self.trim();
+  }
+
+  public static String trimStart(String self)
+  {
+    int len = self.length();
+    if (len == 0) return self;
+    if (self.charAt(0) > ' ') return self;
+    int pos = 1;
+    while (pos < len && self.charAt(pos) <= ' ') pos++;
+    return self.substring(pos);
+  }
+
+  public static String trimEnd(String self)
+  {
+    int len = self.length();
+    if (len == 0) return self;
+    int pos = len-1;
+    if (self.charAt(pos) > ' ') return self;
+    while (pos >= 0 && self.charAt(pos) <= ' ') pos--;
+    return self.substring(0, pos+1);
+  }
+
+  public static List split(String self) { return split(self, null, true); }
+  public static List split(String self, Long separator) { return split(self, separator, true); }
+  public static List split(String self, Long separator, Boolean trimmed)
+  {
+    if (separator == null) return splitws(self);
+    int sep = separator.intValue();
+    boolean trim = trimmed;
+    List toks = new List(Sys.StrType, 16);
+    int len = self.length();
+    int x = 0;
+    for (int i=0; i<len; ++i)
+    {
+      if (self.charAt(i) != sep) continue;
+      if (x <= i) toks.add(splitStr(self, x, i, trim));
+      x = i+1;
+    }
+    if (x <= len) toks.add(splitStr(self, x, len, trim));
+    return toks;
+  }
+
+  private static String splitStr(String val, int s, int e, boolean trim)
+  {
+    if (trim)
+    {
+      while (s < e && val.charAt(s) <= ' ') ++s;
+      while (e > s && val.charAt(e-1) <= ' ') --e;
+    }
+    return val.substring(s, e);
+  }
+
+  public static List splitws(String val)
+  {
+    List toks = new List(Sys.StrType, 16);
+    int len = val.length();
+    while (len > 0 && val.charAt(len-1) <= ' ') --len;
+    int x = 0;
+    while (x < len && val.charAt(x) <= ' ') ++x;
+    for (int i=x; i<len; ++i)
+    {
+      if (val.charAt(i) > ' ') continue;
+      toks.add(val.substring(x, i));
+      x = i + 1;
+      while (x < len && val.charAt(x) <= ' ') ++x;
+      i = x;
+    }
+    if (x <= len) toks.add(val.substring(x, len));
+    if (toks.sz() == 0) toks.add("");
+    return toks;
+  }
+
+  public static List splitLines(String self)
+  {
+    List lines = new List(Sys.StrType, 16);
+    int len = self.length();
+    int s = 0;
+    for (int i=0; i<len; ++i)
+    {
+      int c = self.charAt(i);
+      if (c == '\n' || c == '\r')
+      {
+        lines.add(self.substring(s, i));
+        s = i+1;
+        if (c == '\r' && s < len && self.charAt(s) == '\n') { i++; s++; }
+      }
+    }
+    lines.add(self.substring(s, len));
+    return lines;
+  }
+
+  public static String replace(String self, String from, String to)
+  {
+    if (self.length() == 0) return self;
+    return StrUtil.replace(self, from, to);
+  }
+
+  public static Long numNewlines(String self)
+  {
+    int numLines = 0;
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+    {
+      int c = self.charAt(i);
+      if (c == '\n') numLines++;
+      else if (c == '\r')
+      {
+        numLines++;
+        if (i+1<len && self.charAt(i+1) == '\n') i++;
+      }
+    }
+    return Long.valueOf(numLines);
+  }
+
+  public static Boolean isAscii(String self)
+  {
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+      if (self.charAt(i) >= 128) return false;
+    return true;
+  }
+
+  public static Boolean isSpace(String self)
+  {
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+    {
+      int ch = self.charAt(i);
+      if (ch >= 128 || (FanInt.charMap[ch] & FanInt.SPACE) == 0)
+        return false;
+    }
+    return true;
+  }
+
+  public static Boolean isUpper(String self)
+  {
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+    {
+      int ch = self.charAt(i);
+      if (ch >= 128 || (FanInt.charMap[ch] & FanInt.UPPER) == 0)
+        return false;
+    }
+    return true;
+  }
+
+  public static Boolean isLower(String self)
+  {
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+    {
+      int ch = self.charAt(i);
+      if (ch >= 128 || (FanInt.charMap[ch] & FanInt.LOWER) == 0)
+        return false;
+    }
+    return true;
+  }
+
+  public static boolean isEveryChar(String self, int ch)
+  {
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+      if (self.charAt(i) != ch) return false;
+    return true;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  public static Long localeCompare(String self, String x)
+  {
+    int cmp = Locale.current().collator().compare(self, x);
+    if (cmp < 0) return FanInt.LT;
+    return cmp == 0 ? FanInt.EQ : FanInt.GT;
+  }
+
+  public static String localeLower(String self)
+  {
+    return self.toLowerCase(Locale.current().java());
+  }
+
+  public static String localeUpper(String self)
+  {
+    return self.toUpperCase(Locale.current().java());
+  }
+
+  public static String localeCapitalize(String self)
+  {
+    if (self.length() > 0)
+    {
+      int ch = self.charAt(0);
+      if (Character.isLowerCase(ch))
+      {
+        StringBuilder s = new StringBuilder(self.length());
+        s.append(Character.toString((char)ch).toUpperCase(Locale.current().java()).charAt(0));
+        s.append(self, 1, self.length());
+        return s.toString();
+      }
+    }
+    return self;
+  }
+
+  public static String localeDecapitalize(String self)
+  {
+    if (self.length() > 0)
+    {
+      int ch = self.charAt(0);
+      if (Character.isUpperCase(ch))
+      {
+        StringBuilder s = new StringBuilder(self.length());
+        s.append(Character.toString((char)ch).toLowerCase(Locale.current().java()).charAt(0));
+        s.append(self, 1, self.length());
+        return s.toString();
+      }
+    }
+    return self;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Conversion
+//////////////////////////////////////////////////////////////////////////
+
+  public static Boolean toBool(String self) { return FanBool.fromStr(self, true); }
+  public static Boolean toBool(String self, Boolean checked) { return FanBool.fromStr(self, checked); }
+
+  public static Long toInt(String self) { return FanInt.fromStr(self, FanInt.Ten, true); }
+  public static Long toInt(String self, Long radix) { return FanInt.fromStr(self, radix, true); }
+  public static Long toInt(String self, Long radix, Boolean checked) { return FanInt.fromStr(self, radix, checked); }
+
+  public static Double toFloat(String self) { return FanFloat.fromStr(self, true); }
+  public static Double toFloat(String self, Boolean checked) { return FanFloat.fromStr(self, checked); }
+
+  public static BigDecimal toDecimal(String self) { return FanDecimal.fromStr(self, true); }
+  public static BigDecimal toDecimal(String self, Boolean checked) { return FanDecimal.fromStr(self, checked); }
+
+  public static Uri toUri(String self) { return Uri.fromStr(self); }
+
+  public static String toCode(String self) { return toCode(self, FanInt.pos['"'], false); }
+  public static String toCode(String self, Long quote) { return toCode(self, quote, false); }
+  public static String toCode(String self, Long quote, Boolean escapeUnicode)
+  {
+    StringBuilder s = new StringBuilder(self.length()+10);
+
+    // opening quote
+    boolean escu = escapeUnicode;
+    int q = 0;
+    if (quote != null)
+    {
+      q = quote.intValue();
+      s.append((char)q);
+    }
+
+    // NOTE: these escape sequences are duplicated in ObjEncoder
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+    {
+      int c = self.charAt(i);
+      switch (c)
+      {
+        case '\n': s.append('\\').append('n'); break;
+        case '\r': s.append('\\').append('r'); break;
+        case '\f': s.append('\\').append('f'); break;
+        case '\t': s.append('\\').append('t'); break;
+        case '\\': s.append('\\').append('\\'); break;
+        case '"':  if (q == '"')  s.append('\\').append('"');  else s.append((char)c); break;
+        case '`':  if (q == '`')  s.append('\\').append('`');  else s.append((char)c); break;
+        case '\'': if (q == '\'') s.append('\\').append('\''); else s.append((char)c); break;
+        case '$':  s.append('\\').append('$'); break;
+        default:
+          if (escu && c > 127)
+          {
+            s.append('\\').append('u')
+             .append((char)hex((c>>12)&0xf))
+             .append((char)hex((c>>8)&0xf))
+             .append((char)hex((c>>4)&0xf))
+             .append((char)hex(c&0xf));
+          }
+          else
+          {
+            s.append((char)c);
+          }
+      }
+    }
+
+    // closing quote
+    if (q != 0) s.append((char)q);
+
+    return s.toString();
+  }
+
+  private static int hex(int nib) { return "0123456789abcdef".charAt(nib); }
+
+  public static String toXml(String self)
+  {
+    StringBuilder s = null;
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+    {
+      int c = self.charAt(i);
+      if (c > '>')
+      {
+        if (s != null) s.append((char)c);
+      }
+      else
+      {
+        String esc = xmlEsc[c];
+        if (esc != null && (c != '>' || i==0 || self.charAt(i-1) == ']'))
+        {
+          if (s == null)
+          {
+            s = new StringBuilder(len+12);
+            s.append(self, 0, i);
+          }
+          s.append(esc);
+        }
+        else if (s != null)
+        {
+          s.append((char)c);
+        }
+      }
+    }
+    if (s == null) return self;
+    return s.toString();
+  }
+
+  private static String[] xmlEsc = new String['>'+1];
+  static
+  {
+    xmlEsc['&']  = "&amp;";
+    xmlEsc['<']  = "&lt;";
+    xmlEsc['>']  = "&gt;";
+    xmlEsc['\''] = "&apos;";
+    xmlEsc['"']  = "&quot;";
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  static final String[] ascii = new String[128];
+  static
+  {
+    for (int i=0; i<ascii.length; ++i)
+      ascii[i] = String.valueOf((char)i).intern();
+  }
+
+}

@@ -20,16 +20,16 @@ public class Field
 // Fan Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public static Field make(Str name, Type of) { return make(name, of, null); }
-  public static Field make(Str name, Type of, Map facets)
+  public static Field make(String name, Type of) { return make(name, of, null); }
+  public static Field make(String name, Type of, Map facets)
   {
     Field f = new Field();
     make$(f, name, of, facets);
     return f;
   }
 
-  public static void make$(Field self, Str name, Type of) { make$(self, name, of, null); }
-  public static void make$(Field self, Str name, Type of, Map facets)
+  public static void make$(Field self, String name, Type of) { make$(self, name, of, null); }
+  public static void make$(Field self, String name, Type of, Map facets)
   {
     if (name == null) throw NullErr.make("name is null").val;
     if (of == null) throw NullErr.make("of is null").val;
@@ -45,7 +45,7 @@ public class Field
 // Java Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public Field(Type parent, Str name, int flags, Facets facets, int lineNum, Type of)
+  public Field(Type parent, String name, int flags, Facets facets, int lineNum, Type of)
   {
     super(parent, name, flags, facets, lineNum);
     this.of = of;
@@ -62,13 +62,13 @@ public class Field
 
   public Type of() { return of; }
 
-  public Str signature() { return Str.make(of.toStr().val + " " + Str.make(name.val)); }
+  public String signature() { return of.toStr() + " " + name; }
 
-  public Object trap(Str name, List args)
+  public Object trap(String name, List args)
   {
     // private undocumented access
-    if (name.val.equals("getter")) return getter;
-    if (name.val.equals("setter")) return setter;
+    if (name.equals("getter")) return getter;
+    if (name.equals("setter")) return setter;
     return super.trap(name, args);
   }
 

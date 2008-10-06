@@ -18,18 +18,16 @@ public class UnresolvedErr
 // Java Convenience
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnresolvedErr make(String msg)  { return make(Str.make(msg)); }
-  public static UnresolvedErr make(String msg, Throwable cause)  { return make(Str.make(msg), Err.make(cause)); }
-  public static UnresolvedErr make(String msg, Err cause)  { return make(Str.make(msg), cause); }
+  public static UnresolvedErr make(String msg, Throwable cause)  { return make(msg, Err.make(cause)); }
   public static UnresolvedErr make(Uri uri)  { return make(uri.str); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnresolvedErr make() { return make((Str)null, (Err)null); }
-  public static UnresolvedErr make(Str msg) { return make(msg, null); }
-  public static UnresolvedErr make(Str msg, Err cause)
+  public static UnresolvedErr make() { return make((String)null, (Err)null); }
+  public static UnresolvedErr make(String msg) { return make(msg, (Err)null); }
+  public static UnresolvedErr make(String msg, Err cause)
   {
     UnresolvedErr err = new UnresolvedErr();
     make$(err, msg, cause);
@@ -37,8 +35,8 @@ public class UnresolvedErr
   }
 
   public static void make$(UnresolvedErr self) { make$(self, null);  }
-  public static void make$(UnresolvedErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(UnresolvedErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(UnresolvedErr self, String msg) { make$(self, msg, null); }
+  public static void make$(UnresolvedErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

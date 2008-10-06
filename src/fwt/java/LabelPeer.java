@@ -42,11 +42,11 @@ public class LabelPeer extends WidgetPeer
 //////////////////////////////////////////////////////////////////////////
 
   // Str text := ""
-  public Str text(fan.fwt.Label self) { return text.get(); }
-  public void text(fan.fwt.Label self, Str v) { text.set(v); }
+  public String text(fan.fwt.Label self) { return text.get(); }
+  public void text(fan.fwt.Label self, String v) { text.set(v); }
   public final Prop.StrProp text = new Prop.StrProp(this, "")
   {
-    public String get(Widget w) { return text.val.val; } // CLabel doesn't perserve my text
+    public String get(Widget w) { return text.val; } // CLabel doesn't perserve my text
     public void set(Widget w, String v) { ((CLabel)w).setText(v); }
   };
 

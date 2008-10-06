@@ -59,7 +59,7 @@ public final class FLiterals
   public final Long integer(int index)      { return (Long)ints.get(index); }
   public final Double floats(int index)     { return (Double)floats.get(index); }
   public final BigDecimal decimals(int index) { return (BigDecimal)decimals.get(index); }
-  public final Str str(int index)           { return (Str)strs.get(index); }
+  public final String str(int index)        { return (String)strs.get(index); }
   public final Duration duration(int index) { return (Duration)durations.get(index); }
   public final Uri uri(int index)           { return (Uri)uris.get(index); }
 
@@ -71,7 +71,7 @@ public final class FLiterals
   public FTable ints;       // Long literals
   public FTable floats;     // Float literals
   public FTable decimals;   // Decimal literals
-  public FTable strs;       // Str literals
+  public FTable strs;       // String literals
   public FTable durations;  // Duration literals
   public FTable uris;       // Uri literals
 

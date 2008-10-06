@@ -15,18 +15,12 @@ public class NotImmutableErr
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Java Convenience
-//////////////////////////////////////////////////////////////////////////
-
-  public static NotImmutableErr make(String msg)  { return make(Str.make(msg)); }
-
-//////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static NotImmutableErr make() { return make((Str)null, (Err)null); }
-  public static NotImmutableErr make(Str msg) { return make(msg, null); }
-  public static NotImmutableErr make(Str msg, Err cause)
+  public static NotImmutableErr make() { return make((String)null, (Err)null); }
+  public static NotImmutableErr make(String msg) { return make(msg, (Err)null); }
+  public static NotImmutableErr make(String msg, Err cause)
   {
     NotImmutableErr err = new NotImmutableErr();
     make$(err, msg, cause);
@@ -34,8 +28,8 @@ public class NotImmutableErr
   }
 
   public static void make$(NotImmutableErr self) { make$(self, null);  }
-  public static void make$(NotImmutableErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(NotImmutableErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(NotImmutableErr self, String msg) { make$(self, msg, null); }
+  public static void make$(NotImmutableErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

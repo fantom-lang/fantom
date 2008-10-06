@@ -38,7 +38,7 @@ public class MapType
 
   public Long hash()
   {
-    return signature().hash();
+    return FanStr.hash(signature());
   }
 
   public Boolean _equals(Object obj)
@@ -56,11 +56,11 @@ public class MapType
     return Sys.MapType;
   }
 
-  public final Str signature()
+  public final String signature()
   {
     if (sig == null)
     {
-      sig = Str.make('[' + k.signature().val + ':' + v.signature().val + ']');
+      sig = "[" + k.signature() + ':' + v.signature() + ']';
     }
     return sig;
   }
@@ -78,9 +78,9 @@ public class MapType
   Map makeParams()
   {
     return new Map(Sys.StrType, Sys.TypeType)
-      .set(Str.ascii['K'], k)
-      .set(Str.ascii['V'], v)
-      .set(Str.ascii['M'], this).ro();
+      .set("K", k)
+      .set("V", v)
+      .set("M", this).ro();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -111,6 +111,6 @@ public class MapType
 
   public final Type k;
   public final Type v;
-  private Str sig;
+  private String sig;
 
 }

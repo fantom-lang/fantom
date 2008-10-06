@@ -37,7 +37,7 @@ public class ListType
 
   public final Long hash()
   {
-    return signature().hash();
+    return FanStr.hash(signature());
   }
 
   public final Boolean _equals(Object obj)
@@ -54,12 +54,9 @@ public class ListType
     return Sys.ListType;
   }
 
-  public final Str signature()
+  public final String signature()
   {
-    if (sig == null)
-    {
-      sig = Str.make(v.signature().val + "[]");
-    }
+    if (sig == null) sig = v.signature() + "[]";
     return sig;
   }
 
@@ -76,8 +73,8 @@ public class ListType
   Map makeParams()
   {
     return new Map(Sys.StrType, Sys.TypeType)
-      .set(Str.ascii['V'], v)
-      .set(Str.ascii['L'], this).ro();
+      .set("V", v)
+      .set("L", this).ro();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -106,6 +103,6 @@ public class ListType
 //////////////////////////////////////////////////////////////////////////
 
   public final Type v;
-  private Str sig;
+  private String sig;
 
 }

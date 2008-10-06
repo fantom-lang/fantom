@@ -18,17 +18,16 @@ public class IndexErr
 // Java Convenience
 //////////////////////////////////////////////////////////////////////////
 
-  public static IndexErr make(String msg)  { return make(Str.make(msg)); }
-  public static IndexErr make(Long index)   { return make(Str.make(String.valueOf(index))); }
-  public static IndexErr make(Range index) { return make(Str.make(String.valueOf(index))); }
+  public static IndexErr make(Long index)   { return make(String.valueOf(index)); }
+  public static IndexErr make(Range index) { return make(String.valueOf(index)); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static IndexErr make() { return make((Str)null, (Err)null); }
-  public static IndexErr make(Str msg) { return make(msg, null); }
-  public static IndexErr make(Str msg, Err cause)
+  public static IndexErr make() { return make((String)null, (Err)null); }
+  public static IndexErr make(String msg) { return make(msg, (Err)null); }
+  public static IndexErr make(String msg, Err cause)
   {
     IndexErr err = new IndexErr();
     make$(err, msg, cause);
@@ -36,8 +35,8 @@ public class IndexErr
   }
 
   public static void make$(IndexErr self) { make$(self, null);  }
-  public static void make$(IndexErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(IndexErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(IndexErr self, String msg) { make$(self, msg, null); }
+  public static void make$(IndexErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

@@ -84,7 +84,7 @@ public class TypeDb
   /**
    * Implementation of 'Type.findByFacet'
    */
-  public synchronized List findByFacet(Str name, Object val, Object options)
+  public synchronized List findByFacet(String name, Object val, Object options)
   {
     // process options
     if (options == Boolean.TRUE && val instanceof Type)
@@ -98,7 +98,7 @@ public class TypeDb
    * Implementation when val is Type and options == true.
    * Return a query against the val's full inheritance hierarchy.
    */
-  private List findByFacetInheritance(Str name, Type val)
+  private List findByFacetInheritance(String name, Type val)
   {
     List inheritance = val.inheritance();
     List acc = new List(Sys.TypeType);
@@ -110,12 +110,12 @@ public class TypeDb
   /**
    * Find all the types declared by the specified facet name/value pair.
    */
-  private List doFindByFacet(Str name, Object val)
+  private List doFindByFacet(String name, Object val)
   {
     try
     {
       // lookup the FacetIndex for that name
-      FacetIndex index = readFacetIndex(name.val);
+      FacetIndex index = readFacetIndex(name);
 
       // check if we have any types mapped for value
       Object result = index.valueToTypes.get(val);
@@ -344,7 +344,7 @@ public class TypeDb
     if (pi.pod == null) pi.pod = Pod.find(pi.name, true);
     Type t = pi.pod.findType(ti.name, true);
     ti.type = t;
-    ti.name = t.name().val;
+    ti.name = t.name();
     return t;
   }
 

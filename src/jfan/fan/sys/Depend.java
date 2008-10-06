@@ -20,7 +20,6 @@ public final class Depend
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Depend fromStr(Str str) { return fromStr(str.val); }
   public static Depend fromStr(String str)
   {
     try
@@ -33,7 +32,7 @@ public final class Depend
     }
   }
 
-  private Depend(Str name, Constraint[] constraints)
+  private Depend(String name, Constraint[] constraints)
   {
     this.name = name;
     this.constraints = constraints;
@@ -66,7 +65,7 @@ public final class Depend
       return new Depend(name, (Constraint[])constraints .toArray(new Constraint[constraints.size()]));
     }
 
-    private Str name()
+    private String name()
     {
       StringBuilder s = new StringBuilder();
       while (cur != ' ')
@@ -77,7 +76,7 @@ public final class Depend
       }
       consumeSpaces();
       if (s.length() == 0) throw new RuntimeException();
-      return Str.make(s.toString());
+      return s.toString();
     }
 
     private Constraint constraint()
@@ -155,7 +154,7 @@ public final class Depend
     int pos;
     int len;
     String str;
-    Str name;
+    String name;
     ArrayList constraints = new ArrayList(4);
   }
 
@@ -166,7 +165,7 @@ public final class Depend
   public Boolean _equals(Object obj)
   {
     if (obj instanceof Depend)
-      return toStr()._equals(toStr(obj));
+      return toStr().equals(toStr(obj));
     else
       return false;
   }
@@ -178,7 +177,7 @@ public final class Depend
 
   public Long hash()
   {
-    return toStr().hash();
+    return FanStr.hash(toStr());
   }
 
   public Type type()
@@ -186,12 +185,12 @@ public final class Depend
     return Sys.DependType;
   }
 
-  public Str toStr()
+  public String toStr()
   {
     if (str == null)
     {
       StringBuilder s = new StringBuilder();
-      s.append(name.val).append(' ');
+      s.append(name).append(' ');
       for (int i=0; i<constraints.length; ++i)
       {
         if (i > 0) s.append(',');
@@ -200,7 +199,7 @@ public final class Depend
         if (c.isPlus) s.append('+');
         if (c.endVersion != null) s.append('-').append(c.endVersion);
       }
-      str = Str.make(s.toString());
+      str = s.toString();
     }
     return str;
   }
@@ -209,7 +208,7 @@ public final class Depend
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public final Str name()
+  public final String name()
   {
     return name;
   }
@@ -295,8 +294,8 @@ public final class Depend
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private final Str name;
+  private final String name;
   private final Constraint[] constraints;
-  private Str str;
+  private String str;
 
 }

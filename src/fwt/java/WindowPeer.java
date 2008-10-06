@@ -47,8 +47,8 @@ public class WindowPeer
 //////////////////////////////////////////////////////////////////////////
 
   // Str title := ""
-  public Str title(Window self) { return title.get(); }
-  public void title(Window self, Str v) { title.set(v); }
+  public String title(Window self) { return title.get(); }
+  public void title(Window self, String v) { title.set(v); }
   public final Prop.StrProp title = new Prop.StrProp(this, "")
   {
     public String get(Widget w) { return ((Shell)w).getText(); }

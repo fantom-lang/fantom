@@ -37,14 +37,14 @@ public final class Month
 
   private Month(int ordinal, String name)
   {
-    Enum.make$(this, FanInt.pos[ordinal], Str.make(name).intern());
+    Enum.make$(this, FanInt.pos[ordinal], name.intern());
     this.ord = ordinal;
-    this.localeAbbrKey = Str.make(name + "Abbr");
-    this.localeFullKey = Str.make(name + "Full");
+    this.localeAbbrKey = name + "Abbr";
+    this.localeFullKey = name + "Full";
   }
 
-  public static Month fromStr(Str name) { return fromStr(name, true); }
-  public static Month fromStr(Str name, Boolean checked)
+  public static Month fromStr(String name) { return fromStr(name, true); }
+  public static Month fromStr(String name, Boolean checked)
   {
     return (Month)doFromStr(Sys.MonthType, name, checked);
   }
@@ -63,16 +63,16 @@ public final class Month
       return FanInt.pos[DateTime.daysInMon[ord]];
   }
 
-  public Str toLocale() { return toLocale(null); }
-  public Str toLocale(Str pattern)
+  public String toLocale() { return toLocale(null); }
+  public String toLocale(String pattern)
   {
     if (pattern == null) return localeAbbr();
-    if (pattern.isEveryChar('M'))
+    if (FanStr.isEveryChar(pattern, 'M'))
     {
-      switch (pattern.val.length())
+      switch (pattern.length())
       {
-        case 1: return Str.make(String.valueOf(ord+1));
-        case 2: return Str.make(ord < 9 ? "0" + (ord+1) : String.valueOf(ord+1));
+        case 1: return String.valueOf(ord+1);
+        case 2: return ord < 9 ? "0" + (ord+1) : String.valueOf(ord+1);
         case 3: return localeAbbr();
         case 4: return localeFull();
       }
@@ -80,19 +80,19 @@ public final class Month
     throw ArgErr.make("Invalid pattern: " + pattern).val;
   }
 
-  public Str localeAbbr() { return abbr(Locale.current()); }
-  public Str abbr(Locale locale)
+  public String localeAbbr() { return abbr(Locale.current()); }
+  public String abbr(Locale locale)
   {
-    return locale.get(Str.sysStr, localeAbbrKey);
+    return locale.get("sys", localeAbbrKey);
   }
 
-  public Str localeFull() { return full(Locale.current()); }
-  public Str full(Locale locale)
+  public String localeFull() { return full(Locale.current()); }
+  public String full(Locale locale)
   {
-    return locale.get(Str.sysStr, localeFullKey);
+    return locale.get("sys", localeFullKey);
   }
 
   final int ord;
-  final Str localeAbbrKey;
-  final Str localeFullKey;
+  final String localeAbbrKey;
+  final String localeFullKey;
 }

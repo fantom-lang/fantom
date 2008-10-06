@@ -34,7 +34,7 @@ public final class RootNamespace
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toStr() { return type().toStr(); }
+  public String toStr() { return type().toStr(); }
 
   public Type type() { return Sys.RootNamespaceType; }
 
@@ -52,7 +52,7 @@ public final class RootNamespace
     Object val = null;
     synchronized (lock)
     {
-      val = mem.get(uri.str.val);
+      val = mem.get(uri.str);
       if (val == null)
       {
         if (!checked) return null;
@@ -79,10 +79,10 @@ public final class RootNamespace
       if (uri == null)
         uri = Uri.fromStr("/mem/" + uriCounter++);
 
-      Object old = mem.put(uri.str.val, safe);
+      Object old = mem.put(uri.str, safe);
       if (old != null)
       {
-        mem.put(uri.str.val, old);
+        mem.put(uri.str, old);
         throw ArgErr.make("Uri already mapped: " + uri).val;
       }
 
@@ -101,10 +101,10 @@ public final class RootNamespace
     Object safe = safe(obj);
     synchronized (lock)
     {
-      Object old = mem.put(uri.str.val, safe);
+      Object old = mem.put(uri.str, safe);
       if (old == null)
       {
-        mem.remove(uri.str.val);
+        mem.remove(uri.str);
         throw UnresolvedErr.make(uri).val;
       }
     }
@@ -119,7 +119,7 @@ public final class RootNamespace
 
     synchronized (lock)
     {
-      Object old = mem.remove(uri.str.val);
+      Object old = mem.remove(uri.str);
       if (old == null)
       {
         throw UnresolvedErr.make(uri).val;
@@ -222,9 +222,9 @@ public final class RootNamespace
       if (this.depth != that.depth) return false;
       for (int i=0; i<depth; ++i)
       {
-        Str thisName = (Str)this.path.get(i);
-        Str thatName = (Str)that.path.get(i);
-        if (!thisName.val.equals(thatName.val)) return false;
+        String thisName = (String)this.path.get(i);
+        String thatName = (String)that.path.get(i);
+        if (!thisName.equals(thatName)) return false;
       }
       return true;
     }

@@ -45,9 +45,8 @@ public class Type
 // Management
 //////////////////////////////////////////////////////////////////////////
 
-  public static Type find(Str sig) { return TypeParser.load(sig.val, true, null); }
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
-  public static Type find(Str sig, Boolean checked) { return TypeParser.load(sig.val, checked, null); }
+  public static Type find(String sig, Boolean checked) { return TypeParser.load(sig, checked, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
   public static Type find(String podName, String typeName, boolean checked)
   {
@@ -56,8 +55,8 @@ public class Type
     return pod.findType(typeName, checked);
   }
 
-  public static List findByFacet(Str facetName, Object facetVal) { return findByFacet(facetName, facetVal, null); }
-  public static List findByFacet(Str facetName, Object facetVal, Object options)
+  public static List findByFacet(String facetName, Object facetVal) { return findByFacet(facetName, facetVal, null); }
+  public static List findByFacet(String facetName, Object facetVal, Object options)
   {
     return TypeDb.get().findByFacet(facetName, facetVal, options);
   }
@@ -70,8 +69,8 @@ public class Type
   {
     this.pod      = pod;
     this.ftype    = ftype;
-    this.name     = Str.make(pod.fpod.name(pod.fpod.typeRef(ftype.self).typeName));
-    this.qname    = Str.make(pod.name.val + "::" + name.val);
+    this.name     = pod.fpod.name(pod.fpod.typeRef(ftype.self).typeName);
+    this.qname    = pod.name + "::" + name;
     this.flags    = ftype.flags;
     this.dynamic  = false;
     if (Debug) System.out.println("-- init:   " + qname);
@@ -81,8 +80,8 @@ public class Type
   public Type(Pod pod, String name, int flags, Facets facets)
   {
     this.pod      = pod;
-    this.name     = Str.make(name);
-    this.qname    = Str.make(pod.name.val + "::" + name);
+    this.name     = name;
+    this.qname    = pod.name + "::" + name;
     this.flags    = flags;
     this.dynamic  = false;
     this.facets   = facets;
@@ -95,9 +94,9 @@ public class Type
   public Type type() { return Sys.TypeType; }
 
   public final Pod pod()   { return pod; }
-  public final Str name()  { return name; }
-  public final Str qname() { return qname; }
-  public Str signature()   { return qname; }
+  public final String name()  { return name; }
+  public final String qname() { return qname; }
+  public String signature()   { return qname; }
 
 //////////////////////////////////////////////////////////////////////////
 // Flags
@@ -113,13 +112,12 @@ public class Type
   public final Boolean isPublic() { return (flags & FConst.Public) != 0; }
   public final Boolean isSynthetic() { return (flags & FConst.Synthetic) != 0; }
 
-  public Object trap(Str name, List args)
+  public Object trap(String name, List args)
   {
     // private undocumented access
-    String n = name.val;
-    if (n.equals("flags"))      return Long.valueOf(flags);
-    if (n.equals("lineNumber")) { reflect(); return Long.valueOf(lineNum); }
-    if (n.equals("sourceFile")) { reflect(); return Str.make(sourceFile); }
+    if (name.equals("flags"))      return Long.valueOf(flags);
+    if (name.equals("lineNumber")) { reflect(); return Long.valueOf(lineNum); }
+    if (name.equals("sourceFile")) { reflect(); return sourceFile; }
     return super.trap(name, args);
   }
 
@@ -177,7 +175,7 @@ public class Type
   protected Type()
   {
     this.pod     = null;
-    this.name    = Str.make("dynamic");
+    this.name    = "dynamic";
     this.qname   = name;
     this.flags   = 0;
     this.dynamic = true;
@@ -222,7 +220,7 @@ public class Type
    */
   public boolean isGenericParameter()
   {
-    return pod == Sys.SysPod && name.val.length() == 1;
+    return pod == Sys.SysPod && name.length() == 1;
   }
 
   /*
@@ -258,15 +256,15 @@ public class Type
   {
     if (this == Sys.ListType)
     {
-      Type v = (Type)params.get(Str.ascii['V']);
+      Type v = (Type)params.get("V");
       if (v == null) throw ArgErr.make("List.parameterize - V undefined").val;
       return v.toListOf();
     }
 
     if (this == Sys.MapType)
     {
-      Type v = (Type)params.get(Str.ascii['V']);
-      Type k = (Type)params.get(Str.ascii['K']);
+      Type v = (Type)params.get("V");
+      Type k = (Type)params.get("K");
       if (v == null) throw ArgErr.make("Map.parameterize - V undefined").val;
       if (k == null) throw ArgErr.make("Map.parameterize - K undefined").val;
       return new MapType(k, v);
@@ -274,12 +272,12 @@ public class Type
 
     if (this == Sys.FuncType)
     {
-      Type r = (Type)params.get(Str.ascii['R']);
+      Type r = (Type)params.get("R");
       if (r == null) throw ArgErr.make("Map.parameterize - R undefined").val;
       ArrayList p = new ArrayList();
       for (int i='A'; i<='H'; ++i)
       {
-        Type x = (Type)params.get(Str.ascii[i]);
+        Type x = (Type)params.get(FanStr.ascii[i]);
         if (x == null) break;
         p.add(x);
       }
@@ -303,16 +301,16 @@ public class Type
   public final List methods() { return reflect().methods.ro(); }
   public final List slots()   { return reflect().slots.ro(); }
 
-  public final Field field(Str name) { return (Field)slot(name.val, true); }
-  public final Field field(Str name, Boolean checked) { return (Field)slot(name.val, checked.booleanValue()); }
+  public final Field field(String name) { return (Field)slot(name, true); }
+  public final Field field(String name, Boolean checked) { return (Field)slot(name, checked.booleanValue()); }
   public final Field field(String name, boolean checked) { return (Field)slot(name, checked); }
 
-  public final Method method(Str name) { return (Method)slot(name.val, true); }
-  public final Method method(Str name, Boolean checked) { return (Method)slot(name.val, checked.booleanValue()); }
+  public final Method method(String name) { return (Method)slot(name, true); }
+  public final Method method(String name, Boolean checked) { return (Method)slot(name, checked.booleanValue()); }
   public final Method method(String name, boolean checked) { return (Method)slot(name, checked); }
 
-  public final Slot slot(Str name) { return slot(name.val, true); }
-  public final Slot slot(Str name, Boolean checked) { return slot(name.val, checked.booleanValue()); }
+  public final Slot slot(String name) { return slot(name, true); }
+  public final Slot slot(String name, Boolean checked) { return slot(name, checked.booleanValue()); }
   public final Slot slot(String name, boolean checked)
   {
     Slot slot = (Slot)reflect().slotsByName.get(name);
@@ -325,11 +323,11 @@ public class Type
   {
     if (!dynamic) throw Err.make("Type is not dynamic: " + qname).val;
     reflect();
-    if (slotsByName.containsKey(slot.name.val)) throw Err.make("Duplicate slot name: " + qname).val;
+    if (slotsByName.containsKey(slot.name)) throw Err.make("Duplicate slot name: " + qname).val;
     if (slot.parent != null) throw Err.make("Slot is already parented: " + slot).val;
 
     slot.parent = this;
-    slotsByName.put(slot.name.val, slot);
+    slotsByName.put(slot.name, slot);
     slots.add(slot);
     if (slot instanceof Field)
       fields.add(slot);
@@ -343,7 +341,7 @@ public class Type
     if (slot.parent != this) throw Err.make("Slot.parent != this: " + slot).val;
 
     slot.parent = null;
-    slotsByName.remove(slot.name.val);
+    slotsByName.remove(slot.name);
     slots.remove(slot);
     if (slot instanceof Field)
       fields.remove(slot);
@@ -418,7 +416,7 @@ public class Type
       }
 
       // add myself
-      map.put(qname.val, this);
+      map.put(qname, this);
       acc.add(this);
 
       // add my direct inheritance inheritance
@@ -439,9 +437,9 @@ public class Type
     for (int i=0; i<ti.sz(); ++i)
     {
       Type x = (Type)ti.get(i);
-      if (map.get(x.qname.val) == null)
+      if (map.get(x.qname) == null)
       {
-        map.put(x.qname.val, x);
+        map.put(x.qname, x);
         acc.add(x);
       }
     }
@@ -501,7 +499,7 @@ public class Type
         while (it.hasNext())
         {
           Entry e = (Entry)it.next();
-          Str key = (Str)e.getKey();
+          String key = (String)e.getKey();
           if (map.get(key) == null) map.add(key, e.getValue());
         }
       }
@@ -509,9 +507,9 @@ public class Type
     return map;
   }
 
-  public final Object facet(Str name) { return facet(name, null, false); }
-  public final Object facet(Str name, Object def) { return facet(name, def, false); }
-  public final Object facet(Str name, Object def, Boolean inherited)
+  public final Object facet(String name) { return facet(name, null, false); }
+  public final Object facet(String name, Object def) { return facet(name, def, false); }
+  public final Object facet(String name, Object def, Boolean inherited)
   {
     Object val = reflect().facets.get(name, null);
     if (val != null) return val;
@@ -529,7 +527,7 @@ public class Type
 // Documentation
 //////////////////////////////////////////////////////////////////////////
 
-  public Str doc()
+  public String doc()
   {
     if (!docLoaded)
     {
@@ -554,7 +552,7 @@ public class Type
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toStr() { return signature(); }
+  public String toStr() { return signature(); }
 
   public Boolean isImmutable() { return !dynamic; }
 
@@ -566,7 +564,7 @@ public class Type
 
   public void encode(ObjEncoder out)
   {
-    out.w(qname.val).w("#");
+    out.w(qname).w("#");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -575,9 +573,9 @@ public class Type
 
   public final Log log() { return pod.log(); }
 
-  public final Str loc(Str key) { return pod.loc(key); }
+  public final String loc(String key) { return pod.loc(key); }
 
-  public final Str loc(Str key, Str def) { return pod.loc(key, def); }
+  public final String loc(String key, String def) { return pod.loc(key, def); }
 
 //////////////////////////////////////////////////////////////////////////
 // Reflection
@@ -694,7 +692,7 @@ public class Type
     // skip constructors which aren't mine
     if (slot.isCtor() && slot.parent != this) return;
 
-    String name = slot.name.val;
+    String name = slot.name;
     Long dup = (Long)nameToIndex.get(name);
     if (dup != null)
     {
@@ -737,7 +735,7 @@ public class Type
    */
   private Field map(FPod fpod, FField f)
   {
-    Str name = Str.make(f.name).intern();
+    String name = f.name.intern();
     Type fieldType = pod.findType(f.type);
     return new Field(this, name, f.flags, f.attrs.facets(), f.attrs.lineNum, fieldType);
   }
@@ -747,7 +745,7 @@ public class Type
    */
   private Method map(FPod fpod, FMethod m)
   {
-    Str name = Str.make(m.name).intern();
+    String name = m.name.intern();
     Type returns = pod.findType(m.ret);
     Type inheritedReturns = pod.findType(m.inheritedRet);
     List params = new List(Sys.ParamType, m.paramCount);
@@ -755,7 +753,7 @@ public class Type
     {
       FMethodVar p = m.vars[j];
       int pflags = (p.def == null) ? 0 : Param.HAS_DEFAULT;
-      params.add(new Param(Str.make(p.name).intern(), pod.findType(p.type), pflags));
+      params.add(new Param(p.name.intern(), pod.findType(p.type), pflags));
     }
     return new Method(this, name, m.flags, m.attrs.facets(), m.attrs.lineNum, returns, inheritedReturns, params);
   }
@@ -777,13 +775,13 @@ public class Type
       reflect();
 
       // if sys class, just load it by name
-      String podName = pod.name.val;
+      String podName = pod.name;
       if (podName.equals("sys") || Sys.usePrecompiledOnly)
       {
         try
         {
           this.javaRepr = FanUtil.isJavaRepresentation(this);
-          this.cls = Class.forName(FanUtil.toJavaImplClassName(podName, name.val));
+          this.cls = Class.forName(FanUtil.toJavaImplClassName(podName, name));
         }
         catch (Exception e)
         {
@@ -998,8 +996,8 @@ catch (Exception e) { e.printStackTrace(); }
 
   // available when hollow
   final Pod pod;
-  final Str name;
-  final Str qname;
+  final String name;
+  final String qname;
   final int flags;
   final boolean dynamic;
   int lineNum;
@@ -1010,7 +1008,7 @@ catch (Exception e) { e.printStackTrace(); }
   List inheritance;
   FType ftype;      // we only keep this around for memory compiles
   boolean docLoaded;
-  public Str doc;
+  public String doc;
 
   // available when reflected
   List fields;

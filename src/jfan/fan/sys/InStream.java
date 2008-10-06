@@ -21,11 +21,6 @@ public class InStream
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static InStream makeForStr(Str s)
-  {
-    return new StrInStream(s);
-  }
-
   public static InStream makeForStr(String s)
   {
     return new StrInStream(s);
@@ -272,7 +267,7 @@ public class InStream
 
   public BigDecimal readDecimal()
   {
-    return FanDecimal.fromStr(readUtfString(), true);
+    return FanDecimal.fromStr(readUtf(), true);
   }
 
   public Boolean readBool()
@@ -282,8 +277,7 @@ public class InStream
     return n != 0;
   }
 
-  public Str readUtf() { return Str.make(readUtfString()); }
-  private String readUtfString()
+  public String readUtf()
   {
     // read two-byte length
     int len1 = r();
@@ -363,12 +357,12 @@ public class InStream
     return x;
   }
 
-  public Str readLine() { return readLine(FanInt.Chunk); }
-  public Str readLine(Long max)
+  public String readLine() { return readLine(FanInt.Chunk); }
+  public String readLine(Long max)
   {
     // max limit
     int maxChars = (max != null) ? max.intValue(): Integer.MAX_VALUE;
-    if (maxChars <= 0) return Str.Empty;
+    if (maxChars <= 0) return "";
 
     // read first char, if at end of file bail
     int c = rChar();
@@ -396,16 +390,16 @@ public class InStream
       c = rChar();
       if (c < 0) break;
     }
-    return Str.make(buf.toString());
+    return buf.toString();
   }
 
-  public Str readStrToken() { return readStrToken(FanInt.Chunk, null); }
-  public Str readStrToken(Long max) { return readStrToken(max, null); }
-  public Str readStrToken(Long max, Func f)
+  public String readStrToken() { return readStrToken(FanInt.Chunk, null); }
+  public String readStrToken(Long max) { return readStrToken(max, null); }
+  public String readStrToken(Long max, Func f)
   {
     // max limit
     int maxChars = (max != null) ? max.intValue() : Integer.MAX_VALUE;
-    if (maxChars <= 0) return Str.Empty;
+    if (maxChars <= 0) return "";
 
     // read first char, if at end of file bail
     int c = rChar();
@@ -435,7 +429,7 @@ public class InStream
       c = rChar();
       if (c < 0) break;
     }
-    return Str.make(buf.toString());
+    return buf.toString();
   }
 
   public List readAllLines()
@@ -443,7 +437,7 @@ public class InStream
     try
     {
       List list = new List(Sys.StrType);
-      Str line;
+      String line;
       while ((line = readLine()) != null)
         list.add(line);
       return list;
@@ -458,7 +452,7 @@ public class InStream
   {
     try
     {
-      Str line;
+      String line;
       while ((line = readLine()) != null)
         f.call1(line);
     }
@@ -468,8 +462,8 @@ public class InStream
     }
   }
 
-  public Str readAllStr() { return readAllStr(true); }
-  public Str readAllStr(Boolean normalizeNewlines)
+  public String readAllStr() { return readAllStr(true); }
+  public String readAllStr(Boolean normalizeNewlines)
   {
     try
     {
@@ -506,7 +500,7 @@ public class InStream
         }
       }
 
-      return Str.make(new String(buf, 0, n));
+      return new String(buf, 0, n);
     }
     finally
     {
@@ -546,14 +540,14 @@ public class InStream
         {
           inEndOfLineComment = false;
           if (last == '\r' && c == '\n') continue;
-          Str n = Str.makeTrim(name);
+          String n = FanStr.makeTrim(name);
           if (val != null)
           {
-            props.add(n, Str.makeTrim(val));
+            props.add(n, FanStr.makeTrim(val));
             name = new StringBuilder();
             val = null;
           }
-          else if (n.val.length() > 0)
+          else if (n.length() > 0)
             throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]").val;
           lineNum++;
           continue;
@@ -633,10 +627,10 @@ public class InStream
           val.append((char)c);
       }
 
-      Str n = Str.makeTrim(name);
+      String n = FanStr.makeTrim(name);
       if (val != null)
-        props.add(n, Str.makeTrim(val));
-      else if (n.val.length() > 0)
+        props.add(n, FanStr.makeTrim(val));
+      else if (n.length() > 0)
         throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]").val;
 
       return props;

@@ -21,8 +21,8 @@ public class Thread
 //////////////////////////////////////////////////////////////////////////
 
   public static Thread make() { return make(null, null); }
-  public static Thread make(Str name) { return make(name, null); }
-  public static Thread make(Str name, Func run)
+  public static Thread make(String name) { return make(name, null); }
+  public static Thread make(String name, Func run)
   {
     Thread t = new Thread();
     make$(t, name, run);
@@ -30,8 +30,8 @@ public class Thread
   }
 
   public static void make$(Thread t) { make$(t, null, null); }
-  public static void make$(Thread t, Str name) { make$(t, name, null); }
-  public static void make$(Thread t, Str name, Func run)
+  public static void make$(Thread t, String name) { make$(t, name, null); }
+  public static void make$(Thread t, String name, Func run)
   {
     // if service, get inheritance types before acquiring lock
     List serviceTypes = null;
@@ -46,7 +46,7 @@ public class Thread
 
       // auto generate name if null
       if (name == null)
-        name = Str.make(t.type().pod().name() + "." + t.type().name() + "." + (autoNameCount++));
+        name = t.type().pod().name() + "." + t.type().name() + "." + (autoNameCount++);
 
       // verify name is valid
       Uri.checkName(name);
@@ -66,12 +66,6 @@ public class Thread
 
   public Thread(String name)
   {
-    this.name  = Str.make(name);
-    this.state = NEW;
-  }
-
-  public Thread(Str name)
-  {
     synchronized (topLock)
     {
       // verify unique
@@ -82,8 +76,8 @@ public class Thread
       byName.put(name, this);
     }
 
-    this.name   = name;
-    this.state  = NEW;
+    this.name  = name;
+    this.state = NEW;
   }
 
   public Thread()
@@ -94,8 +88,8 @@ public class Thread
 // Management
 //////////////////////////////////////////////////////////////////////////
 
-  public static Thread find(Str name) { return find(name, true); }
-  public static Thread find(Str name, Boolean checked)
+  public static Thread find(String name) { return find(name, true); }
+  public static Thread find(String name, Boolean checked)
   {
     synchronized (topLock)
     {
@@ -139,8 +133,8 @@ public class Thread
 // Service
 //////////////////////////////////////////////////////////////////////////
 
-  public static Thread findService(Type t) { return findService(t.qname().val, true); }
-  public static Thread findService(Type t, Boolean checked) { return findService(t.qname().val, checked.booleanValue()); }
+  public static Thread findService(Type t) { return findService(t.qname(), true); }
+  public static Thread findService(Type t, Boolean checked) { return findService(t.qname(), checked.booleanValue()); }
   public static Thread findService(String qname, boolean checked)
   {
     synchronized (topLock)
@@ -168,8 +162,8 @@ public class Thread
         if (!isServiceType(t)) continue;
         ThreadNode node = new ThreadNode();
         node.thread = thread;
-        ThreadNode x = (ThreadNode)byService.get(t.qname().val);
-        if ( x== null) byService.put(t.qname().val, node);
+        ThreadNode x = (ThreadNode)byService.get(t.qname());
+        if ( x== null) byService.put(t.qname(), node);
         else
         {
           while (x.next != null) x = x.next;
@@ -193,11 +187,11 @@ public class Thread
       {
         Type t = (Type)types.get(i);
         if (!isServiceType(t)) continue;
-        ThreadNode node = (ThreadNode)byService.get(t.qname().val);
+        ThreadNode node = (ThreadNode)byService.get(t.qname());
         ThreadNode last = null;
         while (node.thread != thread) { last = node; node = node.next; }
         if (last == null)
-          byService.put(t.qname().val, node.next);
+          byService.put(t.qname(), node.next);
         else
           last.next = node.next;
       }
@@ -229,10 +223,10 @@ public class Thread
 
   public final Long hash()
   {
-    return name.hash();
+    return FanStr.hash(name);
   }
 
-  public Str toStr()
+  public String toStr()
   {
     return name;
   }
@@ -242,7 +236,7 @@ public class Thread
     return Sys.ThreadType;
   }
 
-  public final Str name()
+  public final String name()
   {
     return name;
   }
@@ -424,7 +418,7 @@ public class Thread
     {
       this.thread = thread;
       thread.val = this;
-      setName(thread.name.val);
+      setName(thread.name);
       if (isAlive())
         notifyAll();
       else
@@ -839,7 +833,7 @@ public class Thread
   private static int maxQueueSize = 1000;         // max messages to queue
   private static Timer[] noTimers = new Timer[0]; // empty timers
 
-  private Str name;                  // thread name
+  private String name;                  // thread name
   private int state;                 // current state
   private Val val;                   // Java thread if attached
   private Message head, tail;        // message queue linked list

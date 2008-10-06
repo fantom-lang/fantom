@@ -26,7 +26,7 @@ public class ScriptUtil
     file = file.normalize();
 
     // unless force=true, check the cache
-    if (!getOption(options, strForce, false))
+    if (!getOption(options, "force", false))
     {
       CachedScript c = getCache(file);
 
@@ -67,7 +67,7 @@ public class ScriptUtil
 
   private static String generatePodName(File f)
   {
-    String base = f.basename().val;
+    String base = f.basename();
     StringBuilder s = new StringBuilder(base.length()+6);
     for (int i=0; i<base.length(); ++i)
     {
@@ -84,7 +84,7 @@ public class ScriptUtil
   {
     // use Fan reflection to run compiler::Main.compileScript(File)
     Method m = Slot.findMethod("compiler::Main.compileScript", true);
-    return (Pod)m.call3(Str.make(podName), f, options);
+    return (Pod)m.call3(podName, f, options);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -116,14 +116,14 @@ public class ScriptUtil
     CachedScript c = new CachedScript();
     c.modified = file.modified();
     c.size     = file.size();
-    c.typeName = t.qname().val;
+    c.typeName = t.qname();
 
     synchronized (cache) { cache.put(cacheKey(file), c); }
   }
 
   static String cacheKey(File f)
   {
-    return f.toStr().val;
+    return f.toStr();
   }
 
   static class CachedScript
@@ -137,7 +137,7 @@ public class ScriptUtil
 // Option Utils
 //////////////////////////////////////////////////////////////////////////
 
-  static boolean getOption(Map options, Str key, boolean def)
+  static boolean getOption(Map options, String key, boolean def)
   {
     if (options == null) return def;
     Boolean x = (Boolean)options.get(key);
@@ -150,7 +150,6 @@ public class ScriptUtil
 //////////////////////////////////////////////////////////////////////////
 
   static HashMap cache = new HashMap(300);
-  static Str strForce = Str.make("force");
   static Object counterLock = new Object();
   static int counter = 0;
 

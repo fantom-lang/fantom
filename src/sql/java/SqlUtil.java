@@ -63,7 +63,7 @@ public class SqlUtil
       case Types.CHAR:
       case Types.VARCHAR:
       case Types.LONGVARCHAR:
-        return Str.make(rs.getString(col));
+        return rs.getString(col);
 
       case Types.BIT:
         boolean b = rs.getBoolean(col);
@@ -93,7 +93,7 @@ public class SqlUtil
         return new MemBuf(buf);
 
       default:
-        return Str.make(String.valueOf(rs.getObject(col)));
+        return String.valueOf(rs.getObject(col));
     }
   }
 
@@ -149,7 +149,7 @@ public class SqlUtil
     public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
-      return Str.make(rs.getString(col));
+      return rs.getString(col);
     }
   }
 
@@ -202,7 +202,7 @@ public class SqlUtil
     public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
-      return Str.make(String.valueOf(rs.getObject(col)));
+      return String.valueOf(rs.getObject(col));
     }
   }
 
