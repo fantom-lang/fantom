@@ -33,6 +33,7 @@ public class FanUtil
   {
     javaToFanTypes.put("java.lang.Object",     Sys.ObjType);
     javaToFanTypes.put("java.lang.Boolean",    Sys.BoolType);
+    javaToFanTypes.put("java.lang.String",     Sys.StrType);
     javaToFanTypes.put("java.lang.Number",     Sys.NumType);
     javaToFanTypes.put("java.lang.Long",       Sys.IntType);
     javaToFanTypes.put("java.lang.Double",     Sys.FloatType);
@@ -52,6 +53,7 @@ public class FanUtil
   static
   {
     javaImmutables.put("java.lang.Boolean",    Boolean.TRUE);
+    javaImmutables.put("java.lang.String",     Boolean.TRUE);
     javaImmutables.put("java.lang.Long",       Boolean.TRUE);
     javaImmutables.put("java.lang.Double",     Boolean.TRUE);
     javaImmutables.put("java.math.BigDecimal", Boolean.TRUE);
@@ -66,6 +68,7 @@ public class FanUtil
     if (t.pod() != Sys.SysPod) return false;
     return t == Sys.ObjType   ||
            t == Sys.BoolType  ||
+           t == Sys.StrType   ||
            t == Sys.IntType   ||
            t == Sys.FloatType ||
            t == Sys.NumType   ||
@@ -119,6 +122,9 @@ public class FanUtil
         case 'O':
           if (typeName.equals("Obj")) return "java.lang.Object";
           break;
+        case 'S':
+          if (typeName.equals("Str")) return "java.lang.String";
+          break;
       }
     }
     return "fan." + podName + "." + typeName;
@@ -154,6 +160,9 @@ public class FanUtil
         case 'O':
           if (typeName.equals("Obj")) return "fan.sys.FanObj";
           break;
+        case 'S':
+          if (typeName.equals("Str")) return "fan.sys.FanStr";
+          break;
       }
     }
     return "fan." + podName + "." + typeName;
@@ -188,6 +197,9 @@ public class FanUtil
         case 'O':
           if (typeName.equals("Obj")) return "java/lang/Object";
           break;
+        case 'S':
+          if (typeName.equals("Str")) return "java/lang/String";
+          break;
       }
     }
     return "fan/" + podName + "/" + typeName;
@@ -198,7 +210,7 @@ public class FanUtil
    */
   public static String toJavaTypeSig(Type t)
   {
-    return toJavaTypeSig(t.pod().name().val, t.name().val);
+    return toJavaTypeSig(t.pod().name(), t.name());
   }
 
   /**
@@ -214,6 +226,7 @@ public class FanUtil
     {
       if (jsig.equals("java/lang/Object"))  return "fan/sys/FanObj";
       if (jsig.equals("java/lang/Boolean")) return "fan/sys/FanBool";
+      if (jsig.equals("java/lang/String"))  return "fan/sys/FanStr";
       if (jsig.equals("java/lang/Long"))    return "fan/sys/FanInt";
       if (jsig.equals("java/lang/Double"))  return "fan/sys/FanFloat";
       if (jsig.equals("java/lang/Number"))  return "fan/sys/FanNum";

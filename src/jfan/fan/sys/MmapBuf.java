@@ -202,12 +202,12 @@ public class MmapBuf
     return true;
   }
 
-  public final Str toHex()
+  public final String toHex()
   {
     throw UnsupportedErr.make().val;
   }
 
-  public Buf toDigest(Str algorithm)
+  public Buf toDigest(String algorithm)
   {
     throw UnsupportedErr.make().val;
   }

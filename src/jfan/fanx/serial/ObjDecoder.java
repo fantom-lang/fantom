@@ -158,10 +158,10 @@ public class ObjDecoder
   {
     // parse: type(str)
     consume(Token.LPAREN, "Expected ( in simple");
-    Str str = consumeStr("Expected string literal for simple");
+    String str = consumeStr("Expected string literal for simple");
     consume(Token.RPAREN, "Expected ) in simple");
 
-    // lookup the fromStr method
+    // lookup the fromString method
     t.finish();
     Method m = t.method("fromStr", false);
     if (m == null)
@@ -195,7 +195,7 @@ public class ObjDecoder
     {
       List args = null;
       if (root && options != null)
-        args = (List)options.get(optMakeArgs);
+        args = (List)options.get("makeArgs");
       obj = t.make(args);
     }
     catch (Throwable e)
@@ -552,12 +552,12 @@ public class ObjDecoder
   }
 
   /**
-   * Consume the current token as a Str literal.
+   * Consume the current token as a String literal.
    */
-  private Str consumeStr(String expected)
+  private String consumeStr(String expected)
   {
     verify(Token.STR_LITERAL, expected);
-    Str id = (Str)tokenizer.val;
+    String id = (String)tokenizer.val;
     consume();
     return id;
   }
@@ -628,8 +628,6 @@ public class ObjDecoder
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  static final Str optMakeArgs = Str.make("makeArgs");
 
   Tokenizer tokenizer;    // tokenizer
   int curt;               // current token type

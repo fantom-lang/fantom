@@ -50,9 +50,9 @@ public class Sys
 
   public static fan.sys.File appDir() { return appDir; }
 
-  public static Str hostName() { return hostName; }
+  public static String hostName() { return hostName; }
 
-  public static Str userName() { return userName; }
+  public static String userName() { return userName; }
 
   public static void exit() { exit(0L); }
   public static void exit(Long status) { System.exit(status.intValue()); }
@@ -78,26 +78,26 @@ public class Sys
 
     // memory
     MemoryMXBean mem = ManagementFactory.getMemoryMXBean();
-    d.add(Str.make("mem.heap"),    Long.valueOf(mem.getHeapMemoryUsage().getUsed()));
-    d.add(Str.make("mem.nonHeap"), Long.valueOf(mem.getNonHeapMemoryUsage().getUsed()));
+    d.add("mem.heap",    Long.valueOf(mem.getHeapMemoryUsage().getUsed()));
+    d.add("mem.nonHeap", Long.valueOf(mem.getNonHeapMemoryUsage().getUsed()));
 
     // threads
     ThreadMXBean thread = ManagementFactory.getThreadMXBean();
     long[] threadIds = thread.getAllThreadIds();
-    d.add(Str.make("thread.size"), Long.valueOf(threadIds.length));
+    d.add("thread.size", Long.valueOf(threadIds.length));
     for (int i=0; i<threadIds.length; ++i)
     {
       ThreadInfo ti = thread.getThreadInfo(threadIds[i]);
-      d.add(Str.make("thread." + i + ".name"),    Str.make(ti.getThreadName()));
-      d.add(Str.make("thread." + i + ".state"),   Str.make(ti.getThreadState().toString()));
-      d.add(Str.make("thread." + i + ".cpuTime"), Duration.make(thread.getThreadCpuTime(threadIds[i])));
+      d.add("thread." + i + ".name",    ti.getThreadName());
+      d.add("thread." + i + ".state",   ti.getThreadState().toString());
+      d.add("thread." + i + ".cpuTime", Duration.make(thread.getThreadCpuTime(threadIds[i])));
     }
 
     // class loading
     ClassLoadingMXBean cls = ManagementFactory.getClassLoadingMXBean();
-    d.add(Str.make("classes.loaded"),   Long.valueOf(cls.getLoadedClassCount()));
-    d.add(Str.make("classes.total"),    Long.valueOf(cls.getTotalLoadedClassCount()));
-    d.add(Str.make("classes.unloaded"), Long.valueOf(cls.getUnloadedClassCount()));
+    d.add("classes.loaded",   Long.valueOf(cls.getLoadedClassCount()));
+    d.add("classes.total",    Long.valueOf(cls.getTotalLoadedClassCount()));
+    d.add("classes.unloaded", Long.valueOf(cls.getUnloadedClassCount()));
 
     return d;
   }
@@ -170,7 +170,7 @@ public class Sys
     if (val == null)
       val = System.getenv(envKey);
     if (val == null)
-      val = System.getenv(Str.lower(envKey));
+      val = System.getenv(FanStr.lower(envKey));
 
     // fallback to def if provides
     if (val == null && def != null)
@@ -366,7 +366,7 @@ public class Sys
     }
   }
 
-  public static final Str hostName;
+  public static final String hostName;
   static
   {
     String name;
@@ -378,10 +378,10 @@ public class Sys
     {
       name = "unknown";
     }
-    hostName = Str.make(name);
+    hostName = name;
   }
 
-  public static final Str userName = Str.make(System.getProperty("user.name", "unknown"));
+  public static final String userName = System.getProperty("user.name", "unknown");
 
 //////////////////////////////////////////////////////////////////////////
 // Env
@@ -401,7 +401,7 @@ public class Sys
       {
         String key = (String)it.next();
         String val = (String)getenv.get(key);
-        env.set(Str.make(key), Str.make(val));
+        env.set(key, val);
       }
 
       // Java system properties
@@ -410,7 +410,7 @@ public class Sys
       {
         String key = (String)it.next();
         String val = System.getProperty(key);
-        env.set(Str.make(key), Str.make(val));
+        env.set(key, val);
       }
 
       // sys.properties

@@ -282,7 +282,7 @@ public class FileBuf
     }
   }
 
-  public final Str toHex()
+  public final String toHex()
   {
     try
     {
@@ -306,7 +306,7 @@ public class FileBuf
       }
 
       setPos(oldPos);
-      return Str.make(s.toString());
+      return s.toString();
     }
     catch (IOException e)
     {
@@ -314,14 +314,14 @@ public class FileBuf
     }
   }
 
-  public Buf toDigest(Str algorithm)
+  public Buf toDigest(String algorithm)
   {
     try
     {
       long oldPos = getPos();
       long size = getSize();
       byte[] temp = temp();
-      MessageDigest md = MessageDigest.getInstance(algorithm.val);
+      MessageDigest md = MessageDigest.getInstance(algorithm);
 
       setPos(0);
       long total = 0;
@@ -341,7 +341,7 @@ public class FileBuf
     }
     catch (NoSuchAlgorithmException e)
     {
-      throw ArgErr.make("Unknown digest algorthm: " + algorithm.val).val;
+      throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
     }
   }
 

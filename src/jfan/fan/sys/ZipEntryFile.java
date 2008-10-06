@@ -65,7 +65,7 @@ public class ZipEntryFile
     throw IOErr.make("ZipEntryFile is readonly").val;
   }
 
-  public Str osPath()
+  public String osPath()
   {
     return null;
   }
@@ -119,12 +119,12 @@ public class ZipEntryFile
 // IO
 //////////////////////////////////////////////////////////////////////////
 
-  public Buf open(Str mode)
+  public Buf open(String mode)
   {
     throw UnsupportedErr.make("ZipEntryFile.open").val;
   }
 
-  public Buf mmap(Str mode, Long pos, Long size)
+  public Buf mmap(String mode, Long pos, Long size)
   {
     throw UnsupportedErr.make("ZipEntryFile.mmap").val;
   }

@@ -45,7 +45,7 @@ public class FuncType
 
   public Long hash()
   {
-    return signature().hash();
+    return FanStr.hash(signature());
   }
 
   public Boolean _equals(Object obj)
@@ -66,7 +66,7 @@ public class FuncType
     return Sys.FuncType;
   }
 
-  public final Str signature()
+  public final String signature()
   {
     if (sig == null)
     {
@@ -75,12 +75,12 @@ public class FuncType
       for (int i=0; i<params.length; ++i)
       {
         if (i > 0) s.append(',');
-        s.append(params[i].signature().val);
+        s.append(params[i].signature());
       }
       s.append('-').append('>');
-      s.append(ret.signature().val);
+      s.append(ret.signature());
       s.append('|');
-      sig = Str.make(s.toString());
+      sig = s.toString();
     }
     return sig;
   }
@@ -113,8 +113,8 @@ public class FuncType
   {
     Map map = new Map(Sys.StrType, Sys.TypeType);
     for (int i=0; i<params.length; ++i)
-      map.set(Str.ascii['A'+i], params[i]);
-    return map.set(Str.ascii['R'], ret).ro();
+      map.set(FanStr.ascii['A'+i], params[i]);
+    return map.set("R", ret).ro();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -137,7 +137,7 @@ public class FuncType
     if (t == Sys.RType) return ret;
 
     // if A-H maps to avail params
-    int name = t.name.val.charAt(0) - 'A';
+    int name = t.name.charAt(0) - 'A';
     if (name < params.length) return params[name];
 
     // otherwise let anything be used
@@ -152,7 +152,7 @@ public class FuncType
   {
     Param[] p = new Param[params.length];
     for (int i=0; i<p.length; ++i)
-      p[i] = new Param(Str.ascii['a'+i], params[i], 0);
+      p[i] = new Param(FanStr.ascii['a'+i], params[i], 0);
     return new List(Sys.ParamType, p);
   }
 
@@ -162,6 +162,6 @@ public class FuncType
 
   public final Type[] params;
   public final Type ret;
-  private Str sig;
+  private String sig;
   private boolean genericParameterType;
 }

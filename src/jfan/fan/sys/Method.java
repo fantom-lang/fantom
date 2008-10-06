@@ -22,16 +22,16 @@ public class Method
 // Fan Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public static Method make(Str name, Func func) { return make(name, func, null); }
-  public static Method make(Str name, Func func, Map facets)
+  public static Method make(String name, Func func) { return make(name, func, null); }
+  public static Method make(String name, Func func, Map facets)
   {
     Method m = new Method();
     make$(m, name, func, facets);
     return m;
   }
 
-  public static void make$(Method self, Str name, Func func) { make$(self, name, func, null); }
-  public static void make$(Method self, Str name, Func func, Map facets)
+  public static void make$(Method self, String name, Func func) { make$(self, name, func, null); }
+  public static void make$(Method self, String name, Func func, Map facets)
   {
     if (name == null) throw NullErr.make("name is null").val;
     if (func == null) throw NullErr.make("func is null").val;
@@ -51,7 +51,7 @@ public class Method
   /**
    * Constructor used by Type.reflect.
    */
-  public Method(Type parent, Str name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List params)
+  public Method(Type parent, String name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List params)
   {
     this(parent, name, flags, facets, lineNum, returns, inheritedReturns, params, null);
   }
@@ -60,7 +60,7 @@ public class Method
    * Constructor used by GenericType and we are given the generic
    * method that is being parameterized.
    */
-  public Method(Type parent, Str name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List params, Method generic)
+  public Method(Type parent, String name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List params, Method generic)
   {
     super(parent, name, flags, facets, lineNum);
 
@@ -68,7 +68,7 @@ public class Method
     if ((flags & (FConst.Static|FConst.Ctor)) == 0)
     {
       Object[] temp = new Object[params.sz()+1];
-      temp[0] = new Param(Str.thisStr, parent, 0);
+      temp[0] = new Param("this", parent, 0);
       params.copyInto(temp, 1, params.sz());
       fparams = new List(Sys.ParamType, temp);
     }
@@ -116,7 +116,7 @@ public class Method
 
   public Func func() { return func; }
 
-  public Str signature()
+  public String signature()
   {
     StringBuilder s = new StringBuilder();
     s.append(func.returns).append(' ').append(name).append('(');
@@ -127,13 +127,13 @@ public class Method
       s.append(p.of).append(' ').append(p.name);
     }
     s.append(')');
-    return Str.make(s.toString());
+    return s.toString();
   }
 
-  public Object trap(Str name, List args)
+  public Object trap(String name, List args)
   {
     // private undocumented access
-    if (name.val.equals("inheritedReturnType"))
+    if (name.equals("inheritedReturnType"))
       return inheritedReturns;
     else
       return super.trap(name, args);

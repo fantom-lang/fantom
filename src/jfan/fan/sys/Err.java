@@ -65,16 +65,15 @@ public class Err
 // Java Convenience
 //////////////////////////////////////////////////////////////////////////
 
-  public static Err make(String msg) { return make(Str.make(msg)); }
-  public static Err make(String msg, Throwable e) { return make(Str.make(msg), make(e)); }
+  public static Err make(String msg, Throwable e) { return make(msg, make(e)); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static Err make() { return make((Str)null, (Err)null); }
-  public static Err make(Str msg) { return make(msg, null); }
-  public static Err make(Str msg, Err cause)
+  public static Err make() { return make((String)null, (Err)null); }
+  public static Err make(String msg) { return make(msg, (Err)null); }
+  public static Err make(String msg, Err cause)
   {
     Err err = new Err(new Err.Val());
     make$(err, msg, cause);
@@ -82,8 +81,8 @@ public class Err
   }
 
   public static void make$(Err self) { make$(self, null);  }
-  public static void make$(Err self, Str msg) { make$(self, msg, null); }
-  public static void make$(Err self, Str msg, Err cause)
+  public static void make$(Err self, String msg) { make$(self, msg, null); }
+  public static void make$(Err self, String msg, Err cause)
   {
     self.message = msg;
     self.cause   = cause;
@@ -112,14 +111,14 @@ public class Err
     this.val = val;
     val.err = this;
     this.actual = actual;
-    this.message = Str.make(actual.toString());
+    this.message = actual.toString();
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Str message()
+  public String message()
   {
     return message;
   }
@@ -134,12 +133,12 @@ public class Err
     return Sys.ErrType;
   }
 
-  public Str toStr()
+  public String toStr()
   {
     if (message == null)
-      return type().qname().toStr();
+      return type().qname();
     else
-      return Str.make(type().qname() + ": " + message);
+      return type().qname() + ": " + message;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -240,7 +239,7 @@ public class Err
     out.writeChar(')').writeChar('\n');
   }
 
-  public Str traceToStr()
+  public String traceToStr()
   {
     Buf buf = new MemBuf(1024);
     trace(buf.out());
@@ -263,7 +262,7 @@ public class Err
 //////////////////////////////////////////////////////////////////////////
 
   public final Val val;
-  Str message;
+  String message;
   Err cause;
   Throwable actual;
 

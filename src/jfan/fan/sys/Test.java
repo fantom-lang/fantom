@@ -36,14 +36,14 @@ public class Test
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  public Str id()
+  public String id()
   {
     if (id == null)
     {
-      Str qname = type().qname();
+      String qname = type().qname();
       Integer n = (Integer)idMap.get(qname);
       if (n == null) n = Integer.valueOf(0);
-      id = Str.make(qname.val + n);
+      id = qname + n;
       idMap.put(qname, Integer.valueOf(n.intValue()+1));
     }
     return id;
@@ -58,67 +58,67 @@ public class Test
 //////////////////////////////////////////////////////////////////////////
 
   public void verify(Boolean cond) { verify(cond, null); }
-  public void verify(Boolean cond, Str msg)
+  public void verify(Boolean cond, String msg)
   {
     if (!cond) fail(msg);
     verifyCount++;
   }
 
   public void verifyFalse(Boolean cond) { verifyFalse(cond, null); }
-  public void verifyFalse(Boolean cond, Str msg)
+  public void verifyFalse(Boolean cond, String msg)
   {
     if (cond) fail(msg);
     verifyCount++;
   }
 
   public void verifyEq(Object expected, Object actual) { verifyEq(expected, actual, null); }
-  public void verifyEq(Object expected, Object actual, Str msg)
+  public void verifyEq(Object expected, Object actual, String msg)
   {
     if (!OpUtil.compareEQ(expected, actual))
     {
-      if (msg == null) msg = Str.make(s(expected) + " != " + s(actual));
+      if (msg == null) msg = s(expected) + " != " + s(actual);
       fail(msg);
     }
     if (expected != null && actual != null)
     {
       if (hash(expected).longValue() != hash(actual).longValue())
       {
-        fail(Str.make("Equal but different hash codes: " +
+        fail("Equal but different hash codes: " +
           expected + " (0x" + FanInt.toHex(hash(expected)) + ") ?= " +
-          actual   + " (0x" + FanInt.toHex(hash(actual)) + ")"));
+          actual   + " (0x" + FanInt.toHex(hash(actual)) + ")");
       }
     }
     verifyCount++;
   }
 
   public void verifyNotEq(Object expected, Object actual) { verifyNotEq(expected, actual, null); }
-  public void verifyNotEq(Object expected, Object actual, Str msg)
+  public void verifyNotEq(Object expected, Object actual, String msg)
   {
     if (!OpUtil.compareNE(expected, actual))
     {
-      if (msg == null) msg = Str.make(s(expected) + " == " + s(actual));
+      if (msg == null) msg = s(expected) + " == " + s(actual);
       fail(msg);
     }
     verifyCount++;
   }
 
   public void verifySame(Object expected, Object actual) { verifySame(expected, actual, null); }
-  public void verifySame(Object expected, Object actual, Str msg)
+  public void verifySame(Object expected, Object actual, String msg)
   {
     if (!OpUtil.compareSame(expected, actual))
     {
-      if (msg == null) msg = Str.make(s(expected) + " !== " + s(actual));
+      if (msg == null) msg = s(expected) + " !== " + s(actual);
       fail(msg);
     }
     verifyCount++;
   }
 
   public void verifyNotSame(Object expected, Object actual) { verifyNotSame(expected, actual, null); }
-  public void verifyNotSame(Object expected, Object actual, Str msg)
+  public void verifyNotSame(Object expected, Object actual, String msg)
   {
     if (OpUtil.compareSame(expected, actual))
     {
-      if (msg == null) msg = Str.make(s(expected) + " === " + s(actual));
+      if (msg == null) msg = s(expected) + " === " + s(actual);
       fail(msg);
     }
     verifyCount++;
@@ -134,37 +134,37 @@ public class Test
     {
       if (verbose) System.out.println("  verifyErr: " + e);
       if (e.err().type() == errType) { verifyCount++; return; }
-      fail(Str.make(e.err().type() + " thrown, expected " + errType));
+      fail(e.err().type() + " thrown, expected " + errType);
     }
     catch (Throwable e)
     {
       if (verbose) System.out.println("  verifyErr: " + e);
       Err err = Err.make(e);
       if (err.type() == errType) { verifyCount++; return; }
-      fail(Str.make(e.toString() + " thrown, expected " + errType));
+      fail(e.toString() + " thrown, expected " + errType);
     }
-    fail(Str.make("No err thrown, expected " + errType));
+    fail("No err thrown, expected " + errType);
   }
 
   public void fail() { fail(null); }
-  public void fail(Str msg)
+  public void fail(String msg)
   {
     throw err(msg);
   }
 
-  private RuntimeException err(Str msg)
+  private RuntimeException err(String msg)
   {
     if (msg == null)
       return TestErr.make("Test failed").val;
     else
-      return TestErr.make("Test failed: " + msg.val).val;
+      return TestErr.make("Test failed: " + msg).val;
   }
 
   static String s(Object obj)
   {
     if (obj == null) return "null";
-    if (obj instanceof Str) return ((Str)obj).toCode().val;
-    return toStr(obj).val;
+    if (obj instanceof String) return FanStr.toCode((String)obj);
+    return toStr(obj);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -191,6 +191,6 @@ public class Test
   public int verifyCount;
   public static boolean verbose;
   File tempDir;
-  Str id;
+  String id;
 
 }

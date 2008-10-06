@@ -87,8 +87,8 @@ public class TextPeer
   };
 
   // Str text := ""
-  public Str text(fan.fwt.Text self) { return text.get(); }
-  public void text(fan.fwt.Text self, Str v) { text.set(v); }
+  public String text(fan.fwt.Text self) { return text.get(); }
+  public void text(fan.fwt.Text self, String v) { text.set(v); }
   public final Prop.StrProp text = new Prop.StrProp(this, "")
   {
     public String get(Widget w) { return ((Text)w).getText(); }

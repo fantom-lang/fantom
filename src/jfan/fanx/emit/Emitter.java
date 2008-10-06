@@ -387,7 +387,7 @@ public class Emitter
     if (info instanceof CpString)
     {
       CpString x = (CpString)info;
-      return "Str  " + x.utf + "=" + utfToStr(x.utf);
+      return "String  " + x.utf + "=" + utfToStr(x.utf);
     }
     if (info instanceof CpClass)
     {

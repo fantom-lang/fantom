@@ -27,9 +27,9 @@ public abstract class File
     return new LocalFile(uri, f);
   }
 
-  public static File os(Str osPath)
+  public static File os(String osPath)
   {
-    return new LocalFile(new java.io.File(osPath.val));
+    return new LocalFile(new java.io.File(osPath));
   }
 
   public static List osRoots()
@@ -42,15 +42,15 @@ public abstract class File
   }
 
   public static File createTemp() { return createTemp(null, null, null); }
-  public static File createTemp(Str prefix) { return createTemp(prefix, null, null); }
-  public static File createTemp(Str prefix, Str suffix) { return createTemp(prefix, suffix, null); }
-  public static File createTemp(Str prefix, Str suffix, File dir)
+  public static File createTemp(String prefix) { return createTemp(prefix, null, null); }
+  public static File createTemp(String prefix, String suffix) { return createTemp(prefix, suffix, null); }
+  public static File createTemp(String prefix, String suffix, File dir)
   {
-    if (prefix == null || prefix.val.length() == 0) prefix = Str.make("fan");
-    if (prefix.val.length() == 1) prefix = Str.make(prefix.val + "xx");
-    if (prefix.val.length() == 2) prefix = Str.make(prefix.val + "x");
+    if (prefix == null || prefix.length() == 0) prefix = "fan";
+    if (prefix.length() == 1) prefix = prefix + "xx";
+    if (prefix.length() == 2) prefix = prefix + "x";
 
-    if (suffix == null) suffix = Str.make(".tmp");
+    if (suffix == null) suffix = ".tmp";
 
     java.io.File d = null;
     if (dir != null)
@@ -61,7 +61,7 @@ public abstract class File
 
     try
     {
-      return new LocalFile(java.io.File.createTempFile(prefix.val, suffix.val, d));
+      return new LocalFile(java.io.File.createTempFile(prefix, suffix, d));
     }
     catch (java.io.IOException e)
     {
@@ -91,7 +91,7 @@ public abstract class File
 
   public final Long hash() { return uri.hash(); }
 
-  public final Str toStr() { return uri.toStr(); }
+  public final String toStr() { return uri.toStr(); }
 
   public Type type() { return Sys.FileType; }
 
@@ -105,13 +105,13 @@ public abstract class File
 
   public final List path() { return uri.path(); }
 
-  public final Str pathStr() { return uri.pathStr(); }
+  public final String pathStr() { return uri.pathStr(); }
 
-  public final Str name() { return uri.name(); }
+  public final String name() { return uri.name(); }
 
-  public final Str basename() { return uri.basename(); }
+  public final String basename() { return uri.basename(); }
 
-  public final Str ext() { return uri.ext(); }
+  public final String ext() { return uri.ext(); }
 
   public final MimeType mimeType() { return uri.mimeType(); }
 
@@ -126,7 +126,7 @@ public abstract class File
   public abstract DateTime modified();
   public abstract void modified(DateTime time);
 
-  public abstract Str osPath();
+  public abstract String osPath();
 
   public abstract File parent();
 
@@ -170,7 +170,7 @@ public abstract class File
 
   File plusNameOf(File x)
   {
-    String name = x.name().val;
+    String name = x.name();
     if (x.isDir()) name += "/";
     return plus(name);
   }
@@ -181,17 +181,17 @@ public abstract class File
 
   public abstract File create();
 
-  public File createFile(Str name)
+  public File createFile(String name)
   {
     if (!isDir()) throw IOErr.make("Not a directory: " + this).val;
-    return this.plus(name.toUri()).create();
+    return this.plus(Uri.fromStr(name)).create();
   }
 
-  public File createDir(Str name)
+  public File createDir(String name)
   {
     if (!isDir()) throw IOErr.make("Not a directory: " + this).val;
-    if (!name.val.endsWith("/")) name = Str.make(name.val + "/");
-    return this.plus(name.toUri()).create();
+    if (!name.endsWith("/")) name = name + "/";
+    return this.plus(Uri.fromStr(name)).create();
   }
 
   public abstract void delete();
@@ -218,8 +218,8 @@ public abstract class File
     Object exclude = null, overwrite = null;
     if (options != null)
     {
-      exclude = options.get(optExclude);
-      overwrite = options.get(optOverwrite);
+      exclude = options.get("exclude");
+      overwrite = options.get("overwrite");
     }
 
     // recurse
@@ -306,24 +306,23 @@ public abstract class File
     return moveTo(dir.plusNameOf(this));
   }
 
-  public File rename(Str newName)
+  public File rename(String newName)
   {
-    String n = newName.val;
-    if (isDir()) n += "/";
-    return moveTo(parent().plus(n));
+    if (isDir()) newName += "/";
+    return moveTo(parent().plus(newName));
   }
 
 //////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
 
-  public final Buf open() { return open(rwStr); }
-  public abstract Buf open(Str mode);
+  public final Buf open() { return open("rw"); }
+  public abstract Buf open(String mode);
 
-  public final Buf mmap() { return mmap(rwStr, 0L, null); }
-  public final Buf mmap(Str mode) { return mmap(mode, 0L, null); }
-  public final Buf mmap(Str mode, Long pos) { return mmap(mode, pos, null); }
-  public abstract Buf mmap(Str mode, Long pos, Long size);
+  public final Buf mmap() { return mmap("rw", 0L, null); }
+  public final Buf mmap(String mode) { return mmap(mode, 0L, null); }
+  public final Buf mmap(String mode, Long pos) { return mmap(mode, pos, null); }
+  public abstract Buf mmap(String mode, Long pos, Long size);
 
   public final InStream in() { return in(FanInt.Chunk); }
   public abstract InStream in(Long bufSize);
@@ -347,8 +346,8 @@ public abstract class File
     in(FanInt.Chunk).eachLine(f);
   }
 
-  public final Str readAllStr() { return readAllStr(true); }
-  public final Str readAllStr(Boolean normalizeNewlines)
+  public final String readAllStr() { return readAllStr(true); }
+  public final String readAllStr(Boolean normalizeNewlines)
   {
     return in(FanInt.Chunk).readAllStr(normalizeNewlines);
   }
@@ -395,12 +394,8 @@ public abstract class File
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  public static final Str sep = Str.make(java.io.File.separator);
-  public static final Str pathSep = Str.make(java.io.File.pathSeparator);
-
-  static final Str rwStr        = Str.make("rw");
-  static final Str optOverwrite = Str.make("overwrite");
-  static final Str optExclude   = Str.make("exclude");
+  public static final String sep = java.io.File.separator;
+  public static final String pathSep = java.io.File.pathSeparator;
 
   final Uri uri;
 }

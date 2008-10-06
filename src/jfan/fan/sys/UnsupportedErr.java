@@ -15,18 +15,12 @@ public class UnsupportedErr
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Java Convenience
-//////////////////////////////////////////////////////////////////////////
-
-  public static UnsupportedErr make(String msg)  { return make(Str.make(msg)); }
-
-//////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnsupportedErr make() { return make((Str)null, (Err)null); }
-  public static UnsupportedErr make(Str msg) { return make(msg, null); }
-  public static UnsupportedErr make(Str msg, Err cause)
+  public static UnsupportedErr make() { return make((String)null, (Err)null); }
+  public static UnsupportedErr make(String msg) { return make(msg, (Err)null); }
+  public static UnsupportedErr make(String msg, Err cause)
   {
     UnsupportedErr err = new UnsupportedErr();
     make$(err, msg, cause);
@@ -34,8 +28,8 @@ public class UnsupportedErr
   }
 
   public static void make$(UnsupportedErr self) { make$(self, null);  }
-  public static void make$(UnsupportedErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(UnsupportedErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(UnsupportedErr self, String msg) { make$(self, msg, null); }
+  public static void make$(UnsupportedErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

@@ -70,7 +70,7 @@ public class StrBuf
 
   public StrBuf add(Object x)
   {
-    String s = (x == null) ? "null" : toStr(x).val;
+    String s = (x == null) ? "null" : toStr(x);
     sb.append(s);
     return this;
   }
@@ -81,18 +81,18 @@ public class StrBuf
     return this;
   }
 
-  public StrBuf join(Object x) { return join(x, Str.ascii[' ']); }
-  public StrBuf join(Object x, Str sep)
+  public StrBuf join(Object x) { return join(x, " "); }
+  public StrBuf join(Object x, String sep)
   {
-    String s = (x == null) ? "null" : toStr(x).val;
-    if (sb.length() > 0) sb.append(sep.val);
+    String s = (x == null) ? "null" : toStr(x);
+    if (sb.length() > 0) sb.append(sep);
     sb.append(s);
     return this;
   }
 
   public StrBuf insert(Long index, Object x)
   {
-    String s = (x == null) ? "null" : toStr(x).val;
+    String s = (x == null) ? "null" : toStr(x);
     int i = index.intValue();
     if (i < 0) i = sb.length()+i;
     if (i > sb.length()) throw IndexErr.make(index).val;
@@ -121,9 +121,9 @@ public class StrBuf
     return this;
   }
 
-  public Str toStr()
+  public String toStr()
   {
-    return Str.make(sb.toString());
+    return sb.toString();
   }
 
   public Type type()

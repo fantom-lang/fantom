@@ -37,8 +37,8 @@ public class Pod
 // Management
 //////////////////////////////////////////////////////////////////////////
 
-  public static Pod find(Str name) { return find(name.val, true, null, null); }
-  public static Pod find(Str name, Boolean checked) { return find(name.val, checked, null, null); }
+  public static Pod find(String name) { return find(name, true, null, null); }
+  public static Pod find(String name, Boolean checked) { return find(name, checked.booleanValue(), null, null); }
   public static Pod find(String name, boolean checked) { return find(name, checked, null, null); }
   public static Pod find(String name, boolean checked, FPod fpod, HashMap resolving)
   {
@@ -72,7 +72,7 @@ public class Pod
           for (int i=0; i<fpod.depends.length; ++i)
           {
             Depend d = fpod.depends[i];
-            Pod dpod = find(d.name().val, false, null, resolving);
+            Pod dpod = find(d.name(), false, null, resolving);
             if (dpod == null)
               throw new Exception("Missing dependency for '" + name + "': " + d);
             if (!d.match(dpod.version()))
@@ -185,7 +185,7 @@ public class Pod
 
   Pod(FPod fpod)
   {
-    this.name = Str.make(fpod.podName);
+    this.name = fpod.podName;
     load(fpod);
   }
 
@@ -195,12 +195,12 @@ public class Pod
 
   public Type type() { return Sys.PodType; }
 
-  public final Str name()  { return name; }
+  public final String name()  { return name; }
 
   public final Version version()
   {
     if (version == null)
-      version = Version.fromStr(Str.make(fpod.podVersion));
+      version = Version.fromStr(fpod.podVersion);
     return version;
   }
 
@@ -217,15 +217,15 @@ public class Pod
     return uri;
   }
 
-  public final Str toStr() { return name; }
+  public final String toStr() { return name; }
 
 //////////////////////////////////////////////////////////////////////////
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
   public Map facets() { return toFacets().map(); }
-  public Object facet(Str name) { return toFacets().get(name, null); }
-  public Object facet(Str name, Object def) { return toFacets().get(name, def); }
+  public Object facet(String name) { return toFacets().get(name, null); }
+  public Object facet(String name, Object def) { return toFacets().get(name, def); }
 
   private Facets toFacets()
   {
@@ -239,8 +239,8 @@ public class Pod
 
   public List types() { return new List(Sys.TypeType, types); }
 
-  public Type findType(Str name) { return findType(name.val, true); }
-  public Type findType(Str name, Boolean checked) { return findType(name.val, checked.booleanValue()); }
+  public Type findType(String name) { return findType(name, true); }
+  public Type findType(String name, Boolean checked) { return findType(name, checked.booleanValue()); }
   public Type findType(String name, boolean checked)
   {
     Type type = (Type)typesByName.get(name);
@@ -270,12 +270,12 @@ public class Pod
     return log;
   }
 
-  public final Str loc(Str key)
+  public final String loc(String key)
   {
     return Locale.current().doGet(this, name, key, Locale.getNoDef);
   }
 
-  public final Str loc(Str key, Str def)
+  public final String loc(String key, String def)
   {
     return Locale.current().doGet(this, name, key, def);
   }
@@ -300,7 +300,7 @@ public class Pod
 
       // add to my data structures
       types[i] = type;
-      if (typesByName.put(type.name.val, type) != null)
+      if (typesByName.put(type.name, type) != null)
         throw Err.make("Invalid pod: " + name + " type already defined: " + type.name).val;
     }
 
@@ -359,12 +359,12 @@ public class Pod
     // loading my own hollow types
     String podName  = fpod.name(ref.podName);
     String typeName = fpod.name(ref.typeName);
-    Pod pod = podName.equals(name.val) ? this : Pod.find(podName, true, null, null);
+    Pod pod = podName.equals(name) ? this : Pod.find(podName, true, null, null);
     Type type = pod.findType(typeName, false);
     if (type != null) return type;
 
     // handle variance types (for sys pod only)
-    if (this.name.val.equals("sys"))
+    if (this.name.equals("sys"))
     {
       type = Sys.genericParameterType(typeName);
       if (type != null) return type;
@@ -420,7 +420,7 @@ public class Pod
   static HashMap podsByName = new HashMap();
   static List allPodsList = null;
 
-  final Str name;
+  final String name;
   Uri uri;
   FPod fpod;
   Version version;

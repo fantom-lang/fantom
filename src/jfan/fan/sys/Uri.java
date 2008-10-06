@@ -23,13 +23,12 @@ public final class Uri
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Uri fromStr(String s) { return fromStr(Str.make(s), true); }
-  public static Uri fromStr(Str s) { return fromStr(s, true); }
-  public static Uri fromStr(Str s, Boolean checked)
+  public static Uri fromStr(String s) { return fromStr(s, true); }
+  public static Uri fromStr(String s, Boolean checked)
   {
     try
     {
-      return new Uri(new Decoder(s.val, false).decode());
+      return new Uri(new Decoder(s, false).decode());
     }
     catch (ParseErr.Val e)
     {
@@ -43,13 +42,12 @@ public final class Uri
     }
   }
 
-  public static Uri decode(String s) { return decode(Str.make(s), true); }
-  public static Uri decode(Str s) { return decode(s, true); }
-  public static Uri decode(Str s, Boolean checked)
+  public static Uri decode(String s) { return decode(s, true); }
+  public static Uri decode(String s, Boolean checked)
   {
     try
     {
-      return new Uri(new Decoder(s.val, true).decode());
+      return new Uri(new Decoder(s, true).decode());
     }
     catch (ParseErr.Val e)
     {
@@ -67,11 +65,11 @@ public final class Uri
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public static Map decodeQuery(Str s)
+  public static Map decodeQuery(String s)
   {
     try
     {
-      return new Decoder(s.val, true).decodeQuery();
+      return new Decoder(s, true).decodeQuery();
     }
     catch (ArgErr.Val e)
     {
@@ -83,23 +81,23 @@ public final class Uri
     }
   }
 
-  public static Str encodeQuery(Map map)
+  public static String encodeQuery(Map map)
   {
     StringBuilder buf = new StringBuilder(256);
     java.util.Iterator it = map.keysIterator();
     while (it.hasNext())
     {
-      Str key = (Str)it.next();
-      Str val = (Str)map.get(key);
+      String key = (String)it.next();
+      String val = (String)map.get(key);
       if (buf.length() > 0) buf.append('&');
-      encodeQueryStr(buf, key.val);
+      encodeQueryStr(buf, key);
       if (val != null)
       {
         buf.append('=');
-        encodeQueryStr(buf, val.val);
+        encodeQueryStr(buf, val);
       }
     }
-    return Str.make(buf.toString());
+    return buf.toString();
   }
 
   static void encodeQueryStr(StringBuilder buf, String str)
@@ -152,16 +150,16 @@ public final class Uri
 
     private void normalizeHttp()
     {
-      if (scheme == null || !scheme.val.equals("http"))
+      if (scheme == null || !scheme.equals("http"))
         return;
 
       // port 80 -> null
       if (port != null && port.longValue() == 80) port = null;
 
       // if path is "" -> "/"
-      if (pathStr == null || pathStr.val.length() == 0)
+      if (pathStr == null || pathStr.length() == 0)
       {
-        pathStr = Str.ascii['/'];
+        pathStr = "/";
         if (path == null) path = emptyPath();
       }
     }
@@ -170,21 +168,21 @@ public final class Uri
     {
       if (path == null) return;
 
-      boolean isAbs = pathStr.val.startsWith("/");
-      boolean isDir = pathStr.val.endsWith("/");
+      boolean isAbs = pathStr.startsWith("/");
+      boolean isDir = pathStr.endsWith("/");
       boolean dotLast = false;
       boolean modified = false;
       for (int i=0; i<path.sz(); ++i)
       {
-        Str seg = (Str)path.get(i);
-        if (seg.val.equals(".") && (path.sz() > 1 || host != null))
+        String seg = (String)path.get(i);
+        if (seg.equals(".") && (path.sz() > 1 || host != null))
         {
           path.removeAt(Long.valueOf(i));
           modified = true;
           dotLast = true;
           i -= 1;
         }
-        else if (seg.val.equals("..") && i > 0 && !path.get(i-1).toString().equals(".."))
+        else if (seg.equals("..") && i > 0 && !path.get(i-1).toString().equals(".."))
         {
           path.removeAt(Long.valueOf(i));
           path.removeAt(Long.valueOf(i-1));
@@ -212,16 +210,16 @@ public final class Uri
         query = emptyQuery();
     }
 
-    Str scheme;
-    Str host;
-    Str userInfo;
+    String scheme;
+    String host;
+    String userInfo;
     Long port;
-    Str pathStr;
+    String pathStr;
     List path;
-    Str queryStr;
+    String queryStr;
     Map query;
-    Str frag;
-    Str str;
+    String frag;
+    String str;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -257,8 +255,8 @@ public final class Uri
         // any upper case characters normalize to lowercase
         pos = i + 1;
         String scheme = str.substring(0, i);
-        if (hasUpper) scheme = Str.lower(scheme);
-        this.scheme = Str.make(scheme);
+        if (hasUpper) scheme = FanStr.lower(scheme);
+        this.scheme = scheme;
       }
 
       // ==== authority ====
@@ -285,7 +283,7 @@ public final class Uri
         // if we found an @ symbol, parse out userinfo
         if (at > 0)
         {
-          this.userInfo = substr(authStart, at, USER);
+          this.userInfo = substring(authStart, at, USER);
           hostStart = at+1;
         }
 
@@ -297,7 +295,7 @@ public final class Uri
         }
 
         // host is everything left in the authority
-        this.host = substr(hostStart, hostEnd, HOST);
+        this.host = substring(hostStart, hostEnd, HOST);
         pos = authEnd;
       }
 
@@ -322,8 +320,8 @@ public final class Uri
       }
 
       // we now have the complete path section
-      this.pathStr = substr(pathStart, pathEnd, PATH);
-      this.path = pathSegments(pathStr.val, numSegs);
+      this.pathStr = substring(pathStart, pathEnd, PATH);
+      this.path = pathSegments(pathStr, numSegs);
       pos = pathEnd;
 
       // ==== query ====
@@ -347,8 +345,8 @@ public final class Uri
         }
 
         // we now have the complete query section
-        this.queryStr = substr(queryStart, queryEnd, QUERY);
-        this.query = parseQuery(queryStr.val);
+        this.queryStr = substring(queryStart, queryEnd, QUERY);
+        this.query = parseQuery(queryStr);
         pos = queryEnd;
       }
 
@@ -356,7 +354,7 @@ public final class Uri
 
       if (pos < len  && str.charAt(pos) == '#')
       {
-        this.frag = substr(pos+1, len, FRAG);
+        this.frag = substring(pos+1, len, FRAG);
       }
 
       // === normalize ===
@@ -379,7 +377,7 @@ public final class Uri
       }
 
       // parse the segments
-      Str[] path = new Str[numSegs];
+      String[] path = new String[numSegs];
       int n = 0;
       int segStart = 0, prev = 0;
       for (int i=0; i<pathStr.length(); ++i)
@@ -389,7 +387,7 @@ public final class Uri
         {
           if (c == '/')
           {
-            if (i > 0) path[n++] = Str.make(pathStr.substring(segStart, i));
+            if (i > 0) path[n++] = pathStr.substring(segStart, i);
             segStart = i+1;
           }
           prev = c;
@@ -400,7 +398,7 @@ public final class Uri
         }
       }
       if (segStart < len)
-        path[n++] = Str.make(pathStr.substring(segStart, pathStr.length()));
+        path[n++] = pathStr.substring(segStart, pathStr.length());
 
       return new List(Sys.StrType, path);
     }
@@ -458,14 +456,14 @@ public final class Uri
     private void addQueryParam(Map map, String q, int start, int eq, int end, boolean escaped)
     {
       if (start == eq)
-        map.set(toQueryStr(q, start, end, escaped), FanBool.trueStr);
+        map.set(toQueryStr(q, start, end, escaped), "true");
       else
         map.set(toQueryStr(q, start, eq, escaped), toQueryStr(q, eq+1, end, escaped));
     }
 
-    private Str toQueryStr(String q, int start, int end, boolean escaped)
+    private String toQueryStr(String q, int start, int end, boolean escaped)
     {
-      if (!escaped) return Str.make(q.substring(start, end));
+      if (!escaped) return q.substring(start, end);
       StringBuilder s = new StringBuilder(end-start);
       int prev = 0;
       for (int i=start; i<end; ++i)
@@ -482,12 +480,7 @@ public final class Uri
           else prev = c;
         }
       }
-      return Str.make(s.toString());
-    }
-
-    private Str substr(int start, int end, int section)
-    {
-      return Str.make(substring(start, end, section));
+      return s.toString();
     }
 
     private String substring(int start, int end, int section)
@@ -581,13 +574,13 @@ public final class Uri
       this.buf = new StringBuilder();
     }
 
-    Str encode()
+    String encode()
     {
       Uri uri = this.uri;
       StringBuilder buf = this.buf;
 
       // scheme
-      if (uri.scheme != null) buf.append(uri.scheme.val).append(':');
+      if (uri.scheme != null) buf.append(uri.scheme).append(':');
 
       // authority
       if (uri.userInfo != null || uri.host != null || uri.port != null)
@@ -610,15 +603,14 @@ public final class Uri
       if (uri.frag != null)
         { buf.append('#'); encode(uri.frag, FRAG); }
 
-      return Str.make(buf.toString());
+      return buf.toString();
     }
 
-    StringBuilder encode(Str str, int section)
+    StringBuilder encode(String s, int section)
     {
-      if (!encoding) return buf.append(str.val);
+      if (!encoding) return buf.append(s);
 
       StringBuilder buf = this.buf;
-      String s = str.val;
       int len = s.length();
       int c = 0, prev;
       for (int i=0; i<len; ++i)
@@ -692,7 +684,7 @@ public final class Uri
   {
     if (obj instanceof Uri)
     {
-      return str._equals(((Uri)obj).str);
+      return str.equals(((Uri)obj).str);
     }
     return false;
   }
@@ -704,17 +696,17 @@ public final class Uri
 
   public Long hash()
   {
-    return str.hash();
+    return FanStr.hash(str);
   }
 
-  public Str toStr()
+  public String toStr()
   {
     return str;
   }
 
   public void encode(ObjEncoder out)
   {
-    out.wStrLiteral(str.val, '`');
+    out.wStrLiteral(str, '`');
   }
 
   public Type type()
@@ -722,9 +714,9 @@ public final class Uri
     return Sys.UriType;
   }
 
-  public Str encode()
+  public String encode()
   {
-    Str x = encoded;
+    String x = encoded;
     if (x != null) return x;
     return encoded = new Encoder(this, true).encode();
   }
@@ -747,7 +739,7 @@ public final class Uri
   {
     if (pathStr != null)
     {
-      String p = pathStr.val;
+      String p = pathStr;
       int len = p.length();
       if (len > 0 && p.charAt(len-1) == '/')
         return true;
@@ -755,32 +747,32 @@ public final class Uri
     return false;
   }
 
-  public Str scheme()
+  public String scheme()
   {
     return scheme;
   }
 
-  public Str auth()
+  public String auth()
   {
     if (host == null) return null;
     if (port == null)
     {
       if (userInfo == null) return host;
-      else return Str.make(userInfo.val + '@' + host.val);
+      else return userInfo + '@' + host;
     }
     else
     {
-      if (userInfo == null) return Str.make(host.val + ':' + port);
-      else return Str.make(userInfo.val + '@' + host.val + ':' + port);
+      if (userInfo == null) return host + ':' + port;
+      else return userInfo + '@' + host + ':' + port;
     }
   }
 
-  public Str host()
+  public String host()
   {
     return host;
   }
 
-  public Str userInfo()
+  public String userInfo()
   {
     return userInfo;
   }
@@ -790,23 +782,23 @@ public final class Uri
     return port;
   }
 
-  public final String path(int depth) { return ((Str)path.get(depth)).val; }
+  public final String path(int depth) { return (String)path.get(depth); }
   public List path()
   {
     return path;
   }
 
-  public Str pathStr()
+  public String pathStr()
   {
     return pathStr;
   }
 
   public Boolean isPathAbs()
   {
-    if (pathStr == null || pathStr.val.length() == 0)
+    if (pathStr == null || pathStr.length() == 0)
       return false;
     else
-      return pathStr.val.charAt(0) == '/';
+      return pathStr.charAt(0) == '/';
   }
 
   public Boolean isPathOnly()
@@ -815,30 +807,28 @@ public final class Uri
            userInfo == null && queryStr == null && frag == null;
   }
 
-  public Str name()
+  public String name()
   {
-    if (path.sz() == 0) return Str.Empty;
-    return (Str)path.last();
+    if (path.sz() == 0) return "";
+    return (String)path.last();
   }
 
-  public Str basename()
+  public String basename()
   {
-    Str name = name();
-    String n = name.val;
+    String n = name();
     int dot = n.lastIndexOf('.');
     if (dot < 2)
     {
-      if (dot < 0) return name;
-      if (n.equals(".")) return name;
-      if (n.equals("..")) return name;
+      if (dot < 0) return n;
+      if (n.equals(".")) return n;
+      if (n.equals("..")) return n;
     }
-    return Str.make(n.substring(0, dot));
+    return n.substring(0, dot);
   }
 
-  public Str ext()
+  public String ext()
   {
-    Str name = name();
-    String n = name.val;
+    String n = name();
     int dot = n.lastIndexOf('.');
     if (dot < 2)
     {
@@ -846,7 +836,7 @@ public final class Uri
       if (n.equals(".")) return null;
       if (n.equals("..")) return null;
     }
-    return Str.make(n.substring(dot+1));
+    return n.substring(dot+1);
   }
 
   public MimeType mimeType()
@@ -860,12 +850,12 @@ public final class Uri
     return query;
   }
 
-  public Str queryStr()
+  public String queryStr()
   {
     return queryStr;
   }
 
-  public Str frag()
+  public String frag()
   {
     return frag;
   }
@@ -880,7 +870,6 @@ public final class Uri
     if (path.sz() == 0) return null;
 
     // if just a simple filename, then no parent
-    String p = pathStr.val;
     if (path.sz() == 1 && !isPathAbs() && !isDir()) return null;
 
     // use slice
@@ -926,7 +915,7 @@ public final class Uri
     Sections t = new Sections();
     t.path = path.slice(range);
 
-    StringBuilder sb = new StringBuilder(pathStr.val.length());
+    StringBuilder sb = new StringBuilder(pathStr.length());
     if ((head && isPathAbs()) || forcePathAbs) sb.append('/');
     for (int i=0; i<t.path.sz(); ++i)
     {
@@ -934,7 +923,7 @@ public final class Uri
       sb.append(t.path.get(i));
     }
     if (t.path.sz() > 0 && (!tail || isDir())) sb.append('/');
-    t.pathStr = Str.make(sb.toString());
+    t.pathStr = sb.toString();
 
     if (head)
     {
@@ -1000,7 +989,7 @@ public final class Uri
     else if (d == this.path.sz() && d == base.path.sz())
     {
       t.path = emptyPath();
-      t.pathStr = Str.Empty;
+      t.pathStr = "";
     }
 
     // create sub-path at divergence point
@@ -1012,7 +1001,7 @@ public final class Uri
       // insert .. backup if needed
       int backup = base.path.sz() - d;
       if (!base.isDir()) backup--;
-      while (backup-- > 0) t.path.insert(0L, dotDot);
+      while (backup-- > 0) t.path.insert(0L, "..");
 
       // format the new path string
       t.pathStr = toPathStr(false, t.path, this.isDir());
@@ -1059,7 +1048,7 @@ public final class Uri
     }
     else
     {
-      if (r.pathStr == null || r.pathStr.val.equals(""))
+      if (r.pathStr == null || r.pathStr.equals(""))
       {
         t.setPath(base);
         if (r.queryStr != null)
@@ -1069,7 +1058,7 @@ public final class Uri
       }
       else
       {
-        if (r.pathStr.val.startsWith("/"))
+        if (r.pathStr.startsWith("/"))
           t.setPath(r);
         else
           merge(t, base, r);
@@ -1104,9 +1093,9 @@ public final class Uri
       if (!baseIsDir) tPath.pop();
       for (int i=0; i<rPath.sz(); ++i)
       {
-        Str rSeg = (Str)rPath.get(i);
-        if (rSeg.val.equals(".")) { dotLast = true; continue; }
-        if (rSeg.val.equals(".."))
+        String rSeg = (String)rPath.get(i);
+        if (rSeg.equals(".")) { dotLast = true; continue; }
+        if (rSeg.equals(".."))
         {
           if (!tPath.isEmpty()) { tPath.pop(); dotLast = true; continue; }
           if (baseIsAbs) continue;
@@ -1119,7 +1108,7 @@ public final class Uri
     t.pathStr = toPathStr(baseIsAbs, tPath, rIsDir || dotLast);
   }
 
-  static Str toPathStr(boolean isAbs, List path, boolean isDir)
+  static String toPathStr(boolean isAbs, List path, boolean isDir)
   {
     StringBuilder buf = new StringBuilder();
     if (isAbs) buf.append('/');
@@ -1130,17 +1119,17 @@ public final class Uri
     }
     if (isDir && !(buf.length() > 0 && buf.charAt(buf.length()-1) == '/'))
       buf.append('/');
-    return Str.make(buf.toString());
+    return buf.toString();
   }
 
-  public Uri plusName(String name, boolean isDir) { return plusName(Str.make(name), Boolean.valueOf(isDir)); }
-  public Uri plusName(Str name) { return plusName(name, false); }
-  public Uri plusName(Str name, Boolean asDir)
+  public Uri plusName(String name, boolean isDir) { return plusName(name, Boolean.valueOf(isDir)); }
+  public Uri plusName(String name) { return plusName(name, false); }
+  public Uri plusName(String name, Boolean asDir)
   {
     int size         = path.sz();
     boolean isDir    = isDir();
     int newSize      = isDir ? size + 1 : size;
-    Str[] temp       = (Str[])path.toArray(new Str[newSize]);
+    String[] temp    = (String[])path.toArray(new String[newSize]);
     temp[newSize-1]  = name;
 
     Sections t = new Sections();
@@ -1168,7 +1157,7 @@ public final class Uri
     t.queryStr = this.queryStr;
     t.frag     = this.frag;
     t.path     = this.path;
-    t.pathStr  = Str.make(this.pathStr.val + "/");
+    t.pathStr  = this.pathStr + "/";
     return new Uri(t);
   }
 
@@ -1184,8 +1173,8 @@ public final class Uri
     {
       if (s.length() > 0) s.append('&');
       java.util.Map.Entry e = (java.util.Map.Entry)it.next();
-      String key = ((Str)e.getKey()).val;
-      String val = ((Str)e.getValue()).val;
+      String key = (String)e.getKey();
+      String val = (String)e.getValue();
       appendQueryStr(s, key);
       s.append('=');
       appendQueryStr(s, val);
@@ -1200,7 +1189,7 @@ public final class Uri
     t.pathStr  = this.pathStr;
     t.path     = this.path;
     t.query    = merge.ro();
-    t.queryStr = Str.make(s.toString());
+    t.queryStr = s.toString();
     return new Uri(t);
   }
 
@@ -1237,7 +1226,7 @@ public final class Uri
       Uri baseUri = null;
       try
       {
-        baseUri = (Uri)trap(base, Str.uriStr, null);
+        baseUri = (Uri)trap(base, "uri", null);
         if (baseUri == null)
           throw UnresolvedErr.make("Base object's uri is null: " + this).val;
       }
@@ -1269,25 +1258,24 @@ public final class Uri
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean isName(Str name)
+  public static Boolean isName(String name)
   {
-    String n = name.val;
-    int len = n.length();
+    int len = name.length();
 
     // must be at least one character long
     if (len == 0) return false;
 
     // check for "." and ".."
-    if (n.charAt(0) == '.' && len <= 2)
+    if (name.charAt(0) == '.' && len <= 2)
     {
       if (len == 1) return false;
-      if (n.charAt(1) == '.') return false;
+      if (name.charAt(1) == '.') return false;
     }
 
     // check that each char is unreserved
     for (int i=0; i<len; ++i)
     {
-      int c = n.charAt(i);
+      int c = name.charAt(i);
       if (c < 128 && nameMap[c]) continue;
       return false;
     }
@@ -1295,7 +1283,7 @@ public final class Uri
     return true;
   }
 
-  public static void checkName(Str name)
+  public static void checkName(String name)
   {
     if (!isName(name))
       throw NameErr.make(name).val;
@@ -1428,18 +1416,17 @@ public final class Uri
 //////////////////////////////////////////////////////////////////////////
 
   static final Range parentRange = Range.make(0L, -2L, false);
-  static final Str dotDot = Str.make("..");
 
-  final Str str;
-  final Str scheme;
-  final Str userInfo;
-  final Str host;
+  final String str;
+  final String scheme;
+  final String userInfo;
+  final String host;
   final Long port;
   final List path;
-  final Str pathStr;
+  final String pathStr;
   final Map query;
-  final Str queryStr;
-  final Str frag;
-  Str encoded;
+  final String queryStr;
+  final String frag;
+  String encoded;
 
 }

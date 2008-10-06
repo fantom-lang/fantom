@@ -20,13 +20,6 @@ public class StrInStream
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public StrInStream(Str str)
-  {
-    this.str  = str.val;
-    this.size = str.val.length();
-    this.pos  = 0;
-  }
-
   public StrInStream(String val)
   {
     this.str  = val;

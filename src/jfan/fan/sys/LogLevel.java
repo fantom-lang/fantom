@@ -34,12 +34,12 @@ public class LogLevel
 
   private LogLevel(int ord, String name)
   {
-    Enum.make$(this, FanInt.pos[ord], Str.make(name).intern());
+    Enum.make$(this, FanInt.pos[ord], name.intern());
     this.ord = ord;
   }
 
-  public static LogLevel fromStr(Str name) { return fromStr(name, true); }
-  public static LogLevel fromStr(Str name, Boolean checked)
+  public static LogLevel fromStr(String name) { return fromStr(name, true); }
+  public static LogLevel fromStr(String name, Boolean checked)
   {
     return (LogLevel)doFromStr(Sys.LogLevelType, name, checked);
   }

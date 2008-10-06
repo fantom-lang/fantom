@@ -39,7 +39,7 @@ class ErrTest : Test
     Int line := #testTrace->lineNumber; line += 3 // next line
     verifyTrace(line++) |,| { throw Err.make("foo") }
     verifyTrace(line++) |,| { Obj x := 3; ((Str)x).size }
-    verifyTrace(line++) |,| { Str x := null; x.size }
+    verifyTrace(line++) |,| { Pod x := null; x.name }
     verifyTrace(line++) |,| { try { throw Err.make("cause") } catch (Err e) { throw Err.make("foo", e) } }
   }
 

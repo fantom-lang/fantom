@@ -15,18 +15,12 @@ public class NameErr
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Java Convenience
-//////////////////////////////////////////////////////////////////////////
-
-  public static NameErr make(String msg)  { return make(Str.make(msg)); }
-
-//////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static NameErr make() { return make((Str)null, (Err)null); }
-  public static NameErr make(Str msg) { return make(msg, null); }
-  public static NameErr make(Str msg, Err cause)
+  public static NameErr make() { return make((String)null, (Err)null); }
+  public static NameErr make(String msg) { return make(msg, (Err)null); }
+  public static NameErr make(String msg, Err cause)
   {
     NameErr err = new NameErr();
     make$(err, msg, cause);
@@ -34,8 +28,8 @@ public class NameErr
   }
 
   public static void make$(NameErr self) { make$(self, null);  }
-  public static void make$(NameErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(NameErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(NameErr self, String msg) { make$(self, msg, null); }
+  public static void make$(NameErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

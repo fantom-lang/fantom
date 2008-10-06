@@ -31,7 +31,7 @@ final class DirNamespace
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toStr() { return Str.make("DirNamespace " + dir); }
+  public String toStr() { return "DirNamespace " + dir; }
 
   public Type type() { return Sys.DirNamespaceType; }
 

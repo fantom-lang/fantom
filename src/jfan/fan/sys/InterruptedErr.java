@@ -18,15 +18,13 @@ public class InterruptedErr
 // Java Convenience
 //////////////////////////////////////////////////////////////////////////
 
-  public static InterruptedErr make(String msg)  { return make(Str.make(msg)); }
-
 //////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static InterruptedErr make() { return make((Str)null, (Err)null); }
-  public static InterruptedErr make(Str msg) { return make(msg, null); }
-  public static InterruptedErr make(Str msg, Err cause)
+  public static InterruptedErr make() { return make((String)null, (Err)null); }
+  public static InterruptedErr make(String msg) { return make(msg, (Err)null); }
+  public static InterruptedErr make(String msg, Err cause)
   {
     InterruptedErr err = new InterruptedErr();
     make$(err, msg, cause);
@@ -34,8 +32,8 @@ public class InterruptedErr
   }
 
   public static void make$(InterruptedErr self) { make$(self, null);  }
-  public static void make$(InterruptedErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(InterruptedErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(InterruptedErr self, String msg) { make$(self, msg, null); }
+  public static void make$(InterruptedErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

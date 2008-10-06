@@ -111,7 +111,7 @@ public class CharsetTest
   {
     // encode with Java as control
     ByteArrayOutputStream control = new ByteArrayOutputStream();
-    OutputStreamWriter reader = new OutputStreamWriter(control, cs.name().val);
+    OutputStreamWriter reader = new OutputStreamWriter(control, cs.name());
     reader.write(string);
     reader.flush();
 

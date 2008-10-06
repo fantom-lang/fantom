@@ -20,8 +20,8 @@ public abstract class UriScheme
 // Lookup
 //////////////////////////////////////////////////////////////////////////
 
-  public static UriScheme find(Str scheme) { return find(scheme, true); }
-  public static UriScheme find(Str scheme, Boolean checked)
+  public static UriScheme find(String scheme) { return find(scheme, true); }
+  public static UriScheme find(String scheme, Boolean checked)
   {
     // check cache
     synchronized (cache)
@@ -33,7 +33,7 @@ public abstract class UriScheme
     try
     {
       // lookup scheme type
-      Type t = (Type)Type.findByFacet(Str.make("uriScheme"), scheme, true).first();
+      Type t = (Type)Type.findByFacet("uriScheme", scheme, true).first();
       if (t == null) throw new Exception();
 
       // allocate instance
@@ -71,9 +71,9 @@ public abstract class UriScheme
 
   public Type type() { return Sys.UriSchemeType; }
 
-  public Str toStr() { return scheme; }
+  public String toStr() { return scheme; }
 
-  public Str scheme() { return scheme; }
+  public String scheme() { return scheme; }
 
   public abstract Object get(Uri uri, Object base);
 
@@ -83,5 +83,5 @@ public abstract class UriScheme
 
   static HashMap cache = new HashMap();
 
-  Str scheme;
+  String scheme;
 }

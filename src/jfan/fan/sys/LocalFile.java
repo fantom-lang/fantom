@@ -63,7 +63,7 @@ public class LocalFile
 
   public static String uriToPath(Uri uri)
   {
-    String path = uri.pathStr().val;
+    String path = uri.pathStr();
     int len = path.length();
     StringBuilder s = null;
     for (int i=0; i<len; ++i)
@@ -163,9 +163,9 @@ public class LocalFile
     file.setLastModified(time.java());
   }
 
-  public Str osPath()
+  public String osPath()
   {
-    return Str.make(file.getPath());
+    return file.getPath();
   }
 
   public File parent()
@@ -309,11 +309,11 @@ public class LocalFile
 // IO
 //////////////////////////////////////////////////////////////////////////
 
-  public Buf open(Str mode)
+  public Buf open(String mode)
   {
     try
     {
-      return new FileBuf(this, new RandomAccessFile(file, mode.val));
+      return new FileBuf(this, new RandomAccessFile(file, mode));
     }
     catch (java.io.IOException e)
     {
@@ -321,15 +321,15 @@ public class LocalFile
     }
   }
 
-  public Buf mmap(Str mode, Long pos, Long size)
+  public Buf mmap(String mode, Long pos, Long size)
   {
     try
     {
       // map mode
       String rw; MapMode mm;
-      if (mode.val.equals("r"))       { rw = "r";  mm = MapMode.READ_ONLY; }
-      else if (mode.val.equals("rw")) { rw = "rw"; mm = MapMode.READ_WRITE; }
-      else if (mode.val.equals("p"))  { rw = "rw"; mm = MapMode.PRIVATE; }
+      if (mode.equals("r"))       { rw = "r";  mm = MapMode.READ_ONLY; }
+      else if (mode.equals("rw")) { rw = "rw"; mm = MapMode.READ_WRITE; }
+      else if (mode.equals("p"))  { rw = "rw"; mm = MapMode.PRIVATE; }
       else throw ArgErr.make("Invalid mode: " + mode).val;
 
       // if size is null, use file size

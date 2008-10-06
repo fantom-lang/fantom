@@ -32,7 +32,7 @@ public final class TimeZone
     List list = new List(Sys.StrType);
     for (int i=0; i<indexNames.length; ++i)
       if ((indexTypes[i] & 0x01) != 0)
-        list.add(Str.make(indexNames[i]));
+        list.add(indexNames[i]);
     return list.ro();
   }
 
@@ -41,12 +41,12 @@ public final class TimeZone
     List list = new List(Sys.StrType);
     for (int i=0; i<indexNames.length; ++i)
       if ((indexTypes[i] & 0x02) != 0)
-        list.add(Str.make(indexNames[i]));
+        list.add(indexNames[i]);
     return list.ro();
   }
 
-  public static TimeZone fromStr(Str name) { return fromStr(name.val, true); }
-  public static TimeZone fromStr(Str name, Boolean checked) { return fromStr(name.val, checked.booleanValue()); }
+  public static TimeZone fromStr(String name) { return fromStr(name, true); }
+  public static TimeZone fromStr(String name, Boolean checked) { return fromStr(name, checked.booleanValue()); }
   public static TimeZone fromStr(String name, boolean checked)
   {
     // check cache first
@@ -73,8 +73,8 @@ public final class TimeZone
     {
       synchronized (cache)
       {
-        cache.put(tz.name.val, tz);
-        cache.put(tz.fullName.val, tz);
+        cache.put(tz.name, tz);
+        cache.put(tz.fullName, tz);
         return tz;
       }
     }
@@ -98,7 +98,7 @@ public final class TimeZone
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toStr() { return name; }
+  public String toStr() { return name; }
 
   public Type type() { return Sys.TimeZoneType; }
 
@@ -106,12 +106,12 @@ public final class TimeZone
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Str name()
+  public String name()
   {
     return name;
   }
 
-  public Str fullName()
+  public String fullName()
   {
     return fullName;
   }
@@ -128,14 +128,14 @@ public final class TimeZone
     return Duration.make(r.dstOffset * Duration.nsPerSec);
   }
 
-  public Str stdAbbr(Long year)
+  public String stdAbbr(Long year)
   {
-    return Str.make(rule(year.intValue()).stdAbbr);
+    return rule(year.intValue()).stdAbbr;
   }
 
-  public Str dstAbbr(Long year)
+  public String dstAbbr(Long year)
   {
-    return Str.make(rule(year.intValue()).dstAbbr);
+    return rule(year.intValue()).dstAbbr;
   }
 
   public String abbr(int year, boolean inDST)
@@ -160,7 +160,7 @@ public final class TimeZone
   // This is mostly for testing right.
   java.util.TimeZone java()
   {
-    return java.util.TimeZone.getTimeZone(name.val);
+    return java.util.TimeZone.getTimeZone(name);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -271,8 +271,8 @@ public final class TimeZone
     try
     {
       f.seek(seekOffset);
-      tz.name      = Str.make(f.readUTF());
-      tz.fullName  = Str.make(f.readUTF());
+      tz.name      = f.readUTF();
+      tz.fullName  = f.readUTF();
       int numRules = f.readUnsignedShort();
       tz.rules = new Rule[numRules];
       for (int i=0; i<numRules; ++i)
@@ -475,7 +475,7 @@ public final class TimeZone
   static byte[] indexTypes   = new byte[0];
   static int[] indexOffsets  = new int[0];
 
-  static HashMap cache = new HashMap(); // Str -> TimeZone
+  static HashMap cache = new HashMap(); // String -> TimeZone
   static TimeZone utc;
   static TimeZone current;
 
@@ -493,21 +493,21 @@ public final class TimeZone
 
     try
     {
-      utc = fromStr(Str.make("Etc/UTC"));
+      utc = fromStr("Etc/UTC");
     }
     catch (Throwable e)
     {
       System.out.println("ERROR: Cannot init UTC timezone");
       e.printStackTrace();
 
-      utc.name = utc.fullName = Str.make("UTC");
+      utc.name = utc.fullName = "UTC";
       utc.rules = new Rule[] { new Rule() };
     }
 
     try
     {
       // first check system property
-      Str sysProp = (Str)Sys.env().get(Str.make("fan.timezone"));
+      String sysProp = (String)Sys.env().get("fan.timezone");
       if (sysProp != null)
       {
         current = fromStr(sysProp);
@@ -522,7 +522,7 @@ public final class TimeZone
           javatz = "Etc/UTC";
         else if (javatz.startsWith("GMT") && javatz.endsWith(":00"))
           javatz = javatz.substring(0, javatz.length()-3);
-        current = fromStr(Str.make(javatz));
+        current = fromStr(javatz);
       }
     }
     catch (Throwable e)
@@ -538,8 +538,8 @@ public final class TimeZone
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Str name;        // time zone identifer
-  private Str fullName;    // identifer in zoneinfo database
+  private String name;        // time zone identifer
+  private String fullName;    // identifer in zoneinfo database
   private Rule[] rules;    // reverse sorted by year
 
 }

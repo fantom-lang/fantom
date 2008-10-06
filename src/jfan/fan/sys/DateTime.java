@@ -242,8 +242,8 @@ public final class DateTime
 // Constructor - FromStr
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime fromStr(Str s) { return fromStr(s.val, true); }
-  public static DateTime fromStr(Str s, Boolean checked) { return fromStr(s.val, checked.booleanValue()); }
+  public static DateTime fromStr(String s) { return fromStr(s, true); }
+  public static DateTime fromStr(String s, Boolean checked) { return fromStr(s, checked.booleanValue()); }
   public static DateTime fromStr(String s, boolean checked)
   {
     try
@@ -386,7 +386,7 @@ public final class DateTime
   public final Boolean dst() { return ((fields >> 31) & 0x1) != 0; }
   public final boolean getDST()  { return ((fields >> 31) & 0x1) != 0; }
 
-  public final Str timeZoneAbbr() { return getDST() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
+  public final String timeZoneAbbr() { return getDST() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
 
   public final Long dayOfYear() { return Long.valueOf(dayOfYear(getYear(), month().ord, getDay())+1); }
 
@@ -394,8 +394,7 @@ public final class DateTime
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toLocale() { return Str.make(toLocale((String)null)); }
-  public Str toLocale(Str p) { return Str.make(toLocale(p != null ? p.val : null)); }
+  public String toLocale() { return toLocale((String)null); }
   public String toLocale(String pattern)
   {
     // locale specific default
@@ -403,7 +402,7 @@ public final class DateTime
     if (pattern == null)
     {
       if (locale == null) locale = Locale.current();
-      pattern = locale.get(Str.sysStr, localeKey).val;
+      pattern = locale.get("sys", localeKey);
     }
 
     // process pattern
@@ -452,11 +451,11 @@ public final class DateTime
           {
             case 4:
               if (locale == null) locale = Locale.current();
-              s.append(mon.full(locale).val);
+              s.append(mon.full(locale));
               break;
             case 3:
               if (locale == null) locale = Locale.current();
-              s.append(mon.abbr(locale).val);
+              s.append(mon.abbr(locale));
               break;
             case 2:  if (mon.ord+1 < 10) s.append('0');
             case 1:  s.append(mon.ord+1); break;
@@ -480,11 +479,11 @@ public final class DateTime
           {
             case 4:
               if (locale == null) locale = Locale.current();
-              s.append(weekday.full(locale).val);
+              s.append(weekday.full(locale));
               break;
             case 3:
               if (locale == null) locale = Locale.current();
-              s.append(weekday.abbr(locale).val);
+              s.append(weekday.abbr(locale));
               break;
             default: invalidNum = true;
           }
@@ -578,7 +577,7 @@ public final class DateTime
               s.append(dst ? rule.dstAbbr : rule.stdAbbr);
               break;
             case 4:
-              s.append(timeZone.name().val);
+              s.append(timeZone.name());
               break;
             default:
               invalidNum = true;
@@ -643,9 +642,9 @@ public final class DateTime
     return makeTicks(ticks - (ticks % accuracy.ticks), timeZone);
   }
 
-  public final Str toStr()
+  public final String toStr()
   {
-    return Str.make(toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz"));
+    return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
   }
 
   public static Boolean isLeapYear(Long year) { return isLeapYear(year.intValue()); }
@@ -750,14 +749,14 @@ public final class DateTime
 // HTTP
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime fromHttpStr(Str s) { return fromHttpStr(s, true); }
-  public static DateTime fromHttpStr(Str s, Boolean checked)
+  public static DateTime fromHttpStr(String s) { return fromHttpStr(s, true); }
+  public static DateTime fromHttpStr(String s, Boolean checked)
   {
     for (int i=0; i<httpFormats.length; ++i)
     {
       try
       {
-        Date date = httpFormats[i].parse(s.val);
+        Date date = httpFormats[i].parse(s);
         return java(date.getTime());
       }
       catch (Exception e)
@@ -769,9 +768,9 @@ public final class DateTime
     throw ParseErr.make("Invalid HTTP DateTime: '" + s + "'").val;
   }
 
-  public Str toHttpStr()
+  public String toHttpStr()
   {
-    return Str.make(httpFormats[0].format(new Date(java())));
+    return httpFormats[0].format(new Date(java()));
   }
 
   private static final SimpleDateFormat httpFormats[] =
@@ -866,7 +865,7 @@ public final class DateTime
   private static final Duration toleranceDefault = Duration.makeMillis(250);
   private static volatile DateTime cached = new DateTime(0, TimeZone.current);
   private static volatile DateTime cachedUtc = new DateTime(0, TimeZone.utc);
-  private static final Str localeKey = Str.make("dateTime");
+  private static final String localeKey = "dateTime";
   private static final DateTime boot = now();
 
 

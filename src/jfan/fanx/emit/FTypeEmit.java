@@ -247,7 +247,7 @@ public abstract class FTypeEmit
       Type t = parent;
       if (parent.base() instanceof FuncType) t = parent.base();
 
-      code.op2(LDC_W, strConst(t.signature().val));
+      code.op2(LDC_W, strConst(t.signature()));
       code.op2(INVOKESTATIC, method("fan/sys/Type.find(Ljava/lang/String;)Lfan/sys/Type;"));
       code.op2(PUTSTATIC, typeField.ref());
     }
@@ -300,7 +300,7 @@ public abstract class FTypeEmit
   private void findMixins(Type t, HashMap acc)
   {
     // if mixin I haven't seen add to accumulator
-    String qname = t.qname().val;
+    String qname = t.qname();
     if (t.isMixin() && acc.get(qname) == null)
       acc.put(qname, t);
 
@@ -321,7 +321,7 @@ public abstract class FTypeEmit
       if (m.isStatic() || m.isAbstract()) continue;
 
       // only emit the router unless this is the exact one I inherit
-      String name = m.name().val;
+      String name = m.name();
       if (parent.slot(name, true).parent() != type) continue;
 
       // do it
