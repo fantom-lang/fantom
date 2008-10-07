@@ -31,7 +31,7 @@ namespace Fan.Sys
     public override bool Equals(Object obj)
     {
       if (obj is Obj)
-        return equals((Obj)obj).val;
+        return _equals((Obj)obj).val;
       else
         return false;
     }
@@ -48,12 +48,13 @@ namespace Fan.Sys
     public static Bool equals(object self, Obj x)
     {
       if (self is FanObj)
-        return ((FanObj)self).equals((Obj)x);
+        return ((FanObj)self)._equals((Obj)x);
       else
         return Bool.make(self.Equals(x));
     }
 
-    public virtual Bool equals(Obj obj)
+    //public Bool equals(Obj obj) { throw new System.Exception(); }
+    public virtual Bool _equals(Obj obj)
     {
       return this == obj ? Bool.True : Bool.False;
     }

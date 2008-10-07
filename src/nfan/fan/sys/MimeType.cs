@@ -158,14 +158,14 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool equals(Obj obj)
+    public override Bool _equals(Obj obj)
     {
       if (!(obj is MimeType)) return Bool.False;
       MimeType x = (MimeType)obj;
       return Bool.make(
         m_mediaType.val.Equals(x.m_mediaType.val) &&
         m_subType.val.Equals(x.m_subType.val) &&
-        m_params.equals(x.m_params).val);
+        m_params.Equals(x.m_params));
     }
 
     public override int GetHashCode()

@@ -35,7 +35,7 @@ namespace Fanx.Emit
       this.emit       = emit;
       this.method     = method;
       this.code       = method.m_code;
-      this.name       = method.m_name;
+      this.name       = normalizeName(method.m_name);
       this.paramLen   = method.m_paramCount;
       this.isStatic   = (method.m_flags & FConst.Static) != 0;
       this.isInternal = false; //(method.m_flags & FConst.Internal) != 0;
@@ -58,6 +58,15 @@ namespace Fanx.Emit
     {
       this.emitter = emit.emitter;
       this.emit = emit;
+    }
+
+    /// <summary>
+    /// Get the .NET method name to use for a Fan method.
+    /// </summary>
+    internal string normalizeName(string name)
+    {
+      if (name == "equals") return "_equals";
+      return name;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -239,7 +248,7 @@ namespace Fanx.Emit
     public void emitMixinRouter(Method m)
     {
       string parent  = "Fan." + NameUtil.upper(m.parent().pod().name().val) + "." + m.parent().name().val;
-      string name    = m.name().val;
+      string name    = normalizeName(m.name().val);
       string ret     = "Fan." + NameUtil.upper(m.inheritedReturns().pod().name().val) + "." + m.inheritedReturns().name().val;
       string[] parTypes = new string[] { parent };
       List pars      = m.@params();

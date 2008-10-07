@@ -55,7 +55,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Bool equals(Obj obj)
+    public override sealed Bool _equals(Obj obj)
     {
       return this == obj ? Bool.True : Bool.False;
     }

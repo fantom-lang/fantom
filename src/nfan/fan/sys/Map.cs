@@ -203,11 +203,11 @@ namespace Fan.Sys
       this.m_def = v;
     }
 
-    public override Bool equals(Obj that)
+    public override Bool _equals(Obj that)
     {
       if (that is Map)
       {
-        if (!m_type.equals(type(that)).val)
+        if (!m_type.Equals(type(that)))
           return Bool.False;
 
         Hashtable thatMap = ((Map)that).m_map;

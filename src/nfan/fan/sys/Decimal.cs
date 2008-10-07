@@ -55,7 +55,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool equals(Obj obj)
+    public override Bool _equals(Obj obj)
     {
       if (obj is Decimal)
       {

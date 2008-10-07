@@ -292,7 +292,7 @@ namespace Fan.Sys
 
     public override Int hash() { return Int.make(m_encoding.GetHashCode()); }
 
-    public override Bool equals(Obj obj)
+    public override Bool _equals(Obj obj)
     {
       if (obj is Charset)
       {
