@@ -180,7 +180,7 @@ namespace Fanx.Fcode
         if (podName == "sys" && typeName == "Obj")
           n = "System.Object";
         else
-          n = "Fan." + NameUtil.upper(podName) + '.' + typeName;
+          n = NameUtil.toNetTypeName(podName, typeName);
         m_nnames[index] = n;
       }
       return n;

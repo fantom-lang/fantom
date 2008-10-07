@@ -247,15 +247,12 @@ namespace Fanx.Emit
     /// </summary>
     public void emitMixinRouter(Method m)
     {
-      string parent  = "Fan." + NameUtil.upper(m.parent().pod().name().val) + "." + m.parent().name().val;
+      string parent  = NameUtil.toNetTypeName(m.parent().pod().name(), m.parent().name());
       string name    = normalizeName(m.name().val);
-      string ret     = "Fan." + NameUtil.upper(m.inheritedReturns().pod().name().val) + "." + m.inheritedReturns().name().val;
+      string ret     = NameUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
       string[] parTypes = new string[] { parent };
       List pars      = m.@params();
       int paramCount = pars.sz();
-
-      if (parent == "Fan.Sys.Obj") parent = "System.Object";
-      if (ret    == "Fan.Sys.Obj") ret = "System.Object";
 
       // find first param with default value
       int firstDefault = paramCount;
@@ -275,8 +272,7 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = "Fan." + NameUtil.upper(pt.pod().name().val) + "." + pt.name().val;
-          if (s == "Fan.Sys.Obj") s = "System.Object";
+          string s = NameUtil.toNetTypeName(pt.pod().name(), pt.name());
 
           myParams[j] = s;
           myParamNames[j] = param.name().val;
@@ -329,9 +325,9 @@ namespace Fanx.Emit
     /// </summary>
     public void emitInterfaceRouter(Type implType, Method m)
     {
-      string impl = "Fan." + NameUtil.upper(implType.pod().name().val) + "." + implType.name().val;
+      string impl = NameUtil.toNetTypeName(implType.pod().name(), implType.name());
       string name = m.name().val;
-      string ret  = "Fan." + NameUtil.upper(m.inheritedReturns().pod().name().val) + "." + m.inheritedReturns().name().val;
+      string ret  = NameUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
       List pars   = m.@params();
       int paramCount = pars.sz();
 

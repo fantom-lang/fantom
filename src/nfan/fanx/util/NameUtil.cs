@@ -16,13 +16,30 @@ namespace Fanx.Util
   /// </summary>
   public class NameUtil
   {
+    /// <summary>
+    /// Return the .NET type name for this Fan pod and type.
+    /// </summary>
+    public static string toNetTypeName(Fan.Sys.Str podName, Fan.Sys.Str typeName)
+    {
+      return toNetTypeName(podName.val, typeName.val);
+    }
+
+    /// <summary>
+    /// Return the .NET type name for this Fan pod and type.
+    /// </summary>
+    public static string toNetTypeName(string podName, string typeName)
+    {
+      if (podName == "sys" && typeName == "Obj") return "System.Object";
+      return "Fan." + NameUtil.upper(podName, false) + "." + typeName;
+    }
 
     /// <summary>
     /// Return a new string, where the first letter is uppercase.
     /// If the string is a fully qualified type name, make each
     /// character following a '.' uppercase as well.
     /// </summary>
-    public static string upper(string str)
+    public static string upper(string str) { return upper(str, true); }
+    public static string upper(string str, bool recurse)
     {
       if (str.Length <= 1) return str.ToUpper();
 
@@ -30,10 +47,13 @@ namespace Fanx.Util
       Char[] chars = str.ToCharArray();
       chars[0] = Char.ToUpper(chars[0]);
 
-      // Check for namespace
-      for (int i=0; i<chars.Length-1; i++)
-        if (chars[i] == '.')
-          chars[i+1] = Char.ToUpper(chars[i+1]);
+      if (recurse)
+      {
+        // Check for namespace
+        for (int i=0; i<chars.Length-1; i++)
+          if (chars[i] == '.')
+            chars[i+1] = Char.ToUpper(chars[i+1]);
+      }
 
       return new string(chars);
     }

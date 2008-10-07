@@ -43,7 +43,7 @@ namespace Fanx.Emit
       this.len        = fcode.m_len;
       //this.emit       = code.emit;
       this.code       = code;
-      this.podClass   = NameUtil.upper("Fan." + pod.m_podName + ".$Pod");
+      this.podClass   = NameUtil.toNetTypeName(pod.m_podName, "$Pod");
       this.jumps      = new Jumps(code);
     }
 

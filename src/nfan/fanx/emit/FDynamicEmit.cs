@@ -49,7 +49,7 @@ namespace Fanx.Emit
     {
       this.assemblyName = nextAssemblyName();
       this.emitter = new Emitter(assemblyName);
-      this.baseClassName = "Fan." + NameUtil.upper(m_base.pod().name().val) + "." + m_base.name().val;
+      this.baseClassName = NameUtil.toNetTypeName(m_base.pod().name(), m_base.name());
       this.className = baseClassName + "_Dynamic";
 
       emitter.emitClass(baseClassName, className, new string[0], PERWAPI.TypeAttr.Public);
