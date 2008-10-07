@@ -316,7 +316,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is DateTime)
       {
@@ -325,7 +325,7 @@ namespace Fan.Sys
       return Bool.False;
     }
 
-    public override Int compare(Obj obj)
+    public override Int compare(object obj)
     {
       long that = (obj as DateTime).m_ticks;
       if (m_ticks < that) return Int.LT; return m_ticks == that ? Int.EQ : Int.GT;

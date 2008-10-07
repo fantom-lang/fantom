@@ -72,8 +72,8 @@ namespace Fan.Sys
       verifyCount++;
     }
 
-    public void verifyEq(Obj expected, Obj actual) { verifyEq(expected, actual, null); }
-    public void verifyEq(Obj expected, Obj actual, Str msg)
+    public void verifyEq(object expected, object actual) { verifyEq(expected, actual, null); }
+    public void verifyEq(object expected, object actual, Str msg)
     {
       if (!OpUtil.compareEQ(expected, actual).val)
       {
@@ -92,8 +92,8 @@ namespace Fan.Sys
       verifyCount++;
     }
 
-    public void verifyNotEq(Obj expected, Obj actual) { verifyNotEq(expected, actual, null); }
-    public void verifyNotEq(Obj expected, Obj actual, Str msg)
+    public void verifyNotEq(object expected, object actual) { verifyNotEq(expected, actual, null); }
+    public void verifyNotEq(object expected, object actual, Str msg)
     {
       if (!OpUtil.compareNE(expected, actual).val)
       {
@@ -103,8 +103,8 @@ namespace Fan.Sys
       verifyCount++;
     }
 
-    public void verifySame(Obj expected, Obj actual) { verifySame(expected, actual, null); }
-    public void verifySame(Obj expected, Obj actual, Str msg)
+    public void verifySame(object expected, object actual) { verifySame(expected, actual, null); }
+    public void verifySame(object expected, object actual, Str msg)
     {
       if (!OpUtil.compareSame(expected, actual).val)
       {
@@ -114,8 +114,8 @@ namespace Fan.Sys
       verifyCount++;
     }
 
-    public void verifyNotSame(Obj expected, Obj actual) { verifyNotSame(expected, actual, null); }
-    public void verifyNotSame(Obj expected, Obj actual, Str msg)
+    public void verifyNotSame(object expected, object actual) { verifyNotSame(expected, actual, null); }
+    public void verifyNotSame(object expected, object actual, Str msg)
     {
       if (OpUtil.compareSame(expected, actual).val)
       {

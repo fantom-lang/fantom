@@ -68,14 +68,14 @@ namespace Fanx.Test
         "  }\n" +
         "}";
 
-      List r = new List(Sys.IntType, new Obj[] { Int.make(0), Int.make(3), Int.make(99) });
+      List r = new List(Sys.IntType, new object[] { Int.make(0), Int.make(3), Int.make(99) });
       System.Type type = CompileToType(src);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Int.make(2) });
 
       List c = (List)o;
-      verify(c.get(0).equals(Int.make(0))  == Bool.True);
-      verify(c.get(1).equals(Int.make(3))  == Bool.True);
-      verify(c.get(2).equals(Int.make(99)) == Bool.True);
+      verify(c.get(0) == Int.make(0));
+      verify(c.get(1) == Int.make(3));
+      verify(c.get(2) == Int.make(99));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -110,7 +110,7 @@ namespace Fanx.Test
         "  }\n" +
         "}";
 
-      List r = new List(Sys.IntType, new Obj[] {});
+      List r = new List(Sys.IntType, new object[] {});
       System.Type type = CompileToType(src);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Int.make(2) });
 
@@ -277,7 +277,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Int.make(2) });
 
       List c = (List)o;
@@ -322,7 +322,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
 
       List c = (List)o;
@@ -369,7 +369,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r });
 
       verify(r == o);
@@ -409,7 +409,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r });
 
       verify(r == o);
@@ -453,7 +453,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r });
 
       verify(o == null);
@@ -489,7 +489,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       try
       {
         type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r });
@@ -533,7 +533,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r });
 
       verify(r == o);
@@ -599,7 +599,7 @@ namespace Fanx.Test
       //verifyEq(r, [0, 1, 101, 99, 102, 99, 3, 103, 99, 104, 99, 105, 99, 999, 9999, 99999])
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r });
 
       verify(o == null);
@@ -653,7 +653,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
 
       verify(o == Int.make(2));
@@ -696,7 +696,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
 
       verify(o == null);
@@ -741,7 +741,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, null });
 
       verify(o == null);
@@ -816,7 +816,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, null });
 
       verify(o == null);
@@ -928,7 +928,7 @@ namespace Fanx.Test
       //verifyEq(r, [0, 10, 20, 30, 300, 50, 11, 21, 31, 301, 51, 12, 32, 902, 922, 932, 99, 999])
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r });
 
       verify(o == null);
@@ -970,7 +970,7 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      List r = new List(Sys.IntType, new Obj[0]);
+      List r = new List(Sys.IntType, new object[0]);
       type.InvokeMember("F", GetStaticFlags(), null, null, new object[0]);
     }
 

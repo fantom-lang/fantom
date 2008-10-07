@@ -571,7 +571,7 @@ namespace Fanx.Emit
         case FConst.JumpFalse:
           if (parent.CompareEQz == null)
             parent.CompareEQz = emitter.findMethod("Fanx.Util.OpUtil", "compareEQz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareEQz);
           consumeOp();
           code.Branch(BranchOp.brfalse, jumps.add(u2()));
@@ -579,7 +579,7 @@ namespace Fanx.Emit
         case FConst.JumpTrue:
           if (parent.CompareEQz == null)
             parent.CompareEQz = emitter.findMethod("Fanx.Util.OpUtil", "compareEQz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareEQz);
           consumeOp();
           code.Branch(BranchOp.brtrue, jumps.add(u2()));
@@ -587,7 +587,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareEQ == null)
             parent.CompareEQ = emitter.findMethod("Fanx.Util.OpUtil", "compareEQ",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
           code.MethInst(MethodOp.call, parent.CompareEQ);
           break;
       }
@@ -601,7 +601,7 @@ namespace Fanx.Emit
         case FConst.JumpFalse:
           if (parent.CompareNEz == null)
             parent.CompareNEz = emitter.findMethod("Fanx.Util.OpUtil", "compareNEz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNEz);
           consumeOp();
           code.Branch(BranchOp.brfalse, jumps.add(u2()));
@@ -609,7 +609,7 @@ namespace Fanx.Emit
         case FConst.JumpTrue:
           if (parent.CompareNEz == null)
             parent.CompareNEz = emitter.findMethod("Fanx.Util.OpUtil", "compareNEz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNEz);
           consumeOp();
           code.Branch(BranchOp.brtrue, jumps.add(u2()));
@@ -617,7 +617,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareNE == null)
             parent.CompareNE = emitter.findMethod("Fanx.Util.OpUtil", "compareNE",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
           code.MethInst(MethodOp.call, parent.CompareNE);
           break;
       }
@@ -627,7 +627,7 @@ namespace Fanx.Emit
     {
       if (parent.Compare == null)
         parent.Compare = emitter.findMethod("Fanx.Util.OpUtil", "compare",
-          new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "Fan.Sys.Int");
+          new string[] { "System.Object", "System.Object" }, "Fan.Sys.Int");
       code.MethInst(MethodOp.call, parent.Compare);
     }
 
@@ -639,7 +639,7 @@ namespace Fanx.Emit
        case FConst.JumpFalse:
           if (parent.CompareLTz == null)
             parent.CompareLTz = emitter.findMethod("Fanx.Util.OpUtil", "compareLTz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareLTz);
           consumeOp();
           code.Branch(BranchOp.brfalse, jumps.add(u2()));
@@ -647,7 +647,7 @@ namespace Fanx.Emit
         case FConst.JumpTrue:
           if (parent.CompareLTz == null)
             parent.CompareLTz = emitter.findMethod("Fanx.Util.OpUtil", "compareLTz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareLTz);
           consumeOp();
           code.Branch(BranchOp.brtrue, jumps.add(u2()));
@@ -655,7 +655,7 @@ namespace Fanx.Emit
        default:
           if (parent.CompareLT == null)
             parent.CompareLT = emitter.findMethod("Fanx.Util.OpUtil", "compareLT",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
           code.MethInst(MethodOp.call, parent.CompareLT);
           break;
       }
@@ -669,7 +669,7 @@ namespace Fanx.Emit
         case FConst.JumpFalse:
           if (parent.CompareLEz == null)
             parent.CompareLEz = emitter.findMethod("Fanx.Util.OpUtil", "compareLEz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareLEz);
           consumeOp();
           code.Branch(BranchOp.brfalse, jumps.add(u2()));
@@ -677,7 +677,7 @@ namespace Fanx.Emit
         case FConst.JumpTrue:
           if (parent.CompareLEz == null)
             parent.CompareLEz = emitter.findMethod("Fanx.Util.OpUtil", "compareLEz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareLEz);
           consumeOp();
           code.Branch(BranchOp.brtrue, jumps.add(u2()));
@@ -685,7 +685,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareLE == null)
             parent.CompareLE = emitter.findMethod("Fanx.Util.OpUtil", "compareLE",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
           code.MethInst(MethodOp.call, parent.CompareLE);
           break;
       }
@@ -699,7 +699,7 @@ namespace Fanx.Emit
         case FConst.JumpFalse:
           if (parent.CompareGEz == null)
             parent.CompareGEz = emitter.findMethod("Fanx.Util.OpUtil", "compareGEz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareGEz);
           consumeOp();
           code.Branch(BranchOp.brfalse, jumps.add(u2()));
@@ -707,7 +707,7 @@ namespace Fanx.Emit
         case FConst.JumpTrue:
           if (parent.CompareGEz == null)
             parent.CompareGEz = emitter.findMethod("Fanx.Util.OpUtil", "compareGEz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareGEz);
           consumeOp();
           code.Branch(BranchOp.brtrue, jumps.add(u2()));
@@ -715,7 +715,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareGE == null)
             parent.CompareGE = emitter.findMethod("Fanx.Util.OpUtil", "compareGE",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
           code.MethInst(MethodOp.call, parent.CompareGE);
           break;
       }
@@ -729,7 +729,7 @@ namespace Fanx.Emit
         case FConst.JumpFalse:
           if (parent.CompareGTz == null)
             parent.CompareGTz = emitter.findMethod("Fanx.Util.OpUtil", "compareGTz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareGTz);
           consumeOp();
           code.Branch(BranchOp.brfalse, jumps.add(u2()));
@@ -737,7 +737,7 @@ namespace Fanx.Emit
         case FConst.JumpTrue:
           if (parent.CompareGTz == null)
             parent.CompareGTz = emitter.findMethod("Fanx.Util.OpUtil", "compareGTz",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "System.Boolean");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareGTz);
           consumeOp();
           code.Branch(BranchOp.brtrue, jumps.add(u2()));
@@ -745,7 +745,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareGT == null)
             parent.CompareGT = emitter.findMethod("Fanx.Util.OpUtil", "compareGT",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Obj" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
           code.MethInst(MethodOp.call, parent.CompareGT);
           break;
       }
@@ -855,7 +855,7 @@ namespace Fanx.Emit
       {
         if (parent.IsViaType == null)
           parent.IsViaType = emitter.findMethod("Fanx.Util.OpUtil", "is",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Type" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "Fan.Sys.Type" }, "Fan.Sys.Bool");
         loadType(typeRef);
         code.MethInst(MethodOp.call, parent.IsViaType);
       }
@@ -880,7 +880,7 @@ namespace Fanx.Emit
       {
         if (parent.AsViaType == null)
           parent.AsViaType = emitter.findMethod("Fanx.Util.OpUtil", "as",
-              new string[] { "Fan.Sys.Obj", "Fan.Sys.Type" }, "Fan.Sys.Obj");
+              new string[] { "System.Object", "Fan.Sys.Type" }, "System.Object");
         loadType(typeRef);
         code.MethInst(MethodOp.call, parent.AsViaType);
         code.TypeInst(TypeOp.isinst, type);

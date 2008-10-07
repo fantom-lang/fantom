@@ -141,12 +141,12 @@ namespace Fan.Fwt
 
     public abstract void sync(Str id);
 
-    public Obj send(Widget self, Str id)
+    public object send(Widget self, Str id)
     {
       return send(id);
     }
 
-    public virtual Obj send(Str id) { System.Console.WriteLine(id); return null; }
+    public virtual object send(Str id) { System.Console.WriteLine(id); return null; }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

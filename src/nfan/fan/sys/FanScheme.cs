@@ -28,7 +28,7 @@ namespace Fan.Sys
 
     public override Type type() { return Sys.FanSchemeType; }
 
-    public override Obj get(Uri uri, Obj @base)
+    public override object get(Uri uri, object @base)
     {
       return Sys.ns().get(uri.pathOnly(), Bool.True);
     }

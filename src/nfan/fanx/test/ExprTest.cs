@@ -177,12 +177,12 @@ namespace Fanx.Test
       verify("static Bool f(Int a, Int b) { return a != b; }", MakeInts(0, 1),   Bool.True);
       verify("static Bool f(Int a, Int b) { return a != b; }", MakeInts(1, 1),   Bool.False);
       verify("static Bool f(Int a, Int b) { return a != b; }", MakeInts(77, -3), Bool.True);
-      verify("static Bool f(Int a, Int b) { return a == b; }", new Obj[] { null,null  },     Bool.True);
-      verify("static Bool f(Int a, Int b) { return a == b; }", new Obj[] { Int.Zero, null }, Bool.False);
-      verify("static Bool f(Int a, Int b) { return a == b; }", new Obj[] { null, Int.Zero }, Bool.False);
-      verify("static Bool f(Int a, Int b) { return a != b; }", new Obj[] { null,null  },     Bool.False);
-      verify("static Bool f(Int a, Int b) { return a != b; }", new Obj[] { Int.Zero, null }, Bool.True);
-      verify("static Bool f(Int a, Int b) { return a != b; }", new Obj[] { null, Int.Zero }, Bool.True);
+      verify("static Bool f(Int a, Int b) { return a == b; }", new object[] { null,null  },     Bool.True);
+      verify("static Bool f(Int a, Int b) { return a == b; }", new object[] { Int.Zero, null }, Bool.False);
+      verify("static Bool f(Int a, Int b) { return a == b; }", new object[] { null, Int.Zero }, Bool.False);
+      verify("static Bool f(Int a, Int b) { return a != b; }", new object[] { null,null  },     Bool.False);
+      verify("static Bool f(Int a, Int b) { return a != b; }", new object[] { Int.Zero, null }, Bool.True);
+      verify("static Bool f(Int a, Int b) { return a != b; }", new object[] { null, Int.Zero }, Bool.True);
 
       //
       // floats
@@ -198,12 +198,12 @@ namespace Fanx.Test
       verify("static Bool f(Float a, Float b) { return a != b; }", MakeFloats(0, 1),   Bool.True);
       verify("static Bool f(Float a, Float b) { return a != b; }", MakeFloats(1, 1),   Bool.False);
       verify("static Bool f(Float a, Float b) { return a != b; }", MakeFloats(77, -3), Bool.True);
-      verify("static Bool f(Float a, Float b) { return a == b; }", new Obj[] { null,null  },     Bool.True);
-      verify("static Bool f(Float a, Float b) { return a == b; }", new Obj[] { Float.m_zero, null }, Bool.False);
-      verify("static Bool f(Float a, Float b) { return a == b; }", new Obj[] { null, Float.m_zero }, Bool.False);
-      verify("static Bool f(Float a, Float b) { return a != b; }", new Obj[] { null,null  },     Bool.False);
-      verify("static Bool f(Float a, Float b) { return a != b; }", new Obj[] { Float.m_zero, null }, Bool.True);
-      verify("static Bool f(Float a, Float b) { return a != b; }", new Obj[] { null, Float.m_zero }, Bool.True);
+      verify("static Bool f(Float a, Float b) { return a == b; }", new object[] { null,null  },     Bool.True);
+      verify("static Bool f(Float a, Float b) { return a == b; }", new object[] { Float.m_zero, null }, Bool.False);
+      verify("static Bool f(Float a, Float b) { return a == b; }", new object[] { null, Float.m_zero }, Bool.False);
+      verify("static Bool f(Float a, Float b) { return a != b; }", new object[] { null,null  },     Bool.False);
+      verify("static Bool f(Float a, Float b) { return a != b; }", new object[] { Float.m_zero, null }, Bool.True);
+      verify("static Bool f(Float a, Float b) { return a != b; }", new object[] { null, Float.m_zero }, Bool.True);
 
       //
       // str
@@ -262,40 +262,40 @@ namespace Fanx.Test
       verify("static Bool f(Int a, Int b) { return a < b; }", MakeInts(1, 0),  Bool.make(1 < 0));
       verify("static Bool f(Int a, Int b) { return a < b; }", MakeInts(0, 1),  Bool.make(0 < 1));
       verify("static Bool f(Int a, Int b) { return a < b; }", MakeInts(1, 1),  Bool.make(1 < 1));
-      verify("static Bool f(Int a, Int b) { return a < b; }", new Obj[] { null, null },      Bool.False);
-      verify("static Bool f(Int a, Int b) { return a < b; }", new Obj[] { Int.Zero, null },  Bool.False);
-      verify("static Bool f(Int a, Int b) { return a < b; }", new Obj[] { null, Int.Zero },  Bool.True);
+      verify("static Bool f(Int a, Int b) { return a < b; }", new object[] { null, null },      Bool.False);
+      verify("static Bool f(Int a, Int b) { return a < b; }", new object[] { Int.Zero, null },  Bool.False);
+      verify("static Bool f(Int a, Int b) { return a < b; }", new object[] { null, Int.Zero },  Bool.True);
 
       verify("static Bool f(Int a, Int b) { return a <= b; }", MakeInts(0,  0),   Bool.make(0  <= 0));
       verify("static Bool f(Int a, Int b) { return a <= b; }", MakeInts(-1, 0),   Bool.make(-1 <= 0));
       verify("static Bool f(Int a, Int b) { return a <= b; }", MakeInts(0,  -1),  Bool.make(0  <= -1));
       verify("static Bool f(Int a, Int b) { return a <= b; }", MakeInts(-1, -1),  Bool.make(-1 <= -1));
-      verify("static Bool f(Int a, Int b) { return a <= b; }", new Obj[] { null, null },      Bool.True);
-      verify("static Bool f(Int a, Int b) { return a <= b; }", new Obj[] { Int.Zero, null },  Bool.False);
-      verify("static Bool f(Int a, Int b) { return a <= b; }", new Obj[] { null, Int.Zero },  Bool.True);
+      verify("static Bool f(Int a, Int b) { return a <= b; }", new object[] { null, null },      Bool.True);
+      verify("static Bool f(Int a, Int b) { return a <= b; }", new object[] { Int.Zero, null },  Bool.False);
+      verify("static Bool f(Int a, Int b) { return a <= b; }", new object[] { null, Int.Zero },  Bool.True);
 
       verify("static Bool f(Int a, Int b) { return a > b; }", MakeInts(4, 4),  Bool.make(4 > 4));
       verify("static Bool f(Int a, Int b) { return a > b; }", MakeInts(7, 4),  Bool.make(7 > 4));
       verify("static Bool f(Int a, Int b) { return a > b; }", MakeInts(4, 7),  Bool.make(4 > 7));
       verify("static Bool f(Int a, Int b) { return a > b; }", MakeInts(7, 7),  Bool.make(7 > 7));
-      verify("static Bool f(Int a, Int b) { return a > b; }", new Obj[] { null, null },      Bool.False);
-      verify("static Bool f(Int a, Int b) { return a > b; }", new Obj[] { Int.Zero, null },  Bool.True);
-      verify("static Bool f(Int a, Int b) { return a > b; }", new Obj[] { null, Int.Zero },  Bool.False);
+      verify("static Bool f(Int a, Int b) { return a > b; }", new object[] { null, null },      Bool.False);
+      verify("static Bool f(Int a, Int b) { return a > b; }", new object[] { Int.Zero, null },  Bool.True);
+      verify("static Bool f(Int a, Int b) { return a > b; }", new object[] { null, Int.Zero },  Bool.False);
 
       verify("static Bool f(Int a, Int b) { return a >= b; }", MakeInts(-2, -2),  Bool.make(-2 >= -2));
       verify("static Bool f(Int a, Int b) { return a >= b; }", MakeInts(+2, -2),  Bool.make(+2 >= -2));
       verify("static Bool f(Int a, Int b) { return a >= b; }", MakeInts(-2, +2),  Bool.make(-2 >= +2));
       verify("static Bool f(Int a, Int b) { return a >= b; }", MakeInts(+2, +2),  Bool.make(+2 >= +2));
-      verify("static Bool f(Int a, Int b) { return a >= b; }", new Obj[] { null, null },      Bool.True);
-      verify("static Bool f(Int a, Int b) { return a >= b; }", new Obj[] { Int.Zero, null },  Bool.True);
-      verify("static Bool f(Int a, Int b) { return a >= b; }", new Obj[] { null, Int.Zero },  Bool.False);
+      verify("static Bool f(Int a, Int b) { return a >= b; }", new object[] { null, null },      Bool.True);
+      verify("static Bool f(Int a, Int b) { return a >= b; }", new object[] { Int.Zero, null },  Bool.True);
+      verify("static Bool f(Int a, Int b) { return a >= b; }", new object[] { null, Int.Zero },  Bool.False);
 
       verify("static Int f(Int a, Int b) { return a <=> b; }", MakeInts(3, 2),  Int.make(1));
       verify("static Int f(Int a, Int b) { return a <=> b; }", MakeInts(3, 3),  Int.make(0));
       verify("static Int f(Int a, Int b) { return a <=> b; }", MakeInts(2, 3),  Int.make(-1));
-      verify("static Int f(Int a, Int b) { return a <=> b; }", new Obj[] { null, null },      Int.make(0));
-      verify("static Int f(Int a, Int b) { return a <=> b; }", new Obj[] { Int.Zero, null },  Int.make(1));
-      verify("static Int f(Int a, Int b) { return a <=> b; }", new Obj[] { null, Int.Zero },  Int.make(-1));
+      verify("static Int f(Int a, Int b) { return a <=> b; }", new object[] { null, null },      Int.make(0));
+      verify("static Int f(Int a, Int b) { return a <=> b; }", new object[] { Int.Zero, null },  Int.make(1));
+      verify("static Int f(Int a, Int b) { return a <=> b; }", new object[] { null, Int.Zero },  Int.make(-1));
 
       //
       // MakeFloats
@@ -893,25 +893,25 @@ namespace Fanx.Test
       verify("Str f(Str a, Str b) { return a + b; }", MakeStrs("a", null),  Str.make("anull"));
 
       // bool
-      verify("Str f(Str a, Bool b) { return a + b; }", new Obj[] {Str.make("a"), Bool.make(true)}, Str.make("atrue"));
-      verify("Str f(Bool a, Str b) { return a + b; }", new Obj[] {Bool.make(false), Str.make("a")}, Str.make("falsea"));
+      verify("Str f(Str a, Bool b) { return a + b; }", new object[] {Str.make("a"), Bool.make(true)}, Str.make("atrue"));
+      verify("Str f(Bool a, Str b) { return a + b; }", new object[] {Bool.make(false), Str.make("a")}, Str.make("falsea"));
       verify("Str f() { return \"foo\" + true; }", Str.make("footrue"));
       verify("Str f() { return false + \" foo\"; }", Str.make("false foo"));
 
       // int
-      verify("Str f(Str a, Int b) { return a + b; }", new Obj[] { Str.make("a"), Int.make(3) }, Str.make("a3"));
-      verify("Str f(Int a, Str b) { return a + b; }", new Obj[] { Int.make(-99), Str.make("a") }, Str.make("-99a"));
+      verify("Str f(Str a, Int b) { return a + b; }", new object[] { Str.make("a"), Int.make(3) }, Str.make("a3"));
+      verify("Str f(Int a, Str b) { return a + b; }", new object[] { Int.make(-99), Str.make("a") }, Str.make("-99a"));
       verify("Str f() { return \"foo \" + 77; }", Str.make("foo 77"));
       verify("Str f() { return 0 + \" foo\"; }", Str.make("0 foo"));
 
       // double
-      verify("Str f(Str a, Float b) { return a + b; }", new Obj[] { Str.make("a"), Float.make(3) }, Str.make("a3.0"));
-      verify("Str f(Float a, Str b) { return a + b; }", new Obj[] { Float.make(-99), Str.make("a") }, Str.make("-99.0a"));
+      verify("Str f(Str a, Float b) { return a + b; }", new object[] { Str.make("a"), Float.make(3) }, Str.make("a3.0"));
+      verify("Str f(Float a, Str b) { return a + b; }", new object[] { Float.make(-99), Str.make("a") }, Str.make("-99.0a"));
       verify("Str f() { return \"foo \" + 77.0; }", Str.make("foo 77.0"));
       verify("Str f() { return 0.0 + \" foo\"; }", Str.make("0.0 foo"));
 
       // mix
-      verify("Str f(Int a, Str b, Bool c) { return a + b + c; }", new Obj[] { Int.make(3), Str.make(" wow "), Bool.make(true) }, Str.make("3 wow true"));
+      verify("Str f(Int a, Str b, Bool c) { return a + b + c; }", new object[] { Int.make(3), Str.make(" wow "), Bool.make(true) }, Str.make("3 wow true"));
       verify("Str f(Int a, Str b, Bool c) { return \"w\" + a + \"x\" + b + \"y\" + c + \"z\"; }", new Object[] { Int.make(3), Str.make(" wow "), Bool.make(true) }, Str.make("w3x wow ytruez"));
     }
 

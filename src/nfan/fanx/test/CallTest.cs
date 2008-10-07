@@ -68,7 +68,7 @@ namespace Fanx.Test
 
     private void verifyReflectCalls(Type t, int n)
     {
-      Obj obj = t.make();
+      object obj = t.make();
       Method ms = t.method("s" + n, true);
       Method mi = t.method("i" + n, true);
 
@@ -126,7 +126,7 @@ namespace Fanx.Test
       }
     }
 
-    Int callList(Obj obj, Method m, int argn)
+    Int callList(object obj, Method m, int argn)
     {
       List list = new List(Sys.ObjType);
       if (!m.isStatic().val) list.add(obj);
@@ -156,7 +156,7 @@ namespace Fanx.Test
       return null;
     }
 
-    Int callIndirect(Obj obj, Method m, int argn)
+    Int callIndirect(object obj, Method m, int argn)
     {
       switch (argn)
       {

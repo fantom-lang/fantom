@@ -27,7 +27,7 @@ namespace Fan.Fwt
       if (id == null || id == Window.m_titleId) form.Text = self.title().val;
     }
 
-    public override Obj send(Str id)
+    public override object send(Str id)
     {
       if (id == Window.m_openId) { open(); return null; }
       if (id == Window.m_closeId) { close(); return null; }

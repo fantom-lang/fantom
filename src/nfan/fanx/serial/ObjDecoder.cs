@@ -22,7 +22,7 @@ namespace Fanx.Serial
   // Static
   //////////////////////////////////////////////////////////////////////////
 
-    public static Obj decode(string s)
+    public static object decode(string s)
     {
       return new ObjDecoder(InStream.makeForStr(s), null).readObj();
     }
@@ -48,7 +48,7 @@ namespace Fanx.Serial
     /// <summary>
     /// Read an object from the stream.
     /// </summary>
-    public Obj readObj()
+    public object readObj()
     {
       readHeader();
       return readObj(null, null, true);
@@ -110,12 +110,12 @@ namespace Fanx.Serial
     /// <summary>
     /// obj := literal | simple | complex
     /// </summary>
-    private Obj readObj(Field curField, Type peekType, bool root)
+    private object readObj(Field curField, Type peekType, bool root)
     {
       // literals are stand alone
       if (Token.isLiteral(curt))
       {
-        Obj val = (Obj)tokenizer.m_val;
+        object val = tokenizer.m_val;
         consume();
         return val;
       }
@@ -147,7 +147,7 @@ namespace Fanx.Serial
     /// <summary>
     /// typeLiteral := type "#"
     /// </summary>
-    private Obj readTypeLiteral(int line, Type t)
+    private object readTypeLiteral(int line, Type t)
     {
       consume(Token.POUND, "Expected '#' for type literal");
       return t;
@@ -156,7 +156,7 @@ namespace Fanx.Serial
     /// <summary>
     /// simple := type "(" str ")"
     /// </summary>
-    private Obj readSimple(int line, Type t)
+    private object readSimple(int line, Type t)
     {
       // parse: type(str)
       consume(Token.LPAREN, "Expected ( in simple");
@@ -189,16 +189,16 @@ namespace Fanx.Serial
     /// fields  := "{" field (eos field)* "}"
     /// field   := name "=" obj
     /// </summary>
-    private Obj readComplex(int line, Type t, bool root)
+    private object readComplex(int line, Type t, bool root)
     {
       // make instance
-      Obj obj = null;
+      object obj = null;
       try
       {
         List args = null;
         if (root && options != null)
           args = (List)options.get(optMakeArgs);
-        obj = (Obj)t.make(args);
+        obj = t.make(args);
       }
       catch (System.Exception e)
       {
@@ -243,9 +243,9 @@ namespace Fanx.Serial
       return obj;
     }
 
-    void readComplexAdd(Type t, Obj obj, int line)
+    void readComplexAdd(Type t, object obj, int line)
     {
-      Obj val = readObj(null, null, false);
+      object val = readObj(null, null, false);
       Method m = t.method("add", false);
       if (m == null) throw err("Method not found: " + t.qname() + ".add", line);
       try
@@ -258,14 +258,14 @@ namespace Fanx.Serial
       }
     }
 
-    void readComplexField(Type t, Obj obj, int line, string name)
+    void readComplexField(Type t, object obj, int line, string name)
     {
       // resolve field
       Field field = t.field(name, false);
       if (field == null) throw err("Field not found: " + t.qname() + "." + name, line);
 
       // parse value
-      Obj val = readObj(field, null, false);
+      object val = readObj(field, null, false);
 
       // set field value (skip const check)
       try
@@ -288,7 +288,7 @@ namespace Fanx.Serial
     /// <summary>
     /// collection := list | map
     /// </summary>
-    private Obj readCollection(Field curField, Type t)
+    private object readCollection(Field curField, Type t)
     {
       // opening [
       consume(Token.LBRACKET, "Expecting '['");
@@ -332,7 +332,7 @@ namespace Fanx.Serial
       }
 
       // read first list item or first map key
-      Obj first = readObj(null, peekType, false);
+      object first = readObj(null, peekType, false);
 
       // now we can distinguish b/w list and map
       if (curt == Token.COLON)
@@ -344,10 +344,10 @@ namespace Fanx.Serial
     /// <summary>
     /// list := "[" obj ("," obj)* "]"
     /// </summary>
-    private Obj readList(Type of, Obj first)
+    private object readList(Type of, object first)
     {
       // setup accumulator
-      Obj[] acc = new Obj[8];
+      object[] acc = new object[8];
       int n = 0;
       acc[n++] = first;
 
@@ -358,7 +358,7 @@ namespace Fanx.Serial
         if (curt == Token.RBRACKET) break;
         if (n >= acc.Length)
         {
-          Obj[] temp = new Obj[n*2];
+          object[] temp = new object[n*2];
           System.Array.Copy(acc, 0, temp, 0, n);
           acc = temp;
         }
@@ -376,7 +376,7 @@ namespace Fanx.Serial
     /// map     := "[" mapPair ("," mapPair)* "]"
     /// mapPair := obj ":" + obj
     /// </summary>
-    private Obj readMap(MapType mapType, Obj firstKey)
+    private object readMap(MapType mapType, object firstKey)
     {
       // setup accumulator
       Hashtable map = new Hashtable();
@@ -391,9 +391,9 @@ namespace Fanx.Serial
       {
         consume(Token.COMMA, "Expected ','");
         if (curt == Token.RBRACKET) break;
-        Obj key = readObj(null, null, false);
+        object key = readObj(null, null, false);
         consume(Token.COLON, "Expected ':'");
-        Obj val = readObj(null, null, false);
+        object val = readObj(null, null, false);
         map[key] = val;
       }
       consume(Token.RBRACKET, "Expected ']'");
@@ -402,14 +402,14 @@ namespace Fanx.Serial
       if (mapType == null)
       {
         int size = map.Count;
-        Obj[] keys = new Obj[map.Count];
-        Obj[] vals = new Obj[map.Count];
+        object[] keys = new object[map.Count];
+        object[] vals = new object[map.Count];
         IDictionaryEnumerator en = map.GetEnumerator();
         int i = 0;
         while (en.MoveNext())
         {
-          keys[i] = (Obj)en.Key;
-          vals[i] = (Obj)en.Value;
+          keys[i] = en.Key;
+          vals[i] = en.Value;
           i++;
         }
         Type k = Type.common(keys, size);

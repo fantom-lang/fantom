@@ -49,15 +49,15 @@ namespace Fan.Sys
 
     public Uri uri() { return m_uri; }
 
-    public Obj get(Uri uri) { return get(uri, Bool.True); }
-    public abstract Obj get(Uri uri, Bool check);
+    public object get(Uri uri) { return get(uri, Bool.True); }
+    public abstract object get(Uri uri, Bool check);
 
-    public virtual Uri create(Uri uri, Obj obj)
+    public virtual Uri create(Uri uri, object obj)
     {
       throw UnsupportedErr.make(type() + ".create").val;
     }
 
-    public virtual void put(Uri uri, Obj obj)
+    public virtual void put(Uri uri, object obj)
     {
       throw UnsupportedErr.make(type() + ".put").val;
     }
@@ -76,7 +76,7 @@ namespace Fan.Sys
     /// If it is immutable, then just return it; otherwise
     /// we make a serialized copy.
     /// </summary>
-    public static Obj safe(Obj obj)
+    public static object safe(object obj)
     {
       if (obj == null) return null;
       if (isImmutable(obj).val) return obj;

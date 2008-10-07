@@ -75,7 +75,7 @@ namespace Fan.Sys
 
     public Str scheme() { return m_scheme; }
 
-    public abstract Obj get(Uri uri, Obj @base);
+    public abstract object get(Uri uri, object @base);
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

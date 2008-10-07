@@ -233,22 +233,22 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual OutStream print(Obj obj)
+    public virtual OutStream print(object obj)
     {
       Str s = obj == null ? Str.nullStr : toStr(obj);
       return writeChars(s, Int.Zero, s.size());
     }
 
     public virtual OutStream printLine() { return printLine(Str.Empty); }
-    public virtual OutStream printLine(Obj obj)
+    public virtual OutStream printLine(object obj)
     {
       Str s = obj == null ? Str.nullStr : toStr(obj);
       writeChars(s, Int.Zero, s.size());
       return writeChar(Int.m_pos['\n']);
     }
 
-    public virtual OutStream writeObj(Obj obj) { return writeObj(obj, null); }
-    public virtual OutStream writeObj(Obj obj, Map options)
+    public virtual OutStream writeObj(object obj) { return writeObj(obj, null); }
+    public virtual OutStream writeObj(object obj, Map options)
     {
       new ObjEncoder(this, options).writeObj(obj);
       return this;

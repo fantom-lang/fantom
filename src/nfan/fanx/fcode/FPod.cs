@@ -83,11 +83,11 @@ namespace Fanx.Fcode
         int[] m = methodRef(index).val;
         string parent = nname(m[0]);
         string mName  = name(m[1]);
-        bool onObj    = parent == "Fan.Sys.Obj";
+        bool onObj    = parent == "System.Object";
         bool explicitSelf = false;
         bool isStatic = false;
 
-        // static methods on sys::Obj are really FanObj
+        // methods on System.Object/sys::Obj are static methods on FanObj
         if (onObj)
         {
           parent = "Fan.Sys.FanObj";
@@ -175,7 +175,13 @@ namespace Fanx.Fcode
       if (n == null)
       {
         FTypeRef refer = typeRef(index);
-        n = m_nnames[index] = "Fan." + NameUtil.upper(name(refer.podName)) + '.' + name(refer.typeName);
+        string podName = name(refer.podName);
+        string typeName = name(refer.typeName);
+        if (podName == "sys" && typeName == "Obj")
+          n = "System.Object";
+        else
+          n = "Fan." + NameUtil.upper(podName) + '.' + typeName;
+        m_nnames[index] = n;
       }
       return n;
     }

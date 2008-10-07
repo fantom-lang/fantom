@@ -128,7 +128,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Bool _equals(Obj obj)
+    public override sealed Bool _equals(object obj)
     {
       if (obj is Duration)
         return m_ticks == ((Duration)obj).m_ticks ? Bool.True : Bool.False;
@@ -136,7 +136,7 @@ namespace Fan.Sys
         return Bool.False;
     }
 
-    public override sealed Int compare(Obj obj)
+    public override sealed Int compare(object obj)
     {
       long that = ((Duration)obj).m_ticks;
       if (m_ticks < that) return Int.LT; return m_ticks  == that ? Int.EQ : Int.GT;

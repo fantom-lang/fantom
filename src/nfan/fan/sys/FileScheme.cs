@@ -28,7 +28,7 @@ namespace Fan.Sys
 
     public override Type type() { return Sys.FileSchemeType; }
 
-    public override Obj get(Uri uri, Obj @base)
+    public override object get(Uri uri, object @base)
     {
       File f = File.make(uri, Bool.False);
       if (f.exists().val) return f;

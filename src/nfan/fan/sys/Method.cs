@@ -68,7 +68,7 @@ namespace Fan.Sys
       List fparams = pars.ro();
       if ((flags & (FConst.Static|FConst.Ctor)) == 0)
       {
-        Obj[] temp = new Obj[pars.sz()+1];
+        object[] temp = new object[pars.sz()+1];
         temp[0] = new Param(Str.thisStr, parent, 0);
         pars.copyInto(temp, 1, pars.sz());
         fparams = new List(Sys.ParamType, temp);
@@ -131,7 +131,7 @@ namespace Fan.Sys
       return Str.make(s.ToString());
     }
 
-    public override Obj trap(Str name, List args)
+    public override object trap(Str name, List args)
     {
       // private undocumented access
       if (name.val == "inheritedReturnType")
@@ -176,17 +176,17 @@ namespace Fan.Sys
   // Call Conveniences
   //////////////////////////////////////////////////////////////////////////
 
-    public Obj call(List args) { return m_func.call(args); }
-    public Obj callOn(Obj target, List args) { return m_func.callOn(target, args); }
-    public Obj call0() { return m_func.call0(); }
-    public Obj call1(Obj a) { return m_func.call1(a); }
-    public Obj call2(Obj a, Obj b) { return m_func.call2(a,b); }
-    public Obj call3(Obj a, Obj b, Obj c) { return m_func.call3(a,b,c); }
-    public Obj call4(Obj a, Obj b, Obj c, Obj d) { return m_func.call4(a,b,c,d); }
-    public Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e) { return m_func.call5(a,b,c,d,e); }
-    public Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f) { return m_func.call6(a,b,c,d,e,f); }
-    public Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g) { return m_func.call7(a,b,c,d,e,f,g); }
-    public Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h) { return m_func.call8(a,b,c,d,e,f,g,h); }
+    public object call(List args) { return m_func.call(args); }
+    public object callOn(object target, List args) { return m_func.callOn(target, args); }
+    public object call0() { return m_func.call0(); }
+    public object call1(object a) { return m_func.call1(a); }
+    public object call2(object a, object b) { return m_func.call2(a,b); }
+    public object call3(object a, object b, object c) { return m_func.call3(a,b,c); }
+    public object call4(object a, object b, object c, object d) { return m_func.call4(a,b,c,d); }
+    public object call5(object a, object b, object c, object d, object e) { return m_func.call5(a,b,c,d,e); }
+    public object call6(object a, object b, object c, object d, object e, object f) { return m_func.call6(a,b,c,d,e,f); }
+    public object call7(object a, object b, object c, object d, object e, object f, object g) { return m_func.call7(a,b,c,d,e,f,g); }
+    public object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return m_func.call8(a,b,c,d,e,f,g,h); }
 
   //////////////////////////////////////////////////////////////////////////
   // MethodFunc
@@ -208,13 +208,13 @@ namespace Fan.Sys
         return Bool.make(m.isStatic().val || m.m_parent.isConst().val);
       }
 
-      public override Obj call(List args)
+      public override object call(List args)
       {
         int argsSize = args == null ? 0 : args.sz();
 
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         int p = checkArgs(argsSize, isStatic, false);
-        Obj[] a = new Obj[p];
+        object[] a = new object[p];
 
         if (isStatic)
         {
@@ -223,13 +223,13 @@ namespace Fan.Sys
         }
         else
         {
-          Obj i = args.get(0);
+          object i = args.get(0);
           if (a.Length > 0) args.toArray(a, 1, a.Length);
           return m.invoke(i, a);
         }
       }
 
-      public override Obj callOn(Obj target, List args)
+      public override object callOn(object target, List args)
       {
         int argsSize = args == null ? 0 : args.sz();
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
@@ -237,64 +237,64 @@ namespace Fan.Sys
         // we don't include target as part of arguments
         int p = checkArgs(argsSize, isStatic, true);
 
-        Obj[] a = new Obj[p];
+        object[] a = new object[p];
         if (args != null && a.Length > 0) args.toArray(a, 0, a.Length);
         return m.invoke(target, a);
       }
 
-      public override Obj call0()
+      public override object call0()
       {
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         checkArgs(0, isStatic, false);
         return m.invoke(null, noArgs);
       }
 
-      public override Obj call1(Obj a)
+      public override object call1(object a)
       {
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         int p = checkArgs(1, isStatic, false);
-        Obj[] args;
+        object[] args;
         if (isStatic)
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = a;
           return m.invoke(null, args);
         }
         else
         {
-          args = new Obj[p];
+          args = new object[p];
           return m.invoke(a, args);
         }
       }
 
-      public override Obj call2(Obj a, Obj b)
+      public override object call2(object a, object b)
       {
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         int p = checkArgs(2, isStatic, false);
-        Obj[] args;
+        object[] args;
         if (isStatic)
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = a;
           if (p > 1) args[1] = b;
           return m.invoke(null, args);
         }
         else
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = b;
           return m.invoke(a, args);
         }
       }
 
-      public override Obj call3(Obj a, Obj b, Obj c)
+      public override object call3(object a, object b, object c)
       {
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         int p = checkArgs(3, isStatic, false);
-        Obj[] args;
+        object[] args;
         if (isStatic)
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = a;
           if (p > 1) args[1] = b;
           if (p > 2) args[2] = c;
@@ -302,21 +302,21 @@ namespace Fan.Sys
         }
         else
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = b;
           if (p > 1) args[1] = c;
           return m.invoke(a, args);
         }
       }
 
-      public override Obj call4(Obj a, Obj b, Obj c, Obj d)
+      public override object call4(object a, object b, object c, object d)
       {
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         int p = checkArgs(4, isStatic, false);
-        Obj[] args;
+        object[] args;
         if (isStatic)
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = a;
           if (p > 1) args[1] = b;
           if (p > 2) args[2] = c;
@@ -325,7 +325,7 @@ namespace Fan.Sys
         }
         else
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = b;
           if (p > 1) args[1] = c;
           if (p > 2) args[2] = d;
@@ -333,14 +333,14 @@ namespace Fan.Sys
         }
       }
 
-      public override Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e)
+      public override object call5(object a, object b, object c, object d, object e)
       {
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         int p = checkArgs(5, isStatic, false);
-        Obj[] args;
+        object[] args;
         if (isStatic)
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = a;
           if (p > 1) args[1] = b;
           if (p > 2) args[2] = c;
@@ -352,7 +352,7 @@ namespace Fan.Sys
 
         else
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = b;
           if (p > 1) args[1] = c;
           if (p > 2) args[2] = d;
@@ -361,14 +361,14 @@ namespace Fan.Sys
         }
       }
 
-      public override Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f)
+      public override object call6(object a, object b, object c, object d, object e, object f)
       {
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         int p = checkArgs(6, isStatic, false);
-        Obj[] args;
+        object[] args;
         if (isStatic)
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = a;
           if (p > 1) args[1] = b;
           if (p > 2) args[2] = c;
@@ -379,7 +379,7 @@ namespace Fan.Sys
         }
         else
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = b;
           if (p > 1) args[1] = c;
           if (p > 2) args[2] = d;
@@ -389,14 +389,14 @@ namespace Fan.Sys
         }
       }
 
-      public override Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g)
+      public override object call7(object a, object b, object c, object d, object e, object f, object g)
       {
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         int p = checkArgs(7, isStatic, false);
-        Obj[] args;
+        object[] args;
         if (isStatic)
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = a;
           if (p > 1) args[1] = b;
           if (p > 2) args[2] = c;
@@ -408,7 +408,7 @@ namespace Fan.Sys
         }
         else
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = b;
           if (p > 1) args[1] = c;
           if (p > 2) args[2] = d;
@@ -419,14 +419,14 @@ namespace Fan.Sys
         }
       }
 
-      public override Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h)
+      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h)
       {
         bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
         int p = checkArgs(8, isStatic, false);
-        Obj[] args;
+        object[] args;
         if (isStatic)
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = a;
           if (p > 1) args[1] = b;
           if (p > 2) args[2] = c;
@@ -439,7 +439,7 @@ namespace Fan.Sys
         }
         else
         {
-          args = new Obj[p];
+          args = new object[p];
           if (p > 0) args[0] = b;
           if (p > 1) args[1] = c;
           if (p > 2) args[2] = d;
@@ -482,7 +482,7 @@ namespace Fan.Sys
   // Reflection
   //////////////////////////////////////////////////////////////////////////
 
-    internal Obj invoke(object instance, object[] args)
+    internal object invoke(object instance, object[] args)
     {
       if (m_reflect == null) m_parent.finish();
 
@@ -491,7 +491,7 @@ namespace Fan.Sys
         // zero index is full signature up to using max defaults
         int index = m_params.sz()-args.Length;
         if (index < 0) index = 0;
-        return (Obj)m_reflect[index].Invoke(instance, args);
+        return m_reflect[index].Invoke(instance, args);
       }
       catch (ArgumentException e)
       {
@@ -524,7 +524,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     internal static readonly int GENERIC = 0x01;  // is this a generic method
-    internal static readonly Object[] noArgs = new Object[0];
+    internal static readonly object[] noArgs = new object[0];
 
     internal Func m_func;
     internal List m_params;           // might be different from func.params is instance method

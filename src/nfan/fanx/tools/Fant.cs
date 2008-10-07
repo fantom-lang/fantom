@@ -131,7 +131,7 @@ namespace Fanx.Tools
       try
       {
         test = (FanSysTest)type.make();
-        args = new List(Sys.ObjType, new Obj[] {test});
+        args = new List(Sys.ObjType, new object[] {test});
       }
       catch (System.Exception e)
       {
@@ -190,7 +190,7 @@ namespace Fanx.Tools
     class MainThread : Thread
     {
       public MainThread() : base(Str.make("main")) {}
-      public override Obj run()
+      public override object run()
       {
         ret = doRun();
         return null;

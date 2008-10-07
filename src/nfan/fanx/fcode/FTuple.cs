@@ -52,7 +52,7 @@ namespace Fanx.Fcode
       return hashCode;
     }
 
-    public override bool Equals(Object obj)
+    public override bool Equals(object obj)
     {
       FTuple x = (FTuple)obj;
       if (val.Length != x.val.Length) return false;

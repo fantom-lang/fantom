@@ -42,17 +42,17 @@ namespace Fan.Sys
   // Namespace
   //////////////////////////////////////////////////////////////////////////
 
-    public override Obj get(Uri uri, Bool check)
+    public override object get(Uri uri, Bool check)
     {
       checkUri(uri);
 
       Namespace sub = ns(uri);
       if (sub != this) return sub.get(uri, check);
 
-      Obj val = null;
+      object val = null;
       lock (m_lock)
       {
-        val = (Obj)m_mem[uri.m_str.val];
+        val = m_mem[uri.m_str.val];
         if (val == null)
         {
           if (!check.val) return null;
@@ -62,7 +62,7 @@ namespace Fan.Sys
       return safe(val);
     }
 
-    public override Uri create(Uri uri, Obj obj)
+    public override Uri create(Uri uri, object obj)
     {
       if (obj == null) throw ArgErr.make("obj is null").val;
 
@@ -73,7 +73,7 @@ namespace Fan.Sys
         if (sub != this) return sub.create(uri, obj);
       }
 
-      Obj safe = Namespace.safe(obj);
+      object safe = Namespace.safe(obj);
       lock (m_lock)
       {
         if (uri == null)
@@ -89,7 +89,7 @@ namespace Fan.Sys
       }
     }
 
-    public override void put(Uri uri, Obj obj)
+    public override void put(Uri uri, object obj)
     {
       checkUri(uri);
       if (obj == null) throw ArgErr.make("obj is null").val;
@@ -97,7 +97,7 @@ namespace Fan.Sys
       Namespace sub = ns(uri);
       if (sub != this) { sub.put(uri, obj); return; }
 
-      Obj safe = Namespace.safe(obj);
+      object safe = Namespace.safe(obj);
       lock (m_lock)
       {
         object old = m_mem[uri.m_str.val];
@@ -239,7 +239,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     private object m_lock;       // synchronized lock
-    private Hashtable m_mem;     // memory db: uri.m_str.val -> Obj
+    private Hashtable m_mem;     // memory db: uri.m_str.val -> object
     private Hashtable m_mounts;  // mounts: uri.m_str.val -> Namespace
     private int m_uriCounter;    // auto-generated uris
 

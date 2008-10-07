@@ -55,7 +55,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is Decimal)
       {
@@ -64,7 +64,7 @@ namespace Fan.Sys
       return Bool.False;
     }
 
-    public override Int compare(Obj obj)
+    public override Int compare(object obj)
     {
       return Int.make(val.CompareTo((obj as Decimal).val));
     }

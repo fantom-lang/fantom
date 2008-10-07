@@ -88,7 +88,7 @@ namespace Fanx.Typedb
     /// Implementation of 'Type.findByFacet'
     /// </summary>
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public List findByFacet(Str name, Obj val, Obj options)
+    public List findByFacet(Str name, object val, object options)
     {
       // process options
       if (options == Bool.True && val is Type)
@@ -114,7 +114,7 @@ namespace Fanx.Typedb
     /// <summary>
     /// Find all the types declared by the specified facet name/value pair.
     /// </summary>
-    private List doFindByFacet(Str name, Obj val)
+    private List doFindByFacet(Str name, object val)
     {
       try
       {
@@ -453,7 +453,7 @@ namespace Fanx.Typedb
     internal class FacetIndex
     {
       public string name;             // facet name
-      public Hashtable valueToTypes;  // facet values Obj -> int[]/Type[]
+      public Hashtable valueToTypes;  // facet values object -> int[]/Type[]
       public int pos;                 // file offset
     }
 

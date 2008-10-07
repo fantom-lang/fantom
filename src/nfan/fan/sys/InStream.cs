@@ -521,8 +521,8 @@ namespace Fan.Sys
       }
     }
 
-    public virtual Obj readObj() { return readObj(null); }
-    public virtual Obj readObj(Map options)
+    public virtual object readObj() { return readObj(null); }
+    public virtual object readObj(Map options)
     {
       return new ObjDecoder(this, options).readObj();
     }

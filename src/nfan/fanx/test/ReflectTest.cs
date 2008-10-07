@@ -67,7 +67,7 @@ namespace Fanx.Test
     public void verifyBasic()
     {
       Type t = CompileToFanType("class Foo { Str f() { return type.name } }");
-      Obj obj = (Obj)t.make();
+      object obj = t.make();
       Str name = (Str)t.method("f", true).call1(obj);
       verify(name.val == "Foo");
     }

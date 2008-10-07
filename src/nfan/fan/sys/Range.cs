@@ -114,7 +114,7 @@ namespace Fan.Sys
       return acc;
     }
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is Range)
       {

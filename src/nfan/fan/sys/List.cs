@@ -35,7 +35,7 @@ namespace Fan.Sys
       return new List(Sys.ObjType, (int)capacity.val);
     }
 
-    public List(Type of, Obj[] values)
+    public List(Type of, object[] values)
     {
       if (of == null) { Console.WriteLine(new StackTrace(true)); throw new NullErr().val; }
       this.m_of = of;
@@ -43,7 +43,7 @@ namespace Fan.Sys
       this.m_size = values.Length;
     }
 
-    public List(Type of, Obj[] values, int size)
+    public List(Type of, object[] values, int size)
     {
       if (of == null) { Console.WriteLine(new StackTrace(true)); throw new NullErr().val; }
       this.m_of = of;
@@ -55,7 +55,7 @@ namespace Fan.Sys
     {
       if (of == null) { Console.WriteLine(new StackTrace(true)); throw new NullErr().val; }
       this.m_of = of;
-      this.m_values = capacity == 0 ? m_empty : new Obj[capacity];
+      this.m_values = capacity == 0 ? m_empty : new object[capacity];
     }
 
     public List(Type of)
@@ -70,14 +70,14 @@ namespace Fan.Sys
       if (of == null) { Console.WriteLine(new StackTrace(true)); throw new NullErr().val; }
       this.m_of = of;
       this.m_size = collection.Count;
-      this.m_values = new Obj[m_size];
+      this.m_values = new object[m_size];
       collection.CopyTo(this.m_values, 0);
     }
 
     public List(string[] values)
     {
       this.m_of = Sys.StrType;
-      this.m_values = new Obj[values.Length];
+      this.m_values = new object[values.Length];
       this.m_size = values.Length;
       for (int i=0; i<values.Length; ++i)
         this.m_values[i] = Str.make(values[i]);
@@ -117,14 +117,14 @@ namespace Fan.Sys
       int newSize = (int)s.val;
       if (newSize > m_size)
       {
-        Obj[] temp = new Obj[newSize];
+        object[] temp = new object[newSize];
         Array.Copy(m_values, 0, temp, 0, m_size);
         m_values = temp;
         m_size = newSize;
       }
       else
       {
-        Obj[] temp = new Obj[newSize];
+        object[] temp = new object[newSize];
         Array.Copy(m_values, 0, temp, 0, newSize);
         m_values = temp;
         m_size = newSize;
@@ -141,12 +141,12 @@ namespace Fan.Sys
       modify();
       int newCapacity = (int)c.val;
       if (newCapacity < m_size) throw ArgErr.make("capacity < m_size").val;
-      Obj[] temp = new Obj[newCapacity];
+      object[] temp = new object[newCapacity];
       Array.Copy(m_values, 0, temp, 0, m_size);
       m_values = temp;
     }
 
-    public Obj get(Int index)
+    public object get(Int index)
     {
       try
       {
@@ -181,12 +181,12 @@ namespace Fan.Sys
       }
     }
 
-    public Bool contains(Obj val)
+    public Bool contains(object val)
     {
       return Bool.make(index(val) != null);
     }
 
-    public Bool containsSame(Obj val)
+    public Bool containsSame(object val)
     {
       return Bool.make(indexSame(val) != null);
     }
@@ -207,8 +207,8 @@ namespace Fan.Sys
       return Bool.True;
     }
 
-    public Int index(Obj val) { return index(val, Int.Zero); }
-    public Int index(Obj val, Int off)
+    public Int index(object val) { return index(val, Int.Zero); }
+    public Int index(object val, Int off)
     {
       if (m_size == 0) return null;
       int start = (int)off.val;
@@ -240,8 +240,8 @@ namespace Fan.Sys
       }
     }
 
-    public Int indexSame(Obj val) { return indexSame(val, Int.Zero); }
-    public Int indexSame(Obj val, Int off)
+    public Int indexSame(object val) { return indexSame(val, Int.Zero); }
+    public Int indexSame(object val, Int off)
     {
       if (m_size == 0) return null;
       int start = (int)off.val;
@@ -261,13 +261,13 @@ namespace Fan.Sys
       }
     }
 
-    public Obj first()
+    public object first()
     {
       if (m_size == 0) return null;
       return m_values[0];
     }
 
-    public Obj last()
+    public object last()
     {
       if (m_size == 0) return null;
       return m_values[m_size-1];
@@ -275,7 +275,7 @@ namespace Fan.Sys
 
     public List dup()
     {
-      Obj[] dup = new Obj[m_size];
+      object[] dup = new object[m_size];
       Array.Copy(m_values, 0, dup, 0, m_size);
       return new List(m_of, dup);
     }
@@ -285,13 +285,13 @@ namespace Fan.Sys
       long hash = 33;
       for (int i=0; i<m_size; i++)
       {
-        Obj obj = m_values[i];
+        object obj = m_values[i];
         if (obj != null) hash ^= FanObj.hash(obj).val;
       }
       return Int.make(hash);
     }
 
-    public override Bool _equals(Obj that)
+    public override Bool _equals(object that)
     {
       if (that is List)
       {
@@ -309,7 +309,7 @@ namespace Fan.Sys
   // Modification
   //////////////////////////////////////////////////////////////////////////
 
-    public List set(Int index, Obj val)
+    public List set(Int index, object val)
     {
       modify();
       try
@@ -326,9 +326,9 @@ namespace Fan.Sys
       }
     }
 
-    public List add(Obj val)
+    public List add(object val)
     {
-      // modify in insert(int, Obj)
+      // modify in insert(int, object)
       return insert(m_size, val);
     }
 
@@ -338,16 +338,16 @@ namespace Fan.Sys
       return insertAll(m_size, list);
     }
 
-    public List insert(Int index, Obj val)
+    public List insert(Int index, object val)
     {
-      // modify in insert(int, Obj)
+      // modify in insert(int, object)
       int i = (int)index.val;
       if (i < 0) i = m_size + i;
       if (i > m_size) throw IndexErr.make(index).val;
       return insert(i, val);
     }
 
-    private List insert(int i, Obj val)
+    private List insert(int i, object val)
     {
       modify();
       if (m_values.Length <= m_size)
@@ -381,7 +381,7 @@ namespace Fan.Sys
       return this;
     }
 
-    public Obj remove(Obj val)
+    public object remove(object val)
     {
       // modify in removeAt(Int)
       Int i = index(val);
@@ -389,7 +389,7 @@ namespace Fan.Sys
       return removeAt(i);
     }
 
-    public Obj removeSame(Obj val)
+    public object removeSame(object val)
     {
       // modify in removeAt(Int)
       Int i = indexSame(val);
@@ -397,13 +397,13 @@ namespace Fan.Sys
       return removeAt(i);
     }
 
-    public Obj removeAt(Int index)
+    public object removeAt(Int index)
     {
       modify();
       int i = (int)index.val;
       if (i < 0) i = m_size + i;
       if (i >= m_size) throw IndexErr.make(index).val;
-      Obj old = m_values[i];
+      object old = m_values[i];
       if (i < m_size-1)
         Array.Copy(m_values, i+1, m_values, i, m_size-i-1);
       m_size--;
@@ -431,7 +431,7 @@ namespace Fan.Sys
       if (desired < 1) throw Err.make("desired " + desired + " < 1").val;
       int newSize = Math.Max(desired, m_size*2);
       if (newSize < 10) newSize = 10;
-      Obj[] temp = new Obj[newSize];
+      object[] temp = new object[newSize];
       Array.Copy(m_values, temp, m_size);
       m_values = temp;
     }
@@ -445,7 +445,7 @@ namespace Fan.Sys
       }
       else if (m_size != m_values.Length)
       {
-        Obj[] temp = new Obj[m_size];
+        object[] temp = new object[m_size];
         Array.Copy(m_values, temp, m_size);
         m_values = temp;
       }
@@ -465,20 +465,20 @@ namespace Fan.Sys
   // Stack
   //////////////////////////////////////////////////////////////////////////
 
-    public Obj peek()
+    public object peek()
     {
       if (m_size == 0) return null;
       return m_values[m_size-1];
     }
 
-    public Obj pop()
+    public object pop()
     {
       // modify in removeAt()
       if (m_size == 0) return null;
       return removeAt(Int.NegOne);
     }
 
-    public List push(Obj obj)
+    public List push(object obj)
     {
       // modify in add()
       return add(obj);
@@ -500,17 +500,17 @@ namespace Fan.Sys
         f.call2(m_values[i], Int.pos(i));
     }
 
-    public Obj eachBreak(Func f)
+    public object eachBreak(Func f)
     {
       for (int i=0; i<m_size; i++)
       {
-        Obj r = f.call2(m_values[i], Int.pos(i));
+        object r = f.call2(m_values[i], Int.pos(i));
         if (r != null) return r;
       }
       return null;
     }
 
-    public Obj find(Func f)
+    public object find(Func f)
     {
       for (int i=0; i<m_size; i++)
         if (f.call2(m_values[i], Int.pos(i)) == Bool.True)
@@ -543,7 +543,7 @@ namespace Fan.Sys
       List acc = new List(t, m_size);
       for (int i=0; i<m_size; i++)
       {
-        Obj item = m_values[i];
+        object item = m_values[i];
         if (item != null && type(item).@is(t))
           acc.add(item);
       }
@@ -575,7 +575,7 @@ namespace Fan.Sys
       return Bool.True;
     }
 
-    public Obj reduce(Obj reduction, Func f)
+    public object reduce(object reduction, Func f)
     {
       for (int i=0; i<m_size; i++)
         reduction = f.call3(reduction, m_values[i], Int.pos(i));
@@ -590,24 +590,24 @@ namespace Fan.Sys
       return acc;
     }
 
-    public Obj max() { return max(null); }
-    public Obj max(Func f)
+    public object max() { return max(null); }
+    public object max(Func f)
     {
       if (m_size == 0) return null;
       IComparer c = toComparer(f);
-      Obj max = m_values[0];
+      object max = m_values[0];
       for (int i=1; i<m_size; i++)
         if (c.Compare(m_values[i], max) > 0)
           max = m_values[i];
       return max;
     }
 
-    public Obj min() { return min(null); }
-    public Obj min(Func f)
+    public object min() { return min(null); }
+    public object min(Func f)
     {
       if (m_size == 0) return null;
       IComparer c = toComparer(f);
-      Obj min = m_values[0];
+      object min = m_values[0];
       for (int i=1; i<m_size; i++)
         if (c.Compare(m_values[i], min) < 0)
           min = m_values[i];
@@ -621,7 +621,7 @@ namespace Fan.Sys
       bool hasNull = false;
       for (int i=0; i<m_size; i++)
       {
-        Obj v = m_values[i];
+        object v = m_values[i];
         if (v == null && !hasNull)
         {
           hasNull = true;
@@ -646,7 +646,7 @@ namespace Fan.Sys
       // first me
       for (int i=0; i<m_size; i++)
       {
-        Obj v = m_values[i];
+        object v = m_values[i];
         if (v == null && !hasNull)
         {
           hasNull = true;
@@ -662,7 +662,7 @@ namespace Fan.Sys
       // then him
       for (int i=0; i<that.m_size; i++)
       {
-        Obj v = that.m_values[i];
+        object v = that.m_values[i];
         if (v == null && !hasNull)
         {
           hasNull = true;
@@ -685,7 +685,7 @@ namespace Fan.Sys
       bool hasNull = false;
       for (int i=0; i<that.m_size; ++i)
       {
-        Obj v = that.m_values[i];
+        object v = that.m_values[i];
         if (v == null) hasNull = true;
         else dups[v] = this;
       }
@@ -695,7 +695,7 @@ namespace Fan.Sys
       List acc = new List(m_of, m_size);
       for (int i=0; i<m_size; i++)
       {
-        Obj v = m_values[i];
+        object v = m_values[i];
         if (v == null && hasNull)
         {
           acc.add(v);
@@ -730,11 +730,11 @@ namespace Fan.Sys
       return this;
     }
 
-    public Int binarySearch(Obj key) { return binarySearch(key, null); }
-    public Int binarySearch(Obj key, Func f)
+    public Int binarySearch(object key) { return binarySearch(key, null); }
+    public Int binarySearch(object key, Func f)
     {
       IComparer c = toComparer(f);
-      Obj[] values = m_values;
+      object[] values = m_values;
       int low = 0, high = m_size-1;
       while (low <= high)
       {
@@ -753,13 +753,13 @@ namespace Fan.Sys
     public List reverse()
     {
       modify();
-      Obj[] m_values = this.m_values;
+      object[] m_values = this.m_values;
       int m_size = this.m_size;
       int mid   = m_size/2;
       for (int i=0; i<mid; i++)
       {
-        Obj a = m_values[i];
-        Obj b = m_values[m_size-i-1];
+        object a = m_values[i];
+        object b = m_values[m_size-i-1];
         m_values[i] = b;
         m_values[m_size-i-1] = a;
       }
@@ -769,7 +769,7 @@ namespace Fan.Sys
     public List swap(Int a, Int b)
     {
       // modify in set()
-      Obj temp = get(a);
+      object temp = get(a);
       set(a, get(b));
       set(b, temp);
       return this;
@@ -786,7 +786,7 @@ namespace Fan.Sys
     {
       for (int i=0; i<m_size; ++i)
       {
-        Obj item = m_values[i];
+        object item = m_values[i];
         if (item is List)
           ((List)item).doFlatten(acc);
         else
@@ -806,7 +806,7 @@ namespace Fan.Sys
 
       if (m_size == 1)
       {
-        Obj v = m_values[0];
+        object v = m_values[0];
         if (f != null) return (Str)f.call2(v, Int.Zero);
         if (v == null) return Str.nullStr;
         return toStr(v);
@@ -859,7 +859,7 @@ namespace Fan.Sys
       return m_size;
     }
 
-    public Obj get(int i)
+    public object get(int i)
     {
       try
       {
@@ -872,10 +872,10 @@ namespace Fan.Sys
       }
     }
 
-    public Obj[] toArray()
+    public object[] toArray()
     {
       if (m_values.Length == m_size) return m_values;
-      Obj[] r = new Obj[m_size];
+      object[] r = new object[m_size];
       Array.Copy(m_values, 0, r, 0, m_size);
       return r;
     }
@@ -924,7 +924,7 @@ namespace Fan.Sys
       string[] a = new string[m_size];
       for (int i=0; i<m_size; ++i)
       {
-        Object obj = get(i);
+        object obj = get(i);
         if (obj == null) a[i] = "null";
         else a[i] = toStr(obj).val;
       }
@@ -953,12 +953,12 @@ namespace Fan.Sys
     sealed class Comparer : IComparer
     {
       public Comparer(Func f) { this.f = f; }
-      public int Compare(Object a, Object b) { return (int)((Int)f.call2((Obj)a, (Obj)b)).val; }
+      public int Compare(object a, object b) { return (int)((Int)f.call2(a, b)).val; }
       private Func f;
     }
     sealed class DefaultComparer : IComparer
     {
-      public int Compare(Object a, Object b) { return (int)OpUtil.compare((Obj)a, (Obj)b).val; }
+      public int Compare(object a, object b) { return (int)OpUtil.compare(a, b).val; }
     }
     static DefaultComparer defaultComparer = new DefaultComparer();
 
@@ -971,12 +971,12 @@ namespace Fan.Sys
     sealed class ReverseComparer : IComparer
     {
       public ReverseComparer(Func f) { this.f = f; }
-      public int Compare(Object a, Object b) { return (int)((Int)f.call2((Obj)b, (Obj)a)).val; }
+      public int Compare(object a, object b) { return (int)((Int)f.call2(b, a)).val; }
       private Func f;
     }
     sealed class DefaultReverseComparer : IComparer
     {
-      public int Compare(Object a, Object b) { return (int)OpUtil.compare((Obj)b, (Obj)a).val; }
+      public int Compare(object a, object b) { return (int)OpUtil.compare(b, a).val; }
     }
     static DefaultReverseComparer defaultReverseComparer = new DefaultReverseComparer();
 
@@ -998,7 +998,7 @@ namespace Fan.Sys
     {
       if (!m_isReadonly) return this;
 
-      Obj[] temp = new Obj[m_size];
+      object[] temp = new object[m_size];
       Array.Copy(m_values, temp, m_size);
 
       List rw = new List(m_of);
@@ -1033,10 +1033,10 @@ namespace Fan.Sys
       if (m_immutable) return this;
 
       // make safe copy
-      Obj[] temp = new Obj[m_size];
+      object[] temp = new object[m_size];
       for (int i=0; i<m_size; i++)
       {
-        Obj item = m_values[i];
+        object item = m_values[i];
         if (item != null)
         {
           if (item is List)
@@ -1066,7 +1066,7 @@ namespace Fan.Sys
       // it so it remains immutable
       if (m_readonlyList != null)
       {
-        Obj[] temp = new Obj[m_size];
+        object[] temp = new object[m_size];
         Array.Copy(m_values, temp, m_size);
         m_readonlyList.m_values = temp;
         m_readonlyList = null;
@@ -1077,10 +1077,10 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private static readonly Obj[] m_empty = new Obj[0];
+    private static readonly object[] m_empty = new object[0];
 
     private Type m_of;
-    private Obj[] m_values;
+    private object[] m_values;
     private int m_size;
     private bool m_isReadonly;
     private bool m_immutable;

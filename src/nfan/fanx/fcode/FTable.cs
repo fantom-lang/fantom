@@ -42,7 +42,7 @@ namespace Fanx.Fcode
     ///
     /// Get the object identified by the specified 16-bit index.
     ///
-    public Object get(int index)
+    public object get(int index)
     {
       return m_table[index];
     }

@@ -254,6 +254,9 @@ namespace Fanx.Emit
       List pars      = m.@params();
       int paramCount = pars.sz();
 
+      if (parent == "Fan.Sys.Obj") parent = "System.Object";
+      if (ret    == "Fan.Sys.Obj") ret = "System.Object";
+
       // find first param with default value
       int firstDefault = paramCount;
       for (int i=0; i<paramCount; i++)
@@ -273,6 +276,7 @@ namespace Fanx.Emit
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
           string s = "Fan." + NameUtil.upper(pt.pod().name().val) + "." + pt.name().val;
+          if (s == "Fan.Sys.Obj") s = "System.Object";
 
           myParams[j] = s;
           myParamNames[j] = param.name().val;

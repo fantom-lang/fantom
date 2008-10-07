@@ -233,7 +233,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       return this == obj ? Bool.True : Bool.False;
     }
@@ -347,7 +347,7 @@ namespace Fan.Sys
       m_threadLookup = attached;
       try
       {
-        Obj result = null;
+        object result = null;
         try
         {
           attached.onStart();
@@ -393,10 +393,10 @@ namespace Fan.Sys
       return this;
     }
 
-    public Obj join() { return join(null); }
+    public object join() { return join(null); }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public Obj join(Duration duration)
+    public object join(Duration duration)
     {
       try
       {
@@ -410,7 +410,7 @@ namespace Fan.Sys
             while (m_state == RUNNING) Monitor.Wait(this);
         }
 
-        Obj r = m_runResult;
+        object r = m_runResult;
         m_runResult = null;
         return r;
       }
@@ -445,7 +445,7 @@ namespace Fan.Sys
   // Run
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual Obj run()
+    public virtual object run()
     {
       if (m_run != null)
       {
@@ -490,7 +490,7 @@ namespace Fan.Sys
     {
       try
       {
-        Obj result = received.call1(msg.obj);
+        object result = received.call1(msg.obj);
         result = Namespace.safe(result);
         msg.finish(MSG_FINISH_OK, result);
       }
@@ -508,7 +508,7 @@ namespace Fan.Sys
   // Messaging
   //////////////////////////////////////////////////////////////////////////
 
-    public Obj sendSync(Obj obj)
+    public object sendSync(object obj)
     {
       obj = Namespace.safe(obj);
 
@@ -524,7 +524,7 @@ namespace Fan.Sys
       }
     }
 
-    public Thread sendAsync(Obj obj)
+    public Thread sendAsync(object obj)
     {
       obj = Namespace.safe(obj);
 
@@ -543,8 +543,8 @@ namespace Fan.Sys
   // Timer
   //////////////////////////////////////////////////////////////////////////
 
-    public Obj sendLater(Duration dur, Obj obj) { return sendLater(dur, obj, Bool.False); }
-    public Obj sendLater(Duration dur, Obj obj, Bool repeat)
+    public object sendLater(Duration dur, object obj) { return sendLater(dur, obj, Bool.False); }
+    public object sendLater(Duration dur, object obj, Bool repeat)
     {
       obj = Namespace.safe(obj);
 
@@ -579,7 +579,7 @@ namespace Fan.Sys
       }
     }
 
-    public void cancelLater(Obj ticket)
+    public void cancelLater(object ticket)
     {
       lock (this)
       {
@@ -598,7 +598,7 @@ namespace Fan.Sys
     {
       internal long deadline;   // nanoTime expiration
       internal long duration;   // -1 for non-repeating
-      internal Obj msg;         // message to send
+      internal object msg;         // message to send
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -691,14 +691,14 @@ namespace Fan.Sys
 
     internal class Message
     {
-      public Message(int state, Obj obj)
+      public Message(int state, object obj)
       {
         this.state = state;
         this.obj = obj;
       }
 
       [MethodImpl(MethodImplOptions.Synchronized)]
-      internal Obj waitUntilFinished()
+      internal object waitUntilFinished()
       {
         if (state == MSG_SYNC) Monitor.Wait(this);
 
@@ -712,7 +712,7 @@ namespace Fan.Sys
         }
       }
 
-      internal void finish(int newState, Obj obj)
+      internal void finish(int newState, object obj)
       {
         if (this.state == MSG_ASYNC)
         {
@@ -731,7 +731,7 @@ namespace Fan.Sys
       }
 
       internal int state;       // sync/async in, ok/err out
-      internal Obj obj;         // message in, return/err out
+      internal object obj;         // message in, return/err out
       internal Message next;    // queue linked list
     }
 
@@ -753,7 +753,7 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private static Object topLock = new Object();   // top level lock
+    private static object topLock = new object();   // top level lock
     private static Hashtable byName = new Hashtable();  // String -> Thread
     private static Hashtable byService = new Hashtable();  // String -> ThreadNode
     private static int autoNameCount = 0;           // auto-generate unique name
@@ -767,7 +767,7 @@ namespace Fan.Sys
     private int m_size, m_peek;          // message queue size
     private Timer[] m_timers = noTimers; // timers for sendLater
     private Func m_run;                  // run method
-    private Obj m_runResult;             // return of run method
+    private object m_runResult;             // return of run method
 
   }
 
