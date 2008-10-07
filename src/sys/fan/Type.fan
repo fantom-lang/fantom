@@ -86,11 +86,13 @@ class Type
   **
   ** Qualified name formatted as "pod::name".  For parameterized
   ** types derived from List, Map, or Func, this method always returns
-  ** "sys::List", "sys::Map", or "sys::Func" respectively.  Return
+  ** "sys::List", "sys::Map", or "sys::Func" respectively.  If this
+  ** a nullable type, the qname does *not* include the "?".  Return
   ** "dynamic" if dynamic type.
   **
   ** Examples:
   **   Str#.qname         => "sys::Str"
+  **   Str?#.qname        => "sys::Str"
   **   acme::Foo#.qname   => "acme::Foo"
   **   acme::Foo[]#.qname => "sys::List"
   **
@@ -105,8 +107,12 @@ class Type
   **   Map  => [K:V]
   **   Func => |A,B...->R|
   **
+  ** If this is a nullable type, the signature ends with "?" such
+  ** as "sys::Int?".
+  **
   ** Examples:
   **   Str#.signature => "sys::Str"
+  **   Str?#.signature => "sys::Str?"
   **   Int[]#.signature => "sys::Int[]"
   **   Int:Str#.signature => "[sys::Int:sys::Str]"
   **   Str:Buf[]#.signature => [sys::Str:sys::Buf[]]
@@ -170,6 +176,23 @@ class Type
   **   Obj#.fits(Float#)   =>  false
   **
   Bool fits(Type t)
+
+//////////////////////////////////////////////////////////////////////////
+// Nullable
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Is this a nullable type.  Nullable types can store the 'null'
+  ** value, but non-nullables are never null.  Null types are indicated
+  ** with a trailing "?".
+  **
+  Bool isNullable()
+
+  **
+  ** Return this type as a nullable type.  If this type is already
+  ** nullable then return this.
+  **
+  Type toNullable()
 
 //////////////////////////////////////////////////////////////////////////
 // Generics
