@@ -789,7 +789,7 @@ namespace Fan.Sys
           try
           {
             string name = (this == Sys.ObjType) ? "FanObj" : m_name.val;
-            m_type = System.Type.GetType("Fan." + NameUtil.upper(podName) + "." + name);
+            m_type = System.Type.GetType(NameUtil.toNetTypeName(podName, name));
           }
           catch (Exception e)
           {
