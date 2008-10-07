@@ -248,6 +248,10 @@ public class ClassType
 
   public boolean is(Type type)
   {
+    // we don't take nullable into account for fits
+    if (type instanceof NullableType)
+      type = ((NullableType)type).root;
+
     if (type == this || (type == Sys.ObjType && this != Sys.VoidType))
       return true;
     List inheritance = inheritance();
