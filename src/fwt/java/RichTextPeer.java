@@ -339,24 +339,6 @@ public class RichTextPeer
     // fire SWT changing event
     content.fireTextChanging(te);
 
-    // the styled text widget has a bug where it doesn't repaint
-    // deleting lines at the end of the screen; so take a brute
-    // force approach
-    if (te.replaceLineCount != te.newLineCount)
-    {
-      styledText.redraw();
-    }
-
-    // if the style of the line immediately after the
-    // inserted text has been modified, then do a repaint
-    else if (tc.repaintLen != null)
-    {
-      int repaintStart = te.start;
-      if (tc.repaintStart != null) repaintStart = tc.repaintStart.intValue();
-      int repaintLen = tc.repaintLen.intValue();
-      styledText.redrawRange(repaintStart, repaintLen, false);
-    }
-
     // fire modified event
     content.fireTextChanged(new TextChangedEvent(content));
 
@@ -365,6 +347,23 @@ public class RichTextPeer
     {
       fan.fwt.Event modevt = event(EventId.modified, tc);
       self.onModify().fire(modevt);
+    }
+
+    // the styled text widget has a bug where it doesn't repaint
+    // deleting lines at the end of the screen; so take a brute
+    // force approach
+    if (te.replaceLineCount != te.newLineCount)
+    {
+      styledText.redraw();
+    }
+    // if the style of the line immediately after the
+    // inserted text has been modified, then do a repaint
+    else if (tc.repaintLen != null)
+    {
+      int repaintStart = te.start;
+      if (tc.repaintStart != null) repaintStart = tc.repaintStart.intValue();
+      int repaintLen = tc.repaintLen.intValue();
+      styledText.redrawRange(repaintStart, repaintLen, false);
     }
   }
 
