@@ -184,6 +184,18 @@ public class Type
   public Boolean isDynamic() { return dynamic; }
 
 //////////////////////////////////////////////////////////////////////////
+// Nullable
+//////////////////////////////////////////////////////////////////////////
+
+  public Boolean isNullable() { return false; }
+
+  public Type toNullable()
+  {
+    if (nullable == null) nullable = new NullableType(this);
+    return nullable;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Generics
 //////////////////////////////////////////////////////////////////////////
 
@@ -401,7 +413,7 @@ public class Type
 
   public List mixins() { return mixins; }
 
-  public final List inheritance()
+  public List inheritance()
   {
     if (inheritance == null)
     {
@@ -1025,6 +1037,7 @@ catch (Exception e) { e.printStackTrace(); }
   String finishing;
 
   // misc
+  Type nullable;
   Type listOf;
   Constructor dynamicCtor;  // enabled to store a type per instance
   boolean javaRepr;         // if representation a Java type, such as java.lang.Long
