@@ -45,14 +45,38 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
+    public static Bool equals(object self, Obj x)
+    {
+      if (self is FanObj)
+        return ((FanObj)self).equals((Obj)x);
+      else
+        return Bool.make(self.Equals(x));
+    }
+
     public virtual Bool equals(Obj obj)
     {
       return this == obj ? Bool.True : Bool.False;
     }
 
+    public static Int compare(object self, Obj x)
+    {
+      if (self is FanObj)
+        return ((FanObj)self).compare((Obj)x);
+      else
+        return toStr(self).compare(toStr(x));
+    }
+
     public virtual Int compare(Obj obj)
     {
-      return toStr().compare(obj.toStr());
+      return toStr(this).compare(toStr(obj));
+    }
+
+    public static Int hash(object self)
+    {
+      if (self is FanObj)
+        return ((FanObj)self).hash();
+      else
+        return Int.make(self.GetHashCode());
     }
 
     public virtual Int hash()
@@ -60,9 +84,25 @@ namespace Fan.Sys
       return Int.make(base.GetHashCode());
     }
 
+    public static Str toStr(object self)
+    {
+      if (self is FanObj)
+        return ((FanObj)self).toStr();
+      else
+        return Str.make(self.ToString());
+    }
+
     public virtual Str toStr()
     {
       return Str.make(base.ToString());
+    }
+
+    public static Bool isImmutable(object self)
+    {
+      if (self is FanObj)
+        return ((FanObj)self).isImmutable();
+      else
+        return Bool.False;
     }
 
     public virtual Bool isImmutable()
@@ -70,9 +110,19 @@ namespace Fan.Sys
       return type().isConst();
     }
 
+    public static Type type(object self)
+    {
+      return ((FanObj)self).type();
+    }
+
     public virtual Type type()
     {
       return Sys.ObjType;
+    }
+
+    public static Obj trap(object self, Str name, List args)
+    {
+      return ((FanObj)self).trap(name, args);
     }
 
     public virtual Obj trap(Str name, List args)

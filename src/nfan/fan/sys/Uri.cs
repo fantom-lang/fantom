@@ -990,7 +990,7 @@ namespace Fan.Sys
       int d=0;
       int len = Math.Min(this.m_path.sz(), baseUri.m_path.sz());
       for (; d<len; ++d)
-        if (!this.m_path.get(d).equals(baseUri.m_path.get(d)).val)
+        if (!this.m_path.get(d).Equals(baseUri.m_path.get(d)))
           break;
 
       // if diverenge is at root, then no commonality
@@ -1241,13 +1241,13 @@ namespace Fan.Sys
         Uri baseUri = null;
         try
         {
-          baseUri = (Uri)@base.trap(Str.uriStr, null);
+          baseUri = (Uri)trap(@base, Str.uriStr, null);
           if (baseUri == null)
             throw UnresolvedErr.make("Base object's uri is null: " + this).val;
         }
         catch (System.Exception e)
         {
-          throw UnresolvedErr.make("Cannot access base '" + @base.type() + ".uri' to normalize: " + this, e).val;
+          throw UnresolvedErr.make("Cannot access base '" + FanObj.type(@base) + ".uri' to normalize: " + this, e).val;
         }
         if (baseUri.m_scheme == null)
           throw UnresolvedErr.make("Base object's uri is not absolute: " + baseUri).val;

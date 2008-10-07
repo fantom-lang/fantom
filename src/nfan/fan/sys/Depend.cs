@@ -177,7 +177,7 @@ namespace Fan.Sys
     public override Bool equals(Obj obj)
     {
       if (obj is Depend)
-        return toStr().equals(obj.toStr());
+        return toStr().equals(toStr(obj));
       else
         return Bool.False;
     }

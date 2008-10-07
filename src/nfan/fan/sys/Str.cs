@@ -174,7 +174,7 @@ namespace Fan.Sys
     public Str plus(Obj obj)
     {
       if (obj == null) return make(String.Concat(val, "null"));
-      Str x = obj.toStr();
+      Str x = FanObj.toStr(obj);
       if (x.val == "") return this;
       return make(String.Concat(val, x.val));
     }

@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
+using FanObj = Fan.Sys.FanObj;
 using Obj = Fan.Sys.Obj;
 using List = Fan.Sys.List;
 using Log = Fan.Sys.Log;
@@ -564,7 +565,7 @@ namespace Fanx.Typedb
         Obj v = getObj(name);
         if (v == null) return null;
         if (v is Str) return (Str)v;
-        log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + v.type());
+        log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + FanObj.type(v));
         return null;
       }
 
@@ -573,7 +574,7 @@ namespace Fanx.Typedb
         Obj v = getObj(name);
         if (v == null) return null;
         if (v is List && ((List)v).of() == Sys.StrType) return (List)v;
-        log.warn("Expecting '" + loc + "@" + name + "' to be Str[], not " + v.type());
+        log.warn("Expecting '" + loc + "@" + name + "' to be Str[], not " + FanObj.type(v));
         return null;
       }
 

@@ -469,12 +469,12 @@ namespace Fan.Sys
     public static Type common(Obj[] objs, int n)
     {
       if (objs.Length == 0) return Sys.ObjType;
-      Type best = objs[0].type();
+      Type best = type(objs[0]);
       for (int i=1; i<n; ++i)
       {
         Obj obj = objs[i];
         if (obj == null) continue;
-        Type t = obj.type();
+        Type t = type(obj);
         while (!t.@is(best))
         {
           best = best.m_base;
@@ -788,7 +788,8 @@ namespace Fan.Sys
         {
           try
           {
-            m_type = System.Type.GetType("Fan." + NameUtil.upper(podName) + "." + m_name.val);
+            string name = (this == Sys.ObjType) ? "FanObj" : m_name.val;
+            m_type = System.Type.GetType("Fan." + NameUtil.upper(podName) + "." + name);
           }
           catch (Exception e)
           {

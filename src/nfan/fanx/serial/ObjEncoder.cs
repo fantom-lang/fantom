@@ -57,7 +57,7 @@ namespace Fanx.Serial
         return;
       }
 
-      Type type = obj.type();
+      Type type = FanObj.type(obj);
       if (type.facet(facetSimple, null, Bool.False) == Bool.True)
       {
         writeSimple(type, obj);
@@ -81,7 +81,7 @@ namespace Fanx.Serial
 
     private void writeSimple(Type type, Obj obj)
     {
-      wType(type).w('(').wStrLiteral(obj.toStr().val, '"').w(')');
+      wType(type).w('(').wStrLiteral(FanObj.toStr(obj).val, '"').w(')');
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ namespace Fanx.Serial
 
       bool first = true;
       Obj defObj = null;
-      if (skipDefaults) defObj = obj.type().make();
+      if (skipDefaults) defObj = FanObj.type(obj).make();
 
       List fields = type.fields();
       for (int i=0; i<fields.sz(); ++i)

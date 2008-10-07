@@ -227,8 +227,8 @@ namespace Fan.Sys
         {
           for (int i=start; i<m_size; i++)
           {
-            Obj obj = m_values[i];
-            if (obj != null && obj.equals(val).val)
+            object obj = m_values[i];
+            if (obj != null && obj.Equals(val))
               return Int.pos(i);
           }
         }
@@ -286,7 +286,7 @@ namespace Fan.Sys
       for (int i=0; i<m_size; i++)
       {
         Obj obj = m_values[i];
-        if (obj != null) hash ^= obj.hash().val;
+        if (obj != null) hash ^= FanObj.hash(obj).val;
       }
       return Int.make(hash);
     }
@@ -544,7 +544,7 @@ namespace Fan.Sys
       for (int i=0; i<m_size; i++)
       {
         Obj item = m_values[i];
-        if (item != null && item.type().@is(t))
+        if (item != null && type(item).@is(t))
           acc.add(item);
       }
       return acc;
@@ -809,7 +809,7 @@ namespace Fan.Sys
         Obj v = m_values[0];
         if (f != null) return (Str)f.call2(v, Int.Zero);
         if (v == null) return Str.nullStr;
-        return v.toStr();
+        return toStr(v);
       }
 
       StringBuilder s = new StringBuilder(32+m_size*32);
@@ -919,6 +919,27 @@ namespace Fan.Sys
       }
     }
 
+    public string[] toStrings()
+    {
+      string[] a = new string[m_size];
+      for (int i=0; i<m_size; ++i)
+      {
+        Object obj = get(i);
+        if (obj == null) a[i] = "null";
+        else a[i] = toStr(obj).val;
+      }
+      return a;
+    }
+
+    /*
+    public int[] toInts()
+    {
+      int[] a = new int[size];
+      for (int i=0; i<size; ++i) a[i] = ((Long)get(i)).intValue();
+      return a;
+    }
+    */
+
   //////////////////////////////////////////////////////////////////////////
   // Comparators
   //////////////////////////////////////////////////////////////////////////
@@ -1022,8 +1043,8 @@ namespace Fan.Sys
             item = ((List)item).toImmutable();
           else if (item is Map)
             item = ((Map)item).toImmutable();
-          else if (!item.isImmutable().val)
-            throw NotImmutableErr.make("Item [" + i + "] not immutable " + item.type()).val;
+          else if (!isImmutable(item).val)
+            throw NotImmutableErr.make("Item [" + i + "] not immutable " + type(item)).val;
         }
         temp[i] = item;
       }

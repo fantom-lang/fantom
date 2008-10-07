@@ -82,9 +82,11 @@ namespace Fan.Sys
       }
       if (expected != null && actual != null)
       {
-        if (expected.hash().val != actual.hash().val)
+        if (hash(expected).val != hash(actual).val)
         {
-          fail(Str.make("Equal but different hash codes: " + expected + " ?= " + actual));
+          fail(Str.make("Equal but different hash codes: " +
+            expected + " (0x" + hash(expected).toHex() + ") ?= " +
+            actual   + " (0x" + hash(actual).toHex() + ")"));
         }
       }
       verifyCount++;

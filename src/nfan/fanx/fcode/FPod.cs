@@ -78,19 +78,38 @@ namespace Fanx.Fcode
     {
       if (m_ncalls == null) m_ncalls = new NMethod[m_methodRefs.size()];
       NMethod x = m_ncalls[index];
-      if (x == null)
+      if (x == null || opcode == FConst.CallNonVirtual) // don't use cache on nonvirt (see below)
       {
         int[] m = methodRef(index).val;
         string parent = nname(m[0]);
-        string mName = /*NameUtil.Upper(*/name(m[1]);/*);*/
-        bool onObj = parent == "Fan.Sys.Obj";
-        string[] pars = new string[m.Length-3];
-        for (int i=0; i<pars.Length; i++) pars[i] = nname(m[i+3]);
+        string mName  = name(m[1]);
+        bool onObj    = parent == "Fan.Sys.Obj";
+        bool explicitSelf = false;
+        bool isStatic = false;
 
         // static methods on sys::Obj are really FanObj
-        if (onObj && (opcode == FConst.CallStatic || opcode == FConst.CallNonVirtual))
+        if (onObj)
         {
           parent = "Fan.Sys.FanObj";
+          isStatic = explicitSelf = opcode == FConst.CallVirtual;
+        }
+        else
+        {
+          // if no object method than ok to use cache
+          if (x != null) return x;
+        }
+
+        string[] pars;
+        if (explicitSelf)
+        {
+          pars = new string[m.Length-2];
+          pars[0] = "System.Object";
+          for (int i=1; i<pars.Length; i++) pars[i] = nname(m[i+2]);
+        }
+        else
+        {
+          pars = new string[m.Length-3];
+          for (int i=0; i<pars.Length; i++) pars[i] = nname(m[i+3]);
         }
 
         string ret = nname(m[2]);
@@ -104,7 +123,13 @@ namespace Fanx.Fcode
         x.methodName = mName;
         x.returnType = ret;
         x.paramTypes = pars;
-        if (!onObj) m_ncalls[index] = x;
+        x.isStatic   = isStatic;
+
+        // we don't cache nonvirtuals on Obj b/c of conflicting signatures:
+        // - CallVirtual: Obj.toStr => static FanObj.toStr(Object)
+        // - CallNonVirtual: Obj.toStr => FanObj.toStr()
+        if (!onObj || opcode != FConst.CallNonVirtual)
+          m_ncalls[index] = x;
       }
       return x;
     }

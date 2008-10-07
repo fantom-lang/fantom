@@ -24,7 +24,7 @@ class Build : BuildCs
             scriptDir + `fanx/emit/`,
             scriptDir + `fanx/fcode/`,
             scriptDir + `fanx/serial/`,
-            scriptDir + `fanx/test/`,
+            //scriptDir + `fanx/test/`,
             scriptDir + `fanx/tools/`,
             scriptDir + `fanx/typedb/`,
             scriptDir + `fanx/util/`,

@@ -235,14 +235,14 @@ namespace Fan.Sys
 
     public virtual OutStream print(Obj obj)
     {
-      Str s = obj == null ? Str.nullStr : obj.toStr();
+      Str s = obj == null ? Str.nullStr : toStr(obj);
       return writeChars(s, Int.Zero, s.size());
     }
 
     public virtual OutStream printLine() { return printLine(Str.Empty); }
     public virtual OutStream printLine(Obj obj)
     {
-      Str s = obj == null ? Str.nullStr : obj.toStr();
+      Str s = obj == null ? Str.nullStr : toStr(obj);
       writeChars(s, Int.Zero, s.size());
       return writeChar(Int.m_pos['\n']);
     }
