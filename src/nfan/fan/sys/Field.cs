@@ -118,7 +118,7 @@ namespace Fan.Sys
       {
         if (checkConst)
           throw ReadonlyErr.make("Cannot set const field " + qname()).val;
-        else if (value != null && !value.isImmutable().val)
+        else if (value != null && !isImmutable(value).val)
           throw ReadonlyErr.make("Cannot set const field " + qname() + " with mutable value").val;
       }
 
@@ -129,8 +129,8 @@ namespace Fan.Sys
       // check generic type (the .NET runtime will check non-generics)
       if (m_of.isGenericInstance() && value != null)
       {
-        if (!m_of.@is(value.type()))
-          throw ArgErr.make("Wrong type for field " + qname() + ": " + m_of + " != " + value.type()).val;
+        if (!m_of.@is(type(value)))
+          throw ArgErr.make("Wrong type for field " + qname() + ": " + m_of + " != " + type(value)).val;
       }
 
       if (m_setter != null)

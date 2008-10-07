@@ -94,7 +94,7 @@ namespace Fan.Sys
 
     public StrBuf add(Obj x)
     {
-      string s = (x == null) ? "null" : x.toStr().val;
+      string s = (x == null) ? "null" : toStr(x).val;
       sb.Append(s);
       return this;
     }
@@ -108,7 +108,7 @@ namespace Fan.Sys
     public StrBuf join(Obj x) { return join(x, Str.m_ascii[' ']); }
     public StrBuf join(Obj x, Str sep)
     {
-      String s = (x == null) ? "null" : x.toStr().val;
+      String s = (x == null) ? "null" : toStr(x).val;
       if (sb.Length > 0) sb.Append(sep.val);
       sb.Append(s);
       return this;
@@ -116,7 +116,7 @@ namespace Fan.Sys
 
     public StrBuf insert(Int index, Obj x)
     {
-      string s = (x == null) ? "null" : x.toStr().val;
+      string s = (x == null) ? "null" : toStr(x).val;
       int i = (int)index.val;
       if (i < 0) i = sb.Length+i;
       if (i > sb.Length) throw IndexErr.make(index).val;

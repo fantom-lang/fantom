@@ -74,7 +74,7 @@ namespace Fan.Sys
     public static Int idHash(Obj obj)
     {
       //return Int.make(System.identityHashCode(obj));
-      return obj.hash();
+      return FanObj.hash(obj);
     }
 
     public static Map diagnostics()

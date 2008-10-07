@@ -108,8 +108,8 @@ namespace Fan.Sys
       modify();
       if (key == null)
         throw NullErr.make("key is null").val;
-      if (!key.isImmutable().val)
-        throw NotImmutableErr.make("key is not immutable: " + key.type()).val;
+      if (!isImmutable(key).val)
+        throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
       m_map[key] = val;
       return this;
     }
@@ -119,8 +119,8 @@ namespace Fan.Sys
       modify();
       if (key == null)
         throw NullErr.make("key is null").val;
-      if (!key.isImmutable().val)
-        throw NotImmutableErr.make("key is not immutable: " + key.type()).val;
+      if (!isImmutable(key).val)
+        throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
       if (m_map[key] != null)
         throw ArgErr.make("Key already mapped: " + key).val;
       m_map[key] = val;
@@ -198,16 +198,16 @@ namespace Fan.Sys
     public void def(Obj v)
     {
       modify();
-      if (v != null && !v.isImmutable().val)
-        throw NotImmutableErr.make("def must be immutable: " + v.type()).val;
+      if (v != null && !isImmutable(v).val)
+        throw NotImmutableErr.make("def must be immutable: " + type(v)).val;
       this.m_def = v;
     }
-    
+
     public override Bool equals(Obj that)
     {
       if (that is Map)
       {
-        if (!m_type.equals(that.type()).val)
+        if (!m_type.equals(type(that)).val)
           return Bool.False;
 
         Hashtable thatMap = ((Map)that).m_map;
@@ -225,7 +225,7 @@ namespace Fan.Sys
           {
             if (test != null) return Bool.False;
           }
-          else if (!val.equals(test).val)
+          else if (!val.Equals(test))
           {
             return Bool.False;
           }
@@ -433,8 +433,8 @@ namespace Fan.Sys
             val = ((List)val).toImmutable();
           else if (val is Map)
             val = ((Map)val).toImmutable();
-          else if (!val.isImmutable().val)
-            throw NotImmutableErr.make("Item [" + key + "] not immutable " + val.type()).val;
+          else if (!isImmutable(val).val)
+            throw NotImmutableErr.make("Item [" + key + "] not immutable " + type(val)).val;
         }
 
         temp[key] = val;

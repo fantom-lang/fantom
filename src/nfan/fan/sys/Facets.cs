@@ -55,7 +55,7 @@ namespace Fan.Sys
       {
         Str key  = (Str)en.Key;
         Obj val  = (Obj)en.Value;
-        if (val.isImmutable().val)
+        if (FanObj.isImmutable(val).val)
           src[key] = val;
         else
           src[key] = ObjEncoder.encode(val);
@@ -99,7 +99,7 @@ namespace Fan.Sys
 
     private Obj toImmutable(Obj obj)
     {
-      if (obj.isImmutable().val) return obj;
+      if (FanObj.isImmutable(obj).val) return obj;
 
       if (obj is List)
       {
@@ -142,7 +142,7 @@ namespace Fan.Sys
       {
         Obj val = get(name, null);
         map.set(name, val);
-        allImmutable &= val.isImmutable().val;
+        allImmutable &= FanObj.isImmutable(val).val;
       }
 
       // if all the values were immutable, then we

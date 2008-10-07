@@ -17,19 +17,19 @@ namespace Fan.Sys
   public interface Obj
   {
 
-    Bool equals(Obj obj);
+    //Bool equals(Obj obj);
 
-    Int compare(Obj obj);
+    //Int compare(Obj obj);
 
-    Int hash();
+    //Int hash();
 
-    Str toStr();
+    //Str toStr();
 
-    Bool isImmutable();
+    //Bool isImmutable();
 
-    Type type();
+    //Type type();
 
-    Obj trap(Str name, List args);
+    //Obj trap(Str name, List args);
 
   }
 }

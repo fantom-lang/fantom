@@ -62,8 +62,8 @@ namespace Fanx.Tools
         //  pattern = "";
         //else
         //  pattern = pattern.Substring(5);
-        if (!Fanx.Test.Test.RunTests(null)) failures++;
-        totalVerifyCount += Fanx.Test.Test.totalVerified;
+//        if (!Fanx.Test.Test.RunTests(null)) failures++;
+//        totalVerifyCount += Fanx.Test.Test.totalVerified;
         return;
       }
 
