@@ -60,8 +60,8 @@ public class NullableType
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Type root;
-  private String signature;
+  final Type root;
+  final String signature;
   private Type listOf;
 
 }
