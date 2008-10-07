@@ -115,11 +115,11 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Int.make(2) });
 
       verify(r == o);
-      verify(r.get(0).equals(Int.make(0))   == Bool.True);
-      verify(r.get(1).equals(Int.make(3))   == Bool.True);
-      verify(r.get(2).equals(Int.make(99))  == Bool.True);
-      verify(r.get(3).equals(Int.make(4))   == Bool.True);
-      verify(r.get(4).equals(Int.make(100)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(3)));
+      verify(r.get(2).Equals(Int.make(99)));
+      verify(r.get(3).Equals(Int.make(4)));
+      verify(r.get(4).Equals(Int.make(100)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -281,9 +281,9 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Int.make(2) });
 
       List c = (List)o;
-      verify(c.get(0).equals(Int.make(0))  == Bool.True);
-      verify(c.get(1).equals(Int.make(3))  == Bool.True);
-      verify(c.get(2).equals(Int.make(99)) == Bool.True);
+      verify(c.get(0).Equals(Int.make(0)));
+      verify(c.get(1).Equals(Int.make(3)));
+      verify(c.get(2).Equals(Int.make(99)));
 
       r.clear();
       try
@@ -294,8 +294,8 @@ namespace Fanx.Test
       {
         verify(ex.InnerException is System.NullReferenceException);
         c = (List)o;
-        verify(c.get(0).equals(Int.make(0))  == Bool.True);
-        verify(c.get(1).equals(Int.make(99)) == Bool.True);
+        verify(c.get(0).Equals(Int.make(0)));
+        verify(c.get(1).Equals(Int.make(99)));
       }
     }
 
@@ -326,11 +326,11 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
 
       List c = (List)o;
-      verify(c.get(0).equals(Int.make(0)) == Bool.True);
-      verify(c.get(1).equals(Int.make(1)) == Bool.True);
-      verify(c.get(2).equals(Int.make(2)) == Bool.True);
-      verify(c.get(3).equals(Int.make(3)) == Bool.True);
-      verify(c.get(4).equals(Int.make(4)) == Bool.True);
+      verify(c.get(0).Equals(Int.make(0)));
+      verify(c.get(1).Equals(Int.make(1)));
+      verify(c.get(2).Equals(Int.make(2)));
+      verify(c.get(3).Equals(Int.make(3)));
+      verify(c.get(4).Equals(Int.make(4)));
 
       r.clear();
       try
@@ -343,9 +343,9 @@ namespace Fanx.Test
         verify(err.GetType() == System.Type.GetType("Fan.Sys.ArgErr"));
 
         c = (List)o;
-        verify(c.get(0).equals(Int.make(0)) == Bool.True);
-        verify(c.get(1).equals(Int.make(1)) == Bool.True);
-        verify(c.get(2).equals(Int.make(3)) == Bool.True);
+        verify(c.get(0).Equals(Int.make(0)));
+        verify(c.get(1).Equals(Int.make(1)));
+        verify(c.get(2).Equals(Int.make(3)));
       }
     }
 
@@ -375,9 +375,9 @@ namespace Fanx.Test
       verify(r == o);
 
       List c = (List)o;
-      verify(c.get(0).equals(Int.make(0)) == Bool.True);
-      verify(c.get(1).equals(Int.make(1)) == Bool.True);
-      verify(c.get(2).equals(Int.make(2)) == Bool.True);
+      verify(c.get(0).Equals(Int.make(0)));
+      verify(c.get(1).Equals(Int.make(1)));
+      verify(c.get(2).Equals(Int.make(2)));
     }
 
     void verifyTryFinally4()
@@ -415,11 +415,11 @@ namespace Fanx.Test
       verify(r == o);
 
       List c = (List)o;
-      verify(c.get(0).equals(Int.make(0)) == Bool.True);
-      verify(c.get(1).equals(Int.make(1)) == Bool.True);
-      verify(c.get(2).equals(Int.make(2)) == Bool.True);
-      verify(c.get(3).equals(Int.make(3)) == Bool.True);
-      verify(c.get(4).equals(Int.make(5)) == Bool.True);
+      verify(c.get(0).Equals(Int.make(0)));
+      verify(c.get(1).Equals(Int.make(1)));
+      verify(c.get(2).Equals(Int.make(2)));
+      verify(c.get(3).Equals(Int.make(3)));
+      verify(c.get(4).Equals(Int.make(5)));
     }
 
     void verifyTryFinally5()  // same as testTryFinally4 but Void
@@ -458,11 +458,11 @@ namespace Fanx.Test
 
       verify(o == null);
 
-      verify(r.get(0).equals(Int.make(0)) == Bool.True);
-      verify(r.get(1).equals(Int.make(1)) == Bool.True);
-      verify(r.get(2).equals(Int.make(2)) == Bool.True);
-      verify(r.get(3).equals(Int.make(3)) == Bool.True);
-      verify(r.get(4).equals(Int.make(5)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(1)));
+      verify(r.get(2).Equals(Int.make(2)));
+      verify(r.get(3).Equals(Int.make(3)));
+      verify(r.get(4).Equals(Int.make(5)));
     }
 
     void verifyTryFinally6()
@@ -499,12 +499,12 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.ArgErr"));
 
-        verify(r.get(0).equals(Int.make(0))   == Bool.True);
-        verify(r.get(1).equals(Int.make(11))  == Bool.True);
-        verify(r.get(2).equals(Int.make(101)) == Bool.True);
-        verify(r.get(3).equals(Int.make(12))  == Bool.True);
-        verify(r.get(4).equals(Int.make(102)) == Bool.True);
-        verify(r.get(5).equals(Int.make(103)) == Bool.True);
+        verify(r.get(0).Equals(Int.make(0)));
+        verify(r.get(1).Equals(Int.make(11)));
+        verify(r.get(2).Equals(Int.make(101)));
+        verify(r.get(3).Equals(Int.make(12)));
+        verify(r.get(4).Equals(Int.make(102)));
+        verify(r.get(5).Equals(Int.make(103)));
       }
     }
 
@@ -538,15 +538,15 @@ namespace Fanx.Test
 
       verify(r == o);
 
-      verify(r.get(0).equals(Int.make(0))   == Bool.True);
-      verify(r.get(1).equals(Int.make(1))   == Bool.True);
-      verify(r.get(2).equals(Int.make(101)) == Bool.True);
-      verify(r.get(3).equals(Int.make(102)) == Bool.True);
-      verify(r.get(4).equals(Int.make(3))   == Bool.True);
-      verify(r.get(5).equals(Int.make(103)) == Bool.True);
-      verify(r.get(6).equals(Int.make(104)) == Bool.True);
-      verify(r.get(7).equals(Int.make(105)) == Bool.True);
-      verify(r.get(8).equals(Int.make(99))  == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(1)));
+      verify(r.get(2).Equals(Int.make(101)));
+      verify(r.get(3).Equals(Int.make(102)));
+      verify(r.get(4).Equals(Int.make(3)));
+      verify(r.get(5).Equals(Int.make(103)));
+      verify(r.get(6).Equals(Int.make(104)));
+      verify(r.get(7).Equals(Int.make(105)));
+      verify(r.get(8).Equals(Int.make(99)));
     }
 
     void verifyTryFinally8()
@@ -604,22 +604,22 @@ namespace Fanx.Test
 
       verify(o == null);
 
-      verify(r.get(0).equals(Int.make(0))      == Bool.True);
-      verify(r.get(1).equals(Int.make(1))      == Bool.True);
-      verify(r.get(2).equals(Int.make(101))    == Bool.True);
-      verify(r.get(3).equals(Int.make(99))     == Bool.True);
-      verify(r.get(4).equals(Int.make(102))    == Bool.True);
-      verify(r.get(5).equals(Int.make(99))     == Bool.True);
-      verify(r.get(6).equals(Int.make(3))      == Bool.True);
-      verify(r.get(7).equals(Int.make(103))    == Bool.True);
-      verify(r.get(8).equals(Int.make(99))     == Bool.True);
-      verify(r.get(9).equals(Int.make(104))    == Bool.True);
-      verify(r.get(10).equals(Int.make(99))    == Bool.True);
-      verify(r.get(11).equals(Int.make(105))   == Bool.True);
-      verify(r.get(12).equals(Int.make(99))    == Bool.True);
-      verify(r.get(13).equals(Int.make(999))   == Bool.True);
-      verify(r.get(14).equals(Int.make(9999))  == Bool.True);
-      verify(r.get(15).equals(Int.make(99999)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(1)));
+      verify(r.get(2).Equals(Int.make(101)));
+      verify(r.get(3).Equals(Int.make(99)));
+      verify(r.get(4).Equals(Int.make(102)));
+      verify(r.get(5).Equals(Int.make(99)));
+      verify(r.get(6).Equals(Int.make(3)));
+      verify(r.get(7).Equals(Int.make(103)));
+      verify(r.get(8).Equals(Int.make(99)));
+      verify(r.get(9).Equals(Int.make(104)));
+      verify(r.get(10).Equals(Int.make(99)));
+      verify(r.get(11).Equals(Int.make(105)));
+      verify(r.get(12).Equals(Int.make(99)));
+      verify(r.get(13).Equals(Int.make(999)));
+      verify(r.get(14).Equals(Int.make(9999)));
+      verify(r.get(15).Equals(Int.make(99999)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -657,18 +657,18 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
 
       verify(o == Int.make(2));
-      verify(r.get(0).equals(Int.make(0)) == Bool.True);
-      verify(r.get(1).equals(Int.make(1)) == Bool.True);
-      verify(r.get(2).equals(Int.make(2)) == Bool.True);
-      verify(r.get(3).equals(Int.make(4)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(1)));
+      verify(r.get(2).Equals(Int.make(2)));
+      verify(r.get(3).Equals(Int.make(4)));
 
       r.clear();
       o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.True});
       verify(o == Int.make(3));
-      verify(r.get(0).equals(Int.make(0)) == Bool.True);
-      verify(r.get(1).equals(Int.make(1)) == Bool.True);
-      verify(r.get(2).equals(Int.make(3)) == Bool.True);
-      verify(r.get(3).equals(Int.make(4)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(1)));
+      verify(r.get(2).Equals(Int.make(3)));
+      verify(r.get(3).Equals(Int.make(4)));
     }
 
     void verifyTryCatchFinally2() // same as testTryCatchFinally2 but Void
@@ -700,18 +700,18 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
 
       verify(o == null);
-      verify(r.get(0).equals(Int.make(0)) == Bool.True);
-      verify(r.get(1).equals(Int.make(1)) == Bool.True);
-      verify(r.get(2).equals(Int.make(2)) == Bool.True);
-      verify(r.get(3).equals(Int.make(4)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(1)));
+      verify(r.get(2).Equals(Int.make(2)));
+      verify(r.get(3).Equals(Int.make(4)));
 
       r.clear();
       o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.True});
       verify(o == null);
-      verify(r.get(0).equals(Int.make(0)) == Bool.True);
-      verify(r.get(1).equals(Int.make(1)) == Bool.True);
-      verify(r.get(2).equals(Int.make(3)) == Bool.True);
-      verify(r.get(3).equals(Int.make(4)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(1)));
+      verify(r.get(2).Equals(Int.make(3)));
+      verify(r.get(3).Equals(Int.make(4)));
     }
 
     void verifyTryCatchFinally3()
@@ -745,10 +745,10 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, null });
 
       verify(o == null);
-      verify(r.get(0).equals(Int.make(0))  == Bool.True);
-      verify(r.get(1).equals(Int.make(1))  == Bool.True);
-      verify(r.get(2).equals(Int.make(2))  == Bool.True);
-      verify(r.get(3).equals(Int.make(99)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(1)));
+      verify(r.get(2).Equals(Int.make(2)));
+      verify(r.get(3).Equals(Int.make(99)));
 
       r.clear();
       try
@@ -760,10 +760,10 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.IndexErr"));
 
-        verify(r.get(0).equals(Int.make(0))  == Bool.True);
-        verify(r.get(1).equals(Int.make(1))  == Bool.True);
-        verify(r.get(2).equals(Int.make(3))  == Bool.True);
-        verify(r.get(3).equals(Int.make(99)) == Bool.True);
+        verify(r.get(0).Equals(Int.make(0)));
+        verify(r.get(1).Equals(Int.make(1)));
+        verify(r.get(2).Equals(Int.make(3)));
+        verify(r.get(3).Equals(Int.make(99)));
       }
 
       r.clear();
@@ -776,10 +776,10 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.IOErr"));
 
-        verify(r.get(0).equals(Int.make(0))  == Bool.True);
-        verify(r.get(1).equals(Int.make(1))  == Bool.True);
-        verify(r.get(2).equals(Int.make(3))  == Bool.True);
-        verify(r.get(3).equals(Int.make(99)) == Bool.True);
+        verify(r.get(0).Equals(Int.make(0)));
+        verify(r.get(1).Equals(Int.make(1)));
+        verify(r.get(2).Equals(Int.make(3)));
+        verify(r.get(3).Equals(Int.make(99)));
       }
     }
 
@@ -820,10 +820,10 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, null });
 
       verify(o == null);
-      verify(r.get(0).equals(Int.make(0))  == Bool.True);
-      verify(r.get(1).equals(Int.make(1))  == Bool.True);
-      verify(r.get(2).equals(Int.make(2))  == Bool.True);
-      verify(r.get(3).equals(Int.make(99)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(1)));
+      verify(r.get(2).Equals(Int.make(2)));
+      verify(r.get(3).Equals(Int.make(99)));
 
       r.clear();
       try
@@ -835,10 +835,10 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.IOErr"));
 
-        verify(r.get(0).equals(Int.make(0))  == Bool.True);
-        verify(r.get(1).equals(Int.make(1))  == Bool.True);
-        verify(r.get(2).equals(Int.make(3))  == Bool.True);
-        verify(r.get(3).equals(Int.make(99)) == Bool.True);
+        verify(r.get(0).Equals(Int.make(0)));
+        verify(r.get(1).Equals(Int.make(1)));
+        verify(r.get(2).Equals(Int.make(3)));
+        verify(r.get(3).Equals(Int.make(99)));
       }
 
       r.clear();
@@ -851,10 +851,10 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.IndexErr"));
 
-        verify(r.get(0).equals(Int.make(0))  == Bool.True);
-        verify(r.get(1).equals(Int.make(1))  == Bool.True);
-        verify(r.get(2).equals(Int.make(5))  == Bool.True);
-        verify(r.get(3).equals(Int.make(99)) == Bool.True);
+        verify(r.get(0).Equals(Int.make(0)));
+        verify(r.get(1).Equals(Int.make(1)));
+        verify(r.get(2).Equals(Int.make(5)));
+        verify(r.get(3).Equals(Int.make(99)));
       }
     }
 
@@ -932,24 +932,24 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r });
 
       verify(o == null);
-      verify(r.get(0).equals(Int.make(0))    == Bool.True);
-      verify(r.get(1).equals(Int.make(10))   == Bool.True);
-      verify(r.get(2).equals(Int.make(20))   == Bool.True);
-      verify(r.get(3).equals(Int.make(30))   == Bool.True);
-      verify(r.get(4).equals(Int.make(300))  == Bool.True);
-      verify(r.get(5).equals(Int.make(50))   == Bool.True);
-      verify(r.get(6).equals(Int.make(11))   == Bool.True);
-      verify(r.get(7).equals(Int.make(21))   == Bool.True);
-      verify(r.get(8).equals(Int.make(31))   == Bool.True);
-      verify(r.get(9).equals(Int.make(301))  == Bool.True);
-      verify(r.get(10).equals(Int.make(51))  == Bool.True);
-      verify(r.get(11).equals(Int.make(12))  == Bool.True);
-      verify(r.get(12).equals(Int.make(32))  == Bool.True);
-      verify(r.get(13).equals(Int.make(902)) == Bool.True);
-      verify(r.get(14).equals(Int.make(922)) == Bool.True);
-      verify(r.get(15).equals(Int.make(932)) == Bool.True);
-      verify(r.get(16).equals(Int.make(99))  == Bool.True);
-      verify(r.get(17).equals(Int.make(999)) == Bool.True);
+      verify(r.get(0).Equals(Int.make(0)));
+      verify(r.get(1).Equals(Int.make(10)));
+      verify(r.get(2).Equals(Int.make(20)));
+      verify(r.get(3).Equals(Int.make(30)));
+      verify(r.get(4).Equals(Int.make(300)));
+      verify(r.get(5).Equals(Int.make(50)));
+      verify(r.get(6).Equals(Int.make(11)));
+      verify(r.get(7).Equals(Int.make(21)));
+      verify(r.get(8).Equals(Int.make(31)));
+      verify(r.get(9).Equals(Int.make(301)));
+      verify(r.get(10).Equals(Int.make(51)));
+      verify(r.get(11).Equals(Int.make(12)));
+      verify(r.get(12).Equals(Int.make(32)));
+      verify(r.get(13).Equals(Int.make(902)));
+      verify(r.get(14).Equals(Int.make(922)));
+      verify(r.get(15).Equals(Int.make(932)));
+      verify(r.get(16).Equals(Int.make(99)));
+      verify(r.get(17).Equals(Int.make(999)));
     }
 
 
