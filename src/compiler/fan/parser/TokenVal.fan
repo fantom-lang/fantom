@@ -69,7 +69,8 @@ class TokenVal : Location
     return kind === Token.lbracket && !newline
   }
 
-  Token kind     // enum for Token type
-  Obj val        // Str, Int, Float, Duration, or Str[]
-  Bool newline   // have we processed one or more newlines since the last token
+  Token kind      // enum for Token type
+  Obj val         // Str, Int, Float, Duration, or Str[]
+  Bool newline    // have we processed one or more newlines since the last token
+  Bool whitespace // was this token preceeded by whitespace
 }

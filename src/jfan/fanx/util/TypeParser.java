@@ -32,9 +32,17 @@ public class TypeParser
    */
   public static Type load(String sig, boolean checked, Pod loadingPod)
   {
+    // if last character is ?, then parse a nullable
+    int len = sig.length();
+    int last = len > 1 ? sig.charAt(len-1) : 0;
+    if (last == '?')
+    {
+      // TODO: we can make this more efficient
+      return load(sig.substring(0, len-1), checked, loadingPod).toNullable();
+    }
+
     // if the last character isn't ] or |, then this a non-generic
     // type and we don't even need to allocate a parser
-    int last = sig.length() > 1 ? sig.charAt(sig.length()-1) : 0;
     if (last != ']' && last != '|')
     {
       String podName, typeName;

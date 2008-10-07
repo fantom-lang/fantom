@@ -35,7 +35,7 @@ public class FDoc
       if (line.length() == 0 && key != null)
       {
         if (key.indexOf('.') < 0)
-          Type.find(key, true).doc = s.toString();
+          ((ClassType)Type.find(key, true)).doc = s.toString();
         else
           Slot.find(key, true).doc = s.toString();
         s = new StringBuilder();

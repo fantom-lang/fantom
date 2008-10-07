@@ -33,6 +33,7 @@ class Tokenizer : CompilerSupport
     this.tokens   = TokenVal[,]
     this.inStrLiteral = false
     this.posOfLine = 0
+    this.whitespace = false
 
     // initialize cur and peek
     cur = peek = ' '
@@ -91,9 +92,11 @@ class Tokenizer : CompilerSupport
       tok.line = line
       tok.col  = col
       tok.newline = lastLine < line
+      tok.whitespace = whitespace
 
-      // save last line
+      // save last line, clear whitespace flag
       lastLine = line
+      whitespace = false
 
       return tok
     }
@@ -106,7 +109,7 @@ class Tokenizer : CompilerSupport
   private TokenVal find()
   {
     // skip whitespace
-    if (cur.isSpace) { consume; return null }
+    if (cur.isSpace) { consume; whitespace = true; return null }
 
     // raw string literal r"c:\dir\foo.txt"
     if (cur === 'r' && peek === '"' && !inStrLiteral) return rawStr
@@ -154,10 +157,10 @@ class Tokenizer : CompilerSupport
     // check keywords
     keyword := Token.keywords[word]
     if (keyword != null)
-      return TokenVal.make(keyword)
+      return TokenVal(keyword)
 
     // otherwise this is a normal identifier
-    return TokenVal.make(Token.identifier, word)
+    return TokenVal(Token.identifier, word)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -232,7 +235,7 @@ class Tokenizer : CompilerSupport
       if (floatSuffix)
       {
         num := Float.fromStr(str)
-        return TokenVal.make(Token.floatLiteral, num)
+        return TokenVal(Token.floatLiteral, num)
       }
 
       // decimal literal
@@ -240,17 +243,17 @@ class Tokenizer : CompilerSupport
       {
         num := Decimal.fromStr(str)
         if (dur != null)
-          return TokenVal.make(Token.durationLiteral, Duration.make((num*dur.toDecimal).toInt))
+          return TokenVal(Token.durationLiteral, Duration((num*dur.toDecimal).toInt))
         else
-          return TokenVal.make(Token.decimalLiteral, num)
+          return TokenVal(Token.decimalLiteral, num)
       }
 
       // int literal
       num := Int.fromStr(str)
       if (dur != null)
-        return TokenVal.make(Token.durationLiteral, Duration.make(num*dur))
+        return TokenVal(Token.durationLiteral, Duration(num*dur))
       else
-        return TokenVal.make(Token.intLiteral, num)
+        return TokenVal(Token.intLiteral, num)
     }
     catch (ParseErr e)
     {
@@ -285,7 +288,7 @@ class Tokenizer : CompilerSupport
       consume
     }
 
-    return TokenVal.make(Token.intLiteral, val)
+    return TokenVal(Token.intLiteral, val)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -306,7 +309,7 @@ class Tokenizer : CompilerSupport
     multiLineOk := true
 
     // string contents
-    s := StrBuf.make
+    s := StrBuf()
     while (cur !==  '"')
     {
       if (cur <= 0) throw err("Unexpected end of string")
@@ -326,7 +329,7 @@ class Tokenizer : CompilerSupport
     // close quote
     consume
 
-    return TokenVal.make(Token.strLiteral, s.toStr)
+    return TokenVal(Token.strLiteral, s.toStr)
   }
 
   **
@@ -344,7 +347,7 @@ class Tokenizer : CompilerSupport
       multiLineOk := true
 
       // store starting position
-      s := StrBuf.make
+      s := StrBuf()
 
       // loop until we find end of string
       interpolated := false
@@ -401,7 +404,7 @@ class Tokenizer : CompilerSupport
       }
       else
       {
-        return TokenVal.make(Token.strLiteral, s.toStr)
+        return TokenVal(Token.strLiteral, s.toStr)
       }
     }
     finally
@@ -503,7 +506,7 @@ class Tokenizer : CompilerSupport
   **
   private TokenVal makeVirtualToken(Token kind, Obj value := null)
   {
-    tok := TokenVal.make(kind, value)
+    tok := TokenVal(kind, value)
     tok.file  = filename
     tok.line  = line
     tok.col   = col
@@ -523,7 +526,7 @@ class Tokenizer : CompilerSupport
     consume
 
     // store starting position
-    s := StrBuf.make
+    s := StrBuf()
 
     // loop until we find end of string
     while (true)
@@ -554,7 +557,7 @@ class Tokenizer : CompilerSupport
       }
     }
 
-    return TokenVal.make(Token.uriLiteral, s.toStr)
+    return TokenVal(Token.uriLiteral, s.toStr)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -585,7 +588,7 @@ class Tokenizer : CompilerSupport
     if (cur !== '\'') throw err("Expecting ' close of char literal")
     consume
 
-    return TokenVal.make(Token.intLiteral, c)
+    return TokenVal(Token.intLiteral, c)
   }
 
   **
@@ -679,7 +682,7 @@ class Tokenizer : CompilerSupport
 
     // parse comment
     lines := Str[,]
-    s := StrBuf.make
+    s := StrBuf()
     while (cur > 0)
     {
       // add to buffer and advance
@@ -711,7 +714,7 @@ class Tokenizer : CompilerSupport
       if (lines.last.trim.isEmpty) lines.removeAt(-1)
       else break
 
-    return TokenVal.make(Token.docComment, lines)
+    return TokenVal(Token.docComment, lines)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -733,119 +736,119 @@ class Tokenizer : CompilerSupport
         if (cur === '=')
         {
           consume
-          if (cur === '=') { consume; return TokenVal.make(Token.notSame) }
-          return TokenVal.make(Token.notEq)
+          if (cur === '=') { consume; return TokenVal(Token.notSame) }
+          return TokenVal(Token.notEq)
         }
-        return TokenVal.make(Token.bang)
+        return TokenVal(Token.bang)
       case '#':
-        return TokenVal.make(Token.pound)
+        return TokenVal(Token.pound)
       case '%':
-        if (cur === '=') { consume; return TokenVal.make(Token.assignPercent) }
-        return TokenVal.make(Token.percent)
+        if (cur === '=') { consume; return TokenVal(Token.assignPercent) }
+        return TokenVal(Token.percent)
       case '&':
-        if (cur === '=') { consume; return TokenVal.make(Token.assignAmp) }
-        if (cur === '&') { consume; return TokenVal.make(Token.doubleAmp) }
-        return TokenVal.make(Token.amp)
+        if (cur === '=') { consume; return TokenVal(Token.assignAmp) }
+        if (cur === '&') { consume; return TokenVal(Token.doubleAmp) }
+        return TokenVal(Token.amp)
       case '(':
-        return TokenVal.make(Token.lparen)
+        return TokenVal(Token.lparen)
       case ')':
-        return TokenVal.make(Token.rparen)
+        return TokenVal(Token.rparen)
       case '*':
-        if (cur === '=') { consume; return TokenVal.make(Token.assignStar) }
-        return TokenVal.make(Token.star)
+        if (cur === '=') { consume; return TokenVal(Token.assignStar) }
+        return TokenVal(Token.star)
       case '+':
-        if (cur === '=') { consume; return TokenVal.make(Token.assignPlus) }
-        if (cur === '+') { consume; return TokenVal.make(Token.increment) }
-        return TokenVal.make(Token.plus)
+        if (cur === '=') { consume; return TokenVal(Token.assignPlus) }
+        if (cur === '+') { consume; return TokenVal(Token.increment) }
+        return TokenVal(Token.plus)
       case ',':
-        return TokenVal.make(Token.comma)
+        return TokenVal(Token.comma)
       case '-':
-        if (cur === '>') { consume; return TokenVal.make(Token.arrow) }
-        if (cur === '-') { consume; return TokenVal.make(Token.decrement) }
-        if (cur === '=') { consume; return TokenVal.make(Token.assignMinus) }
-        return TokenVal.make(Token.minus)
+        if (cur === '>') { consume; return TokenVal(Token.arrow) }
+        if (cur === '-') { consume; return TokenVal(Token.decrement) }
+        if (cur === '=') { consume; return TokenVal(Token.assignMinus) }
+        return TokenVal(Token.minus)
       case '.':
         if (cur === '.')
         {
           consume
-          if (cur === '.') { consume; return TokenVal.make(Token.dotDotDot) }
-          return TokenVal.make(Token.dotDot)
+          if (cur === '.') { consume; return TokenVal(Token.dotDotDot) }
+          return TokenVal(Token.dotDot)
         }
-        return TokenVal.make(Token.dot)
+        return TokenVal(Token.dot)
       case '/':
-        if (cur === '=') { consume; return TokenVal.make(Token.assignSlash) }
-        return TokenVal.make(Token.slash)
+        if (cur === '=') { consume; return TokenVal(Token.assignSlash) }
+        return TokenVal(Token.slash)
       case ':':
-        if (cur === ':') { consume; return TokenVal.make(Token.doubleColon) }
-        if (cur === '=') { consume; return TokenVal.make(Token.defAssign) }
-        return TokenVal.make(Token.colon)
+        if (cur === ':') { consume; return TokenVal(Token.doubleColon) }
+        if (cur === '=') { consume; return TokenVal(Token.defAssign) }
+        return TokenVal(Token.colon)
       case ';':
-        return TokenVal.make(Token.semicolon)
+        return TokenVal(Token.semicolon)
       case '<':
         if (cur === '=')
         {
           consume
-          if (cur === '>') { consume; return TokenVal.make(Token.cmp) }
-          return TokenVal.make(Token.ltEq)
+          if (cur === '>') { consume; return TokenVal(Token.cmp) }
+          return TokenVal(Token.ltEq)
         }
         if (cur === '<')
         {
           consume
-          if (cur === '=') { consume; return TokenVal.make(Token.assignLshift) }
-          return TokenVal.make(Token.lshift)
+          if (cur === '=') { consume; return TokenVal(Token.assignLshift) }
+          return TokenVal(Token.lshift)
         }
-        return TokenVal.make(Token.lt)
+        return TokenVal(Token.lt)
       case '=':
         if (cur === '=')
         {
           consume
-          if (cur === '=') { consume; return TokenVal.make(Token.same) }
-          return TokenVal.make(Token.eq)
+          if (cur === '=') { consume; return TokenVal(Token.same) }
+          return TokenVal(Token.eq)
         }
-        return TokenVal.make(Token.assign)
+        return TokenVal(Token.assign)
       case '>':
-        if (cur === '=') { consume; return TokenVal.make(Token.gtEq) }
+        if (cur === '=') { consume; return TokenVal(Token.gtEq) }
         if (cur === '>')
         {
           consume
-          if (cur === '=') { consume; return TokenVal.make(Token.assignRshift) }
-          return TokenVal.make(Token.rshift)
+          if (cur === '=') { consume; return TokenVal(Token.assignRshift) }
+          return TokenVal(Token.rshift)
         }
-        return TokenVal.make(Token.gt)
+        return TokenVal(Token.gt)
       case '?':
-        if (cur === ':') { consume; return TokenVal.make(Token.elvis) }
-        if (cur === '.') { consume; return TokenVal.make(Token.safeDot) }
+        if (cur === ':') { consume; return TokenVal(Token.elvis) }
+        if (cur === '.') { consume; return TokenVal(Token.safeDot) }
         if (cur === '-')
         {
           consume
           if (cur !== '>') throw err("Expected '?->' symbol")
           consume
-          return TokenVal.make(Token.safeArrow)
+          return TokenVal(Token.safeArrow)
         }
-        return TokenVal.make(Token.question)
+        return TokenVal(Token.question)
       case '@':
-        return TokenVal.make(Token.at)
+        return TokenVal(Token.at)
       case '[':
-        return TokenVal.make(Token.lbracket)
+        return TokenVal(Token.lbracket)
       case ']':
-        return TokenVal.make(Token.rbracket)
+        return TokenVal(Token.rbracket)
       case '^':
-        if (cur === '=') { consume; return TokenVal.make(Token.assignCaret) }
-        return TokenVal.make(Token.caret)
+        if (cur === '=') { consume; return TokenVal(Token.assignCaret) }
+        return TokenVal(Token.caret)
       case '{':
-        return TokenVal.make(Token.lbrace)
+        return TokenVal(Token.lbrace)
       case '|':
-        if (cur === '|') { consume; return TokenVal.make(Token.doublePipe) }
-        if (cur === '=') { consume; return TokenVal.make(Token.assignPipe) }
-        return TokenVal.make(Token.pipe)
+        if (cur === '|') { consume; return TokenVal(Token.doublePipe) }
+        if (cur === '=') { consume; return TokenVal(Token.assignPipe) }
+        return TokenVal(Token.pipe)
       case '}':
-        return TokenVal.make(Token.rbrace)
+        return TokenVal(Token.rbrace)
       case '~':
-        return TokenVal.make(Token.tilde)
+        return TokenVal(Token.tilde)
     }
 
     if (c === 0)
-      return TokenVal.make(Token.eof)
+      return TokenVal(Token.eof)
 
     throw err("Unexpected symbol: " + c.toChar + " (0x" + c.toHex + ")")
   }
@@ -859,7 +862,7 @@ class Tokenizer : CompilerSupport
   **
   override CompilerErr err(Str msg, Location loc := null)
   {
-    if (loc == null) loc = Location.make(filename, line, col)
+    if (loc == null) loc = Location(filename, line, col)
     return super.err(msg, loc);
   }
 
@@ -906,10 +909,10 @@ class Tokenizer : CompilerSupport
   static Void main()
   {
     t1 := Duration.now
-    files := File.make(`/dev/fan/src/testSys/fan/`).list
+    files := File(`/dev/fan/src/testSys/fan/`).list
     files.each |File f|
     {
-      tok := Tokenizer.make(null, Location.make(f.name), f.readAllStr, false).tokenize
+      tok := Tokenizer(null, Location(f.name), f.readAllStr, false).tokenize
       echo("-- " + f + " [" + tok.size + "]")
     }
     t2 := Duration.now
@@ -933,6 +936,7 @@ class Tokenizer : CompilerSupport
   private Int posOfLine     // index into buf for start of current line
   private TokenVal[] tokens // token accumulator
   private Bool inStrLiteral // return if inside a string literal token
+  private Bool whitespace   // was there whitespace before current token
 
 
 }

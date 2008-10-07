@@ -539,7 +539,7 @@ public class Method
     {
       // zero index is full signature up to using max defaults
       int index = params.sz()-args.length;
-      if (parent.javaRepr && isInstance()) index++;
+      if (parent.javaRepr() && isInstance()) index++;
       if (index < 0) index = 0;
 /*
 System.out.println("invoke " + qname() + " index=" + index + " java=" + parent.javaRepr + " isInstance" + isInstance());

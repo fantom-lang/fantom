@@ -37,7 +37,7 @@ public class Jstub
 
     // read fcode into memory
     Pod pod = Pod.find(podName, true, null, null);
-    Type[] types = (Type[])pod.types().toArray(new Type[pod.types().sz()]);
+    ClassType[] types = (ClassType[])pod.types().toArray(new ClassType[pod.types().sz()]);
 
     // open jar file
     ZipOutputStream out = new ZipOutputStream(new FileOutputStream(new File(outDir, podName + ".jar")));
@@ -51,7 +51,7 @@ public class Jstub
       // write out each type to one or more .class files
       for (int i=0; i<types.length; ++i)
       {
-        Type type = types[i];
+        ClassType type = types[i];
         FTypeEmit[] emitted = type.emitToClassFiles();
 
         // write to jar
