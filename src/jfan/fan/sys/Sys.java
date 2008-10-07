@@ -297,29 +297,29 @@ public class Sys
   public static final Type UnsupportedErrType   = builtin("UnsupportedErr",   ErrType);
 
   // generic parameter types used with generic types List, Map, and Method
-  public static final Type[] GenericParameterTypes = new Type[256];
-  public static final Type AType, BType, CType, DType, EType, FType, GType,
-                           HType, KType, LType, MType, RType, VType;
+  public static final ClassType[] GenericParameterTypes = new ClassType[256];
+  public static final ClassType AType, BType, CType, DType, EType, FType, GType,
+                                HType, KType, LType, MType, RType, VType;
   static
   {
-    GenericParameterTypes['A'] = AType = new Type(SysPod, "A", 0, null);  // A-H Params
-    GenericParameterTypes['B'] = BType = new Type(SysPod, "B", 0, null);
-    GenericParameterTypes['C'] = CType = new Type(SysPod, "C", 0, null);
-    GenericParameterTypes['D'] = DType = new Type(SysPod, "D", 0, null);
-    GenericParameterTypes['E'] = EType = new Type(SysPod, "E", 0, null);
-    GenericParameterTypes['F'] = FType = new Type(SysPod, "F", 0, null);
-    GenericParameterTypes['G'] = GType = new Type(SysPod, "G", 0, null);
-    GenericParameterTypes['H'] = HType = new Type(SysPod, "H", 0, null);
-    GenericParameterTypes['K'] = KType = new Type(SysPod, "K", 0, null);  // Key
-    GenericParameterTypes['L'] = LType = new Type(SysPod, "L", 0, null);  // Parameterized List
-    GenericParameterTypes['M'] = MType = new Type(SysPod, "M", 0, null);  // Parameterized Map
-    GenericParameterTypes['R'] = RType = new Type(SysPod, "R", 0, null);  // Return
-    GenericParameterTypes['V'] = VType = new Type(SysPod, "V", 0, null);  // Value
+    GenericParameterTypes['A'] = AType = new ClassType(SysPod, "A", 0, null);  // A-H Params
+    GenericParameterTypes['B'] = BType = new ClassType(SysPod, "B", 0, null);
+    GenericParameterTypes['C'] = CType = new ClassType(SysPod, "C", 0, null);
+    GenericParameterTypes['D'] = DType = new ClassType(SysPod, "D", 0, null);
+    GenericParameterTypes['E'] = EType = new ClassType(SysPod, "E", 0, null);
+    GenericParameterTypes['F'] = FType = new ClassType(SysPod, "F", 0, null);
+    GenericParameterTypes['G'] = GType = new ClassType(SysPod, "G", 0, null);
+    GenericParameterTypes['H'] = HType = new ClassType(SysPod, "H", 0, null);
+    GenericParameterTypes['K'] = KType = new ClassType(SysPod, "K", 0, null);  // Key
+    GenericParameterTypes['L'] = LType = new ClassType(SysPod, "L", 0, null);  // Parameterized List
+    GenericParameterTypes['M'] = MType = new ClassType(SysPod, "M", 0, null);  // Parameterized Map
+    GenericParameterTypes['R'] = RType = new ClassType(SysPod, "R", 0, null);  // Return
+    GenericParameterTypes['V'] = VType = new ClassType(SysPod, "V", 0, null);  // Value
 
     List noMixins = new List(TypeType, 0).ro();
     for (int i=0; i<GenericParameterTypes.length; ++i)
     {
-      Type gp = GenericParameterTypes[i];
+      ClassType gp = GenericParameterTypes[i];
       if (gp == null) continue;
       gp.base = ObjType;
       gp.mixins = noMixins;

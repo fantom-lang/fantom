@@ -31,14 +31,13 @@ abstract class GenericType : CType
   override Str qname()     { return base.qname }
   override Int flags()  { return 0 }
 
+  override Bool isNullable() { return false }
+  override once CType toNullable() { return NullableType(this) }
+
   override Bool isGeneric() { return false }
   override Bool isParameterized() { return true }
 
-  override ListType toListOf()
-  {
-    if (listOf == null) listOf = ListType.make(this)
-    return listOf
-  }
+  override once CType toListOf() { return ListType(this) }
 
   override CType[] mixins() { return CType[,] }
 
@@ -312,10 +311,12 @@ class GenericParameterType : CType
   override Str qname
   override Str signature() { return qname }
   override Int flags() { return 0 }
+  override Bool isNullable() { return false }
+  override once CType toNullable() { return NullableType(this) }
   override Bool isGeneric() { return false }
   override Bool isParameterized() { return false }
   override Bool isGenericParameter() { return true }
-  override ListType toListOf() { if (listOf == null) listOf = ListType.make(this); return listOf }
+  override once CType toListOf() { return ListType(this) }
   override CType base() { return ns.objType }
   override CType[] mixins() { return CType[,] }
   override Str:CSlot slots() { throw UnsupportedErr.make }

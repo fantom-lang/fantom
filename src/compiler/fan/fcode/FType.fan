@@ -61,6 +61,10 @@ class FType : CType
     }
   }
 
+  override Bool isNullable() { return false }
+
+  override once CType toNullable() { return NullableType(this) }
+
   override Bool isGeneric()
   {
     return fpod.name == "sys" && (name == "List" || name == "Map" || name == "Func")
@@ -73,11 +77,7 @@ class FType : CType
     return fpod.name == "sys" && name.size == 1
   }
 
-  override ListType toListOf()
-  {
-    if (listOf == null) listOf = ListType.make(this)
-    return listOf
-  }
+  override once CType toListOf() { return ListType(this) }
 
 //////////////////////////////////////////////////////////////////////////
 // Reflection
@@ -210,6 +210,5 @@ class FType : CType
   FField[] ffields      // fields
   FMethod[] fmethods    // methods
   FAttr[] fattrs        // type attributes
-  ListType listOf       // CType.listOf cache
 
 }

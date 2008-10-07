@@ -292,11 +292,11 @@ public class Pod
     // create a hollow Type for each FType (this requires two steps,
     // because we don't necessary have all the Types created for
     // superclasses until this loop completes)
-    types = new Type[fpod.types.length];
+    types = new ClassType[fpod.types.length];
     for (int i=0; i<fpod.types.length; ++i)
     {
       // create type instance
-      Type type = new Type(this, fpod.types[i]);
+      ClassType type = new ClassType(this, fpod.types[i]);
 
       // add to my data structures
       types[i] = type;
@@ -316,8 +316,8 @@ public class Pod
     for (int i=0; i<fpod.types.length; ++i)
     {
       FType ftype = fpod.types[i];
-      Type type   = types[i];
-      type.base   = findType(ftype.base);
+      ClassType type = types[i];
+      type.base = findType(ftype.base);
 
       List mixins = new List(typeType, ftype.mixins.length);
       for (int j=0; j<ftype.mixins.length; ++j)
@@ -426,7 +426,7 @@ public class Pod
   Version version;
   List depends;
   Facets facets;
-  Type[] types;
+  ClassType[] types;
   HashMap typesByName;
   Class cls;
   Map files;

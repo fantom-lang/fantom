@@ -2036,6 +2036,13 @@ public class Parser : CompilerSupport
       t = MapType.make(key, val)
     }
 
+    // check for ? nullable
+    if (curt === Token.question && !cur.whitespace)
+    {
+      consume(Token.question)
+      t = t.toNullable
+    }
+
     return t
   }
 

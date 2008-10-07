@@ -49,11 +49,6 @@ public class ListType
     return false;
   }
 
-  public final Type base()
-  {
-    return Sys.ListType;
-  }
-
   public final String signature()
   {
     if (sig == null) sig = v.signature() + "[]";

@@ -369,6 +369,56 @@ class ReflectionTest : Test
     obj->iz = 543; verifyEq(obj->iz, 543)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Nullable
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNullable()
+  {
+    t := Int#
+    verifyEq(t.pod, Obj#.pod)
+    verifyEq(t.name, "Int")
+    verifyEq(t.qname, "sys::Int")
+    verifyEq(t.signature, "sys::Int")
+    verifyEq(t.isNullable, false)
+    verifyEq(t.toNullable.signature, "sys::Int?")
+    verifyEq(t.toListOf.signature, "sys::Int[]")
+    verifyEq(t.fits(Obj#), true)
+    verifyEq(t.fits(Obj?#), true)
+    verifyEq(t.fits(Num#), true)
+    verifyEq(t.fits(Int#), true)
+    verifyEq(t.fits(Int?#), true)
+    verifyEq(t.fits(Float#), false)
+
+    t = Int?#
+    verifyEq(t.pod, Obj#.pod)
+    verifyEq(t.name, "Int")
+    verifyEq(t.qname, "sys::Int")
+    verifyEq(t.signature, "sys::Int?")
+    verifyEq(t.isNullable, true)
+    verifyEq(t.toNullable.signature, "sys::Int?")
+    verifyEq(t.toListOf.signature, "sys::Int[]?")
+    verifyEq(t.fits(Obj#), true)
+    verifyEq(t.fits(Obj?#), true)
+    verifyEq(t.fits(Num#), true)
+    verifyEq(t.fits(Int#), true)
+    verifyEq(t.fits(Int?#), true)
+    verifyEq(t.fits(Float#), false)
+
+    m := #nullableMethod
+    verifyEq(m.returns.signature, "sys::Int?")
+    verifyEq(m.returns.isNullable, true)
+    verifyEq(m.params[0].of.signature, "sys::Bool?")
+    verifyEq(m.params[0].of.isNullable, true)
+
+    f := #nullableField
+    verifyEq(f.of.signature, "sys::Str[]?")
+    verifyEq(f.of.isNullable, true)
+  }
+
+  Int? nullableMethod(Bool? a) { return null }
+  Str[]? nullableField
+
 }
 
 **************************************************************************
