@@ -11,7 +11,6 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using FanObj = Fan.Sys.FanObj;
-using Obj = Fan.Sys.Obj;
 using List = Fan.Sys.List;
 using Log = Fan.Sys.Log;
 using Str = Fan.Sys.Str;
@@ -302,7 +301,7 @@ namespace Fanx.Typedb
       // we add each list item to the index
       if (val.EndsWith("]"))
       {
-        Obj obj = t.facets.getObj(index.name);
+        object obj = t.facets.getObj(index.name);
         if (obj is List)
         {
           List list = (List)obj;
@@ -544,7 +543,7 @@ namespace Fanx.Typedb
         return (string)map[name];
       }
 
-      public Obj getObj(string name)
+      public object getObj(string name)
       {
         string val = get(name);
         if (val == null) return null;
@@ -562,7 +561,7 @@ namespace Fanx.Typedb
 
       public Str getStr(string name)
       {
-        Obj v = getObj(name);
+        object v = getObj(name);
         if (v == null) return null;
         if (v is Str) return (Str)v;
         log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + FanObj.type(v));
@@ -571,7 +570,7 @@ namespace Fanx.Typedb
 
       public List getStrList(string name)
       {
-        Obj v = getObj(name);
+        object v = getObj(name);
         if (v == null) return null;
         if (v is List && ((List)v).of() == Sys.StrType) return (List)v;
         log.warn("Expecting '" + loc + "@" + name + "' to be Str[], not " + FanObj.type(v));

@@ -44,10 +44,9 @@ namespace Fanx.Emit
 
     protected override string[] mixins()
     {
-      string[] mixins = new string[type.m_mixins.Length+1];
-      mixins[0] = "Fan.Sys.Obj";
-      for (int i=1; i<mixins.Length; i++)
-        mixins[i] = nname(type.m_mixins[i-1]);
+      string[] mixins = new string[type.m_mixins.Length];
+      for (int i=0; i<mixins.Length; i++)
+        mixins[i] = nname(type.m_mixins[i]);
       return mixins;
     }
 

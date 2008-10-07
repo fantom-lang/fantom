@@ -109,7 +109,7 @@ public virtual Bool isConst() { return Bool.make(m_flags & FConst.Const); } // w
     public Bool isSynthetic() { return Bool.make(m_flags & FConst.Synthetic); }
     public Bool isVirtual()   { return Bool.make(m_flags & FConst.Virtual); }
 
-    public override Obj trap(Str name, List args)
+    public override object trap(Str name, List args)
     {
       // private undocumented access
       string n = name.val;
@@ -123,8 +123,8 @@ public virtual Bool isConst() { return Bool.make(m_flags & FConst.Const); } // w
   //////////////////////////////////////////////////////////////////////////
 
     public Map facets() { return m_facets.map(); }
-    public Obj facet(Str name) { return m_facets.get(name, null); }
-    public Obj facet(Str name, Obj def) { return m_facets.get(name, def); }
+    public object facet(Str name) { return m_facets.get(name, null); }
+    public object facet(Str name, object def) { return m_facets.get(name, def); }
 
   //////////////////////////////////////////////////////////////////////////
   // Documentation

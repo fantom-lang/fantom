@@ -47,7 +47,7 @@ namespace Fanx.Emit
       else
       {
         string baset = nname(type.m_base);
-        if (baset == "Fan.Sys.Obj") return "Fan.Sys.FanObj";
+        if (baset == "System.Object") return "Fan.Sys.FanObj";
         return baset;
       }
     }

@@ -42,7 +42,7 @@ namespace Fan.Sys
       return signature().hash();
     }
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is FuncType)
       {

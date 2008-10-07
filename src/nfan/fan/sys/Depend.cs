@@ -174,7 +174,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is Depend)
         return toStr()._equals(toStr(obj));

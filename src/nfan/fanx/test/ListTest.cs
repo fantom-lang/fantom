@@ -58,7 +58,7 @@ namespace Fanx.Test
       for (int i=0; i<100; ++i)
       {
         List list = new List(Sys.ObjType);
-        Obj[] match = new Obj[i];
+        object[] match = new object[i];
 
         for (int j=0; j<i; ++j)
           list.add(match[j] = Int.make(j));
@@ -98,8 +98,8 @@ namespace Fanx.Test
       verify("Obj f() { return Str[,] }", new List(Sys.StrType));
 
       // adds
-      verify("Obj f(Str[] x) { x.add(\"a\"); return x }", new Obj[] {new List(Sys.StrType)}, Make("a"));
-      verify("Obj f(Str[] x) { x.add(\"a\"); x.add(\"b\"); return x }", new Obj[] {new List(Sys.StrType)}, Make("a", "b"));
+      verify("Obj f(Str[] x) { x.add(\"a\"); return x }", new object[] {new List(Sys.StrType)}, Make("a"));
+      verify("Obj f(Str[] x) { x.add(\"a\"); x.add(\"b\"); return x }", new object[] {new List(Sys.StrType)}, Make("a", "b"));
 
       // literals
       verify("Obj f() { return [,] }", new List(Sys.ObjType));
@@ -173,14 +173,14 @@ namespace Fanx.Test
     public List Make(string a, string b, string c) { return new List(Sys.StrType, MakeStrs(a, b, c)); }
     public List Make(string a, string b, string c, string d) { return new List(Sys.StrType, MakeStrs(a, b, c, d)); }
 
-    public void verify(List list) { verify(list, new Obj[0]); }
-    public void verify(List list, Str a) { verify(list, new Obj[]{a}); }
-    public void verify(List list, Str a, Str b) { verify(list, new Obj[]{a, b}); }
-    public void verify(List list, Str a, Str b, Str c) { verify(list, new Obj[]{a, b, c}); }
-    public void verify(List list, Str a, Str b, Str c, Str d) { verify(list, new Obj[]{a, b, c, d}); }
-    public void verify(List list, Str a, Str b, Str c, Str d, Str e) { verify(list, new Obj[] {a, b, c, d, e}); }
+    public void verify(List list) { verify(list, new object[0]); }
+    public void verify(List list, Str a) { verify(list, new object[]{a}); }
+    public void verify(List list, Str a, Str b) { verify(list, new object[]{a, b}); }
+    public void verify(List list, Str a, Str b, Str c) { verify(list, new object[]{a, b, c}); }
+    public void verify(List list, Str a, Str b, Str c, Str d) { verify(list, new object[]{a, b, c, d}); }
+    public void verify(List list, Str a, Str b, Str c, Str d, Str e) { verify(list, new object[] {a, b, c, d, e}); }
 
-    public void verify(List list, Obj[] v)
+    public void verify(List list, object[] v)
     {
   //System.Console.WriteLine(list);
       verify(list.isEmpty().val == (v.Length == 0));

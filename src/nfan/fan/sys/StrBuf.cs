@@ -46,13 +46,6 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    /*
-    public Bool equals(Obj obj)
-    {
-      return val.equals(((Str)obj).val) ? Bool.True : Bool.False;
-    }
-    */
-
     public Bool isEmpty()
     {
       return sb.Length == 0 ? Bool.True : Bool.False;
@@ -92,7 +85,7 @@ namespace Fan.Sys
       }
     }
 
-    public StrBuf add(Obj x)
+    public StrBuf add(object x)
     {
       string s = (x == null) ? "null" : toStr(x).val;
       sb.Append(s);
@@ -105,8 +98,8 @@ namespace Fan.Sys
       return this;
     }
 
-    public StrBuf join(Obj x) { return join(x, Str.m_ascii[' ']); }
-    public StrBuf join(Obj x, Str sep)
+    public StrBuf join(object x) { return join(x, Str.m_ascii[' ']); }
+    public StrBuf join(object x, Str sep)
     {
       String s = (x == null) ? "null" : toStr(x).val;
       if (sb.Length > 0) sb.Append(sep.val);
@@ -114,7 +107,7 @@ namespace Fan.Sys
       return this;
     }
 
-    public StrBuf insert(Int index, Obj x)
+    public StrBuf insert(Int index, object x)
     {
       string s = (x == null) ? "null" : toStr(x).val;
       int i = (int)index.val;

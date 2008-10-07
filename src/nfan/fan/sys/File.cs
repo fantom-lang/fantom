@@ -86,7 +86,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Bool _equals(Obj obj)
+    public override sealed Bool _equals(object obj)
     {
       if (obj is File)
       {
@@ -223,7 +223,7 @@ namespace Fan.Sys
       }
 
       // options
-      Obj exclude = null, overwrite = null;
+      object exclude = null, overwrite = null;
       if (options != null)
       {
         exclude = options.get(optExclude);
@@ -235,7 +235,7 @@ namespace Fan.Sys
       return to;
     }
 
-    private void doCopyTo(File to, Obj exclude, Obj overwrite)
+    private void doCopyTo(File to, object exclude, object overwrite)
     {
       // check exclude
       if (exclude is Regex)
@@ -373,8 +373,8 @@ namespace Fan.Sys
       @out(Bool.False, defaultBufSize).writeProps(props, Bool.True);
     }
 
-    public Obj readObj() { return readObj(null); }
-    public Obj readObj(Map options)
+    public object readObj() { return readObj(null); }
+    public object readObj(Map options)
     {
       InStream ins = @in();
       try
@@ -387,8 +387,8 @@ namespace Fan.Sys
       }
     }
 
-    public void writeObj(Obj obj) { writeObj(obj, null); }
-    public void writeObj(Obj obj, Map options)
+    public void writeObj(object obj) { writeObj(obj, null); }
+    public void writeObj(object obj, Map options)
     {
       OutStream outs = @out();
       try

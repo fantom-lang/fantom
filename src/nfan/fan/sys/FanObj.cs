@@ -15,7 +15,7 @@ namespace Fan.Sys
   /// representation of Obj which manifests itself as both an interface
   /// called Obj and this class.
   ///
-  public class FanObj : Obj
+  public class FanObj
   {
 
   //////////////////////////////////////////////////////////////////////////
@@ -28,12 +28,9 @@ namespace Fan.Sys
       return (int)(h ^ (h >> 32));
     }
 
-    public override bool Equals(Object obj)
+    public override bool Equals(object obj)
     {
-      if (obj is Obj)
-        return _equals((Obj)obj).val;
-      else
-        return false;
+      return _equals(obj).val;
     }
 
     public override string ToString()
@@ -45,29 +42,28 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Bool equals(object self, Obj x)
+    public static Bool equals(object self, object x)
     {
       if (self is FanObj)
-        return ((FanObj)self)._equals((Obj)x);
+        return ((FanObj)self)._equals(x);
       else
         return Bool.make(self.Equals(x));
     }
 
-    //public Bool equals(Obj obj) { throw new System.Exception(); }
-    public virtual Bool _equals(Obj obj)
+    public virtual Bool _equals(object obj)
     {
       return this == obj ? Bool.True : Bool.False;
     }
 
-    public static Int compare(object self, Obj x)
+    public static Int compare(object self, object x)
     {
       if (self is FanObj)
-        return ((FanObj)self).compare((Obj)x);
+        return ((FanObj)self).compare(x);
       else
         return toStr(self).compare(toStr(x));
     }
 
-    public virtual Int compare(Obj obj)
+    public virtual Int compare(object obj)
     {
       return toStr(this).compare(toStr(obj));
     }
@@ -121,12 +117,12 @@ namespace Fan.Sys
       return Sys.ObjType;
     }
 
-    public static Obj trap(object self, Str name, List args)
+    public static object trap(object self, Str name, List args)
     {
       return ((FanObj)self).trap(name, args);
     }
 
-    public virtual Obj trap(Str name, List args)
+    public virtual object trap(Str name, List args)
     {
       Slot slot = type().slot(name, Bool.True);
       if (slot is Method)
@@ -145,7 +141,7 @@ namespace Fan.Sys
 
         if (argSize == 1)
         {
-          Obj val = args.get(0);
+          object val = args.get(0);
           f.set(this, val);
           return val;
         }
@@ -155,7 +151,7 @@ namespace Fan.Sys
     }
 
     /* TODO
-    public virtual Obj trapUri(Uri uri)
+    public virtual object trapUri(Uri uri)
     {
       // sanity checks
       List path = uri.path();
@@ -166,7 +162,7 @@ namespace Fan.Sys
 
       // get next level of path
       Str nextName = (Str)path.first();
-      Obj obj = null;
+      object obj = null;
       try
       {
         if (emptyList == null) emptyList = new List(Sys.ObjType).ro();
@@ -187,7 +183,7 @@ namespace Fan.Sys
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
-    public static void echo(Obj obj)
+    public static void echo(object obj)
     {
       System.Console.WriteLine(obj);
     }

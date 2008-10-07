@@ -53,8 +53,8 @@ namespace Fan.Sys
       IDictionaryEnumerator en = map.pairsIterator();
       while (en.MoveNext())
       {
-        Str key  = (Str)en.Key;
-        Obj val  = (Obj)en.Value;
+        Str key = (Str)en.Key;
+        object val = en.Value;
         if (FanObj.isImmutable(val).val)
           src[key] = val;
         else
@@ -78,26 +78,26 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    internal Obj get(Str name, Obj def)
+    internal object get(Str name, object def)
     {
       object val = m_src[name];
       if (val == null) return def;
 
       // if we've already decoded, go with it
-      if (val is Obj) return (Obj)val;
+      if (val is FanObj) return val;
 
       // decode into an object
-      Obj obj = ObjDecoder.decode((string)val);
+      object obj = ObjDecoder.decode((string)val);
 
       // if the object is immutable, then it
       // safe to reuse for future gets
-      Obj x = toImmutable(obj);
+      object x = toImmutable(obj);
       if (x == null) return obj;
       m_src[name] = x;
       return x;
     }
 
-    private Obj toImmutable(Obj obj)
+    private object toImmutable(object obj)
     {
       if (FanObj.isImmutable(obj).val) return obj;
 
@@ -140,7 +140,7 @@ namespace Fan.Sys
       m_src.Keys.CopyTo(keys, 0);
       foreach (Str name in keys)
       {
-        Obj val = get(name, null);
+        object val = get(name, null);
         map.set(name, val);
         allImmutable &= FanObj.isImmutable(val).val;
       }

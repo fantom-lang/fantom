@@ -50,7 +50,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is Str)
         return val == ((Str)obj).val ? Bool.True : Bool.False;
@@ -79,7 +79,7 @@ namespace Fan.Sys
       return Bool.True;
     }
 
-    public override Int compare(Obj obj)
+    public override Int compare(object obj)
     {
       int cmp = String.CompareOrdinal(val, ((Str)obj).val);
       if (cmp < 0) return Int.LT;
@@ -171,7 +171,7 @@ namespace Fan.Sys
       return make(val.Substring(s, (e-s)+1));
     }
 
-    public Str plus(Obj obj)
+    public Str plus(object obj)
     {
       if (obj == null) return make(String.Concat(val, "null"));
       Str x = FanObj.toStr(obj);

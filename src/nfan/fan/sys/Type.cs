@@ -58,8 +58,8 @@ namespace Fan.Sys
       return pod.findType(typeName, check);
     }
 
-    public static List findByFacet(Str facetName, Obj facetVal) { return findByFacet(facetName, facetVal, null); }
-    public static List findByFacet(Str facetName, Obj facetVal, Obj options)
+    public static List findByFacet(Str facetName, object facetVal) { return findByFacet(facetName, facetVal, null); }
+    public static List findByFacet(Str facetName, object facetVal, object options)
     {
       return TypeDb.get().findByFacet(facetName, facetVal, options);
     }
@@ -114,7 +114,7 @@ namespace Fan.Sys
     public Bool isPublic() { return Bool.make(m_flags & FConst.Public); }
     public Bool isSynthetic() { return Bool.make(m_flags & FConst.Synthetic); }
 
-    public override Obj trap(Str name, List args)
+    public override object trap(Str name, List args)
     {
       // private undocumented access
       string n = name.val;
@@ -353,14 +353,14 @@ namespace Fan.Sys
         m_methods.remove(slot);
     }
 
-    public Obj make() { return make(null); }
-    public Obj make(List args)
+    public object make() { return make(null); }
+    public object make(List args)
     {
       if (m_dynamic) return makeDynamicInstance();
       return method("make", true).call(args);
     }
 
-    private Obj makeDynamicInstance()
+    private object makeDynamicInstance()
     {
       // dynamic make requires generation of a special subclass which can
       // store the type per instance.  Once generated we keep a reference
@@ -385,7 +385,7 @@ namespace Fan.Sys
         }
 
         // use our special subclass which can store type per instance
-        return (Obj)dynamicCtor.Invoke(new object[] { this });
+        return dynamicCtor.Invoke(new object[] { this });
       }
       catch (Err.Val e)
       {
@@ -466,13 +466,13 @@ namespace Fan.Sys
     /// share,or at worst return sys::Obj.  This method does not take into
     /// account interfaces, only extends class inheritance.
     /// </summary>
-    public static Type common(Obj[] objs, int n)
+    public static Type common(object[] objs, int n)
     {
       if (objs.Length == 0) return Sys.ObjType;
       Type best = type(objs[0]);
       for (int i=1; i<n; ++i)
       {
-        Obj obj = objs[i];
+        object obj = objs[i];
         if (obj == null) continue;
         Type t = type(obj);
         while (!t.@is(best))
@@ -504,18 +504,18 @@ namespace Fan.Sys
           while (en.MoveNext())
           {
             Str key = (Str)en.Key;
-            if (map.get(key) == null) map.add(key, (Obj)en.Value);
+            if (map.get(key) == null) map.add(key, en.Value);
           }
         }
       }
       return map;
     }
 
-    public Obj facet(Str name) { return facet(name, null, Bool.False); }
-    public Obj facet(Str name, Obj def) { return facet(name, def, Bool.False); }
-    public Obj facet(Str name, Obj def, Bool inherited)
+    public object facet(Str name) { return facet(name, null, Bool.False); }
+    public object facet(Str name, object def) { return facet(name, def, Bool.False); }
+    public object facet(Str name, object def, Bool inherited)
     {
-      Obj val = reflect().m_facets.get(name, null);
+      object val = reflect().m_facets.get(name, null);
       if (val != null) return val;
       if (!inherited.val) return def;
       List inherit = inheritance();
@@ -910,7 +910,11 @@ namespace Fan.Sys
         // get parameters, if sys we need to skip the
         // methods that use non-Fan signatures
         ParameterInfo[] pars = m.GetParameters();
-        if (m_pod == Sys.SysPod && !checkAllFan(pars)) return;
+        if (m_pod == Sys.SysPod)
+        {
+          if (!checkAllFan(pars)) return;
+          if (this == Sys.ObjType && m.IsStatic && name != "echo") return;
+        }
 
         // zero index is full signature up to using max defaults
         method.m_reflect[method.@params().sz()-pars.Length] = m;
@@ -928,8 +932,11 @@ namespace Fan.Sys
     bool checkAllFan(ParameterInfo[] pars)
     {
       for (int i=0; i<pars.Length; i++)
-        if (!pars[i].ParameterType.ToString().StartsWith("Fan."))
+      {
+        string p = pars[i].ParameterType.ToString();
+        if (!p.StartsWith("Fan.") && p != "System.Object")
           return false;
+      }
       return true;
     }
 
@@ -960,7 +967,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     internal static readonly bool Debug = false;
-    internal static Object noParams;
+    internal static object noParams;
 
     // available when hollow
     internal readonly Pod m_pod;

@@ -53,7 +53,7 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj that)
+    public override Bool _equals(object that)
     {
       return this == that ? Bool.True : Bool.False;
     }
@@ -250,13 +250,13 @@ namespace Fan.Sys
     public Buf writeChars(Str s, Int off) { m_out.writeChars(s, off); return this; }
     public Buf writeChars(Str s, Int off, Int len) { m_out.writeChars(s, off, len); return this; }
 
-    public Buf print(Obj obj) { m_out.print(obj); return this; }
+    public Buf print(object obj) { m_out.print(obj); return this; }
 
     public Buf printLine() { m_out.printLine(); return this; }
-    public Buf printLine(Obj obj) { m_out.printLine(obj); return this; }
+    public Buf printLine(object obj) { m_out.printLine(obj); return this; }
 
-    public Buf writeObj(Obj obj) { m_out.writeObj(obj); return this; }
-    public Buf writeObj(Obj obj, Map opt) { m_out.writeObj(obj, opt); return this; }
+    public Buf writeObj(object obj) { m_out.writeObj(obj); return this; }
+    public Buf writeObj(object obj, Map opt) { m_out.writeObj(obj, opt); return this; }
 
   //////////////////////////////////////////////////////////////////////////
   // InStream
@@ -320,7 +320,7 @@ namespace Fan.Sys
     public Str readAllStr() { return m_in.readAllStr(); }
     public Str readAllStr(Bool normalizeNewlines)  { return m_in.readAllStr(normalizeNewlines); }
 
-    public Obj readObj() { return m_in.readObj(); }
+    public object readObj() { return m_in.readObj(); }
 
   //////////////////////////////////////////////////////////////////////////
   // Hex

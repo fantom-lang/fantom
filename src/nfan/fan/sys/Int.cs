@@ -78,7 +78,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is Int)
         return val == ((Int)obj).val ? Bool.True : Bool.False;
@@ -86,7 +86,7 @@ namespace Fan.Sys
         return Bool.False;
     }
 
-    public override Int compare(Obj obj)
+    public override Int compare(object obj)
     {
       long that = ((Int)obj).val;
       if (val < that) return LT; return val == that ? EQ : GT;

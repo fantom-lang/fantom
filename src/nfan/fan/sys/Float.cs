@@ -61,7 +61,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is Float)
       {
@@ -86,16 +86,16 @@ namespace Fan.Sys
       return Math.Abs(val - that.val) <= t ? Bool.True : Bool.False;
     }
 
-    public override Int compare(Obj obj)
+    public override Int compare(object obj)
     {
       double that = ((Float)obj).val;
       if (Double.IsNaN(val))
       {
-        return (Double.IsNaN(that)) ? Int.EQ : Int.LT;
+        return (Double.IsNaN(that)) ? Int.EQ : Int.GT;
       }
       else if (Double.IsNaN(that))
       {
-        return Int.GT;
+        return Int.LT;
       }
       else
       {

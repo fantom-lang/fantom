@@ -37,7 +37,7 @@ namespace Fan.Sys
   // Namespace
   //////////////////////////////////////////////////////////////////////////
 
-    public override Obj get(Uri uri, Bool check)
+    public override object get(Uri uri, Bool check)
     {
       File f = m_dir.plus(uri.relTo(this.uri()), Bool.False);
       if (f.exists().val) return f;

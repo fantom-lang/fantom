@@ -6,7 +6,6 @@
 //   31 Oct 06  Andy Frank  Creation
 //
 
-using Object = System.Object;
 using Fan.Sys;
 
 namespace Fanx.Util
@@ -21,42 +20,42 @@ namespace Fanx.Util
   // Comparisions -> boolean
   //////////////////////////////////////////////////////////////////////////
 
-    public static bool compareEQz(Obj a, Obj b)
+    public static bool compareEQz(object a, object b)
     {
       if (a == null) return (b == null);
       if (b == null) return false;
       return a.Equals(b);
     }
 
-    public static bool compareNEz(Obj a, Obj b)
+    public static bool compareNEz(object a, object b)
     {
       if (a == null) return (b != null);
       if (b == null) return true;
       return !a.Equals(b);
     }
 
-    public static bool compareLTz(Obj a, Obj b)
+    public static bool compareLTz(object a, object b)
     {
       if (a == null) return (b != null);
       if (b == null) return false;
       return FanObj.compare(a, b).val < 0;
     }
 
-    public static bool compareLEz(Obj a, Obj b)
+    public static bool compareLEz(object a, object b)
     {
       if (a == null) return true;
       if (b == null) return false;
       return FanObj.compare(a, b).val <= 0;
     }
 
-    public static bool compareGEz(Obj a, Obj b)
+    public static bool compareGEz(object a, object b)
     {
       if (a == null) return (b == null);
       if (b == null) return true;
       return FanObj.compare(a, b).val >= 0;
     }
 
-    public static bool compareGTz(Obj a, Obj b)
+    public static bool compareGTz(object a, object b)
     {
       if (a == null) return false;
       if (b == null) return true;
@@ -67,71 +66,71 @@ namespace Fanx.Util
   // Comparisions -> Bool
   //////////////////////////////////////////////////////////////////////////
 
-    public static Bool compareEQ(Obj a, Obj b)
+    public static Bool compareEQ(object a, object b)
     {
       if (a == null) return (b == null) ? Bool.True : Bool.False;
       if (b == null) return Bool.False;
       return a.Equals(b) ? Bool.True : Bool.False;
     }
 
-    public static Bool compareNE(Obj a, Obj b)
+    public static Bool compareNE(object a, object b)
     {
       if (a == null) return (b == null) ? Bool.False : Bool.True;
       if (b == null) return Bool.True;
       return a.Equals(b) ? Bool.False : Bool.True;
     }
 
-    public static Int compare(Obj a, Obj b)
+    public static Int compare(object a, object b)
     {
       if (a == null) return (b == null) ? Int.EQ : Int.LT;
       if (b == null) return Int.GT;
       return FanObj.compare(a, b);
     }
 
-    public static Bool compareLT(Obj a, Obj b)
+    public static Bool compareLT(object a, object b)
     {
       if (a == null) return (b == null) ? Bool.False : Bool.True;
       if (b == null) return Bool.False;
       return FanObj.compare(a, b).val < 0 ? Bool.True : Bool.False;
     }
 
-    public static Bool compareLE(Obj a, Obj b)
+    public static Bool compareLE(object a, object b)
     {
       if (a == null) return Bool.True;
       if (b == null) return Bool.False;
       return FanObj.compare(a, b).val <= 0 ? Bool.True : Bool.False;
     }
 
-    public static Bool compareGE(Obj a, Obj b)
+    public static Bool compareGE(object a, object b)
     {
       if (a == null) return (b == null) ? Bool.True : Bool.False;
       if (b == null) return Bool.True;
       return FanObj.compare(a, b).val >= 0 ? Bool.True : Bool.False;
     }
 
-    public static Bool compareGT(Obj a, Obj b)
+    public static Bool compareGT(object a, object b)
     {
       if (a == null) return Bool.False;
       if (b == null) return Bool.True;
       return FanObj.compare(a, b).val > 0 ? Bool.True : Bool.False;
     }
 
-    public static Bool compareSame(Object a, Object b) // need to use Object for mixins
+    public static Bool compareSame(object a, object b) // need to use Object for mixins
     {
       return a == b ? Bool.True : Bool.False;
     }
 
-    public static Bool compareNotSame(Object a, Object b) // need to use Object for mixins
+    public static Bool compareNotSame(object a, object b) // need to use Object for mixins
     {
       return a != b ? Bool.True : Bool.False;
     }
 
-    public static Bool compareNull(Object a) // need to use Object for mixins
+    public static Bool compareNull(object a) // need to use Object for mixins
     {
       return a == null ? Bool.True : Bool.False;
     }
 
-    public static Bool compareNotNull(Object a) // need to use Object for mixins
+    public static Bool compareNotNull(object a) // need to use Object for mixins
     {
       return a != null ? Bool.True : Bool.False;
     }
@@ -140,19 +139,19 @@ namespace Fanx.Util
   // Is/As
   //////////////////////////////////////////////////////////////////////////
 
-    public static Bool @is(Obj instance, Type type)
+    public static Bool @is(object instance, Type type)
     {
       if (instance == null) return Bool.False;
       return FanObj.type(instance).fits(type);
     }
 
-    public static Obj @as(Obj instance, Type type)
+    public static object @as(object instance, Type type)
     {
       if (instance == null) return null;
       return FanObj.type(instance).@is(type) ? instance : null;
     }
 
-    public static Obj toImmutable(Obj obj)
+    public static object toImmutable(object obj)
     {
       if (obj == null) return null;
       if (FanObj.isImmutable(obj).val) return obj;

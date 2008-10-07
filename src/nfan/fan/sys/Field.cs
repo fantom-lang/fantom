@@ -66,7 +66,7 @@ namespace Fan.Sys
 
     public override Str signature() { return Str.make(m_of.toStr().val + " " + Str.make(m_name.val)); }
 
-    public override Obj trap(Str name, List args)
+    public override object trap(Str name, List args)
     {
       // private undocumented access
       if (name.val == "getter") return m_getter;
@@ -78,8 +78,8 @@ namespace Fan.Sys
   // Reflection
   //////////////////////////////////////////////////////////////////////////
 
-    public Obj get() { return get(null); }
-    public virtual Obj get(Obj instance)
+    public object get() { return get(null); }
+    public virtual object get(object instance)
     {
       m_parent.finish();
 
@@ -90,7 +90,7 @@ namespace Fan.Sys
 
       try
       {
-        return (Obj)m_reflect.GetValue(instance);
+        return m_reflect.GetValue(instance);
       }
       catch (Exception e)
       {
@@ -104,12 +104,12 @@ namespace Fan.Sys
       }
     }
 
-    public virtual void set(Obj instance, Obj value)
+    public virtual void set(object instance, object value)
     {
       set(instance, value, true);
     }
 
-    public virtual void set(Obj instance, Obj value, bool checkConst)
+    public virtual void set(object instance, object value, bool checkConst)
     {
       m_parent.finish();
 
@@ -135,7 +135,7 @@ namespace Fan.Sys
 
       if (m_setter != null)
       {
-        m_setter.invoke(instance, new Obj[] { value });
+        m_setter.invoke(instance, new object[] { value });
         return;
       }
 

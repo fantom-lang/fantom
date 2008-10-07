@@ -82,7 +82,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is Version)
         return toStr()._equals(((Version)obj).toStr());
@@ -90,7 +90,7 @@ namespace Fan.Sys
         return Bool.False;
     }
 
-    public override Int compare(Obj obj)
+    public override Int compare(object obj)
     {
       Version that = (Version)obj;
       List a = this.m_segments;

@@ -22,7 +22,7 @@ namespace Fanx.Serial
   // Static
   //////////////////////////////////////////////////////////////////////////
 
-    public static string encode(Obj obj)
+    public static string encode(object obj)
     {
       StrBufOutStream @out = new StrBufOutStream();
       new ObjEncoder(@out, null).writeObj(obj);
@@ -43,7 +43,7 @@ namespace Fanx.Serial
   // Write
   //////////////////////////////////////////////////////////////////////////
 
-    public void writeObj(Obj obj)
+    public void writeObj(object obj)
     {
       if (obj == null)
       {
@@ -79,7 +79,7 @@ namespace Fanx.Serial
   // Simple
   //////////////////////////////////////////////////////////////////////////
 
-    private void writeSimple(Type type, Obj obj)
+    private void writeSimple(Type type, object obj)
     {
       wType(type).w('(').wStrLiteral(FanObj.toStr(obj).val, '"').w(')');
     }
@@ -88,12 +88,12 @@ namespace Fanx.Serial
   // Complex
   //////////////////////////////////////////////////////////////////////////
 
-    private void writeComplex(Type type, Obj obj)
+    private void writeComplex(Type type, object obj)
     {
       wType(type);
 
       bool first = true;
-      Obj defObj = null;
+      object defObj = null;
       if (skipDefaults) defObj = FanObj.type(obj).make();
 
       List fields = type.fields();
@@ -107,12 +107,12 @@ namespace Fanx.Serial
           continue;
 
         // get the value
-        Obj val = f.get(obj);
+        object val = f.get(obj);
 
         // if skipping defaults
         if (defObj != null)
         {
-          Obj defVal = f.get(defObj);
+          object defVal = f.get(defObj);
           if (OpUtil.compareEQz(val, defVal)) continue;
         }
 
@@ -142,7 +142,7 @@ namespace Fanx.Serial
   // Collection (@collection)
   //////////////////////////////////////////////////////////////////////////
 
-    private bool writeCollectionItems(Type type, Obj obj, bool first)
+    private bool writeCollectionItems(Type type, object obj, bool first)
     {
       // lookup each method
       Method m = type.method("each", false);
@@ -164,7 +164,7 @@ namespace Fanx.Serial
         this.encoder = encoder;
         this.first = first;
       }
-      public override Obj call1(Obj obj)
+      public override object call1(object obj)
       {
         if (first) { encoder.w('\n').wIndent().w('{').w('\n'); encoder.level++; first = false; }
         encoder.wIndent();
@@ -257,8 +257,8 @@ namespace Fanx.Serial
       {
         if (first) first = false; else w(',');
         if (nl) w('\n').wIndent();
-        Obj key = (Obj)en.Key;
-        Obj val = (Obj)en.Value;
+        object key = en.Key;
+        object val = en.Value;
         writeObj(key); w(':'); writeObj(val);
       }
       w(']');

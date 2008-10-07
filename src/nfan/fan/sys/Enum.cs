@@ -55,12 +55,12 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Bool _equals(Obj obj)
+    public override sealed Bool _equals(object obj)
     {
       return this == obj ? Bool.True : Bool.False;
     }
 
-    public override sealed Int compare(Obj obj)
+    public override sealed Int compare(object obj)
     {
       return m_ordinal.compare(((Enum)obj).m_ordinal);
     }

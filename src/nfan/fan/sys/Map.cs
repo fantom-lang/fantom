@@ -72,23 +72,23 @@ namespace Fan.Sys
       return Int.pos(m_map.Count);
     }
 
-    public Obj get(Obj key)
+    public object get(object key)
     {
       if (key == null) return m_def;
-      Obj val = (Obj)m_map[key];
+      object val = m_map[key];
       if (val != null) return val;
       return m_def;
     }
 
-    public Obj get(Obj key, Obj def)
+    public object get(object key, object def)
     {
       if (key == null) return def;
-      Obj val = (Obj)m_map[key];
+      object val = m_map[key];
       if (val != null) return val;
       return def;
     }
 
-    public Bool containsKey(Obj key)
+    public Bool containsKey(object key)
     {
       return (key == null) ? Bool.False : Bool.make(m_map.ContainsKey(key));
     }
@@ -103,7 +103,7 @@ namespace Fan.Sys
       return new List(m_type.m_v, m_map.Values);
     }
 
-    public Map set(Obj key, Obj val)
+    public Map set(object key, object val)
     {
       modify();
       if (key == null)
@@ -114,7 +114,7 @@ namespace Fan.Sys
       return this;
     }
 
-    public Map add(Obj key, Obj val)
+    public Map add(object key, object val)
     {
       modify();
       if (key == null)
@@ -133,8 +133,8 @@ namespace Fan.Sys
       IDictionaryEnumerator en = m.m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Object key = en.Key;
-        Object val = en.Value;
+        object key = en.Key;
+        object val = en.Value;
         m_map[key] = val;
       }
       return this;
@@ -146,17 +146,17 @@ namespace Fan.Sys
       IDictionaryEnumerator en = m.m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Obj key = (Obj)en.Key;
-        Obj val = (Obj)en.Value;
+        object key = en.Key;
+        object val = en.Value;
         add(key, val);
       }
       return this;
     }
 
-    public Obj remove(Obj key)
+    public object remove(object key)
     {
       modify();
-      Obj val = (Obj)m_map[key];
+      object val = m_map[key];
       m_map.Remove(key);
       return val;
     }
@@ -194,8 +194,8 @@ namespace Fan.Sys
         m_map = new Hashtable();
     }
 
-    public Obj def() { return m_def; }
-    public void def(Obj v)
+    public object def() { return m_def; }
+    public void def(object v)
     {
       modify();
       if (v != null && !isImmutable(v).val)
@@ -203,7 +203,7 @@ namespace Fan.Sys
       this.m_def = v;
     }
 
-    public override Bool _equals(Obj that)
+    public override Bool _equals(object that)
     {
       if (that is Map)
       {
@@ -217,9 +217,9 @@ namespace Fan.Sys
         IDictionaryEnumerator en = m_map.GetEnumerator();
         while (en.MoveNext())
         {
-          Obj key  = (Obj)en.Key;
-          Obj val  = (Obj)en.Value;
-          Obj test = (Obj)thatMap[key];
+          object key  = en.Key;
+          object val  = en.Value;
+          object test = thatMap[key];
 
           if (val == null)
           {
@@ -258,8 +258,8 @@ namespace Fan.Sys
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Object key = en.Key;
-        Object val = en.Value;
+        object key = en.Key;
+        object val = en.Value;
         if (!first) s.Append(", ");
         else first = false;
         s.Append(key).Append(':').Append(val);
@@ -283,32 +283,32 @@ namespace Fan.Sys
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Obj key = (Obj)en.Key;
-        Obj val = (Obj)en.Value;
+        object key = en.Key;
+        object val = en.Value;
         f.call2(val, key);
       }
     }
 
-    public Obj eachBreak(Func f)
+    public object eachBreak(Func f)
     {
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Obj key = (Obj)en.Key;
-        Obj val = (Obj)en.Value;
-        Obj r = f.call2(val, key);
+        object key = en.Key;
+        object val = en.Value;
+        object r = f.call2(val, key);
         if (r != null) return r;
       }
       return null;
     }
 
-    public Obj find(Func f)
+    public object find(Func f)
     {
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Obj key = (Obj)en.Key;
-        Obj val = (Obj)en.Value;
+        object key = en.Key;
+        object val = en.Value;
         if (f.call2(val, key) == Bool.True)
           return val;
       }
@@ -321,8 +321,8 @@ namespace Fan.Sys
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Obj key = (Obj)en.Key;
-        Obj val = (Obj)en.Value;
+        object key = en.Key;
+        object val = en.Value;
         if (f.call2(val, key) == Bool.True)
           acc.set(key, val);
       }
@@ -335,21 +335,21 @@ namespace Fan.Sys
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Obj key = (Obj)en.Key;
-        Obj val = (Obj)en.Value;
+        object key = en.Key;
+        object val = en.Value;
         if (f.call2(val, key) == Bool.False)
           acc.set(key, val);
       }
       return acc;
     }
 
-    public Obj reduce(Obj reduction, Func f)
+    public object reduce(object reduction, Func f)
     {
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Obj key = (Obj)en.Key;
-        Obj val = (Obj)en.Value;
+        object key = en.Key;
+        object val = en.Value;
         reduction = f.call3(reduction, val, key);
       }
       return reduction;
@@ -360,8 +360,8 @@ namespace Fan.Sys
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Obj key = (Obj)en.Key;
-        Obj val = (Obj)en.Value;
+        object key = en.Key;
+        object val = en.Value;
         acc.set(key, f.call2(val, key));
       }
       return acc;
@@ -424,8 +424,8 @@ namespace Fan.Sys
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {
-        Object key = en.Key;
-        Obj val = (Obj)en.Value;
+        object key = en.Key;
+        object val = en.Value;
 
         if (val != null)
         {
@@ -505,7 +505,7 @@ namespace Fan.Sys
     private bool m_isReadonly;
     private bool m_immutable;
     private bool m_caseInsensitive = false;
-    private Obj m_def;
+    private object m_def;
 
   }
 }

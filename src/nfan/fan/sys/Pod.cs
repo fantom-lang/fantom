@@ -206,8 +206,8 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public Map facets() { return toFacets().map(); }
-    public Obj facet(Str name) { return toFacets().get(name, null); }
-    public Obj facet(Str name, Obj def) { return toFacets().get(name, def); }
+    public object facet(Str name) { return toFacets().get(name, null); }
+    public object facet(Str name, object def) { return toFacets().get(name, def); }
 
     private Facets toFacets()
     {

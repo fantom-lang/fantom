@@ -692,7 +692,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(Obj obj)
+    public override Bool _equals(object obj)
     {
       if (obj is Uri)
       {
@@ -1228,9 +1228,9 @@ namespace Fan.Sys
       return File.make(this);
     }
 
-    public Obj get() { return get(null, Bool.True); }
-    public Obj get(Obj @base) { return get(@base, Bool.True); }
-    public Obj get(Obj @base, Bool check)
+    public object get() { return get(null, Bool.True); }
+    public object get(object @base) { return get(@base, Bool.True); }
+    public object get(object @base, Bool check)
     {
       // if we have a relative uri, we need to resolve against
       // the base object's uri

@@ -117,7 +117,7 @@ namespace Fanx.Tools
       else if (((Param)pars.get(0)).of().@is(Sys.StrType.toListOf()) &&
                (pars.sz() == 1 || ((Param)pars.get(1)).hasDefault().val))
       {
-        args = new List(Sys.ObjType, new Obj[] { Sys.args() });
+        args = new List(Sys.ObjType, new object[] { Sys.args() });
       }
       else
       {
@@ -140,7 +140,7 @@ namespace Fanx.Tools
       }
     }
 
-    static int toResult(Object obj)
+    static int toResult(object obj)
     {
       if (obj is Int) return (int)((Int)obj).val;
       return 0;
@@ -195,7 +195,7 @@ namespace Fanx.Tools
     class MainThread : Thread
     {
       public MainThread() : base(Str.make("main")) {}
-      public override Obj run()
+      public override object run()
       {
         ret = doRun();
         return null;

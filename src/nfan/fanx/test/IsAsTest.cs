@@ -54,7 +54,7 @@ namespace Fanx.Test
     {
       verify("Str f(Obj x) { return x as Str }", MakeStrs("foo"), Str.make("foo"));
       verify("Str f(Obj x) { return x as Str }", MakeInts(4), null);
-      verify("Str f(Obj x) { return x as Str }", new Obj[] { null }, null);
+      verify("Str f(Obj x) { return x as Str }", new object[] { null }, null);
       verify("Str f(Obj x) { return x.type.method(\"toStr\").call1(x) as Str }", MakeInts(2), Str.make("2"));
       verify("Int f(Obj x) { return x.type.method(\"toStr\").call1(x) as Int }", MakeInts(2), null);
     }

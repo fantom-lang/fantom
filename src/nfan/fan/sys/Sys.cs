@@ -71,7 +71,7 @@ namespace Fan.Sys
       GC.Collect();
     }
 
-    public static Int idHash(Obj obj)
+    public static Int idHash(object obj)
     {
       //return Int.make(System.identityHashCode(obj));
       return FanObj.hash(obj);
