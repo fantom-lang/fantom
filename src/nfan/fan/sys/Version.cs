@@ -82,10 +82,10 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool equals(Obj obj)
+    public override Bool _equals(Obj obj)
     {
       if (obj is Version)
-        return toStr().equals(((Version)obj).toStr());
+        return toStr()._equals(((Version)obj).toStr());
       else
         return Bool.False;
     }

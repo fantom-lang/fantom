@@ -86,11 +86,11 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Bool equals(Obj obj)
+    public override sealed Bool _equals(Obj obj)
     {
       if (obj is File)
       {
-        return m_uri.equals(((File)obj).m_uri);
+        return m_uri._equals(((File)obj).m_uri);
       }
       return Bool.False;
     }

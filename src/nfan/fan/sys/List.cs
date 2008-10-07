@@ -291,12 +291,12 @@ namespace Fan.Sys
       return Int.make(hash);
     }
 
-    public override Bool equals(Obj that)
+    public override Bool _equals(Obj that)
     {
       if (that is List)
       {
         List x = (List)that;
-        if (!m_of.equals(x.m_of).val) return Bool.False;
+        if (!m_of.Equals(x.m_of)) return Bool.False;
         if (m_size != x.m_size) return Bool.False;
         for (int i=0; i<m_size; i++)
           if (!OpUtil.compareEQ(m_values[i], x.m_values[i]).val) return Bool.False;

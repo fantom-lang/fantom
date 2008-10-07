@@ -32,11 +32,11 @@ namespace Fan.Sys
       return signature().hash();
     }
 
-    public override Bool equals(Obj obj)
+    public override Bool _equals(Obj obj)
     {
       if (obj is ListType)
       {
-        return m_v.equals(((ListType)obj).m_v);
+        return m_v._equals(((ListType)obj).m_v);
       }
       return Bool.False;
     }

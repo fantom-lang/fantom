@@ -692,11 +692,11 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool equals(Obj obj)
+    public override Bool _equals(Obj obj)
     {
       if (obj is Uri)
       {
-        return m_str.equals(((Uri)obj).m_str);
+        return m_str._equals(((Uri)obj).m_str);
       }
       return Bool.False;
     }

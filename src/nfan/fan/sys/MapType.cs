@@ -36,12 +36,12 @@ namespace Fan.Sys
       return signature().hash();
     }
 
-    public override Bool equals(Obj obj)
+    public override Bool _equals(Obj obj)
     {
       if (obj is MapType)
       {
         MapType x = (MapType)obj;
-        return Bool.make(m_k.equals(x.m_k).val && m_v.equals(x.m_v).val);
+        return Bool.make(m_k.Equals(x.m_k) && m_v.Equals(x.m_v));
       }
       return Bool.False;
     }

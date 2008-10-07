@@ -36,10 +36,10 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public sealed override Bool equals(Obj obj)
+    public sealed override Bool _equals(Obj obj)
     {
       if (obj is Regex)
-        return ((Regex)obj).m_source.equals(this.m_source);
+        return ((Regex)obj).m_source._equals(this.m_source);
       else
         return Bool.False;
     }

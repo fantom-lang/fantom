@@ -884,7 +884,9 @@ namespace Fan.Sys
 
     private void finishMethod(MethodInfo m, bool staticOnly)
     {
-      Slot s = slot(m.Name, false);
+      string name = m.Name;
+      if (name == "_equals") name = "equals";
+      Slot s = slot(name, false);
       if (s == null) return;
       if (s.parent() != this) return;
       if (staticOnly && !s.isStatic().val) return;

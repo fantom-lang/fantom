@@ -53,7 +53,7 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool equals(Obj that)
+    public override Bool _equals(Obj that)
     {
       return this == that ? Bool.True : Bool.False;
     }

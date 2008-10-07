@@ -102,11 +102,11 @@ namespace Fan.Sys
 
     public override Int hash() { return m_str.hash(); }
 
-    public override Bool equals(Obj obj)
+    public override Bool _equals(Obj obj)
     {
       if (obj is Locale)
       {
-        return (obj as Locale).m_str.equals(m_str);
+        return (obj as Locale).m_str._equals(m_str);
       }
       return Bool.False;
     }
