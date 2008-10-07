@@ -191,3 +191,5 @@ navBar.close.icon=fan:/sys/pod/icons/x16/tab-close.png
 navBar.refresh.name=Refresh
 
 navBar.goInto.name=Go Into
+
+navBar.sync.name=Sync Tree
