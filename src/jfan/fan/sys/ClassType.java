@@ -84,7 +84,6 @@ public class ClassType
   public Object trap(String name, List args)
   {
     // private undocumented access
-    if (name.equals("flags"))      return Long.valueOf(flags);
     if (name.equals("lineNumber")) { reflect(); return Long.valueOf(lineNum); }
     if (name.equals("sourceFile")) { reflect(); return sourceFile; }
     return super.trap(name, args);
@@ -105,81 +104,6 @@ public class ClassType
   }
 
   public Boolean isDynamic() { return dynamic; }
-
-//////////////////////////////////////////////////////////////////////////
-// Nullable
-//////////////////////////////////////////////////////////////////////////
-
-  public Boolean isNullable() { return false; }
-
-  public Type toNullable()
-  {
-    if (nullable == null) nullable = new NullableType(this);
-    return nullable;
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Generics
-//////////////////////////////////////////////////////////////////////////
-
-  /**
-   * A generic type means that one or more of my slots contain signatures
-   * using a generic parameter (such as V or K).  Fan supports three built-in
-   * generic types: List, Map, and Func.  A generic instance (such as Str[])
-   * is NOT a generic type (all of its generic parameters have been filled in).
-   * User defined generic types are not supported in Fan.
-   */
-  public boolean isGenericType()
-  {
-    return this == Sys.ListType || this == Sys.MapType || this == Sys.FuncType;
-  }
-
-  /**
-   * A generic instance is a type which has "instantiated" a generic type
-   * and replaced all the generic parameter types with generic argument
-   * types.  The type Str[] is a generic instance of the generic type
-   * List (V is replaced with Str).  A generic instance always has a signature
-   * which different from the qname.
-   */
-  public boolean isGenericInstance()
-  {
-    return false;
-  }
-
-  /**
-   * Return if this type is a generic parameter (such as V or K) in a
-   * generic type (List, Map, or Method).  Generic parameters serve
-   * as place holders for the parameterization of the generic type.
-   * Fan has a predefined set of generic parameters which are always
-   * defined in the sys pod with a one character name.
-   */
-  public boolean isGenericParameter()
-  {
-    return pod == Sys.SysPod && name.length() == 1;
-  }
-
-  /*
-   * If this type is a generic parameter (V, L, etc), then return
-   * the actual type used in the Java method.  For example V is Obj,
-   * and L is List.  This is the type we actually use when constructing
-   * a signature for the invoke opcode.
-   */
-  public Type getRawType()
-  {
-    if (!isGenericParameter()) return this;
-    if (this == Sys.LType) return Sys.ListType;
-    if (this == Sys.MType) return Sys.MapType;
-    if (this instanceof ListType) return Sys.ListType;
-    if (this instanceof MapType)  return Sys.MapType;
-    if (this instanceof FuncType) return Sys.FuncType;
-    return Sys.ObjType;
-  }
-
-  public final synchronized Type toListOf()
-  {
-    if (listOf == null) listOf = new ListType(this);
-    return listOf;
-  }
 
 //////////////////////////////////////////////////////////////////////////
 // Slots
@@ -889,7 +813,6 @@ catch (Exception e) { e.printStackTrace(); }
 
   // misc
   Type nullable;
-  Type listOf;
   Constructor dynamicCtor;  // enabled to store a type per instance
   boolean javaRepr;         // if representation a Java type, such as java.lang.Long
 

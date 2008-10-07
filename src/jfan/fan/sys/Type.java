@@ -76,6 +76,13 @@ public abstract class Type
   public final Boolean isSynthetic() { return (flags() & FConst.Synthetic) != 0; }
   abstract int flags();
 
+  public Object trap(String name, List args)
+  {
+    // private undocumented access
+    if (name.equals("flags")) return Long.valueOf(flags());
+    return super.trap(name, args);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Dynamic
 //////////////////////////////////////////////////////////////////////////
@@ -127,15 +134,21 @@ public abstract class Type
       throw ArgErr.make("Cannot use dynamic in makeDynamic: " + this).val;
   }
 
-  public abstract Boolean isDynamic();
+  public Boolean isDynamic() { return false; }
 
 //////////////////////////////////////////////////////////////////////////
 // Nullable
 //////////////////////////////////////////////////////////////////////////
 
-  public abstract Boolean isNullable();
+  public Boolean isNullable() { return false; }
 
-  public abstract Type toNullable();
+  public final synchronized Type toNullable()
+  {
+    if (nullable == null) nullable = makeToNullable();
+    return nullable;
+  }
+
+  protected Type makeToNullable() { return new NullableType(this); }
 
 //////////////////////////////////////////////////////////////////////////
 // Generics
@@ -241,7 +254,13 @@ public abstract class Type
     throw UnsupportedErr.make("not generic: " + this).val;
   }
 
-  public abstract Type toListOf();
+  public final synchronized Type toListOf()
+  {
+    if (listOf == null) listOf = makeToListOf();
+    return listOf;
+  }
+
+  protected Type makeToListOf() { return new ListType(this); }
 
 //////////////////////////////////////////////////////////////////////////
 // Slots
@@ -373,5 +392,8 @@ public abstract class Type
 
   static final boolean Debug = false;
   static Object noParams;
+
+  Type nullable;   // cached value of toNullable()
+  Type listOf;     // cached value of toListOf()
 
 }

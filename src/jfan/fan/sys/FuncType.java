@@ -61,11 +61,6 @@ public class FuncType
     return false;
   }
 
-  public final Type base()
-  {
-    return Sys.FuncType;
-  }
-
   public final String signature()
   {
     if (sig == null)
