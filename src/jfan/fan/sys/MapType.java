@@ -51,11 +51,6 @@ public class MapType
     return false;
   }
 
-  public final Type base()
-  {
-    return Sys.MapType;
-  }
-
   public final String signature()
   {
     if (sig == null)

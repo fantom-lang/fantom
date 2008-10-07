@@ -21,37 +21,47 @@ import fanx.emit.*;
  * instances (for example an instance of ListType is used to represent Str[]).
  */
 public abstract class GenericType
-  extends ClassType
+  extends Type
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  GenericType(Type base)
-  {
-    super(base.pod(), base.name(), base.flags(), ((ClassType)base).facets);
-  }
+  GenericType(Type base) { this.base = base; }
 
 //////////////////////////////////////////////////////////////////////////
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public abstract Type base();
-
-  public List mixins()
-  {
-    return base().mixins();
-  }
-
+  public final Pod pod() { return base.pod(); }
+  public final String name() { return base.name(); }
+  public final String qname() { return base.qname(); }
   public abstract String signature();
+  int flags() { return base.flags(); }
+
+  public final Type base() { return base; }
+  public final List mixins() { return base.mixins(); }
+  public final List inheritance() { return base.inheritance(); }
 
   public final boolean isGenericInstance() { return true; }
 
   public boolean is(Type type)
   {
-    if (type == this || type == base()) return true;
-    return base().is(type);
+    if (type == this || type == base) return true;
+    return base.is(type);
+  }
+
+  public final List fields()  { return reflect().fields.ro(); }
+  public final List methods() { return reflect().methods.ro(); }
+  public final List slots()   { return reflect().slots.ro(); }
+
+  public final Slot slot(String name, boolean checked)
+  {
+    Slot slot = (Slot)reflect().slotsByName.get(name);
+    if (slot != null) return slot;
+    if (checked) throw UnknownSlotErr.make(this.qname() + "." + name).val;
+    return null;
   }
 
   public Map params()
@@ -62,6 +72,13 @@ public abstract class GenericType
 
   abstract Map makeParams();
 
+  public Map facets(Boolean inherited) { return base.facets(inherited); }
+  public Object facet(String name, Object def, Boolean inherited) { return base.facet(name, def, inherited); }
+
+  public String doc() { return base.doc(); }
+
+  public final boolean javaRepr() { return false; }
+
 //////////////////////////////////////////////////////////////////////////
 // Reflect
 //////////////////////////////////////////////////////////////////////////
@@ -69,11 +86,18 @@ public abstract class GenericType
   /**
    * On reflection, we parameterize the master's methods.
    */
-  protected void doReflect()
+  protected final synchronized GenericType reflect()
+  {
+    if (slotsByName != null) return this;
+    doReflect();
+    return this;
+  }
+
+  private void doReflect()
   {
     // ensure master type is reflected
-    Type master = base();
-    master.reflect();
+    Type master = base;
+    master.finish();
     List masterSlots = master.slots();
 
     // allocate slot data structures
@@ -134,7 +158,9 @@ public abstract class GenericType
       }
     }
 
-    return new Method(this, m.name, m.flags, m.facets, m.lineNum, ret, m.inheritedReturns, params, m);
+    Method pm = new Method(this, m.name, m.flags, m.facets, m.lineNum, ret, m.inheritedReturns, params, m);
+    pm.reflect = m.reflect;
+    return pm;
   }
 
   /**
@@ -186,5 +212,15 @@ public abstract class GenericType
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  // available at construction time
+  private final Type base;
+
+  // lazily created by params()
   private Map params;
+
+   // available when reflected
+  private List fields;
+  private List methods;
+  private List slots;
+  private HashMap slotsByName;  // String:Slot
 }

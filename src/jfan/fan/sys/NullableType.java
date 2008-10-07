@@ -18,7 +18,7 @@ public class NullableType
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  NullableType(ClassType root)
+  NullableType(Type root)
   {
     this.root = root;
     this.signature = root.signature() + "?";
@@ -40,9 +40,9 @@ public class NullableType
   public boolean is(Type type) { return root.is(type); }
 
   public Boolean isNullable() { return true; }
-  public Type toNullable() { return this; }
+  protected Type makeToNullable() { return this; }
 
-  public Boolean isDynamic() { return false; }
+  protected Type makeToListOf() { return new ListType(root).toNullable(); }
 
   public List fields() { return root.fields(); }
   public List methods() { return root.methods(); }
@@ -53,12 +53,6 @@ public class NullableType
   public Object facet(String name, Object def, Boolean inherited) { return root.facet(name, def, inherited); }
 
   public String doc() { return root.doc(); }
-
-  public final synchronized Type toListOf()
-  {
-    if (listOf == null) listOf = new ListType(root).toNullable();
-    return listOf;
-  }
 
   public boolean javaRepr() { return root.javaRepr(); }
 
