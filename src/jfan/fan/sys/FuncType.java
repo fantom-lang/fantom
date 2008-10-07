@@ -137,7 +137,7 @@ public class FuncType
     if (t == Sys.RType) return ret;
 
     // if A-H maps to avail params
-    int name = t.name.charAt(0) - 'A';
+    int name = t.name().charAt(0) - 'A';
     if (name < params.length) return params[name];
 
     // otherwise let anything be used
