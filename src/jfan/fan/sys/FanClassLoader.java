@@ -109,7 +109,7 @@ public class FanClassLoader
             // if the precompiled class is a fan type, then we need
             // to finish the emit process since we skipped the normal
             // code path thru Type.emit() for fcode to bytecode generation
-            Type type = pod.findType(typeName, false);
+            ClassType type = (ClassType)pod.findType(typeName, false);
             if (type != null) type.precompiled(cls);
 
             // if the class is a precompiled Pod type
@@ -137,13 +137,15 @@ public class FanClassLoader
       if (typeName.endsWith("$") || typeName.endsWith("$Val"))
       {
         int strip = typeName.endsWith("$") ? 1 : 4;
-        Class cls = pod.findType(typeName.substring(0, typeName.length()-strip), true).emit();
+        ClassType t = (ClassType)pod.findType(typeName.substring(0, typeName.length()-strip), true);
+        Class cls = t.emit();
         return loadClass(name);
       }
 
       // if there wasn't a precompiled class, then this must
       // be a normal fcode type which we need to emit
-      return pod.findType(typeName, true).emit();
+      ClassType t = (ClassType)pod.findType(typeName, true);
+      return t.emit();
     }
 
     // fallback to system class loader

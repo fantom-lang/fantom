@@ -21,7 +21,7 @@ import fanx.emit.*;
  * instances (for example an instance of ListType is used to represent Str[]).
  */
 public abstract class GenericType
-  extends Type
+  extends ClassType
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ public abstract class GenericType
 
   GenericType(Type base)
   {
-    super(base.pod, base.name, base.flags, base.facets);
+    super(base.pod(), base.name(), base.flags(), ((ClassType)base).facets);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -74,11 +74,11 @@ public abstract class GenericType
     // ensure master type is reflected
     Type master = base();
     master.reflect();
-    List masterSlots = master.slots;
+    List masterSlots = master.slots();
 
     // allocate slot data structures
-    fields = new List(Sys.FieldType, master.fields.sz());
-    methods = new List(Sys.MethodType, master.methods.sz());
+    fields = new List(Sys.FieldType, master.fields().sz());
+    methods = new List(Sys.MethodType, master.methods().sz());
     slots = new List(Sys.SlotType, masterSlots.sz());
     slotsByName = new HashMap(masterSlots.sz()*3);
 

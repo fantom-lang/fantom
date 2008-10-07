@@ -18,9 +18,9 @@ public class NullableType
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  NullableType(Type root)
+  NullableType(ClassType root)
   {
-    super(root.pod, root.name, root.flags, root.facets);
+    this.root = root;
     this.signature = root.signature() + "?";
   }
 
@@ -28,19 +28,39 @@ public class NullableType
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public Type base() { return root.base(); }
-
-  public List mixins() { return root.mixins(); }
-
+  public Pod pod() { return root.pod(); }
+  public String name() { return root.name(); }
+  public String qname() { return root.qname(); }
   public String signature() { return signature; }
+  int flags() { return root.flags(); }
 
-  public List inheritance() { return root.inheritance; }
-
+  public Type base() { return root.base(); }
+  public List mixins() { return root.mixins(); }
+  public List inheritance() { return root.inheritance(); }
   public boolean is(Type type) { return root.is(type); }
 
   public Boolean isNullable() { return true; }
-
   public Type toNullable() { return this; }
+
+  public Boolean isDynamic() { return false; }
+
+  public List fields() { return root.fields(); }
+  public List methods() { return root.methods(); }
+  public List slots() { return root.slots(); }
+  public Slot slot(String name, boolean checked) { return root.slot(name, checked); }
+
+  public Map facets(Boolean inherited) { return root.facets(inherited); }
+  public Object facet(String name, Object def, Boolean inherited) { return root.facet(name, def, inherited); }
+
+  public String doc() { return root.doc(); }
+
+  public final synchronized Type toListOf()
+  {
+    if (listOf == null) listOf = new ListType(root).toNullable();
+    return listOf;
+  }
+
+  public boolean javaRepr() { return root.javaRepr(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -48,5 +68,6 @@ public class NullableType
 
   private Type root;
   private String signature;
+  private Type listOf;
 
 }

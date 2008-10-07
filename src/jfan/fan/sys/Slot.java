@@ -65,7 +65,7 @@ public abstract class Slot
   {
     this.parent  = parent;
     this.name    = name;
-    this.qname   = parent == null ? name : parent.qname + "." + name;
+    this.qname   = parent == null ? name : parent.qname() + "." + name;
     this.flags   = flags;
     this.facets  = facets;
     this.lineNum = lineNum;

@@ -92,7 +92,7 @@ public class Field
     }
     catch (Exception e)
     {
-      if (parent != null && parent.dynamic)
+      if (parent != null && parent.isDynamic())
         throw Err.make("Dynamic field must override get()").val;
 
       if (reflect == null)
@@ -147,7 +147,7 @@ public class Field
     }
     catch (Exception e)
     {
-      if (parent != null && parent.dynamic)
+      if (parent != null && parent.isDynamic())
         throw Err.make("Dynamic field must override set()").val;
 
       if (reflect == null)
