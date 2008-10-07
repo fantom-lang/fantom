@@ -177,14 +177,23 @@ internal class NavBar : SideBar
 
   internal Void onPopup(Event event)
   {
+    Menu menu
     n := event.data as NavNode
-    r := n?.resource
-    menu := r?.popup(frame, event) ?: Menu()
-    if (r is FileResource && r->file->isDir)
+    if (n != null)
     {
-      menu.add(MenuItem { mode = MenuItemMode.sep })
-      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.refresh", &onRefresh(n)) })
-      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.goInto", &onGoInto(n)) })
+      r := n?.resource
+      menu = r?.popup(frame, event) ?: Menu()
+      if (r is FileResource && r->file->isDir)
+      {
+        menu.add(MenuItem { mode = MenuItemMode.sep })
+        menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.refresh", &onRefresh(n)) })
+        menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.goInto", &onGoInto(n)) })
+      }
+    }
+    else
+    {
+      menu = Menu()
+      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.sync", &onSync) })
     }
     event.popup = menu
   }
@@ -199,6 +208,42 @@ internal class NavBar : SideBar
   {
     addTree(n.resource)
     select(trees.size-1)
+  }
+
+  internal Void onSync()
+  {
+    r := frame.view.resource
+    if (r isnot FileResource)
+    {
+      Dialog.openErr(frame, "Resource not found in tree")
+      return
+    }
+
+    node  := null
+    nodes := active.model.roots
+    path  := r.uri.path
+    path.eachBreak |Str s->Obj|
+    {
+      found := nodes.eachBreak |Obj n->Obj|
+      {
+        if (n->name == s)
+        {
+          node = n
+          nodes = active.model.children(n)
+          active.setExpanded(n, true)
+          return true
+        }
+        return null
+      }
+      return found ? null : false
+    }
+
+    if (node != null)
+    {
+      active.select(node)
+      active.show(node)
+    }
+    else Dialog.openErr(frame, "Resource not found in tree")
   }
 
 //////////////////////////////////////////////////////////////////////////
