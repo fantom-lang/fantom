@@ -40,10 +40,13 @@ class TypeRef : Node, CType
   override CType[] mixins() { return t.mixins }
   override Bool fits(CType that) { return t.fits(that) }
 
+  override Bool isNullable() { return t.isNullable }
+  override CType toNullable() { return t.toNullable }
+
   override Bool isGeneric() { return t.isGeneric }
   override Bool isParameterized() { return t.isParameterized }
   override Bool isGenericParameter() { return t.isGenericParameter }
-  override ListType toListOf() { return t.toListOf }
+  override CType toListOf() { return t.toListOf }
 
   override Str:CSlot slots() { return t.slots }
 

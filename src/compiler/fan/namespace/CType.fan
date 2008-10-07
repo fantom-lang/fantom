@@ -50,6 +50,20 @@ mixin CType
   virtual CType deref() { return this }
 
 //////////////////////////////////////////////////////////////////////////
+// Nullable
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Is this is a nullable type (marked with trailing ?)
+  **
+  abstract Bool isNullable()
+
+  **
+  ** Get this type as a nullable type (marked with trailing ?)
+  **
+  abstract CType toNullable()
+
+//////////////////////////////////////////////////////////////////////////
 // Generics
 //////////////////////////////////////////////////////////////////////////
 
@@ -83,7 +97,7 @@ mixin CType
   **
   ** Create a parameterized List of this type.
   **
-  abstract ListType toListOf()
+  abstract CType toListOf()
 
   **
   ** If this type is a generic parameter (V, L, etc), then return

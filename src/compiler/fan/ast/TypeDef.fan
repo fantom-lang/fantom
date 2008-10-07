@@ -39,15 +39,14 @@ class TypeDef : DefNode, CType
 
   override Str signature() { return qname }
 
+  override Bool isNullable() { return false }
+  override once CType toNullable() { return NullableType(this) }
+
   override Bool isGeneric() { return false }
   override Bool isParameterized() { return false }
   override Bool isGenericParameter() { return false }
 
-  override ListType toListOf()
-  {
-    if (listOf == null) listOf = ListType.make(this)
-    return listOf
-  }
+  override once CType toListOf() { return ListType(this) }
 
 //////////////////////////////////////////////////////////////////////////
 // Access

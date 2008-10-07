@@ -39,15 +39,14 @@ class ReflectType : CType
   override Str signature() { return t.signature }
   override Int flags()     { return (Int)t->flags }
 
+  override Bool isNullable() { return false }
+  override once CType toNullable() { return NullableType(this) }
+
   override Bool isGeneric() { return t.isGeneric }
   override Bool isParameterized() { return !t.params.isEmpty }
   override Bool isGenericParameter() { return pod === ns.sysPod && name.size === 1 }
 
-  override ListType toListOf()
-  {
-    if (listOf == null) listOf = ListType.make(this)
-    return listOf
-  }
+  override once CType toListOf() { return ListType(this) }
 
   override Str:CSlot slots()
   {
@@ -90,6 +89,5 @@ class ReflectType : CType
   override readonly CType[] mixins
   private Str:CSlot slotMap := Str:CSlot[:]
   private Bool slotsLoaded := false
-  private ListType listOf
 
 }
