@@ -79,7 +79,7 @@ public class Process
         Entry entry = (Entry)it.next();
         String key = (String)entry.getKey();
         String val = (String)entry.getValue();
-        env.set(Str.make(key), Str.make(val));
+        env.set(key, val);
       }
     }
     return env;
@@ -110,7 +110,7 @@ public class Process
       // commands
       String[] strings = new String[command.sz()];
       for (int i=0; i<command.sz(); ++i)
-        strings[i] = ((Str)command.get(i)).val;
+        strings[i] = (String)command.get(i);
       ProcessBuilder builder = new ProcessBuilder(strings);
 
       // environment
@@ -120,9 +120,9 @@ public class Process
         while (it.hasNext())
         {
           Entry entry = (Entry)it.next();
-          Str key = (Str)entry.getKey();
-          Str val = (Str)entry.getValue();
-          builder.environment().put(key.val, val.val);
+          String key = (String)entry.getKey();
+          String val = (String)entry.getValue();
+          builder.environment().put(key, val);
         }
       }
 

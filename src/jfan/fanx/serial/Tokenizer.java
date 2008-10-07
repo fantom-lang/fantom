@@ -358,7 +358,7 @@ public class Tokenizer
         default:    s.append((char)cur); consume(); break;
       }
     }
-    this.val = Str.make(s.toString());
+    this.val = s.toString();
     return Token.STR_LITERAL;
   }
 

@@ -64,7 +64,7 @@ public final class Zip
 
   public Type type() { return Sys.ZipType; }
 
-  public Str toStr()
+  public String toStr()
   {
     if (file != null) return file.toStr();
     return super.toStr();

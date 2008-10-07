@@ -18,16 +18,16 @@ public class LogRecord
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static LogRecord make(DateTime time, LogLevel level, Str logName, Str msg) { return make(time, level, logName, msg); }
-  public static LogRecord make(DateTime time, LogLevel level, Str logName, Str msg, Err err)
+  public static LogRecord make(DateTime time, LogLevel level, String logName, String msg) { return make(time, level, logName, msg); }
+  public static LogRecord make(DateTime time, LogLevel level, String logName, String msg, Err err)
   {
     LogRecord self = new LogRecord();
     make$(self, time, level, logName, msg, err);
     return self;
   }
 
-  public static void make$(LogRecord self, DateTime time, LogLevel level, Str logName, Str msg) { make$(self, time, level, logName, msg, null); }
-  public static void make$(LogRecord self, DateTime time, LogLevel level, Str logName, Str msg, Err err)
+  public static void make$(LogRecord self, DateTime time, LogLevel level, String logName, String msg) { make$(self, time, level, logName, msg, null); }
+  public static void make$(LogRecord self, DateTime time, LogLevel level, String logName, String msg, Err err)
   {
     self.time    = time;
     self.level   = level;
@@ -42,7 +42,7 @@ public class LogRecord
 
   public Type type() { return Sys.LogRecordType; }
 
-  public Str toStr()
+  public String toStr()
   {
     String ts = ((DateTime)time).toLocale("hh:mm:ss DD-MMM-YY");
     StringBuilder s = new StringBuilder();
@@ -50,7 +50,7 @@ public class LogRecord
      .append(' ').append('[').append(level).append(']')
      .append(' ').append('[').append(logName).append(']')
      .append(' ').append(message);
-    return Str.make(s.toString());
+    return s.toString();
   }
 
   public void print() { print(Sys.out()); }
@@ -69,8 +69,8 @@ public class LogRecord
 
   public DateTime time;
   public LogLevel level;
-  public Str logName;
-  public Str message;
+  public String logName;
+  public String message;
   public Err err;
 
 }

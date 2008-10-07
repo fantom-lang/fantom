@@ -32,8 +32,8 @@ public class StrBufTest
 
   public void perf()
   {
-    Str a = Str.make("foobar ");
-    Str b = Str.make(" yippee!");
+    String a = "foobar ";
+    String b = " yippee!";
 
     System.out.println("Java: " + java(a, b, 0L));
     System.out.println("Fan:  " +  fan(a, b, 0L));
@@ -57,14 +57,14 @@ public class StrBufTest
     System.out.println("Fan:  " + (t5-t4) + "ns");
   }
 
-  public Str java(Str a, Str b, Long i)
+  public String java(String a, String b, Long i)
   {
     StringBuilder s = new StringBuilder();
     s.append(a).append(i).append(b);
-    return Str.make(s.toString());
+    return s.toString();
   }
 
-  public Str fan(Str a, Str b, Long i)
+  public String fan(String a, String b, Long i)
   {
     StrBuf s = new StrBuf(new StringBuilder());
     s.add(a).add(i).add(b);

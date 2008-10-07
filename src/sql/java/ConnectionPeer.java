@@ -28,12 +28,12 @@ public class ConnectionPeer
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  public static Connection open(Str database, Str username, Str password)
+  public static Connection open(String database, String username, String password)
   {
     try
     {
       Connection self = Connection.make();
-      self.peer.jconn = DriverManager.getConnection(database.val, username.val, password.val);
+      self.peer.jconn = DriverManager.getConnection(database, username, password);
       self.peer.openCount = 1;
       return self;
     }
@@ -73,7 +73,7 @@ public class ConnectionPeer
 // Database metadata
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean tableExists(Connection self, Str tableName)
+  public Boolean tableExists(Connection self, String tableName)
   {
     try
     {
@@ -81,7 +81,7 @@ public class ConnectionPeer
         ResultSet tables =
           dbData.getTables(null,          // catalog
                            null,          // schema pattern
-                           tableName.val, // table name pattern
+                           tableName,     // table name pattern
                            null);         // types
 
       boolean exists = tables.next();
@@ -110,7 +110,7 @@ public class ConnectionPeer
       while (tables.next())
       {
         String tableName = tables.getString(nameIndex);
-        tableList.add(Str.make(tableName));
+        tableList.add(tableName);
       }
       tables.close();
 
@@ -122,12 +122,12 @@ public class ConnectionPeer
     }
   }
 
-  public Object tableRow(Connection self, Str tableName)
+  public Object tableRow(Connection self, String tableName)
   {
     try
     {
       DatabaseMetaData dbData = jconn.getMetaData();
-      ResultSet columns = dbData.getColumns(null, null, tableName.val, null);
+      ResultSet columns = dbData.getColumns(null, null, tableName, null);
 
       // map the meta-data to a dynamic type
       Type t = Type.makeDynamic(listOfRow);
@@ -146,11 +146,11 @@ public class ConnectionPeer
           System.out.println("WARNING: Cannot map " + typeName + " to Fan type");
           fanType = Sys.StrType;
         }
-        t.add(Col.make(Long.valueOf(colIndex++), Str.make(name), fanType, Str.make(typeName), null));
+        t.add(Col.make(Long.valueOf(colIndex++), name, fanType, typeName, null));
       }
 
       if (colIndex == 0)
-        throw SqlErr.make(Str.make("Table not found: " + tableName)).val;
+        throw SqlErr.make("Table not found: " + tableName).val;
 
       Row row = (Row)t.make();
       row.peer.cells = new Object[t.fields().sz()];;
@@ -252,12 +252,11 @@ public class ConnectionPeer
       int keyCount = envKeys.sz();
       for (int i = 0; i < keyCount; i++)
       {
-        Str key = (Str)envKeys.get(i);
-        String keyVal = key.val;
-        if (!keyVal.startsWith("sql.")) continue;
-        if (!keyVal.endsWith(".driver")) continue;
+        String key = (String)envKeys.get(i);
+        if (!key.startsWith("sql.")) continue;
+        if (!key.endsWith(".driver")) continue;
 
-        String driver = ((Str)Sys.env().get(key)).val;
+        String driver = (String)Sys.env().get(key);
         try
         {
           Class.forName(driver);
@@ -295,7 +294,7 @@ public class ConnectionPeer
 
   static RuntimeException err(SQLException e)
   {
-    return SqlErr.make(Str.make(e.getMessage()), Err.make(e)).val;
+    return SqlErr.make(e.getMessage(), Err.make(e)).val;
   }
 
 //////////////////////////////////////////////////////////////////////////

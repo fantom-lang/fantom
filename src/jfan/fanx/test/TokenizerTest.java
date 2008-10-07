@@ -303,7 +303,7 @@ public class TokenizerTest
 
   public Tok[] tokenize(String src)
   {
-    InStream in = InStream.makeForStr(Str.make(src));
+    InStream in = InStream.makeForStr(src);
     Tokenizer tokenizer = new Tokenizer(in);
 
     ArrayList acc = new ArrayList();
@@ -391,8 +391,8 @@ public class TokenizerTest
   public Tok id(String v)  { return new Tok(Token.ID, v); }
   public Tok i(long v)     { return new Tok(Token.INT_LITERAL,   Long.valueOf(v));    }
   public Tok f(double v)   { return new Tok(Token.FLOAT_LITERAL, Double.valueOf(v));  }
-  public Tok s(String v)   { return new Tok(Token.STR_LITERAL,   Str.make(v)); }
-  public Tok dec(String v) { return new Tok(Token.DECIMAL_LITERAL,  FanDecimal.fromStr(Str.make(v))); }
+  public Tok s(String v)   { return new Tok(Token.STR_LITERAL,   v); }
+  public Tok dec(String v) { return new Tok(Token.DECIMAL_LITERAL,  FanDecimal.fromStr(v)); }
   public Tok dur(long v)   { return new Tok(Token.DURATION_LITERAL,  Duration.make(v)); }
   public Tok uri(String v) { return new Tok(Token.URI_LITERAL,   Uri.fromStr(v)); }
 
@@ -408,7 +408,7 @@ public class TokenizerTest
 
     public String toString()
     {
-      if (val instanceof Str)
+      if (val instanceof String)
         return "\"" + StrUtil.asCode(val.toString()) + "\"";
       else
         return Token.toString(type) + " " + val;

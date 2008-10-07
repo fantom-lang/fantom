@@ -22,8 +22,8 @@ public final class FanDecimal
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static BigDecimal fromStr(Str s) { return fromStr(s.val, true); }
-  public static BigDecimal fromStr(Str s, Boolean checked) { return fromStr(s.val, checked); }
+  public static BigDecimal fromStr(String s) { return fromStr(s, true); }
+  public static BigDecimal fromStr(String s, Boolean checked) { return fromStr(s, checked.booleanValue()); }
   public static BigDecimal fromStr(String s, boolean checked)
   {
     try
@@ -41,7 +41,7 @@ public final class FanDecimal
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean _equals(BigDecimal self, Object obj)
+  public static Boolean equals(BigDecimal self, Object obj)
   {
     if (obj instanceof BigDecimal)
     {
@@ -134,9 +134,9 @@ public final class FanDecimal
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public static Str toStr(BigDecimal self)
+  public static String toStr(BigDecimal self)
   {
-    return Str.make(self.toString());
+    return self.toString();
   }
 
   public static void encode(BigDecimal self, ObjEncoder out)

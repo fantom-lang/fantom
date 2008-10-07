@@ -21,11 +21,11 @@ public final class FanBool
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean fromStr(Str s) { return fromStr(s, true); }
-  public static Boolean fromStr(Str s, Boolean checked)
+  public static Boolean fromStr(String s) { return fromStr(s, true); }
+  public static Boolean fromStr(String s, Boolean checked)
   {
-    if (s.val.equals("true")) return true;
-    if (s.val.equals("false")) return false;
+    if (s.equals("true")) return true;
+    if (s.equals("false")) return false;
     if (!checked) return null;
     throw ParseErr.make("Bool", s).val;
   }
@@ -34,7 +34,7 @@ public final class FanBool
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean _equals(Boolean self, Object obj)
+  public static Boolean equals(Boolean self, Object obj)
   {
     return self == obj;
   }
@@ -77,21 +77,14 @@ public final class FanBool
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public static Str toStr(Boolean self)
+  public static String toStr(Boolean self)
   {
-    return self ? trueStr : falseStr;
+    return self ? "true" : "false";
   }
 
   public static void encode(Boolean self, ObjEncoder out)
   {
     out.w(self ? "true" : "false");
   }
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  public static final Str trueStr = Str.make("true");
-  public static final Str falseStr = Str.make("false");
 
 }

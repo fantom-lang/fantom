@@ -8,7 +8,6 @@
 package fan.fwt;
 
 import java.util.Stack;
-import fan.sys.Str;
 import fan.sys.FanObj;
 import fan.sys.ArgErr;
 import org.eclipse.swt.SWT;
@@ -175,10 +174,10 @@ public class GraphicsPeer
     return self;
   }
 
-  public Graphics drawText(Graphics self, Str text, Long x, Long y)
+  public Graphics drawText(Graphics self, String text, Long x, Long y)
   {
     int flags = SWT.DRAW_DELIMITER | SWT.DRAW_TAB | SWT.DRAW_TRANSPARENT;
-    gc.drawText(text.val, x.intValue(), y.intValue(), flags);
+    gc.drawText(text, x.intValue(), y.intValue(), flags);
     return self;
   }
 

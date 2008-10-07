@@ -48,7 +48,7 @@ public class FDynamicEmit
 
   public Box emit()
   {
-    superClassName = "fan/" + base.pod().name().val + "/" + base.name().val;
+    superClassName = "fan/" + base.pod().name() + "/" + base.name();
     init(superClassName +"$Dynamic", superClassName , new String[0], PUBLIC);
     emitType();
     emitCtor();

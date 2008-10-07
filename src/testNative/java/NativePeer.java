@@ -38,8 +38,8 @@ public class NativePeer
   public Long fA(Native t) { return fA; }
   public void fA(Native t, Long x) { fA = x; }
 
-  public Str fV(Native t) { return fV; }
-  public void fV(Native t, Str x) { fV = x; }
+  public String fV(Native t) { return fV; }
+  public void fV(Native t, String x) { fV = x; }
 
   public Long getPeerZ(Native t)
   {
@@ -57,17 +57,17 @@ public class NativePeer
     return ctorY;
   }
 
-  public Str defs1(Native t, Str a) { return a; }
-  public Str defs2(Native t, Str a, Str b) { return Str.make(a.val+b.val);  }
-  public Str defs3(Native t, Str a, Str b, Str c) { return Str.make(a.val+b.val+c.val);  }
+  public String defs1(Native t, String a) { return a; }
+  public String defs2(Native t, String a, String b) { return a + b;  }
+  public String defs3(Native t, String a, String b, String c) { return a + b + c;  }
 
-  public static Str sdefs1(Str a) { return a; }
-  public static Str sdefs2(Str a, Str b) { return Str.make(a.val+b.val);  }
-  public static Str sdefs3(Str a, Str b, Str c) { return Str.make(a.val+b.val+c.val);  }
+  public static String sdefs1(String a) { return a; }
+  public static String sdefs2(String a, String b) { return a + b;  }
+  public static String sdefs3(String a, String b, String c) { return a + b + c;  }
 
   Long ctorY;  // value of y during make()
   Long z;
   Long fA = 444L;
-  Str fV = Str.make("fV");
+  String fV = "fV";
 
 }

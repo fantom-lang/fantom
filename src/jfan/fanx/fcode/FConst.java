@@ -73,7 +73,7 @@ public interface FConst
   public static final int LoadTrue        =   3; // ()        load true literal onto stack
   public static final int LoadInt         =   4; // (int)     load Int const by index onto stack
   public static final int LoadFloat       =   5; // (float)   load Float const by index onto stack
-  public static final int LoadStr         =   6; // (str)     load Str const by index onto stack
+  public static final int LoadStr         =   6; // (str)     load String const by index onto stack
   public static final int LoadDuration    =   7; // (dur)     load Duration const by index onto stack
   public static final int LoadType        =   8; // (type)    load Type instance by index onto stack
   public static final int LoadUri         =   9; // (uri)     load Uri const by index onto stack

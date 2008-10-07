@@ -68,8 +68,8 @@ public class ButtonPeer
   };
 
   // Str text := ""
-  public Str text(fan.fwt.Button self) { return text.get(); }
-  public void text(fan.fwt.Button self, Str v) { text.set(v); }
+  public String text(fan.fwt.Button self) { return text.get(); }
+  public void text(fan.fwt.Button self, String v) { text.set(v); }
   public final Prop.StrProp text = new Prop.StrProp(this, "")
   {
     public String get(Widget w) { return (w instanceof Button) ? ((Button)w).getText() : ((ToolItem)w).getText(); }

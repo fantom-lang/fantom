@@ -30,7 +30,7 @@ public abstract class GenericType
 
   GenericType(Type base)
   {
-    super(base.pod, base.name.val, base.flags, base.facets);
+    super(base.pod, base.name, base.flags, base.facets);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ public abstract class GenericType
     return base().mixins();
   }
 
-  public abstract Str signature();
+  public abstract String signature();
 
   public final boolean isGenericInstance() { return true; }
 
@@ -96,7 +96,7 @@ public abstract class GenericType
         fields.add(slot);
       }
       slots.add(slot);
-      slotsByName.put(slot.name.val, slot);
+      slotsByName.put(slot.name, slot);
     }
   }
 

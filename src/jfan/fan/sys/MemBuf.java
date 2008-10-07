@@ -193,7 +193,7 @@ public final class MemBuf
     return this;
   }
 
-  public Str toHex()
+  public String toHex()
   {
     byte[] buf = this.buf;
     int size = this.size;
@@ -204,10 +204,10 @@ public final class MemBuf
       int b = buf[i] & 0xFF;
       s.append(hexChars[b>>4]).append(hexChars[b&0xf]);
     }
-    return Str.make(s.toString());
+    return s.toString();
   }
 
-  public Str toBase64()
+  public String toBase64()
   {
     byte[] buf = this.buf;
     int size = this.size;
@@ -237,20 +237,20 @@ public final class MemBuf
       s.append('=');
     }
 
-    return Str.make(s.toString());
+    return s.toString();
   }
 
-  public Buf toDigest(Str algorithm)
+  public Buf toDigest(String algorithm)
   {
     try
     {
-      MessageDigest md = MessageDigest.getInstance(algorithm.val);
+      MessageDigest md = MessageDigest.getInstance(algorithm);
       md.update(buf, 0, size);
       return new MemBuf(md.digest());
     }
     catch (NoSuchAlgorithmException e)
     {
-      throw ArgErr.make("Unknown digest algorthm: " + algorithm.val).val;
+      throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
     }
   }
 
@@ -273,7 +273,7 @@ public final class MemBuf
         int c = buf[i];
         if (c != '\n') continue;
         String str = new String(buf, s, i-s, charset);
-        f.call1(Str.make(str));
+        f.call1(str);
         s = i+1;
       }
     }
@@ -283,7 +283,7 @@ public final class MemBuf
     }
   }
 
-  public Str readAllStr(Boolean normalizeNewline )
+  public String readAllStr(Boolean normalizeNewline )
   */
 
 //////////////////////////////////////////////////////////////////////////

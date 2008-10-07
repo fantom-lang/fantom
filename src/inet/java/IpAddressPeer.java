@@ -27,23 +27,23 @@ public class IpAddressPeer
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static IpAddress make(Str str)
+  public static IpAddress make(String str)
   {
     try
     {
-      return make(str, InetAddress.getByName(str.val));
+      return make(str, InetAddress.getByName(str));
     }
     catch (UnknownHostException e)
     {
-      throw UnknownHostErr.make(Str.make(e.getMessage())).val;
+      throw UnknownHostErr.make(e.getMessage()).val;
     }
   }
 
-  public static List makeAll(Str str)
+  public static List makeAll(String str)
   {
     try
     {
-      InetAddress[] addr = InetAddress.getAllByName(str.val);
+      InetAddress[] addr = InetAddress.getAllByName(str);
       List list = new List(IpAddress.$Type, addr.length);
       for (int i=0; i<addr.length; ++i)
         list.add(make(str, addr[i]));
@@ -51,7 +51,7 @@ public class IpAddressPeer
     }
     catch (UnknownHostException e)
     {
-      throw UnknownHostErr.make(Str.make(e.getMessage())).val;
+      throw UnknownHostErr.make(e.getMessage()).val;
     }
   }
 
@@ -61,11 +61,11 @@ public class IpAddressPeer
     {
       MemBuf mb = (MemBuf)bytes;
       InetAddress java = InetAddress.getByAddress(mb.bytes());
-      return make(Str.make(java.getHostAddress()), java);
+      return make(java.getHostAddress(), java);
     }
     catch (UnknownHostException e)
     {
-      throw ArgErr.make(Str.make(e.getMessage())).val;
+      throw ArgErr.make(e.getMessage()).val;
     }
   }
 
@@ -76,7 +76,7 @@ public class IpAddressPeer
       try
       {
         InetAddress java = InetAddress.getLocalHost();
-        local = make(Str.make(java.getHostName()), java);
+        local = make(java.getHostName(), java);
       }
       catch (Exception e)
       {
@@ -84,7 +84,7 @@ public class IpAddressPeer
         {
           // fallback to explicit loopback
           InetAddress java = InetAddress.getByAddress(new byte[] {127, 0, 0, 1});
-          local = make(Str.make(java.getHostAddress()), java);
+          local = make(java.getHostAddress(), java);
         }
         catch (Exception ignore)
         {
@@ -98,10 +98,10 @@ public class IpAddressPeer
 
   public static IpAddress make(InetAddress java)
   {
-    return make(Str.make(java.getHostAddress()), java);
+    return make(java.getHostAddress(), java);
   }
 
-  public static IpAddress make(Str str, InetAddress java)
+  public static IpAddress make(String str, InetAddress java)
   {
     IpAddress fan = IpAddress.internalMake();
     fan.peer.str  = str;
@@ -126,7 +126,7 @@ public class IpAddressPeer
       return false;
   }
 
-  public Str toStr(IpAddress fan)
+  public String toStr(IpAddress fan)
   {
     return str;
   }
@@ -150,14 +150,14 @@ public class IpAddressPeer
     return new MemBuf(java.getAddress());
   }
 
-  public Str numeric(IpAddress fan)
+  public String numeric(IpAddress fan)
   {
-    return Str.make(java.getHostAddress());
+    return java.getHostAddress();
   }
 
-  public Str hostname(IpAddress fan)
+  public String hostname(IpAddress fan)
   {
-    return Str.make(java.getHostName());
+    return java.getHostName();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -166,7 +166,7 @@ public class IpAddressPeer
 
   private static IpAddress local;
 
-  public Str str;
+  public String str;
   public InetAddress java;
 
 }

@@ -120,7 +120,7 @@ public class DateTimeTest
   {
     System.out.print("     " + tzName + ": ");
 
-    tzFan = fan.sys.TimeZone.fromStr(Str.make(tzName));
+    tzFan = fan.sys.TimeZone.fromStr(tzName);
     tzJava = java.util.TimeZone.getTimeZone(tzName);
     num = 0;
     curYear = -1;
@@ -152,7 +152,7 @@ public class DateTimeTest
     cal.setTime(date);
     DateTime dt = DateTime.makeTicks(Long.valueOf((millis-946684800000L)*1000000L), tzFan);
     int year = cal.get(Calendar.YEAR);
-    String name = tzFan.name().val;
+    String name = tzFan.name();
 
     try
     {

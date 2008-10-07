@@ -50,12 +50,12 @@ public final class RegexMatcher
     return Long.valueOf(matcher.groupCount());
   }
 
-  public final Str group() { return group(0L); }
-  public final Str group(Long group)
+  public final String group() { return group(0L); }
+  public final String group(Long group)
   {
     try
     {
-      return Str.make(matcher.group(group.intValue()));
+      return matcher.group(group.intValue());
     }
     catch (IllegalStateException e)
     {

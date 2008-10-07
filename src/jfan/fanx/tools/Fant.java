@@ -55,7 +55,7 @@ public class Fant
       for (int i=0; i<pods.sz(); ++i)
       {
         Pod pod = (Pod)pods.get(i);
-        test(pod.name().val, verbose);
+        test(pod.name(), verbose);
       }
       return;
     }
@@ -86,7 +86,7 @@ public class Fant
       Method[] methods = methods(tests[i], methodName);
       for (int j=0; j<methods.length; ++j)
       {
-        String name = methods[j].toStr().val;
+        String name = methods[j].toStr();
         System.out.println("-- Run:  " + name + "...");
         System.out.flush();
         int verifyCount = runTest(tests[i], methods[j]);
@@ -133,7 +133,7 @@ public class Fant
     for (int i=0; i<all.sz(); ++i)
     {
       Method m = (Method)all.get(i);
-      if (m.name().val.startsWith("test") && !m.isAbstract()) acc.add(m);
+      if (m.name().startsWith("test") && !m.isAbstract()) acc.add(m);
     }
     return (Method[])acc.toArray(new Method[acc.size()]);
 
@@ -286,7 +286,7 @@ public class Fant
     throws Exception
   {
     System.getProperties().put("fan.appDir", "$home/tmp/test/");
-    new Thread(Str.make("main"))
+    new Thread("FantMain")
     {
       public Object run()
       {

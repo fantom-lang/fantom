@@ -231,10 +231,10 @@ public class RichTextPeer
     tc.startOffset = Long.valueOf(se.start);
     tc.startLine   = model.lineAtOffset(tc.startOffset);
     tc.oldText     = model.textRange(tc.startOffset, Long.valueOf(se.end-se.start));
-    tc.newText     = Str.make(se.text);
+    tc.newText     = se.text;
 
     fan.fwt.Event fe = event(EventId.verify, tc);
-    Str origNewText = tc.newText;
+    String origNewText = tc.newText;
 
     for (int i=0; i<cbs.sz(); ++i)
     {
@@ -242,7 +242,7 @@ public class RichTextPeer
       if (tc.newText != origNewText && OpUtil.compareNEz(tc.newText, origNewText))
       {
         if (tc.newText == null) se.doit = false;
-        else se.text = tc.newText.val;
+        else se.text = tc.newText;
         return;
       }
     }
@@ -330,10 +330,10 @@ public class RichTextPeer
     // map Fan model event to SWT event
     TextChangingEvent te = new TextChangingEvent(content);
     te.start            = tc.startOffset.intValue();
-    te.replaceCharCount = tc.oldText.size().intValue();
+    te.replaceCharCount = tc.oldText.length();
     te.replaceLineCount = tc.oldNumNewlines.intValue();
-    te.newText          = tc.newText.val;
-    te.newCharCount     = tc.newText.size().intValue();
+    te.newText          = tc.newText;
+    te.newCharCount     = tc.newText.length();
     te.newLineCount     = tc.newNumNewlines.intValue();
 
     // fire SWT changing event
@@ -385,7 +385,7 @@ public class RichTextPeer
     // Return the line at the given line index without delimiters.
     public String getLine(int lineIndex)
     {
-      return model.line(Long.valueOf(lineIndex)).val;
+      return model.line(Long.valueOf(lineIndex));
     }
 
     // Return the line index at the given character offset.
@@ -403,25 +403,25 @@ public class RichTextPeer
     // Return the line delimiter that should be used by the StyledText widget when inserting new lines.
     public String getLineDelimiter()
     {
-      return model.lineDelimiter().val;
+      return model.lineDelimiter();
     }
 
     // Returns a string representing the content at the given range.
     public String getTextRange(int start, int len)
     {
-      return model.textRange(Long.valueOf(start), Long.valueOf(len)).val;
+      return model.textRange(Long.valueOf(start), Long.valueOf(len));
     }
 
     // Replace the text with "newText" starting at position "start" for a length of "len".
     public void replaceTextRange(int start, int len, String newText)
     {
-      model.modify(Long.valueOf(start), Long.valueOf(len), Str.make(newText));
+      model.modify(Long.valueOf(start), Long.valueOf(len), newText);
     }
 
     // Set text to "text".
     public void setText(String text)
     {
-      model.text(Str.make(text));
+      model.text(text);
     }
 
     // Called by StyledText to add itself as an Observer to content changes.

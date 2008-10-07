@@ -220,9 +220,9 @@ public final class Map
     return Long.valueOf(map.hashCode());
   }
 
-  public final Str toStr()
+  public final String toStr()
   {
-    if (map.size() == 0) return Str.make("[:]");
+    if (map.size() == 0) return "[:]";
     StringBuilder s = new StringBuilder(32+map.size()*32);
     s.append("[");
     boolean first = true;
@@ -235,7 +235,7 @@ public final class Map
       s.append(e.getKey()).append(':').append(e.getValue());
     }
     s.append("]");
-    return Str.make(s.toString());
+    return s.toString();
   }
 
   public final void encode(ObjEncoder out)
@@ -467,10 +467,10 @@ public final class Map
 
   static class CIHashMap extends FanHashMap
   {
-    public Object get(Object key) { return super.get(new CIKey((Str)key)); }
-    public boolean containsKey(Object key) { return super.containsKey(new CIKey((Str)key)); }
-    public Object put(Object key, Object val) { return super.put(new CIKey((Str)key), val); }
-    public Object remove(Object key) { return super.remove(new CIKey((Str)key)); }
+    public Object get(Object key) { return super.get(new CIKey((String)key)); }
+    public boolean containsKey(Object key) { return super.containsKey(new CIKey((String)key)); }
+    public Object put(Object key, Object val) { return super.put(new CIKey((String)key), val); }
+    public Object remove(Object key) { return super.remove(new CIKey((String)key)); }
     public Set keySet() { throw new UnsupportedOperationException(); }
     public Set pairs() { return new CIPairs(entrySet()); }
 
@@ -525,17 +525,17 @@ public final class Map
     public int hashCode() { return key.hashCode() ^ (val == null ? 0 : val.hashCode()); }
     public boolean equals(Object o) { throw new UnsupportedOperationException(); }
     public Object setValue(Object v) { throw new UnsupportedOperationException(); }
-    Str key;
+    String key;
     Object val;
   }
 
   static final class CIKey
   {
-    CIKey(Str key) { this.key  = key; this.hash = key.caseInsensitiveHash(); }
+    CIKey(String key) { this.key = key; this.hash = FanStr.caseInsensitiveHash(key); }
     public final int hashCode() { return hash; }
-    public final boolean equals(Object obj) { return key.equalsIgnoreCase(((CIKey)obj).key); }
-    public final String toString() { return key.val; }
-    final Str key;
+    public final boolean equals(Object obj) { return FanStr.equalsIgnoreCase(key, ((CIKey)obj).key); }
+    public final String toString() { return key; }
+    final String key;
     final int hash;
   }
 

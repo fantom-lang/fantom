@@ -18,7 +18,7 @@ public class Param
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public Param(Str name, Type of, int mask)
+  public Param(String name, Type of, int mask)
   {
     this.name = name;
     this.of   = of;
@@ -31,11 +31,11 @@ public class Param
 
   public Type type() { return Sys.ParamType; }
 
-  public Str name()  { return name; }
+  public String name()  { return name; }
   public Type of()   { return of; }
   public Boolean hasDefault() { return (mask & HAS_DEFAULT) != 0; }
 
-  public Str toStr() { return Str.make(of + " " + name); }
+  public String toStr() { return of + " " + name; }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -43,7 +43,7 @@ public class Param
 
   public static final int HAS_DEFAULT   = 0x01;  // is a default value provided
 
-  final Str name;
+  final String name;
   final Type of;
   final int mask;
 

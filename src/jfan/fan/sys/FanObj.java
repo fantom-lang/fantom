@@ -34,7 +34,7 @@ public class FanObj
 
   public final String toString()
   {
-    return toStr().val;
+    return toStr();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,12 +61,12 @@ public class FanObj
     else if (self instanceof Comparable)
       return Long.valueOf(((Comparable)self).compareTo(x));
     else
-      return toStr(self).compare(toStr(x));
+      return FanStr.compare(toStr(self), toStr(x));
   }
 
   public Long compare(Object obj)
   {
-    return toStr(this).compare(toStr(obj));
+    return FanStr.compare(toStr(), toStr(obj));
   }
 
   public static Long hash(Object self)
@@ -82,17 +82,17 @@ public class FanObj
     return Long.valueOf(super.hashCode());
   }
 
-  public static Str toStr(Object self)
+  public static String toStr(Object self)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).toStr();
     else
-      return Str.make(self.toString());
+      return self.toString();
   }
 
-  public Str toStr()
+  public String toStr()
   {
-    return Str.make(super.toString());
+    return super.toString();
   }
 
   public static Boolean isImmutable(Object self)
@@ -121,7 +121,7 @@ public class FanObj
     return Sys.ObjType;
   }
 
-  public static Object trap(Object self, Str name, List args)
+  public static Object trap(Object self, String name, List args)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).trap(name, args);
@@ -129,9 +129,9 @@ public class FanObj
       return doTrap(self, name, args, type(self));
   }
 
-  public Object trap(Str name, List args) { return doTrap(this, name, args, type()); }
+  public Object trap(String name, List args) { return doTrap(this, name, args, type()); }
 
-  private static Object doTrap(Object self, Str name, List args, Type type)
+  private static Object doTrap(Object self, String name, List args, Type type)
   {
     Slot slot = type.slot(name, true);
     if (slot instanceof Method)

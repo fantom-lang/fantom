@@ -20,9 +20,8 @@ public final class Version
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Version fromStr(Str str) { return fromStr(str.val, true); }
-  public static Version fromStr(Str str, Boolean checked) { return fromStr(str.val, checked.booleanValue()); }
-  public static Version fromStr(String s) { return fromStr(s, true); }
+  public static Version fromStr(String str) { return fromStr(str, true); }
+  public static Version fromStr(String str, Boolean checked) { return fromStr(str, checked.booleanValue()); }
   public static Version fromStr(String s, boolean checked)
   {
     List segments = new List(Sys.IntType, 4);
@@ -85,7 +84,7 @@ public final class Version
   public Boolean _equals(Object obj)
   {
     if (obj instanceof Version)
-      return toStr()._equals(((Version)obj).toStr());
+      return toStr().equals(((Version)obj).toStr());
     else
       return false;
   }
@@ -114,7 +113,7 @@ public final class Version
 
   public Long hash()
   {
-    return toStr().hash();
+    return FanStr.hash(toStr());
   }
 
   public Type type()
@@ -122,7 +121,7 @@ public final class Version
     return Sys.VersionType;
   }
 
-  public Str toStr()
+  public String toStr()
   {
     if (str == null)
     {
@@ -132,7 +131,7 @@ public final class Version
         if (i > 0) s.append('.');
         s.append(segments.get(i));
       }
-      str = Str.make(s.toString());
+      str = s.toString();
     }
     return str;
   }
@@ -179,6 +178,6 @@ public final class Version
 //////////////////////////////////////////////////////////////////////////
 
   private final List segments;
-  private Str str;
+  private String str;
 
 }

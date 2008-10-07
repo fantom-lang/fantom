@@ -138,7 +138,7 @@ public class OutStream
 
   public OutStream writeDecimal(BigDecimal x)
   {
-    return writeUtfString(x.toString());
+    return writeUtf(x.toString());
   }
 
   public OutStream writeBool(Boolean x)
@@ -146,8 +146,7 @@ public class OutStream
     return w(x ? 1 : 0);
   }
 
-  public OutStream writeUtf(Str x) { return writeUtfString(x.val); }
-  private OutStream writeUtfString(String s)
+  public OutStream writeUtf(String s)
   {
     int slen = s.length();
     int utflen = 0;
@@ -217,10 +216,9 @@ public class OutStream
     return this;
   }
 
-  public OutStream writeChars(Str s) { return writeChars(s.val, 0, s.val.length()); }
-  public OutStream writeChars(Str s, Long off) { return writeChars(s.val, off.intValue(), s.val.length()-off.intValue()); }
-  public OutStream writeChars(Str s, Long off, Long len) { return writeChars(s.val, off.intValue(), len.intValue()); }
   public OutStream writeChars(String s) { return writeChars(s, 0, s.length()); }
+  public OutStream writeChars(String s, Long off) { return writeChars(s, off.intValue(), s.length()-off.intValue()); }
+  public OutStream writeChars(String s, Long off, Long len) { return writeChars(s, off.intValue(), len.intValue()); }
   public OutStream writeChars(String s, int off, int len)
   {
     int end = off+len;
@@ -231,16 +229,16 @@ public class OutStream
 
   public OutStream print(Object obj)
   {
-    Str s = obj == null ? Str.nullStr : toStr(obj);
-    return writeChars(s, 0L, s.size());
+    String s = obj == null ? "null" : toStr(obj);
+    return writeChars(s, 0, s.length());
   }
 
-  public OutStream printLine() { return printLine(Str.Empty); }
+  public OutStream printLine() { return printLine(""); }
   public OutStream printLine(Object obj)
   {
-    Str s = obj == null ? Str.nullStr : toStr(obj);
-    writeChars(s, 0L, s.size());
-    return writeChar(FanInt.pos['\n']);
+    String s = obj == null ? "null" : toStr(obj);
+    writeChars(s, 0, s.length());
+    return writeChar('\n');
   }
 
   public OutStream writeObj(Object obj) { return writeObj(obj, null); }
@@ -263,11 +261,11 @@ public class OutStream
       Long nl = FanInt.pos['\n'];
       for (int i=0; i<size; ++i)
       {
-        Str key = (Str)keys.get(i);
-        Str val = (Str)props.get(key);
-        writePropStr(key.val);
+        String key = (String)keys.get(i);
+        String val = (String)props.get(key);
+        writePropStr(key);
         writeChar(eq);
-        writePropStr(val.val);
+        writePropStr(val);
         writeChar(nl);
       }
       return this;

@@ -73,7 +73,7 @@ public class FAttrs
     {
       String name = in.name();
       String value = in.utf();
-      map.put(Str.make(name), value);
+      map.put(name, value);
     }
     facets = map;
   }

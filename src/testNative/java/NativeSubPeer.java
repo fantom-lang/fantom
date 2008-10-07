@@ -30,9 +30,9 @@ public class NativeSubPeer extends NativePeer
       throw new RuntimeException("this != ((Native)self).peer");
   }
 
-  public Str subNative(NativeSub self)
+  public String subNative(NativeSub self)
   {
-    return Str.make("subNative working");
+    return "subNative working";
   }
 
   public Long subfX(NativeSub self)

@@ -21,18 +21,18 @@ public final class FanInt
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Long fromStr(Str s) { return fromStr(s, Ten, true); }
-  public static Long fromStr(Str s, Long radix) { return fromStr(s, radix, true); }
-  public static Long fromStr(Str s, Long radix, Boolean checked)
+  public static Long fromStr(String s) { return fromStr(s, Ten, true); }
+  public static Long fromStr(String s, Long radix) { return fromStr(s, radix, true); }
+  public static Long fromStr(String s, Long radix, Boolean checked)
   {
     try
     {
-      return Long.valueOf(s.val, radix.intValue());
+      return Long.valueOf(s, radix.intValue());
     }
     catch (NumberFormatException e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Int",  s).val;
+      throw ParseErr.make("Int", s).val;
     }
   }
 
@@ -53,7 +53,7 @@ public final class FanInt
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean _equals(Long self, Object obj)
+  public static Boolean equals(Long self, Object obj)
   {
     if (obj instanceof Long)
       return self.longValue() == ((Long)obj).longValue();
@@ -411,29 +411,29 @@ public final class FanInt
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public static Str toChar(Long self)
+  public static String toChar(Long self)
   {
     long val = self;
     if (val < 0 || val > 0xFFFF) throw Err.make("Invalid unicode char: " + val).val;
-    if (val < Str.ascii.length) return Str.ascii[(int)val];
-    return Str.make(String.valueOf((char)val));
+    if (val < FanStr.ascii.length) return FanStr.ascii[(int)val];
+    return String.valueOf((char)val);
   }
 
-  public static Str toHex(Long self) { return toHex(self, null); }
-  public static Str toHex(Long self, Long width)
+  public static String toHex(Long self) { return toHex(self, null); }
+  public static String toHex(Long self, Long width)
   {
     long val = self.longValue();
     String s = Long.toHexString(val);
     if (width != null && s.length() < width.intValue())
       s = zeros[width.intValue()-s.length()] + s;
-    return Str.make(s);
+    return s;
   }
   static String[] zeros = new String[16];
   static { zeros[0] = ""; for (int i=1; i<zeros.length; ++i) zeros[i] = zeros[i-1] + "0"; }
 
-  public static Str toStr(Long self)
+  public static String toStr(Long self)
   {
-    return Str.make(self.toString());
+    return self.toString();
   }
 
 //////////////////////////////////////////////////////////////////////////
