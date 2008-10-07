@@ -78,9 +78,9 @@ public abstract class Func
   {
     protected Indirect(FuncType type) { super(type); this.type = type; }
 
-    public Str  name()  { return Str.make(getClass().getName()); }
+    public String  name()  { return getClass().getName(); }
     public Type type()  { return type; }
-    public Str  toStr() { return type.signature(); }
+    public String  toStr() { return type.signature(); }
     public Boolean isImmutable() { return false; }
     public Method method() { return null; }
     public Err.Val tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + type.params.length).val; }
@@ -272,9 +272,9 @@ public abstract class Func
       this.bound = bound.ro();
     }
 
-    public Str  name()  { return Str.make(getClass().getName()); }
+    public String name()  { return getClass().getName(); }
     public Type type()  { return type; }
-    public Str  toStr() { return type.signature(); }
+    public String  toStr() { return type.signature(); }
     public Boolean isImmutable() { return false; }
     public Method method() { return null; }
 

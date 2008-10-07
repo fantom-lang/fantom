@@ -28,7 +28,7 @@ public class StatementPeer
     // syntax must be replaced with ?.  It's not a simple
     // replace though because we need to keep the key/value
     // map.
-    parse(self.sql.val);
+    parse(self.sql);
     try
     {
       stmt = self.conn.peer.jconn.prepareStatement(translated, java.sql.Statement.RETURN_GENERATED_KEYS);
@@ -54,7 +54,7 @@ public class StatementPeer
       else
       {
         stmt = self.conn.peer.jconn.createStatement();
-        rs = stmt.executeQuery(self.sql.val);
+        rs = stmt.executeQuery(self.sql);
       }
 
       return toRows(rs);
@@ -108,7 +108,7 @@ public class StatementPeer
         System.out.println("WARNING: Cannot map " + typeName + " to Fan type");
         fanType = Sys.StrType;
       }
-      t.add(Col.make(Long.valueOf(i), Str.make(name), fanType, Str.make(typeName), null));
+      t.add(Col.make(Long.valueOf(i), name, fanType, typeName, null));
     }
 
     return t;
@@ -187,7 +187,7 @@ public class StatementPeer
       else
       {
         stmt = self.conn.peer.jconn.createStatement();
-        rs = stmt.executeQuery(self.sql.val);
+        rs = stmt.executeQuery(self.sql);
       }
 
       each(rs, eachFunc);
@@ -220,7 +220,7 @@ public class StatementPeer
         stmt = self.conn.peer.jconn.createStatement();
         try
         {
-          int rc = stmt.executeUpdate(self.sql.val, java.sql.Statement.RETURN_GENERATED_KEYS);
+          int rc = stmt.executeUpdate(self.sql, java.sql.Statement.RETURN_GENERATED_KEYS);
           ResultSet keys = stmt.getGeneratedKeys();
           if (keys.next()) self.conn.peer.lastAutoGen = Long.valueOf(keys.getInt(1));
           return Long.valueOf(rc);
@@ -244,7 +244,7 @@ public class StatementPeer
   private void setParameters(Map params)
   {
     if (!prepared)
-      throw SqlErr.make(Str.make("Statement has not been prepared.")).val;
+      throw SqlErr.make("Statement has not been prepared.").val;
     PreparedStatement pstmt = (PreparedStatement)stmt;
     try
     {
@@ -252,7 +252,7 @@ public class StatementPeer
       while (i.hasNext())
       {
         java.util.Map.Entry entry = (java.util.Map.Entry)i.next();
-        Str key = (Str)entry.getKey();
+        String key = (String)entry.getKey();
         Object value = params.get(key);
         Object jobj = fanToJava(value);
         int[] locs = (int[])entry.getValue();
@@ -284,8 +284,8 @@ public class StatementPeer
       jobj = value;
     else if (value instanceof Long)
       jobj = value;
-    else if (value instanceof Str)
-      jobj = ((Str)value).val;
+    else if (value instanceof String)
+      jobj = value;
     else if (value instanceof MemBuf)
       jobj = ((MemBuf)value).buf;
 
@@ -337,7 +337,7 @@ public class StatementPeer
           if (paramMap == null) paramMap = new HashMap();
 
           // param
-          Str key = Str.make(s.substring(1));
+          String key = s.substring(1);
           int[] locs = (int[])paramMap.get(key);
           if (locs == null)
           {

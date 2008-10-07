@@ -23,8 +23,8 @@ public class Charset
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Charset fromStr(Str name) { return fromStr(name.val, true); }
-  public static Charset fromStr(Str name, Boolean checked) { return fromStr(name.val, checked.booleanValue()); }
+  public static Charset fromStr(String name) { return fromStr(name, true); }
+  public static Charset fromStr(String name, Boolean checked) { return fromStr(name, checked.booleanValue()); }
   public static Charset fromStr(String name, boolean checked)
   {
     try
@@ -52,7 +52,7 @@ public class Charset
   private Charset(java.nio.charset.Charset charset)
   {
     this.charset = charset;
-    this.name    = Str.make(charset.name());
+    this.name    = charset.name();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -271,7 +271,7 @@ public class Charset
 
   public Type type() { return Sys.CharsetType; }
 
-  public Str name() { return name; }
+  public String name() { return name; }
 
   public int hashCode() { return charset.hashCode(); }
 
@@ -286,7 +286,7 @@ public class Charset
     return false;
   }
 
-  public Str toStr() { return name; }
+  public String toStr() { return name; }
 
 //////////////////////////////////////////////////////////////////////////
 // Encoder
@@ -460,6 +460,6 @@ public class Charset
   static Charset utf8, utf16BE, utf16LE, iso8859_1;
 
   final java.nio.charset.Charset charset;
-  final Str name;
+  final String name;
 
 }

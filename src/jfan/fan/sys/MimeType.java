@@ -24,14 +24,14 @@ public final class MimeType
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static MimeType fromStr(Str s) { return fromStr(s, true); }
-  public static MimeType fromStr(Str s, Boolean checked)
+  public static MimeType fromStr(String s) { return fromStr(s, true); }
+  public static MimeType fromStr(String s, Boolean checked)
   {
     try
     {
-      int slash = s.val.indexOf('/');
-      String media = s.val.substring(0, slash);
-      String sub = s.val.substring(slash+1, s.val.length());
+      int slash = s.indexOf('/');
+      String media = s.substring(0, slash);
+      String sub = s.substring(slash+1, s.length());
       Map params = emptyParams();
 
       int semi = sub.indexOf(';');
@@ -73,7 +73,7 @@ public final class MimeType
             if (valEnd < 0) valEnd = i-1;
             String key = sub.substring(keyStart, eq).trim();
             String val = sub.substring(valStart, valEnd+1).trim();
-            params.set(Str.make(key), Str.make(val));
+            params.set(key, val);
             keyStart = i+1;
             eq = valStart = valEnd = -1;
           }
@@ -84,7 +84,7 @@ public final class MimeType
           if (valEnd < 0) valEnd = sub.length()-1;
           String key = sub.substring(keyStart, eq).trim();
           String val = sub.substring(valStart, valEnd+1).trim();
-          params.set(Str.make(key), Str.make(val));
+          params.set(key, val);
         }
 
         sub = sub.substring(0, semi).trim();
@@ -92,8 +92,8 @@ public final class MimeType
 
       MimeType r  = new MimeType();
       r.str       = s;
-      r.mediaType = Str.make(Str.lower(media));
-      r.subType   = Str.make(Str.lower(sub));
+      r.mediaType = FanStr.lower(media);
+      r.subType   = FanStr.lower(sub);
       r.params    = params.ro();
       return r;
     }
@@ -113,13 +113,13 @@ public final class MimeType
 // Extension
 //////////////////////////////////////////////////////////////////////////
 
-  public static MimeType forExt(Str s)
+  public static MimeType forExt(String s)
   {
     if (s == null) return null;
     synchronized (extLock)
     {
       if (extMap == null) extMap = loadExtMap();
-      return (MimeType)extMap.get(s.lower());
+      return (MimeType)extMap.get(FanStr.lower(s));
     }
   }
 
@@ -134,11 +134,11 @@ public final class MimeType
       while (it.hasNext())
       {
         Entry entry = (Entry)it.next();
-        Str ext  = (Str)entry.getKey();
-        Str mime = (Str)entry.getValue();
+        String ext  = (String)entry.getKey();
+        String mime = (String)entry.getValue();
         try
         {
-          map.put(ext.lower(), fromStr(mime));
+          map.put(FanStr.lower(ext), fromStr(mime));
         }
         catch (Exception e)
         {
@@ -166,15 +166,15 @@ public final class MimeType
   {
     if (!(obj instanceof MimeType)) return false;
     MimeType x = (MimeType)obj;
-    return mediaType.val.equals(x.mediaType.val) &&
-           subType.val.equals(x.subType.val) &&
+    return mediaType.equals(x.mediaType) &&
+           subType.equals(x.subType) &&
            params.equals(x.params);
   }
 
   public int hashCode()
   {
-    return mediaType.val.hashCode() ^
-           subType.val.hashCode() ^
+    return mediaType.hashCode() ^
+           subType.hashCode() ^
            params.hashCode();
   }
 
@@ -183,7 +183,7 @@ public final class MimeType
     return Long.valueOf(hashCode());
   }
 
-  public Str toStr()
+  public String toStr()
   {
     return str;
   }
@@ -197,12 +197,12 @@ public final class MimeType
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Str mediaType()
+  public String mediaType()
   {
     return mediaType;
   }
 
-  public Str subType()
+  public String subType()
   {
     return subType;
   }
@@ -234,11 +234,11 @@ public final class MimeType
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static final MimeType dir = fromStr(Str.make("x-directory/normal"));
+  static final MimeType dir = fromStr("x-directory/normal");
 
-  private Str mediaType;
-  private Str subType;
+  private String mediaType;
+  private String subType;
   private Map params;
-  private Str str;
+  private String str;
 
 }

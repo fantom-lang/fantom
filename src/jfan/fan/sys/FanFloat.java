@@ -21,21 +21,20 @@ public final class FanFloat
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Double fromStr(Str s) { return fromStr(s, true); }
-  public static Double fromStr(Str s, Boolean checked)
+  public static Double fromStr(String s) { return fromStr(s, true); }
+  public static Double fromStr(String s, Boolean checked)
   {
     try
     {
-      String x = s.val;
-      if (x.equals("NaN"))  return nan;
-      if (x.equals("INF"))  return posInf;
-      if (x.equals("-INF")) return negInf;
-      return Double.valueOf(x);
+      if (s.equals("NaN"))  return nan;
+      if (s.equals("INF"))  return posInf;
+      if (s.equals("-INF")) return negInf;
+      return Double.valueOf(s);
     }
     catch (NumberFormatException e)
     {
       if (!checked) return null;
-      throw ParseErr.make("Float",  s).val;
+      throw ParseErr.make("Float", s).val;
     }
   }
 
@@ -291,13 +290,13 @@ public final class FanFloat
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public static Str toStr(Double self)
+  public static String toStr(Double self)
   {
     double val = self.doubleValue();
     if (Double.isNaN(val)) return NaNStr;
     if (val == Double.POSITIVE_INFINITY) return PosInfStr;
     if (val == Double.NEGATIVE_INFINITY) return NegInfStr;
-    return Str.make(Double.toString(val));
+    return Double.toString(val);
   }
 
   public static void encode(Double self, ObjEncoder out)
@@ -319,8 +318,8 @@ public final class FanFloat
   public static final Double nan    = Double.valueOf(Double.NaN);
   public static final Double e      = Double.valueOf(Math.E);
   public static final Double pi     = Double.valueOf(Math.PI);
-  public static final Str PosInfStr = Str.make("INF");
-  public static final Str NegInfStr = Str.make("-INF");
-  public static final Str NaNStr    = Str.make("NaN");
+  public static final String PosInfStr = "INF";
+  public static final String NegInfStr = "-INF";
+  public static final String NaNStr    = "NaN";
 
 }

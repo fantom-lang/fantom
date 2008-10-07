@@ -20,15 +20,15 @@ public final class Regex
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static final Regex fromStr(Str pattern)
+  public static final Regex fromStr(String pattern)
   {
     return new Regex(pattern);
   }
 
-  Regex(Str source)
+  Regex(String source)
   {
     this.source  = source;
-    this.pattern = Pattern.compile(source.val);
+    this.pattern = Pattern.compile(source);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,16 +38,16 @@ public final class Regex
   public final Boolean _equals(Object obj)
   {
     if (obj instanceof Regex)
-      return ((Regex)obj).source._equals(this.source);
+      return ((Regex)obj).source.equals(this.source);
     else
       return false;
   }
 
   public final int hashCode() { return source.hashCode(); }
 
-  public final Long hash() { return source.hash(); }
+  public final Long hash() { return FanStr.hash(source); }
 
-  public Str toStr() { return source; }
+  public String toStr() { return source; }
 
   public Type type() { return Sys.RegexType; }
 
@@ -55,26 +55,26 @@ public final class Regex
 // Regular expression
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean matches(Str s)
+  public Boolean matches(String s)
   {
-    return pattern.matcher(s.val).matches();
+    return pattern.matcher(s).matches();
   }
 
-  public RegexMatcher matcher(Str s)
+  public RegexMatcher matcher(String s)
   {
-    return new RegexMatcher(pattern.matcher(s.val));
+    return new RegexMatcher(pattern.matcher(s));
   }
 
-  public List split(Str s) { return split(s, 0L); }
-  public List split(Str s, Long limit)
+  public List split(String s) { return split(s, 0L); }
+  public List split(String s, Long limit)
   {
-    return new List(pattern.split(s.val, limit.intValue()));
+    return new List(pattern.split(s, limit.intValue()));
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Str source;
+  private String source;
   private Pattern pattern;
 }

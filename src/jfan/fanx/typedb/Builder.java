@@ -13,7 +13,6 @@ import java.util.zip.*;
 import fan.sys.FanObj;
 import fan.sys.List;
 import fan.sys.Log;
-import fan.sys.Str;
 import fan.sys.Sys;
 import fan.sys.Version;
 import fanx.fcode.*;
@@ -270,7 +269,7 @@ class Builder
       if (names == null) continue;
       for (int j=0; j<names.sz(); ++j)
       {
-        String n = ((Str)names.get(j)).val;
+        String n = (String)names.get(j);
         if (facetNames.get(n) == null)
           facetNames.put(n, new FacetIndex(n));
       }
@@ -563,11 +562,11 @@ class Builder
       }
     }
 
-    Str getStr(String name)
+    String getStr(String name)
     {
       Object v = getObj(name);
       if (v == null) return null;
-      if (v instanceof Str) return (Str)v;
+      if (v instanceof String) return (String)v;
       log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + FanObj.type(v));
       return null;
     }

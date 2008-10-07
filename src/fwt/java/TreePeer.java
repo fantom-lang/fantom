@@ -245,7 +245,7 @@ public class TreePeer
     data.node = node;
 
     Env env = Env.get();
-    item.setText(model.text(node).val);
+    item.setText(model.text(node));
     item.setImage(env.image(model.image(node)));
     item.setData(data);
 

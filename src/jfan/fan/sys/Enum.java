@@ -20,23 +20,23 @@ public abstract class Enum
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Enum make(Long ordinal, Str name)
+  public static Enum make(Long ordinal, String name)
   {
     // should never be used
     throw new IllegalStateException();
   }
 
-  public static void make$(Enum self, Long ordinal, Str name)
+  public static void make$(Enum self, Long ordinal, String name)
   {
     if (ordinal == null || name == null) throw new NullErr().val;
     self.ordinal = ordinal;
     self.name    = name;
   }
 
-  protected static Enum doFromStr(Type t, Str name, Boolean checked)
+  protected static Enum doFromStr(Type t, String name, Boolean checked)
   {
     // the compiler marks the value fields with the Enum flag
-    Slot slot = t.slot(name.val, false);
+    Slot slot = t.slot(name, false);
     if (slot != null && (slot.flags & FConst.Enum) != 0)
     {
       try
@@ -48,7 +48,7 @@ public abstract class Enum
       }
     }
     if (!checked) return null;
-    throw ParseErr.make(t.qname().val, name).val;
+    throw ParseErr.make(t.qname(), name).val;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,7 @@ public abstract class Enum
     return Sys.EnumType;
   }
 
-  public Str toStr()
+  public String toStr()
   {
     return name;
   }
@@ -80,7 +80,7 @@ public abstract class Enum
     return ordinal;
   }
 
-  public final Str name()
+  public final String name()
   {
     return name;
   }
@@ -90,6 +90,6 @@ public abstract class Enum
 //////////////////////////////////////////////////////////////////////////
 
   private Long ordinal;
-  private Str name;
+  private String name;
 
 }

@@ -29,8 +29,8 @@ public class Log
     }
   }
 
-  public static Log find(Str name) { return find(name, true); }
-  public static Log find(Str name, Boolean checked)
+  public static Log find(String name) { return find(name, true); }
+  public static Log find(String name, Boolean checked)
   {
     synchronized (lock)
     {
@@ -41,8 +41,7 @@ public class Log
     }
   }
 
-  public static Log get(String name) { return get(Str.make(name)); }
-  public static Log get(Str name)
+  public static Log get(String name)
   {
     synchronized (lock)
     {
@@ -52,14 +51,14 @@ public class Log
     }
   }
 
-  public static Log make(Str name)
+  public static Log make(String name)
   {
     Log self = new Log();
     make$(self, name);
     return self;
   }
 
-  public static void make$(Log self, Str name)
+  public static void make$(Log self, String name)
   {
     synchronized (lock)
     {
@@ -77,7 +76,7 @@ public class Log
       // check for initial level
       if (logProps != null)
       {
-        Str val = (Str)logProps.get(name);
+        String val = (String)logProps.get(name);
         if (val != null)
           self.level = LogLevel.fromStr(val);
       }
@@ -93,12 +92,12 @@ public class Log
     return Sys.LogType;
   }
 
-  public final Str toStr()
+  public final String toStr()
   {
     return name;
   }
 
-  public final Str name()
+  public final String name()
   {
     return name;
   }
@@ -140,34 +139,30 @@ public class Log
 // Logging
 //////////////////////////////////////////////////////////////////////////
 
-  public final void error(Str message) { error(message, null); }
-  public final void error(String message) { error(Str.make(message), null); }
-  public final void error(String message, Throwable e) { error(Str.make(message), Err.make(e)); }
-  public final void error(Str message, Err err)
+  public final void error(String message) { error(message, (Err)null); }
+  public final void error(String message, Throwable e) { error(message, Err.make(e)); }
+  public final void error(String message, Err err)
   {
     log(LogRecord.make(DateTime.now(), LogLevel.error, name, message, err));
   }
 
-  public final void warn(Str message) { warn(message, null); }
-  public final void warn(String message) { warn(Str.make(message), null); }
-  public final void warn(String message, Throwable e) { warn(Str.make(message), Err.make(e)); }
-  public final void warn(Str message, Err err)
+  public final void warn(String message) { warn(message, (Err)null); }
+  public final void warn(String message, Throwable e) { warn(message, Err.make(e)); }
+  public final void warn(String message, Err err)
   {
     log(LogRecord.make(DateTime.now(), LogLevel.warn, name, message, err));
   }
 
-  public final void info(Str message) { info(message, null); }
-  public final void info(String message) { info(Str.make(message), null); }
-  public final void info(String message, Throwable e) { info(Str.make(message), Err.make(e)); }
-  public final void info(Str message, Err err)
+  public final void info(String message) { info(message, (Err)null); }
+  public final void info(String message, Throwable e) { info(message, Err.make(e)); }
+  public final void info(String message, Err err)
   {
     log(LogRecord.make(DateTime.now(), LogLevel.info, name, message, err));
   }
 
-  public final void debug(Str message) { debug(message, null); }
-  public final void debug(String message) { debug(Str.make(message), null); }
-  public final void debug(String message, Throwable e) { debug(Str.make(message), Err.make(e)); }
-  public final void debug(Str message, Err err)
+  public final void debug(String message) { debug(message, (Err)null); }
+  public final void debug(String message, Throwable e) { debug(message, Err.make(e)); }
+  public final void debug(String message, Err err)
   {
     log(LogRecord.make(DateTime.now(), LogLevel.debug, name, message, err));
   }
@@ -251,8 +246,8 @@ public class Log
         List keys = props.keys();
         for (int i=0; i<keys.sz(); ++i)
         {
-          Str key = (Str)keys.get(i);
-          Str val = (Str)props.get(key);
+          String key = (String)keys.get(i);
+          String val = (String)props.get(key);
           if (LogLevel.fromStr(val, false) == null)
           {
             System.out.println("ERROR: Invalid level lib/log.props#" + key + " = " + val);
@@ -276,7 +271,7 @@ public class Log
   private static HashMap byName = new HashMap();   // String -> Log
   private static Map logProps;
 
-  private Str name;
+  private String name;
   private volatile LogLevel level = LogLevel.info;
 
 }

@@ -39,8 +39,8 @@ public class TabPeer extends WidgetPeer
 //////////////////////////////////////////////////////////////////////////
 
   // Str text := ""
-  public Str text(Tab self) { return text.get(); }
-  public void text(Tab self, Str v) { text.set(v); }
+  public String text(Tab self) { return text.get(); }
+  public void text(Tab self, String v) { text.set(v); }
   public final Prop.StrProp text = new Prop.StrProp(this, "")
   {
     public String get(Widget w) { return ((TabItem)w).getText(); }

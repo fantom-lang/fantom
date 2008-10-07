@@ -20,16 +20,16 @@ public abstract class Slot
 // Management
 //////////////////////////////////////////////////////////////////////////
 
-  public static Method findMethod(Str qname) { return (Method)find(qname.val, true); }
-  public static Method findMethod(Str qname, Boolean checked) { return (Method)find(qname.val, checked.booleanValue()); }
+  public static Method findMethod(String qname) { return (Method)find(qname, true); }
+  public static Method findMethod(String qname, Boolean checked) { return (Method)find(qname, checked.booleanValue()); }
   public static Method findMethod(String qname, boolean checked) { return (Method)find(qname, checked); }
 
-  public static Field findField(Str qname) { return (Field)find(qname.val, true); }
-  public static Field findField(Str qname, Boolean checked) { return (Field)find(qname.val, checked.booleanValue()); }
+  public static Field findField(String qname) { return (Field)find(qname, true); }
+  public static Field findField(String qname, Boolean checked) { return (Field)find(qname, checked.booleanValue()); }
   public static Field findField(String qname, boolean checked) { return (Field)find(qname, checked); }
 
-  public static Slot find(Str qname) { return find(qname.val, true); }
-  public static Slot find(Str qname, Boolean checked) { return find(qname.val, checked.booleanValue()); }
+  public static Slot find(String qname) { return find(qname, true); }
+  public static Slot find(String qname, Boolean checked) { return find(qname, checked.booleanValue()); }
   public static Slot find(String qname, boolean checked)
   {
     String typeName, slotName;
@@ -48,8 +48,8 @@ public abstract class Slot
     return type.slot(slotName, checked);
   }
 
-  public static Func findFunc(Str qname) { return findFunc(qname.val, true); }
-  public static Func findFunc(Str qname, Boolean checked) { return findFunc(qname.val, checked.booleanValue()); }
+  public static Func findFunc(String qname) { return findFunc(qname, true); }
+  public static Func findFunc(String qname, Boolean checked) { return findFunc(qname, checked.booleanValue()); }
   public static Func findFunc(String qname, boolean checked)
   {
     Method m = (Method)find(qname, checked);
@@ -61,11 +61,11 @@ public abstract class Slot
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public Slot(Type parent, Str name, int flags, Facets facets, int lineNum)
+  public Slot(Type parent, String name, int flags, Facets facets, int lineNum)
   {
     this.parent  = parent;
     this.name    = name;
-    this.qname   = parent == null ? name : Str.make(parent.qname.val + "." + name.val);
+    this.qname   = parent == null ? name : parent.qname + "." + name;
     this.flags   = flags;
     this.facets  = facets;
     this.lineNum = lineNum;
@@ -83,11 +83,11 @@ public abstract class Slot
   public Type type() { return Sys.SlotType; }
 
   public Type parent()   { return parent; }
-  public Str name()      { return name; }
-  public Str qname()     { return qname; }
+  public String name()      { return name; }
+  public String qname()     { return qname; }
   public Boolean isField()  { return this instanceof Field; }
   public Boolean isMethod() { return this instanceof Method; }
-  public abstract Str signature();
+  public abstract String signature();
 
 //////////////////////////////////////////////////////////////////////////
 // Flags
@@ -107,12 +107,11 @@ public abstract class Slot
   public final Boolean isSynthetic() { return (flags & FConst.Synthetic) != 0; }
   public final Boolean isVirtual()   { return (flags & FConst.Virtual) != 0; }
 
-  public Object trap(Str name, List args)
+  public Object trap(String name, List args)
   {
     // private undocumented access
-    String n = name.val;
-    if (n.equals("flags")) return Long.valueOf(flags);
-    if (n.equals("lineNumber")) return Long.valueOf(lineNum);
+    if (name.equals("flags")) return Long.valueOf(flags);
+    if (name.equals("lineNumber")) return Long.valueOf(lineNum);
     return super.trap(name, args);
   }
 
@@ -121,14 +120,14 @@ public abstract class Slot
 //////////////////////////////////////////////////////////////////////////
 
   public Map facets() { return facets.map(); }
-  public Object facet(Str name) { return facets.get(name, null); }
-  public Object facet(Str name, Object def) { return facets.get(name, def); }
+  public Object facet(String name) { return facets.get(name, null); }
+  public Object facet(String name, Object def) { return facets.get(name, def); }
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation
 //////////////////////////////////////////////////////////////////////////
 
-  public Str doc()
+  public String doc()
   {
     parent.doc();  // ensure parent has loaded documentation
     return doc;
@@ -138,18 +137,18 @@ public abstract class Slot
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toStr() { return qname; }
+  public String toStr() { return qname; }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   int flags;
-  Str name;
-  Str qname;
+  String name;
+  String qname;
   Type parent;
   Facets facets;
-  public Str doc;
+  public String doc;
   int lineNum;
 
 

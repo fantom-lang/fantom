@@ -30,14 +30,12 @@ public class DesktopPeer
 // Native methods
 //////////////////////////////////////////////////////////////////////////
 
-  public static Str platform()
+  public static String platform()
   {
-    if (Env.isWindows()) return windows;
-    if (Env.isMac()) return mac;
-    return Str.make(SWT.getPlatform());
+    if (Env.isWindows()) return "windows";
+    if (Env.isMac()) return "mac";
+    return SWT.getPlatform();
   }
-  static final Str windows = Str.make("windows");
-  static final Str mac = Str.make("mac");
 
   public static Boolean isWindows()
   {

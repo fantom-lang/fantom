@@ -280,7 +280,7 @@ public class FCodeEmit
   private void loadStr()
   {
     int index = u2();
-    int field = emit.field(podClass + ".S" + index + ":Lfan/sys/Str;");
+    int field = emit.field(podClass + ".S" + index + ":Ljava/lang/String;");
     code.op2(GETSTATIC, field);
   }
 

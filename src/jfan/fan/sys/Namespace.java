@@ -41,7 +41,7 @@ public abstract class Namespace
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toStr() { return Str.make(type().qname + " uri=" + uri); }
+  public String toStr() { return type().qname + " uri=" + uri; }
 
   public Type type() { return Sys.NamespaceType; }
 

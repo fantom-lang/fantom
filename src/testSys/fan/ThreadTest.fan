@@ -65,7 +65,7 @@ class ThreadTest : Test
     verify(Thread.list.contains(d))
 
     // current
-    verifyEq(Thread.current.name, "main")
+    verifyEq(Thread.current.name, "FantMain")
     verifyEq(Thread.current.isNew, false)
     verifyEq(Thread.current.isRunning, true)
     verifyEq(Thread.current.isDead, false)
@@ -575,4 +575,3 @@ const class TestService : ATestService, MTestService
   override Bool isService() { return true }
   override Obj run() { while(isRunning) sleep(20ms); return null }
 }
-

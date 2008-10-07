@@ -78,10 +78,8 @@ public final class List
   public List(String[] values)
   {
     this.of = Sys.StrType;
-    this.values = new Object[values.length];
     this.size = values.length;
-    for (int i=0; i<values.length; ++i)
-      this.values[i] = Str.make(values[i]);
+    this.values = values;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -772,35 +770,35 @@ public final class List
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public final Str join() { return join(Str.Empty, null); }
-  public final Str join(Str sep) { return join(sep, null); }
-  public final Str join(Str sep, Func f)
+  public final String join() { return join("", null); }
+  public final String join(String sep) { return join(sep, null); }
+  public final String join(String sep, Func f)
   {
-    if (size == 0) return Str.Empty;
+    if (size == 0) return "";
 
     if (size == 1)
     {
       Object v = values[0];
-      if (f != null) return (Str)f.call2(v, 0L);
-      if (v == null) return Str.nullStr;
+      if (f != null) return (String)f.call2(v, 0L);
+      if (v == null) return "null";
       return toStr(v);
     }
 
     StringBuilder s = new StringBuilder(32+size*32);
     for (int i=0; i<size; ++i)
     {
-      if (i > 0) s.append(sep.val);
+      if (i > 0) s.append(sep);
       if (f == null)
         s.append(values[i]);
       else
         s.append(f.call2(values[i], Long.valueOf(i)));
     }
-    return Str.make(s.toString());
+    return s.toString();
   }
 
-  public final Str toStr()
+  public final String toStr()
   {
-    if (size == 0) return Str.make("[,]");
+    if (size == 0) return "[,]";
     StringBuilder s = new StringBuilder(32+size*32);
     s.append("[");
     for (int i=0; i<size; ++i)
@@ -809,7 +807,7 @@ public final class List
       s.append(values[i]);
     }
     s.append("]");
-    return Str.make(s.toString());
+    return s.toString();
   }
 
   public final void encode(ObjEncoder out)
@@ -894,7 +892,7 @@ public final class List
     {
       Object obj = get(i);
       if (obj == null) a[i] = "null";
-      else a[i] = toStr(obj).val;
+      else a[i] = toStr(obj);
     }
     return a;
   }

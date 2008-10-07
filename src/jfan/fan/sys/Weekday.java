@@ -28,14 +28,14 @@ public final class Weekday
 
   private Weekday(int ordinal, String name)
   {
-    Enum.make$(this, FanInt.pos[ordinal], Str.make(name).intern());
+    Enum.make$(this, FanInt.pos[ordinal], name.intern());
     this.ord = ordinal;
-    this.localeAbbrKey  = Str.make(name + "Abbr");
-    this.localeFullKey  = Str.make(name + "Full");
+    this.localeAbbrKey  = name + "Abbr";
+    this.localeFullKey  = name + "Full";
   }
 
-  public static Weekday fromStr(Str name) { return fromStr(name, true); }
-  public static Weekday fromStr(Str name, Boolean checked)
+  public static Weekday fromStr(String name) { return fromStr(name, true); }
+  public static Weekday fromStr(String name, Boolean checked)
   {
     return (Weekday)doFromStr(Sys.WeekdayType, name, checked);
   }
@@ -46,13 +46,13 @@ public final class Weekday
 
   public Weekday decrement() { return ord == 0 ? array[array.length-1] : array[ord-1]; }
 
-  public Str toLocale() { return toLocale(null); }
-  public Str toLocale(Str pattern)
+  public String toLocale() { return toLocale(null); }
+  public String toLocale(String pattern)
   {
     if (pattern == null) return localeAbbr();
-    if (pattern.isEveryChar('W'))
+    if (FanStr.isEveryChar(pattern, 'W'))
     {
-      switch (pattern.val.length())
+      switch (pattern.length())
       {
         case 3: return localeAbbr();
         case 4: return localeFull();
@@ -61,26 +61,24 @@ public final class Weekday
     throw ArgErr.make("Invalid pattern: " + pattern).val;
   }
 
-  public Str localeAbbr() { return abbr(Locale.current()); }
-  public Str abbr(Locale locale)
+  public String localeAbbr() { return abbr(Locale.current()); }
+  public String abbr(Locale locale)
   {
-    return locale.get(Str.sysStr, localeAbbrKey);
+    return locale.get("sys", localeAbbrKey);
   }
 
-  public Str localeFull() { return full(Locale.current()); }
-  public Str full(Locale locale)
+  public String localeFull() { return full(Locale.current()); }
+  public String full(Locale locale)
   {
-    return locale.get(Str.sysStr, localeFullKey);
+    return locale.get("sys", localeFullKey);
   }
 
   public static Weekday localeStartOfWeek()
   {
-    return fromStr(Locale.current().get(Str.sysStr, localeStartKey));
+    return fromStr(Locale.current().get("sys", "weekdayStart"));
   }
 
-  static final Str localeStartKey = Str.make("weekdayStart");
-
   final int ord;
-  final Str localeAbbrKey;
-  final Str localeFullKey;
+  final String localeAbbrKey;
+  final String localeFullKey;
 }

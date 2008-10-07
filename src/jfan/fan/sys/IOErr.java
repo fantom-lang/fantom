@@ -18,16 +18,15 @@ public class IOErr
 // Java Convenience
 //////////////////////////////////////////////////////////////////////////
 
-  public static IOErr make(String msg)  { return make(Str.make(msg)); }
-  public static IOErr make(String msg, Throwable cause)  { return make(Str.make(msg), Err.make(cause)); }
+  public static IOErr make(String msg, Throwable cause)  { return make(msg, Err.make(cause)); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static IOErr make() { return make((Str)null, (Err)null); }
-  public static IOErr make(Str msg) { return make(msg, null); }
-  public static IOErr make(Str msg, Err cause)
+  public static IOErr make() { return make((String)null, (Err)null); }
+  public static IOErr make(String msg) { return make(msg, (Err)null); }
+  public static IOErr make(String msg, Err cause)
   {
     IOErr err = new IOErr();
     make$(err, msg, cause);
@@ -35,8 +34,8 @@ public class IOErr
   }
 
   public static void make$(IOErr self) { make$(self, null);  }
-  public static void make$(IOErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(IOErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(IOErr self, String msg) { make$(self, msg, null); }
+  public static void make$(IOErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

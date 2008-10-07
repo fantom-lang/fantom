@@ -18,17 +18,16 @@ public class ArgErr
 // Java Convenience
 //////////////////////////////////////////////////////////////////////////
 
-  public static ArgErr make(String msg)  { return make(Str.make(msg)); }
-  public static ArgErr make(Long index)   { return make(Str.make(String.valueOf(index))); }
-  public static ArgErr make(Range index) { return make(Str.make(String.valueOf(index))); }
+  public static ArgErr make(Long index)   { return make(String.valueOf(index)); }
+  public static ArgErr make(Range index) { return make(String.valueOf(index)); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static ArgErr make() { return make((Str)null, (Err)null); }
-  public static ArgErr make(Str msg) { return make(msg, null); }
-  public static ArgErr make(Str msg, Err cause)
+  public static ArgErr make() { return make((String)null, (Err)null); }
+  public static ArgErr make(String msg) { return make(msg, (Err)null); }
+  public static ArgErr make(String msg, Err cause)
   {
     ArgErr err = new ArgErr();
     make$(err, msg, cause);
@@ -36,8 +35,8 @@ public class ArgErr
   }
 
   public static void make$(ArgErr self) { make$(self, null);  }
-  public static void make$(ArgErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(ArgErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(ArgErr self, String msg) { make$(self, msg, null); }
+  public static void make$(ArgErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

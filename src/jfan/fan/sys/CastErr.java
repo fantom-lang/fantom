@@ -15,18 +15,12 @@ public class CastErr
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Java Convenience
-//////////////////////////////////////////////////////////////////////////
-
-  public static CastErr make(String msg)  { return make(Str.make(msg)); }
-
-//////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static CastErr make() { return make((Str)null, (Err)null); }
-  public static CastErr make(Str msg) { return make(msg, null); }
-  public static CastErr make(Str msg, Err cause)
+  public static CastErr make() { return make((String)null, (Err)null); }
+  public static CastErr make(String msg) { return make(msg, (Err)null); }
+  public static CastErr make(String msg, Err cause)
   {
     CastErr err = new CastErr();
     make$(err, msg, cause);
@@ -34,8 +28,8 @@ public class CastErr
   }
 
   public static void make$(CastErr self) { make$(self, null);  }
-  public static void make$(CastErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(CastErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(CastErr self, String msg) { make$(self, msg, null); }
+  public static void make$(CastErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

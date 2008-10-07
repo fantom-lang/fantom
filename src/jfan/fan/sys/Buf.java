@@ -57,9 +57,9 @@ public abstract class Buf
     return this == that;
   }
 
-  public Str toStr()
+  public String toStr()
   {
-    return Str.make(type().name().val + "(pos=" + getPos() + " size=" + getSize() + ")");
+    return type().name() + "(pos=" + getPos() + " size=" + getSize() + ")";
   }
 
   public Type type() { return Sys.BufType; }
@@ -243,13 +243,13 @@ public abstract class Buf
 
   public final Buf writeBool(Boolean x) { out.writeBool(x); return this; }
 
-  public final Buf writeUtf(Str x) { out.writeUtf(x); return this; }
+  public final Buf writeUtf(String x) { out.writeUtf(x); return this; }
 
   public final Buf writeChar(Long c) { out.writeChar(c); return this; }
 
-  public final Buf writeChars(Str s) { out.writeChars(s); return this; }
-  public final Buf writeChars(Str s, Long off) { out.writeChars(s, off); return this; }
-  public final Buf writeChars(Str s, Long off, Long len) { out.writeChars(s, off, len); return this; }
+  public final Buf writeChars(String s) { out.writeChars(s); return this; }
+  public final Buf writeChars(String s, Long off) { out.writeChars(s, off); return this; }
+  public final Buf writeChars(String s, Long off, Long len) { out.writeChars(s, off, len); return this; }
 
   public final Buf print(Object obj) { out.print(obj); return this; }
 
@@ -299,7 +299,7 @@ public abstract class Buf
 
   public final Boolean readBool() { return in.readBool(); }
 
-  public final Str readUtf() { return in.readUtf(); }
+  public final String readUtf() { return in.readUtf(); }
 
   public final Long readChar() { return in.readChar(); }
 
@@ -307,19 +307,19 @@ public abstract class Buf
 
   public final Long peekChar() { return in.peekChar(); }
 
-  public final Str readLine() { return in.readLine(); }
-  public final Str readLine(Long max) { return in.readLine(max); }
+  public final String readLine() { return in.readLine(); }
+  public final String readLine(Long max) { return in.readLine(max); }
 
-  public final Str readStrToken() { return in.readStrToken(); }
-  public final Str readStrToken(Long max) { return in.readStrToken(max); }
-  public final Str readStrToken(Long max, Func f) { return in.readStrToken(FanInt.Chunk, f); }
+  public final String readStrToken() { return in.readStrToken(); }
+  public final String readStrToken(Long max) { return in.readStrToken(max); }
+  public final String readStrToken(Long max, Func f) { return in.readStrToken(FanInt.Chunk, f); }
 
   public final List readAllLines() { return in.readAllLines(); }
 
   public final void eachLine(Func f) { in.eachLine(f); }
 
-  public final Str readAllStr() { return in.readAllStr(); }
-  public final Str readAllStr(Boolean normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
+  public final String readAllStr() { return in.readAllStr(); }
+  public final String readAllStr(Boolean normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
 
   public final Object readObj() { return in.readObj(); }
 
@@ -327,14 +327,14 @@ public abstract class Buf
 // Hex
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toHex()
+  public String toHex()
   {
     throw UnsupportedErr.make(type()+".toHex").val;
   }
 
-  public static Buf fromHex(Str str)
+  public static Buf fromHex(String str)
   {
-    String s = str.val;
+    String s = str;
     int slen = s.length();
     byte[] buf = new byte[slen/2];
     int[] hexInv = Buf.hexInv;
@@ -373,14 +373,13 @@ public abstract class Buf
 // Base64
 //////////////////////////////////////////////////////////////////////////
 
-  public Str toBase64()
+  public String toBase64()
   {
     throw UnsupportedErr.make(type()+".toBase64").val;
   }
 
-  public static Buf fromBase64(Str str)
+  public static Buf fromBase64(String s)
   {
-    String s = str.val;
     int slen = s.length();
     int si = 0;
     int max = slen * 6 / 8;
@@ -423,7 +422,7 @@ public abstract class Buf
 // Digest
 //////////////////////////////////////////////////////////////////////////
 
-  public Buf toDigest(Str algorithm)
+  public Buf toDigest(String algorithm)
   {
     throw UnsupportedErr.make(type()+".toDigest").val;
   }

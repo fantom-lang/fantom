@@ -41,9 +41,9 @@ public class FontPeer
     return Long.valueOf(scratchGC(self).getFontMetrics().getLeading());
   }
 
-  public Long width(fan.fwt.Font self, Str s)
+  public Long width(fan.fwt.Font self, String s)
   {
-    return Long.valueOf(scratchGC(self).textExtent(s.val).x);
+    return Long.valueOf(scratchGC(self).textExtent(s).x);
   }
 
   private GC scratchGC(fan.fwt.Font self)
@@ -64,7 +64,7 @@ public class FontPeer
     if (sys == null)
     {
       FontData data = Env.get().display.getSystemFont().getFontData()[0];
-      sys = fan.fwt.Font.make(Str.make(data.getName()), Long.valueOf(data.getHeight()));
+      sys = fan.fwt.Font.make(data.getName(), Long.valueOf(data.getHeight()));
     }
     return sys;
   }
@@ -76,7 +76,7 @@ public class FontPeer
     {
       String name = "Courier New"; int size = 9;
       if (Env.isMac()) { name = "Monaco"; size = 12; }
-      sysMonospace = fan.fwt.Font.make(Str.make(name), Long.valueOf(size));
+      sysMonospace = fan.fwt.Font.make(name, Long.valueOf(size));
     }
     return sysMonospace;
   }

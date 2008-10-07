@@ -15,18 +15,12 @@ public class NullErr
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Java Convenience
-//////////////////////////////////////////////////////////////////////////
-
-  public static NullErr make(String msg)  { return make(Str.make(msg)); }
-
-//////////////////////////////////////////////////////////////////////////
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static NullErr make() { return make((Str)null, (Err)null); }
-  public static NullErr make(Str msg) { return make(msg, null); }
-  public static NullErr make(Str msg, Err cause)
+  public static NullErr make() { return make((String)null, (Err)null); }
+  public static NullErr make(String msg) { return make(msg, (Err)null); }
+  public static NullErr make(String msg, Err cause)
   {
     NullErr err = new NullErr();
     make$(err, msg, cause);
@@ -34,8 +28,8 @@ public class NullErr
   }
 
   public static void make$(NullErr self) { make$(self, null);  }
-  public static void make$(NullErr self, Str msg) { make$(self, msg, null); }
-  public static void make$(NullErr self, Str msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(NullErr self, String msg) { make$(self, msg, null); }
+  public static void make$(NullErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors

@@ -49,10 +49,10 @@ public abstract class TextWidgetPeer extends WidgetPeer
 // Selection
 //////////////////////////////////////////////////////////////////////////
 
-  public Str selectText(TextWidget self)
+  public String selectText(TextWidget self)
   {
-    if (control == null) return Str.Empty;
-    return Str.make(selectText(control));
+    if (control == null) return "";
+    return selectText(control);
   }
 
   public Long selectStart(TextWidget self)
