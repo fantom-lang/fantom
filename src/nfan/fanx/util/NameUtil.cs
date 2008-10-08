@@ -34,6 +34,24 @@ namespace Fanx.Util
     }
 
     /// <summary>
+    /// Return the .NET method name for this Fan method name.
+    /// </summary>
+    public static string toNetMethodName(string fanName)
+    {
+      if (fanName == "equals") return "_equals";
+      return fanName;
+    }
+
+    /// <summary>
+    /// Return the Fan method name for this .NET method name.
+    /// </summary>
+    public static string toFanMethodName(string netName)
+    {
+      if (netName == "_equals") return "equals";
+      return netName;
+    }
+
+    /// <summary>
     /// Return a new string, where the first letter is uppercase.
     /// If the string is a fully qualified type name, make each
     /// character following a '.' uppercase as well.

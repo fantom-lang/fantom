@@ -101,8 +101,8 @@ namespace Fanx.Fcode
 
         // equals => _equals (since we can't override
         // Object.equals by return type)
-        if (!explicitSelf && mName == "equals")
-          mName = "_equals";
+        if (!explicitSelf)
+          mName = NameUtil.toNetMethodName(mName);
 
         string[] pars;
         if (explicitSelf)
