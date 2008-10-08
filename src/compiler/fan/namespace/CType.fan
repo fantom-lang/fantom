@@ -63,6 +63,11 @@ mixin CType
   **
   abstract CType toNullable()
 
+  **
+  ** Get this type as a non-nullable (if nullable)
+  **
+  virtual CType toNonNullable() { return this }
+
 //////////////////////////////////////////////////////////////////////////
 // Generics
 //////////////////////////////////////////////////////////////////////////
@@ -164,6 +169,12 @@ mixin CType
   **
   virtual Bool fits(CType t)
   {
+    // don't take nullable in consideration
+    t = t.toNonNullable
+
+    // everything fits Obj
+    if (t.isObj) return true
+
     // short circuit if myself
     if (this == t) return true
 

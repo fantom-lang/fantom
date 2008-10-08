@@ -42,6 +42,7 @@ class TypeRef : Node, CType
 
   override Bool isNullable() { return t.isNullable }
   override CType toNullable() { return t.toNullable }
+  override CType toNonNullable() { return t.toNonNullable }
 
   override Bool isGeneric() { return t.isGeneric }
   override Bool isParameterized() { return t.isParameterized }
