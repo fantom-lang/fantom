@@ -29,12 +29,12 @@ const class FTypeRef
     return podName === x.podName && typeName === x.typeName && sig == x.sig
   }
 
-  Bool isGenericInstance() { return sig.size > 0 }
+  Bool isGenericInstance() { return sig.size > 1 }
 
   Str signature(FPod pod)
   {
     if (isGenericInstance) return sig
-    return pod.n(podName) + "::" + pod.n(typeName)
+    return pod.n(podName) + "::" + pod.n(typeName) + sig
   }
 
   Str format(FPod pod) { return signature(pod) }

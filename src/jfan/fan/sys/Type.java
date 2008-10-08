@@ -219,7 +219,7 @@ public abstract class Type
     return (Map)noParams;
   }
 
-  public final Type parameterize(Map params)
+  public Type parameterize(Map params)
   {
     if (this == Sys.ListType)
     {

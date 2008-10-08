@@ -306,14 +306,15 @@ public class FCodeEmit
   private void loadType(int typeRefIndex)
   {
     FTypeRef ref = pod.typeRef(typeRefIndex);
-    String podName  = pod.name( ref.podName );
-    String typeName = pod.name( ref.typeName );
+    String podName  = pod.name(ref.podName);
+    String typeName = pod.name(ref.typeName);
 
     // if pod is "sys", then we can perform a shortcut and use
     // one of the predefined fields in Sys
     if (!ref.isGenericInstance() && podName.equals("sys"))
     {
       code.op2(GETSTATIC, emit.field("fan/sys/Sys." + typeName + "Type:Lfan/sys/Type;"));
+      if (ref.isNullable()) typeToNullable();
       return;
     }
 
@@ -970,6 +971,12 @@ public class FCodeEmit
   {
     if (parent.BoolMake == 0) parent.BoolMake = emit.method("java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
     code.op2(INVOKESTATIC, parent.BoolMake);
+  }
+
+  private void typeToNullable()
+  {
+    if (parent.TypeToNullable == 0) parent.TypeToNullable = emit.method("fan/sys/Type.toNullable()Lfan/sys/Type;");
+    code.op2(INVOKEVIRTUAL, parent.TypeToNullable);
   }
 
 //////////////////////////////////////////////////////////////////////////

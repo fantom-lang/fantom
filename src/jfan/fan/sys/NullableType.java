@@ -42,6 +42,13 @@ public class NullableType
   public Boolean isNullable() { return true; }
   protected Type makeToNullable() { return this; }
 
+  public boolean isGenericType() { return root.isGenericType(); }
+  public boolean isGenericInstance() { return root.isGenericInstance(); }
+  public boolean isGenericParameter() { return root.isGenericParameter(); }
+  public Type getRawType() { return root.getRawType(); }
+  public Map params() { return root.params(); }
+  public Type parameterize(Map params) { return root.parameterize(params).toNullable(); }
+
   protected Type makeToListOf() { return new ListType(root).toNullable(); }
 
   public List fields() { return root.fields(); }

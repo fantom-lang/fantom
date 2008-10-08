@@ -23,7 +23,7 @@ class Build : BuildPod
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`]
     javaDirs    = [`java/`]
-    netDirs     = [`net/`]
+    // netDirs     = [`net/`] TODO
     podFacets   =
     [
       "doc": false
