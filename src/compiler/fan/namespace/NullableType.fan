@@ -36,6 +36,7 @@ class NullableType : CType
 
   override Bool isNullable() { return true }
   override CType toNullable() { return this }
+  override CType toNonNullable() { return root }
 
   override Bool isGeneric() { return false }
   override Bool isParameterized() { return false }
@@ -45,6 +46,7 @@ class NullableType : CType
 
   override CType base() { return root.base }
   override CType[] mixins() { return root.mixins }
+  override Bool fits(CType t) { return root.fits(t) }
 
   override Str:CSlot slots() { return root.slots }
 

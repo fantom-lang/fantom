@@ -125,6 +125,7 @@ class ListType : GenericType
 
   override Bool fits(CType t)
   {
+    t = t.toNonNullable
     if (this == t) return true
     if (t.signature == "sys::List") return true
     if (t.isObj) return true
@@ -175,6 +176,7 @@ class MapType : GenericType
 
   override Bool fits(CType t)
   {
+    t = t.toNonNullable
     if (this == t) return true
     if (t.signature == "sys::Map") return true
     if (t.isObj) return true
@@ -232,6 +234,7 @@ class FuncType : GenericType
 
   override Bool fits(CType t)
   {
+    t = t.toNonNullable
     if (this == t) return true
     if (t.signature == "sys::Func") return true
     if (t.isObj) return true
