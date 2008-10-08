@@ -884,8 +884,7 @@ namespace Fan.Sys
 
     private void finishMethod(MethodInfo m, bool staticOnly)
     {
-      string name = m.Name;
-      if (name == "_equals") name = "equals";
+      string name = NameUtil.toFanMethodName(m.Name);
       Slot s = slot(name, false);
       if (s == null) return;
       if (s.parent() != this) return;

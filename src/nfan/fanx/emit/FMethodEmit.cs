@@ -35,7 +35,7 @@ namespace Fanx.Emit
       this.emit       = emit;
       this.method     = method;
       this.code       = method.m_code;
-      this.name       = normalizeName(method.m_name);
+      this.name       = NameUtil.toNetMethodName(method.m_name);
       this.paramLen   = method.m_paramCount;
       this.isStatic   = (method.m_flags & FConst.Static) != 0;
       this.isInternal = false; //(method.m_flags & FConst.Internal) != 0;
@@ -58,15 +58,6 @@ namespace Fanx.Emit
     {
       this.emitter = emit.emitter;
       this.emit = emit;
-    }
-
-    /// <summary>
-    /// Get the .NET method name to use for a Fan method.
-    /// </summary>
-    internal string normalizeName(string name)
-    {
-      if (name == "equals") return "_equals";
-      return name;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -248,7 +239,7 @@ namespace Fanx.Emit
     public void emitMixinRouter(Method m)
     {
       string parent  = NameUtil.toNetTypeName(m.parent().pod().name(), m.parent().name());
-      string name    = normalizeName(m.name().val);
+      string name    = NameUtil.toNetMethodName(m.name().val);
       string ret     = NameUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
       string[] parTypes = new string[] { parent };
       List pars      = m.@params();
@@ -273,7 +264,6 @@ namespace Fanx.Emit
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
           string s = NameUtil.toNetTypeName(pt.pod().name(), pt.name());
-
           myParams[j] = s;
           myParamNames[j] = param.name().val;
           implParams[j+1] = s;
