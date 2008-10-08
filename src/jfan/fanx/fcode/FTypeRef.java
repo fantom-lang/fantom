@@ -34,7 +34,12 @@ public class FTypeRef
 
   public boolean isGenericInstance()
   {
-    return sig.length() > 0;
+    return sig.length() > 1;  // "?" is non-generic nullable
+  }
+
+  public boolean isNullable()
+  {
+    return sig.length() > 0 && sig.charAt(sig.length()-1) == '?';
   }
 
   public int hashCode()
@@ -51,7 +56,7 @@ public class FTypeRef
   public String sig(FPod pod)
   {
     if (isGenericInstance()) return sig;
-    return pod.name(podName) + "::" + pod.name(typeName);
+    return pod.name(podName) + "::" + pod.name(typeName) + sig;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -69,7 +74,7 @@ public class FTypeRef
 
   public final int podName;
   public final int typeName;
-  public final String sig;
+  public final String sig;  // full sig if parameterized, "?" if nullable
   public final int hash;
 
 }

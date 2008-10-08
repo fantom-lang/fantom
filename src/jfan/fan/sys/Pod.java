@@ -361,13 +361,21 @@ public class Pod
     String typeName = fpod.name(ref.typeName);
     Pod pod = podName.equals(name) ? this : Pod.find(podName, true, null, null);
     Type type = pod.findType(typeName, false);
-    if (type != null) return type;
+    if (type != null)
+    {
+      if (ref.isNullable()) type = type.toNullable();
+      return type;
+    }
 
-    // handle variance types (for sys pod only)
+    // handle generic parameter types (for sys pod only)
     if (this.name.equals("sys"))
     {
       type = Sys.genericParameterType(typeName);
-      if (type != null) return type;
+      if (type != null)
+      {
+        if (ref.isNullable()) type = type.toNullable();
+        return type;
+      }
     }
 
     // lost cause

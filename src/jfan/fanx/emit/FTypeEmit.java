@@ -402,6 +402,7 @@ public abstract class FTypeEmit
   int IntVal;
   int ErrMake;
   int ErrVal;
+  int TypeToNullable;
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

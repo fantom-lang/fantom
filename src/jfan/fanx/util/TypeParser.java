@@ -36,10 +36,7 @@ public class TypeParser
     int len = sig.length();
     int last = len > 1 ? sig.charAt(len-1) : 0;
     if (last == '?')
-    {
-      // TODO: we can make this more efficient
       return load(sig.substring(0, len-1), checked, loadingPod).toNullable();
-    }
 
     // if the last character isn't ] or |, then this a non-generic
     // type and we don't even need to allocate a parser

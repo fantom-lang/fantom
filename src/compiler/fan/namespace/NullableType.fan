@@ -38,9 +38,9 @@ class NullableType : CType
   override CType toNullable() { return this }
   override CType toNonNullable() { return root }
 
-  override Bool isGeneric() { return false }
-  override Bool isParameterized() { return false }
-  override Bool isGenericParameter() { return false }
+  override Bool isGeneric() { return root.isGeneric }
+  override Bool isParameterized() { return root.isParameterized }
+  override Bool isGenericParameter() { return root.isGenericParameter }
 
   override once CType toListOf() { return root.toListOf.toNullable }
 

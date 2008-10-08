@@ -106,7 +106,9 @@ final class FPod : CPod, FConst
   {
     p   := addName(t.pod.name)
     n   := addName(t.name)
-    sig := (t.isParameterized || t.isNullable) ? t.signature : ""
+    sig := ""
+    if (t.isParameterized) sig = t.signature
+    else if (t.isNullable) sig = "?"
     return typeRefs.add(FTypeRef.make(p, n, sig))
   }
 

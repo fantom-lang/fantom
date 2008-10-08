@@ -35,7 +35,7 @@
 
   strings.def
   {
-    u2 size 
+    u2 size
     utf[size] values
   }
 
@@ -57,7 +57,7 @@
 
   typeRefs.def
   {
-    u2 size 
+    u2 size
     typeRef[size] values
   }
 
@@ -65,16 +65,16 @@
   {
     u2 podName (names.def)
     u2 typeName (names.def)
-    utf signature ("" if not parameterized)
+    utf signature ("" if not parameterized, "?" if nullable)
   }
-  
+
   Examples:
-  
+
     acme::Foo    -> { "acme", "Foo",   "" }
     Foo[]        -> { "sys", "List",   "acme::Foo[]" } }
     Int:Str      -> { "sys", "Map",    "[sys::Int;sys::Str]" }
     |Real->Void| -> { "sys", "Method", "|sys::Real->sys::Void|" }
-  
+
 //////////////////////////////////////////////////////////////////////////
 // SlotRefs
 //////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@
     u2 size
     fieldRef[size] values
   }
-  
+
   fieldRef
   {
     u2 parent (typeRefs.def)
@@ -119,10 +119,10 @@
     utf podVersion
     u1  dependCount
     utf[dependCount] depends
-    u2  attrCount 
+    u2  attrCount
     attr[attrCount] attrs
   }
-  
+
 //////////////////////////////////////////////////////////////////////////
 // Type Meta
 //////////////////////////////////////////////////////////////////////////
@@ -132,27 +132,27 @@
     u2 size
     typeMeta[size] types
   }
-  
+
   typeMeta
   {
     u2 self  (typeRefs.def)
     u2 base  (typeRefs.def or 0xFFFF)
     u2 mixinCount
     u2 mixin[mixinCount] (typeRefs.def)
-    u4 flags 
+    u4 flags
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Type Body
 //////////////////////////////////////////////////////////////////////////
- 
+
   x.fcode
   {
     u2 fieldCount
     field[fieldCount] fields
     u2 methodCount
     method[methodCount] methods
-    u2 attrCount 
+    u2 attrCount
     attr[attrCount] attrs
   }
 
@@ -161,14 +161,14 @@
     u2 name  (names.def)
     u4 flags
     u2 type  (typeRefs.def)
-    u2 attrCount 
+    u2 attrCount
     attr[attrCount] attrs
   }
 
   method
   {
     u2 name  (names.def)
-    u4 flags    
+    u4 flags
     u2 returnType (typeRefs.def)
     u2 inheritReturnType (typeRefs.def) // for covariance
     u1 maxStack
@@ -176,19 +176,19 @@
     u1 localCount
     methodVar[paramCount+localCount] vars
     buf code
-    u2 attrCount 
+    u2 attrCount
     attr[attrCount] attrs
   }
-  
+
   methodVar
   {
     u2 name (names.def)
     u2 type (typeRefs.def)
     u1 flags
-    u2 attrCount 
+    u2 attrCount
     attr[attrCount] attrs
   }
-  
+
 //////////////////////////////////////////////////////////////////////////
 // Attributes
 //////////////////////////////////////////////////////////////////////////
@@ -206,7 +206,7 @@
     {
       u2 name     // name index
       utf value   // serialized value
-    } facets[count]   
+    } facets[count]
   }
 
   SourceFile // type attribute
@@ -222,7 +222,7 @@
     u2 size
     u2 line
   }
-    
+
   LineNumbers // method attribute
   {
     u2 name  = "LineNumbers"
@@ -233,7 +233,7 @@
       u2 line
     } lines[lineCount]
   }
-  
+
   ErrTable // method attribute
   {
     u2 name  = "ErrTable"
@@ -244,20 +244,20 @@
       u2 end      // pc exlcusive
       u2 handler  // pc to call on trap
       u2 type     // Err type to catch (typeRefs.def)
-    } traps[count]   
+    } traps[count]
   }
 
   ParamDefault  // method parameter attribute
   {
     u2 name = "ParamDefault"
-    u2 size 
+    u2 size
     u1[size]  opcodes
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Buf
 //////////////////////////////////////////////////////////////////////////
-  
+
   buf
   {
     u2 len
@@ -277,7 +277,7 @@
     u2 facetNameCount
     utf[] facetNames
     typedbFacets facets
-    u2 typeCount 
+    u2 typeCount
     typedb[typeCount] types
   }
 
@@ -287,10 +287,10 @@
     utf base  (qname or "")
     u2 mixinCount
     utf mixin[mixinCount] (qname)
-    u4 flags 
+    u4 flags
     typedbFacets facets
   }
-  
+
   typedbFacets
   {
     u2 facetCount

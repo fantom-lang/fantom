@@ -30,9 +30,12 @@ class TypeParser
   **
   public static CType resolve(CNamespace ns, Str sig)
   {
+    // if last char is ? then parse as nullable
+    last := sig[-1]
+    if (last == '?') return resolve(ns, sig[0..-2]).toNullable
+
     // if the last character isn't ] or |, then this a non-generic
     // type and we don't even need to allocate a parser
-    last := sig[-1]
     if (last !== ']' && last !== '|')
     {
       colon    := sig.index("::")
