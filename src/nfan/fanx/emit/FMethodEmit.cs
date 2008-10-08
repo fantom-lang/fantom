@@ -347,8 +347,7 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = "Fan." + NameUtil.upper(pt.pod().name().val) + "." + pt.name().val;
-
+          string s = NameUtil.toNetTypeName(pt.pod().name(), pt.name());
           myParams[j] = s;
           myParamNames[j] = param.name().val;
         }
