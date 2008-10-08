@@ -322,6 +322,7 @@ public abstract class Buf
   public final String readAllStr(Boolean normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
 
   public final Object readObj() { return in.readObj(); }
+  public final Object readObj(Map opt) { return in.readObj(opt); }
 
 //////////////////////////////////////////////////////////////////////////
 // Hex

@@ -540,6 +540,12 @@ class BufTest : Test
     buf.seek(0)
     acc := Str[,]; buf.eachLine |Str s| { acc.add(s) }
     verifyEq(acc, ["one", "two"])
+
+    // obj
+    buf.clear.writeObj(3)
+    verifyEq(buf.flip.readObj, 3)
+    buf.clear.writeObj(3, ["dummy":true])
+    verifyEq(buf.flip.readObj(["dummy":true]), 3)
   }
 
 //////////////////////////////////////////////////////////////////////////

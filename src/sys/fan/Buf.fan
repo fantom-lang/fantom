@@ -452,7 +452,7 @@ class Buf
   **
   ** Convenience for [in.readObj]`InStream.readObj`
   **
-  Obj readObj()
+  Obj readObj(Str:Obj options := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Conversions
