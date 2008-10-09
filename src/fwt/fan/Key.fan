@@ -224,7 +224,7 @@ const class Key
   **
   ** Equality is based on keycode.
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
   {
     x := that as Key
     if (x == null) return false

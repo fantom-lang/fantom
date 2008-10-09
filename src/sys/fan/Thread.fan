@@ -37,7 +37,7 @@ const class Thread
   ** The thread is created in the new state, and must be started using
   ** the start method.
   **
-  new make(Str name := null, |Thread t->Obj| run := null)
+  new make(Str? name := null, |Thread t->Obj|? run := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Management
@@ -49,7 +49,7 @@ const class Thread
   ** UnknownThreadErr.  Only active threads which are in the new
   ** or running state may be found by name.
   **
-  static Thread find(Str name, Bool checked := true)
+  static Thread? find(Str name, Bool checked := true)
 
   **
   ** Get the list of all active (new or running) threads
@@ -80,7 +80,7 @@ const class Thread
   ** exist and checked is false then return null, otherwise throw
   ** UnknownThreadErr.  See `isService`.
   **
-  static Thread findService(Type t, Bool checked := true)
+  static Thread? findService(Type t, Bool checked := true)
 
   **
   ** Subclasses should override this method to publish this
@@ -114,7 +114,7 @@ const class Thread
   **
   ** Return true if same thread according '===' same operator.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Return name.hash.
@@ -172,7 +172,7 @@ const class Thread
   ** the result of the run method for the first thread to join,
   ** or null on subsequent calls.
   **
-  Obj join(Duration timeout := null)
+  Obj join(Duration? timeout := null)
 
   **
   ** Put the currently executing thread to sleep for the
@@ -191,7 +191,7 @@ const class Thread
   ** which calls the join method (the result is not required to
   ** be immutable).
   **
-  protected virtual Obj run()
+  protected virtual Obj? run()
 
   **
   ** This callback is invoked on this thread right before
@@ -244,7 +244,7 @@ const class Thread
   **
   ** See [docLang]`docLang::Threading#messages`.
   **
-  Obj sendSync(Obj msg)
+  Obj? sendSync(Obj? msg)
 
   **
   ** Enqueue the specified message for this thread to process in
@@ -257,7 +257,7 @@ const class Thread
   **
   ** See [docLang]`docLang::Threading#messages`.
   **
-  This sendAsync(Obj msg)
+  This sendAsync(Obj? msg)
 
   **
   ** Setup a timer to post a message to this thread after the
@@ -270,7 +270,7 @@ const class Thread
   **
   ** See [docLang]`docLang::Threading#timers`.
   **
-  Obj sendLater(Duration dur, Obj msg, Bool repeat := false)
+  Obj sendLater(Duration dur, Obj? msg, Bool repeat := false)
 
   **
   ** Cancel a timer with the ticket returned by `sendLater`.

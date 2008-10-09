@@ -41,7 +41,7 @@ const final class Range
   **
   ** Return true if same start, end, and exclusive.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Return start ^ end.

@@ -26,7 +26,7 @@ class ReflectionTest : Test
     m := t.method("toInt")
     verifyEq(m.name, "toInt")
     verifyEq(m.qname, "sys::Str.toInt")
-    verifyEq(m.returns, Int#)
+    verifyEq(m.returns, Int?#)
 
     verifyEq(m.params.type, Param[]#)
     verifyEq(m.params.size, 2)

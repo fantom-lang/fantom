@@ -185,7 +185,7 @@ const class Color : Brush
   **
   ** Return `argb` as the hash code.
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
   {
     x := that as Color
     return x == null ? false : x.argb == argb

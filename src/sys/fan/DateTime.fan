@@ -34,13 +34,13 @@ const final class DateTime
   ** then use `Duration.now` instead.  Duration is more efficient
   ** and won't cause you grief when the system clock is modified.
   **
-  static DateTime now(Duration tolerance := 250ms)
+  static DateTime now(Duration? tolerance := 250ms)
 
   **
   ** Return the current time using `TimeZone.utc`.
   ** See `now` for a description of the tolerance parameter.
   **
-  static DateTime nowUtc(Duration tolerance := 250ms)
+  static DateTime nowUtc(Duration? tolerance := 250ms)
 
   **
   ** Make for nanosecond ticks since 1 Jan 2000 GMT.  Throw
@@ -70,7 +70,7 @@ const final class DateTime
   ** DateTime and checked is false then return null, otherwise throw
   ** ParseErr.
   **
-  static DateTime fromStr(Str s, Bool checked := true)
+  static DateTime? fromStr(Str s, Bool checked := true)
 
   **
   ** Get the boot time of the Fan VM with `TimeZone.current`
@@ -89,7 +89,7 @@ const final class DateTime
   **
   ** Two times are equal if have identical nanosecond ticks.
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
 
   **
   ** Return nanosecond ticks for the hashcode.
@@ -231,7 +231,7 @@ const final class DateTime
   ** A symbol immediately preceding a "F" pattern with a no
   ** fraction to print is skipped.
   **
-  Str toLocale(Str pattern := null)
+  Str toLocale(Str? pattern := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -314,7 +314,7 @@ const final class DateTime
   **   Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
   **   Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
   **
-  static DateTime fromHttpStr(Str s, Bool checked := true)
+  static DateTime? fromHttpStr(Str s, Bool checked := true)
 
   **
   ** Format this time for use in an MIME or HTTP message

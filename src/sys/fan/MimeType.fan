@@ -23,14 +23,14 @@ const final class MimeType
   ** checked is false return null, otherwise throw ParseErr.
   ** Parenthesis comments are not supported.
   **
-  static MimeType fromStr(Str s, Bool checked := true)
+  static MimeType? fromStr(Str s, Bool checked := true)
 
   **
   ** Map a case insensitive file extension to a MimeType.
   ** This mapping is configured via "lib/ext2mime.props".  If
   ** no mapping is available return null.
   **
-  static MimeType forExt(Str ext)
+  static MimeType? forExt(Str ext)
 
   **
   ** Private constructor - must use fromStr
@@ -52,7 +52,7 @@ const final class MimeType
   ** and subType, and params (keys are case insensitive
   ** and values are case sensitive).
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
 
   **
   ** Encode as a MIME message according to RFC 822.  This

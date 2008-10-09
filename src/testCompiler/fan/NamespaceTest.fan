@@ -93,10 +93,10 @@ class NamespaceTest : CompilerTest
     verifySame(echo.parent, obj)
     verifyEq(echo.name, "echo")
     verifyEq(echo.qname, "sys::Obj.echo")
-    verifyEq(echo.signature, "sys::Void echo(sys::Obj x)")
+    verifyEq(echo.signature, "sys::Void echo(sys::Obj? x)")
     verifySame(echo.returnType, v)
     verifyEq(echo.params[0].name, "x")
-    verifyEq(echo.params[0].paramType, obj)
+    verifyEq(echo.params[0].paramType, obj.toNullable)
     verifyEq(echo.params[0].hasDefault, false)
 
     // slots -> Int.hash

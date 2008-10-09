@@ -522,7 +522,7 @@ const class ThreadCount : Thread
 class Msg
 {
   override Int hash() { return toStr.hash }
-  override Bool equals(Obj obj) { return obj is Msg && obj.toStr == toStr }
+  override Bool equals(Obj? obj) { return obj is Msg && obj.toStr == toStr }
   override Str toStr() { return "a=$a b=$b c=$c" }
   Str a
   Str b

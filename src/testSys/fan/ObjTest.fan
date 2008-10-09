@@ -108,6 +108,6 @@ class ObjWrapper
 {
   new make(Obj obj) { this.obj = obj }
   override Int hash() { return obj.hash(); }
-  override Bool equals(Obj that) { return ((ObjWrapper)that).obj == obj }
+  override Bool equals(Obj? that) { return ((ObjWrapper)that).obj == obj }
   Obj obj
 }

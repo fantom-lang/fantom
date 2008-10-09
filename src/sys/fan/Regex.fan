@@ -33,7 +33,7 @@ const final class Regex
   **
   ** Equality is based on pattern string.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Return 'toStr.hash'.

@@ -78,7 +78,7 @@ const final class Uri
   **   - If http then port 80 normalizes to null
   **   - If http then a null path normalizes to /
   **
-  static Uri fromStr(Str s, Bool checked := true)
+  static Uri? fromStr(Str s, Bool checked := true)
 
   **
   ** Parse an ASCII percent encoded string into a Uri according to
@@ -89,7 +89,7 @@ const final class Uri
   ** URI or if not encoded correctly, otherwise return null. Refer
   ** to `fromStr` for normalization rules.
   **
-  static Uri decode(Str s, Bool checked := true)
+  static Uri? decode(Str s, Bool checked := true)
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -140,7 +140,7 @@ const final class Uri
   **
   ** Two Uris are equal if they have same string normalized representation.
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
 
   **
   ** Return a hash code based on the normalized string representation.
@@ -196,7 +196,7 @@ const final class Uri
   **   `HTTP://foo/a/b/c`.scheme      =>  "http"
   **   `mailto:who@there.com`.scheme  =>  "mailto"
   **
-  Str scheme()
+  Str? scheme()
 
   **
   ** The authority represents a network endpoint in the format:
@@ -207,7 +207,7 @@ const final class Uri
   **   `http://host/`.auth          =>  "host"
   **   `/dir/file.txt`.auth         =>  null
   **
-  Str auth()
+  Str? auth()
 
   **
   ** Return the host address of the URI or null if not available.  The
@@ -223,7 +223,7 @@ const final class Uri
   **   `//foo/bar`.host                      =>  "foo"
   **   `/bar`.host                           =>  null
   **
-  Str host()
+  Str? host()
 
   **
   ** User info is string information embedded in the authority using
@@ -233,7 +233,7 @@ const final class Uri
   **   `http://brian:pass@host/`.userInfo  =>  "brian:pass"
   **   `http://www.cool.com/`.userInfo     =>  null
   **
-  Str userInfo()
+  Str? userInfo()
 
   **
   ** Return the IP port of the host for the network end point.  It is optionally
@@ -244,7 +244,7 @@ const final class Uri
   **   `http://foo:81/`.port        =>  81
   **   `http://www.cool.com/`.port  =>  null
   **
-  Int port()
+  Int? port()
 
   **
   ** Return the path parsed into a list of simple names or
@@ -334,7 +334,7 @@ const final class Uri
   **   `/a/file.`.ext     =>  ""
   **   `..`.ext           =>  null
   **
-  Str ext()
+  Str? ext()
 
   **
   ** Return the MimeType mapped by the `ext` or null if
@@ -345,7 +345,7 @@ const final class Uri
   **   `file.txt`  =>  text/plain
   **   `somefile`  =>  null
   **
-  MimeType mimeType()
+  MimeType? mimeType()
 
   **
   ** Return the query parsed as a map of key/value pairs.  If no query
@@ -379,7 +379,7 @@ const final class Uri
   **   `../foo?a=b&c=d`.queryStr              =>  "a=b&c=d"
   **   `?a=b;c;`.queryStr                     =>  "a=b;c;"
   **
-  Str queryStr()
+  Str? queryStr()
 
   **
   ** Return the fragment component of the Uri which is everything
@@ -390,7 +390,7 @@ const final class Uri
   **   `http://host/path`                  =>  null
   **   `#h1`                               =>  "h1"
   **
-  Str frag()
+  Str? frag()
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -409,7 +409,7 @@ const final class Uri
   **   `/`.parent        =>   null
   **   `a.txt`.parent    =>   null
   **
-  Uri parent()
+  Uri? parent()
 
   **
   ** Return a new Uri with only a path part.  If this Uri has
@@ -447,7 +447,7 @@ const final class Uri
   **   `/a/b/c/`[1...2]              =>  `b/`
   **   `/a`[0..-2]                   =>  `/`
   **
-  Uri slice(Range r, Bool pathAbs := null)
+  Uri slice(Range r)
 
   **
   ** Return a slice of this Uri's path using the same semantics
@@ -518,7 +518,7 @@ const final class Uri
   **   `/foo?a=b`.plusQuery(["k":"v"])          =>  `/foo?a=b&k=v`
   **   `?a=b`.plusQuery(["k1":"v1", "k2":"v2"]) =>  `?a=b&k1=v1&k2=v2`
   **
-  Uri plusQuery(Str:Str query)
+  Uri plusQuery([Str:Str]? query)
 
   **
   ** Relativize this uri against the specified base.
@@ -560,6 +560,6 @@ const final class Uri
   ** Resolve this Uri into an Fan object.
   ** See [docLang]`docLang::Naming#resolving` for the resolve process.
   **
-  Obj get(Obj base := null, Bool checked := true)
+  Obj? get(Obj? base := null, Bool checked := true)
 
 }

@@ -48,25 +48,25 @@ final class StrBuf
   ** the string buffer.  This method is accessed via the []
   ** operator.  Return this.
   **
-  StrBuf set(Int index, Int ch)
+  This set(Int index, Int ch)
 
   **
   ** Add x.toStr to the end of this buffer.  If x is null then
   ** the string "null" is inserted.  Return this.
   **
-  StrBuf add(Obj x)
+  This add(Obj? x)
 
   **
   ** Optimized implementation for add(ch.toChar).  Return this.
   **
-  StrBuf addChar(Int ch)
+  This addChar(Int ch)
 
   **
   ** Add x.toStr to the end of the buffer.  If the buffer is not
   ** empty, then first add the specified separator which defaults
   ** to a space if not specified.  Return this.
   **
-  StrBuf join(Obj x, Str sep := " ")
+  This join(Obj? x, Str sep := " ")
 
   **
   ** Insert x.toStr into this buffer at the specified index.
@@ -75,27 +75,27 @@ final class StrBuf
   ** buffer.  Throw IndexErr if index is out of range.  Return
   ** this.
   **
-  StrBuf insert(Int index, Obj x)
+  This insert(Int index, Obj? x)
 
   **
   ** Remove the char at the specified index.  A negative index may be
   ** used to access an index from the end of the list.  Size is decremented
   ** by 1.  Return the this.  Throw IndexErr if index is out of range.
   **
-  StrBuf remove(Int index)
+  This remove(Int index)
 
   **
   ** Ensure that this buffer has the specified capactity.  If
   ** this buffer is already beyond the given capacity, then
   ** do nothing.  Return this.
   **
-  StrBuf grow(Int size)
+  This grow(Int size)
 
   **
   ** Clear the contents of the string buffer so that is
   ** has a size of zero.  Return this.
   **
-  StrBuf clear()
+  This clear()
 
 // TODO: capacity, get, slice, etc
 

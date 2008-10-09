@@ -83,7 +83,7 @@ final class Zip
   ** keys will start with a slash and be relative to this zip file.
   ** Return null if using streams.
   **
-  Uri:File contents()
+  [Uri:File]? contents()
 
   **
   ** Read the next entry in the zip.  Use the File's input stream to read the

@@ -23,7 +23,7 @@ const final class Charset
   ** methods such as `utf8` to get a standard encoding.  If charset not
   ** found and checked is false return null, otherwise throw ParseErr.
   **
-  static Charset fromStr(Str name, Bool checked := true)
+  static Charset? fromStr(Str name, Bool checked := true)
 
   **
   ** Private constructor
@@ -69,7 +69,7 @@ const final class Charset
   ** Charset equality is based on the character set name
   ** ignoring case (names are not case-sensitive).
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Return name().

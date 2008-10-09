@@ -20,7 +20,7 @@ final class Process
   ** Construct a Process instanced used to launch an external
   ** OS process with the specified command arguments.
   **
-  new make(Str[] cmd := Str[,], File dir := null)
+  new make(Str[] cmd := Str[,], File? dir := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Configuration
@@ -40,7 +40,7 @@ final class Process
   **
   ** Working directory of process.
   **
-  File dir
+  File? dir
 
   **
   ** If true, then stderr is redirected to the output
@@ -54,7 +54,7 @@ final class Process
   ** Default is to send to `Sys.out`.  If set to null, then
   ** output is silently consumed like /dev/null.
   **
-  OutStream out := Sys.out
+  OutStream? out := Sys.out
 
   **
   ** The output stream used to sink the process stderr.
@@ -64,14 +64,14 @@ final class Process
   ** true, in which case stderr goes to the stream configured
   ** via 'out'.
   **
-  OutStream err := Sys.err
+  OutStream? err := Sys.err
 
   **
   ** The input stream used to source the process stdin.
   ** If null, then the new process will block if it attempts
   ** to read stdin.  Default is null.
   **
-  InStream in := null
+  InStream? in := null
 
 //////////////////////////////////////////////////////////////////////////
 // Lifecycle

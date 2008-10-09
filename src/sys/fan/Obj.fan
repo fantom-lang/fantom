@@ -33,7 +33,7 @@ abstract class Obj
   ** also be overridden such that any two objects which return true for
   ** equals() must return the same value for hash().
   **
-  virtual Bool equals(Obj that)
+  virtual Bool equals(Obj? that)
 
   **
   ** Return -1, 0, or 1 if this object is less than, equal to, or greater
@@ -69,7 +69,7 @@ abstract class Obj
   ** is one, set the field and return args[0].  Otherwise throw
   ** UnknownSlotErr.
   **
-  virtual Obj trap(Str name, Obj[] args)
+  virtual Obj? trap(Str name, Obj[]? args)
 
 //////////////////////////////////////////////////////////////////////////
 // Type
@@ -100,6 +100,6 @@ abstract class Obj
   ** Write 'x.toStr' to standard output.  If 'x' is
   ** null then print "null".
   **
-  static Void echo(Obj x)
+  static Void echo(Obj? x)
 
 }

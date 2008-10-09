@@ -36,7 +36,7 @@ final class List
   ** Two Lists are equal if they have the same number of items and all
   ** the items at each index return true for equals().
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
 
   **
   ** Return platform dependent hashcode based a hash of the items

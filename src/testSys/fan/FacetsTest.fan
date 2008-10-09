@@ -207,7 +207,7 @@ class FacetsA
   override Int hash() { return "$i + $f + $s".hash }
 
   @wow
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := obj as FacetsA
     if (x == null) return false

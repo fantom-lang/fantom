@@ -127,7 +127,7 @@ const class Font
   **
   ** Equality is based on name, size, and style.
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
   {
     x := that as Font
     if (x == null) return false

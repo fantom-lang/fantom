@@ -53,8 +53,9 @@ final class Depend
   ** Parse the string according into a dependency.  See class
   ** header for specification of the format.  Throw ParseErr if
   ** string is illegally formatted.
+  ** TODO: add checked flag
   **
-  static Depend fromStr(Str s)
+  static Depend? fromStr(Str s)
 
   **
   ** Private constructor
@@ -68,7 +69,7 @@ final class Depend
   **
   ** Two Depends are equal if they have same normalized string representation.
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
 
   **
   ** Return a hash code based on the normalized string representation.

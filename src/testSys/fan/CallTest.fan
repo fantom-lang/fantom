@@ -125,7 +125,7 @@ class CallB : CallA
 
 class CallDynamic
 {
-  override Obj trap(Str name, Obj[] args)
+  override Obj? trap(Str name, Obj[]? args)
   {
     this.name = name
     this.args = args
@@ -144,4 +144,3 @@ class CallDynamic
   Str name
   Obj[] args
 }
-

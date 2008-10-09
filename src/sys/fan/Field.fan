@@ -21,7 +21,7 @@ const class Field : Slot
   ** and override 'get' and 'set' with an implementation for managing
   ** the state of the field.
   **
-  protected new make(Str name, Type of, Str:Obj facets := null)
+  protected new make(Str name, Type of, [Str:Obj]? facets := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
@@ -41,13 +41,13 @@ const class Field : Slot
   ** static, then the instance parameter is ignored.  If the getter
   ** is non-null, then it is used to get the field.
   **
-  virtual Obj get(Obj instance := null)
+  virtual Obj? get(Obj? instance := null)
 
   **
   ** Set the field for the specified instance.  If the field is
   ** static, then the instance parameter is ignored.  If the setter
   ** is non-null, then it is used to set the field.
   **
-  virtual Void set(Obj instance, Obj value)
+  virtual Void set(Obj? instance, Obj? value)
 
 }

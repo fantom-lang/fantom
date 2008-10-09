@@ -183,9 +183,10 @@ class SerializationTest : Test
     verifySer("[sys::Int:sys::Bool[]][][sys::Int:sys::Bool[][2:[true]]]", [Int:Bool[]][][[2:[true]]])
     verifySer("[sys::Int:sys::Int][][sys::Int:sys::Int[2:20]]", [Int:Int][][Int:Int[2:20]])
     verifySer("[sys::Int:sys::Int][][[sys::Int:sys::Int][2:20]]", [Int:Int][][Int:Int[2:20]])
-    verifySer("sys::Version:sys::Int[sys::Version(\"1.2\"):1]", [Version.fromStr("1.2"):1])
-    verifySer("[sys::Version:sys::Int][sys::Version(\"1.2\"):1]", [Version.fromStr("1.2"):1])
-    verifySer("sys::Version:sys::Int[][[sys::Version(\"1.2\"):1]]", sys::Version:sys::Int[][[Version.fromStr("1.2"):1]])
+    // TODO: need to fix nullable map inference...
+    verifySer("sys::Version:sys::Int[sys::Version(\"1.2\"):1]", Version:Int[Version.fromStr("1.2"):1])
+    verifySer("[sys::Version:sys::Int][sys::Version(\"1.2\"):1]", Version:Int[Version.fromStr("1.2"):1])
+    verifySer("sys::Version:sys::Int[][[sys::Version(\"1.2\"):1]]", sys::Version:sys::Int[][Version:Int[Version.fromStr("1.2"):1]])
 
     // errors
     verifyErr(IOErr#) |,| { verifySer("[:", null) }
@@ -722,7 +723,7 @@ class SerA
     return i.hash ^ f.hash
   }
 
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := obj as SerA
     if (x == null) return false
@@ -760,7 +761,7 @@ class SerA
 class SerB : SerA
 {
   new make() : super.make(null, null) {}
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := obj as SerB
     if (x == null) return false
@@ -791,7 +792,7 @@ const class SerConst
     return a.hash
   }
 
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := obj as SerConst
     if (x == null) return false
@@ -817,7 +818,7 @@ class SerListMap
 {
   override Int hash() { return map.hash }
 
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := obj as SerListMap
     if (x == null) return false
@@ -848,7 +849,7 @@ class SerSimple
   new make(Int a, Int b) { this.a = a; this.b = b }
   override Str toStr() { return "$a,$b" }
   override Int hash() { return a ^ b }
-  override Bool equals(Obj obj) { return a == obj->a && b == obj->b }
+  override Bool equals(Obj? obj) { return a == obj->a && b == obj->b }
   Int a
   Int b
 }
@@ -865,7 +866,7 @@ class SerSynthetic
   once Int b() { return a + 1 }
 
   override Int hash() { return a }
-  override Bool equals(Obj obj) { return a == obj->a }
+  override Bool equals(Obj? obj) { return a == obj->a }
   override Str toStr() { return "a=$a" }
 }
 
@@ -880,7 +881,7 @@ class SerIntCollection
   This add(Int i) { list.add(i); return this }
   Void each(|Int i| f) { list.each(f) }
   override Int hash() { return list.hash }
-  override Bool equals(Obj obj) { return name == obj->name && list == obj->list }
+  override Bool equals(Obj? obj) { return name == obj->name && list == obj->list }
   override Str toStr() { return name + " " + list.toStr }
   Str name
   @transient Int[] list := Int[,]
@@ -897,9 +898,8 @@ class SerFolder
   Void add(SerFolder x) { list.add(x) }
   Void each(|SerFolder i| f) { list.each(f) }
   override Int hash() { return list.hash }
-  override Bool equals(Obj obj) { return name == obj->name && list == obj->list }
+  override Bool equals(Obj? obj) { return name == obj->name && list == obj->list }
   override Str toStr() { return name + " " + list.toStr }
   Str name
   @transient SerFolder[] list := SerFolder[,]
 }
-

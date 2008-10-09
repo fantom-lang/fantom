@@ -21,7 +21,7 @@ const final class Int : Num
   ** If invalid format and checked is false return null,
   ** otherwise throw ParseErr.
   **
-  static Int fromStr(Str s, Int radix := 10, Bool checked := true)
+  static Int? fromStr(Str s, Int radix := 10, Bool checked := true)
 
   **
   ** Generate a random number.  If range is null then all 2^64
@@ -33,7 +33,7 @@ const final class Int : Num
   **   r := Int.random
   **   r := Int.random(0..100)
   **
-  static Int random(Range r := null)
+  static Int random(Range? r := null)
 
   **
   ** Private constructor.
@@ -59,7 +59,7 @@ const final class Int : Num
   **
   ** Return true if same integer value.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Compare based on integer value.
@@ -318,7 +318,7 @@ const final class Int : Num
   **   255.toHex     =>  "ff"
   **   255.toHex(4)  =>  "00ff"
   **
-  Str toHex(Int width := null)
+  Str toHex(Int? width := null)
 
   **
   ** Map as a Unicode code point to a single character Str.

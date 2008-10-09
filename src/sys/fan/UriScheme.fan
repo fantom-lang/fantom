@@ -23,7 +23,7 @@ abstract const class UriScheme
   ** not mapped and checked is true then throw UnresolvedErr
   ** otherwise return null.
   **
-  static UriScheme find(Str scheme, Bool checked := true)
+  static UriScheme? find(Str scheme, Bool checked := true)
 
   **
   ** Return the scheme name for this instance.  This method
@@ -41,7 +41,7 @@ abstract const class UriScheme
   ** Resolve the uri to a Fan object.  If uri cannot
   ** be resolved by this scheme then throw UnresolvedErr.
   **
-  abstract Obj get(Uri uri, Obj base)
+  abstract Obj? get(Uri uri, Obj? base)
 
 }
 
@@ -52,7 +52,7 @@ abstract const class UriScheme
 @uriScheme="fan"
 internal const class FanScheme : UriScheme
 {
-  override Obj get(Uri uri, Obj base)
+  override Obj? get(Uri uri, Obj? base)
 }
 
 **************************************************************************
@@ -62,9 +62,8 @@ internal const class FanScheme : UriScheme
 @uriScheme="file"
 internal const class FileScheme : UriScheme
 {
-  override Obj get(Uri uri, Obj base)
+  override Obj? get(Uri uri, Obj? base)
 }
-
 
 
 

@@ -30,7 +30,7 @@ const class Log
   ** Find a log by name.  If the log doesn't exist and
   ** checked is false then return null, otherwise throw Err.
   **
-  static Log find(Str name, Bool checked := true)
+  static Log? find(Str name, Bool checked := true)
 
   **
   ** Find an existing log by name or if not found then
@@ -105,22 +105,22 @@ const class Log
   **
   ** Generate a `LogLevel.error` log entry.
   **
-  Void error(Str message, Err err := null)
+  Void error(Str message, Err? err := null)
 
   **
   ** Generate a `LogLevel.warn` log entry.
   **
-  Void warn(Str message, Err err := null)
+  Void warn(Str message, Err? err := null)
 
   **
   ** Generate a `LogLevel.info` log entry.
   **
-  Void info(Str message, Err err := null)
+  Void info(Str message, Err? err := null)
 
   **
   ** Generate a `LogLevel.debug` log entry.
   **
-  Void debug(Str message, Err err := null)
+  Void debug(Str message, Err? err := null)
 
   **
   ** Publish a log entry.  The convenience methods `error`, `warn`

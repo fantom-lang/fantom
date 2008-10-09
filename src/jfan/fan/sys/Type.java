@@ -142,6 +142,8 @@ public abstract class Type
 
   public Boolean isNullable() { return false; }
 
+  public Type toNonNullable() { return this; }
+
   public final synchronized Type toNullable()
   {
     if (nullable == null) nullable = makeToNullable();

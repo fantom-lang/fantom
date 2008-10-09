@@ -113,7 +113,7 @@ const class Pen
   **
   ** Equality is based on Pen's fields.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     that := obj as Pen
     if (that == null) return false

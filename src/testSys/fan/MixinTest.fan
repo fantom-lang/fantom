@@ -492,7 +492,7 @@ class MxClsGetters : MxGetters
 mixin MxGoo
 {
   abstract Str name
-  override Bool equals(Obj that) { return name == ((MxGoo)that).name }
+  override Bool equals(Obj? that) { return name == ((MxGoo)that).name }
 }
 
 mixin MxRoo {}

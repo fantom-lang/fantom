@@ -30,7 +30,7 @@ final class Map
   **
   ** Two Maps are equal if they have the same number of equal key/value pairs.
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
 
   **
   ** Return platform dependent hashcode based on hash of the keys and values.

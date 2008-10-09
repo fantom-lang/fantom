@@ -15,6 +15,6 @@ const class UnsupportedErr : Err
   **
   ** Construct with specified error message and optional root cause.
   **
-  new make(Str msg := null, Err cause := null)
+  new make(Str? msg := null, Err? cause := null)
 
 }

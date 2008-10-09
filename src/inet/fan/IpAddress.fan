@@ -73,7 +73,7 @@ final class IpAddress
   **
   ** Equality is based on equivalent address bytes.
   **
-  override native Bool equals(Obj obj)
+  override native Bool equals(Obj? obj)
 
   **
   ** Return the exact string passed to the constructor.

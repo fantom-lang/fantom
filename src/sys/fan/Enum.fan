@@ -38,7 +38,7 @@ abstract const class Enum
   ** A public static fromStr method is always auto-generated
   ** by the compiler for each enum.
   **
-  protected static Enum doFromStr(Type t, Str name, Bool checked)
+  protected static Enum? doFromStr(Type t, Str name, Bool checked)
 
 //////////////////////////////////////////////////////////////////////////
 // Obj Overrides
@@ -47,7 +47,7 @@ abstract const class Enum
   **
   ** Enums are only equal if same instance using ===.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Compare based on ordinal value.
