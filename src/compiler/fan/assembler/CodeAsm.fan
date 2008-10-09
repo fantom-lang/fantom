@@ -719,7 +719,9 @@ class CodeAsm : CompilerSupport
 
   private Void listLiteral(ListLiteralExpr list)
   {
-    v := ((ListType)list.ctype).v
+    t := list.ctype
+    if (t is NullableType) t = t->root
+    v := ((ListType)t).v
 
     op(FOp.LoadType, fpod.addTypeRef(v));
     op(FOp.LoadInt,  fpod.ints.add(list.vals.size))

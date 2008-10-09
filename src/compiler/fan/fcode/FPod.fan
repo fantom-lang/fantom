@@ -62,7 +62,7 @@ final class FPod : CPod, FConst
     if (r.isGenericInstance)
       sig = r.sig
     else
-      sig = n(r.podName) + "::" + n(r.typeName)
+      sig = n(r.podName) + "::" + n(r.typeName) + r.sig
     return ns.resolveType(sig)
   }
 

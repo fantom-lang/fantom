@@ -816,7 +816,7 @@ class CheckErrors : CompilerStep
 
   private Void checkConstruction(CallExpr call)
   {
-    if (!call.method.isCtor && call.ctype != call.method.returnType)
+    if (!call.method.isCtor && call.ctype.toNonNullable != call.method.returnType.toNonNullable)
       err("Construction method '$call.method.qname' must return '$call.ctype.name'", call.location)
     checkCall(call)
   }
