@@ -20,8 +20,9 @@ const class Locale
 
   **
   ** Parse a locale according to the `toStr` format.
+  ** TODO: checked param
   **
-  static Locale fromStr(Str s)
+  static Locale? fromStr(Str s)
 
   **
   ** Private constructor
@@ -64,7 +65,7 @@ const class Locale
   ** Get the country/region as an uppercase ISO 3166 two
   ** letter code.  Return null if the country is unspecified.
   **
-  Str country()
+  Str? country()
 
   **
   ** Compute hash code base on normalized toStr format.
@@ -74,7 +75,7 @@ const class Locale
   **
   ** Equality is based on the normalized toStr format.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Return string representation:
@@ -100,6 +101,6 @@ const class Locale
   **
   ** Also see `Pod.loc` and `Type.loc`.
   **
-  Str get(Str pod, Str key, Str def := "pod::key")
+  Str? get(Str pod, Str key, Str? def := "pod::key")
 
 }

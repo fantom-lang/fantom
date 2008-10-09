@@ -43,7 +43,7 @@ const class Point
   override Int hash() { return x.hash ^ (y.hash << 16) }
 
   ** Return if obj is same Point value.
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     that := obj as Point
     if (that == null) return false
@@ -97,7 +97,7 @@ const class Size
   override Int hash() { return w.hash ^ (h.hash << 16) }
 
   ** Return if obj is same Size value.
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     that := obj as Size
     if (that == null) return false
@@ -172,7 +172,7 @@ const class Rect
   }
 
   ** Return if obj is same Rect value.
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     that := obj as Rect
     if (that == null) return false
@@ -261,7 +261,7 @@ const class Insets
   }
 
   ** Return if obj is same Insets value.
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     that := obj as Insets
     if (that == null) return false
@@ -311,7 +311,7 @@ const class Hints
   }
 
   ** Return if obj is same Hints value.
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     that := obj as Hints
     if (that == null) return false

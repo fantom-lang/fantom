@@ -245,12 +245,12 @@ const class TestField : Field
   new make(Str name, Type of) : super(name, of) {}
   new makef(Str name, Type of, Str:Obj f) : super.make(name, of, f) {}
 
-  override Obj get(Obj instance)
+  override Obj? get(Obj? instance)
   {
     return ((Dyno)instance).vals[name]
   }
 
-  override Void set(Obj instance, Obj val)
+  override Void set(Obj? instance, Obj? val)
   {
     ((Dyno)instance).vals[name] = val
   }
@@ -291,5 +291,4 @@ class Dyno2 : Dyno
   Int sub(Int x) { return i - x }
   Bool z := true
 }
-
 

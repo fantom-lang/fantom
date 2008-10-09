@@ -22,7 +22,7 @@ const final class Decimal : Num
   ** Parse a Str into a Decimal.  If invalid format and
   ** checked is false return null, otherwise throw ParseErr.
   **
-  static Decimal fromStr(Str s, Bool checked := true)
+  static Decimal? fromStr(Str s, Bool checked := true)
 
   **
   ** Private constructor.
@@ -36,7 +36,7 @@ const final class Decimal : Num
   **
   ** Return true if same decimal with same scale.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Compare based on decimal value, scale is not

@@ -44,7 +44,7 @@ abstract const class Namespace
   ** Get the Uri that this Namespace is mounted
   ** under or null if not mounted.
   **
-  Uri uri()
+  Uri? uri()
 
   **
   ** Get the object mapped by the specified Uri.  If the Uri
@@ -52,7 +52,7 @@ abstract const class Namespace
   ** return null, otherwise throw UnresolvedErr.  Throw
   ** ArgErr if uri returns false for [isPathOnly]`Uri.isPathOnly`.
   **
-  abstract Obj get(Uri uri, Bool checked := true)
+  abstract Obj? get(Uri uri, Bool checked := true)
 
   **
   ** Create the specified uri/object pair in this namespace.
@@ -103,7 +103,7 @@ abstract const class Namespace
 
 internal const class RootNamespace : Namespace
 {
-  override Obj get(Uri uri, Bool checked := true)
+  override Obj? get(Uri uri, Bool checked := true)
 }
 
 **************************************************************************
@@ -112,7 +112,7 @@ internal const class RootNamespace : Namespace
 
 internal const class SysNamespace : Namespace
 {
-  override Obj get(Uri uri, Bool checked := true)
+  override Obj? get(Uri uri, Bool checked := true)
 }
 
 **************************************************************************
@@ -121,6 +121,5 @@ internal const class SysNamespace : Namespace
 
 internal const class DirNamespace : Namespace
 {
-  override Obj get(Uri uri, Bool checked := true)
+  override Obj? get(Uri uri, Bool checked := true)
 }
-

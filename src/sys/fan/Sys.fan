@@ -29,7 +29,7 @@ final class Sys
   ** Get the namespace instance which manages the specified
   ** uri, or if uri is omitted, then get the root namespace.
   **
-  static Namespace ns(Uri uri := null)
+  static Namespace ns(Uri? uri := null)
 
   **
   ** Mount a namespace under the specified Uri.  All requests
@@ -139,7 +139,7 @@ final class Sys
   ** has overridden the 'hash' method.  If null then
   ** return 0.
   **
-  static Int idHash(Obj obj)
+  static Int idHash(Obj? obj)
 
 //////////////////////////////////////////////////////////////////////////
 // Compiler Utils
@@ -159,6 +159,6 @@ final class Sys
   **   - force: pass 'true' to not use caching, always forces
   **     a recompile
   **
-  static Type compile(File f, Str:Obj options := null)
+  static Type compile(File f, [Str:Obj]? options := null)
 
 }

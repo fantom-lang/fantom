@@ -50,7 +50,7 @@ const class TimeZone
   ** doesn't exist and checked is false then return
   ** null, otherwise throw ParseErr.
   **
-  static TimeZone fromStr(Str name, Bool checked := true)
+  static TimeZone? fromStr(Str name, Bool checked := true)
 
   **
   ** Get the time zone which represents UTC.

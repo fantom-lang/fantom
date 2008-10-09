@@ -33,7 +33,7 @@ class OutStream
   ** handle writes by overriding the following methods: `write`
   ** and `writeBuf`.
   **
-  protected new make(OutStream out)
+  protected new make(OutStream? out)
 
 //////////////////////////////////////////////////////////////////////////
 // Virtuals
@@ -152,13 +152,13 @@ class OutStream
   ** Convenience for 'writeChars(obj.toStr)'.  If obj is null,
   ** then print the string "null".  Return this.
   **
-  virtual This print(Obj s)
+  virtual This print(Obj? s)
 
   **
   ** Convenience for 'writeChars(obj.toStr + "\n")'.  If obj
   ** is null then print the string "null\n".  Return this.
   **
-  virtual This printLine(Obj obj := "")
+  virtual This printLine(Obj? obj := "")
 
   **
   ** Write a serialized object from the stream according to
@@ -175,7 +175,7 @@ class OutStream
   **     aren't serializable. If true then we output null and a comment.
   **     Default is false.
   **
-  This writeObj(Obj obj, Str:Obj options := null)
+  This writeObj(Obj? obj, [Str:Obj]? options := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

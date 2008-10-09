@@ -40,7 +40,7 @@ const final class Float : Num
   **
   ** TODO: need spec - follow XML Schema literal definition
   **
-  static Float fromStr(Str s, Bool checked := true)
+  static Float? fromStr(Str s, Bool checked := true)
 
   **
   ** Private constructor.
@@ -80,7 +80,7 @@ const final class Float : Num
   **
   ** Return true if same float value.  Unlike Java, NaN equals NaN.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Return if this Float is approximately equal to the given Float by the
@@ -91,7 +91,7 @@ const final class Float : Num
   **   if (tolerance == null) tolerance = min(abs(this/1e6), abs(r/1e6))
   **   (this - r).abs < tolerance
   **
-  Bool approx(Float r, Float tolerance := null)
+  Bool approx(Float r, Float? tolerance := null)
 
   **
   ** Compare based on floating point value.

@@ -55,7 +55,7 @@ const class Gradient : Brush
   **
   ** Equality is based on fields.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     that := obj as Gradient
     if (that == null) return false

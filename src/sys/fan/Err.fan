@@ -19,7 +19,7 @@ const class Err
   **
   ** Construct with specified error message and optional root cause.
   **
-  new make(Str msg := null, Err cause := null)
+  new make(Str? msg := null, Err? cause := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
@@ -29,12 +29,12 @@ const class Err
   ** Get the string message passed to the contructor or null if
   ** a message is not available.
   **
-  Str message()
+  Str? message()
 
   **
   ** Get the underyling cause exception or null.
   **
-  Err cause()
+  Err? cause()
 
   **
   ** Dump the stack trace of this exception to the specified

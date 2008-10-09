@@ -55,7 +55,7 @@ abstract const class File
   **   File.createTemp("x", ".txt") => `/tmp/x67392.txt`
   **   File.createTemp.deleteOnExit => `/tmp/fan5284.tmp`
   **
-  static File createTemp(Str prefix := "fan", Str suffix := ".tmp", File dir := null)
+  static File createTemp(Str prefix := "fan", Str suffix := ".tmp", File? dir := null)
 
   **
   ** Private constructor
@@ -69,7 +69,7 @@ abstract const class File
   **
   ** File equality is based on the un-normalized Uri used to create the File.
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
 
   **
   ** Return 'uri.hash'.
@@ -119,12 +119,12 @@ abstract const class File
   **
   ** Convenience for [uri.ext]`Uri.ext`.
   **
-  Str ext()
+  Str? ext()
 
   **
   ** Convenience for [uri.mimeType]`Uri.mimeType`.
   **
-  MimeType mimeType()
+  MimeType? mimeType()
 
 //////////////////////////////////////////////////////////////////////////
 // Access
@@ -139,25 +139,25 @@ abstract const class File
   ** Return the size of the file in bytes otherwise null if a
   ** directory or unknown.
   **
-  abstract Int size()
+  abstract Int? size()
 
   **
   ** Get time the file was last modified or null if unknown.
   **
-  abstract DateTime modified
+  abstract DateTime? modified
 
   **
   ** Get this File as an operating system specific path on
   ** the local system.  If this File doesn't represent a
   ** path on the local file system then return null.
   **
-  abstract Str osPath()
+  abstract Str? osPath()
 
   **
   ** Get the parent directory of this file or null.
   ** Also see `Uri.parent`.
   **
-  abstract File parent()
+  abstract File? parent()
 
   **
   ** List the files contained by this directory.  This list includes
@@ -274,14 +274,14 @@ abstract const class File
   **
   ** Return the 'to' destination file.
   **
-  virtual File copyTo(File to, Str:Obj options := null)
+  virtual File copyTo(File to, [Str:Obj]? options := null)
 
   **
   ** Copy this file under the specified directory and return
   ** the destination file.  This method is a convenience for:
   **   return this.copyTo(dir + this.name, options)
   **
-  virtual File copyInto(File dir, Str:Obj options := null)
+  virtual File copyInto(File dir, [Str:Obj]? options := null)
 
   **
   ** Move this file to the specified location.  If this file is
@@ -352,14 +352,14 @@ abstract const class File
   **   - "p": private read/write mode will not propagate changes
   **     to other processes which have mapped the file.
   **
-  abstract Buf mmap(Str mode := "rw", Int pos := 0, Int size := null)
+  abstract Buf mmap(Str mode := "rw", Int pos := 0, Int? size := null)
 
   **
   ** Open a new buffered InStream used to read from this file.  A
   ** bufferSize of null or zero will return an unbuffered input stream.
   ** Throw IOErr on error.
   **
-  abstract InStream in(Int bufferSize := 4096)
+  abstract InStream in(Int? bufferSize := 4096)
 
   **
   ** Open a new buffered OutStream used to write to this file.  If append is
@@ -367,7 +367,7 @@ abstract const class File
   ** opened as an empty file.  A bufferSize of null or zero will return an
   ** unbuffered input stream.  Throw IOErr on error.
   **
-  abstract OutStream out(Bool append := false, Int bufferSize := 4096)
+  abstract OutStream out(Bool append := false, Int? bufferSize := 4096)
 
   **
   ** Convenience for [in.readAllBuf]`File.readAllBuf`.
@@ -409,17 +409,13 @@ abstract const class File
   ** Convenience for [in.readObj]`InStream.readObj`
   ** The input stream is guaranteed to be closed.
   **
-  Obj readObj(Str:Obj options := null)
+  Obj? readObj([Str:Obj]? options := null)
 
   **
   ** Convenience for [out.writeObj]`OutStream.writeObj`
   ** The output stream is guaranteed to be closed.
   **
-  Void writeObj(Obj obj, Str:Obj options := null)
-
-  // TODO:
-  //  - random access as Buf
-  //  - copy, move, rename, etc
+  Void writeObj(Obj? obj, [Str:Obj]? options := null)
 
   **
   ** Return the platform's separator for names within
@@ -443,10 +439,10 @@ internal const class LocalFile : File
 {
   private new init()
   override Bool exists()
-  override Int size()
-  override DateTime modified
-  override Str osPath()
-  override File parent()
+  override Int? size()
+  override DateTime? modified
+  override Str? osPath()
+  override File? parent()
   override File[] list()
   override File normalize()
   override File plus(Uri uri, Bool checkSlash := true)
@@ -455,9 +451,9 @@ internal const class LocalFile : File
   override Void delete()
   override File deleteOnExit()
   override Buf open(Str mode := "rw")
-  override Buf mmap(Str mode := "rw", Int pos := 0, Int size := this.size)
-  override InStream in(Int bufferSize := 4096)
-  override OutStream out(Bool append := false, Int bufferSize := 4096)
+  override Buf mmap(Str mode := "rw", Int pos := 0, Int? size := this.size)
+  override InStream in(Int? bufferSize := 4096)
+  override OutStream out(Bool append := false, Int? bufferSize := 4096)
 }
 
 **************************************************************************
@@ -468,10 +464,10 @@ internal const class ZipEntryFile : File
 {
   private new init()
   override Bool exists()
-  override Int size()
-  override DateTime modified
-  override Str osPath()
-  override File parent()
+  override Int? size()
+  override DateTime? modified
+  override Str? osPath()
+  override File? parent()
   override File[] list()
   override File normalize()
   override File plus(Uri uri, Bool checkSlash := true)
@@ -480,7 +476,7 @@ internal const class ZipEntryFile : File
   override Void delete()
   override File deleteOnExit()
   override Buf open(Str mode := "rw")
-  override Buf mmap(Str mode := "rw", Int pos := 0, Int size := this.size)
-  override InStream in(Int bufferSize := 4096)
-  override OutStream out(Bool append := false, Int bufferSize := 4096)
+  override Buf mmap(Str mode := "rw", Int pos := 0, Int? size := this.size)
+  override InStream in(Int? bufferSize := 4096)
+  override OutStream out(Bool append := false, Int? bufferSize := 4096)
 }

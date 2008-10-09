@@ -21,22 +21,22 @@ abstract const class Slot
   ** doesn't exist and checked is false then return null, otherwise
   ** throw UnknownSlotErr.
   **
-  static Slot find(Str qname, Bool checked := true)
+  static Slot? find(Str qname, Bool checked := true)
 
   **
   ** Convenience for '(Method)find(qname, checked)'
   **
-  static Method findMethod(Str qname, Bool checked := true)
+  static Method? findMethod(Str qname, Bool checked := true)
 
   **
   ** Convenience for '(Field)find(qname, checked)'
   **
-  static Field findField(Str qname, Bool checked := true)
+  static Field? findField(Str qname, Bool checked := true)
 
   **
   ** Convenience for 'findMethod(qname, checked).func'
   **
-  static Func findFunc(Str qname, Bool checked := true)
+  static Func? findFunc(Str qname, Bool checked := true)
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
@@ -168,7 +168,7 @@ abstract const class Slot
   ** Get a facet by name, or return the 'def' is the facet is not defined.
   ** See the [Facets Doc]`docLang::Facets` for details.
   **
-  Obj facet(Str name, Obj def := null)
+  Obj? facet(Str name, Obj? def := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation
@@ -180,7 +180,7 @@ abstract const class Slot
   ** included an the start of the string as a series of "@name=value"
   ** lines.
   **
-  Str doc()
+  Str? doc()
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion

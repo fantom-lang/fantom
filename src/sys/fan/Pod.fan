@@ -28,7 +28,7 @@ final const class Pod
   ** Find a pod by name.  If the pod doesn't exist and checked
   ** is false then return null, otherwise throw UnknownPodErr.
   **
-  static Pod find(Str name, Bool checked := true)
+  static Pod? find(Str name, Bool checked := true)
 
   **
   ** Load a pod into memory from the specified input stream.  The
@@ -92,7 +92,7 @@ final const class Pod
   ** Get a facet by name, or return the 'def' is the facet is not defined.
   ** See the [Facets Doc]`docLang::Facets` for details.
   **
-  Obj facet(Str name, Obj def := null)
+  Obj? facet(Str name, Obj? def := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Types
@@ -107,7 +107,7 @@ final const class Pod
   ** Find a type by name.  If the type doesn't exist and checked
   ** is false then return null, otherwise throw UnknownTypeErr.
   **
-  Type findType(Str name, Bool checked := true)
+  Type? findType(Str name, Bool checked := true)
 
 //////////////////////////////////////////////////////////////////////////
 // Resource Files
@@ -136,6 +136,6 @@ final const class Pod
   **   Locale.current.get(name, key, def)
   ** Also see `Locale.get` and `Type.loc`.
   **
-  Str loc(Str key, Str def := "name::key")
+  Str? loc(Str key, Str? def := "name::key")
 
 }

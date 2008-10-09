@@ -40,6 +40,7 @@ public class NullableType
   public boolean is(Type type) { return root.is(type); }
 
   public Boolean isNullable() { return true; }
+  public Type toNonNullable() { return root; }
   protected Type makeToNullable() { return this; }
 
   public boolean isGenericType() { return root.isGenericType(); }

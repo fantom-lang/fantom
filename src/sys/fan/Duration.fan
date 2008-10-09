@@ -47,7 +47,7 @@ const final class Duration
   **   Duration.fromStr("100ms")
   **   Duration.fromStr("-0.5hr")
   **
-  static Duration fromStr(Str s, Bool checked := true)
+  static Duration? fromStr(Str s, Bool checked := true)
 
   **
   ** Get the system timer at boot time of the Fan VM.
@@ -72,7 +72,7 @@ const final class Duration
   **
   ** Return true if same number nanosecond ticks.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Compare based on nanosecond ticks.

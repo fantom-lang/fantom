@@ -13,7 +13,7 @@
 internal const class FluxScheme : UriScheme
 {
 
-  override Obj get(Uri uri, Obj base)
+  override Obj? get(Uri uri, Obj? base)
   {
     switch (uri.pathStr)
     {

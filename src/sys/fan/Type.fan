@@ -24,7 +24,7 @@ class Type
   ** doesn't exist and checked is false then return null, otherwise
   ** throw UnknownTypeErr.
   **
-  static Type find(Str qname, Bool checked := true)
+  static Type? find(Str qname, Bool checked := true)
 
   **
   ** Find all the types annotated with the specified facet name/value
@@ -37,7 +37,7 @@ class Type
   **
   ** See [Facet Indexing]`docLang::TypeDatabase#facetIndexing` for details.
   **
-  static Type[] findByFacet(Str facetName, Obj facetVal, Obj options := null)
+  static Type[] findByFacet(Str facetName, Obj facetVal, Obj? options := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
@@ -53,7 +53,7 @@ class Type
   **
   ** NOTE: creating dynamics using mixins is not supported yet.
   **
-  new makeDynamic(Type[] supers, Str:Obj facets := null)
+  new makeDynamic(Type[] supers, [Str:Obj]? facets := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Naming
@@ -69,7 +69,7 @@ class Type
   **   acme::Foo#.pod   => acme
   **   acme::Foo[]#.pod => sys
   **
-  Pod pod()
+  Pod? pod()
 
   **
   ** Simple name of the type such as "Str".  For parameterized types derived
@@ -134,7 +134,7 @@ class Type
   **   Int#.base        =>  sys::Num
   **   OutStream#.base  =>  sys::Obj
   **
-  Type base()
+  Type? base()
 
   **
   ** Return the mixins directly implemented by this type.
@@ -193,6 +193,12 @@ class Type
   ** nullable then return this.
   **
   Type toNullable()
+
+  **
+  ** Return this type as a non-nullable type.  If this type is already
+  ** non-nullable then return this.
+  **
+  Type toNonNullable()
 
 //////////////////////////////////////////////////////////////////////////
 // Generics
@@ -328,18 +334,18 @@ class Type
   **
   ** Convenience for (Field)slot(name, checked)
   **
-  Field field(Str name, Bool checked := true)
+  Field? field(Str name, Bool checked := true)
 
   **
   ** Convenience for (Method)slot(name, checked)
   **
-  Method method(Str name, Bool checked := true)
+  Method? method(Str name, Bool checked := true)
 
   **
   ** Lookup a slot by name.  If the slot doesn't exist and checked
   ** is false then return null, otherwise throw UnknownSlotErr.
   **
-  Slot slot(Str name, Bool checked := true)
+  Slot? slot(Str name, Bool checked := true)
 
   **
   ** Add a new slot to a dynamic type.  If not a dynamic
@@ -362,7 +368,7 @@ class Type
   ** called "make".  Throw Err if public constructor "make" is
   ** not available.
   **
-  Obj make(Obj[] args := null)
+  Obj make(Obj[]? args := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Facets
@@ -383,7 +389,7 @@ class Type
   ** If 'inherited' is true, then this type's `inheritance` chain is
   ** searched.  See the [Facets Doc]`docLang::Facets` for details.
   **
-  Obj facet(Str name, Obj def := null, Bool inherited := false)
+  Obj? facet(Str name, Obj? def := null, Bool inherited := false)
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation
@@ -395,7 +401,7 @@ class Type
   ** included an the start of the string as a series of "@name=value"
   ** lines.
   **
-  Str doc()
+  Str? doc()
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion
@@ -428,6 +434,6 @@ class Type
   **   Locale.current.get(pod.name, key, def)
   ** Also see `Locale.get` and `Pod.loc`.
   **
-  Str loc(Str key, Str def := "name::key")
+  Str? loc(Str key, Str? def := "name::key")
 
 }

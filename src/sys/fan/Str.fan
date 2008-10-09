@@ -28,7 +28,7 @@ const final class Str
   **
   ** Return true if a Str with exact same char sequence.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Convenience for 'compareIgnoreCase(s) == 0'.
@@ -118,7 +118,7 @@ const final class Str
   **   "abcabc".index("b", -3) => 4
   **   "abcabc".index("x")     => null
   **
-  Int index(Str s, Int offset := 0)
+  Int? index(Str s, Int offset := 0)
 
   **
   ** Reverse index - return the first occurance of the specified
@@ -131,19 +131,19 @@ const final class Str
   **   "abcabc".indexr("b", -3) => 1
   **   "abcabc".indexr("b", 0)  => null
   **
-  Int indexr(Str s, Int offset := -1)
+  Int? indexr(Str s, Int offset := -1)
 
   **
   ** Find the index just like `index`, but ignoring case for
   ** ASCII chars only.
   **
-  Int indexIgnoreCase(Str s, Int offset := 0)
+  Int? indexIgnoreCase(Str s, Int offset := 0)
 
   **
   ** Find the index just like `indexr`, but ignoring case for
   ** ASCII chars only.
   **
-  Int indexrIgnoreCase(Str s, Int offset := -1)
+  Int? indexrIgnoreCase(Str s, Int offset := -1)
 
   **
   ** Return if this string contains the specified string.
@@ -381,7 +381,7 @@ const final class Str
   **   "22#33".split('#', false)  =>  ["22","33"]
   **   " x ; y".split(';', false) =>  [" x "," y"]
   **
-  Str[] split(Int separator := null, Bool trim := true)
+  Str[] split(Int? separator := null, Bool trim := true)
 
   **
   ** Split this string into individual lines where lines are
@@ -483,22 +483,22 @@ const final class Str
   **
   ** Convenience for `Bool.fromStr` using this string.
   **
-  Bool toBool(Bool checked := true)
+  Bool? toBool(Bool checked := true)
 
   **
   ** Convenience for `Int.fromStr` using this string.
   **
-  Int toInt(Int radix := 10, Bool checked := true)
+  Int? toInt(Int radix := 10, Bool checked := true)
 
   **
   ** Convenience for `Float.fromStr` using this string.
   **
-  Float toFloat(Bool checked := true)
+  Float? toFloat(Bool checked := true)
 
   **
   ** Convenience for `Decimal.fromStr` using this string.
   **
-  Decimal toDecimal(Bool checked := true)
+  Decimal? toDecimal(Bool checked := true)
 
   **
   ** Return this string as its Fan source code and serialization

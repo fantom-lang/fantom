@@ -318,7 +318,7 @@ internal class DialogCommand : Command
 
   override Int hash() { return id.hash }
 
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
   {
     if (that isnot DialogCommand) return false
     return ((DialogCommand)that).id == id

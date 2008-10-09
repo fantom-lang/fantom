@@ -16,7 +16,7 @@ const class LogRecord
   **
   ** Constructor with all the fields
   **
-  new make(DateTime time, LogLevel level, Str logName, Str message, Err err := null)
+  new make(DateTime time, LogLevel level, Str logName, Str message, Err? err := null)
 
   **
   ** Timestamp of log event
@@ -41,7 +41,7 @@ const class LogRecord
   **
   ** Exception if applicable
   **
-  const Err err
+  const Err? err
 
   **
   ** Return standard log format.

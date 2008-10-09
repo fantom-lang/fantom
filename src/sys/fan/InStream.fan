@@ -42,7 +42,7 @@ class InStream
   ** Read the next unsigned byte from the input stream.
   ** Return null if at end of stream.  Throw IOErr on error.
   **
-  virtual Int read()
+  virtual Int? read()
 
   **
   ** Attempt to read the next n bytes into the Buf at it's current
@@ -53,7 +53,7 @@ class InStream
   ** `readBufFully` if you must block until all n bytes read.
   ** Throw IOErr on error.
   **
-  virtual Int readBuf(Buf buf, Int n)
+  virtual Int? readBuf(Buf buf, Int n)
 
   **
   ** Pushback a byte so that it is the next byte to be read.  There
@@ -96,7 +96,7 @@ class InStream
   ** the Buf passed in or the one created automatically if buf is null.
   ** The buffer is automatically positioned at zero.
   **
-  Buf readBufFully(Buf buf, Int n)
+  Buf readBufFully(Buf? buf, Int n)
 
 //////////////////////////////////////////////////////////////////////////
 // Binary Data
@@ -107,7 +107,7 @@ class InStream
   ** it.  Peek has the same semantics as a read/unread.  Return
   ** null if at end of stream.
   **
-  Int peek()
+  Int? peek()
 
   **
   ** Read the next byte as an unsigned 8-bit number in network
@@ -218,7 +218,7 @@ class InStream
   ** Throw IOErr if there is a problem reading the stream, or
   ** an invalid character encoding is encountered.
   **
-  Int readChar()
+  Int? readChar()
 
   **
   ** Pushback a char so that it is the next char to be read.  This
@@ -232,7 +232,7 @@ class InStream
   ** it.  Peek has the same semantics as a readChar/unreadChar.
   ** Return null if at end of stream.
   **
-  Int peekChar()
+  Int? peekChar()
 
   **
   ** Read the next line from the input stream as a Str based on the
@@ -248,7 +248,7 @@ class InStream
   ** if there is a problem reading the stream or an invalid character
   ** encoding is encountered.
   **
-  Str readLine(Int max := 4096)
+  Str? readLine(Int? max := 4096)
 
   **
   ** Read a Str token from the input stream which is terminated
@@ -269,7 +269,7 @@ class InStream
   ** if there is a problem reading the stream or an invalid character
   ** encoding is encountered.
   **
-  Str readStrToken(Int max := 4096, |Int ch->Bool| c := null)
+  Str? readStrToken(Int? max := 4096, |Int ch->Bool|? c := null)
 
   **
   ** Read the entire stream into a list of Str lines based on the
@@ -318,7 +318,7 @@ class InStream
   **   - "makeArgs": Obj[] arguments to pass to the root
   **     object's make constructor via 'Type.make'
   **
-  Obj readObj(Str:Obj options := null)
+  Obj? readObj([Str:Obj]? options := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -358,7 +358,7 @@ class InStream
   ** upon return (the OutStream is never closed).  Return the number
   ** of bytes piped to the output stream.
   **
-  Int pipe(OutStream out, Int n := null, Bool close := true)
+  Int pipe(OutStream out, Int? n := null, Bool close := true)
 
 }
 
@@ -368,8 +368,8 @@ class InStream
 
 internal class SysInStream : InStream
 {
-  override Int read()
-  override Int readBuf(Buf buf, Int n)
+  override Int? read()
+  override Int? readBuf(Buf buf, Int n)
   override This unread(Int n)
   override Bool close()
 }

@@ -50,14 +50,14 @@ abstract class Test
   ** failure exception.  If msg is non-null, include it
   ** in a failure exception.
   **
-  Void verify(Bool cond, Str msg := null)
+  Void verify(Bool cond, Str? msg := null)
 
   **
   ** Verify that cond is false, otherwise throw a test
   ** failure exception.  If msg is non-null, include it
   ** in a failure exception.
   **
-  Void verifyFalse(Bool cond, Str msg := null)
+  Void verifyFalse(Bool cond, Str? msg := null)
 
   **
   ** Verify that a == b, otherwise throw a test failure exception.
@@ -66,25 +66,25 @@ abstract class Test
   ** true for equals() must also return the same hash code.  If
   ** msg is non-null, include it in failure exception.
   **
-  Void verifyEq(Obj a, Obj b, Str msg := null)
+  Void verifyEq(Obj? a, Obj? b, Str? msg := null)
 
   **
   ** Verify that a != b, otherwise throw a test failure exception.
   ** If msg is non-null, include it in failure exception.
   **
-  Void verifyNotEq(Obj a, Obj b, Str msg := null)
+  Void verifyNotEq(Obj? a, Obj? b, Str? msg := null)
 
   **
   ** Verify that a === b, otherwise throw a test failure exception.
   ** If msg is non-null, include it in failure exception.
   **
-  Void verifySame(Obj a, Obj b, Str msg := null)
+  Void verifySame(Obj? a, Obj? b, Str? msg := null)
 
   **
   ** Verify that a !== b, otherwise throw a test* failure exception.
   ** If msg is non-null, include it in failure exception.
   **
-  Void verifyNotSame(Obj a, Obj b, Str msg := null)
+  Void verifyNotSame(Obj? a, Obj? b, Str? msg := null)
 
   **
   ** Verify that the function throws an Err of the
@@ -99,7 +99,7 @@ abstract class Test
   ** Throw a test failure exception.  If msg is non-null, include
   ** it in the failure exception.
   **
-  Void fail(Str msg := null)
+  Void fail(Str? msg := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -121,5 +121,5 @@ abstract class Test
 
 internal const class TestErr : Err
 {
-  new make(Str msg := null, Err cause := null)
+  new make(Str? msg := null, Err? cause := null)
 }

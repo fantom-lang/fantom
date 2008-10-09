@@ -21,7 +21,7 @@ const class Method : Slot
   ** Dynamic slot constructor.  Dynamic methods take an implementation
   ** function which defines the return type and parameters of the method.
   **
-  public new make(Str name, Func func, Str:Obj facets := null)
+  public new make(Str name, Func func, [Str:Obj]? facets := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Signature
@@ -49,36 +49,36 @@ const class Method : Slot
 //////////////////////////////////////////////////////////////////////////
 
   ** Convenience for 'func.call'
-  Obj call(Obj[] args)
+  Obj? call(Obj[]? args)
 
   ** Convenience for 'func.callOn'
-  Obj callOn(Obj target, Obj[] args)
+  Obj? callOn(Obj? target, Obj[]? args)
 
   ** Convenience for 'func.call0'
-  Obj call0()
+  Obj? call0()
 
   ** Convenience for 'func.call1'
-  Obj call1(Obj a)
+  Obj? call1(Obj? a)
 
   ** Convenience for 'func.call2'
-  Obj call2(Obj a, Obj b)
+  Obj? call2(Obj? a, Obj? b)
 
   ** Convenience for 'func.call3'
-  Obj call3(Obj a, Obj b, Obj c)
+  Obj? call3(Obj? a, Obj? b, Obj? c)
 
   ** Convenience for 'func.call4'
-  Obj call4(Obj a, Obj b, Obj c, Obj d)
+  Obj? call4(Obj? a, Obj? b, Obj? c, Obj? d)
 
   ** Convenience for 'func.call5'
-  Obj call5(Obj a, Obj b, Obj c, Obj d, Obj e)
+  Obj? call5(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e)
 
   ** Convenience for 'func.call6'
-  Obj call6(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f)
+  Obj? call6(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f)
 
   ** Convenience for 'func.call7'
-  Obj call7(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g)
+  Obj? call7(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f, Obj? g)
 
   ** Convenience for 'func.call8'
-  Obj call8(Obj a, Obj b, Obj c, Obj d, Obj e, Obj f, Obj g, Obj h)
+  Obj? call8(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f, Obj? g, Obj? h)
 
 }

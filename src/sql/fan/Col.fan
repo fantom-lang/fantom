@@ -28,7 +28,7 @@ const class Col : Field
   **
   ** Get the column value for the specified row.
   **
-  override Obj get(Obj row)
+  override Obj? get(Obj? row)
   {
     return ((Row)row).get(this)
   }
@@ -36,7 +36,7 @@ const class Col : Field
   **
   ** Set the column value for the specified row.
   **
-  override Void set(Obj row, Obj val)
+  override Void set(Obj? row, Obj? val)
   {
     ((Row)row).set(this, val)
   }

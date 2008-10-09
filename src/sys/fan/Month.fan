@@ -52,7 +52,7 @@ enum Month
   ** If pattern is null it defaults to "MMM".  Also see `localeAbbr`
   ** and `localeFull`.
   **
-  Str toLocale(Str pattern := null)
+  Str toLocale(Str? pattern := null)
 
   **
   ** Get the abbreviated name for the current locale.

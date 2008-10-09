@@ -60,7 +60,7 @@ class Buf
   **
   ** Buf equality is based on reference equality using the === operator.
   **
-  override Bool equals(Obj that)
+  override Bool equals(Obj? that)
 
   **
   ** Return string summary of the buffer.
@@ -287,19 +287,19 @@ class Buf
   ** Convenience for [out.print]`OutStream.print`
   ** Return this.
   **
-  This print(Obj s)
+  This print(Obj? s)
 
   **
   ** Convenience for [out.printLine]`OutStream.printLine`
   ** Return this.
   **
-  This printLine(Obj obj := "")
+  This printLine(Obj? obj := "")
 
   **
   ** Convenience for [out.writeObj]`OutStream.writeObj`
   ** Return this.
   **
-  This writeObj(Obj obj, Str:Obj options := null)
+  This writeObj(Obj? obj, [Str:Obj]? options := null)
 
 //////////////////////////////////////////////////////////////////////////
 // InStream
@@ -316,12 +316,12 @@ class Buf
   **
   ** Convenience for [in.read]`InStream.read`
   **
-  Int read()
+  Int? read()
 
   **
   ** Convenience for [in.readBuf]`InStream.readBuf`
   **
-  Int readBuf(Buf buf, Int n)
+  Int? readBuf(Buf buf, Int n)
 
   **
   ** Convenience for [in.unread]`InStream.unread`
@@ -329,7 +329,7 @@ class Buf
   ** like IO streams.  File backed buffers will simply rewrite
   ** the last position in the file.  Return this.
   **
-  This unread(Int b)
+  This? unread(Int b)
 
   **
   ** Convenience for [in.readAllBuf]`InStream.readAllBuf`
@@ -339,12 +339,12 @@ class Buf
   **
   ** Convenience for [in.readBufFully]`InStream.readBufFully`
   **
-  Buf readBufFully(Buf buf, Int n)
+  Buf readBufFully(Buf? buf, Int n)
 
   **
   ** Convenience for [in.peek]`InStream.peek`
   **
-  Int peek()
+  Int? peek()
 
   **
   ** Convenience for [in.readU1]`InStream.readU1`
@@ -409,7 +409,7 @@ class Buf
   **
   ** Convenience for [in.readChar]`InStream.readChar`
   **
-  Int readChar()
+  Int? readChar()
 
   **
   ** Convenience for [in.unreadChar]`InStream.unreadChar`
@@ -422,17 +422,17 @@ class Buf
   **
   ** Convenience for [in.peekChar]`InStream.peekChar`
   **
-  Int peekChar()
+  Int? peekChar()
 
   **
   ** Convenience for [in.readLine]`InStream.readLine`
   **
-  Str readLine(Int max := 4096)
+  Str? readLine(Int? max := 4096)
 
   **
   ** Convenience for [in.readStrToken]`InStream.readStrToken`
   **
-  Str readStrToken(Int max := 4096, |Int ch->Bool| c := null)
+  Str? readStrToken(Int? max := 4096, |Int ch->Bool|? c := null)
 
   **
   ** Convenience for [in.readAllLines]`InStream.readAllLines`
@@ -452,7 +452,7 @@ class Buf
   **
   ** Convenience for [in.readObj]`InStream.readObj`
   **
-  Obj readObj(Str:Obj options := null)
+  Obj? readObj([Str:Obj]? options := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Conversions

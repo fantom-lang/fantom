@@ -24,7 +24,7 @@ const final class Version
   ** If invalid format and checked is false return null,
   ** otherwise throw ParseErr.
   **
-  static Version fromStr(Str version, Bool checked := true)
+  static Version? fromStr(Str version, Bool checked := true)
 
   **
   ** Construct with list of integer segments.
@@ -44,7 +44,7 @@ const final class Version
   **
   ** Return true if equal segments.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Compare from from most significant segment to least significant
@@ -86,18 +86,18 @@ const final class Version
   ** Get the second segment which represents the minor version.
   ** If return null if less than two segments.
   **
-  Int minor()
+  Int? minor()
 
   **
   ** Get the third segment which represents the build number.
   ** If return null if less than three segments.
   **
-  Int build()
+  Int? build()
 
   **
   ** Get the fourth segment which represents the patch number.
   ** If return null if less than four segments.
   **
-  Int patch()
+  Int? patch()
 
 }

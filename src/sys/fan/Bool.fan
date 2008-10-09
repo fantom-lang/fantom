@@ -21,7 +21,7 @@ const final class Bool
   ** If invalid format and checked is false return null, otherwise
   ** throw ParseErr.
   **
-  static Bool fromStr(Str s, Bool checked := true)
+  static Bool? fromStr(Str s, Bool checked := true)
 
   **
   ** Private constructor.
@@ -35,7 +35,7 @@ const final class Bool
   **
   ** Return if same boolean value.
   **
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
 
   **
   ** Return 1231 for true and 1237 for false.
