@@ -20,7 +20,8 @@ public final class Depend
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Depend fromStr(String str)
+  public static Depend fromStr(String str) { return fromStr(str, true); }
+  public static Depend fromStr(String str, Boolean checked)
   {
     try
     {
@@ -28,7 +29,8 @@ public final class Depend
     }
     catch (Throwable e)
     {
-      throw ParseErr.make("Invalid Depend: '" + str + "'").val;
+      if (!checked) return null;
+      throw ParseErr.make("Depend", str).val;
     }
   }
 
