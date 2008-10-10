@@ -118,12 +118,26 @@ public class TypeParser
     else
       type = loadBasic();
 
+    // nullable
+    if (cur == '?')
+    {
+      consume('?');
+      type = type.toNullable();
+    }
+
     // anything left must be []
     while (cur == '[')
     {
       consume('[');
       consume(']');
       type = type.toListOf();
+    }
+
+    // nullable
+    if (cur == '?')
+    {
+      consume('?');
+      type = type.toNullable();
     }
 
     return type;
