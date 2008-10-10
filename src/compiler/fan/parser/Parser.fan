@@ -1851,7 +1851,7 @@ public class Parser : CompilerSupport
   private MapLiteralExpr mapLiteralExpr(Location loc, CType explicitType, Expr first)
   {
     // explicitType is *the* map type: Str:Str[,]
-    if (explicitType != null && !(explicitType is MapType))
+    if (explicitType != null && explicitType isnot MapType)
     {
       err("Invalid map type '$explicitType' for map literal", loc)
       explicitType = null
@@ -2025,6 +2025,12 @@ public class Parser : CompilerSupport
       consume(Token.lbracket)
       consume(Token.rbracket)
       t = t.toListOf
+    }
+
+    // check for type?:type map (illegal)
+    if (curt === Token.elvis && !cur.whitespace)
+    {
+      throw err("Map type cannot have nullable key type")
     }
 
     // check for ":" for map type

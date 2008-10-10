@@ -1174,6 +1174,9 @@ class ParserTest : CompilerTest
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  false)
 
+    verifyErrors("class Foo { Void a(Str?:Str bad) {} }",
+      [1,  23, "Map type cannot have nullable key type"])
+
     t = verifyType("[Int:Str]")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Map")
