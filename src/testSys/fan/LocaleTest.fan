@@ -30,7 +30,9 @@ class LocaleTest : Test
     verifyLocale("fr",    "fr", null)
     verifyLocale("fr-CA", "fr", "CA")
 
+    verifyEq(Locale.fromStr("", false), null)
     verifyErr(ParseErr#) |,| { Locale.fromStr("x") }
+    verifyErr(ParseErr#) |,| { Locale.fromStr("x", true) }
     verifyErr(ParseErr#) |,| { Locale.fromStr("e2") }
     verifyErr(ParseErr#) |,| { Locale.fromStr("en_US") }
     verifyErr(ParseErr#) |,| { Locale.fromStr("en-x") }

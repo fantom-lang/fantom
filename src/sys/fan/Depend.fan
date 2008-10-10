@@ -51,11 +51,10 @@ final class Depend
 
   **
   ** Parse the string according into a dependency.  See class
-  ** header for specification of the format.  Throw ParseErr if
-  ** string is illegally formatted.
-  ** TODO: add checked flag
+  ** header for specification of the format.  If invalid format
+  ** and checked is false return null, otherwise throw ParseErr.
   **
-  static Depend? fromStr(Str s)
+  static Depend? fromStr(Str s, Bool checked := true)
 
   **
   ** Private constructor

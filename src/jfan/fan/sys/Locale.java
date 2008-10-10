@@ -18,7 +18,8 @@ public class Locale
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Locale fromStr(String s)
+  public static Locale fromStr(String s) { return fromStr(s, true); }
+  public static Locale fromStr(String s, Boolean checked)
   {
     int len = s.length();
     try
@@ -40,6 +41,7 @@ public class Locale
     catch (Exception e)
     {
     }
+    if (!checked) return null;
     throw ParseErr.make("Locale", s).val;
   }
 

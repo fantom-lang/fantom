@@ -20,9 +20,10 @@ const class Locale
 
   **
   ** Parse a locale according to the `toStr` format.
-  ** TODO: checked param
+  ** If invalid format and checked is false return null,
+  ** otherwise throw ParseErr.
   **
-  static Locale? fromStr(Str s)
+  static Locale? fromStr(Str s, Bool checked := true)
 
   **
   ** Private constructor
