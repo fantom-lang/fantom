@@ -153,7 +153,7 @@ mixin CType
   **
   ** Equality based on signature.
   **
-  override Bool equals(Obj t)
+  override Bool equals(Obj? t)
   {
     if (this === t) return true
     that := t as CType
