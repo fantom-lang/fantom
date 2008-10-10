@@ -24,7 +24,7 @@ class TokenVal : Location
     return kind.hash
   }
 
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     that := obj as TokenVal
     if (that == null) return false
