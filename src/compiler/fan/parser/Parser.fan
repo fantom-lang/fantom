@@ -2019,6 +2019,13 @@ public class Parser : CompilerSupport
       throw err("Expecting type name")
     }
 
+    // check for ? nullable
+    if (curt === Token.question && !cur.whitespace)
+    {
+      consume(Token.question)
+      t = t.toNullable
+    }
+
     // trailing [] for lists
     while (curt === Token.lbracket && peekt === Token.rbracket)
     {

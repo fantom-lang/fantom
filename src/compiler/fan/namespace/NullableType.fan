@@ -42,7 +42,7 @@ class NullableType : CType
   override Bool isParameterized() { return root.isParameterized }
   override Bool isGenericParameter() { return root.isGenericParameter }
 
-  override once CType toListOf() { return root.toListOf.toNullable }
+  override once CType toListOf() { return ListType(this) }
 
   override CType base() { return root.base }
   override CType[] mixins() { return root.mixins }

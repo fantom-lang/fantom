@@ -1080,8 +1080,8 @@ class ParserTest : CompilerTest
       verifyEq(t.base.qname,  "sys::Obj")
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  true)
-      verifyEq(t.toListOf.signature, "sys::Str[]?")
-      verifyEq(t.toListOf.isNullable, true)
+      verifyEq(t.toListOf.signature, "sys::Str?[]")
+      verifyEq(t.toListOf.isNullable, false)
       verifyEq(t.toNullable.signature, "sys::Str?")
 
     t = verifyType("sys::Str")
@@ -1103,8 +1103,6 @@ class ParserTest : CompilerTest
       verifyEq(t.base.qname,  "sys::Obj")
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  true)
-      verifyEq(t.toListOf.signature, "sys::Str[]?")
-      verifyEq(t.toListOf.isNullable, true)
 
     t = verifyType("$podName::Foo")
       verifyEq(t.pod.name,    podName)
@@ -1125,8 +1123,8 @@ class ParserTest : CompilerTest
       verifyEq(t.base.qname,  "sys::Obj")
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  true)
-      verifyEq(t.toListOf.signature, "$podName::Foo[]?")
-      verifyEq(t.toListOf.isNullable, true)
+      verifyEq(t.toListOf.signature, "$podName::Foo?[]")
+      verifyEq(t.toListOf.isNullable, false)
       verifyEq(t.toNullable.signature, "$podName::Foo?")
 
     t = verifyType("Str[]")
@@ -1134,6 +1132,15 @@ class ParserTest : CompilerTest
       verifyEq(t.name,        "List")
       verifyEq(t.qname,       "sys::List")
       verifyEq(t.signature,   "sys::Str[]")
+      verifyEq(t.base.qname,  "sys::List")
+      verifyEq(t.mixins.size, 0)
+      verifyEq(t.isNullable,  false)
+
+    t = verifyType("Str?[]")
+      verifyEq(t.pod.name,    "sys")
+      verifyEq(t.name,        "List")
+      verifyEq(t.qname,       "sys::List")
+      verifyEq(t.signature,   "sys::Str?[]")
       verifyEq(t.base.qname,  "sys::List")
       verifyEq(t.mixins.size, 0)
       verifyEq(t.isNullable,  false)
@@ -1232,6 +1239,10 @@ class ParserTest : CompilerTest
       verifyEq(t.qname,       "sys::Func")
       verifyEq(t.signature,   "|->sys::Str|")
 
+    t = verifyType("|->Str?|")
+      verifyEq(t.qname,       "sys::Func")
+      verifyEq(t.signature,   "|->sys::Str?|")
+
     t = verifyType("Str:Obj[]")
       verifyEq(t.qname,       "sys::Map")
       verifyEq(t.signature,   "[sys::Str:sys::Obj[]]")
@@ -1278,7 +1289,6 @@ class ParserTest : CompilerTest
       verifyEq(t.signature,   "[sys::Str:|[sys::Int:sys::Int[]]->|->sys::Void||[]]?")
       verifyEq(t.isNullable,  true)
   }
-
 
   CType verifyType(Str typeStr)
   {
