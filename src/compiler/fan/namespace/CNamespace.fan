@@ -104,7 +104,9 @@ abstract class CNamespace
   private CType genericParam(Str name)
   {
     t := GenericParameterType.make(this, name)
-    types[t.qname] = t
+    n := t.toNullable
+    types[t.signature] = t
+    types[n.signature] = n
     return t
   }
 

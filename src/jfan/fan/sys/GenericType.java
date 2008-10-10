@@ -168,12 +168,15 @@ public abstract class GenericType
    */
   final Type parameterize(Type t)
   {
-    if (t instanceof ListType)
-      return parameterizeListType((ListType)t);
-    else if (t instanceof FuncType)
-      return parameterizeFuncType((FuncType)t);
+    boolean nullable = t.isNullable();
+    Type nn = t.toNonNullable();
+    if (nn instanceof ListType)
+      t = parameterizeListType((ListType)nn);
+    else if (nn instanceof FuncType)
+      t = parameterizeFuncType((FuncType)nn);
     else
-      return doParameterize(t);
+      t = doParameterize(nn);
+    return nullable ? t.toNullable() : t;
   }
 
   /**

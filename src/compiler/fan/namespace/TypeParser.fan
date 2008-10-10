@@ -89,12 +89,26 @@ class TypeParser
     else
       t = loadBasic
 
+    // nullable
+    if (cur == '?')
+    {
+      consume('?')
+      t = t.toNullable
+    }
+
     // anything left must be []
     while (cur == '[')
     {
       consume('[')
       consume(']')
       t = t.toListOf
+    }
+
+    // nullable
+    if (cur == '?')
+    {
+      consume('?')
+      t = t.toNullable
     }
 
     return t
