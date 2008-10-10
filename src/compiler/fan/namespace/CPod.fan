@@ -50,7 +50,7 @@ mixin CPod
   **
   ** Equality based on pod name.
   **
-  override Bool equals(Obj t)
+  override Bool equals(Obj? t)
   {
     if (this === t) return true
     that := t as CPod
