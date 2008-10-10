@@ -23,7 +23,7 @@ const class FTypeRef
 
   override Int hash() { return hashcode }
 
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := (FTypeRef)obj
     return podName === x.podName && typeName === x.typeName && sig == x.sig
@@ -78,7 +78,7 @@ const class FFieldRef
     return hashcode
   }
 
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := (FFieldRef)obj
     return parent === x.parent && name === x.name && typeRef === x.typeRef
@@ -128,7 +128,7 @@ const class FMethodRef
     return hashcode
   }
 
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := (FMethodRef)obj
     return parent === x.parent && name === x.name && ret === x.ret && params == x.params
