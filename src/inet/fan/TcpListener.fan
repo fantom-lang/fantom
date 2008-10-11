@@ -43,12 +43,12 @@ class TcpListener
   **
   ** Get the bound local address or null if unbound.
   **
-  native IpAddress localAddress()
+  native IpAddress? localAddress()
 
   **
   ** Get the bound local port or null if unbound.
   **
-  native Int localPort()
+  native Int? localPort()
 
 //////////////////////////////////////////////////////////////////////////
 // Communication
@@ -60,7 +60,7 @@ class TcpListener
   ** is null an ephemeral port is selected.  Throw IOErr if the port is
   ** already bound or the bind fails.  Return this.
   **
-  native TcpListener bind(IpAddress addr, Int port, Int backlog := 50)
+  native TcpListener bind(IpAddress? addr, Int? port, Int backlog := 50)
 
   **
   ** Accept the next incoming connection.  This method blocks the
@@ -101,7 +101,7 @@ class TcpListener
   internal native Bool getReuseAddress()
   internal native Void setReuseAddress(Bool v)
 
-  internal native Duration getReceiveTimeout()
-  internal native Void setReceiveTimeout(Duration v)
+  internal native Duration? getReceiveTimeout()
+  internal native Void setReceiveTimeout(Duration? v)
 
 }

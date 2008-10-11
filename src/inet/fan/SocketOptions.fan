@@ -37,7 +37,7 @@ final class SocketOptions
   ** null disables input stream buffing.  This field may only be set before
   ** the socket is connected otherwise Err is thrown.
   **
-  Int inBufferSize
+  Int? inBufferSize
   {
     get { return (Int)wrap |->Obj| { return socket->getInBufferSize } }
     set { wrap |,| { socket->setInBufferSize(val) } }
@@ -48,7 +48,7 @@ final class SocketOptions
   ** null disables output stream buffing.  This field may only be set before
   ** the socket is connected otherwise Err is thrown.
   **
-  Int outBufferSize
+  Int? outBufferSize
   {
     get { return (Int)wrap |->Obj| { return socket->getOutBufferSize } }
     set { wrap |,| { socket->setOutBufferSize(val) } }
@@ -108,7 +108,7 @@ final class SocketOptions
   ** SO_LINGER socket option controls the linger time or set
   ** to null to disable linger.
   **
-  Duration linger
+  Duration? linger
   {
     get { return (Duration)wrap |->Obj| { return socket->getLinger} }
     set { wrap |,| { socket->setLinger(val) } }
@@ -119,7 +119,7 @@ final class SocketOptions
   ** will block on a read call before throwing an IOErr timeout exception.
   ** Null is used to indicate an infinite timeout.
   **
-  Duration receiveTimeout
+  Duration? receiveTimeout
   {
     get { return (Duration)wrap |->Obj| { return socket->getReceiveTimeout} }
     set { wrap |,| { socket->setReceiveTimeout(val) } }
