@@ -442,6 +442,7 @@
 - Java runtime: fan.sys.Num -> java.lang.Number
 - Java runtime: fan.sys.Decimal -> java.math.BigDecimal
 - Nullable type support
+- Support for parameterized fields (sys::Map.def)
 - Add build::CreateZip task, buildall.fan handles dist zip
 - Fix RichText editor home/end to take whitespace into account
 - Change fwt::Image constructors

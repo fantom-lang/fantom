@@ -63,6 +63,17 @@ mixin CField : CSlot
   ** Does this field covariantly override a method?
   **
   Bool isCovariant() { return isOverride && fieldType != inheritedReturnType }
+
+  **
+  ** Is this field typed with a generic parameter.
+  **
+  Bool isGeneric() { return fieldType.isGenericParameter }
+
+  **
+  ** Is this field the parameterization of a generic field,
+  ** with the generic type replaced with a real type.
+  **
+  virtual Bool isParameterized() { return false }
 }
 
 **************************************************************************

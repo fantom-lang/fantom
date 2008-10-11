@@ -881,4 +881,31 @@ class MiscTest : CompilerTest
     verifyEq(obj->foo([7]), true)
   }
 
+  Void testGenericFields()
+  {
+    // verify parameterized casts
+    compile(
+      "class Foo
+       {
+         Str foo() { x := Int:Str[:]; x.def = \"hi\"; return x.def }
+         Int bar() { x := Int:Int[:]; x.def = 5; return x.def.max(3) }
+       }")
+    obj := pod.types.first.make
+    verifyEq(obj->foo, "hi")
+    verifyEq(obj->bar, 5)
+
+    // verify type check errors
+    verifyErrors(
+      "class Foo
+       {
+         Void foo()
+         {
+           x := Int:Str[:]
+           x.def = 5ms
+         }
+       }",
+       [6, 13, "'sys::Duration' is not assignable to 'sys::Str?'",
+       ])
+  }
+
 }
