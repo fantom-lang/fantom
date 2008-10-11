@@ -51,7 +51,7 @@ const class FileLogger : Thread
   **
   ** Run the script
   **
-  override Obj run()
+  override Obj? run()
   {
     // open file
     OutStream out := null

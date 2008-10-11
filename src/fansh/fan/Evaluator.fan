@@ -19,7 +19,7 @@ class Evaluator
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Shell shell)
+  new make(Shell? shell)
   {
     if (shell != null)
     {
@@ -54,7 +54,7 @@ class Evaluator
 
     // if line has a local variable definition, then we
     // want to capture it as part of the continuing scope
-    Var local := null
+    Var? local := null
     if (line.contains(":="))
     {
       local = Var.make
@@ -101,7 +101,7 @@ class Evaluator
     // evaluate by calling eval
     t := pod.types.first
     method := t.method("_eval")
-    Obj result := null
+    Obj? result := null
     try
     {
       instance := t.make([scopeMap])
@@ -153,7 +153,7 @@ class Evaluator
     }
   }
 
-  private Type localDefType()
+  private Type? localDefType()
   {
     if (pod == null) return null
     stmt := (LocalDefStmt)compiler.pod.typeDefs["FanshEval"].methodDef("_eval").code.stmts[-2]
@@ -185,8 +185,8 @@ class Evaluator
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Shell shell
-  private OutStream out
+  private Shell? shell
+  private OutStream? out
   private Compiler compiler
   private Pod pod
 
