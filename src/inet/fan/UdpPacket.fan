@@ -20,7 +20,7 @@ class UdpPacket
   **
   ** Construct a new UdpPacket.
   **
-  new make(IpAddress addr := null, Int port := null, Buf data := null)
+  new make(IpAddress? addr := null, Int? port := null, Buf? data := null)
   {
     this.address = addr
     this.port = port
@@ -34,17 +34,17 @@ class UdpPacket
   **
   ** The send or receive IpAddress.  Defaults to null.
   **
-  IpAddress address := null
+  IpAddress? address := null
 
   **
   ** The send or receive port number.  Defaults to null.
   **
-  Int port := null
+  Int? port := null
 
   **
   ** The payload to send or received.  Defaults to null.
   ** The data buffer must always be a memory backed buffer.
   **
-  Buf data := null
+  Buf? data := null
 
 }

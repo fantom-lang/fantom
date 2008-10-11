@@ -52,22 +52,22 @@ const class TcpSocket
   **
   ** Get the bound local address or null if unbound.
   **
-  native IpAddress localAddress()
+  native IpAddress? localAddress()
 
   **
   ** Get the bound local port or null if unbound.
   **
-  native Int localPort()
+  native Int? localPort()
 
   **
   ** Get the remote address or null if not connected.
   **
-  native IpAddress remoteAddress()
+  native IpAddress? remoteAddress()
 
   **
   ** Get the remote port or null if not connected.
   **
-  native Int remotePort()
+  native Int? remotePort()
 
 //////////////////////////////////////////////////////////////////////////
 // Communication
@@ -79,7 +79,7 @@ const class TcpSocket
   ** is null an ephemeral port is selected.  Throw IOErr if the port is
   ** already bound or the bind fails.  Return this.
   **
-  native This bind(IpAddress addr, Int port)
+  native This bind(IpAddress? addr, Int? port)
 
   **
   ** Connect this socket to the specified address and port.  This method
@@ -87,7 +87,7 @@ const class TcpSocket
   ** connection error.  If a non-null timeout is specified, then block no
   ** longer then the specified timeout before raising an IOErr.
   **
-  native This connect(IpAddress addr, Int port, Duration timeout := null)
+  native This connect(IpAddress addr, Int port, Duration? timeout := null)
 
   **
   ** Get the input stream used to read data from the socket.  The input
@@ -131,11 +131,11 @@ const class TcpSocket
   **
   native SocketOptions options()
 
-  internal native Int getInBufferSize()
-  internal native Void setInBufferSize(Int v)
+  internal native Int? getInBufferSize()
+  internal native Void setInBufferSize(Int? v)
 
-  internal native Int getOutBufferSize()
-  internal native Void setOutBufferSize(Int v)
+  internal native Int? getOutBufferSize()
+  internal native Void setOutBufferSize(Int? v)
 
   internal native Bool getKeepAlive()
   internal native Void setKeepAlive(Bool v)
@@ -149,11 +149,11 @@ const class TcpSocket
   internal native Bool getReuseAddress()
   internal native Void setReuseAddress(Bool v)
 
-  internal native Duration getLinger()
-  internal native Void setLinger(Duration v)
+  internal native Duration? getLinger()
+  internal native Void setLinger(Duration? v)
 
-  internal native Duration getReceiveTimeout()
-  internal native Void setReceiveTimeout(Duration v)
+  internal native Duration? getReceiveTimeout()
+  internal native Void setReceiveTimeout(Duration? v)
 
   internal native Bool getNoDelay()
   internal native Void setNoDelay(Bool v)

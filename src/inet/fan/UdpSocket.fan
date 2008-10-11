@@ -55,22 +55,22 @@ const class UdpSocket
   **
   ** Get the bound local address or null if unbound.
   **
-  native IpAddress localAddress()
+  native IpAddress? localAddress()
 
   **
   ** Get the bound local port or null if unbound.
   **
-  native Int localPort()
+  native Int? localPort()
 
   **
   ** Get the remote address or null if not connected to a specific end point.
   **
-  native IpAddress remoteAddress()
+  native IpAddress? remoteAddress()
 
   **
   ** Get the remote port or null if not connected to a specific end point.
   **
-  native Int remotePort()
+  native Int? remotePort()
 
 //////////////////////////////////////////////////////////////////////////
 // Communication
@@ -82,7 +82,7 @@ const class UdpSocket
   ** is null an ephemeral port is selected.  Throw IOErr if the port is
   ** already bound or the bind fails.  Return this.
   **
-  native This bind(IpAddress addr, Int port)
+  native This bind(IpAddress? addr, Int? port)
 
   **
   ** Connect this socket to the specified address and port.  Once
@@ -115,7 +115,7 @@ const class UdpSocket
   ** is null, then a new packet is created with a capacity of 1kb.  The
   ** packet data must always be a memory backed buffer.
   **
-  native UdpPacket receive(UdpPacket packet := null)
+  native UdpPacket receive(UdpPacket? packet := null)
 
   **
   ** Disconnect this socket from its remote address.  Do nothing
@@ -159,8 +159,8 @@ const class UdpSocket
   internal native Bool getReuseAddress()
   internal native Void setReuseAddress(Bool v)
 
-  internal native Duration getReceiveTimeout()
-  internal native Void setReceiveTimeout(Duration v)
+  internal native Duration? getReceiveTimeout()
+  internal native Void setReceiveTimeout(Duration? v)
 
   internal native Int getTrafficClass()
   internal native Void setTrafficClass(Int v)
