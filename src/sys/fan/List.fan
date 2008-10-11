@@ -144,25 +144,25 @@ final class List
   ** range.  If the item is not found return null.  This method
   ** is idempotent.
   **
-  Int index(V item, Int offset := 0)
+  Int? index(V item, Int offset := 0)
 
   **
   ** Return integer index just like `List.index` except
   ** use === same operator instead of the == equals operator.
   **
-  Int indexSame(V item, Int offset := 0)
+  Int? indexSame(V item, Int offset := 0)
 
   **
   ** Return the item at index 0, or if empty return null.
   ** This method is idempotent.
   **
-  V first()
+  V? first()
 
   **
   ** Return the item at index-1, or if empty return null.
   ** This method is idempotent.
   **
-  V last()
+  V? last()
 
   **
   ** Create a shallow duplicate copy of this List.  The items
@@ -222,13 +222,13 @@ final class List
   ** decrement size by 1.  If the value is not found, then return null.
   ** Throw ReadonlyErr if readonly.
   **
-  V remove(V item)
+  V? remove(V item)
 
   **
   ** Remove the item just like `remove` except use
   ** the === operator instead of the == equals operator.
   **
-  V removeSame(V item)
+  V? removeSame(V item)
 
   **
   ** Remove the object at the specified index.  A negative index may be
@@ -267,7 +267,7 @@ final class List
   ** This method has the same semantics as last().  This method
   ** is idempotent.
   **
-  V peek()
+  V? peek()
 
   **
   ** Remove the last item and return it, or return null if the list
@@ -275,7 +275,7 @@ final class List
   ** the exception of has an empty list is handled.  Throw ReadonlyErr
   ** if readonly.
   **
-  V pop()
+  V? pop()
 
   **
   ** Add the specified item to the end of the list.  Return this.
@@ -315,7 +315,7 @@ final class List
   ** resulting object.  Return null if the function returns
   ** null for every item.  This method is idempotent.
   **
-  Obj eachBreak(|V item, Int index->Obj| c)
+  Obj? eachBreak(|V item, Int index->Obj?| c)
 
   **
   ** Return the first item in the list for which c returns true.
@@ -327,7 +327,7 @@ final class List
   **   list.find |Int v->Bool| { return v.toStr == "3" } => 3
   **   list.find |Int v->Bool| { return v.toStr == "7" } => null
   **
-  V find(|V item, Int index->Bool| c)
+  V? find(|V item, Int index->Bool| c)
 
   **
   ** Return the first item in the list for which c returns true
@@ -339,7 +339,7 @@ final class List
   **   list.findIndex |Int v->Bool| { return v.toStr == "7" } => 2
   **   list.findIndex |Int v->Bool| { return v.toStr == "9" } => null
   **
-  Int findIndex(|V item, Int index->Bool| c)
+  Int? findIndex(|V item, Int index->Bool| c)
 
   **
   ** Return a new list containing the items for which c returns
@@ -423,7 +423,7 @@ final class List
   **   list := [1, 2, 3]
   **   list.reduce(0) |Obj r, Int v->Obj| { return (Int)r + v } => 6
   **
-  Obj reduce(Obj init, |Obj reduction, V item, Int index->Obj| c)
+  Obj? reduce(Obj? init, |Obj? reduction, V item, Int index->Obj?| c)
 
   **
   ** Return the minimum value of the list.  If c is provided, then it
@@ -436,7 +436,7 @@ final class List
   **   list.min => "albatross"
   **   list.min |Str a, Str b->Int| { return a.size <=> b.size } => "dog"
   **
-  V min(|V a, V b->Int| c := null)
+  V? min(|V a, V b->Int|? c := null)
 
   **
   ** Return the maximum value of the list.  If c is provided, then it
@@ -449,7 +449,7 @@ final class List
   **   list.max => "horse"
   **   list.max |Str a, Str b->Int| { return a.size <=> b.size } => "albatross"
   **
-  V max(|V a, V b->Int| c := null)
+  V? max(|V a, V b->Int|? c := null)
 
   **
   ** Returns a new list with all duplicate items removed such that the
@@ -509,7 +509,7 @@ final class List
   **   s.sort |Str a, Str b->Int| { return a.size <=> b.size }
   **   // s now evaluates to ["he", "ate", "candy"]
   **
-  L sort(|V a, V b->Int| c := null)
+  L sort(|V a, V b->Int|? c := null)
 
   **
   ** Reverse sort - perform an in-place reverse sort on this list.  If
@@ -521,7 +521,7 @@ final class List
   ** Example:
   **   [3, 2, 4, 1].sortr =>  [4, 3, 2, 1]
   **
-  L sortr(|V a, V b->Int| c := null)
+  L sortr(|V a, V b->Int|? c := null)
 
   **
   ** Search the list for the index of the specified key using a binary
@@ -532,7 +532,7 @@ final class List
   ** operator (shortcut for the 'compare' method).  If the key is not found,
   ** then return a negative value which is '-(insertation point) - 1'.
   **
-  Int binarySearch(V key, |V a, V b->Int| c := null)
+  Int binarySearch(V key, |V a, V b->Int|? c := null)
 
   **
   ** Reverse the order of the items of this list in-place.  Return this.
@@ -559,7 +559,7 @@ final class List
   **   [[1,2],[3]].flatten    =>  [1,2,3]
   **   [1,[2,[3]],4].flatten  =>  [1,2,3,4]
   **
-  Obj[] flatten()
+  Obj?[] flatten()
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion
@@ -581,10 +581,7 @@ final class List
   **   ["a", "b", "c"].join("-") => "a-b-c"
   **   ["a", "b", "c"].join("-") |Str s->Str| { return "($s)" } => "(a)-(b)-(c)"
   **
-  Str join(Str separator := "", |V item, Int index->Str| c := null)
-
-  // TODO
-  //   flatten, fill, binarySearch
+  Str join(Str separator := "", |V item, Int index->Str|? c := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Readonly

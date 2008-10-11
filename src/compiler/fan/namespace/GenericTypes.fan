@@ -74,10 +74,22 @@ abstract class GenericType : CType
   internal CType parameterize(CType t)
   {
     if (!t.isGenericParameter) return t
-    if (t is ListType) return parameterizeListType((ListType)t)
-    if (t is FuncType) return parameterizeFuncType((FuncType)t)
-    if (t.name.size != 1) throw CompilerErr.make("Cannot parameterize $t.qname", null)
-    return doParameterize(t.name[0])
+    nullable := t.isNullable
+    nn := t.toNonNullable
+    if (nn is ListType)
+    {
+      t = parameterizeListType(nn)
+    }
+    else if (nn is FuncType)
+    {
+      t = parameterizeFuncType(nn)
+    }
+    else
+    {
+      if (nn.name.size != 1) throw CompilerErr.make("Cannot parameterize $t.qname", null)
+      t = doParameterize(nn.name[0])
+    }
+    return nullable ? t.toNullable : t
   }
 
   private CType parameterizeListType(ListType t)
