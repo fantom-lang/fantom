@@ -1052,7 +1052,8 @@ class CodeAsm : CompilerSupport
           op(FOp.CallVirtual, index)
       }
 
-      if (field.isCovariant)
+      // if parameterized or covariant, then cast
+      if (field.isParameterized || field.isCovariant)
       {
         op(FOp.Cast, fpod.addTypeRef(field.fieldType))
       }

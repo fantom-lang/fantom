@@ -65,10 +65,18 @@ abstract class GenericType : CType
 
   private CSlot parameterizeSlot(CSlot slot)
   {
-    m := slot as CMethod
-    if (m == null) return slot
-    if (!m.isGeneric) return slot
-    return ParameterizedMethod.make(this, m)
+    if (slot is CMethod)
+    {
+      CMethod m := slot
+      if (!m.isGeneric) return slot
+      return ParameterizedMethod.make(this, m)
+    }
+    else
+    {
+      f := (CField)slot
+      if (!f.fieldType.isGenericParameter) return slot
+      return ParameterizedField.make(this, f)
+    }
   }
 
   internal CType parameterize(CType t)
@@ -337,6 +345,38 @@ class GenericParameterType : CType
   override Str:CSlot slots() { throw UnsupportedErr.make }
   override Str toStr() { return qname }
   private ListType listOf
+}
+
+**************************************************************************
+** ParameterizedField
+**************************************************************************
+
+class ParameterizedField : CField
+{
+  new make(GenericType parent, CField generic)
+  {
+    this.parent = parent
+    this.generic = generic
+    this.fieldType = parent.parameterize(generic.fieldType)
+    this.getter = ParameterizedMethod(parent, generic.getter)
+    this.setter = ParameterizedMethod(parent, generic.setter)
+  }
+
+  override Str name()  { return generic.name }
+  override Str qname() { return generic.qname }
+  override Str signature() { return generic.signature }
+  override Int flags() { return generic.flags }
+  override Str toStr() { return generic.toStr }
+
+  override CType fieldType
+  override CMethod getter
+  override CMethod setter
+  override CType inheritedReturnType() { return fieldType }
+
+  override Bool isParameterized() { return true }
+
+  override readonly CType parent
+  readonly CField generic
 }
 
 **************************************************************************
