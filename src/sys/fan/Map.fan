@@ -58,7 +58,7 @@ final class Map
   ** it defaults to the `def` field.  This method is idempotent.
   ** Shortcut is a[key].
   **
-  V get(K key, V def := this.def)
+  V? get(K key, V? def := this.def)
 
   **
   ** Return if the specified key is mapped.
@@ -123,7 +123,7 @@ final class Map
   ** from the map and return the value.   If the key was not mapped
   ** then return null.  Throw ReadonlyErr if readonly.
   **
-  V remove(K key)
+  V? remove(K key)
 
   **
   ** Remove all key/value pairs from the map.  Return this.
@@ -151,7 +151,7 @@ final class Map
   ** or NotImmutableErr is thrown.  Getting this field is idempotent.
   ** Throw ReadonlyErr if set when readonly.
   **
-  V def
+  V? def
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion
@@ -179,14 +179,14 @@ final class Map
   ** if the function returns null for every key/value pair.
   ** This method is idempotent.
   **
-  Obj eachBreak(|V item, K key->Obj| c)
+  Obj? eachBreak(|V item, K key->Obj?| c)
 
   **
   ** Return the first value in the map for which c returns true.
   ** If c returns false for every pair, then return null.  This
   ** method is idempotent.
   **
-  V find(|V value, K key->Bool| c)
+  V? find(|V value, K key->Bool| c)
 
   **
   ** Return a new map containing the key/value pairs for which c
@@ -219,7 +219,7 @@ final class Map
   **   m := ["2":2, "3":3, "4":4]
   **   m.reduce(100) |Obj r, Int v->Obj| { return (Int)r + v } => 109
   **
-  Obj reduce(Obj init, |Obj reduction, V item, K key->Obj| c)
+  Obj? reduce(Obj? init, |Obj? reduction, V item, K key->Obj?| c)
 
   **
   ** Create a new map with the same keys, but apply the specified

@@ -82,7 +82,7 @@ final class Func
   ** parameters - the additional arguments are ignored.  If no arguments are
   ** required, you may pass null for args.
   **
-  virtual R call(Obj[]? args)
+  virtual R call(Obj?[]? args)
 
   **
   ** Convenience for dynamically invoking an instance method with
@@ -91,7 +91,7 @@ final class Func
   ** 'call([target, args[0], args[1] ...])'.  Throw UnsupportedErr
   ** if called on a function which is not an instance method.
   **
-  virtual R callOn(Obj? target, Obj[]? args)
+  virtual R callOn(Obj? target, Obj?[]? args)
 
   **
   ** Optimized convenience for call([,]).
@@ -144,6 +144,6 @@ final class Func
   ** function which takes the remaining unbound parameters.
   ** The '&' operator is used as a shortcut for currying.
   **
-  Func curry(Obj[] args)
+  Func curry(Obj?[] args)
 
 }

@@ -397,7 +397,7 @@ class ReflectionTest : Test
     verifyEq(t.signature, "sys::Int?")
     verifyEq(t.isNullable, true)
     verifyEq(t.toNullable.signature, "sys::Int?")
-    verifyEq(t.toListOf.signature, "sys::Int[]?")
+    verifyEq(t.toListOf.signature, "sys::Int?[]")
     verifyEq(t.fits(Obj#), true)
     verifyEq(t.fits(Obj?#), true)
     verifyEq(t.fits(Num#), true)
