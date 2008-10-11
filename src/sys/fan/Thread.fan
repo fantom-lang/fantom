@@ -172,7 +172,7 @@ const class Thread
   ** the result of the run method for the first thread to join,
   ** or null on subsequent calls.
   **
-  Obj join(Duration? timeout := null)
+  Obj? join(Duration? timeout := null)
 
   **
   ** Put the currently executing thread to sleep for the

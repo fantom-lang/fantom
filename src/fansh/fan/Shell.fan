@@ -155,7 +155,7 @@ internal class Var
 
   Type of := Obj#
   Str name
-  Obj val
+  Obj? val
 }
 
 **************************************************************************
