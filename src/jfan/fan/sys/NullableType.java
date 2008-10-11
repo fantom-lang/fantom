@@ -50,7 +50,7 @@ public class NullableType
   public Map params() { return root.params(); }
   public Type parameterize(Map params) { return root.parameterize(params).toNullable(); }
 
-  protected Type makeToListOf() { return new ListType(root).toNullable(); }
+  protected Type makeToListOf() { return new ListType(this); }
 
   public List fields() { return root.fields(); }
   public List methods() { return root.methods(); }

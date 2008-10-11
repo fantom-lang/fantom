@@ -61,16 +61,19 @@ class ParserTotureTest : Test
 
   Void testTypes()
   {
+    t := Obj?[]?#
+    verifyEq(t.signature, "sys::Obj?[]?")
+
     verifyEq([Int:Str][]#get.returns, [Int:Str]#)
     verifyEq([Int:Str][][]#.method("get").returns, [Int:Str][]#)
 
     verifyEq([Int:Str[]][]#get.returns, Int:Str[]#)
     verifyEq([Int:Str[]][]#.method("get").returns, [Int:Str[]]#)
 
-    verifyEq(Int[]:Str[]#get.returns,   Str[]#)
+    verifyEq(Int[]:Str[]#get.returns,   Str[]?#)
     verifyEq(Int[]:Str[]#.method("get").params[0].of, Int[]#)
 
-    verifyEq(Int[][]:Str[][]#get.returns,  Str[][]#)
+    verifyEq(Int[][]:Str[][]#values.returns,  Str[][][]#)
     verifyEq(Int[][]:Str[][]#.method("get").params[0].of, Int[][]#)
   }
 

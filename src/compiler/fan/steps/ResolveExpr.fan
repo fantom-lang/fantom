@@ -557,8 +557,8 @@ class ResolveExpr : CompilerStep
     get := ((ShortcutExpr)expr.target).method
     set := get.parent.method("set")
     if (set == null || set.params.size != 2 || set.isStatic ||
-        set.params[0].paramType != get.params[0].paramType ||
-        set.params[1].paramType != get.returnType)
+        set.params[0].paramType.toNonNullable != get.params[0].paramType.toNonNullable ||
+        set.params[1].paramType.toNonNullable != get.returnType.toNonNullable)
       err("No matching 'set' method for '$get.qname'", orig.location)
     expr.setMethod = set
 

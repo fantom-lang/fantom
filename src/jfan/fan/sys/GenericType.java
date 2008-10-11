@@ -117,6 +117,7 @@ public abstract class GenericType
       }
       else
       {
+        slot = parameterize((Field)slot);
         fields.add(slot);
       }
       slots.add(slot);
@@ -125,7 +126,24 @@ public abstract class GenericType
   }
 
   /**
-   * Parameterize the specified method (if reuse if generic
+   * Parameterize the specified field (reuse if generic
+   * parameterization isn't necessary).
+   */
+  Field parameterize(Field f)
+  {
+    // if not generic, short circuit and reuse original
+    Type of = f.of();
+    if (!of.isGenericParameter()) return f;
+
+    // create new parameterized version
+    of = parameterize(of);
+    Field pf = new Field(this, f.name, f.flags, f.facets, f.lineNum, of);
+    pf.reflect = f.reflect;
+    return pf;
+  }
+
+  /**
+   * Parameterize the specified method (reuse if generic
    * parameterization isn't necessary).
    */
   Method parameterize(Method m)
