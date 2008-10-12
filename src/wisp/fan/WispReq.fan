@@ -34,7 +34,7 @@ class WispReq : WebReq
   override Int remotePort
   override Str:Str headers
   override Uri uri
-  override Str:Obj stash := Str:Obj[:]
+  override Str:Obj? stash := Str:Obj?[:]
   override InStream in
 
   override Uri absUri
@@ -51,7 +51,7 @@ class WispReq : WebReq
     }
   }
 
-  override UserAgent userAgent
+  override UserAgent? userAgent
   {
     get
     {
@@ -102,7 +102,7 @@ class WispReq : WebReq
     }
   }
 
-  override Str:Str form
+  override [Str:Str]? form
   {
     get
     {
