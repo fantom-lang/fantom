@@ -116,7 +116,7 @@ const class HistoryItem
   **
   ** Uri for icon of resource or null.
   **
-  const Uri iconUri
+  const Uri? iconUri
 
   **
   ** Return uri string.

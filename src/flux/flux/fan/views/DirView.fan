@@ -78,7 +78,7 @@ internal class DirViewModel : TableModel
     }
   }
 
-  override Image image(Int col, Int row)
+  override Image? image(Int col, Int row)
   {
     return (col == 0) ? files[row].icon : null
   }

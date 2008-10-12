@@ -83,7 +83,7 @@ class TextEditor : View
     Thread.locals["fluxText.topLine.$resource.uri"] = richText.topLine
   }
 
-  override Void onCommand(Str id, Event event)
+  override Void onCommand(Str id, Event? event)
   {
     controller.trap("on${id.capitalize}", [event])
   }

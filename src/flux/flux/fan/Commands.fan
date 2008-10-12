@@ -718,9 +718,9 @@ internal class RecentTableModel : TableModel
       default: return null
     }
   }
-  override Image image(Int col, Int row) { return col==0 ? icons[row] : null }
-  override Font font(Int col, Int row) { return col==1 ? accFont : null }
-  override Color fg(Int col, Int row)  { return col==1 ? accColor : null }
+  override Image? image(Int col, Int row) { return col==0 ? icons[row] : null }
+  override Font? font(Int col, Int row) { return col==1 ? accFont : null }
+  override Color? fg(Int col, Int row)  { return col==1 ? accColor : null }
   override Str text(Int col, Int row)
   {
     switch (col)

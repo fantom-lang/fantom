@@ -60,6 +60,6 @@ class FluxCommand : Command
   **
   ** Get the flux Frame associated with this command.
   **
-  Frame frame { internal set }
+  Frame? frame { internal set }
 
 }

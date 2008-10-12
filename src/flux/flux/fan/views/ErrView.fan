@@ -15,7 +15,7 @@ using fwt
 **
 internal class ErrView : View
 {
-  new make(Str message, Err cause := null)
+  new make(Str message, Err? cause := null)
   {
     this.message = message
     this.cause = cause
@@ -56,5 +56,5 @@ internal class ErrView : View
   }
 
   const Str message
-  const Err cause
+  const Err? cause
 }

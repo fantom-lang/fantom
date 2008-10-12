@@ -32,7 +32,7 @@ class Frame : Window
   ** otherwise return null.  This method can only be called
   ** on the UI thread.
   **
-  static Frame findById(Str id, Bool checked := true)
+  static Frame? findById(Str id, Bool checked := true)
   {
     Frame f := Thread.locals["flux.$id"]
     if (f != null) return f
@@ -133,7 +133,7 @@ class Frame : Window
   ** that instance.  Otherwise if make is true, then create a
   ** new sidebar for this frame.  If make is false return null.
   **
-  SideBar sideBar(Type t, Bool make := true)
+  SideBar? sideBar(Type t, Bool make := true)
   {
     return sideBarPane.sideBar(t, make)
   }
@@ -154,7 +154,7 @@ class Frame : Window
   ** Lookup a predefined command by id or return null if not
   ** found.  See `CommandId` for the predefined id strings.
   **
-  FluxCommand command(Str id)
+  FluxCommand? command(Str id)
   {
     return commands.byId[id]
   }
@@ -252,7 +252,7 @@ internal class FrameState
   static FrameState load() { return Flux.loadOptions("session/frame", FrameState#) }
   Void save() { Flux.saveOptions("session/frame", this) }
 
-  Point pos := null
+  Point? pos := null
   Size size := Size(800, 600)
 }
 

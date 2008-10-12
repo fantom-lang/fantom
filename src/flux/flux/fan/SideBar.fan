@@ -22,7 +22,7 @@ abstract class SideBar : ContentPane
   **
   ** Get the top level flux window.
   **
-  Frame frame { internal set }
+  Frame? frame { internal set }
 
   **
   ** Get this sidebar's preferred alignment which is used to

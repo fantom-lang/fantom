@@ -44,7 +44,7 @@ internal class StartRecentTableModel : TableModel
 
   override Int numCols() { return 2 }
   override Int numRows() { return items.size }
-  override Int prefWidth(Int col)
+  override Int? prefWidth(Int col)
   {
     switch (col)
     {
@@ -53,8 +53,8 @@ internal class StartRecentTableModel : TableModel
       default: return null
     }
   }
-  override Image image(Int col, Int row) { return col==0 ? icons[row] : null }
-  override Color fg(Int col, Int row)  { return col==1 ? pathCol : null }
+  override Image? image(Int col, Int row) { return col==0 ? icons[row] : null }
+  override Color? fg(Int col, Int row)  { return col==1 ? pathCol : null }
   override Str header(Int col) { return headers[col] }
   override Str text(Int col, Int row)
   {
@@ -80,5 +80,5 @@ internal class StartResource : Resource
   new make(Uri uri) { this.uri = uri }
   override Uri uri
   override Str name() { return uri.toStr }
-  override Image icon() { return Flux.icon(`/x16/dialog-information.png`) }
+  override Image? icon() { return Flux.icon(`/x16/dialog-information.png`) }
 }

@@ -121,7 +121,7 @@ mixin TableModel
   ** Return null (the default) to use the Tables default
   ** width.
   **
-  virtual Int prefWidth(Int col) { return null }
+  virtual Int? prefWidth(Int col) { return null }
 
   **
   ** Get the text to display for specified cell.
