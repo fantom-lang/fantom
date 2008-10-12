@@ -56,7 +56,7 @@ class FandocToHtml : DocCompilerSupport
     fandocFiles.each |File file| { generate(file) }
   }
 
-  Doc generate(File inFile)
+  Doc? generate(File inFile)
 
   {
     log.debug("  Fandoc [$inFile]")
