@@ -96,7 +96,7 @@ abstract class WebReq
   ** The UserAgent for this request or null if the
   ** "User-Agent" header was not specified in the request.
   **
-  abstract UserAgent userAgent()
+  abstract UserAgent? userAgent()
 
   **
   ** Get the key/value pairs of the form data.  If the request
@@ -106,7 +106,7 @@ abstract class WebReq
   ** type is not "application/x-www-form-urlencoded" this method
   ** returns null.
   **
-  abstract Str:Str form()
+  abstract [Str:Str]? form()
 
   **
   ** The InStream for this request.
@@ -123,7 +123,7 @@ abstract class WebReq
   **
   ** The namespace object resolved by `uri`.
   **
-  Obj resource
+  Obj? resource
 
 
 }

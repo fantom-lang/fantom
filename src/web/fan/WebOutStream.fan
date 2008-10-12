@@ -74,7 +74,7 @@ class WebOutStream : OutStream
   ** manually. Use empty to optionally close this element without
   ** using an end tag.
   **
-  This tag(Str elemName, Str attrs := null, Bool empty := false)
+  This tag(Str elemName, Str? attrs := null, Bool empty := false)
   {
     writeChar('<')
     writeChars(elemName)
@@ -192,7 +192,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <link> tag for an Atom feed resource.
   **
-  This atom(Uri href, Str attrs := null)
+  This atom(Uri href, Str? attrs := null)
   {
     return tag("link rel='alternate' type='application/atom+xml' href='$href.encode.toXml'", attrs, true).nl
   }
@@ -200,7 +200,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <link> tag for a RSS feed resource.
   **
-  This rss(Uri href, Str attrs := null)
+  This rss(Uri href, Str? attrs := null)
   {
     return tag("link rel='alternate' type='application/rss+xml' href='$href.encode.toXml'", attrs, true).nl
   }
@@ -212,7 +212,7 @@ class WebOutStream : OutStream
   **
   ** Start a <body> tag.
   **
-  This body(Str attrs := null)
+  This body(Str? attrs := null)
   {
     return tag("body", attrs).nl
   }
@@ -232,7 +232,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <h1> tag.
   **
-  This h1(Str content, Str attrs := null)
+  This h1(Str content, Str? attrs := null)
   {
     return tag("h1", attrs).w(content).tagEnd("h1").nl
   }
@@ -240,7 +240,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <h2> tag.
   **
-  This h2(Str content, Str attrs := null)
+  This h2(Str content, Str? attrs := null)
   {
     return tag("h2", attrs).w(content).tagEnd("h2").nl
   }
@@ -248,7 +248,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <h3> tag.
   **
-  This h3(Str content, Str attrs := null)
+  This h3(Str content, Str? attrs := null)
   {
     return tag("h3", attrs).w(content).tagEnd("h3").nl
   }
@@ -256,7 +256,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <h4> tag.
   **
-  This h4(Str content, Str attrs := null)
+  This h4(Str content, Str? attrs := null)
   {
     return tag("h4", attrs).w(content).tagEnd("h4").nl
   }
@@ -264,7 +264,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <h5> tag.
   **
-  This h5(Str content, Str attrs := null)
+  This h5(Str content, Str? attrs := null)
   {
     return tag("h5", attrs).w(content).tagEnd("h5").nl
   }
@@ -272,7 +272,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <h6> tag.
   **
-  This h6(Str content, Str attrs := null)
+  This h6(Str content, Str? attrs := null)
   {
     return tag("h6", attrs).w(content).tagEnd("h6").nl
   }
@@ -284,7 +284,7 @@ class WebOutStream : OutStream
   **
   ** Start a <div> tag.
   **
-  This div(Str attrs := null)
+  This div(Str? attrs := null)
   {
     return tag("div", attrs).nl
   }
@@ -304,7 +304,7 @@ class WebOutStream : OutStream
   **
   ** Start a <span> tag.
   **
-  This span(Str attrs := null)
+  This span(Str? attrs := null)
   {
     return tag("span", attrs)
   }
@@ -324,7 +324,7 @@ class WebOutStream : OutStream
   **
   ** Start a <p> tag.
   **
-  This p(Str attrs := null)
+  This p(Str? attrs := null)
   {
     return tag("p", attrs).nl
   }
@@ -344,7 +344,7 @@ class WebOutStream : OutStream
   **
   ** Start a <b> tag.
   **
-  This b(Str attrs := null)
+  This b(Str? attrs := null)
   {
     return tag("b", attrs).nl
   }
@@ -364,7 +364,7 @@ class WebOutStream : OutStream
   **
   ** Start a <i> tag.
   **
-  This i(Str attrs := null)
+  This i(Str? attrs := null)
   {
     return tag("i", attrs).nl
   }
@@ -384,7 +384,7 @@ class WebOutStream : OutStream
   **
   ** Start a <em> tag.
   **
-  This em(Str attrs := null)
+  This em(Str? attrs := null)
   {
     return tag("em", attrs).nl
   }
@@ -404,7 +404,7 @@ class WebOutStream : OutStream
   **
   ** Start a <pre> tag.
   **
-  This pre(Str attrs := null)
+  This pre(Str? attrs := null)
   {
     return tag("pre", attrs)
   }
@@ -424,7 +424,7 @@ class WebOutStream : OutStream
   **
   ** Start a <code> tag.
   **
-  This code(Str attrs := null)
+  This code(Str? attrs := null)
   {
     return tag("code", attrs)
   }
@@ -468,7 +468,7 @@ class WebOutStream : OutStream
   **
   ** Start a <a> tag.
   **
-  This a(Uri href, Str attrs := null)
+  This a(Uri href, Str? attrs := null)
   {
     return tag("a href='$href.encode.toXml'", attrs)
   }
@@ -488,7 +488,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <img> tag.
   **
-  This img(Uri src, Str attrs := null)
+  This img(Uri src, Str? attrs := null)
   {
     return tag("img src='$src.encode.toXml'", attrs, true)
   }
@@ -500,7 +500,7 @@ class WebOutStream : OutStream
   **
   ** Start a <table> tag.
   **
-  This table(Str attrs := null)
+  This table(Str? attrs := null)
   {
     return tag("table", attrs).nl
   }
@@ -520,7 +520,7 @@ class WebOutStream : OutStream
   **
   ** Start a <tr> tag.
   **
-  This tr(Str attrs := null)
+  This tr(Str? attrs := null)
   {
     return tag("tr", attrs).nl
   }
@@ -540,7 +540,7 @@ class WebOutStream : OutStream
   **
   ** Start a <th> tag.
   **
-  This th(Str attrs := null)
+  This th(Str? attrs := null)
   {
     return tag("th", attrs)
   }
@@ -560,7 +560,7 @@ class WebOutStream : OutStream
   **
   ** Start a <td> tag.
   **
-  This td(Str attrs := null)
+  This td(Str? attrs := null)
   {
     return tag("td", attrs)
   }
@@ -580,7 +580,7 @@ class WebOutStream : OutStream
   **
   ** Start a <ul> tag.
   **
-  This ul(Str attrs := null)
+  This ul(Str? attrs := null)
   {
     return tag("ul", attrs).nl
   }
@@ -596,7 +596,7 @@ class WebOutStream : OutStream
   **
   ** Start a <ol> tag.
   **
-  This ol(Str attrs := null)
+  This ol(Str? attrs := null)
   {
     return tag("ol", attrs).nl
   }
@@ -612,7 +612,7 @@ class WebOutStream : OutStream
   **
   ** Start a <li> tag.
   **
-  This li(Str attrs := null)
+  This li(Str? attrs := null)
   {
     return tag("li", attrs).nl
   }
@@ -632,7 +632,7 @@ class WebOutStream : OutStream
   **
   ** Start a <dl> tag.
   **
-  This dl(Str attrs := null)
+  This dl(Str? attrs := null)
   {
     return tag("dl", attrs).nl
   }
@@ -648,7 +648,7 @@ class WebOutStream : OutStream
   **
   ** Start a <dt> tag.
   **
-  This dt(Str attrs := null)
+  This dt(Str? attrs := null)
   {
     return tag("dt", attrs).nl
   }
@@ -664,7 +664,7 @@ class WebOutStream : OutStream
   **
   ** Start a <dd> tag.
   **
-  This dd(Str attrs := null)
+  This dd(Str? attrs := null)
   {
     return tag("dd", attrs).nl
   }
@@ -684,7 +684,7 @@ class WebOutStream : OutStream
   **
   ** Start a <form> tag.
   **
-  This form(Str attrs := null)
+  This form(Str? attrs := null)
   {
     return tag("form", attrs).nl
   }
@@ -704,7 +704,7 @@ class WebOutStream : OutStream
   **
   ** Write a complete <input> tag.
   **
-  This input(Str attrs := null)
+  This input(Str? attrs := null)
   {
     return tag("input", attrs, true)
   }
@@ -712,7 +712,7 @@ class WebOutStream : OutStream
   **
   ** Convenience for input("type='text'" + attrs).
   **
-  This textField(Str attrs := null)
+  This textField(Str? attrs := null)
   {
     return tag("input type='text'", attrs, true)
   }
@@ -720,7 +720,7 @@ class WebOutStream : OutStream
   **
   ** Convenience for input("type='password'" + attrs).
   **
-  This password(Str attrs := null)
+  This password(Str? attrs := null)
   {
     return tag("input type='password'", attrs, true)
   }
@@ -728,7 +728,7 @@ class WebOutStream : OutStream
   **
   ** Convenience for input("type='hidden'" + attrs).
   **
-  This hidden(Str attrs := null)
+  This hidden(Str? attrs := null)
   {
     return tag("input type='hidden'", attrs, true)
   }
@@ -736,7 +736,7 @@ class WebOutStream : OutStream
   **
   ** Convenience for input("type='button'" + attrs).
   **
-  This button(Str attrs := null)
+  This button(Str? attrs := null)
   {
     return tag("input type='button'", attrs, true)
   }
@@ -744,7 +744,7 @@ class WebOutStream : OutStream
   **
   ** Convenience for input("type='checkbox'" + attrs)
   **
-  This checkbox(Str attrs := null)
+  This checkbox(Str? attrs := null)
   {
     return tag("input type='checkbox'", attrs, true)
   }
@@ -752,7 +752,7 @@ class WebOutStream : OutStream
   **
   ** Convenience for input("type='radio'" + attrs)
   **
-  This radio(Str attrs := null)
+  This radio(Str? attrs := null)
   {
     return tag("input type='radio'", attrs, true)
   }
@@ -760,7 +760,7 @@ class WebOutStream : OutStream
   **
   ** Convenience for input("type='submit'" + attrs).
   **
-  This submit(Str attrs := null)
+  This submit(Str? attrs := null)
   {
     return tag("input type='submit'", attrs, true)
   }
@@ -772,7 +772,7 @@ class WebOutStream : OutStream
   **
   ** Start a <select> tag.
   **
-  This select(Str attrs := null)
+  This select(Str? attrs := null)
   {
     return tag("select", attrs).nl
   }
@@ -788,7 +788,7 @@ class WebOutStream : OutStream
   **
   ** Start a <option> tag.
   **
-  This option(Str attrs := null)
+  This option(Str? attrs := null)
   {
     return tag("option", attrs)
   }
@@ -808,7 +808,7 @@ class WebOutStream : OutStream
   **
   ** Start a <textarea> tag.
   **
-  This textArea(Str attrs := null)
+  This textArea(Str? attrs := null)
   {
     return tag("textarea", attrs).nl
   }
@@ -833,7 +833,7 @@ class WebOutStream : OutStream
   ** see `sys::Str.toXml`.  If obj is null, then "null" is
   ** written.
   **
-  This esc(Obj obj)
+  This esc(Obj? obj)
   {
     if (obj == null) return w("null")
     str := obj.toStr
@@ -861,7 +861,7 @@ class WebOutStream : OutStream
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Uri[] cssUris  // what CSS uris have been added
-  private Uri[] jsUris   // what JavaScript uris have been added
+  private Uri[]? cssUris  // what CSS uris have been added
+  private Uri[]? jsUris   // what JavaScript uris have been added
 
 }

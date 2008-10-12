@@ -22,7 +22,7 @@ abstract const class WebService : Thread
   **
   ** Constructor with thread name.
   **
-  new make(Str name) : super(name) {}
+  new make(Str? name) : super(name) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Service
@@ -128,7 +128,7 @@ abstract const class WebService : Thread
   static const Log log := Log.get("web")
 
   ** Session management thread
-  internal const WebSessionMgr sessionMgr := WebSessionMgr.make
+  internal const WebSessionMgr sessionMgr := WebSessionMgr()
 
 
 }
