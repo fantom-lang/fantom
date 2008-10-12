@@ -25,11 +25,11 @@ const class SqlService : Thread
   ** - 'dialect' is the database specific dialect implementation.  If null,
   **   MySqlDialect is assumed.
   **
-  new make(Str threadName  := null,
+  new make(Str? threadName  := null,
            Str connection  := "",
-           Str username    := "",
-           Str password    := "",
-           Dialect dialect := null) : super(threadName)
+           Str? username    := "",
+           Str? password    := "",
+           Dialect? dialect := null) : super(threadName)
   {
     this.connection = connection
     this.username   = username
@@ -246,12 +246,12 @@ const class SqlService : Thread
   **
   ** The username used to connect to this database.
   **
-  const Str username
+  const Str? username
 
   **
   ** The password used to connect to this database.
   **
-  const Str password
+  const Str? password
 
   **
   ** The database specific string used to connect to the database.
