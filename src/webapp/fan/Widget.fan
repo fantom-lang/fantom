@@ -24,13 +24,13 @@ abstract class Widget : Weblet
   **
   ** Get this widget's parent or null if not mounted.
   **
-  @transient readonly Widget parent
+  @transient readonly Widget? parent
 
   **
   ** The unique name for this widget within the parent, or
   ** null if this widget is not mounted.
   **
-  @transient readonly Str name
+  @transient readonly Str? name
 
   **
   ** Iterate the children widgets.
@@ -49,7 +49,7 @@ abstract class Widget : Weblet
   ** Return the child Widget with the given name, or
   ** null if one does not exist.
   **
-  Widget get(Str name)
+  Widget? get(Str name)
   {
     return kids.find |Widget w->Bool| { return w.name == name }
   }
@@ -96,7 +96,7 @@ abstract class Widget : Weblet
   ** Return the uri to this Widget from the base widget,
   ** or null if this widget is not mounted.
   **
-  Uri uri()
+  Uri? uri()
   {
     if (name == null) return null
     path := Str[,]
@@ -113,7 +113,7 @@ abstract class Widget : Weblet
   ** Return the Widget with the given Uri, or null
   ** if one cannot be found.
   **
-  Widget find(Uri uri)
+  Widget? find(Uri uri)
   {
     w := this
     path := uri.path
@@ -262,9 +262,9 @@ abstract class Widget : Weblet
   ** and is then automatically cleaned up.  It is convenient for
   ** passing notifications following a POST.
   **
-  Str:Obj flash()
+  Str:Obj? flash()
   {
-    return req.session["webapp.widget.flash"] as Str:Obj
+    return req.session["webapp.widget.flash"] as Str:Obj?
   }
 
   **

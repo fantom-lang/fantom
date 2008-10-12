@@ -45,7 +45,7 @@ const class FindChromeStep : WebAppStep
   ** for no chrome.  Default implementation tries to find
   ** a Widget at `chrome`.
   **
-  virtual Widget find(WebReq req, WebRes res)
+  virtual Widget? find(WebReq req, WebRes res)
   {
     if (chrome == null) return null
     obj := resolve(chrome)
@@ -57,6 +57,6 @@ const class FindChromeStep : WebAppStep
   **
   ** Uri to the default chrome, or null for no chrome.
   **
-  const Uri chrome
+  const Uri? chrome
 
 }

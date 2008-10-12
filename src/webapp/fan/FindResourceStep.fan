@@ -47,7 +47,7 @@ const class FindResourceStep : WebAppStep
   ** Attempt to find the resource identified by the
   ** specified uri or return null if not found.
   **
-  virtual Obj find(Uri uri)
+  virtual Obj? find(Uri uri)
   {
     // we only use path section
     uri = uri.pathOnly
@@ -73,7 +73,7 @@ const class FindResourceStep : WebAppStep
   ** Search the configured list of extensions in `extSearch` to
   ** map the web uri to a resource in the local VM's namespace.
   **
-  virtual Obj findExtSearch(Uri uri)
+  virtual Obj? findExtSearch(Uri uri)
   {
     if (extSearch != null)
     {
