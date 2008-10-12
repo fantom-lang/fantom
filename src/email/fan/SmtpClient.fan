@@ -36,13 +36,13 @@ class SmtpClient
   ** Username to use for authentication, or null to skip
   ** authentication.
   **
-  Str username
+  Str? username
 
   **
   ** Password to use for authentication, or null to skip
   ** authentication.
   **
-  Str password
+  Str? password
 
 //////////////////////////////////////////////////////////////////////////
 // Send
@@ -308,7 +308,7 @@ class SmtpClient
   Log log := Log.get("smtp")
 
   private TcpSocket sock   // Socket if open or null if closed
-  private Str[] auths      // SASL auth mechanisms supported by server
+  private Str[]? auths     // SASL auth mechanisms supported by server
 }
 
 **************************************************************************

@@ -31,17 +31,17 @@ class Email
   **
   ** List of "to" email addresses.
   **
-  Str[] to
+  Str[]? to
 
   **
   ** List of "cc" email addresses.
   **
-  Str[] cc
+  Str[]? cc
 
   **
   ** List of "bcc" email addresses.
   **
-  Str[] bcc
+  Str[]? bcc
 
   **
   ** Subject of the email.  This string can be any Unicode
