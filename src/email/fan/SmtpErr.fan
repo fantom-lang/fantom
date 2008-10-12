@@ -15,7 +15,7 @@ const class SmtpErr : Err
   **
   ** Construct with error code, message, and optional cause.
   **
-  new make(Int code, Str msg, Err cause := null)
+  new make(Int code, Str? msg, Err? cause := null)
     : super(msg, cause)
   {
     this.code = code
@@ -24,7 +24,7 @@ const class SmtpErr : Err
   **
   ** Construct with SmtpRes (internal only)
   **
-  internal new makeRes(SmtpRes res, Err cause := null)
+  internal new makeRes(SmtpRes res, Err? cause := null)
     : super.make(res.toStr, cause)
   {
     this.code = res.code
