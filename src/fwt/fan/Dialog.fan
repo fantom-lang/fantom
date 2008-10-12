@@ -191,7 +191,7 @@ class Dialog : Window
   **
   ** If the content field is null, then construct is via `buildContent`.
   **
-  override Obj open()
+  override Obj? open()
   {
     if (content == null) buildContent
     return super.open

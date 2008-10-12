@@ -239,6 +239,40 @@ class InheritTest : CompilerTest
        ])
   }
 
+  Void testCovariantNullable()
+  {
+    verifyErrors(
+     "class Foo : Base
+      {
+        override Obj  a() { return this }
+        override Obj? b() { return this }
+        override Str[]? c
+        override Str:Int d
+        override Int e
+        override Int? f
+      }
+
+      class Base
+      {
+        virtual Obj? a() { return this }
+        virtual Obj  b() { return this }
+        virtual Str[] c
+        virtual [Str:Int]? d
+        virtual Int? e() { return 4 }
+        virtual Int f() { return 4 }
+      }
+
+      ",
+       [
+        3, 3, "Return type mismatch in override of '$podName::Base.a' - 'sys::Obj?' != 'sys::Obj'",
+        4, 3, "Return type mismatch in override of '$podName::Base.b' - 'sys::Obj' != 'sys::Obj?'",
+        5, 3, "Type mismatch in override of '$podName::Base.c' - 'sys::Str[]' != 'sys::Str[]?'",
+        6, 3, "Type mismatch in override of '$podName::Base.d' - '[sys::Str:sys::Int]?' != '[sys::Str:sys::Int]'",
+        7, 3, "Type mismatch in override of '$podName::Base.e' - 'sys::Int?' != 'sys::Int'",
+        8, 3, "Type mismatch in override of '$podName::Base.f' - 'sys::Int' != 'sys::Int?'",
+       ])
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // InheritProtection
 //////////////////////////////////////////////////////////////////////////

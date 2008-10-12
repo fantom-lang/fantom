@@ -273,7 +273,7 @@ class Inherit : CompilerStep
     {
       // check if new return type is a subtype of original
       // return type (we allow covariant return types)
-      if (!defRet.fits(baseRet) || (defRet.isVoid && !baseRet.isVoid))
+      if (!defRet.fits(baseRet) || (defRet.isVoid && !baseRet.isVoid) || defRet.isNullable != baseRet.isNullable)
         throw err("Return type mismatch in override of '$base.qname' - '$baseRet' != '$defRet'", loc)
 
       // if the definition already has a covariant return type, then
@@ -299,8 +299,10 @@ class Inherit : CompilerStep
     loc := def.location
 
     // check that types match (we allow field to be covariant typed)
-    if (!def.fieldType.fits(base.returnType))
-      throw err("Type mismatch in override of '$base.qname' - '$base.returnType' != '$def.fieldType'", loc)
+    ft := def.fieldType
+    rt := base.returnType
+    if (!ft.fits(rt) || ft.isNullable != rt.isNullable)
+      throw err("Type mismatch in override of '$base.qname' - '$rt' != '$ft'", loc)
 
     // save original return type
     def.inheritedRet = base.inheritedReturnType

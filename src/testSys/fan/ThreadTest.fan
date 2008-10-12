@@ -507,7 +507,7 @@ const class ThreadCount : Thread
 {
   new make() : super("ThreadCount") {}
 
-  override Obj run()
+  override Obj? run()
   {
     3.times |Int c| { sleep(100ms) }
     return null
@@ -537,7 +537,7 @@ const class ThreadCallbacks : Thread
 {
   new make(Int mode) : super(null) { this.mode = mode }
 
-  override Obj run()
+  override Obj? run()
   {
     Sys.ns.put(`/testSys/run`, true)
     if (mode == 1) ThreadTest.make.fail
@@ -573,5 +573,5 @@ const class ATestService : Thread { new make() : super() {} }
 const class TestService : ATestService, MTestService
 {
   override Bool isService() { return true }
-  override Obj run() { while(isRunning) sleep(20ms); return null }
+  override Obj? run() { while(isRunning) sleep(20ms); return null }
 }

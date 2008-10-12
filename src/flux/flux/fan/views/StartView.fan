@@ -80,5 +80,5 @@ internal class StartResource : Resource
   new make(Uri uri) { this.uri = uri }
   override Uri uri
   override Str name() { return uri.toStr }
-  override Image? icon() { return Flux.icon(`/x16/dialog-information.png`) }
+  override Image icon() { return Flux.icon(`/x16/dialog-information.png`) }
 }

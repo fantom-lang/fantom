@@ -709,7 +709,7 @@ internal class RecentTableModel : TableModel
 
   override Int numCols() { return 2 }
   override Int numRows() { return items.size }
-  override Int prefWidth(Int col)
+  override Int? prefWidth(Int col)
   {
     switch (col)
     {

@@ -55,7 +55,7 @@ internal class DirViewModel : TableModel
   override Str header(Int col) { return headers[col] }
   override Halign halign(Int col) { return col == 1 ? Halign.right : Halign.left }
 
-  override Int prefWidth(Int col)
+  override Int? prefWidth(Int col)
   {
     switch (col)
     {
