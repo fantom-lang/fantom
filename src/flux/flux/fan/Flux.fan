@@ -42,7 +42,7 @@ class Flux
 
     // not cached or modified since we loaded cache
     file := Flux.homeDir + "${name}.fog".toUri
-    value := null
+    Obj? value := null
     try
     {
       if (file.exists)

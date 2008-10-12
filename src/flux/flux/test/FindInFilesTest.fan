@@ -30,8 +30,8 @@ internal class FindInFilesTest : Test
     verifyMark(marks[4], "sub/gamma.fan", 2, 8)
     verifyMark(marks[5], "sub/gamma.fan", 5, 2)
 
-    verifyErr(ArgErr#) |,| { FindInFiles(null, "foo").find }
-    verifyErr(ArgErr#) |,| { FindInFiles(tempDir, null).find }
+    //verifyErr(ArgErr#) |,| { FindInFiles(null, "foo").find }
+    //verifyErr(ArgErr#) |,| { FindInFiles(tempDir, null).find }
     verifyErr(ArgErr#) |,| { FindInFiles(tempDir, "").find }
     verifyErr(ArgErr#) |,| { FindInFiles(tempDir+`dne/`, "foo").find }
   }

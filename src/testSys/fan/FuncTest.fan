@@ -130,7 +130,7 @@ class FuncTest : Test
       if (a.size >= 1) verifyEq(g.callOn(a[0], a[1..-1]), expected)
 
       // curry operator
-      Func c := null
+      Func? c := null
       switch (i)
       {
         case 0: c = f

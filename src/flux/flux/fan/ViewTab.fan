@@ -58,7 +58,7 @@ internal class ViewTab : EdgePane
   {
     // check for explicit view query param, otherwise
     // default to first registered view on resource type
-    Type viewType
+    Type? viewType
     qname := r.uri.query["view"]
     if (qname != null)
     {
@@ -77,7 +77,7 @@ internal class ViewTab : EdgePane
     return view
   }
 
-  private Void loadErr(Resource r, Str msg, LoadMode mode, Err cause := null)
+  private Void loadErr(Resource r, Str msg, LoadMode mode, Err? cause := null)
   {
     view := ErrView(msg, cause)
     doOnLoad(view, r)
@@ -141,7 +141,7 @@ internal class ViewTab : EdgePane
     activate
   }
 
-  Widget doBuildToolBar(View v)
+  Widget? doBuildToolBar(View v)
   {
     try
     {
@@ -168,7 +168,7 @@ internal class ViewTab : EdgePane
     }
   }
 
-  Widget doBuildStatusBar(View v)
+  Widget? doBuildStatusBar(View v)
   {
     try
     {
@@ -351,5 +351,5 @@ internal class ViewTab : EdgePane
 
 internal const class ViewLoadErr : Err
 {
-  new make(Str msg, Err cause := null) : super.make(msg, cause) {}
+  new make(Str msg, Err? cause := null) : super.make(msg, cause) {}
 }

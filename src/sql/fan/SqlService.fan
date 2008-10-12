@@ -50,7 +50,7 @@ const class SqlService : Thread
   {
     log.info("SqlService started ($name)")
     log.info("SqlService connection: $connection")
-    loop |Obj->Obj| { return null }
+    loop |Obj->Obj?| { return null }
     log.info("SqlService stopped ($name)")
     return null
   }
@@ -84,7 +84,7 @@ const class SqlService : Thread
   **
   ** Get the connection to this database for the current thread.
   **
-  private Connection threadConnection(Bool checked := true)
+  private Connection? threadConnection(Bool checked := true)
   {
     conn := (Connection)Thread.locals[name]
     if (conn == null)

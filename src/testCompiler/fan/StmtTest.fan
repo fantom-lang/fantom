@@ -23,16 +23,16 @@ class StmtTest : CompilerTest
     verifyStmt(code, 2, 33)
 
     code = "if (a == 0) { x = 1; y = 1; } return [x,y]"
-    verifyStmt(code, [1,1], 0)
-    verifyStmt(code, Int[null,null], 99)
+    verifyStmt(code, Int?[1,1], 0)
+    verifyStmt(code, Int?[null,null], 99)
 
     code = "if (a == 0) return 1; else return 2"
     verifyStmt(code, 1, 0)
     verifyStmt(code, 2, 33)
 
     code = "if (a == 0) { x = 1; y = 1; } else { x = 2; y = 2; } return [x,y]"
-    verifyStmt(code, [1,1], 0)
-    verifyStmt(code, [2,2], 9)
+    verifyStmt(code, Int?[1,1], 0)
+    verifyStmt(code, Int?[2,2], 9)
 
     code = "if (a == 0)
             {
@@ -50,11 +50,11 @@ class StmtTest : CompilerTest
               x = 99
             }
             return [x, y]"
-    verifyStmt(code, [10, 10],   0, 0)
-    verifyStmt(code, [10, 99],   0, 1)
-    verifyStmt(code, [11, null], 1, 0)
-    verifyStmt(code, [11, 11],   1, 1)
-    verifyStmt(code, [99, null], 2, 0)
+    verifyStmt(code, Int?[10, 10],   0, 0)
+    verifyStmt(code, Int?[10, 99],   0, 1)
+    verifyStmt(code, Int?[11, null], 1, 0)
+    verifyStmt(code, Int?[11, 11],   1, 1)
+    verifyStmt(code, Int?[99, null], 2, 0)
 
     code = "if (a == 2 || b == 3)
               return 77
@@ -490,9 +490,9 @@ class StmtTest : CompilerTest
     compile(
      "class Foo
       {
-        static Int f(Str s)
+        static Int? f(Str s)
         {
-          Int x := null
+          Int? x := null
           switch (s)
           {
             case \"a\": x = 'a'
@@ -539,9 +539,9 @@ class StmtTest : CompilerTest
     compile(
      "class Foo
       {
-        static Obj f(Obj obj)
+        static Obj? f(Obj obj)
         {
-          Obj x := null
+          Obj? x := null
           switch (obj)
           {
             case \"a\":
@@ -587,7 +587,7 @@ class StmtTest : CompilerTest
         y = 1
       }
       return [x,y]"
-    verifyStmt(code, [1,1])
+    verifyStmt(code, Int?[1,1])
 
     code =
      "try
@@ -1127,22 +1127,22 @@ class StmtTest : CompilerTest
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  Void verifyStmt(Str code, Obj result, Obj a := null, Obj b := null, Obj c := null)
+  Void verifyStmt(Str code, Obj? result, Obj? a := null, Obj? b := null, Obj? c := null)
   {
     compile(
      "class Foo
       {
         new make() { return }
 
-        Obj func(Int a, Int b, Int c)
+        Obj? func(Int? a, Int? b, Int? c)
         {
           x = y = z = null
           $code
         }
 
-        Int x
-        Int y
-        Int z
+        Int? x
+        Int? y
+        Int? z
       }")
 
      t := pod.types.first

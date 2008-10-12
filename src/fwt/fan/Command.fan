@@ -82,7 +82,7 @@ class Command
   ** If onInvoke is not specified, then the `invoke` method
   ** must be overridden to execute the command.
   **
-  new make(Str name := null, Image? icon := null, |Event event|? onInvoke := null)
+  new make(Str? name := null, Image? icon := null, |Event event|? onInvoke := null)
   {
     if (name != null) this.name = name
     this.icon = icon

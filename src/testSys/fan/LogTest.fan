@@ -236,7 +236,7 @@ class LogTest : Test
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  Void verifyLog(LogLevel level, Str msg := null, Err err := null)
+  Void verifyLog(LogLevel? level, Str? msg := null, Err? err := null)
   {
     log := log()
     LogRecord rec := Thread.locals["testSys.logRecord"]

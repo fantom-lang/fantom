@@ -39,7 +39,6 @@ class ProcessTest : Test
     verifyErr(Err#) |,| { proc.out=null }
     verifyErr(Err#) |,| { proc.err=null }
     verifyErr(Err#) |,| { proc.in=null }
-    verifyErr(Err#) |,| { proc.mergeErr=null }
     verifyErr(Err#) |,| { proc.run }
   }
 

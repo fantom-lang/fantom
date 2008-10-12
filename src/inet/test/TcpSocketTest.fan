@@ -40,7 +40,7 @@ class TcpSocketTest : Test
     verifyBind(IpAddress.local, 1973)
   }
 
-  Void verifyBind(IpAddress addr, Int port)
+  Void verifyBind(IpAddress? addr, Int? port)
   {
     s := TcpSocket.make
     verifySame(s.bind(addr, port), s)
@@ -119,7 +119,7 @@ class TcpSocketTest : Test
     doTestConnectHttp(30sec)
   }
 
-  Void doTestConnectHttp(Duration timeout)
+  Void doTestConnectHttp(Duration? timeout)
   {
     // connect to www server
     s := TcpSocket().connect(IpAddress("www.fandev.org"), 80, timeout)

@@ -661,7 +661,7 @@ internal class RecentCommand : FluxCommand
   new make() : super(CommandId.recent) {}
   override Void invoke(Event? event)
   {
-    Dialog dlg
+    Dialog? dlg
     model := RecentTableModel()
     table := Table
     {

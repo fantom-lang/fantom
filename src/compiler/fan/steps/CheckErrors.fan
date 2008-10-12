@@ -63,7 +63,7 @@ class CheckErrors : CompilerStep
 
     // check some knuckle head doesn't override type
     if (t.slotDef("type") != null && !compiler.isSys)
-      err("Cannot override Obj.type() knuckle head", t.slotDef("type").location)
+      err("Cannot override Obj.type()", t.slotDef("type").location)
   }
 
   private Void checkTypeFlags(TypeDef t)
@@ -379,7 +379,7 @@ class CheckErrors : CompilerStep
 
     // check parameter default type
     if (p.def != null && !p.def.fits(p.paramType))
-      err("'$p.def.ctype' is not assignable to '$p.paramType'", p.def.location)
+      err("'$p.def.toTypeStr' is not assignable to '$p.paramType'", p.def.location)
   }
 
   private Void checkMethodReturn(MethodDef m)
@@ -540,10 +540,10 @@ class CheckErrors : CompilerStep
     {
       if (!stmt.expr.fits(ret))
       {
-        if (ret.fits(stmt.expr.ctype))
+        if (stmt.expr.id !== ExprId.nullLiteral && ret.fits(stmt.expr.ctype))
           stmt.expr = cast(stmt.expr, ret)
         else
-          err("Cannot return '$stmt.expr.ctype' as '$ret'", stmt.expr.location)
+          err("Cannot return '$stmt.expr.toTypeStr' as '$ret'", stmt.expr.location)
       }
     }
 
@@ -686,10 +686,10 @@ class CheckErrors : CompilerStep
     // check that rhs is assignable to lhs
     if (!expr.rhs.fits(expr.lhs.ctype))
     {
-      if (expr.lhs.ctype.fits(expr.rhs.ctype))
+      if (expr.rhs.id !== ExprId.nullLiteral && expr.lhs.ctype.fits(expr.rhs.ctype))
         expr.rhs = cast(expr.rhs, expr.lhs.ctype)
       else
-        err("'$expr.rhs.ctype' is not assignable to '$expr.lhs.ctype'", expr.rhs.location)
+        err("'$expr.rhs.toTypeStr' is not assignable to '$expr.lhs.ctype'", expr.rhs.location)
     }
 
     // check that lhs is assignable
@@ -1041,7 +1041,7 @@ class CheckErrors : CompilerStep
           arg := args[i]
           if (!arg.fits(p))
           {
-            if (p.fits(arg.ctype))
+            if (arg.id !== ExprId.nullLiteral && p.fits(arg.ctype))
               args[i] = cast(arg, p)
             else
               isErr = true
@@ -1072,10 +1072,10 @@ class CheckErrors : CompilerStep
           arg := args[i]
           if (!arg.fits(p.paramType))
           {
-            if (p.paramType.fits(arg.ctype))
+            if (arg.id !== ExprId.nullLiteral && p.paramType.fits(arg.ctype))
               args[i] = cast(arg, p.paramType)
             else
-              isErr = true
+              isErr = name != "compare" // TODO let anything slide for Obj.compare
           }
         }
       }
@@ -1088,7 +1088,7 @@ class CheckErrors : CompilerStep
       msg += "|" + sig.params.join(", ") + "|"
     else
       msg += call.method.nameAndParamTypesToStr
-    msg += ", not (" + args.join(", ", |Expr e->Str| { return "$e.ctype" }) + ")"
+    msg += ", not (" + args.join(", ", |Expr e->Str| { return "$e.toTypeStr" }) + ")"
     err(msg, call.location)
   }
 

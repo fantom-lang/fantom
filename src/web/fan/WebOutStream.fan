@@ -31,7 +31,7 @@ class WebOutStream : OutStream
   **
   ** Convenience for writeChars(obj.toStr).
   **
-  This w(Obj obj)
+  This w(Obj? obj)
   {
     writeChars(obj == null ? "null" : obj.toStr)
     return this

@@ -21,7 +21,7 @@ const class Font
   ** Construct a Font with family name, size in points,
   ** and optional bold/italic style.
   **
-  new make(Str name := null, Int size := 12, Bool bold := false, Bool italic := false)
+  new make(Str? name := null, Int size := 12, Bool bold := false, Bool italic := false)
   {
     if (name != null) this.name = name
     this.size   = size
@@ -39,12 +39,12 @@ const class Font
   **   Font.fromStr("bold 10pt Courier")
   **   Font.fromStr("bold italic 8pt Times Roman")
   **
-  static Font fromStr(Str s, Bool checked := true)
+  static Font? fromStr(Str s, Bool checked := true)
   {
     try
     {
-      Str name := null
-      Int size := null
+      Str? name := null
+      Int? size := null
       bold   := false
       italic := false
 

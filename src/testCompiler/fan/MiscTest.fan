@@ -215,7 +215,7 @@ class MiscTest : CompilerTest
       {
         Void a(Str a := 6)    {}
         Void b(Int a := 6f, Num b := \"f\") {}
-        Void c(Str a := null) {}  // ok
+        Void c(Str? a := null) {}  // ok
         Void d(Num a := 7)    {}  // ok
       }",
       [
@@ -417,9 +417,9 @@ class MiscTest : CompilerTest
 
         // methods
         Void m00() {}
-        Int m01(List list) { return null }
+        Int? m01(List? list) { return null }
         static Void m02(Obj x) {}
-        static Str[] m03(Int a, Int b) { return null }
+        static Str[]? m03(Int a, Int b) { return null }
 
         // closures
         static Func c00() { return |,| {} }
@@ -630,13 +630,13 @@ class MiscTest : CompilerTest
     compile(
      "class Foo
       {
-        Void a(Str x := null) { }
+        Void a(Str? x := null) { }
         Void b(Int[] y := Int[,] , Str z := \"hi\\n\") {}
         Void c(Int x := 7, Int y := x-x , Int z := ~ y) {}
         Void d(Str x := mi(), Str y := ms(5)) {}
 
-        Str mi() { return null }
-        static Str ms(Int i) { return null }
+        Str? mi() { return null }
+        static Str? ms(Int i) { return null }
       }"
     )
 
@@ -783,19 +783,19 @@ class MiscTest : CompilerTest
      "class Foo
       {
         const Int[] a
-        const Int[] b := null
+        const Int[]? b := null
         const Int[] c := [2,3]
-        const Int[] d := wrap(null)
+        const Int[]? d := wrap(null)
         const Int[] e := wrap([4])
         const Int[] f
         const Int[] g
 
-        const Int:Str h := null
-        const Int:Str i := map(null)
+        const [Int:Str]? h := null
+        const [Int:Str]? i := map(null)
         const Int:Str j := map(c)
         const Int:Str k := map(c)
 
-        const Type l := null
+        const Type? l := null
         const Type m := Str#
         const Type n
         const Type o
@@ -821,10 +821,10 @@ class MiscTest : CompilerTest
           }
         }
 
-        static Int[] wrap(Int[] x) { return x }
-        static Type thru(Type t) { return t }
+        static Int[]? wrap(Int[]? x) { return x }
+        static Type? thru(Type? t) { return t }
 
-        static Int:Str map(Int[] x)
+        static [Int:Str]? map(Int[]? x)
         {
           if (x == null) return null
           m := Int:Str[:]

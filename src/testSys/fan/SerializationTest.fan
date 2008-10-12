@@ -494,7 +494,7 @@ class SerializationTest : Test
 
   Void testSynthetics()
   {
-    SerSynthetic x := null
+    SerSynthetic? x := null
 
     x = verifySer("testSys::SerSynthetic {}", SerSynthetic.make)
     verifyEq(x.b, 4)
@@ -670,7 +670,7 @@ class SerializationTest : Test
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  Obj verifySer(Str data, Obj expected)
+  Obj? verifySer(Str data, Obj? expected)
   {
 //Sys.out.printLine("===================")
 //echo(data)
@@ -712,7 +712,7 @@ class SerializationTest : Test
 @serializable
 class SerA
 {
-  new make(Str s := null, Duration d := null)
+  new make(Str? s := null, Duration? d := null)
   {
     this.s = s
     this.d = d
@@ -780,7 +780,7 @@ class SerB : SerA
 @serializable
 const class SerConst
 {
-  new make(Int a := 0, Int[] b := null, Int[][] c := null)
+  new make(Int a := 0, Int[]? b := null, Int[][]? c := null)
   {
     this.a = a
     if (b != null) this.b = b.toImmutable
@@ -805,8 +805,8 @@ const class SerConst
   }
 
   const Int a
-  const Int[] b
-  const Int[][] c
+  const Int[]? b
+  const Int[][]? c
 }
 
 **************************************************************************

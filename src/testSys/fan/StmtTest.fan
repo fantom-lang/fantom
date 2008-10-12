@@ -72,14 +72,14 @@ class StmtTest : Test
   Str verifyIfGE(Int a, Int b) { if (a >= b) return ">="; return "!>="; }
   Str verifyIfSame(Int a, Int b)    { if (a === b) return "==="; return "!=="; }
   Str verifyIfNotSame(Int a, Int b) { if (a !== b) return "!=="; return "==="; }
-  Str verifyIfNullA(Obj a)     { if (a == null) return "true"; return "false" }
-  Str verifyIfNullB(Obj a)     { if (null == a) return "true"; return "false" }
-  Str verifyIfNullC(Obj a)     { if (a === null) return "true"; return "false" }
-  Str verifyIfNullD(Obj a)     { if (null === a) return "true"; return "false" }
-  Str verifyIfNotNullA(Obj a)  { if (a != null) return "true"; return "false" }
-  Str verifyIfNotNullB(Obj a)  { if (null != a) return "true"; return "false" }
-  Str verifyIfNotNullC(Obj a)  { if (a !== null) return "true"; return "false" }
-  Str verifyIfNotNullD(Obj a)  { if (null !== a) return "true"; return "false" }
+  Str verifyIfNullA(Obj? a)     { if (a == null) return "true"; return "false" }
+  Str verifyIfNullB(Obj? a)     { if (null == a) return "true"; return "false" }
+  Str verifyIfNullC(Obj? a)     { if (a === null) return "true"; return "false" }
+  Str verifyIfNullD(Obj? a)     { if (null === a) return "true"; return "false" }
+  Str verifyIfNotNullA(Obj? a)  { if (a != null) return "true"; return "false" }
+  Str verifyIfNotNullB(Obj? a)  { if (null != a) return "true"; return "false" }
+  Str verifyIfNotNullC(Obj? a)  { if (a !== null) return "true"; return "false" }
+  Str verifyIfNotNullD(Obj? a)  { if (null !== a) return "true"; return "false" }
 
 //////////////////////////////////////////////////////////////////////////
 // If -> Bool
@@ -140,14 +140,14 @@ class StmtTest : Test
   Bool verifyIfGEBool(Int a, Int b) { return (a >= b) }
   Bool verifyIfSameBool(Int a, Int b)    { return (a === b) }
   Bool verifyIfNotSameBool(Int a, Int b) { return (a !== b) }
-  Bool verifyIfNullBoolA(Obj a)    { return (a == null) }
-  Bool verifyIfNullBoolB(Obj a)    { return (null == a) }
-  Bool verifyIfNullBoolC(Obj a)    { return (a === null) }
-  Bool verifyIfNullBoolD(Obj a)    { return (null === a) }
-  Bool verifyIfNotNullBoolA(Obj a)  { return (a != null) }
-  Bool verifyIfNotNullBoolB(Obj a)  { return (null != a) }
-  Bool verifyIfNotNullBoolC(Obj a)  { return (a !== null) }
-  Bool verifyIfNotNullBoolD(Obj a)  { return (null !== a) }
+  Bool verifyIfNullBoolA(Obj? a)    { return (a == null) }
+  Bool verifyIfNullBoolB(Obj? a)    { return (null == a) }
+  Bool verifyIfNullBoolC(Obj? a)    { return (a === null) }
+  Bool verifyIfNullBoolD(Obj? a)    { return (null === a) }
+  Bool verifyIfNotNullBoolA(Obj? a)  { return (a != null) }
+  Bool verifyIfNotNullBoolB(Obj? a)  { return (null != a) }
+  Bool verifyIfNotNullBoolC(Obj? a)  { return (a !== null) }
+  Bool verifyIfNotNullBoolD(Obj? a)  { return (null !== a) }
 
 //////////////////////////////////////////////////////////////////////////
 // For
@@ -255,12 +255,12 @@ class StmtTest : Test
     verifyEq(verifyTry4(6),     "try catch-all finally")
   }
 
-  Int verifyTry1(Str x)
+  Int verifyTry1(Str? x)
   {
     try { return x.size } catch (NullErr e) { return -1 }
   }
 
-  Int verifyTry2(Str x)
+  Int verifyTry2(Str? x)
   {
     try
       return x.size
@@ -268,14 +268,14 @@ class StmtTest : Test
       return -1
   }
 
-  Int verifyTry3(Obj x)
+  Int verifyTry3(Obj? x)
   {
     try return ((Str)x).size
     catch (NullErr e) { return -1 }
     catch (CastErr e) return -2
   }
 
-  Str verifyTry4(Obj x)
+  Str verifyTry4(Obj? x)
   {
     s := ""
     try

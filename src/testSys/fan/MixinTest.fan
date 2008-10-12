@@ -122,8 +122,7 @@ class MixinTest : Test
     verify(ab is MxClsAB)
 
     // verify compiler allows assignment
-    MxA x
-    x = MxClsA.make;
+    MxA x := MxClsA.make;
     x = MxClsAB.make;
   }
 
@@ -211,7 +210,7 @@ class MixinTest : Test
   {
     x := MxClsDefs.make
     y := MxClsDefs.make as MxDefs
-    Str s := null
+    Str? s := null
 
     // void - zero args
     x.v0(); verifyEq(x.r(), "v0")

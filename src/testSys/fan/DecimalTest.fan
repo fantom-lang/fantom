@@ -89,8 +89,7 @@ class DecimalTest : Test
 
   Void testOperators()
   {
-    Decimal x;
-    x = 5d;   verifyEq(-x, -5d)
+    x := 5d;   verifyEq(-x, -5d)
     x = -44d; verifyEq(-x, 44d)
 
     verifyEq(3d*2d,   6d)

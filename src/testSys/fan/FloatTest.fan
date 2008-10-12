@@ -127,8 +127,7 @@ class FloatTest : Test
 
   Void testOperators()
   {
-    Float x;
-    x = 5f;   verifyEq(-x, -5f)
+    x := 5f;   verifyEq(-x, -5f)
     x = -44f; verifyEq(-x, 44f)
 
     verifyEq(3f*2f,   6f)

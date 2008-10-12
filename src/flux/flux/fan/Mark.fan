@@ -93,7 +93,7 @@ internal class MarkParser
     if (Desktop.isWindows) text = text.lower
 
     // attempt to match one of the root indices
-    Str root := null
+    Str? root := null
     Int s := rootDirs.eachBreak |Str rootDir->Int| { return text.index(root = rootDir) }
     if (s == null) return null
 
@@ -126,11 +126,11 @@ internal class MarkParser
     fileEnd = e
 
     // we now have our uri
-    Uri uri := null
+    Uri? uri := null
     try { uri = f.normalize.uri } catch { return null }
 
     // try to find a number for line
-    Int num := null
+    Int? num := null
     for (i:=e+1; i<e+8 && i<text.size; ++i)
       if (text[i].isDigit) { num=i; break }
     if (num == null) return Mark { uri = uri }

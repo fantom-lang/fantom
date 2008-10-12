@@ -86,11 +86,12 @@ class ResolveExpr : CompilerStep
     // if init is null, then we default the variable to null (Fan
     // doesn't do true definite assignment checking since most local
     // variables use type inference anyhow)
-    if (def.init == null)
+    if (def.init == null && !def.isCatchVar)
       def.init = LiteralExpr.make(def.location, ExprId.nullLiteral, def.ctype, null)
 
     // turn init into full assignment
-    def.init = BinaryExpr.makeAssign(LocalVarExpr.make(def.location, def.var), def.init)
+    if (def.init != null)
+      def.init = BinaryExpr.makeAssign(LocalVarExpr.make(def.location, def.var), def.init)
   }
 
   private Void resolveFor(ForStmt stmt)

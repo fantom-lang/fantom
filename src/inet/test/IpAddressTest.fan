@@ -57,7 +57,7 @@ class IpAddressTest : Test
     verifyEq(IpAddress("www.microsoft.com").hash, IpAddress("WWW.Microsoft.COM").hash)
   }
 
-  Void verifyAddr(Str str, Int[] bytes, Str numeric := str, Str numericAlt := null)
+  Void verifyAddr(Str str, Int[] bytes, Str numeric := str, Str? numericAlt := null)
   {
     // check fields
     a := IpAddress(str)

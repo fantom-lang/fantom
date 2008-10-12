@@ -32,7 +32,7 @@ internal class FindBar : ContentPane, TextEditorSupport
     {
       mode = ButtonMode.check
       text = Flux#.loc("find.matchCase")
-      onAction.add(&find(null, true, true))
+      onAction.add |Event e| { find(null, true, true) }
     }
 
     findPane = InsetPane(4,4,4,4)
@@ -173,7 +173,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   ** is true, the document is searched for the total
   ** number of occurances of the query string.
   **
-  internal Void find(Int fromPos, Bool forward := true, Bool calcTotal := false)
+  internal Void find(Int? fromPos, Bool forward := true, Bool calcTotal := false)
   {
     if (!visible || ignore) return
     enabled := false

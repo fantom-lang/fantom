@@ -185,7 +185,7 @@ const final class Str
   **
   ** Concat the value of obj.toStr
   **
-  Str plus(Obj obj)
+  Str plus(Obj? obj)
 
 //////////////////////////////////////////////////////////////////////////
 // Iterators

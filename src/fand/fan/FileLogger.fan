@@ -21,10 +21,10 @@ const class FileLogger : Thread
   **
   ** Constructor.
   **
-  new make(Str name := null, File file := null)
+  new make(Str? name := null, File? file := null)
     : super(name)
   {
-    this.file = file
+    if (file != null) this.file = file
   }
 
   **
@@ -54,7 +54,7 @@ const class FileLogger : Thread
   override Obj? run()
   {
     // open file
-    OutStream out := null
+    OutStream? out := null
     try
     {
       if (file == null)
@@ -74,7 +74,7 @@ const class FileLogger : Thread
     }
 
     // dequeue strings and append to file
-    loop |Obj msg->Obj|
+    loop |Obj msg->Obj?|
     {
       if (out != null) out.printLine(msg).flush
       return null

@@ -45,7 +45,7 @@ class InitClosures : CompilerStep
     // {
     //    new $make() {}
     //    Bool isImmutable() { return true }
-    //    Obj call(Obj a, Obj b, ...) { doCall((A)a, ...) }
+    //    Obj? call(Obj? a, Obj? b, ...) { doCall((A)a, ...) }
     //    R doCall(A a, B b, ...) { closure.code }
     // }
 
@@ -171,7 +171,7 @@ class InitClosures : CompilerStep
     m := MethodDef.make(loc, parent)
     m.name  = "call"
     m.flags = FConst.Override | FConst.Synthetic
-    m.ret   = ns.objType
+    m.ret   = ns.objType.toNullable
     m.code  = Block.make(loc)
 
     // signature:
@@ -189,7 +189,7 @@ class InitClosures : CompilerStep
       m.name += paramCount.toStr
       paramCount.times |Int i|
       {
-        p := ParamDef.make(loc, ns.objType, "p$i")
+        p := ParamDef.make(loc, ns.objType.toNullable, "p$i")
         m.paramDefs.add(p)
       }
     }

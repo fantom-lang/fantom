@@ -38,7 +38,7 @@ class UdpSocketTest : Test
     verifyBind(IpAddress.local, 2073)
   }
 
-  Void verifyBind(IpAddress addr, Int port)
+  Void verifyBind(IpAddress? addr, Int? port)
   {
     s := UdpSocket.make
     verifySame(s.bind(addr, port), s)

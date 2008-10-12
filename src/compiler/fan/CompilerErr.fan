@@ -12,7 +12,7 @@
 const class CompilerErr : Err
 {
 
-  new make(Str msg, Location location, Err cause := null)
+  new make(Str msg, Location? location, Err? cause := null)
     : super(msg, cause)
   {
     if (location != null)
@@ -28,7 +28,7 @@ const class CompilerErr : Err
     return Location.make(file, line, col)
   }
 
-  const Str file
-  const Int line
-  const Int col
+  const Str? file
+  const Int? line
+  const Int? col
 }

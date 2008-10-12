@@ -77,7 +77,7 @@ const class FindResourceStep : WebAppStep
   {
     if (extSearch != null)
     {
-      Obj match := null
+      Obj? match := null
       found := extSearch.any |Str ext->Bool|
       {
         extUri := (uri.toStr + "." + ext).toUri
@@ -120,7 +120,7 @@ const class FindResourceStep : WebAppStep
   {
     if (dirIndex != null)
     {
-      File index := null
+      File? index := null
       found := dirIndex.any |Uri f->Bool|
       {
         index = dir + f

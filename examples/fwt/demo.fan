@@ -565,9 +565,9 @@ class DirTreeModel : TreeModel
 
   override Str text(Obj node) { return node->name }
 
-  override Image image(Obj node) { return demo.folderIcon }
+  override Image? image(Obj node) { return demo.folderIcon }
 
-  override Obj[] children(Obj obj) { return obj->listDirs }
+  override Obj[]? children(Obj obj) { return obj->listDirs }
 }
 
 **************************************************************************
@@ -583,9 +583,9 @@ class DirTableModel : TableModel
   override Int numRows() { return dir.size }
   override Str header(Int col) { return headers[col] }
   override Halign halign(Int col) { return col == 1 ? Halign.right : Halign.left }
-  override Font font(Int col, Int row) { return col == 2 ? Font(Font.sys.name, Font.sys.size-1) : null }
-  override Color fg(Int col, Int row)  { return col == 2 ? Color("#666") : null }
-  override Color bg(Int col, Int row)  { return col == 2 ? Color("#eee") : null }
+  override Font? font(Int col, Int row) { return col == 2 ? Font(Font.sys.name, Font.sys.size-1) : null }
+  override Color? fg(Int col, Int row)  { return col == 2 ? Color("#666") : null }
+  override Color? bg(Int col, Int row)  { return col == 2 ? Color("#eee") : null }
   override Str text(Int col, Int row)
   {
     f := dir[row]
@@ -597,7 +597,7 @@ class DirTableModel : TableModel
       default: return "?"
     }
   }
-  override Image image(Int col, Int row)
+  override Image? image(Int col, Int row)
   {
     if (col != 0) return null
     return dir[row].isDir ? demo.folderIcon : demo.fileIcon
@@ -645,7 +645,7 @@ class EventDemo : Widget
     onMouseWheel.add(&dump)
   }
 
-  override Size prefSize(Hints hints := null) { return Size.make(100, 100) }
+  override Size prefSize(Hints hints := Hints.def) { return Size.make(100, 100) }
 
   override Void onPaint(Graphics g)
   {
@@ -684,7 +684,7 @@ class GraphicsDemo : Widget
 {
   FwtDemo demo
 
-  override Size prefSize(Hints hints := null) { return Size.make(600,500) }
+  override Size prefSize(Hints hints := Hints.def) { return Size.make(600,500) }
 
   override Void onPaint(Graphics g)
   {

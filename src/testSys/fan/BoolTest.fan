@@ -84,7 +84,7 @@ class BoolTest : Test
   {
     t := true
     f := false
-    Str s := null
+    Str? s := null
 
     // not
     verify(!f)
@@ -141,7 +141,7 @@ class BoolTest : Test
     verifyErr(NullErr#) |,| { verifyEq((s != null) ^ (s.size == 0), false) }
 
     // bitwise and assignment
-    Bool x
+    Bool x := false
     x = false; x &= false; verifyEq(x, false)
     x = false; x &= true;  verifyEq(x, false)
     x = true;  x &= false; verifyEq(x, false)

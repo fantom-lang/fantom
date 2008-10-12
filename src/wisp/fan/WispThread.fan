@@ -127,7 +127,7 @@ internal const class WispThread : Thread
   **
   ** Return an error during request parsing.
   **
-  private static BadReqErr badReq(Str msg, Err cause := null)
+  private static BadReqErr badReq(Str msg, Err? cause := null)
   {
     return BadReqErr(msg, cause)
   }

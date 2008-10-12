@@ -353,7 +353,7 @@ class ClosureTest : CompilerTest
     compile(
      "class Foo
       {
-        Str f()
+        Str? f()
         {
           2.times |Int i|
           {

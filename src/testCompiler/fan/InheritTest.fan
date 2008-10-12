@@ -426,8 +426,8 @@ class InheritTest : CompilerTest
     compile(
      "mixin Q
       {
-        virtual Q m() { return null }
-        virtual Q n() { return null }
+        virtual Q? m() { return null }
+        virtual Q? n() { return null }
 
         virtual Obj[] e() { return [2ns, 3] }
         virtual Num[] f() { return [2, 3f] }
@@ -435,7 +435,7 @@ class InheritTest : CompilerTest
 
       mixin P : Q
       {
-        override P n() { return this }
+        override P? n() { return this }
         override Int[] f() { return [2, 3] }
       }"
     )
@@ -450,30 +450,30 @@ class InheritTest : CompilerTest
 
       class A
       {
-        virtual A x() { return null }
+        virtual A? x() { return null }
       }
 
       mixin M
       {
-        virtual M y() { return null }
+        virtual M? y() { return null }
       }
 
       class B : A, M, P
       {
-        override B x() { return this }
-        static A xA(A a) { return a.x }
+        override B? x() { return this }
+        static A? xA(A a) { return a.x }
         static B xB(B b) { return b.x }
 
-        override B y() { return this }
-        static M yM(M a) { return a.y }
+        override B? y() { return this }
+        static M? yM(M a) { return a.y }
         static B yB(B b) { return b.y }
 
-        override B m() { return this }
-        static Q mQ(Q q) { return q.m }
+        override B? m() { return this }
+        static Q? mQ(Q q) { return q.m }
         static B mB(B b) { return b.m }
 
-        override B n() { return this }
-        static Q nQ(Q q) { return q.n }
+        override B? n() { return this }
+        static Q? nQ(Q q) { return q.n }
         static P nP(P p) { return p.n }
         static B nB(B b) { return b.n }
 
@@ -536,20 +536,20 @@ class InheritTest : CompilerTest
      Type mt := pod.types[1]
      Type bt := pod.types[2]
 
-     verifySame(at.method("x").returns, at)
-     verifySame(mt.method("y").returns, mt)
-     verifySame(qt.method("m").returns, qt)
-     verifySame(qt.method("n").returns, qt)
+     verifySame(at.method("x").returns, at.toNullable)
+     verifySame(mt.method("y").returns, mt.toNullable)
+     verifySame(qt.method("m").returns, qt.toNullable)
+     verifySame(qt.method("n").returns, qt.toNullable)
      verifySame(qt.method("e").returns, Obj[]#)
      verifySame(qt.method("f").returns, Num[]#)
-     verifySame(pt.method("m").returns, qt)
-     verifySame(pt.method("n").returns, pt)
+     verifySame(pt.method("m").returns, qt.toNullable)
+     verifySame(pt.method("n").returns, pt.toNullable)
      verifySame(pt.method("e").returns, Obj[]#)
      verifySame(pt.method("f").returns, Int[]#)
-     verifySame(bt.method("x").returns, bt)
-     verifySame(bt.method("y").returns, bt)
-     verifySame(bt.method("n").returns, bt)
-     verifySame(bt.method("m").returns, bt)
+     verifySame(bt.method("x").returns, bt.toNullable)
+     verifySame(bt.method("y").returns, bt.toNullable)
+     verifySame(bt.method("n").returns, bt.toNullable)
+     verifySame(bt.method("m").returns, bt.toNullable)
      verifySame(bt.method("e").returns, Str[]#)
      verifySame(bt.method("f").returns, Int[]#)
 
@@ -727,7 +727,7 @@ class InheritTest : CompilerTest
         This x() { return this }
         Int a() { return 'A' }
         virtual This o() { return this }
-        This n() { return null }
+        This n() { return null }  // TODO should be illegal
       }
 
       class B : A
@@ -805,8 +805,8 @@ class InheritTest : CompilerTest
       {
         Void m00(This x) {}
         Void m01(Void x) {}
-        Void m02() { This x := null }
-        Void m03() { Void x := null }
+        Void m02() { This? x := null }
+        Void m03() { Void? x := null }
         static This m04() { return Foo.make }
         This m05() { return 3 }
       }",

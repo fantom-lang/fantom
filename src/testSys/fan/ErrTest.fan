@@ -39,13 +39,13 @@ class ErrTest : Test
     Int line := #testTrace->lineNumber; line += 3 // next line
     verifyTrace(line++) |,| { throw Err.make("foo") }
     verifyTrace(line++) |,| { Obj x := 3; ((Str)x).size }
-    verifyTrace(line++) |,| { Pod x := null; x.name }
+    verifyTrace(line++) |,| { Pod? x := null; x.name }
     verifyTrace(line++) |,| { try { throw Err.make("cause") } catch (Err e) { throw Err.make("foo", e) } }
   }
 
   Void verifyTrace(Int line, Func f)
   {
-    Err err
+    Err? err
     try { a(f) } catch (Err e) { err = e }
 
     buf := Buf.make
@@ -99,7 +99,7 @@ class ErrTest : Test
   Void testAllSysErrs()
   {
     cause := Err.make
-    Err err
+    Err? err
 
     // ArgErr
     err = ArgErr.make("msg", cause)
@@ -314,13 +314,13 @@ class ErrTest : Test
 
 const class TestOneErr : Err
 {
-  new make(Str msg := null, Err cause := null) : super(msg, cause) {}
+  new make(Str? msg := null, Err? cause := null) : super(msg, cause) {}
   const Float r := -3f
 }
 
 const class TestTwoErr : TestOneErr
 {
-  new make(Str msg := null, Err cause := null) : super(msg, cause) {}
+  new make(Str? msg := null, Err? cause := null) : super(msg, cause) {}
 
   const Int i := 77
   const Str s := "hello world"
@@ -328,7 +328,7 @@ const class TestTwoErr : TestOneErr
 
 const class TestIOErr : IOErr
 {
-  new make(Str msg := null, Err cause := null) : super(msg, cause) {}
+  new make(Str? msg := null, Err? cause := null) : super(msg, cause) {}
 
   const Str s := "memorial day"
 }

@@ -54,7 +54,7 @@ class DynamicTypeTest : Test
       TestType#,   "TestType", f1)
 
     // check invalid args to makeDynamic
-    verifyErr(ArgErr#) |,| { Type.makeDynamic(null) }
+    //verifyErr(ArgErr#) |,| { Type.makeDynamic(null) }
     verifyErr(ArgErr#) |,| { Type.makeDynamic(Type[,]) }
     verifyErr(ArgErr#) |,| { Type.makeDynamic(Type[TestType.make0]) }
     verifyErr(ArgErr#) |,| { Type.makeDynamic(Type[Obj#]) }
@@ -168,8 +168,8 @@ class DynamicTypeTest : Test
     verifyErr(UnknownSlotErr#) |,| { echo(obj->x) }
 
     // verify errs
-    verifyErr(NullErr#) |,| { TestField.make(null, Int#) }
-    verifyErr(NullErr#) |,| { TestField.make("foo", null) }
+    //verifyErr(NullErr#) |,| { TestField.make(null, Int#) }
+    //verifyErr(NullErr#) |,| { TestField.make("foo", null) }
     verifyErr(Err#) |,| { t.add(Str#.slot("trim")) }
   }
 
@@ -291,4 +291,3 @@ class Dyno2 : Dyno
   Int sub(Int x) { return i - x }
   Bool z := true
 }
-

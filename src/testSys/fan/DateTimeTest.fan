@@ -632,7 +632,7 @@ class DateTimeTest : Test
 
   Void verifyDateTime(Int ticks, TimeZone tz, Int year, Month month, Int day,
                       Int hr, Int min, Int sec,
-                      Weekday weekday, Bool isDST, Int doy := null,
+                      Weekday weekday, Bool isDST, Int? doy := null,
                       Int nanoSec := 0, Bool testMake := true)
   {
     func := |DateTime dt|

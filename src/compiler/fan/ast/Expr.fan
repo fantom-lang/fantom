@@ -45,11 +45,20 @@ abstract class Expr : Node
     // void is never any type
     if (actual.isVoid) return false
 
-    // null can be used for any type (everything is boxed)
-    if (id === ExprId.nullLiteral) return true
+    // null can be used for any non-nullable type
+    if (id === ExprId.nullLiteral) return expected.isNullable
 
     // route to CType.fits
     return actual.fits(expected)
+  }
+
+  **
+  ** Get this expression's type as a string for error reporting.
+  **
+  Str toTypeStr()
+  {
+    if (id == ExprId.nullLiteral) return "null"
+    return ctype.toStr
   }
 
   **

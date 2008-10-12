@@ -218,7 +218,7 @@ const class TestNamespace : Namespace
     throw UnresolvedErr.make(uri.toStr)
   }
 
-  override Uri create(Uri uri, Obj obj)
+  override Uri create(Uri? uri, Obj obj)
   {
     Thread.locals[uri.toStr] = obj
     return uri

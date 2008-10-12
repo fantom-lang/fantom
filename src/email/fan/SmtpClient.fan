@@ -307,7 +307,7 @@ class SmtpClient
   ** Log for tracing
   Log log := Log.get("smtp")
 
-  private TcpSocket sock   // Socket if open or null if closed
+  private TcpSocket? sock  // Socket if open or null if closed
   private Str[]? auths     // SASL auth mechanisms supported by server
 }
 

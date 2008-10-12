@@ -142,7 +142,7 @@ abstract class Widget : Weblet
   **
   Uri toInvoke(Obj func)
   {
-    Str name := null
+    Str? name := null
     if (func is Func && func->method != null)
     {
       name = (func as Func).method.name

@@ -144,5 +144,5 @@ abstract class View : ContentPane
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  internal ViewTab tab
+  internal ViewTab? tab
 }

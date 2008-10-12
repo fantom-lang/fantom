@@ -25,12 +25,15 @@ class EmailTest : Test
     m = makeVal { to = null; cc = null }; m.validate
 
     // check null
+    Str? x := null
+    EmailPart? xpart := null
+    EmailPart[]? xparts := null
     verifyErr(Err#) |,| { m = makeVal { to = null; cc = null; bcc = null }; m.validate }
-    verifyErr(Err#) |,| { m = makeVal { from = null }; m.validate }
-    verifyErr(Err#) |,| { m = makeVal { subject = null }; m.validate }
-    verifyErr(Err#) |,| { m = makeVal { body = null }; m.validate }
-    verifyErr(Err#) |,| { m = makeVal { body = TextPart { text = null } }; m.validate }
-    verifyErr(Err#) |,| { m = makeVal { body = MultiPart { parts = null } }; m.validate }
+    verifyErr(Err#) |,| { m = makeVal { from = x }; m.validate }
+    verifyErr(Err#) |,| { m = makeVal { subject = x }; m.validate }
+    verifyErr(Err#) |,| { m = makeVal { body = xpart }; m.validate }
+    verifyErr(Err#) |,| { m = makeVal { body = TextPart { text = x } }; m.validate }
+    verifyErr(Err#) |,| { m = makeVal { body = MultiPart { parts = xparts } }; m.validate }
     verifyErr(Err#) |,| { m = makeVal { body = MultiPart { } }; m.validate }
 
     // check charset defaults to utf-8

@@ -420,7 +420,7 @@ class StrTest : Test
     verifyIndex("abcabc", "x", null, null)
   }
 
-  Void verifyIndex(Str base, Str sub, Int off, Int expected)
+  Void verifyIndex(Str base, Str sub, Int? off, Int? expected)
   {
     if (off == null)
     {
@@ -466,7 +466,7 @@ class StrTest : Test
     verifyIndexr("abcabc", "b", 0, null)
   }
 
-  Void verifyIndexr(Str base, Str sub, Int off, Int expected)
+  Void verifyIndexr(Str base, Str sub, Int? off, Int? expected)
   {
     if (off == null)
     {

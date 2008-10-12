@@ -133,7 +133,7 @@ class Dialog : Window
     // get localized props
     title := pod.loc("${keyBase}.name")
     locImage := pod.loc("${keyBase}.image")
-    Image image
+    Image? image
     try { image = Image(locImage.toUri) } catch {}
 
     // swizzle details if passed commands
@@ -156,7 +156,7 @@ class Dialog : Window
   ** The text field is populated with the 'def' string which defaults
   ** to "".
   **
-  static Str openPromptStr(Window? parent, Str msg, Str def := "", Int prefCols := 20)
+  static Str? openPromptStr(Window? parent, Str msg, Str def := "", Int prefCols := 20)
   {
     field := Text { text = def; prefCols = prefCols }
     pane := GridPane

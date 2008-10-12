@@ -67,7 +67,7 @@ internal class Parser
   ** the knowledge that the start of the line is inside a
   ** multi-line block.
   **
-  Line parseLine(Str text, BlockClose close := null)
+  Line parseLine(Str text, BlockClose? close := null)
   {
     try
     {
@@ -415,8 +415,8 @@ internal class Parser
   private Int peek                 // next char
 
   private Int commentNesting       // levels of block comments opened/closed
-  private Block opens              // if current line opens block
-  private Block[] closes           // if current line closes block
+  private Block? opens             // if current line opens block
+  private Block[]? closes          // if current line closes block
 }
 
 

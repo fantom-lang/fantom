@@ -93,7 +93,7 @@ class CheckErrorsTest : CompilerTest
     // check inherit stage
     verifyErrors(
      "class A { Type type }
-      class B { Type type() { return null } }
+      class B { Type type() { return Str# } }
       ",
        [
          1, 11, "Must specify override keyword to override 'sys::Obj.type'",
@@ -103,11 +103,11 @@ class CheckErrorsTest : CompilerTest
     // check errors stage
     verifyErrors(
      "class A { override Type type }
-      class B { override Type type() { return null } }
+      class B { override Type type() { return Str# } }
       ",
        [
-         1, 11, "Cannot override Obj.type() knuckle head",
-         2, 11, "Cannot override Obj.type() knuckle head",
+         1, 11, "Cannot override Obj.type()",
+         2, 11, "Cannot override Obj.type()",
        ])
   }
 
@@ -722,7 +722,7 @@ class CheckErrorsTest : CompilerTest
       class E : A { new makeIt() {} }
       class F : B { new makeIt() {} }
       mixin G { new make() {} }
-      class H { Void f(Int a := null, Int b) {} }
+      class H { Void f(Int a := 3, Int b) {} }
       ",
        [
          3,  1, "Must call super class constructor in 'make'",
@@ -730,7 +730,7 @@ class CheckErrorsTest : CompilerTest
          5, 15, "Must call super class constructor in 'makeIt'",
          6, 15, "Must call super class constructor in 'makeIt'",
          7, 11, "Mixins cannot have constructors",
-         8, 33, "Parameter 'b' must have default",
+         8, 30, "Parameter 'b' must have default",
        ])
   }
 
@@ -747,8 +747,8 @@ class CheckErrorsTest : CompilerTest
         static Obj m03() { if (0) return 1; return 2; }
         static Obj m04() { throw 3 }
         static Str m05() { return 6 }
-        static Obj m06() { for (;\"x\";) m03(); return null }
-        static Obj m07() { while (\"x\") m03(); return null }
+        static Obj m06() { for (;\"x\";) m03(); return 2 }
+        static Obj m07() { while (\"x\") m03(); return 2 }
         static Void m08() { break; continue }
         static Void m09() { Str x := 4.0f }
         static Void m10() { try { m03 } catch (Str x) {} }
@@ -825,12 +825,12 @@ class CheckErrorsTest : CompilerTest
         static Obj m12(Str x) { return 1 ? 2 : 3 }
         static Bool m14(Str x, Int y) { return x === y }
         static Bool m15(Str x, Int y) { return x !== y }
-        static Bool m16(Str x) { return x == m10(null) }
+        static Bool m16(Str x) { return x == m10(\"\") }
         static Bool m17(Str x) { return x != x.size }
         static Bool m18(Int x) { return x < 2f }
         static Bool m19(Int x) { return x <= Weekday.sun }
         static Bool m20(Int x) { return x > \"\" }
-        static Bool m21(Int x) { return x >= m10(null) }
+        static Bool m21(Int x) { return x >= m10(\"\") }
         static Int m22(Int x) { return x <=> 2f }
         static Obj m23(Str x) { return (Num)x }
         static Obj m24(Str x) { return x is Num}
@@ -881,7 +881,7 @@ class CheckErrorsTest : CompilerTest
        28, 34, "Inconvertible types 'sys::Str' and 'sys::Type'",
        29, 34, "Inconvertible types 'sys::Str' and 'sys::Num'",
        30, 33, "Calling constructor on abstract class",
-       31, 33, "Invalid args plus(sys::Obj), not (sys::Void)",
+       31, 33, "Invalid args plus(sys::Obj?), not (sys::Void)",
        32, 29, "Invalid args plus(sys::Int), not (sys::Void)",
        33, 29, "Invalid args plus(sys::Int), not (sys::Duration)",
        ])
@@ -904,7 +904,7 @@ class CheckErrorsTest : CompilerTest
         Void m07(Foo a) { this += a }
         Void m08(Foo a) { this++ }
 
-        Int i() { return null }
+        Int i() { return 3 }
         Foo plus(Foo a) { return this }
         Void increment() {}
       }",
@@ -1093,7 +1093,7 @@ class CheckErrorsTest : CompilerTest
         }
 
         Foo y() { return this }
-        Foo get(Int x) { return null }
+        Foo? get(Int x) { return null }
         Void set(Int x, Int y) {}
         Foo x
         Int i
@@ -1106,6 +1106,25 @@ class CheckErrorsTest : CompilerTest
          7,  8, "Null-safe operator on left hand side of assignment",
          8, 10, "Null-safe operator on left hand side of assignment",
          9,  8, "Null-safe operator on left hand side of assignment",
+       ])
+  }
+
+  Void testNullableNullLiteral()
+  {
+    // errors
+    verifyErrors(
+     "class Foo
+      {
+        Int m00() { return null }
+        Void m01(Obj x) { x = null }
+        Void m02() { Int x := null }
+        Void m03() { m01(null) }
+      }",
+       [
+         3, 22, "Cannot return 'null' as 'sys::Int'",
+         4, 25, "'null' is not assignable to 'sys::Obj'",
+         5, 25, "'null' is not assignable to 'sys::Int'",
+         6, 16, "Invalid args m01(sys::Obj), not (null)",
        ])
   }
 
