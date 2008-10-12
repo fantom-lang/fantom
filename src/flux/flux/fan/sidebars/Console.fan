@@ -113,7 +113,7 @@ class Console : SideBar
   ** in the console.  See `sys::Process` for a description
   ** of the command and dir parameters.
   **
-  This exec(Str[] command, File dir := null)
+  This exec(Str[] command, File? dir := null)
   {
     if (busy) throw Err("Console is busy")
     frame.marks = Mark[,]
@@ -372,7 +372,7 @@ internal class ConsoleLine
   Mark mark
 
   ** Styling
-  Obj[] styling
+  Obj[]? styling
 }
 
 **************************************************************************

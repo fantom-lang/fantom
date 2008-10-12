@@ -66,7 +66,7 @@ class FileResource : Resource
   ** empty list or null to indicate no children.  Default
   ** returns null.
   **
-  override FileResource[] children()
+  override FileResource[]? children()
   {
     if (kids != null) return kids
 
@@ -103,7 +103,7 @@ class FileResource : Resource
   **
   ** Add command specific Files.
   **
-  override Menu popup(Frame frame, Event event)
+  override Menu popup(Frame? frame, Event? event)
   {
     menu := super.popup(frame, event)
     if (file.isDir)

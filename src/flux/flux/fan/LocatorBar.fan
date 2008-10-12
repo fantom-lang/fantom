@@ -100,7 +100,7 @@ internal class LocatorBar : Widget
 
   const Insets textInsets := Insets(4,4,4,22)
   const Insets viewInsets := Insets(4,13,4,4)
-  Image icon
+  Image? icon
   Text uriText := Text { onAction.add(&go(null)); border = false }
   Str view := "Views"
 

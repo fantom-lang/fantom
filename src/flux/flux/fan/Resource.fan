@@ -81,7 +81,7 @@ abstract class Resource
   ** empty list or null to indicate no children.  Default
   ** returns null.
   **
-  virtual Resource[] children() { return null}
+  virtual Resource[]? children() { return null}
 
   **
   ** Get the list of available `View` types for the resource.
@@ -100,7 +100,7 @@ abstract class Resource
   ** Make a popup menu for this resource or return null.
   ** The default popup menu returns the `viewsMenu`.
   **
-  virtual Menu popup(Frame frame, Event event)
+  virtual Menu? popup(Frame? frame, Event? event)
   {
     return Menu { viewsMenu(frame, event) }
   }
@@ -109,7 +109,7 @@ abstract class Resource
   ** Return a menu to hyperlink to the views supported
   ** by this resource.
   **
-  virtual Menu viewsMenu(Frame frame, Event event)
+  virtual Menu? viewsMenu(Frame? frame, Event? event)
   {
     menu := Menu { text = type.loc("views.name") }
     views.each |Type v, Int i|

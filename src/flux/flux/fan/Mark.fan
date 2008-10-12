@@ -24,7 +24,7 @@ const class Mark
   ** various compilers including Fan compilers, javac, and the
   ** C# compiler.  Return null if file path found.
   **
-  static Mark fromStr(Str text)
+  static Mark? fromStr(Str text)
   {
     return MarkParser(text).parse
   }
@@ -38,13 +38,13 @@ const class Mark
   ** One based line number or null if unknown.
   ** Note that fwt widgets are zero based.
   **
-  const Int line
+  const Int? line
 
   **
   ** One based line column or null if unknown
   ** Note that fwt widgets are zero based.
   **
-  const Int col
+  const Int? col
 
   **
   ** Return string formatted as "uri:line:col" where the
@@ -73,7 +73,7 @@ internal class MarkParser
 {
   new make(Str text) { this.text = text }
 
-  Mark parse()
+  Mark? parse()
   {
     try
     {
@@ -86,7 +86,7 @@ internal class MarkParser
     }
   }
 
-  private Mark doParse()
+  private Mark? doParse()
   {
     // use case insensitive compare on windows
     text := this.text
@@ -178,7 +178,7 @@ internal class MarkParser
     return roots
   }
 
-  Str text
-  Int fileStart
-  Int fileEnd
+  Str? text
+  Int fileStart := -1
+  Int fileEnd := -1
 }

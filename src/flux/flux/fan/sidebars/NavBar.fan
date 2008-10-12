@@ -280,9 +280,9 @@ internal class NavTreeModel : TreeModel
   new make(Resource[] roots) { this.myRoots = NavNode.map(roots) }
   override Obj[] roots() { return myRoots }
   override Str text(Obj node) { return ((NavNode)node).name }
-  override Image image(Obj node) { return ((NavNode)node).icon }
+  override Image? image(Obj node) { return ((NavNode)node).icon }
   override Bool hasChildren(Obj node) { return ((NavNode)node).hasChildren }
-  override Obj[] children(Obj node) { return ((NavNode)node).children }
+  override Obj[]? children(Obj node) { return ((NavNode)node).children }
   private NavNode[] myRoots
 }
 
@@ -308,11 +308,11 @@ internal class NavNode
 
   Str name() { return resource.name }
 
-  Image icon() { return resource.icon }
+  Image? icon() { return resource.icon }
 
   Bool hasChildren() { return resource.hasChildren }
 
-  NavNode[] children
+  NavNode[]? children
   {
     get
     {

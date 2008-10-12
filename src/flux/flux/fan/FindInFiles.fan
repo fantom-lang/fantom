@@ -29,7 +29,7 @@ internal class FindInFiles
   ** If a function is passed in, that function is called each
   ** time a match is found.
   **
-  Mark[] find(|Mark m| func := null)
+  Mark[] find(|Mark m|? func := null)
   {
     if (file == null) throw ArgErr("File cannot be null")
     if (!file.exists) throw ArgErr("File does not exist")

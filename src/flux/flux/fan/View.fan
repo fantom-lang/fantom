@@ -22,7 +22,7 @@ abstract class View : ContentPane
   **
   ** Get the top level flux frame associated with this view.
   **
-  Frame frame { internal set }
+  Frame? frame { internal set }
 
   **
   ** Get the command history for undo/redo.
@@ -33,7 +33,7 @@ abstract class View : ContentPane
   **
   ** Current resource loaded into this view.
   **
-  Resource resource { internal set }
+  Resource? resource { internal set }
 
   **
   ** Reload this view.
@@ -69,14 +69,14 @@ abstract class View : ContentPane
   ** Return null for no toolbar.  See `flux::Frame.command` if you
   ** wish to use predefined commands like cut/copy/paste.
   **
-  virtual Widget buildToolBar() { return null }
+  virtual Widget? buildToolBar() { return null }
 
   **
   ** Build a view specific status bar to merge into the frame.
   ** This method is called after `onLoad`, but before mounting.
   ** Return null for no status bar.
   **
-  virtual Widget buildStatusBar() { return null }
+  virtual Widget? buildStatusBar() { return null }
 
 //////////////////////////////////////////////////////////////////////////
 // Lifecycle
@@ -121,7 +121,7 @@ abstract class View : ContentPane
   **
   **    trap("on${id.capitalize}", [event])
   **
-  virtual Void onCommand(Str id, Event event) {}
+  virtual Void onCommand(Str id, Event? event) {}
 
   **
   ** Callback when the frame's list of marks is updated.
