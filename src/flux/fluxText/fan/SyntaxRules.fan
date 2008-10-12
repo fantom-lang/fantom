@@ -23,20 +23,20 @@ const class SyntaxRules
   const Str brackets := "(){}[]"
 
   ** List of the keywords.
-  const Str[] keywords
+  const Str[]? keywords
 
   ** Start tokens for single line comments to end
   ** of line (list of strings).
-  const Str[] comments
+  const Str[]? comments
 
   ** String and character literal styles
-  const SyntaxStr[] strs
+  const SyntaxStr[]? strs
 
   ** Start token for multi-line block comments
-  const Str blockCommentStart
+  const Str? blockCommentStart
 
   ** End token for multi-line block comments
-  const Str blockCommentEnd
+  const Str? blockCommentEnd
 
   ** Can block comments be nested (default is false).
   const Bool blockCommentsNest := false
@@ -89,7 +89,7 @@ const class SyntaxStr
   ** Token which delimits the end of the string, or if
   ** null, then `delimiter` is assumed to be both the
   ** start and end of the string.
-  const Str delimiterEnd
+  const Str? delimiterEnd
 
   ** Escape character placed before ending delimiter to indicate
   ** the delimiter is part of the string, not the end.  The

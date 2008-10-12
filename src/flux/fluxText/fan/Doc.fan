@@ -165,7 +165,7 @@ class Doc : RichTextModel
     size = n
   }
 
-  override Obj[] lineStyling(Int lineIndex)
+  override Obj[]? lineStyling(Int lineIndex)
   {
     try
     {
@@ -294,7 +294,7 @@ class Doc : RichTextModel
   ** Return null is not found.  Note we don't currently
   ** support searching across multiple lines.
   **
-  Int findNext(Str s, Int offset, Bool matchCase)
+  Int? findNext(Str s, Int offset, Bool matchCase)
   {
     offset = offset.max(0).min(size)
     lineIndex := lineAtOffset(offset)
@@ -320,7 +320,7 @@ class Doc : RichTextModel
   ** Return null is not found.  Note we don't currently
   ** support searching across multiple lines.
   **
-  Int findPrev(Str s, Int offset, Bool matchCase)
+  Int? findPrev(Str s, Int offset, Bool matchCase)
   {
     offset = offset.max(0).min(size)
     lineIndex := lineAtOffset(offset)
@@ -357,7 +357,7 @@ class Doc : RichTextModel
   ** account nesting.  If a closing bracket we search backward.
   ** Return null if no match.
   **
-  internal Int matchBracket(Int offset)
+  internal Int? matchBracket(Int offset)
   {
     lineIndex := lineAtOffset(offset)
     line := lines[lineIndex]
@@ -490,22 +490,22 @@ internal class Line
   const Str text
 
   ** Offset/RichTextStyle pairs
-  Obj[] styling
+  Obj[]? styling
 
   ** Override when line is inside a block comment or multi-line str
-  Obj[] stylingOverride
+  Obj[]? stylingOverride
 
   ** Opens n comments if > 0 or closes n comments if < 0
   virtual Int commentNesting() { return 0 }
 
   ** If this line opens a multi-line block (comment/str),
   ** then return a block handle, else null.
-  virtual Block opens() { return null }
+  virtual Block? opens() { return null }
 
   ** If this line closes the specified block, then return the new
   ** line which takes into account that this line is the closing line
   ** of a multi-line comment or string.
-  virtual Line closes(Block open) { return null }
+  virtual Line? closes(Block open) { return null }
 
   ** Debug information
   internal virtual Str debug() { return "" }
@@ -527,12 +527,12 @@ internal class FatLine : Line
 
   ** If this line opens a multi-line block (comment/str),
   ** then return a block handle, else null.
-  override Block opens
+  override Block? opens
 
   ** If this line closes the specified block, then return the new
   ** line which takes into account that this line is the closing line
   ** of a multi-line comment or string.
-  override Line closes(Block open)
+  override Line? closes(Block open)
   {
     if (closeBlocks == null) return null
     for (i:=0; i<closeBlocks.size; ++i)
@@ -565,12 +565,12 @@ internal class FatLine : Line
 internal abstract class Block
 {
   ** Which style override should be used inside the block?
-  abstract Obj[] stylingOverride()
+  abstract Obj[]? stylingOverride()
 
   ** If this block marker can be used to close the specified
   ** open block, then return the new line taking into account
   ** that the cur line is closing a mult-line block comment
   ** or str.  Return null if this instance doesn't close open.
-  abstract Line closes(Line line, Block open)
+  abstract Line? closes(Line line, Block open)
 }
 
