@@ -19,12 +19,12 @@ class Row
   **
   ** Get column value.
   **
-  native Obj get(Col col)
+  native Obj? get(Col col)
 
   **
   ** Set a column value.
   **
-  native Void set(Col col, Obj val)
+  native Void set(Col col, Obj? val)
 
   **
   ** Dump the cells separated by a comma.

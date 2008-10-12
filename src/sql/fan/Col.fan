@@ -18,7 +18,7 @@ const class Col : Field
   **
   ** Construct a column for the given meta-data.
   **
-  new make(Int index, Str name, Type of, Str sqlType, Str:Obj facets := null)
+  new make(Int index, Str name, Type of, Str sqlType, [Str:Obj]? facets := null)
     : super(name, of, facets)
   {
     this.index   = index
