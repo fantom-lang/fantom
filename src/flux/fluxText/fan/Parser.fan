@@ -478,7 +478,7 @@ internal class BlockOpen : Block
 {
   new make(Parser p, Str n, Obj[] s) { parser = p; name = n; stylingOverride = s }
 
-  override Line closes(Line line, Block open) { throw Err("illegal state") }
+  override Line? closes(Line line, Block open) { throw Err("illegal state") }
 
   override Str toStr() { return name }
 
@@ -501,7 +501,7 @@ internal class BlockClose : Block
 
   override Obj[] stylingOverride() { return open.stylingOverride }
 
-  override Line closes(Line line, Block open)
+  override Line? closes(Line line, Block open)
   {
     if (open !== this.open) return null
     if (cachedLineOnClose == null)
