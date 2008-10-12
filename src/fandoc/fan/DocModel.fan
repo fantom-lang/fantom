@@ -162,7 +162,7 @@ abstract class DocElem : DocNode
   }
 
   DocNode[] children := DocNode[,]
-  Str anchorId
+  Str? anchorId
 }
 
 **************************************************************************
@@ -216,7 +216,7 @@ class Para : DocElem
   override DocNodeId id() { return DocNodeId.para }
   override Str htmlName() { return "p" }
   override Bool isInline() { return false }
-  Str admonition   // WARNING, NOTE, TODO, etc
+  Str? admonition   // WARNING, NOTE, TODO, etc
 }
 
 **************************************************************************

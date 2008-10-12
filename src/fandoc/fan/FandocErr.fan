@@ -12,7 +12,7 @@
 const class FandocErr : Err
 {
 
-  new make(Str msg, Str file, Int line, Err cause := null)
+  new make(Str msg, Str file, Int line, Err? cause := null)
     : super(msg, cause)
   {
     this.file = file
