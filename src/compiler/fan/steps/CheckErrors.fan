@@ -252,7 +252,7 @@ class CheckErrors : CompilerStep
   {
     if (t.isConst) return true
     if (t.isObj) return true
-    t = t.deref
+    t = t.deref.toNonNullable
 
     if (t is ListType)
     {

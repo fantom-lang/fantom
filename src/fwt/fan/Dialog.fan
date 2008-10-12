@@ -22,7 +22,7 @@ class Dialog : Window
   ** Image to the left of the body when building content.
   ** See `buildContent`.
   **
-  Image image
+  Image? image
 
   **
   ** Main body of the content:
@@ -30,7 +30,7 @@ class Dialog : Window
   **   - Widget: used as main content
   ** See `buildContent`.
   **
-  Obj body
+  Obj? body
 
   **
   ** The details parameter is hidden by default, but may be displayed by
@@ -42,7 +42,7 @@ class Dialog : Window
   **   - Widget: mounted as main content of details box
   ** See `buildContent`.
   **
-  Obj details
+  Obj? details
 
   **
   ** The commands are mapped to buttons along the bottom of the dialog.
@@ -82,7 +82,7 @@ class Dialog : Window
   **
   ** Open an information message box.  See `openMsgBox`.
   **
-  static Obj openInfo(Window parent, Str msg, Obj details := null,
+  static Obj openInfo(Window? parent, Str msg, Obj? details := null,
                       Command[] commands := [ok])
   {
     return openMsgBox(Dialog#.pod, "info", parent, msg, details, commands)
@@ -91,7 +91,7 @@ class Dialog : Window
   **
   ** Open a warning message box.  See `openMsgBox`.
   **
-  static Obj openWarn(Window parent, Str msg, Obj details := null,
+  static Obj openWarn(Window? parent, Str msg, Obj? details := null,
                       Command[] commands := [ok])
   {
     return openMsgBox(Dialog#.pod, "warn", parent, msg, details, commands)
@@ -100,7 +100,7 @@ class Dialog : Window
   **
   ** Open an error message box.  See `openMsgBox`.
   **
-  static Obj openErr(Window parent, Str msg, Obj details := null,
+  static Obj openErr(Window? parent, Str msg, Obj? details := null,
                      Command[] commands := [ok])
   {
     return openMsgBox(Dialog#.pod, "err", parent, msg, details, commands)
@@ -109,7 +109,7 @@ class Dialog : Window
   **
   ** Open a question message box.  See `openMsgBox`.
   **
-  static Obj openQuestion(Window parent, Str msg, Obj details := null,
+  static Obj openQuestion(Window? parent, Str msg, Obj? details := null,
                           Command[] commands := [ok])
   {
     return openMsgBox(Dialog#.pod, "question", parent, msg, details, commands)
@@ -127,8 +127,8 @@ class Dialog : Window
   ** The command invoked to close message box is returned.  If the
   ** dialog is canceled using the window manager then null is returned.
   **
-  static Obj openMsgBox(Pod pod, Str keyBase, Window parent, Obj body,
-                        Obj details := null, Command[] commands := [ok])
+  static Obj openMsgBox(Pod pod, Str keyBase, Window? parent, Obj body,
+                        Obj? details := null, Command[] commands := [ok])
   {
     // get localized props
     title := pod.loc("${keyBase}.name")
@@ -156,7 +156,7 @@ class Dialog : Window
   ** The text field is populated with the 'def' string which defaults
   ** to "".
   **
-  static Str openPromptStr(Window parent, Str msg, Str def := "", Int prefCols := 20)
+  static Str openPromptStr(Window? parent, Str msg, Str def := "", Int prefCols := 20)
   {
     field := Text { text = def; prefCols = prefCols }
     pane := GridPane
@@ -182,10 +182,10 @@ class Dialog : Window
   **
   ** Construct dialog.
   **
-  new make(Window parent)
+  new make(Window? parent)
     : super(parent)
   {
-    if (parent != null) icon = parent.icon
+    icon = parent?.icon
   }
 
   **
@@ -296,7 +296,7 @@ class Dialog : Window
 **
 internal class DialogCommand : Command
 {
-  new make(DialogCommandId id, Obj arg := null)
+  new make(DialogCommandId id, Obj? arg := null)
     : super.makeLocale(Dialog#.pod, id.name)
   {
     this.id = id
@@ -305,7 +305,7 @@ internal class DialogCommand : Command
       this.mode = CommandMode.toggle
   }
 
-  override Void invoke(Event e)
+  override Void invoke(Event? e)
   {
     switch (id)
     {
@@ -334,7 +334,7 @@ internal class DialogCommand : Command
   }
 
   const DialogCommandId id
-  Obj arg
+  Obj? arg
 }
 
 **************************************************************************

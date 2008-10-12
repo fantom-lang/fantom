@@ -125,7 +125,7 @@ class RichText : TextWidget
   ** Map a coordinate on the widget to an offset in the text,
   ** or return null if no mapping at specified point.
   **
-  native Int offsetAtPos(Int x, Int y)
+  native Int? offsetAtPos(Int x, Int y)
 
   **
   ** Convenience for `RichTextModel.modify`.
@@ -281,7 +281,7 @@ abstract class RichTextModel
   ** The result is a list of Int/RichTextStyle pairs where the Int
   ** specifies a zero based char offset of the line.
   **
-  virtual Obj[] lineStyling(Int lineIndex) { return null }
+  virtual Obj[]? lineStyling(Int lineIndex) { return null }
 }
 
 **************************************************************************
@@ -296,16 +296,16 @@ abstract class RichTextModel
 const class RichTextStyle
 {
   ** Foreground color
-  const Color fg
+  const Color? fg
 
   ** Background color or null
-  const Color bg
+  const Color? bg
 
   ** Font of text segment
-  const Font font
+  const Font? font
 
   ** Underline color, if null then use fg color.
-  const Color underlineColor
+  const Color? underlineColor
 
   ** Underline style or none for no underline.
   const RichTextUnderline underline := RichTextUnderline.none

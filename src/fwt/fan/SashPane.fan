@@ -24,6 +24,6 @@ class SashPane : Widget
   ** If null, then children are evenly divided.  The
   ** default is null.
   **
-  native Int[] weights
+  native Int[]? weights
 
 }

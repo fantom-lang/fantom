@@ -20,67 +20,67 @@ class Event
   **
   ** Widget which generated the event.  This will be null for model events.
   **
-  Widget widget
+  Widget? widget
 
   **
   ** Convenience for 'widget?.window'.
   **
-  Window window() { return widget?.window }
+  Window? window() { return widget?.window }
 
   **
   ** Index for list based events. For table events this
   ** is the row index.
   **
-  Int index
+  Int? index
 
   **
   ** Used as the zero based text offset for text
   ** and rich text widget events.
   **
-  Int offset
+  Int? offset
 
   **
   ** Number of characters for text and rich text widget events.
   **
-  Int size
+  Int? size
 
   **
   ** Mouse button number pressed
   **
-  Int button
+  Int? button
 
   **
   ** Unicode character represented by a key event.
   **
-  Int keyChar
+  Int? keyChar
 
   **
   ** Key code and modifiers.
   **
-  Key key
+  Key? key
 
   **
   ** Coordinate of event.  For mouse events this is the mouse
   ** coordinate relative to the widget.
   **
-  Point pos
+  Point? pos
 
   **
   ** Number of mouse clicks.
   **
-  Int count
+  Int? count
 
   **
   ** Event specific user data.
   **
-  Obj data
+  Obj? data
 
   **
   ** If this a popup event, then this field should be set
   ** to the menu item to open.  Setting this field to a nonnull
   ** value implicitly consumes the event.
   **
-  Menu popup { set { @popup = val; if (val != null) consume } }
+  Menu? popup { set { @popup = val; if (val != null) consume } }
 
   **
   ** Has this event been "consumed"?  Once an event
@@ -174,7 +174,7 @@ class EventListeners
   Void remove(|Event| cb) { listeners.remove(cb) }
 
   ** Fire the event to all the listeners
-  Void fire(Event event)
+  Void fire(Event? event)
   {
     listeners.each | |Event| cb |
     {

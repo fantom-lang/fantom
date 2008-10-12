@@ -39,7 +39,7 @@ class Desktop
   **
   ** Get the current focused widget or return null.
   **
-  static native Widget focus()
+  static native Widget? focus()
 
   **
   ** Call the specified function on the UI thread's event loop.

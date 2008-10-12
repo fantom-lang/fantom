@@ -36,12 +36,12 @@ class Command
   **
   ** Icon of the command or null.  Typically a 16x16.
   **
-  Image icon
+  Image? icon
 
   **
   ** Accelerator of the command or null.
   **
-  Key accelerator
+  Key? accelerator
 
   **
   ** The function to invoke when the command is executed.  If
@@ -82,9 +82,9 @@ class Command
   ** If onInvoke is not specified, then the `invoke` method
   ** must be overridden to execute the command.
   **
-  new make(Str name := null, Image icon := null, |Event event| onInvoke := null)
+  new make(Str name := null, Image? icon := null, |Event event|? onInvoke := null)
   {
-    this.name = name
+    if (name != null) this.name = name
     this.icon = icon
     if (onInvoke != null) this.onInvoke.add(onInvoke)
   }
@@ -111,14 +111,15 @@ class Command
   ** property was not specified, then automatically swizzle Ctrl
   ** to Command.
   **
-  new makeLocale(Pod pod, Str keyBase, |Event event| onInvoke := null)
+  new makeLocale(Pod pod, Str keyBase, |Event event|? onInvoke := null)
   {
     plat := Desktop.platform
 
     // name
-    name = pod.loc("${keyBase}.name.${plat}", null)
+    name := pod.loc("${keyBase}.name.${plat}", null)
     if (name == null)
       name = pod.loc("${keyBase}.name")
+    this.name = name
 
     // icon
     locIcon := pod.loc("${keyBase}.icon.${plat}", null)
@@ -165,7 +166,7 @@ class Command
   ** via one of the widgets bound to this command.  Return
   ** null if no associated window can be found.
   **
-  Window window()
+  Window? window()
   {
     if (assocDialog != null) return assocDialog
     return widgets.eachBreak |Widget w->Window| { return w.window }
@@ -221,7 +222,7 @@ class Command
   ** Invoke the command.  If the user event is known
   ** then is passed, otherwise it might be null.
   **
-  virtual Void invoke(Event event)
+  virtual Void invoke(Event? event)
   {
     if (onInvoke.isEmpty == null) throw UnsupportedErr("Must set onInvoke or override invoke: $name")
     onInvoke.fire(event)
@@ -313,7 +314,7 @@ class CommandStack
   ** for `Command.undoable` then ignore this call.
   ** Return this.
   **
-  CommandStack push(Command c)
+  CommandStack push(Command? c)
   {
     if (c == null || !c.undoable) return this
     undoStack.push(c)
@@ -328,7 +329,7 @@ class CommandStack
   ** then push it onto the redo stack.  If the undo stack
   ** is empty, then ignore this call.  Return command undone.
   **
-  Command undo()
+  Command? undo()
   {
     c := undoStack.pop
     if (c == null) return null
@@ -343,7 +344,7 @@ class CommandStack
   ** then push it onto the undo stack.  If the redo stack
   ** is empty, then ignore this call.  Return command redone.
   **
-  Command redo()
+  Command? redo()
   {
     c := redoStack.pop
     if (c == null) return null

@@ -65,14 +65,14 @@ class GridPane : Pane
   ** any extra height available beyond the preferred height.  A
   ** negative number indexes from the last row.  Default is null.
   **
-  Int expandRow := null
+  Int? expandRow := null
 
   **
   ** If non-null, then this is a zero based column number to assign
   ** any extra width available beyond the preferred width.  A
   ** negative number indexes from the last column.  Default is null.
   **
-  Int expandCol := null
+  Int? expandCol := null
 
   **
   ** If true, then all columns are given a uniform width which

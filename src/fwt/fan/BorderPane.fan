@@ -19,7 +19,7 @@ class BorderPane : Pane
   **
   ** The content child widget.
   **
-  Widget content { set { remove(@content); Widget.super.add(val); @content = val } }
+  Widget? content { set { remove(@content); Widget.super.add(val); @content = val } }
 
   **
   ** If this the first widget added, then assume it the content.
@@ -34,7 +34,7 @@ class BorderPane : Pane
   **
   ** The callback to paint the custom border.
   **
-  |Graphics g, Size size, Insets insets| onBorder := null
+  |Graphics g, Size size, Insets insets|? onBorder := null
 
   **
   ** Insets to leave around the edge of the content.

@@ -128,7 +128,7 @@ mixin TreeModel
   **
   ** Get the image to display for specified node or null.
   **
-  virtual Image image(Obj node) { return null }
+  virtual Image? image(Obj node) { return null }
 
   **
   ** Return if this has or might have children.  This
@@ -143,6 +143,6 @@ mixin TreeModel
   ** children return null or the empty list.
   ** Default returns null.
   **
-  virtual Obj[] children(Obj node) { return null }
+  virtual Obj[]? children(Obj node) { return null }
 
 }

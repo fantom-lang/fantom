@@ -19,7 +19,7 @@ abstract class Image
   ** asynchronously upon demand we don't know the image can actually
   ** be loaded upon return.
   **
-  static Image make(Uri uri, Bool checked := true)
+  static Image? make(Uri uri, Bool checked := true)
   {
     try
     {
@@ -41,7 +41,7 @@ abstract class Image
   ** asynchronously upon demand we don't know the image can actually
   ** be loaded upon return.
   **
-  static Image makeFile(File f, Bool checked := true)
+  static Image? makeFile(File f, Bool checked := true)
   {
     try
     {
@@ -75,7 +75,7 @@ abstract class Image
   ** Return the uri used to load this file, or null if this
   ** image wasn't created from a uri.
   **
-  virtual Uri uri() { return null }
+  virtual Uri? uri() { return null }
 
 }
 
@@ -94,7 +94,7 @@ internal class FileImage : Image
 
   const File file
 
-  override Uri uri { internal set }
+  override Uri? uri { internal set }
 
   override Str toStr() { return file.toStr }
 }

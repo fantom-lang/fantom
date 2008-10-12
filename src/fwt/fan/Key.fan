@@ -151,7 +151,7 @@ const class Key
   ** and checked is true then throw ParseErr otherwise
   ** return null.
   **
-  static Key fromStr(Str s, Bool checked := true)
+  static Key? fromStr(Str s, Bool checked := true)
   {
     try
     {
@@ -203,7 +203,7 @@ const class Key
   **
   ** Private constructor
   **
-  private new makeNew(Int mask, Str str)
+  private new makeNew(Int mask, Str? str)
   {
     this.mask = mask
     this.str  = str
@@ -331,6 +331,6 @@ const class Key
   ** Internal mask is based on SWT mask values
   internal const Int mask
 
-  ** String encoding
-  internal const Str str
+  ** String encoding (if null we have to calcualte in toStr)
+  internal const Str? str
 }

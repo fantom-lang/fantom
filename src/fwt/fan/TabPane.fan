@@ -34,12 +34,12 @@ class TabPane : Widget
   **
   ** The currently selected index of `tabs`.
   **
-  native Int selectedIndex
+  native Int? selectedIndex
 
   **
   ** The currently selected tab.
   **
-  Tab selected
+  Tab? selected
   {
     get { i := selectedIndex; return i == null ? null : tabs[i] }
     set { i := index(val); if (i != null) selectedIndex = i }
@@ -48,7 +48,7 @@ class TabPane : Widget
   **
   ** Get the index of the specified tab.
   **
-  Int index(Tab tab) { return tabs.index(tab) }
+  Int? index(Tab tab) { return tabs.index(tab) }
 
   **
   ** Only `Tab` children may be added.
@@ -82,6 +82,6 @@ class Tab : Widget
   **
   ** Image to display on tab. Defaults to null.
   **
-  native Image image
+  native Image? image
 
 }

@@ -106,7 +106,7 @@ const class Color : Brush
   **   Color.fromStr("#88AA00")
   **   Color.fromStr("#d088aa00")
   **
-  static Color fromStr(Str s, Bool checked := true)
+  static Color? fromStr(Str s, Bool checked := true)
   {
     try
     {
