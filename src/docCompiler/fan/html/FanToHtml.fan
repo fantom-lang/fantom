@@ -59,7 +59,7 @@ class FanToHtml
   ** number map.  If non-null, it will be used to attempt to
   ** place an anchor where the respective slot is defined.
   **
-  new make(InStream in, OutStream out, Str:Int slots := null)
+  new make(InStream in, OutStream out, [Str:Int]? slots := null)
   {
     this.in    = FanToHtmlInStream(in)
     this.out   = out

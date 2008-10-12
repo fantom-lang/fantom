@@ -69,7 +69,7 @@ const class Thread
   ** keyed by a string name - by convention use a dotted notation beginning
   ** with your pod name to avoid naming collisions.
   **
-  static Str:Obj locals()
+  static Str:Obj? locals()
 
 //////////////////////////////////////////////////////////////////////////
 // Service

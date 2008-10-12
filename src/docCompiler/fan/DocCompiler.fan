@@ -84,8 +84,8 @@ class DocCompiler
   File outDir               // output directory
   Pod pod                   // pod to compile
   UriMapper uriMapper       // normalizes fandoc URIs to HTML
-  File podDir               // Init: outDir/podName
-  Obj[] fandocIndex         // FandocToHtml if we have "index.fog"
-  Type curType              // if running Api generation
+  File? podDir              // Init: outDir/podName
+  Obj[]? fandocIndex        // FandocToHtml if we have "index.fog"
+  Type? curType             // if running Api generation
 
 }
