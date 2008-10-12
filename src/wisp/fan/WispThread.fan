@@ -33,7 +33,7 @@ internal const class WispThread : Thread
   **
   ** Process a HTTP request and response.
   **
-  override Obj run()
+  override Obj? run()
   {
     try
     {
@@ -182,5 +182,5 @@ internal const class WispThread : Thread
 ** Used to indicate an error parsing the request
 internal const class BadReqErr : Err
 {
-  new make(Str msg, Err cause := null) : super(msg, cause) {}
+  new make(Str msg, Err? cause := null) : super(msg, cause) {}
 }

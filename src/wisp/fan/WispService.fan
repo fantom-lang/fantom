@@ -23,12 +23,12 @@ const class WispService : WebService
   **
   ** Constructor with thread name.
   **
-  new make(Str name := null) : super.make(name) {}
+  new make(Str? name := null) : super.make(name) {}
 
   **
   ** Main loop.
   **
-  override Obj run()
+  override Obj? run()
   {
     listener := TcpListener.make
     listener.bind(null, port)

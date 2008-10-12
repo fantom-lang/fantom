@@ -114,7 +114,7 @@ class WispRes : WebRes
   ** this method throws an Err.  If the server has a preconfigured page
   ** for this error code, it will trump the message passed in.
   **
-  override Void sendError(Int statusCode, Str msg := null)
+  override Void sendError(Int statusCode, Str? msg := null)
   {
     checkUncommitted
     this.statusCode = statusCode
