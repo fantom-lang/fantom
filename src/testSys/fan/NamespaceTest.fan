@@ -210,7 +210,7 @@ class NamespaceTest : Test
 const class TestNamespace : Namespace
 {
 
-  override Obj get(Uri uri, Bool checked := true)
+  override Obj? get(Uri uri, Bool checked := true)
   {
     x := Thread.locals[uri.toStr]
     if (x != null) return x

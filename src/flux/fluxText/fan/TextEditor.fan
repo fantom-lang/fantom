@@ -21,7 +21,7 @@ class TextEditor : View
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  override Widget buildToolBar()
+  override Widget? buildToolBar()
   {
     return EdgePane
     {
@@ -43,7 +43,7 @@ class TextEditor : View
     }
   }
 
-  override Widget buildStatusBar()
+  override Widget? buildStatusBar()
   {
     controller.updateCaretField()
     return GridPane

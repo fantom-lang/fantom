@@ -329,7 +329,7 @@ internal class ConsoleModel : RichTextModel
     return ConsoleLine { text = t; mark = m; styling = s }
   }
 
-  override Obj[] lineStyling(Int lineIndex)
+  override Obj[]? lineStyling(Int lineIndex)
   {
     return lines[lineIndex].styling
   }

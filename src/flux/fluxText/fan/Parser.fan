@@ -482,7 +482,7 @@ internal class BlockOpen : Block
 
   override Str toStr() { return name }
 
-  override Obj[] stylingOverride
+  override Obj[]? stylingOverride
   readonly Parser parser
   const Str name
 }
@@ -499,7 +499,7 @@ internal class BlockClose : Block
 {
   new make(BlockOpen open, Int pos) { this.open = open; this.pos = pos }
 
-  override Obj[] stylingOverride() { return open.stylingOverride }
+  override Obj[]? stylingOverride() { return open.stylingOverride }
 
   override Line? closes(Line line, Block open)
   {
@@ -515,4 +515,3 @@ internal class BlockClose : Block
   const Int pos
   Line cachedLineOnClose
 }
-

@@ -46,7 +46,7 @@ const class SqlService : Thread
   **
   override Bool isService() { return true }
 
-  override protected Obj run()
+  override protected Obj? run()
   {
     log.info("SqlService started ($name)")
     log.info("SqlService connection: $connection")
