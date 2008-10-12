@@ -20,7 +20,7 @@ abstract const class WebAppStep : WebStep
   ** then is compiled and an instance of the primary type
   ** is returned.
   **
-  Obj resolve(Uri uri)
+  Obj? resolve(Uri? uri)
   {
     // if uri is null, return null
     if (uri == null) return null

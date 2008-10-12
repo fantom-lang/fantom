@@ -21,9 +21,9 @@ internal class TestWebReq : WebReq
   override Str:Obj stash := Str:Obj[:]
   override InStream in
   override Uri absUri
-  override UserAgent userAgent
+  override UserAgent? userAgent
   override Str:Str cookies
-  override Str:Str form
+  override [Str:Str]? form
 }
 
 internal class TestWebRes : WebRes
@@ -35,7 +35,7 @@ internal class TestWebRes : WebRes
   override readonly Bool isCommitted := false
   override WebOutStream out
   override Void redirect(Uri uri, Int sc := 303) { statusCode = sc }
-  override Void sendError(Int sc, Str msg := null) { statusCode = sc }
+  override Void sendError(Int sc, Str? msg := null) { statusCode = sc }
   override readonly Bool isDone := false
   override Void done() { isDone = true }
 }
