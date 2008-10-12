@@ -65,12 +65,12 @@ class SerializationTest : Test
     InsetPane x := verifySer(full)
     verifyEq(x.content.type, Label#)
     verifyEq(x.content->text, "hi")
-    verifyEq(x.children, [x.content])
+    verifyEq(x.children, Widget[x.content])
 
     x = verifySer(short, full)
     verifyEq(x.content.type, Label#)
     verifyEq(x.content->text, "hi")
-    verifyEq(x.children, [x.content])
+    verifyEq(x.children, Widget[x.content])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -117,7 +117,7 @@ class SerializationTest : Test
     verifyEq(x.menuBar.children.first->text, "File")
     verifyEq(x.content.type, Label#)
     verifyEq(x.content->text, "content")
-    verifyEq(x.children, [x.content, x.menuBar])
+    verifyEq(x.children, Widget[x.content, x.menuBar])
 
     x = verifySer(short, full)
     verifyEq(x.menuBar.type, Menu#)
@@ -125,7 +125,7 @@ class SerializationTest : Test
     verifyEq(x.menuBar.children.first->text, "File")
     verifyEq(x.content.type, Label#)
     verifyEq(x.content->text, "content")
-    verifyEq(x.children, [x.menuBar, x.content])
+    verifyEq(x.children, Widget[x.menuBar, x.content])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -149,7 +149,7 @@ class SerializationTest : Test
 
     verifyEq(x.left.type, Label#)
     verifyEq(x.right.type, Label#)
-    verifyEq(x.children, [x.left, x.right])
+    verifyEq(x.children, Widget[x.left, x.right])
     verifyEq(x.left->text, "left")
     verifyEq(x.right->text, "right")
   }

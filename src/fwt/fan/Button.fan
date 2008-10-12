@@ -61,12 +61,12 @@ class Button : Widget
   **
   ** Image to display on button. Defaults to null.
   **
-  native Image image
+  native Image? image
 
   **
   ** Font for text. Defaults to null (system default).
   **
-  native Font font
+  native Font? font
 
   **
   ** Insets to apply for padding between the button's border
@@ -82,7 +82,7 @@ class Button : Widget
   ** command automatically maps the text, icon, enable state,
   ** and eventing to the command.
   **
-  Command command
+  Command? command
   {
     set
     {

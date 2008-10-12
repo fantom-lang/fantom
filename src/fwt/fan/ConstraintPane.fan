@@ -14,16 +14,16 @@ class ConstraintPane : ContentPane
 {
 
   ** Minimum width or null to use pref width of content
-  Int minw := null
+  Int? minw := null
 
   ** Minimum height null to use pref height of content
-  Int minh := null
+  Int? minh := null
 
   ** Maximum width or null to use pref width of content.
-  Int maxw := null
+  Int? maxw := null
 
   ** Maximum width or null to use pref height of content.
-  Int maxh := null
+  Int? maxh := null
 
   override Size prefSize(Hints hints := Hints.def)
   {

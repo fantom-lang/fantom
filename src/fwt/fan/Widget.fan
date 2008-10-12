@@ -231,7 +231,7 @@ abstract class Widget
   ** Get the position of this widget on the screen coordinate's
   ** system.  If not on mounted on the screen then return null.
   **
-  native Point posOnDisplay()
+  native Point? posOnDisplay()
 
 //////////////////////////////////////////////////////////////////////////
 // Widget Tree
@@ -240,14 +240,14 @@ abstract class Widget
   **
   ** Get this widget's parent or null if not mounted.
   **
-  @transient readonly Widget parent
+  @transient readonly Widget? parent
   internal Void setParent(Widget p) { parent = p } // for Window.make
 
   **
   ** Get this widget's parent window or null if not
   ** mounted under a Window widget.
   **
-  Window window()
+  Window? window()
   {
     x := this
     while (x != null)
@@ -350,7 +350,7 @@ abstract class Widget
   ** Repaint this widget.  If the dirty rectangle is null,
   ** then the whole widget is repainted.
   **
-  native Void repaint(Rect dirty := null)
+  native Void repaint(Rect? dirty := null)
 
   **
   ** This callback is invoked when the widget should be repainted.

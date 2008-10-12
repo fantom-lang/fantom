@@ -23,7 +23,7 @@ const class Font
   **
   new make(Str name := null, Int size := 12, Bool bold := false, Bool italic := false)
   {
-    this.name   = name
+    if (name != null) this.name = name
     this.size   = size
     this.bold   = bold
     this.italic = italic

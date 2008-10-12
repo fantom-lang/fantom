@@ -59,19 +59,19 @@ class MenuItem : Widget
   **
   ** Accelerator for menu item.
   **
-  native Key accelerator
+  native Key? accelerator
 
   **
   ** Image to display on menu item. Defaults to null.
   **
-  native Image image
+  native Image? image
 
   **
   ** Command associated with this menu item.  Setting the
   ** command automatically maps the text, icon, enable state,
   ** and eventing to the command.
   **
-  Command command
+  Command? command
   {
     set
     {

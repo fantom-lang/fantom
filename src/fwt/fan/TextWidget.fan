@@ -72,7 +72,7 @@ abstract class TextWidget : Widget
   **
   ** Font for text. Defaults to null (system default).
   **
-  virtual native Font font
+  virtual native Font? font
 
   **
   ** The preferred number of character columns to
@@ -190,7 +190,7 @@ class TextChange
 
   ** Number of newlines in `oldText` or zero if no newlines
   ** This field will lazily be calcualted if null.
-  Int oldNumNewlines
+  Int? oldNumNewlines
   {
     get
     {
@@ -201,7 +201,7 @@ class TextChange
 
   ** Number of newlines in `newText` or zero if no newlines.
   ** This field will lazily be calcualted if null.
-  Int newNumNewlines
+  Int? newNumNewlines
   {
     get
     {

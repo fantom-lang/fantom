@@ -20,22 +20,22 @@ class Label : Widget
   **
   ** Image to display on label. Defaults to null.
   **
-  native Image image
+  native Image? image
 
   **
   ** Foreground color. Defaults to null (system default).
   **
-  native Color fg
+  native Color? fg
 
   **
   ** Background color. Defaults to null (system default).
   **
-  native Color bg
+  native Color? bg
 
   **
   ** Font for text. Defaults to null (system default).
   **
-  native Font font
+  native Font? font
 
   **
   ** Horizontal alignment. Defaults to left.

@@ -99,12 +99,12 @@ class Window : ContentPane
   **
   ** Child menu bar widget if top level frame.
   **
-  Menu menuBar { set { remove(@menuBar); Widget.super.add(val); @menuBar= val } }
+  Menu? menuBar { set { remove(@menuBar); Widget.super.add(val); @menuBar= val } }
 
   **
   ** Icon if window is a frame.
   **
-  native Image icon
+  native Image? icon
 
   **
   ** Title string if window is a frame.  Defaults to "".
@@ -114,7 +114,7 @@ class Window : ContentPane
   **
   ** Construct the window with an option parent window.
   **
-  new make(Window parent := null) { setParent(parent) }
+  new make(Window? parent := null) { setParent(parent) }
 
   **
   ** Open the window.  If this is a dialog, then return result
@@ -126,11 +126,11 @@ class Window : ContentPane
   ** not explicitly set, then the windows is centered over its
   ** parent window (or primary monitor if no parent).
   **
-  virtual native Obj open()
+  virtual native Obj? open()
 
   **
   ** Close the window.
   **
-  virtual native Void close(Obj result := null)
+  virtual native Void close(Obj? result := null)
 
 }

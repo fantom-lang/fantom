@@ -50,7 +50,7 @@ const class Pen
   ** Dash pattern as on/off again lengths.  If null
   ** then shapes are stroked solid.
   **
-  const Int[] dash
+  const Int[]? dash
 
   **
   ** Default pen is width of 1 with capSquare and joinMiter.
@@ -62,7 +62,7 @@ const class Pen
   ** and checked is true then throw ParseErr otherwise
   ** return null.
   **
-  static Pen fromStr(Str str, Bool checked := true)
+  static Pen? fromStr(Str str, Bool checked := true)
   {
     try
     {

@@ -87,7 +87,7 @@ internal class TestCommand : Command
 {
   new make(Str name) : super(name) {}
 
-  override Void invoke(Event e) { invoked++ }
+  override Void invoke(Event? e) { invoked++ }
   override Void undo() { undone++ }
 
   Int invoked := 0

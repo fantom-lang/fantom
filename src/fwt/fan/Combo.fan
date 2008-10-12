@@ -61,18 +61,18 @@ class Combo : Widget
   **
   ** Font for text. Defaults to null (system default).
   **
-  native Font font
+  native Font? font
 
   **
-  ** The currently selected index of `items`.
+  ** The currently selected index of `items` or null if no selection.
   **
-  native Int selectedIndex
+  native Int? selectedIndex
 
   **
   ** The currently selected item.  Items are matched
   ** to the `items` list using `index`.
   **
-  Obj selected
+  Obj? selected
   {
     get { i := selectedIndex; return i == null ? null : items[i] }
     set { i := index(val); if (i != null) selectedIndex = i }
@@ -82,7 +82,7 @@ class Combo : Widget
   ** Get the index of the specified item. Items are matched
   ** to indices via 'Obj.equals'.  See `sys::List.index`.
   **
-  Int index(Obj item) { return items.index(item) }
+  Int? index(Obj item) { return items.index(item) }
 
 
 }

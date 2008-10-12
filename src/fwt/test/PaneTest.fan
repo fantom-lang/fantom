@@ -38,7 +38,7 @@ class PaneTest : Test
       top = Fixed { ps = Size(10,20) }
       bottom = Fixed { ps = Size(30,40) }
     }
-    verifyEq(x.children, [x.top, x.bottom])
+    verifyEq(x.children, Widget[x.top, x.bottom])
 
     // preferred size
     verifyEq(x.prefSize, Size(30,60))
@@ -52,7 +52,7 @@ class PaneTest : Test
     // clear top, replace bottom
     x.top = null
     x.bottom = Fixed { ps = Size(100, 10) }
-    verifyEq(x.children, [x.bottom])
+    verifyEq(x.children, Widget[x.bottom])
     verifyEq(x.prefSize, Size(100,10))
 
     // all five
@@ -61,7 +61,7 @@ class PaneTest : Test
     x.left   = Fixed { ps = Size(30, 20) }
     x.right  = Fixed { ps = Size(40, 40) }
     x.center = Fixed { ps = Size(50, 30) }
-    verifyEq(x.children, [x.top, x.bottom, x.left, x.right, x.center])
+    verifyEq(x.children, Widget[x.top, x.bottom, x.left, x.right, x.center])
     verifyEq(x.prefSize, Size(120,70))
 
     // layout
