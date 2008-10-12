@@ -43,7 +43,7 @@ class Cookie
   ** Provided to allow users to organize their cookies.
   ** Defaults to null.
   **
-  Str comment
+  Str? comment
 
   **
   ** Defines the lifetime of the cookie, after the the max-age
@@ -53,7 +53,7 @@ class Cookie
   ** until the client is shutdown.  If zero is specified, the
   ** cookie is discarded immediately.
   **
-  Duration maxAge
+  Duration? maxAge
 
   **
   ** Specifies the domain for which the cookie is valid.
@@ -61,7 +61,7 @@ class Cookie
   ** null (the default) then the cookie only applies to
   ** the server which set it.
   **
-  Str domain
+  Str? domain
 
   **
   ** Specifies the subset of URLs to which the cookie applies.
@@ -70,7 +70,7 @@ class Cookie
   ** path as the document being described by the header which
   ** contains the cookie.
   **
-  Str path := "/"
+  Str? path := "/"
 
   **
   ** If true, then the client only sends this cookie using a

@@ -21,7 +21,10 @@ class WebSession
   **
   ** Internal make
   **
-  internal new make(Str id := null) { this.id = id }
+  internal new make(Str? id := null)
+  {
+    if (id != null) this.id = id
+  }
 
   **
   ** Get the unique id used to identify this session.
@@ -36,19 +39,19 @@ class WebSession
   **
   ** Convenience for 'map.get(name, def)'.
   **
-  Obj get(Str name, Obj def := null) { return map.get(name, def) }
+  Obj? get(Str name, Obj? def := null) { return map.get(name, def) }
 
   **
   ** Convenience for 'map.set(name, val)'.
   **
-  Void set(Str name, Obj val) { map[name] = val }
+  Void set(Str name, Obj? val) { map[name] = val }
 
   **
   ** Application name/value pairs which are persisted
   ** between HTTP requests.  The values stored in this
   ** map must be serializable.
   **
-  readonly Str:Obj map := Str:Obj[:]
+  readonly Str:Obj? map := Str:Obj[:]
 
   **
   ** Delete this web session which clears both the user
@@ -118,7 +121,7 @@ internal const class WebSessionMgr : Thread
     }
   }
 
-  override Obj run()
+  override Obj? run()
   {
     sessions := Str:WebSession[:]
     sendLater(13min, "_houseKeeping", true)
@@ -126,7 +129,7 @@ internal const class WebSessionMgr : Thread
     return null
   }
 
-  Obj process(Str:WebSession sessions, Obj msg)
+  Obj? process(Str:WebSession sessions, Obj? msg)
   {
     // generate new session
     if (msg === "_new")
