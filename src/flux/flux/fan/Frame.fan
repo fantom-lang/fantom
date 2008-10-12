@@ -185,7 +185,7 @@ class Frame : Window
   **
   ** Index into marks for current mark
   **
-  internal Int curMark
+  internal Int? curMark
 
 //////////////////////////////////////////////////////////////////////////
 // State

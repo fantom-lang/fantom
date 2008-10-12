@@ -245,10 +245,10 @@ class SqlServiceTest : Test
 
   Void closures()
   {
-    ages := Int[,]
+    ages := Int?[,]
     db.sql("select age from farmers").query.each |Obj row| { ages.add(row->age) }
 
-    ages2 := Int[,]
+    ages2 := Int?[,]
     db.sql("select name, age from farmers").queryEach(null) |Obj row|
     {
       if (row->age != null)

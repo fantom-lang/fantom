@@ -50,7 +50,7 @@ internal class InlineParser
   private Void segment(DocElem parent)
   {
     stack.push(parent)
-    DocNode child
+    DocNode? child
     if (last.isSpace || last == '*' || last == '/')
     {
       switch (cur)
@@ -166,7 +166,7 @@ internal class InlineParser
     return link
   }
 
-  private DocNode annotation(DocElem parent)
+  private DocNode? annotation(DocElem parent)
   {
     if (peek == null || peek == ']')
       return text
@@ -269,7 +269,7 @@ internal class InlineParser
   private Int line            // line
   private Int pos             // index into buf for cur
   private Int last            // last char
-  private Int cur             // current char
-  private Int peek            // next char
+  private Int? cur            // current char
+  private Int? peek           // next char
   private DocNode[] stack     // stack of nodes
 }

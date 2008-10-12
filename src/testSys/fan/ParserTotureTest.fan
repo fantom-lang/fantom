@@ -47,8 +47,7 @@ class ParserTotureTest : Test
     */
 
     // test closure with 2 closure args
-    Obj obj;
-    obj = | |->Int| a, |->Int| b->Int| { return (Int)a.call0 + (Int)b.call0 }
+    obj := | |->Int| a, |->Int| b->Int| { return (Int)a.call0 + (Int)b.call0 }
           .call2(|->Int| { return 6 }, |->Int| { return 3 })
     verifyEq(obj, 9)
 

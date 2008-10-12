@@ -35,7 +35,7 @@ class TcpListenerTest : Test
     verifyBind(IpAddress.local, 1873)
   }
 
-  Void verifyBind(IpAddress addr, Int port)
+  Void verifyBind(IpAddress? addr, Int? port)
   {
     s := TcpListener.make
     verifySame(s.bind(addr, port), s)

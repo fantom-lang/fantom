@@ -197,7 +197,7 @@ class FieldTest : CompilerTest
         Int e { get { return @e } set { @e = val } }
         Int f { get { return 2 } }
         Int g { set { } }
-        Int h { get { return null } set {} }
+        Int h { get { return 777 } set {} }
         Void hs() { @h = 2 }
 
         // no storage

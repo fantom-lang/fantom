@@ -69,7 +69,7 @@ internal class ViewTabPane : Pane
   Void close(ViewTab tab)
   {
     if (!tab.confirmClose) return
-    ViewTab newActive := null
+    ViewTab? newActive := null
     if (tab === active)
     {
       i := tabs.index(tab)
@@ -224,7 +224,7 @@ internal class TabBar : Widget
     if (event.id == EventId.mouseDown && event.button == 1)
     {
       close := false
-      tab := tabBounds.eachBreak |Rect r, Int i->Obj|
+      tab := tabBounds.eachBreak |Rect r, Int i->Obj?|
       {
         if (r.contains(event.pos.x, event.pos.y))
         {
@@ -253,5 +253,3 @@ internal class TabBar : Widget
   const Font fontActive   := Font.sys.toBold
   const Font fontInactive := Font.sys
 }
-
-

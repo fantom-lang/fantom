@@ -239,7 +239,7 @@ class CtorSubDefs : CtorDefs
 
 class CtorOrderA
 {
-  new make(Str a := null) { q += ",1" }
+  new make(Str? a := null) { q += ",1" }
   Str q := "0"
 }
 

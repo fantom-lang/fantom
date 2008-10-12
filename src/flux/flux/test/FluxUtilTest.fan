@@ -16,8 +16,7 @@ class FluxUtilTest : Test
     verifyFalse(file.exists)
 
     // default
-    GeneralOptions opt
-    opt = Flux.loadOptions("FluxUtilTest", GeneralOptions#)
+    opt := Flux.loadOptions("FluxUtilTest", GeneralOptions#) as GeneralOptions
     verifyEq(opt.homePage, `flux:start`)
 
     // write file
@@ -56,7 +55,7 @@ class FluxUtilTest : Test
     verifyMark("file=${f.osPath} line=1234 col=8", f, 1234, 8)
   }
 
-  Void verifyMark(Str text, File f, Int line := null, Int col := null)
+  Void verifyMark(Str text, File f, Int? line := null, Int? col := null)
   {
     mark := Mark(text)
     // echo("$text  =>  $mark")

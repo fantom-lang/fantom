@@ -200,7 +200,7 @@ class UriTest : Test
     verifyScheme(`#frag`, null);
   }
 
-  Void verifyScheme(Uri uri, Str scheme)
+  Void verifyScheme(Uri uri, Str? scheme)
   {
     verifyEq(uri.scheme, scheme)
     verifyEq(uri.isAbs, scheme != null)
@@ -243,7 +243,7 @@ class UriTest : Test
     verifyAuth(`#frag`, null, null, null, null);
   }
 
-  Void verifyAuth(Uri uri, Str auth, Str userInfo, Str host, Int port)
+  Void verifyAuth(Uri uri, Str? auth, Str? userInfo, Str? host, Int? port)
   {
     verifyEq(uri.auth, auth)
     verifyEq(uri.userInfo, userInfo)
@@ -375,7 +375,7 @@ class UriTest : Test
     verifyName(`../..`, "..", "..", null)
   }
 
-  Void verifyName(Uri uri, Str name, Str basename, Str ext)
+  Void verifyName(Uri uri, Str name, Str basename, Str? ext)
   {
     verifyEq(uri.name, name)
     verifyEq(uri.basename, basename)
@@ -416,7 +416,7 @@ class UriTest : Test
     verifyQuery(`?a=b&;&charlie;`, "a=b&;&charlie;", Str:Str["a":"b", "charlie":"true"])
   }
 
-  Void verifyQuery(Uri uri, Str queryStr, Str:Str query)
+  Void verifyQuery(Uri uri, Str? queryStr, Str:Str query)
   {
     verifyEq(uri.queryStr, queryStr)
     verifyEq(uri.query, query)
@@ -444,7 +444,7 @@ class UriTest : Test
     verifyFrag(`#h1`, "h1")
   }
 
-  Void verifyFrag(Uri uri, Str frag)
+  Void verifyFrag(Uri uri, Str? frag)
   {
     verifyEq(uri.frag, frag)
   }
@@ -485,7 +485,7 @@ class UriTest : Test
     verifyParent(``, null)
   }
 
-  Void verifyParent(Uri uri, Uri parent)
+  Void verifyParent(Uri uri, Uri? parent)
   {
     verifyUriEq(uri.parent, parent)
   }
@@ -1052,7 +1052,7 @@ class UriTest : Test
   }
 
   Void verifyEsc(Uri uri, Str encoded, Str pathStr, Str[] path,
-                 Str queryStr, Str:Str query, Str frag)
+                 Str? queryStr, Str:Str query, Str? frag)
   {
     verifyEq(uri.encode, encoded)
     verifyUriEq(Uri.decode(uri.encode), uri)

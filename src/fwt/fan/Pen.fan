@@ -66,10 +66,10 @@ const class Pen
   {
     try
     {
-      w := null
+      Int? w := null
       c := capSquare
       j := joinMiter
-      Int[] d := null
+      Int[]? d := null
 
       b := str.index("[")
       if (b != null)

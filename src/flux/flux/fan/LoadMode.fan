@@ -20,7 +20,7 @@ class LoadMode
   ** was holding down the Ctrl key (Command for Macs), then
   ** set newTab to true.
   **
-  new make(Event event := null)
+  new make(Event? event := null)
   {
     key := event?.key
     if (key != null)

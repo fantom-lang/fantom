@@ -186,33 +186,33 @@ class ListTest : Test
   Void testItems()
   {
     // add, insert, removeAt, get, size
-    Obj r;
-    list := Int[,]
-    list.add(10); verifyEq(list, [10]); verifyEq(list.size, 1);
-    list.add(20); verifyEq(list, [10, 20]); verifyEq(list.size, 2);
-    list.add(30); verifyEq(list, [10, 20, 30]); verifyEq(list.size, 3);
-    list.insert(0, 40); verifyEq(list, [40, 10, 20, 30]); verifyEq(list.size, 4);
-    list.insert(1, 50).add(60); verifyEq(list, [40, 50, 10, 20, 30, 60]); verifyEq(list.size, 6);
-    list.insert(-1, 70); verifyEq(list, [40, 50, 10, 20, 30, 70, 60]); verifyEq(list.size, 7);
-    list.insert(-3, 80); verifyEq(list, [40, 50, 10, 20, 80, 30, 70, 60]); verifyEq(list.size, 8);
-    verify(list.removeAt(0) == 40); verifyEq(list, [50, 10, 20, 80, 30, 70, 60]); verifyEq(list.size, 7);
-    verify(list.removeAt(6) == 60); verifyEq(list, [50, 10, 20, 80, 30, 70]); verifyEq(list.size, 6);
-    list.removeAt(3); verifyEq(list, [50, 10, 20, 30, 70]); verifyEq(list.size, 5);
-    list.removeAt(-1); verifyEq(list, [50, 10, 20, 30]); verifyEq(list.size, 4);
-    list.removeAt(-4); verifyEq(list, [10, 20, 30]); verifyEq(list.size, 3);
-    list.add(40); verifyEq(list, [10, 20, 30, 40]); verifyEq(list.size, 4);
-    verify(list.insert(2, 50) === list); verifyEq(list, [10, 20, 50, 30, 40]); verifyEq(list.size, 5);
-    list.removeAt(2); verifyEq(list, [10, 20, 30, 40]); verifyEq(list.size, 4);
+    Obj? r;
+    list := Int?[,]
+    list.add(10); verifyEq(list, Int?[10]); verifyEq(list.size, 1);
+    list.add(20); verifyEq(list, Int?[10, 20]); verifyEq(list.size, 2);
+    list.add(30); verifyEq(list, Int?[10, 20, 30]); verifyEq(list.size, 3);
+    list.insert(0, 40); verifyEq(list, Int?[40, 10, 20, 30]); verifyEq(list.size, 4);
+    list.insert(1, 50).add(60); verifyEq(list, Int?[40, 50, 10, 20, 30, 60]); verifyEq(list.size, 6);
+    list.insert(-1, 70); verifyEq(list, Int?[40, 50, 10, 20, 30, 70, 60]); verifyEq(list.size, 7);
+    list.insert(-3, 80); verifyEq(list, Int?[40, 50, 10, 20, 80, 30, 70, 60]); verifyEq(list.size, 8);
+    verify(list.removeAt(0) == 40); verifyEq(list, Int?[50, 10, 20, 80, 30, 70, 60]); verifyEq(list.size, 7);
+    verify(list.removeAt(6) == 60); verifyEq(list, Int?[50, 10, 20, 80, 30, 70]); verifyEq(list.size, 6);
+    list.removeAt(3); verifyEq(list, Int?[50, 10, 20, 30, 70]); verifyEq(list.size, 5);
+    list.removeAt(-1); verifyEq(list, Int?[50, 10, 20, 30]); verifyEq(list.size, 4);
+    list.removeAt(-4); verifyEq(list, Int?[10, 20, 30]); verifyEq(list.size, 3);
+    list.add(40); verifyEq(list, Int?[10, 20, 30, 40]); verifyEq(list.size, 4);
+    verify(list.insert(2, 50) === list); verifyEq(list, Int?[10, 20, 50, 30, 40]); verifyEq(list.size, 5);
+    list.removeAt(2); verifyEq(list, Int?[10, 20, 30, 40]); verifyEq(list.size, 4);
     verifyEq(list[0], 10); verifyEq(list[-4], 10);
     verifyEq(list[1], 20); verifyEq(list[-3], 20);
     verifyEq(list[2], 30); verifyEq(list[-2], 30);
     verifyEq(list[3], 40); verifyEq(list[-1], 40);
-    list[0] = -10; verifyEq(list, [-10, 20, 30, 40]); verifyEq(list.size, 4);
-    list[2] = -30; verifyEq(list, [-10, 20, -30, 40]); verifyEq(list.size, 4);
-    list[-1] = -40; verifyEq(list, [-10, 20, -30, -40]); verifyEq(list.size, 4);
-    list[-3] = -20; verifyEq(list, [-10, -20, -30, -40]); verifyEq(list.size, 4);
-    list[-2] = null; verifyEq(list, [-10, -20, null, -40]); verifyEq(list.size, 4);
-    list[0] = null; verifyEq(list, [null, -20, null, -40]); verifyEq(list.size, 4);
+    list[0] = -10; verifyEq(list, Int?[-10, 20, 30, 40]); verifyEq(list.size, 4);
+    list[2] = -30; verifyEq(list, Int?[-10, 20, -30, 40]); verifyEq(list.size, 4);
+    list[-1] = -40; verifyEq(list, Int?[-10, 20, -30, -40]); verifyEq(list.size, 4);
+    list[-3] = -20; verifyEq(list, Int?[-10, -20, -30, -40]); verifyEq(list.size, 4);
+    list[-2] = null; verifyEq(list, Int?[-10, -20, null, -40]); verifyEq(list.size, 4);
+    list[0] = null; verifyEq(list, Int?[null, -20, null, -40]); verifyEq(list.size, 4);
 
     // IndexErr - no items
     list = Int[,]
@@ -431,16 +431,16 @@ class ListTest : Test
   Void testRemove()
   {
     foo := "foobar"[0..2]
-    list := ["a", "b", foo, null, "a"]
+    list := Str?["a", "b", foo, null, "a"]
     verifyEq(list.indexSame("foo"), null)
-    verifyEq(list.remove("b"), "b");     verifyEq(list, ["a", "foo", null, "a"])
-    verifyEq(list.remove("a"), "a");     verifyEq(list, ["foo", null, "a"])
-    verifyEq(list.remove("x"), null);    verifyEq(list, ["foo", null, "a"])
-    verifyEq(list.remove("a"), "a");     verifyEq(list, ["foo", null])
-    verifyEq(list.remove(null), null);   verifyEq(list, ["foo"])
-    verifyEq(list.removeSame("foo"), null);  verifyEq(list, Str["foo"])
-    verifyEq(list.remove("foo"), "foo"); verifyEq(list, Str[,])
-    verifyEq(list.remove("a"), null);    verifyEq(list, Str[,])
+    verifyEq(list.remove("b"), "b");     verifyEq(list, Str?["a", "foo", null, "a"])
+    verifyEq(list.remove("a"), "a");     verifyEq(list, Str?["foo", null, "a"])
+    verifyEq(list.remove("x"), null);    verifyEq(list, Str?["foo", null, "a"])
+    verifyEq(list.remove("a"), "a");     verifyEq(list, Str?["foo", null])
+    verifyEq(list.remove(null), null);   verifyEq(list, Str?["foo"])
+    verifyEq(list.removeSame("foo"), null);  verifyEq(list, Str?["foo"])
+    verifyEq(list.remove("foo"), "foo"); verifyEq(list, Str?[,])
+    verifyEq(list.remove("a"), null);    verifyEq(list, Str?[,])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -491,9 +491,9 @@ class ListTest : Test
   {
     foo := "foobar"[0..2]
     verify(foo !== "foo")
-    list := ["a", "b", null, "c", null, "b", foo]
+    list := Str?["a", "b", null, "c", null, "b", foo]
 
-    verifyEq([,].contains(null), false)
+    //verifyEq([,].contains(null), false)
     verifyEq([,].contains("a"), false)
 
     verify(list.contains("a"))
@@ -792,7 +792,7 @@ class ListTest : Test
   {
     list := [3, 4, 5]
     verifyEq(list.map(Int[,]) |Int v->Obj| { return v*2 },  [6, 8, 10])
-    verifyEq(list.map([,]) |Int v->Obj| { return null }, [null, null, null])
+    verifyEq(list.map([,]) |Int v->Obj?| { return null }, [null, null, null])
     verifyEq(list.map(Bool[,]) |Int v, Int i->Obj| { return i%2==0 },  [true, false, true])
 
     acc := [0, 1, 2]

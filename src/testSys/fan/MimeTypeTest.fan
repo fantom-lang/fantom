@@ -53,7 +53,7 @@ class MimeTypeTest : Test
     verifyFromStrBad("a/b; charset=foo (comment)")
   }
 
-  Void verifyFromStr(Str s, Str media, Str sub, Str:Str params)
+  Void verifyFromStr(Str s, Str media, Str sub, [Str:Str]? params)
   {
     if (params == null) params = Str:Str[:]
     t := MimeType.fromStr(s)
@@ -83,7 +83,7 @@ class MimeTypeTest : Test
     verifyEq(MimeType.forExt("XML"), MimeType("text/xml"))
     verifyEq(MimeType.forExt("gif"), MimeType("image/gif"))
     verifyEq(MimeType.forExt("foobar"), null)
-    verifyEq(MimeType.forExt(null), null)
+    //verifyEq(MimeType.forExt(null), null)
   }
 
 }

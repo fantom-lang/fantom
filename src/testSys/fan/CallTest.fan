@@ -111,7 +111,7 @@ class CallA
   Void pub(Str s) { val = "public: " + s; }
 
   Void callSecret(Str s) { secret(s); }
-  private Int secret(Str s) { val = s; return null }
+  private Int? secret(Str s) { val = s; return null }
 
   Str val;
 }
@@ -120,7 +120,7 @@ class CallB : CallA
 {
   override Void callSuper(Str s) { super.callSuper(s);  val = "[" + val + "]" }
 
-  private Int secret(Str s) { val = "wrong!";  return null  }
+  private Int? secret(Str s) { val = "wrong!";  return null  }
 }
 
 class CallDynamic

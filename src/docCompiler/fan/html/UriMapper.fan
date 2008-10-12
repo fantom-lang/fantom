@@ -122,7 +122,7 @@ class UriMapper : DocCompilerSupport
   private Void mapTypeOrFile(Pod pod, Str s)
   {
     typeName := s
-    Str rest := null
+    Str? rest := null
 
     if (s == "index")
     {
@@ -205,7 +205,7 @@ class UriMapper : DocCompilerSupport
   private Void mapSlot(Type t, Str rest)
   {
     targetIsCode = true
-    Str slotFrag := null
+    Str? slotFrag := null
 
     // if rest it must be a slot name
     if (rest != null)
@@ -266,9 +266,9 @@ class UriMapper : DocCompilerSupport
 //////////////////////////////////////////////////////////////////////////
 
   Str fandocUri
-  Str frag
+  Str? frag
   Location loc
-  Uri targetUri
+  Uri? targetUri
   Bool targetIsCode
   Bool targetIsSlot
   Str:CachedUri cache := Str:CachedUri[:]
@@ -291,4 +291,3 @@ internal class FandocFrags
 {
   Str:Str frags := Str:Str[:]
 }
-

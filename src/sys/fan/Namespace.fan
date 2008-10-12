@@ -67,7 +67,7 @@ abstract const class Namespace
   ** The default implementation for subclasses is to throw
   ** UnsupportedErr.
   **
-  virtual Uri create(Uri uri, Obj obj)
+  virtual Uri create(Uri? uri, Obj obj)
 
   **
   ** Update the object mapped by the specified uri.  If

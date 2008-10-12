@@ -212,7 +212,7 @@ const class Insets
   **   Insets(5)     === Insets(5,5,5,5)
   **   Insets(5,6)   === Insets(5,6,5,6)
   **   Insets(5,6,7) === Insets(5,6,7,6)
-  new make(Int top := 0, Int right := null, Int bottom := null, Int left := null)
+  new make(Int top := 0, Int? right := null, Int? bottom := null, Int? left := null)
   {
     if (right == null) right = top
     if (bottom == null) bottom = top
@@ -299,7 +299,7 @@ const class Hints
   const static Hints def := Hints(null, null)
 
   ** Construct with optional w, h.
-  new make(Int w := null, Int h := null) { this.w = w; this.h = h }
+  new make(Int? w := null, Int? h := null) { this.w = w; this.h = h }
 
   ** Return '"w,h"'
   override Str toStr() { return "$w,$h" }

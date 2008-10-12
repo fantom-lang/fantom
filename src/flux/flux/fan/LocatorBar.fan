@@ -31,12 +31,14 @@ internal class LocatorBar : Widget
     repaint
   }
 
-  Void go(Type view, Event event)
+  Void go(Type? view, Event? event)
   {
     uri := uriText.text.toUri
     if (view != null) uri = uri.plusQuery(["view":view.qname])
     frame.load(uri)
   }
+
+  Void goDefaultView(Event? event) { go(null, event) }
 
   Void onViewPopup(Event event)
   {
@@ -101,7 +103,7 @@ internal class LocatorBar : Widget
   const Insets textInsets := Insets(4,4,4,22)
   const Insets viewInsets := Insets(4,13,4,4)
   Image? icon
-  Text uriText := Text { onAction.add(&go(null)); border = false }
+  Text uriText := Text { onAction.add(&goDefaultView); border = false }
   Str view := "Views"
 
 }

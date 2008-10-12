@@ -231,7 +231,7 @@ class TryTest : Test
   }
 
   static Str throwCastErr() { Obj four := 4; return (Str)four }
-  static Void throwNullErr() { Str a := null; a.size }
+  static Void throwNullErr() { Str? a := null; a.size }
   static Void throwIndexErr() { x := "foo"[100] }
   static Void throwIOErr() { throw IOErr.make /* not really a good test */ }
   static Void throwInterruptedErr() { throw InterruptedErr.make /* not really a good test */ }
@@ -243,5 +243,5 @@ class TryTest : Test
 
 const class CatchTestIOErr : IOErr
 {
-  new make(Str msg, Err cause := null) : super(msg, cause) {}
+  new make(Str msg, Err? cause := null) : super(msg, cause) {}
 }

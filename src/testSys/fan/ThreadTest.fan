@@ -167,7 +167,7 @@ class ThreadTest : Test
 
   static Void runMessaging(Thread t)
   {
-    t.loop |Obj msg->Obj|
+    t.loop |Obj? msg->Obj?|
     {
       if (msg is Int) return (Int)msg * 2
 
@@ -261,7 +261,7 @@ class ThreadTest : Test
     }
   }
 
-  static Obj runSyncStop(Thread main, Thread t)
+  static Obj? runSyncStop(Thread main, Thread t)
   {
     try
     {
@@ -341,7 +341,7 @@ class ThreadTest : Test
     verifyEq(results[1], msg)
   }
 
-  static Obj runTimerTest(Thread t)
+  static Obj? runTimerTest(Thread t)
   {
     t.sendLater(100ms, "100ms")
     t.sendLater(200ms, "200ms")
@@ -472,7 +472,7 @@ class ThreadTest : Test
     verifyService(ThreadCount#,  null)
   }
 
-  Void verifyService(Type t, Thread s)
+  Void verifyService(Type t, Thread? s)
   {
     uri := "/sys/service/$t.qname".toUri
     if (s == null)
@@ -541,7 +541,7 @@ const class ThreadCallbacks : Thread
   {
     Sys.ns.put(`/testSys/run`, true)
     if (mode == 1) ThreadTest.make.fail
-    loop |Obj req->Obj|
+    loop |Obj? req->Obj?|
     {
       echo("  req: $req")
       return null

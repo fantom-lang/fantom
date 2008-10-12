@@ -110,8 +110,8 @@ class ExprTest : CompilerTest
     verifyExpr("b", 2, 1, 2)
     verifyExpr("c", 3, 1, 2, "c := 3;")
     verifyExpr("c", 3, 1, 2, "Int c := 3;")
-    verifyExpr("c", 7, 1, 2, "Int c; c = 7;")
-    verifyExpr("c", null, 1, 2, "Int c;")
+    verifyExpr("c", 7, 1, 2, "Int? c; c = 7;")
+    verifyExpr("c", null, 1, 2, "Int? c;")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -133,10 +133,10 @@ class ExprTest : CompilerTest
     verifyExpr("a === null", false, 3)
     verifyExpr("a != null",  true,  3)
     verifyExpr("a !== null", true,  3)
-    verifyExpr("null == a",  true,  null, null, "Str a := null;")
-    verifyExpr("null === a", true,  null, null, "Str a := null;")
-    verifyExpr("null != a",  false, null, null, "Str a := null;")
-    verifyExpr("null !== a", false, null, null, "Str a := null;")
+    verifyExpr("null == a",  true,  null, null, "Str? a := null;")
+    verifyExpr("null === a", true,  null, null, "Str? a := null;")
+    verifyExpr("null != a",  false, null, null, "Str? a := null;")
+    verifyExpr("null !== a", false, null, null, "Str? a := null;")
 
     verifyExpr("a || b", true, true, true)
     verifyExpr("a || b", true, false, true)
@@ -204,7 +204,7 @@ class ExprTest : CompilerTest
     verifyExpr("${podName}::Foo.sfoo()", "sfoo")
 
     // generics
-    verifyExpr("x.negate", -20, [0, 10, 20, 30], null, "Int x; x = a[2];")
+    verifyExpr("x.negate", -20, [0, 10, 20, 30], null, "Int x := -1; x = a[2];")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -460,7 +460,7 @@ class ExprTest : CompilerTest
   Void testSafeFields()
   {
     verifyExpr("x?.f", 7, 0, 0, "f = 7; Foo x := this;")
-    verifyExpr("x?.f", null, 0, 0, "f = 7; Foo x := null;")
+    verifyExpr("x?.f", null, 0, 0, "f = 7; Foo? x := null;")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -543,9 +543,9 @@ class ExprTest : CompilerTest
         static Obj c() { return SC() }
       }
 
-      class SA { SA fromStr(Str a) {return null} }
-      class SB { static SA fromStr(Str a) {return null} }
-      class SC { static SA make() {return null} new m() {} }
+      class SA { SA? fromStr(Str a) {return null} }
+      class SB { static SA? fromStr(Str a) {return null} }
+      class SC { static SA? make() {return null} new m() {} }
       ",
       [ 3, 27, "Cannot call instance method 'fromStr' in static context",
         4, 27, "Construction method '$podName::SB.fromStr' must return 'SB'",
@@ -957,7 +957,7 @@ class ExprTest : CompilerTest
 
   const static Str xNull := "_null_"
 
-  Void verifyExpr(Str code, Obj result, Obj a := null, Obj b := null, Str more := "")
+  Void verifyExpr(Str code, Obj? result, Obj? a := null, Obj? b := null, Str more := "")
   {
     params := ""
     if (a != null) params = a.type.signature+ " a"

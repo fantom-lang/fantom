@@ -16,7 +16,7 @@ class Build : FluxCommand
 {
   new make(Str id) : super(id) {}
 
-  override Void invoke(Event event)
+  override Void invoke(Event? event)
   {
     frame.command(CommandId.saveAll).invoke(event)
     if (!findBuildFile) return

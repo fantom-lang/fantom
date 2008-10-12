@@ -25,7 +25,7 @@ class FandocToHtml : DocCompilerSupport
     // first find all the fandoc files and see
     // if we can find the index.fandoc file
     fandocFiles := File[,]
-    File indexFile := null
+    File? indexFile := null
     compiler.pod.files.each |File file|
     {
       if (file.name == "index.fog")

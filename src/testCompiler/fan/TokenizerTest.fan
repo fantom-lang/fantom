@@ -480,8 +480,7 @@ class TokenizerTest : Test
 
   Void testPosition()
   {
-    TokenVal[] tok
-    tok = tokenize("\nfoo")
+    tok := tokenize("\nfoo")
     verifyPos(tok[0], 2, 1);  verify(tok[0] == makeId("foo"))
     tok = tokenize("\n\n bar")
     verifyPos(tok[0], 3, 2);  verify(tok[0] == makeId("bar"))
@@ -578,7 +577,8 @@ class TokenizerTest : Test
   TokenVal[] tokenize(Str src)
   {
     // strip trailing eof
-    return Tokenizer.make(null, Location.make("test"), src, true).tokenize[0..-2]
+    c := Compiler(CompilerInput()) { log.level=LogLevel.silent }
+    return Tokenizer.make(c, Location.make("test"), src, true).tokenize[0..-2]
   }
 
   Void verifyToken(Str src, TokenVal want)
@@ -618,7 +618,7 @@ class TokenizerTest : Test
 // Token Factory
 //////////////////////////////////////////////////////////////////////////
 
-  TokenVal makeToken(Token kind, Obj val := null)
+  TokenVal makeToken(Token kind, Obj? val := null)
   {
     return TokenVal.make(kind, val)
   }

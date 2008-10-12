@@ -86,7 +86,7 @@ internal const class WebSessionMgr : Thread
 
   WebSession load(WebReq req)
   {
-    WebSession ws := null
+    WebSession? ws := null
 
     // try to lookup existing session via cookie
     cookie := req.cookies["fanws"]

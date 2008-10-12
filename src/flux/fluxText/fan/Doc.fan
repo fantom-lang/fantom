@@ -124,7 +124,7 @@ class Doc : RichTextModel
     inStr := false
 
     // walk the lines
-    Block block := null
+    Block? block := null
     lines.each |Line line, Int i|
     {
       // update offset and total running size
@@ -204,8 +204,8 @@ class Doc : RichTextModel
   private Void insertBracketMatch(Obj[] styling, Int offset, Int lineLen)
   {
     // find insert point in styling list;
-    Int i; Int iOffset := 0; RichTextStyle iStyle := styling[1]
-    for (i=0; i<styling.size; i+=2)
+    i := 0; Int iOffset := 0; RichTextStyle iStyle := styling[1]
+    for (; i<styling.size; i+=2)
     {
       if (styling[i] >= offset) break
       iStyle = styling[i+1]
@@ -464,10 +464,10 @@ class Doc : RichTextModel
   internal Str delimiter             // line delimiter
   internal Parser parser             // to parse lines into styled segments
 
-  internal Int bracketLine1          // matched bracket 1 line index
-  internal Int bracketLine2          // matched bracket 2 line index
-  internal Int bracketCol1           // matched bracket 1 offset in line
-  internal Int bracketCol2           // matched bracket 2 offset in line
+  internal Int? bracketLine1         // matched bracket 1 line index
+  internal Int? bracketLine2         // matched bracket 2 line index
+  internal Int? bracketCol1          // matched bracket 1 offset in line
+  internal Int? bracketCol2          // matched bracket 2 offset in line
 }
 
 **************************************************************************
@@ -573,4 +573,3 @@ internal abstract class Block
   ** or str.  Return null if this instance doesn't close open.
   abstract Line? closes(Line line, Block open)
 }
-

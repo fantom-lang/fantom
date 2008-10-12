@@ -97,11 +97,11 @@ class MethodTest : Test
   Void dummy6(|Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h, Type i, Slot j| x) {}
 
   Void x0() {}
-  Str  x1() { return null }
+  Str?  x1() { return null }
   Void x2(Float x) {}
-  Str  x3(Float x, Int y) { return null }
-  Str  x4(Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h) { return null }
-  Str  x5(Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h, Type i) { return null }
+  Str? x3(Float x, Int y) { return null }
+  Str? x4(Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h) { return null }
+  Str? x5(Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h, Type i) { return null }
   Void x6(Float a, Int b, Bool c, Str d, Float e, Int f, Bool g, Str h, Type i, Slot j) {}
 
   Void testReflectMethodParam()
@@ -136,8 +136,8 @@ class MethodTest : Test
     verifyFunc( |,|{},
       "|->sys::Void|", Type[,], Void#);
 
-    verifyFunc( |->Str| { return null},
-      "|->sys::Str|", Type[,], Str#);
+    verifyFunc( |->Str?| { return null},
+      "|->sys::Str?|", Type[,], Str?#);
 
     verifyFunc( |Float x| {},
       "|sys::Float->sys::Void|", [Float#], Void#);
@@ -206,7 +206,7 @@ class MethodTest : Test
   }
 
   Void testGenericStack() { foo(null) }
-  Void foo(|Obj x| m)
+  Void foo(|Obj x|? m)
   {
     // this tests stack invariance when parameterized
     // is void, but generic is not

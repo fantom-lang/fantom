@@ -415,7 +415,7 @@ class WebOutStreamTest : Test
     verifyEsc("&bar", "&amp;bar")
   }
 
-  Void verifyEsc(Obj input, Str match)
+  Void verifyEsc(Obj? input, Str match)
   {
     buf := Buf.make
     out := WebOutStream(buf.out)
@@ -427,7 +427,7 @@ class WebOutStreamTest : Test
 // verifyOut
 //////////////////////////////////////////////////////////////////////////
 
-  Void verifyOut(Buf buf, Str match)
+  Void verifyOut(Buf buf, Str? match)
   {
     buf.flip
     verifyEq(buf.readLine, match)

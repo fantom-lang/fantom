@@ -164,7 +164,7 @@ class TextEditor : View
     doc.load(lines)
   }
 
-  private Str[] readAllLines()
+  private Str[]? readAllLines()
   {
     in := file.in { charset = charset }
     try

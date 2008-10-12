@@ -215,15 +215,15 @@ class MapTest : Test
 
   Void testItems()
   {
-    m := Int:Str[:]
-    verifyEq(m, Int:Str[:])
+    m := Int:Str?[:]
+    verifyEq(m, Int:Str?[:])
     verifyEq(m[0], null)
     verify(m.isEmpty)
-    verify(m.get(null) == null)
-    verifyFalse(m.containsKey(null))
+    //verify(m.get(null) == null)
+    //verifyFalse(m.containsKey(null))
 
     m[5] = "five"
-    verifyEq(m, [5:"five"])
+    verifyEq(m, Int:Str?[5:"five"])
     verifyEq(m[0], null)
     verifyEq(m[5], "five")
     verifyEq(m.get(5), "five")
@@ -232,14 +232,14 @@ class MapTest : Test
     verifyFalse(m.isEmpty)
 
     m[9] = "nine"
-    verifyEq(m, [5:"five", 9:"nine"])
+    verifyEq(m, Int:Str?[5:"five", 9:"nine"])
     verifyEq(m[0], null)
     verifyEq(m[5], "five")
     verifyEq(m[9], "nine")
     verifyFalse(m.isEmpty)
 
     m.add(2, "two")
-    verifyEq(m, [2:"two", 5:"five", 9:"nine"])
+    verifyEq(m, Int:Str?[2:"two", 5:"five", 9:"nine"])
     verifyEq(m[0], null)
     verifyEq(m[2], "two")
     verifyEq(m[5], "five")
@@ -248,7 +248,7 @@ class MapTest : Test
     verifyEq(m[2], "two")
 
     m[9] = null
-    verifyEq(m, [2:"two", 5:"five", 9:null])
+    verifyEq(m, Int:Str?[2:"two", 5:"five", 9:null])
     verifyEq(m[0], null)
     verifyEq(m[2], "two")
     verifyEq(m[5], "five")
@@ -258,7 +258,7 @@ class MapTest : Test
     verifyEq(m.get(9, "?"), "?") // mapped, but null returns def
 
     m.add(9, "nine") // add overwrites null
-    verifyEq(m, [2:"two", 5:"five", 9:"nine"])
+    verifyEq(m, Int:Str?[2:"two", 5:"five", 9:"nine"])
     verifyEq(m[0], null)
     verifyEq(m[2], "two")
     verifyEq(m[5], "five")
@@ -268,25 +268,25 @@ class MapTest : Test
     m[9] = null
 
     m.remove(9)
-    verifyEq(m, [2:"two", 5:"five"])
-    verifyEq(m[null], null)
+    verifyEq(m, Int:Str?[2:"two", 5:"five"])
+    //verifyEq(m[null], null)
     verifyEq(m[0], null)
     verifyEq(m[2], "two")
     verifyEq(m[5], "five")
     verifyEq(m[9], null)
-    verify(!m.containsKey(null))
+    //verify(!m.containsKey(null))
 
     m.remove(5)
-    verifyEq(m, [2:"two"])
-    verifyEq(m[null], null)
+    verifyEq(m, Int:Str?[2:"two"])
+    //verifyEq(m[null], null)
     verifyEq(m[0], null)
     verifyEq(m[2], "two")
     verifyEq(m[5], null)
     verifyEq(m[9], null)
 
     m.remove(2)
-    verifyEq(m, Int:Str[:])
-    verifyEq(m[null], null)
+    verifyEq(m, Int:Str?[:])
+    //verifyEq(m[null], null)
     verifyEq(m[0], null)
     verifyEq(m[2], null)
     verifyEq(m[5], null)
@@ -299,8 +299,8 @@ class MapTest : Test
     for (Int i :=0;   i<500;   ++i) verifyEq(m[i], i.toStr)
     for (Int i :=500; i<1000;  ++i) verifyEq(m[i], null)
 
-    verifyErr(NullErr#) |,| { m.set(null, "foo") }
-    verifyErr(NullErr#) |,| { m.add(null, "foo") }
+    //verifyErr(NullErr#) |,| { m.set(null, "foo") }
+    //verifyErr(NullErr#) |,| { m.add(null, "foo") }
 
     em := [:]
     verifyErr(NotImmutableErr#) |,| { em.add(this, "foo") }
@@ -900,7 +900,7 @@ class MapTest : Test
     verify(mc.isImmutable)
     verifyEq(mc.type.signature, "[sys::Int[]:[sys::Duration:sys::Str]]")
     verifyEq(mc.get([0]), [0ns:"zero"])
-    verifyEq(mc.get(null), null)
+    //verifyEq(mc.get(null), null)
     verifyEq(mc.get([2]), null)
     verify(mc.get([0]).isRO)
     verify(mc.get([0]).isImmutable)

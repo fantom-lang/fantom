@@ -324,7 +324,7 @@ class FandocParser
   **
   ** Log an error
   **
-  private Void err(Str msg, Int line, Err cause := null)
+  private Void err(Str msg, Int line, Err? cause := null)
   {
     errReport(FandocErr(msg, filename, line, cause))
   }
@@ -459,7 +459,7 @@ class FandocParser
   Bool silent := false
   FandocErr[] errors
   internal Str filename       // filename for reporting errors
-  private Str[] lines         // lines of document
+  private Str[]? lines        // lines of document
   private Int numLines        // lines.size
   private Int lineIndex       // current index in lines
   private Str cur             // current line
@@ -504,4 +504,3 @@ internal enum LineType
     }
   }
 }
-

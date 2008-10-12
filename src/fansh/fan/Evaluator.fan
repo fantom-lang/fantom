@@ -188,6 +188,6 @@ class Evaluator
   private Shell? shell
   private OutStream? out
   private Compiler compiler
-  private Pod pod
+  private Pod? pod
 
 }

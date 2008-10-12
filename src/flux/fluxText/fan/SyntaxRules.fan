@@ -45,10 +45,10 @@ const class SyntaxRules
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  internal static SyntaxRules load(SyntaxOptions options, File f, Str firstLine)
+  internal static SyntaxRules load(SyntaxOptions options, File? f, Str? firstLine)
   {
     // try file extension first
-    SyntaxRules rules := null
+    SyntaxRules? rules := null
     extToRulesName := options.extToRules[f?.ext?.lower]
     if (extToRulesName != null)
     {
@@ -99,6 +99,4 @@ const class SyntaxStr
   ** Can this string literal span multiple lines
   const Bool multiLine := false
 }
-
-
 

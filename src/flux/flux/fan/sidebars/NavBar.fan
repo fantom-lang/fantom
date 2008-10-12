@@ -81,7 +81,7 @@ internal class NavBar : SideBar
   ** is passed, use the root of the file system for the
   ** tree root.
   **
-  Void addTree(Resource r)
+  Void addTree(Resource? r)
   {
     // create new tree for r
     tree := Tree
@@ -177,7 +177,7 @@ internal class NavBar : SideBar
 
   internal Void onPopup(Event event)
   {
-    Menu menu
+    Menu? menu
     n := event.data as NavNode
     if (n != null)
     {
@@ -219,12 +219,12 @@ internal class NavBar : SideBar
       return
     }
 
-    node  := null
+    Obj? node := null
     nodes := active.model.roots
     path  := r.uri.path
     path.eachBreak |Str s->Obj|
     {
-      found := nodes.eachBreak |Obj n->Obj|
+      found := nodes.eachBreak |Obj n->Obj?|
       {
         if (n->name == s)
         {
@@ -268,7 +268,7 @@ internal class NavBarState
   static NavBarState load() { return Flux.loadOptions("session/navBar", NavBarState#) }
   Void save() { Flux.saveOptions("session/navBar", this) }
   Uri[] roots := [,]
-  Int selected := null
+  Int? selected := null
 }
 
 **************************************************************************

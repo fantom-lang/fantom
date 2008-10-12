@@ -510,10 +510,8 @@ class ParserTest : CompilerTest
 
   Void testStmt()
   {
-    Stmt stmt
-
     // local def
-    stmt = verifyStmt("Int i", StmtId.localDef);
+    Stmt stmt := verifyStmt("Int i", StmtId.localDef);
       verifyEq(stmt->ctype->signature, "sys::Int")
       verifyEq(stmt->name, "i")
     stmt = verifyStmt("Int i := 3", StmtId.localDef);
@@ -648,10 +646,8 @@ class ParserTest : CompilerTest
 
   Void testExpr()
   {
-    Expr expr
-
     // literals
-    expr = verifyExpr("null", ExprId.nullLiteral)
+    expr := verifyExpr("null", ExprId.nullLiteral)
     expr = verifyExpr("true", ExprId.trueLiteral);    verifyEq(expr->val, true)
     expr = verifyExpr("false", ExprId.falseLiteral);  verifyEq(expr->val, false)
     expr = verifyExpr("4", ExprId.intLiteral);        verifyEq(expr->val, 4)
@@ -843,9 +839,7 @@ class ParserTest : CompilerTest
 
   Void testCollections()
   {
-    Expr expr
-
-    expr = verifyExpr("[,]", ExprId.listLiteral)
+    expr := verifyExpr("[,]", ExprId.listLiteral)
       verifyEq(expr->explicitType, null)
       verifyEq(expr->vals->size, 0)
 
@@ -958,9 +952,7 @@ class ParserTest : CompilerTest
 
   Void testClosures()
   {
-    Expr expr
-
-    expr = verifyExpr("x |,| {}", ExprId.call)
+    expr := verifyExpr("x |,| {}", ExprId.call)
       verifyEq(expr->name, "x")
       verifyEq(expr->args->size, 1)
       verifyEq(expr->args->last->id, ExprId.closure)
@@ -1058,9 +1050,7 @@ class ParserTest : CompilerTest
 
   Void testTypes()
   {
-    CType t
-
-    t = verifyType("Str")
+    t := verifyType("Str")
       verifyEq(t.pod.name,    "sys")
       verifyEq(t.name,        "Str")
       verifyEq(t.qname,       "sys::Str")

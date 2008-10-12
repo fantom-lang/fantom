@@ -43,7 +43,7 @@ class LocaleTest : Test
     verifyErr(ParseErr#) |,| { Locale.fromStr("en-us") }
   }
 
-  Void verifyLocale(Str str, Str lang, Str country)
+  Void verifyLocale(Str str, Str lang, Str? country)
   {
     locale := Locale.fromStr(str)
     verifyEq(locale.lang,    lang)
@@ -66,7 +66,7 @@ class LocaleTest : Test
     verifyEq(Locale.current.toStr, "zh-TW")
 
     // can't set to null
-    verifyErr(NullErr#) |,| { Locale.setCurrent(null) }
+    //verifyErr(NullErr#) |,| { Locale.setCurrent(null) }
 
     // check with closure which throws exception
     try
@@ -153,7 +153,7 @@ class LocaleTest : Test
     verifyProp(x, "x", "foo", "foo")
   }
 
-  Void verifyProp(Locale x, Str key, Str expected, Str def := "_no_def_")
+  Void verifyProp(Locale x, Str key, Str? expected, Str? def := "_no_def_")
   {
     old := Locale.current
     Locale.setCurrent(x)

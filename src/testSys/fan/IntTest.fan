@@ -122,7 +122,6 @@ class IntTest : Test
     verifyEq(3 <=> 3, 0)
     verifyEq(4 <=> 3, 1)
     verifyEq(null <=> 3, -1)
-    verifyEq(null <=> null, 0)
     verifyEq(-9 <=> null, 1)
   }
 
@@ -132,8 +131,7 @@ class IntTest : Test
 
   Void testOperators()
   {
-    Int x;
-    x = 5;   verifyEq(-x, -5)
+    x := 5;   verifyEq(-x, -5)
     x = -44; verifyEq(-x, 44)
 
     verifyEq(3*2,   6)

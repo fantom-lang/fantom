@@ -140,9 +140,9 @@ class SwitchTest : Test
     verifyEq(enumTableSwitchB(SwitchEnum.four),  "default");
   }
 
-  Str enumTableSwitchA(SwitchEnum e)
+  Str? enumTableSwitchA(SwitchEnum e)
   {
-    Str s := null
+    Str? s := null
     switch (e)
     {
       case SwitchEnum.one:   s = "one"

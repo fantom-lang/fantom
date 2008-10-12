@@ -167,7 +167,7 @@ class FileResource : Resource
   ** Prompt the user for a new valid filename, returns the new
   ** filename, or null if the dialog was canceled.
   **
-  private Str promptFileName(Frame frame, Str label, File dir, Str oldName)
+  private Str? promptFileName(Frame frame, Str label, File dir, Str oldName)
   {
     newName := oldName
     while (true)

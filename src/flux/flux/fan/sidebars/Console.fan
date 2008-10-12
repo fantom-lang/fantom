@@ -314,7 +314,7 @@ internal class ConsoleModel : RichTextModel
 
   ConsoleLine parseLine(Str t)
   {
-    Obj[] s := null
+    Obj[]? s := null
     mp := MarkParser(t)
     m := mp.parse
     if (m != null && !m.uri.toStr.contains("bin"))

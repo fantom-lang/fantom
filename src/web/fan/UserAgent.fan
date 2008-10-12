@@ -86,7 +86,7 @@ class UserAgent
   **   "1b"     =>  1
   **   "abc"    =>  null
   **
-  internal Version parseVer(Str s)
+  internal Version? parseVer(Str s)
   {
     v := ""
     for (i:=0; i<s.size; i++)

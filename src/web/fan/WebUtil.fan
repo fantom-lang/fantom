@@ -36,7 +36,7 @@ class WebUtil
   {
     headers := Str:Str[:]
     headers.caseInsensitive = true
-    Str last := null
+    Str? last := null
 
     // read headers into map
     while (true)
