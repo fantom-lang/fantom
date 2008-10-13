@@ -168,10 +168,10 @@ class EventListeners
   Int size() { return listeners.size }
 
   ** Add a listener callback function
-  Void add(|Event| cb) { listeners.add(cb) }
+  Void add(|Event| cb) { listeners.add(cb); modified }
 
   ** Remove a listener callback function
-  Void remove(|Event| cb) { listeners.remove(cb) }
+  Void remove(|Event| cb) { listeners.remove(cb); modified }
 
   ** Fire the event to all the listeners
   Void fire(Event? event)
@@ -189,6 +189,15 @@ class EventListeners
         e.trace
       }
     }
+  }
+
+  ** Fire internal modified event
+  internal Void modified()
+  {
+    try
+      onModify?.call1(this)
+    catch (Err e)
+      e.trace
   }
 
   ** List of listeners
