@@ -151,7 +151,7 @@ class ResolveExpr : CompilerStep
       case ExprId.boolAnd:
       case ExprId.isExpr:          expr.ctype = ns.boolType
       case ExprId.isnotExpr:       expr.ctype = ns.boolType
-      case ExprId.asExpr:          expr.ctype = ((TypeCheckExpr)expr).check
+      case ExprId.asExpr:          expr.ctype = ((TypeCheckExpr)expr).check.toNullable
       case ExprId.call:            return resolveCall((CallExpr)expr)
       case ExprId.construction:    return resolveConstruction((CallExpr)expr)
       case ExprId.shortcut:        return resolveShortcut((ShortcutExpr)expr)
@@ -348,7 +348,7 @@ class ResolveExpr : CompilerStep
   **
   private Expr resolveElvis(BinaryExpr expr)
   {
-    expr.ctype = CType.common(ns, [expr.lhs.ctype, expr.rhs.ctype])
+    expr.ctype = CType.common(ns, [expr.lhs.ctype, expr.rhs.ctype]).toNullable
     return expr
   }
 
@@ -391,7 +391,7 @@ class ResolveExpr : CompilerStep
     if (call.isDynamic)
     {
       call.method = ns.objTrap
-      call.ctype = ns.objType
+      call.ctype = ns.objType.toNullable
       return call
     }
 
