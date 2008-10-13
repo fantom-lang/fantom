@@ -539,8 +539,8 @@ class CheckErrors : CompilerStep
     }
     else if (ret.isThis)
     {
-      if (!stmt.expr.ctype.fits(curType) && stmt.expr.id !== ExprId.nullLiteral)
-        err("Cannot return '$stmt.expr.ctype' as $curType This", stmt.expr.location)
+      if (!stmt.expr.ctype.fits(curType))
+        err("Cannot return '$stmt.expr.toTypeStr' as $curType This", stmt.expr.location)
     }
     else
     {

@@ -727,7 +727,7 @@ class InheritTest : CompilerTest
         This x() { return this }
         Int a() { return 'A' }
         virtual This o() { return this }
-        This n() { return null }  // TODO should be illegal
+        This n() { return this }
       }
 
       class B : A
@@ -809,7 +809,8 @@ class InheritTest : CompilerTest
         Void m03() { Void? x := null }
         static This m04() { return Foo.make }
         This m05() { return 3 }
-        This? m06() { return null }
+        This? m06() { return this }
+        This m07() { return null }
       }",
       [
         3, 12, "Cannot use This as parameter type",
@@ -819,6 +820,7 @@ class InheritTest : CompilerTest
         7, 3,  "Cannot return This from static method",
         8, 23, "Cannot return 'sys::Int' as $podName::Foo This",
         9, 3, "This type cannot be nullable",
+        10, 23, "Cannot return 'null' as $podName::Foo This",
       ])
   }
 
