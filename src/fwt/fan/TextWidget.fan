@@ -183,10 +183,10 @@ class TextChange
   Int startLine
 
   ** Old text which was replaced
-  Str oldText
+  Str? oldText
 
   ** New text inserted
-  Str newText
+  Str? newText
 
   ** Number of newlines in `oldText` or zero if no newlines
   ** This field will lazily be calcualted if null.

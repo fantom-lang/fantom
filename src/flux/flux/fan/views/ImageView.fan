@@ -49,7 +49,7 @@ internal class ImageView : View
     image?.dispose
   }
 
-  Image image
+  Image? image
 }
 
 internal class ImageViewWidget : Widget

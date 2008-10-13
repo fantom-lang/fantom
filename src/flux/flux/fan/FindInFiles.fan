@@ -60,7 +60,7 @@ internal class FindInFiles
         }
       }
       catch (IOErr err) {} // skip files we can't read
-      finally in?.close
+      finally in.close
     }
     return marks
   }

@@ -204,5 +204,5 @@ class EventListeners
   private |Event|[] listeners := |Event|[,]
 
   ** Callback when list of listeners is modified
-  internal |EventListeners| onModify
+  internal |EventListeners|? onModify
 }
