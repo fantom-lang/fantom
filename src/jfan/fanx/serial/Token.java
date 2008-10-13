@@ -43,8 +43,9 @@ public class Token
   public static final int LRBRACKET        = 20;  //  []
   public static final int EQ               = 21;  //  =
   public static final int POUND            = 22;  //  #
-  public static final int AS               = 23;  //  as
-  public static final int USING            = 24;  //  using
+  public static final int QUESTION         = 23;  //  ?
+  public static final int AS               = 24;  //  as
+  public static final int USING            = 25;  //  using
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -83,6 +84,7 @@ public class Token
       case LRBRACKET:        return "[]";
       case EQ:               return "=";
       case POUND:            return "#";
+      case QUESTION:         return "?";
       case AS:               return "as";
       case USING:            return "using";
       default:               return "Token[" + type + "]";

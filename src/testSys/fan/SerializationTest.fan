@@ -131,10 +131,20 @@ class SerializationTest : Test
 
   Void testLists()
   {
-    verifySer("[,]", [,])
+    verifySer("[,]", Obj?[,])
+    verifySer("sys::Obj?[,]", Obj?[,])
+    verifySer("sys::Obj[,]", Obj[,])
+    verifySer("[null]", Obj?[null])
+    verifySer("[null, null]", Obj?[null, null])
     verifySer("sys::Uri[,]", Uri[,])
-    verifySer("[1, 2, 3]", [1,2,3])
-    verifySer("[1, null, 3]", [1,null,3])
+    verifySer("sys::Int?[,]", Int?[,])
+    verifySer("sys::Int?[null, 2]", Int?[null, 2])
+    verifySer("[null, 3]", Int?[null, 3])
+    verifySer("[3, null]", Int?[3, null])
+    verifySer("[3, 2f]", Num[3, 2f])
+    verifySer("[3, null, 2f]", Num?[3, null, 2f])
+    verifySer("[1, 2, 3]", Int[1,2,3])
+    verifySer("[1, null, 3]", Int?[1,null,3])
     verifySer("[1, 2f, 3]", [1,2f,3])
     verifySer("[1, 2f, 3.00,]", Num[1,2f,3.00])
     verifySer("[1, [7ns], \"3\"]", [1, [7ns], "3"])
@@ -159,16 +169,23 @@ class SerializationTest : Test
 
   Void testMaps()
   {
-    verifySer("[:]", [:])
+    verifySer("[:]", Obj:Obj?[:])
+    verifySer("using sys\nObj:Obj[:]", Obj:Obj[:])
+    verifySer("using sys\nObj:Obj?[:]", Obj:Obj?[:])
     verifySer("sys::Str:sys::Str[:]", Str:Str[:])
-    verifySer("sys::Int:sys::Uri[:]", Int:Uri[:])
+    verifySer("sys::Int:sys::Uri?[:]", Int:Uri?[:])
     verifySer("[sys::Int:sys::Uri][:]", Int:Uri[:])
+    verifySer("[sys::Int:sys::Uri?][:]", Int:Uri?[:])
     verifySer("[1:1ns, 2:2ns]", [1:1ns, 2:2ns])
     verifySer("[\"1\":1, \"2\":2f]", ["1":1, "2":2f])
     verifySer("[\"1\":1, \"2\":2f,]", Str:Num["1":1, "2":2f])
     verifySer("sys::Str:sys::Num[\"1\":1, \"2\":2f]", Str:Num["1":1, "2":2f])
     verifySer("[sys::Str:sys::Num][\"1\":1, \"2\":2f]", Str:Num["1":1, "2":2f])
     verifySer("[0:sys::Str[,], 1:[\"x\"]]", [0:Str[,], 1:["x"]])
+    verifySer("sys::Int:sys::Duration?[1:null]", Int:Duration?[1:null])
+    verifySer("[1:null, 2:8ns]", Int:Duration?[1:null, 2:8ns])
+    verifySer("[1:8ms, 2:null]", Int:Duration?[1:8ms, 2:null])
+    verifySer("[1:null, 2:8ns, 3:3]", Int:Obj?[1:null, 2:8ns, 3:3])
 
     // various nested type/list type signatures
     verifySer("sys::Int:sys::Uri[,]", Int:Uri[,])
@@ -649,9 +666,9 @@ class SerializationTest : Test
   Void testSkipErrors()
   {
     verifySkipErrors(
-       [SerA.make,this,SerA.make],
-       "[testSys::SerA,null /* Not serializable: ${type.qname} */,testSys::SerA]",
-       [SerA.make,null,SerA.make])
+       Obj?[SerA.make,this,SerA.make],
+       "sys::Obj?[testSys::SerA,null /* Not serializable: ${type.qname} */,testSys::SerA]",
+       Obj?[SerA.make,null,SerA.make])
   }
 
   Void verifySkipErrors(Obj obj, Str expectedStr, Obj expected)
@@ -672,7 +689,7 @@ class SerializationTest : Test
 
   Obj? verifySer(Str data, Obj? expected)
   {
-//Sys.out.printLine("===================")
+//echo("===================")
 //echo(data)
     // verify InStream
     x := InStream.makeForStr(data).readObj
@@ -691,7 +708,9 @@ class SerializationTest : Test
 
   static Void dump(Obj x, Obj y)
   {
-    echo("--- Not Equal ---")
+    echo("--- Serialization Dump ---")
+    echo("$x.type ?= $y.type")
+    echo("$x ?= $y  =>  ${x==y}")
     x.type.fields.each |Field f|
     {
       a := f.get(x)

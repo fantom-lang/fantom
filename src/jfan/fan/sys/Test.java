@@ -164,6 +164,7 @@ public class Test
   {
     if (obj == null) return "null";
     if (obj instanceof String) return FanStr.toCode((String)obj);
+    if (obj instanceof List) return ((List)obj).of().toString() + obj;
     return toStr(obj);
   }
 

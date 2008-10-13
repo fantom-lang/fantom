@@ -315,25 +315,28 @@ public abstract class Type
 
   /**
    * Given a list of objects, compute the most specific type which they all
-   * share,or at worst return sys::Obj.  This method does not take into
+   * share,or at worst return sys::Obj?.  This method does not take into
    * account interfaces, only extends class inheritance.
    */
   public static Type common(Object[] objs, int n)
   {
-    if (objs.length == 0) return Sys.ObjType;
-    Type best = type(objs[0]);
-    for (int i=1; i<n; ++i)
+    if (objs.length == 0) return Sys.ObjType.toNullable();
+    boolean nullable = false;
+    Type best = null;
+    for (int i=0; i<n; ++i)
     {
       Object obj = objs[i];
-      if (obj == null) continue;
+      if (obj == null) { nullable = true; continue; }
       Type t = type(obj);
+      if (best == null) { best = t; continue; }
       while (!t.is(best))
       {
         best = best.base();
         if (best == null) return Sys.ObjType;
       }
     }
-    return best;
+    if (best == null) best = Sys.ObjType;
+    return nullable ? best.toNullable() : best;
   }
 
 //////////////////////////////////////////////////////////////////////////
