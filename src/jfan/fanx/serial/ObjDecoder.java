@@ -423,7 +423,7 @@ public class ObjDecoder
       if (ft instanceof ListType) return ((ListType)ft).v;
     }
     if (infer) return null;
-    return Sys.ObjType;
+    return Sys.ObjType.toNullable();
   }
 
   /**
@@ -450,7 +450,7 @@ public class ObjDecoder
     if (infer) return null;
     return defaultMapType;
   }
-  private static final MapType defaultMapType = new MapType(Sys.ObjType, Sys.ObjType);
+  private static final MapType defaultMapType = new MapType(Sys.ObjType, Sys.ObjType.toNullable());
 
 //////////////////////////////////////////////////////////////////////////
 // Type
@@ -469,6 +469,11 @@ public class ObjDecoder
   private Type readType(boolean lbracket)
   {
     Type t = readSimpleType();
+    if (curt == Token.QUESTION)
+    {
+      consume();
+      t = t.toNullable();
+    }
     if (curt == Token.COLON)
     {
       consume();
@@ -478,6 +483,11 @@ public class ObjDecoder
     {
       consume();
       t = t.toListOf();
+    }
+    if (curt == Token.QUESTION)
+    {
+      consume();
+      t = t.toNullable();
     }
     return t;
   }

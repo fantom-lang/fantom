@@ -195,7 +195,7 @@ public class ObjEncoder
 
     // figure out if we can use an inferred type
     boolean inferred = false;
-    if (list.type() == curFieldType || of == Sys.ObjType)
+    if (list.type() == curFieldType)
     {
       inferred = true;
     }
@@ -239,7 +239,7 @@ public class ObjEncoder
 
     // figure out if we can use an inferred type
     boolean inferred = false;
-    if (t.equals(curFieldType) || (t.k == Sys.ObjType && t.v == Sys.ObjType))
+    if (t.equals(curFieldType))
     {
       inferred = true;
     }
