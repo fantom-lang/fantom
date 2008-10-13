@@ -972,7 +972,7 @@ class StmtTest : CompilerTest
     compile(
      "class Foo
       {
-        static Void f(Int[] r, Err err)
+        static Void f(Int[] r, Err? err)
         {
           r.add(0)
           try
@@ -1013,7 +1013,7 @@ class StmtTest : CompilerTest
     compile(
      "class Foo
       {
-        static Void f(Int[] r, Err err)
+        static Void f(Int[] r, Err? err)
         {
           r.add(0)
           try

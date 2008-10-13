@@ -20,7 +20,7 @@ class RangeTest : Test
 
   Void testEquals()
   {
-    Obj x := 0..2
+    Obj? x := 0..2
     verifySame(x.type, Range#)
     verify(x == Range.makeInclusive(0, 2))
     verify(x != Range.makeExclusive(0, 2))
@@ -31,8 +31,8 @@ class RangeTest : Test
     verify(0..-1 == 0..-1)
     verify(0..-1 != 0..1)
     verify(0..-1 != -1..0)
-    verify(0..-1 != null)
-    verify(null != 0..-1)
+    verify(x != null)
+    verify(null != x)
   }
 
   Void testToStr()

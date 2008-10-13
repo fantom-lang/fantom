@@ -54,12 +54,9 @@ class SqlServiceTest : Test
     }
     finally
     {
-      if (db != null)
-      {
-        db.close
-        verify(db.isClosed)
-        db.stop
-      }
+      db.close
+      verify(db.isClosed)
+      db.stop
     }
   }
 
@@ -210,7 +207,7 @@ class SqlServiceTest : Test
   Void insertFarmer(Obj[] row)
   {
     s := "insert farmers (name, married, pet, ss, age, pigs, cows, ducks, height, weight) values ("
-    s += row.join(", ") |Obj o->Str|
+    s += row.join(", ") |Obj? o->Str|
     {
       if (o == null) return "null"
       if (o is Str) return "'$o'"
@@ -257,7 +254,7 @@ class SqlServiceTest : Test
         ages2.add(null)
     }
 
-    ages.each |Int age, Int i|
+    ages.each |Int? age, Int i|
     {
       if (age != null) verifyEq(age+10, ages2[i])
     }
@@ -273,7 +270,7 @@ class SqlServiceTest : Test
       ages2.add(row->age)
     }
 
-    ages.each |Int age, Int i|
+    ages.each |Int? age, Int i|
     {
       if (age != null) verifyEq(age+10, ages2[i])
     }

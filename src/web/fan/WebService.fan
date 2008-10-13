@@ -60,7 +60,7 @@ abstract const class WebService : Thread
     try
     {
       // if pipeline is empty
-      if (pipeline == null || pipeline.isEmpty)
+      if ((Obj?)pipeline == null || pipeline.isEmpty)
         throw Err("Must set WebService.pipeline")
 
       // onBeforeService

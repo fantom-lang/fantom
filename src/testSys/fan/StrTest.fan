@@ -81,15 +81,14 @@ class StrTest : Test
 
   Void testEquals()
   {
+    Obj? x := ""
     verify("" == "")
     verify("a" == "a")
     verify("aB" == "aB")
     verify("" != "a")
     verify("bad" != "ass")
-    verify("" != null)
-    verify(null != "")
-    verify("ok" != null)
-    verify(null != "no")
+    verify(x != null)
+    verify(null != x)
     verify("wow" as Obj != 4)
   }
 

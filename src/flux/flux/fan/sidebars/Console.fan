@@ -369,7 +369,7 @@ internal class ConsoleLine
   const Str text
 
   ** If we matched a file location from text
-  Mark mark
+  Mark? mark
 
   ** Styling
   Obj[]? styling

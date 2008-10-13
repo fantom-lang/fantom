@@ -141,8 +141,8 @@ class FandocToHtmlGenerator : HtmlGenerator
 
   File file
   Doc doc
-  Uri prev   // prev link if exists
-  Uri next   // next link if exists
+  Uri? prev   // prev link if exists
+  Uri? next   // next link if exists
 
 }
 

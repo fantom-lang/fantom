@@ -128,8 +128,8 @@ class TcpSocketTest : Test
     verifyEq(s.isBound, true)
     verifyEq(s.isConnected, true)
     verifyEq(s.isClosed, false)
-    verify(s.in != null)
-    verify(s.out != null)
+    verify((Obj?)s.in != null)
+    verify((Obj?)s.out != null)
     verifyErr(Err#) |,| { s.options.inBufferSize = 16 }
     verifyErr(Err#) |,| { s.options.outBufferSize = 16 }
 

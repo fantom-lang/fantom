@@ -308,7 +308,7 @@ should link to the slot
 
     if (s.isField)
     {
-      Method z := s->setter
+      Method? z := s->setter
       if (z != null && !s.isPrivate && z.isPrivate) out.print("readonly ")
     }
   }
@@ -319,7 +319,7 @@ should link to the slot
   **
   Void setter(Field f)
   {
-    Method s := f->setter
+    Method? s := f->setter
     if (s == null) return
     if (f.isPublic    && s.isPublic)    return
     if (f.isProtected && s.isProtected) return
@@ -389,7 +389,7 @@ should link to the slot
   **
   ** Parse def parameters.
   **
-  Str:Str parseMeta(Str text)
+  Str:Str parseMeta(Str? text)
   {
     meta := Str:Str[:]
     if (text == null || !text.startsWith("@"))

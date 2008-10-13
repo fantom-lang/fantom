@@ -83,7 +83,7 @@ class RichText : TextWidget
   **
   ** Backing data model of text document.
   **
-  RichTextModel model
+  RichTextModel? model
   {
     set
     {
@@ -316,7 +316,7 @@ const class RichTextStyle
     if (fg != null) s.add("fg=$fg")
     if (bg != null) s.add(" bg=$bg")
     if (font != null) s.add(" font=$font")
-    if (underline != null) s.add(" underline=$underline")
+    if (underline != RichTextUnderline.none) s.add(" underline=$underline")
     if (underlineColor != null) s.add(" underlineColor=$underlineColor")
     return s.toStr.trim
   }

@@ -202,7 +202,7 @@ class UriMapper : DocCompilerSupport
     targetUri = toUri(pod, "${fandocFile.basename}.html", frag)
   }
 
-  private Void mapSlot(Type t, Str rest)
+  private Void mapSlot(Type t, Str? rest)
   {
     targetIsCode = true
     Str? slotFrag := null
@@ -222,7 +222,7 @@ class UriMapper : DocCompilerSupport
     targetUri = toUri(t.pod, "${t.name}.html", slotFrag)
   }
 
-  private Uri toUri(Pod pod, Str uri, Str frag)
+  private Uri toUri(Pod pod, Str uri, Str? frag)
   {
     if (pod != compiler.pod) uri = "../$pod.name/" + uri
     if (frag != null) uri = uri + "#" + frag

@@ -94,7 +94,7 @@ internal class ViewTab : EdgePane
 
   private Void doLoad(Resource r, View newView, LoadMode mode)
   {
-    if (newView == null) throw ArgErr("newView is null")
+    if ((Obj?)newView == null) throw ArgErr("newView is null")
     oldView := this.view
 
     // suspend dirty handling
@@ -234,7 +234,7 @@ internal class ViewTab : EdgePane
     }
   }
 
-  Bool dirty() { return view != null ? view.dirty : false }
+  Bool dirty() { return view.dirty }
 
   Void onDirty(View view, Bool dirty)
   {
@@ -326,7 +326,7 @@ internal class ViewTab : EdgePane
 
   private Void push(Resource[] list, Resource r)
   {
-    if (r == null) throw ArgErr("null resource")
+    if ((Obj?)r == null) throw ArgErr("null resource")
     list.push(r)
     if (list.size > historyLimit) list.removeAt(0)
   }
@@ -341,7 +341,7 @@ internal class ViewTab : EdgePane
   internal Image image
 
   internal Frame frame
-  internal Resource resource
+  internal Resource? resource
   internal View view := ErrView("Booting...")
   internal Resource[] historyBack:= Resource[,]
   internal Resource[] historyForward := Resource[,]

@@ -59,14 +59,14 @@ class MixinTest : Test
     verifyEq(abi.coc, 23)
 
     // this return
-    verify(a.thisa   ===  null)
+    verifyErr(UnsupportedErr#) |,| { a.thisa }
     verify(a.thisb   ===  a)
     verify(a.thisb.mxClsA == "MxClsA")
     verify(ab.thisa  ===  ab)
     verify(ab.thisb  ===  ab)
     verify(ab.thisa.mxClsAB == "MxClsAB")
-    verify(abi.thisa ===  null)
-    verify(abi.thisb ===  null)
+    verifyErr(UnresolvedErr#) |,| { abi.thisa }
+    verifyErr(IndexErr#)      |,| { abi.thisb }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,11 +135,11 @@ class MixinTest : Test
     Obj x := MxClsAB.make
     verify(x.type === MxClsAB#)
 
-    MxClsAB cls := x as MxClsAB;  verify(cls === x)
-    MxA     a   := x as MxA;      verify(a   === x)
-    MxB     b   := x as MxB;      verify(b   === x)
-    MxAB    ab  := x as MxAB;     verify(ab  === null)
-    Str     s   := x as Str;      verify(s   === null)
+    MxClsAB? cls := x as MxClsAB;  verify(cls === x)
+    MxA?     a   := x as MxA;      verify(a   === x)
+    MxB?     b   := x as MxB;      verify(b   === x)
+    MxAB?    ab  := x as MxAB;     verify(ab  === null)
+    Str?     s   := x as Str;      verify(s   === null)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -153,7 +153,7 @@ class MixinTest : Test
     // the fan::Obj type in the VM; the compiler works around this
     // by inserting an Obj in the appropiate places
 
-    MxA a := MxClsAB.make as MxA;
+    MxA? a := MxClsAB.make as MxA;
 
     // call Obj instance methods on mixin
     verifyEq(a.toStr, "MxClsAB!")
@@ -409,14 +409,14 @@ mixin MxAB : MxA, MxB
 {
   override Int coa() { return 11 }
   override Int cob() { return 12 }
-  override This thisa() { return null }
+  override This thisa() { throw UnresolvedErr() }
 }
 
 class MxClsA : MxA
 {
   override Str aa() { return "aa" }
   override Str va() { return "override-va" }
-  override This thisa() { return null }
+  override This thisa() { throw UnsupportedErr() }
   Str mxClsA() { return "MxClsA" }
 }
 
@@ -435,7 +435,7 @@ class MxClsABIndirect  : MxAB
   override Str aa() { return "iaa" }
   override Str ab() { return "iab" }
   override Int coc() { return 23 }
-  override This thisb() { return null }
+  override This thisb() { throw IndexErr() }
 }
 
 mixin MxDefs

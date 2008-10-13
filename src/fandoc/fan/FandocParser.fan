@@ -462,8 +462,8 @@ class FandocParser
   private Str[]? lines        // lines of document
   private Int numLines        // lines.size
   private Int lineIndex       // current index in lines
-  private Str cur             // current line
-  private Str peek            // next line
+  private Str? cur            // current line
+  private Str? peek           // next line
   private LineType curt       // current line type
   private LineType peekt      // peek line type
   private Int curLine         // one based line number of cur

@@ -302,7 +302,7 @@ class UriTest : Test
     verifyPath(`../../a/b`, "../../a/b", ["..", "..", "a", "b"])
   }
 
-  Void verifyPath(Uri uri, Str pathStr, Str[] path)
+  Void verifyPath(Uri uri, Str pathStr, Str[]? path)
   {
     verifyEq(uri.pathStr, pathStr)
     verifyEq(uri.path, path)
@@ -1065,7 +1065,7 @@ class UriTest : Test
 // Util
 //////////////////////////////////////////////////////////////////////////
 
-  Void verifyUriEq(Uri a, Uri b, Bool roundtrip := true)
+  Void verifyUriEq(Uri? a, Uri? b, Bool roundtrip := true)
   {
     verifyEq(a, b)
     if (a == null && b == null) return

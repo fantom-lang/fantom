@@ -358,9 +358,9 @@ class ResolveExpr : CompilerStep
   private Expr resolveTernary(TernaryExpr expr)
   {
     if (expr.trueExpr.id === ExprId.nullLiteral)
-      expr.ctype = expr.falseExpr.ctype
+      expr.ctype = expr.falseExpr.ctype.toNullable
     else if (expr.falseExpr.id === ExprId.nullLiteral)
-      expr.ctype = expr.trueExpr.ctype
+      expr.ctype = expr.trueExpr.ctype.toNullable
     else
       expr.ctype = CType.common(ns, [expr.trueExpr.ctype, expr.falseExpr.ctype])
     return expr

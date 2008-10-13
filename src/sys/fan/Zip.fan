@@ -76,7 +76,7 @@ final class Zip
   **
   ** Get the underlying file or null if using streams.
   **
-  File file()
+  File? file()
 
   **
   ** Return the contents of this zip as a map of Files.  The Uri
@@ -88,9 +88,10 @@ final class Zip
   **
   ** Read the next entry in the zip.  Use the File's input stream to read the
   ** file contents.  Some file meta-data such as size may not be available.
-  ** Throw UnsupportedErr if not reading from an input stream.
+  ** Return null if at end of zip file.  Throw UnsupportedErr if not reading
+  ** from an input stream.
   **
-  File readNext()
+  File? readNext()
 
   **
   ** Append a new file to the end of this zip file and return an OutStream

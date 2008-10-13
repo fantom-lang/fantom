@@ -94,7 +94,7 @@ internal class MarkParser
 
     // attempt to match one of the root indices
     Str? root := null
-    Int s := rootDirs.eachBreak |Str rootDir->Int| { return text.index(root = rootDir) }
+    Int? s := rootDirs.eachBreak |Str rootDir->Int| { return text.index(root = rootDir) }
     if (s == null) return null
 
     // match up anything that looks like a directory
@@ -116,7 +116,7 @@ internal class MarkParser
     names := Str[,]
     f.list.map(names) |File x->Str| { return Desktop.isWindows ? x.name.lower : x.name }
     names.sortr |Str a, Str b->Int| { return a.size <=> b.size }
-    Str n := names.eachBreak |Str n->Str| { return rest.startsWith(n) ? n : null }
+    Str? n := names.eachBreak |Str n->Str| { return rest.startsWith(n) ? n : null }
     if (n != null)
     {
       f = File.make(f.uri + n.toUri, false)
@@ -160,7 +160,7 @@ internal class MarkParser
   **
   internal static Str[] rootDirs()
   {
-    Str[] roots := Thread.locals["flux.Mark.roots"]
+    Str[]? roots := Thread.locals["flux.Mark.roots"]
     if (roots == null)
     {
       roots = Str[,]

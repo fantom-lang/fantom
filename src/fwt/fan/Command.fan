@@ -171,7 +171,7 @@ class Command
     if (assocDialog != null) return assocDialog
     return widgets.eachBreak |Widget w->Window| { return w.window }
   }
-  internal Dialog assocDialog
+  internal Dialog? assocDialog
 
   **
   ** The enable state of the command automatically controls
@@ -224,7 +224,7 @@ class Command
   **
   virtual Void invoke(Event? event)
   {
-    if (onInvoke.isEmpty == null) throw UnsupportedErr("Must set onInvoke or override invoke: $name")
+    if (onInvoke.isEmpty) throw UnsupportedErr("Must set onInvoke or override invoke: $name")
     onInvoke.fire(event)
   }
 

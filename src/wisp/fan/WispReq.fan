@@ -37,82 +37,59 @@ class WispReq : WebReq
   override Str:Obj? stash := Str:Obj?[:]
   override InStream in
 
-  override Uri absUri
+  override once Uri absUri()
   {
-    get
-    {
-      if (@absUri == null)
-      {
-        host := headers["Host"]
-        if (host == null) throw Err("Missing Host header")
-        @absUri = ("http://" + host + "/").toUri + uri
-      }
-      return @absUri
-    }
+    host := headers["Host"]
+    if (host == null) throw Err("Missing Host header")
+    return ("http://" + host + "/").toUri + uri
   }
 
-  override UserAgent? userAgent
+  override once UserAgent? userAgent()
   {
-    get
+    try
     {
-      try
+      header := headers["User-Agent"]
+      if (header != null)
+        return UserAgent.fromStr(header)
+    }
+    catch (Err e)
+    {
+      e.trace
+    }
+    return null
+  }
+
+  override once Str:Str cookies()
+  {
+    cookies := Str:Str[:]
+    try
+    {
+      header := headers["Cookie"]
+      if (header != null)
       {
-        if (@userAgent == null)
+        header.split(';', false).each |Str s|
         {
-          header := headers["User-Agent"]
-          if (header != null)
-            @userAgent = UserAgent.fromStr(header)
+          if (s[0] == '$') return
+          c := Cookie.fromStr(s)
+          cookies[c.name] = c.value
         }
       }
-      catch (Err e)
-      {
-        e.trace
-      }
-      return @userAgent
     }
+    catch (Err e)
+    {
+      e.trace
+    }
+    return cookies.ro
   }
 
-  override Str:Str cookies
+  override once [Str:Str]? form()
   {
-    get
+    if (headers.get("Content-Type", "").startsWith("application/x-www-form-urlencoded"))
     {
-      try
-      {
-        if (@cookies == null)
-        {
-          @cookies = Str:Str[:]
-          header := headers["Cookie"]
-          if (header != null)
-          {
-            header.split(';', false).each |Str s|
-            {
-              if (s[0] == '$') return
-              c := Cookie.fromStr(s)
-              @cookies[c.name] = c.value
-            }
-          }
-          @cookies = @cookies.ro
-        }
-      }
-      catch (Err e)
-      {
-        e.trace
-      }
-      return @cookies
+      len := headers["Content-Length"]
+      if (len == null) throw IOErr("Missing Content-Length header")
+      return Uri.decodeQuery(in.readLine(len.toInt))
     }
-  }
-
-  override [Str:Str]? form
-  {
-    get
-    {
-      if (@form == null && headers.get("Content-Type", "").startsWith("application/x-www-form-urlencoded"))
-      {
-        len := headers["Content-Length"]
-        if (len == null) throw IOErr("Missing Content-Length header")
-        @form = Uri.decodeQuery(in.readLine(len.toInt))
-      }
-      return @form
-    }
+    return null
   }
 }

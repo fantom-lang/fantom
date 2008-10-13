@@ -112,7 +112,7 @@ internal const class WebSessionMgr : Thread
   {
     try
     {
-      WebSession ws := Thread.locals.remove("web.session")
+      WebSession? ws := Thread.locals.remove("web.session")
       if (ws != null) sendAsync(ws)
     }
     catch (Err e)

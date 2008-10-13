@@ -379,7 +379,7 @@ internal class FanToHtmlInStream : InStream
   ** Read the next character from the base stream.  If the
   ** character is a newline, increment our current line.
   **
-  Int next()
+  Int? next()
   {
     ch := readChar
     if (ch == 0x0a || ch == 0x0d) line++
@@ -391,4 +391,3 @@ internal class FanToHtmlInStream : InStream
   **
   Int line := 1
 }
-

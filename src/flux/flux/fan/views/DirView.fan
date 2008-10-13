@@ -48,7 +48,7 @@ internal class DirViewModel : TableModel
   FileResource[] files
   Str[] headers := ["Name", "Size", "Modified"]
 
-  FileResource file(Int i) { return i == null ? null : files[i] }
+  FileResource? file(Int? i) { return i == null ? null : files[i] }
 
   override Int numCols() { return 3 }
   override Int numRows() { return files.size }

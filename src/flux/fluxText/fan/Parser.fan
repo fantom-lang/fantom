@@ -513,5 +513,5 @@ internal class BlockClose : Block
 
   readonly BlockOpen open
   const Int pos
-  Line cachedLineOnClose
+  Line? cachedLineOnClose
 }

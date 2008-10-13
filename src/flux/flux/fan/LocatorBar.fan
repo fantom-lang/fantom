@@ -47,7 +47,7 @@ internal class LocatorBar : Widget
     if (event.pos.x > vx && event.pos.x < vx+vw)
     {
       views := frame.view.tab.resource.views
-      if (views == null || views.isEmpty) return
+      if ((Obj?)views == null || views.isEmpty) return
       menu := Menu {}
       views.each |Type t|
       {

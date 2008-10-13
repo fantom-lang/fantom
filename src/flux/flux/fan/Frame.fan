@@ -34,7 +34,7 @@ class Frame : Window
   **
   static Frame? findById(Str id, Bool checked := true)
   {
-    Frame f := Thread.locals["flux.$id"]
+    Frame? f := Thread.locals["flux.$id"]
     if (f != null) return f
     if (!checked) return null
     throw Err("Frame not found $id")
@@ -253,7 +253,7 @@ internal class FrameState
   Void save() { Flux.saveOptions("session/frame", this) }
 
   Point? pos := null
-  Size size := Size(800, 600)
+  Size? size := Size(800, 600)
 }
 
 **************************************************************************
