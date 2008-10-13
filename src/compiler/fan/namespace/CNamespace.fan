@@ -131,7 +131,7 @@ abstract class CNamespace
   ** dependency library.  If not found and checked is true
   ** throw UnknownPodErr otherwise return null.
   **
-  abstract CPod resolvePod(Str podName, Bool checked)
+  abstract CPod? resolvePod(Str podName, Bool checked)
 
   **
   ** Attempt resolve a signature against our dependency

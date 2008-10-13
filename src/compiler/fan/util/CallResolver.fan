@@ -319,7 +319,7 @@ class CallResolver : CompilerSupport
   Void withBlockAdd()
   {
     // check if with-block base supports an add method
-    CMethod add := null
+    CMethod? add := null
     try { add = base.method("add") } catch {}
     if (add == null) return
 

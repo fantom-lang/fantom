@@ -114,11 +114,9 @@ class InitClosures : CompilerStep
 
   static internal Void genIsImmutableMethod(Compiler compiler, Location loc, TypeDef parent, Bool literalVal)
   {
-    Expr literal
-    if (literalVal)
-      literal = LiteralExpr.make(loc, ExprId.trueLiteral, compiler.ns.boolType, true)
-    else
-      literal = LiteralExpr.make(loc, ExprId.falseLiteral, compiler.ns.boolType, false)
+    Expr literal := literalVal ?
+       LiteralExpr.make(loc, ExprId.trueLiteral, compiler.ns.boolType, true) :
+       LiteralExpr.make(loc, ExprId.falseLiteral, compiler.ns.boolType, false)
 
     code := Block.make(loc)
     code.stmts.add(ReturnStmt.make(loc, literal))
@@ -197,7 +195,7 @@ class InitClosures : CompilerStep
     // init the doCall() expr with arguments
     paramCount.times |Int i|
     {
-      Expr arg
+      Expr? arg
 
       // list.get(<i>)
       if (useListArgs)

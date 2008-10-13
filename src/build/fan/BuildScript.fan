@@ -197,7 +197,7 @@ abstract class BuildScript
   ** method cannot be called until after the script has completed
   ** its constructor.
   **
-  Target target(Str name, Bool checked := true)
+  Target? target(Str name, Bool checked := true)
   {
     if (targets == null) throw Err.make("script not setup yet")
     t := targets.find |Target t->Bool| { return t.name == name }
@@ -356,7 +356,7 @@ abstract class BuildScript
   **
   ** Convert a Uri to a directory and verify it exists.
   **
-  internal File resolveDir(Uri uri, Bool nullOk := false)
+  internal File? resolveDir(Uri uri, Bool nullOk := false)
   {
     return resolveUris([uri], nullOk, true)[0]
   }
@@ -364,7 +364,7 @@ abstract class BuildScript
   **
   ** Convert a Uri to a file and verify it exists.
   **
-  internal File resolveFile(Uri uri, Bool nullOk := false)
+  internal File? resolveFile(Uri uri, Bool nullOk := false)
   {
     return resolveUris([uri], nullOk, false)[0]
   }
@@ -372,7 +372,7 @@ abstract class BuildScript
   **
   ** Convert a list of Uris to directories and verify they all exist.
   **
-  internal File[] resolveDirs(Uri[] uris, Bool nullOk := false)
+  internal File?[] resolveDirs(Uri[] uris, Bool nullOk := false)
   {
     return resolveUris(uris, nullOk, true)
   }
@@ -380,14 +380,14 @@ abstract class BuildScript
   **
   ** Convert a list of Uris to files and verify they all exist.
   **
-  internal File[] resolveFiles(Uri[] uris, Bool nullOk := false)
+  internal File?[] resolveFiles(Uri[] uris, Bool nullOk := false)
   {
     return resolveUris(uris, nullOk, false)
   }
 
-  private File[] resolveUris(Uri[] uris, Bool nullOk, Bool expectDir)
+  private File?[] resolveUris(Uri[] uris, Bool nullOk, Bool expectDir)
   {
-    files := File[,]
+    files := File?[,]
     if (uris == null) return files
 
     files.capacity = uris.size
@@ -423,7 +423,7 @@ abstract class BuildScript
   **
   ** Log an error and return a FatalBuildErr instance
   **
-  FatalBuildErr fatal(Str msg, Err err := null)
+  FatalBuildErr fatal(Str msg, Err? err := null)
   {
     log.error(msg, err)
     return FatalBuildErr.make

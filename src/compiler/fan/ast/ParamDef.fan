@@ -16,7 +16,7 @@ class ParamDef : Node, CParam
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, CType paramType := null, Str name := null, Expr def := null)
+  new make(Location location, CType paramType, Str name, Expr? def := null)
     : super(location)
   {
     this.paramType = paramType
@@ -51,6 +51,6 @@ class ParamDef : Node, CParam
 
   override CType paramType   // type of parameter
   override Str name          // local variable name
-  Expr def                   // default expression
+  Expr? def                  // default expression
 
 }

@@ -31,7 +31,7 @@ public class FieldDef : SlotDef, CField
 
   FieldExpr makeAccessorExpr(Location loc, Bool useAccessor)
   {
-    Expr target
+    Expr? target
     if (isStatic)
       target = StaticTargetExpr.make(loc, parent)
     else
@@ -74,7 +74,7 @@ public class FieldDef : SlotDef, CField
 // Documentation
 //////////////////////////////////////////////////////////////////////////
 
-  override Str:Str docMeta()
+  override [Str:Str]? docMeta()
   {
     if (initDoc == null) return null
     return ["def": initDoc.toDocStr]
@@ -103,13 +103,13 @@ public class FieldDef : SlotDef, CField
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  override CType fieldType  // field type (null if inferred from init)
-  Field field               // resolved finalized field
-  Expr init                 // init expression or null
-  Expr initDoc              // original init expression for documentation only
-  MethodDef get             // getter MethodDef
-  MethodDef set             // setter MethodDef
-  CField concreteBase       // if I override a concrete virtual field
-  CType inheritedRet        // if covariant override of method
+  override CType fieldType  // field type
+  Field? field              // resolved finalized field
+  Expr? init                // init expression or null
+  Expr? initDoc             // original init expression for documentation only
+  MethodDef? get            // getter MethodDef
+  MethodDef? set            // setter MethodDef
+  CField? concreteBase      // if I override a concrete virtual field
+  CType? inheritedRet       // if covariant override of method
 
 }

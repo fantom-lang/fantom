@@ -276,7 +276,7 @@ class ClosureVars : CompilerStep
 
 
     // walk closure implementation looking for cvarss
-    MethodVar cvarsLocal := null
+    MethodVar? cvarsLocal := null
     doCall.code.walkExpr |Expr expr->Expr|
     {
       // if we've encountered a nested closure which uses cvars,
@@ -430,9 +430,9 @@ class ClosureVars : CompilerStep
   private MethodDef method          // current method being processed
   private Location location         // method.location
   private Bool inClosure            // is method itself a closure doCall body
-  private TypeDef cvars             // cvars class implementation
-  private MethodDef cvarsCtor       // constructor for cvars class
-  private MethodVar cvarsLocal      // local var referencing cvars in method body
+  private TypeDef? cvars            // cvars class implementation
+  private MethodDef? cvarsCtor      // constructor for cvars class
+  private MethodVar? cvarsLocal     // local var referencing cvars in method body
   private ClosureExpr[] closures    // acc for closures found in method body
 
 }

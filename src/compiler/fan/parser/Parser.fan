@@ -416,7 +416,7 @@ public class Parser : CompilerSupport
   **   <fieldGetter>  :=  "get" (<eos> | <block>)
   **   <fieldSetter>  :=  <protection> "set" (<eos> | <block>)
   **
-  private FieldDef fieldDef(Location loc, TypeDef parent, Str[] doc, Str:FacetDef facets, Int flags, TypeRef type, Str name)
+  private FieldDef fieldDef(Location loc, TypeDef parent, Str[] doc, Str:FacetDef facets, Int flags, TypeRef? type, Str name)
   {
     // define field itself
     field := FieldDef.make(loc, parent)
@@ -542,7 +542,7 @@ public class Parser : CompilerSupport
         curMethod = f.set
 
       // { ...block... }
-      Block block := null
+      Block? block := null
       if (curt === Token.lbrace)
         block = this.block(id != "get")
       else
@@ -653,9 +653,7 @@ public class Parser : CompilerSupport
 
   private ParamDef paramDef()
   {
-    param := ParamDef.make(cur)
-    param.paramType = typeRef
-    param.name = consumeId
+    param := ParamDef.make(cur, typeRef, consumeId)
     if (curt === Token.defAssign || curt === Token.assign)
     {
       if (curt === Token.assign) err("Must use := for parameter default");
@@ -699,7 +697,7 @@ public class Parser : CompilerSupport
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  private Str:FacetDef facets()
+  private [Str:FacetDef]? facets()
   {
     if (curt !== Token.at) return null
 
@@ -709,7 +707,7 @@ public class Parser : CompilerSupport
       consume
       loc := cur
       name := consumeId
-      Expr val
+      Expr? val
       if (curt === Token.assign)
       {
         consume()
@@ -835,7 +833,7 @@ public class Parser : CompilerSupport
   ** Parse local variable declaration, the current token must be
   ** the identifier of the local variable.
   **
-  private LocalDefStmt localDefStmt(Location loc, CType localType, Bool isEndOfStmt)
+  private LocalDefStmt localDefStmt(Location loc, CType? localType, Bool isEndOfStmt)
   {
     stmt := LocalDefStmt.make(loc)
     stmt.ctype = localType
@@ -1066,7 +1064,7 @@ public class Parser : CompilerSupport
 
   private Block switchBlock()
   {
-    Block block := null
+    Block? block := null
     while (curt !== Token.caseKeyword && curt != Token.defaultKeyword && curt !== Token.rbrace)
     {
       if (block == null) block = Block.make(cur)
@@ -1093,7 +1091,7 @@ public class Parser : CompilerSupport
   **   <assignExpr>  :=  <condOrExpr> [<assignOp> <assignExpr>]
   **   <assignOp>    :=  "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>="  | "&=" | "^=" | "|="
   **
-  private Expr assignExpr(Expr expr := null)
+  private Expr assignExpr(Expr? expr := null)
   {
     // this is tree if built to the right (others to the left)
     if (expr == null) expr = ternary
@@ -1429,7 +1427,7 @@ public class Parser : CompilerSupport
   **
   **   <termExpr>  :=  <termBase> <termChain>* [withBlock]
   **
-  private Expr termExpr(Expr target := null)
+  private Expr termExpr(Expr? target := null)
   {
     if (target == null) target = termBaseExpr
     while (true)
@@ -1548,7 +1546,7 @@ public class Parser : CompilerSupport
   **   <compiledCall>   :=  "." <idExpr>
   **   <dynamicCall>    :=  "->" <idExpr>
   **
-  private Expr termChainExpr(Expr target)
+  private Expr? termChainExpr(Expr target)
   {
     loc := cur
 
@@ -1578,7 +1576,7 @@ public class Parser : CompilerSupport
     if (target.id === ExprId.withBase) return idExpr(target, false, false)
 
     // otherwise the expression should be finished
-    return null;
+    return null
   }
 
   **
@@ -1649,7 +1647,7 @@ public class Parser : CompilerSupport
   **   <local>   :=  <id>
   **   <field>   :=  ["@"] <id>
   **
-  private Expr idExpr(Expr target, Bool dynamicCall, Bool safeCall)
+  private Expr idExpr(Expr? target, Bool dynamicCall, Bool safeCall)
   {
     loc := cur
 
@@ -1770,7 +1768,7 @@ public class Parser : CompilerSupport
   **   <mapItems>   :=  ":" | (<mapPair> ("," <mapPair>)*)
   **   <mapPair>    :=  <expr> ":" <expr>
   **
-  private Expr collectionLiteralExpr(Location loc, CType explicitType)
+  private Expr collectionLiteralExpr(Location loc, CType? explicitType)
   {
     // empty list [,]
     if (peekt === Token.comma)
@@ -1807,7 +1805,7 @@ public class Parser : CompilerSupport
   ** else
   **   cur must be on comma after first item
   **
-  private ListLiteralExpr listLiteralExpr(Location loc, CType explicitType, Expr first)
+  private ListLiteralExpr listLiteralExpr(Location loc, CType? explicitType, Expr? first)
   {
     // explicitType is type of List:  Str[,]
     if (explicitType != null)
@@ -1848,7 +1846,7 @@ public class Parser : CompilerSupport
   ** else
   **   cur must be on colon of first key/value pair
   **
-  private MapLiteralExpr mapLiteralExpr(Location loc, CType explicitType, Expr first)
+  private MapLiteralExpr mapLiteralExpr(Location loc, CType? explicitType, Expr? first)
   {
     // explicitType is *the* map type: Str:Str[,]
     if (explicitType != null && explicitType isnot MapType)
@@ -1898,7 +1896,7 @@ public class Parser : CompilerSupport
   ** Attempt to parse a closure expression or return null if we
   ** aren't positioned at the start of a closure expression.
   **
-  private ClosureExpr tryClosure()
+  private ClosureExpr? tryClosure()
   {
     loc := cur
 
@@ -1964,7 +1962,7 @@ public class Parser : CompilerSupport
   ** valid type production return it.  Otherwise leave
   ** the parser positioned on the current token.
   **
-  private CType tryType()
+  private CType? tryType()
   {
     // types can only begin with identifier, | or [
     if (curt !== Token.identifier && curt !== Token.pipe && curt !== Token.lbracket)
@@ -1972,7 +1970,7 @@ public class Parser : CompilerSupport
 
     suppressErr = true
     mark := pos
-    CType type := null
+    CType? type := null
     try
     {
       type = ctype
@@ -1993,7 +1991,7 @@ public class Parser : CompilerSupport
   **
   private CType ctype()
   {
-    CType t := null
+    CType? t := null
 
     // Types can begin with:
     //   - id
@@ -2158,7 +2156,7 @@ public class Parser : CompilerSupport
   **
   private Str[] doc()
   {
-    Str[] doc := null
+    Str[]? doc := null
     while (curt === Token.docComment)
       doc = (Str[])consume(Token.docComment).val
     return doc
@@ -2168,7 +2166,7 @@ public class Parser : CompilerSupport
 // Errors
 //////////////////////////////////////////////////////////////////////////
 
-  override CompilerErr err(Str msg, Location loc := null)
+  override CompilerErr err(Str msg, Location? loc := null)
   {
     if (loc == null) loc = cur
     return super.err(msg, loc)
@@ -2202,7 +2200,7 @@ public class Parser : CompilerSupport
   ** Consume the current token and return consumed token.
   ** If kind is non-null then verify first
   **
-  private TokenVal consume(Token kind := null)
+  private TokenVal consume(Token? kind := null)
   {
     // verify if not null
     if (kind != null) verify(kind)
@@ -2212,7 +2210,7 @@ public class Parser : CompilerSupport
 
     // get the next token from the buffer, if pos is past numTokens,
     // then always use the last token which will be eof
-    TokenVal next;
+    TokenVal? next;
     pos++;
     if (pos+1 < numTokens)
       next = tokens[pos+1]  // next peek is cur+1
@@ -2232,7 +2230,7 @@ public class Parser : CompilerSupport
   ** or } end of block.   Return true on success.  On failure
   ** return false if errMsg is null or log/throw an exception.
   **
-  private Bool endOfStmt(Str errMsg := "Expected end of statement: semicolon, newline, or end of block; not '$cur'")
+  private Bool endOfStmt(Str? errMsg := "Expected end of statement: semicolon, newline, or end of block; not '$cur'")
   {
     if (cur.newline) return true
     if (curt === Token.semicolon) { consume; return true }
@@ -2284,10 +2282,10 @@ public class Parser : CompilerSupport
   private Bool isSys := false    // are we parsing the sys pod itself
   private Bool inVoid            // are we currently in a void method
   private Bool inFieldInit := false // are we currently in a field initializer
-  private TypeDef curType        // current TypeDef scope
-  private MethodDef curMethod    // current MethodDef scope
+  private TypeDef? curType       // current TypeDef scope
+  private MethodDef? curMethod   // current MethodDef scope
   private ClosureExpr curClosure // current ClosureExpr if inside closure
-  private Int closureCount       // number of closures parsed inside curMethod
+  private Int? closureCount      // number of closures parsed inside curMethod
   private ClosureExpr[] closures // list of all closures parsed
 
 }

@@ -12,7 +12,7 @@
 class TokenVal : Location
 {
 
-  new make(Token kind, Obj val := null)
+  new make(Token kind, Obj? val := null)
     : super.makeUninit()
   {
     this.kind = kind

@@ -12,7 +12,7 @@
 class Exec : Task
 {
 
-  new make(BuildScript script, Str[] cmd, File dir := null)
+  new make(BuildScript script, Str[] cmd, File? dir := null)
     : super(script)
   {
     this.process = Process.make(cmd, dir)

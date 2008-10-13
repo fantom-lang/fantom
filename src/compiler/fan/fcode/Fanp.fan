@@ -82,7 +82,7 @@ class Fanp
 
   FSlot fslot(FType ftype, Str slotName)
   {
-    FSlot slot := null
+    FSlot? slot := null
 
     slot = ftype.ffields.find |FSlot s->Bool|
     {
@@ -107,7 +107,7 @@ class Fanp
   {
     if (args.isEmpty) { help; return }
 
-    Str target := null
+    Str? target := null
 
     // process args
     for (i:=0; i<args.size; ++i)

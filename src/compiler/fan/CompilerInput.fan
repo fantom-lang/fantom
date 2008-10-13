@@ -65,14 +65,14 @@ class CompilerInput
   ** use the compiler's own pod definitions via reflection (which
   ** is more efficient).
   **
-  File dependsDir := null
+  File? dependsDir := null
 
   **
   ** What type of output should be generated - the compiler
   ** can be used to generate a transient in-memory pod or
   ** to write out a pod zip file to disk.
   **
-  CompilerOutputMode output := null
+  CompilerOutputMode? output := null
 
   **
   ** Log used for reporting compile status
@@ -104,7 +104,7 @@ class CompilerInput
   ** This mode determines whether the source code is input
   ** from the file system or from an in-memory string.
   **
-  CompilerInputMode mode := null
+  CompilerInputMode? mode := null
 
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.file
@@ -197,4 +197,3 @@ enum CompilerInputMode
   file,
   str
 }
-

@@ -55,7 +55,7 @@ abstract class Task
   **
   ** Log an error and return a FatalBuildErr instance
   **
-  FatalBuildErr fatal(Str msg, Err err := null)
+  FatalBuildErr fatal(Str msg, Err? err := null)
   {
     log.error(msg, err)
     return FatalBuildErr.make

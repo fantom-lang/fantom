@@ -17,7 +17,7 @@ class MethodDef : SlotDef, CMethod
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static MethodDef makeStaticInit(Location location, TypeDef parent, Block block)
+  public static MethodDef makeStaticInit(Location location, TypeDef parent, Block? block)
   {
     def := make(location, parent)
     def.name   = "static\$init"
@@ -27,7 +27,7 @@ class MethodDef : SlotDef, CMethod
     return def;
   }
 
-  public static MethodDef makeInstanceInit(Location location, TypeDef parent, Block block)
+  public static MethodDef makeInstanceInit(Location location, TypeDef parent, Block? block)
   {
     def := make(location, parent)
     def.name   = "instance\$init\$$parent.pod.name\$$parent.name";
@@ -78,7 +78,7 @@ class MethodDef : SlotDef, CMethod
   ** Make and add a MethodVar for a local variable.  If name is
   ** null then we auto-generate a temporary variable name
   **
-  MethodVar addLocalVar(CType ctype, Str name, Block scope)
+  MethodVar addLocalVar(CType ctype, Str? name, Block? scope)
   {
     // allocate next register index, implicit this always register 0
     reg := vars.size
@@ -145,7 +145,7 @@ class MethodDef : SlotDef, CMethod
 // Documentation
 //////////////////////////////////////////////////////////////////////////
 
-  override Str:Str docMeta()
+  override [Str:Str]? docMeta()
   {
     if (paramDefs.isEmpty || !paramDefs[-1].hasDefault)
       return null
@@ -189,12 +189,12 @@ class MethodDef : SlotDef, CMethod
 //////////////////////////////////////////////////////////////////////////
 
   CType ret              // return type
-  CType inheritedRet     // used for original return if covariant
+  CType? inheritedRet    // used for original return if covariant
   ParamDef[] paramDefs   // parameter definitions
-  Block code             // code block
-  CallExpr ctorChain     // constructor chain for this/super ctor
+  Block? code            // code block
+  CallExpr? ctorChain    // constructor chain for this/super ctor
   MethodVar[] vars       // all param/local variables in method
-  FieldDef accessorFor   // if accessor method for field
+  FieldDef? accessorFor  // if accessor method for field
   Bool needsCvars        // does this method have locals used inside closures
 
 }

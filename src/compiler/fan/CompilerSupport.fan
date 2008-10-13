@@ -90,7 +90,7 @@ class CompilerSupport
   **
   ** Create, log, and return a CompilerErr.
   **
-  virtual CompilerErr err(Str msg, Location loc)
+  virtual CompilerErr err(Str msg, Location? loc)
   {
     if (suppressErr) throw SuppressedErr.make
     return errReport(CompilerErr.make(msg, loc))

@@ -29,7 +29,7 @@ class FUtil : FConst
     }
   }
 
-  static Buf readBuf(InStream in)
+  static Buf? readBuf(InStream in)
   {
     size := in.readU2
     if (size === 0) return null

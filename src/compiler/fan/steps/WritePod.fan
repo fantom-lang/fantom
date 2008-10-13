@@ -46,7 +46,7 @@ class WritePod : CompilerStep
     // create output directory
     dir.create
 
-    Zip zip := null
+    Zip? zip := null
     try
     {
       // open zip store
@@ -86,7 +86,7 @@ class WritePod : CompilerStep
 // Resource
 //////////////////////////////////////////////////////////////////////////
 
-  private Void writeRes(Zip zip, File file, Uri path := null)
+  private Void writeRes(Zip zip, File file, Uri? path := null)
   {
     input := compiler.input
     if (path == null)

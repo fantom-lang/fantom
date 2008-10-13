@@ -75,7 +75,7 @@ class TypeParser
 
   private CType loadAny()
   {
-    CType t
+    CType? t
 
     // |...| is function
     if (cur === '|')
@@ -162,7 +162,7 @@ class TypeParser
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  private Void consume(Int expected := null)
+  private Void consume(Int? expected := null)
   {
     if (expected != null && cur != expected) throw err
     cur = peek

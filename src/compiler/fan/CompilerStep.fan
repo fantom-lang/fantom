@@ -68,6 +68,6 @@ abstract class CompilerStep : CompilerSupport, Visitor
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  TypeDef curType
-  MethodDef curMethod
+  TypeDef? curType
+  MethodDef? curMethod
 }

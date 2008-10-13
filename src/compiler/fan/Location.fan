@@ -12,7 +12,7 @@
 class Location
 {
 
-  new make(Str file, Int line := null, Int col := null)
+  new make(Str? file, Int? line := null, Int? col := null)
   {
     this.file = file
     this.line = line
@@ -35,7 +35,7 @@ class Location
   {
   }
 
-  Str filename()
+  Str? filename()
   {
     if (file == null) return null
     f := file
@@ -45,7 +45,7 @@ class Location
     return f
   }
 
-  Str fileUri()
+  Str? fileUri()
   {
     try
     {
@@ -64,7 +64,7 @@ class Location
 
   Str toLocationStr()
   {
-    StrBuf s := StrBuf.make
+    StrBuf s := StrBuf()
     s.add(file)
     if (line != null)
     {
@@ -75,8 +75,8 @@ class Location
     return s.toStr
   }
 
-  Str file
-  Int line
-  Int col
+  Str? file
+  Int? line
+  Int? col
 
 }

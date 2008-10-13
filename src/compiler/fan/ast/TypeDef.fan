@@ -74,7 +74,7 @@ class TypeDef : DefNode, CType
   ** SlotDefs declared by this type as well as slots inherited by
   ** this type.
   **
-  Void addSlot(CSlot s, Int slotDefIndex := null)
+  Void addSlot(CSlot s, Int? slotDefIndex := null)
   {
     // if MethodDef
     m := s as MethodDef
@@ -294,7 +294,7 @@ class TypeDef : DefNode, CType
 // Documentation
 //////////////////////////////////////////////////////////////////////////
 
-  Str:Str docMeta()
+  [Str:Str]? docMeta()
   {
     return null
   }

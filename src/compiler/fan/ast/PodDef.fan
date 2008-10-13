@@ -27,9 +27,9 @@ class PodDef : DefNode, CPod
 // CPod
 //////////////////////////////////////////////////////////////////////////
 
-  override Version version() { return null }
+  override Version version() { throw UnsupportedErr("PodDef.version") }
 
-  override CType resolveType(Str name, Bool checked)
+  override CType? resolveType(Str name, Bool checked)
   {
     t := typeDefs[name]
     if (t != null) return t

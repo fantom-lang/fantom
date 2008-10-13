@@ -58,33 +58,33 @@ class CompilerLog
   **
   ** Log an error level message.
   **
-  Void error(Str msg, Err err := null)
+  Void error(Str msg, Err? err := null)
   {
-    log(LogRecord.make(DateTime.now, LogLevel.error, null, msg, err))
+    log(LogRecord(DateTime.now, LogLevel.error, "compiler", msg, err))
   }
 
   **
   ** Log a warn level message.
   **
-  Void warn(Str msg, Err err := null)
+  Void warn(Str msg, Err? err := null)
   {
-    log(LogRecord.make(DateTime.now, LogLevel.warn, null, msg, err))
+    log(LogRecord(DateTime.now, LogLevel.warn, "compiler", msg, err))
   }
 
   **
   ** Log an info level message.
   **
-  Void info(Str msg, Err err := null)
+  Void info(Str msg, Err? err := null)
   {
-    log(LogRecord.make(DateTime.now, LogLevel.info, null, msg, err))
+    log(LogRecord(DateTime.now, LogLevel.info, "compiler", msg, err))
   }
 
   **
   ** Log an debug level message.
   **
-  Void debug(Str msg, Err err := null)
+  Void debug(Str msg, Err? err := null)
   {
-    log(LogRecord.make(DateTime.now, LogLevel.debug, null, msg, err))
+    log(LogRecord(DateTime.now, LogLevel.debug, "compiler", msg, err))
   }
 
   **
@@ -97,7 +97,7 @@ class CompilerLog
     if (rec.level < this.level) return
     if (rec.level >= LogLevel.warn) print(rec.level.toStr.capitalize).print(": ")
     print(Str.spaces(indentation*2))
-    printLine(rec.message);
+    printLine(rec.message)
 
     if (rec.err != null)
     {
@@ -136,7 +136,7 @@ class CompilerLog
   **
   ** Print a string without trailing newline.
   **
-  CompilerLog print(Obj s)
+  CompilerLog print(Obj? s)
   {
     out.print(s)
     return this
@@ -145,7 +145,7 @@ class CompilerLog
   **
   ** Print a line.
   **
-  CompilerLog printLine(Obj s := "")
+  CompilerLog printLine(Obj? s := "")
   {
     out.printLine(s).flush
     return this
@@ -162,6 +162,6 @@ class CompilerLog
   Int indentation := 0
 
   ** Sink for all output
-  OutStream out := null
+  OutStream? out := null
 
 }

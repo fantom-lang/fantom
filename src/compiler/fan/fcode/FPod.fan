@@ -19,7 +19,7 @@ final class FPod : CPod, FConst
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(FPodNamespace ns, Str podName, Zip zip)
+  new make(FPodNamespace? ns, Str podName, Zip? zip)
   {
     this.ns         = ns
     this.name       = podName
@@ -40,7 +40,7 @@ final class FPod : CPod, FConst
 // CPod
 //////////////////////////////////////////////////////////////////////////
 
-  override CType resolveType(Str name, Bool checked)
+  override CType? resolveType(Str name, Bool checked)
   {
     t := ftypesByName[name]
     if (t != null) return t
@@ -53,16 +53,14 @@ final class FPod : CPod, FConst
     return ftypes
   }
 
-  CType toType(Int index)
+  CType? toType(Int index)
   {
     if (index == 0xffff) return null
     r := typeRef(index)
 
-    Str sig
-    if (r.isGenericInstance)
-      sig = r.sig
-    else
-      sig = n(r.podName) + "::" + n(r.typeName) + r.sig
+    sig := r.isGenericInstance ?
+           r.sig :
+           n(r.podName) + "::" + n(r.typeName) + r.sig
     return ns.resolveType(sig)
   }
 
@@ -120,7 +118,7 @@ final class FPod : CPod, FConst
     return fieldRefs.add(FFieldRef.make(p, n, t))
   }
 
-  Int addMethodRef(CMethod method, Int argCount := null)
+  Int addMethodRef(CMethod method, Int? argCount := null)
   {
     // if this is a generic instantiation, we want to call
     // against the original generic method using it's raw
@@ -271,7 +269,7 @@ final class FPod : CPod, FConst
   **
   ** Get input stream to read the specified file from zip storage.
   **
-  InStream in(Uri uri)
+  InStream? in(Uri uri)
   {
     file := zip.contents[uri]
     if (file == null) return null

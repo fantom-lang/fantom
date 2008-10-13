@@ -87,7 +87,7 @@ class FindSourceFiles : CompilerStep
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  private Void find(File dir, File[] acc, Str ext)
+  private Void find(File dir, File[] acc, Str? ext)
   {
     if (!dir.isDir) throw err("Invalid directory", Location.makeFile(dir))
     dir.list.each |File f|

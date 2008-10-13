@@ -67,7 +67,7 @@ class InitEnum : CompilerStep
   Void addCtor()
   {
     // our constructor definition
-    MethodDef m :=  null
+    MethodDef? m :=  null
 
     // check if there are any existing constructors - there
     // can only be zero or one called make

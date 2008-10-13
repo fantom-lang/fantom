@@ -44,7 +44,7 @@ class ConstantFolder : CompilerSupport
     if (target == null) return call
 
     // check if all the parameters are constant
-    Obj[] args := null
+    Obj[]? args := null
     for (i:=0; i<call.args.size; ++i)
     {
       arg := exprToConst(call.args[i])
@@ -64,7 +64,7 @@ class ConstantFolder : CompilerSupport
     }
 
     // try to invoke the method to get the result
-    Obj result := null
+    Obj? result := null
     try
     {
       result = method.callOn(target, args)
@@ -81,7 +81,7 @@ class ConstantFolder : CompilerSupport
     return constToExpr(call, result)
   }
 
-  private Obj exprToConst(Expr expr)
+  private Obj? exprToConst(Expr expr)
   {
     if (expr == null) return null
     switch (expr.id)
