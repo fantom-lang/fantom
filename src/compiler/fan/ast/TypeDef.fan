@@ -201,7 +201,7 @@ class TypeDef : DefNode, CType
   **
   ** Return SlotDef for specified name or null.
   **
-  SlotDef slotDef(Str name)
+  SlotDef? slotDef(Str name)
   {
     return slotDefMap[name]
   }
@@ -209,7 +209,7 @@ class TypeDef : DefNode, CType
   **
   ** Return FieldDef for specified name or null.
   **
-  FieldDef fieldDef (Str name)
+  FieldDef? fieldDef (Str name)
   {
     return (FieldDef)slotDefMap[name]
   }
@@ -217,7 +217,7 @@ class TypeDef : DefNode, CType
   **
   ** Return MethodDef for specified name or null.
   **
-  MethodDef methodDef(Str name)
+  MethodDef? methodDef(Str name)
   {
     return (MethodDef)slotDefMap[name]
   }
@@ -269,7 +269,7 @@ class TypeDef : DefNode, CType
   **
   ** Return EnumDef for specified name or null.
   **
-  public EnumDef enumDef(Str name)
+  public EnumDef? enumDef(Str name)
   {
     return enumDefs.find |EnumDef def->Bool| { return def.name == name }
   }
@@ -344,11 +344,11 @@ class TypeDef : DefNode, CType
   override readonly Str name       // simple class name
   override readonly Str qname      // podName::name
   Bool baseSpecified := true       // was base assigned from source code
-  override CType base              // extends class
+  override CType? base             // extends class
   override CType[] mixins          // mixin types
   EnumDef[] enumDefs               // declared enumerated pairs (only if enum)
   ClosureExpr[] closures           // closures where I am enclosing type (Parse)
-  ClosureExpr closure              // if I am a closure anonymous class
+  ClosureExpr? closure             // if I am a closure anonymous class
   private Str:CSlot slotMap        // all slots
   private Str:SlotDef slotDefMap   // declared slot definitions
   private SlotDef[] slotDefList    // declared slot definitions

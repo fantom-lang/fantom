@@ -66,7 +66,7 @@ class FField : FSlot, CField
 //////////////////////////////////////////////////////////////////////////
 
   Int typeRef     // typeRef index
-  override CMethod getter
-  override CMethod setter
+  override CMethod? getter
+  override CMethod? setter
 
 }

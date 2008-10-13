@@ -36,7 +36,7 @@ class TypeRef : Node, CType
   override CType deref()   { return t }
   override Int flags()     { return t.flags }
 
-  override CType base() { return t.base }
+  override CType? base() { return t.base }
   override CType[] mixins() { return t.mixins }
   override Bool fits(CType that) { return t.fits(that) }
 

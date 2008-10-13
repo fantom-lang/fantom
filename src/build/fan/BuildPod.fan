@@ -32,7 +32,7 @@ abstract class BuildPod : BuildScript
   **
   ** User defined pod level facets.  Optional.
   **
-  Str:Obj podFacets
+  [Str:Obj]? podFacets
 
   **
   ** Version of the pod - typically set to
@@ -64,33 +64,33 @@ abstract class BuildPod : BuildScript
   ** List of Uris relative to `scriptDir` of directories of resources
   ** files to package into pod zip file.  Optional.
   **
-  Uri[] resDirs
+  Uri[]? resDirs
 
   **
   ** List of Uris relative to `scriptDir` of directories containing
   ** the Java source files to compile for Java native jar.
   **
-  Uri[] javaDirs
+  Uri[]? javaDirs
 
   **
   ** List of Uris relative to `scriptDir` of Java jar files which
   ** are automatically included in the classpath when compiling the
   ** `javaDirs`.
   **
-  Uri[] javaLibs
+  Uri[]? javaLibs
 
   **
   ** List of Uris relative to `scriptDir` of directories containing
   ** the C# source files to compile for .NET native dll.
   **
-  Uri[] netDirs
+  Uri[]? netDirs
 
   **
   ** List of Uris relative to `scriptDir` of .NET assemblies which
   ** are automatically included in the library path when compiling
   ** the `netDirs`.
   **
-  Uri[] netLibs
+  Uri[]? netLibs
 
 //////////////////////////////////////////////////////////////////////////
 // Setup
@@ -101,7 +101,7 @@ abstract class BuildPod : BuildScript
   **
   internal override Void validate()
   {
-    if (podFacets == null) podFacets = Str:Obj[:]
+    if  (podFacets == null) podFacets = Str:Obj[:]
 
     ok := true
     ok &= validateReqField("podName")

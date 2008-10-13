@@ -122,7 +122,7 @@ class ResolveExpr : CompilerStep
     expr = resolveExpr(expr)
 
     // expr type must be resolved at this point
-    if (expr.ctype == null)
+    if ((Obj?)expr.ctype == null)
       throw err("Expr type not resolved: ${expr.id}: ${expr}", expr.location)
 
     // if we resolved to a generic parameter like V or K,
@@ -715,7 +715,7 @@ class ResolveExpr : CompilerStep
   ** Check if the specified block is currently in scope.  We make
   ** a specialcase for "for" loops which can declare variables.
   **
-  private Bool isBlockInScope(Block block)
+  private Bool isBlockInScope(Block? block)
   {
     // the null block within the whole method (ctorChains or defaultParams)
     if (block == null) return true

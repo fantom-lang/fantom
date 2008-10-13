@@ -65,7 +65,7 @@ class ReflectType : CType
     return slotMap
   }
 
-  override CSlot slot(Str name)
+  override CSlot? slot(Str name)
   {
     cs := slotMap[name]
     if (cs == null)
@@ -85,7 +85,7 @@ class ReflectType : CType
 
   readonly Type t
   override readonly ReflectPod pod
-  override readonly CType base
+  override readonly CType? base
   override readonly CType[] mixins
   private Str:CSlot slotMap := Str:CSlot[:]
   private Bool slotsLoaded := false

@@ -45,8 +45,8 @@ public class FieldDef : SlotDef, CField
 //////////////////////////////////////////////////////////////////////////
 
   override Str signature() { return qname }
-  override CMethod getter() { return get }
-  override CMethod setter() { return set }
+  override CMethod? getter() { return get }
+  override CMethod? setter() { return set }
 
   override CType inheritedReturnType()
   {
@@ -93,7 +93,7 @@ public class FieldDef : SlotDef, CField
   {
     printFacets(out)
     out.flags(flags)
-    if (fieldType != null) out.w(fieldType).w(" ")
+    out.w(fieldType).w(" ")
     out.w(name)
     if (init != null) { out.w(" := "); init.print(out) }
     out.nl.nl

@@ -29,19 +29,19 @@ class AttrAsm : CompilerSupport
 // Named Adds
 //////////////////////////////////////////////////////////////////////////
 
-  Void sourceFile(Str source)
+  Void sourceFile(Str? source)
   {
     if (source == null) return
     utf(FConst.SourceFileAttr, source)
   }
 
-  Void lineNumber(Int line)
+  Void lineNumber(Int? line)
   {
     if (line == null || line == 0) return
     u2(FConst.LineNumberAttr, line)
   }
 
-  Void facets(Str:FacetDef facets)
+  Void facets([Str:FacetDef]? facets)
   {
     if (facets == null || facets.isEmpty) return
 

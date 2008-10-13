@@ -229,7 +229,7 @@ class Main
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Str podName
+  Str? podName
   File[] srcDirs := File[,]    // directories to build
   File? outDir := null         // -d output directory
   CompilerLog log := CompilerLog.make  // logging, -v verbose output

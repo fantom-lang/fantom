@@ -26,6 +26,7 @@ class FPodNamespace : CNamespace
   new make(File dir)
   {
     this.dir = dir
+    this.pods = Str:FPod[:]
     init
   }
 
@@ -38,8 +39,6 @@ class FPodNamespace : CNamespace
   **
   override FPod? resolvePod(Str podName, Bool checked)
   {
-    if (pods == null) pods = Str:FPod[:]
-
     // check cache
     fpod := pods[podName]
     if (fpod != null) return fpod

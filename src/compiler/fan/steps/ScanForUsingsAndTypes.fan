@@ -65,7 +65,7 @@ class UsingAndTypeScanner : CompilerSupport
     this.tokens   = unit.tokens
     this.pos      = 0
     this.allTypes = allTypes
-    if (compiler != null) this.isSys = compiler.isSys
+    this.isSys    = compiler.isSys
   }
 
   Void parse()

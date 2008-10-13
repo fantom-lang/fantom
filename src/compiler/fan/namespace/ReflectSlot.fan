@@ -40,8 +40,8 @@ class ReflectField : ReflectSlot, CField
     this.parent = parent
     this.f = f
     this.fieldType = ns.importType(f.of)
-    get := (Method)f->getter; if (get != null) this.getter = ns.importMethod(get)
-    set := (Method)f->setter; if (set != null) this.setter = ns.importMethod(set)
+    get := (Method?)f->getter; if (get != null) this.getter = ns.importMethod(get)
+    set := (Method?)f->setter; if (set != null) this.setter = ns.importMethod(set)
   }
 
   override ReflectNamespace ns() { return parent.ns }
@@ -56,8 +56,8 @@ class ReflectField : ReflectSlot, CField
   }
 
   override readonly CType fieldType
-  override readonly CMethod getter
-  override readonly CMethod setter
+  override readonly CMethod? getter
+  override readonly CMethod? setter
   readonly Field f
 }
 

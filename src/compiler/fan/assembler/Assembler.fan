@@ -169,7 +169,7 @@ class Assembler : CompilerSupport, FConst
     return asm.finishCode
   }
 
-  private Buf? assembleExpr(Expr expr)
+  private Buf? assembleExpr(Expr? expr)
   {
     if (expr == null) return null
     asm := CodeAsm.make(compiler, expr.location, fpod)

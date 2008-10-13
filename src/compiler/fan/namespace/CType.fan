@@ -135,7 +135,7 @@ mixin CType
   **
   ** The direct super class of this type (null for Obj).
   **
-  abstract CType base()
+  abstract CType? base()
 
   **
   ** Return the mixins directly implemented by this type.
@@ -218,8 +218,9 @@ mixin CType
       if (t.isNullable) { nullable = true; t = t.toNonNullable }
       while (!t.fits(best))
       {
-        best = best.base
-        if (best == null) return ns.objType
+        bestBase := best.base
+        if (bestBase == null) return nullable ? ns.objType.toNullable : ns.objType
+        best = bestBase
       }
     }
     return nullable ? best.toNullable : best
@@ -315,17 +316,17 @@ mixin CType
   **
   ** Lookup a slot by name.  If the slot doesn't exist then return null.
   **
-  virtual CSlot slot(Str name) { return slots[name] }
+  virtual CSlot? slot(Str name) { return slots[name] }
 
   **
   ** Lookup a field by name.
   **
-  CField field(Str name) { return (CField)slot(name) }
+  CField? field(Str name) { return (CField)slot(name) }
 
   **
   ** Lookup a method by name.
   **
-  CMethod method(Str name) { return (CMethod)slot(name) }
+  CMethod? method(Str name) { return (CMethod)slot(name) }
 
   **
   ** List of the all defined fields (including inherited fields).

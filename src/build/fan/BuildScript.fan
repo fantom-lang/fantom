@@ -199,7 +199,7 @@ abstract class BuildScript
   **
   Target? target(Str name, Bool checked := true)
   {
-    if (targets == null) throw Err.make("script not setup yet")
+    if ((Obj?)targets == null) throw Err.make("script not setup yet")
     t := targets.find |Target t->Bool| { return t.name == name }
     if (t != null) return t
     if (checked) throw Err.make("Target not found: $name")
@@ -356,7 +356,7 @@ abstract class BuildScript
   **
   ** Convert a Uri to a directory and verify it exists.
   **
-  internal File? resolveDir(Uri uri, Bool nullOk := false)
+  internal File? resolveDir(Uri? uri, Bool nullOk := false)
   {
     return resolveUris([uri], nullOk, true)[0]
   }
@@ -364,7 +364,7 @@ abstract class BuildScript
   **
   ** Convert a Uri to a file and verify it exists.
   **
-  internal File? resolveFile(Uri uri, Bool nullOk := false)
+  internal File? resolveFile(Uri? uri, Bool nullOk := false)
   {
     return resolveUris([uri], nullOk, false)[0]
   }
@@ -372,7 +372,7 @@ abstract class BuildScript
   **
   ** Convert a list of Uris to directories and verify they all exist.
   **
-  internal File?[] resolveDirs(Uri[] uris, Bool nullOk := false)
+  internal File?[] resolveDirs(Uri?[]? uris, Bool nullOk := false)
   {
     return resolveUris(uris, nullOk, true)
   }
@@ -380,19 +380,19 @@ abstract class BuildScript
   **
   ** Convert a list of Uris to files and verify they all exist.
   **
-  internal File?[] resolveFiles(Uri[] uris, Bool nullOk := false)
+  internal File?[] resolveFiles(Uri?[]? uris, Bool nullOk := false)
   {
     return resolveUris(uris, nullOk, false)
   }
 
-  private File?[] resolveUris(Uri[] uris, Bool nullOk, Bool expectDir)
+  private File?[] resolveUris(Uri?[]? uris, Bool nullOk, Bool expectDir)
   {
     files := File?[,]
     if (uris == null) return files
 
     files.capacity = uris.size
     ok := true
-    uris.each |Uri uri|
+    uris.each |Uri? uri|
     {
       if (uri == null)
       {

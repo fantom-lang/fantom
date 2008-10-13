@@ -371,12 +371,12 @@ class CallResolver : CompilerSupport
   MethodDef curMethod  // current method of scope
   NameExpr expr        // original expression being resolved
   Location location    // location of original expression
-  Expr target          // target base or null
+  Expr? target         // target base or null
   Str name             // slot name to resolve
   Bool isVar           // are we resolving simple variable
   Expr[] args          // arguments or null if simple variable
-  CType base           // resolveBase()
-  CSlot found          // find()
-  Expr result          // resolveToExpr()
+  CType? base          // resolveBase()
+  CSlot? found         // find()
+  Expr? result         // resolveToExpr()
 
 }

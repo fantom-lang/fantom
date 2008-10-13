@@ -51,8 +51,8 @@ mixin CSlot
 mixin CField : CSlot
 {
   abstract CType fieldType()
-  abstract CMethod getter()
-  abstract CMethod setter()
+  abstract CMethod? getter()
+  abstract CMethod? setter()
 
   **
   ** Original return type from inherited method if a covariant override.

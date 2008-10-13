@@ -46,9 +46,9 @@ class Using : Node
 //////////////////////////////////////////////////////////////////////////
 
   Str podName          // pod name
-  Str typeName         // type name or null
-  Str asName           // rename if using as
-  CPod resolvedPod     // ResolveImports
-  CType resolvedType   // ResolveImports
+  Str? typeName        // type name or null
+  Str? asName          // rename if using as
+  CPod? resolvedPod    // ResolveImports
+  CType? resolvedType  // ResolveImports
 
 }

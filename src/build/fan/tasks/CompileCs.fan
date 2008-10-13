@@ -111,13 +111,13 @@ class CompileCs : Task
   File cscExe
 
   ** Output file created by the compiler.
-  File output
+  File? output
 
   ** Output target type
-  Str targetType
+  Str? targetType
 
   ** List of dll libraries to link in
-  File[] libs
+  File[]? libs
 
   ** List of source files or directories to compile
   File[] src := File[,]

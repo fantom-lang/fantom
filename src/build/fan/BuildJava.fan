@@ -32,7 +32,7 @@ abstract class BuildJava : BuildScript
   **
   ** Main class name to add to manifest if not null.
   **
-  Str mainClass
+  Str? mainClass
 
 //////////////////////////////////////////////////////////////////////////
 // Setup

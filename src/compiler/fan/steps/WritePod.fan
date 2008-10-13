@@ -143,7 +143,7 @@ class WritePod : CompilerStep
     }
   }
 
-  private static Void writeDoc(OutStream out, Str key, Str[] doc, Str:Str meta)
+  private static Void writeDoc(OutStream out, Str key, Str[]? doc, [Str:Str]? meta)
   {
     if (doc == null && (meta == null || meta.isEmpty)) return
     out.printLine(key)
@@ -227,7 +227,7 @@ class WritePod : CompilerStep
     out.close
   }
 
-  private FacetDef[] computeIndexedFacets(Str:FacetDef all, Str[] list, Str:Int map)
+  private FacetDef[] computeIndexedFacets([Str:FacetDef]? all, Str[] list, Str:Int map)
   {
     // if no facets defined, this is easy
     if (all == null || all.size == 0)
