@@ -96,7 +96,7 @@ class Cookie
     if (domain != null) s.add(";Domain=").add(domain)
     if (path != null) s.add(";Path=").add(path)
     if (secure) s.add(";Secure")
-    if (version != null) s.add(";Version=").add(version)
+    s.add(";Version=").add(version)
     return s.toStr
   }
 

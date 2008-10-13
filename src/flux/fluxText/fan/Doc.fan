@@ -146,7 +146,7 @@ class Doc : RichTextModel
       }
       else
       {
-        Line closes := line.closes(block)
+        Line? closes := line.closes(block)
         if (closes == null || commentLevel > 0)
         {
           // override this line as str/comment block
@@ -545,7 +545,7 @@ internal class FatLine : Line
 
   ** List of blocks this line potentially closes
   ** if used after an opening block
-  Block[] closeBlocks
+  Block[]? closeBlocks
 
   ** Debug information
   internal override Str debug()

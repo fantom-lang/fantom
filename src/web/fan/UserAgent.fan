@@ -34,6 +34,7 @@ class UserAgent
     tokens = tokens.ro
 
     // Browser/Version
+    Version? version := null
     for (i:=0; i<tokens.size; i++)
     {
       s := tokens[i]
@@ -71,6 +72,7 @@ class UserAgent
 
     // Check for valid version
     if (version == null) version = Version.fromStr("0.0")
+    this.version = version
   }
 
   **

@@ -33,7 +33,7 @@ class DecimalTest : Test
 
   Void testEquals()
   {
-    Obj x := 3.0d
+    Obj? x := 3.0d
 
     verify(-2.0d == -2.0d)
     verify(0.0d == 0.0d)
@@ -44,8 +44,8 @@ class DecimalTest : Test
     verify(-2.0d != 2.0d)
     verify(x != 3.0f)
     verify(x != true)
-    verify(5.0d != null)
-    verify(null != -9e10d)
+    verify(x != null)
+    verify(null != x)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -75,7 +75,7 @@ class History
   **
   This add(HistoryItem item)
   {
-    if (item.uri == null || item.time == null)
+    if ((Obj?)item.uri == null || (Obj?)item.time == null)
       throw ArgErr("Invalid item: " + item)
     list.add(item)
     return this

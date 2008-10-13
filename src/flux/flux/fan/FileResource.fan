@@ -74,7 +74,7 @@ class FileResource : Resource
     kids = files.map(FileResource[,]) |File f->Obj| { return makeFile(f.normalize) }
     return kids
   }
-  private FileResource[] kids
+  private FileResource[]? kids
 
   **
   ** View types are based on mime type.  Register a file view
@@ -169,7 +169,7 @@ class FileResource : Resource
   **
   private Str? promptFileName(Frame frame, Str label, File dir, Str oldName)
   {
-    newName := oldName
+    Str? newName := oldName
     while (true)
     {
       newName = Dialog.openPromptStr(frame, label, newName)
@@ -204,7 +204,7 @@ class FileResource : Resource
   ** Given a file size in bytes return a suitable string
   ** representation for display.  If size is null return "".
   **
-  static Str sizeToStr(Int size)
+  static Str sizeToStr(Int? size)
   {
     if (size == null) return ""
     if (size == 0) return "0KB"

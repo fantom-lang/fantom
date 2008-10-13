@@ -908,7 +908,7 @@ class MapTest : Test
     verifyEq(mc.get([2]), null)
     verify(mc.get([0]).isRO)
     verify(mc.get([0]).isImmutable)
-    mc.keys.each |Int[] k| { if (k != null) verify(k.isImmutable) }
+    mc.keys.each |Int[]? k| { if (k != null) verify(k.isImmutable) }
 
     mx := mc.rw
     verifyEq(mx.isImmutable, false)

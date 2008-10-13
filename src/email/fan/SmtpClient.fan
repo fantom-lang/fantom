@@ -65,8 +65,8 @@ class SmtpClient
   Void open()
   {
     // do sanity checking before opening the socket
-    if (host == null) throw NullErr("host is null")
-    if (port == null) throw NullErr("port is null")
+    if ((Obj?)host == null) throw NullErr("host is null")
+    if ((Obj?)port == null) throw NullErr("port is null")
 
     // open the socket connection
     sock = TcpSocket().connect(IpAddress(host), port)

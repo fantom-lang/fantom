@@ -30,10 +30,11 @@ class DurationTest : Test
 
   Void testEquals()
   {
+    Obj? x := 9hr
     verify(0ms == 0sec)
     verify(1ms != 1sec)
-    verify(9hr != null)
-    verify(null != 8ns)
+    verify(x != null)
+    verify(null != x)
     verify(8ns as Obj != 8)
   }
 

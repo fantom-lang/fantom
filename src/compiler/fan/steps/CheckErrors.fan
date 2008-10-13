@@ -619,6 +619,8 @@ class CheckErrors : CompilerStep
     {
       case ExprId.rangeLiteral:   checkRangeLiteral((RangeLiteralExpr)expr)
       case ExprId.boolNot:        checkBool((UnaryExpr)expr)
+      case ExprId.cmpNull:
+      case ExprId.cmpNotNull:     checkCompareNull((UnaryExpr)expr)
       case ExprId.assign:         checkAssign((BinaryExpr)expr)
       case ExprId.boolOr:
       case ExprId.boolAnd:        checkBools((CondExpr)expr)
@@ -656,6 +658,14 @@ class CheckErrors : CompilerStep
       else
         err("Cannot apply '$expr.opToken.symbol' operator to '$operand'", expr.location)
     }
+  }
+
+
+  private Void checkCompareNull(UnaryExpr expr)
+  {
+    t := expr.operand.ctype
+    if (!t.isNullable)
+      err("Comparison of non-nullable type '$t' to null", expr.location)
   }
 
   private Void checkBools(CondExpr expr)

@@ -47,6 +47,7 @@ class IntTest : Test
 
   Void testEquals()
   {
+    Obj? x := 99
     verify(-2 == -2)
     verify(0 == 0)
     verify(15 == 0xf)
@@ -56,8 +57,8 @@ class IntTest : Test
     verify(2 != 3)
     verify(-2 != 0)
     verify(3 as Obj != "foo")
-    verify(0 != null)
-    verify(null != 99)
+    verify(x != null)
+    verify(null != x)
     verify(44.equals(44))
     verify(!44.equals("x"))
   }

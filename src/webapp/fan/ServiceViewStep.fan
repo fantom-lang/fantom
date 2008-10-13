@@ -22,7 +22,7 @@ const class ServiceViewStep : WebAppStep
   **
   override Void service(WebReq req, WebRes res)
   {
-    Weblet view := req.stash["webapp.view"]
+    Weblet? view := req.stash["webapp.view"]
     if (view == null) throw Err("req.stash[webapp.view] is null")
     view.service
   }

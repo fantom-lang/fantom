@@ -23,7 +23,7 @@ abstract class Image
   {
     try
     {
-      FileImage img := makeFile(uri.get, checked)
+      FileImage? img := makeFile(uri.get, checked)
       if (img != null) img.uri = uri
       return img
     }
@@ -45,7 +45,6 @@ abstract class Image
   {
     try
     {
-      if (f == null) throw NullErr("file is null")
       if (!f.exists) throw ArgErr("file does not exist: $f")
       return FileImage.internalMake(f)
     }

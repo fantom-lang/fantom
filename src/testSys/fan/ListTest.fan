@@ -95,6 +95,8 @@ class ListTest : Test
     verifyEq([x?.caseInsensitive].type, Bool?[]#)
     verifyEq([x?->foo].type, Obj?[]#)
     verifyEq([returnThis].type, ListTest[]#)
+    verifyEq([x == null ? "x" : null].type, Str?[]#)
+    verifyEq([x == null ? null : 4f].type, Float?[]#)
   }
 
   This returnThis() { return this }

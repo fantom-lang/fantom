@@ -343,5 +343,5 @@ internal class NavTreePane : Pane
       active.relayout
     }
   }
-  Widget active
+  Widget? active
 }

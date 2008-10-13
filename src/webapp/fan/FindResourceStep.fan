@@ -144,12 +144,12 @@ const class FindResourceStep : WebAppStep
   ** List extensions to search when resolving the
   ** web Uri to the namespace Uri.
   **
-  const Str[] extSearch := ["fan", "html"]
+  const Str[]? extSearch := ["fan", "html"]
 
   **
   ** List of file names to search for to map a File
   ** directory to a resource.
   **
-  const Uri[] dirIndex := [`index.html`]
+  const Uri[]? dirIndex := [`index.html`]
 
 }

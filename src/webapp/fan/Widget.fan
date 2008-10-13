@@ -58,7 +58,7 @@ abstract class Widget : Weblet
   ** Add a child widget.  If child is null, then do nothing.
   ** If child is already parented throw ArgErr.  Return this.
   **
-  virtual This add(Widget child)
+  virtual This add(Widget? child)
   {
     if (child == null) return this
     if (child.parent != null)
@@ -74,7 +74,7 @@ abstract class Widget : Weblet
   ** nothing.  If this widget is not the child's current
   ** parent throw ArgErr.  Return this.
   **
-  virtual This remove(Widget child)
+  virtual This remove(Widget? child)
   {
     if (child == null) return this
     if (kids.removeSame(child) == null)
@@ -100,7 +100,7 @@ abstract class Widget : Weblet
   {
     if (name == null) return null
     path := Str[,]
-    w := this
+    Widget? w := this
     while (w != null && w.name != null)
     {
       path.add(w.name)
@@ -115,7 +115,7 @@ abstract class Widget : Weblet
   **
   Widget? find(Uri uri)
   {
-    w := this
+    Widget? w := this
     path := uri.path
     for (i:=0; i<path.size; i++)
     {

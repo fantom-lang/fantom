@@ -129,10 +129,10 @@ class ExprTest : CompilerTest
     verifyExpr("a === b", true, 3, 3)
     verifyExpr("a !== b", false, 3, 3)
 
-    verifyExpr("a == null",  false, 3)
-    verifyExpr("a === null", false, 3)
-    verifyExpr("a != null",  true,  3)
-    verifyExpr("a !== null", true,  3)
+    verifyExpr("a == null",  false, 3, null, "", true)
+    verifyExpr("a === null", false, 3, null, "", true)
+    verifyExpr("a != null",  true,  3, null, "", true)
+    verifyExpr("a !== null", true,  3, null, "", true)
     verifyExpr("null == a",  true,  null, null, "Str? a := null;")
     verifyExpr("null === a", true,  null, null, "Str? a := null;")
     verifyExpr("null != a",  false, null, null, "Str? a := null;")
@@ -289,12 +289,12 @@ class ExprTest : CompilerTest
     verifyExpr("a ^ b", 0x35, 0xab, 0x9e)
 
     // equality
-    verifyExpr("a == b", true, "x", "x")
-    verifyExpr("a == null", false, "x", "x")
-    verifyExpr("null == a", false, "x", "x")
-    verifyExpr("a != b", false, "x", "x")
-    verifyExpr("a != null", true, "x", "x")
-    verifyExpr("null != a", true, "x", "x")
+    verifyExpr("a == b", true, "x", "x", "", true)
+    verifyExpr("a == null", false, "x", "x", "", true)
+    verifyExpr("null == a", false, "x", "x", "", true)
+    verifyExpr("a != b", false, "x", "x", "", true)
+    verifyExpr("a != null", true, "x", "x", "", true)
+    verifyExpr("null != a", true, "x", "x", "", true)
 
     // comparisons
     verifyExpr("a < b", true, 2, 3)
@@ -957,11 +957,11 @@ class ExprTest : CompilerTest
 
   const static Str xNull := "_null_"
 
-  Void verifyExpr(Str code, Obj? result, Obj? a := null, Obj? b := null, Str more := "")
+  Void verifyExpr(Str code, Obj? result, Obj? a := null, Obj? b := null, Str more := "", Bool nullable := false)
   {
     params := ""
-    if (a != null) params = a.type.signature+ " a"
-    if (b != null) params += ", " + b.type.signature + " b"
+    if (a != null) params = a.type.signature + (nullable ? "?" :"") + " a"
+    if (b != null) params += ", " + b.type.signature + (nullable ? "?" :"") + " b"
 
     src :=
      "class Foo

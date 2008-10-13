@@ -67,7 +67,7 @@ const class SqlService : Thread
   {
     if (!isRunning()) throw Err("SqlService not started")
 
-    conn := (Connection)Thread.locals[name]
+    Connection? conn := Thread.locals[name]
     if (conn == null)
     {
       conn = Connection.open(connection, username, password)
@@ -86,7 +86,7 @@ const class SqlService : Thread
   **
   private Connection? threadConnection(Bool checked := true)
   {
-    conn := (Connection)Thread.locals[name]
+    Connection? conn := Thread.locals[name]
     if (conn == null)
     {
       if (checked)
@@ -119,7 +119,7 @@ const class SqlService : Thread
   **
   Void close()
   {
-    conn := (Connection)Thread.locals[name]
+    Connection? conn := Thread.locals[name]
     if (conn != null)
     {
       if (conn.decrement == 0)

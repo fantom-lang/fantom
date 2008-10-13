@@ -31,9 +31,9 @@ internal class FindInFiles
   **
   Mark[] find(|Mark m|? func := null)
   {
-    if (file == null) throw ArgErr("File cannot be null")
+    if ((Obj?)file == null) throw ArgErr("File cannot be null")
     if (!file.exists) throw ArgErr("File does not exist")
-    if (query == null) throw ArgErr("Query cannot be null")
+    if ((Obj?)query == null) throw ArgErr("Query cannot be null")
     if (query.size == 0) throw ArgErr("Query cannot be empty")
 
     marks := Mark[,]

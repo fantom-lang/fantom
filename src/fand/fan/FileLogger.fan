@@ -57,7 +57,7 @@ const class FileLogger : Thread
     OutStream? out := null
     try
     {
-      if (file == null)
+      if ((Obj?)file == null)
       {
         log.error("No file configured")
       }

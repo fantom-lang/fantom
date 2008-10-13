@@ -38,7 +38,7 @@ const class LogStep : WebAppStep
 
   override Void onStart(WebService service)
   {
-    if (file == null)
+    if ((Obj?)file == null)
     {
       log.error("LogStep.file not configured")
       return
@@ -77,7 +77,7 @@ const class LogStep : WebAppStep
   {
     try
     {
-      FileLogger logger := Thread.find(req.service.name + "-Logger", false) as FileLogger
+      FileLogger? logger := Thread.find(req.service.name + "-Logger", false) as FileLogger
       if (logger == null) return
 
       s := StrBuf(256)

@@ -249,7 +249,7 @@ abstract class Widget
   **
   Window? window()
   {
-    x := this
+    Widget? x := this
     while (x != null)
     {
       if (x is Window) return (Window)x
@@ -275,7 +275,7 @@ abstract class Widget
   ** Add a child widget.  If child is null, then do nothing.
   ** If child is already parented throw ArgErr.  Return this.
   **
-  virtual This add(Widget child)
+  virtual This add(Widget? child)
   {
     if (child == null) return this
     if (child.parent != null)
@@ -291,7 +291,7 @@ abstract class Widget
   ** nothing.  If this widget is not the child's current
   ** parent throw ArgErr.  Return this.
   **
-  virtual This remove(Widget child)
+  virtual This remove(Widget? child)
   {
     if (child == null) return this
     try { child.detach } catch (Err e) { e.trace }

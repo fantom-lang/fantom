@@ -38,7 +38,7 @@ class FloatTest : Test
 
   Void testEquals()
   {
-    Obj x := 3.0f
+    Obj? x := 3.0f
 
     verify(-2.0f == -2.0f)
     verify(0.0f == 0.0f)
@@ -48,8 +48,8 @@ class FloatTest : Test
     verify(-2.0f != 0.0f)
     verify(-2.0f != 2.0f)
     verify(x != true)
-    verify(5.0f != null)
-    verify(null != -9e10f)
+    verify(x != null)
+    verify(null != x)
 
     verify(Float.posInf != 0.0f)
     verify(Float.posInf == Float.posInf)

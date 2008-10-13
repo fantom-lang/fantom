@@ -169,7 +169,7 @@ class Normalize : CompilerStep
     f := FieldDef.make(loc, curType)
     f.flags     = FConst.Private | FConst.Storage | FConst.Synthetic
     f.name      = m.name + "\$Store"
-    f.fieldType = ns.objType
+    f.fieldType = ns.objType.toNullable
     f.init      = LiteralExpr.makeFor(loc, ns, "_once_")
     curType.addSlot(f)
      iInit.add(fieldInitStmt(f))
@@ -188,7 +188,7 @@ class Normalize : CompilerStep
     // rename orignal method as name$Once
     m.flags = FConst.Private | FConst.Synthetic
     m.name  = m.name + "\$Once"
-    m.ret   = ns.objType
+    m.ret   = ns.objType.toNullable
     curType.addSlot(m)
 
     // if (name$Store == "_once_")

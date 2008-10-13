@@ -197,7 +197,7 @@ internal class FindBar : ContentPane, TextEditorSupport
       if (calcTotal)
       {
         total = 0
-        temp := 0
+        Int? temp := 0
         while ((temp = doc.findNext(q, temp, match)) != null) { total++; temp++ }
       }
       matchStr := msgTotal

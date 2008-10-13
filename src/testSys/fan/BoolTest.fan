@@ -19,6 +19,8 @@ class BoolTest : Test
   Void testIdentity()
   {
     Obj x := true
+    Bool? t := true
+    Bool? f := false
     verify(x.isImmutable)
     verify(x.type === Bool#)
     verify(true.isImmutable)
@@ -27,9 +29,9 @@ class BoolTest : Test
     verify(true != false)
     verify(false != x)
     verify(x != "wow")
-    verify(true != null)
-    verify(null != false)
-    verify(true.equals(true))
+    verify(t != null)
+    verify(null != f)
+    verify(t.equals(t))
   }
 
 //////////////////////////////////////////////////////////////////////////

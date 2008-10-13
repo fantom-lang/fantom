@@ -82,7 +82,7 @@ class DocCompiler
   CompilerLog log           // ctor
   CompilerErr[] errors      // accumulated errors
   File outDir               // output directory
-  Pod pod                   // pod to compile
+  Pod? pod                  // pod to compile
   UriMapper uriMapper       // normalizes fandoc URIs to HTML
   File? podDir              // Init: outDir/podName
   Obj[]? fandocIndex        // FandocToHtml if we have "index.fog"
