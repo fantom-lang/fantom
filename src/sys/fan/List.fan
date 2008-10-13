@@ -24,7 +24,7 @@ final class List
   new make(Type of, Int capacity)
 
   **
-  ** Constructor for Obj[] with initial capacity.
+  ** Constructor for Obj?[] with initial capacity.
   **
   new makeObj(Int capacity)
 

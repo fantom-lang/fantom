@@ -34,7 +34,7 @@ public final class List
 
   public static List makeObj(Long capacity)
   {
-    return new List(Sys.ObjType, capacity.intValue());
+    return new List(Sys.ObjType.toNullable(), capacity.intValue());
   }
 
   public List(Type of, Object[] values)
@@ -749,7 +749,7 @@ public final class List
 
   public final List flatten()
   {
-    List acc = new List(Sys.ObjType, size*2);
+    List acc = new List(Sys.ObjType.toNullable(), size*2);
     doFlatten(acc);
     return acc;
   }

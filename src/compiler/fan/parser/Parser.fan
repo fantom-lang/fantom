@@ -1467,7 +1467,7 @@ public class Parser : CompilerSupport
       case Token.uriLiteral:      return LiteralExpr.make(loc, ExprId.uriLiteral, ns.uriType, consume.val)
       case Token.lbracket:        return collectionLiteralExpr(loc, null)
       case Token.falseKeyword:    consume; return LiteralExpr.make(loc, ExprId.falseLiteral, ns.boolType, false)
-      case Token.nullKeyword:     consume; return LiteralExpr.make(loc, ExprId.nullLiteral, ns.objType, null)
+      case Token.nullKeyword:     consume; return LiteralExpr.makeNullLiteral(loc, ns)
       case Token.superKeyword:    consume; return SuperExpr.make(loc)
       case Token.thisKeyword:     consume; return ThisExpr.make(loc)
       case Token.trueKeyword:     consume; return LiteralExpr.make(loc, ExprId.trueLiteral, ns.boolType, true)

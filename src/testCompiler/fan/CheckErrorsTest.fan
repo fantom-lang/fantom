@@ -851,11 +851,11 @@ class CheckErrorsTest : CompilerTest
       {
       }",
        [4, 29, "Range must be Int..Int, not 'sys::Float..sys::Int'",
-        5, 29, "Range must be Int..Int, not 'sys::Int..sys::Obj[]'",
+        5, 29, "Range must be Int..Int, not 'sys::Int..sys::Obj?[]'",
         6, 29, "Cannot apply '!' operator to 'sys::Int'",
         7, 29, "Cannot apply '&&' operator to 'sys::Int'",
         8, 29, "Cannot apply '||' operator to 'sys::Duration'",
-        8, 36, "Cannot apply '||' operator to 'sys::Obj[]'",
+        8, 36, "Cannot apply '||' operator to 'sys::Obj?[]'",
         9, 32, "'sys::Bool' is not assignable to 'sys::Str'",
        10, 21, "Cannot call constructor 'make' on instance",
        11, 21, "Cannot call static method 'm00' on instance",

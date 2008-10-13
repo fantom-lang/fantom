@@ -87,7 +87,7 @@ class ResolveExpr : CompilerStep
     // doesn't do true definite assignment checking since most local
     // variables use type inference anyhow)
     if (def.init == null && !def.isCatchVar)
-      def.init = LiteralExpr.make(def.location, ExprId.nullLiteral, def.ctype, null)
+      def.init = LiteralExpr.makeNullLiteral(def.location, ns)
 
     // turn init into full assignment
     if (def.init != null)
@@ -216,7 +216,7 @@ class ResolveExpr : CompilerStep
     else
     {
       // infer from key/val expressions
-      k := Expr.commonType(ns, expr.keys)
+      k := Expr.commonType(ns, expr.keys).toNonNullable
       v := Expr.commonType(ns, expr.vals)
       expr.ctype = MapType.make(k, v)
     }

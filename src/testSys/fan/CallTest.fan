@@ -61,12 +61,12 @@ class CallTest : Test
     // one arg
     verifyEq(obj->m1("x"), "m1(x)")
     verifyEq(c.name,  "m1")
-    verifyEq(c.args,  Obj["x"])
+    verifyEq(c.args,  Obj?["x"])
 
     // two arg
     verifyEq(obj->m2("x", "y"), "m2(x, y)")
     verifyEq(c.name,  "m2")
-    verifyEq(c.args,  Obj["x", "y"])
+    verifyEq(c.args,  Obj?["x", "y"])
 
     // static
     verifyEq(obj->s0(), "s0()")
@@ -82,7 +82,7 @@ class CallTest : Test
     verifyEq(obj->f = "foo", "foo")
     verifyEq(c.f, "foo")
     verifyEq(c.name,  "f")
-    verifyEq(c.args,  Obj["foo"])
+    verifyEq(c.args,  Obj?["foo"])
 
     // static field get
     verifyEq(obj->sf, "sf")
