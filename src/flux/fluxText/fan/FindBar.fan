@@ -32,7 +32,7 @@ internal class FindBar : ContentPane, TextEditorSupport
     {
       mode = ButtonMode.check
       text = Flux#.loc("find.matchCase")
-      onAction.add |Event e| { find(null, true, true) }
+      onAction.add(&find(null, true, true))
     }
 
     findPane = InsetPane(4,4,4,4)
