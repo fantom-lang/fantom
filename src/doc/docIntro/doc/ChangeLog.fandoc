@@ -434,7 +434,7 @@
 - New fwt text selection and clipboard APIs
 - Flux prototype!
 
-*Build 1.0.33 (working)*
+*Build 1.0.33 (13 Oct 08)*
 - Java runtime: fan.sys.Obj -> java.lang.Object
 - Java runtime: fan.sys.Bool -> java.lang.Boolean
 - Java runtime: fan.sys.Int -> java.lang.Long
@@ -448,3 +448,4 @@
 - Change fwt::Image constructors
 - Add icons to flux history items
 
+*Build 1.0.34 (working)*

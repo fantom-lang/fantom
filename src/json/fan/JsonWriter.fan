@@ -81,7 +81,7 @@ internal class JsonWriter
 
   // FIXIT actually need to write values out for number, obj, array, true,
   // false, null
-  private static Void writeValue(Obj val, OutStream buf)
+  private static Void writeValue(Obj? val, OutStream buf)
   {
     // FIXIT need route for DateTime
     if (val is Str) writeString(val as Str, buf)

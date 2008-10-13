@@ -118,7 +118,7 @@ class Doc : RichTextModel
     onModify.fire(Event { id = EventId.modified; data = tc })
   }
 
-  override Obj[] lineStyling(Int lineIndex)
+  override Obj[]? lineStyling(Int lineIndex)
   {
     // style { or } using brace color,
     // and // or ** as end of line comments

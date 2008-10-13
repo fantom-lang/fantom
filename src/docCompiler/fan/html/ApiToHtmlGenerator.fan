@@ -355,13 +355,17 @@ should link to the slot
       if (p["L"] != null)
       {
         of := p["V"]
-        return "${makeTypeLink(of,map)}[]"
+        link := "${makeTypeLink(of,map)}[]"
+        if (t.isNullable) link += "?"
+        return link
       }
       if (p["M"] != null)
       {
         key := p["K"]
         val := p["V"]
-        return "${makeTypeLink(key,map)}:${makeTypeLink(val,map)}"
+        link := "${makeTypeLink(key,map)}:${makeTypeLink(val,map)}"
+        if (t.isNullable) link = "[" + link + "]?"
+        return link
       }
       if (p["R"] != null)
       {
@@ -375,15 +379,17 @@ should link to the slot
         }
         if (p["R"] != Void#) buf.add(" -> ").add(makeTypeLink(p["R"], map))
         buf.addChar('|')
+        if (t.isNullable) buf.add("?")
         return buf.toStr
       }
     }
 
-    // map A,B,C... to Obj
-    if (t.pod.name == "sys" && t.name.size == 1)
-      return "<a href='${map(Obj#)}'>$t.name</a>"
+    link := (t.pod.name == "sys" && t.name.size == 1) ?
+       "<a href='${map(Obj#)}'>$t.name</a>" :
+       "<a href='${map(t)}'>$t.name</a>"
 
-    return "<a href='${map(t)}'>$t.name</a>"
+    if (t.isNullable) link += "?"
+    return link
   }
 
   **

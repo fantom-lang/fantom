@@ -122,13 +122,12 @@ class Build : BuildGroup
 // Zip
 //////////////////////////////////////////////////////////////////////////
 
-  /* TODO
   @target="create build zip file"
   Void zip()
   {
     zip := CreateZip(this)
     {
-      outFile = Sys.homeDir + ("fan-" + Pod.find("sys").version + ".zip").toUri
+      outFile = devHomeDir + ("fan-" + globalVersion + ".zip").toUri
       inDir = devHomeDir
       filter = |File f, Str path->Bool|
       {
@@ -142,7 +141,6 @@ class Build : BuildGroup
     }
     zip.run
   }
-  */
 
 //////////////////////////////////////////////////////////////////////////
 // Dist
@@ -156,6 +154,7 @@ class Build : BuildGroup
     doc
     test
     deleteNonDist
+    zip
   }
 
   @target="delete non-distribuation files"
