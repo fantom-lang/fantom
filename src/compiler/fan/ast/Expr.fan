@@ -112,8 +112,16 @@ abstract class Expr : Node
   **
   static CType commonType(CNamespace ns, Expr[] exprs)
   {
-    exprs = exprs.exclude |Expr e->Bool| { return e.id == ExprId.nullLiteral }
-    return CType.common(ns, ctypes(exprs))
+    hasNull := false
+    exprs = exprs.exclude |Expr e->Bool|
+    {
+      if (e.id !== ExprId.nullLiteral) return false
+      hasNull = true
+      return true
+    }
+    t := CType.common(ns, ctypes(exprs))
+    if (hasNull) t = t.toNullable
+    return t
   }
 
   **
@@ -295,6 +303,13 @@ class LiteralExpr : Expr
   {
     this.ctype = ctype
     this.val   = val
+    if (val == null && !ctype.isNullable)
+      throw Err("null literal must typed as nullable!")
+  }
+
+  new makeNullLiteral(Location location, CNamespace ns)
+    : this.make(location, ExprId.nullLiteral, ns.objType.toNullable, null)
+  {
   }
 
   override Int? asTableSwitchCase()

@@ -72,11 +72,28 @@ class ListTest : Test
     verify(c is Field[])
   }
 
+  Void testInference()
+  {
+    verifyEq([,].type,     Obj?[]#)
+    verifyEq(Obj?[,].type, Obj?[]#)
+    verifyEq(Obj[,].type,  Obj[]#)
+    verifyEq([null].type,  Obj?[]#)
+    verifyEq([null,null].type, Obj?[]#)
+    verifyEq([2,null].type,  Int?[]#)
+    verifyEq([null,2].type,  Int?[]#)
+    verifyEq([2,null,2f].type, Num?[]#)
+    verifyEq([null,3,2f].type, Num?[]#)
+  }
+
   Void testIsInfered()
   {
     // Obj[]
     verify([2,"a"] is Obj)
     verify([3,"b"] is Obj[])
+    verify([,] is Obj?[])
+    verify([null] is Obj?[])
+    verify([2,null] is Obj?[])
+    verify([null,"2"] is Obj?[])
     verifyFalse((Obj)[type,8f] is Str)
     verifyFalse((Obj)["a",this] is Str[])
 
@@ -132,14 +149,14 @@ class ListTest : Test
     verifyEq(x.type.pod.name,  "sys")
     verifyEq(x.type.name,      "List")
     verifyEq(x.type.qname,     "sys::List")
-    verifyEq(x.type.signature, "sys::Obj[]")
-    verifyEq(x.type.toStr,     "sys::Obj[]")
+    verifyEq(x.type.signature, "sys::Obj?[]")
+    verifyEq(x.type.toStr,     "sys::Obj?[]")
     verifyEq(x.type.method("isEmpty").returns,  Bool#)
-    verifyEq(x.type.method("first").returns,  Obj?#)
-    verifyEq(x.type.method("get").returns,      Obj#)
-    verifyEq(x.type.method("add").returns,      Obj[]#)
-    verifyEq(x.type.method("add").params[0].of, Obj#)
-    verifyEq(x.type.method("each").params[0].of, |Obj a, Int i->Void|#)
+    verifyEq(x.type.method("first").returns,    Obj?#)
+    verifyEq(x.type.method("get").returns,      Obj?#)
+    verifyEq(x.type.method("add").returns,      Obj?[]#)
+    verifyEq(x.type.method("add").params[0].of, Obj?#)
+    verifyEq(x.type.method("each").params[0].of, |Obj? a, Int i->Void|#)
     verifyNotEq(x.type.method("each").params[0].of, |Str a, Int i->Void|#)
 
     y := [7]
@@ -289,7 +306,7 @@ class ListTest : Test
 
   Void testSizeCapacity()
   {
-    x := Str[,]
+    x := Str?[,]
 
     verifyEq(x.size, 0)
     verifyEq(x.capacity, 0)
@@ -306,12 +323,12 @@ class ListTest : Test
     x.add("c")  // auto-grow
     verifyEq(x.size, 3)
     verifyEq(x.capacity, 10)
-    verifyEq(x, ["a", "b", "c"])
+    verifyEq(x, Str?["a", "b", "c"])
 
     x.capacity = 3 // manual trim
     verifyEq(x.size, 3)
     verifyEq(x.capacity, 3)
-    verifyEq(x, ["a", "b", "c"])
+    verifyEq(x, Str?["a", "b", "c"])
 
     x.size = 4
     verifyEq(x.size, 4)
@@ -321,7 +338,7 @@ class ListTest : Test
     x.size = 2
     verifyEq(x.size, 2)
     verifyEq(x.capacity, 2)
-    verifyEq(x, ["a", "b"])
+    verifyEq(x, Str?["a", "b"])
 
     x.size = 5
     verifyEq(x.size, 5)
@@ -336,17 +353,17 @@ class ListTest : Test
     x.size = 0
     verifyEq(x.size, 0)
     verifyEq(x.capacity, 0)
-    verifyEq(x, Str[,])
+    verifyEq(x, Str?[,])
 
     x.add("x")
     verifyEq(x.size, 1)
     verifyEq(x.capacity, 10)
-    verifyEq(x, ["x"])
+    verifyEq(x, Str?["x"])
 
     x.size = x.size
     verifyEq(x.size, 1)
     verifyEq(x.capacity, 1)
-    verifyEq(x, ["x"])
+    verifyEq(x, Str?["x"])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -888,7 +905,7 @@ class ListTest : Test
     verifyEq(Int[0, 1, 2].union(Int[1, 2, 3]), [0, 1, 2, 3])
     verifyEq(Int[0, 1, 2].union(Int[10, 20]), [0, 1, 2, 10, 20])
     verifyEq(Int[0, 1, 2, 1, 2, 0].union(Int[10, 20, 10, 10]), [0, 1, 2, 10, 20])
-    verifyEq(Int[null, 0, 1, 2].union(Int[10, null, 20, 2]), [null, 0, 1, 2, 10, 20])
+    verifyEq(Int?[null, 0, 1, 2].union(Int?[10, null, 20, 2]), [null, 0, 1, 2, 10, 20])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -908,7 +925,7 @@ class ListTest : Test
     verifyEq([0, 1, 2].intersection([0, 1, 2, 3]), [0, 1, 2])
     verifyEq([0, 1, 2].intersection([3, 2, 1, 0]), [0, 1, 2])
     verifyEq([0, 1, 2, 3].intersection([5, 3, 1]), [1, 3])
-    verifyEq([0, null, 2].intersection([0, 1, 2, 3]), [0, 2])
+    verifyEq([0, null, 2].intersection([0, 1, 2, 3]), Int?[0, 2])
     verifyEq([0, null, 2].intersection([null, 0, 1, 2, 3]), [0, null, 2])
     verifyEq([0, 1, 2, 2, 1, 1].intersection([2, 2, 1, 0]), [0, 1, 2])
     verifyEq([0, 1, null, 2, 1, null, 1].intersection([2, null, 2, 1, 0]), [0, 1, null, 2])
@@ -1065,13 +1082,13 @@ class ListTest : Test
   {
     verifyEq([,].flatten, [,])
     verifyNotSame([,].flatten, [,])
-    verifyEq([2].flatten, Obj[2])
-    verifyEq([2,3].flatten, Obj[2,3])
-    verifyEq([2,[3,4],5].flatten, Obj[2,3,4,5])
-    verifyEq([2,[3,[4,5]],[6,7]].flatten, Obj[2,3,4,5,6,7])
-    verifyEq([[[[34]]]].flatten, Obj[34])
-    verifyEq([[[[,]]]].flatten, Obj[,])
-    verifyEq([[[[1,2],3],4],5].flatten, Obj[1,2,3,4,5])
+    verifyEq([2].flatten, Obj?[2])
+    verifyEq([2,3].flatten, Obj?[2,3])
+    verifyEq([2,[3,4],5].flatten, Obj?[2,3,4,5])
+    verifyEq([2,[3,[4,5]],[6,7]].flatten, Obj?[2,3,4,5,6,7])
+    verifyEq([[[[34]]]].flatten, Obj?[34])
+    verifyEq([[[[,]]]].flatten, Obj?[,])
+    verifyEq([[[[1,2],3],4],5].flatten, Obj?[1,2,3,4,5])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1297,7 +1314,7 @@ class ListTest : Test
     m := [0:"zero", 99:null]
     z := [m, null]
     zc := z.toImmutable
-    verifyEq(zc.type.signature, "[sys::Int:sys::Str][]")
+    verifyEq(zc.type.signature, "[sys::Int:sys::Str?]?[]")
     verify(zc.isRO)
     verify(zc[0].isRO)
     verify(zc[0].isImmutable)

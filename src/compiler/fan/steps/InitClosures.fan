@@ -227,7 +227,7 @@ class InitClosures : CompilerStep
     if (signature.ret.isVoid)
     {
       m.code.add(c.toStmt)
-      m.code.add(ReturnStmt.make(loc, LiteralExpr.make(loc, ExprId.nullLiteral, ns.objType, null)))
+      m.code.add(ReturnStmt.make(loc, LiteralExpr.makeNullLiteral(loc, ns)))
     }
     else
     {

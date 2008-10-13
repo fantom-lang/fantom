@@ -95,7 +95,7 @@ class MapTest : Test
     // empty Obj[Obj]
     Obj a := [:]
     verify(a is Obj:Obj)
-    verifyEq(a.type, Obj:Obj#)
+    verifyEq(a.type, Obj:Obj?#)
 
     // inferred Obj:Obj
     Obj b := [2:"two", "three":3]
@@ -110,12 +110,16 @@ class MapTest : Test
     verify(c is Num:Obj)
     verify(c is Obj:Obj)
     verifyEq(c.type, Int:Str#)
-    verifyEq([3 : null , 4 : "d"].type, Int:Str#)   // null
+    verifyEq([3 : null , 4 : "d"].type, Int:Str?#)   // null
 
     Obj d := [3:"c"]
     verifyNotEq(d.type, Obj:Str#)
     verifyNotEq(d.type, Int:Obj#)
     verifyNotEq(d.type, Sys:Bool#)
+
+    // nullable
+    Obj e := [2:"two", "three":null, "four":4]
+    verifyEq(e.type, Obj:Obj?#)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -156,16 +160,16 @@ class MapTest : Test
     verifyEq(a.type.pod.name,  "sys")
     verifyEq(a.type.name,      "Map")
     verifyEq(a.type.qname,     "sys::Map")
-    verifyEq(a.type.signature, "[sys::Obj:sys::Obj]")
-    verifyEq(a.type.toStr,     "[sys::Obj:sys::Obj]")
+    verifyEq(a.type.signature, "[sys::Obj:sys::Obj?]")
+    verifyEq(a.type.toStr,     "[sys::Obj:sys::Obj?]")
     verifyEq(a.type.method("isEmpty").returns,  Bool#)
     verifyEq(a.type.method("get").returns,      Obj?#)
     verifyEq(a.type.method("get").params[0].of, Obj#)
     verifyEq(a.type.method("get").params[1].of, Obj?#)
-    verifyEq(a.type.method("set").returns,      Obj:Obj#)
+    verifyEq(a.type.method("set").returns,      Obj:Obj?#)
     verifyEq(a.type.method("set").params[0].of, Obj#)
-    verifyEq(a.type.method("set").params[1].of, Obj#)
-    verifyEq(a.type.method("each").params[0].of, |Obj v, Obj k->Void|#)
+    verifyEq(a.type.method("set").params[1].of, Obj?#)
+    verifyEq(a.type.method("each").params[0].of, |Obj? v, Obj k->Void|#)
     verifyNotEq(a.type.method("each").params[0].of, |Str v, Obj k->Void|#)
 
     b := [0:"zero"]
@@ -898,7 +902,7 @@ class MapTest : Test
     verifyNotSame(m.ro, mc)
     verify(mc.isRO)
     verify(mc.isImmutable)
-    verifyEq(mc.type.signature, "[sys::Int[]:[sys::Duration:sys::Str]]")
+    verifyEq(mc.type.signature, "[sys::Int[]:[sys::Duration:sys::Str]?]")
     verifyEq(mc.get([0]), [0ns:"zero"])
     //verifyEq(mc.get(null), null)
     verifyEq(mc.get([2]), null)

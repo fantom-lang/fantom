@@ -209,18 +209,20 @@ mixin CType
   **
   public static CType common(CNamespace ns, CType[] types)
   {
-    if (types.isEmpty) return ns.objType
-    best := types[0]
+    if (types.isEmpty) return ns.objType.toNullable
+    nullable := types[0].isNullable
+    best := types[0].toNonNullable
     for (Int i:=1; i<types.size; ++i)
     {
       t := types[i]
+      if (t.isNullable) { nullable = true; t = t.toNonNullable }
       while (!t.fits(best))
       {
         best = best.base
         if (best == null) return ns.objType
       }
     }
-    return best
+    return nullable ? best.toNullable : best
   }
 
 //////////////////////////////////////////////////////////////////////////
