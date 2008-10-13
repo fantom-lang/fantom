@@ -78,9 +78,9 @@ internal class JsonParser
     return string
   }
 
-  private Obj value()
+  private Obj? value()
   {
-    if (this.cur == JsonToken.quote && this.peek == JsonToken.grave) 
+    if (this.cur == JsonToken.quote && this.peek == JsonToken.grave)
       return uri
     else if (this.cur == JsonToken.quote) return string
     else if (this.cur.isDigit || this.cur == '-') return digits
@@ -127,7 +127,7 @@ internal class JsonParser
       while (this.cur.isDigit)
       {
         fractional.add(this.cur.toChar)
-	consume
+  consume
       }
     }
     if (this.cur == 'e' || this.cur == 'E')
@@ -137,17 +137,17 @@ internal class JsonParser
       if (this.cur == '+') consume
       else if (this.cur == '-')
       {
-	exponent.add(this.cur.toChar)
+  exponent.add(this.cur.toChar)
         consume
       }
       while (this.cur.isDigit)
       {
         exponent.add(this.cur.toChar)
-	consume
+  consume
       }
     }
 
-    Num num := null
+    Num? num := null
     if (fractional.size > 0)
       num = Decimal.fromStr(integral.toStr+"."+fractional.toStr+exponent.toStr)
     else if (exponent.size > 0)
@@ -157,51 +157,51 @@ internal class JsonParser
     Int dur := maybeDuration
     if (dur > 0)
       return Duration.make(dur*num);
-    else 
+    else
       return num;
   }
 
   private Int maybeDuration()
   {
     Int dur := -1
-    if (cur == 'n' && peek == 's') 
-    { 
+    if (cur == 'n' && peek == 's')
+    {
       consume(); // n
       consume(); // s
-      dur = 1; 
+      dur = 1;
     }
-    if (cur == 'm' && peek == 's') 
-    { 
+    if (cur == 'm' && peek == 's')
+    {
       consume(); // m
       consume(); // s
-      dur = 1000000; 
+      dur = 1000000;
     }
-    if (cur == 's' && peek == 'e') 
-    { 
+    if (cur == 's' && peek == 'e')
+    {
       consume(); // s
       consume(); // e
-      expect('c'); 
-      dur = 1000000000; 
+      expect('c');
+      dur = 1000000000;
     }
-    if (cur == 'm' && peek == 'i') 
-    { 
+    if (cur == 'm' && peek == 'i')
+    {
       consume(); // m
       consume(); // i
-      expect('n'); 
-      dur = 60000000000; 
+      expect('n');
+      dur = 60000000000;
     }
     if (cur == 'h' && peek == 'r')
-    { 
+    {
       consume(); // h
       consume(); // r
       dur = 3600000000000;
     }
-    if (cur == 'd' && peek == 'a') 
-    { 
+    if (cur == 'd' && peek == 'a')
+    {
       consume(); // d
       consume(); // a
-      expect('y'); 
-      dur = 86400000000000; 
+      expect('y');
+      dur = 86400000000000;
     }
     return dur
   }
