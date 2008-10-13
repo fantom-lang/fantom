@@ -83,6 +83,17 @@ class ListTest : Test
     verifyEq([null,2].type,  Int?[]#)
     verifyEq([2,null,2f].type, Num?[]#)
     verifyEq([null,3,2f].type, Num?[]#)
+
+    // expressions used to create list literal
+    [Str:Int]? x := null
+    verifyEq([this->toStr].type, Obj?[]#)
+    verifyEq([Pod.find("xxxx", false)].type, Pod?[]#)
+    verifyEq([this as Test].type, Test?[]#)
+    verifyEq([this ?: "foo"].type, Obj?[]#)
+    verifyEq([x?.toStr].type, Str?[]#)
+    verifyEq([x?.def].type, Int?[]#)
+    verifyEq([x?.caseInsensitive].type, Bool?[]#)
+    verifyEq([x?->foo].type, Obj?[]#)
   }
 
   Void testIsInfered()

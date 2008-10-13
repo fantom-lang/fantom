@@ -64,6 +64,7 @@ class CallResolver : CompilerSupport
       resolveToExpr
       constantFolding
       castForThisType
+      safeToNullable
       return result
     }
     catch (CompilerErr err)
@@ -262,6 +263,7 @@ class CallResolver : CompilerSupport
     field.field  = f
     field.ctype  = f.fieldType
     field.isSafe = expr.isSafe
+
     return field
   }
 
@@ -303,6 +305,20 @@ class CallResolver : CompilerSupport
     result.ctype = base
     if (method.inheritedReturnType != base)
       result = TypeCheckExpr.cast(result, base) { synthetic = true }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Safe to Nullable
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** If the epxression is a safe call using "?.", then
+  ** the resulting expression type is nullable.
+  **
+  private Void safeToNullable()
+  {
+    if (expr.isSafe)
+      result.ctype = result.ctype.toNullable
   }
 
 //////////////////////////////////////////////////////////////////////////
