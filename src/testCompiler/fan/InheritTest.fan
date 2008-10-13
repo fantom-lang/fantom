@@ -809,6 +809,7 @@ class InheritTest : CompilerTest
         Void m03() { Void? x := null }
         static This m04() { return Foo.make }
         This m05() { return 3 }
+        This? m06() { return null }
       }",
       [
         3, 12, "Cannot use This as parameter type",
@@ -817,6 +818,7 @@ class InheritTest : CompilerTest
         6, 16, "Cannot use Void as local variable type",
         7, 3,  "Cannot return This from static method",
         8, 23, "Cannot return 'sys::Int' as $podName::Foo This",
+        9, 3, "This type cannot be nullable",
       ])
   }
 
