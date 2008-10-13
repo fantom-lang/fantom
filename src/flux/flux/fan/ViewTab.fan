@@ -67,7 +67,7 @@ internal class ViewTab : EdgePane
     }
     else
     {
-      viewType = r.views?.first
+      viewType = r.views.first
       if (viewType == null) throw ViewLoadErr("No views registered")
     }
 

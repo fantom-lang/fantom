@@ -886,6 +886,10 @@ class CheckErrors : CompilerStep
       if (m.isAbstract)
         err("Cannot use super to call abstract method '$m.qname'", call.target.location)
     }
+
+    // don't allow safe calls on non-nullable type
+    if (call.isSafe && call.target != null && !call.target.ctype.isNullable)
+      err("Cannot use null-safe call on non-nullable type '$call.target.ctype'", call.target.location)
   }
 
   private Void checkField(FieldExpr f)
@@ -915,6 +919,10 @@ class CheckErrors : CompilerStep
       if (field.isAbstract)
         err("Cannot use super to access abstract field '$field.qname'", f.target.location)
     }
+
+    // don't allow safe access on non-nullable type
+    if (f.isSafe && f.target != null && !f.target.ctype.isNullable)
+      err("Cannot use null-safe access on non-nullable type '$f.target.ctype'", f.target.location)
 
     // if using the field's accessor method
     if (f.useAccessor)

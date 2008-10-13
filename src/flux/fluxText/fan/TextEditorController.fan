@@ -75,7 +75,7 @@ internal class TextEditorController : TextEditorSupport
       line := doc.lineAtOffset(offset)
       col  := offset-doc.offsetAtLine(line)
       editor.caretField.text = "${(line+1)}:${col+1}"
-      editor.caretField?.parent?.relayout
+      editor.caretField.parent?.relayout
     }
     catch (Err e) e.trace
   }

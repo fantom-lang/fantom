@@ -45,7 +45,7 @@ class History
     item := HistoryItem
     {
       uri = r.uri
-      iconUri = r.icon?.uri
+      iconUri = r.icon.uri
       time = DateTime.now
     }
 

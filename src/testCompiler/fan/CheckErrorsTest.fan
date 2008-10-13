@@ -1090,12 +1090,15 @@ class CheckErrorsTest : CompilerTest
           x?.x?.i = 5
           y()?.i = 5
           x?.i += 5
+          nn?.y
+          temp := nn?.i
         }
 
-        Foo y() { return this }
+        Foo? y() { return this }
         Foo? get(Int x) { return null }
         Void set(Int x, Int y) {}
-        Foo x
+        Foo? x
+        Foo nn
         Int i
       }",
 
@@ -1106,6 +1109,8 @@ class CheckErrorsTest : CompilerTest
          7,  8, "Null-safe operator on left hand side of assignment",
          8, 10, "Null-safe operator on left hand side of assignment",
          9,  8, "Null-safe operator on left hand side of assignment",
+        10,  5, "Cannot use null-safe call on non-nullable type '$podName::Foo'",
+        11, 13, "Cannot use null-safe access on non-nullable type '$podName::Foo'",
        ])
   }
 

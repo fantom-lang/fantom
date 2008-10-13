@@ -225,25 +225,25 @@ class ExprTest : CompilerTest
 
   Void testSafe()
   {
-    verifyExpr("a?.size()", 3, "abc")
-    verifyExpr("a?.size()", null, xNull)
-    verifyExpr("a?->size()", 6, "foobar")
-    verifyExpr("a?->size()", null, xNull)
+    verifyExpr("a?.size()", 3, "abc", null, "", true)
+    verifyExpr("a?.size()", null, xNull, null, "", true)
+    verifyExpr("a?->size()", 6, "foobar", null, "", true)
+    verifyExpr("a?->size()", null, xNull, null, "", true)
 
-    verifyExpr("a?.size", 3, "abc")
-    verifyExpr("a?.size", null, xNull)
-    verifyExpr("a?->size", 6, "foobar")
-    verifyExpr("a?->size", null, xNull)
+    verifyExpr("a?.size", 3, "abc", null, "", true)
+    verifyExpr("a?.size", null, xNull, null, "", true)
+    verifyExpr("a?->size", 6, "foobar", null, "", true)
+    verifyExpr("a?->size", null, xNull, null, "", true)
 
-    verifyExpr("a?.size()?.plus(6)", 9, "abc")
-    verifyExpr("a?.size()?.plus(6)", null, xNull)
-    verifyExpr("a?->size()?->plus(6)", 12, "foobar")
-    verifyExpr("a?->size()?->plus(6)", null, xNull)
+    verifyExpr("a?.size()?.plus(6)", 9, "abc", null, "", true)
+    verifyExpr("a?.size()?.plus(6)", null, xNull, null, "", true)
+    verifyExpr("a?->size()?->plus(6)", 12, "foobar", null, "", true)
+    verifyExpr("a?->size()?->plus(6)", null, xNull, null, "", true)
 
-    verifyExpr("a?.size?.plus(6)", 9, "abc")
-    verifyExpr("a?.size?.plus(6)", null, xNull)
-    verifyExpr("a?->size?->plus(6)", 12, "foobar")
-    verifyExpr("a?->size?->plus(6)", null, xNull)
+    verifyExpr("a?.size?.plus(6)", 9, "abc", null, "", true)
+    verifyExpr("a?.size?.plus(6)", null, xNull, null, "", true)
+    verifyExpr("a?->size?->plus(6)", 12, "foobar", null, "", true)
+    verifyExpr("a?->size?->plus(6)", null, xNull, null, "", true)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -459,8 +459,8 @@ class ExprTest : CompilerTest
 
   Void testSafeFields()
   {
-    verifyExpr("x?.f", 7, 0, 0, "f = 7; Foo x := this;")
-    verifyExpr("x?.f", null, 0, 0, "f = 7; Foo? x := null;")
+    verifyExpr("x?.f", 7, 0, 0, "f = 7; Foo? x := this;", true)
+    verifyExpr("x?.f", null, 0, 0, "f = 7; Foo? x := null;", true)
   }
 
 //////////////////////////////////////////////////////////////////////////

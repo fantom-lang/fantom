@@ -289,7 +289,7 @@ internal class Parser
     }
   }
 
-  Matcher toMatcher(Str tok)
+  Matcher toMatcher(Str? tok)
   {
     tok = tok?.trim ?: ""
     switch (tok.size)
