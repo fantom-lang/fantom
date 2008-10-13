@@ -94,7 +94,10 @@ class ListTest : Test
     verifyEq([x?.def].type, Int?[]#)
     verifyEq([x?.caseInsensitive].type, Bool?[]#)
     verifyEq([x?->foo].type, Obj?[]#)
+    verifyEq([returnThis].type, ListTest[]#)
   }
+
+  This returnThis() { return this }
 
   Void testIsInfered()
   {

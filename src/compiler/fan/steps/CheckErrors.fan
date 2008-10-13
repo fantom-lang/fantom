@@ -384,8 +384,14 @@ class CheckErrors : CompilerStep
 
   private Void checkMethodReturn(MethodDef m)
   {
-    if (m.isStatic && m.ret.isThis)
-      err("Cannot return This from static method", m.location)
+    if (m.ret.isThis)
+    {
+      if (m.isStatic)
+        err("Cannot return This from static method", m.location)
+
+      if (m.ret.isNullable)
+        err("This type cannot be nullable", m.location)
+    }
   }
 
   private Void checkCtor(MethodDef m)

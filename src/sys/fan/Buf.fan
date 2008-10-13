@@ -329,7 +329,7 @@ class Buf
   ** like IO streams.  File backed buffers will simply rewrite
   ** the last position in the file.  Return this.
   **
-  This? unread(Int b)
+  This unread(Int b)
 
   **
   ** Convenience for [in.readAllBuf]`InStream.readAllBuf`
