@@ -101,6 +101,6 @@ class FCodePrinter : FConst
   FPod pod
   OutStream out
   Bool showIndex
-  Buf buf
+  Buf? buf
 
 }

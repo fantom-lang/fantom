@@ -146,7 +146,7 @@ enum Token
   **
   ** Construct with symbol str, or null symbol for keyword.
   **
-  private new make(Str symbol := null)
+  private new make(Str? symbol := null)
   {
     if (symbol == null)
     {

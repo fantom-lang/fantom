@@ -217,7 +217,7 @@ class IfStmt : Stmt
 **
 class ReturnStmt : Stmt
 {
-  new make(Location location, Expr expr := null)
+  new make(Location location, Expr? expr := null)
     : super(location, StmtId.returnStmt)
   {
     this.expr = expr
@@ -238,7 +238,7 @@ class ReturnStmt : Stmt
   }
 
 
-  Expr expr           // expr to return of null if void return
+  Expr? expr          // expr to return of null if void return
   MethodVar leaveVar  // to stash result for leave from protected region
 }
 

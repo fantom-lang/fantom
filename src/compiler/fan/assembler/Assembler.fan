@@ -154,7 +154,7 @@ class Assembler : CompilerSupport, FConst
     return fpod.addName(val)
   }
 
-  private Buf assembleCode(MethodDef def , AttrAsm attrs)
+  private Buf? assembleCode(MethodDef def , AttrAsm attrs)
   {
     block := def.code
     if (block == null) return null
@@ -169,7 +169,7 @@ class Assembler : CompilerSupport, FConst
     return asm.finishCode
   }
 
-  private Buf assembleExpr(Expr expr)
+  private Buf? assembleExpr(Expr expr)
   {
     if (expr == null) return null
     asm := CodeAsm.make(compiler, expr.location, fpod)

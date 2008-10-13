@@ -23,7 +23,7 @@ mixin CPod
   abstract Str name()
 
   **
-  ** Get the pod version
+  ** Get the pod version or null if unknown.
   **
   abstract Version version()
 
@@ -37,7 +37,7 @@ mixin CPod
   ** exist and checked is true then throw UnknownTypeErr
   ** otherwise return null.
   **
-  abstract CType resolveType(Str name, Bool checked)
+  abstract CType? resolveType(Str name, Bool checked)
 
   **
   ** Hash on name.

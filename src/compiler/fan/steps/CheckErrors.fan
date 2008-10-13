@@ -1129,7 +1129,7 @@ class CheckErrors : CompilerStep
     if (errMsg != null) err(errMsg, loc)
   }
 
-  private Str slotProtectionErr(CSlot slot, Bool setter := false)
+  private Str? slotProtectionErr(CSlot slot, Bool setter := false)
   {
     msg := setter ? "setter of field" : (slot is CMethod ? "method" : "field")
 

@@ -14,7 +14,7 @@ using compiler
 **
 class FanScript : Task
 {
-  new make(BuildScript script, File file, Obj[] args := null)
+  new make(BuildScript script, File file, Obj[]? args := null)
     : super(script)
   {
     this.file = file

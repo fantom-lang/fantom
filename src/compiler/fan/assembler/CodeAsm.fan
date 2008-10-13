@@ -245,7 +245,7 @@ class CodeAsm : CompilerSupport
     // needs to jump out of the protected region - that requires
     // calling each region's finally block and using a "leave"
     // instruction rather than a standard "jump"
-    Int toBackpatch := null
+    Int? toBackpatch := null
     if (!loop.protectedRegions.isEmpty)
     {
       // jump to any finally blocks we are inside
@@ -293,7 +293,7 @@ class CodeAsm : CompilerSupport
   ** offset into a jump table.  Return null if the switch is not numeric
   ** or too sparse to use as a table switch.
   **
-  private Int[] computeTableRange(SwitchStmt stmt)
+  private Int[]? computeTableRange(SwitchStmt stmt)
   {
     // we only compute ranges for Ints and Enums
     ctype := stmt.condition.ctype
@@ -579,7 +579,7 @@ class CodeAsm : CompilerSupport
     return done
   }
 
-  private Void addToErrTable(Int start, Int end, Int handler, CType errType)
+  private Void addToErrTable(Int start, Int end, Int handler, CType? errType)
   {
     // catch all is implicitly a catch for sys::Err
     if (errType == null) errType = ns.errType
@@ -829,7 +829,7 @@ class CodeAsm : CompilerSupport
     }
   }
 
-  private Void or(CondExpr expr, Cond cond)
+  private Void or(CondExpr expr, Cond? cond)
   {
     // if cond is null this is a top level expr which means
     // the result is to push true or false onto the stack;
@@ -854,7 +854,7 @@ class CodeAsm : CompilerSupport
     if (topLevel) condEnd(cond)
   }
 
-  private Void and(CondExpr expr, Cond cond)
+  private Void and(CondExpr expr, Cond? cond)
   {
     // if cond is null this is a top level expr which means
     // the result is to push true or false onto the stack;
@@ -1021,7 +1021,7 @@ class CodeAsm : CompilerSupport
     }
 
     // if safe, check for null condition
-    Int isNullLabel := null
+    Int? isNullLabel := null
     if (fexpr.isSafe)
     {
       if (fexpr.target == null) throw err("Compiler error field isSafe", fexpr.location)
@@ -1165,7 +1165,7 @@ class CodeAsm : CompilerSupport
     if (call.target != null) expr(call.target)
 
     // if safe, check for null
-    Int isNullLabel := null
+    Int? isNullLabel := null
     if (call.isSafe)
     {
       if (call.target == null) throw err("Compiler error call isSafe", call.location)
@@ -1466,7 +1466,7 @@ class CodeAsm : CompilerSupport
   **
   ** Append a opcode with option two byte argument.
   **
-  Void op(FOp op, Int arg := null)
+  Void op(FOp op, Int? arg := null)
   {
     code.write(op.ordinal)
     if (arg != null) code.writeI2(arg)

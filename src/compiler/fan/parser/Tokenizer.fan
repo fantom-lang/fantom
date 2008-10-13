@@ -75,7 +75,7 @@ class Tokenizer : CompilerSupport
   **
   ** Return the next token in the buffer.
   **
-  private TokenVal next()
+  private TokenVal? next()
   {
     while (true)
     {
@@ -106,7 +106,7 @@ class Tokenizer : CompilerSupport
   **
   ** Find the next token or return null.
   **
-  private TokenVal find()
+  private TokenVal? find()
   {
     // skip whitespace
     if (cur.isSpace) { consume; whitespace = true; return null }
@@ -208,7 +208,7 @@ class Tokenizer : CompilerSupport
     // check for suffixes
     floatSuffix   := false
     decimalSuffix := false
-    Int dur       := null
+    Int? dur      := null
     if (cur.isLower && peek.isLower)
     {
       if (cur === 'n' && peek === 's') { consume; consume; dur = 1 }
@@ -335,7 +335,7 @@ class Tokenizer : CompilerSupport
   **
   ** Parse a string literal token.
   **
-  private TokenVal str()
+  private TokenVal? str()
   {
     inStrLiteral = true
     try
@@ -504,7 +504,7 @@ class Tokenizer : CompilerSupport
   **
   ** Create a virtual token for string interpolation.
   **
-  private TokenVal makeVirtualToken(Token kind, Obj value := null)
+  private TokenVal makeVirtualToken(Token kind, Obj? value := null)
   {
     tok := TokenVal(kind, value)
     tok.file  = filename
@@ -573,7 +573,7 @@ class Tokenizer : CompilerSupport
     consume
 
     // if \ then process as escape
-    Int c
+    c := -1
     if (cur === '\\')
     {
       c = escape
@@ -637,7 +637,7 @@ class Tokenizer : CompilerSupport
   **
   ** Skip a single line // comment
   **
-  private TokenVal skipCommentSL()
+  private TokenVal? skipCommentSL()
   {
     consume  // first slash
     consume  // next slash
@@ -654,7 +654,7 @@ class Tokenizer : CompilerSupport
   ** Skip a multi line /* comment.  Note unlike C/Java,
   ** slash/star comments can be nested.
   **
-  private TokenVal skipCommentML()
+  private TokenVal? skipCommentML()
   {
     consume   // first slash
     consume   // next slash
@@ -672,7 +672,7 @@ class Tokenizer : CompilerSupport
   **
   ** Parse a Javadoc style comment into a documentation comment token.
   **
-  private TokenVal docComment()
+  private TokenVal? docComment()
   {
     // if doc is off, then just skip the line and be done
     if (!isDoc) { skipCommentSL; return null }
@@ -860,7 +860,7 @@ class Tokenizer : CompilerSupport
   **
   ** Return a CompilerException for current location in source.
   **
-  override CompilerErr err(Str msg, Location loc := null)
+  override CompilerErr err(Str msg, Location? loc := null)
   {
     if (loc == null) loc = Location(filename, line, col)
     return super.err(msg, loc);
@@ -906,6 +906,7 @@ class Tokenizer : CompilerSupport
 // Test
 //////////////////////////////////////////////////////////////////////////
 
+  /*
   static Void main()
   {
     t1 := Duration.now
@@ -919,6 +920,7 @@ class Tokenizer : CompilerSupport
     echo("Time: " + (t2-t1).toMillis)
     echo("Time: " + (t2-t1))
   }
+  */
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

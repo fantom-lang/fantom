@@ -31,7 +31,7 @@ abstract class Expr : Node
   ** or null if this Expr doesn't represent a constant Int.  Expressions
   ** which work as table switch cases: int literals and enum constants
   **
-  virtual Int asTableSwitchCase() { return null }
+  virtual Int? asTableSwitchCase() { return null }
 
   **
   ** Return if this expression matches the expected type.
@@ -224,7 +224,7 @@ abstract class Expr : Node
   {
   }
 
-  static Expr walkExpr(Visitor v, Expr expr)
+  static Expr? walkExpr(Visitor v, Expr expr)
   {
     if (expr == null) return null
     return expr.walk(v)
@@ -290,14 +290,14 @@ class LiteralExpr : Expr
     }
   }
 
-  new make(Location location, ExprId id, CType ctype, Obj val)
+  new make(Location location, ExprId id, CType ctype, Obj? val)
     : super(location, id)
   {
     this.ctype = ctype
     this.val   = val
   }
 
-  override Int asTableSwitchCase()
+  override Int? asTableSwitchCase()
   {
     return val as Int
   }
@@ -331,7 +331,7 @@ class LiteralExpr : Expr
     }
   }
 
-  Obj val // Bool, Int, Float, Str (for Str/Uri), Duration, CType, or null
+  Obj? val // Bool, Int, Float, Str (for Str/Uri), Duration, CType, or null
 }
 
 **************************************************************************
@@ -408,7 +408,7 @@ class RangeLiteralExpr : Expr
 **
 class ListLiteralExpr : Expr
 {
-  new make(Location location, ListType explicitType := null)
+  new make(Location location, ListType? explicitType := null)
     : super(location, ExprId.listLiteral)
   {
     this.explicitType = explicitType
@@ -464,7 +464,7 @@ class ListLiteralExpr : Expr
 **
 class MapLiteralExpr : Expr
 {
-  new make(Location location, MapType explicitType := null)
+  new make(Location location, MapType? explicitType := null)
     : super(location, ExprId.mapLiteral)
   {
     this.explicitType = explicitType
@@ -645,7 +645,7 @@ class CondExpr : Expr
 **
 abstract class NameExpr : Expr
 {
-  new make(Location location, ExprId id, Expr target, Str name)
+  new make(Location location, ExprId id, Expr? target, Str? name)
     : super(location, id)
   {
     this.target = target
@@ -666,8 +666,8 @@ abstract class NameExpr : Expr
       return name
   }
 
-  Expr target   // base target expression or null
-  Str name      // name of variable (local/field/method)
+  Expr? target  // base target expression or null
+  Str? name     // name of variable (local/field/method)
   Bool isSafe   // if ?. operator
 }
 
@@ -682,12 +682,12 @@ abstract class NameExpr : Expr
 **
 class UnknownVarExpr : NameExpr
 {
-  new make(Location location, Expr target, Str name)
+  new make(Location location, Expr? target, Str name)
     : super(location, ExprId.unknownVar, target, name)
   {
   }
 
-  new makeStorage(Location location, Expr target, Str name)
+  new makeStorage(Location location, Expr? target, Str name)
     : super.make(location, ExprId.storage, target, name)
   {
   }
@@ -703,7 +703,7 @@ class UnknownVarExpr : NameExpr
 **
 class CallExpr : NameExpr
 {
-  new make(Location location, Expr target := null, Str name := null, ExprId id := ExprId.call)
+  new make(Location location, Expr? target := null, Str? name := null, ExprId id := ExprId.call)
     : super(location, id, target, name)
   {
     args = Expr[,]
@@ -712,7 +712,7 @@ class CallExpr : NameExpr
     isCtorChain = false
   }
 
-  new makeWithMethod(Location location, Expr target, CMethod method, Expr[] args := null)
+  new makeWithMethod(Location location, Expr? target, CMethod method, Expr[]? args := null)
     : this.make(location, target, method.name, ExprId.call)
   {
     this.method = method
@@ -783,7 +783,7 @@ class CallExpr : NameExpr
   Expr[] args         // Expr[] arguments to pass
   Bool isDynamic      // true if this is a -> dynamic call
   Bool isCtorChain    // true if this is MethodDef.ctorChain call
-  CMethod method      // resolved method
+  CMethod? method     // resolved method
 }
 
 **************************************************************************
@@ -935,7 +935,7 @@ class IndexedAssignExpr : ShortcutExpr
 **
 class FieldExpr : NameExpr
 {
-  new make(Location location, Expr target := null, CField field := null, Bool useAccessor := true)
+  new make(Location location, Expr? target := null, CField? field := null, Bool useAccessor := true)
     : super(location, ExprId.field, target, null)
   {
     this.useAccessor = useAccessor
@@ -952,7 +952,7 @@ class FieldExpr : NameExpr
 
   override Bool assignRequiresTempVar() { return !field.isStatic }
 
-  override Int asTableSwitchCase()
+  override Int? asTableSwitchCase()
   {
     // TODO - this should probably be tightened up if we switch to const
     if (field.isStatic && field.parent.isEnum && ctype.isEnum)
@@ -1019,7 +1019,7 @@ class FieldExpr : NameExpr
 **
 class LocalVarExpr : Expr
 {
-  new make(Location location, MethodVar var, ExprId id := ExprId.localVar)
+  new make(Location location, MethodVar? var, ExprId id := ExprId.localVar)
     : super(location, id)
   {
     if (var != null)
@@ -1041,7 +1041,7 @@ class LocalVarExpr : Expr
     return var.name
   }
 
-  MethodVar var   // bound variable
+  MethodVar? var   // bound variable
 
   // used to mark a local var access that should not be
   // pulled out into cvars, even if var.usedInClosure is true
@@ -1058,7 +1058,7 @@ class LocalVarExpr : Expr
 **
 class ThisExpr : LocalVarExpr
 {
-  new make(Location location, CType ctype := null)
+  new make(Location location, CType? ctype := null)
     : super(location, null, ExprId.thisExpr)
   {
     this.ctype = ctype
@@ -1085,7 +1085,7 @@ class ThisExpr : LocalVarExpr
 **
 class SuperExpr : LocalVarExpr
 {
-  new make(Location location, CType explicitType := null)
+  new make(Location location, CType? explicitType := null)
     : super(location, null, ExprId.superExpr)
   {
     this.explicitType = explicitType
@@ -1308,7 +1308,7 @@ class WithSubExpr : Expr
 **
 class WithBaseExpr : Expr
 {
-  new make(WithBlockExpr withBlock, WithSubExpr withSub := null)
+  new make(WithBlockExpr withBlock, WithSubExpr? withSub := null)
     : super(withBlock.location, ExprId.withBase)
   {
     this.ctype = withBlock.ctype
@@ -1438,7 +1438,7 @@ class ClosureExpr : Expr
   MethodDef enclosingMethod     // enclosing method
   ClosureExpr enclosingClosure  // if nested closure
   FuncType signature            // parameter and return signature
-  Block code                    // moved into a MethodDef in InitClosures
+  Block? code                   // moved into a MethodDef in InitClosures
   Str name                      // anonymous class name
 
   // InitClosures
@@ -1535,7 +1535,7 @@ enum ShortcutOp
   set(2),
   slice(2)
 
-  private new make(Int degree, Str methodName := null)
+  private new make(Int degree, Str? methodName := null)
   {
     this.degree = degree
     this.methodName = methodName == null ? name : methodName

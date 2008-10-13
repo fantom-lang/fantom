@@ -640,7 +640,7 @@ class ResolveExpr : CompilerStep
   ** Resolve a local variable using current scope based on
   ** the block stack and possibly the scope of a closure.
   **
-  private MethodVar resolveLocal(Str name)
+  private MethodVar? resolveLocal(Str name)
   {
     // if not in method, then we can't have a local
     if (curMethod == null) return null
@@ -686,11 +686,9 @@ class ResolveExpr : CompilerStep
   **
   private Str:MethodVar localsInScope()
   {
-    Str:MethodVar acc
-    if (inClosure)
-      acc = curType.closure.enclosingLocals.dup
-    else
-      acc = Str:MethodVar[:]
+    Str:MethodVar acc := inClosure ?
+      curType.closure.enclosingLocals.dup :
+      Str:MethodVar[:]
 
     curMethod.vars.each |MethodVar var|
     {
@@ -737,7 +735,7 @@ class ResolveExpr : CompilerStep
 // StmtStack
 //////////////////////////////////////////////////////////////////////////
 
-  private Stmt findLoop()
+  private Stmt? findLoop()
   {
     for (i:=stmtStack.size-1; i>=0; --i)
     {

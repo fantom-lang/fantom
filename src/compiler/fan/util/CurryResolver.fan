@@ -215,7 +215,7 @@ class CurryResolver : CompilerSupport
 
     // figure out if there is an implied this parameter to curry, if
     // so then we need to include this in the implied arguments
-    Expr self := null
+    Expr? self := null
     if (!method.isStatic && call.target != null && call.target.id != ExprId.staticTarget)
       args.insert(0, self = call.target)
 

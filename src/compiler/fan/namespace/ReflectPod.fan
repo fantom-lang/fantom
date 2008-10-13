@@ -37,7 +37,7 @@ class ReflectPod : CPod
     }
   }
 
-  override ReflectType resolveType(Str typeName, Bool checked)
+  override ReflectType? resolveType(Str typeName, Bool checked)
   {
     // check cache first
     rt := typeMap[typeName]

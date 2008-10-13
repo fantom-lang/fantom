@@ -200,7 +200,7 @@ class ResolveImports : CompilerStep
   ** an imported type.  If the type name cannot be resolved then we
   ** log an error and return null.
   **
-  static CType resolveQualified(CompilerSupport cs, Str podName, Str typeName, Location location)
+  static CType? resolveQualified(CompilerSupport cs, Str podName, Str typeName, Location location)
   {
     // first check pod being compiled
     if (podName == cs.compiler.pod.name)

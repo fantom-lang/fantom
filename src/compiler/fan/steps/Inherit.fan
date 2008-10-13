@@ -185,7 +185,7 @@ class Inherit : CompilerStep
   ** Return if there is a clear keeper between a and b - if so
   ** return the one to keep otherwise return null.
   **
-  private CSlot keep(CSlot a, CSlot b)
+  private CSlot? keep(CSlot a, CSlot b)
   {
     // if one is abstract and one concrete we keep the concrete one
     if (a.isAbstract && !b.isAbstract) return b

@@ -69,7 +69,7 @@ abstract class BuildGroup : BuildScript
   override Target[] makeTargets()
   {
     // get union of names in my children scripts
-    Str[] names := null
+    Str[]? names := null
     children.each |BuildScript child|
     {
       // get all the target names in this subscript

@@ -45,7 +45,7 @@ abstract class SlotDef : DefNode, CSlot
 // Documentation
 //////////////////////////////////////////////////////////////////////////
 
-  virtual Str:Str docMeta()
+  virtual [Str:Str]? docMeta()
   {
     return null
   }

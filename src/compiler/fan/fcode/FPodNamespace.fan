@@ -36,7 +36,7 @@ class FPodNamespace : CNamespace
   **
   ** Map to an FPod
   **
-  override FPod resolvePod(Str podName, Bool checked)
+  override FPod? resolvePod(Str podName, Bool checked)
   {
     if (pods == null) pods = Str:FPod[:]
 

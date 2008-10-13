@@ -184,7 +184,7 @@ class Main
   ** Compile the script file into a transient pod.
   ** See `sys::Sys.compile` for option definitions.
   **
-  static Pod compileScript(Str podName, File file, Str:Obj options := null)
+  static Pod compileScript(Str podName, File file, [Str:Obj]? options := null)
   {
     input := CompilerInput.make
     input.podName        = podName
@@ -211,7 +211,7 @@ class Main
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  Void println(Obj s)
+  Void println(Obj? s)
   {
     log.printLine(s)
   }
@@ -231,7 +231,7 @@ class Main
 
   Str podName
   File[] srcDirs := File[,]    // directories to build
-  File outDir := null          // -d output directory
+  File? outDir := null         // -d output directory
   CompilerLog log := CompilerLog.make  // logging, -v verbose output
   Bool includeDoc := false     // include fandoc in output pod
   Bool includeSrc := false     // include source code in output pod

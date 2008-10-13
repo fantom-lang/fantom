@@ -413,7 +413,7 @@ class ParameterizedMethod : CMethod
 
   override readonly CType parent
   override readonly Str signature
-  override readonly CMethod generic
+  override readonly CMethod? generic
   override readonly CType returnType
   override readonly CParam[] params
 }
