@@ -397,7 +397,7 @@ class CodeAsm : CompilerSupport
     // backpatch the jump table
     end := code.size
     code.seek(jumpStart)
-    jumps.each |Case c, Int i|
+    jumps.each |Case? c, Int i|
     {
       if (c == null)
         code.writeI2(defaultStart)
@@ -467,7 +467,7 @@ class CodeAsm : CompilerSupport
     }
   }
 
-  private Int switchBlock(Block block, Bool pop := false)
+  private Int switchBlock(Block? block, Bool pop := false)
   {
     if (pop) op(FOp.Pop);
     if (block != null)
@@ -1585,9 +1585,9 @@ class CodeAsm : CompilerSupport
   Loop[] loopStack
 
   // protected region fields
-  ProtectedRegion[] protectedRegions // stack of protection regions
-  Int[] leavesToReturn     // list of Leave positions to backpatch
-  MethodVar returnLocal    // where we stash return value
+  ProtectedRegion[]? protectedRegions // stack of protection regions
+  Int[]? leavesToReturn    // list of Leave positions to backpatch
+  MethodVar? returnLocal    // where we stash return value
 }
 
 **************************************************************************

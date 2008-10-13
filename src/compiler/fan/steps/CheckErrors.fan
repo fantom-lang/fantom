@@ -573,7 +573,7 @@ class CheckErrors : CompilerStep
     caught := CType[,]
     stmt.catches.each |Catch c|
     {
-      CType errType := c.errType
+      CType? errType := c.errType
       if (errType == null) errType = ns.errType
       if (!errType.fits(ns.errType))
         err("Must catch Err, not '$c.errType'", c.errType.location)

@@ -126,7 +126,7 @@ class FTable
   **
   ** Serialize.
   **
-  FTable read(InStream in)
+  FTable read(InStream? in)
   {
     table = [,]
     if (in == null) return this

@@ -84,7 +84,7 @@ class Tokenizer : CompilerSupport
       col  := this.col
 
       // find next token
-      TokenVal tok := find
+      TokenVal? tok := find
       if (tok == null) continue
 
       // fill in token's location
@@ -270,13 +270,13 @@ class Tokenizer : CompilerSupport
     consume // x
 
     // read first hex
-    Int val := cur.fromDigit(16)
+    val := cur.fromDigit(16)
     if (val == null) throw err("Expecting hex number")
     consume
     Int nibCount := 1
     while (true)
     {
-      Int nib := cur.fromDigit(16)
+      nib := cur.fromDigit(16)
       if (nib == null)
       {
         if (cur === '_') { consume; continue }

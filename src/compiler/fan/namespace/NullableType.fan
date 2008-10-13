@@ -44,7 +44,7 @@ class NullableType : CType
 
   override once CType toListOf() { return ListType(this) }
 
-  override CType base() { return root.base }
+  override CType? base() { return root.base }
   override CType[] mixins() { return root.mixins }
   override Bool fits(CType t) { return root.fits(t) }
 

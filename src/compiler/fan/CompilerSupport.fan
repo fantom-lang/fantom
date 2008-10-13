@@ -101,11 +101,8 @@ class CompilerSupport
   **
   CompilerErr errReport(CompilerErr e)
   {
-    if (compiler != null)
-    {
-      compiler.log.compilerErr(e)
-      compiler.errors.add(e)
-    }
+    compiler.log.compilerErr(e)
+    compiler.errors.add(e)
     return e
   }
 

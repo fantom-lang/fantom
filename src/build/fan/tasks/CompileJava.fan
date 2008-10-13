@@ -110,7 +110,7 @@ class CompileJava : JdkTask
   File[] src := File[,]
 
   ** Output directory
-  File outDir
+  File? outDir
 
 
 }

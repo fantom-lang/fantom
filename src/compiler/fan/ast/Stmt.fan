@@ -48,7 +48,7 @@ abstract class Stmt : Node
   {
   }
 
-  static Expr walkExpr(Visitor v, VisitDepth depth, Expr expr)
+  static Expr walkExpr(Visitor v, VisitDepth depth, Expr? expr)
   {
     if (depth === VisitDepth.expr && expr != null)
       return expr.walk(v)
@@ -161,9 +161,9 @@ class LocalDefStmt : Stmt
     if (nl) out.nl
   }
 
-  CType ctype       // type of the variable (or null if inferred)
+  CType? ctype      // type of the variable (or null if inferred)
   Str name          // variable name
-  Expr init         // rhs of init; in ResolveExpr it becomes full assign expr
+  Expr? init        // rhs of init; in ResolveExpr it becomes full assign expr
   Bool isCatchVar   // is this auto-generated var for "catch (Err x)"
   MethodVar var     // variable binding
 }
@@ -205,7 +205,7 @@ class IfStmt : Stmt
 
   Expr condition      // test expression
   Block trueBlock     // block to execute if condition true
-  Block falseBlock    // else clause or null
+  Block? falseBlock   // else clause or null
 }
 
 **************************************************************************
@@ -238,8 +238,8 @@ class ReturnStmt : Stmt
   }
 
 
-  Expr? expr          // expr to return of null if void return
-  MethodVar leaveVar  // to stash result for leave from protected region
+  Expr? expr           // expr to return of null if void return
+  MethodVar? leaveVar  // to stash result for leave from protected region
 }
 
 **************************************************************************
@@ -305,9 +305,9 @@ class ForStmt : Stmt
     block.print(out)
   }
 
-  Stmt init         // loop initialization
-  Expr condition    // loop condition
-  Expr update       // loop update
+  Stmt? init        // loop initialization
+  Expr? condition   // loop condition
+  Expr? update      // loop update
   Block block       // code to run inside loop
 }
 
@@ -362,7 +362,7 @@ class BreakStmt : Stmt
     out.w("break").nl
   }
 
-   Stmt loop   // loop to break out of
+  Stmt? loop   // loop to break out of
 }
 
 **************************************************************************
@@ -383,7 +383,7 @@ class ContinueStmt : Stmt
     out.w("continue").nl
   }
 
-  Stmt loop   // loop to continue
+  Stmt? loop   // loop to continue
 }
 
 **************************************************************************
@@ -431,10 +431,10 @@ class TryStmt : Stmt
     }
   }
 
-  Expr exception      // expression which leaves exception on stack
-  Block block         // body of try block
-  Catch[] catches     // list of catch clauses
-  Block finallyBlock  // body of finally block or null
+  Expr exception       // expression which leaves exception on stack
+  Block block          // body of try block
+  Catch[] catches      // list of catch clauses
+  Block? finallyBlock  // body of finally block or null
 }
 
 **
@@ -452,8 +452,8 @@ class Catch : Node
     block.print(out)
   }
 
-  TypeRef errType      // Err type to catch or null for catch-all
-  Str errVariable      // name of err local variable
+  TypeRef? errType     // Err type to catch or null for catch-all
+  Str? errVariable     // name of err local variable
   Block block          // body of catch block
   Int start            // start offset generated in CodeAsm
   Int end              // end offset generated in CodeAsm
@@ -507,7 +507,7 @@ class SwitchStmt : Stmt
 
   Expr condition        // test expression
   Case[] cases          // list of case blocks
-  Block defaultBlock    // default block (or null)
+  Block? defaultBlock   // default block (or null)
   Bool isTableswitch    // just for testing
 }
 
@@ -539,7 +539,7 @@ class Case : Node
   }
 
   Expr[] cases     // list of case target (literal expressions)
-  Block block      // code to run for case
+  Block? block     // code to run for case
   Int startOffset  // start offset for CodeAsm
 }
 

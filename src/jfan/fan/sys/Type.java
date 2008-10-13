@@ -332,7 +332,7 @@ public abstract class Type
       while (!t.is(best))
       {
         best = best.base();
-        if (best == null) return Sys.ObjType;
+        if (best == null) return nullable ? Sys.ObjType.toNullable() : Sys.ObjType;
       }
     }
     if (best == null) best = Sys.ObjType;

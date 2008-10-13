@@ -43,13 +43,9 @@ class FMethod : FSlot, CMethod
     return "$returnType $name(" + params.join(",") + ")"
   }
 
-  override Bool isGeneric
+  override once Bool isGeneric()
   {
-    get
-    {
-      if (@isGeneric == null) @isGeneric = calcGeneric(this)
-      return @isGeneric
-    }
+    return calcGeneric(this)
   }
 
   override CType inheritedReturnType()
@@ -105,7 +101,7 @@ class FMethod : FSlot, CMethod
   FMethodVar[] vars    // parameters and local variables
   Int paramCount       // number of params in vars
   Int localCount       // number of locals in vars
-  Buf code             // method executable code
+  Buf? code            // method executable code
   Int maxStack := 16   // TODO - need to calculate in compiler
 
 }
@@ -171,6 +167,6 @@ class FMethodVar : FConst, CParam
   Int typeRef      // typeRef index
   Int flags        // method variable flags
   Int defNameIndex // name index of DefaultParamAttr
-  Buf def          // default expression or null (only for params)
+  Buf? def         // default expression or null (only for params)
 
 }

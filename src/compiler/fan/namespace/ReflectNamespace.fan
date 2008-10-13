@@ -23,6 +23,7 @@ class ReflectNamespace : CNamespace
   **
   new make()
   {
+    this.pods = Str:ReflectPod[:]
     init
   }
 
@@ -35,8 +36,6 @@ class ReflectNamespace : CNamespace
   **
   override ReflectPod? resolvePod(Str podName, Bool checked)
   {
-    if (pods == null) pods = Str:ReflectPod[:]
-
     // check cache
     cpod := pods[podName]
     if (cpod != null) return cpod
@@ -63,7 +62,7 @@ class ReflectNamespace : CNamespace
   **
   ** Map an imported Type into a CType
   **
-  CType? importType(Type t)
+  CType? importType(Type? t)
   {
     if (t == null) return null
     return resolveType(t.signature)

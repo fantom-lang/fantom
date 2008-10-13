@@ -16,7 +16,7 @@ class FUtil : FConst
 // Buf
 //////////////////////////////////////////////////////////////////////////
 
-  static Void writeBuf(OutStream out, Buf buf)
+  static Void writeBuf(OutStream? out, Buf? buf)
   {
     if (buf == null)
     {
@@ -45,7 +45,7 @@ class FUtil : FConst
   ** format is an extremely simple plan text format with left justified
   ** type/slot qnames, followed by the fandoc content indented two spaces.
   **
-  static Void writeDoc(OutStream out, Str key, Str doc)
+  static Void writeDoc(OutStream out, Str key, Str? doc)
   {
     if (doc == null) return
     out.print(key).print("\n").print("  ")

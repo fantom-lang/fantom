@@ -118,14 +118,7 @@ class CompilerLog
   virtual Void compilerErr(CompilerErr err)
   {
     if (LogLevel.error < this.level) return
-    if (err.location != null)
-    {
-      printLine(err.location.toLocationStr + ": " + err.message)
-    }
-    else
-    {
-      printLine(err.message)
-    }
+    printLine(err.location.toLocationStr + ": " + err.message)
     if (isDebug) err.trace(out)
   }
 

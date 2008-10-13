@@ -81,7 +81,7 @@ class ConstantFolder : CompilerSupport
     return constToExpr(call, result)
   }
 
-  private Obj? exprToConst(Expr expr)
+  private Obj? exprToConst(Expr? expr)
   {
     if (expr == null) return null
     switch (expr.id)

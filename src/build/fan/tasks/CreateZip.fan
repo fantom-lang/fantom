@@ -21,8 +21,8 @@ class CreateZip : Task
   override Void run()
   {
     // basic sanity checking
-    if (inDir == null) throw fatal("Not configured: CreateZip.inDir")
-    if (outFile == null) throw fatal("Not configured: CreateZip.outFile")
+    if ((Obj?)inDir == null) throw fatal("Not configured: CreateZip.inDir")
+    if ((Obj?)outFile == null) throw fatal("Not configured: CreateZip.outFile")
     if (!inDir.isDir) throw fatal("Not a directory: $inDir")
 
     // ensure outFile is not under inDir (although we do allow
@@ -49,7 +49,7 @@ class CreateZip : Task
     }
     finally
     {
-      if (out != null) out.close
+      out.close
     }
   }
 

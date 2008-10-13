@@ -19,7 +19,7 @@ class Location
     this.col  = col
   }
 
-  new makeFile(File file)
+  new makeFile(File? file)
   {
     if (file != null)
     {

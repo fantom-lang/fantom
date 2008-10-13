@@ -26,11 +26,11 @@ public class Parser : CompilerSupport
   new make(Compiler compiler, CompilationUnit unit, ClosureExpr[] closures)
     : super(compiler)
   {
-    this.unit        = unit
-    this.tokens      = unit.tokens
-    this.numTokens   = unit.tokens.size
-    this.closures    = closures
-    if (compiler != null) this.isSys = compiler.isSys
+    this.unit      = unit
+    this.tokens    = unit.tokens
+    this.numTokens = unit.tokens.size
+    this.closures  = closures
+    this.isSys     = compiler.isSys
     reset(0)
   }
 
@@ -815,7 +815,7 @@ public class Parser : CompilerSupport
     }
 
     // if current is an identifer, save for special error handling
-    Str id := (curt === Token.identifier) ? (Str)cur.val : null
+    Str? id := (curt === Token.identifier) ? (Str)cur.val : null
 
     // otherwise assume it's a stand alone expression statement
     stmt := ExprStmt.make(expr)
@@ -1906,7 +1906,7 @@ public class Parser : CompilerSupport
     // otherwise this can only be a FuncType declaration,
     // so give it a whirl, and bail if that fails
     mark := pos
-    funcType := (FuncType)tryType
+    funcType := (FuncType?)tryType
     if (funcType == null) return null
 
     // if we don't see opening brace for body - no go

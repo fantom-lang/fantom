@@ -63,7 +63,7 @@ class CheckInheritance : CompilerStep
     return true
   }
 
-  private Void checkExtends(TypeDef t, CType base)
+  private Void checkExtends(TypeDef t, CType? base)
   {
     // base is null only for sys::Obj
     if (base == null && t.qname == "sys::Obj")

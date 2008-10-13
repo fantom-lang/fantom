@@ -141,7 +141,7 @@ class FPrinter : FConst
 // Attributes
 //////////////////////////////////////////////////////////////////////////
 
-  Void attrs(FAttr[] attrs)
+  Void attrs(FAttr[]? attrs)
   {
     if (attrs == null) return
     attrs.each |FAttr a| { attr(a) }

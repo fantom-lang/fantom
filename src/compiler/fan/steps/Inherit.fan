@@ -55,7 +55,7 @@ class Inherit : CompilerStep
 // Inherit
 //////////////////////////////////////////////////////////////////////////
 
-  private Void inheritType(TypeDef t, CType parent)
+  private Void inheritType(TypeDef t, CType? parent)
   {
     if (parent == null)
     {

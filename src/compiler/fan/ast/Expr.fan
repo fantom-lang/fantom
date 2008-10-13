@@ -39,7 +39,7 @@ abstract class Expr : Node
   Bool fits(CType expected)
   {
     // sanity check that this expression has been typed
-    if (ctype == null) throw NullErr.make("null ctype: ${this}")
+    if ((Obj?)ctype == null) throw NullErr.make("null ctype: ${this}")
     actual := ctype
 
     // void is never any type
@@ -232,13 +232,13 @@ abstract class Expr : Node
   {
   }
 
-  static Expr? walkExpr(Visitor v, Expr expr)
+  static Expr? walkExpr(Visitor v, Expr? expr)
   {
     if (expr == null) return null
     return expr.walk(v)
   }
 
-  static Expr[] walkExprs(Visitor v, Expr[] exprs)
+  static Expr[] walkExprs(Visitor v, Expr?[] exprs)
   {
     for (i:=0; i<exprs.size; ++i)
     {
@@ -466,7 +466,7 @@ class ListLiteralExpr : Expr
     return s.toStr
   }
 
-  ListType explicitType
+  ListType? explicitType
   Expr[] vals := Expr[,]
 }
 
@@ -519,7 +519,7 @@ class MapLiteralExpr : Expr
     return s.toStr
   }
 
-  MapType explicitType
+  MapType? explicitType
   Expr[] keys := Expr[,]
   Expr[] vals := Expr[,]
 }
@@ -1118,7 +1118,7 @@ class SuperExpr : LocalVarExpr
       return "super"
   }
 
-  CType explicitType   // if "named super"
+  CType? explicitType   // if "named super"
 }
 
 **************************************************************************
@@ -1314,7 +1314,7 @@ class WithSubExpr : Expr
 
   WithBlockExpr withBlock
   Expr expr
-  CMethod add   // if 'with.add(expr)'
+  CMethod? add   // if 'with.add(expr)'
 }
 
 **
@@ -1414,17 +1414,10 @@ class ClosureExpr : Expr
     this.usesCvars        = false
   }
 
-  readonly CField outerThisField
+  once CField outerThisField()
   {
-    get
-    {
-      if (@outerThisField == null)
-      {
-        if (enclosingMethod.isStatic) throw Err.make("Internal error: $location.toLocationStr")
-        @outerThisField = ClosureVars.makeOuterThisField(this)
-      }
-      return @outerThisField
-    }
+    if (enclosingMethod.isStatic) throw Err.make("Internal error: $location.toLocationStr")
+    return ClosureVars.makeOuterThisField(this)
   }
 
   override Str toStr()
@@ -1451,18 +1444,18 @@ class ClosureExpr : Expr
   // Parse
   TypeDef enclosingType         // enclosing class
   MethodDef enclosingMethod     // enclosing method
-  ClosureExpr enclosingClosure  // if nested closure
+  ClosureExpr? enclosingClosure // if nested closure
   FuncType signature            // parameter and return signature
   Block? code                   // moved into a MethodDef in InitClosures
   Str name                      // anonymous class name
 
   // InitClosures
-  CallExpr substitute           // expression to substitute during assembly
-  TypeDef cls                   // anonymous class which implements the closure
-  MethodDef doCall              // anonymous class's doCall() with code
+  CallExpr? substitute          // expression to substitute during assembly
+  TypeDef? cls                  // anonymous class which implements the closure
+  MethodDef? doCall             // anonymous class's doCall() with code
 
   // ResolveExpr
-  Str:MethodVar enclosingLocals // locals in scope
+  [Str:MethodVar]? enclosingLocals // locals in scope
   Bool usesCvars                // does this guy use vars from outer scope
 }
 

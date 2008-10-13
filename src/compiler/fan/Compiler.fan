@@ -36,7 +36,7 @@ class Compiler
   **
   new make(CompilerInput input)
   {
-    if (input.log == null)
+    if ((Obj?)input.log == null)
       throw ArgErr("CompilerInput.log is null")
 
     this.input  = input

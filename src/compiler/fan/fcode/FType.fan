@@ -34,7 +34,7 @@ class FType : CType
   override Str signature() { return qname }
   override Str toStr() { return signature }
 
-  override CType base
+  override CType? base
   {
     get
     {
@@ -43,23 +43,20 @@ class FType : CType
     }
   }
 
-  override CType[] mixins
+  override once CType[] mixins()
   {
-    get
-    {
-      if (@mixins == null) @mixins = fpod.resolveTypes(fmixins)
-      return @mixins
-    }
+    return fpod.resolveTypes(fmixins)
   }
 
   override Str:CSlot slots
   {
     get
     {
-      if (@slots == null) reflect
-      return @slots
+      if (slotsCached == null) reflect
+      return slotsCached
     }
   }
+  private [Str:CSlot]? slotsCached
 
   override Bool isNullable() { return false }
 
@@ -89,11 +86,11 @@ class FType : CType
     read
 
     // map all the declared fields and methods
-    @slots = Str:CSlot[:]
+    slotsCached = Str:CSlot[:]
     ffields.each  |FField f|  { slots[f.name] = f }
     fmethods.each |FMethod m|
     {
-      f := (FField)slots[m.name]
+      f := (FField?)slots[m.name]
       if (f != null)
       {
         // if already mapped to field must be getter/setter
@@ -106,7 +103,7 @@ class FType : CType
       }
       else
       {
-        slots[m.name] = m
+        slotsCached[m.name] = m
       }
     }
 
@@ -120,7 +117,7 @@ class FType : CType
     t.slots.each |CSlot newSlot|
     {
       // if slot already mapped, skip it
-      if (@slots[newSlot.name] != null) return
+      if (slotsCached[newSlot.name] != null) return
 
       // we never inherit constructors, private slots,
       // or internal slots outside of the pod
@@ -129,7 +126,7 @@ class FType : CType
         return
 
       // inherit it
-      @slots[newSlot.name] = newSlot
+      slotsCached[newSlot.name] = newSlot
     }
   }
 

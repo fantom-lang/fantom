@@ -258,7 +258,7 @@ const final class Int : Num
   **   'f'.fromDigit(16) => 15
   **   '%'.fromDigit     => null
   **
-  Int fromDigit(Int radix := 10)
+  Int? fromDigit(Int radix := 10)
 
   **
   ** Return if the two Unicode chars are equal without regard

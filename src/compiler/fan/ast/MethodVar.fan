@@ -44,8 +44,8 @@ class MethodVar
   Str name            // variable name
   Int flags           // Param
   Block? scope        // block which scopes this variable
-  ParamDef paramDef   // if param
+  ParamDef? paramDef  // if param
   Bool usedInClosure  // local used by closure within containing method
-  CField cvarsField   // if mapped into a field of closure variable class
+  CField? cvarsField  // if mapped into a field of closure variable class
 
 }
