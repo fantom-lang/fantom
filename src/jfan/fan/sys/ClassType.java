@@ -50,6 +50,7 @@ public class ClassType
     this.ftype    = ftype;
     this.name     = pod.fpod.name(pod.fpod.typeRef(ftype.self).typeName);
     this.qname    = pod.name + "::" + name;
+    this.nullable = new NullableType(this);
     this.flags    = ftype.flags;
     this.dynamic  = false;
     if (Debug) System.out.println("-- init:   " + qname);
@@ -61,6 +62,7 @@ public class ClassType
     this.pod      = pod;
     this.name     = name;
     this.qname    = pod.name + "::" + name;
+    this.nullable = new NullableType(this);
     this.flags    = flags;
     this.dynamic  = false;
     this.facets   = facets;
@@ -74,6 +76,8 @@ public class ClassType
   public final String name()  { return name; }
   public final String qname() { return qname; }
   public String signature()   { return qname; }
+
+  public final Type toNullable() { return nullable; }
 
 //////////////////////////////////////////////////////////////////////////
 // Flags
@@ -101,6 +105,7 @@ public class ClassType
     this.qname   = name;
     this.flags   = 0;
     this.dynamic = true;
+    this.nullable = new NullableType(this);
   }
 
   public Boolean isDynamic() { return dynamic; }
@@ -791,6 +796,7 @@ catch (Exception e) { e.printStackTrace(); }
   final String qname;
   final int flags;
   final boolean dynamic;
+  final Type nullable;
   int lineNum;
   String sourceFile = "";
   Facets facets;
@@ -816,7 +822,6 @@ catch (Exception e) { e.printStackTrace(); }
   String finishing;
 
   // misc
-  Type nullable;
   Constructor dynamicCtor;  // enabled to store a type per instance
   boolean javaRepr;         // if representation a Java type, such as java.lang.Long
 

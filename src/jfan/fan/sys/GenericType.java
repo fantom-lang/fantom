@@ -64,6 +64,12 @@ public abstract class GenericType
     return null;
   }
 
+  public final synchronized Type toNullable()
+  {
+    if (nullable == null) nullable = new NullableType(this);
+    return nullable;
+  }
+
   public Map params()
   {
     if (params == null) params = makeParams();
@@ -235,6 +241,9 @@ public abstract class GenericType
 
   // available at construction time
   private final Type base;
+
+  // lazily created by toNullable()
+  private Type nullable;
 
   // lazily created by params()
   private Map params;
