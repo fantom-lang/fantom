@@ -40,8 +40,8 @@ public class NullableType
   public boolean is(Type type) { return root.is(type); }
 
   public Boolean isNullable() { return true; }
+  public Type toNullable() { return this; }
   public Type toNonNullable() { return root; }
-  protected Type makeToNullable() { return this; }
 
   public boolean isGenericType() { return root.isGenericType(); }
   public boolean isGenericInstance() { return root.isGenericInstance(); }
@@ -49,8 +49,6 @@ public class NullableType
   public Type getRawType() { return root.getRawType(); }
   public Map params() { return root.params(); }
   public Type parameterize(Map params) { return root.parameterize(params).toNullable(); }
-
-  protected Type makeToListOf() { return new ListType(this); }
 
   public List fields() { return root.fields(); }
   public List methods() { return root.methods(); }

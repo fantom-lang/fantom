@@ -144,13 +144,7 @@ public abstract class Type
 
   public Type toNonNullable() { return this; }
 
-  public final synchronized Type toNullable()
-  {
-    if (nullable == null) nullable = makeToNullable();
-    return nullable;
-  }
-
-  protected Type makeToNullable() { return new NullableType(this); }
+  public abstract Type toNullable();
 
 //////////////////////////////////////////////////////////////////////////
 // Generics
@@ -258,11 +252,9 @@ public abstract class Type
 
   public final synchronized Type toListOf()
   {
-    if (listOf == null) listOf = makeToListOf();
+    if (listOf == null) listOf = new ListType(this);
     return listOf;
   }
-
-  protected Type makeToListOf() { return new ListType(this); }
 
 //////////////////////////////////////////////////////////////////////////
 // Slots
@@ -398,7 +390,6 @@ public abstract class Type
   static final boolean Debug = false;
   static Object noParams;
 
-  Type nullable;   // cached value of toNullable()
   Type listOf;     // cached value of toListOf()
 
 }
