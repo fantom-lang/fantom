@@ -215,8 +215,8 @@ class UdpSocketTest : Test
     verifyEq(so.receiveBufferSize, receive*2)
 
     send := so.sendBufferSize
-    so.sendBufferSize = send*4
-    verifyEq(so.sendBufferSize, send*4)
+    so.sendBufferSize = send/2
+    verifyEq(so.sendBufferSize, send/2)
 
     reuse := so.reuseAddress
     so.reuseAddress = !reuse
