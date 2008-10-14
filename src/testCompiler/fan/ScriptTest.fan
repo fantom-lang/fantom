@@ -26,10 +26,10 @@ class ScriptTest : CompilerTest
     verifySame(t1, t2)
     verifyEq(t2.make->x, 2008)
 
-    f.out.print("class Foo { Int x() { return 2009 } }").close
+    f.out.print("class Foo { Str x() { return \"2009\" } }").close
     t3 := Sys.compile(f)
     verifyNotSame(t1, t3)
-    verifyEq(t3.make->x, 2009)
+    verifyEq(t3.make->x, "2009")
 
     t4 := Sys.compile(f, ["force":false])
     verifySame(t3, t4)

@@ -61,8 +61,9 @@ Windows Substitutes [#subsWindows]
 To make this all work seamlessly on Windows, the Fan launcher will
 look in "sys.props" to see if a substitute runtime should be used.
 For example in our environment we map the following scripts to
-use the *rel* installation:
+use the *rel* installation.
 
+  // lib/sys.props of your *dev* directory
   fan.runtime.substitutes=                             \
     /C:/dev/fan/src/buildall.fan       = C:\\dev\\rel  \
     /C:/dev/fan/src/buildboot.fan      = C:\\dev\\rel  \
@@ -141,4 +142,3 @@ In summary, you want to make sure of four key things:
   2. ensure rel/lib/sys.props devHome points to your dev installation
   3. make sure your FAN_SUBSTITUTE env points to the rel installation
   4. always run your scripts from the dev installation
-
