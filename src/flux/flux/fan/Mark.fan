@@ -94,7 +94,13 @@ internal class MarkParser
 
     // attempt to match one of the root indices
     Str? root := null
-    Int? s := rootDirs.eachBreak |Str rootDir->Int| { return text.index(root = rootDir) }
+    Int? s := null
+    rootDirs.each |Str rootDir|
+    {
+      x := text.index(rootDir)
+      if (x == null) return
+      if (s == null || x < s) { s = x; root = rootDir }
+    }
     if (s == null) return null
 
     // match up anything that looks like a directory
