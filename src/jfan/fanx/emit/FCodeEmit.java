@@ -116,9 +116,8 @@ public class FCodeEmit
 
         case ReturnVoid:          code.op(RETURN); break;
         case ReturnObj:           code.op(ARETURN); break;
-        case Pop:                 code.op(POP); break;
-        case Dup:                 code.op(DUP); break;
-        case DupDown:             code.op(DUP_X1); break;
+        case Pop:                 pop(); break;
+        case Dup:                 dup(); break;
         case Is:                  is(); break;
         case As:                  as(); break;
         case Cast:                cast(); break;
@@ -800,6 +799,36 @@ public class FCodeEmit
       default:
        if (parent.CompareNotNull == 0) parent.CompareNotNull = emit.method("fanx/util/OpUtil.compareNotNull(Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareNotNull);
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Stack Manipulation
+//////////////////////////////////////////////////////////////////////////
+
+  private void dup()
+  {
+    if (pod.version == FPod.OldFCodeVersion)
+    {
+      code.op(DUP);
+    }
+    else
+    {
+      int typeRef = u2();
+      code.op(DUP);
+    }
+  }
+
+  private void pop()
+  {
+    if (pod.version == FPod.OldFCodeVersion)
+    {
+      code.op(POP);
+    }
+    else
+    {
+      int typeRef = u2();
+      code.op(POP);
     }
   }
 
