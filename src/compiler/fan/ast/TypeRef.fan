@@ -40,6 +40,8 @@ class TypeRef : Node, CType
   override CType[] mixins() { return t.mixins }
   override Bool fits(CType that) { return t.fits(that) }
 
+  override Bool isValue() { return t.isValue }
+
   override Bool isNullable() { return t.isNullable }
   override CType toNullable() { return t.toNullable }
   override CType toNonNullable() { return t.toNonNullable }

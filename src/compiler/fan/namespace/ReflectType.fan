@@ -23,10 +23,11 @@ class ReflectType : CType
   **
   new make(ReflectNamespace ns, Type t)
   {
-    this.pod    = ns.importPod(t.pod)
-    this.t      = t
-    this.base   = ns.importType(t.base)
-    this.mixins = ns.importTypes(t.mixins)
+    this.pod     = ns.importPod(t.pod)
+    this.t       = t
+    this.base    = ns.importType(t.base)
+    this.mixins  = ns.importTypes(t.mixins)
+    this.isValue = t.isValue
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,6 +39,8 @@ class ReflectType : CType
   override Str qname()     { return t.qname }
   override Str signature() { return t.signature }
   override Int flags()     { return (Int)t->flags }
+
+  override readonly Bool isValue
 
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }

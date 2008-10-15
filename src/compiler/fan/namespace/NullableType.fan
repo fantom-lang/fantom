@@ -34,6 +34,8 @@ class NullableType : CType
   override Int flags()     { return root.flags }
   override Str signature
 
+  override Bool isValue() { return root.isValue }
+
   override Bool isNullable() { return true }
   override CType toNullable() { return this }
   override CType toNonNullable() { return root }

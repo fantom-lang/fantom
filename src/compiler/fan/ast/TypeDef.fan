@@ -25,6 +25,7 @@ class TypeDef : DefNode, CType
     this.unit        = unit
     this.name        = name
     this.qname       = pod.name + "::" + name
+    this.isValue     = CType.isValueType(qname)
     this.mixins      = CType[,]
     this.enumDefs    = EnumDef[,]
     this.slotMap     = Str:CSlot[:]
@@ -343,6 +344,7 @@ class TypeDef : DefNode, CType
   override readonly CPod pod       // parent pod
   override readonly Str name       // simple class name
   override readonly Str qname      // podName::name
+  override readonly Bool isValue   // is this a value type (Bool, Int, etc)
   Bool baseSpecified := true       // was base assigned from source code
   override CType? base             // extends class
   override CType[] mixins          // mixin types

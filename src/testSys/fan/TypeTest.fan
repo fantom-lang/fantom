@@ -42,6 +42,29 @@ class TypeTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Value Types
+//////////////////////////////////////////////////////////////////////////
+
+  Void testValueTypes()
+  {
+    verifyEq(Bool#.isValue,     true)
+    verifyEq(Bool?#.isValue,    true)
+    verifyEq(Int#.isValue,      true)
+    verifyEq(Int?#.isValue,     true)
+    verifyEq(Float#.isValue,    true)
+    verifyEq(Float?#.isValue,   true)
+
+    verifyEq(Obj#.isValue,      false)
+    verifyEq(Obj?#.isValue,     false)
+    verifyEq(Num#.isValue,      false)
+    verifyEq(Num?#.isValue,     false)
+    verifyEq(Decimal#.isValue,  false)
+    verifyEq(Decimal?#.isValue, false)
+    verifyEq(Str#.isValue,      false)
+    verifyEq(Str?#.isValue,     false)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // TypeDb
 //////////////////////////////////////////////////////////////////////////
 

@@ -54,6 +54,31 @@ mixin CType
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Is this is a value type (Bool, Int, or Float and their nullables)
+  **
+  abstract Bool isValue()
+
+  **
+  ** Static utility for value type
+  **
+  static Bool isValueType(Str qname)
+  {
+    switch (qname)
+    {
+      case "sys::Bool":
+      case "sys::Int":
+      case "sys::Float":
+        return true
+      default:
+        return false
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Nullable
+//////////////////////////////////////////////////////////////////////////
+
+  **
   ** Is this is a nullable type (marked with trailing ?)
   **
   abstract Bool isNullable()

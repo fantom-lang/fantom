@@ -29,8 +29,8 @@ class FType : CType
 
   override CNamespace ns() { return fpod.ns }
   override FPod pod() { return fpod }
-  override Str name() { return fpod.n(fpod.typeRef(self).typeName) }
-  override Str qname() { return "${fpod.name}::${name}" }
+  override once Str name() { return fpod.n(fpod.typeRef(self).typeName) }
+  override once Str qname() { return "${fpod.name}::${name}" }
   override Str signature() { return qname }
   override Str toStr() { return signature }
 
@@ -46,6 +46,11 @@ class FType : CType
   override once CType[] mixins()
   {
     return fpod.resolveTypes(fmixins)
+  }
+
+  override once Bool isValue()
+  {
+    return isValueType(qname)
   }
 
   override Str:CSlot slots
