@@ -19,7 +19,7 @@
 **   2) add temp local for returns inside protected region
 **   3) check for field accessor optimization
 **   4) check for field storage requirements
-**   5) add implicit cast when assigning Obj to non-Obj
+**   5) add implicit coersions: auto-casts, boxing, to non-nullable
 **   6) implicit call to toImmutable when assigning to const field
 **
 class CheckErrors : CompilerStep
@@ -378,8 +378,13 @@ class CheckErrors : CompilerStep
       err("Cannot use This as parameter type", p.location)
 
     // check parameter default type
-    if (p.def != null && !p.def.fits(p.paramType))
-      err("'$p.def.toTypeStr' is not assignable to '$p.paramType'", p.def.location)
+    if (p.def != null)
+    {
+      p.def = coerce(p.def, p.paramType) |,|
+      {
+        err("'$p.def.toTypeStr' is not assignable to '$p.paramType'", p.def.location)
+      }
+    }
   }
 
   private Void checkMethodReturn(MethodDef m)
@@ -466,45 +471,36 @@ class CheckErrors : CompilerStep
 
   private Void checkIf(IfStmt stmt)
   {
-    if (!stmt.condition.ctype.isBool)
+    stmt.condition = coerce(stmt.condition, ns.boolType) |,|
     {
-      if (stmt.condition.ctype.isObj)
-        stmt.condition = cast(stmt.condition, ns.boolType)
-      else
-        err("If condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
+      err("If condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
     }
   }
 
   private Void checkThrow(ThrowStmt stmt)
   {
-    if (!stmt.exception.fits(ns.errType))
+    stmt.exception = coerce(stmt.exception, ns.errType) |,|
     {
-      if (stmt.exception.ctype.isObj)
-        stmt.exception = cast(stmt.exception, ns.errType)
-      else
-        err("Must throw Err, not '$stmt.exception.ctype'", stmt.exception.location)
+      err("Must throw Err, not '$stmt.exception.ctype'", stmt.exception.location)
     }
   }
 
   private Void checkFor(ForStmt stmt)
   {
-    if (stmt.condition != null && !stmt.condition.ctype.isBool)
+    if (stmt.condition != null)
     {
-      if (stmt.condition.ctype.isObj)
-        stmt.condition = cast(stmt.condition, ns.boolType)
-      else
+      stmt.condition = coerce(stmt.condition, ns.boolType) |,|
+      {
         err("For condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
+      }
     }
   }
 
   private Void checkWhile(WhileStmt stmt)
   {
-    if (!stmt.condition.ctype.isBool)
+    stmt.condition = coerce(stmt.condition, ns.boolType) |,|
     {
-      if (stmt.condition.ctype.isObj)
-        stmt.condition = cast(stmt.condition, ns.boolType)
-      else
-        err("While condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
+      err("While condition must be Bool, not '$stmt.condition.ctype'", stmt.condition.location)
     }
   }
 
@@ -544,12 +540,9 @@ class CheckErrors : CompilerStep
     }
     else
     {
-      if (!stmt.expr.fits(ret))
+      stmt.expr = coerce(stmt.expr, ret) |,|
       {
-        if (stmt.expr.id !== ExprId.nullLiteral && ret.fits(stmt.expr.ctype))
-          stmt.expr = cast(stmt.expr, ret)
-        else
-          err("Cannot return '$stmt.expr.toTypeStr' as '$ret'", stmt.expr.location)
+        err("Cannot return '$stmt.expr.toTypeStr' as '$ret'", stmt.expr.location)
       }
     }
 
@@ -650,16 +643,11 @@ class CheckErrors : CompilerStep
 
   private Void checkBool(UnaryExpr expr)
   {
-    operand := expr.operand.ctype
-    if (!operand.isBool)
+    expr.operand = coerce(expr.operand, ns.boolType) |,|
     {
-      if (operand.isObj)
-        expr.operand = cast(expr.operand, ns.boolType)
-      else
-        err("Cannot apply '$expr.opToken.symbol' operator to '$operand'", expr.location)
+      err("Cannot apply '$expr.opToken.symbol' operator to '$expr.operand.ctype'", expr.location)
     }
   }
-
 
   private Void checkCompareNull(UnaryExpr expr)
   {
@@ -672,12 +660,9 @@ class CheckErrors : CompilerStep
   {
     expr.operands.each |Expr operand, Int i|
     {
-      if (!operand.ctype.isBool)
+      expr.operands[i] = coerce(operand, ns.boolType) |,|
       {
-        if (operand.ctype.isObj)
-          expr.operands[i] = cast(operand, ns.boolType)
-        else
-          err("Cannot apply '$expr.opToken.symbol' operator to '$operand.ctype'", operand.location)
+        err("Cannot apply '$expr.opToken.symbol' operator to '$operand.ctype'", operand.location)
       }
     }
   }
@@ -689,7 +674,7 @@ class CheckErrors : CompilerStep
 
   private Bool checkCompare(Expr lhs, Expr rhs)
   {
-    if (!lhs.fits(rhs.ctype) && !rhs.fits(lhs.ctype))
+    if (!lhs.ctype.fits(rhs.ctype) && !rhs.ctype.fits(lhs.ctype))
     {
       err("Incomparable types '$lhs.ctype' and '$rhs.ctype'", lhs.location)
       return false
@@ -700,12 +685,9 @@ class CheckErrors : CompilerStep
   private Void checkAssign(BinaryExpr expr)
   {
     // check that rhs is assignable to lhs
-    if (!expr.rhs.fits(expr.lhs.ctype))
+    expr.rhs = coerce(expr.rhs, expr.lhs.ctype) |,|
     {
-      if (expr.rhs.id !== ExprId.nullLiteral && expr.lhs.ctype.fits(expr.rhs.ctype))
-        expr.rhs = cast(expr.rhs, expr.lhs.ctype)
-      else
-        err("'$expr.rhs.toTypeStr' is not assignable to '$expr.lhs.ctype'", expr.rhs.location)
+      err("'$expr.rhs.toTypeStr' is not assignable to '$expr.lhs.ctype'", expr.rhs.location)
     }
 
     // check that lhs is assignable
@@ -1018,12 +1000,9 @@ class CheckErrors : CompilerStep
 
   private Void checkTernary(TernaryExpr expr)
   {
-    if (!expr.condition.ctype.isBool)
+    expr.condition = coerce(expr.condition, ns.boolType) |,|
     {
-      if (expr.condition.ctype.isObj)
-        expr.condition = cast(expr.condition, ns.boolType)
-      else
-        err("Ternary condition must be Bool, not '$expr.condition.ctype'", expr.condition.location)
+      err("Ternary condition must be Bool, not '$expr.condition.ctype'", expr.condition.location)
     }
   }
 
@@ -1062,14 +1041,7 @@ class CheckErrors : CompilerStep
       {
         sig.params.each |CType p, Int i|
         {
-          arg := args[i]
-          if (!arg.fits(p))
-          {
-            if (arg.id !== ExprId.nullLiteral && p.fits(arg.ctype))
-              args[i] = cast(arg, p)
-            else
-              isErr = true
-          }
+          args[i] = coerce(args[i], p) |,| { isErr = true }
         }
       }
     }
@@ -1093,13 +1065,9 @@ class CheckErrors : CompilerStep
         else
         {
           // ensure arg fits parameter type (or auto-cast)
-          arg := args[i]
-          if (!arg.fits(p.paramType))
+          args[i] = coerce(args[i], p.paramType) |,|
           {
-            if (arg.id !== ExprId.nullLiteral && p.paramType.fits(arg.ctype))
-              args[i] = cast(arg, p.paramType)
-            else
-              isErr = name != "compare" // TODO let anything slide for Obj.compare
+            isErr = name != "compare" // TODO let anything slide for Obj.compare
           }
         }
       }
@@ -1183,9 +1151,43 @@ class CheckErrors : CompilerStep
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  private static Expr cast(Expr target, CType to)
+  **
+  ** Coerce the target expression to the specified type.  If
+  ** the expression is not type compatible run the onErr function.
+  **
+  private static Expr coerce(Expr expr, CType expected, |,| onErr)
   {
-    return TypeCheckExpr.cast(target, to)
+    // sanity check that expression has been typed
+    CType? actual := expr.ctype
+    if (actual == null) throw NullErr.make("null ctype: ${expr}")
+
+    // if the same type this is easy
+    if (actual == expected) return expr
+
+    // we can never use a void expression
+    if (actual.isVoid)
+    {
+      onErr()
+      return expr
+    }
+
+    // if expr is null literal, verify expected type is nullable
+    if (expr.id === ExprId.nullLiteral)
+    {
+      if (!expected.isNullable) onErr()
+      return expr
+    }
+
+    // if the expression fits to type, that is ok
+    if (actual.fits(expected)) return expr
+
+    // if we auto-cast to make the expr fit, do it
+    if (expected.fits(actual))
+      return TypeCheckExpr.cast(expr, expected)
+
+    // we have an error condition
+    onErr()
+    return expr
   }
 
 //////////////////////////////////////////////////////////////////////////
