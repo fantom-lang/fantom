@@ -34,25 +34,6 @@ abstract class Expr : Node
   virtual Int? asTableSwitchCase() { return null }
 
   **
-  ** Return if this expression matches the expected type.
-  **
-  Bool fits(CType expected)
-  {
-    // sanity check that this expression has been typed
-    if ((Obj?)ctype == null) throw NullErr.make("null ctype: ${this}")
-    actual := ctype
-
-    // void is never any type
-    if (actual.isVoid) return false
-
-    // null can be used for any non-nullable type
-    if (id === ExprId.nullLiteral) return expected.isNullable
-
-    // route to CType.fits
-    return actual.fits(expected)
-  }
-
-  **
   ** Get this expression's type as a string for error reporting.
   **
   Str toTypeStr()
