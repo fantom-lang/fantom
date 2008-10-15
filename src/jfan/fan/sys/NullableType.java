@@ -39,6 +39,8 @@ public class NullableType
   public List inheritance() { return root.inheritance(); }
   public boolean is(Type type) { return root.is(type); }
 
+  public Boolean isValue() { return root.isValue(); }
+
   public Boolean isNullable() { return true; }
   public Type toNullable() { return this; }
   public Type toNonNullable() { return root; }

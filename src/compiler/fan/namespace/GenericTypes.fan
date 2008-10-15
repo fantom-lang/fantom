@@ -31,6 +31,8 @@ abstract class GenericType : CType
   override Str qname()     { return base.qname }
   override Int flags()  { return 0 }
 
+  override Bool isValue() { return false }
+
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }
 
@@ -327,6 +329,7 @@ class GenericParameterType : CType
   override Str qname
   override Str signature() { return qname }
   override Int flags() { return 0 }
+  override Bool isValue() { return false }
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }
   override Bool isGeneric() { return false }
