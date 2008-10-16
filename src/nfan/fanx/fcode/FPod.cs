@@ -86,7 +86,7 @@ namespace Fanx.Fcode
 
         // if the type signature is java/lang then we route
         // to static methods on FanObj, FanFloat, etc
-        string impl = NameUtil.toNetImplTypeName(type);
+        string impl = FanUtil.toNetImplTypeName(type);
         bool explicitSelf = false;
         bool isStatic = false;
         if (type != impl)
@@ -103,7 +103,7 @@ namespace Fanx.Fcode
         // equals => _equals (since we can't override
         // Object.equals by return type)
         if (!explicitSelf)
-          mName = NameUtil.toNetMethodName(mName);
+          mName = FanUtil.toNetMethodName(mName);
 
         string[] pars;
         if (explicitSelf)
@@ -158,7 +158,7 @@ namespace Fanx.Fcode
       {
         int[] v = fieldRef(index).val;
         nfield = new NField();
-        nfield.parentType = NameUtil.toNetImplTypeName(nname(v[0]));
+        nfield.parentType = FanUtil.toNetImplTypeName(nname(v[0]));
         nfield.fieldName  = "m_" + name(v[1]);
         nfield.fieldType  = nname(v[2]);
         m_nfields[index] = nfield;
@@ -178,7 +178,7 @@ namespace Fanx.Fcode
         FTypeRef refer = typeRef(index);
         string podName = name(refer.podName);
         string typeName = name(refer.typeName);
-        m_nnames[index] = n = NameUtil.toNetTypeName(podName, typeName);
+        m_nnames[index] = n = FanUtil.toNetTypeName(podName, typeName);
       }
       return n;
     }

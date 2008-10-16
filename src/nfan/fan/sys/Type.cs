@@ -788,7 +788,7 @@ namespace Fan.Sys
         {
           try
           {
-            m_type = System.Type.GetType(NameUtil.toNetImplTypeName(podName, m_name.val));
+            m_type = System.Type.GetType(FanUtil.toNetImplTypeName(podName, m_name.val));
           }
           catch (Exception e)
           {
@@ -883,7 +883,7 @@ namespace Fan.Sys
 
     private void finishMethod(MethodInfo m, bool staticOnly)
     {
-      string name = NameUtil.toFanMethodName(m.Name);
+      string name = FanUtil.toFanMethodName(m.Name);
       Slot s = slot(name, false);
       if (s == null) return;
       if (s.parent() != this) return;
@@ -935,7 +935,7 @@ namespace Fan.Sys
       for (int i=0; i<pars.Length; i++)
       {
         System.Type p = pars[i].ParameterType;
-        if (!p.FullName.StartsWith("Fan.") && NameUtil.toFanType(p, false) == null)
+        if (!p.FullName.StartsWith("Fan.") && FanUtil.toFanType(p, false) == null)
           return false;
       }
       return true;

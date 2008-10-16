@@ -15,7 +15,7 @@ namespace Fanx.Util
   /// <summary>
   /// Utilites for dealing with type names in .NET.
   /// </summary>
-  public class NameUtil
+  public class FanUtil
   {
     /// <summary>
     /// Convert .NET type to Fan type.
@@ -61,7 +61,7 @@ namespace Fanx.Util
             break;
         }
       }
-      return "Fan." + NameUtil.upper(podName, false) + "." + typeName;
+      return "Fan." + FanUtil.upper(podName, false) + "." + typeName;
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ namespace Fanx.Util
             break;
         }
       }
-      return "Fan." + NameUtil.upper(podName, false) + "." + typeName;
+      return "Fan." + FanUtil.upper(podName, false) + "." + typeName;
     }
 
     /// <summary>
@@ -201,7 +201,7 @@ namespace Fanx.Util
     private static Hashtable netToFanTypes = new Hashtable();
     private static Hashtable netImmutables = new Hashtable();
 
-    static NameUtil()
+    static FanUtil()
     {
       netToFanTypes["System.Object"]  = Fan.Sys.Sys.ObjType;
       netToFanTypes["Fan.Sys.Double"] = Fan.Sys.Sys.FloatType;
