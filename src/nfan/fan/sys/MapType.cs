@@ -36,14 +36,14 @@ namespace Fan.Sys
       return signature().hash();
     }
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is MapType)
       {
         MapType x = (MapType)obj;
-        return Bool.make(m_k.Equals(x.m_k) && m_v.Equals(x.m_v));
+        return Boolean.valueOf(m_k.Equals(x.m_k) && m_v.Equals(x.m_v));
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     public override Type @base()

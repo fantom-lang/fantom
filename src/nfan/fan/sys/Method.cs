@@ -203,9 +203,9 @@ namespace Fan.Sys
 
       public override Method method() { return m; }
 
-      public override Bool isImmutable()
+      public override Boolean isImmutable()
       {
-        return Bool.make(m.isStatic().val || m.m_parent.isConst().val);
+        return Boolean.valueOf(m.isStatic().booleanValue() || m.m_parent.isConst().booleanValue());
       }
 
       public override object call(List args)

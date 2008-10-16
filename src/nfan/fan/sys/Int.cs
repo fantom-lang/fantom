@@ -21,9 +21,9 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Int fromStr(Str s) { return fromStr(s, Ten, Bool.True); }
-    public static Int fromStr(Str s, Int radix) { return fromStr(s, radix, Bool.True); }
-    public static Int fromStr(Str s, Int radix, Bool check)
+    public static Int fromStr(Str s) { return fromStr(s, Ten, Boolean.True); }
+    public static Int fromStr(Str s, Int radix) { return fromStr(s, radix, Boolean.True); }
+    public static Int fromStr(Str s, Int radix, Boolean check)
     {
       try
       {
@@ -31,7 +31,7 @@ namespace Fan.Sys
       }
       catch (FormatException)
       {
-        if (!check.val) return null;
+        if (!check.booleanValue()) return null;
         throw ParseErr.make("Int", s).val;
       }
     }
@@ -45,7 +45,7 @@ namespace Fan.Sys
       if (v < 0) v = -v;
       long start = r.start().val;
       long end   = r.end().val;
-      if (r.inclusive().val) ++end;
+      if (r.inclusive().booleanValue()) ++end;
       return make(start + (v % (end-start)));
     }
 
@@ -78,12 +78,12 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is Int)
-        return val == ((Int)obj).val ? Bool.True : Bool.False;
+        return val == ((Int)obj).val ? Boolean.True : Boolean.False;
       else
-        return Bool.False;
+        return Boolean.False;
     }
 
     public override Int compare(object obj)
@@ -158,34 +158,34 @@ namespace Fan.Sys
       return that;
     }
 
-    public Bool isEven()
+    public Boolean isEven()
     {
-      return (val % 2) == 0 ? Bool.True : Bool.False;
+      return (val % 2) == 0 ? Boolean.True : Boolean.False;
     }
 
-    public Bool isOdd()
+    public Boolean isOdd()
     {
-      return (val % 2) != 0 ? Bool.True : Bool.False;
+      return (val % 2) != 0 ? Boolean.True : Boolean.False;
     }
 
   /////////////////////////////////////////////////////////////////////////
   // Char
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isSpace()
+    public Boolean isSpace()
     {
       try
       {
         if (val < 128 && (charMap[(int)val] & SPACE) != 0)
-          return Bool.True;
+          return Boolean.True;
         else
-          return Bool.False;
+          return Boolean.False;
       }
       catch (IndexOutOfRangeException)
       {
         // should be very rare to use this method with negative
         // numbers, so don't take the hit every call
-        return Bool.False;
+        return Boolean.False;
       }
     }
 
@@ -203,20 +203,20 @@ namespace Fan.Sys
       }
     }
 
-    public Bool isAlpha()
+    public Boolean isAlpha()
     {
       try
       {
         if (val < 128 && (charMap[(int)val] & (UPPER|LOWER)) != 0)
-          return Bool.True;
+          return Boolean.True;
         else
-          return Bool.False;
+          return Boolean.False;
       }
       catch (IndexOutOfRangeException)
       {
         // should be very rare to use this method with negative
         // numbers, so don't take the hit every call
-        return Bool.False;
+        return Boolean.False;
       }
     }
 
@@ -234,31 +234,31 @@ namespace Fan.Sys
       }
     }
 
-    public Bool isAlphaNum()
+    public Boolean isAlphaNum()
     {
       try
       {
         if (val < 128 && (charMap[(int)val] & (UPPER|LOWER|DIGIT)) != 0)
-          return Bool.True;
+          return Boolean.True;
         else
-          return Bool.False;
+          return Boolean.False;
       }
       catch (IndexOutOfRangeException)
       {
         // should be very rare to use this method with negative
         // numbers, so don't take the hit every call
-        return Bool.False;
+        return Boolean.False;
       }
     }
 
-    public Bool isUpper()
+    public Boolean isUpper()
     {
-      return 'A' <= val && val <= 'Z' ? Bool.True : Bool.False;
+      return 'A' <= val && val <= 'Z' ? Boolean.True : Boolean.False;
     }
 
-    public Bool isLower()
+    public Boolean isLower()
     {
-      return 'a' <= val && val <= 'z' ? Bool.True : Bool.False;
+      return 'a' <= val && val <= 'z' ? Boolean.True : Boolean.False;
     }
 
     public Int upper()
@@ -277,38 +277,38 @@ namespace Fan.Sys
         return this;
     }
 
-    public Bool isDigit()
+    public Boolean isDigit()
     {
-      return '0' <= val && val <= '9' ? Bool.True : Bool.False;
+      return '0' <= val && val <= '9' ? Boolean.True : Boolean.False;
     }
 
-    public Bool isDigit(Int radix)
+    public Boolean isDigit(Int radix)
     {
-      if (val < 0 || val >= 128) return Bool.False;
+      if (val < 0 || val >= 128) return Boolean.False;
       int v = (int)val;
       int r = (int)radix.val;
 
       if (r == 10)
       {
-        return ((charMap[v] & DIGIT) != 0) ? Bool.True : Bool.False;
+        return ((charMap[v] & DIGIT) != 0) ? Boolean.True : Boolean.False;
       }
 
       if (r == 16)
       {
-        return ((charMap[v] & HEX) != 0) ? Bool.True : Bool.False;
+        return ((charMap[v] & HEX) != 0) ? Boolean.True : Boolean.False;
       }
 
       if (r <= 10)
       {
-        return '0' <= v && v <= ('0'+r) ?  Bool.True : Bool.False;
+        return '0' <= v && v <= ('0'+r) ?  Boolean.True : Boolean.False;
       }
       else
       {
-        if ((charMap[v] & DIGIT) != 0) return Bool.True;
+        if ((charMap[v] & DIGIT) != 0) return Boolean.True;
         int x = v-10;
-        if ('a' <= v && v <= 'a'+x) return Bool.True;
-        if ('A' <= v && v <= 'A'+x) return Bool.True;
-        return Bool.False;
+        if ('a' <= v && v <= 'a'+x) return Boolean.True;
+        if ('A' <= v && v <= 'A'+x) return Boolean.True;
+        return Boolean.False;
       }
     }
 
@@ -351,9 +351,9 @@ namespace Fan.Sys
       return null;
     }
 
-    public Bool equalsIgnoreCase(Int ch)
+    public Boolean equalsIgnoreCase(Int ch)
     {
-      return (val | 0x20L) == (ch.val | 0x20L) ? Bool.True : Bool.False;
+      return (val | 0x20L) == (ch.val | 0x20L) ? Boolean.True : Boolean.False;
     }
 
     internal static readonly byte[] charMap = new byte[128];
@@ -368,14 +368,14 @@ namespace Fan.Sys
   // Locale
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool localeIsUpper()
+    public Boolean localeIsUpper()
     {
-      return Char.IsUpper((char)val) ? Bool.True : Bool.False;
+      return Char.IsUpper((char)val) ? Boolean.True : Boolean.False;
     }
 
-    public Bool localeIsLower()
+    public Boolean localeIsLower()
     {
-      return Char.IsLower((char)val) ? Bool.True : Bool.False;
+      return Char.IsLower((char)val) ? Boolean.True : Boolean.False;
     }
 
     public Int localeUpper()

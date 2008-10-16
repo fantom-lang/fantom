@@ -49,7 +49,7 @@ namespace Fan.Sys
 
     public static Type find(Str sig) { return TypeParser.load(sig.val, true, null); }
     public static Type find(String sig) { return TypeParser.load(sig, true, null); }
-    public static Type find(Str sig, Bool check) { return TypeParser.load(sig.val, check.val, null); }
+    public static Type find(Str sig, Boolean check) { return TypeParser.load(sig.val, check.booleanValue(), null); }
     public static Type find(String sig, bool check) { return TypeParser.load(sig, check, null); }
     public static Type find(String podName, String typeName, bool check)
     {
@@ -104,15 +104,15 @@ namespace Fan.Sys
   // Flags
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isAbstract() { return Bool.make(m_flags & FConst.Abstract); }
-    public Bool isClass() { return Bool.make((m_flags & (FConst.Enum|FConst.Mixin)) == 0); }
-    public Bool isConst() { return Bool.make(m_flags & FConst.Const); }
-    public Bool isEnum() { return Bool.make(m_flags & FConst.Enum); }
-    public Bool isFinal() { return Bool.make(m_flags & FConst.Final); }
-    public Bool isInternal() { return Bool.make(m_flags & FConst.Internal); }
-    public Bool isMixin() { return Bool.make(m_flags & FConst.Mixin); }
-    public Bool isPublic() { return Bool.make(m_flags & FConst.Public); }
-    public Bool isSynthetic() { return Bool.make(m_flags & FConst.Synthetic); }
+    public Boolean isAbstract() { return Boolean.valueOf(m_flags & FConst.Abstract); }
+    public Boolean isClass() { return Boolean.valueOf((m_flags & (FConst.Enum|FConst.Mixin)) == 0); }
+    public Boolean isConst() { return Boolean.valueOf(m_flags & FConst.Const); }
+    public Boolean isEnum() { return Boolean.valueOf(m_flags & FConst.Enum); }
+    public Boolean isFinal() { return Boolean.valueOf(m_flags & FConst.Final); }
+    public Boolean isInternal() { return Boolean.valueOf(m_flags & FConst.Internal); }
+    public Boolean isMixin() { return Boolean.valueOf(m_flags & FConst.Mixin); }
+    public Boolean isPublic() { return Boolean.valueOf(m_flags & FConst.Public); }
+    public Boolean isSynthetic() { return Boolean.valueOf(m_flags & FConst.Synthetic); }
 
     public override object trap(Str name, List args)
     {
@@ -144,7 +144,7 @@ namespace Fan.Sys
 
       // check that first is a class type
       t.m_base = (Type)supers.get(0);
-      if (t.m_base.isMixin().val) throw ArgErr.make("Not a class: " + t.m_base).val;
+      if (t.m_base.isMixin().booleanValue()) throw ArgErr.make("Not a class: " + t.m_base).val;
       t.m_base.checkOkForDynamic();
 
       // TODO: we don't support mixins yet
@@ -156,7 +156,7 @@ namespace Fan.Sys
       for (int i=1; i<supers.sz(); ++i)
       {
         Type m = (Type)supers.get(i);
-        if (!m.isMixin().val) throw ArgErr.make("Not mixin: " + m).val;
+        if (!m.isMixin().booleanValue()) throw ArgErr.make("Not mixin: " + m).val;
         m.checkOkForDynamic();
         mixins.add(m);
       }
@@ -184,7 +184,7 @@ namespace Fan.Sys
       this.m_dynamic = true;
     }
 
-    public Bool isDynamic() { return Bool.make(m_dynamic); }
+    public Boolean isDynamic() { return Boolean.valueOf(m_dynamic); }
 
   //////////////////////////////////////////////////////////////////////////
   // Generics
@@ -243,9 +243,9 @@ namespace Fan.Sys
       return Sys.ObjType;
     }
 
-    public Bool isGeneric()
+    public Boolean isGeneric()
     {
-      return isGenericType() ? Bool.True : Bool.False;
+      return isGenericType() ? Boolean.True : Boolean.False;
     }
 
     public virtual Map @params()
@@ -306,15 +306,15 @@ namespace Fan.Sys
     public List slots()   { return reflect().m_slots.ro(); }
 
     public Field field(Str name) { return (Field)slot(name.val, true); }
-    public Field field(Str name, Bool check) { return (Field)slot(name.val, check.val); }
+    public Field field(Str name, Boolean check) { return (Field)slot(name.val, check.booleanValue()); }
     public Field field(string name, bool check) { return (Field)slot(name, check); }
 
     public Method method(Str name) { return (Method)slot(name.val, true); }
-    public Method method(Str name, Bool check) { return (Method)slot(name.val, check.val); }
+    public Method method(Str name, Boolean check) { return (Method)slot(name.val, check.booleanValue()); }
     public Method method(string name, bool check) { return (Method)slot(name, check); }
 
     public Slot slot(Str name) { return slot(name.val, true); }
-    public Slot slot(Str name, Bool check) { return slot(name.val, check.val); }
+    public Slot slot(Str name, Boolean check) { return slot(name.val, check.booleanValue()); }
     public Slot slot(string name, bool check)
     {
       Slot slot = (Slot)reflect().m_slotsByName[name];
@@ -375,7 +375,7 @@ namespace Fan.Sys
         {
           // check for no-arg make on base class
           Method make = m_base.method("make", true);
-          if (!make.isCtor().val || make.m_func.m_params.sz() != 0)
+          if (!make.isCtor().booleanValue() || make.m_func.m_params.sz() != 0)
             throw Err.make("Dynamic base type requires no arg make ctor: " + m_base).val;
 
           // generate the class and store the .NET constructor
@@ -450,7 +450,7 @@ namespace Fan.Sys
       }
     }
 
-    public Bool fits(Type type) { return @is(type) ? Bool.True : Bool.False; }
+    public Boolean fits(Type type) { return @is(type) ? Boolean.True : Boolean.False; }
     public virtual bool @is(Type type)
     {
       if (type == this || (type == Sys.ObjType && this != Sys.VoidType))
@@ -488,18 +488,18 @@ namespace Fan.Sys
   // Facets
   //////////////////////////////////////////////////////////////////////////
 
-    public Map facets() { return facets(Bool.False); }
-    public Map facets(Bool inherited)
+    public Map facets() { return facets(Boolean.False); }
+    public Map facets(Boolean inherited)
     {
       Map map = reflect().m_facets.map();
-      if (inherited.val)
+      if (inherited.booleanValue())
       {
         map = map.rw();
         List inherit = inheritance();
         for (int i=0; i<inherit.sz(); ++i)
         {
-          Map x = ((Type)inherit.get(i)).facets(Bool.False);
-          if (x.isEmpty().val) continue;
+          Map x = ((Type)inherit.get(i)).facets(Boolean.False);
+          if (x.isEmpty().booleanValue()) continue;
           IDictionaryEnumerator en = x.pairsIterator();
           while (en.MoveNext())
           {
@@ -511,17 +511,17 @@ namespace Fan.Sys
       return map;
     }
 
-    public object facet(Str name) { return facet(name, null, Bool.False); }
-    public object facet(Str name, object def) { return facet(name, def, Bool.False); }
-    public object facet(Str name, object def, Bool inherited)
+    public object facet(Str name) { return facet(name, null, Boolean.False); }
+    public object facet(Str name, object def) { return facet(name, def, Boolean.False); }
+    public object facet(Str name, object def, Boolean inherited)
     {
       object val = reflect().m_facets.get(name, null);
       if (val != null) return val;
-      if (!inherited.val) return def;
+      if (!inherited.booleanValue()) return def;
       List inherit = inheritance();
       for (int i=0; i<inherit.sz(); ++i)
       {
-        val = ((Type)inherit.get(i)).facet(name, null, Bool.False);
+        val = ((Type)inherit.get(i)).facet(name, null, Boolean.False);
         if (val != null) return val;
       }
       return def;
@@ -558,7 +558,7 @@ namespace Fan.Sys
 
     public override Str toStr() { return signature(); }
 
-    public override Bool isImmutable() { return m_dynamic ? Bool.False : Bool.True; }
+    public override Boolean isImmutable() { return m_dynamic ? Boolean.False : Boolean.True; }
 
     public Type toImmutable()
     {
@@ -697,7 +697,7 @@ namespace Fan.Sys
     private void merge(Slot slot, List slots, Hashtable nameToSlot, Hashtable nameToIndex)
     {
       // skip constructors which aren't mine
-      if (slot.isCtor().val && slot.m_parent != this) return;
+      if (slot.isCtor().booleanValue() && slot.m_parent != this) return;
 
       string name = slot.m_name.val;
       Int dup = (Int)nameToIndex[name];
@@ -843,7 +843,7 @@ namespace Fan.Sys
         // mixin then we do this for both the interface and
         // the static methods only of the implementation class
         finishSlots(m_type, false);
-        if (isMixin().val) finishSlots(m_auxType, true);
+        if (isMixin().booleanValue()) finishSlots(m_auxType, true);
       }
       catch (Exception e)
       {
@@ -887,7 +887,7 @@ namespace Fan.Sys
       Slot s = slot(name, false);
       if (s == null) return;
       if (s.parent() != this) return;
-      if (staticOnly && !s.isStatic().val) return;
+      if (staticOnly && !s.isStatic().booleanValue()) return;
       if (s is Method)
       {
         Method method = (Method)s;
@@ -899,7 +899,7 @@ namespace Fan.Sys
           int n = 1;
           for (int j=method.@params().sz()-1; j>=0; j--)
           {
-            if (((Param)method.@params().get(j)).hasDefault().val) n++;
+            if (((Param)method.@params().get(j)).hasDefault().booleanValue()) n++;
             else break;
           }
           method.m_reflect = new MethodInfo[n];
@@ -914,7 +914,7 @@ namespace Fan.Sys
           if (!checkAllFan(pars)) return;
           bool netStatic = m.IsStatic;
           if (netStatic && this == Sys.ObjType && name != "echo") return;
-          if (netStatic && !method.isStatic().val && !method.isCtor().val) --numParams;
+          if (netStatic && !method.isStatic().booleanValue() && !method.isCtor().booleanValue()) --numParams;
         }
 
         // zero index is full signature up to using max defaults

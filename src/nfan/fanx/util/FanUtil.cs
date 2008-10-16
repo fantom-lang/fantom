@@ -53,6 +53,9 @@ namespace Fanx.Util
       {
         switch (typeName[0])
         {
+          case 'B':
+            if (typeName == "Bool") return "Fan.Sys.Boolean";
+            break;
           case 'F':
             if (typeName == "Float") return "Fan.Sys.Double";
             break;
@@ -75,6 +78,9 @@ namespace Fanx.Util
       {
         switch (typeName[0])
         {
+          case 'B':
+            if (typeName == "Bool") return "Fan.Sys.FanBool";
+            break;
           case 'F':
             if (typeName == "Float") return "Fan.Sys.FanFloat";
             break;
@@ -101,6 +107,7 @@ namespace Fanx.Util
       }
       if (ntype[0] == 'F')
       {
+        if (ntype == "Fan.Sys.Boolean") return "Fan.Sys.FanBool";
         if (ntype == "Fan.Sys.Double") return "Fan.Sys.FanFloat";
       }
       return ntype;
@@ -203,10 +210,12 @@ namespace Fanx.Util
 
     static FanUtil()
     {
-      netToFanTypes["System.Object"]  = Fan.Sys.Sys.ObjType;
-      netToFanTypes["Fan.Sys.Double"] = Fan.Sys.Sys.FloatType;
+      netToFanTypes["System.Object"]   = Fan.Sys.Sys.ObjType;
+      netToFanTypes["Fan.Sys.Boolean"] = Fan.Sys.Sys.BoolType;
+      netToFanTypes["Fan.Sys.Double"]  = Fan.Sys.Sys.FloatType;
 
-      netImmutables["Fan.Sys.Double"] = true;
+      netImmutables["Fan.Sys.Boolean"] = true;
+      netImmutables["Fan.Sys.Double"]  = true;
     }
 
   }

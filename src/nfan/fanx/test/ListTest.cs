@@ -183,7 +183,7 @@ namespace Fanx.Test
     public void verify(List list, object[] v)
     {
   //System.Console.WriteLine(list);
-      verify(list.isEmpty().val == (v.Length == 0));
+      verify(list.isEmpty().booleanValue() == (v.Length == 0));
       verify(list.size().val == v.Length);
       for (int i=0; i<list.size().val; ++i)
         verify(list.get(Int.make(i)) == v[i]);

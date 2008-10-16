@@ -21,7 +21,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Version fromStr(Str str) { return fromStr(str.val, true); }
-    public static Version fromStr(Str str, Bool check) { return fromStr(str.val, check.val); }
+    public static Version fromStr(Str str, Boolean check) { return fromStr(str.val, check.booleanValue()); }
     public static Version fromStr(string s) { return fromStr(s, true); }
     public static Version fromStr(string s, bool check)
     {
@@ -82,12 +82,12 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is Version)
         return toStr()._equals(((Version)obj).toStr());
       else
-        return Bool.False;
+        return Boolean.False;
     }
 
     public override Int compare(object obj)

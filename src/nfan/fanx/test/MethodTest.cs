@@ -38,23 +38,23 @@ namespace Fanx.Test
 
       verifySig("|->Void|", new Type[] { }, Sys.VoidType);
 
-      verifySig("|Bool x-> Str|", new Type[] { Sys.BoolType }, Sys.StrType);
+      verifySig("|Boolean x-> Str|", new Type[] { Sys.BoolType }, Sys.StrType);
 
       verifySig("|Str a, Duration b -> Int|",
                 new Type[] { Sys.StrType, Sys.DurationType },
                 Sys.IntType);
 
-      verifySig("|Bool a, Int b, Int c, Str d, Type e, Obj f, Str g, Bool h -> Int|",
+      verifySig("|Boolean a, Int b, Int c, Str d, Type e, Obj f, Str g, Boolean h -> Int|",
                new Type[] { Sys.BoolType, Sys.IntType, Sys.IntType, Sys.StrType,
                  Sys.TypeType, Sys.ObjType, Sys.StrType, Sys.BoolType  },
                Sys.IntType);
 
-      verifySig("|Bool a, Int b, Int c, Str d, Type e, Obj f, Str g, Bool h, Duration i -> Int|",
+      verifySig("|Boolean a, Int b, Int c, Str d, Type e, Obj f, Str g, Boolean h, Duration i -> Int|",
                new Type[] { Sys.BoolType, Sys.IntType, Sys.IntType, Sys.StrType,
                  Sys.TypeType, Sys.ObjType, Sys.StrType, Sys.BoolType, Sys.DurationType  },
                Sys.IntType);
 
-      //verifySigErr("|Bool a-> Int,Bool|", "Expected '|', not ','");
+      //verifySigErr("|Boolean a-> Int,Boolean|", "Expected '|', not ','");
     }
 
     /*
@@ -119,9 +119,9 @@ namespace Fanx.Test
       throws Exception
     {
       // static
-      verify("Obj f(|Str s, Bool c -> Type| m) { return m.call([\"sys::Str\", true]) }",
+      verify("Obj f(|Str s, Boolean c -> Type| m) { return m.call([\"sys::Str\", true]) }",
         new Obj[] { Sys.findMethod("sys::Sys.findType", true) }, Sys.StrType);
-      verify("Obj f(|Str s, Bool c -> Type| m) { return m.call([\"sys::Str\", true, 55]) }",
+      verify("Obj f(|Str s, Boolean c -> Type| m) { return m.call([\"sys::Str\", true, 55]) }",
         new Obj[] { Sys.findMethod("sys::Sys.findType", true) }, Sys.StrType);
 
       // instance

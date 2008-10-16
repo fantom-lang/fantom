@@ -52,7 +52,7 @@ namespace Fanx.Util
       for (int i=0; i<types.sz(); ++i)
       {
         t = (Type)types.get(i);
-        if (t.isPublic().val) break;
+        if (t.isPublic().booleanValue()) break;
       }
       if (t == null)
         throw Err.make("Script file defines no public classes: " +  file).val;
@@ -142,9 +142,9 @@ namespace Fanx.Util
     static bool getOption(Map options, Str key, bool def)
     {
       if (options == null) return def;
-      Bool x = (Bool)options.get(key);
+      Boolean x = (Boolean)options.get(key);
       if (x == null) return def;
-      return x.val;
+      return x.booleanValue();
     }
 
   //////////////////////////////////////////////////////////////////////////

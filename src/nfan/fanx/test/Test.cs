@@ -8,7 +8,7 @@
 
 using System;
 using System.Reflection;
-using Bool  = Fan.Sys.Bool;
+using Boolean  = Fan.Sys.Boolean;
 using Int   = Fan.Sys.Int;
 using Double = Fan.Sys.Double;
 using Str   = Fan.Sys.Str;
@@ -214,24 +214,24 @@ namespace Fanx.Test
   // Array Utils
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool MakeBool(bool a)
+    public Boolean MakeBool(bool a)
     {
-      return Bool.make(a);
+      return Boolean.valueOf(a);
     }
 
-    public Bool[] MakeBools(bool a)
+    public Boolean[] MakeBools(bool a)
     {
-      return new Bool[] { MakeBool(a) };
+      return new Boolean[] { MakeBool(a) };
     }
 
-    public Bool[] MakeBools(bool a, bool b)
+    public Boolean[] MakeBools(bool a, bool b)
     {
-      return new Bool[] { MakeBool(a), MakeBool(b) };
+      return new Boolean[] { MakeBool(a), MakeBool(b) };
     }
 
-    public Bool[] MakeBools(bool a, bool b, bool c)
+    public Boolean[] MakeBools(bool a, bool b, bool c)
     {
-      return new Bool[] { MakeBool(a), MakeBool(b), MakeBool(c) };
+      return new Boolean[] { MakeBool(a), MakeBool(b), MakeBool(c) };
     }
 
     public Int[] MakeInts(long a)

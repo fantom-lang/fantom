@@ -56,7 +56,7 @@ namespace Fan.Sys
     public File dir() { return m_dir; }
     public void dir(File v)
     {
-      if (v != null && (!v.exists().val || !v.isDir().val))
+      if (v != null && (!v.exists().booleanValue() || !v.isDir().booleanValue()))
         throw ArgErr.make("Invalid working directory: " + v).val;
       this.m_dir = v;
     }

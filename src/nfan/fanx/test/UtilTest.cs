@@ -61,9 +61,9 @@ namespace Fanx.Test
     {
       verifyQName(FanUtil.splitQName("Fan"), null, "Fan");
       verifyQName(FanUtil.splitQName("Fan.Sys"), "Fan", "Sys");
-      verifyQName(FanUtil.splitQName("Fan.Sys.Bool"), "Fan.Sys", "Bool");
-      verifyQName(FanUtil.splitQName("Fan.Sys.Bool.Foo"), "Fan.Sys.Bool", "Foo");
-      verifyQName(FanUtil.splitQName("Fan.Sys.Bool.Foo/Val"), "Fan.Sys.Bool.Foo", "Val");
+      verifyQName(FanUtil.splitQName("Fan.Sys.Boolean"), "Fan.Sys", "Boolean");
+      verifyQName(FanUtil.splitQName("Fan.Sys.Boolean.Foo"), "Fan.Sys.Boolean", "Foo");
+      verifyQName(FanUtil.splitQName("Fan.Sys.Boolean.Foo/Val"), "Fan.Sys.Boolean.Foo", "Val");
     }
 
     private void verifyQName(string[] a, string b, string c)

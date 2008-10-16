@@ -221,10 +221,10 @@ namespace Fan.Sys
       return this;
     }
 
-    public override sealed Bool close()
+    public override sealed Boolean close()
     {
       // Java doesn't support closing mmap
-      return Bool.True;
+      return Boolean.True;
     }
 
     public override sealed Str toHex()

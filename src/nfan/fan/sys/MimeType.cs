@@ -21,8 +21,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static MimeType fromStr(Str s) { return fromStr(s, Bool.True); }
-    public static MimeType fromStr(Str s, Bool check)
+    public static MimeType fromStr(Str s) { return fromStr(s, Boolean.True); }
+    public static MimeType fromStr(Str s, Boolean check)
     {
       try
       {
@@ -35,7 +35,7 @@ namespace Fan.Sys
         if (semi > 0)
         {
           pars = new Map(Sys.StrType, Sys.StrType);
-          pars.caseInsensitive(Bool.True);
+          pars.caseInsensitive(Boolean.True);
           bool inQuotes = false;
           int keyStart = semi+1;
           int valStart = -1;
@@ -96,12 +96,12 @@ namespace Fan.Sys
       }
       catch (ParseErr.Val e)
       {
-        if (!check.val) return null;
+        if (!check.booleanValue()) return null;
         throw e;
       }
       catch (System.Exception)
       {
-        if (!check.val) return null;
+        if (!check.booleanValue()) return null;
         throw ParseErr.make("MimeType",  s).val;
       }
     }
@@ -158,11 +158,11 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
-      if (!(obj is MimeType)) return Bool.False;
+      if (!(obj is MimeType)) return Boolean.False;
       MimeType x = (MimeType)obj;
-      return Bool.make(
+      return Boolean.valueOf(
         m_mediaType.val.Equals(x.m_mediaType.val) &&
         m_subType.val.Equals(x.m_subType.val) &&
         m_params.Equals(x.m_params));
@@ -219,7 +219,7 @@ namespace Fan.Sys
       if (q == null)
       {
         q = new Map(Sys.StrType, Sys.StrType);
-        q.caseInsensitive(Bool.True);
+        q.caseInsensitive(Boolean.True);
         q = q.toImmutable();
         m_emptyQuery = q;
       }

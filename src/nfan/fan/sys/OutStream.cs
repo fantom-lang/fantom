@@ -146,9 +146,9 @@ namespace Fan.Sys
       return writeUtfString(x.val.ToString());
     }
 
-    public virtual OutStream writeBool(Bool x)
+    public virtual OutStream writeBool(Boolean x)
     {
-      return w(x.val ? 1 : 0);
+      return w(x.booleanValue() ? 1 : 0);
     }
 
     public virtual OutStream writeUtf(Str x) { return writeUtfString(x.val); }
@@ -254,8 +254,8 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual OutStream writeProps(Map props) { return writeProps(props, Bool.True); }
-    public virtual OutStream writeProps(Map props, Bool cls)
+    public virtual OutStream writeProps(Map props) { return writeProps(props, Boolean.True); }
+    public virtual OutStream writeProps(Map props, Boolean cls)
     {
       Charset origCharset = charset();
       charset(Charset.utf8());
@@ -278,7 +278,7 @@ namespace Fan.Sys
       }
       finally
       {
-        try { if (cls.val) close(); } catch (System.Exception e) { Err.dumpStack(e); }
+        try { if (cls.booleanValue()) close(); } catch (System.Exception e) { Err.dumpStack(e); }
         charset(origCharset);
       }
     }
@@ -323,10 +323,10 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual Bool close()
+    public virtual Boolean close()
     {
       if (m_out != null) return m_out.close();
-      return Bool.True;
+      return Boolean.True;
     }
 
   //////////////////////////////////////////////////////////////////////////

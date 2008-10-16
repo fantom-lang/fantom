@@ -51,10 +51,12 @@ namespace Fanx.Serial
         return;
       }
 
-      //if (obj instanceof Number)
-      //{
+      if (obj.GetType().FullName[0] == 'F')
+      {
+        if (obj is Boolean && (obj as Boolean).booleanValue())  { w("true"); return; }
+        if (obj is Boolean && !(obj as Boolean).booleanValue()) { w("false"); return; }
         if (obj is Double) { FanFloat.encode((Double)obj, this); return; }
-      //}
+      }
 
       if (obj is Literal)
       {
@@ -63,11 +65,11 @@ namespace Fanx.Serial
       }
 
       Type type = FanObj.type(obj);
-      if (type.facet(facetSimple, null, Bool.False) == Bool.True)
+      if (type.facet(facetSimple, null, Boolean.False) == Boolean.True)
       {
         writeSimple(type, obj);
       }
-      else if (type.facet(facetSerializable, null, Bool.True) == Bool.True)
+      else if (type.facet(facetSerializable, null, Boolean.True) == Boolean.True)
       {
         writeComplex(type, obj);
       }
@@ -107,8 +109,8 @@ namespace Fanx.Serial
         Field f = (Field)fields.get(i);
 
         // skip static, transient, and synthetic (once) fields
-        if (f.isStatic().val || f.isSynthetic().val ||
-            f.facet(facetTransient, Bool.False) == Bool.True)
+        if (f.isStatic().booleanValue() || f.isSynthetic().booleanValue() ||
+            f.facet(facetTransient, Boolean.False) == Boolean.True)
           continue;
 
         // get the value
@@ -136,7 +138,7 @@ namespace Fanx.Serial
       }
 
       // if collection
-      if (type.facet(facetCollection, null, Bool.True) == Bool.True)
+      if (type.facet(facetCollection, null, Boolean.True) == Boolean.True)
         first = writeCollectionItems(type, obj, first);
 
       // if we output fields, then close braces
@@ -251,7 +253,7 @@ namespace Fanx.Serial
       if (!inferred) wType(t);
 
       // handle empty map
-      if (map.isEmpty().val) { w("[:]"); return; }
+      if (map.isEmpty().booleanValue()) { w("[:]"); return; }
 
       // items
       level++;
@@ -349,9 +351,9 @@ namespace Fanx.Serial
 
     private static bool option(Map options, Str name, bool def)
     {
-      Bool val = (Bool)options.get(name);
+      Boolean val = (Boolean)options.get(name);
       if (val == null) return def;
-      return val.val;
+      return val.booleanValue();
     }
 
   //////////////////////////////////////////////////////////////////////////

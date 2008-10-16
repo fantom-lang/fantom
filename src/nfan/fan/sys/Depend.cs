@@ -174,12 +174,12 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is Depend)
         return toStr()._equals(toStr(obj));
       else
-        return Bool.False;
+        return Boolean.False;
     }
 
     public override Int hash()
@@ -231,16 +231,16 @@ namespace Fan.Sys
       return m_constraints[(int)index.val].version;
     }
 
-    public Bool isPlus() { return isPlus(Int.Zero); }
-    public Bool isPlus(Int index)
+    public Boolean isPlus() { return isPlus(Int.Zero); }
+    public Boolean isPlus(Int index)
     {
-      return m_constraints[(int)index.val].isPlus ? Bool.True : Bool.False;
+      return m_constraints[(int)index.val].isPlus ? Boolean.True : Boolean.False;
     }
 
-    public Bool isRange() { return isRange(Int.Zero); }
-    public Bool isRange(Int index)
+    public Boolean isRange() { return isRange(Int.Zero); }
+    public Boolean isRange(Int index)
     {
-      return m_constraints[(int)index.val].endVersion != null ? Bool.True : Bool.False;
+      return m_constraints[(int)index.val].endVersion != null ? Boolean.True : Boolean.False;
     }
 
     public Version endVersion() { return endVersion(Int.Zero); }
@@ -249,7 +249,7 @@ namespace Fan.Sys
       return m_constraints[(int)index.val].endVersion;
     }
 
-    public Bool match(Version v)
+    public Boolean match(Version v)
     {
       for (int i=0; i<m_constraints.Length; i++)
       {
@@ -258,23 +258,23 @@ namespace Fan.Sys
         {
           // versionPlus
           if (c.version.compare(v).val <= 0)
-            return Bool.True;
+            return Boolean.True;
         }
         else if (c.endVersion != null)
         {
           // versionRange
           if (c.version.compare(v).val <= 0 &&
               (c.endVersion.compare(v).val >= 0 || match(c.endVersion, v)))
-            return Bool.True;
+            return Boolean.True;
         }
         else
         {
           // versionSimple
           if (match(c.version, v))
-            return Bool.True;
+            return Boolean.True;
         }
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     private static bool match(Version a, Version b)

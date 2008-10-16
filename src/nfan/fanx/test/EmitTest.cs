@@ -72,15 +72,15 @@ namespace Fanx.Test
     public void verifySysFindType()
     {
       Pod pod = Pod.find("sys", true, null);
-      verify(pod.findType("Bool", true) == Sys.BoolType);
+      verify(pod.findType("Boolean", true) == Sys.BoolType);
       verify(pod.findType("Int", true)  == Sys.IntType);
       verify(pod.findType("Str", true)  == Sys.StrType);
 
-      verify(Fan.Sys.Type.find(Str.make("sys::Bool")) == Sys.BoolType);
-      verify(Fan.Sys.Type.find(Str.make("sys::Bool"), Bool.True) == Sys.BoolType);
-      verify(Fan.Sys.Type.find("sys::Bool") == Sys.BoolType);
-      verify(Fan.Sys.Type.find("sys::Bool", true) == Sys.BoolType);
-      verify(Fan.Sys.Type.find("sys", "Bool", true) == Sys.BoolType);
+      verify(Fan.Sys.Type.find(Str.make("sys::Boolean")) == Sys.BoolType);
+      verify(Fan.Sys.Type.find(Str.make("sys::Boolean"), Fan.Sys.Boolean.True) == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys::Boolean") == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys::Boolean", true) == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys", "Boolean", true) == Sys.BoolType);
     }
 
     public void verifyTypeParser()
@@ -112,7 +112,7 @@ namespace Fanx.Test
 
     public void verifySysReflect()
     {
-      verifySysImpl("sys::Bool", "Fan.Sys.Bool");
+      verifySysImpl("sys::Boolean", "Fan.Sys.Boolean");
       verifySysImpl("sys::Int",  "Fan.Sys.Int");
       verifySysImpl("sys::Str",  "Fan.Sys.Str");
     }
@@ -149,7 +149,7 @@ namespace Fanx.Test
     public void verifyFooBar()
     {
       string code = "class Foo {\n" +
-        "  Bool b\n" +
+        "  Boolean b\n" +
         "  Int i\n" +
         "  Str s\n" +
         "}";

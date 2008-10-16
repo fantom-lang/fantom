@@ -129,7 +129,7 @@ namespace Fanx.Test
     Int callList(object obj, Method m, int argn)
     {
       List list = new List(Sys.ObjType);
-      if (!m.isStatic().val) list.add(obj);
+      if (!m.isStatic().booleanValue()) list.add(obj);
       for (int i=0; i<argn; i++) list.add(Int.make(1+i));
       return (Int)m.call(list);
     }

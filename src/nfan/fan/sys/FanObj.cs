@@ -31,7 +31,7 @@ namespace Fan.Sys
 
     public override bool Equals(object obj)
     {
-      return _equals(obj).val;
+      return _equals(obj).booleanValue();
     }
 
     public override string ToString()
@@ -43,17 +43,17 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Bool equals(object self, object x)
+    public static Boolean equals(object self, object x)
     {
       if (self is FanObj)
         return ((FanObj)self)._equals(x);
       else
-        return Bool.make(self.Equals(x));
+        return Boolean.valueOf(self.Equals(x));
     }
 
-    public virtual Bool _equals(object obj)
+    public virtual Boolean _equals(object obj)
     {
-      return this == obj ? Bool.True : Bool.False;
+      return this == obj ? Boolean.True : Boolean.False;
     }
 
     public static Int compare(object self, object x)
@@ -97,15 +97,15 @@ namespace Fan.Sys
       return Str.make(base.ToString());
     }
 
-    public static Bool isImmutable(object self)
+    public static Boolean isImmutable(object self)
     {
       if (self is FanObj)
         return ((FanObj)self).isImmutable();
       else
-        return Bool.make(FanUtil.isNetImmutable(self.GetType()));
+        return Boolean.valueOf(FanUtil.isNetImmutable(self.GetType()));
     }
 
-    public virtual Bool isImmutable()
+    public virtual Boolean isImmutable()
     {
       return type().isConst();
     }
@@ -130,7 +130,7 @@ namespace Fan.Sys
 
     public virtual object trap(Str name, List args)
     {
-      Slot slot = type().slot(name, Bool.True);
+      Slot slot = type().slot(name, Boolean.True);
       if (slot is Method)
       {
         Method m = (Method)slot;

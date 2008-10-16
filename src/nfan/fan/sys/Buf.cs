@@ -53,9 +53,9 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object that)
+    public override Boolean _equals(object that)
     {
-      return this == that ? Bool.True : Bool.False;
+      return this == that ? Boolean.True : Boolean.False;
     }
 
     public override Str toStr()
@@ -89,9 +89,9 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool empty()
+    public Boolean empty()
     {
-      return getSize() == 0 ? Bool.True : Bool.False;
+      return getSize() == 0 ? Boolean.True : Boolean.False;
     }
 
     public virtual Int capacity()
@@ -123,9 +123,9 @@ namespace Fan.Sys
       return Int.make(getSize()-getPos());
     }
 
-    public Bool more()
+    public Boolean more()
     {
-      return getSize()-getPos() > 0 ? Bool.True : Bool.False;
+      return getSize()-getPos() > 0 ? Boolean.True : Boolean.False;
     }
 
     public Buf seek(Int pos)
@@ -201,9 +201,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual Bool close()
+    public virtual Boolean close()
     {
-      return Bool.True;
+      return Boolean.True;
     }
 
     public Charset charset()
@@ -240,7 +240,7 @@ namespace Fan.Sys
 
     public Buf writeDecimal(Decimal x) { m_out.writeDecimal(x); return this; }
 
-    public Buf writeBool(Bool x) { m_out.writeBool(x); return this; }
+    public Buf writeBool(Boolean x) { m_out.writeBool(x); return this; }
 
     public Buf writeUtf(Str x) { m_out.writeUtf(x); return this; }
 
@@ -296,7 +296,7 @@ namespace Fan.Sys
 
     public Decimal readDecimal() { return m_in.readDecimal(); }
 
-    public Bool readBool() { return m_in.readBool(); }
+    public Boolean readBool() { return m_in.readBool(); }
 
     public Str readUtf() { return m_in.readUtf(); }
 
@@ -318,7 +318,7 @@ namespace Fan.Sys
     public void eachLine(Func f) { m_in.eachLine(f); }
 
     public Str readAllStr() { return m_in.readAllStr(); }
-    public Str readAllStr(Bool normalizeNewlines)  { return m_in.readAllStr(normalizeNewlines); }
+    public Str readAllStr(Boolean normalizeNewlines)  { return m_in.readAllStr(normalizeNewlines); }
 
     public object readObj() { return m_in.readObj(); }
 

@@ -244,7 +244,7 @@ namespace Fan.Sys
 //////////////////////////////////////////////////////////////////////////
 
     public static DateTime fromStr(Str s) { return fromStr(s.val, true); }
-    public static DateTime fromStr(Str s, Bool check) { return fromStr(s.val, check.val); }
+    public static DateTime fromStr(Str s, Boolean check) { return fromStr(s.val, check.booleanValue()); }
     public static DateTime fromStr(string s, bool check)
     {
       try
@@ -316,13 +316,13 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is DateTime)
       {
-        return m_ticks == (obj as DateTime).m_ticks ? Bool.True : Bool.False;
+        return m_ticks == (obj as DateTime).m_ticks ? Boolean.True : Boolean.False;
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     public override Int compare(object obj)
@@ -385,7 +385,7 @@ namespace Fan.Sys
 
     public TimeZone timeZone() { return m_timeZone; }
 
-    public Bool dst() { return ((m_fields >> 31) & 0x1) != 0 ? Bool.True : Bool.False; }
+    public Boolean dst() { return ((m_fields >> 31) & 0x1) != 0 ? Boolean.True : Boolean.False; }
     public bool getDST()  { return ((m_fields >> 31) & 0x1) != 0; }
 
     public Str timeZoneAbbr() { return getDST() ? m_timeZone.dstAbbr(year()) : m_timeZone.stdAbbr(year()); }
@@ -652,7 +652,7 @@ namespace Fan.Sys
       return Str.make(toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz"));
     }
 
-    public static Bool isLeapYear(Int year) { return Bool.make(isLeapYear((int)year.val)); }
+    public static Boolean isLeapYear(Int year) { return Boolean.valueOf(isLeapYear((int)year.val)); }
     public static bool isLeapYear(int year)
     {
       if ((year & 3) != 0) return false;
@@ -754,8 +754,8 @@ namespace Fan.Sys
   // HTTP
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime fromHttpStr(Str s) { return fromHttpStr(s, Bool.True); }
-    public static DateTime fromHttpStr(Str s, Bool check)
+    public static DateTime fromHttpStr(Str s) { return fromHttpStr(s, Boolean.True); }
+    public static DateTime fromHttpStr(Str s, Boolean check)
     {
       for (int i=0; i<httpFormats.Length; ++i)
       {
@@ -771,7 +771,7 @@ namespace Fan.Sys
         }
       }
 
-      if (!check.val) return null;
+      if (!check.booleanValue()) return null;
       throw ParseErr.make("Invalid HTTP DateTime: '" + s + "'").val;
     }
 

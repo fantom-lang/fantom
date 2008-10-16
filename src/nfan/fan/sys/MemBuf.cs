@@ -258,7 +258,7 @@ namespace Fan.Sys
       }
     }
 
-    public Str readAllStr(Bool normalizeNewline )
+    public Str readAllStr(Boolean normalizeNewline )
     */
 
   //////////////////////////////////////////////////////////////////////////

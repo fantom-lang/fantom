@@ -37,8 +37,8 @@ namespace Fan.Sys
       this.localeFullKey  = Str.make(name + "Full");
     }
 
-    public static Weekday fromStr(Str name) { return fromStr(name, Bool.True); }
-    public static Weekday fromStr(Str name, Bool check)
+    public static Weekday fromStr(Str name) { return fromStr(name, Boolean.True); }
+    public static Weekday fromStr(Str name, Boolean check)
     {
       return (Weekday)doFromStr(Sys.WeekdayType, name, check);
     }

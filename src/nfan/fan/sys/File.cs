@@ -18,11 +18,11 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static File make(Uri uri) { return make(uri, Bool.True); }
-    public static File make(Uri uri, Bool checkSlash)
+    public static File make(Uri uri) { return make(uri, Boolean.True); }
+    public static File make(Uri uri, Boolean checkSlash)
     {
       System.IO.FileSystemInfo f = LocalFile.uriToFile(uri);
-      if (f is System.IO.DirectoryInfo && !checkSlash.val && !uri.isDir().val)
+      if (f is System.IO.DirectoryInfo && !checkSlash.booleanValue() && !uri.isDir().booleanValue())
         uri = uri.plusSlash();
       return new LocalFile(uri, f);
     }
@@ -86,13 +86,13 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Bool _equals(object obj)
+    public override sealed Boolean _equals(object obj)
     {
       if (obj is File)
       {
         return m_uri._equals(((File)obj).m_uri);
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     public override sealed int GetHashCode() { return m_uri.GetHashCode(); }
@@ -109,7 +109,7 @@ namespace Fan.Sys
 
     public Uri uri() { return m_uri; }
 
-    public Bool isDir() { return m_uri.isDir();   }
+    public Boolean isDir() { return m_uri.isDir();   }
 
     public List path() { return m_uri.path(); }
 
@@ -127,7 +127,7 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public abstract Bool exists();
+    public abstract Boolean exists();
 
     public abstract Int size();
 
@@ -144,7 +144,7 @@ namespace Fan.Sys
     {
       List x = list();
       for (int i=x.sz()-1; i>=0; --i)
-        if (!((File)x.get(i)).isDir().val)
+        if (!((File)x.get(i)).isDir().booleanValue())
           x.removeAt(Int.make(i));
       return x;
     }
@@ -152,7 +152,7 @@ namespace Fan.Sys
     public virtual void walk(Func c)
     {
       c.call1(this);
-      if (isDir().val)
+      if (isDir().booleanValue())
       {
         List x = list();
         for (int i=0; i<x.sz(); ++i)
@@ -164,22 +164,22 @@ namespace Fan.Sys
     {
       List x = list();
       for (int i=x.sz()-1; i>=0; --i)
-        if (((File)x.get(i)).isDir().val)
+        if (((File)x.get(i)).isDir().booleanValue())
           x.removeAt(Int.make(i));
       return x;
     }
 
     public abstract File normalize();
 
-    public File plus(Uri uri) { return plus(uri, Bool.True); }
-    public abstract File plus(Uri uri, Bool checkSlash);
+    public File plus(Uri uri) { return plus(uri, Boolean.True); }
+    public abstract File plus(Uri uri, Boolean checkSlash);
 
     internal File plus(string uri) { return plus(Uri.fromStr(uri)); }
 
     internal File plusNameOf(File x)
     {
       string name = x.name().val;
-      if (x.isDir().val) name += "/";
+      if (x.isDir().booleanValue()) name += "/";
       return plus(name);
     }
 
@@ -191,13 +191,13 @@ namespace Fan.Sys
 
     public File createFile(Str name)
     {
-      if (!isDir().val) throw IOErr.make("Not a directory: " + this).val;
+      if (!isDir().booleanValue()) throw IOErr.make("Not a directory: " + this).val;
       return this.plus(name.toUri()).create();
     }
 
     public File createDir(Str name)
     {
-      if (!isDir().val) throw IOErr.make("Not a directory: " + this).val;
+      if (!isDir().booleanValue()) throw IOErr.make("Not a directory: " + this).val;
       if (!name.val.EndsWith("/")) name = Str.make(name.val + "/");
       return this.plus(name.toUri()).create();
     }
@@ -216,7 +216,7 @@ namespace Fan.Sys
       // sanity
       if (isDir() != to.isDir())
       {
-        if (isDir().val)
+        if (isDir().booleanValue())
           throw ArgErr.make("copyTo must be dir `" + to + "`").val;
         else
           throw ArgErr.make("copyTo must not be dir `" + to + "`").val;
@@ -240,23 +240,23 @@ namespace Fan.Sys
       // check exclude
       if (exclude is Regex)
       {
-        if (((Regex)exclude).matches(m_uri.toStr()).val) return;
+        if (((Regex)exclude).matches(m_uri.toStr()).booleanValue()) return;
       }
       else if (exclude is Func)
       {
-        if (((Func)exclude).call1(this) == Bool.True) return;
+        if (((Func)exclude).call1(this) == Boolean.True) return;
       }
 
       // check for overwrite
-      if (to.exists().val)
+      if (to.exists().booleanValue())
       {
-        if (overwrite is Bool)
+        if (overwrite is Boolean)
         {
-          if (overwrite == Bool.False) return;
+          if (overwrite == Boolean.False) return;
         }
         else if (overwrite is Func)
         {
-          if (((Func)overwrite).call1(this) == Bool.False) return;
+          if (((Func)overwrite).call1(this) == Boolean.False) return;
         }
         else
         {
@@ -265,7 +265,7 @@ namespace Fan.Sys
       }
 
       // copy directory
-      if (isDir().val)
+      if (isDir().booleanValue())
       {
         to.create();
         List kids = list();
@@ -294,7 +294,7 @@ namespace Fan.Sys
     public File copyInto(File dir) { return copyInto(dir, null); }
     public virtual File copyInto(File dir, Map options)
     {
-      if (!dir.isDir().val)
+      if (!dir.isDir().booleanValue())
         throw ArgErr.make("Not a dir: `" + dir + "`").val;
 
       return copyTo(dir.plusNameOf(this), options);
@@ -308,7 +308,7 @@ namespace Fan.Sys
 
     public virtual File moveInto(File dir)
     {
-      if (!dir.isDir().val)
+      if (!dir.isDir().booleanValue())
         throw ArgErr.make("Not a dir: `" + dir + "`").val;
 
       return moveTo(dir.plusNameOf(this));
@@ -317,7 +317,7 @@ namespace Fan.Sys
     public virtual File rename(Str newName)
     {
       string n = newName.val;
-      if (isDir().val) n += "/";
+      if (isDir().booleanValue()) n += "/";
       return moveTo(parent().plus(n));
     }
 
@@ -336,9 +336,9 @@ namespace Fan.Sys
     public InStream @in() { return @in(defaultBufSize); }
     public abstract InStream @in(Int bufSize);
 
-    public OutStream @out() { return @out(Bool.False, defaultBufSize); }
-    public OutStream @out(Bool append) { return @out(append, defaultBufSize); }
-    public abstract OutStream @out(Bool append, Int bufSize);
+    public OutStream @out() { return @out(Boolean.False, defaultBufSize); }
+    public OutStream @out(Boolean append) { return @out(append, defaultBufSize); }
+    public abstract OutStream @out(Boolean append, Int bufSize);
 
     private static readonly Int defaultBufSize = Int.make(4096);
 
@@ -357,8 +357,8 @@ namespace Fan.Sys
       @in(Int.Chunk).eachLine(f);
     }
 
-    public Str readAllStr() { return readAllStr(Bool.True); }
-    public Str readAllStr(Bool normalizeNewlines)
+    public Str readAllStr() { return readAllStr(Boolean.True); }
+    public Str readAllStr(Boolean normalizeNewlines)
     {
       return @in(defaultBufSize).readAllStr(normalizeNewlines);
     }
@@ -370,7 +370,7 @@ namespace Fan.Sys
 
     public void writeProps(Map props)
     {
-      @out(Bool.False, defaultBufSize).writeProps(props, Bool.True);
+      @out(Boolean.False, defaultBufSize).writeProps(props, Boolean.True);
     }
 
     public object readObj() { return readObj(null); }

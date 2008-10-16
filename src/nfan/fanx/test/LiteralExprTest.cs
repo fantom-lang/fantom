@@ -38,9 +38,9 @@ namespace Fanx.Test
 
     void verifyBoolLiterals()
     {
-      verify("Bool f() { return true }",  Bool.True);
-      verify("Bool f() { return false }", Bool.False);
-      verify("Bool f() { return null; }", null);
+      verify("Boolean f() { return true }",  Boolean.True);
+      verify("Boolean f() { return false }", Boolean.False);
+      verify("Boolean f() { return null; }", null);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -181,7 +181,7 @@ namespace Fanx.Test
     void verifyTypeLiterals()
     {
       // verify basic sys types
-      verify("Type f() { return Bool.type }",  Sys.BoolType);
+      verify("Type f() { return Boolean.type }",  Sys.BoolType);
       verify("Type f() { return Int.type }",   Sys.IntType);
       verify("Type f() { return Str.type; }",   Sys.StrType);
       verify("Type f() { return Type.type }",  Sys.TypeType);
