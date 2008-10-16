@@ -303,7 +303,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Int[] f(Int[] r, Bool b)\n" +
+        "  static Int[] f(Int[] r, Boolean b)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -323,7 +323,7 @@ namespace Fanx.Test
 
       System.Type type = CompileToType(src);
       List r = new List(Sys.IntType, new object[0]);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.False });
 
       List c = (List)o;
       verify(c.get(0).Equals(Int.make(0)));
@@ -335,7 +335,7 @@ namespace Fanx.Test
       r.clear();
       try
       {
-        o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.True});
+        o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.True});
       }
       catch (System.Reflection.TargetInvocationException ex)
       {
@@ -630,7 +630,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Int f(Int[] r, Bool raise)\n" +
+        "  static Int f(Int[] r, Boolean raise)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -654,7 +654,7 @@ namespace Fanx.Test
 
       System.Type type = CompileToType(src);
       List r = new List(Sys.IntType, new object[0]);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.False });
 
       verify(o == Int.make(2));
       verify(r.get(0).Equals(Int.make(0)));
@@ -663,7 +663,7 @@ namespace Fanx.Test
       verify(r.get(3).Equals(Int.make(4)));
 
       r.clear();
-      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.True});
+      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.True});
       verify(o == Int.make(3));
       verify(r.get(0).Equals(Int.make(0)));
       verify(r.get(1).Equals(Int.make(1)));
@@ -675,7 +675,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Void f(Int[] r, Bool raise)\n" +
+        "  static Void f(Int[] r, Boolean raise)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -697,7 +697,7 @@ namespace Fanx.Test
 
       System.Type type = CompileToType(src);
       List r = new List(Sys.IntType, new object[0]);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.False });
 
       verify(o == null);
       verify(r.get(0).Equals(Int.make(0)));
@@ -706,7 +706,7 @@ namespace Fanx.Test
       verify(r.get(3).Equals(Int.make(4)));
 
       r.clear();
-      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.True});
+      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.True});
       verify(o == null);
       verify(r.get(0).Equals(Int.make(0)));
       verify(r.get(1).Equals(Int.make(1)));

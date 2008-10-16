@@ -36,14 +36,14 @@ namespace Fanx.Test
 
     void verifyIs()
     {
-      verify("Bool f() { return true is Bool }",  null, Bool.True);
-      //verify("Bool f() { return 5 is Bool }",  null, Bool.False);
-      verify("Bool f() { return type is Type}",  null, Bool.True);
-      //verify("Bool f() { return type.name is Type}",  null, Bool.False);
-      verify("Bool f() { return type.name is Str}",  null, Bool.True);
-      verify("Bool f() { return type.name.size is Int}",  null, Bool.True);
-      verify("Bool f(Obj o) { return o is Int}",  MakeBools(false), Bool.False);
-      verify("Bool f(Obj o) { return o is Int}",  MakeInts(7), Bool.True);
+      verify("Boolean f() { return true is Boolean }",  null, Boolean.True);
+      //verify("Boolean f() { return 5 is Boolean }",  null, Boolean.False);
+      verify("Boolean f() { return type is Type}",  null, Boolean.True);
+      //verify("Boolean f() { return type.name is Type}",  null, Boolean.False);
+      verify("Boolean f() { return type.name is Str}",  null, Boolean.True);
+      verify("Boolean f() { return type.name.size is Int}",  null, Boolean.True);
+      verify("Boolean f(Obj o) { return o is Int}",  MakeBools(false), Boolean.False);
+      verify("Boolean f(Obj o) { return o is Int}",  MakeInts(7), Boolean.True);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -66,9 +66,9 @@ namespace Fanx.Test
     /*
     void verifyFits()
     {
-      verify("Bool f() { return true.type.fits(Bool.type) }",  null, Bool.True);
-      verify("Bool f() { return 5.type.fits(Bool.type) }",  null, Bool.False);
-      verify("Bool f() { return 5ms.type.fits(Obj.type) }",  null, Bool.True);
+      verify("Boolean f() { return true.type.fits(Boolean.type) }",  null, Boolean.True);
+      verify("Boolean f() { return 5.type.fits(Boolean.type) }",  null, Boolean.False);
+      verify("Boolean f() { return 5ms.type.fits(Obj.type) }",  null, Boolean.True);
     }
     */
 
@@ -80,17 +80,17 @@ namespace Fanx.Test
     void verifyList()
     {
       // is Str[,]
-      verify("Bool f() { return Str[,] is Bool  }",   null, Bool.False);
-      verify("Bool f() { return Str[,] is List  }",   null, Bool.True);
-      verify("Bool f() { return Str[,] is Obj[] }",   null, Bool.True);
-      verify("Bool f() { return Str[,] is Str[] }",   null, Bool.True);
-      verify("Bool f() { return Str[,] is Int[] }",   null, Bool.False);
-      verify("Bool f() { return Str[,] is Str[][] }", null, Bool.False);
+      verify("Boolean f() { return Str[,] is Boolean  }",   null, Boolean.False);
+      verify("Boolean f() { return Str[,] is List  }",   null, Boolean.True);
+      verify("Boolean f() { return Str[,] is Obj[] }",   null, Boolean.True);
+      verify("Boolean f() { return Str[,] is Str[] }",   null, Boolean.True);
+      verify("Boolean f() { return Str[,] is Int[] }",   null, Boolean.False);
+      verify("Boolean f() { return Str[,] is Str[][] }", null, Boolean.False);
 
       // as Str[,]
       Obj x = new List(Sys.StrType);
       Object[] a = { x };
-      verify("Bool    f(Obj x) { return x as Bool  }",   a, null);
+      verify("Boolean    f(Obj x) { return x as Boolean  }",   a, null);
       verify("List    f(Obj x) { return x as List  }",   a, x);
       verify("Obj[]   f(Obj x) { return x as Obj[] }",   a, x);
       verify("Str[]   f(Obj x) { return x as Str[] }",   a, x);
@@ -98,19 +98,19 @@ namespace Fanx.Test
       verify("Str[][] f(Obj x) { return x as Str[][] }", a, null);
 
       // is [Str[,]]
-      verify("Bool f() { return [Str[,]] is Bool  }",      null, Bool.False);
-      verify("Bool f() { return [Str[,]] is List  }",      null, Bool.True);
-      verify("Bool f() { return [Str[,]] is List[]  }",    null, Bool.True);
-      verify("Bool f() { return [Str[,]] is Str[]  }",     null, Bool.False);
-      verify("Bool f() { return [Str[,]] is Str[][]  }",   null, Bool.True);
-      verify("Bool f() { return [Str[,]] is Obj[][]  }",   null, Bool.True);
-      verify("Bool f() { return [Str[,]] is Int[][]  }",   null, Bool.False);
-      verify("Bool f() { return [Str[,]] is Str[][][] }",  null, Bool.False);
+      verify("Boolean f() { return [Str[,]] is Boolean  }",      null, Boolean.False);
+      verify("Boolean f() { return [Str[,]] is List  }",      null, Boolean.True);
+      verify("Boolean f() { return [Str[,]] is List[]  }",    null, Boolean.True);
+      verify("Boolean f() { return [Str[,]] is Str[]  }",     null, Boolean.False);
+      verify("Boolean f() { return [Str[,]] is Str[][]  }",   null, Boolean.True);
+      verify("Boolean f() { return [Str[,]] is Obj[][]  }",   null, Boolean.True);
+      verify("Boolean f() { return [Str[,]] is Int[][]  }",   null, Boolean.False);
+      verify("Boolean f() { return [Str[,]] is Str[][][] }",  null, Boolean.False);
 
       // as [Str[,]]
       x = new List(Sys.StrType.toListOf());
       a = new Obj[] { x };
-      verify("Bool      f(Obj x) { return x as Bool  }",      a, null);
+      verify("Boolean      f(Obj x) { return x as Boolean  }",      a, null);
       verify("List      f(Obj x) { return x as List  }",      a, x);
       verify("List[]    f(Obj x) { return x as List[]  }",    a, x);
       verify("Str[]     f(Obj x) { return x as Str[]  }",     a, null);

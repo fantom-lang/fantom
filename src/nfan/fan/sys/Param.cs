@@ -33,7 +33,7 @@ namespace Fan.Sys
 
     public Str name()  { return m_name; }
     public Type of()   { return m_of; }
-    public Bool hasDefault() { return Bool.make(m_mask & HAS_DEFAULT); }
+    public Boolean hasDefault() { return Boolean.valueOf(m_mask & HAS_DEFAULT); }
 
     public override Str toStr() { return Str.make(m_of + " " + m_name); }
 

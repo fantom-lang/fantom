@@ -136,32 +136,32 @@ namespace Fan.Sys
       }
     }
 
-    public Bool finish()
+    public Boolean finish()
     {
       if (m_zipOut == null) throw UnsupportedErr.make("Zip not opened for writing").val;
       try
       {
         m_zipOut.Finish();
-        return Bool.True;
+        return Boolean.True;
       }
       catch (System.IO.IOException)
       {
-        return Bool.False;
+        return Boolean.False;
       }
     }
 
-    public Bool close()
+    public Boolean close()
     {
       try
       {
         if (m_zipFile != null) m_zipFile.Close();
         if (m_zipIn != null)   m_zipIn.Close();
         if (m_zipOut != null)  m_zipOut.Close();
-        return Bool.True;
+        return Boolean.True;
       }
       catch (System.IO.IOException)
       {
-        return Bool.False;
+        return Boolean.False;
       }
     }
 
@@ -175,16 +175,16 @@ namespace Fan.Sys
       {
         this.zout = zout;
       }
-      public override Bool close()
+      public override Boolean close()
       {
         try
         {
           zout.CloseEntry();
-          return Bool.True;
+          return Boolean.True;
         }
         catch (System.IO.IOException)
         {
-          return Bool.False;
+          return Boolean.False;
         }
       }
       private ZipOutputStream zout;

@@ -32,14 +32,14 @@ namespace Fan.Inet
   // State
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isBound(TcpListener fan)
+    public Boolean isBound(TcpListener fan)
     {
-      return Bool.make(m_bound);
+      return Boolean.valueOf(m_bound);
     }
 
-    public Bool isClosed(TcpListener fan)
+    public Boolean isClosed(TcpListener fan)
     {
-      return Bool.make(m_closed);
+      return Boolean.valueOf(m_closed);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -95,17 +95,17 @@ namespace Fan.Inet
       return s;
     }
 
-    public Bool close(TcpListener fan)
+    public Boolean close(TcpListener fan)
     {
       try
       {
         m_net.Stop();
         m_closed = true;
-        return Bool.True;
+        return Boolean.True;
       }
       catch (Exception)
       {
-        return Bool.False;
+        return Boolean.False;
       }
     }
 
@@ -123,13 +123,13 @@ namespace Fan.Inet
       m_net.Server.ReceiveBufferSize = (int)v.val;
     }
 
-    public Bool getReuseAddress(TcpListener fan)
+    public Boolean getReuseAddress(TcpListener fan)
     {
-      return Bool.make(Convert.ToBoolean(
+      return Boolean.valueOf(Convert.ToBoolean(
         m_net.Server.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress)));
     }
 
-    public void setReuseAddress(TcpListener fan, Bool v)
+    public void setReuseAddress(TcpListener fan, Boolean v)
     {
       m_net.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.val);
     }

@@ -282,11 +282,11 @@ namespace Fan.Sys
       return Decimal.fromStr(readUtfString(), true);
     }
 
-    public virtual Bool readBool()
+    public virtual Boolean readBool()
     {
       int n = r();
       if (n < 0) throw IOErr.make("Unexpected end of stream").val;
-      return n == 0 ? Bool.False : Bool.True;
+      return n == 0 ? Boolean.False : Boolean.True;
     }
 
     public virtual Str readUtf() { return Str.make(readUtfString()); }
@@ -427,7 +427,7 @@ namespace Fan.Sys
         if (f == null)
           terminate = Int.isSpace(c);
         else
-          terminate = ((Bool)f.call1(Int.pos(c))).val;
+          terminate = ((Boolean)f.call1(Int.pos(c))).booleanValue();
         if (terminate)
         {
           unreadChar(c);
@@ -475,14 +475,14 @@ namespace Fan.Sys
       }
     }
 
-    public virtual Str readAllStr() { return readAllStr(Bool.True); }
-    public virtual Str readAllStr(Bool normalizeNewlines)
+    public virtual Str readAllStr() { return readAllStr(Boolean.True); }
+    public virtual Str readAllStr(Boolean normalizeNewlines)
     {
       try
       {
         char[] buf  = new char[4096];
         int n = 0;
-        bool normalize = normalizeNewlines.val;
+        bool normalize = normalizeNewlines.booleanValue();
 
         // read characters
         int last = -1;
@@ -663,9 +663,9 @@ namespace Fan.Sys
       return -1;
     }
 
-    public virtual Int pipe(OutStream output) { return pipe(output, null, Bool.True); }
-    public virtual Int pipe(OutStream output, Int n) { return pipe(output, n, Bool.True); }
-    public virtual Int pipe(OutStream output, Int toPipe, Bool cls)
+    public virtual Int pipe(OutStream output) { return pipe(output, null, Boolean.True); }
+    public virtual Int pipe(OutStream output, Int n) { return pipe(output, n, Boolean.True); }
+    public virtual Int pipe(OutStream output, Int toPipe, Boolean cls)
     {
       try
       {
@@ -698,14 +698,14 @@ namespace Fan.Sys
       }
       finally
       {
-        if (cls.val) close();
+        if (cls.booleanValue()) close();
       }
     }
 
-    public virtual Bool close()
+    public virtual Boolean close()
     {
       if (m_in != null) return m_in.close();
-      return Bool.True;
+      return Boolean.True;
     }
 
   //////////////////////////////////////////////////////////////////////////

@@ -45,14 +45,14 @@ namespace Fan.Sys
   // File
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool exists()
+    public override Boolean exists()
     {
-      return Bool.True;
+      return Boolean.True;
     }
 
     public override Int size()
     {
-      if (isDir().val) return null;
+      if (isDir().booleanValue()) return null;
       long size = m_entry.Size;
       if (size < 0) return null;
       return Int.pos(size);
@@ -88,7 +88,7 @@ namespace Fan.Sys
       return this;
     }
 
-    public override File plus(Uri uri, Bool checkSlash)
+    public override File plus(Uri uri, Boolean checkSlash)
     {
       // TODO
       throw UnsupportedErr.make("ZipEntryFile.plus").val;
@@ -160,7 +160,7 @@ namespace Fan.Sys
       }
     }
 
-    public override OutStream @out(Bool append, Int bufSize)
+    public override OutStream @out(Boolean append, Int bufSize)
     {
       throw IOErr.make("ZipEntryFile is readonly").val;
     }

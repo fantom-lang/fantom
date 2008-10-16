@@ -30,7 +30,7 @@ namespace Fan.Sys
       {
         if (len == 2)
         {
-          if (str.isLower().val)
+          if (str.isLower().booleanValue())
             return new Locale(str, str, null);
         }
 
@@ -38,7 +38,7 @@ namespace Fan.Sys
         {
           Str lang = Str.make(s.Substring(0, 2));
           Str country = Str.make(s.Substring(3, 2));
-          if (lang.isLower().val && country.isUpper().val && s[2] == '-')
+          if (lang.isLower().booleanValue() && country.isUpper().booleanValue() && s[2] == '-')
             return new Locale(str, lang, country);
         }
       }
@@ -102,13 +102,13 @@ namespace Fan.Sys
 
     public override Int hash() { return m_str.hash(); }
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is Locale)
       {
         return (obj as Locale).m_str._equals(m_str);
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     public override Str toStr() { return m_str; }
@@ -130,12 +130,12 @@ namespace Fan.Sys
 
     public Str get(Str podName, Str key)
     {
-      return doGet(Pod.find(podName, Bool.False), podName, key, m_getNoDef);
+      return doGet(Pod.find(podName, Boolean.False), podName, key, m_getNoDef);
     }
 
     public Str get(Str podName, Str key, Str def)
     {
-      return doGet(Pod.find(podName, Bool.False), podName, key, def);
+      return doGet(Pod.find(podName, Boolean.False), podName, key, def);
     }
 
     /**

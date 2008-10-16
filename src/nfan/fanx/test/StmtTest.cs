@@ -36,30 +36,30 @@ namespace Fanx.Test
     {
       object[] f  = MakeBools(false);
       object[] t  = MakeBools(true);
-      object[] fx = new object[] { Bool.False, Int.make(-1) };
-      object[] tx = new object[] { Bool.True,  Int.make(-1) };
+      object[] fx = new object[] { Boolean.False, Int.make(-1) };
+      object[] tx = new object[] { Boolean.True,  Int.make(-1) };
 
       // no else - return
-      verify("Int f(Bool b) { if (b) return 2; return 3; }",       t, Int.make(2));
-      verify("Int f(Bool b) { if (b) return 2; return 3; }",       f, Int.make(3));
-      verify("Int f(Bool b) { if (b) { return 2; } return 3; }",   t, Int.make(2));
-      verify("Int f(Bool b) { if (b) { return 2; } return 3; }",   f, Int.make(3));
+      verify("Int f(Boolean b) { if (b) return 2; return 3; }",       t, Int.make(2));
+      verify("Int f(Boolean b) { if (b) return 2; return 3; }",       f, Int.make(3));
+      verify("Int f(Boolean b) { if (b) { return 2; } return 3; }",   t, Int.make(2));
+      verify("Int f(Boolean b) { if (b) { return 2; } return 3; }",   f, Int.make(3));
 
       // else - return
-      verify("Int f(Bool b) { if (b) return 2; else return 3; }",  t, Int.make(2));
-      verify("Int f(Bool b) { if (b) return 2; else return 3; }",  f, Int.make(3));
-      verify("Int f(Bool b) { if (b) { return 2; } else { return 3; } }",  t, Int.make(2));
-      verify("Int f(Bool b) { if (b) { return 2; } else { return 3; } }",  f, Int.make(3));
+      verify("Int f(Boolean b) { if (b) return 2; else return 3; }",  t, Int.make(2));
+      verify("Int f(Boolean b) { if (b) return 2; else return 3; }",  f, Int.make(3));
+      verify("Int f(Boolean b) { if (b) { return 2; } else { return 3; } }",  t, Int.make(2));
+      verify("Int f(Boolean b) { if (b) { return 2; } else { return 3; } }",  f, Int.make(3));
 
       // no else - no return
-      verify("Int f(Bool b, Int x) { if (b) x = 2; return x; }", tx, Int.make(2));
-      verify("Int f(Bool b, Int x) { if (b) x = 2; return x; }", fx, Int.make(-1));
-      verify("Int f(Bool b, Int x) { if (b) { x = 2; } return x; }", tx, Int.make(2));
-      verify("Int f(Bool b, Int x) { if (b) { x = 2; } return x; }", fx, Int.make(-1));
+      verify("Int f(Boolean b, Int x) { if (b) x = 2; return x; }", tx, Int.make(2));
+      verify("Int f(Boolean b, Int x) { if (b) x = 2; return x; }", fx, Int.make(-1));
+      verify("Int f(Boolean b, Int x) { if (b) { x = 2; } return x; }", tx, Int.make(2));
+      verify("Int f(Boolean b, Int x) { if (b) { x = 2; } return x; }", fx, Int.make(-1));
 
       // else - no return
-      verify("Int f(Bool b, Int x) { if (b) { x = 2; } else { x = 3; } return x; }", tx, Int.make(2));
-      verify("Int f(Bool b, Int x) { if (b) { x = 2; } else { x = 3; } return x; }", fx, Int.make(3));
+      verify("Int f(Boolean b, Int x) { if (b) { x = 2; } else { x = 3; } return x; }", tx, Int.make(2));
+      verify("Int f(Boolean b, Int x) { if (b) { x = 2; } else { x = 3; } return x; }", fx, Int.make(3));
 
       // if/else if/else - return
       verify("Int f(Int x) { if (x == 0) return 10; else if (x == 1) return 11; else return 12;  }", MakeInts(0), Int.make(10));
@@ -84,13 +84,13 @@ namespace Fanx.Test
       verify("Int f(Int x) { if (x == 0) return 10; else if (x == 1) return 11; else if (x == 2) return 12; else if (x == 3) return 13; else return 14;}", MakeInts(4), Int.make(14));
 
       // if { if/else } else { if/else } - return
-      verify("Int f(Bool x, Bool y) { if (x) { if (y) return 3; else return 2; } else { if (y) return 1; else return 0; } }", MakeBools(false, false), Int.make(0));
-      verify("Int f(Bool x, Bool y) { if (x) { if (y) return 3; else return 2; } else { if (y) return 1; else return 0; } }", MakeBools(false, true),  Int.make(1));
-      verify("Int f(Bool x, Bool y) { if (x) { if (y) return 3; else return 2; } else { if (y) return 1; else return 0; } }", MakeBools(true,  false), Int.make(2));
-      verify("Int f(Bool x, Bool y) { if (x) { if (y) return 3; else return 2; } else { if (y) return 1; else return 0; } }", MakeBools(true,  true),  Int.make(3));
+      verify("Int f(Boolean x, Boolean y) { if (x) { if (y) return 3; else return 2; } else { if (y) return 1; else return 0; } }", MakeBools(false, false), Int.make(0));
+      verify("Int f(Boolean x, Boolean y) { if (x) { if (y) return 3; else return 2; } else { if (y) return 1; else return 0; } }", MakeBools(false, true),  Int.make(1));
+      verify("Int f(Boolean x, Boolean y) { if (x) { if (y) return 3; else return 2; } else { if (y) return 1; else return 0; } }", MakeBools(true,  false), Int.make(2));
+      verify("Int f(Boolean x, Boolean y) { if (x) { if (y) return 3; else return 2; } else { if (y) return 1; else return 0; } }", MakeBools(true,  true),  Int.make(3));
 
       // errors
-//VERR      verifyErr("Int f() { if (5) return 1; else return 2 }", "If condition must be Bool, not 'sys::Int'");
+//VERR      verifyErr("Int f() { if (5) return 1; else return 2 }", "If condition must be Boolean, not 'sys::Int'");
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ namespace Fanx.Test
       verify("Int f(Int x) { i:=0; j:=0; while (i<10) { i++; if (i%2 == 0) continue; j = 0; while (true) { j++; if (j>10) break; x++ } } return x }", MakeInts(0), Int.make(50));
 
       // errors
-//VERR      verifyErr("Void f() { while (5) {} }", "While condition must be Bool, not 'sys::Int'");
+//VERR      verifyErr("Void f() { while (5) {} }", "While condition must be Boolean, not 'sys::Int'");
 //VERR      verifyErr("Void f() { break; }",      "Break outside of loop (break is implicit in switch)");
 //VERR      verifyErr("Void f() { continue; }",   "Continue outside of loop");
     }
@@ -148,8 +148,8 @@ namespace Fanx.Test
       verify("Int f() { x:=0; for (;;++x) if (x == 7) break; return x;}", Int.make(7));
 
       // two breaks
-      verify("Int f(Bool b) { x:=0; for (;;) { if (b) {x=1; break} else {x=-1; break}} return x;}", MakeBools(false), Int.make(-1));
-      verify("Int f(Bool b) { x:=0; for (;;) { if (b) {x=1; break} else {x=-1; break}} return x;}", MakeBools(true), Int.make(+1));
+      verify("Int f(Boolean b) { x:=0; for (;;) { if (b) {x=1; break} else {x=-1; break}} return x;}", MakeBools(false), Int.make(-1));
+      verify("Int f(Boolean b) { x:=0; for (;;) { if (b) {x=1; break} else {x=-1; break}} return x;}", MakeBools(true), Int.make(+1));
 
       // two tier break
       verify("Int f() {" +
@@ -168,7 +168,7 @@ namespace Fanx.Test
       verify("Int f() { x:=0; for (Int i:=0; i<3; ++i) x++; for (Int i:=0; i<2; ++i) x++; return x;}", Int.make(5));
 
       // errors
-//VERR      verifyErr("Void f() { for (;\"x\";) {} }", "For condition must be Bool, not 'sys::Str'");
+//VERR      verifyErr("Void f() { for (;\"x\";) {} }", "For condition must be Boolean, not 'sys::Str'");
 //VERR      verifyErr("Void f() { break; }",      "Break outside of loop (break is implicit in switch)");
 //VERR      verifyErr("Void f() { continue; }",   "Continue outside of loop");
     }

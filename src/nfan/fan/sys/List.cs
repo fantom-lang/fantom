@@ -101,9 +101,9 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isEmpty()
+    public Boolean isEmpty()
     {
-      return m_size == 0 ? Bool.True : Bool.False;
+      return m_size == 0 ? Boolean.True : Boolean.False;
     }
 
     public Int size()
@@ -181,30 +181,30 @@ namespace Fan.Sys
       }
     }
 
-    public Bool contains(object val)
+    public Boolean contains(object val)
     {
-      return Bool.make(index(val) != null);
+      return Boolean.valueOf(index(val) != null);
     }
 
-    public Bool containsSame(object val)
+    public Boolean containsSame(object val)
     {
-      return Bool.make(indexSame(val) != null);
+      return Boolean.valueOf(indexSame(val) != null);
     }
 
-    public Bool containsAll(List list)
+    public Boolean containsAll(List list)
     {
       for (int i=0; i<list.sz(); i++)
         if (index(list.get(i)) == null)
-          return Bool.False;
-      return Bool.True;
+          return Boolean.False;
+      return Boolean.True;
     }
 
-    public Bool containsAllSame(List list)
+    public Boolean containsAllSame(List list)
     {
       for (int i=0; i<list.sz(); i++)
         if (indexSame(list.get(i)) == null)
-          return Bool.False;
-      return Bool.True;
+          return Boolean.False;
+      return Boolean.True;
     }
 
     public Int index(object val) { return index(val, Int.Zero); }
@@ -291,18 +291,18 @@ namespace Fan.Sys
       return Int.make(hash);
     }
 
-    public override Bool _equals(object that)
+    public override Boolean _equals(object that)
     {
       if (that is List)
       {
         List x = (List)that;
-        if (!m_of.Equals(x.m_of)) return Bool.False;
-        if (m_size != x.m_size) return Bool.False;
+        if (!m_of.Equals(x.m_of)) return Boolean.False;
+        if (m_size != x.m_size) return Boolean.False;
         for (int i=0; i<m_size; i++)
-          if (!OpUtil.compareEQ(m_values[i], x.m_values[i]).val) return Bool.False;
-        return Bool.True;
+          if (!OpUtil.compareEQ(m_values[i], x.m_values[i]).booleanValue()) return Boolean.False;
+        return Boolean.True;
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -513,7 +513,7 @@ namespace Fan.Sys
     public object find(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Int.pos(i)) == Bool.True)
+        if (f.call2(m_values[i], Int.pos(i)) == Boolean.True)
           return m_values[i];
       return null;
     }
@@ -523,7 +523,7 @@ namespace Fan.Sys
       for (int i=0; i<m_size; ++i)
       {
         Int pos = Int.pos(i);
-        if (f.call2(m_values[i], pos) == Bool.True)
+        if (f.call2(m_values[i], pos) == Boolean.True)
           return pos;
       }
       return null;
@@ -533,7 +533,7 @@ namespace Fan.Sys
     {
       List acc = new List(m_of, m_size);
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Int.pos(i)) == Bool.True)
+        if (f.call2(m_values[i], Int.pos(i)) == Boolean.True)
           acc.add(m_values[i]);
       return acc;
     }
@@ -554,25 +554,25 @@ namespace Fan.Sys
     {
       List acc = new List(m_of, m_size);
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Int.pos(i)) != Bool.True)
+        if (f.call2(m_values[i], Int.pos(i)) != Boolean.True)
           acc.add(m_values[i]);
       return acc;
     }
 
-    public Bool any(Func f)
+    public Boolean any(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Int.pos(i)) == Bool.True)
-          return Bool.True;
-      return Bool.False;
+        if (f.call2(m_values[i], Int.pos(i)) == Boolean.True)
+          return Boolean.True;
+      return Boolean.False;
     }
 
-    public Bool all(Func f)
+    public Boolean all(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Int.pos(i)) != Bool.True)
-          return Bool.False;
-      return Bool.True;
+        if (f.call2(m_values[i], Int.pos(i)) != Boolean.True)
+          return Boolean.False;
+      return Boolean.True;
     }
 
     public object reduce(object reduction, Func f)
@@ -984,14 +984,14 @@ namespace Fan.Sys
   // Readonly
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isRW()
+    public Boolean isRW()
     {
-      return m_isReadonly ? Bool.False : Bool.True;
+      return m_isReadonly ? Boolean.False : Boolean.True;
     }
 
-    public Bool isRO()
+    public Boolean isRO()
     {
-      return m_isReadonly ? Bool.True : Bool.False;
+      return m_isReadonly ? Boolean.True : Boolean.False;
     }
 
     public List rw()
@@ -1023,9 +1023,9 @@ namespace Fan.Sys
       return m_readonlyList;
     }
 
-    public override Bool isImmutable()
+    public override Boolean isImmutable()
     {
-      return Bool.make(m_immutable);
+      return Boolean.valueOf(m_immutable);
     }
 
     public List toImmutable()
@@ -1043,7 +1043,7 @@ namespace Fan.Sys
             item = ((List)item).toImmutable();
           else if (item is Map)
             item = ((Map)item).toImmutable();
-          else if (!isImmutable(item).val)
+          else if (!isImmutable(item).booleanValue())
             throw NotImmutableErr.make("Item [" + i + "] not immutable " + type(item)).val;
         }
         temp[i] = item;

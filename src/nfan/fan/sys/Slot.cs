@@ -22,15 +22,15 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Method findMethod(Str qname) { return (Method)find(qname.val, true); }
-    public static Method findMethod(Str qname, Bool check) { return (Method)find(qname.val, check.val); }
+    public static Method findMethod(Str qname, Boolean check) { return (Method)find(qname.val, check.booleanValue()); }
     public static Method findMethod(String qname, bool check) { return (Method)find(qname, check); }
 
     public static Field findField(Str qname) { return (Field)find(qname.val, true); }
-    public static Field findField(Str qname, Bool check) { return (Field)find(qname.val, check.val); }
+    public static Field findField(Str qname, Boolean check) { return (Field)find(qname.val, check.booleanValue()); }
     public static Field findField(String qname, bool check) { return (Field)find(qname, check); }
 
     public static Slot find(Str qname) { return find(qname.val, true); }
-    public static Slot find(Str qname, Bool check) { return find(qname.val, check.val); }
+    public static Slot find(Str qname, Boolean check) { return find(qname.val, check.booleanValue()); }
     public static Slot find(String qname, bool check)
     {
       String typeName, slotName;
@@ -50,7 +50,7 @@ namespace Fan.Sys
     }
 
     public static Func findFunc(Str qname) { return findFunc(qname.val, true); }
-    public static Func findFunc(Str qname, Bool check) { return findFunc(qname.val, check.val); }
+    public static Func findFunc(Str qname, Boolean check) { return findFunc(qname.val, check.booleanValue()); }
     public static Func findFunc(string qname, bool check)
     {
       Method m = (Method)find(qname, check);
@@ -86,8 +86,8 @@ namespace Fan.Sys
     public Type parent()      { return m_parent; }
     public virtual Str name() { return m_name; }
     public Str qname()        { return m_qname; }
-    public Bool isField()     { return (this is Field) ? Bool.True : Bool.False; }
-    public Bool isMethod()    { return (this is Method) ? Bool.True : Bool.False; }
+    public Boolean isField()     { return (this is Field) ? Boolean.True : Boolean.False; }
+    public Boolean isMethod()    { return (this is Method) ? Boolean.True : Boolean.False; }
     public abstract Str signature();
 
   //////////////////////////////////////////////////////////////////////////
@@ -95,19 +95,19 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public int flags() { return m_flags; }
-    public Bool isAbstract()  { return Bool.make(m_flags & FConst.Abstract); }
-public virtual Bool isConst() { return Bool.make(m_flags & FConst.Const); } // we let synethic Methods override
-    public Bool isCtor()      { return Bool.make(m_flags & FConst.Ctor); }
-    public Bool isFinal()     { return Bool.make(m_flags & FConst.Final); }
-    public Bool isInternal()  { return Bool.make(m_flags & FConst.Internal); }
-    public Bool isNative()    { return Bool.make(m_flags & FConst.Native); }
-    public Bool isOverride()  { return Bool.make(m_flags & FConst.Override); }
-    public Bool isPrivate()   { return Bool.make(m_flags & FConst.Private); }
-    public Bool isProtected() { return Bool.make(m_flags & FConst.Protected); }
-    public Bool isPublic()    { return Bool.make(m_flags & FConst.Public); }
-    public Bool isStatic()    { return Bool.make(m_flags & FConst.Static); }
-    public Bool isSynthetic() { return Bool.make(m_flags & FConst.Synthetic); }
-    public Bool isVirtual()   { return Bool.make(m_flags & FConst.Virtual); }
+    public Boolean isAbstract()  { return Boolean.valueOf(m_flags & FConst.Abstract); }
+public virtual Boolean isConst() { return Boolean.valueOf(m_flags & FConst.Const); } // we let synethic Methods override
+    public Boolean isCtor()      { return Boolean.valueOf(m_flags & FConst.Ctor); }
+    public Boolean isFinal()     { return Boolean.valueOf(m_flags & FConst.Final); }
+    public Boolean isInternal()  { return Boolean.valueOf(m_flags & FConst.Internal); }
+    public Boolean isNative()    { return Boolean.valueOf(m_flags & FConst.Native); }
+    public Boolean isOverride()  { return Boolean.valueOf(m_flags & FConst.Override); }
+    public Boolean isPrivate()   { return Boolean.valueOf(m_flags & FConst.Private); }
+    public Boolean isProtected() { return Boolean.valueOf(m_flags & FConst.Protected); }
+    public Boolean isPublic()    { return Boolean.valueOf(m_flags & FConst.Public); }
+    public Boolean isStatic()    { return Boolean.valueOf(m_flags & FConst.Static); }
+    public Boolean isSynthetic() { return Boolean.valueOf(m_flags & FConst.Synthetic); }
+    public Boolean isVirtual()   { return Boolean.valueOf(m_flags & FConst.Virtual); }
 
     public override object trap(Str name, List args)
     {

@@ -85,9 +85,9 @@ namespace Fan.Fwt
   // Attachment
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool attached(Widget self)
+    public Boolean attached(Widget self)
     {
-      return m_control != null ? Bool.True : Bool.False;
+      return m_control != null ? Boolean.True : Boolean.False;
     }
 
     public void attach(Widget self)

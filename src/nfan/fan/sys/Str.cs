@@ -50,23 +50,23 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is Str)
-        return val == ((Str)obj).val ? Bool.True : Bool.False;
+        return val == ((Str)obj).val ? Boolean.True : Boolean.False;
       else
-        return Bool.False;
+        return Boolean.False;
     }
 
-    public Bool equalsIgnoreCase(Str s)
+    public Boolean equalsIgnoreCase(Str s)
     {
-      if (s == this) return Bool.True;
+      if (s == this) return Boolean.True;
 
       string a = this.val;
       string b = s.val;
       int an   = a.Length;
       int bn   = b.Length;
-      if (an != bn) return Bool.False;
+      if (an != bn) return Boolean.False;
 
       for (int i=0; i<an; i++)
       {
@@ -74,9 +74,9 @@ namespace Fan.Sys
         int bc = b[i];
         if ('A' <= ac && ac <= 'Z') ac |= 0x20;
         if ('A' <= bc && bc <= 'Z') bc |= 0x20;
-        if (ac != bc) return Bool.False;
+        if (ac != bc) return Boolean.False;
       }
-      return Bool.True;
+      return Boolean.True;
     }
 
     public override Int compare(object obj)
@@ -190,9 +190,9 @@ namespace Fan.Sys
       return s;
     }
 
-    public Bool isEmpty()
+    public Boolean isEmpty()
     {
-      return val.Length == 0 ? Bool.True : Bool.False;
+      return val.Length == 0 ? Boolean.True : Boolean.False;
     }
 
     public Int size()
@@ -200,24 +200,24 @@ namespace Fan.Sys
       return Int.pos(val.Length);
     }
 
-    public Bool startsWith(Str s)
+    public Boolean startsWith(Str s)
     {
-      return Bool.make(val.StartsWith(s.val));
+      return Boolean.valueOf(val.StartsWith(s.val));
     }
 
-    public Bool endsWith(Str s)
+    public Boolean endsWith(Str s)
     {
-      return Bool.make(val.EndsWith(s.val));
+      return Boolean.valueOf(val.EndsWith(s.val));
     }
 
-    public Bool contains(Str s)
+    public Boolean contains(Str s)
     {
-      return index(s, Int.Zero) != null ? Bool.True : Bool.False;
+      return index(s, Int.Zero) != null ? Boolean.True : Boolean.False;
     }
 
-    public Bool containsChar(Int ch)
+    public Boolean containsChar(Int ch)
     {
-      return val.IndexOf((char)ch.val) >= 0 ? Bool.True : Bool.False;
+      return val.IndexOf((char)ch.val) >= 0 ? Boolean.True : Boolean.False;
     }
 
     public Int index(Str s) { return index(s, Int.Zero); }
@@ -356,24 +356,24 @@ namespace Fan.Sys
         f.call2(Int.pos(val[i]), Int.pos(i));
     }
 
-    public Bool any(Func f)
+    public Boolean any(Func f)
     {
       string val = this.val;
       int len = val.Length;
       for (int i=0; i<len ; i++)
-        if (f.call2(Int.pos(val[i]), Int.pos(i)) == Bool.True)
-          return Bool.True;
-      return Bool.False;
+        if (f.call2(Int.pos(val[i]), Int.pos(i)) == Boolean.True)
+          return Boolean.True;
+      return Boolean.False;
     }
 
-    public Bool all(Func f)
+    public Boolean all(Func f)
     {
       string val = this.val;
       int len = val.Length;
       for (int i=0; i<len ; i++)
-        if (f.call2(Int.pos(val[i]), Int.pos(i)) == Bool.False)
-          return Bool.False;
-      return Bool.True;
+        if (f.call2(Int.pos(val[i]), Int.pos(i)) == Boolean.False)
+          return Boolean.False;
+      return Boolean.True;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -519,14 +519,14 @@ namespace Fan.Sys
       return make(val.Substring(0, pos+1));
     }
 
-    public List split() { return split(null, Bool.True); }
-    public List split(Int separator) { return split(separator, Bool.True); }
-    public List split(Int separator, Bool trimmed)
+    public List split() { return split(null, Boolean.True); }
+    public List split(Int separator) { return split(separator, Boolean.True); }
+    public List split(Int separator, Boolean trimmed)
     {
       String val = this.val;
       if (separator == null) return splitws(val);
       int sep = (int)separator.val;
-      bool trim = trimmed.val;
+      bool trim = trimmed.booleanValue();
       List toks = new List(Sys.StrType, 16);
       int len = val.Length;
       int x = 0;
@@ -613,16 +613,16 @@ namespace Fan.Sys
       return numLines;
     }
 
-    public Bool isAscii()
+    public Boolean isAscii()
     {
       string val = this.val;
       int len = val.Length;
       for (int i=0; i<len; ++i)
-        if (val[i] >= 128) return Bool.False;
-      return Bool.True;
+        if (val[i] >= 128) return Boolean.False;
+      return Boolean.True;
     }
 
-    public Bool isSpace()
+    public Boolean isSpace()
     {
       string val = this.val;
       int len = val.Length;
@@ -630,12 +630,12 @@ namespace Fan.Sys
       {
         int ch = val[i];
         if (ch >= 128 || (Int.charMap[ch] & Int.SPACE) == 0)
-          return Bool.False;
+          return Boolean.False;
       }
-      return Bool.True;
+      return Boolean.True;
     }
 
-    public Bool isUpper()
+    public Boolean isUpper()
     {
       string val = this.val;
       int len = val.Length;
@@ -643,12 +643,12 @@ namespace Fan.Sys
       {
         int ch = val[i];
         if (ch >= 128 || (Int.charMap[ch] & Int.UPPER) == 0)
-          return Bool.False;
+          return Boolean.False;
       }
-      return Bool.True;
+      return Boolean.True;
     }
 
-    public Bool isLower()
+    public Boolean isLower()
     {
       string val = this.val;
       int len = val.Length;
@@ -656,9 +656,9 @@ namespace Fan.Sys
       {
         int ch = val[i];
         if (ch >= 128 || (Int.charMap[ch] & Int.LOWER) == 0)
-          return Bool.False;
+          return Boolean.False;
       }
-      return Bool.True;
+      return Boolean.True;
     }
 
     public bool isEveryChar(int ch)
@@ -729,29 +729,29 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool toBool() { return Bool.fromStr(this, Bool.True); }
-    public Bool toBool(Bool check) { return Bool.fromStr(this, check); }
+    public Boolean toBool() { return FanBool.fromStr(this, Boolean.True); }
+    public Boolean toBool(Boolean check) { return FanBool.fromStr(this, check); }
 
-    public Int toInt() { return Int.fromStr(this, Int.Ten, Bool.True); }
-    public Int toInt(Int radix) { return Int.fromStr(this, radix, Bool.True); }
-    public Int toInt(Int radix, Bool check) { return Int.fromStr(this, radix, check); }
+    public Int toInt() { return Int.fromStr(this, Int.Ten, Boolean.True); }
+    public Int toInt(Int radix) { return Int.fromStr(this, radix, Boolean.True); }
+    public Int toInt(Int radix, Boolean check) { return Int.fromStr(this, radix, check); }
 
-    public Double toFloat() { return FanFloat.fromStr(this, Bool.True); }
-    public Double toFloat(Bool check) { return FanFloat.fromStr(this, check); }
+    public Double toFloat() { return FanFloat.fromStr(this, Boolean.True); }
+    public Double toFloat(Boolean check) { return FanFloat.fromStr(this, check); }
 
-    public Decimal toDecimal() { return Decimal.fromStr(this, Bool.True); }
-    public Decimal toDecimal(Bool check) { return Decimal.fromStr(this, check); }
+    public Decimal toDecimal() { return Decimal.fromStr(this, Boolean.True); }
+    public Decimal toDecimal(Boolean check) { return Decimal.fromStr(this, check); }
 
     public Uri toUri() { return Uri.fromStr(this); }
 
-    public Str toCode() { return toCode(Int.m_pos['"'], Bool.False); }
-    public Str toCode(Int quote) { return toCode(quote, Bool.False); }
-    public Str toCode(Int quote, Bool escapeUnicode)
+    public Str toCode() { return toCode(Int.m_pos['"'], Boolean.False); }
+    public Str toCode(Int quote) { return toCode(quote, Boolean.False); }
+    public Str toCode(Int quote, Boolean escapeUnicode)
     {
       StringBuilder s = new StringBuilder(val.Length+10);
 
       // opening quote
-      bool escu = escapeUnicode.val;
+      bool escu = escapeUnicode.booleanValue();
       int q = 0;
       if (quote != null)
       {

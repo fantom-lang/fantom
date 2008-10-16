@@ -91,7 +91,7 @@ namespace Fanx.Typedb
     public List findByFacet(Str name, object val, object options)
     {
       // process options
-      if (options == Bool.True && val is Type)
+      if (options == Boolean.True && val is Type)
         return findByFacetInheritance(name, (Type)val);
 
       // no options

@@ -4,6 +4,7 @@
 //
 // History:
 //   13 Sep 06  Andy Frank  Creation
+//   16 Oct 08  Andy Frank  Refactor to FanFloat
 //
 
 using Fanx.Serial;
@@ -21,8 +22,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Double fromStr(Str s) { return fromStr(s, Bool.True); }
-    public static Double fromStr(Str s, Bool check)
+    public static Double fromStr(Str s) { return fromStr(s, Boolean.True); }
+    public static Double fromStr(Str s, Boolean check)
     {
       try
       {
@@ -34,7 +35,7 @@ namespace Fan.Sys
       }
       catch (System.FormatException)
       {
-        if (!check.val) return null;
+        if (!check.booleanValue()) return null;
         throw ParseErr.make("Float", s).val;
       }
     }
@@ -53,30 +54,30 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Bool equals(Double self, object obj)
+    public static Boolean equals(Double self, object obj)
     {
       if (obj is Double)
       {
         double val = self.doubleValue();
         double x = (obj as Double).doubleValue();
-        if (Double.isNaN(val)) return Bool.make(Double.isNaN(x));
-        return val == x ? Bool.True : Bool.False;
+        if (Double.isNaN(val)) return Boolean.valueOf(Double.isNaN(x));
+        return val == x ? Boolean.True : Boolean.False;
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
-    public static Bool approx(Double self, Double that) { return approx(self, that, null); }
-    public static Bool approx(Double self, Double that, Double tolerance)
+    public static Boolean approx(Double self, Double that) { return approx(self, that, null); }
+    public static Boolean approx(Double self, Double that, Double tolerance)
     {
       // need this to check +inf, -inf, and nan
-      if (equals(self, that).val) return Bool.True;
+      if (equals(self, that).booleanValue()) return Boolean.True;
 
       double t;
       if (tolerance == null)
         t = System.Math.Min(System.Math.Abs(self.doubleValue()/1e6), System.Math.Abs(that.doubleValue()/1e6));
       else
         t = tolerance.doubleValue();
-      return System.Math.Abs(self.doubleValue() - that.doubleValue()) <= t ? Bool.True : Bool.False;
+      return System.Math.Abs(self.doubleValue() - that.doubleValue()) <= t ? Boolean.True : Boolean.False;
     }
 
     public static Int compare(Double self, object obj)

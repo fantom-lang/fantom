@@ -245,16 +245,16 @@ namespace Fan.Sys
       }
     }
 
-    public override sealed Bool close()
+    public override sealed Boolean close()
     {
       try
       {
         m_stream.Close();
-        return Bool.True;
+        return Boolean.True;
       }
       catch (System.Exception)
       {
-        return Bool.False;
+        return Boolean.False;
       }
     }
 

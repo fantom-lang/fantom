@@ -44,19 +44,19 @@ namespace Fan.Inet
   // State
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isBound(TcpSocket fan)
+    public Boolean isBound(TcpSocket fan)
     {
-      return Bool.make(m_net.IsBound);
+      return Boolean.valueOf(m_net.IsBound);
     }
 
-    public Bool isConnected(TcpSocket fan)
+    public Boolean isConnected(TcpSocket fan)
     {
-      return Bool.make(m_net.Connected);
+      return Boolean.valueOf(m_net.Connected);
     }
 
-    public Bool isClosed(TcpSocket fan)
+    public Boolean isClosed(TcpSocket fan)
     {
-      return Bool.make(m_closed);
+      return Boolean.valueOf(m_closed);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -152,16 +152,16 @@ namespace Fan.Inet
       return m_out;
     }
 
-    public Bool close(TcpSocket fan)
+    public Boolean close(TcpSocket fan)
     {
       try
       {
         close();
-        return Bool.True;
+        return Boolean.True;
       }
       catch
       {
-        return Bool.False;
+        return Boolean.False;
       }
     }
 
@@ -275,13 +275,13 @@ namespace Fan.Inet
       return m_options;
     }
 
-    public Bool getKeepAlive(TcpSocket fan)
+    public Boolean getKeepAlive(TcpSocket fan)
     {
-      return Bool.make(Convert.ToBoolean(
+      return Boolean.valueOf(Convert.ToBoolean(
         m_net.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive)));
     }
 
-    public void setKeepAlive(TcpSocket fan, Bool v)
+    public void setKeepAlive(TcpSocket fan, Boolean v)
     {
       m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, v.val);
     }
@@ -306,13 +306,13 @@ namespace Fan.Inet
       m_net.SendBufferSize = (int)v.val;
     }
 
-    public Bool getReuseAddress(TcpSocket fan)
+    public Boolean getReuseAddress(TcpSocket fan)
     {
-      return Bool.make(Convert.ToBoolean(
+      return Boolean.valueOf(Convert.ToBoolean(
         m_net.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress)));
     }
 
-    public void setReuseAddress(TcpSocket fan, Bool v)
+    public void setReuseAddress(TcpSocket fan, Boolean v)
     {
       m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.val);
     }
@@ -349,12 +349,12 @@ namespace Fan.Inet
         m_net.ReceiveTimeout = (int)(v.millis());
     }
 
-    public Bool getNoDelay(TcpSocket fan)
+    public Boolean getNoDelay(TcpSocket fan)
     {
-      return Bool.make(m_net.NoDelay);
+      return Boolean.valueOf(m_net.NoDelay);
     }
 
-    public void setNoDelay(TcpSocket fan, Bool v)
+    public void setNoDelay(TcpSocket fan, Boolean v)
     {
       m_net.NoDelay = v.val;
     }

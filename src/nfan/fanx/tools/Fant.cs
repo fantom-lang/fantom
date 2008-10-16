@@ -103,7 +103,7 @@ namespace Fanx.Tools
       for (int i=0; i<all.sz(); i++)
       {
         Type x = (Type)all.get(i);
-        if (x.@is(Sys.TestType) && !x.isAbstract().val) acc.Add(x);
+        if (x.@is(Sys.TestType) && !x.isAbstract().booleanValue()) acc.Add(x);
       }
       return (Type[])acc.ToArray(System.Type.GetType("Fan.Sys.Type"));
     }
@@ -117,7 +117,7 @@ namespace Fanx.Tools
       Method[] all = type.methodArr();
       ArrayList acc = new ArrayList();
       for (int i=0; i<all.Length; i++)
-        if (all[i].name().val.StartsWith("test") && !all[i].isAbstract().val) acc.Add(all[i]);
+        if (all[i].name().val.StartsWith("test") && !all[i].isAbstract().booleanValue()) acc.Add(all[i]);
       return (Method[])acc.ToArray(System.Type.GetType("Fan.Sys.Method"));
     }
 

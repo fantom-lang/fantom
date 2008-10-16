@@ -137,13 +137,13 @@ namespace Fanx.Serial
           if (val == "as") { return Token.AS; }
           break;
         case 'f':
-          if (val == "false") { m_val = Bool.False; return Token.BOOL_LITERAL; }
+          if (val == "false") { m_val = Boolean.False; return Token.BOOL_LITERAL; }
           break;
         case 'n':
           if (val == "null") { m_val = null; return Token.NULL_LITERAL; }
           break;
         case 't':
-          if (val == "true") { m_val = Bool.True; return Token.BOOL_LITERAL; }
+          if (val == "true") { m_val = Boolean.True; return Token.BOOL_LITERAL; }
           break;
         case 'u':
           if (val == "using") { return Token.USING; }

@@ -42,17 +42,17 @@ namespace Fan.Sys
       return signature().hash();
     }
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is FuncType)
       {
         FuncType x = (FuncType)obj;
-        if (m_params.Length != x.m_params.Length) return Bool.False;
+        if (m_params.Length != x.m_params.Length) return Boolean.False;
         for (int i=0; i<m_params.Length; ++i)
-          if (!m_params[i].Equals(x.m_params[i])) return Bool.False;
+          if (!m_params[i].Equals(x.m_params[i])) return Boolean.False;
         return m_ret._equals(x.m_ret);
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     public override Type @base()

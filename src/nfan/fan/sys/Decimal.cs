@@ -30,7 +30,7 @@ namespace Fan.Sys
     }
 
     public static Decimal fromStr(Str s) { return fromStr(s.val, true); }
-    public static Decimal fromStr(Str s, Bool check) { return fromStr(s.val, check.val); }
+    public static Decimal fromStr(Str s, Boolean check) { return fromStr(s.val, check.booleanValue()); }
     public static Decimal fromStr(string s, bool check)
     {
       try
@@ -55,13 +55,13 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is Decimal)
       {
-        return val == (obj as Decimal).val ? Bool.True : Bool.False;
+        return val == (obj as Decimal).val ? Boolean.True : Boolean.False;
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     public override Int compare(object obj)

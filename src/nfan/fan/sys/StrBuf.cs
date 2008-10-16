@@ -46,9 +46,9 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isEmpty()
+    public Boolean isEmpty()
     {
-      return sb.Length == 0 ? Bool.True : Bool.False;
+      return sb.Length == 0 ? Boolean.True : Boolean.False;
     }
 
     public Int size()

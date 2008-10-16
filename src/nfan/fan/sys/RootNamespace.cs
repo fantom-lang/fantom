@@ -42,7 +42,7 @@ namespace Fan.Sys
   // Namespace
   //////////////////////////////////////////////////////////////////////////
 
-    public override object get(Uri uri, Bool check)
+    public override object get(Uri uri, Boolean check)
     {
       checkUri(uri);
 
@@ -55,7 +55,7 @@ namespace Fan.Sys
         val = m_mem[uri.m_str.val];
         if (val == null)
         {
-          if (!check.val) return null;
+          if (!check.booleanValue()) return null;
           throw UnresolvedErr.make(uri).val;
         }
       }
@@ -128,7 +128,7 @@ namespace Fan.Sys
 
     private void checkUri(Uri uri)
     {
-      if (!uri.isPathOnly().val)
+      if (!uri.isPathOnly().booleanValue())
         throw ArgErr.make("Uri not path only: " + uri).val;
     }
 
@@ -160,7 +160,7 @@ namespace Fan.Sys
     {
       if (uri.auth() != null || uri.m_queryStr != null ||
           uri.m_frag != null   || uri.m_path == null ||
-          uri.m_path.sz() == 0 || !uri.isPathAbs().val)
+          uri.m_path.sz() == 0 || !uri.isPathAbs().booleanValue())
         throw ArgErr.make("Invalid Uri for mount: " + uri).val;
 
       if (ns.m_uri != null)

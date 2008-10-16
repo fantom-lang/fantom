@@ -51,71 +51,71 @@ namespace Fanx.Test
 
     void verifyCond()
     {
-      verify("Bool f(Bool a, Bool b) { return a || b;  }", tt, or(tt));
-      verify("Bool f(Bool a, Bool b) { return a || b;  }", ft, or(ft));
-      verify("Bool f(Bool a, Bool b) { return a || b;  }", tf, or(tf));
-      verify("Bool f(Bool a, Bool b) { return a || b;  }", ff, or(ff));
+      verify("Boolean f(Boolean a, Boolean b) { return a || b;  }", tt, or(tt));
+      verify("Boolean f(Boolean a, Boolean b) { return a || b;  }", ft, or(ft));
+      verify("Boolean f(Boolean a, Boolean b) { return a || b;  }", tf, or(tf));
+      verify("Boolean f(Boolean a, Boolean b) { return a || b;  }", ff, or(ff));
 
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b || c;  }", ttt, or(ttt));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b || c;  }", ftt, or(ftt));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b || c;  }", tft, or(tft));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b || c;  }", ttf, or(ttf));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b || c;  }", fft, or(fft));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b || c;  }", ftf, or(ftf));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b || c;  }", tff, or(tff));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b || c;  }", fff, or(fff));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b || c;  }", ttt, or(ttt));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b || c;  }", ftt, or(ftt));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b || c;  }", tft, or(tft));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b || c;  }", ttf, or(ttf));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b || c;  }", fft, or(fft));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b || c;  }", ftf, or(ftf));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b || c;  }", tff, or(tff));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b || c;  }", fff, or(fff));
 
-      verify("Bool f(Bool a, Bool b) { return a && b;  }", tt, and(tt));
-      verify("Bool f(Bool a, Bool b) { return a && b;  }", ft, and(ft));
-      verify("Bool f(Bool a, Bool b) { return a && b;  }", tf, and(tf));
-      verify("Bool f(Bool a, Bool b) { return a && b;  }", ff, and(ff));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b && c;  }", ttt, and(ttt));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b && c;  }", ftt, and(ftt));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b && c;  }", tft, and(tft));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b && c;  }", ttf, and(ttf));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b && c;  }", fft, and(fft));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b && c;  }", ftf, and(ftf));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b && c;  }", tff, and(tff));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b && c;  }", fff, and(fff));
+      verify("Boolean f(Boolean a, Boolean b) { return a && b;  }", tt, and(tt));
+      verify("Boolean f(Boolean a, Boolean b) { return a && b;  }", ft, and(ft));
+      verify("Boolean f(Boolean a, Boolean b) { return a && b;  }", tf, and(tf));
+      verify("Boolean f(Boolean a, Boolean b) { return a && b;  }", ff, and(ff));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b && c;  }", ttt, and(ttt));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b && c;  }", ftt, and(ftt));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b && c;  }", tft, and(tft));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b && c;  }", ttf, and(ttf));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b && c;  }", fft, and(fft));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b && c;  }", ftf, and(ftf));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b && c;  }", tff, and(tff));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b && c;  }", fff, and(fff));
 
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b && c;  }", ttt, MakeBool(true ||true &&true));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b && c;  }", ftt, MakeBool(false||true &&true));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b && c;  }", tft, MakeBool(true ||false&&true));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b && c;  }", ttf, MakeBool(true ||true &&false));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b && c;  }", fft, MakeBool(false||false&&true));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b && c;  }", tff, MakeBool(true ||false&&false));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a || b && c;  }", fff, MakeBool(false||false&&false));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b && c;  }", ttt, MakeBool(true ||true &&true));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b && c;  }", ftt, MakeBool(false||true &&true));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b && c;  }", tft, MakeBool(true ||false&&true));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b && c;  }", ttf, MakeBool(true ||true &&false));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b && c;  }", fft, MakeBool(false||false&&true));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b && c;  }", tff, MakeBool(true ||false&&false));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a || b && c;  }", fff, MakeBool(false||false&&false));
 
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b || c; }",  ttt, MakeBool(true &&true ||true));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b || c; }",  ftt, MakeBool(false&&true ||true));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b || c; }",  tft, MakeBool(true &&false||true));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b || c; }",  ttf, MakeBool(true &&true ||false));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b || c; }",  fft, MakeBool(false&&false||true));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b || c; }",  ftf, MakeBool(false&&true ||false));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b || c; }",  tff, MakeBool(true &&false||false));
-      verify("Bool f(Bool a, Bool b, Bool c) { return a && b || c; }",  fff, MakeBool(false&&false||false));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b || c; }",  ttt, MakeBool(true &&true ||true));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b || c; }",  ftt, MakeBool(false&&true ||true));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b || c; }",  tft, MakeBool(true &&false||true));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b || c; }",  ttf, MakeBool(true &&true ||false));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b || c; }",  fft, MakeBool(false&&false||true));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b || c; }",  ftf, MakeBool(false&&true ||false));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b || c; }",  tff, MakeBool(true &&false||false));
+      verify("Boolean f(Boolean a, Boolean b, Boolean c) { return a && b || c; }",  fff, MakeBool(false&&false||false));
 
-      verify("Bool f(Bool a) { return !a; }",  MakeBools(true), MakeBool(false));
-      verify("Bool f(Bool a) { return !a; }",  MakeBools(false), MakeBool(true));
-      verify("Bool f() { return !true; }",     MakeBool(false));
-      verify("Bool f() { return !false; }",    MakeBool(true));
+      verify("Boolean f(Boolean a) { return !a; }",  MakeBools(true), MakeBool(false));
+      verify("Boolean f(Boolean a) { return !a; }",  MakeBools(false), MakeBool(true));
+      verify("Boolean f() { return !true; }",     MakeBool(false));
+      verify("Boolean f() { return !false; }",    MakeBool(true));
 
-      verify("Bool f(Bool a, Bool b) { return !a && !b; }", tt, MakeBool(false));
-      verify("Bool f(Bool a, Bool b) { return !a && !b; }", ff, MakeBool(true));
+      verify("Boolean f(Boolean a, Boolean b) { return !a && !b; }", tt, MakeBool(false));
+      verify("Boolean f(Boolean a, Boolean b) { return !a && !b; }", ff, MakeBool(true));
     }
 
-    Bool or(Bool[] b)
+    Boolean or(Boolean[] b)
     {
-      bool r = b[0].val;
-      for (int i=1; i<b.Length; i++) r = r || b[i].val;
-      return Bool.make(r);
+      bool r = b[0].booleanValue();
+      for (int i=1; i<b.Length; i++) r = r || b[i].booleanValue();
+      return Boolean.valueOf(r);
     }
 
-    Bool and(Bool[] b)
+    Boolean and(Boolean[] b)
     {
-      bool r = b[0].val;
-      for (int i=1; i<b.Length; i++) r = r && b[i].val;
-      return Bool.make(r);
+      bool r = b[0].booleanValue();
+      for (int i=1; i<b.Length; i++) r = r && b[i].booleanValue();
+      return Boolean.valueOf(r);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -127,125 +127,125 @@ namespace Fanx.Test
       //
       // bool
       //
-      verify("static Bool f(Bool a, Bool b) { return a == b; }", tt, Bool.True);
-      verify("static Bool f(Bool a, Bool b) { return a == b; }", ft, Bool.False);
-      verify("static Bool f(Bool a, Bool b) { return a == b; }", tf, Bool.False);
-      verify("static Bool f(Bool a, Bool b) { return a == b; }", ff, Bool.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a == b; }", tt, Boolean.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a == b; }", ft, Boolean.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a == b; }", tf, Boolean.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a == b; }", ff, Boolean.True);
 
-      verify("static Bool f(Bool a, Bool b) { return a != b; }", tt, Bool.False);
-      verify("static Bool f(Bool a, Bool b) { return a != b; }", ft, Bool.True);
-      verify("static Bool f(Bool a, Bool b) { return a != b; }", tf, Bool.True);
-      verify("static Bool f(Bool a, Bool b) { return a != b; }", ff, Bool.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a != b; }", tt, Boolean.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a != b; }", ft, Boolean.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a != b; }", tf, Boolean.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a != b; }", ff, Boolean.False);
 
-      verify("static Bool f(Bool a, Bool b) { return a == b; }", nn, Bool.True);
-      verify("static Bool f(Bool a, Bool b) { return a == b; }", tn, Bool.False);
-      verify("static Bool f(Bool a, Bool b) { return a == b; }", nt, Bool.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a == b; }", nn, Boolean.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a == b; }", tn, Boolean.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a == b; }", nt, Boolean.False);
 
-      verify("static Bool f(Bool a, Bool b) { return a != b; }", nn, Bool.False);
-      verify("static Bool f(Bool a, Bool b) { return a != b; }", tn, Bool.True);
-      verify("static Bool f(Bool a, Bool b) { return a != b; }", nt, Bool.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a != b; }", nn, Boolean.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a != b; }", tn, Boolean.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a != b; }", nt, Boolean.True);
 
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a == b == c; }", ttt, Bool.make(true  == true  == true));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a == b == c; }", ftt, Bool.make(false == true  == true));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a == b == c; }", tft, Bool.make(true  == false == true));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a == b == c; }", ttf, Bool.make(true  == true  == false));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a == b == c; }", fft, Bool.make(false == false == true));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a == b == c; }", tff, Bool.make(true  == false == false));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a == b == c; }", ftf, Bool.make(false == true  == false));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a == b == c; }", fff, Bool.make(false == false == false));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a == b == c; }", ttt, Boolean.valueOf(true  == true  == true));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a == b == c; }", ftt, Boolean.valueOf(false == true  == true));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a == b == c; }", tft, Boolean.valueOf(true  == false == true));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a == b == c; }", ttf, Boolean.valueOf(true  == true  == false));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a == b == c; }", fft, Boolean.valueOf(false == false == true));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a == b == c; }", tff, Boolean.valueOf(true  == false == false));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a == b == c; }", ftf, Boolean.valueOf(false == true  == false));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a == b == c; }", fff, Boolean.valueOf(false == false == false));
 
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a != b != c; }", ttt, Bool.make(true  != true  != true));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a != b != c; }", ftt, Bool.make(false != true  != true));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a != b != c; }", tft, Bool.make(true  != false != true));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a != b != c; }", ttf, Bool.make(true  != true  != false));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a != b != c; }", fft, Bool.make(false != false != true));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a != b != c; }", tff, Bool.make(true  != false != false));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a != b != c; }", ftf, Bool.make(false != true  != false));
-      verify("static Bool f(Bool a, Bool b, Bool c) { return a != b != c; }", fff, Bool.make(false != false != false));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a != b != c; }", ttt, Boolean.valueOf(true  != true  != true));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a != b != c; }", ftt, Boolean.valueOf(false != true  != true));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a != b != c; }", tft, Boolean.valueOf(true  != false != true));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a != b != c; }", ttf, Boolean.valueOf(true  != true  != false));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a != b != c; }", fft, Boolean.valueOf(false != false != true));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a != b != c; }", tff, Boolean.valueOf(true  != false != false));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a != b != c; }", ftf, Boolean.valueOf(false != true  != false));
+      verify("static Boolean f(Boolean a, Boolean b, Boolean c) { return a != b != c; }", fff, Boolean.valueOf(false != false != false));
 
       //
       // int
       //
-      verify("static Bool f(Int a, Int b) { return a == b; }", MakeInts(0, 0),   Bool.True);
-      verify("static Bool f(Int a, Int b) { return a == b; }", MakeInts(1, 0),   Bool.False);
-      verify("static Bool f(Int a, Int b) { return a == b; }", MakeInts(0, 1),   Bool.False);
-      verify("static Bool f(Int a, Int b) { return a == b; }", MakeInts(1, 1),   Bool.True);
-      verify("static Bool f(Int a, Int b) { return a == b; }", MakeInts(-1, -1), Bool.True);
-      verify("static Bool f(Int a, Int b) { return a == b; }", MakeInts(-1, -2), Bool.False);
-      verify("static Bool f(Int a, Int b) { return a != b; }", MakeInts(0, 0),   Bool.False);
-      verify("static Bool f(Int a, Int b) { return a != b; }", MakeInts(1, 0),   Bool.True);
-      verify("static Bool f(Int a, Int b) { return a != b; }", MakeInts(0, 1),   Bool.True);
-      verify("static Bool f(Int a, Int b) { return a != b; }", MakeInts(1, 1),   Bool.False);
-      verify("static Bool f(Int a, Int b) { return a != b; }", MakeInts(77, -3), Bool.True);
-      verify("static Bool f(Int a, Int b) { return a == b; }", new object[] { null,null  },     Bool.True);
-      verify("static Bool f(Int a, Int b) { return a == b; }", new object[] { Int.Zero, null }, Bool.False);
-      verify("static Bool f(Int a, Int b) { return a == b; }", new object[] { null, Int.Zero }, Bool.False);
-      verify("static Bool f(Int a, Int b) { return a != b; }", new object[] { null,null  },     Bool.False);
-      verify("static Bool f(Int a, Int b) { return a != b; }", new object[] { Int.Zero, null }, Bool.True);
-      verify("static Bool f(Int a, Int b) { return a != b; }", new object[] { null, Int.Zero }, Bool.True);
+      verify("static Boolean f(Int a, Int b) { return a == b; }", MakeInts(0, 0),   Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a == b; }", MakeInts(1, 0),   Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a == b; }", MakeInts(0, 1),   Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a == b; }", MakeInts(1, 1),   Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a == b; }", MakeInts(-1, -1), Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a == b; }", MakeInts(-1, -2), Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a != b; }", MakeInts(0, 0),   Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a != b; }", MakeInts(1, 0),   Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a != b; }", MakeInts(0, 1),   Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a != b; }", MakeInts(1, 1),   Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a != b; }", MakeInts(77, -3), Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a == b; }", new object[] { null,null  },     Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a == b; }", new object[] { Int.Zero, null }, Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a == b; }", new object[] { null, Int.Zero }, Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a != b; }", new object[] { null,null  },     Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a != b; }", new object[] { Int.Zero, null }, Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a != b; }", new object[] { null, Int.Zero }, Boolean.True);
 
       //
       // floats
       //
-      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(0, 0),   Bool.True);
-      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(1, 0),   Bool.False);
-      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(0, 1),   Bool.False);
-      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(1, 1),   Bool.True);
-      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(-1, -1), Bool.True);
-      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(-1, -2), Bool.False);
-      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(0, 0),   Bool.False);
-      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(1, 0),   Bool.True);
-      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(0, 1),   Bool.True);
-      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(1, 1),   Bool.False);
-      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(77, -3), Bool.True);
-      verify("static Bool f(Double a, Double b) { return a == b; }", new object[] { null,null  },     Bool.True);
-      verify("static Bool f(Double a, Double b) { return a == b; }", new object[] { FanFloat.m_zero, null }, Bool.False);
-      verify("static Bool f(Double a, Double b) { return a == b; }", new object[] { null, FanFloat.m_zero }, Bool.False);
-      verify("static Bool f(Double a, Double b) { return a != b; }", new object[] { null,null  },     Bool.False);
-      verify("static Bool f(Double a, Double b) { return a != b; }", new object[] { FanFloat.m_zero, null }, Bool.True);
-      verify("static Bool f(Double a, Double b) { return a != b; }", new object[] { null, FanFloat.m_zero }, Bool.True);
+      verify("static Boolean f(Double a, Double b) { return a == b; }", MakeFloats(0, 0),   Boolean.True);
+      verify("static Boolean f(Double a, Double b) { return a == b; }", MakeFloats(1, 0),   Boolean.False);
+      verify("static Boolean f(Double a, Double b) { return a == b; }", MakeFloats(0, 1),   Boolean.False);
+      verify("static Boolean f(Double a, Double b) { return a == b; }", MakeFloats(1, 1),   Boolean.True);
+      verify("static Boolean f(Double a, Double b) { return a == b; }", MakeFloats(-1, -1), Boolean.True);
+      verify("static Boolean f(Double a, Double b) { return a == b; }", MakeFloats(-1, -2), Boolean.False);
+      verify("static Boolean f(Double a, Double b) { return a != b; }", MakeFloats(0, 0),   Boolean.False);
+      verify("static Boolean f(Double a, Double b) { return a != b; }", MakeFloats(1, 0),   Boolean.True);
+      verify("static Boolean f(Double a, Double b) { return a != b; }", MakeFloats(0, 1),   Boolean.True);
+      verify("static Boolean f(Double a, Double b) { return a != b; }", MakeFloats(1, 1),   Boolean.False);
+      verify("static Boolean f(Double a, Double b) { return a != b; }", MakeFloats(77, -3), Boolean.True);
+      verify("static Boolean f(Double a, Double b) { return a == b; }", new object[] { null,null  },     Boolean.True);
+      verify("static Boolean f(Double a, Double b) { return a == b; }", new object[] { FanFloat.m_zero, null }, Boolean.False);
+      verify("static Boolean f(Double a, Double b) { return a == b; }", new object[] { null, FanFloat.m_zero }, Boolean.False);
+      verify("static Boolean f(Double a, Double b) { return a != b; }", new object[] { null,null  },     Boolean.False);
+      verify("static Boolean f(Double a, Double b) { return a != b; }", new object[] { FanFloat.m_zero, null }, Boolean.True);
+      verify("static Boolean f(Double a, Double b) { return a != b; }", new object[] { null, FanFloat.m_zero }, Boolean.True);
 
       //
       // str
       //
-      verify("static Bool f(Str a, Str b) { return a == b; }", MakeStrs(null, null), Bool.True);
-      verify("static Bool f(Str a, Str b) { return a == b; }", MakeStrs("a",  null), Bool.False);
-      verify("static Bool f(Str a, Str b) { return a == b; }", MakeStrs(null, "a"),  Bool.False);
-      verify("static Bool f(Str a, Str b) { return a == b; }", MakeStrs("a", "a"),   Bool.True);
-      verify("static Bool f(Str a, Str b) { return a == b; }", MakeStrs("a", "b"),   Bool.False);
-      verify("static Bool f(Str a, Str b) { return a != b; }", MakeStrs(null, null), Bool.False);
-      verify("static Bool f(Str a, Str b) { return a != b; }", MakeStrs("a",  null), Bool.True);
-      verify("static Bool f(Str a, Str b) { return a != b; }", MakeStrs(null, "a"),  Bool.True);
-      verify("static Bool f(Str a, Str b) { return a != b; }", MakeStrs("a", "a"),   Bool.False);
-      verify("static Bool f(Str a, Str b) { return a != b; }", MakeStrs("a", "b"),   Bool.True);
+      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs(null, null), Boolean.True);
+      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs("a",  null), Boolean.False);
+      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs(null, "a"),  Boolean.False);
+      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs("a", "a"),   Boolean.True);
+      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs("a", "b"),   Boolean.False);
+      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs(null, null), Boolean.False);
+      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs("a",  null), Boolean.True);
+      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs(null, "a"),  Boolean.True);
+      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs("a", "a"),   Boolean.False);
+      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs("a", "b"),   Boolean.True);
 
       //
       // Duration
       //
-      verify("static Bool f(Duration a, Duration b) { return a == b; }", MakeDurs(0, 0),  Bool.True);
-      verify("static Bool f(Duration a, Duration b) { return a == b; }", MakeDurs(20, 0), Bool.False);
-      verify("static Bool f(Duration a, Duration b) { return a != b; }", MakeDurs(0, 0),  Bool.False);
-      verify("static Bool f(Duration a, Duration b) { return a != b; }", MakeDurs(20, 0), Bool.True);
+      verify("static Boolean f(Duration a, Duration b) { return a == b; }", MakeDurs(0, 0),  Boolean.True);
+      verify("static Boolean f(Duration a, Duration b) { return a == b; }", MakeDurs(20, 0), Boolean.False);
+      verify("static Boolean f(Duration a, Duration b) { return a != b; }", MakeDurs(0, 0),  Boolean.False);
+      verify("static Boolean f(Duration a, Duration b) { return a != b; }", MakeDurs(20, 0), Boolean.True);
 
       //
       // same ===
       //
-      verify("static Bool f() { return null === null; }",        Bool.True);
-      verify("static Bool f() { return 5 === null; }",           Bool.False);
-      verify("static Bool f() { return null === 5; }",           Bool.False);
-      verify("static Bool f() { return 5 === 5; }",              Bool.True);
-      verify("static Bool f() { return \"x\" === \"x\"; }",      Bool.True);
-      verify("static Bool f() { return \"x\" === \"y\"; }",      Bool.False);
-      verify("static Bool f() { return !(\"x\" === \"y\"); }",   Bool.True);
-      verify("static Bool f(Int x, Int y) { return x === y; }",  MakeInts(256, 256), Bool.True);
-      verify("static Bool f(Int x, Int y) { return x === y; }",  MakeInts(2568888, 2568888), Bool.False);
+      verify("static Boolean f() { return null === null; }",        Boolean.True);
+      verify("static Boolean f() { return 5 === null; }",           Boolean.False);
+      verify("static Boolean f() { return null === 5; }",           Boolean.False);
+      verify("static Boolean f() { return 5 === 5; }",              Boolean.True);
+      verify("static Boolean f() { return \"x\" === \"x\"; }",      Boolean.True);
+      verify("static Boolean f() { return \"x\" === \"y\"; }",      Boolean.False);
+      verify("static Boolean f() { return !(\"x\" === \"y\"); }",   Boolean.True);
+      verify("static Boolean f(Int x, Int y) { return x === y; }",  MakeInts(256, 256), Boolean.True);
+      verify("static Boolean f(Int x, Int y) { return x === y; }",  MakeInts(2568888, 2568888), Boolean.False);
 
       // auto-cast matrix
       /*
-      verify("Bool f(Int a, Double b) { return a == b; }", new Object[] { Int.make(4), Double.valueOf(4) }, Bool.True);
-      verify("Bool f(Int a, Double b) { return a != b; }", new Object[] { Int.make(4), Double.valueOf(4) }, Bool.False);
-      verify("Bool f(Double a, Int b) { return a == b; }", new Object[] { Double.valueOf(-99), Int.make(-99) }, Bool.True);
-      verify("Bool f(Double a, Int b) { return a != b; }", new Object[] { Double.valueOf(-99), Int.make(-99) }, Bool.False);
+      verify("Boolean f(Int a, Double b) { return a == b; }", new Object[] { Int.make(4), Double.valueOf(4) }, Boolean.True);
+      verify("Boolean f(Int a, Double b) { return a != b; }", new Object[] { Int.make(4), Double.valueOf(4) }, Boolean.False);
+      verify("Boolean f(Double a, Int b) { return a == b; }", new Object[] { Double.valueOf(-99), Int.make(-99) }, Boolean.True);
+      verify("Boolean f(Double a, Int b) { return a != b; }", new Object[] { Double.valueOf(-99), Int.make(-99) }, Boolean.False);
       */
     }
 
@@ -258,37 +258,37 @@ namespace Fanx.Test
       //
       // MakeInts
       //
-      verify("static Bool f(Int a, Int b) { return a < b; }", MakeInts(0, 0),  Bool.make(0 < 0));
-      verify("static Bool f(Int a, Int b) { return a < b; }", MakeInts(1, 0),  Bool.make(1 < 0));
-      verify("static Bool f(Int a, Int b) { return a < b; }", MakeInts(0, 1),  Bool.make(0 < 1));
-      verify("static Bool f(Int a, Int b) { return a < b; }", MakeInts(1, 1),  Bool.make(1 < 1));
-      verify("static Bool f(Int a, Int b) { return a < b; }", new object[] { null, null },      Bool.False);
-      verify("static Bool f(Int a, Int b) { return a < b; }", new object[] { Int.Zero, null },  Bool.False);
-      verify("static Bool f(Int a, Int b) { return a < b; }", new object[] { null, Int.Zero },  Bool.True);
+      verify("static Boolean f(Int a, Int b) { return a < b; }", MakeInts(0, 0),  Boolean.valueOf(0 < 0));
+      verify("static Boolean f(Int a, Int b) { return a < b; }", MakeInts(1, 0),  Boolean.valueOf(1 < 0));
+      verify("static Boolean f(Int a, Int b) { return a < b; }", MakeInts(0, 1),  Boolean.valueOf(0 < 1));
+      verify("static Boolean f(Int a, Int b) { return a < b; }", MakeInts(1, 1),  Boolean.valueOf(1 < 1));
+      verify("static Boolean f(Int a, Int b) { return a < b; }", new object[] { null, null },      Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a < b; }", new object[] { Int.Zero, null },  Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a < b; }", new object[] { null, Int.Zero },  Boolean.True);
 
-      verify("static Bool f(Int a, Int b) { return a <= b; }", MakeInts(0,  0),   Bool.make(0  <= 0));
-      verify("static Bool f(Int a, Int b) { return a <= b; }", MakeInts(-1, 0),   Bool.make(-1 <= 0));
-      verify("static Bool f(Int a, Int b) { return a <= b; }", MakeInts(0,  -1),  Bool.make(0  <= -1));
-      verify("static Bool f(Int a, Int b) { return a <= b; }", MakeInts(-1, -1),  Bool.make(-1 <= -1));
-      verify("static Bool f(Int a, Int b) { return a <= b; }", new object[] { null, null },      Bool.True);
-      verify("static Bool f(Int a, Int b) { return a <= b; }", new object[] { Int.Zero, null },  Bool.False);
-      verify("static Bool f(Int a, Int b) { return a <= b; }", new object[] { null, Int.Zero },  Bool.True);
+      verify("static Boolean f(Int a, Int b) { return a <= b; }", MakeInts(0,  0),   Boolean.valueOf(0  <= 0));
+      verify("static Boolean f(Int a, Int b) { return a <= b; }", MakeInts(-1, 0),   Boolean.valueOf(-1 <= 0));
+      verify("static Boolean f(Int a, Int b) { return a <= b; }", MakeInts(0,  -1),  Boolean.valueOf(0  <= -1));
+      verify("static Boolean f(Int a, Int b) { return a <= b; }", MakeInts(-1, -1),  Boolean.valueOf(-1 <= -1));
+      verify("static Boolean f(Int a, Int b) { return a <= b; }", new object[] { null, null },      Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a <= b; }", new object[] { Int.Zero, null },  Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a <= b; }", new object[] { null, Int.Zero },  Boolean.True);
 
-      verify("static Bool f(Int a, Int b) { return a > b; }", MakeInts(4, 4),  Bool.make(4 > 4));
-      verify("static Bool f(Int a, Int b) { return a > b; }", MakeInts(7, 4),  Bool.make(7 > 4));
-      verify("static Bool f(Int a, Int b) { return a > b; }", MakeInts(4, 7),  Bool.make(4 > 7));
-      verify("static Bool f(Int a, Int b) { return a > b; }", MakeInts(7, 7),  Bool.make(7 > 7));
-      verify("static Bool f(Int a, Int b) { return a > b; }", new object[] { null, null },      Bool.False);
-      verify("static Bool f(Int a, Int b) { return a > b; }", new object[] { Int.Zero, null },  Bool.True);
-      verify("static Bool f(Int a, Int b) { return a > b; }", new object[] { null, Int.Zero },  Bool.False);
+      verify("static Boolean f(Int a, Int b) { return a > b; }", MakeInts(4, 4),  Boolean.valueOf(4 > 4));
+      verify("static Boolean f(Int a, Int b) { return a > b; }", MakeInts(7, 4),  Boolean.valueOf(7 > 4));
+      verify("static Boolean f(Int a, Int b) { return a > b; }", MakeInts(4, 7),  Boolean.valueOf(4 > 7));
+      verify("static Boolean f(Int a, Int b) { return a > b; }", MakeInts(7, 7),  Boolean.valueOf(7 > 7));
+      verify("static Boolean f(Int a, Int b) { return a > b; }", new object[] { null, null },      Boolean.False);
+      verify("static Boolean f(Int a, Int b) { return a > b; }", new object[] { Int.Zero, null },  Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a > b; }", new object[] { null, Int.Zero },  Boolean.False);
 
-      verify("static Bool f(Int a, Int b) { return a >= b; }", MakeInts(-2, -2),  Bool.make(-2 >= -2));
-      verify("static Bool f(Int a, Int b) { return a >= b; }", MakeInts(+2, -2),  Bool.make(+2 >= -2));
-      verify("static Bool f(Int a, Int b) { return a >= b; }", MakeInts(-2, +2),  Bool.make(-2 >= +2));
-      verify("static Bool f(Int a, Int b) { return a >= b; }", MakeInts(+2, +2),  Bool.make(+2 >= +2));
-      verify("static Bool f(Int a, Int b) { return a >= b; }", new object[] { null, null },      Bool.True);
-      verify("static Bool f(Int a, Int b) { return a >= b; }", new object[] { Int.Zero, null },  Bool.True);
-      verify("static Bool f(Int a, Int b) { return a >= b; }", new object[] { null, Int.Zero },  Bool.False);
+      verify("static Boolean f(Int a, Int b) { return a >= b; }", MakeInts(-2, -2),  Boolean.valueOf(-2 >= -2));
+      verify("static Boolean f(Int a, Int b) { return a >= b; }", MakeInts(+2, -2),  Boolean.valueOf(+2 >= -2));
+      verify("static Boolean f(Int a, Int b) { return a >= b; }", MakeInts(-2, +2),  Boolean.valueOf(-2 >= +2));
+      verify("static Boolean f(Int a, Int b) { return a >= b; }", MakeInts(+2, +2),  Boolean.valueOf(+2 >= +2));
+      verify("static Boolean f(Int a, Int b) { return a >= b; }", new object[] { null, null },      Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a >= b; }", new object[] { Int.Zero, null },  Boolean.True);
+      verify("static Boolean f(Int a, Int b) { return a >= b; }", new object[] { null, Int.Zero },  Boolean.False);
 
       verify("static Int f(Int a, Int b) { return a <=> b; }", MakeInts(3, 2),  Int.make(1));
       verify("static Int f(Int a, Int b) { return a <=> b; }", MakeInts(3, 3),  Int.make(0));
@@ -300,25 +300,25 @@ namespace Fanx.Test
       //
       // MakeFloats
       //
-      verify("static Bool f(Double a, Double b) { return a < b; }", MakeFloats(0, 0),  Bool.make(0 < 0));
-      verify("static Bool f(Double a, Double b) { return a < b; }", MakeFloats(1, 0),  Bool.make(1 < 0));
-      verify("static Bool f(Double a, Double b) { return a < b; }", MakeFloats(0, 1),  Bool.make(0 < 1));
-      verify("static Bool f(Double a, Double b) { return a < b; }", MakeFloats(1, 1),  Bool.make(1 < 1));
+      verify("static Boolean f(Double a, Double b) { return a < b; }", MakeFloats(0, 0),  Boolean.valueOf(0 < 0));
+      verify("static Boolean f(Double a, Double b) { return a < b; }", MakeFloats(1, 0),  Boolean.valueOf(1 < 0));
+      verify("static Boolean f(Double a, Double b) { return a < b; }", MakeFloats(0, 1),  Boolean.valueOf(0 < 1));
+      verify("static Boolean f(Double a, Double b) { return a < b; }", MakeFloats(1, 1),  Boolean.valueOf(1 < 1));
 
-      verify("static Bool f(Double a, Double b) { return a <= b; }", MakeFloats(0,  0),   Bool.make(0  <= 0));
-      verify("static Bool f(Double a, Double b) { return a <= b; }", MakeFloats(-1, 0),   Bool.make(-1 <= 0));
-      verify("static Bool f(Double a, Double b) { return a <= b; }", MakeFloats(0,  -1),  Bool.make(0  <= -1));
-      verify("static Bool f(Double a, Double b) { return a <= b; }", MakeFloats(-1, -1),  Bool.make(-1 <= -1));
+      verify("static Boolean f(Double a, Double b) { return a <= b; }", MakeFloats(0,  0),   Boolean.valueOf(0  <= 0));
+      verify("static Boolean f(Double a, Double b) { return a <= b; }", MakeFloats(-1, 0),   Boolean.valueOf(-1 <= 0));
+      verify("static Boolean f(Double a, Double b) { return a <= b; }", MakeFloats(0,  -1),  Boolean.valueOf(0  <= -1));
+      verify("static Boolean f(Double a, Double b) { return a <= b; }", MakeFloats(-1, -1),  Boolean.valueOf(-1 <= -1));
 
-      verify("static Bool f(Double a, Double b) { return a > b; }", MakeFloats(4, 4),  Bool.make(4 > 4));
-      verify("static Bool f(Double a, Double b) { return a > b; }", MakeFloats(7, 4),  Bool.make(7 > 4));
-      verify("static Bool f(Double a, Double b) { return a > b; }", MakeFloats(4, 7),  Bool.make(4 > 7));
-      verify("static Bool f(Double a, Double b) { return a > b; }", MakeFloats(7, 7),  Bool.make(7 > 7));
+      verify("static Boolean f(Double a, Double b) { return a > b; }", MakeFloats(4, 4),  Boolean.valueOf(4 > 4));
+      verify("static Boolean f(Double a, Double b) { return a > b; }", MakeFloats(7, 4),  Boolean.valueOf(7 > 4));
+      verify("static Boolean f(Double a, Double b) { return a > b; }", MakeFloats(4, 7),  Boolean.valueOf(4 > 7));
+      verify("static Boolean f(Double a, Double b) { return a > b; }", MakeFloats(7, 7),  Boolean.valueOf(7 > 7));
 
-      verify("static Bool f(Double a, Double b) { return a >= b; }", MakeFloats(-2, -2),  Bool.make(-2 >= -2));
-      verify("static Bool f(Double a, Double b) { return a >= b; }", MakeFloats(+2, -2),  Bool.make(+2 >= -2));
-      verify("static Bool f(Double a, Double b) { return a >= b; }", MakeFloats(-2, +2),  Bool.make(-2 >= +2));
-      verify("static Bool f(Double a, Double b) { return a >= b; }", MakeFloats(+2, +2),  Bool.make(+2 >= +2));
+      verify("static Boolean f(Double a, Double b) { return a >= b; }", MakeFloats(-2, -2),  Boolean.valueOf(-2 >= -2));
+      verify("static Boolean f(Double a, Double b) { return a >= b; }", MakeFloats(+2, -2),  Boolean.valueOf(+2 >= -2));
+      verify("static Boolean f(Double a, Double b) { return a >= b; }", MakeFloats(-2, +2),  Boolean.valueOf(-2 >= +2));
+      verify("static Boolean f(Double a, Double b) { return a >= b; }", MakeFloats(+2, +2),  Boolean.valueOf(+2 >= +2));
 
       verify("static Int f(Double a, Double b) { return a <=> b; }", MakeFloats(3, 2),  Int.make(1));
       verify("static Int f(Double a, Double b) { return a <=> b; }", MakeFloats(3, 3),  Int.make(0));
@@ -327,44 +327,44 @@ namespace Fanx.Test
       //
       // bool
       //
-      verify("static Bool f(Bool a, Bool b) { return a < b; }", ft,  Bool.True);
-      verify("static Bool f(Bool a, Bool b) { return a < b; }", ff,  Bool.False);
-      verify("static Bool f(Bool a, Bool b) { return a < b; }", tf,  Bool.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a < b; }", ft,  Boolean.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a < b; }", ff,  Boolean.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a < b; }", tf,  Boolean.False);
 
-      verify("static Bool f(Bool a, Bool b) { return a <= b; }", ft,  Bool.True);
-      verify("static Bool f(Bool a, Bool b) { return a <= b; }", ff,  Bool.True);
-      verify("static Bool f(Bool a, Bool b) { return a <= b; }", tf,  Bool.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a <= b; }", ft,  Boolean.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a <= b; }", ff,  Boolean.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a <= b; }", tf,  Boolean.False);
 
-      verify("static Bool f(Bool a, Bool b) { return a > b; }", ft,  Bool.False);
-      verify("static Bool f(Bool a, Bool b) { return a > b; }", ff,  Bool.False);
-      verify("static Bool f(Bool a, Bool b) { return a > b; }", tf,  Bool.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a > b; }", ft,  Boolean.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a > b; }", ff,  Boolean.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a > b; }", tf,  Boolean.True);
 
-      verify("static Bool f(Bool a, Bool b) { return a >= b; }", ft,  Bool.False);
-      verify("static Bool f(Bool a, Bool b) { return a >= b; }", ff,  Bool.True);
-      verify("static Bool f(Bool a, Bool b) { return a >= b; }", tf,  Bool.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a >= b; }", ft,  Boolean.False);
+      verify("static Boolean f(Boolean a, Boolean b) { return a >= b; }", ff,  Boolean.True);
+      verify("static Boolean f(Boolean a, Boolean b) { return a >= b; }", tf,  Boolean.True);
 
-      verify("static Int f(Bool a, Bool b) { return a <=> b; }", tf,  Int.make(1));
-      verify("static Int f(Bool a, Bool b) { return a <=> b; }", tt,  Int.make(0));
-      verify("static Int f(Bool a, Bool b) { return a <=> b; }", ft,  Int.make(-1));
+      verify("static Int f(Boolean a, Boolean b) { return a <=> b; }", tf,  Int.make(1));
+      verify("static Int f(Boolean a, Boolean b) { return a <=> b; }", tt,  Int.make(0));
+      verify("static Int f(Boolean a, Boolean b) { return a <=> b; }", ft,  Int.make(-1));
 
       //
       // str
       //
-      verify("static Bool f(Str a, Str b) { return a < b; }", MakeStrs("a", "b"),  Bool.True);
-      verify("static Bool f(Str a, Str b) { return a < b; }", MakeStrs("a", "a"),  Bool.False);
-      verify("static Bool f(Str a, Str b) { return a < b; }", MakeStrs("b", "a"),  Bool.False);
+      verify("static Boolean f(Str a, Str b) { return a < b; }", MakeStrs("a", "b"),  Boolean.True);
+      verify("static Boolean f(Str a, Str b) { return a < b; }", MakeStrs("a", "a"),  Boolean.False);
+      verify("static Boolean f(Str a, Str b) { return a < b; }", MakeStrs("b", "a"),  Boolean.False);
 
-      verify("static Bool f(Str a, Str b) { return a <= b; }", MakeStrs("a", "b"),  Bool.True);
-      verify("static Bool f(Str a, Str b) { return a <= b; }", MakeStrs("a", "a"),  Bool.True);
-      verify("static Bool f(Str a, Str b) { return a <= b; }", MakeStrs("b", "a"),  Bool.False);
+      verify("static Boolean f(Str a, Str b) { return a <= b; }", MakeStrs("a", "b"),  Boolean.True);
+      verify("static Boolean f(Str a, Str b) { return a <= b; }", MakeStrs("a", "a"),  Boolean.True);
+      verify("static Boolean f(Str a, Str b) { return a <= b; }", MakeStrs("b", "a"),  Boolean.False);
 
-      verify("static Bool f(Str a, Str b) { return a > b; }", MakeStrs("a", "b"),  Bool.False);
-      verify("static Bool f(Str a, Str b) { return a > b; }", MakeStrs("a", "a"),  Bool.False);
-      verify("static Bool f(Str a, Str b) { return a > b; }", MakeStrs("b", "a"),  Bool.True);
+      verify("static Boolean f(Str a, Str b) { return a > b; }", MakeStrs("a", "b"),  Boolean.False);
+      verify("static Boolean f(Str a, Str b) { return a > b; }", MakeStrs("a", "a"),  Boolean.False);
+      verify("static Boolean f(Str a, Str b) { return a > b; }", MakeStrs("b", "a"),  Boolean.True);
 
-      verify("static Bool f(Str a, Str b) { return a >= b; }", MakeStrs("a", "b"),  Bool.False);
-      verify("static Bool f(Str a, Str b) { return a >= b; }", MakeStrs("a", "a"),  Bool.True);
-      verify("static Bool f(Str a, Str b) { return a >= b; }", MakeStrs("b", "a"),  Bool.True);
+      verify("static Boolean f(Str a, Str b) { return a >= b; }", MakeStrs("a", "b"),  Boolean.False);
+      verify("static Boolean f(Str a, Str b) { return a >= b; }", MakeStrs("a", "a"),  Boolean.True);
+      verify("static Boolean f(Str a, Str b) { return a >= b; }", MakeStrs("b", "a"),  Boolean.True);
 
       verify("static Int f(Str a, Str b) { return a <=> b; }", MakeStrs("a", "b"),  Int.make(-1));
       verify("static Int f(Str a, Str b) { return a <=> b; }", MakeStrs("a", "a"),  Int.make(0));
@@ -377,21 +377,21 @@ namespace Fanx.Test
       //
       // Duration
       //
-      verify("static Bool f(Duration a, Duration b) { return a < b; }", MakeDurs(3, 9),  Bool.True);
-      verify("static Bool f(Duration a, Duration b) { return a < b; }", MakeDurs(3, 3),  Bool.False);
-      verify("static Bool f(Duration a, Duration b) { return a < b; }", MakeDurs(9, 3),  Bool.False);
+      verify("static Boolean f(Duration a, Duration b) { return a < b; }", MakeDurs(3, 9),  Boolean.True);
+      verify("static Boolean f(Duration a, Duration b) { return a < b; }", MakeDurs(3, 3),  Boolean.False);
+      verify("static Boolean f(Duration a, Duration b) { return a < b; }", MakeDurs(9, 3),  Boolean.False);
 
-      verify("static Bool f(Duration a, Duration b) { return a <= b; }", MakeDurs(3, 9),  Bool.True);
-      verify("static Bool f(Duration a, Duration b) { return a <= b; }", MakeDurs(3, 3),  Bool.True);
-      verify("static Bool f(Duration a, Duration b) { return a <= b; }", MakeDurs(9, 3),  Bool.False);
+      verify("static Boolean f(Duration a, Duration b) { return a <= b; }", MakeDurs(3, 9),  Boolean.True);
+      verify("static Boolean f(Duration a, Duration b) { return a <= b; }", MakeDurs(3, 3),  Boolean.True);
+      verify("static Boolean f(Duration a, Duration b) { return a <= b; }", MakeDurs(9, 3),  Boolean.False);
 
-      verify("static Bool f(Duration a, Duration b) { return a > b; }", MakeDurs(3, 9),  Bool.False);
-      verify("static Bool f(Duration a, Duration b) { return a > b; }", MakeDurs(3, 3),  Bool.False);
-      verify("static Bool f(Duration a, Duration b) { return a > b; }", MakeDurs(9, 3),  Bool.True);
+      verify("static Boolean f(Duration a, Duration b) { return a > b; }", MakeDurs(3, 9),  Boolean.False);
+      verify("static Boolean f(Duration a, Duration b) { return a > b; }", MakeDurs(3, 3),  Boolean.False);
+      verify("static Boolean f(Duration a, Duration b) { return a > b; }", MakeDurs(9, 3),  Boolean.True);
 
-      verify("static Bool f(Duration a, Duration b) { return a >= b; }", MakeDurs(3, 9),  Bool.False);
-      verify("static Bool f(Duration a, Duration b) { return a >= b; }", MakeDurs(3, 3),  Bool.True);
-      verify("static Bool f(Duration a, Duration b) { return a >= b; }", MakeDurs(9, 3),  Bool.True);
+      verify("static Boolean f(Duration a, Duration b) { return a >= b; }", MakeDurs(3, 9),  Boolean.False);
+      verify("static Boolean f(Duration a, Duration b) { return a >= b; }", MakeDurs(3, 3),  Boolean.True);
+      verify("static Boolean f(Duration a, Duration b) { return a >= b; }", MakeDurs(9, 3),  Boolean.True);
 
       verify("static Int f(Duration a, Duration b) { return a <=> b; }", MakeDurs(3, 9),  Int.make(-1));
       verify("static Int f(Duration a, Duration b) { return a <=> b; }", MakeDurs(3, 3),  Int.make(0));
@@ -401,15 +401,15 @@ namespace Fanx.Test
       // auto-cast matrix
       //
       /* TODO
-      verify("Bool f(Int a, Double b) { return a < b; }",  new Object[] { Int.make(-6), Double.valueOf(-7)  }, Bool.False);
-      verify("Bool f(Int a, Double b) { return a <= b; }", new Object[] { Int.make(-6), Double.valueOf(-7)  }, Bool.False);
-      verify("Bool f(Int a, Double b) { return a > b; }",  new Object[] { Int.make(-6), Double.valueOf(-7)  }, Bool.True);
-      verify("Bool f(Int a, Double b) { return a >= b; }", new Object[] { Int.make(-6), Double.valueOf(-7)  }, Bool.True);
+      verify("Boolean f(Int a, Double b) { return a < b; }",  new Object[] { Int.make(-6), Double.valueOf(-7)  }, Boolean.False);
+      verify("Boolean f(Int a, Double b) { return a <= b; }", new Object[] { Int.make(-6), Double.valueOf(-7)  }, Boolean.False);
+      verify("Boolean f(Int a, Double b) { return a > b; }",  new Object[] { Int.make(-6), Double.valueOf(-7)  }, Boolean.True);
+      verify("Boolean f(Int a, Double b) { return a >= b; }", new Object[] { Int.make(-6), Double.valueOf(-7)  }, Boolean.True);
 
-      verify("Bool f(Double a, Int b) { return a < b; }",  new Object[] { Double.valueOf(99), Int.make(-99) }, Bool.False);
-      verify("Bool f(Double a, Int b) { return a <= b; }", new Object[] { Double.valueOf(99), Int.make(-99) }, Bool.False);
-      verify("Bool f(Double a, Int b) { return a > b; }",  new Object[] { Double.valueOf(99), Int.make(-99) }, Bool.True);
-      verify("Bool f(Double a, Int b) { return a >= b; }", new Object[] { Double.valueOf(99), Int.make(-99) }, Bool.True);
+      verify("Boolean f(Double a, Int b) { return a < b; }",  new Object[] { Double.valueOf(99), Int.make(-99) }, Boolean.False);
+      verify("Boolean f(Double a, Int b) { return a <= b; }", new Object[] { Double.valueOf(99), Int.make(-99) }, Boolean.False);
+      verify("Boolean f(Double a, Int b) { return a > b; }",  new Object[] { Double.valueOf(99), Int.make(-99) }, Boolean.True);
+      verify("Boolean f(Double a, Int b) { return a >= b; }", new Object[] { Double.valueOf(99), Int.make(-99) }, Boolean.True);
 
       verify("Int f(Double a, Int b) { return a <=> b; }", new Object[] { Double.valueOf(9), Int.make(-9) }, Int.make(1));
       verify("Int f(Double a, Int b) { return a <=> b; }", new Object[] { Double.valueOf(9), Int.make(9) },  Int.make(0));
@@ -618,15 +618,15 @@ namespace Fanx.Test
         verify("Int f(Int a, Int b, Int c) { return a | b ^ c; }", MakeInts(a, b, c), Int.make((a | b) ^ c));
         verify("Int f(Int a, Int b, Int c) { return a ^ b | c; }", MakeInts(a, b, c), Int.make((a ^ b) | c));
         // verify equality lower precedence than bitwise (different than Java/C#)
-        verify("Bool f(Int a, Int b) { return a & b == 0 }", MakeInts(0x2, 0x4), Bool.True);
-        verify("Bool f(Int a, Int b) { return a & b == 2 }", MakeInts(0x2, 0x3), Bool.True);
-        verify("Bool f(Int a, Int b) { return a & b != 2 }", MakeInts(0x2, 0x3), Bool.False);
-        verify("Bool f(Int a, Int b) { return a | b == 3 }", MakeInts(0x2, 0x1), Bool.True);
-        verify("Bool f(Int a, Int b) { return a ^ b == 1 }", MakeInts(0x2, 0x3), Bool.True);
+        verify("Boolean f(Int a, Int b) { return a & b == 0 }", MakeInts(0x2, 0x4), Boolean.True);
+        verify("Boolean f(Int a, Int b) { return a & b == 2 }", MakeInts(0x2, 0x3), Boolean.True);
+        verify("Boolean f(Int a, Int b) { return a & b != 2 }", MakeInts(0x2, 0x3), Boolean.False);
+        verify("Boolean f(Int a, Int b) { return a | b == 3 }", MakeInts(0x2, 0x1), Boolean.True);
+        verify("Boolean f(Int a, Int b) { return a ^ b == 1 }", MakeInts(0x2, 0x3), Boolean.True);
         // verify comparision lower precedence than bitwise (different than Java/C#)
-        verify("Bool f(Int a, Int b) { return a & b >= 2 }", MakeInts(0x2, 0x3), Bool.True);
-        verify("Bool f(Int a, Int b) { return a | b < 2 }",  MakeInts(0x2, 0x1), Bool.False);
-        verify("Bool f(Int a, Int b) { return a ^ b <= 5 }", MakeInts(0x2, 0x3), Bool.True);
+        verify("Boolean f(Int a, Int b) { return a & b >= 2 }", MakeInts(0x2, 0x3), Boolean.True);
+        verify("Boolean f(Int a, Int b) { return a | b < 2 }",  MakeInts(0x2, 0x1), Boolean.False);
+        verify("Boolean f(Int a, Int b) { return a ^ b <= 5 }", MakeInts(0x2, 0x3), Boolean.True);
       }
 
       // shift
@@ -893,8 +893,8 @@ namespace Fanx.Test
       verify("Str f(Str a, Str b) { return a + b; }", MakeStrs("a", null),  Str.make("anull"));
 
       // bool
-      verify("Str f(Str a, Bool b) { return a + b; }", new object[] {Str.make("a"), Bool.make(true)}, Str.make("atrue"));
-      verify("Str f(Bool a, Str b) { return a + b; }", new object[] {Bool.make(false), Str.make("a")}, Str.make("falsea"));
+      verify("Str f(Str a, Boolean b) { return a + b; }", new object[] {Str.make("a"), Boolean.valueOf(true)}, Str.make("atrue"));
+      verify("Str f(Boolean a, Str b) { return a + b; }", new object[] {Boolean.valueOf(false), Str.make("a")}, Str.make("falsea"));
       verify("Str f() { return \"foo\" + true; }", Str.make("footrue"));
       verify("Str f() { return false + \" foo\"; }", Str.make("false foo"));
 
@@ -911,8 +911,8 @@ namespace Fanx.Test
       verify("Str f() { return 0.0 + \" foo\"; }", Str.make("0.0 foo"));
 
       // mix
-      verify("Str f(Int a, Str b, Bool c) { return a + b + c; }", new object[] { Int.make(3), Str.make(" wow "), Bool.make(true) }, Str.make("3 wow true"));
-      verify("Str f(Int a, Str b, Bool c) { return \"w\" + a + \"x\" + b + \"y\" + c + \"z\"; }", new Object[] { Int.make(3), Str.make(" wow "), Bool.make(true) }, Str.make("w3x wow ytruez"));
+      verify("Str f(Int a, Str b, Boolean c) { return a + b + c; }", new object[] { Int.make(3), Str.make(" wow "), Boolean.valueOf(true) }, Str.make("3 wow true"));
+      verify("Str f(Int a, Str b, Boolean c) { return \"w\" + a + \"x\" + b + \"y\" + c + \"z\"; }", new Object[] { Int.make(3), Str.make(" wow "), Boolean.valueOf(true) }, Str.make("w3x wow ytruez"));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -936,15 +936,15 @@ namespace Fanx.Test
       verify("Str f() { Str x := \"hello\"; return x; }", Str.make("hello"));
       verify("Int f() { Str a := \"hello\"; Int b := 66; return b; }", Int.make(66));
 
-      verify("static Bool f(Bool x, Bool y) { x = true; y = x; return y; }", ff, Bool.True);
-      verify("static Bool f(Bool x, Bool y) { return x = y = true; }", ff, Bool.True);
+      verify("static Boolean f(Boolean x, Boolean y) { x = true; y = x; return y; }", ff, Boolean.True);
+      verify("static Boolean f(Boolean x, Boolean y) { return x = y = true; }", ff, Boolean.True);
 
       verify("static Int f(Int x) { x = 17; return x; }", MakeInts(88), Int.make(17));
       verify("static Int f(Int x) { return  x = 17; }", MakeInts(88), Int.make(17));
       verify("static Str f(Str x) { x = \"yeah\"; return x; }", MakeStrs("not"), Str.make("yeah"));
       verify("static Str f(Str x) { return x = \"yeah\"; }", MakeStrs("not"), Str.make("yeah"));
 
-      verify("Bool f(Bool x, Bool y) { x = true; y = x; return y; }", ff, Bool.True);
+      verify("Boolean f(Boolean x, Boolean y) { x = true; y = x; return y; }", ff, Boolean.True);
       verify("Int f(Int x) { x = 17; return x; }",     MakeInts(88), Int.make(17));
       verify("Int f(Int x) { return x = 17; }",        MakeInts(88), Int.make(17));
       verify("Double f(Double x) { x = 17.0; return x; }", MakeFloats(88), Double.valueOf(17));
@@ -1078,12 +1078,12 @@ namespace Fanx.Test
 
       members = "Int zero() { return 0; }\n" +
                 "Int two() { return 2; }";
-      verify("Bool f() { return zero() > two(); }",   Bool.False);
-      verify("Bool f() { return two()  > zero(); }",  Bool.True);
-      verify("Bool f() { return two()  == zero(); }", Bool.False);
-      verify("Bool f() { return two()  != zero(); }", Bool.True);
-      verify("Bool f() { return two >  zero }",  Bool.True);
-      verify("Bool f() { return two != zero }", Bool.True);
+      verify("Boolean f() { return zero() > two(); }",   Boolean.False);
+      verify("Boolean f() { return two()  > zero(); }",  Boolean.True);
+      verify("Boolean f() { return two()  == zero(); }", Boolean.False);
+      verify("Boolean f() { return two()  != zero(); }", Boolean.True);
+      verify("Boolean f() { return two >  zero }",  Boolean.True);
+      verify("Boolean f() { return two != zero }", Boolean.True);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -1095,21 +1095,21 @@ namespace Fanx.Test
       members = "Int one() { return 1; }  Int two() { return 2; }";
 
       // literals wrapped in parens
-      verify("static Bool f() { return (false); }",     MakeBool(false));
-      verify("static Bool f() { return (true); }",      MakeBool(true));
-      verify("static Bool f() { return ((false)); }",   MakeBool(false));
+      verify("static Boolean f() { return (false); }",     MakeBool(false));
+      verify("static Boolean f() { return (true); }",      MakeBool(true));
+      verify("static Boolean f() { return ((false)); }",   MakeBool(false));
       verify("static Int f() { return (0); }",          Int.make(0));
       verify("static Int f() { return (77); }",         Int.make(77));
       verify("static Int f() { return (-5); }",         Int.make(-5));
       verify("static Int f() { return ((0)); }",        Int.make(0));
       verify("static Str f() { return (\"foo\"); }",    Str.make("foo"));
       verify("static Str f() { return (((\"foo\"))); }",Str.make("foo"));
-      verify("static Bool f(Int a, Int b) { return (a > b); }",     MakeInts(2, 3),  MakeBool(false));
-      verify("static Bool f(Int a, Int b) { return (a) > (b); }",   MakeInts(7, -1), MakeBool(true));
-      verify("static Bool f(Int a, Int b) { return ((a) > (b)); }", MakeInts(7, -1), MakeBool(true));
-      verify("Bool f() { return (one() > two()); }",         MakeBool(false));
-      verify("Bool f() { return (one()) > (two()); }",       MakeBool(false));
-      verify("Bool f() { return ((one()) > (two())); }",     MakeBool(false));
+      verify("static Boolean f(Int a, Int b) { return (a > b); }",     MakeInts(2, 3),  MakeBool(false));
+      verify("static Boolean f(Int a, Int b) { return (a) > (b); }",   MakeInts(7, -1), MakeBool(true));
+      verify("static Boolean f(Int a, Int b) { return ((a) > (b)); }", MakeInts(7, -1), MakeBool(true));
+      verify("Boolean f() { return (one() > two()); }",         MakeBool(false));
+      verify("Boolean f() { return (one()) > (two()); }",       MakeBool(false));
+      verify("Boolean f() { return ((one()) > (two())); }",     MakeBool(false));
 
       // TODO
     }
@@ -1189,23 +1189,23 @@ namespace Fanx.Test
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    Bool[] tt = { Bool.True,  Bool.True  };
-    Bool[] ft = { Bool.False, Bool.True  };
-    Bool[] tf = { Bool.True,  Bool.False };
-    Bool[] ff = { Bool.False, Bool.False };
+    Boolean[] tt = { Boolean.True,  Boolean.True  };
+    Boolean[] ft = { Boolean.False, Boolean.True  };
+    Boolean[] tf = { Boolean.True,  Boolean.False };
+    Boolean[] ff = { Boolean.False, Boolean.False };
 
-    Bool[] nn = { null,       null };
-    Bool[] tn = { Bool.True,  null};
-    Bool[] nt = { null,       Bool.True};
+    Boolean[] nn = { null,       null };
+    Boolean[] tn = { Boolean.True,  null};
+    Boolean[] nt = { null,       Boolean.True};
 
-    Bool[] ttt = { Bool.True,  Bool.True,  Bool.True  };
-    Bool[] ftt = { Bool.False, Bool.True,  Bool.True  };
-    Bool[] tft = { Bool.True,  Bool.False, Bool.True  };
-    Bool[] ttf = { Bool.True,  Bool.True,  Bool.False };
-    Bool[] fft = { Bool.False, Bool.False, Bool.True  };
-    Bool[] ftf = { Bool.False, Bool.True,  Bool.False };
-    Bool[] tff = { Bool.True,  Bool.False, Bool.False };
-    Bool[] fff = { Bool.False, Bool.False, Bool.False };
+    Boolean[] ttt = { Boolean.True,  Boolean.True,  Boolean.True  };
+    Boolean[] ftt = { Boolean.False, Boolean.True,  Boolean.True  };
+    Boolean[] tft = { Boolean.True,  Boolean.False, Boolean.True  };
+    Boolean[] ttf = { Boolean.True,  Boolean.True,  Boolean.False };
+    Boolean[] fft = { Boolean.False, Boolean.False, Boolean.True  };
+    Boolean[] ftf = { Boolean.False, Boolean.True,  Boolean.False };
+    Boolean[] tff = { Boolean.True,  Boolean.False, Boolean.False };
+    Boolean[] fff = { Boolean.False, Boolean.False, Boolean.False };
 
   }
 }

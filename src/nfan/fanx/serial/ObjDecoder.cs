@@ -270,7 +270,7 @@ namespace Fanx.Serial
       // set field value (skip const check)
       try
       {
-        if (field.isConst().val)
+        if (field.isConst().booleanValue())
           field.set(obj, OpUtil.toImmutable(val), false);
         else
           field.set(obj, val, false);

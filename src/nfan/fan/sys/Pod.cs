@@ -38,7 +38,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Pod find(Str name) { return find(name.val, true, null); }
-    public static Pod find(Str name, Bool check) { return find(name.val, check.val, null); }
+    public static Pod find(Str name, Boolean check) { return find(name.val, check.booleanValue(), null); }
     public static Pod find(string name, bool check) { return find(name, check, null); }
     public static Pod find(string name, bool check, FPod fpod)
     {
@@ -222,7 +222,7 @@ namespace Fan.Sys
     public List types() { return new List(Sys.TypeType, m_types); }
 
     public Type findType(Str name) { return findType(name.val, true); }
-    public Type findType(Str name, Bool check) { return findType(name.val, check.val); }
+    public Type findType(Str name, Boolean check) { return findType(name.val, check.booleanValue()); }
     public Type findType(string name, bool check)
     {
       Type type = (Type)typesByName[name];

@@ -32,7 +32,7 @@ namespace Fanx.Test
 
     void verifyTypeParser()
     {
-      verify(Type.find("sys::Bool", true)     == Sys.BoolType);
+      verify(Type.find("sys::Boolean", true)     == Sys.BoolType);
       verify(Type.find("sys::Duration", true) == Sys.DurationType);
       //verify(Sys.findType("sys::Int[]", true)    == Sys.IntType.ToListOf());
       verifyTypeParserErr("");

@@ -351,11 +351,11 @@ namespace Fanx.Test
       "{\n" +
 
       // some static methods
-      " static Bool b() { return true }\n" +
+      " static Boolean b() { return true }\n" +
       " static Int  i() { return 5 }\n" +
 
       // basic literals
-      "  static const Bool lb := true \n" +
+      "  static const Boolean lb := true \n" +
       "  static const Int li := 3 \n" +
       "  static const Double lr := 6.9 \n" +
       "  static const Str ls := \"inference rules!\" \n" +
@@ -390,7 +390,7 @@ namespace Fanx.Test
       System.Type type = CompileToType(typeInference);
 
       // literals
-      verify(Get(type, "lb"),  Bool.True);
+      verify(Get(type, "lb"),  Boolean.True);
       verify(Get(type, "li"),  Int.make(3));
       verify(Get(type, "lr"),  Double.valueOf(6.9));
       verify(Get(type, "ls"),  Str.make("inference rules!"));
@@ -410,7 +410,7 @@ namespace Fanx.Test
 //      verify(Get(type, "call1"), Int.make(2));
 
       // my methods (doesn't work, type inference before bind)
-      //verify(Get(type, "methodb"), new Boolean(true));
+      //verify(Get(type, "methodb"), Boolean.valueOf(true));
       //verify(Get(type, "methodi"), Int.make(5));
 
       // local type inference

@@ -40,19 +40,19 @@ namespace Fan.Inet
   // State
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isBound(UdpSocket fan)
+    public Boolean isBound(UdpSocket fan)
     {
-      return Bool.make(m_net.IsBound);
+      return Boolean.valueOf(m_net.IsBound);
     }
 
-    public Bool isConnected(UdpSocket fan)
+    public Boolean isConnected(UdpSocket fan)
     {
-      return Bool.make(m_net.Connected);
+      return Boolean.valueOf(m_net.Connected);
     }
 
-    public Bool isClosed(UdpSocket fan)
+    public Boolean isClosed(UdpSocket fan)
     {
-      return Bool.make(m_closed);
+      return Boolean.valueOf(m_closed);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -228,16 +228,16 @@ namespace Fan.Inet
       return fan;
     }
 
-    public Bool close(UdpSocket fan)
+    public Boolean close(UdpSocket fan)
     {
       try
       {
         close();
-        return Bool.True;
+        return Boolean.True;
       }
       catch
       {
-        return Bool.False;
+        return Boolean.False;
       }
     }
 
@@ -257,12 +257,12 @@ namespace Fan.Inet
       return m_options;
     }
 
-    public Bool getBroadcast(UdpSocket fan)
+    public Boolean getBroadcast(UdpSocket fan)
     {
-      return Bool.make(m_net.EnableBroadcast);
+      return Boolean.valueOf(m_net.EnableBroadcast);
     }
 
-    public void setBroadcast(UdpSocket fan, Bool v)
+    public void setBroadcast(UdpSocket fan, Boolean v)
     {
       m_net.EnableBroadcast = v.val;
     }
@@ -287,13 +287,13 @@ namespace Fan.Inet
       m_net.SendBufferSize = (int)v.val;
     }
 
-    public Bool getReuseAddress(UdpSocket fan)
+    public Boolean getReuseAddress(UdpSocket fan)
     {
-      return Bool.make(Convert.ToBoolean(
+      return Boolean.valueOf(Convert.ToBoolean(
         m_net.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress)));
     }
 
-    public void setReuseAddress(UdpSocket fan, Bool v)
+    public void setReuseAddress(UdpSocket fan, Boolean v)
     {
       m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.val);
     }
