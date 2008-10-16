@@ -252,9 +252,9 @@ namespace Fanx.Serial
         if (floatSuffix)
         {
           if (s == null)
-            this.m_val = Float.make((double)whole);
+            this.m_val = Double.valueOf((double)whole);
           else
-            this.m_val = Float.make(System.Double.Parse(s.ToString()));
+            this.m_val = Double.valueOf(System.Double.Parse(s.ToString()));
           return Token.FLOAT_LITERAL;
         }
 

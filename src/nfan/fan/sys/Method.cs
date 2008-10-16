@@ -212,7 +212,7 @@ namespace Fan.Sys
       {
         int argsSize = args == null ? 0 : args.sz();
 
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(argsSize, isStatic, false);
         object[] a = new object[p];
 
@@ -232,26 +232,39 @@ namespace Fan.Sys
       public override object callOn(object target, List args)
       {
         int argsSize = args == null ? 0 : args.sz();
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool netStatic = _isStatic();
+        bool fanStatic = ((m.m_flags & (FConst.Static|FConst.Ctor)) != 0);
 
-        // we don't include target as part of arguments
-        int p = checkArgs(argsSize, isStatic, true);
-
-        object[] a = new object[p];
-        if (args != null && a.Length > 0) args.toArray(a, 0, a.Length);
-        return m.invoke(target, a);
+        if (netStatic && !fanStatic)
+        {
+          // if Java static doesn't match Fan static, then this is
+          // a FanXXX method which we need to call as Java static
+          int p = checkArgs(argsSize, false, true);
+          object[] a = new object[p+1];
+          a[0] = target;
+          if (args != null && a.Length > 0) args.copyInto(a, 1, a.Length-1);
+          return m.invoke(null, a);
+        }
+        else
+        {
+          // we don't include target as part of arguments
+          int p = checkArgs(argsSize, netStatic, true);
+          object[] a = new object[p];
+          if (args != null && a.Length > 0) args.toArray(a, 0, a.Length);
+          return m.invoke(target, a);
+        }
       }
 
       public override object call0()
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         checkArgs(0, isStatic, false);
         return m.invoke(null, noArgs);
       }
 
       public override object call1(object a)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(1, isStatic, false);
         object[] args;
         if (isStatic)
@@ -269,7 +282,7 @@ namespace Fan.Sys
 
       public override object call2(object a, object b)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(2, isStatic, false);
         object[] args;
         if (isStatic)
@@ -289,7 +302,7 @@ namespace Fan.Sys
 
       public override object call3(object a, object b, object c)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(3, isStatic, false);
         object[] args;
         if (isStatic)
@@ -311,7 +324,7 @@ namespace Fan.Sys
 
       public override object call4(object a, object b, object c, object d)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(4, isStatic, false);
         object[] args;
         if (isStatic)
@@ -335,7 +348,7 @@ namespace Fan.Sys
 
       public override object call5(object a, object b, object c, object d, object e)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(5, isStatic, false);
         object[] args;
         if (isStatic)
@@ -363,7 +376,7 @@ namespace Fan.Sys
 
       public override object call6(object a, object b, object c, object d, object e, object f)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(6, isStatic, false);
         object[] args;
         if (isStatic)
@@ -391,7 +404,7 @@ namespace Fan.Sys
 
       public override object call7(object a, object b, object c, object d, object e, object f, object g)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(7, isStatic, false);
         object[] args;
         if (isStatic)
@@ -421,7 +434,7 @@ namespace Fan.Sys
 
       public override object call8(object a, object b, object c, object d, object e, object f, object g, object h)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(8, isStatic, false);
         object[] args;
         if (isStatic)
@@ -451,11 +464,24 @@ namespace Fan.Sys
         }
       }
 
+      private bool _isStatic()
+      {
+        try
+        {
+          // ensure parent has finished emitting so that reflect is populated
+          m.m_parent.finish();
+
+          // return if .NET method(s) is static
+          return m.m_reflect[0].IsStatic;
+        }
+        catch (Exception)
+        {
+          throw Err.make("Method not mapped to java.lang.reflect correctly " + m.qname()).val;
+        }
+      }
+
       private int checkArgs(int args, bool isStatic, bool isCallOn)
       {
-        // ensure parent has finished emitting so that reflect is populated
-        m.m_parent.finish();
-
         // compuate min/max parameters - reflect contains all the method versions
         // with full pars at index zero, and full defaults at reflect.Length-1
         int max = m_params.sz();

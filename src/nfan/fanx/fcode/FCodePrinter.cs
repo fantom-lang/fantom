@@ -112,7 +112,7 @@ namespace Fanx.Fcode
 
     const int None     = -1;
     const int Int      = 0;
-    const int Float     = 1;
+    const int Float    = 1;
     const int Str      = 2;
     const int Dur      = 3;
     const int Uri      = 4;

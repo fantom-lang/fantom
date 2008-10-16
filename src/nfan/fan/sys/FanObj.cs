@@ -7,6 +7,7 @@
 //
 
 using System;
+using Fanx.Util;
 
 namespace Fan.Sys
 {
@@ -59,6 +60,8 @@ namespace Fan.Sys
     {
       if (self is FanObj)
         return ((FanObj)self).compare(x);
+      else if (self is IComparable)
+        return Int.make(((IComparable)self).CompareTo(x));
       else
         return toStr(self).compare(toStr(x));
     }
@@ -99,7 +102,7 @@ namespace Fan.Sys
       if (self is FanObj)
         return ((FanObj)self).isImmutable();
       else
-        return Bool.False;
+        return Bool.make(NameUtil.isNetImmutable(self.GetType()));
     }
 
     public virtual Bool isImmutable()
@@ -109,7 +112,10 @@ namespace Fan.Sys
 
     public static Type type(object self)
     {
-      return ((FanObj)self).type();
+      if (self is FanObj)
+        return ((FanObj)self).type();
+      else
+        return NameUtil.toFanType(self.GetType(), true);
     }
 
     public virtual Type type()

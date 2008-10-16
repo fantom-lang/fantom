@@ -132,7 +132,7 @@ namespace Fan.Sys
 
     public override Int toInt() { return this; }
 
-    public override Float toFloat() { return Float.make(val); }
+    public override Double toFloat() { return Double.valueOf(val); }
 
     public override Decimal toDecimal() { return Decimal.make(new decimal(val)); }
 

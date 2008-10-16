@@ -788,8 +788,7 @@ namespace Fan.Sys
         {
           try
           {
-            string name = (this == Sys.ObjType) ? "FanObj" : m_name.val;
-            m_type = System.Type.GetType(NameUtil.toNetTypeName(podName, name));
+            m_type = System.Type.GetType(NameUtil.toNetImplTypeName(podName, m_name.val));
           }
           catch (Exception e)
           {
@@ -909,14 +908,17 @@ namespace Fan.Sys
         // get parameters, if sys we need to skip the
         // methods that use non-Fan signatures
         ParameterInfo[] pars = m.GetParameters();
+        int numParams = pars.Length;
         if (m_pod == Sys.SysPod)
         {
           if (!checkAllFan(pars)) return;
-          if (this == Sys.ObjType && m.IsStatic && name != "echo") return;
+          bool netStatic = m.IsStatic;
+          if (netStatic && this == Sys.ObjType && name != "echo") return;
+          if (netStatic && !method.isStatic().val && !method.isCtor().val) --numParams;
         }
 
         // zero index is full signature up to using max defaults
-        method.m_reflect[method.@params().sz()-pars.Length] = m;
+        method.m_reflect[method.@params().sz()-numParams] = m;
       }
       else
       {
@@ -932,8 +934,8 @@ namespace Fan.Sys
     {
       for (int i=0; i<pars.Length; i++)
       {
-        string p = pars[i].ParameterType.ToString();
-        if (!p.StartsWith("Fan.") && p != "System.Object")
+        System.Type p = pars[i].ParameterType;
+        if (!p.FullName.StartsWith("Fan.") && NameUtil.toFanType(p, false) == null)
           return false;
       }
       return true;

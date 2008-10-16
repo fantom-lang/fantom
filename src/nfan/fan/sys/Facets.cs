@@ -84,7 +84,7 @@ namespace Fan.Sys
       if (val == null) return def;
 
       // if we've already decoded, go with it
-      if (val is FanObj) return val;
+      if (!(val is string)) return val;
 
       // decode into an object
       object obj = ObjDecoder.decode((string)val);

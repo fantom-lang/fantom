@@ -244,7 +244,7 @@ namespace Fanx.Emit
     private void loadFloat()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "F" + index, "Fan.Sys.Float");
+      PERWAPI.Field field = emitter.findField(podClass, "F" + index, "Fan.Sys.Double");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
@@ -473,28 +473,17 @@ namespace Fanx.Emit
     {
       int index = u2();
       FPod.NMethod ncall = pod.ncall(index, FConst.CallVirtual);
-
-      //System.Console.WriteLine("### sig: " + ncall.parentType + "/"+ ncall.methodName);
-
-      // if this is a virtual invoke on Obj then we to make it an
-      // interface invoke because the Java runtime models Obj
-      // as an interface to deal with mixins cleanly
-//      if (sig.startsWith("fan/sys/Obj."))
-//      {
-//        int[] m = pod.methodRef(index).val;
-//        int nargs = m.length-3;
-//        int method = emit.interfaceRef(sig);
-//        code.op2(INVOKEINTERFACE, method);
-//        code.info.u1(nargs+1);
-//        code.info.u1(0);
-//      }
-//      else
-//      {
-        Method method = emitter.findMethod(ncall.parentType, ncall.methodName,
-          ncall.paramTypes, ncall.returnType);
-        if (!ncall.isStatic) method.AddCallConv(CallConv.Instance);
+      Method method = emitter.findMethod(ncall.parentType, ncall.methodName,
+        ncall.paramTypes, ncall.returnType);
+      if (ncall.isStatic)
+      {
+        code.MethInst(MethodOp.call, method);
+      }
+      else
+      {
+        method.AddCallConv(CallConv.Instance);
         code.MethInst(MethodOp.callvirt, method);
-//      }
+      }
     }
 
     private void callNonVirtual()
@@ -526,7 +515,7 @@ namespace Fanx.Emit
 
     private void callMixinNonVirtual()
     {
-      FPod.NMethod ncall = pod.ncall(u2(), FConst.CallMixinVirtual);
+      FPod.NMethod ncall = pod.ncall(u2(), FConst.CallMixinNonVirtual);
       string parent = ncall.parentType;
       string name = ncall.methodName;
       string ret = ncall.returnType;

@@ -43,7 +43,7 @@ namespace Fanx.Emit
       for (int i=0; i<pod.m_literals.m_ints.size(); i++)
         emitter.emitField("I" + i, "Fan.Sys.Int", fattr);
       for (int i=0; i<pod.m_literals.m_floats.size(); i++)
-        emitter.emitField("F" + i, "Fan.Sys.Float", fattr);
+        emitter.emitField("F" + i, "Fan.Sys.Double", fattr);
       for (int i=0; i<pod.m_literals.m_decimals.size(); i++)
         emitter.emitField("D" + i, "Fan.Sys.Decimal", fattr);
       for (int i=0; i<pod.m_literals.m_strs.size(); i++)
