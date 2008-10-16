@@ -26,7 +26,7 @@ class ClosureTest : CompilerTest
         static Void x()
         {
           gt := |,| {}
-          ht := |Int x, Str y->Bool| { return true }
+          ht := |Int x, Str y->Str| { return \"x\" }
           it := |Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int j| {}
         }
       }")
@@ -47,18 +47,18 @@ class ClosureTest : CompilerTest
      verifyEq(h.slotDef("call2")->code->size, 1)
      c := h.slotDef("call2")->code->stmts->get(0)->expr as CallExpr
      verifyEq(c.method.name, "doCall")
-     verifyEq(c.args[0].id, ExprId.cast)
+     verifyEq(c.args[0].id, ExprId.coerce)
      verifyEq(c.args[0]->check->qname, "sys::Int")
-     verifyEq(c.args[1].id, ExprId.cast)
+     verifyEq(c.args[1].id, ExprId.coerce)
      verifyEq(c.args[1]->check->qname, "sys::Str")
 
      verifyEq(i.name, "Foo\$x\$2")
      verifyEq(i.slotDef("call")->params->get(0)->paramType->qname, "sys::List")
      c = i.slotDef("call")->code->stmts->get(0)->expr as CallExpr
-     verifyEq(c.args[0].id, ExprId.cast)
+     verifyEq(c.args[0].id, ExprId.coerce)
      verifyEq(c.args[0]->check->qname, "sys::Int")
      verifyEq(c.args[0]->target->method->qname, "sys::List.get")
-     verifyEq(c.args[8].id, ExprId.cast)
+     verifyEq(c.args[8].id, ExprId.coerce)
      verifyEq(c.args[8]->check->qname, "sys::Int")
      verifyEq(c.args[8]->target->method->qname, "sys::List.get")
   }

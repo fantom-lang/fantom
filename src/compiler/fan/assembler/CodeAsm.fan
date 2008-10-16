@@ -634,7 +634,7 @@ class CodeAsm : CompilerSupport
       case ExprId.construction:    call((CallExpr)expr)
       case ExprId.shortcut:        shortcut((ShortcutExpr)expr)
       case ExprId.field:           loadField((FieldExpr)expr)
-      case ExprId.cast:            cast((TypeCheckExpr)expr)
+      case ExprId.coerce:          coerce((TypeCheckExpr)expr)
       case ExprId.closure:         this.expr(((ClosureExpr)expr).substitute)
       case ExprId.ternary:         ternary((TernaryExpr)expr)
       case ExprId.withBlock:       withBlock((WithBlockExpr)expr)
@@ -912,10 +912,12 @@ class CodeAsm : CompilerSupport
     op(FOp.As, fpod.addTypeRef(tc.check))
   }
 
-  private Void cast(TypeCheckExpr tc)
+  private Void coerce(TypeCheckExpr tc)
   {
     expr(tc.target)
-    op(FOp.Cast, fpod.addTypeRef(tc.check))
+    op(FOp.Coerce)
+    code.writeI2(fpod.addTypeRef(tc.target.ctype))
+    code.writeI2(fpod.addTypeRef(tc.ctype))
     if (!tc.leave) opType(FOp.Pop, tc.ctype)
   }
 

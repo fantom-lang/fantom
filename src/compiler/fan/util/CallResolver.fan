@@ -304,7 +304,7 @@ class CallResolver : CompilerSupport
     // then we also need an implicit cast operation
     result.ctype = base
     if (method.inheritedReturnType != base)
-      result = TypeCheckExpr.cast(result, base) { synthetic = true }
+      result = TypeCheckExpr.coerce(result, base) { synthetic = true }
   }
 
 //////////////////////////////////////////////////////////////////////////

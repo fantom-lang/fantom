@@ -131,10 +131,10 @@ abstract class Expr : Node
     // CallResolver, it is unnecessary at the top level and must
     // be stripped
     result := this
-    if (result.id === ExprId.cast)
+    if (result.id === ExprId.coerce)
     {
-      cast := (TypeCheckExpr)result
-      if (cast.synthetic) result = cast.target
+      coerce := (TypeCheckExpr)result
+      if (coerce.synthetic) result = coerce.target
     }
     result.leave = false
     return result
@@ -1130,7 +1130,7 @@ class StaticTargetExpr : Expr
 
 **
 ** TypeCheckExpr is an expression which is composed of an arbitrary
-** expression and a type - is, as, & casts
+** expression and a type - is, as, coerce
 **
 class TypeCheckExpr : Expr
 {
@@ -1142,9 +1142,10 @@ class TypeCheckExpr : Expr
     this.ctype  = check
   }
 
-  new cast(Expr target, CType to)
-    : super.make(target.location, ExprId.cast)
+  new coerce(Expr target, CType to)
+    : super.make(target.location, ExprId.coerce)
   {
+    if (to.isGenericParameter) to = to.ns.objType // TODO: not sure about this
     this.target = target
     this.check  = to
     this.ctype  = to
@@ -1157,7 +1158,7 @@ class TypeCheckExpr : Expr
 
   override Bool isStmt()
   {
-    return id === ExprId.cast && target.isStmt
+    return id === ExprId.coerce && target.isStmt
   }
 
   override Str toStr()
@@ -1166,7 +1167,7 @@ class TypeCheckExpr : Expr
     {
       case ExprId.isExpr: return "($target is $check)"
       case ExprId.asExpr: return "($target as $check)"
-      case ExprId.cast:   return "($check)$target"
+      case ExprId.coerce: return "($check)$target"
       default:            throw Err.make(id.toStr)
     }
   }
@@ -1475,7 +1476,7 @@ enum ExprId
   isExpr,           // TypeCheckExpr
   isnotExpr,
   asExpr,
-  cast,
+  coerce,
   call,             // CallExpr
   construction,
   shortcut,         // ShortcutExpr (has ShortcutOp)

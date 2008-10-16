@@ -142,7 +142,7 @@ class InitEnum : CompilerStep
     doFromStr.args.add(LiteralExpr.make(loc, ExprId.typeLiteral, ns.typeType, curType))
     doFromStr.args.add(UnknownVarExpr.make(loc, null, "name"))
     doFromStr.args.add(UnknownVarExpr.make(loc, null, "checked"))
-    cast := TypeCheckExpr.make(loc, ExprId.cast, doFromStr, curType)
+    cast := TypeCheckExpr(loc, ExprId.coerce, doFromStr, curType)
     m.code.stmts.add(ReturnStmt.make(loc, cast))
   }
 

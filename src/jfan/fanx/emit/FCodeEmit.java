@@ -120,7 +120,8 @@ public class FCodeEmit
         case Dup:                 dup(); break;
         case Is:                  is(); break;
         case As:                  as(); break;
-        case Cast:                cast(); break;
+case Cast: cast(); break;  // TODO
+        case Coerce:              coerce(); break;
         case Switch:              tableswitch(); break;
 
         case Throw:               doThrow(); break;
@@ -920,14 +921,33 @@ public class FCodeEmit
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Misc
+// Coercion
 //////////////////////////////////////////////////////////////////////////
+
+  private void coerce()
+  {
+    int fromId = u2();
+    //TypeRef fromRef = pod.typeRef(fromId);
+    //String fromPod  = pod.name(fromRef.podName);
+    //String fromName = pod.name(fromRef.typeName);
+
+    int toId = u2();
+    //TypeRef toRef = pod.typeRef(toId);
+    //String toPod  = pod.name(toRef.podName);
+    //String toName = pod.name(toRef.typeName);
+
+    code.op2(CHECKCAST, emit.cls(pod.jname(toId)));
+  }
 
   private void cast()
   {
     int cls = emit.cls(pod.jname(u2()));
     code.op2(CHECKCAST, cls);
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Misc
+//////////////////////////////////////////////////////////////////////////
 
   private void doThrow()
   {

@@ -209,7 +209,7 @@ class Normalize : CompilerStep
 
     // return (RetType)name$Store
     retStmt := ReturnStmt.make(loc)
-    retStmt.expr = TypeCheckExpr.cast(
+    retStmt.expr = TypeCheckExpr.coerce(
       f.makeAccessorExpr(loc, false),
       d.ret)
     d.code.add(retStmt)
