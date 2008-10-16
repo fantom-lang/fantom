@@ -1344,7 +1344,7 @@ public class Parser : CompilerSupport
     if (curt === Token.rparen)
     {
       consume
-      return TypeCheckExpr.make(loc, ExprId.cast, parenExpr, castType)
+      return TypeCheckExpr.make(loc, ExprId.coerce, parenExpr, castType)
     }
     reset(mark)
 

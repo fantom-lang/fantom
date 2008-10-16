@@ -157,9 +157,7 @@ class GenFConst < Env
 
    "LoadDecimal         2  (decimal) // load Decimal const by index onto stack",
 
-   "CheckNotNull        2  (type)    // throw NullErr if top of stack is null",
-   "Box                 2  (type)    // box from value type to reference type",
-   "Unbox               2  (type)    // unbox from reference type to value type",
+   "Coerce              4  (coerce)  // from->to coercion value/reference/nullable",
 
  ]
 
@@ -209,7 +207,8 @@ enum FOpArg
   TypeRef,
   FieldRef,
   MethodRef,
-  Jump
+  Jump,
+  Coerce
 }
 FAN_OP_FOOTER
 
@@ -283,7 +282,8 @@ FAN_OP_FOOTER
                "jmp"=>"FOpArg.Jump",
                "type"=>"FOpArg.TypeRef",
                "field"=>"FOpArg.FieldRef",
-               "method"=>"FOpArg.MethodRef"}[sig]
+               "method"=>"FOpArg.MethodRef",
+               "coerce"=>"FOpArg.Coerce"}[sig]
         arg = "(" + arg + ")"
         arg = arg + "," unless (i == @@opcodes.length-1)
         arg = arg.ljust(20)

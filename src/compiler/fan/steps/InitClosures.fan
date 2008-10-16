@@ -212,7 +212,7 @@ class InitClosures : CompilerStep
       }
 
       // cast to closure param type
-      arg = TypeCheckExpr.make(loc, ExprId.cast, arg, signature.params[i])
+      arg = TypeCheckExpr.make(loc, ExprId.coerce, arg, signature.params[i])
 
       // add to doCall() argument list
       if (firstAsTarget && i === 0)

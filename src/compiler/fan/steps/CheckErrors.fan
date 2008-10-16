@@ -628,7 +628,7 @@ class CheckErrors : CompilerStep
       case ExprId.isExpr:
       case ExprId.isnotExpr:
       case ExprId.asExpr:
-      case ExprId.cast:           checkTypeCheck((TypeCheckExpr)expr)
+      case ExprId.coerce:         checkTypeCheck((TypeCheckExpr)expr)
       case ExprId.ternary:        checkTernary((TernaryExpr)expr)
       case ExprId.withBlock:      checkWithBlock((WithBlockExpr)expr)
     }
@@ -1158,8 +1158,8 @@ class CheckErrors : CompilerStep
   private static Expr coerce(Expr expr, CType expected, |,| onErr)
   {
     // sanity check that expression has been typed
-    CType? actual := expr.ctype
-    if (actual == null) throw NullErr.make("null ctype: ${expr}")
+    CType actual := expr.ctype
+    if ((Obj?)actual == null) throw NullErr.make("null ctype: ${expr}")
 
     // if the same type this is easy
     if (actual == expected) return expr
@@ -1179,15 +1179,34 @@ class CheckErrors : CompilerStep
     }
 
     // if the expression fits to type, that is ok
-    if (actual.fits(expected)) return expr
+    if (actual.fits(expected))
+    {
+      // if we have any nullable/value difference we need a coercion
+      if (needCoerce(actual, expected))
+        return TypeCheckExpr.coerce(expr, expected)
+      else
+        return expr
+    }
 
     // if we auto-cast to make the expr fit, do it
     if (expected.fits(actual))
-      return TypeCheckExpr.cast(expr, expected)
+      return TypeCheckExpr.coerce(expr, expected)
 
     // we have an error condition
     onErr()
     return expr
+  }
+
+  static Bool needCoerce(CType from, CType to)
+  {
+    // if either side is a value type and we got past
+    // the equals check then we definitely need a coercion
+    if (from.isValue || to.isValue) return true
+
+    // if going from Obj? -> Obj we need a nullable coercion
+    if (!to.isNullable) return from.isNullable
+
+    return false
   }
 
 //////////////////////////////////////////////////////////////////////////

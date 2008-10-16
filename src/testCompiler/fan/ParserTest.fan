@@ -738,13 +738,13 @@ class ParserTest : CompilerTest
       verifyEq(expr->lhs->op, ShortcutOp.get);
 
     // cast
-    expr = verifyExpr("(Int)x", ExprId.cast);
+    expr = verifyExpr("(Int)x", ExprId.coerce);
       verifyEq(expr->target->name, "x");
       verifyEq(expr->check->signature, "sys::Int")
-    expr = verifyExpr("(sys::Int)x", ExprId.cast);
+    expr = verifyExpr("(sys::Int)x", ExprId.coerce);
       verifyEq(expr->target->name, "x");
       verifyEq(expr->check->signature, "sys::Int")
-    expr = verifyExpr("(Int[])x", ExprId.cast);
+    expr = verifyExpr("(Int[])x", ExprId.coerce);
       verifyEq(expr->target->name, "x");
       verifyEq(expr->check->signature, "sys::Int[]")
 

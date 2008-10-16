@@ -159,7 +159,7 @@ class ResolveExpr : CompilerStep
       case ExprId.superExpr:       return resolveSuper((SuperExpr)expr)
       case ExprId.unknownVar:      return resolveVar((UnknownVarExpr)expr)
       case ExprId.storage:         return resolveStorage((UnknownVarExpr)expr)
-      case ExprId.cast:            expr.ctype = ((TypeCheckExpr)expr).check
+      case ExprId.coerce:          expr.ctype = ((TypeCheckExpr)expr).check
       case ExprId.ternary:         resolveTernary((TernaryExpr)expr)
       case ExprId.withSub:         resolveWithSub((WithSubExpr)expr)
       case ExprId.curry:           return resolveCurry((CurryExpr)expr)
