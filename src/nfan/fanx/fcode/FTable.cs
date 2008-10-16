@@ -225,7 +225,7 @@ namespace Fanx.Fcode
          m_size = input.u2();
          m_table = new object[m_size];
          for (int i=0; i<m_size; i++)
-           m_table[i] = Float.make(input.f8());
+           m_table[i] = Fan.Sys.Double.valueOf(input.f8());
          return this;
       }
     }

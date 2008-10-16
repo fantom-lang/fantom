@@ -161,15 +161,15 @@ namespace Fanx.Test
 
       "  Int i0;\n" +
       "  Int i1 := 7;\n" +
-      "  Float r0 := 7.0;\n" +  // auto-casts
-      "  Float r1 := 7.0;\n" +
+      "  Double r0 := 7.0;\n" +  // auto-casts
+      "  Double r1 := 7.0;\n" +
       "  Str s0;\n" +
       "  Str s1 := \"hello\";\n" +
       "  Str s2 := \"s2\";\n" +
       "  Foo foo;\n" +
       "  \n" +
       "  static const Int  si := 3\n" +
-      "  static const Float sr := 7.0\n" +  // auto-cast
+      "  static const Double sr := 7.0\n" +  // auto-cast
       "  static const Str  ss\n" +      // default to null
       "  static const Int  sx\n" +      // compute in static {}
       "  \n" +
@@ -186,7 +186,7 @@ namespace Fanx.Test
 
       // static fields
       verify(Get(type, "si").Equals(Int.make(3)));
-      verify(Get(type, "sr").Equals(Float.make(7)));
+      verify(Get(type, "sr").Equals(Double.valueOf(7)));
       verify(Get(type, "ss") == null);
       verify(Get(type, "sx").Equals(Int.make(9)));
 
@@ -357,7 +357,7 @@ namespace Fanx.Test
       // basic literals
       "  static const Bool lb := true \n" +
       "  static const Int li := 3 \n" +
-      "  static const Float lr := 6.9 \n" +
+      "  static const Double lr := 6.9 \n" +
       "  static const Str ls := \"inference rules!\" \n" +
       "  static const Duration lt := 5ns \n" +
       "  //static lsa := [ \"a\", \"b\" ] \n" +
@@ -392,7 +392,7 @@ namespace Fanx.Test
       // literals
       verify(Get(type, "lb"),  Bool.True);
       verify(Get(type, "li"),  Int.make(3));
-      verify(Get(type, "lr"),  Float.make(6.9));
+      verify(Get(type, "lr"),  Double.valueOf(6.9));
       verify(Get(type, "ls"),  Str.make("inference rules!"));
       verify(Get(type, "lt"),  Duration.make(5));
   // TODO
@@ -402,7 +402,7 @@ namespace Fanx.Test
       // math
 // Andy - TODO
 //      verify(Get(type, "m1"), Int.make(12));
-//      verify(Get(type, "m2"), Float.make(7.7));
+//      verify(Get(type, "m2"), Double.make(7.7));
 
       // call chains
 // Andy - TODO

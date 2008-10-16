@@ -7,6 +7,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Text;
 
 namespace Fanx.Util
@@ -16,6 +17,25 @@ namespace Fanx.Util
   /// </summary>
   public class NameUtil
   {
+    /// <summary>
+    /// Convert .NET type to Fan type.
+    /// </summary>
+    public static Fan.Sys.Type toFanType(Type netType, bool check)
+    {
+      Fan.Sys.Type t = (Fan.Sys.Type)netToFanTypes[netType.FullName];
+      if (t != null) return t;
+      if (!check) return null;
+      throw Fan.Sys.Err.make("Not a Fan type: " + netType).val;
+    }
+
+    /// <summary>
+    /// Return if the specified .NET type represents an immutable type.
+    /// </summary>
+    public static bool isNetImmutable(Type netType)
+    {
+      return netImmutables[netType.FullName] != null;
+    }
+
     /// <summary>
     /// Return the .NET type name for this Fan pod and type.
     /// </summary>
@@ -29,8 +49,61 @@ namespace Fanx.Util
     /// </summary>
     public static string toNetTypeName(string podName, string typeName)
     {
-      if (podName == "sys" && typeName == "Obj") return "System.Object";
+      if (podName == "sys")
+      {
+        switch (typeName[0])
+        {
+          case 'F':
+            if (typeName == "Float") return "Fan.Sys.Double";
+            break;
+          case 'O':
+            if (typeName == "Obj") return "System.Object";
+            break;
+        }
+      }
       return "Fan." + NameUtil.upper(podName, false) + "." + typeName;
+    }
+
+    /// <summary>
+    /// Given a Fan qname, get the Java implementation class name:
+    ///   sys::Obj    =>  Fan.Sys.FanObj
+    ///   sys::Float  =>  Fan.Sys.Double
+    /// </summary>
+    public static string toNetImplTypeName(string podName, string typeName)
+    {
+      if (podName == "sys")
+      {
+        switch (typeName[0])
+        {
+          case 'F':
+            if (typeName == "Float") return "Fan.Sys.FanFloat";
+            break;
+          case 'O':
+            if (typeName == "Obj") return "Fan.Sys.FanObj";
+            break;
+        }
+      }
+      return "Fan." + NameUtil.upper(podName, false) + "." + typeName;
+    }
+
+    /// <summary>
+    /// Given a .NET type signature, return the implementation
+    /// class signature for methods and fields:
+    ///   System.Object   =>  Fan.Sys.FanObj
+    ///   Fan.Sys.Double  =>  Fan.Sys.FanFloat
+    /// Anything else returns itself.
+    /// </summary>
+    public static string toNetImplTypeName(string ntype)
+    {
+      if (ntype[0] == 'S')
+      {
+        if (ntype == "System.Object")  return "Fan.Sys.FanObj";
+      }
+      if (ntype[0] == 'F')
+      {
+        if (ntype == "Fan.Sys.Double") return "Fan.Sys.FanFloat";
+      }
+      return ntype;
     }
 
     /// <summary>
@@ -123,6 +196,17 @@ namespace Fanx.Util
         }
       }
       return s;
+    }
+
+    private static Hashtable netToFanTypes = new Hashtable();
+    private static Hashtable netImmutables = new Hashtable();
+
+    static NameUtil()
+    {
+      netToFanTypes["System.Object"]  = Fan.Sys.Sys.ObjType;
+      netToFanTypes["Fan.Sys.Double"] = Fan.Sys.Sys.FloatType;
+
+      netImmutables["Fan.Sys.Double"] = true;
     }
 
   }

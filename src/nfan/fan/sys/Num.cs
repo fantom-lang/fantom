@@ -9,14 +9,14 @@
 namespace Fan.Sys
 {
   /// <summary>
-  /// Num is the base class for numbers including Int and Float.
+  /// Num is the base class for numbers including Int and Double.
   /// </summary>
   public abstract class Num : FanObj
   {
 
     public abstract Int toInt();
 
-    public abstract Float toFloat();
+    public abstract Double toFloat();
 
     public abstract Decimal toDecimal();
 

@@ -736,8 +736,8 @@ namespace Fan.Sys
     public Int toInt(Int radix) { return Int.fromStr(this, radix, Bool.True); }
     public Int toInt(Int radix, Bool check) { return Int.fromStr(this, radix, check); }
 
-    public Float toFloat() { return Float.fromStr(this, Bool.True); }
-    public Float toFloat(Bool check) { return Float.fromStr(this, check); }
+    public Double toFloat() { return FanFloat.fromStr(this, Bool.True); }
+    public Double toFloat(Bool check) { return FanFloat.fromStr(this, check); }
 
     public Decimal toDecimal() { return Decimal.fromStr(this, Bool.True); }
     public Decimal toDecimal(Bool check) { return Decimal.fromStr(this, check); }

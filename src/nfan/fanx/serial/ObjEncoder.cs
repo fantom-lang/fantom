@@ -51,6 +51,11 @@ namespace Fanx.Serial
         return;
       }
 
+      //if (obj instanceof Number)
+      //{
+        if (obj is Double) { FanFloat.encode((Double)obj, this); return; }
+      //}
+
       if (obj is Literal)
       {
         ((Literal)obj).encode(this);

@@ -267,14 +267,14 @@ namespace Fan.Sys
               (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
     }
 
-    public virtual Float readF4()
+    public virtual Double readF4()
     {
-      return Float.make(System.BitConverter.ToSingle(System.BitConverter.GetBytes(readInt()), 0));
+      return Double.valueOf(System.BitConverter.ToSingle(System.BitConverter.GetBytes(readInt()), 0));
     }
 
-    public virtual Float readF8()
+    public virtual Double readF8()
     {
-      return Float.make(System.BitConverter.Int64BitsToDouble(readLong()));
+      return Double.valueOf(System.BitConverter.Int64BitsToDouble(readLong()));
     }
 
     public virtual Decimal readDecimal()

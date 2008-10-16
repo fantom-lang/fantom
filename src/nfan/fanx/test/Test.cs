@@ -10,7 +10,7 @@ using System;
 using System.Reflection;
 using Bool  = Fan.Sys.Bool;
 using Int   = Fan.Sys.Int;
-using Float = Fan.Sys.Float;
+using Double = Fan.Sys.Double;
 using Str   = Fan.Sys.Str;
 using Duration = Fan.Sys.Duration;
 
@@ -264,19 +264,19 @@ namespace Fanx.Test
       return new Int[] { Int.make(a), Int.make(b), Int.make(c), Int.make(d), Int.make(e), Int.make(f) };
     }
 
-    public Float[] MakeFloats(double a)
+    public Double[] MakeFloats(double a)
     {
-      return new Float[] { Float.make(a) };
+      return new Double[] { Double.valueOf(a) };
     }
 
-    public Float[] MakeFloats(double a, double b)
+    public Double[] MakeFloats(double a, double b)
     {
-      return new Float[] { Float.make(a), Float.make(b) };
+      return new Double[] { Double.valueOf(a), Double.valueOf(b) };
     }
 
-    public Float[] MakeFloats(double a, double b, double c)
+    public Double[] MakeFloats(double a, double b, double c)
     {
-      return new Float[] { Float.make(a), Float.make(b), Float.make(c) };
+      return new Double[] { Double.valueOf(a), Double.valueOf(b), Double.valueOf(c) };
     }
 
     public Str[] MakeStrs(String a)

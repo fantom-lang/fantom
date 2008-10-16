@@ -187,23 +187,23 @@ namespace Fanx.Test
       //
       // floats
       //
-      verify("static Bool f(Float a, Float b) { return a == b; }", MakeFloats(0, 0),   Bool.True);
-      verify("static Bool f(Float a, Float b) { return a == b; }", MakeFloats(1, 0),   Bool.False);
-      verify("static Bool f(Float a, Float b) { return a == b; }", MakeFloats(0, 1),   Bool.False);
-      verify("static Bool f(Float a, Float b) { return a == b; }", MakeFloats(1, 1),   Bool.True);
-      verify("static Bool f(Float a, Float b) { return a == b; }", MakeFloats(-1, -1), Bool.True);
-      verify("static Bool f(Float a, Float b) { return a == b; }", MakeFloats(-1, -2), Bool.False);
-      verify("static Bool f(Float a, Float b) { return a != b; }", MakeFloats(0, 0),   Bool.False);
-      verify("static Bool f(Float a, Float b) { return a != b; }", MakeFloats(1, 0),   Bool.True);
-      verify("static Bool f(Float a, Float b) { return a != b; }", MakeFloats(0, 1),   Bool.True);
-      verify("static Bool f(Float a, Float b) { return a != b; }", MakeFloats(1, 1),   Bool.False);
-      verify("static Bool f(Float a, Float b) { return a != b; }", MakeFloats(77, -3), Bool.True);
-      verify("static Bool f(Float a, Float b) { return a == b; }", new object[] { null,null  },     Bool.True);
-      verify("static Bool f(Float a, Float b) { return a == b; }", new object[] { Float.m_zero, null }, Bool.False);
-      verify("static Bool f(Float a, Float b) { return a == b; }", new object[] { null, Float.m_zero }, Bool.False);
-      verify("static Bool f(Float a, Float b) { return a != b; }", new object[] { null,null  },     Bool.False);
-      verify("static Bool f(Float a, Float b) { return a != b; }", new object[] { Float.m_zero, null }, Bool.True);
-      verify("static Bool f(Float a, Float b) { return a != b; }", new object[] { null, Float.m_zero }, Bool.True);
+      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(0, 0),   Bool.True);
+      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(1, 0),   Bool.False);
+      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(0, 1),   Bool.False);
+      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(1, 1),   Bool.True);
+      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(-1, -1), Bool.True);
+      verify("static Bool f(Double a, Double b) { return a == b; }", MakeFloats(-1, -2), Bool.False);
+      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(0, 0),   Bool.False);
+      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(1, 0),   Bool.True);
+      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(0, 1),   Bool.True);
+      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(1, 1),   Bool.False);
+      verify("static Bool f(Double a, Double b) { return a != b; }", MakeFloats(77, -3), Bool.True);
+      verify("static Bool f(Double a, Double b) { return a == b; }", new object[] { null,null  },     Bool.True);
+      verify("static Bool f(Double a, Double b) { return a == b; }", new object[] { FanFloat.m_zero, null }, Bool.False);
+      verify("static Bool f(Double a, Double b) { return a == b; }", new object[] { null, FanFloat.m_zero }, Bool.False);
+      verify("static Bool f(Double a, Double b) { return a != b; }", new object[] { null,null  },     Bool.False);
+      verify("static Bool f(Double a, Double b) { return a != b; }", new object[] { FanFloat.m_zero, null }, Bool.True);
+      verify("static Bool f(Double a, Double b) { return a != b; }", new object[] { null, FanFloat.m_zero }, Bool.True);
 
       //
       // str
@@ -242,10 +242,10 @@ namespace Fanx.Test
 
       // auto-cast matrix
       /*
-      verify("Bool f(Int a, Float b) { return a == b; }", new Object[] { Int.make(4), Float.make(4) }, Bool.True);
-      verify("Bool f(Int a, Float b) { return a != b; }", new Object[] { Int.make(4), Float.make(4) }, Bool.False);
-      verify("Bool f(Float a, Int b) { return a == b; }", new Object[] { Float.make(-99), Int.make(-99) }, Bool.True);
-      verify("Bool f(Float a, Int b) { return a != b; }", new Object[] { Float.make(-99), Int.make(-99) }, Bool.False);
+      verify("Bool f(Int a, Double b) { return a == b; }", new Object[] { Int.make(4), Double.valueOf(4) }, Bool.True);
+      verify("Bool f(Int a, Double b) { return a != b; }", new Object[] { Int.make(4), Double.valueOf(4) }, Bool.False);
+      verify("Bool f(Double a, Int b) { return a == b; }", new Object[] { Double.valueOf(-99), Int.make(-99) }, Bool.True);
+      verify("Bool f(Double a, Int b) { return a != b; }", new Object[] { Double.valueOf(-99), Int.make(-99) }, Bool.False);
       */
     }
 
@@ -300,29 +300,29 @@ namespace Fanx.Test
       //
       // MakeFloats
       //
-      verify("static Bool f(Float a, Float b) { return a < b; }", MakeFloats(0, 0),  Bool.make(0 < 0));
-      verify("static Bool f(Float a, Float b) { return a < b; }", MakeFloats(1, 0),  Bool.make(1 < 0));
-      verify("static Bool f(Float a, Float b) { return a < b; }", MakeFloats(0, 1),  Bool.make(0 < 1));
-      verify("static Bool f(Float a, Float b) { return a < b; }", MakeFloats(1, 1),  Bool.make(1 < 1));
+      verify("static Bool f(Double a, Double b) { return a < b; }", MakeFloats(0, 0),  Bool.make(0 < 0));
+      verify("static Bool f(Double a, Double b) { return a < b; }", MakeFloats(1, 0),  Bool.make(1 < 0));
+      verify("static Bool f(Double a, Double b) { return a < b; }", MakeFloats(0, 1),  Bool.make(0 < 1));
+      verify("static Bool f(Double a, Double b) { return a < b; }", MakeFloats(1, 1),  Bool.make(1 < 1));
 
-      verify("static Bool f(Float a, Float b) { return a <= b; }", MakeFloats(0,  0),   Bool.make(0  <= 0));
-      verify("static Bool f(Float a, Float b) { return a <= b; }", MakeFloats(-1, 0),   Bool.make(-1 <= 0));
-      verify("static Bool f(Float a, Float b) { return a <= b; }", MakeFloats(0,  -1),  Bool.make(0  <= -1));
-      verify("static Bool f(Float a, Float b) { return a <= b; }", MakeFloats(-1, -1),  Bool.make(-1 <= -1));
+      verify("static Bool f(Double a, Double b) { return a <= b; }", MakeFloats(0,  0),   Bool.make(0  <= 0));
+      verify("static Bool f(Double a, Double b) { return a <= b; }", MakeFloats(-1, 0),   Bool.make(-1 <= 0));
+      verify("static Bool f(Double a, Double b) { return a <= b; }", MakeFloats(0,  -1),  Bool.make(0  <= -1));
+      verify("static Bool f(Double a, Double b) { return a <= b; }", MakeFloats(-1, -1),  Bool.make(-1 <= -1));
 
-      verify("static Bool f(Float a, Float b) { return a > b; }", MakeFloats(4, 4),  Bool.make(4 > 4));
-      verify("static Bool f(Float a, Float b) { return a > b; }", MakeFloats(7, 4),  Bool.make(7 > 4));
-      verify("static Bool f(Float a, Float b) { return a > b; }", MakeFloats(4, 7),  Bool.make(4 > 7));
-      verify("static Bool f(Float a, Float b) { return a > b; }", MakeFloats(7, 7),  Bool.make(7 > 7));
+      verify("static Bool f(Double a, Double b) { return a > b; }", MakeFloats(4, 4),  Bool.make(4 > 4));
+      verify("static Bool f(Double a, Double b) { return a > b; }", MakeFloats(7, 4),  Bool.make(7 > 4));
+      verify("static Bool f(Double a, Double b) { return a > b; }", MakeFloats(4, 7),  Bool.make(4 > 7));
+      verify("static Bool f(Double a, Double b) { return a > b; }", MakeFloats(7, 7),  Bool.make(7 > 7));
 
-      verify("static Bool f(Float a, Float b) { return a >= b; }", MakeFloats(-2, -2),  Bool.make(-2 >= -2));
-      verify("static Bool f(Float a, Float b) { return a >= b; }", MakeFloats(+2, -2),  Bool.make(+2 >= -2));
-      verify("static Bool f(Float a, Float b) { return a >= b; }", MakeFloats(-2, +2),  Bool.make(-2 >= +2));
-      verify("static Bool f(Float a, Float b) { return a >= b; }", MakeFloats(+2, +2),  Bool.make(+2 >= +2));
+      verify("static Bool f(Double a, Double b) { return a >= b; }", MakeFloats(-2, -2),  Bool.make(-2 >= -2));
+      verify("static Bool f(Double a, Double b) { return a >= b; }", MakeFloats(+2, -2),  Bool.make(+2 >= -2));
+      verify("static Bool f(Double a, Double b) { return a >= b; }", MakeFloats(-2, +2),  Bool.make(-2 >= +2));
+      verify("static Bool f(Double a, Double b) { return a >= b; }", MakeFloats(+2, +2),  Bool.make(+2 >= +2));
 
-      verify("static Int f(Float a, Float b) { return a <=> b; }", MakeFloats(3, 2),  Int.make(1));
-      verify("static Int f(Float a, Float b) { return a <=> b; }", MakeFloats(3, 3),  Int.make(0));
-      verify("static Int f(Float a, Float b) { return a <=> b; }", MakeFloats(2, 3),  Int.make(-1));
+      verify("static Int f(Double a, Double b) { return a <=> b; }", MakeFloats(3, 2),  Int.make(1));
+      verify("static Int f(Double a, Double b) { return a <=> b; }", MakeFloats(3, 3),  Int.make(0));
+      verify("static Int f(Double a, Double b) { return a <=> b; }", MakeFloats(2, 3),  Int.make(-1));
 
       //
       // bool
@@ -401,22 +401,22 @@ namespace Fanx.Test
       // auto-cast matrix
       //
       /* TODO
-      verify("Bool f(Int a, Float b) { return a < b; }",  new Object[] { Int.make(-6), Float.make(-7)  }, Bool.False);
-      verify("Bool f(Int a, Float b) { return a <= b; }", new Object[] { Int.make(-6), Float.make(-7)  }, Bool.False);
-      verify("Bool f(Int a, Float b) { return a > b; }",  new Object[] { Int.make(-6), Float.make(-7)  }, Bool.True);
-      verify("Bool f(Int a, Float b) { return a >= b; }", new Object[] { Int.make(-6), Float.make(-7)  }, Bool.True);
+      verify("Bool f(Int a, Double b) { return a < b; }",  new Object[] { Int.make(-6), Double.valueOf(-7)  }, Bool.False);
+      verify("Bool f(Int a, Double b) { return a <= b; }", new Object[] { Int.make(-6), Double.valueOf(-7)  }, Bool.False);
+      verify("Bool f(Int a, Double b) { return a > b; }",  new Object[] { Int.make(-6), Double.valueOf(-7)  }, Bool.True);
+      verify("Bool f(Int a, Double b) { return a >= b; }", new Object[] { Int.make(-6), Double.valueOf(-7)  }, Bool.True);
 
-      verify("Bool f(Float a, Int b) { return a < b; }",  new Object[] { Float.make(99), Int.make(-99) }, Bool.False);
-      verify("Bool f(Float a, Int b) { return a <= b; }", new Object[] { Float.make(99), Int.make(-99) }, Bool.False);
-      verify("Bool f(Float a, Int b) { return a > b; }",  new Object[] { Float.make(99), Int.make(-99) }, Bool.True);
-      verify("Bool f(Float a, Int b) { return a >= b; }", new Object[] { Float.make(99), Int.make(-99) }, Bool.True);
+      verify("Bool f(Double a, Int b) { return a < b; }",  new Object[] { Double.valueOf(99), Int.make(-99) }, Bool.False);
+      verify("Bool f(Double a, Int b) { return a <= b; }", new Object[] { Double.valueOf(99), Int.make(-99) }, Bool.False);
+      verify("Bool f(Double a, Int b) { return a > b; }",  new Object[] { Double.valueOf(99), Int.make(-99) }, Bool.True);
+      verify("Bool f(Double a, Int b) { return a >= b; }", new Object[] { Double.valueOf(99), Int.make(-99) }, Bool.True);
 
-      verify("Int f(Float a, Int b) { return a <=> b; }", new Object[] { Float.make(9), Int.make(-9) }, Int.make(1));
-      verify("Int f(Float a, Int b) { return a <=> b; }", new Object[] { Float.make(9), Int.make(9) },  Int.make(0));
-      verify("Int f(Float a, Int b) { return a <=> b; }", new Object[] { Float.make(9), Int.make(99) }, Int.make(-1));
-      verify("Int f(Float a, Int b) { return a <=> b; }", new Object[] { Float.make(9), Int.make(-9) }, Int.make(1));
-      verify("Int f(Float a, Int b) { return a <=> b; }", new Object[] { Float.make(9), Int.make(9) },  Int.make(0));
-      verify("Int f(Float a, Int b) { return a <=> b; }", new Object[] { Float.make(9), Int.make(99) }, Int.make(-1));
+      verify("Int f(Double a, Int b) { return a <=> b; }", new Object[] { Double.valueOf(9), Int.make(-9) }, Int.make(1));
+      verify("Int f(Double a, Int b) { return a <=> b; }", new Object[] { Double.valueOf(9), Int.make(9) },  Int.make(0));
+      verify("Int f(Double a, Int b) { return a <=> b; }", new Object[] { Double.valueOf(9), Int.make(99) }, Int.make(-1));
+      verify("Int f(Double a, Int b) { return a <=> b; }", new Object[] { Double.valueOf(9), Int.make(-9) }, Int.make(1));
+      verify("Int f(Double a, Int b) { return a <=> b; }", new Object[] { Double.valueOf(9), Int.make(9) },  Int.make(0));
+      verify("Int f(Double a, Int b) { return a <=> b; }", new Object[] { Double.valueOf(9), Int.make(99) }, Int.make(-1));
       */
     }
 
@@ -434,10 +434,10 @@ namespace Fanx.Test
       verify("static Int f(Int a) { return -(-a); }", MakeInts(8), Int.make(8));
 
       // MakeFloats
-      verify("static Float f(Float a) { return -a; }", MakeFloats(1), Float.make(-1));
-      verify("static Float f(Float a) { return -a; }", MakeFloats(-1), Float.make(1));
-      verify("static Float f(Float a) { return -(a); }", MakeFloats(8), Float.make(-8));
-      verify("static Float f(Float a) { return -(-a); }", MakeFloats(8), Float.make(8));
+      verify("static Double f(Double a) { return -a; }", MakeFloats(1), Double.valueOf(-1));
+      verify("static Double f(Double a) { return -a; }", MakeFloats(-1), Double.valueOf(1));
+      verify("static Double f(Double a) { return -(a); }", MakeFloats(8), Double.valueOf(-8));
+      verify("static Double f(Double a) { return -(-a); }", MakeFloats(8), Double.valueOf(8));
 
       // MakeDursation
       verify("static Duration f(Duration a) { return -a; }", MakeDurs(1), Duration.make(-1));
@@ -470,23 +470,23 @@ namespace Fanx.Test
       verify("static Int f() { return x *= 4; }", Int.make(8));
 
       // MakeFloats
-      verify("Float f(Float a, Float b) { return a * b; }", MakeFloats(0, 0), Float.make(0));
-      verify("Float f(Float a, Float b) { return a * b; }", MakeFloats(2, 5), Float.make(10));
-      verify("Float f(Float a, Float b) { return a * b; }", MakeFloats(-3.32, 66.44), Float.make(-3.32*66.44));
-      verify("Float f(Float a, Float b) { return a * 0.8; }", MakeFloats(-3.32, 66.44), Float.make(-3.32*0.8));
-      verify("Float f() { x := 3.0; x *= 6.0; return x; }", Float.make(18));
-      members = "Float x := 2.0; Float y;";
-      verify("Float f() { x *= 3.0; return x; }", Float.make(6));
-      verify("Float f() { return x *= -3.0; }",   Float.make(-6));
-      o = verify("Float f() { return y = x *= -3f; }", Float.make(-6));
-        verify(Get(o, "x").Equals(Float.make(-6)));
-        verify(Get(o, "y").Equals(Float.make(-6)));
-      members = "static Float x := 0.0;";
-      verify("static Float f() { return x *= 4f; }", Float.make(0));
+      verify("Double f(Double a, Double b) { return a * b; }", MakeFloats(0, 0), Double.valueOf(0));
+      verify("Double f(Double a, Double b) { return a * b; }", MakeFloats(2, 5), Double.valueOf(10));
+      verify("Double f(Double a, Double b) { return a * b; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32*66.44));
+      verify("Double f(Double a, Double b) { return a * 0.8; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32*0.8));
+      verify("Double f() { x := 3.0; x *= 6.0; return x; }", Double.valueOf(18));
+      members = "Double x := 2.0; Double y;";
+      verify("Double f() { x *= 3.0; return x; }", Double.valueOf(6));
+      verify("Double f() { return x *= -3.0; }",   Double.valueOf(-6));
+      o = verify("Double f() { return y = x *= -3f; }", Double.valueOf(-6));
+        verify(Get(o, "x").Equals(Double.valueOf(-6)));
+        verify(Get(o, "y").Equals(Double.valueOf(-6)));
+      members = "static Double x := 0.0;";
+      verify("static Double f() { return x *= 4f; }", Double.valueOf(0));
 
       // MakeDursation
       members = "x := 2ns; \n Duration y;";
-      verify("Duration f(Duration a, Float b) { return a * b; }", new Object[] { Duration.make(4), Float.make(3) }, Duration.make(12));
+      verify("Duration f(Duration a, Double b) { return a * b; }", new Object[] { Duration.make(4), Double.valueOf(3) }, Duration.make(12));
       verify("Duration f(Duration a) { return a * 6.0; }", new Object[] { Duration.make(4) }, Duration.make(24));
       verify("Duration f() { x *= 3.0; return x; }", Duration.make(6));
       verify("Duration f() { return x *= -3.0; }",   Duration.make(-6));
@@ -500,8 +500,8 @@ namespace Fanx.Test
 
       // auto-cast matrix
       /* TODO
-      verify("Float f(Int a, Float b) { return a * b; }", new Object[] { Int.make(10), Float.make(-0.004) }, Float.make(10L*-0.004));
-      verify("Float f(Float a, Int b) { return a * b; }", new Object[] { Float.make(1.2), Int.make(0xabcdL) }, Float.make(1.2*0xabcdL));
+      verify("Double f(Int a, Double b) { return a * b; }", new Object[] { Int.make(10), Double.valueOf(-0.004) }, Double.valueOf(10L*-0.004));
+      verify("Double f(Double a, Int b) { return a * b; }", new Object[] { Double.valueOf(1.2), Int.make(0xabcdL) }, Double.valueOf(1.2*0xabcdL));
       */
     }
 
@@ -522,17 +522,17 @@ namespace Fanx.Test
       verify("Int f() { return x /= 4; }",    Int.make(2));
 
       // floats
-      verify("Float f(Float a, Float b) { return a / b; }", MakeFloats(0, 1), Float.make(0));
-      verify("Float f(Float a, Float b) { return a / b; }", MakeFloats(20, 5), Float.make(20d/5d));
-      verify("Float f(Float a, Float b) { return a / b; }", MakeFloats(-3.32, 66.44), Float.make(-3.32/66.44));
-      verify("Float f(Float a, Float b) { return a / 0.8; }", MakeFloats(-3.32, 66.44), Float.make(-3.32/0.8));
-      verify("Float f() { Float x := 14.0; x /= 2.0; return x; }", Float.make(7));
-      members = "Float x := 8F;";
-      verify("Float f() { x /= 4f; return x; }", Float.make(2));
-      verify("Float f() { return x /= 4f; }",    Float.make(2));
+      verify("Double f(Double a, Double b) { return a / b; }", MakeFloats(0, 1), Double.valueOf(0));
+      verify("Double f(Double a, Double b) { return a / b; }", MakeFloats(20, 5), Double.valueOf(20d/5d));
+      verify("Double f(Double a, Double b) { return a / b; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32/66.44));
+      verify("Double f(Double a, Double b) { return a / 0.8; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32/0.8));
+      verify("Double f() { Double x := 14.0; x /= 2.0; return x; }", Double.valueOf(7));
+      members = "Double x := 8F;";
+      verify("Double f() { x /= 4f; return x; }", Double.valueOf(2));
+      verify("Double f() { return x /= 4f; }",    Double.valueOf(2));
 
       // duration
-      verify("Duration f(Duration a, Float b) { return a / b; }", new Object[] { Duration.make(100), Float.make(4)}, Duration.make(25));
+      verify("Duration f(Duration a, Double b) { return a / b; }", new Object[] { Duration.make(100), Double.valueOf(4)}, Duration.make(25));
       verify("Duration f(Duration a) { return a / 4.0; }", new Object[] { Duration.make(100), }, Duration.make(25));
       verify("Duration f() { x := 7ns; x /= 2.0; return x; }", Duration.make(3));
       members = "Duration x := 8ns;";
@@ -541,8 +541,8 @@ namespace Fanx.Test
 
       // auto-cast matrix
       /* TODO
-      verify("Float f(Int a, Float b) { return a / b; }", new Object[] { Int.make(10), Float.make(-0.004) }, Float.make(10L/-0.004));
-      verify("Float f(Float a, Int b) { return a / b; }", new Object[] { Float.make(1.2), Int.make(0xabcdL) }, Float.make(1.2/0xabcdL));
+      verify("Double f(Int a, Double b) { return a / b; }", new Object[] { Int.make(10), Double.valueOf(-0.004) }, Double.valueOf(10L/-0.004));
+      verify("Double f(Double a, Int b) { return a / b; }", new Object[] { Double.valueOf(1.2), Int.make(0xabcdL) }, Double.valueOf(1.2/0xabcdL));
       */
     }
 
@@ -563,17 +563,17 @@ namespace Fanx.Test
       verify("Int f() { return x %= 4; }",    Int.make(1));
 
       // MakeFloats
-      verify("Float f(Float a, Float b) { return a % b; }", MakeFloats(9, 4), Float.make(1));
-      verify("Float f(Float a, Float b) { return a % b; }", MakeFloats(20, 5), Float.make(20d%5d));
-      verify("Float f(Float a, Float b) { return a % b; }", MakeFloats(-3.32, 66.44), Float.make(-3.32%66.44));
-      verify("Float f(Float a, Float b) { return a % 0.8; }", MakeFloats(-3.32, 66.44), Float.make(-3.32%0.8));
-      verify("Float f() { Float x := 15.0; x %= 3.0; return x; }", Float.make(0));
-      members = "Float x := 9.0;";
-      verify("Float f() { x %= 4.0; return x; }", Float.make(1));
-      verify("Float f() { return x %= 4.0; }",    Float.make(1));
+      verify("Double f(Double a, Double b) { return a % b; }", MakeFloats(9, 4), Double.valueOf(1));
+      verify("Double f(Double a, Double b) { return a % b; }", MakeFloats(20, 5), Double.valueOf(20d%5d));
+      verify("Double f(Double a, Double b) { return a % b; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32%66.44));
+      verify("Double f(Double a, Double b) { return a % 0.8; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32%0.8));
+      verify("Double f() { Double x := 15.0; x %= 3.0; return x; }", Double.valueOf(0));
+      members = "Double x := 9.0;";
+      verify("Double f() { x %= 4.0; return x; }", Double.valueOf(1));
+      verify("Double f() { return x %= 4.0; }",    Double.valueOf(1));
 
       // duration
-      verify("Duration f(Duration a, Float b) { return a % b; }", new Object[] { Duration.make(13), Float.make(4)}, Duration.make(1));
+      verify("Duration f(Duration a, Double b) { return a % b; }", new Object[] { Duration.make(13), Double.valueOf(4)}, Duration.make(1));
       verify("Duration f(Duration a) { return a % 4.0; }", new Object[] { Duration.make(13), }, Duration.make(1));
       verify("Duration f() { x := 7ns; x %= 5.0; return x; }", Duration.make(2));
       members = "Duration x := 10ns;";
@@ -582,8 +582,8 @@ namespace Fanx.Test
 
       // auto-cast matrix
       /* TODO
-      verify("Float f(Int a, Float b) { return a % b; }", new Object[] { Int.make(10), Float.make(-0.004) }, Float.make(10L%-0.004));
-      verify("Float f(Float a, Int b) { return a % b; }", new Object[] { Float.make(1.2), Int.make(0xabcdL) }, Float.make(1.2%0xabcdL));
+      verify("Double f(Int a, Double b) { return a % b; }", new Object[] { Int.make(10), Double.valueOf(-0.004) }, Double.valueOf(10L%-0.004));
+      verify("Double f(Double a, Int b) { return a % b; }", new Object[] { Double.valueOf(1.2), Int.make(0xabcdL) }, Double.valueOf(1.2%0xabcdL));
       */
     }
 
@@ -706,16 +706,16 @@ namespace Fanx.Test
         verify(Get(o, "y").Equals(Int.make(2)));
 
       // MakeFloats
-      verify("Float f(Float a, Float b) { return a + b; }", MakeFloats(0, 1), Float.make(1));
-      verify("Float f(Float a, Float b) { return a + b; }", MakeFloats(20, 5), Float.make(20d+5d));
-      verify("Float f(Float a, Float b) { return a + b; }", MakeFloats(-3.32, 66.44), Float.make(-3.32+66.44));
-      verify("Float f(Float a, Float b) { return a + 0.8; }", MakeFloats(-3.32, 66.44), Float.make(-3.32+0.8));
-      verify("Float f() { x := 5.0; x+=5.0; return x; }", Float.make(10));
-      members = "Float x := 5.0; Float y;";
-      verify("Float f() { x += -3.0; return x; }", Float.make(2));
-      o = verify("Float f() { return y = x += -3.0; }", Float.make(2));
-        verify(Get(o, "x").Equals(Float.make(2)));
-        verify(Get(o, "y").Equals(Float.make(2)));
+      verify("Double f(Double a, Double b) { return a + b; }", MakeFloats(0, 1), Double.valueOf(1));
+      verify("Double f(Double a, Double b) { return a + b; }", MakeFloats(20, 5), Double.valueOf(20d+5d));
+      verify("Double f(Double a, Double b) { return a + b; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32+66.44));
+      verify("Double f(Double a, Double b) { return a + 0.8; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32+0.8));
+      verify("Double f() { x := 5.0; x+=5.0; return x; }", Double.valueOf(10));
+      members = "Double x := 5.0; Double y;";
+      verify("Double f() { x += -3.0; return x; }", Double.valueOf(2));
+      o = verify("Double f() { return y = x += -3.0; }", Double.valueOf(2));
+        verify(Get(o, "x").Equals(Double.valueOf(2)));
+        verify(Get(o, "y").Equals(Double.valueOf(2)));
 
       // duration
       verify("Duration f(Duration a, Duration b) { return a + b; }", MakeDurs(0, 1), Duration.make(1));
@@ -731,8 +731,8 @@ namespace Fanx.Test
 
       // auto-cast matrix
       /* TODO
-      verify("Float f(Int a, Float b) { return a + b; }", new Object[] { Int.make(10), Float.make(-0.004) }, Float.make(10L+-0.004));
-      verify("Float f(Float a, Int b) { return a + b; }", new Object[] { Float.make(1.2), Int.make(0xabcdL) }, Float.make(1.2+0xabcdL));
+      verify("Double f(Int a, Double b) { return a + b; }", new Object[] { Int.make(10), Double.valueOf(-0.004) }, Double.valueOf(10L+-0.004));
+      verify("Double f(Double a, Int b) { return a + b; }", new Object[] { Double.valueOf(1.2), Int.make(0xabcdL) }, Double.valueOf(1.2+0xabcdL));
       */
     }
 
@@ -756,11 +756,11 @@ namespace Fanx.Test
       verify("Int f() { return x -= 4; }", Int.make(5));
 
       // MakeFloats
-      verify("Float f(Float a, Float b) { return a - b; }", MakeFloats(0, 1), Float.make(-1));
-      verify("Float f(Float a, Float b) { return a - b; }", MakeFloats(20, 5), Float.make(20d-5d));
-      verify("Float f(Float a, Float b) { return a - b; }", MakeFloats(-3.32, 66.44), Float.make(-3.32-66.44));
-      verify("Float f(Float a, Float b) { return a - 0.8; }", MakeFloats(-3.32, 66.44), Float.make(-3.32-0.8));
-      verify("Float f() { x := 5.0; x -= 6.0; return x; }", Float.make(-1));
+      verify("Double f(Double a, Double b) { return a - b; }", MakeFloats(0, 1), Double.valueOf(-1));
+      verify("Double f(Double a, Double b) { return a - b; }", MakeFloats(20, 5), Double.valueOf(20d-5d));
+      verify("Double f(Double a, Double b) { return a - b; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32-66.44));
+      verify("Double f(Double a, Double b) { return a - 0.8; }", MakeFloats(-3.32, 66.44), Double.valueOf(-3.32-0.8));
+      verify("Double f() { x := 5.0; x -= 6.0; return x; }", Double.valueOf(-1));
 
       // duration
       verify("Duration f(Duration a, Duration b) { return a - b; }", MakeDurs(4, 6), Duration.make(-2));
@@ -776,11 +776,11 @@ namespace Fanx.Test
 
       // auto-cast matrix
       /* TODO
-      verify("Float f(Int a, Float b) { return a - b; }", new Object[] { Int.make(10), Float.make(-0.004) }, Float.make(10L-(-0.004)));
-      members = "Float x := 9;";
-      verify("Float f() { x -= 4; return x; }", Float.make(5));
-      verify("Float f() { return x -= 4; }", Float.make(5));
-      verify("Float f(Float a, Int b) { return a - b; }", new Object[] { Float.make(1.2), Int.make(0xabcdL) }, Float.make(1.2-0xabcdL));
+      verify("Double f(Int a, Double b) { return a - b; }", new Object[] { Int.make(10), Double.valueOf(-0.004) }, Double.valueOf(10L-(-0.004)));
+      members = "Double x := 9;";
+      verify("Double f() { x -= 4; return x; }", Double.valueOf(5));
+      verify("Double f() { return x -= 4; }", Double.valueOf(5));
+      verify("Double f(Double a, Int b) { return a - b; }", new Object[] { Double.valueOf(1.2), Int.make(0xabcdL) }, Double.valueOf(1.2-0xabcdL));
       */
     }
 
@@ -833,26 +833,26 @@ namespace Fanx.Test
       o = verify("Int f(Int y) { return x = y--; }", MakeInts(3), Int.make(3)); verify(Get(o, "x").Equals(Int.make(3)));
 
       // MakeFloats
-      members = "Float x := 0.0;";
-      o = verify("Float f() { return ++x; }", Float.make(1)); verify(Get(o, "x").Equals(Float.make(1)));
-      o = verify("Float f() { return x++; }", Float.make(0)); verify(Get(o, "x").Equals(Float.make(1)));
-      o = verify("Float f() { return --x; }", Float.make(-1)); verify(Get(o, "x").Equals(Float.make(-1)));
-      o = verify("Float f() { return x--; }", Float.make(0)); verify(Get(o, "x").Equals(Float.make(-1)));
-      members = "static Float x := 0.0;";
-      o = verify("static Float f() { return ++x; }", Float.make(1)); verify(Get(o, "x").Equals(Float.make(1)));
-      o = verify("static Float f() { return x++; }", Float.make(0)); verify(Get(o, "x").Equals(Float.make(1)));
-      o = verify("static Float f() { return --x; }", Float.make(-1)); verify(Get(o, "x").Equals(Float.make(-1)));
-      o = verify("static Float f() { return x--; }", Float.make(0)); verify(Get(o, "x").Equals(Float.make(-1)));
+      members = "Double x := 0.0;";
+      o = verify("Double f() { return ++x; }", Double.valueOf(1)); verify(Get(o, "x").Equals(Double.valueOf(1)));
+      o = verify("Double f() { return x++; }", Double.valueOf(0)); verify(Get(o, "x").Equals(Double.valueOf(1)));
+      o = verify("Double f() { return --x; }", Double.valueOf(-1)); verify(Get(o, "x").Equals(Double.valueOf(-1)));
+      o = verify("Double f() { return x--; }", Double.valueOf(0)); verify(Get(o, "x").Equals(Double.valueOf(-1)));
+      members = "static Double x := 0.0;";
+      o = verify("static Double f() { return ++x; }", Double.valueOf(1)); verify(Get(o, "x").Equals(Double.valueOf(1)));
+      o = verify("static Double f() { return x++; }", Double.valueOf(0)); verify(Get(o, "x").Equals(Double.valueOf(1)));
+      o = verify("static Double f() { return --x; }", Double.valueOf(-1)); verify(Get(o, "x").Equals(Double.valueOf(-1)));
+      o = verify("static Double f() { return x--; }", Double.valueOf(0)); verify(Get(o, "x").Equals(Double.valueOf(-1)));
       members = "";
-      o = verify("Float f(Float y) { return ++y; }", MakeFloats(3), Float.make(4));
-      o = verify("Float f(Float y) { return y++; }", MakeFloats(3), Float.make(3));
-      o = verify("Float f(Float y) { return --y; }", MakeFloats(3), Float.make(2));
-      o = verify("Float f(Float y) { return y--; }", MakeFloats(3), Float.make(3));
-      members = "Float x := 0.0;";
-      o = verify("Float f(Float y) { return x = ++y; }", MakeFloats(3), Float.make(4)); verify(Get(o, "x").Equals(Float.make(4)));
-      o = verify("Float f(Float y) { return x = y++; }", MakeFloats(3), Float.make(3)); verify(Get(o, "x").Equals(Float.make(3)));
-      o = verify("Float f(Float y) { return x = --y; }", MakeFloats(3), Float.make(2)); verify(Get(o, "x").Equals(Float.make(2)));
-      o = verify("Float f(Float y) { return x = y--; }", MakeFloats(3), Float.make(3)); verify(Get(o, "x").Equals(Float.make(3)));
+      o = verify("Double f(Double y) { return ++y; }", MakeFloats(3), Double.valueOf(4));
+      o = verify("Double f(Double y) { return y++; }", MakeFloats(3), Double.valueOf(3));
+      o = verify("Double f(Double y) { return --y; }", MakeFloats(3), Double.valueOf(2));
+      o = verify("Double f(Double y) { return y--; }", MakeFloats(3), Double.valueOf(3));
+      members = "Double x := 0.0;";
+      o = verify("Double f(Double y) { return x = ++y; }", MakeFloats(3), Double.valueOf(4)); verify(Get(o, "x").Equals(Double.valueOf(4)));
+      o = verify("Double f(Double y) { return x = y++; }", MakeFloats(3), Double.valueOf(3)); verify(Get(o, "x").Equals(Double.valueOf(3)));
+      o = verify("Double f(Double y) { return x = --y; }", MakeFloats(3), Double.valueOf(2)); verify(Get(o, "x").Equals(Double.valueOf(2)));
+      o = verify("Double f(Double y) { return x = y--; }", MakeFloats(3), Double.valueOf(3)); verify(Get(o, "x").Equals(Double.valueOf(3)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -905,8 +905,8 @@ namespace Fanx.Test
       verify("Str f() { return 0 + \" foo\"; }", Str.make("0 foo"));
 
       // double
-      verify("Str f(Str a, Float b) { return a + b; }", new object[] { Str.make("a"), Float.make(3) }, Str.make("a3.0"));
-      verify("Str f(Float a, Str b) { return a + b; }", new object[] { Float.make(-99), Str.make("a") }, Str.make("-99.0a"));
+      verify("Str f(Str a, Double b) { return a + b; }", new object[] { Str.make("a"), Double.valueOf(3) }, Str.make("a3.0"));
+      verify("Str f(Double a, Str b) { return a + b; }", new object[] { Double.valueOf(-99), Str.make("a") }, Str.make("-99.0a"));
       verify("Str f() { return \"foo \" + 77.0; }", Str.make("foo 77.0"));
       verify("Str f() { return 0.0 + \" foo\"; }", Str.make("0.0 foo"));
 
@@ -947,21 +947,21 @@ namespace Fanx.Test
       verify("Bool f(Bool x, Bool y) { x = true; y = x; return y; }", ff, Bool.True);
       verify("Int f(Int x) { x = 17; return x; }",     MakeInts(88), Int.make(17));
       verify("Int f(Int x) { return x = 17; }",        MakeInts(88), Int.make(17));
-      verify("Float f(Float x) { x = 17.0; return x; }", MakeFloats(88), Float.make(17));
-      verify("Float f(Float x) { return x = 17.0; }",    MakeFloats(88), Float.make(17));
+      verify("Double f(Double x) { x = 17.0; return x; }", MakeFloats(88), Double.valueOf(17));
+      verify("Double f(Double x) { return x = 17.0; }",    MakeFloats(88), Double.valueOf(17));
       verify("Str f(Str x) { x = \"yeah\"; return x; }", MakeStrs("not"), Str.make("yeah"));
       verify("Obj f(Obj x) { x = \"yeah\"; return x; }", MakeStrs("not"), Str.make("yeah"));
 //COMPILER      verifyErr("Int f(Int x) { x = \"no way\"; return x; }", "Type 'sys::Str' is not assignable to 'sys::Int'");
 
       // auto-cast matrix: int * x
-//COMPILER      verifyErr("Int f(Int a, Float b) { a = b; return a; }", "Type 'sys::Float' is not assignable to 'sys::Int'");
-//COMPILER      verifyErr("Int f(Int a, Float b) { a = 6.0; return a; }", "Type 'sys::Float' is not assignable to 'sys::Int'");
+//COMPILER      verifyErr("Int f(Int a, Double b) { a = b; return a; }", "Type 'sys::Double' is not assignable to 'sys::Int'");
+//COMPILER      verifyErr("Int f(Int a, Double b) { a = 6.0; return a; }", "Type 'sys::Double' is not assignable to 'sys::Int'");
 
-      // auto-cast matrix: Float * x
+      // auto-cast matrix: Double * x
       /*
-      verify("Float f(Float a, Int b) { a = b; return a; }", new Object[] { Float.make(0), Int.make(6) }, Float.make(6));
-      verify("Float f(Float a, Int b) { a = 6; return a; }", new Object[] { Float.make(0), Int.make(6) }, Float.make(6));
-      verify("Float f(Float a, Int b) { return a = b; }", new Object[] { Float.make(0), Int.make(6) }, Float.make(6));
+      verify("Double f(Double a, Int b) { a = b; return a; }", new Object[] { Double.valueOf(0), Int.make(6) }, Double.valueOf(6));
+      verify("Double f(Double a, Int b) { a = 6; return a; }", new Object[] { Double.valueOf(0), Int.make(6) }, Double.valueOf(6));
+      verify("Double f(Double a, Int b) { return a = b; }", new Object[] { Double.valueOf(0), Int.make(6) }, Double.valueOf(6));
       */
     }
 
@@ -989,11 +989,11 @@ namespace Fanx.Test
       //verifyErr("static Int f() { return x; }", "Cannot access instance field '" + nextPodName + "::" + nextClassName + ".x' in static context");
 //COMPILER      verifyErr("static Int f() { return this.x }", "Cannot access 'this' in static context");
 
-      members = "Float x";
-      verify("Float f() { return x; }", null);
+      members = "Double x";
+      verify("Double f() { return x; }", null);
 
       members = "x := 0.0";
-      verify("Float f() { return x; }", Float.make(0));
+      verify("Double f() { return x; }", Double.valueOf(0));
     }
 
     void verifyFieldSet()
@@ -1031,13 +1031,13 @@ namespace Fanx.Test
 //COMPILER      verifyErr("static Void f() { this.x = 4; }", "Cannot access 'this' in static context");
 
       imports = "";
-      members = "Float x; Float y;";
-      verify("Float f() { x = -4.88; return x; }", Float.make(-4.88));
-      verify("Float f() { return x = -4.88; }", Float.make(-4.88));
-      verify("Float f() { return x = 88.0; }", Float.make(88));
-      o = verify("Float f() { return x = y = 7.0; }", Float.make(7));
-        verify(Get(o, "x").Equals(Float.make(7)));
-        verify(Get(o, "y").Equals(Float.make(7)));
+      members = "Double x; Double y;";
+      verify("Double f() { x = -4.88; return x; }", Double.valueOf(-4.88));
+      verify("Double f() { return x = -4.88; }", Double.valueOf(-4.88));
+      verify("Double f() { return x = 88.0; }", Double.valueOf(88));
+      o = verify("Double f() { return x = y = 7.0; }", Double.valueOf(7));
+        verify(Get(o, "x").Equals(Double.valueOf(7)));
+        verify(Get(o, "y").Equals(Double.valueOf(7)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -1171,15 +1171,15 @@ namespace Fanx.Test
         verify("Str f(float x) { return java.lang.String.valueOf((float)x); }",  MakeFloats(6), "6.0");
         verify("Str f(float x) { return java.lang.String.valueOf((double)x); }", MakeFloats(7), "7.0");
 
-        // Float to *
-        verify("Str f(Float x) { return java.lang.String.valueOf(x); }",         MakeFloats(65), "65.0");
-        verify("Str f(Float x) { return java.lang.String.valueOf((char)x); }",   MakeFloats(65), "A");
-        verify("Str f(Float x) { return java.lang.Byte.toString((byte)x); }",    MakeFloats(1000), String.valueOf((byte)1000));
-        verify("Str f(Float x) { return java.lang.Short.toString((short)x); }",  MakeFloats(0xFFFFF), String.valueOf((short)0xFFFFF));
-        verify("Str f(Float x) { return java.lang.String.valueOf((int)x); }",    MakeFloats(-6), "-6");
-        verify("Str f(Float x) { return java.lang.String.valueOf((long)x); }",   MakeFloats(5), "5");
-        verify("Str f(Float x) { return java.lang.String.valueOf((float)x); }",  MakeFloats(6), "6.0");
-        verify("Str f(Float x) { return java.lang.String.valueOf((double)x); }", MakeFloats(7), "7.0");
+        // Double to *
+        verify("Str f(Double x) { return java.lang.String.valueOf(x); }",         MakeFloats(65), "65.0");
+        verify("Str f(Double x) { return java.lang.String.valueOf((char)x); }",   MakeFloats(65), "A");
+        verify("Str f(Double x) { return java.lang.Byte.toString((byte)x); }",    MakeFloats(1000), String.valueOf((byte)1000));
+        verify("Str f(Double x) { return java.lang.Short.toString((short)x); }",  MakeFloats(0xFFFFF), String.valueOf((short)0xFFFFF));
+        verify("Str f(Double x) { return java.lang.String.valueOf((int)x); }",    MakeFloats(-6), "-6");
+        verify("Str f(Double x) { return java.lang.String.valueOf((long)x); }",   MakeFloats(5), "5");
+        verify("Str f(Double x) { return java.lang.String.valueOf((float)x); }",  MakeFloats(6), "6.0");
+        verify("Str f(Double x) { return java.lang.String.valueOf((double)x); }", MakeFloats(7), "7.0");
 
       }
         */

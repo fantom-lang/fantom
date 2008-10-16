@@ -119,19 +119,19 @@ namespace Fanx.Test
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Float Literals
+  // Double Literals
   //////////////////////////////////////////////////////////////////////////
 
     void verifyFloatLiterals()
     {
-      verify("Float f() { return 0.0; }",       Float.make(0));
-      verify("Float f() { return 2.0; }",       Float.make(2));
-      verify("Float f() { return +1.0; }",      Float.make(1));
-      verify("Float f() { return -1.0; }",      Float.make(-1));
-      verify("Float f() { return 0.005; }",     Float.make(0.005));
-      verify("Float f() { return -1000.003; }", Float.make(-1000.003));
-      verify("Float f() { return -4.5e33; }",   Float.make(-4.5e33));
-      verify("Float f() { return null; }",      null);
+      verify("Double f() { return 0.0; }",       Double.valueOf(0));
+      verify("Double f() { return 2.0; }",       Double.valueOf(2));
+      verify("Double f() { return +1.0; }",      Double.valueOf(1));
+      verify("Double f() { return -1.0; }",      Double.valueOf(-1));
+      verify("Double f() { return 0.005; }",     Double.valueOf(0.005));
+      verify("Double f() { return -1000.003; }", Double.valueOf(-1000.003));
+      verify("Double f() { return -4.5e33; }",   Double.valueOf(-4.5e33));
+      verify("Double f() { return null; }",      null);
     }
 
   //////////////////////////////////////////////////////////////////////////
