@@ -128,7 +128,7 @@ namespace Fanx.Test
       for (int i=0; i<ftype.Fields().Sz(); i++)
       {
         Field ffield = (Field)ftype.Fields().Get(i);
-        string name = NameUtil.Upper(ffield.Name().val);
+        string name = FanUtil.Upper(ffield.Name().val);
         FieldInfo nfield = ntype.GetField(name);
         verify(name, nfield.Name);
       }
@@ -138,7 +138,7 @@ namespace Fanx.Test
       for (int i=0; i<ftype.Methods().Sz(); i++)
       {
         Method fmeth = (Method)ftype.Methods().Get(i);
-        string name = NameUtil.Upper(fmeth.Name().val);
+        string name = FanUtil.Upper(fmeth.Name().val);
         MethodInfo nmeth = ntype.GetMethod(name);
         verify(name, nmeth.Name);
       }

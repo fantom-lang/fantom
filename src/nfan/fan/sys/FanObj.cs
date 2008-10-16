@@ -102,7 +102,7 @@ namespace Fan.Sys
       if (self is FanObj)
         return ((FanObj)self).isImmutable();
       else
-        return Bool.make(NameUtil.isNetImmutable(self.GetType()));
+        return Bool.make(FanUtil.isNetImmutable(self.GetType()));
     }
 
     public virtual Bool isImmutable()
@@ -115,7 +115,7 @@ namespace Fan.Sys
       if (self is FanObj)
         return ((FanObj)self).type();
       else
-        return NameUtil.toFanType(self.GetType(), true);
+        return FanUtil.toFanType(self.GetType(), true);
     }
 
     public virtual Type type()
