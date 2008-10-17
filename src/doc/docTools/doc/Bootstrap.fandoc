@@ -77,6 +77,13 @@ files.  If a match is made, then it will route to the alternate
 runtime specified.  Turn on [launcher debugging]`Setup#debugging`
 to see exactly what is happening under the covers.
 
+Note that the extension used to run the build scripts needs to
+match the substitutes defined in the "sys.props".  If you set
+your 'pathext' to include ".fan", then Windows will pass the extension
+into the launcher.  If you are running an alternate way you might
+need to explicitly specify the extension on your command line or
+change the extensions defined in "sys.props".
+
 Unix Substitutes [#subsUnix]
 ============================
 Unix substitution is implemented by the bootstrap build scripts
