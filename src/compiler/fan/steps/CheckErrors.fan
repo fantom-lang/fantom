@@ -610,6 +610,8 @@ class CheckErrors : CompilerStep
   {
     switch (expr.id)
     {
+      case ExprId.listLiteral:    checkListLiteral((ListLiteralExpr)expr)
+      case ExprId.mapLiteral:     checkMapLiteral((MapLiteralExpr)expr)
       case ExprId.rangeLiteral:   checkRangeLiteral((RangeLiteralExpr)expr)
       case ExprId.boolNot:        checkBool((UnaryExpr)expr)
       case ExprId.cmpNull:
@@ -633,6 +635,41 @@ class CheckErrors : CompilerStep
       case ExprId.withBlock:      checkWithBlock((WithBlockExpr)expr)
     }
     return expr
+  }
+
+  private Void checkListLiteral(ListLiteralExpr expr)
+  {
+    // check the types and ensure that everything gets boxed
+    listType := (ListType)expr.ctype
+    valType := listType.v
+    expr.vals.each |Expr val, Int i|
+    {
+      expr.vals[i] = coerceBoxed(val, valType) |,|
+      {
+        err("Invalid value type '$val.toTypeStr' for list of '$valType'", val.location)
+      }
+    }
+  }
+
+  private Void checkMapLiteral(MapLiteralExpr expr)
+  {
+    // check the types and ensure that everything gets boxed
+    mapType := (MapType)expr.ctype
+    keyType := mapType.k
+    valType := mapType.v
+    expr.keys.each |Expr key, Int i|
+    {
+      expr.keys[i] = coerceBoxed(key, keyType) |,|
+      {
+        err("Invalid key type '$key.toTypeStr' for map type '$mapType'", key.location)
+      }
+
+      val := expr.vals[i]
+      expr.vals[i] = coerceBoxed(val, valType) |,|
+      {
+        err("Invalid value type '$val.toTypeStr' for map type '$mapType'", val.location)
+      }
+    }
   }
 
   private Void checkRangeLiteral(RangeLiteralExpr range)
@@ -1150,6 +1187,25 @@ class CheckErrors : CompilerStep
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Ensure the specified expression is boxed to an object reference.
+  **
+  private Expr box(Expr expr)
+  {
+    if (expr.ctype.isValue)
+      return TypeCheckExpr.coerce(expr, ns.objType)
+    else
+      return expr
+  }
+
+  **
+  ** Run the standard coerce method and ensure the result is boxed.
+  **
+  private Expr coerceBoxed(Expr expr, CType expected, |,| onErr)
+  {
+    return box(coerce(expr, expected, onErr))
+  }
 
   **
   ** Coerce the target expression to the specified type.  If
