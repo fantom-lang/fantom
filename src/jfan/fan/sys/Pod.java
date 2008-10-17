@@ -352,13 +352,13 @@ public class Pod
     // so it's safe that my pod has been loaded and is now registered (in
     // case the generic type is parameterized via types in my pod)
     if (ref.isGenericInstance())
-      return TypeParser.load(ref.sig, true, this);
+      return TypeParser.load(ref.signature, true, this);
 
     // otherwise I need to handle if I am loading my own pod, because
     // I might not yet be added to the system namespace if I'm just
     // loading my own hollow types
-    String podName  = fpod.name(ref.podName);
-    String typeName = fpod.name(ref.typeName);
+    String podName  = ref.podName;
+    String typeName = ref.typeName;
     Pod pod = podName.equals(name) ? this : Pod.find(podName, true, null, null);
     Type type = pod.findType(typeName, false);
     if (type != null)
