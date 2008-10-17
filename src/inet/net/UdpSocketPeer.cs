@@ -40,19 +40,19 @@ namespace Fan.Inet
   // State
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean isBound(UdpSocket fan)
+    public Fan.Sys.Boolean isBound(UdpSocket fan)
     {
-      return Boolean.valueOf(m_net.IsBound);
+      return Fan.Sys.Boolean.valueOf(m_net.IsBound);
     }
 
-    public Boolean isConnected(UdpSocket fan)
+    public Fan.Sys.Boolean isConnected(UdpSocket fan)
     {
-      return Boolean.valueOf(m_net.Connected);
+      return Fan.Sys.Boolean.valueOf(m_net.Connected);
     }
 
-    public Boolean isClosed(UdpSocket fan)
+    public Fan.Sys.Boolean isClosed(UdpSocket fan)
     {
-      return Boolean.valueOf(m_closed);
+      return Fan.Sys.Boolean.valueOf(m_closed);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -228,16 +228,16 @@ namespace Fan.Inet
       return fan;
     }
 
-    public Boolean close(UdpSocket fan)
+    public Fan.Sys.Boolean close(UdpSocket fan)
     {
       try
       {
         close();
-        return Boolean.True;
+        return Fan.Sys.Boolean.True;
       }
       catch
       {
-        return Boolean.False;
+        return Fan.Sys.Boolean.False;
       }
     }
 
@@ -257,14 +257,14 @@ namespace Fan.Inet
       return m_options;
     }
 
-    public Boolean getBroadcast(UdpSocket fan)
+    public Fan.Sys.Boolean getBroadcast(UdpSocket fan)
     {
-      return Boolean.valueOf(m_net.EnableBroadcast);
+      return Fan.Sys.Boolean.valueOf(m_net.EnableBroadcast);
     }
 
-    public void setBroadcast(UdpSocket fan, Boolean v)
+    public void setBroadcast(UdpSocket fan, Fan.Sys.Boolean v)
     {
-      m_net.EnableBroadcast = v.val;
+      m_net.EnableBroadcast = v.booleanValue();
     }
 
     public Int getReceiveBufferSize(UdpSocket fan)
@@ -287,15 +287,15 @@ namespace Fan.Inet
       m_net.SendBufferSize = (int)v.val;
     }
 
-    public Boolean getReuseAddress(UdpSocket fan)
+    public Fan.Sys.Boolean getReuseAddress(UdpSocket fan)
     {
-      return Boolean.valueOf(Convert.ToBoolean(
+      return Fan.Sys.Boolean.valueOf(Convert.ToBoolean(
         m_net.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress)));
     }
 
-    public void setReuseAddress(UdpSocket fan, Boolean v)
+    public void setReuseAddress(UdpSocket fan, Fan.Sys.Boolean v)
     {
-      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.val);
+      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.booleanValue());
     }
 
     public Duration getReceiveTimeout(UdpSocket fan)

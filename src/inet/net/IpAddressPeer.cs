@@ -131,12 +131,12 @@ namespace Fan.Inet
       return Int.make(m_net.GetHashCode());
     }
 
-    public Boolean _equals(IpAddress fan, object obj)
+    public Fan.Sys.Boolean _equals(IpAddress fan, object obj)
     {
       if (obj is IpAddress)
-        return Boolean.valueOf(this.m_net.Equals(((IpAddress)obj).m_peer.m_net));
+        return Fan.Sys.Boolean.valueOf(this.m_net.Equals(((IpAddress)obj).m_peer.m_net));
       else
-        return Boolean.False;
+        return Fan.Sys.Boolean.False;
     }
 
     public Str toStr(IpAddress fan)
@@ -148,14 +148,14 @@ namespace Fan.Inet
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean isIPv4(IpAddress fan)
+    public Fan.Sys.Boolean isIPv4(IpAddress fan)
     {
-      return Boolean.valueOf(m_net.AddressFamily == AddressFamily.InterNetwork);
+      return Fan.Sys.Boolean.valueOf(m_net.AddressFamily == AddressFamily.InterNetwork);
     }
 
-    public Boolean isIPv6(IpAddress fan)
+    public Fan.Sys.Boolean isIPv6(IpAddress fan)
     {
-      return Boolean.valueOf(m_net.AddressFamily == AddressFamily.InterNetworkV6);
+      return Fan.Sys.Boolean.valueOf(m_net.AddressFamily == AddressFamily.InterNetworkV6);
     }
 
     public Buf bytes(IpAddress fan)
