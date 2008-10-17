@@ -1346,7 +1346,9 @@ class CodeAsm : CompilerSupport
 
   private Void shortcutOp(CallExpr call, FOp opCode)
   {
-    if (call.target != null) expr(call.target)
+    // TODO: need to optimize for value-type comparisons
+    expr(call.target)
+    if (call.target.ctype.isValue) coerceOp(call.target.ctype, ns.objType)
     call.args.each |Expr arg| { expr(arg) }
     op(opCode)
   }
