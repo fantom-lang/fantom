@@ -40,7 +40,7 @@ public class FMethodEmit
     this.isStatic = (method.flags & FConst.Static) != 0;
     this.isCtor   = (method.flags & FConst.Ctor) != 0;
     this.isNative = (method.flags & FConst.Native) != 0;
-    this.ret      = emit.jname(method.inheritedRet); // we don't actually use Java covariance
+    this.ret      = emit.pod.typeRef(method.inheritedRet).jsig(); // we don't actually use Java covariance
     this.isVoid   = ret.equals("V");
     this.selfName = emit.selfName;
   }
@@ -105,7 +105,7 @@ public class FMethodEmit
     this.name   = ctorName;
     this.self   = false;
     this.isVoid = false;
-    this.ret    = selfName;
+    this.ret    = "L" + selfName + ";";
     this.code   = null;
     MethodEmit factory = doEmit();
     CodeEmit code = factory.emitCode();
@@ -289,6 +289,8 @@ public class FMethodEmit
     for (int i=paramLen; i<method.paramCount; ++i)
     {
       FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code);
+      e.vars = method.vars;
+      e.isStatic = isStatic;
       e.emit();
       maxStack = Math.max(maxStack, 2+i+8);
     }
@@ -343,10 +345,7 @@ public class FMethodEmit
     sig.append(')');
 
     // return
-    if (isVoid)
-      sig.append('V');
-    else
-      sig.append('L').append(ret).append(';');
+    sig.append(ret);
 
     return sig.toString();
   }
@@ -364,25 +363,14 @@ public class FMethodEmit
     for (int i=0; i<paramLen; ++i)
     {
       Param param = (Param)m.params().get(i);
-      toSig(sig, param.of());
+      sig.append(FanUtil.toJavaMemberSig(param.of()));
     }
     sig.append(')');
 
     // return
-    if (m.returns() == Sys.VoidType)
-      sig.append('V');
-    else
-      toSig(sig, m.inheritedReturns());
+    sig.append(FanUtil.toJavaMemberSig(m.inheritedReturns()));
 
     return sig.toString();
-  }
-
-  /**
-   * Append specified type to the signature string.
-   */
-  private static void toSig(StringBuilder s, Type t)
-  {
-    s.append('L').append(FanUtil.toJavaTypeSig(t)).append(';');
   }
 
 //////////////////////////////////////////////////////////////////////////
