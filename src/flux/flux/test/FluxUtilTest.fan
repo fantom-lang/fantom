@@ -40,7 +40,25 @@ class FluxUtilTest : Test
     verifyEq(opt.homePage, `flux:start`)
   }
 
-  Void testMark()
+  Void testMarkIdentity()
+  {
+    a := Mark { uri = `/a.txt`; line = 55 }
+    b := Mark { uri = `/a.txt`; line = 8 }
+    c := Mark { uri = `/b.txt`; line = 3 }
+    d := Mark { uri = `/a.txt`; line = 55; col = 3 }
+
+    verifyEq(a, Mark { uri = `/a.txt`; line = 55 })
+    verifyNotEq(a, b)
+    verifyNotEq(a, c)
+    verifyNotEq(a, d)
+
+    verifyEq(a <=> a, 0)
+    verifyEq(a <=> b, +1)
+    verifyEq(a <=> c, -1)
+    verifyEq(a <=> d, -1)
+  }
+
+  Void testMarkParse()
   {
     f := Sys.homeDir + `lib/sys.props`
     verifyMark("${f.osPath}", f)
