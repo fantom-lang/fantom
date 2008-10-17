@@ -71,14 +71,15 @@ public final class FPod
     if (jcall == null || opcode == CallNonVirtual) // don't use cache on nonvirt (see below)
     {
       int[] m = methodRef(index).val;
-      String type = jname(m[0]);
+      FTypeRef typeRef = typeRef(m[0]);
       String name = name(m[1]);
 
       // if the type signature is java/lang then we route
       // to static methods on FanObj, FanFloat, etc
-      String impl = FanUtil.toJavaImplSig(type);
+      String jname = typeRef.jname();
+      String impl = typeRef.jimpl();
       boolean explicitSelf = false;
-      if (type != impl)
+      if (jname != impl)
       {
         explicitSelf = opcode == CallVirtual;
       }
@@ -97,15 +98,13 @@ public final class FPod
       s.append(impl);
       if (opcode == CallMixinStatic) s.append('$');
       s.append('.').append(name).append('(');
-      if (explicitSelf) s.append('L').append(type).append(';');
-      for (int i=3; i<m.length; ++i)
-        s.append('L').append(jname(m[i])).append(';');
+      if (explicitSelf) s.append('L').append(jname).append(';');
+      for (int i=3; i<m.length; ++i) typeRef(m[i]).jsig(s);
       s.append(')');
 
-      String ret = jname(m[2]);
-      if (opcode == CallNew) s.append('L').append(type).append(';'); // factory
-      else if (ret.equals("fan/sys/Void")) s.append('V');
-      else s.append('L').append(ret).append(';');
+      FTypeRef ret = typeRef(m[2]);
+      if (opcode == CallNew) typeRef.jsig(s); // factory
+      else ret.jsig(s);
 
       jcall = new JCall();
       jcall.invokestatic = explicitSelf;
@@ -114,7 +113,7 @@ public final class FPod
       // we don't cache nonvirtuals on Obj b/c of conflicting signatures:
       //  - CallVirtual:     Obj.toStr => static FanObj.toStr(Object)
       //  - CallNonVirtual:  Obj.toStr => FanObj.toStr()
-      if (type == impl || opcode != CallNonVirtual)
+      if (jname == impl || opcode != CallNonVirtual)
         jcalls[index] = jcall;
     }
     return jcall;
@@ -137,10 +136,10 @@ public final class FPod
     {
       int[] f = fieldRef(index).val;
       StringBuilder s = new StringBuilder();
-      s.append(FanUtil.toJavaImplSig(jname(f[0])));
+      s.append(typeRef(f[0]).jimpl());
       if (mixin) s.append('$');
-      s.append('.').append(name(f[1]))
-       .append(':').append('L').append(jname(f[2])).append(';');
+      s.append('.').append(name(f[1])).append(':');
+      typeRef(f[2]).jsig(s);
       jfield = jfields[index] = s.toString();
     }
     return jfield;
@@ -149,10 +148,12 @@ public final class FPod
   /**
    * Map a Java type name (:: replaced wit /) via typeRefs table.
    */
+/*
   public final String jname(int index)
   {
     return typeRef(index).jname();
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Read
