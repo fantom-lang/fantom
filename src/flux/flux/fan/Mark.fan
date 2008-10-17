@@ -47,6 +47,40 @@ const class Mark
   const Int? col
 
   **
+  ** Hash code is based on uri, line, and col.
+  **
+  override Int hash()
+  {
+    hash := uri.hash
+    if (line != null) hash ^= line << 21
+    if (col != null)  hash ^= col << 11
+    return hash
+  }
+
+  **
+  ** Equality is based on uri, line, and col.
+  **
+  override Bool equals(Obj? that)
+  {
+    x := that as Mark
+    if (x == null) return false
+    return uri == x.uri && line == x.line && col == x.col
+  }
+
+  **
+  ** Compare URIs, then lines, then columns
+  **
+  override Int compare(Obj that)
+  {
+    x := that as Mark
+    if (x == null) return super.compare(that)
+    cmp := uri <=> x.uri
+    if (cmp == 0) cmp = line <=> x.line
+    if (cmp == 0) cmp = col <=> x.col
+    return cmp
+  }
+
+  **
   ** Return string formatted as "uri:line:col" where the
   ** line and col are optional if null.
   **
