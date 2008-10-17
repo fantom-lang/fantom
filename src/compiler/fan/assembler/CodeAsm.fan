@@ -915,10 +915,15 @@ class CodeAsm : CompilerSupport
   private Void coerce(TypeCheckExpr tc)
   {
     expr(tc.target)
-    op(FOp.Coerce)
-    code.writeI2(fpod.addTypeRef(tc.target.ctype))
-    code.writeI2(fpod.addTypeRef(tc.ctype))
+    coerceOp(tc.target.ctype, tc.ctype)
     if (!tc.leave) opType(FOp.Pop, tc.ctype)
+  }
+
+  private Void coerceOp(CType from, CType to)
+  {
+    op(FOp.Coerce)
+    code.writeI2(fpod.addTypeRef(from))
+    code.writeI2(fpod.addTypeRef(to))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1164,7 +1169,15 @@ class CodeAsm : CompilerSupport
   private Void call(CallExpr call, Bool leave := call.leave)
   {
     // evaluate target
-    if (call.target != null) expr(call.target)
+    if (call.target != null)
+    {
+      // push call target onto the stack
+      expr(call.target)
+
+      // if target is Obj method on value-type then box it
+      if (call.target.ctype.isValue && call.method.parent.isObj)
+        coerceOp(call.target.ctype, ns.objType)
+    }
 
     // if safe, check for null
     Int? isNullLabel := null
