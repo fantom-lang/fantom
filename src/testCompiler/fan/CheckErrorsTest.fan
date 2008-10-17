@@ -1133,4 +1133,47 @@ class CheckErrorsTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Collection Literals
+//////////////////////////////////////////////////////////////////////////
+
+  Void testListLiterals()
+  {
+    // errors
+    verifyErrors(
+     "class Foo
+      {
+        Obj m00() { return [3] }    // ok
+        Obj m01() { return [null] } // ok
+        Obj m02() { return Num[\"x\", 4ns, 6] }
+        Obj m03() { return Num[null] }
+        Obj m04() { return Int[][ [3], [3d] ] }
+      }",
+       [
+         5, 26, "Invalid value type 'sys::Str' for list of 'sys::Num'",
+         5, 31, "Invalid value type 'sys::Duration' for list of 'sys::Num'",
+         6, 26, "Invalid value type 'null' for list of 'sys::Num'",
+         7, 34, "Invalid value type 'sys::Decimal[]' for list of 'sys::Int[]'",
+       ])
+  }
+
+  Void testMapLiterals()
+  {
+    // errors
+    verifyErrors(
+     "class Foo
+      {
+        Obj m00() { return Int:Num[3:2ns, 2ns:5, 2ns:2ns] }
+        Obj m01() { return Int:Int[null:2, 3:null] }
+      }",
+       [
+         3, 32, "Invalid value type 'sys::Duration' for map type '[sys::Int:sys::Num]'",
+         3, 37, "Invalid key type 'sys::Duration' for map type '[sys::Int:sys::Num]'",
+         3, 44, "Invalid key type 'sys::Duration' for map type '[sys::Int:sys::Num]'",
+         3, 48, "Invalid value type 'sys::Duration' for map type '[sys::Int:sys::Num]'",
+         4, 30, "Invalid key type 'null' for map type '[sys::Int:sys::Int]'",
+         4, 40, "Invalid value type 'null' for map type '[sys::Int:sys::Int]'",
+       ])
+  }
+
 }
