@@ -1175,7 +1175,7 @@ class TypeCheckExpr : Expr
     {
       case ExprId.isExpr: return "($target is $check)"
       case ExprId.asExpr: return "($target as $check)"
-      case ExprId.coerce: return "($check)$target"
+      case ExprId.coerce: return "(($check)$target)"
       default:            throw Err.make(id.toStr)
     }
   }

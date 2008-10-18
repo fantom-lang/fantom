@@ -916,6 +916,11 @@ class CheckErrors : CompilerStep
     // don't allow safe calls on non-nullable type
     if (call.isSafe && call.target != null && !call.target.ctype.isNullable)
       err("Cannot use null-safe call on non-nullable type '$call.target.ctype'", call.target.location)
+
+    // if calling a method on a value-type, ensure target is coerced to non-null
+    target := call.target
+    if (target != null && target.ctype.isValue && target.ctype.isNullable)
+      call.target = coerce(target, target.ctype.toNonNullable) |,| { throw Err() }
   }
 
   private Void checkField(FieldExpr f)
