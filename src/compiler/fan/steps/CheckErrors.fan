@@ -1041,6 +1041,14 @@ class CheckErrors : CompilerStep
     {
       err("Ternary condition must be Bool, not '$expr.condition.ctype'", expr.condition.location)
     }
+    expr.trueExpr = coerce(expr.trueExpr, expr.ctype) |,|
+    {
+      err("Ternary true expr '$expr.trueExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.trueExpr.location)
+    }
+    expr.falseExpr = coerce(expr.falseExpr, expr.ctype) |,|
+    {
+      err("Ternary falseexpr '$expr.falseExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.falseExpr.location)
+    }
   }
 
   private Void checkWithBlock(WithBlockExpr expr)
