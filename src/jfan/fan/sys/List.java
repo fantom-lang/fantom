@@ -290,7 +290,7 @@ public final class List
     return Long.valueOf(hash);
   }
 
-  public final boolean _equals(Object that)
+  public final boolean equals(Object that)
   {
     if (that instanceof List)
     {

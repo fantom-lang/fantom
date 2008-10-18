@@ -116,7 +116,7 @@ public final class Duration
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final boolean _equals(Object obj)
+  public final boolean equals(Object obj)
   {
     if (obj instanceof Duration)
       return ticks == ((Duration)obj).ticks;

@@ -89,11 +89,6 @@ public final class FPod
         if (jcall != null) return jcall;
       }
 
-      // equals => _equals (since we can't override
-      // Object.equals by return type)
-      if (!explicitSelf)
-        name = FanUtil.toJavaMethodName(name);
-
       StringBuilder s = new StringBuilder();
       s.append(impl);
       if (opcode == CallMixinStatic) s.append('$');

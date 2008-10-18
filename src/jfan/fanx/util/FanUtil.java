@@ -80,24 +80,6 @@ public class FanUtil
   }
 
   /**
-   * Convert Java method name to Fan method name.
-   */
-  public static String toFanMethodName(String name)
-  {
-    if (name.equals("_equals")) return "equals";
-    return name;
-  }
-
-  /**
-   * Convert Fan method name to Java method name.
-   */
-  public static String toJavaMethodName(String name)
-  {
-    if (name.equals("equals")) return "_equals";
-    return name;
-  }
-
-  /**
    * Given a Fan qname, get the Java class name:
    *   sys::Obj  =>  java.lang.Object
    *   foo::Bar  =>  fan.foo.Bar

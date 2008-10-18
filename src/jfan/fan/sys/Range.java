@@ -114,7 +114,7 @@ public final class Range
     return acc;
   }
 
-  public final boolean _equals(Object object)
+  public final boolean equals(Object object)
   {
     if (object instanceof Range)
     {

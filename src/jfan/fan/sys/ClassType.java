@@ -712,7 +712,7 @@ catch (Exception e) { e.printStackTrace(); }
   {
     if (pod == Sys.SysPod && !Modifier.isPublic(m.getModifiers())) return;
     this.finishing = m.getName();
-    String name = FanUtil.toFanMethodName(m.getName());
+    String name = m.getName();
     Slot slot = slot(name, false);
     if (slot == null) return;
     if (slot.parent() != this) return;

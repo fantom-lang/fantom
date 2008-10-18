@@ -34,7 +34,7 @@ public class FMethodEmit
     this.emit     = emit;
     this.method   = method;
     this.code     = method.code;
-    this.name     = FanUtil.toJavaMethodName(method.name);
+    this.name     = method.name;
     this.jflags   = FTypeEmit.jflags(method.flags);
     this.paramLen = method.paramCount;
     this.isStatic = (method.flags & FConst.Static) != 0;
@@ -214,7 +214,7 @@ public class FMethodEmit
   public void emitMixinRouter(Method m)
   {
     String parent  = "fan/" + m.parent().pod().name() + "/" + m.parent().name();
-    String name    = FanUtil.toJavaMethodName(m.name());
+    String name    = m.name();
     int jflags     = emit.jflags(m.flags());
     List params    = m.params();
     int paramCount = params.sz();

@@ -27,11 +27,6 @@ public class FanObj
     return (int)(hash ^ (hash >>> 32));
   }
 
-  public final boolean equals(Object obj)
-  {
-    return _equals(obj);
-  }
-
   public final String toString()
   {
     return toStr();
@@ -43,15 +38,7 @@ public class FanObj
 
   public static boolean equals(Object self, Object x)
   {
-    if (self instanceof FanObj)
-      return ((FanObj)self)._equals(x);
-    else
-      return self.equals(x);
-  }
-
-  public boolean _equals(Object obj)
-  {
-    return this == obj;
+    return self.equals(x);
   }
 
   public static Long compare(Object self, Object x)
