@@ -1058,16 +1058,19 @@ class CheckErrors : CompilerStep
 
   private Void checkArgs(CallExpr call)
   {
-    params := call.method.params
+    method := call.method
     name := call.name
     args := call.args
+    newArgs := args.dup
     isErr := false
+    params := method.params
+    genericParams := method.isParameterized ? method.generic.params : null
 
     // if we are calling callx(A, B...) on a FuncType, then
     // use the first class Func signature rather than the
     // version of callx which got picked because we might have
     // picked the wrong callx version
-    sig := call.method.parent as FuncType
+    sig := method.parent as FuncType
     if (sig != null && name.startsWith("call") && name.size == 5)
     {
       if (sig.params.size != args.size)
@@ -1078,7 +1081,8 @@ class CheckErrors : CompilerStep
       {
         sig.params.each |CType p, Int i|
         {
-          args[i] = coerce(args[i], p) |,| { isErr = true }
+          // check each argument and ensure boxed
+          newArgs[i] = coerceBoxed(args[i], p) |,| { isErr = true }
         }
       }
     }
@@ -1102,21 +1106,31 @@ class CheckErrors : CompilerStep
         else
         {
           // ensure arg fits parameter type (or auto-cast)
-          args[i] = coerce(args[i], p.paramType) |,|
+          newArgs[i] = coerce(args[i], p.paramType) |,|
           {
             isErr = name != "compare" // TODO let anything slide for Obj.compare
           }
+
+          // if this a parameterized generic, then we need to box
+          // even if the expected type is a value-type (since the
+          // actual implementation methods are all Obj based)
+          if (!isErr && genericParams != null && genericParams[i].paramType.isGenericParameter)
+            newArgs[i] = box(newArgs[i])
         }
       }
     }
 
-    if (!isErr) return
+    if (!isErr)
+    {
+      call.args = newArgs
+      return
+    }
 
     msg := "Invalid args "
     if (sig != null)
       msg += "|" + sig.params.join(", ") + "|"
     else
-      msg += call.method.nameAndParamTypesToStr
+      msg += method.nameAndParamTypesToStr
     msg += ", not (" + args.join(", ", |Expr e->Str| { return "$e.toTypeStr" }) + ")"
     err(msg, call.location)
   }

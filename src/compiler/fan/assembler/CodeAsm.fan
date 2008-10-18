@@ -1059,11 +1059,11 @@ class CodeAsm : CompilerSupport
           op(FOp.CallVirtual, index)
       }
 
-      // if parameterized or covariant, then cast
-      if (field.isParameterized || field.isCovariant)
-      {
-        op(FOp.Cast, fpod.addTypeRef(field.fieldType))
-      }
+      // if parameterized or covariant, then coerce
+      if (field.isParameterized)
+        coerceOp(ns.objType, field.fieldType)
+      else if (field.isCovariant)
+        coerceOp(field.inheritedReturnType, field.fieldType)
     }
     // load field directly from storage
     else
@@ -1288,11 +1288,11 @@ class CodeAsm : CompilerSupport
       {
         ret := m.generic.returnType
         if (ret.isGenericParameter)
-          op(FOp.Cast, fpod.addTypeRef(m.returnType))
+          coerceOp(ns.objType, m.returnType)
       }
       else if (m.isCovariant)
       {
-        op(FOp.Cast, fpod.addTypeRef(m.returnType))
+        coerceOp(m.inheritedReturnType, m.returnType)
       }
     }
 
