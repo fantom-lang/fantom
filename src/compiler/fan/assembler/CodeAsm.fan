@@ -1088,6 +1088,7 @@ class CodeAsm : CompilerSupport
     // if safe, handle null case
     if (fexpr.isSafe)
     {
+      if (field.fieldType.isValue) coerceOp(field.fieldType, field.fieldType.toNullable)
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
       opType(FOp.Pop, fexpr.ctype)
@@ -1169,6 +1170,7 @@ class CodeAsm : CompilerSupport
   private Void call(CallExpr call, Bool leave := call.leave)
   {
     // evaluate target
+    method := call.method
     if (call.target != null)
     {
       // push call target onto the stack
@@ -1203,6 +1205,7 @@ class CodeAsm : CompilerSupport
     // if safe, handle null case
     if (call.isSafe)
     {
+      if (method.returnType.isValue) coerceOp(method.returnType, call.ctype.toNullable)
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
       opType(FOp.Pop, call.ctype)
