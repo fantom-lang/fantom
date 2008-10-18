@@ -98,7 +98,7 @@ public final class FPod
       s.append(impl);
       if (opcode == CallMixinStatic) s.append('$');
       s.append('.').append(name).append('(');
-      if (explicitSelf) s.append('L').append(jname).append(';');
+      if (explicitSelf) typeRef.jsig(s);
       for (int i=3; i<m.length; ++i) typeRef(m[i]).jsig(s);
       s.append(')');
 

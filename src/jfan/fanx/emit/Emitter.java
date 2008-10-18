@@ -229,10 +229,6 @@ public class Emitter
    */
   public int cls(String className)
   {
-    // normalize class name
-    if (className.indexOf('.') >= 0)
-      throw new IllegalArgumentException("Use jtype format: " + className);
-
     // lookup or add
     CpClass info = (CpClass)cpClass.get(className);
     if (info == null)
