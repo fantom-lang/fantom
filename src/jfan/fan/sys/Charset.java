@@ -276,7 +276,7 @@ public class Charset
 
   public Long hash() { return Long.valueOf(charset.hashCode()); }
 
-  public boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (obj instanceof Charset)
     {

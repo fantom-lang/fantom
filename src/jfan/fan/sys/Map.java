@@ -206,7 +206,7 @@ public final class Map
     this.def = v;
   }
 
-  public final boolean _equals(Object that)
+  public final boolean equals(Object that)
   {
     if (that instanceof Map)
     {

@@ -52,7 +52,7 @@ public abstract class Buf
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public final boolean _equals(Object that)
+  public final boolean equals(Object that)
   {
     return this == that;
   }

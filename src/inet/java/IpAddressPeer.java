@@ -118,7 +118,7 @@ public class IpAddressPeer
     return Long.valueOf(java.hashCode());
   }
 
-  public boolean _equals(IpAddress fan, Object obj)
+  public boolean equals(IpAddress fan, Object obj)
   {
     if (obj instanceof IpAddress)
       return this.java.equals(((IpAddress)obj).peer.java);

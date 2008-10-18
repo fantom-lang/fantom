@@ -80,7 +80,7 @@ public final class Version
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (obj instanceof Version)
       return toStr().equals(((Version)obj).toStr());

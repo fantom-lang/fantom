@@ -48,7 +48,7 @@ public class FuncType
     return FanStr.hash(signature());
   }
 
-  public boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (obj instanceof FuncType)
     {
@@ -56,7 +56,7 @@ public class FuncType
       if (params.length != x.params.length) return false;
       for (int i=0; i<params.length; ++i)
         if (!params[i].equals(x.params[i])) return false;
-      return ret._equals(x.ret);
+      return ret.equals(x.ret);
     }
     return false;
   }

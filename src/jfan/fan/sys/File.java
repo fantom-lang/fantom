@@ -78,11 +78,11 @@ public abstract class File
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final boolean _equals(Object obj)
+  public final boolean equals(Object obj)
   {
     if (obj instanceof File)
     {
-      return uri._equals(((File)obj).uri);
+      return uri.equals(((File)obj).uri);
     }
     return false;
   }

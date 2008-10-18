@@ -100,7 +100,7 @@ public class Locale
 
   public Long hash() { return FanStr.hash(str); }
 
-  public boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (obj instanceof Locale)
     {
