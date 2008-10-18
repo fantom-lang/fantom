@@ -289,7 +289,6 @@ public class FMethodEmit
     int maxStack  = 16; // TODO - add additional default expr stack height
     for (int i=paramLen; i<method.paramCount; ++i)
     {
-// TODO: rework constructor
       FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code, emit.pod.typeRef(method.ret));
       e.vars = method.vars;
       e.isStatic = isStatic;
