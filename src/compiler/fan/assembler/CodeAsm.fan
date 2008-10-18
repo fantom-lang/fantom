@@ -1420,6 +1420,7 @@ class CodeAsm : CompilerSupport
         storeField((FieldExpr)var)
       case ExprId.shortcut:
         set := (CMethod)c->setMethod
+        if (var.ctype.isValue) coerceOp(var.ctype, ns.objType)
         op(FOp.CallVirtual, fpod.addMethodRef(set, 2))
         if (!set.returnType.isVoid) opType(FOp.Pop, set.returnType)
     }

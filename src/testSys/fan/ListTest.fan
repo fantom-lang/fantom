@@ -1164,13 +1164,20 @@ class ListTest : Test
     x[1] <<= 4
     verifyEq(x, [8, 0xabcd0])
 
-// TODO: coercion not right - causes verify error
-//    b := [false, false, true, true]
-//    b[0] |= Bool.fromStr("false")
-//    b[1] |= true
-//    b[2] |= false
-//    verifyEq(b[3] |= true, true)
-//    verifyEq(b, [false, true, true, true])
+    f := [3f, 2f]
+    f[1] *= 8f
+    verifyEq(f, [3f, 16f])
+
+    s := ["x"]
+    s[0] += "y"
+    verifyEq(s, ["xy"])
+
+    b := [false, false, true, true]
+    b[0] |= Bool.fromStr("false")
+    b[1] |= true
+    b[2] |= false
+    verifyEq(b[3] |= true, true)
+    verifyEq(b, [false, true, true, true])
   }
 
 //////////////////////////////////////////////////////////////////////////
