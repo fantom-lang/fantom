@@ -22,7 +22,7 @@ public final class FanFloat
 //////////////////////////////////////////////////////////////////////////
 
   public static Double fromStr(String s) { return fromStr(s, true); }
-  public static Double fromStr(String s, Boolean checked)
+  public static Double fromStr(String s, boolean checked)
   {
     try
     {
@@ -52,7 +52,7 @@ public final class FanFloat
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(Double self, Object obj)
+  public static boolean equals(Double self, Object obj)
   {
     if (obj instanceof Double)
     {
@@ -64,8 +64,8 @@ public final class FanFloat
     return false;
   }
 
-  public static Boolean approx(Double self, Double that) { return approx(self, that, null); }
-  public static Boolean approx(Double self, Double that, Double tolerance)
+  public static boolean approx(Double self, Double that) { return approx(self, that, null); }
+  public static boolean approx(Double self, Double that, Double tolerance)
   {
     // need this to check +inf, -inf, and nan
     if (equals(self, that)) return true;

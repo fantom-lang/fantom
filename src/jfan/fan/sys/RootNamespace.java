@@ -42,7 +42,7 @@ public final class RootNamespace
 // Namespace
 //////////////////////////////////////////////////////////////////////////
 
-  public Object get(Uri uri, Boolean checked)
+  public Object get(Uri uri, boolean checked)
   {
     checkUri(uri);
 

@@ -269,7 +269,7 @@ public class FileBuf
     }
   }
 
-  public final Boolean close()
+  public final boolean close()
   {
     try
     {

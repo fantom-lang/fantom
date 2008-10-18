@@ -81,7 +81,7 @@ public class StrInStream
     return this;
   }
 
-  public Boolean close()
+  public boolean close()
   {
     return true;
   }

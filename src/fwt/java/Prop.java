@@ -55,13 +55,13 @@ public abstract class Prop
 
     void syncFromControl() { val = get(); }
 
-    Boolean get()
+    boolean get()
     {
       Widget w = peer.control;
       return w == null ? val : get(w);
     }
 
-    void set(Boolean v)
+    void set(boolean v)
     {
       Widget w = peer.control;
       if (w == null)
@@ -73,7 +73,7 @@ public abstract class Prop
     public abstract boolean get(Widget w);
     public abstract void set(Widget w, boolean v);
 
-    Boolean val;
+    boolean val;
   }
 
 //////////////////////////////////////////////////////////////////////////

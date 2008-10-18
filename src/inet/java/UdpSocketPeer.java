@@ -42,17 +42,17 @@ public class UdpSocketPeer
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isBound(UdpSocket fan)
+  public boolean isBound(UdpSocket fan)
   {
     return isBound();
   }
 
-  public Boolean isConnected(UdpSocket fan)
+  public boolean isConnected(UdpSocket fan)
   {
     return isConnected();
   }
 
-  public Boolean isClosed(UdpSocket fan)
+  public boolean isClosed(UdpSocket fan)
   {
     return isClosed();
   }
@@ -202,7 +202,7 @@ public class UdpSocketPeer
     return fan;
   }
 
-  public Boolean close(UdpSocket fan)
+  public boolean close(UdpSocket fan)
   {
     try
     {
@@ -225,7 +225,7 @@ public class UdpSocketPeer
     return options;
   }
 
-  public Boolean getBroadcast(UdpSocket fan)
+  public boolean getBroadcast(UdpSocket fan)
   {
     try
     {
@@ -237,7 +237,7 @@ public class UdpSocketPeer
     }
   }
 
-  public void setBroadcast(UdpSocket fan, Boolean v)
+  public void setBroadcast(UdpSocket fan, boolean v)
   {
     try
     {
@@ -297,7 +297,7 @@ public class UdpSocketPeer
     }
   }
 
-  public Boolean getReuseAddress(UdpSocket fan)
+  public boolean getReuseAddress(UdpSocket fan)
   {
     try
     {
@@ -309,7 +309,7 @@ public class UdpSocketPeer
     }
   }
 
-  public void setReuseAddress(UdpSocket fan, Boolean v)
+  public void setReuseAddress(UdpSocket fan, boolean v)
   {
     try
     {

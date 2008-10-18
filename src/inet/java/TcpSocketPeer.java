@@ -36,17 +36,17 @@ public class TcpSocketPeer
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isBound(TcpSocket fan)
+  public boolean isBound(TcpSocket fan)
   {
     return isBound();
   }
 
-  public Boolean isConnected(TcpSocket fan)
+  public boolean isConnected(TcpSocket fan)
   {
     return isConnected();
   }
 
-  public Boolean isClosed(TcpSocket fan)
+  public boolean isClosed(TcpSocket fan)
   {
     return isClosed();
   }
@@ -140,7 +140,7 @@ public class TcpSocketPeer
     return out;
   }
 
-  public Boolean close(TcpSocket fan)
+  public boolean close(TcpSocket fan)
   {
     try
     {
@@ -263,7 +263,7 @@ public class TcpSocketPeer
     return options;
   }
 
-  public Boolean getKeepAlive(TcpSocket fan)
+  public boolean getKeepAlive(TcpSocket fan)
   {
     try
     {
@@ -275,7 +275,7 @@ public class TcpSocketPeer
     }
   }
 
-  public void setKeepAlive(TcpSocket fan, Boolean v)
+  public void setKeepAlive(TcpSocket fan, boolean v)
   {
     try
     {
@@ -335,7 +335,7 @@ public class TcpSocketPeer
     }
   }
 
-  public Boolean getReuseAddress(TcpSocket fan)
+  public boolean getReuseAddress(TcpSocket fan)
   {
     try
     {
@@ -347,7 +347,7 @@ public class TcpSocketPeer
     }
   }
 
-  public void setReuseAddress(TcpSocket fan, Boolean v)
+  public void setReuseAddress(TcpSocket fan, boolean v)
   {
     try
     {
@@ -417,7 +417,7 @@ public class TcpSocketPeer
     }
   }
 
-  public Boolean getNoDelay(TcpSocket fan)
+  public boolean getNoDelay(TcpSocket fan)
   {
     try
     {
@@ -429,7 +429,7 @@ public class TcpSocketPeer
     }
   }
 
-  public void setNoDelay(TcpSocket fan, Boolean v)
+  public void setNoDelay(TcpSocket fan, boolean v)
   {
     try
     {

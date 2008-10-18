@@ -74,7 +74,7 @@ public class StrBufOutStream
     return this;
   }
 
-  public Boolean close()
+  public boolean close()
   {
     return true;
   }

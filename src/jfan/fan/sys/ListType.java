@@ -40,7 +40,7 @@ public class ListType
     return FanStr.hash(signature());
   }
 
-  public final Boolean _equals(Object obj)
+  public final boolean _equals(Object obj)
   {
     if (obj instanceof ListType)
     {

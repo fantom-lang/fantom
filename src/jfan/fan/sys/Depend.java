@@ -21,7 +21,7 @@ public final class Depend
 //////////////////////////////////////////////////////////////////////////
 
   public static Depend fromStr(String str) { return fromStr(str, true); }
-  public static Depend fromStr(String str, Boolean checked)
+  public static Depend fromStr(String str, boolean checked)
   {
     try
     {
@@ -164,7 +164,7 @@ public final class Depend
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean _equals(Object obj)
+  public boolean _equals(Object obj)
   {
     if (obj instanceof Depend)
       return toStr().equals(toStr(obj));
@@ -226,14 +226,14 @@ public final class Depend
     return constraints[index.intValue()].version;
   }
 
-  public final Boolean isPlus() { return isPlus(0L); }
-  public final Boolean isPlus(Long index)
+  public final boolean isPlus() { return isPlus(0L); }
+  public final boolean isPlus(Long index)
   {
     return constraints[index.intValue()].isPlus;
   }
 
-  public final Boolean isRange() { return isRange(0L); }
-  public final Boolean isRange(Long index)
+  public final boolean isRange() { return isRange(0L); }
+  public final boolean isRange(Long index)
   {
     return constraints[index.intValue()].endVersion != null;
   }
@@ -244,7 +244,7 @@ public final class Depend
     return constraints[index.intValue()].endVersion;
   }
 
-  public final Boolean match(Version v)
+  public final boolean match(Version v)
   {
     for (int i=0; i<constraints.length; ++i)
     {

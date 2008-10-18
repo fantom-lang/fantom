@@ -4,7 +4,7 @@
 //
 // History:
 //   2 Dec 05  Brian Frank  Creation
-//   4 Oct 08  Brian Frank  Refactor Boolean into Boolean/FanBool
+//   4 Oct 08  Brian Frank  Refactor Bool into Boolean/FanBool
 //
 package fan.sys;
 
@@ -22,10 +22,10 @@ public final class FanBool
 //////////////////////////////////////////////////////////////////////////
 
   public static Boolean fromStr(String s) { return fromStr(s, true); }
-  public static Boolean fromStr(String s, Boolean checked)
+  public static Boolean fromStr(String s, boolean checked)
   {
-    if (s.equals("true")) return true;
-    if (s.equals("false")) return false;
+    if (s.equals("true")) return Boolean.TRUE;
+    if (s.equals("false")) return Boolean.FALSE;
     if (!checked) return null;
     throw ParseErr.make("Bool", s).val;
   }
@@ -34,17 +34,17 @@ public final class FanBool
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(Boolean self, Object obj)
+  public static boolean equals(boolean self, Object obj)
   {
     return self == obj;
   }
 
-  public static Long hash(Boolean self)
+  public static Long hash(boolean self)
   {
     return self ? Long.valueOf(1231) : Long.valueOf(1237);
   }
 
-  public static Type type(Boolean self)
+  public static Type type(boolean self)
   {
     return Sys.BoolType;
   }
@@ -53,22 +53,22 @@ public final class FanBool
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean not(Boolean self)
+  public static boolean not(boolean self)
   {
     return !self;
   }
 
-  public static Boolean and(Boolean self, Boolean b)
+  public static boolean and(boolean self, boolean b)
   {
     return self & b;
   }
 
-  public static Boolean or(Boolean self, Boolean b)
+  public static boolean or(boolean self, boolean b)
   {
     return self | b;
   }
 
-  public static Boolean xor(Boolean self, Boolean b)
+  public static boolean xor(boolean self, boolean b)
   {
     return self ^ b;
   }
@@ -77,12 +77,12 @@ public final class FanBool
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public static String toStr(Boolean self)
+  public static String toStr(boolean self)
   {
     return self ? "true" : "false";
   }
 
-  public static void encode(Boolean self, ObjEncoder out)
+  public static void encode(boolean self, ObjEncoder out)
   {
     out.w(self ? "true" : "false");
   }

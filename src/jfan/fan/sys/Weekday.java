@@ -35,7 +35,7 @@ public final class Weekday
   }
 
   public static Weekday fromStr(String name) { return fromStr(name, true); }
-  public static Weekday fromStr(String name, Boolean checked)
+  public static Weekday fromStr(String name, boolean checked)
   {
     return (Weekday)doFromStr(Sys.WeekdayType, name, checked);
   }

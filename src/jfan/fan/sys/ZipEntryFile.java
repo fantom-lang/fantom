@@ -42,7 +42,7 @@ public class ZipEntryFile
 // File
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean exists()
+  public boolean exists()
   {
     return true;
   }
@@ -85,7 +85,7 @@ public class ZipEntryFile
     return this;
   }
 
-  public File plus(Uri uri, Boolean checkSlash)
+  public File plus(Uri uri, boolean checkSlash)
   {
     // TODO
     throw UnsupportedErr.make("ZipEntryFile.plus").val;
@@ -157,7 +157,7 @@ public class ZipEntryFile
     }
   }
 
-  public OutStream out(Boolean append, Long bufSize)
+  public OutStream out(boolean append, Long bufSize)
   {
     throw IOErr.make("ZipEntryFile is readonly").val;
   }

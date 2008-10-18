@@ -114,12 +114,12 @@ public class GraphicsPeer
     this.gc.setFont(Env.get().font(font));
   }
 
-  public Boolean antialias(Graphics self)
+  public boolean antialias(Graphics self)
   {
     return gc.getAntialias() == SWT.ON;
   }
 
-  public void antialias(Graphics self, Boolean on)
+  public void antialias(Graphics self, boolean on)
   {
     int val = on ? SWT.ON : SWT.OFF;
     gc.setAntialias(val);

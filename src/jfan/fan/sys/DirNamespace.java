@@ -39,7 +39,7 @@ final class DirNamespace
 // Namespace
 //////////////////////////////////////////////////////////////////////////
 
-  public Object get(Uri uri, Boolean checked)
+  public Object get(Uri uri, boolean checked)
   {
     File f = dir.plus(uri.relTo(this.uri()), false);
     if (f.exists()) return f;

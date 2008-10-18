@@ -41,7 +41,7 @@ public class MapType
     return FanStr.hash(signature());
   }
 
-  public Boolean _equals(Object obj)
+  public boolean _equals(Object obj)
   {
     if (obj instanceof MapType)
     {

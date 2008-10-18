@@ -102,7 +102,7 @@ public class SysInStream
     }
   }
 
-  public Boolean close()
+  public boolean close()
   {
     try
     {

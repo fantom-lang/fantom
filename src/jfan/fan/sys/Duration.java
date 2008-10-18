@@ -22,7 +22,7 @@ public final class Duration
 //////////////////////////////////////////////////////////////////////////
 
   public static Duration fromStr(String s) { return fromStr(s, true); }
-  public static Duration fromStr(String s, Boolean checked)
+  public static Duration fromStr(String s, boolean checked)
   {
     //   ns:   nanoseconds  (x 1)
     //   ms:   milliseconds (x 1,000,000)
@@ -116,7 +116,7 @@ public final class Duration
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean _equals(Object obj)
+  public final boolean _equals(Object obj)
   {
     if (obj instanceof Duration)
       return ticks == ((Duration)obj).ticks;

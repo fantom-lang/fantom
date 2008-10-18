@@ -44,7 +44,7 @@ public final class Month
   }
 
   public static Month fromStr(String name) { return fromStr(name, true); }
-  public static Month fromStr(String name, Boolean checked)
+  public static Month fromStr(String name, boolean checked)
   {
     return (Month)doFromStr(Sys.MonthType, name, checked);
   }

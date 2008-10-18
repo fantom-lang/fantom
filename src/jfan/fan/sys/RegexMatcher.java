@@ -35,12 +35,12 @@ public final class RegexMatcher
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean matches()
+  public final boolean matches()
   {
     return matcher.matches();
   }
 
-  public final Boolean find()
+  public final boolean find()
   {
     return matcher.find();
   }

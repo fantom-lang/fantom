@@ -40,12 +40,12 @@ public class TcpListenerPeer
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isBound(TcpListener fan)
+  public boolean isBound(TcpListener fan)
   {
     return isBound();
   }
 
-  public Boolean isClosed(TcpListener fan)
+  public boolean isClosed(TcpListener fan)
   {
     return isClosed();
   }
@@ -104,7 +104,7 @@ public class TcpListenerPeer
     }
   }
 
-  public Boolean close(TcpListener fan)
+  public boolean close(TcpListener fan)
   {
     try
     {
@@ -145,7 +145,7 @@ public class TcpListenerPeer
     }
   }
 
-  public Boolean getReuseAddress(TcpListener fan)
+  public boolean getReuseAddress(TcpListener fan)
   {
     try
     {
@@ -157,7 +157,7 @@ public class TcpListenerPeer
     }
   }
 
-  public void setReuseAddress(TcpListener fan, Boolean v)
+  public void setReuseAddress(TcpListener fan, boolean v)
   {
     try
     {

@@ -23,7 +23,6 @@ public final class FanDecimal
 //////////////////////////////////////////////////////////////////////////
 
   public static BigDecimal fromStr(String s) { return fromStr(s, true); }
-  public static BigDecimal fromStr(String s, Boolean checked) { return fromStr(s, checked.booleanValue()); }
   public static BigDecimal fromStr(String s, boolean checked)
   {
     try
@@ -41,7 +40,7 @@ public final class FanDecimal
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(BigDecimal self, Object obj)
+  public static boolean equals(BigDecimal self, Object obj)
   {
     if (obj instanceof BigDecimal)
     {

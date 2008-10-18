@@ -196,7 +196,7 @@ public class MmapBuf
     return this;
   }
 
-  public final Boolean close()
+  public final boolean close()
   {
     // Java doesn't support closing mmap
     return true;

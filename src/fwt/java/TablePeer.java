@@ -63,8 +63,8 @@ public class TablePeer
 //////////////////////////////////////////////////////////////////////////
 
   // Bool headerVisible := true
-  public Boolean headerVisible(fan.fwt.Table self) { return headerVisible.get(); }
-  public void headerVisible(fan.fwt.Table self, Boolean v) { headerVisible.set(v); }
+  public boolean headerVisible(fan.fwt.Table self) { return headerVisible.get(); }
+  public void headerVisible(fan.fwt.Table self, boolean v) { headerVisible.set(v); }
   public final Prop.BoolProp headerVisible = new Prop.BoolProp(this, true)
   {
     public boolean get(Widget w) { return ((Table)w).getHeaderVisible(); }

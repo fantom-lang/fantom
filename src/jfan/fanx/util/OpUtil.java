@@ -16,63 +16,17 @@ public class OpUtil
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Comparisions -> boolean
-//////////////////////////////////////////////////////////////////////////
-
-  public static boolean compareEQz(Object a, Object b)
-  {
-    if (a == null) return (b == null);
-    if (b == null) return false;
-    return a.equals(b);
-  }
-
-  public static boolean compareNEz(Object a, Object b)
-  {
-    if (a == null) return (b != null);
-    if (b == null) return true;
-    return !a.equals(b);
-  }
-
-  public static boolean compareLTz(Object a, Object b)
-  {
-    if (a == null) return (b != null);
-    if (b == null) return false;
-    return FanObj.compare(a, b).longValue() < 0;
-  }
-
-  public static boolean compareLEz(Object a, Object b)
-  {
-    if (a == null) return true;
-    if (b == null) return false;
-    return FanObj.compare(a, b).longValue() <= 0;
-  }
-
-  public static boolean compareGEz(Object a, Object b)
-  {
-    if (a == null) return (b == null);
-    if (b == null) return true;
-    return FanObj.compare(a, b).longValue() >= 0;
-  }
-
-  public static boolean compareGTz(Object a, Object b)
-  {
-    if (a == null) return false;
-    if (b == null) return true;
-    return FanObj.compare(a, b).longValue() > 0;
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Comparisions -> Bool
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean compareEQ(Object a, Object b)
+  public static boolean compareEQ(Object a, Object b)
   {
     if (a == null) return (b == null);
     if (b == null) return false;
     return a.equals(b);
   }
 
-  public static Boolean compareNE(Object a, Object b)
+  public static boolean compareNE(Object a, Object b)
   {
     if (a == null) return (b != null);
     if (b == null) return true;
@@ -86,50 +40,50 @@ public class OpUtil
     return FanObj.compare(a, b);
   }
 
-  public static Boolean compareLT(Object a, Object b)
+  public static boolean compareLT(Object a, Object b)
   {
     if (a == null) return (b != null);
     if (b == null) return false;
     return FanObj.compare(a, b).longValue() < 0;
   }
 
-  public static Boolean compareLE(Object a, Object b)
+  public static boolean compareLE(Object a, Object b)
   {
     if (a == null) return true;
     if (b == null) return false;
     return FanObj.compare(a, b).longValue() <= 0;
   }
 
-  public static Boolean compareGE(Object a, Object b)
+  public static boolean compareGE(Object a, Object b)
   {
     if (a == null) return (b == null);
     if (b == null) return true;
     return FanObj.compare(a, b).longValue() >= 0;
   }
 
-  public static Boolean compareGT(Object a, Object b)
+  public static boolean compareGT(Object a, Object b)
   {
     if (a == null) return false;
     if (b == null) return true;
     return FanObj.compare(a, b).longValue() > 0;
   }
 
-  public static Boolean compareSame(Object a, Object b) // need to use Object for mixins
+  public static boolean compareSame(Object a, Object b) // need to use Object for mixins
   {
     return a == b;
   }
 
-  public static Boolean compareNotSame(Object a, Object b) // need to use Object for mixins
+  public static boolean compareNotSame(Object a, Object b) // need to use Object for mixins
   {
     return a != b;
   }
 
-  public static Boolean compareNull(Object a) // need to use Object for mixins
+  public static boolean compareNull(Object a) // need to use Object for mixins
   {
     return a == null;
   }
 
-  public static Boolean compareNotNull(Object a) // need to use Object for mixins
+  public static boolean compareNotNull(Object a) // need to use Object for mixins
   {
     return a != null;
   }
@@ -138,7 +92,7 @@ public class OpUtil
 // Is/As
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean is(Object instance, Type type)
+  public static boolean is(Object instance, Type type)
   {
     if (instance == null) return false;
     return FanObj.type(instance).fits(type);

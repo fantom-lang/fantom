@@ -148,7 +148,7 @@ public class Sys
       */
 
       // load sys pod
-      SysPod = Pod.find("sys", true, null, null);
+      SysPod = Pod.doFind("sys", true, null, null);
     }
     catch (Throwable e)
     {

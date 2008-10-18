@@ -79,7 +79,7 @@ public class Fant
 
     System.out.println();
 
-    Pod pod = Pod.find(podName, true, null, null);
+    Pod pod = Pod.find(podName, true);
     Type[] tests = tests(pod, testName);
     for (int i=0; i<tests.length; ++i)
     {

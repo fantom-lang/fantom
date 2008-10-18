@@ -85,8 +85,8 @@ public class Process
     return env;
   }
 
-  public Boolean mergeErr() { return mergeErr; }
-  public void mergeErr(Boolean v) { checkRun(); mergeErr = v;  }
+  public boolean mergeErr() { return mergeErr; }
+  public void mergeErr(boolean v) { checkRun(); mergeErr = v;  }
 
   public OutStream out() { return out; }
   public void out(OutStream out) { checkRun(); this.out = out; }

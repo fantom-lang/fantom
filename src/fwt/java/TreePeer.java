@@ -110,7 +110,7 @@ public class TreePeer
     c.select(item);
   }
 
-  public void setExpanded(fan.fwt.Tree self, Object node, Boolean expanded)
+  public void setExpanded(fan.fwt.Tree self, Object node, boolean expanded)
   {
     Tree c = (Tree)this.control;
 

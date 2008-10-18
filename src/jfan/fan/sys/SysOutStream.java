@@ -86,7 +86,7 @@ public class SysOutStream
     }
   }
 
-  public Boolean close()
+  public boolean close()
   {
     try
     {

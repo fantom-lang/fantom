@@ -283,7 +283,7 @@ public final class MemBuf
     }
   }
 
-  public String readAllStr(Boolean normalizeNewline )
+  public String readAllStr(boolean normalizeNewline )
   */
 
 //////////////////////////////////////////////////////////////////////////

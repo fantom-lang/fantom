@@ -243,7 +243,6 @@ public final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   public static DateTime fromStr(String s) { return fromStr(s, true); }
-  public static DateTime fromStr(String s, Boolean checked) { return fromStr(s, checked.booleanValue()); }
   public static DateTime fromStr(String s, boolean checked)
   {
     try
@@ -314,7 +313,7 @@ public final class DateTime
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean _equals(Object obj)
+  public final boolean _equals(Object obj)
   {
     if (obj instanceof DateTime)
     {
@@ -383,7 +382,7 @@ public final class DateTime
 
   public final TimeZone timeZone() { return timeZone; }
 
-  public final Boolean dst() { return ((fields >> 31) & 0x1) != 0; }
+  public final boolean dst() { return ((fields >> 31) & 0x1) != 0; }
   public final boolean getDST()  { return ((fields >> 31) & 0x1) != 0; }
 
   public final String timeZoneAbbr() { return getDST() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
@@ -647,7 +646,7 @@ public final class DateTime
     return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
   }
 
-  public static Boolean isLeapYear(Long year) { return isLeapYear(year.intValue()); }
+  public static boolean isLeapYear(Long year) { return isLeapYear(year.intValue()); }
   public static boolean isLeapYear(int year)
   {
     if ((year & 3) != 0) return false;
@@ -750,7 +749,7 @@ public final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   public static DateTime fromHttpStr(String s) { return fromHttpStr(s, true); }
-  public static DateTime fromHttpStr(String s, Boolean checked)
+  public static DateTime fromHttpStr(String s, boolean checked)
   {
     for (int i=0; i<httpFormats.length; ++i)
     {
