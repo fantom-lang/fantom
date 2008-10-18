@@ -870,8 +870,15 @@ class CheckErrors : CompilerStep
     // check protection scope
     checkSlotProtection(call.method, call.location)
 
-    // check arguments
-    if (!call.isDynamic) checkArgs(call)
+    // if dynamic then box all the args otherwise type check them
+    if (!call.isDynamic)
+    {
+      checkArgs(call)
+    }
+    else
+    {
+      call.args.each |Expr arg, Int i| { call.args[i] = box(call.args[i]) }
+    }
 
     // if constructor
     if (m.isCtor && !call.isCtorChain)
