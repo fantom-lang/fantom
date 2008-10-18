@@ -40,8 +40,7 @@ public class FMethodEmit
     this.isStatic = (method.flags & FConst.Static) != 0;
     this.isCtor   = (method.flags & FConst.Ctor) != 0;
     this.isNative = (method.flags & FConst.Native) != 0;
-    this.ret      = emit.pod.typeRef(method.inheritedRet).jsig(); // we don't actually use Java covariance
-    this.isVoid   = ret.equals("V");
+    this.ret      = emit.pod.typeRef(method.inheritedRet); // we don't actually use Java covariance
     this.selfName = emit.selfName;
   }
 
@@ -95,18 +94,16 @@ public class FMethodEmit
     // first emit the body with implicit self
     this.name   = ctorName + "$";
     this.self   = true;
-    this.isVoid = true;
     MethodEmit body = doEmit();
 
     // emit body default parameter wrappers
     emitWrappers(body);
 
     // then emit the factory
-    this.name   = ctorName;
-    this.self   = false;
-    this.isVoid = false;
-    this.ret    = "L" + selfName + ";";
-    this.code   = null;
+    this.name = ctorName;
+    this.self = false;
+    this.ret  = emit.pod.typeRef(emit.type.self);
+    this.code = null;
     MethodEmit factory = doEmit();
     CodeEmit code = factory.emitCode();
     code.maxLocals = method.paramCount;
@@ -115,7 +112,7 @@ public class FMethodEmit
     code.op(DUP);
     code.op2(INVOKESPECIAL, emit.method(selfName+ ".<init>()V"));
     code.op(DUP);
-    pushArgs(code, method.paramCount);
+    pushArgs(code, false, method.paramCount);
     code.op2(INVOKESTATIC, body.ref());
     code.op(ARETURN);
 
@@ -139,7 +136,7 @@ public class FMethodEmit
       int peerMethod = emit.method(selfName + "Peer." + name + sig);
       code.maxLocals = paramLen;
       code.maxStack  = Math.max(paramLen, 1);
-      pushArgs(code, paramLen);
+      pushArgs(code, false, paramLen);
       code.op2(INVOKESTATIC, peerMethod);
     }
     else
@@ -154,10 +151,10 @@ public class FMethodEmit
       code.maxStack  = paramLen+2;
       code.op(ALOAD_0);
       code.op2(GETFIELD, emit.peerField.ref());
-      pushArgs(code, paramLen+1);
+      pushArgs(code, true, paramLen);
       code.op2(INVOKEVIRTUAL, peerMethod);
     }
-    code.op(isVoid ? RETURN : ARETURN);
+    code.op(FCodeEmit.returnOp(ret));
 
     // emit default parameter wrappers
     emitWrappers(main);
@@ -233,15 +230,20 @@ public class FMethodEmit
     {
       String mySig = signature(m, null, i);
       String implSig = signature(m, parent, i);
-      boolean isVoid = mySig.endsWith("V");
 
       MethodEmit me = emit.emitMethod(name, mySig, jflags);
       CodeEmit code = me.emitCode();
       code.maxLocals = 1+i;
       code.maxStack = 1+i;
-      pushArgs(code, 1+i); // push this + params
+      code.op(ALOAD_0); // push this
+      for (int p=0; p<i; ++p)
+      {
+        // push args
+        Param param = (Param)m.params().get(p);
+        FCodeEmit.loadVar(code, FanUtil.toJavaStackType(param.of()), p+1);
+      }
       code.op2(INVOKESTATIC, emit.method(parent + "$." + name + implSig));
-      code.op(isVoid ? RETURN : ARETURN);
+      code.op(FCodeEmit.returnOp(FanUtil.toJavaStackType(m.returns())));
     }
   }
 
@@ -275,20 +277,20 @@ public class FMethodEmit
     // use explicit param count, and clear code
     this.paramLen = paramLen;
     this.code     = null;
-    int numArgs   = isStatic && !self ? paramLen : paramLen+1;
 
     // emit code
     CodeEmit code  = doEmit().emitCode();
 
     // push arguments passed thru
-    pushArgs(code, numArgs);
+    pushArgs(code, !(isStatic && !self), paramLen);
 
     // emit default arguments
     int maxLocals = method.maxLocals();
     int maxStack  = 16; // TODO - add additional default expr stack height
     for (int i=paramLen; i<method.paramCount; ++i)
     {
-      FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code);
+// TODO: rework constructor
+      FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code, emit.pod.typeRef(method.ret));
       e.vars = method.vars;
       e.isStatic = isStatic;
       e.emit();
@@ -301,7 +303,7 @@ public class FMethodEmit
     code.op2((main.flags & STATIC) != 0 ? INVOKESTATIC : INVOKEVIRTUAL, main.ref());
 
     // return
-    code.op(isVoid ? RETURN : ARETURN);
+    code.op(FCodeEmit.returnOp(ret));
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -338,14 +340,11 @@ public class FMethodEmit
     sig.append('(');
     if (self) sig.append('L').append(selfName).append(';');
     for (int i=0; i<paramLen; ++i)
-    {
-      FMethodVar param = method.vars[i];
-      sig.append('L').append(emit.jname(param.type)).append(';');
-    }
+      emit.pod.typeRef(method.vars[i].type).jsig(sig);
     sig.append(')');
 
     // return
-    sig.append(ret);
+    ret.jsig(sig);
 
     return sig.toString();
   }
@@ -380,38 +379,13 @@ public class FMethodEmit
   /**
    * Push the specified number of arguments onto the stack.
    */
-  private static void pushArgs(CodeEmit code, int count)
+  private void pushArgs(CodeEmit code, boolean self, int count)
   {
-    switch (count)
+    if (self) code.op(ALOAD_0);
+    for (int i=0; i<count; ++i)
     {
-      case 0:
-        return;
-      case 1:
-        code.op(ALOAD_0);
-        return;
-      case 2:
-        code.op(ALOAD_0);
-        code.op(ALOAD_1);
-        return;
-      case 3:
-        code.op(ALOAD_0);
-        code.op(ALOAD_1);
-        code.op(ALOAD_2);
-        return;
-      case 4:
-        code.op(ALOAD_0);
-        code.op(ALOAD_1);
-        code.op(ALOAD_2);
-        code.op(ALOAD_3);
-        return;
-      default:
-        code.op(ALOAD_0);
-        code.op(ALOAD_1);
-        code.op(ALOAD_2);
-        code.op(ALOAD_3);
-        for (int i=4; i<count; ++i)
-          code.op1(ALOAD, i);
-        return;
+      FTypeRef var = emit.pod.typeRef(method.vars[i].type);
+      FCodeEmit.loadVar(code, var.stackType, self ? i+1 : i);
     }
   }
 
@@ -427,8 +401,7 @@ public class FMethodEmit
   boolean isStatic;  // are we emitting a static method
   boolean isCtor;    // are we emitting a constructor
   boolean isNative;  // are we emitting a native method
-  boolean isVoid;    // is return void
-  String ret;        // java return sig
+  FTypeRef ret;      // java return sig
   boolean self;      // add implicit self as first parameter
   String selfName;   // class name for self if self is true
   int paramLen;      // number of parameters to use

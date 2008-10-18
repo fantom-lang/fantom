@@ -25,7 +25,7 @@ public class FCodeEmit
 
   public FCodeEmit(FTypeEmit parent, FMethod fmethod, CodeEmit code)
   {
-    this(parent, fmethod.code, code);
+    this(parent, fmethod.code, code, parent.pod.typeRef(fmethod.ret));
     this.fmethod    = fmethod;
     this.vars       = fmethod.vars;
     this.isStatic   = (fmethod.flags & FConst.Static) != 0;
@@ -33,7 +33,7 @@ public class FCodeEmit
     code.maxStack   = fmethod.maxStack;
   }
 
-  public FCodeEmit(FTypeEmit parent, FBuf fcode, CodeEmit code)
+  public FCodeEmit(FTypeEmit parent, FBuf fcode, CodeEmit code, FTypeRef ret)
   {
     this.pod        = parent.pod;
     this.parent     = parent;
@@ -43,6 +43,7 @@ public class FCodeEmit
     this.code       = code;
     this.podClass   = "fan/" + pod.podName + "/$Pod";
     this.reloc      = new int[len];
+    this.ret        = ret;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -116,8 +117,8 @@ public class FCodeEmit
         case CompareNull:         compareNull(); break;
         case CompareNotNull:      compareNotNull(); break;
 
-        case ReturnVoid:          code.op(RETURN); break;
-        case ReturnObj:           code.op(ARETURN); break;
+        case ReturnVoid:          // TODO: get rid of two returns
+        case ReturnObj:           returnOp(); break;
         case Pop:                 pop(); break;
         case Dup:                 dup(); break;
         case Is:                  is(); break;
@@ -247,15 +248,12 @@ case Cast: cast(); break;  // TODO
 
   private void loadFalse()
   {
-    if (parent.BoolFalse == 0) parent.BoolFalse = emit.field("java/lang/Boolean.FALSE:Ljava/lang/Boolean;");
-    code.op2(GETSTATIC, parent.BoolFalse);
+    code.op(ICONST_0);
   }
 
   private void loadTrue()
   {
-    // TODO: optimize while (true) either here or in compiler
-    if (parent.BoolTrue == 0) parent.BoolTrue = emit.field("java/lang/Boolean.TRUE:Ljava/lang/Boolean;");
-    code.op2(GETSTATIC, parent.BoolTrue);
+    code.op(ICONST_1);
   }
 
   private void loadInt()
@@ -358,11 +356,32 @@ case Cast: cast(); break;  // TODO
 
   private void loadVar(int index)
   {
-    FTypeRef t = var(index);
-    loadVarObj(index);
+    loadVar(code, varStackType(index), index);
   }
 
-  private void loadVarObj(int index)
+  static void loadVar(CodeEmit code, int stackType, int index)
+  {
+    switch (stackType)
+    {
+      case FTypeRef.INT: loadVarInt(code, index); break;
+      case FTypeRef.OBJ: loadVarObj(code, index); break;
+      default: throw new IllegalStateException(""+(char)stackType);
+    }
+  }
+
+  private static void loadVarInt(CodeEmit code, int index)
+  {
+    switch (index)
+    {
+      case 0:  code.op(ILOAD_0); break;
+      case 1:  code.op(ILOAD_1); break;
+      case 2:  code.op(ILOAD_2); break;
+      case 3:  code.op(ILOAD_3); break;
+      default: code.op1(ILOAD, index); break;
+    }
+  }
+
+  private static void loadVarObj(CodeEmit code, int index)
   {
     switch (index)
     {
@@ -385,8 +404,24 @@ case Cast: cast(); break;  // TODO
 
   private void storeVar(int index)
   {
-    FTypeRef t = var(index);
-    storeVarObj(index);
+    switch (varStackType(index))
+    {
+      case FTypeRef.INT: storeVarInt(index); break;
+      case FTypeRef.OBJ: storeVarObj(index); break;
+      default: throw new IllegalStateException(""+(char)varStackType(index));
+    }
+  }
+
+  private void storeVarInt(int index)
+  {
+    switch (index)
+    {
+      case 0:  code.op(ISTORE_0); break;
+      case 1:  code.op(ISTORE_1); break;
+      case 2:  code.op(ISTORE_2); break;
+      case 3:  code.op(ISTORE_3); break;
+      default: code.op1(ISTORE, index); break;
+    }
   }
 
   private void storeVarObj(int index)
@@ -540,14 +575,12 @@ case Cast: cast(); break;  // TODO
 
   private void jumpTrue()
   {
-    loadBoolVal();
     code.op(IFNE);
     branch();
   }
 
   private void jumpFalse()
   {
-    loadBoolVal();
     code.op(IFEQ);
     branch();
   }
@@ -583,50 +616,46 @@ case Cast: cast(); break;  // TODO
 
   private void compareEQ()
   {
+    if (parent.CompareEQ == 0) parent.CompareEQ = emit.method("fanx/util/OpUtil.compareEQ(Ljava/lang/Object;Ljava/lang/Object;)Z");
     int peek = peekOp();
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareEQz == 0) parent.CompareEQz = emit.method("fanx/util/OpUtil.compareEQz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareEQz);
+        code.op2(INVOKESTATIC, parent.CompareEQ);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareEQz == 0) parent.CompareEQz = emit.method("fanx/util/OpUtil.compareEQz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareEQz);
+        code.op2(INVOKESTATIC, parent.CompareEQ);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareEQ == 0) parent.CompareEQ = emit.method("fanx/util/OpUtil.compareEQ(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareEQ);
     }
   }
 
   private void compareNE()
   {
+    if (parent.CompareNE == 0) parent.CompareNE = emit.method("fanx/util/OpUtil.compareNE(Ljava/lang/Object;Ljava/lang/Object;)Z");
     int peek = peekOp();
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareNEz == 0) parent.CompareNEz = emit.method("fanx/util/OpUtil.compareNEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareNEz);
+        code.op2(INVOKESTATIC, parent.CompareNE);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareNEz == 0) parent.CompareNEz = emit.method("fanx/util/OpUtil.compareNEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareNEz);
+        code.op2(INVOKESTATIC, parent.CompareNE);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareNE == 0) parent.CompareNE = emit.method("fanx/util/OpUtil.compareNE(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareNE);
     }
   }
@@ -639,100 +668,92 @@ case Cast: cast(); break;  // TODO
 
   private void compareLT()
   {
+    if (parent.CompareLT == 0) parent.CompareLT = emit.method("fanx/util/OpUtil.compareLT(Ljava/lang/Object;Ljava/lang/Object;)Z");
     int peek = peekOp();
     switch (peek)
     {
      case JumpFalse:
-        if (parent.CompareLTz == 0) parent.CompareLTz = emit.method("fanx/util/OpUtil.compareLTz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareLTz);
+        code.op2(INVOKESTATIC, parent.CompareLT);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareLTz == 0) parent.CompareLTz = emit.method("fanx/util/OpUtil.compareLTz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareLTz);
+        code.op2(INVOKESTATIC, parent.CompareLT);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
      default:
-       if (parent.CompareLT == 0) parent.CompareLT = emit.method("fanx/util/OpUtil.compareLT(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareLT);
     }
   }
 
   private void compareLE()
   {
+    if (parent.CompareLE == 0) parent.CompareLE = emit.method("fanx/util/OpUtil.compareLE(Ljava/lang/Object;Ljava/lang/Object;)Z");
     int peek = peekOp();
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareLEz == 0) parent.CompareLEz = emit.method("fanx/util/OpUtil.compareLEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareLEz);
+        code.op2(INVOKESTATIC, parent.CompareLE);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareLEz == 0) parent.CompareLEz = emit.method("fanx/util/OpUtil.compareLEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareLEz);
+        code.op2(INVOKESTATIC, parent.CompareLE);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareLE == 0) parent.CompareLE = emit.method("fanx/util/OpUtil.compareLE(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareLE);
     }
   }
 
   private void compareGE()
   {
+    if (parent.CompareGE == 0) parent.CompareGE = emit.method("fanx/util/OpUtil.compareGE(Ljava/lang/Object;Ljava/lang/Object;)Z");
     int peek = peekOp();
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareGEz == 0) parent.CompareGEz = emit.method("fanx/util/OpUtil.compareGEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareGEz);
+        code.op2(INVOKESTATIC, parent.CompareGE);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareGEz == 0) parent.CompareGEz = emit.method("fanx/util/OpUtil.compareGEz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareGEz);
+        code.op2(INVOKESTATIC, parent.CompareGE);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareGE == 0) parent.CompareGE = emit.method("fanx/util/OpUtil.compareGE(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareGE);
     }
   }
 
   private void compareGT()
   {
+    if (parent.CompareGT == 0) parent.CompareGT = emit.method("fanx/util/OpUtil.compareGT(Ljava/lang/Object;Ljava/lang/Object;)Z");
     int peek = peekOp();
     switch (peek)
     {
       case JumpFalse:
-        if (parent.CompareGTz == 0) parent.CompareGTz = emit.method("fanx/util/OpUtil.compareGTz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareGTz);
+        code.op2(INVOKESTATIC, parent.CompareGT);
         consumeOp();
         code.op(IFEQ);
         branch();
         break;
       case JumpTrue:
-        if (parent.CompareGTz == 0) parent.CompareGTz = emit.method("fanx/util/OpUtil.compareGTz(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareGTz);
+        code.op2(INVOKESTATIC, parent.CompareGT);
         consumeOp();
         code.op(IFNE);
         branch();
         break;
       default:
-       if (parent.CompareGT == 0) parent.CompareGT = emit.method("fanx/util/OpUtil.compareGT(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
        code.op2(INVOKESTATIC, parent.CompareGT);
     }
   }
@@ -753,7 +774,7 @@ case Cast: cast(); break;  // TODO
         branch();
         break;
       default:
-       if (parent.CompareSame == 0) parent.CompareSame = emit.method("fanx/util/OpUtil.compareSame(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
+       if (parent.CompareSame == 0) parent.CompareSame = emit.method("fanx/util/OpUtil.compareSame(Ljava/lang/Object;Ljava/lang/Object;)Z");
        code.op2(INVOKESTATIC, parent.CompareSame);
     }
   }
@@ -774,7 +795,7 @@ case Cast: cast(); break;  // TODO
         branch();
         break;
       default:
-        if (parent.CompareNotSame == 0) parent.CompareNotSame = emit.method("fanx/util/OpUtil.compareNotSame(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;");
+        if (parent.CompareNotSame == 0) parent.CompareNotSame = emit.method("fanx/util/OpUtil.compareNotSame(Ljava/lang/Object;Ljava/lang/Object;)Z");
         code.op2(INVOKESTATIC, parent.CompareNotSame);
     }
   }
@@ -795,7 +816,7 @@ case Cast: cast(); break;  // TODO
         branch();
         break;
       default:
-       if (parent.CompareNull == 0) parent.CompareNull = emit.method("fanx/util/OpUtil.compareNull(Ljava/lang/Object;)Ljava/lang/Boolean;");
+       if (parent.CompareNull == 0) parent.CompareNull = emit.method("fanx/util/OpUtil.compareNull(Ljava/lang/Object;)Z");
        code.op2(INVOKESTATIC, parent.CompareNull);
     }
   }
@@ -816,7 +837,7 @@ case Cast: cast(); break;  // TODO
         branch();
         break;
       default:
-       if (parent.CompareNotNull == 0) parent.CompareNotNull = emit.method("fanx/util/OpUtil.compareNotNull(Ljava/lang/Object;)Ljava/lang/Boolean;");
+       if (parent.CompareNotNull == 0) parent.CompareNotNull = emit.method("fanx/util/OpUtil.compareNotNull(Ljava/lang/Object;)Z");
        code.op2(INVOKESTATIC, parent.CompareNotNull);
     }
   }
@@ -824,6 +845,22 @@ case Cast: cast(); break;  // TODO
 //////////////////////////////////////////////////////////////////////////
 // Stack Manipulation
 //////////////////////////////////////////////////////////////////////////
+
+  private void returnOp()  { code.op(returnOp(ret)); }
+
+  static int returnOp(FTypeRef ret) { return returnOp(ret.stackType); }
+
+  static int returnOp(int retStackType)
+  {
+    switch (retStackType)
+    {
+      case 'A': return ARETURN;
+      case 'I': return IRETURN;
+      case 'V': return RETURN;
+      case 'Z': return IRETURN;
+      default: throw new IllegalStateException(""+(char)retStackType);
+    }
+  }
 
   private void dup()
   {
@@ -864,22 +901,21 @@ case Cast: cast(); break;  // TODO
     // otherwise we can use straight bytecode
     if (typeRef.isGenericInstance())
     {
-      if (parent.IsViaType == 0) parent.IsViaType = emit.method("fanx/util/OpUtil.is(Ljava/lang/Object;Lfan/sys/Type;)Ljava/lang/Boolean;");
+      if (parent.IsViaType == 0) parent.IsViaType = emit.method("fanx/util/OpUtil.is(Ljava/lang/Object;Lfan/sys/Type;)Z");
       loadType(typeRef);
       code.op2(INVOKESTATIC, parent.IsViaType);
     }
     else
     {
-      int cls = emit.cls(typeRef.jname());
+      int cls = emit.cls(typeRef.jnameBoxed());
       code.op2(INSTANCEOF, cls);
-      boolMake();
     }
   }
 
   private void as()
   {
     FTypeRef typeRef = pod.typeRef(u2());
-    int cls = emit.cls(typeRef.jname());
+    int cls = emit.cls(typeRef.jnameBoxed());
 
     // if a generic instance, we have to use a method call
     // because Fan types don't map to Java classes exactly;
@@ -944,17 +980,27 @@ case Cast: cast(); break;  // TODO
 
   private void coerce()
   {
-    int fromId = u2();
-    //TypeRef fromRef = pod.typeRef(fromId);
-    //String fromPod  = pod.name(fromRef.podName);
-    //String fromName = pod.name(fromRef.typeName);
+    FTypeRef from = pod.typeRef(u2());
+    FTypeRef to   = pod.typeRef(u2());
 
-    int toId = u2();
-    //TypeRef toRef = pod.typeRef(toId);
-    //String toPod  = pod.name(toRef.podName);
-    //String toName = pod.name(toRef.typeName);
+    // Bool boxing
+    if (from.isBoolPrimitive())
+    {
+      if (to.isRef()) { boolBox(); return; }
+      throw new IllegalStateException("Coerce " + from  + " => " + to);
+    }
 
-    code.op2(CHECKCAST, emit.cls(pod.typeRef(toId).jname()));
+    // Bool unboxing
+    if (to.isBoolPrimitive())
+    {
+      if (from.isRef()) { boolUnbox(!from.isBool()); return; }
+      throw new IllegalStateException("Coerce " + from  + " => " + to);
+    }
+
+    // don't bother casting to obj
+    if (to.isObj()) return;
+
+    code.op2(CHECKCAST, emit.cls(to.jname()));
   }
 
   private void cast()
@@ -1022,33 +1068,34 @@ case Cast: cast(); break;  // TODO
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  private FTypeRef var(int index)
+  private int varStackType(int index)
   {
     if (vars == null) throw new IllegalStateException("Use of variable outside of method");
     if (!isStatic)
     {
-      if (index == 0) return null; // return null for this pointer
+      if (index == 0) return FTypeRef.OBJ; // assume this pointer
       else --index;
     }
-    return pod.typeRef(vars[index].type);
+    return pod.typeRef(vars[index].type).stackType;
   }
 
-  private void loadBoolVal()
+  private void boolBox()
   {
-    if (parent.BoolVal == 0) parent.BoolVal = emit.method("java/lang/Boolean.booleanValue()Z");
-    code.op2(INVOKEVIRTUAL, parent.BoolVal);
+    if (parent.BoolBox == 0) parent.BoolBox = emit.method("java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
+    code.op2(INVOKESTATIC, parent.BoolBox);
+  }
+
+  private void boolUnbox(boolean cast)
+  {
+    if (cast) code.op2(CHECKCAST, emit.cls("java/lang/Boolean"));
+    if (parent.BoolUnbox== 0) parent.BoolUnbox = emit.method("java/lang/Boolean.booleanValue()Z");
+    code.op2(INVOKEVIRTUAL, parent.BoolUnbox);
   }
 
   private void loadIntVal()
   {
     if (parent.IntVal == 0) parent.IntVal = emit.method("java/lang/Long.longValue()J");
     code.op2(INVOKEVIRTUAL, parent.IntVal);
-  }
-
-  private void boolMake()
-  {
-    if (parent.BoolMake == 0) parent.BoolMake = emit.method("java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
-    code.op2(INVOKESTATIC, parent.BoolMake);
   }
 
   private void typeToNullable()
@@ -1096,6 +1143,7 @@ case Cast: cast(); break;  // TODO
   FMethod fmethod;     // maybe null
   FMethodVar[] vars;   // method variables must be set for loadVar/storeVar
   boolean isStatic;    // used to determine how to index vars
+  FTypeRef ret;        // return type
   byte[] buf;
   int len;
   int pos;
