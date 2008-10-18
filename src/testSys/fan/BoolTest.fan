@@ -31,8 +31,9 @@ class BoolTest : Test
     verify(x != "wow")
     verify(t != null)
     verify(null != f)
-// TODO
-//    verify(t.equals(t))
+    verify(t.equals(t))
+    verify(t.equals(true))
+    verifyFalse(false.equals(t))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -87,6 +88,8 @@ class BoolTest : Test
   {
     t := true
     f := false
+    Bool? nt := true
+    Bool? nf := false
     Str? s := null
 
     // not
@@ -98,6 +101,10 @@ class BoolTest : Test
     verifyEq(f && t, false)
     verifyEq(t && f, false)
     verifyEq(t && t, true)
+    verifyEq(nf && f, false)
+    verifyEq(f && nt, false)
+    verifyEq(nt && nf, false)
+    verifyEq(nt && t, true)
 
     // logical and - short circuit
     verifyEq(s != null && s.size == 0, false)
@@ -108,6 +115,10 @@ class BoolTest : Test
     verifyEq(f || t, true)
     verifyEq(t || f, true)
     verifyEq(t || t, true)
+    verifyEq(nf || f, false)
+    verifyEq(f || nt, true)
+    verifyEq(t || nf, true)
+    verifyEq(nt || nt, true)
 
     // logical or - short circuit
     verifyEq(s == null || s.size == 0, true)
@@ -118,6 +129,10 @@ class BoolTest : Test
     verifyEq(f & t, false)
     verifyEq(t & f, false)
     verifyEq(t & t, true)
+    verifyEq(nf & nf, false)
+    verifyEq(f & nt, false)
+    verifyEq(nt & f, false)
+    verifyEq(nt & nt, true)
 
     // bitwise and - no short circuit
     verifyErr(NullErr#) |,| { verifyEq((s != null) & (s.size == 0), false) }
@@ -128,6 +143,10 @@ class BoolTest : Test
     verifyEq(f | t, true)
     verifyEq(t | f, true)
     verifyEq(t | t, true)
+    verifyEq(nf | nf, false)
+    verifyEq(nf | nt, true)
+    verifyEq(nt | f, true)
+    verifyEq(t | nt, true)
 
     // bitwise or - no short circuit
     verifyErr(NullErr#) |,| { verifyEq((s == null) | (s.size == 0), true) }
@@ -138,6 +157,10 @@ class BoolTest : Test
     verifyEq(f ^ t, true)
     verifyEq(t ^ f, true)
     verifyEq(t ^ t, false)
+    verifyEq(nf ^ f, false)
+    verifyEq(f ^ nt, true)
+    verifyEq(nt ^ nf, true)
+    verifyEq(nt ^ nt, false)
 
     // bitwise xor - no short circuit
     verifyErr(NullErr#) |,| { verifyEq((s == null) ^ (s.size == 0), true) }
@@ -145,23 +168,35 @@ class BoolTest : Test
 
     // bitwise and assignment
     Bool x := false
+    Bool? y := false
+    Bool[] q := [true]
+    Bool?[] r := [true]
     x = false; x &= false; verifyEq(x, false)
-    x = false; x &= true;  verifyEq(x, false)
-    x = true;  x &= false; verifyEq(x, false)
-    x = true;  x &= true;  verifyEq(x, true)
+    y = false; y &= true;  verifyEq(y, false)
+    f = true;  f &= false; verifyEq(f, false)
+    g = true;  g &= true;  verifyEq(g, true)
+    q[0] = true; q[0] &= false; verifyEq(q[0], false)
+    r[0] = true; r[0] &= true;  verifyEq(r[0], true)
 
     // bitwise or assignment
     x = false; x |= false; verifyEq(x, false)
-    x = false; x |= true;  verifyEq(x, true)
-    x = true;  x |= false; verifyEq(x, true)
-    x = true;  x |= true;  verifyEq(x, true)
+    y = false; y |= true;  verifyEq(y, true)
+    f = true;  f |= false; verifyEq(f, true)
+    g = true;  g |= true;  verifyEq(g, true)
+    q[0] = false; q[0] |= false; verifyEq(q[0], false)
+    r[0] = false; r[0] |= true;  verifyEq(r[0], true)
 
     // bitwise xor assignment
     x = false; x ^= false; verifyEq(x, false)
-    x = false; x ^= true;  verifyEq(x, true)
-    x = true;  x ^= false; verifyEq(x, true)
-    x = true;  x ^= true;  verifyEq(x, false)
+    y = false; y ^= true;  verifyEq(y, true)
+    f = true;  f ^= false; verifyEq(f, true)
+    g = true;  g ^= true;  verifyEq(g, false)
+    q[0] = false; q[0] ^= true;  verifyEq(q[0], true)
+    r[0] = true;  r[0] ^= false; verifyEq(r[0], true)
   }
+
+  Bool f := true
+  Bool? g := false
 
 //////////////////////////////////////////////////////////////////////////
 // Parse

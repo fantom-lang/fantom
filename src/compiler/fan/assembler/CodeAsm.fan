@@ -1358,6 +1358,14 @@ class CodeAsm : CompilerSupport
     var := c.target
     leaveUsingTemp := false
 
+    // if var is a coercion set that aside and get real variable
+    TypeCheckExpr? coerce := null
+    if (var.id == ExprId.coerce)
+    {
+      coerce = (TypeCheckExpr)var
+      var = coerce.target
+    }
+
     // load the variable
     switch (var.id)
     {
@@ -1376,7 +1384,7 @@ class CodeAsm : CompilerSupport
         //   index  \  used for set
         //   target /
         index := (IndexedAssignExpr)c
-        get := (ShortcutExpr)index.target
+        get := (ShortcutExpr)var
         expr(get.target)  // target
         opType(FOp.Dup, get.target.ctype)
         op(FOp.StoreVar, index.scratchA.register)
@@ -1390,6 +1398,9 @@ class CodeAsm : CompilerSupport
       default:
         throw err("Internal error", var.location)
     }
+
+    // if we have a coercion do it
+    if (coerce != null) coerceOp(var.ctype, coerce.check)
 
     // if postfix leave, duplicate value before we preform computation
     if (c.leave && c.isPostfixLeave)
@@ -1411,6 +1422,9 @@ class CodeAsm : CompilerSupport
         op(FOp.StoreVar, c.tempVar.register)
     }
 
+    // if we have a coercion then uncoerce
+    if (coerce != null) coerceOp(coerce.check, var.ctype)
+
     // save the variable back
     switch (var.id)
     {
@@ -1420,9 +1434,12 @@ class CodeAsm : CompilerSupport
         storeField((FieldExpr)var)
       case ExprId.shortcut:
         set := (CMethod)c->setMethod
-        if (var.ctype.isValue) coerceOp(var.ctype, ns.objType)
+        // if calling setter we have to ensure unboxed
+        if (c.ctype.isValue && coerce == null) coerceOp(c.ctype, ns.objType)
         op(FOp.CallVirtual, fpod.addMethodRef(set, 2))
         if (!set.returnType.isVoid) opType(FOp.Pop, set.returnType)
+      default:
+        throw err("Internal error", var.location)
     }
 
     // if field leave, then load back from temp local
