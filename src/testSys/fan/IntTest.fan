@@ -67,6 +67,7 @@ class IntTest : Test
 // Same
 //////////////////////////////////////////////////////////////////////////
 
+  /* same operators not allowed for value types
   Void testSame()
   {
     verify(0 === 0)
@@ -88,6 +89,7 @@ class IntTest : Test
     y :=  99_999
     verify(x !== y+1)
   }
+  */
 
 //////////////////////////////////////////////////////////////////////////
 // Compare
@@ -207,7 +209,7 @@ class IntTest : Test
     verifyEq(9.toDecimal, 9d)
     verifyEq(-123456789.toDecimal, -123456789d)
     verifyEq(-7.toInt, -7)
-    verify(93757393754.toInt === 93757393754)
+    verify(93757393754.toInt == 93757393754)
   }
 
 //////////////////////////////////////////////////////////////////////////

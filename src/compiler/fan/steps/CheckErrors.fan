@@ -707,6 +707,10 @@ class CheckErrors : CompilerStep
   private Void checkSame(BinaryExpr expr)
   {
     checkCompare(expr.lhs, expr.rhs)
+
+    // don't allow for value types
+    if (expr.lhs.ctype.isValue || expr.rhs.ctype.isValue)
+      err("Cannot use '$expr.opToken.symbol' operator with value types", expr.location)
   }
 
   private Bool checkCompare(Expr lhs, Expr rhs)

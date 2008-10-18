@@ -1169,9 +1169,9 @@ class CodeAsm : CompilerSupport
       // push call target onto the stack
       expr(call.target)
 
-      // if target is Obj method on value-type then box it
-      if (call.target.ctype.isValue && call.method.parent.isObj)
-        coerceOp(call.target.ctype, ns.objType)
+      // if target is Obj/Num method on value-type then box it
+      if (call.target.ctype.isValue && !call.method.parent.isValue)
+        coerceOp(call.target.ctype, call.method.parent)
     }
 
     // if safe, check for null

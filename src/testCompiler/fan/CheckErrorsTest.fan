@@ -823,8 +823,8 @@ class CheckErrorsTest : CompilerTest
         static Void m10(Str x) { f.size; Foo.f.size }
         static Void m11(Str x) { this.m06; super.hash() }
         static Obj m12(Str x) { return 1 ? 2 : 3 }
-        static Bool m14(Str x, Int y) { return x === y }
-        static Bool m15(Str x, Int y) { return x !== y }
+        static Bool m14(Str x, Duration y) { return x === y }
+        static Bool m15(Str x, Duration y) { return x !== y }
         static Bool m16(Str x) { return x == m10(\"\") }
         static Bool m17(Str x) { return x != x.size }
         static Bool m18(Int x) { return x < 2f }
@@ -867,8 +867,8 @@ class CheckErrorsTest : CompilerTest
        15, 28, "Cannot access 'this' in static context",
        15, 38, "Cannot access 'super' in static context",
        16, 34, "Ternary condition must be Bool, not 'sys::Int'",
-       17, 42, "Incomparable types 'sys::Str' and 'sys::Int'",
-       18, 42, "Incomparable types 'sys::Str' and 'sys::Int'",
+       17, 47, "Incomparable types 'sys::Str' and 'sys::Duration'",
+       18, 47, "Incomparable types 'sys::Str' and 'sys::Duration'",
        19, 35, "Incomparable types 'sys::Str' and 'sys::Void'",
        20, 35, "Incomparable types 'sys::Str' and 'sys::Int'",
        21, 35, "Incomparable types 'sys::Int' and 'sys::Float'",
@@ -1055,7 +1055,7 @@ class CheckErrorsTest : CompilerTest
           i == 4 ? 0ns : 1ns;
           |,| {};
           i == 2;
-          i === 2;
+          s === o;
         }
 
         Str f
