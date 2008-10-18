@@ -740,7 +740,7 @@ class CheckErrors : CompilerStep
 
     // take this opportunity to generate a temp local variable if needed
     if (expr.leave && expr.lhs.assignRequiresTempVar)
-      expr.tempVar = curMethod.addLocalVar(expr.ctype, null, null)
+      expr.tempVar = curMethod.addLocalVar(expr.lhs.ctype, null, null)
   }
 
   private Void checkNoNullSafes(Expr x)
@@ -782,7 +782,7 @@ class CheckErrors : CompilerStep
 
     // take this oppotunity to generate a temp local variable if needed
     if (shortcut.leave && shortcut.isAssign && shortcut.target.assignRequiresTempVar)
-      shortcut.tempVar = curMethod.addLocalVar(shortcut.ctype, null, null)
+      shortcut.tempVar = curMethod.addLocalVar(shortcut.target.ctype, null, null)
 
     // perform normal call checking
     checkCall(shortcut)
