@@ -135,12 +135,12 @@ class GenFConst < Env
    "CompareNull         0  ()        // a == null",
    "CompareNotNull      0  ()        // a != null",
 
-   "ReturnVoid          0  ()        // return nothing",
-   "ReturnObj           0  ()        // return object",
+   "Return              0  ()        // return from method",
+   "UnusedReturnObj     0  ()        // unused opcode",
 
    "Pop                 0  (type)    // pop top object off stack",
    "Dup                 0  (type)    // duplicate object ref on top of stack",
-   "Unused3             0  ()        // unsed opcode",
+   "Unused4             0  ()        // unsed opcode",
    "Is                  2  (type)    // is operator",
    "As                  2  (type)    // as operator",
    "Cast                2  (type)    // type cast",

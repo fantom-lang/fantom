@@ -137,15 +137,8 @@ class CodeAsm : CompilerSupport
     }
 
     // process as normal return
-    if (stmt.expr != null)
-    {
-      expr(stmt.expr)
-      op(FOp.ReturnObj)
-    }
-    else
-    {
-      op(FOp.ReturnVoid)
-    }
+    if (stmt.expr != null) expr(stmt.expr)
+    op(FOp.Return)
   }
 
   private Void throwStmt(ThrowStmt stmt)
@@ -1551,15 +1544,8 @@ class CodeAsm : CompilerSupport
     if (leavesToReturn != null)
     {
       leavesToReturn.each |Int pos| { backpatch(pos) }
-      if (returnLocal != null)
-      {
-        op(FOp.LoadVar, returnLocal.register)
-        op(FOp.ReturnObj)
-      }
-      else
-      {
-        op(FOp.ReturnVoid)
-      }
+      if (returnLocal != null) op(FOp.LoadVar, returnLocal.register)
+      op(FOp.Return)
     }
 
     // check final size
