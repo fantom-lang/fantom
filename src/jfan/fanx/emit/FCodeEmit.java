@@ -117,13 +117,13 @@ public class FCodeEmit
         case CompareNull:         compareNull(); break;
         case CompareNotNull:      compareNotNull(); break;
 
-        case ReturnVoid:          // TODO: get rid of two returns
-        case ReturnObj:           returnOp(); break;
+case UnusedReturnObj: // TODO: replaced by single Return
+        case Return:              returnOp(); break;
         case Pop:                 pop(); break;
         case Dup:                 dup(); break;
         case Is:                  is(); break;
         case As:                  as(); break;
-case Cast: cast(); break;  // TODO
+case Cast: cast(); break;  // TODO: replaced by Coerce
         case Coerce:              coerce(); break;
         case Switch:              tableswitch(); break;
 
