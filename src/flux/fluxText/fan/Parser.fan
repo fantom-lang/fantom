@@ -104,7 +104,7 @@ internal class Parser
 
   private Void parseStyling(Obj[] styling)
   {
-    while (cur !== 0)
+    while (cur != 0)
     {
       p := pos
       tok := next
@@ -176,7 +176,7 @@ internal class Parser
       start := pos
       consume
       consume
-      while (cur.isAlphaNum || cur === '_') consume
+      while (cur.isAlphaNum || cur == '_') consume
       word := text[start...pos]
       if (keywords[word]) return Token.keyword
       return Token.text
@@ -206,9 +206,9 @@ internal class Parser
   {
     while (true)
     {
-      if (cur.isAlphaNum ||  cur === '_') { consume; continue }
-      if (cur === '.' && peek.isDigit) { consume; continue }
-      if (peek === '-' && (cur === 'e' || cur === 'E')) { consume; consume; continue }
+      if (cur.isAlphaNum ||  cur == '_') { consume; continue }
+      if (cur == '.' && peek.isDigit) { consume; continue }
+      if (peek == '-' && (cur == 'e' || cur == 'E')) { consume; consume; continue }
       break
     }
     return Token.literal
@@ -220,7 +220,7 @@ internal class Parser
   private Token strLiteral(StrMatch s)
   {
     s.start.consume
-    while (cur !== 0)
+    while (cur != 0)
     {
       if (s.end.isMatch && countEscapes(s.escape).isEven)
       {
@@ -250,7 +250,7 @@ internal class Parser
   Token blockComment()
   {
     thisNesting := 0
-    while (cur !== 0)
+    while (cur != 0)
     {
       if (commentStart.isMatch)
       {
@@ -303,16 +303,16 @@ internal class Parser
 
   Bool noMatch() { return false }
 
-  Bool match1(Int ch1) { return cur === ch1 }
+  Bool match1(Int ch1) { return cur == ch1 }
 
-  Bool match2(Int ch1, Int ch2) { return cur === ch1 && peek === ch2 }
+  Bool match2(Int ch1, Int ch2) { return cur == ch1 && peek == ch2 }
 
   Bool matchN(Str chars)
   {
     try
     {
-      if (cur !== chars[0] || peek != chars[1]) return false
-      for (i:=2; i<chars.size; ++i) if (chars[i] !== text[pos+i]) return false
+      if (cur != chars[0] || peek != chars[1]) return false
+      for (i:=2; i<chars.size; ++i) if (chars[i] != text[pos+i]) return false
       return true
     }
     catch (Err e)

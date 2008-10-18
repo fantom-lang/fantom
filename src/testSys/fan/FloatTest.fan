@@ -180,7 +180,7 @@ class FloatTest : Test
     verifyEq(((Num)3.1f).toInt, 3)
     verifyEq(3.9f.toInt, 3)
     verifyEq(4.0f.toInt, 4)
-    verify(73939.9555f.toFloat === 73939.9555f)
+    verify(73939.9555f.toFloat == 73939.9555f)
     verifyEq(-5.66e12f.toDecimal <=> -5.66e12d, 0)
     verifyEq(Float.posInf.toInt, 0x7fff_ffff_ffff_ffff)
     verifyEq(Float.negInf.toInt, 0x8000_0000_0000_0000)

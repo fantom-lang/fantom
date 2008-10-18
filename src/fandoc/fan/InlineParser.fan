@@ -32,8 +32,8 @@ internal class InlineParser
     cur = peek = null
     if (src.size > 0) cur  = src[0]
     if (src.size > 1) peek = src[1]
-    if (cur === '\n')  { ++line; cur= ' ' }
-    if (peek === '\n') { ++line; peek = ' ' }
+    if (cur == '\n')  { ++line; cur= ' ' }
+    if (peek == '\n') { ++line; peek = ' ' }
     pos = 0
   }
 
@@ -199,7 +199,7 @@ internal class InlineParser
 
   private Str uri()
   {
-    if (cur !== '`') throw err("Invalid uri")
+    if (cur != '`') throw err("Invalid uri")
     consume  // leading `
     buf := StrBuf.make
     while (cur != '`')
@@ -214,7 +214,7 @@ internal class InlineParser
 
   private Str brackets()
   {
-    if (cur !== '[') throw err("Invalid []")
+    if (cur != '[') throw err("Invalid []")
     consume  // leading [
     buf := StrBuf.make
     while (cur != ']')
@@ -252,7 +252,7 @@ internal class InlineParser
     if (pos+1 < src.size)
     {
       peek = src[pos+1] // next peek is cur+1
-      if (peek === '\n') { ++line; peek = ' '; }
+      if (peek == '\n') { ++line; peek = ' '; }
     }
     else
     {

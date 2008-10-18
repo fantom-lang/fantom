@@ -39,11 +39,11 @@ class StmtTest : Test
     verifyEq(verifyIfGE(5, 5), ">=")
     verifyEq(verifyIfGE(2, 7), "!>=")
 
-    verifyEq(verifyIfSame(5, 5), "===")
-    verifyEq(verifyIfSame(5, 3), "!==")
+    verifyEq(verifyIfSame(5ns, 5ns), "===")
+    verifyEq(verifyIfSame(5ns, 3ns), "!==")
 
-    verifyEq(verifyIfNotSame(5, 5), "===")
-    verifyEq(verifyIfNotSame(5, 3), "!==")
+    verifyEq(verifyIfNotSame(5ns, 5ns), "===")
+    verifyEq(verifyIfNotSame(5ns, 3ns), "!==")
 
     verifyEq(verifyIfNullA(5),    "false")
     verifyEq(verifyIfNullA(null), "true")
@@ -70,8 +70,8 @@ class StmtTest : Test
   Str verifyIfLE(Int a, Int b) { if (a <= b) return "<="; return "!<="; }
   Str verifyIfGT(Int a, Int b) { if (a > b)  return ">"; return "!>"; }
   Str verifyIfGE(Int a, Int b) { if (a >= b) return ">="; return "!>="; }
-  Str verifyIfSame(Int a, Int b)    { if (a === b) return "==="; return "!=="; }
-  Str verifyIfNotSame(Int a, Int b) { if (a !== b) return "!=="; return "==="; }
+  Str verifyIfSame(Duration a, Duration b)    { if (a === b) return "==="; return "!=="; }
+  Str verifyIfNotSame(Duration a, Duration b) { if (a !== b) return "!=="; return "==="; }
   Str verifyIfNullA(Obj? a)     { if (a == null) return "true"; return "false" }
   Str verifyIfNullB(Obj? a)     { if (null == a) return "true"; return "false" }
   Str verifyIfNullC(Obj? a)     { if (a === null) return "true"; return "false" }
@@ -107,11 +107,11 @@ class StmtTest : Test
     verifyEq(verifyIfGEBool(5, 5), true)
     verifyEq(verifyIfGEBool(2, 7), false)
 
-    verifyEq(verifyIfSameBool(2, 2), true)
-    verifyEq(verifyIfSameBool(2, 6), false)
+    verifyEq(verifyIfSameBool(2ms, 2ms), true)
+    verifyEq(verifyIfSameBool(2ms, 6ms), false)
 
-    verifyEq(verifyIfNotSameBool(2, 0), true)
-    verifyEq(verifyIfNotSameBool(6, 6), false)
+    verifyEq(verifyIfNotSameBool(2ms, 0ms), true)
+    verifyEq(verifyIfNotSameBool(6ms, 6ms), false)
 
     verifyEq(verifyIfNullBoolA(null), true)
     verifyEq(verifyIfNullBoolA(2),    false)
@@ -138,8 +138,8 @@ class StmtTest : Test
   Bool verifyIfLEBool(Int a, Int b) { return (a <= b) }
   Bool verifyIfGTBool(Int a, Int b) { return (a > b)  }
   Bool verifyIfGEBool(Int a, Int b) { return (a >= b) }
-  Bool verifyIfSameBool(Int a, Int b)    { return (a === b) }
-  Bool verifyIfNotSameBool(Int a, Int b) { return (a !== b) }
+  Bool verifyIfSameBool(Duration a, Duration b)    { return (a === b) }
+  Bool verifyIfNotSameBool(Duration a, Duration b) { return (a !== b) }
   Bool verifyIfNullBoolA(Obj? a)    { return (a == null) }
   Bool verifyIfNullBoolB(Obj? a)    { return (null == a) }
   Bool verifyIfNullBoolC(Obj? a)    { return (a === null) }

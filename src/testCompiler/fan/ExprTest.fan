@@ -12,7 +12,7 @@
 class ExprTest : CompilerTest
 {
 
-//////////////////////////////////////////////////////////////////////////
+//////////////////////////////// //////////////////////////////////////////
 // Literals
 //////////////////////////////////////////////////////////////////////////
 
@@ -126,13 +126,13 @@ class ExprTest : CompilerTest
     verifyExpr("+a", 2, 2)
     verifyExpr("+a", -2f, -2f)
 
-    verifyExpr("a === b", true, 3, 3)
-    verifyExpr("a !== b", false, 3, 3)
+    verifyExpr("a === b", true, 3ns, 3ns)
+    verifyExpr("a !== b", false, 3ns, 3ns)
 
-    verifyExpr("a == null",  false, 3, null, "", true)
-    verifyExpr("a === null", false, 3, null, "", true)
-    verifyExpr("a != null",  true,  3, null, "", true)
-    verifyExpr("a !== null", true,  3, null, "", true)
+    verifyExpr("a == null",  false, 3ns, null, "", true)
+    verifyExpr("a === null", false, 3ns, null, "", true)
+    verifyExpr("a != null",  true,  3ns, null, "", true)
+    verifyExpr("a !== null", true,  3ns, null, "", true)
     verifyExpr("null == a",  true,  null, null, "Str? a := null;")
     verifyExpr("null === a", true,  null, null, "Str? a := null;")
     verifyExpr("null != a",  false, null, null, "Str? a := null;")
