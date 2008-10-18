@@ -108,7 +108,7 @@ public class ClassType
     this.nullable = new NullableType(this);
   }
 
-  public Boolean isDynamic() { return dynamic; }
+  public boolean isDynamic() { return dynamic; }
 
 //////////////////////////////////////////////////////////////////////////
 // Slots
@@ -292,7 +292,7 @@ public class ClassType
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  public final Map facets(Boolean inherited)
+  public final Map facets(boolean inherited)
   {
     Map map = reflect().facets.map();
     if (inherited)
@@ -315,7 +315,7 @@ public class ClassType
     return map;
   }
 
-  public final Object facet(String name, Object def, Boolean inherited)
+  public final Object facet(String name, Object def, boolean inherited)
   {
     Object val = reflect().facets.get(name, null);
     if (val != null) return val;
@@ -358,7 +358,7 @@ public class ClassType
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isImmutable() { return !dynamic; }
+  public boolean isImmutable() { return !dynamic; }
 
   public final Type toImmutable()
   {
@@ -652,7 +652,7 @@ public class ClassType
       if (isMixin()) finishSlots(auxCls, true);
 
 /*
-System.out.println("---- Finish " + qname());
+System.out.println("---- Finish " + qname() + " cls=" + cls);
 try
 {
 for (int i=0; i<methods().sz(); ++i)
@@ -710,6 +710,7 @@ catch (Exception e) { e.printStackTrace(); }
 
   private void finishMethod(java.lang.reflect.Method m, boolean staticOnly)
   {
+    if (pod == Sys.SysPod && !Modifier.isPublic(m.getModifiers())) return;
     this.finishing = m.getName();
     String name = FanUtil.toFanMethodName(m.getName());
     Slot slot = slot(name, false);
@@ -750,7 +751,7 @@ catch (Exception e) { e.printStackTrace(); }
       }
 
       // zero index is full signature up to using max defaults
-      method.reflect[method.params().sz()-numParams ] = m;
+      method.reflect[method.params().sz()-numParams] = m;
     }
     else
     {

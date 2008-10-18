@@ -23,7 +23,7 @@ public final class FanInt
 
   public static Long fromStr(String s) { return fromStr(s, Ten, true); }
   public static Long fromStr(String s, Long radix) { return fromStr(s, radix, true); }
-  public static Long fromStr(String s, Long radix, Boolean checked)
+  public static Long fromStr(String s, Long radix, boolean checked)
   {
     try
     {
@@ -53,7 +53,7 @@ public final class FanInt
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(Long self, Object obj)
+  public static boolean equals(Long self, Object obj)
   {
     if (obj instanceof Long)
       return self.longValue() == ((Long)obj).longValue();
@@ -177,13 +177,13 @@ public final class FanInt
     return that;
   }
 
-  public static Boolean isEven(Long self)
+  public static boolean isEven(Long self)
   {
     long val = self;
     return (val % 2) == 0;
   }
 
-  public static Boolean isOdd(Long self)
+  public static boolean isOdd(Long self)
   {
     long val = self;
     return (val % 2) != 0;
@@ -194,7 +194,7 @@ public final class FanInt
 //////////////////////////////////////////////////////////////////////////
 
 
-  public static Boolean isSpace(Long self) { return isSpace(self.intValue()); }
+  public static boolean isSpace(Long self) { return isSpace(self.intValue()); }
   public static boolean isSpace(int val)
   {
     try
@@ -209,7 +209,7 @@ public final class FanInt
     }
   }
 
-  public static Boolean isAlpha(Long self) { return isAlpha(self.intValue()); }
+  public static boolean isAlpha(Long self) { return isAlpha(self.intValue()); }
   public static boolean isAlpha(int val)
   {
     try
@@ -224,7 +224,7 @@ public final class FanInt
     }
   }
 
-  public static Boolean isAlphaNum(Long self) { return isAlphaNum(self.intValue()); }
+  public static boolean isAlphaNum(Long self) { return isAlphaNum(self.intValue()); }
   public static boolean isAlphaNum(int val)
   {
     try
@@ -239,13 +239,13 @@ public final class FanInt
     }
   }
 
-  public static Boolean isUpper(Long self)
+  public static boolean isUpper(Long self)
   {
     long val = self;
     return 'A' <= val && val <= 'Z';
   }
 
-  public static Boolean isLower(Long self)
+  public static boolean isLower(Long self)
   {
     long val = self;
     return 'a' <= val && val <= 'z';
@@ -269,13 +269,13 @@ public final class FanInt
       return self;
   }
 
-  public static Boolean isDigit(Long self)
+  public static boolean isDigit(Long self)
   {
     long val = self;
     return '0' <= val && val <= '9';
   }
 
-  public static Boolean isDigit(Long self, Long radix)
+  public static boolean isDigit(Long self, Long radix)
   {
     int val = self.intValue();
     if (val < 0 || val >= 128) return false;
@@ -346,7 +346,7 @@ public final class FanInt
     return null;
   }
 
-  public static Boolean equalsIgnoreCase(Long self, Long ch)
+  public static boolean equalsIgnoreCase(Long self, Long ch)
   {
     long val = self;
     return (val | 0x20L) == (ch.longValue() | 0x20L);
@@ -383,12 +383,12 @@ public final class FanInt
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean localeIsUpper(Long self)
+  public static boolean localeIsUpper(Long self)
   {
     return Character.isUpperCase(self.intValue());
   }
 
-  public static Boolean localeIsLower(Long self)
+  public static boolean localeIsLower(Long self)
   {
     return Character.isLowerCase(self.intValue());
   }

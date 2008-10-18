@@ -24,7 +24,7 @@ public final class Uri
 //////////////////////////////////////////////////////////////////////////
 
   public static Uri fromStr(String s) { return fromStr(s, true); }
-  public static Uri fromStr(String s, Boolean checked)
+  public static Uri fromStr(String s, boolean checked)
   {
     try
     {
@@ -43,7 +43,7 @@ public final class Uri
   }
 
   public static Uri decode(String s) { return decode(s, true); }
-  public static Uri decode(String s, Boolean checked)
+  public static Uri decode(String s, boolean checked)
   {
     try
     {
@@ -680,7 +680,7 @@ public final class Uri
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean _equals(Object obj)
+  public final boolean _equals(Object obj)
   {
     if (obj instanceof Uri)
     {
@@ -725,17 +725,17 @@ public final class Uri
 // Components
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isAbs()
+  public boolean isAbs()
   {
     return scheme != null;
   }
 
-  public Boolean isRel()
+  public boolean isRel()
   {
     return scheme == null;
   }
 
-  public Boolean isDir()
+  public boolean isDir()
   {
     if (pathStr != null)
     {
@@ -793,7 +793,7 @@ public final class Uri
     return pathStr;
   }
 
-  public Boolean isPathAbs()
+  public boolean isPathAbs()
   {
     if (pathStr == null || pathStr.length() == 0)
       return false;
@@ -801,7 +801,7 @@ public final class Uri
       return pathStr.charAt(0) == '/';
   }
 
-  public Boolean isPathOnly()
+  public boolean isPathOnly()
   {
     return scheme == null && host == null && port == null &&
            userInfo == null && queryStr == null && frag == null;
@@ -958,10 +958,10 @@ public final class Uri
 
   public Uri relTo(Uri base)
   {
-    if (!OpUtil.compareEQz(this.scheme,   base.scheme) ||
-        !OpUtil.compareEQz(this.userInfo, base.userInfo) ||
-        !OpUtil.compareEQz(this.host,     base.host) ||
-        !OpUtil.compareEQz(this.port,     base.port))
+    if (!OpUtil.compareEQ(this.scheme,   base.scheme) ||
+        !OpUtil.compareEQ(this.userInfo, base.userInfo) ||
+        !OpUtil.compareEQ(this.host,     base.host) ||
+        !OpUtil.compareEQ(this.port,     base.port))
       return this;
 
     // at this point we know we have the same scheme and auth, and
@@ -1122,9 +1122,8 @@ public final class Uri
     return buf.toString();
   }
 
-  public Uri plusName(String name, boolean isDir) { return plusName(name, Boolean.valueOf(isDir)); }
   public Uri plusName(String name) { return plusName(name, false); }
-  public Uri plusName(String name, Boolean asDir)
+  public Uri plusName(String name, boolean asDir)
   {
     int size         = path.sz();
     boolean isDir    = isDir();
@@ -1215,7 +1214,7 @@ public final class Uri
 
   public Object get() { return get(null, true); }
   public Object get(Object base) { return get(base, true); }
-  public Object get(Object base, Boolean checked)
+  public Object get(Object base, boolean checked)
   {
     // if we have a relative uri, we need to resolve against
     // the base object's uri
@@ -1258,7 +1257,7 @@ public final class Uri
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean isName(String name)
+  public static boolean isName(String name)
   {
     int len = name.length();
 

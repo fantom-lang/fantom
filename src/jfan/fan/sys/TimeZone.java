@@ -46,7 +46,6 @@ public final class TimeZone
   }
 
   public static TimeZone fromStr(String name) { return fromStr(name, true); }
-  public static TimeZone fromStr(String name, Boolean checked) { return fromStr(name, checked.booleanValue()); }
   public static TimeZone fromStr(String name, boolean checked)
   {
     // check cache first

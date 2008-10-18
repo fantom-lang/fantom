@@ -270,7 +270,7 @@ public class InStream
     return FanDecimal.fromStr(readUtf(), true);
   }
 
-  public Boolean readBool()
+  public boolean readBool()
   {
     int n = r();
     if (n < 0) throw IOErr.make("Unexpected end of stream").val;
@@ -463,7 +463,7 @@ public class InStream
   }
 
   public String readAllStr() { return readAllStr(true); }
-  public String readAllStr(Boolean normalizeNewlines)
+  public String readAllStr(boolean normalizeNewlines)
   {
     try
     {
@@ -652,7 +652,7 @@ public class InStream
 
   public Long pipe(OutStream out) { return pipe(out, null, true); }
   public Long pipe(OutStream out, Long n) { return pipe(out, n, true); }
-  public Long pipe(OutStream out, Long toPipe, Boolean close)
+  public Long pipe(OutStream out, Long toPipe, boolean close)
   {
     try
     {
@@ -689,7 +689,7 @@ public class InStream
     }
   }
 
-  public Boolean close()
+  public boolean close()
   {
     if (in != null) return in.close();
     return true;

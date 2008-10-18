@@ -59,8 +59,8 @@ public class MenuItemPeer
   //
 
   // Bool selected := false
-  public Boolean selected(fan.fwt.MenuItem self) { return selected.get(); }
-  public void selected(fan.fwt.MenuItem self, Boolean v) { selected.set(v); }
+  public boolean selected(fan.fwt.MenuItem self) { return selected.get(); }
+  public void selected(fan.fwt.MenuItem self, boolean v) { selected.set(v); }
   public final Prop.BoolProp selected = new Prop.BoolProp(this, false)
   {
     public boolean get(Widget w) { return (w instanceof MenuItem) ? ((MenuItem)w).getSelection() : false; }

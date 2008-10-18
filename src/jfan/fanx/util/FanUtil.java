@@ -32,6 +32,9 @@ public class FanUtil
   static
   {
     if (Sys.ObjType == null) java.lang.Thread.dumpStack();
+    javaToFanTypes.put("boolean",              Sys.BoolType);
+    //javaToFanTypes.put("long",                 Sys.IntType);
+    //javaToFanTypes.put("double",               Sys.FloatType);
     javaToFanTypes.put("java.lang.Object",     Sys.ObjType);
     javaToFanTypes.put("java.lang.Boolean",    Sys.BoolType);
     javaToFanTypes.put("java.lang.String",     Sys.StrType);
@@ -181,7 +184,8 @@ public class FanUtil
       switch (typeName.charAt(0))
       {
         case 'B':
-          if (typeName.equals("Bool")) return "java/lang/Boolean";
+          if (typeName.equals("Bool"))
+            return nullable ? "java/lang/Boolean" : "Z";
           break;
         case 'D':
           if (typeName.equals("Decimal")) return "java/math/BigDecimal";
@@ -230,6 +234,19 @@ public class FanUtil
   }
 
   /**
+   * Given a Fan type, get its stack type: 'A', 'I', 'J', etc
+   */
+  public static int toJavaStackType(Type t)
+  {
+    if (!t.isNullable())
+    {
+      if (t == Sys.BoolType) return 'I';
+      if (t == Sys.VoidType) return 'V';
+    }
+    return 'A';
+  }
+
+  /**
    * Given a Java type signature, return the implementation
    * class signature for methods and fields:
    *   java/lang/Object  =>  fan/sys/FanObj
@@ -238,6 +255,15 @@ public class FanUtil
    */
   public static String toJavaImplSig(String jsig)
   {
+    if (jsig.length() == 1)
+    {
+      switch (jsig.charAt(0))
+      {
+        case 'Z': return "fan/sys/FanBool";
+        default: throw new IllegalStateException(jsig);
+      }
+    }
+
     if (jsig.charAt(0) == 'j')
     {
       if (jsig.equals("java/lang/Object"))  return "fan/sys/FanObj";

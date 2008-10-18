@@ -100,7 +100,7 @@ public final class List
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean isEmpty()
+  public final boolean isEmpty()
   {
     return size == 0;
   }
@@ -180,17 +180,17 @@ public final class List
     }
   }
 
-  public final Boolean contains(Object value)
+  public final boolean contains(Object value)
   {
     return index(value) != null;
   }
 
-  public final Boolean containsSame(Object value)
+  public final boolean containsSame(Object value)
   {
     return indexSame(value) != null;
   }
 
-  public final Boolean containsAll(List list)
+  public final boolean containsAll(List list)
   {
     for (int i=0; i<list.sz(); ++i)
       if (index(list.get(i)) == null)
@@ -198,7 +198,7 @@ public final class List
     return true;
   }
 
-  public final Boolean containsAllSame(List list)
+  public final boolean containsAllSame(List list)
   {
     for (int i=0; i<list.sz(); ++i)
       if (indexSame(list.get(i)) == null)
@@ -290,7 +290,7 @@ public final class List
     return Long.valueOf(hash);
   }
 
-  public final Boolean _equals(Object that)
+  public final boolean _equals(Object that)
   {
     if (that instanceof List)
     {
@@ -558,7 +558,7 @@ public final class List
     return acc;
   }
 
-  public final Boolean any(Func f)
+  public final boolean any(Func f)
   {
     for (int i=0; i<size; ++i)
       if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
@@ -566,7 +566,7 @@ public final class List
     return false;
   }
 
-  public final Boolean all(Func f)
+  public final boolean all(Func f)
   {
     for (int i=0; i<size; ++i)
       if (f.call2(values[i], Long.valueOf(i)) != Boolean.TRUE)
@@ -938,12 +938,12 @@ public final class List
 // Readonly
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean isRW()
+  public final boolean isRW()
   {
     return !readonly;
   }
 
-  public final Boolean isRO()
+  public final boolean isRO()
   {
     return readonly;
   }
@@ -977,7 +977,7 @@ public final class List
     return readonlyList;
   }
 
-  public final Boolean isImmutable()
+  public final boolean isImmutable()
   {
     return immutable;
   }

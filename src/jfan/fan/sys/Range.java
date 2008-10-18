@@ -38,7 +38,7 @@ public final class Range
     return new Range(start, end, true);
   }
 
-  public static final Range make(Long start, Long end, Boolean exclusive)
+  public static final Range make(Long start, Long end, boolean exclusive)
   {
     return new Range(start, end, exclusive);
   }
@@ -65,17 +65,17 @@ public final class Range
     return end;
   }
 
-  public final Boolean inclusive()
+  public final boolean inclusive()
   {
     return !exclusive;
   }
 
-  public final Boolean exclusive()
+  public final boolean exclusive()
   {
     return exclusive;
   }
 
-  public final Boolean contains(Long i)
+  public final boolean contains(Long i)
   {
     if (exclusive)
       return start.longValue() <= i.longValue() && i.longValue() < end.longValue();
@@ -114,7 +114,7 @@ public final class Range
     return acc;
   }
 
-  public final Boolean _equals(Object object)
+  public final boolean _equals(Object object)
   {
     if (object instanceof Range)
     {

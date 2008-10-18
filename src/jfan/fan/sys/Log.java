@@ -30,7 +30,7 @@ public class Log
   }
 
   public static Log find(String name) { return find(name, true); }
-  public static Log find(String name, Boolean checked)
+  public static Log find(String name, boolean checked)
   {
     synchronized (lock)
     {
@@ -122,18 +122,18 @@ public class Log
     return this.level.ord <= level.ord;
   }
 
-  public final Boolean isEnabled(LogLevel level)
+  public final boolean isEnabled(LogLevel level)
   {
     return enabled(level);
   }
 
-  public final Boolean isError() { return isEnabled(LogLevel.error); }
+  public final boolean isError() { return isEnabled(LogLevel.error); }
 
-  public final Boolean isWarn()  { return isEnabled(LogLevel.warn); }
+  public final boolean isWarn()  { return isEnabled(LogLevel.warn); }
 
-  public final Boolean isInfo()  { return isEnabled(LogLevel.info); }
+  public final boolean isInfo()  { return isEnabled(LogLevel.info); }
 
-  public final Boolean isDebug() { return isEnabled(LogLevel.debug); }
+  public final boolean isDebug() { return isEnabled(LogLevel.debug); }
 
 //////////////////////////////////////////////////////////////////////////
 // Logging

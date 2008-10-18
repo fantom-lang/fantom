@@ -52,7 +52,7 @@ public abstract class Buf
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean _equals(Object that)
+  public final boolean _equals(Object that)
   {
     return this == that;
   }
@@ -90,7 +90,7 @@ public abstract class Buf
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean empty()
+  public final boolean empty()
   {
     return getSize() == 0;
   }
@@ -124,7 +124,7 @@ public abstract class Buf
     return Long.valueOf(getSize()-getPos());
   }
 
-  public final Boolean more()
+  public final boolean more()
   {
     return getSize()-getPos() > 0;
   }
@@ -202,7 +202,7 @@ public abstract class Buf
     return this;
   }
 
-  public Boolean close()
+  public boolean close()
   {
     return true;
   }
@@ -241,7 +241,7 @@ public abstract class Buf
 
   public final Buf writeDecimal(BigDecimal x) { out.writeDecimal(x); return this; }
 
-  public final Buf writeBool(Boolean x) { out.writeBool(x); return this; }
+  public final Buf writeBool(boolean x) { out.writeBool(x); return this; }
 
   public final Buf writeUtf(String x) { out.writeUtf(x); return this; }
 
@@ -297,7 +297,7 @@ public abstract class Buf
 
   public final BigDecimal readDecimal() { return in.readDecimal(); }
 
-  public final Boolean readBool() { return in.readBool(); }
+  public final boolean readBool() { return in.readBool(); }
 
   public final String readUtf() { return in.readUtf(); }
 
@@ -319,7 +319,7 @@ public abstract class Buf
   public final void eachLine(Func f) { in.eachLine(f); }
 
   public final String readAllStr() { return in.readAllStr(); }
-  public final String readAllStr(Boolean normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
+  public final String readAllStr(boolean normalizeNewlines)  { return in.readAllStr(normalizeNewlines); }
 
   public final Object readObj() { return in.readObj(); }
   public final Object readObj(Map opt) { return in.readObj(opt); }

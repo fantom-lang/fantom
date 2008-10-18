@@ -39,9 +39,9 @@ public class NullableType
   public List inheritance() { return root.inheritance(); }
   public boolean is(Type type) { return root.is(type); }
 
-  public Boolean isValue() { return root.isValue(); }
+  public boolean isValue() { return root.isValue(); }
 
-  public Boolean isNullable() { return true; }
+  public boolean isNullable() { return true; }
   public Type toNullable() { return this; }
   public Type toNonNullable() { return root; }
 
@@ -57,8 +57,8 @@ public class NullableType
   public List slots() { return root.slots(); }
   public Slot slot(String name, boolean checked) { return root.slot(name, checked); }
 
-  public Map facets(Boolean inherited) { return root.facets(inherited); }
-  public Object facet(String name, Object def, Boolean inherited) { return root.facet(name, def, inherited); }
+  public Map facets(boolean inherited) { return root.facets(inherited); }
+  public Object facet(String name, Object def, boolean inherited) { return root.facet(name, def, inherited); }
 
   public String doc() { return root.doc(); }
 

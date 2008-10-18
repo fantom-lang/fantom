@@ -21,15 +21,12 @@ public abstract class Slot
 //////////////////////////////////////////////////////////////////////////
 
   public static Method findMethod(String qname) { return (Method)find(qname, true); }
-  public static Method findMethod(String qname, Boolean checked) { return (Method)find(qname, checked.booleanValue()); }
   public static Method findMethod(String qname, boolean checked) { return (Method)find(qname, checked); }
 
   public static Field findField(String qname) { return (Field)find(qname, true); }
-  public static Field findField(String qname, Boolean checked) { return (Field)find(qname, checked.booleanValue()); }
   public static Field findField(String qname, boolean checked) { return (Field)find(qname, checked); }
 
   public static Slot find(String qname) { return find(qname, true); }
-  public static Slot find(String qname, Boolean checked) { return find(qname, checked.booleanValue()); }
   public static Slot find(String qname, boolean checked)
   {
     String typeName, slotName;
@@ -49,7 +46,6 @@ public abstract class Slot
   }
 
   public static Func findFunc(String qname) { return findFunc(qname, true); }
-  public static Func findFunc(String qname, Boolean checked) { return findFunc(qname, checked.booleanValue()); }
   public static Func findFunc(String qname, boolean checked)
   {
     Method m = (Method)find(qname, checked);
@@ -85,8 +81,8 @@ public abstract class Slot
   public Type parent()   { return parent; }
   public String name()      { return name; }
   public String qname()     { return qname; }
-  public Boolean isField()  { return this instanceof Field; }
-  public Boolean isMethod() { return this instanceof Method; }
+  public boolean isField()  { return this instanceof Field; }
+  public boolean isMethod() { return this instanceof Method; }
   public abstract String signature();
 
 //////////////////////////////////////////////////////////////////////////
@@ -94,18 +90,18 @@ public abstract class Slot
 //////////////////////////////////////////////////////////////////////////
 
   public final int flags() { return flags; }
-  public final Boolean isAbstract()  { return (flags & FConst.Abstract) != 0; }
-  public /* */ Boolean isConst()     { return (flags & FConst.Const) != 0; } // we let synethic Methods override
-  public final Boolean isCtor()      { return (flags & FConst.Ctor) != 0; }
-  public final Boolean isInternal()  { return (flags & FConst.Internal) != 0; }
-  public final Boolean isNative()    { return (flags & FConst.Native) != 0; }
-  public final Boolean isOverride()  { return (flags & FConst.Override) != 0; }
-  public final Boolean isPrivate()   { return (flags & FConst.Private) != 0; }
-  public final Boolean isProtected() { return (flags & FConst.Protected) != 0; }
-  public final Boolean isPublic()    { return (flags & FConst.Public) != 0; }
-  public final Boolean isStatic()    { return (flags & FConst.Static) != 0; }
-  public final Boolean isSynthetic() { return (flags & FConst.Synthetic) != 0; }
-  public final Boolean isVirtual()   { return (flags & FConst.Virtual) != 0; }
+  public final boolean isAbstract()  { return (flags & FConst.Abstract) != 0; }
+  public /* */ boolean isConst()     { return (flags & FConst.Const) != 0; } // we let synethic Methods override
+  public final boolean isCtor()      { return (flags & FConst.Ctor) != 0; }
+  public final boolean isInternal()  { return (flags & FConst.Internal) != 0; }
+  public final boolean isNative()    { return (flags & FConst.Native) != 0; }
+  public final boolean isOverride()  { return (flags & FConst.Override) != 0; }
+  public final boolean isPrivate()   { return (flags & FConst.Private) != 0; }
+  public final boolean isProtected() { return (flags & FConst.Protected) != 0; }
+  public final boolean isPublic()    { return (flags & FConst.Public) != 0; }
+  public final boolean isStatic()    { return (flags & FConst.Static) != 0; }
+  public final boolean isSynthetic() { return (flags & FConst.Synthetic) != 0; }
+  public final boolean isVirtual()   { return (flags & FConst.Virtual) != 0; }
 
   public Object trap(String name, List args)
   {

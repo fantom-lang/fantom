@@ -21,7 +21,7 @@ public abstract class UriScheme
 //////////////////////////////////////////////////////////////////////////
 
   public static UriScheme find(String scheme) { return find(scheme, true); }
-  public static UriScheme find(String scheme, Boolean checked)
+  public static UriScheme find(String scheme, boolean checked)
   {
     // check cache
     synchronized (cache)

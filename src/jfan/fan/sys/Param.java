@@ -33,7 +33,7 @@ public class Param
 
   public String name()  { return name; }
   public Type of()   { return of; }
-  public Boolean hasDefault() { return (mask & HAS_DEFAULT) != 0; }
+  public boolean hasDefault() { return (mask & HAS_DEFAULT) != 0; }
 
   public String toStr() { return of + " " + name; }
 

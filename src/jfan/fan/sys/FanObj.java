@@ -41,7 +41,7 @@ public class FanObj
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(Object self, Object x)
+  public static boolean equals(Object self, Object x)
   {
     if (self instanceof FanObj)
       return ((FanObj)self)._equals(x);
@@ -49,7 +49,7 @@ public class FanObj
       return self.equals(x);
   }
 
-  public Boolean _equals(Object obj)
+  public boolean _equals(Object obj)
   {
     return this == obj;
   }
@@ -95,7 +95,7 @@ public class FanObj
     return super.toString();
   }
 
-  public static Boolean isImmutable(Object self)
+  public static boolean isImmutable(Object self)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).isImmutable();
@@ -103,7 +103,7 @@ public class FanObj
       return FanUtil.isJavaImmutable(self.getClass());
   }
 
-  public Boolean isImmutable()
+  public boolean isImmutable()
   {
     return type().isConst();
   }

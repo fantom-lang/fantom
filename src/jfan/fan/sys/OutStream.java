@@ -141,7 +141,7 @@ public class OutStream
     return writeUtf(x.toString());
   }
 
-  public OutStream writeBool(Boolean x)
+  public OutStream writeBool(boolean x)
   {
     return w(x ? 1 : 0);
   }
@@ -249,7 +249,7 @@ public class OutStream
   }
 
   public OutStream writeProps(Map props) { return writeProps(props, true); }
-  public OutStream writeProps(Map props, Boolean close)
+  public OutStream writeProps(Map props, boolean close)
   {
     Charset origCharset = charset();
     charset(Charset.utf8());
@@ -317,7 +317,7 @@ public class OutStream
     return this;
   }
 
-  public Boolean close()
+  public boolean close()
   {
     if (out != null) return out.close();
     return true;

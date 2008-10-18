@@ -65,8 +65,8 @@ public class WidgetPeer
 //////////////////////////////////////////////////////////////////////////
 
   // Bool enabled := true
-  public Boolean enabled(fan.fwt.Widget self) { return enabled.get(); }
-  public void enabled(fan.fwt.Widget self, Boolean v) { enabled.set(v); }
+  public boolean enabled(fan.fwt.Widget self) { return enabled.get(); }
+  public void enabled(fan.fwt.Widget self, boolean v) { enabled.set(v); }
   public final Prop.BoolProp enabled = new Prop.BoolProp(this, true)
   {
     public boolean get(Widget w)
@@ -87,8 +87,8 @@ public class WidgetPeer
   };
 
   // Bool visible := true
-  public Boolean visible(fan.fwt.Widget self) { return visible.get(); }
-  public void visible(fan.fwt.Widget self, Boolean v) { visible.set(v); }
+  public boolean visible(fan.fwt.Widget self) { return visible.get(); }
+  public void visible(fan.fwt.Widget self, boolean v) { visible.set(v); }
   public final Prop.BoolProp visible = new Prop.BoolProp(this, true)
   {
     public boolean get(Widget w)
@@ -166,7 +166,7 @@ public class WidgetPeer
 // Focus Eventing
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean hasFocus(fan.fwt.Widget self)
+  public boolean hasFocus(fan.fwt.Widget self)
   {
     if (control instanceof Control)
       return ((Control)control).isFocusControl();
@@ -324,7 +324,7 @@ public class WidgetPeer
 // Attachment
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean attached(fan.fwt.Widget self)
+  public final boolean attached(fan.fwt.Widget self)
   {
     return control != null;
   }

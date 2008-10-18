@@ -33,7 +33,7 @@ public abstract class Enum
     self.name    = name;
   }
 
-  protected static Enum doFromStr(Type t, String name, Boolean checked)
+  protected static Enum doFromStr(Type t, String name, boolean checked)
   {
     // the compiler marks the value fields with the Enum flag
     Slot slot = t.slot(name, false);
@@ -55,7 +55,7 @@ public abstract class Enum
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean _equals(Object obj)
+  public final boolean _equals(Object obj)
   {
     return this == obj;
   }

@@ -21,7 +21,6 @@ public final class Version
 //////////////////////////////////////////////////////////////////////////
 
   public static Version fromStr(String str) { return fromStr(str, true); }
-  public static Version fromStr(String str, Boolean checked) { return fromStr(str, checked.booleanValue()); }
   public static Version fromStr(String s, boolean checked)
   {
     List segments = new List(Sys.IntType, 4);
@@ -81,7 +80,7 @@ public final class Version
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean _equals(Object obj)
+  public boolean _equals(Object obj)
   {
     if (obj instanceof Version)
       return toStr().equals(((Version)obj).toStr());

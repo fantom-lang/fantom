@@ -33,12 +33,12 @@ public class FanStr
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(String self, Object obj)
+  public static boolean equals(String self, Object obj)
   {
     return self.equals(obj);
   }
 
-  public static Boolean equalsIgnoreCase(String a, String b)
+  public static boolean equalsIgnoreCase(String a, String b)
   {
     if (a == b) return true;
 
@@ -153,7 +153,7 @@ public class FanStr
     return self.intern();
   }
 
-  public static Boolean isEmpty(String self)
+  public static boolean isEmpty(String self)
   {
     return self.length() == 0;
   }
@@ -163,22 +163,22 @@ public class FanStr
     return Long.valueOf(self.length());
   }
 
-  public static Boolean startsWith(String self, String s)
+  public static boolean startsWith(String self, String s)
   {
     return self.startsWith(s, 0);
   }
 
-  public static Boolean endsWith(String self, String s)
+  public static boolean endsWith(String self, String s)
   {
     return self.endsWith(s);
   }
 
-  public static Boolean contains(String self, String s)
+  public static boolean contains(String self, String s)
   {
     return index(self, s, 0L) != null;
   }
 
-  public static Boolean containsChar(String self, Long ch)
+  public static boolean containsChar(String self, Long ch)
   {
     return self.indexOf(ch.intValue()) >= 0;
   }
@@ -287,7 +287,7 @@ public class FanStr
       f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i));
   }
 
-  public static Boolean any(String self, Func f)
+  public static boolean any(String self, Func f)
   {
     int len = self.length();
     for (int i=0; i<len ; ++i)
@@ -296,7 +296,7 @@ public class FanStr
     return false;
   }
 
-  public static Boolean all(String self, Func f)
+  public static boolean all(String self, Func f)
   {
     int len = self.length();
     for (int i=0; i<len ; ++i)
@@ -450,7 +450,7 @@ public class FanStr
 
   public static List split(String self) { return split(self, null, true); }
   public static List split(String self, Long separator) { return split(self, separator, true); }
-  public static List split(String self, Long separator, Boolean trimmed)
+  public static List split(String self, Long separator, boolean trimmed)
   {
     if (separator == null) return splitws(self);
     int sep = separator.intValue();
@@ -540,7 +540,7 @@ public class FanStr
     return Long.valueOf(numLines);
   }
 
-  public static Boolean isAscii(String self)
+  public static boolean isAscii(String self)
   {
     int len = self.length();
     for (int i=0; i<len; ++i)
@@ -548,7 +548,7 @@ public class FanStr
     return true;
   }
 
-  public static Boolean isSpace(String self)
+  public static boolean isSpace(String self)
   {
     int len = self.length();
     for (int i=0; i<len; ++i)
@@ -560,7 +560,7 @@ public class FanStr
     return true;
   }
 
-  public static Boolean isUpper(String self)
+  public static boolean isUpper(String self)
   {
     int len = self.length();
     for (int i=0; i<len; ++i)
@@ -572,7 +572,7 @@ public class FanStr
     return true;
   }
 
-  public static Boolean isLower(String self)
+  public static boolean isLower(String self)
   {
     int len = self.length();
     for (int i=0; i<len; ++i)
@@ -650,23 +650,23 @@ public class FanStr
 //////////////////////////////////////////////////////////////////////////
 
   public static Boolean toBool(String self) { return FanBool.fromStr(self, true); }
-  public static Boolean toBool(String self, Boolean checked) { return FanBool.fromStr(self, checked); }
+  public static Boolean toBool(String self, boolean checked) { return FanBool.fromStr(self, checked); }
 
   public static Long toInt(String self) { return FanInt.fromStr(self, FanInt.Ten, true); }
   public static Long toInt(String self, Long radix) { return FanInt.fromStr(self, radix, true); }
-  public static Long toInt(String self, Long radix, Boolean checked) { return FanInt.fromStr(self, radix, checked); }
+  public static Long toInt(String self, Long radix, boolean checked) { return FanInt.fromStr(self, radix, checked); }
 
   public static Double toFloat(String self) { return FanFloat.fromStr(self, true); }
-  public static Double toFloat(String self, Boolean checked) { return FanFloat.fromStr(self, checked); }
+  public static Double toFloat(String self, boolean checked) { return FanFloat.fromStr(self, checked); }
 
   public static BigDecimal toDecimal(String self) { return FanDecimal.fromStr(self, true); }
-  public static BigDecimal toDecimal(String self, Boolean checked) { return FanDecimal.fromStr(self, checked); }
+  public static BigDecimal toDecimal(String self, boolean checked) { return FanDecimal.fromStr(self, checked); }
 
   public static Uri toUri(String self) { return Uri.fromStr(self); }
 
   public static String toCode(String self) { return toCode(self, FanInt.pos['"'], false); }
   public static String toCode(String self, Long quote) { return toCode(self, quote, false); }
-  public static String toCode(String self, Long quote, Boolean escapeUnicode)
+  public static String toCode(String self, Long quote, boolean escapeUnicode)
   {
     StringBuilder s = new StringBuilder(self.length()+10);
 

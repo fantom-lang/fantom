@@ -130,13 +130,13 @@ class MapTest : Test
   {
     Obj x := [:]
 
-    Obj o    := x as Obj;          verifySame(o , x)
-    Bool b   := x as Bool;         verifySame(b , null)
-    Str s    := x as Str;          verifySame(s , null)
-    Map m    := x as Map;          verifySame(m , x)
-    Obj:Obj  ol := x as Obj:Obj;   verifySame(ol , x)
-    Obj:Int  il := x as Int:Int;   verifySame(il , null)
-    Int:Str  sl := x as Int:Str;   verifySame(sl , null)
+    o  := x as Obj;       verifySame(o , x)
+    b  := x as Bool;      verifySame(b , null)
+    s  := x as Str;       verifySame(s , null)
+    m  := x as Map;       verifySame(m , x)
+    ol := x as Obj:Obj;   verifySame(ol , x)
+    il := x as Int:Int;   verifySame(il , null)
+    sl := x as Int:Str;   verifySame(sl , null)
 
     x  = [0:"a", 1:"b"]
     o  = x as Obj;       verifySame(o , x)
@@ -144,7 +144,7 @@ class MapTest : Test
     s  = x as Str;       verifySame(s , null)
     m  = x as Map;       verifySame(m , x)
     ol = x as Obj:Obj;   verifySame(ol , x)
-    il = x as Str:Int;   verifySame(il , null)
+    il = x as Int:Int;   verifySame(il , null)
     sl = x as Int:Str;   verifySame(sl , x)
   }
 

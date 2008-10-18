@@ -43,7 +43,7 @@ public class StrBuf
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isEmpty()
+  public boolean isEmpty()
   {
     return sb.length() == 0;
   }

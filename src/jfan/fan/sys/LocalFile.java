@@ -142,7 +142,7 @@ public class LocalFile
 // File
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean exists()
+  public boolean exists()
   {
     return file.exists();
   }
@@ -203,7 +203,7 @@ public class LocalFile
     }
   }
 
-  public File plus(Uri uri, Boolean checkSlash)
+  public File plus(Uri uri, boolean checkSlash)
   {
     return make(this.uri.plus(uri), checkSlash);
   }
@@ -360,7 +360,7 @@ public class LocalFile
     }
   }
 
-  public OutStream out(Boolean append, Long bufSize)
+  public OutStream out(boolean append, Long bufSize)
   {
     try
     {
