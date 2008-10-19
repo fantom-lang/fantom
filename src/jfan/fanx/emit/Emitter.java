@@ -160,14 +160,13 @@ public class Emitter
   /**
    * Map a integer literal into the constant pool.
    */
-  public int intConst(int v)
+  public int intConst(Integer v)
   {
-    Integer key = new Integer(v);
-    CpInteger info = (CpInteger)cpInteger.get(key);
+    CpInteger info = (CpInteger)cpInteger.get(v);
     if (info == null)
     {
-      info = new CpInteger(v);
-      cpInteger.put(key, info);
+      info = new CpInteger(v.intValue());
+      cpInteger.put(v, info);
       add(info);
     }
     return info.index;
@@ -176,14 +175,13 @@ public class Emitter
   /**
    * Map a long literal into the constant pool.
    */
-  public int longConst(long v)
+  public int longConst(Long v)
   {
-    Long key = new Long(v);
-    CpLong info = (CpLong)cpLong.get(key);
+    CpLong info = (CpLong)cpLong.get(v);
     if (info == null)
     {
-      info = new CpLong(v);
-      cpLong.put(key, info);
+      info = new CpLong(v.longValue());
+      cpLong.put(v, info);
       add(info);
       add(new CpDummy()); // longs take two entries
     }
@@ -193,14 +191,13 @@ public class Emitter
   /**
    * Map a float literal into the constant pool.
    */
-  public int floatConst(float v)
+  public int floatConst(Float v)
   {
-    Float key = new Float(v);
-    CpFloat info = (CpFloat)cpFloat.get(key);
+    CpFloat info = (CpFloat)cpFloat.get(v);
     if (info == null)
     {
-      info = new CpFloat(v);
-      cpFloat.put(key, info);
+      info = new CpFloat(v.floatValue());
+      cpFloat.put(v, info);
       add(info);
     }
     return info.index;

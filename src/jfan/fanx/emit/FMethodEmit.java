@@ -106,8 +106,8 @@ public class FMethodEmit
     this.code = null;
     MethodEmit factory = doEmit();
     CodeEmit code = factory.emitCode();
-    code.maxLocals = method.paramCount;
-    code.maxStack  = 2 + method.paramCount;
+    code.maxLocals = method.paramCount * 2; // TODO
+    code.maxStack  = 2 + method.paramCount * 2; // TODO
     code.op2(NEW, emit.cls(selfName));
     code.op(DUP);
     code.op2(INVOKESPECIAL, emit.method(selfName+ ".<init>()V"));
@@ -134,8 +134,8 @@ public class FMethodEmit
     if (isStatic)
     {
       int peerMethod = emit.method(selfName + "Peer." + name + sig);
-      code.maxLocals = paramLen;
-      code.maxStack  = Math.max(paramLen, 1);
+      code.maxLocals = paramLen*2; // TODO
+      code.maxStack  = Math.max(paramLen, 1) * 2; // TODO
       pushArgs(code, false, paramLen);
       code.op2(INVOKESTATIC, peerMethod);
     }
@@ -147,8 +147,8 @@ public class FMethodEmit
       this.self = false;
 
       int peerMethod = emit.method(selfName + "Peer." + name + sig);
-      code.maxLocals = paramLen+2;
-      code.maxStack  = paramLen+2;
+      code.maxLocals = 2*paramLen+2; // TODO
+      code.maxStack  = 2*paramLen+2; // TODO
       code.op(ALOAD_0);
       code.op2(GETFIELD, emit.peerField.ref());
       pushArgs(code, true, paramLen);

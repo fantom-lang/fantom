@@ -52,7 +52,6 @@ public final class FTypeRef
             if (!nullable) stackType = DOUBLE;
           }
           break;
-        /*
         case 'I':
           if (typeName.equals("Int"))
           {
@@ -60,7 +59,6 @@ public final class FTypeRef
             if (!nullable) stackType = LONG;
           }
           break;
-        */
         case 'O':
           if (typeName.equals("Obj")) mask |= SYS_OBJ;
           break;
@@ -119,6 +117,11 @@ public final class FTypeRef
   public boolean isInt() { return (mask & SYS_INT) != 0; }
 
   /**
+   * Is this sys::Int, long primitive
+   */
+  public boolean isIntPrimitive() { return stackType == LONG && isInt(); }
+
+  /**
    * Is this sys::Float or sys::Float?
    */
   public boolean isFloat() { return (mask & SYS_FLOAT) != 0; }
@@ -153,8 +156,9 @@ public final class FTypeRef
    */
   public String jnameBoxed()
   {
-    if (stackType == OBJ) return jname();
-    if (isBoolPrimitive()) return "java/lang/Boolean";
+    if (stackType == OBJ)   return jname();
+    if (isBoolPrimitive())  return "java/lang/Boolean";
+    if (isIntPrimitive())   return "java/lang/Long";
     if (isFloatPrimitive()) return "java/lang/Double";
     throw new IllegalStateException(signature);
   }

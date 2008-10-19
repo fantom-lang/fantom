@@ -260,9 +260,21 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
 
   private void loadInt()
   {
-    int index = u2();
-    int field = emit.field(podClass + ".I" + index + ":Ljava/lang/Long;");
-    code.op2(GETSTATIC, field);
+//    int index = u2();
+//    int field = emit.field(podClass + ".I" + index + ":Ljava/lang/Long;");
+//    code.op2(GETSTATIC, field);
+    try
+    {
+      Long val = pod.readLiterals().integer(u2());
+      long i = val.longValue();
+      if (i == 0L) code.op(LCONST_0);
+      else if (i == 1L) code.op(LCONST_1);
+      else code.op2(LDC2_W, emit.longConst(val));
+    }
+    catch (java.io.IOException e)
+    {
+      throw new RuntimeException(e.toString(), e);
+    }
   }
 
   private void loadFloat()
@@ -373,6 +385,7 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     switch (stackType)
     {
       case FTypeRef.INT:    return loadVarInt(code, jindex);
+      case FTypeRef.LONG:   return loadVarLong(code, jindex);
       case FTypeRef.DOUBLE: return loadVarDouble(code, jindex);
       case FTypeRef.OBJ:    return loadVarObj(code, jindex);
       default: throw new IllegalStateException("Register " + jindex + " " + (char)stackType);
@@ -390,6 +403,19 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
       default: code.op1(ILOAD, jindex); break;
     }
     return jindex+1;
+  }
+
+  private static int loadVarLong(CodeEmit code, int jindex)
+  {
+    switch (jindex)
+    {
+      case 0:  code.op(LLOAD_0); break;
+      case 1:  code.op(LLOAD_1); break;
+      case 2:  code.op(LLOAD_2); break;
+      case 3:  code.op(LLOAD_3); break;
+      default: code.op1(LLOAD, jindex); break;
+    }
+    return jindex+2;
   }
 
   private static int loadVarDouble(CodeEmit code, int jindex)
@@ -433,6 +459,7 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     switch (stackType)
     {
       case FTypeRef.INT:    storeVarInt(jindex); break;
+      case FTypeRef.LONG:   storeVarLong(jindex); break;
       case FTypeRef.DOUBLE: storeVarDouble(jindex); break;
       case FTypeRef.OBJ:    storeVarObj(jindex); break;
       default: throw new IllegalStateException("Register " + jindex + " " + (char)stackType);
@@ -448,6 +475,18 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
       case 2:  code.op(ISTORE_2); break;
       case 3:  code.op(ISTORE_3); break;
       default: code.op1(ISTORE, jindex); break;
+    }
+  }
+
+  private void storeVarLong(int jindex)
+  {
+    switch (jindex)
+    {
+      case 0:  code.op(LSTORE_0); break;
+      case 1:  code.op(LSTORE_1); break;
+      case 2:  code.op(LSTORE_2); break;
+      case 3:  code.op(LSTORE_3); break;
+      default: code.op1(LSTORE, jindex); break;
     }
   }
 
@@ -577,13 +616,12 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
   private void callMixinVirtual()
   {
     int index = u2();
-    int[] m = pod.methodRef(index).val;
-    int nargs = m.length-3;
+    int nargs = pod.methodRef(index).toInvokeInterfaceNumArgs(pod);
 
     String sig = pod.jcall(index, CallMixinVirtual).sig;
     int method = emit.interfaceRef(sig);
     code.op2(INVOKEINTERFACE, method);
-    code.info.u1(nargs+1);
+    code.info.u1(nargs);
     code.info.u1(0);
   }
 
@@ -701,7 +739,7 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
 
   private void compare()
   {
-    if (parent.Compare == 0) parent.Compare = emit.method("fanx/util/OpUtil.compare(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Long;");
+    if (parent.Compare == 0) parent.Compare = emit.method("fanx/util/OpUtil.compare(Ljava/lang/Object;Ljava/lang/Object;)J");
     code.op2(INVOKESTATIC, parent.Compare);
   }
 
@@ -896,7 +934,7 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
       case 'A': return ARETURN;
       case 'D': return DRETURN;
       case 'I': return IRETURN;
-      case 'L': return LRETURN;
+      case 'J': return LRETURN;
       case 'V': return RETURN;
       case 'Z': return IRETURN;
       default: throw new IllegalStateException(""+(char)retStackType);
@@ -990,7 +1028,6 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
   {
     int count = u2();
 
-    loadIntVal();
     code.op(L2I);
     int start = code.pos();
     code.op(TABLESWITCH);
@@ -1024,6 +1061,15 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     FTypeRef from = pod.typeRef(u2());
     FTypeRef to   = pod.typeRef(u2());
 
+    // short circuit if types exactly the same
+    if (from == to)
+    {
+// TODO
+//System.out.println("WARNING: coerce " + from + " => " + to);
+      if (to.isRef()) code.op2(CHECKCAST, emit.cls(to.jname()));
+      return;
+    }
+
     // Bool boxing/unboxing
     if (from.isBoolPrimitive())
     {
@@ -1033,6 +1079,18 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     if (to.isBoolPrimitive())
     {
       if (from.isRef()) { boolUnbox(!from.isBool()); return; }
+      throw new IllegalStateException("Coerce " + from  + " => " + to);
+    }
+
+    // Int boxing/unboxing
+    if (from.isIntPrimitive())
+    {
+      if (to.isRef()) { intBox(); return; }
+      throw new IllegalStateException("Coerce " + from  + " => " + to);
+    }
+    if (to.isIntPrimitive())
+    {
+      if (from.isRef()) { intUnbox(!from.isInt()); return; }
       throw new IllegalStateException("Coerce " + from  + " => " + to);
     }
 
@@ -1132,6 +1190,19 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     code.op2(INVOKEVIRTUAL, parent.BoolUnbox);
   }
 
+  private void intBox()
+  {
+    if (parent.IntBox == 0) parent.IntBox = emit.method("java/lang/Long.valueOf(J)Ljava/lang/Long;");
+    code.op2(INVOKESTATIC, parent.IntBox);
+  }
+
+  private void intUnbox(boolean cast)
+  {
+    if (cast) code.op2(CHECKCAST, emit.cls("java/lang/Long"));
+    if (parent.IntUnbox== 0) parent.IntUnbox = emit.method("java/lang/Long.longValue()J");
+    code.op2(INVOKEVIRTUAL, parent.IntUnbox);
+  }
+
   private void floatBox()
   {
     if (parent.FloatBox == 0) parent.FloatBox = emit.method("java/lang/Double.valueOf(D)Ljava/lang/Double;");
@@ -1143,12 +1214,6 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     if (cast) code.op2(CHECKCAST, emit.cls("java/lang/Double"));
     if (parent.FloatUnbox== 0) parent.FloatUnbox = emit.method("java/lang/Double.doubleValue()D");
     code.op2(INVOKEVIRTUAL, parent.FloatUnbox);
-  }
-
-  private void loadIntVal()
-  {
-    if (parent.IntVal == 0) parent.IntVal = emit.method("java/lang/Long.longValue()J");
-    code.op2(INVOKEVIRTUAL, parent.IntVal);
   }
 
   private void typeToNullable()

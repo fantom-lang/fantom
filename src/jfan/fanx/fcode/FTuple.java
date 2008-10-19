@@ -40,6 +40,7 @@ public class FTuple
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
+  /*
   public int hashCode()
   {
     if (hashCode == 0)
@@ -59,6 +60,7 @@ public class FTuple
       if (val[i] != x.val[i]) return false;
     return true;
   }
+  */
 
   public String toString()
   {
@@ -73,10 +75,29 @@ public class FTuple
     return s.toString();
   }
 
+  /**
+   * Get this MethodRef's number of arguments for an invokeinterface
+   * operation taking into account wide parameters.
+   */
+  public int toInvokeInterfaceNumArgs(FPod pod)
+  {
+    if (this.iiNumArgs < 0)
+    {
+      int numArgs = 1;
+      for (int i=3; i<val.length; ++i)
+      {
+        FTypeRef tr = pod.typeRef(val[i]);
+        numArgs += tr.isWide() ? 2 : 1;
+      }
+      this.iiNumArgs = numArgs;
+    }
+    return this.iiNumArgs;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   public int[] val;
-  private int hashCode = 0;
+  private int iiNumArgs = -1;
 }
