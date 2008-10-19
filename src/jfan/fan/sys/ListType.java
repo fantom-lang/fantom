@@ -35,7 +35,7 @@ public class ListType
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public final Long hash()
+  public final long hash()
   {
     return FanStr.hash(signature());
   }

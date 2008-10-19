@@ -158,7 +158,7 @@ public class WidgetPeer
       if (r == null)
         c.redraw();
       else
-        c.redraw(r.x.intValue(), r.y.intValue(), r.w.intValue(), r.h.intValue(), true);
+        c.redraw((int)r.x, (int)r.y, (int)r.w, (int)r.h, true);
     }
   }
 
@@ -253,7 +253,7 @@ public class WidgetPeer
 
   static Key toKey(int keyCode, int stateMask)
   {
-    Key key = Key.fromMask(Long.valueOf(keyCode));
+    Key key = Key.fromMask(keyCode);
     if ((stateMask & SWT.SHIFT) != 0)   key = key.plus(Key.shift);
     if ((stateMask & SWT.ALT) != 0)     key = key.plus(Key.alt);
     if ((stateMask & SWT.CTRL) != 0)    key = key.plus(Key.ctrl);
@@ -479,32 +479,32 @@ public class WidgetPeer
 
   static fan.fwt.Point point(int x, int y)
   {
-    return fan.fwt.Point.make(Long.valueOf(x), Long.valueOf(y));
+    return fan.fwt.Point.make(x, y);
   }
 
   static fan.fwt.Point point(Point pt)
   {
-    return fan.fwt.Point.make(Long.valueOf(pt.x), Long.valueOf(pt.y));
+    return fan.fwt.Point.make(pt.x, pt.y);
   }
 
   static fan.fwt.Size size(int w, int h)
   {
-    return fan.fwt.Size.make(Long.valueOf(w), Long.valueOf(h));
+    return fan.fwt.Size.make(w, h);
   }
 
   static fan.fwt.Size size(Point pt)
   {
-    return fan.fwt.Size.make(Long.valueOf(pt.x), Long.valueOf(pt.y));
+    return fan.fwt.Size.make(pt.x, pt.y);
   }
 
   static fan.fwt.Rect rect(Rectangle r)
   {
-    return fan.fwt.Rect.make(Long.valueOf(r.x), Long.valueOf(r.y), Long.valueOf(r.width), Long.valueOf(r.height));
+    return fan.fwt.Rect.make(r.x, r.y, r.width, r.height);
   }
 
   static Rectangle rect(fan.fwt.Rect r)
   {
-    return new Rectangle(r.x.intValue(), r.y.intValue(), r.w.intValue(), r.h.intValue());
+    return new Rectangle((int)r.x, (int)r.y, (int)r.w, (int)r.h);
   }
 
   static int style(Halign halign)
@@ -525,7 +525,7 @@ public class WidgetPeer
   static int accelerator(Key key)
   {
     if (key == null) return 0;
-    return key.mask.intValue();
+    return (int)key.mask;
   }
 
 //////////////////////////////////////////////////////////////////////////

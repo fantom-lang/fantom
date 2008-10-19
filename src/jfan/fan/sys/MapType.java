@@ -36,7 +36,7 @@ public class MapType
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public Long hash()
+  public long hash()
   {
     return FanStr.hash(signature());
   }

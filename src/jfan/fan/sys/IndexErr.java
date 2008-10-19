@@ -18,7 +18,7 @@ public class IndexErr
 // Java Convenience
 //////////////////////////////////////////////////////////////////////////
 
-  public static IndexErr make(Long index)   { return make(String.valueOf(index)); }
+  public static IndexErr make(long index)   { return make(String.valueOf(index)); }
   public static IndexErr make(Range index) { return make(String.valueOf(index)); }
 
 //////////////////////////////////////////////////////////////////////////

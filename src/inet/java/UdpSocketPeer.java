@@ -108,13 +108,13 @@ public class UdpSocketPeer
     }
   }
 
-  public UdpSocket connect(UdpSocket fan, IpAddress addr, Long port)
+  public UdpSocket connect(UdpSocket fan, IpAddress addr, long port)
   {
     try
     {
-      connect(new InetSocketAddress(addr.peer.java, port.intValue()));
+      connect(new InetSocketAddress(addr.peer.java, (int)port));
       this.remoteAddr = addr;
-      this.remotePort = port.intValue();
+      this.remotePort = (int)port;
       return fan;
     }
     catch (IOException e)
@@ -249,11 +249,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Long getReceiveBufferSize(UdpSocket fan)
+  public long getReceiveBufferSize(UdpSocket fan)
   {
     try
     {
-      return Long.valueOf(getReceiveBufferSize());
+      return getReceiveBufferSize();
     }
     catch (IOException e)
     {
@@ -261,11 +261,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setReceiveBufferSize(UdpSocket fan, Long v)
+  public void setReceiveBufferSize(UdpSocket fan, long v)
   {
     try
     {
-      setReceiveBufferSize(v.intValue());
+      setReceiveBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -273,11 +273,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Long getSendBufferSize(UdpSocket fan)
+  public long getSendBufferSize(UdpSocket fan)
   {
     try
     {
-      return Long.valueOf(getSendBufferSize());
+      return getSendBufferSize();
     }
     catch (IOException e)
     {
@@ -285,11 +285,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setSendBufferSize(UdpSocket fan, Long v)
+  public void setSendBufferSize(UdpSocket fan, long v)
   {
     try
     {
-      setSendBufferSize(v.intValue());
+      setSendBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -350,11 +350,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Long getTrafficClass(UdpSocket fan)
+  public long getTrafficClass(UdpSocket fan)
   {
     try
     {
-      return Long.valueOf(getTrafficClass());
+      return getTrafficClass();
     }
     catch (IOException e)
     {
@@ -362,11 +362,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setTrafficClass(UdpSocket fan, Long v)
+  public void setTrafficClass(UdpSocket fan, long v)
   {
     try
     {
-      setTrafficClass(v.intValue());
+      setTrafficClass((int)v);
     }
     catch (IOException e)
     {

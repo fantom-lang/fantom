@@ -88,7 +88,7 @@ public final class Version
       return false;
   }
 
-  public Long compare(Object obj)
+  public long compare(Object obj)
   {
     Version that = (Version)obj;
     List a = this.segments;
@@ -110,7 +110,7 @@ public final class Version
     return toStr().hashCode();
   }
 
-  public Long hash()
+  public long hash()
   {
     return FanStr.hash(toStr());
   }
@@ -149,7 +149,7 @@ public final class Version
     return ((Long)segments.get(index)).intValue();
   }
 
-  public Long major()
+  public long major()
   {
     return (Long)segments.get(0);
   }

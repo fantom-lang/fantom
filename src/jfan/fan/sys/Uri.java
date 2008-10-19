@@ -177,15 +177,15 @@ public final class Uri
         String seg = (String)path.get(i);
         if (seg.equals(".") && (path.sz() > 1 || host != null))
         {
-          path.removeAt(Long.valueOf(i));
+          path.removeAt(i);
           modified = true;
           dotLast = true;
           i -= 1;
         }
         else if (seg.equals("..") && i > 0 && !path.get(i-1).toString().equals(".."))
         {
-          path.removeAt(Long.valueOf(i));
-          path.removeAt(Long.valueOf(i-1));
+          path.removeAt(i);
+          path.removeAt(i-1);
           modified = true;
           i -= 2;
           dotLast = true;
@@ -694,7 +694,7 @@ public final class Uri
     return str.hashCode();
   }
 
-  public Long hash()
+  public long hash()
   {
     return FanStr.hash(str);
   }
@@ -996,7 +996,7 @@ public final class Uri
     else
     {
       // slice my path
-      t.path = this.path.slice(Range.makeInclusive(Long.valueOf(d), FanInt.NegOne));
+      t.path = this.path.slice(Range.makeInclusive(d, -1));
 
       // insert .. backup if needed
       int backup = base.path.sz() - d;

@@ -362,7 +362,7 @@ public class FileBuf
 
   class FileBufOutStream extends OutStream
   {
-    public final OutStream write(Long v) { return w(v.intValue()); }
+    public final OutStream write(long v) { return w((int)v); }
     public final OutStream w(int v)
     {
       try
@@ -376,11 +376,11 @@ public class FileBuf
       }
     }
 
-    public OutStream writeBuf(Buf other, Long n)
+    public OutStream writeBuf(Buf other, long n)
     {
       try
       {
-        other.pipeTo(fp, n.longValue());
+        other.pipeTo(fp, n);
         return this;
       }
       catch (IOException e)
@@ -415,11 +415,11 @@ public class FileBuf
       }
     }
 
-    public Long readBuf(Buf other, Long n)
+    public Long readBuf(Buf other, long n)
     {
       try
       {
-        long read = other.pipeFrom(fp, n.longValue());
+        long read = other.pipeFrom(fp, n);
         if (read < 0) return null;
         return Long.valueOf(read);
       }
@@ -429,7 +429,7 @@ public class FileBuf
       }
     }
 
-    public InStream unread(Long n) { return unread(n.intValue()); }
+    public InStream unread(long n) { return unread((int)n); }
     public InStream unread(int n)
     {
       try

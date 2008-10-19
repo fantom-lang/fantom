@@ -45,7 +45,7 @@ public class SysOutStream
 // OutStream
 //////////////////////////////////////////////////////////////////////////
 
-  public final OutStream write(Long b) { return w(b.intValue()); }
+  public final OutStream write(long b) { return w((int)b); }
   public OutStream w(int v)
   {
     try
@@ -60,11 +60,11 @@ public class SysOutStream
   }
 
   public final OutStream writeBuf(Buf buf) { return writeBuf(buf, buf.remaining()); }
-  public OutStream writeBuf(Buf buf, Long n)
+  public OutStream writeBuf(Buf buf, long n)
   {
     try
     {
-      buf.pipeTo(out, n.longValue());
+      buf.pipeTo(out, n);
       return this;
     }
     catch (IOException e)
@@ -117,13 +117,13 @@ public class SysOutStream
   static class JavaOutputStream extends OutputStream
   {
     JavaOutputStream(OutStream out) { this.out = out; }
-    public void write(int b) { out.write(Long.valueOf(b)); }
+    public void write(int b) { out.write((long)b); }
     public void write(byte[] b, int off, int len)
     {
       buf.buf = b;
       buf.pos = off;
       buf.size = b.length;
-      out.writeBuf(buf, Long.valueOf(len));
+      out.writeBuf(buf, len);
       buf.buf = null;
     }
     public void close() { out.close(); }

@@ -124,7 +124,7 @@ public class ZipEntryFile
     throw UnsupportedErr.make("ZipEntryFile.open").val;
   }
 
-  public Buf mmap(String mode, Long pos, Long size)
+  public Buf mmap(String mode, long pos, Long size)
   {
     throw UnsupportedErr.make("ZipEntryFile.mmap").val;
   }

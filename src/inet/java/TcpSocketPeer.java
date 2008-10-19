@@ -102,13 +102,13 @@ public class TcpSocketPeer
     }
   }
 
-  public TcpSocket connect(TcpSocket fan, IpAddress addr, Long port, Duration timeout)
+  public TcpSocket connect(TcpSocket fan, IpAddress addr, long port, Duration timeout)
   {
     try
     {
       // connect
       int javaTimeout = (timeout == null) ? 0 : (int)timeout.millis();
-      connect(new InetSocketAddress(addr.peer.java, port.intValue()), javaTimeout);
+      connect(new InetSocketAddress(addr.peer.java, (int)port), javaTimeout);
       connected(fan);
       return fan;
     }
@@ -287,11 +287,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Long getReceiveBufferSize(TcpSocket fan)
+  public long getReceiveBufferSize(TcpSocket fan)
   {
     try
     {
-      return Long.valueOf(getReceiveBufferSize());
+      return getReceiveBufferSize();
     }
     catch (IOException e)
     {
@@ -299,11 +299,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setReceiveBufferSize(TcpSocket fan, Long v)
+  public void setReceiveBufferSize(TcpSocket fan, long v)
   {
     try
     {
-      setReceiveBufferSize(v.intValue());
+      setReceiveBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -311,11 +311,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Long getSendBufferSize(TcpSocket fan)
+  public long getSendBufferSize(TcpSocket fan)
   {
     try
     {
-      return Long.valueOf(getSendBufferSize());
+      return getSendBufferSize();
     }
     catch (IOException e)
     {
@@ -323,11 +323,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setSendBufferSize(TcpSocket fan, Long v)
+  public void setSendBufferSize(TcpSocket fan, long v)
   {
     try
     {
-      setSendBufferSize(v.intValue());
+      setSendBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -441,11 +441,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Long getTrafficClass(TcpSocket fan)
+  public long getTrafficClass(TcpSocket fan)
   {
     try
     {
-      return Long.valueOf(getTrafficClass());
+      return getTrafficClass();
     }
     catch (IOException e)
     {
@@ -453,11 +453,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setTrafficClass(TcpSocket fan, Long v)
+  public void setTrafficClass(TcpSocket fan, long v)
   {
     try
     {
-      setTrafficClass(v.intValue());
+      setTrafficClass((int)v);
     }
     catch (IOException e)
     {

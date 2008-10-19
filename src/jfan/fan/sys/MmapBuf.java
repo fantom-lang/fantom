@@ -180,12 +180,12 @@ public class MmapBuf
 // Buf API
 //////////////////////////////////////////////////////////////////////////
 
-  public Long capacity()
+  public long capacity()
   {
     return size();
   }
 
-  public void capacity(Long x)
+  public void capacity(long x)
   {
     throw UnsupportedErr.make("mmap capacity fixed").val;
   }
@@ -228,16 +228,16 @@ public class MmapBuf
 
   class MmapBufOutStream extends OutStream
   {
-    public final OutStream write(Long v) { return w(v.intValue()); }
+    public final OutStream write(long v) { return w((int)v); }
     public final OutStream w(int v)
     {
       mmap.put((byte)v);
       return this;
     }
 
-    public OutStream writeBuf(Buf other, Long n)
+    public OutStream writeBuf(Buf other, long n)
     {
-      other.pipeTo(mmap, n.intValue());
+      other.pipeTo(mmap, (int)n);
       return this;
     }
 
@@ -260,14 +260,14 @@ public class MmapBuf
       return mmap.get() & 0xff;
     }
 
-    public Long readBuf(Buf other, Long n)
+    public Long readBuf(Buf other, long n)
     {
-      int read = other.pipeFrom(mmap, n.intValue());
+      int read = other.pipeFrom(mmap, (int)n);
       if (read < 0) return null;
       return Long.valueOf(read);
     }
 
-    public InStream unread(Long n) { return unread(n.intValue()); }
+    public InStream unread(long n) { return unread((int)n); }
     public InStream unread(int n)
     {
       mmap.put(mmap.position()-1, (byte)n);

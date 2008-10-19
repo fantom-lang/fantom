@@ -36,7 +36,7 @@ class Build : BuildGroup
       //`webServlet/build.fan`,
       `wisp/build.fan`,
       `fandoc/build.fan`,
-      `docCompiler/build.fan`,
+//      `docCompiler/build.fan`,
       `doc/build.fan`,
       `sql/build.fan`,
       `email/build.fan`,

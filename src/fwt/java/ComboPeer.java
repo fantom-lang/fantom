@@ -77,7 +77,7 @@ public class ComboPeer
     public void set(Widget w, Font v) { ((Combo)w).setFont(v); }
   };
 
-  // Int selectedIndex := 0
+  // Int? selectedIndex := 0
   public Long selectedIndex(fan.fwt.Combo self) { return selectedIndex.get(); }
   public void selectedIndex(fan.fwt.Combo self, Long v) { selectedIndex.set(v); }
   public final Prop.IntProp selectedIndex = new Prop.IntProp(this, 0, true)

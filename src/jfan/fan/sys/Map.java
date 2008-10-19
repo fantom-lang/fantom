@@ -69,9 +69,9 @@ public final class Map
     return map.size() == 0;
   }
 
-  public final Long size()
+  public final long size()
   {
-    return Long.valueOf(map.size());
+    return map.size();
   }
 
   public final Object get(Object key)
@@ -215,9 +215,9 @@ public final class Map
     return false;
   }
 
-  public final Long hash()
+  public final long hash()
   {
-    return Long.valueOf(map.hashCode());
+    return map.hashCode();
   }
 
   public final String toStr()

@@ -74,13 +74,13 @@ public class TcpListenerPeer
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public TcpListener bind(TcpListener fan, IpAddress addr, Long port, Long backlog)
+  public TcpListener bind(TcpListener fan, IpAddress addr, Long port, long backlog)
   {
     try
     {
       InetAddress javaAddr = (addr == null) ? null : addr.peer.java;
       int javaPort = (port == null) ? 0 : port.intValue();
-      bind(new InetSocketAddress(javaAddr, javaPort), backlog.intValue());
+      bind(new InetSocketAddress(javaAddr, javaPort), (int)backlog);
       return fan;
     }
     catch (IOException e)
@@ -121,11 +121,11 @@ public class TcpListenerPeer
 // Socket Options
 //////////////////////////////////////////////////////////////////////////
 
-  public Long getReceiveBufferSize(TcpListener fan)
+  public long getReceiveBufferSize(TcpListener fan)
   {
     try
     {
-      return Long.valueOf(getReceiveBufferSize());
+      return getReceiveBufferSize();
     }
     catch (IOException e)
     {
@@ -133,11 +133,11 @@ public class TcpListenerPeer
     }
   }
 
-  public void setReceiveBufferSize(TcpListener fan, Long v)
+  public void setReceiveBufferSize(TcpListener fan, long v)
   {
     try
     {
-      setReceiveBufferSize(v.intValue());
+      setReceiveBufferSize((int)v);
     }
     catch (IOException e)
     {

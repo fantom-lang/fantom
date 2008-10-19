@@ -221,7 +221,7 @@ public class Thread
     return name.hashCode();
   }
 
-  public final Long hash()
+  public final long hash()
   {
     return FanStr.hash(name);
   }

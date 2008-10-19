@@ -27,14 +27,14 @@ public final class List
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static List make(Type of, Long capacity)
+  public static List make(Type of, long capacity)
   {
-    return new List(of, capacity.intValue());
+    return new List(of, (int)capacity);
   }
 
-  public static List makeObj(Long capacity)
+  public static List makeObj(long capacity)
   {
-    return new List(Sys.ObjType.toNullable(), capacity.intValue());
+    return new List(Sys.ObjType.toNullable(), (int)capacity);
   }
 
   public List(Type of, Object[] values)
@@ -105,15 +105,15 @@ public final class List
     return size == 0;
   }
 
-  public final Long size()
+  public final long size()
   {
-    return Long.valueOf(size);
+    return size;
   }
 
-  public final void size(Long s)
+  public final void size(long s)
   {
     modify();
-    int newSize = s.intValue();
+    int newSize = (int)s;
     if (newSize > size)
     {
       Object[] temp = new Object[newSize];
@@ -130,26 +130,26 @@ public final class List
     }
   }
 
-  public final Long capacity()
+  public final long capacity()
   {
-    return Long.valueOf(values.length);
+    return values.length;
   }
 
-  public final void capacity(Long c)
+  public final void capacity(long c)
   {
     modify();
-    int newCapacity = c.intValue();
+    int newCapacity = (int)c;
     if (newCapacity < size) throw ArgErr.make("capacity < size").val;
     Object[] temp = new Object[newCapacity];
     System.arraycopy(values, 0, temp, 0, size);
     values = temp;
   }
 
-  public final Object get(Long index)
+  public final Object get(long index)
   {
     try
     {
-      int i = index.intValue();
+      int i = (int)index;
       if (i < 0) i = size + i;
       if (i >= size) throw IndexErr.make(index).val;
       return values[i];
@@ -207,10 +207,10 @@ public final class List
   }
 
   public final Long index(Object value) { return index(value, 0L); }
-  public final Long index(Object value, Long off)
+  public final Long index(Object value, long off)
   {
     if (size == 0) return null;
-    int start = off.intValue();
+    int start = (int)off;
     if (start < 0) start = size + start;
     if (start >= size) throw IndexErr.make(off).val;
 
@@ -240,10 +240,10 @@ public final class List
   }
 
   public final Long indexSame(Object value) { return indexSame(value, 0L); }
-  public final Long indexSame(Object value, Long off)
+  public final Long indexSame(Object value, long off)
   {
     if (size == 0) return null;
-    int start = off.intValue();
+    int start = (int)off;
     if (start < 0) start = size + start;
     if (start >= size) throw IndexErr.make(off).val;
 
@@ -279,15 +279,15 @@ public final class List
     return new List(of, dup);
   }
 
-  public final Long hash()
+  public final long hash()
   {
     long hash = 33;
     for (int i=0; i<size; ++i)
     {
       Object obj = values[i];
-      if (obj != null) hash ^= hash(obj).longValue();
+      if (obj != null) hash ^= hash(obj);
     }
-    return Long.valueOf(hash);
+    return hash;
   }
 
   public final boolean equals(Object that)
@@ -308,12 +308,12 @@ public final class List
 // Modification
 //////////////////////////////////////////////////////////////////////////
 
-  public final List set(Long index, Object value)
+  public final List set(long index, Object value)
   {
     modify();
     try
     {
-      int i = index.intValue();
+      int i = (int)index;
       if (i < 0) i = size + i;
       if (i >= size) throw IndexErr.make(index).val;
       values[i] = value;
@@ -337,10 +337,10 @@ public final class List
     return insertAll(size, list);
   }
 
-  public final List insert(Long index, Object value)
+  public final List insert(long index, Object value)
   {
     // modify in insert(int, Obj)
-    int i = index.intValue();
+    int i = (int)index;
     if (i < 0) i = size + i;
     if (i > size) throw IndexErr.make(index).val;
     return insert(i, value);
@@ -358,10 +358,10 @@ public final class List
     return this;
   }
 
-  public final List insertAll(Long index, List list)
+  public final List insertAll(long index, List list)
   {
     // modify in insertAll(int, List)
-    int i = index.intValue();
+    int i = (int)index;
     if (i < 0) i = size + i;
     if (i > size) throw IndexErr.make(index).val;
     return insertAll(i, list);
@@ -396,10 +396,10 @@ public final class List
     return removeAt(index);
   }
 
-  public final Object removeAt(Long index)
+  public final Object removeAt(long index)
   {
     modify();
-    int i = index.intValue();
+    int i = (int)index;
     if (i < 0) i = size + i;
     if (i >= size) throw IndexErr.make(index).val;
     Object old = values[i];
@@ -702,8 +702,8 @@ public final class List
     return this;
   }
 
-  public final Long binarySearch(Object key) { return binarySearch(key, null); }
-  public final Long binarySearch(Object key, Func f)
+  public final long binarySearch(Object key) { return binarySearch(key, null); }
+  public final long binarySearch(Object key, Func f)
   {
     Comparator c = toComparator(f);
     Object[] values = this.values;
@@ -717,9 +717,9 @@ public final class List
       else if (cmp > 0)
         high = probe - 1;
       else
-        return Long.valueOf(probe);
+        return probe;
     }
-    return Long.valueOf(-(low + 1));
+    return -(low + 1);
   }
 
   public final List reverse()
@@ -738,7 +738,7 @@ public final class List
     return this;
   }
 
-  public final List swap(Long a, Long b)
+  public final List swap(long a, long b)
   {
     // modify in set()
     Object temp = get(a);
@@ -918,7 +918,7 @@ public final class List
   }
   static final Comparator defaultComparator = new Comparator()
   {
-    public int compare(Object a, Object b) { return OpUtil.compare(a, b).intValue(); }
+    public int compare(Object a, Object b) { return (int)OpUtil.compare(a, b); }
   };
 
   static Comparator toReverseComparator(final Func f)
@@ -931,7 +931,7 @@ public final class List
   }
   static final Comparator defaultReverseComparator = new Comparator()
   {
-    public int compare(Object a, Object b) { return OpUtil.compare(b, a).intValue(); }
+    public int compare(Object a, Object b) { return (int)OpUtil.compare(b, a); }
   };
 
 //////////////////////////////////////////////////////////////////////////
