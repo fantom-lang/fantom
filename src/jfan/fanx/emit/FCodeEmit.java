@@ -25,15 +25,16 @@ public class FCodeEmit
 
   public FCodeEmit(FTypeEmit parent, FMethod fmethod, CodeEmit code)
   {
-    this(parent, fmethod.code, code, parent.pod.typeRef(fmethod.ret));
+    this(parent, fmethod.code, code,
+         initRegs(parent.pod,  fmethod.isStatic(), fmethod.vars),
+         parent.pod.typeRef(fmethod.ret));
     this.fmethod    = fmethod;
-    this.vars       = fmethod.vars;
-    this.isStatic   = (fmethod.flags & FConst.Static) != 0;
-    code.maxLocals  = fmethod.maxLocals();
-    code.maxStack   = fmethod.maxStack;
+// TODO: we can define maxLocals from regs now
+    code.maxLocals  = fmethod.maxLocals() * 2;
+    code.maxStack   = fmethod.maxStack * 2;
   }
 
-  public FCodeEmit(FTypeEmit parent, FBuf fcode, CodeEmit code, FTypeRef ret)
+  public FCodeEmit(FTypeEmit parent, FBuf fcode, CodeEmit code, Reg[] regs, FTypeRef ret)
   {
     this.pod        = parent.pod;
     this.parent     = parent;
@@ -43,6 +44,7 @@ public class FCodeEmit
     this.code       = code;
     this.podClass   = "fan/" + pod.podName + "/$Pod";
     this.reloc      = new int[len];
+    this.regs       = regs;
     this.ret        = ret;
   }
 
@@ -265,9 +267,11 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
 
   private void loadFloat()
   {
-    int index = u2();
-    int field = emit.field(podClass + ".F" + index + ":Ljava/lang/Double;");
-    code.op2(GETSTATIC, field);
+    Double val = pod.readLiterals().floats(u2());
+    double d = val.doubleValue();
+    if (d == 0.0) code.op(DCONST_0);
+    else if (d == 1.0) code.op(DCONST_1);
+    else code.op2(LDC2_W, emit.doubleConst(val));
   }
 
   private void loadDecimal()
@@ -351,46 +355,60 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
 
   private void loadVar()
   {
-    loadVar(u2());
+    Reg reg = reg(u2());
+    loadVar(code, reg.stackType, reg.jindex);
   }
 
-  private void loadVar(int index)
-  {
-    loadVar(code, varStackType(index), index);
-  }
-
-  static void loadVar(CodeEmit code, int stackType, int index)
+  /** Load variable onto stack using Java type and java index (which might
+      not map to Fan index.  Return next available java index */
+  static int loadVar(CodeEmit code, int stackType, int jindex)
   {
     switch (stackType)
     {
-      case FTypeRef.INT: loadVarInt(code, index); break;
-      case FTypeRef.OBJ: loadVarObj(code, index); break;
-      default: throw new IllegalStateException(""+(char)stackType);
+      case FTypeRef.INT:    return loadVarInt(code, jindex);
+      case FTypeRef.DOUBLE: return loadVarDouble(code, jindex);
+      case FTypeRef.OBJ:    return loadVarObj(code, jindex);
+      default: throw new IllegalStateException("Register " + jindex + " " + (char)stackType);
     }
   }
 
-  private static void loadVarInt(CodeEmit code, int index)
+  private static int loadVarInt(CodeEmit code, int jindex)
   {
-    switch (index)
+    switch (jindex)
     {
       case 0:  code.op(ILOAD_0); break;
       case 1:  code.op(ILOAD_1); break;
       case 2:  code.op(ILOAD_2); break;
       case 3:  code.op(ILOAD_3); break;
-      default: code.op1(ILOAD, index); break;
+      default: code.op1(ILOAD, jindex); break;
     }
+    return jindex+1;
   }
 
-  private static void loadVarObj(CodeEmit code, int index)
+  private static int loadVarDouble(CodeEmit code, int jindex)
   {
-    switch (index)
+    switch (jindex)
+    {
+      case 0:  code.op(DLOAD_0); break;
+      case 1:  code.op(DLOAD_1); break;
+      case 2:  code.op(DLOAD_2); break;
+      case 3:  code.op(DLOAD_3); break;
+      default: code.op1(DLOAD, jindex); break;
+    }
+    return jindex+2;
+  }
+
+  private static int loadVarObj(CodeEmit code, int jindex)
+  {
+    switch (jindex)
     {
       case 0:  code.op(ALOAD_0); break;
       case 1:  code.op(ALOAD_1); break;
       case 2:  code.op(ALOAD_2); break;
       case 3:  code.op(ALOAD_3); break;
-      default: code.op1(ALOAD, index); break;
+      default: code.op1(ALOAD, jindex); break;
     }
+    return jindex+1;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -399,40 +417,54 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
 
   private void storeVar()
   {
-    storeVar(u2());
+    Reg reg = reg(u2());
+    storeVar(reg.stackType, reg.jindex);
   }
 
-  private void storeVar(int index)
+  private void storeVar(int stackType, int jindex)
   {
-    switch (varStackType(index))
+    switch (stackType)
     {
-      case FTypeRef.INT: storeVarInt(index); break;
-      case FTypeRef.OBJ: storeVarObj(index); break;
-      default: throw new IllegalStateException(""+(char)varStackType(index));
+      case FTypeRef.INT:    storeVarInt(jindex); break;
+      case FTypeRef.DOUBLE: storeVarDouble(jindex); break;
+      case FTypeRef.OBJ:    storeVarObj(jindex); break;
+      default: throw new IllegalStateException("Register " + jindex + " " + (char)stackType);
     }
   }
 
-  private void storeVarInt(int index)
+  private void storeVarInt(int jindex)
   {
-    switch (index)
+    switch (jindex)
     {
       case 0:  code.op(ISTORE_0); break;
       case 1:  code.op(ISTORE_1); break;
       case 2:  code.op(ISTORE_2); break;
       case 3:  code.op(ISTORE_3); break;
-      default: code.op1(ISTORE, index); break;
+      default: code.op1(ISTORE, jindex); break;
     }
   }
 
-  private void storeVarObj(int index)
+  private void storeVarDouble(int jindex)
   {
-    switch (index)
+    switch (jindex)
+    {
+      case 0:  code.op(DSTORE_0); break;
+      case 1:  code.op(DSTORE_1); break;
+      case 2:  code.op(DSTORE_2); break;
+      case 3:  code.op(DSTORE_3); break;
+      default: code.op1(DSTORE, jindex); break;
+    }
+  }
+
+  private void storeVarObj(int jindex)
+  {
+    switch (jindex)
     {
       case 0:  code.op(ASTORE_0); break;
       case 1:  code.op(ASTORE_1); break;
       case 2:  code.op(ASTORE_2); break;
       case 3:  code.op(ASTORE_3); break;
-      default: code.op1(ASTORE, index); break;
+      default: code.op1(ASTORE, jindex); break;
     }
   }
 
@@ -855,7 +887,9 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     switch (retStackType)
     {
       case 'A': return ARETURN;
+      case 'D': return DRETURN;
       case 'I': return IRETURN;
+      case 'L': return LRETURN;
       case 'V': return RETURN;
       case 'Z': return IRETURN;
       default: throw new IllegalStateException(""+(char)retStackType);
@@ -870,8 +904,8 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     }
     else
     {
-      int typeRef = u2();
-      code.op(DUP);
+      FTypeRef typeRef = pod.typeRef(u2());
+      code.op(typeRef.isWide() ? DUP2 : DUP);
     }
   }
 
@@ -883,8 +917,8 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     }
     else
     {
-      int typeRef = u2();
-      code.op(POP);
+      FTypeRef typeRef = pod.typeRef(u2());
+      code.op(typeRef.isWide() ? POP2 : POP);
     }
   }
 
@@ -983,17 +1017,27 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     FTypeRef from = pod.typeRef(u2());
     FTypeRef to   = pod.typeRef(u2());
 
-    // Bool boxing
+    // Bool boxing/unboxing
     if (from.isBoolPrimitive())
     {
       if (to.isRef()) { boolBox(); return; }
       throw new IllegalStateException("Coerce " + from  + " => " + to);
     }
-
-    // Bool unboxing
     if (to.isBoolPrimitive())
     {
       if (from.isRef()) { boolUnbox(!from.isBool()); return; }
+      throw new IllegalStateException("Coerce " + from  + " => " + to);
+    }
+
+    // Float boxing/unboxing
+    if (from.isFloatPrimitive())
+    {
+      if (to.isRef()) { floatBox(); return; }
+      throw new IllegalStateException("Coerce " + from  + " => " + to);
+    }
+    if (to.isFloatPrimitive())
+    {
+      if (from.isRef()) { floatUnbox(!from.isFloat()); return; }
       throw new IllegalStateException("Coerce " + from  + " => " + to);
     }
 
@@ -1041,8 +1085,8 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     // create a new temporary local variable to stash stack pointer
     if (finallyEx < 0)
     {
-      finallyEx = fmethod.maxLocals();
-      finallySp = fmethod.maxLocals()+1;
+      finallyEx = code.maxLocals;
+      finallySp = code.maxLocals+1;
       code.maxLocals += 2;
     }
 
@@ -1056,7 +1100,7 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     code.op(ATHROW);             // rethrow it
 
     // generate start of finally block
-    storeVarObj(finallySp);      // stash stack pointer
+    code.op1(ASTORE, finallySp); // stash stack pointer
   }
 
   private void finallyEnd()
@@ -1067,17 +1111,6 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
-
-  private int varStackType(int index)
-  {
-    if (vars == null) throw new IllegalStateException("Use of variable outside of method");
-    if (!isStatic)
-    {
-      if (index == 0) return FTypeRef.OBJ; // assume this pointer
-      else --index;
-    }
-    return pod.typeRef(vars[index].type).stackType;
-  }
 
   private void boolBox()
   {
@@ -1090,6 +1123,19 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     if (cast) code.op2(CHECKCAST, emit.cls("java/lang/Boolean"));
     if (parent.BoolUnbox== 0) parent.BoolUnbox = emit.method("java/lang/Boolean.booleanValue()Z");
     code.op2(INVOKEVIRTUAL, parent.BoolUnbox);
+  }
+
+  private void floatBox()
+  {
+    if (parent.FloatBox == 0) parent.FloatBox = emit.method("java/lang/Double.valueOf(D)Ljava/lang/Double;");
+    code.op2(INVOKESTATIC, parent.FloatBox);
+  }
+
+  private void floatUnbox(boolean cast)
+  {
+    if (cast) code.op2(CHECKCAST, emit.cls("java/lang/Double"));
+    if (parent.FloatUnbox== 0) parent.FloatUnbox = emit.method("java/lang/Double.doubleValue()D");
+    code.op2(INVOKEVIRTUAL, parent.FloatUnbox);
   }
 
   private void loadIntVal()
@@ -1125,6 +1171,54 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
   private int u4() { return (buf[pos++] & 0xFF) << 24 | (buf[pos++] & 0xFF) << 16 | (buf[pos++] & 0xFF) << 8 | (buf[pos++] & 0xFF); }
 
 //////////////////////////////////////////////////////////////////////////
+// Reg
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Map to Java register info for the given Fan local variables.
+   * Registers are typed (so we know which XLOAD_X and XSTORE_X opcodes
+   * to use) and might be numbered differently (if using longs/doubles).
+   */
+  static Reg[] initRegs(FPod pod, boolean isStatic, FMethodVar[] vars)
+  {
+    Reg[] regs = new Reg[isStatic ? vars.length : vars.length+1];
+    int jindex = 0;
+    for (int i=0; i<regs.length; ++i)
+    {
+      Reg r = new Reg();
+      if (i == 0 && !isStatic)
+      {
+        // this pointer
+        r.stackType = FTypeRef.OBJ;
+        r.jindex = jindex;
+        ++jindex;
+      }
+      else
+      {
+        FTypeRef typeRef = pod.typeRef(vars[isStatic ? i : i - 1].type);
+        r.stackType = typeRef.stackType;
+        r.jindex = jindex;
+        jindex += typeRef.isWide() ? 2 : 1;
+      }
+      regs[i] = r;
+    }
+    return regs;
+  }
+
+  private Reg reg(int fanIndex)
+  {
+    if (regs == null) throw new IllegalStateException("Use of variable with undefined regs");
+    return regs[fanIndex];
+  }
+
+  static class Reg
+  {
+    public String toString() { return "Reg " + jindex + " " + (char)stackType; }
+    int stackType;  // FTypeRef.OBJ, LONG, INT, etc
+    int jindex;     // Java register number to use (might shift for longs/doubles)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
@@ -1141,8 +1235,7 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
   FPod pod;
   FTypeEmit parent;
   FMethod fmethod;     // maybe null
-  FMethodVar[] vars;   // method variables must be set for loadVar/storeVar
-  boolean isStatic;    // used to determine how to index vars
+  Reg[] regs;          // register mappnig must be set for loadVar/storeVar
   FTypeRef ret;        // return type
   byte[] buf;
   int len;

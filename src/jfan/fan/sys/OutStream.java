@@ -126,14 +126,14 @@ public class OutStream
                .w((int)(v >>> 0)  & 0xFF);
   }
 
-  public OutStream writeF4(Double x)
+  public OutStream writeF4(double x)
   {
-    return writeI4(Float.floatToIntBits(x.floatValue()));
+    return writeI4(Float.floatToIntBits((float)x));
   }
 
-  public OutStream writeF8(Double x)
+  public OutStream writeF8(double x)
   {
-    return writeI8(Double.doubleToLongBits(x.doubleValue()));
+    return writeI8(Double.doubleToLongBits(x));
   }
 
   public OutStream writeDecimal(BigDecimal x)

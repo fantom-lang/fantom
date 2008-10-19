@@ -233,17 +233,18 @@ public class FMethodEmit
 
       MethodEmit me = emit.emitMethod(name, mySig, jflags);
       CodeEmit code = me.emitCode();
-      code.maxLocals = 1+i;
-      code.maxStack = 1+i;
       code.op(ALOAD_0); // push this
+      int jindex = 1;
       for (int p=0; p<i; ++p)
       {
         // push args
         Param param = (Param)m.params().get(p);
-        FCodeEmit.loadVar(code, FanUtil.toJavaStackType(param.of()), p+1);
+        jindex = FCodeEmit.loadVar(code, FanUtil.toJavaStackType(param.of()), jindex);
       }
       code.op2(INVOKESTATIC, emit.method(parent + "$." + name + implSig));
       code.op(FCodeEmit.returnOp(FanUtil.toJavaStackType(m.returns())));
+      code.maxLocals = jindex;
+      code.maxStack = jindex+1;  // leave room for wide return
     }
   }
 
@@ -287,11 +288,10 @@ public class FMethodEmit
     // emit default arguments
     int maxLocals = method.maxLocals();
     int maxStack  = 16; // TODO - add additional default expr stack height
+    FCodeEmit.Reg[] regs = FCodeEmit.initRegs(emit.pod, isStatic, method.vars);
     for (int i=paramLen; i<method.paramCount; ++i)
     {
-      FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code, emit.pod.typeRef(method.ret));
-      e.vars = method.vars;
-      e.isStatic = isStatic;
+      FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code, regs, emit.pod.typeRef(method.ret));
       e.emit();
       maxStack = Math.max(maxStack, 2+i+8);
     }
@@ -380,11 +380,12 @@ public class FMethodEmit
    */
   private void pushArgs(CodeEmit code, boolean self, int count)
   {
-    if (self) code.op(ALOAD_0);
+    int jindex = 0;
+    if (self) { code.op(ALOAD_0); ++jindex; }
     for (int i=0; i<count; ++i)
     {
       FTypeRef var = emit.pod.typeRef(method.vars[i].type);
-      FCodeEmit.loadVar(code, var.stackType, self ? i+1 : i);
+      jindex = FCodeEmit.loadVar(code, var.stackType, jindex);
     }
   }
 

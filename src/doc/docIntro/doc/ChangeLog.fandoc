@@ -450,3 +450,5 @@
 
 *Build 1.0.34 (working)*
 - Roll fcode version for value-type support
+- Java runtime maps sys::Boolean to primitive boolean
+- Java runtime maps sys::Float to primitive double

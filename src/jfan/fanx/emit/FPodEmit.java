@@ -77,7 +77,8 @@ public class FPodEmit
     for (int i=0; i<literals.uris.size(); ++i)
       cls.getField("U"+i).set(null, literals.uris.get(i));
 
-    fpod.literals = null;
+// TODO
+//    fpod.literals = null;
   }
 
   private FPodEmit(FPod pod)

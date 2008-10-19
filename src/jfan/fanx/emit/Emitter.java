@@ -209,14 +209,13 @@ public class Emitter
   /**
    * Map a double literal into the constant pool.
    */
-  public int doubleConst(double v)
+  public int doubleConst(Double v)
   {
-    Double key = new Double(v);
-    CpDouble info = (CpDouble)cpDouble.get(key);
+    CpDouble info = (CpDouble)cpDouble.get(v);
     if (info == null)
     {
-      info = new CpDouble(v);
-      cpDouble.put(key, info);
+      info = new CpDouble(v.doubleValue());
+      cpDouble.put(v, info);
       add(info);
       add(new CpDummy()); // doubles take two entries
     }

@@ -23,10 +23,10 @@ public class FanNum
     return Long.valueOf(self.longValue());
   }
 
-  public static Double toFloat(Number self)
+  public static double toFloat(Number self)
   {
     if (self instanceof Double) return (Double)self;
-    return Double.valueOf(self.doubleValue());
+    return self.doubleValue();
   }
 
   public static BigDecimal toDecimal(Number self)

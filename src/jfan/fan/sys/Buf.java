@@ -235,9 +235,9 @@ public abstract class Buf
 
   public final Buf writeI8(Long x) { out.writeI8(x); return this; }
 
-  public final Buf writeF4(Double x) { out.writeF4(x); return this; }
+  public final Buf writeF4(double x) { out.writeF4(x); return this; }
 
-  public final Buf writeF8(Double x) { out.writeF8(x); return this; }
+  public final Buf writeF8(double x) { out.writeF8(x); return this; }
 
   public final Buf writeDecimal(BigDecimal x) { out.writeDecimal(x); return this; }
 
@@ -291,9 +291,9 @@ public abstract class Buf
 
   public final Long readS8() { return in.readS8(); }
 
-  public final Double readF4() { return in.readF4(); }
+  public final double readF4() { return in.readF4(); }
 
-  public final Double readF8() { return in.readF8(); }
+  public final double readF8() { return in.readF8(); }
 
   public final BigDecimal readDecimal() { return in.readDecimal(); }
 

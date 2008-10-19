@@ -17,6 +17,8 @@ public class FSlot
   implements FConst
 {
 
+  public final boolean isStatic() { return (flags & FConst.Static) != 0; }
+
   protected void readCommon(FStore.Input in) throws IOException
   {
     name  = in.name();
