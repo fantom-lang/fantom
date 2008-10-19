@@ -1176,4 +1176,36 @@ class CheckErrorsTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Value Types
+//////////////////////////////////////////////////////////////////////////
+
+  Void testValueTypes()
+  {
+    // errors
+    verifyErrors(
+     "class Foo
+      {
+        Int m00() { return (Int)(Obj)5ns } // ok - runtime failure
+        Float? m01() { return (Float?)(Obj)5ns } // ok - runtime failure
+        Bool m02() { return m00 === 0  }
+        Bool m03() { return 2f !== m01  }
+        Bool m04() { return m01 is Float  }
+        Bool m05() { return 6f is Float?  }
+        Bool m06() { return 5 isnot Num  }
+        Bool m07() { return m00 isnot Num  }
+        Obj? m08() { return m00 as Int  }
+        Obj? m09(Int? x) { return x as Int?  }
+      }",
+       [
+         5, 23, "Cannot use '===' operator with value types",
+         6, 23, "Cannot use '!==' operator with value types",
+         7, 23, "Cannot use 'is' operator on value type 'sys::Float?'",
+         8, 23, "Cannot use 'is' operator on value type 'sys::Float'",
+         9, 23, "Cannot use 'isnot' operator on value type 'sys::Int'",
+        10, 23, "Cannot use 'isnot' operator on value type 'sys::Int'",
+        11, 23, "Cannot use 'as' operator on value type 'sys::Int'",
+        12, 29, "Cannot use 'as' operator on value type 'sys::Int?'",
+       ])
+  }
 }

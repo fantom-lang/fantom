@@ -267,11 +267,18 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
 
   private void loadFloat()
   {
-    Double val = pod.readLiterals().floats(u2());
-    double d = val.doubleValue();
-    if (d == 0.0) code.op(DCONST_0);
-    else if (d == 1.0) code.op(DCONST_1);
-    else code.op2(LDC2_W, emit.doubleConst(val));
+    try
+    {
+      Double val = pod.readLiterals().floats(u2());
+      double d = val.doubleValue();
+      if (d == 0.0) code.op(DCONST_0);
+      else if (d == 1.0) code.op(DCONST_1);
+      else code.op2(LDC2_W, emit.doubleConst(val));
+    }
+    catch (java.io.IOException e)
+    {
+      throw new RuntimeException(e.toString(), e);
+    }
   }
 
   private void loadDecimal()

@@ -56,7 +56,7 @@ class IntTest : Test
     verify(0xffff_ffff_ffff_ffff == 0xffff_ffff_ffff_ffff)
     verify(2 != 3)
     verify(-2 != 0)
-    verify(3 as Obj != "foo")
+    verify(x as Obj != "foo")
     verify(x != null)
     verify(null != x)
     verify(44.equals(44))

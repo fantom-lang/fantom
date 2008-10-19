@@ -1049,6 +1049,13 @@ class CheckErrors : CompilerStep
     target := expr.target.ctype
     if (!check.fits(target) && !target.fits(check))
       err("Inconvertible types '$target' and '$check'", expr.location)
+
+    // don't allow is, as, isnot (everything but coerce) to be
+    // used with value type expressions
+    if (expr.id != ExprId.coerce)
+    {
+      if (target.isValue) err("Cannot use '$expr.opStr' operator on value type '$target'", expr.location)
+    }
   }
 
   private Void checkTernary(TernaryExpr expr)

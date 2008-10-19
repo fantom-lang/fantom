@@ -22,7 +22,7 @@ class ListTest : Test
     verify(x.type == Int[]#)
     verify(x.type === Int[]#)
     a := x[-1]
-    verify(a is Int)
+    verify((Obj?)a is Int)
     verify(a.type == Int#)
     verify(a == 3)
   }
