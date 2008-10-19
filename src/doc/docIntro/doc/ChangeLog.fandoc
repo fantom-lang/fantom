@@ -451,6 +451,7 @@
 *Build 1.0.34 (working)*
 - Roll fcode version for value-type support
 - Bool, Int, Float are now value types
+- Disallow covariance with value types
 - Disallow === !== is isnot as operators to be used againt value types
 - Java runtime maps sys::Boolean to primitive boolean
 - Java runtime maps sys::Float to primitive double
