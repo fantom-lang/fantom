@@ -47,7 +47,7 @@ class ReflectType : CType
 
   override Bool isGeneric() { return t.isGeneric }
   override Bool isParameterized() { return !t.params.isEmpty }
-  override Bool isGenericParameter() { return pod === ns.sysPod && name.size === 1 }
+  override Bool isGenericParameter() { return pod === ns.sysPod && name.size == 1 }
 
   override once CType toListOf() { return ListType(this) }
 

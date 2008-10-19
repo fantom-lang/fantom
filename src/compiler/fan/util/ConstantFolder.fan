@@ -49,7 +49,7 @@ class ConstantFolder : CompilerSupport
     {
       arg := exprToConst(call.args[i])
       if (arg == null) return call
-      if (i === 0) args = [,]
+      if (i == 0) args = [,]
       args.add(arg)
     }
 

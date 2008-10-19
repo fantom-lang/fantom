@@ -104,7 +104,7 @@ class CodeAsm : CompilerSupport
       block(stmt.falseBlock)
 
     // end
-    if (endLabel !== -1) backpatch(endLabel)
+    if (endLabel != -1) backpatch(endLabel)
   }
 
   private Void returnStmt(ReturnStmt stmt)

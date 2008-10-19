@@ -36,7 +36,7 @@ class TypeParser
 
     // if the last character isn't ] or |, then this a non-generic
     // type and we don't even need to allocate a parser
-    if (last !== ']' && last !== '|')
+    if (last != ']' && last != '|')
     {
       colon    := sig.index("::")
       podName  := sig[0...colon]
@@ -78,11 +78,11 @@ class TypeParser
     CType? t
 
     // |...| is function
-    if (cur === '|')
+    if (cur == '|')
       t = loadFunc
 
     // [...] is map
-    else if (cur === '[')
+    else if (cur == '[')
       t = loadMap
 
     // otherwise must be basic[]
