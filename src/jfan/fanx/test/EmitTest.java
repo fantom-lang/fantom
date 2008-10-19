@@ -65,7 +65,7 @@ public class EmitTest
     // long
     int l = e.longConst(Long.MIN_VALUE);
     verify(e.longConst(Long.MIN_VALUE) == l);
-    int l2 = e.longConst(0);
+    int l2 = e.longConst(0L);
     verify(l2 == l + 2); // double entries
 
     // float

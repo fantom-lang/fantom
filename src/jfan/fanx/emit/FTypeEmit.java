@@ -391,10 +391,10 @@ public abstract class FTypeEmit
   int CompareNull;
   int CompareNotNull;
   int BoolBox, BoolUnbox;
+  int IntBox, IntUnbox;
   int FloatBox, FloatUnbox;
   int IsViaType;
   int AsViaType;
-  int IntVal;
   int ErrMake;
   int ErrVal;
   int TypeToNullable;

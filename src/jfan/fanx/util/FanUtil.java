@@ -33,7 +33,7 @@ public class FanUtil
   {
     if (Sys.ObjType == null) java.lang.Thread.dumpStack();
     javaToFanTypes.put("boolean",              Sys.BoolType);
-    //javaToFanTypes.put("long",                 Sys.IntType);
+    javaToFanTypes.put("long",                 Sys.IntType);
     javaToFanTypes.put("double",               Sys.FloatType);
     javaToFanTypes.put("java.lang.Object",     Sys.ObjType);
     javaToFanTypes.put("java.lang.Boolean",    Sys.BoolType);
@@ -177,7 +177,8 @@ public class FanUtil
             return nullable ? "java/lang/Double" : "D";
           break;
         case 'I':
-          if (typeName.equals("Int")) return "java/lang/Long";
+          if (typeName.equals("Int"))
+            return nullable ? "java/lang/Long" : "J";
           break;
         case 'N':
           if (typeName.equals("Num")) return "java/lang/Number";
@@ -223,8 +224,9 @@ public class FanUtil
   {
     if (!t.isNullable())
     {
-      if (t == Sys.BoolType)  return 'I';
       if (t == Sys.VoidType)  return 'V';
+      if (t == Sys.BoolType)  return 'I';
+      if (t == Sys.IntType)   return 'J';
       if (t == Sys.FloatType) return 'D';
     }
     return 'A';
@@ -244,6 +246,7 @@ public class FanUtil
       switch (jsig.charAt(0))
       {
         case 'Z': return "fan/sys/FanBool";
+        case 'J': return "fan/sys/FanInt";
         case 'D': return "fan/sys/FanFloat";
         default: throw new IllegalStateException(jsig);
       }
