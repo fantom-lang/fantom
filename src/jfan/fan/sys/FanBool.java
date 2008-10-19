@@ -11,8 +11,9 @@ package fan.sys;
 import fanx.serial.*;
 
 /**
- * FanBoolean defines the methods for sys::Bool.  The actual
- * class used for representation is java.lang.Boolean.
+ * FanBoolean defines the methods for sys::Bool:
+ *   sys::Bool   =>  boolean primitive
+ *   sys::Bool?  =>  java.lang.Boolean
  */
 public final class FanBool
 {

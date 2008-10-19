@@ -255,14 +255,14 @@ public class InStream
             (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
   }
 
-  public Double readF4()
+  public double readF4()
   {
-    return Double.valueOf(Float.intBitsToFloat(readInt()));
+    return Float.intBitsToFloat(readInt());
   }
 
-  public Double readF8()
+  public double readF8()
   {
-    return Double.valueOf(Double.longBitsToDouble(readLong()));
+    return Double.longBitsToDouble(readLong());
   }
 
   public BigDecimal readDecimal()

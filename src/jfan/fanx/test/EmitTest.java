@@ -80,7 +80,7 @@ public class EmitTest
     // double
     int d = e.doubleConst(Double.MAX_VALUE);
     verify(e.doubleConst(Double.MAX_VALUE) == d);
-    int d2 = e.doubleConst(0);
+    int d2 = e.doubleConst(0.0);
     verify(d2 == d + 2); // double entries
     int dNan = e.doubleConst(Double.NaN);
     verify(e.doubleConst(Double.NaN) == dNan);

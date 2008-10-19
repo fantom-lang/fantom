@@ -45,14 +45,14 @@ public final class FTypeRef
         case 'E':
           if (typeName.equals("Err")) mask |= SYS_ERR;
           break;
-        /*
         case 'F':
-          if (typeName.equals("Bool"))
+          if (typeName.equals("Float"))
           {
             mask |= SYS_FLOAT;
             if (!nullable) stackType = DOUBLE;
           }
           break;
+        /*
         case 'I':
           if (typeName.equals("Int"))
           {
@@ -124,9 +124,19 @@ public final class FTypeRef
   public boolean isFloat() { return (mask & SYS_FLOAT) != 0; }
 
   /**
+   * Is this sys::Float, double primitive
+   */
+  public boolean isFloatPrimitive() { return stackType == DOUBLE && isFloat(); }
+
+  /**
    * Is this sys::Err or sys::Err?
    */
   public boolean isErr() { return (mask & SYS_ERR) != 0; }
+
+  /**
+   * Is this a wide stack type (double or long)
+   */
+  public boolean isWide() { return stackType == LONG || stackType == DOUBLE; }
 
   /**
    * Java type name:  fan/sys/Duration, java/lang/Boolean, Z
@@ -145,6 +155,7 @@ public final class FTypeRef
   {
     if (stackType == OBJ) return jname();
     if (isBoolPrimitive()) return "java/lang/Boolean";
+    if (isFloatPrimitive()) return "java/lang/Double";
     throw new IllegalStateException(signature);
   }
 
