@@ -271,18 +271,18 @@ public class Parser : CompilerSupport
       consume
     }
 
-    if ((flags & FConst.Abstract !== 0) && (flags & FConst.Virtual !== 0))
+    if ((flags & FConst.Abstract != 0) && (flags & FConst.Virtual != 0))
       err("Abstract implies virtual", loc)
-    if ((flags & FConst.Override !== 0) && (flags & FConst.Virtual !== 0))
+    if ((flags & FConst.Override != 0) && (flags & FConst.Virtual != 0))
       err("Override implies virtual", loc)
 
     if (normalize)
     {
       if (!protection) flags |= FConst.Public
-      if (flags & FConst.Abstract !== 0) flags |= FConst.Virtual
-      if (flags & FConst.Override !== 0)
+      if (flags & FConst.Abstract != 0) flags |= FConst.Virtual
+      if (flags & FConst.Override != 0)
       {
-        if (flags & FConst.Final !== 0)
+        if (flags & FConst.Final != 0)
           flags &= ~FConst.Final
         else
           flags |= FConst.Virtual
@@ -385,7 +385,7 @@ public class Parser : CompilerSupport
     }
 
     // check for constructor
-    if (flags & FConst.Ctor !== 0)
+    if (flags & FConst.Ctor != 0)
     {
       name := consumeId
       return methodDef(loc, parent, doc, facets, flags, TypeRef.make(loc, ns.voidType), name)
@@ -468,7 +468,7 @@ public class Parser : CompilerSupport
     }
 
     // readonly is syntatic sugar for { private set }
-    if (flags & Readonly !== 0)
+    if (flags & Readonly != 0)
     {
       field.set.flags = (field.set.flags & ProtectionMask) | FConst.Private
     }
@@ -621,7 +621,7 @@ public class Parser : CompilerSupport
 
     // if no body expected
     if (isSys) flags |= FConst.Native
-    if (flags & FConst.Abstract !== 0 || flags & FConst.Native !== 0)
+    if (flags & FConst.Abstract != 0 || flags & FConst.Native != 0)
     {
       if (curt === Token.lbrace)
       {
@@ -636,7 +636,7 @@ public class Parser : CompilerSupport
     }
 
     // ctor chain
-    if ((flags & FConst.Ctor !== 0) && (curt === Token.colon))
+    if ((flags & FConst.Ctor != 0) && (curt === Token.colon))
       method.ctorChain = ctorChain(method);
 
     // body

@@ -215,7 +215,7 @@ class InitClosures : CompilerStep
       arg = TypeCheckExpr.make(loc, ExprId.coerce, arg, signature.params[i])
 
       // add to doCall() argument list
-      if (firstAsTarget && i === 0)
+      if (firstAsTarget && i == 0)
         c.target = arg
       else
         c.args.add(arg)
