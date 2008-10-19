@@ -247,7 +247,7 @@ const final class Int : Num
   **   15.toDigit(16) => 'f'
   **   99.toDigit     => null
   **
-  Int toDigit(Int radix := 10)
+  Int? toDigit(Int radix := 10)
 
   **
   ** Convert a Unicode digit character into a number for the specified

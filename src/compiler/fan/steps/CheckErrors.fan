@@ -674,8 +674,14 @@ class CheckErrors : CompilerStep
 
   private Void checkRangeLiteral(RangeLiteralExpr range)
   {
-    if (!range.start.ctype.isInt || !range.end.ctype.isInt)
+    range.start = coerce(range.start, ns.intType) |,|
+    {
       err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.location)
+    }
+    range.end = coerce(range.end, ns.intType) |,|
+    {
+      err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.location)
+    }
   }
 
   private Void checkBool(UnaryExpr expr)
