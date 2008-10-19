@@ -1472,6 +1472,7 @@ class CodeAsm : CompilerSupport
       if (!isEmptyStrLiteral(lhs))
       {
         this.expr(lhs)
+        if (lhs.ctype.isValue) coerceOp(lhs.ctype, ns.objType)
         op(FOp.CallVirtual, fpod.addMethodRef(ns.strBufAdd))
       }
     }
