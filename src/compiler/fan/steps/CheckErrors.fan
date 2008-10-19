@@ -792,7 +792,7 @@ class CheckErrors : CompilerStep
 
     // take this oppotunity to generate a temp local variable if needed
     if (shortcut.leave && shortcut.isAssign && shortcut.target.assignRequiresTempVar)
-      shortcut.tempVar = curMethod.addLocalVar(shortcut.target.ctype, null, null)
+      shortcut.tempVar = curMethod.addLocalVar(shortcut.ctype, null, null)
 
     // perform normal call checking
     checkCall(shortcut)
