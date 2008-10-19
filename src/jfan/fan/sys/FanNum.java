@@ -17,15 +17,13 @@ import java.math.*;
 public class FanNum
 {
 
-  public static Long toInt(Number self)
+  public static long toInt(Number self)
   {
-    if (self instanceof Long) return (Long)self;
-    return Long.valueOf(self.longValue());
+    return self.longValue();
   }
 
   public static double toFloat(Number self)
   {
-    if (self instanceof Double) return (Double)self;
     return self.doubleValue();
   }
 

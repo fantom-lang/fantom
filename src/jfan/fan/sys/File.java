@@ -89,7 +89,7 @@ public abstract class File
 
   public final int hashCode() { return uri.hashCode(); }
 
-  public final Long hash() { return uri.hash(); }
+  public final long hash() { return uri.hash(); }
 
   public final String toStr() { return uri.toStr(); }
 
@@ -137,7 +137,7 @@ public abstract class File
     List list = list();
     for (int i=list.sz()-1; i>=0; --i)
       if (!((File)list.get(i)).isDir())
-        list.removeAt(Long.valueOf(i));
+        list.removeAt(i);
     return list;
   }
 
@@ -146,7 +146,7 @@ public abstract class File
     List list = list();
     for (int i=list.sz()-1; i>=0; --i)
       if (((File)list.get(i)).isDir())
-        list.removeAt(Long.valueOf(i));
+        list.removeAt(i);
     return list;
   }
 
@@ -321,8 +321,8 @@ public abstract class File
 
   public final Buf mmap() { return mmap("rw", 0L, null); }
   public final Buf mmap(String mode) { return mmap(mode, 0L, null); }
-  public final Buf mmap(String mode, Long pos) { return mmap(mode, pos, null); }
-  public abstract Buf mmap(String mode, Long pos, Long size);
+  public final Buf mmap(String mode, long pos) { return mmap(mode, pos, null); }
+  public abstract Buf mmap(String mode, long pos, Long size);
 
   public final InStream in() { return in(FanInt.Chunk); }
   public abstract InStream in(Long bufSize);

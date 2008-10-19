@@ -4,15 +4,16 @@
 //
 // History:
 //   2 Dec 05  Brian Frank  Creation
-//   4 Oct 08  Brian Frank  Refactor Long into Long/FanInt
+//   4 Oct 08  Brian Frank  Refactor long into Long/FanInt
 //
 package fan.sys;
 
 import fanx.serial.*;
 
 /**
- * FanLong defines the methods for sys::Int.  The actual
- * class used for representation is java.lang.Long.
+ * FanInt defines the methods for sys::Int
+ *   sys::Int   =>  long primitive
+ *   sys::Int?  =>  java.lang.Long
  */
 public final class FanInt
 {
@@ -22,12 +23,12 @@ public final class FanInt
 //////////////////////////////////////////////////////////////////////////
 
   public static Long fromStr(String s) { return fromStr(s, Ten, true); }
-  public static Long fromStr(String s, Long radix) { return fromStr(s, radix, true); }
-  public static Long fromStr(String s, Long radix, boolean checked)
+  public static Long fromStr(String s, long radix) { return fromStr(s, radix, true); }
+  public static Long fromStr(String s, long radix, boolean checked)
   {
     try
     {
-      return Long.valueOf(s, radix.intValue());
+      return Long.valueOf(s, (int)radix);
     }
     catch (NumberFormatException e)
     {
@@ -36,8 +37,8 @@ public final class FanInt
     }
   }
 
-  public static Long random() { return random(null); }
-  public static Long random(Range r)
+  public static long random() { return random(null); }
+  public static long random(Range r)
   {
     long v = random.nextLong();
     if (r == null) return v;
@@ -53,27 +54,26 @@ public final class FanInt
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static boolean equals(Long self, Object obj)
+  public static boolean equals(long self, Object obj)
   {
     if (obj instanceof Long)
-      return self.longValue() == ((Long)obj).longValue();
+      return self == ((Long)obj).longValue();
     else
       return false;
   }
 
-  public static Long compare(Long self, Object obj)
+  public static long compare(long self, Object obj)
   {
-    long val = self;
     long that = (Long)obj;
-    if (val < that) return LT; return val == that ? EQ : GT;
+    if (self < that) return LT; return self == that ? EQ : GT;
   }
 
-  public static Long hash(Long self)
+  public static long hash(long self)
   {
     return self;
   }
 
-  public static Type type(Long self)
+  public static Type type(long self)
   {
     return Sys.IntType;
   }
@@ -82,111 +82,106 @@ public final class FanInt
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  public static Long negate(Long self)
+  public static long negate(long self)
   {
-    return -self.longValue();
+    return -self;
   }
 
-  public static Long inverse(Long self)
+  public static long inverse(long self)
   {
-    return ~self.longValue();
+    return ~self;
   }
 
-  public static Long mult(Long self, Long x)
+  public static long mult(long self, long x)
   {
-    return self.longValue() * x.longValue();
+    return self * x;
   }
 
-  public static Long div(Long self, Long x)
+  public static long div(long self, long x)
   {
-    return self.longValue() / x.longValue();
+    return self / x;
   }
 
-  public static Long mod(Long self, Long x)
+  public static long mod(long self, long x)
   {
-    return self.longValue() % x.longValue();
+    return self % x;
   }
 
-  public static Long plus(Long self, Long x)
+  public static long plus(long self, long x)
   {
-    return self.longValue() + x.longValue();
+    return self + x;
   }
 
-  public static Long minus(Long self, Long x)
+  public static long minus(long self, long x)
   {
-    return self.longValue() - x.longValue();
+    return self - x;
   }
 
-  public static Long and(Long self, Long x)
+  public static long and(long self, long x)
   {
-    return self.longValue() & x.longValue();
+    return self & x;
   }
 
-  public static Long or(Long self, Long x)
+  public static long or(long self, long x)
   {
-    return self.longValue() | x.longValue();
+    return self | x;
   }
 
-  public static Long xor(Long self, Long x)
+  public static long xor(long self, long x)
   {
-    return self.longValue() ^ x.longValue();
+    return self ^ x;
   }
 
-  public static Long lshift(Long self, Long x)
+  public static long lshift(long self, long x)
   {
-    return self.longValue() << x.longValue();
+    return self << x;
   }
 
-  public static Long rshift(Long self, Long x)
+  public static long rshift(long self, long x)
   {
-    return self.longValue() >> x.longValue();
+    return self >> x;
   }
 
-  public static Long increment(Long self)
+  public static long increment(long self)
   {
-    return self.longValue()+1;
+    return self+1;
   }
 
-  public static Long decrement(Long self)
+  public static long decrement(long self)
   {
-    return self.longValue()-1;
+    return self-1;
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Math
 //////////////////////////////////////////////////////////////////////////
 
-  public static Long abs(Long self)
+  public static long abs(long self)
   {
-    long val = self;
-    if (val >= 0) return self;
-    return Long.valueOf(-val);
+    if (self >= 0) return self;
+    return -self;
   }
 
-  public static Long min(Long self, Long that)
+  public static long min(long self, long that)
   {
-    long val = self;
-    if (val <= that.longValue()) return self;
+    if (self <= that) return self;
     return that;
   }
 
-  public static Long max(Long self, Long that)
+  public static long max(long self, long that)
   {
-    long val = self;
-    if (val >= that.longValue()) return self;
+    if (self >= that) return self;
     return that;
   }
 
-  public static boolean isEven(Long self)
+  public static boolean isEven(long self)
   {
-    long val = self;
-    return (val % 2) == 0;
+    return (self % 2) == 0;
   }
 
-  public static boolean isOdd(Long self)
+  public static boolean isOdd(long self)
   {
-    long val = self;
-    return (val % 2) != 0;
+    return (self % 2) != 0;
   }
 
 /////////////////////////////////////////////////////////////////////////
@@ -194,12 +189,11 @@ public final class FanInt
 //////////////////////////////////////////////////////////////////////////
 
 
-  public static boolean isSpace(Long self) { return isSpace(self.intValue()); }
-  public static boolean isSpace(int val)
+  public static boolean isSpace(long self)
   {
     try
     {
-      return (val < 128 && (charMap[val] & SPACE) != 0);
+      return (self < 128 && (charMap[(int)self] & SPACE) != 0);
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
@@ -209,12 +203,11 @@ public final class FanInt
     }
   }
 
-  public static boolean isAlpha(Long self) { return isAlpha(self.intValue()); }
-  public static boolean isAlpha(int val)
+  public static boolean isAlpha(long self)
   {
     try
     {
-      return val < 128 && (charMap[val] & (UPPER|LOWER)) != 0;
+      return self < 128 && (charMap[(int)self] & (UPPER|LOWER)) != 0;
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
@@ -224,12 +217,11 @@ public final class FanInt
     }
   }
 
-  public static boolean isAlphaNum(Long self) { return isAlphaNum(self.intValue()); }
-  public static boolean isAlphaNum(int val)
+  public static boolean isAlphaNum(long self)
   {
     try
     {
-      return (val < 128 && (charMap[val] & (UPPER|LOWER|DIGIT)) != 0);
+      return (self < 128 && (charMap[(int)self] & (UPPER|LOWER|DIGIT)) != 0);
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
@@ -239,61 +231,56 @@ public final class FanInt
     }
   }
 
-  public static boolean isUpper(Long self)
+  public static boolean isUpper(long self)
   {
-    long val = self;
-    return 'A' <= val && val <= 'Z';
+    return 'A' <= self && self <= 'Z';
   }
 
-  public static boolean isLower(Long self)
+  public static boolean isLower(long self)
   {
-    long val = self;
-    return 'a' <= val && val <= 'z';
+    return 'a' <= self && self <= 'z';
   }
 
-  public static Long upper(Long self)
+  public static long upper(long self)
   {
-    long val = self;
-    if ('a' <= val && val <= 'z')
-      return pos[((int)val) & ~0x20];
+    if ('a' <= self && self <= 'z')
+      return self & ~0x20L;
     else
       return self;
   }
 
-  public static Long lower(Long self)
+  public static long lower(long self)
   {
-    long val = self;
-    if ('A' <= val && val <= 'Z')
-      return pos[((int)val) | 0x20];
+    if ('A' <= self && self <= 'Z')
+      return self | 0x20L;
     else
       return self;
   }
 
-  public static boolean isDigit(Long self)
+  public static boolean isDigit(long self)
   {
-    long val = self;
-    return '0' <= val && val <= '9';
+    return '0' <= self && self <= '9';
   }
 
-  public static boolean isDigit(Long self, Long radix)
+  public static boolean isDigit(long self, long r)
   {
-    int val = self.intValue();
-    if (val < 0 || val >= 128) return false;
-    int r   = radix.intValue();
+    if (self < 0 || self >= 128) return false;
 
-    if (r == 10)
+    int val = (int)self;
+    int radix = (int)r;
+    if (radix == 10)
     {
       return ((charMap[val] & DIGIT) != 0);
     }
 
-    if (r == 16)
+    if (radix == 16)
     {
       return ((charMap[val] & HEX) != 0);
     }
 
-    if (r <= 10)
+    if (radix <= 10)
     {
-      return '0' <= val && val <= ('0'+r);
+      return '0' <= val && val <= ('0'+radix);
     }
     else
     {
@@ -305,51 +292,46 @@ public final class FanInt
     }
   }
 
-  public static Long toDigit(Long self)
+  public static Long toDigit(long self)
   {
-    long val = self;
-    if (0 <= val && val <= 9) return pos[(int)val + '0'];
+    if (0 <= self && self <= 9) return pos[(int)self+ '0'];
     return null;
   }
 
-  public static Long toDigit(Long self, Long radix)
+  public static Long toDigit(long self, long radix)
   {
-    int val = self.intValue();
-    int r   = radix.intValue();
-    if (val < 0 || val >= r) return null;
+    if (self < 0 || self >= radix) return null;
 
-    if (val < 10) return pos[val + '0'];
-    return pos[val - 10 + 'a'];
+    if (self < 10) return pos[(int)self + '0'];
+    return pos[(int)self - 10 + 'a'];
   }
 
-  public static Long fromDigit(Long self)
+  public static Long fromDigit(long self)
   {
-    long val = self;
-    if ('0' <= val && val <= '9') return pos[(int)val - '0'];
+    if ('0' <= self && self <= '9') return pos[(int)self - '0'];
     return null;
   }
 
-  public static Long fromDigit(Long self, Long radix)
+  public static Long fromDigit(long self, long r)
   {
-    int val = self.intValue();
-    if (val < 0 || val >= 128) return null;
-    int r   = radix.intValue();
+    if (self < 0 || self >= 128) return null;
+    int val = (int)self;
 
-    int ten = r < 10 ? r : 10;
+    int radix = (int)r;
+    int ten = radix < 10 ? radix : 10;
     if ('0' <= val && val < '0'+ten) return pos[val - '0'];
-    if (r > 10)
+    if (radix > 10)
     {
-      int alpha = r-10;
+      int alpha = radix-10;
       if ('a' <= val && val < 'a'+alpha) return pos[val + 10 - 'a'];
       if ('A' <= val && val < 'A'+alpha) return pos[val + 10 - 'A'];
     }
     return null;
   }
 
-  public static boolean equalsIgnoreCase(Long self, Long ch)
+  public static boolean equalsIgnoreCase(long self, long ch)
   {
-    long val = self;
-    return (val | 0x20L) == (ch.longValue() | 0x20L);
+    return (self | 0x20L) == (ch | 0x20L);
   }
 
   static final byte[] charMap = new byte[128];
@@ -383,47 +365,43 @@ public final class FanInt
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public static boolean localeIsUpper(Long self)
+  public static boolean localeIsUpper(long self)
   {
-    return Character.isUpperCase(self.intValue());
+    return Character.isUpperCase((int)self);
   }
 
-  public static boolean localeIsLower(Long self)
+  public static boolean localeIsLower(long self)
   {
-    return Character.isLowerCase(self.intValue());
+    return Character.isLowerCase((int)self);
   }
 
-  public static Long localeUpper(Long self)
+  public static long localeUpper(long self)
   {
     // Java doesn't provide a locale Character API
-    long val = self.longValue();
-    return Long.valueOf(Character.toString((char)val).toUpperCase(Locale.current().java()).charAt(0));
+    return Character.toString((char)self).toUpperCase(Locale.current().java()).charAt(0);
   }
 
-  public static Long localeLower(Long self)
+  public static long localeLower(long self)
   {
     // Java doesn't provide a locale Character API
-    long val = self.longValue();
-    return Long.valueOf(Character.toString((char)val).toLowerCase(Locale.current().java()).charAt(0));
+    return Character.toString((char)self).toLowerCase(Locale.current().java()).charAt(0);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public static String toChar(Long self)
+  public static String toChar(long self)
   {
-    long val = self;
-    if (val < 0 || val > 0xFFFF) throw Err.make("Invalid unicode char: " + val).val;
-    if (val < FanStr.ascii.length) return FanStr.ascii[(int)val];
-    return String.valueOf((char)val);
+    if (self < 0 || self > 0xFFFF) throw Err.make("Invalid unicode char: " + self).val;
+    if (self < FanStr.ascii.length) return FanStr.ascii[(int)self];
+    return String.valueOf((char)self);
   }
 
-  public static String toHex(Long self) { return toHex(self, null); }
-  public static String toHex(Long self, Long width)
+  public static String toHex(long self) { return toHex(self, null); }
+  public static String toHex(long self, Long width)
   {
-    long val = self.longValue();
-    String s = Long.toHexString(val);
+    String s = Long.toHexString(self);
     if (width != null && s.length() < width.intValue())
       s = zeros[width.intValue()-s.length()] + s;
     return s;
@@ -431,19 +409,18 @@ public final class FanInt
   static String[] zeros = new String[16];
   static { zeros[0] = ""; for (int i=1; i<zeros.length; ++i) zeros[i] = zeros[i-1] + "0"; }
 
-  public static String toStr(Long self)
+  public static String toStr(long self)
   {
-    return self.toString();
+    return String.valueOf(self);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Closures
 //////////////////////////////////////////////////////////////////////////
 
-  public static void times(Long self, Func f)
+  public static void times(long self, Func f)
   {
-    long val = self;
-    for (long i=0; i<val; ++i)
+    for (long i=0; i<self; ++i)
       f.call1(Long.valueOf(i));
   }
 
@@ -453,24 +430,24 @@ public final class FanInt
 
   public static final long NEG = -257;
   public static final long POS = 4000;
-  public static final Long Zero;    // 0
-  public static final Long One;     // 1
-  public static final Long NegOne;  // -1
-  public static final Long NegTwo;  // -2
-  public static final Long Ten;     // 10
-  public static final Long LT;      // compare() -> -1
-  public static final Long EQ;      // compare() ->  0
-  public static final Long GT;      // compare() ->  1
-  public static final Long Chunk;   // 4kb / 4096
-  public static final Long maxValue = Long.valueOf(Long.MAX_VALUE);
-  public static final Long minValue = Long.valueOf(Long.MIN_VALUE);
-  static final Long[] neg = new Long[-(int)NEG];
+  public static final long Zero;    // 0
+  public static final long One;     // 1
+  public static final long NegOne;  // -1
+  public static final long NegTwo;  // -2
+  public static final long Ten;     // 10
+  public static final long LT;      // compare() -> -1
+  public static final long EQ;      // compare() ->  0
+  public static final long GT;      // compare() ->  1
+  public static final long Chunk;   // 4kb / 4096
+  public static final long maxValue = Long.MAX_VALUE;
+  public static final long minValue = Long.MIN_VALUE;
+//  static final Long[] neg = new Long[-(int)NEG];
   static final Long[] pos = new Long[(int)POS];
 
   static
   {
-    for (int i=1; i<neg.length; ++i) neg[i] = Long.valueOf(-i);
     for (int i=0; i<pos.length; ++i) pos[i] = Long.valueOf(i);
+// TODO
     Zero   = Long.valueOf(0);
     One    = Long.valueOf(1);
     NegOne = Long.valueOf(-1);

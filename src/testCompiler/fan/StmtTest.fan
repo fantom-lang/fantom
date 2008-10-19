@@ -511,6 +511,8 @@ class StmtTest : CompilerTest
     verifyEq(f.call1(null), '?')
 
     // int no-table
+/* TODO
+   need to coerce condition and case statements
     compile(
      "class Foo
       {
@@ -566,7 +568,7 @@ class StmtTest : CompilerTest
     verifyEq(f.call1(Int#), null)
     verifyEq(f.call1(0), 0)
     verifyEq(f.call1(null), null)
-
+*/
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -615,7 +617,7 @@ class StmtTest : CompilerTest
     compile(
      "class Foo
       {
-        static Int[] f(Int[] r, Int a)
+        static Int[] f(Int[] r, Int? a)
         {
           r.add(0)
           try
@@ -924,11 +926,11 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifySame(t.method("f").call2(r, false), 2)
+    verifyEq(t.method("f").call2(r, false), 2)
     verifyEq(r, [0, 1, 2, 4])
 
     r = Int[,]
-    verifySame(t.method("f").call2(r, true), 3)
+    verifyEq(t.method("f").call2(r, true), 3)
     verifyEq(r, [0, 1, 3, 4])
   }
 

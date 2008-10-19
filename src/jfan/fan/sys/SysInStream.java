@@ -56,11 +56,11 @@ public class SysInStream
     }
   }
 
-  public Long readBuf(Buf buf, Long n)
+  public Long readBuf(Buf buf, long n)
   {
     try
     {
-      long read = buf.pipeFrom(in, n.longValue());
+      long read = buf.pipeFrom(in, n);
       if (read < 0) return null;
       return Long.valueOf(read);
     }
@@ -70,7 +70,7 @@ public class SysInStream
     }
   }
 
-  public InStream unread(Long n) { return unread(n.intValue()); }
+  public InStream unread(long n) { return unread((int)n); }
   public InStream unread(int n)
   {
     try
@@ -88,13 +88,13 @@ public class SysInStream
     }
   }
 
-  public Long skip(Long n)
+  public long skip(long n)
   {
     try
     {
-      long skipped = in.skip(n.longValue());
-      if (skipped < 0) return FanInt.Zero;
-      return Long.valueOf(skipped);
+      long skipped = in.skip(n);
+      if (skipped < 0) return 0;
+      return skipped;
     }
     catch (IOException e)
     {
@@ -144,7 +144,7 @@ public class SysInStream
       buf.buf = b;
       buf.pos = off;
       buf.size = b.length;
-      Long n = in.readBuf(buf, Long.valueOf(len));
+      Long n = in.readBuf(buf, len);
       buf.buf = null;
       if (n == null) return -1;
       return n.intValue();

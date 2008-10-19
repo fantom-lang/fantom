@@ -92,7 +92,7 @@ public class TablePeer
     if (model == null) return;
 
     c.removeAll();
-    c.setItemCount(model.numRows().intValue());
+    c.setItemCount((int)model.numRows());
     c.clearAll();
   }
 
@@ -118,11 +118,11 @@ public class TablePeer
     Env env = Env.get();
     TableItem item = (TableItem)event.item;
 
-    int numCols = model.numCols().intValue();
-    Long row = Long.valueOf(event.index);
+    int numCols = (int)model.numCols();
+    long row = event.index;
     for (int i=0; i<numCols; ++i)
     {
-      Long col = Long.valueOf(i);
+      long col = i;
       item.setText(i, model.text(col, row));
       item.setImage(i, env.image(model.image(col, row)));
       item.setFont(i, env.font(model.font(col, row)));
@@ -184,10 +184,10 @@ public class TablePeer
     if (model == null) return;
 
     // build columns
-    int numCols = model.numCols().intValue();
+    int numCols = (int)model.numCols();
     for (int i=0; i<numCols; ++i)
     {
-      Long col = Long.valueOf(i);
+      long col = i;
       Long pw = model.prefWidth(col);
       TableColumn tc = new TableColumn(table, style(model.halign(col)));
       tc.setText(model.header(col));
@@ -195,7 +195,7 @@ public class TablePeer
     }
 
     // rows
-    table.setItemCount(model.numRows().intValue());
+    table.setItemCount((int)model.numRows());
   }
 
 //////////////////////////////////////////////////////////////////////////

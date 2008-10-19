@@ -57,14 +57,14 @@ public class StrBufTest
     System.out.println("Fan:  " + (t5-t4) + "ns");
   }
 
-  public String java(String a, String b, Long i)
+  public String java(String a, String b, long i)
   {
     StringBuilder s = new StringBuilder();
     s.append(a).append(i).append(b);
     return s.toString();
   }
 
-  public String fan(String a, String b, Long i)
+  public String fan(String a, String b, long i)
   {
     StrBuf s = new StrBuf(new StringBuilder());
     s.add(a).add(i).add(b);

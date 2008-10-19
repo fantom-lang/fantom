@@ -67,10 +67,10 @@ public class GraphicsPeer
   private Pattern gradient(Env env, Gradient g)
   {
     return new Pattern(env.display,
-        (float)g.p1.x.longValue(), (float)g.p1.y.longValue(),
-        (float)g.p2.x.longValue(), (float)g.p2.y.longValue(),
-        env.color(g.c1), g.c1.alpha().intValue(),
-        env.color(g.c2), g.c2.alpha().intValue());
+        (float)g.p1.x, (float)g.p1.y,
+        (float)g.p2.x, (float)g.p2.y,
+        env.color(g.c1), (int)g.c1.alpha(),
+        env.color(g.c2), (int)g.c2.alpha());
   }
 
   public Pen pen(Graphics self)
@@ -81,13 +81,13 @@ public class GraphicsPeer
   public void pen(Graphics self, Pen pen)
   {
     this.pen = pen;
-    gc.setLineWidth(pen.width.intValue());
+    gc.setLineWidth((int)pen.width);
     gc.setLineCap(penCap(pen.cap));
     gc.setLineJoin(penJoin(pen.join));
     gc.setLineDash(pen.dash != null ? pen.dash.toInts() : null);
   }
 
-  private static int penCap(Long cap)
+  private static int penCap(long cap)
   {
     if (cap == Pen.capSquare) return SWT.CAP_SQUARE;
     if (cap == Pen.capButt)   return SWT.CAP_FLAT;
@@ -95,7 +95,7 @@ public class GraphicsPeer
     throw new IllegalStateException("Invalid pen.cap " + cap);
   }
 
-  private static int penJoin(Long join)
+  private static int penJoin(long join)
   {
     if (join == Pen.joinMiter) return SWT.JOIN_MITER;
     if (join == Pen.joinBevel) return SWT.JOIN_BEVEL;
@@ -126,80 +126,80 @@ public class GraphicsPeer
     gc.setTextAntialias(val);
   }
 
-  public Graphics drawPoint(Graphics self, Long x, Long y)
+  public Graphics drawPoint(Graphics self, long x, long y)
   {
-    gc.drawPoint(x.intValue(), y.intValue());
+    gc.drawPoint((int)x, (int)y);
     return self;
   }
 
-  public Graphics drawLine(Graphics self, Long x1, Long y1, Long x2, Long y2)
+  public Graphics drawLine(Graphics self, long x1, long y1, long x2, long y2)
   {
-    gc.drawLine(x1.intValue(), y1.intValue(), x2.intValue(), y2.intValue());
+    gc.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
     return self;
   }
 
-  public Graphics drawRect(Graphics self, Long x, Long y, Long w, Long h)
+  public Graphics drawRect(Graphics self, long x, long y, long w, long h)
   {
-    gc.drawRectangle(x.intValue(), y.intValue(), w.intValue(), h.intValue());
+    gc.drawRectangle((int)x, (int)y, (int)w, (int)h);
     return self;
   }
 
-  public Graphics fillRect(Graphics self, Long x, Long y, Long w, Long h)
+  public Graphics fillRect(Graphics self, long x, long y, long w, long h)
   {
-    gc.fillRectangle(x.intValue(), y.intValue(), w.intValue(), h.intValue());
+    gc.fillRectangle((int)x, (int)y, (int)w, (int)h);
     return self;
   }
 
-  public Graphics drawOval(Graphics self, Long x, Long y, Long w, Long h)
+  public Graphics drawOval(Graphics self, long x, long y, long w, long h)
   {
-    gc.drawOval(x.intValue(), y.intValue(), w.intValue(), h.intValue());
+    gc.drawOval((int)x, (int)y, (int)w, (int)h);
     return self;
   }
 
-  public Graphics fillOval(Graphics self, Long x, Long y, Long w, Long h)
+  public Graphics fillOval(Graphics self, long x, long y, long w, long h)
   {
-    gc.fillOval(x.intValue(), y.intValue(), w.intValue(), h.intValue());
+    gc.fillOval((int)x, (int)y, (int)w, (int)h);
     return self;
   }
 
-  public Graphics drawArc(Graphics self, Long x, Long y, Long w, Long h, Long s, Long a)
+  public Graphics drawArc(Graphics self, long x, long y, long w, long h, long s, long a)
   {
-    gc.drawArc(x.intValue(), y.intValue(), w.intValue(), h.intValue(), s.intValue(), a.intValue());
+    gc.drawArc((int)x, (int)y, (int)w, (int)h, (int)s, (int)a);
     return self;
   }
 
-  public Graphics fillArc(Graphics self, Long x, Long y, Long w, Long h, Long s, Long a)
+  public Graphics fillArc(Graphics self, long x, long y, long w, long h, long s, long a)
   {
-    gc.fillArc(x.intValue(), y.intValue(), w.intValue(), h.intValue(), s.intValue(), a.intValue());
+    gc.fillArc((int)x, (int)y, (int)w, (int)h, (int)s, (int)a);
     return self;
   }
 
-  public Graphics drawText(Graphics self, String text, Long x, Long y)
+  public Graphics drawText(Graphics self, String text, long x, long y)
   {
     int flags = SWT.DRAW_DELIMITER | SWT.DRAW_TAB | SWT.DRAW_TRANSPARENT;
-    gc.drawText(text, x.intValue(), y.intValue(), flags);
+    gc.drawText(text, (int)x, (int)y, flags);
     return self;
   }
 
-  public Graphics drawImage(Graphics self, Image img, Long x, Long y)
+  public Graphics drawImage(Graphics self, Image img, long x, long y)
   {
-    gc.drawImage(Env.get().image(img), x.intValue(), y.intValue());
+    gc.drawImage(Env.get().image(img), (int)x, (int)y);
     return self;
   }
 
   public Graphics copyImage(Graphics self, Image img, Rect s, Rect d)
   {
     gc.drawImage(Env.get().image(img),
-      s.x.intValue(), s.y.intValue(), s.w.intValue(), s.h.intValue(),
-      d.x.intValue(), d.y.intValue(), d.w.intValue(), d.h.intValue());
+      (int)s.x, (int)s.y, (int)s.w, (int)s.h,
+      (int)d.x, (int)d.y, (int)d.w, (int)d.h);
     return self;
   }
 
-  public Graphics translate(Graphics self, Long x, Long y)
+  public Graphics translate(Graphics self, long x, long y)
   {
     Transform t = new Transform(gc.getDevice());
     gc.getTransform(t);
-    t.translate(x.intValue(), y.intValue());
+    t.translate((int)x, (int)y);
     gc.setTransform(t);
     t.dispose();
     return self;

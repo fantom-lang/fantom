@@ -156,13 +156,13 @@ public class DateTimeTest
 
     try
     {
-      verifyEq(year,                             dt.year().longValue());
-      verifyEq(cal.get(Calendar.MONTH),          dt.month().ordinal().longValue());
-      verifyEq(cal.get(Calendar.DAY_OF_MONTH),   dt.day().longValue());
-      verifyEq(cal.get(Calendar.HOUR_OF_DAY),    dt.hour().longValue());
-      verifyEq(cal.get(Calendar.MINUTE),         dt.min().longValue());
-      verifyEq(cal.get(Calendar.SECOND),         dt.sec().longValue());
-      verifyEq(cal.get(Calendar.DAY_OF_WEEK)-1,  dt.weekday().ordinal().longValue());
+      verifyEq(year,                             dt.year());
+      verifyEq(cal.get(Calendar.MONTH),          dt.month().ordinal());
+      verifyEq(cal.get(Calendar.DAY_OF_MONTH),   dt.day());
+      verifyEq(cal.get(Calendar.HOUR_OF_DAY),    dt.hour());
+      verifyEq(cal.get(Calendar.MINUTE),         dt.min());
+      verifyEq(cal.get(Calendar.SECOND),         dt.sec());
+      verifyEq(cal.get(Calendar.DAY_OF_WEEK)-1,  dt.weekday().ordinal());
       verifyEq(cal.getTimeZone().inDaylightTime(date), dt.dst());
     }
     catch (RuntimeException e)

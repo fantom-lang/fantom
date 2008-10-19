@@ -33,10 +33,10 @@ public class OpUtil
     return !a.equals(b);
   }
 
-  public static Long compare(Object a, Object b)
+  public static long compare(Object a, Object b)
   {
-    if (a == null) return (b == null) ? FanInt.EQ : FanInt.LT;
-    if (b == null) return FanInt.GT;
+    if (a == null) return (b == null) ? 0L : -1L;
+    if (b == null) return +1L;
     return FanObj.compare(a, b);
   }
 
@@ -44,28 +44,28 @@ public class OpUtil
   {
     if (a == null) return (b != null);
     if (b == null) return false;
-    return FanObj.compare(a, b).longValue() < 0;
+    return FanObj.compare(a, b) < 0;
   }
 
   public static boolean compareLE(Object a, Object b)
   {
     if (a == null) return true;
     if (b == null) return false;
-    return FanObj.compare(a, b).longValue() <= 0;
+    return FanObj.compare(a, b) <= 0;
   }
 
   public static boolean compareGE(Object a, Object b)
   {
     if (a == null) return (b == null);
     if (b == null) return true;
-    return FanObj.compare(a, b).longValue() >= 0;
+    return FanObj.compare(a, b) >= 0;
   }
 
   public static boolean compareGT(Object a, Object b)
   {
     if (a == null) return false;
     if (b == null) return true;
-    return FanObj.compare(a, b).longValue() > 0;
+    return FanObj.compare(a, b) > 0;
   }
 
   public static boolean compareSame(Object a, Object b) // need to use Object for mixins

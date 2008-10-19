@@ -170,14 +170,14 @@ public final class MemBuf
 // Buf API
 //////////////////////////////////////////////////////////////////////////
 
-  public final Long capacity()
+  public final long capacity()
   {
-    return Long.valueOf(buf.length);
+    return buf.length;
   }
 
-  public final void capacity(Long c)
+  public final void capacity(long c)
   {
-    int newCapacity = c.intValue();
+    int newCapacity = (int)c;
     if (newCapacity < size) throw ArgErr.make("capacity < size").val;
     byte[] temp = new byte[newCapacity];
     System.arraycopy(buf, 0, temp, 0, newCapacity);
@@ -311,7 +311,7 @@ public final class MemBuf
 
   class MemBufOutStream extends OutStream
   {
-    public final OutStream write(Long v) { return w(v.intValue()); }
+    public final OutStream write(long v) { return w((int)v); }
     public final OutStream w(int v)
     {
       if (pos+1 >= buf.length) grow(pos+1);
@@ -320,9 +320,9 @@ public final class MemBuf
       return this;
     }
 
-    public OutStream writeBuf(Buf other, Long n)
+    public OutStream writeBuf(Buf other, long n)
     {
-      int len = n.intValue();
+      int len = (int)n;
       grow(pos+len);
       other.pipeTo(buf, pos, len);
       pos += len;
@@ -344,16 +344,16 @@ public final class MemBuf
       return buf[pos++] & 0xFF;
     }
 
-    public Long readBuf(Buf other, Long n)
+    public Long readBuf(Buf other, long n)
     {
       if (pos >= size) return null;
-      int len = Math.min(size-pos, n.intValue());
+      int len = Math.min(size-pos, (int)n);
       other.pipeFrom(buf, pos, len);
       pos += len;
       return Long.valueOf(len);
     }
 
-    public InStream unread(Long n) { return unread(n.intValue()); }
+    public InStream unread(long n) { return unread((int)n); }
     public InStream unread(int n)
     {
       // unreading a buffer is a bit weird - the typical case
@@ -381,13 +381,13 @@ public final class MemBuf
       return FanInt.pos[buf[pos] & 0xFF];
     }
 
-    public Long skip(Long n)
+    public long skip(long n)
     {
       int oldPos = pos;
       pos += n;
       if (pos < size) return n;
       pos = size;
-      return Long.valueOf(pos-oldPos);
+      return pos-oldPos;
     }
 
   }

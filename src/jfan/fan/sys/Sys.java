@@ -55,7 +55,7 @@ public class Sys
   public static String userName() { return userName; }
 
   public static void exit() { exit(0L); }
-  public static void exit(Long status) { System.exit(status.intValue()); }
+  public static void exit(long status) { System.exit((int)status); }
 
   public static InStream  in()  { return StdIn; }
   public static OutStream out() { return StdOut; }
@@ -63,9 +63,9 @@ public class Sys
 
   public static void gc() { System.gc(); }
 
-  public static Long idHash(Object obj)
+  public static long idHash(Object obj)
   {
-    return Long.valueOf(System.identityHashCode(obj));
+    return System.identityHashCode(obj);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -441,7 +441,7 @@ public class Sys
 //////////////////////////////////////////////////////////////////////////
 
   /** Are we running 1.6 or greater */
-  public static boolean isJava1_6() { return javaVersion.compare(v1_6).intValue() >= 0; }
+  public static boolean isJava1_6() { return javaVersion.compare(v1_6) >= 0; }
 
   public static final Version javaVersion;
   public static final Version v1_6 = Version.fromStr("1.6");

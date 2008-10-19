@@ -28,12 +28,12 @@ public class RowPeer
 
   public Object get(Row row, Col col)
   {
-    return cells[col.index.intValue()];
+    return cells[(int)col.index];
   }
 
   public void set(Row row, Col col, Object val)
   {
-    cells[col.index.intValue()] = val;
+    cells[(int)col.index] = val;
   }
 
 //////////////////////////////////////////////////////////////////////////

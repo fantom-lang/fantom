@@ -226,15 +226,15 @@ public class ConnectionPeer
 // Open Count
 //////////////////////////////////////////////////////////////////////////
 
-  public Long increment(Connection self)
+  public long increment(Connection self)
   {
-    return Long.valueOf(++openCount);
+    return ++openCount;
   }
 
-  public Long decrement(Connection self)
+  public long decrement(Connection self)
   {
     if (openCount != 0) openCount--;
-    return Long.valueOf(openCount);
+    return openCount;
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -36,8 +36,8 @@ public abstract class TextWidgetPeer extends WidgetPeer
 //////////////////////////////////////////////////////////////////////////
 
   // Int caretOffset := 0
-  public Long caretOffset(TextWidget self) { return caretOffset().get(); }
-  public void caretOffset(TextWidget self, Long v) { caretOffset().set(v); }
+  public long caretOffset(TextWidget self) { return caretOffset().get(); }
+  public void caretOffset(TextWidget self, long v) { caretOffset().set(v); }
   abstract Prop.IntProp caretOffset();
 
   // Font font := null
@@ -55,22 +55,22 @@ public abstract class TextWidgetPeer extends WidgetPeer
     return selectText(control);
   }
 
-  public Long selectStart(TextWidget self)
+  public long selectStart(TextWidget self)
   {
     if (control == null) return 0L;
-    return Long.valueOf(selectStart(control));
+    return selectStart(control);
   }
 
-  public Long selectSize(TextWidget self)
+  public long selectSize(TextWidget self)
   {
     if (control == null) return 0L;
-    return Long.valueOf(selectSize(control));
+    return selectSize(control);
   }
 
-  public void select(TextWidget self, Long start, Long size)
+  public void select(TextWidget self, long start, long size)
   {
     if (control == null) return;
-    select(control, start.intValue(), size.intValue());
+    select(control, (int)start, (int)size);
   }
 
   public void selectAll(TextWidget self)

@@ -274,7 +274,7 @@ public class Charset
 
   public int hashCode() { return charset.hashCode(); }
 
-  public Long hash() { return Long.valueOf(charset.hashCode()); }
+  public long hash() { return charset.hashCode(); }
 
   public boolean equals(Object obj)
   {

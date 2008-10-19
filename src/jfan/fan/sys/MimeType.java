@@ -129,7 +129,7 @@ public final class MimeType
     {
       LocalFile f = new LocalFile(new java.io.File(Sys.HomeDir, "lib" + File.sep + "ext2mime.props"));
       Map props = f.readProps();
-      HashMap map = new HashMap(props.size().intValue() * 3);
+      HashMap map = new HashMap((int)props.size() * 3);
       Iterator it = props.pairsIterator();
       while (it.hasNext())
       {
@@ -178,9 +178,9 @@ public final class MimeType
            params.hashCode();
   }
 
-  public Long hash()
+  public long hash()
   {
-    return Long.valueOf(hashCode());
+    return hashCode();
   }
 
   public String toStr()

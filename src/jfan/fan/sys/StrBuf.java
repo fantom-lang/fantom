@@ -29,9 +29,9 @@ public class StrBuf
   /**
    * Create with specified capacity.
    */
-  public static StrBuf make(Long capacity)
+  public static StrBuf make(long capacity)
   {
-    return new StrBuf(new StringBuilder(capacity.intValue()));
+    return new StrBuf(new StringBuilder((int)capacity));
   }
 
   public StrBuf(StringBuilder sb)
@@ -48,23 +48,23 @@ public class StrBuf
     return sb.length() == 0;
   }
 
-  public Long size()
+  public long size()
   {
-    return Long.valueOf(sb.length());
+    return sb.length();
   }
 
-  public Long get(Long index)
+  public long get(long index)
   {
-    int i = index.intValue();
+    int i = (int)index;
     if (i < 0) i = sb.length()+i;
-    return Long.valueOf(sb.charAt(i));
+    return sb.charAt(i);
   }
 
-  public StrBuf set(Long index, Long ch)
+  public StrBuf set(long index, long ch)
   {
-    int i = index.intValue();
+    int i = (int)index;
     if (i < 0) i = sb.length()+i;
-    sb.setCharAt(i, (char)ch.longValue());
+    sb.setCharAt(i, (char)ch);
     return this;
   }
 
@@ -75,9 +75,9 @@ public class StrBuf
     return this;
   }
 
-  public StrBuf addChar(Long ch)
+  public StrBuf addChar(long ch)
   {
-    sb.append((char)ch.longValue());
+    sb.append((char)ch);
     return this;
   }
 
@@ -90,28 +90,28 @@ public class StrBuf
     return this;
   }
 
-  public StrBuf insert(Long index, Object x)
+  public StrBuf insert(long index, Object x)
   {
     String s = (x == null) ? "null" : toStr(x);
-    int i = index.intValue();
+    int i = (int)index;
     if (i < 0) i = sb.length()+i;
     if (i > sb.length()) throw IndexErr.make(index).val;
     sb.insert(i, s);
     return this;
   }
 
-  public StrBuf remove(Long index)
+  public StrBuf remove(long index)
   {
-    int i = index.intValue();
+    int i = (int)index;
     if (i < 0) i = sb.length()+i;
     if (i >= sb.length()) throw IndexErr.make(index).val;
     sb.delete(i, i+1);
     return this;
   }
 
-  public StrBuf grow(Long size)
+  public StrBuf grow(long size)
   {
-    sb.ensureCapacity(size.intValue());
+    sb.ensureCapacity((int)size);
     return this;
   }
 

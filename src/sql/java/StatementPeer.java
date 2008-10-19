@@ -202,7 +202,7 @@ public class StatementPeer
     }
   }
 
-  public Long execute(Statement self, Map params)
+  public long execute(Statement self, Map params)
   {
     self.conn.peer.lastAutoGen = null;
     try
@@ -210,7 +210,7 @@ public class StatementPeer
       if (prepared)
       {
         setParameters(params);
-        Long rows = Long.valueOf(((PreparedStatement)stmt).executeUpdate());
+        long rows = ((PreparedStatement)stmt).executeUpdate();
         ResultSet keys = stmt.getGeneratedKeys();
         if (keys.next()) self.conn.peer.lastAutoGen = Long.valueOf(keys.getInt(1));
         return rows;
@@ -223,7 +223,7 @@ public class StatementPeer
           int rc = stmt.executeUpdate(self.sql, java.sql.Statement.RETURN_GENERATED_KEYS);
           ResultSet keys = stmt.getGeneratedKeys();
           if (keys.next()) self.conn.peer.lastAutoGen = Long.valueOf(keys.getInt(1));
-          return Long.valueOf(rc);
+          return rc;
         }
         finally
         {

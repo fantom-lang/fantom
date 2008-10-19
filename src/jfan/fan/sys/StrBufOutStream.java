@@ -46,7 +46,7 @@ public class StrBufOutStream
     throw UnsupportedErr.make("binary write on StrBuf output").val;
   }
 
-  public OutStream writeBuf(Buf buf, Long n)
+  public OutStream writeBuf(Buf buf, long n)
   {
     throw UnsupportedErr.make("binary write on StrBuf output").val;
   }
@@ -57,9 +57,9 @@ public class StrBufOutStream
     return this;
   }
 
-  public OutStream writeChar(Long c)
+  public OutStream writeChar(long c)
   {
-    sb.append((char)c.longValue());
+    sb.append((char)c);
     return this;
   }
 

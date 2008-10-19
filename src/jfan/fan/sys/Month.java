@@ -55,12 +55,12 @@ public final class Month
 
   public Month decrement() { return ord == 0 ? array[array.length-1] : array[ord-1]; }
 
-  public Long numDays(Long year)
+  public long numDays(long year)
   {
-    if (DateTime.isLeapYear(year.intValue()))
-      return FanInt.pos[DateTime.daysInMonLeap[ord]];
+    if (DateTime.isLeapYear((int)year))
+      return DateTime.daysInMonLeap[ord];
     else
-      return FanInt.pos[DateTime.daysInMon[ord]];
+      return DateTime.daysInMon[ord];
   }
 
   public String toLocale() { return toLocale(null); }

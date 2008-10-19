@@ -57,14 +57,14 @@ public class FanStr
     return true;
   }
 
-  public static Long compare(String a, Object b)
+  public static long compare(String a, Object b)
   {
     int cmp = a.compareTo((String)b);
     if (cmp < 0) return FanInt.LT;
     return cmp == 0 ? FanInt.EQ : FanInt.GT;
   }
 
-  public static Long compareIgnoreCase(String a, String b)
+  public static long compareIgnoreCase(String a, String b)
   {
     if (a == b) return FanInt.Zero;
 
@@ -84,9 +84,9 @@ public class FanStr
     return an < bn ? FanInt.LT : FanInt.GT;
   }
 
-  public static Long hash(String self)
+  public static long hash(String self)
   {
-    return Long.valueOf(self.hashCode());
+    return self.hashCode();
   }
 
   public static int caseInsensitiveHash(String self)
@@ -118,11 +118,11 @@ public class FanStr
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  public static Long get(String self, Long index)
+  public static long get(String self, long index)
   {
-    int i = index.intValue();
+    int i = (int)index;
     if (i < 0) i = self.length()+i;
-    return Long.valueOf(self.charAt(i));
+    return self.charAt(i);
   }
 
   public static String slice(String self, Range r)
@@ -158,9 +158,9 @@ public class FanStr
     return self.length() == 0;
   }
 
-  public static Long size(String self)
+  public static long size(String self)
   {
-    return Long.valueOf(self.length());
+    return self.length();
   }
 
   public static boolean startsWith(String self, String s)
@@ -178,15 +178,15 @@ public class FanStr
     return index(self, s, 0L) != null;
   }
 
-  public static boolean containsChar(String self, Long ch)
+  public static boolean containsChar(String self, long ch)
   {
-    return self.indexOf(ch.intValue()) >= 0;
+    return self.indexOf((int)ch) >= 0;
   }
 
   public static Long index(String self, String s) { return index(self, s, 0L); }
-  public static Long index(String self, String s, Long off)
+  public static Long index(String self, String s, long off)
   {
-    int i = off.intValue();
+    int i = (int)off;
     if (i < 0) i = self.length()+i;
 
     int r;
@@ -200,9 +200,9 @@ public class FanStr
   }
 
   public static Long indexr(String self, String s) { return indexr(self, s, -1L); }
-  public static Long indexr(String self, String s, Long off)
+  public static Long indexr(String self, String s, long off)
   {
-    int i = off.intValue();
+    int i = (int)off;
     if (i < 0) i = self.length()+i;
 
     int r;
@@ -216,12 +216,12 @@ public class FanStr
   }
 
   public static Long indexIgnoreCase(String self, String s) { return indexIgnoreCase(self, s, 0L); }
-  public static Long indexIgnoreCase(String self, String s, Long off)
+  public static Long indexIgnoreCase(String self, String s, long off)
   {
     int len = self.length(), slen = s.length();
     int r = -1;
 
-    int i = off.intValue();
+    int i = (int)off;
     if (i < 0) i = len+i;
 
     int first = s.charAt(0) | 0x20;
@@ -243,12 +243,12 @@ public class FanStr
   }
 
   public static Long indexrIgnoreCase(String self, String s) { return indexrIgnoreCase(self, s, -1L); }
-  public static Long indexrIgnoreCase(String self, String s, Long off)
+  public static Long indexrIgnoreCase(String self, String s, long off)
   {
     int len = self.length(), slen = s.length();
     int r = -1;
 
-    int i = off.intValue();
+    int i = (int)off;
     if (i < 0) i = len+i;
     if (i+slen >= len) i = len-slen;
 
@@ -309,11 +309,11 @@ public class FanStr
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public static String spaces(Long n)
+  public static String spaces(long n)
   {
     // do an array lookup for reasonable length
     // strings since that is the common case
-    int count = n.intValue();
+    int count = (int)n;
     try { return spaces[count]; } catch (ArrayIndexOutOfBoundsException e) {}
 
     // otherwise we build a new one
@@ -389,9 +389,9 @@ public class FanStr
     return self;
   }
 
-  public static String justl(String self, Long width)
+  public static String justl(String self, long width)
   {
-    int w = width.intValue();
+    int w = (int)width;
     if (self.length() >= w) return self;
     StringBuilder s = new StringBuilder(w);
     s.append(self);
@@ -400,9 +400,9 @@ public class FanStr
     return s.toString();
   }
 
-  public static String justr(String self, Long width)
+  public static String justr(String self, long width)
   {
-    int w = width.intValue();
+    int w = (int)width;
     if (self.length() >= w) return self;
     StringBuilder s = new StringBuilder(w);
     for (int i=self.length(); i<w; ++i)
@@ -523,7 +523,7 @@ public class FanStr
     return StrUtil.replace(self, from, to);
   }
 
-  public static Long numNewlines(String self)
+  public static long numNewlines(String self)
   {
     int numLines = 0;
     int len = self.length();
@@ -537,7 +537,7 @@ public class FanStr
         if (i+1<len && self.charAt(i+1) == '\n') i++;
       }
     }
-    return Long.valueOf(numLines);
+    return numLines;
   }
 
   public static boolean isAscii(String self)
@@ -596,7 +596,7 @@ public class FanStr
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public static Long localeCompare(String self, String x)
+  public static long localeCompare(String self, String x)
   {
     int cmp = Locale.current().collator().compare(self, x);
     if (cmp < 0) return FanInt.LT;
@@ -653,8 +653,8 @@ public class FanStr
   public static Boolean toBool(String self, boolean checked) { return FanBool.fromStr(self, checked); }
 
   public static Long toInt(String self) { return FanInt.fromStr(self, FanInt.Ten, true); }
-  public static Long toInt(String self, Long radix) { return FanInt.fromStr(self, radix, true); }
-  public static Long toInt(String self, Long radix, boolean checked) { return FanInt.fromStr(self, radix, checked); }
+  public static Long toInt(String self, long radix) { return FanInt.fromStr(self, radix, true); }
+  public static Long toInt(String self, long radix, boolean checked) { return FanInt.fromStr(self, radix, checked); }
 
   public static Double toFloat(String self) { return FanFloat.fromStr(self, true); }
   public static Double toFloat(String self, boolean checked) { return FanFloat.fromStr(self, checked); }

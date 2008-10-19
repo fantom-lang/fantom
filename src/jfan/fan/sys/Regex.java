@@ -45,7 +45,7 @@ public final class Regex
 
   public final int hashCode() { return source.hashCode(); }
 
-  public final Long hash() { return FanStr.hash(source); }
+  public final long hash() { return FanStr.hash(source); }
 
   public String toStr() { return source; }
 
@@ -66,9 +66,9 @@ public final class Regex
   }
 
   public List split(String s) { return split(s, 0L); }
-  public List split(String s, Long limit)
+  public List split(String s, long limit)
   {
-    return new List(pattern.split(s, limit.intValue()));
+    return new List(pattern.split(s, (int)limit));
   }
 
 //////////////////////////////////////////////////////////////////////////

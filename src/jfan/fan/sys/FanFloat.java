@@ -39,14 +39,14 @@ public final class FanFloat
     }
   }
 
-  public static double makeBits(Long bits)
+  public static double makeBits(long bits)
   {
-    return Double.longBitsToDouble(bits.longValue());
+    return Double.longBitsToDouble(bits);
   }
 
-  public static double makeBits32(Long bits)
+  public static double makeBits32(long bits)
   {
-    return Float.intBitsToFloat(bits.intValue());
+    return Float.intBitsToFloat((int)bits);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ public final class FanFloat
     return Math.abs(self - that) <= t;
   }
 
-  public static Long compare(double self, Object obj)
+  public static long compare(double self, Object obj)
   {
     double that = ((Double)obj).doubleValue();
     if (Double.isNaN(self))
@@ -95,19 +95,19 @@ public final class FanFloat
     }
   }
 
-  public static Long hash(double self)
+  public static long hash(double self)
   {
     return bits(self);
   }
 
-  public static Long bits(double self)
+  public static long bits(double self)
   {
-    return Long.valueOf(Double.doubleToLongBits(self));
+    return Double.doubleToLongBits(self);
   }
 
-  public static Long bits32(double self)
+  public static long bits32(double self)
   {
-    return Long.valueOf(Float.floatToIntBits((float)self) & 0xFFFFFFFFL);
+    return Float.floatToIntBits((float)self) & 0xFFFFFFFFL;
   }
 
   public static Type type(double self)

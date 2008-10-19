@@ -321,7 +321,7 @@ public class LocalFile
     }
   }
 
-  public Buf mmap(String mode, Long pos, Long size)
+  public Buf mmap(String mode, long pos, Long size)
   {
     try
     {
@@ -338,7 +338,7 @@ public class LocalFile
       // traverse the various Java APIs
       RandomAccessFile fp = new RandomAccessFile(file, rw);
       FileChannel chan = fp.getChannel();
-      MappedByteBuffer mmap = chan.map(mm, pos.longValue(), size.longValue());
+      MappedByteBuffer mmap = chan.map(mm, pos, size.longValue());
 
       return new MmapBuf(this, mmap);
     }

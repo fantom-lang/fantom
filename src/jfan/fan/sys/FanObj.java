@@ -41,32 +41,32 @@ public class FanObj
     return self.equals(x);
   }
 
-  public static Long compare(Object self, Object x)
+  public static long compare(Object self, Object x)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).compare(x);
     else if (self instanceof Comparable)
-      return Long.valueOf(((Comparable)self).compareTo(x));
+      return ((Comparable)self).compareTo(x);
     else
       return FanStr.compare(toStr(self), toStr(x));
   }
 
-  public Long compare(Object obj)
+  public long compare(Object obj)
   {
     return FanStr.compare(toStr(), toStr(obj));
   }
 
-  public static Long hash(Object self)
+  public static long hash(Object self)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).hash();
     else
-      return Long.valueOf(self.hashCode());
+      return self.hashCode();
   }
 
-  public Long hash()
+  public long hash()
   {
-    return Long.valueOf(super.hashCode());
+    return super.hashCode();
   }
 
   public static String toStr(Object self)

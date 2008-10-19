@@ -183,7 +183,7 @@ public abstract class Prop
       if (peer.control instanceof Control)
       {
         Control c = (Control)peer.control;
-        c.setLocation(v.x.intValue(), v.y.intValue());
+        c.setLocation((int)v.x, (int)v.y);
       }
     }
 
@@ -218,7 +218,7 @@ public abstract class Prop
       if (peer.control instanceof Control)
       {
         Control c = (Control)peer.control;
-        c.setSize(v.w.intValue(), v.h.intValue());
+        c.setSize((int)v.w, (int)v.h);
       }
     }
 
