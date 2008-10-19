@@ -960,7 +960,7 @@ class CodeAsm : CompilerSupport
     expr(withBlock.base)
     withBlock.subs.each |WithSubExpr sub|
     {
-      opType(FOp.Dup, sub.ctype)
+      opType(FOp.Dup, withBlock.ctype)
       expr(sub.expr)
       if (sub.expr.leave) throw Err.make("should never leave with expr " + sub.location)
     }
