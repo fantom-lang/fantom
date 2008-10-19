@@ -1169,14 +1169,26 @@ class TypeCheckExpr : Expr
       return super.serialize
   }
 
+  Str opStr()
+  {
+    switch (id)
+    {
+      case ExprId.isExpr:    return "is"
+      case ExprId.isnotExpr: return "isnot"
+      case ExprId.asExpr:    return "as"
+      default:               throw Err.make(id.toStr)
+    }
+  }
+
   override Str toStr()
   {
     switch (id)
     {
-      case ExprId.isExpr: return "($target is $check)"
-      case ExprId.asExpr: return "($target as $check)"
-      case ExprId.coerce: return "(($check)$target)"
-      default:            throw Err.make(id.toStr)
+      case ExprId.isExpr:    return "($target is $check)"
+      case ExprId.isnotExpr: return "($target isnot $check)"
+      case ExprId.asExpr:    return "($target as $check)"
+      case ExprId.coerce:    return "(($check)$target)"
+      default:               throw Err.make(id.toStr)
     }
   }
 
