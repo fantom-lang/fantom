@@ -332,13 +332,16 @@ class CodeAsm : CompilerSupport
   private Void tableSwitchStmt(SwitchStmt stmt, Int min, Int max)
   {
     stmt.isTableswitch = true
-    isEnum := stmt.condition.ctype.isEnum
+    conditionType := stmt.condition.ctype
+    isEnum := conditionType.isEnum
 
     // push condition onto the stack
     expr(stmt.condition)
 
-    // if this is an enum get ordinal on the stack
-    if (isEnum)
+    // get a real int onto the stack
+    if (conditionType.isInt && conditionType.isNullable)
+      coerceOp(conditionType, ns.intType)
+    else if (isEnum)
       op(FOp.CallVirtual, fpod.addMethodRef(ns.enumOrdinal))
 
     // if min is not zero, then do a subtraction so that
