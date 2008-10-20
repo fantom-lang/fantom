@@ -255,21 +255,18 @@ class ExprTest : CompilerTest
 
   Void testElvis()
   {
-/*
-TODO
-    verifyExpr("a?:\"x\"", "abc", "abc")
-    verifyExpr("a?:\"x\"", "x", xNull)
-    verifyExpr("a.index(\"b\")?:-1", 1, "abc")
-    verifyExpr("a.index(\"b\")?:-1", -1, "xyz")
-*/
+    verifyExpr("a?:\"x\"", "abc", "abc", null, "", true)
+    verifyExpr("a?:\"x\"", "x", xNull, null, "", true)
+    verifyExpr("a.index(\"b\")?:-1", 1, "abc", null, "", true)
+    verifyExpr("a.index(\"b\")?:-1", -1, "xyz", null, "", true)
 
-    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", "bar")
-    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", xNull)
-    verifyExpr("a ?: b ?: \"x\"", "bar", xNull, "bar")
-    verifyExpr("a ?: b ?: \"x\"", "x",   xNull, xNull)
+    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", "bar", "", true)
+    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", xNull, "", true)
+    verifyExpr("a ?: b ?: \"x\"", "bar", xNull, "bar", "", true)
+    verifyExpr("a ?: b ?: \"x\"", "x",   xNull, xNull, "", true)
 
-    verifyExpr("a ?: b < \"m\"", true, "a", "z")
-    verifyExpr("a ?: b < \"m\"", false, xNull, "z")
+    verifyExpr("a ?: b < \"m\"", true, "a", "z", "", true)
+    verifyExpr("a ?: b < \"m\"", false, xNull, "z", "", true)
   }
 
 //////////////////////////////////////////////////////////////////////////

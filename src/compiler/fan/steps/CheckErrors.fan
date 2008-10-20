@@ -617,6 +617,7 @@ class CheckErrors : CompilerStep
       case ExprId.cmpNull:
       case ExprId.cmpNotNull:     checkCompareNull((UnaryExpr)expr)
       case ExprId.assign:         checkAssign((BinaryExpr)expr)
+      case ExprId.elvis:          checkElvis((BinaryExpr)expr)
       case ExprId.boolOr:
       case ExprId.boolAnd:        checkBools((CondExpr)expr)
       case ExprId.same:
@@ -751,6 +752,17 @@ class CheckErrors : CompilerStep
     // take this opportunity to generate a temp local variable if needed
     if (expr.leave && expr.lhs.assignRequiresTempVar)
       expr.tempVar = curMethod.addLocalVar(expr.lhs.ctype, null, null)
+  }
+
+  private Void checkElvis(BinaryExpr expr)
+  {
+    if (!expr.lhs.ctype.isNullable)
+      err("Cannot use '?:' operator on non-nullable type '$expr.lhs.ctype'", expr.location)
+
+    expr.rhs = coerce(expr.rhs, expr.ctype) |,|
+    {
+      err("Cannot coerce '$expr.rhs.toTypeStr' to '$expr.ctype'", expr.rhs.location);
+    }
   }
 
   private Void checkNoNullSafes(Expr x)

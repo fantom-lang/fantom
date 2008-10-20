@@ -26,7 +26,7 @@ internal class Parser
     options  = doc.options
     syntax   = doc.syntax
     rules    = doc.rules
-    brackets = rules.brackets ?: ""
+    brackets = rules.brackets
 
     // build keyword map, and also a prefix map
     // of the first two characters for fast yes/no
