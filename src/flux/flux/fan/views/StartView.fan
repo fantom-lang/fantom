@@ -38,7 +38,7 @@ internal class StartRecentTableModel : TableModel
     icons = Image[,]
     items.map(icons) |HistoryItem item->Obj|
     {
-      return Image.make(item.iconUri, false) ?: def
+      return Image(item.iconUri, false) ?: def
     }
   }
 
