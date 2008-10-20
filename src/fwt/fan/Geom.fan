@@ -315,13 +315,7 @@ const class Hints
   {
     that := obj as Hints
     if (that == null) return false
-// TODO
-//    return this.w == that.w && this.h == that.h
-if (this.w == null) { if (that.w != null) return false }
-else if (this.w != that.w) return false
-if (this.h == null) { if (that.h != null) return false }
-else if (this.h != that.h) return false
-return true
+    return this.w == that.w && this.h == that.h
   }
 
   ** Add the given w and h to this hint's dimensions.  If a hint

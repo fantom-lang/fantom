@@ -729,6 +729,8 @@ class CallExpr : NameExpr
 
   override Bool isStmt() { return true }
 
+  virtual Bool isCompare() { return false }
+
   override Void walkChildren(Visitor v)
   {
     target = walkExpr(v, target)
@@ -864,7 +866,12 @@ class ShortcutExpr : CallExpr
 
   override Bool isAssignable()
   {
-    return op == ShortcutOp.get
+    return op === ShortcutOp.get
+  }
+
+  override Bool isCompare()
+  {
+    return op === ShortcutOp.eq || op === ShortcutOp.cmp
   }
 
   override Bool isStmt() { return isAssign || op === ShortcutOp.set }

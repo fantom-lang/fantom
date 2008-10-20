@@ -927,10 +927,14 @@ class CheckErrors : CompilerStep
     if (call.isSafe && call.target != null && !call.target.ctype.isNullable)
       err("Cannot use null-safe call on non-nullable type '$call.target.ctype'", call.target.location)
 
-    // if calling a method on a value-type, ensure target is coerced to non-null
-    target := call.target
-    if (target != null && target.ctype.isValue && target.ctype.isNullable)
-      call.target = coerce(target, target.ctype.toNonNullable) |,| { throw Err() }
+    // if calling a method on a value-type, ensure target is
+    // coerced to non-null; we don't do this for comparisons
+    // since they are handled with special opcodes
+    if (call.target != null && !call.isCompare)
+    {
+      if (call.target.ctype.isValue || call.method.parent.isValue)
+        call.target = coerce(call.target, call.method.parent) |,| {}
+    }
   }
 
   private Void checkField(FieldExpr f)
