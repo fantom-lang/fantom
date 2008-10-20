@@ -1167,15 +1167,9 @@ class CodeAsm : CompilerSupport
   {
     // evaluate target
     method := call.method
-    if (call.target != null)
-    {
-      // push call target onto the stack
-      expr(call.target)
 
-      // if target is Obj/Num method on value-type then box it
-      if (call.target.ctype.isValue && !call.method.parent.isValue)
-        coerceOp(call.target.ctype, call.method.parent)
-    }
+    // push call target onto the stack
+    if (call.target != null) expr(call.target)
 
     // if safe, check for null
     Int? isNullLabel := null
@@ -1347,7 +1341,7 @@ class CodeAsm : CompilerSupport
   {
     // TODO: need to optimize for value-type comparisons
     expr(call.target)
-    if (call.target.ctype.isValue) coerceOp(call.target.ctype, ns.objType)
+    if (call.target.ctype.isValue) coerceOp(call.target.ctype, ns.objType.toNullable)
     call.args.each |Expr arg| { expr(arg) }
     op(opCode)
   }

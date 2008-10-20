@@ -64,14 +64,7 @@ const class Mark
   {
     x := that as Mark
     if (x == null) return false
-// TODO
-//    return uri == x.uri && line == x.line && col == x.col
-if (uri != x.uri) return false
-if (line == null) { if (x.line != null) return false }
-else if (line != x.line) return false
-if (col == null) { if (x.col != null) return false }
-else if (col != x.col) return false
-return true
+    return uri == x.uri && line == x.line && col == x.col
   }
 
   **
@@ -82,19 +75,8 @@ return true
     x := that as Mark
     if (x == null) return super.compare(that)
     cmp := uri <=> x.uri
-// TODO
-//    if (cmp == 0) cmp = line <=> x.line
-//    if (cmp == 0) cmp = col <=> x.col
-if (cmp == 0)
-{
-  if (line == null) cmp = x.line == null ? 0 : -1
-  else cmp = line <=> x.line
-}
-if (cmp == 0)
-{
-  if (col == null) cmp = x.col == null ? 0 : -1
-  else cmp = col <=> x.col
-}
+    if (cmp == 0) cmp = line <=> x.line
+    if (cmp == 0) cmp = col <=> x.col
     return cmp
   }
 
