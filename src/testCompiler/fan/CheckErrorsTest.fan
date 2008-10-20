@@ -1092,6 +1092,9 @@ class CheckErrorsTest : CompilerTest
           x?.i += 5
           nn?.y
           temp := nn?.i
+          foo1 := x ?: 5 // ok
+          foo2 := nn ?: 5 // not-ok
+          int1 := 5; int2 := int1 ?: 7
         }
 
         Foo? y() { return this }
@@ -1111,6 +1114,8 @@ class CheckErrorsTest : CompilerTest
          9,  8, "Null-safe operator on left hand side of assignment",
         10,  5, "Cannot use null-safe call on non-nullable type '$podName::Foo'",
         11, 13, "Cannot use null-safe access on non-nullable type '$podName::Foo'",
+        13, 13, "Cannot use '?:' operator on non-nullable type '$podName::Foo'",
+        14, 24, "Cannot use '?:' operator on non-nullable type 'sys::Int'",
        ])
   }
 

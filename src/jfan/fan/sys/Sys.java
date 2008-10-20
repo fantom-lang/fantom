@@ -17,7 +17,7 @@ import fanx.util.*;
 /**
  * Sys provides static access to the system's environment.
  */
-public class Sys
+public final class Sys
   extends FanObj
 {
 

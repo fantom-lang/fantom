@@ -89,7 +89,7 @@ class ListTest : Test
     verifyEq([this->toStr].type, Obj?[]#)
     verifyEq([Pod.find("xxxx", false)].type, Pod?[]#)
     verifyEq([this as Test].type, Test?[]#)
-    verifyEq([this ?: "foo"].type, Obj?[]#)
+    verifyEq([(Obj?)this ?: "foo"].type, Obj?[]#)
     verifyEq([x?.toStr].type, Str?[]#)
     verifyEq([x?.def].type, Int?[]#)
     verifyEq([x?.caseInsensitive].type, Bool?[]#)

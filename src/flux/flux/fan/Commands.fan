@@ -703,7 +703,7 @@ internal class RecentTableModel : TableModel
     icons = Image[,]
     items.map(icons) |HistoryItem item->Obj|
     {
-      return Image(item.iconUri, false) ?: def
+      return Image.make(item.iconUri, false) ?: def
     }
   }
 
