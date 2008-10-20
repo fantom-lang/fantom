@@ -82,10 +82,10 @@ namespace Fanx.Emit
     /// and invoke them
     ///
     ///   fan:
-    ///     class Foo { new make(Int a) { ... } }
+    ///     class Foo { new make(Long a) { ... } }
     ///   .net:
-    ///     static Foo make(Int a) { return make_(new Foo(), a) }
-    ///     static Foo make_(Foo self, Int a) { ... return self }
+    ///     static Foo make(Long a) { return make_(new Foo(), a) }
+    ///     static Foo make_(Foo self, Long a) { ... return self }
     ///
     /// We call the first method "make" the "factory" and the
     /// second method "make_" the "body".  CallNew opcodes are
@@ -288,12 +288,12 @@ namespace Fanx.Emit
     ///
     ///   mixin Mixin
     ///   {
-    ///     abstract Int foo()
+    ///     abstract Long foo()
     ///   }
     ///
     ///   class Base
     ///   {
-    ///     Int foo() { return 5 }
+    ///     Long foo() { return 5 }
     ///   }
     ///
     ///   class Child : Base, Mixin
@@ -307,7 +307,7 @@ namespace Fanx.Emit
     ///
     ///   class Child : Base, Mixin
     ///   {
-    ///     public virtual Int foo() { return base.foo(); }
+    ///     public virtual Long foo() { return base.foo(); }
     ///   }
     ///
     ///   TODO - optimize the intra-pod case

@@ -63,7 +63,7 @@ namespace Fanx.Serial
         case ID:               return "identifier";
         case BOOL_LITERAL:     return "Bool literal";
         case STR_LITERAL:      return "Str literal";
-        case INT_LITERAL:      return "Int literal";
+        case INT_LITERAL:      return "Long literal";
         case FLOAT_LITERAL:    return "Float literal";
         case DECIMAL_LITERAL:  return "Decimal literal";
         case DURATION_LITERAL: return "Duration literal";

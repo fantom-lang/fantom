@@ -73,7 +73,7 @@ namespace Fanx.Test
     {
       Pod pod = Pod.find("sys", true, null);
       verify(pod.findType("Boolean", true) == Sys.BoolType);
-      verify(pod.findType("Int", true)  == Sys.IntType);
+      verify(pod.findType("Long", true)  == Sys.IntType);
       verify(pod.findType("Str", true)  == Sys.StrType);
 
       verify(Fan.Sys.Type.find(Str.make("sys::Boolean")) == Sys.BoolType);
@@ -113,7 +113,7 @@ namespace Fanx.Test
     public void verifySysReflect()
     {
       verifySysImpl("sys::Boolean", "Fan.Sys.Boolean");
-      verifySysImpl("sys::Int",  "Fan.Sys.Int");
+      verifySysImpl("sys::Long",  "Fan.Sys.Long");
       verifySysImpl("sys::Str",  "Fan.Sys.Str");
     }
 
@@ -150,7 +150,7 @@ namespace Fanx.Test
     {
       string code = "class Foo {\n" +
         "  Boolean b\n" +
-        "  Int i\n" +
+        "  Long i\n" +
         "  Str s\n" +
         "}";
       stub(code);

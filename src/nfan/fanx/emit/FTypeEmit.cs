@@ -561,7 +561,7 @@ namespace Fanx.Emit
     internal PERWAPI.Field BoolTrue;
     internal PERWAPI.Field BoolFalse;
     internal PERWAPI.Method BoolVal;
-    internal PERWAPI.Field IntVal;
+    internal PERWAPI.Method IntVal;
     internal PERWAPI.Method ErrMake;
     internal PERWAPI.Field ErrVal;
 

@@ -142,7 +142,7 @@ namespace Fanx.Tools
 
     static int toResult(object obj)
     {
-      if (obj is Int) return (int)((Int)obj).val;
+      if (obj is Long) return ((Long)obj).intValue();
       return 0;
     }
 
@@ -176,7 +176,7 @@ namespace Fanx.Tools
       for (int i=0; i<pods.sz(); i++)
       {
         Pod pod = (Pod)pods.get(i);
-        writeLine("  " + pod.name().justl(Int.make(14)) + "  " + pod.version());
+        writeLine("  " + pod.name().justl(Long.valueOf(14)) + "  " + pod.version());
       }
     }
 

@@ -159,7 +159,7 @@ namespace Fan.Sys
           return;
 
         // port 80 -> null
-        if (port != null && port.val == 80) port = null;
+        if (port != null && port.longValue() == 80) port = null;
 
         // if path is "" -> "/"
         if (pathStr == null || pathStr.val.Length == 0)
@@ -182,15 +182,15 @@ namespace Fan.Sys
           Str seg = (Str)path.get(i);
           if (seg.val == "." && (path.sz() > 1 || host != null))
           {
-            path.removeAt(Int.make(i));
+            path.removeAt(Long.valueOf(i));
             modified = true;
             dotLast = true;
             i -= 1;
           }
           else if (seg.val == ".." && i > 0 && path.get(i-1).ToString() != "..")
           {
-            path.removeAt(Int.make(i));
-            path.removeAt(Int.make(i-1));
+            path.removeAt(Long.valueOf(i));
+            path.removeAt(Long.valueOf(i-1));
             modified = true;
             i -= 2;
             dotLast = true;
@@ -218,7 +218,7 @@ namespace Fan.Sys
       internal Str scheme;
       internal Str host;
       internal Str userInfo;
-      internal Int port;
+      internal Long port;
       internal Str pathStr;
       internal List path;
       internal Str queryStr;
@@ -295,7 +295,7 @@ namespace Fan.Sys
           // if we found an colon, parse out port
           if (colon > 0)
           {
-            this.port = Int.make(Convert.ToInt64(str.Substring(colon+1, authEnd-colon-1)));
+            this.port = Long.valueOf(Convert.ToInt64(str.Substring(colon+1, authEnd-colon-1)));
             hostEnd = colon;
           }
 
@@ -599,7 +599,7 @@ namespace Fan.Sys
           buf.Append('/').Append('/');
           if (uri.m_userInfo != null) encode(uri.m_userInfo, USER).Append('@');
           if (uri.m_host != null) encode(uri.m_host, HOST);
-          if (uri.m_port != null) buf.Append(':').Append(uri.m_port.val);
+          if (uri.m_port != null) buf.Append(':').Append(uri.m_port.longValue());
         }
 
         // path
@@ -706,7 +706,7 @@ namespace Fan.Sys
       return m_str.GetHashCode();
     }
 
-    public override Int hash()
+    public override Long hash()
     {
       return m_str.hash();
     }
@@ -789,7 +789,7 @@ namespace Fan.Sys
       return m_userInfo;
     }
 
-    public Int port()
+    public Long port()
     {
       return m_port;
     }
@@ -1011,12 +1011,12 @@ namespace Fan.Sys
       else
       {
         // slice my path
-        t.path = this.m_path.slice(Range.makeInclusive(Int.make(d), Int.NegOne));
+        t.path = this.m_path.slice(Range.makeInclusive(Long.valueOf(d), FanInt.NegOne));
 
         // insert .. backup if needed
         int backup = baseUri.m_path.sz() - d;
         if (!baseUri.isDir().booleanValue()) backup--;
-        while (backup-- > 0) t.path.insert(Int.Zero, dotDot);
+        while (backup-- > 0) t.path.insert(FanInt.Zero, dotDot);
 
         // format the new path string
         t.pathStr = toPathStr(false, t.path, this.isDir().booleanValue());
@@ -1431,14 +1431,14 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    static readonly Range parentRange = Range.make(Int.Zero, Int.NegTwo, Boolean.False);
+    static readonly Range parentRange = Range.make(FanInt.Zero, FanInt.NegTwo, Boolean.False);
     static readonly Str dotDot = Str.make("..");
 
     internal readonly Str m_str;
     internal readonly Str m_scheme;
     internal readonly Str m_userInfo;
     internal readonly Str m_host;
-    internal readonly Int m_port;
+    internal readonly Long m_port;
     internal readonly List m_path;
     internal readonly Str m_pathStr;
     internal readonly Map m_query;

@@ -37,9 +37,9 @@ namespace Fanx.Test
     {
       Str a = Str.make("a"), b = Str.make("b"), c = Str.make("c"),
           d = Str.make("d"), e = Str.make("e"), f = Str.make("f");
-      Int i0 = Int.make(0);
-      Int i1 = Int.make(1);
-      Int i2 = Int.make(2);
+      Long i0 = Long.valueOf(0);
+      Long i1 = Long.valueOf(1);
+      Long i2 = Long.valueOf(2);
 
       List x = new List(Sys.StrType);
       verify(x);
@@ -61,7 +61,7 @@ namespace Fanx.Test
         object[] match = new object[i];
 
         for (int j=0; j<i; ++j)
-          list.add(match[j] = Int.make(j));
+          list.add(match[j] = Long.valueOf(j));
         verify(list, match);
 
         for (int j=0; j<i; ++j)
@@ -133,10 +133,10 @@ namespace Fanx.Test
       verifyThrows("Str f(Str[] x) { return x[-6] }", args, System.Type.GetType("Fan.Sys.IndexErr+Val"));
 
       // parameterized typing
-//      verifyErr("Int f(Str[] x) { return x[0] }", "Cannot return 'sys::Str' as 'sys::Int'");
-//      verifyErr("Void f(Str[] x) { x.add(3) }", "Invalid args add(sys::Int) for add(sys::Str)");
+//      verifyErr("Long f(Str[] x) { return x[0] }", "Cannot return 'sys::Str' as 'sys::Long'");
+//      verifyErr("Void f(Str[] x) { x.add(3) }", "Invalid args add(sys::Long) for add(sys::Str)");
 //      verifyErr("Void f(Str[] x, Obj a) { x.add(a) }", "Invalid args add(sys::Obj) for add(sys::Str)");
-      //verifyErr("Int[] f(Str[] x) { return x }", "Cannot return 'sys::Str[]' as 'sys::Int[]'");
+      //verifyErr("Long[] f(Str[] x) { return x }", "Cannot return 'sys::Str[]' as 'sys::Long[]'");
 
       // TODO - just List; should we allow List/Map to be used or force use of Obj[]?
       // verify("Obj f(List x) { return x[0] }", args, Str.make("0"));
@@ -184,9 +184,9 @@ namespace Fanx.Test
     {
   //System.Console.WriteLine(list);
       verify(list.isEmpty().booleanValue() == (v.Length == 0));
-      verify(list.size().val == v.Length);
-      for (int i=0; i<list.size().val; ++i)
-        verify(list.get(Int.make(i)) == v[i]);
+      verify(list.size().longValue() == v.Length);
+      for (int i=0; i<list.size().longValue(); ++i)
+        verify(list.get(Long.valueOf(i)) == v[i]);
     }
 
   }

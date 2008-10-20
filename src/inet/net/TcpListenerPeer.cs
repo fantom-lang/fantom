@@ -54,25 +54,25 @@ namespace Fan.Inet
       return IpAddressPeer.make(pt.Address);
     }
 
-    public Int localPort(TcpListener fan)
+    public Long localPort(TcpListener fan)
     {
       if (!m_bound) return null;
       IPEndPoint pt = m_net.LocalEndpoint as IPEndPoint;
       if (pt == null) return null;
       // TODO - null for default port?
-      return Int.make(pt.Port);
+      return Long.valueOf(pt.Port);
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public TcpListener bind(TcpListener fan, IpAddress addr, Int port, Int backlog)
+    public TcpListener bind(TcpListener fan, IpAddress addr, Long port, Long backlog)
     {
       IPAddress netAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_net;
-      int netPort = (port == null) ? 0 : (int)port.val;
+      int netPort = (port == null) ? 0 : port.intValue();
       m_net = new System.Net.Sockets.TcpListener(netAddr, netPort);
-      m_net.Start((int)backlog.val);
+      m_net.Start(backlog.intValue());
       m_bound = true;
       return fan;
     }
@@ -113,14 +113,14 @@ namespace Fan.Inet
   // Socket Options
   //////////////////////////////////////////////////////////////////////////
 
-    public Int getReceiveBufferSize(TcpListener fan)
+    public Long getReceiveBufferSize(TcpListener fan)
     {
-      return Int.make(m_net.Server.ReceiveBufferSize);
+      return Long.valueOf(m_net.Server.ReceiveBufferSize);
     }
 
-    public void setReceiveBufferSize(TcpListener fan, Int v)
+    public void setReceiveBufferSize(TcpListener fan, Long v)
     {
-      m_net.Server.ReceiveBufferSize = (int)v.val;
+      m_net.Server.ReceiveBufferSize = v.intValue();
     }
 
     public Fan.Sys.Boolean getReuseAddress(TcpListener fan)

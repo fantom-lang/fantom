@@ -287,7 +287,7 @@ namespace Fanx.Serial
         }
         else
         {
-          this.m_val = Int.make(num);
+          this.m_val = Long.valueOf(num);
           return Token.INT_LITERAL;
         }
       }
@@ -325,7 +325,7 @@ namespace Fanx.Serial
         consume();
       }
 
-      m_val = Int.make(val);
+      m_val = Long.valueOf(val);
       return type;
     }
 
@@ -370,7 +370,7 @@ namespace Fanx.Serial
   //////////////////////////////////////////////////////////////////////////
 
     /// <summary>
-    /// Parse a char literal token (as Int literal).
+    /// Parse a char literal token (as Long literal).
     /// </summary>
     private int ch()
     {
@@ -393,7 +393,7 @@ namespace Fanx.Serial
       if (cur != '\'') throw err("Expecting ' close of char literal");
       consume();
 
-      m_val = Int.make(c);
+      m_val = Long.valueOf(c);
       return Token.INT_LITERAL;
     }
 

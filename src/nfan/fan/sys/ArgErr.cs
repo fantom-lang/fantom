@@ -21,7 +21,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public new static ArgErr make(string msg)  { return make(Str.make(msg)); }
-    public static ArgErr make(Int index)   { return make(Str.make(index.ToString())); }
+    public static ArgErr make(Long index)   { return make(Str.make(index.ToString())); }
     public static ArgErr make(Range index) { return make(Str.make(index.ToString())); }
 
   //////////////////////////////////////////////////////////////////////////

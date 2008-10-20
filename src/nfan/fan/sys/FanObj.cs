@@ -25,7 +25,7 @@ namespace Fan.Sys
 
     public override int GetHashCode()
     {
-      long h = hash().val;
+      long h = hash().longValue();
       return (int)(h ^ (h >> 32));
     }
 
@@ -56,32 +56,32 @@ namespace Fan.Sys
       return this == obj ? Boolean.True : Boolean.False;
     }
 
-    public static Int compare(object self, object x)
+    public static Long compare(object self, object x)
     {
       if (self is FanObj)
         return ((FanObj)self).compare(x);
       else if (self is IComparable)
-        return Int.make(((IComparable)self).CompareTo(x));
+        return Long.valueOf(((IComparable)self).CompareTo(x));
       else
         return toStr(self).compare(toStr(x));
     }
 
-    public virtual Int compare(object obj)
+    public virtual Long compare(object obj)
     {
       return toStr(this).compare(toStr(obj));
     }
 
-    public static Int hash(object self)
+    public static Long hash(object self)
     {
       if (self is FanObj)
         return ((FanObj)self).hash();
       else
-        return Int.make(self.GetHashCode());
+        return Long.valueOf(self.GetHashCode());
     }
 
-    public virtual Int hash()
+    public virtual Long hash()
     {
-      return Int.make(base.GetHashCode());
+      return Long.valueOf(base.GetHashCode());
     }
 
     public static Str toStr(object self)

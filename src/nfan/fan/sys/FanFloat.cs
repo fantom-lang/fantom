@@ -40,14 +40,14 @@ namespace Fan.Sys
       }
     }
 
-    public static Double makeBits(Int bits)
+    public static Double makeBits(Long bits)
     {
-      return Double.valueOf(System.BitConverter.Int64BitsToDouble(bits.val));
+      return Double.valueOf(System.BitConverter.Int64BitsToDouble(bits.longValue()));
     }
 
-    public static Double makeBits32(Int bits)
+    public static Double makeBits32(Long bits)
     {
-      return Double.valueOf(System.BitConverter.ToSingle(System.BitConverter.GetBytes(bits.val), 0));
+      return Double.valueOf(System.BitConverter.ToSingle(System.BitConverter.GetBytes(bits.longValue()), 0));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -80,37 +80,37 @@ namespace Fan.Sys
       return System.Math.Abs(self.doubleValue() - that.doubleValue()) <= t ? Boolean.True : Boolean.False;
     }
 
-    public static Int compare(Double self, object obj)
+    public static Long compare(Double self, object obj)
     {
       double val = self.doubleValue();
       double that = ((Double)obj).doubleValue();
       if (Double.isNaN(val))
       {
-        return (Double.isNaN(that)) ? Int.EQ : Int.LT;
+        return (Double.isNaN(that)) ? FanInt.EQ : FanInt.LT;
       }
       else if (Double.isNaN(that))
       {
-        return Int.LT;
+        return FanInt.LT;
       }
       else
       {
-        if (val < that) return Int.LT; return val == that ? Int.EQ : Int.GT;
+        if (val < that) return FanInt.LT; return val == that ? FanInt.EQ : FanInt.GT;
       }
     }
 
-    public static Int hash(Double self)
+    public static Long hash(Double self)
     {
       return bits(self);
     }
 
-    public static Int bits(Double self)
+    public static Long bits(Double self)
     {
-      return Int.make(System.BitConverter.DoubleToInt64Bits(self.doubleValue()));
+      return Long.valueOf(System.BitConverter.DoubleToInt64Bits(self.doubleValue()));
     }
 
-    public static Int bits32(Double self)
+    public static Long bits32(Double self)
     {
-      return Int.make(System.BitConverter.ToInt32(System.BitConverter.GetBytes(self.floatValue()), 0) & 0xFFFFFFFFL);
+      return Long.valueOf(System.BitConverter.ToInt32(System.BitConverter.GetBytes(self.floatValue()), 0) & 0xFFFFFFFFL);
     }
 
     public static Type type(Double self)
@@ -135,16 +135,16 @@ namespace Fan.Sys
   // Num
   //////////////////////////////////////////////////////////////////////////
 
-    public static Int toInt(Double self)
+    public static Long toInt(Double self)
     {
       /*
       // TODO
       double val = self.doubleValue();
-      if (val == System.Double.PositiveInfinity) return Int.make(System.Int64.MaxValue);
-      if (Double.isNaN(val)) return Int.Zero;
-      return Int.make(self.longValue());
+      if (val == System.Double.PositiveInfinity) return Long.valueOf(System.Int64.MaxValue);
+      if (Double.isNaN(val)) return FanInt.Zero;
+      return Long.valueOf(self.longValue());
       */
-      return Int.make(self.longValue());
+      return Long.valueOf(self.longValue());
     }
 
     public static Double toFloat(Double self) { return self; }

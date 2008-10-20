@@ -42,7 +42,7 @@ namespace Fanx.Test
       "class Foo\n" +
       "{\n" +
       "  static Foo f() { return Make; }\n" +
-      "  Int a := 6\n" +
+      "  Long a := 6\n" +
       "}";
 
     public void Play()
@@ -51,7 +51,7 @@ namespace Fanx.Test
   if (true) return;
       Class cls = compileToClass(play);
       Object foo = invoke(cls, "f");
-      verify(get(foo, "a"), Int.make(6));
+      verify(get(foo, "a"), Long.valueOf(6));
     }
 */
 
@@ -63,14 +63,14 @@ namespace Fanx.Test
       "class Foo\n" +
       "{\n" +
 
-      "  new make(Int x)\n" +
+      "  new make(Long x)\n" +
       "  {\n" +
       "    this.x = x;\n" +
       "  }\n" +
 
-      "  Int x\n" +
-      "  Int y := 3\n" +
-      "  static const Int z := 4\n" +
+      "  Long x\n" +
+      "  Long y := 3\n" +
+      "  static const Long z := 4\n" +
 
       "  static Foo f() { return make(2); }\n" +
       "}";
@@ -79,9 +79,9 @@ namespace Fanx.Test
     {
       System.Type type = CompileToType(simple);
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[0]);
-        verify(Get(o, "x")   == Int.make(2));
-        verify(Get(o, "y")   == Int.make(3));
-        verify(Get(type, "z") == Int.make(4));
+        verify(Get(o, "x")   == Long.valueOf(2));
+        verify(Get(o, "y")   == Long.valueOf(3));
+        verify(Get(type, "z") == Long.valueOf(4));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ namespace Fanx.Test
       "class Foo\n" +
       "{\n" +
 
-      "  new make(Int a, Int b, Int c, Int d, Int e, Int f, Int g)\n" +
+      "  new make(Long a, Long b, Long c, Long d, Long e, Long f, Long g)\n" +
       "  {\n" +
       "    this.a = a\n" +
       "    this.b = b\n" +
@@ -103,13 +103,13 @@ namespace Fanx.Test
       "    this.g = g\n" +
       "  }\n" +
 
-      "  Int a\n" +
-      "  Int b\n" +
-      "  Int c\n" +
-      "  Int d\n" +
-      "  Int e\n" +
-      "  Int f\n" +
-      "  Int g\n" +
+      "  Long a\n" +
+      "  Long b\n" +
+      "  Long c\n" +
+      "  Long d\n" +
+      "  Long e\n" +
+      "  Long f\n" +
+      "  Long g\n" +
 
       "  static Foo what() { return make(1, 2, 3, 4, 5, 6, 7); }\n" +
       "}";
@@ -118,13 +118,13 @@ namespace Fanx.Test
     {
       System.Type type = CompileToType(manyArgCtor);
       object o = type.InvokeMember("What", GetStaticFlags(), null, null, new object[0]);
-        verify(Get(o, "a")   == Int.make(1));
-        verify(Get(o, "b")   == Int.make(2));
-        verify(Get(o, "c")   == Int.make(3));
-        verify(Get(o, "d")   == Int.make(4));
-        verify(Get(o, "e")   == Int.make(5));
-        verify(Get(o, "f")   == Int.make(6));
-        verify(Get(o, "g")   == Int.make(7));
+        verify(Get(o, "a")   == Long.valueOf(1));
+        verify(Get(o, "b")   == Long.valueOf(2));
+        verify(Get(o, "c")   == Long.valueOf(3));
+        verify(Get(o, "d")   == Long.valueOf(4));
+        verify(Get(o, "e")   == Long.valueOf(5));
+        verify(Get(o, "f")   == Long.valueOf(6));
+        verify(Get(o, "g")   == Long.valueOf(7));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -140,27 +140,27 @@ namespace Fanx.Test
       "    s2 = s2 + \" overwritten\" \n" +
       "  }\n" +
 
-      "  new makeArgs(Int i0, Str s0)\n" +
+      "  new makeArgs(Long i0, Str s0)\n" +
       "  {\n" +
       "    this.i0 = i0;\n" +
       "    this.s0 = s0;\n" +
       "    s2 = s2 + \" overwritten\" \n" +
       "  }\n" +
 
-      "  static Int zero() { return 0; }\n" +
-      "  static Int one()  { return 1; }\n" +
+      "  static Long zero() { return 0; }\n" +
+      "  static Long one()  { return 1; }\n" +
       "  static Foo make0()                { return make }\n" +
       "  static Foo make1()                { return Foo.make }\n" +
-      "  static Foo make2(Int i0, Str s0)  { return makeArgs(i0, s0); }\n" +
-      "  static Foo make3(Int i0, Str s0)  { return (Foo.makeArgs(i0, s0)); }\n" +
+      "  static Foo make2(Long i0, Str s0)  { return makeArgs(i0, s0); }\n" +
+      "  static Foo make3(Long i0, Str s0)  { return (Foo.makeArgs(i0, s0)); }\n" +
       "  static Str makeAndGet(Str s0)     { return makeArgs(-1, s0).s0; }\n" +
-      "  Int i1PreInc()  { return ++i1; }\n" +
-      "  Int i1PostInc() { return i1++; }\n" +
-      "  Int fooPreInc()  { return ++foo.i1; }\n" +
-      "  Int fooPostInc() { return foo.i1++; }\n" +
+      "  Long i1PreInc()  { return ++i1; }\n" +
+      "  Long i1PostInc() { return i1++; }\n" +
+      "  Long fooPreInc()  { return ++foo.i1; }\n" +
+      "  Long fooPostInc() { return foo.i1++; }\n" +
 
-      "  Int i0;\n" +
-      "  Int i1 := 7;\n" +
+      "  Long i0;\n" +
+      "  Long i1 := 7;\n" +
       "  Double r0 := 7.0;\n" +  // auto-casts
       "  Double r1 := 7.0;\n" +
       "  Str s0;\n" +
@@ -168,10 +168,10 @@ namespace Fanx.Test
       "  Str s2 := \"s2\";\n" +
       "  Foo foo;\n" +
       "  \n" +
-      "  static const Int  si := 3\n" +
+      "  static const Long  si := 3\n" +
       "  static const Double sr := 7.0\n" +  // auto-cast
       "  static const Str  ss\n" +      // default to null
-      "  static const Int  sx\n" +      // compute in static {}
+      "  static const Long  sx\n" +      // compute in static {}
       "  \n" +
       "  static\n" +
       "  {\n" +
@@ -185,39 +185,39 @@ namespace Fanx.Test
       object o;
 
       // static fields
-      verify(Get(type, "si").Equals(Int.make(3)));
+      verify(Get(type, "si").Equals(Long.valueOf(3)));
       verify(Get(type, "sr").Equals(Double.valueOf(7)));
       verify(Get(type, "ss") == null);
-      verify(Get(type, "sx").Equals(Int.make(9)));
+      verify(Get(type, "sx").Equals(Long.valueOf(9)));
 
       // static methods
       o = type.InvokeMember("Zero", GetStaticFlags(), null, null, new object[0]);
-        verify(o.Equals(Int.make(0)));
+        verify(o.Equals(Long.valueOf(0)));
       o = type.InvokeMember("One", GetStaticFlags(), null, null, new object[0]);
-        verify(o.Equals(Int.make(1)));
+        verify(o.Equals(Long.valueOf(1)));
 
       object x = type.InvokeMember("Make", GetStaticFlags(), null, null, new object[0]);
       object y = type.InvokeMember("Make", GetStaticFlags(), null, null, new object[0]);
       verifyDefInit(x);
       o = type.InvokeMember("I1PreInc", GetInstanceFlags(), null, x, new object[0]);
-        verify(o.Equals(Int.make(8)));
-        verify(Get(x, "i1").Equals(Int.make(8)));
+        verify(o.Equals(Long.valueOf(8)));
+        verify(Get(x, "i1").Equals(Long.valueOf(8)));
       o = type.InvokeMember("I1PostInc", GetInstanceFlags(), null, x, new object[0]);
-        verify(o.Equals(Int.make(8)));
-        verify(Get(x, "i1").Equals(Int.make(9)));
+        verify(o.Equals(Long.valueOf(8)));
+        verify(Get(x, "i1").Equals(Long.valueOf(9)));
 
       type.GetField("foo", GetInstanceFlags()).SetValue(x, y);
       o = type.InvokeMember("FooPreInc", GetInstanceFlags(), null, x, new object[0]);
-        verify(o.Equals(Int.make(8)));
-        verify(Get(x, "i1").Equals(Int.make(9)));
-        verify(Get(y, "i1").Equals(Int.make(8)));
+        verify(o.Equals(Long.valueOf(8)));
+        verify(Get(x, "i1").Equals(Long.valueOf(9)));
+        verify(Get(y, "i1").Equals(Long.valueOf(8)));
       o = type.InvokeMember("FooPostInc", GetInstanceFlags(), null, x, new object[0]);
-        verify(o.Equals(Int.make(8)));
-        verify(Get(x, "i1").Equals(Int.make(9)));
-        verify(Get(y, "i1").Equals(Int.make(9)));
+        verify(o.Equals(Long.valueOf(8)));
+        verify(Get(x, "i1").Equals(Long.valueOf(9)));
+        verify(Get(y, "i1").Equals(Long.valueOf(9)));
 
       // instance fields
-      x = type.InvokeMember("MakeArgs", GetStaticFlags(), null, null, new object[] { Int.make(88), Str.make("lombardy") });
+      x = type.InvokeMember("MakeArgs", GetStaticFlags(), null, null, new object[] { Long.valueOf(88), Str.make("lombardy") });
       verifyInit(x, 88, "lombardy");
 
       // factory method
@@ -225,9 +225,9 @@ namespace Fanx.Test
       verifyDefInit(x);
       x = type.InvokeMember("Make1", GetStaticFlags(), null, null, new object[0]);
       verifyDefInit(x);
-      x = type.InvokeMember("Make2", GetStaticFlags(), null, null, new object[] { Int.make(62), Str.make("fan rocks") });
+      x = type.InvokeMember("Make2", GetStaticFlags(), null, null, new object[] { Long.valueOf(62), Str.make("fan rocks") });
       verifyInit(x, 62, "fan rocks");
-      x = type.InvokeMember("Make3", GetStaticFlags(), null, null, new object[] { Int.make(63), Str.make("fan really rocks") });
+      x = type.InvokeMember("Make3", GetStaticFlags(), null, null, new object[] { Long.valueOf(63), Str.make("fan really rocks") });
       verifyInit(x, 63, "fan really rocks");
       x = type.InvokeMember("MakeAndGet", GetStaticFlags(), null, null, new object[] { Str.make("Haley dog!") });
       verify(x.Equals(Str.make("Haley dog!")));
@@ -236,7 +236,7 @@ namespace Fanx.Test
     void verifyDefInit(object x)
     {
       verify(Get(x, "i0") == null);
-      verify(Get(x, "i1").Equals(Int.make(7)));
+      verify(Get(x, "i1").Equals(Long.valueOf(7)));
       verify(Get(x, "s0") == null);
       verify(Get(x, "s1").Equals(Str.make("hello")));
       verify(Get(x, "s2"), Str.make("s2 overwritten"));
@@ -244,8 +244,8 @@ namespace Fanx.Test
 
     void verifyInit(object x, int i0, string s0)
     {
-      verify(Get(x, "i0").Equals(Int.make(i0)));
-      verify(Get(x, "i1").Equals(Int.make(7)));
+      verify(Get(x, "i0").Equals(Long.valueOf(i0)));
+      verify(Get(x, "i1").Equals(Long.valueOf(7)));
       verify(Get(x, "s0").Equals(Str.make(s0)));
       verify(Get(x, "s1").Equals(Str.make("hello")));
       verify(Get(x, "s2").Equals(Str.make("s2 overwritten")));
@@ -305,13 +305,13 @@ namespace Fanx.Test
       "class Foo\n" +
       "{\n" +
 
-      "  static Int a := 1 \n" +
-      "  static Int b := 2 \n" +
-      "  static Int c := a + b \n" +
-      "  static Int d := a + b \n" +
+      "  static Long a := 1 \n" +
+      "  static Long b := 2 \n" +
+      "  static Long c := a + b \n" +
+      "  static Long d := a + b \n" +
       "  static { d = -1 }\n" +
-      "  static Int e := d\n" +
-      "  static Int f\n" +
+      "  static Long e := d\n" +
+      "  static Long f\n" +
       "  static { f = e + 9 }\n" +
 
       "}\n";
@@ -333,12 +333,12 @@ namespace Fanx.Test
     {
       System.Type type = CompileToType(classInit);
 
-      verify(Get(type, "a").Equals(Int.make(a)));
-      verify(Get(type, "b").Equals(Int.make(b)));
-      verify(Get(type, "c").Equals(Int.make(c)));
-      verify(Get(type, "d").Equals(Int.make(d)));
-      verify(Get(type, "e").Equals(Int.make(e)));
-      verify(Get(type, "f").Equals(Int.make(f)));
+      verify(Get(type, "a").Equals(Long.valueOf(a)));
+      verify(Get(type, "b").Equals(Long.valueOf(b)));
+      verify(Get(type, "c").Equals(Long.valueOf(c)));
+      verify(Get(type, "d").Equals(Long.valueOf(d)));
+      verify(Get(type, "e").Equals(Long.valueOf(e)));
+      verify(Get(type, "f").Equals(Long.valueOf(f)));
     }
 */
 
@@ -352,11 +352,11 @@ namespace Fanx.Test
 
       // some static methods
       " static Boolean b() { return true }\n" +
-      " static Int  i() { return 5 }\n" +
+      " static Long  i() { return 5 }\n" +
 
       // basic literals
       "  static const Boolean lb := true \n" +
-      "  static const Int li := 3 \n" +
+      "  static const Long li := 3 \n" +
       "  static const Double lr := 6.9 \n" +
       "  static const Str ls := \"inference rules!\" \n" +
       "  static const Duration lt := 5ns \n" +
@@ -391,7 +391,7 @@ namespace Fanx.Test
 
       // literals
       verify(Get(type, "lb"),  Boolean.True);
-      verify(Get(type, "li"),  Int.make(3));
+      verify(Get(type, "li"),  Long.valueOf(3));
       verify(Get(type, "lr"),  Double.valueOf(6.9));
       verify(Get(type, "ls"),  Str.make("inference rules!"));
       verify(Get(type, "lt"),  Duration.make(5));
@@ -401,17 +401,17 @@ namespace Fanx.Test
 
       // math
 // Andy - TODO
-//      verify(Get(type, "m1"), Int.make(12));
+//      verify(Get(type, "m1"), Long.valueOf(12));
 //      verify(Get(type, "m2"), Double.make(7.7));
 
       // call chains
 // Andy - TODO
 //      verify(Get(type, "call0"), Str.make("ab"));
-//      verify(Get(type, "call1"), Int.make(2));
+//      verify(Get(type, "call1"), Long.valueOf(2));
 
       // my methods (doesn't work, type inference before bind)
       //verify(Get(type, "methodb"), Boolean.valueOf(true));
-      //verify(Get(type, "methodi"), Int.make(5));
+      //verify(Get(type, "methodi"), Long.valueOf(5));
 
       // local type inference
 // Andy - TODO

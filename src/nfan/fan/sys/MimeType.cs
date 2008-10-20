@@ -51,7 +51,7 @@ namespace Fan.Sys
             if (c == '=' && !inQuotes)
             {
               eq = i++;
-              while (Int.isSpace(sub[i])) ++i;
+              while (FanInt.isSpace(sub[i])) ++i;
               if (sub[i] == '"') { inQuotes = true; ++i; }
               else inQuotes = false;
               valStart = i;
@@ -126,7 +126,7 @@ namespace Fan.Sys
       {
         LocalFile f = new LocalFile(new System.IO.FileInfo(Sys.HomeDir + File.m_sep + "lib" + File.m_sep + "ext2mime.props"));
         Map props = f.readProps();
-        Hashtable map = new Hashtable((int)props.size().val * 3);
+        Hashtable map = new Hashtable(props.size().intValue() * 3);
         IDictionaryEnumerator en = props.pairsIterator();
         while (en.MoveNext())
         {
@@ -175,9 +175,9 @@ namespace Fan.Sys
              m_params.GetHashCode();
     }
 
-    public override Int hash()
+    public override Long hash()
     {
-      return Int.make(GetHashCode());
+      return Long.valueOf(GetHashCode());
     }
 
     public override Str toStr()

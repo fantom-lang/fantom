@@ -168,11 +168,11 @@ namespace Fan.Sys
       return m_file.Exists ? Boolean.True : Boolean.False;
     }
 
-    public override Int size()
+    public override Long size()
     {
       if (m_file is DirectoryInfo) return null;
       m_file.Refresh();
-      return Int.make((m_file as FileInfo).Length);
+      return Long.valueOf((m_file as FileInfo).Length);
     }
 
     public override DateTime modified()
@@ -404,7 +404,7 @@ namespace Fan.Sys
       }
     }
 
-    public override Buf mmap(Str mode, Int pos, Int size)
+    public override Buf mmap(Str mode, Long pos, Long size)
     {
       try
       {
@@ -429,7 +429,7 @@ namespace Fan.Sys
         //MappedByteBuffer mmap = chan.map(mm, pos.val, size.val);
         */
 
-        return new MmapBuf(this, mode.val, pos.val, size.val);
+        return new MmapBuf(this, mode.val, pos.longValue(), size.longValue());
       }
       catch (System.IO.IOException e)
       {
@@ -437,7 +437,7 @@ namespace Fan.Sys
       }
     }
 
-    public override InStream @in(Int bufSize)
+    public override InStream @in(Long bufSize)
     {
       try
       {
@@ -450,7 +450,7 @@ namespace Fan.Sys
       }
     }
 
-    public override OutStream @out(Boolean append, Int bufSize)
+    public override OutStream @out(Boolean append, Long bufSize)
     {
       try
       {

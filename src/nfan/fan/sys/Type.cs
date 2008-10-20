@@ -118,8 +118,8 @@ namespace Fan.Sys
     {
       // private undocumented access
       string n = name.val;
-      if (n == "flags")      return Int.make(m_flags);
-      if (n == "lineNumber") { reflect(); return Int.make(m_lineNum); }
+      if (n == "flags")      return Long.valueOf(m_flags);
+      if (n == "lineNumber") { reflect(); return Long.valueOf(m_lineNum); }
       if (n == "sourceFile") { reflect(); return Str.make(m_sourceFile); }
       return base.trap(name, args);
     }
@@ -624,7 +624,7 @@ namespace Fan.Sys
       // data structures of my defined and inherited slots
       List slots  = new List(Sys.SlotType, 64);
       Hashtable nameToSlot  = new Hashtable();   // String -> Slot
-      Hashtable nameToIndex = new Hashtable();   // String -> Int
+      Hashtable nameToIndex = new Hashtable();   // String -> Long
 
       // merge in base class and mixin classes
       merge(m_base, slots, nameToSlot, nameToIndex);
@@ -676,7 +676,7 @@ namespace Fan.Sys
     /// Merge the inherit's slots into my slot maps.
     ///   slots:       Slot[] by order
     ///   nameToSlot:  String name -> Slot
-    ///   nameToIndex: String name -> Int index of slots
+    ///   nameToIndex: String name -> Long index of slots
     /// </summary>
     private void merge(Type inheritedType, List slots, Hashtable nameToSlot, Hashtable nameToIndex)
     {
@@ -692,7 +692,7 @@ namespace Fan.Sys
     /// and my slots in the right order)
     ///   slots:       Slot[] by order
     ///   nameToSlot:  String name -> Slot
-    ///   nameToIndex: String name -> Int index of slots
+    ///   nameToIndex: String name -> Long index of slots
     /// </summary>
     private void merge(Slot slot, List slots, Hashtable nameToSlot, Hashtable nameToIndex)
     {
@@ -700,7 +700,7 @@ namespace Fan.Sys
       if (slot.isCtor().booleanValue() && slot.m_parent != this) return;
 
       string name = slot.m_name.val;
-      Int dup = (Int)nameToIndex[name];
+      Long dup = (Long)nameToIndex[name];
       if (dup != null)
       {
         // if the slot is inherited from Obj, then we can
@@ -733,7 +733,7 @@ namespace Fan.Sys
       {
         nameToSlot[name] = slot;
         slots.add(slot);
-        nameToIndex[name] = Int.make(slots.sz()-1);
+        nameToIndex[name] = Long.valueOf(slots.sz()-1);
       }
     }
 
@@ -788,6 +788,7 @@ namespace Fan.Sys
         {
           try
           {
+            m_netRepr = FanUtil.isNetRepresentation(this);
             m_type = System.Type.GetType(FanUtil.toNetImplTypeName(podName, m_name.val));
           }
           catch (Exception e)
@@ -912,9 +913,13 @@ namespace Fan.Sys
         if (m_pod == Sys.SysPod)
         {
           if (!checkAllFan(pars)) return;
-          bool netStatic = m.IsStatic;
-          if (netStatic && this == Sys.ObjType && name != "echo") return;
-          if (netStatic && !method.isStatic().booleanValue() && !method.isCtor().booleanValue()) --numParams;
+          if (m_netRepr)
+          {
+            bool netStatic = m.IsStatic;
+            if (!netStatic) return;
+            if (!method.isStatic().booleanValue() && !method.isCtor().booleanValue()) --numParams;
+          }
+
         }
 
         // zero index is full signature up to using max defaults
@@ -1003,5 +1008,7 @@ namespace Fan.Sys
     // misc
     Type listOf;
     ConstructorInfo dynamicCtor;  // enabled to store a type per instance
+    internal bool m_netRepr;      // if representation a .NET type, such as Fan.Sys.Long
+
   }
 }

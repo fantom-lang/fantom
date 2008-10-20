@@ -21,12 +21,12 @@ namespace Fan.Sys
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public static SysOutStream make(Stream output, Int bufSize)
+    public static SysOutStream make(Stream output, Long bufSize)
     {
-      if (bufSize == null || bufSize.val == 0)
+      if (bufSize == null || bufSize.longValue() == 0)
         return new SysOutStream(output);
       else
-        return new SysOutStream(new BufferedStream(output, (int)bufSize.val));
+        return new SysOutStream(new BufferedStream(output, bufSize.intValue()));
     }
 
     public SysOutStream(Stream output)
@@ -44,7 +44,7 @@ namespace Fan.Sys
   // OutStream
   //////////////////////////////////////////////////////////////////////////
 
-    public override OutStream write(Int b) { return w((int)b.val); }
+    public override OutStream write(Long b) { return w(b.intValue()); }
     public override OutStream w(int v)
     {
       try
@@ -59,11 +59,11 @@ namespace Fan.Sys
     }
 
     public override OutStream writeBuf(Buf buf) { return writeBuf(buf, buf.remaining()); }
-    public override OutStream writeBuf(Buf buf, Int n)
+    public override OutStream writeBuf(Buf buf, Long n)
     {
       try
       {
-        buf.pipeTo(outStream, n.val);
+        buf.pipeTo(outStream, n.longValue());
         return this;
       }
       catch (IOException e)
@@ -134,7 +134,7 @@ namespace Fan.Sys
         buf.m_buf = b;
         buf.m_pos = off;
         buf.m_size = b.Length;
-        outs.writeBuf(buf, Int.make(len));
+        outs.writeBuf(buf, Long.valueOf(len));
         buf.m_buf = null;
       }
       public override void Close() { outs.close(); }

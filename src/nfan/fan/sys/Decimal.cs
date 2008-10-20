@@ -64,9 +64,9 @@ namespace Fan.Sys
       return Boolean.False;
     }
 
-    public override Int compare(object obj)
+    public override Long compare(object obj)
     {
-      return Int.make(val.CompareTo((obj as Decimal).val));
+      return Long.valueOf(val.CompareTo((obj as Decimal).val));
     }
 
     public override int GetHashCode()
@@ -74,9 +74,9 @@ namespace Fan.Sys
       return val.GetHashCode();
     }
 
-    public override Int hash()
+    public override Long hash()
     {
-      return Int.make(val.GetHashCode());
+      return Long.valueOf(val.GetHashCode());
     }
 
     public override Type type()
@@ -101,7 +101,7 @@ namespace Fan.Sys
   // Num
   //////////////////////////////////////////////////////////////////////////
 
-    public override Int toInt() { return Int.make((long)val); }
+    public override Long toInt() { return Long.valueOf((long)val); }
 
     public override Double toFloat() { return Double.valueOf((double)val); }
 

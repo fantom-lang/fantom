@@ -38,28 +38,28 @@ namespace Fanx.Util
     {
       if (a == null) return (b != null);
       if (b == null) return false;
-      return FanObj.compare(a, b).val < 0;
+      return FanObj.compare(a, b).longValue() < 0;
     }
 
     public static bool compareLEz(object a, object b)
     {
       if (a == null) return true;
       if (b == null) return false;
-      return FanObj.compare(a, b).val <= 0;
+      return FanObj.compare(a, b).longValue() <= 0;
     }
 
     public static bool compareGEz(object a, object b)
     {
       if (a == null) return (b == null);
       if (b == null) return true;
-      return FanObj.compare(a, b).val >= 0;
+      return FanObj.compare(a, b).longValue() >= 0;
     }
 
     public static bool compareGTz(object a, object b)
     {
       if (a == null) return false;
       if (b == null) return true;
-      return FanObj.compare(a, b).val > 0;
+      return FanObj.compare(a, b).longValue() > 0;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -80,10 +80,10 @@ namespace Fanx.Util
       return a.Equals(b) ? Boolean.False : Boolean.True;
     }
 
-    public static Int compare(object a, object b)
+    public static Long compare(object a, object b)
     {
-      if (a == null) return (b == null) ? Int.EQ : Int.LT;
-      if (b == null) return Int.GT;
+      if (a == null) return (b == null) ? FanInt.EQ : FanInt.LT;
+      if (b == null) return FanInt.GT;
       return FanObj.compare(a, b);
     }
 
@@ -91,28 +91,28 @@ namespace Fanx.Util
     {
       if (a == null) return (b == null) ? Boolean.False : Boolean.True;
       if (b == null) return Boolean.False;
-      return FanObj.compare(a, b).val < 0 ? Boolean.True : Boolean.False;
+      return FanObj.compare(a, b).longValue() < 0 ? Boolean.True : Boolean.False;
     }
 
     public static Boolean compareLE(object a, object b)
     {
       if (a == null) return Boolean.True;
       if (b == null) return Boolean.False;
-      return FanObj.compare(a, b).val <= 0 ? Boolean.True : Boolean.False;
+      return FanObj.compare(a, b).longValue() <= 0 ? Boolean.True : Boolean.False;
     }
 
     public static Boolean compareGE(object a, object b)
     {
       if (a == null) return (b == null) ? Boolean.True : Boolean.False;
       if (b == null) return Boolean.True;
-      return FanObj.compare(a, b).val >= 0 ? Boolean.True : Boolean.False;
+      return FanObj.compare(a, b).longValue() >= 0 ? Boolean.True : Boolean.False;
     }
 
     public static Boolean compareGT(object a, object b)
     {
       if (a == null) return Boolean.False;
       if (b == null) return Boolean.True;
-      return FanObj.compare(a, b).val > 0 ? Boolean.True : Boolean.False;
+      return FanObj.compare(a, b).longValue() > 0 ? Boolean.True : Boolean.False;
     }
 
     public static Boolean compareSame(object a, object b) // need to use Object for mixins

@@ -237,7 +237,7 @@ namespace Fanx.Emit
     private void loadInt()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "I" + index, "Fan.Sys.Int");
+      PERWAPI.Field field = emitter.findField(podClass, "I" + index, "Fan.Sys.Long");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
@@ -616,7 +616,7 @@ namespace Fanx.Emit
     {
       if (parent.Compare == null)
         parent.Compare = emitter.findMethod("Fanx.Util.OpUtil", "compare",
-          new string[] { "System.Object", "System.Object" }, "Fan.Sys.Int");
+          new string[] { "System.Object", "System.Object" }, "Fan.Sys.Long");
       code.MethInst(MethodOp.call, parent.Compare);
     }
 
@@ -1051,9 +1051,6 @@ namespace Fanx.Emit
 
     private void loadBoolVal()
     {
-      //if (parent.BoolVal == null)
-      //  parent.BoolVal = emitter.findField("Fan.Sys.Boolean", "val", "System.Boolean");
-      //code.FieldInst(FieldOp.ldfld, parent.BoolVal);
       if (parent.BoolVal == null)
       {
         parent.BoolVal = emitter.findMethod("Fan.Sys.Boolean", "booleanValue",
@@ -1066,8 +1063,12 @@ namespace Fanx.Emit
     private void loadIntVal()
     {
       if (parent.IntVal == null)
-        parent.IntVal = emitter.findField("Fan.Sys.Int", "val", "System.Int64");
-      code.FieldInst(FieldOp.ldfld, parent.IntVal);
+      {
+        parent.IntVal = emitter.findMethod("Fan.Sys.Long", "longValue",
+          new string[0], "System.Int64");
+        parent.IntVal.AddCallConv(CallConv.Instance);
+      }
+      code.MethInst(MethodOp.call, parent.IntVal);
     }
 
     private void boolMake()

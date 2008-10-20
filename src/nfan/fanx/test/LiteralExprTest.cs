@@ -44,7 +44,7 @@ namespace Fanx.Test
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Int Literals
+  // Long Literals
   //////////////////////////////////////////////////////////////////////////
 
     void verifyIntLiterals()
@@ -95,13 +95,13 @@ namespace Fanx.Test
       //verifyIntLiteral(0xabcd0123fedc4567L);
       //verifyIntLiteral(Long.MIN_VALUE);
       //verifyIntLiteral(Long.MAX_VALUE);
-      verify("Int f() { return null; }", null);
+      verify("Long f() { return null; }", null);
     }
 
     void verifyIntLiteral(long val)
     {
-      verify("Int f() { return " + val + "; }", Int.make(val));
-      //verify("static Int f() { return 0x" + Long.toHexString(val) + "; }", Int.make(val));
+      verify("Long f() { return " + val + "; }", Long.valueOf(val));
+      //verify("static Long f() { return 0x" + Long.toHexString(val) + "; }", Long.valueOf(val));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -110,12 +110,12 @@ namespace Fanx.Test
 
     void verifyCharLiterals()
     {
-      verify("Int f() { return 'a'; }",      Int.make('a'));
-      verify("Int f() { return '_'; }",      Int.make('_'));
-      verify("Int f() { return '\n'; }",     Int.make('\n'));
-      verify("Int f() { return '\0'; }",     Int.make('\0'));
-      verify("Int f() { return '\''; }",     Int.make('\''));
-      verify("Int f() { return '\uabcd'; }", Int.make('\uabcd'));
+      verify("Long f() { return 'a'; }",      Long.valueOf('a'));
+      verify("Long f() { return '_'; }",      Long.valueOf('_'));
+      verify("Long f() { return '\n'; }",     Long.valueOf('\n'));
+      verify("Long f() { return '\0'; }",     Long.valueOf('\0'));
+      verify("Long f() { return '\''; }",     Long.valueOf('\''));
+      verify("Long f() { return '\uabcd'; }", Long.valueOf('\uabcd'));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -182,13 +182,13 @@ namespace Fanx.Test
     {
       // verify basic sys types
       verify("Type f() { return Boolean.type }",  Sys.BoolType);
-      verify("Type f() { return Int.type }",   Sys.IntType);
+      verify("Type f() { return Long.type }",   Sys.IntType);
       verify("Type f() { return Str.type; }",   Sys.StrType);
       verify("Type f() { return Type.type }",  Sys.TypeType);
 
       // verify variegated list literal
       //verify("static Type f() { return Str[].type }",  Sys.StrType.toListOf());
-      //verify("static Type f() { return Int[][].type }",  Sys.IntType.toListOf().toListOf());
+      //verify("static Type f() { return Long[][].type }",  Sys.IntType.toListOf().toListOf());
 
       // verify non-sys non-variegated type
       //Type t = CompileToType("class HappyDays { static Type f() { return HappyDays.type } }");

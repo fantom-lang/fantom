@@ -37,6 +37,21 @@ namespace Fanx.Util
     }
 
     /// <summary>
+    /// Return if the Fan Type is represented as a .NET class
+    /// such as sys::Int as Fan.Sys.Long.
+    /// </summary>
+    public static bool isNetRepresentation(Fan.Sys.Type t)
+    {
+      if (t.pod() != Fan.Sys.Sys.SysPod) return false;
+      return t == Fan.Sys.Sys.ObjType   ||
+             t == Fan.Sys.Sys.BoolType  ||
+             t == Fan.Sys.Sys.IntType   ||
+             t == Fan.Sys.Sys.FloatType;// ||
+             //t == Sys.NumType   ||
+             //t == Sys.DecimalType;
+    }
+
+    /// <summary>
     /// Return the .NET type name for this Fan pod and type.
     /// </summary>
     public static string toNetTypeName(Fan.Sys.Str podName, Fan.Sys.Str typeName)
@@ -59,6 +74,9 @@ namespace Fanx.Util
           case 'F':
             if (typeName == "Float") return "Fan.Sys.Double";
             break;
+          case 'I':
+            if (typeName == "Int") return "Fan.Sys.Long";
+            break;
           case 'O':
             if (typeName == "Obj") return "System.Object";
             break;
@@ -68,9 +86,7 @@ namespace Fanx.Util
     }
 
     /// <summary>
-    /// Given a Fan qname, get the Java implementation class name:
-    ///   sys::Obj    =>  Fan.Sys.FanObj
-    ///   sys::Float  =>  Fan.Sys.Double
+    /// Given a Fan qname, get the .NET implementation class name:
     /// </summary>
     public static string toNetImplTypeName(string podName, string typeName)
     {
@@ -83,6 +99,9 @@ namespace Fanx.Util
             break;
           case 'F':
             if (typeName == "Float") return "Fan.Sys.FanFloat";
+            break;
+          case 'I':
+            if (typeName == "Int") return "Fan.Sys.FanInt";
             break;
           case 'O':
             if (typeName == "Obj") return "Fan.Sys.FanObj";
@@ -109,6 +128,7 @@ namespace Fanx.Util
       {
         if (ntype == "Fan.Sys.Boolean") return "Fan.Sys.FanBool";
         if (ntype == "Fan.Sys.Double") return "Fan.Sys.FanFloat";
+        if (ntype == "Fan.Sys.Long") return "Fan.Sys.FanInt";
       }
       return ntype;
     }
@@ -213,9 +233,11 @@ namespace Fanx.Util
       netToFanTypes["System.Object"]   = Fan.Sys.Sys.ObjType;
       netToFanTypes["Fan.Sys.Boolean"] = Fan.Sys.Sys.BoolType;
       netToFanTypes["Fan.Sys.Double"]  = Fan.Sys.Sys.FloatType;
+      netToFanTypes["Fan.Sys.Long"]    = Fan.Sys.Sys.IntType;
 
       netImmutables["Fan.Sys.Boolean"] = true;
       netImmutables["Fan.Sys.Double"]  = true;
+      netImmutables["Fan.Sys.Long"]    = true;
     }
 
   }

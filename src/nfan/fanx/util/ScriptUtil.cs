@@ -131,7 +131,7 @@ namespace Fanx.Util
     class CachedScript
     {
       public DateTime modified;
-      public Int size;
+      public Long size;
       public string typeName;
     }
 

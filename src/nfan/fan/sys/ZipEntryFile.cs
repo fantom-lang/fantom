@@ -50,12 +50,12 @@ namespace Fan.Sys
       return Boolean.True;
     }
 
-    public override Int size()
+    public override Long size()
     {
       if (isDir().booleanValue()) return null;
       long size = m_entry.Size;
       if (size < 0) return null;
-      return Int.pos(size);
+      return Long.valueOf(size);
     }
 
     public override DateTime modified()
@@ -127,12 +127,12 @@ namespace Fan.Sys
       throw IOErr.make("ZipEntryFile cannot be opened with random access").val;
     }
 
-    public override Buf mmap(Str mode, Int pos, Int size)
+    public override Buf mmap(Str mode, Long pos, Long size)
     {
       throw UnsupportedErr.make("ZipEntryFile.mmap").val;
     }
 
-    public override InStream @in(Int bufSize)
+    public override InStream @in(Long bufSize)
     {
       try
       {
@@ -147,8 +147,8 @@ namespace Fan.Sys
           ins = (m_parent as ZipFile).GetInputStream(m_entry);
 
           // buffer if specified
-          if (bufSize != null && bufSize.val != 0)
-            ins = new System.IO.BufferedStream(ins, (int)bufSize.val);
+          if (bufSize != null && bufSize.longValue() != 0)
+            ins = new System.IO.BufferedStream(ins, bufSize.intValue());
         }
 
         // return as fan stream
@@ -160,7 +160,7 @@ namespace Fan.Sys
       }
     }
 
-    public override OutStream @out(Boolean append, Int bufSize)
+    public override OutStream @out(Boolean append, Long bufSize)
     {
       throw IOErr.make("ZipEntryFile is readonly").val;
     }

@@ -508,6 +508,8 @@ namespace Fan.Sys
   // Reflection
   //////////////////////////////////////////////////////////////////////////
 
+    private bool isInstance() { return (m_flags & (FConst.Static|FConst.Ctor)) == 0; }
+
     internal object invoke(object instance, object[] args)
     {
       if (m_reflect == null) m_parent.finish();
@@ -516,7 +518,15 @@ namespace Fan.Sys
       {
         // zero index is full signature up to using max defaults
         int index = m_params.sz()-args.Length;
+        if (m_parent.m_netRepr && isInstance()) index++;
         if (index < 0) index = 0;
+
+        //System.Console.WriteLine(">>> " + m_reflect.Length + "/" + index);
+        //System.Console.WriteLine(m_reflect[index]);
+        //System.Console.WriteLine("---");
+        //for (int i=0; i<m_reflect.Length; i++)
+        //  System.Console.WriteLine(m_reflect[i]);
+
         return m_reflect[index].Invoke(instance, args);
       }
       catch (ArgumentException e)
@@ -534,12 +544,14 @@ namespace Fan.Sys
         if (m_reflect == null)
           throw Err.make("Method not mapped to System.Reflection.MethodInfo correctly " + m_qname).val;
 
-        //System.Console.WriteLine("ERROR:      " + signature());
-        //System.Console.WriteLine("  instance: " + instance);
-        //System.Console.WriteLine("  args:     " + (args == null ? "null" : ""+args.Length));
-        //for (int i=0; args != null && i<args.Length; ++i)
-        //  System.Console.WriteLine("    args[" + i + "] = " + args[i]);
-        //Err.dumpStack(e);
+        /*
+        System.Console.WriteLine("ERROR:      " + signature());
+        System.Console.WriteLine("  instance: " + instance);
+        System.Console.WriteLine("  args:     " + (args == null ? "null" : ""+args.Length));
+        for (int i=0; args != null && i<args.Length; ++i)
+          System.Console.WriteLine("    args[" + i + "] = " + args[i]);
+        Err.dumpStack(e);
+        */
 
         throw Err.make("Cannot call '" + this + "': " + e).val;
       }

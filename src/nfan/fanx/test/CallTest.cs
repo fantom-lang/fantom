@@ -33,32 +33,32 @@ namespace Fanx.Test
     {
       string src = "class ReflectCallTest\n";
       src += "{\n";
-      src += "  Int i0() { return 0 }\n";
-      src += "  Int i1(Int a) { return a }\n";
-      src += "  Int i2(Int a, Int b) { return a+b }\n";
-      src += "  Int i3(Int a, Int b, Int c) { return a+b+c }\n";
-      src += "  Int i4(Int a, Int b, Int c, Int d) { return a+b+c+d }\n";
-      src += "  Int i5(Int a, Int b, Int c, Int d, Int e) { return a+b+c+d+e }\n";
-      src += "  Int i6(Int a, Int b, Int c, Int d, Int e, Int f) { return a+b+c+d+e+f }\n";
-      src += "  Int i7(Int a, Int b, Int c, Int d, Int e, Int f, Int g) { return a+b+c+d+e+f+g }\n";
-      src += "  Int i8(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h) { return a+b+c+d+e+f+g+h }\n";
-      src += "  Int i9(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i) { return a+b+c+d+e+f+g+h+i }\n";
-      src += "  Int i10(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i, Int j) { return a+b+c+d+e+f+g+h+i+j }\n";
-      src += "  Int i11(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i, Int j, Int k) { return a+b+c+d+e+f+g+h+i+j+k }\n";
-      src += "  Int i12(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i, Int j, Int k, Int l) { return a+b+c+d+e+f+g+h+i+j+k+l }\n";
-      src += "  static Int s0() { return 0 }\n";
-      src += "  static Int s1(Int a) { return a }\n";
-      src += "  static Int s2(Int a, Int b) { return a+b }\n";
-      src += "  static Int s3(Int a, Int b, Int c) { return a+b+c }\n";
-      src += "  static Int s4(Int a, Int b, Int c, Int d) { return a+b+c+d }\n";
-      src += "  static Int s5(Int a, Int b, Int c, Int d, Int e) { return a+b+c+d+e }\n";
-      src += "  static Int s6(Int a, Int b, Int c, Int d, Int e, Int f) { return a+b+c+d+e+f }\n";
-      src += "  static Int s7(Int a, Int b, Int c, Int d, Int e, Int f, Int g) { return a+b+c+d+e+f+g }\n";
-      src += "  static Int s8(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h) { return a+b+c+d+e+f+g+h }\n";
-      src += "  static Int s9(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i) { return a+b+c+d+e+f+g+h+i }\n";
-      src += "  static Int s10(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i, Int j) { return a+b+c+d+e+f+g+h+i+j }\n";
-      src += "  static Int s11(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i, Int j, Int k) { return a+b+c+d+e+f+g+h+i+j+k }\n";
-      src += "  static Int s12(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i, Int j, Int k, Int l) { return a+b+c+d+e+f+g+h+i+j+k+l }\n";
+      src += "  Long i0() { return 0 }\n";
+      src += "  Long i1(Long a) { return a }\n";
+      src += "  Long i2(Long a, Long b) { return a+b }\n";
+      src += "  Long i3(Long a, Long b, Long c) { return a+b+c }\n";
+      src += "  Long i4(Long a, Long b, Long c, Long d) { return a+b+c+d }\n";
+      src += "  Long i5(Long a, Long b, Long c, Long d, Long e) { return a+b+c+d+e }\n";
+      src += "  Long i6(Long a, Long b, Long c, Long d, Long e, Long f) { return a+b+c+d+e+f }\n";
+      src += "  Long i7(Long a, Long b, Long c, Long d, Long e, Long f, Long g) { return a+b+c+d+e+f+g }\n";
+      src += "  Long i8(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h) { return a+b+c+d+e+f+g+h }\n";
+      src += "  Long i9(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h, Long i) { return a+b+c+d+e+f+g+h+i }\n";
+      src += "  Long i10(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h, Long i, Long j) { return a+b+c+d+e+f+g+h+i+j }\n";
+      src += "  Long i11(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h, Long i, Long j, Long k) { return a+b+c+d+e+f+g+h+i+j+k }\n";
+      src += "  Long i12(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h, Long i, Long j, Long k, Long l) { return a+b+c+d+e+f+g+h+i+j+k+l }\n";
+      src += "  static Long s0() { return 0 }\n";
+      src += "  static Long s1(Long a) { return a }\n";
+      src += "  static Long s2(Long a, Long b) { return a+b }\n";
+      src += "  static Long s3(Long a, Long b, Long c) { return a+b+c }\n";
+      src += "  static Long s4(Long a, Long b, Long c, Long d) { return a+b+c+d }\n";
+      src += "  static Long s5(Long a, Long b, Long c, Long d, Long e) { return a+b+c+d+e }\n";
+      src += "  static Long s6(Long a, Long b, Long c, Long d, Long e, Long f) { return a+b+c+d+e+f }\n";
+      src += "  static Long s7(Long a, Long b, Long c, Long d, Long e, Long f, Long g) { return a+b+c+d+e+f+g }\n";
+      src += "  static Long s8(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h) { return a+b+c+d+e+f+g+h }\n";
+      src += "  static Long s9(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h, Long i) { return a+b+c+d+e+f+g+h+i }\n";
+      src += "  static Long s10(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h, Long i, Long j) { return a+b+c+d+e+f+g+h+i+j }\n";
+      src += "  static Long s11(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h, Long i, Long j, Long k) { return a+b+c+d+e+f+g+h+i+j+k }\n";
+      src += "  static Long s12(Long a, Long b, Long c, Long d, Long e, Long f, Long g, Long h, Long i, Long j, Long k, Long l) { return a+b+c+d+e+f+g+h+i+j+k+l }\n";
       src += "}\n";
 
       Type t = CompileToFanType(src);
@@ -117,61 +117,61 @@ namespace Fanx.Test
       for (int i=n; i<12; i++)
       {
   //System.out.println("  verify " + i + " -> " + n);
-        verify(callList(obj, ms, i), Int.make(result));
-        verify(callList(obj, mi, i), Int.make(result));
+        verify(callList(obj, ms, i), Long.valueOf(result));
+        verify(callList(obj, mi, i), Long.valueOf(result));
         if (i <= Func.MaxIndirectParams)
-          verify(callIndirect(ms, i), Int.make(result));
+          verify(callIndirect(ms, i), Long.valueOf(result));
         if (i+1 <= Func.MaxIndirectParams)
-          verify(callIndirect(obj, mi, i), Int.make(result));
+          verify(callIndirect(obj, mi, i), Long.valueOf(result));
       }
     }
 
-    Int callList(object obj, Method m, int argn)
+    Long callList(object obj, Method m, int argn)
     {
       List list = new List(Sys.ObjType);
       if (!m.isStatic().booleanValue()) list.add(obj);
-      for (int i=0; i<argn; i++) list.add(Int.make(1+i));
-      return (Int)m.call(list);
+      for (int i=0; i<argn; i++) list.add(Long.valueOf(1+i));
+      return (Long)m.call(list);
     }
 
-    Int callIndirect(Method m, int argn)
+    Long callIndirect(Method m, int argn)
     {
       switch (argn)
       {
-        case 0:  return (Int)m.call0();
-        case 1:  return (Int)m.call1(Int.make(1));
-        case 2:  return (Int)m.call2(Int.make(1), Int.make(2));
-        case 3:  return (Int)m.call3(Int.make(1), Int.make(2), Int.make(3));
-        case 4:  return (Int)m.call4(Int.make(1), Int.make(2), Int.make(3), Int.make(4));
-        case 5:  return (Int)m.call5(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5));
-        case 6:  return (Int)m.call6(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6));
-        case 7:  return (Int)m.call7(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7));
-        case 8:  return (Int)m.call8(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8));
-        //case 9:  return (Int)m.call9(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9));
-        //case 10: return (Int)m.call10(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9), Int.make(10));
-        //case 11: return (Int)m.call11(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9), Int.make(10), Int.make(11));
-        //case 12: return (Int)m.call12(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9), Int.make(10), Int.make(11), Int.make(12));
+        case 0:  return (Long)m.call0();
+        case 1:  return (Long)m.call1(Long.valueOf(1));
+        case 2:  return (Long)m.call2(Long.valueOf(1), Long.valueOf(2));
+        case 3:  return (Long)m.call3(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3));
+        case 4:  return (Long)m.call4(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4));
+        case 5:  return (Long)m.call5(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5));
+        case 6:  return (Long)m.call6(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6));
+        case 7:  return (Long)m.call7(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7));
+        case 8:  return (Long)m.call8(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8));
+        //case 9:  return (Long)m.call9(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9));
+        //case 10: return (Long)m.call10(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9), Long.valueOf(10));
+        //case 11: return (Long)m.call11(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9), Long.valueOf(10), Long.valueOf(11));
+        //case 12: return (Long)m.call12(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9), Long.valueOf(10), Long.valueOf(11), Long.valueOf(12));
         default: Fail(); break;
       }
       return null;
     }
 
-    Int callIndirect(object obj, Method m, int argn)
+    Long callIndirect(object obj, Method m, int argn)
     {
       switch (argn)
       {
-        case 0:  return (Int)m.call1(obj);
-        case 1:  return (Int)m.call2(obj, Int.make(1));
-        case 2:  return (Int)m.call3(obj, Int.make(1), Int.make(2));
-        case 3:  return (Int)m.call4(obj, Int.make(1), Int.make(2), Int.make(3));
-        case 4:  return (Int)m.call5(obj, Int.make(1), Int.make(2), Int.make(3), Int.make(4));
-        case 5:  return (Int)m.call6(obj, Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5));
-        case 6:  return (Int)m.call7(obj, Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6));
-        case 7:  return (Int)m.call8(obj, Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7));
-        //case 8:  return (Int)m.call9(obj, Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8));
-        //case 9:  return (Int)m.call10(obj, Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9));
-        //case 10: return (Int)m.call11(obj, Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9), Int.make(10));
-        //case 11: return (Int)m.call12(obj, Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9), Int.make(10), Int.make(11));
+        case 0:  return (Long)m.call1(obj);
+        case 1:  return (Long)m.call2(obj, Long.valueOf(1));
+        case 2:  return (Long)m.call3(obj, Long.valueOf(1), Long.valueOf(2));
+        case 3:  return (Long)m.call4(obj, Long.valueOf(1), Long.valueOf(2), Long.valueOf(3));
+        case 4:  return (Long)m.call5(obj, Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4));
+        case 5:  return (Long)m.call6(obj, Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5));
+        case 6:  return (Long)m.call7(obj, Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6));
+        case 7:  return (Long)m.call8(obj, Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7));
+        //case 8:  return (Long)m.call9(obj, Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8));
+        //case 9:  return (Long)m.call10(obj, Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9));
+        //case 10: return (Long)m.call11(obj, Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9), Long.valueOf(10));
+        //case 11: return (Long)m.call12(obj, Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9), Long.valueOf(10), Long.valueOf(11));
         default: Fail(); break;
       }
       return null;

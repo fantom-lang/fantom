@@ -41,18 +41,18 @@ namespace Fan.Sys
       return rChar();
     }
 
-    public override Int read()
+    public override Long read()
     {
-      int b = r(); return (b < 0) ? null : Int.m_pos[b & 0xFF];
+      int b = r(); return (b < 0) ? null : FanInt.m_pos[b & 0xFF];
     }
 
-    public override Int readBuf(Buf buf, Int n)
+    public override Long readBuf(Buf buf, Long n)
     {
-      int nval = (int)n.val;
+      int nval = n.intValue();
       for (int i=0; i<nval; ++i)
       {
         int c = rChar();
-        if (c < 0) return Int.make(i);
+        if (c < 0) return Long.valueOf(i);
         buf.m_out.w(c);
       }
       return n;
@@ -66,20 +66,20 @@ namespace Fan.Sys
     public override int rChar()
     {
       if (m_pushback != null && m_pushback.sz() > 0)
-        return (int)((Int)m_pushback.pop()).val;
+        return ((Long)m_pushback.pop()).intValue();
       if (m_pos >= m_size) return -1;
       return m_str[m_pos++];
     }
 
-    public override Int readChar()
+    public override Long readChar()
     {
       if (m_pushback != null && m_pushback.sz() > 0)
-        return (Int)m_pushback.pop();
+        return (Long)m_pushback.pop();
       if (m_pos >= m_size) return null;
-      return Int.pos(m_str[m_pos++]);
+      return Long.valueOf(m_str[m_pos++]);
     }
 
-    public override InStream unreadChar(Int c)
+    public override InStream unreadChar(Long c)
     {
       if (m_pushback == null) m_pushback = new List(Sys.IntType, 8);
       m_pushback.push(c);

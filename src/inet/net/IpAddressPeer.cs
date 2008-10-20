@@ -126,9 +126,9 @@ namespace Fan.Inet
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public Int hash(IpAddress fan)
+    public Long hash(IpAddress fan)
     {
-      return Int.make(m_net.GetHashCode());
+      return Long.valueOf(m_net.GetHashCode());
     }
 
     public Fan.Sys.Boolean _equals(IpAddress fan, object obj)
