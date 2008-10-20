@@ -117,7 +117,7 @@ namespace Fanx.Test
     {
       string code = "class Foo {\n" +
         "  Bool b\n" +
-        "  Int i\n" +
+        "  Long i\n" +
         "  Str s\n" +
         "}";
       stub(code);

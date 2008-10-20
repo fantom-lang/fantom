@@ -243,7 +243,7 @@ namespace Fan.Sys
       return m_name.GetHashCode();
     }
 
-    public override Int hash()
+    public override Long hash()
     {
       return m_name.hash();
     }
@@ -575,7 +575,7 @@ namespace Fan.Sys
         m_timers[id] = t;
 
         // return ticket which is index into timers array
-        return Int.make(id);
+        return Long.valueOf(id);
       }
     }
 
@@ -585,7 +585,7 @@ namespace Fan.Sys
       {
         try
         {
-          m_timers[(int)((Int)ticket).val] = null;
+          m_timers[((Long)ticket).intValue()] = null;
         }
         catch (Exception)
         {

@@ -233,62 +233,64 @@ namespace Fan.Sys
         Err e = ((Err.Val)err).err();
         if (e.m_stack != null) stack = e.m_stack;
       }
-      string[] lines = stack.Split('\n');
-      for (int i=0; i<lines.Length; i++)
+      if (stack != null)
       {
-        // TODO - could be *way* more efficient
-
-        string s = lines[i].Trim();
-        int parOpen  = s.IndexOf('(');
-        int parClose = s.IndexOf(')', parOpen);
-
-        string source = s.Substring(parClose+1, s.Length-parClose-1);
-        if (source == "") source = "Unknown Source";
-        else
+        string[] lines = stack.Split('\n');
+        for (int i=0; i<lines.Length; i++)
         {
-          source = source.Substring(4);
-          int index = source.LastIndexOf("\\");
-          if (index != -1) source = source.Substring(index+1);
-          index = source.LastIndexOf(":line");
-          source = source.Substring(0, index+1) + source.Substring(index+6);
-        }
+          // TODO - could be *way* more efficient
 
-        string target = s.Substring(0, parOpen);
-        if (target.StartsWith("at Fan."))
-        {
-          int a = target.IndexOf(".", 7);
-          int b = target.IndexOf(".", a+1);
-          string pod  = target.Substring(7, a-7);
-          string type = target.Substring(a+1, b-a-1);
-          string meth = target.Substring(b+1);
+          string s = lines[i].Trim();
+          int parOpen  = s.IndexOf('(');
+          int parClose = s.IndexOf(')', parOpen);
 
-          // check for closures
-          int dollar1 = type.IndexOf('$');
-          int dollar2 = dollar1 < 0 ? -1 : type.IndexOf('$', dollar1+1);
-          if (dollar2 > 0)
+          string source = s.Substring(parClose+1, s.Length-parClose-1);
+          if (source == "") source = "Unknown Source";
+          else
           {
-            // don't print callX for closures
-            if (meth.StartsWith("call")) continue;
-            // remap closure class back to original method
-            if (meth.StartsWith("doCall"))
-            {
-              meth = type.Substring(dollar1+1, dollar2-dollar1-1);
-              type = type.Substring(0, dollar1);
-            }
+            source = source.Substring(4);
+            int index = source.LastIndexOf("\\");
+            if (index != -1) source = source.Substring(index+1);
+            index = source.LastIndexOf(":line");
+            source = source.Substring(0, index+1) + source.Substring(index+6);
           }
 
-          target = Str.make(pod).decapitalize().val + "::" + type + "." + meth;
+          string target = s.Substring(0, parOpen);
+          if (target.StartsWith("at Fan."))
+          {
+            int a = target.IndexOf(".", 7);
+            int b = target.IndexOf(".", a+1);
+            string pod  = target.Substring(7, a-7);
+            string type = target.Substring(a+1, b-a-1);
+            string meth = target.Substring(b+1);
+
+            // check for closures
+            int dollar1 = type.IndexOf('$');
+            int dollar2 = dollar1 < 0 ? -1 : type.IndexOf('$', dollar1+1);
+            if (dollar2 > 0)
+            {
+              // don't print callX for closures
+              if (meth.StartsWith("call")) continue;
+              // remap closure class back to original method
+              if (meth.StartsWith("doCall"))
+              {
+                meth = type.Substring(dollar1+1, dollar2-dollar1-1);
+                type = type.Substring(0, dollar1);
+              }
+            }
+
+            target = Str.make(pod).decapitalize().val + "::" + type + "." + meth;
+          }
+
+          for (int sp=0; sp<depth; sp++) w.Write(" ");
+          w.Write("  ");
+          w.Write(target);
+          w.Write(" (");
+          w.Write(source);
+          w.Write(")");
+          w.Write("\n");
         }
-
-        for (int sp=0; sp<depth; sp++) w.Write(" ");
-        w.Write("  ");
-        w.Write(target);
-        w.Write(" (");
-        w.Write(source);
-        w.Write(")");
-        w.Write("\n");
       }
-
       // inner exception
       Exception cause = err.InnerException;
       if (cause != null) doDumpStack(msg, cause, depth+1, w);

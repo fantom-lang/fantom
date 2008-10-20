@@ -77,7 +77,7 @@ namespace Fan.Sys
       }
     }
 
-    public static Duration make(Int ticks) { return make(ticks.val); }
+    public static Duration make(Long ticks) { return make(ticks.longValue()); }
     public static Duration make(long ticks)
     {
       if (ticks == 0) return Zero;
@@ -136,10 +136,10 @@ namespace Fan.Sys
         return Boolean.False;
     }
 
-    public override sealed Int compare(object obj)
+    public override sealed Long compare(object obj)
     {
       long that = ((Duration)obj).m_ticks;
-      if (m_ticks < that) return Int.LT; return m_ticks  == that ? Int.EQ : Int.GT;
+      if (m_ticks < that) return FanInt.LT; return m_ticks  == that ? FanInt.EQ : FanInt.GT;
     }
 
     public override sealed int GetHashCode()
@@ -147,14 +147,14 @@ namespace Fan.Sys
       return (int)(m_ticks ^ (m_ticks >> 32));
     }
 
-    public override sealed Int hash()
+    public override sealed Long hash()
     {
-      return Int.make(m_ticks);
+      return Long.valueOf(m_ticks);
     }
 
-    public Int ticks()
+    public Long ticks()
     {
-      return Int.make(m_ticks);
+      return Long.valueOf(m_ticks);
     }
 
     public override sealed Type type()
@@ -229,29 +229,29 @@ namespace Fan.Sys
       return ns + "ns";
     }
 
-    public Int toMillis()
+    public Long toMillis()
     {
-      return Int.make(m_ticks/nsPerMilli);
+      return Long.valueOf(m_ticks/nsPerMilli);
     }
 
-    public Int toSec()
+    public Long toSec()
     {
-      return Int.make(m_ticks/nsPerSec);
+      return Long.valueOf(m_ticks/nsPerSec);
     }
 
-    public Int toMin()
+    public Long toMin()
     {
-      return Int.make(m_ticks/nsPerMin);
+      return Long.valueOf(m_ticks/nsPerMin);
     }
 
-    public Int toHour()
+    public Long toHour()
     {
-      return Int.make(m_ticks/nsPerHr);
+      return Long.valueOf(m_ticks/nsPerHr);
     }
 
-    public Int toDay()
+    public Long toDay()
     {
-      return Int.make(m_ticks/nsPerDay);
+      return Long.valueOf(m_ticks/nsPerDay);
     }
 
   //////////////////////////////////////////////////////////////////////////

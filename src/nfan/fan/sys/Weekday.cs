@@ -31,7 +31,7 @@ namespace Fan.Sys
 
     private Weekday(int ordinal, string name)
     {
-      Enum.make_(this, Int.m_pos[ordinal], Str.make(name).intern());
+      Enum.make_(this, FanInt.m_pos[ordinal], Str.make(name).intern());
       this.ord = ordinal;
       this.localeAbbrKey  = Str.make(name + "Abbr");
       this.localeFullKey  = Str.make(name + "Full");

@@ -37,7 +37,7 @@ namespace Fan.Sys
 
     private Month(int ordinal, string name)
     {
-      Enum.make_(this, Int.m_pos[ordinal], Str.make(name).intern());
+      Enum.make_(this, FanInt.m_pos[ordinal], Str.make(name).intern());
       this.ord = ordinal;
       this.localeAbbrKey = Str.make(name + "Abbr");
       this.localeFullKey = Str.make(name + "Full");
@@ -55,12 +55,12 @@ namespace Fan.Sys
 
     public Month decrement() { return ord == 0 ? array[array.Length-1] : array[ord-1]; }
 
-    public Int numDays(Int year)
+    public Long numDays(Long year)
     {
-      if (DateTime.isLeapYear((int)year.val))
-        return Int.m_pos[DateTime.daysInMonLeap[ord]];
+      if (DateTime.isLeapYear(year.intValue()))
+        return FanInt.m_pos[DateTime.daysInMonLeap[ord]];
       else
-        return Int.m_pos[DateTime.daysInMon[ord]];
+        return FanInt.m_pos[DateTime.daysInMon[ord]];
     }
 
     public Str toLocale() { return toLocale(null); }

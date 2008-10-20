@@ -9,7 +9,7 @@
 using System;
 using System.Reflection;
 using Boolean  = Fan.Sys.Boolean;
-using Int   = Fan.Sys.Int;
+using Long   = Fan.Sys.Long;
 using Double = Fan.Sys.Double;
 using Str   = Fan.Sys.Str;
 using Duration = Fan.Sys.Duration;
@@ -234,34 +234,34 @@ namespace Fanx.Test
       return new Boolean[] { MakeBool(a), MakeBool(b), MakeBool(c) };
     }
 
-    public Int[] MakeInts(long a)
+    public Long[] MakeInts(long a)
     {
-      return new Int[] { Int.make(a) };
+      return new Long[] { Long.valueOf(a) };
     }
 
-    public Int[] MakeInts(long a, long b)
+    public Long[] MakeInts(long a, long b)
     {
-      return new Int[] { Int.make(a), Int.make(b) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b) };
     }
 
-    public Int[] MakeInts(long a, long b, long c)
+    public Long[] MakeInts(long a, long b, long c)
     {
-      return new Int[] { Int.make(a), Int.make(b), Int.make(c) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c) };
     }
 
-    public Int[] MakeInts(long a, long b, long c, long d)
+    public Long[] MakeInts(long a, long b, long c, long d)
     {
-      return new Int[] { Int.make(a), Int.make(b), Int.make(c), Int.make(d) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d) };
     }
 
-    public Int[] MakeInts(long a, long b, long c, long d, long e)
+    public Long[] MakeInts(long a, long b, long c, long d, long e)
     {
-      return new Int[] { Int.make(a), Int.make(b), Int.make(c), Int.make(d), Int.make(e) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d), Long.valueOf(e) };
     }
 
-    public Int[] MakeInts(long a, long b, long c, long d, long e, long f)
+    public Long[] MakeInts(long a, long b, long c, long d, long e, long f)
     {
-      return new Int[] { Int.make(a), Int.make(b), Int.make(c), Int.make(d), Int.make(e), Int.make(f) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d), Long.valueOf(e), Long.valueOf(f) };
     }
 
     public Double[] MakeFloats(double a)

@@ -35,7 +35,7 @@ namespace Fan.Sys
         if (c == '.')
         {
           if (seg < 0 || i+1>=len) { valid = false; break; }
-          segments.add(Int.pos(seg));
+          segments.add(Long.valueOf(seg));
           seg = -1;
         }
         else
@@ -51,7 +51,7 @@ namespace Fan.Sys
           }
         }
       }
-      if (seg >= 0) segments.add(Int.pos(seg));
+      if (seg >= 0) segments.add(Long.valueOf(seg));
 
       if (!valid || segments.sz() == 0)
       {
@@ -68,7 +68,7 @@ namespace Fan.Sys
     {
       bool valid = segments.sz() > 0;
       for (int i=0; i<segments.sz(); i++)
-        if (((Int)segments.get(i)).val < 0) valid = false;
+        if (((Long)segments.get(i)).longValue() < 0) valid = false;
       if (!valid) throw ArgErr.make("Invalid Version: '" + segments + "'").val;
       return new Version(segments);
     }
@@ -90,21 +90,21 @@ namespace Fan.Sys
         return Boolean.False;
     }
 
-    public override Int compare(object obj)
+    public override Long compare(object obj)
     {
       Version that = (Version)obj;
       List a = this.m_segments;
       List b = that.m_segments;
       for (int i=0; i<a.sz() && i<b.sz(); i++)
       {
-        long ai = ((Int)a.get(i)).val;
-        long bi = ((Int)b.get(i)).val;
-        if (ai < bi) return Int.LT;
-        if (ai > bi) return Int.GT;
+        long ai = ((Long)a.get(i)).longValue();
+        long bi = ((Long)b.get(i)).longValue();
+        if (ai < bi) return FanInt.LT;
+        if (ai > bi) return FanInt.GT;
       }
-      if (a.sz() < b.sz()) return Int.LT;
-      if (a.sz() > b.sz()) return Int.GT;
-      return Int.EQ;
+      if (a.sz() < b.sz()) return FanInt.LT;
+      if (a.sz() > b.sz()) return FanInt.GT;
+      return FanInt.EQ;
     }
 
     public override int GetHashCode()
@@ -112,7 +112,7 @@ namespace Fan.Sys
       return toStr().GetHashCode();
     }
 
-    public override Int hash()
+    public override Long hash()
     {
       return toStr().hash();
     }
@@ -130,7 +130,7 @@ namespace Fan.Sys
         for (int i=0; i<m_segments.sz(); i++)
         {
           if (i > 0) s.Append('.');
-          s.Append(((Int)m_segments.get(i)).val);
+          s.Append(((Long)m_segments.get(i)).longValue());
         }
         m_str = Str.make(s.ToString());
       }
@@ -148,30 +148,30 @@ namespace Fan.Sys
 
     public int segment(int index)
     {
-      return (int)((Int)m_segments.get(index)).val;
+      return ((Long)m_segments.get(index)).intValue();
     }
 
-    public Int major()
+    public Long major()
     {
-      return (Int)m_segments.get(0);
+      return (Long)m_segments.get(0);
     }
 
-    public Int minor()
+    public Long minor()
     {
       if (m_segments.sz() < 2) return null;
-      return (Int)m_segments.get(1);
+      return (Long)m_segments.get(1);
     }
 
-    public Int build()
+    public Long build()
     {
       if (m_segments.sz() < 3) return null;
-      return (Int)m_segments.get(2);
+      return (Long)m_segments.get(2);
     }
 
-    public Int patch()
+    public Long patch()
     {
       if (m_segments.sz() < 4) return null;
-      return (Int)m_segments.get(3);
+      return (Long)m_segments.get(3);
     }
 
   //////////////////////////////////////////////////////////////////////////

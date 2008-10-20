@@ -67,9 +67,9 @@ namespace Fan.Sys
       return m_map.Count == 0 ? Boolean.True : Boolean.False;
     }
 
-    public Int size()
+    public Long size()
     {
-      return Int.pos(m_map.Count);
+      return Long.valueOf(m_map.Count);
     }
 
     public object get(object key)
@@ -236,7 +236,7 @@ namespace Fan.Sys
       return Boolean.False;
     }
 
-    public override Int hash()
+    public override Long hash()
     {
       int hash = 0;
       IDictionaryEnumerator en = m_map.GetEnumerator();
@@ -246,7 +246,7 @@ namespace Fan.Sys
         object val = en.Value;
         hash += key.GetHashCode() ^ (val == null ? 0 : val.GetHashCode());
       }
-      return Int.make(hash);
+      return Long.valueOf(hash);
     }
 
     public override Str toStr()

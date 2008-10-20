@@ -34,7 +34,7 @@ namespace Fan.Sys
 
     private LogLevel(int ord, string name)
     {
-      Enum.make_(this, Int.m_pos[ord], Str.make(name).intern());
+      Enum.make_(this, FanInt.m_pos[ord], Str.make(name).intern());
       this.m_ord = ord;
     }
 

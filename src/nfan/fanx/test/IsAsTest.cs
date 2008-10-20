@@ -41,9 +41,9 @@ namespace Fanx.Test
       verify("Boolean f() { return type is Type}",  null, Boolean.True);
       //verify("Boolean f() { return type.name is Type}",  null, Boolean.False);
       verify("Boolean f() { return type.name is Str}",  null, Boolean.True);
-      verify("Boolean f() { return type.name.size is Int}",  null, Boolean.True);
-      verify("Boolean f(Obj o) { return o is Int}",  MakeBools(false), Boolean.False);
-      verify("Boolean f(Obj o) { return o is Int}",  MakeInts(7), Boolean.True);
+      verify("Boolean f() { return type.name.size is Long}",  null, Boolean.True);
+      verify("Boolean f(Obj o) { return o is Long}",  MakeBools(false), Boolean.False);
+      verify("Boolean f(Obj o) { return o is Long}",  MakeInts(7), Boolean.True);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ namespace Fanx.Test
       verify("Str f(Obj x) { return x as Str }", MakeInts(4), null);
       verify("Str f(Obj x) { return x as Str }", new object[] { null }, null);
       verify("Str f(Obj x) { return x.type.method(\"toStr\").call1(x) as Str }", MakeInts(2), Str.make("2"));
-      verify("Int f(Obj x) { return x.type.method(\"toStr\").call1(x) as Int }", MakeInts(2), null);
+      verify("Long f(Obj x) { return x.type.method(\"toStr\").call1(x) as Long }", MakeInts(2), null);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ namespace Fanx.Test
       verify("Boolean f() { return Str[,] is List  }",   null, Boolean.True);
       verify("Boolean f() { return Str[,] is Obj[] }",   null, Boolean.True);
       verify("Boolean f() { return Str[,] is Str[] }",   null, Boolean.True);
-      verify("Boolean f() { return Str[,] is Int[] }",   null, Boolean.False);
+      verify("Boolean f() { return Str[,] is Long[] }",   null, Boolean.False);
       verify("Boolean f() { return Str[,] is Str[][] }", null, Boolean.False);
 
       // as Str[,]
@@ -94,7 +94,7 @@ namespace Fanx.Test
       verify("List    f(Obj x) { return x as List  }",   a, x);
       verify("Obj[]   f(Obj x) { return x as Obj[] }",   a, x);
       verify("Str[]   f(Obj x) { return x as Str[] }",   a, x);
-      verify("Int[]   f(Obj x) { return x as Int[] }",   a, null);
+      verify("Long[]   f(Obj x) { return x as Long[] }",   a, null);
       verify("Str[][] f(Obj x) { return x as Str[][] }", a, null);
 
       // is [Str[,]]
@@ -104,7 +104,7 @@ namespace Fanx.Test
       verify("Boolean f() { return [Str[,]] is Str[]  }",     null, Boolean.False);
       verify("Boolean f() { return [Str[,]] is Str[][]  }",   null, Boolean.True);
       verify("Boolean f() { return [Str[,]] is Obj[][]  }",   null, Boolean.True);
-      verify("Boolean f() { return [Str[,]] is Int[][]  }",   null, Boolean.False);
+      verify("Boolean f() { return [Str[,]] is Long[][]  }",   null, Boolean.False);
       verify("Boolean f() { return [Str[,]] is Str[][][] }",  null, Boolean.False);
 
       // as [Str[,]]
@@ -116,7 +116,7 @@ namespace Fanx.Test
       verify("Str[]     f(Obj x) { return x as Str[]  }",     a, null);
       verify("Str[][]   f(Obj x) { return x as Str[][]  }",   a, x);
       verify("Obj[][]   f(Obj x) { return x as Obj[][]  }",   a, x);
-      verify("Int[][]   f(Obj x) { return x as Int[][]  }",   a, null);
+      verify("Long[][]   f(Obj x) { return x as Long[][]  }",   a, null);
       verify("Str[][][] f(Obj x) { return x as Str[][][] }",  a, null);
     }
     */

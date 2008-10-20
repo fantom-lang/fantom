@@ -57,19 +57,19 @@ namespace Fan.Sys
     /// Write a byte using a Java primitive int.  Most
     /// writes route to this method for efficient mapping to
     /// a java.io.OutputStream.  If we aren't overriding this
-    /// method, then route back to write(Int) for the
+    /// method, then route back to write(Long) for the
     /// subclass to handle.
     /// <summary>
     public virtual OutStream w(int b)
     {
-      return write(Int.make(b));
+      return write(Long.valueOf(b));
     }
 
   //////////////////////////////////////////////////////////////////////////
   // OutStream
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual OutStream write(Int x)
+    public virtual OutStream write(Long x)
     {
       try
       {
@@ -86,7 +86,7 @@ namespace Fan.Sys
     }
 
     public virtual OutStream writeBuf(Buf buf) { return writeBuf(buf, buf.remaining()); }
-    public virtual OutStream writeBuf(Buf buf, Int n)
+    public virtual OutStream writeBuf(Buf buf, Long n)
     {
       try
       {
@@ -102,14 +102,14 @@ namespace Fan.Sys
       }
     }
 
-    public virtual OutStream writeI2(Int x)
+    public virtual OutStream writeI2(Long x)
     {
-      int v = (int)x.val;
+      int v = x.intValue();
       return this.w((v >> 8) & 0xFF)
                  .w((v >> 0) & 0xFF);
     }
 
-    public virtual OutStream writeI4(Int x) { return writeI4((int)x.val); }
+    public virtual OutStream writeI4(Long x) { return writeI4(x.intValue()); }
     public virtual OutStream writeI4(int v)
     {
       return this.w((v >> 24) & 0xFF)
@@ -118,7 +118,7 @@ namespace Fan.Sys
                  .w((v >> 0)  & 0xFF);
     }
 
-    public virtual OutStream writeI8(Int x) { return writeI8(x.val); }
+    public virtual OutStream writeI8(Long x) { return writeI8(x.longValue()); }
     public virtual OutStream writeI8(long v)
     {
       return this.w((int)(v >> 56) & 0xFF)
@@ -210,9 +210,9 @@ namespace Fan.Sys
       m_charset = charset;
     }
 
-    public virtual OutStream writeChar(Int c)
+    public virtual OutStream writeChar(Long c)
     {
-      m_charsetEncoder.encode((char)c.val, this);
+      m_charsetEncoder.encode((char)c.longValue(), this);
       return this;
     }
 
@@ -223,8 +223,8 @@ namespace Fan.Sys
     }
 
     public virtual OutStream writeChars(Str s) { return writeChars(s.val, 0, s.val.Length); }
-    public virtual OutStream writeChars(Str s, Int off) { return writeChars(s.val, (int)off.val, s.val.Length-(int)off.val); }
-    public virtual OutStream writeChars(Str s, Int off, Int len) { return writeChars(s.val, (int)off.val, (int)len.val); }
+    public virtual OutStream writeChars(Str s, Long off) { return writeChars(s.val, off.intValue(), s.val.Length-off.intValue()); }
+    public virtual OutStream writeChars(Str s, Long off, Long len) { return writeChars(s.val, off.intValue(), len.intValue()); }
     public virtual OutStream writeChars(string s, int off, int len)
     {
       int end = off+len;
@@ -236,15 +236,15 @@ namespace Fan.Sys
     public virtual OutStream print(object obj)
     {
       Str s = obj == null ? Str.nullStr : toStr(obj);
-      return writeChars(s, Int.Zero, s.size());
+      return writeChars(s, FanInt.Zero, s.size());
     }
 
     public virtual OutStream printLine() { return printLine(Str.Empty); }
     public virtual OutStream printLine(object obj)
     {
       Str s = obj == null ? Str.nullStr : toStr(obj);
-      writeChars(s, Int.Zero, s.size());
-      return writeChar(Int.m_pos['\n']);
+      writeChars(s, FanInt.Zero, s.size());
+      return writeChar(FanInt.m_pos['\n']);
     }
 
     public virtual OutStream writeObj(object obj) { return writeObj(obj, null); }
@@ -263,8 +263,8 @@ namespace Fan.Sys
       {
         List keys = props.keys().sort();
         int size = keys.sz();
-        Int eq = Int.m_pos['='];
-        Int nl = Int.m_pos['\n'];
+        Long eq = FanInt.m_pos['='];
+        Long nl = FanInt.m_pos['\n'];
         for (int i=0; i<size; ++i)
         {
           Str key = (Str)keys.get(i);
@@ -294,26 +294,26 @@ namespace Fan.Sys
         // escape special chars
         switch (ch)
         {
-          case '\n': writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['n']); continue;
-          case '\r': writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['r']); continue;
-          case '\t': writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['t']); continue;
-          case '\\': writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['\\']); continue;
+          case '\n': writeChar(FanInt.m_pos['\\']).writeChar(FanInt.m_pos['n']); continue;
+          case '\r': writeChar(FanInt.m_pos['\\']).writeChar(FanInt.m_pos['r']); continue;
+          case '\t': writeChar(FanInt.m_pos['\\']).writeChar(FanInt.m_pos['t']); continue;
+          case '\\': writeChar(FanInt.m_pos['\\']).writeChar(FanInt.m_pos['\\']); continue;
         }
 
         // escape control chars, comments, and =
         if ((ch < ' ') || (ch == '/' && (peek == '/' || peek == '*')) || (ch == '='))
         {
-          Int nib1 = Int.m_pos[(ch>>4)&0xf].toDigit(Int.m_pos[16]);
-          Int nib2 = Int.m_pos[(ch>>0)&0xf].toDigit(Int.m_pos[16]);
+          Long nib1 = FanInt.toDigit(FanInt.m_pos[(ch>>4)&0xf], FanInt.m_pos[16]);
+          Long nib2 = FanInt.toDigit(FanInt.m_pos[(ch>>0)&0xf], FanInt.m_pos[16]);
 
-          this.writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['u'])
-              .writeChar(Int.m_pos['0']).writeChar(Int.m_pos['0'])
+          this.writeChar(FanInt.m_pos['\\']).writeChar(FanInt.m_pos['u'])
+              .writeChar(FanInt.m_pos['0']).writeChar(FanInt.m_pos['0'])
               .writeChar(nib1).writeChar(nib2);
           continue;
         }
 
         // normal character
-        writeChar(Int.pos(ch));
+        writeChar(Long.valueOf(ch));
       }
     }
 

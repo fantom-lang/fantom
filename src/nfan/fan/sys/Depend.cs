@@ -115,7 +115,7 @@ namespace Fan.Sys
           }
           else
           {
-            segs.add(Int.pos(seg));
+            segs.add(Long.valueOf(seg));
             seg = 0;
             if (m_cur != '.') break;
             else consume();
@@ -182,7 +182,7 @@ namespace Fan.Sys
         return Boolean.False;
     }
 
-    public override Int hash()
+    public override Long hash()
     {
       return toStr().hash();
     }
@@ -220,33 +220,33 @@ namespace Fan.Sys
       return m_name;
     }
 
-    public Int size()
+    public Long size()
     {
-      return Int.pos(m_constraints.Length);
+      return Long.valueOf(m_constraints.Length);
     }
 
-    public Version version() { return version(Int.Zero); }
-    public Version version(Int index)
+    public Version version() { return version(FanInt.Zero); }
+    public Version version(Long index)
     {
-      return m_constraints[(int)index.val].version;
+      return m_constraints[index.intValue()].version;
     }
 
-    public Boolean isPlus() { return isPlus(Int.Zero); }
-    public Boolean isPlus(Int index)
+    public Boolean isPlus() { return isPlus(FanInt.Zero); }
+    public Boolean isPlus(Long index)
     {
-      return m_constraints[(int)index.val].isPlus ? Boolean.True : Boolean.False;
+      return m_constraints[index.intValue()].isPlus ? Boolean.True : Boolean.False;
     }
 
-    public Boolean isRange() { return isRange(Int.Zero); }
-    public Boolean isRange(Int index)
+    public Boolean isRange() { return isRange(FanInt.Zero); }
+    public Boolean isRange(Long index)
     {
-      return m_constraints[(int)index.val].endVersion != null ? Boolean.True : Boolean.False;
+      return m_constraints[index.intValue()].endVersion != null ? Boolean.True : Boolean.False;
     }
 
-    public Version endVersion() { return endVersion(Int.Zero); }
-    public Version endVersion(Int index)
+    public Version endVersion() { return endVersion(FanInt.Zero); }
+    public Version endVersion(Long index)
     {
-      return m_constraints[(int)index.val].endVersion;
+      return m_constraints[index.intValue()].endVersion;
     }
 
     public Boolean match(Version v)
@@ -257,14 +257,14 @@ namespace Fan.Sys
         if (c.isPlus)
         {
           // versionPlus
-          if (c.version.compare(v).val <= 0)
+          if (c.version.compare(v).longValue() <= 0)
             return Boolean.True;
         }
         else if (c.endVersion != null)
         {
           // versionRange
-          if (c.version.compare(v).val <= 0 &&
-              (c.endVersion.compare(v).val >= 0 || match(c.endVersion, v)))
+          if (c.version.compare(v).longValue() <= 0 &&
+              (c.endVersion.compare(v).longValue() >= 0 || match(c.endVersion, v)))
             return Boolean.True;
         }
         else

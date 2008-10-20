@@ -36,8 +36,8 @@ namespace Fan.Sys
     {
       int start = 0;
       int end = s.Length;
-      while (start < end) if (Int.isSpace(s[start])) start++; else break;
-      while (end > start) if (Int.isSpace(s[end-1])) end--; else break;
+      while (start < end) if (FanInt.isSpace(s[start])) start++; else break;
+      while (end > start) if (FanInt.isSpace(s[end-1])) end--; else break;
       return make(s.ToString(start, end-start));
     }
 
@@ -79,16 +79,16 @@ namespace Fan.Sys
       return Boolean.True;
     }
 
-    public override Int compare(object obj)
+    public override Long compare(object obj)
     {
       int cmp = String.CompareOrdinal(val, ((Str)obj).val);
-      if (cmp < 0) return Int.LT;
-      return cmp == 0 ? Int.EQ : Int.GT;
+      if (cmp < 0) return FanInt.LT;
+      return cmp == 0 ? FanInt.EQ : FanInt.GT;
     }
 
-    public Int compareIgnoreCase(Str s)
+    public Long compareIgnoreCase(Str s)
     {
-      if (s == this) return Int.Zero;
+      if (s == this) return FanInt.Zero;
 
       string a = this.val;
       string b = s.val;
@@ -101,11 +101,11 @@ namespace Fan.Sys
         int bc = b[i];
         if ('A' <= ac && ac <= 'Z') ac |= 0x20;
         if ('A' <= bc && bc <= 'Z') bc |= 0x20;
-        if (ac != bc) return ac < bc ? Int.LT : Int.GT;
+        if (ac != bc) return ac < bc ? FanInt.LT : FanInt.GT;
       }
 
-      if (an == bn) return Int.Zero;
-      return an < bn ? Int.LT : Int.GT;
+      if (an == bn) return FanInt.Zero;
+      return an < bn ? FanInt.LT : FanInt.GT;
     }
 
     public override int GetHashCode()
@@ -113,9 +113,9 @@ namespace Fan.Sys
       return val.GetHashCode();
     }
 
-    public override Int hash()
+    public override Long hash()
     {
-      return Int.make(val.GetHashCode());
+      return Long.valueOf(val.GetHashCode());
     }
 
     public int caseInsensitiveHash()
@@ -153,11 +153,11 @@ namespace Fan.Sys
   // Operators
   //////////////////////////////////////////////////////////////////////////
 
-    public Int get(Int index)
+    public Long get(Long index)
     {
-      int i = (int)index.val;
+      int i = index.intValue();
       if (i < 0) i = val.Length+i;
-      return Int.pos(val[i]);
+      return Long.valueOf(val[i]);
     }
 
     public Str slice(Range r)
@@ -195,9 +195,9 @@ namespace Fan.Sys
       return val.Length == 0 ? Boolean.True : Boolean.False;
     }
 
-    public Int size()
+    public Long size()
     {
-      return Int.pos(val.Length);
+      return Long.valueOf(val.Length);
     }
 
     public Boolean startsWith(Str s)
@@ -212,18 +212,18 @@ namespace Fan.Sys
 
     public Boolean contains(Str s)
     {
-      return index(s, Int.Zero) != null ? Boolean.True : Boolean.False;
+      return index(s, FanInt.Zero) != null ? Boolean.True : Boolean.False;
     }
 
-    public Boolean containsChar(Int ch)
+    public Boolean containsChar(Long ch)
     {
-      return val.IndexOf((char)ch.val) >= 0 ? Boolean.True : Boolean.False;
+      return val.IndexOf((char)ch.longValue()) >= 0 ? Boolean.True : Boolean.False;
     }
 
-    public Int index(Str s) { return index(s, Int.Zero); }
-    public Int index(Str s, Int off)
+    public Long index(Str s) { return index(s, FanInt.Zero); }
+    public Long index(Str s, Long off)
     {
-      int i = (int)off.val;
+      int i = off.intValue();
       if (i < 0) i = val.Length+i;
 
       int r;
@@ -234,13 +234,13 @@ namespace Fan.Sys
         r = val.IndexOf(sval, i);
 
       if (r < 0) return null;
-      return Int.make(r);
+      return Long.valueOf(r);
     }
 
-    public Int indexr(Str s) { return indexr(s, Int.NegOne); }
-    public Int indexr(Str s, Int off)
+    public Long indexr(Str s) { return indexr(s, FanInt.NegOne); }
+    public Long indexr(Str s, Long off)
     {
-      int i = (int)off.val;
+      int i = off.intValue();
       if (i < 0) i = val.Length+i;
 
       int r;
@@ -263,17 +263,17 @@ namespace Fan.Sys
       }
 
       if (r < 0) return null;
-      return Int.make(r);
+      return Long.valueOf(r);
     }
 
-    public Int indexIgnoreCase(Str s) { return indexIgnoreCase(s, Int.Zero); }
-    public Int indexIgnoreCase(Str s, Int off)
+    public Long indexIgnoreCase(Str s) { return indexIgnoreCase(s, FanInt.Zero); }
+    public Long indexIgnoreCase(Str s, Long off)
     {
       string val  = this.val, sval = s.val;
       int vlen = val.Length, slen = sval.Length;
       int r = -1;
 
-      int i = (int)off.val;
+      int i = off.intValue();
       if (i < 0) i = vlen+i;
 
       int first = sval[0] | 0x20;
@@ -291,17 +291,17 @@ namespace Fan.Sys
       }
 
       if (r < 0) return null;
-      return Int.make(r);
+      return Long.valueOf(r);
     }
 
-    public Int indexrIgnoreCase(Str s) { return indexrIgnoreCase(s, Int.NegOne); }
-    public Int indexrIgnoreCase(Str s, Int off)
+    public Long indexrIgnoreCase(Str s) { return indexrIgnoreCase(s, FanInt.NegOne); }
+    public Long indexrIgnoreCase(Str s, Long off)
     {
       string val  = this.val, sval = s.val;
       int vlen = val.Length, slen = sval.Length;
       int r = -1;
 
-      int i = (int)off.val;
+      int i = off.intValue();
       if (i < 0) i = vlen+i;
       if (i+slen >= vlen) i = vlen-slen;
 
@@ -320,7 +320,7 @@ namespace Fan.Sys
       }
 
       if (r < 0) return null;
-      return Int.make(r);
+      return Long.valueOf(r);
     }
 
     private bool nStartsWith(string s, string pre, int off)
@@ -346,14 +346,14 @@ namespace Fan.Sys
       string val = this.val;
       int len = val.Length;
       for (int i=0; i<len ; i++)
-        f.call2(Int.pos(val[i]), Int.pos(i));
+        f.call2(Long.valueOf(val[i]), Long.valueOf(i));
     }
 
     public void eachr(Func f)
     {
       string val = this.val;
       for (int i=val.Length-1; i>=0; --i)
-        f.call2(Int.pos(val[i]), Int.pos(i));
+        f.call2(Long.valueOf(val[i]), Long.valueOf(i));
     }
 
     public Boolean any(Func f)
@@ -361,7 +361,7 @@ namespace Fan.Sys
       string val = this.val;
       int len = val.Length;
       for (int i=0; i<len ; i++)
-        if (f.call2(Int.pos(val[i]), Int.pos(i)) == Boolean.True)
+        if (f.call2(Long.valueOf(val[i]), Long.valueOf(i)) == Boolean.True)
           return Boolean.True;
       return Boolean.False;
     }
@@ -371,7 +371,7 @@ namespace Fan.Sys
       string val = this.val;
       int len = val.Length;
       for (int i=0; i<len ; i++)
-        if (f.call2(Int.pos(val[i]), Int.pos(i)) == Boolean.False)
+        if (f.call2(Long.valueOf(val[i]), Long.valueOf(i)) == Boolean.False)
           return Boolean.False;
       return Boolean.True;
     }
@@ -380,11 +380,11 @@ namespace Fan.Sys
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
-    public static Str spaces(Int n)
+    public static Str spaces(Long n)
     {
       // do an array lookup for reasonable length
       // strings since that is the common case
-      int count = (int)n.val;
+      int count = n.intValue();
       try { return m_spaces[count]; } catch (IndexOutOfRangeException) {}
 
       // otherwise we build a new one
@@ -454,10 +454,10 @@ namespace Fan.Sys
       return this;
     }
 
-    public Str justl(Int width)
+    public Str justl(Long width)
     {
       string val = this.val;
-      int w = (int)width.val;
+      int w = width.intValue();
       if (val.Length >= w) return this;
       StringBuilder s = new StringBuilder(w);
       s.Append(val);
@@ -466,10 +466,10 @@ namespace Fan.Sys
       return make(s.ToString());
     }
 
-    public Str justr(Int width)
+    public Str justr(Long width)
     {
       string val = this.val;
-      int w = (int)width.val;
+      int w = width.intValue();
       if (val.Length >= w) return this;
       StringBuilder s = new StringBuilder(w);
       for (int i=val.Length; i<w; i++)
@@ -520,12 +520,12 @@ namespace Fan.Sys
     }
 
     public List split() { return split(null, Boolean.True); }
-    public List split(Int separator) { return split(separator, Boolean.True); }
-    public List split(Int separator, Boolean trimmed)
+    public List split(Long separator) { return split(separator, Boolean.True); }
+    public List split(Long separator, Boolean trimmed)
     {
       String val = this.val;
       if (separator == null) return splitws(val);
-      int sep = (int)separator.val;
+      int sep = separator.intValue();
       bool trim = trimmed.booleanValue();
       List toks = new List(Sys.StrType, 16);
       int len = val.Length;
@@ -595,7 +595,7 @@ namespace Fan.Sys
       return make(StrUtil.Replace(val, from.val, to.val));
     }
 
-    public Int numNewlines() { return Int.pos(numNewlines(val)); }
+    public Long numNewlines() { return Long.valueOf(numNewlines(val)); }
     public static int numNewlines(String val)
     {
       int numLines = 0;
@@ -629,7 +629,7 @@ namespace Fan.Sys
       for (int i=0; i<len; i++)
       {
         int ch = val[i];
-        if (ch >= 128 || (Int.charMap[ch] & Int.SPACE) == 0)
+        if (ch >= 128 || (FanInt.charMap[ch] & FanInt.SPACE) == 0)
           return Boolean.False;
       }
       return Boolean.True;
@@ -642,7 +642,7 @@ namespace Fan.Sys
       for (int i=0; i<len; ++i)
       {
         int ch = val[i];
-        if (ch >= 128 || (Int.charMap[ch] & Int.UPPER) == 0)
+        if (ch >= 128 || (FanInt.charMap[ch] & FanInt.UPPER) == 0)
           return Boolean.False;
       }
       return Boolean.True;
@@ -655,7 +655,7 @@ namespace Fan.Sys
       for (int i=0; i<len; ++i)
       {
         int ch = val[i];
-        if (ch >= 128 || (Int.charMap[ch] & Int.LOWER) == 0)
+        if (ch >= 128 || (FanInt.charMap[ch] & FanInt.LOWER) == 0)
           return Boolean.False;
       }
       return Boolean.True;
@@ -674,11 +674,11 @@ namespace Fan.Sys
   // Locale
   //////////////////////////////////////////////////////////////////////////
 
-    public Int localeCompare(Str x)
+    public Long localeCompare(Str x)
     {
       int cmp = String.Compare(val, x.val, true, Locale.current().net());
-      if (cmp < 0) return Int.LT;
-      return cmp == 0 ? Int.EQ : Int.GT;
+      if (cmp < 0) return FanInt.LT;
+      return cmp == 0 ? FanInt.EQ : FanInt.GT;
     }
 
     public Str localeLower()
@@ -732,9 +732,9 @@ namespace Fan.Sys
     public Boolean toBool() { return FanBool.fromStr(this, Boolean.True); }
     public Boolean toBool(Boolean check) { return FanBool.fromStr(this, check); }
 
-    public Int toInt() { return Int.fromStr(this, Int.Ten, Boolean.True); }
-    public Int toInt(Int radix) { return Int.fromStr(this, radix, Boolean.True); }
-    public Int toInt(Int radix, Boolean check) { return Int.fromStr(this, radix, check); }
+    public Long toInt() { return FanInt.fromStr(this, FanInt.Ten, Boolean.True); }
+    public Long toInt(Long radix) { return FanInt.fromStr(this, radix, Boolean.True); }
+    public Long toInt(Long radix, Boolean check) { return FanInt.fromStr(this, radix, check); }
 
     public Double toFloat() { return FanFloat.fromStr(this, Boolean.True); }
     public Double toFloat(Boolean check) { return FanFloat.fromStr(this, check); }
@@ -744,9 +744,9 @@ namespace Fan.Sys
 
     public Uri toUri() { return Uri.fromStr(this); }
 
-    public Str toCode() { return toCode(Int.m_pos['"'], Boolean.False); }
-    public Str toCode(Int quote) { return toCode(quote, Boolean.False); }
-    public Str toCode(Int quote, Boolean escapeUnicode)
+    public Str toCode() { return toCode(FanInt.m_pos['"'], Boolean.False); }
+    public Str toCode(Long quote) { return toCode(quote, Boolean.False); }
+    public Str toCode(Long quote, Boolean escapeUnicode)
     {
       StringBuilder s = new StringBuilder(val.Length+10);
 
@@ -755,7 +755,7 @@ namespace Fan.Sys
       int q = 0;
       if (quote != null)
       {
-        q = (int)quote.val;
+        q = quote.intValue();
         s.Append((char)q);
       }
 

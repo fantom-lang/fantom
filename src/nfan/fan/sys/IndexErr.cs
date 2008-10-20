@@ -22,7 +22,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public new static IndexErr make(string msg)  { return make(Str.make(msg)); }
-    public static IndexErr make(Int index)       { return make(Str.make(index.ToString())); }
+    public static IndexErr make(Long index)       { return make(Str.make(index.ToString())); }
     public static IndexErr make(Range index) { return make(Str.make(index.ToString())); }
 
   //////////////////////////////////////////////////////////////////////////

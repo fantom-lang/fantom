@@ -40,21 +40,21 @@ namespace Fanx.Test
 
       verifySig("|Boolean x-> Str|", new Type[] { Sys.BoolType }, Sys.StrType);
 
-      verifySig("|Str a, Duration b -> Int|",
+      verifySig("|Str a, Duration b -> Long|",
                 new Type[] { Sys.StrType, Sys.DurationType },
                 Sys.IntType);
 
-      verifySig("|Boolean a, Int b, Int c, Str d, Type e, Obj f, Str g, Boolean h -> Int|",
+      verifySig("|Boolean a, Long b, Long c, Str d, Type e, Obj f, Str g, Boolean h -> Long|",
                new Type[] { Sys.BoolType, Sys.IntType, Sys.IntType, Sys.StrType,
                  Sys.TypeType, Sys.ObjType, Sys.StrType, Sys.BoolType  },
                Sys.IntType);
 
-      verifySig("|Boolean a, Int b, Int c, Str d, Type e, Obj f, Str g, Boolean h, Duration i -> Int|",
+      verifySig("|Boolean a, Long b, Long c, Str d, Type e, Obj f, Str g, Boolean h, Duration i -> Long|",
                new Type[] { Sys.BoolType, Sys.IntType, Sys.IntType, Sys.StrType,
                  Sys.TypeType, Sys.ObjType, Sys.StrType, Sys.BoolType, Sys.DurationType  },
                Sys.IntType);
 
-      //verifySigErr("|Boolean a-> Int,Boolean|", "Expected '|', not ','");
+      //verifySigErr("|Boolean a-> Long,Boolean|", "Expected '|', not ','");
     }
 
     /*
@@ -125,16 +125,16 @@ namespace Fanx.Test
         new Obj[] { Sys.findMethod("sys::Sys.findType", true) }, Sys.StrType);
 
       // instance
-      verify("Obj f(|Int a, Int b -> Int| m) { return m.call([4, 2])}",
-        new Obj[] { Sys.findMethod("sys::Int.plus", true) }, Int.make(6));
-      verify("Obj f(|Int a, Int b -> Int| m) { return m.call([4, 2])}",
-        new Obj[] { Sys.findMethod("sys::Int.star", true) }, Int.make(8));
-      verify("Obj f(|Int a, Int b -> Int| m) { return m.call([4, 2, 3])}",
-        new Obj[] { Sys.findMethod("sys::Int.star", true) }, Int.make(8));
-      verify("Obj f(|Int a, Int b -> Int| m) { return m.call([-3])}",
-        new Obj[] { Sys.findMethod("sys::Int.negate", true) }, Int.make(3));
-      verify("Obj f(|Int a, Int b -> Int| m) { return m.call([4, 2])}",
-        new Obj[] { Sys.findMethod("sys::Int.negate", true) }, Int.make(-4));
+      verify("Obj f(|Long a, Long b -> Long| m) { return m.call([4, 2])}",
+        new Obj[] { Sys.findMethod("sys::Long.plus", true) }, Long.valueOf(6));
+      verify("Obj f(|Long a, Long b -> Long| m) { return m.call([4, 2])}",
+        new Obj[] { Sys.findMethod("sys::Long.star", true) }, Long.valueOf(8));
+      verify("Obj f(|Long a, Long b -> Long| m) { return m.call([4, 2, 3])}",
+        new Obj[] { Sys.findMethod("sys::Long.star", true) }, Long.valueOf(8));
+      verify("Obj f(|Long a, Long b -> Long| m) { return m.call([-3])}",
+        new Obj[] { Sys.findMethod("sys::Long.negate", true) }, Long.valueOf(3));
+      verify("Obj f(|Long a, Long b -> Long| m) { return m.call([4, 2])}",
+        new Obj[] { Sys.findMethod("sys::Long.negate", true) }, Long.valueOf(-4));
     }
     */
 

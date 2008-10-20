@@ -55,6 +55,7 @@ namespace Fanx.Serial
       {
         if (obj is Boolean && (obj as Boolean).booleanValue())  { w("true"); return; }
         if (obj is Boolean && !(obj as Boolean).booleanValue()) { w("false"); return; }
+        if (obj is Long)   { w(obj.ToString()); return; }
         if (obj is Double) { FanFloat.encode((Double)obj, this); return; }
       }
 
@@ -344,9 +345,9 @@ namespace Fanx.Serial
 
     private static int option(Map options, Str name, int def)
     {
-      Int val = (Int)options.get(name);
+      Long val = (Long)options.get(name);
       if (val == null) return def;
-      return (int)val.val;
+      return val.intValue();
     }
 
     private static bool option(Map options, Str name, bool def)

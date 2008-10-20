@@ -20,13 +20,13 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Enum make(Int ordinal, Str name)
+    public static Enum make(Long ordinal, Str name)
     {
       // should never be used
       throw new System.Exception();
     }
 
-    public static void make_(Enum self, Int ordinal, Str name)
+    public static void make_(Enum self, Long ordinal, Str name)
     {
       if (ordinal == null || name == null) throw new NullErr().val;
       self.m_ordinal = ordinal;
@@ -60,9 +60,9 @@ namespace Fan.Sys
       return this == obj ? Boolean.True : Boolean.False;
     }
 
-    public override sealed Int compare(object obj)
+    public override sealed Long compare(object obj)
     {
-      return m_ordinal.compare(((Enum)obj).m_ordinal);
+      return FanInt.compare(m_ordinal, ((Enum)obj).m_ordinal);
     }
 
     public override Type type()
@@ -75,7 +75,7 @@ namespace Fan.Sys
       return m_name;
     }
 
-    public Int ordinal()
+    public Long ordinal()
     {
       return m_ordinal;
     }
@@ -89,7 +89,7 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private Int m_ordinal = null;
+    private Long m_ordinal = null;
     private Str m_name = null;
 
   }

@@ -152,14 +152,14 @@ namespace Fan.Sys
   // Buf API
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Int capacity()
+    public override sealed Long capacity()
     {
-      return Int.pos(m_buf.Length);
+      return Long.valueOf(m_buf.Length);
     }
 
-    public override sealed void capacity(Int c)
+    public override sealed void capacity(Long c)
     {
-      int newCapacity = (int)c.val;
+      int newCapacity = c.intValue();
       if (newCapacity < m_size) throw ArgErr.make("capacity < size").val;
       byte[] temp = new byte[newCapacity];
       System.Array.Copy(m_buf, 0, temp, 0, newCapacity);
@@ -289,7 +289,7 @@ namespace Fan.Sys
       internal MemBufOutStream(MemBuf parent) { this.p = parent; }
       private MemBuf p;
 
-      public override sealed OutStream write(Int v) { return w((int)v.val); }
+      public override sealed OutStream write(Long v) { return w(v.intValue()); }
       public override sealed OutStream w(int v)
       {
         if (p.m_pos+1 >= p.m_buf.Length) p.grow(p.m_pos+1);
@@ -298,9 +298,9 @@ namespace Fan.Sys
         return this;
       }
 
-      public override OutStream writeBuf(Buf other, Int n)
+      public override OutStream writeBuf(Buf other, Long n)
       {
-        int len = (int)n.val;
+        int len = n.intValue();
         p.grow(p.m_pos+len);
         other.pipeTo(p.m_buf, p.m_pos, len);
         p.m_pos += len;
@@ -318,23 +318,23 @@ namespace Fan.Sys
       internal MemBufInStream(MemBuf parent) { this.p = parent; }
       private MemBuf p;
 
-      public override Int read() { int n = r(); return n < 0 ? null : Int.m_pos[n]; }
+      public override Long read() { int n = r(); return n < 0 ? null : FanInt.m_pos[n]; }
       public override int r()
       {
         if (p.m_pos >= p.m_size) return -1;
         return p.m_buf[p.m_pos++] & 0xFF;
       }
 
-      public override Int readBuf(Buf other, Int n)
+      public override Long readBuf(Buf other, Long n)
       {
         if (p.m_pos >= p.m_size) return null;
-        int len = Math.Min(p.m_size-p.m_pos, (int)n.val);
+        int len = Math.Min(p.m_size-p.m_pos, n.intValue());
         other.pipeFrom(p.m_buf, p.m_pos, len);
         p.m_pos += len;
-        return Int.pos(len);
+        return Long.valueOf(len);
       }
 
-      public override InStream unread(Int n) { return unread((int)n.val); }
+      public override InStream unread(Long n) { return unread(n.intValue()); }
       public override InStream unread(int n)
       {
         // unreading a buffer is a bit weird - the typical case
@@ -356,19 +356,19 @@ namespace Fan.Sys
         return this;
       }
 
-      public override Int peek()
+      public override Long peek()
       {
         if (p.m_pos >= p.m_size) return null;
-        return Int.m_pos[p.m_buf[p.m_pos] & 0xFF];
+        return FanInt.m_pos[p.m_buf[p.m_pos] & 0xFF];
       }
 
-      public override Int skip(Int n)
+      public override Long skip(Long n)
       {
         int oldPos = p.m_pos;
-        p.m_pos += (int)n.val;
+        p.m_pos += n.intValue();
         if (p.m_pos < p.m_size) return n;
         p.m_pos = p.m_size;
-        return Int.pos(p.m_pos-oldPos);
+        return Long.valueOf(p.m_pos-oldPos);
       }
 
     }

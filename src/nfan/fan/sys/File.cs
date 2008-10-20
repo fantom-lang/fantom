@@ -97,7 +97,7 @@ namespace Fan.Sys
 
     public override sealed int GetHashCode() { return m_uri.GetHashCode(); }
 
-    public override sealed Int hash() { return m_uri.hash(); }
+    public override sealed Long hash() { return m_uri.hash(); }
 
     public override sealed Str toStr() { return m_uri.toStr(); }
 
@@ -129,7 +129,7 @@ namespace Fan.Sys
 
     public abstract Boolean exists();
 
-    public abstract Int size();
+    public abstract Long size();
 
     public abstract DateTime modified();
     public abstract void modified(DateTime time);
@@ -145,7 +145,7 @@ namespace Fan.Sys
       List x = list();
       for (int i=x.sz()-1; i>=0; --i)
         if (!((File)x.get(i)).isDir().booleanValue())
-          x.removeAt(Int.make(i));
+          x.removeAt(Long.valueOf(i));
       return x;
     }
 
@@ -165,7 +165,7 @@ namespace Fan.Sys
       List x = list();
       for (int i=x.sz()-1; i>=0; --i)
         if (((File)x.get(i)).isDir().booleanValue())
-          x.removeAt(Int.make(i));
+          x.removeAt(Long.valueOf(i));
       return x;
     }
 
@@ -328,19 +328,19 @@ namespace Fan.Sys
     public Buf open() { return open(rwStr); }
     public abstract Buf open(Str mode);
 
-    public Buf mmap() { return mmap(rwStr, Int.Zero, null); }
-    public Buf mmap(Str mode) { return mmap(mode, Int.Zero, null); }
-    public Buf mmap(Str mode, Int pos) { return mmap(mode, pos, null); }
-    public abstract Buf mmap(Str mode, Int pos, Int size);
+    public Buf mmap() { return mmap(rwStr, FanInt.Zero, null); }
+    public Buf mmap(Str mode) { return mmap(mode, FanInt.Zero, null); }
+    public Buf mmap(Str mode, Long pos) { return mmap(mode, pos, null); }
+    public abstract Buf mmap(Str mode, Long pos, Long size);
 
     public InStream @in() { return @in(defaultBufSize); }
-    public abstract InStream @in(Int bufSize);
+    public abstract InStream @in(Long bufSize);
 
     public OutStream @out() { return @out(Boolean.False, defaultBufSize); }
     public OutStream @out(Boolean append) { return @out(append, defaultBufSize); }
-    public abstract OutStream @out(Boolean append, Int bufSize);
+    public abstract OutStream @out(Boolean append, Long bufSize);
 
-    private static readonly Int defaultBufSize = Int.make(4096);
+    private static readonly Long defaultBufSize = Long.valueOf(4096);
 
     public Buf readAllBuf()
     {
@@ -354,7 +354,7 @@ namespace Fan.Sys
 
     public void eachLine(Func f)
     {
-      @in(Int.Chunk).eachLine(f);
+      @in(FanInt.Chunk).eachLine(f);
     }
 
     public Str readAllStr() { return readAllStr(Boolean.True); }
