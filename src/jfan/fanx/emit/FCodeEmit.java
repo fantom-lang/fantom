@@ -1081,12 +1081,11 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     FTypeRef from = pod.typeRef(u2());
     FTypeRef to   = pod.typeRef(u2());
 
-    // short circuit if types exactly the same
+    // if types exactly the same then print warning;
+    // the compiler should not emit such a coerce
     if (from == to)
     {
-// TODO
-//System.out.println("WARNING: coerce " + from + " => " + to);
-      if (to.isRef()) code.op2(CHECKCAST, emit.cls(to.jname()));
+      System.out.println("WARNING: " + parent.selfName + " " + fmethod.name + " Coerce: " + from + " => " + to);
       return;
     }
 
