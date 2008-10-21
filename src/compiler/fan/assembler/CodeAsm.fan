@@ -305,6 +305,7 @@ class CodeAsm : CompilerSupport
         {
           count++
           expr := c.cases[i]
+          // TODO: need to handle static const Int fields here
           literal := expr.asTableSwitchCase
           if (literal == null) throw CompilerErr.make("return null", c.location)
           if (literal < min) min = literal
@@ -415,7 +416,8 @@ class CodeAsm : CompilerSupport
     stmt.isTableswitch = false
 
     // push condition onto the stack
-    expr(stmt.condition)
+    condition := stmt.condition
+    expr(condition)
 
     // walk thru each case, keeping track of all the
     // places we need to backpatch when cases match
@@ -425,9 +427,8 @@ class CodeAsm : CompilerSupport
     {
       for (i:=0; i<c.cases.size; ++i)
       {
-        opType(FOp.Dup, c.cases[i].ctype)
-        expr(c.cases[i])
-        op(FOp.CmpEQ) // TODO eq/jump combo?
+        opType(FOp.Dup, condition.ctype)
+        compareOp(stmt.condition.ctype, FOp.CmpEQ, c.cases[i])
         jumpPositions.add(jump(FOp.JumpTrue))
         jumpCases.add(c)
       }
@@ -436,7 +437,7 @@ class CodeAsm : CompilerSupport
     // default block goes first - it's the switch fall
     // thru, save offset to back patch jump
     defaultStart := mark
-    defaultEnd := switchBlock(stmt.defaultBlock, stmt.condition.ctype)
+    defaultEnd := switchBlock(stmt.defaultBlock, condition.ctype)
 
     // now write each case block
     caseEnds := Int[,]
@@ -444,7 +445,7 @@ class CodeAsm : CompilerSupport
     stmt.cases.each |Case c, Int i|
     {
       c.startOffset = code.size
-      caseEnds[i] = switchBlock(c.block, stmt.condition.ctype)
+      caseEnds[i] = switchBlock(c.block, condition.ctype)
     }
 
     // backpatch the jump table
@@ -922,6 +923,7 @@ class CodeAsm : CompilerSupport
     code.writeI2(fpod.addTypeRef(to))
   }
 
+
 //////////////////////////////////////////////////////////////////////////
 // Elvis
 //////////////////////////////////////////////////////////////////////////
@@ -1307,15 +1309,17 @@ class CodeAsm : CompilerSupport
   private Void shortcut(ShortcutExpr call)
   {
     // handle comparisions as special opcodes
+    target := call.target
+    firstArg := call.args.first
     switch (call.opToken)
     {
-      case Token.eq:     shortcutOp(call, FOp.CmpEQ); return
-      case Token.notEq:  shortcutOp(call, FOp.CmpNE); return
-      case Token.cmp:    shortcutOp(call, FOp.Cmp);   return
-      case Token.lt:     shortcutOp(call, FOp.CmpLT); return
-      case Token.ltEq:   shortcutOp(call, FOp.CmpLE); return
-      case Token.gt:     shortcutOp(call, FOp.CmpGT); return
-      case Token.gtEq:   shortcutOp(call, FOp.CmpGE); return
+      case Token.eq:     compareOp(target, FOp.CmpEQ, firstArg); return
+      case Token.notEq:  compareOp(target, FOp.CmpNE, firstArg); return
+      case Token.cmp:    compareOp(target, FOp.Cmp,   firstArg); return
+      case Token.lt:     compareOp(target, FOp.CmpLT, firstArg); return
+      case Token.ltEq:   compareOp(target, FOp.CmpLE, firstArg); return
+      case Token.gt:     compareOp(target, FOp.CmpGT, firstArg); return
+      case Token.gtEq:   compareOp(target, FOp.CmpGE, firstArg); return
     }
 
     // always check string concat first since it can
@@ -1337,12 +1341,19 @@ class CodeAsm : CompilerSupport
     this.call(call)
   }
 
-  private Void shortcutOp(CallExpr call, FOp opCode)
+  **
+  ** Generate a comparison.  The lhs can be either a ctype or an expr.
+  **
+  private Void compareOp(Obj lhs, FOp opCode, Expr rhs)
   {
+    lhsExpr := lhs as Expr
+    lhsType := lhsExpr != null ? lhsExpr.ctype : (CType)lhs
+
     // TODO: need to optimize for value-type comparisons
-    expr(call.target)
-    if (call.target.ctype.isValue) coerceOp(call.target.ctype, ns.objType.toNullable)
-    call.args.each |Expr arg| { expr(arg) }
+    if (lhsExpr != null) expr(lhsExpr)
+    if (lhsType.isValue) coerceOp(lhsType, ns.objType.toNullable)
+    expr(rhs)
+    if (rhs.ctype.isValue) coerceOp(rhs.ctype, ns.objType.toNullable)
     op(opCode)
   }
 
