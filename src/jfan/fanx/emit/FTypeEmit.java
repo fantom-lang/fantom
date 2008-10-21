@@ -386,10 +386,6 @@ public abstract class FTypeEmit
   int CompareLT, CompareLE;
   int CompareGE, CompareGT;
   int Compare;
-  int CompareSame;
-  int CompareNotSame;
-  int CompareNull;
-  int CompareNotNull;
   int BoolBox, BoolUnbox;
   int IntBox, IntUnbox;
   int FloatBox, FloatUnbox;

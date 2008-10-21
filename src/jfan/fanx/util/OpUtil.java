@@ -68,26 +68,6 @@ public class OpUtil
     return FanObj.compare(a, b) > 0;
   }
 
-  public static boolean compareSame(Object a, Object b) // need to use Object for mixins
-  {
-    return a == b;
-  }
-
-  public static boolean compareNotSame(Object a, Object b) // need to use Object for mixins
-  {
-    return a != b;
-  }
-
-  public static boolean compareNull(Object a) // need to use Object for mixins
-  {
-    return a == null;
-  }
-
-  public static boolean compareNotNull(Object a) // need to use Object for mixins
-  {
-    return a != null;
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Is/As
 //////////////////////////////////////////////////////////////////////////

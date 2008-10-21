@@ -105,7 +105,7 @@ public class Test
   public void verifySame(Object expected, Object actual) { verifySame(expected, actual, null); }
   public void verifySame(Object expected, Object actual, String msg)
   {
-    if (!OpUtil.compareSame(expected, actual))
+    if (expected != actual)
     {
       if (msg == null) msg = s(expected) + " !== " + s(actual);
       fail(msg);
@@ -116,7 +116,7 @@ public class Test
   public void verifyNotSame(Object expected, Object actual) { verifyNotSame(expected, actual, null); }
   public void verifyNotSame(Object expected, Object actual, String msg)
   {
-    if (OpUtil.compareSame(expected, actual))
+    if (expected == actual)
     {
       if (msg == null) msg = s(expected) + " === " + s(actual);
       fail(msg);
