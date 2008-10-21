@@ -912,17 +912,24 @@ class CodeAsm : CompilerSupport
   private Void coerce(TypeCheckExpr tc)
   {
     expr(tc.target)
-    coerceOp(tc.target.ctype, tc.ctype)
+    coerceOp(tc.from, tc.ctype)
     if (!tc.leave) opType(FOp.Pop, tc.ctype)
   }
 
   private Void coerceOp(CType from, CType to)
   {
-    op(FOp.Coerce)
-    code.writeI2(fpod.addTypeRef(from))
-    code.writeI2(fpod.addTypeRef(to))
-  }
+    // map from/to to typeRefs
+    fromRef := fpod.addTypeRef(from)
+    toRef   := fpod.addTypeRef(to)
 
+    // short circuit if coercing same types
+    if (fromRef == toRef) return
+
+    // write opcode with its from/to arguments
+    op(FOp.Coerce)
+    code.writeI2(fromRef)
+    code.writeI2(toRef)
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Elvis

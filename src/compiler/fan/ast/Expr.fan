@@ -1154,6 +1154,7 @@ class TypeCheckExpr : Expr
   {
     if (to.isGenericParameter) to = to.ns.objType // TODO: not sure about this
     this.target = target
+    this.from   = target.ctype
     this.check  = to
     this.ctype  = to
   }
@@ -1199,8 +1200,11 @@ class TypeCheckExpr : Expr
     }
   }
 
+  ** From type if coerce
+  CType from { get { return @from ?: target.ctype } }
+
   Expr target
-  CType check
+  CType check    // to type if coerce
   Bool synthetic := false
 }
 
