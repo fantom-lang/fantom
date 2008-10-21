@@ -131,22 +131,17 @@ const class Pen
   {
     s := width.toStr
 
-/* TODO
     switch (cap)
     {
       case capButt:  s += " capButt"
       case capRound: s += " capRound"
     }
+
     switch (join)
     {
       case joinBevel: s += " joinBevel"
       case joinRound: s += " joinRound"
     }
-*/
-if (cap == capButt) s += " capButt"
-if (cap == capRound) s += " capRound"
-if (join == joinBevel) s += " joinBevel"
-if (join == joinRound) s += " joinRound"
 
     if (dash != null) s += " [" + dash.join(",") + "]"
     return s

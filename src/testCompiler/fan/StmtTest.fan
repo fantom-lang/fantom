@@ -511,8 +511,6 @@ class StmtTest : CompilerTest
     verifyEq(f.call1(null), '?')
 
     // int no-table
-/* TODO
-   need to coerce condition and case statements
     compile(
      "class Foo
       {
@@ -528,6 +526,30 @@ class StmtTest : CompilerTest
 
         static Int zero() { return 0 }
         static Int one()  { return 1 }
+      }")
+
+    f = pod.types[0].method("f")
+    verifyEq(compiler.types[0].methodDef("f").code.stmts[0]->isTableswitch, false)
+    verifyEq(f.call1(0), 100)
+    verifyEq(f.call1(1), 101)
+    verifyEq(f.call1(2), -1)
+
+    // int? no-table
+    compile(
+     "class Foo
+      {
+        static Int f(Int? x)
+        {
+          switch (x)
+          {
+            case zero(): return 100
+            case one():  return 101
+          }
+          return -1
+        }
+
+        static Int zero() { return 0 }
+        static Int? one()  { return 1 }
       }")
 
     f = pod.types[0].method("f")
@@ -568,7 +590,6 @@ class StmtTest : CompilerTest
     verifyEq(f.call1(Int#), null)
     verifyEq(f.call1(0), 0)
     verifyEq(f.call1(null), null)
-*/
   }
 
 //////////////////////////////////////////////////////////////////////////
