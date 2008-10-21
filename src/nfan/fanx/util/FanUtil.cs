@@ -46,9 +46,9 @@ namespace Fanx.Util
       return t == Fan.Sys.Sys.ObjType   ||
              t == Fan.Sys.Sys.BoolType  ||
              t == Fan.Sys.Sys.IntType   ||
-             t == Fan.Sys.Sys.FloatType;// ||
-             //t == Sys.NumType   ||
-             //t == Sys.DecimalType;
+             t == Fan.Sys.Sys.FloatType ||
+             t == Fan.Sys.Sys.NumType   ||
+             t == Fan.Sys.Sys.DecimalType;
     }
 
     /// <summary>
@@ -71,11 +71,17 @@ namespace Fanx.Util
           case 'B':
             if (typeName == "Bool") return "Fan.Sys.Boolean";
             break;
+          case 'D':
+            if (typeName == "Decimal") return "Fan.Sys.BigDecimal";
+            break;
           case 'F':
             if (typeName == "Float") return "Fan.Sys.Double";
             break;
           case 'I':
             if (typeName == "Int") return "Fan.Sys.Long";
+            break;
+          case 'N':
+            if (typeName == "Num") return "Fan.Sys.Number";
             break;
           case 'O':
             if (typeName == "Obj") return "System.Object";
@@ -97,11 +103,17 @@ namespace Fanx.Util
           case 'B':
             if (typeName == "Bool") return "Fan.Sys.FanBool";
             break;
+          case 'D':
+            if (typeName == "Decimal") return "Fan.Sys.FanDecimal";
+            break;
           case 'F':
             if (typeName == "Float") return "Fan.Sys.FanFloat";
             break;
           case 'I':
             if (typeName == "Int") return "Fan.Sys.FanInt";
+            break;
+          case 'N':
+            if (typeName == "Num") return "Fan.Sys.FanNum";
             break;
           case 'O':
             if (typeName == "Obj") return "Fan.Sys.FanObj";
@@ -127,8 +139,10 @@ namespace Fanx.Util
       if (ntype[0] == 'F')
       {
         if (ntype == "Fan.Sys.Boolean") return "Fan.Sys.FanBool";
+        if (ntype == "Fan.Sys.BigDecimal") return "Fan.Sys.FanDecimal";
         if (ntype == "Fan.Sys.Double") return "Fan.Sys.FanFloat";
         if (ntype == "Fan.Sys.Long") return "Fan.Sys.FanInt";
+        if (ntype == "Fan.Sys.Number") return "Fan.Sys.FanNum";
       }
       return ntype;
     }
@@ -230,14 +244,18 @@ namespace Fanx.Util
 
     static FanUtil()
     {
-      netToFanTypes["System.Object"]   = Fan.Sys.Sys.ObjType;
-      netToFanTypes["Fan.Sys.Boolean"] = Fan.Sys.Sys.BoolType;
-      netToFanTypes["Fan.Sys.Double"]  = Fan.Sys.Sys.FloatType;
-      netToFanTypes["Fan.Sys.Long"]    = Fan.Sys.Sys.IntType;
+      netToFanTypes["System.Object"]      = Fan.Sys.Sys.ObjType;
+      netToFanTypes["Fan.Sys.Boolean"]    = Fan.Sys.Sys.BoolType;
+      netToFanTypes["Fan.Sys.BigDecimal"] = Fan.Sys.Sys.DecimalType;
+      netToFanTypes["Fan.Sys.Double"]     = Fan.Sys.Sys.FloatType;
+      netToFanTypes["Fan.Sys.Long"]       = Fan.Sys.Sys.IntType;
+      netToFanTypes["Fan.Sys.Number"]     = Fan.Sys.Sys.NumType;
 
-      netImmutables["Fan.Sys.Boolean"] = true;
-      netImmutables["Fan.Sys.Double"]  = true;
-      netImmutables["Fan.Sys.Long"]    = true;
+      netImmutables["Fan.Sys.Boolean"]    = true;
+      netImmutables["Fan.Sys.BigDecimal"] = true;
+      netImmutables["Fan.Sys.Double"]     = true;
+      netImmutables["Fan.Sys.Long"]       = true;
+      netImmutables["Fan.Sys.Number"]     = true;
     }
 
   }

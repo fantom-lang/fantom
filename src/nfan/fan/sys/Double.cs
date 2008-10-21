@@ -11,7 +11,7 @@ namespace Fan.Sys
   ///
   /// Temp wrapper for double primitive
   ///
-  public sealed class Double : System.IComparable
+  public sealed class Double : Number, System.IComparable
   {
     public Double(double val)
     {
@@ -45,9 +45,10 @@ namespace Fan.Sys
 
     public override int GetHashCode() { return val.GetHashCode(); }
 
-    public double doubleValue() { return val; }
-    public float floatValue() { return (float)val; }
-    public long longValue() { return (long)val; }
+    public override double doubleValue() { return val; }
+    public override float floatValue() { return (float)val; }
+    public override long longValue() { return (long)val; }
+    public override int intValue() { return (int)val; }
 
     public bool isNaN() { return System.Double.IsNaN(val); }
     public static bool isNaN(double d) { return System.Double.IsNaN(d); }

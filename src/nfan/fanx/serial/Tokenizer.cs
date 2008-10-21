@@ -263,7 +263,7 @@ namespace Fanx.Serial
         {
           decimal dnum = (s == null) ?
             new decimal(whole) :
-            Decimal.Parse(s.ToString());
+            BigDecimal.valueOf(s.ToString()).decimalValue();
           if (dur > 0)
           {
             //this.m_val = Duration.make(((long)dnum) * dur);
@@ -273,7 +273,7 @@ namespace Fanx.Serial
           }
           else
           {
-            this.m_val = Decimal.make(dnum);
+            this.m_val = BigDecimal.valueOf(dnum);
             return Token.DECIMAL_LITERAL;
           }
         }

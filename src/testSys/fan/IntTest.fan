@@ -36,7 +36,7 @@ class IntTest : Test
     verify(8.isImmutable)
 
     verify(x is Obj)
-    //verify(x is Num) TODO
+    verify(x is Num)
     verify(x is Int)
     verifyFalse(x is Float)
   }
@@ -204,14 +204,11 @@ class IntTest : Test
 
   Void testNum()
   {
-    /*
-    TODO
     verifyEq(9.toFloat, 9.0f)
     verifyEq(9.toDecimal, 9d)
     verifyEq(-123456789.toDecimal, -123456789d)
     verifyEq(-7.toInt, -7)
     verify(93757393754.toInt === 93757393754)
-    */
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -132,26 +132,6 @@ namespace Fan.Sys
     public static Double decrement (Double self)           { return Double.valueOf(self.doubleValue()-1); }
 
   //////////////////////////////////////////////////////////////////////////
-  // Num
-  //////////////////////////////////////////////////////////////////////////
-
-    public static Long toInt(Double self)
-    {
-      /*
-      // TODO
-      double val = self.doubleValue();
-      if (val == System.Double.PositiveInfinity) return Long.valueOf(System.Int64.MaxValue);
-      if (Double.isNaN(val)) return FanInt.Zero;
-      return Long.valueOf(self.longValue());
-      */
-      return Long.valueOf(self.longValue());
-    }
-
-    public static Double toFloat(Double self) { return self; }
-
-    public static Decimal toDecimal(Double self) { return Decimal.make(new decimal(self.doubleValue())); }
-
-  //////////////////////////////////////////////////////////////////////////
   // Math
   //////////////////////////////////////////////////////////////////////////
 

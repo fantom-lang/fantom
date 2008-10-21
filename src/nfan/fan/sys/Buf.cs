@@ -238,7 +238,7 @@ namespace Fan.Sys
 
     public Buf writeF8(Double x) { m_out.writeF8(x); return this; }
 
-    public Buf writeDecimal(Decimal x) { m_out.writeDecimal(x); return this; }
+    public Buf writeDecimal(BigDecimal x) { m_out.writeDecimal(x); return this; }
 
     public Buf writeBool(Boolean x) { m_out.writeBool(x); return this; }
 
@@ -294,7 +294,7 @@ namespace Fan.Sys
 
     public Double readF8() { return m_in.readF8(); }
 
-    public Decimal readDecimal() { return m_in.readDecimal(); }
+    public BigDecimal readDecimal() { return m_in.readDecimal(); }
 
     public Boolean readBool() { return m_in.readBool(); }
 
