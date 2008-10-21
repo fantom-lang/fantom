@@ -141,9 +141,9 @@ namespace Fan.Sys
       return writeI8(System.BitConverter.DoubleToInt64Bits(x.doubleValue()));
     }
 
-    public virtual OutStream writeDecimal(Decimal x)
+    public virtual OutStream writeDecimal(BigDecimal x)
     {
-      return writeUtfString(x.val.ToString());
+      return writeUtfString(x.ToString());
     }
 
     public virtual OutStream writeBool(Boolean x)

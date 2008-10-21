@@ -277,9 +277,9 @@ namespace Fan.Sys
       return Double.valueOf(System.BitConverter.Int64BitsToDouble(readLong()));
     }
 
-    public virtual Decimal readDecimal()
+    public virtual BigDecimal readDecimal()
     {
-      return Decimal.fromStr(readUtfString(), true);
+      return FanDecimal.fromStr(readUtfString(), true);
     }
 
     public virtual Boolean readBool()

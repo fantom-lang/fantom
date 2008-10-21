@@ -53,7 +53,7 @@ namespace Fanx.Fcode
 
     public Long integer(int index)      { return (Long)m_ints.get(index); }
     public Double floats(int index)     { return (Double)m_floats.get(index); }
-    public Decimal decimals(int index)  { return (Decimal)m_decimals.get(index); }
+    public BigDecimal decimals(int index)  { return (BigDecimal)m_decimals.get(index); }
     public Str str(int index)           { return (Str)m_strs.get(index); }
     public Duration duration(int index) { return (Duration)m_durations.get(index); }
     public Uri uri(int index)           { return (Uri)m_uris.get(index); }
@@ -65,7 +65,7 @@ namespace Fanx.Fcode
     public FPod m_fpod;         // parent pod
     public FTable m_ints;       // Long literals
     public FTable m_floats;     // Double literals
-    public FTable m_decimals;   // Decimal literals
+    public FTable m_decimals;   // BigDecimal literals
     public FTable m_strs;       // Str literals
     public FTable m_durations;  // Duration literals
     public FTable m_uris;       // Uri literals

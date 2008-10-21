@@ -251,7 +251,7 @@ namespace Fanx.Emit
     private void loadDecimal()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "D" + index, "Fan.Sys.Decimal");
+      PERWAPI.Field field = emitter.findField(podClass, "D" + index, "Fan.Sys.BigDecimal");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 

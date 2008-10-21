@@ -739,8 +739,8 @@ namespace Fan.Sys
     public Double toFloat() { return FanFloat.fromStr(this, Boolean.True); }
     public Double toFloat(Boolean check) { return FanFloat.fromStr(this, check); }
 
-    public Decimal toDecimal() { return Decimal.fromStr(this, Boolean.True); }
-    public Decimal toDecimal(Boolean check) { return Decimal.fromStr(this, check); }
+    public BigDecimal toDecimal() { return FanDecimal.fromStr(this, Boolean.True); }
+    public BigDecimal toDecimal(Boolean check) { return FanDecimal.fromStr(this, check); }
 
     public Uri toUri() { return Uri.fromStr(this); }
 

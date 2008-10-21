@@ -11,7 +11,7 @@ namespace Fan.Sys
   ///
   /// Temp wrapper for long primitive
   ///
-  public sealed class Long : System.IComparable
+  public sealed class Long : Number, System.IComparable
   {
     private Long(long val)
     {
@@ -35,8 +35,10 @@ namespace Fan.Sys
 
     public override int GetHashCode() { return val.GetHashCode(); }
 
-    public int intValue() { return (int)val; }
-    public long longValue() { return val; }
+    public override int intValue() { return (int)val; }
+    public override long longValue() { return val; }
+    public override float floatValue() { return (float)val; }
+    public override double doubleValue() { return (double)val; }
 
     public static Long valueOf(string s) { return valueOf(System.Int64.Parse(s)); }
     public static Long valueOf(long l)

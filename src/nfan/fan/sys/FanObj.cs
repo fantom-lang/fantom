@@ -125,16 +125,21 @@ namespace Fan.Sys
 
     public static object trap(object self, Str name, List args)
     {
-      return ((FanObj)self).trap(name, args);
+      if (self is FanObj)
+        return ((FanObj)self).trap(name, args);
+      else
+        return doTrap(self, name, args, type(self));
     }
 
-    public virtual object trap(Str name, List args)
+    public virtual object trap(Str name, List args) { return doTrap(this, name, args, type()); }
+
+    private static object doTrap(object self, Str name, List args, Type type)
     {
-      Slot slot = type().slot(name, Boolean.True);
+      Slot slot = type.slot(name, Boolean.True);
       if (slot is Method)
       {
         Method m = (Method)slot;
-        return m.m_func.callOn(this, args);
+        return m.m_func.callOn(self, args);
       }
       else
       {
@@ -142,48 +147,19 @@ namespace Fan.Sys
         int argSize = (args == null) ? 0 : args.sz();
         if (argSize == 0)
         {
-          return f.get(this);
+          return f.get(self);
         }
 
         if (argSize == 1)
         {
           object val = args.get(0);
-          f.set(this, val);
+          f.set(self, val);
           return val;
         }
 
         throw ArgErr.make("Invalid number of args to get or set field '" + name + "'").val;
       }
     }
-
-    /* TODO
-    public virtual object trapUri(Uri uri)
-    {
-      // sanity checks
-      List path = uri.path();
-      if (path == null) throw ArgErr.make("Path is null: '" + uri + "'").val;
-
-      // if path is empty, return this
-      if (path.sz() == 0) return this;
-
-      // get next level of path
-      Str nextName = (Str)path.first();
-      object obj = null;
-      try
-      {
-        if (emptyList == null) emptyList = new List(Sys.ObjType).ro();
-        obj = trap(nextName, emptyList);
-      }
-      catch(UnknownSlotErr.Val)
-      {
-      }
-      if (obj == null) return null;
-
-      // recurse
-      return obj.trapUri(uri.tail());
-    }
-    private static List emptyList;
-    */
 
   //////////////////////////////////////////////////////////////////////////
   // Utils

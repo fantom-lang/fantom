@@ -244,7 +244,7 @@ namespace Fanx.Fcode
          m_size = input.u2();
          m_table = new object[m_size];
          for (int i=0; i<m_size; i++)
-           m_table[i] = Fan.Sys.Decimal.fromStr(input.utf(), true);
+           m_table[i] = FanDecimal.fromStr(input.utf(), true);
          return this;
       }
     }
