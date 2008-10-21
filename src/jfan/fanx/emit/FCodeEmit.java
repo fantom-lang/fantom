@@ -851,8 +851,13 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
         branch();
         break;
       default:
-       if (parent.CompareSame == 0) parent.CompareSame = emit.method("fanx/util/OpUtil.compareSame(Ljava/lang/Object;Ljava/lang/Object;)Z");
-       code.op2(INVOKESTATIC, parent.CompareSame);
+        int label = code.branch(IF_ACMPEQ);
+        code.op(ICONST_0);
+        int end = code.branch(GOTO);
+        code.mark(label);
+        code.op(ICONST_1);
+        code.mark(end);
+        break;
     }
   }
 
@@ -872,8 +877,13 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
         branch();
         break;
       default:
-        if (parent.CompareNotSame == 0) parent.CompareNotSame = emit.method("fanx/util/OpUtil.compareNotSame(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        code.op2(INVOKESTATIC, parent.CompareNotSame);
+        int label = code.branch(IF_ACMPNE);
+        code.op(ICONST_0);
+        int end = code.branch(GOTO);
+        code.mark(label);
+        code.op(ICONST_1);
+        code.mark(end);
+        break;
     }
   }
 
@@ -893,8 +903,13 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
         branch();
         break;
       default:
-       if (parent.CompareNull == 0) parent.CompareNull = emit.method("fanx/util/OpUtil.compareNull(Ljava/lang/Object;)Z");
-       code.op2(INVOKESTATIC, parent.CompareNull);
+        int label = code.branch(IFNULL);
+        code.op(ICONST_0);
+        int end = code.branch(GOTO);
+        code.mark(label);
+        code.op(ICONST_1);
+        code.mark(end);
+        break;
     }
   }
 
@@ -914,8 +929,13 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
         branch();
         break;
       default:
-       if (parent.CompareNotNull == 0) parent.CompareNotNull = emit.method("fanx/util/OpUtil.compareNotNull(Ljava/lang/Object;)Z");
-       code.op2(INVOKESTATIC, parent.CompareNotNull);
+        int label = code.branch(IFNONNULL);
+        code.op(ICONST_0);
+        int end = code.branch(GOTO);
+        code.mark(label);
+        code.op(ICONST_1);
+        code.mark(end);
+        break;
     }
   }
 
