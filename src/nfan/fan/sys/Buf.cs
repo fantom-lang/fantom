@@ -321,6 +321,7 @@ namespace Fan.Sys
     public string readAllStr(Boolean normalizeNewlines)  { return m_in.readAllStr(normalizeNewlines); }
 
     public object readObj() { return m_in.readObj(); }
+    public object readObj(Map opt) { return m_in.readObj(opt); }
 
   //////////////////////////////////////////////////////////////////////////
   // Hex
