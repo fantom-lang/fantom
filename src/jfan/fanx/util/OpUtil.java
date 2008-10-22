@@ -35,8 +35,8 @@ public class OpUtil
 
   public static long compare(Object a, Object b)
   {
-    if (a == null) return (b == null) ? 0L : -1L;
-    if (b == null) return +1L;
+    if (a == null) return (b == null) ? 0 : -1;
+    if (b == null) return +1;
     return FanObj.compare(a, b);
   }
 

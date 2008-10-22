@@ -22,7 +22,7 @@ public final class FanInt
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Long fromStr(String s) { return fromStr(s, Ten, true); }
+  public static Long fromStr(String s) { return fromStr(s, 10, true); }
   public static Long fromStr(String s, long radix) { return fromStr(s, radix, true); }
   public static Long fromStr(String s, long radix, boolean checked)
   {
@@ -65,7 +65,7 @@ public final class FanInt
   public static long compare(long self, Object obj)
   {
     long that = (Long)obj;
-    if (self < that) return LT; return self == that ? EQ : GT;
+    if (self < that) return -1; return self == that ? 0 : +1;
   }
 
   public static long hash(long self)
@@ -425,38 +425,20 @@ public final class FanInt
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Intern
+// Fields
 //////////////////////////////////////////////////////////////////////////
 
-  public static final long NEG = -257;
-  public static final long POS = 4000;
-  public static final long Zero;    // 0
-  public static final long One;     // 1
-  public static final long NegOne;  // -1
-  public static final long NegTwo;  // -2
-  public static final long Ten;     // 10
-  public static final long LT;      // compare() -> -1
-  public static final long EQ;      // compare() ->  0
-  public static final long GT;      // compare() ->  1
-  public static final long Chunk;   // 4kb / 4096
+  /** sys::Int.maxValue */
   public static final long maxValue = Long.MAX_VALUE;
-  public static final long minValue = Long.MIN_VALUE;
-//  static final Long[] neg = new Long[-(int)NEG];
-  static final Long[] pos = new Long[(int)POS];
 
-  static
-  {
-    for (int i=0; i<pos.length; ++i) pos[i] = Long.valueOf(i);
-// TODO
-    Zero   = Long.valueOf(0);
-    One    = Long.valueOf(1);
-    NegOne = Long.valueOf(-1);
-    NegTwo = Long.valueOf(-2);
-    Ten    = Long.valueOf(10);
-    LT     = Long.valueOf(-1);
-    EQ     = Long.valueOf(0);
-    GT     = Long.valueOf(1);
-    Chunk  = Long.valueOf(4096);
-  }
+  /** sys::Int.minValue */
+  public static final long minValue = Long.MIN_VALUE;
+
+  // default chunk size for IO buffering (defaults to 4KB)
+  public static final Long Chunk = Long.valueOf(4096);
+
+  // internalized boxed Longs used for byte IO
+  static final Long[] pos = new Long[256];
+  static { for (int i=0; i<pos.length; ++i) pos[i] = Long.valueOf(i); }
 
 }

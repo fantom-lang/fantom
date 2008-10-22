@@ -97,12 +97,12 @@ public final class Version
     {
       long ai = (Long)a.get(i);
       long bi = (Long)b.get(i);
-      if (ai < bi) return FanInt.LT;
-      if (ai > bi) return FanInt.GT;
+      if (ai < bi) return -1;
+      if (ai > bi) return +1;
     }
-    if (a.sz() < b.sz()) return FanInt.LT;
-    if (a.sz() > b.sz()) return FanInt.GT;
-    return FanInt.EQ;
+    if (a.sz() < b.sz()) return -1;
+    if (a.sz() > b.sz()) return +1;
+    return 0;
   }
 
   public int hashCode()

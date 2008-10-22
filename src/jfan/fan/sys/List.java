@@ -474,7 +474,7 @@ public final class List
   {
     // modify in removeAt()
     if (size == 0) return null;
-    return removeAt(FanInt.NegOne);
+    return removeAt(-1);
   }
 
   public final List push(Object obj)

@@ -60,13 +60,13 @@ public class FanStr
   public static long compare(String a, Object b)
   {
     int cmp = a.compareTo((String)b);
-    if (cmp < 0) return FanInt.LT;
-    return cmp == 0 ? FanInt.EQ : FanInt.GT;
+    if (cmp < 0) return -1;
+    return cmp == 0 ? 0 : 1;
   }
 
   public static long compareIgnoreCase(String a, String b)
   {
-    if (a == b) return FanInt.Zero;
+    if (a == b) return 0;
 
     int an = a.length();
     int bn = b.length();
@@ -77,11 +77,11 @@ public class FanStr
       int bc = b.charAt(i);
       if ('A' <= ac && ac <= 'Z') ac |= 0x20;
       if ('A' <= bc && bc <= 'Z') bc |= 0x20;
-      if (ac != bc) return ac < bc ? FanInt.LT : FanInt.GT;
+      if (ac != bc) return ac < bc ? -1 : +1;
     }
 
-    if (an == bn) return FanInt.Zero;
-    return an < bn ? FanInt.LT : FanInt.GT;
+    if (an == bn) return 0;
+    return an < bn ? -1 : +1;
   }
 
   public static long hash(String self)
@@ -599,8 +599,8 @@ public class FanStr
   public static long localeCompare(String self, String x)
   {
     int cmp = Locale.current().collator().compare(self, x);
-    if (cmp < 0) return FanInt.LT;
-    return cmp == 0 ? FanInt.EQ : FanInt.GT;
+    if (cmp < 0) return -1;
+    return cmp == 0 ? 0 : +1;
   }
 
   public static String localeLower(String self)
@@ -652,7 +652,7 @@ public class FanStr
   public static Boolean toBool(String self) { return FanBool.fromStr(self, true); }
   public static Boolean toBool(String self, boolean checked) { return FanBool.fromStr(self, checked); }
 
-  public static Long toInt(String self) { return FanInt.fromStr(self, FanInt.Ten, true); }
+  public static Long toInt(String self) { return FanInt.fromStr(self, 10, true); }
   public static Long toInt(String self, long radix) { return FanInt.fromStr(self, radix, true); }
   public static Long toInt(String self, long radix, boolean checked) { return FanInt.fromStr(self, radix, checked); }
 
