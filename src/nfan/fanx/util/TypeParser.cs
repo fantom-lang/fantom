@@ -33,9 +33,17 @@ namespace Fanx.Util
     /// </summary>
     public static Type load(string sig, bool check, Pod loadingPod)
     {
+      // if last character is ?, then parse a nullable
+      int len = sig.Length;
+      int last = len > 1 ? sig[len-1] : 0;
+      if (last == '?')
+      {
+        // TODO: we can make this more efficient
+        return load(sig.Substring(0, len-1), check, loadingPod).toNullable();
+      }
+
       // if the last character isn't ] or |, then this a non-generic
       // type and we don't even need to allocate a parser
-      int last = sig.Length > 1 ? sig[sig.Length-1] : 0;
       if (last != ']' && last != '|')
       {
         string podName, typeName;
@@ -51,7 +59,7 @@ namespace Fanx.Util
         {
           throw ArgErr.make("Invalid type signature '" + sig + "', use <pod>::<type>").val;
         }
-        if (loadingPod != null && podName == loadingPod.name().val)
+        if (loadingPod != null && podName == loadingPod.name())
           return loadingPod.findType(typeName, check);
         else
           return Type.find(podName, typeName, check);
@@ -170,7 +178,7 @@ namespace Fanx.Util
         if (type != null) return type;
       }
 
-      if (loadingPod != null && podName == loadingPod.name().val)
+      if (loadingPod != null && podName == loadingPod.name())
         return loadingPod.findType(typeName, check);
       else
         return Type.find(podName, typeName, check);

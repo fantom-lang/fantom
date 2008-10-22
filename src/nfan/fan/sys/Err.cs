@@ -72,16 +72,15 @@ namespace Fan.Sys
   // C# Convenience
   //////////////////////////////////////////////////////////////////////////
 
-    public static Err make(string msg) { return make(Str.make(msg)); }
-    public static Err make(string msg, Exception e) { return make(Str.make(msg), make(e)); }
+    public static Err make(string msg, Exception e) { return make(msg, make(e)); }
 
   //////////////////////////////////////////////////////////////////////////
   // Fan Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public static Err make() { return make((Str)null, (Err)null); }
-    public static Err make(Str msg) { return make(msg, null); }
-    public static Err make(Str msg, Err cause)
+    public static Err make() { return make((string)null, (Err)null); }
+    public static Err make(string msg) { return make(msg, (Err)null); }
+    public static Err make(string msg, Err cause)
     {
       Err err = new Err(new Err.Val());
       make_(err, msg, cause);
@@ -89,8 +88,8 @@ namespace Fan.Sys
     }
 
     public static void make_(Err self) { make_(self, null);  }
-    public static void make_(Err self, Str msg) { make_(self, msg, null); }
-    public static void make_(Err self, Str msg, Err cause)
+    public static void make_(Err self, string msg) { make_(self, msg, null); }
+    public static void make_(Err self, string msg, Err cause)
     {
       self.m_message = msg;
       self.m_cause   = cause;
@@ -121,14 +120,14 @@ namespace Fan.Sys
       this.val = val;
       val.m_err = this;
       this.m_actual = actual;
-      this.m_message = Str.make(actual.Message);
+      this.m_message = actual.Message;
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Str message()
+    public string message()
     {
       return m_message;
     }
@@ -141,7 +140,7 @@ namespace Fan.Sys
     public Err trace() { return trace(0); }
     public Err trace(int indent)
     {
-      dumpStack(toStr().val, m_actual != null ? m_actual : val, indent);
+      dumpStack(toStr(), m_actual != null ? m_actual : val, indent);
       if (m_cause != null)
       {
         System.Console.WriteLine("Cause:");
@@ -153,16 +152,16 @@ namespace Fan.Sys
     public Err trace(OutStream @out) { return trace(@out, 0); }
     public Err trace(OutStream @out, int indent)
     {
-      dumpStack(toStr().val, m_actual != null ? m_actual : val, @out, indent);
+      dumpStack(toStr(), m_actual != null ? m_actual : val, @out, indent);
       if (m_cause != null)
       {
-        @out.printLine(Str.make("Cause:"));
+        @out.printLine("Cause:");
         m_cause.trace(@out, indent+2);
       }
       return this;
     }
 
-    public Str traceToStr()
+    public string traceToStr()
     {
       Buf buf = new MemBuf(1024);
       trace(buf.@out());
@@ -174,12 +173,12 @@ namespace Fan.Sys
       return Sys.ErrType;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       if (m_message == null)
-        return type().qname().toStr();
+        return type().qname();
       else
-        return Str.make(type().qname() + ": " + m_message);
+        return type().qname() + ": " + m_message;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -216,7 +215,7 @@ namespace Fan.Sys
     {
       StringWriter w = new StringWriter();
       doDumpStack(msg, err, indent, w);
-      @out.writeChars(Str.make(w.ToString())).flush();
+      @out.writeChars(w.ToString()).flush();
     }
 
     static void doDumpStack(string msg, Exception err, int depth, StringWriter w)
@@ -233,62 +232,64 @@ namespace Fan.Sys
         Err e = ((Err.Val)err).err();
         if (e.m_stack != null) stack = e.m_stack;
       }
-      string[] lines = stack.Split('\n');
-      for (int i=0; i<lines.Length; i++)
+      if (stack != null)
       {
-        // TODO - could be *way* more efficient
-
-        string s = lines[i].Trim();
-        int parOpen  = s.IndexOf('(');
-        int parClose = s.IndexOf(')', parOpen);
-
-        string source = s.Substring(parClose+1, s.Length-parClose-1);
-        if (source == "") source = "Unknown Source";
-        else
+        string[] lines = stack.Split('\n');
+        for (int i=0; i<lines.Length; i++)
         {
-          source = source.Substring(4);
-          int index = source.LastIndexOf("\\");
-          if (index != -1) source = source.Substring(index+1);
-          index = source.LastIndexOf(":line");
-          source = source.Substring(0, index+1) + source.Substring(index+6);
-        }
+          // TODO - could be *way* more efficient
 
-        string target = s.Substring(0, parOpen);
-        if (target.StartsWith("at Fan."))
-        {
-          int a = target.IndexOf(".", 7);
-          int b = target.IndexOf(".", a+1);
-          string pod  = target.Substring(7, a-7);
-          string type = target.Substring(a+1, b-a-1);
-          string meth = target.Substring(b+1);
+          string s = lines[i].Trim();
+          int parOpen  = s.IndexOf('(');
+          int parClose = s.IndexOf(')', parOpen);
 
-          // check for closures
-          int dollar1 = type.IndexOf('$');
-          int dollar2 = dollar1 < 0 ? -1 : type.IndexOf('$', dollar1+1);
-          if (dollar2 > 0)
+          string source = s.Substring(parClose+1, s.Length-parClose-1);
+          if (source == "") source = "Unknown Source";
+          else
           {
-            // don't print callX for closures
-            if (meth.StartsWith("call")) continue;
-            // remap closure class back to original method
-            if (meth.StartsWith("doCall"))
-            {
-              meth = type.Substring(dollar1+1, dollar2-dollar1-1);
-              type = type.Substring(0, dollar1);
-            }
+            source = source.Substring(4);
+            int index = source.LastIndexOf("\\");
+            if (index != -1) source = source.Substring(index+1);
+            index = source.LastIndexOf(":line");
+            source = source.Substring(0, index+1) + source.Substring(index+6);
           }
 
-          target = Str.make(pod).decapitalize().val + "::" + type + "." + meth;
+          string target = s.Substring(0, parOpen);
+          if (target.StartsWith("at Fan."))
+          {
+            int a = target.IndexOf(".", 7);
+            int b = target.IndexOf(".", a+1);
+            string pod  = target.Substring(7, a-7);
+            string type = target.Substring(a+1, b-a-1);
+            string meth = target.Substring(b+1);
+
+            // check for closures
+            int dollar1 = type.IndexOf('$');
+            int dollar2 = dollar1 < 0 ? -1 : type.IndexOf('$', dollar1+1);
+            if (dollar2 > 0)
+            {
+              // don't print callX for closures
+              if (meth.StartsWith("call")) continue;
+              // remap closure class back to original method
+              if (meth.StartsWith("doCall"))
+              {
+                meth = type.Substring(dollar1+1, dollar2-dollar1-1);
+                type = type.Substring(0, dollar1);
+              }
+            }
+
+            target = FanStr.decapitalize(pod) + "::" + type + "." + meth;
+          }
+
+          for (int sp=0; sp<depth; sp++) w.Write(" ");
+          w.Write("  ");
+          w.Write(target);
+          w.Write(" (");
+          w.Write(source);
+          w.Write(")");
+          w.Write("\n");
         }
-
-        for (int sp=0; sp<depth; sp++) w.Write(" ");
-        w.Write("  ");
-        w.Write(target);
-        w.Write(" (");
-        w.Write(source);
-        w.Write(")");
-        w.Write("\n");
       }
-
       // inner exception
       Exception cause = err.InnerException;
       if (cause != null) doDumpStack(msg, cause, depth+1, w);
@@ -299,7 +300,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public readonly Val val;
-    internal Str m_message;
+    internal string m_message;
     internal Err m_cause = null;
     internal Exception m_actual;
     internal string m_stack;       // only used for Method.invoke()
