@@ -247,6 +247,10 @@ namespace Fan.Sys
 
     public override bool @is(Type type)
     {
+      // we don't take nullable into account for fits
+      if (type is NullableType)
+        type = ((NullableType)type).m_root;
+
       if (type == this || (type == Sys.ObjType && this != Sys.VoidType))
         return true;
       List inherit = inheritance();
@@ -254,6 +258,7 @@ namespace Fan.Sys
         if (inherit.get(i) == type) return true;
       return false;
     }
+
 //TODO
 /*
     /// <summary>

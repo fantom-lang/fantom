@@ -63,8 +63,8 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private Type m_root;
-    private string m_signature;
+    internal readonly Type m_root;
+    internal readonly string m_signature;
 
   }
 }
