@@ -18,21 +18,21 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static File make(Uri uri) { return make(uri, Bool.True); }
-    public static File make(Uri uri, Bool checkSlash)
+    public static File make(Uri uri) { return make(uri, Boolean.True); }
+    public static File make(Uri uri, Boolean checkSlash)
     {
       System.IO.FileSystemInfo f = LocalFile.uriToFile(uri);
-      if (f is System.IO.DirectoryInfo && !checkSlash.val && !uri.isDir().val)
+      if (f is System.IO.DirectoryInfo && !checkSlash.booleanValue() && !uri.isDir().booleanValue())
         uri = uri.plusSlash();
       return new LocalFile(uri, f);
     }
 
-    public static File os(Str osPath)
+    public static File os(string osPath)
     {
-      System.IO.FileSystemInfo f = (System.IO.Directory.Exists(osPath.val))
-        ? new System.IO.DirectoryInfo(osPath.val) as System.IO.FileSystemInfo
-        : new System.IO.FileInfo(osPath.val) as System.IO.FileSystemInfo;
-      Uri uri = LocalFile.pathToUri(osPath.val, f is System.IO.DirectoryInfo);
+      System.IO.FileSystemInfo f = (System.IO.Directory.Exists(osPath))
+        ? new System.IO.DirectoryInfo(osPath) as System.IO.FileSystemInfo
+        : new System.IO.FileInfo(osPath) as System.IO.FileSystemInfo;
+      Uri uri = LocalFile.pathToUri(osPath, f is System.IO.DirectoryInfo);
       return new LocalFile(uri, f);
     }
 
@@ -43,12 +43,12 @@ namespace Fan.Sys
     }
 
     public static File createTemp() { return createTemp(null, null, null); }
-    public static File createTemp(Str prefix) { return createTemp(prefix, null, null); }
-    public static File createTemp(Str prefix, Str suffix) { return createTemp(prefix, suffix, null); }
-    public static File createTemp(Str prefix, Str suffix, File dir)
+    public static File createTemp(string prefix) { return createTemp(prefix, null, null); }
+    public static File createTemp(string prefix, string suffix) { return createTemp(prefix, suffix, null); }
+    public static File createTemp(string prefix, string suffix, File dir)
     {
-      if (prefix == null || prefix.val.Length == 0) prefix = Str.make("fan");
-      if (suffix == null) suffix = Str.make(".tmp");
+      if (prefix == null || prefix.Length == 0) prefix = "fan";
+      if (suffix == null) suffix = ".tmp";
 
       string parent = null;
       if (dir == null)
@@ -63,10 +63,10 @@ namespace Fan.Sys
 
       try
       {
-        string name = parent + '\\' + prefix.val + suffix.val;
+        string name = parent + '\\' + prefix + suffix;
         int count = 1;
         while (System.IO.File.Exists(name))
-          name = parent + '\\' + prefix.val + (count++) + suffix.val;
+          name = parent + '\\' + prefix + (count++) + suffix;
         LocalFile temp = new LocalFile(new System.IO.FileInfo(name));
         temp.create();
         return temp;
@@ -86,20 +86,20 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Bool _equals(object obj)
+    public override sealed Boolean _equals(object obj)
     {
       if (obj is File)
       {
         return m_uri._equals(((File)obj).m_uri);
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     public override sealed int GetHashCode() { return m_uri.GetHashCode(); }
 
-    public override sealed Int hash() { return m_uri.hash(); }
+    public override sealed Long hash() { return m_uri.hash(); }
 
-    public override sealed Str toStr() { return m_uri.toStr(); }
+    public override sealed string toStr() { return m_uri.toStr(); }
 
     public override Type type() { return Sys.FileType; }
 
@@ -109,17 +109,17 @@ namespace Fan.Sys
 
     public Uri uri() { return m_uri; }
 
-    public Bool isDir() { return m_uri.isDir();   }
+    public Boolean isDir() { return m_uri.isDir();   }
 
     public List path() { return m_uri.path(); }
 
-    public Str pathStr() { return m_uri.pathStr(); }
+    public string pathStr() { return m_uri.pathStr(); }
 
-    public Str name() { return m_uri.name(); }
+    public string name() { return m_uri.name(); }
 
-    public Str basename() { return m_uri.basename(); }
+    public string basename() { return m_uri.basename(); }
 
-    public Str ext() { return m_uri.ext(); }
+    public string ext() { return m_uri.ext(); }
 
     public MimeType mimeType() { return m_uri.mimeType(); }
 
@@ -127,14 +127,14 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public abstract Bool exists();
+    public abstract Boolean exists();
 
-    public abstract Int size();
+    public abstract Long size();
 
     public abstract DateTime modified();
     public abstract void modified(DateTime time);
 
-    public abstract Str osPath();
+    public abstract string osPath();
 
     public abstract File parent();
 
@@ -144,15 +144,15 @@ namespace Fan.Sys
     {
       List x = list();
       for (int i=x.sz()-1; i>=0; --i)
-        if (!((File)x.get(i)).isDir().val)
-          x.removeAt(Int.make(i));
+        if (!((File)x.get(i)).isDir().booleanValue())
+          x.removeAt(Long.valueOf(i));
       return x;
     }
 
     public virtual void walk(Func c)
     {
       c.call1(this);
-      if (isDir().val)
+      if (isDir().booleanValue())
       {
         List x = list();
         for (int i=0; i<x.sz(); ++i)
@@ -164,22 +164,22 @@ namespace Fan.Sys
     {
       List x = list();
       for (int i=x.sz()-1; i>=0; --i)
-        if (((File)x.get(i)).isDir().val)
-          x.removeAt(Int.make(i));
+        if (((File)x.get(i)).isDir().booleanValue())
+          x.removeAt(Long.valueOf(i));
       return x;
     }
 
     public abstract File normalize();
 
-    public File plus(Uri uri) { return plus(uri, Bool.True); }
-    public abstract File plus(Uri uri, Bool checkSlash);
+    public File plus(Uri uri) { return plus(uri, Boolean.True); }
+    public abstract File plus(Uri uri, Boolean checkSlash);
 
     internal File plus(string uri) { return plus(Uri.fromStr(uri)); }
 
     internal File plusNameOf(File x)
     {
-      string name = x.name().val;
-      if (x.isDir().val) name += "/";
+      string name = x.name();
+      if (x.isDir().booleanValue()) name += "/";
       return plus(name);
     }
 
@@ -189,17 +189,17 @@ namespace Fan.Sys
 
     public abstract File create();
 
-    public File createFile(Str name)
+    public File createFile(string name)
     {
-      if (!isDir().val) throw IOErr.make("Not a directory: " + this).val;
-      return this.plus(name.toUri()).create();
+      if (!isDir().booleanValue()) throw IOErr.make("Not a directory: " + this).val;
+      return this.plus(FanStr.toUri(name)).create();
     }
 
-    public File createDir(Str name)
+    public File createDir(string name)
     {
-      if (!isDir().val) throw IOErr.make("Not a directory: " + this).val;
-      if (!name.val.EndsWith("/")) name = Str.make(name.val + "/");
-      return this.plus(name.toUri()).create();
+      if (!isDir().booleanValue()) throw IOErr.make("Not a directory: " + this).val;
+      if (!name.EndsWith("/")) name = name + "/";
+      return this.plus(FanStr.toUri(name)).create();
     }
 
     public abstract void delete();
@@ -216,7 +216,7 @@ namespace Fan.Sys
       // sanity
       if (isDir() != to.isDir())
       {
-        if (isDir().val)
+        if (isDir().booleanValue())
           throw ArgErr.make("copyTo must be dir `" + to + "`").val;
         else
           throw ArgErr.make("copyTo must not be dir `" + to + "`").val;
@@ -240,23 +240,23 @@ namespace Fan.Sys
       // check exclude
       if (exclude is Regex)
       {
-        if (((Regex)exclude).matches(m_uri.toStr()).val) return;
+        if (((Regex)exclude).matches(m_uri.toStr()).booleanValue()) return;
       }
       else if (exclude is Func)
       {
-        if (((Func)exclude).call1(this) == Bool.True) return;
+        if (((Func)exclude).call1(this) == Boolean.True) return;
       }
 
       // check for overwrite
-      if (to.exists().val)
+      if (to.exists().booleanValue())
       {
-        if (overwrite is Bool)
+        if (overwrite is Boolean)
         {
-          if (overwrite == Bool.False) return;
+          if (overwrite == Boolean.False) return;
         }
         else if (overwrite is Func)
         {
-          if (((Func)overwrite).call1(this) == Bool.False) return;
+          if (((Func)overwrite).call1(this) == Boolean.False) return;
         }
         else
         {
@@ -265,7 +265,7 @@ namespace Fan.Sys
       }
 
       // copy directory
-      if (isDir().val)
+      if (isDir().booleanValue())
       {
         to.create();
         List kids = list();
@@ -294,7 +294,7 @@ namespace Fan.Sys
     public File copyInto(File dir) { return copyInto(dir, null); }
     public virtual File copyInto(File dir, Map options)
     {
-      if (!dir.isDir().val)
+      if (!dir.isDir().booleanValue())
         throw ArgErr.make("Not a dir: `" + dir + "`").val;
 
       return copyTo(dir.plusNameOf(this), options);
@@ -308,16 +308,16 @@ namespace Fan.Sys
 
     public virtual File moveInto(File dir)
     {
-      if (!dir.isDir().val)
+      if (!dir.isDir().booleanValue())
         throw ArgErr.make("Not a dir: `" + dir + "`").val;
 
       return moveTo(dir.plusNameOf(this));
     }
 
-    public virtual File rename(Str newName)
+    public virtual File rename(string newName)
     {
-      string n = newName.val;
-      if (isDir().val) n += "/";
+      string n = newName;
+      if (isDir().booleanValue()) n += "/";
       return moveTo(parent().plus(n));
     }
 
@@ -326,21 +326,21 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public Buf open() { return open(rwStr); }
-    public abstract Buf open(Str mode);
+    public abstract Buf open(string mode);
 
-    public Buf mmap() { return mmap(rwStr, Int.Zero, null); }
-    public Buf mmap(Str mode) { return mmap(mode, Int.Zero, null); }
-    public Buf mmap(Str mode, Int pos) { return mmap(mode, pos, null); }
-    public abstract Buf mmap(Str mode, Int pos, Int size);
+    public Buf mmap() { return mmap(rwStr, FanInt.Zero, null); }
+    public Buf mmap(string mode) { return mmap(mode, FanInt.Zero, null); }
+    public Buf mmap(string mode, Long pos) { return mmap(mode, pos, null); }
+    public abstract Buf mmap(string mode, Long pos, Long size);
 
     public InStream @in() { return @in(defaultBufSize); }
-    public abstract InStream @in(Int bufSize);
+    public abstract InStream @in(Long bufSize);
 
-    public OutStream @out() { return @out(Bool.False, defaultBufSize); }
-    public OutStream @out(Bool append) { return @out(append, defaultBufSize); }
-    public abstract OutStream @out(Bool append, Int bufSize);
+    public OutStream @out() { return @out(Boolean.False, defaultBufSize); }
+    public OutStream @out(Boolean append) { return @out(append, defaultBufSize); }
+    public abstract OutStream @out(Boolean append, Long bufSize);
 
-    private static readonly Int defaultBufSize = Int.make(4096);
+    private static readonly Long defaultBufSize = Long.valueOf(4096);
 
     public Buf readAllBuf()
     {
@@ -354,11 +354,11 @@ namespace Fan.Sys
 
     public void eachLine(Func f)
     {
-      @in(Int.Chunk).eachLine(f);
+      @in(FanInt.Chunk).eachLine(f);
     }
 
-    public Str readAllStr() { return readAllStr(Bool.True); }
-    public Str readAllStr(Bool normalizeNewlines)
+    public string readAllStr() { return readAllStr(Boolean.True); }
+    public string readAllStr(Boolean normalizeNewlines)
     {
       return @in(defaultBufSize).readAllStr(normalizeNewlines);
     }
@@ -370,7 +370,7 @@ namespace Fan.Sys
 
     public void writeProps(Map props)
     {
-      @out(Bool.False, defaultBufSize).writeProps(props, Bool.True);
+      @out(Boolean.False, defaultBufSize).writeProps(props, Boolean.True);
     }
 
     public object readObj() { return readObj(null); }
@@ -405,12 +405,12 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    public static readonly Str m_sep = Str.make(""+System.IO.Path.DirectorySeparatorChar);
-    public static readonly Str m_pathSep = Str.make(""+System.IO.Path.PathSeparator);
+    public static readonly string m_sep = ""+System.IO.Path.DirectorySeparatorChar;
+    public static readonly string m_pathSep = ""+System.IO.Path.PathSeparator;
 
-    internal static readonly Str rwStr        = Str.make("rw");
-    internal static readonly Str optOverwrite = Str.make("overwrite");
-    internal static readonly Str optExclude   = Str.make("exclude");
+    internal static readonly string rwStr        = "rw";
+    internal static readonly string optOverwrite = "overwrite";
+    internal static readonly string optExclude   = "exclude";
 
     internal readonly Uri m_uri;
 
