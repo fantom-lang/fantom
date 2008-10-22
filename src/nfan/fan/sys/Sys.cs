@@ -55,12 +55,12 @@ namespace Fan.Sys
       return m_appDir;
     }
 
-    public static Str hostName() { return m_hostName; }
+    public static string hostName() { return m_hostName; }
 
-    public static Str userName() { return m_userName; }
+    public static string userName() { return m_userName; }
 
-    public static void exit() { exit(Int.Zero); }
-    public static void exit(Int status) { System.Environment.Exit((int)status.val); }
+    public static void exit() { exit(FanInt.Zero); }
+    public static void exit(Long status) { System.Environment.Exit(status.intValue()); }
 
     public static InStream  @in()  { return StdIn; }
     public static OutStream @out() { return StdOut; }
@@ -71,10 +71,9 @@ namespace Fan.Sys
       GC.Collect();
     }
 
-    public static Int idHash(object obj)
+    public static Long idHash(object obj)
     {
-      //return Int.make(System.identityHashCode(obj));
-      return FanObj.hash(obj);
+      return Long.valueOf(System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj));
     }
 
     public static Map diagnostics()
@@ -289,16 +288,16 @@ namespace Fan.Sys
         m_homeDir = new LocalFile(new DirectoryInfo(HomeDir));
 // set is accesor method
 //m_appDir  = new LocalFile(new DirectoryInfo(AppDir));
-        m_hostName = Str.make(Environment.MachineName);
-        m_userName = Str.make(Environment.UserName);
+        m_hostName = Environment.MachineName;
+        m_userName = Environment.UserName;
 
         m_env = new Map(StrType, StrType);
-        m_env.caseInsensitive(Bool.True);
+        m_env.caseInsensitive(Boolean.True);
         try
         {
           // predefined
-          m_env.set(Str.make("os.name"), Str.make(Environment.OSVersion.Platform.ToString()));
-          m_env.set(Str.make("os.version"), Str.make(Environment.OSVersion.Version.ToString()));
+          m_env.set("os.name", Environment.OSVersion.Platform.ToString());
+          m_env.set("os.version", Environment.OSVersion.Version.ToString());
 
           // environment variables
           IDictionary getenv = Environment.GetEnvironmentVariables();
@@ -306,7 +305,7 @@ namespace Fan.Sys
           {
             string key = (string)de.Key;
             string val = (string)de.Value;
-            m_env.set(Str.make(key), Str.make(val));
+            m_env.set(key, val);
           }
 
           // TODO - is there an equiv in C# for Java sys props?
@@ -316,15 +315,15 @@ namespace Fan.Sys
           it = System.getProperties().keySet().iterator();
           while (it.hasNext())
           {
-            String key = (String)it.next();
-            String val = System.getProperty(key);
-            env.set(Str.make(key), Str.make(val));
+            string key = (string)it.next();
+            string val = System.getProperty(key);
+            env.set(string.make(key), string.make(val));
           }
           */
 
           // sys.properties
           LocalFile f = new LocalFile(new FileInfo(FileUtil.combine(HomeDir, "lib", "sys.props")));
-          if (f.exists().val)
+          if (f.exists().booleanValue())
           {
             try
             {
@@ -535,8 +534,8 @@ namespace Fan.Sys
     public static readonly List m_args;
     public static readonly LocalFile m_homeDir;
     public static LocalFile m_appDir;
-    public static readonly Str m_hostName;
-    public static readonly Str m_userName;
+    public static readonly string m_hostName;
+    public static readonly string m_userName;
     private static Map m_env;
 
     // Namespace

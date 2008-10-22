@@ -43,7 +43,7 @@ namespace Fanx.Emit
       this.len        = fcode.m_len;
       //this.emit       = code.emit;
       this.code       = code;
-      this.podClass   = NameUtil.upper("Fan." + pod.m_podName + ".$Pod");
+      this.podClass   = FanUtil.toNetTypeName(pod.m_podName, "$Pod");
       this.jumps      = new Jumps(code);
     }
 
@@ -222,7 +222,7 @@ namespace Fanx.Emit
     private void loadFalse()
     {
       if (parent.BoolFalse == null)
-        parent.BoolFalse = emitter.findField("Fan.Sys.Bool", "False", "Fan.Sys.Bool");
+        parent.BoolFalse = emitter.findField("Fan.Sys.Boolean", "False", "Fan.Sys.Boolean");
       code.FieldInst(FieldOp.ldsfld, parent.BoolFalse);
     }
 
@@ -230,35 +230,35 @@ namespace Fanx.Emit
     {
       // TODO: optimize while (true) either here or in compiler
       if (parent.BoolTrue == null)
-        parent.BoolTrue = emitter.findField("Fan.Sys.Bool", "True", "Fan.Sys.Bool");
+        parent.BoolTrue = emitter.findField("Fan.Sys.Boolean", "True", "Fan.Sys.Boolean");
       code.FieldInst(FieldOp.ldsfld, parent.BoolTrue);
     }
 
     private void loadInt()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "I" + index, "Fan.Sys.Int");
+      PERWAPI.Field field = emitter.findField(podClass, "I" + index, "Fan.Sys.Long");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
     private void loadFloat()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "F" + index, "Fan.Sys.Float");
+      PERWAPI.Field field = emitter.findField(podClass, "F" + index, "Fan.Sys.Double");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
     private void loadDecimal()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "D" + index, "Fan.Sys.Decimal");
+      PERWAPI.Field field = emitter.findField(podClass, "D" + index, "Fan.Sys.BigDecimal");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
     private void loadStr()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "S" + index, "Fan.Sys.Str");
+      PERWAPI.Field field = emitter.findField(podClass, "S" + index, "System.String");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
@@ -473,28 +473,17 @@ namespace Fanx.Emit
     {
       int index = u2();
       FPod.NMethod ncall = pod.ncall(index, FConst.CallVirtual);
-
-      //System.Console.WriteLine("### sig: " + ncall.parentType + "/"+ ncall.methodName);
-
-      // if this is a virtual invoke on Obj then we to make it an
-      // interface invoke because the Java runtime models Obj
-      // as an interface to deal with mixins cleanly
-//      if (sig.startsWith("fan/sys/Obj."))
-//      {
-//        int[] m = pod.methodRef(index).val;
-//        int nargs = m.length-3;
-//        int method = emit.interfaceRef(sig);
-//        code.op2(INVOKEINTERFACE, method);
-//        code.info.u1(nargs+1);
-//        code.info.u1(0);
-//      }
-//      else
-//      {
-        Method method = emitter.findMethod(ncall.parentType, ncall.methodName,
-          ncall.paramTypes, ncall.returnType);
-        if (!ncall.isStatic) method.AddCallConv(CallConv.Instance);
+      Method method = emitter.findMethod(ncall.parentType, ncall.methodName,
+        ncall.paramTypes, ncall.returnType);
+      if (ncall.isStatic)
+      {
+        code.MethInst(MethodOp.call, method);
+      }
+      else
+      {
+        method.AddCallConv(CallConv.Instance);
         code.MethInst(MethodOp.callvirt, method);
-//      }
+      }
     }
 
     private void callNonVirtual()
@@ -526,7 +515,7 @@ namespace Fanx.Emit
 
     private void callMixinNonVirtual()
     {
-      FPod.NMethod ncall = pod.ncall(u2(), FConst.CallMixinVirtual);
+      FPod.NMethod ncall = pod.ncall(u2(), FConst.CallMixinNonVirtual);
       string parent = ncall.parentType;
       string name = ncall.methodName;
       string ret = ncall.returnType;
@@ -587,7 +576,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareEQ == null)
             parent.CompareEQ = emitter.findMethod("Fanx.Util.OpUtil", "compareEQ",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareEQ);
           break;
       }
@@ -617,7 +606,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareNE == null)
             parent.CompareNE = emitter.findMethod("Fanx.Util.OpUtil", "compareNE",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNE);
           break;
       }
@@ -627,7 +616,7 @@ namespace Fanx.Emit
     {
       if (parent.Compare == null)
         parent.Compare = emitter.findMethod("Fanx.Util.OpUtil", "compare",
-          new string[] { "System.Object", "System.Object" }, "Fan.Sys.Int");
+          new string[] { "System.Object", "System.Object" }, "Fan.Sys.Long");
       code.MethInst(MethodOp.call, parent.Compare);
     }
 
@@ -655,7 +644,7 @@ namespace Fanx.Emit
        default:
           if (parent.CompareLT == null)
             parent.CompareLT = emitter.findMethod("Fanx.Util.OpUtil", "compareLT",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareLT);
           break;
       }
@@ -685,7 +674,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareLE == null)
             parent.CompareLE = emitter.findMethod("Fanx.Util.OpUtil", "compareLE",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareLE);
           break;
       }
@@ -715,7 +704,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareGE == null)
             parent.CompareGE = emitter.findMethod("Fanx.Util.OpUtil", "compareGE",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareGE);
           break;
       }
@@ -745,7 +734,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareGT == null)
             parent.CompareGT = emitter.findMethod("Fanx.Util.OpUtil", "compareGT",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareGT);
           break;
       }
@@ -767,7 +756,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareSame == null)
             parent.CompareSame = emitter.findMethod("Fanx.Util.OpUtil", "compareSame",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareSame);
           break;
       }
@@ -789,7 +778,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareNotSame == null)
             parent.CompareNotSame = emitter.findMethod("Fanx.Util.OpUtil", "compareNotSame",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNotSame);
           break;
       }
@@ -811,7 +800,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareNull == null)
             parent.CompareNull = emitter.findMethod("Fanx.Util.OpUtil", "compareNull",
-              new string[] { "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNull);
           break;
       }
@@ -833,7 +822,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareNotNull == null)
             parent.CompareNotNull = emitter.findMethod("Fanx.Util.OpUtil", "compareNotNull",
-              new string[] { "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNotNull);
          break;
       }
@@ -855,7 +844,7 @@ namespace Fanx.Emit
       {
         if (parent.IsViaType == null)
           parent.IsViaType = emitter.findMethod("Fanx.Util.OpUtil", "is",
-              new string[] { "System.Object", "Fan.Sys.Type" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "Fan.Sys.Type" }, "Fan.Sys.Boolean");
         loadType(typeRef);
         code.MethInst(MethodOp.call, parent.IsViaType);
       }
@@ -1063,22 +1052,30 @@ namespace Fanx.Emit
     private void loadBoolVal()
     {
       if (parent.BoolVal == null)
-        parent.BoolVal = emitter.findField("Fan.Sys.Bool", "val", "System.Boolean");
-      code.FieldInst(FieldOp.ldfld, parent.BoolVal);
+      {
+        parent.BoolVal = emitter.findMethod("Fan.Sys.Boolean", "booleanValue",
+          new string[0], "System.Boolean");
+        parent.BoolVal.AddCallConv(CallConv.Instance);
+      }
+      code.MethInst(MethodOp.call, parent.BoolVal);
     }
 
     private void loadIntVal()
     {
       if (parent.IntVal == null)
-        parent.IntVal = emitter.findField("Fan.Sys.Int", "val", "System.Int64");
-      code.FieldInst(FieldOp.ldfld, parent.IntVal);
+      {
+        parent.IntVal = emitter.findMethod("Fan.Sys.Long", "longValue",
+          new string[0], "System.Int64");
+        parent.IntVal.AddCallConv(CallConv.Instance);
+      }
+      code.MethInst(MethodOp.call, parent.IntVal);
     }
 
     private void boolMake()
     {
       if (parent.BoolMake == null)
-        parent.BoolMake = emitter.findMethod("Fan.Sys.Bool", "make",
-          new string[] { "System.Boolean" }, "Fan.Sys.Bool");
+        parent.BoolMake = emitter.findMethod("Fan.Sys.Boolean", "valueOf",
+          new string[] { "System.Boolean" }, "Fan.Sys.Boolean");
       code.MethInst(MethodOp.call, parent.BoolMake);
     }
 

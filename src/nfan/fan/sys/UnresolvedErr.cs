@@ -21,18 +21,16 @@ namespace Fan.Sys
   // C# Convenience
   //////////////////////////////////////////////////////////////////////////
 
-    public new static UnresolvedErr make(string msg) { return make(Str.make(msg)); }
-    public new static UnresolvedErr make(String msg, Exception cause)  { return make(Str.make(msg), Err.make(cause)); }
-    public static UnresolvedErr make(String msg, Err cause)  { return make(Str.make(msg), cause); }
+    public new static UnresolvedErr make(string msg, Exception cause)  { return make(msg, Err.make(cause)); }
     public static UnresolvedErr make(Uri uri) { return make(uri.m_str); }
 
   //////////////////////////////////////////////////////////////////////////
   // Fan Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static UnresolvedErr make() { return make((Str)null, (Err)null); }
-    public new static UnresolvedErr make(Str msg) { return make(msg, null); }
-    public new static UnresolvedErr make(Str msg, Err cause)
+    public new static UnresolvedErr make() { return make((string)null, (Err)null); }
+    public new static UnresolvedErr make(string msg) { return make(msg, (Err)null); }
+    public new static UnresolvedErr make(string msg, Err cause)
     {
       UnresolvedErr err = new UnresolvedErr();
       make_(err, msg, cause);
@@ -40,8 +38,8 @@ namespace Fan.Sys
     }
 
     public static void make_(UnresolvedErr self) { make_(self, null);  }
-    public static void make_(UnresolvedErr self, Str msg) { make_(self, msg, null); }
-    public static void make_(UnresolvedErr self, Str msg, Err cause) { Err.make_(self, msg, cause); }
+    public static void make_(UnresolvedErr self, string msg) { make_(self, msg, null); }
+    public static void make_(UnresolvedErr self, string msg, Err cause) { Err.make_(self, msg, cause); }
 
   //////////////////////////////////////////////////////////////////////////
   // C# Constructors

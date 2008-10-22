@@ -72,15 +72,15 @@ namespace Fanx.Test
     public void verifySysFindType()
     {
       Pod pod = Pod.find("sys", true, null);
-      verify(pod.findType("Bool", true) == Sys.BoolType);
-      verify(pod.findType("Int", true)  == Sys.IntType);
-      verify(pod.findType("Str", true)  == Sys.StrType);
+      verify(pod.findType("Boolean", true) == Sys.BoolType);
+      verify(pod.findType("Long", true)  == Sys.IntType);
+      verify(pod.findType("string", true)  == Sys.StrType);
 
-      verify(Fan.Sys.Type.find(Str.make("sys::Bool")) == Sys.BoolType);
-      verify(Fan.Sys.Type.find(Str.make("sys::Bool"), Bool.True) == Sys.BoolType);
-      verify(Fan.Sys.Type.find("sys::Bool") == Sys.BoolType);
-      verify(Fan.Sys.Type.find("sys::Bool", true) == Sys.BoolType);
-      verify(Fan.Sys.Type.find("sys", "Bool", true) == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys::Boolean") == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys::Boolean", Fan.Sys.Boolean.True) == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys::Boolean") == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys::Boolean", true) == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys", "Boolean", true) == Sys.BoolType);
     }
 
     public void verifyTypeParser()
@@ -106,15 +106,15 @@ namespace Fanx.Test
       catch(Err.Val err)
       {
         //Console.WriteLine(" -- " + err);
-        verify(err.err().message().val.StartsWith("Invalid type signature '" + sig + "'"));
+        verify(err.err().message().StartsWith("Invalid type signature '" + sig + "'"));
       }
     }
 
     public void verifySysReflect()
     {
-      verifySysImpl("sys::Bool", "Fan.Sys.Bool");
-      verifySysImpl("sys::Int",  "Fan.Sys.Int");
-      verifySysImpl("sys::Str",  "Fan.Sys.Str");
+      verifySysImpl("sys::Boolean", "Fan.Sys.Boolean");
+      verifySysImpl("sys::Long",    "Fan.Sys.Long");
+      verifySysImpl("sys::Str",     "Fan.Sys.Str");
     }
 
     public void verifySysImpl(string fname, string nname)
@@ -128,7 +128,7 @@ namespace Fanx.Test
       for (int i=0; i<ftype.Fields().Sz(); i++)
       {
         Field ffield = (Field)ftype.Fields().Get(i);
-        string name = NameUtil.Upper(ffield.Name().val);
+        string name = FanUtil.Upper(ffield.Name().val);
         FieldInfo nfield = ntype.GetField(name);
         verify(name, nfield.Name);
       }
@@ -138,7 +138,7 @@ namespace Fanx.Test
       for (int i=0; i<ftype.Methods().Sz(); i++)
       {
         Method fmeth = (Method)ftype.Methods().Get(i);
-        string name = NameUtil.Upper(fmeth.Name().val);
+        string name = FanUtil.Upper(fmeth.Name().val);
         MethodInfo nmeth = ntype.GetMethod(name);
         verify(name, nmeth.Name);
       }
@@ -149,9 +149,9 @@ namespace Fanx.Test
     public void verifyFooBar()
     {
       string code = "class Foo {\n" +
-        "  Bool b\n" +
-        "  Int i\n" +
-        "  Str s\n" +
+        "  Boolean b\n" +
+        "  Long i\n" +
+        "  string s\n" +
         "}";
       stub(code);
       compile();
