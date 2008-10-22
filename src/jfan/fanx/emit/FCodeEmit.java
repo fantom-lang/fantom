@@ -260,9 +260,6 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
 
   private void loadInt()
   {
-//    int index = u2();
-//    int field = emit.field(podClass + ".I" + index + ":Ljava/lang/Long;");
-//    code.op2(GETSTATIC, field);
     try
     {
       Long val = pod.readLiterals().integer(u2());
@@ -293,17 +290,27 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
     }
   }
 
+  private void loadStr()
+  {
+    try
+    {
+      String val = pod.readLiterals().str(u2());
+      int cp = emit.strConst(val);
+      if (cp < 255)
+        code.op1(LDC, cp);
+      else
+        code.op2(LDC_W, cp);
+    }
+    catch (java.io.IOException e)
+    {
+      throw new RuntimeException(e.toString(), e);
+    }
+  }
+
   private void loadDecimal()
   {
     int index = u2();
     int field = emit.field(podClass + ".D" + index + ":Ljava/math/BigDecimal;");
-    code.op2(GETSTATIC, field);
-  }
-
-  private void loadStr()
-  {
-    int index = u2();
-    int field = emit.field(podClass + ".S" + index + ":Ljava/lang/String;");
     code.op2(GETSTATIC, field);
   }
 
