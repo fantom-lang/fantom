@@ -64,34 +64,6 @@ class IntTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Same
-//////////////////////////////////////////////////////////////////////////
-
-  /* same operators not allowed for value types
-  Void testSame()
-  {
-    verify(0 === 0)
-    verify(4 === 4)
-    verify('z' === 'z')
-    verify('z' !== 'Z')
-
-    // everything from -100 to 100 must be interned to use ===
-    j := -100
-    for (Int i := -100; i<=100; ++i)
-    {
-      verifySame(i, j)
-      j++
-    }
-
-    // technically this would be ok in an implementation, but
-    // it's more to just test CompareNotSame than anything
-    x := 100_000
-    y :=  99_999
-    verify(x !== y+1)
-  }
-  */
-
-//////////////////////////////////////////////////////////////////////////
 // Compare
 //////////////////////////////////////////////////////////////////////////
 
@@ -156,17 +128,14 @@ class IntTest : Test
     verifyEq(2 + -1, 1)
     verifyEq(2+3,  5)
     verifyEq(2+-1, 1)
-    x= 4 + 3; x+=5; verifyEq(x, 12)
+    fx=4 + 3; fx+=5; verifyEq(fx, 12)
 
     verifyEq(7 - 3,  4)
     verifyEq(2 - 3, -1)
     verifyEq(7-3,  4)
     verifyEq(2-3, -1)
-    x=5 - 2; x-=-3; verifyEq(x, 6)
+    fy=5 - 2; fy-=-3; verifyEq(fy, 6)
   }
-
-  // TODO - need to fix when do const folding optimization
-  // TODO - need to check field rvalues
 
 //////////////////////////////////////////////////////////////////////////
 // Increment
@@ -174,12 +143,47 @@ class IntTest : Test
 
   Void testIncrement()
   {
-    x:=4
+    x := 4
     verifyEq(++x, 5); verifyEq(x, 5)
     verifyEq(x++, 5); verifyEq(x, 6)
     verifyEq(--x, 5); verifyEq(x, 5)
     verifyEq(x--, 5); verifyEq(x, 4)
+
+    Int? y := 4
+    verifyEq(++y, 5); verifyEq(y, 5)
+    verifyEq(y++, 5); verifyEq(y, 6)
+    verifyEq(--y, 5); verifyEq(y, 5)
+    verifyEq(y--, 5); verifyEq(y, 4)
+
+    fx = 4
+    verifyEq(++fx, 5); verifyEq(fx, 5)
+    verifyEq(fx++, 5); verifyEq(fx, 6)
+    verifyEq(--fx, 5); verifyEq(fx, 5)
+    verifyEq(fx--, 5); verifyEq(fx, 4)
+
+    fy = 4
+    verifyEq(++fy, 5); verifyEq(fy, 5)
+    verifyEq(fy++, 5); verifyEq(fy, 6)
+    verifyEq(--fy, 5); verifyEq(fy, 5)
+    verifyEq(fy--, 5); verifyEq(fy, 4)
+
+    lx = [4]
+    verifyEq(++lx[0], 5); verifyEq(lx[0], 5)
+    verifyEq(lx[0]++, 5); verifyEq(lx[0], 6)
+    verifyEq(--lx[0], 5); verifyEq(lx[0], 5)
+    verifyEq(lx[0]--, 5); verifyEq(lx[0], 4)
+
+    ly = [4]
+    verifyEq(++ly[0], 5); verifyEq(ly[0], 5)
+    verifyEq(ly[0]++, 5); verifyEq(ly[0], 6)
+    verifyEq(--ly[0], 5); verifyEq(ly[0], 5)
+    verifyEq(ly[0]--, 5); verifyEq(ly[0], 4)
   }
+
+  Int fx
+  Int? fy
+  Int[] lx
+  Int?[] ly
 
 //////////////////////////////////////////////////////////////////////////
 // Bitwise
