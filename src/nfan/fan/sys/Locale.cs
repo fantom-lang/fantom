@@ -21,35 +21,33 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Locale fromStr(string s) { return fromStr(Str.make(s)); }
-    public static Locale fromStr(Str str)
+    public static Locale fromStr(string s)
     {
-      string s = str.val;
       int len = s.Length;
       try
       {
         if (len == 2)
         {
-          if (str.isLower().val)
-            return new Locale(str, str, null);
+          if (FanStr.isLower(s).booleanValue())
+            return new Locale(s, s, null);
         }
 
         if (len == 5)
         {
-          Str lang = Str.make(s.Substring(0, 2));
-          Str country = Str.make(s.Substring(3, 2));
-          if (lang.isLower().val && country.isUpper().val && s[2] == '-')
-            return new Locale(str, lang, country);
+          string lang = s.Substring(0, 2);
+          string country = s.Substring(3, 2);
+          if (FanStr.isLower(lang).booleanValue() && FanStr.isUpper(country).booleanValue() && s[2] == '-')
+            return new Locale(s, lang, country);
         }
       }
       catch (Exception e)
       {
         Err.dumpStack(e);
       }
-      throw ParseErr.make("Locale",  str).val;
+      throw ParseErr.make("Locale",  s).val;
     }
 
-    private Locale(Str str, Str lang, Str country)
+    private Locale(string str, string lang, string country)
     {
       this.m_str     = str;
       this.m_lang    = lang;
@@ -92,33 +90,33 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Str lang() { return m_lang; }
+    public string lang() { return m_lang; }
 
-    public Str country() { return m_country; }
+    public string country() { return m_country; }
 
     public override Type type() { return Sys.LocaleType; }
 
     public override int GetHashCode() { return m_str.GetHashCode(); }
 
-    public override Int hash() { return m_str.hash(); }
+    public override Long hash() { return FanStr.hash(m_str); }
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is Locale)
       {
-        return (obj as Locale).m_str._equals(m_str);
+        return (obj as Locale).m_str == m_str ? Boolean.True : Boolean.False;
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
-    public override Str toStr() { return m_str; }
+    public override string toStr() { return m_str; }
 
     public CultureInfo net()
     {
       if (netCulture == null)
       {
-        string n = m_lang.val;
-        if (m_country != null) n += "-" + m_country.val;
+        string n = m_lang;
+        if (m_country != null) n += "-" + m_country;
         netCulture = new CultureInfo(n);
       }
       return netCulture;
@@ -128,14 +126,14 @@ namespace Fan.Sys
   // Properties
   //////////////////////////////////////////////////////////////////////////
 
-    public Str get(Str podName, Str key)
+    public string get(string podName, string key)
     {
-      return doGet(Pod.find(podName, Bool.False), podName, key, m_getNoDef);
+      return doGet(Pod.find(podName, Boolean.False), podName, key, m_getNoDef);
     }
 
-    public Str get(Str podName, Str key, Str def)
+    public string get(string podName, string key, string def)
     {
-      return doGet(Pod.find(podName, Bool.False), podName, key, def);
+      return doGet(Pod.find(podName, Boolean.False), podName, key, def);
     }
 
     /**
@@ -145,13 +143,13 @@ namespace Fan.Sys
      *   4. Lookup via '/locale/en.props'
      *   5. If all else fails return 'pod::key'
      */
-    internal Str doGet(Pod pod, Str podName, Str key, Str def)
+    internal string doGet(Pod pod, string podName, string key, string def)
     {
       // 1. Find the pod and use its resource files
       if (pod != null)
       {
         // 2. Lookup via '/locale/{toStr}.props'
-        Str val = tryProp(pod, key, m_str);
+        string val = tryProp(pod, key, m_str);
         if (val != null) return val;
 
         // 3. Lookup via '/locale/{lang}.props'
@@ -162,7 +160,7 @@ namespace Fan.Sys
         }
 
         // 4. Lookup via '/locale/en.props'
-        if (m_str.val != "en")
+        if (m_str != "en")
         {
           val = tryProp(pod, key, en);
           if (val != null) return val;
@@ -170,11 +168,11 @@ namespace Fan.Sys
       }
 
       // 5. If all else fails return def, which defaults to pod::key
-      if (def == m_getNoDef) return Str.make(podName + "::" + key);
+      if (def == m_getNoDef) return podName + "::" + key;
       return def;
     }
 
-    Str tryProp(Pod pod, Str key, Str locale)
+    string tryProp(Pod pod, string key, string locale)
     {
       // get the props for the locale
       Map props;
@@ -184,7 +182,7 @@ namespace Fan.Sys
       }
 
       // if already loaded, lookup key
-      if (props != null) return (Str)props.get(key);
+      if (props != null) return (string)props.get(key);
 
       // the props for this locale is not
       // loaded yet, so let's load it!
@@ -214,11 +212,11 @@ namespace Fan.Sys
       }
 
       // return result
-      return (Str)props.get(key);
+      return (string)props.get(key);
     }
 
     static readonly Map noProps = new Map(Sys.StrType, Sys.StrType).ro();
-    static readonly Str en = Str.make("en");
+    static readonly string en = "en";
 
   //////////////////////////////////////////////////////////////////////////
   // Default Locale
@@ -233,12 +231,12 @@ namespace Fan.Sys
         string name = CultureInfo.CurrentCulture.Name;
         if (name.Length != 5)
           name = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        x = fromStr(Str.make(name));
+        x = fromStr(name);
       }
       catch (Exception e)
       {
         Err.dumpStack(e);
-        x = fromStr(Str.make("en"));
+        x = fromStr("en");
       }
       defaultLocale = x;
     }
@@ -248,11 +246,11 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     // use predefined string to avoid unnecessary string concat
-    internal static readonly Str m_getNoDef = Str.make("_locale_nodef_");
+    internal static readonly string m_getNoDef = "_locale_nodef_";
 
-    readonly Str m_str;
-    readonly Str m_lang;
-    readonly Str m_country;
+    readonly string m_str;
+    readonly string m_lang;
+    readonly string m_country;
     CultureInfo netCulture;
 
   }

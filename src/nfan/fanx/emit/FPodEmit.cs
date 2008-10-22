@@ -33,7 +33,7 @@ namespace Fanx.Emit
       TypeAttr tattr = TypeAttr.Public | TypeAttr.Sealed;
       FieldAttr fattr = FieldAttr.Public | FieldAttr.Static;
 
-      emitter.emitClass("System.Object", NameUtil.upper("Fan." + pod.m_podName + ".$Pod"),
+      emitter.emitClass("System.Object", FanUtil.toNetTypeName(pod.m_podName, "$Pod"),
         new string[0], tattr);
 
       pod.readLiterals();
@@ -41,13 +41,13 @@ namespace Fanx.Emit
       // generate constant fields other types will reference, we don't
       // initialize them, rather we do that later via reflection
       for (int i=0; i<pod.m_literals.m_ints.size(); i++)
-        emitter.emitField("I" + i, "Fan.Sys.Int", fattr);
+        emitter.emitField("I" + i, "Fan.Sys.Long", fattr);
       for (int i=0; i<pod.m_literals.m_floats.size(); i++)
-        emitter.emitField("F" + i, "Fan.Sys.Float", fattr);
+        emitter.emitField("F" + i, "Fan.Sys.Double", fattr);
       for (int i=0; i<pod.m_literals.m_decimals.size(); i++)
-        emitter.emitField("D" + i, "Fan.Sys.Decimal", fattr);
+        emitter.emitField("D" + i, "Fan.Sys.BigDecimal", fattr);
       for (int i=0; i<pod.m_literals.m_strs.size(); i++)
-        emitter.emitField("S" + i, "Fan.Sys.Str", fattr);
+        emitter.emitField("S" + i, "System.String", fattr);
       for (int i=0; i<pod.m_literals.m_durations.size(); i++)
         emitter.emitField("Dur" + i, "Fan.Sys.Duration", fattr);
       for (int i=0; i<pod.m_literals.m_uris.size(); i++)
@@ -61,7 +61,7 @@ namespace Fanx.Emit
     public static System.Type load(System.Reflection.Assembly assembly, FPod pod)
     {
       System.Type type = null;
-      string name = NameUtil.upper("fan." + pod.m_podName + ".$Pod");
+      string name = FanUtil.toNetTypeName(pod.m_podName, "$Pod");
 
       if (Sys.usePrecompiledOnly)
         type = System.Type.GetType(name);

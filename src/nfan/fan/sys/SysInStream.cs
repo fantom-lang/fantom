@@ -22,12 +22,12 @@ namespace Fan.Sys
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public static SysInStream make(Stream input, Int bufSize)
+    public static SysInStream make(Stream input, Long bufSize)
     {
-      if (bufSize == null || bufSize.val == 0)
+      if (bufSize == null || bufSize.longValue() == 0)
         return new SysInStream(input);
       else
-        return new SysInStream(new BufferedStream(input, (int)bufSize.val));
+        return new SysInStream(new BufferedStream(input, bufSize.intValue()));
     }
 
     public SysInStream(Stream input)
@@ -45,7 +45,7 @@ namespace Fan.Sys
   // InStream
   //////////////////////////////////////////////////////////////////////////
 
-    public override Int read() { int n = r(); return n < 0 ? null : Int.pos(n); }
+    public override Long read() { int n = r(); return n < 0 ? null : Long.valueOf(n); }
     public override int r()
     {
       try
@@ -58,13 +58,13 @@ namespace Fan.Sys
       }
     }
 
-    public override Int readBuf(Buf buf, Int n)
+    public override Long readBuf(Buf buf, Long n)
     {
       try
       {
-        long read = buf.pipeFrom(inStream, n.val);
+        long read = buf.pipeFrom(inStream, n.longValue());
         if (read <= 0) return null;
-        return Int.pos(read);
+        return Long.valueOf(read);
       }
       catch (IOException e)
       {
@@ -72,7 +72,7 @@ namespace Fan.Sys
       }
     }
 
-    public override InStream unread(Int n) { return unread((int)n.val); }
+    public override InStream unread(Long n) { return unread(n.intValue()); }
     public override InStream unread(int n)
     {
       try
@@ -90,14 +90,14 @@ namespace Fan.Sys
       }
     }
 
-    public override Int skip(Int n)
+    public override Long skip(Long n)
     {
       try
       {
-        long nval = n.val;
+        long nval = n.longValue();
         for (int i=0; i<nval; ++i)
-          if (r() < 0) return Int.pos(i);
-        return Int.pos(nval);
+          if (r() < 0) return Long.valueOf(i);
+        return Long.valueOf(nval);
       }
       catch (IOException e)
       {
@@ -105,16 +105,16 @@ namespace Fan.Sys
       }
     }
 
-    public override Bool close()
+    public override Boolean close()
     {
       try
       {
         if (inStream != null) inStream.Close();
-        return Bool.True;
+        return Boolean.True;
       }
       catch (IOException)
       {
-        return Bool.False;
+        return Boolean.False;
       }
     }
 
@@ -236,10 +236,10 @@ namespace Fan.Sys
         buf.m_buf = b;
         buf.m_pos = off;
         buf.m_size = b.Length;
-        Int n = ins.readBuf(buf, Int.make(len));
+        Long n = ins.readBuf(buf, Long.valueOf(len));
         buf.m_buf = null;
         if (n == null) return -1;
-        return (int)n.val;
+        return n.intValue();
       }
       public override long Seek(long off, SeekOrigin origin) { return -1; }
       public override void SetLength(long val) {}
