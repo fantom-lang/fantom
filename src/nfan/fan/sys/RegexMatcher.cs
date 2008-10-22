@@ -20,7 +20,7 @@ namespace Fan.Sys
   // Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    internal RegexMatcher(Match match, Str source)
+    internal RegexMatcher(Match match, string source)
     {
       this.m_match = match;
       this.m_source = source;
@@ -36,56 +36,56 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool matches()
+    public Boolean matches()
     {
       // to match java
       return (m_match.Success)
-        ? Bool.make(m_source.val.Length == m_match.Length) : Bool.False;
+        ? Boolean.valueOf(m_source.Length == m_match.Length) : Boolean.False;
     }
 
-    public Bool find()
+    public Boolean find()
     {
-      return Bool.make(true); //matcher.find());
+      return Boolean.valueOf(true); //matcher.find());
     }
 
-    public Int groupCount()
-    {
-      // to match java
-      return Int.make(m_match.Groups.Count-1);
-    }
-
-    public Str group() { return group(Int.Zero); }
-    public Str group(Int group)
+    public Long groupCount()
     {
       // to match java
-      if (!matches().val) throw new System.Exception();
-      if (group.val < 0 || group.val >= m_match.Groups.Count)
+      return Long.valueOf(m_match.Groups.Count-1);
+    }
+
+    public string group() { return group(FanInt.Zero); }
+    public string group(Long group)
+    {
+      // to match java
+      if (!matches().booleanValue()) throw new System.Exception();
+      if (group.longValue() < 0 || group.longValue() >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 
-      return Str.make(m_match.Groups[(int)group.val].Value);
+      return m_match.Groups[group.intValue()].Value;
     }
 
-    public Int start() { return start(Int.Zero); }
-    public Int start(Int group)
+    public Long start() { return start(FanInt.Zero); }
+    public Long start(Long group)
     {
       // to match java
-      if (!matches().val) throw new System.Exception();
-      if (group.val < 0 || group.val >= m_match.Groups.Count)
+      if (!matches().booleanValue()) throw new System.Exception();
+      if (group.longValue() < 0 || group.longValue() >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 
-      return Int.make(m_match.Groups[(int)group.val].Index);
+      return Long.valueOf(m_match.Groups[group.intValue()].Index);
     }
 
-    public Int end() { return end(Int.Zero); }
-    public Int end(Int group)
+    public Long end() { return end(FanInt.Zero); }
+    public Long end(Long group)
     {
       // to match java
-      if (!matches().val) throw new System.Exception();
-      if (group.val < 0 || group.val >= m_match.Groups.Count)
+      if (!matches().booleanValue()) throw new System.Exception();
+      if (group.longValue() < 0 || group.longValue() >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 
-      Group g = m_match.Groups[(int)group.val];
-      return Int.make(g.Index + g.Length);
+      Group g = m_match.Groups[group.intValue()];
+      return Long.valueOf(g.Index + g.Length);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     Match m_match;
-    Str m_source;
+    string m_source;
 
   }
 }

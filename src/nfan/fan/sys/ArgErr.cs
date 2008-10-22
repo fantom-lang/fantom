@@ -20,17 +20,16 @@ namespace Fan.Sys
   // C# Convenience
   //////////////////////////////////////////////////////////////////////////
 
-    public new static ArgErr make(string msg)  { return make(Str.make(msg)); }
-    public static ArgErr make(Int index)   { return make(Str.make(index.ToString())); }
-    public static ArgErr make(Range index) { return make(Str.make(index.ToString())); }
+    public static ArgErr make(Long index)   { return make(index.ToString()); }
+    public static ArgErr make(Range index) { return make(index.ToString()); }
 
   //////////////////////////////////////////////////////////////////////////
   // Fan Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static ArgErr make() { return make((Str)null, (Err)null); }
-    public new static ArgErr make(Str msg) { return make(msg, null); }
-    public new static ArgErr make(Str msg, Err cause)
+    public new static ArgErr make() { return make((string)null, (Err)null); }
+    public new static ArgErr make(string msg) { return make(msg, (Err)null); }
+    public new static ArgErr make(string msg, Err cause)
     {
       ArgErr err = new ArgErr();
       make_(err, msg, cause);
@@ -38,8 +37,8 @@ namespace Fan.Sys
     }
 
     public static void make_(ArgErr self) { make_(self, null);  }
-    public static void make_(ArgErr self, Str msg) { make_(self, msg, null); }
-    public static void make_(ArgErr self, Str msg, Err cause) { Err.make_(self, msg, cause); }
+    public static void make_(ArgErr self, string msg) { make_(self, msg, null); }
+    public static void make_(ArgErr self, string msg, Err cause) { Err.make_(self, msg, cause); }
 
   //////////////////////////////////////////////////////////////////////////
   // C# Constructors
