@@ -20,7 +20,7 @@ namespace Fan.Sys
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    internal NullableType(ClassType root)
+    internal NullableType(Type root)
     {
       m_root = root;
       m_signature = root.signature() + "?";
@@ -42,8 +42,10 @@ namespace Fan.Sys
     public override bool @is(Type type) { return m_root.@is(type); }
 
     public override Boolean isNullable() { return Boolean.True; }
-    public override Type toNullable() { return this; }
+    protected override Type makeToNullable() { return this; }
+
     public override Boolean isDynamic() { return Boolean.False; }
+    protected override Type makeToListOf() { return new ListType(m_root).toNullable(); }
 
     public override List fields() { return m_root.fields(); }
     public override List methods() { return m_root.methods(); }
@@ -55,13 +57,6 @@ namespace Fan.Sys
 
     public override string doc() { return m_root.doc(); }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    public override sealed Type toListOf()
-    {
-      if (m_listOf == null) m_listOf = new ListType(m_root).toNullable();
-      return m_listOf;
-    }
-
     public override bool netRepr() { return m_root.netRepr(); }
 
   //////////////////////////////////////////////////////////////////////////
@@ -70,7 +65,6 @@ namespace Fan.Sys
 
     private Type m_root;
     private string m_signature;
-    private Type m_listOf;
 
   }
 }

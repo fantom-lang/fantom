@@ -46,11 +46,6 @@ namespace Fan.Sys
       return Boolean.False;
     }
 
-    public override Type @base()
-    {
-      return Sys.MapType;
-    }
-
     public override string signature()
     {
       if (m_sig == null)

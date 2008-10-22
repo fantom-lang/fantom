@@ -41,11 +41,6 @@ namespace Fan.Sys
       return Boolean.False;
     }
 
-    public override Type @base()
-    {
-      return Sys.ListType;
-    }
-
     public override string signature()
     {
       if (m_sig == null)
