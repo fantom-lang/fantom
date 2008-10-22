@@ -104,9 +104,9 @@ public class OutStream
                .w((v >>> 0) & 0xFF);
   }
 
-  public OutStream writeI4(long x) { return writeI4((int)x); }
-  public OutStream writeI4(int v)
+  public OutStream writeI4(long x)
   {
+    int v = (int)x;
     return this.w((v >>> 24) & 0xFF)
                .w((v >>> 16) & 0xFF)
                .w((v >>> 8)  & 0xFF)
