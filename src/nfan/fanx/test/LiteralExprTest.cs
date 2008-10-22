@@ -38,13 +38,13 @@ namespace Fanx.Test
 
     void verifyBoolLiterals()
     {
-      verify("Bool f() { return true }",  Bool.True);
-      verify("Bool f() { return false }", Bool.False);
-      verify("Bool f() { return null; }", null);
+      verify("Boolean f() { return true }",  Boolean.True);
+      verify("Boolean f() { return false }", Boolean.False);
+      verify("Boolean f() { return null; }", null);
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Int Literals
+  // Long Literals
   //////////////////////////////////////////////////////////////////////////
 
     void verifyIntLiterals()
@@ -95,13 +95,13 @@ namespace Fanx.Test
       //verifyIntLiteral(0xabcd0123fedc4567L);
       //verifyIntLiteral(Long.MIN_VALUE);
       //verifyIntLiteral(Long.MAX_VALUE);
-      verify("Int f() { return null; }", null);
+      verify("Long f() { return null; }", null);
     }
 
     void verifyIntLiteral(long val)
     {
-      verify("Int f() { return " + val + "; }", Int.make(val));
-      //verify("static Int f() { return 0x" + Long.toHexString(val) + "; }", Int.make(val));
+      verify("Long f() { return " + val + "; }", Long.valueOf(val));
+      //verify("static Long f() { return 0x" + Long.toHexString(val) + "; }", Long.valueOf(val));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -110,39 +110,39 @@ namespace Fanx.Test
 
     void verifyCharLiterals()
     {
-      verify("Int f() { return 'a'; }",      Int.make('a'));
-      verify("Int f() { return '_'; }",      Int.make('_'));
-      verify("Int f() { return '\n'; }",     Int.make('\n'));
-      verify("Int f() { return '\0'; }",     Int.make('\0'));
-      verify("Int f() { return '\''; }",     Int.make('\''));
-      verify("Int f() { return '\uabcd'; }", Int.make('\uabcd'));
+      verify("Long f() { return 'a'; }",      Long.valueOf('a'));
+      verify("Long f() { return '_'; }",      Long.valueOf('_'));
+      verify("Long f() { return '\n'; }",     Long.valueOf('\n'));
+      verify("Long f() { return '\0'; }",     Long.valueOf('\0'));
+      verify("Long f() { return '\''; }",     Long.valueOf('\''));
+      verify("Long f() { return '\uabcd'; }", Long.valueOf('\uabcd'));
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Float Literals
+  // Double Literals
   //////////////////////////////////////////////////////////////////////////
 
     void verifyFloatLiterals()
     {
-      verify("Float f() { return 0.0; }",       Float.make(0));
-      verify("Float f() { return 2.0; }",       Float.make(2));
-      verify("Float f() { return +1.0; }",      Float.make(1));
-      verify("Float f() { return -1.0; }",      Float.make(-1));
-      verify("Float f() { return 0.005; }",     Float.make(0.005));
-      verify("Float f() { return -1000.003; }", Float.make(-1000.003));
-      verify("Float f() { return -4.5e33; }",   Float.make(-4.5e33));
-      verify("Float f() { return null; }",      null);
+      verify("Double f() { return 0.0; }",       Double.valueOf(0));
+      verify("Double f() { return 2.0; }",       Double.valueOf(2));
+      verify("Double f() { return +1.0; }",      Double.valueOf(1));
+      verify("Double f() { return -1.0; }",      Double.valueOf(-1));
+      verify("Double f() { return 0.005; }",     Double.valueOf(0.005));
+      verify("Double f() { return -1000.003; }", Double.valueOf(-1000.003));
+      verify("Double f() { return -4.5e33; }",   Double.valueOf(-4.5e33));
+      verify("Double f() { return null; }",      null);
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Str Literals
+  // string Literals
   //////////////////////////////////////////////////////////////////////////
 
     void verifyStrLiterals()
     {
-      verify("Str f() { return \"a\"; }", Str.make("a"));
-      verify("Str f() { return \"hello world\"; }", Str.make("hello world"));
-      verify("Str f() { return null; }", null);
+      verify("string f() { return \"a\"; }", "a");
+      verify("string f() { return \"hello world\"; }", "hello world");
+      verify("string f() { return null; }", null);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -181,14 +181,14 @@ namespace Fanx.Test
     void verifyTypeLiterals()
     {
       // verify basic sys types
-      verify("Type f() { return Bool.type }",  Sys.BoolType);
-      verify("Type f() { return Int.type }",   Sys.IntType);
-      verify("Type f() { return Str.type; }",   Sys.StrType);
+      verify("Type f() { return Boolean.type }",  Sys.BoolType);
+      verify("Type f() { return Long.type }",   Sys.IntType);
+      verify("Type f() { return string.type; }",   Sys.StrType);
       verify("Type f() { return Type.type }",  Sys.TypeType);
 
       // verify variegated list literal
-      //verify("static Type f() { return Str[].type }",  Sys.StrType.toListOf());
-      //verify("static Type f() { return Int[][].type }",  Sys.IntType.toListOf().toListOf());
+      //verify("static Type f() { return string[].type }",  Sys.StrType.toListOf());
+      //verify("static Type f() { return Long[][].type }",  Sys.IntType.toListOf().toListOf());
 
       // verify non-sys non-variegated type
       //Type t = CompileToType("class HappyDays { static Type f() { return HappyDays.type } }");

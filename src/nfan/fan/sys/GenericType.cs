@@ -7,6 +7,7 @@
 //
 
 using System.Collections;
+using System.Runtime.CompilerServices;
 using Fanx.Fcode;
 
 namespace Fan.Sys
@@ -15,7 +16,7 @@ namespace Fan.Sys
   /// GenericType is the base class for ListType, MapType, and MethodType
   /// which all support parameterization of the generic parameter types (such
   /// as A-H, V, K).  Instances of GenericType are used to represent generic
-  /// instances (for example an instance of ListType is used to represent Str[]).
+  /// instances (for example an instance of ListType is used to represent string[]).
   /// </summary>
   public abstract class GenericType : Type
   {
@@ -24,30 +25,43 @@ namespace Fan.Sys
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    internal GenericType(Type baseType) :
-      base(baseType.m_pod, baseType.m_name.val, baseType.m_flags, baseType.m_facets)
+    internal GenericType(Type baseType)
     {
+      m_base = baseType;
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Type
   //////////////////////////////////////////////////////////////////////////
 
-    public override abstract Type @base();
+    public override sealed Pod pod() { return m_base.pod(); }
+    public override sealed string name() { return m_base.name(); }
+    public override sealed string qname() { return m_base.qname(); }
+    public override abstract string signature();
+    internal override int flags() { return m_base.flags(); }
 
-    public override List mixins()
-    {
-      return @base().mixins();
-    }
-
-    public override abstract Str signature();
+    public override sealed Type @base() { return m_base; }
+    public override sealed List mixins() { return m_base.mixins(); }
+    public override sealed List inheritance() { return m_base.inheritance(); }
 
     public override bool isGenericInstance() { return true; }
 
     public override bool @is(Type type)
     {
-      if (type == this || type == @base()) return true;
-      return @base().@is(type);
+      if (type == this || type == m_base) return true;
+      return m_base.@is(type);
+    }
+
+    public override sealed List fields()  { return ((GenericType)reflect()).m_fields.ro(); }
+    public override sealed List methods() { return ((GenericType)reflect()).m_methods.ro(); }
+    public override sealed List slots()   { return ((GenericType)reflect()).m_slots.ro(); }
+
+    public override sealed Slot slot(string name, bool check)
+    {
+      Slot slot = (Slot)((GenericType)reflect()).m_slotsByName[name];
+      if (slot != null) return slot;
+      if (check) throw UnknownSlotErr.make(this.qname() + "." + name).val;
+      return null;
     }
 
     public override Map @params()
@@ -58,23 +72,38 @@ namespace Fan.Sys
 
     internal abstract Map makeParams();
 
+    public override Map facets(Boolean inherited) { return m_base.facets(inherited); }
+    public override object facet(string name, object def, Boolean inherited) { return m_base.facet(name, def, inherited); }
+
+    public override string doc() { return m_base.doc(); }
+
+    public override sealed bool netRepr() { return false; }
+
   //////////////////////////////////////////////////////////////////////////
   // Reflect
   //////////////////////////////////////////////////////////////////////////
 
-    /**
-     * On reflection, we parameterize the master's methods.
-     */
-    protected override void doReflect()
+    /// <summary>
+    /// On reflection, we parameterize the master's methods.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public override sealed Type reflect()
+    {
+      if (m_slotsByName != null) return this;
+      doReflect();
+      return this;
+    }
+
+    protected void doReflect()
     {
       // ensure master type is reflected
-      Type master = @base();
-      master.reflect();
-      List masterSlots = master.m_slots;
+      Type master = m_base;
+      master.finish();
+      List masterSlots = master.slots();
 
       // allocate slot data structures
-      m_fields = new List(Sys.FieldType, master.m_fields.sz());
-      m_methods = new List(Sys.MethodType, master.m_methods.sz());
+      m_fields = new List(Sys.FieldType, master.fields().sz());
+      m_methods = new List(Sys.MethodType, master.methods().sz());
       m_slots = new List(Sys.SlotType, masterSlots.sz());
       m_slotsByName = new Hashtable(masterSlots.sz()*3);
 
@@ -92,13 +121,8 @@ namespace Fan.Sys
           m_fields.add(slot);
         }
         m_slots.add(slot);
-        m_slotsByName[slot.m_name.val] = slot;
+        m_slotsByName[slot.m_name] = slot;
       }
-
-      // TODO - java code doesn't do this - but don't see anywhere
-      // else where it gets set to something, so do it for now to
-      // make things work
-      if (m_facets == null) m_facets = Facets.empty();
     }
 
     /**
@@ -135,7 +159,9 @@ namespace Fan.Sys
         }
       }
 
-      return new Method(this, m.m_name, m.m_flags, m.m_facets, m.m_lineNum, ret, m.m_inheritedReturns, pars, m);
+      Method pm = new Method(this, m.m_name, m.m_flags, m.m_facets, m.m_lineNum, ret, m.m_inheritedReturns, pars, m);
+      pm.m_reflect = m.m_reflect;
+      return pm;
     }
 
     /**
@@ -187,7 +213,17 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
+    // available at construction time
+    private readonly Type m_base;
+
     private Map m_params;
+
+    // available when reflected
+    internal List m_fields;
+    internal List m_methods;
+    internal List m_slots;
+    internal Hashtable m_slotsByName;  // string:Slot
+
   }
 
 }

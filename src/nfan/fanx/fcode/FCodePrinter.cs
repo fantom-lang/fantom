@@ -81,7 +81,7 @@ namespace Fanx.Fcode
       else switch (op.arg)
       {
         case None:     break;
-        case Int:      Write(integer()); break;
+        case Long:     Write(integer()); break;
         case Float:    Write(floatpt()); break;
         case Str:      Write(str()); break;
         case Dur:      Write(duration()); break;
@@ -111,8 +111,8 @@ namespace Fanx.Fcode
   //////////////////////////////////////////////////////////////////////////
 
     const int None     = -1;
-    const int Int      = 0;
-    const int Float     = 1;
+    const int Long     = 0;
+    const int Float    = 1;
     const int Str      = 2;
     const int Dur      = 3;
     const int Uri      = 4;
@@ -149,7 +149,7 @@ namespace Fanx.Fcode
     static int parseArg(string sig)
     {
       if (sig == "()")       return None;
-      if (sig == "(int)")    return Int;
+      if (sig == "(int)")    return Long;
       if (sig == "(float)")  return Float;
       if (sig == "(str)")    return Str;
       if (sig == "(dur)")    return Dur;
