@@ -293,6 +293,7 @@ namespace Fanx.Emit
       {
         PERWAPI.Field field = emitter.findField("Fan.Sys.Sys", typeName + "Type", "Fan.Sys.Type");
         code.FieldInst(FieldOp.ldsfld, field);
+        if (tref.isNullable()) typeToNullable();
         return;
       }
 
@@ -1077,6 +1078,14 @@ namespace Fanx.Emit
         parent.BoolMake = emitter.findMethod("Fan.Sys.Boolean", "valueOf",
           new string[] { "System.Boolean" }, "Fan.Sys.Boolean");
       code.MethInst(MethodOp.call, parent.BoolMake);
+    }
+
+    private void typeToNullable()
+    {
+      if (parent.TypeToNullable == null)
+       parent.TypeToNullable = emitter.findMethod("Fan.Sys.Type", "toNullable",
+         new string[] {}, "Fan.Sys.Type");
+      code.MethInst(MethodOp.callvirt, parent.TypeToNullable);
     }
 
   //////////////////////////////////////////////////////////////////////////

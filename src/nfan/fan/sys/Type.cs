@@ -166,7 +166,7 @@ namespace Fan.Sys
     /// is NOT a generic type (all of its generic parameters have been filled in).
     /// User defined generic types are not supported in Fan.
     /// </summary>
-    public bool isGenericType()
+    public virtual bool isGenericType()
     {
       return this == Sys.ListType || this == Sys.MapType || this == Sys.FuncType;
     }
@@ -224,7 +224,7 @@ namespace Fan.Sys
       return (Map)noParams;
     }
 
-    public Type parameterize(Map pars)
+    public virtual Type parameterize(Map pars)
     {
       if (this == Sys.ListType)
       {

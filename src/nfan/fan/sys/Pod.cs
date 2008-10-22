@@ -346,13 +346,21 @@ namespace Fan.Sys
       string typeName = fpod.name(reference.typeName);
       Pod pod = podName == m_name ? this : find(podName, true, null);
       Type type = pod.findType(typeName, false);
-      if (type != null) return type;
-
-      // handle variance types (for sys pod only)
-      if (this.m_name == "sys")
+      if (type != null)
       {
-        type = Sys.genericParameterType(typeName);
-        if (type != null) return type;
+        if (reference.isNullable()) type = type.toNullable();
+        return type;
+      }
+
+       // handle generic parameter types (for sys pod only)
+       if (m_name == "sys")
+       {
+         type = Sys.genericParameterType(typeName);
+        if (type != null)
+        {
+          if (reference.isNullable()) type = type.toNullable();
+          return type;
+        }
       }
 
       // lost cause

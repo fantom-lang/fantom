@@ -44,6 +44,13 @@ namespace Fan.Sys
     public override Boolean isNullable() { return Boolean.True; }
     protected override Type makeToNullable() { return this; }
 
+    public override bool isGenericType() { return m_root.isGenericType(); }
+    public override bool isGenericInstance() { return m_root.isGenericInstance(); }
+    public override bool isGenericParameter() { return m_root.isGenericParameter(); }
+    public override Type getRawType() { return m_root.getRawType(); }
+    public override Map @params() { return m_root.@params(); }
+    public override Type parameterize(Map pars) { return m_root.parameterize(pars).toNullable(); }
+
     public override Boolean isDynamic() { return Boolean.False; }
     protected override Type makeToListOf() { return new ListType(m_root).toNullable(); }
 
