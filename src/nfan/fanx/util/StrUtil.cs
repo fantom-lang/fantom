@@ -22,7 +22,7 @@ namespace Fanx.Util
     /// <code>match</code> with <code>replace</code> in
     /// <code>s</code>.
     /// <summary>
-    public static String Replace(string s, string match, string replace)
+    public static string Replace(string s, string match, string replace)
     {
       StringBuilder b = new StringBuilder();
 
@@ -84,7 +84,7 @@ namespace Fanx.Util
         s.Append(' ');
       return s.ToString();
     }
-    static String[] spaces = new String[20];
+    static string[] spaces = new string[20];
     static StrUtil()
     {
       StringBuilder s = new StringBuilder();
@@ -119,7 +119,7 @@ namespace Fanx.Util
      * Get current hostname.
      */
     /*
-    public static String hostname()
+    public static string hostname()
     {
       if (hostname == null)
       {
@@ -134,14 +134,14 @@ namespace Fanx.Util
       }
       return hostname;
     }
-    static String hostname = null;
+    static string hostname = null;
     */
 
     /**
      * Get a timestamp string for current time.
      */
     /*
-    public static String timestamp()
+    public static string timestamp()
     {
       return new SimpleDateFormat("d-MMM-yyyy HH:mm:ss zzz").format(new Date());
     }
@@ -151,9 +151,9 @@ namespace Fanx.Util
      * Get simple class name from specified class.
      */
     /*
-    public static String getName(Class cls)
+    public static string getName(Class cls)
     {
-      String name = cls.getName();
+      string name = cls.getName();
       int dot = name.lastIndexOf('.');
       if (dot < 0) return name;
       return name.substring(dot+1);
@@ -164,7 +164,7 @@ namespace Fanx.Util
      * Write the stack trace to a string.
      */
     /*
-    public static String traceToString(Throwable e)
+    public static string traceToString(Throwable e)
     {
       StringWriter out = new StringWriter();
       e.printStackTrace(new PrintWriter(out));
@@ -220,7 +220,7 @@ namespace Fanx.Util
     {
       public int compare(Object a, Object b)
       {
-        return String.valueOf(a).compareTo(String.valueOf(b));
+        return string.valueOf(a).compareTo(string.valueOf(b));
       }
     };
     */

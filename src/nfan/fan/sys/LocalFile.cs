@@ -72,14 +72,14 @@ namespace Fan.Sys
       string path = uriToPath(uri);
       if (System.IO.Directory.Exists(path)) return new DirectoryInfo(path);
       if (System.IO.File.Exists(path)) return new FileInfo(path);
-      if (uri.isDir().val) return new DirectoryInfo(path);
+      if (uri.isDir().booleanValue()) return new DirectoryInfo(path);
       return new FileInfo(path);
     }
 
     public static string uriToPath(Uri uri)
     {
-      string path = uri.m_pathStr.val;
-      bool dir = uri.isDir().val;
+      string path = uri.m_pathStr;
+      bool dir = uri.isDir().booleanValue();
       int len = path.Length;
       StringBuilder s = new StringBuilder(path.Length);
       for (int i=0; i<len; ++i)
@@ -143,12 +143,12 @@ namespace Fan.Sys
       this.m_file = file;
       if (System.IO.Directory.Exists(file.FullName))
       {
-        if (!uri.isDir().val)
+        if (!uri.isDir().booleanValue())
           throw IOErr.make("Must use trailing slash for dir: " + uri).val;
       }
       else if (System.IO.File.Exists(file.FullName))
       {
-        if (uri.isDir().val)
+        if (uri.isDir().booleanValue())
           throw IOErr.make("Cannot use trailing slash for file: " + uri).val;
       }
     }
@@ -163,16 +163,16 @@ namespace Fan.Sys
   // File
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool exists()
+    public override Boolean exists()
     {
-      return m_file.Exists ? Bool.True : Bool.False;
+      return m_file.Exists ? Boolean.True : Boolean.False;
     }
 
-    public override Int size()
+    public override Long size()
     {
       if (m_file is DirectoryInfo) return null;
       m_file.Refresh();
-      return Int.make((m_file as FileInfo).Length);
+      return Long.valueOf((m_file as FileInfo).Length);
     }
 
     public override DateTime modified()
@@ -185,9 +185,9 @@ namespace Fan.Sys
       m_file.LastAccessTime = new System.DateTime(time.net());
     }
 
-    public override Str osPath()
+    public override string osPath()
     {
-      return Str.make(uriToPath(m_uri));
+      return uriToPath(m_uri);
     }
 
     public override File parent()
@@ -229,7 +229,7 @@ namespace Fan.Sys
       return new LocalFile(uri, canonical);
     }
 
-    public override File plus(Uri uri, Bool checkSlash)
+    public override File plus(Uri uri, Boolean checkSlash)
     {
       return make(m_uri.plus(uri), checkSlash);
     }
@@ -240,7 +240,7 @@ namespace Fan.Sys
 
     public override File create()
     {
-      if (isDir().val)
+      if (isDir().booleanValue())
         createDir();
       else
         createFile();
@@ -308,7 +308,7 @@ namespace Fan.Sys
     {
       if (isDir() != to.isDir())
       {
-        if (isDir().val)
+        if (isDir().booleanValue())
           throw ArgErr.make("moveTo must be dir `" + to + "`").val;
         else
           throw ArgErr.make("moveTo must not be dir `" + to + "`").val;
@@ -318,7 +318,7 @@ namespace Fan.Sys
         throw IOErr.make("Cannot move LocalFile to " + to.type()).val;
       LocalFile dest = (LocalFile)to;
 
-      if (dest.exists().val)
+      if (dest.exists().booleanValue())
         throw IOErr.make("moveTo already exists: " + to).val;
 
       try
@@ -338,7 +338,7 @@ namespace Fan.Sys
 
     public override void delete()
     {
-      if (!exists().val) return;
+      if (!exists().booleanValue()) return;
 
       if (m_file is DirectoryInfo)
       {
@@ -368,13 +368,13 @@ namespace Fan.Sys
   // IO
   //////////////////////////////////////////////////////////////////////////
 
-    public override Buf open(Str mode)
+    public override Buf open(string mode)
     {
       try
       {
         System.IO.FileMode fm;
         System.IO.FileAccess fa;
-        string s = mode.val;
+        string s = mode;
 
         if (s == "r")
         {
@@ -393,7 +393,7 @@ namespace Fan.Sys
         }
         else
         {
-          throw new System.IO.IOException("Unsupported mode: " + mode.val);
+          throw new System.IO.IOException("Unsupported mode: " + mode);
         }
 
         return new FileBuf(this, (m_file as FileInfo).Open(fm, fa));
@@ -404,7 +404,7 @@ namespace Fan.Sys
       }
     }
 
-    public override Buf mmap(Str mode, Int pos, Int size)
+    public override Buf mmap(string mode, Long pos, Long size)
     {
       try
       {
@@ -429,7 +429,7 @@ namespace Fan.Sys
         //MappedByteBuffer mmap = chan.map(mm, pos.val, size.val);
         */
 
-        return new MmapBuf(this, mode.val, pos.val, size.val);
+        return new MmapBuf(this, mode, pos.longValue(), size.longValue());
       }
       catch (System.IO.IOException e)
       {
@@ -437,7 +437,7 @@ namespace Fan.Sys
       }
     }
 
-    public override InStream @in(Int bufSize)
+    public override InStream @in(Long bufSize)
     {
       try
       {
@@ -450,7 +450,7 @@ namespace Fan.Sys
       }
     }
 
-    public override OutStream @out(Bool append, Int bufSize)
+    public override OutStream @out(Boolean append, Long bufSize)
     {
       try
       {
@@ -459,7 +459,7 @@ namespace Fan.Sys
         //if (!parent.exists()) parent.mkdirs();
 
         System.IO.Stream stream = (m_file as FileInfo).Open(
-          append.val ? System.IO.FileMode.Append : System.IO.FileMode.Create,
+          append.booleanValue() ? System.IO.FileMode.Append : System.IO.FileMode.Create,
           System.IO.FileAccess.Write);
         m_file.Refresh();
         return SysOutStream.make(stream, bufSize);
