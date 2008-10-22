@@ -40,19 +40,19 @@ namespace Fan.Inet
   // State
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isBound(UdpSocket fan)
+    public Fan.Sys.Boolean isBound(UdpSocket fan)
     {
-      return Bool.make(m_net.IsBound);
+      return Fan.Sys.Boolean.valueOf(m_net.IsBound);
     }
 
-    public Bool isConnected(UdpSocket fan)
+    public Fan.Sys.Boolean isConnected(UdpSocket fan)
     {
-      return Bool.make(m_net.Connected);
+      return Fan.Sys.Boolean.valueOf(m_net.Connected);
     }
 
-    public Bool isClosed(UdpSocket fan)
+    public Fan.Sys.Boolean isClosed(UdpSocket fan)
     {
-      return Bool.make(m_closed);
+      return Fan.Sys.Boolean.valueOf(m_closed);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -67,13 +67,13 @@ namespace Fan.Inet
       return IpAddressPeer.make(pt.Address);
     }
 
-    public Int localPort(UdpSocket fan)
+    public Long localPort(UdpSocket fan)
     {
       if (!m_net.IsBound) return null;
       IPEndPoint pt = m_net.LocalEndPoint as IPEndPoint;
       if (pt == null) return null;
       // TODO - default port?
-      return Int.make(pt.Port);
+      return Long.valueOf(pt.Port);
     }
 
     public IpAddress remoteAddress(UdpSocket fan)
@@ -82,22 +82,22 @@ namespace Fan.Inet
       return m_remoteAddr;
     }
 
-    public Int remotePort(UdpSocket fan)
+    public Long remotePort(UdpSocket fan)
     {
       if (!m_net.Connected) return null;
-      return Int.make(m_remotePort);
+      return Long.valueOf(m_remotePort);
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Communication
   //////////////////////////////////////////////////////////////////////////
 
-    public UdpSocket bind(UdpSocket fan, IpAddress addr, Int port)
+    public UdpSocket bind(UdpSocket fan, IpAddress addr, Long port)
     {
       try
       {
         IPAddress netAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_net;
-        int netPort = (port == null) ? 0 : (int)port.val;
+        int netPort = (port == null) ? 0 : port.intValue();
         m_net.Bind(new IPEndPoint(netAddr, netPort));
         return fan;
       }
@@ -107,11 +107,11 @@ namespace Fan.Inet
       }
     }
 
-    public UdpSocket connect(UdpSocket fan, IpAddress addr, Int port)
+    public UdpSocket connect(UdpSocket fan, IpAddress addr, Long port)
     {
       try
       {
-        m_net.Connect(addr.m_peer.m_net, (int)port.val);
+        m_net.Connect(addr.m_peer.m_net, port.intValue());
         IPEndPoint endPoint = m_net.RemoteEndPoint as IPEndPoint;
         m_remoteAddr = IpAddressPeer.make(endPoint.Address);
         m_remotePort = endPoint.Port;
@@ -133,7 +133,7 @@ namespace Fan.Inet
 
       // map address, port
       IpAddress addr = packet.address();
-      Int port = packet.port();
+      Long port = packet.port();
       if (m_net.Connected)
       {
         if (addr != null || port != null)
@@ -155,7 +155,7 @@ namespace Fan.Inet
 
         try
         {
-          IPEndPoint endPoint = new IPEndPoint(addr.m_peer.m_net, (int)port.val);
+          IPEndPoint endPoint = new IPEndPoint(addr.m_peer.m_net, port.intValue());
           m_net.SendTo(buf, off, len, SocketFlags.None, endPoint);
         }
         catch (SocketException e)
@@ -210,7 +210,7 @@ namespace Fan.Inet
       // update packet with received message
       IPEndPoint endPoint = sender as IPEndPoint;
       packet.address(IpAddressPeer.make(endPoint.Address));
-      packet.port(Int.make(endPoint.Port));
+      packet.port(Long.valueOf(endPoint.Port));
       data.m_pos  += recv;
       data.m_size += recv;
 
@@ -228,16 +228,16 @@ namespace Fan.Inet
       return fan;
     }
 
-    public Bool close(UdpSocket fan)
+    public Fan.Sys.Boolean close(UdpSocket fan)
     {
       try
       {
         close();
-        return Bool.True;
+        return Fan.Sys.Boolean.True;
       }
       catch
       {
-        return Bool.False;
+        return Fan.Sys.Boolean.False;
       }
     }
 
@@ -257,45 +257,45 @@ namespace Fan.Inet
       return m_options;
     }
 
-    public Bool getBroadcast(UdpSocket fan)
+    public Fan.Sys.Boolean getBroadcast(UdpSocket fan)
     {
-      return Bool.make(m_net.EnableBroadcast);
+      return Fan.Sys.Boolean.valueOf(m_net.EnableBroadcast);
     }
 
-    public void setBroadcast(UdpSocket fan, Bool v)
+    public void setBroadcast(UdpSocket fan, Fan.Sys.Boolean v)
     {
-      m_net.EnableBroadcast = v.val;
+      m_net.EnableBroadcast = v.booleanValue();
     }
 
-    public Int getReceiveBufferSize(UdpSocket fan)
+    public Long getReceiveBufferSize(UdpSocket fan)
     {
-      return Int.make(m_net.ReceiveBufferSize);
+      return Long.valueOf(m_net.ReceiveBufferSize);
     }
 
-    public void setReceiveBufferSize(UdpSocket fan, Int v)
+    public void setReceiveBufferSize(UdpSocket fan, Long v)
     {
-      m_net.ReceiveBufferSize = (int)v.val;
+      m_net.ReceiveBufferSize = v.intValue();
     }
 
-    public Int getSendBufferSize(UdpSocket fan)
+    public Long getSendBufferSize(UdpSocket fan)
     {
-      return Int.make(m_net.SendBufferSize);
+      return Long.valueOf(m_net.SendBufferSize);
     }
 
-    public void setSendBufferSize(UdpSocket fan, Int v)
+    public void setSendBufferSize(UdpSocket fan, Long v)
     {
-      m_net.SendBufferSize = (int)v.val;
+      m_net.SendBufferSize = v.intValue();
     }
 
-    public Bool getReuseAddress(UdpSocket fan)
+    public Fan.Sys.Boolean getReuseAddress(UdpSocket fan)
     {
-      return Bool.make(Convert.ToBoolean(
+      return Fan.Sys.Boolean.valueOf(Convert.ToBoolean(
         m_net.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress)));
     }
 
-    public void setReuseAddress(UdpSocket fan, Bool v)
+    public void setReuseAddress(UdpSocket fan, Fan.Sys.Boolean v)
     {
-      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.val);
+      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.booleanValue());
     }
 
     public Duration getReceiveTimeout(UdpSocket fan)
@@ -312,15 +312,15 @@ namespace Fan.Inet
         m_net.ReceiveTimeout = (int)(v.millis());
     }
 
-    public Int getTrafficClass(UdpSocket fan)
+    public Long getTrafficClass(UdpSocket fan)
     {
-      return Int.make(Convert.ToInt32(
+      return Long.valueOf(Convert.ToInt32(
         m_net.GetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService)));
     }
 
-    public void setTrafficClass(UdpSocket fan, Int v)
+    public void setTrafficClass(UdpSocket fan, Long v)
     {
-      m_net.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, v.val);
+      m_net.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, v.longValue());
     }
 
   //////////////////////////////////////////////////////////////////////////

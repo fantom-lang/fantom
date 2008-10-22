@@ -21,7 +21,7 @@ namespace Fan.Fwt
       return c;
     }
 
-    public override void sync(Str f)
+    public override void sync(string f)
     {
       Fan.Fwt.Label self = (Fan.Fwt.Label)this.m_self;
       System.Windows.Forms.Label c = (System.Windows.Forms.Label)this.m_control;
