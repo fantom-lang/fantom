@@ -59,17 +59,17 @@ namespace Fan.TestNative
     }
 
     public string defs1(Native t, string a) { return a; }
-    public string defs2(Native t, string a, string b) { return string.make(a.val+b.val);  }
-    public string defs3(Native t, string a, string b, string c) { return string.make(a.val+b.val+c.val);  }
+    public string defs2(Native t, string a, string b) { return a+b;  }
+    public string defs3(Native t, string a, string b, string c) { return a+b+c;  }
 
     public static string sdefs1(string a) { return a; }
-    public static string sdefs2(string a, string b) { return string.make(a.val+b.val);  }
-    public static string sdefs3(string a, string b, string c) { return string.make(a.val+b.val+c.val);  }
+    public static string sdefs2(string a, string b) { return a+b;  }
+    public static string sdefs3(string a, string b, string c) { return a+b+c;  }
 
     Long m_ctorY;  // value of y during make()
     Long m_z;
     Long m_fA = Long.valueOf(444);
-    string m_fV = string.make("fV");
+    string m_fV = "fV";
 
   }
 }
