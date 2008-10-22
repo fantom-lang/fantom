@@ -140,16 +140,6 @@ public final class FPod
     return jfield;
   }
 
-  /**
-   * Map a Java type name (:: replaced wit /) via typeRefs table.
-   */
-/*
-  public final String jname(int index)
-  {
-    return typeRef(index).jname();
-  }
-*/
-
 //////////////////////////////////////////////////////////////////////////
 // Read
 //////////////////////////////////////////////////////////////////////////
