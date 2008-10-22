@@ -40,22 +40,22 @@ public class MmapBuf
 // Buf Support
 //////////////////////////////////////////////////////////////////////////
 
-  final long getSize()
+  public final long size()
   {
     return mmap.limit();
   }
 
-  final void setSize(long x)
+  public final void size(long x)
   {
     mmap.limit((int)x);
   }
 
-  final long getPos()
+  public final long pos()
   {
     return mmap.position();
   }
 
-  final void setPos(long x)
+  final void pos(long x)
   {
     mmap.position((int)x);
   }

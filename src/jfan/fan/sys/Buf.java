@@ -59,7 +59,7 @@ public abstract class Buf
 
   public String toStr()
   {
-    return type().name() + "(pos=" + getPos() + " size=" + getSize() + ")";
+    return type().name() + "(pos=" + pos() + " size=" + size() + ")";
   }
 
   public Type type() { return Sys.BufType; }
@@ -68,10 +68,6 @@ public abstract class Buf
 // Support
 //////////////////////////////////////////////////////////////////////////
 
-  abstract long getSize();
-  abstract void setSize(long x);
-  abstract long getPos();
-  abstract void setPos(long x);
   abstract int getByte(long pos);
   abstract void getBytes(long pos, byte[] dst, int off, int len);
   abstract void setByte(long pos, int x);
@@ -92,7 +88,7 @@ public abstract class Buf
 
   public final boolean empty()
   {
-    return getSize() == 0;
+    return size() == 0;
   }
 
   public long capacity()
@@ -104,50 +100,43 @@ public abstract class Buf
   {
   }
 
-  public final long size()
-  {
-    return getSize();
-  }
+  public abstract long size();
 
-  public final void size(long s)
-  {
-    setSize(s);
-  }
+  public abstract void size(long s);
 
-  public final long pos()
-  {
-    return getPos();
-  }
+  public abstract long pos();
+
+  abstract void pos(long p);
 
   public final long remaining()
   {
-    return getSize()-getPos();
+    return size()-pos();
   }
 
   public final boolean more()
   {
-    return getSize()-getPos() > 0;
+    return size()-pos() > 0;
   }
 
   public final Buf seek(long pos)
   {
-    long size = getSize();
+    long size = size();
     if (pos < 0) pos = size + pos;
     if (pos < 0 || pos > size) throw IndexErr.make(pos).val;
-    setPos(pos);
+    pos(pos);
     return this;
   }
 
   public final Buf flip()
   {
-    setSize(getPos());
-    setPos(0);
+    size(pos());
+    pos(0);
     return this;
   }
 
   public final long get(long pos)
   {
-    long size = getSize();
+    long size = size();
     if (pos < 0) pos = size + pos;
     if (pos < 0 || pos >= size) throw IndexErr.make(pos).val;
     return getByte(pos);
@@ -155,7 +144,7 @@ public abstract class Buf
 
   public final Buf slice(Range range)
   {
-    long size = getSize();
+    long size = size();
     long s = range.start(size);
     long e = range.end(size);
     int n = (int)(e - s + 1);
@@ -175,7 +164,7 @@ public abstract class Buf
 
   public final Buf set(long pos, long b)
   {
-    long size = getSize();
+    long size = size();
     if (pos < 0) pos = size + pos;
     if (pos < 0 || pos >= size) throw IndexErr.make(pos).val;
     setByte(pos, (int)b);
@@ -189,8 +178,8 @@ public abstract class Buf
 
   public final Buf clear()
   {
-    setPos(0);
-    setSize(0);
+    pos(0);
+    size(0);
     return this;
   }
 

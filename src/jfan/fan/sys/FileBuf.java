@@ -40,7 +40,7 @@ public class FileBuf
 // Buf Support
 //////////////////////////////////////////////////////////////////////////
 
-  final long getSize()
+  public final long size()
   {
     try
     {
@@ -52,7 +52,7 @@ public class FileBuf
     }
   }
 
-  final void setSize(long x)
+  public final void size(long x)
   {
     try
     {
@@ -64,7 +64,7 @@ public class FileBuf
     }
   }
 
-  final long getPos()
+  public final long pos()
   {
     try
     {
@@ -76,7 +76,7 @@ public class FileBuf
     }
   }
 
-  final void setPos(long x)
+  final void pos(long x)
   {
     try
     {
@@ -286,13 +286,13 @@ public class FileBuf
   {
     try
     {
-      long oldPos = getPos();
-      int size = (int)getSize();
+      long oldPos = pos();
+      int size = (int)size();
       byte[] temp = temp();
       char[] hexChars = Buf.hexChars;
       StringBuilder s = new StringBuilder(size*2);
 
-      setPos(0);
+      pos(0);
       int total = 0;
       while (total < size)
       {
@@ -305,7 +305,7 @@ public class FileBuf
         total += n;
       }
 
-      setPos(oldPos);
+      pos(oldPos);
       return s.toString();
     }
     catch (IOException e)
@@ -318,12 +318,12 @@ public class FileBuf
   {
     try
     {
-      long oldPos = getPos();
-      long size = getSize();
+      long oldPos = pos();
+      long size = size();
       byte[] temp = temp();
       MessageDigest md = MessageDigest.getInstance(algorithm);
 
-      setPos(0);
+      pos(0);
       long total = 0;
       while (total < size)
       {
@@ -332,7 +332,7 @@ public class FileBuf
         total += n;
       }
 
-      setPos(oldPos);
+      pos(oldPos);
       return new MemBuf(md.digest());
     }
     catch (IOException e)
@@ -434,7 +434,7 @@ public class FileBuf
     {
       try
       {
-        long pos = getPos();
+        long pos = pos();
         fp.seek(pos-1);
         fp.write(n);
         fp.seek(pos-1);
@@ -450,9 +450,9 @@ public class FileBuf
     {
       try
       {
-        long pos = getPos();
+        long pos = pos();
         int n = fp.read();
-        setPos(pos);
+        pos(pos);
         return n < 0 ? null : FanInt.pos[n];
       }
       catch (IOException e)
