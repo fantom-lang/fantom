@@ -33,9 +33,17 @@ namespace Fanx.Util
     /// </summary>
     public static Type load(string sig, bool check, Pod loadingPod)
     {
+      // if last character is ?, then parse a nullable
+      int len = sig.Length;
+      int last = len > 1 ? sig[len-1] : 0;
+      if (last == '?')
+      {
+        // TODO: we can make this more efficient
+        return load(sig.Substring(0, len-1), check, loadingPod).toNullable();
+      }
+
       // if the last character isn't ] or |, then this a non-generic
       // type and we don't even need to allocate a parser
-      int last = sig.Length > 1 ? sig[sig.Length-1] : 0;
       if (last != ']' && last != '|')
       {
         string podName, typeName;
