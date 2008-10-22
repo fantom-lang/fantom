@@ -44,19 +44,19 @@ namespace Fan.Inet
   // State
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isBound(TcpSocket fan)
+    public Fan.Sys.Boolean isBound(TcpSocket fan)
     {
-      return Bool.make(m_net.IsBound);
+      return Fan.Sys.Boolean.valueOf(m_net.IsBound);
     }
 
-    public Bool isConnected(TcpSocket fan)
+    public Fan.Sys.Boolean isConnected(TcpSocket fan)
     {
-      return Bool.make(m_net.Connected);
+      return Fan.Sys.Boolean.valueOf(m_net.Connected);
     }
 
-    public Bool isClosed(TcpSocket fan)
+    public Fan.Sys.Boolean isClosed(TcpSocket fan)
     {
-      return Bool.make(m_closed);
+      return Fan.Sys.Boolean.valueOf(m_closed);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -71,13 +71,13 @@ namespace Fan.Inet
       return IpAddressPeer.make(pt.Address);
     }
 
-    public Int localPort(TcpSocket fan)
+    public Long localPort(TcpSocket fan)
     {
       if (!m_net.IsBound) return null;
       IPEndPoint pt = m_net.LocalEndPoint as IPEndPoint;
       if (pt == null) return null;
       // TODO - default port?
-      return Int.make(pt.Port);
+      return Long.valueOf(pt.Port);
     }
 
     public IpAddress remoteAddress(TcpSocket fan)
@@ -86,22 +86,22 @@ namespace Fan.Inet
       return m_remoteAddr;
     }
 
-    public Int remotePort(TcpSocket fan)
+    public Long remotePort(TcpSocket fan)
     {
       if (!m_net.Connected) return null;
-      return Int.make(m_remotePort);
+      return Long.valueOf(m_remotePort);
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Communication
   //////////////////////////////////////////////////////////////////////////
 
-    public TcpSocket bind(TcpSocket fan, IpAddress addr, Int port)
+    public TcpSocket bind(TcpSocket fan, IpAddress addr, Long port)
     {
       try
       {
         IPAddress netAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_net;
-        int netPort = (port == null) ? 0 : (int)port.val;
+        int netPort = (port == null) ? 0 : port.intValue();
         m_net.Bind(new IPEndPoint(netAddr, netPort));
         return fan;
       }
@@ -111,11 +111,11 @@ namespace Fan.Inet
       }
     }
 
-    public TcpSocket connect(TcpSocket fan, IpAddress addr, Int port, Duration timeout)
+    public TcpSocket connect(TcpSocket fan, IpAddress addr, Long port, Duration timeout)
     {
       if (timeout != null)
       {
-        IAsyncResult result = m_net.BeginConnect(addr.m_peer.m_net, (int)port.val, null, null);
+        IAsyncResult result = m_net.BeginConnect(addr.m_peer.m_net, port.intValue(), null, null);
         bool success = result.AsyncWaitHandle.WaitOne((int)timeout.millis(), true);
         if (!success)
         {
@@ -125,7 +125,7 @@ namespace Fan.Inet
       }
       else
       {
-        m_net.Connect(addr.m_peer.m_net, (int)port.val);
+        m_net.Connect(addr.m_peer.m_net, port.intValue());
       }
       connected(fan);
       return fan;
@@ -152,16 +152,16 @@ namespace Fan.Inet
       return m_out;
     }
 
-    public Bool close(TcpSocket fan)
+    public Fan.Sys.Boolean close(TcpSocket fan)
     {
       try
       {
         close();
-        return Bool.True;
+        return Fan.Sys.Boolean.True;
       }
       catch
       {
-        return Bool.False;
+        return Fan.Sys.Boolean.False;
       }
     }
 
@@ -188,9 +188,9 @@ namespace Fan.Inet
     ** is thrown.  Once a socket is forked onto a new thread,  it is detached
     ** from the calling thread and all methods will throw UnsupportedErr.
     **
-    native Thread fork(Str threadName, |TcpSocket s->Obj| run)
+    native Thread fork(string threadName, |TcpSocket s->Obj| run)
 
-    public Thread fork(TcpSocket oldSock, Str name, final Method run)
+    public Thread fork(TcpSocket oldSock, string name, final Method run)
     {
       // error checking
       checkDetached();
@@ -202,7 +202,7 @@ namespace Fan.Inet
       synchronized (topLock) { n = forkCount++; }
 
       // generate name if null
-      if (name == null) name = Str.make("inet.TcpSocket" + n);
+      if (name == null) name = string.make("inet.TcpSocket" + n);
 
       // create new detached thread-safe socket
       final TcpSocket newSock = detach(oldSock);
@@ -243,26 +243,26 @@ namespace Fan.Inet
   // Streaming Options
   //////////////////////////////////////////////////////////////////////////
 
-    public Int getInBufferSize(TcpSocket fan)
+    public Long getInBufferSize(TcpSocket fan)
     {
-      return (m_inBufSize <= 0) ? null : Int.make(m_inBufSize);
+      return (m_inBufSize <= 0) ? null : Long.valueOf(m_inBufSize);
     }
 
-    public void setInBufferSize(TcpSocket fan, Int v)
+    public void setInBufferSize(TcpSocket fan, Long v)
     {
       if (m_in != null) throw Err.make("Must set inBufferSize before connection").val;
-      m_inBufSize = (v == null) ? 0 : (int)v.val;
+      m_inBufSize = (v == null) ? 0 : v.intValue();
     }
 
-    public Int getOutBufferSize(TcpSocket fan)
+    public Long getOutBufferSize(TcpSocket fan)
     {
-      return (m_outBufSize <= 0) ? null : Int.make(m_outBufSize);
+      return (m_outBufSize <= 0) ? null : Long.valueOf(m_outBufSize);
     }
 
-    public void setOutBufferSize(TcpSocket fan, Int v)
+    public void setOutBufferSize(TcpSocket fan, Long v)
     {
       if (m_in != null) throw Err.make("Must set outBufSize before connection").val;
-      m_outBufSize = (v == null) ? 0 : (int)v.val;
+      m_outBufSize = (v == null) ? 0 : v.intValue();
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -275,46 +275,46 @@ namespace Fan.Inet
       return m_options;
     }
 
-    public Bool getKeepAlive(TcpSocket fan)
+    public Fan.Sys.Boolean getKeepAlive(TcpSocket fan)
     {
-      return Bool.make(Convert.ToBoolean(
+      return Fan.Sys.Boolean.valueOf(Convert.ToBoolean(
         m_net.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive)));
     }
 
-    public void setKeepAlive(TcpSocket fan, Bool v)
+    public void setKeepAlive(TcpSocket fan, Fan.Sys.Boolean v)
     {
-      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, v.val);
+      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, v.booleanValue());
     }
 
-    public Int getReceiveBufferSize(TcpSocket fan)
+    public Long getReceiveBufferSize(TcpSocket fan)
     {
-      return Int.make(m_net.ReceiveBufferSize);
+      return Long.valueOf(m_net.ReceiveBufferSize);
     }
 
-    public void setReceiveBufferSize(TcpSocket fan, Int v)
+    public void setReceiveBufferSize(TcpSocket fan, Long v)
     {
-      m_net.ReceiveBufferSize = (int)v.val;
+      m_net.ReceiveBufferSize = v.intValue();
     }
 
-    public Int getSendBufferSize(TcpSocket fan)
+    public Long getSendBufferSize(TcpSocket fan)
     {
-      return Int.make(m_net.SendBufferSize);
+      return Long.valueOf(m_net.SendBufferSize);
     }
 
-    public void setSendBufferSize(TcpSocket fan, Int v)
+    public void setSendBufferSize(TcpSocket fan, Long v)
     {
-      m_net.SendBufferSize = (int)v.val;
+      m_net.SendBufferSize = v.intValue();
     }
 
-    public Bool getReuseAddress(TcpSocket fan)
+    public Fan.Sys.Boolean getReuseAddress(TcpSocket fan)
     {
-      return Bool.make(Convert.ToBoolean(
+      return Fan.Sys.Boolean.valueOf(Convert.ToBoolean(
         m_net.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress)));
     }
 
-    public void setReuseAddress(TcpSocket fan, Bool v)
+    public void setReuseAddress(TcpSocket fan, Fan.Sys.Boolean v)
     {
-      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.val);
+      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.booleanValue());
     }
 
     public Duration getLinger(TcpSocket fan)
@@ -349,27 +349,27 @@ namespace Fan.Inet
         m_net.ReceiveTimeout = (int)(v.millis());
     }
 
-    public Bool getNoDelay(TcpSocket fan)
+    public Fan.Sys.Boolean getNoDelay(TcpSocket fan)
     {
-      return Bool.make(m_net.NoDelay);
+      return Fan.Sys.Boolean.valueOf(m_net.NoDelay);
     }
 
-    public void setNoDelay(TcpSocket fan, Bool v)
+    public void setNoDelay(TcpSocket fan, Fan.Sys.Boolean v)
     {
-      m_net.NoDelay = v.val;
+      m_net.NoDelay = v.booleanValue();
     }
 
-    public Int getTrafficClass(TcpSocket fan)
+    public Long getTrafficClass(TcpSocket fan)
     {
-      return Int.make(Convert.ToInt32(
+      return Long.valueOf(Convert.ToInt32(
         m_net.GetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService)));
     }
 
-    public void setTrafficClass(TcpSocket fan, Int v)
+    public void setTrafficClass(TcpSocket fan, Long v)
     {
 //try
 //{
-      m_net.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, v.val);
+      m_net.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, v.longValue());
 //}
 //catch (System.Exception e)
 //{
