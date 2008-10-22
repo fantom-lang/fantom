@@ -20,8 +20,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Charset fromStr(Str name) { return fromStr(name.val, true); }
-    public static Charset fromStr(Str name, Bool check) { return fromStr(name.val, check.val); }
+    public static Charset fromStr(string name) { return fromStr(name, true); }
+    public static Charset fromStr(string name, Boolean check) { return fromStr(name, check.booleanValue()); }
     public static Charset fromStr(string name, bool check)
     {
       try
@@ -49,13 +49,13 @@ namespace Fan.Sys
     private Charset(Encoding encoding)
     {
       this.m_encoding = encoding;
-      this.m_name     = Str.make(encoding.WebName.ToUpper());
+      this.m_name     = encoding.WebName.ToUpper();
     }
 
     private Charset(Encoding encoding, string name)
     {
       this.m_encoding = encoding;
-      this.m_name     = Str.make(name);
+      this.m_name     = name;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -286,22 +286,22 @@ namespace Fan.Sys
 
     public override Type type() { return Sys.CharsetType; }
 
-    public Str name() { return m_name; }
+    public string name() { return m_name; }
 
     public override int GetHashCode() { return m_encoding.GetHashCode(); }
 
-    public override Int hash() { return Int.make(m_encoding.GetHashCode()); }
+    public override Long hash() { return Long.valueOf(m_encoding.GetHashCode()); }
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is Charset)
       {
-        return ((Charset)obj).m_encoding.Equals(this.m_encoding) ? Bool.True : Bool.False;
+        return ((Charset)obj).m_encoding.Equals(this.m_encoding) ? Boolean.True : Boolean.False;
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
-    public override Str toStr() { return m_name; }
+    public override string toStr() { return m_name; }
 
   //////////////////////////////////////////////////////////////////////////
   // Encoder
@@ -408,7 +408,7 @@ namespace Fan.Sys
     internal static Charset m_utf8, m_utf16BE, m_utf16LE, m_iso8859_1;
 
     internal readonly Encoding m_encoding;
-    internal readonly Str m_name;
+    internal readonly string m_name;
 
   }
 }

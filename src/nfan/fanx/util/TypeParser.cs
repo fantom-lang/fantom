@@ -51,7 +51,7 @@ namespace Fanx.Util
         {
           throw ArgErr.make("Invalid type signature '" + sig + "', use <pod>::<type>").val;
         }
-        if (loadingPod != null && podName == loadingPod.name().val)
+        if (loadingPod != null && podName == loadingPod.name())
           return loadingPod.findType(typeName, check);
         else
           return Type.find(podName, typeName, check);
@@ -170,7 +170,7 @@ namespace Fanx.Util
         if (type != null) return type;
       }
 
-      if (loadingPod != null && podName == loadingPod.name().val)
+      if (loadingPod != null && podName == loadingPod.name())
         return loadingPod.findType(typeName, check);
       else
         return Type.find(podName, typeName, check);

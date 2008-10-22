@@ -15,7 +15,7 @@ namespace Fan.Sys
   /// GenericType is the base class for ListType, MapType, and MethodType
   /// which all support parameterization of the generic parameter types (such
   /// as A-H, V, K).  Instances of GenericType are used to represent generic
-  /// instances (for example an instance of ListType is used to represent Str[]).
+  /// instances (for example an instance of ListType is used to represent string[]).
   /// </summary>
   public abstract class GenericType : Type
   {
@@ -25,7 +25,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     internal GenericType(Type baseType) :
-      base(baseType.m_pod, baseType.m_name.val, baseType.m_flags, baseType.m_facets)
+      base(baseType.m_pod, baseType.m_name, baseType.m_flags, baseType.m_facets)
     {
     }
 
@@ -40,7 +40,7 @@ namespace Fan.Sys
       return @base().mixins();
     }
 
-    public override abstract Str signature();
+    public override abstract string signature();
 
     public override bool isGenericInstance() { return true; }
 
@@ -92,7 +92,7 @@ namespace Fan.Sys
           m_fields.add(slot);
         }
         m_slots.add(slot);
-        m_slotsByName[slot.m_name.val] = slot;
+        m_slotsByName[slot.m_name] = slot;
       }
 
       // TODO - java code doesn't do this - but don't see anywhere

@@ -31,17 +31,17 @@ namespace Fan.TestNative
         throw new System.Exception("this != ((Native)self).peer");
     }
 
-    public Str subNative(NativeSub self)
+    public string subNative(NativeSub self)
     {
-      return Str.make("subNative working");
+      return string.make("subNative working");
     }
 
-    public Int subfX(NativeSub self)
+    public Long subfX(NativeSub self)
     {
       return fX(self);
     }
 
-    public Int subGetPeerZ(NativeSub self)
+    public Long subGetPeerZ(NativeSub self)
     {
       return getPeerZ(self);
     }

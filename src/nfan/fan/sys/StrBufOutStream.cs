@@ -45,7 +45,7 @@ namespace Fan.Sys
       throw UnsupportedErr.make("binary write on StrBuf output").val;
     }
 
-    public override OutStream writeBuf(Buf buf, Int n)
+    public override OutStream writeBuf(Buf buf, Long n)
     {
       throw UnsupportedErr.make("binary write on StrBuf output").val;
     }
@@ -56,9 +56,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public override OutStream writeChar(Int c)
+    public override OutStream writeChar(Long c)
     {
-      m_sb.Append((char)c.val);
+      m_sb.Append((char)c.longValue());
       return this;
     }
 
@@ -73,9 +73,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public override Bool close()
+    public override Boolean close()
     {
-      return Bool.True;
+      return Boolean.True;
     }
 
   //////////////////////////////////////////////////////////////////////////

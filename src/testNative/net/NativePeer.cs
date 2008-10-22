@@ -23,53 +23,53 @@ namespace Fan.TestNative
       return peer;
     }
 
-    public static Int doStaticA()
+    public static Long doStaticA()
     {
-      return Int.make(2006);
+      return Long.valueOf(2006);
     }
 
-    public static Int doStaticB(Int a, Int b)
+    public static Long doStaticB(Long a, Long b)
     {
-      return a.plus(b);
+      return Long.valueOf(a.longValue() + b.longValue());
     }
 
-    public Int fX(Native t) { return t.m_x; }
-    public void fX(Native t, Int x) { t.m_x = x; }
+    public Long fX(Native t) { return t.m_x; }
+    public void fX(Native t, Long x) { t.m_x = x; }
 
-    public Int fA(Native t) { return m_fA; }
-    public void fA(Native t, Int x) { m_fA = x; }
+    public Long fA(Native t) { return m_fA; }
+    public void fA(Native t, Long x) { m_fA = x; }
 
-    public Str fV(Native t) { return m_fV; }
-    public void fV(Native t, Str x) { m_fV = x; }
+    public string fV(Native t) { return m_fV; }
+    public void fV(Native t, string x) { m_fV = x; }
 
-    public Int getPeerZ(Native t)
+    public Long getPeerZ(Native t)
     {
       return m_z;
     }
 
-    public void setPeerZ(Native t, Int z)
+    public void setPeerZ(Native t, Long z)
     {
       if (t.m_peer != this) throw new System.Exception();
       this.m_z = z;
     }
 
-    public Int getCtorY(Native t)
+    public Long getCtorY(Native t)
     {
       return m_ctorY;
     }
 
-    public Str defs1(Native t, Str a) { return a; }
-    public Str defs2(Native t, Str a, Str b) { return Str.make(a.val+b.val);  }
-    public Str defs3(Native t, Str a, Str b, Str c) { return Str.make(a.val+b.val+c.val);  }
+    public string defs1(Native t, string a) { return a; }
+    public string defs2(Native t, string a, string b) { return string.make(a.val+b.val);  }
+    public string defs3(Native t, string a, string b, string c) { return string.make(a.val+b.val+c.val);  }
 
-    public static Str sdefs1(Str a) { return a; }
-    public static Str sdefs2(Str a, Str b) { return Str.make(a.val+b.val);  }
-    public static Str sdefs3(Str a, Str b, Str c) { return Str.make(a.val+b.val+c.val);  }
+    public static string sdefs1(string a) { return a; }
+    public static string sdefs2(string a, string b) { return string.make(a.val+b.val);  }
+    public static string sdefs3(string a, string b, string c) { return string.make(a.val+b.val+c.val);  }
 
-    Int m_ctorY;  // value of y during make()
-    Int m_z;
-    Int m_fA = Int.make(444);
-    Str m_fV = Str.make("fV");
+    Long m_ctorY;  // value of y during make()
+    Long m_z;
+    Long m_fA = Long.valueOf(444);
+    string m_fV = string.make("fV");
 
   }
 }

@@ -30,8 +30,8 @@ namespace Fan.Sys
 
     public override object get(Uri uri, object @base)
     {
-      File f = File.make(uri, Bool.False);
-      if (f.exists().val) return f;
+      File f = File.make(uri, Boolean.False);
+      if (f.exists().booleanValue()) return f;
       throw UnresolvedErr.make(uri).val;
     }
 
