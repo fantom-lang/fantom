@@ -21,16 +21,15 @@ namespace Fan.Sys
   // C# Convenience
   //////////////////////////////////////////////////////////////////////////
 
-    public new static IOErr make(string msg)  { return make(Str.make(msg)); }
-    public new static IOErr make(string msg, Exception cause)  { return make(Str.make(msg), Err.make(cause)); }
+    public new static IOErr make(string msg, Exception cause)  { return make(msg, Err.make(cause)); }
 
   //////////////////////////////////////////////////////////////////////////
   // Fan Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static IOErr make() { return make((Str)null, (Err)null); }
-    public new static IOErr make(Str msg) { return make(msg, null); }
-    public new static IOErr make(Str msg, Err cause)
+    public new static IOErr make() { return make((string)null, (Err)null); }
+    public new static IOErr make(string msg) { return make(msg, (Err)null); }
+    public new static IOErr make(string msg, Err cause)
     {
       IOErr err = new IOErr();
       make_(err, msg, cause);
@@ -38,8 +37,8 @@ namespace Fan.Sys
     }
 
     public static void make_(IOErr self) { make_(self, null);  }
-    public static void make_(IOErr self, Str msg) { make_(self, msg, null); }
-    public static void make_(IOErr self, Str msg, Err cause) { Err.make_(self, msg, cause); }
+    public static void make_(IOErr self, string msg) { make_(self, msg, null); }
+    public static void make_(IOErr self, string msg, Err cause) { Err.make_(self, msg, cause); }
 
   //////////////////////////////////////////////////////////////////////////
   // C# Constructors

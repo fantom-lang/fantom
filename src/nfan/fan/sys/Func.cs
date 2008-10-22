@@ -78,9 +78,9 @@ namespace Fan.Sys
     {
       protected Indirect(FuncType type) : base(type) { this.m_type = type; }
 
-      public Str name() { return Str.make(GetType().Name); }
+      public string name() { return GetType().Name; }
       public override Type type()  { return m_type; }
-      public override Str  toStr() { return m_type.signature(); }
+      public override string  toStr() { return m_type.signature(); }
       public override Boolean isImmutable() { return Boolean.False; }
       public override Method method() { return null; }
       public Err.Val tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + m_type.m_params.Length).val; }
@@ -272,9 +272,9 @@ namespace Fan.Sys
         this.m_bound = bound.ro();
       }
 
-      public Str  name()  { return Str.make(GetType().Name); }
+      public string  name()  { return GetType().Name; }
       public override Type type()  { return m_type; }
-      public override Str  toStr() { return m_type.signature(); }
+      public override string  toStr() { return m_type.signature(); }
       public override Boolean isImmutable() { return Boolean.False; }
       public override Method method() { return null; }
 

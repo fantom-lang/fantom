@@ -208,16 +208,16 @@ namespace Fanx.Test
       //
       // str
       //
-      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs(null, null), Boolean.True);
-      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs("a",  null), Boolean.False);
-      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs(null, "a"),  Boolean.False);
-      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs("a", "a"),   Boolean.True);
-      verify("static Boolean f(Str a, Str b) { return a == b; }", MakeStrs("a", "b"),   Boolean.False);
-      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs(null, null), Boolean.False);
-      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs("a",  null), Boolean.True);
-      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs(null, "a"),  Boolean.True);
-      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs("a", "a"),   Boolean.False);
-      verify("static Boolean f(Str a, Str b) { return a != b; }", MakeStrs("a", "b"),   Boolean.True);
+      verify("static Boolean f(string a, string b) { return a == b; }", MakeStrs(null, null), Boolean.True);
+      verify("static Boolean f(string a, string b) { return a == b; }", MakeStrs("a",  null), Boolean.False);
+      verify("static Boolean f(string a, string b) { return a == b; }", MakeStrs(null, "a"),  Boolean.False);
+      verify("static Boolean f(string a, string b) { return a == b; }", MakeStrs("a", "a"),   Boolean.True);
+      verify("static Boolean f(string a, string b) { return a == b; }", MakeStrs("a", "b"),   Boolean.False);
+      verify("static Boolean f(string a, string b) { return a != b; }", MakeStrs(null, null), Boolean.False);
+      verify("static Boolean f(string a, string b) { return a != b; }", MakeStrs("a",  null), Boolean.True);
+      verify("static Boolean f(string a, string b) { return a != b; }", MakeStrs(null, "a"),  Boolean.True);
+      verify("static Boolean f(string a, string b) { return a != b; }", MakeStrs("a", "a"),   Boolean.False);
+      verify("static Boolean f(string a, string b) { return a != b; }", MakeStrs("a", "b"),   Boolean.True);
 
       //
       // Duration
@@ -350,29 +350,29 @@ namespace Fanx.Test
       //
       // str
       //
-      verify("static Boolean f(Str a, Str b) { return a < b; }", MakeStrs("a", "b"),  Boolean.True);
-      verify("static Boolean f(Str a, Str b) { return a < b; }", MakeStrs("a", "a"),  Boolean.False);
-      verify("static Boolean f(Str a, Str b) { return a < b; }", MakeStrs("b", "a"),  Boolean.False);
+      verify("static Boolean f(string a, string b) { return a < b; }", MakeStrs("a", "b"),  Boolean.True);
+      verify("static Boolean f(string a, string b) { return a < b; }", MakeStrs("a", "a"),  Boolean.False);
+      verify("static Boolean f(string a, string b) { return a < b; }", MakeStrs("b", "a"),  Boolean.False);
 
-      verify("static Boolean f(Str a, Str b) { return a <= b; }", MakeStrs("a", "b"),  Boolean.True);
-      verify("static Boolean f(Str a, Str b) { return a <= b; }", MakeStrs("a", "a"),  Boolean.True);
-      verify("static Boolean f(Str a, Str b) { return a <= b; }", MakeStrs("b", "a"),  Boolean.False);
+      verify("static Boolean f(string a, string b) { return a <= b; }", MakeStrs("a", "b"),  Boolean.True);
+      verify("static Boolean f(string a, string b) { return a <= b; }", MakeStrs("a", "a"),  Boolean.True);
+      verify("static Boolean f(string a, string b) { return a <= b; }", MakeStrs("b", "a"),  Boolean.False);
 
-      verify("static Boolean f(Str a, Str b) { return a > b; }", MakeStrs("a", "b"),  Boolean.False);
-      verify("static Boolean f(Str a, Str b) { return a > b; }", MakeStrs("a", "a"),  Boolean.False);
-      verify("static Boolean f(Str a, Str b) { return a > b; }", MakeStrs("b", "a"),  Boolean.True);
+      verify("static Boolean f(string a, string b) { return a > b; }", MakeStrs("a", "b"),  Boolean.False);
+      verify("static Boolean f(string a, string b) { return a > b; }", MakeStrs("a", "a"),  Boolean.False);
+      verify("static Boolean f(string a, string b) { return a > b; }", MakeStrs("b", "a"),  Boolean.True);
 
-      verify("static Boolean f(Str a, Str b) { return a >= b; }", MakeStrs("a", "b"),  Boolean.False);
-      verify("static Boolean f(Str a, Str b) { return a >= b; }", MakeStrs("a", "a"),  Boolean.True);
-      verify("static Boolean f(Str a, Str b) { return a >= b; }", MakeStrs("b", "a"),  Boolean.True);
+      verify("static Boolean f(string a, string b) { return a >= b; }", MakeStrs("a", "b"),  Boolean.False);
+      verify("static Boolean f(string a, string b) { return a >= b; }", MakeStrs("a", "a"),  Boolean.True);
+      verify("static Boolean f(string a, string b) { return a >= b; }", MakeStrs("b", "a"),  Boolean.True);
 
-      verify("static Long f(Str a, Str b) { return a <=> b; }", MakeStrs("a", "b"),  Long.valueOf(-1));
-      verify("static Long f(Str a, Str b) { return a <=> b; }", MakeStrs("a", "a"),  Long.valueOf(0));
-      verify("static Long f(Str a, Str b) { return a <=> b; }", MakeStrs("b", "a"),  Long.valueOf(1));
+      verify("static Long f(string a, string b) { return a <=> b; }", MakeStrs("a", "b"),  Long.valueOf(-1));
+      verify("static Long f(string a, string b) { return a <=> b; }", MakeStrs("a", "a"),  Long.valueOf(0));
+      verify("static Long f(string a, string b) { return a <=> b; }", MakeStrs("b", "a"),  Long.valueOf(1));
 
-      verify("static Long f(Str a, Str b) { return a <=> b; }", MakeStrs(null, null), Long.valueOf(0));
-      verify("static Long f(Str a, Str b) { return a <=> b; }", MakeStrs(null, "a"),  Long.valueOf(-1));
-      verify("static Long f(Str a, Str b) { return a <=> b; }", MakeStrs("b", null),  Long.valueOf(1));
+      verify("static Long f(string a, string b) { return a <=> b; }", MakeStrs(null, null), Long.valueOf(0));
+      verify("static Long f(string a, string b) { return a <=> b; }", MakeStrs(null, "a"),  Long.valueOf(-1));
+      verify("static Long f(string a, string b) { return a <=> b; }", MakeStrs("b", null),  Long.valueOf(1));
 
       //
       // Duration
@@ -887,32 +887,32 @@ namespace Fanx.Test
     void verifyStrAdd()
     {
       // str
-      verify("Str f(Str a, Str b) { return a + b; }", MakeStrs("a", "b"), Str.make("ab"));
-      verify("Str f(Str a, Str b) { return a + b; }", MakeStrs(null, null), Str.make("nullnull"));
-      verify("Str f(Str a, Str b) { return a + b; }", MakeStrs(null, "b"),  Str.make("nullb"));
-      verify("Str f(Str a, Str b) { return a + b; }", MakeStrs("a", null),  Str.make("anull"));
+      verify("string f(string a, string b) { return a + b; }", MakeStrs("a", "b"), "ab");
+      verify("string f(string a, string b) { return a + b; }", MakeStrs(null, null), "nullnull");
+      verify("string f(string a, string b) { return a + b; }", MakeStrs(null, "b"),  "nullb");
+      verify("string f(string a, string b) { return a + b; }", MakeStrs("a", null),  "anull");
 
       // bool
-      verify("Str f(Str a, Boolean b) { return a + b; }", new object[] {Str.make("a"), Boolean.valueOf(true)}, Str.make("atrue"));
-      verify("Str f(Boolean a, Str b) { return a + b; }", new object[] {Boolean.valueOf(false), Str.make("a")}, Str.make("falsea"));
-      verify("Str f() { return \"foo\" + true; }", Str.make("footrue"));
-      verify("Str f() { return false + \" foo\"; }", Str.make("false foo"));
+      verify("string f(string a, Boolean b) { return a + b; }", new object[] {"a", Boolean.valueOf(true)}, "atrue");
+      verify("string f(Boolean a, string b) { return a + b; }", new object[] {Boolean.valueOf(false), "a"}, "falsea");
+      verify("string f() { return \"foo\" + true; }", "footrue");
+      verify("string f() { return false + \" foo\"; }", "false foo");
 
       // int
-      verify("Str f(Str a, Long b) { return a + b; }", new object[] { Str.make("a"), Long.valueOf(3) }, Str.make("a3"));
-      verify("Str f(Long a, Str b) { return a + b; }", new object[] { Long.valueOf(-99), Str.make("a") }, Str.make("-99a"));
-      verify("Str f() { return \"foo \" + 77; }", Str.make("foo 77"));
-      verify("Str f() { return 0 + \" foo\"; }", Str.make("0 foo"));
+      verify("string f(string a, Long b) { return a + b; }", new object[] { "a", Long.valueOf(3) }, "a3");
+      verify("string f(Long a, string b) { return a + b; }", new object[] { Long.valueOf(-99), "a" }, "-99a");
+      verify("string f() { return \"foo \" + 77; }", "foo 77");
+      verify("string f() { return 0 + \" foo\"; }", "0 foo");
 
       // double
-      verify("Str f(Str a, Double b) { return a + b; }", new object[] { Str.make("a"), Double.valueOf(3) }, Str.make("a3.0"));
-      verify("Str f(Double a, Str b) { return a + b; }", new object[] { Double.valueOf(-99), Str.make("a") }, Str.make("-99.0a"));
-      verify("Str f() { return \"foo \" + 77.0; }", Str.make("foo 77.0"));
-      verify("Str f() { return 0.0 + \" foo\"; }", Str.make("0.0 foo"));
+      verify("string f(string a, Double b) { return a + b; }", new object[] { "a", Double.valueOf(3) }, "a3.0");
+      verify("string f(Double a, string b) { return a + b; }", new object[] { Double.valueOf(-99), "a" }, "-99.0a");
+      verify("string f() { return \"foo \" + 77.0; }", "foo 77.0");
+      verify("string f() { return 0.0 + \" foo\"; }", "0.0 foo");
 
       // mix
-      verify("Str f(Long a, Str b, Boolean c) { return a + b + c; }", new object[] { Long.valueOf(3), Str.make(" wow "), Boolean.valueOf(true) }, Str.make("3 wow true"));
-      verify("Str f(Long a, Str b, Boolean c) { return \"w\" + a + \"x\" + b + \"y\" + c + \"z\"; }", new Object[] { Long.valueOf(3), Str.make(" wow "), Boolean.valueOf(true) }, Str.make("w3x wow ytruez"));
+      verify("string f(Long a, string b, Boolean c) { return a + b + c; }", new object[] { Long.valueOf(3), " wow ", Boolean.valueOf(true) }, "3 wow true");
+      verify("string f(Long a, string b, Boolean c) { return \"w\" + a + \"x\" + b + \"y\" + c + \"z\"; }", new Object[] { Long.valueOf(3), " wow ", Boolean.valueOf(true) }, "w3x wow ytruez");
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -933,25 +933,25 @@ namespace Fanx.Test
       verify("Long f() { sys::Long x; x = 7; return x; }", Long.valueOf(7));
       */
       verify("Long f(Long a) { Long x := 7; return x; }", MakeInts(1), Long.valueOf(7));
-      verify("Str f() { Str x := \"hello\"; return x; }", Str.make("hello"));
-      verify("Long f() { Str a := \"hello\"; Long b := 66; return b; }", Long.valueOf(66));
+      verify("string f() { string x := \"hello\"; return x; }", "hello");
+      verify("Long f() { string a := \"hello\"; Long b := 66; return b; }", Long.valueOf(66));
 
       verify("static Boolean f(Boolean x, Boolean y) { x = true; y = x; return y; }", ff, Boolean.True);
       verify("static Boolean f(Boolean x, Boolean y) { return x = y = true; }", ff, Boolean.True);
 
       verify("static Long f(Long x) { x = 17; return x; }", MakeInts(88), Long.valueOf(17));
       verify("static Long f(Long x) { return  x = 17; }", MakeInts(88), Long.valueOf(17));
-      verify("static Str f(Str x) { x = \"yeah\"; return x; }", MakeStrs("not"), Str.make("yeah"));
-      verify("static Str f(Str x) { return x = \"yeah\"; }", MakeStrs("not"), Str.make("yeah"));
+      verify("static string f(string x) { x = \"yeah\"; return x; }", MakeStrs("not"), "yeah");
+      verify("static string f(string x) { return x = \"yeah\"; }", MakeStrs("not"), "yeah");
 
       verify("Boolean f(Boolean x, Boolean y) { x = true; y = x; return y; }", ff, Boolean.True);
       verify("Long f(Long x) { x = 17; return x; }",     MakeInts(88), Long.valueOf(17));
       verify("Long f(Long x) { return x = 17; }",        MakeInts(88), Long.valueOf(17));
       verify("Double f(Double x) { x = 17.0; return x; }", MakeFloats(88), Double.valueOf(17));
       verify("Double f(Double x) { return x = 17.0; }",    MakeFloats(88), Double.valueOf(17));
-      verify("Str f(Str x) { x = \"yeah\"; return x; }", MakeStrs("not"), Str.make("yeah"));
-      verify("Obj f(Obj x) { x = \"yeah\"; return x; }", MakeStrs("not"), Str.make("yeah"));
-//COMPILER      verifyErr("Long f(Long x) { x = \"no way\"; return x; }", "Type 'sys::Str' is not assignable to 'sys::Long'");
+      verify("string f(string x) { x = \"yeah\"; return x; }", MakeStrs("not"), "yeah");
+      verify("Obj f(Obj x) { x = \"yeah\"; return x; }", MakeStrs("not"), "yeah");
+//COMPILER      verifyErr("Long f(Long x) { x = \"no way\"; return x; }", "Type 'sys::string' is not assignable to 'sys::Long'");
 
       // auto-cast matrix: int * x
 //COMPILER      verifyErr("Long f(Long a, Double b) { a = b; return a; }", "Type 'sys::Double' is not assignable to 'sys::Long'");
@@ -1058,20 +1058,20 @@ namespace Fanx.Test
       verify("Long f() { return this.x(); }", Long.valueOf(6));
       verify("Long f() { return this.x; }", Long.valueOf(6));
 
-      members = "static Str x() { return \"hello\"; }";
-      verify("Str f() { return x(); }", Str.make("hello"));
+      members = "static string x() { return \"hello\"; }";
+      verify("string f() { return x(); }", "hello");
       verify("Long f() { return x.size }", Long.valueOf(5));
 //COMPILER      verifyErr("Long f() { return x.compare }", "Invalid args compare() for compare(sys::Obj)");
 
-      verify("Str f(Str q) { q = x(); return q; }", MakeStrs("foo"), Str.make("hello"));
-      verify("Str f() { x(); return x(); }", Str.make("hello"));
-      verify("Str f() { x; return x }", Str.make("hello"));
+      verify("string f(string q) { q = x(); return q; }", MakeStrs("foo"), "hello");
+      verify("string f() { x(); return x(); }", "hello");
+      verify("string f() { x; return x }", "hello");
 
-//COMPILER      members = "Str x() { return \"hello\"; }";
-//COMPILER      verifyErr("static Str f() { return x(); }",         "Cannot call instance method '" + nextPodName + "::" + nextClassName + ".x' in static context");
-//COMPILER      verifyErr("static Str f() { return x }",            "Cannot call instance method '" + nextPodName + "::" + nextClassName + ".x' in static context");
-//COMPILER      verifyErr("static Str f() { return this.x() }",     "Cannot access 'this' in static context");
-//COMPILER      verifyErr("static Str f() { return this.x }",       "Cannot access 'this' in static context");
+//COMPILER      members = "string x() { return \"hello\"; }";
+//COMPILER      verifyErr("static string f() { return x(); }",         "Cannot call instance method '" + nextPodName + "::" + nextClassName + ".x' in static context");
+//COMPILER      verifyErr("static string f() { return x }",            "Cannot call instance method '" + nextPodName + "::" + nextClassName + ".x' in static context");
+//COMPILER      verifyErr("static string f() { return this.x() }",     "Cannot access 'this' in static context");
+//COMPILER      verifyErr("static string f() { return this.x }",       "Cannot access 'this' in static context");
 //COMPILER      verifyErr("static Long f() { return Long.plus(3); }", "Cannot call instance method 'sys::Long.plus' in static context");
 //COMPILER      verifyErr("static Long f() { return Long.hash() }",   "Cannot call instance method 'sys::Long.hash' in static context");
 //COMPILER      verifyErr("static Long f() { return Long.hash}",      "Cannot call instance method 'sys::Long.hash' in static context");
@@ -1102,8 +1102,8 @@ namespace Fanx.Test
       verify("static Long f() { return (77); }",         Long.valueOf(77));
       verify("static Long f() { return (-5); }",         Long.valueOf(-5));
       verify("static Long f() { return ((0)); }",        Long.valueOf(0));
-      verify("static Str f() { return (\"foo\"); }",    Str.make("foo"));
-      verify("static Str f() { return (((\"foo\"))); }",Str.make("foo"));
+      verify("static string f() { return (\"foo\"); }",    "foo");
+      verify("static string f() { return (((\"foo\"))); }","foo");
       verify("static Boolean f(Long a, Long b) { return (a > b); }",     MakeInts(2, 3),  MakeBool(false));
       verify("static Boolean f(Long a, Long b) { return (a) > (b); }",   MakeInts(7, -1), MakeBool(true));
       verify("static Boolean f(Long a, Long b) { return ((a) > (b)); }", MakeInts(7, -1), MakeBool(true));
@@ -1120,66 +1120,66 @@ namespace Fanx.Test
 
     void verifyCasts()
     {
-      verify("static Str f(Obj x)   { return (Str)x; }", MakeStrs("hello"), Str.make("hello"));
+      verify("static string f(Obj x)   { return (string)x; }", MakeStrs("hello"), "hello");
       verify("static Long f(Obj x)   { return (Long)x; }", MakeInts(6), Long.valueOf(6));
       verify("static Long f(Obj x)   { return (Long)5; }", MakeInts(6), Long.valueOf(5));
-//GENERICS      verify("static Str[] f(Obj x) { return (Str[])x; }", new Obj[]{new List(Sys.StrType)}, new List(Sys.StrType));
+//GENERICS      verify("static string[] f(Obj x) { return (string[])x; }", new Obj[]{new List(Sys.StrType)}, new List(Sys.StrType));
 
       /*
       if (jcompiler)
       {
         // various reference based casts
-        verify("Str f(Long x) { return (java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
-        verify("Str f(Long x) { return (Str)java.lang.Long.toHexString(x); }", MakeInts(16), "10");
-        verify("Str f(Long x) { return (fan.sys.Str)java.lang.Long.toHexString(x); }", MakeInts(16), "10");
-        verify("Str f(Long x) { return (Str)(java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
-        verify("Str f(Long x) { return (fan.sys.Str)(java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
-        verify("Str f(Long x) { return ((Str)java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
-        verify("Str f(Long x) { return ((fan.sys.Str)java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
-        verify("Str f(Long x) { return ((Str)(java.lang.Long.toHexString(x))); }", MakeInts(16), "10");
-        verify("Str f(Long x) { return ((fan.sys.Str)(java.lang.Long.toHexString(x))); }", MakeInts(16), "10");
+        verify("string f(Long x) { return (java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
+        verify("string f(Long x) { return (string)java.lang.Long.toHexString(x); }", MakeInts(16), "10");
+        verify("string f(Long x) { return (fan.sys.string)java.lang.Long.toHexString(x); }", MakeInts(16), "10");
+        verify("string f(Long x) { return (string)(java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
+        verify("string f(Long x) { return (fan.sys.string)(java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
+        verify("string f(Long x) { return ((string)java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
+        verify("string f(Long x) { return ((fan.sys.string)java.lang.Long.toHexString(x)); }", MakeInts(16), "10");
+        verify("string f(Long x) { return ((string)(java.lang.Long.toHexString(x))); }", MakeInts(16), "10");
+        verify("string f(Long x) { return ((fan.sys.string)(java.lang.Long.toHexString(x))); }", MakeInts(16), "10");
 
         // test primitive cast matrix
 
         // int to *
-        verify("Str f(int x) { return java.lang.String.valueOf(x); }",         MakeInts(65), "65");
-        verify("Str f(int x) { return java.lang.String.valueOf((char)x); }",   MakeInts(65), "A");
-        verify("Str f(int x) { return java.lang.Byte.toString((byte)x); }",    MakeInts(1000), String.valueOf((byte)1000));
-        verify("Str f(int x) { return java.lang.Short.toString((short)x); }",  MakeInts(0xFFFFF), String.valueOf((short)0xFFFFF));
-        verify("Str f(int x) { return java.lang.String.valueOf((int)x); }",    MakeInts(-6), "-6");
-        verify("Str f(int x) { return java.lang.String.valueOf((long)x); }",   MakeInts(5), "5");
-        verify("Str f(int x) { return java.lang.String.valueOf((float)x); }",  MakeInts(6), "6.0");
-        verify("Str f(int x) { return java.lang.String.valueOf((double)x); }", MakeInts(7), "7.0");
+        verify("string f(int x) { return java.lang.String.valueOf(x); }",         MakeInts(65), "65");
+        verify("string f(int x) { return java.lang.String.valueOf((char)x); }",   MakeInts(65), "A");
+        verify("string f(int x) { return java.lang.Byte.toString((byte)x); }",    MakeInts(1000), String.valueOf((byte)1000));
+        verify("string f(int x) { return java.lang.Short.toString((short)x); }",  MakeInts(0xFFFFF), String.valueOf((short)0xFFFFF));
+        verify("string f(int x) { return java.lang.String.valueOf((int)x); }",    MakeInts(-6), "-6");
+        verify("string f(int x) { return java.lang.String.valueOf((long)x); }",   MakeInts(5), "5");
+        verify("string f(int x) { return java.lang.String.valueOf((float)x); }",  MakeInts(6), "6.0");
+        verify("string f(int x) { return java.lang.String.valueOf((double)x); }", MakeInts(7), "7.0");
 
         // Long to *
-        verify("Str f(Long x) { return java.lang.String.valueOf(x); }",         MakeInts(65), "65");
-        verify("Str f(Long x) { return java.lang.String.valueOf((char)x); }",   MakeInts(65), "A");
-        verify("Str f(Long x) { return java.lang.Byte.toString((byte)x); }",    MakeInts(1000), String.valueOf((byte)1000));
-        verify("Str f(Long x) { return java.lang.Short.toString((short)x); }",  MakeInts(0xFFFFF), String.valueOf((short)0xFFFFF));
-        verify("Str f(Long x) { return java.lang.String.valueOf((int)x); }",    MakeInts(-6), "-6");
-        verify("Str f(Long x) { return java.lang.String.valueOf((long)x); }",   MakeInts(5), "5");
-        verify("Str f(Long x) { return java.lang.String.valueOf((float)x); }",  MakeInts(6), "6.0");
-        verify("Str f(Long x) { return java.lang.String.valueOf((double)x); }", MakeInts(7), "7.0");
+        verify("string f(Long x) { return java.lang.String.valueOf(x); }",         MakeInts(65), "65");
+        verify("string f(Long x) { return java.lang.String.valueOf((char)x); }",   MakeInts(65), "A");
+        verify("string f(Long x) { return java.lang.Byte.toString((byte)x); }",    MakeInts(1000), String.valueOf((byte)1000));
+        verify("string f(Long x) { return java.lang.Short.toString((short)x); }",  MakeInts(0xFFFFF), String.valueOf((short)0xFFFFF));
+        verify("string f(Long x) { return java.lang.String.valueOf((int)x); }",    MakeInts(-6), "-6");
+        verify("string f(Long x) { return java.lang.String.valueOf((long)x); }",   MakeInts(5), "5");
+        verify("string f(Long x) { return java.lang.String.valueOf((float)x); }",  MakeInts(6), "6.0");
+        verify("string f(Long x) { return java.lang.String.valueOf((double)x); }", MakeInts(7), "7.0");
 
         // float to *
-        verify("Str f(float x) { return java.lang.String.valueOf(x); }",         MakeFloats(65), "65.0");
-        verify("Str f(float x) { return java.lang.String.valueOf((char)x); }",   MakeFloats(65), "A");
-        verify("Str f(float x) { return java.lang.Byte.toString((byte)x); }",    MakeFloats(1000), String.valueOf((byte)1000));
-        verify("Str f(float x) { return java.lang.Short.toString((short)x); }",  MakeFloats(0xFFFFF), String.valueOf((short)0xFFFFF));
-        verify("Str f(float x) { return java.lang.String.valueOf((int)x); }",    MakeFloats(-6), "-6");
-        verify("Str f(float x) { return java.lang.String.valueOf((long)x); }",   MakeFloats(5), "5");
-        verify("Str f(float x) { return java.lang.String.valueOf((float)x); }",  MakeFloats(6), "6.0");
-        verify("Str f(float x) { return java.lang.String.valueOf((double)x); }", MakeFloats(7), "7.0");
+        verify("string f(float x) { return java.lang.String.valueOf(x); }",         MakeFloats(65), "65.0");
+        verify("string f(float x) { return java.lang.String.valueOf((char)x); }",   MakeFloats(65), "A");
+        verify("string f(float x) { return java.lang.Byte.toString((byte)x); }",    MakeFloats(1000), String.valueOf((byte)1000));
+        verify("string f(float x) { return java.lang.Short.toString((short)x); }",  MakeFloats(0xFFFFF), String.valueOf((short)0xFFFFF));
+        verify("string f(float x) { return java.lang.String.valueOf((int)x); }",    MakeFloats(-6), "-6");
+        verify("string f(float x) { return java.lang.String.valueOf((long)x); }",   MakeFloats(5), "5");
+        verify("string f(float x) { return java.lang.String.valueOf((float)x); }",  MakeFloats(6), "6.0");
+        verify("string f(float x) { return java.lang.String.valueOf((double)x); }", MakeFloats(7), "7.0");
 
         // Double to *
-        verify("Str f(Double x) { return java.lang.String.valueOf(x); }",         MakeFloats(65), "65.0");
-        verify("Str f(Double x) { return java.lang.String.valueOf((char)x); }",   MakeFloats(65), "A");
-        verify("Str f(Double x) { return java.lang.Byte.toString((byte)x); }",    MakeFloats(1000), String.valueOf((byte)1000));
-        verify("Str f(Double x) { return java.lang.Short.toString((short)x); }",  MakeFloats(0xFFFFF), String.valueOf((short)0xFFFFF));
-        verify("Str f(Double x) { return java.lang.String.valueOf((int)x); }",    MakeFloats(-6), "-6");
-        verify("Str f(Double x) { return java.lang.String.valueOf((long)x); }",   MakeFloats(5), "5");
-        verify("Str f(Double x) { return java.lang.String.valueOf((float)x); }",  MakeFloats(6), "6.0");
-        verify("Str f(Double x) { return java.lang.String.valueOf((double)x); }", MakeFloats(7), "7.0");
+        verify("string f(Double x) { return java.lang.String.valueOf(x); }",         MakeFloats(65), "65.0");
+        verify("string f(Double x) { return java.lang.String.valueOf((char)x); }",   MakeFloats(65), "A");
+        verify("string f(Double x) { return java.lang.Byte.toString((byte)x); }",    MakeFloats(1000), String.valueOf((byte)1000));
+        verify("string f(Double x) { return java.lang.Short.toString((short)x); }",  MakeFloats(0xFFFFF), String.valueOf((short)0xFFFFF));
+        verify("string f(Double x) { return java.lang.String.valueOf((int)x); }",    MakeFloats(-6), "-6");
+        verify("string f(Double x) { return java.lang.String.valueOf((long)x); }",   MakeFloats(5), "5");
+        verify("string f(Double x) { return java.lang.String.valueOf((float)x); }",  MakeFloats(6), "6.0");
+        verify("string f(Double x) { return java.lang.String.valueOf((double)x); }", MakeFloats(7), "7.0");
 
       }
         */

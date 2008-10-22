@@ -136,12 +136,12 @@ namespace Fan.Sys
       return Long.valueOf(m_start.longValue() ^ m_end.longValue());
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       if (m_exclusive)
-        return Str.make(m_start.ToString() + "..." + m_end.ToString());
+        return m_start.ToString() + "..." + m_end.ToString();
       else
-        return Str.make(m_start.ToString() + ".." + m_end.ToString());
+        return m_start.ToString() + ".." + m_end.ToString();
     }
 
     public override Type type() { return Sys.RangeType; }

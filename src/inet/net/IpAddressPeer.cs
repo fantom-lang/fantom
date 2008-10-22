@@ -29,7 +29,7 @@ namespace Fan.Inet
   // Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public static IpAddress make(Str str)
+    public static IpAddress make(string str)
     {
       try
       {
@@ -37,11 +37,11 @@ namespace Fan.Inet
       }
       catch (SocketException e)
       {
-        throw UnknownHostErr.make(Str.make(e.Message)).val;
+        throw UnknownHostErr.make(string.make(e.Message)).val;
       }
     }
 
-    public static List makeAll(Str str)
+    public static List makeAll(string str)
     {
       try
       {
@@ -53,7 +53,7 @@ namespace Fan.Inet
       }
       catch (SocketException e)
       {
-        throw UnknownHostErr.make(Str.make(e.Message)).val;
+        throw UnknownHostErr.make(string.make(e.Message)).val;
       }
     }
 
@@ -63,11 +63,11 @@ namespace Fan.Inet
       {
         MemBuf mb = bytes as MemBuf;
         IPAddress net = Dns.GetHostEntry(new IPAddress(mb.bytes())).AddressList[0];
-        return make(Str.make(net.ToString()), net);
+        return make(string.make(net.ToString()), net);
       }
       catch (SocketException e)
       {
-        throw ArgErr.make(Str.make(e.Message)).val;
+        throw ArgErr.make(string.make(e.Message)).val;
       }
     }
 
@@ -89,7 +89,7 @@ namespace Fan.Inet
             if (addr[i].AddressFamily == AddressFamily.InterNetwork)
               net = addr[i];
 
-          m_local = make(Str.make(hostName), net);
+          m_local = make(string.make(hostName), net);
         }
         catch (Exception)
         {
@@ -97,7 +97,7 @@ namespace Fan.Inet
           {
             // fallback to explicit loopback
             IPAddress net = new IPAddress(new byte[] {127, 0, 0, 1});
-            m_local = make(Str.make(net.ToString()), net);
+            m_local = make(string.make(net.ToString()), net);
           }
           catch (Exception ignore)
           {
@@ -111,10 +111,10 @@ namespace Fan.Inet
 
     public static IpAddress make(IPAddress net)
     {
-      return make(Str.make(net.ToString()), net);
+      return make(string.make(net.ToString()), net);
     }
 
-    public static IpAddress make(Str str, IPAddress net)
+    public static IpAddress make(string str, IPAddress net)
     {
       IpAddress fan = IpAddress.internalMake();
       fan.m_peer.m_str = str;
@@ -139,7 +139,7 @@ namespace Fan.Inet
         return Fan.Sys.Boolean.False;
     }
 
-    public Str toStr(IpAddress fan)
+    public string toStr(IpAddress fan)
     {
       return m_str;
     }
@@ -163,14 +163,14 @@ namespace Fan.Inet
       return new MemBuf(m_net.GetAddressBytes());
     }
 
-    public Str numeric(IpAddress fan)
+    public string numeric(IpAddress fan)
     {
-      return Str.make(m_net.ToString());
+      return string.make(m_net.ToString());
     }
 
-    public Str hostname(IpAddress fan)
+    public string hostname(IpAddress fan)
     {
-      return Str.make(Dns.GetHostEntry(m_net).HostName);
+      return string.make(Dns.GetHostEntry(m_net).HostName);
       //return m_str;
     }
 
@@ -180,7 +180,7 @@ namespace Fan.Inet
 
     private static IpAddress m_local;
 
-    public Str m_str;
+    public string m_str;
     public IPAddress m_net;
 
   }

@@ -263,7 +263,7 @@ namespace Fanx.Fcode
          m_size = input.u2();
          m_table = new object[m_size];
          for (int i=0; i<m_size; i++)
-           m_table[i] = Str.make(String.Intern(input.utf()));
+           m_table[i] = String.Intern(input.utf());
          return this;
       }
     }
@@ -301,7 +301,7 @@ namespace Fanx.Fcode
          m_size = input.u2();
          m_table = new object[m_size];
          for (int i=0; i<m_size; i++)
-           m_table[i] = Uri.fromStr(Str.make(input.utf()) );
+           m_table[i] = Uri.fromStr(input.utf());
          return this;
       }
     }

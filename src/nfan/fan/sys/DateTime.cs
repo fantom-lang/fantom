@@ -243,8 +243,8 @@ namespace Fan.Sys
 // Constructor - FromStr
 //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime fromStr(Str s) { return fromStr(s.val, true); }
-    public static DateTime fromStr(Str s, Boolean check) { return fromStr(s.val, check.booleanValue()); }
+    public static DateTime fromStr(string s) { return fromStr(s, true); }
+    public static DateTime fromStr(string s, Boolean check) { return fromStr(s, check.booleanValue()); }
     public static DateTime fromStr(string s, bool check)
     {
       try
@@ -388,7 +388,7 @@ namespace Fan.Sys
     public Boolean dst() { return ((m_fields >> 31) & 0x1) != 0 ? Boolean.True : Boolean.False; }
     public bool getDST()  { return ((m_fields >> 31) & 0x1) != 0; }
 
-    public Str timeZoneAbbr() { return getDST() ? m_timeZone.dstAbbr(year()) : m_timeZone.stdAbbr(year()); }
+    public string timeZoneAbbr() { return getDST() ? m_timeZone.dstAbbr(year()) : m_timeZone.stdAbbr(year()); }
 
     public Long dayOfYear() { return Long.valueOf(dayOfYear(getYear(), month().ord, getDay())+1); }
 
@@ -396,8 +396,7 @@ namespace Fan.Sys
   // Locale
   //////////////////////////////////////////////////////////////////////////
 
-    public Str toLocale() { return Str.make(toLocale((string)null)); }
-    public Str toLocale(Str p) { return Str.make(toLocale(p != null ? p.val : null)); }
+    public string toLocale() { return toLocale((string)null); }
     public string toLocale(string pattern)
     {
       // locale specific default
@@ -405,7 +404,7 @@ namespace Fan.Sys
       if (pattern == null)
       {
         if (locale == null) locale = Locale.current();
-        pattern = locale.get(Str.sysStr, localeKey).val;
+        pattern = locale.get(FanStr.sysStr, localeKey);
       }
 
       // process pattern
@@ -454,11 +453,11 @@ namespace Fan.Sys
             {
               case 4:
                 if (locale == null) locale = Locale.current();
-                s.Append(mon.full(locale).val);
+                s.Append(mon.full(locale));
                 break;
               case 3:
                 if (locale == null) locale = Locale.current();
-                s.Append(mon.abbr(locale).val);
+                s.Append(mon.abbr(locale));
                 break;
               case 2:  if (mon.ord+1 < 10) s.Append('0'); s.Append(mon.ord+1); break;
               case 1:  s.Append(mon.ord+1); break;
@@ -482,11 +481,11 @@ namespace Fan.Sys
             {
               case 4:
                 if (locale == null) locale = Locale.current();
-                s.Append(wd.full(locale).val);
+                s.Append(wd.full(locale));
                 break;
               case 3:
                 if (locale == null) locale = Locale.current();
-                s.Append(wd.abbr(locale).val);
+                s.Append(wd.abbr(locale));
                 break;
               default: invalidNum = true; break;
             }
@@ -580,7 +579,7 @@ namespace Fan.Sys
                 s.Append(dst ? rule.dstAbbr : rule.stdAbbr);
                 break;
               case 4:
-                s.Append(m_timeZone.name().val);
+                s.Append(m_timeZone.name());
                 break;
               default:
                 invalidNum = true;
@@ -647,9 +646,9 @@ namespace Fan.Sys
       return makeTicks(m_ticks - (m_ticks % accuracy.m_ticks), m_timeZone);
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
-      return Str.make(toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz"));
+      return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
     }
 
     public static Boolean isLeapYear(Long year) { return Boolean.valueOf(isLeapYear(year.intValue())); }
@@ -754,14 +753,14 @@ namespace Fan.Sys
   // HTTP
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime fromHttpStr(Str s) { return fromHttpStr(s, Boolean.True); }
-    public static DateTime fromHttpStr(Str s, Boolean check)
+    public static DateTime fromHttpStr(string s) { return fromHttpStr(s, Boolean.True); }
+    public static DateTime fromHttpStr(string s, Boolean check)
     {
       for (int i=0; i<httpFormats.Length; ++i)
       {
         try
         {
-          System.DateTime date = System.DateTime.ParseExact(s.val, httpFormats,
+          System.DateTime date = System.DateTime.ParseExact(s, httpFormats,
             CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite |
             DateTimeStyles.AdjustToUniversal);
           return net(date.Ticks);
@@ -775,9 +774,9 @@ namespace Fan.Sys
       throw ParseErr.make("Invalid HTTP DateTime: '" + s + "'").val;
     }
 
-    public Str toHttpStr()
+    public string toHttpStr()
     {
-      return Str.make(new System.DateTime(net()).ToString(httpFormats[0]));
+      return new System.DateTime(net()).ToString(httpFormats[0]);
     }
 
     static readonly string[] httpFormats = new string[]
@@ -865,7 +864,7 @@ namespace Fan.Sys
     static volatile DateTime cached = new DateTime(0, TimeZone.m_current);
     static volatile DateTime cachedUtc = new DateTime(0, TimeZone.m_utc);
     static readonly DateTime m_boot;
-    static readonly Str localeKey = Str.make("dateTime");
+    static readonly string localeKey = "dateTime";
 
     // Fields Bitmask
     //   Field       Width    Mask   Start Bit

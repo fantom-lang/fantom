@@ -140,7 +140,7 @@ namespace Fanx.Test
       "    s2 = s2 + \" overwritten\" \n" +
       "  }\n" +
 
-      "  new makeArgs(Long i0, Str s0)\n" +
+      "  new makeArgs(Long i0, string s0)\n" +
       "  {\n" +
       "    this.i0 = i0;\n" +
       "    this.s0 = s0;\n" +
@@ -151,9 +151,9 @@ namespace Fanx.Test
       "  static Long one()  { return 1; }\n" +
       "  static Foo make0()                { return make }\n" +
       "  static Foo make1()                { return Foo.make }\n" +
-      "  static Foo make2(Long i0, Str s0)  { return makeArgs(i0, s0); }\n" +
-      "  static Foo make3(Long i0, Str s0)  { return (Foo.makeArgs(i0, s0)); }\n" +
-      "  static Str makeAndGet(Str s0)     { return makeArgs(-1, s0).s0; }\n" +
+      "  static Foo make2(Long i0, string s0)  { return makeArgs(i0, s0); }\n" +
+      "  static Foo make3(Long i0, string s0)  { return (Foo.makeArgs(i0, s0)); }\n" +
+      "  static string makeAndGet(string s0)     { return makeArgs(-1, s0).s0; }\n" +
       "  Long i1PreInc()  { return ++i1; }\n" +
       "  Long i1PostInc() { return i1++; }\n" +
       "  Long fooPreInc()  { return ++foo.i1; }\n" +
@@ -163,14 +163,14 @@ namespace Fanx.Test
       "  Long i1 := 7;\n" +
       "  Double r0 := 7.0;\n" +  // auto-casts
       "  Double r1 := 7.0;\n" +
-      "  Str s0;\n" +
-      "  Str s1 := \"hello\";\n" +
-      "  Str s2 := \"s2\";\n" +
+      "  string s0;\n" +
+      "  string s1 := \"hello\";\n" +
+      "  string s2 := \"s2\";\n" +
       "  Foo foo;\n" +
       "  \n" +
       "  static const Long  si := 3\n" +
       "  static const Double sr := 7.0\n" +  // auto-cast
-      "  static const Str  ss\n" +      // default to null
+      "  static const string  ss\n" +      // default to null
       "  static const Long  sx\n" +      // compute in static {}
       "  \n" +
       "  static\n" +
@@ -217,7 +217,7 @@ namespace Fanx.Test
         verify(Get(y, "i1").Equals(Long.valueOf(9)));
 
       // instance fields
-      x = type.InvokeMember("MakeArgs", GetStaticFlags(), null, null, new object[] { Long.valueOf(88), Str.make("lombardy") });
+      x = type.InvokeMember("MakeArgs", GetStaticFlags(), null, null, new object[] { Long.valueOf(88), "lombardy" });
       verifyInit(x, 88, "lombardy");
 
       // factory method
@@ -225,12 +225,12 @@ namespace Fanx.Test
       verifyDefInit(x);
       x = type.InvokeMember("Make1", GetStaticFlags(), null, null, new object[0]);
       verifyDefInit(x);
-      x = type.InvokeMember("Make2", GetStaticFlags(), null, null, new object[] { Long.valueOf(62), Str.make("fan rocks") });
+      x = type.InvokeMember("Make2", GetStaticFlags(), null, null, new object[] { Long.valueOf(62), "fan rocks" });
       verifyInit(x, 62, "fan rocks");
-      x = type.InvokeMember("Make3", GetStaticFlags(), null, null, new object[] { Long.valueOf(63), Str.make("fan really rocks") });
+      x = type.InvokeMember("Make3", GetStaticFlags(), null, null, new object[] { Long.valueOf(63), "fan really rocks" });
       verifyInit(x, 63, "fan really rocks");
-      x = type.InvokeMember("MakeAndGet", GetStaticFlags(), null, null, new object[] { Str.make("Haley dog!") });
-      verify(x.Equals(Str.make("Haley dog!")));
+      x = type.InvokeMember("MakeAndGet", GetStaticFlags(), null, null, new object[] { "Haley dog!" });
+      verify(x.Equals("Haley dog!"));
     }
 
     void verifyDefInit(object x)
@@ -238,17 +238,17 @@ namespace Fanx.Test
       verify(Get(x, "i0") == null);
       verify(Get(x, "i1").Equals(Long.valueOf(7)));
       verify(Get(x, "s0") == null);
-      verify(Get(x, "s1").Equals(Str.make("hello")));
-      verify(Get(x, "s2"), Str.make("s2 overwritten"));
+      verify(Get(x, "s1").Equals("hello"));
+      verify(Get(x, "s2"), "s2 overwritten");
     }
 
     void verifyInit(object x, int i0, string s0)
     {
       verify(Get(x, "i0").Equals(Long.valueOf(i0)));
       verify(Get(x, "i1").Equals(Long.valueOf(7)));
-      verify(Get(x, "s0").Equals(Str.make(s0)));
-      verify(Get(x, "s1").Equals(Str.make("hello")));
-      verify(Get(x, "s2").Equals(Str.make("s2 overwritten")));
+      verify(Get(x, "s0").Equals(s0));
+      verify(Get(x, "s1").Equals("hello"));
+      verify(Get(x, "s2").Equals("s2 overwritten"));
     }
 
     void verifyMethodFlags(System.Type type, string name, MethodAttributes attrs)
@@ -358,7 +358,7 @@ namespace Fanx.Test
       "  static const Boolean lb := true \n" +
       "  static const Long li := 3 \n" +
       "  static const Double lr := 6.9 \n" +
-      "  static const Str ls := \"inference rules!\" \n" +
+      "  static const string ls := \"inference rules!\" \n" +
       "  static const Duration lt := 5ns \n" +
       "  //static lsa := [ \"a\", \"b\" ] \n" +
       "  //static lta := Duration[] \n" +
@@ -393,10 +393,10 @@ namespace Fanx.Test
       verify(Get(type, "lb"),  Boolean.True);
       verify(Get(type, "li"),  Long.valueOf(3));
       verify(Get(type, "lr"),  Double.valueOf(6.9));
-      verify(Get(type, "ls"),  Str.make("inference rules!"));
+      verify(Get(type, "ls"),  "inference rules!");
       verify(Get(type, "lt"),  Duration.make(5));
   // TODO
-  //    verify(Get(type, "lsa"), new List(String.class).add(Str.make("a")).add(Str.make("b")));
+  //    verify(Get(type, "lsa"), new List(String.class).add(string.make("a")).add(string.make("b")));
   //    verify(Get(type, "lta"), new List(Duration.class));
 
       // math
@@ -406,7 +406,7 @@ namespace Fanx.Test
 
       // call chains
 // Andy - TODO
-//      verify(Get(type, "call0"), Str.make("ab"));
+//      verify(Get(type, "call0"), string.make("ab"));
 //      verify(Get(type, "call1"), Long.valueOf(2));
 
       // my methods (doesn't work, type inference before bind)
@@ -415,9 +415,9 @@ namespace Fanx.Test
 
       // local type inference
 // Andy - TODO
-//      verify(Invoke(type, "local0"), Str.make("inferred"));
-//      verify(Invoke(type, "local1"), Str.make("foo"));
-//      verify(Invoke(type, "local2"), Str.make("inference rules!"));
+//      verify(Invoke(type, "local0"), string.make("inferred"));
+//      verify(Invoke(type, "local1"), string.make("foo"));
+//      verify(Invoke(type, "local2"), string.make("inference rules!"));
     }
 
   //////////////////////////////////////////////////////////////////////////

@@ -22,16 +22,15 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Double fromStr(Str s) { return fromStr(s, Boolean.True); }
-    public static Double fromStr(Str s, Boolean check)
+    public static Double fromStr(string s) { return fromStr(s, Boolean.True); }
+    public static Double fromStr(string s, Boolean check)
     {
       try
       {
-        string x = s.val;
-        if (x == "NaN")  return m_nan;
-        if (x == "INF")  return m_posInf;
-        if (x == "-INF") return m_negInf;
-        return Double.valueOf(x);
+        if (s == "NaN")  return m_nan;
+        if (s == "INF")  return m_posInf;
+        if (s == "-INF") return m_negInf;
+        return Double.valueOf(s);
       }
       catch (System.FormatException)
       {
@@ -261,7 +260,7 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public static Str toStr(Double self)
+    public static string toStr(Double self)
     {
       double val = self.doubleValue();
       if (Double.isNaN(val)) return m_NaNStr;
@@ -269,7 +268,7 @@ namespace Fan.Sys
       if (val == System.Double.NegativeInfinity) return m_NegInfStr;
       string s = Double.toString(val);
       if (s.IndexOf('.') == -1) s += ".0";  // to match java behavior
-      return Str.make(s);
+      return s;
     }
 
     public static void encode(Double self, ObjEncoder @out)
@@ -291,9 +290,9 @@ namespace Fan.Sys
     public static readonly Double m_nan    = Double.valueOf(System.Double.NaN);
     public static readonly Double m_e      = Double.valueOf(System.Math.E);
     public static readonly Double m_pi     = Double.valueOf(System.Math.PI);
-    public static readonly Str m_PosInfStr = Str.make("INF");
-    public static readonly Str m_NegInfStr = Str.make("-INF");
-    public static readonly Str m_NaNStr    = Str.make("NaN");
+    public static readonly string m_PosInfStr = "INF";
+    public static readonly string m_NegInfStr = "-INF";
+    public static readonly string m_NaNStr    = "NaN";
 
   }
 }

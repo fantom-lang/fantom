@@ -24,16 +24,16 @@ namespace Fan.Sys
   // Fan Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public static Method make(Str name, Func func) { return make(name, func, null); }
-    public static Method make(Str name, Func func, Map facets)
+    public static Method make(string name, Func func) { return make(name, func, null); }
+    public static Method make(string name, Func func, Map facets)
     {
       Method m = new Method();
       make_(m, name, func, facets);
       return m;
     }
 
-    public static void make_(Method self, Str name, Func func) { make_(self, name, func, null); }
-    public static void make_(Method self, Str name, Func func, Map facets)
+    public static void make_(Method self, string name, Func func) { make_(self, name, func, null); }
+    public static void make_(Method self, string name, Func func, Map facets)
     {
       if (name == null) throw NullErr.make("name is null").val;
       if (func == null) throw NullErr.make("func is null").val;
@@ -53,7 +53,7 @@ namespace Fan.Sys
     /**
      * Constructor used by Type.reflect.
      */
-    public Method(Type parent, Str name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars)
+    public Method(Type parent, string name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars)
      : this(parent, name, flags, facets, lineNum, returns, inheritedReturns, pars, null)
     {
     }
@@ -62,14 +62,14 @@ namespace Fan.Sys
      * Constructor used by GenericType and we are given the generic
      * method that is being parameterized.
      */
-    public Method(Type parent, Str name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars, Method generic)
+    public Method(Type parent, string name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars, Method generic)
       : base(parent, name, flags, facets, lineNum)
     {
       List fparams = pars.ro();
       if ((flags & (FConst.Static|FConst.Ctor)) == 0)
       {
         object[] temp = new object[pars.sz()+1];
-        temp[0] = new Param(Str.thisStr, parent, 0);
+        temp[0] = new Param("this", parent, 0);
         pars.copyInto(temp, 1, pars.sz());
         fparams = new List(Sys.ParamType, temp);
       }
@@ -117,7 +117,7 @@ namespace Fan.Sys
 
     public Func func() { return m_func; }
 
-    public override Str signature()
+    public override string signature()
     {
       StringBuilder s = new StringBuilder();
       s.Append(m_func.m_returns).Append(' ').Append(m_name).Append('(');
@@ -128,13 +128,13 @@ namespace Fan.Sys
         s.Append(p.m_of).Append(' ').Append(p.m_name);
       }
       s.Append(')');
-      return Str.make(s.ToString());
+      return s.ToString();
     }
 
-    public override object trap(Str name, List args)
+    public override object trap(string name, List args)
     {
       // private undocumented access
-      if (name.val == "inheritedReturnType")
+      if (name == "inheritedReturnType")
         return m_inheritedReturns;
       else
         return base.trap(name, args);

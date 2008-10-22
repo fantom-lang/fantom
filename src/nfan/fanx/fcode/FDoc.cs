@@ -34,9 +34,9 @@ namespace Fanx.Fcode
         if (line.Length == 0 && key != null)
         {
           if (key.IndexOf('.') < 0)
-            Type.find(key, true).m_doc = Str.make(s.ToString());
+            Type.find(key, true).m_doc = s.ToString();
           else
-            Slot.find(key, true).m_doc = Str.make(s.ToString());
+            Slot.find(key, true).m_doc = s.ToString();
           s = new StringBuilder();
           key = null;
         }

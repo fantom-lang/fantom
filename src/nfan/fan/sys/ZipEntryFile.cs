@@ -68,7 +68,7 @@ namespace Fan.Sys
       throw IOErr.make("ZipEntryFile is readonly").val;
     }
 
-    public override Str osPath()
+    public override string osPath()
     {
       return null;
     }
@@ -122,12 +122,12 @@ namespace Fan.Sys
   // IO
   //////////////////////////////////////////////////////////////////////////
 
-    public override Buf open(Str mode)
+    public override Buf open(string mode)
     {
       throw IOErr.make("ZipEntryFile cannot be opened with random access").val;
     }
 
-    public override Buf mmap(Str mode, Long pos, Long size)
+    public override Buf mmap(string mode, Long pos, Long size)
     {
       throw UnsupportedErr.make("ZipEntryFile.mmap").val;
     }

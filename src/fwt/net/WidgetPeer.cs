@@ -133,20 +133,20 @@ namespace Fan.Fwt
   // Widget/Control synchronization
   //////////////////////////////////////////////////////////////////////////
 
-    public void sync(Widget self, Str id)
+    public void sync(Widget self, string id)
     {
       if (m_control == null) return;
       sync(id);
     }
 
-    public abstract void sync(Str id);
+    public abstract void sync(string id);
 
-    public object send(Widget self, Str id)
+    public object send(Widget self, string id)
     {
       return send(id);
     }
 
-    public virtual object send(Str id) { System.Console.WriteLine(id); return null; }
+    public virtual object send(string id) { System.Console.WriteLine(id); return null; }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

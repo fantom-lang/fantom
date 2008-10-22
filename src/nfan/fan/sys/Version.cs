@@ -20,9 +20,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Version fromStr(Str str) { return fromStr(str.val, true); }
-    public static Version fromStr(Str str, Boolean check) { return fromStr(str.val, check.booleanValue()); }
     public static Version fromStr(string s) { return fromStr(s, true); }
+    public static Version fromStr(string str, Boolean check) { return fromStr(str, check.booleanValue()); }
     public static Version fromStr(string s, bool check)
     {
       List segments = new List(Sys.IntType, 4);
@@ -85,7 +84,7 @@ namespace Fan.Sys
     public override Boolean _equals(object obj)
     {
       if (obj is Version)
-        return toStr()._equals(((Version)obj).toStr());
+        return toStr() == ((Version)obj).toStr() ? Boolean.True : Boolean.False;
       else
         return Boolean.False;
     }
@@ -114,7 +113,7 @@ namespace Fan.Sys
 
     public override Long hash()
     {
-      return toStr().hash();
+      return FanStr.hash(toStr());
     }
 
     public override Type type()
@@ -122,7 +121,7 @@ namespace Fan.Sys
       return Sys.VersionType;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       if (m_str == null)
       {
@@ -132,7 +131,7 @@ namespace Fan.Sys
           if (i > 0) s.Append('.');
           s.Append(((Long)m_segments.get(i)).longValue());
         }
-        m_str = Str.make(s.ToString());
+        m_str = s.ToString();
       }
       return m_str;
     }
@@ -179,7 +178,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     private readonly List m_segments;
-    private Str m_str;
+    private string m_str;
 
   }
 }

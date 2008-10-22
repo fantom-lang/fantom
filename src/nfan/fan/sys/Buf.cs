@@ -58,9 +58,9 @@ namespace Fan.Sys
       return this == that ? Boolean.True : Boolean.False;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
-      return Str.make(type().name().val + "(pos=" + getPos() + " size=" + getSize() + ")");
+      return type().name() + "(pos=" + getPos() + " size=" + getSize() + ")";
     }
 
     public override Type type() { return Sys.BufType; }
@@ -242,13 +242,13 @@ namespace Fan.Sys
 
     public Buf writeBool(Boolean x) { m_out.writeBool(x); return this; }
 
-    public Buf writeUtf(Str x) { m_out.writeUtf(x); return this; }
+    public Buf writeUtf(string x) { m_out.writeUtf(x); return this; }
 
     public Buf writeChar(Long c) { m_out.writeChar(c); return this; }
 
-    public Buf writeChars(Str s) { m_out.writeChars(s); return this; }
-    public Buf writeChars(Str s, Long off) { m_out.writeChars(s, off); return this; }
-    public Buf writeChars(Str s, Long off, Long len) { m_out.writeChars(s, off, len); return this; }
+    public Buf writeChars(string s) { m_out.writeChars(s); return this; }
+    public Buf writeChars(string s, Long off) { m_out.writeChars(s, off); return this; }
+    public Buf writeChars(string s, Long off, Long len) { m_out.writeChars(s, off, len); return this; }
 
     public Buf print(object obj) { m_out.print(obj); return this; }
 
@@ -298,7 +298,7 @@ namespace Fan.Sys
 
     public Boolean readBool() { return m_in.readBool(); }
 
-    public Str readUtf() { return m_in.readUtf(); }
+    public string readUtf() { return m_in.readUtf(); }
 
     public Long readChar() { return m_in.readChar(); }
 
@@ -306,19 +306,19 @@ namespace Fan.Sys
 
     public Long peekChar() { return m_in.peekChar(); }
 
-    public Str readLine() { return m_in.readLine(); }
-    public Str readLine(Long max) { return m_in.readLine(max); }
+    public string readLine() { return m_in.readLine(); }
+    public string readLine(Long max) { return m_in.readLine(max); }
 
-    public Str readStrToken() { return m_in.readStrToken(); }
-    public Str readStrToken(Long max) { return m_in.readStrToken(max); }
-    public Str readStrToken(Long max, Func f) { return m_in.readStrToken(FanInt.Chunk, f); }
+    public string readStrToken() { return m_in.readStrToken(); }
+    public string readStrToken(Long max) { return m_in.readStrToken(max); }
+    public string readStrToken(Long max, Func f) { return m_in.readStrToken(FanInt.Chunk, f); }
 
     public List readAllLines() { return m_in.readAllLines(); }
 
     public void eachLine(Func f) { m_in.eachLine(f); }
 
-    public Str readAllStr() { return m_in.readAllStr(); }
-    public Str readAllStr(Boolean normalizeNewlines)  { return m_in.readAllStr(normalizeNewlines); }
+    public string readAllStr() { return m_in.readAllStr(); }
+    public string readAllStr(Boolean normalizeNewlines)  { return m_in.readAllStr(normalizeNewlines); }
 
     public object readObj() { return m_in.readObj(); }
 
@@ -326,14 +326,13 @@ namespace Fan.Sys
   // Hex
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual Str toHex()
+    public virtual string toHex()
     {
       throw UnsupportedErr.make(type()+".toHex").val;
     }
 
-    public static Buf fromHex(Str str)
+    public static Buf fromHex(string s)
     {
-      string s = str.val;
       int slen = s.Length;
       byte[] buf = new byte[slen/2];
       int[] hexInv = Buf.hexInv;
@@ -363,14 +362,13 @@ namespace Fan.Sys
   // Base64
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual Str toBase64()
+    public virtual string toBase64()
     {
       throw UnsupportedErr.make(type()+".toBase64").val;
     }
 
-    public static Buf fromBase64(Str str)
+    public static Buf fromBase64(string s)
     {
-      string s = str.val;
       int slen = s.Length;
       int si = 0;
       int max = slen * 6 / 8;
@@ -404,7 +402,7 @@ namespace Fan.Sys
   // Digest
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual Buf toDigest(Str algorithm)
+    public virtual Buf toDigest(string algorithm)
     {
       throw UnsupportedErr.make(type()+".toDigest").val;
     }

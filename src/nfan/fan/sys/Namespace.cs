@@ -39,7 +39,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Str toStr() { return Str.make(type().m_qname + " uri=" + m_uri); }
+    public override string toStr() { return type().m_qname + " uri=" + m_uri; }
 
     public override Type type() { return Sys.NamespaceType; }
 

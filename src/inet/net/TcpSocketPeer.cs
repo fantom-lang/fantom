@@ -188,9 +188,9 @@ namespace Fan.Inet
     ** is thrown.  Once a socket is forked onto a new thread,  it is detached
     ** from the calling thread and all methods will throw UnsupportedErr.
     **
-    native Thread fork(Str threadName, |TcpSocket s->Obj| run)
+    native Thread fork(string threadName, |TcpSocket s->Obj| run)
 
-    public Thread fork(TcpSocket oldSock, Str name, final Method run)
+    public Thread fork(TcpSocket oldSock, string name, final Method run)
     {
       // error checking
       checkDetached();
@@ -202,7 +202,7 @@ namespace Fan.Inet
       synchronized (topLock) { n = forkCount++; }
 
       // generate name if null
-      if (name == null) name = Str.make("inet.TcpSocket" + n);
+      if (name == null) name = string.make("inet.TcpSocket" + n);
 
       // create new detached thread-safe socket
       final TcpSocket newSock = detach(oldSock);

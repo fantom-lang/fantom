@@ -21,11 +21,6 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static InStream makeForStr(Str s)
-    {
-      return new StrInStream(s);
-    }
-
     public static InStream makeForStr(string s)
     {
       return new StrInStream(s);
@@ -289,7 +284,7 @@ namespace Fan.Sys
       return n == 0 ? Boolean.False : Boolean.True;
     }
 
-    public virtual Str readUtf() { return Str.make(readUtfString()); }
+    public virtual string readUtf() { return readUtfString(); }
     private string readUtfString()
     {
       // read two-byte Length
@@ -335,7 +330,7 @@ namespace Fan.Sys
         }
       }
 
-      // allocate as Str
+      // allocate as string
       return new string(buf, 0, cnum);
     }
 
@@ -370,12 +365,12 @@ namespace Fan.Sys
       return x;
     }
 
-    public virtual Str readLine() { return readLine(FanInt.Chunk); }
-    public virtual Str readLine(Long max)
+    public virtual string readLine() { return readLine(FanInt.Chunk); }
+    public virtual string readLine(Long max)
     {
       // max limit
       int maxChars = (max != null) ? max.intValue() : System.Int32.MaxValue;
-      if (maxChars <= 0) return Str.Empty;
+      if (maxChars <= 0) return string.Empty;
 
       // read first char, if at end of file bail
       int c = rChar();
@@ -403,16 +398,16 @@ namespace Fan.Sys
         c = rChar();
         if (c < 0) break;
       }
-      return Str.make(buf.ToString());
+      return buf.ToString();
     }
 
-    public virtual Str readStrToken() { return readStrToken(FanInt.Chunk, null); }
-    public virtual Str readStrToken(Long max) { return readStrToken(max, null); }
-    public virtual Str readStrToken(Long max, Func f)
+    public virtual string readStrToken() { return readStrToken(FanInt.Chunk, null); }
+    public virtual string readStrToken(Long max) { return readStrToken(max, null); }
+    public virtual string readStrToken(Long max, Func f)
     {
       // max limit
       int maxChars = (max != null) ? max.intValue() : System.Int32.MaxValue;
-      if (maxChars <= 0) return Str.Empty;
+      if (maxChars <= 0) return string.Empty;
 
       // read first char, if at end of file bail
       int c = rChar();
@@ -442,7 +437,7 @@ namespace Fan.Sys
         c = rChar();
         if (c < 0) break;
       }
-      return Str.make(buf.ToString());
+      return buf.ToString();
     }
 
     public virtual List readAllLines()
@@ -450,7 +445,7 @@ namespace Fan.Sys
       try
       {
         List list = new List(Sys.StrType);
-        Str line;
+        string line;
         while ((line = readLine()) != null)
           list.add(line);
         return list;
@@ -465,7 +460,7 @@ namespace Fan.Sys
     {
       try
       {
-        Str line;
+        string line;
         while ((line = readLine()) != null)
           f.call1(line);
       }
@@ -475,8 +470,8 @@ namespace Fan.Sys
       }
     }
 
-    public virtual Str readAllStr() { return readAllStr(Boolean.True); }
-    public virtual Str readAllStr(Boolean normalizeNewlines)
+    public virtual string readAllStr() { return readAllStr(Boolean.True); }
+    public virtual string readAllStr(Boolean normalizeNewlines)
     {
       try
       {
@@ -513,7 +508,7 @@ namespace Fan.Sys
           }
         }
 
-        return Str.make(new string(buf, 0, n));
+        return new string(buf, 0, n);
       }
       finally
       {
@@ -553,14 +548,14 @@ namespace Fan.Sys
           {
             inEndOfLineComment = false;
             if (last == '\r' && c == '\n') continue;
-            Str n = Str.makeTrim(name);
+            string n = FanStr.makeTrim(name);
             if (val != null)
             {
-              props.add(n, Str.makeTrim(val));
+              props.add(n, FanStr.makeTrim(val));
               name = new StringBuilder();
               val = null;
             }
-            else if (n.val.Length > 0)
+            else if (n.Length > 0)
               throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]").val;
             lineNum++;
             continue;
@@ -640,10 +635,10 @@ namespace Fan.Sys
             val.Append((char)c);
         }
 
-        Str nm = Str.makeTrim(name);
+        string nm = FanStr.makeTrim(name);
         if (val != null)
-          props.add(nm, Str.makeTrim(val));
-        else if (nm.val.Length > 0)
+          props.add(nm, FanStr.makeTrim(val));
+        else if (nm.Length > 0)
           throw IOErr.make("Invalid name/value pair [Line " + lineNum + "]").val;
 
         return props;

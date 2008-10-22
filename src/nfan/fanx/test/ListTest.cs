@@ -35,8 +35,8 @@ namespace Fanx.Test
 
     public void verifyKernel()
     {
-      Str a = Str.make("a"), b = Str.make("b"), c = Str.make("c"),
-          d = Str.make("d"), e = Str.make("e"), f = Str.make("f");
+      string a = "a", b = "b", c = "c",
+          d = "d", e = "e";
       Long i0 = Long.valueOf(0);
       Long i1 = Long.valueOf(1);
       Long i2 = Long.valueOf(2);
@@ -76,7 +76,7 @@ namespace Fanx.Test
 
     public void verifyReflect()
     {
-      System.Type nt = CompileToType("class Foo { static Type f() { return Str[,].type() } }");
+      System.Type nt = CompileToType("class Foo { static Type f() { return string[,].type() } }");
       Type t = (Type)InvokeStatic(nt, "F");
       //t.Dump();
 
@@ -95,11 +95,11 @@ namespace Fanx.Test
     public void verifyLang()
     {
       verify("Obj f() { return [,] }",    new List(Sys.ObjType));
-      verify("Obj f() { return Str[,] }", new List(Sys.StrType));
+      verify("Obj f() { return string[,] }", new List(Sys.StrType));
 
       // adds
-      verify("Obj f(Str[] x) { x.add(\"a\"); return x }", new object[] {new List(Sys.StrType)}, Make("a"));
-      verify("Obj f(Str[] x) { x.add(\"a\"); x.add(\"b\"); return x }", new object[] {new List(Sys.StrType)}, Make("a", "b"));
+      verify("Obj f(string[] x) { x.add(\"a\"); return x }", new object[] {new List(Sys.StrType)}, Make("a"));
+      verify("Obj f(string[] x) { x.add(\"a\"); x.add(\"b\"); return x }", new object[] {new List(Sys.StrType)}, Make("a", "b"));
 
       // literals
       verify("Obj f() { return [,] }", new List(Sys.ObjType));
@@ -109,42 +109,42 @@ namespace Fanx.Test
       verify("Obj f() { return [ \"a\" , \"b\" , \"c\", ] }", Make("a", "b", "c"));  // extra comma
 
       // explicit typing: empty literal
-      verify("Obj f() { return Str[,] }", new List(Sys.StrType));
+      verify("Obj f() { return string[,] }", new List(Sys.StrType));
       // explicit typing: single item - not figured out until resolve time
-      verify("Obj f() { return Str[\"a\"] }", Make("a"));
+      verify("Obj f() { return string[\"a\"] }", Make("a"));
       // explicit typing: single item, trailing comma
-      verify("Obj f() { return Str[\"a\",] }", Make("a"));
+      verify("Obj f() { return string[\"a\",] }", Make("a"));
       // explicit typing: multiple items
-      verify("Obj f() { return Str[\"a\", \"b\"] }", Make("a", "b"));
+      verify("Obj f() { return string[\"a\", \"b\"] }", Make("a", "b"));
 
       // slicing
       object[] args = { Make("0", "1", "2", "3") };
-      verify("Obj f(Str[] x) { return x[0] }", args, Str.make("0"));
-      verify("Str f(Str[] x) { return x[1] }", args, Str.make("1"));
-      verify("Obj f(Str[] x) { return x[2] }", args, Str.make("2"));
-      verify("Str f(Str[] x) { return x[3] }", args, Str.make("3"));
-      verify("Obj f(Str[] x) { return x[-1] }", args, Str.make("3"));
-      verify("Str f(Str[] x) { return x[-2] }", args, Str.make("2"));
-      verify("Obj f(Str[] x) { return x[-3] }", args, Str.make("1"));
-      verify("Str f(Str[] x) { return x[-4] }", args, Str.make("0"));
-      verifyThrows("Obj f(Str[] x) { return x[4] }",  args, System.Type.GetType("Fan.Sys.IndexErr+Val"));
-      verifyThrows("Str f(Str[] x) { return x[5] }",  args, System.Type.GetType("Fan.Sys.IndexErr+Val"));
-      verifyThrows("Obj f(Str[] x) { return x[-5] }", args, System.Type.GetType("Fan.Sys.IndexErr+Val"));
-      verifyThrows("Str f(Str[] x) { return x[-6] }", args, System.Type.GetType("Fan.Sys.IndexErr+Val"));
+      verify("Obj f(string[] x) { return x[0] }", args, "0");
+      verify("string f(string[] x) { return x[1] }", args, "1");
+      verify("Obj f(string[] x) { return x[2] }", args, "2");
+      verify("string f(string[] x) { return x[3] }", args, "3");
+      verify("Obj f(string[] x) { return x[-1] }", args, "3");
+      verify("string f(string[] x) { return x[-2] }", args, "2");
+      verify("Obj f(string[] x) { return x[-3] }", args, "1");
+      verify("string f(string[] x) { return x[-4] }", args, "0");
+      verifyThrows("Obj f(string[] x) { return x[4] }",  args, System.Type.GetType("Fan.Sys.IndexErr+Val"));
+      verifyThrows("string f(string[] x) { return x[5] }",  args, System.Type.GetType("Fan.Sys.IndexErr+Val"));
+      verifyThrows("Obj f(string[] x) { return x[-5] }", args, System.Type.GetType("Fan.Sys.IndexErr+Val"));
+      verifyThrows("string f(string[] x) { return x[-6] }", args, System.Type.GetType("Fan.Sys.IndexErr+Val"));
 
       // parameterized typing
-//      verifyErr("Long f(Str[] x) { return x[0] }", "Cannot return 'sys::Str' as 'sys::Long'");
-//      verifyErr("Void f(Str[] x) { x.add(3) }", "Invalid args add(sys::Long) for add(sys::Str)");
-//      verifyErr("Void f(Str[] x, Obj a) { x.add(a) }", "Invalid args add(sys::Obj) for add(sys::Str)");
-      //verifyErr("Long[] f(Str[] x) { return x }", "Cannot return 'sys::Str[]' as 'sys::Long[]'");
+//      verifyErr("Long f(string[] x) { return x[0] }", "Cannot return 'sys::string' as 'sys::Long'");
+//      verifyErr("Void f(string[] x) { x.add(3) }", "Invalid args add(sys::Long) for add(sys::string)");
+//      verifyErr("Void f(string[] x, Obj a) { x.add(a) }", "Invalid args add(sys::Obj) for add(sys::string)");
+      //verifyErr("Long[] f(string[] x) { return x }", "Cannot return 'sys::string[]' as 'sys::Long[]'");
 
       // TODO - just List; should we allow List/Map to be used or force use of Obj[]?
-      // verify("Obj f(List x) { return x[0] }", args, Str.make("0"));
+      // verify("Obj f(List x) { return x[0] }", args, string.make("0"));
 
       // errors
 //      verifyErr("Obj f([] x) {}",             "Expected type identifier, not ']'");
 //      verifyErr("Obj f() { return [] }",      "Invalid list literal; use '[,]' for empty Obj[] list");
-//      verifyErr("Obj f() { return Str[] }",   "Invalid use of type name as expression");
+//      verifyErr("Obj f() { return string[] }",   "Invalid use of type name as expression");
 //      verifyErr("Obj f() { return this[] }",  "Expected expression, not ']'");
 //      verifyErr("Obj f() { return X[] }",     "Unresolved type 'X'");
 //      verifyErr("Obj f() { return X[,] }",    "Unresolved type 'X'");
@@ -160,8 +160,8 @@ namespace Fanx.Test
     public void verifyUnparameterized()
     {
       object[] args = { Make("0", "1", "2", "3") };
-      verify("Obj f(List x) { return x[0] }", args, Str.make("0"));
-      verify("Obj f(List x) { return x.get(2) }", args, Str.make("2"));
+      verify("Obj f(List x) { return x[0] }", args, "0");
+      verify("Obj f(List x) { return x.get(2) }", args, "2");
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -174,11 +174,11 @@ namespace Fanx.Test
     public List Make(string a, string b, string c, string d) { return new List(Sys.StrType, MakeStrs(a, b, c, d)); }
 
     public void verify(List list) { verify(list, new object[0]); }
-    public void verify(List list, Str a) { verify(list, new object[]{a}); }
-    public void verify(List list, Str a, Str b) { verify(list, new object[]{a, b}); }
-    public void verify(List list, Str a, Str b, Str c) { verify(list, new object[]{a, b, c}); }
-    public void verify(List list, Str a, Str b, Str c, Str d) { verify(list, new object[]{a, b, c, d}); }
-    public void verify(List list, Str a, Str b, Str c, Str d, Str e) { verify(list, new object[] {a, b, c, d, e}); }
+    public void verify(List list, string a) { verify(list, new object[]{a}); }
+    public void verify(List list, string a, string b) { verify(list, new object[]{a, b}); }
+    public void verify(List list, string a, string b, string c) { verify(list, new object[]{a, b, c}); }
+    public void verify(List list, string a, string b, string c, string d) { verify(list, new object[]{a, b, c, d}); }
+    public void verify(List list, string a, string b, string c, string d, string e) { verify(list, new object[] {a, b, c, d, e}); }
 
     public void verify(List list, object[] v)
     {

@@ -78,7 +78,7 @@ namespace Fan.Sys
 
     public static string uriToPath(Uri uri)
     {
-      string path = uri.m_pathStr.val;
+      string path = uri.m_pathStr;
       bool dir = uri.isDir().booleanValue();
       int len = path.Length;
       StringBuilder s = new StringBuilder(path.Length);
@@ -185,9 +185,9 @@ namespace Fan.Sys
       m_file.LastAccessTime = new System.DateTime(time.net());
     }
 
-    public override Str osPath()
+    public override string osPath()
     {
-      return Str.make(uriToPath(m_uri));
+      return uriToPath(m_uri);
     }
 
     public override File parent()
@@ -368,13 +368,13 @@ namespace Fan.Sys
   // IO
   //////////////////////////////////////////////////////////////////////////
 
-    public override Buf open(Str mode)
+    public override Buf open(string mode)
     {
       try
       {
         System.IO.FileMode fm;
         System.IO.FileAccess fa;
-        string s = mode.val;
+        string s = mode;
 
         if (s == "r")
         {
@@ -393,7 +393,7 @@ namespace Fan.Sys
         }
         else
         {
-          throw new System.IO.IOException("Unsupported mode: " + mode.val);
+          throw new System.IO.IOException("Unsupported mode: " + mode);
         }
 
         return new FileBuf(this, (m_file as FileInfo).Open(fm, fa));
@@ -404,7 +404,7 @@ namespace Fan.Sys
       }
     }
 
-    public override Buf mmap(Str mode, Long pos, Long size)
+    public override Buf mmap(string mode, Long pos, Long size)
     {
       try
       {
@@ -429,7 +429,7 @@ namespace Fan.Sys
         //MappedByteBuffer mmap = chan.map(mm, pos.val, size.val);
         */
 
-        return new MmapBuf(this, mode.val, pos.longValue(), size.longValue());
+        return new MmapBuf(this, mode, pos.longValue(), size.longValue());
       }
       catch (System.IO.IOException e)
       {

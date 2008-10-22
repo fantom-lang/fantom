@@ -372,7 +372,7 @@ namespace Fanx.Emit
         Type t = parent;
         if (parent.@base() is FuncType) t = parent.@base();
 
-        code.ldstr(t.signature().val);
+        code.ldstr(t.signature());
         PERWAPI.Method findType = emitter.findMethod("Fan.Sys.Type", "find",
           new string[] { "System.String" }, "Fan.Sys.Type");
         code.MethInst(PERWAPI.MethodOp.call, findType);
@@ -427,7 +427,7 @@ namespace Fanx.Emit
     private void findMixins(Type t, Hashtable acc)
     {
       // if mixin I haven't seen add to accumulator
-      string qname = t.qname().val;
+      string qname = t.qname();
       if (t.isMixin().booleanValue() && acc[qname] == null)
         acc[qname] = t;
 
@@ -443,7 +443,7 @@ namespace Fanx.Emit
       for (int i=0; i<methods.sz(); i++)
       {
         Method m = (Method)methods.get(i);
-        string name = m.name().val;
+        string name = m.name();
 
         // only emit router for non-abstract instance methods
         if (m.isStatic().booleanValue()) continue;

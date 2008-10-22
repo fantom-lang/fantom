@@ -115,10 +115,10 @@ namespace Fanx.Test
     /*
     public void verifyFooBar()
     {
-      string code = "class Foo {\n" +
+      Str code = "class Foo {\n" +
         "  Bool b\n" +
         "  Long i\n" +
-        "  Str s\n" +
+        "  string s\n" +
         "}";
       stub(code);
       compile();

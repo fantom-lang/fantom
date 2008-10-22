@@ -70,12 +70,12 @@ namespace Fan.Sys
       try
       {
         // get arguments
-        string fileName = (m_command.get(0) as Str).val;
+        string fileName = m_command.get(0) as string;
         StringBuilder args = new StringBuilder();
           for (int i=1; i<m_command.sz(); ++i)
           {
             if (i > 1) args.Append(" ");
-            args.Append((m_command.get(i) as Str).val);
+            args.Append(m_command.get(i) as string);
           }
 
         // config and run process

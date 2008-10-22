@@ -74,10 +74,10 @@ namespace Fanx.Test
       Pod pod = Pod.find("sys", true, null);
       verify(pod.findType("Boolean", true) == Sys.BoolType);
       verify(pod.findType("Long", true)  == Sys.IntType);
-      verify(pod.findType("Str", true)  == Sys.StrType);
+      verify(pod.findType("string", true)  == Sys.StrType);
 
-      verify(Fan.Sys.Type.find(Str.make("sys::Boolean")) == Sys.BoolType);
-      verify(Fan.Sys.Type.find(Str.make("sys::Boolean"), Fan.Sys.Boolean.True) == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys::Boolean") == Sys.BoolType);
+      verify(Fan.Sys.Type.find("sys::Boolean", Fan.Sys.Boolean.True) == Sys.BoolType);
       verify(Fan.Sys.Type.find("sys::Boolean") == Sys.BoolType);
       verify(Fan.Sys.Type.find("sys::Boolean", true) == Sys.BoolType);
       verify(Fan.Sys.Type.find("sys", "Boolean", true) == Sys.BoolType);
@@ -106,15 +106,15 @@ namespace Fanx.Test
       catch(Err.Val err)
       {
         //Console.WriteLine(" -- " + err);
-        verify(err.err().message().val.StartsWith("Invalid type signature '" + sig + "'"));
+        verify(err.err().message().StartsWith("Invalid type signature '" + sig + "'"));
       }
     }
 
     public void verifySysReflect()
     {
       verifySysImpl("sys::Boolean", "Fan.Sys.Boolean");
-      verifySysImpl("sys::Long",  "Fan.Sys.Long");
-      verifySysImpl("sys::Str",  "Fan.Sys.Str");
+      verifySysImpl("sys::Long",    "Fan.Sys.Long");
+      verifySysImpl("sys::Str",     "Fan.Sys.Str");
     }
 
     public void verifySysImpl(string fname, string nname)
@@ -151,7 +151,7 @@ namespace Fanx.Test
       string code = "class Foo {\n" +
         "  Boolean b\n" +
         "  Long i\n" +
-        "  Str s\n" +
+        "  string s\n" +
         "}";
       stub(code);
       compile();

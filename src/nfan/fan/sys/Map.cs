@@ -180,7 +180,7 @@ namespace Fan.Sys
       modify();
 
       if (m_type.m_k != Sys.StrType)
-        throw UnsupportedErr.make("Map not keyed by Str: " + m_type).val;
+        throw UnsupportedErr.make("Map not keyed by string: " + m_type).val;
 
       if (m_map.Count != 0)
         throw UnsupportedErr.make("Map not empty").val;
@@ -249,9 +249,9 @@ namespace Fan.Sys
       return Long.valueOf(hash);
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
-      if (m_map.Count == 0) return Str.make("[:]");
+      if (m_map.Count == 0) return "[:]";
       StringBuilder s = new StringBuilder(32+m_map.Count*32);
       s.Append("[");
       bool first = true;
@@ -265,7 +265,7 @@ namespace Fan.Sys
         s.Append(key).Append(':').Append(val);
       }
       s.Append("]");
-      return Str.make(s.ToString());
+      return s.ToString();
     }
 
     public void encode(ObjEncoder @out)
@@ -486,12 +486,12 @@ namespace Fan.Sys
     {
       public new bool Equals(object x, object y)
       {
-        return ((Str)x).equalsIgnoreCase((Str)y).booleanValue();
+        return FanStr.equalsIgnoreCase((string)x, (string)y).booleanValue();
       }
 
       public int GetHashCode(object obj)
       {
-        return ((Str)obj).caseInsensitiveHash();
+        return FanStr.caseInsensitiveHash((string)obj);
       }
     }
 

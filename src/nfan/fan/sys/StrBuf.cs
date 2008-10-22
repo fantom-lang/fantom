@@ -87,7 +87,7 @@ namespace Fan.Sys
 
     public StrBuf add(object x)
     {
-      string s = (x == null) ? "null" : toStr(x).val;
+      string s = (x == null) ? "null" : toStr(x);
       sb.Append(s);
       return this;
     }
@@ -98,18 +98,18 @@ namespace Fan.Sys
       return this;
     }
 
-    public StrBuf join(object x) { return join(x, Str.m_ascii[' ']); }
-    public StrBuf join(object x, Str sep)
+    public StrBuf join(object x) { return join(x, FanStr.m_ascii[' ']); }
+    public StrBuf join(object x, string sep)
     {
-      String s = (x == null) ? "null" : toStr(x).val;
-      if (sb.Length > 0) sb.Append(sep.val);
+      string s = (x == null) ? "null" : toStr(x);
+      if (sb.Length > 0) sb.Append(sep);
       sb.Append(s);
       return this;
     }
 
     public StrBuf insert(Long index, object x)
     {
-      string s = (x == null) ? "null" : toStr(x).val;
+      string s = (x == null) ? "null" : toStr(x);
       int i = index.intValue();
       if (i < 0) i = sb.Length+i;
       if (i > sb.Length) throw IndexErr.make(index).val;
@@ -138,9 +138,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
-      return Str.make(sb.ToString());
+      return sb.ToString();
     }
 
     public override Type type()

@@ -22,13 +22,13 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Long fromStr(Str s) { return fromStr(s, Ten, Boolean.True); }
-    public static Long fromStr(Str s, Long radix) { return fromStr(s, radix, Boolean.True); }
-    public static Long fromStr(Str s, Long radix, Boolean check)
+    public static Long fromStr(string s) { return fromStr(s, Ten, Boolean.True); }
+    public static Long fromStr(string s, Long radix) { return fromStr(s, radix, Boolean.True); }
+    public static Long fromStr(string s, Long radix, Boolean check)
     {
       try
       {
-        return Long.valueOf(Convert.ToInt64(s.val, radix.intValue()));
+        return Long.valueOf(Convert.ToInt64(s, radix.intValue()));
       }
       catch (FormatException)
       {
@@ -342,28 +342,28 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public static Str toChar(Long self)
+    public static string toChar(Long self)
     {
       long val = self.longValue();
       if (val < 0 || val > 0xFFFF) throw Err.make("Invalid unicode char: " + val).val;
-      if (val < Str.m_ascii.Length) return Str.m_ascii[(int)val];
-      return Str.make("" + (char)val);
+      if (val < FanStr.m_ascii.Length) return FanStr.m_ascii[(int)val];
+      return "" + (char)val;
     }
 
-    public static Str toHex(Long self) { return toHex(self, null); }
-    public static Str toHex(Long self, Long width)
+    public static string toHex(Long self) { return toHex(self, null); }
+    public static string toHex(Long self, Long width)
     {
       long val = self.longValue();
       string s = val.ToString("X").ToLower();
       if (width != null && s.Length < width.intValue())
         s = zeros[(int)width.intValue()-s.Length] + s;
-      return Str.make(s);
+      return s;
     }
     static string[] zeros = new string[16];
 
-    public static Str toStr(Long self)
+    public static string toStr(Long self)
     {
-      return Str.make(self.ToString());
+      return self.ToString();
     }
 
     public static void encode(Long self, ObjEncoder @out)

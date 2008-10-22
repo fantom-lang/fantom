@@ -135,14 +135,14 @@ namespace Fanx.Test
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Str Literals
+  // string Literals
   //////////////////////////////////////////////////////////////////////////
 
     void verifyStrLiterals()
     {
-      verify("Str f() { return \"a\"; }", Str.make("a"));
-      verify("Str f() { return \"hello world\"; }", Str.make("hello world"));
-      verify("Str f() { return null; }", null);
+      verify("string f() { return \"a\"; }", "a");
+      verify("string f() { return \"hello world\"; }", "hello world");
+      verify("string f() { return null; }", null);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -183,11 +183,11 @@ namespace Fanx.Test
       // verify basic sys types
       verify("Type f() { return Boolean.type }",  Sys.BoolType);
       verify("Type f() { return Long.type }",   Sys.IntType);
-      verify("Type f() { return Str.type; }",   Sys.StrType);
+      verify("Type f() { return string.type; }",   Sys.StrType);
       verify("Type f() { return Type.type }",  Sys.TypeType);
 
       // verify variegated list literal
-      //verify("static Type f() { return Str[].type }",  Sys.StrType.toListOf());
+      //verify("static Type f() { return string[].type }",  Sys.StrType.toListOf());
       //verify("static Type f() { return Long[][].type }",  Sys.IntType.toListOf().toListOf());
 
       // verify non-sys non-variegated type

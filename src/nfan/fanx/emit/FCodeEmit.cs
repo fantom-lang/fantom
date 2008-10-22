@@ -258,7 +258,7 @@ namespace Fanx.Emit
     private void loadStr()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "S" + index, "Fan.Sys.Str");
+      PERWAPI.Field field = emitter.findField(podClass, "S" + index, "System.String");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 

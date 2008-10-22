@@ -22,8 +22,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static BigDecimal fromStr(Str s) { return fromStr(s.val, true); }
-    public static BigDecimal fromStr(Str s, Boolean check) { return fromStr(s.val, check.booleanValue()); }
+    public static BigDecimal fromStr(string s) { return fromStr(s, true); }
+    public static BigDecimal fromStr(string s, Boolean check) { return fromStr(s, check.booleanValue()); }
     public static BigDecimal fromStr(string s, bool check)
     {
       try
@@ -103,9 +103,9 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public static Str toStr(BigDecimal self)
+    public static string toStr(BigDecimal self)
     {
-      return Str.make(self.ToString());
+      return self.ToString();
     }
 
     public static void encode(BigDecimal self, ObjEncoder @out)

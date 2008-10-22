@@ -13,7 +13,6 @@ using System.Text;
 using FanObj = Fan.Sys.FanObj;
 using List = Fan.Sys.List;
 using Log = Fan.Sys.Log;
-using Str = Fan.Sys.Str;
 using Sys = Fan.Sys.Sys;
 using Version = Fan.Sys.Version;
 using ICSharpCode.SharpZipLib.Zip;
@@ -266,7 +265,7 @@ namespace Fanx.Typedb
         if (names == null) continue;
         for (int j=0; j<names.sz(); ++j)
         {
-          string n = ((Str)names.get(j)).val;
+          string n = ((string)names.get(j));
           if (facetNames[n] == null)
             facetNames[n] = new FacetIndex(n);
         }
@@ -559,12 +558,12 @@ namespace Fanx.Typedb
         }
       }
 
-      public Str getStr(string name)
+      public string getStr(string name)
       {
         object v = getObj(name);
         if (v == null) return null;
-        if (v is Str) return (Str)v;
-        log.warn("Expecting '" + loc + "@" + name + "' to be Str, not " + FanObj.type(v));
+        if (v is string) return (string)v;
+        log.warn("Expecting '" + loc + "@" + name + "' to be string, not " + FanObj.type(v));
         return null;
       }
 
@@ -573,7 +572,7 @@ namespace Fanx.Typedb
         object v = getObj(name);
         if (v == null) return null;
         if (v is List && ((List)v).of() == Sys.StrType) return (List)v;
-        log.warn("Expecting '" + loc + "@" + name + "' to be Str[], not " + FanObj.type(v));
+        log.warn("Expecting '" + loc + "@" + name + "' to be string[], not " + FanObj.type(v));
         return null;
       }
 

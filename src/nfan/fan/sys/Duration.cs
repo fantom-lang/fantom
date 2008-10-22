@@ -22,8 +22,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Duration fromStr(Str s) { return fromStr(s, Boolean.True); }
-    public static Duration fromStr(Str s, Boolean check)
+    public static Duration fromStr(string s) { return fromStr(s, Boolean.True); }
+    public static Duration fromStr(string s, Boolean check)
     {
       //   ns:   nanoseconds  (x 1)
       //   ms:   milliseconds (x 1,000,000)
@@ -33,12 +33,11 @@ namespace Fan.Sys
       //   day:  days         (x 86,400,000,000,000)
       try
       {
-        string str = s.val;
-        int len = str.Length;
-        int x1 = str[len-1];
-        int x2 = str[len-2];
-        int x3 = str[len-3];
-        bool dot = str.IndexOf('.') > 0;
+        int len = s.Length;
+        int x1 = s[len-1];
+        int x2 = s[len-2];
+        int x3 = s[len-3];
+        bool dot = s.IndexOf('.') > 0;
 
         long mult = -1;
         int suffixLen  = -1;
@@ -64,11 +63,11 @@ namespace Fan.Sys
 
         if (mult < 0) throw new Exception();
 
-        str = str.Substring(0, len-suffixLen);
+        s = s.Substring(0, len-suffixLen);
         if (dot)
-          return make((long)(Double.valueOf(str).doubleValue()*(double)mult));
+          return make((long)(Double.valueOf(s).doubleValue()*(double)mult));
         else
-          return make(Int64.Parse(str)*mult);
+          return make(Int64.Parse(s)*mult);
       }
       catch (Exception)
       {
@@ -201,10 +200,9 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public override Str toStr()
+    public override string toStr()
     {
-      if (m_ticks == 0) return ZeroStr;
-      return Str.make(str());
+      return str();
     }
 
     public void encode(ObjEncoder @out)
@@ -214,6 +212,8 @@ namespace Fan.Sys
 
     public string str()
     {
+      if (m_ticks == 0) return "0ns";
+
       // if clean millisecond boundary
       long ns = m_ticks;
       if (ns % nsPerMilli == 0)
@@ -258,13 +258,13 @@ namespace Fan.Sys
   // Locale
   //////////////////////////////////////////////////////////////////////////
 
-    public Str toLocale()
+    public string toLocale()
     {
       long ticks = this.m_ticks;
       StringBuilder s;
 
       // less than 1000ns Xns
-      if (ticks < 1000L) return Str.make(ticks + "ns");
+      if (ticks < 1000L) return ticks + "ns";
 
       // less than 2ms X.XXXms
       if (ticks < 2*nsPerMilli)
@@ -280,14 +280,14 @@ namespace Fan.Sys
         if (s[s.Length-1] == '0') s.Length = s.Length-1;
         if (s[s.Length-1] == '0') s.Length = s.Length-1;
         s.Append("ms");
-        return Str.make(s.ToString());
+        return s.ToString();
       }
 
       // less than 2sec Xms
-      if (ticks < 2L*nsPerSec)   return Str.make(ticks/nsPerMilli + "ms");
+      if (ticks < 2L*nsPerSec) return (ticks/nsPerMilli) + "ms";
 
       // less than 2min Xsec
-      if (ticks < 1L*nsPerMin)   return Str.make(ticks/nsPerSec+ "sec");
+      if (ticks < 1L*nsPerMin) return (ticks/nsPerSec) + "sec";
 
       // [Xdays] [Xhr] Xmin Xsec
       long days  = ticks/nsPerDay; ticks -= days*nsPerDay;
@@ -300,7 +300,7 @@ namespace Fan.Sys
       if (days > 0 || hr > 0) s.Append(hr).Append("hr ");
       s.Append(min).Append("min ");
       s.Append(sec).Append("sec");
-      return Str.make(s.ToString());
+      return s.ToString();
     }
 
 
@@ -323,7 +323,6 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static readonly Duration Zero = new Duration(0);
-    public static readonly Str ZeroStr = Str.make("0ns");
     public const long nsPerDay   = 86400000000000L;
     public const long nsPerHr    = 3600000000000L;
     public const long nsPerMin   = 60000000000L;
