@@ -51,12 +51,12 @@ public final class MemBuf
 // Buf Support
 //////////////////////////////////////////////////////////////////////////
 
-  final long getSize()
+  public final long size()
   {
     return size;
   }
 
-  final void setSize(long x)
+  public final void size(long x)
   {
     int newSize = (int)x;
     if (newSize > buf.length)
@@ -68,12 +68,12 @@ public final class MemBuf
     size = newSize;
   }
 
-  final long getPos()
+  public final long pos()
   {
     return pos;
   }
 
-  final void setPos(long x)
+  final void pos(long x)
   {
     this.pos = (int)x;
   }
