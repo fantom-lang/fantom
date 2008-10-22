@@ -186,6 +186,18 @@ namespace Fan.Sys
     public Boolean isDynamic() { return Boolean.valueOf(m_dynamic); }
 
   //////////////////////////////////////////////////////////////////////////
+  // Nullable
+  //////////////////////////////////////////////////////////////////////////
+
+    public virtual Boolean isNullable() { return Boolean.False; }
+
+    public virtual Type toNullable()
+    {
+      if (m_nullable == null) m_nullable = new NullableType(this);
+      return m_nullable;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
   // Generics
   //////////////////////////////////////////////////////////////////////////
 
@@ -405,7 +417,7 @@ namespace Fan.Sys
 
     public virtual List mixins() { return m_mixins; }
 
-    public List inheritance()
+    public virtual List inheritance()
     {
       if (m_inheritance == null)
       {
@@ -1005,6 +1017,7 @@ namespace Fan.Sys
     bool finished;
 
     // misc
+    Type m_nullable;
     Type listOf;
     ConstructorInfo dynamicCtor;  // enabled to store a type per instance
     internal bool m_netRepr;      // if representation a .NET type, such as Fan.Sys.Long
