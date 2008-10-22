@@ -82,7 +82,6 @@ namespace Fan.Sys
     public override object trap(string name, List args)
     {
       // private undocumented access
-      if (name == "flags")      return Long.valueOf(m_flags);
       if (name == "lineNumber") { reflect(); return Long.valueOf(m_lineNum); }
       if (name == "sourceFile") { reflect(); return m_sourceFile; }
       return base.trap(name, args);
@@ -103,83 +102,6 @@ namespace Fan.Sys
     }
 
     public override Boolean isDynamic() { return Boolean.valueOf(m_dynamic); }
-
-  //////////////////////////////////////////////////////////////////////////
-  // Nullable
-  //////////////////////////////////////////////////////////////////////////
-
-    public override Boolean isNullable() { return Boolean.False; }
-
-    public override Type toNullable()
-    {
-      if (m_nullable == null) m_nullable = new NullableType(this);
-      return m_nullable;
-    }
-
-  //////////////////////////////////////////////////////////////////////////
-  // Generics
-  //////////////////////////////////////////////////////////////////////////
-//TODO
-/*
-    /// <summary>
-    /// A generic type means that one or more of my slots contain signatures
-    /// using a generic parameter (such as V or K).  Fan supports three built-in
-    /// generic types: List, Map, and Method.  A generic instance (such as string[])
-    /// is NOT a generic type (all of its generic parameters have been filled in).
-    /// User defined generic types are not supported in Fan.
-    /// </summary>
-    public override bool isGenericType()
-    {
-      return this == Sys.ListType || this == Sys.MapType || this == Sys.FuncType;
-    }
-
-    /// <summary>
-    /// A generic instance is a type which has "instantiated" a generic type
-    /// and replaced all the generic parameter types with generic argument
-    /// types.  The type string[] is a generic instance of the generic type
-    /// List (V is replaced with string).  A generic instance always has a signature
-    /// which different from the qname.
-    /// </summary>
-    public virtual bool isGenericInstance()
-    {
-      return false;
-    }
-
-    /// <summary>
-    /// Return if this type is a generic parameter (such as V or K) in a
-    /// generic type (List, Map, or Method).  Generic parameters serve
-    /// as place holders for the parameterization of the generic type.
-    /// Fan has a predefined set of generic parameters which are always
-    /// defined in the sys pod with a one character name.
-    /// </summary>
-    public virtual bool isGenericParameter()
-    {
-      return m_pod == Sys.SysPod && m_name.Length == 1;
-    }
-
-    /// <summary>
-    /// If this type is a generic parameter (V, L, etc), then return
-    /// the actual type used in the Java method.  For example V is Obj,
-    /// and L is List.  This is the type we actually use when constructing
-    /// a signature for the invoke opcode.
-    /// </summary>
-    public virtual Type getRawType()
-    {
-      if (!isGenericParameter()) return this;
-      if (this == Sys.LType) return Sys.ListType;
-      if (this == Sys.MType) return Sys.MapType;
-      if (this is ListType)  return Sys.ListType;
-      if (this is MapType)   return Sys.MapType;
-      if (this is FuncType)  return Sys.FuncType;
-      return Sys.ObjType;
-    }
-*/
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    public override sealed Type toListOf()
-    {
-      if (m_listOf == null) m_listOf = new ListType(this);
-      return m_listOf;
-    }
 
   //////////////////////////////////////////////////////////////////////////
   // Slots
@@ -462,7 +384,7 @@ namespace Fan.Sys
       return this;
     }
 
-    protected virtual void doReflect()
+    private void doReflect()
     {
       // if the ftype is non-null, that means it was passed in non-hollow
       // ftype (in-memory compile), otherwise we need to read it from the pod
@@ -540,7 +462,11 @@ namespace Fan.Sys
     private void merge(Type inheritedType, List slots, Hashtable nameToSlot, Hashtable nameToIndex)
     {
       if (inheritedType == null) return;
-      List inheritedSlots = ((ClassType)inheritedType.reflect()).m_slots;
+      List inheritedSlots;
+      if (inheritedType is GenericType)
+        inheritedSlots = ((GenericType)inheritedType.reflect()).m_slots;
+      else
+        inheritedSlots = ((ClassType)inheritedType.reflect()).m_slots;
       for (int i=0; i<inheritedSlots.sz(); i++)
         merge((Slot)inheritedSlots.get(i), slots, nameToSlot, nameToIndex);
     }
@@ -854,8 +780,6 @@ namespace Fan.Sys
     string m_finishing;
 
     // misc
-    Type m_nullable;
-    Type m_listOf;
     ConstructorInfo m_dynamicCtor;  // enabled to store a type per instance
     internal bool m_netRepr;      // if representation a .NET type, such as Fan.Sys.Long
 

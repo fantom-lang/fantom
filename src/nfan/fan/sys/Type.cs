@@ -6,11 +6,8 @@
 //   14 Sep 06  Andy Frank  Creation
 //
 
-//using System;
 using System.Collections;
-//using System.IO;
-//using System.Reflection;
-//using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using Fanx.Emit;
 using Fanx.Fcode;
 using Fanx.Serial;
@@ -141,15 +138,22 @@ namespace Fan.Sys
         throw ArgErr.make("Cannot use dynamic in makeDynamic: " + this).val;
     }
 
-    public abstract Boolean isDynamic();
+    public virtual Boolean isDynamic() { return Boolean.False; }
 
   //////////////////////////////////////////////////////////////////////////
   // Nullable
   //////////////////////////////////////////////////////////////////////////
 
-    public abstract Boolean isNullable();
+    public virtual Boolean isNullable() { return Boolean.False; }
 
-    public abstract Type toNullable();
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public virtual Type toNullable()
+    {
+      if (m_nullable == null) m_nullable = makeToNullable();
+      return m_nullable;
+    }
+
+    protected virtual Type makeToNullable() { return new NullableType(this); }
 
   //////////////////////////////////////////////////////////////////////////
   // Generics
@@ -255,7 +259,14 @@ namespace Fan.Sys
       throw UnsupportedErr.make("not generic: " + this).val;
     }
 
-    public abstract Type toListOf();
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public Type toListOf()
+    {
+      if (m_listOf == null) m_listOf = makeToListOf();
+      return m_listOf;
+    }
+
+    protected virtual Type makeToListOf() { return new ListType(this); }
 
   //////////////////////////////////////////////////////////////////////////
   // Slots
@@ -389,6 +400,9 @@ namespace Fan.Sys
 
     internal static readonly bool Debug = false;
     internal static object noParams;
+
+    Type m_nullable;   // cached value of toNullable()
+    Type m_listOf;     // cached value of toListOf()
 
   }
 }
