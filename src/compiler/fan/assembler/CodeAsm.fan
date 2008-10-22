@@ -1178,16 +1178,25 @@ class CodeAsm : CompilerSupport
     method := call.method
 
     // push call target onto the stack
-    if (call.target != null) expr(call.target)
+    target := call.target
+    if (target != null) expr(target)
 
     // if safe, check for null
     Int? isNullLabel := null
     if (call.isSafe)
     {
-      if (call.target == null) throw err("Compiler error call isSafe", call.location)
-      opType(FOp.Dup, call.target.ctype)
+      // sanity check
+      if (target == null || (target.ctype.isValue && !target.ctype.isNullable))
+        throw err("Compiler error call isSafe: $call", call.location)
+
+      // check if null and if so then jump over call
+      opType(FOp.Dup, target.ctype)
       op(FOp.CmpNull)
       isNullLabel = jump(FOp.JumpTrue)
+
+      // now if we are calling a value-type method we might need to coerce
+      if (target.ctype.isValue || method.parent.isValue)
+        coerceOp(target.ctype, call.method.parent)
     }
 
     // invoke call
@@ -1204,7 +1213,12 @@ class CodeAsm : CompilerSupport
     // if safe, handle null case
     if (call.isSafe)
     {
-      if (method.returnType.isValue) coerceOp(method.returnType, call.ctype.toNullable)
+      // if the method return a value type, ensure it is coerced to nullable
+      if (method.returnType.isValue)
+        coerceOp(method.returnType, call.ctype.toNullable)
+
+      // jump to end after successful call and push null onto
+      // stack for null check from above (if a leave)
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
       opType(FOp.Pop, call.ctype)

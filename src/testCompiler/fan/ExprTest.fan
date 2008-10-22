@@ -235,8 +235,6 @@ class ExprTest : CompilerTest
     verifyExpr("a?->size", 6, "foobar", null, "", true)
     verifyExpr("a?->size", null, xNull, null, "", true)
 
-/* TODO
-   compiler doesn't coerce correctly
     verifyExpr("a?.size()?.plus(6)", 9, "abc", null, "", true)
     verifyExpr("a?.size()?.plus(6)", null, xNull, null, "", true)
     verifyExpr("a?->size()?->plus(6)", 12, "foobar", null, "", true)
@@ -246,7 +244,6 @@ class ExprTest : CompilerTest
     verifyExpr("a?.size?.plus(6)", null, xNull, null, "", true)
     verifyExpr("a?->size?->plus(6)", 12, "foobar", null, "", true)
     verifyExpr("a?->size?->plus(6)", null, xNull, null, "", true)
-*/
   }
 
 //////////////////////////////////////////////////////////////////////////
