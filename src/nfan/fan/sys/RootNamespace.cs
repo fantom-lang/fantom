@@ -34,7 +34,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Str toStr() { return type().toStr(); }
+    public override string toStr() { return type().toStr(); }
 
     public override Type type() { return Sys.RootNamespaceType; }
 
@@ -52,7 +52,7 @@ namespace Fan.Sys
       object val = null;
       lock (m_lock)
       {
-        val = m_mem[uri.m_str.val];
+        val = m_mem[uri.m_str];
         if (val == null)
         {
           if (!check.booleanValue()) return null;
@@ -79,12 +79,12 @@ namespace Fan.Sys
         if (uri == null)
           uri = Uri.fromStr("/mem/" + m_uriCounter++);
 
-        object old = m_mem[uri.m_str.val];
+        object old = m_mem[uri.m_str];
         if (old != null)
         {
           throw ArgErr.make("Uri already mapped: " + uri).val;
         }
-        m_mem[uri.m_str.val] = safe;
+        m_mem[uri.m_str] = safe;
         return uri;
       }
     }
@@ -100,12 +100,12 @@ namespace Fan.Sys
       object safe = Namespace.safe(obj);
       lock (m_lock)
       {
-        object old = m_mem[uri.m_str.val];
+        object old = m_mem[uri.m_str];
         if (old == null)
         {
           throw UnresolvedErr.make(uri).val;
         }
-        m_mem[uri.m_str.val] = safe;
+        m_mem[uri.m_str] = safe;
       }
     }
 
@@ -118,11 +118,11 @@ namespace Fan.Sys
 
       lock (m_lock)
       {
-        if (m_mem[uri.m_str.val] == null)
+        if (m_mem[uri.m_str] == null)
         {
           throw UnresolvedErr.make(uri).val;
         }
-        m_mem.Remove(uri.m_str.val);
+        m_mem.Remove(uri.m_str);
       }
     }
 
@@ -222,9 +222,9 @@ namespace Fan.Sys
         if (this.depth != that.depth) return false;
         for (int i=0; i<depth; ++i)
         {
-          Str thisName = (Str)this.path.get(i);
-          Str thatName = (Str)that.path.get(i);
-          if (thisName.val != thatName.val) return false;
+          string thisName = (string)this.path.get(i);
+          string thatName = (string)that.path.get(i);
+          if (thisName != thatName) return false;
         }
         return true;
       }

@@ -45,18 +45,11 @@ namespace Fanx.Util
       if (t.pod() != Fan.Sys.Sys.SysPod) return false;
       return t == Fan.Sys.Sys.ObjType   ||
              t == Fan.Sys.Sys.BoolType  ||
+             t == Fan.Sys.Sys.StrType   ||
              t == Fan.Sys.Sys.IntType   ||
              t == Fan.Sys.Sys.FloatType ||
              t == Fan.Sys.Sys.NumType   ||
              t == Fan.Sys.Sys.DecimalType;
-    }
-
-    /// <summary>
-    /// Return the .NET type name for this Fan pod and type.
-    /// </summary>
-    public static string toNetTypeName(Fan.Sys.Str podName, Fan.Sys.Str typeName)
-    {
-      return toNetTypeName(podName.val, typeName.val);
     }
 
     /// <summary>
@@ -70,6 +63,9 @@ namespace Fanx.Util
         {
           case 'B':
             if (typeName == "Bool") return "Fan.Sys.Boolean";
+            break;
+          case 'S':
+            if (typeName == "Str") return "System.String";
             break;
           case 'D':
             if (typeName == "Decimal") return "Fan.Sys.BigDecimal";
@@ -103,6 +99,9 @@ namespace Fanx.Util
           case 'B':
             if (typeName == "Bool") return "Fan.Sys.FanBool";
             break;
+          case 'S':
+            if (typeName == "Str") return "Fan.Sys.FanStr";
+            break;
           case 'D':
             if (typeName == "Decimal") return "Fan.Sys.FanDecimal";
             break;
@@ -134,6 +133,7 @@ namespace Fanx.Util
     {
       if (ntype[0] == 'S')
       {
+        if (ntype == "System.String")  return "Fan.Sys.FanStr";
         if (ntype == "System.Object")  return "Fan.Sys.FanObj";
       }
       if (ntype[0] == 'F')
@@ -244,6 +244,7 @@ namespace Fanx.Util
 
     static FanUtil()
     {
+      netToFanTypes["System.String"]      = Fan.Sys.Sys.StrType;
       netToFanTypes["System.Object"]      = Fan.Sys.Sys.ObjType;
       netToFanTypes["Fan.Sys.Boolean"]    = Fan.Sys.Sys.BoolType;
       netToFanTypes["Fan.Sys.BigDecimal"] = Fan.Sys.Sys.DecimalType;
@@ -251,6 +252,7 @@ namespace Fanx.Util
       netToFanTypes["Fan.Sys.Long"]       = Fan.Sys.Sys.IntType;
       netToFanTypes["Fan.Sys.Number"]     = Fan.Sys.Sys.NumType;
 
+      netImmutables["System.String"]      = true;
       netImmutables["Fan.Sys.Boolean"]    = true;
       netImmutables["Fan.Sys.BigDecimal"] = true;
       netImmutables["Fan.Sys.Double"]     = true;

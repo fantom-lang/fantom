@@ -29,7 +29,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Str toStr() { return Str.make("DirNamespace " + m_dir); }
+    public override string toStr() { return "DirNamespace " + m_dir; }
 
     public override Type type() { return Sys.DirNamespaceType; }
 

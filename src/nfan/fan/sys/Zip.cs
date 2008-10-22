@@ -62,7 +62,7 @@ namespace Fan.Sys
 
     public override Type type() { return Sys.ZipType; }
 
-    public override Str toStr()
+    public override string toStr()
     {
       if (m_file != null) return m_file.toStr();
       return base.toStr();

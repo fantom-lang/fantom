@@ -22,11 +22,11 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean fromStr(Str s) { return fromStr(s, Boolean.True); }
-    public static Boolean fromStr(Str s, Boolean check)
+    public static Boolean fromStr(string s) { return fromStr(s, Boolean.True); }
+    public static Boolean fromStr(string s, Boolean check)
     {
-      if (s.val == "true") return Boolean.True;
-      if (s.val == "false") return Boolean.False;
+      if (s == "true") return Boolean.True;
+      if (s == "false") return Boolean.False;
       if (!check.booleanValue()) return null;
       throw ParseErr.make("Bool", s).val;
     }
@@ -78,22 +78,15 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public static Str toStr(Boolean self)
+    public static string toStr(Boolean self)
     {
-      return self.booleanValue() ? trueStr : falseStr;
+      return self.booleanValue() ? "true" : "false";
     }
 
     public static void encode(Boolean self, ObjEncoder @out)
     {
       @out.w(self.booleanValue() ? "true" : "false");
     }
-
-  //////////////////////////////////////////////////////////////////////////
-  // Fields
-  //////////////////////////////////////////////////////////////////////////
-
-    public static readonly Str trueStr = Str.make("true");
-    public static readonly Str falseStr = Str.make("false");
 
   }
 }

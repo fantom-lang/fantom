@@ -30,8 +30,8 @@ namespace Fan.Sys
       }
     }
 
-    public static Log find(Str name) { return find(name, Boolean.True); }
-    public static Log find(Str name, Boolean check)
+    public static Log find(string name) { return find(name, Boolean.True); }
+    public static Log find(string name, Boolean check)
     {
       lock (lockObj)
       {
@@ -42,8 +42,7 @@ namespace Fan.Sys
       }
     }
 
-    public static Log get(string name) { return get(Str.make(name)); }
-    public static Log get(Str name)
+    public static Log get(string name)
     {
       lock (lockObj)
       {
@@ -53,14 +52,14 @@ namespace Fan.Sys
       }
     }
 
-    public static Log make(Str name)
+    public static Log make(string name)
     {
       Log self = new Log();
       make_(self, name);
       return self;
     }
 
-    public static void make_(Log self, Str name)
+    public static void make_(Log self, string name)
     {
       lock (lockObj)
       {
@@ -78,7 +77,7 @@ namespace Fan.Sys
         // check for initial level
         if (logProps != null)
         {
-          Str val = (Str)logProps.get(name);
+          string val = (string)logProps.get(name);
           if (val != null)
             self.m_level = LogLevel.fromStr(val);
         }
@@ -94,12 +93,12 @@ namespace Fan.Sys
       return Sys.LogType;
     }
 
-    public sealed override Str toStr()
+    public sealed override string toStr()
     {
       return m_name;
     }
 
-    public Str name()
+    public string name()
     {
       return m_name;
     }
@@ -141,34 +140,30 @@ namespace Fan.Sys
   // Logging
   //////////////////////////////////////////////////////////////////////////
 
-    public void error(Str message) { error(message, null); }
-    public void error(string message) { error(Str.make(message), null); }
-    public void error(string message, System.Exception e) { error(Str.make(message), Err.make(e)); }
-    public void error(Str message, Err err)
+    public void error(string message) { error(message, (Err)null); }
+    public void error(string message, System.Exception e) { error(message, Err.make(e)); }
+    public void error(string message, Err err)
     {
       log(LogRecord.make(DateTime.now(), LogLevel.m_error, m_name, message, err));
     }
 
-    public void warn(Str message) { warn(message, null); }
-    public void warn(string message) { warn(Str.make(message), null); }
-    public void warn(string message, System.Exception e) { warn(Str.make(message), Err.make(e)); }
-    public void warn(Str message, Err err)
+    public void warn(string message) { warn(message, (Err)null); }
+    public void warn(string message, System.Exception e) { warn(message, Err.make(e)); }
+    public void warn(string message, Err err)
     {
       log(LogRecord.make(DateTime.now(), LogLevel.m_warn, m_name, message, err));
     }
 
-    public void info(Str message) { info(message, null); }
-    public void info(string message) { info(Str.make(message), null); }
-    public void info(string message, System.Exception e) { info(Str.make(message), Err.make(e)); }
-    public void info(Str message, Err err)
+    public void info(string message) { info(message, (Err)null); }
+    public void info(string message, System.Exception e) { info(message, Err.make(e)); }
+    public void info(string message, Err err)
     {
       log(LogRecord.make(DateTime.now(), LogLevel.m_info, m_name, message, err));
     }
 
-    public void debug(Str message) { debug(message, null); }
-    public void debug(string message) { debug(Str.make(message), null); }
-    public void debug(string message, System.Exception e) { debug(Str.make(message), Err.make(e)); }
-    public void debug(Str message, Err err)
+    public void debug(string message) { debug(message, (Err)null); }
+    public void debug(string message, System.Exception e) { debug(message, Err.make(e)); }
+    public void debug(string message, Err err)
     {
       log(LogRecord.make(DateTime.now(), LogLevel.m_debug, m_name, message, err));
     }
@@ -250,8 +245,8 @@ namespace Fan.Sys
           List keys = props.keys();
           for (int i=0; i<keys.sz(); ++i)
           {
-            Str key = (Str)keys.get(i);
-            Str val = (Str)props.get(key);
+            string key = (string)keys.get(i);
+            string val = (string)props.get(key);
             if (LogLevel.fromStr(val, Boolean.False) == null)
             {
               System.Console.WriteLine("ERROR: Invalid level lib/log.props#" + key + " = " + val);
@@ -275,7 +270,7 @@ namespace Fan.Sys
     private static Hashtable byName = new Hashtable();    // string -> Log
     private static Map logProps;
 
-    private Str m_name;
+    private string m_name;
     private volatile LogLevel m_level = LogLevel.m_info;
 
   }

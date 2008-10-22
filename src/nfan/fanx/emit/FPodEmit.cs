@@ -47,7 +47,7 @@ namespace Fanx.Emit
       for (int i=0; i<pod.m_literals.m_decimals.size(); i++)
         emitter.emitField("D" + i, "Fan.Sys.BigDecimal", fattr);
       for (int i=0; i<pod.m_literals.m_strs.size(); i++)
-        emitter.emitField("S" + i, "Fan.Sys.Str", fattr);
+        emitter.emitField("S" + i, "System.String", fattr);
       for (int i=0; i<pod.m_literals.m_durations.size(); i++)
         emitter.emitField("Dur" + i, "Fan.Sys.Duration", fattr);
       for (int i=0; i<pod.m_literals.m_uris.size(); i++)

@@ -28,7 +28,7 @@ namespace Fanx.Tools
     {
       // args
       for (int i=0; i<args.Length; ++i)
-        Sys.m_args.add(Str.make(args[i]));
+        Sys.m_args.add(args[i]);
 
       // first try as file name
       if (System.IO.File.Exists(target) && !Directory.Exists(target))
@@ -176,7 +176,7 @@ namespace Fanx.Tools
       for (int i=0; i<pods.sz(); i++)
       {
         Pod pod = (Pod)pods.get(i);
-        writeLine("  " + pod.name().justl(Long.valueOf(14)) + "  " + pod.version());
+        writeLine("  " + FanStr.justl(pod.name(), Long.valueOf(14)) + "  " + pod.version());
       }
     }
 
@@ -194,7 +194,7 @@ namespace Fanx.Tools
 
     class MainThread : Thread
     {
-      public MainThread() : base(Str.make("main")) {}
+      public MainThread() : base("main") {}
       public override object run()
       {
         ret = doRun();

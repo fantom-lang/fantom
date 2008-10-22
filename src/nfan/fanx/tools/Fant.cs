@@ -50,7 +50,7 @@ namespace Fanx.Tools
         for (int i=0; i<pods.sz(); i++)
         {
           Pod p = (Pod)pods.get(i);
-          test(p.name().val, verbose);
+          test(p.name(), verbose);
         }
         return;
       }
@@ -117,7 +117,7 @@ namespace Fanx.Tools
       Method[] all = type.methodArr();
       ArrayList acc = new ArrayList();
       for (int i=0; i<all.Length; i++)
-        if (all[i].name().val.StartsWith("test") && !all[i].isAbstract().booleanValue()) acc.Add(all[i]);
+        if (all[i].name().StartsWith("test") && !all[i].isAbstract().booleanValue()) acc.Add(all[i]);
       return (Method[])acc.ToArray(System.Type.GetType("Fan.Sys.Method"));
     }
 
@@ -189,7 +189,7 @@ namespace Fanx.Tools
 
     class MainThread : Thread
     {
-      public MainThread() : base(Str.make("main")) {}
+      public MainThread() : base("main") {}
       public override object run()
       {
         ret = doRun();

@@ -20,23 +20,23 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Enum make(Long ordinal, Str name)
+    public static Enum make(Long ordinal, string name)
     {
       // should never be used
       throw new System.Exception();
     }
 
-    public static void make_(Enum self, Long ordinal, Str name)
+    public static void make_(Enum self, Long ordinal, string name)
     {
       if (ordinal == null || name == null) throw new NullErr().val;
       self.m_ordinal = ordinal;
       self.m_name    = name;
     }
 
-    protected static Enum doFromStr(Type t, Str name, Boolean check)
+    protected static Enum doFromStr(Type t, string name, Boolean check)
     {
       // the compiler marks the value fields with the Enum flag
-      Slot slot = t.slot(name.val, false);
+      Slot slot = t.slot(name, false);
       if (slot != null && (slot.m_flags & FConst.Enum) != 0)
       {
         try
@@ -48,7 +48,7 @@ namespace Fan.Sys
         }
       }
       if (!check.booleanValue()) return null;
-      throw ParseErr.make(t.qname().val, name).val;
+      throw ParseErr.make(t.qname(), name).val;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,7 @@ namespace Fan.Sys
       return Sys.EnumType;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       return m_name;
     }
@@ -80,7 +80,7 @@ namespace Fan.Sys
       return m_ordinal;
     }
 
-    public Str name()
+    public string name()
     {
       return m_name;
     }
@@ -90,7 +90,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     private Long m_ordinal = null;
-    private Str m_name = null;
+    private string m_name = null;
 
   }
 }

@@ -72,16 +72,15 @@ namespace Fan.Sys
   // C# Convenience
   //////////////////////////////////////////////////////////////////////////
 
-    public static Err make(string msg) { return make(Str.make(msg)); }
-    public static Err make(string msg, Exception e) { return make(Str.make(msg), make(e)); }
+    public static Err make(string msg, Exception e) { return make(msg, make(e)); }
 
   //////////////////////////////////////////////////////////////////////////
   // Fan Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public static Err make() { return make((Str)null, (Err)null); }
-    public static Err make(Str msg) { return make(msg, null); }
-    public static Err make(Str msg, Err cause)
+    public static Err make() { return make((string)null, (Err)null); }
+    public static Err make(string msg) { return make(msg, (Err)null); }
+    public static Err make(string msg, Err cause)
     {
       Err err = new Err(new Err.Val());
       make_(err, msg, cause);
@@ -89,8 +88,8 @@ namespace Fan.Sys
     }
 
     public static void make_(Err self) { make_(self, null);  }
-    public static void make_(Err self, Str msg) { make_(self, msg, null); }
-    public static void make_(Err self, Str msg, Err cause)
+    public static void make_(Err self, string msg) { make_(self, msg, null); }
+    public static void make_(Err self, string msg, Err cause)
     {
       self.m_message = msg;
       self.m_cause   = cause;
@@ -121,14 +120,14 @@ namespace Fan.Sys
       this.val = val;
       val.m_err = this;
       this.m_actual = actual;
-      this.m_message = Str.make(actual.Message);
+      this.m_message = actual.Message;
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Str message()
+    public string message()
     {
       return m_message;
     }
@@ -141,7 +140,7 @@ namespace Fan.Sys
     public Err trace() { return trace(0); }
     public Err trace(int indent)
     {
-      dumpStack(toStr().val, m_actual != null ? m_actual : val, indent);
+      dumpStack(toStr(), m_actual != null ? m_actual : val, indent);
       if (m_cause != null)
       {
         System.Console.WriteLine("Cause:");
@@ -153,16 +152,16 @@ namespace Fan.Sys
     public Err trace(OutStream @out) { return trace(@out, 0); }
     public Err trace(OutStream @out, int indent)
     {
-      dumpStack(toStr().val, m_actual != null ? m_actual : val, @out, indent);
+      dumpStack(toStr(), m_actual != null ? m_actual : val, @out, indent);
       if (m_cause != null)
       {
-        @out.printLine(Str.make("Cause:"));
+        @out.printLine("Cause:");
         m_cause.trace(@out, indent+2);
       }
       return this;
     }
 
-    public Str traceToStr()
+    public string traceToStr()
     {
       Buf buf = new MemBuf(1024);
       trace(buf.@out());
@@ -174,12 +173,12 @@ namespace Fan.Sys
       return Sys.ErrType;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       if (m_message == null)
-        return type().qname().toStr();
+        return type().qname();
       else
-        return Str.make(type().qname() + ": " + m_message);
+        return type().qname() + ": " + m_message;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -216,7 +215,7 @@ namespace Fan.Sys
     {
       StringWriter w = new StringWriter();
       doDumpStack(msg, err, indent, w);
-      @out.writeChars(Str.make(w.ToString())).flush();
+      @out.writeChars(w.ToString()).flush();
     }
 
     static void doDumpStack(string msg, Exception err, int depth, StringWriter w)
@@ -279,7 +278,7 @@ namespace Fan.Sys
               }
             }
 
-            target = Str.make(pod).decapitalize().val + "::" + type + "." + meth;
+            target = FanStr.decapitalize(pod) + "::" + type + "." + meth;
           }
 
           for (int sp=0; sp<depth; sp++) w.Write(" ");
@@ -301,7 +300,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public readonly Val val;
-    internal Str m_message;
+    internal string m_message;
     internal Err m_cause = null;
     internal Exception m_actual;
     internal string m_stack;       // only used for Method.invoke()

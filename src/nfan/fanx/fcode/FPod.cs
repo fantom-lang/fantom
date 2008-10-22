@@ -266,7 +266,7 @@ namespace Fanx.Fcode
       m_podVersion = input.utf();
       m_depends = new Depend[input.u1()];
       for (int i=0; i<m_depends.Length; ++i)
-        m_depends[i] = Depend.fromStr(Str.make(input.utf()));
+        m_depends[i] = Depend.fromStr(input.utf());
 
       m_attrs = FAttrs.read(input);
 

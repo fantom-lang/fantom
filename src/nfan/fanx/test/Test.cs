@@ -11,7 +11,6 @@ using System.Reflection;
 using Boolean  = Fan.Sys.Boolean;
 using Long   = Fan.Sys.Long;
 using Double = Fan.Sys.Double;
-using Str   = Fan.Sys.Str;
 using Duration = Fan.Sys.Duration;
 
 namespace Fanx.Test
@@ -279,29 +278,29 @@ namespace Fanx.Test
       return new Double[] { Double.valueOf(a), Double.valueOf(b), Double.valueOf(c) };
     }
 
-    public Str[] MakeStrs(String a)
+    public string[] MakeStrs(string a)
     {
-      return new Str[] { Str.make(a) };
+      return new string[] { a };
     }
 
-    public Str[] MakeStrs(String a, String b)
+    public string[] MakeStrs(string a, string b)
     {
-      return new Str[] { Str.make(a), Str.make(b) };
+      return new string[] { a, b };
     }
 
-    public Str[] MakeStrs(String a, String b, String c)
+    public string[] MakeStrs(string a, string b, string c)
     {
-      return new Str[] { Str.make(a), Str.make(b), Str.make(c) };
+      return new string[] { a, b, c };
     }
 
-    public Str[] MakeStrs(String a, String b, String c, String d)
+    public string[] MakeStrs(string a, string b, string c, string d)
     {
-      return new Str[] { Str.make(a), Str.make(b), Str.make(c), Str.make(d) };
+      return new string[] { a, b, c, d };
     }
 
-    public Str[] MakeStrs(String a, String b, String c, String d, String e)
+    public string[] MakeStrs(string a, string b, string c, string d, string e)
     {
-      return new Str[] { Str.make(a), Str.make(b), Str.make(c), Str.make(d), Str.make(e) };
+      return new string[] { a, b, c, d, e };
     }
 
     public Duration[] MakeDurs(long a)
@@ -347,12 +346,12 @@ namespace Fanx.Test
       return type.InvokeMember(name, GetInstanceFlags(), null, obj, args);
     }
 
-    public MethodInfo FindMethod(Type type, String name)
+    public MethodInfo FindMethod(Type type, string name)
     {
       return FindMethod(type, name, -1);
     }
 
-    public MethodInfo FindMethod(Type type, String name, int paramCount)
+    public MethodInfo FindMethod(Type type, string name, int paramCount)
     {
       MethodInfo method;
       method = FindMethod(type, name, paramCount, type.GetMethods()); if (method != null) return method;
@@ -360,7 +359,7 @@ namespace Fanx.Test
       throw new Exception("No method " + name);
     }
 
-    public MethodInfo FindMethod(Type type, String name, int paramCount, MethodInfo[] methods)
+    public MethodInfo FindMethod(Type type, string name, int paramCount, MethodInfo[] methods)
     {
       for (int i=0; i<methods.Length; ++i)
         if (methods[i].Name == name)

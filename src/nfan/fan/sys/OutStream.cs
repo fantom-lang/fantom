@@ -151,7 +151,7 @@ namespace Fan.Sys
       return w(x.booleanValue() ? 1 : 0);
     }
 
-    public virtual OutStream writeUtf(Str x) { return writeUtfString(x.val); }
+    public virtual OutStream writeUtf(string x) { return writeUtfString(x); }
     private OutStream writeUtfString(string s)
     {
       int slen = s.Length;
@@ -222,9 +222,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual OutStream writeChars(Str s) { return writeChars(s.val, 0, s.val.Length); }
-    public virtual OutStream writeChars(Str s, Long off) { return writeChars(s.val, off.intValue(), s.val.Length-off.intValue()); }
-    public virtual OutStream writeChars(Str s, Long off, Long len) { return writeChars(s.val, off.intValue(), len.intValue()); }
+    public virtual OutStream writeChars(string s) { return writeChars(s, 0, s.Length); }
+    public virtual OutStream writeChars(string s, Long off) { return writeChars(s, off.intValue(), s.Length-off.intValue()); }
+    public virtual OutStream writeChars(string s, Long off, Long len) { return writeChars(s, off.intValue(), len.intValue()); }
     public virtual OutStream writeChars(string s, int off, int len)
     {
       int end = off+len;
@@ -235,15 +235,15 @@ namespace Fan.Sys
 
     public virtual OutStream print(object obj)
     {
-      Str s = obj == null ? Str.nullStr : toStr(obj);
-      return writeChars(s, FanInt.Zero, s.size());
+      string s = obj == null ? FanStr.nullStr : toStr(obj);
+      return writeChars(s, FanInt.Zero, Long.valueOf(s.Length));
     }
 
-    public virtual OutStream printLine() { return printLine(Str.Empty); }
+    public virtual OutStream printLine() { return printLine(string.Empty); }
     public virtual OutStream printLine(object obj)
     {
-      Str s = obj == null ? Str.nullStr : toStr(obj);
-      writeChars(s, FanInt.Zero, s.size());
+      string s = obj == null ? FanStr.nullStr : toStr(obj);
+      writeChars(s, FanInt.Zero, Long.valueOf(s.Length));
       return writeChar(FanInt.m_pos['\n']);
     }
 
@@ -267,11 +267,11 @@ namespace Fan.Sys
         Long nl = FanInt.m_pos['\n'];
         for (int i=0; i<size; ++i)
         {
-          Str key = (Str)keys.get(i);
-          Str val = (Str)props.get(key);
-          writePropStr(key.val);
+          string key = (string)keys.get(i);
+          string val = (string)props.get(key);
+          writePropStr(key);
           writeChar(eq);
-          writePropStr(val.val);
+          writePropStr(val);
           writeChar(nl);
         }
         return this;

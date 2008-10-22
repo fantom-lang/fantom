@@ -28,7 +28,7 @@ namespace Fan.Sys
       List list = new List(Sys.StrType);
       for (int i=0; i<indexNames.Length; ++i)
         if ((indexTypes[i] & 0x01) != 0)
-          list.add(Str.make(indexNames[i]));
+          list.add(indexNames[i]);
       return list.ro();
     }
 
@@ -37,12 +37,12 @@ namespace Fan.Sys
       List list = new List(Sys.StrType);
       for (int i=0; i<indexNames.Length; ++i)
         if ((indexTypes[i] & 0x02) != 0)
-          list.add(Str.make(indexNames[i]));
+          list.add(indexNames[i]);
       return list.ro();
     }
 
-    public static TimeZone fromStr(Str name) { return fromStr(name.val, true); }
-    public static TimeZone fromStr(Str name, Boolean check) { return fromStr(name.val, check.booleanValue()); }
+    public static TimeZone fromStr(string name) { return fromStr(name, true); }
+    public static TimeZone fromStr(string name, Boolean check) { return fromStr(name, check.booleanValue()); }
     public static TimeZone fromStr(string name, bool check)
     {
       // check cache first
@@ -69,8 +69,8 @@ namespace Fan.Sys
       {
         lock (cache)
         {
-          cache[tz.m_name.val] = tz;
-          cache[tz.m_fullName.val] = tz;
+          cache[tz.m_name] = tz;
+          cache[tz.m_fullName] = tz;
           return tz;
         }
       }
@@ -94,7 +94,7 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Str toStr() { return m_name; }
+    public override string toStr() { return m_name; }
 
     public override Type type() { return Sys.TimeZoneType; }
 
@@ -102,12 +102,12 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Str name()
+    public string name()
     {
       return m_name;
     }
 
-    public Str fullName()
+    public string fullName()
     {
       return m_fullName;
     }
@@ -124,14 +124,14 @@ namespace Fan.Sys
       return Duration.make(r.dstOffset * Duration.nsPerSec);
     }
 
-    public Str stdAbbr(Long year)
+    public string stdAbbr(Long year)
     {
-      return Str.make(rule(year.intValue()).stdAbbr);
+      return rule(year.intValue()).stdAbbr;
     }
 
-    public Str dstAbbr(Long year)
+    public string dstAbbr(Long year)
     {
-      return Str.make(rule(year.intValue()).dstAbbr);
+      return rule(year.intValue()).dstAbbr;
     }
 
     public string abbr(int year, bool inDST)
@@ -259,7 +259,7 @@ namespace Fan.Sys
 
       // create time zone instance
       TimeZone tz = new TimeZone();
-      tz.m_name = Str.make(name);
+      tz.m_name = name;
 
       // read time zone definition from database file
       FileStream f = dbFile.OpenRead();
@@ -267,8 +267,8 @@ namespace Fan.Sys
       try
       {
         f.Seek(seekOffset, SeekOrigin.Begin);
-        tz.m_name     = Str.make(d.ReadUTF());
-        tz.m_fullName = Str.make(d.ReadUTF());
+        tz.m_name     = d.ReadUTF();
+        tz.m_fullName = d.ReadUTF();
         int numRules  = d.ReadUnsignedShort();
         tz.rules = new Rule[numRules];
         for (int i=0; i<numRules; ++i)
@@ -470,7 +470,7 @@ namespace Fan.Sys
     static byte[] indexTypes   = new byte[0];
     static int[] indexOffsets  = new int[0];
 
-    static Hashtable cache = new Hashtable(); // Str -> TimeZone
+    static Hashtable cache = new Hashtable(); // string -> TimeZone
     internal static TimeZone m_utc;
     internal static TimeZone m_current = null;
 
@@ -488,21 +488,21 @@ namespace Fan.Sys
 
       try
       {
-        m_utc = fromStr(Str.make("Etc/UTC"));
+        m_utc = fromStr("Etc/UTC");
       }
       catch (Exception e)
       {
         System.Console.WriteLine("ERROR: Cannot init UTC timezone");
         Err.dumpStack(e);
 
-        m_utc.m_name = m_utc.m_fullName = Str.make("UTC");
+        m_utc.m_name = m_utc.m_fullName = "UTC";
         m_utc.rules = new Rule[] { new Rule() };
       }
 
       try
       {
         // first check system property
-        Str sysProp = (Str)Sys.env().get(Str.make("fan.timezone"));
+        string sysProp = (string)Sys.env().get("fan.timezone");
         if (sysProp != null)
         {
           m_current = fromStr(sysProp);
@@ -512,8 +512,8 @@ namespace Fan.Sys
         else
         {
           // TODO - no clue how to auto map this yet
-          //current = fromStr(Str.make(java.util.TimeZone.getDefault().getID()));
-          m_current = fromStr(Str.make("America/New_York"));
+          //current = fromStr(java.util.TimeZone.getDefault().getID());
+          m_current = fromStr("America/New_York");
         }
       }
       catch (Exception e)
@@ -529,8 +529,8 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private Str m_name;       // time zone identifer
-    private Str m_fullName;   // identifer in zoneinfo database
+    private string m_name;       // time zone identifer
+    private string m_fullName;   // identifer in zoneinfo database
     private Rule[] rules;     // reverse sorted by year
 
   }

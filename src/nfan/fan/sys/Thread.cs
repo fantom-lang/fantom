@@ -30,8 +30,8 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Thread make() { return make(null, null); }
-    public static Thread make(Str name) { return make(name, null); }
-    public static Thread make(Str name, Func run)
+    public static Thread make(string name) { return make(name, null); }
+    public static Thread make(string name, Func run)
     {
       Thread t = new Thread();
       make_(t, name, run);
@@ -39,8 +39,8 @@ namespace Fan.Sys
     }
 
     public static void make_(Thread t) { make_(t, null, null); }
-    public static void make_(Thread t, Str name) { make_(t, name, null); }
-    public static void make_(Thread t, Str name, Func run)
+    public static void make_(Thread t, string name) { make_(t, name, null); }
+    public static void make_(Thread t, string name, Func run)
     {
       // if service, get inheritance types before acquiring lock
       List serviceTypes = null;
@@ -55,7 +55,7 @@ namespace Fan.Sys
 
         // auto generate name if null
         if (name == null)
-          name = Str.make(t.type().pod().name() + "." + t.type().name() + "." + (autoNameCount++));
+          name = t.type().pod().name() + "." + t.type().name() + "." + (autoNameCount++);
 
         // verify name is valid
         Uri.checkName(name);
@@ -74,12 +74,6 @@ namespace Fan.Sys
     }
 
     public Thread(string name)
-    {
-      this.m_name  = Str.make(name);
-      this.m_state = NEW;
-    }
-
-    public Thread(Str name)
     {
       lock (topLock)
       {
@@ -113,8 +107,8 @@ namespace Fan.Sys
   // Management
   //////////////////////////////////////////////////////////////////////////
 
-    public static Thread find(Str name) { return find(name, Boolean.True); }
-    public static Thread find(Str name, Boolean check)
+    public static Thread find(string name) { return find(name, Boolean.True); }
+    public static Thread find(string name, Boolean check)
     {
       lock (topLock)
       {
@@ -155,9 +149,9 @@ namespace Fan.Sys
   // Service
   //////////////////////////////////////////////////////////////////////////
 
-    public static Thread findService(Type t) { return findService(t.qname().val, true); }
-    public static Thread findService(Type t, Boolean check) { return findService(t.qname().val, check.booleanValue()); }
-    public static Thread findService(String qname, bool check)
+    public static Thread findService(Type t) { return findService(t.qname(), true); }
+    public static Thread findService(Type t, Boolean check) { return findService(t.qname(), check.booleanValue()); }
+    public static Thread findService(string qname, bool check)
     {
       lock (topLock)
       {
@@ -184,8 +178,8 @@ namespace Fan.Sys
           if (!isServiceType(t)) continue;
           ThreadNode node = new ThreadNode();
           node.thread = thread;
-          ThreadNode x = (ThreadNode)byService[t.qname().val];
-          if ( x== null) byService[t.qname().val] = node;
+          ThreadNode x = (ThreadNode)byService[t.qname()];
+          if ( x== null) byService[t.qname()] = node;
           else
           {
             while (x.next != null) x = x.next;
@@ -209,11 +203,11 @@ namespace Fan.Sys
         {
           Type t = (Type)types.get(i);
           if (!isServiceType(t)) continue;
-          ThreadNode node = (ThreadNode)byService[t.qname().val];
+          ThreadNode node = (ThreadNode)byService[t.qname()];
           ThreadNode last = null;
           while (node.thread != thread) { last = node; node = node.next; }
           if (last == null)
-            byService[t.qname().val] = node.next;
+            byService[t.qname()] = node.next;
           else
             last.next = node.next;
         }
@@ -245,10 +239,10 @@ namespace Fan.Sys
 
     public override Long hash()
     {
-      return m_name.hash();
+      return FanStr.hash(m_name);
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       return m_name;
     }
@@ -258,7 +252,7 @@ namespace Fan.Sys
       return Sys.ThreadType;
     }
 
-    public Str name()
+    public string name()
     {
       return m_name;
     }
@@ -268,7 +262,7 @@ namespace Fan.Sys
     {
       if (m_thread == null) return;
 
-      @out.printLine(Str.make("sys::Err: Thread.trace"));
+      @out.printLine("sys::Err: Thread.trace");
 
       StackTrace st = new StackTrace(true);
       for(int i=1; i<st.FrameCount; i++)
@@ -293,13 +287,13 @@ namespace Fan.Sys
           int off = type.IndexOf(".", 4);
           string pod = type.Substring(4, off-4);
           string fant = type.Substring(off+1);
-          type = Str.make(pod).decapitalize().val + "::" + fant;
+          type = FanStr.decapitalize(pod) + "::" + fant;
         }
 
         StringBuilder sb = new StringBuilder();
         sb.Append("  ").Append(type).Append(".").Append(mb.Name);
         sb.Append(" (").Append(loc).Append(")");
-        @out.printLine(Str.make(sb.ToString()));
+        @out.printLine(sb.ToString());
       }
     }
 
@@ -754,13 +748,13 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     private static object topLock = new object();   // top level lock
-    private static Hashtable byName = new Hashtable();  // String -> Thread
-    private static Hashtable byService = new Hashtable();  // String -> ThreadNode
+    private static Hashtable byName = new Hashtable();  // string -> Thread
+    private static Hashtable byService = new Hashtable();  // string -> ThreadNode
     private static int autoNameCount = 0;           // auto-generate unique name
     private static int maxQueueSize = 1000;         // max messages to queue
     private static Timer[] noTimers = new Timer[0]; // empty timers
 
-    private Str m_name;                  // thread name
+    private string m_name;                  // thread name
     private int m_state;                 // current state
     private NThread m_thread;            // .NET thread if attached
     private Message m_head, m_tail;      // message queue linked list
@@ -777,7 +771,7 @@ namespace Fan.Sys
 
   class ThreadNode
   {
-    override public String ToString() { return thread.ToString(); }
+    override public string ToString() { return thread.ToString(); }
     public Thread thread;
     public ThreadNode next;
   }

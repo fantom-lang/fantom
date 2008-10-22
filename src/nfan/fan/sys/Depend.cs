@@ -21,7 +21,6 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Depend fromStr(Str str) { return fromStr(str.val); }
     public static Depend fromStr(string str)
     {
       try
@@ -34,7 +33,7 @@ namespace Fan.Sys
       }
     }
 
-    private Depend(Str name, Constraint[] constraints)
+    private Depend(string name, Constraint[] constraints)
     {
       this.m_name = name;
       this.m_constraints = constraints;
@@ -68,7 +67,7 @@ namespace Fan.Sys
           System.Type.GetType("Fan.Sys.Depend+Constraint")));
       }
 
-      private Str name()
+      private string name()
       {
         StringBuilder s = new StringBuilder();
         while (m_cur != ' ')
@@ -79,7 +78,7 @@ namespace Fan.Sys
         }
         consumeSpaces();
         if (s.Length == 0) throw new System.Exception();
-        return Str.make(s.ToString());
+        return s.ToString();
       }
 
       private Constraint constraint()
@@ -157,7 +156,7 @@ namespace Fan.Sys
       int m_pos;
       int m_len;
       string m_str;
-      Str m_name;
+      string m_name;
       ArrayList constraints = new ArrayList(4);
     }
 
@@ -177,14 +176,14 @@ namespace Fan.Sys
     public override Boolean _equals(object obj)
     {
       if (obj is Depend)
-        return toStr()._equals(toStr(obj));
+        return toStr() == toStr(obj) ? Boolean.True : Boolean.False;
       else
         return Boolean.False;
     }
 
     public override Long hash()
     {
-      return toStr().hash();
+      return FanStr.hash(toStr());
     }
 
     public override Type type()
@@ -192,12 +191,12 @@ namespace Fan.Sys
       return Sys.DependType;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       if (m_str == null)
       {
         StringBuilder s = new StringBuilder();
-        s.Append(m_name.val).Append(' ');
+        s.Append(m_name).Append(' ');
         for (int i=0; i<m_constraints.Length; i++)
         {
           if (i > 0) s.Append(',');
@@ -206,7 +205,7 @@ namespace Fan.Sys
           if (c.isPlus) s.Append('+');
           if (c.endVersion != null) s.Append('-').Append(c.endVersion);
         }
-        m_str = Str.make(s.ToString());
+        m_str = s.ToString();
       }
       return m_str;
     }
@@ -215,7 +214,7 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Str name()
+    public string name()
     {
       return m_name;
     }
@@ -301,9 +300,9 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private readonly Str m_name;
+    private readonly string m_name;
     private readonly Constraint[] m_constraints;
-    private Str m_str;
+    private string m_str;
 
   }
 }

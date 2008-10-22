@@ -258,7 +258,7 @@ namespace Fan.Sys
       }
     }
 
-    public override sealed Str toHex()
+    public override sealed string toHex()
     {
       try
       {
@@ -282,7 +282,7 @@ namespace Fan.Sys
         }
 
         setPos(oldPos);
-        return Str.make(s.ToString());
+        return s.ToString();
       }
       catch (IOException e)
       {
@@ -290,13 +290,13 @@ namespace Fan.Sys
       }
     }
 
-    public override Buf toDigest(Str algorithm)
+    public override Buf toDigest(string algorithm)
     {
-      string alg = algorithm.val;
+      string alg = algorithm;
       if (alg == "SHA-1") alg = "SHA1";  // to make .NET happy
       HashAlgorithm ha = HashAlgorithm.Create(alg);
       if (ha == null)
-        throw ArgErr.make("Unknown digest algorthm: " + algorithm.val).val;
+        throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
 
       try
       {

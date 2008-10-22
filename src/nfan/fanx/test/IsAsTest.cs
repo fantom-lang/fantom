@@ -40,7 +40,7 @@ namespace Fanx.Test
       //verify("Boolean f() { return 5 is Boolean }",  null, Boolean.False);
       verify("Boolean f() { return type is Type}",  null, Boolean.True);
       //verify("Boolean f() { return type.name is Type}",  null, Boolean.False);
-      verify("Boolean f() { return type.name is Str}",  null, Boolean.True);
+      verify("Boolean f() { return type.name is string}",  null, Boolean.True);
       verify("Boolean f() { return type.name.size is Long}",  null, Boolean.True);
       verify("Boolean f(Obj o) { return o is Long}",  MakeBools(false), Boolean.False);
       verify("Boolean f(Obj o) { return o is Long}",  MakeInts(7), Boolean.True);
@@ -52,10 +52,10 @@ namespace Fanx.Test
 
     void verifyAs()
     {
-      verify("Str f(Obj x) { return x as Str }", MakeStrs("foo"), Str.make("foo"));
-      verify("Str f(Obj x) { return x as Str }", MakeInts(4), null);
-      verify("Str f(Obj x) { return x as Str }", new object[] { null }, null);
-      verify("Str f(Obj x) { return x.type.method(\"toStr\").call1(x) as Str }", MakeInts(2), Str.make("2"));
+      verify("string f(Obj x) { return x as string }", MakeStrs("foo"), "foo");
+      verify("string f(Obj x) { return x as string }", MakeInts(4), null);
+      verify("string f(Obj x) { return x as string }", new object[] { null }, null);
+      verify("string f(Obj x) { return x.type.method(\"toStr\").call1(x) as string }", MakeInts(2), "2");
       verify("Long f(Obj x) { return x.type.method(\"toStr\").call1(x) as Long }", MakeInts(2), null);
     }
 
@@ -79,45 +79,45 @@ namespace Fanx.Test
     /*
     void verifyList()
     {
-      // is Str[,]
-      verify("Boolean f() { return Str[,] is Boolean  }",   null, Boolean.False);
-      verify("Boolean f() { return Str[,] is List  }",   null, Boolean.True);
-      verify("Boolean f() { return Str[,] is Obj[] }",   null, Boolean.True);
-      verify("Boolean f() { return Str[,] is Str[] }",   null, Boolean.True);
-      verify("Boolean f() { return Str[,] is Long[] }",   null, Boolean.False);
-      verify("Boolean f() { return Str[,] is Str[][] }", null, Boolean.False);
+      // is string[,]
+      verify("Boolean f() { return string[,] is Boolean  }",   null, Boolean.False);
+      verify("Boolean f() { return string[,] is List  }",   null, Boolean.True);
+      verify("Boolean f() { return string[,] is Obj[] }",   null, Boolean.True);
+      verify("Boolean f() { return string[,] is string[] }",   null, Boolean.True);
+      verify("Boolean f() { return string[,] is Long[] }",   null, Boolean.False);
+      verify("Boolean f() { return string[,] is string[][] }", null, Boolean.False);
 
-      // as Str[,]
+      // as string[,]
       Obj x = new List(Sys.StrType);
       Object[] a = { x };
       verify("Boolean    f(Obj x) { return x as Boolean  }",   a, null);
       verify("List    f(Obj x) { return x as List  }",   a, x);
       verify("Obj[]   f(Obj x) { return x as Obj[] }",   a, x);
-      verify("Str[]   f(Obj x) { return x as Str[] }",   a, x);
+      verify("string[]   f(Obj x) { return x as string[] }",   a, x);
       verify("Long[]   f(Obj x) { return x as Long[] }",   a, null);
-      verify("Str[][] f(Obj x) { return x as Str[][] }", a, null);
+      verify("string[][] f(Obj x) { return x as string[][] }", a, null);
 
-      // is [Str[,]]
-      verify("Boolean f() { return [Str[,]] is Boolean  }",      null, Boolean.False);
-      verify("Boolean f() { return [Str[,]] is List  }",      null, Boolean.True);
-      verify("Boolean f() { return [Str[,]] is List[]  }",    null, Boolean.True);
-      verify("Boolean f() { return [Str[,]] is Str[]  }",     null, Boolean.False);
-      verify("Boolean f() { return [Str[,]] is Str[][]  }",   null, Boolean.True);
-      verify("Boolean f() { return [Str[,]] is Obj[][]  }",   null, Boolean.True);
-      verify("Boolean f() { return [Str[,]] is Long[][]  }",   null, Boolean.False);
-      verify("Boolean f() { return [Str[,]] is Str[][][] }",  null, Boolean.False);
+      // is [string[,]]
+      verify("Boolean f() { return [string[,]] is Boolean  }",      null, Boolean.False);
+      verify("Boolean f() { return [string[,]] is List  }",      null, Boolean.True);
+      verify("Boolean f() { return [string[,]] is List[]  }",    null, Boolean.True);
+      verify("Boolean f() { return [string[,]] is string[]  }",     null, Boolean.False);
+      verify("Boolean f() { return [string[,]] is string[][]  }",   null, Boolean.True);
+      verify("Boolean f() { return [string[,]] is Obj[][]  }",   null, Boolean.True);
+      verify("Boolean f() { return [string[,]] is Long[][]  }",   null, Boolean.False);
+      verify("Boolean f() { return [string[,]] is string[][][] }",  null, Boolean.False);
 
-      // as [Str[,]]
+      // as [string[,]]
       x = new List(Sys.StrType.toListOf());
       a = new Obj[] { x };
       verify("Boolean      f(Obj x) { return x as Boolean  }",      a, null);
       verify("List      f(Obj x) { return x as List  }",      a, x);
       verify("List[]    f(Obj x) { return x as List[]  }",    a, x);
-      verify("Str[]     f(Obj x) { return x as Str[]  }",     a, null);
-      verify("Str[][]   f(Obj x) { return x as Str[][]  }",   a, x);
+      verify("string[]     f(Obj x) { return x as string[]  }",     a, null);
+      verify("string[][]   f(Obj x) { return x as string[][]  }",   a, x);
       verify("Obj[][]   f(Obj x) { return x as Obj[][]  }",   a, x);
       verify("Long[][]   f(Obj x) { return x as Long[][]  }",   a, null);
-      verify("Str[][][] f(Obj x) { return x as Str[][][] }",  a, null);
+      verify("string[][][] f(Obj x) { return x as string[][][] }",  a, null);
     }
     */
 

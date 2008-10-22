@@ -25,13 +25,12 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Uri fromStr(string s) { return fromStr(Str.make(s), Boolean.True); }
-    public static Uri fromStr(Str s) { return fromStr(s, Boolean.True); }
-    public static Uri fromStr(Str s, Boolean check)
+    public static Uri fromStr(string s) { return fromStr(s, Boolean.True); }
+    public static Uri fromStr(string s, Boolean check)
     {
       try
       {
-        return new Uri(new Decoder(s.val, false).decode());
+        return new Uri(new Decoder(s, false).decode());
       }
       catch (ParseErr.Val e)
       {
@@ -45,13 +44,12 @@ namespace Fan.Sys
       }
     }
 
-    public static Uri decode(String s) { return decode(Str.make(s), Boolean.True); }
-    public static Uri decode(Str s) { return decode(s, Boolean.True); }
-    public static Uri decode(Str s, Boolean check)
+    public static Uri decode(string s) { return decode(s, Boolean.True); }
+    public static Uri decode(string s, Boolean check)
     {
       try
       {
-        return new Uri(new Decoder(s.val, true).decode());
+        return new Uri(new Decoder(s, true).decode());
       }
       catch (ParseErr.Val e)
       {
@@ -69,11 +67,11 @@ namespace Fan.Sys
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
-    public static Map decodeQuery(Str s)
+    public static Map decodeQuery(string s)
     {
       try
       {
-        return new Decoder(s.val, true).decodeQuery();
+        return new Decoder(s, true).decodeQuery();
       }
       catch (ArgErr.Val e)
       {
@@ -85,27 +83,27 @@ namespace Fan.Sys
       }
     }
 
-    public static Str encodeQuery(Map map)
+    public static string encodeQuery(Map map)
     {
       StringBuilder buf = new StringBuilder(256);
 
       IEnumerator en = map.keysEnumerator();
       while (en.MoveNext())
       {
-        Str key = (Str)en.Current;
-        Str val = (Str)map.get(key);
+        string key = (string)en.Current;
+        string val = (string)map.get(key);
         if (buf.Length > 0) buf.Append('&');
-        encodeQueryStr(buf, key.val);
+        encodeQueryStr(buf, key);
         if (val != null)
         {
           buf.Append('=');
-          encodeQueryStr(buf, val.val);
+          encodeQueryStr(buf, val);
         }
       }
-      return Str.make(buf.ToString());
+      return buf.ToString();
     }
 
-    static void encodeQueryStr(StringBuilder buf, String str)
+    static void encodeQueryStr(StringBuilder buf, string str)
     {
       for (int i=0; i<str.Length; ++i)
       {
@@ -155,16 +153,16 @@ namespace Fan.Sys
 
       private void normalizeHttp()
       {
-        if (scheme == null || scheme.val != "http")
+        if (scheme == null || scheme != "http")
           return;
 
         // port 80 -> null
         if (port != null && port.longValue() == 80) port = null;
 
         // if path is "" -> "/"
-        if (pathStr == null || pathStr.val.Length == 0)
+        if (pathStr == null || pathStr.Length == 0)
         {
-          pathStr = Str.m_ascii['/'];
+          pathStr = FanStr.m_ascii['/'];
           if (path == null) path = emptyPath();
         }
       }
@@ -173,21 +171,21 @@ namespace Fan.Sys
       {
         if (path == null) return;
 
-        bool isAbs = pathStr.val.StartsWith("/");
-        bool isDir = pathStr.val.EndsWith("/");
+        bool isAbs = pathStr.StartsWith("/");
+        bool isDir = pathStr.EndsWith("/");
         bool dotLast = false;
         bool modified = false;
         for (int i=0; i<path.sz(); ++i)
         {
-          Str seg = (Str)path.get(i);
-          if (seg.val == "." && (path.sz() > 1 || host != null))
+          string seg = (string)path.get(i);
+          if (seg == "." && (path.sz() > 1 || host != null))
           {
             path.removeAt(Long.valueOf(i));
             modified = true;
             dotLast = true;
             i -= 1;
           }
-          else if (seg.val == ".." && i > 0 && path.get(i-1).ToString() != "..")
+          else if (seg == ".." && i > 0 && path.get(i-1).ToString() != "..")
           {
             path.removeAt(Long.valueOf(i));
             path.removeAt(Long.valueOf(i-1));
@@ -215,16 +213,16 @@ namespace Fan.Sys
           query = emptyQuery();
       }
 
-      internal Str scheme;
-      internal Str host;
-      internal Str userInfo;
+      internal string scheme;
+      internal string host;
+      internal string userInfo;
       internal Long port;
-      internal Str pathStr;
+      internal string pathStr;
       internal List path;
-      internal Str queryStr;
+      internal string queryStr;
       internal Map query;
-      internal Str frag;
-      internal Str str;
+      internal string frag;
+      internal string str;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -259,9 +257,9 @@ namespace Fan.Sys
           // at this point we have a scheme; if we detected
           // any upper case characters normalize to lowercase
           pos = i + 1;
-          String scheme = str.Substring(0, i);
-          if (hasUpper) scheme = Str.lower(scheme);
-          this.scheme = Str.make(scheme);
+          string scheme = str.Substring(0, i);
+          if (hasUpper) scheme = FanStr.lower(scheme);
+          this.scheme = scheme;
         }
 
         // ==== authority ====
@@ -326,7 +324,7 @@ namespace Fan.Sys
 
         // we now have the complete path section
         this.pathStr = substr(pathStart, pathEnd, PATH);
-        this.path = pathSegments(pathStr.val, numSegs);
+        this.path = pathSegments(pathStr, numSegs);
         pos = pathEnd;
 
         // ==== query ====
@@ -352,7 +350,7 @@ namespace Fan.Sys
 
           // we now have the complete query section
           this.queryStr = substr(queryStart, queryEnd, QUERY);
-          this.query = parseQuery(queryStr.val);
+          this.query = parseQuery(queryStr);
           pos = queryEnd;
         }
 
@@ -368,7 +366,7 @@ namespace Fan.Sys
         return this;
       }
 
-      private List pathSegments(String pathStr, int numSegs)
+      private List pathSegments(string pathStr, int numSegs)
       {
         // if pathStr is "/" then path si the empty list
         int len = pathStr.Length;
@@ -383,7 +381,7 @@ namespace Fan.Sys
         }
 
         // parse the segments
-        Str[] path = new Str[numSegs];
+        string[] path = new string[numSegs];
         int n = 0;
         int segStart = 0, prev = 0;
         for (int i=0; i<pathStr.Length; ++i)
@@ -393,7 +391,7 @@ namespace Fan.Sys
           {
             if (c == '/')
             {
-              if (i > 0) path[n++] = Str.make(pathStr.Substring(segStart, i-segStart));
+              if (i > 0) path[n++] = pathStr.Substring(segStart, i-segStart);
               segStart = i+1;
             }
             prev = c;
@@ -404,7 +402,7 @@ namespace Fan.Sys
           }
         }
         if (segStart < len)
-          path[n++] = Str.make(pathStr.Substring(segStart, pathStr.Length-segStart));
+          path[n++] = pathStr.Substring(segStart, pathStr.Length-segStart);
 
         return new List(Sys.StrType, path);
       }
@@ -414,7 +412,7 @@ namespace Fan.Sys
         return parseQuery(substring(0, str.Length, QUERY));
       }
 
-      private Map parseQuery(String q)
+      private Map parseQuery(string q)
       {
         if (q == null) return null;
         Map map = new Map(Sys.StrType, Sys.StrType);
@@ -459,17 +457,17 @@ namespace Fan.Sys
         return map;
       }
 
-      private void addQueryParam(Map map, String q, int start, int eq, int end, bool escaped)
+      private void addQueryParam(Map map, string q, int start, int eq, int end, bool escaped)
       {
         if (start == eq)
-          map.set(toQueryStr(q, start, end, escaped), FanBool.trueStr);
+          map.set(toQueryStr(q, start, end, escaped), "true");
         else
           map.set(toQueryStr(q, start, eq, escaped), toQueryStr(q, eq+1, end, escaped));
       }
 
-      private Str toQueryStr(String q, int start, int end, bool escaped)
+      private string toQueryStr(string q, int start, int end, bool escaped)
       {
-        if (!escaped) return Str.make(q.Substring(start, end-start));
+        if (!escaped) return q.Substring(start, end-start);
         StringBuilder s = new StringBuilder(end-start);
         int prev = 0;
         for (int i=start; i<end; ++i)
@@ -486,15 +484,15 @@ namespace Fan.Sys
             else prev = c;
           }
         }
-        return Str.make(s.ToString());
+        return s.ToString();
       }
 
-      private Str substr(int start, int end, int section)
+      private string substr(int start, int end, int section)
       {
-        return Str.make(substring(start, end, section));
+        return substring(start, end, section);
       }
 
-      private String substring(int start, int end, int section)
+      private string substring(int start, int end, int section)
       {
         if (!decoding) return str.Substring(start, end-start);
 
@@ -585,13 +583,10 @@ namespace Fan.Sys
         this.buf = new StringBuilder();
       }
 
-      internal Str encode()
+      internal string encode()
       {
-        //Uri uri = this.uri;
-        //StringBuilder buf = this.buf;
-
         // scheme
-        if (uri.m_scheme != null) buf.Append(uri.m_scheme.val).Append(':');
+        if (uri.m_scheme != null) buf.Append(uri.m_scheme).Append(':');
 
         // authority
         if (uri.m_userInfo != null || uri.m_host != null || uri.m_port != null)
@@ -614,15 +609,13 @@ namespace Fan.Sys
         if (uri.m_frag != null)
           { buf.Append('#'); encode(uri.m_frag, FRAG); }
 
-        return Str.make(buf.ToString());
+        return buf.ToString();
       }
 
-      internal StringBuilder encode(Str str, int section)
+      internal StringBuilder encode(string s, int section)
       {
-        if (!encoding) return buf.Append(str.val);
+        if (!encoding) return buf.Append(s);
 
-        //StringBuilder buf = this.buf;
-        String s = str.val;
         int len = s.Length;
         int c = 0, prev;
         for (int i=0; i<len; ++i)
@@ -696,7 +689,7 @@ namespace Fan.Sys
     {
       if (obj is Uri)
       {
-        return m_str._equals(((Uri)obj).m_str);
+        return m_str == ((Uri)obj).m_str ? Boolean.True : Boolean.False;
       }
       return Boolean.False;
     }
@@ -708,17 +701,17 @@ namespace Fan.Sys
 
     public override Long hash()
     {
-      return m_str.hash();
+      return FanStr.hash(m_str);
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       return m_str;
     }
 
     public void encode(ObjEncoder @out)
     {
-      @out.wStrLiteral(m_str.val, '`');
+      @out.wStrLiteral(m_str, '`');
     }
 
     public override Type type()
@@ -726,9 +719,9 @@ namespace Fan.Sys
       return Sys.UriType;
     }
 
-    public Str encode()
+    public string encode()
     {
-      Str x = m_encoded;
+      string x = m_encoded;
       if (x != null) return x;
       return m_encoded = new Encoder(this, true).encode();
     }
@@ -751,7 +744,7 @@ namespace Fan.Sys
     {
       if (m_pathStr != null)
       {
-        string p = m_pathStr.val;
+        string p = m_pathStr;
         int len = p.Length;
         if (len > 0 && p[len-1] == '/')
           return Boolean.True;
@@ -759,32 +752,32 @@ namespace Fan.Sys
       return Boolean.False;
     }
 
-    public Str scheme()
+    public string scheme()
     {
       return m_scheme;
     }
 
-    public Str auth()
+    public string auth()
     {
       if (m_host == null) return null;
       if (m_port == null)
       {
         if (m_userInfo == null) return m_host;
-        else return Str.make(m_userInfo.val + '@' + m_host.val);
+        else return m_userInfo + '@' + m_host;
       }
       else
       {
-        if (m_userInfo == null) return Str.make(m_host.val + ':' + m_port);
-        else return Str.make(m_userInfo.val + '@' + m_host.val + ':' + m_port);
+        if (m_userInfo == null) return m_host + ':' + m_port;
+        else return m_userInfo + '@' + m_host + ':' + m_port;
       }
     }
 
-    public Str host()
+    public string host()
     {
       return m_host;
     }
 
-    public Str userInfo()
+    public string userInfo()
     {
       return m_userInfo;
     }
@@ -794,23 +787,23 @@ namespace Fan.Sys
       return m_port;
     }
 
-    public string path(int depth) { return ((Str)m_path.get(depth)).val; }
+    public string path(int depth) { return ((string)m_path.get(depth)); }
     public List path()
     {
       return m_path;
     }
 
-    public Str pathStr()
+    public string pathStr()
     {
       return m_pathStr;
     }
 
     public Boolean isPathAbs()
     {
-      if (m_pathStr == null || m_pathStr.val.Length == 0)
+      if (m_pathStr == null || m_pathStr.Length == 0)
         return Boolean.False;
       else
-        return m_pathStr.val[0] == '/' ? Boolean.True : Boolean.False;
+        return m_pathStr[0] == '/' ? Boolean.True : Boolean.False;
     }
 
     public Boolean isPathOnly()
@@ -819,30 +812,28 @@ namespace Fan.Sys
         m_userInfo == null && m_queryStr == null && m_frag == null);
     }
 
-    public Str name()
+    public string name()
     {
-      if (m_path.sz() == 0) return Str.Empty;
-      return (Str)m_path.last();
+      if (m_path.sz() == 0) return string.Empty;
+      return (string)m_path.last();
     }
 
-    public Str basename()
+    public string basename()
     {
-      Str name = this.name();
-      string n = name.val;
+      string n = this.name();
       int dot = n.LastIndexOf('.');
       if (dot < 2)
       {
-        if (dot < 0) return name;
-        if (n == ".") return name;
-        if (n == "..") return name;
+        if (dot < 0) return n;
+        if (n == ".") return n;
+        if (n == "..") return n;
       }
-      return Str.make(n.Substring(0, dot));
+      return n.Substring(0, dot);
     }
 
-    public Str ext()
+    public string ext()
     {
-      Str name = this.name();
-      String n = name.val;
+      string n = this.name();
       int dot = n.LastIndexOf('.');
       if (dot < 2)
       {
@@ -850,7 +841,7 @@ namespace Fan.Sys
         if (n == ".") return null;
         if (n == "..") return null;
       }
-      return Str.make(n.Substring(dot+1));
+      return n.Substring(dot+1);
     }
 
     public MimeType mimeType()
@@ -864,12 +855,12 @@ namespace Fan.Sys
       return m_query;
     }
 
-    public Str queryStr()
+    public string queryStr()
     {
       return m_queryStr;
     }
 
-    public Str frag()
+    public string frag()
     {
       return m_frag;
     }
@@ -884,7 +875,7 @@ namespace Fan.Sys
       if (m_path.sz() == 0) return null;
 
       // if just a simple filename, then no parent
-      string p = m_pathStr.val;
+      string p = m_pathStr;
       if (m_path.sz() == 1 && !isPathAbs().booleanValue() && !isDir().booleanValue()) return null;
 
       // use slice
@@ -930,7 +921,7 @@ namespace Fan.Sys
       Sections t = new Sections();
       t.path = m_path.slice(range);
 
-      StringBuilder sb = new StringBuilder(m_pathStr.val.Length);
+      StringBuilder sb = new StringBuilder(m_pathStr.Length);
       if ((head && isPathAbs().booleanValue()) || forcePathAbs) sb.Append('/');
       for (int i=0; i<t.path.sz(); ++i)
       {
@@ -938,7 +929,7 @@ namespace Fan.Sys
         sb.Append(t.path.get(i));
       }
       if (t.path.sz() > 0 && (!tail || isDir().booleanValue())) sb.Append('/');
-      t.pathStr = Str.make(sb.ToString());
+      t.pathStr = sb.ToString();
 
       if (head)
       {
@@ -1004,7 +995,7 @@ namespace Fan.Sys
       else if (d == this.m_path.sz() && d == baseUri.m_path.sz())
       {
         t.path = emptyPath();
-        t.pathStr = Str.Empty;
+        t.pathStr = string.Empty;
       }
 
       // create sub-path at divergence point
@@ -1063,7 +1054,7 @@ namespace Fan.Sys
       }
       else
       {
-        if (r.m_pathStr == null || r.m_pathStr.val == "")
+        if (r.m_pathStr == null || r.m_pathStr == "")
         {
           t.setPath(baseUri);
           if (r.m_queryStr != null)
@@ -1073,7 +1064,7 @@ namespace Fan.Sys
         }
         else
         {
-          if (r.m_pathStr.val.StartsWith("/"))
+          if (r.m_pathStr.StartsWith("/"))
             t.setPath(r);
           else
             merge(t, baseUri, r);
@@ -1108,9 +1099,9 @@ namespace Fan.Sys
         if (!baseIsDir) tPath.pop();
         for (int i=0; i<rPath.sz(); ++i)
         {
-          Str rSeg = (Str)rPath.get(i);
-          if (rSeg.val == ".") { dotLast = true; continue; }
-          if (rSeg.val == "..")
+          string rSeg = (string)rPath.get(i);
+          if (rSeg == ".") { dotLast = true; continue; }
+          if (rSeg == "..")
           {
             if (!tPath.isEmpty().booleanValue()) { tPath.pop(); dotLast = true; continue; }
             if (baseIsAbs) continue;
@@ -1124,7 +1115,7 @@ namespace Fan.Sys
       t.pathStr = toPathStr(baseIsAbs, tPath, rIsDir || dotLast);
     }
 
-    static Str toPathStr(bool isAbs, List path, bool isDir)
+    static string toPathStr(bool isAbs, List path, bool isDir)
     {
       StringBuilder buf = new StringBuilder();
       if (isAbs) buf.Append('/');
@@ -1135,17 +1126,17 @@ namespace Fan.Sys
       }
       if (isDir && !(buf.Length > 0 && buf[buf.Length-1] == '/'))
         buf.Append('/');
-      return Str.make(buf.ToString());
+      return buf.ToString();
     }
 
-    public Uri plusName(String name, bool isDir) { return plusName(Str.make(name), Boolean.valueOf(isDir)); }
-    public Uri plusName(Str name) { return plusName(name, Boolean.False); }
-    public Uri plusName(Str name, Boolean asDir)
+    public Uri plusName(string name, bool isDir) { return plusName(name, Boolean.valueOf(isDir)); }
+    public Uri plusName(string name) { return plusName(name, Boolean.False); }
+    public Uri plusName(string name, Boolean asDir)
     {
       int size         = m_path.sz();
       bool isDir       = this.isDir().booleanValue();
       int newSize      = isDir ? size + 1 : size;
-      Str[] temp       = (Str[])m_path.toArray(new Str[newSize]);
+      string[] temp       = (string[])m_path.toArray(new string[newSize]);
       temp[newSize-1]  = name;
 
       Sections t = new Sections();
@@ -1173,7 +1164,7 @@ namespace Fan.Sys
       t.queryStr = this.m_queryStr;
       t.frag     = this.m_frag;
       t.path     = this.m_path;
-      t.pathStr  = Str.make(this.m_pathStr.val + "/");
+      t.pathStr  = this.m_pathStr + "/";
       return new Uri(t);
     }
 
@@ -1188,8 +1179,8 @@ namespace Fan.Sys
       while (en.MoveNext())
       {
         if (s.Length > 0) s.Append('&');
-        String key = ((Str)en.Key).val;
-        String val = ((Str)en.Value).val;
+        string key = (string)en.Key;
+        string val = (string)en.Value;
         appendQueryStr(s, key);
         s.Append('=');
         appendQueryStr(s, val);
@@ -1204,11 +1195,11 @@ namespace Fan.Sys
       t.pathStr  = m_pathStr;
       t.path     = m_path;
       t.query    = merge.ro();
-      t.queryStr = Str.make(s.ToString());
+      t.queryStr = s.ToString();
       return new Uri(t);
     }
 
-    static void appendQueryStr(StringBuilder buf, String str)
+    static void appendQueryStr(StringBuilder buf, string str)
     {
       for (int i=0; i<str.Length; ++i)
       {
@@ -1241,7 +1232,7 @@ namespace Fan.Sys
         Uri baseUri = null;
         try
         {
-          baseUri = (Uri)trap(@base, Str.uriStr, null);
+          baseUri = (Uri)trap(@base, FanStr.uriStr, null);
           if (baseUri == null)
             throw UnresolvedErr.make("Base object's uri is null: " + this).val;
         }
@@ -1273,25 +1264,24 @@ namespace Fan.Sys
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean isName(Str name)
+    public static Boolean isName(string name)
     {
-      string n = name.val;
-      int len = n.Length;
+      int len = name.Length;
 
       // must be at least one character long
       if (len == 0) return Boolean.False;
 
       // check for "." and ".."
-      if (n[0] == '.' && len <= 2)
+      if (name[0] == '.' && len <= 2)
       {
         if (len == 1) return Boolean.False;
-        if (n[1] == '.') return Boolean.False;
+        if (name[1] == '.') return Boolean.False;
       }
 
       // check that each char is unreserved
       for (int i=0; i<len; ++i)
       {
-        int c = n[i];
+        int c = name[i];
         if (c < 128 && nameMap[c]) continue;
         return Boolean.False;
       }
@@ -1299,7 +1289,7 @@ namespace Fan.Sys
       return Boolean.True;
     }
 
-    public static void checkName(Str name)
+    public static void checkName(string name)
     {
       if (!isName(name).booleanValue())
         throw NameErr.make(name).val;
@@ -1318,7 +1308,7 @@ namespace Fan.Sys
       return (ch - 'a') + 10;
     }
 
-    static Exception err(String msg)
+    static Exception err(string msg)
     {
       return ParseErr.make(msg).val;
     }
@@ -1432,19 +1422,19 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     static readonly Range parentRange = Range.make(FanInt.Zero, FanInt.NegTwo, Boolean.False);
-    static readonly Str dotDot = Str.make("..");
+    static readonly string dotDot = "..";
 
-    internal readonly Str m_str;
-    internal readonly Str m_scheme;
-    internal readonly Str m_userInfo;
-    internal readonly Str m_host;
+    internal readonly string m_str;
+    internal readonly string m_scheme;
+    internal readonly string m_userInfo;
+    internal readonly string m_host;
     internal readonly Long m_port;
     internal readonly List m_path;
-    internal readonly Str m_pathStr;
+    internal readonly string m_pathStr;
     internal readonly Map m_query;
-    internal readonly Str m_queryStr;
-    internal readonly Str m_frag;
-    internal Str m_encoded;
+    internal readonly string m_queryStr;
+    internal readonly string m_frag;
+    internal string m_encoded;
 
   }
 }

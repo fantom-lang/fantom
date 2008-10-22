@@ -21,19 +21,19 @@ namespace Fan.Sys
   // Management
   //////////////////////////////////////////////////////////////////////////
 
-    public static Method findMethod(Str qname) { return (Method)find(qname.val, true); }
-    public static Method findMethod(Str qname, Boolean check) { return (Method)find(qname.val, check.booleanValue()); }
-    public static Method findMethod(String qname, bool check) { return (Method)find(qname, check); }
+    public static Method findMethod(string qname) { return (Method)find(qname, true); }
+    public static Method findMethod(string qname, Boolean check) { return (Method)find(qname, check.booleanValue()); }
+    public static Method findMethod(string qname, bool check) { return (Method)find(qname, check); }
 
-    public static Field findField(Str qname) { return (Field)find(qname.val, true); }
-    public static Field findField(Str qname, Boolean check) { return (Field)find(qname.val, check.booleanValue()); }
-    public static Field findField(String qname, bool check) { return (Field)find(qname, check); }
+    public static Field findField(string qname) { return (Field)find(qname, true); }
+    public static Field findField(string qname, Boolean check) { return (Field)find(qname, check.booleanValue()); }
+    public static Field findField(string qname, bool check) { return (Field)find(qname, check); }
 
-    public static Slot find(Str qname) { return find(qname.val, true); }
-    public static Slot find(Str qname, Boolean check) { return find(qname.val, check.booleanValue()); }
-    public static Slot find(String qname, bool check)
+    public static Slot find(string qname) { return find(qname, true); }
+    public static Slot find(string qname, Boolean check) { return find(qname, check.booleanValue()); }
+    public static Slot find(string qname, bool check)
     {
-      String typeName, slotName;
+      string typeName, slotName;
       try
       {
         int dot = qname.IndexOf('.');
@@ -49,8 +49,8 @@ namespace Fan.Sys
       return type.slot(slotName, check);
     }
 
-    public static Func findFunc(Str qname) { return findFunc(qname.val, true); }
-    public static Func findFunc(Str qname, Boolean check) { return findFunc(qname.val, check.booleanValue()); }
+    public static Func findFunc(string qname) { return findFunc(qname, true); }
+    public static Func findFunc(string qname, Boolean check) { return findFunc(qname, check.booleanValue()); }
     public static Func findFunc(string qname, bool check)
     {
       Method m = (Method)find(qname, check);
@@ -62,11 +62,11 @@ namespace Fan.Sys
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public Slot(Type parent, Str name, int flags, Facets facets, int lineNum)
+    public Slot(Type parent, string name, int flags, Facets facets, int lineNum)
     {
       this.m_parent  = parent;
       this.m_name    = name;
-      this.m_qname   = parent == null ? name : Str.make(parent.m_qname.val + "." + name.val);
+      this.m_qname   = parent == null ? name : parent.m_qname + "." + name;
       this.m_flags   = flags;
       this.m_facets  = facets;
       this.m_lineNum = lineNum;
@@ -84,11 +84,11 @@ namespace Fan.Sys
     public override Type type() { return Sys.SlotType; }
 
     public Type parent()      { return m_parent; }
-    public virtual Str name() { return m_name; }
-    public Str qname()        { return m_qname; }
+    public virtual string name() { return m_name; }
+    public string qname()        { return m_qname; }
     public Boolean isField()     { return (this is Field) ? Boolean.True : Boolean.False; }
     public Boolean isMethod()    { return (this is Method) ? Boolean.True : Boolean.False; }
-    public abstract Str signature();
+    public abstract string signature();
 
   //////////////////////////////////////////////////////////////////////////
   // Flags
@@ -109,10 +109,10 @@ public virtual Boolean isConst() { return Boolean.valueOf(m_flags & FConst.Const
     public Boolean isSynthetic() { return Boolean.valueOf(m_flags & FConst.Synthetic); }
     public Boolean isVirtual()   { return Boolean.valueOf(m_flags & FConst.Virtual); }
 
-    public override object trap(Str name, List args)
+    public override object trap(string name, List args)
     {
       // private undocumented access
-      string n = name.val;
+      string n = name;
       if (n == "flags") return Long.valueOf(m_flags);
       if (n == "lineNumber") return Long.valueOf(m_lineNum);
       return base.trap(name, args);
@@ -123,36 +123,36 @@ public virtual Boolean isConst() { return Boolean.valueOf(m_flags & FConst.Const
   //////////////////////////////////////////////////////////////////////////
 
     public Map facets() { return m_facets.map(); }
-    public object facet(Str name) { return m_facets.get(name, null); }
-    public object facet(Str name, object def) { return m_facets.get(name, def); }
+    public object facet(string name) { return m_facets.get(name, null); }
+    public object facet(string name, object def) { return m_facets.get(name, def); }
 
   //////////////////////////////////////////////////////////////////////////
   // Documentation
   //////////////////////////////////////////////////////////////////////////
 
-    public Str doc()
+    public string doc()
     {
       //parent.doc();  // ensure parent has loaded documentation
       //return doc;
-      return Str.make("todo");
+      return "todo";
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public override Str toStr() { return m_qname; }
+    public override string toStr() { return m_qname; }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
     internal Type m_parent;
-    internal Str m_name;
-    internal Str m_qname;
+    internal string m_name;
+    internal string m_qname;
     internal int m_flags;
     internal Facets m_facets;
-    public Str m_doc;
+    public string m_doc;
     internal int m_lineNum;
 
   }

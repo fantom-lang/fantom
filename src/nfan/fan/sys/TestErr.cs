@@ -18,18 +18,12 @@ namespace Fan.Sys
   {
 
   //////////////////////////////////////////////////////////////////////////
-  // C# Convenience
-  //////////////////////////////////////////////////////////////////////////
-
-    public new static TestErr make(string msg) { return make(Str.make(msg)); }
-
-  //////////////////////////////////////////////////////////////////////////
   // Fan Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static TestErr make() { return make((Str)null, (Err)null); }
-    public new static TestErr make(Str msg) { return make(msg, null); }
-    public new static TestErr make(Str msg, Err cause)
+    public new static TestErr make() { return make((string)null, (Err)null); }
+    public new static TestErr make(string msg) { return make(msg, (Err)null); }
+    public new static TestErr make(string msg, Err cause)
     {
       TestErr err = new TestErr();
       make_(err, msg, cause);
@@ -37,8 +31,8 @@ namespace Fan.Sys
     }
 
     public static void make_(TestErr self) { make_(self, null);  }
-    public static void make_(TestErr self, Str msg) { make_(self, msg, null); }
-    public static void make_(TestErr self, Str msg, Err cause) { Err.make_(self, msg, cause); }
+    public static void make_(TestErr self, string msg) { make_(self, msg, null); }
+    public static void make_(TestErr self, string msg, Err cause) { Err.make_(self, msg, cause); }
 
   //////////////////////////////////////////////////////////////////////////
   // C# Constructors

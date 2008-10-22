@@ -168,7 +168,7 @@ namespace Fanx.Test
       verify("Long f() { x:=0; for (Long i:=0; i<3; ++i) x++; for (Long i:=0; i<2; ++i) x++; return x;}", Long.valueOf(5));
 
       // errors
-//VERR      verifyErr("Void f() { for (;\"x\";) {} }", "For condition must be Boolean, not 'sys::Str'");
+//VERR      verifyErr("Void f() { for (;\"x\";) {} }", "For condition must be Boolean, not 'sys::string'");
 //VERR      verifyErr("Void f() { break; }",      "Break outside of loop (break is implicit in switch)");
 //VERR      verifyErr("Void f() { continue; }",   "Continue outside of loop");
     }
@@ -186,7 +186,7 @@ namespace Fanx.Test
       catch (System.Reflection.TargetInvocationException e) { err = (e.InnerException as Err.Val).err(); }
       verify(err != null);
       verify(err.GetType() == System.Type.GetType("Fan.Sys.Err"));
-      verify(err.message().val.Equals("bad"));
+      verify(err.message().Equals("bad"));
 
       err = null;
       try { verify("Long f() { throw IOErr.make(); return 0; }", null); }

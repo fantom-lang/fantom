@@ -34,22 +34,22 @@ namespace Fanx.Test
     {
       verifySig("|,|", new Type[] { }, Sys.VoidType);
 
-      verifySig("|->Str|", new Type[] { }, Sys.StrType);
+      verifySig("|->string|", new Type[] { }, Sys.StrType);
 
       verifySig("|->Void|", new Type[] { }, Sys.VoidType);
 
-      verifySig("|Boolean x-> Str|", new Type[] { Sys.BoolType }, Sys.StrType);
+      verifySig("|Boolean x-> string|", new Type[] { Sys.BoolType }, Sys.StrType);
 
-      verifySig("|Str a, Duration b -> Long|",
+      verifySig("|string a, Duration b -> Long|",
                 new Type[] { Sys.StrType, Sys.DurationType },
                 Sys.IntType);
 
-      verifySig("|Boolean a, Long b, Long c, Str d, Type e, Obj f, Str g, Boolean h -> Long|",
+      verifySig("|Boolean a, Long b, Long c, string d, Type e, Obj f, string g, Boolean h -> Long|",
                new Type[] { Sys.BoolType, Sys.IntType, Sys.IntType, Sys.StrType,
                  Sys.TypeType, Sys.ObjType, Sys.StrType, Sys.BoolType  },
                Sys.IntType);
 
-      verifySig("|Boolean a, Long b, Long c, Str d, Type e, Obj f, Str g, Boolean h, Duration i -> Long|",
+      verifySig("|Boolean a, Long b, Long c, string d, Type e, Obj f, string g, Boolean h, Duration i -> Long|",
                new Type[] { Sys.BoolType, Sys.IntType, Sys.IntType, Sys.StrType,
                  Sys.TypeType, Sys.ObjType, Sys.StrType, Sys.BoolType, Sys.DurationType  },
                Sys.IntType);
@@ -119,9 +119,9 @@ namespace Fanx.Test
       throws Exception
     {
       // static
-      verify("Obj f(|Str s, Boolean c -> Type| m) { return m.call([\"sys::Str\", true]) }",
+      verify("Obj f(|string s, Boolean c -> Type| m) { return m.call([\"sys::string\", true]) }",
         new Obj[] { Sys.findMethod("sys::Sys.findType", true) }, Sys.StrType);
-      verify("Obj f(|Str s, Boolean c -> Type| m) { return m.call([\"sys::Str\", true, 55]) }",
+      verify("Obj f(|string s, Boolean c -> Type| m) { return m.call([\"sys::string\", true, 55]) }",
         new Obj[] { Sys.findMethod("sys::Sys.findType", true) }, Sys.StrType);
 
       // instance

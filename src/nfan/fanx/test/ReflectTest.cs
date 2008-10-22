@@ -56,7 +56,7 @@ namespace Fanx.Test
       catch(Err.Val err)
       {
         //System.out.println(" -- " + err);
-        verify(err.err().message().val.StartsWith("Invalid type signature '" + sig + "'"));
+        verify(err.err().message().StartsWith("Invalid type signature '" + sig + "'"));
       }
     }
 
@@ -66,10 +66,10 @@ namespace Fanx.Test
 
     public void verifyBasic()
     {
-      Type t = CompileToFanType("class Foo { Str f() { return type.name } }");
+      Type t = CompileToFanType("class Foo { string f() { return type.name } }");
       object obj = t.make();
-      Str name = (Str)t.method("f", true).call1(obj);
-      verify(name.val == "Foo");
+      string name = (string)t.method("f", true).call1(obj);
+      verify(name == "Foo");
     }
 
   }

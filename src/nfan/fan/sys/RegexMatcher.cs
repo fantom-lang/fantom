@@ -20,7 +20,7 @@ namespace Fan.Sys
   // Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    internal RegexMatcher(Match match, Str source)
+    internal RegexMatcher(Match match, string source)
     {
       this.m_match = match;
       this.m_source = source;
@@ -40,7 +40,7 @@ namespace Fan.Sys
     {
       // to match java
       return (m_match.Success)
-        ? Boolean.valueOf(m_source.val.Length == m_match.Length) : Boolean.False;
+        ? Boolean.valueOf(m_source.Length == m_match.Length) : Boolean.False;
     }
 
     public Boolean find()
@@ -54,15 +54,15 @@ namespace Fan.Sys
       return Long.valueOf(m_match.Groups.Count-1);
     }
 
-    public Str group() { return group(FanInt.Zero); }
-    public Str group(Long group)
+    public string group() { return group(FanInt.Zero); }
+    public string group(Long group)
     {
       // to match java
       if (!matches().booleanValue()) throw new System.Exception();
       if (group.longValue() < 0 || group.longValue() >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 
-      return Str.make(m_match.Groups[group.intValue()].Value);
+      return m_match.Groups[group.intValue()].Value;
     }
 
     public Long start() { return start(FanInt.Zero); }
@@ -93,7 +93,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     Match m_match;
-    Str m_source;
+    string m_source;
 
   }
 }

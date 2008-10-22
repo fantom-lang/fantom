@@ -175,7 +175,7 @@ namespace Fan.Sys
       return this;
     }
 
-    public override Str toHex()
+    public override string toHex()
     {
       char[] hexChars = Buf.hexChars;
       StringBuilder s = new StringBuilder(m_size*2);
@@ -184,10 +184,10 @@ namespace Fan.Sys
         int b = m_buf[i] & 0xFF;
         s.Append(hexChars[b>>4]).Append(hexChars[b&0xf]);
       }
-      return Str.make(s.ToString());
+      return s.ToString();
     }
 
-    public override Str toBase64()
+    public override string toBase64()
     {
       StringBuilder s = new StringBuilder(m_size*2);
       char[] base64chars = Buf.base64chars;
@@ -216,16 +216,16 @@ namespace Fan.Sys
         s.Append('=');
       }
 
-      return Str.make(s.ToString());
+      return s.ToString();
     }
 
-    public override Buf toDigest(Str algorithm)
+    public override Buf toDigest(string algorithm)
     {
-      string alg = algorithm.val;
+      string alg = algorithm;
       if (alg == "SHA-1") alg = "SHA1";  // to make .NET happy
       HashAlgorithm ha = HashAlgorithm.Create(alg);
       if (ha == null)
-        throw ArgErr.make("Unknown digest algorthm: " + algorithm.val).val;
+        throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
       return new MemBuf(ha.ComputeHash(m_buf, 0, m_size));
     }
 
@@ -248,7 +248,7 @@ namespace Fan.Sys
           int c = buf[i];
           if (c != '\n') continue;
           String str = new String(buf, s, i-s, charset);
-          f.call1(Str.make(str));
+          f.call1(string.make(str));
           s = i+1;
         }
       }
@@ -258,7 +258,7 @@ namespace Fan.Sys
       }
     }
 
-    public Str readAllStr(Boolean normalizeNewline )
+    public string readAllStr(Boolean normalizeNewline )
     */
 
   //////////////////////////////////////////////////////////////////////////

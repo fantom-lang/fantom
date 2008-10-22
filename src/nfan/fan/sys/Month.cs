@@ -37,14 +37,14 @@ namespace Fan.Sys
 
     private Month(int ordinal, string name)
     {
-      Enum.make_(this, FanInt.m_pos[ordinal], Str.make(name).intern());
+      Enum.make_(this, FanInt.m_pos[ordinal], System.String.Intern(name));
       this.ord = ordinal;
-      this.localeAbbrKey = Str.make(name + "Abbr");
-      this.localeFullKey = Str.make(name + "Full");
+      this.localeAbbrKey = name + "Abbr";
+      this.localeFullKey = name + "Full";
     }
 
-    public static Month fromStr(Str name) { return fromStr(name, Boolean.True); }
-    public static Month fromStr(Str name, Boolean check)
+    public static Month fromStr(string name) { return fromStr(name, Boolean.True); }
+    public static Month fromStr(string name, Boolean check)
     {
       return (Month)doFromStr(Sys.MonthType, name, check);
     }
@@ -63,16 +63,16 @@ namespace Fan.Sys
         return FanInt.m_pos[DateTime.daysInMon[ord]];
     }
 
-    public Str toLocale() { return toLocale(null); }
-    public Str toLocale(Str pattern)
+    public string toLocale() { return toLocale(null); }
+    public string toLocale(string pattern)
     {
       if (pattern == null) return localeAbbr();
-      if (pattern.isEveryChar('M'))
+      if (FanStr.isEveryChar(pattern, 'M'))
       {
-        switch (pattern.val.Length)
+        switch (pattern.Length)
         {
-          case 1: return Str.make(""+(ord+1));
-          case 2: return Str.make(ord < 9 ? "0" + (ord+1) : ""+(ord+1));
+          case 1: return ""+(ord+1);
+          case 2: return ord < 9 ? "0"+(ord+1) : ""+(ord+1);
           case 3: return localeAbbr();
           case 4: return localeFull();
         }
@@ -80,20 +80,20 @@ namespace Fan.Sys
       throw ArgErr.make("Invalid pattern: " + pattern).val;
     }
 
-    public Str localeAbbr() { return abbr(Locale.current()); }
-    public Str abbr(Locale locale)
+    public string localeAbbr() { return abbr(Locale.current()); }
+    public string abbr(Locale locale)
     {
-      return locale.get(Str.sysStr, localeAbbrKey);
+      return locale.get(FanStr.sysStr, localeAbbrKey);
     }
 
-    public Str localeFull() { return full(Locale.current()); }
-    public Str full(Locale locale)
+    public string localeFull() { return full(Locale.current()); }
+    public string full(Locale locale)
     {
-      return locale.get(Str.sysStr, localeFullKey);
+      return locale.get(FanStr.sysStr, localeFullKey);
     }
 
     internal readonly int ord;
-    readonly Str localeAbbrKey;
-    readonly Str localeFullKey;
+    readonly string localeAbbrKey;
+    readonly string localeFullKey;
   }
 }

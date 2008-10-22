@@ -77,10 +77,8 @@ namespace Fan.Sys
     public List(string[] values)
     {
       this.m_of = Sys.StrType;
-      this.m_values = new object[values.Length];
       this.m_size = values.Length;
-      for (int i=0; i<values.Length; ++i)
-        this.m_values[i] = Str.make(values[i]);
+      this.m_values = values;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -798,24 +796,24 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public Str join() { return join(Str.Empty, null); }
-    public Str join(Str sep) { return join(sep, null); }
-    public Str join(Str sep, Func f)
+    public string join() { return join(string.Empty, null); }
+    public string join(string sep) { return join(sep, null); }
+    public string join(string sep, Func f)
     {
-      if (m_size == 0) return Str.Empty;
+      if (m_size == 0) return "";
 
       if (m_size == 1)
       {
         object v = m_values[0];
-        if (f != null) return (Str)f.call2(v, FanInt.Zero);
-        if (v == null) return Str.nullStr;
+        if (f != null) return (string)f.call2(v, FanInt.Zero);
+        if (v == null) return "null";
         return toStr(v);
       }
 
       StringBuilder s = new StringBuilder(32+m_size*32);
       for (int i=0; i<m_size; i++)
       {
-        if (i > 0) s.Append(sep.val);
+        if (i > 0) s.Append(sep);
         if (f == null)
         {
           if (m_values[i] == null) s.Append("null");
@@ -826,12 +824,12 @@ namespace Fan.Sys
           s.Append(f.call2(m_values[i], Long.valueOf(i)));
         }
       }
-      return Str.make(s.ToString());
+      return s.ToString();
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
-      if (m_size == 0) return Str.make("[,]");
+      if (m_size == 0) return "[,]";
       StringBuilder s = new StringBuilder(32+m_size*32);
       s.Append("[");
       for (int i=0; i<m_size; i++)
@@ -841,7 +839,7 @@ namespace Fan.Sys
         else s.Append(m_values[i]);
       }
       s.Append("]");
-      return Str.make(s.ToString());
+      return s.ToString();
     }
 
     public void encode(ObjEncoder @out)
@@ -926,7 +924,7 @@ namespace Fan.Sys
       {
         object obj = get(i);
         if (obj == null) a[i] = "null";
-        else a[i] = toStr(obj).val;
+        else a[i] = toStr(obj);
       }
       return a;
     }

@@ -82,13 +82,13 @@ namespace Fanx.Test
         try { callList(obj, ms, i); } catch (Err.Val e) { err = e.err(); }
   //System.out.println("  " + err);
         verify(err != null);
-        verify(err.message().val.StartsWith("Too few arguments: " + i));
+        verify(err.message().StartsWith("Too few arguments: " + i));
 
         err = null;
         try { callList(obj, mi, i); } catch (Err.Val e) { err = e.err(); }
   //System.out.println("  " + err);
         verify(err != null);
-        verify(err.message().val.StartsWith("Too few arguments: " + (i+1)));
+        verify(err.message().StartsWith("Too few arguments: " + (i+1)));
 
         if (i <= Func.MaxIndirectParams)
         {
@@ -96,7 +96,7 @@ namespace Fanx.Test
           try { callIndirect(ms, i); } catch (Err.Val e) { err = e.err(); }
   //System.out.println("  " + err);
           verify(err != null);
-          verify(err.message().val.StartsWith("Too few arguments: " + i));
+          verify(err.message().StartsWith("Too few arguments: " + i));
         }
 
         if (i+1 <= Func.MaxIndirectParams)
@@ -105,7 +105,7 @@ namespace Fanx.Test
           try { callIndirect(obj, mi, i); } catch (Err.Val e) { err = e.err(); }
     //System.out.println("  " + err);
           verify(err != null);
-          verify(err.message().val.StartsWith("Too few arguments: " + (i+1)));
+          verify(err.message().StartsWith("Too few arguments: " + (i+1)));
         }
       }
 

@@ -62,8 +62,8 @@ namespace Fanx.Serial
         case EOF:              return "end of file";
         case ID:               return "identifier";
         case BOOL_LITERAL:     return "Bool literal";
-        case STR_LITERAL:      return "Str literal";
-        case INT_LITERAL:      return "Long literal";
+        case STR_LITERAL:      return "String literal";
+        case INT_LITERAL:      return "Int literal";
         case FLOAT_LITERAL:    return "Float literal";
         case DECIMAL_LITERAL:  return "Decimal literal";
         case DURATION_LITERAL: return "Duration literal";

@@ -29,7 +29,7 @@ namespace Fan.Sys
 
     public override Long hash()
     {
-      return signature().hash();
+      return FanStr.hash(signature());
     }
 
     public override Boolean _equals(object obj)
@@ -46,11 +46,11 @@ namespace Fan.Sys
       return Sys.ListType;
     }
 
-    public override Str signature()
+    public override string signature()
     {
       if (m_sig == null)
       {
-        m_sig = Str.make(m_v.signature().val + "[]");
+        m_sig = m_v.signature() + "[]";
       }
       return m_sig;
     }
@@ -68,8 +68,8 @@ namespace Fan.Sys
     internal override Map makeParams()
     {
       return new Map(Sys.StrType, Sys.TypeType)
-        .set(Str.m_ascii['V'], m_v)
-        .set(Str.m_ascii['L'], this).ro();
+        .set("V", m_v)
+        .set("L", this).ro();
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -98,7 +98,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public readonly Type m_v;
-    private Str m_sig;
+    private string m_sig;
 
   }
 }

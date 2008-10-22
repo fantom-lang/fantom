@@ -36,7 +36,7 @@ namespace Fan.Sys
 
     public override string ToString()
     {
-      return toStr().val;
+      return toStr();
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -60,15 +60,17 @@ namespace Fan.Sys
     {
       if (self is FanObj)
         return ((FanObj)self).compare(x);
+      else if (self is string)
+        return FanStr.compare((string)self, x);
       else if (self is IComparable)
         return Long.valueOf(((IComparable)self).CompareTo(x));
       else
-        return toStr(self).compare(toStr(x));
+        return FanStr.compare(toStr(self), toStr(x));
     }
 
     public virtual Long compare(object obj)
     {
-      return toStr(this).compare(toStr(obj));
+      return FanStr.compare(toStr(), toStr(obj));
     }
 
     public static Long hash(object self)
@@ -84,17 +86,17 @@ namespace Fan.Sys
       return Long.valueOf(base.GetHashCode());
     }
 
-    public static Str toStr(object self)
+    public static string toStr(object self)
     {
       if (self is FanObj)
         return ((FanObj)self).toStr();
       else
-        return Str.make(self.ToString());
+        return self.ToString();
     }
 
-    public virtual Str toStr()
+    public virtual string toStr()
     {
-      return Str.make(base.ToString());
+      return base.ToString();
     }
 
     public static Boolean isImmutable(object self)
@@ -123,7 +125,7 @@ namespace Fan.Sys
       return Sys.ObjType;
     }
 
-    public static object trap(object self, Str name, List args)
+    public static object trap(object self, string name, List args)
     {
       if (self is FanObj)
         return ((FanObj)self).trap(name, args);
@@ -131,9 +133,9 @@ namespace Fan.Sys
         return doTrap(self, name, args, type(self));
     }
 
-    public virtual object trap(Str name, List args) { return doTrap(this, name, args, type()); }
+    public virtual object trap(string name, List args) { return doTrap(this, name, args, type()); }
 
-    private static object doTrap(object self, Str name, List args, Type type)
+    private static object doTrap(object self, string name, List args, Type type)
     {
       Slot slot = type.slot(name, Boolean.True);
       if (slot is Method)

@@ -15,7 +15,7 @@ using Fanx.Serial;
 namespace Fan.Sys
 {
   /// <summary>
-  /// Facets manages facet meta-data as a Str:Obj map.
+  /// Facets manages facet meta-data as a string:Obj map.
   /// </summary>
   public sealed class Facets
   {
@@ -38,6 +38,10 @@ namespace Fan.Sys
       return m_empty = new Facets(new Hashtable());
     }
 
+    /// <summary>
+    /// This is the constructor used during decoding the pod
+    /// file. The values are all passed in as encoded Strings.
+    /// </summary>
     public static Facets make(Hashtable src)
     {
       if (src == null || src.Count == 0) return empty();
@@ -45,6 +49,9 @@ namespace Fan.Sys
 
     }
 
+    // <summary>
+    /// This is the constructor used by Type.makeDynamic.
+    /// </summary>
     public static Facets make(Map map)
     {
       if (map == null || map.isEmpty().booleanValue()) return empty();
@@ -53,7 +60,7 @@ namespace Fan.Sys
       IDictionaryEnumerator en = map.pairsIterator();
       while (en.MoveNext())
       {
-        Str key = (Str)en.Key;
+        string key = (string)en.Key;
         object val = en.Value;
         if (FanObj.isImmutable(val).booleanValue())
           src[key] = val;
@@ -78,13 +85,13 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    internal object get(Str name, object def)
+    internal object get(string name, object def)
     {
       object val = m_src[name];
       if (val == null) return def;
 
       // if we've already decoded, go with it
-      if (!(val is string)) return val;
+      if (!(val is string)) return fromValue(val);
 
       // decode into an object
       object obj = ObjDecoder.decode((string)val);
@@ -93,7 +100,7 @@ namespace Fan.Sys
       // safe to reuse for future gets
       object x = toImmutable(obj);
       if (x == null) return obj;
-      m_src[name] = x;
+      m_src[name] = toValue(x);
       return x;
     }
 
@@ -136,9 +143,9 @@ namespace Fan.Sys
       // Enumeration, so we need to create a disconnected
       // copy of our keys to modify.
       bool allImmutable = true;
-      Str[] keys = new Str[m_src.Count];
+      string[] keys = new string[m_src.Count];
       m_src.Keys.CopyTo(keys, 0);
-      foreach (Str name in keys)
+      foreach (string name in keys)
       {
         object val = get(name, null);
         map.set(name, val);
@@ -159,6 +166,31 @@ namespace Fan.Sys
       return map().ToString();
     }
 
+    private static object toValue(object obj)
+    {
+      // we can't store a String as a value in the map b/c that
+      // is how we store the values which are still encoded
+      if (obj is string)
+        return new StrVal((string)obj);
+      else
+        return obj;
+    }
+
+    private static object fromValue(object obj)
+    {
+      if (obj is StrVal)
+        return ((StrVal)obj).val;
+      else
+        return obj;
+    }
+
+    internal class StrVal
+    {
+      internal StrVal(string val) { this.val = val; }
+      public string toString() { return val; }
+      internal string val;
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
@@ -166,8 +198,8 @@ namespace Fan.Sys
     private static MapType m_mapType;
     private static Facets m_empty;
 
-    private Hashtable m_src;   // Str -> String or immutable Obj
-    private Map m_immutable;   // immutable Str:Obj Fan map
+    private Hashtable m_src;   // string -> string or immutable Obj
+    private Map m_immutable;   // immutable string:Obj Fan map
 
   }
 }

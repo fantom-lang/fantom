@@ -227,12 +227,12 @@ namespace Fan.Sys
       return Boolean.True;
     }
 
-    public override sealed Str toHex()
+    public override sealed string toHex()
     {
       throw UnsupportedErr.make().val;
     }
 
-    public override Buf toDigest(Str algorithm)
+    public override Buf toDigest(string algorithm)
     {
       throw UnsupportedErr.make().val;
     }

@@ -20,16 +20,16 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static LogRecord make(DateTime time, LogLevel level, Str logName, Str msg) { return make(time, level, logName, msg); }
-    public static LogRecord make(DateTime time, LogLevel level, Str logName, Str msg, Err err)
+    public static LogRecord make(DateTime time, LogLevel level, string logName, string msg) { return make(time, level, logName, msg); }
+    public static LogRecord make(DateTime time, LogLevel level, string logName, string msg, Err err)
     {
       LogRecord self = new LogRecord();
       make_(self, time, level, logName, msg, err);
       return self;
     }
 
-    public static void make_(LogRecord self, DateTime time, LogLevel level, Str logName, Str msg) { make_(self, time, level, logName, msg, null); }
-    public static void make_(LogRecord self, DateTime time, LogLevel level, Str logName, Str msg, Err err)
+    public static void make_(LogRecord self, DateTime time, LogLevel level, string logName, string msg) { make_(self, time, level, logName, msg, null); }
+    public static void make_(LogRecord self, DateTime time, LogLevel level, string logName, string msg, Err err)
     {
       self.m_time    = time;
       self.m_level   = level;
@@ -44,7 +44,7 @@ namespace Fan.Sys
 
     public override Type type() { return Sys.LogRecordType; }
 
-    public override Str toStr()
+    public override string toStr()
     {
       string ts = m_time.toLocale("hh:mm:ss DD-MMM-YY");
       StringBuilder s = new StringBuilder();
@@ -52,7 +52,7 @@ namespace Fan.Sys
        .Append(' ').Append('[').Append(m_level).Append(']')
        .Append(' ').Append('[').Append(m_logName).Append(']')
        .Append(' ').Append(m_message);
-      return Str.make(s.ToString());
+      return s.ToString();
     }
 
     public void print() { print(Sys.@out()); }
@@ -68,8 +68,8 @@ namespace Fan.Sys
 
     public DateTime m_time;
     public LogLevel m_level;
-    public Str m_logName;
-    public Str m_message;
+    public string m_logName;
+    public string m_message;
     public Err m_err;
 
   }

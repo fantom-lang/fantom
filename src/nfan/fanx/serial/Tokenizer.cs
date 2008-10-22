@@ -361,7 +361,7 @@ namespace Fanx.Serial
           default:    s.Append((char)cur); consume(); break;
         }
       }
-      m_val = Str.make(s.ToString());
+      m_val = s.ToString();
       return Token.STR_LITERAL;
     }
 

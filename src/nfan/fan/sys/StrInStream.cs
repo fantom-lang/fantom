@@ -18,13 +18,6 @@ namespace Fan.Sys
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public StrInStream(Str str) : base(null)
-    {
-      m_str  = str.val;
-      m_size = str.val.Length;
-      m_pos  = 0;
-    }
-
     public StrInStream(string val) : base(null)
     {
       m_str  = val;
