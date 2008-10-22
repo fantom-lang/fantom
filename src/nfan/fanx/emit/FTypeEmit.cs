@@ -564,6 +564,7 @@ namespace Fanx.Emit
     internal PERWAPI.Method IntVal;
     internal PERWAPI.Method ErrMake;
     internal PERWAPI.Field ErrVal;
+    internal PERWAPI.Method TypeToNullable;
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
