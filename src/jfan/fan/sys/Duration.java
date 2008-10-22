@@ -126,7 +126,7 @@ public final class Duration
   public final long compare(Object obj)
   {
     long that = ((Duration)obj).ticks;
-    if (ticks < that) return FanInt.LT; return ticks  == that ? FanInt.EQ : FanInt.GT;
+    if (ticks < that) return -1; return ticks  == that ? 0 : +1;
   }
 
   public final int hashCode()

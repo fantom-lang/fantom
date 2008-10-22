@@ -93,7 +93,7 @@ public abstract class Buf
 
   public long capacity()
   {
-    return FanInt.maxValue;
+    return Long.MAX_VALUE;
   }
 
   public void capacity(long c)
@@ -294,11 +294,11 @@ public abstract class Buf
   public final Long peekChar() { return in.peekChar(); }
 
   public final String readLine() { return in.readLine(); }
-  public final String readLine(long max) { return in.readLine(max); }
+  public final String readLine(Long max) { return in.readLine(max); }
 
   public final String readStrToken() { return in.readStrToken(); }
-  public final String readStrToken(long max) { return in.readStrToken(max); }
-  public final String readStrToken(long max, Func f) { return in.readStrToken(FanInt.Chunk, f); }
+  public final String readStrToken(Long max) { return in.readStrToken(max); }
+  public final String readStrToken(Long max, Func f) { return in.readStrToken(FanInt.Chunk, f); }
 
   public final List readAllLines() { return in.readAllLines(); }
 

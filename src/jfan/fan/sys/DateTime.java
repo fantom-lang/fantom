@@ -324,7 +324,7 @@ public final class DateTime
   public long compare(Object obj)
   {
     long that = ((DateTime)obj).ticks;
-    if (ticks < that) return FanInt.LT; return ticks  == that ? FanInt.EQ : FanInt.GT;
+    if (ticks < that) return -1; return ticks  == that ? 0 : +1;
   }
 
   public int hashCode()
@@ -347,7 +347,6 @@ public final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   public final long ticks() { return ticks; }
-  public final long getTicks() { return ticks; }
 
   public final long year() { return (fields & 0xff) + 1900; }
   public final int getYear() { return (fields & 0xff) + 1900; }
@@ -382,9 +381,8 @@ public final class DateTime
   public final TimeZone timeZone() { return timeZone; }
 
   public final boolean dst() { return ((fields >> 31) & 0x1) != 0; }
-  public final boolean getDST()  { return ((fields >> 31) & 0x1) != 0; }
 
-  public final String timeZoneAbbr() { return getDST() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
+  public final String timeZoneAbbr() { return dst() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
 
   public final long dayOfYear() { return dayOfYear(getYear(), month().ord, getDay())+1; }
 
@@ -557,7 +555,7 @@ public final class DateTime
 
         case 'z':
           TimeZone.Rule rule = timeZone.rule(getYear());
-          boolean dst = getDST();
+          boolean dst = dst();
           switch (n)
           {
             case 1:

@@ -83,15 +83,15 @@ public final class FanFloat
     double that = ((Double)obj).doubleValue();
     if (Double.isNaN(self))
     {
-      return (Double.isNaN(that)) ? FanInt.EQ : FanInt.LT;
+      return (Double.isNaN(that)) ? 0 : -1;
     }
     else if (Double.isNaN(that))
     {
-      return FanInt.GT;
+      return +1;
     }
     else
     {
-      if (self < that) return FanInt.LT; return self == that ? FanInt.EQ : FanInt.GT;
+      if (self < that) return -1; return self == that ? 0 : +1;
     }
   }
 

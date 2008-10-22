@@ -39,15 +39,15 @@ public class StrBufTest
     System.out.println("Fan:  " +  fan(a, b, 0L));
 
     long t1 = System.nanoTime();
-    for (int i=0; i<100000; ++i) java(a, b, Long.valueOf(i % FanInt.POS));
+    for (int i=0; i<100000; ++i) java(a, b, Long.valueOf(i % 200));
     long t2 = System.nanoTime();
-    for (int i=0; i<100000; ++i) fan(a, b, Long.valueOf(i % FanInt.POS));
+    for (int i=0; i<100000; ++i) fan(a, b, Long.valueOf(i % 200));
     long t3 = System.nanoTime();
 
     long t4 = System.nanoTime();
-    for (int i=0; i<1000000; ++i) fan(a, b, Long.valueOf(i % FanInt.POS));
+    for (int i=0; i<1000000; ++i) fan(a, b, Long.valueOf(i % 200));
     long t5 = System.nanoTime();
-    for (int i=0; i<1000000; ++i) java(a, b, Long.valueOf(i % FanInt.POS));
+    for (int i=0; i<1000000; ++i) java(a, b, Long.valueOf(i % 200));
     long t6 = System.nanoTime();
 
     System.out.println("Java: " + (t2-t1) + "ns");
