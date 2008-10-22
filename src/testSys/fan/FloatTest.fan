@@ -129,6 +129,7 @@ class FloatTest : Test
   {
     x := 5f;   verifyEq(-x, -5f)
     x = -44f; verifyEq(-x, 44f)
+    Float? y
 
     verifyEq(3f*2f,   6f)
     verifyEq(3f*-2f, -6f)
@@ -143,23 +144,23 @@ class FloatTest : Test
     verifyEq(21f%-6f, 3f)
     verifyEq(16f%5f, 1f)
     verifyEq(12f%5f, 2f)
-    x = 19f % 10f; x %= 5f; verifyEq(x, 4f)
+    y = 19f % 10f; y %= 5f; verifyEq(y, 4f)
 
     verifyEq(2f + 3f,  5f)
     verifyEq(2f + -1f, 1f)
-    x= 4f + 3f; x+=5f; verifyEq(x, 12f)
+    fx= 4f + 3f; fx+=5f; verifyEq(fx, 12f)
 
     verifyEq(7f - 3f,  4f)
     verifyEq(2f - 3f, -1f)
-    x=5f - 2f; x-=-3.0f; verifyEq(x, 6f)
+    fy=5f - 2f; fy-=-3.0f; verifyEq(fy, 6f)
   }
-
-  // TODO - need to fix when do const folding optimization
-  // TODO - need to check field rvalues
 
 //////////////////////////////////////////////////////////////////////////
 // Increment
 //////////////////////////////////////////////////////////////////////////
+
+  Float fx
+  Float? fy
 
   Void testIncrement()
   {
@@ -168,6 +169,24 @@ class FloatTest : Test
     verifyEq(x++, 5.0f); verifyEq(x, 6.0f)
     verifyEq(--x, 5.0f); verifyEq(x, 5.0f)
     verifyEq(x--, 5.0f); verifyEq(x, 4.0f)
+
+    Float? y := 4.0f
+    verifyEq(++y, 5.0f); verifyEq(y, 5.0f)
+    verifyEq(y++, 5.0f); verifyEq(y, 6.0f)
+    verifyEq(--y, 5.0f); verifyEq(y, 5.0f)
+    verifyEq(y--, 5.0f); verifyEq(y, 4.0f)
+
+    fx = 4f
+    verifyEq(++fx, 5.0f); verifyEq(fx, 5.0f)
+    verifyEq(fx++, 5.0f); verifyEq(fx, 6.0f)
+    verifyEq(--fx, 5.0f); verifyEq(fx, 5.0f)
+    verifyEq(fx--, 5.0f); verifyEq(fx, 4.0f)
+
+    fy = 4.0f
+    verifyEq(++fy, 5.0f); verifyEq(fy, 5.0f)
+    verifyEq(fy++, 5.0f); verifyEq(fy, 6.0f)
+    verifyEq(--fy, 5.0f); verifyEq(fy, 5.0f)
+    verifyEq(fy--, 5.0f); verifyEq(fy, 4.0f)
   }
 
 //////////////////////////////////////////////////////////////////////////
