@@ -33,7 +33,7 @@ namespace Fan.TestNative
 
     public string subNative(NativeSub self)
     {
-      return string.make("subNative working");
+      return "subNative working";
     }
 
     public Long subfX(NativeSub self)

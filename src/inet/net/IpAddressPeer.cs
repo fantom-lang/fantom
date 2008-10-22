@@ -33,11 +33,11 @@ namespace Fan.Inet
     {
       try
       {
-        return make(str, Dns.GetHostEntry(str.val).AddressList[0]);
+        return make(str, Dns.GetHostEntry(str).AddressList[0]);
       }
       catch (SocketException e)
       {
-        throw UnknownHostErr.make(string.make(e.Message)).val;
+        throw UnknownHostErr.make(e.Message).val;
       }
     }
 
@@ -45,7 +45,7 @@ namespace Fan.Inet
     {
       try
       {
-        IPAddress[] addr = Dns.GetHostEntry(str.val).AddressList;
+        IPAddress[] addr = Dns.GetHostEntry(str).AddressList;
         List list = new List(Fan.Sys.Sys.ObjType, addr.Length); //IpAddress.$Type, addr.length);
         for (int i=0; i<addr.Length; i++)
           list.add(make(str, addr[i]));
@@ -53,7 +53,7 @@ namespace Fan.Inet
       }
       catch (SocketException e)
       {
-        throw UnknownHostErr.make(string.make(e.Message)).val;
+        throw UnknownHostErr.make(e.Message).val;
       }
     }
 
@@ -63,11 +63,11 @@ namespace Fan.Inet
       {
         MemBuf mb = bytes as MemBuf;
         IPAddress net = Dns.GetHostEntry(new IPAddress(mb.bytes())).AddressList[0];
-        return make(string.make(net.ToString()), net);
+        return make(net.ToString(), net);
       }
       catch (SocketException e)
       {
-        throw ArgErr.make(string.make(e.Message)).val;
+        throw ArgErr.make(e.Message).val;
       }
     }
 
@@ -89,7 +89,7 @@ namespace Fan.Inet
             if (addr[i].AddressFamily == AddressFamily.InterNetwork)
               net = addr[i];
 
-          m_local = make(string.make(hostName), net);
+          m_local = make(hostName, net);
         }
         catch (Exception)
         {
@@ -97,7 +97,7 @@ namespace Fan.Inet
           {
             // fallback to explicit loopback
             IPAddress net = new IPAddress(new byte[] {127, 0, 0, 1});
-            m_local = make(string.make(net.ToString()), net);
+            m_local = make(net.ToString(), net);
           }
           catch (Exception ignore)
           {
@@ -111,7 +111,7 @@ namespace Fan.Inet
 
     public static IpAddress make(IPAddress net)
     {
-      return make(string.make(net.ToString()), net);
+      return make(net.ToString(), net);
     }
 
     public static IpAddress make(string str, IPAddress net)
@@ -165,12 +165,12 @@ namespace Fan.Inet
 
     public string numeric(IpAddress fan)
     {
-      return string.make(m_net.ToString());
+      return m_net.ToString();
     }
 
     public string hostname(IpAddress fan)
     {
-      return string.make(Dns.GetHostEntry(m_net).HostName);
+      return Dns.GetHostEntry(m_net).HostName;
       //return m_str;
     }
 
