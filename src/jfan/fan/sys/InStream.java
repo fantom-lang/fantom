@@ -228,8 +228,7 @@ public class InStream
     return (c1 << 24) + (c2 << 16) + (c3 << 8) + c4;
   }
 
-  public long readS4() { return readInt(); }
-  public int readInt()
+  public long readS4()
   {
     int c1 = r();
     int c2 = r();
@@ -239,8 +238,7 @@ public class InStream
     return ((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
   }
 
-  public long readS8() { return readLong(); }
-  public long readLong()
+  public long readS8()
   {
     long c1 = r();
     long c2 = r();
@@ -257,12 +255,12 @@ public class InStream
 
   public double readF4()
   {
-    return Float.intBitsToFloat(readInt());
+    return Float.intBitsToFloat((int)readS4());
   }
 
   public double readF8()
   {
-    return Double.longBitsToDouble(readLong());
+    return Double.longBitsToDouble(readS8());
   }
 
   public BigDecimal readDecimal()
