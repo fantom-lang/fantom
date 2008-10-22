@@ -37,14 +37,14 @@ namespace Fan.Sys
   // Lifecycle
   //////////////////////////////////////////////////////////////////////////
 
-    public Str id()
+    public string id()
     {
       if (m_id == null)
       {
-        Str qname = type().qname();
+        string qname = type().qname();
         int n = 0;
         if (idMap[qname] != null) n = (int)idMap[qname];
-        m_id = Str.make(qname.val + n);
+        m_id = qname + n;
         idMap[qname] = n+1;
       }
       return m_id;
@@ -58,68 +58,68 @@ namespace Fan.Sys
   // verify
   //////////////////////////////////////////////////////////////////////////
 
-    public void verify(Bool cond) { verify(cond, null); }
-    public void verify(Bool cond, Str msg)
+    public void verify(Boolean cond) { verify(cond, null); }
+    public void verify(Boolean cond, string msg)
     {
-      if (!cond.val) fail(msg);
+      if (!cond.booleanValue()) fail(msg);
       verifyCount++;
     }
 
-    public void verifyFalse(Bool cond) { verifyFalse(cond, null); }
-    public void verifyFalse(Bool cond, Str msg)
+    public void verifyFalse(Boolean cond) { verifyFalse(cond, null); }
+    public void verifyFalse(Boolean cond, string msg)
     {
-      if (cond.val) fail(msg);
+      if (cond.booleanValue()) fail(msg);
       verifyCount++;
     }
 
     public void verifyEq(object expected, object actual) { verifyEq(expected, actual, null); }
-    public void verifyEq(object expected, object actual, Str msg)
+    public void verifyEq(object expected, object actual, string msg)
     {
-      if (!OpUtil.compareEQ(expected, actual).val)
+      if (!OpUtil.compareEQ(expected, actual).booleanValue())
       {
-        if (msg == null) msg = Str.make(expected + " != " + actual);
+        if (msg == null) msg = expected + " != " + actual;
         fail(msg);
       }
       if (expected != null && actual != null)
       {
-        if (hash(expected).val != hash(actual).val)
+        if (hash(expected).longValue() != hash(actual).longValue())
         {
-          fail(Str.make("Equal but different hash codes: " +
-            expected + " (0x" + hash(expected).toHex() + ") ?= " +
-            actual   + " (0x" + hash(actual).toHex() + ")"));
+          fail("Equal but different hash codes: " +
+            expected + " (0x" + FanInt.toHex(hash(expected)) + ") ?= " +
+            actual   + " (0x" + FanInt.toHex(hash(actual)) + ")");
         }
       }
       verifyCount++;
     }
 
     public void verifyNotEq(object expected, object actual) { verifyNotEq(expected, actual, null); }
-    public void verifyNotEq(object expected, object actual, Str msg)
+    public void verifyNotEq(object expected, object actual, string msg)
     {
-      if (!OpUtil.compareNE(expected, actual).val)
+      if (!OpUtil.compareNE(expected, actual).booleanValue())
       {
-        if (msg == null) msg = Str.make(expected + " == " + actual);
+        if (msg == null) msg = expected + " == " + actual;
         fail(msg);
       }
       verifyCount++;
     }
 
     public void verifySame(object expected, object actual) { verifySame(expected, actual, null); }
-    public void verifySame(object expected, object actual, Str msg)
+    public void verifySame(object expected, object actual, string msg)
     {
-      if (!OpUtil.compareSame(expected, actual).val)
+      if (!OpUtil.compareSame(expected, actual).booleanValue())
       {
-        if (msg == null) msg = Str.make(expected + " !== " + actual);
+        if (msg == null) msg = expected + " !== " + actual;
         fail(msg);
       }
       verifyCount++;
     }
 
     public void verifyNotSame(object expected, object actual) { verifyNotSame(expected, actual, null); }
-    public void verifyNotSame(object expected, object actual, Str msg)
+    public void verifyNotSame(object expected, object actual, string msg)
     {
-      if (OpUtil.compareSame(expected, actual).val)
+      if (OpUtil.compareSame(expected, actual).booleanValue())
       {
-        if (msg == null) msg = Str.make(expected + " === " + actual);
+        if (msg == null) msg = expected + " === " + actual;
         fail(msg);
       }
       verifyCount++;
@@ -135,30 +135,30 @@ namespace Fan.Sys
       {
         if (verbose) System.Console.WriteLine("  verifyErr: " + e);
         if (e.err().type() == errType) { verifyCount++; return; }
-        fail(Str.make(e.err().type() + " thrown, expected " + errType));
+        fail(e.err().type() + " thrown, expected " + errType);
       }
       catch (System.Exception e)
       {
         if (verbose) System.Console.WriteLine("  verifyErr: " + e);
         Err err = Fan.Sys.Err.make(e);
         if (err.type() == errType) { verifyCount++; return; }
-        fail(Str.make(e.GetType() + " thrown, expected " + errType));
+        fail(e.GetType() + " thrown, expected " + errType);
       }
-      fail(Str.make("No err thrown, expected " + errType));
+      fail("No err thrown, expected " + errType);
     }
 
     public void fail() { fail(null); }
-    public void fail(Str msg)
+    public void fail(string msg)
     {
       throw err(msg);
     }
 
-    private Exception err(Str msg)
+    private Exception err(string msg)
     {
       if (msg == null)
         return Fan.Sys.TestErr.make("Test failed").val;
       else
-        return Fan.Sys.TestErr.make("Test failed: " + msg.val).val;
+        return Fan.Sys.TestErr.make("Test failed: " + msg).val;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -185,7 +185,7 @@ namespace Fan.Sys
     public int verifyCount;
     public static bool verbose;
     File m_tempDir = null;
-    Str m_id = null;
+    string m_id = null;
 
   }
 }

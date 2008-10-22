@@ -37,22 +37,22 @@ namespace Fan.Sys
   // Type
   //////////////////////////////////////////////////////////////////////////
 
-    public override Int hash()
+    public override Long hash()
     {
-      return signature().hash();
+      return FanStr.hash(signature());
     }
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is FuncType)
       {
         FuncType x = (FuncType)obj;
-        if (m_params.Length != x.m_params.Length) return Bool.False;
+        if (m_params.Length != x.m_params.Length) return Boolean.False;
         for (int i=0; i<m_params.Length; ++i)
-          if (!m_params[i].Equals(x.m_params[i])) return Bool.False;
+          if (!m_params[i].Equals(x.m_params[i])) return Boolean.False;
         return m_ret._equals(x.m_ret);
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     public override Type @base()
@@ -60,7 +60,7 @@ namespace Fan.Sys
       return Sys.FuncType;
     }
 
-    public override Str signature()
+    public override string signature()
     {
       if (m_sig == null)
       {
@@ -69,12 +69,12 @@ namespace Fan.Sys
         for (int i=0; i<m_params.Length; ++i)
         {
           if (i > 0) s.Append(',');
-          s.Append(m_params[i].signature().val);
+          s.Append(m_params[i].signature());
         }
         s.Append('-').Append('>');
-        s.Append(m_ret.signature().val);
+        s.Append(m_ret.signature());
         s.Append('|');
-        m_sig = Str.make(s.ToString());
+        m_sig = s.ToString();
       }
       return m_sig;
     }
@@ -107,8 +107,8 @@ namespace Fan.Sys
     {
       Map map = new Map(Sys.StrType, Sys.TypeType);
       for (int i=0; i<m_params.Length; ++i)
-        map.set(Str.m_ascii['A'+i], m_params[i]);
-      return map.set(Str.m_ascii['R'], m_ret).ro();
+        map.set(FanStr.m_ascii['A'+i], m_params[i]);
+      return map.set(FanStr.m_ascii['R'], m_ret).ro();
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ namespace Fan.Sys
       if (t == Sys.RType) return m_ret;
 
       // if A-H maps to avail params
-      int name = t.m_name.val[0] - 'A';
+      int name = t.name()[0] - 'A';
       if (name < m_params.Length) return m_params[name];
 
       // otherwise let anything be used
@@ -146,7 +146,7 @@ namespace Fan.Sys
     {
       Param[] p = new Param[m_params.Length];
       for (int i=0; i<p.Length; ++i)
-        p[i] = new Param(Str.m_ascii['a'+i], m_params[i], 0);
+        p[i] = new Param(FanStr.m_ascii['a'+i], m_params[i], 0);
       return new List(Sys.ParamType, p);
     }
 
@@ -156,7 +156,7 @@ namespace Fan.Sys
 
     public readonly Type[] m_params;
     public readonly Type m_ret;
-    private Str m_sig;
+    private string m_sig;
     private bool m_genericParameterType;
 
   }
