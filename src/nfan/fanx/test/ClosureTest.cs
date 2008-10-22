@@ -34,17 +34,17 @@ namespace Fanx.Test
     {
       string src = "class Simple\n";
       src += "{\n";
-      src += "  static Int f(Int x)\n";
+      src += "  static Long f(Long x)\n";
       src += "  {\n";
       src += "    y := 1\n";
-      src += "    3.times |Int t| { x += y }\n";
+      src += "    3.times |Long t| { x += y }\n";
       src += "    //echo(\"done x=\" + x + \" y=\" + y)\n";
       src += "    return x\n";
       src += "  }\n";
       src += "}\n";
 
       System.Type cls = CompileToType(src);
-      verify(InvokeStatic(cls, "F", MakeInts(6)) == Int.make(9));
+      verify(InvokeStatic(cls, "F", MakeInts(6)) == Long.valueOf(9));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -53,19 +53,19 @@ namespace Fanx.Test
 
     public void verifyDefs()
     {
-      verifyDef("|->Int| { return 0 }", 0);
-      verifyDef("|Int a->Int| { return a }", 1);
-      verifyDef("|Int a, Int b->Int| { return a+b }", 2);
-      verifyDef("|Int a, Int b, Int c->Int| { return a+b+c }", 3);
-      verifyDef("|Int a, Int b, Int c, Int d->Int| { return a+b+c+d }", 4);
-      verifyDef("|Int a, Int b, Int c, Int d, Int e->Int| { return a+b+c+d+e }", 5);
-      verifyDef("|Int a, Int b, Int c, Int d, Int e,Int f->Int| { return a+b+c+d+e+f }", 6);
-      verifyDef("|Int a, Int b, Int c, Int d, Int e,Int f,Int g->Int| { return a+b+c+d+e+f+g }", 7);
-      verifyDef("|Int a, Int b, Int c, Int d, Int e,Int f,Int g,Int h->Int| { return a+b+c+d+e+f+g+h }", 8);
-      //verifyDef("|Int a, Int b, Int c, Int d, Int e,Int f,Int g,Int h,Int i->Int| { return a+b+c+d+e+f+g+h+i }", 9);
-      //verifyDef("|Int a, Int b, Int c, Int d, Int e,Int f,Int g,Int h,Int i,Int j->Int| { return a+b+c+d+e+f+g+h+i+j }", 10);
-      //verifyDef("|Int a, Int b, Int c, Int d, Int e,Int f,Int g,Int h,Int i,Int j,Int k->Int| { return a+b+c+d+e+f+g+h+i+j+k }", 11);
-      //verifyDef("|Int a, Int b, Int c, Int d, Int e,Int f,Int g,Int h,Int i,Int j,Int k,Int l->Int| { return a+b+c+d+e+f+g+h+i+j+k+l }", 12);
+      verifyDef("|->Long| { return 0 }", 0);
+      verifyDef("|Long a->Long| { return a }", 1);
+      verifyDef("|Long a, Long b->Long| { return a+b }", 2);
+      verifyDef("|Long a, Long b, Long c->Long| { return a+b+c }", 3);
+      verifyDef("|Long a, Long b, Long c, Long d->Long| { return a+b+c+d }", 4);
+      verifyDef("|Long a, Long b, Long c, Long d, Long e->Long| { return a+b+c+d+e }", 5);
+      verifyDef("|Long a, Long b, Long c, Long d, Long e,Long f->Long| { return a+b+c+d+e+f }", 6);
+      verifyDef("|Long a, Long b, Long c, Long d, Long e,Long f,Long g->Long| { return a+b+c+d+e+f+g }", 7);
+      verifyDef("|Long a, Long b, Long c, Long d, Long e,Long f,Long g,Long h->Long| { return a+b+c+d+e+f+g+h }", 8);
+      //verifyDef("|Long a, Long b, Long c, Long d, Long e,Long f,Long g,Long h,Long i->Long| { return a+b+c+d+e+f+g+h+i }", 9);
+      //verifyDef("|Long a, Long b, Long c, Long d, Long e,Long f,Long g,Long h,Long i,Long j->Long| { return a+b+c+d+e+f+g+h+i+j }", 10);
+      //verifyDef("|Long a, Long b, Long c, Long d, Long e,Long f,Long g,Long h,Long i,Long j,Long k->Long| { return a+b+c+d+e+f+g+h+i+j+k }", 11);
+      //verifyDef("|Long a, Long b, Long c, Long d, Long e,Long f,Long g,Long h,Long i,Long j,Long k,Long l->Long| { return a+b+c+d+e+f+g+h+i+j+k+l }", 12);
     }
 
     private void verifyDef(string closure, int n)
@@ -96,36 +96,36 @@ namespace Fanx.Test
       // anything n and over should be ok
       for (int i=n; i<12; i++)
       {
-        verify(callList(m, i), Int.make(result));
+        verify(callList(m, i), Long.valueOf(result));
         if (i <= Func.MaxIndirectParams)
-          verify(callIndirect(m, i), Int.make(result));
+          verify(callIndirect(m, i), Long.valueOf(result));
       }
     }
 
-    private Int callList(Method m, int argn)
+    private Long callList(Method m, int argn)
     {
       List list = new List(Sys.ObjType);
-      for (int i=0; i<argn; i++) list.add(Int.make(1+i));
-      return (Int)m.call(list);
+      for (int i=0; i<argn; i++) list.add(Long.valueOf(1+i));
+      return (Long)m.call(list);
     }
 
-    private Int callIndirect(Method m, int argn)
+    private Long callIndirect(Method m, int argn)
     {
       switch (argn)
       {
-        case 0:  return (Int)m.call0();
-        case 1:  return (Int)m.call1(Int.make(1));
-        case 2:  return (Int)m.call2(Int.make(1), Int.make(2));
-        case 3:  return (Int)m.call3(Int.make(1), Int.make(2), Int.make(3));
-        case 4:  return (Int)m.call4(Int.make(1), Int.make(2), Int.make(3), Int.make(4));
-        case 5:  return (Int)m.call5(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5));
-        case 6:  return (Int)m.call6(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6));
-        case 7:  return (Int)m.call7(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7));
-        case 8:  return (Int)m.call8(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8));
-        //case 9:  return (Int)m.call9(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9));
-        //case 10: return (Int)m.call10(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9), Int.make(10));
-        //case 11: return (Int)m.call11(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9), Int.make(10), Int.make(11));
-        //case 12: return (Int)m.call12(Int.make(1), Int.make(2), Int.make(3), Int.make(4), Int.make(5), Int.make(6), Int.make(7), Int.make(8), Int.make(9), Int.make(10), Int.make(11), Int.make(12));
+        case 0:  return (Long)m.call0();
+        case 1:  return (Long)m.call1(Long.valueOf(1));
+        case 2:  return (Long)m.call2(Long.valueOf(1), Long.valueOf(2));
+        case 3:  return (Long)m.call3(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3));
+        case 4:  return (Long)m.call4(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4));
+        case 5:  return (Long)m.call5(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5));
+        case 6:  return (Long)m.call6(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6));
+        case 7:  return (Long)m.call7(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7));
+        case 8:  return (Long)m.call8(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8));
+        //case 9:  return (Long)m.call9(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9));
+        //case 10: return (Long)m.call10(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9), Long.valueOf(10));
+        //case 11: return (Long)m.call11(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9), Long.valueOf(10), Long.valueOf(11));
+        //case 12: return (Long)m.call12(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3), Long.valueOf(4), Long.valueOf(5), Long.valueOf(6), Long.valueOf(7), Long.valueOf(8), Long.valueOf(9), Long.valueOf(10), Long.valueOf(11), Long.valueOf(12));
         default: return null; // ignore
 
       }

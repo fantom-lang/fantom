@@ -35,7 +35,7 @@ namespace Fanx.Emit
       this.emit       = emit;
       this.method     = method;
       this.code       = method.m_code;
-      this.name       = normalizeName(method.m_name);
+      this.name       = FanUtil.toNetMethodName(method.m_name);
       this.paramLen   = method.m_paramCount;
       this.isStatic   = (method.m_flags & FConst.Static) != 0;
       this.isInternal = false; //(method.m_flags & FConst.Internal) != 0;
@@ -60,15 +60,6 @@ namespace Fanx.Emit
       this.emit = emit;
     }
 
-    /// <summary>
-    /// Get the .NET method name to use for a Fan method.
-    /// </summary>
-    internal string normalizeName(string name)
-    {
-      if (name == "equals") return "_equals";
-      return name;
-    }
-
   //////////////////////////////////////////////////////////////////////////
   // Emit
   //////////////////////////////////////////////////////////////////////////
@@ -91,10 +82,10 @@ namespace Fanx.Emit
     /// and invoke them
     ///
     ///   fan:
-    ///     class Foo { new make(Int a) { ... } }
+    ///     class Foo { new make(Long a) { ... } }
     ///   .net:
-    ///     static Foo make(Int a) { return make_(new Foo(), a) }
-    ///     static Foo make_(Foo self, Int a) { ... return self }
+    ///     static Foo make(Long a) { return make_(new Foo(), a) }
+    ///     static Foo make_(Foo self, Long a) { ... return self }
     ///
     /// We call the first method "make" the "factory" and the
     /// second method "make_" the "body".  CallNew opcodes are
@@ -247,9 +238,9 @@ namespace Fanx.Emit
     /// </summary>
     public void emitMixinRouter(Method m)
     {
-      string parent  = NameUtil.toNetTypeName(m.parent().pod().name(), m.parent().name());
-      string name    = normalizeName(m.name().val);
-      string ret     = NameUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
+      string parent  = FanUtil.toNetTypeName(m.parent().pod().name(), m.parent().name());
+      string name    = FanUtil.toNetMethodName(m.name());
+      string ret     = FanUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
       string[] parTypes = new string[] { parent };
       List pars      = m.@params();
       int paramCount = pars.sz();
@@ -257,7 +248,7 @@ namespace Fanx.Emit
       // find first param with default value
       int firstDefault = paramCount;
       for (int i=0; i<paramCount; i++)
-        if (((Param)pars.get(i)).hasDefault().val)
+        if (((Param)pars.get(i)).hasDefault().booleanValue())
           { firstDefault = i; break; }
 
       // generate routers
@@ -272,10 +263,9 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = NameUtil.toNetTypeName(pt.pod().name(), pt.name());
-
+          string s = FanUtil.toNetTypeName(pt.pod().name(), pt.name());
           myParams[j] = s;
-          myParamNames[j] = param.name().val;
+          myParamNames[j] = param.name();
           implParams[j+1] = s;
         }
 
@@ -298,12 +288,12 @@ namespace Fanx.Emit
     ///
     ///   mixin Mixin
     ///   {
-    ///     abstract Int foo()
+    ///     abstract Long foo()
     ///   }
     ///
     ///   class Base
     ///   {
-    ///     Int foo() { return 5 }
+    ///     Long foo() { return 5 }
     ///   }
     ///
     ///   class Child : Base, Mixin
@@ -317,7 +307,7 @@ namespace Fanx.Emit
     ///
     ///   class Child : Base, Mixin
     ///   {
-    ///     public virtual Int foo() { return base.foo(); }
+    ///     public virtual Long foo() { return base.foo(); }
     ///   }
     ///
     ///   TODO - optimize the intra-pod case
@@ -325,16 +315,16 @@ namespace Fanx.Emit
     /// </summary>
     public void emitInterfaceRouter(Type implType, Method m)
     {
-      string impl = NameUtil.toNetTypeName(implType.pod().name(), implType.name());
-      string name = m.name().val;
-      string ret  = NameUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
+      string impl = FanUtil.toNetTypeName(implType.pod().name(), implType.name());
+      string name = m.name();
+      string ret  = FanUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
       List pars   = m.@params();
       int paramCount = pars.sz();
 
       // find first param with default value
       int firstDefault = paramCount;
       for (int i=0; i<paramCount; i++)
-        if (((Param)pars.get(i)).hasDefault().val)
+        if (((Param)pars.get(i)).hasDefault().booleanValue())
           { firstDefault = i; break; }
 
       // generate routers
@@ -347,10 +337,9 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = "Fan." + NameUtil.upper(pt.pod().name().val) + "." + pt.name().val;
-
+          string s = FanUtil.toNetTypeName(pt.pod().name(), pt.name());
           myParams[j] = s;
-          myParamNames[j] = param.name().val;
+          myParamNames[j] = param.name();
         }
 
         // CLR requires public virtual

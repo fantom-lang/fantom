@@ -53,7 +53,7 @@ namespace Fanx.Test
       string src =
         "class Foo\n" +
         "{\n" +
-        "  static Int[] f(Int[] r, Int a)\n" +
+        "  static Long[] f(Long[] r, Long a)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -68,14 +68,14 @@ namespace Fanx.Test
         "  }\n" +
         "}";
 
-      List r = new List(Sys.IntType, new object[] { Int.make(0), Int.make(3), Int.make(99) });
+      List r = new List(Sys.IntType, new object[] { Long.valueOf(0), Long.valueOf(3), Long.valueOf(99) });
       System.Type type = CompileToType(src);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Int.make(2) });
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Long.valueOf(2) });
 
       List c = (List)o;
-      verify(c.get(0) == Int.make(0));
-      verify(c.get(1) == Int.make(3));
-      verify(c.get(2) == Int.make(99));
+      verify(c.get(0) == Long.valueOf(0));
+      verify(c.get(1) == Long.valueOf(3));
+      verify(c.get(2) == Long.valueOf(99));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ namespace Fanx.Test
       string src =
         "class Foo\n" +
         "{\n" +
-        "  static Int[] f(Int[] r, Int a)\n" +
+        "  static Long[] f(Long[] r, Long a)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -112,14 +112,14 @@ namespace Fanx.Test
 
       List r = new List(Sys.IntType, new object[] {});
       System.Type type = CompileToType(src);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Int.make(2) });
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Long.valueOf(2) });
 
       verify(r == o);
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(3)));
-      verify(r.get(2).Equals(Int.make(99)));
-      verify(r.get(3).Equals(Int.make(4)));
-      verify(r.get(4).Equals(Int.make(100)));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(3)));
+      verify(r.get(2).Equals(Long.valueOf(99)));
+      verify(r.get(3).Equals(Long.valueOf(4)));
+      verify(r.get(4).Equals(Long.valueOf(100)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ namespace Fanx.Test
       string src =
         "class Foo\n" +
         "{\n" +
-        "  static Int f(Int a)\n" +
+        "  static Long f(Long a)\n" +
         "  {\n" +
         "    try\n" +
         "    {\n" +
@@ -147,8 +147,8 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Int.make(5) });
-      verify(o.Equals(Int.make(8)));
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Long.valueOf(5) });
+      verify(o.Equals(Long.valueOf(8)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -160,7 +160,7 @@ namespace Fanx.Test
       string src =
         "class Foo\n" +
         "{\n" +
-        "  static Int f(Int a)\n" +
+        "  static Long f(Long a)\n" +
         "  {\n" +
         "    try\n" +
         "    {\n" +
@@ -176,8 +176,8 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Int.make(3) });
-      verify(o.Equals(Int.make(6)));
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Long.valueOf(3) });
+      verify(o.Equals(Long.valueOf(6)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -189,7 +189,7 @@ namespace Fanx.Test
       string src =
         "class Foo\n" +
         "{\n" +
-        "  static Int f(Int a, Err err)\n" +
+        "  static Long f(Long a, Err err)\n" +
         "  {\n" +
         "    try\n" +
         "    {\n" +
@@ -209,11 +209,11 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Int.make(3), IndexErr.make() });
-      verify(o.Equals(Int.make(6)));
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Long.valueOf(3), IndexErr.make() });
+      verify(o.Equals(Long.valueOf(6)));
 
-      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Int.make(3), IOErr.make() });
-      verify(o.Equals(Int.make(7)));
+      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Long.valueOf(3), IOErr.make() });
+      verify(o.Equals(Long.valueOf(7)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -225,7 +225,7 @@ namespace Fanx.Test
       string src =
         "class Foo\n" +
         "{\n" +
-        "  static Int f(Int a)\n" +
+        "  static Long f(Long a)\n" +
         "  {\n" +
         "    try\n" +
         "    {\n" +
@@ -249,8 +249,8 @@ namespace Fanx.Test
         "}";
 
       System.Type type = CompileToType(src);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Int.make(3) });
-      verify(o.Equals(Int.make(4)));
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { Long.valueOf(3) });
+      verify(o.Equals(Long.valueOf(4)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -261,7 +261,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n"+
         "{\n"+
-        "  static Int[] f(Int[] r, Int a)\n"+
+        "  static Long[] f(Long[] r, Long a)\n"+
         "  {\n"+
         "    r.add(0)\n"+
         "    try\n"+
@@ -278,12 +278,12 @@ namespace Fanx.Test
 
       System.Type type = CompileToType(src);
       List r = new List(Sys.IntType, new object[0]);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Int.make(2) });
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Long.valueOf(2) });
 
       List c = (List)o;
-      verify(c.get(0).Equals(Int.make(0)));
-      verify(c.get(1).Equals(Int.make(3)));
-      verify(c.get(2).Equals(Int.make(99)));
+      verify(c.get(0).Equals(Long.valueOf(0)));
+      verify(c.get(1).Equals(Long.valueOf(3)));
+      verify(c.get(2).Equals(Long.valueOf(99)));
 
       r.clear();
       try
@@ -294,8 +294,8 @@ namespace Fanx.Test
       {
         verify(ex.InnerException is System.NullReferenceException);
         c = (List)o;
-        verify(c.get(0).Equals(Int.make(0)));
-        verify(c.get(1).Equals(Int.make(99)));
+        verify(c.get(0).Equals(Long.valueOf(0)));
+        verify(c.get(1).Equals(Long.valueOf(99)));
       }
     }
 
@@ -303,7 +303,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Int[] f(Int[] r, Bool b)\n" +
+        "  static Long[] f(Long[] r, Boolean b)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -323,19 +323,19 @@ namespace Fanx.Test
 
       System.Type type = CompileToType(src);
       List r = new List(Sys.IntType, new object[0]);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.False });
 
       List c = (List)o;
-      verify(c.get(0).Equals(Int.make(0)));
-      verify(c.get(1).Equals(Int.make(1)));
-      verify(c.get(2).Equals(Int.make(2)));
-      verify(c.get(3).Equals(Int.make(3)));
-      verify(c.get(4).Equals(Int.make(4)));
+      verify(c.get(0).Equals(Long.valueOf(0)));
+      verify(c.get(1).Equals(Long.valueOf(1)));
+      verify(c.get(2).Equals(Long.valueOf(2)));
+      verify(c.get(3).Equals(Long.valueOf(3)));
+      verify(c.get(4).Equals(Long.valueOf(4)));
 
       r.clear();
       try
       {
-        o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.True});
+        o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.True});
       }
       catch (System.Reflection.TargetInvocationException ex)
       {
@@ -343,9 +343,9 @@ namespace Fanx.Test
         verify(err.GetType() == System.Type.GetType("Fan.Sys.ArgErr"));
 
         c = (List)o;
-        verify(c.get(0).Equals(Int.make(0)));
-        verify(c.get(1).Equals(Int.make(1)));
-        verify(c.get(2).Equals(Int.make(3)));
+        verify(c.get(0).Equals(Long.valueOf(0)));
+        verify(c.get(1).Equals(Long.valueOf(1)));
+        verify(c.get(2).Equals(Long.valueOf(3)));
       }
     }
 
@@ -353,7 +353,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Int[] f(Int[] r)\n" +
+        "  static Long[] f(Long[] r)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -375,16 +375,16 @@ namespace Fanx.Test
       verify(r == o);
 
       List c = (List)o;
-      verify(c.get(0).Equals(Int.make(0)));
-      verify(c.get(1).Equals(Int.make(1)));
-      verify(c.get(2).Equals(Int.make(2)));
+      verify(c.get(0).Equals(Long.valueOf(0)));
+      verify(c.get(1).Equals(Long.valueOf(1)));
+      verify(c.get(2).Equals(Long.valueOf(2)));
     }
 
     void verifyTryFinally4()
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Int[] f(Int[] r)\n" +
+        "  static Long[] f(Long[] r)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -415,18 +415,18 @@ namespace Fanx.Test
       verify(r == o);
 
       List c = (List)o;
-      verify(c.get(0).Equals(Int.make(0)));
-      verify(c.get(1).Equals(Int.make(1)));
-      verify(c.get(2).Equals(Int.make(2)));
-      verify(c.get(3).Equals(Int.make(3)));
-      verify(c.get(4).Equals(Int.make(5)));
+      verify(c.get(0).Equals(Long.valueOf(0)));
+      verify(c.get(1).Equals(Long.valueOf(1)));
+      verify(c.get(2).Equals(Long.valueOf(2)));
+      verify(c.get(3).Equals(Long.valueOf(3)));
+      verify(c.get(4).Equals(Long.valueOf(5)));
     }
 
     void verifyTryFinally5()  // same as testTryFinally4 but Void
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Void f(Int[] r)\n" +
+        "  static Void f(Long[] r)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -458,18 +458,18 @@ namespace Fanx.Test
 
       verify(o == null);
 
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(1)));
-      verify(r.get(2).Equals(Int.make(2)));
-      verify(r.get(3).Equals(Int.make(3)));
-      verify(r.get(4).Equals(Int.make(5)));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(1)));
+      verify(r.get(2).Equals(Long.valueOf(2)));
+      verify(r.get(3).Equals(Long.valueOf(3)));
+      verify(r.get(4).Equals(Long.valueOf(5)));
     }
 
     void verifyTryFinally6()
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Int[] f(Int[] r)\n" +
+        "  static Long[] f(Long[] r)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    for (i:=1; i<=3; ++i)\n" +
@@ -499,12 +499,12 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.ArgErr"));
 
-        verify(r.get(0).Equals(Int.make(0)));
-        verify(r.get(1).Equals(Int.make(11)));
-        verify(r.get(2).Equals(Int.make(101)));
-        verify(r.get(3).Equals(Int.make(12)));
-        verify(r.get(4).Equals(Int.make(102)));
-        verify(r.get(5).Equals(Int.make(103)));
+        verify(r.get(0).Equals(Long.valueOf(0)));
+        verify(r.get(1).Equals(Long.valueOf(11)));
+        verify(r.get(2).Equals(Long.valueOf(101)));
+        verify(r.get(3).Equals(Long.valueOf(12)));
+        verify(r.get(4).Equals(Long.valueOf(102)));
+        verify(r.get(5).Equals(Long.valueOf(103)));
       }
     }
 
@@ -512,7 +512,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Int[] f(Int[] r)\n" +
+        "  static Long[] f(Long[] r)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    for (i:=1; true; ++i)\n" +
@@ -538,22 +538,22 @@ namespace Fanx.Test
 
       verify(r == o);
 
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(1)));
-      verify(r.get(2).Equals(Int.make(101)));
-      verify(r.get(3).Equals(Int.make(102)));
-      verify(r.get(4).Equals(Int.make(3)));
-      verify(r.get(5).Equals(Int.make(103)));
-      verify(r.get(6).Equals(Int.make(104)));
-      verify(r.get(7).Equals(Int.make(105)));
-      verify(r.get(8).Equals(Int.make(99)));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(1)));
+      verify(r.get(2).Equals(Long.valueOf(101)));
+      verify(r.get(3).Equals(Long.valueOf(102)));
+      verify(r.get(4).Equals(Long.valueOf(3)));
+      verify(r.get(5).Equals(Long.valueOf(103)));
+      verify(r.get(6).Equals(Long.valueOf(104)));
+      verify(r.get(7).Equals(Long.valueOf(105)));
+      verify(r.get(8).Equals(Long.valueOf(99)));
     }
 
     void verifyTryFinally8()
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Void f(Int[] r)\n" +
+        "  static Void f(Long[] r)\n" +
         "  {\n" +
         "    try\n" +
         "    {\n" +
@@ -594,7 +594,7 @@ namespace Fanx.Test
         "  }\n" +
         "}";
 
-      //r := Int[,]
+      //r := Long[,]
       //verifySame(t.method("f").call1(r), null)
       //verifyEq(r, [0, 1, 101, 99, 102, 99, 3, 103, 99, 104, 99, 105, 99, 999, 9999, 99999])
 
@@ -604,22 +604,22 @@ namespace Fanx.Test
 
       verify(o == null);
 
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(1)));
-      verify(r.get(2).Equals(Int.make(101)));
-      verify(r.get(3).Equals(Int.make(99)));
-      verify(r.get(4).Equals(Int.make(102)));
-      verify(r.get(5).Equals(Int.make(99)));
-      verify(r.get(6).Equals(Int.make(3)));
-      verify(r.get(7).Equals(Int.make(103)));
-      verify(r.get(8).Equals(Int.make(99)));
-      verify(r.get(9).Equals(Int.make(104)));
-      verify(r.get(10).Equals(Int.make(99)));
-      verify(r.get(11).Equals(Int.make(105)));
-      verify(r.get(12).Equals(Int.make(99)));
-      verify(r.get(13).Equals(Int.make(999)));
-      verify(r.get(14).Equals(Int.make(9999)));
-      verify(r.get(15).Equals(Int.make(99999)));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(1)));
+      verify(r.get(2).Equals(Long.valueOf(101)));
+      verify(r.get(3).Equals(Long.valueOf(99)));
+      verify(r.get(4).Equals(Long.valueOf(102)));
+      verify(r.get(5).Equals(Long.valueOf(99)));
+      verify(r.get(6).Equals(Long.valueOf(3)));
+      verify(r.get(7).Equals(Long.valueOf(103)));
+      verify(r.get(8).Equals(Long.valueOf(99)));
+      verify(r.get(9).Equals(Long.valueOf(104)));
+      verify(r.get(10).Equals(Long.valueOf(99)));
+      verify(r.get(11).Equals(Long.valueOf(105)));
+      verify(r.get(12).Equals(Long.valueOf(99)));
+      verify(r.get(13).Equals(Long.valueOf(999)));
+      verify(r.get(14).Equals(Long.valueOf(9999)));
+      verify(r.get(15).Equals(Long.valueOf(99999)));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -630,7 +630,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Int f(Int[] r, Bool raise)\n" +
+        "  static Long f(Long[] r, Boolean raise)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -654,28 +654,28 @@ namespace Fanx.Test
 
       System.Type type = CompileToType(src);
       List r = new List(Sys.IntType, new object[0]);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.False });
 
-      verify(o == Int.make(2));
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(1)));
-      verify(r.get(2).Equals(Int.make(2)));
-      verify(r.get(3).Equals(Int.make(4)));
+      verify(o == Long.valueOf(2));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(1)));
+      verify(r.get(2).Equals(Long.valueOf(2)));
+      verify(r.get(3).Equals(Long.valueOf(4)));
 
       r.clear();
-      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.True});
-      verify(o == Int.make(3));
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(1)));
-      verify(r.get(2).Equals(Int.make(3)));
-      verify(r.get(3).Equals(Int.make(4)));
+      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.True});
+      verify(o == Long.valueOf(3));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(1)));
+      verify(r.get(2).Equals(Long.valueOf(3)));
+      verify(r.get(3).Equals(Long.valueOf(4)));
     }
 
     void verifyTryCatchFinally2() // same as testTryCatchFinally2 but Void
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Void f(Int[] r, Bool raise)\n" +
+        "  static Void f(Long[] r, Boolean raise)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -697,28 +697,28 @@ namespace Fanx.Test
 
       System.Type type = CompileToType(src);
       List r = new List(Sys.IntType, new object[0]);
-      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.False });
+      object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.False });
 
       verify(o == null);
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(1)));
-      verify(r.get(2).Equals(Int.make(2)));
-      verify(r.get(3).Equals(Int.make(4)));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(1)));
+      verify(r.get(2).Equals(Long.valueOf(2)));
+      verify(r.get(3).Equals(Long.valueOf(4)));
 
       r.clear();
-      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Bool.True});
+      o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, Boolean.True});
       verify(o == null);
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(1)));
-      verify(r.get(2).Equals(Int.make(3)));
-      verify(r.get(3).Equals(Int.make(4)));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(1)));
+      verify(r.get(2).Equals(Long.valueOf(3)));
+      verify(r.get(3).Equals(Long.valueOf(4)));
     }
 
     void verifyTryCatchFinally3()
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Void f(Int[] r, Err err)\n" +
+        "  static Void f(Long[] r, Err err)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -745,10 +745,10 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, null });
 
       verify(o == null);
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(1)));
-      verify(r.get(2).Equals(Int.make(2)));
-      verify(r.get(3).Equals(Int.make(99)));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(1)));
+      verify(r.get(2).Equals(Long.valueOf(2)));
+      verify(r.get(3).Equals(Long.valueOf(99)));
 
       r.clear();
       try
@@ -760,10 +760,10 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.IndexErr"));
 
-        verify(r.get(0).Equals(Int.make(0)));
-        verify(r.get(1).Equals(Int.make(1)));
-        verify(r.get(2).Equals(Int.make(3)));
-        verify(r.get(3).Equals(Int.make(99)));
+        verify(r.get(0).Equals(Long.valueOf(0)));
+        verify(r.get(1).Equals(Long.valueOf(1)));
+        verify(r.get(2).Equals(Long.valueOf(3)));
+        verify(r.get(3).Equals(Long.valueOf(99)));
       }
 
       r.clear();
@@ -776,10 +776,10 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.IOErr"));
 
-        verify(r.get(0).Equals(Int.make(0)));
-        verify(r.get(1).Equals(Int.make(1)));
-        verify(r.get(2).Equals(Int.make(3)));
-        verify(r.get(3).Equals(Int.make(99)));
+        verify(r.get(0).Equals(Long.valueOf(0)));
+        verify(r.get(1).Equals(Long.valueOf(1)));
+        verify(r.get(2).Equals(Long.valueOf(3)));
+        verify(r.get(3).Equals(Long.valueOf(99)));
       }
     }
 
@@ -787,7 +787,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Void f(Int[] r, Err err)\n" +
+        "  static Void f(Long[] r, Err err)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -820,10 +820,10 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r, null });
 
       verify(o == null);
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(1)));
-      verify(r.get(2).Equals(Int.make(2)));
-      verify(r.get(3).Equals(Int.make(99)));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(1)));
+      verify(r.get(2).Equals(Long.valueOf(2)));
+      verify(r.get(3).Equals(Long.valueOf(99)));
 
       r.clear();
       try
@@ -835,10 +835,10 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.IOErr"));
 
-        verify(r.get(0).Equals(Int.make(0)));
-        verify(r.get(1).Equals(Int.make(1)));
-        verify(r.get(2).Equals(Int.make(3)));
-        verify(r.get(3).Equals(Int.make(99)));
+        verify(r.get(0).Equals(Long.valueOf(0)));
+        verify(r.get(1).Equals(Long.valueOf(1)));
+        verify(r.get(2).Equals(Long.valueOf(3)));
+        verify(r.get(3).Equals(Long.valueOf(99)));
       }
 
       r.clear();
@@ -851,10 +851,10 @@ namespace Fanx.Test
         Err err = (ex.InnerException as Err.Val).err();
         verify(err.GetType() == System.Type.GetType("Fan.Sys.IndexErr"));
 
-        verify(r.get(0).Equals(Int.make(0)));
-        verify(r.get(1).Equals(Int.make(1)));
-        verify(r.get(2).Equals(Int.make(5)));
-        verify(r.get(3).Equals(Int.make(99)));
+        verify(r.get(0).Equals(Long.valueOf(0)));
+        verify(r.get(1).Equals(Long.valueOf(1)));
+        verify(r.get(2).Equals(Long.valueOf(5)));
+        verify(r.get(3).Equals(Long.valueOf(99)));
       }
     }
 
@@ -862,7 +862,7 @@ namespace Fanx.Test
     {
       string src = "class Foo\n" +
         "{\n" +
-        "  static Void f(Int[] r)\n" +
+        "  static Void f(Long[] r)\n" +
         "  {\n" +
         "    r.add(0)\n" +
         "    try\n" +
@@ -923,7 +923,7 @@ namespace Fanx.Test
         "  }\n" +
         "}";
 
-      //r := Int[,]
+      //r := Long[,]
       //t.method("f").call1(r)
       //verifyEq(r, [0, 10, 20, 30, 300, 50, 11, 21, 31, 301, 51, 12, 32, 902, 922, 932, 99, 999])
 
@@ -932,24 +932,24 @@ namespace Fanx.Test
       object o = type.InvokeMember("F", GetStaticFlags(), null, null, new object[] { r });
 
       verify(o == null);
-      verify(r.get(0).Equals(Int.make(0)));
-      verify(r.get(1).Equals(Int.make(10)));
-      verify(r.get(2).Equals(Int.make(20)));
-      verify(r.get(3).Equals(Int.make(30)));
-      verify(r.get(4).Equals(Int.make(300)));
-      verify(r.get(5).Equals(Int.make(50)));
-      verify(r.get(6).Equals(Int.make(11)));
-      verify(r.get(7).Equals(Int.make(21)));
-      verify(r.get(8).Equals(Int.make(31)));
-      verify(r.get(9).Equals(Int.make(301)));
-      verify(r.get(10).Equals(Int.make(51)));
-      verify(r.get(11).Equals(Int.make(12)));
-      verify(r.get(12).Equals(Int.make(32)));
-      verify(r.get(13).Equals(Int.make(902)));
-      verify(r.get(14).Equals(Int.make(922)));
-      verify(r.get(15).Equals(Int.make(932)));
-      verify(r.get(16).Equals(Int.make(99)));
-      verify(r.get(17).Equals(Int.make(999)));
+      verify(r.get(0).Equals(Long.valueOf(0)));
+      verify(r.get(1).Equals(Long.valueOf(10)));
+      verify(r.get(2).Equals(Long.valueOf(20)));
+      verify(r.get(3).Equals(Long.valueOf(30)));
+      verify(r.get(4).Equals(Long.valueOf(300)));
+      verify(r.get(5).Equals(Long.valueOf(50)));
+      verify(r.get(6).Equals(Long.valueOf(11)));
+      verify(r.get(7).Equals(Long.valueOf(21)));
+      verify(r.get(8).Equals(Long.valueOf(31)));
+      verify(r.get(9).Equals(Long.valueOf(301)));
+      verify(r.get(10).Equals(Long.valueOf(51)));
+      verify(r.get(11).Equals(Long.valueOf(12)));
+      verify(r.get(12).Equals(Long.valueOf(32)));
+      verify(r.get(13).Equals(Long.valueOf(902)));
+      verify(r.get(14).Equals(Long.valueOf(922)));
+      verify(r.get(15).Equals(Long.valueOf(932)));
+      verify(r.get(16).Equals(Long.valueOf(99)));
+      verify(r.get(17).Equals(Long.valueOf(999)));
     }
 
 
