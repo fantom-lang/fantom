@@ -26,6 +26,7 @@ public class FPodEmit
 
   public static Class emitAndLoad(FPod pod)
   {
+
     try
     {
       // lookup or load class
@@ -103,7 +104,7 @@ public class FPodEmit
     // initialize them, rather we do that later via reflection
     for (int i=0; i<literals.decimals.size(); ++i)
       emitField("D" + i, "Ljava/math/BigDecimal;", EmitConst.PUBLIC | EmitConst.STATIC);
-    for (int i=0; i<literals.strs.size(); ++i)
+    for (int i=0; i<literals.durations.size(); ++i)
       emitField("Dur" + i, "Lfan/sys/Duration;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.uris.size(); ++i)
       emitField("U" + i, "Lfan/sys/Uri;", EmitConst.PUBLIC | EmitConst.STATIC);

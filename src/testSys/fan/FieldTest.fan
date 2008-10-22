@@ -92,18 +92,44 @@ class FieldTest : Test
 // Closures Inside Accessor
 //////////////////////////////////////////////////////////////////////////
 
-  /* TODO - Java compiler can't handle this
-  Str torture := "abc"
+  Void testClosureInsideAccessor()
+  {
+    verifyEq(closureInsideAccessorCount, 0)
+    verifyEq(closureInsideAccessor, "abc")
+    verifyEq(closureInsideAccessorCount, 3)
+  }
+
+  Str closureInsideAccessor := "abc"
   {
     get
     {
-      torturex = 0
-      torture.each |Int ch| { torturex++ }
-      return torture
+      closureInsideAccessorCount = 0
+      @closureInsideAccessor.each |Int ch| { closureInsideAccessorCount++ }
+      return @closureInsideAccessor
     }
   }
-  Int torturex
-  */
+  Int closureInsideAccessorCount
+
+//////////////////////////////////////////////////////////////////////////
+// Field Defaults
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDefaults()
+  {
+    verifyEq(b1, false)
+    verifyEq(b2, null)
+    verifyEq(i1, 0)
+    verifyEq(i2, null)
+    verifyEq(f1, 0f)
+    verifyEq(f2, null)
+    verifyEq(s1, null)
+    verifyEq(s2, null)
+  }
+
+  Bool b1;  Bool? b2
+  Int i1;   Int? i2
+  Float f1; Float? f2
+  Str s1;   Str? s2
 
 //////////////////////////////////////////////////////////////////////////
 // Reflect Signatures
