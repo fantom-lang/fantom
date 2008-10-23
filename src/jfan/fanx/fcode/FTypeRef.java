@@ -140,6 +140,7 @@ public final class FTypeRef
    * Is this a wide stack type (double or long)
    */
   public boolean isWide() { return stackType == LONG || stackType == DOUBLE; }
+  public static boolean isWide(int stackType) { return stackType == LONG || stackType == DOUBLE; }
 
   /**
    * Java type name:  fan/sys/Duration, java/lang/Boolean, Z

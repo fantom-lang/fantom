@@ -28,10 +28,8 @@ public class FCodeEmit
     this(parent, fmethod.code, code,
          initRegs(parent.pod,  fmethod.isStatic(), fmethod.vars),
          parent.pod.typeRef(fmethod.ret));
-    this.fmethod    = fmethod;
-// TODO: we can define maxLocals from regs now
-    code.maxLocals  = fmethod.maxLocals() * 2;
-    code.maxStack   = fmethod.maxStack * 2;
+    this.fmethod  = fmethod;
+    code.maxStack = fmethod.maxStack * 2; // TODO: how should we handle wide items on stack?
   }
 
   public FCodeEmit(FTypeEmit parent, FBuf fcode, CodeEmit code, Reg[] regs, FTypeRef ret)
@@ -46,6 +44,7 @@ public class FCodeEmit
     this.reloc      = new int[len];
     this.regs       = regs;
     this.ret        = ret;
+    code.maxLocals  = maxLocals(regs);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1273,6 +1272,16 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
 //////////////////////////////////////////////////////////////////////////
 
   /**
+   * Given a list of registers compute the max locals
+   */
+  static int maxLocals(Reg[] regs)
+  {
+    if (regs.length == 0) return 0;
+    Reg last = regs[regs.length-1];
+    return last.jindex + (last.isWide() ? 2 : 1);
+  }
+
+  /**
    * Map to Java register info for the given Fan local variables.
    * Registers are typed (so we know which XLOAD_X and XSTORE_X opcodes
    * to use) and might be numbered differently (if using longs/doubles).
@@ -1312,6 +1321,7 @@ case Cast: cast(); break;  // TODO: replaced by Coerce
   static class Reg
   {
     public String toString() { return "Reg " + jindex + " " + (char)stackType; }
+    public boolean isWide() { return FTypeRef.isWide(stackType); }
     int stackType;  // FTypeRef.OBJ, LONG, INT, etc
     int jindex;     // Java register number to use (might shift for longs/doubles)
   }
