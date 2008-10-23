@@ -489,41 +489,88 @@ public final class List
 
   public final void each(Func f)
   {
-    for (int i=0; i<size; ++i)
-      f.call2(values[i], Long.valueOf(i));
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        f.call1(values[i]);
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        f.call2(values[i], Long.valueOf(i));
+    }
   }
 
   public final void eachr(Func f)
   {
-    for (int i=size-1; i>=0; --i)
-      f.call2(values[i], Long.valueOf(i));
+    if (f.params.sz() == 1)
+    {
+      for (int i=size-1; i>=0; --i)
+        f.call1(values[i]);
+    }
+    else
+    {
+      for (int i=size-1; i>=0; --i)
+        f.call2(values[i], Long.valueOf(i));
+    }
   }
 
   public final Object eachBreak(Func f)
   {
-    for (int i=0; i<size; ++i)
+    if (f.params.sz() == 1)
     {
-      Object r = f.call2(values[i], Long.valueOf(i));
-      if (r != null) return r;
+      for (int i=0; i<size; ++i)
+      {
+        Object r = f.call1(values[i]);
+        if (r != null) return r;
+      }
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+      {
+        Object r = f.call2(values[i], Long.valueOf(i));
+        if (r != null) return r;
+      }
     }
     return null;
   }
 
   public final Object find(Func f)
   {
-    for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
-        return values[i];
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call1(values[i]) == Boolean.TRUE)
+          return values[i];
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
+          return values[i];
+    }
     return null;
   }
 
   public final Long findIndex(Func f)
   {
-    for (int i=0; i<size; ++i)
+    if (f.params.sz() == 1)
     {
-      Long pos = Long.valueOf(i);
-      if (f.call2(values[i], pos) == Boolean.TRUE)
-        return pos;
+      for (int i=0; i<size; ++i)
+      {
+        if (f.call1(values[i]) == Boolean.TRUE)
+          return Long.valueOf(i);
+      }
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+      {
+        Long pos = Long.valueOf(i);
+        if (f.call2(values[i], pos) == Boolean.TRUE)
+          return pos;
+      }
     }
     return null;
   }
@@ -531,9 +578,18 @@ public final class List
   public final List findAll(Func f)
   {
     List acc = new List(of, size);
-    for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
-        acc.add(values[i]);
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call1(values[i]) == Boolean.TRUE)
+          acc.add(values[i]);
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
+          acc.add(values[i]);
+    }
     return acc;
   }
 
@@ -552,40 +608,83 @@ public final class List
   public final List exclude(Func f)
   {
     List acc = new List(of, size);
-    for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Long.valueOf(i)) != Boolean.TRUE)
-        acc.add(values[i]);
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call1(values[i]) != Boolean.TRUE)
+          acc.add(values[i]);
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call2(values[i], Long.valueOf(i)) != Boolean.TRUE)
+          acc.add(values[i]);
+    }
     return acc;
   }
 
   public final boolean any(Func f)
   {
-    for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
-        return true;
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call1(values[i]) == Boolean.TRUE)
+          return true;
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
+          return true;
+    }
     return false;
   }
 
   public final boolean all(Func f)
   {
-    for (int i=0; i<size; ++i)
-      if (f.call2(values[i], Long.valueOf(i)) != Boolean.TRUE)
-        return false;
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call1(values[i]) != Boolean.TRUE)
+          return false;
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        if (f.call2(values[i], Long.valueOf(i)) != Boolean.TRUE)
+          return false;
+    }
     return true;
   }
 
   public final Object reduce(Object reduction, Func f)
   {
-    for (int i=0; i<size; ++i)
-      reduction = f.call3(reduction, values[i], Long.valueOf(i));
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        reduction = f.call2(reduction, values[i]);
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        reduction = f.call3(reduction, values[i], Long.valueOf(i));
+    }
     return reduction;
   }
 
   public final List map(List acc, Func f)
   {
     if (acc.size == 0) acc.capacity(size());
-    for (int i=0; i<size; ++i)
-      acc.add(f.call2(values[i], Long.valueOf(i)));
+    if (f.params.sz() == 1)
+    {
+      for (int i=0; i<size; ++i)
+        acc.add(f.call1(values[i]));
+    }
+    else
+    {
+      for (int i=0; i<size; ++i)
+        acc.add(f.call2(values[i], Long.valueOf(i)));
+    }
     return acc;
   }
 
