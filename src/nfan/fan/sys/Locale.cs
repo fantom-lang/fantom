@@ -21,7 +21,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Locale fromStr(string s)
+    public static Locale fromStr(string s) { return fromStr(s, Boolean.True); }
+    public static Locale fromStr(string s, Boolean check)
     {
       int len = s.Length;
       try
@@ -44,6 +45,7 @@ namespace Fan.Sys
       {
         Err.dumpStack(e);
       }
+      if (!check.booleanValue()) return null;
       throw ParseErr.make("Locale",  s).val;
     }
 

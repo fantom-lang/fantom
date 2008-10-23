@@ -118,6 +118,7 @@ namespace Fan.Sys
         }
         else
         {
+          slot = parameterize((Field)slot);
           m_fields.add(slot);
         }
         m_slots.add(slot);
@@ -125,10 +126,27 @@ namespace Fan.Sys
       }
     }
 
-    /**
-     * Parameterize the specified method (if reuse if generic
-     * parameterization isn't necessary).
-     */
+    /// <summary>
+    /// Parameterize the specified field (reuse if generic
+    /// parameterization isn't necessary).
+    /// </summary>
+    internal Field parameterize(Field f)
+    {
+      // if not generic, short circuit and reuse original
+      Type of = f.of();
+      if (!of.isGenericParameter()) return f;
+
+      // create new parameterized version
+      of = parameterize(of);
+      Field pf = new Field(this, f.m_name, f.m_flags, f.m_facets, f.m_lineNum, of);
+      pf.m_reflect = f.m_reflect;
+      return pf;
+    }
+
+    /// <summary>
+    /// Parameterize the specified method (reuse if generic
+    /// parameterization isn't necessary).
+    /// </summary>
     internal Method parameterize(Method m)
     {
       // if not generic, short circuit and reuse original
@@ -164,30 +182,33 @@ namespace Fan.Sys
       return pm;
     }
 
-    /**
-     * Parameterize t, where t is a generic parameter type such as V.
-     */
+    /// <summary>
+    /// Parameterize t, where t is a generic parameter type such as V.
+    /// </summary>
     internal Type parameterize(Type t)
     {
-      if (t is ListType)
-        return parameterizeListType((ListType)t);
-      else if (t is FuncType)
-        return parameterizeFuncType((FuncType)t);
+      bool nullable = t.isNullable().booleanValue();
+      Type nn = t.toNonNullable();
+      if (nn is ListType)
+        t = parameterizeListType((ListType)nn);
+      else if (nn is FuncType)
+        t = parameterizeFuncType((FuncType)nn);
       else
-        return doParameterize(t);
+        t = doParameterize(nn);
+      return nullable ? t.toNullable() : t;
     }
 
-    /**
-     * Recursively parameterize the a generic list type.
-     */
+    /// <summary>
+    /// Recursively parameterize the a generic list type.
+    /// </summary>
     internal Type parameterizeListType(ListType t)
     {
       return doParameterize(t.m_v).toListOf();
     }
 
-    /**
-     * Recursively parameterize the pars of a method type.
-     */
+    /// <summary>
+    /// Recursively parameterize the pars of a method type.
+    /// </summary>
     internal FuncType parameterizeFuncType(FuncType t)
     {
       Type[] pars = new Type[t.m_params.Length];
@@ -204,9 +225,9 @@ namespace Fan.Sys
       return new FuncType(pars, ret);
     }
 
-    /**
-     * Parameterize t, where t is a generic parameter type such as V.
-     */
+    /// <summary>
+    /// Parameterize t, where t is a generic parameter type such as V.
+    /// </summary>
     protected abstract Type doParameterize(Type t);
 
   //////////////////////////////////////////////////////////////////////////

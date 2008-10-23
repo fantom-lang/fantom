@@ -436,7 +436,7 @@ namespace Fanx.Serial
         if (ft is ListType) return ((ListType)ft).m_v;
       }
       if (infer) return null;
-      return Sys.ObjType;
+      return Sys.ObjType.toNullable();
     }
 
     /// <summary>
@@ -463,7 +463,7 @@ namespace Fanx.Serial
       if (infer) return null;
       return defaultMapType;
     }
-    private static readonly MapType defaultMapType = new MapType(Sys.ObjType, Sys.ObjType);
+    private static readonly MapType defaultMapType = new MapType(Sys.ObjType, Sys.ObjType.toNullable());
 
   //////////////////////////////////////////////////////////////////////////
   // Type
@@ -482,6 +482,11 @@ namespace Fanx.Serial
     private Type readType(bool lbracket)
     {
       Type t = readSimpleType();
+      if (curt == Token.QUESTION)
+      {
+        consume();
+        t = t.toNullable();
+      }
       if (curt == Token.COLON)
       {
         consume();
@@ -491,6 +496,11 @@ namespace Fanx.Serial
       {
         consume();
         t = t.toListOf();
+      }
+      if (curt == Token.QUESTION)
+      {
+        consume();
+        t = t.toNullable();
       }
       return t;
     }

@@ -77,7 +77,7 @@ namespace Fan.Sys
     {
       if (!OpUtil.compareEQ(expected, actual).booleanValue())
       {
-        if (msg == null) msg = expected + " != " + actual;
+        if (msg == null) msg = s(expected) + " != " + s(actual);
         fail(msg);
       }
       if (expected != null && actual != null)
@@ -97,7 +97,7 @@ namespace Fan.Sys
     {
       if (!OpUtil.compareNE(expected, actual).booleanValue())
       {
-        if (msg == null) msg = expected + " == " + actual;
+        if (msg == null) msg = s(expected) + " == " + s(actual);
         fail(msg);
       }
       verifyCount++;
@@ -108,7 +108,7 @@ namespace Fan.Sys
     {
       if (!OpUtil.compareSame(expected, actual).booleanValue())
       {
-        if (msg == null) msg = expected + " !== " + actual;
+        if (msg == null) msg = s(expected) + " !== " + s(actual);
         fail(msg);
       }
       verifyCount++;
@@ -119,7 +119,7 @@ namespace Fan.Sys
     {
       if (OpUtil.compareSame(expected, actual).booleanValue())
       {
-        if (msg == null) msg = expected + " === " + actual;
+        if (msg == null) msg = s(expected) + " === " + s(actual);
         fail(msg);
       }
       verifyCount++;
@@ -159,6 +159,14 @@ namespace Fan.Sys
         return Fan.Sys.TestErr.make("Test failed").val;
       else
         return Fan.Sys.TestErr.make("Test failed: " + msg).val;
+    }
+
+    private static string s(object obj)
+    {
+      if (obj == null) return "null";
+      if (obj is string) return FanStr.toCode((string)obj);
+      if (obj is List) return ((List)obj).of().ToString() + obj;
+      return toStr(obj);
     }
 
   //////////////////////////////////////////////////////////////////////////

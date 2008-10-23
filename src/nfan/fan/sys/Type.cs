@@ -146,6 +146,8 @@ namespace Fan.Sys
 
     public virtual Boolean isNullable() { return Boolean.False; }
 
+    public virtual Type toNonNullable() { return this; }
+
     [MethodImpl(MethodImplOptions.Synchronized)]
     public virtual Type toNullable()
     {
@@ -324,20 +326,23 @@ namespace Fan.Sys
     /// </summary>
     public static Type common(object[] objs, int n)
     {
-      if (objs.Length == 0) return Sys.ObjType;
-      Type best = type(objs[0]);
-      for (int i=1; i<n; ++i)
+      if (objs.Length == 0) return Sys.ObjType.toNullable();
+      bool nullable = false;
+      Type best = null;
+      for (int i=0; i<n; ++i)
       {
         object obj = objs[i];
-        if (obj == null) continue;
+        if (obj == null) { nullable = true; continue; }
         Type t = type(obj);
+        if (best == null) { best = t; continue; }
         while (!t.@is(best))
         {
           best = best.@base();
-          if (best == null) return Sys.ObjType;
+          if (best == null) return nullable ? Sys.ObjType.toNullable() : Sys.ObjType;
         }
       }
-      return best;
+      if (best == null) best = Sys.ObjType;
+      return nullable ? best.toNullable() : best;
     }
 
   //////////////////////////////////////////////////////////////////////////

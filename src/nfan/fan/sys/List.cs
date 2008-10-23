@@ -32,7 +32,7 @@ namespace Fan.Sys
 
     public static List makeObj(Long capacity)
     {
-      return new List(Sys.ObjType, capacity.intValue());
+      return new List(Sys.ObjType.toNullable(), capacity.intValue());
     }
 
     public List(Type of, object[] values)
@@ -775,7 +775,7 @@ namespace Fan.Sys
 
     public List flatten()
     {
-      List acc = new List(Sys.ObjType, m_size*2);
+      List acc = new List(Sys.ObjType.toNullable(), m_size*2);
       doFlatten(acc);
       return acc;
     }
