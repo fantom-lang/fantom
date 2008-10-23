@@ -34,16 +34,16 @@ namespace Fanx.Test
     string forward  =
       "class A\n" + // : Test\n" +
       "{\n" +
-      "  Str a() { return \"a\" }\n" +
-      "  virtual Str f() { return \"af\" }\n" +
+      "  string a() { return \"a\" }\n" +
+      "  virtual string f() { return \"af\" }\n" +
       "}\n" +
 
       "class B : A\n" +
       "{\n" +
-      "  Str b()  { return \"b\" }\n" +
-      "  Str bi() { return b() }\n" +
-      "  Str ai() { return a() }\n" +
-      "  override Str f()  { return \"bf\" }\n" +
+      "  string b()  { return \"b\" }\n" +
+      "  string bi() { return b() }\n" +
+      "  string ai() { return a() }\n" +
+      "  override string f()  { return \"bf\" }\n" +
       "}";
 
     public void verifyForward()
@@ -57,14 +57,14 @@ namespace Fanx.Test
       object a = Make(clsA);
       object b = Make(clsB);
 
-      verify(InvokeInstance(clsA, a, "A"),  Str.make("a"));
-      verify(InvokeInstance(clsB, b, "A"),  Str.make("a"));
-      verify(InvokeInstance(clsB, b, "B"),  Str.make("b"));
-      verify(InvokeInstance(clsB, b, "Bi"), Str.make("b"));
-      verify(InvokeInstance(clsB, b, "Ai"), Str.make("a"));
+      verify(InvokeInstance(clsA, a, "A"),  "a");
+      verify(InvokeInstance(clsB, b, "A"),  "a");
+      verify(InvokeInstance(clsB, b, "B"),  "b");
+      verify(InvokeInstance(clsB, b, "Bi"), "b");
+      verify(InvokeInstance(clsB, b, "Ai"), "a");
 
-      verify(InvokeInstance(clsA, a, "F"),  Str.make("af"));
-      verify(InvokeInstance(clsB, b, "F"),  Str.make("bf"));
+      verify(InvokeInstance(clsA, a, "F"),  "af");
+      verify(InvokeInstance(clsB, b, "F"),  "bf");
 
 //      verify(invoke(a, "setup"),    null);
 //      verify(invoke(a, "teardown"), null);
@@ -77,14 +77,14 @@ namespace Fanx.Test
     string backward =
       "class B : A\n" +
       "{\n" +
-      "  Str b() { return \"b\" }\n" +
-      "  Str bi() { return b() }\n" +
-      "  Str ai() { return a() }\n" +
+      "  string b() { return \"b\" }\n" +
+      "  string bi() { return b() }\n" +
+      "  string ai() { return a() }\n" +
       "}" +
 
       "class A\n" +
       "{\n" +
-      "  Str a() { return \"a\" }\n" +
+      "  string a() { return \"a\" }\n" +
       "}\n";
 
     public void verifyBackward()
@@ -98,10 +98,10 @@ namespace Fanx.Test
       object a = Make(clsA);
       object b = Make(clsB);
 
-      verify(InvokeInstance(clsA, a, "A"),  Str.make("a"));
-      verify(InvokeInstance(clsB, b, "B"),  Str.make("b"));
-      verify(InvokeInstance(clsB, b, "Bi"), Str.make("b"));
-      verify(InvokeInstance(clsB, b, "Ai"), Str.make("a"));
+      verify(InvokeInstance(clsA, a, "A"),  "a");
+      verify(InvokeInstance(clsB, b, "B"),  "b");
+      verify(InvokeInstance(clsB, b, "Bi"), "b");
+      verify(InvokeInstance(clsB, b, "Ai"), "a");
     }
 
   //////////////////////////////////////////////////////////////////////////

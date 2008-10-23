@@ -21,21 +21,21 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static MimeType fromStr(Str s) { return fromStr(s, Bool.True); }
-    public static MimeType fromStr(Str s, Bool check)
+    public static MimeType fromStr(string s) { return fromStr(s, Boolean.True); }
+    public static MimeType fromStr(string s, Boolean check)
     {
       try
       {
-        int slash = s.val.IndexOf('/');
-        string media = s.val.Substring(0, slash);
-        string sub = s.val.Substring(slash+1); //, s.val.Length-slash+1);
+        int slash = s.IndexOf('/');
+        string media = s.Substring(0, slash);
+        string sub = s.Substring(slash+1); //, s.val.Length-slash+1);
         Map pars = emptyParams();
 
         int semi = sub.IndexOf(';');
         if (semi > 0)
         {
           pars = new Map(Sys.StrType, Sys.StrType);
-          pars.caseInsensitive(Bool.True);
+          pars.caseInsensitive(Boolean.True);
           bool inQuotes = false;
           int keyStart = semi+1;
           int valStart = -1;
@@ -51,7 +51,7 @@ namespace Fan.Sys
             if (c == '=' && !inQuotes)
             {
               eq = i++;
-              while (Int.isSpace(sub[i])) ++i;
+              while (FanInt.isSpace(sub[i])) ++i;
               if (sub[i] == '"') { inQuotes = true; ++i; }
               else inQuotes = false;
               valStart = i;
@@ -70,7 +70,7 @@ namespace Fan.Sys
               if (valEnd < 0) valEnd = i-1;
               string key = sub.Substring(keyStart, eq-keyStart).Trim();
               string val = sub.Substring(valStart, valEnd+1-valStart).Trim();
-              pars.set(Str.make(key), Str.make(val));
+              pars.set(key, val);
               keyStart = i+1;
               eq = valStart = valEnd = -1;
             }
@@ -81,7 +81,7 @@ namespace Fan.Sys
             if (valEnd < 0) valEnd = sub.Length-1;
             string key = sub.Substring(keyStart, eq-keyStart).Trim();
             string val = sub.Substring(valStart, valEnd+1-valStart).Trim();
-            pars.set(Str.make(key), Str.make(val));
+            pars.set(key, val);
           }
 
           sub = sub.Substring(0, semi).Trim();
@@ -89,19 +89,19 @@ namespace Fan.Sys
 
         MimeType r    = new MimeType();
         r.m_str       = s;
-        r.m_mediaType = Str.make(Str.lower(media));
-        r.m_subType   = Str.make(Str.lower(sub));
+        r.m_mediaType = FanStr.lower(media);
+        r.m_subType   = FanStr.lower(sub);
         r.m_params    = pars.ro();
         return r;
       }
       catch (ParseErr.Val e)
       {
-        if (!check.val) return null;
+        if (!check.booleanValue()) return null;
         throw e;
       }
       catch (System.Exception)
       {
-        if (!check.val) return null;
+        if (!check.booleanValue()) return null;
         throw ParseErr.make("MimeType",  s).val;
       }
     }
@@ -110,13 +110,13 @@ namespace Fan.Sys
   // Extension
   //////////////////////////////////////////////////////////////////////////
 
-    public static MimeType forExt(Str s)
+    public static MimeType forExt(string s)
     {
       if (s == null) return null;
       lock (m_extLock)
       {
         if (m_extMap == null) m_extMap = loadExtMap();
-        return (MimeType)m_extMap[s.lower()];
+        return (MimeType)m_extMap[FanStr.lower(s)];
       }
     }
 
@@ -126,15 +126,15 @@ namespace Fan.Sys
       {
         LocalFile f = new LocalFile(new System.IO.FileInfo(Sys.HomeDir + File.m_sep + "lib" + File.m_sep + "ext2mime.props"));
         Map props = f.readProps();
-        Hashtable map = new Hashtable((int)props.size().val * 3);
+        Hashtable map = new Hashtable(props.size().intValue() * 3);
         IDictionaryEnumerator en = props.pairsIterator();
         while (en.MoveNext())
         {
-          Str ext  = (Str)en.Key;
-          Str mime = (Str)en.Value;
+          string ext  = (string)en.Key;
+          string mime = (string)en.Value;
           try
           {
-            map[ext.lower()] = fromStr(mime);
+            map[FanStr.lower(ext)] = fromStr(mime);
           }
           catch (System.Exception)
           {
@@ -158,29 +158,29 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
-      if (!(obj is MimeType)) return Bool.False;
+      if (!(obj is MimeType)) return Boolean.False;
       MimeType x = (MimeType)obj;
-      return Bool.make(
-        m_mediaType.val.Equals(x.m_mediaType.val) &&
-        m_subType.val.Equals(x.m_subType.val) &&
-        m_params.Equals(x.m_params));
+      return Boolean.valueOf(
+        m_mediaType == x.m_mediaType &&
+        m_subType == x.m_subType &&
+        m_params == x.m_params);
     }
 
     public override int GetHashCode()
     {
-      return m_mediaType.val.GetHashCode() ^
-             m_subType.val.GetHashCode() ^
+      return m_mediaType.GetHashCode() ^
+             m_subType.GetHashCode() ^
              m_params.GetHashCode();
     }
 
-    public override Int hash()
+    public override Long hash()
     {
-      return Int.make(GetHashCode());
+      return Long.valueOf(GetHashCode());
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       return m_str;
     }
@@ -194,12 +194,12 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Str mediaType()
+    public string mediaType()
     {
       return m_mediaType;
     }
 
-    public Str subType()
+    public string subType()
     {
       return m_subType;
     }
@@ -219,7 +219,7 @@ namespace Fan.Sys
       if (q == null)
       {
         q = new Map(Sys.StrType, Sys.StrType);
-        q.caseInsensitive(Bool.True);
+        q.caseInsensitive(Boolean.True);
         q = q.toImmutable();
         m_emptyQuery = q;
       }
@@ -231,12 +231,12 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    internal static MimeType m_dir = fromStr(Str.make("x-directory/normal"));
+    internal static MimeType m_dir = fromStr("x-directory/normal");
 
-    private Str m_mediaType;
-    private Str m_subType;
+    private string m_mediaType;
+    private string m_subType;
     private Map m_params;
-    private Str m_str;
+    private string m_str;
 
   }
 }

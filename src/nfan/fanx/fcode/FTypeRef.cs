@@ -34,7 +34,12 @@ namespace Fanx.Fcode
 
     public bool isGenericInstance()
     {
-      return sig.Length > 0;
+      return sig.Length > 1;  // "?" is non-generic nullable
+    }
+
+    public bool isNullable()
+    {
+      return sig.Length > 0 && sig[sig.Length-1] == '?';
     }
 
     public override int GetHashCode()
@@ -51,7 +56,7 @@ namespace Fanx.Fcode
     public string Sig(FPod pod)
     {
       if (isGenericInstance()) return sig;
-      return pod.name(podName) + "::" + pod.name(typeName);
+      return pod.name(podName) + "::" + pod.name(typeName) + sig;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -69,7 +74,7 @@ namespace Fanx.Fcode
 
     public readonly int podName;
     public readonly int typeName;
-    public readonly string sig;
+    public readonly string sig;   // full sig if parameterized, "?" if nullable
     public readonly int hash;
 
   }

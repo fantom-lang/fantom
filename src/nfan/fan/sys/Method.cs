@@ -24,16 +24,16 @@ namespace Fan.Sys
   // Fan Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public static Method make(Str name, Func func) { return make(name, func, null); }
-    public static Method make(Str name, Func func, Map facets)
+    public static Method make(string name, Func func) { return make(name, func, null); }
+    public static Method make(string name, Func func, Map facets)
     {
       Method m = new Method();
       make_(m, name, func, facets);
       return m;
     }
 
-    public static void make_(Method self, Str name, Func func) { make_(self, name, func, null); }
-    public static void make_(Method self, Str name, Func func, Map facets)
+    public static void make_(Method self, string name, Func func) { make_(self, name, func, null); }
+    public static void make_(Method self, string name, Func func, Map facets)
     {
       if (name == null) throw NullErr.make("name is null").val;
       if (func == null) throw NullErr.make("func is null").val;
@@ -53,7 +53,7 @@ namespace Fan.Sys
     /**
      * Constructor used by Type.reflect.
      */
-    public Method(Type parent, Str name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars)
+    public Method(Type parent, string name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars)
      : this(parent, name, flags, facets, lineNum, returns, inheritedReturns, pars, null)
     {
     }
@@ -62,14 +62,14 @@ namespace Fan.Sys
      * Constructor used by GenericType and we are given the generic
      * method that is being parameterized.
      */
-    public Method(Type parent, Str name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars, Method generic)
+    public Method(Type parent, string name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars, Method generic)
       : base(parent, name, flags, facets, lineNum)
     {
       List fparams = pars.ro();
       if ((flags & (FConst.Static|FConst.Ctor)) == 0)
       {
         object[] temp = new object[pars.sz()+1];
-        temp[0] = new Param(Str.thisStr, parent, 0);
+        temp[0] = new Param("this", parent, 0);
         pars.copyInto(temp, 1, pars.sz());
         fparams = new List(Sys.ParamType, temp);
       }
@@ -117,7 +117,7 @@ namespace Fan.Sys
 
     public Func func() { return m_func; }
 
-    public override Str signature()
+    public override string signature()
     {
       StringBuilder s = new StringBuilder();
       s.Append(m_func.m_returns).Append(' ').Append(m_name).Append('(');
@@ -128,13 +128,13 @@ namespace Fan.Sys
         s.Append(p.m_of).Append(' ').Append(p.m_name);
       }
       s.Append(')');
-      return Str.make(s.ToString());
+      return s.ToString();
     }
 
-    public override object trap(Str name, List args)
+    public override object trap(string name, List args)
     {
       // private undocumented access
-      if (name.val == "inheritedReturnType")
+      if (name == "inheritedReturnType")
         return m_inheritedReturns;
       else
         return base.trap(name, args);
@@ -203,16 +203,16 @@ namespace Fan.Sys
 
       public override Method method() { return m; }
 
-      public override Bool isImmutable()
+      public override Boolean isImmutable()
       {
-        return Bool.make(m.isStatic().val || m.m_parent.isConst().val);
+        return Boolean.valueOf(m.isStatic().booleanValue() || m.m_parent.isConst().booleanValue());
       }
 
       public override object call(List args)
       {
         int argsSize = args == null ? 0 : args.sz();
 
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(argsSize, isStatic, false);
         object[] a = new object[p];
 
@@ -232,26 +232,39 @@ namespace Fan.Sys
       public override object callOn(object target, List args)
       {
         int argsSize = args == null ? 0 : args.sz();
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool netStatic = _isStatic();
+        bool fanStatic = ((m.m_flags & (FConst.Static|FConst.Ctor)) != 0);
 
-        // we don't include target as part of arguments
-        int p = checkArgs(argsSize, isStatic, true);
-
-        object[] a = new object[p];
-        if (args != null && a.Length > 0) args.toArray(a, 0, a.Length);
-        return m.invoke(target, a);
+        if (netStatic && !fanStatic)
+        {
+          // if Java static doesn't match Fan static, then this is
+          // a FanXXX method which we need to call as Java static
+          int p = checkArgs(argsSize, false, true);
+          object[] a = new object[p+1];
+          a[0] = target;
+          if (args != null && a.Length > 0) args.copyInto(a, 1, a.Length-1);
+          return m.invoke(null, a);
+        }
+        else
+        {
+          // we don't include target as part of arguments
+          int p = checkArgs(argsSize, netStatic, true);
+          object[] a = new object[p];
+          if (args != null && a.Length > 0) args.toArray(a, 0, a.Length);
+          return m.invoke(target, a);
+        }
       }
 
       public override object call0()
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         checkArgs(0, isStatic, false);
         return m.invoke(null, noArgs);
       }
 
       public override object call1(object a)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(1, isStatic, false);
         object[] args;
         if (isStatic)
@@ -269,7 +282,7 @@ namespace Fan.Sys
 
       public override object call2(object a, object b)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(2, isStatic, false);
         object[] args;
         if (isStatic)
@@ -289,7 +302,7 @@ namespace Fan.Sys
 
       public override object call3(object a, object b, object c)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(3, isStatic, false);
         object[] args;
         if (isStatic)
@@ -311,7 +324,7 @@ namespace Fan.Sys
 
       public override object call4(object a, object b, object c, object d)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(4, isStatic, false);
         object[] args;
         if (isStatic)
@@ -335,7 +348,7 @@ namespace Fan.Sys
 
       public override object call5(object a, object b, object c, object d, object e)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(5, isStatic, false);
         object[] args;
         if (isStatic)
@@ -363,7 +376,7 @@ namespace Fan.Sys
 
       public override object call6(object a, object b, object c, object d, object e, object f)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(6, isStatic, false);
         object[] args;
         if (isStatic)
@@ -391,7 +404,7 @@ namespace Fan.Sys
 
       public override object call7(object a, object b, object c, object d, object e, object f, object g)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(7, isStatic, false);
         object[] args;
         if (isStatic)
@@ -421,7 +434,7 @@ namespace Fan.Sys
 
       public override object call8(object a, object b, object c, object d, object e, object f, object g, object h)
       {
-        bool isStatic = (m.m_flags & (FConst.Static|FConst.Ctor)) != 0;
+        bool isStatic = _isStatic();
         int p = checkArgs(8, isStatic, false);
         object[] args;
         if (isStatic)
@@ -451,11 +464,24 @@ namespace Fan.Sys
         }
       }
 
+      private bool _isStatic()
+      {
+        try
+        {
+          // ensure parent has finished emitting so that reflect is populated
+          m.m_parent.finish();
+
+          // return if .NET method(s) is static
+          return m.m_reflect[0].IsStatic;
+        }
+        catch (Exception)
+        {
+          throw Err.make("Method not mapped to java.lang.reflect correctly " + m.qname()).val;
+        }
+      }
+
       private int checkArgs(int args, bool isStatic, bool isCallOn)
       {
-        // ensure parent has finished emitting so that reflect is populated
-        m.m_parent.finish();
-
         // compuate min/max parameters - reflect contains all the method versions
         // with full pars at index zero, and full defaults at reflect.Length-1
         int max = m_params.sz();
@@ -482,6 +508,8 @@ namespace Fan.Sys
   // Reflection
   //////////////////////////////////////////////////////////////////////////
 
+    private bool isInstance() { return (m_flags & (FConst.Static|FConst.Ctor)) == 0; }
+
     internal object invoke(object instance, object[] args)
     {
       if (m_reflect == null) m_parent.finish();
@@ -490,7 +518,15 @@ namespace Fan.Sys
       {
         // zero index is full signature up to using max defaults
         int index = m_params.sz()-args.Length;
+        if (m_parent.netRepr() && isInstance()) index++;
         if (index < 0) index = 0;
+
+        //System.Console.WriteLine(">>> " + m_reflect.Length + "/" + index);
+        //System.Console.WriteLine(m_reflect[index]);
+        //System.Console.WriteLine("---");
+        //for (int i=0; i<m_reflect.Length; i++)
+        //  System.Console.WriteLine(m_reflect[i]);
+
         return m_reflect[index].Invoke(instance, args);
       }
       catch (ArgumentException e)
@@ -508,12 +544,14 @@ namespace Fan.Sys
         if (m_reflect == null)
           throw Err.make("Method not mapped to System.Reflection.MethodInfo correctly " + m_qname).val;
 
-        //System.Console.WriteLine("ERROR:      " + signature());
-        //System.Console.WriteLine("  instance: " + instance);
-        //System.Console.WriteLine("  args:     " + (args == null ? "null" : ""+args.Length));
-        //for (int i=0; args != null && i<args.Length; ++i)
-        //  System.Console.WriteLine("    args[" + i + "] = " + args[i]);
-        //Err.dumpStack(e);
+        /*
+        System.Console.WriteLine("ERROR:      " + signature());
+        System.Console.WriteLine("  instance: " + instance);
+        System.Console.WriteLine("  args:     " + (args == null ? "null" : ""+args.Length));
+        for (int i=0; args != null && i<args.Length; ++i)
+          System.Console.WriteLine("    args[" + i + "] = " + args[i]);
+        Err.dumpStack(e);
+        */
 
         throw Err.make("Cannot call '" + this + "': " + e).val;
       }
