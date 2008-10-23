@@ -51,6 +51,20 @@ namespace Fanx.Serial
         return;
       }
 
+      if (obj.GetType().FullName[0] == 'S')
+      {
+        if (obj is string) { wStrLiteral(obj.ToString(), '"'); return; }
+      }
+
+      if (obj.GetType().FullName[0] == 'F')
+      {
+        if (obj is Boolean && (obj as Boolean).booleanValue())  { w("true"); return; }
+        if (obj is Boolean && !(obj as Boolean).booleanValue()) { w("false"); return; }
+        if (obj is Long)   { w(obj.ToString()); return; }
+        if (obj is Double) { FanFloat.encode((Double)obj, this); return; }
+        if (obj is BigDecimal) { FanDecimal.encode((BigDecimal)obj, this); return; }
+      }
+
       if (obj is Literal)
       {
         ((Literal)obj).encode(this);
@@ -58,18 +72,18 @@ namespace Fanx.Serial
       }
 
       Type type = FanObj.type(obj);
-      if (type.facet(facetSimple, null, Bool.False) == Bool.True)
+      if (type.facet("simple", null, Boolean.False) == Boolean.True)
       {
         writeSimple(type, obj);
       }
-      else if (type.facet(facetSerializable, null, Bool.True) == Bool.True)
+      else if (type.facet("serializable", null, Boolean.True) == Boolean.True)
       {
         writeComplex(type, obj);
       }
       else
       {
         if (skipErrors)
-          w("null /* Not serializable: ").w(type.qname().val).w(" */");
+          w("null /* Not serializable: ").w(type.qname()).w(" */");
         else
           throw IOErr.make("Not serializable: " + type).val;
       }
@@ -81,7 +95,7 @@ namespace Fanx.Serial
 
     private void writeSimple(Type type, object obj)
     {
-      wType(type).w('(').wStrLiteral(FanObj.toStr(obj).val, '"').w(')');
+      wType(type).w('(').wStrLiteral(FanObj.toStr(obj), '"').w(')');
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -102,8 +116,8 @@ namespace Fanx.Serial
         Field f = (Field)fields.get(i);
 
         // skip static, transient, and synthetic (once) fields
-        if (f.isStatic().val || f.isSynthetic().val ||
-            f.facet(facetTransient, Bool.False) == Bool.True)
+        if (f.isStatic().booleanValue() || f.isSynthetic().booleanValue() ||
+            f.facet("transient", Boolean.False) == Boolean.True)
           continue;
 
         // get the value
@@ -120,7 +134,7 @@ namespace Fanx.Serial
         if (first) { w('\n').wIndent().w('{').w('\n'); level++; first = false; }
 
         // field name =
-        wIndent().w(f.name().val).w('=');
+        wIndent().w(f.name()).w('=');
 
         // field value
         curFieldType = f.of();
@@ -131,7 +145,7 @@ namespace Fanx.Serial
       }
 
       // if collection
-      if (type.facet(facetCollection, null, Bool.True) == Bool.True)
+      if (type.facet("collection", null, Boolean.True) == Boolean.True)
         first = writeCollectionItems(type, obj, first);
 
       // if we output fields, then close braces
@@ -246,7 +260,7 @@ namespace Fanx.Serial
       if (!inferred) wType(t);
 
       // handle empty map
-      if (map.isEmpty().val) { w("[:]"); return; }
+      if (map.isEmpty().booleanValue()) { w("[:]"); return; }
 
       // items
       level++;
@@ -276,14 +290,14 @@ namespace Fanx.Serial
 
     public ObjEncoder wType(Type t)
     {
-      return w(t.signature().val);
+      return w(t.signature());
     }
 
     public ObjEncoder wStrLiteral(string s, char quote)
     {
       int len = s.Length;
       w(quote);
-      // NOTE: these escape sequences are duplicated in Str.toCode()
+      // NOTE: these escape sequences are duplicated in FanStr.toCode()
       for (int i=0; i<len; ++i)
       {
         char c = s[i];
@@ -330,36 +344,28 @@ namespace Fanx.Serial
 
     private void initOptions(Map options)
     {
-      indent = option(options, optIndent, indent);
-      skipDefaults = option(options, optSkipDefaults, skipDefaults);
-      skipErrors = option(options, optSkipErrors, skipErrors);
+      indent = option(options, "indent", indent);
+      skipDefaults = option(options, "skipDefaults", skipDefaults);
+      skipErrors = option(options, "skipErrors", skipErrors);
     }
 
-    private static int option(Map options, Str name, int def)
+    private static int option(Map options, string name, int def)
     {
-      Int val = (Int)options.get(name);
+      Long val = (Long)options.get(name);
       if (val == null) return def;
-      return (int)val.val;
+      return val.intValue();
     }
 
-    private static bool option(Map options, Str name, bool def)
+    private static bool option(Map options, string name, bool def)
     {
-      Bool val = (Bool)options.get(name);
+      Boolean val = (Boolean)options.get(name);
       if (val == null) return def;
-      return val.val;
+      return val.booleanValue();
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
-
-    readonly Str optIndent         = Str.make("indent");
-    readonly Str optSkipDefaults   = Str.make("skipDefaults");
-    readonly Str optSkipErrors     = Str.make("skipErrors");
-    readonly Str facetSimple       = Str.make("simple");
-    readonly Str facetSerializable = Str.make("serializable");
-    readonly Str facetCollection   = Str.make("collection");
-    readonly Str facetTransient    = Str.make("transient");
 
     OutStream @out;
     int level  = 0;

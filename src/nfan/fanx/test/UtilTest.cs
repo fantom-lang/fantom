@@ -29,27 +29,27 @@ namespace Fanx.Test
 
     public void verifyUpper()
     {
-      verify(NameUtil.upper("foo"), "Foo");
-      verify(NameUtil.upper("Foo"), "Foo");
-      verify(NameUtil.upper("fooBar"), "FooBar");
-      verify(NameUtil.upper("FooBar"), "FooBar");
-      verify(NameUtil.upper("alpha.beta.gamma"), "Alpha.Beta.Gamma");
-      verify(NameUtil.upper("Alpha.Beta.gamma"), "Alpha.Beta.Gamma");
-      verify(NameUtil.upper("Alpha.beta.Gamma"), "Alpha.Beta.Gamma");
-      verify(NameUtil.upper("alpha.Beta.Gamma"), "Alpha.Beta.Gamma");
+      verify(FanUtil.upper("foo"), "Foo");
+      verify(FanUtil.upper("Foo"), "Foo");
+      verify(FanUtil.upper("fooBar"), "FooBar");
+      verify(FanUtil.upper("FooBar"), "FooBar");
+      verify(FanUtil.upper("alpha.beta.gamma"), "Alpha.Beta.Gamma");
+      verify(FanUtil.upper("Alpha.Beta.gamma"), "Alpha.Beta.Gamma");
+      verify(FanUtil.upper("Alpha.beta.Gamma"), "Alpha.Beta.Gamma");
+      verify(FanUtil.upper("alpha.Beta.Gamma"), "Alpha.Beta.Gamma");
     }
 
     public void verifyGetPodName()
     {
-      verify(NameUtil.getPodName("Fan.Sys.Foo"),         "sys");
-      verify(NameUtil.getPodName("Fan.Sys.Foo.Bar"),     "sys");
-      verify(NameUtil.getPodName("Fan.Sys.Foo.Bar.Car"), "sys");
-      verify(NameUtil.getPodName("Fan.Sys.Foo/Val"),     "sys");
-      verify(NameUtil.getPodName("Fan.SysTest.Foo"),     "sysTest");
+      verify(FanUtil.getPodName("Fan.Sys.Foo"),         "sys");
+      verify(FanUtil.getPodName("Fan.Sys.Foo.Bar"),     "sys");
+      verify(FanUtil.getPodName("Fan.Sys.Foo.Bar.Car"), "sys");
+      verify(FanUtil.getPodName("Fan.Sys.Foo/Val"),     "sys");
+      verify(FanUtil.getPodName("Fan.SysTest.Foo"),     "sysTest");
 
-      verifyFail(NameUtil.getPodName("Fan.Sys"),     "sys");
-      verifyFail(NameUtil.getPodName("Fan.Sys.Foo"), "Sys");
-      verifyFail(NameUtil.getPodName("Fan.Sys.Foo"), "andy");
+      verifyFail(FanUtil.getPodName("Fan.Sys"),     "sys");
+      verifyFail(FanUtil.getPodName("Fan.Sys.Foo"), "Sys");
+      verifyFail(FanUtil.getPodName("Fan.Sys.Foo"), "andy");
     }
 
     private void verifyFail(string a, string b)
@@ -59,11 +59,11 @@ namespace Fanx.Test
 
     public void verifySplitQName()
     {
-      verifyQName(NameUtil.splitQName("Fan"), null, "Fan");
-      verifyQName(NameUtil.splitQName("Fan.Sys"), "Fan", "Sys");
-      verifyQName(NameUtil.splitQName("Fan.Sys.Bool"), "Fan.Sys", "Bool");
-      verifyQName(NameUtil.splitQName("Fan.Sys.Bool.Foo"), "Fan.Sys.Bool", "Foo");
-      verifyQName(NameUtil.splitQName("Fan.Sys.Bool.Foo/Val"), "Fan.Sys.Bool.Foo", "Val");
+      verifyQName(FanUtil.splitQName("Fan"), null, "Fan");
+      verifyQName(FanUtil.splitQName("Fan.Sys"), "Fan", "Sys");
+      verifyQName(FanUtil.splitQName("Fan.Sys.Boolean"), "Fan.Sys", "Boolean");
+      verifyQName(FanUtil.splitQName("Fan.Sys.Boolean.Foo"), "Fan.Sys.Boolean", "Foo");
+      verifyQName(FanUtil.splitQName("Fan.Sys.Boolean.Foo/Val"), "Fan.Sys.Boolean.Foo", "Val");
     }
 
     private void verifyQName(string[] a, string b, string c)

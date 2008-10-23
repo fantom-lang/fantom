@@ -18,18 +18,12 @@ namespace Fan.Sys
   {
 
   //////////////////////////////////////////////////////////////////////////
-  // C# Convenience
-  //////////////////////////////////////////////////////////////////////////
-
-    public new static UnknownThreadErr make(string msg)  { return make(Str.make(msg)); }
-
-  //////////////////////////////////////////////////////////////////////////
   // Fan Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static UnknownThreadErr make() { return make((Str)null, (Err)null); }
-    public new static UnknownThreadErr make(Str msg) { return make(msg, null); }
-    public new static UnknownThreadErr make(Str msg, Err cause)
+    public new static UnknownThreadErr make() { return make((string)null, (Err)null); }
+    public new static UnknownThreadErr make(string msg) { return make(msg, (Err)null); }
+    public new static UnknownThreadErr make(string msg, Err cause)
     {
       UnknownThreadErr err = new UnknownThreadErr();
       make_(err, msg, cause);
@@ -37,8 +31,8 @@ namespace Fan.Sys
     }
 
     public static void make_(UnknownThreadErr self) { make_(self, null);  }
-    public static void make_(UnknownThreadErr self, Str msg) { make_(self, msg, null); }
-    public static void make_(UnknownThreadErr self, Str msg, Err cause) { Err.make_(self, msg, cause); }
+    public static void make_(UnknownThreadErr self, string msg) { make_(self, msg, null); }
+    public static void make_(UnknownThreadErr self, string msg, Err cause) { Err.make_(self, msg, cause); }
 
   //////////////////////////////////////////////////////////////////////////
   // C# Constructors
