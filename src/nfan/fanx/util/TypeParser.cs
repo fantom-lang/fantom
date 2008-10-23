@@ -119,12 +119,26 @@ namespace Fanx.Util
       else
         type = LoadBasic();
 
+      // nullable
+      if (cur == '?')
+      {
+        Consume('?');
+        type = type.toNullable();
+      }
+
       // anything left must be []
       while (cur == '[')
       {
         Consume('[');
         Consume(']');
         type = type.toListOf();
+      }
+
+      // nullable
+      if (cur == '?')
+      {
+        Consume('?');
+        type = type.toNullable();
       }
 
       return type;

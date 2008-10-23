@@ -204,7 +204,7 @@ namespace Fanx.Serial
 
       // figure out if we can use an inferred type
       bool inferred = false;
-      if (list.type() == curFieldType || of == Sys.ObjType)
+      if (list.type() == curFieldType)
       {
         inferred = true;
       }
@@ -248,7 +248,7 @@ namespace Fanx.Serial
 
       // figure out if we can use an inferred type
       bool inferred = false;
-      if (t.Equals(curFieldType) || (t.m_k == Sys.ObjType && t.m_v == Sys.ObjType))
+      if (t.Equals(curFieldType))
       {
         inferred = true;
       }

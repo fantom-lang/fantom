@@ -21,7 +21,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Depend fromStr(string str)
+    public static Depend fromStr(string str) { return fromStr(str, Boolean.True); }
+    public static Depend fromStr(string str, Boolean check)
     {
       try
       {
@@ -29,7 +30,8 @@ namespace Fan.Sys
       }
       catch (System.Exception)
       {
-        throw ParseErr.make("Invalid Depend: '" + str + "'").val;
+        if (!check.booleanValue()) return null;
+        throw ParseErr.make("Depend", str).val;
       }
     }
 
