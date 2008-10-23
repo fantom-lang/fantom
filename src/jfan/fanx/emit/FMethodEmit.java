@@ -106,13 +106,12 @@ public class FMethodEmit
     this.code = null;
     MethodEmit factory = doEmit();
     CodeEmit code = factory.emitCode();
-    code.maxLocals = method.paramCount * 2; // TODO
-    code.maxStack  = 2 + method.paramCount * 2; // TODO
     code.op2(NEW, emit.cls(selfName));
     code.op(DUP);
     code.op2(INVOKESPECIAL, emit.method(selfName+ ".<init>()V"));
     code.op(DUP);
-    pushArgs(code, false, method.paramCount);
+    code.maxLocals = pushArgs(code, false, method.paramCount);
+    code.maxStack  = code.maxLocals + 2;
     code.op2(INVOKESTATIC, body.ref());
     code.op(ARETURN);
 
@@ -134,9 +133,8 @@ public class FMethodEmit
     if (isStatic)
     {
       int peerMethod = emit.method(selfName + "Peer." + name + sig);
-      code.maxLocals = paramLen*2; // TODO
-      code.maxStack  = Math.max(paramLen, 1) * 2; // TODO
-      pushArgs(code, false, paramLen);
+      code.maxLocals = pushArgs(code, false, paramLen);
+      code.maxStack  = Math.max(code.maxLocals, 2);
       code.op2(INVOKESTATIC, peerMethod);
     }
     else
@@ -147,11 +145,10 @@ public class FMethodEmit
       this.self = false;
 
       int peerMethod = emit.method(selfName + "Peer." + name + sig);
-      code.maxLocals = 2*paramLen+2; // TODO
-      code.maxStack  = 2*paramLen+2; // TODO
       code.op(ALOAD_0);
       code.op2(GETFIELD, emit.peerField.ref());
-      pushArgs(code, true, paramLen);
+      code.maxLocals = pushArgs(code, true, paramLen) + 1;
+      code.maxStack  = Math.max(code.maxLocals, 2);
       code.op2(INVOKEVIRTUAL, peerMethod);
     }
     code.op(FCodeEmit.returnOp(ret));
@@ -286,17 +283,13 @@ public class FMethodEmit
     pushArgs(code, !(isStatic && !self), paramLen);
 
     // emit default arguments
-    int maxLocals = method.maxLocals();
-    int maxStack  = 16; // TODO - add additional default expr stack height
     FCodeEmit.Reg[] regs = FCodeEmit.initRegs(emit.pod, isStatic, method.vars);
     for (int i=paramLen; i<method.paramCount; ++i)
     {
       FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code, regs, emit.pod.typeRef(method.ret));
       e.emit();
-      maxStack = Math.max(maxStack, 2+i+8);
     }
-    code.maxLocals = maxLocals;
-    code.maxStack  = maxStack;
+    code.maxStack = code.maxLocals + 1;
 
     // call master implementation
     code.op2((main.flags & STATIC) != 0 ? INVOKESTATIC : INVOKEVIRTUAL, main.ref());
@@ -378,7 +371,7 @@ public class FMethodEmit
   /**
    * Push the specified number of arguments onto the stack.
    */
-  private void pushArgs(CodeEmit code, boolean self, int count)
+  private int pushArgs(CodeEmit code, boolean self, int count)
   {
     int jindex = 0;
     if (self) { code.op(ALOAD_0); ++jindex; }
@@ -387,6 +380,7 @@ public class FMethodEmit
       FTypeRef var = emit.pod.typeRef(method.vars[i].type);
       jindex = FCodeEmit.loadVar(code, var.stackType, jindex);
     }
+    return jindex;
   }
 
 //////////////////////////////////////////////////////////////////////////
