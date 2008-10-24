@@ -18,7 +18,7 @@ public interface FConst
 //////////////////////////////////////////////////////////////////////////
 
   public static final int FCodeMagic    = 0x0FC0DE05;
-  public static final int FCodeVersion  = 0x01000033;
+  public static final int FCodeVersion  = 0x01000034;
   public static final int TypeDbMagic   = 0x0FC0DEDB;
   public static final int TypeDbVersion = 0x01000018;
 
@@ -73,61 +73,56 @@ public interface FConst
   public static final int LoadTrue        =   3; // ()        load true literal onto stack
   public static final int LoadInt         =   4; // (int)     load Int const by index onto stack
   public static final int LoadFloat       =   5; // (float)   load Float const by index onto stack
-  public static final int LoadStr         =   6; // (str)     load Str const by index onto stack
-  public static final int LoadDuration    =   7; // (dur)     load Duration const by index onto stack
-  public static final int LoadType        =   8; // (type)    load Type instance by index onto stack
-  public static final int LoadUri         =   9; // (uri)     load Uri const by index onto stack
-  public static final int LoadVar         =  10; // (reg)     local var register index (0 is this)
-  public static final int StoreVar        =  11; // (reg)     local var register index (0 is this)
-  public static final int LoadInstance    =  12; // (field)   load field from storage
-  public static final int StoreInstance   =  13; // (field)   store field to storage
-  public static final int LoadStatic      =  14; // (field)   load static field from storage
-  public static final int StoreStatic     =  15; // (field)   store static field to storage
-  public static final int Unused1         =  16; // ()        unsed opcode
-  public static final int Unused2         =  17; // ()        unsed opcode
-  public static final int LoadMixinStatic =  18; // (field)   load static on mixin field from storage
-  public static final int StoreMixinStatic =  19; // (field)   store static on mixin field to storage
-  public static final int CallNew         =  20; // (method)  alloc new object and call constructor
-  public static final int CallCtor        =  21; // (method)  call constructor (used for constructor chaining)
-  public static final int CallStatic      =  22; // (method)  call static method
-  public static final int CallVirtual     =  23; // (method)  call virtual instance method
-  public static final int CallNonVirtual  =  24; // (method)  call instance method non-virtually (private or super only b/c of Java invokespecial)
-  public static final int CallMixinStatic =  25; // (method)  call static mixin method
-  public static final int CallMixinVirtual =  26; // (method)  call virtual mixin method
-  public static final int CallMixinNonVirtual =  27; // (method)  call instance mixin method non-virtually (named super)
-  public static final int Jump            =  28; // (jmp)     unconditional jump
-  public static final int JumpTrue        =  29; // (jmp)     jump if bool true
-  public static final int JumpFalse       =  30; // (jmp)     jump if bool false
-  public static final int CompareEQ       =  31; // (typePair)  a.equals(b)
-  public static final int CompareNE       =  32; // (typePair)  !a.equals(b)
-  public static final int Compare         =  33; // (typePair)  a.compare(b)
-  public static final int CompareLE       =  34; // (typePair)  a.compare(b) <= 0
-  public static final int CompareLT       =  35; // (typePair)  a.compare(b) < 0
-  public static final int CompareGT       =  36; // (typePair)  a.compare(b) > 0
-  public static final int CompareGE       =  37; // (typePair)  a.compare(b) >= 0
-  public static final int CompareSame     =  38; // ()        a === b
-  public static final int CompareNotSame  =  39; // ()        a !== b
-  public static final int CompareNull     =  40; // (type)    a == null
-  public static final int CompareNotNull  =  41; // (type)    a != null
-  public static final int Return          =  42; // ()        return from method
-  public static final int UnusedReturnObj =  43; // ()        unused opcode
-  public static final int Pop             =  44; // (type)    pop top object off stack
-  public static final int Dup             =  45; // (type)    duplicate object ref on top of stack
-  public static final int Unused4         =  46; // ()        unsed opcode
-  public static final int Is              =  47; // (type)    is operator
-  public static final int As              =  48; // (type)    as operator
-  public static final int Cast            =  49; // (type)    type cast
-  public static final int Switch          =  50; // ()        switch jump table 2 count + 2*count
-  public static final int Throw           =  51; // ()        throw Err on top of stack
-  public static final int Leave           =  52; // (jmp)     jump out of a try or catch block
-  public static final int JumpFinally     =  53; // (jmp)     jump to a finally block
-  public static final int CatchAllStart   =  54; // ()        start catch all block - do not leave Err on stack
-  public static final int CatchErrStart   =  55; // (type)    start catch block - leave typed Err on stack
-  public static final int CatchEnd        =  56; // ()        start catch block - leave typed Err on stack
-  public static final int FinallyStart    =  57; // ()        starting instruction of a finally block
-  public static final int FinallyEnd      =  58; // ()        ending instruction of a finally block
-  public static final int LoadDecimal     =  59; // (decimal)  load Decimal const by index onto stack
-  public static final int Coerce          =  60; // (typePair)  from->to coercion value/reference/nullable
+  public static final int LoadDecimal     =   6; // (decimal)  load Decimal const by index onto stack
+  public static final int LoadStr         =   7; // (str)     load Str const by index onto stack
+  public static final int LoadDuration    =   8; // (dur)     load Duration const by index onto stack
+  public static final int LoadType        =   9; // (type)    load Type instance by index onto stack
+  public static final int LoadUri         =  10; // (uri)     load Uri const by index onto stack
+  public static final int LoadVar         =  11; // (reg)     local var register index (0 is this)
+  public static final int StoreVar        =  12; // (reg)     local var register index (0 is this)
+  public static final int LoadInstance    =  13; // (field)   load field from storage
+  public static final int StoreInstance   =  14; // (field)   store field to storage
+  public static final int LoadStatic      =  15; // (field)   load static field from storage
+  public static final int StoreStatic     =  16; // (field)   store static field to storage
+  public static final int LoadMixinStatic =  17; // (field)   load static on mixin field from storage
+  public static final int StoreMixinStatic =  18; // (field)   store static on mixin field to storage
+  public static final int CallNew         =  19; // (method)  alloc new object and call constructor
+  public static final int CallCtor        =  20; // (method)  call constructor (used for constructor chaining)
+  public static final int CallStatic      =  21; // (method)  call static method
+  public static final int CallVirtual     =  22; // (method)  call virtual instance method
+  public static final int CallNonVirtual  =  23; // (method)  call instance method non-virtually (private or super only b/c of Java invokespecial)
+  public static final int CallMixinStatic =  24; // (method)  call static mixin method
+  public static final int CallMixinVirtual =  25; // (method)  call virtual mixin method
+  public static final int CallMixinNonVirtual =  26; // (method)  call instance mixin method non-virtually (named super)
+  public static final int Jump            =  27; // (jmp)     unconditional jump
+  public static final int JumpTrue        =  28; // (jmp)     jump if bool true
+  public static final int JumpFalse       =  29; // (jmp)     jump if bool false
+  public static final int CompareEQ       =  30; // (typePair)  a.equals(b)
+  public static final int CompareNE       =  31; // (typePair)  !a.equals(b)
+  public static final int Compare         =  32; // (typePair)  a.compare(b)
+  public static final int CompareLE       =  33; // (typePair)  a.compare(b) <= 0
+  public static final int CompareLT       =  34; // (typePair)  a.compare(b) < 0
+  public static final int CompareGT       =  35; // (typePair)  a.compare(b) > 0
+  public static final int CompareGE       =  36; // (typePair)  a.compare(b) >= 0
+  public static final int CompareSame     =  37; // ()        a === b
+  public static final int CompareNotSame  =  38; // ()        a !== b
+  public static final int CompareNull     =  39; // (type)    a == null
+  public static final int CompareNotNull  =  40; // (type)    a != null
+  public static final int Return          =  41; // ()        return from method
+  public static final int Pop             =  42; // (type)    pop top object off stack
+  public static final int Dup             =  43; // (type)    duplicate object ref on top of stack
+  public static final int Is              =  44; // (type)    is operator
+  public static final int As              =  45; // (type)    as operator
+  public static final int Coerce          =  46; // (typePair)  from->to coercion value/reference/nullable
+  public static final int Switch          =  47; // ()        switch jump table 2 count + 2*count
+  public static final int Throw           =  48; // ()        throw Err on top of stack
+  public static final int Leave           =  49; // (jmp)     jump out of a try or catch block
+  public static final int JumpFinally     =  50; // (jmp)     jump to a finally block
+  public static final int CatchAllStart   =  51; // ()        start catch all block - do not leave Err on stack
+  public static final int CatchErrStart   =  52; // (type)    start catch block - leave typed Err on stack
+  public static final int CatchEnd        =  53; // ()        start catch block - leave typed Err on stack
+  public static final int FinallyStart    =  54; // ()        starting instruction of a finally block
+  public static final int FinallyEnd      =  55; // ()        ending instruction of a finally block
 
   public static final String[] OpNames =
   {
@@ -137,61 +132,56 @@ public interface FConst
     "LoadTrue",           //   3
     "LoadInt",            //   4
     "LoadFloat",          //   5
-    "LoadStr",            //   6
-    "LoadDuration",       //   7
-    "LoadType",           //   8
-    "LoadUri",            //   9
-    "LoadVar",            //  10
-    "StoreVar",           //  11
-    "LoadInstance",       //  12
-    "StoreInstance",      //  13
-    "LoadStatic",         //  14
-    "StoreStatic",        //  15
-    "Unused1",            //  16
-    "Unused2",            //  17
-    "LoadMixinStatic",    //  18
-    "StoreMixinStatic",   //  19
-    "CallNew",            //  20
-    "CallCtor",           //  21
-    "CallStatic",         //  22
-    "CallVirtual",        //  23
-    "CallNonVirtual",     //  24
-    "CallMixinStatic",    //  25
-    "CallMixinVirtual",   //  26
-    "CallMixinNonVirtual",  //  27
-    "Jump",               //  28
-    "JumpTrue",           //  29
-    "JumpFalse",          //  30
-    "CompareEQ",          //  31
-    "CompareNE",          //  32
-    "Compare",            //  33
-    "CompareLE",          //  34
-    "CompareLT",          //  35
-    "CompareGT",          //  36
-    "CompareGE",          //  37
-    "CompareSame",        //  38
-    "CompareNotSame",     //  39
-    "CompareNull",        //  40
-    "CompareNotNull",     //  41
-    "Return",             //  42
-    "UnusedReturnObj",    //  43
-    "Pop",                //  44
-    "Dup",                //  45
-    "Unused4",            //  46
-    "Is",                 //  47
-    "As",                 //  48
-    "Cast",               //  49
-    "Switch",             //  50
-    "Throw",              //  51
-    "Leave",              //  52
-    "JumpFinally",        //  53
-    "CatchAllStart",      //  54
-    "CatchErrStart",      //  55
-    "CatchEnd",           //  56
-    "FinallyStart",       //  57
-    "FinallyEnd",         //  58
-    "LoadDecimal",        //  59
-    "Coerce",             //  60
+    "LoadDecimal",        //   6
+    "LoadStr",            //   7
+    "LoadDuration",       //   8
+    "LoadType",           //   9
+    "LoadUri",            //  10
+    "LoadVar",            //  11
+    "StoreVar",           //  12
+    "LoadInstance",       //  13
+    "StoreInstance",      //  14
+    "LoadStatic",         //  15
+    "StoreStatic",        //  16
+    "LoadMixinStatic",    //  17
+    "StoreMixinStatic",   //  18
+    "CallNew",            //  19
+    "CallCtor",           //  20
+    "CallStatic",         //  21
+    "CallVirtual",        //  22
+    "CallNonVirtual",     //  23
+    "CallMixinStatic",    //  24
+    "CallMixinVirtual",   //  25
+    "CallMixinNonVirtual",  //  26
+    "Jump",               //  27
+    "JumpTrue",           //  28
+    "JumpFalse",          //  29
+    "CompareEQ",          //  30
+    "CompareNE",          //  31
+    "Compare",            //  32
+    "CompareLE",          //  33
+    "CompareLT",          //  34
+    "CompareGT",          //  35
+    "CompareGE",          //  36
+    "CompareSame",        //  37
+    "CompareNotSame",     //  38
+    "CompareNull",        //  39
+    "CompareNotNull",     //  40
+    "Return",             //  41
+    "Pop",                //  42
+    "Dup",                //  43
+    "Is",                 //  44
+    "As",                 //  45
+    "Coerce",             //  46
+    "Switch",             //  47
+    "Throw",              //  48
+    "Leave",              //  49
+    "JumpFinally",        //  50
+    "CatchAllStart",      //  51
+    "CatchErrStart",      //  52
+    "CatchEnd",           //  53
+    "FinallyStart",       //  54
+    "FinallyEnd",         //  55
   };
 
   public static final int[] OpSkips =
@@ -202,61 +192,56 @@ public interface FConst
     0,  //   3 LoadTrue
     2,  //   4 LoadInt
     2,  //   5 LoadFloat
-    2,  //   6 LoadStr
-    2,  //   7 LoadDuration
-    2,  //   8 LoadType
-    2,  //   9 LoadUri
-    2,  //  10 LoadVar
-    2,  //  11 StoreVar
-    2,  //  12 LoadInstance
-    2,  //  13 StoreInstance
-    2,  //  14 LoadStatic
-    2,  //  15 StoreStatic
-    0,  //  16 Unused1
-    0,  //  17 Unused2
-    2,  //  18 LoadMixinStatic
-    2,  //  19 StoreMixinStatic
-    2,  //  20 CallNew
-    2,  //  21 CallCtor
-    2,  //  22 CallStatic
-    2,  //  23 CallVirtual
-    2,  //  24 CallNonVirtual
-    2,  //  25 CallMixinStatic
-    2,  //  26 CallMixinVirtual
-    2,  //  27 CallMixinNonVirtual
-    2,  //  28 Jump
-    2,  //  29 JumpTrue
-    2,  //  30 JumpFalse
-    0,  //  31 CompareEQ
-    0,  //  32 CompareNE
-    0,  //  33 Compare
-    0,  //  34 CompareLE
-    0,  //  35 CompareLT
-    0,  //  36 CompareGT
-    0,  //  37 CompareGE
-    0,  //  38 CompareSame
-    0,  //  39 CompareNotSame
-    0,  //  40 CompareNull
-    0,  //  41 CompareNotNull
-    0,  //  42 Return
-    0,  //  43 UnusedReturnObj
-    0,  //  44 Pop
-    0,  //  45 Dup
-    0,  //  46 Unused4
-    2,  //  47 Is
-    2,  //  48 As
-    2,  //  49 Cast
-    0,  //  50 Switch
-    0,  //  51 Throw
-    2,  //  52 Leave
-    2,  //  53 JumpFinally
-    0,  //  54 CatchAllStart
-    2,  //  55 CatchErrStart
-    0,  //  56 CatchEnd
-    0,  //  57 FinallyStart
-    0,  //  58 FinallyEnd
-    2,  //  59 LoadDecimal
-    4,  //  60 Coerce
+    2,  //   6 LoadDecimal
+    2,  //   7 LoadStr
+    2,  //   8 LoadDuration
+    2,  //   9 LoadType
+    2,  //  10 LoadUri
+    2,  //  11 LoadVar
+    2,  //  12 StoreVar
+    2,  //  13 LoadInstance
+    2,  //  14 StoreInstance
+    2,  //  15 LoadStatic
+    2,  //  16 StoreStatic
+    2,  //  17 LoadMixinStatic
+    2,  //  18 StoreMixinStatic
+    2,  //  19 CallNew
+    2,  //  20 CallCtor
+    2,  //  21 CallStatic
+    2,  //  22 CallVirtual
+    2,  //  23 CallNonVirtual
+    2,  //  24 CallMixinStatic
+    2,  //  25 CallMixinVirtual
+    2,  //  26 CallMixinNonVirtual
+    2,  //  27 Jump
+    2,  //  28 JumpTrue
+    2,  //  29 JumpFalse
+    0,  //  30 CompareEQ
+    0,  //  31 CompareNE
+    0,  //  32 Compare
+    0,  //  33 CompareLE
+    0,  //  34 CompareLT
+    0,  //  35 CompareGT
+    0,  //  36 CompareGE
+    0,  //  37 CompareSame
+    0,  //  38 CompareNotSame
+    0,  //  39 CompareNull
+    0,  //  40 CompareNotNull
+    0,  //  41 Return
+    0,  //  42 Pop
+    0,  //  43 Dup
+    2,  //  44 Is
+    2,  //  45 As
+    4,  //  46 Coerce
+    0,  //  47 Switch
+    0,  //  48 Throw
+    2,  //  49 Leave
+    2,  //  50 JumpFinally
+    0,  //  51 CatchAllStart
+    2,  //  52 CatchErrStart
+    0,  //  53 CatchEnd
+    0,  //  54 FinallyStart
+    0,  //  55 FinallyEnd
   };
 
   public static final String[] OpSigs =
@@ -267,61 +252,56 @@ public interface FConst
     "()",         //   3 LoadTrue
     "(int)",      //   4 LoadInt
     "(float)",    //   5 LoadFloat
-    "(str)",      //   6 LoadStr
-    "(dur)",      //   7 LoadDuration
-    "(type)",     //   8 LoadType
-    "(uri)",      //   9 LoadUri
-    "(reg)",      //  10 LoadVar
-    "(reg)",      //  11 StoreVar
-    "(field)",    //  12 LoadInstance
-    "(field)",    //  13 StoreInstance
-    "(field)",    //  14 LoadStatic
-    "(field)",    //  15 StoreStatic
-    "()",         //  16 Unused1
-    "()",         //  17 Unused2
-    "(field)",    //  18 LoadMixinStatic
-    "(field)",    //  19 StoreMixinStatic
-    "(method)",   //  20 CallNew
-    "(method)",   //  21 CallCtor
-    "(method)",   //  22 CallStatic
-    "(method)",   //  23 CallVirtual
-    "(method)",   //  24 CallNonVirtual
-    "(method)",   //  25 CallMixinStatic
-    "(method)",   //  26 CallMixinVirtual
-    "(method)",   //  27 CallMixinNonVirtual
-    "(jmp)",      //  28 Jump
-    "(jmp)",      //  29 JumpTrue
-    "(jmp)",      //  30 JumpFalse
-    "(typePair)",  //  31 CompareEQ
-    "(typePair)",  //  32 CompareNE
-    "(typePair)",  //  33 Compare
-    "(typePair)",  //  34 CompareLE
-    "(typePair)",  //  35 CompareLT
-    "(typePair)",  //  36 CompareGT
-    "(typePair)",  //  37 CompareGE
-    "()",         //  38 CompareSame
-    "()",         //  39 CompareNotSame
-    "(type)",     //  40 CompareNull
-    "(type)",     //  41 CompareNotNull
-    "()",         //  42 Return
-    "()",         //  43 UnusedReturnObj
-    "(type)",     //  44 Pop
-    "(type)",     //  45 Dup
-    "()",         //  46 Unused4
-    "(type)",     //  47 Is
-    "(type)",     //  48 As
-    "(type)",     //  49 Cast
-    "()",         //  50 Switch
-    "()",         //  51 Throw
-    "(jmp)",      //  52 Leave
-    "(jmp)",      //  53 JumpFinally
-    "()",         //  54 CatchAllStart
-    "(type)",     //  55 CatchErrStart
-    "()",         //  56 CatchEnd
-    "()",         //  57 FinallyStart
-    "()",         //  58 FinallyEnd
-    "(decimal)",  //  59 LoadDecimal
-    "(typePair)",  //  60 Coerce
+    "(decimal)",  //   6 LoadDecimal
+    "(str)",      //   7 LoadStr
+    "(dur)",      //   8 LoadDuration
+    "(type)",     //   9 LoadType
+    "(uri)",      //  10 LoadUri
+    "(reg)",      //  11 LoadVar
+    "(reg)",      //  12 StoreVar
+    "(field)",    //  13 LoadInstance
+    "(field)",    //  14 StoreInstance
+    "(field)",    //  15 LoadStatic
+    "(field)",    //  16 StoreStatic
+    "(field)",    //  17 LoadMixinStatic
+    "(field)",    //  18 StoreMixinStatic
+    "(method)",   //  19 CallNew
+    "(method)",   //  20 CallCtor
+    "(method)",   //  21 CallStatic
+    "(method)",   //  22 CallVirtual
+    "(method)",   //  23 CallNonVirtual
+    "(method)",   //  24 CallMixinStatic
+    "(method)",   //  25 CallMixinVirtual
+    "(method)",   //  26 CallMixinNonVirtual
+    "(jmp)",      //  27 Jump
+    "(jmp)",      //  28 JumpTrue
+    "(jmp)",      //  29 JumpFalse
+    "(typePair)",  //  30 CompareEQ
+    "(typePair)",  //  31 CompareNE
+    "(typePair)",  //  32 Compare
+    "(typePair)",  //  33 CompareLE
+    "(typePair)",  //  34 CompareLT
+    "(typePair)",  //  35 CompareGT
+    "(typePair)",  //  36 CompareGE
+    "()",         //  37 CompareSame
+    "()",         //  38 CompareNotSame
+    "(type)",     //  39 CompareNull
+    "(type)",     //  40 CompareNotNull
+    "()",         //  41 Return
+    "(type)",     //  42 Pop
+    "(type)",     //  43 Dup
+    "(type)",     //  44 Is
+    "(type)",     //  45 As
+    "(typePair)",  //  46 Coerce
+    "()",         //  47 Switch
+    "()",         //  48 Throw
+    "(jmp)",      //  49 Leave
+    "(jmp)",      //  50 JumpFinally
+    "()",         //  51 CatchAllStart
+    "(type)",     //  52 CatchErrStart
+    "()",         //  53 CatchEnd
+    "()",         //  54 FinallyStart
+    "()",         //  55 FinallyEnd
   };
 
 }
