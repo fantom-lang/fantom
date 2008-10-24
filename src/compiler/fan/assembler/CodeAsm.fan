@@ -759,13 +759,13 @@ class CodeAsm : CompilerSupport
   private Void cmpNull(UnaryExpr unary)
   {
     expr(unary.operand)
-    op(FOp.CmpNull)
+    opType(FOp.CmpNull, unary.operand.ctype)
   }
 
   private Void cmpNotNull(UnaryExpr unary)
   {
     expr(unary.operand)
-    op(FOp.CmpNotNull)
+    opType(FOp.CmpNotNull, unary.operand.ctype)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -774,42 +774,22 @@ class CodeAsm : CompilerSupport
 
   private Void same(BinaryExpr binary)
   {
-    if (binary.lhs.id === ExprId.nullLiteral)
-    {
-      expr(binary.rhs)
-      op(FOp.CmpNull)
-    }
-    else if (binary.rhs.id === ExprId.nullLiteral)
-    {
-      expr(binary.lhs)
-      op(FOp.CmpNull)
-    }
-    else
-    {
-      expr(binary.lhs)
-      expr(binary.rhs)
-      op(FOp.CmpSame)
-    }
+    if (binary.lhs.id === ExprId.nullLiteral ||
+        binary.rhs.id === ExprId.nullLiteral)
+      err("Unexpected use of same with null literals", binary.location)
+    expr(binary.lhs)
+    expr(binary.rhs)
+    op(FOp.CmpSame)
   }
 
   private Void notSame(BinaryExpr binary)
   {
-    if (binary.lhs.id === ExprId.nullLiteral)
-    {
-      expr(binary.rhs)
-      op(FOp.CmpNotNull)
-    }
-    else if (binary.rhs.id === ExprId.nullLiteral)
-    {
-      expr(binary.lhs)
-      op(FOp.CmpNotNull)
-    }
-    else
-    {
-      expr(binary.lhs)
-      expr(binary.rhs)
-      op(FOp.CmpNotSame)
-    }
+    if (binary.lhs.id === ExprId.nullLiteral ||
+        binary.rhs.id === ExprId.nullLiteral)
+      err("Unexpected use of same with null literals", binary.location)
+    expr(binary.lhs)
+    expr(binary.rhs)
+    op(FOp.CmpNotSame)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -939,7 +919,7 @@ class CodeAsm : CompilerSupport
   {
     expr(binary.lhs)
     opType(FOp.Dup, binary.lhs.ctype)
-    op(FOp.CmpNull)
+    opType(FOp.CmpNull, binary.lhs.ctype)
     isNullLabel := jump(FOp.JumpTrue)
     endLabel := jump(FOp.Jump)
     backpatch(isNullLabel)
@@ -1038,7 +1018,7 @@ class CodeAsm : CompilerSupport
     {
       if (fexpr.target == null) throw err("Compiler error field isSafe", fexpr.location)
       opType(FOp.Dup, fexpr.ctype)
-      op(FOp.CmpNull)
+      opType(FOp.CmpNull, fexpr.ctype)
       isNullLabel = jump(FOp.JumpTrue)
     }
 
@@ -1191,7 +1171,7 @@ class CodeAsm : CompilerSupport
 
       // check if null and if so then jump over call
       opType(FOp.Dup, target.ctype)
-      op(FOp.CmpNull)
+      opType(FOp.CmpNull, target.ctype)
       isNullLabel = jump(FOp.JumpTrue)
 
       // now if we are calling a value-type method we might need to coerce
@@ -1375,7 +1355,13 @@ class CodeAsm : CompilerSupport
     if (lhsType.isValue) coerceOp(lhsType, ns.objType.toNullable)
     expr(rhs)
     if (rhs.ctype.isValue) coerceOp(rhs.ctype, ns.objType.toNullable)
+
+    fromRef := fpod.addTypeRef(lhsType)
+    toRef   := fpod.addTypeRef(rhs.ctype)
+
     op(opCode)
+    code.writeI2(fromRef)
+    code.writeI2(toRef)
   }
 
   **

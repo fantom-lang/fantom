@@ -220,7 +220,7 @@ public final class FPod
       throw new IOException("Invalid magic");
 
     int version = in.u4();
-    if (version != FConst.FCodeVersion && version != OldFCodeVersion)
+    if (version != FConst.FCodeVersion)
       throw new IOException("Invalid version 0x" + Integer.toHexString(version));
     this.version = version;
 
@@ -264,9 +264,6 @@ public final class FPod
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  // TODO
-  public static final int OldFCodeVersion = 0x01000016;
 
   public String podName;     // pod's unique name
   public String podVersion;  // pod's version
