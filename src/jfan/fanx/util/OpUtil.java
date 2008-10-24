@@ -82,23 +82,23 @@ public class OpUtil
 
   public static boolean compareLT(boolean a, boolean b) { return a == b ? false : !a; }
   public static boolean compareLT(boolean a, Object b)  { return (b instanceof Boolean) ? compareLT(a, ((Boolean)b).booleanValue()) : compareLT((Object)a, b); }
-  public static boolean compareLT(Object a, boolean b)  { return (a instanceof Boolean) ? compareLT(b, ((Boolean)a).booleanValue()) : compareLT(a, (Object)b); }
+  public static boolean compareLT(Object a, boolean b)  { return (a instanceof Boolean) ? compareLT(((Boolean)a).booleanValue(), b) : compareLT(a, (Object)b); }
 
   public static boolean compareLE(boolean a, boolean b) { return a == b ? true : !a; }
   public static boolean compareLE(boolean a, Object b)  { return (b instanceof Boolean) ? compareLE(a, ((Boolean)b).booleanValue()) : compareLE((Object)a, b); }
-  public static boolean compareLE(Object a, boolean b)  { return (a instanceof Boolean) ? compareLE(b, ((Boolean)a).booleanValue()) : compareLE(a, (Object)b); }
+  public static boolean compareLE(Object a, boolean b)  { return (a instanceof Boolean) ? compareLE(((Boolean)a).booleanValue(), b) : compareLE(a, (Object)b); }
 
   public static boolean compareGE(boolean a, boolean b) { return a == b ? true : a; }
   public static boolean compareGE(boolean a, Object b)  { return (b instanceof Boolean) ? compareGE(a, ((Boolean)b).booleanValue()) : compareGE((Object)a, b); }
-  public static boolean compareGE(Object a, boolean b)  { return (a instanceof Boolean) ? compareGE(b, ((Boolean)a).booleanValue()) : compareGE(a, (Object)b); }
+  public static boolean compareGE(Object a, boolean b)  { return (a instanceof Boolean) ? compareGE(((Boolean)a).booleanValue(), b) : compareGE(a, (Object)b); }
 
   public static boolean compareGT(boolean a, boolean b) { return a == b ? false : a; }
   public static boolean compareGT(boolean a, Object b)  { return (b instanceof Boolean) ? compareGT(a, ((Boolean)b).booleanValue()) : compareGT((Object)a, b); }
-  public static boolean compareGT(Object a, boolean b)  { return (a instanceof Boolean) ? compareGT(b, ((Boolean)a).booleanValue()) : compareGT(a, (Object)b); }
+  public static boolean compareGT(Object a, boolean b)  { return (a instanceof Boolean) ? compareGT(((Boolean)a).booleanValue(), b) : compareGT(a, (Object)b); }
 
   public static long compare(boolean a, boolean b) { return a == b ? 0 : (a ? +1 : -1); }
   public static long compare(boolean a, Object b)  { return (b instanceof Boolean) ? compare(a, ((Boolean)b).booleanValue()) : compare((Object)a, b); }
-  public static long compare(Object a, boolean b)  { return (a instanceof Boolean) ? compare(b, ((Boolean)a).booleanValue()) : compare(a, (Object)b); }
+  public static long compare(Object a, boolean b)  { return (a instanceof Boolean) ? compare(((Boolean)a).booleanValue(), b) : compare(a, (Object)b); }
 
 //////////////////////////////////////////////////////////////////////////
 // sys::Int Comparisions
@@ -153,16 +153,24 @@ public class OpUtil
   public static boolean compareLE(Object a, double b) { return (a instanceof Double) ? compareLE(((Double)a).doubleValue(), b) : compareLE(a, (Object)b); }
 
   public static boolean compareGE(double a, double b) { return a >= b; }
-  public static boolean compareGE(double a, Object b) { return (b instanceof Double) ? a >= ((Double)b).doubleValue() : compareGE((Object)a, b); }
-  public static boolean compareGE(Object a, double b) { return (a instanceof Double) ? b >= ((Double)a).doubleValue() : compareGE(a, (Object)b); }
+  public static boolean compareGE(double a, Object b) { return (b instanceof Double) ? compareGE(a, ((Double)b).doubleValue()) : compareGE((Object)a, b); }
+  public static boolean compareGE(Object a, double b) { return (a instanceof Double) ? compareGE(((Double)a).doubleValue(), b) : compareGE(a, (Object)b); }
 
   public static boolean compareGT(double a, double b) { return a > b; }
-  public static boolean compareGT(double a, Object b) { return (b instanceof Double) ? a > ((Double)b).doubleValue() : compareGT((Object)a, b); }
-  public static boolean compareGT(Object a, double b) { return (a instanceof Double) ? b > ((Double)a).doubleValue() : compareGT(a, (Object)b); }
+  public static boolean compareGT(double a, Object b) { return (b instanceof Double) ? compareGT(a, ((Double)b).doubleValue()) : compareGT((Object)a, b); }
+  public static boolean compareGT(Object a, double b) { return (a instanceof Double) ? compareGT(((Double)a).doubleValue(), b) : compareGT(a, (Object)b); }
 
-  public static long compare(double a, double b) { return a < b ? -1 : (a == b ? 0 : +1); }
   public static long compare(double a, Object b) { return (b instanceof Double) ? compare(a, ((Double)b).doubleValue()) : compare((Object)a, b); }
   public static long compare(Object a, double b) { return (a instanceof Double) ? compare(((Double)a).doubleValue(), b) : compare(a, (Object)b); }
+  public static long compare(double a, double b)
+  {
+    if (Double.isNaN(a))
+    {
+      return (Double.isNaN(b)) ? 0 : -1;
+    }
+    if (Double.isNaN(b)) return +1;
+    return a < b ? -1 : (a == b ? 0 : +1);
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Is/As
