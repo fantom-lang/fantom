@@ -114,19 +114,19 @@ public class OpUtil
 
   public static boolean compareLT(long a, long b) { return a < b; }
   public static boolean compareLT(long a, Object b) { return (b instanceof Long) ? a < ((Long)b).longValue() : compareLT((Object)a, b); }
-  public static boolean compareLT(Object a, long b) { return (a instanceof Long) ? b < ((Long)a).longValue() : compareLT(a, (Object)b); }
+  public static boolean compareLT(Object a, long b) { return (a instanceof Long) ? ((Long)a).longValue() < b : compareLT(a, (Object)b); }
 
   public static boolean compareLE(long a, long b) { return a <= b; }
   public static boolean compareLE(long a, Object b) { return (b instanceof Long) ? a <= ((Long)b).longValue() : compareLE((Object)a, b); }
-  public static boolean compareLE(Object a, long b) { return (a instanceof Long) ? b <= ((Long)a).longValue() : compareLE(a, (Object)b); }
+  public static boolean compareLE(Object a, long b) { return (a instanceof Long) ? ((Long)a).longValue() <= b : compareLE(a, (Object)b); }
 
   public static boolean compareGE(long a, long b) { return a >= b; }
   public static boolean compareGE(long a, Object b) { return (b instanceof Long) ? a >= ((Long)b).longValue() : compareGE((Object)a, b); }
-  public static boolean compareGE(Object a, long b) { return (a instanceof Long) ? b >= ((Long)a).longValue() : compareGE(a, (Object)b); }
+  public static boolean compareGE(Object a, long b) { return (a instanceof Long) ? ((Long)a).longValue() >= b : compareGE(a, (Object)b); }
 
   public static boolean compareGT(long a, long b) { return a > b; }
   public static boolean compareGT(long a, Object b) { return (b instanceof Long) ? a > ((Long)b).longValue() : compareGT((Object)a, b); }
-  public static boolean compareGT(Object a, long b) { return (a instanceof Long) ? b > ((Long)a).longValue() : compareGT(a, (Object)b); }
+  public static boolean compareGT(Object a, long b) { return (a instanceof Long) ? ((Long)a).longValue() > b : compareGT(a, (Object)b); }
 
   public static long compare(long a, long b) { return a < b ? -1 : (a == b ? 0 : +1); }
   public static long compare(long a, Object b) { return (b instanceof Long) ? compare(a, ((Long)b).longValue()) : compare((Object)a, b); }
