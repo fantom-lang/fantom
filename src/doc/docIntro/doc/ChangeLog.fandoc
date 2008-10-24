@@ -448,11 +448,12 @@
 - Change fwt::Image constructors
 - Add icons to flux history items
 
-*Build 1.0.34 (working)*
+*Build 1.0.34 (24 Oct 08)*
 - Roll fcode version for value-type support
 - Bool, Int, Float are now value types
 - Disallow covariance with value types
 - Disallow === !== is isnot as operators to be used againt value types
 - Java runtime maps sys::Boolean to primitive boolean
+- Java runtime maps sys::Int to primitive long
 - Java runtime maps sys::Float to primitive double
 - Change semanatics of Float.nan compare to match JVM
