@@ -695,169 +695,35 @@ public class FCodeEmit
 // Compare
 //////////////////////////////////////////////////////////////////////////
 
-  private void compareEQ()
+  private void compareEQ() { doCompare("EQ"); }
+
+  private void compareNE() { doCompare("NE"); }
+
+  private void compareLT() { doCompare("LT"); }
+
+  private void compareLE() { doCompare("LE"); }
+
+  private void compareGE() { doCompare("GE"); }
+
+  private void compareGT() { doCompare("GT"); }
+
+  private void compare() { doCompare(""); }
+
+  private void doCompare(String suffix)
   {
-    FTypeRef from = pod.typeRef(u2());
-    FTypeRef to   = pod.typeRef(u2());
+    // get lhs and rhs types
+    FTypeRef lhs = pod.typeRef(u2());
+    FTypeRef rhs = pod.typeRef(u2());
 
-    if (parent.CompareEQ == 0) parent.CompareEQ = emit.method("fanx/util/OpUtil.compareEQ(Ljava/lang/Object;Ljava/lang/Object;)Z");
-    int peek = peekOp();
-    switch (peek)
-    {
-      case JumpFalse:
-        code.op2(INVOKESTATIC, parent.CompareEQ);
-        consumeOp();
-        code.op(IFEQ);
-        branch();
-        break;
-      case JumpTrue:
-        code.op2(INVOKESTATIC, parent.CompareEQ);
-        consumeOp();
-        code.op(IFNE);
-        branch();
-        break;
-      default:
-       code.op2(INVOKESTATIC, parent.CompareEQ);
-    }
-  }
+    // compute the right method call signature
+    StringBuilder s = new StringBuilder();
+    s.append("fanx/util/OpUtil.compare").append(suffix).append('(');
+    if (lhs.isRef()) s.append("Ljava/lang/Object;"); else lhs.jsig(s);
+    if (rhs.isRef()) s.append("Ljava/lang/Object;"); else rhs.jsig(s);
+    s.append(')');
+    if (suffix == "") s.append('J'); else s.append('Z');
 
-  private void compareNE()
-  {
-    FTypeRef from = pod.typeRef(u2());
-    FTypeRef to   = pod.typeRef(u2());
-
-    if (parent.CompareNE == 0) parent.CompareNE = emit.method("fanx/util/OpUtil.compareNE(Ljava/lang/Object;Ljava/lang/Object;)Z");
-    int peek = peekOp();
-    switch (peek)
-    {
-      case JumpFalse:
-        code.op2(INVOKESTATIC, parent.CompareNE);
-        consumeOp();
-        code.op(IFEQ);
-        branch();
-        break;
-      case JumpTrue:
-        code.op2(INVOKESTATIC, parent.CompareNE);
-        consumeOp();
-        code.op(IFNE);
-        branch();
-        break;
-      default:
-       code.op2(INVOKESTATIC, parent.CompareNE);
-    }
-  }
-
-  private void compare()
-  {
-    FTypeRef from = pod.typeRef(u2());
-    FTypeRef to   = pod.typeRef(u2());
-
-    if (parent.Compare == 0) parent.Compare = emit.method("fanx/util/OpUtil.compare(Ljava/lang/Object;Ljava/lang/Object;)J");
-    code.op2(INVOKESTATIC, parent.Compare);
-  }
-
-  private void compareLT()
-  {
-    FTypeRef from = pod.typeRef(u2());
-    FTypeRef to   = pod.typeRef(u2());
-
-    if (parent.CompareLT == 0) parent.CompareLT = emit.method("fanx/util/OpUtil.compareLT(Ljava/lang/Object;Ljava/lang/Object;)Z");
-    int peek = peekOp();
-    switch (peek)
-    {
-     case JumpFalse:
-        code.op2(INVOKESTATIC, parent.CompareLT);
-        consumeOp();
-        code.op(IFEQ);
-        branch();
-        break;
-      case JumpTrue:
-        code.op2(INVOKESTATIC, parent.CompareLT);
-        consumeOp();
-        code.op(IFNE);
-        branch();
-        break;
-     default:
-       code.op2(INVOKESTATIC, parent.CompareLT);
-    }
-  }
-
-  private void compareLE()
-  {
-    FTypeRef from = pod.typeRef(u2());
-    FTypeRef to   = pod.typeRef(u2());
-
-    if (parent.CompareLE == 0) parent.CompareLE = emit.method("fanx/util/OpUtil.compareLE(Ljava/lang/Object;Ljava/lang/Object;)Z");
-    int peek = peekOp();
-    switch (peek)
-    {
-      case JumpFalse:
-        code.op2(INVOKESTATIC, parent.CompareLE);
-        consumeOp();
-        code.op(IFEQ);
-        branch();
-        break;
-      case JumpTrue:
-        code.op2(INVOKESTATIC, parent.CompareLE);
-        consumeOp();
-        code.op(IFNE);
-        branch();
-        break;
-      default:
-       code.op2(INVOKESTATIC, parent.CompareLE);
-    }
-  }
-
-  private void compareGE()
-  {
-    FTypeRef from = pod.typeRef(u2());
-    FTypeRef to   = pod.typeRef(u2());
-
-    if (parent.CompareGE == 0) parent.CompareGE = emit.method("fanx/util/OpUtil.compareGE(Ljava/lang/Object;Ljava/lang/Object;)Z");
-    int peek = peekOp();
-    switch (peek)
-    {
-      case JumpFalse:
-        code.op2(INVOKESTATIC, parent.CompareGE);
-        consumeOp();
-        code.op(IFEQ);
-        branch();
-        break;
-      case JumpTrue:
-        code.op2(INVOKESTATIC, parent.CompareGE);
-        consumeOp();
-        code.op(IFNE);
-        branch();
-        break;
-      default:
-       code.op2(INVOKESTATIC, parent.CompareGE);
-    }
-  }
-
-  private void compareGT()
-  {
-    FTypeRef from = pod.typeRef(u2());
-    FTypeRef to   = pod.typeRef(u2());
-
-    if (parent.CompareGT == 0) parent.CompareGT = emit.method("fanx/util/OpUtil.compareGT(Ljava/lang/Object;Ljava/lang/Object;)Z");
-    int peek = peekOp();
-    switch (peek)
-    {
-      case JumpFalse:
-        code.op2(INVOKESTATIC, parent.CompareGT);
-        consumeOp();
-        code.op(IFEQ);
-        branch();
-        break;
-      case JumpTrue:
-        code.op2(INVOKESTATIC, parent.CompareGT);
-        consumeOp();
-        code.op(IFNE);
-        branch();
-        break;
-      default:
-       code.op2(INVOKESTATIC, parent.CompareGT);
-    }
+    code.op2(INVOKESTATIC, emit.method(s.toString()));
   }
 
   private void compareSame()
@@ -914,8 +780,7 @@ public class FCodeEmit
 
   private void compareNull()
   {
-    FTypeRef type = pod.typeRef(u2());
-
+    u2(); // ignore type
     int peek = peekOp();
     switch (peek)
     {
@@ -942,8 +807,7 @@ public class FCodeEmit
 
   private void compareNotNull()
   {
-    FTypeRef type = pod.typeRef(u2());
-
+    u2(); // ignore type
     int peek = peekOp();
     switch (peek)
     {

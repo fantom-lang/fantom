@@ -71,7 +71,7 @@ class FCodePrinter : FConst
         i1 := buf.readU2
         i2 := buf.readU2
         print(pod.typeRefStr(i1) + index(i1))
-        print(" => ")
+        if (op == FOp.Coerce) print(" => "); else print(" <=> ")
         print(pod.typeRefStr(i2) + index(i2))
       default:       throw Err.make(op.arg.toStr)
     }

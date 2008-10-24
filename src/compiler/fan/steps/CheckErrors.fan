@@ -807,7 +807,8 @@ class CheckErrors : CompilerStep
       shortcut.tempVar = curMethod.addLocalVar(shortcut.ctype, null, null)
 
     // perform normal call checking
-    checkCall(shortcut)
+    if (!shortcut.isCompare)
+      checkCall(shortcut)
   }
 
   ** Check if field is assignable, return new rhs.
