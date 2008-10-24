@@ -17,61 +17,56 @@ enum FOp
   LoadTrue           (),                  //   3  load true literal onto stack
   LoadInt            (FOpArg.Int),        //   4  load Int const by index onto stack
   LoadFloat          (FOpArg.Float),      //   5  load Float const by index onto stack
-  LoadStr            (FOpArg.Str),        //   6  load Str const by index onto stack
-  LoadDuration       (FOpArg.Duration),   //   7  load Duration const by index onto stack
-  LoadType           (FOpArg.TypeRef),    //   8  load Type instance by index onto stack
-  LoadUri            (FOpArg.Uri),        //   9  load Uri const by index onto stack
-  LoadVar            (FOpArg.Register),   //  10  local var register index (0 is this)
-  StoreVar           (FOpArg.Register),   //  11  local var register index (0 is this)
-  LoadInstance       (FOpArg.FieldRef),   //  12  load field from storage
-  StoreInstance      (FOpArg.FieldRef),   //  13  store field to storage
-  LoadStatic         (FOpArg.FieldRef),   //  14  load static field from storage
-  StoreStatic        (FOpArg.FieldRef),   //  15  store static field to storage
-  Unused1            (),                  //  16  unsed opcode
-  Unused2            (),                  //  17  unsed opcode
-  LoadMixinStatic    (FOpArg.FieldRef),   //  18  load static on mixin field from storage
-  StoreMixinStatic   (FOpArg.FieldRef),   //  19  store static on mixin field to storage
-  CallNew            (FOpArg.MethodRef),  //  20  alloc new object and call constructor
-  CallCtor           (FOpArg.MethodRef),  //  21  call constructor (used for constructor chaining)
-  CallStatic         (FOpArg.MethodRef),  //  22  call static method
-  CallVirtual        (FOpArg.MethodRef),  //  23  call virtual instance method
-  CallNonVirtual     (FOpArg.MethodRef),  //  24  call instance method non-virtually (private or super only b/c of Java invokespecial)
-  CallMixinStatic    (FOpArg.MethodRef),  //  25  call static mixin method
-  CallMixinVirtual   (FOpArg.MethodRef),  //  26  call virtual mixin method
-  CallMixinNonVirtual (FOpArg.MethodRef),  //  27  call instance mixin method non-virtually (named super)
-  Jump               (FOpArg.Jump),       //  28  unconditional jump
-  JumpTrue           (FOpArg.Jump),       //  29  jump if bool true
-  JumpFalse          (FOpArg.Jump),       //  30  jump if bool false
-  CmpEQ              (FOpArg.TypePair),   //  31  a.equals(b)
-  CmpNE              (FOpArg.TypePair),   //  32  !a.equals(b)
-  Cmp                (FOpArg.TypePair),   //  33  a.compare(b)
-  CmpLE              (FOpArg.TypePair),   //  34  a.compare(b) <= 0
-  CmpLT              (FOpArg.TypePair),   //  35  a.compare(b) < 0
-  CmpGT              (FOpArg.TypePair),   //  36  a.compare(b) > 0
-  CmpGE              (FOpArg.TypePair),   //  37  a.compare(b) >= 0
-  CmpSame            (),                  //  38  a === b
-  CmpNotSame         (),                  //  39  a !== b
-  CmpNull            (FOpArg.TypeRef),    //  40  a == null
-  CmpNotNull         (FOpArg.TypeRef),    //  41  a != null
-  Return             (),                  //  42  return from method
-  UnusedReturnObj    (),                  //  43  unused opcode
-  Pop                (FOpArg.TypeRef),    //  44  pop top object off stack
-  Dup                (FOpArg.TypeRef),    //  45  duplicate object ref on top of stack
-  Unused4            (),                  //  46  unsed opcode
-  Is                 (FOpArg.TypeRef),    //  47  is operator
-  As                 (FOpArg.TypeRef),    //  48  as operator
-  Cast               (FOpArg.TypeRef),    //  49  type cast
-  Switch             (),                  //  50  switch jump table 2 count + 2*count
-  Throw              (),                  //  51  throw Err on top of stack
-  Leave              (FOpArg.Jump),       //  52  jump out of a try or catch block
-  JumpFinally        (FOpArg.Jump),       //  53  jump to a finally block
-  CatchAllStart      (),                  //  54  start catch all block - do not leave Err on stack
-  CatchErrStart      (FOpArg.TypeRef),    //  55  start catch block - leave typed Err on stack
-  CatchEnd           (),                  //  56  start catch block - leave typed Err on stack
-  FinallyStart       (),                  //  57  starting instruction of a finally block
-  FinallyEnd         (),                  //  58  ending instruction of a finally block
-  LoadDecimal        (FOpArg.Decimal),    //  59  load Decimal const by index onto stack
-  Coerce             (FOpArg.TypePair)    //  60  from->to coercion value/reference/nullable
+  LoadDecimal        (FOpArg.Decimal),    //   6  load Decimal const by index onto stack
+  LoadStr            (FOpArg.Str),        //   7  load Str const by index onto stack
+  LoadDuration       (FOpArg.Duration),   //   8  load Duration const by index onto stack
+  LoadType           (FOpArg.TypeRef),    //   9  load Type instance by index onto stack
+  LoadUri            (FOpArg.Uri),        //  10  load Uri const by index onto stack
+  LoadVar            (FOpArg.Register),   //  11  local var register index (0 is this)
+  StoreVar           (FOpArg.Register),   //  12  local var register index (0 is this)
+  LoadInstance       (FOpArg.FieldRef),   //  13  load field from storage
+  StoreInstance      (FOpArg.FieldRef),   //  14  store field to storage
+  LoadStatic         (FOpArg.FieldRef),   //  15  load static field from storage
+  StoreStatic        (FOpArg.FieldRef),   //  16  store static field to storage
+  LoadMixinStatic    (FOpArg.FieldRef),   //  17  load static on mixin field from storage
+  StoreMixinStatic   (FOpArg.FieldRef),   //  18  store static on mixin field to storage
+  CallNew            (FOpArg.MethodRef),  //  19  alloc new object and call constructor
+  CallCtor           (FOpArg.MethodRef),  //  20  call constructor (used for constructor chaining)
+  CallStatic         (FOpArg.MethodRef),  //  21  call static method
+  CallVirtual        (FOpArg.MethodRef),  //  22  call virtual instance method
+  CallNonVirtual     (FOpArg.MethodRef),  //  23  call instance method non-virtually (private or super only b/c of Java invokespecial)
+  CallMixinStatic    (FOpArg.MethodRef),  //  24  call static mixin method
+  CallMixinVirtual   (FOpArg.MethodRef),  //  25  call virtual mixin method
+  CallMixinNonVirtual (FOpArg.MethodRef),  //  26  call instance mixin method non-virtually (named super)
+  Jump               (FOpArg.Jump),       //  27  unconditional jump
+  JumpTrue           (FOpArg.Jump),       //  28  jump if bool true
+  JumpFalse          (FOpArg.Jump),       //  29  jump if bool false
+  CmpEQ              (FOpArg.TypePair),   //  30  a.equals(b)
+  CmpNE              (FOpArg.TypePair),   //  31  !a.equals(b)
+  Cmp                (FOpArg.TypePair),   //  32  a.compare(b)
+  CmpLE              (FOpArg.TypePair),   //  33  a.compare(b) <= 0
+  CmpLT              (FOpArg.TypePair),   //  34  a.compare(b) < 0
+  CmpGT              (FOpArg.TypePair),   //  35  a.compare(b) > 0
+  CmpGE              (FOpArg.TypePair),   //  36  a.compare(b) >= 0
+  CmpSame            (),                  //  37  a === b
+  CmpNotSame         (),                  //  38  a !== b
+  CmpNull            (FOpArg.TypeRef),    //  39  a == null
+  CmpNotNull         (FOpArg.TypeRef),    //  40  a != null
+  Return             (),                  //  41  return from method
+  Pop                (FOpArg.TypeRef),    //  42  pop top object off stack
+  Dup                (FOpArg.TypeRef),    //  43  duplicate object ref on top of stack
+  Is                 (FOpArg.TypeRef),    //  44  is operator
+  As                 (FOpArg.TypeRef),    //  45  as operator
+  Coerce             (FOpArg.TypePair),   //  46  from->to coercion value/reference/nullable
+  Switch             (),                  //  47  switch jump table 2 count + 2*count
+  Throw              (),                  //  48  throw Err on top of stack
+  Leave              (FOpArg.Jump),       //  49  jump out of a try or catch block
+  JumpFinally        (FOpArg.Jump),       //  50  jump to a finally block
+  CatchAllStart      (),                  //  51  start catch all block - do not leave Err on stack
+  CatchErrStart      (FOpArg.TypeRef),    //  52  start catch block - leave typed Err on stack
+  CatchEnd           (),                  //  53  start catch block - leave typed Err on stack
+  FinallyStart       (),                  //  54  starting instruction of a finally block
+  FinallyEnd         ()                   //  55  ending instruction of a finally block
 
   private new make(FOpArg arg := FOpArg.None) { this.arg = arg }
 
