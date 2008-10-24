@@ -382,10 +382,6 @@ public abstract class FTypeEmit
 // Cached CpInfo
 //////////////////////////////////////////////////////////////////////////
 
-  int CompareEQ, CompareNE;
-  int CompareLT, CompareLE;
-  int CompareGE, CompareGT;
-  int Compare;
   int BoolBox, BoolUnbox;
   int IntBox, IntUnbox;
   int FloatBox, FloatUnbox;

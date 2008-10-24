@@ -1350,11 +1350,8 @@ class CodeAsm : CompilerSupport
     lhsExpr := lhs as Expr
     lhsType := lhsExpr != null ? lhsExpr.ctype : (CType)lhs
 
-    // TODO: need to optimize for value-type comparisons
     if (lhsExpr != null) expr(lhsExpr)
-    if (lhsType.isValue) coerceOp(lhsType, ns.objType.toNullable)
     expr(rhs)
-    if (rhs.ctype.isValue) coerceOp(rhs.ctype, ns.objType.toNullable)
 
     fromRef := fpod.addTypeRef(lhsType)
     toRef   := fpod.addTypeRef(rhs.ctype)
