@@ -258,7 +258,7 @@ namespace Fanx.Fcode
         throw new System.IO.IOException("Invalid magic");
 
       int version = input.u4();
-      if (version != FConst.FCodeVersion)
+      if (version != FConst.FCodeVersion && version != OldFCodeVersion)
         throw new System.IO.IOException("Invalid version 0x" + version.ToString("X").ToLower());
       this.m_version = version;
 
@@ -302,6 +302,9 @@ namespace Fanx.Fcode
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
+
+    // TODO
+    public const int OldFCodeVersion = 0x01000016;
 
     public string m_podName;      // pod's unique name
     public string m_podVersion;   // pod version
