@@ -55,12 +55,12 @@ namespace Fan.Sys
       return m_appDir;
     }
 
-    public static Str hostName() { return m_hostName; }
+    public static string hostName() { return m_hostName; }
 
-    public static Str userName() { return m_userName; }
+    public static string userName() { return m_userName; }
 
-    public static void exit() { exit(Int.Zero); }
-    public static void exit(Int status) { System.Environment.Exit((int)status.val); }
+    public static void exit() { exit(FanInt.Zero); }
+    public static void exit(Long status) { System.Environment.Exit(status.intValue()); }
 
     public static InStream  @in()  { return StdIn; }
     public static OutStream @out() { return StdOut; }
@@ -71,10 +71,9 @@ namespace Fan.Sys
       GC.Collect();
     }
 
-    public static Int idHash(object obj)
+    public static Long idHash(object obj)
     {
-      //return Int.make(System.identityHashCode(obj));
-      return FanObj.hash(obj);
+      return Long.valueOf(System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj));
     }
 
     public static Map diagnostics()
@@ -262,24 +261,24 @@ namespace Fan.Sys
         UnsupportedErrType   = builtin("UnsupportedErr",   ErrType);
 
         // generic types
-        GenericParameterTypes['A'] = AType = new Type(SysPod, "A", 0, null);  // A-H Params
-        GenericParameterTypes['B'] = BType = new Type(SysPod, "B", 0, null);
-        GenericParameterTypes['C'] = CType = new Type(SysPod, "C", 0, null);
-        GenericParameterTypes['D'] = DType = new Type(SysPod, "D", 0, null);
-        GenericParameterTypes['E'] = EType = new Type(SysPod, "E", 0, null);
-        GenericParameterTypes['F'] = FType = new Type(SysPod, "F", 0, null);
-        GenericParameterTypes['G'] = GType = new Type(SysPod, "G", 0, null);
-        GenericParameterTypes['H'] = HType = new Type(SysPod, "H", 0, null);
-        GenericParameterTypes['K'] = KType = new Type(SysPod, "K", 0, null);  // Key
-        GenericParameterTypes['L'] = LType = new Type(SysPod, "L", 0, null);  // Parameterized List
-        GenericParameterTypes['M'] = MType = new Type(SysPod, "M", 0, null);  // Parameterized Map
-        GenericParameterTypes['R'] = RType = new Type(SysPod, "R", 0, null);  // Return
-        GenericParameterTypes['V'] = VType = new Type(SysPod, "V", 0, null);  // Value
+        GenericParameterTypes['A'] = AType = new ClassType(SysPod, "A", 0, null);  // A-H Params
+        GenericParameterTypes['B'] = BType = new ClassType(SysPod, "B", 0, null);
+        GenericParameterTypes['C'] = CType = new ClassType(SysPod, "C", 0, null);
+        GenericParameterTypes['D'] = DType = new ClassType(SysPod, "D", 0, null);
+        GenericParameterTypes['E'] = EType = new ClassType(SysPod, "E", 0, null);
+        GenericParameterTypes['F'] = FType = new ClassType(SysPod, "F", 0, null);
+        GenericParameterTypes['G'] = GType = new ClassType(SysPod, "G", 0, null);
+        GenericParameterTypes['H'] = HType = new ClassType(SysPod, "H", 0, null);
+        GenericParameterTypes['K'] = KType = new ClassType(SysPod, "K", 0, null);  // Key
+        GenericParameterTypes['L'] = LType = new ClassType(SysPod, "L", 0, null);  // Parameterized List
+        GenericParameterTypes['M'] = MType = new ClassType(SysPod, "M", 0, null);  // Parameterized Map
+        GenericParameterTypes['R'] = RType = new ClassType(SysPod, "R", 0, null);  // Return
+        GenericParameterTypes['V'] = VType = new ClassType(SysPod, "V", 0, null);  // Value
 
         List noMixins = new List(TypeType, 0).ro();
         for (int i=0; i<GenericParameterTypes.Length; i++)
         {
-          Type gp = GenericParameterTypes[i];
+          ClassType gp = GenericParameterTypes[i];
           if (gp == null) continue;
           gp.m_base   = ObjType;
           gp.m_mixins = noMixins;
@@ -289,16 +288,16 @@ namespace Fan.Sys
         m_homeDir = new LocalFile(new DirectoryInfo(HomeDir));
 // set is accesor method
 //m_appDir  = new LocalFile(new DirectoryInfo(AppDir));
-        m_hostName = Str.make(Environment.MachineName);
-        m_userName = Str.make(Environment.UserName);
+        m_hostName = Environment.MachineName;
+        m_userName = Environment.UserName;
 
         m_env = new Map(StrType, StrType);
-        m_env.caseInsensitive(Bool.True);
+        m_env.caseInsensitive(Boolean.True);
         try
         {
           // predefined
-          m_env.set(Str.make("os.name"), Str.make(Environment.OSVersion.Platform.ToString()));
-          m_env.set(Str.make("os.version"), Str.make(Environment.OSVersion.Version.ToString()));
+          m_env.set("os.name", Environment.OSVersion.Platform.ToString());
+          m_env.set("os.version", Environment.OSVersion.Version.ToString());
 
           // environment variables
           IDictionary getenv = Environment.GetEnvironmentVariables();
@@ -306,7 +305,7 @@ namespace Fan.Sys
           {
             string key = (string)de.Key;
             string val = (string)de.Value;
-            m_env.set(Str.make(key), Str.make(val));
+            m_env.set(key, val);
           }
 
           // TODO - is there an equiv in C# for Java sys props?
@@ -316,15 +315,15 @@ namespace Fan.Sys
           it = System.getProperties().keySet().iterator();
           while (it.hasNext())
           {
-            String key = (String)it.next();
-            String val = System.getProperty(key);
-            env.set(Str.make(key), Str.make(val));
+            string key = (string)it.next();
+            string val = System.getProperty(key);
+            env.set(string.make(key), string.make(val));
           }
           */
 
           // sys.properties
           LocalFile f = new LocalFile(new FileInfo(FileUtil.combine(HomeDir, "lib", "sys.props")));
-          if (f.exists().val)
+          if (f.exists().booleanValue())
           {
             try
             {
@@ -513,8 +512,8 @@ namespace Fan.Sys
     public static readonly Type UnsupportedErrType;
 
     // generic parameter types used with generic types List, Map, and Method
-    public static readonly Type[] GenericParameterTypes = new Type[256];
-    public static readonly Type AType, BType, CType, DType, EType, FType, GType,
+    public static readonly ClassType[] GenericParameterTypes = new ClassType[256];
+    public static readonly ClassType AType, BType, CType, DType, EType, FType, GType,
                              HType, KType, LType, MType, RType, VType;
 
     public static Type genericParameterType(string name)
@@ -528,15 +527,13 @@ namespace Fan.Sys
     static Type builtin(string name, Type baseType)
     {
       return SysPod.findType(name, true);
-      //if (SysPod.fpod != null) return SysPod.findType(name, true);
-      //return SysPod.Stub(Type.Stub(SysPod, name, baseType));
     }
 
     public static readonly List m_args;
     public static readonly LocalFile m_homeDir;
     public static LocalFile m_appDir;
-    public static readonly Str m_hostName;
-    public static readonly Str m_userName;
+    public static readonly string m_hostName;
+    public static readonly string m_userName;
     private static Map m_env;
 
     // Namespace

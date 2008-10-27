@@ -7,6 +7,7 @@
 //
 
 using System;
+using Fanx.Util;
 
 namespace Fan.Sys
 {
@@ -24,92 +25,99 @@ namespace Fan.Sys
 
     public override int GetHashCode()
     {
-      long h = hash().val;
+      long h = hash().longValue();
       return (int)(h ^ (h >> 32));
     }
 
     public override bool Equals(object obj)
     {
-      return _equals(obj).val;
+      return _equals(obj).booleanValue();
     }
 
     public override string ToString()
     {
-      return toStr().val;
+      return toStr();
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Bool equals(object self, object x)
+    public static Boolean equals(object self, object x)
     {
       if (self is FanObj)
         return ((FanObj)self)._equals(x);
       else
-        return Bool.make(self.Equals(x));
+        return Boolean.valueOf(self.Equals(x));
     }
 
-    public virtual Bool _equals(object obj)
+    public virtual Boolean _equals(object obj)
     {
-      return this == obj ? Bool.True : Bool.False;
+      return this == obj ? Boolean.True : Boolean.False;
     }
 
-    public static Int compare(object self, object x)
+    public static Long compare(object self, object x)
     {
       if (self is FanObj)
         return ((FanObj)self).compare(x);
+      else if (self is string)
+        return FanStr.compare((string)self, x);
+      else if (self is IComparable)
+        return Long.valueOf(((IComparable)self).CompareTo(x));
       else
-        return toStr(self).compare(toStr(x));
+        return FanStr.compare(toStr(self), toStr(x));
     }
 
-    public virtual Int compare(object obj)
+    public virtual Long compare(object obj)
     {
-      return toStr(this).compare(toStr(obj));
+      return FanStr.compare(toStr(), toStr(obj));
     }
 
-    public static Int hash(object self)
+    public static Long hash(object self)
     {
       if (self is FanObj)
         return ((FanObj)self).hash();
       else
-        return Int.make(self.GetHashCode());
+        return Long.valueOf(self.GetHashCode());
     }
 
-    public virtual Int hash()
+    public virtual Long hash()
     {
-      return Int.make(base.GetHashCode());
+      return Long.valueOf(base.GetHashCode());
     }
 
-    public static Str toStr(object self)
+    public static string toStr(object self)
     {
       if (self is FanObj)
         return ((FanObj)self).toStr();
       else
-        return Str.make(self.ToString());
+        return self.ToString();
     }
 
-    public virtual Str toStr()
+    public virtual string toStr()
     {
-      return Str.make(base.ToString());
+      return base.ToString();
     }
 
-    public static Bool isImmutable(object self)
+    public static Boolean isImmutable(object self)
     {
       if (self is FanObj)
         return ((FanObj)self).isImmutable();
       else
-        return Bool.False;
+        return Boolean.valueOf(FanUtil.isNetImmutable(self.GetType()));
     }
 
-    public virtual Bool isImmutable()
+    public virtual Boolean isImmutable()
     {
       return type().isConst();
     }
 
     public static Type type(object self)
     {
-      return ((FanObj)self).type();
+      if (self is FanObj)
+        return ((FanObj)self).type();
+      else
+        return FanUtil.toFanType(self.GetType(), true);
     }
 
     public virtual Type type()
@@ -117,18 +125,23 @@ namespace Fan.Sys
       return Sys.ObjType;
     }
 
-    public static object trap(object self, Str name, List args)
+    public static object trap(object self, string name, List args)
     {
-      return ((FanObj)self).trap(name, args);
+      if (self is FanObj)
+        return ((FanObj)self).trap(name, args);
+      else
+        return doTrap(self, name, args, type(self));
     }
 
-    public virtual object trap(Str name, List args)
+    public virtual object trap(string name, List args) { return doTrap(this, name, args, type()); }
+
+    private static object doTrap(object self, string name, List args, Type type)
     {
-      Slot slot = type().slot(name, Bool.True);
+      Slot slot = type.slot(name, Boolean.True);
       if (slot is Method)
       {
         Method m = (Method)slot;
-        return m.m_func.callOn(this, args);
+        return m.m_func.callOn(self, args);
       }
       else
       {
@@ -136,48 +149,19 @@ namespace Fan.Sys
         int argSize = (args == null) ? 0 : args.sz();
         if (argSize == 0)
         {
-          return f.get(this);
+          return f.get(self);
         }
 
         if (argSize == 1)
         {
           object val = args.get(0);
-          f.set(this, val);
+          f.set(self, val);
           return val;
         }
 
         throw ArgErr.make("Invalid number of args to get or set field '" + name + "'").val;
       }
     }
-
-    /* TODO
-    public virtual object trapUri(Uri uri)
-    {
-      // sanity checks
-      List path = uri.path();
-      if (path == null) throw ArgErr.make("Path is null: '" + uri + "'").val;
-
-      // if path is empty, return this
-      if (path.sz() == 0) return this;
-
-      // get next level of path
-      Str nextName = (Str)path.first();
-      object obj = null;
-      try
-      {
-        if (emptyList == null) emptyList = new List(Sys.ObjType).ro();
-        obj = trap(nextName, emptyList);
-      }
-      catch(UnknownSlotErr.Val)
-      {
-      }
-      if (obj == null) return null;
-
-      // recurse
-      return obj.trapUri(uri.tail());
-    }
-    private static List emptyList;
-    */
 
   //////////////////////////////////////////////////////////////////////////
   // Utils

@@ -23,11 +23,11 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Buf make() { return new MemBuf(1024); }
-    public static Buf make(Int capacity) { return new MemBuf((int)capacity.val); }
+    public static Buf make(Long capacity) { return new MemBuf((int)capacity.longValue()); }
 
-    public static Buf random(Int s)
+    public static Buf random(Long s)
     {
-      int size = (int)s.val;
+      int size = s.intValue();
       byte[] buf = new byte[size];
       Random random = new Random();
 
@@ -53,14 +53,14 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object that)
+    public override Boolean _equals(object that)
     {
-      return this == that ? Bool.True : Bool.False;
+      return this == that ? Boolean.True : Boolean.False;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
-      return Str.make(type().name().val + "(pos=" + getPos() + " size=" + getSize() + ")");
+      return type().name() + "(pos=" + getPos() + " size=" + getSize() + ")";
     }
 
     public override Type type() { return Sys.BufType; }
@@ -89,48 +89,48 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool empty()
+    public Boolean empty()
     {
-      return getSize() == 0 ? Bool.True : Bool.False;
+      return getSize() == 0 ? Boolean.True : Boolean.False;
     }
 
-    public virtual Int capacity()
+    public virtual Long capacity()
     {
-      return Int.m_maxValue;
+      return FanInt.m_maxValue;
     }
 
-    public virtual void capacity(Int c)
+    public virtual void capacity(Long c)
     {
     }
 
-    public Int size()
+    public Long size()
     {
-      return Int.make(getSize());
+      return Long.valueOf(getSize());
     }
 
-    public void size(Int s)
+    public void size(Long s)
     {
-      setSize(s.val);
+      setSize(s.longValue());
     }
 
-    public Int pos()
+    public Long pos()
     {
-      return Int.make(getPos());
+      return Long.valueOf(getPos());
     }
 
-    public Int remaining()
+    public Long remaining()
     {
-      return Int.make(getSize()-getPos());
+      return Long.valueOf(getSize()-getPos());
     }
 
-    public Bool more()
+    public Boolean more()
     {
-      return getSize()-getPos() > 0 ? Bool.True : Bool.False;
+      return getSize()-getPos() > 0 ? Boolean.True : Boolean.False;
     }
 
-    public Buf seek(Int pos)
+    public Buf seek(Long pos)
     {
-      long p = pos.val;
+      long p = pos.longValue();
       long size = getSize();
       if (p < 0) p = size + p;
       if (p < 0 || p > size) throw IndexErr.make(pos).val;
@@ -145,13 +145,13 @@ namespace Fan.Sys
       return this;
     }
 
-    public Int get(Int pos)
+    public Long get(Long pos)
     {
-      long p = pos.val;
+      long p = pos.longValue();
       long size = getSize();
       if (p < 0) p = size + p;
       if (p < 0 || p >= size) throw IndexErr.make(pos).val;
-      return Int.m_pos[getByte(p)];
+      return FanInt.m_pos[getByte(p)];
     }
 
     public Buf slice(Range range)
@@ -174,13 +174,13 @@ namespace Fan.Sys
   // Modification
   //////////////////////////////////////////////////////////////////////////
 
-    public Buf set(Int pos, Int b)
+    public Buf set(Long pos, Long b)
     {
-      long p = pos.val;
+      long p = pos.longValue();
       long size = getSize();
       if (p < 0) p = size + p;
       if (p < 0 || p >= size) throw IndexErr.make(pos).val;
-      setByte(p, (int)b.val);
+      setByte(p, b.intValue());
       return this;
     }
 
@@ -201,9 +201,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual Bool close()
+    public virtual Boolean close()
     {
-      return Bool.True;
+      return Boolean.True;
     }
 
     public Charset charset()
@@ -223,32 +223,32 @@ namespace Fan.Sys
 
     public OutStream @out() { return m_out; }
 
-    public Buf write(Int b) { m_out.write(b); return this; }
+    public Buf write(Long b) { m_out.write(b); return this; }
 
     public Buf writeBuf(Buf other) { m_out.writeBuf(other); return this; }
-    public Buf writeBuf(Buf other, Int n) { m_out.writeBuf(other, n); return this; }
+    public Buf writeBuf(Buf other, Long n) { m_out.writeBuf(other, n); return this; }
 
-    public Buf writeI2(Int x) { m_out.writeI2(x); return this; }
+    public Buf writeI2(Long x) { m_out.writeI2(x); return this; }
 
-    public Buf writeI4(Int x) { m_out.writeI4(x); return this; }
+    public Buf writeI4(Long x) { m_out.writeI4(x); return this; }
 
-    public Buf writeI8(Int x) { m_out.writeI8(x); return this; }
+    public Buf writeI8(Long x) { m_out.writeI8(x); return this; }
 
-    public Buf writeF4(Float x) { m_out.writeF4(x); return this; }
+    public Buf writeF4(Double x) { m_out.writeF4(x); return this; }
 
-    public Buf writeF8(Float x) { m_out.writeF8(x); return this; }
+    public Buf writeF8(Double x) { m_out.writeF8(x); return this; }
 
-    public Buf writeDecimal(Decimal x) { m_out.writeDecimal(x); return this; }
+    public Buf writeDecimal(BigDecimal x) { m_out.writeDecimal(x); return this; }
 
-    public Buf writeBool(Bool x) { m_out.writeBool(x); return this; }
+    public Buf writeBool(Boolean x) { m_out.writeBool(x); return this; }
 
-    public Buf writeUtf(Str x) { m_out.writeUtf(x); return this; }
+    public Buf writeUtf(string x) { m_out.writeUtf(x); return this; }
 
-    public Buf writeChar(Int c) { m_out.writeChar(c); return this; }
+    public Buf writeChar(Long c) { m_out.writeChar(c); return this; }
 
-    public Buf writeChars(Str s) { m_out.writeChars(s); return this; }
-    public Buf writeChars(Str s, Int off) { m_out.writeChars(s, off); return this; }
-    public Buf writeChars(Str s, Int off, Int len) { m_out.writeChars(s, off, len); return this; }
+    public Buf writeChars(string s) { m_out.writeChars(s); return this; }
+    public Buf writeChars(string s, Long off) { m_out.writeChars(s, off); return this; }
+    public Buf writeChars(string s, Long off, Long len) { m_out.writeChars(s, off, len); return this; }
 
     public Buf print(object obj) { m_out.print(obj); return this; }
 
@@ -264,76 +264,76 @@ namespace Fan.Sys
 
     public InStream @in() { return m_in; }
 
-    public Int read() {  return m_in.read(); }
+    public Long read() {  return m_in.read(); }
 
-    public Int readBuf(Buf other, Int n) { return m_in.readBuf(other, n); }
+    public Long readBuf(Buf other, Long n) { return m_in.readBuf(other, n); }
 
-    public Buf unread(Int n) { m_in.unread(n); return this; }
+    public Buf unread(Long n) { m_in.unread(n); return this; }
 
-    public Buf readBufFully(Buf buf, Int n) { return m_in.readBufFully(buf, n); }
+    public Buf readBufFully(Buf buf, Long n) { return m_in.readBufFully(buf, n); }
 
     public Buf readAllBuf() { return m_in.readAllBuf(); }
 
-    public Int peek() { return m_in.peek(); }
+    public Long peek() { return m_in.peek(); }
 
-    public Int readU1() { return m_in.readU1(); }
+    public Long readU1() { return m_in.readU1(); }
 
-    public Int readS1() { return m_in.readS1(); }
+    public Long readS1() { return m_in.readS1(); }
 
-    public Int readU2() { return m_in.readU2(); }
+    public Long readU2() { return m_in.readU2(); }
 
-    public Int readS2() { return m_in.readS2(); }
+    public Long readS2() { return m_in.readS2(); }
 
-    public Int readU4() { return m_in.readU4(); }
+    public Long readU4() { return m_in.readU4(); }
 
-    public Int readS4() { return m_in.readS4(); }
+    public Long readS4() { return m_in.readS4(); }
 
-    public Int readS8() { return m_in.readS8(); }
+    public Long readS8() { return m_in.readS8(); }
 
-    public Float readF4() { return m_in.readF4(); }
+    public Double readF4() { return m_in.readF4(); }
 
-    public Float readF8() { return m_in.readF8(); }
+    public Double readF8() { return m_in.readF8(); }
 
-    public Decimal readDecimal() { return m_in.readDecimal(); }
+    public BigDecimal readDecimal() { return m_in.readDecimal(); }
 
-    public Bool readBool() { return m_in.readBool(); }
+    public Boolean readBool() { return m_in.readBool(); }
 
-    public Str readUtf() { return m_in.readUtf(); }
+    public string readUtf() { return m_in.readUtf(); }
 
-    public Int readChar() { return m_in.readChar(); }
+    public Long readChar() { return m_in.readChar(); }
 
-    public Buf unreadChar(Int c) { m_in.unreadChar(c); return this; }
+    public Buf unreadChar(Long c) { m_in.unreadChar(c); return this; }
 
-    public Int peekChar() { return m_in.peekChar(); }
+    public Long peekChar() { return m_in.peekChar(); }
 
-    public Str readLine() { return m_in.readLine(); }
-    public Str readLine(Int max) { return m_in.readLine(max); }
+    public string readLine() { return m_in.readLine(); }
+    public string readLine(Long max) { return m_in.readLine(max); }
 
-    public Str readStrToken() { return m_in.readStrToken(); }
-    public Str readStrToken(Int max) { return m_in.readStrToken(max); }
-    public Str readStrToken(Int max, Func f) { return m_in.readStrToken(Int.Chunk, f); }
+    public string readStrToken() { return m_in.readStrToken(); }
+    public string readStrToken(Long max) { return m_in.readStrToken(max); }
+    public string readStrToken(Long max, Func f) { return m_in.readStrToken(FanInt.Chunk, f); }
 
     public List readAllLines() { return m_in.readAllLines(); }
 
     public void eachLine(Func f) { m_in.eachLine(f); }
 
-    public Str readAllStr() { return m_in.readAllStr(); }
-    public Str readAllStr(Bool normalizeNewlines)  { return m_in.readAllStr(normalizeNewlines); }
+    public string readAllStr() { return m_in.readAllStr(); }
+    public string readAllStr(Boolean normalizeNewlines)  { return m_in.readAllStr(normalizeNewlines); }
 
     public object readObj() { return m_in.readObj(); }
+    public object readObj(Map opt) { return m_in.readObj(opt); }
 
   //////////////////////////////////////////////////////////////////////////
   // Hex
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual Str toHex()
+    public virtual string toHex()
     {
       throw UnsupportedErr.make(type()+".toHex").val;
     }
 
-    public static Buf fromHex(Str str)
+    public static Buf fromHex(string s)
     {
-      string s = str.val;
       int slen = s.Length;
       byte[] buf = new byte[slen/2];
       int[] hexInv = Buf.hexInv;
@@ -363,14 +363,13 @@ namespace Fan.Sys
   // Base64
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual Str toBase64()
+    public virtual string toBase64()
     {
       throw UnsupportedErr.make(type()+".toBase64").val;
     }
 
-    public static Buf fromBase64(Str str)
+    public static Buf fromBase64(string s)
     {
-      string s = str.val;
       int slen = s.Length;
       int si = 0;
       int max = slen * 6 / 8;
@@ -404,7 +403,7 @@ namespace Fan.Sys
   // Digest
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual Buf toDigest(Str algorithm)
+    public virtual Buf toDigest(string algorithm)
     {
       throw UnsupportedErr.make(type()+".toDigest").val;
     }

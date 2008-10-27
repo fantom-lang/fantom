@@ -205,12 +205,12 @@ namespace Fan.Sys
   // Buf API
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Int capacity()
+    public override sealed Long capacity()
     {
       return size();
     }
 
-    public override void capacity(Int x)
+    public override void capacity(Long x)
     {
       throw UnsupportedErr.make("mmap capacity fixed").val;
     }
@@ -221,18 +221,18 @@ namespace Fan.Sys
       return this;
     }
 
-    public override sealed Bool close()
+    public override sealed Boolean close()
     {
       // Java doesn't support closing mmap
-      return Bool.True;
+      return Boolean.True;
     }
 
-    public override sealed Str toHex()
+    public override sealed string toHex()
     {
       throw UnsupportedErr.make().val;
     }
 
-    public override Buf toDigest(Str algorithm)
+    public override Buf toDigest(string algorithm)
     {
       throw UnsupportedErr.make().val;
     }
@@ -254,14 +254,14 @@ namespace Fan.Sys
     /*
     internal class MmapBufOutStream : OutStream
     {
-      public override OutStream write(Int v) { return w((int)v.val); }
+      public override OutStream write(Long v) { return w((int)v.val); }
       public override OutStream w(int v)
       {
         mmap.put((byte)v);
         return this;
       }
 
-      public OutStream writeBuf(Buf other, Int n)
+      public OutStream writeBuf(Buf other, Long n)
       {
         other.pipeTo(mmap, (int)n.val);
         return this;
@@ -282,29 +282,29 @@ namespace Fan.Sys
     /*
     internal class MmapBufInStream : InStream
     {
-      public Int read() { int n = r(); return n < 0 ? null : Int.pos[n]; }
+      public Long read() { int n = r(); return n < 0 ? null : Long.valueOf[n]; }
       public int r()
       {
         return mmap.get() & 0xff;
       }
 
-      public Int readBuf(Buf other, Int n)
+      public Long readBuf(Buf other, Long n)
       {
         int read = other.pipeFrom(mmap, (int)n.val);
         if (read < 0) return null;
-        return Int.pos(read);
+        return Long.valueOf(read);
       }
 
-      public InStream unread(Int n) { return unread((int)n.val); }
+      public InStream unread(Long n) { return unread((int)n.val); }
       public InStream unread(int n)
       {
         mmap.put(mmap.position()-1, (byte)n);
         return this;
       }
 
-      public Int peek()
+      public Long peek()
       {
-        return Int.pos[mmap.get(mmap.position())];
+        return Long.valueOf[mmap.get(mmap.position())];
       }
     }
     */
