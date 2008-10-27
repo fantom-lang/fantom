@@ -20,14 +20,14 @@ class GenFConst < Env
  @@stuff = [
 
   "FCodeMagic    = 0x0FC0DE05;",
-  "FCodeVersion  = 0x01000016;",
+  "FCodeVersion  = 0x01000034;",
 
   "TypeDbMagic   = 0x0FC0DEDB;",
   "TypeDbVersion = 0x01000018;",
- 
+
  ]
- 
- 
+
+
 #####################################################################
 # Flags
 #####################################################################
@@ -53,7 +53,7 @@ class GenFConst < Env
   "Synthetic  = 0x00010000;",
   "Virtual    = 0x00020000;",
   "FlagsMask  = 0x0003ffff;",
-  
+
  ]
 
 #####################################################################
@@ -63,7 +63,7 @@ class GenFConst < Env
  @@methodVarFlags = [
 
   "Param = 0x0001;  // parameter or local variable",
- 
+
  ]
 
 #####################################################################
@@ -78,7 +78,7 @@ class GenFConst < Env
   "LineNumbersAttr  = \"LineNumbers\";",
   "SourceFileAttr   = \"SourceFile\";",
   "ParamDefaultAttr = \"ParamDefault\";",
- 
+
  ]
 
 #####################################################################
@@ -86,7 +86,7 @@ class GenFConst < Env
 #####################################################################
 
  @@opcodes = [
- 
+
    "Nop                 0  ()        // no operation",
    "LoadNull            0  ()        // load null literal onto stack",
    "LoadFalse           0  ()        // load false literal onto stack",
@@ -97,10 +97,10 @@ class GenFConst < Env
    "LoadDuration        2  (dur)     // load Duration const by index onto stack",
    "LoadType            2  (type)    // load Type instance by index onto stack",
    "LoadUri             2  (uri)     // load Uri const by index onto stack",
-   
+
    "LoadVar             2  (reg)     // local var register index (0 is this)",
    "StoreVar            2  (reg)     // local var register index (0 is this)",
-    
+
    "LoadInstance        2  (field)   // load field from storage",
    "StoreInstance       2  (field)   // store field to storage",
    "LoadStatic          2  (field)   // load static field from storage",
@@ -109,7 +109,7 @@ class GenFConst < Env
    "Unused2             0  ()        // unsed opcode",
    "LoadMixinStatic     2  (field)   // load static on mixin field from storage",
    "StoreMixinStatic    2  (field)   // store static on mixin field to storage",
-   
+
    "CallNew             2  (method)  // alloc new object and call constructor",
    "CallCtor            2  (method)  // call constructor (used for constructor chaining)",
    "CallStatic          2  (method)  // call static method",
@@ -118,7 +118,7 @@ class GenFConst < Env
    "CallMixinStatic     2  (method)  // call static mixin method",
    "CallMixinVirtual    2  (method)  // call virtual mixin method",
    "CallMixinNonVirtual 2  (method)  // call instance mixin method non-virtually (named super)",
-    
+
    "Jump                2  (jmp)     // unconditional jump",
    "JumpTrue            2  (jmp)     // jump if bool true",
    "JumpFalse           2  (jmp)     // jump if bool false",
@@ -138,14 +138,14 @@ class GenFConst < Env
    "ReturnVoid          0  ()        // return nothing",
    "ReturnObj           0  ()        // return object",
 
-   "Pop                 0  ()        // pop top object off stack",
-   "Dup                 0  ()        // duplicate object ref on top of stack",
-   "DupDown             0  ()        // TODO - remove when we axe Java compiler",
+   "Pop                 0  (type)    // pop top object off stack",
+   "Dup                 0  (type)    // duplicate object ref on top of stack",
+   "Unused3             0  ()        // unsed opcode",
    "Is                  2  (type)    // is operator",
    "As                  2  (type)    // as operator",
    "Cast                2  (type)    // type cast",
    "Switch              0  ()        // switch jump table 2 count + 2*count",
-    
+
    "Throw               0  ()        // throw Err on top of stack",
    "Leave               2  (jmp)     // jump out of a try or catch block",
    "JumpFinally         2  (jmp)     // jump to a finally block",
@@ -156,7 +156,11 @@ class GenFConst < Env
    "FinallyEnd          0  ()        // ending instruction of a finally block",
 
    "LoadDecimal         2  (decimal) // load Decimal const by index onto stack",
- 
+
+   "CheckNotNull        2  (type)    // throw NullErr if top of stack is null",
+   "Box                 2  (type)    // box from value type to reference type",
+   "Unbox               2  (type)    // unbox from reference type to value type",
+
  ]
 
 #####################################################################
@@ -237,7 +241,7 @@ FAN_OP_FOOTER
       f << "//////////////////////////////////////////////////////////////////////////\n"
       f << "\n"
       @@attributes.each {|s| f << "  const static Str #{s.gsub('=', ':=').gsub(';', '')}\n"}
-      
+
 #      f << "\n"
 #      f << "//////////////////////////////////////////////////////////////////////////\n"
 #      f << "// OpCodes\n"
@@ -251,7 +255,7 @@ FAN_OP_FOOTER
 #        istr = i.to_s.rjust(3)
 #        sig = sig.ljust(8)
 #        f << "  static readonly Int #{name} := #{istr} // #{sig} #{comment}\n"
-#      end 
+#      end
 
       f << "\n"
       f << "}\n"
@@ -267,28 +271,28 @@ FAN_OP_FOOTER
         name = name.gsub("Compare", "Cmp").ljust(18)
         id = i.to_s.rjust(3)
         sig = sig[1..-2]
-        
-        arg = {""=>"", 
-               "int"=>"FOpArg.Int", 
-               "float"=>"FOpArg.Float", 
-               "decimal"=>"FOpArg.Decimal", 
-               "str"=>"FOpArg.Str", 
-               "dur"=>"FOpArg.Duration", 
-               "uri"=>"FOpArg.Uri", 
-               "reg"=>"FOpArg.Register", 
-               "jmp"=>"FOpArg.Jump", 
-               "type"=>"FOpArg.TypeRef", 
-               "field"=>"FOpArg.FieldRef", 
+
+        arg = {""=>"",
+               "int"=>"FOpArg.Int",
+               "float"=>"FOpArg.Float",
+               "decimal"=>"FOpArg.Decimal",
+               "str"=>"FOpArg.Str",
+               "dur"=>"FOpArg.Duration",
+               "uri"=>"FOpArg.Uri",
+               "reg"=>"FOpArg.Register",
+               "jmp"=>"FOpArg.Jump",
+               "type"=>"FOpArg.TypeRef",
+               "field"=>"FOpArg.FieldRef",
                "method"=>"FOpArg.MethodRef"}[sig]
         arg = "(" + arg + ")"
         arg = arg + "," unless (i == @@opcodes.length-1)
         arg = arg.ljust(20)
-        
+
         f << "  #{name} #{arg} // #{id} #{comment}\n"
       end
       f << @@fanOpFooter
     end
-    
+
   end
 
 #####################################################################
@@ -353,9 +357,9 @@ JAVA_HEADER
         istr = i.to_s.rjust(3)
         sig = sig.ljust(8)
         f << "  public static final int #{name} = #{istr}; // #{sig} #{comment}\n"
-      end 
+      end
       f << "\n"
-      
+
       f << "  public static final String[] OpNames =\n"
       f << "  {\n"
       @@opcodes.each_index do |i|
@@ -368,7 +372,7 @@ JAVA_HEADER
       end
       f << "  };\n";
       f << "\n"
-      
+
       f << "  public static final int[] OpSkips =\n"
       f << "  {\n"
       @@opcodes.each_index do |i|
@@ -380,7 +384,7 @@ JAVA_HEADER
       end
       f << "  };\n";
       f << "\n"
-      
+
       f << "  public static final String[] OpSigs =\n"
       f << "  {\n"
       @@opcodes.each_index do |i|
@@ -440,7 +444,7 @@ NET_HEADER
       f << "// MethodVarFlags\n"
       f << "//////////////////////////////////////////////////////////////////////////\n"
       f << "\n"
-      @@methodVarFlags.each {|s| f << "  public const int #{s}\n"}      
+      @@methodVarFlags.each {|s| f << "  public const int #{s}\n"}
       f << "\n"
       f << "//////////////////////////////////////////////////////////////////////////\n"
       f << "// Attributes\n"
@@ -460,9 +464,9 @@ NET_HEADER
         istr = i.to_s.rjust(3)
         sig = sig.ljust(8)
         f << "  public const int #{name} = #{istr}; // #{sig} #{comment}\n"
-      end 
+      end
       f << "\n"
-      
+
       f << "  public static readonly string[] OpNames =\n"
       f << "  {\n"
       @@opcodes.each_index do |i|
@@ -475,7 +479,7 @@ NET_HEADER
       end
       f << "  };\n";
       f << "\n"
-      
+
       f << "  public static readonly int[] OpSkips =\n"
       f << "  {\n"
       @@opcodes.each_index do |i|
@@ -487,7 +491,7 @@ NET_HEADER
       end
       f << "  };\n";
       f << "\n"
-      
+
       f << "  public static readonly string[] OpSigs =\n"
       f << "  {\n"
       @@opcodes.each_index do |i|
