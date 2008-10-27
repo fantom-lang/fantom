@@ -50,7 +50,7 @@ namespace Fanx.Tools
         for (int i=0; i<pods.sz(); i++)
         {
           Pod p = (Pod)pods.get(i);
-          test(p.name().val, verbose);
+          test(p.name(), verbose);
         }
         return;
       }
@@ -103,7 +103,7 @@ namespace Fanx.Tools
       for (int i=0; i<all.sz(); i++)
       {
         Type x = (Type)all.get(i);
-        if (x.@is(Sys.TestType) && !x.isAbstract().val) acc.Add(x);
+        if (x.@is(Sys.TestType) && !x.isAbstract().booleanValue()) acc.Add(x);
       }
       return (Type[])acc.ToArray(System.Type.GetType("Fan.Sys.Type"));
     }
@@ -114,10 +114,13 @@ namespace Fanx.Tools
       if (methodName != "*") return new Method[] { type.method(methodName, true) };
 
       // all methods which start with "test"
-      Method[] all = type.methodArr();
+      List all = type.methods();
       ArrayList acc = new ArrayList();
-      for (int i=0; i<all.Length; i++)
-        if (all[i].name().val.StartsWith("test") && !all[i].isAbstract().val) acc.Add(all[i]);
+      for (int i=0; i<all.sz(); i++)
+      {
+        Method m = (Method)all.get(i);
+        if (m.name().StartsWith("test") && !m.isAbstract().booleanValue()) acc.Add(m);
+      }
       return (Method[])acc.ToArray(System.Type.GetType("Fan.Sys.Method"));
     }
 
@@ -189,7 +192,7 @@ namespace Fanx.Tools
 
     class MainThread : Thread
     {
-      public MainThread() : base(Str.make("main")) {}
+      public MainThread() : base("main") {}
       public override object run()
       {
         ret = doRun();
