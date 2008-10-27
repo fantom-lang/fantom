@@ -18,7 +18,7 @@ namespace Fan.Sys
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public Param(Str name, Type of, int mask)
+    public Param(string name, Type of, int mask)
     {
       this.m_name = name;
       this.m_of   = of;
@@ -31,11 +31,11 @@ namespace Fan.Sys
 
     public override Type type() { return Sys.ParamType; }
 
-    public Str name()  { return m_name; }
+    public string name()  { return m_name; }
     public Type of()   { return m_of; }
-    public Bool hasDefault() { return Bool.make(m_mask & HAS_DEFAULT); }
+    public Boolean hasDefault() { return Boolean.valueOf(m_mask & HAS_DEFAULT); }
 
-    public override Str toStr() { return Str.make(m_of + " " + m_name); }
+    public override string toStr() { return m_of + " " + m_name; }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
@@ -43,7 +43,7 @@ namespace Fan.Sys
 
     public static readonly int HAS_DEFAULT = 0x01;  // is a default value provided
 
-    internal readonly Str m_name;
+    internal readonly string m_name;
     internal readonly Type m_of;
     internal readonly int m_mask;
   }

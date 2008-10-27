@@ -46,7 +46,7 @@ namespace Fan.Fwt
     {
       //if (control == null) return pos;
       //Point p = control.getLocation();
-      //return fan.fwt.Point.make(Int.make(p.x), Int.make(p.y));
+      //return fan.fwt.Point.make(Long.valueOf(p.x), Long.valueOf(p.y));
       return null;
     }
 
@@ -59,7 +59,7 @@ namespace Fan.Fwt
     public Size size(Widget self)
     {
       if (m_control == null) return m_size;
-      return Size.make(Int.make(m_control.Size.Width), Int.make(m_control.Size.Height));
+      return Size.make(Long.valueOf(m_control.Size.Width), Long.valueOf(m_control.Size.Height));
     }
 
     public void size(Widget self, Fan.Fwt.Size size)
@@ -72,7 +72,7 @@ namespace Fan.Fwt
     {
       if (m_control == null) return Rect.make(m_pos.m_x, m_pos.m_y, m_size.m_w, m_size.m_h);
       Rectangle b = m_control.Bounds;
-      return Rect.make(Int.make(b.X), Int.make(b.Y), Int.make(b.Width), Int.make(b.Height));
+      return Rect.make(Long.valueOf(b.X), Long.valueOf(b.Y), Long.valueOf(b.Width), Long.valueOf(b.Height));
     }
 
     public void bounds(Widget self, Rect b)
@@ -85,9 +85,9 @@ namespace Fan.Fwt
   // Attachment
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool attached(Widget self)
+    public Boolean attached(Widget self)
     {
-      return m_control != null ? Bool.True : Bool.False;
+      return m_control != null ? Boolean.True : Boolean.False;
     }
 
     public void attach(Widget self)
@@ -133,20 +133,20 @@ namespace Fan.Fwt
   // Widget/Control synchronization
   //////////////////////////////////////////////////////////////////////////
 
-    public void sync(Widget self, Str id)
+    public void sync(Widget self, string id)
     {
       if (m_control == null) return;
       sync(id);
     }
 
-    public abstract void sync(Str id);
+    public abstract void sync(string id);
 
-    public object send(Widget self, Str id)
+    public object send(Widget self, string id)
     {
       return send(id);
     }
 
-    public virtual object send(Str id) { System.Console.WriteLine(id); return null; }
+    public virtual object send(string id) { System.Console.WriteLine(id); return null; }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
