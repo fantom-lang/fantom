@@ -227,7 +227,7 @@ namespace Fanx.Tools
           for (int i=0; i<depends.sz(); i++)
           {
             Depend d = depends.get(i) as Depend;
-            string n = d.name().val;
+            string n = d.name();
             if (n == "sys") continue; // skip sys
             if (keep[n] == null)
             {

@@ -34,12 +34,12 @@ namespace Fan.Sys
 
     private LogLevel(int ord, string name)
     {
-      Enum.make_(this, Int.m_pos[ord], Str.make(name).intern());
+      Enum.make_(this, FanInt.m_pos[ord], System.String.Intern(name));
       this.m_ord = ord;
     }
 
-    public static LogLevel fromStr(Str name) { return fromStr(name, Bool.True); }
-    public static LogLevel fromStr(Str name, Bool check)
+    public static LogLevel fromStr(string name) { return fromStr(name, Boolean.True); }
+    public static LogLevel fromStr(string name, Boolean check)
     {
       return (LogLevel)doFromStr(Sys.LogLevelType, name, check);
     }

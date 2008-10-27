@@ -21,8 +21,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Depend fromStr(Str str) { return fromStr(str.val); }
-    public static Depend fromStr(string str)
+    public static Depend fromStr(string str) { return fromStr(str, Boolean.True); }
+    public static Depend fromStr(string str, Boolean check)
     {
       try
       {
@@ -30,11 +30,12 @@ namespace Fan.Sys
       }
       catch (System.Exception)
       {
-        throw ParseErr.make("Invalid Depend: '" + str + "'").val;
+        if (!check.booleanValue()) return null;
+        throw ParseErr.make("Depend", str).val;
       }
     }
 
-    private Depend(Str name, Constraint[] constraints)
+    private Depend(string name, Constraint[] constraints)
     {
       this.m_name = name;
       this.m_constraints = constraints;
@@ -68,7 +69,7 @@ namespace Fan.Sys
           System.Type.GetType("Fan.Sys.Depend+Constraint")));
       }
 
-      private Str name()
+      private string name()
       {
         StringBuilder s = new StringBuilder();
         while (m_cur != ' ')
@@ -79,7 +80,7 @@ namespace Fan.Sys
         }
         consumeSpaces();
         if (s.Length == 0) throw new System.Exception();
-        return Str.make(s.ToString());
+        return s.ToString();
       }
 
       private Constraint constraint()
@@ -115,7 +116,7 @@ namespace Fan.Sys
           }
           else
           {
-            segs.add(Int.pos(seg));
+            segs.add(Long.valueOf(seg));
             seg = 0;
             if (m_cur != '.') break;
             else consume();
@@ -157,7 +158,7 @@ namespace Fan.Sys
       int m_pos;
       int m_len;
       string m_str;
-      Str m_name;
+      string m_name;
       ArrayList constraints = new ArrayList(4);
     }
 
@@ -174,17 +175,17 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override Boolean _equals(object obj)
     {
       if (obj is Depend)
-        return toStr()._equals(toStr(obj));
+        return toStr() == toStr(obj) ? Boolean.True : Boolean.False;
       else
-        return Bool.False;
+        return Boolean.False;
     }
 
-    public override Int hash()
+    public override Long hash()
     {
-      return toStr().hash();
+      return FanStr.hash(toStr());
     }
 
     public override Type type()
@@ -192,12 +193,12 @@ namespace Fan.Sys
       return Sys.DependType;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       if (m_str == null)
       {
         StringBuilder s = new StringBuilder();
-        s.Append(m_name.val).Append(' ');
+        s.Append(m_name).Append(' ');
         for (int i=0; i<m_constraints.Length; i++)
         {
           if (i > 0) s.Append(',');
@@ -206,7 +207,7 @@ namespace Fan.Sys
           if (c.isPlus) s.Append('+');
           if (c.endVersion != null) s.Append('-').Append(c.endVersion);
         }
-        m_str = Str.make(s.ToString());
+        m_str = s.ToString();
       }
       return m_str;
     }
@@ -215,41 +216,41 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Str name()
+    public string name()
     {
       return m_name;
     }
 
-    public Int size()
+    public Long size()
     {
-      return Int.pos(m_constraints.Length);
+      return Long.valueOf(m_constraints.Length);
     }
 
-    public Version version() { return version(Int.Zero); }
-    public Version version(Int index)
+    public Version version() { return version(FanInt.Zero); }
+    public Version version(Long index)
     {
-      return m_constraints[(int)index.val].version;
+      return m_constraints[index.intValue()].version;
     }
 
-    public Bool isPlus() { return isPlus(Int.Zero); }
-    public Bool isPlus(Int index)
+    public Boolean isPlus() { return isPlus(FanInt.Zero); }
+    public Boolean isPlus(Long index)
     {
-      return m_constraints[(int)index.val].isPlus ? Bool.True : Bool.False;
+      return m_constraints[index.intValue()].isPlus ? Boolean.True : Boolean.False;
     }
 
-    public Bool isRange() { return isRange(Int.Zero); }
-    public Bool isRange(Int index)
+    public Boolean isRange() { return isRange(FanInt.Zero); }
+    public Boolean isRange(Long index)
     {
-      return m_constraints[(int)index.val].endVersion != null ? Bool.True : Bool.False;
+      return m_constraints[index.intValue()].endVersion != null ? Boolean.True : Boolean.False;
     }
 
-    public Version endVersion() { return endVersion(Int.Zero); }
-    public Version endVersion(Int index)
+    public Version endVersion() { return endVersion(FanInt.Zero); }
+    public Version endVersion(Long index)
     {
-      return m_constraints[(int)index.val].endVersion;
+      return m_constraints[index.intValue()].endVersion;
     }
 
-    public Bool match(Version v)
+    public Boolean match(Version v)
     {
       for (int i=0; i<m_constraints.Length; i++)
       {
@@ -257,24 +258,24 @@ namespace Fan.Sys
         if (c.isPlus)
         {
           // versionPlus
-          if (c.version.compare(v).val <= 0)
-            return Bool.True;
+          if (c.version.compare(v).longValue() <= 0)
+            return Boolean.True;
         }
         else if (c.endVersion != null)
         {
           // versionRange
-          if (c.version.compare(v).val <= 0 &&
-              (c.endVersion.compare(v).val >= 0 || match(c.endVersion, v)))
-            return Bool.True;
+          if (c.version.compare(v).longValue() <= 0 &&
+              (c.endVersion.compare(v).longValue() >= 0 || match(c.endVersion, v)))
+            return Boolean.True;
         }
         else
         {
           // versionSimple
           if (match(c.version, v))
-            return Bool.True;
+            return Boolean.True;
         }
       }
-      return Bool.False;
+      return Boolean.False;
     }
 
     private static bool match(Version a, Version b)
@@ -301,9 +302,9 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private readonly Str m_name;
+    private readonly string m_name;
     private readonly Constraint[] m_constraints;
-    private Str m_str;
+    private string m_str;
 
   }
 }
