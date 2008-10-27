@@ -148,14 +148,7 @@ namespace Fan.Sys
 
     public virtual Type toNonNullable() { return this; }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    public virtual Type toNullable()
-    {
-      if (m_nullable == null) m_nullable = makeToNullable();
-      return m_nullable;
-    }
-
-    protected virtual Type makeToNullable() { return new NullableType(this); }
+    public abstract Type toNullable();
 
   //////////////////////////////////////////////////////////////////////////
   // Generics
@@ -264,11 +257,9 @@ namespace Fan.Sys
     [MethodImpl(MethodImplOptions.Synchronized)]
     public Type toListOf()
     {
-      if (m_listOf == null) m_listOf = makeToListOf();
+      if (m_listOf == null) m_listOf = new ListType(this);
       return m_listOf;
     }
-
-    protected virtual Type makeToListOf() { return new ListType(this); }
 
   //////////////////////////////////////////////////////////////////////////
   // Slots
@@ -406,7 +397,6 @@ namespace Fan.Sys
     internal static readonly bool Debug = false;
     internal static object noParams;
 
-    Type m_nullable;   // cached value of toNullable()
     Type m_listOf;     // cached value of toListOf()
 
   }
