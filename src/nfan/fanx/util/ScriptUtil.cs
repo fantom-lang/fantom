@@ -52,7 +52,7 @@ namespace Fanx.Util
       for (int i=0; i<types.sz(); ++i)
       {
         t = (Type)types.get(i);
-        if (t.isPublic().val) break;
+        if (t.isPublic().booleanValue()) break;
       }
       if (t == null)
         throw Err.make("Script file defines no public classes: " +  file).val;
@@ -69,7 +69,7 @@ namespace Fanx.Util
 
     private static string generatePodName(File f)
     {
-      string bse = f.basename().val;
+      string bse = f.basename();
       StringBuilder s = new StringBuilder(bse.Length+6);
       for (int i=0; i<bse.Length; ++i)
       {
@@ -86,7 +86,7 @@ namespace Fanx.Util
     {
       // use Fan reflection to run compiler::Main.compileScript(File)
       Method m = Slot.findMethod("compiler::Main.compileScript", true);
-      return (Pod)m.call3(Str.make(podName), f, options);
+      return (Pod)m.call3(podName, f, options);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -118,20 +118,20 @@ namespace Fanx.Util
       CachedScript c = new CachedScript();
       c.modified = file.modified();
       c.size     = file.size();
-      c.typeName = t.qname().val;
+      c.typeName = t.qname();
 
       lock (m_cache) { m_cache[cacheKey(file)] = c; }
     }
 
     static string cacheKey(File f)
     {
-      return f.toStr().val;
+      return f.toStr();
     }
 
     class CachedScript
     {
       public DateTime modified;
-      public Int size;
+      public Long size;
       public string typeName;
     }
 
@@ -139,12 +139,12 @@ namespace Fanx.Util
   // Option Utils
   //////////////////////////////////////////////////////////////////////////
 
-    static bool getOption(Map options, Str key, bool def)
+    static bool getOption(Map options, string key, bool def)
     {
       if (options == null) return def;
-      Bool x = (Bool)options.get(key);
+      Boolean x = (Boolean)options.get(key);
       if (x == null) return def;
-      return x.val;
+      return x.booleanValue();
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ namespace Fanx.Util
   //////////////////////////////////////////////////////////////////////////
 
     static Hashtable m_cache = new Hashtable(300);
-    static Str m_strForce = Str.make("force");
+    static string m_strForce = "force";
     static object m_counterLock = new object();
     static int m_counter = 0;
 
