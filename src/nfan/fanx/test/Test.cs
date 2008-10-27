@@ -8,10 +8,9 @@
 
 using System;
 using System.Reflection;
-using Bool  = Fan.Sys.Bool;
-using Int   = Fan.Sys.Int;
-using Float = Fan.Sys.Float;
-using Str   = Fan.Sys.Str;
+using Boolean  = Fan.Sys.Boolean;
+using Long   = Fan.Sys.Long;
+using Double = Fan.Sys.Double;
 using Duration = Fan.Sys.Duration;
 
 namespace Fanx.Test
@@ -214,94 +213,94 @@ namespace Fanx.Test
   // Array Utils
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool MakeBool(bool a)
+    public Boolean MakeBool(bool a)
     {
-      return Bool.make(a);
+      return Boolean.valueOf(a);
     }
 
-    public Bool[] MakeBools(bool a)
+    public Boolean[] MakeBools(bool a)
     {
-      return new Bool[] { MakeBool(a) };
+      return new Boolean[] { MakeBool(a) };
     }
 
-    public Bool[] MakeBools(bool a, bool b)
+    public Boolean[] MakeBools(bool a, bool b)
     {
-      return new Bool[] { MakeBool(a), MakeBool(b) };
+      return new Boolean[] { MakeBool(a), MakeBool(b) };
     }
 
-    public Bool[] MakeBools(bool a, bool b, bool c)
+    public Boolean[] MakeBools(bool a, bool b, bool c)
     {
-      return new Bool[] { MakeBool(a), MakeBool(b), MakeBool(c) };
+      return new Boolean[] { MakeBool(a), MakeBool(b), MakeBool(c) };
     }
 
-    public Int[] MakeInts(long a)
+    public Long[] MakeInts(long a)
     {
-      return new Int[] { Int.make(a) };
+      return new Long[] { Long.valueOf(a) };
     }
 
-    public Int[] MakeInts(long a, long b)
+    public Long[] MakeInts(long a, long b)
     {
-      return new Int[] { Int.make(a), Int.make(b) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b) };
     }
 
-    public Int[] MakeInts(long a, long b, long c)
+    public Long[] MakeInts(long a, long b, long c)
     {
-      return new Int[] { Int.make(a), Int.make(b), Int.make(c) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c) };
     }
 
-    public Int[] MakeInts(long a, long b, long c, long d)
+    public Long[] MakeInts(long a, long b, long c, long d)
     {
-      return new Int[] { Int.make(a), Int.make(b), Int.make(c), Int.make(d) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d) };
     }
 
-    public Int[] MakeInts(long a, long b, long c, long d, long e)
+    public Long[] MakeInts(long a, long b, long c, long d, long e)
     {
-      return new Int[] { Int.make(a), Int.make(b), Int.make(c), Int.make(d), Int.make(e) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d), Long.valueOf(e) };
     }
 
-    public Int[] MakeInts(long a, long b, long c, long d, long e, long f)
+    public Long[] MakeInts(long a, long b, long c, long d, long e, long f)
     {
-      return new Int[] { Int.make(a), Int.make(b), Int.make(c), Int.make(d), Int.make(e), Int.make(f) };
+      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d), Long.valueOf(e), Long.valueOf(f) };
     }
 
-    public Float[] MakeFloats(double a)
+    public Double[] MakeFloats(double a)
     {
-      return new Float[] { Float.make(a) };
+      return new Double[] { Double.valueOf(a) };
     }
 
-    public Float[] MakeFloats(double a, double b)
+    public Double[] MakeFloats(double a, double b)
     {
-      return new Float[] { Float.make(a), Float.make(b) };
+      return new Double[] { Double.valueOf(a), Double.valueOf(b) };
     }
 
-    public Float[] MakeFloats(double a, double b, double c)
+    public Double[] MakeFloats(double a, double b, double c)
     {
-      return new Float[] { Float.make(a), Float.make(b), Float.make(c) };
+      return new Double[] { Double.valueOf(a), Double.valueOf(b), Double.valueOf(c) };
     }
 
-    public Str[] MakeStrs(String a)
+    public string[] MakeStrs(string a)
     {
-      return new Str[] { Str.make(a) };
+      return new string[] { a };
     }
 
-    public Str[] MakeStrs(String a, String b)
+    public string[] MakeStrs(string a, string b)
     {
-      return new Str[] { Str.make(a), Str.make(b) };
+      return new string[] { a, b };
     }
 
-    public Str[] MakeStrs(String a, String b, String c)
+    public string[] MakeStrs(string a, string b, string c)
     {
-      return new Str[] { Str.make(a), Str.make(b), Str.make(c) };
+      return new string[] { a, b, c };
     }
 
-    public Str[] MakeStrs(String a, String b, String c, String d)
+    public string[] MakeStrs(string a, string b, string c, string d)
     {
-      return new Str[] { Str.make(a), Str.make(b), Str.make(c), Str.make(d) };
+      return new string[] { a, b, c, d };
     }
 
-    public Str[] MakeStrs(String a, String b, String c, String d, String e)
+    public string[] MakeStrs(string a, string b, string c, string d, string e)
     {
-      return new Str[] { Str.make(a), Str.make(b), Str.make(c), Str.make(d), Str.make(e) };
+      return new string[] { a, b, c, d, e };
     }
 
     public Duration[] MakeDurs(long a)
@@ -347,12 +346,12 @@ namespace Fanx.Test
       return type.InvokeMember(name, GetInstanceFlags(), null, obj, args);
     }
 
-    public MethodInfo FindMethod(Type type, String name)
+    public MethodInfo FindMethod(Type type, string name)
     {
       return FindMethod(type, name, -1);
     }
 
-    public MethodInfo FindMethod(Type type, String name, int paramCount)
+    public MethodInfo FindMethod(Type type, string name, int paramCount)
     {
       MethodInfo method;
       method = FindMethod(type, name, paramCount, type.GetMethods()); if (method != null) return method;
@@ -360,7 +359,7 @@ namespace Fanx.Test
       throw new Exception("No method " + name);
     }
 
-    public MethodInfo FindMethod(Type type, String name, int paramCount, MethodInfo[] methods)
+    public MethodInfo FindMethod(Type type, string name, int paramCount, MethodInfo[] methods)
     {
       for (int i=0; i<methods.Length; ++i)
         if (methods[i].Name == name)

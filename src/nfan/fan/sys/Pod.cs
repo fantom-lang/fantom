@@ -37,8 +37,8 @@ namespace Fan.Sys
   // Management
   //////////////////////////////////////////////////////////////////////////
 
-    public static Pod find(Str name) { return find(name.val, true, null); }
-    public static Pod find(Str name, Bool check) { return find(name.val, check.val, null); }
+    public static Pod find(string name) { return find(name, true, null); }
+    public static Pod find(string name, Boolean check) { return find(name, check.booleanValue(), null); }
     public static Pod find(string name, bool check) { return find(name, check, null); }
     public static Pod find(string name, bool check, FPod fpod)
     {
@@ -161,14 +161,14 @@ namespace Fan.Sys
 
     internal Pod(FPod fpod)
     {
-      this.m_name = Str.make(fpod.m_podName);
+      this.m_name = fpod.m_podName;
       load(fpod);
     }
 
     // used by ShimPod and Sys.stubSysPod
-    public Pod(String name)
+    public Pod(string name)
     {
-      this.m_name = Str.make(name);
+      this.m_name = name;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -177,12 +177,12 @@ namespace Fan.Sys
 
     public override Type type() { return Sys.PodType; }
 
-    public Str name()  { return m_name; }
+    public string name()  { return m_name; }
 
     public Version version()
     {
       if (m_version == null)
-        m_version = Version.fromStr(Str.make(fpod.m_podVersion));
+        m_version = Version.fromStr(fpod.m_podVersion);
       return m_version;
     }
 
@@ -199,15 +199,15 @@ namespace Fan.Sys
       return m_uri;
     }
 
-    public override Str toStr() { return m_name; }
+    public override string toStr() { return m_name; }
 
   //////////////////////////////////////////////////////////////////////////
   // Facets
   //////////////////////////////////////////////////////////////////////////
 
     public Map facets() { return toFacets().map(); }
-    public object facet(Str name) { return toFacets().get(name, null); }
-    public object facet(Str name, object def) { return toFacets().get(name, def); }
+    public object facet(string name) { return toFacets().get(name, null); }
+    public object facet(string name, object def) { return toFacets().get(name, def); }
 
     private Facets toFacets()
     {
@@ -221,8 +221,8 @@ namespace Fan.Sys
 
     public List types() { return new List(Sys.TypeType, m_types); }
 
-    public Type findType(Str name) { return findType(name.val, true); }
-    public Type findType(Str name, Bool check) { return findType(name.val, check.val); }
+    public Type findType(string name) { return findType(name, true); }
+    public Type findType(string name, Boolean check) { return findType(name, check.booleanValue()); }
     public Type findType(string name, bool check)
     {
       Type type = (Type)typesByName[name];
@@ -252,12 +252,12 @@ namespace Fan.Sys
       return m_log;
     }
 
-    public Str loc(Str key)
+    public string loc(string key)
     {
       return Locale.current().doGet(this, m_name, key, Locale.m_getNoDef);
     }
 
-    public Str loc(Str key, Str def)
+    public string loc(string key, string def)
     {
       return Locale.current().doGet(this, m_name, key, def);
     }
@@ -274,17 +274,17 @@ namespace Fan.Sys
       // create a hollow Type for each FType (this requires two steps,
       // because we don't necessary have all the Types created for
       // superclasses until this loop completes)
-      m_types = new Type[fpod.m_types.Length];
+      m_types = new ClassType[fpod.m_types.Length];
       for (int i=0; i<fpod.m_types.Length; i++)
       {
         // create type instance
-        Type type = new Type(this, fpod.m_types[i]);
+        ClassType type = new ClassType(this, fpod.m_types[i]);
 
         // add to my data structures
         m_types[i] = type;
-        if (typesByName[type.m_name.val] != null)
+        if (typesByName[type.m_name] != null)
           throw Err.make("Invalid pod: " + m_name + " type already defined: " + type.m_name).val;
-        typesByName[type.m_name.val] = type;
+        typesByName[type.m_name] = type;
       }
 
       // get TypeType to use for mixin List (we need to handle case
@@ -299,7 +299,7 @@ namespace Fan.Sys
       for (int i=0; i<fpod.m_types.Length; i++)
       {
         FType ftype = fpod.m_types[i];
-        Type type   = m_types[i];
+        ClassType type = m_types[i];
         type.m_base = findType(ftype.m_base);
 
         List mixins = new List(typeType, ftype.m_mixins.Length);
@@ -342,17 +342,25 @@ namespace Fan.Sys
       // otherwise I need to handle if I am loading my own pod, because
       // I might not yet be added to the system namespace if I'm just
       // loading my own hollow types
-      String podName  = fpod.name(reference.podName);
-      String typeName = fpod.name(reference.typeName);
-      Pod pod = podName == m_name.val ? this : find(podName, true, null);
+      string podName  = fpod.name(reference.podName);
+      string typeName = fpod.name(reference.typeName);
+      Pod pod = podName == m_name ? this : find(podName, true, null);
       Type type = pod.findType(typeName, false);
-      if (type != null) return type;
-
-      // handle variance types (for sys pod only)
-      if (this.m_name.val == "sys")
+      if (type != null)
       {
-        type = Sys.genericParameterType(typeName);
-        if (type != null) return type;
+        if (reference.isNullable()) type = type.toNullable();
+        return type;
+      }
+
+       // handle generic parameter types (for sys pod only)
+       if (m_name == "sys")
+       {
+         type = Sys.genericParameterType(typeName);
+        if (type != null)
+        {
+          if (reference.isNullable()) type = type.toNullable();
+          return type;
+        }
       }
 
       // lost cause
@@ -373,14 +381,17 @@ namespace Fan.Sys
   // Compiler Support
   //////////////////////////////////////////////////////////////////////////
 
+//TODO
+/*
     // stub is used when sys.pod is not found, so that we can stub
     // enough to do self tests and compile sys itself
     internal Type stub(Type type)
     {
       if (typesByName == null) typesByName = new Hashtable();
-      typesByName[type.name().val] = type;
+      typesByName[type.name()] = type;
       return type;
     }
+*/
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
@@ -389,13 +400,13 @@ namespace Fan.Sys
     internal static Hashtable m_podsByName = new Hashtable();
     internal static List m_allPodsList = null;
 
-    internal readonly Str m_name;
+    internal readonly string m_name;
     internal Uri m_uri;
     internal FPod fpod;
     internal Version m_version;
     internal List m_depends;
     internal Facets m_facets;
-    internal Type[] m_types;
+    internal ClassType[] m_types;
     internal Hashtable typesByName;
     internal Map m_files;
     internal Hashtable locales = new Hashtable(4);
