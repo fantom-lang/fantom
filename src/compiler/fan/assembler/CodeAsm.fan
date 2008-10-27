@@ -429,7 +429,7 @@ class CodeAsm : CompilerSupport
     {
       for (i:=0; i<c.cases.size; ++i)
       {
-        op(FOp.Dup)
+        opType(FOp.Dup, c.cases[i].ctype)
         expr(c.cases[i])
         op(FOp.CmpEQ) // TODO eq/jump combo?
         jumpPositions.add(jump(FOp.JumpTrue))
@@ -440,7 +440,7 @@ class CodeAsm : CompilerSupport
     // default block goes first - it's the switch fall
     // thru, save offset to back patch jump
     defaultStart := mark
-    defaultEnd := switchBlock(stmt.defaultBlock, true)
+    defaultEnd := switchBlock(stmt.defaultBlock, stmt.condition.ctype)
 
     // now write each case block
     caseEnds := Int[,]
@@ -448,7 +448,7 @@ class CodeAsm : CompilerSupport
     stmt.cases.each |Case c, Int i|
     {
       c.startOffset = code.size
-      caseEnds[i] = switchBlock(c.block, true)
+      caseEnds[i] = switchBlock(c.block, stmt.condition.ctype)
     }
 
     // backpatch the jump table
@@ -467,9 +467,9 @@ class CodeAsm : CompilerSupport
     }
   }
 
-  private Int switchBlock(Block? block, Bool pop := false)
+  private Int switchBlock(Block? block, CType? popType := null)
   {
-    if (pop) op(FOp.Pop);
+    if (popType != null) opType(FOp.Pop, popType)
     if (block != null)
     {
       this.block(block)
@@ -916,7 +916,7 @@ class CodeAsm : CompilerSupport
   {
     expr(tc.target)
     op(FOp.Cast, fpod.addTypeRef(tc.check))
-    if (!tc.leave) op(FOp.Pop)
+    if (!tc.leave) opType(FOp.Pop, tc.ctype)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -926,12 +926,12 @@ class CodeAsm : CompilerSupport
   private Void elvis(BinaryExpr binary)
   {
     expr(binary.lhs)
-    op(FOp.Dup)
+    opType(FOp.Dup, binary.lhs.ctype)
     op(FOp.CmpNull)
     isNullLabel := jump(FOp.JumpTrue)
     endLabel := jump(FOp.Jump)
     backpatch(isNullLabel)
-    op(FOp.Pop)
+    opType(FOp.Pop, binary.lhs.ctype)
     expr(binary.rhs)
     backpatch(endLabel)
   }
@@ -960,11 +960,11 @@ class CodeAsm : CompilerSupport
     expr(withBlock.base)
     withBlock.subs.each |WithSubExpr sub|
     {
-      op(FOp.Dup)
+      opType(FOp.Dup, sub.ctype)
       expr(sub.expr)
       if (sub.expr.leave) throw Err.make("should never leave with expr " + sub.location)
     }
-    if (!withBlock.leave) op(FOp.Pop)
+    if (!withBlock.leave) opType(FOp.Pop, withBlock.ctype)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1001,7 +1001,7 @@ class CodeAsm : CompilerSupport
   private Void assignLocalVar(BinaryExpr assign)
   {
     expr(assign.rhs)
-    if (assign.leave) op(FOp.Dup)
+    if (assign.leave) opType(FOp.Dup, assign.ctype)
     storeLocalVar((LocalVarExpr)assign.lhs)
   }
 
@@ -1017,7 +1017,7 @@ class CodeAsm : CompilerSupport
     if (fexpr.target != null)
     {
       expr(fexpr.target);
-      if (dupTarget) op(FOp.Dup)
+      if (dupTarget) opType(FOp.Dup, fexpr.target.ctype)
     }
 
     // if safe, check for null condition
@@ -1025,7 +1025,7 @@ class CodeAsm : CompilerSupport
     if (fexpr.isSafe)
     {
       if (fexpr.target == null) throw err("Compiler error field isSafe", fexpr.location)
-      op(FOp.Dup)
+      opType(FOp.Dup, fexpr.ctype)
       op(FOp.CmpNull)
       isNullLabel = jump(FOp.JumpTrue)
     }
@@ -1083,7 +1083,7 @@ class CodeAsm : CompilerSupport
     {
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
-      op(FOp.Pop)
+      opType(FOp.Pop, fexpr.ctype)
       op(FOp.LoadNull)
       backpatch(endLabel)
     }
@@ -1098,7 +1098,7 @@ class CodeAsm : CompilerSupport
     expr(assign.rhs);
     if (assign.leave)
     {
-      op(FOp.Dup)
+      opType(FOp.Dup, assign.ctype)
       if (isInstanceField)
         op(FOp.StoreVar, assign.tempVar.register)
     }
@@ -1169,7 +1169,7 @@ class CodeAsm : CompilerSupport
     if (call.isSafe)
     {
       if (call.target == null) throw err("Compiler error call isSafe", call.location)
-      op(FOp.Dup)
+      opType(FOp.Dup, call.target.ctype)
       op(FOp.CmpNull)
       isNullLabel = jump(FOp.JumpTrue)
     }
@@ -1190,7 +1190,7 @@ class CodeAsm : CompilerSupport
     {
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
-      op(FOp.Pop)
+      opType(FOp.Pop, call.ctype)
       if (call.leave) op(FOp.LoadNull)
       backpatch(endLabel)
     }
@@ -1216,7 +1216,7 @@ class CodeAsm : CompilerSupport
     op(FOp.CallVirtual, fpod.addMethodRef(ns.objTrap))
 
     // pop return if no leave
-    if (!call.leave) op(FOp.Pop)
+    if (!call.leave) opType(FOp.Pop, call.ctype)
   }
 
   private Void invokeCall(CallExpr call, Bool leave := call.leave)
@@ -1288,7 +1288,7 @@ class CodeAsm : CompilerSupport
       // note we need to use the actual method signature (not parameterized)
       x := m.isParameterized ? m.generic : m
       if (!x.returnType.isVoid || x.isCtor)
-        op(FOp.Pop)
+        opType(FOp.Pop, x.returnType)
     }
   }
 
@@ -1365,10 +1365,10 @@ class CodeAsm : CompilerSupport
         index := (IndexedAssignExpr)c
         get := (ShortcutExpr)index.target
         expr(get.target)  // target
-        op(FOp.Dup)
+        opType(FOp.Dup, get.target.ctype)
         op(FOp.StoreVar, index.scratchA.register)
         expr(get.args[0]) // index expr
-        op(FOp.Dup)
+        opType(FOp.Dup, get.args[0].ctype)
         op(FOp.StoreVar, index.scratchB.register)
         op(FOp.LoadVar, index.scratchA.register)
         op(FOp.LoadVar, index.scratchB.register)
@@ -1381,7 +1381,7 @@ class CodeAsm : CompilerSupport
     // if postfix leave, duplicate value before we preform computation
     if (c.leave && c.isPostfixLeave)
     {
-      op(FOp.Dup)
+      opType(FOp.Dup, c.ctype)
       if (leaveUsingTemp)
         op(FOp.StoreVar, c.tempVar.register)
     }
@@ -1393,7 +1393,7 @@ class CodeAsm : CompilerSupport
     // if prefix, duplicate after we've done computation
     if (c.leave && !c.isPostfixLeave)
     {
-      op(FOp.Dup)
+      opType(FOp.Dup, c.ctype)
       if (leaveUsingTemp)
         op(FOp.StoreVar, c.tempVar.register)
     }
@@ -1408,7 +1408,7 @@ class CodeAsm : CompilerSupport
       case ExprId.shortcut:
         set := (CMethod)c->setMethod
         op(FOp.CallVirtual, fpod.addMethodRef(set, 2))
-        if (!set.returnType.isVoid) op(FOp.Pop)
+        if (!set.returnType.isVoid) opType(FOp.Pop, set.returnType)
     }
 
     // if field leave, then load back from temp local
@@ -1462,6 +1462,14 @@ class CodeAsm : CompilerSupport
 //////////////////////////////////////////////////////////////////////////
 // Code Buffer
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Append a opcode with a type argument.
+  **
+  Void opType(FOp opcode, CType arg)
+  {
+    op(opcode, fpod.addTypeRef(arg))
+  }
 
   **
   ** Append a opcode with option two byte argument.
