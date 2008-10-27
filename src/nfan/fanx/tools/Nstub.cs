@@ -40,7 +40,7 @@ namespace Fanx.Tools
         writeLine("  <- " + podPath);
         Pod pod = Pod.find(podName, true, null);
         List list = pod.types();
-        string pre = "Fan." + NameUtil.upper(podName) + ".";
+        string pre = "Fan." + FanUtil.upper(podName) + ".";
         for (int i=0; i<list.sz(); i++)
           writeLine("  " + pre + (list.get(i) as Type).name());
         writeLine("  -> " + target);
