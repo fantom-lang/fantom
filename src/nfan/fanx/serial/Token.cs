@@ -43,8 +43,9 @@ namespace Fanx.Serial
     public const int LRBRACKET        = 20;  //  []
     public const int EQ               = 21;  //  =
     public const int POUND            = 22;  //  #
-    public const int AS               = 23;  //  as
-    public const int USING            = 24;  //  using
+    public const int QUESTION         = 23;  //  ?
+    public const int AS               = 24;  //  as
+    public const int USING            = 25;  //  using
 
   //////////////////////////////////////////////////////////////////////////
   // Utils
@@ -62,7 +63,7 @@ namespace Fanx.Serial
         case EOF:              return "end of file";
         case ID:               return "identifier";
         case BOOL_LITERAL:     return "Bool literal";
-        case STR_LITERAL:      return "Str literal";
+        case STR_LITERAL:      return "String literal";
         case INT_LITERAL:      return "Int literal";
         case FLOAT_LITERAL:    return "Float literal";
         case DECIMAL_LITERAL:  return "Decimal literal";
@@ -83,6 +84,7 @@ namespace Fanx.Serial
         case LRBRACKET:        return "[]";
         case EQ:               return "=";
         case POUND:            return "#";
+        case QUESTION:         return "?";
         case AS:               return "as";
         case USING:            return "using";
         default:               return "Token[" + type + "]";

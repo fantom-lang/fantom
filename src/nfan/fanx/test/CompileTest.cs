@@ -64,7 +64,7 @@ namespace Fanx.Test
       Stub(pod, src);
       Compile(pod);
 
-      System.Type type = Fan.Sys.Type.find(pod, "Bar", true).emit();
+      System.Type type = ((ClassType)Fan.Sys.Type.find(pod, "Bar", true)).emit();
       MethodInfo m = type.GetMethod("F");
 
       Object target = (m.IsStatic) ? null : Activator.CreateInstance(type);
@@ -115,10 +115,10 @@ namespace Fanx.Test
     /*
     public void verifyFooBar()
     {
-      string code = "class Foo {\n" +
+      Str code = "class Foo {\n" +
         "  Bool b\n" +
-        "  Int i\n" +
-        "  Str s\n" +
+        "  Long i\n" +
+        "  string s\n" +
         "}";
       stub(code);
       compile();
@@ -142,7 +142,7 @@ namespace Fanx.Test
       List list = Pod.find(pod, true, null).types();
       System.Type[] types = new System.Type[list.sz()];
       for (int i=0; i<list.sz(); i++)
-        types[i] = (list.get(i) as Fan.Sys.Type).emit();
+        types[i] = (list.get(i) as Fan.Sys.ClassType).emit();
 
       return types;
     }
