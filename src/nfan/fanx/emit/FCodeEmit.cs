@@ -129,9 +129,8 @@ namespace Fanx.Emit
 
           case FConst.ReturnVoid:          code.Inst(Op.ret); break;
           case FConst.ReturnObj:           code.Inst(Op.ret); break;
-          case FConst.Pop:                 code.Inst(Op.pop); break;
-          case FConst.Dup:                 code.Inst(Op.dup); break;
-          //case FConst.DupDown:             code.op(DUP_X1); break; // WON'T SUPPORT
+          case FConst.Pop:                 pop(); break;
+          case FConst.Dup:                 dup(); break;
           case FConst.Is:                  @is(); break;
           case FConst.As:                  @as(); break;
           case FConst.Cast:                cast(); break;
@@ -826,6 +825,36 @@ namespace Fanx.Emit
               new string[] { "System.Object" }, "Fan.Sys.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNotNull);
          break;
+      }
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Stack Manipulation
+  //////////////////////////////////////////////////////////////////////////
+
+    private void dup()
+    {
+      if (pod.m_version == FPod.OldFCodeVersion)
+      {
+        code.Inst(Op.dup);
+      }
+      else
+      {
+        int typeRef = u2();
+        code.Inst(Op.dup);
+      }
+    }
+
+    private void pop()
+    {
+      if (pod.m_version == FPod.OldFCodeVersion)
+      {
+        code.Inst(Op.pop);
+      }
+      else
+      {
+        int typeRef = u2();
+        code.Inst(Op.pop);
       }
     }
 
