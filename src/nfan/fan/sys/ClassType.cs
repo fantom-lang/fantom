@@ -45,23 +45,25 @@ namespace Fan.Sys
 
     internal ClassType(Pod pod, FType ftype)
     {
-      this.m_pod     = pod;
-      this.m_ftype   = ftype;
-      this.m_name    = pod.fpod.name(pod.fpod.typeRef(ftype.m_self).typeName);
-      this.m_qname   = pod.m_name + "::" + m_name;
-      this.m_flags   = ftype.m_flags;
-      this.m_dynamic = false;
+      this.m_pod      = pod;
+      this.m_ftype    = ftype;
+      this.m_name     = pod.fpod.name(pod.fpod.typeRef(ftype.m_self).typeName);
+      this.m_qname    = pod.m_name + "::" + m_name;
+      this.m_nullable = new NullableType(this);
+      this.m_flags    = ftype.m_flags;
+      this.m_dynamic  = false;
       if (Debug) Console.WriteLine("-- init:   " + m_qname);
     }
 
     // parameterized type constructor
     public ClassType(Pod pod, string name, int flags, Facets facets)
     {
-      this.m_pod    = pod;
-      this.m_name   = name;
-      this.m_qname  = pod.m_name + "::" + name;
-      this.m_flags  = flags;
-      this.m_facets = facets;
+      this.m_pod      = pod;
+      this.m_name     = name;
+      this.m_qname    = pod.m_name + "::" + name;
+      this.m_nullable = new NullableType(this);
+      this.m_flags    = flags;
+      this.m_facets   = facets;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -72,6 +74,8 @@ namespace Fan.Sys
     public override string name()  { return m_name; }
     public override string qname() { return m_qname; }
     public override string signature() { return m_qname; }
+
+    public override sealed Type toNullable() { return m_nullable; }
 
   //////////////////////////////////////////////////////////////////////////
   // Flags
@@ -94,11 +98,12 @@ namespace Fan.Sys
     // dynamic constructor
     public ClassType()
     {
-      this.m_pod     = null;
-      this.m_name    = "dynamic";
-      this.m_qname   = m_name;
-      this.m_flags   = 0;
-      this.m_dynamic = true;
+      this.m_pod      = null;
+      this.m_name     = "dynamic";
+      this.m_qname    = m_name;
+      this.m_flags    = 0;
+      this.m_dynamic  = true;
+      this.m_nullable = new NullableType(this);
     }
 
     public override Boolean isDynamic() { return Boolean.valueOf(m_dynamic); }
@@ -760,6 +765,7 @@ namespace Fan.Sys
     internal readonly string m_qname;
     internal readonly int m_flags;
     internal readonly bool m_dynamic;
+    internal readonly Type m_nullable;
     internal int m_lineNum;
     internal string m_sourceFile = "";
     internal Facets m_facets;
@@ -774,7 +780,7 @@ namespace Fan.Sys
     internal List m_fields;
     internal List m_methods;
     internal List m_slots;
-    internal Hashtable m_slotsByName;  // String:Slot
+    internal Hashtable m_slotsByName;  // string:Slot
 
     // available when emitted
     internal System.Type m_type;     // main .NET type representation

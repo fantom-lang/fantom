@@ -64,6 +64,13 @@ namespace Fan.Sys
       return null;
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public override sealed Type toNullable()
+    {
+      if (m_nullable == null) m_nullable = new NullableType(this);
+      return m_nullable;
+    }
+
     public override Map @params()
     {
       if (m_params == null) m_params = makeParams();
@@ -237,6 +244,10 @@ namespace Fan.Sys
     // available at construction time
     private readonly Type m_base;
 
+    // lazily created by toNullable()
+    private Type m_nullable;
+
+    // lazily created by params()
     private Map m_params;
 
     // available when reflected
