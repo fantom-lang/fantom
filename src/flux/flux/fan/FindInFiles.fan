@@ -62,7 +62,7 @@ internal class FindInFiles
       catch (IOErr err) {} // skip files we can't read
       finally in.close
     }
-    return marks
+    return marks.sort
   }
 
   readonly File file
