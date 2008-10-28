@@ -556,7 +556,7 @@ class ListTest : Test
     verifyEq(list.containsAll(Str[,]), true)
     verifyEq(list.containsAll(["a"]), true)
     verifyEq(list.containsAll(["c"]), true)
-    verifyEq(list.containsAll(Str[null]), true)
+    verifyEq(list.containsAll(Str?[null]), true)
     verifyEq(list.containsAll(["x"]), false)
     verifyEq(list.containsAll(["b", "a"]), true)
     verifyEq(list.containsAll(["b", null, "a"]), true)
@@ -887,7 +887,7 @@ class ListTest : Test
     verifyEq(list.max |Str a, Str b->Int| { return a.size <=> b.size }, "albatross")
 
     // with null
-    list = Str["a", null, "b"]
+    list = Str?["a", null, "b"]
     verifyEq(list.min, null)
     verifyEq(list.max, "b")
   }

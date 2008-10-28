@@ -610,6 +610,8 @@ class CheckErrors : CompilerStep
   {
     switch (expr.id)
     {
+      case ExprId.listLiteral:    checkListLiteral((ListLiteralExpr)expr)
+      case ExprId.mapLiteral:     checkMapLiteral((MapLiteralExpr)expr)
       case ExprId.rangeLiteral:   checkRangeLiteral((RangeLiteralExpr)expr)
       case ExprId.boolNot:        checkBool((UnaryExpr)expr)
       case ExprId.cmpNull:
@@ -633,6 +635,41 @@ class CheckErrors : CompilerStep
       case ExprId.withBlock:      checkWithBlock((WithBlockExpr)expr)
     }
     return expr
+  }
+
+  private Void checkListLiteral(ListLiteralExpr expr)
+  {
+    // check the types and ensure that everything gets boxed
+    listType := (ListType)expr.ctype
+    valType := listType.v
+    expr.vals.each |Expr val, Int i|
+    {
+      expr.vals[i] = coerceBoxed(val, valType) |,|
+      {
+        err("Invalid value type '$val.toTypeStr' for list of '$valType'", val.location)
+      }
+    }
+  }
+
+  private Void checkMapLiteral(MapLiteralExpr expr)
+  {
+    // check the types and ensure that everything gets boxed
+    mapType := (MapType)expr.ctype
+    keyType := mapType.k
+    valType := mapType.v
+    expr.keys.each |Expr key, Int i|
+    {
+      expr.keys[i] = coerceBoxed(key, keyType) |,|
+      {
+        err("Invalid key type '$key.toTypeStr' for map type '$mapType'", key.location)
+      }
+
+      val := expr.vals[i]
+      expr.vals[i] = coerceBoxed(val, valType) |,|
+      {
+        err("Invalid value type '$val.toTypeStr' for map type '$mapType'", val.location)
+      }
+    }
   }
 
   private Void checkRangeLiteral(RangeLiteralExpr range)
@@ -703,7 +740,7 @@ class CheckErrors : CompilerStep
 
     // take this opportunity to generate a temp local variable if needed
     if (expr.leave && expr.lhs.assignRequiresTempVar)
-      expr.tempVar = curMethod.addLocalVar(expr.ctype, null, null)
+      expr.tempVar = curMethod.addLocalVar(expr.lhs.ctype, null, null)
   }
 
   private Void checkNoNullSafes(Expr x)
@@ -745,7 +782,7 @@ class CheckErrors : CompilerStep
 
     // take this oppotunity to generate a temp local variable if needed
     if (shortcut.leave && shortcut.isAssign && shortcut.target.assignRequiresTempVar)
-      shortcut.tempVar = curMethod.addLocalVar(shortcut.ctype, null, null)
+      shortcut.tempVar = curMethod.addLocalVar(shortcut.target.ctype, null, null)
 
     // perform normal call checking
     checkCall(shortcut)
@@ -833,8 +870,15 @@ class CheckErrors : CompilerStep
     // check protection scope
     checkSlotProtection(call.method, call.location)
 
-    // check arguments
-    if (!call.isDynamic) checkArgs(call)
+    // if dynamic then box all the args otherwise type check them
+    if (!call.isDynamic)
+    {
+      checkArgs(call)
+    }
+    else
+    {
+      call.args.each |Expr arg, Int i| { call.args[i] = box(call.args[i]) }
+    }
 
     // if constructor
     if (m.isCtor && !call.isCtorChain)
@@ -1004,6 +1048,14 @@ class CheckErrors : CompilerStep
     {
       err("Ternary condition must be Bool, not '$expr.condition.ctype'", expr.condition.location)
     }
+    expr.trueExpr = coerce(expr.trueExpr, expr.ctype) |,|
+    {
+      err("Ternary true expr '$expr.trueExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.trueExpr.location)
+    }
+    expr.falseExpr = coerce(expr.falseExpr, expr.ctype) |,|
+    {
+      err("Ternary falseexpr '$expr.falseExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.falseExpr.location)
+    }
   }
 
   private Void checkWithBlock(WithBlockExpr expr)
@@ -1021,16 +1073,19 @@ class CheckErrors : CompilerStep
 
   private Void checkArgs(CallExpr call)
   {
-    params := call.method.params
+    method := call.method
     name := call.name
     args := call.args
+    newArgs := args.dup
     isErr := false
+    params := method.params
+    genericParams := method.isParameterized ? method.generic.params : null
 
     // if we are calling callx(A, B...) on a FuncType, then
     // use the first class Func signature rather than the
     // version of callx which got picked because we might have
     // picked the wrong callx version
-    sig := call.method.parent as FuncType
+    sig := method.parent as FuncType
     if (sig != null && name.startsWith("call") && name.size == 5)
     {
       if (sig.params.size != args.size)
@@ -1041,7 +1096,8 @@ class CheckErrors : CompilerStep
       {
         sig.params.each |CType p, Int i|
         {
-          args[i] = coerce(args[i], p) |,| { isErr = true }
+          // check each argument and ensure boxed
+          newArgs[i] = coerceBoxed(args[i], p) |,| { isErr = true }
         }
       }
     }
@@ -1065,21 +1121,31 @@ class CheckErrors : CompilerStep
         else
         {
           // ensure arg fits parameter type (or auto-cast)
-          args[i] = coerce(args[i], p.paramType) |,|
+          newArgs[i] = coerce(args[i], p.paramType) |,|
           {
             isErr = name != "compare" // TODO let anything slide for Obj.compare
           }
+
+          // if this a parameterized generic, then we need to box
+          // even if the expected type is a value-type (since the
+          // actual implementation methods are all Obj based)
+          if (!isErr && genericParams != null && genericParams[i].paramType.isGenericParameter)
+            newArgs[i] = box(newArgs[i])
         }
       }
     }
 
-    if (!isErr) return
+    if (!isErr)
+    {
+      call.args = newArgs
+      return
+    }
 
     msg := "Invalid args "
     if (sig != null)
       msg += "|" + sig.params.join(", ") + "|"
     else
-      msg += call.method.nameAndParamTypesToStr
+      msg += method.nameAndParamTypesToStr
     msg += ", not (" + args.join(", ", |Expr e->Str| { return "$e.toTypeStr" }) + ")"
     err(msg, call.location)
   }
@@ -1150,6 +1216,25 @@ class CheckErrors : CompilerStep
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Ensure the specified expression is boxed to an object reference.
+  **
+  private Expr box(Expr expr)
+  {
+    if (expr.ctype.isValue)
+      return TypeCheckExpr.coerce(expr, ns.objType)
+    else
+      return expr
+  }
+
+  **
+  ** Run the standard coerce method and ensure the result is boxed.
+  **
+  private Expr coerceBoxed(Expr expr, CType expected, |,| onErr)
+  {
+    return box(coerce(expr, expected, onErr))
+  }
 
   **
   ** Coerce the target expression to the specified type.  If

@@ -392,7 +392,10 @@ class ParameterizedMethod : CMethod
     this.returnType = parent.parameterize(generic.returnType)
     generic.params.map(this.params = CParam[,]) |CParam p->Obj|
     {
-      return ParameterizedMethodParam.make(parent, p)
+      if (!p.paramType.isGenericParameter)
+        return p
+      else
+        return ParameterizedMethodParam.make(parent, p)
     }
 
     signature = "$returnType $name(" + params.join(", ") + ")"

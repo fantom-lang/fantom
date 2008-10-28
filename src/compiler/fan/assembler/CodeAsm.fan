@@ -915,10 +915,15 @@ class CodeAsm : CompilerSupport
   private Void coerce(TypeCheckExpr tc)
   {
     expr(tc.target)
-    op(FOp.Coerce)
-    code.writeI2(fpod.addTypeRef(tc.target.ctype))
-    code.writeI2(fpod.addTypeRef(tc.ctype))
+    coerceOp(tc.target.ctype, tc.ctype)
     if (!tc.leave) opType(FOp.Pop, tc.ctype)
+  }
+
+  private Void coerceOp(CType from, CType to)
+  {
+    op(FOp.Coerce)
+    code.writeI2(fpod.addTypeRef(from))
+    code.writeI2(fpod.addTypeRef(to))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1054,11 +1059,11 @@ class CodeAsm : CompilerSupport
           op(FOp.CallVirtual, index)
       }
 
-      // if parameterized or covariant, then cast
-      if (field.isParameterized || field.isCovariant)
-      {
-        op(FOp.Cast, fpod.addTypeRef(field.fieldType))
-      }
+      // if parameterized or covariant, then coerce
+      if (field.isParameterized)
+        coerceOp(ns.objType, field.fieldType)
+      else if (field.isCovariant)
+        coerceOp(field.inheritedReturnType, field.fieldType)
     }
     // load field directly from storage
     else
@@ -1083,6 +1088,7 @@ class CodeAsm : CompilerSupport
     // if safe, handle null case
     if (fexpr.isSafe)
     {
+      if (field.fieldType.isValue) coerceOp(field.fieldType, field.fieldType.toNullable)
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
       opType(FOp.Pop, fexpr.ctype)
@@ -1164,7 +1170,16 @@ class CodeAsm : CompilerSupport
   private Void call(CallExpr call, Bool leave := call.leave)
   {
     // evaluate target
-    if (call.target != null) expr(call.target)
+    method := call.method
+    if (call.target != null)
+    {
+      // push call target onto the stack
+      expr(call.target)
+
+      // if target is Obj method on value-type then box it
+      if (call.target.ctype.isValue && call.method.parent.isObj)
+        coerceOp(call.target.ctype, ns.objType)
+    }
 
     // if safe, check for null
     Int? isNullLabel := null
@@ -1190,6 +1205,7 @@ class CodeAsm : CompilerSupport
     // if safe, handle null case
     if (call.isSafe)
     {
+      if (method.returnType.isValue) coerceOp(method.returnType, call.ctype.toNullable)
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
       opType(FOp.Pop, call.ctype)
@@ -1275,11 +1291,11 @@ class CodeAsm : CompilerSupport
       {
         ret := m.generic.returnType
         if (ret.isGenericParameter)
-          op(FOp.Cast, fpod.addTypeRef(m.returnType))
+          coerceOp(ns.objType, m.returnType)
       }
       else if (m.isCovariant)
       {
-        op(FOp.Cast, fpod.addTypeRef(m.returnType))
+        coerceOp(m.inheritedReturnType, m.returnType)
       }
     }
 
@@ -1333,7 +1349,9 @@ class CodeAsm : CompilerSupport
 
   private Void shortcutOp(CallExpr call, FOp opCode)
   {
-    if (call.target != null) expr(call.target)
+    // TODO: need to optimize for value-type comparisons
+    expr(call.target)
+    if (call.target.ctype.isValue) coerceOp(call.target.ctype, ns.objType)
     call.args.each |Expr arg| { expr(arg) }
     op(opCode)
   }
