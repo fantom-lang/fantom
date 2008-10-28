@@ -103,7 +103,7 @@ namespace Fanx.Fcode
       public override string toString(int index)
       {
         if (index == -1) return "null";
-        return ((FTypeRef)m_table[index]).Sig(m_pod);
+        return ((FTypeRef)m_table[index]).signature;
       }
 
       public override FTable read(FStore.Input input)

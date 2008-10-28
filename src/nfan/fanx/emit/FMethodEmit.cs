@@ -238,9 +238,9 @@ namespace Fanx.Emit
     /// </summary>
     public void emitMixinRouter(Method m)
     {
-      string parent  = FanUtil.toNetTypeName(m.parent().pod().name(), m.parent().name());
+      string parent  = FanUtil.toNetTypeName(m.parent());
       string name    = FanUtil.toNetMethodName(m.name());
-      string ret     = FanUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
+      string ret     = FanUtil.toNetTypeName(m.inheritedReturns());
       string[] parTypes = new string[] { parent };
       List pars      = m.@params();
       int paramCount = pars.sz();
@@ -263,7 +263,7 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = FanUtil.toNetTypeName(pt.pod().name(), pt.name());
+          string s = FanUtil.toNetTypeName(pt);
           myParams[j] = s;
           myParamNames[j] = param.name();
           implParams[j+1] = s;
@@ -315,9 +315,9 @@ namespace Fanx.Emit
     /// </summary>
     public void emitInterfaceRouter(Type implType, Method m)
     {
-      string impl = FanUtil.toNetTypeName(implType.pod().name(), implType.name());
+      string impl = FanUtil.toNetTypeName(implType);
       string name = m.name();
-      string ret  = FanUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
+      string ret  = FanUtil.toNetTypeName(m.inheritedReturns());
       List pars   = m.@params();
       int paramCount = pars.sz();
 
@@ -337,7 +337,7 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = FanUtil.toNetTypeName(pt.pod().name(), pt.name());
+          string s = FanUtil.toNetTypeName(pt);
           myParams[j] = s;
           myParamNames[j] = param.name();
         }

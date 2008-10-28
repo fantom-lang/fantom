@@ -53,9 +53,17 @@ namespace Fanx.Util
     }
 
     /// <summary>
+    /// Return the .NET type name for this Fan type.
+    /// </summary>
+    public static string toNetTypeName(Fan.Sys.Type type)
+    {
+      return toNetTypeName(type.pod().name(), type.name(), type.isNullable().booleanValue());
+    }
+
+    /// <summary>
     /// Return the .NET type name for this Fan pod and type.
     /// </summary>
-    public static string toNetTypeName(string podName, string typeName)
+    public static string toNetTypeName(string podName, string typeName, bool nullable)
     {
       if (podName == "sys")
       {
@@ -244,6 +252,8 @@ namespace Fanx.Util
 
     static FanUtil()
     {
+      if (Fan.Sys.Sys.ObjType == null) Fan.Sys.Sys.dumpStack();
+
       netToFanTypes["System.String"]      = Fan.Sys.Sys.StrType;
       netToFanTypes["System.Object"]      = Fan.Sys.Sys.ObjType;
       netToFanTypes["Fan.Sys.Boolean"]    = Fan.Sys.Sys.BoolType;

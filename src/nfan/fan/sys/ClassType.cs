@@ -47,7 +47,7 @@ namespace Fan.Sys
     {
       this.m_pod      = pod;
       this.m_ftype    = ftype;
-      this.m_name     = pod.fpod.name(pod.fpod.typeRef(ftype.m_self).typeName);
+      this.m_name     = pod.fpod.typeRef(ftype.m_self).typeName;
       this.m_qname    = pod.m_name + "::" + m_name;
       this.m_nullable = new NullableType(this);
       this.m_flags    = ftype.m_flags;
