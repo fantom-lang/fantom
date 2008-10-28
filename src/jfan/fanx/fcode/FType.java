@@ -46,7 +46,7 @@ public class FType
 
   public String filename()
   {
-    return pod.name(pod.typeRef(self).typeName) + ".fcode";
+    return pod.typeRef(self).typeName + ".fcode";
   }
 
   public void read() throws IOException

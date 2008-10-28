@@ -101,7 +101,7 @@ public abstract class FTable
     public String toString(int index)
     {
       if (index == -1) return "null";
-      return ((FTypeRef)table[index]).sig(pod);
+      return ((FTypeRef)table[index]).signature;
     }
 
     public FTable read(FStore.Input in) throws IOException

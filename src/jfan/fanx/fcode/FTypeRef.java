@@ -13,50 +13,43 @@ import fanx.util.*;
 /**
  * FTypeRef stores a typeRef structure used to reference type signatures.
  */
-public class FTypeRef
+public final class FTypeRef
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public FTypeRef(int podName, int typeName, String sig)
+  FTypeRef(String podName, String typeName, String sig)
   {
     this.podName  = podName;
     this.typeName = typeName;
-    this.sig      = sig;
-    this.hash     = (podName << 7) ^ (typeName) ^ (sig.hashCode());
+
+    // compute mask
+    int mask = 0;
+    if (sig.endsWith("?")) mask |= NULLABLE;
+    if (sig.length() > 1)  mask |= GENERIC_INSTANCE;
+    this.mask = mask;
+
+    // compute full siguature
+    if (isGenericInstance())
+      this.signature = sig;
+    else
+      this.signature = podName + "::" + typeName + sig;
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Identity
+// Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public boolean isGenericInstance()
-  {
-    return sig.length() > 1;  // "?" is non-generic nullable
-  }
+  public boolean isNullable() { return (mask & NULLABLE) != 0; }
 
-  public boolean isNullable()
-  {
-    return sig.length() > 0 && sig.charAt(sig.length()-1) == '?';
-  }
+  public boolean isGenericInstance() { return (mask & GENERIC_INSTANCE) != 0; }
 
-  public int hashCode()
+  public String jname()
   {
-    return hash;
-  }
-
-  public boolean equals(Object obj)
-  {
-    FTypeRef x = (FTypeRef)obj;
-    return podName == x.podName && typeName == x.typeName && sig.equals(x.sig);
-  }
-
-  public String sig(FPod pod)
-  {
-    if (isGenericInstance()) return sig;
-    return pod.name(podName) + "::" + pod.name(typeName) + sig;
+    if (jname == null) jname = FanUtil.toJavaTypeSig(podName, typeName, isNullable());
+    return jname;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,16 +58,24 @@ public class FTypeRef
 
   public static FTypeRef read(FStore.Input in) throws IOException
   {
-    return new FTypeRef(in.u2(), in.u2(), in.utf());
+    FPod fpod = in.fpod;
+    String podName = fpod.name(in.u2());
+    String typeName = fpod.name(in.u2());
+    String sig = in.utf(); // full sig if parameterized, "?" if nullable, or ""
+    return new FTypeRef(podName, typeName, sig);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  public final int podName;
-  public final int typeName;
-  public final String sig;  // full sig if parameterized, "?" if nullable
-  public final int hash;
+  public static final int NULLABLE         = 0x0001;
+  public static final int GENERIC_INSTANCE = 0x0002;
+
+  public final String podName;     // pod name "sys"
+  public final String typeName;    // simple type name "Bool"
+  public final int mask;           // bitmask
+  public final String signature;   // full fan signature (qname or parameterized)
+  private String jname;           // fan/sys/Duration, java/lang/Boolean, Z
 
 }
