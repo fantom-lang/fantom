@@ -210,11 +210,23 @@ public class FanUtil
   }
 
   /**
-   * Given a Fan type, get the Java type signature.
+   * Given a Fan type, get the Java type signature:
+   *   fan/sys/Duration
    */
   public static String toJavaTypeSig(Type t)
   {
     return toJavaTypeSig(t.pod().name(), t.name(), t.isNullable());
+  }
+
+  /**
+   * Given a Fan type, get the Java member signature.
+   *   Lfan/sys/Duration;
+   */
+  public static String toJavaMemberSig(Type t)
+  {
+    String sig = toJavaTypeSig(t);
+    if (sig.length() == 1) return sig;
+    return "L" + sig + ";";
   }
 
   /**
