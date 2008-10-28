@@ -141,7 +141,7 @@ class ErrResource : Resource
 
   override Uri uri
 
-  override Str name() { return uri.name ?: uri.toStr }
+  override Str name() { n := uri.name; return n.isEmpty ? uri.toStr : n }
 
   override Image icon() { return Flux.icon(`/x16/dialog-error.png`) }
 

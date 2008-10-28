@@ -212,11 +212,11 @@ class TextChange
 
   ** Zero based offset of where repaint should start, or if
   ** null then `startOffset` is assumed.
-  Int repaintStart
+  Int? repaintStart
 
   ** Zero based offset of where repaint should end,
   ** or if null then 'newText.size' is assumed.
-  Int repaintLen
+  Int? repaintLen
 
   override Str toStr()
   {

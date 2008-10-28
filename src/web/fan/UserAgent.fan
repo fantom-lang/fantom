@@ -97,10 +97,10 @@ class UserAgent
       next := (i < s.size-1) ? s[i+1] : -1
       last := (i > 0) ? s[i-1] : -1
 
-      if (curr === '.')
+      if (curr == '.')
       {
-        if (last === '.') break
-        if (next === '.') break
+        if (last == '.') break
+        if (next == '.') break
         if (!next.isDigit) break
 
       }

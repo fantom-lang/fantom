@@ -58,7 +58,7 @@ public class TypeParser
       if (loadingPod != null && podName.equals(loadingPod.name()))
         return loadingPod.findType(typeName, checked);
       else
-        return Type.find(podName, typeName, checked);
+        return find(podName, typeName, checked);
     }
 
     // we got our work cut out for us - create parser
@@ -74,6 +74,13 @@ public class TypeParser
     {
       throw err(sig).val;
     }
+  }
+
+  public static Type find(String podName, String typeName, boolean checked)
+  {
+    Pod pod = Pod.find(podName, checked);
+    if (pod == null) return null;
+    return pod.findType(typeName, checked);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -191,7 +198,7 @@ public class TypeParser
     if (loadingPod != null && podName.equals(loadingPod.name()))
       return loadingPod.findType(typeName, checked);
     else
-      return Type.find(podName, typeName, checked);
+      return find(podName, typeName, checked);
   }
 
 //////////////////////////////////////////////////////////////////////////

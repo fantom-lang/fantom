@@ -42,17 +42,17 @@ public class UdpSocketPeer
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isBound(UdpSocket fan)
+  public boolean isBound(UdpSocket fan)
   {
     return isBound();
   }
 
-  public Boolean isConnected(UdpSocket fan)
+  public boolean isConnected(UdpSocket fan)
   {
     return isConnected();
   }
 
-  public Boolean isClosed(UdpSocket fan)
+  public boolean isClosed(UdpSocket fan)
   {
     return isClosed();
   }
@@ -108,13 +108,13 @@ public class UdpSocketPeer
     }
   }
 
-  public UdpSocket connect(UdpSocket fan, IpAddress addr, Long port)
+  public UdpSocket connect(UdpSocket fan, IpAddress addr, long port)
   {
     try
     {
-      connect(new InetSocketAddress(addr.peer.java, port.intValue()));
+      connect(new InetSocketAddress(addr.peer.java, (int)port));
       this.remoteAddr = addr;
-      this.remotePort = port.intValue();
+      this.remotePort = (int)port;
       return fan;
     }
     catch (IOException e)
@@ -202,7 +202,7 @@ public class UdpSocketPeer
     return fan;
   }
 
-  public Boolean close(UdpSocket fan)
+  public boolean close(UdpSocket fan)
   {
     try
     {
@@ -225,7 +225,7 @@ public class UdpSocketPeer
     return options;
   }
 
-  public Boolean getBroadcast(UdpSocket fan)
+  public boolean getBroadcast(UdpSocket fan)
   {
     try
     {
@@ -237,7 +237,7 @@ public class UdpSocketPeer
     }
   }
 
-  public void setBroadcast(UdpSocket fan, Boolean v)
+  public void setBroadcast(UdpSocket fan, boolean v)
   {
     try
     {
@@ -249,11 +249,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Long getReceiveBufferSize(UdpSocket fan)
+  public long getReceiveBufferSize(UdpSocket fan)
   {
     try
     {
-      return Long.valueOf(getReceiveBufferSize());
+      return getReceiveBufferSize();
     }
     catch (IOException e)
     {
@@ -261,11 +261,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setReceiveBufferSize(UdpSocket fan, Long v)
+  public void setReceiveBufferSize(UdpSocket fan, long v)
   {
     try
     {
-      setReceiveBufferSize(v.intValue());
+      setReceiveBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -273,11 +273,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Long getSendBufferSize(UdpSocket fan)
+  public long getSendBufferSize(UdpSocket fan)
   {
     try
     {
-      return Long.valueOf(getSendBufferSize());
+      return getSendBufferSize();
     }
     catch (IOException e)
     {
@@ -285,11 +285,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setSendBufferSize(UdpSocket fan, Long v)
+  public void setSendBufferSize(UdpSocket fan, long v)
   {
     try
     {
-      setSendBufferSize(v.intValue());
+      setSendBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -297,7 +297,7 @@ public class UdpSocketPeer
     }
   }
 
-  public Boolean getReuseAddress(UdpSocket fan)
+  public boolean getReuseAddress(UdpSocket fan)
   {
     try
     {
@@ -309,7 +309,7 @@ public class UdpSocketPeer
     }
   }
 
-  public void setReuseAddress(UdpSocket fan, Boolean v)
+  public void setReuseAddress(UdpSocket fan, boolean v)
   {
     try
     {
@@ -350,11 +350,11 @@ public class UdpSocketPeer
     }
   }
 
-  public Long getTrafficClass(UdpSocket fan)
+  public long getTrafficClass(UdpSocket fan)
   {
     try
     {
-      return Long.valueOf(getTrafficClass());
+      return getTrafficClass();
     }
     catch (IOException e)
     {
@@ -362,11 +362,11 @@ public class UdpSocketPeer
     }
   }
 
-  public void setTrafficClass(UdpSocket fan, Long v)
+  public void setTrafficClass(UdpSocket fan, long v)
   {
     try
     {
-      setTrafficClass(v.intValue());
+      setTrafficClass((int)v);
     }
     catch (IOException e)
     {

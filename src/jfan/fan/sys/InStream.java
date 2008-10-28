@@ -69,7 +69,7 @@ public class InStream
    */
   public InStream unread(int b)
   {
-    return unread(Long.valueOf(b));
+    return unread((long)b);
   }
 
   /**
@@ -85,7 +85,7 @@ public class InStream
    */
   public InStream unreadChar(int b)
   {
-    return unreadChar(Long.valueOf(b));
+    return unreadChar((long)b);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ public class InStream
     }
   }
 
-  public Long readBuf(Buf buf, Long n)
+  public Long readBuf(Buf buf, long n)
   {
     try
     {
@@ -122,7 +122,7 @@ public class InStream
     }
   }
 
-  public InStream unread(Long n)
+  public InStream unread(long n)
   {
     try
     {
@@ -138,13 +138,13 @@ public class InStream
     }
   }
 
-  public Long skip(Long n)
+  public long skip(long n)
   {
     if (in != null) return in.skip(n);
 
     long nval = n;
     for (int i=0; i<nval; ++i)
-      if (r() < 0) return Long.valueOf(i);
+      if (r() < 0) return i;
     return n;
   }
 
@@ -152,7 +152,7 @@ public class InStream
   {
     try
     {
-      Long size = FanInt.Chunk;
+      long size = FanInt.Chunk;
       Buf buf = Buf.make(size);
       while (readBuf(buf, size) != null);
       buf.flip();
@@ -164,7 +164,7 @@ public class InStream
     }
   }
 
-  public Buf readBufFully(Buf buf, Long n)
+  public Buf readBufFully(Buf buf, long n)
   {
     if (buf == null) buf = Buf.make(n);
 
@@ -172,7 +172,7 @@ public class InStream
     long got = 0;
     while (got < total)
     {
-      Long r = readBuf(buf, Long.valueOf(total-got));
+      Long r = readBuf(buf, total-got);
       if (r == null || r.longValue() == 0) throw IOErr.make("Unexpected end of stream").val;
       got += r.longValue();
     }
@@ -188,48 +188,47 @@ public class InStream
     return x;
   }
 
-  public Long readU1()
+  public long readU1()
   {
     int c = r();
     if (c < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Long.valueOf(c);
+    return c;
   }
 
-  public Long readS1()
+  public long readS1()
   {
     int c = r();
     if (c < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Long.valueOf((byte)c);
+    return (byte)c;
   }
 
-  public Long readU2()
+  public long readU2()
   {
     int c1 = r();
     int c2 = r();
     if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Long.valueOf(c1 << 8 | c2);
+    return c1 << 8 | c2;
   }
 
-  public Long readS2()
+  public long readS2()
   {
     int c1 = r();
     int c2 = r();
     if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Long.valueOf((short)(c1 << 8 | c2));
+    return (short)(c1 << 8 | c2);
   }
 
-  public Long readU4()
+  public long readU4()
   {
     long c1 = r();
     long c2 = r();
     long c3 = r();
     long c4 = r();
     if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream").val;
-    return Long.valueOf((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
+    return (c1 << 24) + (c2 << 16) + (c3 << 8) + c4;
   }
 
-  public Long readS4() { return Long.valueOf(readInt()); }
-  public int readInt()
+  public long readS4()
   {
     int c1 = r();
     int c2 = r();
@@ -239,8 +238,7 @@ public class InStream
     return ((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
   }
 
-  public Long readS8() { return Long.valueOf(readLong()); }
-  public long readLong()
+  public long readS8()
   {
     long c1 = r();
     long c2 = r();
@@ -255,14 +253,14 @@ public class InStream
             (c5 << 24) + (c6 << 16) + (c7 << 8) + c8);
   }
 
-  public Double readF4()
+  public double readF4()
   {
-    return Double.valueOf(Float.intBitsToFloat(readInt()));
+    return Float.intBitsToFloat((int)readS4());
   }
 
-  public Double readF8()
+  public double readF8()
   {
-    return Double.valueOf(Double.longBitsToDouble(readLong()));
+    return Double.longBitsToDouble(readS8());
   }
 
   public BigDecimal readDecimal()
@@ -270,7 +268,7 @@ public class InStream
     return FanDecimal.fromStr(readUtf(), true);
   }
 
-  public Boolean readBool()
+  public boolean readBool()
   {
     int n = r();
     if (n < 0) throw IOErr.make("Unexpected end of stream").val;
@@ -344,9 +342,9 @@ public class InStream
     return ch < 0 ? null : Long.valueOf(ch);
   }
 
-  public InStream unreadChar(Long c)
+  public InStream unreadChar(long c)
   {
-    charsetEncoder.encode((char)c.longValue(), this);
+    charsetEncoder.encode((char)c, this);
     return this;
   }
 
@@ -361,7 +359,7 @@ public class InStream
   public String readLine(Long max)
   {
     // max limit
-    int maxChars = (max != null) ? max.intValue(): Integer.MAX_VALUE;
+    int maxChars = (max != null) ? max.intValue() : Integer.MAX_VALUE;
     if (maxChars <= 0) return "";
 
     // read first char, if at end of file bail
@@ -463,7 +461,7 @@ public class InStream
   }
 
   public String readAllStr() { return readAllStr(true); }
-  public String readAllStr(Boolean normalizeNewlines)
+  public String readAllStr(boolean normalizeNewlines)
   {
     try
     {
@@ -650,13 +648,13 @@ public class InStream
     return -1;
   }
 
-  public Long pipe(OutStream out) { return pipe(out, null, true); }
-  public Long pipe(OutStream out, Long n) { return pipe(out, n, true); }
-  public Long pipe(OutStream out, Long toPipe, Boolean close)
+  public long pipe(OutStream out) { return pipe(out, null, true); }
+  public long pipe(OutStream out, Long n) { return pipe(out, n, true); }
+  public long pipe(OutStream out, Long toPipe, boolean close)
   {
     try
     {
-      Long bufSize = FanInt.Chunk;
+      long bufSize = FanInt.Chunk;
       Buf buf = Buf.make(bufSize);
       long total = 0;
       if (toPipe == null)
@@ -674,14 +672,14 @@ public class InStream
         long toPipeVal = toPipe;
         while (total < toPipeVal)
         {
-          if (toPipeVal - total < bufSize.longValue()) bufSize = Long.valueOf(toPipeVal - total);
+          if (toPipeVal - total < bufSize) bufSize = toPipeVal - total;
           Long n = readBuf(buf.clear(), bufSize);
           if (n == null) throw IOErr.make("Unexpected end of stream").val;
           out.writeBuf(buf.flip(), buf.remaining());
           total += n;
         }
       }
-      return Long.valueOf(total);
+      return total;
     }
     finally
     {
@@ -689,7 +687,7 @@ public class InStream
     }
   }
 
-  public Boolean close()
+  public boolean close()
   {
     if (in != null) return in.close();
     return true;

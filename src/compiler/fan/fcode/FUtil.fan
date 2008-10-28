@@ -32,7 +32,7 @@ class FUtil : FConst
   static Buf? readBuf(InStream in)
   {
     size := in.readU2
-    if (size === 0) return null
+    if (size == 0) return null
     return in.readBufFully(null, size)
   }
 
@@ -51,9 +51,9 @@ class FUtil : FConst
     out.print(key).print("\n").print("  ")
     doc.each |Int ch|
     {
-      if (ch === '\r') throw ArgErr.make
+      if (ch == '\r') throw ArgErr.make
       out.writeChar(ch)
-      if (ch === '\n') out.print("  ")
+      if (ch == '\n') out.print("  ")
     }
     out.print("\n\n")
   }

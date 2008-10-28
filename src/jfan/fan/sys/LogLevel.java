@@ -39,7 +39,7 @@ public class LogLevel
   }
 
   public static LogLevel fromStr(String name) { return fromStr(name, true); }
-  public static LogLevel fromStr(String name, Boolean checked)
+  public static LogLevel fromStr(String name, boolean checked)
   {
     return (LogLevel)doFromStr(Sys.LogLevelType, name, checked);
   }

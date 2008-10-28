@@ -35,27 +35,27 @@ public final class RegexMatcher
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean matches()
+  public final boolean matches()
   {
     return matcher.matches();
   }
 
-  public final Boolean find()
+  public final boolean find()
   {
     return matcher.find();
   }
 
-  public final Long groupCount()
+  public final long groupCount()
   {
-    return Long.valueOf(matcher.groupCount());
+    return matcher.groupCount();
   }
 
   public final String group() { return group(0L); }
-  public final String group(Long group)
+  public final String group(long group)
   {
     try
     {
-      return matcher.group(group.intValue());
+      return matcher.group((int)group);
     }
     catch (IllegalStateException e)
     {
@@ -67,12 +67,12 @@ public final class RegexMatcher
     }
   }
 
-  public final Long start() { return start(0L); }
-  public final Long start(Long group)
+  public final long start() { return start(0L); }
+  public final long start(long group)
   {
     try
     {
-      return Long.valueOf(matcher.start(group.intValue()));
+      return matcher.start((int)group);
     }
     catch (IllegalStateException e)
     {
@@ -84,12 +84,12 @@ public final class RegexMatcher
     }
   }
 
-  public final Long end() { return end(0L); }
-  public final Long end(Long group)
+  public final long end() { return end(0L); }
+  public final long end(long group)
   {
     try
     {
-      return Long.valueOf(matcher.end(group.intValue()));
+      return Long.valueOf(matcher.end((int)group));
     }
     catch (IllegalStateException e)
     {

@@ -19,7 +19,7 @@ public class Locale
 //////////////////////////////////////////////////////////////////////////
 
   public static Locale fromStr(String s) { return fromStr(s, true); }
-  public static Locale fromStr(String s, Boolean checked)
+  public static Locale fromStr(String s, boolean checked)
   {
     int len = s.length();
     try
@@ -98,9 +98,9 @@ public class Locale
 
   public int hashCode() { return str.hashCode(); }
 
-  public Long hash() { return FanStr.hash(str); }
+  public long hash() { return FanStr.hash(str); }
 
-  public Boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (obj instanceof Locale)
     {

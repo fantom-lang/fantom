@@ -132,7 +132,7 @@ public final class Zip
       zipOut.putNextEntry(entry);
       return new SysOutStream(zipOut)
       {
-        public Boolean close()
+        public boolean close()
         {
           try
           {
@@ -152,7 +152,7 @@ public final class Zip
     }
   }
 
-  public Boolean finish()
+  public boolean finish()
   {
     if (zipOut == null) throw UnsupportedErr.make("Zip not opened for writing").val;
     try
@@ -166,7 +166,7 @@ public final class Zip
     }
   }
 
-  public Boolean close()
+  public boolean close()
   {
     try
     {

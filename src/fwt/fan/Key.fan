@@ -232,7 +232,7 @@ const class Key
   }
 
   **
-  ** Format as '"TODO"'
+  ** Format as key names combined with "+" symbol.
   **
   override Str toStr()
   {

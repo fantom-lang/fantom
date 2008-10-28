@@ -22,7 +22,7 @@ class ListTest : Test
     verify(x.type == Int[]#)
     verify(x.type === Int[]#)
     a := x[-1]
-    verify(a is Int)
+    verify((Obj?)a is Int)
     verify(a.type == Int#)
     verify(a == 3)
   }
@@ -89,7 +89,7 @@ class ListTest : Test
     verifyEq([this->toStr].type, Obj?[]#)
     verifyEq([Pod.find("xxxx", false)].type, Pod?[]#)
     verifyEq([this as Test].type, Test?[]#)
-    verifyEq([this ?: "foo"].type, Obj?[]#)
+    verifyEq([(Obj?)this ?: "foo"].type, Obj?[]#)
     verifyEq([x?.toStr].type, Str?[]#)
     verifyEq([x?.def].type, Int?[]#)
     verifyEq([x?.caseInsensitive].type, Bool?[]#)
@@ -132,13 +132,13 @@ class ListTest : Test
   {
     Obj x := [,];
 
-    Obj o    := x as Obj;    verifySame(o , x)
-    Bool b   := x as Bool;   verifySame(b , null)
-    Str s    := x as Str;    verifySame(s , null)
-    List l   := x as List;   verifySame(l , x)
-    Obj[] ol := x as Obj[];  verifySame(ol , x)
-    Int[] il := x as Int[];  verifySame(il , null)
-    Str[] sl := x as Str[];  verifySame(sl , null)
+    o  := x as Obj;    verifySame(o , x)
+    b  := x as Bool;   verifySame(b , null)
+    s  := x as Str;    verifySame(s , null)
+    l  := x as List;   verifySame(l , x)
+    ol := x as Obj[];  verifySame(ol , x)
+    il := x as Int[];  verifySame(il , null)
+    sl := x as Str[];  verifySame(sl , null)
 
     x  = ["a", "b"]
     o  = x as Obj;    verifySame(o , x)
@@ -1163,6 +1163,14 @@ class ListTest : Test
     x.add(0xabcd)
     x[1] <<= 4
     verifyEq(x, [8, 0xabcd0])
+
+    f := [3f, 2f]
+    f[1] *= 8f
+    verifyEq(f, [3f, 16f])
+
+    s := ["x"]
+    s[0] += "y"
+    verifyEq(s, ["xy"])
 
     b := [false, false, true, true]
     b[0] |= Bool.fromStr("false")

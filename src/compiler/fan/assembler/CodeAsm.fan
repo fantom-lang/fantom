@@ -104,7 +104,7 @@ class CodeAsm : CompilerSupport
       block(stmt.falseBlock)
 
     // end
-    if (endLabel !== -1) backpatch(endLabel)
+    if (endLabel != -1) backpatch(endLabel)
   }
 
   private Void returnStmt(ReturnStmt stmt)
@@ -137,15 +137,8 @@ class CodeAsm : CompilerSupport
     }
 
     // process as normal return
-    if (stmt.expr != null)
-    {
-      expr(stmt.expr)
-      op(FOp.ReturnObj)
-    }
-    else
-    {
-      op(FOp.ReturnVoid)
-    }
+    if (stmt.expr != null) expr(stmt.expr)
+    op(FOp.Return)
   }
 
   private Void throwStmt(ThrowStmt stmt)
@@ -312,6 +305,7 @@ class CodeAsm : CompilerSupport
         {
           count++
           expr := c.cases[i]
+          // TODO: need to handle static const Int fields here
           literal := expr.asTableSwitchCase
           if (literal == null) throw CompilerErr.make("return null", c.location)
           if (literal < min) min = literal
@@ -339,13 +333,16 @@ class CodeAsm : CompilerSupport
   private Void tableSwitchStmt(SwitchStmt stmt, Int min, Int max)
   {
     stmt.isTableswitch = true
-    isEnum := stmt.condition.ctype.isEnum
+    conditionType := stmt.condition.ctype
+    isEnum := conditionType.isEnum
 
     // push condition onto the stack
     expr(stmt.condition)
 
-    // if this is an enum get ordinal on the stack
-    if (isEnum)
+    // get a real int onto the stack
+    if (conditionType.isInt && conditionType.isNullable)
+      coerceOp(conditionType, ns.intType)
+    else if (isEnum)
       op(FOp.CallVirtual, fpod.addMethodRef(ns.enumOrdinal))
 
     // if min is not zero, then do a subtraction so that
@@ -419,7 +416,8 @@ class CodeAsm : CompilerSupport
     stmt.isTableswitch = false
 
     // push condition onto the stack
-    expr(stmt.condition)
+    condition := stmt.condition
+    expr(condition)
 
     // walk thru each case, keeping track of all the
     // places we need to backpatch when cases match
@@ -429,9 +427,8 @@ class CodeAsm : CompilerSupport
     {
       for (i:=0; i<c.cases.size; ++i)
       {
-        opType(FOp.Dup, c.cases[i].ctype)
-        expr(c.cases[i])
-        op(FOp.CmpEQ) // TODO eq/jump combo?
+        opType(FOp.Dup, condition.ctype)
+        compareOp(stmt.condition.ctype, FOp.CmpEQ, c.cases[i])
         jumpPositions.add(jump(FOp.JumpTrue))
         jumpCases.add(c)
       }
@@ -440,7 +437,7 @@ class CodeAsm : CompilerSupport
     // default block goes first - it's the switch fall
     // thru, save offset to back patch jump
     defaultStart := mark
-    defaultEnd := switchBlock(stmt.defaultBlock, stmt.condition.ctype)
+    defaultEnd := switchBlock(stmt.defaultBlock, condition.ctype)
 
     // now write each case block
     caseEnds := Int[,]
@@ -448,7 +445,7 @@ class CodeAsm : CompilerSupport
     stmt.cases.each |Case c, Int i|
     {
       c.startOffset = code.size
-      caseEnds[i] = switchBlock(c.block, stmt.condition.ctype)
+      caseEnds[i] = switchBlock(c.block, condition.ctype)
     }
 
     // backpatch the jump table
@@ -762,13 +759,13 @@ class CodeAsm : CompilerSupport
   private Void cmpNull(UnaryExpr unary)
   {
     expr(unary.operand)
-    op(FOp.CmpNull)
+    opType(FOp.CmpNull, unary.operand.ctype)
   }
 
   private Void cmpNotNull(UnaryExpr unary)
   {
     expr(unary.operand)
-    op(FOp.CmpNotNull)
+    opType(FOp.CmpNotNull, unary.operand.ctype)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -777,42 +774,22 @@ class CodeAsm : CompilerSupport
 
   private Void same(BinaryExpr binary)
   {
-    if (binary.lhs.id === ExprId.nullLiteral)
-    {
-      expr(binary.rhs)
-      op(FOp.CmpNull)
-    }
-    else if (binary.rhs.id === ExprId.nullLiteral)
-    {
-      expr(binary.lhs)
-      op(FOp.CmpNull)
-    }
-    else
-    {
-      expr(binary.lhs)
-      expr(binary.rhs)
-      op(FOp.CmpSame)
-    }
+    if (binary.lhs.id === ExprId.nullLiteral ||
+        binary.rhs.id === ExprId.nullLiteral)
+      err("Unexpected use of same with null literals", binary.location)
+    expr(binary.lhs)
+    expr(binary.rhs)
+    op(FOp.CmpSame)
   }
 
   private Void notSame(BinaryExpr binary)
   {
-    if (binary.lhs.id === ExprId.nullLiteral)
-    {
-      expr(binary.rhs)
-      op(FOp.CmpNotNull)
-    }
-    else if (binary.rhs.id === ExprId.nullLiteral)
-    {
-      expr(binary.lhs)
-      op(FOp.CmpNotNull)
-    }
-    else
-    {
-      expr(binary.lhs)
-      expr(binary.rhs)
-      op(FOp.CmpNotSame)
-    }
+    if (binary.lhs.id === ExprId.nullLiteral ||
+        binary.rhs.id === ExprId.nullLiteral)
+      err("Unexpected use of same with null literals", binary.location)
+    expr(binary.lhs)
+    expr(binary.rhs)
+    op(FOp.CmpNotSame)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -915,15 +892,23 @@ class CodeAsm : CompilerSupport
   private Void coerce(TypeCheckExpr tc)
   {
     expr(tc.target)
-    coerceOp(tc.target.ctype, tc.ctype)
+    coerceOp(tc.from, tc.ctype)
     if (!tc.leave) opType(FOp.Pop, tc.ctype)
   }
 
   private Void coerceOp(CType from, CType to)
   {
+    // map from/to to typeRefs
+    fromRef := fpod.addTypeRef(from)
+    toRef   := fpod.addTypeRef(to)
+
+    // short circuit if coercing same types
+    if (fromRef == toRef) return
+
+    // write opcode with its from/to arguments
     op(FOp.Coerce)
-    code.writeI2(fpod.addTypeRef(from))
-    code.writeI2(fpod.addTypeRef(to))
+    code.writeI2(fromRef)
+    code.writeI2(toRef)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -934,7 +919,7 @@ class CodeAsm : CompilerSupport
   {
     expr(binary.lhs)
     opType(FOp.Dup, binary.lhs.ctype)
-    op(FOp.CmpNull)
+    opType(FOp.CmpNull, binary.lhs.ctype)
     isNullLabel := jump(FOp.JumpTrue)
     endLabel := jump(FOp.Jump)
     backpatch(isNullLabel)
@@ -967,7 +952,7 @@ class CodeAsm : CompilerSupport
     expr(withBlock.base)
     withBlock.subs.each |WithSubExpr sub|
     {
-      opType(FOp.Dup, sub.ctype)
+      opType(FOp.Dup, withBlock.ctype)
       expr(sub.expr)
       if (sub.expr.leave) throw Err.make("should never leave with expr " + sub.location)
     }
@@ -1033,7 +1018,7 @@ class CodeAsm : CompilerSupport
     {
       if (fexpr.target == null) throw err("Compiler error field isSafe", fexpr.location)
       opType(FOp.Dup, fexpr.ctype)
-      op(FOp.CmpNull)
+      opType(FOp.CmpNull, fexpr.ctype)
       isNullLabel = jump(FOp.JumpTrue)
     }
 
@@ -1171,24 +1156,27 @@ class CodeAsm : CompilerSupport
   {
     // evaluate target
     method := call.method
-    if (call.target != null)
-    {
-      // push call target onto the stack
-      expr(call.target)
 
-      // if target is Obj method on value-type then box it
-      if (call.target.ctype.isValue && call.method.parent.isObj)
-        coerceOp(call.target.ctype, ns.objType)
-    }
+    // push call target onto the stack
+    target := call.target
+    if (target != null) expr(target)
 
     // if safe, check for null
     Int? isNullLabel := null
     if (call.isSafe)
     {
-      if (call.target == null) throw err("Compiler error call isSafe", call.location)
-      opType(FOp.Dup, call.target.ctype)
-      op(FOp.CmpNull)
+      // sanity check
+      if (target == null || (target.ctype.isValue && !target.ctype.isNullable))
+        throw err("Compiler error call isSafe: $call", call.location)
+
+      // check if null and if so then jump over call
+      opType(FOp.Dup, target.ctype)
+      opType(FOp.CmpNull, target.ctype)
       isNullLabel = jump(FOp.JumpTrue)
+
+      // now if we are calling a value-type method we might need to coerce
+      if (target.ctype.isValue || method.parent.isValue)
+        coerceOp(target.ctype, call.method.parent)
     }
 
     // invoke call
@@ -1205,7 +1193,12 @@ class CodeAsm : CompilerSupport
     // if safe, handle null case
     if (call.isSafe)
     {
-      if (method.returnType.isValue) coerceOp(method.returnType, call.ctype.toNullable)
+      // if the method return a value type, ensure it is coerced to nullable
+      if (method.returnType.isValue)
+        coerceOp(method.returnType, call.ctype.toNullable)
+
+      // jump to end after successful call and push null onto
+      // stack for null check from above (if a leave)
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
       opType(FOp.Pop, call.ctype)
@@ -1317,15 +1310,17 @@ class CodeAsm : CompilerSupport
   private Void shortcut(ShortcutExpr call)
   {
     // handle comparisions as special opcodes
+    target := call.target
+    firstArg := call.args.first
     switch (call.opToken)
     {
-      case Token.eq:     shortcutOp(call, FOp.CmpEQ); return
-      case Token.notEq:  shortcutOp(call, FOp.CmpNE); return
-      case Token.cmp:    shortcutOp(call, FOp.Cmp);   return
-      case Token.lt:     shortcutOp(call, FOp.CmpLT); return
-      case Token.ltEq:   shortcutOp(call, FOp.CmpLE); return
-      case Token.gt:     shortcutOp(call, FOp.CmpGT); return
-      case Token.gtEq:   shortcutOp(call, FOp.CmpGE); return
+      case Token.eq:     compareOp(target, FOp.CmpEQ, firstArg); return
+      case Token.notEq:  compareOp(target, FOp.CmpNE, firstArg); return
+      case Token.cmp:    compareOp(target, FOp.Cmp,   firstArg); return
+      case Token.lt:     compareOp(target, FOp.CmpLT, firstArg); return
+      case Token.ltEq:   compareOp(target, FOp.CmpLE, firstArg); return
+      case Token.gt:     compareOp(target, FOp.CmpGT, firstArg); return
+      case Token.gtEq:   compareOp(target, FOp.CmpGE, firstArg); return
     }
 
     // always check string concat first since it can
@@ -1347,13 +1342,23 @@ class CodeAsm : CompilerSupport
     this.call(call)
   }
 
-  private Void shortcutOp(CallExpr call, FOp opCode)
+  **
+  ** Generate a comparison.  The lhs can be either a ctype or an expr.
+  **
+  private Void compareOp(Obj lhs, FOp opCode, Expr rhs)
   {
-    // TODO: need to optimize for value-type comparisons
-    expr(call.target)
-    if (call.target.ctype.isValue) coerceOp(call.target.ctype, ns.objType)
-    call.args.each |Expr arg| { expr(arg) }
+    lhsExpr := lhs as Expr
+    lhsType := lhsExpr != null ? lhsExpr.ctype : (CType)lhs
+
+    if (lhsExpr != null) expr(lhsExpr)
+    expr(rhs)
+
+    fromRef := fpod.addTypeRef(lhsType)
+    toRef   := fpod.addTypeRef(rhs.ctype)
+
     op(opCode)
+    code.writeI2(fromRef)
+    code.writeI2(toRef)
   }
 
   **
@@ -1364,6 +1369,14 @@ class CodeAsm : CompilerSupport
   {
     var := c.target
     leaveUsingTemp := false
+
+    // if var is a coercion set that aside and get real variable
+    TypeCheckExpr? coerce := null
+    if (var.id == ExprId.coerce)
+    {
+      coerce = (TypeCheckExpr)var
+      var = coerce.target
+    }
 
     // load the variable
     switch (var.id)
@@ -1383,7 +1396,7 @@ class CodeAsm : CompilerSupport
         //   index  \  used for set
         //   target /
         index := (IndexedAssignExpr)c
-        get := (ShortcutExpr)index.target
+        get := (ShortcutExpr)var
         expr(get.target)  // target
         opType(FOp.Dup, get.target.ctype)
         op(FOp.StoreVar, index.scratchA.register)
@@ -1397,6 +1410,9 @@ class CodeAsm : CompilerSupport
       default:
         throw err("Internal error", var.location)
     }
+
+    // if we have a coercion do it
+    if (coerce != null) coerceOp(var.ctype, coerce.check)
 
     // if postfix leave, duplicate value before we preform computation
     if (c.leave && c.isPostfixLeave)
@@ -1418,6 +1434,9 @@ class CodeAsm : CompilerSupport
         op(FOp.StoreVar, c.tempVar.register)
     }
 
+    // if we have a coercion then uncoerce
+    if (coerce != null) coerceOp(coerce.check, var.ctype)
+
     // save the variable back
     switch (var.id)
     {
@@ -1427,8 +1446,12 @@ class CodeAsm : CompilerSupport
         storeField((FieldExpr)var)
       case ExprId.shortcut:
         set := (CMethod)c->setMethod
+        // if calling setter we have to ensure unboxed
+        if (c.ctype.isValue && coerce == null) coerceOp(c.ctype, ns.objType)
         op(FOp.CallVirtual, fpod.addMethodRef(set, 2))
         if (!set.returnType.isVoid) opType(FOp.Pop, set.returnType)
+      default:
+        throw err("Internal error", var.location)
     }
 
     // if field leave, then load back from temp local
@@ -1461,6 +1484,7 @@ class CodeAsm : CompilerSupport
       if (!isEmptyStrLiteral(lhs))
       {
         this.expr(lhs)
+        if (lhs.ctype.isValue) coerceOp(lhs.ctype, ns.objType)
         op(FOp.CallVirtual, fpod.addMethodRef(ns.strBufAdd))
       }
     }
@@ -1551,15 +1575,8 @@ class CodeAsm : CompilerSupport
     if (leavesToReturn != null)
     {
       leavesToReturn.each |Int pos| { backpatch(pos) }
-      if (returnLocal != null)
-      {
-        op(FOp.LoadVar, returnLocal.register)
-        op(FOp.ReturnObj)
-      }
-      else
-      {
-        op(FOp.ReturnVoid)
-      }
+      if (returnLocal != null) op(FOp.LoadVar, returnLocal.register)
+      op(FOp.Return)
     }
 
     // check final size

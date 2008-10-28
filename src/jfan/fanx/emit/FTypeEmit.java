@@ -162,7 +162,7 @@ public abstract class FTypeEmit
   protected void emit(FField f)
   {
     if ((f.flags & FConst.Storage) != 0)
-      emitField(f.name, "L"+jname(f.type)+";", jflags(f.flags));
+      emitField(f.name, pod.typeRef(f.type).jsig(), jflags(f.flags));
   }
 
   /**
@@ -382,24 +382,11 @@ public abstract class FTypeEmit
 // Cached CpInfo
 //////////////////////////////////////////////////////////////////////////
 
-  int CompareEQ, CompareEQz;
-  int CompareNE, CompareNEz;
-  int Compare;
-  int CompareLT, CompareLTz;
-  int CompareLE, CompareLEz;
-  int CompareGE, CompareGEz;
-  int CompareGT, CompareGTz;
-  int CompareSame;
-  int CompareNotSame;
-  int CompareNull;
-  int CompareNotNull;
+  int BoolBox, BoolUnbox;
+  int IntBox, IntUnbox;
+  int FloatBox, FloatUnbox;
   int IsViaType;
   int AsViaType;
-  int BoolMake;
-  int BoolTrue;
-  int BoolFalse;
-  int BoolVal;
-  int IntVal;
   int ErrMake;
   int ErrVal;
   int TypeToNullable;

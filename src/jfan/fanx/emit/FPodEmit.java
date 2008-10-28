@@ -26,6 +26,7 @@ public class FPodEmit
 
   public static Class emitAndLoad(FPod pod)
   {
+
     try
     {
       // lookup or load class
@@ -64,20 +65,19 @@ public class FPodEmit
   {
     FLiterals literals = fpod.readLiterals();
 
-    for (int i=0; i<literals.ints.size(); ++i)
-      cls.getField("I"+i).set(null, literals.ints.get(i));
-    for (int i=0; i<literals.floats.size(); ++i)
-      cls.getField("F"+i).set(null, literals.floats.get(i));
+    // NOTE: ints, floats, and strings use direct Java constants
+
     for (int i=0; i<literals.decimals.size(); ++i)
       cls.getField("D"+i).set(null, literals.decimals.get(i));
-    for (int i=0; i<literals.strs.size(); ++i)
-      cls.getField("S"+i).set(null, literals.strs.get(i));
+    literals.decimals = null;
+
     for (int i=0; i<literals.durations.size(); ++i)
       cls.getField("Dur"+i).set(null, literals.durations.get(i));
+    literals.durations = null;
+
     for (int i=0; i<literals.uris.size(); ++i)
       cls.getField("U"+i).set(null, literals.uris.get(i));
-
-    fpod.literals = null;
+    literals.uris = null;
   }
 
   private FPodEmit(FPod pod)
@@ -98,16 +98,12 @@ public class FPodEmit
   {
     init("fan/" + pod.podName + "/$Pod", "java/lang/Object", new String[0], EmitConst.PUBLIC | EmitConst.FINAL);
 
+    // NOTE: ints, floats, and strings use direct Java constants
+
     // generate constant fields other types will reference, we don't
     // initialize them, rather we do that later via reflection
-    for (int i=0; i<literals.ints.size(); ++i)
-      emitField("I" + i, "Ljava/lang/Long;", EmitConst.PUBLIC | EmitConst.STATIC);
-    for (int i=0; i<literals.floats.size(); ++i)
-      emitField("F" + i, "Ljava/lang/Double;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.decimals.size(); ++i)
       emitField("D" + i, "Ljava/math/BigDecimal;", EmitConst.PUBLIC | EmitConst.STATIC);
-    for (int i=0; i<literals.strs.size(); ++i)
-      emitField("S" + i, "Ljava/lang/String;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.durations.size(); ++i)
       emitField("Dur" + i, "Lfan/sys/Duration;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.uris.size(); ++i)

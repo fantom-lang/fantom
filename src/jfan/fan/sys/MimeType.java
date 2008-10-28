@@ -25,7 +25,7 @@ public final class MimeType
 //////////////////////////////////////////////////////////////////////////
 
   public static MimeType fromStr(String s) { return fromStr(s, true); }
-  public static MimeType fromStr(String s, Boolean checked)
+  public static MimeType fromStr(String s, boolean checked)
   {
     try
     {
@@ -129,7 +129,7 @@ public final class MimeType
     {
       LocalFile f = new LocalFile(new java.io.File(Sys.HomeDir, "lib" + File.sep + "ext2mime.props"));
       Map props = f.readProps();
-      HashMap map = new HashMap(props.size().intValue() * 3);
+      HashMap map = new HashMap((int)props.size() * 3);
       Iterator it = props.pairsIterator();
       while (it.hasNext())
       {
@@ -162,7 +162,7 @@ public final class MimeType
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (!(obj instanceof MimeType)) return false;
     MimeType x = (MimeType)obj;
@@ -178,9 +178,9 @@ public final class MimeType
            params.hashCode();
   }
 
-  public Long hash()
+  public long hash()
   {
-    return Long.valueOf(hashCode());
+    return hashCode();
   }
 
   public String toStr()

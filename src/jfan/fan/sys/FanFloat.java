@@ -11,8 +11,9 @@ package fan.sys;
 import fanx.serial.*;
 
 /**
- * FanDouble defines the methods for sys::Float.  The actual
- * class used for representation is java.lang.Double.
+ * FanFloat defines the methods for sys::Float:
+ *   sys::Float   =>  double primitive
+ *   sys::Float?  =>  java.lang.Double
  */
 public final class FanFloat
 {
@@ -22,7 +23,7 @@ public final class FanFloat
 //////////////////////////////////////////////////////////////////////////
 
   public static Double fromStr(String s) { return fromStr(s, true); }
-  public static Double fromStr(String s, Boolean checked)
+  public static Double fromStr(String s, boolean checked)
   {
     try
     {
@@ -38,80 +39,78 @@ public final class FanFloat
     }
   }
 
-  public static Double makeBits(Long bits)
+  public static double makeBits(long bits)
   {
-    return Double.valueOf(Double.longBitsToDouble(bits.longValue()));
+    return Double.longBitsToDouble(bits);
   }
 
-  public static Double makeBits32(Long bits)
+  public static double makeBits32(long bits)
   {
-    return Double.valueOf(Float.intBitsToFloat(bits.intValue()));
+    return Float.intBitsToFloat((int)bits);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(Double self, Object obj)
+  public static boolean equals(double self, Object obj)
   {
     if (obj instanceof Double)
     {
-      double val = self.doubleValue();
       double x = ((Double)obj).doubleValue();
-      if (Double.isNaN(val)) return Double.isNaN(x);
-      return val == x;
+      if (Double.isNaN(self)) return Double.isNaN(x);
+      return self == x;
     }
     return false;
   }
 
-  public static Boolean approx(Double self, Double that) { return approx(self, that, null); }
-  public static Boolean approx(Double self, Double that, Double tolerance)
+  public static boolean approx(double self, double that) { return approx(self, that, null); }
+  public static boolean approx(double self, double that, Double tolerance)
   {
     // need this to check +inf, -inf, and nan
     if (equals(self, that)) return true;
 
     double t;
     if (tolerance == null)
-      t = Math.min( Math.abs(self.doubleValue()/1e6), Math.abs(that.doubleValue()/1e6) );
+      t = Math.min( Math.abs(self/1e6), Math.abs(that/1e6) );
     else
       t = tolerance.doubleValue();
-    return Math.abs(self.doubleValue() - that.doubleValue()) <= t;
+    return Math.abs(self - that) <= t;
   }
 
-  public static Long compare(Double self, Object obj)
+  public static long compare(double self, Object obj)
   {
-    double val = self.doubleValue();
     double that = ((Double)obj).doubleValue();
-    if (Double.isNaN(val))
+    if (Double.isNaN(self))
     {
-      return (Double.isNaN(that)) ? FanInt.EQ : FanInt.LT;
+      return (Double.isNaN(that)) ? 0 : -1;
     }
     else if (Double.isNaN(that))
     {
-      return FanInt.GT;
+      return +1;
     }
     else
     {
-      if (val < that) return FanInt.LT; return val == that ? FanInt.EQ : FanInt.GT;
+      if (self < that) return -1; return self == that ? 0 : +1;
     }
   }
 
-  public static Long hash(Double self)
+  public static long hash(double self)
   {
     return bits(self);
   }
 
-  public static Long bits(Double self)
+  public static long bits(double self)
   {
-    return Long.valueOf(Double.doubleToLongBits(self.doubleValue()));
+    return Double.doubleToLongBits(self);
   }
 
-  public static Long bits32(Double self)
+  public static long bits32(double self)
   {
-    return Long.valueOf(Float.floatToIntBits(self.floatValue()) & 0xFFFFFFFFL);
+    return Float.floatToIntBits((float)self) & 0xFFFFFFFFL;
   }
 
-  public static Type type(Double self)
+  public static Type type(double self)
   {
     return Sys.FloatType;
   }
@@ -120,204 +119,201 @@ public final class FanFloat
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  public static Double negate(Double self)
+  public static double negate(double self)
   {
-    return Double.valueOf(-self.doubleValue());
+    return -self;
   }
 
-  public static Double mult(Double self, Double x)
+  public static double mult(double self, double x)
   {
-    return Double.valueOf(self.doubleValue() * x.doubleValue());
+    return self * x;
   }
 
-  public static Double div(Double self, Double x)
+  public static double div(double self, double x)
   {
-    return Double.valueOf(self.doubleValue() / x.doubleValue());
+    return self / x;
   }
 
-  public static Double mod(Double self, Double x)
+  public static double mod(double self, double x)
   {
-    return Double.valueOf(self.doubleValue() % x.doubleValue());
+    return self % x;
   }
 
-  public static Double plus(Double self, Double x)
+  public static double plus(double self, double x)
   {
-    return Double.valueOf(self.doubleValue() + x.doubleValue());
+    return self + x;
   }
 
-  public static Double minus(Double self, Double x)
+  public static double minus(double self, double x)
   {
-    return Double.valueOf(self.doubleValue() - x.doubleValue());
+    return self - x;
   }
 
-  public static Double increment(Double self)
+  public static double increment(double self)
   {
-    return Double.valueOf(self.doubleValue()+1);
+    return self + 1.0;
   }
 
-  public static Double decrement(Double self)
+  public static double decrement(double self)
   {
-    return Double.valueOf(self.doubleValue()-1);
+    return self - 1.0;
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Math
 //////////////////////////////////////////////////////////////////////////
 
-  public static Double abs(Double self)
+  public static double abs(double self)
   {
-    if (self.doubleValue() >= 0) return self;
-    return Double.valueOf(-self.doubleValue());
+    if (self >= 0) return self;
+    return -self;
   }
 
-  public static Double min(Double self, Double that)
+  public static double min(double self, double that)
   {
-    if (self.doubleValue() <= that.doubleValue()) return self;
+    if (self <= that) return self;
     return that;
   }
 
-  public static Double max(Double self, Double that)
+  public static double max(double self, double that)
   {
-    if (self.doubleValue() >= that.doubleValue()) return self;
+    if (self >= that) return self;
     return that;
   }
 
-  public static Double ceil(Double self)
+  public static double ceil(double self)
   {
-    return Double.valueOf(Math.ceil(self.doubleValue()));
+    return Math.ceil(self);
   }
 
-  public static Double floor(Double self)
+  public static double floor(double self)
   {
-    return Double.valueOf(Math.floor(self.doubleValue()));
+    return Math.floor(self);
   }
 
-  public static Double round(Double self)
+  public static double round(double self)
   {
-    return Double.valueOf(Math.rint(self.doubleValue()));
+    return Math.rint(self);
   }
 
-  public static Double exp(Double self)
+  public static double exp(double self)
   {
-    return Double.valueOf(Math.exp(self.doubleValue()));
+    return Math.exp(self);
   }
 
-  public static Double log(Double self)
+  public static double log(double self)
   {
-    return Double.valueOf(Math.log(self.doubleValue()));
+    return Math.log(self);
   }
 
-  public static Double log10(Double self)
+  public static double log10(double self)
   {
-    return Double.valueOf(Math.log10(self.doubleValue()));
+    return Math.log10(self);
   }
 
-  public static Double pow(Double self, Double pow)
+  public static double pow(double self, double pow)
   {
-    return Double.valueOf(Math.pow(self.doubleValue(), pow.doubleValue()));
+    return Math.pow(self, pow);
   }
 
-  public static Double sqrt(Double self)
+  public static double sqrt(double self)
   {
-    return Double.valueOf(Math.sqrt(self.doubleValue()));
+    return Math.sqrt(self);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Trig
 //////////////////////////////////////////////////////////////////////////
 
-  public static Double acos(Double self)
+  public static double acos(double self)
   {
-    return Double.valueOf(Math.acos(self.doubleValue()));
+    return Math.acos(self);
   }
 
-  public static Double asin(Double self)
+  public static double asin(double self)
   {
-    return Double.valueOf(Math.asin(self.doubleValue()));
+    return Math.asin(self);
   }
 
-  public static Double atan(Double self)
+  public static double atan(double self)
   {
-    return Double.valueOf(Math.atan(self.doubleValue()));
+    return Math.atan(self);
   }
 
-  public static Double atan2(Double y, Double x)
+  public static double atan2(double y, double x)
   {
-    return Double.valueOf(Math.atan2(y.doubleValue(), x.doubleValue()));
+    return Math.atan2(y, x);
   }
 
-  public static Double cos(Double self)
+  public static double cos(double self)
   {
-    return Double.valueOf(Math.cos(self.doubleValue()));
+    return Math.cos(self);
   }
 
-  public static Double cosh(Double self)
+  public static double cosh(double self)
   {
-    return Double.valueOf(Math.cosh(self.doubleValue()));
+    return Math.cosh(self);
   }
 
-  public static Double sin(Double self)
+  public static double sin(double self)
   {
-    return Double.valueOf(Math.sin(self.doubleValue()));
+    return Math.sin(self);
   }
 
-  public static Double sinh(Double self)
+  public static double sinh(double self)
   {
-    return Double.valueOf(Math.sinh(self.doubleValue()));
+    return Math.sinh(self);
   }
 
-  public static Double tan(Double self)
+  public static double tan(double self)
   {
-    return Double.valueOf(Math.tan(self.doubleValue()));
+    return Math.tan(self);
   }
 
-  public static Double tanh(Double self)
+  public static double tanh(double self)
   {
-    return Double.valueOf(Math.tanh(self.doubleValue()));
+    return Math.tanh(self);
   }
 
-  public static Double toDegrees(Double self)
+  public static double toDegrees(double self)
   {
-    return Double.valueOf(Math.toDegrees(self.doubleValue()));
+    return Math.toDegrees(self);
   }
 
-  public static Double toRadians(Double self)
+  public static double toRadians(double self)
   {
-    return Double.valueOf(Math.toRadians(self.doubleValue()));
+    return Math.toRadians(self);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public static String toStr(Double self)
+  public static String toStr(double self)
   {
-    double val = self.doubleValue();
-    if (Double.isNaN(val)) return NaNStr;
-    if (val == Double.POSITIVE_INFINITY) return PosInfStr;
-    if (val == Double.NEGATIVE_INFINITY) return NegInfStr;
-    return Double.toString(val);
+    if (Double.isNaN(self)) return NaNStr;
+    if (self == Double.POSITIVE_INFINITY) return PosInfStr;
+    if (self == Double.NEGATIVE_INFINITY) return NegInfStr;
+    return Double.toString(self);
   }
 
-  public static void encode(Double self, ObjEncoder out)
+  public static void encode(double self, ObjEncoder out)
   {
-    double val = self.doubleValue();
-    if (Double.isNaN(val)) out.w("sys::Float(\"NaN\")");
-    else if (val == Double.POSITIVE_INFINITY) out.w("sys::Float(\"INF\")");
-    else if (val == Double.NEGATIVE_INFINITY) out.w("sys::Float(\"-INF\")");
-    else out.w(Double.toString(val)).w("f");
+    if (Double.isNaN(self)) out.w("sys::Float(\"NaN\")");
+    else if (self == Double.POSITIVE_INFINITY) out.w("sys::Float(\"INF\")");
+    else if (self == Double.NEGATIVE_INFINITY) out.w("sys::Float(\"-INF\")");
+    else out.w(Double.toString(self)).w("f");
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  public static final Double Zero   = Double.valueOf(0);
-  public static final Double posInf = Double.valueOf(Double.POSITIVE_INFINITY);
-  public static final Double negInf = Double.valueOf(Double.NEGATIVE_INFINITY);
-  public static final Double nan    = Double.valueOf(Double.NaN);
-  public static final Double e      = Double.valueOf(Math.E);
-  public static final Double pi     = Double.valueOf(Math.PI);
+  public static final double posInf = Double.POSITIVE_INFINITY;
+  public static final double negInf = Double.NEGATIVE_INFINITY;
+  public static final double nan    = Double.NaN;
+  public static final double e      = Math.E;
+  public static final double pi     = Math.PI;
   public static final String PosInfStr = "INF";
   public static final String NegInfStr = "-INF";
   public static final String NaNStr    = "NaN";

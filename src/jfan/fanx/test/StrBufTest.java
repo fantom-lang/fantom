@@ -39,15 +39,15 @@ public class StrBufTest
     System.out.println("Fan:  " +  fan(a, b, 0L));
 
     long t1 = System.nanoTime();
-    for (int i=0; i<100000; ++i) java(a, b, Long.valueOf(i % FanInt.POS));
+    for (int i=0; i<100000; ++i) java(a, b, Long.valueOf(i % 200));
     long t2 = System.nanoTime();
-    for (int i=0; i<100000; ++i) fan(a, b, Long.valueOf(i % FanInt.POS));
+    for (int i=0; i<100000; ++i) fan(a, b, Long.valueOf(i % 200));
     long t3 = System.nanoTime();
 
     long t4 = System.nanoTime();
-    for (int i=0; i<1000000; ++i) fan(a, b, Long.valueOf(i % FanInt.POS));
+    for (int i=0; i<1000000; ++i) fan(a, b, Long.valueOf(i % 200));
     long t5 = System.nanoTime();
-    for (int i=0; i<1000000; ++i) java(a, b, Long.valueOf(i % FanInt.POS));
+    for (int i=0; i<1000000; ++i) java(a, b, Long.valueOf(i % 200));
     long t6 = System.nanoTime();
 
     System.out.println("Java: " + (t2-t1) + "ns");
@@ -57,14 +57,14 @@ public class StrBufTest
     System.out.println("Fan:  " + (t5-t4) + "ns");
   }
 
-  public String java(String a, String b, Long i)
+  public String java(String a, String b, long i)
   {
     StringBuilder s = new StringBuilder();
     s.append(a).append(i).append(b);
     return s.toString();
   }
 
-  public String fan(String a, String b, Long i)
+  public String fan(String a, String b, long i)
   {
     StrBuf s = new StrBuf(new StringBuilder());
     s.add(a).add(i).add(b);

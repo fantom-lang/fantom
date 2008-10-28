@@ -32,6 +32,9 @@ public class FanUtil
   static
   {
     if (Sys.ObjType == null) java.lang.Thread.dumpStack();
+    javaToFanTypes.put("boolean",              Sys.BoolType);
+    javaToFanTypes.put("long",                 Sys.IntType);
+    javaToFanTypes.put("double",               Sys.FloatType);
     javaToFanTypes.put("java.lang.Object",     Sys.ObjType);
     javaToFanTypes.put("java.lang.Boolean",    Sys.BoolType);
     javaToFanTypes.put("java.lang.String",     Sys.StrType);
@@ -74,24 +77,6 @@ public class FanUtil
            t == Sys.FloatType ||
            t == Sys.NumType   ||
            t == Sys.DecimalType;
-  }
-
-  /**
-   * Convert Java method name to Fan method name.
-   */
-  public static String toFanMethodName(String name)
-  {
-    if (name.equals("_equals")) return "equals";
-    return name;
-  }
-
-  /**
-   * Convert Fan method name to Java method name.
-   */
-  public static String toJavaMethodName(String name)
-  {
-    if (name.equals("equals")) return "_equals";
-    return name;
   }
 
   /**
@@ -181,16 +166,19 @@ public class FanUtil
       switch (typeName.charAt(0))
       {
         case 'B':
-          if (typeName.equals("Bool")) return "java/lang/Boolean";
+          if (typeName.equals("Bool"))
+            return nullable ? "java/lang/Boolean" : "Z";
           break;
         case 'D':
           if (typeName.equals("Decimal")) return "java/math/BigDecimal";
           break;
         case 'F':
-          if (typeName.equals("Float")) return "java/lang/Double";
+          if (typeName.equals("Float"))
+            return nullable ? "java/lang/Double" : "D";
           break;
         case 'I':
-          if (typeName.equals("Int")) return "java/lang/Long";
+          if (typeName.equals("Int"))
+            return nullable ? "java/lang/Long" : "J";
           break;
         case 'N':
           if (typeName.equals("Num")) return "java/lang/Number";
@@ -230,6 +218,21 @@ public class FanUtil
   }
 
   /**
+   * Given a Fan type, get its stack type: 'A', 'I', 'J', etc
+   */
+  public static int toJavaStackType(Type t)
+  {
+    if (!t.isNullable())
+    {
+      if (t == Sys.VoidType)  return 'V';
+      if (t == Sys.BoolType)  return 'I';
+      if (t == Sys.IntType)   return 'J';
+      if (t == Sys.FloatType) return 'D';
+    }
+    return 'A';
+  }
+
+  /**
    * Given a Java type signature, return the implementation
    * class signature for methods and fields:
    *   java/lang/Object  =>  fan/sys/FanObj
@@ -238,6 +241,17 @@ public class FanUtil
    */
   public static String toJavaImplSig(String jsig)
   {
+    if (jsig.length() == 1)
+    {
+      switch (jsig.charAt(0))
+      {
+        case 'Z': return "fan/sys/FanBool";
+        case 'J': return "fan/sys/FanInt";
+        case 'D': return "fan/sys/FanFloat";
+        default: throw new IllegalStateException(jsig);
+      }
+    }
+
     if (jsig.charAt(0) == 'j')
     {
       if (jsig.equals("java/lang/Object"))  return "fan/sys/FanObj";

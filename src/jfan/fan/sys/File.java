@@ -19,7 +19,7 @@ public abstract class File
 //////////////////////////////////////////////////////////////////////////
 
   public static File make(Uri uri) { return make(uri, true); }
-  public static File make(Uri uri, Boolean checkSlash)
+  public static File make(Uri uri, boolean checkSlash)
   {
     java.io.File f = LocalFile.uriToFile(uri);
     if (f.isDirectory() && !checkSlash && !uri.isDir())
@@ -78,18 +78,18 @@ public abstract class File
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean _equals(Object obj)
+  public final boolean equals(Object obj)
   {
     if (obj instanceof File)
     {
-      return uri._equals(((File)obj).uri);
+      return uri.equals(((File)obj).uri);
     }
     return false;
   }
 
   public final int hashCode() { return uri.hashCode(); }
 
-  public final Long hash() { return uri.hash(); }
+  public final long hash() { return uri.hash(); }
 
   public final String toStr() { return uri.toStr(); }
 
@@ -101,7 +101,7 @@ public abstract class File
 
   public final Uri uri() { return uri; }
 
-  public final Boolean isDir() { return uri.isDir();   }
+  public final boolean isDir() { return uri.isDir();   }
 
   public final List path() { return uri.path(); }
 
@@ -119,7 +119,7 @@ public abstract class File
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public abstract Boolean exists();
+  public abstract boolean exists();
 
   public abstract Long size();
 
@@ -137,7 +137,7 @@ public abstract class File
     List list = list();
     for (int i=list.sz()-1; i>=0; --i)
       if (!((File)list.get(i)).isDir())
-        list.removeAt(Long.valueOf(i));
+        list.removeAt(i);
     return list;
   }
 
@@ -146,7 +146,7 @@ public abstract class File
     List list = list();
     for (int i=list.sz()-1; i>=0; --i)
       if (((File)list.get(i)).isDir())
-        list.removeAt(Long.valueOf(i));
+        list.removeAt(i);
     return list;
   }
 
@@ -164,7 +164,7 @@ public abstract class File
   public abstract File normalize();
 
   public File plus(Uri uri) { return plus(uri, true); }
-  public abstract File plus(Uri uri, Boolean checkSlash);
+  public abstract File plus(Uri uri, boolean checkSlash);
 
   File plus(String uri) { return plus(Uri.fromStr(uri)); }
 
@@ -321,15 +321,15 @@ public abstract class File
 
   public final Buf mmap() { return mmap("rw", 0L, null); }
   public final Buf mmap(String mode) { return mmap(mode, 0L, null); }
-  public final Buf mmap(String mode, Long pos) { return mmap(mode, pos, null); }
-  public abstract Buf mmap(String mode, Long pos, Long size);
+  public final Buf mmap(String mode, long pos) { return mmap(mode, pos, null); }
+  public abstract Buf mmap(String mode, long pos, Long size);
 
   public final InStream in() { return in(FanInt.Chunk); }
   public abstract InStream in(Long bufSize);
 
   public final OutStream out() { return out(false, FanInt.Chunk); }
-  public final OutStream out(Boolean append) { return out(append, FanInt.Chunk); }
-  public abstract OutStream out(Boolean append, Long bufSize);
+  public final OutStream out(boolean append) { return out(append, FanInt.Chunk); }
+  public abstract OutStream out(boolean append, Long bufSize);
 
   public final Buf readAllBuf()
   {
@@ -347,7 +347,7 @@ public abstract class File
   }
 
   public final String readAllStr() { return readAllStr(true); }
-  public final String readAllStr(Boolean normalizeNewlines)
+  public final String readAllStr(boolean normalizeNewlines)
   {
     return in(FanInt.Chunk).readAllStr(normalizeNewlines);
   }

@@ -33,12 +33,12 @@ public class FanStr
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(String self, Object obj)
+  public static boolean equals(String self, Object obj)
   {
     return self.equals(obj);
   }
 
-  public static Boolean equalsIgnoreCase(String a, String b)
+  public static boolean equalsIgnoreCase(String a, String b)
   {
     if (a == b) return true;
 
@@ -57,16 +57,16 @@ public class FanStr
     return true;
   }
 
-  public static Long compare(String a, Object b)
+  public static long compare(String a, Object b)
   {
     int cmp = a.compareTo((String)b);
-    if (cmp < 0) return FanInt.LT;
-    return cmp == 0 ? FanInt.EQ : FanInt.GT;
+    if (cmp < 0) return -1;
+    return cmp == 0 ? 0 : 1;
   }
 
-  public static Long compareIgnoreCase(String a, String b)
+  public static long compareIgnoreCase(String a, String b)
   {
-    if (a == b) return FanInt.Zero;
+    if (a == b) return 0;
 
     int an = a.length();
     int bn = b.length();
@@ -77,16 +77,16 @@ public class FanStr
       int bc = b.charAt(i);
       if ('A' <= ac && ac <= 'Z') ac |= 0x20;
       if ('A' <= bc && bc <= 'Z') bc |= 0x20;
-      if (ac != bc) return ac < bc ? FanInt.LT : FanInt.GT;
+      if (ac != bc) return ac < bc ? -1 : +1;
     }
 
-    if (an == bn) return FanInt.Zero;
-    return an < bn ? FanInt.LT : FanInt.GT;
+    if (an == bn) return 0;
+    return an < bn ? -1 : +1;
   }
 
-  public static Long hash(String self)
+  public static long hash(String self)
   {
-    return Long.valueOf(self.hashCode());
+    return self.hashCode();
   }
 
   public static int caseInsensitiveHash(String self)
@@ -118,11 +118,11 @@ public class FanStr
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  public static Long get(String self, Long index)
+  public static long get(String self, long index)
   {
-    int i = index.intValue();
+    int i = (int)index;
     if (i < 0) i = self.length()+i;
-    return Long.valueOf(self.charAt(i));
+    return self.charAt(i);
   }
 
   public static String slice(String self, Range r)
@@ -153,40 +153,40 @@ public class FanStr
     return self.intern();
   }
 
-  public static Boolean isEmpty(String self)
+  public static boolean isEmpty(String self)
   {
     return self.length() == 0;
   }
 
-  public static Long size(String self)
+  public static long size(String self)
   {
-    return Long.valueOf(self.length());
+    return self.length();
   }
 
-  public static Boolean startsWith(String self, String s)
+  public static boolean startsWith(String self, String s)
   {
     return self.startsWith(s, 0);
   }
 
-  public static Boolean endsWith(String self, String s)
+  public static boolean endsWith(String self, String s)
   {
     return self.endsWith(s);
   }
 
-  public static Boolean contains(String self, String s)
+  public static boolean contains(String self, String s)
   {
     return index(self, s, 0L) != null;
   }
 
-  public static Boolean containsChar(String self, Long ch)
+  public static boolean containsChar(String self, long ch)
   {
-    return self.indexOf(ch.intValue()) >= 0;
+    return self.indexOf((int)ch) >= 0;
   }
 
   public static Long index(String self, String s) { return index(self, s, 0L); }
-  public static Long index(String self, String s, Long off)
+  public static Long index(String self, String s, long off)
   {
-    int i = off.intValue();
+    int i = (int)off;
     if (i < 0) i = self.length()+i;
 
     int r;
@@ -200,9 +200,9 @@ public class FanStr
   }
 
   public static Long indexr(String self, String s) { return indexr(self, s, -1L); }
-  public static Long indexr(String self, String s, Long off)
+  public static Long indexr(String self, String s, long off)
   {
-    int i = off.intValue();
+    int i = (int)off;
     if (i < 0) i = self.length()+i;
 
     int r;
@@ -216,12 +216,12 @@ public class FanStr
   }
 
   public static Long indexIgnoreCase(String self, String s) { return indexIgnoreCase(self, s, 0L); }
-  public static Long indexIgnoreCase(String self, String s, Long off)
+  public static Long indexIgnoreCase(String self, String s, long off)
   {
     int len = self.length(), slen = s.length();
     int r = -1;
 
-    int i = off.intValue();
+    int i = (int)off;
     if (i < 0) i = len+i;
 
     int first = s.charAt(0) | 0x20;
@@ -243,12 +243,12 @@ public class FanStr
   }
 
   public static Long indexrIgnoreCase(String self, String s) { return indexrIgnoreCase(self, s, -1L); }
-  public static Long indexrIgnoreCase(String self, String s, Long off)
+  public static Long indexrIgnoreCase(String self, String s, long off)
   {
     int len = self.length(), slen = s.length();
     int r = -1;
 
-    int i = off.intValue();
+    int i = (int)off;
     if (i < 0) i = len+i;
     if (i+slen >= len) i = len-slen;
 
@@ -287,7 +287,7 @@ public class FanStr
       f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i));
   }
 
-  public static Boolean any(String self, Func f)
+  public static boolean any(String self, Func f)
   {
     int len = self.length();
     for (int i=0; i<len ; ++i)
@@ -296,7 +296,7 @@ public class FanStr
     return false;
   }
 
-  public static Boolean all(String self, Func f)
+  public static boolean all(String self, Func f)
   {
     int len = self.length();
     for (int i=0; i<len ; ++i)
@@ -309,11 +309,11 @@ public class FanStr
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public static String spaces(Long n)
+  public static String spaces(long n)
   {
     // do an array lookup for reasonable length
     // strings since that is the common case
-    int count = n.intValue();
+    int count = (int)n;
     try { return spaces[count]; } catch (ArrayIndexOutOfBoundsException e) {}
 
     // otherwise we build a new one
@@ -389,9 +389,9 @@ public class FanStr
     return self;
   }
 
-  public static String justl(String self, Long width)
+  public static String justl(String self, long width)
   {
-    int w = width.intValue();
+    int w = (int)width;
     if (self.length() >= w) return self;
     StringBuilder s = new StringBuilder(w);
     s.append(self);
@@ -400,9 +400,9 @@ public class FanStr
     return s.toString();
   }
 
-  public static String justr(String self, Long width)
+  public static String justr(String self, long width)
   {
-    int w = width.intValue();
+    int w = (int)width;
     if (self.length() >= w) return self;
     StringBuilder s = new StringBuilder(w);
     for (int i=self.length(); i<w; ++i)
@@ -450,7 +450,7 @@ public class FanStr
 
   public static List split(String self) { return split(self, null, true); }
   public static List split(String self, Long separator) { return split(self, separator, true); }
-  public static List split(String self, Long separator, Boolean trimmed)
+  public static List split(String self, Long separator, boolean trimmed)
   {
     if (separator == null) return splitws(self);
     int sep = separator.intValue();
@@ -523,7 +523,7 @@ public class FanStr
     return StrUtil.replace(self, from, to);
   }
 
-  public static Long numNewlines(String self)
+  public static long numNewlines(String self)
   {
     int numLines = 0;
     int len = self.length();
@@ -537,10 +537,10 @@ public class FanStr
         if (i+1<len && self.charAt(i+1) == '\n') i++;
       }
     }
-    return Long.valueOf(numLines);
+    return numLines;
   }
 
-  public static Boolean isAscii(String self)
+  public static boolean isAscii(String self)
   {
     int len = self.length();
     for (int i=0; i<len; ++i)
@@ -548,7 +548,7 @@ public class FanStr
     return true;
   }
 
-  public static Boolean isSpace(String self)
+  public static boolean isSpace(String self)
   {
     int len = self.length();
     for (int i=0; i<len; ++i)
@@ -560,7 +560,7 @@ public class FanStr
     return true;
   }
 
-  public static Boolean isUpper(String self)
+  public static boolean isUpper(String self)
   {
     int len = self.length();
     for (int i=0; i<len; ++i)
@@ -572,7 +572,7 @@ public class FanStr
     return true;
   }
 
-  public static Boolean isLower(String self)
+  public static boolean isLower(String self)
   {
     int len = self.length();
     for (int i=0; i<len; ++i)
@@ -596,11 +596,11 @@ public class FanStr
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public static Long localeCompare(String self, String x)
+  public static long localeCompare(String self, String x)
   {
     int cmp = Locale.current().collator().compare(self, x);
-    if (cmp < 0) return FanInt.LT;
-    return cmp == 0 ? FanInt.EQ : FanInt.GT;
+    if (cmp < 0) return -1;
+    return cmp == 0 ? 0 : +1;
   }
 
   public static String localeLower(String self)
@@ -650,23 +650,23 @@ public class FanStr
 //////////////////////////////////////////////////////////////////////////
 
   public static Boolean toBool(String self) { return FanBool.fromStr(self, true); }
-  public static Boolean toBool(String self, Boolean checked) { return FanBool.fromStr(self, checked); }
+  public static Boolean toBool(String self, boolean checked) { return FanBool.fromStr(self, checked); }
 
-  public static Long toInt(String self) { return FanInt.fromStr(self, FanInt.Ten, true); }
-  public static Long toInt(String self, Long radix) { return FanInt.fromStr(self, radix, true); }
-  public static Long toInt(String self, Long radix, Boolean checked) { return FanInt.fromStr(self, radix, checked); }
+  public static Long toInt(String self) { return FanInt.fromStr(self, 10, true); }
+  public static Long toInt(String self, long radix) { return FanInt.fromStr(self, radix, true); }
+  public static Long toInt(String self, long radix, boolean checked) { return FanInt.fromStr(self, radix, checked); }
 
   public static Double toFloat(String self) { return FanFloat.fromStr(self, true); }
-  public static Double toFloat(String self, Boolean checked) { return FanFloat.fromStr(self, checked); }
+  public static Double toFloat(String self, boolean checked) { return FanFloat.fromStr(self, checked); }
 
   public static BigDecimal toDecimal(String self) { return FanDecimal.fromStr(self, true); }
-  public static BigDecimal toDecimal(String self, Boolean checked) { return FanDecimal.fromStr(self, checked); }
+  public static BigDecimal toDecimal(String self, boolean checked) { return FanDecimal.fromStr(self, checked); }
 
   public static Uri toUri(String self) { return Uri.fromStr(self); }
 
   public static String toCode(String self) { return toCode(self, FanInt.pos['"'], false); }
   public static String toCode(String self, Long quote) { return toCode(self, quote, false); }
-  public static String toCode(String self, Long quote, Boolean escapeUnicode)
+  public static String toCode(String self, Long quote, boolean escapeUnicode)
   {
     StringBuilder s = new StringBuilder(self.length()+10);
 

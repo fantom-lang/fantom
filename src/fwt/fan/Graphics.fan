@@ -6,16 +6,6 @@
 //   25 Jun 08  Brian Frank  Creation
 //
 
-//
-// TODO:
-//   - clipping
-//   - pen stroking
-//   - brush fills
-//   - affine transformations
-//   - anti-aliasing
-//   - font metrics
-//
-
 **
 ** Graphics is used to draw to the screen or to an offscreen image.
 **

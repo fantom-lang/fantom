@@ -617,6 +617,7 @@ class CheckErrors : CompilerStep
       case ExprId.cmpNull:
       case ExprId.cmpNotNull:     checkCompareNull((UnaryExpr)expr)
       case ExprId.assign:         checkAssign((BinaryExpr)expr)
+      case ExprId.elvis:          checkElvis((BinaryExpr)expr)
       case ExprId.boolOr:
       case ExprId.boolAnd:        checkBools((CondExpr)expr)
       case ExprId.same:
@@ -674,8 +675,14 @@ class CheckErrors : CompilerStep
 
   private Void checkRangeLiteral(RangeLiteralExpr range)
   {
-    if (!range.start.ctype.isInt || !range.end.ctype.isInt)
+    range.start = coerce(range.start, ns.intType) |,|
+    {
       err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.location)
+    }
+    range.end = coerce(range.end, ns.intType) |,|
+    {
+      err("Range must be Int..Int, not '${range.start.ctype}..${range.end.ctype}'", range.location)
+    }
   }
 
   private Void checkBool(UnaryExpr expr)
@@ -707,6 +714,10 @@ class CheckErrors : CompilerStep
   private Void checkSame(BinaryExpr expr)
   {
     checkCompare(expr.lhs, expr.rhs)
+
+    // don't allow for value types
+    if (expr.lhs.ctype.isValue || expr.rhs.ctype.isValue)
+      err("Cannot use '$expr.opToken.symbol' operator with value types", expr.location)
   }
 
   private Bool checkCompare(Expr lhs, Expr rhs)
@@ -741,6 +752,17 @@ class CheckErrors : CompilerStep
     // take this opportunity to generate a temp local variable if needed
     if (expr.leave && expr.lhs.assignRequiresTempVar)
       expr.tempVar = curMethod.addLocalVar(expr.lhs.ctype, null, null)
+  }
+
+  private Void checkElvis(BinaryExpr expr)
+  {
+    if (!expr.lhs.ctype.isNullable)
+      err("Cannot use '?:' operator on non-nullable type '$expr.lhs.ctype'", expr.location)
+
+    expr.rhs = coerce(expr.rhs, expr.ctype) |,|
+    {
+      err("Cannot coerce '$expr.rhs.toTypeStr' to '$expr.ctype'", expr.rhs.location);
+    }
   }
 
   private Void checkNoNullSafes(Expr x)
@@ -782,10 +804,11 @@ class CheckErrors : CompilerStep
 
     // take this oppotunity to generate a temp local variable if needed
     if (shortcut.leave && shortcut.isAssign && shortcut.target.assignRequiresTempVar)
-      shortcut.tempVar = curMethod.addLocalVar(shortcut.target.ctype, null, null)
+      shortcut.tempVar = curMethod.addLocalVar(shortcut.ctype, null, null)
 
     // perform normal call checking
-    checkCall(shortcut)
+    if (!shortcut.isCompare)
+      checkCall(shortcut)
   }
 
   ** Check if field is assignable, return new rhs.
@@ -851,8 +874,16 @@ class CheckErrors : CompilerStep
 
   private Void checkConstruction(CallExpr call)
   {
-    if (!call.method.isCtor && call.ctype.toNonNullable != call.method.returnType.toNonNullable)
-      err("Construction method '$call.method.qname' must return '$call.ctype.name'", call.location)
+    if (!call.method.isCtor)
+    {
+      // check that ctor method is the expected type
+      if (call.ctype.toNonNullable != call.method.returnType.toNonNullable)
+        err("Construction method '$call.method.qname' must return '$call.ctype.name'", call.location)
+
+      // but allow ctor to be typed as nullable
+      call.ctype = call.method.returnType
+    }
+
     checkCall(call)
   }
 
@@ -916,6 +947,15 @@ class CheckErrors : CompilerStep
     // don't allow safe calls on non-nullable type
     if (call.isSafe && call.target != null && !call.target.ctype.isNullable)
       err("Cannot use null-safe call on non-nullable type '$call.target.ctype'", call.target.location)
+
+    // if calling a method on a value-type, ensure target is
+    // coerced to non-null; we don't do this for comparisons
+    // and safe calls since they are handled specially
+    if (call.target != null && !call.isCompare && !call.isSafe)
+    {
+      if (call.target.ctype.isValue || call.method.parent.isValue)
+        call.target = coerce(call.target, call.method.parent) |,| {}
+    }
   }
 
   private Void checkField(FieldExpr f)
@@ -1040,6 +1080,13 @@ class CheckErrors : CompilerStep
     target := expr.target.ctype
     if (!check.fits(target) && !target.fits(check))
       err("Inconvertible types '$target' and '$check'", expr.location)
+
+    // don't allow is, as, isnot (everything but coerce) to be
+    // used with value type expressions
+    if (expr.id != ExprId.coerce)
+    {
+      if (target.isValue) err("Cannot use '$expr.opStr' operator on value type '$target'", expr.location)
+    }
   }
 
   private Void checkTernary(TernaryExpr expr)

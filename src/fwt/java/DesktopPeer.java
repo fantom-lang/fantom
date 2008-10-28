@@ -37,12 +37,12 @@ public class DesktopPeer
     return SWT.getPlatform();
   }
 
-  public static Boolean isWindows()
+  public static boolean isWindows()
   {
     return Env.isWindows();
   }
 
-  public static Boolean isMac()
+  public static boolean isMac()
   {
     return Env.isMac();
   }

@@ -65,7 +65,7 @@ abstract class FSlot : CSlot, FConst
   {
     fattrs = FAttr[,]
     size := in.readU2
-    if (size !== 0)
+    if (size != 0)
     {
       fattrs.capacity = size
       size.times |,| { fattrs.add(FAttr.make.read(in)) }

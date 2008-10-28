@@ -51,12 +51,12 @@ class MixinTest : Test
     a   := MxClsA.make
     ab  := MxClsAB.make
     abi := MxClsABIndirect.make
-    verifyEq(ab.coa,  1)
-    verifyEq(ab.cob,  22)
-    verifyEq(ab.coc,  3)
-    verifyEq(abi.coa, 11)
-    verifyEq(abi.cob, 12)
-    verifyEq(abi.coc, 23)
+    verifyEq(ab.coa,  "1")
+    verifyEq(ab.cob,  "22")
+    verifyEq(ab.coc,  "3")
+    verifyEq(abi.coa, "11")
+    verifyEq(abi.cob, "12")
+    verifyEq(abi.coc, "23")
 
     // this return
     verifyErr(UnsupportedErr#) |,| { a.thisa }
@@ -390,9 +390,9 @@ mixin MxA
   static Type staticWrapType(MxA a) { return a.type }
   virtual Str va() { return "va" }
   abstract Str aa()
-  virtual Num coa() { return 1 }
-  virtual Num cob() { return 2 }
-  virtual Num coc() { return 3 }
+  virtual Obj coa() { return "1" }
+  virtual Obj cob() { return "2" }
+  virtual Obj coc() { return "3" }
   virtual This thisa() { return this }
   virtual This thisb() { return this }
 }
@@ -407,8 +407,8 @@ mixin MxB
 
 mixin MxAB : MxA, MxB
 {
-  override Int coa() { return 11 }
-  override Int cob() { return 12 }
+  override Str coa() { return "11" }
+  override Str cob() { return "12" }
   override This thisa() { throw UnresolvedErr() }
 }
 
@@ -426,7 +426,7 @@ class MxClsAB : MxA, MxB
   override Str ab() { return "ab" }
   override Str vb() { return "override-vb" }
   override Str toStr() { return "MxClsAB!" }
-  override Int cob() { return 22 }
+  override Str cob() { return "22" }
   Str mxClsAB() { return "MxClsAB" }
 }
 
@@ -434,7 +434,7 @@ class MxClsABIndirect  : MxAB
 {
   override Str aa() { return "iaa" }
   override Str ab() { return "iab" }
-  override Int coc() { return 23 }
+  override Str coc() { return "23" }
   override This thisb() { throw IndexErr() }
 }
 

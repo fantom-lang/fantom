@@ -20,20 +20,20 @@ public abstract class Enum
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Enum make(Long ordinal, String name)
+  public static Enum make(long ordinal, String name)
   {
     // should never be used
     throw new IllegalStateException();
   }
 
-  public static void make$(Enum self, Long ordinal, String name)
+  public static void make$(Enum self, long ordinal, String name)
   {
-    if (ordinal == null || name == null) throw new NullErr().val;
+    if (name == null) throw new NullErr().val;
     self.ordinal = ordinal;
     self.name    = name;
   }
 
-  protected static Enum doFromStr(Type t, String name, Boolean checked)
+  protected static Enum doFromStr(Type t, String name, boolean checked)
   {
     // the compiler marks the value fields with the Enum flag
     Slot slot = t.slot(name, false);
@@ -55,12 +55,12 @@ public abstract class Enum
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean _equals(Object obj)
+  public final boolean equals(Object obj)
   {
     return this == obj;
   }
 
-  public final Long compare(Object obj)
+  public final long compare(Object obj)
   {
     return FanInt.compare(ordinal, ((Enum)obj).ordinal);
   }
@@ -75,7 +75,7 @@ public abstract class Enum
     return name;
   }
 
-  public final Long ordinal()
+  public final long ordinal()
   {
     return ordinal;
   }
@@ -89,7 +89,7 @@ public abstract class Enum
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Long ordinal;
+  private long ordinal;
   private String name;
 
 }

@@ -87,78 +87,70 @@ class GenFConst < Env
 
  @@opcodes = [
 
-   "Nop                 0  ()        // no operation",
-   "LoadNull            0  ()        // load null literal onto stack",
-   "LoadFalse           0  ()        // load false literal onto stack",
-   "LoadTrue            0  ()        // load true literal onto stack",
-   "LoadInt             2  (int)     // load Int const by index onto stack",
-   "LoadFloat           2  (float)   // load Float const by index onto stack",
-   "LoadStr             2  (str)     // load Str const by index onto stack",
-   "LoadDuration        2  (dur)     // load Duration const by index onto stack",
-   "LoadType            2  (type)    // load Type instance by index onto stack",
-   "LoadUri             2  (uri)     // load Uri const by index onto stack",
+   "Nop                 0  ()         // no operation",
+   "LoadNull            0  ()         // load null literal onto stack",
+   "LoadFalse           0  ()         // load false literal onto stack",
+   "LoadTrue            0  ()         // load true literal onto stack",
+   "LoadInt             2  (int)      // load Int const by index onto stack",
+   "LoadFloat           2  (float)    // load Float const by index onto stack",
+   "LoadDecimal         2  (decimal)  // load Decimal const by index onto stack",
+   "LoadStr             2  (str)      // load Str const by index onto stack",
+   "LoadDuration        2  (dur)      // load Duration const by index onto stack",
+   "LoadType            2  (type)     // load Type instance by index onto stack",
+   "LoadUri             2  (uri)      // load Uri const by index onto stack",
 
-   "LoadVar             2  (reg)     // local var register index (0 is this)",
-   "StoreVar            2  (reg)     // local var register index (0 is this)",
+   "LoadVar             2  (reg)      // local var register index (0 is this)",
+   "StoreVar            2  (reg)      // local var register index (0 is this)",
 
-   "LoadInstance        2  (field)   // load field from storage",
-   "StoreInstance       2  (field)   // store field to storage",
-   "LoadStatic          2  (field)   // load static field from storage",
-   "StoreStatic         2  (field)   // store static field to storage",
-   "Unused1             0  ()        // unsed opcode",
-   "Unused2             0  ()        // unsed opcode",
-   "LoadMixinStatic     2  (field)   // load static on mixin field from storage",
-   "StoreMixinStatic    2  (field)   // store static on mixin field to storage",
+   "LoadInstance        2  (field)    // load field from storage",
+   "StoreInstance       2  (field)    // store field to storage",
+   "LoadStatic          2  (field)    // load static field from storage",
+   "StoreStatic         2  (field)    // store static field to storage",
+   "LoadMixinStatic     2  (field)    // load static on mixin field from storage",
+   "StoreMixinStatic    2  (field)    // store static on mixin field to storage",
 
-   "CallNew             2  (method)  // alloc new object and call constructor",
-   "CallCtor            2  (method)  // call constructor (used for constructor chaining)",
-   "CallStatic          2  (method)  // call static method",
-   "CallVirtual         2  (method)  // call virtual instance method",
-   "CallNonVirtual      2  (method)  // call instance method non-virtually (private or super only b/c of Java invokespecial)",
-   "CallMixinStatic     2  (method)  // call static mixin method",
-   "CallMixinVirtual    2  (method)  // call virtual mixin method",
-   "CallMixinNonVirtual 2  (method)  // call instance mixin method non-virtually (named super)",
+   "CallNew             2  (method)   // alloc new object and call constructor",
+   "CallCtor            2  (method)   // call constructor (used for constructor chaining)",
+   "CallStatic          2  (method)   // call static method",
+   "CallVirtual         2  (method)   // call virtual instance method",
+   "CallNonVirtual      2  (method)   // call instance method non-virtually (private or super only b/c of Java invokespecial)",
+   "CallMixinStatic     2  (method)   // call static mixin method",
+   "CallMixinVirtual    2  (method)   // call virtual mixin method",
+   "CallMixinNonVirtual 2  (method)   // call instance mixin method non-virtually (named super)",
 
-   "Jump                2  (jmp)     // unconditional jump",
-   "JumpTrue            2  (jmp)     // jump if bool true",
-   "JumpFalse           2  (jmp)     // jump if bool false",
+   "Jump                2  (jmp)      // unconditional jump",
+   "JumpTrue            2  (jmp)      // jump if bool true",
+   "JumpFalse           2  (jmp)      // jump if bool false",
 
-   "CompareEQ           0  ()        // a.equals(b)",
-   "CompareNE           0  ()        // !a.equals(b)",
-   "Compare             0  ()        // a.compare(b)",
-   "CompareLE           0  ()        // a.compare(b) <= 0",
-   "CompareLT           0  ()        // a.compare(b) < 0",
-   "CompareGT           0  ()        // a.compare(b) > 0",
-   "CompareGE           0  ()        // a.compare(b) >= 0",
-   "CompareSame         0  ()        // a === b",
-   "CompareNotSame      0  ()        // a !== b",
-   "CompareNull         0  ()        // a == null",
-   "CompareNotNull      0  ()        // a != null",
+   "CompareEQ           0  (typePair) // a.equals(b)",
+   "CompareNE           0  (typePair) // !a.equals(b)",
+   "Compare             0  (typePair) // a.compare(b)",
+   "CompareLE           0  (typePair) // a.compare(b) <= 0",
+   "CompareLT           0  (typePair) // a.compare(b) < 0",
+   "CompareGT           0  (typePair) // a.compare(b) > 0",
+   "CompareGE           0  (typePair) // a.compare(b) >= 0",
+   "CompareSame         0  ()         // a === b",
+   "CompareNotSame      0  ()         // a !== b",
+   "CompareNull         0  (type)     // a == null",
+   "CompareNotNull      0  (type)     // a != null",
 
-   "ReturnVoid          0  ()        // return nothing",
-   "ReturnObj           0  ()        // return object",
+   "Return              0  ()         // return from method",
+   "Pop                 0  (type)     // pop top object off stack",
+   "Dup                 0  (type)     // duplicate object ref on top of stack",
+   "Is                  2  (type)     // is operator",
+   "As                  2  (type)     // as operator",
+   "Coerce              4  (typePair) // from->to coercion value/reference/nullable",
+   "Switch              0  ()         // switch jump table 2 count + 2*count",
 
-   "Pop                 0  (type)    // pop top object off stack",
-   "Dup                 0  (type)    // duplicate object ref on top of stack",
-   "Unused3             0  ()        // unsed opcode",
-   "Is                  2  (type)    // is operator",
-   "As                  2  (type)    // as operator",
-   "Cast                2  (type)    // type cast",
-   "Switch              0  ()        // switch jump table 2 count + 2*count",
-
-   "Throw               0  ()        // throw Err on top of stack",
-   "Leave               2  (jmp)     // jump out of a try or catch block",
-   "JumpFinally         2  (jmp)     // jump to a finally block",
-   "CatchAllStart       0  ()        // start catch all block - do not leave Err on stack",
-   "CatchErrStart       2  (type)    // start catch block - leave typed Err on stack",
-   "CatchEnd            0  ()        // start catch block - leave typed Err on stack",
-   "FinallyStart        0  ()        // starting instruction of a finally block",
-   "FinallyEnd          0  ()        // ending instruction of a finally block",
-
-   "LoadDecimal         2  (decimal) // load Decimal const by index onto stack",
-
-   "Coerce              4  (coerce)  // from->to coercion value/reference/nullable",
-
+   "Throw               0  ()         // throw Err on top of stack",
+   "Leave               2  (jmp)      // jump out of a try or catch block",
+   "JumpFinally         2  (jmp)      // jump to a finally block",
+   "CatchAllStart       0  ()         // start catch all block - do not leave Err on stack",
+   "CatchErrStart       2  (type)     // start catch block - leave typed Err on stack",
+   "CatchEnd            0  ()         // start catch block - leave typed Err on stack",
+   "FinallyStart        0  ()         // starting instruction of a finally block",
+   "FinallyEnd          0  ()         // ending instruction of a finally block",
+ 
  ]
 
 #####################################################################
@@ -208,7 +200,7 @@ enum FOpArg
   FieldRef,
   MethodRef,
   Jump,
-  Coerce
+  TypePair
 }
 FAN_OP_FOOTER
 
@@ -283,7 +275,7 @@ FAN_OP_FOOTER
                "type"=>"FOpArg.TypeRef",
                "field"=>"FOpArg.FieldRef",
                "method"=>"FOpArg.MethodRef",
-               "coerce"=>"FOpArg.Coerce"}[sig]
+               "typePair"=>"FOpArg.TypePair"}[sig]
         arg = "(" + arg + ")"
         arg = arg + "," unless (i == @@opcodes.length-1)
         arg = arg.ljust(20)

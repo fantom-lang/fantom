@@ -18,8 +18,8 @@ class SwitchTest : Test
 
   Void testIntTableSwitch()
   {
-//    verifyEq(intTableNone(-1), "default")
-//    verifyEq(intTableNone(3), "default")
+    verifyEq(intTableNone(-1), "default")
+    verifyEq(intTableNone(3), "default")
 
     verifyEq(intTableOne(-1), "default")
     verifyEq(intTableOne(0), "zero")
@@ -42,9 +42,19 @@ class SwitchTest : Test
     verifyEq(intTableHighShift(1000), "1000")
     verifyEq(intTableHighShift(1002), "1002")
     verifyEq(intTableHighShift(2),    "default")
+
+    verifyEq(intObjs(1), "default")
+    verifyEq(intObjs(2), "2")
+    verifyEq(intObjs(3), "3")
+    verifyEq(intObjs(4), "default")
+
+    verifyEq(intNullableObjs(1), "default")
+    verifyEq(intNullableObjs(2), "2")
+    verifyEq(intNullableObjs(3), "3")
+    verifyEq(intNullableObjs(4), "4")
+    verifyEq(intNullableObjs(5), "default")
   }
 
-/* TODO - this will become a if/else switch or optimize it out completely
   Str intTableNone(Int i)
   {
     switch (i)
@@ -52,7 +62,6 @@ class SwitchTest : Test
       default: return "default"
     }
   }
-*/
 
   Str intTableOne(Int i)
   {
@@ -63,7 +72,7 @@ class SwitchTest : Test
     }
   }
 
-  Str intTableTwo(Int i)
+  Str intTableTwo(Int? i)
   {
     switch (i)
     {
@@ -84,7 +93,7 @@ class SwitchTest : Test
     }
   }
 
-  Str intTableThreeUnsorted(Int i)
+  Str intTableThreeUnsorted(Int? i)
   {
     switch (i)
     {
@@ -106,7 +115,6 @@ class SwitchTest : Test
     return "default";
   }
 
-/* TODO - need constant folding optimization and this should solve itself
   Str intTableWithNeg(Int i)
   {
     switch (i)
@@ -119,7 +127,30 @@ class SwitchTest : Test
     }
     return "default";
   }
-*/
+
+  Str intObjs(Int i)
+  {
+    switch (i)
+    {
+      case two: return "2"
+      case three: return "3"
+      default: return "default"
+    }
+  }
+
+  Str intNullableObjs(Int? i)
+  {
+    switch (i)
+    {
+      case two:   return "2"
+      case three: return "3"
+      case 4:     return "4"
+      default:    return "default"
+    }
+  }
+
+  static Obj two() { return 2 }
+  Obj? three() { return 3 }
 
 //////////////////////////////////////////////////////////////////////////
 // Int TableSwitch
@@ -226,9 +257,3 @@ enum SwitchEnum
   three,
   four
 }
-
-
-// TODO:
-//   - no error checking
-//   - string/type/wide int range switch
-//   - verify cases are constant

@@ -92,7 +92,7 @@ public class MenuPeer
     if (pos != null)
     {
       pos = pos.translate(parent.posOnDisplay());
-      menu.setLocation(new Point(pos.x.intValue(), pos.y.intValue()));
+      menu.setLocation(new Point((int)pos.x, (int)pos.y));
     }
     menu.setVisible(true);
 

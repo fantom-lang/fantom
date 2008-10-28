@@ -197,7 +197,7 @@ public class Method
 
     public Method method() { return Method.this; }
 
-    public Boolean isImmutable()
+    public boolean isImmutable()
     {
       return Method.this.isStatic() || parent.isConst();
     }

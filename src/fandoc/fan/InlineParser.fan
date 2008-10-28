@@ -29,11 +29,11 @@ internal class InlineParser
 
     // initialize cur and peek
     last = ' '
-    cur = peek = null
+    cur = peek = -1
     if (src.size > 0) cur  = src[0]
     if (src.size > 1) peek = src[1]
-    if (cur === '\n')  { ++line; cur= ' ' }
-    if (peek === '\n') { ++line; peek = ' ' }
+    if (cur == '\n')  { ++line; cur= ' ' }
+    if (peek == '\n') { ++line; peek = ' ' }
     pos = 0
   }
 
@@ -43,7 +43,7 @@ internal class InlineParser
 
   Void parse(DocElem parent)
   {
-    while (cur != null)
+    while (cur > 0)
       segment(parent)
   }
 
@@ -104,7 +104,7 @@ internal class InlineParser
     buf := StrBuf.make
     buf.addChar(cur)
     consume
-    while (cur != null && !isTextEnd)
+    while (cur > 0 && !isTextEnd)
     {
       buf.addChar(cur)
       consume
@@ -118,7 +118,7 @@ internal class InlineParser
     consume
     while (cur != '\'')
     {
-      if (cur == null) throw err("Invalid code")
+      if (cur <= 0) throw err("Invalid code")
       buf.addChar(cur)
       consume
     }
@@ -130,14 +130,14 @@ internal class InlineParser
 
   private DocNode emphasis()
   {
-    if (peek == null || peek.isSpace)
+    if (peek <= 0 || peek.isSpace)
       return text
 
     em := Emphasis.make
     consume
     while (cur != '*' || peek == '*')
     {
-      if (cur == null) throw err("Invalid *emphasis*")
+      if (cur <= 0) throw err("Invalid *emphasis*")
       segment(em)
     }
     consume
@@ -151,7 +151,7 @@ internal class InlineParser
     consume
     while (cur != '*' || peek != '*')
     {
-      if (cur == null) throw err("Invalid **strong**")
+      if (cur <= 0) throw err("Invalid **strong**")
       segment(strong)
     }
     consume
@@ -168,7 +168,7 @@ internal class InlineParser
 
   private DocNode? annotation(DocElem parent)
   {
-    if (peek == null || peek == ']')
+    if (peek <= 0 || peek == ']')
       return text
 
     s := brackets
@@ -199,12 +199,12 @@ internal class InlineParser
 
   private Str uri()
   {
-    if (cur !== '`') throw err("Invalid uri")
+    if (cur != '`') throw err("Invalid uri")
     consume  // leading `
     buf := StrBuf.make
     while (cur != '`')
     {
-      if (cur == null) throw err("Invalid uri")
+      if (cur <= 0) throw err("Invalid uri")
       buf.addChar(cur)
       consume
     }
@@ -214,12 +214,12 @@ internal class InlineParser
 
   private Str brackets()
   {
-    if (cur !== '[') throw err("Invalid []")
+    if (cur != '[') throw err("Invalid []")
     consume  // leading [
     buf := StrBuf.make
     while (cur != ']')
     {
-      if (cur == null) throw err("Invalid []")
+      if (cur <= 0) throw err("Invalid []")
       buf.addChar(cur)
       consume
     }
@@ -252,11 +252,11 @@ internal class InlineParser
     if (pos+1 < src.size)
     {
       peek = src[pos+1] // next peek is cur+1
-      if (peek === '\n') { ++line; peek = ' '; }
+      if (peek == '\n') { ++line; peek = ' '; }
     }
     else
     {
-      peek = null
+      peek = -1
     }
   }
 
@@ -269,7 +269,7 @@ internal class InlineParser
   private Int line            // line
   private Int pos             // index into buf for cur
   private Int last            // last char
-  private Int? cur            // current char
-  private Int? peek           // next char
+  private Int cur             // current char
+  private Int peek            // next char
   private DocNode[] stack     // stack of nodes
 }

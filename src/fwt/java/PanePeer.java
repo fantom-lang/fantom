@@ -52,7 +52,7 @@ public class PanePeer extends WidgetPeer
         hHint == SWT.DEFAULT ? null : Long.valueOf(hHint));
       Size s = ((Pane)self).prefSize(hints);
       if (s == null) return new Point(20, 20);
-      return new Point(s.w.intValue(), s.h.intValue());
+      return new Point((int)s.w, (int)s.h);
     }
 
     protected void layout(Composite composite, boolean flushCache)

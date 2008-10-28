@@ -823,8 +823,8 @@ class CheckErrorsTest : CompilerTest
         static Void m10(Str x) { f.size; Foo.f.size }
         static Void m11(Str x) { this.m06; super.hash() }
         static Obj m12(Str x) { return 1 ? 2 : 3 }
-        static Bool m14(Str x, Int y) { return x === y }
-        static Bool m15(Str x, Int y) { return x !== y }
+        static Bool m14(Str x, Duration y) { return x === y }
+        static Bool m15(Str x, Duration y) { return x !== y }
         static Bool m16(Str x) { return x == m10(\"\") }
         static Bool m17(Str x) { return x != x.size }
         static Bool m18(Int x) { return x < 2f }
@@ -867,8 +867,8 @@ class CheckErrorsTest : CompilerTest
        15, 28, "Cannot access 'this' in static context",
        15, 38, "Cannot access 'super' in static context",
        16, 34, "Ternary condition must be Bool, not 'sys::Int'",
-       17, 42, "Incomparable types 'sys::Str' and 'sys::Int'",
-       18, 42, "Incomparable types 'sys::Str' and 'sys::Int'",
+       17, 47, "Incomparable types 'sys::Str' and 'sys::Duration'",
+       18, 47, "Incomparable types 'sys::Str' and 'sys::Duration'",
        19, 35, "Incomparable types 'sys::Str' and 'sys::Void'",
        20, 35, "Incomparable types 'sys::Str' and 'sys::Int'",
        21, 35, "Incomparable types 'sys::Int' and 'sys::Float'",
@@ -1055,7 +1055,7 @@ class CheckErrorsTest : CompilerTest
           i == 4 ? 0ns : 1ns;
           |,| {};
           i == 2;
-          i === 2;
+          s === o;
         }
 
         Str f
@@ -1092,6 +1092,9 @@ class CheckErrorsTest : CompilerTest
           x?.i += 5
           nn?.y
           temp := nn?.i
+          foo1 := x ?: 5 // ok
+          foo2 := nn ?: 5 // not-ok
+          int1 := 5; int2 := int1 ?: 7
         }
 
         Foo? y() { return this }
@@ -1111,6 +1114,8 @@ class CheckErrorsTest : CompilerTest
          9,  8, "Null-safe operator on left hand side of assignment",
         10,  5, "Cannot use null-safe call on non-nullable type '$podName::Foo'",
         11, 13, "Cannot use null-safe access on non-nullable type '$podName::Foo'",
+        13, 13, "Cannot use '?:' operator on non-nullable type '$podName::Foo'",
+        14, 24, "Cannot use '?:' operator on non-nullable type 'sys::Int'",
        ])
   }
 
@@ -1176,4 +1181,36 @@ class CheckErrorsTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Value Types
+//////////////////////////////////////////////////////////////////////////
+
+  Void testValueTypes()
+  {
+    // errors
+    verifyErrors(
+     "class Foo
+      {
+        Int m00() { return (Int)(Obj)5ns } // ok - runtime failure
+        Float? m01() { return (Float?)(Obj)5ns } // ok - runtime failure
+        Bool m02() { return m00 === 0  }
+        Bool m03() { return 2f !== m01  }
+        Bool m04() { return m01 is Float  }
+        Bool m05() { return 6f is Float?  }
+        Bool m06() { return 5 isnot Num  }
+        Bool m07() { return m00 isnot Num  }
+        Obj? m08() { return m00 as Int  }
+        Obj? m09(Int? x) { return x as Int?  }
+      }",
+       [
+         5, 23, "Cannot use '===' operator with value types",
+         6, 23, "Cannot use '!==' operator with value types",
+         7, 23, "Cannot use 'is' operator on value type 'sys::Float?'",
+         8, 23, "Cannot use 'is' operator on value type 'sys::Float'",
+         9, 23, "Cannot use 'isnot' operator on value type 'sys::Int'",
+        10, 23, "Cannot use 'isnot' operator on value type 'sys::Int'",
+        11, 23, "Cannot use 'as' operator on value type 'sys::Int'",
+        12, 29, "Cannot use 'as' operator on value type 'sys::Int?'",
+       ])
+  }
 }

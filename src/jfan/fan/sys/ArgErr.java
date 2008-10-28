@@ -18,7 +18,7 @@ public class ArgErr
 // Java Convenience
 //////////////////////////////////////////////////////////////////////////
 
-  public static ArgErr make(Long index)   { return make(String.valueOf(index)); }
+  public static ArgErr make(long index)   { return make(String.valueOf(index)); }
   public static ArgErr make(Range index) { return make(String.valueOf(index)); }
 
 //////////////////////////////////////////////////////////////////////////

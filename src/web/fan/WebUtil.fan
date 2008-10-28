@@ -44,7 +44,7 @@ class WebUtil
       peek := in.peek
 
       // CRLF is end of headers
-      if (peek === CR) break
+      if (peek == CR) break
 
       // if line starts with space it is
       // continuation of last header field
@@ -71,7 +71,7 @@ class WebUtil
     }
 
     // consume final CRLF
-    if (in.read !== CR || in.read !== LF)
+    if (in.read != CR || in.read != LF)
       throw ParseErr("Invalid CRLF headers ending")
 
     return headers

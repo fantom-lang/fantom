@@ -729,6 +729,8 @@ class CallExpr : NameExpr
 
   override Bool isStmt() { return true }
 
+  virtual Bool isCompare() { return false }
+
   override Void walkChildren(Visitor v)
   {
     target = walkExpr(v, target)
@@ -864,7 +866,12 @@ class ShortcutExpr : CallExpr
 
   override Bool isAssignable()
   {
-    return op == ShortcutOp.get
+    return op === ShortcutOp.get
+  }
+
+  override Bool isCompare()
+  {
+    return op === ShortcutOp.eq || op === ShortcutOp.cmp
   }
 
   override Bool isStmt() { return isAssign || op === ShortcutOp.set }
@@ -1147,6 +1154,7 @@ class TypeCheckExpr : Expr
   {
     if (to.isGenericParameter) to = to.ns.objType // TODO: not sure about this
     this.target = target
+    this.from   = target.ctype
     this.check  = to
     this.ctype  = to
   }
@@ -1169,19 +1177,34 @@ class TypeCheckExpr : Expr
       return super.serialize
   }
 
+  Str opStr()
+  {
+    switch (id)
+    {
+      case ExprId.isExpr:    return "is"
+      case ExprId.isnotExpr: return "isnot"
+      case ExprId.asExpr:    return "as"
+      default:               throw Err.make(id.toStr)
+    }
+  }
+
   override Str toStr()
   {
     switch (id)
     {
-      case ExprId.isExpr: return "($target is $check)"
-      case ExprId.asExpr: return "($target as $check)"
-      case ExprId.coerce: return "($check)$target"
-      default:            throw Err.make(id.toStr)
+      case ExprId.isExpr:    return "($target is $check)"
+      case ExprId.isnotExpr: return "($target isnot $check)"
+      case ExprId.asExpr:    return "($target as $check)"
+      case ExprId.coerce:    return "(($check)$target)"
+      default:               throw Err.make(id.toStr)
     }
   }
 
+  ** From type if coerce
+  CType? from { get { return @from ?: target.ctype } }
+
   Expr target
-  CType check
+  CType check    // to type if coerce
   Bool synthetic := false
 }
 

@@ -89,16 +89,11 @@ public final class FPod
         if (jcall != null) return jcall;
       }
 
-      // equals => _equals (since we can't override
-      // Object.equals by return type)
-      if (!explicitSelf)
-        name = FanUtil.toJavaMethodName(name);
-
       StringBuilder s = new StringBuilder();
       s.append(impl);
       if (opcode == CallMixinStatic) s.append('$');
       s.append('.').append(name).append('(');
-      if (explicitSelf) s.append('L').append(jname).append(';');
+      if (explicitSelf) typeRef.jsig(s);
       for (int i=3; i<m.length; ++i) typeRef(m[i]).jsig(s);
       s.append(')');
 
@@ -144,16 +139,6 @@ public final class FPod
     }
     return jfield;
   }
-
-  /**
-   * Map a Java type name (:: replaced wit /) via typeRefs table.
-   */
-/*
-  public final String jname(int index)
-  {
-    return typeRef(index).jname();
-  }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Read
@@ -235,7 +220,7 @@ public final class FPod
       throw new IOException("Invalid magic");
 
     int version = in.u4();
-    if (version != FConst.FCodeVersion && version != OldFCodeVersion)
+    if (version != FConst.FCodeVersion)
       throw new IOException("Invalid version 0x" + Integer.toHexString(version));
     this.version = version;
 
@@ -279,9 +264,6 @@ public final class FPod
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  // TODO
-  public static final int OldFCodeVersion = 0x01000016;
 
   public String podName;     // pod's unique name
   public String podVersion;  // pod's version

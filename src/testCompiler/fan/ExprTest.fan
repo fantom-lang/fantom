@@ -12,7 +12,7 @@
 class ExprTest : CompilerTest
 {
 
-//////////////////////////////////////////////////////////////////////////
+//////////////////////////////// //////////////////////////////////////////
 // Literals
 //////////////////////////////////////////////////////////////////////////
 
@@ -126,13 +126,13 @@ class ExprTest : CompilerTest
     verifyExpr("+a", 2, 2)
     verifyExpr("+a", -2f, -2f)
 
-    verifyExpr("a === b", true, 3, 3)
-    verifyExpr("a !== b", false, 3, 3)
+    verifyExpr("a === b", true, 3ns, 3ns)
+    verifyExpr("a !== b", false, 3ns, 3ns)
 
-    verifyExpr("a == null",  false, 3, null, "", true)
-    verifyExpr("a === null", false, 3, null, "", true)
-    verifyExpr("a != null",  true,  3, null, "", true)
-    verifyExpr("a !== null", true,  3, null, "", true)
+    verifyExpr("a == null",  false, 3ns, null, "", true)
+    verifyExpr("a === null", false, 3ns, null, "", true)
+    verifyExpr("a != null",  true,  3ns, null, "", true)
+    verifyExpr("a !== null", true,  3ns, null, "", true)
     verifyExpr("null == a",  true,  null, null, "Str? a := null;")
     verifyExpr("null === a", true,  null, null, "Str? a := null;")
     verifyExpr("null != a",  false, null, null, "Str? a := null;")
@@ -252,18 +252,18 @@ class ExprTest : CompilerTest
 
   Void testElvis()
   {
-    verifyExpr("a?:\"x\"", "abc", "abc")
-    verifyExpr("a?:\"x\"", "x", xNull)
-    verifyExpr("a.index(\"b\")?:-1", 1, "abc")
-    verifyExpr("a.index(\"b\")?:-1", -1, "xyz")
+    verifyExpr("a?:\"x\"", "abc", "abc", null, "", true)
+    verifyExpr("a?:\"x\"", "x", xNull, null, "", true)
+    verifyExpr("a.index(\"b\")?:-1", 1, "abc", null, "", true)
+    verifyExpr("a.index(\"b\")?:-1", -1, "xyz", null, "", true)
 
-    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", "bar")
-    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", xNull)
-    verifyExpr("a ?: b ?: \"x\"", "bar", xNull, "bar")
-    verifyExpr("a ?: b ?: \"x\"", "x",   xNull, xNull)
+    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", "bar", "", true)
+    verifyExpr("a ?: b ?: \"x\"", "foo", "foo", xNull, "", true)
+    verifyExpr("a ?: b ?: \"x\"", "bar", xNull, "bar", "", true)
+    verifyExpr("a ?: b ?: \"x\"", "x",   xNull, xNull, "", true)
 
-    verifyExpr("a ?: b < \"m\"", true, "a", "z")
-    verifyExpr("a ?: b < \"m\"", false, xNull, "z")
+    verifyExpr("a ?: b < \"m\"", true, "a", "z", "", true)
+    verifyExpr("a ?: b < \"m\"", false, xNull, "z", "", true)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -533,6 +533,30 @@ class StmtTest : CompilerTest
     verifyEq(f.call1(0), 100)
     verifyEq(f.call1(1), 101)
     verifyEq(f.call1(2), -1)
+
+    // int? no-table
+    compile(
+     "class Foo
+      {
+        static Int f(Int? x)
+        {
+          switch (x)
+          {
+            case zero(): return 100
+            case one():  return 101
+          }
+          return -1
+        }
+
+        static Int zero() { return 0 }
+        static Int? one()  { return 1 }
+      }")
+
+    f = pod.types[0].method("f")
+    verifyEq(compiler.types[0].methodDef("f").code.stmts[0]->isTableswitch, false)
+    verifyEq(f.call1(0), 100)
+    verifyEq(f.call1(1), 101)
+    verifyEq(f.call1(2), -1)
     verifyEq(f.call1(null), -1)
 
     // torture test
@@ -566,7 +590,6 @@ class StmtTest : CompilerTest
     verifyEq(f.call1(Int#), null)
     verifyEq(f.call1(0), 0)
     verifyEq(f.call1(null), null)
-
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -615,7 +638,7 @@ class StmtTest : CompilerTest
     compile(
      "class Foo
       {
-        static Int[] f(Int[] r, Int a)
+        static Int[] f(Int[] r, Int? a)
         {
           r.add(0)
           try
@@ -924,11 +947,11 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifySame(t.method("f").call2(r, false), 2)
+    verifyEq(t.method("f").call2(r, false), 2)
     verifyEq(r, [0, 1, 2, 4])
 
     r = Int[,]
-    verifySame(t.method("f").call2(r, true), 3)
+    verifyEq(t.method("f").call2(r, true), 3)
     verifyEq(r, [0, 1, 3, 4])
   }
 
