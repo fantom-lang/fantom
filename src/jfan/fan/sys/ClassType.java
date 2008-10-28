@@ -48,7 +48,7 @@ public class ClassType
   {
     this.pod      = pod;
     this.ftype    = ftype;
-    this.name     = pod.fpod.name(pod.fpod.typeRef(ftype.self).typeName);
+    this.name     = pod.fpod.typeRef(ftype.self).typeName;
     this.qname    = pod.name + "::" + name;
     this.nullable = new NullableType(this);
     this.flags    = ftype.flags;

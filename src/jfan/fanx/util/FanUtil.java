@@ -31,6 +31,7 @@ public class FanUtil
   private static HashMap javaToFanTypes = new HashMap();
   static
   {
+    if (Sys.ObjType == null) java.lang.Thread.dumpStack();
     javaToFanTypes.put("java.lang.Object",     Sys.ObjType);
     javaToFanTypes.put("java.lang.Boolean",    Sys.BoolType);
     javaToFanTypes.put("java.lang.String",     Sys.StrType);
@@ -173,7 +174,7 @@ public class FanUtil
    *   sys::Obj  =>  java/lang/Object
    *   foo::Bar  =>  fan/foo/Bar
    */
-  public static String toJavaTypeSig(String podName, String typeName)
+  public static String toJavaTypeSig(String podName, String typeName, boolean nullable)
   {
     if (podName.equals("sys"))
     {
@@ -210,7 +211,7 @@ public class FanUtil
    */
   public static String toJavaTypeSig(Type t)
   {
-    return toJavaTypeSig(t.pod().name(), t.name());
+    return toJavaTypeSig(t.pod().name(), t.name(), t.isNullable());
   }
 
   /**

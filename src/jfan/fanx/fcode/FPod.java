@@ -43,7 +43,7 @@ public final class FPod
   public FType type(String name)
   {
     for (int i=0; i<types.length; ++i)
-      if (name(typeRef(types[i].self).typeName).equals(name))
+      if (typeRef(types[i].self).typeName.equals(name))
         return types[i];
     throw UnknownTypeErr.make(name).val;
   }
@@ -151,16 +151,7 @@ public final class FPod
    */
   public final String jname(int index)
   {
-    if (jnames == null) jnames = new String[typeRefs.size()];
-    String n = jnames[index];
-    if (n == null)
-    {
-      FTypeRef ref = typeRef(index);
-      String podName = name(ref.podName);
-      String typeName = name(ref.typeName);
-      jnames[index] = n = FanUtil.toJavaTypeSig(podName, typeName);
-    }
-    return n;
+    return typeRef(index).jname();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -277,7 +268,7 @@ public final class FPod
     String typeName = name.substring(0, name.length()-".fcode".length());
     for (int i=0; i<types.length; ++i)
     {
-      String n = name(typeRef(types[i].self).typeName);
+      String n = typeRef(types[i].self).typeName;
       if (n.equals(typeName )) { types[i].read(in); return; }
     }
 
@@ -303,7 +294,6 @@ public final class FPod
   public FTable fieldRefs;   // fields refs:  [parent,name,type]
   public FTable methodRefs;  // methods refs: [parent,name,ret,params*]
   public FLiterals literals; // literal constants (on read fully or lazy load)
-  private String[] jnames;   // cached fan typeRef   -> java name
   private String[] jfields;  // cached fan fieldRef  -> java field signatures
   private JCall[] jcalls;    // cached fan methodRef -> java method signatures
 
