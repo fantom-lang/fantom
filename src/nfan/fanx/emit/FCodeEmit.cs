@@ -28,23 +28,23 @@ namespace Fanx.Emit
     public FCodeEmit(FTypeEmit parent, FMethod fmethod, CILInstructions code)
      : this(parent, fmethod.m_code, code)
     {
-      this.fmethod = fmethod;
-      //code.maxLocals  = Math.max(fmethod.maxLocals(), 4); // TODO - total hack
+      this.fmethod    = fmethod;
+      this.vars       = fmethod.m_vars;
+      this.isStatic   = (fmethod.m_flags & FConst.Static) != 0;
       this.paramCount = fmethod.m_paramCount;
-      if ((fmethod.m_flags & FConst.Static) == 0) paramCount++;
+      if (!isStatic) paramCount++;
     }
 
     public FCodeEmit(FTypeEmit parent, FBuf fcode, CILInstructions code)
     {
-      this.pod        = parent.pod;
-      this.emitter    = parent.emitter;
-      this.parent     = parent;
-      this.buf        = fcode.m_buf;
-      this.len        = fcode.m_len;
-      //this.emit       = code.emit;
-      this.code       = code;
-      this.podClass   = FanUtil.toNetTypeName(pod.m_podName, "$Pod", false);
-      this.jumps      = new Jumps(code);
+      this.pod      = parent.pod;
+      this.emitter  = parent.emitter;
+      this.parent   = parent;
+      this.buf      = fcode.m_buf;
+      this.len      = fcode.m_len;
+      this.code     = code;
+      this.podClass = FanUtil.toNetTypeName(pod.m_podName, "$Pod", false);
+      this.jumps    = new Jumps(code);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -334,9 +334,23 @@ case FConst.Cast: cast(); break;  // TODO
       code.MethInst(MethodOp.call, method);
     }
 
+  //////////////////////////////////////////////////////////////////////////
+  // Load Var
+  //////////////////////////////////////////////////////////////////////////
+
     private void loadVar()
     {
-      int index = u2();
+      loadVar(u2());
+    }
+
+    private void loadVar(int index)
+    {
+      FTypeRef t = var(index);
+      loadVarObj(index);
+    }
+
+    private void loadVarObj(int index)
+    {
       if (index < paramCount)
       {
         switch (index)
@@ -362,9 +376,23 @@ case FConst.Cast: cast(); break;  // TODO
       }
     }
 
+  //////////////////////////////////////////////////////////////////////////
+  // Store Var
+  //////////////////////////////////////////////////////////////////////////
+
     private void storeVar()
     {
-      int index = u2();
+      storeVar(u2());
+    }
+
+    private void storeVar(int index)
+    {
+      FTypeRef t = var(index);
+      storeVarObj(index);
+    }
+
+    private void storeVarObj(int index)
+    {
       if (index < paramCount)
       {
         code.IntInst(IntOp.starg, index);
@@ -1090,6 +1118,17 @@ case FConst.Cast: cast(); break;  // TODO
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
+    private FTypeRef var(int index)
+    {
+      if (vars == null) throw new Exception("Use of variable outside of method");
+      if (!isStatic)
+      {
+        if (index == 0) return null; // return null for this pointer
+        else --index;
+      }
+      return pod.typeRef(vars[index].type);
+    }
+
     private void loadBoolVal()
     {
       if (parent.BoolVal == null)
@@ -1221,7 +1260,9 @@ case FConst.Cast: cast(); break;  // TODO
     internal FPod pod;
     internal Emitter emitter;
     internal FTypeEmit parent;
-    internal FMethod fmethod;        // maybe null
+    internal FMethod fmethod;     // maybe null
+    internal FMethodVar[] vars;   // method variables must be set for loadVar/storeVar
+    internal bool isStatic;       // used to determine how to index vars
     internal int paramCount = -1;
     internal byte[] buf;
     internal int len;
