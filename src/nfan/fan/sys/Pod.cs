@@ -337,13 +337,13 @@ namespace Fan.Sys
       // so it's safe that my pod has been loaded and is now registered (in
       // case the generic type is parameterized via types in my pod)
       if (reference.isGenericInstance())
-        return TypeParser.load(reference.sig, true, this);
+        return TypeParser.load(reference.signature, true, this);
 
       // otherwise I need to handle if I am loading my own pod, because
       // I might not yet be added to the system namespace if I'm just
       // loading my own hollow types
-      string podName  = fpod.name(reference.podName);
-      string typeName = fpod.name(reference.typeName);
+      string podName  = reference.podName;
+      string typeName = reference.typeName;
       Pod pod = podName == m_name ? this : find(podName, true, null);
       Type type = pod.findType(typeName, false);
       if (type != null)

@@ -44,7 +44,7 @@ namespace Fanx.Fcode
     public FType type(string nameToFind)
     {
       for (int i=0; i<m_types.Length; i++)
-        if (name(typeRef(m_types[i].m_self).typeName) == nameToFind)
+        if (typeRef(m_types[i].m_self).typeName == nameToFind)
           return m_types[i];
       throw UnknownTypeErr.make(nameToFind).val;
     }
@@ -171,16 +171,7 @@ namespace Fanx.Fcode
     /// <summary>
     public string nname(int index)
     {
-      if (m_nnames == null) m_nnames = new string[m_typeRefs.size()];
-      string n = m_nnames[index];
-      if (n == null)
-      {
-        FTypeRef refer = typeRef(index);
-        string podName = name(refer.podName);
-        string typeName = name(refer.typeName);
-        m_nnames[index] = n = FanUtil.toNetTypeName(podName, typeName);
-      }
-      return n;
+      return typeRef(index).nname();
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -292,7 +283,7 @@ namespace Fanx.Fcode
       string typeName = name.Substring(0, name.Length-".fcode".Length);
       for (int i=0; i<m_types.Length; ++i)
       {
-        string n = this.name(typeRef(m_types[i].m_self).typeName);
+        string n = typeRef(m_types[i].m_self).typeName;
         if (n == typeName) { m_types[i].read(input); return; }
       }
 
@@ -318,7 +309,6 @@ namespace Fanx.Fcode
     public FTable m_fieldRefs;    // fields refs:  [parent,name,type]
     public FTable m_methodRefs;   // methods refs: [parent,name,ret,params*]
     public FLiterals m_literals;  // literal constants (on read fully or lazy load)
-    private string[] m_nnames;    // cached fan typeRef   -> .net name
     private NMethod[] m_ncalls;   // cached fan methodRef -> .net method signatures
     private NField[] m_nfields;   // cached fan fieldRef  -> .net field signatures
   }

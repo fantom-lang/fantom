@@ -6,57 +6,50 @@
 //   12 Sep 06  Andy Frank  Creation
 //
 
-using System;
+using Fanx.Util;
 
 namespace Fanx.Fcode
 {
-  ///
+  /// <summary>
   /// FTypeRef stores a typeRef structure used to reference type signatures.
-  ///
-  public class FTypeRef
+  /// </summary>
+  public sealed class FTypeRef
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public FTypeRef(int podName, int typeName, string sig)
+    public FTypeRef(string podName, string typeName, string sig)
     {
       this.podName  = podName;
       this.typeName = typeName;
-      this.sig      = sig;
-      this.hash     = (podName << 7) ^ (typeName) ^ (sig.GetHashCode());
+
+      // compute mask
+      int mask = 0;
+      if (sig.EndsWith("?")) mask |= NULLABLE;
+      if (sig.Length > 1)    mask |= GENERIC_INSTANCE;
+      this.mask = mask;
+
+      // compute full siguature
+      if (isGenericInstance())
+        this.signature = sig;
+      else
+        this.signature = podName + "::" + typeName + sig;
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Identity
+  // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public bool isGenericInstance()
-    {
-      return sig.Length > 1;  // "?" is non-generic nullable
-    }
+    public bool isNullable() { return (mask & NULLABLE) != 0; }
 
-    public bool isNullable()
-    {
-      return sig.Length > 0 && sig[sig.Length-1] == '?';
-    }
+    public bool isGenericInstance() { return (mask & GENERIC_INSTANCE) != 0; }
 
-    public override int GetHashCode()
+    public string nname()
     {
-      return hash;
-    }
-
-    public override bool Equals(Object obj)
-    {
-      FTypeRef x = (FTypeRef)obj;
-      return podName == x.podName && typeName == x.typeName && sig.Equals(x.sig);
-    }
-
-    public string Sig(FPod pod)
-    {
-      if (isGenericInstance()) return sig;
-      return pod.name(podName) + "::" + pod.name(typeName) + sig;
+      if (m_nname == null) m_nname = FanUtil.toNetTypeName(podName, typeName, isNullable());
+      return m_nname;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -65,17 +58,25 @@ namespace Fanx.Fcode
 
     public static FTypeRef read(FStore.Input input)
     {
-      return new FTypeRef(input.u2(), input.u2(), input.utf());
+      FPod fpod = input.fpod;
+      string podName = fpod.name(input.u2());
+      string typeName = fpod.name(input.u2());
+      string sig = input.utf(); // full sig if parameterized, "?" if nullable, or ""
+      return new FTypeRef(podName, typeName, sig);
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    public readonly int podName;
-    public readonly int typeName;
-    public readonly string sig;   // full sig if parameterized, "?" if nullable
-    public readonly int hash;
+    public const int NULLABLE         = 0x0001;
+    public const int GENERIC_INSTANCE = 0x0002;
+
+    public readonly string podName;     // pod name "sys"
+    public readonly string typeName;    // simple type name "Bool"
+    public readonly int mask;           // bitmask
+    public readonly string signature;   // full fan signature (qname or parameterized)
+    private string m_nname;             // Fan.Sys.Duration, System.Boolean
 
   }
 }

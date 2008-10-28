@@ -37,7 +37,7 @@ namespace Fanx.Emit
       FTypeRef refer = pod.typeRef(type.m_base);
       if (refer.isGenericInstance())
       {
-        this.funcType = (FuncType)Type.find(refer.sig, true);
+        this.funcType = (FuncType)Type.find(refer.signature, true);
         int paramCount = funcType.m_params.Length;
         if (paramCount  > Func.MaxIndirectParams)
           return "Fan.Sys.Func/IndirectX";
