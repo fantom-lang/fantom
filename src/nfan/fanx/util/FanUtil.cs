@@ -72,9 +72,6 @@ namespace Fanx.Util
           case 'B':
             if (typeName == "Bool") return "Fan.Sys.Boolean";
             break;
-          case 'S':
-            if (typeName == "Str") return "System.String";
-            break;
           case 'D':
             if (typeName == "Decimal") return "Fan.Sys.BigDecimal";
             break;
@@ -90,6 +87,12 @@ namespace Fanx.Util
           case 'O':
             if (typeName == "Obj") return "System.Object";
             break;
+          case 'S':
+            if (typeName == "Str") return "System.String";
+            break;
+          //case 'V':
+          //  if (typeName.equals("Void")) return "System.Void";
+          //  break;
         }
       }
       return "Fan." + FanUtil.upper(podName, false) + "." + typeName;
@@ -107,9 +110,6 @@ namespace Fanx.Util
           case 'B':
             if (typeName == "Bool") return "Fan.Sys.FanBool";
             break;
-          case 'S':
-            if (typeName == "Str") return "Fan.Sys.FanStr";
-            break;
           case 'D':
             if (typeName == "Decimal") return "Fan.Sys.FanDecimal";
             break;
@@ -124,6 +124,9 @@ namespace Fanx.Util
             break;
           case 'O':
             if (typeName == "Obj") return "Fan.Sys.FanObj";
+            break;
+          case 'S':
+            if (typeName == "Str") return "Fan.Sys.FanStr";
             break;
         }
       }

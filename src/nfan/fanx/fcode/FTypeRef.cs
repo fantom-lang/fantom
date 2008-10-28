@@ -29,6 +29,10 @@ namespace Fanx.Fcode
       int mask = 0;
       if (sig.EndsWith("?")) mask |= NULLABLE;
       if (sig.Length > 1)    mask |= GENERIC_INSTANCE;
+      if (podName == "sys")
+      {
+        if (typeName == "Err") mask |= ERR;
+      }
       this.mask = mask;
 
       // compute full siguature
@@ -42,15 +46,32 @@ namespace Fanx.Fcode
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
+
+    /// <summary>
+    /// Is this a nullable type.
+    /// </summary>
     public bool isNullable() { return (mask & NULLABLE) != 0; }
 
+    /// <summary>
+    /// Is this a parameterized generic instance like Str[]
+    /// </summary>
     public bool isGenericInstance() { return (mask & GENERIC_INSTANCE) != 0; }
 
+    /// <summary>
+    /// Is this sys::Err
+    /// </summary>
+    public bool isErr() { return (mask & ERR) != 0; }
+
+    /// <summary>
+    /// .NET type name: Fan.Sys.Duration, System.Boolean
+    /// </summary>
     public string nname()
     {
       if (m_nname == null) m_nname = FanUtil.toNetTypeName(podName, typeName, isNullable());
       return m_nname;
     }
+
+    public override string ToString() { return "FTypeRef: " + signature; }
 
   //////////////////////////////////////////////////////////////////////////
   // IO
@@ -71,6 +92,7 @@ namespace Fanx.Fcode
 
     public const int NULLABLE         = 0x0001;
     public const int GENERIC_INSTANCE = 0x0002;
+    public const int ERR              = 0x0004;
 
     public readonly string podName;     // pod name "sys"
     public readonly string typeName;    // simple type name "Bool"
