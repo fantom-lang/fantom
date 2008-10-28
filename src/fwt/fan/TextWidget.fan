@@ -237,7 +237,7 @@ class TextChange
   Void undo(TextWidget widget)
   {
     widget.modify(startOffset, newText.size, oldText)
-    widget.caretOffset = startOffset + oldText.size
+    widget.select(startOffset + oldText.size, 0)
   }
 
   **
@@ -246,7 +246,7 @@ class TextChange
   Void redo(TextWidget widget)
   {
     widget.modify(startOffset, oldText.size, newText)
-    widget.caretOffset = startOffset + newText.size
+    widget.select(startOffset + newText.size, 0)
   }
 
 }
