@@ -27,6 +27,8 @@ public class FCodeEmit
   {
     this(parent, fmethod.code, code);
     this.fmethod    = fmethod;
+    this.vars       = fmethod.vars;
+    this.isStatic   = (fmethod.flags & FConst.Static) != 0;
     code.maxLocals  = fmethod.maxLocals();
     code.maxStack   = fmethod.maxStack;
   }
@@ -345,12 +347,22 @@ case Cast: cast(); break;  // TODO
     code.mark(nonNull);
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Load Var
+//////////////////////////////////////////////////////////////////////////
+
   private void loadVar()
   {
     loadVar(u2());
   }
 
   private void loadVar(int index)
+  {
+    FTypeRef t = var(index);
+    loadVarObj(index);
+  }
+
+  private void loadVarObj(int index)
   {
     switch (index)
     {
@@ -362,12 +374,22 @@ case Cast: cast(); break;  // TODO
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Store Var
+//////////////////////////////////////////////////////////////////////////
+
   private void storeVar()
   {
     storeVar(u2());
   }
 
   private void storeVar(int index)
+  {
+    FTypeRef t = var(index);
+    storeVarObj(index);
+  }
+
+  private void storeVarObj(int index)
   {
     switch (index)
     {
@@ -988,7 +1010,7 @@ case Cast: cast(); break;  // TODO
     code.op(ATHROW);             // rethrow it
 
     // generate start of finally block
-    storeVar(finallySp);         // stash stack pointer
+    storeVarObj(finallySp);      // stash stack pointer
   }
 
   private void finallyEnd()
@@ -999,6 +1021,17 @@ case Cast: cast(); break;  // TODO
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+  private FTypeRef var(int index)
+  {
+    if (vars == null) throw new IllegalStateException("Use of variable outside of method");
+    if (!isStatic)
+    {
+      if (index == 0) return null; // return null for this pointer
+      else --index;
+    }
+    return pod.typeRef(vars[index].type);
+  }
 
   private void loadBoolVal()
   {
@@ -1060,7 +1093,9 @@ case Cast: cast(); break;  // TODO
 
   FPod pod;
   FTypeEmit parent;
-  FMethod fmethod;   // maybe null
+  FMethod fmethod;     // maybe null
+  FMethodVar[] vars;   // method variables must be set for loadVar/storeVar
+  boolean isStatic;    // used to determine how to index vars
   byte[] buf;
   int len;
   int pos;
