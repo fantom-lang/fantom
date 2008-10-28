@@ -195,15 +195,15 @@ class SerializationTest : Test
     verifySer("sys::Str:sys::Bool[][:]", Str:Bool[][:])
     verifySer("[sys::Str:sys::Bool[]][:]", [Str:Bool[]][:])
     verifySer("[sys::Str:sys::Bool[]][][,]", [Str:Bool[]][][,])
-    verifySer("[sys::Int:sys::Bool[]][][[2:[true]]]", [Int:Bool[]][][[2:[true]]])
-    verifySer("[sys::Int:sys::Bool[]][][[sys::Int:sys::Bool[]][2:[true]]]", [Int:Bool[]][][[2:[true]]])
-    verifySer("[sys::Int:sys::Bool[]][][sys::Int:sys::Bool[][2:[true]]]", [Int:Bool[]][][[2:[true]]])
-    verifySer("[sys::Int:sys::Int][][sys::Int:sys::Int[2:20]]", [Int:Int][][Int:Int[2:20]])
-    verifySer("[sys::Int:sys::Int][][[sys::Int:sys::Int][2:20]]", [Int:Int][][Int:Int[2:20]])
+    verifySer("[sys::Int:sys::Bool[]][[2:[true]]]", [Int:Bool[]][[2:[true]]])
+    verifySer("[sys::Int:sys::Bool[]][[sys::Int:sys::Bool[]][2:[true]]]", [Int:Bool[]][[2:[true]]])
+    verifySer("[sys::Int:sys::Bool[]][sys::Int:sys::Bool[][2:[true]]]", [Int:Bool[]][[2:[true]]])
+    verifySer("[sys::Int:sys::Int][sys::Int:sys::Int[2:20]]", [Int:Int][Int:Int[2:20]])
+    verifySer("[sys::Int:sys::Int][[sys::Int:sys::Int][2:20]]", [Int:Int][Int:Int[2:20]])
     // TODO: need to fix nullable map inference...
     verifySer("sys::Version:sys::Int[sys::Version(\"1.2\"):1]", Version:Int[Version.fromStr("1.2"):1])
     verifySer("[sys::Version:sys::Int][sys::Version(\"1.2\"):1]", Version:Int[Version.fromStr("1.2"):1])
-    verifySer("sys::Version:sys::Int[][[sys::Version(\"1.2\"):1]]", sys::Version:sys::Int[][Version:Int[Version.fromStr("1.2"):1]])
+    verifySer("sys::Version:sys::Int[[sys::Version(\"1.2\"):1]]", [sys::Version:sys::Int][Version:Int[Version.fromStr("1.2"):1]])
 
     // errors
     verifyErr(IOErr#) |,| { verifySer("[:", null) }

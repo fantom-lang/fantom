@@ -189,6 +189,7 @@ class Normalize : CompilerStep
     m.flags = FConst.Private | FConst.Synthetic
     m.name  = m.name + "\$Once"
     m.ret   = ns.objType.toNullable
+    m.inheritedRet = null
     curType.addSlot(m)
 
     // if (name$Store == "_once_")

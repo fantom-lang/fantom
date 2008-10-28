@@ -1161,6 +1161,14 @@ class TypeCheckExpr : Expr
     return id === ExprId.coerce && target.isStmt
   }
 
+  override Str serialize()
+  {
+    if (id == ExprId.coerce)
+      return target.serialize
+    else
+      return super.serialize
+  }
+
   override Str toStr()
   {
     switch (id)
