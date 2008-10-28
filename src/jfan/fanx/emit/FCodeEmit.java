@@ -183,17 +183,17 @@ case Cast: cast(); break;  // TODO
       java.u2(end);
       java.u2(trap);
 
-      int typeRef = (buf[i+6] & 0xFF) << 8 | (buf[i+7] & 0xFF);
-      String type = pod.jname(typeRef);
-      if (type.equals("fan/sys/Err"))
+      int typeRefId = (buf[i+6] & 0xFF) << 8 | (buf[i+7] & 0xFF);
+      FTypeRef typeRef = pod.typeRef(typeRefId);
+      if (typeRef.isErr())
       {
         java.u2(0);
       }
       else
       {
-        int jtype = emit.cls(type + "$Val");
+        int jtype = emit.cls(typeRef.jname() + "$Val");
         java.u2(jtype);
-        String javaEx = Err.fanToJava(type);
+        String javaEx = Err.fanToJava(typeRef.jname());
         if (javaEx != null)
         {
           java.u2(0, ++count);
@@ -300,12 +300,11 @@ case Cast: cast(); break;  // TODO
 
   private void loadType()
   {
-    loadType(u2());
+    loadType(pod.typeRef(u2()));
   }
 
-  private void loadType(int typeRefIndex)
+  private void loadType(FTypeRef ref)
   {
-    FTypeRef ref = pod.typeRef(typeRefIndex);
     String podName  = ref.podName;
     String typeName = ref.typeName;
 
@@ -443,14 +442,13 @@ case Cast: cast(); break;  // TODO
     // implemented as static factory methods with "$" appended
     int index = u2();
     int[] m = pod.methodRef(index).val;
-    String parent = pod.jname(m[0]);
+    String parent = pod.typeRef(m[0]).jname();
     String name = pod.name(m[1]);
 
     StringBuilder s = new StringBuilder();
     s.append(parent).append('.').append(name).append('$').append('(');
     s.append('L').append(parent).append(';');
-    for (int i=3; i<m.length; ++i)
-      s.append('L').append(pod.jname(m[i])).append(';');
+    for (int i=3; i<m.length; ++i) pod.typeRef(m[i]).jsig(s);
     s.append(')').append('V');
 
     int method = emit.method(s.toString());
@@ -499,18 +497,16 @@ case Cast: cast(); break;  // TODO
     // directly (but don't use cache)
     int index = u2();
     int[] m = pod.methodRef(index).val;
-    String parent = pod.jname(m[0]);
+    String parent = pod.typeRef(m[0]).jname();
     String name = pod.name(m[1]);
-    String ret = pod.jname(m[2]);
+    FTypeRef ret = pod.typeRef(m[2]);
 
     StringBuilder s = new StringBuilder();
     s.append(parent).append("$.").append(name).append('(');
     s.append('L').append(parent).append(';');
-    for (int i=3; i<m.length; ++i)
-      s.append('L').append(pod.jname(m[i])).append(';');
+    for (int i=3; i<m.length; ++i) pod.typeRef(m[i]).jsig(s);
     s.append(')');
-    if (ret.equals("fan/sys/Void")) s.append('V');
-    else s.append('L').append(ret).append(';');
+    ret.jsig(s);
 
     int method = emit.method(s.toString());
     code.op2(INVOKESTATIC, method);
@@ -839,12 +835,12 @@ case Cast: cast(); break;  // TODO
 
   private void is()
   {
-    int typeRef = u2();
+    FTypeRef typeRef = pod.typeRef(u2());
 
     // if a generic instance, we have to use a method call
     // because Fan types don't map to Java classes exactly;
     // otherwise we can use straight bytecode
-    if (pod.typeRef(typeRef).isGenericInstance())
+    if (typeRef.isGenericInstance())
     {
       if (parent.IsViaType == 0) parent.IsViaType = emit.method("fanx/util/OpUtil.is(Ljava/lang/Object;Lfan/sys/Type;)Ljava/lang/Boolean;");
       loadType(typeRef);
@@ -852,7 +848,7 @@ case Cast: cast(); break;  // TODO
     }
     else
     {
-      int cls = emit.cls(pod.jname(typeRef));
+      int cls = emit.cls(typeRef.jname());
       code.op2(INSTANCEOF, cls);
       boolMake();
     }
@@ -860,13 +856,13 @@ case Cast: cast(); break;  // TODO
 
   private void as()
   {
-    int typeRef = u2();
-    int cls = emit.cls(pod.jname(typeRef));
+    FTypeRef typeRef = pod.typeRef(u2());
+    int cls = emit.cls(typeRef.jname());
 
     // if a generic instance, we have to use a method call
     // because Fan types don't map to Java classes exactly;
     // otherwise we can use straight bytecode
-    if (pod.typeRef(typeRef).isGenericInstance())
+    if (typeRef.isGenericInstance())
     {
       if (parent.AsViaType == 0) parent.AsViaType = emit.method("fanx/util/OpUtil.as(Ljava/lang/Object;Lfan/sys/Type;)Ljava/lang/Object;");
       loadType(typeRef);
@@ -936,12 +932,12 @@ case Cast: cast(); break;  // TODO
     //String toPod  = pod.name(toRef.podName);
     //String toName = pod.name(toRef.typeName);
 
-    code.op2(CHECKCAST, emit.cls(pod.jname(toId)));
+    code.op2(CHECKCAST, emit.cls(pod.typeRef(toId).jname()));
   }
 
   private void cast()
   {
-    int cls = emit.cls(pod.jname(u2()));
+    int cls = emit.cls(pod.typeRef(u2()).jname());
     code.op2(CHECKCAST, cls);
   }
 

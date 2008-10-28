@@ -356,7 +356,7 @@ public abstract class FTypeEmit
    */
   String jname(int index)
   {
-    return pod.jname(index);
+    return pod.typeRef(index).jname();
   }
 
   /**

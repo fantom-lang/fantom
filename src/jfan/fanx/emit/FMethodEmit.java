@@ -41,7 +41,7 @@ public class FMethodEmit
     this.isCtor   = (method.flags & FConst.Ctor) != 0;
     this.isNative = (method.flags & FConst.Native) != 0;
     this.ret      = emit.jname(method.inheritedRet); // we don't actually use Java covariance
-    this.isVoid   = ret.equals("fan/sys/Void");
+    this.isVoid   = ret.equals("V");
     this.selfName = emit.selfName;
   }
 
