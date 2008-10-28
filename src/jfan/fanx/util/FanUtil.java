@@ -201,6 +201,9 @@ public class FanUtil
         case 'S':
           if (typeName.equals("Str")) return "java/lang/String";
           break;
+        case 'V':
+          if (typeName.equals("Void")) return "V";
+          break;
       }
     }
     return "fan/" + podName + "/" + typeName;
