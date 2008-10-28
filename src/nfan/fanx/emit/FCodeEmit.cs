@@ -133,7 +133,8 @@ namespace Fanx.Emit
           case FConst.Dup:                 dup(); break;
           case FConst.Is:                  @is(); break;
           case FConst.As:                  @as(); break;
-          case FConst.Cast:                cast(); break;
+case FConst.Cast: cast(); break;  // TODO
+          case FConst.Coerce:              coerce(); break;
           case FConst.Switch:              tableswitch(); break;
 
           case FConst.Throw:               doThrow(); break;
@@ -934,13 +935,32 @@ namespace Fanx.Emit
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Misc
+  // Coercion
   //////////////////////////////////////////////////////////////////////////
 
     private void cast()
     {
       code.TypeInst(TypeOp.castclass, emitter.findType(pod.nname(u2())));
     }
+
+    private void coerce()
+    {
+      int fromId = u2();
+      //TypeRef fromRef = pod.typeRef(fromId);
+      //String fromPod  = pod.name(fromRef.podName);
+      //String fromName = pod.name(fromRef.typeName);
+
+      int toId = u2();
+      //TypeRef toRef = pod.typeRef(toId);
+      //String toPod  = pod.name(toRef.podName);
+      //String toName = pod.name(toRef.typeName);
+
+      code.TypeInst(TypeOp.castclass, emitter.findType(pod.nname(toId)));
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Misc
+  //////////////////////////////////////////////////////////////////////////
 
     private void doThrow()
     {

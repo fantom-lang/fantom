@@ -128,9 +128,7 @@ public class FConst
   public const int FinallyStart     =  57; // ()        starting instruction of a finally block
   public const int FinallyEnd       =  58; // ()        ending instruction of a finally block
   public const int LoadDecimal      =  59; // (decimal)  load Decimal const by index onto stack
-  public const int CheckNotNull     =  60; // (type)    throw NullErr if top of stack is null
-  public const int Box              =  61; // (type)    box from value type to reference type
-  public const int Unbox            =  62; // (type)    unbox from reference type to value type
+  public const int Coerce           =  60; // (coerce)  from->to coercion value/reference/nullable
 
   public static readonly string[] OpNames =
   {
@@ -194,9 +192,7 @@ public class FConst
     "FinallyStart",       //  57 
     "FinallyEnd",         //  58 
     "LoadDecimal",        //  59 
-    "CheckNotNull",       //  60 
-    "Box",                //  61 
-    "Unbox",              //  62 
+    "Coerce",             //  60 
   };
 
   public static readonly int[] OpSkips =
@@ -261,9 +257,7 @@ public class FConst
     0,  //  57 FinallyStart 
     0,  //  58 FinallyEnd 
     2,  //  59 LoadDecimal 
-    2,  //  60 CheckNotNull 
-    2,  //  61 Box 
-    2,  //  62 Unbox 
+    4,  //  60 Coerce 
   };
 
   public static readonly string[] OpSigs =
@@ -328,9 +322,7 @@ public class FConst
     "()",         //  57 FinallyStart
     "()",         //  58 FinallyEnd
     "(decimal)",  //  59 LoadDecimal
-    "(type)",     //  60 CheckNotNull
-    "(type)",     //  61 Box
-    "(type)",     //  62 Unbox
+    "(coerce)",   //  60 Coerce
   };
 
 } // FConst
