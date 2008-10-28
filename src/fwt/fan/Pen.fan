@@ -130,16 +130,19 @@ const class Pen
   override Str toStr()
   {
     s := width.toStr
+
     switch (cap)
     {
       case capButt:  s += " capButt"
       case capRound: s += " capRound"
     }
+
     switch (join)
     {
       case joinBevel: s += " joinBevel"
       case joinRound: s += " joinRound"
     }
+
     if (dash != null) s += " [" + dash.join(",") + "]"
     return s
   }

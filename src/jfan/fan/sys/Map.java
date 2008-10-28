@@ -64,14 +64,14 @@ public final class Map
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean isEmpty()
+  public final boolean isEmpty()
   {
     return map.size() == 0;
   }
 
-  public final Long size()
+  public final long size()
   {
-    return Long.valueOf(map.size());
+    return map.size();
   }
 
   public final Object get(Object key)
@@ -88,7 +88,7 @@ public final class Map
     return def;
   }
 
-  public final Boolean containsKey(Object key)
+  public final boolean containsKey(Object key)
   {
     return map.containsKey(key);
   }
@@ -177,8 +177,8 @@ public final class Map
     map.clear();
   }
 
-  public final Boolean caseInsensitive() { return caseInsensitive; }
-  public final void caseInsensitive(Boolean v)
+  public final boolean caseInsensitive() { return caseInsensitive; }
+  public final void caseInsensitive(boolean v)
   {
     modify();
 
@@ -206,7 +206,7 @@ public final class Map
     this.def = v;
   }
 
-  public final Boolean _equals(Object that)
+  public final boolean equals(Object that)
   {
     if (that instanceof Map)
     {
@@ -215,9 +215,9 @@ public final class Map
     return false;
   }
 
-  public final Long hash()
+  public final long hash()
   {
-    return Long.valueOf(map.hashCode());
+    return map.hashCode();
   }
 
   public final String toStr()
@@ -344,12 +344,12 @@ public final class Map
 // Readonly
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean isRW()
+  public final boolean isRW()
   {
     return !readonly;
   }
 
-  public final Boolean isRO()
+  public final boolean isRO()
   {
     return readonly;
   }
@@ -382,7 +382,7 @@ public final class Map
     return readonlyMap;
   }
 
-  public final Boolean isImmutable()
+  public final boolean isImmutable()
   {
     return immutable;
   }
@@ -493,7 +493,7 @@ public final class Map
       {
         CIEntry entry = (CIEntry)it.next();
         Object thatVal = that.get(entry.key);
-        if (!OpUtil.compareEQz(entry.val, thatVal)) return false;
+        if (!OpUtil.compareEQ(entry.val, thatVal)) return false;
       }
       return true;
     }

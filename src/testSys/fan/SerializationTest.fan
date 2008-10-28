@@ -536,12 +536,12 @@ class SerializationTest : Test
         i=12345
       }")
 
-    x.f = Float.nan
+    x.f = Float.posInf
     verifyPrettyPrinting(x,
      "testSys::SerA
       {
         i=12345
-        f=sys::Float(\"NaN\")
+        f=sys::Float(\"INF\")
       }")
 
     x.nList = Num[,]
@@ -549,7 +549,7 @@ class SerializationTest : Test
      "testSys::SerA
       {
         i=12345
-        f=sys::Float(\"NaN\")
+        f=sys::Float(\"INF\")
         nList=[,]
       }")
 
@@ -558,7 +558,7 @@ class SerializationTest : Test
      "testSys::SerA
       {
         i=12345
-        f=sys::Float(\"NaN\")
+        f=sys::Float(\"INF\")
         nList=[2,3]
       }")
 
@@ -567,7 +567,7 @@ class SerializationTest : Test
      "testSys::SerA
       {
         i=12345
-        f=sys::Float(\"NaN\")
+        f=sys::Float(\"INF\")
         nList=[2,3]
         kids=[,]
       }")
@@ -577,7 +577,7 @@ class SerializationTest : Test
      "testSys::SerA
       {
         i=12345
-        f=sys::Float(\"NaN\")
+        f=sys::Float(\"INF\")
         nList=[2,3]
         kids=
         [
@@ -590,7 +590,7 @@ class SerializationTest : Test
      "testSys::SerA
       {
         i=12345
-        f=sys::Float(\"NaN\")
+        f=sys::Float(\"INF\")
         nList=[2,3]
         kids=
         [
@@ -607,7 +607,7 @@ class SerializationTest : Test
      "testSys::SerA
       {
         i=12345
-        f=sys::Float(\"NaN\")
+        f=sys::Float(\"INF\")
         nList=[2,3]
         kids=
         [
@@ -625,7 +625,7 @@ class SerializationTest : Test
      "testSys::SerA
       {
         i=12345
-        f=sys::Float(\"NaN\")
+        f=sys::Float(\"INF\")
         nList=[2,3]
         kids=
         [
@@ -756,7 +756,7 @@ class SerA
           nList == x.nList &&
           isMap == x.isMap &&
           kids == x.kids
-    if (!eq) SerializationTest.dump(this, x)
+//    if (!eq) SerializationTest.dump(this, x)
     return eq
   }
 

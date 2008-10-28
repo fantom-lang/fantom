@@ -65,7 +65,7 @@ public class EmitTest
     // long
     int l = e.longConst(Long.MIN_VALUE);
     verify(e.longConst(Long.MIN_VALUE) == l);
-    int l2 = e.longConst(0);
+    int l2 = e.longConst(0L);
     verify(l2 == l + 2); // double entries
 
     // float
@@ -80,7 +80,7 @@ public class EmitTest
     // double
     int d = e.doubleConst(Double.MAX_VALUE);
     verify(e.doubleConst(Double.MAX_VALUE) == d);
-    int d2 = e.doubleConst(0);
+    int d2 = e.doubleConst(0.0);
     verify(d2 == d + 2); // double entries
     int dNan = e.doubleConst(Double.NaN);
     verify(e.doubleConst(Double.NaN) == dNan);

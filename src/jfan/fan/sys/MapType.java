@@ -36,12 +36,12 @@ public class MapType
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public Long hash()
+  public long hash()
   {
     return FanStr.hash(signature());
   }
 
-  public Boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (obj instanceof MapType)
     {

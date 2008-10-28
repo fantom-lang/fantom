@@ -42,8 +42,8 @@ public class ProgressBarPeer
 //////////////////////////////////////////////////////////////////////////
 
   // Int value := 0
-  public Long value(fan.fwt.ProgressBar self) { return value.get(); }
-  public void value(fan.fwt.ProgressBar self, Long v) { value.set(v); }
+  public long value(fan.fwt.ProgressBar self) { return value.get(); }
+  public void value(fan.fwt.ProgressBar self, long v) { value.set(v); }
   public final Prop.IntProp value = new Prop.IntProp(this, 0)
   {
     public int get(Widget w) { return ((ProgressBar)w).getSelection(); }
@@ -51,8 +51,8 @@ public class ProgressBarPeer
   };
 
   // Int min := 0
-  public Long min(fan.fwt.ProgressBar self) { return min.get(); }
-  public void min(fan.fwt.ProgressBar self, Long v) { min.set(v); }
+  public long min(fan.fwt.ProgressBar self) { return min.get(); }
+  public void min(fan.fwt.ProgressBar self, long v) { min.set(v); }
   public final Prop.IntProp min = new Prop.IntProp(this, 0)
   {
     public int get(Widget w) { return ((ProgressBar)w).getMinimum(); }
@@ -60,8 +60,8 @@ public class ProgressBarPeer
   };
 
   // Int max := 0
-  public Long max(fan.fwt.ProgressBar self) { return max.get(); }
-  public void max(fan.fwt.ProgressBar self, Long v) { max.set(v); }
+  public long max(fan.fwt.ProgressBar self) { return max.get(); }
+  public void max(fan.fwt.ProgressBar self, long v) { max.set(v); }
   public final Prop.IntProp max = new Prop.IntProp(this, 0)
   {
     public int get(Widget w) { return ((ProgressBar)w).getMaximum(); }

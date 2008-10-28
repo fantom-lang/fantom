@@ -135,14 +135,14 @@ public class FileUtilTest
     out.write(new byte[] { 'a', 'b', 'c' }, 1, 1);
     out.write(new byte[] { '0', '1', '2', '3' }, 2, 2);
     out.close();
-    verify(buf.size().longValue() == 7);
-    verify(buf.get(Long.valueOf(0)).longValue() == 0xFF);
-    verify(buf.get(Long.valueOf(1)).longValue() == 'a');
-    verify(buf.get(Long.valueOf(2)).longValue() == 'b');
-    verify(buf.get(Long.valueOf(3)).longValue() == 'c');
-    verify(buf.get(Long.valueOf(4)).longValue() == 'b');
-    verify(buf.get(Long.valueOf(5)).longValue() == '2');
-    verify(buf.get(Long.valueOf(6)).longValue() == '3');
+    verify(buf.size() == 7);
+    verify(buf.get(0) == 0xFF);
+    verify(buf.get(1) == 'a');
+    verify(buf.get(2) == 'b');
+    verify(buf.get(3) == 'c');
+    verify(buf.get(4) == 'b');
+    verify(buf.get(5) == '2');
+    verify(buf.get(6) == '3');
   }
 
 //////////////////////////////////////////////////////////////////////////

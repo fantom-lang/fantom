@@ -83,7 +83,7 @@ const class LogStep : WebAppStep
       s := StrBuf(256)
       fields.split.each |Str field, Int i|
       {
-        if (i !== 0) s.add(" ")
+        if (i != 0) s.add(" ")
 
         // lookup format method for field
         m := formatters[field]

@@ -43,7 +43,7 @@ public class ConnectionPeer
     }
   }
 
-  public Boolean isClosed(Connection self)
+  public boolean isClosed(Connection self)
   {
     try
     {
@@ -55,7 +55,7 @@ public class ConnectionPeer
     }
   }
 
-  public Boolean close(Connection self)
+  public boolean close(Connection self)
   {
     try
     {
@@ -73,7 +73,7 @@ public class ConnectionPeer
 // Database metadata
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean tableExists(Connection self, String tableName)
+  public boolean tableExists(Connection self, String tableName)
   {
     try
     {
@@ -174,7 +174,7 @@ public class ConnectionPeer
 // Transactions
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean getAutoCommit(Connection self)
+  public boolean getAutoCommit(Connection self)
   {
     try
     {
@@ -186,7 +186,7 @@ public class ConnectionPeer
     }
   }
 
-  public void setAutoCommit(Connection self, Boolean b)
+  public void setAutoCommit(Connection self, boolean b)
   {
     try
     {
@@ -226,15 +226,15 @@ public class ConnectionPeer
 // Open Count
 //////////////////////////////////////////////////////////////////////////
 
-  public Long increment(Connection self)
+  public long increment(Connection self)
   {
-    return Long.valueOf(++openCount);
+    return ++openCount;
   }
 
-  public Long decrement(Connection self)
+  public long decrement(Connection self)
   {
     if (openCount != 0) openCount--;
-    return Long.valueOf(openCount);
+    return openCount;
   }
 
 //////////////////////////////////////////////////////////////////////////

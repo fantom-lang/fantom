@@ -53,40 +53,26 @@ class IntTest : Test
     verify(15 == 0xf)
     verify(1_000 == 1000)
     verify(0xABCD == 0xabcd)
+    verify(x == 99)
+    verify(99 == x)
+    verifyFalse(x == 9)
+    verifyFalse(9 == x)
+    verifyFalse(9 == (Obj?)"hi")
+    verifyFalse((Obj?)"hi" == 9)
+
     verify(0xffff_ffff_ffff_ffff == 0xffff_ffff_ffff_ffff)
     verify(2 != 3)
     verify(-2 != 0)
-    verify(3 as Obj != "foo")
+    verifyFalse(x != 99)
+    verifyFalse(99 != x)
+    verify(x != 9)
+    verify(9 != x)
+    verify(x as Obj != "foo")
     verify(x != null)
     verify(null != x)
+
     verify(44.equals(44))
     verify(!44.equals("x"))
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Same
-//////////////////////////////////////////////////////////////////////////
-
-  Void testSame()
-  {
-    verify(0 === 0)
-    verify(4 === 4)
-    verify('z' === 'z')
-    verify('z' !== 'Z')
-
-    // everything from -100 to 100 must be interned to use ===
-    j := -100
-    for (Int i := -100; i<=100; ++i)
-    {
-      verifySame(i, j)
-      j++
-    }
-
-    // technically this would be ok in an implementation, but
-    // it's more to just test CompareNotSame than anything
-    x := 100_000
-    y :=  99_999
-    verify(x !== y+1)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,33 +81,51 @@ class IntTest : Test
 
   Void testCompare()
   {
+    Obj? x := -9
     verify(2 < 3)
+    verify(x < 3)
+    verifyFalse(3 < -9)
     verify(null < 3)
     verifyFalse(3 < 3)
     verifyFalse(6 < 4)
+    verifyFalse(3 < x)
+    verifyFalse(-9 < x)
     verifyFalse(3 < null)
 
     verify(3 <= 3)
     verify(3 <= 3)
+    verify(-9 <= x)
+    verify(-99 <= x)
+    verify(x <= -8)
+    verify(x <= -9)
     verify(null <= 3)
     verifyFalse(6 <= 5)
     verifyFalse(5 <= null)
 
     verify(-2 > -3)
     verify(0 > -2)
+    verify(x > -11)
+    verifyFalse(-11 > x)
     verify(-2 > null)
     verifyFalse(null > 77)
     verifyFalse(3 > 4)
 
     verify(-3 >= -4)
     verify(-3 >= -3)
+    verify(x >= -9)
+    verify(x >= -11)
     verify(-3 >= null)
     verifyFalse(null >= 4)
     verifyFalse(-3 >= -2)
+    verifyFalse(-10 >= x)
+    verify(-7 >= x)
 
     verifyEq(3 <=> 4, -1)
     verifyEq(3 <=> 3, 0)
     verifyEq(4 <=> 3, 1)
+    verifyEq(x <=> 4, -1)
+    verifyEq(4 <=> x, 1)
+    verifyEq(-9 <=> x, 0)
     verifyEq(null <=> 3, -1)
     verifyEq(-9 <=> null, 1)
   }
@@ -154,17 +158,14 @@ class IntTest : Test
     verifyEq(2 + -1, 1)
     verifyEq(2+3,  5)
     verifyEq(2+-1, 1)
-    x= 4 + 3; x+=5; verifyEq(x, 12)
+    fx=4 + 3; fx+=5; verifyEq(fx, 12)
 
     verifyEq(7 - 3,  4)
     verifyEq(2 - 3, -1)
     verifyEq(7-3,  4)
     verifyEq(2-3, -1)
-    x=5 - 2; x-=-3; verifyEq(x, 6)
+    fy=5 - 2; fy-=-3; verifyEq(fy, 6)
   }
-
-  // TODO - need to fix when do const folding optimization
-  // TODO - need to check field rvalues
 
 //////////////////////////////////////////////////////////////////////////
 // Increment
@@ -172,12 +173,47 @@ class IntTest : Test
 
   Void testIncrement()
   {
-    x:=4
+    x := 4
     verifyEq(++x, 5); verifyEq(x, 5)
     verifyEq(x++, 5); verifyEq(x, 6)
     verifyEq(--x, 5); verifyEq(x, 5)
     verifyEq(x--, 5); verifyEq(x, 4)
+
+    Int? y := 4
+    verifyEq(++y, 5); verifyEq(y, 5)
+    verifyEq(y++, 5); verifyEq(y, 6)
+    verifyEq(--y, 5); verifyEq(y, 5)
+    verifyEq(y--, 5); verifyEq(y, 4)
+
+    fx = 4
+    verifyEq(++fx, 5); verifyEq(fx, 5)
+    verifyEq(fx++, 5); verifyEq(fx, 6)
+    verifyEq(--fx, 5); verifyEq(fx, 5)
+    verifyEq(fx--, 5); verifyEq(fx, 4)
+
+    fy = 4
+    verifyEq(++fy, 5); verifyEq(fy, 5)
+    verifyEq(fy++, 5); verifyEq(fy, 6)
+    verifyEq(--fy, 5); verifyEq(fy, 5)
+    verifyEq(fy--, 5); verifyEq(fy, 4)
+
+    lx = [4]
+    verifyEq(++lx[0], 5); verifyEq(lx[0], 5)
+    verifyEq(lx[0]++, 5); verifyEq(lx[0], 6)
+    verifyEq(--lx[0], 5); verifyEq(lx[0], 5)
+    verifyEq(lx[0]--, 5); verifyEq(lx[0], 4)
+
+    ly = [4]
+    verifyEq(++ly[0], 5); verifyEq(ly[0], 5)
+    verifyEq(ly[0]++, 5); verifyEq(ly[0], 6)
+    verifyEq(--ly[0], 5); verifyEq(ly[0], 5)
+    verifyEq(ly[0]--, 5); verifyEq(ly[0], 4)
   }
+
+  Int fx
+  Int? fy
+  Int[] lx
+  Int?[] ly
 
 //////////////////////////////////////////////////////////////////////////
 // Bitwise
@@ -207,7 +243,7 @@ class IntTest : Test
     verifyEq(9.toDecimal, 9d)
     verifyEq(-123456789.toDecimal, -123456789d)
     verifyEq(-7.toInt, -7)
-    verify(93757393754.toInt === 93757393754)
+    verify(93757393754.toInt == 93757393754)
   }
 
 //////////////////////////////////////////////////////////////////////////

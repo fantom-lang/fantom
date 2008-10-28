@@ -46,7 +46,6 @@ public final class TimeZone
   }
 
   public static TimeZone fromStr(String name) { return fromStr(name, true); }
-  public static TimeZone fromStr(String name, Boolean checked) { return fromStr(name, checked.booleanValue()); }
   public static TimeZone fromStr(String name, boolean checked)
   {
     // check cache first
@@ -116,26 +115,26 @@ public final class TimeZone
     return fullName;
   }
 
-  public Duration offset(Long year)
+  public Duration offset(long year)
   {
-    return Duration.make(rule(year.intValue()).offset * Duration.nsPerSec);
+    return Duration.make(rule((int)year).offset * Duration.nsPerSec);
   }
 
-  public Duration dstOffset(Long year)
+  public Duration dstOffset(long year)
   {
-    Rule r = rule(year.intValue());
+    Rule r = rule((int)year);
     if (r.dstOffset == 0) return null;
     return Duration.make(r.dstOffset * Duration.nsPerSec);
   }
 
-  public String stdAbbr(Long year)
+  public String stdAbbr(long year)
   {
-    return rule(year.intValue()).stdAbbr;
+    return rule((int)year).stdAbbr;
   }
 
-  public String dstAbbr(Long year)
+  public String dstAbbr(long year)
   {
-    return rule(year.intValue()).dstAbbr;
+    return rule((int)year).dstAbbr;
   }
 
   public String abbr(int year, boolean inDST)

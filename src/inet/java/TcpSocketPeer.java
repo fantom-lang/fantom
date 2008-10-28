@@ -36,17 +36,17 @@ public class TcpSocketPeer
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isBound(TcpSocket fan)
+  public boolean isBound(TcpSocket fan)
   {
     return isBound();
   }
 
-  public Boolean isConnected(TcpSocket fan)
+  public boolean isConnected(TcpSocket fan)
   {
     return isConnected();
   }
 
-  public Boolean isClosed(TcpSocket fan)
+  public boolean isClosed(TcpSocket fan)
   {
     return isClosed();
   }
@@ -102,13 +102,13 @@ public class TcpSocketPeer
     }
   }
 
-  public TcpSocket connect(TcpSocket fan, IpAddress addr, Long port, Duration timeout)
+  public TcpSocket connect(TcpSocket fan, IpAddress addr, long port, Duration timeout)
   {
     try
     {
       // connect
       int javaTimeout = (timeout == null) ? 0 : (int)timeout.millis();
-      connect(new InetSocketAddress(addr.peer.java, port.intValue()), javaTimeout);
+      connect(new InetSocketAddress(addr.peer.java, (int)port), javaTimeout);
       connected(fan);
       return fan;
     }
@@ -140,7 +140,7 @@ public class TcpSocketPeer
     return out;
   }
 
-  public Boolean close(TcpSocket fan)
+  public boolean close(TcpSocket fan)
   {
     try
     {
@@ -263,7 +263,7 @@ public class TcpSocketPeer
     return options;
   }
 
-  public Boolean getKeepAlive(TcpSocket fan)
+  public boolean getKeepAlive(TcpSocket fan)
   {
     try
     {
@@ -275,7 +275,7 @@ public class TcpSocketPeer
     }
   }
 
-  public void setKeepAlive(TcpSocket fan, Boolean v)
+  public void setKeepAlive(TcpSocket fan, boolean v)
   {
     try
     {
@@ -287,11 +287,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Long getReceiveBufferSize(TcpSocket fan)
+  public long getReceiveBufferSize(TcpSocket fan)
   {
     try
     {
-      return Long.valueOf(getReceiveBufferSize());
+      return getReceiveBufferSize();
     }
     catch (IOException e)
     {
@@ -299,11 +299,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setReceiveBufferSize(TcpSocket fan, Long v)
+  public void setReceiveBufferSize(TcpSocket fan, long v)
   {
     try
     {
-      setReceiveBufferSize(v.intValue());
+      setReceiveBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -311,11 +311,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Long getSendBufferSize(TcpSocket fan)
+  public long getSendBufferSize(TcpSocket fan)
   {
     try
     {
-      return Long.valueOf(getSendBufferSize());
+      return getSendBufferSize();
     }
     catch (IOException e)
     {
@@ -323,11 +323,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setSendBufferSize(TcpSocket fan, Long v)
+  public void setSendBufferSize(TcpSocket fan, long v)
   {
     try
     {
-      setSendBufferSize(v.intValue());
+      setSendBufferSize((int)v);
     }
     catch (IOException e)
     {
@@ -335,7 +335,7 @@ public class TcpSocketPeer
     }
   }
 
-  public Boolean getReuseAddress(TcpSocket fan)
+  public boolean getReuseAddress(TcpSocket fan)
   {
     try
     {
@@ -347,7 +347,7 @@ public class TcpSocketPeer
     }
   }
 
-  public void setReuseAddress(TcpSocket fan, Boolean v)
+  public void setReuseAddress(TcpSocket fan, boolean v)
   {
     try
     {
@@ -417,7 +417,7 @@ public class TcpSocketPeer
     }
   }
 
-  public Boolean getNoDelay(TcpSocket fan)
+  public boolean getNoDelay(TcpSocket fan)
   {
     try
     {
@@ -429,7 +429,7 @@ public class TcpSocketPeer
     }
   }
 
-  public void setNoDelay(TcpSocket fan, Boolean v)
+  public void setNoDelay(TcpSocket fan, boolean v)
   {
     try
     {
@@ -441,11 +441,11 @@ public class TcpSocketPeer
     }
   }
 
-  public Long getTrafficClass(TcpSocket fan)
+  public long getTrafficClass(TcpSocket fan)
   {
     try
     {
-      return Long.valueOf(getTrafficClass());
+      return getTrafficClass();
     }
     catch (IOException e)
     {
@@ -453,11 +453,11 @@ public class TcpSocketPeer
     }
   }
 
-  public void setTrafficClass(TcpSocket fan, Long v)
+  public void setTrafficClass(TcpSocket fan, long v)
   {
     try
     {
-      setTrafficClass(v.intValue());
+      setTrafficClass((int)v);
     }
     catch (IOException e)
     {

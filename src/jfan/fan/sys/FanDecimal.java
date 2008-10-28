@@ -23,7 +23,6 @@ public final class FanDecimal
 //////////////////////////////////////////////////////////////////////////
 
   public static BigDecimal fromStr(String s) { return fromStr(s, true); }
-  public static BigDecimal fromStr(String s, Boolean checked) { return fromStr(s, checked.booleanValue()); }
   public static BigDecimal fromStr(String s, boolean checked)
   {
     try
@@ -41,7 +40,7 @@ public final class FanDecimal
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(BigDecimal self, Object obj)
+  public static boolean equals(BigDecimal self, Object obj)
   {
     if (obj instanceof BigDecimal)
     {
@@ -50,14 +49,14 @@ public final class FanDecimal
     return false;
   }
 
-  public static Long compare(BigDecimal self, Object obj)
+  public static long compare(BigDecimal self, Object obj)
   {
-    return Long.valueOf(self.compareTo((BigDecimal)obj));
+    return self.compareTo((BigDecimal)obj);
   }
 
-  public static Long hash(BigDecimal self)
+  public static long hash(BigDecimal self)
   {
-    return Long.valueOf(self.hashCode());
+    return self.hashCode();
   }
 
   public static Type type()

@@ -234,7 +234,7 @@ class FandocParser
     while (true)
     {
       // next item in my own list
-      if (curt === listType && curIndent === listIndent)
+      if (curt === listType && curIndent == listIndent)
       {
         list.addChild(formattedText(ListItem.make))
       }

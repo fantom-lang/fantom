@@ -52,11 +52,11 @@ class ExprTest : Test
     verifyEq(true  ? (x = 0) : (y = 1), 0); verifyEq(x, 0); verifyEq(y, 2);
     verifyEq(false ? (x = 9) : (y = 8), 8); verifyEq(x, 0); verifyEq(y, 8);
 
-    x = 4; y = 3;
-    Str s := x === y ? "x=$x" : "y=$y"
-    verifyEq(s, "y=3")
-    verifyEq(s = x !== y ? null : "y=$y", null)
-    verifyEq(s = x !== y ? "x=$x" : null,  "x=4")
+    a := 4ns; b := 3ns;
+    Str s := a === b ? "a=$a" : "b=$b"
+    verifyEq(s, "b=3ns")
+    verifyEq(s = a !== b ? null : "b=$b", null)
+    verifyEq(s = a !== b ? "a=$a" : null,  "a=4ns")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,6 +77,134 @@ class ExprTest : Test
     verifyEq(i, 100)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Safe Call
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSafeCall()
+  {
+    // various combinations of Str, Int, and Int?
+    Int? a := 0xabcd
+    verifyEq(a?.toHex, "abcd")
+    verifyEq(a?.toHex?.toInt(16), 0xabcd)
+    verifyEq(a?.toHex?.toInt(16)?.toDigit, null)
+    verifyEq(a?.toHex?.index("b"), 1)
+    Int i := a?.toHex?.index("c"); verifyEq(i, 2)
+    verifyEq(a?.toHex?.index("d")?.toStr, "3")
+    verifyEq(a?.toHex?.index("x")?.toStr, null)
+    verifyEq(a?.toHex?.get(-1)?.toChar, "d")
+
+    // same combinations against null
+    a = null
+    verifyEq(a?.toHex, null)
+    verifyEq(a?.toHex?.toInt(16), null)
+    verifyEq(a?.toHex?.toInt(16)?.toDigit, null)
+    verifyEq(a?.toHex?.index("b"), null)
+    verifyErr(NullErr#) |,| { Int j := a?.toHex?.index("c") }
+    verifyEq(a?.toHex?.index("d")?.toStr, null)
+    verifyEq(a?.toHex?.index("x")?.toStr, null)
+    verifyEq(a?.toHex?.get(-1)?.toChar, null)
+
+    // against myself
+    ExprTest? b := this
+    verifyEq(b?.mInt(4), 4)
+    verifyEq(b?.mInt(4)?.toHex(2), "04")
+    i = b?.mInt(7); verifyEq(i, 7)
+    verifyEq(b?.mIntQ(4), 4)
+    verifyEq(b?.mIntQ('0')?.fromDigit, 0)
+    verifyEq(b?.mIntQ(null)?.max(3), null)
+
+    // against myself null
+    b = null
+    verifyEq(b?.mInt(4), null)
+    verifyEq(b?.mInt(4)?.toHex(2), null)
+    verifyErr(NullErr#) |,| { Int j := b?.mInt(7) }
+    verifyEq(b?.mIntQ(4), null)
+    verifyEq(b?.mIntQ('0')?.fromDigit, null)
+    verifyEq(b?.mIntQ(null)?.max(3), null)
+  }
+
+  Int mInt(Int x) { return x }
+  Int? mIntQ(Int? x) { return x }
+
+//////////////////////////////////////////////////////////////////////////
+// Safe Dynamic Call
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSafeDynamicCall()
+  {
+    Int? i := 0xab
+    verifyEq(i?->toHex, "ab")
+    verifyEq(i?->toHex?->size, 2)
+
+    i = null
+    verifyEq(i?->toHex, null)
+    verifyEq(i?->toHex?->size, null)
+
+    ExprTest? x := this
+    verifyEq(x?->mInt(77), 77)
+    verifyEq(x?->mInt(77)?->toStr, "77")
+    verifyEq(x?->mIntQ(77), 77)
+    verifyEq(x?->mIntQ(77)?.toStr, "77")
+    verifyEq(x?->mIntQ(null), null)
+
+    x = null
+    verifyEq(x?->mInt(77), null)
+    verifyEq(x?->mInt(77)?->toStr, null)
+    verifyEq(x?->mIntQ(77)?.toStr, null)
+    verifyEq(x?->mIntQ(null), null)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Safe Field
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSafeField()
+  {
+    // try with field default values
+    ExprTest? x := this
+    verifyEq(x?.fInt, 0)
+    verifyEq(x?.fIntQ, null)
+    verifyEq(x?.fInt?.toHex, "0")
+    verifyEq(x?.fIntQ?.toHex, null)
+    verifyEq(x?.fStr?.size, null)
+    verifyEq(x?.chain?.fInt, null)
+    verifyEq(x?.chain?.fIntQ, null)
+
+    // set fields and chain and try
+    chain = ExprTest()
+    fInt = 0xabcd
+    fIntQ = 123
+    fStr = "hello"
+    verifyEq(x?.fInt, 0xabcd)
+    verifyEq(x?.fIntQ, 123)
+    verifyEq(x?.fInt?.toHex, "abcd")
+    verifyEq(x?.fInt?.toHex?.toInt(16), 0xabcd)
+    verifyEq(x?.fIntQ?.toHex, "7b")
+    verifyEq(x?.fStr?.size, 5)
+    verifyEq(x?.chain?.fInt, 0)
+    verifyEq(x?.chain?.fInt?.toHex, "0")
+    verifyEq(x?.chain?.fIntQ, null)
+    verifyEq(x?.chain?.fIntQ?.toHex, null)
+
+    // try with x as null
+    x = null
+    verifyEq(x?.fInt, null)
+    verifyEq(x?.fIntQ, null)
+    verifyEq(x?.fInt?.toHex, null)
+    verifyEq(x?.fInt?.toHex?.toInt(16), null)
+    verifyEq(x?.fIntQ?.toHex, null)
+    verifyEq(x?.fStr?.size, null)
+    verifyEq(x?.chain?.fInt, null)
+    verifyEq(x?.chain?.fInt?.toHex, null)
+    verifyEq(x?.chain?.fIntQ, null)
+    verifyEq(x?.chain?.fIntQ?.toHex, null)
+  }
+
+  Int fInt
+  Int? fIntQ
+  Str? fStr
+  ExprTest? chain
 }
 
 class ExprX { This add(ExprX? k) { kids.add(k); return this } ExprX?[] kids := ExprX?[,]  }

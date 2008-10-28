@@ -24,7 +24,6 @@ public class Charset
 //////////////////////////////////////////////////////////////////////////
 
   public static Charset fromStr(String name) { return fromStr(name, true); }
-  public static Charset fromStr(String name, Boolean checked) { return fromStr(name, checked.booleanValue()); }
   public static Charset fromStr(String name, boolean checked)
   {
     try
@@ -275,9 +274,9 @@ public class Charset
 
   public int hashCode() { return charset.hashCode(); }
 
-  public Long hash() { return Long.valueOf(charset.hashCode()); }
+  public long hash() { return charset.hashCode(); }
 
-  public Boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (obj instanceof Charset)
     {

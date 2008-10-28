@@ -43,12 +43,12 @@ class Tokenizer : CompilerSupport
 
     // if first line starts with #, then treat it like an end of
     // line, so that Unix guys can specify the executable to run
-    if (cur === '#')
+    if (cur == '#')
     {
       while (true)
       {
-        if (cur === '\n') { consume; break }
-        if (cur === 0) break
+        if (cur == '\n') { consume; break }
+        if (cur == 0) break
         consume
       }
     }
@@ -112,24 +112,24 @@ class Tokenizer : CompilerSupport
     if (cur.isSpace) { consume; whitespace = true; return null }
 
     // raw string literal r"c:\dir\foo.txt"
-    if (cur === 'r' && peek === '"' && !inStrLiteral) return rawStr
+    if (cur == 'r' && peek == '"' && !inStrLiteral) return rawStr
 
     // alpha means keyword or identifier
-    if (cur.isAlpha || cur === '_') return word
+    if (cur.isAlpha || cur == '_') return word
 
     // number or .number (note that + and - are handled as unary operator)
     if (cur.isDigit) return number
-    if (cur === '.' && peek.isDigit) return number
+    if (cur == '.' && peek.isDigit) return number
 
     // str literal
-    if (cur === '"')  return str
-    if (cur === '`')  return uri
-    if (cur === '\'') return ch
+    if (cur == '"')  return str
+    if (cur == '`')  return uri
+    if (cur == '\'') return ch
 
     // comments
-    if (cur === '*' && peek === '*') return docComment
-    if (cur === '/' && peek === '/') return skipCommentSL
-    if (cur === '/' && peek === '*') return skipCommentML
+    if (cur == '*' && peek == '*') return docComment
+    if (cur == '/' && peek == '/') return skipCommentSL
+    if (cur == '/' && peek == '*') return skipCommentML
 
     // symbols
     return symbol
@@ -149,7 +149,7 @@ class Tokenizer : CompilerSupport
     start := pos
 
     // find end of word to compute length
-    while (cur.isAlphaNum || cur === '_') consume
+    while (cur.isAlphaNum || cur == '_') consume
 
     // create Str (gc note this string might now reference buf)
     word := buf[start...pos]
@@ -173,7 +173,7 @@ class Tokenizer : CompilerSupport
   private TokenVal number()
   {
     // check for hex value
-    if (cur === '0' && peek === 'x')
+    if (cur == '0' && peek == 'x')
       return hex
 
     // find end of literal
@@ -182,24 +182,24 @@ class Tokenizer : CompilerSupport
     exp   := false
 
     // whole part
-    while (cur.isDigit || cur === '_') consume
+    while (cur.isDigit || cur == '_') consume
 
     // fraction part
-    if (cur === '.' && peek.isDigit)
+    if (cur == '.' && peek.isDigit)
     {
       dot = true
       consume
-      while (cur.isDigit || cur === '_') consume
+      while (cur.isDigit || cur == '_') consume
     }
 
     // exponent
-    if (cur === 'e' || cur === 'E')
+    if (cur == 'e' || cur == 'E')
     {
       consume
       exp = true
-      if (cur === '-' || cur === '+') consume
+      if (cur == '-' || cur == '+') consume
       if (!cur.isDigit) throw err("Expected exponent digits")
-      while (cur.isDigit || cur === '_') consume
+      while (cur.isDigit || cur == '_') consume
     }
 
     // string value of literal
@@ -211,19 +211,19 @@ class Tokenizer : CompilerSupport
     Int? dur      := null
     if (cur.isLower && peek.isLower)
     {
-      if (cur === 'n' && peek === 's') { consume; consume; dur = 1 }
-      if (cur === 'm' && peek === 's') { consume; consume; dur = 1000000 }
-      if (cur === 's' && peek === 'e') { consume; consume; if (cur !== 'c') throw err("Expected 'sec' in Duration literal"); consume; dur = 1_000_000_000 }
-      if (cur === 'm' && peek === 'i') { consume; consume; if (cur !== 'n') throw err("Expected 'min' in Duration literal"); consume; dur = 60_000_000_000 }
-      if (cur === 'h' && peek === 'r') { consume; consume; dur = 3_600_000_000_000 }
-      if (cur === 'd' && peek === 'a') { consume; consume; if (cur !== 'y') throw err("Expected 'day' in Duration literal"); consume; dur = 86_400_000_000_000 }
+      if (cur == 'n' && peek == 's') { consume; consume; dur = 1 }
+      if (cur == 'm' && peek == 's') { consume; consume; dur = 1000000 }
+      if (cur == 's' && peek == 'e') { consume; consume; if (cur != 'c') throw err("Expected 'sec' in Duration literal"); consume; dur = 1_000_000_000 }
+      if (cur == 'm' && peek == 'i') { consume; consume; if (cur != 'n') throw err("Expected 'min' in Duration literal"); consume; dur = 60_000_000_000 }
+      if (cur == 'h' && peek == 'r') { consume; consume; dur = 3_600_000_000_000 }
+      if (cur == 'd' && peek == 'a') { consume; consume; if (cur != 'y') throw err("Expected 'day' in Duration literal"); consume; dur = 86_400_000_000_000 }
     }
-    else if (cur === 'f' || cur === 'F')
+    else if (cur == 'f' || cur == 'F')
     {
       consume
       floatSuffix = true
     }
-    else if (cur === 'd' || cur === 'D')
+    else if (cur == 'd' || cur == 'D')
     {
       consume
       decimalSuffix = true
@@ -279,7 +279,7 @@ class Tokenizer : CompilerSupport
       nib := cur.fromDigit(16)
       if (nib == null)
       {
-        if (cur === '_') { consume; continue }
+        if (cur == '_') { consume; continue }
         break
       }
       nibCount++
@@ -310,11 +310,11 @@ class Tokenizer : CompilerSupport
 
     // string contents
     s := StrBuf()
-    while (cur !==  '"')
+    while (cur !=  '"')
     {
       if (cur <= 0) throw err("Unexpected end of string")
 
-      if (cur === '\n')
+      if (cur == '\n')
       {
         s.addChar(cur)
         consume
@@ -353,10 +353,10 @@ class Tokenizer : CompilerSupport
       interpolated := false
       while (true)
       {
-        if (cur === '"') { consume; break }
-        if (cur === 0) throw err("Unexpected end of string")
+        if (cur == '"') { consume; break }
+        if (cur == 0) throw err("Unexpected end of string")
 
-        if (cur === '\n')
+        if (cur == '\n')
         {
           s.addChar(cur)
           consume
@@ -364,7 +364,7 @@ class Tokenizer : CompilerSupport
           continue
         }
 
-        if (cur === '$')
+        if (cur == '$')
         {
           // if we have detected an interpolated string, then
           // insert opening paren to treat whole string atomically
@@ -384,7 +384,7 @@ class Tokenizer : CompilerSupport
 
           s.clear
         }
-        else if (cur === '\\')
+        else if (cur == '\\')
         {
           s.add(escape.toChar)
         }
@@ -424,7 +424,7 @@ class Tokenizer : CompilerSupport
     for (i:=openLine; i<openPos; ++i)
     {
       a := buf[i]
-      if ((a === '\t' && cur !== '\t') || (a !== '\t' && cur !== ' '))
+      if ((a == '\t' && cur != '\t') || (a != '\t' && cur != ' '))
       {
         if (cur == '\n') return true
         numTabs := 0; numSpaces := 0
@@ -455,13 +455,13 @@ class Tokenizer : CompilerSupport
     tokens.add(makeVirtualToken(Token.plus))
 
     // if { we allow an expression b/w {...}
-    if (cur === '{')
+    if (cur == '{')
     {
       tokens.add(makeVirtualToken(Token.lparen))
       consume
       while (true)
       {
-        if (cur === '"' || cur === 0) throw err("Unexpected end of string, missing }")
+        if (cur == '"' || cur == 0) throw err("Unexpected end of string, missing }")
         tok := next
         if (tok.kind == Token.rbrace) break
         tokens.add(tok)
@@ -481,7 +481,7 @@ class Tokenizer : CompilerSupport
       tokens.add(tok)
       while (true)
       {
-        if (cur !== '.') break
+        if (cur != '.') break
         tokens.add(next) // dot
         tok = next
         if (tok.kind !== Token.identifier) throw err("Expected identifier")
@@ -490,7 +490,7 @@ class Tokenizer : CompilerSupport
     }
 
     // if at end of string, all done
-    if (cur === '\"')
+    if (cur == '\"')
     {
       consume
       return false
@@ -532,10 +532,10 @@ class Tokenizer : CompilerSupport
     while (true)
     {
       ch := cur
-      if (ch === '`') { consume; break }
-      if (ch === 0 || ch === '\n') throw err("Unexpected end of uri")
-      if (ch === '$') throw err("Uri interpolation not supported yet")
-      if (ch === '\\')
+      if (ch == '`') { consume; break }
+      if (ch == 0 || ch == '\n') throw err("Unexpected end of uri")
+      if (ch == '$') throw err("Uri interpolation not supported yet")
+      if (ch == '\\')
       {
         switch (peek)
         {
@@ -574,7 +574,7 @@ class Tokenizer : CompilerSupport
 
     // if \ then process as escape
     c := -1
-    if (cur === '\\')
+    if (cur == '\\')
     {
       c = escape
     }
@@ -585,7 +585,7 @@ class Tokenizer : CompilerSupport
     }
 
     // expecting ' quote
-    if (cur !== '\'') throw err("Expecting ' close of char literal")
+    if (cur != '\'') throw err("Expecting ' close of char literal")
     consume
 
     return TokenVal(Token.intLiteral, c)
@@ -597,7 +597,7 @@ class Tokenizer : CompilerSupport
   Int escape()
   {
     // consume slash
-    if (cur !== '\\') throw err("Internal error")
+    if (cur != '\\') throw err("Internal error")
     consume
 
     // check basics
@@ -616,7 +616,7 @@ class Tokenizer : CompilerSupport
     }
 
     // check for uxxxx
-    if (cur === 'u')
+    if (cur == 'u')
     {
       consume
       n3 := cur.fromDigit(16); consume
@@ -643,8 +643,8 @@ class Tokenizer : CompilerSupport
     consume  // next slash
     while (true)
     {
-      if (cur === '\n') { consume; break }
-      if (cur === 0) break
+      if (cur == '\n') { consume; break }
+      if (cur == 0) break
       consume
     }
     return null
@@ -661,9 +661,9 @@ class Tokenizer : CompilerSupport
     depth := 1
     while (true)
     {
-      if (cur === '*' && peek === '/') { consume; consume; depth--; if (depth <= 0) break }
-      if (cur === '/' && peek === '*') { consume; consume; depth++; continue }
-      if (cur === 0) break
+      if (cur == '*' && peek == '/') { consume; consume; depth--; if (depth <= 0) break }
+      if (cur == '/' && peek == '*') { consume; consume; depth++; continue }
+      if (cur == 0) break
       consume
     }
     return null
@@ -677,8 +677,8 @@ class Tokenizer : CompilerSupport
     // if doc is off, then just skip the line and be done
     if (!isDoc) { skipCommentSL; return null }
 
-    while (cur === '*') consume
-    if (cur === ' ') consume
+    while (cur == '*') consume
+    if (cur == ' ') consume
 
     // parse comment
     lines := Str[,]
@@ -690,7 +690,7 @@ class Tokenizer : CompilerSupport
       consume
 
       // if not at newline, then loop
-      if (c !== '\n')
+      if (c != '\n')
       {
         s.addChar(c)
         continue
@@ -702,10 +702,10 @@ class Tokenizer : CompilerSupport
       s.clear
 
       // we at a newline, check for leading whitespace(0+)/star(2+)/whitespace(1)
-      while (cur === ' ' || cur === '\t') consume
-      if (cur !== '*' || peek !== '*') break
-      while (cur === '*') consume
-      if (cur === ' ' || cur === '\t') consume
+      while (cur == ' ' || cur == '\t') consume
+      if (cur != '*' || peek != '*') break
+      while (cur == '*') consume
+      if (cur == ' ' || cur == '\t') consume
     }
     lines.add(s.toStr)
 
@@ -733,95 +733,95 @@ class Tokenizer : CompilerSupport
       case '\r':
         throw err("Carriage return \\r not allowed in source")
       case '!':
-        if (cur === '=')
+        if (cur == '=')
         {
           consume
-          if (cur === '=') { consume; return TokenVal(Token.notSame) }
+          if (cur == '=') { consume; return TokenVal(Token.notSame) }
           return TokenVal(Token.notEq)
         }
         return TokenVal(Token.bang)
       case '#':
         return TokenVal(Token.pound)
       case '%':
-        if (cur === '=') { consume; return TokenVal(Token.assignPercent) }
+        if (cur == '=') { consume; return TokenVal(Token.assignPercent) }
         return TokenVal(Token.percent)
       case '&':
-        if (cur === '=') { consume; return TokenVal(Token.assignAmp) }
-        if (cur === '&') { consume; return TokenVal(Token.doubleAmp) }
+        if (cur == '=') { consume; return TokenVal(Token.assignAmp) }
+        if (cur == '&') { consume; return TokenVal(Token.doubleAmp) }
         return TokenVal(Token.amp)
       case '(':
         return TokenVal(Token.lparen)
       case ')':
         return TokenVal(Token.rparen)
       case '*':
-        if (cur === '=') { consume; return TokenVal(Token.assignStar) }
+        if (cur == '=') { consume; return TokenVal(Token.assignStar) }
         return TokenVal(Token.star)
       case '+':
-        if (cur === '=') { consume; return TokenVal(Token.assignPlus) }
-        if (cur === '+') { consume; return TokenVal(Token.increment) }
+        if (cur == '=') { consume; return TokenVal(Token.assignPlus) }
+        if (cur == '+') { consume; return TokenVal(Token.increment) }
         return TokenVal(Token.plus)
       case ',':
         return TokenVal(Token.comma)
       case '-':
-        if (cur === '>') { consume; return TokenVal(Token.arrow) }
-        if (cur === '-') { consume; return TokenVal(Token.decrement) }
-        if (cur === '=') { consume; return TokenVal(Token.assignMinus) }
+        if (cur == '>') { consume; return TokenVal(Token.arrow) }
+        if (cur == '-') { consume; return TokenVal(Token.decrement) }
+        if (cur == '=') { consume; return TokenVal(Token.assignMinus) }
         return TokenVal(Token.minus)
       case '.':
-        if (cur === '.')
+        if (cur == '.')
         {
           consume
-          if (cur === '.') { consume; return TokenVal(Token.dotDotDot) }
+          if (cur == '.') { consume; return TokenVal(Token.dotDotDot) }
           return TokenVal(Token.dotDot)
         }
         return TokenVal(Token.dot)
       case '/':
-        if (cur === '=') { consume; return TokenVal(Token.assignSlash) }
+        if (cur == '=') { consume; return TokenVal(Token.assignSlash) }
         return TokenVal(Token.slash)
       case ':':
-        if (cur === ':') { consume; return TokenVal(Token.doubleColon) }
-        if (cur === '=') { consume; return TokenVal(Token.defAssign) }
+        if (cur == ':') { consume; return TokenVal(Token.doubleColon) }
+        if (cur == '=') { consume; return TokenVal(Token.defAssign) }
         return TokenVal(Token.colon)
       case ';':
         return TokenVal(Token.semicolon)
       case '<':
-        if (cur === '=')
+        if (cur == '=')
         {
           consume
-          if (cur === '>') { consume; return TokenVal(Token.cmp) }
+          if (cur == '>') { consume; return TokenVal(Token.cmp) }
           return TokenVal(Token.ltEq)
         }
-        if (cur === '<')
+        if (cur == '<')
         {
           consume
-          if (cur === '=') { consume; return TokenVal(Token.assignLshift) }
+          if (cur == '=') { consume; return TokenVal(Token.assignLshift) }
           return TokenVal(Token.lshift)
         }
         return TokenVal(Token.lt)
       case '=':
-        if (cur === '=')
+        if (cur == '=')
         {
           consume
-          if (cur === '=') { consume; return TokenVal(Token.same) }
+          if (cur == '=') { consume; return TokenVal(Token.same) }
           return TokenVal(Token.eq)
         }
         return TokenVal(Token.assign)
       case '>':
-        if (cur === '=') { consume; return TokenVal(Token.gtEq) }
-        if (cur === '>')
+        if (cur == '=') { consume; return TokenVal(Token.gtEq) }
+        if (cur == '>')
         {
           consume
-          if (cur === '=') { consume; return TokenVal(Token.assignRshift) }
+          if (cur == '=') { consume; return TokenVal(Token.assignRshift) }
           return TokenVal(Token.rshift)
         }
         return TokenVal(Token.gt)
       case '?':
-        if (cur === ':') { consume; return TokenVal(Token.elvis) }
-        if (cur === '.') { consume; return TokenVal(Token.safeDot) }
-        if (cur === '-')
+        if (cur == ':') { consume; return TokenVal(Token.elvis) }
+        if (cur == '.') { consume; return TokenVal(Token.safeDot) }
+        if (cur == '-')
         {
           consume
-          if (cur !== '>') throw err("Expected '?->' symbol")
+          if (cur != '>') throw err("Expected '?->' symbol")
           consume
           return TokenVal(Token.safeArrow)
         }
@@ -833,13 +833,13 @@ class Tokenizer : CompilerSupport
       case ']':
         return TokenVal(Token.rbracket)
       case '^':
-        if (cur === '=') { consume; return TokenVal(Token.assignCaret) }
+        if (cur == '=') { consume; return TokenVal(Token.assignCaret) }
         return TokenVal(Token.caret)
       case '{':
         return TokenVal(Token.lbrace)
       case '|':
-        if (cur === '|') { consume; return TokenVal(Token.doublePipe) }
-        if (cur === '=') { consume; return TokenVal(Token.assignPipe) }
+        if (cur == '|') { consume; return TokenVal(Token.doublePipe) }
+        if (cur == '=') { consume; return TokenVal(Token.assignPipe) }
         return TokenVal(Token.pipe)
       case '}':
         return TokenVal(Token.rbrace)
@@ -847,7 +847,7 @@ class Tokenizer : CompilerSupport
         return TokenVal(Token.tilde)
     }
 
-    if (c === 0)
+    if (c == 0)
       return TokenVal(Token.eof)
 
     throw err("Unexpected symbol: " + c.toChar + " (0x" + c.toHex + ")")
@@ -881,7 +881,7 @@ class Tokenizer : CompilerSupport
     // if cur is a line break, then advance line number,
     // because the char we are getting ready to make cur
     // is the first char on the next line
-    if (cur === '\n')
+    if (cur == '\n')
     {
       line++
       col = 1

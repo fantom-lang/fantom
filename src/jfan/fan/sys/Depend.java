@@ -21,7 +21,7 @@ public final class Depend
 //////////////////////////////////////////////////////////////////////////
 
   public static Depend fromStr(String str) { return fromStr(str, true); }
-  public static Depend fromStr(String str, Boolean checked)
+  public static Depend fromStr(String str, boolean checked)
   {
     try
     {
@@ -164,7 +164,7 @@ public final class Depend
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (obj instanceof Depend)
       return toStr().equals(toStr(obj));
@@ -177,7 +177,7 @@ public final class Depend
     return toStr().hashCode();
   }
 
-  public Long hash()
+  public long hash()
   {
     return FanStr.hash(toStr());
   }
@@ -215,36 +215,36 @@ public final class Depend
     return name;
   }
 
-  public final Long size()
+  public final long size()
   {
-    return Long.valueOf(constraints.length);
+    return constraints.length;
   }
 
   public final Version version() { return version(0L); }
-  public final Version version(Long index)
+  public final Version version(long index)
   {
-    return constraints[index.intValue()].version;
+    return constraints[(int)index].version;
   }
 
-  public final Boolean isPlus() { return isPlus(0L); }
-  public final Boolean isPlus(Long index)
+  public final boolean isPlus() { return isPlus(0L); }
+  public final boolean isPlus(long index)
   {
-    return constraints[index.intValue()].isPlus;
+    return constraints[(int)index].isPlus;
   }
 
-  public final Boolean isRange() { return isRange(0L); }
-  public final Boolean isRange(Long index)
+  public final boolean isRange() { return isRange(0L); }
+  public final boolean isRange(long index)
   {
-    return constraints[index.intValue()].endVersion != null;
+    return constraints[(int)index].endVersion != null;
   }
 
   public final Version endVersion() { return endVersion(0L); }
-  public final Version endVersion(Long index)
+  public final Version endVersion(long index)
   {
-    return constraints[index.intValue()].endVersion;
+    return constraints[(int)index].endVersion;
   }
 
-  public final Boolean match(Version v)
+  public final boolean match(Version v)
   {
     for (int i=0; i<constraints.length; ++i)
     {
@@ -252,14 +252,14 @@ public final class Depend
       if (c.isPlus)
       {
         // versionPlus
-        if (c.version.compare(v).longValue() <= 0)
+        if (c.version.compare(v) <= 0)
           return true;
       }
       else if (c.endVersion != null)
       {
         // versionRange
-        if (c.version.compare(v).longValue() <= 0 &&
-            (c.endVersion.compare(v).longValue() >= 0 || doMatch(c.endVersion, v)))
+        if (c.version.compare(v) <= 0 &&
+            (c.endVersion.compare(v) >= 0 || doMatch(c.endVersion, v)))
           return true;
       }
       else

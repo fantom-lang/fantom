@@ -21,7 +21,6 @@ public final class Version
 //////////////////////////////////////////////////////////////////////////
 
   public static Version fromStr(String str) { return fromStr(str, true); }
-  public static Version fromStr(String str, Boolean checked) { return fromStr(str, checked.booleanValue()); }
   public static Version fromStr(String s, boolean checked)
   {
     List segments = new List(Sys.IntType, 4);
@@ -81,7 +80,7 @@ public final class Version
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean _equals(Object obj)
+  public boolean equals(Object obj)
   {
     if (obj instanceof Version)
       return toStr().equals(((Version)obj).toStr());
@@ -89,7 +88,7 @@ public final class Version
       return false;
   }
 
-  public Long compare(Object obj)
+  public long compare(Object obj)
   {
     Version that = (Version)obj;
     List a = this.segments;
@@ -98,12 +97,12 @@ public final class Version
     {
       long ai = (Long)a.get(i);
       long bi = (Long)b.get(i);
-      if (ai < bi) return FanInt.LT;
-      if (ai > bi) return FanInt.GT;
+      if (ai < bi) return -1;
+      if (ai > bi) return +1;
     }
-    if (a.sz() < b.sz()) return FanInt.LT;
-    if (a.sz() > b.sz()) return FanInt.GT;
-    return FanInt.EQ;
+    if (a.sz() < b.sz()) return -1;
+    if (a.sz() > b.sz()) return +1;
+    return 0;
   }
 
   public int hashCode()
@@ -111,7 +110,7 @@ public final class Version
     return toStr().hashCode();
   }
 
-  public Long hash()
+  public long hash()
   {
     return FanStr.hash(toStr());
   }
@@ -150,7 +149,7 @@ public final class Version
     return ((Long)segments.get(index)).intValue();
   }
 
-  public Long major()
+  public long major()
   {
     return (Long)segments.get(0);
   }

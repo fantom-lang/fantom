@@ -80,7 +80,7 @@ public class FanClassLoader
     // if it was pending, then use that to define new class
     if (pending != null)
     {
-//if (true) dumpToFile(name, pending);
+//if (name.endsWith("")) dumpToFile(name, pending);
       Class cls = defineClass(name, pending.buf, 0, pending.len);
       return cls;
     }
@@ -92,7 +92,7 @@ public class FanClassLoader
       int dot = name.indexOf('.', 4);
       String podName  = name.substring(4, dot);
       String typeName = name.substring(dot+1);
-      Pod pod = Pod.find(podName, true, null, null);
+      Pod pod = Pod.doFind(podName, true, null, null);
 
       // see if we can find a precompiled class
       if (pod.fpod.store != null)

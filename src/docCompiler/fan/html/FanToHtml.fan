@@ -134,7 +134,7 @@ class FanToHtml
   {
     out.print("<span class='").print(classBracket).print("'>")
     out.writeChar(in.next)
-    while (brackets.get(in.peek, false)) // optimize consecutive brackets like () or []
+    while (brackets.get(in.peek ?: 0, false)) // optimize consecutive brackets like () or []
       out.writeChar(in.next)
     out.print("</span>")
   }
@@ -285,7 +285,7 @@ class FanToHtml
   **
   ** Return true if ch is a newline character.
   **
-  private Bool nl(Int ch)
+  private Bool nl(Int? ch)
   {
     return ch == '\n' || ch == 0x0d
   }

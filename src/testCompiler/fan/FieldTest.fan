@@ -150,6 +150,7 @@ class FieldTest : CompilerTest
           static Int mgets() { return @s }
 
           static const Int s := 5
+          static const Int? x
           abstract Int a
         }
 
@@ -177,7 +178,8 @@ class FieldTest : CompilerTest
     verifyEq(obj.type.field("s").get, 5)
     verifyEq(obj.type.field("s").parent, m)
     verifyEq(obj->geta, 5)
-    verifyEq(obj->gets, null)
+    verifyEq(obj->gets, 0)
+    verifyEq(obj.type.field("x").get, null)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -373,7 +375,7 @@ class FieldTest : CompilerTest
      verifyEq(obj->aGets, 0); verifyEq(obj->bGets, 0); verifyEq(obj->cGets, 0)
      verifyEq(obj->aSets, 0); verifyEq(obj->bSets, 0); verifyEq(obj->cSets, 0)
 
-     verifyEq(obj->x, null)
+     verifyEq(obj->x, 0)
      verifyEq(obj->aGets, 1); verifyEq(obj->bGets, 1); verifyEq(obj->cGets, 1)
      verifyEq(obj->aSets, 0); verifyEq(obj->bSets, 0); verifyEq(obj->cSets, 0)
 
@@ -496,7 +498,7 @@ class FieldTest : CompilerTest
      obj := bType.make
      verifyEq(obj->bGets, 0); verifyEq(obj->bSets, 0)
 
-     verifyEq(obj->x, null)
+     verifyEq(obj->x, 0)
      verifyEq(obj->bGets, 1); verifyEq(obj->bSets, 0)
 
      obj->set(9)

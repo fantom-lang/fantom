@@ -26,7 +26,7 @@ const class FTypeRef
   override Bool equals(Obj? obj)
   {
     x := (FTypeRef)obj
-    return podName === x.podName && typeName === x.typeName && sig == x.sig
+    return podName == x.podName && typeName == x.typeName && sig == x.sig
   }
 
   Bool isGenericInstance() { return sig.size > 1 }
@@ -81,7 +81,7 @@ const class FFieldRef
   override Bool equals(Obj? obj)
   {
     x := (FFieldRef)obj
-    return parent === x.parent && name === x.name && typeRef === x.typeRef
+    return parent == x.parent && name == x.name && typeRef == x.typeRef
   }
 
   Str format(FPod pod)
@@ -131,7 +131,7 @@ const class FMethodRef
   override Bool equals(Obj? obj)
   {
     x := (FMethodRef)obj
-    return parent === x.parent && name === x.name && ret === x.ret && params == x.params
+    return parent == x.parent && name == x.name && ret == x.ret && params == x.params
   }
 
   Str format(FPod pod)

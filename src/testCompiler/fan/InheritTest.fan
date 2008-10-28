@@ -273,6 +273,34 @@ class InheritTest : CompilerTest
        ])
   }
 
+  Void testCovariantValueTypes()
+  {
+    verifyErrors(
+     "class Foo : Base
+      {
+        override Float? a() { return null}
+        override Int    b() { return 0 }
+        override Int    c() { return 0 }
+        override Int d
+      }
+
+      class Base
+      {
+        virtual Obj? a() { return this }
+        virtual Obj  b() { return this }
+        virtual Num  c() { return 0 }
+        virtual Num  d() { return 0 }
+      }
+
+      ",
+       [
+        3, 3, "Cannot use covariance with value types '$podName::Base.a' - 'sys::Obj?' != 'sys::Float?'",
+        4, 3, "Cannot use covariance with value types '$podName::Base.b' - 'sys::Obj' != 'sys::Int'",
+        5, 3, "Cannot use covariance with value types '$podName::Base.c' - 'sys::Num' != 'sys::Int'",
+        6, 3, "Cannot use covariance with value types '$podName::Base.d' - 'sys::Num' != 'sys::Int'",
+       ])
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // InheritProtection
 //////////////////////////////////////////////////////////////////////////
@@ -644,12 +672,12 @@ class InheritTest : CompilerTest
 
       class B : A, Q
       {
-        override Int x := 3
-        override Int q := 7
+        override Decimal x := 3d
+        override Decimal q := 7d
 
-        static Int v1(B o) { return o.x }
+        static Decimal v1(B o) { return o.x }
         static Num v2(A o) { return o.x }
-        static Int v3(B o) { return o.q++ }
+        static Decimal v3(B o) { return o.q++ }
         static Num v4(Q o) { return o.q }
       }
 
@@ -664,16 +692,16 @@ class InheritTest : CompilerTest
     verifySame(b.base, a)
     verifySame(b.mixins.first, q)
 
-    verifyEq(a.method("x").callOn(o, [,]), 3)
-    verifyEq(b.field("x").get(o), 3)
-    b.field("x").set(o, 6)
-    verifyEq(a.method("x").callOn(o, [,]), 6)
-    verifyEq(b.field("x").get(o), 6)
+    verifyEq(a.method("x").callOn(o, [,]), 3d)
+    verifyEq(b.field("x").get(o), 3d)
+    b.field("x").set(o, 6d)
+    verifyEq(a.method("x").callOn(o, [,]), 6d)
+    verifyEq(b.field("x").get(o), 6d)
 
-    verifyEq(b.method("v1").call1(o), 6)
-    verifyEq(b.method("v2").call1(o), 6)
-    verifyEq(b.method("v3").call1(o), 7)
-    verifyEq(b.method("v4").call1(o), 8)
+    verifyEq(b.method("v1").call1(o), 6d)
+    verifyEq(b.method("v2").call1(o), 6d)
+    verifyEq(b.method("v3").call1(o), 7d)
+    verifyEq(b.method("v4").call1(o), 8d)
   }
 
   Void testCovarianceConflict()

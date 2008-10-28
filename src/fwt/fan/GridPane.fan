@@ -140,8 +140,8 @@ class GridPane : Pane
       rowh := sizes.rowh[row]
       colw := sizes.colw[col]
 
-      if (expandRow == row) rowh += expandRowh
-      if (expandCol == col) colw += expandColw
+      if (row == expandRow) rowh += expandRowh
+      if (col == expandCol) colw += expandColw
 
       switch (halignCells)
       {

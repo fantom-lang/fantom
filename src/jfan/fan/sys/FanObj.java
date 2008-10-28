@@ -27,11 +27,6 @@ public class FanObj
     return (int)(hash ^ (hash >>> 32));
   }
 
-  public final boolean equals(Object obj)
-  {
-    return _equals(obj);
-  }
-
   public final String toString()
   {
     return toStr();
@@ -41,45 +36,37 @@ public class FanObj
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public static Boolean equals(Object self, Object x)
+  public static boolean equals(Object self, Object x)
   {
-    if (self instanceof FanObj)
-      return ((FanObj)self)._equals(x);
-    else
-      return self.equals(x);
+    return self.equals(x);
   }
 
-  public Boolean _equals(Object obj)
-  {
-    return this == obj;
-  }
-
-  public static Long compare(Object self, Object x)
+  public static long compare(Object self, Object x)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).compare(x);
     else if (self instanceof Comparable)
-      return Long.valueOf(((Comparable)self).compareTo(x));
+      return ((Comparable)self).compareTo(x);
     else
       return FanStr.compare(toStr(self), toStr(x));
   }
 
-  public Long compare(Object obj)
+  public long compare(Object obj)
   {
     return FanStr.compare(toStr(), toStr(obj));
   }
 
-  public static Long hash(Object self)
+  public static long hash(Object self)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).hash();
     else
-      return Long.valueOf(self.hashCode());
+      return self.hashCode();
   }
 
-  public Long hash()
+  public long hash()
   {
-    return Long.valueOf(super.hashCode());
+    return super.hashCode();
   }
 
   public static String toStr(Object self)
@@ -95,7 +82,7 @@ public class FanObj
     return super.toString();
   }
 
-  public static Boolean isImmutable(Object self)
+  public static boolean isImmutable(Object self)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).isImmutable();
@@ -103,7 +90,7 @@ public class FanObj
       return FanUtil.isJavaImmutable(self.getClass());
   }
 
-  public Boolean isImmutable()
+  public boolean isImmutable()
   {
     return type().isConst();
   }

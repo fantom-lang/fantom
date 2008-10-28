@@ -37,10 +37,9 @@ public class Pod
 // Management
 //////////////////////////////////////////////////////////////////////////
 
-  public static Pod find(String name) { return find(name, true, null, null); }
-  public static Pod find(String name, Boolean checked) { return find(name, checked.booleanValue(), null, null); }
-  public static Pod find(String name, boolean checked) { return find(name, checked, null, null); }
-  public static Pod find(String name, boolean checked, FPod fpod, HashMap resolving)
+  public static Pod find(String name) { return doFind(name, true, null, null); }
+  public static Pod find(String name, boolean checked) { return doFind(name, checked, null, null); }
+  public static Pod doFind(String name, boolean checked, FPod fpod, HashMap resolving)
   {
     try
     {
@@ -72,7 +71,7 @@ public class Pod
           for (int i=0; i<fpod.depends.length; ++i)
           {
             Depend d = fpod.depends[i];
-            Pod dpod = find(d.name(), false, null, resolving);
+            Pod dpod = doFind(d.name(), false, null, resolving);
             if (dpod == null)
               throw new Exception("Missing dependency for '" + name + "': " + d);
             if (!d.match(dpod.version()))
@@ -164,7 +163,7 @@ public class Pod
             n = n.substring(0, n.length()-".pod".length());
             try
             {
-              pods.add(find(n, true, null, null));
+              pods.add(doFind(n, true, null, null));
             }
             catch (Throwable e)
             {
@@ -240,7 +239,6 @@ public class Pod
   public List types() { return new List(Sys.TypeType, types); }
 
   public Type findType(String name) { return findType(name, true); }
-  public Type findType(String name, Boolean checked) { return findType(name, checked.booleanValue()); }
   public Type findType(String name, boolean checked)
   {
     Type type = (Type)typesByName.get(name);
@@ -359,7 +357,7 @@ public class Pod
     // loading my own hollow types
     String podName  = ref.podName;
     String typeName = ref.typeName;
-    Pod pod = podName.equals(name) ? this : Pod.find(podName, true, null, null);
+    Pod pod = podName.equals(name) ? this : Pod.doFind(podName, true, null, null);
     Type type = pod.findType(typeName, false);
     if (type != null)
     {

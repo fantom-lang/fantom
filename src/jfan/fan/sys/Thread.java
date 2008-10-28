@@ -89,7 +89,7 @@ public class Thread
 //////////////////////////////////////////////////////////////////////////
 
   public static Thread find(String name) { return find(name, true); }
-  public static Thread find(String name, Boolean checked)
+  public static Thread find(String name, boolean checked)
   {
     synchronized (topLock)
     {
@@ -134,8 +134,8 @@ public class Thread
 //////////////////////////////////////////////////////////////////////////
 
   public static Thread findService(Type t) { return findService(t.qname(), true); }
-  public static Thread findService(Type t, Boolean checked) { return findService(t.qname(), checked.booleanValue()); }
-  public static Thread findService(String qname, boolean checked)
+  public static Thread findService(Type t, boolean checked) { return findService(t.qname(), checked); }
+  static Thread findService(String qname, boolean checked)
   {
     synchronized (topLock)
     {
@@ -146,7 +146,7 @@ public class Thread
     }
   }
 
-  public Boolean isService()
+  public boolean isService()
   {
     return false;
   }
@@ -211,7 +211,7 @@ public class Thread
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean _equals(Object obj)
+  public final boolean equals(Object obj)
   {
     return this == obj;
   }
@@ -221,7 +221,7 @@ public class Thread
     return name.hashCode();
   }
 
-  public final Long hash()
+  public final long hash()
   {
     return FanStr.hash(name);
   }
@@ -259,17 +259,17 @@ public class Thread
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public final synchronized Boolean isNew()
+  public final synchronized boolean isNew()
   {
     return state == NEW;
   }
 
-  public final synchronized Boolean isRunning()
+  public final synchronized boolean isRunning()
   {
     return state == RUNNING;
   }
 
-  public final synchronized Boolean isDead()
+  public final synchronized boolean isDead()
   {
     return state == DEAD;
   }
@@ -605,7 +605,7 @@ public class Thread
 //////////////////////////////////////////////////////////////////////////
 
   public final Object sendLater(Duration dur, Object obj) { return sendLater(dur, obj, false); }
-  public final Object sendLater(Duration dur, Object obj, Boolean repeat)
+  public final Object sendLater(Duration dur, Object obj, boolean repeat)
   {
     obj = Namespace.safe(obj);
 

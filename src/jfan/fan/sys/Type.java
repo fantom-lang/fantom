@@ -35,14 +35,7 @@ public abstract class Type
 //////////////////////////////////////////////////////////////////////////
 
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
-  public static Type find(String sig, Boolean checked) { return TypeParser.load(sig, checked, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
-  public static Type find(String podName, String typeName, boolean checked)
-  {
-    Pod pod = Pod.find(podName, checked, null, null);
-    if (pod == null) return null;
-    return pod.findType(typeName, checked);
-  }
 
   public static List findByFacet(String facetName, Object facetVal) { return findByFacet(facetName, facetVal, null); }
   public static List findByFacet(String facetName, Object facetVal, Object options)
@@ -65,15 +58,15 @@ public abstract class Type
 // Flags
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean isAbstract() { return (flags() & FConst.Abstract) != 0; }
-  public final Boolean isClass() { return (flags() & (FConst.Enum|FConst.Mixin)) == 0; }
-  public final Boolean isConst() { return (flags() & FConst.Const) != 0; }
-  public final Boolean isEnum() { return (flags() & FConst.Enum) != 0; }
-  public final Boolean isFinal() { return (flags() & FConst.Final) != 0; }
-  public final Boolean isInternal() { return (flags() & FConst.Internal) != 0; }
-  public final Boolean isMixin() { return (flags() & FConst.Mixin) != 0; }
-  public final Boolean isPublic() { return (flags() & FConst.Public) != 0; }
-  public final Boolean isSynthetic() { return (flags() & FConst.Synthetic) != 0; }
+  public final boolean isAbstract() { return (flags() & FConst.Abstract) != 0; }
+  public final boolean isClass() { return (flags() & (FConst.Enum|FConst.Mixin)) == 0; }
+  public final boolean isConst() { return (flags() & FConst.Const) != 0; }
+  public final boolean isEnum() { return (flags() & FConst.Enum) != 0; }
+  public final boolean isFinal() { return (flags() & FConst.Final) != 0; }
+  public final boolean isInternal() { return (flags() & FConst.Internal) != 0; }
+  public final boolean isMixin() { return (flags() & FConst.Mixin) != 0; }
+  public final boolean isPublic() { return (flags() & FConst.Public) != 0; }
+  public final boolean isSynthetic() { return (flags() & FConst.Synthetic) != 0; }
   abstract int flags();
 
   public Object trap(String name, List args)
@@ -134,13 +127,13 @@ public abstract class Type
       throw ArgErr.make("Cannot use dynamic in makeDynamic: " + this).val;
   }
 
-  public Boolean isDynamic() { return false; }
+  public boolean isDynamic() { return false; }
 
 //////////////////////////////////////////////////////////////////////////
 // Value Types
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isValue()
+  public boolean isValue()
   {
     return this == Sys.BoolType || this == Sys.IntType || this == Sys.FloatType;
   }
@@ -149,7 +142,7 @@ public abstract class Type
 // Nullable
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isNullable() { return false; }
+  public boolean isNullable() { return false; }
 
   public Type toNonNullable() { return this; }
 
@@ -212,7 +205,7 @@ public abstract class Type
     return Sys.ObjType;
   }
 
-  public final Boolean isGeneric()
+  public final boolean isGeneric()
   {
     return isGenericType();
   }
@@ -274,15 +267,12 @@ public abstract class Type
   public abstract List slots();
 
   public final Field field(String name) { return (Field)slot(name, true); }
-  public final Field field(String name, Boolean checked) { return (Field)slot(name, checked.booleanValue()); }
   public final Field field(String name, boolean checked) { return (Field)slot(name, checked); }
 
   public final Method method(String name) { return (Method)slot(name, true); }
-  public final Method method(String name, Boolean checked) { return (Method)slot(name, checked.booleanValue()); }
   public final Method method(String name, boolean checked) { return (Method)slot(name, checked); }
 
   public final Slot slot(String name) { return slot(name, true); }
-  public final Slot slot(String name, Boolean checked) { return slot(name, checked.booleanValue()); }
   public abstract Slot slot(String name, boolean checked);
 
   public void add(Slot slot)
@@ -311,7 +301,7 @@ public abstract class Type
 
   public abstract List inheritance();
 
-  public final Boolean fits(Type type) { return is(type); }
+  public final boolean fits(Type type) { return is(type); }
   public abstract boolean is(Type type);
 
   /**
@@ -345,11 +335,11 @@ public abstract class Type
 //////////////////////////////////////////////////////////////////////////
 
   public final Map facets() { return facets(false); }
-  public abstract Map facets(Boolean inherited);
+  public abstract Map facets(boolean inherited);
 
   public final Object facet(String name) { return facet(name, null, false); }
   public final Object facet(String name, Object def) { return facet(name, def, false); }
-  public abstract Object facet(String name, Object def, Boolean inherited);
+  public abstract Object facet(String name, Object def, boolean inherited);
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation
@@ -363,7 +353,7 @@ public abstract class Type
 
   public String toStr() { return signature(); }
 
-  public Boolean isImmutable() { return true; }
+  public boolean isImmutable() { return true; }
 
   public Type toImmutable() { return this; }
 

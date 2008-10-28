@@ -36,7 +36,7 @@ public class Jstub
     System.out.println("    Java Stub [" + podName + "]");
 
     // read fcode into memory
-    Pod pod = Pod.find(podName, true, null, null);
+    Pod pod = Pod.find(podName, true);
     ClassType[] types = (ClassType[])pod.types().toArray(new ClassType[pod.types().sz()]);
 
     // open jar file

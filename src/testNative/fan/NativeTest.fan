@@ -35,7 +35,7 @@ class NativeTest : Test
     // verify native make happens before field init (1234)
     // and before constructor (11) code
     n := Native.makeY(5, 6)
-    verifyEq(n.getCtorY(), null)
+    verifyEq(n.getCtorY(), 0)
 
     // set field in the peer
     n.setPeerZ(55)
@@ -94,7 +94,7 @@ class NativeTest : Test
 
 abstract class NativeBase : Test
 {
-  abstract Int fA
+  abstract Int? fA
   virtual Str fV
   abstract Int fA2
 }
@@ -118,7 +118,7 @@ class Native : NativeBase
   native static Int doStaticB(Int x, Int y)
 
   native Int fX
-  native override Int fA
+  native override Int? fA
   native override Str fV
   override Int fA2 := 0xab
 

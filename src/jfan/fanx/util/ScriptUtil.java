@@ -101,8 +101,8 @@ public class ScriptUtil
       if (c == null) return null;
 
       // check that timestamp and size still the same
-      if (OpUtil.compareEQz(c.modified, file.modified()) &&
-          OpUtil.compareEQz(c.size, file.size()))
+      if (OpUtil.compareEQ(c.modified, file.modified()) &&
+          OpUtil.compareEQ(c.size, file.size()))
         return c;
 
       // nuke from cache
@@ -129,7 +129,7 @@ public class ScriptUtil
   static class CachedScript
   {
     DateTime modified;
-    Long size;
+    long size;
     String typeName;
   }
 

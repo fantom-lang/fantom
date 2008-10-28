@@ -509,7 +509,7 @@ const final class Str
   ** single quote, or backtick then it is escaped too.  If 'escapeUnicode'
   ** is true then any character over 127 is also escaped as '\uXXXX'.
   **
-  Str toCode(Int quote := '"', Bool escapeUnicode := false)
+  Str toCode(Int? quote := '"', Bool escapeUnicode := false)
 
   **
   ** Return this string as valid XML text.  The special control

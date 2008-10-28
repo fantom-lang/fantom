@@ -85,8 +85,8 @@ public class Process
     return env;
   }
 
-  public Boolean mergeErr() { return mergeErr; }
-  public void mergeErr(Boolean v) { checkRun(); mergeErr = v;  }
+  public boolean mergeErr() { return mergeErr; }
+  public void mergeErr(boolean v) { checkRun(); mergeErr = v;  }
 
   public OutStream out() { return out; }
   public void out(OutStream out) { checkRun(); this.out = out; }
@@ -154,12 +154,12 @@ public class Process
     }
   }
 
-  public final Long join()
+  public final long join()
   {
     if (proc == null) throw Err.make("Process not running").val;
     try
     {
-      return Long.valueOf(proc.waitFor());
+      return proc.waitFor();
     }
     catch (Throwable e)
     {

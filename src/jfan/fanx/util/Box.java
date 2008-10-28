@@ -126,7 +126,9 @@ public class Box
       int c = s.charAt(i);
       if (c <= 0x007F)
       {
-        utflen +=1;
+        // Java requres \0 as 0xC080
+        if (c == 0) utflen += 2;
+        else utflen += 1;
       }
       else if (c > 0x07FF)
       {
@@ -155,7 +157,9 @@ public class Box
       int c = s.charAt(i);
       if (c <= 0x007F)
       {
-        buf[len++] = (byte)c;
+        // Java requres \0 as 0xC080
+        if (c == 0) { buf[len++] = (byte)0xC0; buf[len++] = (byte)0x80; }
+        else buf[len++] = (byte)c;
       }
       else if (c > 0x07FF)
       {

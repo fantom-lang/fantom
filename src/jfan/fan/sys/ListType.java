@@ -35,16 +35,16 @@ public class ListType
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public final Long hash()
+  public final long hash()
   {
     return FanStr.hash(signature());
   }
 
-  public final Boolean _equals(Object obj)
+  public final boolean equals(Object obj)
   {
     if (obj instanceof ListType)
     {
-      return v._equals(((ListType)obj).v);
+      return v.equals(((ListType)obj).v);
     }
     return false;
   }

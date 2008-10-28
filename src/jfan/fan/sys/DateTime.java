@@ -66,12 +66,12 @@ public final class DateTime
 // Constructor - Values
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime make(Long year, Month month, Long day, Long hour, Long min) { return make(year, month, day, hour, min, 0L, 0L, TimeZone.current); }
-  public static DateTime make(Long year, Month month, Long day, Long hour, Long min, Long sec) { return make(year, month, day, hour, min, sec, 0L, TimeZone.current); }
-  public static DateTime make(Long year, Month month, Long day, Long hour, Long min, Long sec, Long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.current); }
-  public static DateTime make(Long year, Month month, Long day, Long hour, Long min, Long sec, Long ns, TimeZone tz)
+  public static DateTime make(long year, Month month, long day, long hour, long min) { return make(year, month, day, hour, min, 0L, 0L, TimeZone.current); }
+  public static DateTime make(long year, Month month, long day, long hour, long min, long sec) { return make(year, month, day, hour, min, sec, 0L, TimeZone.current); }
+  public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.current); }
+  public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns, TimeZone tz)
   {
-    return new DateTime(year.intValue(), month.ord, day.intValue(), hour.intValue(), min.intValue(), sec.intValue(), ns.longValue(), Integer.MAX_VALUE, tz);
+    return new DateTime((int)year, month.ord, (int)day, (int)hour, (int)min, (int)sec, ns, Integer.MAX_VALUE, tz);
   }
 
   private DateTime(int year, int month, int day,
@@ -135,8 +135,7 @@ public final class DateTime
 // Constructor - Ticks
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime makeTicks(Long ticks) { return makeTicks(ticks.longValue(), TimeZone.current); }
-  public static DateTime makeTicks(Long ticks, TimeZone tz) { return makeTicks(ticks.longValue(), tz); }
+  public static DateTime makeTicks(long ticks) { return makeTicks(ticks, TimeZone.current); }
   public static DateTime makeTicks(long ticks, TimeZone tz)
   {
     return new DateTime(ticks, tz);
@@ -243,7 +242,6 @@ public final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   public static DateTime fromStr(String s) { return fromStr(s, true); }
-  public static DateTime fromStr(String s, Boolean checked) { return fromStr(s, checked.booleanValue()); }
   public static DateTime fromStr(String s, boolean checked)
   {
     try
@@ -314,7 +312,7 @@ public final class DateTime
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public final Boolean _equals(Object obj)
+  public final boolean equals(Object obj)
   {
     if (obj instanceof DateTime)
     {
@@ -323,10 +321,10 @@ public final class DateTime
     return false;
   }
 
-  public Long compare(Object obj)
+  public long compare(Object obj)
   {
     long that = ((DateTime)obj).ticks;
-    if (ticks < that) return FanInt.LT; return ticks  == that ? FanInt.EQ : FanInt.GT;
+    if (ticks < that) return -1; return ticks  == that ? 0 : +1;
   }
 
   public int hashCode()
@@ -334,9 +332,9 @@ public final class DateTime
     return (int)(ticks ^ (ticks >>> 32));
   }
 
-  public Long hash()
+  public long hash()
   {
-    return Long.valueOf(ticks);
+    return ticks;
   }
 
   public Type type()
@@ -348,31 +346,30 @@ public final class DateTime
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  public final Long ticks() { return Long.valueOf(ticks); }
-  public final long getTicks() { return ticks; }
+  public final long ticks() { return ticks; }
 
-  public final Long year() { return Long.valueOf((fields & 0xff) + 1900); }
+  public final long year() { return (fields & 0xff) + 1900; }
   public final int getYear() { return (fields & 0xff) + 1900; }
 
   public final Month month() { return Month.array[(fields >> 8) & 0xf]; }
 
-  public final Long day() { return FanInt.pos[(fields >> 12) & 0x1f]; }
+  public final long day() { return (fields >> 12) & 0x1f; }
   public final int getDay() { return (fields >> 12) & 0x1f; }
 
-  public final Long hour() { return FanInt.pos[(fields >> 17) & 0x1f]; }
+  public final long hour() { return (fields >> 17) & 0x1f; }
   public final int getHour() { return (fields >> 17) & 0x1f; }
 
-  public final Long min() { return FanInt.pos[(fields >> 22) & 0x3f]; }
+  public final long min() { return (fields >> 22) & 0x3f; }
   public final int getMin() { return (fields >> 22) & 0x3f; }
 
-  public final Long sec() { return FanInt.pos[getSec()]; }
+  public final long sec() { return getSec(); }
   public final int getSec()
   {
     long rem = ticks >= 0 ? ticks : ticks - yearTicks[0];
     return (int)((rem % nsPerMin) / nsPerSec);
   }
 
-  public final Long nanoSec() { return Long.valueOf(getNanoSec()); }
+  public final long nanoSec() { return getNanoSec(); }
   public final int getNanoSec()
   {
     long rem = ticks >= 0 ? ticks : ticks - yearTicks[0];
@@ -383,12 +380,11 @@ public final class DateTime
 
   public final TimeZone timeZone() { return timeZone; }
 
-  public final Boolean dst() { return ((fields >> 31) & 0x1) != 0; }
-  public final boolean getDST()  { return ((fields >> 31) & 0x1) != 0; }
+  public final boolean dst() { return ((fields >> 31) & 0x1) != 0; }
 
-  public final String timeZoneAbbr() { return getDST() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
+  public final String timeZoneAbbr() { return dst() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
 
-  public final Long dayOfYear() { return Long.valueOf(dayOfYear(getYear(), month().ord, getDay())+1); }
+  public final long dayOfYear() { return dayOfYear(getYear(), month().ord, getDay())+1; }
 
 //////////////////////////////////////////////////////////////////////////
 // Locale
@@ -559,7 +555,7 @@ public final class DateTime
 
         case 'z':
           TimeZone.Rule rule = timeZone.rule(getYear());
-          boolean dst = getDST();
+          boolean dst = dst();
           switch (n)
           {
             case 1:
@@ -647,16 +643,16 @@ public final class DateTime
     return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
   }
 
-  public static Boolean isLeapYear(Long year) { return isLeapYear(year.intValue()); }
+  public static boolean isLeapYear(long year) { return isLeapYear((int)year); }
   public static boolean isLeapYear(int year)
   {
     if ((year & 3) != 0) return false;
     return (year % 100 != 0) || (year % 400 == 0);
   }
 
-  public static Long weekdayInMonth(Long year, Month mon, Weekday weekday, Long pos)
+  public static long weekdayInMonth(long year, Month mon, Weekday weekday, long pos)
   {
-    return Long.valueOf(weekdayInMonth(year.intValue(), mon.ord, weekday.ord, pos.intValue()));
+    return weekdayInMonth((int)year, mon.ord, weekday.ord, (int)pos);
   }
   public static int weekdayInMonth(int year, int mon, int weekday, int pos)
   {
@@ -750,7 +746,7 @@ public final class DateTime
 //////////////////////////////////////////////////////////////////////////
 
   public static DateTime fromHttpStr(String s) { return fromHttpStr(s, true); }
-  public static DateTime fromHttpStr(String s, Boolean checked)
+  public static DateTime fromHttpStr(String s, boolean checked)
   {
     for (int i=0; i<httpFormats.length; ++i)
     {

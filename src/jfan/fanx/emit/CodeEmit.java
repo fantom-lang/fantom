@@ -162,8 +162,8 @@ public class CodeEmit
     if (maxStack < 0 || maxLocals < 0)
     {
       System.out.println("maxStack, maxLocals not set " + method.emit.className + "." + method.sig);
-      if (maxStack < 16) maxStack = 16;
-      if (maxLocals < 16) maxLocals= 16;
+      if (maxStack < 0) maxStack = 16;
+      if (maxLocals < 0) maxLocals = 16;
     }
 
     // at this point the info buffer has some blank fields

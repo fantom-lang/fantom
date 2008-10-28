@@ -44,9 +44,18 @@ class FloatTest : Test
     verify(0.0f == 0.0f)
     verify(15.0f == 0xf.toFloat)
     verify(1_000.4f == 1000.4f)
+    verify(3f == (Float?)3f)
+    verify(x == 3f)
+    verifyFalse(x == 3.3f)
+    verifyFalse(-3f == (Float?)3f)
+
     verify(2.0f != 2.001f)
     verify(-2.0f != 0.0f)
     verify(-2.0f != 2.0f)
+    verify(-2.0f != x)
+    verify(x != -2.0f)
+    verifyFalse(x != 3.0f)
+    verifyFalse((Float?)3.0f != x)
     verify(x != true)
     verify(x != null)
     verify(null != x)
@@ -56,10 +65,15 @@ class FloatTest : Test
     verify(Float.negInf != 0.0f)
     verify(Float.posInf != Float.negInf)
     verify(Float.negInf == Float.negInf)
+    verifyFalse(Float.nan == Float.nan)
+    verifyFalse(Float.nan == 0f)
+    verifyFalse(0f == Float.nan)
+
     verify(Float.nan != 0.0f)
+    verify(4f != Float.nan)
     verify(Float.nan != Float.posInf)
     verify(Float.nan != Float.negInf)
-    verify(Float.nan == Float.nan)
+    verify(Float.nan != Float.nan)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,42 +82,68 @@ class FloatTest : Test
 
   Void testCompare()
   {
+    Float? x := 5f
+
     verify(2.0f < 3.0f)
+    verify(2.0f < x)
+    verifyFalse(5.0f < x)
+    verifyFalse(x < 2f)
+    verifyFalse(x < 5f)
     verify(null < 3.0f)
-    verify(0.1f < Float.nan)
+    verifyFalse(0.1f < Float.nan)
+    verifyFalse(Float.nan < 0.1f)
     verifyFalse(3.0f < 3.0f)
     verifyFalse(6.0f < 4.0f)
     verifyFalse(3.0f < null)
 
     verify(3.0f <= 3.0f)
     verify(3.0f <= 3.0f)
+    verify(x <= 5f)
+    verify(x <= 6f)
+    verify(5f <= x)
+    verify(3f <= x)
     verify(null <= 3f)
-    verify(0.1f <= Float.nan)
-    verify(Float.nan <= Float.nan)
+    verifyFalse(0.1f <= Float.nan)
+    verifyFalse(Float.nan <= 0.1f)
+    verifyFalse(Float.nan <= Float.nan)
     verify(Float.posInf <= Float.posInf)
     verifyFalse(6f <= 5f)
     verifyFalse(5f <= null)
 
     verify(-2f > -3f)
     verify(0f > -2f)
+    verify(6f > x)
+    verifyFalse(5f > x)
+    verify(x < 77f)
+    verifyFalse(x < 5f)
     verify(-2f > null)
+    verifyFalse(8f > Float.nan)
+    verifyFalse(Float.nan > 8f)
     verify(Float.posInf > 1e17f)
     verify(Float.posInf > Float.negInf)
-    verify(Float.nan > Float.posInf)
+    verifyFalse(Float.nan > Float.posInf)
     verifyFalse(null > 77f)
     verifyFalse(3f > 4f)
-    verifyFalse(0f >= Float.nan)
 
     verify(-3f >= -4f)
     verify(-3f >= -3f)
+    verify(x >= -4f)
+    verify(x >= 5f)
+    verify(5f <= x)
+    verifyFalse(6f <= x)
     verify(-3f >= null)
+    verifyFalse(8f >= Float.nan)
+    verifyFalse(Float.nan >= 8f)
     verifyFalse(null >= 4f)
     verifyFalse(-3f >= -2f)
-    verifyFalse(0f >= Float.nan)
 
     verifyEq(3f <=> 4f, -1)
     verifyEq(3f <=> 3f, 0)
     verifyEq(4f <=> 3f, 1)
+    verifyEq(5f <=> x, 0)
+    verifyEq(6f <=> x, 1)
+    verifyEq(x <=> 7f, -1)
+    verifyEq(x <=> 5f, 0)
 
     verifyEq(Float.posInf <=> 99f, 1)
     verifyEq(Float.posInf <=> Float.posInf, 0)
@@ -111,14 +151,16 @@ class FloatTest : Test
     verifyEq(Float.negInf <=> 99f, -1)
     verifyEq(Float.negInf <=> 0f, -1)
 
-    verifyEq(Float.nan <=> 0f, 1)
+    verifyEq(Float.nan <=> 0f, -1)
+    verifyEq(Float.nan.compare(0f), -1)
     verifyEq(Float.nan <=> Float.nan, 0)
-    verifyEq(9e10f <=> Float.nan, -1)
+    verifyEq(9e10f <=> Float.nan, 1)
     verifyEq(null <=> Float.nan, -1)
     verifyEq(Float.nan <=> null, 1)
-    verifyEq(Float.posInf <=> Float.nan, -1)
-    verifyEq(Float.negInf <=> Float.nan, -1)
-    verifyEq(Float.nan <=> -9999f, 1)
+    verifyEq(Float.posInf <=> Float.nan, 1)
+    verifyEq(Float.posInf.compare(Float.nan), 1)
+    verifyEq(Float.negInf <=> Float.nan, 1)
+    verifyEq(Float.nan <=> -9999f, -1)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -129,6 +171,7 @@ class FloatTest : Test
   {
     x := 5f;   verifyEq(-x, -5f)
     x = -44f; verifyEq(-x, 44f)
+    Float? y
 
     verifyEq(3f*2f,   6f)
     verifyEq(3f*-2f, -6f)
@@ -143,23 +186,23 @@ class FloatTest : Test
     verifyEq(21f%-6f, 3f)
     verifyEq(16f%5f, 1f)
     verifyEq(12f%5f, 2f)
-    x = 19f % 10f; x %= 5f; verifyEq(x, 4f)
+    y = 19f % 10f; y %= 5f; verifyEq(y, 4f)
 
     verifyEq(2f + 3f,  5f)
     verifyEq(2f + -1f, 1f)
-    x= 4f + 3f; x+=5f; verifyEq(x, 12f)
+    fx= 4f + 3f; fx+=5f; verifyEq(fx, 12f)
 
     verifyEq(7f - 3f,  4f)
     verifyEq(2f - 3f, -1f)
-    x=5f - 2f; x-=-3.0f; verifyEq(x, 6f)
+    fy=5f - 2f; fy-=-3.0f; verifyEq(fy, 6f)
   }
-
-  // TODO - need to fix when do const folding optimization
-  // TODO - need to check field rvalues
 
 //////////////////////////////////////////////////////////////////////////
 // Increment
 //////////////////////////////////////////////////////////////////////////
+
+  Float fx
+  Float? fy
 
   Void testIncrement()
   {
@@ -168,6 +211,24 @@ class FloatTest : Test
     verifyEq(x++, 5.0f); verifyEq(x, 6.0f)
     verifyEq(--x, 5.0f); verifyEq(x, 5.0f)
     verifyEq(x--, 5.0f); verifyEq(x, 4.0f)
+
+    Float? y := 4.0f
+    verifyEq(++y, 5.0f); verifyEq(y, 5.0f)
+    verifyEq(y++, 5.0f); verifyEq(y, 6.0f)
+    verifyEq(--y, 5.0f); verifyEq(y, 5.0f)
+    verifyEq(y--, 5.0f); verifyEq(y, 4.0f)
+
+    fx = 4f
+    verifyEq(++fx, 5.0f); verifyEq(fx, 5.0f)
+    verifyEq(fx++, 5.0f); verifyEq(fx, 6.0f)
+    verifyEq(--fx, 5.0f); verifyEq(fx, 5.0f)
+    verifyEq(fx--, 5.0f); verifyEq(fx, 4.0f)
+
+    fy = 4.0f
+    verifyEq(++fy, 5.0f); verifyEq(fy, 5.0f)
+    verifyEq(fy++, 5.0f); verifyEq(fy, 6.0f)
+    verifyEq(--fy, 5.0f); verifyEq(fy, 5.0f)
+    verifyEq(fy--, 5.0f); verifyEq(fy, 4.0f)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -182,7 +243,7 @@ class FloatTest : Test
     verifyEq(((Num)3.1f).toInt, 3)
     verifyEq(3.9f.toInt, 3)
     verifyEq(4.0f.toInt, 4)
-    verify(73939.9555f.toFloat === 73939.9555f)
+    verify(73939.9555f.toFloat == 73939.9555f)
     verifyEq(-5.66e12f.toDecimal <=> -5.66e12d, 0)
     verifyEq(Float.posInf.toInt, 0x7fff_ffff_ffff_ffff)
     verifyEq(Float.negInf.toInt, 0x8000_0000_0000_0000)

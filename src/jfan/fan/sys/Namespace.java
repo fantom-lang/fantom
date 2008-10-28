@@ -52,7 +52,7 @@ public abstract class Namespace
   public final Uri uri() { return uri; }
 
   public Object get(Uri uri) { return get(uri, true); }
-  public abstract Object get(Uri uri, Boolean checked);
+  public abstract Object get(Uri uri, boolean checked);
 
   public Uri create(Uri uri, Object obj)
   {

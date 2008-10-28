@@ -113,12 +113,12 @@ public class IpAddressPeer
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Long hash(IpAddress fan)
+  public long hash(IpAddress fan)
   {
-    return Long.valueOf(java.hashCode());
+    return java.hashCode();
   }
 
-  public Boolean _equals(IpAddress fan, Object obj)
+  public boolean equals(IpAddress fan, Object obj)
   {
     if (obj instanceof IpAddress)
       return this.java.equals(((IpAddress)obj).peer.java);
@@ -135,12 +135,12 @@ public class IpAddressPeer
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public Boolean isIPv4(IpAddress fan)
+  public boolean isIPv4(IpAddress fan)
   {
     return java instanceof Inet4Address;
   }
 
-  public Boolean isIPv6(IpAddress fan)
+  public boolean isIPv6(IpAddress fan)
   {
     return java instanceof Inet6Address;
   }

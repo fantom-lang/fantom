@@ -41,9 +41,9 @@ public class StrInStream
     int b = r(); return (b < 0) ? null : FanInt.pos[b & 0xFF];
   }
 
-  public Long readBuf(Buf buf, Long n)
+  public Long readBuf(Buf buf, long n)
   {
-    int nval = n.intValue();
+    int nval = (int)n;
     for (int i=0; i<nval; ++i)
     {
       int c = rChar();
@@ -53,7 +53,7 @@ public class StrInStream
     return n;
   }
 
-  public InStream unread(Long c)
+  public InStream unread(long c)
   {
     return unreadChar(c);
   }
@@ -74,14 +74,14 @@ public class StrInStream
     return Long.valueOf(str.charAt(pos++));
   }
 
-  public InStream unreadChar(Long c)
+  public InStream unreadChar(long c)
   {
     if (pushback == null) pushback = new List(Sys.IntType, 8);
     pushback.push(c);
     return this;
   }
 
-  public Boolean close()
+  public boolean close()
   {
     return true;
   }

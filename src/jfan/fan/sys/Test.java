@@ -57,15 +57,15 @@ public class Test
 // Verify
 //////////////////////////////////////////////////////////////////////////
 
-  public void verify(Boolean cond) { verify(cond, null); }
-  public void verify(Boolean cond, String msg)
+  public void verify(boolean cond) { verify(cond, null); }
+  public void verify(boolean cond, String msg)
   {
     if (!cond) fail(msg);
     verifyCount++;
   }
 
-  public void verifyFalse(Boolean cond) { verifyFalse(cond, null); }
-  public void verifyFalse(Boolean cond, String msg)
+  public void verifyFalse(boolean cond) { verifyFalse(cond, null); }
+  public void verifyFalse(boolean cond, String msg)
   {
     if (cond) fail(msg);
     verifyCount++;
@@ -81,7 +81,7 @@ public class Test
     }
     if (expected != null && actual != null)
     {
-      if (hash(expected).longValue() != hash(actual).longValue())
+      if (hash(expected) != hash(actual))
       {
         fail("Equal but different hash codes: " +
           expected + " (0x" + FanInt.toHex(hash(expected)) + ") ?= " +
@@ -105,7 +105,7 @@ public class Test
   public void verifySame(Object expected, Object actual) { verifySame(expected, actual, null); }
   public void verifySame(Object expected, Object actual, String msg)
   {
-    if (!OpUtil.compareSame(expected, actual))
+    if (expected != actual)
     {
       if (msg == null) msg = s(expected) + " !== " + s(actual);
       fail(msg);
@@ -116,7 +116,7 @@ public class Test
   public void verifyNotSame(Object expected, Object actual) { verifyNotSame(expected, actual, null); }
   public void verifyNotSame(Object expected, Object actual, String msg)
   {
-    if (OpUtil.compareSame(expected, actual))
+    if (expected == actual)
     {
       if (msg == null) msg = s(expected) + " === " + s(actual);
       fail(msg);

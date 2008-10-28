@@ -54,11 +54,10 @@ public class ObjEncoder
 
     if (obj.getClass().getName().charAt(0) == 'j')
     {
-      if (obj == Boolean.TRUE)   { w("true"); return; }
-      if (obj == Boolean.FALSE)  { w("false"); return; }
-      if (obj instanceof String) { wStrLiteral(obj.toString(), '"'); return; }
-      if (obj instanceof Long)   { w(obj.toString()); return; }
-      if (obj instanceof Double) { FanFloat.encode((Double)obj, this); return; }
+      if (obj instanceof Boolean) { w(obj.toString()); return; }
+      if (obj instanceof String)  { wStrLiteral(obj.toString(), '"'); return; }
+      if (obj instanceof Long)    { w(obj.toString()); return; }
+      if (obj instanceof Double)  { FanFloat.encode((Double)obj, this); return; }
       if (obj instanceof BigDecimal) { FanDecimal.encode((BigDecimal)obj, this); return; }
     }
 
@@ -124,7 +123,7 @@ public class ObjEncoder
       if (defObj != null)
       {
         Object defVal = f.get(defObj);
-        if (OpUtil.compareEQz(val, defVal)) continue;
+        if (OpUtil.compareEQ(val, defVal)) continue;
       }
 
       // if first then open braces
