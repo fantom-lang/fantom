@@ -46,7 +46,7 @@ namespace Fanx.Emit
       this.isCtor     = (method.m_flags & FConst.Ctor) != 0;
       this.isNative   = (method.m_flags & FConst.Native) != 0;
       this.isHide     = false; // only used for make/make_
-      this.ret        = emit.nname(method.m_inheritedRet);
+      this.ret        = emit.pod.typeRef(method.m_inheritedRet).nname();
       this.isVoid     = ret == "Fan.Sys.Void";
       this.selfName   = emit.selfName;
     }
@@ -411,6 +411,8 @@ namespace Fanx.Emit
       {
         FCodeEmit ce = new FCodeEmit(emit, method.m_vars[i].def, code);
         ce.paramCount = numArgs;
+        ce.vars = method.m_vars;
+        ce.isStatic = isStatic;
 // TODO - is this correct?
 ce.emit(false);  // don't emit debug scope for wrappers
         maxStack = System.Math.Max(maxStack, 2+i+8);
