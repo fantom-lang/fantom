@@ -278,12 +278,11 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void loadType()
     {
-      loadType(u2());
+      loadType(pod.typeRef(u2()));
     }
 
-    private void loadType(int typeRefIndex)
+    private void loadType(FTypeRef tref)
     {
-      FTypeRef tref = pod.typeRef(typeRefIndex);
       string podName  = tref.podName;
       string typeName = tref.typeName;
 
@@ -450,13 +449,13 @@ case FConst.Cast: cast(); break;  // TODO
 
       int index = u2();
       int[] m = pod.methodRef(index).val;
-      string parent = pod.nname(m[0]);
+      string parent = pod.typeRef(m[0]).nname();
       string name = pod.name(m[1]) + "_";
 
       string[] pars = new string[m.Length-3+1];
       pars[0] = parent;
       for (int i=0; i<pars.Length-1; i++)
-        pars[i+1] = pod.nname(m[i+3]);
+        pars[i+1] = pod.typeRef(m[i+3]).nname();
 
       Method method = emitter.findMethod(parent, name, pars, "System.Void");
       code.MethInst(MethodOp.call, method);
@@ -865,13 +864,13 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void @is()
     {
-      int typeRef = u2();
-      PERWAPI.Type type = emitter.findType(pod.nname(typeRef));
+      FTypeRef typeRef = pod.typeRef(u2());
+      PERWAPI.Type type = emitter.findType(typeRef.nname());
 
       // if a generic instance, we have to use a method call
       // because Fan types don't map to Java classes exactly;
       // otherwise we can use straight bytecode
-      if (pod.typeRef(typeRef).isGenericInstance())
+      if (typeRef.isGenericInstance())
       {
         if (parent.IsViaType == null)
           parent.IsViaType = emitter.findMethod("Fanx.Util.OpUtil", "is",
@@ -890,13 +889,13 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void @as()
     {
-      int typeRef = u2();
-      PERWAPI.Type type = emitter.findType(pod.nname(typeRef));
+      FTypeRef typeRef = pod.typeRef(u2());
+      PERWAPI.Type type = emitter.findType(typeRef.nname());
 
       // if a generic instance, we have to use a method call
       // because Fan types don't map to Java classes exactly;
       // otherwise we can use straight bytecode
-      if (pod.typeRef(typeRef).isGenericInstance())
+      if (typeRef.isGenericInstance())
       {
         if (parent.AsViaType == null)
           parent.AsViaType = emitter.findMethod("Fanx.Util.OpUtil", "as",
@@ -907,15 +906,6 @@ case FConst.Cast: cast(); break;  // TODO
       }
       else
       {
-        //code.op(DUP);
-        //code.op2(INSTANCEOF, cls);
-        //int is = code.branch(IFNE);
-        //code.op(POP);
-        //code.op(ACONST_NULL);
-        //int end = code.branch(GOTO);
-        //code.mark(is);
-        //code.op2(CHECKCAST, cls);
-        //code.mark(end);
         code.TypeInst(TypeOp.isinst, type);
       }
     }
@@ -940,7 +930,8 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void cast()
     {
-      code.TypeInst(TypeOp.castclass, emitter.findType(pod.nname(u2())));
+      PERWAPI.Type type = emitter.findType(pod.typeRef(u2()).nname());
+      code.TypeInst(TypeOp.castclass, type);
     }
 
     private void coerce()
@@ -989,9 +980,9 @@ case FConst.Cast: cast(); break;  // TODO
       for (int i=0; i<tryJump.Length; i++)
         if (startPos == tryJump[i])
         {
-          string ftype = pod.nname(tryErr[i]);
-          netErr = Fan.Sys.Err.fanToNet(ftype);
-          if (ftype != "Fan.Sys.Err") exType = ftype + "/Val";
+          FTypeRef typeRef = pod.typeRef(tryErr[i]);
+          netErr = Fan.Sys.Err.fanToNet(typeRef.nname());
+          if (!typeRef.isErr()) exType = typeRef.nname() + "/Val";
           break;
         }
 
