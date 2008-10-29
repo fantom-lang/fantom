@@ -408,5 +408,5 @@ internal const class ExecParams
 {
   const Str frameId
   const Str[] command
-  const File dir
+  const File? dir
 }
