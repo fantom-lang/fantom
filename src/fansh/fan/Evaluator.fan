@@ -38,14 +38,14 @@ class Evaluator
     // local variables to scope map
     s := StrBuf.make.add("class FanshEval {\n")
     s.add("new make(Str:Obj s) { _scope = s }\n")
-    s.add("Str:Obj _scope\n")
-    s.add("Obj _eval() {\n")
+    s.add("Str:Obj? _scope\n")
+    s.add("Obj? _eval() {\n")
     scopeMap := Str:Obj[:]
     if (shell != null)
     {
       shell.scope.each |Var v|
       {
-        sig := v.of.signature
+        sig := v.of.toNullable.signature
         s.add("  $v.name := ($sig)_scope[\"$v.name\"];\n")
         scopeMap[v.name] = v.val
       }
