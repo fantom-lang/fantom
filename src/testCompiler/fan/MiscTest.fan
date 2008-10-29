@@ -787,7 +787,7 @@ class MiscTest : CompilerTest
         const Int[] c := [2,3]
         const Int[]? d := wrap(null)
         const Int[] e := wrap([4])
-        const Int[] f
+        const Int[]? f
         const Int[] g
 
         const [Int:Str]? h := null
@@ -797,7 +797,7 @@ class MiscTest : CompilerTest
 
         const Type? l := null
         const Type m := Str#
-        const Type n
+        const Type? n
         const Type o
 
         new make()

@@ -131,7 +131,7 @@ class InitEnum : CompilerStep
     m.flags = FConst.Static | FConst.Public
     m.params.add(ParamDef.make(loc, ns.strType, "name"))
     m.params.add(ParamDef.make(loc, ns.boolType, "checked", LiteralExpr.make(loc, ExprId.trueLiteral, ns.boolType, true)))
-    m.ret = TypeRef.make(loc, curType)
+    m.ret = TypeRef.make(loc, curType.toNullable)
     m.code = Block.make(loc)
     m.doc  = ["Return the $curType.name instance for the specified name.  If not a",
               "valid name and checked is false return null, otherwise throw ParseErr."]
@@ -142,7 +142,7 @@ class InitEnum : CompilerStep
     doFromStr.args.add(LiteralExpr.make(loc, ExprId.typeLiteral, ns.typeType, curType))
     doFromStr.args.add(UnknownVarExpr.make(loc, null, "name"))
     doFromStr.args.add(UnknownVarExpr.make(loc, null, "checked"))
-    cast := TypeCheckExpr(loc, ExprId.coerce, doFromStr, curType)
+    cast := TypeCheckExpr(loc, ExprId.coerce, doFromStr, curType.toNullable)
     m.code.stmts.add(ReturnStmt.make(loc, cast))
   }
 

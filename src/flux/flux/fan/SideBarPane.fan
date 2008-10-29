@@ -33,7 +33,7 @@ internal class SideBarPane : ContentPane
     }
   }
 
-  SideBar sideBar(Type t, Bool make)
+  SideBar? sideBar(Type t, Bool make)
   {
     sb := sideBars.find |SideBar x->Bool| { return x.type === t }
     if (sb == null && make)

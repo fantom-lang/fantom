@@ -476,7 +476,7 @@ internal class StrMatch
 ** They are paired with BlockCloses.
 internal class BlockOpen : Block
 {
-  new make(Parser p, Str n, Obj[] s) { parser = p; name = n; stylingOverride = s }
+  new make(Parser p, Str? n, Obj[] s) { parser = p; name = n; stylingOverride = s }
 
   override Line? closes(Line line, Block open) { throw Err("illegal state") }
 
@@ -484,7 +484,7 @@ internal class BlockOpen : Block
 
   override Obj[]? stylingOverride
   readonly Parser parser
-  const Str name
+  const Str? name
 }
 
 **************************************************************************

@@ -110,7 +110,7 @@ final class SocketOptions
   **
   Duration? linger
   {
-    get { return (Duration)wrap |->Obj| { return socket->getLinger} }
+    get { return (Duration?)wrap |->Obj?| { return socket->getLinger} }
     set { wrap |,| { socket->setLinger(val) } }
   }
 
@@ -121,7 +121,7 @@ final class SocketOptions
   **
   Duration? receiveTimeout
   {
-    get { return (Duration)wrap |->Obj| { return socket->getReceiveTimeout} }
+    get { return (Duration?)wrap |->Obj?| { return socket->getReceiveTimeout } }
     set { wrap |,| { socket->setReceiveTimeout(val) } }
   }
 
@@ -156,7 +156,7 @@ final class SocketOptions
 // Wrap
 //////////////////////////////////////////////////////////////////////////
 
-  internal Obj wrap(|->Obj| m)
+  internal Obj? wrap(|->Obj?| m)
   {
     try
     {

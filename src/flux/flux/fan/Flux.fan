@@ -30,7 +30,7 @@ class Flux
   ** By convention flux option classes end in "Options".
   ** If the options file is not found, then return 't?.make'.
   **
-  static Obj loadOptions(Str name, Type? t)
+  static Obj? loadOptions(Str name, Type? t)
   {
     [Str:CachedOptions]? options := Thread.locals["flux.options"]
     if (options == null) Thread.locals["flux.options"] = options = Str:CachedOptions[:]
@@ -98,10 +98,10 @@ class Flux
 
 internal class CachedOptions
 {
-  new make(File f, Obj v) { file = f; modified = f.modified; value = v }
+  new make(File f, Obj? v) { file = f; modified = f.modified; value = v }
   File file
-  DateTime modified
-  Obj value
+  DateTime? modified
+  Obj? value
 }
 
 **************************************************************************

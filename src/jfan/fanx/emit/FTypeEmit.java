@@ -390,6 +390,7 @@ public abstract class FTypeEmit
   int ErrMake;
   int ErrVal;
   int TypeToNullable;
+  int NullErrMakeCoerce;
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

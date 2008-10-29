@@ -239,7 +239,7 @@ class LogTest : Test
   Void verifyLog(LogLevel? level, Str? msg := null, Err? err := null)
   {
     log := log()
-    LogRecord rec := Thread.locals["testSys.logRecord"]
+    LogRecord? rec := Thread.locals["testSys.logRecord"]
     if (level == null)
     {
       verifyEq(level, null)

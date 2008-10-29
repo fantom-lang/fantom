@@ -133,7 +133,7 @@ public class ObjEncoder
       wIndent().w(f.name()).w('=');
 
       // field value
-      curFieldType = f.of();
+      curFieldType = f.of().toNonNullable();
       writeObj(val);
       curFieldType = null;
 

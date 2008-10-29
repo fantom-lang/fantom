@@ -765,7 +765,7 @@ class CheckErrors : CompilerStep
     }
   }
 
-  private Void checkNoNullSafes(Expr x)
+  private Void checkNoNullSafes(Expr? x)
   {
     while (x is NameExpr)
     {
@@ -812,7 +812,7 @@ class CheckErrors : CompilerStep
   }
 
   ** Check if field is assignable, return new rhs.
-  private Expr checkAssignField(FieldExpr lhs, Expr rhs)
+  private Expr? checkAssignField(FieldExpr lhs, Expr? rhs)
   {
     field := ((FieldExpr)lhs).field
 
@@ -1270,7 +1270,7 @@ class CheckErrors : CompilerStep
   private Expr box(Expr expr)
   {
     if (expr.ctype.isValue)
-      return TypeCheckExpr.coerce(expr, ns.objType)
+      return TypeCheckExpr.coerce(expr, ns.objType.toNullable)
     else
       return expr
   }

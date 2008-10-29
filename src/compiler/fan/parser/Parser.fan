@@ -352,7 +352,7 @@ public class Parser : CompilerSupport
   ** Slot definition:
   **   <slotDef> :=  <fieldDef> | <methodDef> | <ctorDef>
   **
-  private SlotDef slotDef(TypeDef parent, Str[] doc)
+  private SlotDef slotDef(TypeDef parent, Str[]? doc)
   {
     // check for static {} class initialization
     if (curt === Token.staticKeyword && peekt === Token.lbrace)
@@ -416,15 +416,15 @@ public class Parser : CompilerSupport
   **   <fieldGetter>  :=  "get" (<eos> | <block>)
   **   <fieldSetter>  :=  <protection> "set" (<eos> | <block>)
   **
-  private FieldDef fieldDef(Location loc, TypeDef parent, Str[] doc, Str:FacetDef facets, Int flags, TypeRef? type, Str name)
+  private FieldDef fieldDef(Location loc, TypeDef parent, Str[]? doc, [Str:FacetDef]? facets, Int flags, TypeRef? type, Str name)
   {
     // define field itself
     field := FieldDef.make(loc, parent)
-    field.doc       = doc
-    field.facets    = facets
-    field.flags     = flags & ~ParserFlagsMask
-    field.fieldType = type
-    field.name      = name
+    field.doc    = doc
+    field.facets = facets
+    field.flags  = flags & ~ParserFlagsMask
+    field.name   = name
+    if (type != null) field.fieldType = type
 
     // const always has storage, otherwise assume no storage
     // until proved otherwise in ResolveExpr step or we
@@ -590,7 +590,7 @@ public class Parser : CompilerSupport
   **   <param>          :=  <type> <id> [":=" <expr>]
   **   <methodBody>     :=  <eos> | ( "{" <stmts> "}" )
   **
-  private MethodDef methodDef(Location loc, TypeDef parent, Str[] doc, Str:FacetDef facets, Int flags, TypeRef ret, Str name)
+  private MethodDef methodDef(Location loc, TypeDef parent, Str[]? doc, [Str:FacetDef]? facets, Int flags, TypeRef ret, Str name)
   {
     method := MethodDef.make(loc, parent)
     method.doc    = doc
@@ -1696,7 +1696,7 @@ public class Parser : CompilerSupport
   ** Call expression:
   **   <call>  :=  <id> ["(" <args> ")"] [<closure>]
   **
-  private CallExpr callExpr(Expr target)
+  private CallExpr callExpr(Expr? target)
   {
     call := CallExpr.make(cur)
     call.target  = target
@@ -1811,7 +1811,7 @@ public class Parser : CompilerSupport
     if (explicitType != null)
       explicitType = explicitType.toListOf
 
-    list := ListLiteralExpr.make(loc, (ListType)explicitType)
+    list := ListLiteralExpr.make(loc, (ListType?)explicitType)
 
     // if first is null, must be on lbracket
     if (first == null)
@@ -1855,7 +1855,7 @@ public class Parser : CompilerSupport
       explicitType = null
     }
 
-    map := MapLiteralExpr.make(loc, (MapType)explicitType)
+    map := MapLiteralExpr.make(loc, (MapType?)explicitType)
 
     // if first is null, must be on lbracket
     if (first == null)
@@ -2070,7 +2070,7 @@ public class Parser : CompilerSupport
     if (curt === Token.doubleColon)
     {
       consume
-      return ResolveImports.resolveQualified(this, id, consumeId, loc)
+      return ResolveImports.resolveQualified(this, id, consumeId, loc) ?: ns.voidType
     }
 
     // unqualified name, lookup in imported types
@@ -2154,7 +2154,7 @@ public class Parser : CompilerSupport
   **
   ** Parse fandoc or retur null
   **
-  private Str[] doc()
+  private Str[]? doc()
   {
     Str[]? doc := null
     while (curt === Token.docComment)

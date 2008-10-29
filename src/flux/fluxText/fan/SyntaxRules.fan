@@ -49,7 +49,7 @@ const class SyntaxRules
   {
     // try file extension first
     SyntaxRules? rules := null
-    extToRulesName := options.extToRules[f?.ext?.lower]
+    extToRulesName := options.extToRules[f?.ext?.lower ?: "not.found"]
     if (extToRulesName != null)
     {
       rules = Flux.loadOptions("syntax/syntax-$extToRulesName", null)

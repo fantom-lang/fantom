@@ -250,7 +250,7 @@ abstract class Expr : Node
 //////////////////////////////////////////////////////////////////////////
 
   readonly ExprId id      // expression type identifier
-  CType ctype             // type expression resolves to
+  CType? ctype            // type expression resolves to
   Bool leave := true { protected set } // leave this expression on the stack
 }
 
@@ -1362,7 +1362,7 @@ class WithBaseExpr : Expr
   }
 
   WithBlockExpr withBlock
-  WithSubExpr withSub
+  WithSubExpr? withSub
 }
 
 **************************************************************************

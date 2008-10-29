@@ -46,7 +46,7 @@ class EnumDef : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Str[] doc
+  Str[]? doc
   Int ordinal
   Str name
   Expr[] ctorArgs

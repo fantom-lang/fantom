@@ -1004,6 +1004,20 @@ public class FCodeEmit
       throw new IllegalStateException("Coerce " + from  + " => " + to);
     }
 
+    // check nullable => non-nullable
+    /*
+    if (from.isNullable() && !to.isNullable())
+    {
+      code.op(DUP);
+      int nonnull = code.branch(IFNONNULL);
+      if (parent.NullErrMakeCoerce == 0)
+        parent.NullErrMakeCoerce = emit.method("fan/sys/NullErr.makeCoerce()Lfan/sys/Err$Val;");
+      code.op2(INVOKESTATIC, parent.NullErrMakeCoerce);
+      code.op(ATHROW);
+      code.mark(nonnull);
+    }
+    */
+
     // don't bother casting to obj
     if (to.isObj()) return;
 

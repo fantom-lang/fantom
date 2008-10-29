@@ -76,10 +76,10 @@ class Email
         (cc == null || cc.isEmpty) &&
         (bcc == null || bcc.isEmpty)) throw Err("no recipients")
     // TODO shouldn't need this once we have fail-safe nullable checking
-    if ((Obj?)messageId == null) throw Err("messageId is null")
-    if ((Obj?)from == null) throw Err("from is null")
-    if ((Obj?)subject == null) throw Err("subject is null")
-    if ((Obj?)body == null) throw Err("body is null")
+    if ((Obj?)messageId == null) throw NullErr("messageId is null")
+    if ((Obj?)from == null) throw NullErr("from is null")
+    if ((Obj?)subject == null) throw NullErr("subject is null")
+    if ((Obj?)body == null) throw NullErr("body is null")
     body.validate
   }
 
