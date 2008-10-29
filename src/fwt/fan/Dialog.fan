@@ -82,7 +82,7 @@ class Dialog : Window
   **
   ** Open an information message box.  See `openMsgBox`.
   **
-  static Obj openInfo(Window? parent, Str msg, Obj? details := null,
+  static Obj? openInfo(Window? parent, Str msg, Obj? details := null,
                       Command[] commands := [ok])
   {
     return openMsgBox(Dialog#.pod, "info", parent, msg, details, commands)
@@ -91,7 +91,7 @@ class Dialog : Window
   **
   ** Open a warning message box.  See `openMsgBox`.
   **
-  static Obj openWarn(Window? parent, Str msg, Obj? details := null,
+  static Obj? openWarn(Window? parent, Str msg, Obj? details := null,
                       Command[] commands := [ok])
   {
     return openMsgBox(Dialog#.pod, "warn", parent, msg, details, commands)
@@ -100,7 +100,7 @@ class Dialog : Window
   **
   ** Open an error message box.  See `openMsgBox`.
   **
-  static Obj openErr(Window? parent, Str msg, Obj? details := null,
+  static Obj? openErr(Window? parent, Str msg, Obj? details := null,
                      Command[] commands := [ok])
   {
     return openMsgBox(Dialog#.pod, "err", parent, msg, details, commands)
@@ -109,7 +109,7 @@ class Dialog : Window
   **
   ** Open a question message box.  See `openMsgBox`.
   **
-  static Obj openQuestion(Window? parent, Str msg, Obj? details := null,
+  static Obj? openQuestion(Window? parent, Str msg, Obj? details := null,
                           Command[] commands := [ok])
   {
     return openMsgBox(Dialog#.pod, "question", parent, msg, details, commands)
@@ -127,8 +127,8 @@ class Dialog : Window
   ** The command invoked to close message box is returned.  If the
   ** dialog is canceled using the window manager then null is returned.
   **
-  static Obj openMsgBox(Pod pod, Str keyBase, Window? parent, Obj body,
-                        Obj? details := null, Command[] commands := [ok])
+  static Obj? openMsgBox(Pod pod, Str keyBase, Window? parent, Obj body,
+                         Obj? details := null, Command[] commands := [ok])
   {
     // get localized props
     title := pod.loc("${keyBase}.name")

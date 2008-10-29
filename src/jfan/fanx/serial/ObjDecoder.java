@@ -419,7 +419,7 @@ public class ObjDecoder
     if (t != null) return t;
     if (curField != null)
     {
-      Type ft = curField.of();
+      Type ft = curField.of().toNonNullable();
       if (ft instanceof ListType) return ((ListType)ft).v;
     }
     if (infer) return null;
@@ -443,7 +443,7 @@ public class ObjDecoder
 
     if (curField != null)
     {
-      Type ft = curField.of();
+      Type ft = curField.of().toNonNullable();
       if (ft instanceof MapType) return (MapType)ft;
     }
 

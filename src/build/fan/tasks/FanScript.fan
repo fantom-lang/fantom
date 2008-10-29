@@ -18,7 +18,7 @@ class FanScript : Task
     : super(script)
   {
     this.file = file
-    this.args = args
+    this.args = args ?: [,]
   }
 
   Pod compile()

@@ -346,12 +346,12 @@ mixin CType
   **
   ** Lookup a field by name.
   **
-  CField? field(Str name) { return (CField)slot(name) }
+  CField? field(Str name) { return (CField?)slot(name) }
 
   **
   ** Lookup a method by name.
   **
-  CMethod? method(Str name) { return (CMethod)slot(name) }
+  CMethod? method(Str name) { return (CMethod?)slot(name) }
 
   **
   ** List of the all defined fields (including inherited fields).

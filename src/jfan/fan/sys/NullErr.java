@@ -35,6 +35,8 @@ public class NullErr
 // Java Constructors
 //////////////////////////////////////////////////////////////////////////
 
+  public static Err.Val makeCoerce() { return make("Coerce to non-null", (Err)null).val; }
+
   public NullErr(Err.Val val) { super(val); }
   public NullErr() { super(new NullErr.Val()); }
   public NullErr(Throwable actual) { super(new NullErr.Val(), actual); }

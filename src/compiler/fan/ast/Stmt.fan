@@ -48,7 +48,7 @@ abstract class Stmt : Node
   {
   }
 
-  static Expr walkExpr(Visitor v, VisitDepth depth, Expr? expr)
+  static Expr? walkExpr(Visitor v, VisitDepth depth, Expr? expr)
   {
     if (depth === VisitDepth.expr && expr != null)
       return expr.walk(v)

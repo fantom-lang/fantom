@@ -743,13 +743,13 @@ class ListTest : Test
   {
     x := ["a", "b", "c", "d"]
     n := 0
-    verifyEq(x.eachBreak |Str s->Str| { return s == "b" ? "B" : null }, "B")
-    verifyEq(x.eachBreak |Str s->Str| { return s == "x" ? "X" : null }, null)
-    verifyEq(x.eachBreak |Str s, Int i->Str| { return i == 2 ? s : null }, "c")
+    verifyEq(x.eachBreak |Str s->Str?| { return s == "b" ? "B" : null }, "B")
+    verifyEq(x.eachBreak |Str s->Str?| { return s == "x" ? "X" : null }, null)
+    verifyEq(x.eachBreak |Str s, Int i->Str?| { return i == 2 ? s : null }, "c")
 
-    n = 0; x.eachBreak |Str s->Obj| { n++; return s == "b" ? true : null }; verifyEq(n, 2)
-    n = 0; x.eachBreak |Str s->Obj| { n++; return s == "c" ? true : null }; verifyEq(n, 3)
-    n = 0; x.eachBreak |Str s->Obj| { n++; return s == "x" ? true : null }; verifyEq(n, 4)
+    n = 0; x.eachBreak |Str s->Obj?| { n++; return s == "b" ? true : null }; verifyEq(n, 2)
+    n = 0; x.eachBreak |Str s->Obj?| { n++; return s == "c" ? true : null }; verifyEq(n, 3)
+    n = 0; x.eachBreak |Str s->Obj?| { n++; return s == "x" ? true : null }; verifyEq(n, 4)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1126,12 +1126,12 @@ class ListTest : Test
     verifyEq(s.join("; "), "foo")
     verifyEq(s.join("-") |Str x->Str| { return "($x)" }, "(foo)")
 
-    s = [(Str)null]
+    s = [(Str?)null]
     verifyEq(s.toStr,      "[null]")
     verifyEq(s.join,       "null")
     verifyEq(s.join("-"),  "null")
     verifyEq(s.join("; "), "null")
-    verifyEq(s.join("-") |Str x->Str| { return "($x)" }, "(null)")
+    verifyEq(s.join("-") |Str? x->Str| { return "($x)" }, "(null)")
 
     s = ["a", "b", "c"]
     verifyEq(s.toStr,      "[a, b, c]")

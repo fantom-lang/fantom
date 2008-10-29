@@ -710,7 +710,7 @@ class SerializationTest : Test
   {
     echo("--- Serialization Dump ---")
     echo("$x.type ?= $y.type")
-    echo("$x ?= $y  =>  ${x==y}")
+    //echo("$x ?= $y  =>  ${x==y}")
     x.type.fields.each |Field f|
     {
       a := f.get(x)
@@ -744,6 +744,7 @@ class SerA
 
   override Bool equals(Obj? obj)
   {
+    if (this === obj) return true
     x := obj as SerA
     if (x == null) return false
     eq := b == x.b &&
@@ -756,20 +757,20 @@ class SerA
           nList == x.nList &&
           isMap == x.isMap &&
           kids == x.kids
-//    if (!eq) SerializationTest.dump(this, x)
+    // if (!eq) SerializationTest.dump(this, x)
     return eq
   }
 
   Bool b := true
   Int i := 7
   Float f := 5f
-  Str s
-  Duration d
-  Uri u
-  Str[] sList
-  Num[] nList
-  Int:Str isMap
-  SerA[] kids
+  Str? s
+  Duration? d
+  Uri? u
+  Str[]? sList
+  Num[]? nList
+  [Int:Str]? isMap
+  SerA[]? kids
   @transient Str skip := "skip"
 }
 

@@ -11,6 +11,18 @@ using web
 class FindViewStepTest : Test
 {
 
+  override Void setup()
+  {
+    Thread.locals["web.req"] = TestWebReq()
+    Thread.locals["web.res"] = TestWebRes()
+  }
+
+  override Void teardown()
+  {
+    Thread.locals["web.req"] = null
+    Thread.locals["web.res"] = null
+  }
+
   Void test()
   {
     WebAppStep.log.level=LogLevel.silent

@@ -564,7 +564,8 @@ class ResolveExpr : CompilerStep
         set.params[0].paramType.toNonNullable != get.params[0].paramType.toNonNullable ||
         set.params[1].paramType.toNonNullable != get.returnType.toNonNullable)
       err("No matching 'set' method for '$get.qname'", orig.location)
-    expr.setMethod = set
+    else
+      expr.setMethod = set
 
     // return the new IndexedAssignExpr
     return expr

@@ -21,7 +21,7 @@ final class FPod : CPod, FConst
 
   new make(FPodNamespace? ns, Str podName, Zip? zip)
   {
-    this.ns         = ns
+    if (ns != null) this.ns = ns
     this.name       = podName
     this.zip        = zip
     this.names      = FTable.makeStrs(this)
@@ -290,7 +290,7 @@ final class FPod : CPod, FConst
   override Version version  // pod version
   Depend[] depends          // pod dependencies
   FAttr[] fattrs            // pod attributes
-  Zip zip                   // zipped storage
+  Zip? zip                  // zipped storage
   FType[] ftypes            // pod's declared types
   FTable names              // identifier names: foo
   FTable typeRefs           // types refs:   [pod,type,sig]
