@@ -1005,7 +1005,6 @@ public class FCodeEmit
     }
 
     // check nullable => non-nullable
-    /*
     if (from.isNullable() && !to.isNullable())
     {
       code.op(DUP);
@@ -1016,7 +1015,6 @@ public class FCodeEmit
       code.op(ATHROW);
       code.mark(nonnull);
     }
-    */
 
     // don't bother casting to obj
     if (to.isObj()) return;
