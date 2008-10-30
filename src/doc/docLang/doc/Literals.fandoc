@@ -8,10 +8,7 @@
 
 Overview [#overview]
 ********************
-Fan is a [pure OO]`TypeSystem#pureOO` language in that everything is an object
-passed by reference - even fundamental types such as 'Bool' and 'Int'.  But
-some types are a little more special than others because we give them a
-literal syntax.  These types are:
+The following types have a literal syntax:
 
   - [sys::Bool]`#bool`
   - [sys::Int]`#int`
@@ -26,10 +23,19 @@ literal syntax.  These types are:
   - [sys::List]`#list`
   - [sys::Map]`#map`
 
+The three types 'Bool', 'Int', and 'Float' are value-types.  These
+types are not necessarily passed as object references, but rather
+passed by value on the call stack.  When value types are coerced
+to/from reference types like 'Obj' and 'Num', the compiler will
+generate boxing/unboxing operations.
+
 Bool [#bool]
 ************
-There are exactly two instances of `sys::Bool` within the VM which are
-represented using the 'true' and 'false' keywords.
+There are exactly two values of `sys::Bool` which are represented
+using the 'true' and 'false' keywords.
+
+As a value-type 'Bool' fields default to 'false' instead of 'null'.
+However 'Bool?' does default to null.
 
 Int [#int]
 **********
@@ -37,8 +43,7 @@ Int [#int]
 types for smaller precisions.  Fan also uses Int to represent a single character
 of a string as a Unicode code point (which happens to be handy because there are
 actually more than 2^16 Unicode characters).  Int is 'const' which means that all
-instances are immutable.  The runtime guarantees that Int representations between
--256 and 1024 are interned to always be the same instance.
+instances are immutable.
 
 Int literals are expressed as a string of decimal digits.  An Int can also be
 represented in hexadecimal if prefixed with '0x'.  Octal notation is not
@@ -65,6 +70,9 @@ digit hexadecimal number.
   '\u03ab'
   '\u00F2'
 
+As a value-type 'Int' fields default to '0' instead of 'null'.
+However 'Int?' does default to null.
+
 Float [#float]
 **************
 `sys::Float` is used to represent a 64-bit floating point number.  Fan does
@@ -83,6 +91,9 @@ can use the '_' underbar as a separator.  Examples of 'Float' literals:
   3e6f
   0.2e+6f
   1_2.3_7e-5_6f
+
+As a value-type 'Float' fields default to '0.0f' instead of 'null'.
+However 'Float?' does default to null.
 
 Decimal [#decimal]
 ******************
@@ -296,7 +307,7 @@ instantiated using the following literal syntax:
   Int[10, 20, 30]     // list of the three Ints 10, 20, and 30
   [10, 20, 30]        // same as above using type inference
   Int[,]              // empty list of Ints
-  [,]                 // empty list of Objs
+  [,]                 // empty list of Obj?
 
 In most simple cases a 'List' literal is just a list of comma separated
 expressions inside square brackets.  If the type prefix is omitted, then
@@ -305,7 +316,7 @@ the items is determined by computing the most specific class all the items
 share (mixins types are not taken into account).  For example:
 
   [1, 2, 3]        // evaluates to Int[]
-  [1, null, 3]     // evaluates to Int[] - null assumed to be Int
+  [1, null, 3]     // evaluates to Int?[]
   [1f, 2f, 3f]     // evaluates to Float[]
   [1, 2f, 3]       // evaluates to Num[]
   [1, "2", 3]      // evaluates to Obj[]
@@ -319,10 +330,17 @@ a common base class other than 'Obj'.  The list 'Num[1,2,3]' would
 evaluate to 'Int[]' if type inference was used, but if we might put
 'Floats' into the list, then we need to explicitly specify the type.
 
+Often the compiler will infer a list to have a non-nullable type.
+If the list might store null values, then you will need to explicitly
+type it:
+
+   [1,2,3]       // cannot store null
+   Int?[1,2,3]   // can store null
+
 The empty list is denoted using the special syntax '[,]'.  Often
 you will specify a type - for example 'Str[,]' is an empty list
 of strings.  If a type is not specified, then the empty list
-evaluates to a 'Obj[,]'.
+evaluates to a 'Obj?[,]'.
 
 Map [#map]
 **********
@@ -338,7 +356,7 @@ table.  Maps may be instantiated using the following literal syntax:
   Int:Str[1:"one", 2:"two"]    // same as above with shorthand type syntax
   [1:"one", 2:"two"]           // same as above using type inference
   Int:Str[:]                   // empty Int:Str map
-  [:]                          // empty map of Obj:Obj
+  [:]                          // empty map of Obj:Obj?
 
 The 'Map' literal syntax is like 'List' except we specify the key
 value pairs using a colon.  The type prefix of a map literal is any
@@ -348,10 +366,23 @@ the keys and values using the same rules as list literals.  For
 example:
 
   [1:"one", 2:"two"]    // evaluates to Int:Str
+  [1:"one", 2:null]     // evaluates to Int:Str?
   [1:"one", 2f:"two"]   // evaluates to Num:Str
-  [1:"one", 2f:null]    // evaluates to Num:Str
+  [1:"one", 2f:null]    // evaluates to Num:Str?
   [1:"one", 2f:0xabcd]  // evaluates to Num:Obj
   [0:["one"]]           // evaluates to Int:Str[]
 
 The empty map is denoted using the special syntax '[:]' with or
 without a type prefix.
+
+Note that maps may not be typed with a nullable key.  If you
+are using type inference, you might need to explicitly type a
+map which will store null:
+
+  [1:"one", 2:"two"]           // cannot store null values
+  Int:Str?[1:"one", 2:"two"]   // can store null values
+
+The type 'Int:Str?' is a map with 'Int' keys and 'Str?' values.  However
+the type '[Int:Str]?' is map of 'Int:Str' where the map variable itself
+might be null.
+
