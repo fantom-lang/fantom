@@ -194,22 +194,27 @@ when building large systems through the assembly of pods and
 their types.  For example, given a serialized type "acme::Foo", it
 is easy to figure out what pod you need.
 
-Pure Object Oriented [#pureOO]
-******************************
-One of the most important trade offs made in the design of Java was
+Object Oriented [#oo]
+*********************
+One of the most important trade-offs made in the design of Java was
 primitive types.  Since primitives aren't really Objects, they become
 an anomaly which results in all sorts of ugly special cases.  On
 the other hand, primitives are important in achieving C like
-performance - especially for numeric applications.  .NET tackles the
-problem quite elegantly with value types, but in the end .NET still
-has the fractured type system which requires boxing and unboxing.
+performance - especially for numeric applications.  Java has since
+put a band-aid on primitives with auto-boxing - but the type system
+remains fractured.
 
-We chose to design Fan using a pure object oriented approach to
-keep the type system clean and elegant at the expense of numeric
-performance.  This means even integers and floats are boxed objects,
-with their own methods.  The ability to treat everything like as
-a true object results in more consistent API.  The pure OO model
-is also a critical aspect of Fan's dynamic and reflective functionality.
+.NET tackles the problem quite elegantly with value types.  These
+are special types which have the performance of primitives, but
+they still cleanly subclass from 'System.Object'.
+
+Fan follows the .NET model of value types.  The three special
+types 'Bool', 'Int', and 'Float' are value types which are implemented
+as primitives in Java and value types in .NET.  These types have
+all the same performance characteristics of using 'boolean',
+'long', and 'double' in Java or C#.  Unlike Java these types cleanly
+subclass from 'Obj' to create a unified class hierarchy.  The compiler
+automatically implements boxing and unboxing when necessary.
 
 Functional Programming [#functional]
 ************************************
@@ -282,6 +287,15 @@ frustrating about Java:
   - **Default parameters**: methods can have default arguments - no more
     writing boiler plate code for convenience methods
 
+  - **Type Inference**: local variables use type inference to avoid all
+    the noise that obscures typical Java code
+
+  - **Field Accessors**: field accessors are defined implicitly - another
+    area where idiomatic Java code has a low signal to noise ratio
+
+  - **Nullable Types**: declare your intention in code whether null is a
+    legal value for a parameter or return type instead of relying on documentation
+
   - **Checked Exceptions**: checked exceptions are evil syntax salt.
     Checked exceptions don't scale, don't version, and don't allow composable
     systems - all the reasons why [Anders Hejlsberg]`http://www.artima.com/intv/handcuffs.html`
@@ -293,5 +307,3 @@ frustrating about Java:
     problems such as file lengths, Unicode characters, or very large lists.
     Although much of the Java and C# implementation is 16-bit chars and 32-bit
     ints under the covers, the Fan APIs themselves are future proof.
-
-
