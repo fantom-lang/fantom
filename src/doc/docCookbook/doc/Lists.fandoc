@@ -10,8 +10,10 @@ Literals [#literals]
 ********************
   Int[10, 20, 30]   // list of the three Ints 10, 20, and 30
   [10, 20, 30]      // same as above using type inference
+  Int?[10, 20, 30]  // list of the Ints which might contain null
   Int[,]            // empty list of Ints
-  [,]               // empty list of Objs
+  Obj[,]            // empty list of Objs
+  [,]               // empty list of Objs?
   [1, 2f, 3]        // evaluates to Num[]
   Num[1, 2, 3]      // evaluates to Num[]
 
@@ -29,6 +31,7 @@ Access [#access]
   list.last             // returns "d"
   list.get(2)           // return item at index 2, returns "c"
   list[2]               // convenience for list.get(2), returns "c"
+  list[-1]              // return last item "d"
   list[-3]              // return item at size-3, returns "b"
   list.slice(0..2)      // return sub-list from 0 to 1 inclusive, returns ["a",b","c"]
   list[0..2]            // convenience for list.slice(0..2)
@@ -64,6 +67,9 @@ Each (Iteration) [#each]
   list.each |Str s| { echo(s) }
   list.each |Str s, Int i| { echo("value at $i is $s") }
   list.eachr |Str s| { echo(s) } // reverse iteration
+
+  // iterate until b, then return 99
+  list.eachBreak |Str s->Int?| { return s == "b" ? 99 : null }
 
 Searching [#search]
 *******************
@@ -126,5 +132,3 @@ More Info [#moreInfo]
 - See [List API]`sys::List`: API reference for 'sys::List'.
 - See [Literals]`docLang::Literals#list`: literals and type inference rules.
 - See [Signature]`docLang::TypeSystem#listSignature`: for generic type signature.
-
-
