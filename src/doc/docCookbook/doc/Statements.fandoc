@@ -75,6 +75,7 @@ Switch [#switch]
       serviceBadMethod
   }
 
+Note you don't use the 'break' statement in a switch - it is implied.
 See [docLang]`docLang::Statements#switch` for details.
 
 Throw [#throw]
@@ -103,6 +104,11 @@ Try/Catch [#tryCatch]
   {
     e.trace
   }
+
+  try
+    doSomething // single statement
+  catch (IOErr e)
+    e.trace     // single statement
 
   try
   {
@@ -136,6 +142,11 @@ Try/Finally [#tryFinally]
   }
 
   try
+    doSomething // single statement
+  finally
+    cleanup     // single statement
+
+  try
   {
     doSomething
   }
@@ -149,7 +160,6 @@ Try/Finally [#tryFinally]
   }
 
 See [docLang]`docLang::Exceptions#finally` for details.
-
 
 
 

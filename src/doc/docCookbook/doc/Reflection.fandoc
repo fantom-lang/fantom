@@ -27,6 +27,7 @@ Types [#types]
   Type.find("myPod::Foo")        // lookup a type by its qualified name
   Type.find("myPod::Foo", false) // returns null if type not found
   Int#                           // type literal for sys::Int
+  Int?[]#                        // type literal for sys::Int?[]
   t.fits(Num#)                   // reflective version of is/instanceof operator
   t.type.pod                     // get the pod of a type
   t.qname                        // qualified name of type
@@ -84,7 +85,6 @@ Fields [#fields]
   f.get                          // get static field
   f.get(self)                    // get instance field
   f.set(self, val)               // set instance field
-
 
 
 

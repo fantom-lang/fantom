@@ -11,6 +11,8 @@ Type Signatures [#signatures]
   [sys::Int:sys::Str]    // formal signature for Int keys, Str values
   [Int:Str]              // unqualified type names
   Int:Str                // you can omit brackets most of the time
+  Int:Str?               // Int keys, Str? values (might store null)
+  [Int:Str]?             // Int:Str variable which might be null
   Str:Int[]              // Str keys, Int[] values
   [Str:Int][]            // list of Str:Int maps (need brackets)
 
@@ -107,5 +109,4 @@ More Info [#moreInfo]
 - See [Map API]`sys::Map`: API reference for 'sys::Map'.
 - See [Literals]`docLang::Literals#map`: literals and type inference rules.
 - See [Signature]`docLang::TypeSystem#mapSignature`: for generic type signature.
-
 
