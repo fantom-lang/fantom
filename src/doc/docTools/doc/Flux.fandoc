@@ -152,7 +152,7 @@ tool script:
   {
     new make(Str id) : super(id) {}
 
-    override Void invoke(Event event)
+    override Void invoke(Event? event)
     {
       Dialog.openInfo(frame, "Hello world tool!")
     }
@@ -163,7 +163,7 @@ You can do this via the console sidebar.  For example assuming "fan" is
 your path, the following will run "fan -version" and show the output in
 the console:
 
-  override Void invoke(Event event)
+  override Void invoke(Event? event)
   {
     frame.console.show.exec(["fan", "-version"])
   }

@@ -31,10 +31,10 @@ The "-c" option will dump the opcodes:
   // disassemble it
   C:\>fanp -c fansh::Main.main
 
-    main () -> sys::Void [const public static]
-      [Code]
-        0: CallNew             fansh::Shell.make() -> sys::Void
-        3: CallVirtual         fansh::Shell.run() -> sys::Void
-        6: ReturnVoid
-      [LineNumber] size=2
-         158
+  main () -> sys::Void [const public static]
+    [Code]
+      0: CallNew             fansh::Shell.make() -> sys::Void
+      3: CallVirtual         fansh::Shell.run() -> sys::Void
+      6: Return
+    [LineNumber] size=2
+       168

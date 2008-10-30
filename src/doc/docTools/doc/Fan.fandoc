@@ -83,7 +83,7 @@ method.  All of these are valid main methods:
   Void make(Str[] args, Bool defaultsOk := true)
   Int make()
   Int make(Str[] args)
-  Int make(Str[] args, Bool defA := true, Int defB := null)
+  Int make(Str[] args, Bool defA := true, Int? defB := null)
 
 All of the main method signatures above can be static or instance based.
 If the main method is static then it is simply invoked using reflection.
@@ -91,6 +91,5 @@ However if the main method is instance based, a new instance is created
 via [Type.make]`sys::Type.make` to use for the main method.  This
 technique can be used perform common initialization via a base
 class - in fact it is used by the [build]`Build` scripts themselves.
-
 
 
