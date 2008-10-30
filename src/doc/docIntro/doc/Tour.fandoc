@@ -27,6 +27,7 @@ Minor differences from Java or C# include:
     you can use 'Sys.out'.
   - Statements can be terminated with a newline (you can use
     a semicolon too)
+  - You can declare 'Str[]' args or access them from 'Sys.args'
 
 Literals [#literals]
 ********************
@@ -68,6 +69,7 @@ syntax as Java and C#:
   a isnot Str   // convenience for !(a is Str)
   a as Str      // like C# as operator
   a?.func()     // safe invoke operator (like Groovy)
+  a ?: b        // elvis operator for a != null ? a : b
 
 Most operators are actually just syntax sugar for a
 method call.  For example:
@@ -90,7 +92,7 @@ braces.
 
 Statements [#statements]
 **************************
-[Statements]`docLang::Statements` are also mostly like
+[Statements]`docLang::Statements` are mostly like
 Java and C#:
 
   Str s := "hello"    // local variable declaration
@@ -100,7 +102,9 @@ Java and C#:
 
 The most noticeable difference is the use of ':=' to declare
 a local variable.  Fan uses type inference, so you can
-omit a local's type declaration.
+omit a local's type declaration.  The ':=' operator is used
+instead of '=' to show the intention of declaration versus
+assignment.  It prevents silly mistakes like variable name typos.
 
 Fields [#fields]
 ****************
@@ -194,7 +198,8 @@ The syntax for [inheritance]`docLang::Inheritance` looks just like C#:
   }
 
 Note the use of 'virtual' and 'override' keywords.  Unlike
-Java methods must be explicitly marked virtual.
+Java methods must be explicitly marked virtual - you have to design
+for a method to be overridden.
 
 Mixins [#mixins]
 ****************
@@ -305,6 +310,22 @@ pass it to a method call without an explicit cast:
 You can also create [dynamic types]`docLang::DynamicTypes`
 at runtime.
 
+Nullable Types [#nullableTypes]
+******************************
+Types may be nullable or non-nullable. A non-nullable type is guaranteed
+to never store the null value. Nullable types are indicated with a
+trailing "?". This means non-nullable is the default unless otherwise
+specified:
+
+  Str   // never stores null
+  Str?  // might store null
+
+The compiler prevents obvious mistakes like using the 'null' literal
+when a non-nullable type is expected.  Additional checks are implicitly
+done at runtime when coercing a nullable type to a non-nullable type.
+This allows your code to fail fast at the point where null bug was introduced
+versus propagating into unrelated code.
+
 Serialization [#serialization]
 ******************************
 The [serialization]`docLang::Serialization` syntax of Fan is a
@@ -317,7 +338,7 @@ to read and write:
   {
     Str name
     Int age
-    Person[] children
+    Person[]? children
   }
 
   // built up tree of objects in code (or from file)

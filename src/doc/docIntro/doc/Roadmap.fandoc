@@ -89,7 +89,7 @@ still need POP3 and MIME decoding.
 
 Sys APIs [#sys]
 ===============
-Some of the 'sys' APIs are imcomplete, such as 'Process' and 'Regex'.
+Some of the 'sys' APIs are imcomplete, such as 'Regex'.
 
 Web APIs [#web]
 ===============
@@ -126,22 +126,15 @@ own web server implementation (wisp).  Although the plan is to
 eventually plug the 'web' API into Java servlet based containers,
 into IIS, and to have a mod_fan for Apache.
 
-Investigate Nulls [#nulls]
-==========================
-Can we find a simple solution to enhance the type system to
-support nullable/non-nullable types?  It would be nice to have
-some syntax sugar for checking nulls. See [discussion]`http://www.fandev.org/sidewalk/topic/200`
-
 Tuples/Pattern Matching/Anonymous Types [#tuples]
 =================================================
 It would be nice to have some type of tuples or anonymous types
 with support for pattern matching.  See [discussion]`http://www.fandev.org/sidewalk/topic/224`.
 
-Simplified Constructors [#simplifiedCtors]
+Constructors and With-Blocks [#constructors]
 ==========================================
-Can we simplify constructors?  There is a proposal to get rid of
-named constructors so that each class only has one constructor.
-See [discussion]`http://www.fandev.org/sidewalk/topic/249`.
+There is a long running debate on how best to make constructors
+work correctly using with-blocks.
 
 Closure Syntax [#closureSyntax]
 ===============================
@@ -152,12 +145,11 @@ for closures which would allow custom control structures which weren't
 so ugly.  See [discussion]`http://www.fandev.org/sidewalk/topic/251`.
 
 Grouping [#grouping]
-===============================
+====================
 Original [discussion]`http://www.fandev.org/sidewalk/topic/25` was
 on grouping tests, but seems like a way to group pods, types, and
 slots in a generic way would be valuable for many application: testing,
 IDE navigation, reflection, etc.
-
 
 
 
