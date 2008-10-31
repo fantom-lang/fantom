@@ -869,7 +869,11 @@ class SerSimple
   new make(Int a, Int b) { this.a = a; this.b = b }
   override Str toStr() { return "$a,$b" }
   override Int hash() { return a ^ b }
-  override Bool equals(Obj? obj) { return a == obj->a && b == obj->b }
+  override Bool equals(Obj? obj)
+  {
+    if (obj isnot SerSimple) return false
+    return a == obj->a && b == obj->b
+  }
   Int a
   Int b
 }
@@ -901,9 +905,13 @@ class SerIntCollection
   This add(Int i) { list.add(i); return this }
   Void each(|Int i| f) { list.each(f) }
   override Int hash() { return list.hash }
-  override Bool equals(Obj? obj) { return name == obj->name && list == obj->list }
+  override Bool equals(Obj? obj)
+  {
+    if (obj isnot SerIntCollection) return false
+    return name == obj->name && list == obj->list
+  }
   override Str toStr() { return name + " " + list.toStr }
-  Str name
+  Str? name
   @transient Int[] list := Int[,]
 }
 
@@ -918,8 +926,12 @@ class SerFolder
   Void add(SerFolder x) { list.add(x) }
   Void each(|SerFolder i| f) { list.each(f) }
   override Int hash() { return list.hash }
-  override Bool equals(Obj? obj) { return name == obj->name && list == obj->list }
+  override Bool equals(Obj? obj)
+  {
+    if (obj isnot SerFolder) return false
+    return name == obj->name && list == obj->list
+  }
   override Str toStr() { return name + " " + list.toStr }
-  Str name
+  Str? name
   @transient SerFolder[] list := SerFolder[,]
 }

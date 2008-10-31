@@ -695,7 +695,20 @@ public class FCodeEmit
 // Compare
 //////////////////////////////////////////////////////////////////////////
 
-  private void compareEQ() { doCompare("EQ"); }
+  private void compareEQ()
+  {
+    FTypeRef lhs = pod.typeRef(u2());
+    FTypeRef rhs = pod.typeRef(u2());
+
+    // if this is a.equals(b) and we know a is non-null, then just call equals
+    if (lhs.isRef() && !lhs.isNullable() && rhs.isRef())
+    {
+      code.op2(INVOKEVIRTUAL, emit.method("java/lang/Object.equals(Ljava/lang/Object;)Z"));
+      return;
+    }
+
+    doCompare("EQ", lhs, rhs);
+  }
 
   private void compareNE() { doCompare("NE"); }
 
@@ -711,10 +724,11 @@ public class FCodeEmit
 
   private void doCompare(String suffix)
   {
-    // get lhs and rhs types
-    FTypeRef lhs = pod.typeRef(u2());
-    FTypeRef rhs = pod.typeRef(u2());
+    doCompare(suffix, pod.typeRef(u2()), pod.typeRef(u2()));
+  }
 
+  private void doCompare(String suffix, FTypeRef lhs, FTypeRef rhs)
+  {
     // compute the right method call signature
     StringBuilder s = new StringBuilder();
     s.append("fanx/util/OpUtil.compare").append(suffix).append('(');

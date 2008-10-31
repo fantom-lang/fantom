@@ -25,19 +25,7 @@ class NamespaceTest : CompilerTest
 
   Void testFPod()
   {
-try
-{
     verifySys(FPodNamespace.make(Sys.homeDir + `lib/fan/`))
-}
-catch (Err e)
-{
-  echo("###")
-  echo("###")
-  echo("### TODO: this test will fail until we roll bootstrap build to 1.0.34")
-  echo("###")
-  echo("###")
-  e.trace
-}
   }
 
   Void verifySys(CNamespace ns)
