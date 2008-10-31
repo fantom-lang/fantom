@@ -177,6 +177,21 @@ namespace Fanx.Util
     }
 
     /// <summary>
+    /// Given a Fan type, get its stack type: 'A', 'I', 'J', etc
+    /// </summary>
+    public static int toNetStackType(Fan.Sys.Type t)
+    {
+      if (!t.isNullable().booleanValue())
+      {
+        if (t == Fan.Sys.Sys.VoidType)  return 'V';
+        if (t == Fan.Sys.Sys.BoolType)  return 'I';
+        if (t == Fan.Sys.Sys.IntType)   return 'J';
+        if (t == Fan.Sys.Sys.FloatType) return 'D';
+      }
+      return 'A';
+    }
+
+    /// <summary>
     /// Return a new string, where the first letter is uppercase.
     /// If the string is a fully qualified type name, make each
     /// character following a '.' uppercase as well.
