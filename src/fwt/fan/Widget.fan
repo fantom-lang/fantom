@@ -26,6 +26,8 @@
 **
 ** Widget is the base class for all UI widgets.
 **
+** See [docLib]`docLib::Fwt` for details.
+**
 @serializable @collection
 abstract class Widget
 {

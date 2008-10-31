@@ -9,6 +9,8 @@
 **
 ** Graphics is used to draw to the screen or to an offscreen image.
 **
+** See [docLib]`docLib::Fwt` for details.
+**
 class Graphics
 {
 
