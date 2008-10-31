@@ -31,7 +31,8 @@ abstract class Obj
   ** the default implementation compares for reference equality using
   ** the === operator.  If this method is overridden, then hash() must
   ** also be overridden such that any two objects which return true for
-  ** equals() must return the same value for hash().
+  ** equals() must return the same value for hash().  This method must
+  ** accept 'null' and return false.
   **
   virtual Bool equals(Obj? that)
 
