@@ -92,6 +92,16 @@ class Console : SideBar
   **
   ** Write the string to the end of the console
   **
+  This clear()
+  {
+    model.text = ""
+    richText.repaint
+    return this
+  }
+
+  **
+  ** Write the string to the end of the console
+  **
   internal Void write(Str s)
   {
     model.modify(model.size, 0, s)
