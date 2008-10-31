@@ -22,14 +22,12 @@ public class OpUtil
   public static boolean compareEQ(Object a, Object b)
   {
     if (a == null) return (b == null);
-    if (b == null) return false;
     return a.equals(b);
   }
 
   public static boolean compareNE(Object a, Object b)
   {
     if (a == null) return (b != null);
-    if (b == null) return true;
     return !a.equals(b);
   }
 
