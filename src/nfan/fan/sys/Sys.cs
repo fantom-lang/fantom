@@ -18,7 +18,7 @@ namespace Fan.Sys
   ///
   /// Sys provides static access to the system's environment.
   ///
-  public class Sys : FanObj
+  public sealed class Sys : FanObj
   {
 
   //////////////////////////////////////////////////////////////////////////

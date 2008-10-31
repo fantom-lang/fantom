@@ -6,6 +6,10 @@
 //   10 Oct 06  Andy Frank  Creation
 //
 
+// TODO
+//  Boolean primitves:   0f8c8ecc9484
+//  Convert sys to bool: e7279e569e98
+
 using System;
 using System.Collections;
 using System.Text;
@@ -26,7 +30,9 @@ namespace Fanx.Emit
   //////////////////////////////////////////////////////////////////////////
 
     public FCodeEmit(FTypeEmit parent, FMethod fmethod, CILInstructions code)
-     : this(parent, fmethod.m_code, code)
+     : this(parent, fmethod.m_code, code,
+         initRegs(parent.pod,  fmethod.isStatic(), fmethod.m_vars),
+         parent.pod.typeRef(fmethod.m_ret))
     {
       this.fmethod    = fmethod;
       this.vars       = fmethod.m_vars;
@@ -35,7 +41,7 @@ namespace Fanx.Emit
       if (!isStatic) paramCount++;
     }
 
-    public FCodeEmit(FTypeEmit parent, FBuf fcode, CILInstructions code)
+    public FCodeEmit(FTypeEmit parent, FBuf fcode, CILInstructions code, Reg[] regs, FTypeRef ret)
     {
       this.pod      = parent.pod;
       this.emitter  = parent.emitter;
@@ -45,6 +51,8 @@ namespace Fanx.Emit
       this.code     = code;
       this.podClass = FanUtil.toNetTypeName(pod.m_podName, "$Pod", false);
       this.jumps    = new Jumps(code);
+      this.regs     = regs;
+      this.ret      = ret;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -127,13 +135,11 @@ namespace Fanx.Emit
           case FConst.CompareNull:         compareNull(); break;
           case FConst.CompareNotNull:      compareNotNull(); break;
 
-          case FConst.ReturnVoid:          code.Inst(Op.ret); break;
-          case FConst.ReturnObj:           code.Inst(Op.ret); break;
+          case FConst.Return:              returnOp(); break;
           case FConst.Pop:                 pop(); break;
           case FConst.Dup:                 dup(); break;
           case FConst.Is:                  @is(); break;
           case FConst.As:                  @as(); break;
-case FConst.Cast: cast(); break;  // TODO
           case FConst.Coerce:              coerce(); break;
           case FConst.Switch:              tableswitch(); break;
 
@@ -228,7 +234,6 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void loadTrue()
     {
-      // TODO: optimize while (true) either here or in compiler
       if (parent.BoolTrue == null)
         parent.BoolTrue = emitter.findField("Fan.Sys.Boolean", "True", "Fan.Sys.Boolean");
       code.FieldInst(FieldOp.ldsfld, parent.BoolTrue);
@@ -340,16 +345,20 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void loadVar()
     {
-      loadVar(u2());
+      Reg reg = this.reg(u2());
+      loadVar(code, reg.stackType, reg.nindex);
     }
 
-    private void loadVar(int index)
+    /// <summary>
+    /// Load variable onto stack using Java type and java index (which might
+    /// not map to Fan index.  Return next available java index
+    /// </summary>
+    internal static void loadVar(CILInstructions code, int stackType, int index)
     {
-      FTypeRef t = var(index);
-      loadVarObj(index);
+      loadVar(code, stackType, index, Int32.MaxValue);
     }
 
-    private void loadVarObj(int index)
+    private static void loadVar(CILInstructions code, int stackType, int index, int paramCount)
     {
       if (index < paramCount)
       {
@@ -382,16 +391,11 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void storeVar()
     {
-      storeVar(u2());
+      Reg reg = this.reg(u2());
+      storeVar(reg.stackType, reg.nindex);
     }
 
-    private void storeVar(int index)
-    {
-      FTypeRef t = var(index);
-      storeVarObj(index);
-    }
-
-    private void storeVarObj(int index)
+    private void storeVar(int stackType, int index)
     {
       if (index < paramCount)
       {
@@ -580,8 +584,12 @@ case FConst.Cast: cast(); break;  // TODO
   // Compare
   //////////////////////////////////////////////////////////////////////////
 
-    private void compareEQ()
+    private void compareEQ() //{ doCompare("EQ"); }
     {
+      // get lhs and rhs types
+      FTypeRef lhs = pod.typeRef(u2());
+      FTypeRef rhs = pod.typeRef(u2());
+
       int peek = peekOp();
       switch (peek)
       {
@@ -612,6 +620,10 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void compareNE()
     {
+      // get lhs and rhs types
+      FTypeRef lhs = pod.typeRef(u2());
+      FTypeRef rhs = pod.typeRef(u2());
+
       int peek = peekOp();
       switch (peek)
       {
@@ -642,6 +654,10 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void compare()
     {
+      // get lhs and rhs types
+      FTypeRef lhs = pod.typeRef(u2());
+      FTypeRef rhs = pod.typeRef(u2());
+
       if (parent.Compare == null)
         parent.Compare = emitter.findMethod("Fanx.Util.OpUtil", "compare",
           new string[] { "System.Object", "System.Object" }, "Fan.Sys.Long");
@@ -650,6 +666,10 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void compareLT()
     {
+      // get lhs and rhs types
+      FTypeRef lhs = pod.typeRef(u2());
+      FTypeRef rhs = pod.typeRef(u2());
+
       int peek = peekOp();
       switch (peek)
       {
@@ -680,6 +700,10 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void compareLE()
     {
+      // get lhs and rhs types
+      FTypeRef lhs = pod.typeRef(u2());
+      FTypeRef rhs = pod.typeRef(u2());
+
       int peek = peekOp();
       switch (peek)
       {
@@ -710,6 +734,10 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void compareGE()
     {
+      // get lhs and rhs types
+      FTypeRef lhs = pod.typeRef(u2());
+      FTypeRef rhs = pod.typeRef(u2());
+
       int peek = peekOp();
       switch (peek)
       {
@@ -740,6 +768,10 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void compareGT()
     {
+      // get lhs and rhs types
+      FTypeRef lhs = pod.typeRef(u2());
+      FTypeRef rhs = pod.typeRef(u2());
+
       int peek = peekOp();
       switch (peek)
       {
@@ -814,6 +846,7 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void compareNull()
     {
+      u2(); // ignore type
       int peek = peekOp();
       switch (peek)
       {
@@ -836,6 +869,7 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void compareNotNull()
     {
+      u2(); // ignore type
       int peek = peekOp();
       switch (peek)
       {
@@ -860,30 +894,39 @@ case FConst.Cast: cast(); break;  // TODO
   // Stack Manipulation
   //////////////////////////////////////////////////////////////////////////
 
+    private void returnOp()
+    {
+      code.Inst(Op.ret);
+    }
+
+    /*
+    static int returnOp(FTypeRef ret) { return returnOp(ret.stackType); }
+
+    static int returnOp(int retStackType)
+    {
+      switch (retStackType)
+      {
+        case 'A': return ARETURN;
+        case 'D': return DRETURN;
+        case 'I': return IRETURN;
+        case 'J': return LRETURN;
+        case 'V': return RETURN;
+        case 'Z': return IRETURN;
+        default: throw new IllegalStateException(""+(char)retStackType);
+      }
+    }
+    */
+
     private void dup()
     {
-      if (pod.m_version == FPod.OldFCodeVersion)
-      {
-        code.Inst(Op.dup);
-      }
-      else
-      {
-        int typeRef = u2();
-        code.Inst(Op.dup);
-      }
+      int typeRef = u2();
+      code.Inst(Op.dup);
     }
 
     private void pop()
     {
-      if (pod.m_version == FPod.OldFCodeVersion)
-      {
-        code.Inst(Op.pop);
-      }
-      else
-      {
-        int typeRef = u2();
-        code.Inst(Op.pop);
-      }
+      int typeRef = u2();
+      code.Inst(Op.pop);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -893,7 +936,6 @@ case FConst.Cast: cast(); break;  // TODO
     private void @is()
     {
       FTypeRef typeRef = pod.typeRef(u2());
-      PERWAPI.Type type = emitter.findType(typeRef.nname());
 
       // if a generic instance, we have to use a method call
       // because Fan types don't map to Java classes exactly;
@@ -908,6 +950,7 @@ case FConst.Cast: cast(); break;  // TODO
       }
       else
       {
+        PERWAPI.Type type = emitter.findType(typeRef.nnameBoxed());
         code.TypeInst(TypeOp.isinst, type);
         code.Inst(Op.ldnull);
         code.Inst(Op.cgt_un);
@@ -918,7 +961,7 @@ case FConst.Cast: cast(); break;  // TODO
     private void @as()
     {
       FTypeRef typeRef = pod.typeRef(u2());
-      PERWAPI.Type type = emitter.findType(typeRef.nname());
+      PERWAPI.Type type = emitter.findType(typeRef.nnameBoxed());
 
       // if a generic instance, we have to use a method call
       // because Fan types don't map to Java classes exactly;
@@ -964,17 +1007,39 @@ case FConst.Cast: cast(); break;  // TODO
 
     private void coerce()
     {
-      int fromId = u2();
-      //TypeRef fromRef = pod.typeRef(fromId);
-      //String fromPod  = pod.name(fromRef.podName);
-      //String fromName = pod.name(fromRef.typeName);
+      FTypeRef from = pod.typeRef(u2());
+      FTypeRef to   = pod.typeRef(u2());
 
-      int toId = u2();
-      //TypeRef toRef = pod.typeRef(toId);
-      //String toPod  = pod.name(toRef.podName);
-      //String toName = pod.name(toRef.typeName);
+      // Bool boxing
+      if (from.isBoolPrimitive())
+      {
+        if (to.isRef()) { boolBox(); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
 
-      code.TypeInst(TypeOp.castclass, emitter.findType(pod.nname(toId)));
+      // Bool unboxing
+      if (to.isBoolPrimitive())
+      {
+        if (from.isRef()) { boolUnbox(!from.isBool()); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
+
+      // Float boxing/unboxing
+      if (from.isFloatPrimitive())
+      {
+        if (to.isRef()) { floatBox(); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
+      if (to.isFloatPrimitive())
+      {
+        if (from.isRef()) { floatUnbox(!from.isFloat()); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
+
+      // don't bother casting to obj
+      if (to.isObj()) return;
+
+      code.TypeInst(TypeOp.castclass, emitter.findType(to.nname()));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -1118,15 +1183,15 @@ case FConst.Cast: cast(); break;  // TODO
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
-    private FTypeRef var(int index)
+    private int varStackType(int index)
     {
       if (vars == null) throw new Exception("Use of variable outside of method");
       if (!isStatic)
       {
-        if (index == 0) return null; // return null for this pointer
+        if (index == 0) return FTypeRef.OBJ; // assume this pointer
         else --index;
       }
-      return pod.typeRef(vars[index].type);
+      return pod.typeRef(vars[index].type).stackType;
     }
 
     private void loadBoolVal()
@@ -1138,6 +1203,51 @@ case FConst.Cast: cast(); break;  // TODO
         parent.BoolVal.AddCallConv(CallConv.Instance);
       }
       code.MethInst(MethodOp.call, parent.BoolVal);
+    }
+
+    private void boolBox()
+    {
+      //if (parent.BoolBox == 0) parent.BoolBox = emit.method("java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
+      //code.op2(INVOKESTATIC, parent.BoolBox);
+      code.TypeInst(TypeOp.castclass, emitter.findType("Fan.Sys.Boolean"));
+    }
+
+    private void boolUnbox(bool cast)
+    {
+      //if (cast) code.op2(CHECKCAST, emit.cls("java/lang/Boolean"));
+      //if (parent.BoolUnbox== 0) parent.BoolUnbox = emit.method("java/lang/Boolean.booleanValue()Z");
+      //code.op2(INVOKEVIRTUAL, parent.BoolUnbox);
+      code.TypeInst(TypeOp.castclass, emitter.findType("Fan.Sys.Boolean"));
+    }
+
+    private void intBox()
+    {
+      //if (parent.IntBox == 0) parent.IntBox = emit.method("java/lang/Long.valueOf(J)Ljava/lang/Long;");
+      //code.op2(INVOKESTATIC, parent.IntBox);
+      code.TypeInst(TypeOp.castclass, emitter.findType("Fan.Sys.Long"));
+    }
+
+    private void intUnbox(bool cast)
+    {
+      //if (cast) code.op2(CHECKCAST, emit.cls("java/lang/Long"));
+      //if (parent.IntUnbox== 0) parent.IntUnbox = emit.method("java/lang/Long.longValue()J");
+      //code.op2(INVOKEVIRTUAL, parent.IntUnbox);
+      code.TypeInst(TypeOp.castclass, emitter.findType("Fan.Sys.Long"));
+    }
+
+    private void floatBox()
+    {
+      //if (parent.FloatBox == 0) parent.FloatBox = emit.method("java/lang/Double.valueOf(D)Ljava/lang/Double;");
+      //code.op2(INVOKESTATIC, parent.FloatBox);
+      code.TypeInst(TypeOp.castclass, emitter.findType("Fan.Sys.Double"));
+    }
+
+    private void floatUnbox(bool cast)
+    {
+      //if (cast) code.op2(CHECKCAST, emit.cls("java/lang/Double"));
+      //if (parent.FloatUnbox== 0) parent.FloatUnbox = emit.method("java/lang/Double.doubleValue()D");
+      //code.op2(INVOKEVIRTUAL, parent.FloatUnbox);
+      code.TypeInst(TypeOp.castclass, emitter.findType("Fan.Sys.Double"));
     }
 
     private void loadIntVal()
@@ -1254,6 +1364,65 @@ case FConst.Cast: cast(); break;  // TODO
     }
 
   //////////////////////////////////////////////////////////////////////////
+  // Reg
+  //////////////////////////////////////////////////////////////////////////
+
+    /// <summary>
+    /// Given a list of registers compute the max locals.
+    /// </summary>
+    internal static int maxLocals(Reg[] regs)
+    {
+      if (regs.Length == 0) return 0;
+      Reg last = regs[regs.Length-1];
+      return last.nindex + (last.isWide() ? 2 : 1);
+    }
+
+    /// <summary>
+    /// Map to Java register info for the given Fan local variables.
+    /// Registers are typed (so we know which XLOAD_X and XSTORE_X opcodes
+    /// to use) and might be numbered differently (if using longs/doubles).
+    /// </summary>
+    internal static Reg[] initRegs(FPod pod, bool isStatic, FMethodVar[] vars)
+    {
+      Reg[] regs = new Reg[isStatic ? vars.Length : vars.Length+1];
+      int nindex = 0;
+      for (int i=0; i<regs.Length; ++i)
+      {
+        Reg r = new Reg();
+        if (i == 0 && !isStatic)
+        {
+          // this pointer
+          r.stackType = FTypeRef.OBJ;
+          r.nindex = nindex;
+          ++nindex;
+        }
+        else
+        {
+          FTypeRef typeRef = pod.typeRef(vars[isStatic ? i : i - 1].type);
+          r.stackType = typeRef.stackType;
+          r.nindex = nindex;
+          nindex += typeRef.isWide() ? 2 : 1;
+        }
+        regs[i] = r;
+      }
+      return regs;
+    }
+
+    private Reg reg(int fanIndex)
+    {
+      if (regs == null) throw new Exception("Use of variable with undefined regs");
+      return regs[fanIndex];
+    }
+
+    public class Reg
+    {
+      public string toString() { return "Reg " + nindex + " " + (char)stackType; }
+      public bool isWide() { return FTypeRef.isWide(stackType); }
+      internal int stackType;  // FTypeRef.OBJ, LONG, INT, etc
+      internal int nindex;     // .NET register number to use (might shift for longs/doubles)
+    }
+
+  //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
@@ -1261,8 +1430,10 @@ case FConst.Cast: cast(); break;  // TODO
     internal Emitter emitter;
     internal FTypeEmit parent;
     internal FMethod fmethod;     // maybe null
+    internal Reg[] regs = null;   // register mappnig must be set for loadVar/storeVar
     internal FMethodVar[] vars;   // method variables must be set for loadVar/storeVar
     internal bool isStatic;       // used to determine how to index vars
+    internal FTypeRef ret;        // return type
     internal int paramCount = -1;
     internal byte[] buf;
     internal int len;

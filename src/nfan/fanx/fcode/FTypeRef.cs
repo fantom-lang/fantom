@@ -27,13 +27,51 @@ namespace Fanx.Fcode
 
       // compute mask
       int mask = 0;
-      if (sig.EndsWith("?")) mask |= NULLABLE;
+      int stackType = OBJ;
+      bool nullable = false;
+      if (sig.EndsWith("?")) { mask |= NULLABLE; nullable = true; }
       if (sig.Length > 1)    mask |= GENERIC_INSTANCE;
       if (podName == "sys")
       {
-        if (typeName == "Err") mask |= ERR;
+        switch (typeName[0])
+        {
+          case 'B':
+            if (typeName == "Bool")
+            {
+              mask |= SYS_BOOL;
+              if (!nullable) stackType = INT;
+            }
+            break;
+          case 'E':
+            if (typeName == "Err") mask |= SYS_ERR;
+            break;
+          /*
+          case 'F':
+            if (typeName.equals(Float"))
+            {
+              mask |= SYS_FLOAT;
+              if (!nullable) stackType = DOUBLE;
+            }
+            break;
+          case 'I':
+            if (typeName.equals("Int"))
+            {
+              mask |= SYS_INT;
+              if (!nullable) stackType = LONG;
+            }
+            break;
+          */
+          case 'O':
+            if (typeName == "Obj") mask |= SYS_OBJ;
+            break;
+          case 'V':
+            if (typeName == "Void") stackType = VOID;
+            break;
+        }
+
       }
       this.mask = mask;
+      this.stackType = stackType;
 
       // compute full siguature
       if (isGenericInstance())
@@ -46,7 +84,6 @@ namespace Fanx.Fcode
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-
     /// <summary>
     /// Is this a nullable type.
     /// </summary>
@@ -58,9 +95,50 @@ namespace Fanx.Fcode
     public bool isGenericInstance() { return (mask & GENERIC_INSTANCE) != 0; }
 
     /// <summary>
-    /// Is this sys::Err
+    /// Is this a reference (boxed) type?
     /// </summary>
-    public bool isErr() { return (mask & ERR) != 0; }
+    public bool isRef() { return stackType == OBJ; }
+
+    /// <summary>
+    /// Is this sys::Obj or sys::Obj?
+    /// </summary>
+    public bool isObj() { return (mask & SYS_OBJ) != 0; }
+
+    /// <summary>
+    /// Is this sys::Bool or sys::Bool?
+    /// </summary>
+    public bool isBool() { return (mask & SYS_BOOL) != 0; }
+
+    /// <summary>
+    /// Is this sys::Bool, boolean primitive
+    /// </summary>
+    public bool isBoolPrimitive() { return stackType == INT && isBool(); }
+
+    /// <summary>
+    /// Is this sys::Float, double primitive
+    /// </summary>
+    public bool isFloatPrimitive() { return stackType == DOUBLE && isFloat(); }
+
+    /// <summary>
+    /// Is this sys::Int or sys::Int?
+    /// </summary>
+    public bool isInt() { return (mask & SYS_INT) != 0; }
+
+    /// <summary>
+    /// Is this sys::Float or sys::Float?
+    /// </summary>
+    public bool isFloat() { return (mask & SYS_FLOAT) != 0; }
+
+    /// <summary>
+    /// Is this sys::Err or sys::Err?
+    /// </summary>
+    public bool isErr() { return (mask & SYS_ERR) != 0; }
+
+    /// <summary>
+    /// Is this a wide stack type (double or long)
+    /// </summary>
+    public bool isWide() { return stackType == LONG || stackType == DOUBLE; }
+    public static bool isWide(int stackType) { return stackType == LONG || stackType == DOUBLE; }
 
     /// <summary>
     /// .NET type name: Fan.Sys.Duration, System.Boolean
@@ -71,7 +149,22 @@ namespace Fanx.Fcode
       return m_nname;
     }
 
-    public override string ToString() { return "FTypeRef: " + signature; }
+    /// <summary>
+    /// .NET type name, but if this is a primitive return its
+    /// boxed class name.
+    /// </summary>
+    public string nnameBoxed()
+    {
+      /*
+      if (stackType == OBJ) return jname();
+      if (isBoolPrimitive()) return "java/lang/Boolean";
+      if (isFloatPrimitive()) return "java/lang/Double";
+      throw new IllegalStateException(signature);
+      */
+      return nname();
+    }
+
+    public override string ToString() { return signature; }
 
   //////////////////////////////////////////////////////////////////////////
   // IO
@@ -90,13 +183,26 @@ namespace Fanx.Fcode
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
+    // mask constants
     public const int NULLABLE         = 0x0001;
     public const int GENERIC_INSTANCE = 0x0002;
-    public const int ERR              = 0x0004;
+    public const int SYS_OBJ          = 0x0004;
+    public const int SYS_BOOL         = 0x0008;
+    public const int SYS_INT          = 0x0010;
+    public const int SYS_FLOAT        = 0x0020;
+    public const int SYS_ERR          = 0x0040;
+
+    // stack type constants
+    public const int VOID   = 'V';
+    public const int INT    = 'I';
+    public const int LONG   = 'J';
+    public const int DOUBLE = 'D';
+    public const int OBJ    = 'A';
 
     public readonly string podName;     // pod name "sys"
     public readonly string typeName;    // simple type name "Bool"
     public readonly int mask;           // bitmask
+    public readonly int stackType;      // stack type constant
     public readonly string signature;   // full fan signature (qname or parameterized)
     private string m_nname;             // Fan.Sys.Duration, System.Boolean
 
