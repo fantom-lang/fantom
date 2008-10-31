@@ -73,8 +73,12 @@ internal class FindInFiles
   **
   static Void dialog(Frame frame)
   {
-    query := Text  { prefCols=30 }
-    uri   := Text  { text="file:/C:/dev/fan/src/flux/flux/fan/"; prefCols=30 }
+    query := Text { prefCols=30 }
+    uri   := Text { prefCols=30 }
+
+    query.text = Thread.locals["flux.findInFiles.text"] ?: ""
+    uri.text   = Thread.locals["flux.findInFiles.uri"]  ?: Sys.homeDir.toStr
+
     content := GridPane
     {
       numCols = 2
@@ -89,25 +93,30 @@ internal class FindInFiles
       body  = content
       commands = [Dialog.ok, Dialog.cancel]
     }
-    if (Dialog.ok == dlg.open)
+    query.onAction.add |,| { dlg.close(Dialog.ok) }
+    uri.onAction.add   |,| { dlg.close(Dialog.ok) }
+    if (Dialog.ok != dlg.open) return
+
+    try
     {
-      try
+      File f := File(uri.text.toUri, false)
+      Str  q := query.text
+
+      Thread.locals["flux.findInFiles.text"] = q
+      Thread.locals["flux.findInFiles.uri"]  = f.toStr
+
+      frame.console.show->clear
+      frame.marks = Mark[,]
+      Console.execWrite(frame.id, "Files containing \"$q\"...\n")
+      marks := FindInFiles(f, q).find |Mark m|
       {
-        File f := uri.text.toUri.toFile
-        Str  q := query.text
-        frame.console.show
-        frame.marks = Mark[,]
-        Console.execWrite(frame.id, "Files containing \"$q\"...\n")
-        marks := FindInFiles(f, q).find |Mark m|
-        {
-          path := m.uri.toFile.osPath
-          Console.execWrite(frame.id, "$path(${m.line+1},${m.col+1})\n")
-        }
-        Console.execWrite(frame.id, "$marks.size results found\n")
-        frame.marks = marks
+        path := m.uri.toFile.osPath
+        Console.execWrite(frame.id, "$path(${m.line+1},${m.col+1})\n")
       }
-      catch (Err err) { Dialog.openErr(frame, err.message, err) }
+      Console.execWrite(frame.id, "$marks.size results found\n")
+      frame.marks = marks
     }
+    catch (Err err) { Dialog.openErr(frame, err.message, err) }
   }
 
 }
