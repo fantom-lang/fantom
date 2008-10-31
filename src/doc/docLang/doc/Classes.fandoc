@@ -63,8 +63,8 @@ class will result in a compiler error.
 Const Classes [#const]
 ======================
 Const classes are immutable - once created, an instance is guaranteed
-to have no state changes.  The following rules must be observed to
-with const classes:
+to have no state changes.  The following rules must be observed with
+const classes:
  - A const class can contain only [const fields]`Fields#const`
    or fields with no storage:
      a. [abstract fields]`Fields#abstract`
@@ -86,8 +86,8 @@ class which doesn't have a superclass itself.
 Instances [#instances]
 **********************
 Fan uses a [pure object oriented]`TypeSystem#pureOO` type system.
-This means that all variables are a reference to an object.  And
-objects are always an instance of exactly one class.
+This means that all variables are an object which is an instance
+of exactly one class.
 
 Reflection [#reflection]
 ************************
@@ -104,7 +104,6 @@ class, you can create new instances reflectively:
   t.make                   // use default make constructor
   t.make(args)             // use make constructor with arguments
   t.method("makeX").call0  // lookup and use a named constructor
-
 
 
 

@@ -59,7 +59,7 @@ You can plug in your own scheme handling by subclassing 'UriScheme':
   @uriScheme="custom"
   const class CustomScheme : UriScheme
   {
-    override Obj get(Uri uri, Obj base) { ... }
+    override Obj? get(Uri uri, Obj? base) { ... }
   }
 
 The indexed '@uriScheme' facet is used to bind your class to a specific
@@ -83,4 +83,3 @@ The runtime predefines an extensive set of name mappings under "fan:/sys/":
   fan:/sys/pod/{name}         =>  Pod.find(name)
   fan:/sys/pod/{name}/{path}  =>  Pod.find(name).files[path]
   fan:/sys/service/{qname}    =>  Thread.findService(qname)
-

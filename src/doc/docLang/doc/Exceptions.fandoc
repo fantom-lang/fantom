@@ -91,11 +91,10 @@ is raised inside a catch block with no matching catch blocks, then
 the exception continues to unwind the call stack (although if
 a 'finally' block is specified it will be executed).
 
-Like Java/C#, the blocks of code in a 'try' statement must be
-surrounded by '{' '}' curly braces (you can't use a single
-statement like you might with an 'while' loop).  The identifier
-of each catch block is used to access the exception caught - this
-variable is scoped within the catch block itself.
+The blocks of code in a 'try' can be either a '{}' block or a
+single statement.  The identifier of each catch block is used to
+access the exception caught - this variable is scoped within the
+catch block itself.
 
 You can have as many 'catch' blocks as you like, however the type
 of a catch block cannot repeat a type used previously.  For example:

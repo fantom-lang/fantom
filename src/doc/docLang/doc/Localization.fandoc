@@ -89,9 +89,3 @@ Best practice is to ensure that all properties are mapped in 'en.props' file
 as your fallback defaults.  Then store localized translations in language
 files such as 'fr.props', 'de.props', etc.  Typically you will only use
 country specific files such as 'en-US' or 'en-GB' for regional terms.
-
-TODO: currently there is a plan to embed localized properties directly
-into string interpolation such as:
-
-  "<input name='$^submit' />"
-  "<input name='$^myApp::submit' />"

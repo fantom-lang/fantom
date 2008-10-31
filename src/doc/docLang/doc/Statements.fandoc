@@ -34,7 +34,7 @@ on the same line.  For example these are all valid Fan statements:
   if (authenticated) { sendToHomePage; return true }
 
 The first version is the preferred syntax.  The third version
-exhibits good mojo too if it is compact enough to keep the code
+also exhibits good mojo if it is compact enough to keep the code
 readable.
 
 The Fan grammar is not perfectly unambiguous when you omit semicolons.
@@ -298,6 +298,5 @@ Exception Handling [#exceptions]
 Fan supports 'throw' and 'try' statements with a syntax very similar
 to Java and C#.  These statements are discussed separately in
 the [exception handling]`Exceptions` chapter.
-
 
 

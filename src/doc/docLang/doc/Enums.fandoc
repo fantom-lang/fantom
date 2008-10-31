@@ -56,7 +56,7 @@ the covers:
 
     static const Color[] values = [red, blue, green].toImmutable
 
-    static Color fromStr(Str s) { ... }
+    static Color? fromStr(Str s) { ... }
 
     private new make(Int ord, Str name) : super(ord, name) {}
   }
@@ -110,4 +110,3 @@ Example code:
   aug := Month.fromStr("aug")   // lookup by name
   Month.fromStr("bad")          // throws ParseErr
   Month.fromStr("bad", false)   // returns null
-

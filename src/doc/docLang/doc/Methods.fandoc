@@ -135,7 +135,7 @@ using the ':' after the formal parameters, but before the method body:
   class Bar : Foo
   {
     new make() : super() {}
-    new makeFullName(Str first, Str last) : super.makeName(last) {}
+    new makeFullName(Str? first, Str last) : super.makeName(last) {}
     new makeLastName(Str last) : this.makeFullName(null, last) {}
   }
 
@@ -237,8 +237,8 @@ are overriding a method using the 'override' keyword:
     override Void talk() { echo("meow") }
   }
 
-  Animal.make.talk   // prints generic
-  Cat.make.talk      // prints meow
+  Animal().talk   // prints generic
+  Cat().talk      // prints meow
 
 Abstract Methods [#abstract]
 ****************************
@@ -384,4 +384,3 @@ for the Java VM and C# for the .NET CLR.  Native methods use the 'native'
 keyword and must not have a method body (like abstract methods).  The
 infrastructure for supporting native methods is discussed in the `Natives`
 chapter.
-
