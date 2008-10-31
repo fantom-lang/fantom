@@ -333,12 +333,14 @@ internal class ViewTab : EdgePane
   {
     parent := resource.uri.parent
     if (parent == null) return
+    if (!confirmClose) return
     load(parent, LoadMode { addToHistory=true})
   }
 
   Void back()
   {
     if (!backEnabled) return
+    if (!confirmClose) return
     oldr := resource
     newr := historyBack.pop
     push(historyForward, oldr)
@@ -348,6 +350,7 @@ internal class ViewTab : EdgePane
   Void forward()
   {
     if (!forwardEnabled) return
+    if (!confirmClose) return
     oldr := resource
     newr := historyForward.pop
     push(historyBack, oldr)
