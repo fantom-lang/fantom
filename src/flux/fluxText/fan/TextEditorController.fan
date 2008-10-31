@@ -174,7 +174,7 @@ internal class TextEditorController : TextEditorSupport
 
   Void pushUndo(TextChange tc)
   {
-    if (!inUndo) editor.commandStack.push(TextChangeCommand(editor, tc))
+    if (!inUndo) editor.commandStack.push(TextChangeCommand(tc))
   }
 
 //////////////////////////////////////////////////////////////////////////

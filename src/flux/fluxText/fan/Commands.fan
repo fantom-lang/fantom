@@ -11,11 +11,9 @@ using flux
 
 internal class TextEditorCommand : FluxCommand
 {
-  new make(TextEditor editor, Str id)
-    : super(id, type.pod)
-  {
-    this.editor = editor
-  }
+  new make(Str id) : super(id, type.pod) {}
+
+  TextEditor editor() { return view }
 
   TextEditorController controller() { return editor.controller }
 
@@ -23,7 +21,6 @@ internal class TextEditorCommand : FluxCommand
 
   Doc doc() { return editor.doc }
 
-  readonly TextEditor editor
 }
 
 **************************************************************************
@@ -32,8 +29,8 @@ internal class TextEditorCommand : FluxCommand
 
 internal class TextChangeCommand : TextEditorCommand
 {
-  new make(TextEditor editor, TextChange change)
-    : super(editor, "textChange")
+  new make(TextChange change)
+    : super("textChange")
   {
     this.change = change
   }

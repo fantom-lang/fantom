@@ -21,6 +21,11 @@ using fwt
 ** icon, and default accelerator to a localized properties file.  The
 ** default 'make' constructor routes to `fwt::Command.makeLocale`.
 **
+** If a FluxCommand supports undo/redo, then it should be posted to
+** the 'View.commandStack'.  However it should not maintain references
+** to a specific view instance since the command stack is persisted
+** between hyperlinks for a given URI.
+**
 class FluxCommand : Command
 {
 
@@ -60,6 +65,15 @@ class FluxCommand : Command
   **
   ** Get the flux Frame associated with this command.
   **
-  Frame? frame { internal set }
+  Frame? frame
+  {
+    get { return @frame ?: Desktop.focus?.window }
+    internal set
+  }
+
+  **
+  ** Get the flux View associated with this command.
+  **
+  View? view() { return frame?.view }
 
 }

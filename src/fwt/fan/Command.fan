@@ -277,6 +277,11 @@ class CommandStack
   Int limit := 1000
 
   **
+  ** Return is both the undo and redo lists are empty.
+  **
+  Bool isEmpty() { return undoStack.isEmpty && redoStack.isEmpty }
+
+  **
   ** Are any commands available for undo.
   **
   Bool hasUndo() { return undoStack.size > 0 }
