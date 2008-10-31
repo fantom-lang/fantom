@@ -28,7 +28,7 @@ class CopyResources : DocCompilerSupport
     exts := ["png", "gif", "jpg", "jpeg", "css", "js"]
     pod.files.each |File f|
     {
-      if (exts.contains(f.ext)) copy(f)
+      if (exts.contains(f.ext ?: "")) copy(f)
     }
   }
 

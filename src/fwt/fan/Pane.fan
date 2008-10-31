@@ -12,6 +12,8 @@
 **   1. Override prefSize to compute their preferred size
 **   2. Override onLayout to set the bounds of all their children
 **
+** See [docLib]`docLib::Fwt` for details.
+**
 abstract class Pane : Widget
 {
 
