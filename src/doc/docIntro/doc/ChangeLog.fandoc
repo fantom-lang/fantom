@@ -461,4 +461,5 @@
 *Build 1.0.35 (incomplete)*
 - Update documentation for nullable and value types
 - Turn on non-null coercion runtime checking
-
+- Flux: persist undo/redo stack between hyperlinks
+- Flux: allow drag and drop of files to hyperlink
