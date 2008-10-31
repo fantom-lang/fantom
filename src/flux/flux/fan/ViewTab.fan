@@ -103,6 +103,7 @@ internal class ViewTab : EdgePane
     // unload old view
     deactivate
     try { oldView.onUnload  } catch (Err e) { e.trace }
+    storeState
     oldView.tab = null
     oldView.frame = null
     oldView.resource = null
@@ -129,6 +130,7 @@ internal class ViewTab : EdgePane
     this.top = doBuildToolBar(newView)
     this.center = newView
     this.bottom = doBuildStatusBar(newView)
+    loadState
     parent?.relayout
 
     // resume dirty handling
@@ -213,6 +215,34 @@ internal class ViewTab : EdgePane
     try { view.onInactive } catch (Err e) { e.trace }
     frame.commands.disableViewManaged
     if (view isnot ErrView) frame.sideBarPane.onInactive(view)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// State
+//////////////////////////////////////////////////////////////////////////
+
+  Void storeState()
+  {
+    if (resource == null) return
+
+    // save undo/redo stack if not empty
+    key := "flux.view.commandStack.${resource.uri}"
+    if (!view.commandStack.isEmpty)
+      Thread.locals[key] = view.commandStack
+  }
+
+  Void loadState()
+  {
+    if (resource == null) return
+
+    // restore undo/redo stack for uri
+    key := "flux.view.commandStack.${resource.uri}"
+    cs := Thread.locals[key]
+    if (cs != null)
+    {
+      view.commandStack = cs
+      Thread.locals[key] = null
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

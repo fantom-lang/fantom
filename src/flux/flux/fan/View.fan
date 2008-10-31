@@ -16,6 +16,18 @@ abstract class View : ContentPane
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Constructor.
+  **
+  new make()
+  {
+    this.commandStack = CommandStack()
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
 
@@ -27,7 +39,10 @@ abstract class View : ContentPane
   **
   ** Get the command history for undo/redo.
   **
-  CommandStack commandStack := CommandStack { onModify.add(&commandStackModified) }
+  CommandStack commandStack
+  {
+    set { @commandStack = val; val.onModify.add(&commandStackModified) }
+  }
   internal Void commandStackModified() { frame?.commands?.updateEdit }
 
   **
