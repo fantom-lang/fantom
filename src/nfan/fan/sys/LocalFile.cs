@@ -352,9 +352,9 @@ namespace Fan.Sys
         m_file.Delete();
         m_file.Refresh();
       }
-      catch (System.Exception)
+      catch (System.Exception e)
       {
-        throw IOErr.make("Cannot delete: " + m_file).val;
+        throw IOErr.make("Cannot delete: " + m_file, e).val;
       }
     }
 

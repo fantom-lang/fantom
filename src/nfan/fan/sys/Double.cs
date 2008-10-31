@@ -22,7 +22,6 @@ namespace Fan.Sys
     {
       if (!(obj is Double)) return false;
       double x = (obj as Double).val;
-      if (System.Double.IsNaN(val)) return System.Double.IsNaN(x);
       return val == x;
     }
 
@@ -31,11 +30,14 @@ namespace Fan.Sys
       double that = ((Double)obj).val;
       if (Double.isNaN(val))
       {
-        return (Double.isNaN(that)) ? 0 : 1;
+        if (Double.isNaN(that)) return 0;
+        if (System.Double.IsPositiveInfinity(that)) return 1;
+        if (System.Double.IsNegativeInfinity(that)) return 1;
+        return -1;
       }
       else if (Double.isNaN(that))
       {
-        return -1;
+        return 1;
       }
       else
       {
@@ -58,6 +60,9 @@ namespace Fan.Sys
 
     public override string ToString()
     {
+      if (Double.isNaN(val)) return FanFloat.m_NaNStr;
+      if (val == System.Double.PositiveInfinity) return FanFloat.m_PosInfStr;
+      if (val == System.Double.NegativeInfinity) return FanFloat.m_NegInfStr;
       string s = val.ToString();
       if (s.IndexOf('.') == -1) s += ".0";  // to match java behavior
       return s;

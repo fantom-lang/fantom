@@ -89,7 +89,7 @@ namespace Fan.Sys
       }
       else if (Double.isNaN(that))
       {
-        return FanInt.LT;
+        return FanInt.GT;
       }
       else
       {
