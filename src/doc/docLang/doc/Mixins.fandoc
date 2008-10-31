@@ -25,7 +25,7 @@ but can contain concrete methods:
   - Mixins can declare static methods
   - Mixins can declare abstract fields
   - Mixins can declare static const fields
-  - Mixins can declare static constructors
+  - Mixins can declare static constructors: 'static {}'
 
 Mixins are declared using the 'mixin' keyword:
 

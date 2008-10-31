@@ -83,7 +83,7 @@ For example to create a namespace which returns the current time:
 
   const class TimeNamespace : Namespace
   {
-    override Obj get(Uri uri, Bool checked := true)
+    override Obj? get(Uri uri, Bool checked := true)
     {
       uri = uri.relTo(this.uri)
       if (uri.path.isEmpty) return DateTime.now

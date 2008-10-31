@@ -81,23 +81,16 @@ in `DynamicTypes`.
 
 Pure Object Oriented [#pureOO]
 ******************************
-Fan is fundamentally an object-oriented language.  It is a pure-OO language
-in the sense that everything is an object including core types such 'Int'.
-For example in Java there is a set of primitive types such as 'boolean', 'int',
-and 'float' which are disjoint from the 'java.lang.Object' type system.  C# handles
-this situation more elegantly with value types - however value types must still
-be boxed and unboxed when an object reference is required.  In Fan *all*
-variables are a reference to a `sys::Obj` instance.  For example consider
-the following code:
+Fan is fundamentally an object-oriented language.  It is "pure" in the
+sense that everything is an object including core types such as 'Int'.
+For example, Java primitive types such as 'boolean' and 'int' do not
+subclass from 'java.lang.Object' which creates a fractured type system.
+Fan defines a unified class hierarchy with 'sys::Obj' as the root.
+Since everything is an object, you can call methods on everything:
 
-  Bool b := true
-  Int i := 5
-
-In the code above, the variable 'b' is a reference to the 'Bool' object
-which represents 'true'.  The variable 'x' is a reference to an 'Int'
-instance representing the integer value of 5.  Both 'Bool' and 'Int' are
-normal subclasses of 'Obj'.  Fan doesn't use boxing or unboxing because
-everything is a reference from the start.
+  false.type   =>  sys::Bool
+  1972.isEven  =>  true
+  'x'.toChar   =>  "x"
 
 Arrays are another type system anomaly not supported by Fan.  For example,
 in Java arrays are reference types which can be used as a 'java.lang.Object'
@@ -106,22 +99,53 @@ circumstances, the `sys::List` class is used instead of arrays.  Plus
 you will use `sys::Buf` instead of 'byte[]' and `sys::StrBuf` instead of
 'char[]'.
 
-Null [#null]
-************
-In Fan, all variables are a reference to an object.  The side-effect of
-this design is that all variables can be null.  Java programmers may find
-this a bit startling that even an 'Int' variable can be null (especially
-fields which default to 'null').  C# 2.0 introduced *nullable types* which
-allow value types to be optionally null - but this isn't handled consistently
-across the type system.
+Nullable Types [#nullableTypes]
+*******************************
+Types may be nullable or non-nullable. A non-nullable type is guaranteed
+to never store the null value. Nullable types are indicated with a
+trailing "?". This means non-nullable is the default unless otherwise
+specified:
 
-Fan makes things really simple:  every variable is a reference and every
-variable can be null.  You'll find this unified approach to the type
-system quite handy.  For example, often in a Java API which returns an
-'int' such as 'String.indexOf()' or 'InputStream.read()' a special value
-of -1 will be used to indicate a non-normal result.  This can be especially
-problematic when the -1 is a valid result.  In Fan APIs we just use 'null'
-instead of a special value like -1.
+  Str   // never stores null
+  Str?  // might store null
+
+The compiler prevents obvious mistakes like using the 'null' literal
+when a non-nullable type is expected.  Additional checks are implicitly
+done at runtime when coercing a nullable type to a non-nullable type.
+This allows your code to fail fast at the point where null bug was introduced
+versus propagating into unrelated code.
+
+Value-Types [#valueTypes]
+*************************
+The special types 'Bool', 'Int', and 'Float' are *value-types*.  These
+types are optimized by the runtime to be passed by value instead of as
+a reference to an object.  This allows Fan to achieve the same performance
+as using primitives in Java and value-types in C#.
+
+Value-types can be nullable also.  For instance a variable declared to
+be 'Int?' can store null.
+
+Value-types differ from reference types in that fields default to
+null or zero instead of null.  However the nullable versions of value-types
+do default to null.
+
+A mapping of Fan types to their runtime representations:
+
+  Fan      Default   Java                .Net
+  ---      -------   ----                ------
+  Bool     false     boolean             bool
+  Bool?    null      java.lang.Boolean   bool?
+  Int      0         long                long
+  Int?     null      java.lang.Long      long?
+  Float    0.0f      double              double
+  Float?   null      java.lang.Double    double?
+
+By convention Fan APIs use 'null' to indicate an non-normal condition.  For
+example, often in a Java API which returns an 'int' such as 'String.indexOf()'
+or 'InputStream.read()' a special value of -1 will be used to indicate
+a non-normal result.  This can be especially problematic when -1 is
+a valid result.  In Fan APIs we return 'Int?' and use 'null' instead of
+a special value like -1.
 
 Statically Typed [#staticallyType]
 **********************************
@@ -173,11 +197,21 @@ For example:
 
 This feature allows you to use 'Obj' as a wildcard type which is assignable
 to anything.  This is often used with in conjunction with dynamic invokes
-which return 'Obj':
+which return 'Obj?':
 
   Str name := x->person->name
   if (test->isTrue) {...}
   File(x->uri)
+
+Coercion from a non-nullable type to a nullable type is safe.  A coercion
+from a nullable type to a non-nullable is implicitly allowed, but is checked
+at runtime:
+
+  Str? x := null
+  Str  y := x      // implicit cast as y := (Str)x
+
+The above code will compile with the impilicit cast.  However at runtime
+it will fail with a 'NullErr'.
 
 Type Signatures [#signatures]
 *****************************
@@ -251,7 +285,7 @@ array syntax of Java and C#:
 
   // examples
   Str[]     // list of Strs
-  Int[]     // list of Ints
+  Int?[]    // list of Int?
   Int[][]   // list of Int[] (list of a list of Ints)
 
 The 'L' generic parameter is used to indicate the parameterized
@@ -283,7 +317,8 @@ the [map literal]`Literals#map` syntax:
   // examples
   [Str:User]     // map of Users keyed by Str
   Str:User       // same as above without optional brackets
-  Uri:File       // map of Files keyed by Uri
+  Uri:File?      // map of File? keyed by Uri
+  [Uri:File]?    // map of Uri:File where the entire map variable might be null
   Str:File[]     // map of File[] keyed by Str
   [Str:File][]   // list of Str:File (brackets not optional)
 
@@ -353,7 +388,3 @@ version of 'sort' would be:
 
 Function signatures are covered in yet more detail in the `Functions`
 chapter.
-
-
-
-

@@ -155,7 +155,7 @@ timer.  Example:
   x := Thread(null) |Thread t|
   {
     t.sendLater(1sec, "1sec one-shot")
-    t.sendLater(2sec, "3sec one-shot")
+    t.sendLater(3sec, "3sec one-shot")
     t.sendLater(1sec, "1sec repeating", true)
     t.loop |Obj msg| { echo(msg) }
   }

@@ -36,19 +36,18 @@ In the simplest case, field declarations look just like Java or C#:
   class Thing
   {
     Int id := 0
-    Str name
+    Str? name
   }
 
 In the example above 'id' and 'name' are instance fields on the
 class 'Thing'.  We use the ':=' operator to provide an initial value
-for the field which is automatically assigned before any constructors
-are executed.  If an initial value is not provided, then all fields
-default to 'null' (remember this includes 'Bool', 'Int', and 'Float'
-fields too).
+for the field which is automatically assigned before the constructor
+is executed.  If an initial value is not provided, then all fields default
+to 'null' with the exception of [value-types]`TypeSystem#valueTypes`.
 
 We access fields using the '.' operator:
 
-  thing := Thing.make
+  thing := Thing()
   thing.name = "bob"
   echo(thing.id)
   echo(thing.name)

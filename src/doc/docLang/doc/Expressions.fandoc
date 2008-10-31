@@ -35,8 +35,8 @@ bitwise expressions more intuitive:
 
 Shortcut Operators [#shortcuts]
 *******************************
-Fan is a pure object oriented language in that everything is an
-object - even primitives such as 'Bool' and 'Int'.  As such almost
+Fan is a pure OO language in that everything is an object you can call
+methods on - even value-types such as 'Bool' and 'Int'.  As such almost
 all the operators are really just method calls.  We call these operators
 the *shortcut operators* because they are just syntax sugar for calling
 a specific method:
@@ -124,7 +124,8 @@ The '===' and '!==' operators are called the *same* and *not same*
 operators.  These operators are used to check if two variables
 reference the same object instance in memory.  Unlike the '==' and '!='
 shortcut operators, the same and not same operators do not result
-in the 'equals' method call.
+in the 'equals' method call.  These operators are not allowed to be
+used against value-types.
 
 Conditional Operators [#cond]
 *****************************
@@ -179,6 +180,9 @@ ternary operator:
   // easy way
   file ?: defaultFile
 
+The elvis operator may not be used on a non-nullable type since
+by definition it will not be null.
+
 Safe Invoke [#safeInvoke]
 =========================
 The safe invoke operators are designed to short circuit if
@@ -202,6 +206,13 @@ If at any point in a null-safe call chain we detect null, then
 the whole expression is short circuited and the expression evaluates
 to null.  You can use '?->' as a null-safe version of the
 [dynamic invoke operator]`Methods#dynamicInvoke`.
+
+The safe invoke operator may not be used on a non-nullable type
+since by definition it will not be null.  The result of a safe
+invoke is always nullable:
+
+  x := str.size   =>  x is typed as Int
+  x := str?.size  =>  x is typed as Int?
 
 Type Checking [#typeChecking]
 *****************************
@@ -227,13 +238,25 @@ runtime:
   obj as Float   =>  evaluates to null
   obj as Int     =>  evaluates to 6 (expr is typed as Int)
 
+Nullability of types is not considered when using the 'is', 'isnot',
+and 'as' operators.  For example these two expressions are considered
+equivalent:
+
+  obj is Str
+  obj is Str?
+
+The 'as' operator by definition returns a nullable type.  For example
+the following expression evaluates to 'Str?', not 'Str':
+
+  x := obj as Str  => x is typed as Str?
+
 Indexing [#indexing]
 ********************
 Depending on how it is used, the '[]' operator maps to three different shortcuts:
 
-   a[b]     => a.get(b)
-   a[b] = c => a.set(b, c)
-   a[b]     => a.slice(b) if b is Range
+   a[b]      =>  a.get(b)
+   a[b] = c  =>  a.set(b, c)
+   a[b]      =>  a.slice(b) if b is Range
 
 Typically 'a[b]' is a shortcut for calling 'a.get(b)'.  For example the
 `sys::List.get` method allows you to lookup a list item by it's 'Int'
@@ -247,7 +270,7 @@ can use '[]' as a shortcut.  Consider this code:
   list["2"]      // error
 
 The expression 'list[2]' is exactly the same code as 'list.get(2)'.  The
-last line two lines result in a compiler error because we are attempting
+last two lines result in a compiler error because we are attempting
 to pass a 'Str' when an 'Int' is expected.
 
 When the indexing shortcut is used on the left hand side of an assignment
