@@ -159,6 +159,16 @@ class Frame : Window
     return commands.byId[id]
   }
 
+  internal Void handleDrop(Obj data)
+  {
+    files := data as File[]
+    if (files == null || files.isEmpty) return
+    files.each |File f, Int i|
+    {
+      load(f.normalize.uri, LoadMode { newTab = i > 0 })
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Mark
 //////////////////////////////////////////////////////////////////////////
@@ -219,6 +229,7 @@ class Frame : Window
     icon  = Flux.icon(Desktop.isMac ? `/x256/flux.png` : `/x16/flux.png`)
     menuBar = commands.buildMenuBar
     onClose.add |Event e| { e.consume; commands.exit.invoke(e) }
+    this->onDrop = &handleDrop  // use back-door hook for file drop
     content = EdgePane
     {
       top = EdgePane

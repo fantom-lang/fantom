@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swt.layout.*;
+import org.eclipse.swt.dnd.*;
 
 public class WindowPeer
   extends PanePeer
@@ -153,6 +154,9 @@ public class WindowPeer
     shell.addShellListener(this);
     attachTo(shell);
 
+    // setup drag and drop
+    initDrop(shell);
+
     // if not explicitly sized, then use prefSize - but
     // make sure not bigger than monitor (at this point we
     // don't know which monitor so assume primary monitor)
@@ -214,9 +218,46 @@ public class WindowPeer
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Utils
+// Drag and Drop
 //////////////////////////////////////////////////////////////////////////
 
+  /**
+   * The FWT doesn't officially support drag and drop.  However as a
+   * temp solution we provide a back-door hook to drop files onto a
+   * Window for flux.
+   */
+  void initDrop(Shell shell)
+  {
+    DropTarget t = new DropTarget(shell, DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
+    t.setTransfer(new Transfer[] { FileTransfer.getInstance() });
+    t.addDropListener(new DropTargetAdapter()
+    {
+      public void dragEnter(DropTargetEvent event)
+      {
+      }
+
+      public void dragOver(DropTargetEvent event)
+      {
+       event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
+      }
+
+      public void drop(DropTargetEvent event)
+      {
+        Window window = (Window)self;
+        if (window.onDrop == null) return;
+
+        FileTransfer ft = FileTransfer.getInstance();
+        if (!ft.isSupportedType(event.currentDataType)) return;
+
+        fan.sys.List data = new fan.sys.List(Sys.FileType, 0);
+        String[] paths = (String[])ft.nativeToJava(event.currentDataType);
+        for (int i=0; i<paths.length; ++i)
+          data.add(File.os(paths[i]));
+
+        window.onDrop().call1(data);
+      }
+    });
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

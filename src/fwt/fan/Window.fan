@@ -133,4 +133,8 @@ class Window : ContentPane
   **
   virtual native Void close(Obj? result := null)
 
+  ** Back-door hook until we officially support drag and drop.
+  ** See WindowPeer.java for details
+  internal |Obj data| onDrop
+
 }
