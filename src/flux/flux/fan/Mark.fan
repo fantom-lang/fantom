@@ -72,8 +72,7 @@ const class Mark
   **
   override Int compare(Obj that)
   {
-    x := that as Mark
-    if (x == null) return super.compare(that)
+    x := (Mark)that
     cmp := uri <=> x.uri
     if (cmp == 0) cmp = line <=> x.line
     if (cmp == 0) cmp = col <=> x.col
