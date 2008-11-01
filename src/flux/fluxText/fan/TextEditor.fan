@@ -45,7 +45,7 @@ class TextEditor : View
 
   override Widget? buildStatusBar()
   {
-    controller.updateCaretField()
+    controller.updateCaretStatus()
     return GridPane
     {
       numCols = 2

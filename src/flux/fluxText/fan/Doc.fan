@@ -190,6 +190,14 @@ class Doc : RichTextModel
     }
   }
 
+  override Color? lineBackground(Int lineIndex)
+  {
+    if (lineIndex == caretLine)
+      return syntax.highlightCurLine
+    else
+      return null
+  }
+
   **
   ** Insert a bracket match style run of one character
   ** at the specified offset.  There are four cases where
@@ -464,6 +472,7 @@ class Doc : RichTextModel
   internal Str delimiter             // line delimiter
   internal Parser parser             // to parse lines into styled segments
 
+  internal Int caretLine             // current line for highlighting
   internal Int? bracketLine1         // matched bracket 1 line index
   internal Int? bracketLine2         // matched bracket 2 line index
   internal Int? bracketCol1          // matched bracket 1 offset in line
