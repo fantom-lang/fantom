@@ -40,6 +40,7 @@ internal class FindInFiles
     file.walk |File f|
     {
       if (f.isDir) return
+      f = f.normalize
       in := f.in
       try
       {
