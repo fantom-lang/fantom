@@ -11,10 +11,6 @@
 // Widgets:
 //   - ScrollPane
 //   - BorderPane
-//   - ProgressBar
-//   - Dialogs
-//   - FileDialog
-//   - DirDialog
 // Eventing
 //   - focus management
 // Graphics:

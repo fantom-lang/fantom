@@ -37,7 +37,7 @@ public class WindowPeer
     return peer;
   }
 
-  public Widget create(Widget parent)
+  public final Widget create(Widget parent)
   {
     // window uses open, not normal attach process
     throw new IllegalStateException();

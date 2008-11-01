@@ -38,7 +38,7 @@ internal class FindInFilesTest : Test
 
   Void verifyMark(Mark mark, Str name, Int line, Int col)
   {
-    verifyEq(mark.uri, tempDir.uri + name.toUri)
+    verifyEq(mark.uri, (tempDir + name.toUri).normalize.uri)
     verifyEq(mark.line, line)
     verifyEq(mark.col, col)
   }

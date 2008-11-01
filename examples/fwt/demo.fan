@@ -121,6 +121,11 @@ class FwtDemo
         MenuItem { mode = MenuItemMode.sep }
         MenuItem { text = "Option A"; onAction.add |Event e| { echo((Dialog(e.window) {body="Str message"; commands=[Dialog.ok]}).open) } }
         MenuItem { text = "Option B"; onAction.add |Event e| { echo((Dialog(e.window) {body=Button { text="BIG!" }; commands=Dialog.okCancel}).open) } }
+        MenuItem { mode = MenuItemMode.sep }
+        MenuItem { text = "File Open";  onAction.add |Event e| { echo(FileDialog {}.open(e.window)) } }
+        MenuItem { text = "Files Open"; onAction.add |Event e| { echo(FileDialog { dir=Sys.homeDir; mode=FileDialogMode.openFiles }.open(e.window)) } }
+        MenuItem { text = "File Save";  onAction.add |Event e| { echo(FileDialog { name="foo.txt";  mode=FileDialogMode.saveFile }.open(e.window)) } }
+        MenuItem { text = "Dir Open";   onAction.add |Event e| { echo(FileDialog { dir=Sys.homeDir; mode=FileDialogMode.openDir }.open(e.window)) } }
       }
 
     }
