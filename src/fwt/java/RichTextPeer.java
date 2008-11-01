@@ -204,7 +204,7 @@ public class RichTextPeer
     // compute top and bottom line y coordinates
     Rectangle client = st.getClientArea();
     int topy = st.getTopPixel();
-    int bottomy = topy + client.height;
+    int bottomy = topy + client.height - 4;
 
     // compute y coordinate of desired line
     int offset = (int)model.offsetAtLine(lineIndex);

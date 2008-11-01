@@ -341,6 +341,10 @@ internal class ConsoleModel : RichTextModel
       else
         s = [0, norm, start, link, mp.fileEnd+1, norm]
     }
+    else
+    {
+      m = null
+    }
     return ConsoleLine { text = t; mark = m; styling = s }
   }
 
