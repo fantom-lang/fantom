@@ -466,3 +466,4 @@
 - Flux: persist undo/redo stack between hyperlinks
 - Flux: allow drag and drop of files to hyperlink
 - Flux: highlight current line
+- Flux: show short filenames in console instead of full paths
