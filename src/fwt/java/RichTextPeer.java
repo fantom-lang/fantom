@@ -16,6 +16,7 @@ import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
@@ -193,6 +194,28 @@ public class RichTextPeer
     StyledText st = (StyledText)control;
     Point pt = st.getLocationAtOffset(offset);
     st.redraw(pt.x, pt.y, st.getSize().x, st.getLineHeight(offset), true);
+  }
+
+  public void showLine(RichText self, long lineIndex)
+  {
+    StyledText st = (StyledText)control;
+    if (st == null) return;
+
+    // compute top and bottom line y coordinates
+    Rectangle client = st.getClientArea();
+    int topy = st.getTopPixel();
+    int bottomy = topy + client.height;
+
+    // compute y coordinate of desired line
+    int offset = (int)model.offsetAtLine(lineIndex);
+    int targety = topy + st.getLocationAtOffset(offset).y;
+
+    // if target line is visible bail
+    if (topy <= targety && targety + st.getLineHeight(offset) < bottomy) return;
+
+    // the SWT APIs for scrolling based on the text model leave
+    // a lot to be desired, the safest thing is to use selection
+    select(self, offset, 0);
   }
 
 //////////////////////////////////////////////////////////////////////////

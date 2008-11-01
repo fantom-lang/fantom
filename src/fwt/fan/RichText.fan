@@ -151,6 +151,11 @@ class RichText : TextWidget
   ** Repaint the specified text range.
   **
   native Void repaintRange(Int offset, Int len)
+
+  **
+  ** Ensure the editor is scrolled such that the specified line is visible.
+  **
+  native Void showLine(Int lineIndex)
 }
 
 **************************************************************************
