@@ -462,6 +462,7 @@
 - Update documentation for nullable and value types
 - New docLib::Fwt chapter
 - Turn on non-null coercion runtime checking
+- Fwt: file and directory dialogs
 - Fwt: RichText line background styling
 - Flux: persist undo/redo stack between hyperlinks
 - Flux: allow drag and drop of files to hyperlink

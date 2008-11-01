@@ -118,3 +118,18 @@ enum WindowMode
   appModal,
   sysModal
 }
+
+**************************************************************************
+** FileDialogMode.
+**************************************************************************
+
+**
+** Enum for `FileDialog.mode`.
+**
+enum FileDialogMode
+{
+  openFile,
+  openFiles,
+  saveFile,
+  openDir
+}
