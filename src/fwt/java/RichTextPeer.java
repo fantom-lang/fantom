@@ -23,7 +23,8 @@ import org.eclipse.swt.events.*;
 
 public class RichTextPeer
   extends TextWidgetPeer
-  implements LineStyleListener, VerifyKeyListener, VerifyListener,
+  implements LineStyleListener, LineBackgroundListener,
+             VerifyKeyListener, VerifyListener,
              SelectionListener, TraverseListener
 {
 
@@ -58,6 +59,7 @@ public class RichTextPeer
     control = t;
     t.setContent(content = new Content());
     t.addLineStyleListener(this);
+    t.addLineBackgroundListener(this);
     t.addTraverseListener(this);
     t.addVerifyKeyListener(this);
     t.addVerifyListener(this);
@@ -186,6 +188,13 @@ public class RichTextPeer
     ((StyledText)control).redrawRange((int)start, (int)len, false);
   }
 
+  void repaintLineRect(int offset)
+  {
+    StyledText st = (StyledText)control;
+    Point pt = st.getLocationAtOffset(offset);
+    st.redraw(pt.x, pt.y, st.getSize().x, st.getLineHeight(offset), true);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
@@ -260,12 +269,26 @@ public class RichTextPeer
 
   public void checkCaretPos()
   {
+    // short circuit if position has change
     int newCaretPos = ((StyledText)control).getCaretOffset();
     if (newCaretPos == oldCaretPos) return;
+
+    // fire caret change event
+    int oldPos = oldCaretPos;
     oldCaretPos = newCaretPos;
     fan.fwt.Event fe = event(EventId.caret);
     fe.offset = Long.valueOf(newCaretPos);
     ((RichText)self).onCaret().fire(fe);
+
+    // automatically repaint last line and current line
+    int oldLine = (int)model.lineAtOffset(oldPos);
+    int newLine = (int)model.lineAtOffset(newCaretPos);
+    if (oldLine == newLine) return;
+
+    // repaint
+    ((StyledText)control).redraw();
+    repaintLineRect(oldPos);
+    repaintLineRect(newCaretPos);
   }
 
   public void checkHomeEnd(KeyEvent event)
@@ -509,6 +532,12 @@ public class RichTextPeer
     if (u == RichTextUnderline.single)   return SWT.UNDERLINE_SINGLE;
     if (u == RichTextUnderline.squiggle) return SWT.UNDERLINE_SQUIGGLE;
     throw new IllegalStateException();
+  }
+
+  public void lineGetBackground(LineBackgroundEvent event)
+  {
+    Color bg = model.lineBackground(model.lineAtOffset(event.lineOffset));
+    if (bg != null) event.lineBackground = Env.get().color(bg);
   }
 
 //////////////////////////////////////////////////////////////////////////

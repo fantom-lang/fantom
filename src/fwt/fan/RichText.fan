@@ -282,6 +282,14 @@ abstract class RichTextModel
   ** specifies a zero based char offset of the line.
   **
   virtual Obj[]? lineStyling(Int lineIndex) { return null }
+
+  **
+  ** Return the color to use for the specified line's background.
+  ** Normal lineStyling backgrounds only cover the width of the text.
+  ** However, the lineBackground covers the width of the entire
+  ** edit area.  Return null for no special background.
+  **
+  virtual Color? lineBackground(Int lineIndex) { return null }
 }
 
 **************************************************************************

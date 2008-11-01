@@ -54,7 +54,8 @@ internal class TextEditorController : TextEditorSupport
 
   Void onCaret(Event event)
   {
-    updateCaretField
+    updateCaretPos
+    updateCaretStatus
     checkBraceMatch(event)
   }
 
@@ -67,14 +68,19 @@ internal class TextEditorController : TextEditorSupport
 // Update Caret
 //////////////////////////////////////////////////////////////////////////
 
-  Void updateCaretField()
+  Void updateCaretPos()
+  {
+    offset := editor.richText.caretOffset
+    this.caretLine = doc.lineAtOffset(offset)
+    this.caretCol  = offset-doc.offsetAtLine(caretLine)
+    doc.caretLine = this.caretLine
+  }
+
+  Void updateCaretStatus()
   {
     try
     {
-      offset := editor.richText.caretOffset
-      line := doc.lineAtOffset(offset)
-      col  := offset-doc.offsetAtLine(line)
-      editor.caretField.text = "${(line+1)}:${col+1}"
+      editor.caretField.text = "${(caretLine+1)}:${caretCol+1}"
       editor.caretField.parent?.relayout
     }
     catch (Err e) e.trace
@@ -282,5 +288,7 @@ internal class TextEditorController : TextEditorSupport
 //////////////////////////////////////////////////////////////////////////
 
   override readonly TextEditor editor
+  Int caretLine
+  Int caretCol
   Bool inUndo := false
 }
