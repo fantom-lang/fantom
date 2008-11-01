@@ -184,28 +184,32 @@ class Console : SideBar
 
   override Void onGotoMark(Mark mark)
   {
-    // highlight the line with the current mark
-    line := model.lines.find |ConsoleLine line->Bool|
-    {
-      return line.mark === mark
-    }
-    if (line != null)
-      richText.select(line.offset, line.text.size)
+    model.curMark = mark
+    line := model.lineForMark(mark)
+    if (line != null) richText.showLine(line.index)
+    richText.repaint
   }
 
   internal Void onRichTextMouseDown(Event event)
   {
+    // clear current mark
+    model.curMark = null
+
     // map event to line and check if line has mark
     offset := richText.offsetAtPos(event.pos.x, event.pos.y)
-    if (offset == null) return
-    line := model.lines[model.lineAtOffset(offset)]
-    if (line.mark == null) return
+    if (offset != null)
+    {
+      line := model.lines[model.lineAtOffset(offset)]
+      if (line.mark != null)
+        model.curMark = line.mark
+    }
 
-    // select the entire line
-    richText.select(line.offset, line.text.size)
+    // update highlight
+    richText.repaint
 
     // hyperlink to view
-    frame.loadMark(line.mark, LoadMode(event))
+    if (model.curMark != null)
+      frame.loadMark(model.curMark, LoadMode(event))
   }
 
   internal Void onCopy()
@@ -313,6 +317,7 @@ internal class ConsoleModel : RichTextModel
     lines.each |ConsoleLine line, Int i|
     {
       // update offset and total running size
+      line.index  = i;
       line.offset = n
       n += line.text.size
       if (i != lastIndex) n += delimiterSize
@@ -344,6 +349,19 @@ internal class ConsoleModel : RichTextModel
     return lines[lineIndex].styling
   }
 
+  override Color? lineBackground(Int lineIndex)
+  {
+    if (curMark != null && lines[lineIndex].mark === curMark)
+      return Color.yellow
+    else
+      return null
+  }
+
+  ConsoleLine? lineForMark(Mark m)
+  {
+    return lines.find |ConsoleLine line->Bool| { return line.mark === m }
+  }
+
   Mark[] toMarks()
   {
     marks := Mark[,]
@@ -360,6 +378,7 @@ internal class ConsoleModel : RichTextModel
   Str delimiter := "\n"
   RichTextStyle norm := RichTextStyle {}
   RichTextStyle link := RichTextStyle { fg=Color.blue; underline = RichTextUnderline.single; }
+  Mark? curMark
 }
 
 **************************************************************************
@@ -370,6 +389,9 @@ internal class ConsoleLine
 {
   ** Return 'text'.
   override Str toStr() { return text }
+
+  ** Zero based line index
+  Int index
 
   ** Zero based offset from start of document (this
   ** field is managed by the Doc).
