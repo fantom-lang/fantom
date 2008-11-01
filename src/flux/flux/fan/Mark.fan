@@ -138,6 +138,7 @@ internal class MarkParser
 
     // match up anything that looks like a directory
     e := s + root.size
+    if (text.size <= e) return null
     f := File.os(text[s..e])
     while (text[e] == '/' || text[e] == '\\')
     {

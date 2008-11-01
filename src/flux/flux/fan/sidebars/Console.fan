@@ -25,6 +25,7 @@ class Console : SideBar
   override Void onLoad()
   {
     model = ConsoleModel()
+    model.clear
     richText = RichText
     {
       model = model
@@ -94,7 +95,7 @@ class Console : SideBar
   **
   This clear()
   {
-    model.text = ""
+    model.clear
     richText.repaint
     return this
   }
@@ -102,11 +103,12 @@ class Console : SideBar
   **
   ** Write the string to the end of the console
   **
-  internal Void write(Str s)
+  This append(Str s)
   {
-    model.modify(model.size, 0, s)
+    model.append(s)
     richText.repaint
     richText.select(model.size, 0)
+    return this
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,7 +129,7 @@ class Console : SideBar
   {
     if (busy) throw Err("Console is busy")
     frame.marks = Mark[,]
-    model.text = command.join(" ") + "\n"
+    model.clear.append(command.join(" ") + "\n")
     richText.repaint
     busy = true
     params := ExecParams
@@ -164,7 +166,7 @@ class Console : SideBar
   **
   internal static Void execWrite(Str frameId, Str str)
   {
-    Frame.findById(frameId).console.write(str)
+    Frame.findById(frameId).console.append(str)
   }
 
   **
@@ -267,31 +269,51 @@ internal class ConsoleModel : RichTextModel
 
   override Void modify(Int startOffset, Int len, Str newText)
   {
-    // compute the lines being replaced
-    endOffset      := startOffset + len
-    startLineIndex := lineAtOffset(startOffset)
-    endLineIndex   := lineAtOffset(endOffset)
-    startLine      := lines[startLineIndex]
-    endLine        := lines[endLineIndex]
-    oldText        := textRange(startOffset, len)
+    // we only allow appending to end of console text since we
+    // are actually modifying the text displayed to show short
+    // filenames versus full file paths
+    throw UnsupportedErr("Cannot only call ConsoleModel.append")
+  }
 
-    // compute the new text of the lines being replaced
-    offsetInStart := startOffset - startLine.offset
-    offsetInEnd   := endOffset - endLine.offset
-    newLinesText  := startLine.text[0...offsetInStart] + newText + endLine.text[offsetInEnd..-1]
+  This clear()
+  {
+    size = 0
+    lines = [ConsoleLine { offset=0; text=""; fullText="" }]
+    curMark = null
+    return this
+  }
 
-    // split new text into new lines
-    newLines := ConsoleLine[,] { capacity=32 }
-    newLinesText.splitLines.each |Str s|
+  This append(Str s)
+  {
+    // save initial state for modification event
+    startOffset := size
+    startLineIndex := lines.last.index
+
+    // normalize newlines
+    newLines := s.splitLines
+    numNewLines := newLines.size - 1
+
+    // figure out if this we are starting a new line or need to append
+    // to the last line; if appending to the last line we have to use
+    // the original fullText to ensure we parse filenames correctly
+    if (newLines.first == "")
     {
-      newLines.add(parseLine(s))
+      newLines.removeAt(0)
+      startLineIndex++
+    }
+    else
+    {
+      newLines[0] = lines.last.fullText + newLines.first
+      lines.removeAt(-1)
     }
 
-    // merge in new lines
-    lines.removeRange(startLineIndex..endLineIndex)
-    lines.insertAll(startLineIndex, newLines)
+    // parse and append new lines
+    newLines.each |Str line|
+    {
+      lines.add(parseLine(line))
+    }
 
-    // update total size, line offsets, and multi-line comments/strings
+    // update total size, line offsets
     updateLines(lines)
 
     // fire modification event
@@ -299,12 +321,14 @@ internal class ConsoleModel : RichTextModel
     {
       startOffset    = startOffset
       startLine      = startLineIndex
-      oldText        = oldText
-      newText        = newText
-      oldNumNewlines = oldText.numNewlines
-      newNumNewlines = newLines.size - 1
+      oldText        = ""
+      newText        = s
+      oldNumNewlines = 0
+      newNumNewlines = numNewLines
     }
     onModify.fire(Event { id =EventId.modified; data = tc })
+
+    return this
   }
 
   private Void updateLines(ConsoleLine[] lines)
@@ -330,22 +354,29 @@ internal class ConsoleModel : RichTextModel
   ConsoleLine parseLine(Str t)
   {
     Obj[]? s := null
+    full := t
+
+    // attempt to parse mark (filename) in the line
     mp := MarkParser(t)
     m := mp.parse
-    if (m != null && !m.uri.toStr.contains("bin"))
+
+    // don't show paths that are likely executables (bin)
+    if (m != null && m.uri.path.contains("bin")) m = null
+
+    // update the text to only show the filename (not the full path);
+    // compute the styling to make filename appear as a hyperlink
+    if (m != null)
     {
       start := mp.fileStart
-      //t = t[0...start] + m.uri.name + t[mp.fileEnd+1..-1]
+      name  := m.uri.name
+      t = t[0...start] + name + t[mp.fileEnd+1..-1]
       if (start == 0)
-        s = [0, link, mp.fileEnd+1, norm]
+        s = [0, link, name.size, norm]
       else
-        s = [0, norm, start, link, mp.fileEnd+1, norm]
+        s = [0, norm, start, link, start+name.size, norm]
     }
-    else
-    {
-      m = null
-    }
-    return ConsoleLine { text = t; mark = m; styling = s }
+
+    return ConsoleLine { text = t; fullText = full; mark = m; styling = s }
   }
 
   override Obj[]? lineStyling(Int lineIndex)
@@ -376,9 +407,8 @@ internal class ConsoleModel : RichTextModel
     return marks
   }
 
-  Int maxLines := 10
-  Int size := 0
-  ConsoleLine[] lines := [ConsoleLine { offset=0; text="" }]
+  Int size
+  ConsoleLine[] lines
   Str delimiter := "\n"
   RichTextStyle norm := RichTextStyle {}
   RichTextStyle link := RichTextStyle { fg=Color.blue; underline = RichTextUnderline.single; }
@@ -401,8 +431,11 @@ internal class ConsoleLine
   ** field is managed by the Doc).
   Int offset { internal set; }
 
-  ** Text of line (without delimiter)
+  ** Text we show (short uri filename)
   const Str text
+
+  ** Full text we show (long uri)
+  const Str fullText
 
   ** If we matched a file location from text
   Mark? mark

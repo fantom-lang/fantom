@@ -191,9 +191,13 @@ public class RichTextPeer
 
   void repaintLineRect(int offset)
   {
-    StyledText st = (StyledText)control;
-    Point pt = st.getLocationAtOffset(offset);
-    st.redraw(pt.x, pt.y, st.getSize().x, st.getLineHeight(offset), true);
+    try
+    {
+      StyledText st = (StyledText)control;
+      Point pt = st.getLocationAtOffset(offset);
+      st.redraw(pt.x, pt.y, st.getSize().x, st.getLineHeight(offset), true);
+    }
+    catch (Exception e) {}
   }
 
   public void showLine(RichText self, long lineIndex)
