@@ -195,7 +195,40 @@ class ClosureTest : CompilerTest
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Void testField()
+  Void testField1()
+  {
+    compile(
+     "class Foo
+      {
+        |,| c1 := |,| { s=\"c1\" };
+        |Str x| c2 := |Str x| { s=x };
+        |Str x| c3 := |Str x| { sets(x) };
+        |Str x| c4 := |Str x| { this.sets(x) };
+        //static const |,| sc1 := |,| { Thread.locals[\"testCompiler.closure\"] = \"sc1\" }
+        Void sets(Str x) { s = x }
+        Str? s
+      }")
+
+    // compiler.fpod.dump
+    t  := pod.types[0]
+    obj := t.make
+    obj->c1->call0()
+    verifyEq(obj->s, "c1")
+    obj->c2->call1("c2")
+    verifyEq(obj->s, "c2")
+    obj->c3->call1("c3")
+    verifyEq(obj->s, "c3")
+    obj->c4->call1("c4")
+    verifyEq(obj->s, "c4")
+
+    /*
+    verifyEq(Thread.locals["testCompiler.closure"], null)
+    ((Func)t.field("sc1").get).call0
+    verifyEq(Thread.locals["testCompiler.closure"], "sc1")
+    */
+  }
+
+  Void testField2()
   {
     compile(
      "class Foo
@@ -416,6 +449,29 @@ class ClosureTest : CompilerTest
      verifyEq(list[2]->run, "gamma")
   }
   */
+
+//////////////////////////////////////////////////////////////////////////
+// Default Params
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDefaultParams()
+  {
+    compile(
+     "class Foo
+      {
+        Void m0() { s = \"m0\" }
+        Void m1(|,| f := |,| { s=\"m1\" }) { f() }
+        Void m2(Str x, |Str y| f := |Str y| { s=y }) { f(x) }
+        Str? s
+      }")
+
+    // compiler.fpod.dump
+    t  := pod.types[0]
+    obj := t.make
+    obj->m0(); verifyEq(obj->s, "m0")
+    obj->m1(); verifyEq(obj->s, "m1")
+    obj->m2("m2"); verifyEq(obj->s, "m2")
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Errors

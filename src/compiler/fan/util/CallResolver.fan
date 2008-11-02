@@ -202,7 +202,7 @@ class CallResolver : CompilerSupport
     if (curType.isClosure)
     {
       closure := curType.closure
-      if (!closure.enclosingMethod.isStatic)
+      if (!closure.enclosingSlot.isStatic)
         target = FieldExpr.make(location, ThisExpr.make(location, closure.enclosingType), closure.outerThisField)
     }
     else

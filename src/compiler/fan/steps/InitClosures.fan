@@ -68,7 +68,6 @@ class InitClosures : CompilerStep
     this.loc             = c.location
     this.signature       = c.signature
     this.enclosingType   = c.enclosingType
-    this.enclosingMethod = c.enclosingMethod
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -257,7 +256,6 @@ class InitClosures : CompilerStep
   Location loc               // closure.location
   FuncType signature         // closure.sig
   TypeDef enclosingType      // closure.enclosingType
-  MethodDef enclosingMethod  // closure.enclosingMethod
   TypeDef cls                // current anonymous class implementing closure
   MethodDef ctor             // anonymous class make ctor
   MethodDef doCall           // R doCall(A a, ...) { closure.code }

@@ -98,7 +98,7 @@ class ClosureVars : CompilerStep
     if (inClosure)
     {
       closure := method.parentDef.closure
-      name := toCvarsTypeName(closure.enclosingType, closure.enclosingMethod)
+      name := toCvarsTypeName(closure.enclosingType, closure.enclosingSlot)
       cvars = (TypeDef)compiler.pod.resolveType(name, true)
     }
 
@@ -131,14 +131,15 @@ class ClosureVars : CompilerStep
     }
   }
 
-  private static Str toCvarsTypeName(TypeDef t, MethodDef m)
+  private static Str toCvarsTypeName(TypeDef t, SlotDef s)
   {
-    if (m.isGetter)
-      return "${t.name}\$${m.name}\$GetCvars"
-    else if (m.isSetter)
-      return "${t.name}\$${m.name}\$SetCvars"
-    else
-      return "${t.name}\$${m.name}\$Cvars"
+    m := s as MethodDef
+    if (m != null)
+    {
+      if (m.isGetter) return "${t.name}\$${s.name}\$GetCvars"
+      if (m.isSetter) return "${t.name}\$${s.name}\$SetCvars"
+    }
+    return "${t.name}\$${s.name}\$Cvars"
   }
 
 //////////////////////////////////////////////////////////////////////////
