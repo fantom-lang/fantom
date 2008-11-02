@@ -129,10 +129,10 @@ Expr [#expr]
   <unaryExpr>      :=  <prefixExpr> | <termExpr> | <postfixExpr>
   <prefixExpr>     :=  ("!" | "+" | "-" | "~" | "&" | "++" | "--") <parenExpr>
   <postfixExpr>    :=  <termExpr> ("++" | "--")
-  <termExpr>       :=  <termBase> <termChain>* [withBlock]
+  <termExpr>       :=  <termBase> <termChain>*
   <termBase>       :=  <literal> | <idExpr> | <closure>
   <termChain>      :=  <dotCall> | <dynCall> | <safeDotCall> | <safeDynCall> |
-                       <indexExpr> | <callOp>
+                       <indexExpr> | <callOp> | <withBlock>
   <withBlock>      :=  "{" <withSub>* "}"
   <withSub>        :=  <expr> <eos>    // expr is restricted
   <dotCall>        :=  "." <idExpr>
@@ -196,7 +196,6 @@ Keywords [#keywords]
   false         protected
   final         public
   finally       readonly
-
 
 
 
