@@ -1425,7 +1425,7 @@ public class Parser : CompilerSupport
   ** optionally followed by a chain of accessor expressions - such
   ** as "x.y[z](a, b)".
   **
-  **   <termExpr>  :=  <termBase> <termChain>* [withBlock]
+  **   <termExpr>  :=  <termBase> <termChain>*
   **
   private Expr termExpr(Expr? target := null)
   {
@@ -1436,8 +1436,6 @@ public class Parser : CompilerSupport
       if (chained == null) break
       target = chained
     }
-    if (curt == Token.lbrace)
-      return withBlock(target)
     return target
   }
 
@@ -1530,7 +1528,7 @@ public class Parser : CompilerSupport
     if (curt == Token.lbrace)
     {
       base := UnknownVarExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
-      return withBlock(base)
+      return withBlock(base) ?: base
     }
 
     throw err("Unexpected type literal", loc)
@@ -1542,7 +1540,7 @@ public class Parser : CompilerSupport
   ** target expression contains a chained access, then return the new
   ** expression, otherwise return null.
   **
-  **   <termChain>      :=  <compiledCall> | <dynamicCall> | <indexExpr>
+  **   <termChain>      :=  <compiledCall> | <dynamicCall> | <indexExpr> | <withBlock>
   **   <compiledCall>   :=  "." <idExpr>
   **   <dynamicCall>    :=  "->" <idExpr>
   **
@@ -1572,6 +1570,9 @@ public class Parser : CompilerSupport
     // if target(...)
     if (cur.isCallOpenParen) return callOp(target)
 
+    // if target {...}
+    if (curt == Token.lbrace) return withBlock(target)
+
     // we treat a with base as a dot slot access
     if (target.id === ExprId.withBase) return idExpr(target, false, false)
 
@@ -1583,17 +1584,17 @@ public class Parser : CompilerSupport
   ** A with block is a series of sub-expressions
   ** inside {} appended to the end of an expression.
   **
-  private Expr withBlock(Expr base)
+  private Expr? withBlock(Expr base)
   {
     // field initializers look like a with block, but
     // we can safely peek to see if the next token is "get",
     // "set", or a keyword like "private"
     if (inFieldInit)
     {
-      if (peek.kind.keyword) return base
+      if (peek.kind.keyword) return null
       if (peekt == Token.identifier)
       {
-        if (peek.val == "get" || peek.val == "set") return base
+        if (peek.val == "get" || peek.val == "set") return null
       }
     }
 
