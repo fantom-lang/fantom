@@ -576,6 +576,13 @@ class ResolveExpr : CompilerStep
   **
   private Expr resolveCurry(CurryExpr expr)
   {
+    // short circuit if operand is in error
+    if (expr.operand.ctype == ns.error)
+    {
+      expr.ctype = ns.error
+      return expr
+    }
+
     // if the operand isn't a CallExpr, then we have a problem
     if (expr.operand.id !== ExprId.call)
     {
