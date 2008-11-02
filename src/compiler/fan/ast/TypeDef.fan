@@ -174,11 +174,11 @@ class TypeDef : DefNode, CType
       return MethodDef.isNameStaticInit(s.name)
     }
 
-    // fix enclosingMethod of closures used in those temp statics
+    // fix enclosingSlot of closures used in those temp statics
     closures.each |ClosureExpr c|
     {
-      if (c.enclosingMethod.isStaticInit)
-        c.enclosingMethod = m
+      if (c.enclosingSlot is MethodDef && ((MethodDef)c.enclosingSlot).isStaticInit)
+        c.enclosingSlot = m
     }
 
     // now we add into all slot tables

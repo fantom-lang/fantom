@@ -1413,13 +1413,13 @@ class CurryExpr : Expr
 class ClosureExpr : Expr
 {
   new make(Location location, TypeDef enclosingType,
-           MethodDef enclosingMethod, ClosureExpr enclosingClosure,
+           SlotDef enclosingSlot, ClosureExpr enclosingClosure,
            FuncType signature, Str name)
     : super(location, ExprId.closure)
   {
     this.ctype            = signature
     this.enclosingType    = enclosingType
-    this.enclosingMethod  = enclosingMethod
+    this.enclosingSlot    = enclosingSlot
     this.enclosingClosure = enclosingClosure
     this.signature        = signature
     this.name             = name
@@ -1429,7 +1429,7 @@ class ClosureExpr : Expr
 
   once CField outerThisField()
   {
-    if (enclosingMethod.isStatic) throw Err.make("Internal error: $location.toLocationStr")
+    if (enclosingSlot.isStatic) throw Err.make("Internal error: $location.toLocationStr")
     return ClosureVars.makeOuterThisField(this)
   }
 
@@ -1456,7 +1456,7 @@ class ClosureExpr : Expr
 
   // Parse
   TypeDef enclosingType         // enclosing class
-  MethodDef enclosingMethod     // enclosing method
+  SlotDef enclosingSlot         // enclosing method or field initializer
   ClosureExpr? enclosingClosure // if nested closure
   FuncType signature            // parameter and return signature
   Block? code                   // moved into a MethodDef in InitClosures

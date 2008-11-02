@@ -233,8 +233,8 @@ class ResolveExpr : CompilerStep
       loc := expr.location
       closure := curType.closure
 
-      // if the closure is in a static method, report an error
-      if (closure.enclosingMethod.isStatic)
+      // if the closure is in a static slot, report an error
+      if (closure.enclosingSlot.isStatic)
       {
         expr.ctype = ns.error
         err("Cannot access 'this' within closure of static context", loc)
@@ -679,7 +679,7 @@ class ResolveExpr : CompilerStep
 
         // mark the enclosing method and recursively
         // any outer closures as needing cvars
-        closure.enclosingMethod.needsCvars = true
+        ((MethodDef)closure.enclosingSlot).needsCvars = true
         for (p := closure.enclosingClosure; p != null; p = p.enclosingClosure)
           p.doCall.needsCvars = true
 

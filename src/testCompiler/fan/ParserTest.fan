@@ -958,7 +958,7 @@ class ParserTest : CompilerTest
       verifyEq(expr->args->last->id, ExprId.closure)
       verifyEq(expr->args->last->signature->signature, "|->sys::Void|")
       verifyEq(expr->args->last->enclosingType->name, "Foo")
-      verifyEq(expr->args->last->enclosingMethod->name, "it")
+      verifyEq(expr->args->last->enclosingSlot->name, "it")
       verifyEq(expr->args->last->name, "Foo\$it\$0")
       verifySame(closures[0], expr->args->last)
 

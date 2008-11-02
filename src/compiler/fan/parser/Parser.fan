@@ -359,9 +359,11 @@ public class Parser : CompilerSupport
     {
       location := cur
       consume
-      curMethod = MethodDef.makeStaticInit(location, parent, null)
-      curMethod.code = block(true)
-      return curMethod
+      sInit := MethodDef.makeStaticInit(location, parent, null)
+      curSlot = sInit
+      sInit.code = block(true)
+      curSlot = null
+      return sInit
     }
 
     // all members start with facets, flags
@@ -437,9 +439,11 @@ public class Parser : CompilerSupport
     {
       if (curt === Token.assign) err("Must use := for field initialization")
       consume
+      curSlot = field
       inFieldInit = true
       field.init = field.initDoc = expr
       inFieldInit = false
+      curSlot = null
     }
 
     // disable type inference for now - doing inference for literals is
@@ -537,9 +541,9 @@ public class Parser : CompilerSupport
       id := consumeId
 
       if (id == "get")
-        curMethod = f.get
+        curSlot = f.get
       else
-        curMethod = f.set
+        curSlot = f.set
 
       // { ...block... }
       Block? block := null
@@ -604,7 +608,7 @@ public class Parser : CompilerSupport
     if (ret.isThis) method.inheritedRet = parent
 
     // enter scope
-    curMethod = method
+    curSlot = method
 
     // parameters
     consume(Token.lparen)
@@ -646,7 +650,7 @@ public class Parser : CompilerSupport
       method.code = block(ret.isVoid)
 
     // exit scope
-    curMethod = null
+    curSlot = null
 
     return method
   }
@@ -1921,14 +1925,13 @@ public class Parser : CompilerSupport
   **
   private ClosureExpr closure(Location loc, FuncType funcType)
   {
-    if (curMethod == null)
-      throw err("Unexpected closure outside of a method")
+    if (curSlot == null) throw err("Unexpected closure")
 
-    // closure anonymous class name: class$method$count
-    name := "${curType.name}\$${curMethod.name}\$${closureCount++}"
+    // closure anonymous class name: class$slot$count
+    name := "${curType.name}\$${curSlot.name}\$${closureCount++}"
 
     // create closure
-    closure := ClosureExpr.make(loc, curType, curMethod, curClosure, funcType, name)
+    closure := ClosureExpr.make(loc, curType, curSlot, curClosure, funcType, name)
 
     // save all closures in global list and list per type
     closures.add(closure)
@@ -2284,9 +2287,9 @@ public class Parser : CompilerSupport
   private Bool inVoid            // are we currently in a void method
   private Bool inFieldInit := false // are we currently in a field initializer
   private TypeDef? curType       // current TypeDef scope
-  private MethodDef? curMethod   // current MethodDef scope
+  private SlotDef? curSlot       // current SlotDef scope
   private ClosureExpr curClosure // current ClosureExpr if inside closure
-  private Int? closureCount      // number of closures parsed inside curMethod
+  private Int? closureCount      // number of closures parsed inside curSlot
   private ClosureExpr[] closures // list of all closures parsed
 
 }
