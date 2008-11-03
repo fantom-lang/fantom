@@ -294,6 +294,73 @@ class CheckErrorsTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Test Type Scopes
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTypeProtectionScopes()
+  {
+    // first create a pod with internal types/slots
+    compile(
+     "internal class Foo
+      {
+        static const Str f
+        static Void m() {}
+      }
+      ")
+    p := pod
+
+    verifyErrors(
+     "using $p.name
+
+      class Bar
+      {
+        Void m00() { echo(Foo.f) }
+        Void m01() { Foo.m() }
+        Void m02() { echo(Foo#) }
+        Void m03() { echo(Foo#f) }
+        Void m04() { echo(Foo#m) }
+
+        Foo  m05() { throw Err() }
+        Foo? m06() { throw Err() }
+        |Foo x| m07() { throw Err() }
+        |->Foo| m08() { throw Err() }
+
+        Void m09(Foo p) {}
+        Void m10(Foo? p) {}
+        Void m11(Foo?[] p) {}
+        Void m12(Str:Foo? p) {}
+        Void m13(Foo:Str p) {}
+        Void m14(|->Foo[]| p) {}
+
+        Foo f00
+        Foo?[] f01
+      }
+      ",
+    [
+       5, 25, "Internal field '$p::Foo.f' not accessible",
+       6, 20, "Internal method '$p::Foo.m' not accessible",
+       7, 21, "Internal type '$p::Foo' not accessible",
+       8, 21, "Internal field '$p::Foo.f' not accessible",
+       9, 21, "Internal method '$p::Foo.m' not accessible",
+
+      11,  3, "Internal type '$p::Foo' not accessible",
+      12,  3, "Internal type '$p::Foo' not accessible",
+      13,  3, "Internal type '$p::Foo' not accessible",
+      14,  3, "Internal type '$p::Foo' not accessible",
+
+      16, 12, "Internal type '$p::Foo' not accessible",
+      17, 12, "Internal type '$p::Foo' not accessible",
+      18, 12, "Internal type '$p::Foo' not accessible",
+      19, 12, "Internal type '$p::Foo' not accessible",
+      20, 12, "Internal type '$p::Foo' not accessible",
+      21, 12, "Internal type '$p::Foo' not accessible",
+
+      23,  3, "Internal type '$p::Foo' not accessible",
+      24,  3, "Internal type '$p::Foo' not accessible",
+    ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
