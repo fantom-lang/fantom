@@ -53,6 +53,12 @@ public abstract class Func
   public abstract Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g);
   public abstract Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h);
 
+  public final Func toImmutable()
+  {
+    if (isImmutable()) return this;
+    throw NotImmutableErr.make().val;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Indirect
 //////////////////////////////////////////////////////////////////////////

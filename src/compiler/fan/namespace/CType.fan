@@ -322,6 +322,7 @@ mixin CType
   Bool isVoid()    { return qname == "sys::Void" }
   Bool isList()    { return fits(ns.listType) }
   Bool isMap()     { return fits(ns.mapType) }
+  Bool isFunc()    { return fits(ns.funcType) }
 
 //////////////////////////////////////////////////////////////////////////
 // Slots

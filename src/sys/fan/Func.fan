@@ -146,4 +146,10 @@ final class Func
   **
   Func curry(Obj?[] args)
 
+  **
+  ** If this function is immutable then return this,
+  ** otherwise throw NotImmutableErr.
+  **
+  Func toImmutable()
+
 }

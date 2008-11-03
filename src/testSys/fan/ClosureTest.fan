@@ -24,6 +24,38 @@ class ClosureTest : Test
   */
 
 //////////////////////////////////////////////////////////////////////////
+// Immutable
+//////////////////////////////////////////////////////////////////////////
+
+  Void testImmutable1() { verifyImmutable |,| { echo("xxx") } }
+  Void testImmutable2() { verifyImmutable |Str x| { echo(x) } }
+  Void testImmutable3() { x := 0; verifyMutable |,| { x++ } }
+  Void testImmutable4() { verifyMutable |,| { verify(true) } }
+  Void testImmutable5() { verifyMutable |,| { echo(this) } }
+
+  Void verifyImmutable(Func f)
+  {
+    verifyEq(f.isImmutable, true)
+    verifySame(f.toImmutable, f)
+  }
+
+  Void verifyMutable(Func f)
+  {
+    verifyEq(f.isImmutable, false)
+    verifyErr(NotImmutableErr#) |,| { f.toImmutable }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Func Fields
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFuncFields()
+  {
+    verifyEq(ClosureFieldA().f.call0, 1972)
+    verifyErr(NotImmutableErr#) |,| { ClosureFieldB().f.call0 }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Param Cvars
 //////////////////////////////////////////////////////////////////////////
 
@@ -236,3 +268,18 @@ class ClosureTest : Test
   //   will trump access to the outer class which is very confusing!
 
 }
+
+**************************************************************************
+** Classes
+**************************************************************************
+
+class ClosureFieldA
+{
+  const |->Int| f := |->Int| { return 1972 } // ok
+}
+
+class ClosureFieldB
+{
+  const |->Str| f := |->Str| { return toStr } // uses this
+}
+
