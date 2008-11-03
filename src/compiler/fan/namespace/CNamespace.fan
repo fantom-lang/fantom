@@ -99,6 +99,7 @@ abstract class CNamespace
     typeField          = sysMethod(typeType,   "field")
     typeMethod         = sysMethod(typeType,   "method")
     typeToImmutable    = sysMethod(typeType,   "toImmutable")
+    funcToImmutable    = sysMethod(funcType,   "toImmutable")
   }
 
   private CType genericParam(Str name)
@@ -230,5 +231,6 @@ abstract class CNamespace
   readonly CMethod typeField
   readonly CMethod typeMethod
   readonly CMethod typeToImmutable
+  readonly CMethod funcToImmutable
 
 }

@@ -266,7 +266,7 @@ class CheckErrors : CompilerStep
       return isConstFieldType(map.k) && isConstFieldType(map.v)
     }
 
-    if (t.fits(ns.typeType))
+    if (t.isType || t.isFunc)
     {
       return true
     }
@@ -857,6 +857,7 @@ class CheckErrors : CompilerStep
     if (ftype.isList) return implicitToImmutable(ftype, rhs, ns.listToImmutable)
     if (ftype.isMap)  return implicitToImmutable(ftype, rhs, ns.mapToImmutable)
     if (ftype.isType) return implicitToImmutable(ftype, rhs, ns.typeToImmutable)
+    if (ftype.isFunc) return implicitToImmutable(ftype, rhs, ns.funcToImmutable)
     return rhs
   }
 

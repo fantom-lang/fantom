@@ -204,7 +204,8 @@ class ClosureTest : CompilerTest
         |Str x| c2 := |Str x| { s=x };
         |Str x| c3 := |Str x| { sets(x) };
         |Str x| c4 := |Str x| { this.sets(x) };
-        //static const |,| sc1 := |,| { Thread.locals[\"testCompiler.closure\"] = \"sc1\" }
+        static const |,| sc1 := |,| { Thread.locals[\"testCompiler.closure\"] = \"sc1\" }
+        static const |Str x| sc2 := |Str x| { Thread.locals[\"testCompiler.closure\"] = x }
         Void sets(Str x) { s = x }
         Str? s
       }")
@@ -221,11 +222,11 @@ class ClosureTest : CompilerTest
     obj->c4->call1("c4")
     verifyEq(obj->s, "c4")
 
-    /*
     verifyEq(Thread.locals["testCompiler.closure"], null)
     ((Func)t.field("sc1").get).call0
     verifyEq(Thread.locals["testCompiler.closure"], "sc1")
-    */
+    ((Func)t.field("sc2").get).call1("xxx")
+    verifyEq(Thread.locals["testCompiler.closure"], "xxx")
   }
 
   Void testField2()
