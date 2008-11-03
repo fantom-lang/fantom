@@ -43,8 +43,7 @@ internal class Parser
 
     // single line comments
     comments= Matcher[,]
-    if (rules.comments != null)
-      rules.comments.each |Str s| { comments.add(toMatcher(s)) }
+    rules.comments?.each |Str s| { comments.add(toMatcher(s)) }
 
     // block comments
     commentStart = toMatcher(rules.blockCommentStart)
