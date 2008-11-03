@@ -1679,6 +1679,7 @@ public class Parser : CompilerSupport
       call := CallExpr.make(loc)
       call.target = target
       call.name   = name
+      call.isSafe = safeCall
       call.args.add(closure)
       return call
     }
