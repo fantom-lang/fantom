@@ -176,6 +176,9 @@ class CheckErrors : CompilerStep
     // abstract field cannot have getter/setter
     if (f.isAbstract && (f.hasGet || f.hasSet))
       err("Abstract field '$f.name' cannot have getter or setter", f.location)
+
+    // check internal type
+    checkTypeProtection(f.fieldType, f.location)
   }
 
   private Void checkFieldFlags(FieldDef f)
@@ -291,6 +294,13 @@ class CheckErrors : CompilerStep
 
     // check ctors call super (or another this) ctor
     if (m.isCtor()) checkCtor(m)
+
+    // check types used in signature
+    if (!m.isAccessor)
+    {
+      checkTypeProtection(m.returnType, m.location)
+      m.paramDefs.each |ParamDef p| { checkTypeProtection(p.paramType, p.location) }
+    }
   }
 
   private Void checkMethodFlags(MethodDef m)
@@ -610,6 +620,8 @@ class CheckErrors : CompilerStep
   {
     switch (expr.id)
     {
+      case ExprId.typeLiteral:    checkTypeLiteral((LiteralExpr)expr)
+      case ExprId.slotLiteral:    checkSlotLiteral((SlotLiteralExpr)expr)
       case ExprId.listLiteral:    checkListLiteral((ListLiteralExpr)expr)
       case ExprId.mapLiteral:     checkMapLiteral((MapLiteralExpr)expr)
       case ExprId.rangeLiteral:   checkRangeLiteral((RangeLiteralExpr)expr)
@@ -636,6 +648,16 @@ class CheckErrors : CompilerStep
       case ExprId.withBlock:      checkWithBlock((WithBlockExpr)expr)
     }
     return expr
+  }
+
+  private Void checkTypeLiteral(LiteralExpr expr)
+  {
+    checkTypeProtection((CType)expr.val, expr.location)
+  }
+
+  private Void checkSlotLiteral(SlotLiteralExpr expr)
+  {
+    checkSlotProtection(expr.slot, expr.location)
   }
 
   private Void checkListLiteral(ListLiteralExpr expr)
@@ -1229,6 +1251,35 @@ class CheckErrors : CompilerStep
     }
   }
 
+  private Void checkTypeProtection(CType t, Location loc)
+  {
+    t = t.toNonNullable
+
+    if (t.isInternal && t.pod != curType.pod)
+      err("Internal type '$t' not accessible", loc)
+
+    if (t is GenericType)
+    {
+      if (t is ListType)
+      {
+        x := (ListType)t
+        checkTypeProtection(x.v, loc)
+      }
+      else if (t is MapType)
+      {
+        x := (MapType)t
+        checkTypeProtection(x.k, loc)
+        checkTypeProtection(x.v, loc)
+      }
+      else
+      {
+        x := (FuncType)t
+        checkTypeProtection(x.ret, loc)
+        x.params.each |CType p| { checkTypeProtection(p, loc) }
+      }
+    }
+  }
+
   private Void checkSlotProtection(CSlot slot, Location loc, Bool setter := false)
   {
     errMsg := slotProtectionErr(slot, setter)
@@ -1248,13 +1299,16 @@ class CheckErrors : CompilerStep
     if (myType.isClosure)
       myType = curType.closure.enclosingType
 
+    // consider the slot internal if its parent is internal
+    isInternal := slot.isInternal || slot.parent.isInternal
+
     if (slot.isPrivate && myType != slot.parent)
       return "Private $msg '$slot.qname' not accessible"
 
     else if (slot.isProtected && !myType.fits(slot.parent))
       return "Protected $msg '$slot.qname' not accessible"
 
-    else if (slot.isInternal && myType.pod != slot.parent.pod)
+    else if (isInternal && myType.pod != slot.parent.pod)
       return "Internal $msg '$slot.qname' not accessible"
 
     else
