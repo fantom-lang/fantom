@@ -1375,13 +1375,55 @@ class CheckErrors : CompilerStep
         return expr
     }
 
-    // if we auto-cast to make the expr fit, do it
-    if (expected.fits(actual))
-      return TypeCheckExpr.coerce(expr, expected)
+    // if we can auto-cast to make the expr fit then do it - we
+    // have to treat function auto-casting a little specially here
+    if (actual.isFunc && expected.isFunc)
+    {
+      if (isFuncAutoCoerce(actual, expected))
+        return TypeCheckExpr.coerce(expr, expected)
+    }
+    else
+    {
+      if (expected.fits(actual))
+        return TypeCheckExpr.coerce(expr, expected)
+    }
 
     // we have an error condition
     onErr()
     return expr
+  }
+
+  static Bool isFuncAutoCoerce(CType actualType, CType expectedType)
+  {
+    // check if both are function types
+    if (!actualType.isFunc || !expectedType.isFunc) return false
+    actual   := (FuncType)actualType.toNonNullable
+    expected := (FuncType)expectedType.toNonNullable
+
+    // if actual function requires more parameters than
+    // we are expecting, then this cannot be a match
+    if (actual.arity > expected.arity) return false
+
+    // check return type
+    if (!isFuncAutoCoerceMatch(actual.ret, expected.ret))
+      return false
+
+    // check that each parameter is auto-castable
+    return actual.params.all |CType actualParam, Int i->Bool|
+    {
+      expectedParam := expected.params[i]
+      return isFuncAutoCoerceMatch(actualParam, expectedParam)
+    }
+
+    return true
+  }
+
+  static Bool isFuncAutoCoerceMatch(CType actual, CType expected)
+  {
+    if (actual.fits(expected)) return true
+    if (expected.fits(actual)) return true
+    if (isFuncAutoCoerce(actual, expected)) return true
+    return false
   }
 
   static Bool needCoerce(CType from, CType to)

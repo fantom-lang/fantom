@@ -272,6 +272,8 @@ class FuncType : GenericType
     return true;
   }
 
+  Int arity() { return params.size }
+
   ParamDef[] toParamDefs(Location loc)
   {
     p := ParamDef[,]
