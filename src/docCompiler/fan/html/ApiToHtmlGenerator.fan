@@ -115,9 +115,10 @@ class ApiToHtmlGenerator : HtmlGenerator
   **
   Void typeDetail()
   {
-    if (t.doc == null) return
+    doc := docBody(t.doc)
+    if (doc == null) return
     out.print("<div class='detail'>\n")
-    fandoc(t.qname, t.doc)
+    fandoc(t.qname, doc)
     if (t.isEnum)
     {
       out.print("<ul>\n")
@@ -206,7 +207,7 @@ class ApiToHtmlGenerator : HtmlGenerator
 
     oldfile := loc.file
     loc.file = slot.qname
-    doc := slot.doc
+    doc := docBody(slot.doc)
 
     hidden := !showByDefault(t, slot)
     cls := (slot.isField) ? "field" : "method"
@@ -258,31 +259,55 @@ class ApiToHtmlGenerator : HtmlGenerator
     out.print("</code></p>\n")
 
     // inherited
+    Slot? docFrom := null
     if (slot.isOverride)
     {
       // if no-doc, walk inheritance for doc
       base := t.base
       while (doc == null && base != null)
       {
-        doc = base.slot(slot.name, false)?.doc
+        docFrom = base.slot(slot.name, false)
+        doc = docBody(docFrom?.doc)
         base = base.base
       }
 
-/* TODO: this code isn't right and when it does it
-should link to the slot
-      out.print("<p>Inherited from ")
-      typeLink(t.base)
-      out.print("</p>\n")
-*/
+      overridden := findOverridden(slot)
+      if (overridden != null)
+      {
+        out.print("<p class='slotinfo'>Overrides ")
+        slotLink(overridden)
+        out.print("</p>")
+      }
     }
 
-    // Slot comment
     if (doc != null)
+    {
+      // if doc from another class
+      if (docFrom != null)
+      {
+        out.print("<p class='slotinfo'>Doc inherited from ")
+        slotLink(docFrom)
+        out.print("</p>")
+      }
+
+      // fandoc body
       fandoc(slot.qname, doc)
+    }
 
     out.print("</dd>\n")
 
     loc.file = oldfile
+  }
+
+  **
+  ** Figure out which what slot is being overridden
+  **
+  Slot? findOverridden(Slot slot)
+  {
+    return slot.parent.inheritance[1..-1].eachBreak |Type t->Slot?|
+    {
+      return t.slot(slot.name, false)
+    }
   }
 
   **
@@ -342,6 +367,15 @@ should link to the slot
   {
     map := |Type x->Uri| { return compiler.uriMapper.map(x.qname, loc) }
     out.print(makeTypeLink(t, map))
+  }
+
+  **
+  ** Print hyperlink to slot with qname as the anchor text
+  **
+  Void slotLink(Slot s)
+  {
+    href := compiler.uriMapper.map(s.parent.qname, loc) + "#" + s.name
+    out.print("<a href='$href'>$s.qname</a>")
   }
 
   **
@@ -413,6 +447,22 @@ should link to the slot
   }
 
   **
+  ** Get the doc body without the @headers or return null if empty
+  **
+  Str? docBody(Str? doc)
+  {
+    if (doc == null) return null
+    if (!doc.startsWith("@")) return doc
+    nl := doc.index("\n")
+    while (nl != null)
+    {
+      if (nl+1 < doc.size && doc[nl+1] != '@') return doc[nl+1..-1]
+      nl = doc.index("\n", nl+1)
+    }
+    return null
+  }
+
+  **
   ** Write out the fandoc for this text - if an exception
   ** is thrown, write the original text.
   **
@@ -424,7 +474,11 @@ should link to the slot
       // the stream we used for parseDefs
 
       in := InStream.makeForStr(text)
-      while (in.peek == '@') in.readLine // eat def args if they exist
+      while (in.peek == '@')
+      {
+        echo("WARNING: should be using docBody!")
+        in.readLine // eat def args if they exist
+      }
 
       doc := FandocParser().parse("API for $qname", in)
       doc.children.each |DocNode child| { child.write(this) }
