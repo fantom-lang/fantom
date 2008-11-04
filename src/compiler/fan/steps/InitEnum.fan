@@ -175,6 +175,7 @@ class InitEnum : CompilerStep
 
     // static field
     f := FieldDef.make(loc, curType)
+    f.doc       = def.doc
     f.flags     = FConst.Public | FConst.Static | FConst.Const | FConst.Storage | FConst.Enum
     f.name      = def.name
     f.fieldType = curType
