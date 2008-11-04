@@ -573,6 +573,11 @@ class CheckErrors : CompilerStep
 
   private Void checkTry(TryStmt stmt)
   {
+    // check that try block not empty
+    if (stmt.block.isEmpty)
+      err("Try block cannot be empty", stmt.location)
+
+    // check each catch
     caught := CType[,]
     stmt.catches.each |Catch c|
     {

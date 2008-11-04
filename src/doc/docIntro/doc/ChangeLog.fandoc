@@ -465,6 +465,7 @@
 - Allow function types const fields with implicit toImmutable
 - Fix compiler checking of internal types
 - Fix compiler auto-casting of function types
+- Fix compiler to disallow empty try blocks
 - Fwt: file and directory dialogs
 - Fwt: RichText line background styling
 - Flux: persist undo/redo stack between hyperlinks
