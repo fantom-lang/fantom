@@ -1105,6 +1105,7 @@ class StmtTest : CompilerTest
 
                 try
                 {
+                  xxx := 555
                 }
                 finally
                 {

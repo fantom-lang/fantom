@@ -835,6 +835,8 @@ class CheckErrorsTest : CompilerTest
         static Void m24() { while (true) { try { echo(3) } finally { break } } }
         static Void m25() { while (true) { try { echo(3) } finally { continue } } }
         static Void m26() { for (;;) { try { try { m03 } finally { break } } finally { continue } } }
+
+        static Void m28() { try { } catch {} }
       }",
        [3, 26, "If condition must be Bool, not 'sys::Int'",
         4, 28, "Must throw Err, not 'sys::Int'",
@@ -863,6 +865,8 @@ class CheckErrorsTest : CompilerTest
         25, 64, "Cannot leave finally block",
         26, 62, "Cannot leave finally block",
         26, 82, "Cannot leave finally block",
+
+        28, 23, "Try block cannot be empty",
        ])
   }
 
