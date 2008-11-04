@@ -468,6 +468,7 @@
 - Fix compiler to disallow empty try blocks
 - Fix compiler to allow for(...); and while(...);
 - Fix compiler to include fandoc for enum defs
+- Enhance docCompiler to show overridden slot and inherited fandoc
 - Fwt: file and directory dialogs
 - Fwt: RichText line background styling
 - Flux: persist undo/redo stack between hyperlinks
