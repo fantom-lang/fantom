@@ -467,6 +467,7 @@
 - Fix compiler auto-casting of function types
 - Fix compiler to disallow empty try blocks
 - Fix compiler to allow for(...); and while(...);
+- Fix compiler to include fandoc for enum defs
 - Fwt: file and directory dialogs
 - Fwt: RichText line background styling
 - Flux: persist undo/redo stack between hyperlinks
