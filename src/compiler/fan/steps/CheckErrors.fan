@@ -259,14 +259,18 @@ class CheckErrors : CompilerStep
 
     if (t is ListType)
     {
-      list := t as ListType
-      return isConstFieldType(list.v)
+      // allow list types since they are checked to toImmutable at runtime
+      //list := t as ListType
+      //return isConstFieldType(f, list.v)
+      return true
     }
 
     if (t is MapType)
     {
-      map := t as MapType
-      return isConstFieldType(map.k) && isConstFieldType(map.v)
+      // allow list types since they are checked to toImmutable at runtime
+      //map := t as MapType
+      //return isConstFieldType(f, map.k) && isConstFieldType(fmap.v)
+      return true
     }
 
     if (t.isType || t.isFunc)

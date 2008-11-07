@@ -463,6 +463,8 @@
 - New docLib::Fwt chapter
 - Turn on non-null coercion runtime checking
 - Allow function types const fields with implicit toImmutable
+- Allow any list or map type as const field via implicit toImmutable
+- OutStream.writeXml
 - Fix compiler checking of internal types
 - Fix compiler auto-casting of function types
 - Fix compiler to disallow empty try blocks
