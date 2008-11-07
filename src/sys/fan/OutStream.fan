@@ -190,6 +190,27 @@ class OutStream
   **
   This writeProps(Str:Str props, Bool close := true)
 
+  **
+  ** Write a string to this output stream using XML escape sequences.
+  ** By default only the '< > &' characters are escaped. You can
+  ** use the following flags to escape additional characters:
+  **   - `xmlEscNewlines`: escape the '\n' and '\r' characters
+  **   - `xmlEscQuotes`: escape the single and double quote characters
+  **   - `xmlEscUnicode`: escape any character greater than 0x7f
+  ** Any control character less than 0x20 which is not '\t', '\n' or
+  ** '\r' is always escaped with a numeric reference.  Return this.
+  **
+  This writeXml(Str str, Int mode := 0)
+
+  ** XML escape newline characters.  See `writeXml`.
+  static const Int xmlEscNewlines := 0x01
+
+  ** XML escape single and double quotes.  See `writeXml`.
+  static const Int xmlEscQuotes := 0x02
+
+  ** XML escape any character greater then 0x7f.  See `writeXml`.
+  static const Int xmlEscUnicode := 0x04
+
 }
 
 **************************************************************************
