@@ -558,11 +558,11 @@ class CheckErrorsTest : CompilerTest
 
         private Str j
         private const StrBuf k
-        const Buf[] l
-        const Str:Buf m
-        const Buf:Int n
-        const Num:Duration ok1
-        const Num:Str[][] ok2
+        const Buf[] l             // ok
+        const Str:Buf m           // ok
+        const Buf:Int n           // ok
+        const Num:Duration ok1    // ok
+        const Num:Str[][] ok2     // ok
 
         once Int p() { return 3 }
       }
@@ -620,9 +620,11 @@ class CheckErrorsTest : CompilerTest
         16, 39, "Cannot set const field 'f' outside of constructor",
 
         23,  3, "Const field 'k' has non-const type 'sys::StrBuf'",
+        /*
         24,  3, "Const field 'l' has non-const type 'sys::Buf[]'",
         25,  3, "Const field 'm' has non-const type '[sys::Str:sys::Buf]'",
         26,  3, "Const field 'n' has non-const type '[sys::Buf:sys::Int]'",
+        */
 
          1,  7, "Const class 'Foo' cannot subclass non-const class '$podName::Bar'",
         22,  3, "Const class 'Foo' cannot contain non-const field 'j'",
