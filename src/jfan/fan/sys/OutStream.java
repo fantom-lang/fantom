@@ -308,6 +308,142 @@ public class OutStream
     }
   }
 
+  public OutStream writeXml(String s) { return writeXml(s, 0); }
+  public OutStream writeXml(String s, long mask)
+  {
+    boolean escNewlines  = (mask & xmlEscNewlines) != 0;
+    boolean escQuotes    = (mask & xmlEscQuotes) != 0;
+    boolean escUnicode   = (mask & xmlEscUnicode) != 0;
+    Charset.Encoder enc  = charsetEncoder;
+    int len = s.length();
+    String hex = "0123456789abcdef";
+
+    for (int i=0; i<len; ++i)
+    {
+      int ch = s.charAt(i);
+      switch (ch)
+      {
+        // table switch on control chars
+        case  0: case  1: case  2: case  3: case  4: case  5: case  6:
+        case  7: case  8: /*case  9: case 10:*/ case 11: case 12: /*case 13:*/
+        case 14: case 15: case 16: case 17: case 18: case 19: case 20:
+        case 21: case 22: case 23: case 24: case 25: case 26: case 27:
+        case 28: case 29: case 30: case 31:
+          writeXmlEsc(ch);
+          break;
+
+        // newlines
+        case '\n': case '\r':
+          if (!escNewlines)
+            enc.encode((char)ch, this);
+          else
+            writeXmlEsc(ch);
+          break;
+
+        // space
+        case ' ':
+          enc.encode(' ', this);
+          break;
+
+        // table switch on common ASCII chars
+        case '!': case '#': case '$': case '%': case '(': case ')': case '*':
+        case '+': case ',': case '-': case '.': case '/': case '0': case '1':
+        case '2': case '3': case '4': case '5': case '6': case '7': case '8':
+        case '9': case ':': case ';': case '=': case '?': case '@': case 'A':
+        case 'B': case 'C': case 'D': case 'E': case 'F': case 'G': case 'H':
+        case 'I': case 'J': case 'K': case 'L': case 'M': case 'N': case 'O':
+        case 'P': case 'Q': case 'R': case 'S': case 'T': case 'U': case 'V':
+        case 'W': case 'X': case 'Y': case 'Z': case '[': case '\\': case ']':
+        case '^': case '_': case '`': case 'a': case 'b': case 'c': case 'd':
+        case 'e': case 'f': case 'g': case 'h': case 'i': case 'j': case 'k':
+        case 'l': case 'm': case 'n': case 'o': case 'p': case 'q': case 'r':
+        case 's': case 't': case 'u': case 'v': case 'w': case 'x': case 'y':
+        case 'z': case '{': case '|': case '}': case '~':
+          enc.encode((char)ch, this);
+          break;
+
+        // XML control characters
+        case '<':
+          enc.encode('&', this);
+          enc.encode('l', this);
+          enc.encode('t', this);
+          enc.encode(';', this);
+          break;
+        case '>':
+          if (i == 0 || s.charAt(i-1) != ']') enc.encode('>', this);
+          else
+          {
+            enc.encode('&', this);
+            enc.encode('g', this);
+            enc.encode('t', this);
+            enc.encode(';', this);
+          }
+          break;
+        case '&':
+          enc.encode('&', this);
+          enc.encode('a', this);
+          enc.encode('m', this);
+          enc.encode('p', this);
+          enc.encode(';', this);
+          break;
+        case '"':
+          if (!escQuotes) enc.encode((char)ch, this);
+          else
+          {
+            enc.encode('&', this);
+            enc.encode('q', this);
+            enc.encode('u', this);
+            enc.encode('o', this);
+            enc.encode('t', this);
+            enc.encode(';', this);
+          }
+          break;
+        case '\'':
+          if (!escQuotes) enc.encode((char)ch, this);
+          else
+          {
+            enc.encode('&', this);
+            enc.encode('a', this);
+            enc.encode('p', this);
+            enc.encode('o', this);
+            enc.encode('s', this);
+            enc.encode(';', this);
+          }
+          break;
+
+        // default
+        default:
+          if (ch <= 0xf7 || !escUnicode)
+            enc.encode((char)ch, this);
+          else
+            writeXmlEsc(ch);
+      }
+    }
+    return this;
+  }
+
+  private void writeXmlEsc(int ch)
+  {
+    Charset.Encoder enc = charsetEncoder;
+    String hex = "0123456789abcdef";
+
+    enc.encode('&', this);
+    enc.encode('#', this);
+    enc.encode('x', this);
+    if (ch > 0xff)
+    {
+      enc.encode(hex.charAt((ch >> 12) & 0xf), this);
+      enc.encode(hex.charAt((ch >> 8)  & 0xf), this);
+    }
+    enc.encode(hex.charAt((ch >> 4) & 0xf), this);
+    enc.encode(hex.charAt((ch >> 0) & 0xf), this);
+    enc.encode(';', this);
+  }
+
+  public static final long xmlEscNewlines = 0x01;
+  public static final long xmlEscQuotes   = 0x02;
+  public static final long xmlEscUnicode  = 0x04;
+
   public OutStream flush()
   {
     if (out != null) out.flush();

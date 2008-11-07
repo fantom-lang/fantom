@@ -301,6 +301,12 @@ class Buf
   **
   This writeObj(Obj? obj, [Str:Obj]? options := null)
 
+  **
+  ** Convenience for [out.writeXml]`OutStream.writeXml`
+  ** Return this.
+  **
+  This writeXml(Str s, Int flags := 0)
+
 //////////////////////////////////////////////////////////////////////////
 // InStream
 //////////////////////////////////////////////////////////////////////////
