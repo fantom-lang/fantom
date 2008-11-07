@@ -836,25 +836,7 @@ class WebOutStream : OutStream
   This esc(Obj? obj)
   {
     if (obj == null) return w("null")
-    str := obj.toStr
-    str.each |Int ch, Int i|
-    {
-      switch (ch)
-      {
-        case '<':  writeChars("&lt;")
-        case '&':  writeChars("&amp;")
-        case '\'': writeChars("&apos;")
-        case '"':  writeChars("&quot;")
-        case '>':
-          if (i == 0 || str[i-1] == ']')
-            writeChars("&gt;")
-          else
-            writeChar(ch)
-        default:
-          writeChar(ch)
-      }
-    }
-    return this
+    return writeXml(obj.toStr, xmlEscQuotes)
   }
 
 //////////////////////////////////////////////////////////////////////////
