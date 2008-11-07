@@ -962,7 +962,7 @@ class StreamTest : Test
     verifyXml("+&-", "+&amp;-", 0)
 
     // gt only escaped when possible CDATA
-    verifyXml(">", ">", 0)
+    verifyXml(">", "&gt;", 0)
     verifyXml(" >", " >", 0)
     verifyXml("]>", "]&gt;", 0)
     verifyXml("&", "&amp;", 0)

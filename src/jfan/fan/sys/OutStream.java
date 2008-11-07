@@ -370,7 +370,7 @@ public class OutStream
           enc.encode(';', this);
           break;
         case '>':
-          if (i == 0 || s.charAt(i-1) != ']') enc.encode('>', this);
+          if (i > 0 && s.charAt(i-1) != ']') enc.encode('>', this);
           else
           {
             enc.encode('&', this);
