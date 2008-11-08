@@ -22,6 +22,11 @@ class XPi : XNode
   }
 
   **
+  ** Return the `NodeType.pi`.
+  **
+  override NodeType nodeType() { return NodeType.pi }
+
+  **
   ** Target name for the processing instruction.  It
   ** must be a valid XML name production.
   **

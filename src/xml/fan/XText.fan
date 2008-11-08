@@ -21,6 +21,11 @@ class XText : XNode
   }
 
   **
+  ** Return the `NodeType.text`.
+  **
+  override NodeType nodeType() { return NodeType.text }
+
+  **
   ** Character data for this text node.  If this text is to
   ** be written as a CDATA section, then this value must not
   ** contain the "]]>" substring.
@@ -41,6 +46,14 @@ class XText : XNode
   {
     if (val.size > 20) return val[0..20] + "..."
     return val
+  }
+
+  **
+  ** Make a copy of this text node.
+  **
+  XText copy()
+  {
+    return XText(val) { cdata = this.cdata }
   }
 
   **
