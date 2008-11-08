@@ -13,6 +13,13 @@ abstract class XNode
 {
 
   **
+  ** Return the node type enum.  Note that XElem always
+  ** returns 'elem', but that during pull parsing XParser
+  ** will return 'elemStart' and 'elemEnd'.
+  **
+  abstract NodeType nodeType()
+
+  **
   ** Get the parent of this node or null if unmounted.
   **
   XNode? parent { internal set }
@@ -24,3 +31,24 @@ abstract class XNode
 
 }
 
+**************************************************************************
+** NodeType
+**************************************************************************
+
+enum NodeType
+{
+  ** Element node type returned by `XElem.nodeType`
+  elem,
+
+  ** Text node type returned by `XText.nodeType`
+  text,
+
+  ** Processing instruction node type returned by `XPi.nodeType`
+  pi,
+
+  ** Start of element used by XParser when pull parsing.
+  elemStart,
+
+  ** End of element used by XParser when pull parsing.
+  elemEnd
+}

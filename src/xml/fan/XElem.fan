@@ -32,18 +32,24 @@ class XElem : XNode
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Return the `NodeType.elem`.  Note that during pull
+  ** parsing XParser will return 'elemStart' and 'elemEnd'.
+  **
+  override NodeType nodeType() { return NodeType.elem }
+
+  **
   ** Unqualified local name of the element.  If an XML namespace prefix
   ** was specified, then this is everything after the colon:
   **   <foo>    =>  foo
   **   <x:foo>  =>  foo
   **
-  readonly Str name
+  Str name
 
   **
   ** The XML namespace which qualified this element's name.
   ** If the element name is unqualified return null.
   **
-  readonly XNs? ns
+  XNs? ns
 
   **
   ** If this element is qualified by an XML namespace then return
@@ -154,6 +160,15 @@ class XElem : XNode
     return attrList.removeAt(index)
   }
 
+  **
+  ** Remove all the attributes.  Return this.
+  **
+  This clearAttrs()
+  {
+    attrList = noAttrs
+    return this
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Children Nodes
 //////////////////////////////////////////////////////////////////////////
@@ -254,6 +269,21 @@ class XElem : XNode
   XText? text()
   {
     return childList.find |XNode n->Bool| { return n is XText }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Make a shallow copy of this element.
+  **
+  XElem copy()
+  {
+    copy := XElem(name, ns)
+    if (!attrList.isEmpty) copy.attrList = attrList.dup
+    if (!childList.isEmpty) copy.childList = childList.dup
+    return copy
   }
 
 //////////////////////////////////////////////////////////////////////////
