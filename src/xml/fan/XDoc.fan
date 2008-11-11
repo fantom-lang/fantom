@@ -24,9 +24,9 @@ class XDoc : XNode
   }
 
   **
-  ** Return the `NodeType.doc`.
+  ** Return the `XNodeType.doc`.
   **
-  override NodeType nodeType() { return NodeType.doc }
+  override XNodeType nodeType() { return XNodeType.doc }
 
   **
   ** Document type declaration or null if undefined.

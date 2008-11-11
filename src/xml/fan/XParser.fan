@@ -39,7 +39,7 @@ class XParser
   **
   XElem parse(Bool close := true)
   {
-    if (next() !== NodeType.elemStart)
+    if (next() !== XNodeType.elemStart)
     {
       if (close) this.close
       throw err("Expecting element start")
@@ -66,15 +66,15 @@ class XParser
         if (nodeType == null) throw eosErr
         switch (nodeType)
         {
-          case NodeType.elemStart:
+          case XNodeType.elemStart:
             oldCur := cur
             cur = elem.copy
             oldCur.add(cur)
             depth++
-          case NodeType.elemEnd:
+          case XNodeType.elemEnd:
             cur = cur.parent
             depth--
-          case NodeType.text:
+          case XNodeType.text:
             cur.add(text.copy)
           default:
             throw Err("unhandled node type: $nodeType")
@@ -95,14 +95,14 @@ class XParser
   **
   ** Advance the parser to the next node and return the node type.
   ** Return the current node type:
-  **   - `NodeType.elemStart`
-  **   - `NodeType.elemEnd`
-  **   - `NodeType.text`
-  **   - `NodeType.pi`
+  **   - `XNodeType.elemStart`
+  **   - `XNodeType.elemEnd`
+  **   - `XNodeType.text`
+  **   - `XNodeType.pi`
   **   - null indicates end of stream
   ** Also see `nodeType`.
   **
-  NodeType? next()
+  XNodeType? next()
   {
     if (popStack)
     {
@@ -114,7 +114,7 @@ class XParser
     {
       emptyElem = false
       popStack = true // pop stack on next call to next()
-      return nodeType = NodeType.elemEnd
+      return nodeType = XNodeType.elemEnd
     }
 
     while(true)
@@ -142,7 +142,7 @@ class XParser
           {
             consume("CDATA[")
             parseCDATA()
-            return nodeType = NodeType.text
+            return nodeType = XNodeType.text
           }
           else if (c == 'D')
           {
@@ -165,20 +165,20 @@ class XParser
         {
           parseElemEnd
           popStack = true  // pop stack on next call to next()
-          return nodeType = NodeType.elemEnd
+          return nodeType = XNodeType.elemEnd
         }
 
         // must be element start
         else
         {
           parseElemStart(c)
-          return nodeType = NodeType.elemStart
+          return nodeType = XNodeType.elemStart
         }
       }
 
       // char data
       if (!parseText(c)) continue
-      return nodeType = NodeType.text
+      return nodeType = XNodeType.text
     }
 
     throw Err("illegal state")
@@ -194,7 +194,7 @@ class XParser
   {
     while(true)
     {
-      if (nodeType === NodeType.elemEnd && depth == toDepth) return
+      if (nodeType === XNodeType.elemEnd && depth == toDepth) return
       nodeType = next()
       if (nodeType == null) throw eosErr
     }
@@ -203,13 +203,13 @@ class XParser
   **
   ** Get the current node type constant which is always the
   ** result of the last call to `next`.  Node type will be:
-  **   - `NodeType.elemStart`
-  **   - `NodeType.elemEnd`
-  **   - `NodeType.text`
-  **   - `NodeType.pi`
+  **   - `XNodeType.elemStart`
+  **   - `XNodeType.elemEnd`
+  **   - `XNodeType.text`
+  **   - `XNodeType.pi`
   **   - null indicates end of stream
   **
-  readonly NodeType? nodeType
+  readonly XNodeType? nodeType
 
   **
   ** Get the depth of the current element with the document
@@ -252,7 +252,7 @@ class XParser
   **
   XText? text()
   {
-    if (nodeType === NodeType.text) return resuableText
+    if (nodeType === XNodeType.text) return resuableText
     return null
   }
 
@@ -280,7 +280,7 @@ class XParser
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Parse a [40] element start production.  We are passed
+  ** Parse a '[40]' element start production.  We are passed
   ** the first character after the < (beginning of name).
   **
   private Void parseElemStart(Int c)
@@ -366,7 +366,7 @@ class XParser
   }
 
   **
-  ** Parse a [41] attribute production.  We are passed
+  ** Parse a '[41]' attribute production.  We are passed
   ** the first character of the attribute name.  Return
   ** if the attribute had a namespace prefix.
   **
@@ -419,7 +419,7 @@ elem.addAttr(name, val)
 
   **
   ** Parse an element or attribute name of the
-  ** format [<prefix>:]name and store result in
+  ** format '[<prefix>:]name' and store result in
   ** prefix and name fields.
   **
   private Void parseQName(Int c)
@@ -535,7 +535,7 @@ elem.addAttr(name, val)
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Skip [3] Space = ' ' '\n' '\r' '\t'
+  ** Skip '[3]' Space = ' ' '\n' '\r' '\t'
   ** Return true if one or more space chars found.
   **
   private Bool skipSpace()
@@ -553,7 +553,7 @@ elem.addAttr(name, val)
   }
 
   **
-  ** Skip [15] Comment := <!-- ... -->
+  ** Skip '[15]' Comment := <!-- ... -->
   **
   private Void skipComment()
   {
@@ -572,7 +572,7 @@ elem.addAttr(name, val)
   }
 
   **
-  ** Skip [16] PI := <? ... ?>
+  ** Skip '[16]' PI := <? ... ?>
   **
   private Void skipPI()
   {
@@ -586,7 +586,7 @@ elem.addAttr(name, val)
   }
 
   **
-  ** Skip [28] DocType := <!DOCTYPE ... >
+  ** Skip '[28]' DocType := <!DOCTYPE ... >
   **
   private Void skipDocType()
   {

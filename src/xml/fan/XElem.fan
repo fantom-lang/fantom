@@ -7,7 +7,7 @@
 //
 
 **
-** XElem models an XML element.
+** Models an XML element: its name, attributes, and children nodes.
 **
 class XElem : XNode
 {
@@ -32,10 +32,10 @@ class XElem : XNode
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return the `NodeType.elem`.  Note that during pull
+  ** Return the `XNodeType.elem`.  Note that during pull
   ** parsing XParser will return 'elemStart' and 'elemEnd'.
   **
-  override NodeType nodeType() { return NodeType.elem }
+  override XNodeType nodeType() { return XNodeType.elem }
 
   **
   ** Unqualified local name of the element.  If an XML namespace prefix

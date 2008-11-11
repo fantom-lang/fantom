@@ -21,9 +21,9 @@ class XText : XNode
   }
 
   **
-  ** Return the `NodeType.text`.
+  ** Return the `XNodeType.text`.
   **
-  override NodeType nodeType() { return NodeType.text }
+  override XNodeType nodeType() { return XNodeType.text }
 
   **
   ** Character data for this text node.  If this text is to
