@@ -157,7 +157,7 @@ class ParserTest : XmlTest
       })
 
     verifyParse(
-      "<r>&amp;\n&#x1234;</r>",
+      " <r>&amp;\n&#x1234;</r> ",
       XDoc
       {
         root = XElem("r") { XText("&\n\u1234") }
@@ -183,7 +183,7 @@ class ParserTest : XmlTest
   Void testCdata()
   {
     verifyParse(
-      "<r><![CDATA[]]></r>",
+      "<r><![CDATA[]]></r>\n",
       XDoc
       {
         root = XElem("r")

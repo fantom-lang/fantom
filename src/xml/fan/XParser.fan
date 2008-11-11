@@ -280,7 +280,7 @@ class XParser
   **
   ** Current one based column number.
   **
-  readonly Int col
+  readonly Int col := 1
 
   **
   ** Close the underlying input stream.  Return true if the stream
@@ -392,7 +392,7 @@ class XParser
       }
       else
       {
-        if (!sp) throw err("Expecting space before attribute")
+        if (!sp) throw err("Expecting space before attribute", line, col-1)
         resolveAttrNs |= parseAttr(c, elem)
       }
     }
@@ -424,6 +424,8 @@ class XParser
   private Void parseElemEnd()
   {
     // prefix / name
+    line := this.line
+    col  := this.col
     parseQName(read)
     XNs? ns := null
     if (prefix == null)
@@ -432,12 +434,12 @@ class XParser
       ns = prefixToNs(prefix)
 
     // get end element
-    if (depth == 0) throw err("Element end without start")
+    if (depth == 0) throw err("Element end without start", line, col)
     elem := stack[depth-1]
 
     // verify
     if (elem.name != name || elem.ns !== ns)
-      throw err("Expecting end of element '${elem.qname}' (start line ${elem.line})")
+      throw err("Expecting end of element '${elem.qname}' (start line ${elem.line})", line, col)
 
     skipSpace
     if (read != '>')
@@ -458,12 +460,12 @@ class XParser
 
     // Eq [25] production
     skipSpace
-    if (read != '=') throw err("Expecting '='")
+    if (read != '=') throw err("Expecting '='", line, col-1)
     skipSpace
 
     // String literal
     c = read
-    if (c != '"' && c != '\'') throw err("Expecting quoted attribute value")
+    if (c != '"' && c != '\'') throw err("Expecting quoted attribute value", line, col-1)
     val := parseQuotedStr(c)
 
     // check namespace declaration "xmlns" or "xmlns:prefix"
@@ -574,6 +576,8 @@ elem.addAttr(name, val)
   **
   private Bool parseText(Int c)
   {
+    line := this.line
+    col  := this.col - 1
     gotText := !isSpace(c)
     buf.clear.addChar(toCharData(c))
     cdata = false
@@ -586,13 +590,15 @@ elem.addAttr(name, val)
       }
       catch(IOErr e)
       {
-        if (gotText) throw e
-        return false
+        if (!gotText) return false
+        if (depth == 0) throw XErr("Expecting root element", line, col)
+        throw e
       }
 
       if (c == '<')
       {
         pushback = c
+        if (gotText && depth == 0) throw XErr("Expecting root element", line, col)
         return gotText
       }
 
@@ -699,7 +705,7 @@ elem.addAttr(name, val)
     // update line:col and normalize line breaks (2.11)
     if (c == '\n')
     {
-      line++; col=0
+      line++; col=1
       return '\n'
     }
     else if (c == '\r')
@@ -918,7 +924,7 @@ elem.addAttr(name, val)
   **
   ** Make an XException using with current line and column.
   **
-  private XErr err(Str msg)
+  private XErr err(Str msg, Int line := this.line, Int col := this.col)
   {
     return XErr(msg, line, col)
   }
