@@ -17,7 +17,7 @@ abstract class XNode
   ** returns 'elem', but that during pull parsing XParser
   ** will return 'elemStart' and 'elemEnd'.
   **
-  abstract NodeType nodeType()
+  abstract XNodeType nodeType()
 
   **
   ** Get the root document node or null if this node is
@@ -43,10 +43,13 @@ abstract class XNode
 }
 
 **************************************************************************
-** NodeType
+** XNodeType
 **************************************************************************
 
-enum NodeType
+**
+** Enumerates the type of `XNode` and current node of `XParser`.
+**
+enum XNodeType
 {
   ** Document node type by `XDoc.nodeType`
   doc,

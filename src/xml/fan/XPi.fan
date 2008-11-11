@@ -22,9 +22,9 @@ class XPi : XNode
   }
 
   **
-  ** Return the `NodeType.pi`.
+  ** Return the `XNodeType.pi`.
   **
-  override NodeType nodeType() { return NodeType.pi }
+  override XNodeType nodeType() { return XNodeType.pi }
 
   **
   ** Target name for the processing instruction.  It
