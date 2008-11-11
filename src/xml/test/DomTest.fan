@@ -155,6 +155,33 @@ class DomTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Doc
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDoc()
+  {
+    doc := XDoc()
+    verifySame(doc.doc, doc)
+    verifySame(doc.root.doc, doc)
+    verifyEq(doc.root.name, "undefined")
+
+    doc.root = XElem("root")
+    {
+      XElem("a")
+      {
+        XElem("b") { XText("text") }
+      }
+      XElem("c")
+    }
+    verifySame(doc.doc, doc)
+    verifySame(doc.root.doc, doc)
+    verifySame(doc.root.elem("a").doc, doc)
+    verifySame(doc.root.elem("a").elem("b").doc, doc)
+    verifySame(doc.root.elem("a").elem("b").text.doc, doc)
+    verifyEq(XElem("x").doc, null)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Namespaces
 //////////////////////////////////////////////////////////////////////////
 
