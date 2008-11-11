@@ -83,6 +83,40 @@ class WriteTest : Test
     verifyWrite(multi, "<multi>line1\nline2</multi>")
   }
 
+  Void testDoc()
+  {
+    doc := XDoc()
+    verifyWrite(doc,
+      "<?xml version='1.0' encoding='UTF-8'?>
+       <undefined/>\n")
+
+    doc.root = XElem("root").addAttr("foo", "bar").add(XText("how, how"))
+    verifyWrite(doc,
+      "<?xml version='1.0' encoding='UTF-8'?>
+       <root foo='bar'>how, how</root>\n")
+
+    doc.docType = XDocType { rootElem="root"; systemId=`root.dtd` }
+    verifyWrite(doc,
+      "<?xml version='1.0' encoding='UTF-8'?>
+       <!DOCTYPE root SYSTEM 'root.dtd'>
+       <root foo='bar'>how, how</root>\n")
+
+    // publicId without systemId isn't technically correct
+    doc.docType = XDocType { rootElem="root"; publicId="foo" }
+    verifyWrite(doc,
+      "<?xml version='1.0' encoding='UTF-8'?>
+       <!DOCTYPE root PUBLIC 'foo'>
+       <root foo='bar'>how, how</root>\n")
+
+    doc.docType = XDocType { rootElem="root";
+      publicId = "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      systemId=`http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd` }
+    verifyWrite(doc,
+      "<?xml version='1.0' encoding='UTF-8'?>
+       <!DOCTYPE root PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+       <root foo='bar'>how, how</root>\n")
+  }
+
   Void testEsc()
   {
     x := XElem("x").addAttr("foo", "<AT&T>")
@@ -126,7 +160,7 @@ class WriteTest : Test
        </root>")
   }
 
-  Void verifyWrite(XElem xml, Str expected)
+  Void verifyWrite(XNode xml, Str expected)
   {
     buf := Buf()
     xml.write(buf.out)

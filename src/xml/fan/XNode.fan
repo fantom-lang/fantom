@@ -20,6 +20,17 @@ abstract class XNode
   abstract NodeType nodeType()
 
   **
+  ** Get the root document node or null if this node is
+  ** not mounted under a XDoc instance.
+  **
+  XDoc? doc()
+  {
+    for (XNode? x := this; x != null; x = x.parent)
+      if (x is XDoc) return x
+    return null
+  }
+
+  **
   ** Get the parent of this node or null if unmounted.
   **
   XNode? parent { internal set }
@@ -37,6 +48,9 @@ abstract class XNode
 
 enum NodeType
 {
+  ** Document node type by `XDoc.nodeType`
+  doc,
+
   ** Element node type returned by `XElem.nodeType`
   elem,
 
