@@ -33,6 +33,17 @@ class XParser
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Parse the entire document into memory as a tree
+  ** of XElems and optionally close the underlying input
+  ** stream.
+  **
+  XDoc parseDoc(Bool close := true)
+  {
+    doc.root = parse(close)
+    return doc
+  }
+
+  **
   ** Parse the entire next element into memory as a tree
   ** of XElems and optionally close the underlying input
   ** stream.
@@ -147,7 +158,7 @@ class XParser
           else if (c == 'D')
           {
              consume("OCTYPE")
-             skipDocType
+             parseDocType
              continue
           }
           throw err("Unexpected markup")
@@ -201,6 +212,11 @@ class XParser
   }
 
   **
+  ** Get the root document node.
+  **
+  readonly XDoc doc := XDoc()
+
+  **
   ** Get the current node type constant which is always the
   ** result of the last call to `next`.  Node type will be:
   **   - `XNodeType.elemStart`
@@ -252,8 +268,8 @@ class XParser
   **
   XText? text()
   {
-    if (nodeType === XNodeType.text) return resuableText
-    return null
+    if (nodeType !== XNodeType.text) return null
+    return XText(buf.toStr) { cdata = this.cdata }
   }
 
   **
@@ -278,6 +294,69 @@ class XParser
 //////////////////////////////////////////////////////////////////////////
 // Parse Utils
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Parse '[28]' DocType := <!DOCTYPE ... >
+  **
+  private Void parseDocType()
+  {
+    // parse root element name
+    skipSpace
+    rootElem := parseName(read)
+    c := read
+    if (c == ':') rootElem += ":" + parseName(c)
+    else pushback = c
+
+    // check for publicId/systemId
+    skipSpace
+    Str? publicId := null
+    Str? systemId := null
+    c = read
+    if (c == 'P' || c == 'S')
+    {
+      key := parseName(c)
+      if (key == "PUBLIC")
+      {
+        skipSpace; c = read
+        if (c == '"' || c == '\'') publicId = parseQuotedStr(c)
+        else pushback = c
+
+        skipSpace; c = read
+        if (c == '"' || c == '\'') systemId = parseQuotedStr(c)
+        else pushback = c
+      }
+      else if (key == "SYSTEM")
+      {
+        skipSpace; c = read
+        if (c == '"' || c == '\'') systemId = parseQuotedStr(c)
+        else pushback = c
+      }
+    }
+    else pushback = c
+
+    // init XDocType
+    docType := doc.docType = XDocType()
+    docType.rootElem = rootElem
+    docType.publicId = publicId
+    try
+    {
+      if (systemId != null) docType.systemId = Uri.decode(systemId)
+    }
+    catch (Err e)
+    {
+      throw err("Invalid system id uri: $systemId")
+    }
+
+    // skip the rest of the doctype
+    depth := 1
+    while(true)
+    {
+      c = read
+      if (c == '<') depth++
+      if (c == '>') depth--
+      if (depth == 0) return
+    }
+  }
 
   **
   ** Parse a '[40]' element start production.  We are passed
@@ -319,7 +398,7 @@ class XParser
     }
 
     // after reading all the attributes, now it is safe to
-    // resolve prefixes into their actual XNs instances;
+    // resolve prefixes into their actual XNs instances
     // first resolve the element itself...
     /*
     if (prefix == null)
@@ -358,7 +437,7 @@ class XParser
 
     // verify
     if (elem.name != name || elem.ns !== ns)
-      throw err("Expecting end of element '${elem.qname}' (start line ${elem.line})");
+      throw err("Expecting end of element '${elem.qname}' (start line ${elem.line})")
 
     skipSpace
     if (read != '>')
@@ -392,7 +471,7 @@ class XParser
     {
       if (name == "xmlns")
       {
-        pushNs(elem, "", val);
+        pushNs(elem, "", val)
       }
     }
     else
@@ -412,7 +491,7 @@ class XParser
 
     // add attribute using raw prefix string - we
     // will resolve later in parseElemStart
-//    elem.addAttrImpl(prefix, name, value);
+//    elem.addAttrImpl(prefix, name, value)
 elem.addAttr(name, val)
     return prefix != null
   }
@@ -456,7 +535,7 @@ elem.addAttr(name, val)
   **
   private Str parseName(Int c)
   {
-    if (!isName(c)) throw err("Expected XML name");
+    if (!isName(c)) throw err("Expected XML name")
 
     buf := this.buf
     buf.clear.addChar(c)
@@ -470,26 +549,22 @@ elem.addAttr(name, val)
   **
   private Void parseCDATA()
   {
-    throw UnsupportedErr()
-/*
-    XText text = this.text;
-    text.length = 0;
-    text.cdata = true;
+    buf.clear
+    cdata = true
 
-    int c2 = -1, c1 = -1, c0 = -1;
+    c2 := -1; c1 := -1; c0 := -1
     while(true)
     {
-      c2 = c1;
-      c1 = c0;
-      c0 = read();
+      c2 = c1
+      c1 = c0
+      c0 = read
       if (c2 == ']' && c1 == ']' && c0 == '>')
       {
-        text.setLength(text.length-2);
-        return;
+        buf.remove(-1).remove(-1)
+        return
       }
-      text.append(c0);
+      buf.addChar(c0)
     }
-*/
   }
 
 
@@ -499,17 +574,15 @@ elem.addAttr(name, val)
   **
   private Bool parseText(Int c)
   {
-//    XText text = this.text;
-//    text.length = 0;
-//    text.cdata = false;
-//    text.append(toCharData(c));
     gotText := !isSpace(c)
+    buf.clear.addChar(toCharData(c))
+    cdata = false
 
     while(true)
     {
       try
       {
-        c = read();
+        c = read
       }
       catch(IOErr e)
       {
@@ -524,7 +597,7 @@ elem.addAttr(name, val)
       }
 
       if (!isSpace(c)) gotText = true
-      //text.append(toCharData(c))
+      buf.addChar(toCharData(c))
     }
 
     throw Err("illegal state")
@@ -543,8 +616,8 @@ elem.addAttr(name, val)
     c := read
     if (!isSpace(c))
     {
-      pushback = c;
-      return false;
+      pushback = c
+      return false
     }
 
     while(isSpace(c = read()));
@@ -585,21 +658,6 @@ elem.addAttr(name, val)
     }
   }
 
-  **
-  ** Skip '[28]' DocType := <!DOCTYPE ... >
-  **
-  private Void skipDocType()
-  {
-    depth := 1
-    while(true)
-    {
-      c := read
-      if (c == '<') depth++
-      if (c == '>') depth--
-      if (depth == 0) return
-    }
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Consume Utils
 //////////////////////////////////////////////////////////////////////////
@@ -612,7 +670,7 @@ elem.addAttr(name, val)
   {
     s.each |Int expected|
     {
-      if (expected != read) throw err("Expected '" + expected.toChar + "'");
+      if (expected != read) throw err("Expected '" + expected.toChar + "'")
     }
   }
 
@@ -641,8 +699,8 @@ elem.addAttr(name, val)
     // update line:col and normalize line breaks (2.11)
     if (c == '\n')
     {
-      line++; col=0;
-      return '\n';
+      line++; col=0
+      return '\n'
     }
     else if (c == '\r')
     {
@@ -666,11 +724,11 @@ elem.addAttr(name, val)
   private Int toCharData(Int c)
   {
     if (c == '<')
-      throw err("Invalid markup in char data");
+      throw err("Invalid markup in char data")
 
-    if (c != '&') return c;
+    if (c != '&') return c
 
-    c = read();
+    c = read
 
     // &#_; and &#x_;
     if (c == '#')
@@ -695,13 +753,13 @@ elem.addAttr(name, val)
     while((c = read()) != ';') ebuf.addChar(c)
     entity := ebuf.toStr
 
-    if (entity == "lt")   return '<';
-    if (entity == "gt")   return '>';
-    if (entity == "amp")  return '&';
-    if (entity == "quot") return '"';
-    if (entity == "apos") return '\'';
+    if (entity == "lt")   return '<'
+    if (entity == "gt")   return '>'
+    if (entity == "amp")  return '&'
+    if (entity == "quot") return '"'
+    if (entity == "apos") return '\''
 
-    throw err("Unsupported entity &${entity};");
+    throw err("Unsupported entity &${entity};")
   }
 
   private Int toNum(Int x, Int c, Int base)
@@ -729,16 +787,16 @@ elem.addAttr(name, val)
 /*
     for(int i=depth-1; i>=0; --i)
     {
-      XNs[] ns = nsStack[i];
-      if (ns == null) continue;
+      XNs[] ns = nsStack[i]
+      if (ns == null) continue
       for(int j=0; j<ns.length; ++j)
         if (ns[j].prefix.equals(prefix))
         {
-          return ns[j];
+          return ns[j]
         }
     }
 */
-    throw err("Undeclared namespace prefix '${prefix}'");
+    throw err("Undeclared namespace prefix '${prefix}'")
   }
 
   **
@@ -748,32 +806,32 @@ elem.addAttr(name, val)
   {
 /*
     // make ns instance
-    XNs ns = new XNs(prefix, value);
+    XNs ns = new XNs(prefix, value)
     ns.declaringElem = elem;
 
     // update defaultNs
     if (prefix == "")
     {
       if (value.equals(""))
-        defaultNs = null;
+        defaultNs = null
       else
-        defaultNs = ns;
+        defaultNs = ns
     }
 
     // update stack
-    XNs[] list = nsStack[depth-1];
+    XNs[] list = nsStack[depth-1]
     if (list == null)
     {
-      list = new XNs[] { ns };
+      list = new XNs[] { ns }
     }
     else
     {
       XNs[] temp = new XNs[list.length+1];
       System.arraycopy(list, 0, temp, 0, list.length);
-      temp[list.length] = ns;
-      list = temp;
+      temp[list.length] = ns
+      list = temp
     }
-    nsStack[depth-1] = list;
+    nsStack[depth-1] = list
 */
   }
 
@@ -785,18 +843,18 @@ elem.addAttr(name, val)
   private Void reEvalDefaultNs()
   {
 /*
-    defaultNs = null;
+    defaultNs = null
     for(int i=depth-1; i>=0; --i)
     {
-      XNs[] ns = nsStack[i];
+      XNs[] ns = nsStack[i]
       if (ns != null)
       {
         for(int j=0; j<ns.length; ++j)
         {
           if (ns[j].isDefault())
           {
-            if (!ns[j].uri.equals("")) defaultNs = ns[j];
-            return;
+            if (!ns[j].uri.equals("")) defaultNs = ns[j]
+            return
           }
         }
       }
@@ -882,8 +940,8 @@ elem.addAttr(name, val)
     t1 := Duration.now
     m1 := Sys.diagnostics["mem.heap"].toStr.toInt
 
-    elem := XParser(File.os(Sys.args[0]).in).parse
-    elem.write(Sys.out)
+    doc := XParser(File.os(Sys.args[0]).in).parseDoc
+    doc.write(Sys.out)
 
     m2 := Sys.diagnostics["mem.heap"].toStr.toInt
     t2 := Duration.now
@@ -926,12 +984,12 @@ elem.addAttr(name, val)
 
   private InStream in
   private Int pushback := -1
-  private XText resuableText := XText("")
   private XElem[] stack := [XElem("")]
   //private XNs[]?[] nsStack := XNs[]?[,]
   private XNs defaultNs
   private StrBuf buf := StrBuf()         // working string buffer
   private StrBuf entityBuf := StrBuf()   // working string buffer
+  private Bool cdata      // is current buf CDATA section
   private Str name        // result of parseQName()
   private Str? prefix     // result of parseQName()
   private Bool popStack   // used for next event
