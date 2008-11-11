@@ -9,7 +9,7 @@
 **
 ** WriteTest
 **
-class WriteTest : Test
+class WriteTest : XmlTest
 {
 
   Void testWrites()
@@ -162,9 +162,20 @@ class WriteTest : Test
 
   Void verifyWrite(XNode xml, Str expected)
   {
+    // write to string
     buf := Buf()
     xml.write(buf.out)
     actual := buf.flip.readAllStr
+
+    // verify actual XML text and expected XML text is the same
     verifyEq(actual, expected)
+
+    // verify using parser if doc or elem
+    /*
+    if (xml is XDoc)
+      verifyDoc(XParser(InStream.makeForStr(expected)).parseDoc, xml)
+    else if (xml is XElem)
+      verifyElem(XParser(InStream.makeForStr(expected)).parse, xml)
+    */
   }
 }
