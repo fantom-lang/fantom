@@ -405,11 +405,19 @@ class XParser
     if (prefix == null)
       elem.ns = defaultNs
     else
-      elem.ns = prefixToNs(prefix, startLine, startCol)
+      elem.ns = prefixToNs(prefix, startLine, startCol, true)
 
-    // resolve attribute prefixes (optimize to short circuit if
-    // no prefixes were specified since that is the common case)...
-//    if (resolveAttrNs) elem.eachAttr |XAttr a | { a.ns = prefixToNs(a.prefix) }
+    // if we detected an unresolved attribute namespace prefix, try
+    // to resolve it now that we've fully parsed the start tag
+    if (resolveAttrNs)
+    {
+      elem.eachAttr |XAttr a, Int i|
+      {
+        if (a.ns?.uri !== unresolvedNs) return
+        ns := prefixToNs(a.ns.prefix, startLine, startCol, true)
+        elem.attrList[i] = XAttr(a.name, a.val, ns)
+      }
+    }
   }
 
   **
@@ -426,7 +434,7 @@ class XParser
     if (prefix == null)
       ns = defaultNs
     else
-      ns = prefixToNs(prefix, line, col)
+      ns = prefixToNs(prefix, line, col, true)
 
     // get end element
     if (depth == 0) throw err("Element end without start", line, col)
@@ -444,7 +452,7 @@ class XParser
   **
   ** Parse a '[41]' attribute production.  We are passed
   ** the first character of the attribute name.  Return
-  ** if the attribute had a namespace prefix.
+  ** if the attribute had a unresolved namespace prefix.
   **
   private Bool parseAttr(Int c, XElem elem)
   {
@@ -488,10 +496,15 @@ class XParser
       }
     }
 
-    // add attribute using raw prefix string - we
-    // will resolve later in parseElemStart
-    elem.addAttr(name, val)
-    return prefix != null
+    // if no prefix then add unqualified attribute
+    if (prefix == null) { elem.addAttr(name, val); return false }
+
+    // attempt to resolve prefix to namespace, this may fail if
+    // prefix is in the current element, in which case we return
+    // true to resolve after the element start tag is complete
+    ns := prefixToNs(prefix, line, col, false)
+    elem.addAttr(name, val, ns)
+    return ns.uri === unresolvedNs
   }
 
   **
@@ -782,15 +795,18 @@ class XParser
 
   **
   ** Map the prefix string to a XNs instance declared
-  ** in the current element or ancestor element.
+  ** in the current element or ancestor element.  If the prefix cannot
+  ** be found and checked if false then return 'unresolvedNs', otherwise
+  ** throw exception.
   **
-  private XNs prefixToNs(Str prefix, Int line, Int col)
+  private XNs prefixToNs(Str prefix, Int line, Int col, Bool checked)
   {
     for (i:=depth-1; i>=0; --i)
     {
       ns := nsStack[i].find(prefix)
       if (ns != null) return ns
     }
+    if (!checked) return XNs(prefix, unresolvedNs)
     throw err("Undeclared namespace prefix '${prefix}'", line, col)
   }
 
@@ -953,6 +969,8 @@ class XParser
 //////////////////////////////////////////////////////////////////////////
 // Fieldsname
 //////////////////////////////////////////////////////////////////////////
+
+  private const static Uri unresolvedNs := `__unresolved__`
 
   private InStream in
   private Int pushback := -1

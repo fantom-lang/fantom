@@ -340,6 +340,6 @@ class XElem : XNode
   internal const static XNode[] noNodes := XNode[,]
   internal const static XAttr[] noAttrs := XAttr[,]
 
-  private XAttr[] attrList  := noAttrs
-  private XNode[] childList := noNodes
+  internal XAttr[] attrList  := noAttrs
+  internal XNode[] childList := noNodes
 }

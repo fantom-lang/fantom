@@ -324,11 +324,72 @@ class ParserTest : XmlTest
       })
   }
 
+  Void testNsAttr()
+  {
+    def  := XNs("", `urn:def`)
+    q    := XNs("q", `urn:foo`)
+    rx   := XNs("rx", `urn:bar`)
+
+    verifyParse(
+      "<rx:root rx:pre='PRE'
+           xmlns='urn:def' xmlns:q='urn:foo' xmlns:rx='urn:bar'
+           a='A' q:b='B' rx:c='C'>
+         <foo rx:pre='PRE' a='A' q:b='B' rx:c='C'/>
+       </rx:root>",
+      XDoc
+      {
+        root = XElem("root", rx)
+        {
+          addAttr("pre", "PRE", rx)
+          XAttr.makeNs(def)
+          XAttr.makeNs(q)
+          XAttr.makeNs(rx)
+          addAttr("a", "A", null)
+          addAttr("b", "B", q)
+          addAttr("c", "C", rx)
+          XElem("foo", def)
+          {
+            addAttr("pre", "PRE", rx)
+            addAttr("a", "A", null)
+            addAttr("b", "B", q)
+            addAttr("c", "C", rx)
+          }
+        }
+      })
+
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Xml Attr
+//////////////////////////////////////////////////////////////////////////
+
+  Void testXmlAttr()
+  {
+    doc := verifyParse(
+      "<foo xml:lang='en' XML:Foo='bar'/>",
+      XDoc
+      {
+        root = XElem("foo")
+        {
+          addAttr("xml:lang", "en")
+          addAttr("xml:Foo",  "bar")
+        }
+      })
+
+    verifyEq(doc.root.attr("xml:lang").name, "xml:lang")
+    verifyEq(doc.root.attr("xml:lang").prefix, null)
+    verifyEq(doc.root.attr("xml:lang").ns, null)
+
+    verifyEq(doc.root.attr("xml:Foo").name, "xml:Foo")
+    verifyEq(doc.root.attr("xml:Foo").prefix, null)
+    verifyEq(doc.root.attr("xml:Foo").ns, null)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Verifies
 //////////////////////////////////////////////////////////////////////////
 
-  Void verifyParse(Str xml, XDoc expected)
+  XDoc verifyParse(Str xml, XDoc expected)
   {
     // parse
     actual := XParser(InStream.makeForStr(xml)).parseDoc
@@ -341,6 +402,8 @@ class ParserTest : XmlTest
     actual.write(buf.out)
     roundtrip := XParser(InStream.makeForStr(buf.flip.readAllStr)).parseDoc
     verifyDoc(roundtrip, expected)
+
+    return actual
   }
 
 

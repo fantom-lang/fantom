@@ -103,6 +103,10 @@ class ParserErrTest : XmlTest
     verifyXErr("<r><p:x xmlns:p='foo'></x></r>", 1, 25)
     verifyXErr("<r><p:x xmlns:p='foo'></p></r>", 1, 25)
     verifyXErr("<r><p:x xmlns:p='foo'></P:x></r>", 1, 25)
+
+    // bad attr
+    verifyXErr("<r attr:x='bad'>", 1, 2)
+    verifyXErr("<r><x xmlns:p='foo'/><y p:a='v'/></r>", 1, 23)
   }
 
 //////////////////////////////////////////////////////////////////////////
