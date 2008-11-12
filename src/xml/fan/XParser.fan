@@ -366,6 +366,8 @@ class XParser
   {
     // get our next XElem onto stack to reuse
     elem := push
+    startLine := this.line
+    startCol := this.col
 
     // prefix / name
     parseQName(c)
@@ -400,21 +402,14 @@ class XParser
     // after reading all the attributes, now it is safe to
     // resolve prefixes into their actual XNs instances
     // first resolve the element itself...
-    /*
     if (prefix == null)
       elem.ns = defaultNs
     else
-      elem.ns = prefixToNs(prefix)
+      elem.ns = prefixToNs(prefix, startLine, startCol)
 
     // resolve attribute prefixes (optimize to short circuit if
     // no prefixes were specified since that is the common case)...
-    if (resolveAttrNs)
-    {
-      for(int i=0; i<elem.attrSize; ++i)
-        if (elem.attr[i*3+1] != null)
-          elem.attr[i*3+1] = prefixToNs((String)elem.attr[i*3+1]);
-    }
-    */
+//    if (resolveAttrNs) elem.eachAttr |XAttr a | { a.ns = prefixToNs(a.prefix) }
   }
 
   **
@@ -431,7 +426,7 @@ class XParser
     if (prefix == null)
       ns = defaultNs
     else
-      ns = prefixToNs(prefix)
+      ns = prefixToNs(prefix, line, col)
 
     // get end element
     if (depth == 0) throw err("Element end without start", line, col)
@@ -454,6 +449,8 @@ class XParser
   private Bool parseAttr(Int c, XElem elem)
   {
     // prefix / name
+    startLine := this.line
+    startCol := this.col
     parseQName(c)
     prefix := this.prefix
     name   := this.name
@@ -468,19 +465,19 @@ class XParser
     if (c != '"' && c != '\'') throw err("Expecting quoted attribute value", line, col-1)
     val := parseQuotedStr(c)
 
-    // check namespace declaration "xmlns" or "xmlns:prefix"
+    // check namespace declaration "xmlns", "xmlns:foo", or "xml:foo"
     if (prefix == null)
     {
       if (name == "xmlns")
       {
-        pushNs(elem, "", val)
+        pushNs("", val, startLine, startCol)
       }
     }
     else
     {
       if (prefix == "xmlns")
       {
-        pushNs(elem, name, val)
+        pushNs(name, val, startLine, startCol)
         prefix = null
         name = "xmlns:" + name
       }
@@ -493,8 +490,7 @@ class XParser
 
     // add attribute using raw prefix string - we
     // will resolve later in parseElemStart
-//    elem.addAttrImpl(prefix, name, value)
-elem.addAttr(name, val)
+    elem.addAttr(name, val)
     return prefix != null
   }
 
@@ -788,57 +784,36 @@ elem.addAttr(name, val)
   ** Map the prefix string to a XNs instance declared
   ** in the current element or ancestor element.
   **
-  private XNs prefixToNs(Str prefix)
+  private XNs prefixToNs(Str prefix, Int line, Int col)
   {
-/*
-    for(int i=depth-1; i>=0; --i)
+    for (i:=depth-1; i>=0; --i)
     {
-      XNs[] ns = nsStack[i]
-      if (ns == null) continue
-      for(int j=0; j<ns.length; ++j)
-        if (ns[j].prefix.equals(prefix))
-        {
-          return ns[j]
-        }
+      ns := nsStack[i].find(prefix)
+      if (ns != null) return ns
     }
-*/
-    throw err("Undeclared namespace prefix '${prefix}'")
+    throw err("Undeclared namespace prefix '${prefix}'", line, col)
   }
 
   **
   ** Push a namespace onto the stack at the current depth.
   **
-  private Void pushNs(XElem elem, Str prefix, Str value)
+  private Void pushNs(Str prefix, Str val, Int line, Int col)
   {
-/*
-    // make ns instance
-    XNs ns = new XNs(prefix, value)
-    ns.declaringElem = elem;
+    // parse value into uri
+    uri := ``
+    try
+      if (!val.isEmpty) uri = Uri.decode(val)
+    catch (Err e)
+      throw err("Invalid namespace uri $val", line, col)
 
-    // update defaultNs
-    if (prefix == "")
-    {
-      if (value.equals(""))
-        defaultNs = null
-      else
-        defaultNs = ns
-    }
+    // make ns instance
+    ns := XNs(prefix, uri)
 
     // update stack
-    XNs[] list = nsStack[depth-1]
-    if (list == null)
-    {
-      list = new XNs[] { ns }
-    }
-    else
-    {
-      XNs[] temp = new XNs[list.length+1];
-      System.arraycopy(list, 0, temp, 0, list.length);
-      temp[list.length] = ns
-      list = temp
-    }
-    nsStack[depth-1] = list
-*/
+    nsStack[depth-1].list.add(ns)
+
+    // re-evaluate default ns
+    if (prefix.isEmpty) reEvalDefaultNs
   }
 
   **
@@ -848,24 +823,16 @@ elem.addAttr(name, val)
   **
   private Void reEvalDefaultNs()
   {
-/*
     defaultNs = null
-    for(int i=depth-1; i>=0; --i)
+    for(i:=depth-1; i>=0; --i)
     {
-      XNs[] ns = nsStack[i]
-      if (ns != null)
+      defaultNs = nsStack[i].find("")
+      if (defaultNs != null)
       {
-        for(int j=0; j<ns.length; ++j)
-        {
-          if (ns[j].isDefault())
-          {
-            if (!ns[j].uri.equals("")) defaultNs = ns[j]
-            return
-          }
-        }
+        if (defaultNs.uri.toStr.isEmpty) defaultNs = null
+        return
       }
     }
-*/
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -892,6 +859,7 @@ elem.addAttr(name, val)
     {
       elem := XElem("")
       stack.add(elem)
+      nsStack.add(XNsDefs())
       depth++
       return elem
     }
@@ -907,14 +875,12 @@ elem.addAttr(name, val)
   {
     depth--
 
-/*
-    ns := nsStack[depth]
-    if (ns != null)
+    nsDefs := nsStack[depth]
+    if (!nsDefs.isEmpty)
     {
-      nsStack[depth] = null
+      nsDefs.clear
       reEvalDefaultNs
     }
-*/
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -991,8 +957,8 @@ elem.addAttr(name, val)
   private InStream in
   private Int pushback := -1
   private XElem[] stack := [XElem("")]
-  //private XNs[]?[] nsStack := XNs[]?[,]
-  private XNs defaultNs
+  private XNsDefs[] nsStack := [XNsDefs()]
+  private XNs? defaultNs
   private StrBuf buf := StrBuf()         // working string buffer
   private StrBuf entityBuf := StrBuf()   // working string buffer
   private Bool cdata      // is current buf CDATA section
@@ -1001,4 +967,25 @@ elem.addAttr(name, val)
   private Bool popStack   // used for next event
   private Bool emptyElem  // used for next event
 
+}
+
+**************************************************************************
+** NsDefs
+**************************************************************************
+
+internal class XNsDefs
+{
+  XNs? find(Str prefix)
+  {
+    if (list.isEmpty) return null
+    for (i:=0; i<list.size; ++i)
+      if (list[i].prefix == prefix) return list[i]
+    return null
+  }
+
+  Bool isEmpty() { return list.isEmpty }
+
+  Void clear() { list.clear }
+
+  XNs[] list := XNs[,]
 }
