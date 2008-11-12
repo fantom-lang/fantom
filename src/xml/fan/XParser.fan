@@ -50,12 +50,15 @@ class XParser
   **
   XElem parse(Bool close := true)
   {
-    if (next() !== XNodeType.elemStart)
+    while (true)
     {
-      if (close) this.close
-      throw err("Expecting element start")
+      if (next() === XNodeType.elemStart) break
+      if (nodeType !== XNodeType.pi)
+      {
+        if (close) this.close
+        throw err("Expecting element start, not $nodeType")
+      }
     }
-
     return parseCurrent(close)
   }
 
@@ -87,6 +90,8 @@ class XParser
             depth--
           case XNodeType.text:
             cur.add(text.copy)
+          case XNodeType.pi:
+            cur.add(curPi)
           default:
             throw Err("unhandled node type: $nodeType")
         }
@@ -167,8 +172,10 @@ class XParser
         // processor instruction
         else if (c == '?')
         {
-          skipPI
-          continue
+          parsePi
+          if (curPi.target.equalsIgnoreCase("xml")) continue
+          if (depth == 0) doc.add(curPi)
+          return nodeType = XNodeType.pi
         }
 
         // element end
@@ -260,16 +267,26 @@ class XParser
   }
 
   **
-  ** If the current type is TEXT return the XText instance used to
+  ** If the current type is 'text' the XText instance used to
   ** store the character data.  After a call to <code>next()</code>
   ** this XText instance is no longer valid and will be reused for
-  ** further processing.  If the current type is not TEXT then
+  ** further processing.  If the current type is not 'text' then
   ** return null.
   **
   XText? text()
   {
     if (nodeType !== XNodeType.text) return null
     return XText(buf.toStr) { cdata = this.cdata }
+  }
+
+  **
+  ** if the current node type is 'pi' return the XPi instance
+  ** otherwise return null.
+  **
+  XPi? pi()
+  {
+    if (nodeType !== XNodeType.pi) return null
+    return curPi
   }
 
   **
@@ -302,19 +319,16 @@ class XParser
   {
     // parse root element name
     skipSpace
-    rootElem := parseName(read)
-    c := read
-    if (c == ':') rootElem += ":" + parseName(c)
-    else pushback = c
+    rootElem := parseName(read, true)
 
     // check for publicId/systemId
     skipSpace
     Str? publicId := null
     Str? systemId := null
-    c = read
+    c := read
     if (c == 'P' || c == 'S')
     {
-      key := parseName(c)
+      key := parseName(c, false)
       if (key == "PUBLIC")
       {
         skipSpace; c = read
@@ -515,13 +529,13 @@ class XParser
   private Void parseQName(Int c)
   {
     prefix = null
-    name = parseName(c)
+    name = parseName(c, false)
 
     c = read
     if (c == ':')
     {
       prefix = name
-      name = parseName(read)
+      name = parseName(read, true)
     }
     else
     {
@@ -544,13 +558,20 @@ class XParser
   **
   ** Parse an XML name token.
   **
-  private Str parseName(Int c)
+  private Str parseName(Int c, Bool includeColon)
   {
     if (!isName(c)) throw err("Expected XML name")
 
     buf := this.buf
     buf.clear.addChar(c)
-    while(isName(c = read)) buf.addChar(c)
+    if (includeColon)
+    {
+      while(isName(c = read) || c == ':') buf.addChar(c)
+    }
+    else
+    {
+      while(isName(c = read)) buf.addChar(c)
+    }
     pushback = c
     return bufToStr
   }
@@ -618,6 +639,26 @@ class XParser
     throw Err("illegal state")
   }
 
+  **
+  ** Parse '[16]' PI := <? ... ?>
+  **
+  private Void parsePi()
+  {
+    target := parseName(read, true)
+    skipSpace
+    buf.clear
+    c1 := -1; c0 := -1
+    while(true)
+    {
+      c1 = c0
+      c0 = read
+      if (c1 == '?' && c0 == '>') break
+      buf.addChar(c0)
+    }
+    buf.remove(-1)
+    curPi = XPi(target, buf.toStr)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Skip Utils
 //////////////////////////////////////////////////////////////////////////
@@ -656,20 +697,6 @@ class XParser
         if (c0 != '>') throw err("Cannot have -- in middle of comment")
         return
       }
-    }
-  }
-
-  **
-  ** Skip '[16]' PI := <? ... ?>
-  **
-  private Void skipPI()
-  {
-    c1 := -1; c0 := -1
-    while(true)
-    {
-      c1 = c0
-      c0 = read
-      if (c1 == '?' && c0 == '>') return
     }
   }
 
@@ -977,6 +1004,7 @@ class XParser
   private XElem[] stack := [XElem("")]
   private XNsDefs[] nsStack := [XNsDefs()]
   private XNs? defaultNs
+  private XPi? curPi
   private StrBuf buf := StrBuf()         // working string buffer
   private StrBuf entityBuf := StrBuf()   // working string buffer
   private Bool cdata      // is current buf CDATA section

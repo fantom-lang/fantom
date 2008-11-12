@@ -164,6 +164,7 @@ class DomTest : Test
     verifySame(doc.doc, doc)
     verifySame(doc.root.doc, doc)
     verifyEq(doc.root.name, "undefined")
+    verifySame(doc.root.parent, doc)
 
     doc.root = XElem("root")
     {
@@ -175,10 +176,32 @@ class DomTest : Test
     }
     verifySame(doc.doc, doc)
     verifySame(doc.root.doc, doc)
+    verifySame(doc.root.parent, doc)
     verifySame(doc.root.elem("a").doc, doc)
     verifySame(doc.root.elem("a").elem("b").doc, doc)
     verifySame(doc.root.elem("a").elem("b").text.doc, doc)
     verifyEq(XElem("x").doc, null)
+    verifyErr(ArgErr#) |,| { doc.root = doc.root.elem("a") }
+
+    doc.add(XElem("newRoot"))
+    verifyEq(doc.root.name, "newRoot")
+    verifySame(doc.root.parent, doc)
+    verifySame(doc.root.doc, doc)
+
+    piA := XPi("a", "aval")
+    piB := XPi("b", "bval")
+    verifyEq(doc.pis, XPi[,])
+    verifyEq(doc.pis.isRO, true)
+    verifyEq(doc.removePi(piA), null)
+    doc.add(piA)
+    verifyEq(doc.pis, [piA])
+    verifyEq(doc.pis.isRO, true)
+    doc.add(piB)
+    verifyEq(doc.pis, [piA, piB])
+    verifyEq(doc.pis.isRO, true)
+    verifySame(doc.removePi(piA), piA)
+    verifyEq(doc.pis, [piB])
+    verifyEq(doc.pis.isRO, true)
   }
 
 //////////////////////////////////////////////////////////////////////////

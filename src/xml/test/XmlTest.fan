@@ -33,6 +33,8 @@ abstract class XmlTest : Test
   Void verifyDoc(XDoc a, XDoc b)
   {
     verifyEq(a.docType?.toStr, b.docType?.toStr)
+    verifyEq(a.pis.size, b.pis.size)
+    a.pis.each |XPi api, Int i| { verifyPi(api, b.pis[i]) }
     verifyElem(a.root, b.root)
   }
 
