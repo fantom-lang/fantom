@@ -19,7 +19,7 @@ class Build : BuildPod
   {
     podName     = "xml"
     version     = globalVersion
-    description = "XML Parsing, DOM, and Writer"
+    description = "XML Parser and Document Modeling"
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`, `test/`]
   }

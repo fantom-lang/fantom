@@ -45,6 +45,7 @@ abstract class XmlTest : Test
     verifyEq(a.prefix, b.prefix)
     verifyEq(a.name,   b.name)
     verifyEq(a.qname,  b.qname)
+    verifyEq(a.ns,     b.ns)
 
     // attributes
     verifyEq(a.attrs.size, b.attrs.size)

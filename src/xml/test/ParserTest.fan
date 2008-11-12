@@ -214,6 +214,117 @@ class ParserTest : XmlTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Namespaces
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNs()
+  {
+    def  := XNs("", `urn:def`)
+    q    := XNs("q", `urn:foo`)
+    rx   := XNs("rx", `urn:bar`)
+
+    // simple prefix
+    verifyParse(
+      "<q:foo xmlns:q='urn:foo'/>",
+      XDoc
+      {
+        root = XElem("foo", q) { XAttr.makeNs(q) }
+      })
+
+    // simple default
+    verifyParse(
+      "<foo xmlns='urn:def'/>",
+      XDoc
+      {
+        root = XElem("foo", def) { XAttr.makeNs(def) }
+      })
+
+    // prefix and default
+    verifyParse(
+      "<root xmlns='urn:def' xmlns:q='urn:foo'>
+         <a><q:b/></a>
+       </root>",
+      XDoc
+      {
+        root = XElem("root", def)
+        {
+          XAttr.makeNs(def)
+          XAttr.makeNs(q)
+          XElem("a", def) { XElem("b", q) }
+        }
+      })
+
+    // various nested combos
+    verifyParse(
+      "<root xmlns:q='urn:foo' xmlns:rx='urn:bar'>
+         <a><inner/></a>
+         <b xmlns='urn:def'><inner/></b>
+         <q:c><inner/></q:c>
+         <rx:d><inner/></rx:d>
+       </root>",
+      XDoc
+      {
+        root = XElem("root", null)
+        {
+          XAttr.makeNs(q)
+          XAttr.makeNs(rx)
+          XElem("a", null) { XElem("inner", null) }
+          XElem("b", def)  { XAttr.makeNs(def); XElem("inner", def) }
+          XElem("c", q)    { XElem("inner", null) }
+          XElem("d", rx)   { XElem("inner", null) }
+        }
+      })
+  }
+
+  Void testNestedDefaultNs()
+  {
+    def1 := XNs("", `urn:def1`)
+    def2 := XNs("", `urn:def2`)
+    def3 := XNs("", `urn:def3`)
+    xyz  := XNs("xyz", `urn:xyz`)
+
+    verifyParse(
+      "<root xmlns='urn:def1'>
+         <a/>
+         <b xmlns='urn:def2' xmlns:xyz='urn:xyz'>
+           <none xmlns=''>
+             <innerNone/>
+             <def2 xmlns='urn:def2'><inner/></def2>
+             <def3 xmlns='urn:def3'><xyz:inner/></def3>
+           </none>
+         </b>
+         <c xmlns='urn:def3'><inner/></c>
+         <d/>
+       </root>",
+      XDoc
+      {
+        root = XElem("root", def1)
+        {
+          XAttr.makeNs(def1)
+          XElem("a", def1)
+          XElem("b", def2)
+          {
+            XAttr.makeNs(def2)
+            XAttr.makeNs(xyz)
+            XElem("none", null)
+            {
+              addAttr("xmlns", "")
+              XElem("innerNone", null)
+              XElem("def2", def2) { XAttr.makeNs(def2); XElem("inner", def2) }
+              XElem("def3", def3) { XAttr.makeNs(def3); XElem("inner", xyz) }
+            }
+          }
+          XElem("c", def3)
+          {
+            XAttr.makeNs(def3)
+            XElem("inner", def3)
+          }
+          XElem("d", def1)
+        }
+      })
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Verifies
 //////////////////////////////////////////////////////////////////////////
 
