@@ -28,11 +28,11 @@ class ParserTest : XmlTest
       })
 
     verifyParse(
-      "<!DOCTYPE  foo >
+      "<!DOCTYPE  q:foo >
        <foo/>",
       XDoc
       {
-        docType = XDocType { rootElem="foo"; publicId=null; systemId=null }
+        docType = XDocType { rootElem="q:foo"; publicId=null; systemId=null }
         root = XElem("foo")
       })
 
@@ -209,6 +209,77 @@ class ParserTest : XmlTest
         root = XElem("r")
         {
           XText(" <&]> ") { cdata=true }
+        }
+      })
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Processing Instructions
+//////////////////////////////////////////////////////////////////////////
+
+  Void testPi()
+  {
+    verifyParse(
+      "<root>
+         <?foo bar?>
+       </root>\n",
+      XDoc
+      {
+        XElem("root")
+        {
+          XPi("foo", "bar")
+        }
+      })
+
+    verifyParse(
+      "<?xml version='1.0'?>
+       <root>
+         <?x y?>
+       </root>\n",
+      XDoc
+      {
+        XElem("root")
+        {
+          XPi("x", "y")
+        }
+      })
+
+    verifyParse(
+      "<?xml-stylesheet
+         type='text/xsl' href='simple.xsl'?>
+       <root>
+         <?synthetic?>
+       </root>\n",
+      XDoc
+      {
+        XPi("xml-stylesheet", "type='text/xsl' href='simple.xsl'")
+        XElem("root")
+        {
+          XPi("synthetic", "")
+        }
+      })
+
+
+    verifyParse(
+      "
+         <?alpha aaa aaa?>
+       <?beta?>
+       <root>
+         <?gamma  ccc?>
+         <a>
+           <?delta d='ddd'?>
+         </a>
+         <?q:epsilon:x?>
+       </root> \n",
+      XDoc
+      {
+        XPi("alpha", "aaa aaa")
+        XPi("beta", "")
+        XElem("root")
+        {
+          XPi("gamma", "ccc")
+          XElem("a") { XPi("delta", "d='ddd'") }
+          XPi("q:epsilon:x", "")
         }
       })
   }

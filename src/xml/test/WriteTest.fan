@@ -77,7 +77,7 @@ class WriteTest : XmlTest
        </x>")
 
     seq := XElem("seq").add(XText("a")).add(XText("b")).add(XText("c"))
-    verifyWrite(seq, "<seq>abc</seq>")
+    verifyWrite(seq, "<seq>abc</seq>", false)
 
     multi := XElem("multi").add(XText("line1\nline2"))
     verifyWrite(multi, "<multi>line1\nline2</multi>")
@@ -115,6 +115,30 @@ class WriteTest : XmlTest
       "<?xml version='1.0' encoding='UTF-8'?>
        <!DOCTYPE root PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
        <root foo='bar'>how, how</root>\n")
+
+    doc = XDoc
+    {
+      XPi("xml-stylesheet", "type='text/xsl' href='simple.xsl'")
+      XElem("foo")
+    }
+    verifyWrite(doc,
+      "<?xml version='1.0' encoding='UTF-8'?>
+       <?xml-stylesheet type='text/xsl' href='simple.xsl'?>
+       <foo/>\n")
+
+    doc = XDoc
+    {
+      docType = XDocType { rootElem="foo"; systemId=`foo.dtd` }
+      XPi("alpha", "foo bar")
+      XPi("beta",  "foo=bar")
+      XElem("foo")
+    }
+    verifyWrite(doc,
+      "<?xml version='1.0' encoding='UTF-8'?>
+       <!DOCTYPE foo SYSTEM 'foo.dtd'>
+       <?alpha foo bar?>
+       <?beta foo=bar?>
+       <foo/>\n")
   }
 
   Void testEsc()
@@ -160,7 +184,7 @@ class WriteTest : XmlTest
        </root>")
   }
 
-  Void verifyWrite(XNode xml, Str expected)
+  Void verifyWrite(XNode xml, Str expected, Bool testRoundtrip := true)
   {
     // write to string
     buf := Buf()
@@ -170,12 +194,11 @@ class WriteTest : XmlTest
     // verify actual XML text and expected XML text is the same
     verifyEq(actual, expected)
 
-    // verify using parser if doc or elem
-    /*
+    // verify roundtrip using parser if doc or elem
+    if (!testRoundtrip) return
     if (xml is XDoc)
       verifyDoc(XParser(InStream.makeForStr(expected)).parseDoc, xml)
     else if (xml is XElem)
-      verifyElem(XParser(InStream.makeForStr(expected)).parse, xml)
-    */
+      verifyElem(XParser(InStream.makeForStr(expected)).parseDoc.root, xml)
   }
 }
