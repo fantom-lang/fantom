@@ -131,7 +131,7 @@ class XParser
     while(true)
     {
       c := 0
-      try { c = read } catch(IOErr e) { return nodeType = null }
+      try { c = read } catch(XIncompleteErr e) { return nodeType = null }
 
       // markup
       if (c == '<')
@@ -367,7 +367,7 @@ class XParser
     // get our next XElem onto stack to reuse
     elem := push
     startLine := this.line
-    startCol := this.col
+    startCol := this.col - 1
 
     // prefix / name
     parseQName(c)
@@ -450,7 +450,7 @@ class XParser
   {
     // prefix / name
     startLine := this.line
-    startCol := this.col
+    startCol := this.col - 1
     parseQName(c)
     prefix := this.prefix
     name   := this.name
@@ -584,7 +584,7 @@ class XParser
       {
         c = read
       }
-      catch(IOErr e)
+      catch(XIncompleteErr e)
       {
         if (!gotText) return false
         if (depth == 0) throw XErr("Expecting root element", line, col)
@@ -896,11 +896,11 @@ class XParser
   }
 
   **
-  ** Make an IOErr for unexected end of stream.
+  ** Make an XIncompleteErr for unexected end of stream.
   **
-  private IOErr eosErr()
+  private XErr eosErr()
   {
-    throw IOErr("Unexpected end of stream")
+    throw XIncompleteErr("Unexpected end of stream", line, col)
   }
 
 //////////////////////////////////////////////////////////////////////////

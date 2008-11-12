@@ -23,15 +23,15 @@ class ParserErrTest : XmlTest
     verifyXErr("x", 1, 1)
     verifyXErr("xyz <r/>", 1, 1)
 
-    verifyIOErr("<?")
-    verifyIOErr("<?xml")
-    verifyIOErr("<?xml ?")
+    verifyXIncompleteErr("<?")
+    verifyXIncompleteErr("<?xml")
+    verifyXIncompleteErr("<?xml ?")
 
-    verifyIOErr("<!DOCTYPE")
-    verifyIOErr("<!DOCTYPE foo")
+    verifyXIncompleteErr("<!DOCTYPE")
+    verifyXIncompleteErr("<!DOCTYPE foo")
 
-    verifyIOErr("<x")
-    verifyIOErr("<x/")
+    verifyXIncompleteErr("<x")
+    verifyXIncompleteErr("<x/")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,13 +55,13 @@ class ParserErrTest : XmlTest
 
     verifyXErr("<r>foo</x>", 1, 9)
 
-    verifyIOErr("<root><a")
-    verifyIOErr("<root><a/")
-    verifyIOErr("<root><a/><")
-    verifyIOErr("<root><a/></")
-    verifyIOErr("<root><a/></root")
-    verifyIOErr("<root><root/>")
-    verifyIOErr("<root>text...")
+    verifyXIncompleteErr("<root><a")
+    verifyXIncompleteErr("<root><a/")
+    verifyXIncompleteErr("<root><a/><")
+    verifyXIncompleteErr("<root><a/></")
+    verifyXIncompleteErr("<root><a/></root")
+    verifyXIncompleteErr("<root><root/>")
+    verifyXIncompleteErr("<root>text...")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,10 +78,31 @@ class ParserErrTest : XmlTest
     verifyXErr("<x a''/>", 1, 5)
     verifyXErr("<x\na\n ''/>", 3, 2)
 
-    verifyIOErr("<x a='")
-    verifyIOErr("<x a=\"")
-    verifyIOErr("<x a='xx")
-    verifyIOErr("<x a=\"xx")
+    verifyXIncompleteErr("<x a='")
+    verifyXIncompleteErr("<x a=\"")
+    verifyXIncompleteErr("<x a='xx")
+    verifyXIncompleteErr("<x a=\"xx")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Namespace
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNs()
+  {
+    // bad uri
+    verifyXErr("\n<x xmlns=' '/>", 2, 4)
+
+    // bad prefix
+    verifyXErr("<p:root/>", 1, 2)
+    verifyXErr("<p:root xmlns='foo'/>", 1, 2)
+    verifyXErr("\n\n <p:root xmlns:P='foo'/>", 3, 3)
+    verifyXErr("<r><p:x xmlns:p='foo'/><p:y/></r>", 1, 25)
+
+    // bad end tag
+    verifyXErr("<r><p:x xmlns:p='foo'></x></r>", 1, 25)
+    verifyXErr("<r><p:x xmlns:p='foo'></p></r>", 1, 25)
+    verifyXErr("<r><p:x xmlns:p='foo'></P:x></r>", 1, 25)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,16 +124,19 @@ class ParserErrTest : XmlTest
     }
   }
 
-  Void verifyIOErr(Str xml)
+  Void verifyXIncompleteErr(Str xml)
   {
     try
     {
       XParser(InStream.makeForStr(xml)).parseDoc
       fail
     }
-    catch (IOErr e)
+    catch (XIncompleteErr e)
     {
-      verify(true)
+      // echo("$e  $e.line,$e.col")
+      lines := xml.splitLines
+      verifyEq(e.line, lines.size)
+      verify(e.col >= lines.last.size-1)
     }
   }
 
