@@ -39,35 +39,24 @@ class XParser
   **
   XDoc parseDoc(Bool close := true)
   {
-    doc.root = parse(close)
-    return doc
-  }
-
-  **
-  ** Parse the entire next element into memory as a tree
-  ** of XElems and optionally close the underlying input
-  ** stream.
-  **
-  XElem parse(Bool close := true)
-  {
-    while (true)
+    try
     {
-      if (next() === XNodeType.elemStart) break
-      if (nodeType !== XNodeType.pi)
-      {
-        if (close) this.close
-        throw err("Expecting element start, not $nodeType")
-      }
+      parseProlog
+      doc.root = parseElem(close)
+      return doc
     }
-    return parseCurrent(close)
+    finally
+    {
+      if (close) this.close
+    }
   }
 
   **
-  ** Parse the entire current element into memory as a tree
+  ** Parse the current element entirely into memory as a tree
   ** of XElems and optionally close the underlying input
   ** stream.
   **
-  XElem parseCurrent(Bool close := true)
+  XElem parseElem(Bool close := true)
   {
     try
     {
@@ -311,6 +300,21 @@ class XParser
 //////////////////////////////////////////////////////////////////////////
 // Parse Utils
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Parse the prolog up to the root element.
+  **
+  private Void parseProlog()
+  {
+    while (next() !== XNodeType.elemStart)
+    {
+      // processing instructions are ok in prolog
+      if (nodeType === XNodeType.pi) continue
+
+      // anything else is bad
+      throw err("Expecting element start, not $nodeType")
+    }
+  }
 
   **
   ** Parse '[28]' DocType := <!DOCTYPE ... >
@@ -948,6 +952,7 @@ class XParser
 // Test
 //////////////////////////////////////////////////////////////////////////
 
+  /*
   static Void main()
   {
     t1 := Duration.now
@@ -960,6 +965,7 @@ class XParser
     t2 := Duration.now
     echo("Mem " + ((m2-m1)/1024) + "kb " + (t2-t1).toMillis + "ms")
   }
+  */
 
 //////////////////////////////////////////////////////////////////////////
 // Char Map
