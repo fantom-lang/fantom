@@ -174,7 +174,7 @@ class XParser
         {
           parsePi
           if (curPi.target.equalsIgnoreCase("xml")) continue
-          if (depth == 0) doc.add(curPi)
+          if (depth < 0) doc.add(curPi)
           return nodeType = XNodeType.pi
         }
 
@@ -205,8 +205,8 @@ class XParser
   **
   ** Skip parses all the content until reaching the end tag
   ** of the specified depth.  When this method returns, the
-  ** next call to <code>next()</code> will return the element
-  ** or text immediately following the end tag.
+  ** next call to `next` will return the node immediately
+  ** following the end tag.
   **
   Void skip(Int toDepth := depth)
   {
@@ -235,40 +235,40 @@ class XParser
   readonly XNodeType? nodeType
 
   **
-  ** Get the depth of the current element with the document
-  ** root being a depth of one.  A depth of 0 indicates
-  ** a position before or after the root element.
+  ** Get the depth of the current element with the document.
+  ** A depth of zero indicates the root element.  A depth
+  ** of -1 indicates a position before or after the root element.
   **
-  readonly Int depth
+  readonly Int depth := -1
 
   **
   ** Get the current element if `nodeType` is 'elemStart' or
-  ** 'elemEnd'.  If `nodeType` is 'text' then this is the parent
-  ** element of the current character data.  After 'elemEnd' this XElem
-  ** instance is no longer valid and will be reused for further
-  ** processing.  If depth is zero return null.
+  ** 'elemEnd'.  If `nodeType` is 'text' or 'pi' then this is the
+  ** parent element.  After 'elemEnd' this XElem instance is no
+  ** longer valid and will be reused for further processing.  If
+  ** depth is -1 return null.
   **
   XElem? elem()
   {
-    if (depth < 1) return null
-    return stack[depth-1]
+    if (depth < 0) return null
+    return stack[depth]
   }
 
   **
   ** Get the element at the specified depth.  Depth must be between 0
   ** and `depth` inclusively.  Calling 'elemAt(0)' will return the
-  ** root element and 'elemAt(depth-1)' returns the current element.
-  ** If depth is invalid, return null.
+  ** root element and 'elemAt(depth)' returns the current element.
+  ** If depth is invalid IndexErr is thrown.
   **
-  XElem? elemAt(Int depth)
+  XElem elemAt(Int depth)
   {
-    if (depth < 0 || depth >= this.depth) return null
+    if (depth < 0 || depth > this.depth) throw IndexErr(depth.toStr)
     return stack[depth]
   }
 
   **
   ** If the current type is 'text' the XText instance used to
-  ** store the character data.  After a call to <code>next()</code>
+  ** store the character data.  After a call to `next`
   ** this XText instance is no longer valid and will be reused for
   ** further processing.  If the current type is not 'text' then
   ** return null.
@@ -451,8 +451,8 @@ class XParser
       ns = prefixToNs(prefix, line, col, true)
 
     // get end element
-    if (depth == 0) throw err("Element end without start", line, col)
-    elem := stack[depth-1]
+    if (depth < 0) throw err("Element end without start", line, col)
+    elem := stack[depth]
 
     // verify
     if (elem.name != name || elem.ns !== ns)
@@ -621,14 +621,14 @@ class XParser
       catch(XIncompleteErr e)
       {
         if (!gotText) return false
-        if (depth == 0) throw XErr("Expecting root element", line, col)
+        if (depth < 0) throw XErr("Expecting root element", line, col)
         throw e
       }
 
       if (c == '<')
       {
         pushback = c
-        if (gotText && depth == 0) throw XErr("Expecting root element", line, col)
+        if (gotText && depth < 0) throw XErr("Expecting root element", line, col)
         return gotText
       }
 
@@ -828,7 +828,7 @@ class XParser
   **
   private XNs prefixToNs(Str prefix, Int line, Int col, Bool checked)
   {
-    for (i:=depth-1; i>=0; --i)
+    for (i:=depth; i>=0; --i)
     {
       ns := nsStack[i].find(prefix)
       if (ns != null) return ns
@@ -853,7 +853,7 @@ class XParser
     ns := XNs(prefix, uri)
 
     // update stack
-    nsStack[depth-1].list.add(ns)
+    nsStack[depth].list.add(ns)
 
     // re-evaluate default ns
     if (prefix.isEmpty) reEvalDefaultNs
@@ -867,7 +867,7 @@ class XParser
   private Void reEvalDefaultNs()
   {
     defaultNs = null
-    for(i:=depth-1; i>=0; --i)
+    for(i:=depth; i>=0; --i)
     {
       defaultNs = nsStack[i].find("")
       if (defaultNs != null)
@@ -892,10 +892,10 @@ class XParser
   private XElem push()
   {
     // attempt to reuse element from given depth
+    depth++
     try
     {
       elem := stack[depth].clearAttrs
-      depth++
       return elem
     }
     catch (IndexErr e)
@@ -903,7 +903,6 @@ class XParser
       elem := XElem("")
       stack.add(elem)
       nsStack.add(XNsDefs())
-      depth++
       return elem
     }
   }
@@ -916,14 +915,13 @@ class XParser
   **
   private Void pop()
   {
-    depth--
-
     nsDefs := nsStack[depth]
     if (!nsDefs.isEmpty)
     {
       nsDefs.clear
       reEvalDefaultNs
     }
+    depth--
   }
 
 //////////////////////////////////////////////////////////////////////////
