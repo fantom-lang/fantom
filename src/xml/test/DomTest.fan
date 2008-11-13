@@ -232,18 +232,21 @@ class DomTest : Test
     verifyEq(u.name, "u")
     verifyEq(u.qname, "u")
     verifyEq(u.prefix, null)
+    verifyEq(u.uri, null)
     verifyEq(u.ns, null)
 
     x := XElem("root", nsdef)
     verifyEq(x.name, "root")
     verifyEq(x.qname, "root")
     verifyEq(x.prefix, "")
+    verifyEq(x.uri, `http://foo/default`)
     verifySame(x.ns, nsdef)
 
     a := XElem("a", nsq)
     verifyEq(a.name, "a")
     verifyEq(a.qname, "q:a")
     verifyEq(a.prefix, "q")
+    verifyEq(a.uri, `http://foo/q`)
     verifySame(a.ns, nsq)
   }
 
@@ -256,12 +259,14 @@ class DomTest : Test
     verifyEq(u.name, "u")
     verifyEq(u.qname, "u")
     verifyEq(u.prefix, null)
+    verifyEq(u.uri, null)
     verifyEq(u.ns, null)
 
     a := XAttr("a", "aval", nsq)
     verifyEq(a.name, "a")
     verifyEq(a.qname, "q:a")
     verifyEq(a.prefix, "q")
+    verifyEq(a.uri, `http://foo/q`)
     verifySame(a.ns, nsq)
 
     // don't allow since no prefix means no ns, not default ns

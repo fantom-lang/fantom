@@ -12,6 +12,7 @@
   [`Fand`,      "daemon server scripts"],
   [`Email`,     "MIME and SMTP email support"],
   [`Sql`,       "relational database APIs"],
+  [`Xml`,       "XML parsing and document modeling"],
 "Desktop Applications",
   [`Fwt`,       "Fan widget toolkit"],
   [`Flux`,      "Framework for building browser based fwt applications"],

@@ -1,0 +1,187 @@
+**************************************************************************
+** title:      Xml
+** author:     Brian Frank
+** created:    13 Nov 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The [xml]`xml::index` API provides the core APIs for working with XML:
+
+  1. [XElem]`xml::XElem`: Provides a standard representation of an XML element tree
+     to be used in memory. It is similar to the W3's DOM, but Fan centric.
+
+  2. [XParser]`xml::XParser`: is a non-validating XML parser. It may be used in
+     two modes: to read an entire XML document into memory or as a pull-parser.
+
+The features supported by XParser:
+  - All element, attribute, processing instructions, and character data
+    productions are supported
+  - CDATA sections are supported
+  - Namespaces are supported at both the element and attribute level
+  - Doctype declarations provide access to the public and system identifiers
+  - DTDs are ignored (as such you can't use internal or external entity declarations)
+  - No access to comments is provided by the XML parser
+  - Character data consisting only of whitespace is always ignored
+
+DOM [#dom]
+**********
+XML documents are modeled in memory using the following classes:
+
+  - [XDoc]`xml::XDoc`: models the entire document providing access to
+    the root element, doctype, and processing instructions declared
+    before the root element
+  - [XElem]`xml::XElem`: models an element name, attributes, and
+    children nodes
+  - [XText]`xml::XText`: models character data in an element
+  - [XPi]`xml::XPi`: models a processing instruction
+  - [XAttr]`xml::XAttr`: models an attribute name/value pair
+  - [XNs]`xml::XNs`: models the prefix and URI of a XML namespace
+
+XML documents are structured as a tree of nodes using the classes listed
+above.  Typically the tree is built by parsing a XML document from an input
+stream.  But you can construct a document in memory using the APIs and
+with-blocks:
+
+  doc := XDoc
+  {
+    XElem("root")
+    {
+      XElem("a") { addAttr("flags", "0"); XText("blah") }
+      XElem("b") { XElem("c") }
+      XElem("m") { XText("I "); XElem("i") { XText("mean") }; XText(" it!") }
+    }
+  }
+  doc.write(Sys.out)
+
+  // would print the following to the console
+  <?xml version='1.0' encoding='UTF-8'?>
+  <root>
+   <a flags='0'>blah</a>
+   <b>
+    <c/>
+   </b>
+   <m>I <i>mean</i> it!</m>
+  </root>
+
+Namespaces [#ns]
+****************
+The [XNs]`xml::XNs` class is used model XML namespaces.  The default
+namespace is indicated with the prefix of "".  Both XElem and XAttr
+define a set of methods for working with qualified names:
+
+  ns := XNs("x", `urn:foo`)
+  e := XElem("name", ns)
+
+  e.ns      =>  ns
+  e.prefix  =>  "x"
+  e.uri     =>  `urn:foo`
+  e.name    =>  "name"
+  e.qname   =>  "x:name"
+
+If you construct a document by hand, then you are responsible for creating
+each element with the correct XNs and ensuring that the appropriate namespace
+attributes are declared:
+
+  nsDef := XNs("", `http://foo/default`)
+  nsBar := XNs("b", `http://foo/bar`)
+  root := XElem("root", nsBar)
+  {
+    XAttr.makeNs(nsDef)
+    XAttr.makeNs(nsBar)
+    XElem("elem", nsDef)
+    XElem("elem", nsBar)
+  }
+  root.write(Sys.out)
+
+  // would print the following to the console
+  <b:root xmlns='http://foo/default' xmlns:b='http://foo/bar'>
+   <elem/>
+   <b:elem/>
+  </b:root>
+
+Writing [#writing]
+******************
+All the XML node classes support a 'write' method which takes
+an 'OutStream'.  During debugging it is often convenient to
+write to standard out:
+
+  node.write(Sys.out)
+  Sys.out.flush
+
+To write an XML document from memory to a file:
+
+  out := `test.xml`.toFile.out
+  doc.write(out)
+  out.close
+
+If you are generating an XML document on the fly you might want to
+use 'OutStream' directly.  It supports escaping XML control characters
+via the [writeXml]`sys::OutStream.writeXml` method:
+
+  // escape markup in text
+  out.writeChars("<text>").writeXml(text).writeChars("</text>")
+
+  // escape markup and quotes
+  out.writeChars("attr='").writeXml(attrVal, OutStream.xmlEscQuotes).writeChars("'")
+
+You can use [Str.toXml]`sys::Str.toXml` to generate a string with XML
+markup escaped.  However, you should prefer OutStream when streaming
+which is more efficient.
+
+Parsing [#parsing]
+******************
+The [XParser]`xml::XParser` class is used to parse XML input streams into XElems.
+The easiest way to do this is to parse the entire document into memory using
+the 'parseDoc' method:
+
+  // parse and close input stream
+  doc := XParser(in).parseDoc
+
+  // parse a file
+  doc := XParser(`test.xml`.toFile.in).parseDoc
+
+  // parse a string
+  doc := XParser(InStream.makeForStr("<foo/>")).parseDoc
+
+The code above parses the document entirely into memory. This tends to be
+easiest way to work with XML documents.  However it can create efficiency problems
+when parsing large documents, especially when mapping the XElems into other data
+structures. To support more efficient parsing of XML streams, XParser may also be
+used to read elements off the input stream one at a time.  This is similar to the
+SAX API, except you pull events instead of having them pushed to you.
+
+To perform pull parsing, use the 'next' method to iterate through the document.
+This tokenizes the stream into XElem, XText, and XPi chunks. Each call to 'next'
+advances to the next token and returns its node type.  You may also check the
+type of the current token using 'nodeType'. You may access the current token
+using 'elem', 'text', or 'pi'.
+
+XParser maintains a stack of XElems for you from the root element down to the
+current element. You may check the depth of the stack using the 'depth' method.
+Get the current element at any position in the stack via 'elemAt'.
+
+It is very important to understand the XElem at given depth is only valid until
+the parser returns 'elemEnd' for that depth.  After that the element will be
+reused.  A XText instance is only valid until the next call to 'next'.  You can
+make a safe copy of nodes using 'copy'.  You can also use 'parseElem' to read the
+current element and its is descendants into memory during pull-parsing.
+
+Example of pull parsing:
+
+  parser := XParser(InStream.makeForStr(
+    "<root>
+       <a>text</a>
+     </root>"))
+
+  while (parser.next != null)
+    echo("$parser.nodeType $parser.depth $parser.elem")
+
+  // prints the following to the console
+  elemStart 0 <root>
+  elemStart 1 <a>
+  text      1 <a>
+  elemEnd   1 <a>
+  elemEnd   0 <root>

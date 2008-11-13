@@ -10,6 +10,8 @@
 ** XAttr models an XML attribute in an element.  Attributes
 ** are immutable and may be shared across multiple XElem parents.
 **
+** See [docLib::Xml]`docLib::Xml`
+**
 const class XAttr
 {
 
@@ -69,6 +71,15 @@ const class XAttr
   Str? prefix()
   {
     return ns?.prefix
+  }
+
+  **
+  ** If this element is qualified by an XML namespace then return
+  ** the namespace's uri.  Otherwise return null.
+  **
+  Uri? uri()
+  {
+    return ns?.uri
   }
 
   **

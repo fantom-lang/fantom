@@ -515,7 +515,8 @@ const final class Str
   ** Return this string as valid XML text.  The special control
   ** characters amp, lt, apos and quot are always escaped.  The
   ** gt char is escaped only if it is the first char or if preceeded
-  ** by the ']' char.  Also see `web::WebOutStream.esc`.
+  ** by the ']' char.  Also see `OutStream.writeXml` which is more
+  ** efficient if streaming.
   **
   Str toXml()
 

@@ -9,6 +9,8 @@
 **
 ** XNode is the base class for `XElem` and `XText`.
 **
+** See [docLib::Xml]`docLib::Xml`
+**
 abstract class XNode
 {
 
