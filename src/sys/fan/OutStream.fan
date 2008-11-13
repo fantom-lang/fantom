@@ -197,6 +197,7 @@ class OutStream
   **   - `xmlEscNewlines`: escape the '\n' and '\r' characters
   **   - `xmlEscQuotes`: escape the single and double quote characters
   **   - `xmlEscUnicode`: escape any character greater than 0x7f
+  **
   ** Any control character less than 0x20 which is not '\t', '\n' or
   ** '\r' is always escaped with a numeric reference.  Return this.
   **

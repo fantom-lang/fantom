@@ -9,6 +9,8 @@
 **
 ** XML document encapsulates the root element and document type.
 **
+** See [docLib::Xml]`docLib::Xml`
+**
 class XDoc : XNode
 {
 

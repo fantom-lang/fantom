@@ -9,6 +9,8 @@
 **
 ** XText represents the character data inside an element.
 **
+** See [docLib::Xml]`docLib::Xml`
+**
 class XText : XNode
 {
 
@@ -51,7 +53,7 @@ class XText : XNode
   **
   ** Make a copy of this text node.
   **
-  XText copy()
+  This copy()
   {
     return XText(val) { cdata = this.cdata }
   }

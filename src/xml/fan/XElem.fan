@@ -9,6 +9,8 @@
 **
 ** Models an XML element: its name, attributes, and children nodes.
 **
+** See [docLib::Xml]`docLib::Xml`
+**
 class XElem : XNode
 {
 
@@ -59,6 +61,15 @@ class XElem : XNode
   Str? prefix()
   {
     return ns?.prefix
+  }
+
+  **
+  ** If this element is qualified by an XML namespace then return
+  ** the namespace's uri.  Otherwise return null.
+  **
+  Uri? uri()
+  {
+    return ns?.uri
   }
 
   **
@@ -278,7 +289,7 @@ class XElem : XNode
   **
   ** Make a shallow copy of this element.
   **
-  XElem copy()
+  This copy()
   {
     copy := XElem(name, ns)
     if (!attrList.isEmpty) copy.attrList = attrList.dup

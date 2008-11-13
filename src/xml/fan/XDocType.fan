@@ -7,7 +7,9 @@
 //
 
 **
-** XML document type declaration (not the whole DTD).
+** XML document type declaration (but not the whole DTD).
+**
+** See [docLib::Xml]`docLib::Xml`
 **
 class XDocType
 {

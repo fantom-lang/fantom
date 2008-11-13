@@ -13,6 +13,8 @@
 ** and text sections of an XML stream or it may be used to
 ** read an entire XML tree into memory as XElems.
 **
+** See [docLib::Xml]`docLib::Xml`
+**
 class XParser
 {
 
@@ -431,7 +433,7 @@ class XParser
     {
       elem.eachAttr |XAttr a, Int i|
       {
-        if (a.ns?.uri !== unresolvedNs) return
+        if (a.uri !== unresolvedNs) return
         ns := prefixToNs(a.ns.prefix, startLine, startCol, true)
         elem.attrList[i] = XAttr(a.name, a.val, ns)
       }
