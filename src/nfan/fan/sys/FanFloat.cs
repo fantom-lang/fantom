@@ -7,13 +7,14 @@
 //   16 Oct 08  Andy Frank  Refactor to FanFloat
 //
 
+using System;
 using Fanx.Serial;
 
 namespace Fan.Sys
 {
   /// <summary>
   /// FanDouble defines the methods for sys::Float.  The actual
-  /// class used for representation is Fan.Sys.Double.
+  /// class used for representation is System.Double.
   /// </summary>
   public sealed class FanFloat
   {
@@ -27,92 +28,90 @@ namespace Fan.Sys
     {
       try
       {
-        if (s == "NaN")  return m_nan;
-        if (s == "INF")  return m_posInf;
-        if (s == "-INF") return m_negInf;
+        if (s == "NaN")  return Double.valueOf(m_nan);
+        if (s == "INF")  return Double.valueOf(m_posInf);
+        if (s == "-INF") return Double.valueOf(m_negInf);
         return Double.valueOf(s);
       }
-      catch (System.FormatException)
+      catch (FormatException)
       {
         if (!check.booleanValue()) return null;
         throw ParseErr.make("Float", s).val;
       }
     }
 
-    public static Double makeBits(Long bits)
+    public static double makeBits(Long bits)
     {
-      return Double.valueOf(System.BitConverter.Int64BitsToDouble(bits.longValue()));
+      return BitConverter.Int64BitsToDouble(bits.longValue());
     }
 
-    public static Double makeBits32(Long bits)
+    public static double makeBits32(Long bits)
     {
-      return Double.valueOf(System.BitConverter.ToSingle(System.BitConverter.GetBytes(bits.longValue()), 0));
+      return BitConverter.ToSingle(BitConverter.GetBytes(bits.longValue()), 0);
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean equals(Double self, object obj)
+    public static Boolean equals(double self, object obj)
     {
-      if (obj is Double)
+      if (obj is double)
       {
-        double val = self.doubleValue();
-        double x = (obj as Double).doubleValue();
-        if (Double.isNaN(val)) return Boolean.valueOf(Double.isNaN(x));
-        return val == x ? Boolean.True : Boolean.False;
+        double x = (double)obj;
+        if (System.Double.IsNaN(self)) return Boolean.valueOf(System.Double.IsNaN(x));
+        return self == x ? Boolean.True : Boolean.False;
       }
       return Boolean.False;
     }
 
-    public static Boolean approx(Double self, Double that) { return approx(self, that, null); }
-    public static Boolean approx(Double self, Double that, Double tolerance)
+    public static Boolean approx(double self, double that) { return approx(self, that, null); }
+    public static Boolean approx(double self, double that, Double tolerance)
     {
       // need this to check +inf, -inf, and nan
       if (equals(self, that).booleanValue()) return Boolean.True;
 
       double t;
       if (tolerance == null)
-        t = System.Math.Min(System.Math.Abs(self.doubleValue()/1e6), System.Math.Abs(that.doubleValue()/1e6));
+        t = Math.Min(Math.Abs(self/1e6), Math.Abs(that/1e6));
       else
-        t = tolerance.doubleValue();
-      return System.Math.Abs(self.doubleValue() - that.doubleValue()) <= t ? Boolean.True : Boolean.False;
+        t = (tolerance as Double).doubleValue();
+      return Math.Abs(self - that) <= t ? Boolean.True : Boolean.False;
     }
 
-    public static Long compare(Double self, object obj)
+    public static Long compare(double self, object obj)
     {
-      double val = self.doubleValue();
-      double that = ((Double)obj).doubleValue();
-      if (Double.isNaN(val))
+      double that = (obj as Double).doubleValue();
+      if (System.Double.IsNaN(self))
       {
-        return (Double.isNaN(that)) ? FanInt.EQ : FanInt.LT;
+        return (System.Double.IsNaN(that)) ? FanInt.EQ : FanInt.LT;
       }
-      else if (Double.isNaN(that))
+      else if (System.Double.IsNaN(that))
       {
         return FanInt.GT;
       }
       else
       {
-        if (val < that) return FanInt.LT; return val == that ? FanInt.EQ : FanInt.GT;
+        if (self < that) return FanInt.LT; return self == that ? FanInt.EQ : FanInt.GT;
       }
     }
 
-    public static Long hash(Double self)
+    public static Long hash(double self)
     {
       return bits(self);
     }
 
-    public static Long bits(Double self)
+    public static Long bits(double self)
     {
-      return Long.valueOf(System.BitConverter.DoubleToInt64Bits(self.doubleValue()));
+      return Long.valueOf(BitConverter.DoubleToInt64Bits(self));
     }
 
-    public static Long bits32(Double self)
+    public static Long bits32(double self)
     {
-      return Long.valueOf(System.BitConverter.ToInt32(System.BitConverter.GetBytes(self.floatValue()), 0) & 0xFFFFFFFFL);
+      return Long.valueOf(BitConverter.ToInt32(BitConverter.GetBytes((float)self), 0) & 0xFFFFFFFFL);
     }
 
-    public static Type type(Double self)
+    public static Type type(double self)
     {
       return Sys.FloatType;
     }
@@ -121,175 +120,95 @@ namespace Fan.Sys
   // Operators
   //////////////////////////////////////////////////////////////////////////
 
-    public static Double negate    (Double self)           { return Double.valueOf(-self.doubleValue()); }
-    public static Double mult      (Double self, Double x) { return Double.valueOf(self.doubleValue() * x.doubleValue()); }
-    public static Double div       (Double self, Double x) { return Double.valueOf(self.doubleValue() / x.doubleValue()); }
-    public static Double mod       (Double self, Double x) { return Double.valueOf(self.doubleValue() % x.doubleValue()); }
-    public static Double plus      (Double self, Double x) { return Double.valueOf(self.doubleValue() + x.doubleValue()); }
-    public static Double minus     (Double self, Double x) { return Double.valueOf(self.doubleValue() - x.doubleValue()); }
-    public static Double increment (Double self)           { return Double.valueOf(self.doubleValue()+1); }
-    public static Double decrement (Double self)           { return Double.valueOf(self.doubleValue()-1); }
+    public static double negate    (double self)           { return -self; }
+    public static double mult      (double self, double x) { return self * x; }
+    public static double div       (double self, double x) { return self / x; }
+    public static double mod       (double self, double x) { return self % x; }
+    public static double plus      (double self, double x) { return self + x; }
+    public static double minus     (double self, double x) { return self - x; }
+    public static double increment (double self)           { return self+1; }
+    public static double decrement (double self)           { return self-1; }
 
   //////////////////////////////////////////////////////////////////////////
   // Math
   //////////////////////////////////////////////////////////////////////////
 
-    public static Double abs(Double self)
+    public static double abs(double self)
     {
-      if (self.doubleValue() >= 0) return self;
-      return Double.valueOf(-self.doubleValue());
+      if (self >= 0) return self;
+      return -self;
     }
 
-    public static Double min(Double self, Double that)
+    public static double min(double self, double that)
     {
-      if (self.doubleValue() <= that.doubleValue()) return self;
+      if (self <= that) return self;
       return that;
     }
 
-    public static Double max(Double self, Double that)
+    public static double max(double self, double that)
     {
-      if (self.doubleValue() >= that.doubleValue()) return self;
+      if (self >= that) return self;
       return that;
     }
 
-    public static Double ceil(Double self)
-    {
-      return Double.valueOf(System.Math.Ceiling(self.doubleValue()));
-    }
-
-    public static Double floor(Double self)
-    {
-      return Double.valueOf(System.Math.Floor(self.doubleValue()));
-    }
-
-    public static Double round(Double self)
-    {
-      return Double.valueOf(System.Math.Round(self.doubleValue()));
-    }
-
-    public static Double exp(Double self)
-    {
-      return Double.valueOf(System.Math.Exp(self.doubleValue()));
-    }
-
-    public static Double log(Double self)
-    {
-      return Double.valueOf(System.Math.Log(self.doubleValue()));
-    }
-
-    public static Double log10(Double self)
-    {
-      return Double.valueOf(System.Math.Log10(self.doubleValue()));
-    }
-
-    public static Double pow(Double self, Double pow)
-    {
-      return Double.valueOf(System.Math.Pow(self.doubleValue(), pow.doubleValue()));
-    }
-
-    public static Double sqrt(Double self)
-    {
-      return Double.valueOf(System.Math.Sqrt(self.doubleValue()));
-    }
+    public static double ceil(double self) { return Math.Ceiling(self); }
+    public static double floor(double self) { return Math.Floor(self); }
+    public static double round(double self) { return Math.Round(self); }
+    public static double exp(double self) { return Math.Exp(self); }
+    public static double log(double self) { return Math.Log(self); }
+    public static double log10(double self) { return Math.Log10(self); }
+    public static double pow(double self, double pow) { return Math.Pow(self, pow); }
+    public static double sqrt(double self) { return Math.Sqrt(self); }
 
   //////////////////////////////////////////////////////////////////////////
   // Trig
   //////////////////////////////////////////////////////////////////////////
 
-    public static Double acos(Double self)
-    {
-      return Double.valueOf(System.Math.Acos(self.doubleValue()));
-    }
-
-    public static Double asin(Double self)
-    {
-      return Double.valueOf(System.Math.Asin(self.doubleValue()));
-    }
-
-    public static Double atan(Double self)
-    {
-      return Double.valueOf(System.Math.Atan(self.doubleValue()));
-    }
-
-    public static Double atan2(Double y, Double x)
-    {
-      return Double.valueOf(System.Math.Atan2(y.doubleValue(), x.doubleValue()));
-    }
-
-    public static Double cos(Double self)
-    {
-      return Double.valueOf(System.Math.Cos(self.doubleValue()));
-    }
-
-    public static Double cosh(Double self)
-    {
-      return Double.valueOf(System.Math.Cosh(self.doubleValue()));
-    }
-
-    public static Double sin(Double self)
-    {
-      return Double.valueOf(System.Math.Sin(self.doubleValue()));
-    }
-
-    public static Double sinh(Double self)
-    {
-      return Double.valueOf(System.Math.Sinh(self.doubleValue()));
-    }
-
-    public static Double tan(Double self)
-    {
-      return Double.valueOf(System.Math.Tan(self.doubleValue()));
-    }
-
-    public static Double tanh(Double self)
-    {
-      return Double.valueOf(System.Math.Tanh(self.doubleValue()));
-    }
-
-    public static Double toDegrees(Double self)
-    {
-      return Double.valueOf((180 / System.Math.PI) * self.doubleValue());
-    }
-
-    public static Double toRadians(Double self)
-    {
-      return Double.valueOf((self.doubleValue() * System.Math.PI) / 180);
-    }
+    public static double acos(double self) { return Math.Acos(self); }
+    public static double asin(double self) { return Math.Asin(self); }
+    public static double atan(double self) { return Math.Atan(self); }
+    public static double atan2(double y, double x) { return Math.Atan2(y, x); }
+    public static double cos(double self)  { return Math.Cos(self); }
+    public static double cosh(double self) { return Math.Cosh(self); }
+    public static double sin(double self)  { return Math.Sin(self); }
+    public static double sinh(double self) { return Math.Sinh(self); }
+    public static double tan(double self)  { return Math.Tan(self); }
+    public static double tanh(double self) { return Math.Tanh(self); }
+    public static double toDegrees(double self) { return (180 / Math.PI) * self; }
+    public static double toRadians(double self) { return (self * Math.PI) / 180; }
 
   //////////////////////////////////////////////////////////////////////////
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public static string toStr(Double self)
+    public static string toStr(double self)
     {
-      double val = self.doubleValue();
-      if (Double.isNaN(val)) return m_NaNStr;
-      if (val == System.Double.PositiveInfinity) return m_PosInfStr;
-      if (val == System.Double.NegativeInfinity) return m_NegInfStr;
-      string s = Double.toString(val);
+      if (System.Double.IsNaN(self)) return m_NaNStr;
+      if (self == System.Double.PositiveInfinity) return m_PosInfStr;
+      if (self == System.Double.NegativeInfinity) return m_NegInfStr;
+      string s = self.ToString();
       if (s.IndexOf('.') == -1) s += ".0";  // to match java behavior
       return s;
     }
 
-    public static void encode(Double self, ObjEncoder @out)
+    public static void encode(double self, ObjEncoder @out)
     {
-      double val = self.doubleValue();
-      if (Double.isNaN(val)) @out.w("sys::Float(\"NaN\")");
-      else if (val == System.Double.PositiveInfinity) @out.w("sys::Float(\"INF\")");
-      else if (val == System.Double.NegativeInfinity) @out.w("sys::Float(\"-INF\")");
-      else @out.w(Double.toString(val)).w("f");
+      if (System.Double.IsNaN(self)) @out.w("sys::Float(\"NaN\")");
+      else if (self == System.Double.PositiveInfinity) @out.w("sys::Float(\"INF\")");
+      else if (self == System.Double.NegativeInfinity) @out.w("sys::Float(\"-INF\")");
+      else @out.w(toStr(self)).w("f");
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    public static readonly Double m_zero   = Double.valueOf(0);
-    public static readonly Double m_posInf = Double.valueOf(System.Double.PositiveInfinity);
-    public static readonly Double m_negInf = Double.valueOf(System.Double.NegativeInfinity);
-    public static readonly Double m_nan    = Double.valueOf(System.Double.NaN);
-    public static readonly Double m_e      = Double.valueOf(System.Math.E);
-    public static readonly Double m_pi     = Double.valueOf(System.Math.PI);
+    public static readonly double m_zero   = 0d;
+    public static readonly double m_posInf = System.Double.PositiveInfinity;
+    public static readonly double m_negInf = System.Double.NegativeInfinity;
+    public static readonly double m_nan    = System.Double.NaN;
+    public static readonly double m_e      = Math.E;
+    public static readonly double m_pi     = Math.PI;
     public static readonly string m_PosInfStr = "INF";
     public static readonly string m_NegInfStr = "-INF";
     public static readonly string m_NaNStr    = "NaN";

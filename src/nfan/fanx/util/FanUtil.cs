@@ -76,7 +76,7 @@ namespace Fanx.Util
             if (typeName == "Decimal") return "Fan.Sys.BigDecimal";
             break;
           case 'F':
-            if (typeName == "Float") return "Fan.Sys.Double";
+            if (typeName == "Float") return nullable ? "Fan.Sys.Double" : "System.Double";
             break;
           case 'I':
             if (typeName == "Int") return "Fan.Sys.Long";
@@ -136,22 +136,22 @@ namespace Fanx.Util
     /// <summary>
     /// Given a .NET type signature, return the implementation
     /// class signature for methods and fields:
-    ///   System.Object   =>  Fan.Sys.FanObj
-    ///   Fan.Sys.Double  =>  Fan.Sys.FanFloat
+    ///   System.Object  =>  Fan.Sys.FanObj
+    ///   System.Double  =>  Fan.Sys.FanFloat
     /// Anything else returns itself.
     /// </summary>
     public static string toNetImplTypeName(string ntype)
     {
       if (ntype[0] == 'S')
       {
-        if (ntype == "System.String")  return "Fan.Sys.FanStr";
-        if (ntype == "System.Object")  return "Fan.Sys.FanObj";
+        if (ntype == "System.Double") return "Fan.Sys.FanFloat";
+        if (ntype == "System.String") return "Fan.Sys.FanStr";
+        if (ntype == "System.Object") return "Fan.Sys.FanObj";
       }
       if (ntype[0] == 'F')
       {
         if (ntype == "Fan.Sys.Boolean") return "Fan.Sys.FanBool";
         if (ntype == "Fan.Sys.BigDecimal") return "Fan.Sys.FanDecimal";
-        if (ntype == "Fan.Sys.Double") return "Fan.Sys.FanFloat";
         if (ntype == "Fan.Sys.Long") return "Fan.Sys.FanInt";
         if (ntype == "Fan.Sys.Number") return "Fan.Sys.FanNum";
       }
@@ -243,6 +243,9 @@ namespace Fanx.Util
     /// If qname represents a nested class, then s[0] will
     /// be the qualified type name of the parent, and s[1]
     /// will simply be the nested class name.
+    /// If qname represnets a generic class, then s[0] will
+    /// be the qualified type name of the class, and s[1]
+    /// will be the generic param.
     /// </summary>
     public static string[] splitQName(string qname)
     {
@@ -255,12 +258,21 @@ namespace Fanx.Util
       }
       else
       {
-        index = qname.LastIndexOf('.');
-        if (index != -1)
-        {
-          s[0] = qname.Substring(0, index);
-          s[1] = qname.Substring(index+1);
-        }
+//        index = qname.LastIndexOf('<');
+//        if (index != -1)
+//        {
+//          s[0] = qname.Substring(0, index);
+//          s[1] = qname.Substring(index+1, qname.Length-index-2);
+//        }
+//        else
+//        {
+          index = qname.LastIndexOf('.');
+          if (index != -1)
+          {
+            s[0] = qname.Substring(0, index);
+            s[1] = qname.Substring(index+1);
+          }
+//        }
       }
       return s;
     }
@@ -272,6 +284,7 @@ namespace Fanx.Util
     {
       if (Fan.Sys.Sys.ObjType == null) Fan.Sys.Sys.dumpStack();
 
+      netToFanTypes["System.Double"]      = Fan.Sys.Sys.FloatType;
       netToFanTypes["System.String"]      = Fan.Sys.Sys.StrType;
       netToFanTypes["System.Object"]      = Fan.Sys.Sys.ObjType;
       netToFanTypes["Fan.Sys.Boolean"]    = Fan.Sys.Sys.BoolType;
@@ -280,6 +293,7 @@ namespace Fanx.Util
       netToFanTypes["Fan.Sys.Long"]       = Fan.Sys.Sys.IntType;
       netToFanTypes["Fan.Sys.Number"]     = Fan.Sys.Sys.NumType;
 
+      netImmutables["System.Double"]      = true;
       netImmutables["System.String"]      = true;
       netImmutables["Fan.Sys.Boolean"]    = true;
       netImmutables["Fan.Sys.BigDecimal"] = true;

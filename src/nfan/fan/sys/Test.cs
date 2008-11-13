@@ -77,7 +77,10 @@ namespace Fan.Sys
     {
       if (!OpUtil.compareEQ(expected, actual).booleanValue())
       {
-        if (msg == null) msg = s(expected) + " != " + s(actual);
+        //if (msg == null) msg = s(expected) + " != " + s(actual);
+        if (msg == null) msg = s(expected) +
+          " [" + (expected != null ? expected.GetType().ToString() : "null") + "] != "
+          + s(actual) + " [" + (actual != null ? actual.GetType().ToString() : "null") + "]";
         fail(msg);
       }
       if (expected != null && actual != null)

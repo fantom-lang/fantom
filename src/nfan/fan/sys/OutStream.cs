@@ -131,14 +131,14 @@ namespace Fan.Sys
                  .w((int)(v >> 0)  & 0xFF);
     }
 
-    public virtual OutStream writeF4(Double x)
+    public virtual OutStream writeF4(double x)
     {
-      return writeI4(System.BitConverter.ToInt32(System.BitConverter.GetBytes(x.floatValue()), 0));
+      return writeI4(System.BitConverter.ToInt32(System.BitConverter.GetBytes((float)x), 0));
     }
 
-    public virtual OutStream writeF8(Double x)
+    public virtual OutStream writeF8(double x)
     {
-      return writeI8(System.BitConverter.DoubleToInt64Bits(x.doubleValue()));
+      return writeI8(System.BitConverter.DoubleToInt64Bits(x));
     }
 
     public virtual OutStream writeDecimal(BigDecimal x)

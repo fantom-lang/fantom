@@ -287,6 +287,16 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
           PERWAPI.ClassRef cref = (PERWAPI.ClassRef)findType(s[0]);
           type = cref.AddNestedClass(s[1]);
         }
+        /*
+        else if (qname.IndexOf("<") != -1)
+        {
+          // Generic type
+          //if (type == null) type = aref.AddClass(s[0], s[1]);
+          PERWAPI.ClassRef cref = (PERWAPI.ClassRef)findType(s[0]);
+          cref.SetGenericParams(new GenericParam[] { cref.GetGenericParam(0) });
+          type = cref;
+        }
+        */
         else
         {
           // Normal class

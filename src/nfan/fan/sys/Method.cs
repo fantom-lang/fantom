@@ -476,7 +476,7 @@ namespace Fan.Sys
         }
         catch (Exception)
         {
-          throw Err.make("Method not mapped to java.lang.reflect correctly " + m.qname()).val;
+          throw Err.make("Method not mapped to System.Reflection correctly " + m.qname()).val;
         }
       }
 
@@ -520,6 +520,7 @@ namespace Fan.Sys
         int index = m_params.sz()-args.Length;
         if (m_parent.netRepr() && isInstance()) index++;
         if (index < 0) index = 0;
+        MethodInfo m = m_reflect[index];
 
         //System.Console.WriteLine(">>> " + m_reflect.Length + "/" + index);
         //System.Console.WriteLine(m_reflect[index]);
@@ -527,7 +528,25 @@ namespace Fan.Sys
         //for (int i=0; i<m_reflect.Length; i++)
         //  System.Console.WriteLine(m_reflect[i]);
 
-        return m_reflect[index].Invoke(instance, args);
+        // TODO - not sure how this should work entirely yet, but we need
+        // to be responsible for "boxing" Fan wrappers and primitives
+
+        // box the parameters
+        ParameterInfo[] pars = m.GetParameters();
+        for (int i=0; i<args.Length; i++)
+        {
+          System.Type pt = pars[i].ParameterType;
+          if (pt == doublePrimitive && args[i] is Fan.Sys.Double)
+            args[i] = (args[i] as Fan.Sys.Double).doubleValue();
+        }
+
+        // invoke method
+        object ret = m.Invoke(instance, args);
+
+        // box the return value
+        if (ret is double) ret = Double.valueOf((double)ret);
+        return ret;
+
       }
       catch (ArgumentException e)
       {
@@ -556,6 +575,8 @@ namespace Fan.Sys
         throw Err.make("Cannot call '" + this + "': " + e).val;
       }
     }
+
+    private static System.Type doublePrimitive = System.Type.GetType("System.Double");
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

@@ -9,8 +9,7 @@
 using System;
 using System.Reflection;
 using Boolean  = Fan.Sys.Boolean;
-using Long   = Fan.Sys.Long;
-using Double = Fan.Sys.Double;
+using Long     = Fan.Sys.Long;
 using Duration = Fan.Sys.Duration;
 
 namespace Fanx.Test
@@ -29,20 +28,6 @@ namespace Fanx.Test
     public static string[] tests =
     {
       "UtilTest",
-      //"EmitTest",
-      //"LiteralExprTest",
-      //"ExprTest",
-      //"StmtTest",
-      //"SlotDefTest",
-      //"TryTest",
-      //"ParamTest",
-      //"InheritTest",
-      //"IsAsTest",
-      //"ReflectTest",
-      //"ListTest",
-      //"CallTest",
-      //"MethodTest",
-      //"ClosureTest",
     };
 
   //////////////////////////////////////////////////////////////////////////
@@ -263,19 +248,19 @@ namespace Fanx.Test
       return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d), Long.valueOf(e), Long.valueOf(f) };
     }
 
-    public Double[] MakeFloats(double a)
+    public double[] MakeFloats(double a)
     {
-      return new Double[] { Double.valueOf(a) };
+      return new double[] { a };
     }
 
-    public Double[] MakeFloats(double a, double b)
+    public double[] MakeFloats(double a, double b)
     {
-      return new Double[] { Double.valueOf(a), Double.valueOf(b) };
+      return new double[] { a, b };
     }
 
-    public Double[] MakeFloats(double a, double b, double c)
+    public double[] MakeFloats(double a, double b, double c)
     {
-      return new Double[] { Double.valueOf(a), Double.valueOf(b), Double.valueOf(c) };
+      return new double[] { a, c, b };
     }
 
     public string[] MakeStrs(string a)
