@@ -211,6 +211,75 @@ class PullTest : XmlTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Skip and Memory
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSkipAndMem()
+  {
+    init(
+      "<root>
+         <!-- skip nodes -->
+         <skip/>
+         <skip><bar/></skip>
+         <skip>
+           <foo><bar/></foo>
+           <foo/>
+           <foo><bar/></foo>
+         </skip>
+         <!-- mem nodes -->
+         <a/>
+         <mem1 a='b'/>
+         <a/>
+         <mem2><kid><grandkid/></kid></mem2>
+         <a/>
+       </root>")
+
+    root := XElem("root")
+    skip := XElem("skip")
+    foo  := XElem("foo")
+    a    := XElem("a")
+    mem1 := XElem("mem1") { addAttr("a", "b") }
+    mem2 := XElem("mem2")
+
+    verifyNext(start, 0, [root])
+    verifyNext(start, 1, [root, skip]); verifyEq(parser.line, 3)
+
+    // skip <skip/>
+    parser.skip
+    verifyNext(start, 1, [root, skip]); verifyEq(parser.line, 4)
+
+    // skip <skip><bar/></skip>
+    parser.skip
+    verifyNext(start, 1, [root, skip]); verifyEq(parser.line, 5)
+    verifyNext(start, 2, [root, skip, foo]); verifyEq(parser.line, 6)
+
+    // we're on foo, skip all the way back up to </skip>
+    parser.skip(1)
+    verifyNext(start, 1, [root, a]); verifyEq(parser.line, 11)
+    verifyNext(end,   1, [root, a])
+
+    // read mem1 into memory
+    verifyNext(start, 1, [root, mem1])
+    xmem1 := parser.parseElem
+    verifyNext(start, 1, [root, a]); verifyEq(parser.line, 13)
+    verifyNext(end,   1, [root, a])
+    verifyElem(xmem1, mem1)
+
+    // read mem2 into memory
+    verifyNext(start, 1, [root, mem2])
+    xmem2 := parser.parseElem
+    verifyNext(start, 1, [root, a]); verifyEq(parser.line, 15)
+    verifyNext(end,   1, [root, a])
+    verifyElem(xmem2, XElem("mem2") { XElem("kid") { XElem("grandkid") } })
+
+    verifyNext(end,   0, [root])
+    verifyNext(null, -1, empty)
+
+    verifyElem(xmem1, mem1)
+    verifyElem(xmem2, XElem("mem2") { XElem("kid") { XElem("grandkid") } })
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
