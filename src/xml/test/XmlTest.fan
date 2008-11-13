@@ -33,16 +33,17 @@ abstract class XmlTest : Test
   Void verifyDoc(XDoc a, XDoc b)
   {
     verifyEq(a.docType?.toStr, b.docType?.toStr)
-    verifyEq(a.pis.size, b.pis.size)
-    a.pis.each |XPi api, Int i| { verifyPi(api, b.pis[i]) }
+    verifyPis(a.pis, b.pis)
     verifyElem(a.root, b.root)
   }
 
   **
   ** Verify two elements are equal
   **
-  Void verifyElem(XElem a, XElem b)
+  Void verifyElem(XElem? a, XElem? b)
   {
+    if (a == null) { verify(b == null); return; }
+
     // naming
     verifyEq(a.prefix, b.prefix)
     verifyEq(a.name,   b.name)
@@ -92,6 +93,15 @@ abstract class XmlTest : Test
   {
     verifyEq(a.target, b.target)
     verifyEq(a.val, b.val)
+  }
+
+  **
+  ** Verify lists of two processing instructions are equal
+  **
+  Void verifyPis(XPi[] a, XPi[] b)
+  {
+    verifyEq(a.size, b.size)
+    a.each |XPi ax, Int i| { verifyPi(ax, b[i]) }
   }
 
 
