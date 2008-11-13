@@ -230,7 +230,7 @@ public class LocalFile
     }
 
     java.io.File parent = file.getParentFile();
-    if (!parent.exists())
+    if (parent != null && !parent.exists())
     {
       if (!parent.mkdirs())
         throw IOErr.make("Cannot create dir: " + parent).val;
@@ -365,7 +365,7 @@ public class LocalFile
     try
     {
       java.io.File parent = file.getParentFile();
-      if (!parent.exists()) parent.mkdirs();
+      if (parent != null && !parent.exists()) parent.mkdirs();
       return SysOutStream.make(new java.io.FileOutputStream(file, append), bufSize);
     }
     catch (java.io.IOException e)
