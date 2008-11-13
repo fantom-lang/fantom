@@ -53,6 +53,7 @@ namespace Fanx.Serial
 
       if (obj.GetType().FullName[0] == 'S')
       {
+        if (obj is double) { FanFloat.encode((double)obj, this); return; }
         if (obj is string) { wStrLiteral(obj.ToString(), '"'); return; }
       }
 
@@ -60,8 +61,8 @@ namespace Fanx.Serial
       {
         if (obj is Boolean && (obj as Boolean).booleanValue())  { w("true"); return; }
         if (obj is Boolean && !(obj as Boolean).booleanValue()) { w("false"); return; }
+        if (obj is Double) { FanFloat.encode((obj as Double).doubleValue(), this); return; }
         if (obj is Long)   { w(obj.ToString()); return; }
-        if (obj is Double) { FanFloat.encode((Double)obj, this); return; }
         if (obj is BigDecimal) { FanDecimal.encode((BigDecimal)obj, this); return; }
       }
 

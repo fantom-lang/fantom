@@ -234,9 +234,9 @@ namespace Fan.Sys
 
     public Buf writeI8(Long x) { m_out.writeI8(x); return this; }
 
-    public Buf writeF4(Double x) { m_out.writeF4(x); return this; }
+    public Buf writeF4(double x) { m_out.writeF4(x); return this; }
 
-    public Buf writeF8(Double x) { m_out.writeF8(x); return this; }
+    public Buf writeF8(double x) { m_out.writeF8(x); return this; }
 
     public Buf writeDecimal(BigDecimal x) { m_out.writeDecimal(x); return this; }
 
@@ -290,9 +290,9 @@ namespace Fan.Sys
 
     public Long readS8() { return m_in.readS8(); }
 
-    public Double readF4() { return m_in.readF4(); }
+    public double readF4() { return m_in.readF4(); }
 
-    public Double readF8() { return m_in.readF8(); }
+    public double readF8() { return m_in.readF8(); }
 
     public BigDecimal readDecimal() { return m_in.readDecimal(); }
 

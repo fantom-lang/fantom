@@ -45,16 +45,16 @@ namespace Fanx.Fcode
           case 'E':
             if (typeName == "Err") mask |= SYS_ERR;
             break;
-          /*
           case 'F':
-            if (typeName.equals(Float"))
+            if (typeName == "Float")
             {
               mask |= SYS_FLOAT;
               if (!nullable) stackType = DOUBLE;
             }
             break;
+          /*
           case 'I':
-            if (typeName.equals("Int"))
+            if (typeName == "Int")
             {
               mask |= SYS_INT;
               if (!nullable) stackType = LONG;
@@ -115,19 +115,24 @@ namespace Fanx.Fcode
     public bool isBoolPrimitive() { return stackType == INT && isBool(); }
 
     /// <summary>
-    /// Is this sys::Float, double primitive
-    /// </summary>
-    public bool isFloatPrimitive() { return stackType == DOUBLE && isFloat(); }
-
-    /// <summary>
     /// Is this sys::Int or sys::Int?
     /// </summary>
     public bool isInt() { return (mask & SYS_INT) != 0; }
 
     /// <summary>
+    /// Is this sys::Int, long primitive
+    /// </summary>
+    public bool isIntPrimitive() { return stackType == LONG && isInt(); }
+
+    /// <summary>
     /// Is this sys::Float or sys::Float?
     /// </summary>
     public bool isFloat() { return (mask & SYS_FLOAT) != 0; }
+
+    /// <summary>
+    /// Is this sys::Float, double primitive
+    /// </summary>
+    public bool isFloatPrimitive() { return stackType == DOUBLE && isFloat(); }
 
     /// <summary>
     /// Is this sys::Err or sys::Err?
@@ -156,11 +161,12 @@ namespace Fanx.Fcode
     public string nnameBoxed()
     {
       /*
-      if (stackType == OBJ) return jname();
+      if (stackType == OBJ) return nname();
       if (isBoolPrimitive()) return "java/lang/Boolean";
       if (isFloatPrimitive()) return "java/lang/Double";
       throw new IllegalStateException(signature);
       */
+      if (isFloatPrimitive()) return "Fan.Sys.Double";
       return nname();
     }
 

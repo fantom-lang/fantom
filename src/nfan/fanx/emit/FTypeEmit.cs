@@ -544,6 +544,7 @@ namespace Fanx.Emit
   // Cached CpInfo
   //////////////////////////////////////////////////////////////////////////
 
+    /*
     internal PERWAPI.Method CompareEQ, CompareEQz;
     internal PERWAPI.Method CompareNE, CompareNEz;
     internal PERWAPI.Method Compare;
@@ -551,6 +552,7 @@ namespace Fanx.Emit
     internal PERWAPI.Method CompareLE, CompareLEz;
     internal PERWAPI.Method CompareGE, CompareGEz;
     internal PERWAPI.Method CompareGT, CompareGTz;
+    */
     internal PERWAPI.Method CompareSame;
     internal PERWAPI.Method CompareNotSame;
     internal PERWAPI.Method CompareNull;

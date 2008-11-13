@@ -17,7 +17,7 @@ namespace Fanx.Util
   {
 
   //////////////////////////////////////////////////////////////////////////
-  // Comparisions -> boolean
+  // Comparisions -> Boolean
   //////////////////////////////////////////////////////////////////////////
 
     public static bool compareEQz(object a, object b)
@@ -115,24 +115,96 @@ namespace Fanx.Util
       return FanObj.compare(a, b).longValue() > 0 ? Boolean.True : Boolean.False;
     }
 
-    public static Boolean compareSame(object a, object b) // need to use Object for mixins
+    public static Boolean compareSame(object a, object b) // need to use object for mixins
     {
       return a == b ? Boolean.True : Boolean.False;
     }
 
-    public static Boolean compareNotSame(object a, object b) // need to use Object for mixins
+    public static Boolean compareNotSame(object a, object b) // need to use object for mixins
     {
       return a != b ? Boolean.True : Boolean.False;
     }
 
-    public static Boolean compareNull(object a) // need to use Object for mixins
+    public static Boolean compareNull(object a) // need to use object for mixins
     {
       return a == null ? Boolean.True : Boolean.False;
     }
 
-    public static Boolean compareNotNull(object a) // need to use Object for mixins
+    public static Boolean compareNotNull(object a) // need to use object for mixins
     {
       return a != null ? Boolean.True : Boolean.False;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // sys::Bool Comparisions
+  //////////////////////////////////////////////////////////////////////////
+
+    public static Boolean compareEQ(Boolean a, Boolean b) { return Boolean.valueOf(a.booleanValue() == b.booleanValue()); }
+    public static Boolean compareEQ(Boolean a, object b)  { return (b is Boolean) ? Boolean.valueOf(a.booleanValue() == ((Boolean)b).booleanValue()) : Boolean.False; }
+    public static Boolean compareEQ(object a, Boolean b)  { return (a is Boolean) ? Boolean.valueOf(b.booleanValue() == ((Boolean)a).booleanValue()) : Boolean.False; }
+
+    public static Boolean compareNE(Boolean a, Boolean b) { return Boolean.valueOf(a.booleanValue() != b.booleanValue()); }
+    public static Boolean compareNE(Boolean a, object b)  { return (b is Boolean) ? Boolean.valueOf(a.booleanValue() != ((Boolean)b).booleanValue()) : Boolean.True; }
+    public static Boolean compareNE(object a, Boolean b)  { return (a is Boolean) ? Boolean.valueOf(b.booleanValue() != ((Boolean)a).booleanValue()) : Boolean.True; }
+
+    public static Boolean compareLT(Boolean a, Boolean b) { return a.booleanValue() == b.booleanValue() ? Boolean.False : Boolean.valueOf(!a.booleanValue()); }
+    public static Boolean compareLT(Boolean a, object b)  { return (b is Boolean) ? compareLT(a, (Boolean)b) : compareLT((object)a, b); }
+    public static Boolean compareLT(object a, Boolean b)  { return (a is Boolean) ? compareLT((Boolean)a, b) : compareLT(a, (object)b); }
+
+    public static Boolean compareLE(Boolean a, Boolean b) { return a.booleanValue() == b.booleanValue() ? Boolean.True : Boolean.valueOf(!a.booleanValue()); }
+    public static Boolean compareLE(Boolean a, object b)  { return (b is Boolean) ? compareLE(a, (Boolean)b) : compareLE((object)a, b); }
+    public static Boolean compareLE(object a, Boolean b)  { return (a is Boolean) ? compareLE((Boolean)a, b) : compareLE(a, (object)b); }
+
+    public static Boolean compareGE(Boolean a, Boolean b) { return a.booleanValue() == b.booleanValue() ? Boolean.True : a; }
+    public static Boolean compareGE(Boolean a, object b)  { return (b is Boolean) ? compareGE(a, (Boolean)b) : compareGE((object)a, b); }
+    public static Boolean compareGE(object a, Boolean b)  { return (a is Boolean) ? compareGE((Boolean)a, b) : compareGE(a, (object)b); }
+
+    public static Boolean compareGT(Boolean a, Boolean b) { return a.booleanValue() == b.booleanValue() ? Boolean.False : a; }
+    public static Boolean compareGT(Boolean a, object b)  { return (b is Boolean) ? compareGT(a, (Boolean)b) : compareGT((object)a, b); }
+    public static Boolean compareGT(object a, Boolean b)  { return (a is Boolean) ? compareGT((Boolean)a, b) : compareGT(a, (object)b); }
+
+    public static Long compare(Boolean a, Boolean b) { return a.booleanValue() == b.booleanValue() ? Long.valueOf(0) : Long.valueOf(a.booleanValue() ? +1 : -1); }
+    public static Long compare(Boolean a, object b)  { return (b is Boolean) ? compare(a, (Boolean)b) : compare((object)a, b); }
+    public static Long compare(object a, Boolean b)  { return (a is Boolean) ? compare((Boolean)a, b) : compare(a, (object)b); }
+
+  //////////////////////////////////////////////////////////////////////////
+  // sys::Float Comparisions
+  //////////////////////////////////////////////////////////////////////////
+
+    public static Boolean compareEQ(double a, double b) { return Boolean.valueOf(a == b); }
+    public static Boolean compareEQ(double a, object b) { return (b is Double) ? compareEQ(a, (b as Double).doubleValue()) : Boolean.False; }
+    public static Boolean compareEQ(object a, double b) { return (a is Double) ? compareEQ((a as Double).doubleValue(), b) : Boolean.False; }
+
+    public static Boolean compareNE(double a, double b) { return Boolean.valueOf(a != b); }
+    public static Boolean compareNE(double a, object b) { return (b is Double) ? compareNE(a, (b as Double).doubleValue()) : Boolean.True; }
+    public static Boolean compareNE(object a, double b) { return (a is Double) ? compareNE((a as Double).doubleValue(), b) : Boolean.True; }
+
+    public static Boolean compareLT(double a, double b) { return Boolean.valueOf(a < b); }
+    public static Boolean compareLT(double a, object b) { return (b is Double) ? compareLT(a, (b as Double).doubleValue()) : compareLT((object)a, b); }
+    public static Boolean compareLT(object a, double b) { return (a is Double) ? compareLT((a as Double).doubleValue(), b) : compareLT(a, (object)b); }
+
+    public static Boolean compareLE(double a, double b) { return Boolean.valueOf(a <= b); }
+    public static Boolean compareLE(double a, object b) { return (b is Double) ? compareLE(a, (b as Double).doubleValue()) : compareLE((object)a, b); }
+    public static Boolean compareLE(object a, double b) { return (a is Double) ? compareLE((a as Double).doubleValue(), b) : compareLE(a, (object)b); }
+
+    public static Boolean compareGE(double a, double b) { return Boolean.valueOf(a >= b); }
+    public static Boolean compareGE(double a, object b) { return (b is Double) ? compareGE(a, (b as Double).doubleValue()) : compareGE((object)a, b); }
+    public static Boolean compareGE(object a, double b) { return (a is Double) ? compareGE((a as Double).doubleValue(), b) : compareGE(a, (object)b); }
+
+    public static Boolean compareGT(double a, double b) { return Boolean.valueOf(a > b); }
+    public static Boolean compareGT(double a, object b) { return (b is Double) ? compareGT(a, (b as Double).doubleValue()) : compareGT((object)a, b); }
+    public static Boolean compareGT(object a, double b) { return (a is Double) ? compareGT((a as Double).doubleValue(), b) : compareGT(a, (object)b); }
+
+    public static Long compare(double a, object b) { return (b is Double) ? compare(a, (b as Double).doubleValue()) : compare((object)a, b); }
+    public static Long compare(object a, double b) { return (a is Double) ? compare((a as Double).doubleValue(), b) : compare(a, (object)b); }
+    public static Long compare(double a, double b)
+    {
+      if (System.Double.IsNaN(a))
+      {
+        return (System.Double.IsNaN(b)) ? Long.valueOf(0) : Long.valueOf(-1);
+      }
+      if (System.Double.IsNaN(b)) return Long.valueOf(+1);
+      return a < b ? Long.valueOf(-1) : (a == b ? Long.valueOf(0) : Long.valueOf(+1));
     }
 
   //////////////////////////////////////////////////////////////////////////

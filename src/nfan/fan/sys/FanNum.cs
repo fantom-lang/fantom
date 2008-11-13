@@ -22,10 +22,10 @@ namespace Fan.Sys
       return Long.valueOf(self.longValue());
     }
 
-    public static Double toFloat(Number self)
+    public static double toFloat(Number self)
     {
-      if (self is Double) return (Double)self;
-      return Double.valueOf(self.doubleValue());
+      //if (self is double) return self;
+      return self.doubleValue();
     }
 
     public static BigDecimal toDecimal(Number self)

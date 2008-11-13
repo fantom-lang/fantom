@@ -65,7 +65,7 @@ namespace Fan.Sys
 
         s = s.Substring(0, len-suffixLen);
         if (dot)
-          return make((long)(Double.valueOf(s).doubleValue()*(double)mult));
+          return make((long)(System.Double.Parse(s)*(double)mult));
         else
           return make(Int64.Parse(s)*mult);
       }
@@ -180,14 +180,14 @@ namespace Fan.Sys
       return make(m_ticks - x.m_ticks);
     }
 
-    public Duration mult(Double x)
+    public Duration mult(double x)
     {
-      return make((long)(m_ticks * x.doubleValue()));
+      return make((long)(m_ticks * x));
     }
 
-    public Duration div(Double x)
+    public Duration div(double x)
     {
-      return make((long)(m_ticks / x.doubleValue()));
+      return make((long)(m_ticks / x));
     }
 
     public Duration floor(Duration accuracy)
