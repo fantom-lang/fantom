@@ -61,7 +61,7 @@ fan.runtime.substitutes=                             \
   /C:/dev/fan/src/build/build.fan    = C:\\dev\\rel
 
 // used to change version for all pods at once
-fan.build.globalVersion=1.0.34
+fan.build.globalVersion=1.0.35
 
 // Must be configured boot build in substitute/release installation
 //fan.build.devHome=/C:/dev/fan/
@@ -73,6 +73,5 @@ fan.build.netHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 
 // Mac setup
 //fan.build.jdkHome=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/
-
 
 

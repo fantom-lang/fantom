@@ -458,7 +458,7 @@
 - Java runtime maps sys::Float to primitive double
 - Change semanatics of Float.nan compare to match JVM
 
-*Build 1.0.35 (incomplete)*
+*Build 1.0.35 (14 Nov 08)*
 - Update documentation for nullable and value types
 - New docLib::Fwt chapter
 - New docLang::Deployment chapter
