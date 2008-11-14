@@ -461,6 +461,7 @@
 *Build 1.0.35 (incomplete)*
 - Update documentation for nullable and value types
 - New docLib::Fwt chapter
+- New docLang::Deployment chapter
 - Turn on non-null coercion runtime checking
 - Allow function types const fields with implicit toImmutable
 - Allow any list or map type as const field via implicit toImmutable

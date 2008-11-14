@@ -6,8 +6,76 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-Overview
-********
-TODO: Deployment
+Overview [#overview]
+********************
+The Fan compiler generates pod files which contain a bytecode
+representation of the code which we call *fcode*.  Pod files are just
+normal zip files you can open in your favorite zip tool.  Pod files
+also contain files for the constant pools and any resource files you might
+have bundled with your pod (available via the [Pod.files]`sys::Pod.files`
+method).
+
+Pod files are portable between Java and .NET.  The runtimes are
+responsible for reading in pod files to execute them.  The runtimes
+also provide a full implementation of the 'sys' pod:
+
+- The Java runtime reads pods files and emits the fcode as Java bytecode.
+This translation occurs at runtime.  The sys APIs are implemented in
+normal Java code.
+
+- Likewise the .NET runtime reads pods files and emits the fcode as IL
+at runtime.  The sys APIs are implemented in normal C# code.
+
+The following illustration depicts this architecture:
 
 ![deployment]`deployment.png`
+
+Natives [#natives]
+******************
+If a pod is written 100% in Fan code, then it is completely portable between
+the runtimes.  However some pods like 'inet' or 'fwt' need to bind the
+underlying platform with native methods.
+
+When you build a pod with native methods, it generates a normal pod file
+which is necessary for all the reflective meta-data.  But it also generates
+a native file.  For Java natives this is a jar file under the "lib/java"
+directory.  For .NET natives a dll file is generated under "lib/net".  Also
+see [docTools]`docTools::Build#buildPod` for how to build pods with native
+code.
+
+Note: this architecture is likely to change when Fan is enhanced for
+[language interop]`docIntro::Roadmap#nativeIntegration`.
+
+Dependencies [#depends]
+***********************
+All pods have an explicit set of dependencies on other pods.  All
+pods must have a dependency on the 'sys' pod.  Dependencies are
+declared in your [build script]`docTools::Build#buildPod` and are
+available at runtime via [Pod.depends]`sys::Pod.depends`.
+
+Dependencies are modeled via the `sys::Depend` class.  They are declared
+in a string format which includes the pod name and a set of *version
+constraints*.  Version constraints can be a simple version number,
+a version number and anything greater, or a version range.  See Depend's
+[fandoc]`sys::Depend` for the format details.
+
+Dependencies are used in two ways.  At compile time dependencies
+determine which pods can be imported via the [using]`CompilationUnits#using`
+statement.  It is a compile time error to import a pod which isn't
+declared in the dependency list.
+
+Dependencies are also checked at runtime.  If a pod's dependencies
+are not met, then the pod cannot be loaded.
+
+Application Deployment [#appDeployment]
+***************************************
+Deploying a Fan application involves three components:
+  1. Platform runtime: either the Java VM or the .NET VM (usually pre-installed)
+  2. Fan runtime: a distribution of the core files
+  3. Pods: the library of pods necessary for your application
+
+The Fan distribution downloaded from the web is really a developer
+distro.  Most of those files are not needed for runtime.  In general
+the only directories needed for runtime is the 'bin' and 'lib'
+directory.  Within the 'lib' directory you can remove all the pod, jar,
+and dll files not needed by your application.
