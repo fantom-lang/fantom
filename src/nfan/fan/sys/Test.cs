@@ -85,7 +85,7 @@ namespace Fan.Sys
       }
       if (expected != null && actual != null)
       {
-        if (hash(expected).longValue() != hash(actual).longValue())
+        if (hash(expected) != hash(actual))
         {
           fail("Equal but different hash codes: " +
             expected + " (0x" + FanInt.toHex(hash(expected)) + ") ?= " +

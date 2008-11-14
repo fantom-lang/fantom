@@ -52,7 +52,6 @@ namespace Fanx.Fcode
               if (!nullable) stackType = DOUBLE;
             }
             break;
-          /*
           case 'I':
             if (typeName == "Int")
             {
@@ -60,7 +59,6 @@ namespace Fanx.Fcode
               if (!nullable) stackType = LONG;
             }
             break;
-          */
           case 'O':
             if (typeName == "Obj") mask |= SYS_OBJ;
             break;
@@ -167,6 +165,7 @@ namespace Fanx.Fcode
       throw new IllegalStateException(signature);
       */
       if (isFloatPrimitive()) return "Fan.Sys.Double";
+      if (isIntPrimitive()) return "Fan.Sys.Long";
       return nname();
     }
 

@@ -183,7 +183,7 @@ namespace Fan.Sys
         return Boolean.False;
     }
 
-    public override Long hash()
+    public override long hash()
     {
       return FanStr.hash(toStr());
     }
@@ -221,33 +221,33 @@ namespace Fan.Sys
       return m_name;
     }
 
-    public Long size()
+    public long size()
     {
-      return Long.valueOf(m_constraints.Length);
+      return m_constraints.Length;
     }
 
-    public Version version() { return version(FanInt.Zero); }
-    public Version version(Long index)
+    public Version version() { return version(0); }
+    public Version version(long index)
     {
-      return m_constraints[index.intValue()].version;
+      return m_constraints[(int)index].version;
     }
 
-    public Boolean isPlus() { return isPlus(FanInt.Zero); }
-    public Boolean isPlus(Long index)
+    public Boolean isPlus() { return isPlus(0); }
+    public Boolean isPlus(long index)
     {
-      return m_constraints[index.intValue()].isPlus ? Boolean.True : Boolean.False;
+      return m_constraints[(int)index].isPlus ? Boolean.True : Boolean.False;
     }
 
-    public Boolean isRange() { return isRange(FanInt.Zero); }
-    public Boolean isRange(Long index)
+    public Boolean isRange() { return isRange(0); }
+    public Boolean isRange(long index)
     {
-      return m_constraints[index.intValue()].endVersion != null ? Boolean.True : Boolean.False;
+      return m_constraints[(int)index].endVersion != null ? Boolean.True : Boolean.False;
     }
 
-    public Version endVersion() { return endVersion(FanInt.Zero); }
-    public Version endVersion(Long index)
+    public Version endVersion() { return endVersion(0); }
+    public Version endVersion(long index)
     {
-      return m_constraints[index.intValue()].endVersion;
+      return m_constraints[(int)index].endVersion;
     }
 
     public Boolean match(Version v)
@@ -258,14 +258,14 @@ namespace Fan.Sys
         if (c.isPlus)
         {
           // versionPlus
-          if (c.version.compare(v).longValue() <= 0)
+          if (c.version.compare(v) <= 0)
             return Boolean.True;
         }
         else if (c.endVersion != null)
         {
           // versionRange
-          if (c.version.compare(v).longValue() <= 0 &&
-              (c.endVersion.compare(v).longValue() >= 0 || match(c.endVersion, v)))
+          if (c.version.compare(v) <= 0 &&
+              (c.endVersion.compare(v) >= 0 || match(c.endVersion, v)))
             return Boolean.True;
         }
         else

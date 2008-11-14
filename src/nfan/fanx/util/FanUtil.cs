@@ -79,7 +79,7 @@ namespace Fanx.Util
             if (typeName == "Float") return nullable ? "Fan.Sys.Double" : "System.Double";
             break;
           case 'I':
-            if (typeName == "Int") return "Fan.Sys.Long";
+            if (typeName == "Int") return nullable ? "Fan.Sys.Long" : "System.Int64";
             break;
           case 'N':
             if (typeName == "Num") return "Fan.Sys.Number";
@@ -136,15 +136,13 @@ namespace Fanx.Util
     /// <summary>
     /// Given a .NET type signature, return the implementation
     /// class signature for methods and fields:
-    ///   System.Object  =>  Fan.Sys.FanObj
-    ///   System.Double  =>  Fan.Sys.FanFloat
-    /// Anything else returns itself.
     /// </summary>
     public static string toNetImplTypeName(string ntype)
     {
       if (ntype[0] == 'S')
       {
         if (ntype == "System.Double") return "Fan.Sys.FanFloat";
+        if (ntype == "System.Int64") return "Fan.Sys.FanInt";
         if (ntype == "System.String") return "Fan.Sys.FanStr";
         if (ntype == "System.Object") return "Fan.Sys.FanObj";
       }
@@ -152,7 +150,6 @@ namespace Fanx.Util
       {
         if (ntype == "Fan.Sys.Boolean") return "Fan.Sys.FanBool";
         if (ntype == "Fan.Sys.BigDecimal") return "Fan.Sys.FanDecimal";
-        if (ntype == "Fan.Sys.Long") return "Fan.Sys.FanInt";
         if (ntype == "Fan.Sys.Number") return "Fan.Sys.FanNum";
       }
       return ntype;
@@ -285,6 +282,7 @@ namespace Fanx.Util
       if (Fan.Sys.Sys.ObjType == null) Fan.Sys.Sys.dumpStack();
 
       netToFanTypes["System.Double"]      = Fan.Sys.Sys.FloatType;
+      netToFanTypes["System.Int64"]       = Fan.Sys.Sys.IntType;
       netToFanTypes["System.String"]      = Fan.Sys.Sys.StrType;
       netToFanTypes["System.Object"]      = Fan.Sys.Sys.ObjType;
       netToFanTypes["Fan.Sys.Boolean"]    = Fan.Sys.Sys.BoolType;
@@ -294,6 +292,7 @@ namespace Fanx.Util
       netToFanTypes["Fan.Sys.Number"]     = Fan.Sys.Sys.NumType;
 
       netImmutables["System.Double"]      = true;
+      netImmutables["System.Int64"]       = true;
       netImmutables["System.String"]      = true;
       netImmutables["Fan.Sys.Boolean"]    = true;
       netImmutables["Fan.Sys.BigDecimal"] = true;

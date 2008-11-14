@@ -46,7 +46,7 @@ namespace Fan.Sys
 
     public sealed override int GetHashCode() { return m_source.GetHashCode(); }
 
-    public sealed override Long hash() { return FanStr.hash(m_source); }
+    public sealed override long hash() { return FanStr.hash(m_source); }
 
     public override string toStr() { return m_source; }
 
@@ -66,15 +66,15 @@ namespace Fan.Sys
       return new RegexMatcher(m_pattern.Match(s), s);
     }
 
-    public List split(string s) { return split(s, FanInt.Zero); }
-    public List split(string s, Long limit)
+    public List split(string s) { return split(s, 0); }
+    public List split(string s, long limit)
     {
-      int l = (limit.longValue() < 0) ? 0 : limit.intValue();
+      int l = (limit < 0) ? 0 : (int)limit;
       List result = new List(m_pattern.Split(s, l));
 
       // to match java we need to discard any trailing
       // emptys strings (use limit, not l)
-      if (limit.longValue() == 0)
+      if (limit == 0)
         while (result.sz() > 0 && (result.last() as string).Length == 0)
           result.pop();
 

@@ -97,7 +97,7 @@ namespace Fan.Sys
 
     public override sealed int GetHashCode() { return m_uri.GetHashCode(); }
 
-    public override sealed Long hash() { return m_uri.hash(); }
+    public override sealed long hash() { return m_uri.hash(); }
 
     public override sealed string toStr() { return m_uri.toStr(); }
 
@@ -145,7 +145,7 @@ namespace Fan.Sys
       List x = list();
       for (int i=x.sz()-1; i>=0; --i)
         if (!((File)x.get(i)).isDir().booleanValue())
-          x.removeAt(Long.valueOf(i));
+          x.removeAt(i);
       return x;
     }
 
@@ -165,7 +165,7 @@ namespace Fan.Sys
       List x = list();
       for (int i=x.sz()-1; i>=0; --i)
         if (((File)x.get(i)).isDir().booleanValue())
-          x.removeAt(Long.valueOf(i));
+          x.removeAt(i);
       return x;
     }
 
@@ -328,10 +328,10 @@ namespace Fan.Sys
     public Buf open() { return open(rwStr); }
     public abstract Buf open(string mode);
 
-    public Buf mmap() { return mmap(rwStr, FanInt.Zero, null); }
-    public Buf mmap(string mode) { return mmap(mode, FanInt.Zero, null); }
-    public Buf mmap(string mode, Long pos) { return mmap(mode, pos, null); }
-    public abstract Buf mmap(string mode, Long pos, Long size);
+    public Buf mmap() { return mmap(rwStr, 0, null); }
+    public Buf mmap(string mode) { return mmap(mode, 0, null); }
+    public Buf mmap(string mode, long pos) { return mmap(mode, pos, null); }
+    public abstract Buf mmap(string mode, long pos, Long size);
 
     public InStream @in() { return @in(defaultBufSize); }
     public abstract InStream @in(Long bufSize);
@@ -354,7 +354,7 @@ namespace Fan.Sys
 
     public void eachLine(Func f)
     {
-      @in(FanInt.Chunk).eachLine(f);
+      @in(Long.valueOf(FanInt.Chunk)).eachLine(f);
     }
 
     public string readAllStr() { return readAllStr(Boolean.True); }

@@ -31,7 +31,7 @@ namespace Fan.Sys
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    internal MmapBuf(File file, string mode, long pos, long size)
+    internal MmapBuf(File file, string mode, long pos, Long size)
     {
       this.m_file = file;
 
@@ -205,12 +205,12 @@ namespace Fan.Sys
   // Buf API
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Long capacity()
+    public override sealed long capacity()
     {
       return size();
     }
 
-    public override void capacity(Long x)
+    public override void capacity(long x)
     {
       throw UnsupportedErr.make("mmap capacity fixed").val;
     }

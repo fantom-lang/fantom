@@ -100,7 +100,7 @@ namespace Fan.Sys
 
     public override int GetHashCode() { return m_str.GetHashCode(); }
 
-    public override Long hash() { return FanStr.hash(m_str); }
+    public override long hash() { return FanStr.hash(m_str); }
 
     public override Boolean _equals(object obj)
     {

@@ -18,34 +18,23 @@ namespace Fan.Sys
   // Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public static Range makeInclusive(int start, int end)
-    {
-      return new Range(Long.valueOf(start), Long.valueOf(end), false);
-    }
-
-    public static Range makeInclusive(Long start, Long end)
+    public static Range makeInclusive(long start, long end)
     {
       return new Range(start, end, false);
     }
 
-    public static Range makeExclusive(int start, int end)
-    {
-      return new Range(Long.valueOf(start), Long.valueOf(end), true);
-    }
-
-    public static Range makeExclusive(Long start, Long end)
+    public static Range makeExclusive(long start, long end)
     {
       return new Range(start, end, true);
     }
 
-    public static Range make(Long start, Long end, Boolean exclusive)
+    public static Range make(long start, long end, Boolean exclusive)
     {
       return new Range(start, end, exclusive.booleanValue());
     }
 
-    private Range(Long start, Long end, bool exclusive)
+    private Range(long start, long end, bool exclusive)
     {
-      if (start == null || end == null) throw NullErr.make().val;
       this.m_start = start;
       this.m_end = end;
       this.m_exclusive = exclusive;
@@ -55,12 +44,12 @@ namespace Fan.Sys
   // Range
   //////////////////////////////////////////////////////////////////////////
 
-    public Long start()
+    public long start()
     {
       return m_start;
     }
 
-    public Long end()
+    public long end()
     {
       return m_end;
     }
@@ -75,39 +64,39 @@ namespace Fan.Sys
       return m_exclusive ? Boolean.True : Boolean.False;
     }
 
-    public Boolean contains(Long i)
+    public Boolean contains(long i)
     {
       if (m_exclusive)
-        return Boolean.valueOf(m_start.longValue() <= i.longValue() && i.longValue() < m_end.longValue());
+        return Boolean.valueOf(m_start <= i && i < m_end);
       else
-        return Boolean.valueOf(m_start.longValue() <= i.longValue() && i.longValue() <= m_end.longValue());
+        return Boolean.valueOf(m_start <= i && i <= m_end);
     }
 
     public void each(Func f)
     {
-      int start = this.m_start.intValue();
-      int end = this.m_end.intValue();
+      int start = (int)m_start;
+      int end = (int)m_end;
       if (!m_exclusive) end++;
       for (int i=start; i<end; ++i)
-        f.call1(Long.valueOf(i));
+        f.call1(i);
     }
 
     public List toList()
     {
-      int start = this.m_start.intValue();
-      int end = this.m_end.intValue();
+      int start = (int)m_start;
+      int end = (int)m_end;
       List acc = new List(Sys.IntType);
       if (start < end)
       {
         if (m_exclusive) --end;
-        acc.capacity(Long.valueOf(end-start));
+        acc.capacity(end-start);
         for (int i=start; i<=end; ++i)
           acc.add(Long.valueOf(i));
       }
       else
       {
         if (m_exclusive) ++end;
-        acc.capacity(Long.valueOf(start-end));
+        acc.capacity(start-end);
         for (int i=start; i>=end; --i)
           acc.add(Long.valueOf(i));
       }
@@ -119,8 +108,8 @@ namespace Fan.Sys
       if (obj is Range)
       {
         Range that = (Range)obj;
-        return Boolean.valueOf(this.m_start.longValue() == that.m_start.longValue() &&
-                         this.m_end.longValue() == that.m_end.longValue() &&
+        return Boolean.valueOf(this.m_start == that.m_start &&
+                         this.m_end == that.m_end &&
                          this.m_exclusive == that.m_exclusive);
       }
       return Boolean.False;
@@ -131,9 +120,9 @@ namespace Fan.Sys
       return m_start.GetHashCode() ^ m_end.GetHashCode();
     }
 
-    public override Long hash()
+    public override long hash()
     {
-      return Long.valueOf(m_start.longValue() ^ m_end.longValue());
+      return m_start ^ m_end;
     }
 
     public override string toStr()
@@ -152,7 +141,7 @@ namespace Fan.Sys
 
     internal int start(int size)
     {
-      int x = m_start.intValue();
+      int x = (int)m_start;
       if (x < 0) x = size + x;
       if (x > size) throw IndexErr.make(this).val;
       return x;
@@ -160,7 +149,7 @@ namespace Fan.Sys
 
     internal long start(long size)
     {
-      long x = m_start.longValue();
+      long x = m_start;
       if (x < 0) x = size + x;
       if (x > size) throw IndexErr.make(this).val;
       return x;
@@ -168,7 +157,7 @@ namespace Fan.Sys
 
     internal int end(int size)
     {
-      int x = m_end.intValue();
+      int x = (int)m_end;
       if (x < 0) x = size + x;
       if (m_exclusive) x--;
       if (x >= size) throw IndexErr.make(this).val;
@@ -177,7 +166,7 @@ namespace Fan.Sys
 
     internal long end(long size)
     {
-      long x = m_end.longValue();
+      long x = m_end;
       if (x < 0) x = size + x;
       if (m_exclusive) x--;
       if (x >= size) throw IndexErr.make(this).val;
@@ -188,7 +177,7 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private Long m_start, m_end;
+    private long m_start, m_end;
     private bool m_exclusive;
   }
 }

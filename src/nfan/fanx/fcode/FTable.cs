@@ -206,7 +206,7 @@ namespace Fanx.Fcode
          m_size = input.u2();
          m_table = new object[m_size];
          for (int i=0; i<m_size; i++)
-           m_table[i] = Long.valueOf(input.u8());
+           m_table[i] = input.u8();
          return this;
       }
     }

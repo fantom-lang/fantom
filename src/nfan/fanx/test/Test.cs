@@ -9,7 +9,6 @@
 using System;
 using System.Reflection;
 using Boolean  = Fan.Sys.Boolean;
-using Long     = Fan.Sys.Long;
 using Duration = Fan.Sys.Duration;
 
 namespace Fanx.Test
@@ -218,34 +217,34 @@ namespace Fanx.Test
       return new Boolean[] { MakeBool(a), MakeBool(b), MakeBool(c) };
     }
 
-    public Long[] MakeInts(long a)
+    public long[] MakeInts(long a)
     {
-      return new Long[] { Long.valueOf(a) };
+      return new long[] { a };
     }
 
-    public Long[] MakeInts(long a, long b)
+    public long[] MakeInts(long a, long b)
     {
-      return new Long[] { Long.valueOf(a), Long.valueOf(b) };
+      return new long[] { a, b };
     }
 
-    public Long[] MakeInts(long a, long b, long c)
+    public long[] MakeInts(long a, long b, long c)
     {
-      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c) };
+      return new long[] { a, b, c };
     }
 
-    public Long[] MakeInts(long a, long b, long c, long d)
+    public long[] MakeInts(long a, long b, long c, long d)
     {
-      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d) };
+      return new long[] { a, b, c, d };
     }
 
-    public Long[] MakeInts(long a, long b, long c, long d, long e)
+    public long[] MakeInts(long a, long b, long c, long d, long e)
     {
-      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d), Long.valueOf(e) };
+      return new long[] { a, b, c, d, e };
     }
 
-    public Long[] MakeInts(long a, long b, long c, long d, long e, long f)
+    public long[] MakeInts(long a, long b, long c, long d, long e, long f)
     {
-      return new Long[] { Long.valueOf(a), Long.valueOf(b), Long.valueOf(c), Long.valueOf(d), Long.valueOf(e), Long.valueOf(f) };
+      return new long[] { a, b, c, d, e, f };
     }
 
     public double[] MakeFloats(double a)

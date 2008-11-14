@@ -20,7 +20,7 @@ namespace Fan.Sys
   // C# Convenience
   //////////////////////////////////////////////////////////////////////////
 
-    public static CastErr make(Long index)   { return make(index.ToString()); }
+    public static CastErr make(long index)   { return make(index.ToString()); }
     public static CastErr make(Range index) { return make(index.ToString()); }
 
   //////////////////////////////////////////////////////////////////////////

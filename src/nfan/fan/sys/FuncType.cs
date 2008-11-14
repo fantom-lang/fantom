@@ -37,7 +37,7 @@ namespace Fan.Sys
   // Type
   //////////////////////////////////////////////////////////////////////////
 
-    public override Long hash()
+    public override long hash()
     {
       return FanStr.hash(signature());
     }

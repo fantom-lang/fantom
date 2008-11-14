@@ -48,44 +48,44 @@ namespace Fan.Sys
       return Boolean.valueOf(true); //matcher.find());
     }
 
-    public Long groupCount()
+    public long groupCount()
     {
       // to match java
-      return Long.valueOf(m_match.Groups.Count-1);
+      return m_match.Groups.Count-1;
     }
 
-    public string group() { return group(FanInt.Zero); }
-    public string group(Long group)
+    public string group() { return group(0); }
+    public string group(long group)
     {
       // to match java
       if (!matches().booleanValue()) throw new System.Exception();
-      if (group.longValue() < 0 || group.longValue() >= m_match.Groups.Count)
+      if (group < 0 || group >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 
-      return m_match.Groups[group.intValue()].Value;
+      return m_match.Groups[(int)group].Value;
     }
 
-    public Long start() { return start(FanInt.Zero); }
-    public Long start(Long group)
+    public long start() { return start(0); }
+    public long start(long group)
     {
       // to match java
       if (!matches().booleanValue()) throw new System.Exception();
-      if (group.longValue() < 0 || group.longValue() >= m_match.Groups.Count)
+      if (group < 0 || group >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 
-      return Long.valueOf(m_match.Groups[group.intValue()].Index);
+      return m_match.Groups[(int)group].Index;
     }
 
-    public Long end() { return end(FanInt.Zero); }
-    public Long end(Long group)
+    public long end() { return end(0); }
+    public long end(long group)
     {
       // to match java
       if (!matches().booleanValue()) throw new System.Exception();
-      if (group.longValue() < 0 || group.longValue() >= m_match.Groups.Count)
+      if (group < 0 || group >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 
-      Group g = m_match.Groups[group.intValue()];
-      return Long.valueOf(g.Index + g.Length);
+      Group g = m_match.Groups[(int)group];
+      return g.Index + g.Length;
     }
 
   //////////////////////////////////////////////////////////////////////////

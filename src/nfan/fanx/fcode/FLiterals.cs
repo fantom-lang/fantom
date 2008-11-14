@@ -11,7 +11,7 @@ using Fan.Sys;
 namespace Fanx.Fcode
 {
   /// <summary>
-  /// FLiterals manages the Long, double, Duration, string,
+  /// FLiterals manages the long, double, Duration, string,
   /// and Uri literal constants.
   /// </summary>
   public sealed class FLiterals
@@ -51,7 +51,7 @@ namespace Fanx.Fcode
   // Tables
   //////////////////////////////////////////////////////////////////////////
 
-    public Long integer(int index)      { return (Long)m_ints.get(index); }
+    public long integer(int index)      { return (long)m_ints.get(index); }
     public double floats(int index)     { return (double)m_floats.get(index); }
     public BigDecimal decimals(int index)  { return (BigDecimal)m_decimals.get(index); }
     public string str(int index)           { return (string)m_strs.get(index); }
@@ -63,7 +63,7 @@ namespace Fanx.Fcode
   //////////////////////////////////////////////////////////////////////////
 
     public FPod m_fpod;         // parent pod
-    public FTable m_ints;       // Long literals
+    public FTable m_ints;       // long literals
     public FTable m_floats;     // double literals
     public FTable m_decimals;   // BigDecimal literals
     public FTable m_strs;       // string literals

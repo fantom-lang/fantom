@@ -44,7 +44,7 @@ namespace Fan.Sys
   // OutStream
   //////////////////////////////////////////////////////////////////////////
 
-    public override OutStream write(Long b) { return w(b.intValue()); }
+    public override OutStream write(long b) { return w((int)b); }
     public override OutStream w(int v)
     {
       try
@@ -59,11 +59,11 @@ namespace Fan.Sys
     }
 
     public override OutStream writeBuf(Buf buf) { return writeBuf(buf, buf.remaining()); }
-    public override OutStream writeBuf(Buf buf, Long n)
+    public override OutStream writeBuf(Buf buf, long n)
     {
       try
       {
-        buf.pipeTo(outStream, n.longValue());
+        buf.pipeTo(outStream, n);
         return this;
       }
       catch (IOException e)
@@ -134,7 +134,7 @@ namespace Fan.Sys
         buf.m_buf = b;
         buf.m_pos = off;
         buf.m_size = b.Length;
-        outs.writeBuf(buf, Long.valueOf(len));
+        outs.writeBuf(buf, len);
         buf.m_buf = null;
       }
       public override void Close() { outs.close(); }

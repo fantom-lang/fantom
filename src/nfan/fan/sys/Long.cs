@@ -53,7 +53,7 @@ namespace Fan.Sys
 
     private long val = 0;
 
-    private static Long[] intern = new Long[256];
+    private static Long[] intern = new Long[356];  // -100 to 256
     static Long()
     {
       for (int i=0; i<intern.Length; i++)

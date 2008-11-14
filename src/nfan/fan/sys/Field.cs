@@ -153,7 +153,7 @@ namespace Fan.Sys
           throw Err.make("Dynamic field must override set()").val;
 
         if (m_reflect == null)
-          throw Err.make("Field not mapped to java.lang.reflect correctly").val;
+          throw Err.make("Field not mapped to System.Reflection correctly").val;
 
         throw Err.make(e).val;
       }

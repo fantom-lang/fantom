@@ -127,7 +127,7 @@ namespace Fan.Sys
       throw IOErr.make("ZipEntryFile cannot be opened with random access").val;
     }
 
-    public override Buf mmap(string mode, Long pos, Long size)
+    public override Buf mmap(string mode, long pos, Long size)
     {
       throw UnsupportedErr.make("ZipEntryFile.mmap").val;
     }

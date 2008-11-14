@@ -25,14 +25,14 @@ namespace Fan.Sys
   // Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public static List make(Type of, Long capacity)
+    public static List make(Type of, long capacity)
     {
-      return new List(of, capacity.intValue());
+      return new List(of, (int)capacity);
     }
 
-    public static List makeObj(Long capacity)
+    public static List makeObj(long capacity)
     {
-      return new List(Sys.ObjType.toNullable(), capacity.intValue());
+      return new List(Sys.ObjType.toNullable(), (int)capacity);
     }
 
     public List(Type of, object[] values)
@@ -104,15 +104,15 @@ namespace Fan.Sys
       return m_size == 0 ? Boolean.True : Boolean.False;
     }
 
-    public Long size()
+    public long size()
     {
-      return Long.valueOf(m_size);
+      return m_size;
     }
 
-    public void size(Long s)
+    public void size(long s)
     {
       modify();
-      int newSize = s.intValue();
+      int newSize = (int)s;
       if (newSize > m_size)
       {
         object[] temp = new object[newSize];
@@ -129,26 +129,26 @@ namespace Fan.Sys
       }
     }
 
-    public Long capacity()
+    public long capacity()
     {
-      return Long.valueOf(m_values.Length);
+      return m_values.Length;
     }
 
-    public void capacity(Long c)
+    public void capacity(long c)
     {
       modify();
-      int newCapacity = c.intValue();
+      int newCapacity = (int)c;
       if (newCapacity < m_size) throw ArgErr.make("capacity < m_size").val;
       object[] temp = new object[newCapacity];
       Array.Copy(m_values, 0, temp, 0, m_size);
       m_values = temp;
     }
 
-    public object get(Long index)
+    public object get(long index)
     {
       try
       {
-        int i = index.intValue();
+        int i = (int)index;
         if (i < 0) i = m_size + i;
         if (i >= m_size) throw IndexErr.make(index).val;
         return m_values[i];
@@ -205,11 +205,11 @@ namespace Fan.Sys
       return Boolean.True;
     }
 
-    public Long index(object val) { return index(val, FanInt.Zero); }
-    public Long index(object val, Long off)
+    public Long index(object val) { return index(val, 0); }
+    public Long index(object val, long off)
     {
       if (m_size == 0) return null;
-      int start = off.intValue();
+      int start = (int)off;
       if (start < 0) start = m_size + start;
       if (start >= m_size) throw IndexErr.make(off).val;
 
@@ -238,11 +238,11 @@ namespace Fan.Sys
       }
     }
 
-    public Long indexSame(object val) { return indexSame(val, FanInt.Zero); }
-    public Long indexSame(object val, Long off)
+    public Long indexSame(object val) { return indexSame(val, 0); }
+    public Long indexSame(object val, long off)
     {
       if (m_size == 0) return null;
-      int start = off.intValue();
+      int start = (int)off;
       if (start < 0) start = m_size + start;
       if (start >= m_size) throw IndexErr.make(off).val;
 
@@ -278,15 +278,15 @@ namespace Fan.Sys
       return new List(m_of, dup);
     }
 
-    public override Long hash()
+    public override long hash()
     {
       long hash = 33;
       for (int i=0; i<m_size; i++)
       {
         object obj = m_values[i];
-        if (obj != null) hash ^= FanObj.hash(obj).longValue();
+        if (obj != null) hash ^= FanObj.hash(obj);
       }
-      return Long.valueOf(hash);
+      return hash;
     }
 
     public override Boolean _equals(object that)
@@ -307,12 +307,12 @@ namespace Fan.Sys
   // Modification
   //////////////////////////////////////////////////////////////////////////
 
-    public List set(Long index, object val)
+    public List set(long index, object val)
     {
       modify();
       try
       {
-        int i = index.intValue();
+        int i = (int)index;
         if (i < 0) i = m_size + i;
         if (i >= m_size) throw IndexErr.make(index).val;
         m_values[i] = val;
@@ -336,10 +336,10 @@ namespace Fan.Sys
       return insertAll(m_size, list);
     }
 
-    public List insert(Long index, object val)
+    public List insert(long index, object val)
     {
       // modify in insert(int, object)
-      int i = index.intValue();
+      int i = (int)index;
       if (i < 0) i = m_size + i;
       if (i > m_size) throw IndexErr.make(index).val;
       return insert(i, val);
@@ -357,10 +357,10 @@ namespace Fan.Sys
       return this;
     }
 
-    public List insertAll(Long index, List list)
+    public List insertAll(long index, List list)
     {
       // modify in insertAll(int, List)
-      int i = index.intValue();
+      int i = (int)index;
       if (i < 0) i = m_size + i;
       if (i > m_size) throw IndexErr.make(index).val;
       return insertAll(i, list);
@@ -381,24 +381,24 @@ namespace Fan.Sys
 
     public object remove(object val)
     {
-      // modify in removeAt(Long)
+      // modify in removeAt(long)
       Long i = index(val);
       if (i == null) return null;
-      return removeAt(i);
+      return removeAt(i.longValue());
     }
 
     public object removeSame(object val)
     {
-      // modify in removeAt(Long)
+      // modify in removeAt(long)
       Long i = indexSame(val);
       if (i == null) return null;
-      return removeAt(i);
+      return removeAt(i.longValue());
     }
 
-    public object removeAt(Long index)
+    public object removeAt(long index)
     {
       modify();
-      int i = index.intValue();
+      int i = (int)index;
       if (i < 0) i = m_size + i;
       if (i >= m_size) throw IndexErr.make(index).val;
       object old = m_values[i];
@@ -473,7 +473,7 @@ namespace Fan.Sys
     {
       // modify in removeAt()
       if (m_size == 0) return null;
-      return removeAt(FanInt.NegOne);
+      return removeAt(-1);
     }
 
     public List push(object obj)
@@ -489,20 +489,20 @@ namespace Fan.Sys
     public void each(Func f)
     {
       for (int i=0; i<m_size; i++)
-        f.call2(m_values[i], Long.valueOf(i));
+        f.call2(m_values[i], i);
     }
 
     public void eachr(Func f)
     {
       for (int i=m_size-1; i>=0; i--)
-        f.call2(m_values[i], Long.valueOf(i));
+        f.call2(m_values[i], i);
     }
 
     public object eachBreak(Func f)
     {
       for (int i=0; i<m_size; i++)
       {
-        object r = f.call2(m_values[i], Long.valueOf(i));
+        object r = f.call2(m_values[i], i);
         if (r != null) return r;
       }
       return null;
@@ -511,7 +511,7 @@ namespace Fan.Sys
     public object find(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Long.valueOf(i)) == Boolean.True)
+        if (f.call2(m_values[i], i) == Boolean.True)
           return m_values[i];
       return null;
     }
@@ -520,9 +520,9 @@ namespace Fan.Sys
     {
       for (int i=0; i<m_size; ++i)
       {
-        Long pos = Long.valueOf(i);
+        long pos = i;
         if (f.call2(m_values[i], pos) == Boolean.True)
-          return pos;
+          return Long.valueOf(pos);
       }
       return null;
     }
@@ -531,7 +531,7 @@ namespace Fan.Sys
     {
       List acc = new List(m_of, m_size);
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Long.valueOf(i)) == Boolean.True)
+        if (f.call2(m_values[i], i) == Boolean.True)
           acc.add(m_values[i]);
       return acc;
     }
@@ -552,7 +552,7 @@ namespace Fan.Sys
     {
       List acc = new List(m_of, m_size);
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Long.valueOf(i)) != Boolean.True)
+        if (f.call2(m_values[i], i) != Boolean.True)
           acc.add(m_values[i]);
       return acc;
     }
@@ -560,7 +560,7 @@ namespace Fan.Sys
     public Boolean any(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Long.valueOf(i)) == Boolean.True)
+        if (f.call2(m_values[i], i) == Boolean.True)
           return Boolean.True;
       return Boolean.False;
     }
@@ -568,7 +568,7 @@ namespace Fan.Sys
     public Boolean all(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], Long.valueOf(i)) != Boolean.True)
+        if (f.call2(m_values[i], i) != Boolean.True)
           return Boolean.False;
       return Boolean.True;
     }
@@ -576,7 +576,7 @@ namespace Fan.Sys
     public object reduce(object reduction, Func f)
     {
       for (int i=0; i<m_size; i++)
-        reduction = f.call3(reduction, m_values[i], Long.valueOf(i));
+        reduction = f.call3(reduction, m_values[i], i);
       return reduction;
     }
 
@@ -584,7 +584,7 @@ namespace Fan.Sys
     {
       if (acc.m_size == 0) acc.capacity(size());
       for (int i=0; i<m_size; i++)
-        acc.add(f.call2(m_values[i], Long.valueOf(i)));
+        acc.add(f.call2(m_values[i], i));
       return acc;
     }
 
@@ -728,8 +728,8 @@ namespace Fan.Sys
       return this;
     }
 
-    public Long binarySearch(object key) { return binarySearch(key, null); }
-    public Long binarySearch(object key, Func f)
+    public long binarySearch(object key) { return binarySearch(key, null); }
+    public long binarySearch(object key, Func f)
     {
       IComparer c = toComparer(f);
       object[] values = m_values;
@@ -743,9 +743,9 @@ namespace Fan.Sys
         else if (cmp > 0)
           high = probe - 1;
         else
-          return Long.valueOf(probe);
+          return probe;
       }
-      return Long.valueOf(-(low + 1));
+      return -(low + 1);
     }
 
     public List reverse()
@@ -764,7 +764,7 @@ namespace Fan.Sys
       return this;
     }
 
-    public List swap(Long a, Long b)
+    public List swap(long a, long b)
     {
       // modify in set()
       object temp = get(a);
@@ -805,7 +805,7 @@ namespace Fan.Sys
       if (m_size == 1)
       {
         object v = m_values[0];
-        if (f != null) return (string)f.call2(v, FanInt.Zero);
+        if (f != null) return (string)f.call2(v, 0);
         if (v == null) return "null";
         return toStr(v);
       }
@@ -821,7 +821,7 @@ namespace Fan.Sys
         }
         else
         {
-          s.Append(f.call2(m_values[i], Long.valueOf(i)));
+          s.Append(f.call2(m_values[i], i));
         }
       }
       return s.ToString();
@@ -933,7 +933,7 @@ namespace Fan.Sys
     public int[] toInts()
     {
       int[] a = new int[size];
-      for (int i=0; i<size; ++i) a[i] = ((Long)get(i)).intValue();
+      for (int i=0; i<size; ++i) a[i] = ((long)get(i)).intValue();
       return a;
     }
     */
@@ -956,7 +956,7 @@ namespace Fan.Sys
     }
     sealed class DefaultComparer : IComparer
     {
-      public int Compare(object a, object b) { return OpUtil.compare(a, b).intValue(); }
+      public int Compare(object a, object b) { return (int)OpUtil.compare(a, b); }
     }
     static DefaultComparer defaultComparer = new DefaultComparer();
 
@@ -974,7 +974,7 @@ namespace Fan.Sys
     }
     sealed class DefaultReverseComparer : IComparer
     {
-      public int Compare(object a, object b) { return OpUtil.compare(b, a).intValue(); }
+      public int Compare(object a, object b) { return (int)OpUtil.compare(b, a); }
     }
     static DefaultReverseComparer defaultReverseComparer = new DefaultReverseComparer();
 

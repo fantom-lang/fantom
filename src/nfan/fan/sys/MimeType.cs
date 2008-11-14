@@ -126,7 +126,7 @@ namespace Fan.Sys
       {
         LocalFile f = new LocalFile(new System.IO.FileInfo(Sys.HomeDir + File.m_sep + "lib" + File.m_sep + "ext2mime.props"));
         Map props = f.readProps();
-        Hashtable map = new Hashtable(props.size().intValue() * 3);
+        Hashtable map = new Hashtable((int)props.size() * 3);
         IDictionaryEnumerator en = props.pairsIterator();
         while (en.MoveNext())
         {
@@ -175,9 +175,9 @@ namespace Fan.Sys
              m_params.GetHashCode();
     }
 
-    public override Long hash()
+    public override long hash()
     {
-      return Long.valueOf(GetHashCode());
+      return GetHashCode();
     }
 
     public override string toStr()

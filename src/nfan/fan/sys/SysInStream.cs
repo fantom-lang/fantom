@@ -58,11 +58,11 @@ namespace Fan.Sys
       }
     }
 
-    public override Long readBuf(Buf buf, Long n)
+    public override Long readBuf(Buf buf, long n)
     {
       try
       {
-        long read = buf.pipeFrom(inStream, n.longValue());
+        long read = buf.pipeFrom(inStream, n);
         if (read <= 0) return null;
         return Long.valueOf(read);
       }
@@ -72,7 +72,7 @@ namespace Fan.Sys
       }
     }
 
-    public override InStream unread(Long n) { return unread(n.intValue()); }
+    public override InStream unread(long n) { return unread((int)n); }
     public override InStream unread(int n)
     {
       try
@@ -90,14 +90,13 @@ namespace Fan.Sys
       }
     }
 
-    public override Long skip(Long n)
+    public override long skip(long n)
     {
       try
       {
-        long nval = n.longValue();
-        for (int i=0; i<nval; ++i)
-          if (r() < 0) return Long.valueOf(i);
-        return Long.valueOf(nval);
+        for (int i=0; i<n; ++i)
+          if (r() < 0) return i;
+        return n;
       }
       catch (IOException e)
       {
@@ -236,7 +235,7 @@ namespace Fan.Sys
         buf.m_buf = b;
         buf.m_pos = off;
         buf.m_size = b.Length;
-        Long n = ins.readBuf(buf, Long.valueOf(len));
+        Long n = ins.readBuf(buf, len);
         buf.m_buf = null;
         if (n == null) return -1;
         return n.intValue();

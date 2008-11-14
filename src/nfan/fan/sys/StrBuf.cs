@@ -32,9 +32,9 @@ namespace Fan.Sys
     /// <summary>
     /// Create with specified capacity.
     /// </summary>
-    public static StrBuf make(Long capacity)
+    public static StrBuf make(long capacity)
     {
-      return new StrBuf(new StringBuilder(capacity.intValue()));
+      return new StrBuf(new StringBuilder((int)capacity));
     }
 
     public StrBuf(StringBuilder sb)
@@ -51,18 +51,18 @@ namespace Fan.Sys
       return sb.Length == 0 ? Boolean.True : Boolean.False;
     }
 
-    public Long size()
+    public long size()
     {
-      return Long.valueOf(sb.Length);
+      return sb.Length;
     }
 
-    public Long get(Long index)
+    public long get(long index)
     {
       try
       {
-        int i = index.intValue();
+        int i = (int)index;
         if (i < 0) i = sb.Length+i;
-        return FanInt.m_pos[sb[i]];
+        return sb[i];
       }
       catch (System.ArgumentOutOfRangeException e)
       {
@@ -70,13 +70,13 @@ namespace Fan.Sys
       }
     }
 
-    public StrBuf set(Long index, Long ch)
+    public StrBuf set(long index, long ch)
     {
       try
       {
-        int i = index.intValue();
+        int i = (int)index;
         if (i < 0) i = sb.Length+i;
-        sb[i] = (char)ch.longValue();
+        sb[i] = (char)ch;
         return this;
       }
       catch (System.ArgumentOutOfRangeException e)
@@ -92,9 +92,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public StrBuf addChar(Long ch)
+    public StrBuf addChar(long ch)
     {
-      sb.Append((char)ch.longValue());
+      sb.Append((char)ch);
       return this;
     }
 
@@ -107,28 +107,28 @@ namespace Fan.Sys
       return this;
     }
 
-    public StrBuf insert(Long index, object x)
+    public StrBuf insert(long index, object x)
     {
       string s = (x == null) ? "null" : toStr(x);
-      int i = index.intValue();
+      int i = (int)index;
       if (i < 0) i = sb.Length+i;
       if (i > sb.Length) throw IndexErr.make(index).val;
       sb.Insert(i, s);
       return this;
     }
 
-    public StrBuf remove(Long index)
+    public StrBuf remove(long index)
     {
-      int i = index.intValue();
+      int i = (int)index;
       if (i < 0) i = sb.Length+i;
       if (i >= sb.Length) throw IndexErr.make(index).val;
       sb.Remove(i, 1);
       return this;
     }
 
-    public StrBuf grow(Long size)
+    public StrBuf grow(long size)
     {
-      sb.EnsureCapacity(size.intValue());
+      sb.EnsureCapacity((int)size);
       return this;
     }
 

@@ -65,7 +65,7 @@ namespace Fan.Sys
   // Lifecycle
   //////////////////////////////////////////////////////////////////////////
 
-    public Long run()
+    public long run()
     {
       try
       {
@@ -89,7 +89,7 @@ namespace Fan.Sys
         p.WaitForExit();
 
         // return exit code
-        return Long.valueOf(p.ExitCode);
+        return p.ExitCode;
       }
       catch (Exception e)
       {
