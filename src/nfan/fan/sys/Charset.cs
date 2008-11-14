@@ -290,7 +290,7 @@ namespace Fan.Sys
 
     public override int GetHashCode() { return m_encoding.GetHashCode(); }
 
-    public override Long hash() { return Long.valueOf(m_encoding.GetHashCode()); }
+    public override long hash() { return m_encoding.GetHashCode(); }
 
     public override Boolean _equals(object obj)
     {

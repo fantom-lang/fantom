@@ -40,9 +40,9 @@ namespace Fan.Sys
       return self == obj ? Boolean.True : Boolean.False;
     }
 
-    public static Long hash(Boolean self)
+    public static long hash(Boolean self)
     {
-      return self.booleanValue() ? Long.valueOf(1231) : Long.valueOf(1237);
+      return self.booleanValue() ? 1231 : 1237;
     }
 
     public static Type type(Boolean self)

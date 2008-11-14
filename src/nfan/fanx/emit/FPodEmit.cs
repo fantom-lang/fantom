@@ -41,7 +41,7 @@ namespace Fanx.Emit
       // generate constant fields other types will reference, we don't
       // initialize them, rather we do that later via reflection
       for (int i=0; i<pod.m_literals.m_ints.size(); i++)
-        emitter.emitField("I" + i, "Fan.Sys.Long", fattr);
+        emitter.emitField("I" + i, "System.Int64", fattr);
       for (int i=0; i<pod.m_literals.m_floats.size(); i++)
         emitter.emitField("F" + i, "System.Double", fattr);
       for (int i=0; i<pod.m_literals.m_decimals.size(); i++)

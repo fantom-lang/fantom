@@ -341,7 +341,7 @@ namespace Fan.Sys
       internal FileBufOutStream(FileBuf parent) { this.p = parent; }
       private FileBuf p;
 
-      public override sealed OutStream write(Long v) { return w(v.intValue()); }
+      public override sealed OutStream write(long v) { return w((int)v); }
       public override sealed OutStream w(int v)
       {
         try
@@ -353,11 +353,11 @@ namespace Fan.Sys
         catch (System.NotSupportedException e) { throw IOErr.make(e.Message, e).val; }
       }
 
-      public override OutStream writeBuf(Buf other, Long n)
+      public override OutStream writeBuf(Buf other, long n)
       {
         try
         {
-          other.pipeTo(p.m_stream, n.longValue());
+          other.pipeTo(p.m_stream, n);
           return this;
         }
         catch (IOException e) { throw IOErr.make(e).val; }
@@ -380,7 +380,7 @@ namespace Fan.Sys
       internal FileBufInStream(FileBuf parent) { this.p = parent; }
       private FileBuf p;
 
-      public override Long read() { int n = r(); return n < 0 ? null : FanInt.m_pos[n]; }
+      public override Long read() { int n = r(); return n < 0 ? null : Long.valueOf(n); }
       public override int r()
       {
         try
@@ -393,11 +393,11 @@ namespace Fan.Sys
         }
       }
 
-      public override Long readBuf(Buf other, Long n)
+      public override Long readBuf(Buf other, long n)
       {
         try
         {
-          long read = other.pipeFrom(p.m_stream, n.longValue());
+          long read = other.pipeFrom(p.m_stream, n);
           if (read < 0) return null;
           return Long.valueOf(read);
         }
@@ -407,7 +407,7 @@ namespace Fan.Sys
         }
       }
 
-      public override InStream unread(Long n) { return unread(n.intValue()); }
+      public override InStream unread(long n) { return unread((int)n); }
       public override InStream unread(int n)
       {
         try
@@ -431,7 +431,7 @@ namespace Fan.Sys
           long pos = p.getPos();
           int n = p.m_stream.ReadByte();
           p.setPos(pos);
-          return n < 0 ? null : FanInt.m_pos[n];
+          return n < 0 ? null : Long.valueOf(n);
         }
         catch (IOException e)
         {

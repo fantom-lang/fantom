@@ -31,7 +31,7 @@ namespace Fan.Sys
 
     private Weekday(int ordinal, string name)
     {
-      Enum.make_(this, FanInt.m_pos[ordinal], System.String.Intern(name));
+      Enum.make_(this, ordinal, System.String.Intern(name));
       this.ord = ordinal;
       this.localeAbbrKey  = name + "Abbr";
       this.localeFullKey  = name + "Full";

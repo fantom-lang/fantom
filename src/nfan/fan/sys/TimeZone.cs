@@ -112,26 +112,26 @@ namespace Fan.Sys
       return m_fullName;
     }
 
-    public Duration offset(Long year)
+    public Duration offset(long year)
     {
-      return Duration.make(rule(year.intValue()).offset * Duration.nsPerSec);
+      return Duration.make(rule((int)year).offset * Duration.nsPerSec);
     }
 
-    public Duration dstOffset(Long year)
+    public Duration dstOffset(long year)
     {
-      Rule r = rule(year.intValue());
+      Rule r = rule((int)year);
       if (r.dstOffset == 0) return null;
       return Duration.make(r.dstOffset * Duration.nsPerSec);
     }
 
-    public string stdAbbr(Long year)
+    public string stdAbbr(long year)
     {
-      return rule(year.intValue()).stdAbbr;
+      return rule((int)year).stdAbbr;
     }
 
-    public string dstAbbr(Long year)
+    public string dstAbbr(long year)
     {
-      return rule(year.intValue()).dstAbbr;
+      return rule((int)year).dstAbbr;
     }
 
     public string abbr(int year, bool inDST)

@@ -89,21 +89,21 @@ namespace Fan.Sys
         return Boolean.False;
     }
 
-    public override Long compare(object obj)
+    public override long compare(object obj)
     {
       Version that = (Version)obj;
       List a = this.m_segments;
       List b = that.m_segments;
       for (int i=0; i<a.sz() && i<b.sz(); i++)
       {
-        long ai = ((Long)a.get(i)).longValue();
-        long bi = ((Long)b.get(i)).longValue();
-        if (ai < bi) return FanInt.LT;
-        if (ai > bi) return FanInt.GT;
+        long ai = (a.get(i) as Long).longValue();
+        long bi = (b.get(i) as Long).longValue();
+        if (ai < bi) return -1;
+        if (ai > bi) return +1;
       }
-      if (a.sz() < b.sz()) return FanInt.LT;
-      if (a.sz() > b.sz()) return FanInt.GT;
-      return FanInt.EQ;
+      if (a.sz() < b.sz()) return -1;
+      if (a.sz() > b.sz()) return +1;
+      return 0;
     }
 
     public override int GetHashCode()
@@ -111,7 +111,7 @@ namespace Fan.Sys
       return toStr().GetHashCode();
     }
 
-    public override Long hash()
+    public override long hash()
     {
       return FanStr.hash(toStr());
     }
@@ -129,7 +129,7 @@ namespace Fan.Sys
         for (int i=0; i<m_segments.sz(); i++)
         {
           if (i > 0) s.Append('.');
-          s.Append(((Long)m_segments.get(i)).longValue());
+          s.Append(m_segments.get(i));
         }
         m_str = s.ToString();
       }
@@ -150,9 +150,9 @@ namespace Fan.Sys
       return ((Long)m_segments.get(index)).intValue();
     }
 
-    public Long major()
+    public long major()
     {
-      return (Long)m_segments.get(0);
+      return ((Long)m_segments.get(0)).longValue();
     }
 
     public Long minor()

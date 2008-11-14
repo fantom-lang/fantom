@@ -36,22 +36,22 @@ namespace Fan.Sys
 
     public override Long read()
     {
-      int b = r(); return (b < 0) ? null : FanInt.m_pos[b & 0xFF];
+      int b = r(); return (b < 0) ? null : Long.valueOf(b & 0xFF);
     }
 
-    public override Long readBuf(Buf buf, Long n)
+    public override Long readBuf(Buf buf, long n)
     {
-      int nval = n.intValue();
+      int nval = (int)n;
       for (int i=0; i<nval; ++i)
       {
         int c = rChar();
         if (c < 0) return Long.valueOf(i);
         buf.m_out.w(c);
       }
-      return n;
+      return Long.valueOf(n);
     }
 
-    public override InStream unread(int c)
+    public override InStream unread(long c)
     {
       return unreadChar(c);
     }
@@ -72,10 +72,10 @@ namespace Fan.Sys
       return Long.valueOf(m_str[m_pos++]);
     }
 
-    public override InStream unreadChar(Long c)
+    public override InStream unreadChar(long c)
     {
       if (m_pushback == null) m_pushback = new List(Sys.IntType, 8);
-      m_pushback.push(c);
+      m_pushback.push(Long.valueOf(c));
       return this;
     }
 

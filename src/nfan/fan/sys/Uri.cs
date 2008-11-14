@@ -180,15 +180,15 @@ namespace Fan.Sys
           string seg = (string)path.get(i);
           if (seg == "." && (path.sz() > 1 || host != null))
           {
-            path.removeAt(Long.valueOf(i));
+            path.removeAt(i);
             modified = true;
             dotLast = true;
             i -= 1;
           }
           else if (seg == ".." && i > 0 && path.get(i-1).ToString() != "..")
           {
-            path.removeAt(Long.valueOf(i));
-            path.removeAt(Long.valueOf(i-1));
+            path.removeAt(i);
+            path.removeAt(i-1);
             modified = true;
             i -= 2;
             dotLast = true;
@@ -594,7 +594,7 @@ namespace Fan.Sys
           buf.Append('/').Append('/');
           if (uri.m_userInfo != null) encode(uri.m_userInfo, USER).Append('@');
           if (uri.m_host != null) encode(uri.m_host, HOST);
-          if (uri.m_port != null) buf.Append(':').Append(uri.m_port.longValue());
+          if (uri.m_port != null) buf.Append(':').Append(uri.m_port);
         }
 
         // path
@@ -699,7 +699,7 @@ namespace Fan.Sys
       return m_str.GetHashCode();
     }
 
-    public override Long hash()
+    public override long hash()
     {
       return FanStr.hash(m_str);
     }
@@ -1002,12 +1002,12 @@ namespace Fan.Sys
       else
       {
         // slice my path
-        t.path = this.m_path.slice(Range.makeInclusive(Long.valueOf(d), FanInt.NegOne));
+        t.path = this.m_path.slice(Range.makeInclusive(d, -1));
 
         // insert .. backup if needed
         int backup = baseUri.m_path.sz() - d;
         if (!baseUri.isDir().booleanValue()) backup--;
-        while (backup-- > 0) t.path.insert(FanInt.Zero, dotDot);
+        while (backup-- > 0) t.path.insert(0, dotDot);
 
         // format the new path string
         t.pathStr = toPathStr(false, t.path, this.isDir().booleanValue());
@@ -1421,7 +1421,7 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    static readonly Range parentRange = Range.make(FanInt.Zero, FanInt.NegTwo, Boolean.False);
+    static readonly Range parentRange = Range.make(0, -2, Boolean.False);
     static readonly string dotDot = "..";
 
     internal readonly string m_str;

@@ -67,16 +67,16 @@ namespace Fan.Sys
       return Boolean.True;
     }
 
-    public static Long compare(string self, object obj)
+    public static long compare(string self, object obj)
     {
       int cmp = String.CompareOrdinal(self, (string)obj);
-      if (cmp < 0) return FanInt.LT;
-      return cmp == 0 ? FanInt.EQ : FanInt.GT;
+      if (cmp < 0) return -1;
+      return cmp == 0 ? 0 : +1;
     }
 
-    public static Long compareIgnoreCase(string a, string b)
+    public static long compareIgnoreCase(string a, string b)
     {
-      if (a == b) return FanInt.Zero;
+      if (a == b) return 0;
 
       int an   = a.Length;
       int bn   = b.Length;
@@ -87,16 +87,16 @@ namespace Fan.Sys
         int bc = b[i];
         if ('A' <= ac && ac <= 'Z') ac |= 0x20;
         if ('A' <= bc && bc <= 'Z') bc |= 0x20;
-        if (ac != bc) return ac < bc ? FanInt.LT : FanInt.GT;
+        if (ac != bc) return ac < bc ? -1 : +1;
       }
 
-      if (an == bn) return FanInt.Zero;
-      return an < bn ? FanInt.LT : FanInt.GT;
+      if (an == bn) return 0;
+      return an < bn ? -1 : +1;
     }
 
-    public static Long hash(string self)
+    public static long hash(string self)
     {
-      return Long.valueOf(self.GetHashCode());
+      return self.GetHashCode();
     }
 
     public static int caseInsensitiveHash(string self)
@@ -128,11 +128,11 @@ namespace Fan.Sys
   // Operators
   //////////////////////////////////////////////////////////////////////////
 
-    public static Long get(string self, Long index)
+    public static long get(string self, long index)
     {
-      int i = index.intValue();
+      int i = (int)index;
       if (i < 0) i = self.Length+i;
-      return Long.valueOf(self[i]);
+      return self[i];
     }
 
     public static string slice(string self, Range r)
@@ -168,9 +168,9 @@ namespace Fan.Sys
       return self.Length == 0 ? Boolean.True : Boolean.False;
     }
 
-    public static Long size(string self)
+    public static long size(string self)
     {
-      return Long.valueOf(self.Length);
+      return self.Length;
     }
 
     public static Boolean startsWith(string self, string s)
@@ -185,18 +185,18 @@ namespace Fan.Sys
 
     public static Boolean contains(string self, string s)
     {
-      return index(self, s, FanInt.Zero) != null ? Boolean.True : Boolean.False;
+      return index(self, s, 0) != null ? Boolean.True : Boolean.False;
     }
 
-    public static Boolean containsChar(string self, Long ch)
+    public static Boolean containsChar(string self, long ch)
     {
-      return self.IndexOf((char)ch.longValue()) >= 0 ? Boolean.True : Boolean.False;
+      return self.IndexOf((char)ch) >= 0 ? Boolean.True : Boolean.False;
     }
 
-    public static Long index(string self, string s) { return index(self, s, FanInt.Zero); }
-    public static Long index(string self, string s, Long off)
+    public static Long index(string self, string s) { return index(self, s, 0); }
+    public static Long index(string self, string s, long off)
     {
-      int i = off.intValue();
+      int i = (int)off;
       if (i < 0) i = self.Length+i;
 
       int r;
@@ -209,10 +209,10 @@ namespace Fan.Sys
       return Long.valueOf(r);
     }
 
-    public static Long indexr(string self, string s) { return indexr(self, s, FanInt.NegOne); }
-    public static Long indexr(string self, string s, Long off)
+    public static Long indexr(string self, string s) { return indexr(self, s, -1); }
+    public static Long indexr(string self, string s, long off)
     {
-      int i = off.intValue();
+      int i = (int)off;
       if (i < 0) i = self.Length+i;
 
       int r;
@@ -237,13 +237,13 @@ namespace Fan.Sys
       return Long.valueOf(r);
     }
 
-    public static Long indexIgnoreCase(string self, string s) { return indexIgnoreCase(self, s, FanInt.Zero); }
-    public static Long indexIgnoreCase(string self, string s, Long off)
+    public static Long indexIgnoreCase(string self, string s) { return indexIgnoreCase(self, s, 0); }
+    public static Long indexIgnoreCase(string self, string s, long off)
     {
       int vlen = self.Length, slen = s.Length;
       int r = -1;
 
-      int i = off.intValue();
+      int i = (int)off;
       if (i < 0) i = vlen+i;
 
       int first = s[0] | 0x20;
@@ -264,13 +264,13 @@ namespace Fan.Sys
       return Long.valueOf(r);
     }
 
-    public static Long indexrIgnoreCase(string self, string s) { return indexrIgnoreCase(self, s, FanInt.NegOne); }
-    public static Long indexrIgnoreCase(string self, string s, Long off)
+    public static Long indexrIgnoreCase(string self, string s) { return indexrIgnoreCase(self, s, -1); }
+    public static Long indexrIgnoreCase(string self, string s, long off)
     {
       int vlen = self.Length, slen = s.Length;
       int r = -1;
 
-      int i = off.intValue();
+      int i = (int)off;
       if (i < 0) i = vlen+i;
       if (i+slen >= vlen) i = vlen-slen;
 
@@ -314,20 +314,20 @@ namespace Fan.Sys
     {
       int len = self.Length;
       for (int i=0; i<len ; i++)
-        f.call2(Long.valueOf(self[i]), Long.valueOf(i));
+        f.call2(self[i], i);
     }
 
     public static void eachr(string self, Func f)
     {
       for (int i=self.Length-1; i>=0; --i)
-        f.call2(Long.valueOf(self[i]), Long.valueOf(i));
+        f.call2(self[i], i);
     }
 
     public static Boolean any(string self, Func f)
     {
       int len = self.Length;
       for (int i=0; i<len ; i++)
-        if (f.call2(Long.valueOf(self[i]), Long.valueOf(i)) == Boolean.True)
+        if (f.call2(self[i], i) == Boolean.True)
           return Boolean.True;
       return Boolean.False;
     }
@@ -336,7 +336,7 @@ namespace Fan.Sys
     {
       int len = self.Length;
       for (int i=0; i<len ; i++)
-        if (f.call2(Long.valueOf(self[i]), Long.valueOf(i)) == Boolean.False)
+        if (f.call2(self[i], i) == Boolean.False)
           return Boolean.False;
       return Boolean.True;
     }
@@ -345,11 +345,11 @@ namespace Fan.Sys
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
-    public static string spaces(Long n)
+    public static string spaces(long n)
     {
       // do an array lookup for reasonable length
       // strings since that is the common case
-      int count = n.intValue();
+      int count = (int)n;
       try { return m_spaces[count]; } catch (IndexOutOfRangeException) {}
 
       // otherwise we build a new one
@@ -415,9 +415,9 @@ namespace Fan.Sys
       return self;
     }
 
-    public static string justl(string self, Long width)
+    public static string justl(string self, long width)
     {
-      int w = width.intValue();
+      int w = (int)width;
       if (self.Length >= w) return self;
       StringBuilder s = new StringBuilder(w);
       s.Append(self);
@@ -426,9 +426,9 @@ namespace Fan.Sys
       return s.ToString();
     }
 
-    public static string justr(string self, Long width)
+    public static string justr(string self, long width)
     {
-      int w = width.intValue();
+      int w = (int)width;
       if (self.Length >= w) return self;
       StringBuilder s = new StringBuilder(w);
       for (int i=self.Length; i<w; i++)
@@ -549,7 +549,7 @@ namespace Fan.Sys
       return StrUtil.Replace(self, from, to);
     }
 
-    public static Long numNewlines(string self)
+    public static long numNewlines(string self)
     {
       int numLines = 0;
       int len = self.Length;
@@ -563,7 +563,7 @@ namespace Fan.Sys
           if (i+1<len && self[i+1] == '\n') i++;
         }
       }
-      return Long.valueOf(numLines);
+      return numLines;
     }
 
     public static Boolean isAscii(string self)
@@ -622,11 +622,11 @@ namespace Fan.Sys
   // Locale
   //////////////////////////////////////////////////////////////////////////
 
-    public static Long localeCompare(string self, string x)
+    public static long localeCompare(string self, string x)
     {
       int cmp = String.Compare(self, x, true, Locale.current().net());
-      if (cmp < 0) return FanInt.LT;
-      return cmp == 0 ? FanInt.EQ : FanInt.GT;
+      if (cmp < 0) return -1;
+      return cmp == 0 ? 0 : +1;
     }
 
     public static string localeLower(string self)
@@ -678,9 +678,9 @@ namespace Fan.Sys
     public static Boolean toBool(string self) { return FanBool.fromStr(self, Boolean.True); }
     public static Boolean toBool(string self, Boolean check) { return FanBool.fromStr(self, check); }
 
-    public static Long toInt(string self) { return FanInt.fromStr(self, FanInt.Ten, Boolean.True); }
-    public static Long toInt(string self, Long radix) { return FanInt.fromStr(self, radix, Boolean.True); }
-    public static Long toInt(string self, Long radix, Boolean check) { return FanInt.fromStr(self, radix, check); }
+    public static Long toInt(string self) { return FanInt.fromStr(self, 10, Boolean.True); }
+    public static Long toInt(string self, long radix) { return FanInt.fromStr(self, radix, Boolean.True); }
+    public static Long toInt(string self, long radix, Boolean check) { return FanInt.fromStr(self, radix, check); }
 
     public static Double toFloat(string self) { return FanFloat.fromStr(self, Boolean.True); }
     public static Double toFloat(string self, Boolean check) { return FanFloat.fromStr(self, check); }
@@ -690,7 +690,7 @@ namespace Fan.Sys
 
     public static Uri toUri(string self) { return Uri.fromStr(self); }
 
-    public static string toCode(string self) { return toCode(self, FanInt.m_pos['"'], Boolean.False); }
+    public static string toCode(string self) { return toCode(self, Long.valueOf('"'), Boolean.False); }
     public static string toCode(string self, Long quote) { return toCode(self, quote, Boolean.False); }
     public static string toCode(string self, Long quote, Boolean escapeUnicode)
     {

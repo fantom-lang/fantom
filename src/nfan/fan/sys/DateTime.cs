@@ -67,12 +67,12 @@ namespace Fan.Sys
   // Constructor - Values
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime make(Long year, Month month, Long day, Long hour, Long min) { return make(year, month, day, hour, min, FanInt.Zero, FanInt.Zero, TimeZone.m_current); }
-    public static DateTime make(Long year, Month month, Long day, Long hour, Long min, Long sec) { return make(year, month, day, hour, min, sec, FanInt.Zero, TimeZone.m_current); }
-    public static DateTime make(Long year, Month month, Long day, Long hour, Long min, Long sec, Long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.m_current); }
-    public static DateTime make(Long year, Month month, Long day, Long hour, Long min, Long sec, Long ns, TimeZone tz)
+    public static DateTime make(long year, Month month, long day, long hour, long min) { return make(year, month, day, hour, min, 0, 0, TimeZone.m_current); }
+    public static DateTime make(long year, Month month, long day, long hour, long min, long sec) { return make(year, month, day, hour, min, sec, 0, TimeZone.m_current); }
+    public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.m_current); }
+    public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns, TimeZone tz)
     {
-      return new DateTime(year.intValue(), month.ord, day.intValue(), hour.intValue(), min.intValue(), sec.intValue(), ns.longValue(), System.Int32.MaxValue, tz);
+      return new DateTime((int)year, month.ord, (int)day, (int)hour, (int)min, (int)sec, ns, System.Int32.MaxValue, tz);
     }
 
     private DateTime(int year, int month, int day,
@@ -136,8 +136,7 @@ namespace Fan.Sys
   // Constructor - Ticks
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime makeTicks(Long ticks) { return makeTicks(ticks.longValue(), TimeZone.m_current); }
-    public static DateTime makeTicks(Long ticks, TimeZone tz) { return makeTicks(ticks.longValue(), tz); }
+    public static DateTime makeTicks(long ticks) { return makeTicks(ticks, TimeZone.m_current); }
     public static DateTime makeTicks(long ticks, TimeZone tz)
     {
       return new DateTime(ticks, tz);
@@ -325,10 +324,10 @@ namespace Fan.Sys
       return Boolean.False;
     }
 
-    public override Long compare(object obj)
+    public override long compare(object obj)
     {
       long that = (obj as DateTime).m_ticks;
-      if (m_ticks < that) return FanInt.LT; return m_ticks == that ? FanInt.EQ : FanInt.GT;
+      if (m_ticks < that) return -1; return m_ticks == that ? 0 : +1;
     }
 
     public override int GetHashCode()
@@ -336,9 +335,9 @@ namespace Fan.Sys
       return (int)(m_ticks ^ (m_ticks >> 32));
     }
 
-    public override Long hash()
+    public override long hash()
     {
-      return Long.valueOf(m_ticks);
+      return m_ticks;
     }
 
     public override Type type()
@@ -350,31 +349,33 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public Long ticks() { return Long.valueOf(m_ticks); }
+    // TODO - cleanup dups
+
+    public long ticks() { return m_ticks; }
     public long getTicks() { return m_ticks; }
 
-    public Long year() { return Long.valueOf((m_fields & 0xff) + 1900); }
+    public long year() { return (m_fields & 0xff) + 1900; }
     public int getYear() { return (m_fields & 0xff) + 1900; }
 
     public Month month() { return Month.array[(m_fields >> 8) & 0xf]; }
 
-    public Long day() { return FanInt.m_pos[(m_fields >> 12) & 0x1f]; }
+    public long day() { return (m_fields >> 12) & 0x1f; }
     public int getDay() { return (m_fields >> 12) & 0x1f; }
 
-    public Long hour() { return FanInt.m_pos[(m_fields >> 17) & 0x1f]; }
+    public long hour() { return (m_fields >> 17) & 0x1f; }
     public int getHour() { return (m_fields >> 17) & 0x1f; }
 
-    public Long min() { return FanInt.m_pos[(m_fields >> 22) & 0x3f]; }
+    public long min() { return (m_fields >> 22) & 0x3f; }
     public int getMin() { return (m_fields >> 22) & 0x3f; }
 
-    public Long sec() { return FanInt.m_pos[getSec()]; }
+    public long sec() { return getSec(); }
     public int getSec()
     {
       long rem = m_ticks >= 0 ? m_ticks : m_ticks - yearTicks[0];
       return (int)((rem % nsPerMin) / nsPerSec);
     }
 
-    public Long nanoSec() { return Long.valueOf(getNanoSec()); }
+    public long nanoSec() { return getNanoSec(); }
     public int getNanoSec()
     {
       long rem = m_ticks >= 0 ? m_ticks : m_ticks - yearTicks[0];
@@ -390,7 +391,7 @@ namespace Fan.Sys
 
     public string timeZoneAbbr() { return getDST() ? m_timeZone.dstAbbr(year()) : m_timeZone.stdAbbr(year()); }
 
-    public Long dayOfYear() { return Long.valueOf(dayOfYear(getYear(), month().ord, getDay())+1); }
+    public long dayOfYear() { return dayOfYear(getYear(), month().ord, getDay())+1; }
 
   //////////////////////////////////////////////////////////////////////////
   // Locale
@@ -651,16 +652,16 @@ namespace Fan.Sys
       return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
     }
 
-    public static Boolean isLeapYear(Long year) { return Boolean.valueOf(isLeapYear(year.intValue())); }
+    public static Boolean isLeapYear(long year) { return Boolean.valueOf(isLeapYear((int)year)); }
     public static bool isLeapYear(int year)
     {
       if ((year & 3) != 0) return false;
       return (year % 100 != 0) || (year % 400 == 0);
     }
 
-    public static Long weekdayInMonth(Long year, Month mon, Weekday weekday, Long pos)
+    public static long weekdayInMonth(long year, Month mon, Weekday weekday, long pos)
     {
-      return Long.valueOf(weekdayInMonth(year.intValue(), mon.ord, weekday.ord, pos.intValue()));
+      return weekdayInMonth((int)year, mon.ord, weekday.ord, (int)pos);
     }
     public static int weekdayInMonth(int year, int mon, int weekday, int pos)
     {

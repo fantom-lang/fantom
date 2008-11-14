@@ -76,7 +76,6 @@ namespace Fan.Sys
       }
     }
 
-    public static Duration make(Long ticks) { return make(ticks.longValue()); }
     public static Duration make(long ticks)
     {
       if (ticks == 0) return Zero;
@@ -135,10 +134,10 @@ namespace Fan.Sys
         return Boolean.False;
     }
 
-    public override sealed Long compare(object obj)
+    public override sealed long compare(object obj)
     {
       long that = ((Duration)obj).m_ticks;
-      if (m_ticks < that) return FanInt.LT; return m_ticks  == that ? FanInt.EQ : FanInt.GT;
+      if (m_ticks < that) return -1; return m_ticks  == that ? 0 : +1;
     }
 
     public override sealed int GetHashCode()
@@ -146,14 +145,14 @@ namespace Fan.Sys
       return (int)(m_ticks ^ (m_ticks >> 32));
     }
 
-    public override sealed Long hash()
+    public override sealed long hash()
     {
-      return Long.valueOf(m_ticks);
+      return m_ticks;
     }
 
-    public Long ticks()
+    public long ticks()
     {
-      return Long.valueOf(m_ticks);
+      return m_ticks;
     }
 
     public override sealed Type type()
@@ -229,29 +228,29 @@ namespace Fan.Sys
       return ns + "ns";
     }
 
-    public Long toMillis()
+    public long toMillis()
     {
-      return Long.valueOf(m_ticks/nsPerMilli);
+      return m_ticks/nsPerMilli;
     }
 
-    public Long toSec()
+    public long toSec()
     {
-      return Long.valueOf(m_ticks/nsPerSec);
+      return m_ticks/nsPerSec;
     }
 
-    public Long toMin()
+    public long toMin()
     {
-      return Long.valueOf(m_ticks/nsPerMin);
+      return m_ticks/nsPerMin;
     }
 
-    public Long toHour()
+    public long toHour()
     {
-      return Long.valueOf(m_ticks/nsPerHr);
+      return m_ticks/nsPerHr;
     }
 
-    public Long toDay()
+    public long toDay()
     {
-      return Long.valueOf(m_ticks/nsPerDay);
+      return m_ticks/nsPerDay;
     }
 
   //////////////////////////////////////////////////////////////////////////

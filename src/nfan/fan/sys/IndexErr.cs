@@ -21,7 +21,7 @@ namespace Fan.Sys
   // C# Convenience
   //////////////////////////////////////////////////////////////////////////
 
-    public static IndexErr make(Long index)  { return make(index.ToString()); }
+    public static IndexErr make(long index)  { return make(index.ToString()); }
     public static IndexErr make(Range index) { return make(index.ToString()); }
 
   //////////////////////////////////////////////////////////////////////////

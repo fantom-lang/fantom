@@ -88,7 +88,7 @@ namespace Fan.Sys
       public override object callOn(object obj, List args)
       {
         List flat = args.dup();
-        flat.insert(FanInt.Zero, obj);
+        flat.insert(0, obj);
         return call(flat);
       }
 

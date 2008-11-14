@@ -59,8 +59,8 @@ namespace Fan.Sys
 
     public static string userName() { return m_userName; }
 
-    public static void exit() { exit(FanInt.Zero); }
-    public static void exit(Long status) { System.Environment.Exit(status.intValue()); }
+    public static void exit() { exit(0); }
+    public static void exit(long status) { System.Environment.Exit((int)status); }
 
     public static InStream  @in()  { return StdIn; }
     public static OutStream @out() { return StdOut; }
@@ -71,9 +71,9 @@ namespace Fan.Sys
       GC.Collect();
     }
 
-    public static Long idHash(object obj)
+    public static long idHash(object obj)
     {
-      return Long.valueOf(System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj));
+      return System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
     }
 
     public static Map diagnostics()

@@ -86,7 +86,7 @@ namespace Fan.Sys
     public override object trap(string name, List args)
     {
       // private undocumented access
-      if (name == "lineNumber") { reflect(); return Long.valueOf(m_lineNum); }
+      if (name == "lineNumber") { reflect(); return m_lineNum; }
       if (name == "sourceFile") { reflect(); return m_sourceFile; }
       return base.trap(name, args);
     }
@@ -495,9 +495,10 @@ namespace Fan.Sys
       if (slot.isCtor().booleanValue() && slot.m_parent != this) return;
 
       string name = slot.m_name;
-      Long dup = (Long)nameToIndex[name];
-      if (dup != null)
+      if (nameToIndex[name] != null)
       {
+        int dup = (int)nameToIndex[name];
+
         // if the slot is inherited from Obj, then we can
         // safely ignore it as an override - the dup is most
         // likely already the same Obj method inherited from
@@ -528,7 +529,7 @@ namespace Fan.Sys
       {
         nameToSlot[name] = slot;
         slots.add(slot);
-        nameToIndex[name] = Long.valueOf(slots.sz()-1);
+        nameToIndex[name] = slots.sz()-1;
       }
     }
 
@@ -792,7 +793,7 @@ namespace Fan.Sys
 
     // misc
     ConstructorInfo m_dynamicCtor;  // enabled to store a type per instance
-    internal bool m_netRepr;      // if representation a .NET type, such as Fan.Sys.Long
+    internal bool m_netRepr;        // if representation a .NET type, such as Fan.Sys.Long
 
   }
 }

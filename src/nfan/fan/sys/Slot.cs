@@ -113,8 +113,8 @@ public virtual Boolean isConst() { return Boolean.valueOf(m_flags & FConst.Const
     {
       // private undocumented access
       string n = name;
-      if (n == "flags") return Long.valueOf(m_flags);
-      if (n == "lineNumber") return Long.valueOf(m_lineNum);
+      if (n == "flags")      return m_flags;
+      if (n == "lineNumber") return m_lineNum;
       return base.trap(name, args);
     }
 

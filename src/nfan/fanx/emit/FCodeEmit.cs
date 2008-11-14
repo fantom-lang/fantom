@@ -242,7 +242,7 @@ namespace Fanx.Emit
     private void loadInt()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "I" + index, "Fan.Sys.Long");
+      PERWAPI.Field field = emitter.findField(podClass, "I" + index, "System.Int64");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
@@ -608,226 +608,11 @@ namespace Fanx.Emit
         lhs.isRef() ? "System.Object" : lhs.nname(),
         rhs.isRef() ? "System.Object" : rhs.nname()
       };
-      string ret = (suffix == "") ? "Fan.Sys.Long" : "Fan.Sys.Boolean";
+      string ret = (suffix == "") ? "System.Int64" : "Fan.Sys.Boolean";
 
       PERWAPI.Method m = emitter.findMethod("Fanx.Util.OpUtil", "compare"+suffix, args, ret);
       code.MethInst(MethodOp.call, m);
     }
-
-    /*
-    private void compareEQ()
-    {
-      // get lhs and rhs types
-      FTypeRef lhs = pod.typeRef(u2());
-      FTypeRef rhs = pod.typeRef(u2());
-      string[] args = new string[]
-      {
-        lhs.isRef() ? "System.Object" : lhs.nname(),
-        rhs.isRef() ? "System.Object" : rhs.nname()
-      };
-
-      int peek = peekOp();
-      switch (peek)
-      {
-        case FConst.JumpFalse:
-          PERWAPI.Method m = emitter.findMethod("Fanx.Util.OpUtil", "compareEQz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareEQz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareEQ", args, "Fan.Sys.Boolean");
-          code.MethInst(MethodOp.call, m);
-          break;
-      }
-    }
-
-    private void compareNE()
-    {
-      // get lhs and rhs types
-      FTypeRef lhs = pod.typeRef(u2());
-      FTypeRef rhs = pod.typeRef(u2());
-      string[] args = new string[]
-      {
-        lhs.isRef() ? "System.Object" : lhs.nname(),
-        rhs.isRef() ? "System.Object" : rhs.nname()
-      };
-
-      int peek = peekOp();
-      switch (peek)
-      {
-        case FConst.JumpFalse:
-          PERWAPI.Method m = emitter.findMethod("Fanx.Util.OpUtil", "compareNEz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareNEz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareNE", args, "Fan.Sys.Boolean");
-          code.MethInst(MethodOp.call, m);
-          break;
-      }
-    }
-
-    private void compare()
-    {
-      // get lhs and rhs types
-      FTypeRef lhs = pod.typeRef(u2());
-      FTypeRef rhs = pod.typeRef(u2());
-      string[] args = new string[]
-      {
-        lhs.isRef() ? "System.Object" : lhs.nname(),
-        rhs.isRef() ? "System.Object" : rhs.nname()
-      };
-
-      PERWAPI.Method m = emitter.findMethod("Fanx.Util.OpUtil", "compare", args, "Fan.Sys.Long");
-      code.MethInst(MethodOp.call, m);
-    }
-
-    private void compareLT()
-    {
-      // get lhs and rhs types
-      FTypeRef lhs = pod.typeRef(u2());
-      FTypeRef rhs = pod.typeRef(u2());
-      string[] args = new string[]
-      {
-        lhs.isRef() ? "System.Object" : lhs.nname(),
-        rhs.isRef() ? "System.Object" : rhs.nname()
-      };
-
-      int peek = peekOp();
-      switch (peek)
-      {
-       case FConst.JumpFalse:
-          PERWAPI.Method m = emitter.findMethod("Fanx.Util.OpUtil", "compareLTz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareLTz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-       default:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareLT", args, "Fan.Sys.Boolean");
-          code.MethInst(MethodOp.call, m);
-          break;
-      }
-    }
-
-    private void compareLE()
-    {
-      // get lhs and rhs types
-      FTypeRef lhs = pod.typeRef(u2());
-      FTypeRef rhs = pod.typeRef(u2());
-      string[] args = new string[]
-      {
-        lhs.isRef() ? "System.Object" : lhs.nname(),
-        rhs.isRef() ? "System.Object" : rhs.nname()
-      };
-
-      int peek = peekOp();
-      switch (peek)
-      {
-        case FConst.JumpFalse:
-          PERWAPI.Method m = emitter.findMethod("Fanx.Util.OpUtil", "compareLEz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareLEz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareLE", args, "Fan.Sys.Boolean");
-          code.MethInst(MethodOp.call, m);
-          break;
-      }
-    }
-
-    private void compareGE()
-    {
-      // get lhs and rhs types
-      FTypeRef lhs = pod.typeRef(u2());
-      FTypeRef rhs = pod.typeRef(u2());
-      string[] args = new string[]
-      {
-        lhs.isRef() ? "System.Object" : lhs.nname(),
-        rhs.isRef() ? "System.Object" : rhs.nname()
-      };
-
-      int peek = peekOp();
-      switch (peek)
-      {
-        case FConst.JumpFalse:
-          PERWAPI.Method m = emitter.findMethod("Fanx.Util.OpUtil", "compareGEz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareGEz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareGE", args, "Fan.Sys.Boolean");
-          code.MethInst(MethodOp.call, m);
-          break;
-      }
-    }
-
-    private void compareGT()
-    {
-      // get lhs and rhs types
-      FTypeRef lhs = pod.typeRef(u2());
-      FTypeRef rhs = pod.typeRef(u2());
-      string[] args = new string[]
-      {
-        lhs.isRef() ? "System.Object" : lhs.nname(),
-        rhs.isRef() ? "System.Object" : rhs.nname()
-      };
-
-      int peek = peekOp();
-      switch (peek)
-      {
-        case FConst.JumpFalse:
-          PERWAPI.Method m = emitter.findMethod("Fanx.Util.OpUtil", "compareGTz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareGTz", args, "System.Boolean");
-          code.MethInst(MethodOp.call, m);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          m = emitter.findMethod("Fanx.Util.OpUtil", "compareGT", args, "Fan.Sys.Boolean");
-          code.MethInst(MethodOp.call, m);
-          break;
-      }
-    }
-    */
 
     private void compareSame()
     {
@@ -1016,7 +801,6 @@ namespace Fanx.Emit
 
     private void tableswitch()
     {
-      loadIntVal();
       int count = u2();
       CILLabel[] labels = new CILLabel[count];
       for (int i=0; i<count; ++i)
@@ -1261,23 +1045,21 @@ namespace Fanx.Emit
 
     private void intBox()
     {
-      //if (parent.IntBox == 0) parent.IntBox = emit.method("java/lang/Long.valueOf(J)Ljava/lang/Long;");
-      //code.op2(INVOKESTATIC, parent.IntBox);
-      code.TypeInst(TypeOp.castclass, emitter.findType("Fan.Sys.Long"));
+      PERWAPI.Method m = emitter.findMethod("Fan.Sys.Long", "valueOf",
+          new string[] { "System.Int64" }, "Fan.Sys.Long");
+      code.MethInst(MethodOp.call, m);
     }
 
     private void intUnbox(bool cast)
     {
-      //if (cast) code.op2(CHECKCAST, emit.cls("java/lang/Long"));
-      //if (parent.IntUnbox== 0) parent.IntUnbox = emit.method("java/lang/Long.longValue()J");
-      //code.op2(INVOKEVIRTUAL, parent.IntUnbox);
-      code.TypeInst(TypeOp.castclass, emitter.findType("Fan.Sys.Long"));
+      PERWAPI.Method m = emitter.findMethod("Fan.Sys.Long", "longValue",
+        new string[0], "System.Int64");
+      m.AddCallConv(CallConv.Instance);
+      code.MethInst(MethodOp.call, m);
     }
 
     private void floatBox()
     {
-      //code.TypeInst(TypeOp.box, emitter.findType("System.Double"));
-
       PERWAPI.Method m = emitter.findMethod("Fan.Sys.Double", "valueOf",
           new string[] { "System.Double" }, "Fan.Sys.Double");
       code.MethInst(MethodOp.call, m);
@@ -1285,8 +1067,6 @@ namespace Fanx.Emit
 
     private void floatUnbox(bool cast)
     {
-      //code.TypeInst(TypeOp.unbox_any, emitter.findType("System.Double"));
-
       PERWAPI.Method m = emitter.findMethod("Fan.Sys.Double", "doubleValue",
         new string[0], "System.Double");
       m.AddCallConv(CallConv.Instance);

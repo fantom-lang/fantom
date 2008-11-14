@@ -537,14 +537,21 @@ namespace Fan.Sys
         {
           System.Type pt = pars[i].ParameterType;
           if (pt == doublePrimitive && args[i] is Fan.Sys.Double)
+          {
             args[i] = (args[i] as Fan.Sys.Double).doubleValue();
+          }
+          else if (pt == longPrimitive && args[i] is Fan.Sys.Long)
+          {
+            args[i] = (args[i] as Fan.Sys.Long).longValue();
+          }
         }
 
         // invoke method
         object ret = m.Invoke(instance, args);
 
         // box the return value
-        if (ret is double) ret = Double.valueOf((double)ret);
+        if (ret is double) return Double.valueOf((double)ret);
+        if (ret is long) return Long.valueOf((long)ret);
         return ret;
 
       }
@@ -577,6 +584,7 @@ namespace Fan.Sys
     }
 
     private static System.Type doublePrimitive = System.Type.GetType("System.Double");
+    private static System.Type longPrimitive = System.Type.GetType("System.Int64");
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

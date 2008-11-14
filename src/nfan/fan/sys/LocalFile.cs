@@ -404,7 +404,7 @@ namespace Fan.Sys
       }
     }
 
-    public override Buf mmap(string mode, Long pos, Long size)
+    public override Buf mmap(string mode, long pos, Long size)
     {
       try
       {
@@ -429,7 +429,7 @@ namespace Fan.Sys
         //MappedByteBuffer mmap = chan.map(mm, pos.val, size.val);
         */
 
-        return new MmapBuf(this, mode, pos.longValue(), size.longValue());
+        return new MmapBuf(this, mode, pos, size);
       }
       catch (System.IO.IOException e)
       {

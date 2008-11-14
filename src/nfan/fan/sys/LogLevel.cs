@@ -34,7 +34,7 @@ namespace Fan.Sys
 
     private LogLevel(int ord, string name)
     {
-      Enum.make_(this, FanInt.m_pos[ord], System.String.Intern(name));
+      Enum.make_(this, ord, System.String.Intern(name));
       this.m_ord = ord;
     }
 

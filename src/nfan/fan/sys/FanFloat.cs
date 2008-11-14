@@ -40,14 +40,14 @@ namespace Fan.Sys
       }
     }
 
-    public static double makeBits(Long bits)
+    public static double makeBits(long bits)
     {
-      return BitConverter.Int64BitsToDouble(bits.longValue());
+      return BitConverter.Int64BitsToDouble(bits);
     }
 
-    public static double makeBits32(Long bits)
+    public static double makeBits32(long bits)
     {
-      return BitConverter.ToSingle(BitConverter.GetBytes(bits.longValue()), 0);
+      return BitConverter.ToSingle(BitConverter.GetBytes(bits), 0);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -79,36 +79,36 @@ namespace Fan.Sys
       return Math.Abs(self - that) <= t ? Boolean.True : Boolean.False;
     }
 
-    public static Long compare(double self, object obj)
+    public static long compare(double self, object obj)
     {
       double that = (obj as Double).doubleValue();
       if (System.Double.IsNaN(self))
       {
-        return (System.Double.IsNaN(that)) ? FanInt.EQ : FanInt.LT;
+        return (System.Double.IsNaN(that)) ? 0 : -1;
       }
       else if (System.Double.IsNaN(that))
       {
-        return FanInt.GT;
+        return +1;
       }
       else
       {
-        if (self < that) return FanInt.LT; return self == that ? FanInt.EQ : FanInt.GT;
+        if (self < that) return -1; return self == that ? 0 : +1;
       }
     }
 
-    public static Long hash(double self)
+    public static long hash(double self)
     {
       return bits(self);
     }
 
-    public static Long bits(double self)
+    public static long bits(double self)
     {
-      return Long.valueOf(BitConverter.DoubleToInt64Bits(self));
+      return BitConverter.DoubleToInt64Bits(self);
     }
 
-    public static Long bits32(double self)
+    public static long bits32(double self)
     {
-      return Long.valueOf(BitConverter.ToInt32(BitConverter.GetBytes((float)self), 0) & 0xFFFFFFFFL);
+      return BitConverter.ToInt32(BitConverter.GetBytes((float)self), 0) & 0xFFFFFFFFL;
     }
 
     public static Type type(double self)

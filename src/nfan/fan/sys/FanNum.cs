@@ -16,10 +16,10 @@ namespace Fan.Sys
   public abstract class FanNum
   {
 
-    public static Long toInt(Number self)
+    public static long toInt(Number self)
     {
-      if (self is Long) return (Long)self;
-      return Long.valueOf(self.longValue());
+      //if (self is long) return (long)self;
+      return self.longValue();
     }
 
     public static double toFloat(Number self)
@@ -31,7 +31,7 @@ namespace Fan.Sys
     public static BigDecimal toDecimal(Number self)
     {
       if (self is BigDecimal) return (BigDecimal)self;
-      if (self is Long) return BigDecimal.valueOf(self.longValue());
+      //if (self is Long) return BigDecimal.valueOf(self.longValue());
       return BigDecimal.valueOf(self.doubleValue());
     }
 

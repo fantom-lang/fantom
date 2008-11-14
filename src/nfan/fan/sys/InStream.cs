@@ -70,13 +70,13 @@ namespace Fan.Sys
     }
 
     /// <summary>
-    /// Unread a byte using a Java primitive int.  If we aren't
+    /// Unread a byte using a .NET primitive int.  If we aren't
     /// overriding this method, then route back to read() for the
     /// subclass to handle.
     /// </summary>
     public virtual InStream unread(int b)
     {
-      return unread(Long.valueOf(b));
+      return unread((long)b);
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ namespace Fan.Sys
     /// </summary>
     public virtual InStream unreadChar(int b)
     {
-      return unreadChar(Long.valueOf(b));
+      return unreadChar((long)b);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ namespace Fan.Sys
       }
     }
 
-    public virtual Long readBuf(Buf buf, Long n)
+    public virtual Long readBuf(Buf buf, long n)
     {
       try
       {
@@ -129,7 +129,7 @@ namespace Fan.Sys
       }
     }
 
-    public virtual InStream unread(Long n)
+    public virtual InStream unread(long n)
     {
       try
       {
@@ -145,13 +145,13 @@ namespace Fan.Sys
       }
     }
 
-    public virtual Long skip(Long n)
+    public virtual long skip(long n)
     {
       if (m_in != null) return m_in.skip(n);
 
-      long nval = n.longValue();
+      long nval = n;
       for (int i=0; i<nval; ++i)
-        if (r() < 0) return Long.valueOf(i);
+        if (r() < 0) return i;
       return n;
     }
 
@@ -159,7 +159,7 @@ namespace Fan.Sys
     {
       try
       {
-        Long size = FanInt.Chunk;
+        long size = FanInt.Chunk;
         Buf buf = Buf.make(size);
         while (readBuf(buf, size) != null);
         buf.flip();
@@ -171,15 +171,15 @@ namespace Fan.Sys
       }
     }
 
-    public virtual Buf readBufFully(Buf buf, Long n)
+    public virtual Buf readBufFully(Buf buf, long n)
     {
       if (buf == null) buf = Buf.make(n);
 
-      long total = n.longValue();
+      long total = n;
       long got = 0;
       while (got < total)
       {
-        Long r = readBuf(buf, Long.valueOf(total-got));
+        Long r = readBuf(buf, total-got);
         if (r == null || r.longValue() == 0) throw IOErr.make("Unexpected end of stream").val;
         got += r.longValue();
       }
@@ -191,51 +191,51 @@ namespace Fan.Sys
     public virtual Long peek()
     {
       Long x = read();
-      if (x != null) unread(x);
+      if (x != null) unread(x.longValue());
       return x;
     }
 
-    public virtual Long readU1()
+    public virtual long readU1()
     {
       int c = r();
       if (c < 0) throw IOErr.make("Unexpected end of stream").val;
-      return Long.valueOf(c);
+      return c;
     }
 
-    public virtual Long readS1()
+    public virtual long readS1()
     {
       int c = r();
       if (c < 0) throw IOErr.make("Unexpected end of stream").val;
-      return Long.valueOf((sbyte)c);
+      return (sbyte)c;
     }
 
-    public virtual Long readU2()
+    public virtual long readU2()
     {
       int c1 = r();
       int c2 = r();
       if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-      return Long.valueOf(c1 << 8 | c2);
+      return c1 << 8 | c2;
     }
 
-    public virtual Long readS2()
+    public virtual long readS2()
     {
       int c1 = r();
       int c2 = r();
       if ((c1 | c2) < 0) throw IOErr.make("Unexpected end of stream").val;
-      return Long.valueOf((short)(c1 << 8 | c2));
+      return (short)(c1 << 8 | c2);
     }
 
-    public virtual Long readU4()
+    public virtual long readU4()
     {
       long c1 = r();
       long c2 = r();
       long c3 = r();
       long c4 = r();
       if ((c1 | c2 | c3 | c4) < 0) throw IOErr.make("Unexpected end of stream").val;
-      return Long.valueOf((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
+      return (c1 << 24) + (c2 << 16) + (c3 << 8) + c4;
     }
 
-    public virtual Long readS4() { return Long.valueOf(readInt()); }
+    public virtual long readS4() { return readInt(); }
     public virtual int readInt()
     {
       int c1 = r();
@@ -246,7 +246,7 @@ namespace Fan.Sys
       return ((c1 << 24) + (c2 << 16) + (c3 << 8) + c4);
     }
 
-    public virtual Long readS8() { return Long.valueOf(readLong()); }
+    public virtual long readS8() { return readLong(); }
     public virtual long readLong()
     {
       long c1 = r();
@@ -352,20 +352,20 @@ namespace Fan.Sys
       return ch < 0 ? null : Long.valueOf(ch);
     }
 
-    public virtual InStream unreadChar(Long c)
+    public virtual InStream unreadChar(long c)
     {
-      m_charsetEncoder.encode((char)c.longValue(), this);
+      m_charsetEncoder.encode((char)c, this);
       return this;
     }
 
     public virtual Long peekChar()
     {
       Long x = readChar();
-      if (x != null) unreadChar(x);
+      if (x != null) unreadChar(x.longValue());
       return x;
     }
 
-    public virtual string readLine() { return readLine(FanInt.Chunk); }
+    public virtual string readLine() { return readLine(Long.valueOf(FanInt.Chunk)); }
     public virtual string readLine(Long max)
     {
       // max limit
@@ -401,7 +401,7 @@ namespace Fan.Sys
       return buf.ToString();
     }
 
-    public virtual string readStrToken() { return readStrToken(FanInt.Chunk, null); }
+    public virtual string readStrToken() { return readStrToken(Long.valueOf(FanInt.Chunk), null); }
     public virtual string readStrToken(Long max) { return readStrToken(max, null); }
     public virtual string readStrToken(Long max, Func f)
     {
@@ -422,7 +422,7 @@ namespace Fan.Sys
         if (f == null)
           terminate = FanInt.isSpace(c);
         else
-          terminate = ((Boolean)f.call1(Long.valueOf(c))).booleanValue();
+          terminate = ((Boolean)f.call1(c)).booleanValue();
         if (terminate)
         {
           unreadChar(c);
@@ -658,13 +658,13 @@ namespace Fan.Sys
       return -1;
     }
 
-    public virtual Long pipe(OutStream output) { return pipe(output, null, Boolean.True); }
-    public virtual Long pipe(OutStream output, Long n) { return pipe(output, n, Boolean.True); }
-    public virtual Long pipe(OutStream output, Long toPipe, Boolean cls)
+    public virtual long pipe(OutStream output) { return pipe(output, null, Boolean.True); }
+    public virtual long pipe(OutStream output, Long n) { return pipe(output, n, Boolean.True); }
+    public virtual long pipe(OutStream output, Long toPipe, Boolean cls)
     {
       try
       {
-        Long bufSize = FanInt.Chunk;
+        long bufSize = FanInt.Chunk;
         Buf buf = Buf.make(bufSize);
         long total = 0;
         if (toPipe == null)
@@ -682,14 +682,14 @@ namespace Fan.Sys
           long toPipeVal = toPipe.longValue();
           while (total < toPipeVal)
           {
-            if (toPipeVal - total < bufSize.longValue()) bufSize = Long.valueOf(toPipeVal - total);
+            if (toPipeVal - total < bufSize) bufSize = toPipeVal - total;
             Long n = readBuf(buf.clear(), bufSize);
             if (n == null) throw IOErr.make("Unexpected end of stream").val;
             output.writeBuf(buf.flip(), buf.remaining());
             total += n.longValue();
           }
         }
-        return Long.valueOf(total);
+        return total;
       }
       finally
       {

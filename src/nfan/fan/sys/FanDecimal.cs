@@ -50,14 +50,14 @@ namespace Fan.Sys
       return Boolean.False;
     }
 
-    public static Long compare(BigDecimal self, object obj)
+    public static long compare(BigDecimal self, object obj)
     {
-      return Long.valueOf(self.CompareTo(obj));
+      return self.CompareTo(obj);
     }
 
-    public static Long hash(BigDecimal self)
+    public static long hash(BigDecimal self)
     {
-      return Long.valueOf(self.GetHashCode());
+      return self.GetHashCode();
     }
 
     public static Type type(BigDecimal self)
