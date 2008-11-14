@@ -208,7 +208,7 @@ class XElem : XNode
   {
     if (child is XAttr)
     {
-      attrList = attrList.rw
+      if (attrList.isRO) attrList = XAttr[,] { capacity=4 }
       attrList.add(child)
     }
     else
@@ -216,7 +216,7 @@ class XElem : XNode
       node := (XNode)child
       if (node.parent != null) throw ArgErr("Node already parented: $child")
       node.parent = this
-      childList = childList.rw
+      if (childList.isRO) childList = XNode[,] { capacity=4 }
       childList.add(node)
     }
     return this
