@@ -23,6 +23,22 @@ const class XErr : Err
   }
 
   **
+  ** String representation.
+  **
+  override Str toStr()
+  {
+    s := super.toStr
+    if (line > 0)
+    {
+      if (col > 0)
+        s += " [line $line, col $col]"
+      else
+        s += " [line $line]"
+    }
+    return s
+  }
+
+  **
   ** Line number of XML error or zero if unknown.
   **
   const Int line
