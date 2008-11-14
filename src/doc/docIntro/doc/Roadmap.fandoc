@@ -67,17 +67,12 @@ tools to generate Fan stubs for Java or .NET class libraries.  But
 there is definitely a lot we can do to make Fan suitable as an alternative
 language using the existing Java or .NET class libraries.
 
-XML [#xml]
-==========
-We need basic XML parsing/writing APIs which will likely will be based
-on [uxparser]`http://sourceforge.net/projects/uxparser`.  The API will
-provide both memory-tree and pull-parser support.  We'll probably also
-include some higher level APIs such as XPath support.
+See [discussion]`http://www.fandev.org/sidewalk/topic/384`
 
 JSON [#json]
 ============
 A library to read/write Fan objects to JavaScript object notation
-would be handy.
+would be handy (in progress).
 
 Email [#email]
 ==============
@@ -150,8 +145,6 @@ Original [discussion]`http://www.fandev.org/sidewalk/topic/25` was
 on grouping tests, but seems like a way to group pods, types, and
 slots in a generic way would be valuable for many application: testing,
 IDE navigation, reflection, etc.
-
-
 
 
 
