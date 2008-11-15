@@ -434,19 +434,43 @@ public class RichTextPeer
     // Return the line at the given line index without delimiters.
     public String getLine(int lineIndex)
     {
-      return model.line(lineIndex);
+      try
+      {
+        return model.line(lineIndex);
+      }
+      catch (RuntimeException e)
+      {
+        System.out.println("WARNING: RichText.getLine " + lineIndex + " >= " + getLineCount());
+        return "";
+      }
     }
 
     // Return the line index at the given character offset.
     public int getLineAtOffset(int offset)
     {
-      return (int)model.lineAtOffset(offset);
+      try
+      {
+        return (int)model.lineAtOffset(offset);
+      }
+      catch (RuntimeException e)
+      {
+        System.out.println("WARNING: RichText.getLineAtOffset " + offset + " >= " + getCharCount());
+        return getLineCount()-1;
+      }
     }
 
     // Return the character offset of the first character of the given line.
     public int getOffsetAtLine(int lineIndex)
     {
-      return (int)model.offsetAtLine(lineIndex);
+      try
+      {
+        return (int)model.offsetAtLine(lineIndex);
+      }
+      catch (RuntimeException e)
+      {
+        System.out.println("WARNING: RichText.getOffsetAtLine " + lineIndex + " >= " + getLineCount());
+        return Math.max(getCharCount()-1, 0);
+      }
     }
 
     // Return the line delimiter that should be used by the StyledText widget when inserting new lines.
