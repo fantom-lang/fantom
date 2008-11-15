@@ -573,5 +573,5 @@ const class ATestService : Thread { new make() : super() {} }
 const class TestService : ATestService, MTestService
 {
   override Bool isService() { return true }
-  override Obj? run() { while(isRunning) sleep(20ms); return null }
+  override Obj? run() { while (isRunning) sleep(20ms); return null }
 }

@@ -116,7 +116,7 @@ class SqlServiceTest : Test
           tables.remove(tableName)
           dropped++
         }
-        catch(Err e)
+        catch (Err e)
         {
         }
       }

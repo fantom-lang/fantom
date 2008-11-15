@@ -88,7 +88,7 @@ public class ConnectionPeer
       tables.close();
       return exists;
     }
-    catch(SQLException ex)
+    catch (SQLException ex)
     {
       throw err(ex);
     }
@@ -116,7 +116,7 @@ public class ConnectionPeer
 
       return tableList.ro();
     }
-    catch(SQLException ex)
+    catch (SQLException ex)
     {
       throw err(ex);
     }
@@ -156,7 +156,7 @@ public class ConnectionPeer
       row.peer.cells = new Object[t.fields().sz()];;
       return row;
     }
-    catch(SQLException ex)
+    catch (SQLException ex)
     {
       throw err(ex);
     }
@@ -261,7 +261,7 @@ public class ConnectionPeer
         {
           Class.forName(driver);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
           System.out.println("WARNING: Cannot preload JDBC driver: " + driver);
         }

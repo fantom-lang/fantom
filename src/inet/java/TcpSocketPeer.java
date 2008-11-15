@@ -29,7 +29,7 @@ public class TcpSocketPeer
   {
     // turn off Nagle's algorithm since we should
     // always be doing buffering in the virtual machine
-    try { setTcpNoDelay(true); } catch(Exception e) {}
+    try { setTcpNoDelay(true); } catch (Exception e) {}
   }
 
 //////////////////////////////////////////////////////////////////////////

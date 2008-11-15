@@ -65,7 +65,7 @@ class XParser
       depth := 1
       root := elem.copy
       XElem? cur := root
-      while(depth > 0)
+      while (depth > 0)
       {
         nodeType := next
         if (nodeType == null) throw eosErr
@@ -124,10 +124,10 @@ class XParser
       return nodeType = XNodeType.elemEnd
     }
 
-    while(true)
+    while (true)
     {
       c := 0
-      try { c = read } catch(XIncompleteErr e) { return nodeType = null }
+      try { c = read } catch (XIncompleteErr e) { return nodeType = null }
 
       // markup
       if (c == '<')
@@ -201,7 +201,7 @@ class XParser
   **
   Void skip(Int toDepth := depth)
   {
-    while(true)
+    while (true)
     {
       if (nodeType === XNodeType.elemEnd && depth == toDepth) return
       nodeType = next()
@@ -369,7 +369,7 @@ class XParser
 
     // skip the rest of the doctype
     depth := 1
-    while(true)
+    while (true)
     {
       c = read
       if (c == '<') depth++
@@ -397,7 +397,7 @@ class XParser
     resolveAttrNs := false
 
     // attributes
-    while(true)
+    while (true)
     {
       sp := skipSpace
       c = read
@@ -557,7 +557,7 @@ class XParser
     buf = this.buf
     buf.clear
     c := 0
-    while((c = read) != quote) buf.addChar(toCharData(c))
+    while ((c = read) != quote) buf.addChar(toCharData(c))
     return bufToStr
   }
 
@@ -572,11 +572,11 @@ class XParser
     buf.clear.addChar(c)
     if (includeColon)
     {
-      while(isName(c = read) || c == ':') buf.addChar(c)
+      while (isName(c = read) || c == ':') buf.addChar(c)
     }
     else
     {
-      while(isName(c = read)) buf.addChar(c)
+      while (isName(c = read)) buf.addChar(c)
     }
     pushback = c
     return bufToStr
@@ -591,7 +591,7 @@ class XParser
     cdata = true
 
     c2 := -1; c1 := -1; c0 := -1
-    while(true)
+    while (true)
     {
       c2 = c1
       c1 = c0
@@ -618,13 +618,13 @@ class XParser
     buf.clear.addChar(toCharData(c))
     cdata = false
 
-    while(true)
+    while (true)
     {
       try
       {
         c = read
       }
-      catch(XIncompleteErr e)
+      catch (XIncompleteErr e)
       {
         if (!gotText) return false
         if (depth < 0) throw XErr("Expecting root element", line, col)
@@ -654,7 +654,7 @@ class XParser
     skipSpace
     buf.clear
     c1 := -1; c0 := -1
-    while(true)
+    while (true)
     {
       c1 = c0
       c0 = read
@@ -693,7 +693,7 @@ class XParser
   private Void skipComment()
   {
     c2 := -1; c1 := -1; c0 := -1
-    while(true)
+    while (true)
     {
       c2 = c1
       c1 = c0
@@ -787,7 +787,7 @@ class XParser
       if (c == 'x') base = 16
       else x = toNum(x, c, base)
       c = in.readChar; col++
-      while(c != ';')
+      while (c != ';')
       {
         x = toNum(x, c, base)
         c = in.readChar; col++
@@ -798,7 +798,7 @@ class XParser
     ebuf := this.entityBuf
     ebuf.clear
     ebuf.addChar(c)
-    while((c = read()) != ';') ebuf.addChar(c)
+    while ((c = read()) != ';') ebuf.addChar(c)
     entity := ebuf.toStr
 
     if (entity == "lt")   return '<'
@@ -873,7 +873,7 @@ class XParser
   private Void reEvalDefaultNs()
   {
     defaultNs = null
-    for(i:=depth; i>=0; --i)
+    for (i:=depth; i>=0; --i)
     {
       defaultNs = nsStack[i].find("")
       if (defaultNs != null)
@@ -982,9 +982,9 @@ class XParser
   {
     name := Bool[,]
     128.times |,| { name.add(false) }
-    for(i:='a'; i<='z'; ++i) name[i] = true
-    for(i:='A'; i<='Z'; ++i) name[i] = true
-    for(i:='0'; i<='9'; ++i) name[i] = true
+    for (i:='a'; i<='z'; ++i) name[i] = true
+    for (i:='A'; i<='Z'; ++i) name[i] = true
+    for (i:='0'; i<='9'; ++i) name[i] = true
     name['-'] = true
     name['.'] = true
     name['_'] = true

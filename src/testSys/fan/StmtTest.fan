@@ -270,7 +270,7 @@ class StmtTest : Test
     verifyEq(verifyTry3(null), -1)
     verifyEq(verifyTry3(5),    -2)
     verifyEq(verifyTry4("xyz"), "try 3 finally")
-    verifyEq(verifyTry4(null),  "try catch(NullErr) finally")
+    verifyEq(verifyTry4(null),  "try catch (NullErr) finally")
     verifyEq(verifyTry4(6),     "try catch-all finally")
   }
 
@@ -303,7 +303,7 @@ class StmtTest : Test
       s += ((Str)x).size.toStr
     }
     catch (NullErr e)
-      s += "catch(NullErr)"
+      s += "catch (NullErr)"
     catch
       s += "catch-all"
     finally

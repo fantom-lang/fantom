@@ -98,7 +98,7 @@ Java and C#:
   Str s := "hello"    // local variable declaration
   s := "hello"        // type inference
   if (x) {} else {}   // if/else statement
-  while(x) {}         // while
+  while (x) {}        // while
 
 The most noticeable difference is the use of ':=' to declare
 a local variable.  Fan uses type inference, so you can

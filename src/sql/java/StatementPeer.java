@@ -34,7 +34,7 @@ public class StatementPeer
       stmt = self.conn.peer.jconn.prepareStatement(translated, java.sql.Statement.RETURN_GENERATED_KEYS);
       prepared = true;
     }
-    catch(SQLException ex)
+    catch (SQLException ex)
     {
       throw ConnectionPeer.err(ex);
     }
@@ -59,13 +59,13 @@ public class StatementPeer
 
       return toRows(rs);
     }
-    catch(SQLException ex)
+    catch (SQLException ex)
     {
       throw ConnectionPeer.err(ex);
     }
     finally
     {
-      try { if (!prepared) stmt.close(); } catch(Exception ex) {}
+      try { if (!prepared) stmt.close(); } catch (Exception ex) {}
     }
   }
   /**
@@ -192,13 +192,13 @@ public class StatementPeer
 
       each(rs, eachFunc);
     }
-    catch(SQLException ex)
+    catch (SQLException ex)
     {
       throw ConnectionPeer.err(ex);
     }
     finally
     {
-      try { if (!prepared) stmt.close(); } catch(Exception ex) {}
+      try { if (!prepared) stmt.close(); } catch (Exception ex) {}
     }
   }
 
@@ -231,7 +231,7 @@ public class StatementPeer
         }
       }
     }
-    catch(SQLException ex)
+    catch (SQLException ex)
     {
       throw ConnectionPeer.err(ex);
     }
@@ -263,7 +263,7 @@ public class StatementPeer
         }
       }
     }
-    catch(SQLException ex)
+    catch (SQLException ex)
     {
       throw ConnectionPeer.err(ex);
     }
@@ -298,7 +298,7 @@ public class StatementPeer
     {
       stmt.close();
     }
-    catch(SQLException ex)
+    catch (SQLException ex)
     {
       throw ConnectionPeer.err(ex);
     }
