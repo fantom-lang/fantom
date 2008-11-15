@@ -682,7 +682,7 @@ class XParser
       return false
     }
 
-    while(isSpace(c = read()));
+    while (isSpace(c = read())) {}
     pushback = c
     return true
   }
