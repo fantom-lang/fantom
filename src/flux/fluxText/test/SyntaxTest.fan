@@ -165,10 +165,12 @@ class SyntaxTest : Test
                        //    0123456789_12345
     "x\"foo\n" +       // 0  x"foo
     "// string!\n" +   // 1  // string
-    "bar\"baz\"\n" +   // 2  bar"baz"
-    "\";",             // 3  ";
+    "a=\\\"b\\\"\n" +  // 2  a=\"b\"
+    "bar\"baz\"\n" +   // 3  bar"baz"
+    "\";",             // 4  ";
     [
       [0, t, 1, s],
+      [0, s],
       [0, s],
       [0, s, 4, t, 7, s],
       [0, s, 1, t],

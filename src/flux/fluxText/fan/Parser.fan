@@ -280,23 +280,33 @@ internal class Parser
   {
     return StrMatch
     {
-      start     = toMatcher(s.delimiter)
-      end       = toMatcher(s.delimiterEnd ?: s.delimiter)
+      start     = toMatcher(s.delimiter, s.escape)
+      end       = toMatcher(s.delimiterEnd ?: s.delimiter, s.escape)
       escape    = s.escape
       multiLine = s.multiLine
       blockOpen = BlockOpen(this, s.delimiter, [0, syntax.literal].ro)
     }
   }
 
-  Matcher toMatcher(Str? tok)
+  Matcher toMatcher(Str? tok, Int esc := 0)
   {
     tok = tok?.trim ?: ""
     switch (tok.size)
     {
-      case 0:  return Matcher(0, &noMatch, |,| {})
-      case 1:  return Matcher(1, &match1(tok[0]), |,| { consume })
-      case 2:  return Matcher(2, &match2(tok[0], tok[1]), |,| { consume; consume })
-      default: return Matcher(tok.size, &matchN(tok), &consumeN(tok.size))
+      case 0:
+        return Matcher(0, &noMatch, |,| {})
+      case 1:
+        if (esc > 0)
+          return Matcher(1, &match1Esc(tok[0], esc), |,| { consume })
+        else
+          return Matcher(1, &match1(tok[0]), |,| { consume })
+      case 2:
+        if (esc > 0)
+          return Matcher(2, &match2Esc(tok[0], tok[1], esc), |,| { consume; consume })
+        else
+          return Matcher(2, &match2(tok[0], tok[1]), |,| { consume; consume })
+      default:
+        return Matcher(tok.size, &matchN(tok), &consumeN(tok.size))
     }
   }
 
@@ -306,7 +316,11 @@ internal class Parser
 
   Bool match2(Int ch1, Int ch2) { return cur == ch1 && peek == ch2 }
 
-  Bool matchN(Str chars)
+  Bool match1Esc(Int ch1, Int esc) { return cur == ch1 && countEscapes(esc).isEven }
+
+  Bool match2Esc(Int ch1, Int ch2, Int esc) { return cur == ch1 && peek == ch2 && countEscapes(esc).isEven }
+
+  Bool matchN(Str chars) // assume no escape for 3 or more
   {
     try
     {
