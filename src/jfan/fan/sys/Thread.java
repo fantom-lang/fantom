@@ -579,7 +579,7 @@ public class Thread
       enqueue(msg);
       return msg.waitUntilFinished();
     }
-    catch(InterruptedException e)
+    catch (InterruptedException e)
     {
       throw InterruptedErr.make(e).val;
     }
@@ -594,7 +594,7 @@ public class Thread
       enqueue(new Message(MSG_ASYNC, obj));
       return this;
     }
-    catch(InterruptedException e)
+    catch (InterruptedException e)
     {
       throw InterruptedErr.make(e).val;
     }

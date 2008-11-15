@@ -277,7 +277,7 @@ public class Env
       Monitor[] m = display.getMonitors();
       Monitor pm = display.getPrimaryMonitor();
       List acc = new List(Type.find("fwt::Monitor"));
-      for(int i=0; i<m.length; ++i)
+      for (int i=0; i<m.length; ++i)
       {
         fan.fwt.Monitor f = MonitorPeer.make(m[i]);
         acc.add(f);
