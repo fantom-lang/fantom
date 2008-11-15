@@ -481,3 +481,4 @@
 - Flux: show short filenames in console instead of full paths
 
 *Build 1.0.36 (incomplete)*
+- Remove compiler support for for(...); and while(...);

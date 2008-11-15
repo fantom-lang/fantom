@@ -160,7 +160,7 @@ class StmtTest : Test
     verifyEq(x, "xxx")
 
     counter := 0
-    while (++counter<7);
+    while (++counter<7) {}
     verifyEq(counter, 7)
   }
 
@@ -214,7 +214,7 @@ class StmtTest : Test
     verifyEq(x, "{0.1.2.}{012}{0}")
 
     counter := 0
-    for (; counter<4; ++counter);
+    for (; counter<4; ++counter) {}
     verifyEq(counter, 4)
   }
 

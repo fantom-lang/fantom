@@ -918,15 +918,7 @@ public class Parser : CompilerSupport
     consume(Token.lparen)
     stmt.condition = expr
     consume(Token.rparen)
-    if (curt === Token.semicolon)
-    {
-      stmt.block = Block(cur)
-      consume
-    }
-    else
-    {
-      stmt.block = stmtOrBlock
-    }
+    stmt.block = stmtOrBlock
     return stmt
   }
 
@@ -950,15 +942,7 @@ public class Parser : CompilerSupport
     if (curt != Token.rparen) stmt.update = expr
     consume(Token.rparen)
 
-    if (curt === Token.semicolon)
-    {
-      stmt.block = Block(cur)
-      consume
-    }
-    else
-    {
-      stmt.block = stmtOrBlock
-    }
+    stmt.block = stmtOrBlock
 
     return stmt
   }
