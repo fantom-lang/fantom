@@ -52,7 +52,7 @@ namespace Fanx.Util
       for (int i=0; i<types.sz(); ++i)
       {
         t = (Type)types.get(i);
-        if (t.isPublic().booleanValue()) break;
+        if (t.isPublic()) break;
       }
       if (t == null)
         throw Err.make("Script file defines no public classes: " +  file).val;
@@ -103,8 +103,8 @@ namespace Fanx.Util
         if (c == null) return null;
 
         // check that timestamp and size still the same
-        if (OpUtil.compareEQz(c.modified, file.modified()) &&
-            OpUtil.compareEQz(c.size, file.size()))
+        if (OpUtil.compareEQ(c.modified, file.modified()) &&
+            OpUtil.compareEQ(c.size, file.size()))
           return c;
 
         // nuke from cache

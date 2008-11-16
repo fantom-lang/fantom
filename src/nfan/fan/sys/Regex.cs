@@ -36,12 +36,12 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public sealed override Boolean _equals(object obj)
+    public sealed override bool _equals(object obj)
     {
       if (obj is Regex)
-        return ((Regex)obj).m_source == this.m_source ? Boolean.True : Boolean.False;
+        return ((Regex)obj).m_source == this.m_source;
       else
-        return Boolean.False;
+        return false;
     }
 
     public sealed override int GetHashCode() { return m_source.GetHashCode(); }
@@ -56,7 +56,7 @@ namespace Fan.Sys
   // Regular expression
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean matches(string s)
+    public bool matches(string s)
     {
       return new RegexMatcher(m_pattern.Match(s), s).matches();
     }

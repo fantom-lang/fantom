@@ -20,8 +20,8 @@ namespace Fan.Sys
 
     internal DirNamespace(File dir)
     {
-      if (!dir.isDir().booleanValue())  throw ArgErr.make("Not a dir: " + dir).val;
-      if (!dir.exists().booleanValue()) throw ArgErr.make("Dir does not exist: " + dir).val;
+      if (!dir.isDir())  throw ArgErr.make("Not a dir: " + dir).val;
+      if (!dir.exists()) throw ArgErr.make("Dir does not exist: " + dir).val;
       this.m_dir = dir;
     }
 
@@ -37,11 +37,11 @@ namespace Fan.Sys
   // Namespace
   //////////////////////////////////////////////////////////////////////////
 
-    public override object get(Uri uri, Boolean check)
+    public override object get(Uri uri, bool check)
     {
-      File f = m_dir.plus(uri.relTo(this.uri()), Boolean.False);
-      if (f.exists().booleanValue()) return f;
-      if (!check.booleanValue()) return null;
+      File f = m_dir.plus(uri.relTo(this.uri()), false);
+      if (f.exists()) return f;
+      if (!check) return null;
       throw UnresolvedErr.make(uri).val;
     }
 

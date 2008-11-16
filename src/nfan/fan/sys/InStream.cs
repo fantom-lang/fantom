@@ -277,11 +277,11 @@ namespace Fan.Sys
       return FanDecimal.fromStr(readUtfString(), true);
     }
 
-    public virtual Boolean readBool()
+    public virtual bool readBool()
     {
       int n = r();
       if (n < 0) throw IOErr.make("Unexpected end of stream").val;
-      return n == 0 ? Boolean.False : Boolean.True;
+      return n == 0 ? false : true;
     }
 
     public virtual string readUtf() { return readUtfString(); }
@@ -470,14 +470,14 @@ namespace Fan.Sys
       }
     }
 
-    public virtual string readAllStr() { return readAllStr(Boolean.True); }
-    public virtual string readAllStr(Boolean normalizeNewlines)
+    public virtual string readAllStr() { return readAllStr(true); }
+    public virtual string readAllStr(bool normalizeNewlines)
     {
       try
       {
         char[] buf  = new char[4096];
         int n = 0;
-        bool normalize = normalizeNewlines.booleanValue();
+        bool normalize = normalizeNewlines;
 
         // read characters
         int last = -1;
@@ -658,9 +658,9 @@ namespace Fan.Sys
       return -1;
     }
 
-    public virtual long pipe(OutStream output) { return pipe(output, null, Boolean.True); }
-    public virtual long pipe(OutStream output, Long n) { return pipe(output, n, Boolean.True); }
-    public virtual long pipe(OutStream output, Long toPipe, Boolean cls)
+    public virtual long pipe(OutStream output) { return pipe(output, null, true); }
+    public virtual long pipe(OutStream output, Long n) { return pipe(output, n, true); }
+    public virtual long pipe(OutStream output, Long toPipe, bool cls)
     {
       try
       {
@@ -693,14 +693,14 @@ namespace Fan.Sys
       }
       finally
       {
-        if (cls.booleanValue()) close();
+        if (cls) close();
       }
     }
 
-    public virtual Boolean close()
+    public virtual bool close()
     {
       if (m_in != null) return m_in.close();
-      return Boolean.True;
+      return true;
     }
 
   //////////////////////////////////////////////////////////////////////////

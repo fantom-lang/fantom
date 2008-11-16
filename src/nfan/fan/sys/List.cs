@@ -99,9 +99,9 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean isEmpty()
+    public bool isEmpty()
     {
-      return m_size == 0 ? Boolean.True : Boolean.False;
+      return m_size == 0;
     }
 
     public long size()
@@ -179,30 +179,30 @@ namespace Fan.Sys
       }
     }
 
-    public Boolean contains(object val)
+    public bool contains(object val)
     {
-      return Boolean.valueOf(index(val) != null);
+      return index(val) != null;
     }
 
-    public Boolean containsSame(object val)
+    public bool containsSame(object val)
     {
-      return Boolean.valueOf(indexSame(val) != null);
+      return indexSame(val) != null;
     }
 
-    public Boolean containsAll(List list)
+    public bool containsAll(List list)
     {
       for (int i=0; i<list.sz(); i++)
         if (index(list.get(i)) == null)
-          return Boolean.False;
-      return Boolean.True;
+          return false;
+      return true;
     }
 
-    public Boolean containsAllSame(List list)
+    public bool containsAllSame(List list)
     {
       for (int i=0; i<list.sz(); i++)
         if (indexSame(list.get(i)) == null)
-          return Boolean.False;
-      return Boolean.True;
+          return false;
+      return true;
     }
 
     public Long index(object val) { return index(val, 0); }
@@ -289,18 +289,18 @@ namespace Fan.Sys
       return hash;
     }
 
-    public override Boolean _equals(object that)
+    public override bool _equals(object that)
     {
       if (that is List)
       {
         List x = (List)that;
-        if (!m_of.Equals(x.m_of)) return Boolean.False;
-        if (m_size != x.m_size) return Boolean.False;
+        if (!m_of.Equals(x.m_of)) return false;
+        if (m_size != x.m_size) return false;
         for (int i=0; i<m_size; i++)
-          if (!OpUtil.compareEQ(m_values[i], x.m_values[i]).booleanValue()) return Boolean.False;
-        return Boolean.True;
+          if (!OpUtil.compareEQ(m_values[i], x.m_values[i])) return false;
+        return true;
       }
-      return Boolean.False;
+      return false;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -552,25 +552,25 @@ namespace Fan.Sys
     {
       List acc = new List(m_of, m_size);
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], i) != Boolean.True)
+        if (f.call2(m_values[i], i) == Boolean.False)
           acc.add(m_values[i]);
       return acc;
     }
 
-    public Boolean any(Func f)
+    public bool any(Func f)
     {
       for (int i=0; i<m_size; i++)
         if (f.call2(m_values[i], i) == Boolean.True)
-          return Boolean.True;
-      return Boolean.False;
+          return true;
+      return false;
     }
 
-    public Boolean all(Func f)
+    public bool all(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], i) != Boolean.True)
-          return Boolean.False;
-      return Boolean.True;
+        if (f.call2(m_values[i], i) == Boolean.False)
+          return false;
+      return true;
     }
 
     public object reduce(object reduction, Func f)
@@ -982,14 +982,14 @@ namespace Fan.Sys
   // Readonly
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean isRW()
+    public bool isRW()
     {
-      return m_isReadonly ? Boolean.False : Boolean.True;
+      return !m_isReadonly;
     }
 
-    public Boolean isRO()
+    public bool isRO()
     {
-      return m_isReadonly ? Boolean.True : Boolean.False;
+      return m_isReadonly;
     }
 
     public List rw()
@@ -1021,9 +1021,9 @@ namespace Fan.Sys
       return m_readonlyList;
     }
 
-    public override Boolean isImmutable()
+    public override bool isImmutable()
     {
-      return Boolean.valueOf(m_immutable);
+      return m_immutable;
     }
 
     public List toImmutable()
@@ -1041,7 +1041,7 @@ namespace Fan.Sys
             item = ((List)item).toImmutable();
           else if (item is Map)
             item = ((Map)item).toImmutable();
-          else if (!isImmutable(item).booleanValue())
+          else if (!isImmutable(item))
             throw NotImmutableErr.make("Item [" + i + "] not immutable " + type(item)).val;
         }
         temp[i] = item;

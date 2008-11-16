@@ -37,7 +37,7 @@ namespace Fan.Sys
 
     public List @params() { return m_params.ro(); }
 
-    public override abstract Boolean isImmutable();
+    public override abstract bool isImmutable();
 
     public abstract Method method();
 
@@ -81,7 +81,7 @@ namespace Fan.Sys
       public string name() { return GetType().Name; }
       public override Type type()  { return m_type; }
       public override string  toStr() { return m_type.signature(); }
-      public override Boolean isImmutable() { return Boolean.False; }
+      public override bool isImmutable() { return false; }
       public override Method method() { return null; }
       public Err.Val tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + m_type.m_params.Length).val; }
 
@@ -275,7 +275,7 @@ namespace Fan.Sys
       public string  name()  { return GetType().Name; }
       public override Type type()  { return m_type; }
       public override string  toStr() { return m_type.signature(); }
-      public override Boolean isImmutable() { return Boolean.False; }
+      public override bool isImmutable() { return false; }
       public override Method method() { return null; }
 
       // this isn't a very optimized implementation

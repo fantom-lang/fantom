@@ -79,8 +79,8 @@ namespace Fan.Sys
 
     internal abstract Map makeParams();
 
-    public override Map facets(Boolean inherited) { return m_base.facets(inherited); }
-    public override object facet(string name, object def, Boolean inherited) { return m_base.facet(name, def, inherited); }
+    public override Map facets(bool inherited) { return m_base.facets(inherited); }
+    public override object facet(string name, object def, bool inherited) { return m_base.facet(name, def, inherited); }
 
     public override string doc() { return m_base.doc(); }
 
@@ -194,7 +194,7 @@ namespace Fan.Sys
     /// </summary>
     internal Type parameterize(Type t)
     {
-      bool nullable = t.isNullable().booleanValue();
+      bool nullable = t.isNullable();
       Type nn = t.toNonNullable();
       if (nn is ListType)
         t = parameterizeListType((ListType)nn);

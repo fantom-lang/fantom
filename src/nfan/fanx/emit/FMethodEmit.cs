@@ -245,7 +245,7 @@ namespace Fanx.Emit
       // find first param with default value
       int firstDefault = paramCount;
       for (int i=0; i<paramCount; i++)
-        if (((Param)pars.get(i)).hasDefault().booleanValue())
+        if (((Param)pars.get(i)).hasDefault())
           { firstDefault = i; break; }
 
       // generate routers
@@ -327,7 +327,7 @@ namespace Fanx.Emit
       // find first param with default value
       int firstDefault = paramCount;
       for (int i=0; i<paramCount; i++)
-        if (((Param)pars.get(i)).hasDefault().booleanValue())
+        if (((Param)pars.get(i)).hasDefault())
           { firstDefault = i; break; }
 
       // generate routers

@@ -33,7 +33,7 @@ namespace Fan.Sys
       self.m_name    = name;
     }
 
-    protected static Enum doFromStr(Type t, string name, Boolean check)
+    protected static Enum doFromStr(Type t, string name, bool check)
     {
       // the compiler marks the value fields with the Enum flag
       Slot slot = t.slot(name, false);
@@ -47,7 +47,7 @@ namespace Fan.Sys
         {
         }
       }
-      if (!check.booleanValue()) return null;
+      if (!check) return null;
       throw ParseErr.make(t.qname(), name).val;
     }
 
@@ -55,9 +55,9 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Boolean _equals(object obj)
+    public override sealed bool _equals(object obj)
     {
-      return this == obj ? Boolean.True : Boolean.False;
+      return this == obj;
     }
 
     public override sealed long compare(object obj)

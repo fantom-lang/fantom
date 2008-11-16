@@ -43,8 +43,8 @@ namespace Fan.Sys
       this.localeFullKey = name + "Full";
     }
 
-    public static Month fromStr(string name) { return fromStr(name, Boolean.True); }
-    public static Month fromStr(string name, Boolean check)
+    public static Month fromStr(string name) { return fromStr(name, true); }
+    public static Month fromStr(string name, bool check)
     {
       return (Month)doFromStr(Sys.MonthType, name, check);
     }

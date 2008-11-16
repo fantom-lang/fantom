@@ -36,16 +36,15 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean matches()
+    public bool matches()
     {
       // to match java
-      return (m_match.Success)
-        ? Boolean.valueOf(m_source.Length == m_match.Length) : Boolean.False;
+      return (m_match.Success) ? m_source.Length == m_match.Length : false;
     }
 
-    public Boolean find()
+    public bool find()
     {
-      return Boolean.valueOf(true); //matcher.find());
+      return true; //matcher.find());
     }
 
     public long groupCount()
@@ -58,7 +57,7 @@ namespace Fan.Sys
     public string group(long group)
     {
       // to match java
-      if (!matches().booleanValue()) throw new System.Exception();
+      if (!matches()) throw new System.Exception();
       if (group < 0 || group >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 
@@ -69,7 +68,7 @@ namespace Fan.Sys
     public long start(long group)
     {
       // to match java
-      if (!matches().booleanValue()) throw new System.Exception();
+      if (!matches()) throw new System.Exception();
       if (group < 0 || group >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 
@@ -80,7 +79,7 @@ namespace Fan.Sys
     public long end(long group)
     {
       // to match java
-      if (!matches().booleanValue()) throw new System.Exception();
+      if (!matches()) throw new System.Exception();
       if (group < 0 || group >= m_match.Groups.Count)
         throw IndexErr.make(group).val;
 

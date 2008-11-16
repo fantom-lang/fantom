@@ -106,7 +106,7 @@ namespace Fan.Sys
       this.m_nullable = new NullableType(this);
     }
 
-    public override Boolean isDynamic() { return Boolean.valueOf(m_dynamic); }
+    public override bool isDynamic() { return m_dynamic; }
 
   //////////////////////////////////////////////////////////////////////////
   // Slots
@@ -175,7 +175,7 @@ namespace Fan.Sys
         {
           // check for no-arg make on base class
           Method make = m_base.method("make", true);
-          if (!make.isCtor().booleanValue() || make.m_func.m_params.sz() != 0)
+          if (!make.isCtor() || make.m_func.m_params.sz() != 0)
             throw Err.make("Dynamic base type requires no arg make ctor: " + m_base).val;
 
           // generate the class and store the .NET constructor
@@ -294,17 +294,17 @@ namespace Fan.Sys
   // Facets
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Map facets(Boolean inherited)
+    public override sealed Map facets(bool inherited)
     {
       Map map = ((ClassType)reflect()).m_facets.map();
-      if (inherited.booleanValue())
+      if (inherited)
       {
         map = map.rw();
         List inherit = inheritance();
         for (int i=0; i<inherit.sz(); ++i)
         {
-          Map x = ((Type)inherit.get(i)).facets(Boolean.False);
-          if (x.isEmpty().booleanValue()) continue;
+          Map x = ((Type)inherit.get(i)).facets(false);
+          if (x.isEmpty()) continue;
           IDictionaryEnumerator en = x.pairsIterator();
           while (en.MoveNext())
           {
@@ -316,15 +316,15 @@ namespace Fan.Sys
       return map;
     }
 
-    public override sealed object facet(string name, object def, Boolean inherited)
+    public override sealed object facet(string name, object def, bool inherited)
     {
       object val = ((ClassType)reflect()).m_facets.get(name, null);
       if (val != null) return val;
-      if (!inherited.booleanValue()) return def;
+      if (!inherited) return def;
       List inherit = inheritance();
       for (int i=0; i<inherit.sz(); ++i)
       {
-        val = ((Type)inherit.get(i)).facet(name, null, Boolean.False);
+        val = ((Type)inherit.get(i)).facet(name, null, false);
         if (val != null) return val;
       }
       return def;
@@ -359,7 +359,7 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public override Boolean isImmutable() { return !m_dynamic ? Boolean.True : Boolean.False; }
+    public override bool isImmutable() { return !m_dynamic; }
 
     public override sealed Type toImmutable()
     {
@@ -492,7 +492,7 @@ namespace Fan.Sys
     private void merge(Slot slot, List slots, Hashtable nameToSlot, Hashtable nameToIndex)
     {
       // skip constructors which aren't mine
-      if (slot.isCtor().booleanValue() && slot.m_parent != this) return;
+      if (slot.isCtor() && slot.m_parent != this) return;
 
       string name = slot.m_name;
       if (nameToIndex[name] != null)
@@ -640,7 +640,7 @@ namespace Fan.Sys
         // mixin then we do this for both the interface and
         // the static methods only of the implementation class
         finishSlots(m_type, false);
-        if (isMixin().booleanValue()) finishSlots(m_auxType, true);
+        if (isMixin()) finishSlots(m_auxType, true);
       }
       catch (Exception e)
       {
@@ -690,7 +690,7 @@ namespace Fan.Sys
       Slot s = slot(name, false);
       if (s == null) return;
       if (s.parent() != this) return;
-      if (staticOnly && !s.isStatic().booleanValue()) return;
+      if (staticOnly && !s.isStatic()) return;
       if (s is Method)
       {
         Method method = (Method)s;
@@ -702,7 +702,7 @@ namespace Fan.Sys
           int n = 1;
           for (int j=method.@params().sz()-1; j>=0; j--)
           {
-            if (((Param)method.@params().get(j)).hasDefault().booleanValue()) n++;
+            if (((Param)method.@params().get(j)).hasDefault()) n++;
             else break;
           }
           method.m_reflect = new MethodInfo[n];
@@ -719,7 +719,7 @@ namespace Fan.Sys
           {
             bool netStatic = m.IsStatic;
             if (!netStatic) return;
-            if (!method.isStatic().booleanValue() && !method.isCtor().booleanValue()) --numParams;
+            if (!method.isStatic() && !method.isCtor()) --numParams;
           }
 
         }

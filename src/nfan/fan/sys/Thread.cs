@@ -44,13 +44,13 @@ namespace Fan.Sys
     {
       // if service, get inheritance types before acquiring lock
       List serviceTypes = null;
-      if (t.isService().booleanValue())
+      if (t.isService())
         serviceTypes = t.type().inheritance();
 
       lock (topLock)
       {
         // check run method
-        if (run != null && !run.isImmutable().booleanValue())
+        if (run != null && !run.isImmutable())
           throw NotImmutableErr.make("Run method not const: " + run).val;
 
         // auto generate name if null
@@ -107,14 +107,14 @@ namespace Fan.Sys
   // Management
   //////////////////////////////////////////////////////////////////////////
 
-    public static Thread find(string name) { return find(name, Boolean.True); }
-    public static Thread find(string name, Boolean check)
+    public static Thread find(string name) { return find(name, true); }
+    public static Thread find(string name, bool check)
     {
       lock (topLock)
       {
         Thread thread = (Thread)byName[name];
         if (thread != null) return thread;
-        if (check.booleanValue()) throw UnknownThreadErr.make(name).val;
+        if (check) throw UnknownThreadErr.make(name).val;
         return null;
       }
     }
@@ -150,7 +150,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Thread findService(Type t) { return findService(t.qname(), true); }
-    public static Thread findService(Type t, Boolean check) { return findService(t.qname(), check.booleanValue()); }
+    public static Thread findService(Type t, bool check) { return findService(t.qname(), check); }
     public static Thread findService(string qname, bool check)
     {
       lock (topLock)
@@ -162,9 +162,9 @@ namespace Fan.Sys
       }
     }
 
-    public virtual Boolean isService()
+    public virtual bool isService()
     {
-      return Boolean.False;
+      return false;
     }
 
     // must be holding topLock
@@ -220,16 +220,16 @@ namespace Fan.Sys
 
     static bool isServiceType(Type t)
     {
-      return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic().booleanValue();
+      return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic();
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Boolean _equals(object obj)
+    public override bool _equals(object obj)
     {
-      return this == obj ? Boolean.True : Boolean.False;
+      return this == obj;
     }
 
     public override int GetHashCode()
@@ -302,21 +302,21 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public Boolean isNew()
+    public bool isNew()
     {
-      return Boolean.valueOf(m_state == NEW);
+      return m_state == NEW;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public Boolean isRunning()
+    public bool isRunning()
     {
-      return Boolean.valueOf(m_state == RUNNING);
+      return m_state == RUNNING;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public Boolean isDead()
+    public bool isDead()
     {
-      return Boolean.valueOf(m_state == DEAD);
+      return m_state == DEAD;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -379,7 +379,7 @@ namespace Fan.Sys
       lock (topLock)
       {
         byName.Remove(m_name);
-        if (isService().booleanValue()) unmountService(this);
+        if (isService()) unmountService(this);
       }
       stopMessages();
       Monitor.PulseAll(this);
@@ -537,8 +537,8 @@ namespace Fan.Sys
   // Timer
   //////////////////////////////////////////////////////////////////////////
 
-    public object sendLater(Duration dur, object obj) { return sendLater(dur, obj, Boolean.False); }
-    public object sendLater(Duration dur, object obj, Boolean repeat)
+    public object sendLater(Duration dur, object obj) { return sendLater(dur, obj, false); }
+    public object sendLater(Duration dur, object obj, bool repeat)
     {
       obj = Namespace.safe(obj);
 
@@ -564,7 +564,7 @@ namespace Fan.Sys
         // allocate timer structure
         Timer t = new Timer();
         t.deadline = Sys.ticks() + dur.m_ticks;
-        t.duration = repeat.booleanValue() ? dur.m_ticks : -1;
+        t.duration = repeat ? dur.m_ticks : -1;
         t.msg = obj;
         m_timers[id] = t;
 

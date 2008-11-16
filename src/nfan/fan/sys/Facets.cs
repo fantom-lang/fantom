@@ -54,7 +54,7 @@ namespace Fan.Sys
     /// </summary>
     public static Facets make(Map map)
     {
-      if (map == null || map.isEmpty().booleanValue()) return empty();
+      if (map == null || map.isEmpty()) return empty();
 
       Hashtable src = new Hashtable();
       IDictionaryEnumerator en = map.pairsIterator();
@@ -62,7 +62,7 @@ namespace Fan.Sys
       {
         string key = (string)en.Key;
         object val = en.Value;
-        if (FanObj.isImmutable(val).booleanValue())
+        if (FanObj.isImmutable(val))
           src[key] = val;
         else
           src[key] = ObjEncoder.encode(val);
@@ -106,12 +106,12 @@ namespace Fan.Sys
 
     private object toImmutable(object obj)
     {
-      if (FanObj.isImmutable(obj).booleanValue()) return obj;
+      if (FanObj.isImmutable(obj)) return obj;
 
       if (obj is List)
       {
         List list = (List)obj;
-        if (list.of().isConst().booleanValue())
+        if (list.of().isConst())
           return list.toImmutable();
       }
 
@@ -119,7 +119,7 @@ namespace Fan.Sys
       {
         Map map = (Map)obj;
         MapType mapType = (MapType)map.type();
-        if (mapType.m_k.isConst().booleanValue() && mapType.m_v.isConst().booleanValue())
+        if (mapType.m_k.isConst() && mapType.m_v.isConst())
           return map.toImmutable();
       }
 
@@ -149,7 +149,7 @@ namespace Fan.Sys
       {
         object val = get(name, null);
         map.set(name, val);
-        allImmutable &= FanObj.isImmutable(val).booleanValue();
+        allImmutable &= FanObj.isImmutable(val);
       }
 
       // if all the values were immutable, then we

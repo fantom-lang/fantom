@@ -21,7 +21,6 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Version fromStr(string s) { return fromStr(s, true); }
-    public static Version fromStr(string str, Boolean check) { return fromStr(str, check.booleanValue()); }
     public static Version fromStr(string s, bool check)
     {
       List segments = new List(Sys.IntType, 4);
@@ -81,12 +80,12 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Boolean _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is Version)
-        return toStr() == ((Version)obj).toStr() ? Boolean.True : Boolean.False;
+        return toStr() == ((Version)obj).toStr();
       else
-        return Boolean.False;
+        return false;
     }
 
     public override long compare(object obj)

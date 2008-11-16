@@ -292,7 +292,7 @@ namespace Fan.Sys
         m_userName = Environment.UserName;
 
         m_env = new Map(StrType, StrType);
-        m_env.caseInsensitive(Boolean.True);
+        m_env.caseInsensitive(true);
         try
         {
           // predefined
@@ -323,7 +323,7 @@ namespace Fan.Sys
 
           // sys.properties
           LocalFile f = new LocalFile(new FileInfo(FileUtil.combine(HomeDir, "lib", "sys.props")));
-          if (f.exists().booleanValue())
+          if (f.exists())
           {
             try
             {

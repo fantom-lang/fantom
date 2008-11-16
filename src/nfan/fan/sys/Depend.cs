@@ -21,8 +21,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Depend fromStr(string str) { return fromStr(str, Boolean.True); }
-    public static Depend fromStr(string str, Boolean check)
+    public static Depend fromStr(string str) { return fromStr(str, true); }
+    public static Depend fromStr(string str, bool check)
     {
       try
       {
@@ -30,7 +30,7 @@ namespace Fan.Sys
       }
       catch (System.Exception)
       {
-        if (!check.booleanValue()) return null;
+        if (!check) return null;
         throw ParseErr.make("Depend", str).val;
       }
     }
@@ -175,12 +175,12 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Boolean _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is Depend)
-        return toStr() == toStr(obj) ? Boolean.True : Boolean.False;
+        return toStr() == toStr(obj);
       else
-        return Boolean.False;
+        return false;
     }
 
     public override long hash()
@@ -232,16 +232,16 @@ namespace Fan.Sys
       return m_constraints[(int)index].version;
     }
 
-    public Boolean isPlus() { return isPlus(0); }
-    public Boolean isPlus(long index)
+    public bool isPlus() { return isPlus(0); }
+    public bool isPlus(long index)
     {
-      return m_constraints[(int)index].isPlus ? Boolean.True : Boolean.False;
+      return m_constraints[(int)index].isPlus;
     }
 
-    public Boolean isRange() { return isRange(0); }
-    public Boolean isRange(long index)
+    public bool isRange() { return isRange(0); }
+    public bool isRange(long index)
     {
-      return m_constraints[(int)index].endVersion != null ? Boolean.True : Boolean.False;
+      return m_constraints[(int)index].endVersion != null;
     }
 
     public Version endVersion() { return endVersion(0); }
@@ -250,7 +250,7 @@ namespace Fan.Sys
       return m_constraints[(int)index].endVersion;
     }
 
-    public Boolean match(Version v)
+    public bool match(Version v)
     {
       for (int i=0; i<m_constraints.Length; i++)
       {
@@ -259,23 +259,23 @@ namespace Fan.Sys
         {
           // versionPlus
           if (c.version.compare(v) <= 0)
-            return Boolean.True;
+            return true;
         }
         else if (c.endVersion != null)
         {
           // versionRange
           if (c.version.compare(v) <= 0 &&
               (c.endVersion.compare(v) >= 0 || match(c.endVersion, v)))
-            return Boolean.True;
+            return true;
         }
         else
         {
           // versionSimple
           if (match(c.version, v))
-            return Boolean.True;
+            return true;
         }
       }
-      return Boolean.False;
+      return false;
     }
 
     private static bool match(Version a, Version b)

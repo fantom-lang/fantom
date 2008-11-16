@@ -23,8 +23,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Double fromStr(string s) { return fromStr(s, Boolean.True); }
-    public static Double fromStr(string s, Boolean check)
+    public static Double fromStr(string s) { return fromStr(s, true); }
+    public static Double fromStr(string s, bool check)
     {
       try
       {
@@ -35,7 +35,7 @@ namespace Fan.Sys
       }
       catch (FormatException)
       {
-        if (!check.booleanValue()) return null;
+        if (!check) return null;
         throw ParseErr.make("Float", s).val;
       }
     }
@@ -54,29 +54,29 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean equals(double self, object obj)
+    public static bool equals(double self, object obj)
     {
       if (obj is double)
       {
         double x = (double)obj;
-        if (System.Double.IsNaN(self)) return Boolean.valueOf(System.Double.IsNaN(x));
-        return self == x ? Boolean.True : Boolean.False;
+        if (System.Double.IsNaN(self)) return System.Double.IsNaN(x);
+        return self == x;
       }
-      return Boolean.False;
+      return false;
     }
 
-    public static Boolean approx(double self, double that) { return approx(self, that, null); }
-    public static Boolean approx(double self, double that, Double tolerance)
+    public static bool approx(double self, double that) { return approx(self, that, null); }
+    public static bool approx(double self, double that, Double tolerance)
     {
       // need this to check +inf, -inf, and nan
-      if (equals(self, that).booleanValue()) return Boolean.True;
+      if (equals(self, that)) return true;
 
       double t;
       if (tolerance == null)
         t = Math.Min(Math.Abs(self/1e6), Math.Abs(that/1e6));
       else
         t = (tolerance as Double).doubleValue();
-      return Math.Abs(self - that) <= t ? Boolean.True : Boolean.False;
+      return Math.Abs(self - that) <= t;
     }
 
     public static long compare(double self, object obj)

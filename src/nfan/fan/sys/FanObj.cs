@@ -31,7 +31,7 @@ namespace Fan.Sys
 
     public override bool Equals(object obj)
     {
-      return _equals(obj).booleanValue();
+      return _equals(obj);
     }
 
     public override string ToString()
@@ -43,17 +43,17 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean equals(object self, object x)
+    public static bool equals(object self, object x)
     {
       if (self is FanObj)
         return ((FanObj)self)._equals(x);
       else
-        return Boolean.valueOf(self.Equals(x));
+        return self.Equals(x);
     }
 
-    public virtual Boolean _equals(object obj)
+    public virtual bool _equals(object obj)
     {
-      return this == obj ? Boolean.True : Boolean.False;
+      return this == obj;
     }
 
     public static long compare(object self, object x)
@@ -99,15 +99,15 @@ namespace Fan.Sys
       return base.ToString();
     }
 
-    public static Boolean isImmutable(object self)
+    public static bool isImmutable(object self)
     {
       if (self is FanObj)
         return ((FanObj)self).isImmutable();
       else
-        return Boolean.valueOf(FanUtil.isNetImmutable(self.GetType()));
+        return FanUtil.isNetImmutable(self.GetType());
     }
 
-    public virtual Boolean isImmutable()
+    public virtual bool isImmutable()
     {
       return type().isConst();
     }
@@ -137,7 +137,7 @@ namespace Fan.Sys
 
     private static object doTrap(object self, string name, List args, Type type)
     {
-      Slot slot = type.slot(name, Boolean.True);
+      Slot slot = type.slot(name, true);
       if (slot is Method)
       {
         Method m = (Method)slot;

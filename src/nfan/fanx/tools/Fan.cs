@@ -115,7 +115,7 @@ namespace Fanx.Tools
         args = null;
       }
       else if (((Param)pars.get(0)).of().@is(Sys.StrType.toListOf()) &&
-               (pars.sz() == 1 || ((Param)pars.get(1)).hasDefault().booleanValue()))
+               (pars.sz() == 1 || ((Param)pars.get(1)).hasDefault()))
       {
         args = new List(Sys.ObjType, new object[] { Sys.args() });
       }
@@ -128,7 +128,7 @@ namespace Fanx.Tools
       // invoke
       try
       {
-        if (m.isStatic().booleanValue())
+        if (m.isStatic())
           return toResult(m.call(args));
         else
           return toResult(m.callOn(t.make(), args));

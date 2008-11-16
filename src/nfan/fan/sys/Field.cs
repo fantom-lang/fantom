@@ -94,7 +94,7 @@ namespace Fan.Sys
       }
       catch (Exception e)
       {
-        if (m_parent != null && m_parent.isDynamic().booleanValue())
+        if (m_parent != null && m_parent.isDynamic())
           throw Err.make("Dynamic field must override get()").val;
 
         if (m_reflect == null)
@@ -118,7 +118,7 @@ namespace Fan.Sys
       {
         if (checkConst)
           throw ReadonlyErr.make("Cannot set const field " + qname()).val;
-        else if (value != null && !isImmutable(value).booleanValue())
+        else if (value != null && !isImmutable(value))
           throw ReadonlyErr.make("Cannot set const field " + qname() + " with mutable value").val;
       }
 
@@ -149,7 +149,7 @@ namespace Fan.Sys
       }
       catch (Exception e)
       {
-        if (m_parent != null && m_parent.isDynamic().booleanValue())
+        if (m_parent != null && m_parent.isDynamic())
           throw Err.make("Dynamic field must override set()").val;
 
         if (m_reflect == null)

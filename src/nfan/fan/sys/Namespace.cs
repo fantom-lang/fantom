@@ -49,8 +49,8 @@ namespace Fan.Sys
 
     public Uri uri() { return m_uri; }
 
-    public object get(Uri uri) { return get(uri, Boolean.True); }
-    public abstract object get(Uri uri, Boolean check);
+    public object get(Uri uri) { return get(uri, true); }
+    public abstract object get(Uri uri, bool check);
 
     public virtual Uri create(Uri uri, object obj)
     {
@@ -79,7 +79,7 @@ namespace Fan.Sys
     public static object safe(object obj)
     {
       if (obj == null) return null;
-      if (isImmutable(obj).booleanValue()) return obj;
+      if (isImmutable(obj)) return obj;
       Buf buf = new MemBuf(512);
       buf.m_out.writeObj(obj);
       buf.flip();

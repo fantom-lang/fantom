@@ -38,8 +38,8 @@ namespace Fan.Sys
       this.m_ord = ord;
     }
 
-    public static LogLevel fromStr(string name) { return fromStr(name, Boolean.True); }
-    public static LogLevel fromStr(string name, Boolean check)
+    public static LogLevel fromStr(string name) { return fromStr(name, true); }
+    public static LogLevel fromStr(string name, bool check)
     {
       return (LogLevel)doFromStr(Sys.LogLevelType, name, check);
     }
