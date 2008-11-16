@@ -22,15 +22,12 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Method findMethod(string qname) { return (Method)find(qname, true); }
-    public static Method findMethod(string qname, Boolean check) { return (Method)find(qname, check.booleanValue()); }
     public static Method findMethod(string qname, bool check) { return (Method)find(qname, check); }
 
     public static Field findField(string qname) { return (Field)find(qname, true); }
-    public static Field findField(string qname, Boolean check) { return (Field)find(qname, check.booleanValue()); }
     public static Field findField(string qname, bool check) { return (Field)find(qname, check); }
 
     public static Slot find(string qname) { return find(qname, true); }
-    public static Slot find(string qname, Boolean check) { return find(qname, check.booleanValue()); }
     public static Slot find(string qname, bool check)
     {
       string typeName, slotName;
@@ -50,7 +47,6 @@ namespace Fan.Sys
     }
 
     public static Func findFunc(string qname) { return findFunc(qname, true); }
-    public static Func findFunc(string qname, Boolean check) { return findFunc(qname, check.booleanValue()); }
     public static Func findFunc(string qname, bool check)
     {
       Method m = (Method)find(qname, check);
@@ -86,8 +82,8 @@ namespace Fan.Sys
     public Type parent()      { return m_parent; }
     public virtual string name() { return m_name; }
     public string qname()        { return m_qname; }
-    public Boolean isField()     { return (this is Field) ? Boolean.True : Boolean.False; }
-    public Boolean isMethod()    { return (this is Method) ? Boolean.True : Boolean.False; }
+    public bool isField()     { return (this is Field); }
+    public bool isMethod()    { return (this is Method); }
     public abstract string signature();
 
   //////////////////////////////////////////////////////////////////////////
@@ -95,19 +91,19 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public int flags() { return m_flags; }
-    public Boolean isAbstract()  { return Boolean.valueOf(m_flags & FConst.Abstract); }
-public virtual Boolean isConst() { return Boolean.valueOf(m_flags & FConst.Const); } // we let synethic Methods override
-    public Boolean isCtor()      { return Boolean.valueOf(m_flags & FConst.Ctor); }
-    public Boolean isFinal()     { return Boolean.valueOf(m_flags & FConst.Final); }
-    public Boolean isInternal()  { return Boolean.valueOf(m_flags & FConst.Internal); }
-    public Boolean isNative()    { return Boolean.valueOf(m_flags & FConst.Native); }
-    public Boolean isOverride()  { return Boolean.valueOf(m_flags & FConst.Override); }
-    public Boolean isPrivate()   { return Boolean.valueOf(m_flags & FConst.Private); }
-    public Boolean isProtected() { return Boolean.valueOf(m_flags & FConst.Protected); }
-    public Boolean isPublic()    { return Boolean.valueOf(m_flags & FConst.Public); }
-    public Boolean isStatic()    { return Boolean.valueOf(m_flags & FConst.Static); }
-    public Boolean isSynthetic() { return Boolean.valueOf(m_flags & FConst.Synthetic); }
-    public Boolean isVirtual()   { return Boolean.valueOf(m_flags & FConst.Virtual); }
+    public bool isAbstract()  { return (m_flags & FConst.Abstract)  != 0; }
+public virtual bool isConst() { return (m_flags & FConst.Const)     != 0; } // we let synethic Methods override
+    public bool isCtor()      { return (m_flags & FConst.Ctor)      != 0; }
+    public bool isFinal()     { return (m_flags & FConst.Final)     != 0; }
+    public bool isInternal()  { return (m_flags & FConst.Internal)  != 0; }
+    public bool isNative()    { return (m_flags & FConst.Native)    != 0; }
+    public bool isOverride()  { return (m_flags & FConst.Override)  != 0; }
+    public bool isPrivate()   { return (m_flags & FConst.Private)   != 0; }
+    public bool isProtected() { return (m_flags & FConst.Protected) != 0; }
+    public bool isPublic()    { return (m_flags & FConst.Public)    != 0; }
+    public bool isStatic()    { return (m_flags & FConst.Static)    != 0; }
+    public bool isSynthetic() { return (m_flags & FConst.Synthetic) != 0; }
+    public bool isVirtual()   { return (m_flags & FConst.Virtual)   != 0; }
 
     public override object trap(string name, List args)
     {

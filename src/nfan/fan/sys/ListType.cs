@@ -32,13 +32,13 @@ namespace Fan.Sys
       return FanStr.hash(signature());
     }
 
-    public override Boolean _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is ListType)
       {
         return m_v._equals(((ListType)obj).m_v);
       }
-      return Boolean.False;
+      return false;
     }
 
     public override string signature()

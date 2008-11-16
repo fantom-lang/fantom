@@ -26,7 +26,7 @@ namespace Fan.Sys
   // Namespace
   //////////////////////////////////////////////////////////////////////////
 
-    public override object get(Uri uri, Boolean check)
+    public override object get(Uri uri, bool check)
     {
       // sanity check
       if (uri.m_path.get(0).ToString() != "sys")
@@ -43,7 +43,7 @@ namespace Fan.Sys
       return unresolved(uri, check);
     }
 
-    private object pod(Uri uri, Boolean check)
+    private object pod(Uri uri, bool check)
     {
       // /sys/pod/{name}
       string name = uri.path().get(2).ToString();
@@ -59,7 +59,7 @@ namespace Fan.Sys
       return unresolved(uri, check);
     }
 
-    private object service(Uri uri, Boolean check)
+    private object service(Uri uri, bool check)
     {
       // /sys/service/qname
       if (uri.path().sz() == 3)
@@ -72,9 +72,9 @@ namespace Fan.Sys
       return unresolved(uri, check);
     }
 
-    private object unresolved(Uri uri, Boolean check)
+    private object unresolved(Uri uri, bool check)
     {
-      if (!check.booleanValue()) return null;
+      if (!check) return null;
       throw UnresolvedErr.make(uri).val;
     }
 

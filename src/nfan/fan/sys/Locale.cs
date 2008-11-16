@@ -21,15 +21,15 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Locale fromStr(string s) { return fromStr(s, Boolean.True); }
-    public static Locale fromStr(string s, Boolean check)
+    public static Locale fromStr(string s) { return fromStr(s, true); }
+    public static Locale fromStr(string s, bool check)
     {
       int len = s.Length;
       try
       {
         if (len == 2)
         {
-          if (FanStr.isLower(s).booleanValue())
+          if (FanStr.isLower(s))
             return new Locale(s, s, null);
         }
 
@@ -37,7 +37,7 @@ namespace Fan.Sys
         {
           string lang = s.Substring(0, 2);
           string country = s.Substring(3, 2);
-          if (FanStr.isLower(lang).booleanValue() && FanStr.isUpper(country).booleanValue() && s[2] == '-')
+          if (FanStr.isLower(lang) && FanStr.isUpper(country) && s[2] == '-')
             return new Locale(s, lang, country);
         }
       }
@@ -45,7 +45,7 @@ namespace Fan.Sys
       {
         Err.dumpStack(e);
       }
-      if (!check.booleanValue()) return null;
+      if (!check) return null;
       throw ParseErr.make("Locale",  s).val;
     }
 
@@ -102,13 +102,13 @@ namespace Fan.Sys
 
     public override long hash() { return FanStr.hash(m_str); }
 
-    public override Boolean _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is Locale)
       {
-        return (obj as Locale).m_str == m_str ? Boolean.True : Boolean.False;
+        return (obj as Locale).m_str == m_str;
       }
-      return Boolean.False;
+      return false;
     }
 
     public override string toStr() { return m_str; }
@@ -130,12 +130,12 @@ namespace Fan.Sys
 
     public string get(string podName, string key)
     {
-      return doGet(Pod.find(podName, Boolean.False), podName, key, m_getNoDef);
+      return doGet(Pod.find(podName, false), podName, key, m_getNoDef);
     }
 
     public string get(string podName, string key, string def)
     {
-      return doGet(Pod.find(podName, Boolean.False), podName, key, def);
+      return doGet(Pod.find(podName, false), podName, key, def);
     }
 
     /**

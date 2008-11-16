@@ -104,16 +104,16 @@ namespace Fan.Sys
       }
     }
 
-    public override Boolean close()
+    public override bool close()
     {
       try
       {
         if (inStream != null) inStream.Close();
-        return Boolean.True;
+        return true;
       }
       catch (IOException)
       {
-        return Boolean.False;
+        return false;
       }
     }
 

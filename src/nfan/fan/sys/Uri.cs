@@ -25,8 +25,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Uri fromStr(string s) { return fromStr(s, Boolean.True); }
-    public static Uri fromStr(string s, Boolean check)
+    public static Uri fromStr(string s) { return fromStr(s, true); }
+    public static Uri fromStr(string s, bool check)
     {
       try
       {
@@ -34,18 +34,18 @@ namespace Fan.Sys
       }
       catch (ParseErr.Val e)
       {
-        if (!check.booleanValue()) return null;
+        if (!check) return null;
         throw ParseErr.make("Uri",  s, e.m_err.message()).val;
       }
       catch (Exception)
       {
-        if (!check.booleanValue()) return null;
+        if (!check) return null;
         throw ParseErr.make("Uri",  s).val;
       }
     }
 
-    public static Uri decode(string s) { return decode(s, Boolean.True); }
-    public static Uri decode(string s, Boolean check)
+    public static Uri decode(string s) { return decode(s, true); }
+    public static Uri decode(string s, bool check)
     {
       try
       {
@@ -53,12 +53,12 @@ namespace Fan.Sys
       }
       catch (ParseErr.Val e)
       {
-        if (!check.booleanValue()) return null;
+        if (!check) return null;
         throw ParseErr.make("Uri",  s, e.m_err.message()).val;
       }
       catch (Exception)
       {
-        if (!check.booleanValue()) return null;
+        if (!check) return null;
         throw ParseErr.make("Uri",  s).val;
       }
     }
@@ -685,13 +685,13 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Boolean _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is Uri)
       {
-        return m_str == ((Uri)obj).m_str ? Boolean.True : Boolean.False;
+        return m_str == ((Uri)obj).m_str;
       }
-      return Boolean.False;
+      return false;
     }
 
     public override int GetHashCode()
@@ -730,26 +730,26 @@ namespace Fan.Sys
   // Components
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean isAbs()
+    public bool isAbs()
     {
-      return m_scheme != null ? Boolean.True : Boolean.False;
+      return m_scheme != null;
     }
 
-    public Boolean isRel()
+    public bool isRel()
     {
-      return m_scheme == null ? Boolean.True : Boolean.False;
+      return m_scheme == null;
     }
 
-    public Boolean isDir()
+    public bool isDir()
     {
       if (m_pathStr != null)
       {
         string p = m_pathStr;
         int len = p.Length;
         if (len > 0 && p[len-1] == '/')
-          return Boolean.True;
+          return true;
       }
-      return Boolean.False;
+      return false;
     }
 
     public string scheme()
@@ -798,18 +798,18 @@ namespace Fan.Sys
       return m_pathStr;
     }
 
-    public Boolean isPathAbs()
+    public bool isPathAbs()
     {
       if (m_pathStr == null || m_pathStr.Length == 0)
-        return Boolean.False;
+        return false;
       else
-        return m_pathStr[0] == '/' ? Boolean.True : Boolean.False;
+        return m_pathStr[0] == '/';
     }
 
-    public Boolean isPathOnly()
+    public bool isPathOnly()
     {
-      return Boolean.valueOf(m_scheme == null && m_host == null && m_port == null &&
-        m_userInfo == null && m_queryStr == null && m_frag == null);
+      return m_scheme == null && m_host == null && m_port == null &&
+        m_userInfo == null && m_queryStr == null && m_frag == null;
     }
 
     public string name()
@@ -846,7 +846,7 @@ namespace Fan.Sys
 
     public MimeType mimeType()
     {
-      if (isDir().booleanValue()) return MimeType.m_dir;
+      if (isDir()) return MimeType.m_dir;
       return MimeType.forExt(ext());
     }
 
@@ -876,7 +876,7 @@ namespace Fan.Sys
 
       // if just a simple filename, then no parent
       string p = m_pathStr;
-      if (m_path.sz() == 1 && !isPathAbs().booleanValue() && !isDir().booleanValue()) return null;
+      if (m_path.sz() == 1 && !isPathAbs() && !isDir()) return null;
 
       // use slice
       return slice(parentRange);
@@ -916,19 +916,19 @@ namespace Fan.Sys
 
       bool head = (s == 0);
       bool tail = (e == size-1);
-      if (head && tail && (!forcePathAbs || isPathAbs().booleanValue())) return this;
+      if (head && tail && (!forcePathAbs || isPathAbs())) return this;
 
       Sections t = new Sections();
       t.path = m_path.slice(range);
 
       StringBuilder sb = new StringBuilder(m_pathStr.Length);
-      if ((head && isPathAbs().booleanValue()) || forcePathAbs) sb.Append('/');
+      if ((head && isPathAbs()) || forcePathAbs) sb.Append('/');
       for (int i=0; i<t.path.sz(); ++i)
       {
         if (i > 0) sb.Append('/');
         sb.Append(t.path.get(i));
       }
-      if (t.path.sz() > 0 && (!tail || isDir().booleanValue())) sb.Append('/');
+      if (t.path.sz() > 0 && (!tail || isDir())) sb.Append('/');
       t.pathStr = sb.ToString();
 
       if (head)
@@ -964,10 +964,10 @@ namespace Fan.Sys
 
     public Uri relTo(Uri baseUri)
     {
-      if (!OpUtil.compareEQz(this.m_scheme,   baseUri.m_scheme) ||
-          !OpUtil.compareEQz(this.m_userInfo, baseUri.m_userInfo) ||
-          !OpUtil.compareEQz(this.m_host,     baseUri.m_host) ||
-          !OpUtil.compareEQz(this.m_port,     baseUri.m_port))
+      if (!OpUtil.compareEQ(this.m_scheme,   baseUri.m_scheme) ||
+          !OpUtil.compareEQ(this.m_userInfo, baseUri.m_userInfo) ||
+          !OpUtil.compareEQ(this.m_host,     baseUri.m_host) ||
+          !OpUtil.compareEQ(this.m_port,     baseUri.m_port))
         return this;
 
       // at this point we know we have the same scheme and auth, and
@@ -1006,11 +1006,11 @@ namespace Fan.Sys
 
         // insert .. backup if needed
         int backup = baseUri.m_path.sz() - d;
-        if (!baseUri.isDir().booleanValue()) backup--;
+        if (!baseUri.isDir()) backup--;
         while (backup-- > 0) t.path.insert(0, dotDot);
 
         // format the new path string
-        t.pathStr = toPathStr(false, t.path, this.isDir().booleanValue());
+        t.pathStr = toPathStr(false, t.path, this.isDir());
       }
 
       return new Uri(t);
@@ -1040,7 +1040,7 @@ namespace Fan.Sys
       // if r is more or equal as absolute as base, return r
       if (r.m_scheme != null) return r;
       if (r.m_host != null && this.m_scheme == null) return r;
-      if (r.isPathAbs().booleanValue() && this.m_host == null) return r;
+      if (r.isPathAbs() && this.m_host == null) return r;
 
       // this algorthm is lifted straight from
       // RFC 3986 (5.2.2) Transform References;
@@ -1080,9 +1080,9 @@ namespace Fan.Sys
 
     static void merge(Sections t, Uri baseUri, Uri r)
     {
-      bool baseIsAbs = baseUri.isPathAbs().booleanValue();
-      bool baseIsDir = baseUri.isDir().booleanValue();
-      bool rIsDir    = r.isDir().booleanValue();
+      bool baseIsAbs = baseUri.isPathAbs();
+      bool baseIsDir = baseUri.isDir();
+      bool rIsDir    = r.isDir();
       List rPath     = r.m_path;
       bool dotLast   = false;
 
@@ -1103,7 +1103,7 @@ namespace Fan.Sys
           if (rSeg == ".") { dotLast = true; continue; }
           if (rSeg == "..")
           {
-            if (!tPath.isEmpty().booleanValue()) { tPath.pop(); dotLast = true; continue; }
+            if (!tPath.isEmpty()) { tPath.pop(); dotLast = true; continue; }
             if (baseIsAbs) continue;
           }
           tPath.add(rSeg); dotLast = false;
@@ -1129,15 +1129,14 @@ namespace Fan.Sys
       return buf.ToString();
     }
 
-    public Uri plusName(string name, bool isDir) { return plusName(name, Boolean.valueOf(isDir)); }
-    public Uri plusName(string name) { return plusName(name, Boolean.False); }
-    public Uri plusName(string name, Boolean asDir)
+    public Uri plusName(string name) { return plusName(name, false); }
+    public Uri plusName(string name, bool asDir)
     {
-      int size         = m_path.sz();
-      bool isDir       = this.isDir().booleanValue();
-      int newSize      = isDir ? size + 1 : size;
-      string[] temp       = (string[])m_path.toArray(new string[newSize]);
-      temp[newSize-1]  = name;
+      int size        = m_path.sz();
+      bool isDir      = this.isDir();
+      int newSize     = isDir ? size + 1 : size;
+      string[] temp   = (string[])m_path.toArray(new string[newSize]);
+      temp[newSize-1] = name;
 
       Sections t = new Sections();
       t.scheme   = this.m_scheme;
@@ -1148,13 +1147,13 @@ namespace Fan.Sys
       t.queryStr = null;
       t.frag     = null;
       t.path     = new List(Sys.StrType, temp);
-      t.pathStr  = toPathStr(isPathAbs().booleanValue(), t.path, asDir.booleanValue());
+      t.pathStr  = toPathStr(isPathAbs(), t.path, asDir);
       return new Uri(t);
     }
 
     public Uri plusSlash()
     {
-      if (isDir().booleanValue()) return this;
+      if (isDir()) return this;
       Sections t = new Sections();
       t.scheme   = this.m_scheme;
       t.userInfo = this.m_userInfo;
@@ -1170,7 +1169,7 @@ namespace Fan.Sys
 
     public Uri plusQuery(Map q)
     {
-      if (q == null || q.isEmpty().booleanValue()) return this;
+      if (q == null || q.isEmpty()) return this;
 
       Map merge = m_query.dup().setAll(q);
 
@@ -1219,9 +1218,9 @@ namespace Fan.Sys
       return File.make(this);
     }
 
-    public object get() { return get(null, Boolean.True); }
-    public object get(object @base) { return get(@base, Boolean.True); }
-    public object get(object @base, Boolean check)
+    public object get() { return get(null, true); }
+    public object get(object @base) { return get(@base, true); }
+    public object get(object @base, bool check)
     {
       // if we have a relative uri, we need to resolve against
       // the base object's uri
@@ -1255,7 +1254,7 @@ namespace Fan.Sys
       }
       catch (UnresolvedErr.Val e)
       {
-        if (check.booleanValue()) throw e;
+        if (check) throw e;
         return null;
       }
     }
@@ -1264,18 +1263,18 @@ namespace Fan.Sys
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean isName(string name)
+    public static bool isName(string name)
     {
       int len = name.Length;
 
       // must be at least one character long
-      if (len == 0) return Boolean.False;
+      if (len == 0) return false;
 
       // check for "." and ".."
       if (name[0] == '.' && len <= 2)
       {
-        if (len == 1) return Boolean.False;
-        if (name[1] == '.') return Boolean.False;
+        if (len == 1) return false;
+        if (name[1] == '.') return false;
       }
 
       // check that each char is unreserved
@@ -1283,15 +1282,15 @@ namespace Fan.Sys
       {
         int c = name[i];
         if (c < 128 && nameMap[c]) continue;
-        return Boolean.False;
+        return false;
       }
 
-      return Boolean.True;
+      return true;
     }
 
     public static void checkName(string name)
     {
-      if (!isName(name).booleanValue())
+      if (!isName(name))
         throw NameErr.make(name).val;
     }
 
@@ -1421,7 +1420,7 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    static readonly Range parentRange = Range.make(0, -2, Boolean.False);
+    static readonly Range parentRange = Range.make(0, -2, false);
     static readonly string dotDot = "..";
 
     internal readonly string m_str;

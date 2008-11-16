@@ -23,7 +23,6 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static BigDecimal fromStr(string s) { return fromStr(s, true); }
-    public static BigDecimal fromStr(string s, Boolean check) { return fromStr(s, check.booleanValue()); }
     public static BigDecimal fromStr(string s, bool check)
     {
       try
@@ -41,13 +40,13 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean equals(BigDecimal self, object obj)
+    public static bool equals(BigDecimal self, object obj)
     {
       if (obj is BigDecimal)
       {
-        return self.Equals(obj) ? Boolean.True : Boolean.False;
+        return self.Equals(obj);
       }
-      return Boolean.False;
+      return false;
     }
 
     public static long compare(BigDecimal self, object obj)

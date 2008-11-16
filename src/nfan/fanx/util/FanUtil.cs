@@ -57,7 +57,7 @@ namespace Fanx.Util
     /// </summary>
     public static string toNetTypeName(Fan.Sys.Type type)
     {
-      return toNetTypeName(type.pod().name(), type.name(), type.isNullable().booleanValue());
+      return toNetTypeName(type.pod().name(), type.name(), type.isNullable());
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ namespace Fanx.Util
         switch (typeName[0])
         {
           case 'B':
-            if (typeName == "Bool") return "Fan.Sys.Boolean";
+            if (typeName == "Bool") return nullable ? "Fan.Sys.Boolean" : "System.Boolean";
             break;
           case 'D':
             if (typeName == "Decimal") return "Fan.Sys.BigDecimal";
@@ -141,6 +141,7 @@ namespace Fanx.Util
     {
       if (ntype[0] == 'S')
       {
+        if (ntype == "System.Boolean") return "Fan.Sys.FanBool";
         if (ntype == "System.Double") return "Fan.Sys.FanFloat";
         if (ntype == "System.Int64") return "Fan.Sys.FanInt";
         if (ntype == "System.String") return "Fan.Sys.FanStr";
@@ -148,7 +149,6 @@ namespace Fanx.Util
       }
       if (ntype[0] == 'F')
       {
-        if (ntype == "Fan.Sys.Boolean") return "Fan.Sys.FanBool";
         if (ntype == "Fan.Sys.BigDecimal") return "Fan.Sys.FanDecimal";
         if (ntype == "Fan.Sys.Number") return "Fan.Sys.FanNum";
       }
@@ -178,7 +178,7 @@ namespace Fanx.Util
     /// </summary>
     public static int toNetStackType(Fan.Sys.Type t)
     {
-      if (!t.isNullable().booleanValue())
+      if (!t.isNullable())
       {
         if (t == Fan.Sys.Sys.VoidType)  return 'V';
         if (t == Fan.Sys.Sys.BoolType)  return 'I';
@@ -281,6 +281,7 @@ namespace Fanx.Util
     {
       if (Fan.Sys.Sys.ObjType == null) Fan.Sys.Sys.dumpStack();
 
+      netToFanTypes["System.Boolean"]     = Fan.Sys.Sys.BoolType;
       netToFanTypes["System.Double"]      = Fan.Sys.Sys.FloatType;
       netToFanTypes["System.Int64"]       = Fan.Sys.Sys.IntType;
       netToFanTypes["System.String"]      = Fan.Sys.Sys.StrType;
@@ -291,6 +292,7 @@ namespace Fanx.Util
       netToFanTypes["Fan.Sys.Long"]       = Fan.Sys.Sys.IntType;
       netToFanTypes["Fan.Sys.Number"]     = Fan.Sys.Sys.NumType;
 
+      netImmutables["System.Boolean"]     = true;
       netImmutables["System.Double"]      = true;
       netImmutables["System.Int64"]       = true;
       netImmutables["System.String"]      = true;

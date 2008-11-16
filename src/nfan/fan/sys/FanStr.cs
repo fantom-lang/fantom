@@ -40,21 +40,21 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean equals(string self, object obj)
+    public static bool equals(string self, object obj)
     {
       if (obj is string)
-        return self == (string)obj ? Boolean.True : Boolean.False;
+        return self == (string)obj;
       else
-        return Boolean.False;
+        return false;
     }
 
-    public static Boolean equalsIgnoreCase(string a, string b)
+    public static bool equalsIgnoreCase(string a, string b)
     {
-      if (a == b) return Boolean.True;
+      if (a == b) return true;
 
       int an   = a.Length;
       int bn   = b.Length;
-      if (an != bn) return Boolean.False;
+      if (an != bn) return false;
 
       for (int i=0; i<an; i++)
       {
@@ -62,9 +62,9 @@ namespace Fan.Sys
         int bc = b[i];
         if ('A' <= ac && ac <= 'Z') ac |= 0x20;
         if ('A' <= bc && bc <= 'Z') bc |= 0x20;
-        if (ac != bc) return Boolean.False;
+        if (ac != bc) return false;
       }
-      return Boolean.True;
+      return true;
     }
 
     public static long compare(string self, object obj)
@@ -163,9 +163,9 @@ namespace Fan.Sys
       return String.Intern(self);
     }
 
-    public static Boolean isEmpty(string self)
+    public static bool isEmpty(string self)
     {
-      return self.Length == 0 ? Boolean.True : Boolean.False;
+      return self.Length == 0;
     }
 
     public static long size(string self)
@@ -173,24 +173,24 @@ namespace Fan.Sys
       return self.Length;
     }
 
-    public static Boolean startsWith(string self, string s)
+    public static bool startsWith(string self, string s)
     {
-      return Boolean.valueOf(self.StartsWith(s));
+      return self.StartsWith(s);
     }
 
-    public static Boolean endsWith(string self, string s)
+    public static bool endsWith(string self, string s)
     {
-      return Boolean.valueOf(self.EndsWith(s));
+      return self.EndsWith(s);
     }
 
-    public static Boolean contains(string self, string s)
+    public static bool contains(string self, string s)
     {
-      return index(self, s, 0) != null ? Boolean.True : Boolean.False;
+      return index(self, s, 0) != null;
     }
 
-    public static Boolean containsChar(string self, long ch)
+    public static bool containsChar(string self, long ch)
     {
-      return self.IndexOf((char)ch) >= 0 ? Boolean.True : Boolean.False;
+      return self.IndexOf((char)ch) >= 0;
     }
 
     public static Long index(string self, string s) { return index(self, s, 0); }
@@ -323,22 +323,22 @@ namespace Fan.Sys
         f.call2(self[i], i);
     }
 
-    public static Boolean any(string self, Func f)
+    public static bool any(string self, Func f)
     {
       int len = self.Length;
       for (int i=0; i<len ; i++)
         if (f.call2(self[i], i) == Boolean.True)
-          return Boolean.True;
-      return Boolean.False;
+          return true;
+      return false;
     }
 
-    public static Boolean all(string self, Func f)
+    public static bool all(string self, Func f)
     {
       int len = self.Length;
       for (int i=0; i<len ; i++)
         if (f.call2(self[i], i) == Boolean.False)
-          return Boolean.False;
-      return Boolean.True;
+          return false;
+      return true;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -474,13 +474,12 @@ namespace Fan.Sys
       return self.Substring(0, pos+1);
     }
 
-    public static List split(string self) { return split(self, null, Boolean.True); }
-    public static List split(string self, Long separator) { return split(self, separator, Boolean.True); }
-    public static List split(string self, Long separator, Boolean trimmed)
+    public static List split(string self) { return split(self, null, true); }
+    public static List split(string self, Long separator) { return split(self, separator, true); }
+    public static List split(string self, Long separator, bool trim)
     {
       if (separator == null) return splitws(self);
       int sep = separator.intValue();
-      bool trim = trimmed.booleanValue();
       List toks = new List(Sys.StrType, 16);
       int len = self.Length;
       int x = 0;
@@ -566,48 +565,48 @@ namespace Fan.Sys
       return numLines;
     }
 
-    public static Boolean isAscii(string self)
+    public static bool isAscii(string self)
     {
       int len = self.Length;
       for (int i=0; i<len; ++i)
-        if (self[i] >= 128) return Boolean.False;
-      return Boolean.True;
+        if (self[i] >= 128) return false;
+      return true;
     }
 
-    public static Boolean isSpace(string self)
+    public static bool isSpace(string self)
     {
       int len = self.Length;
       for (int i=0; i<len; i++)
       {
         int ch = self[i];
         if (ch >= 128 || (FanInt.charMap[ch] & FanInt.SPACE) == 0)
-          return Boolean.False;
+          return false;
       }
-      return Boolean.True;
+      return true;
     }
 
-    public static Boolean isUpper(string self)
+    public static bool isUpper(string self)
     {
       int len = self.Length;
       for (int i=0; i<len; ++i)
       {
         int ch = self[i];
         if (ch >= 128 || (FanInt.charMap[ch] & FanInt.UPPER) == 0)
-          return Boolean.False;
+          return false;
       }
-      return Boolean.True;
+      return true;
     }
 
-    public static Boolean isLower(string self)
+    public static bool isLower(string self)
     {
       int len = self.Length;
       for (int i=0; i<len; ++i)
       {
         int ch = self[i];
         if (ch >= 128 || (FanInt.charMap[ch] & FanInt.LOWER) == 0)
-          return Boolean.False;
+          return false;
       }
-      return Boolean.True;
+      return true;
     }
 
     public static bool isEveryChar(string self, int ch)
@@ -675,29 +674,29 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean toBool(string self) { return FanBool.fromStr(self, Boolean.True); }
-    public static Boolean toBool(string self, Boolean check) { return FanBool.fromStr(self, check); }
+    public static Boolean toBool(string self) { return FanBool.fromStr(self, true); }
+    public static Boolean toBool(string self, bool check) { return FanBool.fromStr(self, check); }
 
-    public static Long toInt(string self) { return FanInt.fromStr(self, 10, Boolean.True); }
-    public static Long toInt(string self, long radix) { return FanInt.fromStr(self, radix, Boolean.True); }
-    public static Long toInt(string self, long radix, Boolean check) { return FanInt.fromStr(self, radix, check); }
+    public static Long toInt(string self) { return FanInt.fromStr(self, 10, true); }
+    public static Long toInt(string self, long radix) { return FanInt.fromStr(self, radix, true); }
+    public static Long toInt(string self, long radix, bool check) { return FanInt.fromStr(self, radix, check); }
 
-    public static Double toFloat(string self) { return FanFloat.fromStr(self, Boolean.True); }
-    public static Double toFloat(string self, Boolean check) { return FanFloat.fromStr(self, check); }
+    public static Double toFloat(string self) { return FanFloat.fromStr(self, true); }
+    public static Double toFloat(string self, bool check) { return FanFloat.fromStr(self, check); }
 
-    public static BigDecimal toDecimal(string self) { return FanDecimal.fromStr(self, Boolean.True); }
-    public static BigDecimal toDecimal(string self, Boolean check) { return FanDecimal.fromStr(self, check); }
+    public static BigDecimal toDecimal(string self) { return FanDecimal.fromStr(self, true); }
+    public static BigDecimal toDecimal(string self, bool check) { return FanDecimal.fromStr(self, check); }
 
     public static Uri toUri(string self) { return Uri.fromStr(self); }
 
-    public static string toCode(string self) { return toCode(self, Long.valueOf('"'), Boolean.False); }
-    public static string toCode(string self, Long quote) { return toCode(self, quote, Boolean.False); }
-    public static string toCode(string self, Long quote, Boolean escapeUnicode)
+    public static string toCode(string self) { return toCode(self, Long.valueOf('"'), false); }
+    public static string toCode(string self, Long quote) { return toCode(self, quote, false); }
+    public static string toCode(string self, Long quote, bool escapeUnicode)
     {
       StringBuilder s = new StringBuilder(self.Length+10);
 
       // opening quote
-      bool escu = escapeUnicode.booleanValue();
+      bool escu = escapeUnicode;
       int q = 0;
       if (quote != null)
       {

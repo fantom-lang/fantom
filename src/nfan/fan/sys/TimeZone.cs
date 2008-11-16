@@ -42,7 +42,6 @@ namespace Fan.Sys
     }
 
     public static TimeZone fromStr(string name) { return fromStr(name, true); }
-    public static TimeZone fromStr(string name, Boolean check) { return fromStr(name, check.booleanValue()); }
     public static TimeZone fromStr(string name, bool check)
     {
       // check cache first

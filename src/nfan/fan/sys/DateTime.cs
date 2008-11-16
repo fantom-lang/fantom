@@ -243,7 +243,6 @@ namespace Fan.Sys
 //////////////////////////////////////////////////////////////////////////
 
     public static DateTime fromStr(string s) { return fromStr(s, true); }
-    public static DateTime fromStr(string s, Boolean check) { return fromStr(s, check.booleanValue()); }
     public static DateTime fromStr(string s, bool check)
     {
       try
@@ -315,13 +314,13 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Boolean _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is DateTime)
       {
-        return m_ticks == (obj as DateTime).m_ticks ? Boolean.True : Boolean.False;
+        return m_ticks == (obj as DateTime).m_ticks;
       }
-      return Boolean.False;
+      return false;
     }
 
     public override long compare(object obj)
@@ -386,7 +385,7 @@ namespace Fan.Sys
 
     public TimeZone timeZone() { return m_timeZone; }
 
-    public Boolean dst() { return ((m_fields >> 31) & 0x1) != 0 ? Boolean.True : Boolean.False; }
+    public bool dst() { return ((m_fields >> 31) & 0x1) != 0; }
     public bool getDST()  { return ((m_fields >> 31) & 0x1) != 0; }
 
     public string timeZoneAbbr() { return getDST() ? m_timeZone.dstAbbr(year()) : m_timeZone.stdAbbr(year()); }
@@ -652,7 +651,7 @@ namespace Fan.Sys
       return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
     }
 
-    public static Boolean isLeapYear(long year) { return Boolean.valueOf(isLeapYear((int)year)); }
+    public static bool isLeapYear(long year) { return isLeapYear((int)year); }
     public static bool isLeapYear(int year)
     {
       if ((year & 3) != 0) return false;
@@ -754,8 +753,8 @@ namespace Fan.Sys
   // HTTP
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime fromHttpStr(string s) { return fromHttpStr(s, Boolean.True); }
-    public static DateTime fromHttpStr(string s, Boolean check)
+    public static DateTime fromHttpStr(string s) { return fromHttpStr(s, true); }
+    public static DateTime fromHttpStr(string s, bool check)
     {
       for (int i=0; i<httpFormats.Length; ++i)
       {
@@ -771,7 +770,7 @@ namespace Fan.Sys
         }
       }
 
-      if (!check.booleanValue()) return null;
+      if (!check) return null;
       throw ParseErr.make("Invalid HTTP DateTime: '" + s + "'").val;
     }
 

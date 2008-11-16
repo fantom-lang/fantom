@@ -72,14 +72,14 @@ namespace Fan.Sys
       string path = uriToPath(uri);
       if (System.IO.Directory.Exists(path)) return new DirectoryInfo(path);
       if (System.IO.File.Exists(path)) return new FileInfo(path);
-      if (uri.isDir().booleanValue()) return new DirectoryInfo(path);
+      if (uri.isDir()) return new DirectoryInfo(path);
       return new FileInfo(path);
     }
 
     public static string uriToPath(Uri uri)
     {
       string path = uri.m_pathStr;
-      bool dir = uri.isDir().booleanValue();
+      bool dir = uri.isDir();
       int len = path.Length;
       StringBuilder s = new StringBuilder(path.Length);
       for (int i=0; i<len; ++i)
@@ -143,12 +143,12 @@ namespace Fan.Sys
       this.m_file = file;
       if (System.IO.Directory.Exists(file.FullName))
       {
-        if (!uri.isDir().booleanValue())
+        if (!uri.isDir())
           throw IOErr.make("Must use trailing slash for dir: " + uri).val;
       }
       else if (System.IO.File.Exists(file.FullName))
       {
-        if (uri.isDir().booleanValue())
+        if (uri.isDir())
           throw IOErr.make("Cannot use trailing slash for file: " + uri).val;
       }
     }
@@ -163,9 +163,9 @@ namespace Fan.Sys
   // File
   //////////////////////////////////////////////////////////////////////////
 
-    public override Boolean exists()
+    public override bool exists()
     {
-      return m_file.Exists ? Boolean.True : Boolean.False;
+      return m_file.Exists;
     }
 
     public override Long size()
@@ -229,7 +229,7 @@ namespace Fan.Sys
       return new LocalFile(uri, canonical);
     }
 
-    public override File plus(Uri uri, Boolean checkSlash)
+    public override File plus(Uri uri, bool checkSlash)
     {
       return make(m_uri.plus(uri), checkSlash);
     }
@@ -240,7 +240,7 @@ namespace Fan.Sys
 
     public override File create()
     {
-      if (isDir().booleanValue())
+      if (isDir())
         createDir();
       else
         createFile();
@@ -308,7 +308,7 @@ namespace Fan.Sys
     {
       if (isDir() != to.isDir())
       {
-        if (isDir().booleanValue())
+        if (isDir())
           throw ArgErr.make("moveTo must be dir `" + to + "`").val;
         else
           throw ArgErr.make("moveTo must not be dir `" + to + "`").val;
@@ -318,7 +318,7 @@ namespace Fan.Sys
         throw IOErr.make("Cannot move LocalFile to " + to.type()).val;
       LocalFile dest = (LocalFile)to;
 
-      if (dest.exists().booleanValue())
+      if (dest.exists())
         throw IOErr.make("moveTo already exists: " + to).val;
 
       try
@@ -338,7 +338,7 @@ namespace Fan.Sys
 
     public override void delete()
     {
-      if (!exists().booleanValue()) return;
+      if (!exists()) return;
 
       if (m_file is DirectoryInfo)
       {
@@ -450,7 +450,7 @@ namespace Fan.Sys
       }
     }
 
-    public override OutStream @out(Boolean append, Long bufSize)
+    public override OutStream @out(bool append, Long bufSize)
     {
       try
       {
@@ -459,7 +459,7 @@ namespace Fan.Sys
         //if (!parent.exists()) parent.mkdirs();
 
         System.IO.Stream stream = (m_file as FileInfo).Open(
-          append.booleanValue() ? System.IO.FileMode.Append : System.IO.FileMode.Create,
+          append ? System.IO.FileMode.Append : System.IO.FileMode.Create,
           System.IO.FileAccess.Write);
         m_file.Refresh();
         return SysOutStream.make(stream, bufSize);

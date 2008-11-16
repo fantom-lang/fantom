@@ -41,9 +41,9 @@ namespace Fan.Sys
     public override List inheritance() { return m_root.inheritance(); }
     public override bool @is(Type type) { return m_root.@is(type); }
 
-    public override Boolean isValue() { return m_root.isValue(); }
+    public override bool isValue() { return m_root.isValue(); }
 
-    public override Boolean isNullable() { return Boolean.True; }
+    public override bool isNullable() { return true; }
     public override Type toNullable() { return this; }
     public override Type toNonNullable() { return m_root; }
 
@@ -54,15 +54,15 @@ namespace Fan.Sys
     public override Map @params() { return m_root.@params(); }
     public override Type parameterize(Map pars) { return m_root.parameterize(pars).toNullable(); }
 
-    public override Boolean isDynamic() { return Boolean.False; }
+    public override bool isDynamic() { return false; }
 
     public override List fields() { return m_root.fields(); }
     public override List methods() { return m_root.methods(); }
     public override List slots() { return m_root.slots(); }
     public override Slot slot(string name, bool check) { return m_root.slot(name, check); }
 
-    public override Map facets(Boolean inherited) { return m_root.facets(inherited); }
-    public override object facet(string name, object def, Boolean inherited) { return m_root.facet(name, def, inherited); }
+    public override Map facets(bool inherited) { return m_root.facets(inherited); }
+    public override object facet(string name, object def, bool inherited) { return m_root.facet(name, def, inherited); }
 
     public override string doc() { return m_root.doc(); }
 

@@ -22,9 +22,9 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Long fromStr(string s) { return fromStr(s, 10, Boolean.True); }
-    public static Long fromStr(string s, long radix) { return fromStr(s, radix, Boolean.True); }
-    public static Long fromStr(string s, long radix, Boolean check)
+    public static Long fromStr(string s) { return fromStr(s, 10, true); }
+    public static Long fromStr(string s, long radix) { return fromStr(s, radix, true); }
+    public static Long fromStr(string s, long radix, bool check)
     {
       try
       {
@@ -32,7 +32,7 @@ namespace Fan.Sys
       }
       catch (FormatException)
       {
-        if (!check.booleanValue()) return null;
+        if (!check) return null;
         throw ParseErr.make("Int", s).val;
       }
     }
@@ -46,7 +46,7 @@ namespace Fan.Sys
       if (v < 0) v = -v;
       long start = r.start();
       long end   = r.end();
-      if (r.inclusive().booleanValue()) ++end;
+      if (r.inclusive()) ++end;
       return start + (v % (end-start));
     }
 
@@ -58,12 +58,12 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean equals(long self, object obj)
+    public static bool equals(long self, object obj)
     {
       if (obj is Long)
-        return self == (obj as Long).longValue() ? Boolean.True : Boolean.False;
+        return self == (obj as Long).longValue();
       else
-        return Boolean.False;
+        return false;
     }
 
     public static long compare(long self, object obj)
@@ -127,21 +127,21 @@ namespace Fan.Sys
       return that;
     }
 
-    public static Boolean isEven(long self)
+    public static bool isEven(long self)
     {
-      return (self % 2) == 0 ? Boolean.True : Boolean.False;
+      return (self % 2) == 0;
     }
 
-    public static Boolean isOdd(long self)
+    public static bool isOdd(long self)
     {
-      return (self % 2) != 0 ? Boolean.True : Boolean.False;
+      return (self % 2) != 0;
     }
 
   /////////////////////////////////////////////////////////////////////////
   // Char
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean isSpace(long self) { return Boolean.valueOf(isSpace((int)self)); }
+    public static bool isSpace(long self) { return isSpace((int)self); }
     public static bool isSpace(int val)
     {
       try
@@ -156,7 +156,7 @@ namespace Fan.Sys
       }
     }
 
-    public static Boolean isAlpha(long self) { return Boolean.valueOf(isAlpha((int)self)); }
+    public static bool isAlpha(long self) { return isAlpha((int)self); }
     public static bool isAlpha(int val)
     {
       try
@@ -171,7 +171,7 @@ namespace Fan.Sys
       }
     }
 
-    public static Boolean isAlphaNum(long self) { return Boolean.valueOf(isAlphaNum((int)self)); }
+    public static bool isAlphaNum(long self) { return isAlphaNum((int)self); }
     public static bool isAlphaNum(int val)
     {
       try
@@ -189,16 +189,16 @@ namespace Fan.Sys
       }
     }
 
-    public static Boolean isUpper(long self)
+    public static bool isUpper(long self)
     {
       long val = self;
-      return 'A' <= val && val <= 'Z' ? Boolean.True : Boolean.False;
+      return 'A' <= val && val <= 'Z';
     }
 
-    public static Boolean isLower(long self)
+    public static bool isLower(long self)
     {
       long val = self;
-      return 'a' <= val && val <= 'z' ? Boolean.True : Boolean.False;
+      return 'a' <= val && val <= 'z';
     }
 
     public static long upper(long self)
@@ -219,39 +219,39 @@ namespace Fan.Sys
         return self;
     }
 
-    public static Boolean isDigit(long self)
+    public static bool isDigit(long self)
     {
       long val = self;
-      return '0' <= val && val <= '9' ? Boolean.True : Boolean.False;
+      return '0' <= val && val <= '9';
     }
 
-    public static Boolean isDigit(long self, long radix)
+    public static bool isDigit(long self, long radix)
     {
       int val = (int)self;
-      if (val < 0 || val >= 128) return Boolean.False;
+      if (val < 0 || val >= 128) return false;
       int r   = (int)radix;
 
       if (r == 10)
       {
-        return ((charMap[val] & DIGIT) != 0) ? Boolean.True : Boolean.False;
+        return ((charMap[val] & DIGIT) != 0);
       }
 
       if (r == 16)
       {
-        return ((charMap[val] & HEX) != 0) ? Boolean.True : Boolean.False;
+        return ((charMap[val] & HEX) != 0);
       }
 
       if (r <= 10)
       {
-        return '0' <= val && val <= ('0'+r) ?  Boolean.True : Boolean.False;
+        return '0' <= val && val <= ('0'+r);
       }
       else
       {
-        if ((charMap[val] & DIGIT) != 0) return Boolean.True;
+        if ((charMap[val] & DIGIT) != 0) return true;
         int x = val-10;
-        if ('a' <= val && val <= 'a'+x) return Boolean.True;
-        if ('A' <= val && val <= 'A'+x) return Boolean.True;
-        return Boolean.False;
+        if ('a' <= val && val <= 'a'+x) return true;
+        if ('A' <= val && val <= 'A'+x) return true;
+        return false;
       }
     }
 
@@ -296,10 +296,10 @@ namespace Fan.Sys
       return null;
     }
 
-    public static Boolean equalsIgnoreCase(long self, long ch)
+    public static bool equalsIgnoreCase(long self, long ch)
     {
       long val = self;
-      return (val | 0x20L) == (ch | 0x20L) ? Boolean.True : Boolean.False;
+      return (val | 0x20L) == (ch | 0x20L);
     }
 
     internal static readonly byte[] charMap = new byte[128];
@@ -314,16 +314,16 @@ namespace Fan.Sys
   // Locale
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean localeIsUpper(long self)
+    public static bool localeIsUpper(long self)
     {
       long val = self;
-      return Char.IsUpper((char)val) ? Boolean.True : Boolean.False;
+      return Char.IsUpper((char)val);
     }
 
-    public static Boolean localeIsLower(long self)
+    public static bool localeIsLower(long self)
     {
       long val = self;
-      return Char.IsLower((char)val) ? Boolean.True : Boolean.False;
+      return Char.IsLower((char)val);
     }
 
     public static long localeUpper(long self)

@@ -58,24 +58,24 @@ namespace Fan.Sys
   // verify
   //////////////////////////////////////////////////////////////////////////
 
-    public void verify(Boolean cond) { verify(cond, null); }
-    public void verify(Boolean cond, string msg)
+    public void verify(bool cond) { verify(cond, null); }
+    public void verify(bool cond, string msg)
     {
-      if (!cond.booleanValue()) fail(msg);
+      if (!cond) fail(msg);
       verifyCount++;
     }
 
-    public void verifyFalse(Boolean cond) { verifyFalse(cond, null); }
-    public void verifyFalse(Boolean cond, string msg)
+    public void verifyFalse(bool cond) { verifyFalse(cond, null); }
+    public void verifyFalse(bool cond, string msg)
     {
-      if (cond.booleanValue()) fail(msg);
+      if (cond) fail(msg);
       verifyCount++;
     }
 
     public void verifyEq(object expected, object actual) { verifyEq(expected, actual, null); }
     public void verifyEq(object expected, object actual, string msg)
     {
-      if (!OpUtil.compareEQ(expected, actual).booleanValue())
+      if (!OpUtil.compareEQ(expected, actual))
       {
         //if (msg == null) msg = s(expected) + " != " + s(actual);
         if (msg == null) msg = s(expected) +
@@ -98,7 +98,7 @@ namespace Fan.Sys
     public void verifyNotEq(object expected, object actual) { verifyNotEq(expected, actual, null); }
     public void verifyNotEq(object expected, object actual, string msg)
     {
-      if (!OpUtil.compareNE(expected, actual).booleanValue())
+      if (!OpUtil.compareNE(expected, actual))
       {
         if (msg == null) msg = s(expected) + " == " + s(actual);
         fail(msg);
@@ -109,7 +109,7 @@ namespace Fan.Sys
     public void verifySame(object expected, object actual) { verifySame(expected, actual, null); }
     public void verifySame(object expected, object actual, string msg)
     {
-      if (!OpUtil.compareSame(expected, actual).booleanValue())
+      if (expected != actual)
       {
         if (msg == null) msg = s(expected) + " !== " + s(actual);
         fail(msg);
@@ -120,7 +120,7 @@ namespace Fan.Sys
     public void verifyNotSame(object expected, object actual) { verifyNotSame(expected, actual, null); }
     public void verifyNotSame(object expected, object actual, string msg)
     {
-      if (OpUtil.compareSame(expected, actual).booleanValue())
+      if (expected == actual)
       {
         if (msg == null) msg = s(expected) + " === " + s(actual);
         fail(msg);

@@ -62,9 +62,9 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean isEmpty()
+    public bool isEmpty()
     {
-      return m_map.Count == 0 ? Boolean.True : Boolean.False;
+      return m_map.Count == 0;
     }
 
     public long size()
@@ -88,9 +88,9 @@ namespace Fan.Sys
       return def;
     }
 
-    public Boolean containsKey(object key)
+    public bool containsKey(object key)
     {
-      return (key == null) ? Boolean.False : Boolean.valueOf(m_map.ContainsKey(key));
+      return (key == null) ? false : m_map.ContainsKey(key);
     }
 
     public List keys()
@@ -108,7 +108,7 @@ namespace Fan.Sys
       modify();
       if (key == null)
         throw NullErr.make("key is null").val;
-      if (!isImmutable(key).booleanValue())
+      if (!isImmutable(key))
         throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
       m_map[key] = val;
       return this;
@@ -119,7 +119,7 @@ namespace Fan.Sys
       modify();
       if (key == null)
         throw NullErr.make("key is null").val;
-      if (!isImmutable(key).booleanValue())
+      if (!isImmutable(key))
         throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
       if (m_map[key] != null)
         throw ArgErr.make("Key already mapped: " + key).val;
@@ -174,8 +174,8 @@ namespace Fan.Sys
       m_map.Clear();
     }
 
-    public Boolean caseInsensitive() { return Boolean.valueOf(m_caseInsensitive); }
-    public void caseInsensitive(Boolean v)
+    public bool caseInsensitive() { return m_caseInsensitive; }
+    public void caseInsensitive(bool v)
     {
       modify();
 
@@ -185,8 +185,8 @@ namespace Fan.Sys
       if (m_map.Count != 0)
         throw UnsupportedErr.make("Map not empty").val;
 
-      if (this.m_caseInsensitive == v.booleanValue()) return;
-      this.m_caseInsensitive = v.booleanValue();
+      if (this.m_caseInsensitive == v) return;
+      this.m_caseInsensitive = v;
 
       if (m_caseInsensitive)
         m_map = new Hashtable(new CIEqualityComparer());
@@ -198,21 +198,21 @@ namespace Fan.Sys
     public void def(object v)
     {
       modify();
-      if (v != null && !isImmutable(v).booleanValue())
+      if (v != null && !isImmutable(v))
         throw NotImmutableErr.make("def must be immutable: " + type(v)).val;
       this.m_def = v;
     }
 
-    public override Boolean _equals(object that)
+    public override bool _equals(object that)
     {
       if (that is Map)
       {
         if (!m_type.Equals(type(that)))
-          return Boolean.False;
+          return false;
 
         Hashtable thatMap = ((Map)that).m_map;
         if (m_map.Count != thatMap.Count)
-          return Boolean.False;
+          return false;
 
         IDictionaryEnumerator en = m_map.GetEnumerator();
         while (en.MoveNext())
@@ -223,17 +223,17 @@ namespace Fan.Sys
 
           if (val == null)
           {
-            if (test != null) return Boolean.False;
+            if (test != null) return false;
           }
           else if (!val.Equals(test))
           {
-            return Boolean.False;
+            return false;
           }
         }
 
-        return Boolean.True;
+        return true;
       }
-      return Boolean.False;
+      return false;
     }
 
     public override long hash()
@@ -371,14 +371,14 @@ namespace Fan.Sys
   // Readonly
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean isRW()
+    public bool isRW()
     {
-      return m_isReadonly ? Boolean.False : Boolean.True;
+      return !m_isReadonly;
     }
 
-    public Boolean isRO()
+    public bool isRO()
     {
-      return m_isReadonly ? Boolean.True : Boolean.False;
+      return m_isReadonly;
     }
 
     public Map rw()
@@ -409,9 +409,9 @@ namespace Fan.Sys
       return m_readonlyMap;
     }
 
-    public override Boolean isImmutable()
+    public override bool isImmutable()
     {
-      return Boolean.valueOf(m_immutable);
+      return m_immutable;
     }
 
     public Map toImmutable()
@@ -433,7 +433,7 @@ namespace Fan.Sys
             val = ((List)val).toImmutable();
           else if (val is Map)
             val = ((Map)val).toImmutable();
-          else if (!isImmutable(val).booleanValue())
+          else if (!isImmutable(val))
             throw NotImmutableErr.make("Item [" + key + "] not immutable " + type(val)).val;
         }
 
@@ -486,7 +486,7 @@ namespace Fan.Sys
     {
       public new bool Equals(object x, object y)
       {
-        return FanStr.equalsIgnoreCase((string)x, (string)y).booleanValue();
+        return FanStr.equalsIgnoreCase((string)x, (string)y);
       }
 
       public int GetHashCode(object obj)

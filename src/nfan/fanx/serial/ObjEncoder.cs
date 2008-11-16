@@ -53,6 +53,8 @@ namespace Fanx.Serial
 
       if (obj.GetType().FullName[0] == 'S')
       {
+        if (obj is bool && (bool)obj)  { w("true");  return; }
+        if (obj is bool && !(bool)obj) { w("false"); return; }
         if (obj is double) { FanFloat.encode((double)obj, this); return; }
         if (obj is long)   { FanInt.encode((long)obj, this); return; }
         if (obj is string) { wStrLiteral(obj.ToString(), '"'); return; }
@@ -74,11 +76,11 @@ namespace Fanx.Serial
       }
 
       Type type = FanObj.type(obj);
-      if (type.facet("simple", null, Boolean.False) == Boolean.True)
+      if (type.facet("simple", null, false) == Boolean.True)
       {
         writeSimple(type, obj);
       }
-      else if (type.facet("serializable", null, Boolean.True) == Boolean.True)
+      else if (type.facet("serializable", null, true) == Boolean.True)
       {
         writeComplex(type, obj);
       }
@@ -118,8 +120,7 @@ namespace Fanx.Serial
         Field f = (Field)fields.get(i);
 
         // skip static, transient, and synthetic (once) fields
-        if (f.isStatic().booleanValue() || f.isSynthetic().booleanValue() ||
-            f.facet("transient", Boolean.False) == Boolean.True)
+        if (f.isStatic() || f.isSynthetic() || f.facet("transient", false) == Boolean.True)
           continue;
 
         // get the value
@@ -129,7 +130,7 @@ namespace Fanx.Serial
         if (defObj != null)
         {
           object defVal = f.get(defObj);
-          if (OpUtil.compareEQz(val, defVal)) continue;
+          if (OpUtil.compareEQ(val, defVal)) continue;
         }
 
         // if first then open braces
@@ -147,7 +148,7 @@ namespace Fanx.Serial
       }
 
       // if collection
-      if (type.facet("collection", null, Boolean.True) == Boolean.True)
+      if (type.facet("collection", null, true) == Boolean.True)
         first = writeCollectionItems(type, obj, first);
 
       // if we output fields, then close braces
@@ -262,7 +263,7 @@ namespace Fanx.Serial
       if (!inferred) wType(t);
 
       // handle empty map
-      if (map.isEmpty().booleanValue()) { w("[:]"); return; }
+      if (map.isEmpty()) { w("[:]"); return; }
 
       // items
       level++;

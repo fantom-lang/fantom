@@ -12,8 +12,8 @@ using Fanx.Serial;
 namespace Fan.Sys
 {
   /// <summary>
-  /// FanBoolean defines the methods for sys::Bool.  The actual
-  /// class used for representation is Fan.Sys.Boolean.
+  /// Fanbool defines the methods for sys::Bool.  The actual
+  /// class used for representation is System.Boolean.
   /// </summary>
   public sealed class FanBool
   {
@@ -22,12 +22,12 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean fromStr(string s) { return fromStr(s, Boolean.True); }
-    public static Boolean fromStr(string s, Boolean check)
+    public static Boolean fromStr(string s) { return fromStr(s, true); }
+    public static Boolean fromStr(string s, bool check)
     {
       if (s == "true") return Boolean.True;
       if (s == "false") return Boolean.False;
-      if (!check.booleanValue()) return null;
+      if (!check) return null;
       throw ParseErr.make("Bool", s).val;
     }
 
@@ -35,17 +35,20 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean equals(Boolean self, object obj)
+    public static bool equals(bool self, object obj)
     {
-      return self == obj ? Boolean.True : Boolean.False;
+      if (obj is Boolean)
+        return self == ((Boolean)obj).booleanValue();
+      else
+        return false;
     }
 
-    public static long hash(Boolean self)
+    public static long hash(bool self)
     {
-      return self.booleanValue() ? 1231 : 1237;
+      return self ? 1231 : 1237;
     }
 
-    public static Type type(Boolean self)
+    public static Type type(bool self)
     {
       return Sys.BoolType;
     }
@@ -54,38 +57,38 @@ namespace Fan.Sys
   // Operators
   //////////////////////////////////////////////////////////////////////////
 
-    public static Boolean not(Boolean self)
+    public static bool not(bool self)
     {
-      return self.booleanValue() ? Boolean.False : Boolean.True;
+      return !self;
     }
 
-    public static Boolean and(Boolean self, Boolean b)
+    public static bool and(bool self, bool b)
     {
-      return self.booleanValue() & b.booleanValue() ? Boolean.True : Boolean.False;
+      return self & b;
     }
 
-    public static Boolean or(Boolean self, Boolean b)
+    public static bool or(bool self, bool b)
     {
-      return self.booleanValue() | b.booleanValue() ? Boolean.True : Boolean.False;
+      return self | b;
     }
 
-    public static Boolean xor(Boolean self, Boolean b)
+    public static bool xor(bool self, bool b)
     {
-      return self.booleanValue() ^ b.booleanValue() ? Boolean.True : Boolean.False;
+      return self ^ b;
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public static string toStr(Boolean self)
+    public static string toStr(bool self)
     {
-      return self.booleanValue() ? "true" : "false";
+      return self ? "true" : "false";
     }
 
-    public static void encode(Boolean self, ObjEncoder @out)
+    public static void encode(bool self, ObjEncoder @out)
     {
-      @out.w(self.booleanValue() ? "true" : "false");
+      @out.w(self ? "true" : "false");
     }
 
   }

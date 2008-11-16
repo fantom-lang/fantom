@@ -367,7 +367,7 @@ namespace Fanx.Emit
 
       // set $Type field with type (if we this is a closure,
       // then the FuncType will be the type exposed)
-      if (!parent.isMixin().booleanValue())
+      if (!parent.isMixin())
       {
         Type t = parent;
         if (parent.@base() is FuncType) t = parent.@base();
@@ -406,7 +406,7 @@ namespace Fanx.Emit
     private void emitMixinRouters()
     {
       // short circuit if no direct mixins implemented
-      if (parent.mixins().isEmpty().booleanValue()) return;
+      if (parent.mixins().isEmpty()) return;
 
       // first we have to find all the mixins I inherit thru my
       // direct mixin inheritances (but not my class extension) - these
@@ -428,7 +428,7 @@ namespace Fanx.Emit
     {
       // if mixin I haven't seen add to accumulator
       string qname = t.qname();
-      if (t.isMixin().booleanValue() && acc[qname] == null)
+      if (t.isMixin() && acc[qname] == null)
         acc[qname] = t;
 
       // recurse
@@ -446,8 +446,8 @@ namespace Fanx.Emit
         string name = m.name();
 
         // only emit router for non-abstract instance methods
-        if (m.isStatic().booleanValue()) continue;
-        if (m.isAbstract().booleanValue())
+        if (m.isStatic()) continue;
+        if (m.isAbstract())
         {
           // however if abstract, check if a base class
           // has already implemented this method
@@ -559,10 +559,6 @@ namespace Fanx.Emit
     internal PERWAPI.Method CompareNotNull;
     internal PERWAPI.Method IsViaType;
     internal PERWAPI.Method AsViaType;
-    internal PERWAPI.Method BoolMake;
-    internal PERWAPI.Field BoolTrue;
-    internal PERWAPI.Field BoolFalse;
-    internal PERWAPI.Method BoolVal;
     internal PERWAPI.Method IntVal;
     internal PERWAPI.Method ErrMake;
     internal PERWAPI.Field ErrVal;

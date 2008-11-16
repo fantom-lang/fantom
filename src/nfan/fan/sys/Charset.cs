@@ -21,7 +21,6 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Charset fromStr(string name) { return fromStr(name, true); }
-    public static Charset fromStr(string name, Boolean check) { return fromStr(name, check.booleanValue()); }
     public static Charset fromStr(string name, bool check)
     {
       try
@@ -292,13 +291,13 @@ namespace Fan.Sys
 
     public override long hash() { return m_encoding.GetHashCode(); }
 
-    public override Boolean _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is Charset)
       {
-        return ((Charset)obj).m_encoding.Equals(this.m_encoding) ? Boolean.True : Boolean.False;
+        return ((Charset)obj).m_encoding.Equals(this.m_encoding);
       }
-      return Boolean.False;
+      return false;
     }
 
     public override string toStr() { return m_name; }

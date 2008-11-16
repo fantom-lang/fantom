@@ -203,9 +203,9 @@ namespace Fan.Sys
 
       public override Method method() { return m; }
 
-      public override Boolean isImmutable()
+      public override bool isImmutable()
       {
-        return Boolean.valueOf(m.isStatic().booleanValue() || m.m_parent.isConst().booleanValue());
+        return m.isStatic() || m.m_parent.isConst();
       }
 
       public override object call(List args)
@@ -536,7 +536,11 @@ namespace Fan.Sys
         for (int i=0; i<args.Length; i++)
         {
           System.Type pt = pars[i].ParameterType;
-          if (pt == doublePrimitive && args[i] is Fan.Sys.Double)
+          if (pt == boolPrimitive && args[i] is Fan.Sys.Boolean)
+          {
+            args[i] = (args[i] as Fan.Sys.Boolean).booleanValue();
+          }
+          else if (pt == doublePrimitive && args[i] is Fan.Sys.Double)
           {
             args[i] = (args[i] as Fan.Sys.Double).doubleValue();
           }
@@ -550,6 +554,7 @@ namespace Fan.Sys
         object ret = m.Invoke(instance, args);
 
         // box the return value
+        if (ret is bool) return Boolean.valueOf((bool)ret);
         if (ret is double) return Double.valueOf((double)ret);
         if (ret is long) return Long.valueOf((long)ret);
         return ret;
@@ -583,6 +588,7 @@ namespace Fan.Sys
       }
     }
 
+    private static System.Type boolPrimitive = System.Type.GetType("System.Boolean");
     private static System.Type doublePrimitive = System.Type.GetType("System.Double");
     private static System.Type longPrimitive = System.Type.GetType("System.Int64");
 

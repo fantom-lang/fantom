@@ -30,14 +30,14 @@ namespace Fan.Sys
       }
     }
 
-    public static Log find(string name) { return find(name, Boolean.True); }
-    public static Log find(string name, Boolean check)
+    public static Log find(string name) { return find(name, true); }
+    public static Log find(string name, bool check)
     {
       lock (lockObj)
       {
         Log log = (Log)byName[name];
         if (log != null) return log;
-        if (check.booleanValue()) throw Err.make("Unknown log: " + name).val;
+        if (check) throw Err.make("Unknown log: " + name).val;
         return null;
       }
     }
@@ -123,18 +123,18 @@ namespace Fan.Sys
       return this.m_level.m_ord <= level.m_ord;
     }
 
-    public Boolean isEnabled(LogLevel level)
+    public bool isEnabled(LogLevel level)
     {
-      return enabled(level) ? Boolean.True : Boolean.False;
+      return enabled(level);
     }
 
-    public Boolean isError() { return isEnabled(LogLevel.m_error); }
+    public bool isError() { return isEnabled(LogLevel.m_error); }
 
-    public Boolean isWarn()  { return isEnabled(LogLevel.m_warn); }
+    public bool isWarn()  { return isEnabled(LogLevel.m_warn); }
 
-    public Boolean isInfo()  { return isEnabled(LogLevel.m_info); }
+    public bool isInfo()  { return isEnabled(LogLevel.m_info); }
 
-    public Boolean isDebug() { return isEnabled(LogLevel.m_debug); }
+    public bool isDebug() { return isEnabled(LogLevel.m_debug); }
 
   //////////////////////////////////////////////////////////////////////////
   // Logging
@@ -197,7 +197,7 @@ namespace Fan.Sys
 
     public static void addHandler(Func func)
     {
-      if (!func.isImmutable().booleanValue())
+      if (!func.isImmutable())
         throw NotImmutableErr.make("handler must be immutable").val;
 
       lock (lockObj)
@@ -239,7 +239,7 @@ namespace Fan.Sys
       try
       {
         File f  = Sys.homeDir().plus("lib/log.props");
-        if (f.exists().booleanValue())
+        if (f.exists())
         {
           Map props = logProps = f.readProps();
           List keys = props.keys();
@@ -247,7 +247,7 @@ namespace Fan.Sys
           {
             string key = (string)keys.get(i);
             string val = (string)props.get(key);
-            if (LogLevel.fromStr(val, Boolean.False) == null)
+            if (LogLevel.fromStr(val, false) == null)
             {
               System.Console.WriteLine("ERROR: Invalid level lib/log.props#" + key + " = " + val);
               props.remove(key);

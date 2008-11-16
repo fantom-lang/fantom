@@ -8,7 +8,6 @@
 
 using System;
 using System.Reflection;
-using Boolean  = Fan.Sys.Boolean;
 using Duration = Fan.Sys.Duration;
 
 namespace Fanx.Test
@@ -197,24 +196,19 @@ namespace Fanx.Test
   // Array Utils
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean MakeBool(bool a)
+    public bool[] MakeBools(bool a)
     {
-      return Boolean.valueOf(a);
+      return new bool[] { a };
     }
 
-    public Boolean[] MakeBools(bool a)
+    public bool[] MakeBools(bool a, bool b)
     {
-      return new Boolean[] { MakeBool(a) };
+      return new bool[] { a, b };
     }
 
-    public Boolean[] MakeBools(bool a, bool b)
+    public bool[] MakeBools(bool a, bool b, bool c)
     {
-      return new Boolean[] { MakeBool(a), MakeBool(b) };
-    }
-
-    public Boolean[] MakeBools(bool a, bool b, bool c)
-    {
-      return new Boolean[] { MakeBool(a), MakeBool(b), MakeBool(c) };
+      return new bool[] { a, b, c };
     }
 
     public long[] MakeInts(long a)

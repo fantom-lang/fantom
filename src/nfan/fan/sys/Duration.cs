@@ -22,8 +22,8 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Duration fromStr(string s) { return fromStr(s, Boolean.True); }
-    public static Duration fromStr(string s, Boolean check)
+    public static Duration fromStr(string s) { return fromStr(s, true); }
+    public static Duration fromStr(string s, bool check)
     {
       //   ns:   nanoseconds  (x 1)
       //   ms:   milliseconds (x 1,000,000)
@@ -71,7 +71,7 @@ namespace Fan.Sys
       }
       catch (Exception)
       {
-        if (!check.booleanValue()) return null;
+        if (!check) return null;
         throw ParseErr.make("Duration",  s).val;
       }
     }
@@ -126,12 +126,12 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Boolean _equals(object obj)
+    public override sealed bool _equals(object obj)
     {
       if (obj is Duration)
-        return m_ticks == ((Duration)obj).m_ticks ? Boolean.True : Boolean.False;
+        return m_ticks == ((Duration)obj).m_ticks;
       else
-        return Boolean.False;
+        return false;
     }
 
     public override sealed long compare(object obj)

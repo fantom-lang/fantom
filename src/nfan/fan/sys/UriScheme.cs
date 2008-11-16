@@ -20,8 +20,8 @@ namespace Fan.Sys
   // Lookup
   //////////////////////////////////////////////////////////////////////////
 
-    public static UriScheme find(string scheme) { return find(scheme, Boolean.True); }
-    public static UriScheme find(string scheme, Boolean check)
+    public static UriScheme find(string scheme) { return find(scheme, true); }
+    public static UriScheme find(string scheme, bool check)
     {
       // check cache
       lock (m_cache)
@@ -33,7 +33,7 @@ namespace Fan.Sys
       try
       {
         // lookup scheme type
-        Type t = (Type)Type.findByFacet("uriScheme", scheme, Boolean.True).first();
+        Type t = (Type)Type.findByFacet("uriScheme", scheme, true).first();
         if (t == null) throw new System.Exception();
 
         // allocate instance
@@ -52,7 +52,7 @@ namespace Fan.Sys
       }
       catch (System.Exception)
       {
-        if (!check.booleanValue()) return null;
+        if (!check) return null;
         throw UnresolvedErr.make("Unknown scheme: " + scheme).val;
       }
     }

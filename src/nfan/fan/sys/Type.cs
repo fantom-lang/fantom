@@ -46,7 +46,6 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public static Type find(string sig) { return TypeParser.load(sig, true, null); }
-    public static Type find(string sig, Boolean check) { return TypeParser.load(sig, check.booleanValue(), null); }
     public static Type find(string sig, bool check) { return TypeParser.load(sig, check, null); }
     public static Type find(string podName, string typeName, bool check)
     {
@@ -76,15 +75,15 @@ namespace Fan.Sys
   // Flags
   //////////////////////////////////////////////////////////////////////////
 
-    public Boolean isAbstract()  { return Boolean.valueOf(flags() & FConst.Abstract); }
-    public Boolean isClass()     { return Boolean.valueOf((flags() & (FConst.Enum|FConst.Mixin)) == 0); }
-    public Boolean isConst()     { return Boolean.valueOf(flags() & FConst.Const); }
-    public Boolean isEnum()      { return Boolean.valueOf(flags() & FConst.Enum); }
-    public Boolean isFinal()     { return Boolean.valueOf(flags() & FConst.Final); }
-    public Boolean isInternal()  { return Boolean.valueOf(flags() & FConst.Internal); }
-    public Boolean isMixin()     { return Boolean.valueOf(flags() & FConst.Mixin); }
-    public Boolean isPublic()    { return Boolean.valueOf(flags() & FConst.Public); }
-    public Boolean isSynthetic() { return Boolean.valueOf(flags() & FConst.Synthetic); }
+    public bool isAbstract()  { return (flags() & FConst.Abstract)  != 0; }
+    public bool isClass()     { return (flags() & (FConst.Enum|FConst.Mixin)) == 0; }
+    public bool isConst()     { return (flags() & FConst.Const)     != 0; }
+    public bool isEnum()      { return (flags() & FConst.Enum)      != 0; }
+    public bool isFinal()     { return (flags() & FConst.Final)     != 0; }
+    public bool isInternal()  { return (flags() & FConst.Internal)  != 0; }
+    public bool isMixin()     { return (flags() & FConst.Mixin)     != 0; }
+    public bool isPublic()    { return (flags() & FConst.Public)    != 0; }
+    public bool isSynthetic() { return (flags() & FConst.Synthetic) != 0; }
     internal abstract int flags();
 
   //////////////////////////////////////////////////////////////////////////
@@ -108,7 +107,7 @@ namespace Fan.Sys
 
       // check that first is a class type
       t.m_base = (Type)supers.get(0);
-      if (t.m_base.isMixin().booleanValue()) throw ArgErr.make("Not a class: " + t.m_base).val;
+      if (t.m_base.isMixin()) throw ArgErr.make("Not a class: " + t.m_base).val;
       t.m_base.checkOkForDynamic();
 
       // TODO: we don't support mixins yet
@@ -120,7 +119,7 @@ namespace Fan.Sys
       for (int i=1; i<supers.sz(); ++i)
       {
         Type m = (Type)supers.get(i);
-        if (!m.isMixin().booleanValue()) throw ArgErr.make("Not mixin: " + m).val;
+        if (!m.isMixin()) throw ArgErr.make("Not mixin: " + m).val;
         m.checkOkForDynamic();
         mixins.add(m);
       }
@@ -134,26 +133,26 @@ namespace Fan.Sys
     {
       if ((flags() & (FConst.Abstract|FConst.Final|FConst.Const)) != 0)
         throw ArgErr.make("Cannot use abstract, final, or const in makeDynamic: " + this).val;
-      if (isDynamic().booleanValue())
+      if (isDynamic())
         throw ArgErr.make("Cannot use dynamic in makeDynamic: " + this).val;
     }
 
-    public virtual Boolean isDynamic() { return Boolean.False; }
+    public virtual bool isDynamic() { return false; }
 
   //////////////////////////////////////////////////////////////////////////
   // Value Types
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual Boolean isValue()
+    public virtual bool isValue()
     {
-      return Boolean.valueOf(this == Sys.BoolType || this == Sys.IntType || this == Sys.FloatType);
+      return this == Sys.BoolType || this == Sys.IntType || this == Sys.FloatType;
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Nullable
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual Boolean isNullable() { return Boolean.False; }
+    public virtual bool isNullable() { return false; }
 
     public virtual Type toNonNullable() { return this; }
 
@@ -216,9 +215,9 @@ namespace Fan.Sys
       return Sys.ObjType;
     }
 
-    public Boolean isGeneric()
+    public bool isGeneric()
     {
-      return isGenericType() ? Boolean.True : Boolean.False;
+      return isGenericType();
     }
 
     public virtual Map @params()
@@ -279,15 +278,12 @@ namespace Fan.Sys
     public abstract List slots();
 
     public Field field(string name) { return (Field)slot(name, true); }
-    public Field field(string name, Boolean check) { return (Field)slot(name, check.booleanValue()); }
     public Field field(string name, bool check) { return (Field)slot(name, check); }
 
     public Method method(string name) { return (Method)slot(name, true); }
-    public Method method(string name, Boolean check) { return (Method)slot(name, check.booleanValue()); }
     public Method method(string name, bool check) { return (Method)slot(name, check); }
 
     public Slot slot(string name) { return slot(name, true); }
-    public Slot slot(string name, Boolean check) { return slot(name, check.booleanValue()); }
     public abstract Slot slot(string name, bool check);
 
     public virtual void add(Slot slot)
@@ -316,7 +312,7 @@ namespace Fan.Sys
 
     public abstract List inheritance();
 
-    public Boolean fits(Type type) { return @is(type) ? Boolean.True : Boolean.False; }
+    public bool fits(Type type) { return @is(type); }
     public abstract bool @is(Type type);
 
     /// <summary>
@@ -349,12 +345,12 @@ namespace Fan.Sys
   // Facets
   //////////////////////////////////////////////////////////////////////////
 
-    public Map facets() { return facets(Boolean.False); }
-    public abstract Map facets(Boolean inherited);
+    public Map facets() { return facets(false); }
+    public abstract Map facets(bool inherited);
 
-    public object facet(string name) { return facet(name, null, Boolean.False); }
-    public object facet(string name, object def) { return facet(name, def, Boolean.False); }
-    public abstract object facet(string name, object def, Boolean inherited);
+    public object facet(string name) { return facet(name, null, false); }
+    public object facet(string name, object def) { return facet(name, def, false); }
+    public abstract object facet(string name, object def, bool inherited);
 
   //////////////////////////////////////////////////////////////////////////
   // Documentation
@@ -368,7 +364,7 @@ namespace Fan.Sys
 
     public override string toStr() { return signature(); }
 
-    public override Boolean isImmutable() { return Boolean.True; }
+    public override bool isImmutable() { return true; }
 
     public virtual Type toImmutable() { return this; }
 

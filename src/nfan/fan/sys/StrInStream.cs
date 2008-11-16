@@ -79,9 +79,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public override Boolean close()
+    public override bool close()
     {
-      return Boolean.True;
+      return true;
     }
 
   //////////////////////////////////////////////////////////////////////////

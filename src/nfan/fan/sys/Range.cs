@@ -28,9 +28,9 @@ namespace Fan.Sys
       return new Range(start, end, true);
     }
 
-    public static Range make(long start, long end, Boolean exclusive)
+    public static Range make(long start, long end, bool exclusive)
     {
-      return new Range(start, end, exclusive.booleanValue());
+      return new Range(start, end, exclusive);
     }
 
     private Range(long start, long end, bool exclusive)
@@ -54,22 +54,22 @@ namespace Fan.Sys
       return m_end;
     }
 
-    public Boolean inclusive()
+    public bool inclusive()
     {
-      return m_exclusive ? Boolean.False : Boolean.True;
+      return !m_exclusive;
     }
 
-    public Boolean exclusive()
+    public bool exclusive()
     {
-      return m_exclusive ? Boolean.True : Boolean.False;
+      return m_exclusive;
     }
 
-    public Boolean contains(long i)
+    public bool contains(long i)
     {
       if (m_exclusive)
-        return Boolean.valueOf(m_start <= i && i < m_end);
+        return m_start <= i && i < m_end;
       else
-        return Boolean.valueOf(m_start <= i && i <= m_end);
+        return m_start <= i && i <= m_end;
     }
 
     public void each(Func f)
@@ -103,16 +103,16 @@ namespace Fan.Sys
       return acc;
     }
 
-    public override Boolean _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is Range)
       {
         Range that = (Range)obj;
-        return Boolean.valueOf(this.m_start == that.m_start &&
-                         this.m_end == that.m_end &&
-                         this.m_exclusive == that.m_exclusive);
+        return this.m_start == that.m_start &&
+               this.m_end == that.m_end &&
+               this.m_exclusive == that.m_exclusive;
       }
-      return Boolean.False;
+      return false;
     }
 
     public override int GetHashCode()
