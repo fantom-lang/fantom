@@ -38,6 +38,8 @@ namespace Fan.Sys
   // C# Constructors
   //////////////////////////////////////////////////////////////////////////
 
+    public static Err.Val makeCoerce() { return make("Coerce to non-null", (Err)null).val; }
+
     public NullErr(Err.Val val) : base(val) {}
     public NullErr() : base(new NullErr.Val()) {}
     public NullErr(Exception actual) : base(new NullErr.Val(), actual) {}
