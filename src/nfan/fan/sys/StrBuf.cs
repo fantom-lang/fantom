@@ -32,9 +32,9 @@ namespace Fan.Sys
     /// <summary>
     /// Create with specified capacity.
     /// </summary>
-    public static StrBuf make(Int capacity)
+    public static StrBuf make(long capacity)
     {
-      return new StrBuf(new StringBuilder((int)capacity.val));
+      return new StrBuf(new StringBuilder((int)capacity));
     }
 
     public StrBuf(StringBuilder sb)
@@ -46,23 +46,23 @@ namespace Fan.Sys
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isEmpty()
+    public bool isEmpty()
     {
-      return sb.Length == 0 ? Bool.True : Bool.False;
+      return sb.Length == 0;
     }
 
-    public Int size()
+    public long size()
     {
-      return Int.pos(sb.Length);
+      return sb.Length;
     }
 
-    public Int get(Int index)
+    public long get(long index)
     {
       try
       {
-        int i = (int)index.val;
+        int i = (int)index;
         if (i < 0) i = sb.Length+i;
-        return Int.m_pos[sb[i]];
+        return sb[i];
       }
       catch (System.ArgumentOutOfRangeException e)
       {
@@ -70,13 +70,13 @@ namespace Fan.Sys
       }
     }
 
-    public StrBuf set(Int index, Int ch)
+    public StrBuf set(long index, long ch)
     {
       try
       {
-        int i = (int)index.val;
+        int i = (int)index;
         if (i < 0) i = sb.Length+i;
-        sb[i] = (char)ch.val;
+        sb[i] = (char)ch;
         return this;
       }
       catch (System.ArgumentOutOfRangeException e)
@@ -87,48 +87,48 @@ namespace Fan.Sys
 
     public StrBuf add(object x)
     {
-      string s = (x == null) ? "null" : toStr(x).val;
+      string s = (x == null) ? "null" : toStr(x);
       sb.Append(s);
       return this;
     }
 
-    public StrBuf addChar(Int ch)
+    public StrBuf addChar(long ch)
     {
-      sb.Append((char)ch.val);
+      sb.Append((char)ch);
       return this;
     }
 
-    public StrBuf join(object x) { return join(x, Str.m_ascii[' ']); }
-    public StrBuf join(object x, Str sep)
+    public StrBuf join(object x) { return join(x, FanStr.m_ascii[' ']); }
+    public StrBuf join(object x, string sep)
     {
-      String s = (x == null) ? "null" : toStr(x).val;
-      if (sb.Length > 0) sb.Append(sep.val);
+      string s = (x == null) ? "null" : toStr(x);
+      if (sb.Length > 0) sb.Append(sep);
       sb.Append(s);
       return this;
     }
 
-    public StrBuf insert(Int index, object x)
+    public StrBuf insert(long index, object x)
     {
-      string s = (x == null) ? "null" : toStr(x).val;
-      int i = (int)index.val;
+      string s = (x == null) ? "null" : toStr(x);
+      int i = (int)index;
       if (i < 0) i = sb.Length+i;
       if (i > sb.Length) throw IndexErr.make(index).val;
       sb.Insert(i, s);
       return this;
     }
 
-    public StrBuf remove(Int index)
+    public StrBuf remove(long index)
     {
-      int i = (int)index.val;
+      int i = (int)index;
       if (i < 0) i = sb.Length+i;
       if (i >= sb.Length) throw IndexErr.make(index).val;
       sb.Remove(i, 1);
       return this;
     }
 
-    public StrBuf grow(Int size)
+    public StrBuf grow(long size)
     {
-      sb.EnsureCapacity((int)size.val);
+      sb.EnsureCapacity((int)size);
       return this;
     }
 
@@ -138,9 +138,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
-      return Str.make(sb.ToString());
+      return sb.ToString();
     }
 
     public override Type type()

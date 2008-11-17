@@ -31,14 +31,14 @@ namespace Fan.Sys
 
     private Weekday(int ordinal, string name)
     {
-      Enum.make_(this, Int.m_pos[ordinal], Str.make(name).intern());
+      Enum.make_(this, ordinal, System.String.Intern(name));
       this.ord = ordinal;
-      this.localeAbbrKey  = Str.make(name + "Abbr");
-      this.localeFullKey  = Str.make(name + "Full");
+      this.localeAbbrKey  = name + "Abbr";
+      this.localeFullKey  = name + "Full";
     }
 
-    public static Weekday fromStr(Str name) { return fromStr(name, Bool.True); }
-    public static Weekday fromStr(Str name, Bool check)
+    public static Weekday fromStr(string name) { return fromStr(name, true); }
+    public static Weekday fromStr(string name, bool check)
     {
       return (Weekday)doFromStr(Sys.WeekdayType, name, check);
     }
@@ -49,13 +49,13 @@ namespace Fan.Sys
 
     public Weekday decrement() { return ord == 0 ? array[array.Length-1] : array[ord-1]; }
 
-    public Str toLocale() { return toLocale(null); }
-    public Str toLocale(Str pattern)
+    public string toLocale() { return toLocale(null); }
+    public string toLocale(string pattern)
     {
       if (pattern == null) return localeAbbr();
-      if (pattern.isEveryChar('W'))
+      if (FanStr.isEveryChar(pattern, 'W'))
       {
-        switch (pattern.val.Length)
+        switch (pattern.Length)
         {
           case 3: return localeAbbr();
           case 4: return localeFull();
@@ -64,27 +64,27 @@ namespace Fan.Sys
       throw ArgErr.make("Invalid pattern: " + pattern).val;
     }
 
-    public Str localeAbbr() { return abbr(Locale.current()); }
-    public Str abbr(Locale locale)
+    public string localeAbbr() { return abbr(Locale.current()); }
+    public string abbr(Locale locale)
     {
-      return locale.get(Str.sysStr, localeAbbrKey);
+      return locale.get(FanStr.sysStr, localeAbbrKey);
     }
 
-    public Str localeFull() { return full(Locale.current()); }
-    public Str full(Locale locale)
+    public string localeFull() { return full(Locale.current()); }
+    public string full(Locale locale)
     {
-      return locale.get(Str.sysStr, localeFullKey);
+      return locale.get(FanStr.sysStr, localeFullKey);
     }
 
     public static Weekday localeStartOfWeek()
     {
-      return fromStr(Locale.current().get(Str.sysStr, localeStartKey));
+      return fromStr(Locale.current().get(FanStr.sysStr, localeStartKey));
     }
 
-    static readonly Str localeStartKey = Str.make("weekdayStart");
+    static readonly string localeStartKey = "weekdayStart";
 
     internal readonly int ord;
-    readonly Str localeAbbrKey;
-    readonly Str localeFullKey;
+    readonly string localeAbbrKey;
+    readonly string localeFullKey;
   }
 }

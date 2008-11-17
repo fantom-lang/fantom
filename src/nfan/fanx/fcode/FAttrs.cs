@@ -74,7 +74,7 @@ namespace Fanx.Fcode
       {
         string name = input.name();
         string val  = input.utf();
-        map[Str.make(name)] = val;
+        map[name] = val;
       }
       m_facets = map;
     }

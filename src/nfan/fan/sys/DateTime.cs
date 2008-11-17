@@ -67,12 +67,12 @@ namespace Fan.Sys
   // Constructor - Values
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime make(Int year, Month month, Int day, Int hour, Int min) { return make(year, month, day, hour, min, Int.Zero, Int.Zero, TimeZone.m_current); }
-    public static DateTime make(Int year, Month month, Int day, Int hour, Int min, Int sec) { return make(year, month, day, hour, min, sec, Int.Zero, TimeZone.m_current); }
-    public static DateTime make(Int year, Month month, Int day, Int hour, Int min, Int sec, Int ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.m_current); }
-    public static DateTime make(Int year, Month month, Int day, Int hour, Int min, Int sec, Int ns, TimeZone tz)
+    public static DateTime make(long year, Month month, long day, long hour, long min) { return make(year, month, day, hour, min, 0, 0, TimeZone.m_current); }
+    public static DateTime make(long year, Month month, long day, long hour, long min, long sec) { return make(year, month, day, hour, min, sec, 0, TimeZone.m_current); }
+    public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns) { return make(year, month, day, hour, min, sec, ns, TimeZone.m_current); }
+    public static DateTime make(long year, Month month, long day, long hour, long min, long sec, long ns, TimeZone tz)
     {
-      return new DateTime((int)year.val, month.ord, (int)day.val, (int)hour.val, (int)min.val, (int)sec.val, ns.val, System.Int32.MaxValue, tz);
+      return new DateTime((int)year, month.ord, (int)day, (int)hour, (int)min, (int)sec, ns, System.Int32.MaxValue, tz);
     }
 
     private DateTime(int year, int month, int day,
@@ -136,8 +136,7 @@ namespace Fan.Sys
   // Constructor - Ticks
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime makeTicks(Int ticks) { return makeTicks(ticks.val, TimeZone.m_current); }
-    public static DateTime makeTicks(Int ticks, TimeZone tz) { return makeTicks(ticks.val, tz); }
+    public static DateTime makeTicks(long ticks) { return makeTicks(ticks, TimeZone.m_current); }
     public static DateTime makeTicks(long ticks, TimeZone tz)
     {
       return new DateTime(ticks, tz);
@@ -243,8 +242,7 @@ namespace Fan.Sys
 // Constructor - FromStr
 //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime fromStr(Str s) { return fromStr(s.val, true); }
-    public static DateTime fromStr(Str s, Bool check) { return fromStr(s.val, check.val); }
+    public static DateTime fromStr(string s) { return fromStr(s, true); }
     public static DateTime fromStr(string s, bool check)
     {
       try
@@ -316,19 +314,19 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is DateTime)
       {
-        return m_ticks == (obj as DateTime).m_ticks ? Bool.True : Bool.False;
+        return m_ticks == (obj as DateTime).m_ticks;
       }
-      return Bool.False;
+      return false;
     }
 
-    public override Int compare(object obj)
+    public override long compare(object obj)
     {
       long that = (obj as DateTime).m_ticks;
-      if (m_ticks < that) return Int.LT; return m_ticks == that ? Int.EQ : Int.GT;
+      if (m_ticks < that) return -1; return m_ticks == that ? 0 : +1;
     }
 
     public override int GetHashCode()
@@ -336,9 +334,9 @@ namespace Fan.Sys
       return (int)(m_ticks ^ (m_ticks >> 32));
     }
 
-    public override Int hash()
+    public override long hash()
     {
-      return Int.make(m_ticks);
+      return m_ticks;
     }
 
     public override Type type()
@@ -350,31 +348,33 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    public Int ticks() { return Int.make(m_ticks); }
+    // TODO - cleanup dups
+
+    public long ticks() { return m_ticks; }
     public long getTicks() { return m_ticks; }
 
-    public Int year() { return Int.make((m_fields & 0xff) + 1900); }
+    public long year() { return (m_fields & 0xff) + 1900; }
     public int getYear() { return (m_fields & 0xff) + 1900; }
 
     public Month month() { return Month.array[(m_fields >> 8) & 0xf]; }
 
-    public Int day() { return Int.m_pos[(m_fields >> 12) & 0x1f]; }
+    public long day() { return (m_fields >> 12) & 0x1f; }
     public int getDay() { return (m_fields >> 12) & 0x1f; }
 
-    public Int hour() { return Int.m_pos[(m_fields >> 17) & 0x1f]; }
+    public long hour() { return (m_fields >> 17) & 0x1f; }
     public int getHour() { return (m_fields >> 17) & 0x1f; }
 
-    public Int min() { return Int.m_pos[(m_fields >> 22) & 0x3f]; }
+    public long min() { return (m_fields >> 22) & 0x3f; }
     public int getMin() { return (m_fields >> 22) & 0x3f; }
 
-    public Int sec() { return Int.m_pos[getSec()]; }
+    public long sec() { return getSec(); }
     public int getSec()
     {
       long rem = m_ticks >= 0 ? m_ticks : m_ticks - yearTicks[0];
       return (int)((rem % nsPerMin) / nsPerSec);
     }
 
-    public Int nanoSec() { return Int.make(getNanoSec()); }
+    public long nanoSec() { return getNanoSec(); }
     public int getNanoSec()
     {
       long rem = m_ticks >= 0 ? m_ticks : m_ticks - yearTicks[0];
@@ -385,19 +385,18 @@ namespace Fan.Sys
 
     public TimeZone timeZone() { return m_timeZone; }
 
-    public Bool dst() { return ((m_fields >> 31) & 0x1) != 0 ? Bool.True : Bool.False; }
+    public bool dst() { return ((m_fields >> 31) & 0x1) != 0; }
     public bool getDST()  { return ((m_fields >> 31) & 0x1) != 0; }
 
-    public Str timeZoneAbbr() { return getDST() ? m_timeZone.dstAbbr(year()) : m_timeZone.stdAbbr(year()); }
+    public string timeZoneAbbr() { return getDST() ? m_timeZone.dstAbbr(year()) : m_timeZone.stdAbbr(year()); }
 
-    public Int dayOfYear() { return Int.pos(dayOfYear(getYear(), month().ord, getDay())+1); }
+    public long dayOfYear() { return dayOfYear(getYear(), month().ord, getDay())+1; }
 
   //////////////////////////////////////////////////////////////////////////
   // Locale
   //////////////////////////////////////////////////////////////////////////
 
-    public Str toLocale() { return Str.make(toLocale((string)null)); }
-    public Str toLocale(Str p) { return Str.make(toLocale(p != null ? p.val : null)); }
+    public string toLocale() { return toLocale((string)null); }
     public string toLocale(string pattern)
     {
       // locale specific default
@@ -405,7 +404,7 @@ namespace Fan.Sys
       if (pattern == null)
       {
         if (locale == null) locale = Locale.current();
-        pattern = locale.get(Str.sysStr, localeKey).val;
+        pattern = locale.get(FanStr.sysStr, localeKey);
       }
 
       // process pattern
@@ -454,11 +453,11 @@ namespace Fan.Sys
             {
               case 4:
                 if (locale == null) locale = Locale.current();
-                s.Append(mon.full(locale).val);
+                s.Append(mon.full(locale));
                 break;
               case 3:
                 if (locale == null) locale = Locale.current();
-                s.Append(mon.abbr(locale).val);
+                s.Append(mon.abbr(locale));
                 break;
               case 2:  if (mon.ord+1 < 10) s.Append('0'); s.Append(mon.ord+1); break;
               case 1:  s.Append(mon.ord+1); break;
@@ -482,11 +481,11 @@ namespace Fan.Sys
             {
               case 4:
                 if (locale == null) locale = Locale.current();
-                s.Append(wd.full(locale).val);
+                s.Append(wd.full(locale));
                 break;
               case 3:
                 if (locale == null) locale = Locale.current();
-                s.Append(wd.abbr(locale).val);
+                s.Append(wd.abbr(locale));
                 break;
               default: invalidNum = true; break;
             }
@@ -580,7 +579,7 @@ namespace Fan.Sys
                 s.Append(dst ? rule.dstAbbr : rule.stdAbbr);
                 break;
               case 4:
-                s.Append(m_timeZone.name().val);
+                s.Append(m_timeZone.name());
                 break;
               default:
                 invalidNum = true;
@@ -589,7 +588,7 @@ namespace Fan.Sys
             break;
 
           default:
-            if (Int.isAlpha(c))
+            if (FanInt.isAlpha(c))
               throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
 
             // don't display symbol between ss.FFF if fractions is zero
@@ -647,21 +646,21 @@ namespace Fan.Sys
       return makeTicks(m_ticks - (m_ticks % accuracy.m_ticks), m_timeZone);
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
-      return Str.make(toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz"));
+      return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
     }
 
-    public static Bool isLeapYear(Int year) { return Bool.make(isLeapYear((int)year.val)); }
+    public static bool isLeapYear(long year) { return isLeapYear((int)year); }
     public static bool isLeapYear(int year)
     {
       if ((year & 3) != 0) return false;
       return (year % 100 != 0) || (year % 400 == 0);
     }
 
-    public static Int weekdayInMonth(Int year, Month mon, Weekday weekday, Int pos)
+    public static long weekdayInMonth(long year, Month mon, Weekday weekday, long pos)
     {
-      return Int.pos(weekdayInMonth((int)year.val, mon.ord, weekday.ord, (int)pos.val));
+      return weekdayInMonth((int)year, mon.ord, weekday.ord, (int)pos);
     }
     public static int weekdayInMonth(int year, int mon, int weekday, int pos)
     {
@@ -754,14 +753,14 @@ namespace Fan.Sys
   // HTTP
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime fromHttpStr(Str s) { return fromHttpStr(s, Bool.True); }
-    public static DateTime fromHttpStr(Str s, Bool check)
+    public static DateTime fromHttpStr(string s) { return fromHttpStr(s, true); }
+    public static DateTime fromHttpStr(string s, bool check)
     {
       for (int i=0; i<httpFormats.Length; ++i)
       {
         try
         {
-          System.DateTime date = System.DateTime.ParseExact(s.val, httpFormats,
+          System.DateTime date = System.DateTime.ParseExact(s, httpFormats,
             CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite |
             DateTimeStyles.AdjustToUniversal);
           return net(date.Ticks);
@@ -771,13 +770,13 @@ namespace Fan.Sys
         }
       }
 
-      if (!check.val) return null;
+      if (!check) return null;
       throw ParseErr.make("Invalid HTTP DateTime: '" + s + "'").val;
     }
 
-    public Str toHttpStr()
+    public string toHttpStr()
     {
-      return Str.make(new System.DateTime(net()).ToString(httpFormats[0]));
+      return new System.DateTime(net()).ToString(httpFormats[0]);
     }
 
     static readonly string[] httpFormats = new string[]
@@ -865,7 +864,7 @@ namespace Fan.Sys
     static volatile DateTime cached = new DateTime(0, TimeZone.m_current);
     static volatile DateTime cachedUtc = new DateTime(0, TimeZone.m_utc);
     static readonly DateTime m_boot;
-    static readonly Str localeKey = Str.make("dateTime");
+    static readonly string localeKey = "dateTime";
 
     // Fields Bitmask
     //   Field       Width    Mask   Start Bit
