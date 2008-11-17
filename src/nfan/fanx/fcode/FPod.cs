@@ -44,7 +44,7 @@ namespace Fanx.Fcode
     public FType type(string nameToFind)
     {
       for (int i=0; i<m_types.Length; i++)
-        if (name(typeRef(m_types[i].m_self).typeName) == nameToFind)
+        if (typeRef(m_types[i].m_self).typeName == nameToFind)
           return m_types[i];
       throw UnknownTypeErr.make(nameToFind).val;
     }
@@ -81,17 +81,18 @@ namespace Fanx.Fcode
       if (x == null || opcode == FConst.CallNonVirtual) // don't use cache on nonvirt (see below)
       {
         int[] m = methodRef(index).val;
-        string parent = nname(m[0]);
-        string mName  = name(m[1]);
-        bool onObj    = parent == "System.Object";
+        string type  = nname(m[0]);
+        string mName = name(m[1]);
+
+        // if the type signature is java/lang then we route
+        // to static methods on FanObj, FanFloat, etc
+        string impl = FanUtil.toNetImplTypeName(type);
         bool explicitSelf = false;
         bool isStatic = false;
-
-        // methods on System.Object/sys::Obj are static methods on FanObj
-        if (onObj)
+        if (type != impl)
         {
-          parent = "Fan.Sys.FanObj";
-          isStatic = explicitSelf = opcode == FConst.CallVirtual;
+          explicitSelf = opcode == FConst.CallVirtual;
+          isStatic = explicitSelf;
         }
         else
         {
@@ -101,14 +102,14 @@ namespace Fanx.Fcode
 
         // equals => _equals (since we can't override
         // Object.equals by return type)
-        if (!explicitSelf && mName == "equals")
-          mName = "_equals";
+        if (!explicitSelf)
+          mName = FanUtil.toNetMethodName(mName);
 
         string[] pars;
         if (explicitSelf)
         {
           pars = new string[m.Length-2];
-          pars[0] = "System.Object";
+          pars[0] = type;
           for (int i=1; i<pars.Length; i++) pars[i] = nname(m[i+2]);
         }
         else
@@ -118,13 +119,13 @@ namespace Fanx.Fcode
         }
 
         string ret = nname(m[2]);
-        if (opcode == FConst.CallNew) ret = parent; // factory
+        if (opcode == FConst.CallNew) ret = type; // factory
 
         // Handle static mixin calls
-        if (opcode == FConst.CallMixinStatic) parent += "_";
+        if (opcode == FConst.CallMixinStatic) impl += "_";
 
         x = new NMethod();
-        x.parentType = parent;
+        x.parentType = impl;
         x.methodName = mName;
         x.returnType = ret;
         x.paramTypes = pars;
@@ -133,7 +134,7 @@ namespace Fanx.Fcode
         // we don't cache nonvirtuals on Obj b/c of conflicting signatures:
         // - CallVirtual: Obj.toStr => static FanObj.toStr(Object)
         // - CallNonVirtual: Obj.toStr => FanObj.toStr()
-        if (!onObj || opcode != FConst.CallNonVirtual)
+        if (type == impl || opcode != FConst.CallNonVirtual)
           m_ncalls[index] = x;
       }
       return x;
@@ -157,10 +158,10 @@ namespace Fanx.Fcode
       {
         int[] v = fieldRef(index).val;
         nfield = new NField();
-        nfield.parentType = nname(v[0]);
+        nfield.parentType = FanUtil.toNetImplTypeName(nname(v[0]));
         nfield.fieldName  = "m_" + name(v[1]);
         nfield.fieldType  = nname(v[2]);
-        // TODO - put in map???
+        m_nfields[index] = nfield;
       }
       return nfield;
     }
@@ -170,20 +171,7 @@ namespace Fanx.Fcode
     /// <summary>
     public string nname(int index)
     {
-      if (m_nnames == null) m_nnames = new string[m_typeRefs.size()];
-      string n = m_nnames[index];
-      if (n == null)
-      {
-        FTypeRef refer = typeRef(index);
-        string podName = name(refer.podName);
-        string typeName = name(refer.typeName);
-        if (podName == "sys" && typeName == "Obj")
-          n = "System.Object";
-        else
-          n = NameUtil.toNetTypeName(podName, typeName);
-        m_nnames[index] = n;
-      }
-      return n;
+      return typeRef(index).nname();
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -269,7 +257,7 @@ namespace Fanx.Fcode
       m_podVersion = input.utf();
       m_depends = new Depend[input.u1()];
       for (int i=0; i<m_depends.Length; ++i)
-        m_depends[i] = Depend.fromStr(Str.make(input.utf()));
+        m_depends[i] = Depend.fromStr(input.utf());
 
       m_attrs = FAttrs.read(input);
 
@@ -295,7 +283,7 @@ namespace Fanx.Fcode
       string typeName = name.Substring(0, name.Length-".fcode".Length);
       for (int i=0; i<m_types.Length; ++i)
       {
-        string n = this.name(typeRef(m_types[i].m_self).typeName);
+        string n = typeRef(m_types[i].m_self).typeName;
         if (n == typeName) { m_types[i].read(input); return; }
       }
 
@@ -318,7 +306,6 @@ namespace Fanx.Fcode
     public FTable m_fieldRefs;    // fields refs:  [parent,name,type]
     public FTable m_methodRefs;   // methods refs: [parent,name,ret,params*]
     public FLiterals m_literals;  // literal constants (on read fully or lazy load)
-    private string[] m_nnames;    // cached fan typeRef   -> .net name
     private NMethod[] m_ncalls;   // cached fan methodRef -> .net method signatures
     private NField[] m_nfields;   // cached fan fieldRef  -> .net field signatures
   }

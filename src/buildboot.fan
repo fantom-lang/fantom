@@ -29,11 +29,10 @@ class Build : BuildGroup
     [
       `sys/build.fan`,
       `jfan/build.fan`,
-      //`nfan/build.fan`,
+      `nfan/build.fan`,
       `compiler/build.fan`,
       `build/build.fan`,
     ]
   }
 
 }
-
