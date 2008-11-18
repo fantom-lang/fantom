@@ -57,19 +57,19 @@ namespace Fan.Sys
     /// Write a byte using a Java primitive int.  Most
     /// writes route to this method for efficient mapping to
     /// a java.io.OutputStream.  If we aren't overriding this
-    /// method, then route back to write(Int) for the
+    /// method, then route back to write(long) for the
     /// subclass to handle.
     /// <summary>
     public virtual OutStream w(int b)
     {
-      return write(Int.make(b));
+      return write(b);
     }
 
   //////////////////////////////////////////////////////////////////////////
   // OutStream
   //////////////////////////////////////////////////////////////////////////
 
-    public virtual OutStream write(Int x)
+    public virtual OutStream write(long x)
     {
       try
       {
@@ -86,7 +86,7 @@ namespace Fan.Sys
     }
 
     public virtual OutStream writeBuf(Buf buf) { return writeBuf(buf, buf.remaining()); }
-    public virtual OutStream writeBuf(Buf buf, Int n)
+    public virtual OutStream writeBuf(Buf buf, long n)
     {
       try
       {
@@ -102,14 +102,14 @@ namespace Fan.Sys
       }
     }
 
-    public virtual OutStream writeI2(Int x)
+    public virtual OutStream writeI2(long x)
     {
-      int v = (int)x.val;
+      int v = (int)x;
       return this.w((v >> 8) & 0xFF)
                  .w((v >> 0) & 0xFF);
     }
 
-    public virtual OutStream writeI4(Int x) { return writeI4((int)x.val); }
+    public virtual OutStream writeI4(long x) { return writeI4((int)x); }
     public virtual OutStream writeI4(int v)
     {
       return this.w((v >> 24) & 0xFF)
@@ -118,7 +118,6 @@ namespace Fan.Sys
                  .w((v >> 0)  & 0xFF);
     }
 
-    public virtual OutStream writeI8(Int x) { return writeI8(x.val); }
     public virtual OutStream writeI8(long v)
     {
       return this.w((int)(v >> 56) & 0xFF)
@@ -131,27 +130,27 @@ namespace Fan.Sys
                  .w((int)(v >> 0)  & 0xFF);
     }
 
-    public virtual OutStream writeF4(Float x)
+    public virtual OutStream writeF4(double x)
     {
-      return writeI4(System.BitConverter.ToInt32(System.BitConverter.GetBytes((float)x.val), 0));
+      return writeI4(System.BitConverter.ToInt32(System.BitConverter.GetBytes((float)x), 0));
     }
 
-    public virtual OutStream writeF8(Float x)
+    public virtual OutStream writeF8(double x)
     {
-      return writeI8(System.BitConverter.DoubleToInt64Bits(x.val));
+      return writeI8(System.BitConverter.DoubleToInt64Bits(x));
     }
 
-    public virtual OutStream writeDecimal(Decimal x)
+    public virtual OutStream writeDecimal(BigDecimal x)
     {
-      return writeUtfString(x.val.ToString());
+      return writeUtfString(x.ToString());
     }
 
-    public virtual OutStream writeBool(Bool x)
+    public virtual OutStream writeBool(bool x)
     {
-      return w(x.val ? 1 : 0);
+      return w(x ? 1 : 0);
     }
 
-    public virtual OutStream writeUtf(Str x) { return writeUtfString(x.val); }
+    public virtual OutStream writeUtf(string x) { return writeUtfString(x); }
     private OutStream writeUtfString(string s)
     {
       int slen = s.Length;
@@ -210,9 +209,9 @@ namespace Fan.Sys
       m_charset = charset;
     }
 
-    public virtual OutStream writeChar(Int c)
+    public virtual OutStream writeChar(long c)
     {
-      m_charsetEncoder.encode((char)c.val, this);
+      m_charsetEncoder.encode((char)c, this);
       return this;
     }
 
@@ -222,9 +221,9 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual OutStream writeChars(Str s) { return writeChars(s.val, 0, s.val.Length); }
-    public virtual OutStream writeChars(Str s, Int off) { return writeChars(s.val, (int)off.val, s.val.Length-(int)off.val); }
-    public virtual OutStream writeChars(Str s, Int off, Int len) { return writeChars(s.val, (int)off.val, (int)len.val); }
+    public virtual OutStream writeChars(string s) { return writeChars(s, 0, s.Length); }
+    public virtual OutStream writeChars(string s, long off) { return writeChars(s, (int)off, s.Length-(int)off); }
+    public virtual OutStream writeChars(string s, long off, long len) { return writeChars(s, (int)off, (int)len); }
     public virtual OutStream writeChars(string s, int off, int len)
     {
       int end = off+len;
@@ -235,16 +234,16 @@ namespace Fan.Sys
 
     public virtual OutStream print(object obj)
     {
-      Str s = obj == null ? Str.nullStr : toStr(obj);
-      return writeChars(s, Int.Zero, s.size());
+      string s = obj == null ? FanStr.nullStr : toStr(obj);
+      return writeChars(s, 0, s.Length);
     }
 
-    public virtual OutStream printLine() { return printLine(Str.Empty); }
+    public virtual OutStream printLine() { return printLine(string.Empty); }
     public virtual OutStream printLine(object obj)
     {
-      Str s = obj == null ? Str.nullStr : toStr(obj);
-      writeChars(s, Int.Zero, s.size());
-      return writeChar(Int.m_pos['\n']);
+      string s = obj == null ? FanStr.nullStr : toStr(obj);
+      writeChars(s, 0, s.Length);
+      return writeChar('\n');
     }
 
     public virtual OutStream writeObj(object obj) { return writeObj(obj, null); }
@@ -254,8 +253,8 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual OutStream writeProps(Map props) { return writeProps(props, Bool.True); }
-    public virtual OutStream writeProps(Map props, Bool cls)
+    public virtual OutStream writeProps(Map props) { return writeProps(props, true); }
+    public virtual OutStream writeProps(Map props, bool cls)
     {
       Charset origCharset = charset();
       charset(Charset.utf8());
@@ -263,22 +262,22 @@ namespace Fan.Sys
       {
         List keys = props.keys().sort();
         int size = keys.sz();
-        Int eq = Int.m_pos['='];
-        Int nl = Int.m_pos['\n'];
+        long eq = '=';
+        long nl = '\n';
         for (int i=0; i<size; ++i)
         {
-          Str key = (Str)keys.get(i);
-          Str val = (Str)props.get(key);
-          writePropStr(key.val);
+          string key = (string)keys.get(i);
+          string val = (string)props.get(key);
+          writePropStr(key);
           writeChar(eq);
-          writePropStr(val.val);
+          writePropStr(val);
           writeChar(nl);
         }
         return this;
       }
       finally
       {
-        try { if (cls.val) close(); } catch (System.Exception e) { Err.dumpStack(e); }
+        try { if (cls) close(); } catch (System.Exception e) { Err.dumpStack(e); }
         charset(origCharset);
       }
     }
@@ -294,28 +293,164 @@ namespace Fan.Sys
         // escape special chars
         switch (ch)
         {
-          case '\n': writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['n']); continue;
-          case '\r': writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['r']); continue;
-          case '\t': writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['t']); continue;
-          case '\\': writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['\\']); continue;
+          case '\n': writeChar('\\').writeChar('n'); continue;
+          case '\r': writeChar('\\').writeChar('r'); continue;
+          case '\t': writeChar('\\').writeChar('t'); continue;
+          case '\\': writeChar('\\').writeChar('\\'); continue;
         }
 
         // escape control chars, comments, and =
         if ((ch < ' ') || (ch == '/' && (peek == '/' || peek == '*')) || (ch == '='))
         {
-          Int nib1 = Int.m_pos[(ch>>4)&0xf].toDigit(Int.m_pos[16]);
-          Int nib2 = Int.m_pos[(ch>>0)&0xf].toDigit(Int.m_pos[16]);
+          long nib1 = FanInt.toDigit((ch>>4)&0xf, 16).longValue();
+          long nib2 = FanInt.toDigit((ch>>0)&0xf, 16).longValue();
 
-          this.writeChar(Int.m_pos['\\']).writeChar(Int.m_pos['u'])
-              .writeChar(Int.m_pos['0']).writeChar(Int.m_pos['0'])
+          this.writeChar('\\').writeChar('u')
+              .writeChar('0').writeChar('0')
               .writeChar(nib1).writeChar(nib2);
           continue;
         }
 
         // normal character
-        writeChar(Int.pos(ch));
+        writeChar(ch);
       }
     }
+
+    public OutStream writeXml(string s) { return writeXml(s, 0); }
+    public OutStream writeXml(string s, long mask)
+    {
+      bool escNewlines  = (mask & m_xmlEscNewlines) != 0;
+      bool escQuotes    = (mask & m_xmlEscQuotes) != 0;
+      bool escUnicode   = (mask & m_xmlEscUnicode) != 0;
+      Charset.Encoder enc  = m_charsetEncoder;
+      int len = s.Length;
+
+      for (int i=0; i<len; ++i)
+      {
+        int ch = s[i];
+        switch (ch)
+        {
+          // table switch on control chars
+          case  0: case  1: case  2: case  3: case  4: case  5: case  6:
+          case  7: case  8: /*case  9: case 10:*/ case 11: case 12: /*case 13:*/
+          case 14: case 15: case 16: case 17: case 18: case 19: case 20:
+          case 21: case 22: case 23: case 24: case 25: case 26: case 27:
+          case 28: case 29: case 30: case 31:
+            writeXmlEsc(ch);
+            break;
+
+          // newlines
+          case '\n': case '\r':
+            if (!escNewlines)
+              enc.encode((char)ch, this);
+            else
+              writeXmlEsc(ch);
+            break;
+
+          // space
+          case ' ':
+            enc.encode(' ', this);
+            break;
+
+          // table switch on common ASCII chars
+          case '!': case '#': case '$': case '%': case '(': case ')': case '*':
+          case '+': case ',': case '-': case '.': case '/': case '0': case '1':
+          case '2': case '3': case '4': case '5': case '6': case '7': case '8':
+          case '9': case ':': case ';': case '=': case '?': case '@': case 'A':
+          case 'B': case 'C': case 'D': case 'E': case 'F': case 'G': case 'H':
+          case 'I': case 'J': case 'K': case 'L': case 'M': case 'N': case 'O':
+          case 'P': case 'Q': case 'R': case 'S': case 'T': case 'U': case 'V':
+          case 'W': case 'X': case 'Y': case 'Z': case '[': case '\\': case ']':
+          case '^': case '_': case '`': case 'a': case 'b': case 'c': case 'd':
+          case 'e': case 'f': case 'g': case 'h': case 'i': case 'j': case 'k':
+          case 'l': case 'm': case 'n': case 'o': case 'p': case 'q': case 'r':
+          case 's': case 't': case 'u': case 'v': case 'w': case 'x': case 'y':
+          case 'z': case '{': case '|': case '}': case '~':
+            enc.encode((char)ch, this);
+            break;
+
+          // XML control characters
+          case '<':
+            enc.encode('&', this);
+            enc.encode('l', this);
+            enc.encode('t', this);
+            enc.encode(';', this);
+            break;
+          case '>':
+            if (i > 0 && s[i-1] != ']') enc.encode('>', this);
+            else
+            {
+              enc.encode('&', this);
+              enc.encode('g', this);
+              enc.encode('t', this);
+              enc.encode(';', this);
+            }
+            break;
+          case '&':
+            enc.encode('&', this);
+            enc.encode('a', this);
+            enc.encode('m', this);
+            enc.encode('p', this);
+            enc.encode(';', this);
+            break;
+          case '"':
+            if (!escQuotes) enc.encode((char)ch, this);
+            else
+            {
+              enc.encode('&', this);
+              enc.encode('q', this);
+              enc.encode('u', this);
+              enc.encode('o', this);
+              enc.encode('t', this);
+              enc.encode(';', this);
+            }
+            break;
+          case '\'':
+            if (!escQuotes) enc.encode((char)ch, this);
+            else
+            {
+              enc.encode('&', this);
+              enc.encode('a', this);
+              enc.encode('p', this);
+              enc.encode('o', this);
+              enc.encode('s', this);
+              enc.encode(';', this);
+            }
+            break;
+
+          // default
+          default:
+            if (ch <= 0xf7 || !escUnicode)
+              enc.encode((char)ch, this);
+            else
+              writeXmlEsc(ch);
+            break;
+        }
+      }
+      return this;
+    }
+
+    private void writeXmlEsc(int ch)
+    {
+      Charset.Encoder enc = m_charsetEncoder;
+      string hex = "0123456789abcdef";
+
+      enc.encode('&', this);
+      enc.encode('#', this);
+      enc.encode('x', this);
+      if (ch > 0xff)
+      {
+        enc.encode(hex[(ch >> 12) & 0xf], this);
+        enc.encode(hex[(ch >> 8)  & 0xf], this);
+      }
+      enc.encode(hex[(ch >> 4) & 0xf], this);
+      enc.encode(hex[(ch >> 0) & 0xf], this);
+      enc.encode(';', this);
+    }
+
+    public static readonly long m_xmlEscNewlines = 0x01;
+    public static readonly long m_xmlEscQuotes   = 0x02;
+    public static readonly long m_xmlEscUnicode  = 0x04;
 
     public virtual OutStream flush()
     {
@@ -323,10 +458,10 @@ namespace Fan.Sys
       return this;
     }
 
-    public virtual Bool close()
+    public virtual bool close()
     {
       if (m_out != null) return m_out.close();
-      return Bool.True;
+      return true;
     }
 
   //////////////////////////////////////////////////////////////////////////

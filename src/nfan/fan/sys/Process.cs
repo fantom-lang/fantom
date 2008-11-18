@@ -56,7 +56,7 @@ namespace Fan.Sys
     public File dir() { return m_dir; }
     public void dir(File v)
     {
-      if (v != null && (!v.exists().val || !v.isDir().val))
+      if (v != null && (!v.exists() || !v.isDir()))
         throw ArgErr.make("Invalid working directory: " + v).val;
       this.m_dir = v;
     }
@@ -65,17 +65,17 @@ namespace Fan.Sys
   // Lifecycle
   //////////////////////////////////////////////////////////////////////////
 
-    public Int run()
+    public long run()
     {
       try
       {
         // get arguments
-        string fileName = (m_command.get(0) as Str).val;
+        string fileName = m_command.get(0) as string;
         StringBuilder args = new StringBuilder();
           for (int i=1; i<m_command.sz(); ++i)
           {
             if (i > 1) args.Append(" ");
-            args.Append((m_command.get(i) as Str).val);
+            args.Append(m_command.get(i) as string);
           }
 
         // config and run process
@@ -89,7 +89,7 @@ namespace Fan.Sys
         p.WaitForExit();
 
         // return exit code
-        return Int.make(p.ExitCode);
+        return p.ExitCode;
       }
       catch (Exception e)
       {
