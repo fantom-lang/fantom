@@ -23,14 +23,12 @@ namespace Fanx.Util
     public static bool compareEQ(object a, object b)
     {
       if (a == null) return (b == null);
-      if (b == null) return false;
       return a.Equals(b);
     }
 
     public static bool compareNE(object a, object b)
     {
       if (a == null) return (b != null);
-      if (b == null) return true;
       return !a.Equals(b);
     }
 
