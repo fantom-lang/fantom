@@ -21,7 +21,7 @@ class Build : BuildPod
     version     = globalVersion
     description = "Compiler FFI Plugin for Java"
     depends     = ["sys 1.0", "compiler 1.0"]
-    srcDirs     = [`fan/`]
+    srcDirs     = [`fan/`, `test/`]
     javaDirs    = [`java/`]
   }
 

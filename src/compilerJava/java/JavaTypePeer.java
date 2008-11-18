@@ -61,7 +61,6 @@ class JavaTypePeer
   void mapField(JavaType self, Map slots, Field java)
     throws Exception
   {
-System.out.println("  -- map " + java);
     String name = java.getName();
     JavaField fan = JavaField.make();
     fan.setParent(self);
@@ -78,7 +77,6 @@ System.out.println("  -- map " + java);
     // store all the overloads for each method
     String name = java.getName();
 if (slots.get(name) != null) return;
-System.out.println("  -- map " + java);
     JavaMethod fan = JavaMethod.make();
     fan.setParent(self);
     fan.setName(name);
