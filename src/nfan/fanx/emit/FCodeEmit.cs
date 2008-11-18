@@ -6,6 +6,10 @@
 //   10 Oct 06  Andy Frank  Creation
 //
 
+// TODO
+//  Boolean primitves:   0f8c8ecc9484
+//  Convert sys to bool: e7279e569e98
+
 using System;
 using System.Collections;
 using System.Text;
@@ -26,25 +30,29 @@ namespace Fanx.Emit
   //////////////////////////////////////////////////////////////////////////
 
     public FCodeEmit(FTypeEmit parent, FMethod fmethod, CILInstructions code)
-     : this(parent, fmethod.m_code, code)
+     : this(parent, fmethod.m_code, code,
+         initRegs(parent.pod,  fmethod.isStatic(), fmethod.m_vars),
+         parent.pod.typeRef(fmethod.m_ret))
     {
-      this.fmethod = fmethod;
-      //code.maxLocals  = Math.max(fmethod.maxLocals(), 4); // TODO - total hack
+      this.fmethod    = fmethod;
+      this.vars       = fmethod.m_vars;
+      this.isStatic   = (fmethod.m_flags & FConst.Static) != 0;
       this.paramCount = fmethod.m_paramCount;
-      if ((fmethod.m_flags & FConst.Static) == 0) paramCount++;
+      if (!isStatic) paramCount++;
     }
 
-    public FCodeEmit(FTypeEmit parent, FBuf fcode, CILInstructions code)
+    public FCodeEmit(FTypeEmit parent, FBuf fcode, CILInstructions code, Reg[] regs, FTypeRef ret)
     {
-      this.pod        = parent.pod;
-      this.emitter    = parent.emitter;
-      this.parent     = parent;
-      this.buf        = fcode.m_buf;
-      this.len        = fcode.m_len;
-      //this.emit       = code.emit;
-      this.code       = code;
-      this.podClass   = NameUtil.toNetTypeName(pod.m_podName, "$Pod");
-      this.jumps      = new Jumps(code);
+      this.pod      = parent.pod;
+      this.emitter  = parent.emitter;
+      this.parent   = parent;
+      this.buf      = fcode.m_buf;
+      this.len      = fcode.m_len;
+      this.code     = code;
+      this.podClass = FanUtil.toNetTypeName(pod.m_podName, "$Pod", false);
+      this.jumps    = new Jumps(code);
+      this.regs     = regs;
+      this.ret      = ret;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -127,14 +135,12 @@ namespace Fanx.Emit
           case FConst.CompareNull:         compareNull(); break;
           case FConst.CompareNotNull:      compareNotNull(); break;
 
-          case FConst.ReturnVoid:          code.Inst(Op.ret); break;
-          case FConst.ReturnObj:           code.Inst(Op.ret); break;
-          case FConst.Pop:                 code.Inst(Op.pop); break;
-          case FConst.Dup:                 code.Inst(Op.dup); break;
-          //case FConst.DupDown:             code.op(DUP_X1); break; // WON'T SUPPORT
+          case FConst.Return:              returnOp(); break;
+          case FConst.Pop:                 pop(); break;
+          case FConst.Dup:                 dup(); break;
           case FConst.Is:                  @is(); break;
           case FConst.As:                  @as(); break;
-          case FConst.Cast:                cast(); break;
+          case FConst.Coerce:              coerce(); break;
           case FConst.Switch:              tableswitch(); break;
 
           case FConst.Throw:               doThrow(); break;
@@ -221,44 +227,39 @@ namespace Fanx.Emit
 
     private void loadFalse()
     {
-      if (parent.BoolFalse == null)
-        parent.BoolFalse = emitter.findField("Fan.Sys.Bool", "False", "Fan.Sys.Bool");
-      code.FieldInst(FieldOp.ldsfld, parent.BoolFalse);
+      code.IntInst(IntOp.ldc_i4, 0);
     }
 
     private void loadTrue()
     {
-      // TODO: optimize while (true) either here or in compiler
-      if (parent.BoolTrue == null)
-        parent.BoolTrue = emitter.findField("Fan.Sys.Bool", "True", "Fan.Sys.Bool");
-      code.FieldInst(FieldOp.ldsfld, parent.BoolTrue);
+      code.IntInst(IntOp.ldc_i4, 1);
     }
 
     private void loadInt()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "I" + index, "Fan.Sys.Int");
+      PERWAPI.Field field = emitter.findField(podClass, "I" + index, "System.Int64");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
     private void loadFloat()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "F" + index, "Fan.Sys.Float");
+      PERWAPI.Field field = emitter.findField(podClass, "F" + index, "System.Double");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
     private void loadDecimal()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "D" + index, "Fan.Sys.Decimal");
+      PERWAPI.Field field = emitter.findField(podClass, "D" + index, "Fan.Sys.BigDecimal");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
     private void loadStr()
     {
       int index = u2();
-      PERWAPI.Field field = emitter.findField(podClass, "S" + index, "Fan.Sys.Str");
+      PERWAPI.Field field = emitter.findField(podClass, "S" + index, "System.String");
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
@@ -278,14 +279,13 @@ namespace Fanx.Emit
 
     private void loadType()
     {
-      loadType(u2());
+      loadType(pod.typeRef(u2()));
     }
 
-    private void loadType(int typeRefIndex)
+    private void loadType(FTypeRef tref)
     {
-      FTypeRef tref = pod.typeRef(typeRefIndex);
-      string podName  = pod.name(tref.podName);
-      string typeName = pod.name(tref.typeName);
+      string podName  = tref.podName;
+      string typeName = tref.typeName;
 
       // if pod is "sys", then we can perform a shortcut and use
       // one of the predefined fields in Sys
@@ -293,6 +293,7 @@ namespace Fanx.Emit
       {
         PERWAPI.Field field = emitter.findField("Fan.Sys.Sys", typeName + "Type", "Fan.Sys.Type");
         code.FieldInst(FieldOp.ldsfld, field);
+        if (tref.isNullable()) typeToNullable();
         return;
       }
 
@@ -303,7 +304,7 @@ namespace Fanx.Emit
       // types are lazy loaded and then cached in a private static field called
       // type$count which will get generated by FTypeEmit (we keep track of signature
       // to fieldname in the typeConstFields map)
-      string sig = tref.Sig(pod);
+      string sig = tref.signature;
       string fieldName = (string)map[sig];
       if (fieldName == null)
       {
@@ -334,9 +335,27 @@ namespace Fanx.Emit
       code.MethInst(MethodOp.call, method);
     }
 
+  //////////////////////////////////////////////////////////////////////////
+  // Load Var
+  //////////////////////////////////////////////////////////////////////////
+
     private void loadVar()
     {
-      int index = u2();
+      Reg reg = this.reg(u2());
+      loadVar(code, reg.stackType, reg.nindex);
+    }
+
+    /// <summary>
+    /// Load variable onto stack using Java type and java index (which might
+    /// not map to Fan index.  Return next available java index
+    /// </summary>
+    internal static void loadVar(CILInstructions code, int stackType, int index)
+    {
+      loadVar(code, stackType, index, Int32.MaxValue);
+    }
+
+    private static void loadVar(CILInstructions code, int stackType, int index, int paramCount)
+    {
       if (index < paramCount)
       {
         switch (index)
@@ -362,9 +381,18 @@ namespace Fanx.Emit
       }
     }
 
+  //////////////////////////////////////////////////////////////////////////
+  // Store Var
+  //////////////////////////////////////////////////////////////////////////
+
     private void storeVar()
     {
-      int index = u2();
+      Reg reg = this.reg(u2());
+      storeVar(reg.stackType, reg.nindex);
+    }
+
+    private void storeVar(int stackType, int index)
+    {
       if (index < paramCount)
       {
         code.IntInst(IntOp.starg, index);
@@ -449,13 +477,13 @@ namespace Fanx.Emit
 
       int index = u2();
       int[] m = pod.methodRef(index).val;
-      string parent = pod.nname(m[0]);
+      string parent = pod.typeRef(m[0]).nname();
       string name = pod.name(m[1]) + "_";
 
       string[] pars = new string[m.Length-3+1];
       pars[0] = parent;
       for (int i=0; i<pars.Length-1; i++)
-        pars[i+1] = pod.nname(m[i+3]);
+        pars[i+1] = pod.typeRef(m[i+3]).nname();
 
       Method method = emitter.findMethod(parent, name, pars, "System.Void");
       code.MethInst(MethodOp.call, method);
@@ -473,28 +501,17 @@ namespace Fanx.Emit
     {
       int index = u2();
       FPod.NMethod ncall = pod.ncall(index, FConst.CallVirtual);
-
-      //System.Console.WriteLine("### sig: " + ncall.parentType + "/"+ ncall.methodName);
-
-      // if this is a virtual invoke on Obj then we to make it an
-      // interface invoke because the Java runtime models Obj
-      // as an interface to deal with mixins cleanly
-//      if (sig.startsWith("fan/sys/Obj."))
-//      {
-//        int[] m = pod.methodRef(index).val;
-//        int nargs = m.length-3;
-//        int method = emit.interfaceRef(sig);
-//        code.op2(INVOKEINTERFACE, method);
-//        code.info.u1(nargs+1);
-//        code.info.u1(0);
-//      }
-//      else
-//      {
-        Method method = emitter.findMethod(ncall.parentType, ncall.methodName,
-          ncall.paramTypes, ncall.returnType);
-        if (!ncall.isStatic) method.AddCallConv(CallConv.Instance);
+      Method method = emitter.findMethod(ncall.parentType, ncall.methodName,
+        ncall.paramTypes, ncall.returnType);
+      if (ncall.isStatic)
+      {
+        code.MethInst(MethodOp.call, method);
+      }
+      else
+      {
+        method.AddCallConv(CallConv.Instance);
         code.MethInst(MethodOp.callvirt, method);
-//      }
+      }
     }
 
     private void callNonVirtual()
@@ -526,7 +543,7 @@ namespace Fanx.Emit
 
     private void callMixinNonVirtual()
     {
-      FPod.NMethod ncall = pod.ncall(u2(), FConst.CallMixinVirtual);
+      FPod.NMethod ncall = pod.ncall(u2(), FConst.CallMixinNonVirtual);
       string parent = ncall.parentType;
       string name = ncall.methodName;
       string ret = ncall.returnType;
@@ -544,13 +561,11 @@ namespace Fanx.Emit
 
     private void jumpTrue()
     {
-      loadBoolVal();
       code.Branch(BranchOp.brtrue, jumps.add(u2()));
     }
 
     private void jumpFalse()
     {
-      loadBoolVal();
       code.Branch(BranchOp.brfalse, jumps.add(u2()));
     }
 
@@ -563,192 +578,34 @@ namespace Fanx.Emit
   // Compare
   //////////////////////////////////////////////////////////////////////////
 
-    private void compareEQ()
-    {
-      int peek = peekOp();
-      switch (peek)
-      {
-        case FConst.JumpFalse:
-          if (parent.CompareEQz == null)
-            parent.CompareEQz = emitter.findMethod("Fanx.Util.OpUtil", "compareEQz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareEQz);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          if (parent.CompareEQz == null)
-            parent.CompareEQz = emitter.findMethod("Fanx.Util.OpUtil", "compareEQz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareEQz);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          if (parent.CompareEQ == null)
-            parent.CompareEQ = emitter.findMethod("Fanx.Util.OpUtil", "compareEQ",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
-          code.MethInst(MethodOp.call, parent.CompareEQ);
-          break;
-      }
-    }
+    private void compareEQ() { doCompare("EQ"); }
 
-    private void compareNE()
-    {
-      int peek = peekOp();
-      switch (peek)
-      {
-        case FConst.JumpFalse:
-          if (parent.CompareNEz == null)
-            parent.CompareNEz = emitter.findMethod("Fanx.Util.OpUtil", "compareNEz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareNEz);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          if (parent.CompareNEz == null)
-            parent.CompareNEz = emitter.findMethod("Fanx.Util.OpUtil", "compareNEz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareNEz);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          if (parent.CompareNE == null)
-            parent.CompareNE = emitter.findMethod("Fanx.Util.OpUtil", "compareNE",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
-          code.MethInst(MethodOp.call, parent.CompareNE);
-          break;
-      }
-    }
+    private void compareNE() { doCompare("NE"); }
 
-    private void compare()
-    {
-      if (parent.Compare == null)
-        parent.Compare = emitter.findMethod("Fanx.Util.OpUtil", "compare",
-          new string[] { "System.Object", "System.Object" }, "Fan.Sys.Int");
-      code.MethInst(MethodOp.call, parent.Compare);
-    }
+    private void compareLT() { doCompare("LT"); }
 
-    private void compareLT()
-    {
-      int peek = peekOp();
-      switch (peek)
-      {
-       case FConst.JumpFalse:
-          if (parent.CompareLTz == null)
-            parent.CompareLTz = emitter.findMethod("Fanx.Util.OpUtil", "compareLTz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareLTz);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          if (parent.CompareLTz == null)
-            parent.CompareLTz = emitter.findMethod("Fanx.Util.OpUtil", "compareLTz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareLTz);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-       default:
-          if (parent.CompareLT == null)
-            parent.CompareLT = emitter.findMethod("Fanx.Util.OpUtil", "compareLT",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
-          code.MethInst(MethodOp.call, parent.CompareLT);
-          break;
-      }
-    }
+    private void compareLE() { doCompare("LE"); }
 
-    private void compareLE()
-    {
-      int peek = peekOp();
-      switch (peek)
-      {
-        case FConst.JumpFalse:
-          if (parent.CompareLEz == null)
-            parent.CompareLEz = emitter.findMethod("Fanx.Util.OpUtil", "compareLEz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareLEz);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          if (parent.CompareLEz == null)
-            parent.CompareLEz = emitter.findMethod("Fanx.Util.OpUtil", "compareLEz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareLEz);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          if (parent.CompareLE == null)
-            parent.CompareLE = emitter.findMethod("Fanx.Util.OpUtil", "compareLE",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
-          code.MethInst(MethodOp.call, parent.CompareLE);
-          break;
-      }
-    }
+    private void compareGE() { doCompare("GE"); }
 
-    private void compareGE()
-    {
-      int peek = peekOp();
-      switch (peek)
-      {
-        case FConst.JumpFalse:
-          if (parent.CompareGEz == null)
-            parent.CompareGEz = emitter.findMethod("Fanx.Util.OpUtil", "compareGEz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareGEz);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          if (parent.CompareGEz == null)
-            parent.CompareGEz = emitter.findMethod("Fanx.Util.OpUtil", "compareGEz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareGEz);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          if (parent.CompareGE == null)
-            parent.CompareGE = emitter.findMethod("Fanx.Util.OpUtil", "compareGE",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
-          code.MethInst(MethodOp.call, parent.CompareGE);
-          break;
-      }
-    }
+    private void compareGT() { doCompare("GT"); }
 
-    private void compareGT()
+    private void compare() { doCompare(""); }
+
+    private void doCompare(string suffix)
     {
-      int peek = peekOp();
-      switch (peek)
+      // get lhs and rhs types
+      FTypeRef lhs = pod.typeRef(u2());
+      FTypeRef rhs = pod.typeRef(u2());
+      string[] args = new string[]
       {
-        case FConst.JumpFalse:
-          if (parent.CompareGTz == null)
-            parent.CompareGTz = emitter.findMethod("Fanx.Util.OpUtil", "compareGTz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareGTz);
-          consumeOp();
-          code.Branch(BranchOp.brfalse, jumps.add(u2()));
-          break;
-        case FConst.JumpTrue:
-          if (parent.CompareGTz == null)
-            parent.CompareGTz = emitter.findMethod("Fanx.Util.OpUtil", "compareGTz",
-              new string[] { "System.Object", "System.Object" }, "System.Boolean");
-          code.MethInst(MethodOp.call, parent.CompareGTz);
-          consumeOp();
-          code.Branch(BranchOp.brtrue, jumps.add(u2()));
-          break;
-        default:
-          if (parent.CompareGT == null)
-            parent.CompareGT = emitter.findMethod("Fanx.Util.OpUtil", "compareGT",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
-          code.MethInst(MethodOp.call, parent.CompareGT);
-          break;
-      }
+        lhs.isRef() ? "System.Object" : lhs.nname(),
+        rhs.isRef() ? "System.Object" : rhs.nname()
+      };
+      string ret = (suffix == "") ? "System.Int64" : "System.Boolean";
+
+      PERWAPI.Method m = emitter.findMethod("Fanx.Util.OpUtil", "compare"+suffix, args, ret);
+      code.MethInst(MethodOp.call, m);
     }
 
     private void compareSame()
@@ -767,7 +624,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareSame == null)
             parent.CompareSame = emitter.findMethod("Fanx.Util.OpUtil", "compareSame",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareSame);
           break;
       }
@@ -789,7 +646,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareNotSame == null)
             parent.CompareNotSame = emitter.findMethod("Fanx.Util.OpUtil", "compareNotSame",
-              new string[] { "System.Object", "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNotSame);
           break;
       }
@@ -797,6 +654,7 @@ namespace Fanx.Emit
 
     private void compareNull()
     {
+      u2(); // ignore type
       int peek = peekOp();
       switch (peek)
       {
@@ -811,7 +669,7 @@ namespace Fanx.Emit
         default:
           if (parent.CompareNull == null)
             parent.CompareNull = emitter.findMethod("Fanx.Util.OpUtil", "compareNull",
-              new string[] { "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNull);
           break;
       }
@@ -819,6 +677,7 @@ namespace Fanx.Emit
 
     private void compareNotNull()
     {
+      u2(); // ignore type
       int peek = peekOp();
       switch (peek)
       {
@@ -833,10 +692,49 @@ namespace Fanx.Emit
         default:
           if (parent.CompareNotNull == null)
             parent.CompareNotNull = emitter.findMethod("Fanx.Util.OpUtil", "compareNotNull",
-              new string[] { "System.Object" }, "Fan.Sys.Bool");
+              new string[] { "System.Object" }, "System.Boolean");
           code.MethInst(MethodOp.call, parent.CompareNotNull);
          break;
       }
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Stack Manipulation
+  //////////////////////////////////////////////////////////////////////////
+
+    private void returnOp()
+    {
+      code.Inst(Op.ret);
+    }
+
+    /*
+    static int returnOp(FTypeRef ret) { return returnOp(ret.stackType); }
+
+    static int returnOp(int retStackType)
+    {
+      switch (retStackType)
+      {
+        case 'A': return ARETURN;
+        case 'D': return DRETURN;
+        case 'I': return IRETURN;
+        case 'J': return LRETURN;
+        case 'V': return RETURN;
+        case 'Z': return IRETURN;
+        default: throw new IllegalStateException(""+(char)retStackType);
+      }
+    }
+    */
+
+    private void dup()
+    {
+      int typeRef = u2();
+      code.Inst(Op.dup);
+    }
+
+    private void pop()
+    {
+      int typeRef = u2();
+      code.Inst(Op.pop);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -845,38 +743,37 @@ namespace Fanx.Emit
 
     private void @is()
     {
-      int typeRef = u2();
-      PERWAPI.Type type = emitter.findType(pod.nname(typeRef));
+      FTypeRef typeRef = pod.typeRef(u2());
 
       // if a generic instance, we have to use a method call
       // because Fan types don't map to Java classes exactly;
       // otherwise we can use straight bytecode
-      if (pod.typeRef(typeRef).isGenericInstance())
+      if (typeRef.isGenericInstance())
       {
         if (parent.IsViaType == null)
           parent.IsViaType = emitter.findMethod("Fanx.Util.OpUtil", "is",
-              new string[] { "System.Object", "Fan.Sys.Type" }, "Fan.Sys.Bool");
+              new string[] { "System.Object", "Fan.Sys.Type" }, "System.Boolean");
         loadType(typeRef);
         code.MethInst(MethodOp.call, parent.IsViaType);
       }
       else
       {
+        PERWAPI.Type type = emitter.findType(typeRef.nnameBoxed());
         code.TypeInst(TypeOp.isinst, type);
         code.Inst(Op.ldnull);
         code.Inst(Op.cgt_un);
-        boolMake();
       }
     }
 
     private void @as()
     {
-      int typeRef = u2();
-      PERWAPI.Type type = emitter.findType(pod.nname(typeRef));
+      FTypeRef typeRef = pod.typeRef(u2());
+      PERWAPI.Type type = emitter.findType(typeRef.nnameBoxed());
 
       // if a generic instance, we have to use a method call
       // because Fan types don't map to Java classes exactly;
       // otherwise we can use straight bytecode
-      if (pod.typeRef(typeRef).isGenericInstance())
+      if (typeRef.isGenericInstance())
       {
         if (parent.AsViaType == null)
           parent.AsViaType = emitter.findMethod("Fanx.Util.OpUtil", "as",
@@ -887,15 +784,6 @@ namespace Fanx.Emit
       }
       else
       {
-        //code.op(DUP);
-        //code.op2(INSTANCEOF, cls);
-        //int is = code.branch(IFNE);
-        //code.op(POP);
-        //code.op(ACONST_NULL);
-        //int end = code.branch(GOTO);
-        //code.mark(is);
-        //code.op2(CHECKCAST, cls);
-        //code.mark(end);
         code.TypeInst(TypeOp.isinst, type);
       }
     }
@@ -906,7 +794,6 @@ namespace Fanx.Emit
 
     private void tableswitch()
     {
-      loadIntVal();
       int count = u2();
       CILLabel[] labels = new CILLabel[count];
       for (int i=0; i<count; ++i)
@@ -915,13 +802,80 @@ namespace Fanx.Emit
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Misc
+  // Coercion
   //////////////////////////////////////////////////////////////////////////
 
     private void cast()
     {
-      code.TypeInst(TypeOp.castclass, emitter.findType(pod.nname(u2())));
+      PERWAPI.Type type = emitter.findType(pod.typeRef(u2()).nname());
+      code.TypeInst(TypeOp.castclass, type);
     }
+
+    private void coerce()
+    {
+      FTypeRef from = pod.typeRef(u2());
+      FTypeRef to   = pod.typeRef(u2());
+
+      // Bool boxing/unboxing
+      if (from.isBoolPrimitive())
+      {
+        if (to.isRef()) { boolBox(); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
+      if (to.isBoolPrimitive())
+      {
+        if (from.isRef()) { boolUnbox(!from.isBool()); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
+
+      // Int boxing/unboxing
+      if (from.isIntPrimitive())
+      {
+        if (to.isRef()) { intBox(); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
+      if (to.isIntPrimitive())
+      {
+        if (from.isRef()) { intUnbox(!from.isInt()); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
+
+      // Float boxing/unboxing
+      if (from.isFloatPrimitive())
+      {
+        if (to.isRef()) { floatBox(); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
+      if (to.isFloatPrimitive())
+      {
+        if (from.isRef()) { floatUnbox(!from.isFloat()); return; }
+        throw new Exception("Coerce " + from  + " => " + to);
+      }
+
+      // check nullable => non-nullable
+      if (from.isNullable() && !to.isNullable())
+      {
+        CILLabel nonnull = code.NewLabel();
+        code.Inst(Op.dup);
+        code.Inst(Op.ldnull);
+        code.Branch(BranchOp.bne_un_s, nonnull);
+        if (parent.NullErrMakeCoerce == null)
+          parent.NullErrMakeCoerce = emitter.findMethod("Fan.Sys.NullErr", "makeCoerce",
+            new string[0], "Fan.Sys.Err/Val");
+        code.MethInst(MethodOp.call, parent.NullErrMakeCoerce );
+        code.Inst(Op.throwOp);
+        code.CodeLabel(nonnull);
+      }
+
+      // don't bother casting to obj
+      if (to.isObj()) return;
+
+      code.TypeInst(TypeOp.castclass, emitter.findType(to.nname()));
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Misc
+  //////////////////////////////////////////////////////////////////////////
 
     private void doThrow()
     {
@@ -950,9 +904,9 @@ namespace Fanx.Emit
       for (int i=0; i<tryJump.Length; i++)
         if (startPos == tryJump[i])
         {
-          string ftype = pod.nname(tryErr[i]);
-          netErr = Fan.Sys.Err.fanToNet(ftype);
-          if (ftype != "Fan.Sys.Err") exType = ftype + "/Val";
+          FTypeRef typeRef = pod.typeRef(tryErr[i]);
+          netErr = Fan.Sys.Err.fanToNet(typeRef.nname());
+          if (!typeRef.isErr()) exType = typeRef.nname() + "/Val";
           break;
         }
 
@@ -1060,26 +1014,79 @@ namespace Fanx.Emit
   // Utils
   //////////////////////////////////////////////////////////////////////////
 
-    private void loadBoolVal()
+    private int varStackType(int index)
     {
-      if (parent.BoolVal == null)
-        parent.BoolVal = emitter.findField("Fan.Sys.Bool", "val", "System.Boolean");
-      code.FieldInst(FieldOp.ldfld, parent.BoolVal);
+      if (vars == null) throw new Exception("Use of variable outside of method");
+      if (!isStatic)
+      {
+        if (index == 0) return FTypeRef.OBJ; // assume this pointer
+        else --index;
+      }
+      return pod.typeRef(vars[index].type).stackType;
+    }
+
+    private void boolBox()
+    {
+      PERWAPI.Method m = emitter.findMethod("Fan.Sys.Boolean", "valueOf",
+          new string[] { "System.Boolean" }, "Fan.Sys.Boolean");
+      code.MethInst(MethodOp.call, m);
+    }
+
+    private void boolUnbox(bool cast)
+    {
+      PERWAPI.Method m = emitter.findMethod("Fan.Sys.Boolean", "booleanValue",
+        new string[0], "System.Boolean");
+      m.AddCallConv(CallConv.Instance);
+      code.MethInst(MethodOp.call, m);
+    }
+
+    private void intBox()
+    {
+      PERWAPI.Method m = emitter.findMethod("Fan.Sys.Long", "valueOf",
+          new string[] { "System.Int64" }, "Fan.Sys.Long");
+      code.MethInst(MethodOp.call, m);
+    }
+
+    private void intUnbox(bool cast)
+    {
+      PERWAPI.Method m = emitter.findMethod("Fan.Sys.Long", "longValue",
+        new string[0], "System.Int64");
+      m.AddCallConv(CallConv.Instance);
+      code.MethInst(MethodOp.call, m);
+    }
+
+    private void floatBox()
+    {
+      PERWAPI.Method m = emitter.findMethod("Fan.Sys.Double", "valueOf",
+          new string[] { "System.Double" }, "Fan.Sys.Double");
+      code.MethInst(MethodOp.call, m);
+    }
+
+    private void floatUnbox(bool cast)
+    {
+      PERWAPI.Method m = emitter.findMethod("Fan.Sys.Double", "doubleValue",
+        new string[0], "System.Double");
+      m.AddCallConv(CallConv.Instance);
+      code.MethInst(MethodOp.call, m);
     }
 
     private void loadIntVal()
     {
       if (parent.IntVal == null)
-        parent.IntVal = emitter.findField("Fan.Sys.Int", "val", "System.Int64");
-      code.FieldInst(FieldOp.ldfld, parent.IntVal);
+      {
+        parent.IntVal = emitter.findMethod("Fan.Sys.Long", "longValue",
+          new string[0], "System.Int64");
+        parent.IntVal.AddCallConv(CallConv.Instance);
+      }
+      code.MethInst(MethodOp.call, parent.IntVal);
     }
 
-    private void boolMake()
+    private void typeToNullable()
     {
-      if (parent.BoolMake == null)
-        parent.BoolMake = emitter.findMethod("Fan.Sys.Bool", "make",
-          new string[] { "System.Boolean" }, "Fan.Sys.Bool");
-      code.MethInst(MethodOp.call, parent.BoolMake);
+      if (parent.TypeToNullable == null)
+       parent.TypeToNullable = emitter.findMethod("Fan.Sys.Type", "toNullable",
+         new string[] {}, "Fan.Sys.Type");
+      code.MethInst(MethodOp.callvirt, parent.TypeToNullable);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -1169,13 +1176,74 @@ namespace Fanx.Emit
     }
 
   //////////////////////////////////////////////////////////////////////////
+  // Reg
+  //////////////////////////////////////////////////////////////////////////
+
+    /// <summary>
+    /// Given a list of registers compute the max locals.
+    /// </summary>
+    internal static int maxLocals(Reg[] regs)
+    {
+      if (regs.Length == 0) return 0;
+      Reg last = regs[regs.Length-1];
+      return last.nindex + 1; //(last.isWide() ? 2 : 1);
+    }
+
+    /// <summary>
+    /// Map to .NET register info for the given Fan local variables.
+    /// </summary>
+    internal static Reg[] initRegs(FPod pod, bool isStatic, FMethodVar[] vars)
+    {
+      Reg[] regs = new Reg[isStatic ? vars.Length : vars.Length+1];
+      int nindex = 0;
+      for (int i=0; i<regs.Length; ++i)
+      {
+        Reg r = new Reg();
+        if (i == 0 && !isStatic)
+        {
+          // this pointer
+          r.stackType = FTypeRef.OBJ;
+          r.nindex = nindex;
+          ++nindex;
+        }
+        else
+        {
+          FTypeRef typeRef = pod.typeRef(vars[isStatic ? i : i - 1].type);
+          r.stackType = typeRef.stackType;
+          r.nindex = nindex;
+          nindex += 1; //nindex += typeRef.isWide() ? 2 : 1;
+        }
+        regs[i] = r;
+      }
+      return regs;
+    }
+
+    private Reg reg(int fanIndex)
+    {
+      if (regs == null) throw new Exception("Use of variable with undefined regs");
+      return regs[fanIndex];
+    }
+
+    public class Reg
+    {
+      public string toString() { return "Reg " + nindex + " " + (char)stackType; }
+      public bool isWide() { return FTypeRef.isWide(stackType); }
+      internal int stackType;  // FTypeRef.OBJ, LONG, INT, etc
+      internal int nindex;     // .NET register number to use (might shift for longs/doubles)
+    }
+
+  //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
     internal FPod pod;
     internal Emitter emitter;
     internal FTypeEmit parent;
-    internal FMethod fmethod;        // maybe null
+    internal FMethod fmethod;     // maybe null
+    internal Reg[] regs = null;   // register mappnig must be set for loadVar/storeVar
+    internal FMethodVar[] vars;   // method variables must be set for loadVar/storeVar
+    internal bool isStatic;       // used to determine how to index vars
+    internal FTypeRef ret;        // return type
     internal int paramCount = -1;
     internal byte[] buf;
     internal int len;
