@@ -34,17 +34,12 @@ class ReflectNamespace : CNamespace
   **
   ** Map an imported Pod into a CPod
   **
-  override ReflectPod? resolvePod(Str podName, Bool checked)
+  protected override ReflectPod? findPod(Str podName)
   {
-    // check cache
-    cpod := pods[podName]
-    if (cpod != null) return cpod
-
     // try to load it
-    pod := Pod.find(podName, checked)
+    pod := Pod.find(podName, false)
     if (pod == null) return null
-    pods[podName] = cpod = ReflectPod.make(this, pod)
-    return cpod
+    return ReflectPod.make(this, pod)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,7 +51,7 @@ class ReflectNamespace : CNamespace
   **
   ReflectPod importPod(Pod pod)
   {
-    return resolvePod(pod.name, true)
+    return resolvePod(pod.name, null)
   }
 
   **

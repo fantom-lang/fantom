@@ -58,28 +58,30 @@ public class Parser : CompilerSupport
   ** they are already parsed by ScanForUsingsAndTypes.
   **
   **   <using>     :=  <usingPod> | <usingType> | <usingAs>
-  **   <usingPod>  :=  "using" <id> <eos>
-  **   <usingType> :=  "using" <id> "::" <id> <eos>
-  **   <usingAs>   :=  "using" <id> "::" <id> "as" <id> <eos>
+  **   <usingPod>  :=  "using" <podSpec> <eos>
+  **   <usingType> :=  "using" <podSpec> "::" <id> <eos>
+  **   <usingAs>   :=  "using" <podSpec> "::" <id> "as" <id> <eos>
+  **   <podSpec>        :=  [ffi] <id> ("." <id>)*
+  **   <ffi>            :=  "[" <id> "]"
   **
   private Void usings()
   {
     while (curt == Token.usingKeyword)
+      skipUsing
+  }
+
+  private Void skipUsing()
+  {
+    consume(Token.usingKeyword)
+    if (curt === Token.lbracket) { consume; consumeId; consume(Token.rbracket) }
+    consumeId
+    while (curt === Token.dot) { consume; consumeId }
+    if (curt === Token.doubleColon)
     {
-      consume
-      consumeId
-      if (curt === Token.doubleColon)
-      {
-        consume
-        consumeId
-        if (curt === Token.asKeyword)
-        {
-          consume
-          consumeId
-        }
-      }
-      endOfStmt
+      consume; consumeId
+      if (curt === Token.asKeyword) { consume; consumeId }
     }
+    endOfStmt
   }
 
 //////////////////////////////////////////////////////////////////////////

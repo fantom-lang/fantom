@@ -83,8 +83,8 @@ class CheckErrorsTest : CompilerTest
          3,  1, "Class 'C' must be abstract since it inherits but doesn't override '$podName::B.y'",
          4,  1, "Class 'D' must be abstract since it inherits but doesn't override '$podName::A.x'",
          4,  1, "Class 'D' must be abstract since it contains abstract slots",
-         5,  1, "Class 'E' must be abstract since it inherits but doesn't override '$podName::X.b'",
          5,  1, "Class 'E' must be abstract since it inherits but doesn't override '$podName::B.y'",
+         5,  1, "Class 'E' must be abstract since it inherits but doesn't override '$podName::X.b'",
        ])
   }
 

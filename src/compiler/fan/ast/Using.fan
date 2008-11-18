@@ -18,10 +18,9 @@ class Using : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, Str podName)
+  new make(Location location)
     : super(location)
   {
-    this.podName = podName
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -45,7 +44,7 @@ class Using : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Str podName          // pod name
+  Str podName          // pod name (including [ffi] if specified)
   Str? typeName        // type name or null
   Str? asName          // rename if using as
   CPod? resolvedPod    // ResolveImports
