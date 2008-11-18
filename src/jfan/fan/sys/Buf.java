@@ -245,6 +245,9 @@ public abstract class Buf
   public final Buf writeObj(Object obj) { out.writeObj(obj); return this; }
   public final Buf writeObj(Object obj, Map opt) { out.writeObj(obj, opt); return this; }
 
+  public final Buf writeXml(String s) { out.writeXml(s, 0); return this; }
+  public final Buf writeXml(String s, long flags) { out.writeXml(s, flags); return this; }
+
 //////////////////////////////////////////////////////////////////////////
 // InStream
 //////////////////////////////////////////////////////////////////////////

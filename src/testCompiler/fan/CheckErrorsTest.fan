@@ -294,6 +294,73 @@ class CheckErrorsTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Test Type Scopes
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTypeProtectionScopes()
+  {
+    // first create a pod with internal types/slots
+    compile(
+     "internal class Foo
+      {
+        static const Str f
+        static Void m() {}
+      }
+      ")
+    p := pod
+
+    verifyErrors(
+     "using $p.name
+
+      class Bar
+      {
+        Void m00() { echo(Foo.f) }
+        Void m01() { Foo.m() }
+        Void m02() { echo(Foo#) }
+        Void m03() { echo(Foo#f) }
+        Void m04() { echo(Foo#m) }
+
+        Foo  m05() { throw Err() }
+        Foo? m06() { throw Err() }
+        |Foo x| m07() { throw Err() }
+        |->Foo| m08() { throw Err() }
+
+        Void m09(Foo p) {}
+        Void m10(Foo? p) {}
+        Void m11(Foo?[] p) {}
+        Void m12(Str:Foo? p) {}
+        Void m13(Foo:Str p) {}
+        Void m14(|->Foo[]| p) {}
+
+        Foo f00
+        Foo?[] f01
+      }
+      ",
+    [
+       5, 25, "Internal field '$p::Foo.f' not accessible",
+       6, 20, "Internal method '$p::Foo.m' not accessible",
+       7, 21, "Internal type '$p::Foo' not accessible",
+       8, 21, "Internal field '$p::Foo.f' not accessible",
+       9, 21, "Internal method '$p::Foo.m' not accessible",
+
+      11,  3, "Internal type '$p::Foo' not accessible",
+      12,  3, "Internal type '$p::Foo' not accessible",
+      13,  3, "Internal type '$p::Foo' not accessible",
+      14,  3, "Internal type '$p::Foo' not accessible",
+
+      16, 12, "Internal type '$p::Foo' not accessible",
+      17, 12, "Internal type '$p::Foo' not accessible",
+      18, 12, "Internal type '$p::Foo' not accessible",
+      19, 12, "Internal type '$p::Foo' not accessible",
+      20, 12, "Internal type '$p::Foo' not accessible",
+      21, 12, "Internal type '$p::Foo' not accessible",
+
+      23,  3, "Internal type '$p::Foo' not accessible",
+      24,  3, "Internal type '$p::Foo' not accessible",
+    ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
@@ -768,6 +835,8 @@ class CheckErrorsTest : CompilerTest
         static Void m24() { while (true) { try { echo(3) } finally { break } } }
         static Void m25() { while (true) { try { echo(3) } finally { continue } } }
         static Void m26() { for (;;) { try { try { m03 } finally { break } } finally { continue } } }
+
+        static Void m28() { try { } catch {} }
       }",
        [3, 26, "If condition must be Bool, not 'sys::Int'",
         4, 28, "Must throw Err, not 'sys::Int'",
@@ -796,6 +865,8 @@ class CheckErrorsTest : CompilerTest
         25, 64, "Cannot leave finally block",
         26, 62, "Cannot leave finally block",
         26, 82, "Cannot leave finally block",
+
+        28, 23, "Try block cannot be empty",
        ])
   }
 
@@ -1213,4 +1284,77 @@ class CheckErrorsTest : CompilerTest
         12, 29, "Cannot use 'as' operator on value type 'sys::Int?'",
        ])
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Func Auto Casting
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFuncAutoCasting()
+  {
+    // test functions which should work
+    compile(
+      "class Foo
+       {
+         static Num a(Num a, Num b, |Num a, Num b->Num| f) { return f(a, b) }
+         // diff return types
+         static Int a01() { return a(1,5) |Num a, Num b->Num?| { return a.toInt+b.toInt } }
+         static Int a02() { return a(1,6) |Num a, Num b->Int|  { return a.toInt+b.toInt } }
+         static Int a03() { return a(1,7) |Num a, Num b->Obj?| { return a.toInt+b.toInt } }
+         // diff parameter types
+         static Int a04() { return a(1,9)  |Int a, Num b->Int|  { return a+b.toInt } }
+         static Int a05() { return a(1,10) |Num a, Int b->Obj|  { return a.toInt+b } }
+         static Int a06() { return a(1,11) |Int? a, Int b->Num| { return a+b } }
+         static Int a07() { return a(1,12) |Obj a, Obj? b->Obj| { return (Int)a + (Int)b } }
+         // diff arity
+         static Int a08() { return a(14,1) |Num? a->Int| { return a.toInt*2 } }
+         static Int a09() { return a(15,1) |Int a->Int| { return a*2 } }
+         static Int a10() { return a(16,1) |Obj a->Int| { return (Int)a*2 } }
+       }")
+    obj := pod.types.first.make
+    verifyEq(obj->a01, 6)
+    verifyEq(obj->a02, 7)
+    verifyEq(obj->a03, 8)
+    verifyEq(obj->a04, 10)
+    verifyEq(obj->a05, 11)
+    verifyEq(obj->a06, 12)
+    verifyEq(obj->a07, 13)
+    verifyEq(obj->a08, 28)
+    verifyEq(obj->a09, 30)
+    verifyEq(obj->a10, 32)
+
+    // errors
+    verifyErrors(
+     "class Foo
+      {
+         static Num a(|Num a, Num b->Num| f) { return f(3, 4) }
+         // diff return types
+         static Int a05() { return a |Num a, Num b->Str| { return a.toStr  } }
+         // wrong arity
+         static Int a07() { return a |Num a, Num b, Num c->Num| { return a.toInt  } }
+         // wrong params
+         static Int a09() { return a |Str a, Num b, Num c->Num| { return a.toInt  } }
+         static Int a10() { return a |Num a, Str? b, Num c->Num| { return a.toInt  } }
+         static Int a11() { return a |Str a, Str b, Str c->Num| { return a.toInt  } }
+
+         static Void b(| |Num[] x| y |? f) {}
+         // diff return types
+         static Void b15() { b | |Num[] x| y | {}  }        // ok
+         static Void b16() { b | |Int[] x| y | {}  }        // ok
+         static Void b17() { b | |Obj[] x| y | {}  }        // ok
+         static Void b18() { b | |Num[] x->Str| y | {}  }   // ok
+         static Void b19() { b | |Str[] x| y | {}  }        // wrong params
+         static Void b20() { b | |Num[] x| y, Obj o| {}  } // wrong arity
+      }",
+       [
+         5, 30, "Invalid args a(|sys::Num,sys::Num->sys::Num|), not (|sys::Num,sys::Num->sys::Str|)",
+         7, 30, "Invalid args a(|sys::Num,sys::Num->sys::Num|), not (|sys::Num,sys::Num,sys::Num->sys::Num|)",
+         9, 30, "Invalid args a(|sys::Num,sys::Num->sys::Num|), not (|sys::Str,sys::Num,sys::Num->sys::Num|)",
+        10, 30, "Invalid args a(|sys::Num,sys::Num->sys::Num|), not (|sys::Num,sys::Str?,sys::Num->sys::Num|)",
+        11, 30, "Invalid args a(|sys::Num,sys::Num->sys::Num|), not (|sys::Str,sys::Str,sys::Str->sys::Num|)",
+        19, 24, "Invalid args b(||sys::Num[]->sys::Void|->sys::Void|?), not (||sys::Str[]->sys::Void|->sys::Void|)",
+        20, 24, "Invalid args b(||sys::Num[]->sys::Void|->sys::Void|?), not (||sys::Num[]->sys::Void|,sys::Obj->sys::Void|)",
+       ])
+
+  }
+
 }

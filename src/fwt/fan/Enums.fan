@@ -128,8 +128,12 @@ enum WindowMode
 **
 enum FileDialogMode
 {
+  ** Display open dialog for single file
   openFile,
+  ** Display open dialog for multiple files
   openFiles,
+  ** Display save dialog for single file
   saveFile,
+  ** Display open directory dialog
   openDir
 }

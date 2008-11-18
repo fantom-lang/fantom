@@ -944,11 +944,47 @@ in.readF8    //test.verifyEq(in.readF8, Float.negInf)
   }
 
 //////////////////////////////////////////////////////////////////////////
-//
+// Xml
 //////////////////////////////////////////////////////////////////////////
 
-  // TODO
-  //  - test OutStream mixin class
-  //  - test InStream mixin class
+  Void testXml()
+  {
+    nl := OutStream.xmlEscNewlines
+    q  := OutStream.xmlEscQuotes
+    u  := OutStream.xmlEscUnicode
+
+    verifyXml("", "", 0)
+    verifyXml("a", "a", 0)
+    verifyXml(" a\t", " a\t", 0)
+
+    // lt and amp
+    verifyXml("<", "&lt;", 0)
+    verifyXml("+&-", "+&amp;-", 0)
+
+    // gt only escaped when possible CDATA
+    verifyXml(">", ">", 0)
+    verifyXml(" >", " >", 0)
+    verifyXml("]>", "]&gt;", 0)
+    verifyXml("&", "&amp;", 0)
+    verifyXml("-\u0000-", "-&#x00;-", 0)
+
+    // optional quotes
+    verifyXml("a='aval' b=\"bval\"", "a='aval' b=\"bval\"", 0)
+    verifyXml("a='aval' b=\"bval\"", "a=&apos;aval&apos; b=&quot;bval&quot;", q)
+
+    // optional newlines
+    verifyXml("x\n y\r z", "x\n y\r z", 0)
+    verifyXml("x\n y\r z", "x&#x0a; y&#x0d; z", nl)
+
+    // optional unicode
+    verifyXml("\u00ff \u0abc \u147d", "\u00ff \u0abc \u147d", 0)
+    verifyXml("\u00ff \u0abc \u147d", "&#xff; &#x0abc; &#x147d;", u)
+  }
+
+  Void verifyXml(Str s, Str expected, Int flags)
+  {
+    actual := Buf().writeXml(s, flags).flip.readAllStr(false)
+    verifyEq(actual, expected)
+  }
 
 }
