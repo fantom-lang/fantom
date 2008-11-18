@@ -853,18 +853,19 @@ namespace Fanx.Emit
       }
 
       // check nullable => non-nullable
-      /*
       if (from.isNullable() && !to.isNullable())
       {
-        code.op(DUP);
-        int nonnull = code.branch(IFNONNULL);
-        if (parent.NullErrMakeCoerce == 0)
-          parent.NullErrMakeCoerce = emit.method("fan/sys/NullErr.makeCoerce()Lfan/sys/Err$Val;");
-        code.op2(INVOKESTATIC, parent.NullErrMakeCoerce);
-        code.op(ATHROW);
-        code.mark(nonnull);
+        CILLabel nonnull = code.NewLabel();
+        code.Inst(Op.dup);
+        code.Inst(Op.ldnull);
+        code.Branch(BranchOp.bne_un_s, nonnull);
+        if (parent.NullErrMakeCoerce == null)
+          parent.NullErrMakeCoerce = emitter.findMethod("Fan.Sys.NullErr", "makeCoerce",
+            new string[0], "Fan.Sys.Err/Val");
+        code.MethInst(MethodOp.call, parent.NullErrMakeCoerce );
+        code.Inst(Op.throwOp);
+        code.CodeLabel(nonnull);
       }
-      */
 
       // don't bother casting to obj
       if (to.isObj()) return;
