@@ -245,20 +245,20 @@ namespace Fan.Sys
       }
     }
 
-    public override sealed Bool close()
+    public override sealed bool close()
     {
       try
       {
         m_stream.Close();
-        return Bool.True;
+        return true;
       }
       catch (System.Exception)
       {
-        return Bool.False;
+        return false;
       }
     }
 
-    public override sealed Str toHex()
+    public override sealed string toHex()
     {
       try
       {
@@ -282,7 +282,7 @@ namespace Fan.Sys
         }
 
         setPos(oldPos);
-        return Str.make(s.ToString());
+        return s.ToString();
       }
       catch (IOException e)
       {
@@ -290,13 +290,13 @@ namespace Fan.Sys
       }
     }
 
-    public override Buf toDigest(Str algorithm)
+    public override Buf toDigest(string algorithm)
     {
-      string alg = algorithm.val;
+      string alg = algorithm;
       if (alg == "SHA-1") alg = "SHA1";  // to make .NET happy
       HashAlgorithm ha = HashAlgorithm.Create(alg);
       if (ha == null)
-        throw ArgErr.make("Unknown digest algorthm: " + algorithm.val).val;
+        throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
 
       try
       {
@@ -341,7 +341,7 @@ namespace Fan.Sys
       internal FileBufOutStream(FileBuf parent) { this.p = parent; }
       private FileBuf p;
 
-      public override sealed OutStream write(Int v) { return w((int)v.val); }
+      public override sealed OutStream write(long v) { return w((int)v); }
       public override sealed OutStream w(int v)
       {
         try
@@ -353,11 +353,11 @@ namespace Fan.Sys
         catch (System.NotSupportedException e) { throw IOErr.make(e.Message, e).val; }
       }
 
-      public override OutStream writeBuf(Buf other, Int n)
+      public override OutStream writeBuf(Buf other, long n)
       {
         try
         {
-          other.pipeTo(p.m_stream, n.val);
+          other.pipeTo(p.m_stream, n);
           return this;
         }
         catch (IOException e) { throw IOErr.make(e).val; }
@@ -380,7 +380,7 @@ namespace Fan.Sys
       internal FileBufInStream(FileBuf parent) { this.p = parent; }
       private FileBuf p;
 
-      public override Int read() { int n = r(); return n < 0 ? null : Int.m_pos[n]; }
+      public override Long read() { int n = r(); return n < 0 ? null : Long.valueOf(n); }
       public override int r()
       {
         try
@@ -393,13 +393,13 @@ namespace Fan.Sys
         }
       }
 
-      public override Int readBuf(Buf other, Int n)
+      public override Long readBuf(Buf other, long n)
       {
         try
         {
-          long read = other.pipeFrom(p.m_stream, n.val);
+          long read = other.pipeFrom(p.m_stream, n);
           if (read < 0) return null;
-          return Int.pos(read);
+          return Long.valueOf(read);
         }
         catch (IOException e)
         {
@@ -407,7 +407,7 @@ namespace Fan.Sys
         }
       }
 
-      public override InStream unread(Int n) { return unread((int)n.val); }
+      public override InStream unread(long n) { return unread((int)n); }
       public override InStream unread(int n)
       {
         try
@@ -424,14 +424,14 @@ namespace Fan.Sys
         }
       }
 
-      public override Int peek()
+      public override Long peek()
       {
         try
         {
           long pos = p.getPos();
           int n = p.m_stream.ReadByte();
           p.setPos(pos);
-          return n < 0 ? null : Int.m_pos[n];
+          return n < 0 ? null : Long.valueOf(n);
         }
         catch (IOException e)
         {

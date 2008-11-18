@@ -88,10 +88,10 @@ namespace Fanx.Typedb
     /// Implementation of 'Type.findByFacet'
     /// </summary>
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public List findByFacet(Str name, object val, object options)
+    public List findByFacet(string name, object val, object options)
     {
       // process options
-      if (options == Bool.True && val is Type)
+      if (options == Boolean.True && val is Type)
         return findByFacetInheritance(name, (Type)val);
 
       // no options
@@ -102,7 +102,7 @@ namespace Fanx.Typedb
     /// Implementation when val is Type and options == true.
     /// Return a query against the val's full inheritance hierarchy.
     /// </summary>
-    private List findByFacetInheritance(Str name, Type val)
+    private List findByFacetInheritance(string name, Type val)
     {
       List inheritance = val.inheritance();
       List acc = new List(Sys.TypeType);
@@ -114,12 +114,12 @@ namespace Fanx.Typedb
     /// <summary>
     /// Find all the types declared by the specified facet name/value pair.
     /// </summary>
-    private List doFindByFacet(Str name, object val)
+    private List doFindByFacet(string name, object val)
     {
       try
       {
         // lookup the FacetIndex for that name
-        FacetIndex index = readFacetIndex(name.val);
+        FacetIndex index = readFacetIndex(name);
 
         // check if we have any types mapped for value
         object result = index.valueToTypes[val];
@@ -348,7 +348,7 @@ namespace Fanx.Typedb
       if (pi.pod == null) pi.pod = Pod.find(pi.name, true);
       Type t = pi.pod.findType(ti.name, true);
       ti.type = t;
-      ti.name = t.name().val;
+      ti.name = t.name();
       return t;
     }
 

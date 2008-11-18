@@ -21,19 +21,16 @@ namespace Fan.Sys
   // Management
   //////////////////////////////////////////////////////////////////////////
 
-    public static Method findMethod(Str qname) { return (Method)find(qname.val, true); }
-    public static Method findMethod(Str qname, Bool check) { return (Method)find(qname.val, check.val); }
-    public static Method findMethod(String qname, bool check) { return (Method)find(qname, check); }
+    public static Method findMethod(string qname) { return (Method)find(qname, true); }
+    public static Method findMethod(string qname, bool check) { return (Method)find(qname, check); }
 
-    public static Field findField(Str qname) { return (Field)find(qname.val, true); }
-    public static Field findField(Str qname, Bool check) { return (Field)find(qname.val, check.val); }
-    public static Field findField(String qname, bool check) { return (Field)find(qname, check); }
+    public static Field findField(string qname) { return (Field)find(qname, true); }
+    public static Field findField(string qname, bool check) { return (Field)find(qname, check); }
 
-    public static Slot find(Str qname) { return find(qname.val, true); }
-    public static Slot find(Str qname, Bool check) { return find(qname.val, check.val); }
-    public static Slot find(String qname, bool check)
+    public static Slot find(string qname) { return find(qname, true); }
+    public static Slot find(string qname, bool check)
     {
-      String typeName, slotName;
+      string typeName, slotName;
       try
       {
         int dot = qname.IndexOf('.');
@@ -49,8 +46,7 @@ namespace Fan.Sys
       return type.slot(slotName, check);
     }
 
-    public static Func findFunc(Str qname) { return findFunc(qname.val, true); }
-    public static Func findFunc(Str qname, Bool check) { return findFunc(qname.val, check.val); }
+    public static Func findFunc(string qname) { return findFunc(qname, true); }
     public static Func findFunc(string qname, bool check)
     {
       Method m = (Method)find(qname, check);
@@ -62,11 +58,11 @@ namespace Fan.Sys
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public Slot(Type parent, Str name, int flags, Facets facets, int lineNum)
+    public Slot(Type parent, string name, int flags, Facets facets, int lineNum)
     {
       this.m_parent  = parent;
       this.m_name    = name;
-      this.m_qname   = parent == null ? name : Str.make(parent.m_qname.val + "." + name.val);
+      this.m_qname   = parent == null ? name : parent.qname() + "." + name;
       this.m_flags   = flags;
       this.m_facets  = facets;
       this.m_lineNum = lineNum;
@@ -84,37 +80,37 @@ namespace Fan.Sys
     public override Type type() { return Sys.SlotType; }
 
     public Type parent()      { return m_parent; }
-    public virtual Str name() { return m_name; }
-    public Str qname()        { return m_qname; }
-    public Bool isField()     { return (this is Field) ? Bool.True : Bool.False; }
-    public Bool isMethod()    { return (this is Method) ? Bool.True : Bool.False; }
-    public abstract Str signature();
+    public virtual string name() { return m_name; }
+    public string qname()        { return m_qname; }
+    public bool isField()     { return (this is Field); }
+    public bool isMethod()    { return (this is Method); }
+    public abstract string signature();
 
   //////////////////////////////////////////////////////////////////////////
   // Flags
   //////////////////////////////////////////////////////////////////////////
 
     public int flags() { return m_flags; }
-    public Bool isAbstract()  { return Bool.make(m_flags & FConst.Abstract); }
-public virtual Bool isConst() { return Bool.make(m_flags & FConst.Const); } // we let synethic Methods override
-    public Bool isCtor()      { return Bool.make(m_flags & FConst.Ctor); }
-    public Bool isFinal()     { return Bool.make(m_flags & FConst.Final); }
-    public Bool isInternal()  { return Bool.make(m_flags & FConst.Internal); }
-    public Bool isNative()    { return Bool.make(m_flags & FConst.Native); }
-    public Bool isOverride()  { return Bool.make(m_flags & FConst.Override); }
-    public Bool isPrivate()   { return Bool.make(m_flags & FConst.Private); }
-    public Bool isProtected() { return Bool.make(m_flags & FConst.Protected); }
-    public Bool isPublic()    { return Bool.make(m_flags & FConst.Public); }
-    public Bool isStatic()    { return Bool.make(m_flags & FConst.Static); }
-    public Bool isSynthetic() { return Bool.make(m_flags & FConst.Synthetic); }
-    public Bool isVirtual()   { return Bool.make(m_flags & FConst.Virtual); }
+    public bool isAbstract()  { return (m_flags & FConst.Abstract)  != 0; }
+public virtual bool isConst() { return (m_flags & FConst.Const)     != 0; } // we let synethic Methods override
+    public bool isCtor()      { return (m_flags & FConst.Ctor)      != 0; }
+    public bool isFinal()     { return (m_flags & FConst.Final)     != 0; }
+    public bool isInternal()  { return (m_flags & FConst.Internal)  != 0; }
+    public bool isNative()    { return (m_flags & FConst.Native)    != 0; }
+    public bool isOverride()  { return (m_flags & FConst.Override)  != 0; }
+    public bool isPrivate()   { return (m_flags & FConst.Private)   != 0; }
+    public bool isProtected() { return (m_flags & FConst.Protected) != 0; }
+    public bool isPublic()    { return (m_flags & FConst.Public)    != 0; }
+    public bool isStatic()    { return (m_flags & FConst.Static)    != 0; }
+    public bool isSynthetic() { return (m_flags & FConst.Synthetic) != 0; }
+    public bool isVirtual()   { return (m_flags & FConst.Virtual)   != 0; }
 
-    public override object trap(Str name, List args)
+    public override object trap(string name, List args)
     {
       // private undocumented access
-      string n = name.val;
-      if (n == "flags") return Int.make(m_flags);
-      if (n == "lineNumber") return Int.make(m_lineNum);
+      string n = name;
+      if (n == "flags")      return m_flags;
+      if (n == "lineNumber") return m_lineNum;
       return base.trap(name, args);
     }
 
@@ -123,36 +119,36 @@ public virtual Bool isConst() { return Bool.make(m_flags & FConst.Const); } // w
   //////////////////////////////////////////////////////////////////////////
 
     public Map facets() { return m_facets.map(); }
-    public object facet(Str name) { return m_facets.get(name, null); }
-    public object facet(Str name, object def) { return m_facets.get(name, def); }
+    public object facet(string name) { return m_facets.get(name, null); }
+    public object facet(string name, object def) { return m_facets.get(name, def); }
 
   //////////////////////////////////////////////////////////////////////////
   // Documentation
   //////////////////////////////////////////////////////////////////////////
 
-    public Str doc()
+    public string doc()
     {
       //parent.doc();  // ensure parent has loaded documentation
       //return doc;
-      return Str.make("todo");
+      return "todo";
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public override Str toStr() { return m_qname; }
+    public override string toStr() { return m_qname; }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
     internal Type m_parent;
-    internal Str m_name;
-    internal Str m_qname;
+    internal string m_name;
+    internal string m_qname;
     internal int m_flags;
     internal Facets m_facets;
-    public Str m_doc;
+    public string m_doc;
     internal int m_lineNum;
 
   }
