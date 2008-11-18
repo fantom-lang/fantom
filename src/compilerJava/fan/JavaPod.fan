@@ -1,0 +1,43 @@
+//
+// Copyright (c) 2008, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   17 Nov 08  Brian Frank  Creation
+//
+
+using compiler
+
+**
+** JavaPod is the CPod wrapper for a Java package.
+**
+class JavaPod : CPod
+{
+
+  new make(CNamespace ns, Str package, Str[] classes)
+  {
+    this.ns = ns
+    this.name = "[java]" + package
+    this.packageName = package
+    this.types = classes.map(JavaType[,]) |Str n->JavaType| { return JavaType(ns, this, n) }
+  }
+
+  override readonly CNamespace ns
+
+  override readonly Str name
+
+  readonly Str packageName
+
+  override Version version() { return Version("0") }
+
+  override readonly CType[] types
+
+  override JavaType? resolveType(Str typeName, Bool checked)
+  {
+    x := types.find |JavaType t->Bool| { return t.name == typeName }
+    if (x != null) return x
+    if (checked) throw UnknownTypeErr(name + "::" + typeName)
+    return null
+  }
+
+}

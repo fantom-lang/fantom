@@ -31,7 +31,7 @@ class NamespaceTest : CompilerTest
   Void verifySys(CNamespace ns)
   {
     // sys pod
-    pod := ns.resolvePod("sys", true)
+    pod := ns.resolvePod("sys", null)
     verifyEq(pod.name, "sys")
     verify(pod.version > Version.fromStr("1.0.7"))
     types := pod.types

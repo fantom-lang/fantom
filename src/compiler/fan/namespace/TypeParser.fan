@@ -41,7 +41,7 @@ class TypeParser
       colon    := sig.index("::")
       podName  := sig[0...colon]
       typeName := sig[colon+2..-1]
-      return ns.resolvePod(podName, true).resolveType(typeName, true)
+      return ns.resolvePod(podName, null).resolveType(typeName, true)
     }
 
     // we got our work cut out for us - create parser
