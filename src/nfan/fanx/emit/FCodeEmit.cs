@@ -578,7 +578,23 @@ namespace Fanx.Emit
   // Compare
   //////////////////////////////////////////////////////////////////////////
 
-    private void compareEQ() { doCompare("EQ"); }
+    private void compareEQ()
+    {
+      FTypeRef lhs = pod.typeRef(u2());
+      FTypeRef rhs = pod.typeRef(u2());
+
+      // if this is a.equals(b) and we know a is non-null, then just call equals
+      if (lhs.isRef() && !lhs.isNullable() && rhs.isRef())
+      {
+        PERWAPI.Method m = emitter.findMethod("System.Object", "Equals",
+          new string[] { "System.Object" }, "System.Boolean");
+        m.AddCallConv(CallConv.Instance);
+        code.MethInst(MethodOp.callvirt, m);
+        return;
+      }
+
+      doCompare("EQ", lhs, rhs);
+    }
 
     private void compareNE() { doCompare("NE"); }
 
@@ -594,9 +610,12 @@ namespace Fanx.Emit
 
     private void doCompare(string suffix)
     {
+      doCompare(suffix, pod.typeRef(u2()), pod.typeRef(u2()));
+    }
+
+    private void doCompare(string suffix, FTypeRef lhs, FTypeRef rhs)
+    {
       // get lhs and rhs types
-      FTypeRef lhs = pod.typeRef(u2());
-      FTypeRef rhs = pod.typeRef(u2());
       string[] args = new string[]
       {
         lhs.isRef() ? "System.Object" : lhs.nname(),
