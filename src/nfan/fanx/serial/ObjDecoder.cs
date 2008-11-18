@@ -160,7 +160,7 @@ namespace Fanx.Serial
     {
       // parse: type(str)
       consume(Token.LPAREN, "Expected ( in simple");
-      Str str = consumeStr("Expected string literal for simple");
+      string str = consumeStr("Expected string literal for simple");
       consume(Token.RPAREN, "Expected ) in simple");
 
       // lookup the fromStr method
@@ -197,7 +197,7 @@ namespace Fanx.Serial
       {
         List args = null;
         if (root && options != null)
-          args = (List)options.get(optMakeArgs);
+          args = (List)options.get("makeArgs");
         obj = t.make(args);
       }
       catch (System.Exception e)
@@ -270,7 +270,7 @@ namespace Fanx.Serial
       // set field value (skip const check)
       try
       {
-        if (field.isConst().val)
+        if (field.isConst())
           field.set(obj, OpUtil.toImmutable(val), false);
         else
           field.set(obj, val, false);
@@ -432,11 +432,11 @@ namespace Fanx.Serial
       if (t != null) return t;
       if (curField != null)
       {
-        Type ft = curField.of();
+        Type ft = curField.of().toNonNullable();
         if (ft is ListType) return ((ListType)ft).m_v;
       }
       if (infer) return null;
-      return Sys.ObjType;
+      return Sys.ObjType.toNullable();
     }
 
     /// <summary>
@@ -456,14 +456,14 @@ namespace Fanx.Serial
 
       if (curField != null)
       {
-        Type ft = curField.of();
+        Type ft = curField.of().toNonNullable();
         if (ft is MapType) return (MapType)ft;
       }
 
       if (infer) return null;
       return defaultMapType;
     }
-    private static readonly MapType defaultMapType = new MapType(Sys.ObjType, Sys.ObjType);
+    private static readonly MapType defaultMapType = new MapType(Sys.ObjType, Sys.ObjType.toNullable());
 
   //////////////////////////////////////////////////////////////////////////
   // Type
@@ -482,6 +482,11 @@ namespace Fanx.Serial
     private Type readType(bool lbracket)
     {
       Type t = readSimpleType();
+      if (curt == Token.QUESTION)
+      {
+        consume();
+        t = t.toNullable();
+      }
       if (curt == Token.COLON)
       {
         consume();
@@ -491,6 +496,11 @@ namespace Fanx.Serial
       {
         consume();
         t = t.toListOf();
+      }
+      if (curt == Token.QUESTION)
+      {
+        consume();
+        t = t.toNullable();
       }
       return t;
     }
@@ -565,12 +575,12 @@ namespace Fanx.Serial
     }
 
     /// <summary>
-    /// Consume the current token as a Str literal.
+    /// Consume the current token as a string literal.
     /// </summary>
-    private Str consumeStr(string expected)
+    private string consumeStr(string expected)
     {
       verify(Token.STR_LITERAL, expected);
-      Str id = (Str)tokenizer.m_val;
+      string id = (string)tokenizer.m_val;
       consume();
       return id;
     }
@@ -641,8 +651,6 @@ namespace Fanx.Serial
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
-
-    static readonly Str optMakeArgs = Str.make("makeArgs");
 
     internal Tokenizer tokenizer;    // tokenizer
     internal int curt;               // current token type

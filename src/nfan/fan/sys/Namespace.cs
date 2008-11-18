@@ -39,7 +39,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Str toStr() { return Str.make(type().m_qname + " uri=" + m_uri); }
+    public override string toStr() { return type().qname() + " uri=" + m_uri; }
 
     public override Type type() { return Sys.NamespaceType; }
 
@@ -49,8 +49,8 @@ namespace Fan.Sys
 
     public Uri uri() { return m_uri; }
 
-    public object get(Uri uri) { return get(uri, Bool.True); }
-    public abstract object get(Uri uri, Bool check);
+    public object get(Uri uri) { return get(uri, true); }
+    public abstract object get(Uri uri, bool check);
 
     public virtual Uri create(Uri uri, object obj)
     {
@@ -79,7 +79,7 @@ namespace Fan.Sys
     public static object safe(object obj)
     {
       if (obj == null) return null;
-      if (isImmutable(obj).val) return obj;
+      if (isImmutable(obj)) return obj;
       Buf buf = new MemBuf(512);
       buf.m_out.writeObj(obj);
       buf.flip();
