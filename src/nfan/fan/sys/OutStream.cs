@@ -377,7 +377,7 @@ namespace Fan.Sys
             enc.encode(';', this);
             break;
           case '>':
-            if (i == 0 || s[i-1] != ']') enc.encode('>', this);
+            if (i > 0 && s[i-1] != ']') enc.encode('>', this);
             else
             {
               enc.encode('&', this);
