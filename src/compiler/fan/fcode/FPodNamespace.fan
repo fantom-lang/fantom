@@ -26,7 +26,6 @@ class FPodNamespace : CNamespace
   new make(File dir)
   {
     this.dir = dir
-    this.pods = Str:FPod[:]
     init
   }
 
@@ -37,24 +36,15 @@ class FPodNamespace : CNamespace
   **
   ** Map to an FPod
   **
-  override FPod? resolvePod(Str podName, Bool checked)
+  protected override FPod? findPod(Str podName)
   {
-    // check cache
-    fpod := pods[podName]
-    if (fpod != null) return fpod
-
     // try to find it
     file := dir + (podName + ".pod").toUri
-    if (!file.exists)
-    {
-      if (checked) throw UnknownPodErr.make(podName)
-      return null
-    }
+    if (!file.exists) return null
 
-    // load it and stash in the cache
-    fpod = FPod.make(this, podName, Zip.open(file))
+    // load it
+    fpod := FPod.make(this, podName, Zip.open(file))
     fpod.read
-    pods[podName] = fpod
     return fpod
   }
 
@@ -63,6 +53,5 @@ class FPodNamespace : CNamespace
 //////////////////////////////////////////////////////////////////////////
 
   readonly File dir       // where we look for pod files
-  private Str:FPod pods   // keyed by pod name
 
 }

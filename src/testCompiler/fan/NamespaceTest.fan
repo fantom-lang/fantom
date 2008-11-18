@@ -31,7 +31,7 @@ class NamespaceTest : CompilerTest
   Void verifySys(CNamespace ns)
   {
     // sys pod
-    pod := ns.resolvePod("sys", true)
+    pod := ns.resolvePod("sys", null)
     verifyEq(pod.name, "sys")
     verify(pod.version > Version.fromStr("1.0.7"))
     types := pod.types
@@ -382,6 +382,23 @@ class NamespaceTest : CompilerTest
        [
          3, 22, "Using 'compiler' which is not a declared dependency for '$podName'",
        ], false)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// FFI Checking
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFFI()
+  {
+    verifyErrors(
+     "using [barxyzfoo] a.b.c
+      using [testCompiler] d.e.f
+      class Foo {}
+      ",
+       [
+         1, 1, "No FFI bridge available for 'barxyzfoo'",
+         2, 1, "No FFI bridge available for 'testCompiler'",
+       ])
   }
 
 }

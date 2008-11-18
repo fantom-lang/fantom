@@ -113,6 +113,14 @@ public class FanUtil
           break;
       }
     }
+
+    if (podName.charAt(0) == '[')
+    {
+      if (!podName.startsWith("[java]"))
+        throw new UnsupportedOperationException("Invalid FFI: " + podName);
+      return podName.substring(6) + "." + typeName;
+    }
+
     return "fan." + podName + "." + typeName;
   }
 
@@ -151,6 +159,14 @@ public class FanUtil
           break;
       }
     }
+
+    if (podName.charAt(0) == '[')
+    {
+      if (!podName.startsWith("[java]"))
+        throw new UnsupportedOperationException("Invalid FFI: " + podName);
+      return podName.substring(6) + "." + typeName;
+    }
+
     return "fan." + podName + "." + typeName;
   }
 
@@ -194,6 +210,22 @@ public class FanUtil
           break;
       }
     }
+
+    if (podName.charAt(0) == '[')
+    {
+      if (!podName.startsWith("[java]"))
+        throw new UnsupportedOperationException("Invalid FFI: " + podName);
+
+      StringBuilder s = new StringBuilder(podName.length()+typeName.length());
+      for (int i=6; i<podName.length(); ++i)
+      {
+        char ch = podName.charAt(i);
+        s.append(ch == '.' ? '/' : ch);
+      }
+      s.append('/').append(typeName);
+      return s.toString();
+    }
+
     return "fan/" + podName + "/" + typeName;
   }
 

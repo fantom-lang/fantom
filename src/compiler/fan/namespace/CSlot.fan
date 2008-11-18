@@ -20,6 +20,8 @@ mixin CSlot
   abstract Str signature()
   abstract Int flags()
 
+  override final Str toStr() { return signature }
+
   Bool isAbstract()  { return flags & FConst.Abstract  != 0 }
   Bool isAccessor()  { return flags & (FConst.Getter | FConst.Setter) != 0 }
   Bool isConst()     { return flags & FConst.Const     != 0 }

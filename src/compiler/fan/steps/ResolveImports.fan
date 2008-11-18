@@ -97,13 +97,15 @@ class ResolveImports : CompilerStep
       // resolve the import and cache in resolved map
       if (u.resolvedPod == null)
       {
-        pod := ns.resolvePod(podName, false)
-        if (pod == null)
+        try
         {
-          err("Pod not found '$podName'", u.location)
-          return
+          pod := ns.resolvePod(podName, u.location)
+          resolved[podName] = u.resolvedPod = pod
         }
-        resolved[podName] = u.resolvedPod = pod
+        catch (CompilerErr e)
+        {
+          errReport(e)
+        }
       }
 
       // if type specified, then resolve type
@@ -215,10 +217,14 @@ class ResolveImports : CompilerStep
     }
 
     // otherwise we need to try to resolve pod
-    pod := cs.ns.resolvePod(podName, false)
-    if (pod == null)
+    CPod? pod := null
+    try
     {
-      cs.err("Pod not found '$podName'", location);
+      pod = cs.ns.resolvePod(podName, location)
+    }
+    catch (CompilerErr e)
+    {
+      cs.errReport(e)
       return null
     }
 

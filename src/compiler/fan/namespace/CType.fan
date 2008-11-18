@@ -45,6 +45,11 @@ mixin CType
   abstract Str signature()
 
   **
+  ** Return signature
+  **
+  override final Str toStr() { return signature }
+
+  **
   ** If this is a TypeRef, return what it references
   **
   virtual CType deref() { return this }
