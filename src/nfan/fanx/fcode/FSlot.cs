@@ -15,6 +15,8 @@ namespace Fanx.Fcode
   /// </summary>
   public class FSlot
   {
+    public bool isStatic() { return (m_flags & FConst.Static) != 0; }
+
     protected void readCommon(FStore.Input input)
     {
       m_name  = input.name();

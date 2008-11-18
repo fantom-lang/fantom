@@ -21,34 +21,34 @@ namespace Fan.Sys
   // Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public static Regex fromStr(Str pattern)
+    public static Regex fromStr(string pattern)
     {
       return new Regex(pattern);
     }
 
-    Regex(Str source)
+    Regex(string source)
     {
       this.m_source  = source;
-      this.m_pattern = new NRegex(source.val);
+      this.m_pattern = new NRegex(source);
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public sealed override Bool _equals(object obj)
+    public sealed override bool _equals(object obj)
     {
       if (obj is Regex)
-        return ((Regex)obj).m_source._equals(this.m_source);
+        return ((Regex)obj).m_source == this.m_source;
       else
-        return Bool.False;
+        return false;
     }
 
     public sealed override int GetHashCode() { return m_source.GetHashCode(); }
 
-    public sealed override Int hash() { return m_source.hash(); }
+    public sealed override long hash() { return FanStr.hash(m_source); }
 
-    public override Str toStr() { return m_source; }
+    public override string toStr() { return m_source; }
 
     public override Type type() { return Sys.RegexType; }
 
@@ -56,26 +56,26 @@ namespace Fan.Sys
   // Regular expression
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool matches(Str s)
+    public bool matches(string s)
     {
-      return new RegexMatcher(m_pattern.Match(s.val), s).matches();
+      return new RegexMatcher(m_pattern.Match(s), s).matches();
     }
 
-    public RegexMatcher matcher(Str s)
+    public RegexMatcher matcher(string s)
     {
-      return new RegexMatcher(m_pattern.Match(s.val), s);
+      return new RegexMatcher(m_pattern.Match(s), s);
     }
 
-    public List split(Str s) { return split(s, Int.Zero); }
-    public List split(Str s, Int limit)
+    public List split(string s) { return split(s, 0); }
+    public List split(string s, long limit)
     {
-      int l = (limit.val < 0) ? 0 : (int)limit.val;
-      List result = new List(m_pattern.Split(s.val, l));
+      int l = (limit < 0) ? 0 : (int)limit;
+      List result = new List(m_pattern.Split(s, l));
 
       // to match java we need to discard any trailing
       // emptys strings (use limit, not l)
-      if (limit.val == 0)
-        while (result.sz() > 0 && (result.last() as Str).val.Length == 0)
+      if (limit == 0)
+        while (result.sz() > 0 && (result.last() as string).Length == 0)
           result.pop();
 
       return result;
@@ -85,7 +85,7 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private Str m_source;
+    private string m_source;
     private NRegex m_pattern;
 
   }

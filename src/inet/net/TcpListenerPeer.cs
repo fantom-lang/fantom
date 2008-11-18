@@ -32,14 +32,14 @@ namespace Fan.Inet
   // State
   //////////////////////////////////////////////////////////////////////////
 
-    public Bool isBound(TcpListener fan)
+    public Fan.Sys.Boolean isBound(TcpListener fan)
     {
-      return Bool.make(m_bound);
+      return Fan.Sys.Boolean.valueOf(m_bound);
     }
 
-    public Bool isClosed(TcpListener fan)
+    public Fan.Sys.Boolean isClosed(TcpListener fan)
     {
-      return Bool.make(m_closed);
+      return Fan.Sys.Boolean.valueOf(m_closed);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -54,25 +54,25 @@ namespace Fan.Inet
       return IpAddressPeer.make(pt.Address);
     }
 
-    public Int localPort(TcpListener fan)
+    public Long localPort(TcpListener fan)
     {
       if (!m_bound) return null;
       IPEndPoint pt = m_net.LocalEndpoint as IPEndPoint;
       if (pt == null) return null;
       // TODO - null for default port?
-      return Int.make(pt.Port);
+      return Long.valueOf(pt.Port);
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public TcpListener bind(TcpListener fan, IpAddress addr, Int port, Int backlog)
+    public TcpListener bind(TcpListener fan, IpAddress addr, Long port, Long backlog)
     {
       IPAddress netAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_net;
-      int netPort = (port == null) ? 0 : (int)port.val;
+      int netPort = (port == null) ? 0 : port.intValue();
       m_net = new System.Net.Sockets.TcpListener(netAddr, netPort);
-      m_net.Start((int)backlog.val);
+      m_net.Start(backlog.intValue());
       m_bound = true;
       return fan;
     }
@@ -95,17 +95,17 @@ namespace Fan.Inet
       return s;
     }
 
-    public Bool close(TcpListener fan)
+    public Fan.Sys.Boolean close(TcpListener fan)
     {
       try
       {
         m_net.Stop();
         m_closed = true;
-        return Bool.True;
+        return Fan.Sys.Boolean.True;
       }
       catch (Exception)
       {
-        return Bool.False;
+        return Fan.Sys.Boolean.False;
       }
     }
 
@@ -113,25 +113,25 @@ namespace Fan.Inet
   // Socket Options
   //////////////////////////////////////////////////////////////////////////
 
-    public Int getReceiveBufferSize(TcpListener fan)
+    public Long getReceiveBufferSize(TcpListener fan)
     {
-      return Int.make(m_net.Server.ReceiveBufferSize);
+      return Long.valueOf(m_net.Server.ReceiveBufferSize);
     }
 
-    public void setReceiveBufferSize(TcpListener fan, Int v)
+    public void setReceiveBufferSize(TcpListener fan, Long v)
     {
-      m_net.Server.ReceiveBufferSize = (int)v.val;
+      m_net.Server.ReceiveBufferSize = v.intValue();
     }
 
-    public Bool getReuseAddress(TcpListener fan)
+    public Fan.Sys.Boolean getReuseAddress(TcpListener fan)
     {
-      return Bool.make(Convert.ToBoolean(
+      return Fan.Sys.Boolean.valueOf(Convert.ToBoolean(
         m_net.Server.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress)));
     }
 
-    public void setReuseAddress(TcpListener fan, Bool v)
+    public void setReuseAddress(TcpListener fan, Fan.Sys.Boolean v)
     {
-      m_net.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.val);
+      m_net.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.booleanValue());
     }
 
     public Duration getReceiveTimeout(TcpListener fan)

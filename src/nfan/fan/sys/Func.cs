@@ -37,7 +37,7 @@ namespace Fan.Sys
 
     public List @params() { return m_params.ro(); }
 
-    public override abstract Bool isImmutable();
+    public override abstract bool isImmutable();
 
     public abstract Method method();
 
@@ -52,6 +52,12 @@ namespace Fan.Sys
     public abstract object call6(object a, object b, object c, object d, object e, object f);
     public abstract object call7(object a, object b, object c, object d, object e, object f, object g);
     public abstract object call8(object a, object b, object c, object d, object e, object f, object g, object h);
+
+    public Func toImmutable()
+    {
+      if (isImmutable()) return this;
+      throw NotImmutableErr.make().val;
+    }
 
   //////////////////////////////////////////////////////////////////////////
   // Indirect
@@ -78,17 +84,17 @@ namespace Fan.Sys
     {
       protected Indirect(FuncType type) : base(type) { this.m_type = type; }
 
-      public Str name() { return Str.make(GetType().Name); }
+      public string name() { return GetType().Name; }
       public override Type type()  { return m_type; }
-      public override Str  toStr() { return m_type.signature(); }
-      public override Bool isImmutable() { return Bool.False; }
+      public override string  toStr() { return m_type.signature(); }
+      public override bool isImmutable() { return false; }
       public override Method method() { return null; }
       public Err.Val tooFewArgs(int given) { return Err.make("Too few arguments: " + given + " < " + m_type.m_params.Length).val; }
 
       public override object callOn(object obj, List args)
       {
         List flat = args.dup();
-        flat.insert(Int.Zero, obj);
+        flat.insert(0, obj);
         return call(flat);
       }
 
@@ -272,10 +278,10 @@ namespace Fan.Sys
         this.m_bound = bound.ro();
       }
 
-      public Str  name()  { return Str.make(GetType().Name); }
+      public string  name()  { return GetType().Name; }
       public override Type type()  { return m_type; }
-      public override Str  toStr() { return m_type.signature(); }
-      public override Bool isImmutable() { return Bool.False; }
+      public override string  toStr() { return m_type.signature(); }
+      public override bool isImmutable() { return false; }
       public override Method method() { return null; }
 
       // this isn't a very optimized implementation
