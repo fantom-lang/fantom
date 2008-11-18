@@ -70,8 +70,12 @@ class ResolveDepends : CompilerStep
   **
   private Void resolveDepend(Depend depend)
   {
-    pod := ns.resolvePod(depend.name, false)
-    if (pod == null)
+    CPod? pod := null
+    try
+    {
+      pod = ns.resolvePod(depend.name, loc)
+    }
+    catch (CompilerErr e)
     {
       err("Cannot resolve depend: pod '$depend.name' not found", loc)
       return

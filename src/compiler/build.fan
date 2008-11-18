@@ -30,6 +30,10 @@ class Build : BuildPod
                    `fan/parser/`,
                    `fan/steps/`,
                    `fan/util/`]
+    podFacets =
+    [
+      "indexFacets": ["compilerBridge"]
+    ]
   }
 
 }

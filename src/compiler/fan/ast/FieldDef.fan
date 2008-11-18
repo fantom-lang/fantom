@@ -84,11 +84,6 @@ public class FieldDef : SlotDef, CField
 // Debug
 //////////////////////////////////////////////////////////////////////////
 
-  override Str toStr()
-  {
-    return "$fieldType $name"
-  }
-
   override Void print(AstWriter out)
   {
     printFacets(out)

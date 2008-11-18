@@ -45,8 +45,6 @@ abstract class GenericType : CType
 
   override once Str:CSlot slots() { return parameterizeSlots }
 
-  override Str toStr() { return signature() }
-
 //////////////////////////////////////////////////////////////////////////
 // Parameterize
 //////////////////////////////////////////////////////////////////////////
@@ -341,7 +339,6 @@ class GenericParameterType : CType
   override CType? base() { return ns.objType }
   override CType[] mixins() { return CType[,] }
   override Str:CSlot slots() { throw UnsupportedErr.make }
-  override Str toStr() { return qname }
   private ListType listOf
 }
 
@@ -364,7 +361,6 @@ class ParameterizedField : CField
   override Str qname() { return generic.qname }
   override Str signature() { return generic.signature }
   override Int flags() { return generic.flags }
-  override Str toStr() { return generic.toStr }
 
   override CType fieldType
   override CMethod? getter
@@ -406,7 +402,6 @@ class ParameterizedMethod : CMethod
   override Str name()  { return generic.name }
   override Str qname() { return generic.qname }
   override Int flags() { return generic.flags }
-  override Str toStr() { return signature }
 
   override Bool isParameterized()  { return true }
 

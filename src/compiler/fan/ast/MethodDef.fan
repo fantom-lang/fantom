@@ -162,11 +162,6 @@ class MethodDef : SlotDef, CMethod
 // Debug
 //////////////////////////////////////////////////////////////////////////
 
-  override Str toStr()
-  {
-    return "$ret $name(" + params.join(",") + ")"
-  }
-
   override Void print(AstWriter out)
   {
     printFacets(out)

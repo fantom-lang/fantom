@@ -24,7 +24,6 @@ abstract class ReflectSlot : CSlot
   override Str qname()     { return slot.qname }
   override Str signature() { return slot.signature }
   override readonly Int flags
-  override Str toStr()     { return signature }
   abstract Slot slot()
 }
 

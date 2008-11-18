@@ -72,7 +72,7 @@ class UsingAndTypeScanner : CompilerSupport
   {
     // sys is imported implicitly (unless this is sys itself)
     if (!isSys)
-      unit.usings.add(Using.make(unit.location, "sys"))
+      unit.usings.add(Using.make(unit.location) { podName="sys" })
 
     // scan tokens quickly looking for keywords
     inClassHeader := false
@@ -100,18 +100,41 @@ class UsingAndTypeScanner : CompilerSupport
 
   private Void parseUsing(TokenVal tok)
   {
-    imp := Using.make(tok, consumeId)
+    u := Using.make(tok)
+
+    // using [ffi]
+    u.podName = ""
+    if (curt === Token.lbracket)
+    {
+      consume
+      u.podName = "[" + consumeId + "]"
+      consume(Token.rbracket)
+
+    }
+
+    // using [ffi] pod
+    u.podName += consumeId
+    while (curt === Token.dot)
+    {
+      consume
+      u.podName += "." + consumeId
+    }
+
+    // using [ffi] pod::type
     if (curt === Token.doubleColon)
     {
       consume
-      imp.typeName = consumeId
+      u.typeName = consumeId
+
+      // using [ffi] pod::type as rename
       if (curt === Token.asKeyword)
       {
         consume
-        imp.asName = consumeId
+        u.asName = consumeId
       }
     }
-    unit.usings.add(imp)
+
+    unit.usings.add(u)
   }
 
   private Void parseType(TokenVal tok)
@@ -144,8 +167,15 @@ class UsingAndTypeScanner : CompilerSupport
     return (Str)id.val
   }
 
-  private TokenVal consume()
+  private Void verify(Token expected)
   {
+    if (curt !== expected)
+      err("Expected '$expected.symbol', not '${tokens[pos]}'", tokens[pos]);
+  }
+
+  private TokenVal consume(Token? expected := null)
+  {
+    if (expected != null) verify(expected)
     return tokens[pos++]
   }
 

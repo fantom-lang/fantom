@@ -26,7 +26,7 @@ abstract class CNamespace
   protected Void init()
   {
     // sys pod
-    sysPod = resolvePod("sys", true)
+    sysPod = resolvePod("sys", null)
 
     // error placeholder type
     error = GenericParameterType.make(this, "Error")
@@ -128,11 +128,71 @@ abstract class CNamespace
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Attempt to import the specified pod name against our
-  ** dependency library.  If not found and checked is true
-  ** throw UnknownPodErr otherwise return null.
+  ** Resolve to foreign function interface bridge.
+  ** Bridges are loaded once for each compiler session.
   **
-  abstract CPod? resolvePod(Str podName, Bool checked)
+  private CBridge resolveBridge(Str name, Location? loc)
+  {
+    // check cache
+    bridge := bridges[name]
+    if (bridge != null) return bridge
+
+    // resolve the name by compilerBridge facet
+    t := Type.findByFacet("compilerBridge", name)
+    if (t.size > 1)
+      throw CompilerErr("Multiple FFI bridges available for '$name': $t", loc)
+    if (t.size == 0)
+      throw CompilerErr("No FFI bridge available for '$name'", loc)
+
+    // construct bridge instance
+    try
+      bridge = t.first.make([this])
+    catch (Err e)
+      throw CompilerErr("Cannot construct FFI bridge '$t.first'", loc, e)
+
+    // put into cache
+    bridges[name] = bridge
+    return bridge
+  }
+  private Str:CBridge bridges := Str:CBridge[:]  // keyed by pod name
+
+  **
+  ** Attempt to import the specified pod name against our
+  ** dependency library.  If not found then throw CompilerErr.
+  **
+  CPod resolvePod(Str podName, Location? loc)
+  {
+    // check cache
+    pod := pods[podName]
+    if (pod != null) return pod
+
+    if (podName[0] == '[')
+    {
+      // we have a FFI, route to bridge
+      sep := podName.index("]")
+      ffi := podName[1...sep]
+      package := podName[sep+1..-1]
+      pod = resolveBridge(ffi, loc).resolvePod(package, loc)
+    }
+    else
+    {
+      // let namespace resolve it
+      pod = findPod(podName)
+      if (pod == null)
+        throw CompilerErr("Pod not found '$podName'", loc)
+    }
+
+    // stash in the cache and return
+    pods[podName] = pod
+    return pod
+  }
+  private Str:CPod pods := Str:CPod[:]  // keyed by pod name
+
+  **
+  ** Subclass hook to resolve a pod name to a CPod implementation.
+  ** Return null if not found.
+  **
+  protected abstract CPod? findPod(Str podName)
 
   **
   ** Attempt resolve a signature against our dependency

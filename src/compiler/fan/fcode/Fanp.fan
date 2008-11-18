@@ -64,7 +64,7 @@ class Fanp
   FPod fpod(Str podName)
   {
     ns := FPodNamespace.make(Sys.homeDir + `lib/fan/`)
-    fpod := ns.resolvePod(podName, true)
+    FPod fpod := ns.resolvePod(podName, null)
     fpod.readFully
     return fpod
   }
