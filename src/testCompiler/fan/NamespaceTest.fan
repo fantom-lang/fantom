@@ -384,4 +384,21 @@ class NamespaceTest : CompilerTest
        ], false)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// FFI Checking
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFFI()
+  {
+    verifyErrors(
+     "using [barxyzfoo] a.b.c
+      using [testCompiler] d.e.f
+      class Foo {}
+      ",
+       [
+         1, 1, "No FFI bridge available for 'barxyzfoo'",
+         2, 1, "No FFI bridge available for 'testCompiler'",
+       ])
+  }
+
 }
