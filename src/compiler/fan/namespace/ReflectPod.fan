@@ -55,11 +55,6 @@ class ReflectPod : CPod
     return rt
   }
 
-  override Str toStr()
-  {
-    return name
-  }
-
   readonly Pod pod
   private Str:ReflectType typeMap := Str:ReflectType[:]
   private Bool loadedAllTypes := false

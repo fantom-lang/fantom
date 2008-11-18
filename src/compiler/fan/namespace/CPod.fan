@@ -58,4 +58,12 @@ mixin CPod
     return name == that.name
   }
 
+  **
+  ** Return name
+  **
+  override final Str toStr()
+  {
+    return name
+  }
+
 }
