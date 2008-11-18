@@ -30,7 +30,6 @@ abstract class FSlot : CSlot, FConst
   override CType parent() { return fparent }
   override Str name() { return fparent.fpod.n(nameIndex) }
   override Str qname() { return fparent.qname + "." + name }
-  override Str toStr() { return qname }
 
 //////////////////////////////////////////////////////////////////////////
 // IO

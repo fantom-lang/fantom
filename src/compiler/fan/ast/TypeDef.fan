@@ -304,11 +304,6 @@ class TypeDef : DefNode, CType
 // Debug
 //////////////////////////////////////////////////////////////////////////
 
-  override Str toStr()
-  {
-    return signature()
-  }
-
   override Void print(AstWriter out)
   {
     out.nl
