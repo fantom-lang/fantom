@@ -53,6 +53,12 @@ namespace Fan.Sys
     public abstract object call7(object a, object b, object c, object d, object e, object f, object g);
     public abstract object call8(object a, object b, object c, object d, object e, object f, object g, object h);
 
+    public Func toImmutable()
+    {
+      if (isImmutable()) return this;
+      throw NotImmutableErr.make().val;
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Indirect
   //////////////////////////////////////////////////////////////////////////
