@@ -256,6 +256,9 @@ namespace Fan.Sys
     public Buf writeObj(object obj) { m_out.writeObj(obj); return this; }
     public Buf writeObj(object obj, Map opt) { m_out.writeObj(obj, opt); return this; }
 
+    public Buf writeXml(string s) { m_out.writeXml(s, 0); return this; }
+    public Buf writeXml(string s, long flags) { m_out.writeXml(s, flags); return this; }
+
   //////////////////////////////////////////////////////////////////////////
   // InStream
   //////////////////////////////////////////////////////////////////////////
