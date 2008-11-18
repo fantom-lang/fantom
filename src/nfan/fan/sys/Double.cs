@@ -22,6 +22,7 @@ namespace Fan.Sys
     {
       if (!(obj is Double)) return false;
       double x = (obj as Double).val;
+      if (System.Double.IsNaN(val)) return System.Double.IsNaN(x);
       return val == x;
     }
 
