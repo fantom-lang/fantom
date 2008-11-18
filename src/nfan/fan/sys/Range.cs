@@ -18,34 +18,23 @@ namespace Fan.Sys
   // Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public static Range makeInclusive(int start, int end)
-    {
-      return new Range(Int.make(start), Int.make(end), false);
-    }
-
-    public static Range makeInclusive(Int start, Int end)
+    public static Range makeInclusive(long start, long end)
     {
       return new Range(start, end, false);
     }
 
-    public static Range makeExclusive(int start, int end)
-    {
-      return new Range(Int.make(start), Int.make(end), true);
-    }
-
-    public static Range makeExclusive(Int start, Int end)
+    public static Range makeExclusive(long start, long end)
     {
       return new Range(start, end, true);
     }
 
-    public static Range make(Int start, Int end, Bool exclusive)
+    public static Range make(long start, long end, bool exclusive)
     {
-      return new Range(start, end, exclusive.val);
+      return new Range(start, end, exclusive);
     }
 
-    private Range(Int start, Int end, bool exclusive)
+    private Range(long start, long end, bool exclusive)
     {
-      if (start == null || end == null) throw NullErr.make().val;
       this.m_start = start;
       this.m_end = end;
       this.m_exclusive = exclusive;
@@ -55,75 +44,75 @@ namespace Fan.Sys
   // Range
   //////////////////////////////////////////////////////////////////////////
 
-    public Int start()
+    public long start()
     {
       return m_start;
     }
 
-    public Int end()
+    public long end()
     {
       return m_end;
     }
 
-    public Bool inclusive()
+    public bool inclusive()
     {
-      return m_exclusive ? Bool.False : Bool.True;
+      return !m_exclusive;
     }
 
-    public Bool exclusive()
+    public bool exclusive()
     {
-      return m_exclusive ? Bool.True : Bool.False;
+      return m_exclusive;
     }
 
-    public Bool contains(Int i)
+    public bool contains(long i)
     {
       if (m_exclusive)
-        return Bool.make(m_start.val <= i.val && i.val < m_end.val);
+        return m_start <= i && i < m_end;
       else
-        return Bool.make(m_start.val <= i.val && i.val <= m_end.val);
+        return m_start <= i && i <= m_end;
     }
 
     public void each(Func f)
     {
-      int start = (int)this.m_start.val;
-      int end = (int)this.m_end.val;
+      int start = (int)m_start;
+      int end = (int)m_end;
       if (!m_exclusive) end++;
       for (int i=start; i<end; ++i)
-        f.call1(Int.make(i));
+        f.call1(i);
     }
 
     public List toList()
     {
-      int start = (int)this.m_start.val;
-      int end = (int)this.m_end.val;
+      int start = (int)m_start;
+      int end = (int)m_end;
       List acc = new List(Sys.IntType);
       if (start < end)
       {
         if (m_exclusive) --end;
-        acc.capacity(Int.make(end-start));
+        acc.capacity(end-start);
         for (int i=start; i<=end; ++i)
-          acc.add(Int.make(i));
+          acc.add(Long.valueOf(i));
       }
       else
       {
         if (m_exclusive) ++end;
-        acc.capacity(Int.make(start-end));
+        acc.capacity(start-end);
         for (int i=start; i>=end; --i)
-          acc.add(Int.make(i));
+          acc.add(Long.valueOf(i));
       }
       return acc;
     }
 
-    public override Bool _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is Range)
       {
         Range that = (Range)obj;
-        return Bool.make(this.m_start.val == that.m_start.val &&
-                         this.m_end.val == that.m_end.val &&
-                         this.m_exclusive == that.m_exclusive);
+        return this.m_start == that.m_start &&
+               this.m_end == that.m_end &&
+               this.m_exclusive == that.m_exclusive;
       }
-      return Bool.False;
+      return false;
     }
 
     public override int GetHashCode()
@@ -131,17 +120,17 @@ namespace Fan.Sys
       return m_start.GetHashCode() ^ m_end.GetHashCode();
     }
 
-    public override Int hash()
+    public override long hash()
     {
-      return Int.make(m_start.val ^ m_end.val);
+      return m_start ^ m_end;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       if (m_exclusive)
-        return Str.make(m_start.toStr().val + "..." + m_end.toStr().val);
+        return m_start.ToString() + "..." + m_end.ToString();
       else
-        return Str.make(m_start.toStr().val + ".." + m_end.toStr().val);
+        return m_start.ToString() + ".." + m_end.ToString();
     }
 
     public override Type type() { return Sys.RangeType; }
@@ -152,7 +141,7 @@ namespace Fan.Sys
 
     internal int start(int size)
     {
-      int x = (int)m_start.val;
+      int x = (int)m_start;
       if (x < 0) x = size + x;
       if (x > size) throw IndexErr.make(this).val;
       return x;
@@ -160,7 +149,7 @@ namespace Fan.Sys
 
     internal long start(long size)
     {
-      long x = m_start.val;
+      long x = m_start;
       if (x < 0) x = size + x;
       if (x > size) throw IndexErr.make(this).val;
       return x;
@@ -168,7 +157,7 @@ namespace Fan.Sys
 
     internal int end(int size)
     {
-      int x = (int)m_end.val;
+      int x = (int)m_end;
       if (x < 0) x = size + x;
       if (m_exclusive) x--;
       if (x >= size) throw IndexErr.make(this).val;
@@ -177,7 +166,7 @@ namespace Fan.Sys
 
     internal long end(long size)
     {
-      long x = m_end.val;
+      long x = m_end;
       if (x < 0) x = size + x;
       if (m_exclusive) x--;
       if (x >= size) throw IndexErr.make(this).val;
@@ -188,7 +177,7 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private Int m_start, m_end;
+    private long m_start, m_end;
     private bool m_exclusive;
   }
 }

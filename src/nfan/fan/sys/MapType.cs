@@ -31,31 +31,26 @@ namespace Fan.Sys
   // Type
   //////////////////////////////////////////////////////////////////////////
 
-    public override Int hash()
+    public override long hash()
     {
-      return signature().hash();
+      return FanStr.hash(signature());
     }
 
-    public override Bool _equals(object obj)
+    public override bool _equals(object obj)
     {
       if (obj is MapType)
       {
         MapType x = (MapType)obj;
-        return Bool.make(m_k.Equals(x.m_k) && m_v.Equals(x.m_v));
+        return m_k.Equals(x.m_k) && m_v.Equals(x.m_v);
       }
-      return Bool.False;
+      return false;
     }
 
-    public override Type @base()
-    {
-      return Sys.MapType;
-    }
-
-    public override Str signature()
+    public override string signature()
     {
       if (m_sig == null)
       {
-        m_sig = Str.make('[' + m_k.signature().val + ':' + m_v.signature().val + ']');
+        m_sig = '[' + m_k.signature() + ':' + m_v.signature() + ']';
       }
       return m_sig;
     }
@@ -73,9 +68,9 @@ namespace Fan.Sys
     internal override Map makeParams()
     {
       return new Map(Sys.StrType, Sys.TypeType)
-        .set(Str.m_ascii['K'], m_k)
-        .set(Str.m_ascii['V'], m_v)
-        .set(Str.m_ascii['M'], this).ro();
+        .set("K", m_k)
+        .set("V", m_v)
+        .set("M", this).ro();
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -106,7 +101,7 @@ namespace Fan.Sys
 
     public readonly Type m_k;
     public readonly Type m_v;
-    private Str m_sig;
+    private string m_sig;
 
   }
 }

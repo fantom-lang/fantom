@@ -31,7 +31,7 @@ namespace Fanx.Tools
 
     class MainThread : Thread
     {
-      public MainThread() : base(Str.make("main")) {}
+      public MainThread() : base("main") {}
       public override object run()
       {
         ret = doRun();

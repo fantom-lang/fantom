@@ -45,17 +45,17 @@ namespace Fan.Sys
   // File
   //////////////////////////////////////////////////////////////////////////
 
-    public override Bool exists()
+    public override bool exists()
     {
-      return Bool.True;
+      return true;
     }
 
-    public override Int size()
+    public override Long size()
     {
-      if (isDir().val) return null;
+      if (isDir()) return null;
       long size = m_entry.Size;
       if (size < 0) return null;
-      return Int.pos(size);
+      return Long.valueOf(size);
     }
 
     public override DateTime modified()
@@ -68,7 +68,7 @@ namespace Fan.Sys
       throw IOErr.make("ZipEntryFile is readonly").val;
     }
 
-    public override Str osPath()
+    public override string osPath()
     {
       return null;
     }
@@ -88,7 +88,7 @@ namespace Fan.Sys
       return this;
     }
 
-    public override File plus(Uri uri, Bool checkSlash)
+    public override File plus(Uri uri, bool checkSlash)
     {
       // TODO
       throw UnsupportedErr.make("ZipEntryFile.plus").val;
@@ -122,17 +122,17 @@ namespace Fan.Sys
   // IO
   //////////////////////////////////////////////////////////////////////////
 
-    public override Buf open(Str mode)
+    public override Buf open(string mode)
     {
       throw IOErr.make("ZipEntryFile cannot be opened with random access").val;
     }
 
-    public override Buf mmap(Str mode, Int pos, Int size)
+    public override Buf mmap(string mode, long pos, Long size)
     {
       throw UnsupportedErr.make("ZipEntryFile.mmap").val;
     }
 
-    public override InStream @in(Int bufSize)
+    public override InStream @in(Long bufSize)
     {
       try
       {
@@ -147,8 +147,8 @@ namespace Fan.Sys
           ins = (m_parent as ZipFile).GetInputStream(m_entry);
 
           // buffer if specified
-          if (bufSize != null && bufSize.val != 0)
-            ins = new System.IO.BufferedStream(ins, (int)bufSize.val);
+          if (bufSize != null && bufSize.longValue() != 0)
+            ins = new System.IO.BufferedStream(ins, bufSize.intValue());
         }
 
         // return as fan stream
@@ -160,7 +160,7 @@ namespace Fan.Sys
       }
     }
 
-    public override OutStream @out(Bool append, Int bufSize)
+    public override OutStream @out(bool append, Long bufSize)
     {
       throw IOErr.make("ZipEntryFile is readonly").val;
     }

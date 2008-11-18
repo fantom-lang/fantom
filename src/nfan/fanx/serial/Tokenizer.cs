@@ -83,6 +83,7 @@ namespace Fanx.Serial
           case '{':   consume(); return Token.LBRACE;
           case '}':   consume(); return Token.RBRACE;
           case '#':   consume(); return Token.POUND;
+          case '?':   consume(); return Token.QUESTION;
           case '.':
             if (peekt == DIGIT) return number(false);
             consume();
@@ -137,13 +138,13 @@ namespace Fanx.Serial
           if (val == "as") { return Token.AS; }
           break;
         case 'f':
-          if (val == "false") { m_val = Bool.False; return Token.BOOL_LITERAL; }
+          if (val == "false") { m_val = Boolean.False; return Token.BOOL_LITERAL; }
           break;
         case 'n':
           if (val == "null") { m_val = null; return Token.NULL_LITERAL; }
           break;
         case 't':
-          if (val == "true") { m_val = Bool.True; return Token.BOOL_LITERAL; }
+          if (val == "true") { m_val = Boolean.True; return Token.BOOL_LITERAL; }
           break;
         case 'u':
           if (val == "using") { return Token.USING; }
@@ -252,9 +253,9 @@ namespace Fanx.Serial
         if (floatSuffix)
         {
           if (s == null)
-            this.m_val = Float.make((double)whole);
+            this.m_val = Double.valueOf((double)whole);
           else
-            this.m_val = Float.make(System.Double.Parse(s.ToString()));
+            this.m_val = Double.valueOf(s.ToString());
           return Token.FLOAT_LITERAL;
         }
 
@@ -263,7 +264,7 @@ namespace Fanx.Serial
         {
           decimal dnum = (s == null) ?
             new decimal(whole) :
-            Decimal.Parse(s.ToString());
+            BigDecimal.valueOf(s.ToString()).decimalValue();
           if (dur > 0)
           {
             //this.m_val = Duration.make(((long)dnum) * dur);
@@ -273,7 +274,7 @@ namespace Fanx.Serial
           }
           else
           {
-            this.m_val = Decimal.make(dnum);
+            this.m_val = BigDecimal.valueOf(dnum);
             return Token.DECIMAL_LITERAL;
           }
         }
@@ -287,7 +288,7 @@ namespace Fanx.Serial
         }
         else
         {
-          this.m_val = Int.make(num);
+          this.m_val = Long.valueOf(num);
           return Token.INT_LITERAL;
         }
       }
@@ -325,7 +326,7 @@ namespace Fanx.Serial
         consume();
       }
 
-      m_val = Int.make(val);
+      m_val = Long.valueOf(val);
       return type;
     }
 
@@ -361,7 +362,7 @@ namespace Fanx.Serial
           default:    s.Append((char)cur); consume(); break;
         }
       }
-      m_val = Str.make(s.ToString());
+      m_val = s.ToString();
       return Token.STR_LITERAL;
     }
 
@@ -370,7 +371,7 @@ namespace Fanx.Serial
   //////////////////////////////////////////////////////////////////////////
 
     /// <summary>
-    /// Parse a char literal token (as Int literal).
+    /// Parse a char literal token (as Long literal).
     /// </summary>
     private int ch()
     {
@@ -393,7 +394,7 @@ namespace Fanx.Serial
       if (cur != '\'') throw err("Expecting ' close of char literal");
       consume();
 
-      m_val = Int.make(c);
+      m_val = Long.valueOf(c);
       return Token.INT_LITERAL;
     }
 
