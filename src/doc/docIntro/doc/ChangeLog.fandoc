@@ -463,6 +463,12 @@
 - New docLib::Fwt chapter
 - Turn on non-null coercion runtime checking
 - Allow function types const fields with implicit toImmutable
+- Fix compiler checking of internal types
+- Fix compiler auto-casting of function types
+- Fix compiler to disallow empty try blocks
+- Fix compiler to allow for(...); and while(...);
+- Fix compiler to include fandoc for enum defs
+- Enhance docCompiler to show overridden slot and inherited fandoc
 - Fwt: file and directory dialogs
 - Fwt: RichText line background styling
 - Flux: persist undo/redo stack between hyperlinks

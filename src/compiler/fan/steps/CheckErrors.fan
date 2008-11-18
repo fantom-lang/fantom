@@ -176,6 +176,9 @@ class CheckErrors : CompilerStep
     // abstract field cannot have getter/setter
     if (f.isAbstract && (f.hasGet || f.hasSet))
       err("Abstract field '$f.name' cannot have getter or setter", f.location)
+
+    // check internal type
+    checkTypeProtection(f.fieldType, f.location)
   }
 
   private Void checkFieldFlags(FieldDef f)
@@ -291,6 +294,13 @@ class CheckErrors : CompilerStep
 
     // check ctors call super (or another this) ctor
     if (m.isCtor()) checkCtor(m)
+
+    // check types used in signature
+    if (!m.isAccessor)
+    {
+      checkTypeProtection(m.returnType, m.location)
+      m.paramDefs.each |ParamDef p| { checkTypeProtection(p.paramType, p.location) }
+    }
   }
 
   private Void checkMethodFlags(MethodDef m)
@@ -563,6 +573,11 @@ class CheckErrors : CompilerStep
 
   private Void checkTry(TryStmt stmt)
   {
+    // check that try block not empty
+    if (stmt.block.isEmpty)
+      err("Try block cannot be empty", stmt.location)
+
+    // check each catch
     caught := CType[,]
     stmt.catches.each |Catch c|
     {
@@ -610,6 +625,8 @@ class CheckErrors : CompilerStep
   {
     switch (expr.id)
     {
+      case ExprId.typeLiteral:    checkTypeLiteral((LiteralExpr)expr)
+      case ExprId.slotLiteral:    checkSlotLiteral((SlotLiteralExpr)expr)
       case ExprId.listLiteral:    checkListLiteral((ListLiteralExpr)expr)
       case ExprId.mapLiteral:     checkMapLiteral((MapLiteralExpr)expr)
       case ExprId.rangeLiteral:   checkRangeLiteral((RangeLiteralExpr)expr)
@@ -636,6 +653,16 @@ class CheckErrors : CompilerStep
       case ExprId.withBlock:      checkWithBlock((WithBlockExpr)expr)
     }
     return expr
+  }
+
+  private Void checkTypeLiteral(LiteralExpr expr)
+  {
+    checkTypeProtection((CType)expr.val, expr.location)
+  }
+
+  private Void checkSlotLiteral(SlotLiteralExpr expr)
+  {
+    checkSlotProtection(expr.slot, expr.location)
   }
 
   private Void checkListLiteral(ListLiteralExpr expr)
@@ -1229,6 +1256,35 @@ class CheckErrors : CompilerStep
     }
   }
 
+  private Void checkTypeProtection(CType t, Location loc)
+  {
+    t = t.toNonNullable
+
+    if (t.isInternal && t.pod != curType.pod)
+      err("Internal type '$t' not accessible", loc)
+
+    if (t is GenericType)
+    {
+      if (t is ListType)
+      {
+        x := (ListType)t
+        checkTypeProtection(x.v, loc)
+      }
+      else if (t is MapType)
+      {
+        x := (MapType)t
+        checkTypeProtection(x.k, loc)
+        checkTypeProtection(x.v, loc)
+      }
+      else
+      {
+        x := (FuncType)t
+        checkTypeProtection(x.ret, loc)
+        x.params.each |CType p| { checkTypeProtection(p, loc) }
+      }
+    }
+  }
+
   private Void checkSlotProtection(CSlot slot, Location loc, Bool setter := false)
   {
     errMsg := slotProtectionErr(slot, setter)
@@ -1248,13 +1304,16 @@ class CheckErrors : CompilerStep
     if (myType.isClosure)
       myType = curType.closure.enclosingType
 
+    // consider the slot internal if its parent is internal
+    isInternal := slot.isInternal || slot.parent.isInternal
+
     if (slot.isPrivate && myType != slot.parent)
       return "Private $msg '$slot.qname' not accessible"
 
     else if (slot.isProtected && !myType.fits(slot.parent))
       return "Protected $msg '$slot.qname' not accessible"
 
-    else if (slot.isInternal && myType.pod != slot.parent.pod)
+    else if (isInternal && myType.pod != slot.parent.pod)
       return "Internal $msg '$slot.qname' not accessible"
 
     else
@@ -1321,13 +1380,55 @@ class CheckErrors : CompilerStep
         return expr
     }
 
-    // if we auto-cast to make the expr fit, do it
-    if (expected.fits(actual))
-      return TypeCheckExpr.coerce(expr, expected)
+    // if we can auto-cast to make the expr fit then do it - we
+    // have to treat function auto-casting a little specially here
+    if (actual.isFunc && expected.isFunc)
+    {
+      if (isFuncAutoCoerce(actual, expected))
+        return TypeCheckExpr.coerce(expr, expected)
+    }
+    else
+    {
+      if (expected.fits(actual))
+        return TypeCheckExpr.coerce(expr, expected)
+    }
 
     // we have an error condition
     onErr()
     return expr
+  }
+
+  static Bool isFuncAutoCoerce(CType actualType, CType expectedType)
+  {
+    // check if both are function types
+    if (!actualType.isFunc || !expectedType.isFunc) return false
+    actual   := (FuncType)actualType.toNonNullable
+    expected := (FuncType)expectedType.toNonNullable
+
+    // if actual function requires more parameters than
+    // we are expecting, then this cannot be a match
+    if (actual.arity > expected.arity) return false
+
+    // check return type
+    if (!isFuncAutoCoerceMatch(actual.ret, expected.ret))
+      return false
+
+    // check that each parameter is auto-castable
+    return actual.params.all |CType actualParam, Int i->Bool|
+    {
+      expectedParam := expected.params[i]
+      return isFuncAutoCoerceMatch(actualParam, expectedParam)
+    }
+
+    return true
+  }
+
+  static Bool isFuncAutoCoerceMatch(CType actual, CType expected)
+  {
+    if (actual.fits(expected)) return true
+    if (expected.fits(actual)) return true
+    if (isFuncAutoCoerce(actual, expected)) return true
+    return false
   }
 
   static Bool needCoerce(CType from, CType to)
