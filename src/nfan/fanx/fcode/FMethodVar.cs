@@ -35,7 +35,7 @@ namespace Fanx.Fcode
       int attrCount = input.u2();
       for (int i=0; i<attrCount; ++i)
       {
-        String attrName = input.fpod.name(input.u2());
+        string attrName = input.fpod.name(input.u2());
         FBuf attrBuf = FBuf.read(input);
         if (attrName == FConst.ParamDefaultAttr)
           def = attrBuf;

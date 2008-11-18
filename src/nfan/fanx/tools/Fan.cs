@@ -28,7 +28,7 @@ namespace Fanx.Tools
     {
       // args
       for (int i=0; i<args.Length; ++i)
-        Sys.m_args.add(Str.make(args[i]));
+        Sys.m_args.add(args[i]);
 
       // first try as file name
       if (System.IO.File.Exists(target) && !Directory.Exists(target))
@@ -115,7 +115,7 @@ namespace Fanx.Tools
         args = null;
       }
       else if (((Param)pars.get(0)).of().@is(Sys.StrType.toListOf()) &&
-               (pars.sz() == 1 || ((Param)pars.get(1)).hasDefault().val))
+               (pars.sz() == 1 || ((Param)pars.get(1)).hasDefault()))
       {
         args = new List(Sys.ObjType, new object[] { Sys.args() });
       }
@@ -128,7 +128,7 @@ namespace Fanx.Tools
       // invoke
       try
       {
-        if (m.isStatic().val)
+        if (m.isStatic())
           return toResult(m.call(args));
         else
           return toResult(m.callOn(t.make(), args));
@@ -142,7 +142,7 @@ namespace Fanx.Tools
 
     static int toResult(object obj)
     {
-      if (obj is Int) return (int)((Int)obj).val;
+      if (obj is long) return (int)obj;
       return 0;
     }
 
@@ -176,7 +176,7 @@ namespace Fanx.Tools
       for (int i=0; i<pods.sz(); i++)
       {
         Pod pod = (Pod)pods.get(i);
-        writeLine("  " + pod.name().justl(Int.make(14)) + "  " + pod.version());
+        writeLine("  " + FanStr.justl(pod.name(), 14) + "  " + pod.version());
       }
     }
 
@@ -194,7 +194,7 @@ namespace Fanx.Tools
 
     class MainThread : Thread
     {
-      public MainThread() : base(Str.make("main")) {}
+      public MainThread() : base("main") {}
       public override object run()
       {
         ret = doRun();

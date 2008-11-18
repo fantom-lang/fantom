@@ -62,7 +62,7 @@ namespace Fan.Sys
 
     public override Type type() { return Sys.ZipType; }
 
-    public override Str toStr()
+    public override string toStr()
     {
       if (m_file != null) return m_file.toStr();
       return base.toStr();
@@ -136,32 +136,32 @@ namespace Fan.Sys
       }
     }
 
-    public Bool finish()
+    public bool finish()
     {
       if (m_zipOut == null) throw UnsupportedErr.make("Zip not opened for writing").val;
       try
       {
         m_zipOut.Finish();
-        return Bool.True;
+        return true;
       }
       catch (System.IO.IOException)
       {
-        return Bool.False;
+        return false;
       }
     }
 
-    public Bool close()
+    public bool close()
     {
       try
       {
         if (m_zipFile != null) m_zipFile.Close();
         if (m_zipIn != null)   m_zipIn.Close();
         if (m_zipOut != null)  m_zipOut.Close();
-        return Bool.True;
+        return true;
       }
       catch (System.IO.IOException)
       {
-        return Bool.False;
+        return false;
       }
     }
 
@@ -175,16 +175,16 @@ namespace Fan.Sys
       {
         this.zout = zout;
       }
-      public override Bool close()
+      public override bool close()
       {
         try
         {
           zout.CloseEntry();
-          return Bool.True;
+          return true;
         }
         catch (System.IO.IOException)
         {
-          return Bool.False;
+          return false;
         }
       }
       private ZipOutputStream zout;
