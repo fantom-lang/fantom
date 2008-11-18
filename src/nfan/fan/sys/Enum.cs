@@ -20,23 +20,23 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Enum make(Int ordinal, Str name)
+    public static Enum make(long ordinal, string name)
     {
       // should never be used
       throw new System.Exception();
     }
 
-    public static void make_(Enum self, Int ordinal, Str name)
+    public static void make_(Enum self, long ordinal, string name)
     {
-      if (ordinal == null || name == null) throw new NullErr().val;
+      if (name == null) throw new NullErr().val;
       self.m_ordinal = ordinal;
       self.m_name    = name;
     }
 
-    protected static Enum doFromStr(Type t, Str name, Bool check)
+    protected static Enum doFromStr(Type t, string name, bool check)
     {
       // the compiler marks the value fields with the Enum flag
-      Slot slot = t.slot(name.val, false);
+      Slot slot = t.slot(name, false);
       if (slot != null && (slot.m_flags & FConst.Enum) != 0)
       {
         try
@@ -47,22 +47,22 @@ namespace Fan.Sys
         {
         }
       }
-      if (!check.val) return null;
-      throw ParseErr.make(t.qname().val, name).val;
+      if (!check) return null;
+      throw ParseErr.make(t.qname(), name).val;
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed Bool _equals(object obj)
+    public override sealed bool _equals(object obj)
     {
-      return this == obj ? Bool.True : Bool.False;
+      return this == obj;
     }
 
-    public override sealed Int compare(object obj)
+    public override sealed long compare(object obj)
     {
-      return m_ordinal.compare(((Enum)obj).m_ordinal);
+      return FanInt.compare(m_ordinal, ((Enum)obj).m_ordinal);
     }
 
     public override Type type()
@@ -70,17 +70,17 @@ namespace Fan.Sys
       return Sys.EnumType;
     }
 
-    public override Str toStr()
+    public override string toStr()
     {
       return m_name;
     }
 
-    public Int ordinal()
+    public long ordinal()
     {
       return m_ordinal;
     }
 
-    public Str name()
+    public string name()
     {
       return m_name;
     }
@@ -89,8 +89,8 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private Int m_ordinal = null;
-    private Str m_name = null;
+    private long m_ordinal;
+    private string m_name;
 
   }
 }

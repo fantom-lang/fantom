@@ -35,7 +35,7 @@ namespace Fanx.Emit
       this.emit       = emit;
       this.method     = method;
       this.code       = method.m_code;
-      this.name       = normalizeName(method.m_name);
+      this.name       = FanUtil.toNetMethodName(method.m_name);
       this.paramLen   = method.m_paramCount;
       this.isStatic   = (method.m_flags & FConst.Static) != 0;
       this.isInternal = false; //(method.m_flags & FConst.Internal) != 0;
@@ -46,8 +46,7 @@ namespace Fanx.Emit
       this.isCtor     = (method.m_flags & FConst.Ctor) != 0;
       this.isNative   = (method.m_flags & FConst.Native) != 0;
       this.isHide     = false; // only used for make/make_
-      this.ret        = emit.nname(method.m_inheritedRet);
-      this.isVoid     = ret == "Fan.Sys.Void";
+      this.ret        = emit.pod.typeRef(method.m_inheritedRet);
       this.selfName   = emit.selfName;
     }
 
@@ -58,15 +57,6 @@ namespace Fanx.Emit
     {
       this.emitter = emit.emitter;
       this.emit = emit;
-    }
-
-    /// <summary>
-    /// Get the .NET method name to use for a Fan method.
-    /// </summary>
-    internal string normalizeName(string name)
-    {
-      if (name == "equals") return "_equals";
-      return name;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -91,10 +81,10 @@ namespace Fanx.Emit
     /// and invoke them
     ///
     ///   fan:
-    ///     class Foo { new make(Int a) { ... } }
+    ///     class Foo { new make(Long a) { ... } }
     ///   .net:
-    ///     static Foo make(Int a) { return make_(new Foo(), a) }
-    ///     static Foo make_(Foo self, Int a) { ... return self }
+    ///     static Foo make(Long a) { return make_(new Foo(), a) }
+    ///     static Foo make_(Foo self, Long a) { ... return self }
     ///
     /// We call the first method "make" the "factory" and the
     /// second method "make_" the "body".  CallNew opcodes are
@@ -112,7 +102,6 @@ namespace Fanx.Emit
       // first emit the body with implicit self
       this.name   = ctorName + "_";
       this.self   = true;
-      this.isVoid = true;
       doEmit();
       PERWAPI.MethodDef make = emitter.methodDef;
 
@@ -120,17 +109,16 @@ namespace Fanx.Emit
       emitWrappers();
 
       // then emit the factory
-      this.name   = ctorName;
-      this.self   = false;
-      this.isVoid = false;
-      this.ret    = selfName;
-      this.code   = null;
+      this.name = ctorName;
+      this.self = false;
+      this.ret  = emit.pod.typeRef(emit.type.m_self);
+      this.code = null;
 
       PERWAPI.CILInstructions code = doEmit();
       PERWAPI.Method ctor = emitter.findMethod(selfName, ".ctor", new string[0], "System.Void");
       code.MethInst(PERWAPI.MethodOp.newobj, ctor);
       code.Inst(PERWAPI.Op.dup);
-      pushArgs(code, method.m_paramCount);
+      pushArgs(code, false, method.m_paramCount);
       code.MethInst(PERWAPI.MethodOp.call, make);
       code.Inst(PERWAPI.Op.ret);
 
@@ -156,8 +144,8 @@ namespace Fanx.Emit
           for (int i=0; i<paramLen; i++)
             parTypes[i] = emit.nname(method.m_vars[i].type);
 
-          PERWAPI.Method peerMeth = emitter.findMethod(selfName + "Peer", name, parTypes, ret);
-          pushArgs(code, paramLen);
+          PERWAPI.Method peerMeth = emitter.findMethod(selfName + "Peer", name, parTypes, ret.nname());
+          pushArgs(code, false, paramLen);
           code.MethInst(PERWAPI.MethodOp.call, peerMeth);
         }
         else
@@ -167,11 +155,11 @@ namespace Fanx.Emit
           for (int i=0; i<paramLen; i++)
             parTypes[i+1] = emit.nname(method.m_vars[i].type);
 
-          PERWAPI.Method peerMeth = emitter.findMethod(selfName + "Peer", name, parTypes, ret);
+          PERWAPI.Method peerMeth = emitter.findMethod(selfName + "Peer", name, parTypes, ret.nname());
           peerMeth.AddCallConv(PERWAPI.CallConv.Instance);
           code.Inst(PERWAPI.Op.ldarg_0);
           code.FieldInst(PERWAPI.FieldOp.ldfld, emit.peerField);
-          pushArgs(code, paramLen+1);
+          pushArgs(code, true, paramLen);
           code.MethInst(PERWAPI.MethodOp.call, peerMeth);
         }
       }
@@ -247,9 +235,9 @@ namespace Fanx.Emit
     /// </summary>
     public void emitMixinRouter(Method m)
     {
-      string parent  = NameUtil.toNetTypeName(m.parent().pod().name(), m.parent().name());
-      string name    = normalizeName(m.name().val);
-      string ret     = NameUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
+      string parent  = FanUtil.toNetTypeName(m.parent());
+      string name    = FanUtil.toNetMethodName(m.name());
+      string ret     = FanUtil.toNetTypeName(m.inheritedReturns());
       string[] parTypes = new string[] { parent };
       List pars      = m.@params();
       int paramCount = pars.sz();
@@ -257,7 +245,7 @@ namespace Fanx.Emit
       // find first param with default value
       int firstDefault = paramCount;
       for (int i=0; i<paramCount; i++)
-        if (((Param)pars.get(i)).hasDefault().val)
+        if (((Param)pars.get(i)).hasDefault())
           { firstDefault = i; break; }
 
       // generate routers
@@ -272,10 +260,9 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = NameUtil.toNetTypeName(pt.pod().name(), pt.name());
-
+          string s = FanUtil.toNetTypeName(pt);
           myParams[j] = s;
-          myParamNames[j] = param.name().val;
+          myParamNames[j] = param.name();
           implParams[j+1] = s;
         }
 
@@ -284,7 +271,13 @@ namespace Fanx.Emit
 
         PERWAPI.CILInstructions code = emitter.emitMethod(name, ret, myParamNames, myParams,
           attr, new string[0], new string[0]);
-        pushArgs(code, i+1); // push this + params
+        code.Inst(PERWAPI.Op.ldarg_0); // push this
+        for (int p=0; p<i; p++)
+        {
+          // push args
+          Param param = (Param)m.@params().get(p);
+          FCodeEmit.loadVar(code, FanUtil.toNetStackType(param.of()), p+1);
+        }
         PERWAPI.Method meth = emitter.findMethod(parent + "_", name, implParams, ret);
         code.MethInst(PERWAPI.MethodOp.call, meth);
         code.Inst(PERWAPI.Op.ret);
@@ -298,12 +291,12 @@ namespace Fanx.Emit
     ///
     ///   mixin Mixin
     ///   {
-    ///     abstract Int foo()
+    ///     abstract Long foo()
     ///   }
     ///
     ///   class Base
     ///   {
-    ///     Int foo() { return 5 }
+    ///     Long foo() { return 5 }
     ///   }
     ///
     ///   class Child : Base, Mixin
@@ -317,7 +310,7 @@ namespace Fanx.Emit
     ///
     ///   class Child : Base, Mixin
     ///   {
-    ///     public virtual Int foo() { return base.foo(); }
+    ///     public virtual Long foo() { return base.foo(); }
     ///   }
     ///
     ///   TODO - optimize the intra-pod case
@@ -325,16 +318,16 @@ namespace Fanx.Emit
     /// </summary>
     public void emitInterfaceRouter(Type implType, Method m)
     {
-      string impl = NameUtil.toNetTypeName(implType.pod().name(), implType.name());
-      string name = m.name().val;
-      string ret  = NameUtil.toNetTypeName(m.inheritedReturns().pod().name(), m.inheritedReturns().name());
+      string impl = FanUtil.toNetTypeName(implType);
+      string name = m.name();
+      string ret  = FanUtil.toNetTypeName(m.inheritedReturns());
       List pars   = m.@params();
       int paramCount = pars.sz();
 
       // find first param with default value
       int firstDefault = paramCount;
       for (int i=0; i<paramCount; i++)
-        if (((Param)pars.get(i)).hasDefault().val)
+        if (((Param)pars.get(i)).hasDefault())
           { firstDefault = i; break; }
 
       // generate routers
@@ -347,10 +340,9 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = "Fan." + NameUtil.upper(pt.pod().name().val) + "." + pt.name().val;
-
+          string s = FanUtil.toNetTypeName(pt);
           myParams[j] = s;
-          myParamNames[j] = param.name().val;
+          myParamNames[j] = param.name();
         }
 
         // CLR requires public virtual
@@ -358,7 +350,13 @@ namespace Fanx.Emit
 
         PERWAPI.CILInstructions code = emitter.emitMethod(name, ret, myParamNames, myParams,
           attr, new string[0], new string[0]);
-        pushArgs(code, i+1); // push this + params
+        code.Inst(PERWAPI.Op.ldarg_0); // push this
+        for (int p=0; p<i; p++)
+        {
+          // push args
+          Param param = (Param)m.@params().get(p);
+          FCodeEmit.loadVar(code, FanUtil.toNetStackType(param.of()), p+1);
+        }
         PERWAPI.Method meth = emitter.findMethod(impl, name, myParams, ret);
         code.MethInst(PERWAPI.MethodOp.call, meth);
         code.Inst(PERWAPI.Op.ret);
@@ -397,7 +395,6 @@ namespace Fanx.Emit
       // use explicit param count, and clear code
       this.paramLen = paramLen;
       this.code     = null;
-      int numArgs   = isStatic && !self ? paramLen : paramLen+1;
 
       // define our locals
       int numLocals = method.m_paramCount - paramLen;
@@ -413,17 +410,20 @@ namespace Fanx.Emit
       PERWAPI.CILInstructions code = doEmit(localNames, localTypes);
 
       // push arguments passed thru
-      pushArgs(code, numArgs);
+      pushArgs(code, !(isStatic && !self), paramLen);
 
       // emit default arguments
+      FCodeEmit.Reg[] regs = FCodeEmit.initRegs(emit.pod, isStatic, method.m_vars);
       int maxLocals = method.maxLocals();
       int maxStack  = 16; // TODO - add additional default expr stack height
       for (int i=paramLen; i<method.m_paramCount; i++)
       {
-        FCodeEmit ce = new FCodeEmit(emit, method.m_vars[i].def, code);
-        ce.paramCount = numArgs;
+        FCodeEmit ce = new FCodeEmit(emit, method.m_vars[i].def, code, regs, emit.pod.typeRef(method.m_ret));
+        //ce.paramCount = numArgs;
+        ce.vars = method.m_vars;
+        ce.isStatic = isStatic;
 // TODO - is this correct?
-ce.emit(false);  // don't emit debug scope for wrappers
+ce.emit(false);  // don't emit debug s cope for wrappers
         maxStack = System.Math.Max(maxStack, 2+i+8);
       }
       // TODO
@@ -507,7 +507,7 @@ ce.emit(false);  // don't emit debug scope for wrappers
       if (isOverride) attr |= PERWAPI.MethAttr.Virtual;
       if (isHide)     attr |= PERWAPI.MethAttr.HideBySig;
 
-      PERWAPI.CILInstructions code = emitter.emitMethod(name, ret, parNames, parTypes, attr,
+      PERWAPI.CILInstructions code = emitter.emitMethod(name, ret.nname(), parNames, parTypes, attr,
         localNames, localTypes);
       if (this.code != null) new FCodeEmit(emit, method, code).emit();
 
@@ -521,38 +521,13 @@ ce.emit(false);  // don't emit debug scope for wrappers
     /// <summary>
     /// Push the specified number of arguments onto the stack.
     /// </summary>
-    private static void pushArgs(PERWAPI.CILInstructions code, int count)
+    private void pushArgs(PERWAPI.CILInstructions code, bool self, int count)
     {
-      switch (count)
+      if (self) code.Inst(PERWAPI.Op.ldarg_0);
+      for (int i=0; i<count; i++)
       {
-        case 0:
-          return;
-        case 1:
-          code.Inst(PERWAPI.Op.ldarg_0);
-          return;
-        case 2:
-          code.Inst(PERWAPI.Op.ldarg_0);
-          code.Inst(PERWAPI.Op.ldarg_1);
-          return;
-        case 3:
-          code.Inst(PERWAPI.Op.ldarg_0);
-          code.Inst(PERWAPI.Op.ldarg_1);
-          code.Inst(PERWAPI.Op.ldarg_2);
-          return;
-        case 4:
-          code.Inst(PERWAPI.Op.ldarg_0);
-          code.Inst(PERWAPI.Op.ldarg_1);
-          code.Inst(PERWAPI.Op.ldarg_2);
-          code.Inst(PERWAPI.Op.ldarg_3);
-          return;
-        default:
-          code.Inst(PERWAPI.Op.ldarg_0);
-          code.Inst(PERWAPI.Op.ldarg_1);
-          code.Inst(PERWAPI.Op.ldarg_2);
-          code.Inst(PERWAPI.Op.ldarg_3);
-          for (int i=4; i<count; i++)
-            code.IntInst(PERWAPI.IntOp.ldarg, i);
-          return;
+        FTypeRef var = emit.pod.typeRef(method.m_vars[i].type);
+        FCodeEmit.loadVar(code, var.stackType, self ? i+1 : i);
       }
     }
 
@@ -573,9 +548,8 @@ ce.emit(false);  // don't emit debug scope for wrappers
     internal bool isOverride;  // are we emitting an overridden method
     internal bool isCtor;      // are we emitting a constructor
     internal bool isNative;    // are we emitting a native method
-    internal bool isVoid;      // is return void
     internal bool isHide;      // do we need to hide a base method
-    internal string ret;       // java return sig
+    internal FTypeRef ret;     // java return sig
     internal bool self;        // add implicit self as first parameter
     internal string selfName;  // class name for self if self is true
     internal int paramLen;     // number of parameters to use

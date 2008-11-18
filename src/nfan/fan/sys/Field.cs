@@ -22,16 +22,16 @@ namespace Fan.Sys
   // Fan Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public static Field make(Str name, Type of) { return make(name, of, null); }
-    public static Field make(Str name, Type of, Map facets)
+    public static Field make(string name, Type of) { return make(name, of, null); }
+    public static Field make(string name, Type of, Map facets)
     {
       Field f = new Field();
       make_(f, name, of, facets);
       return f;
     }
 
-    public static void make_(Field self, Str name, Type of) { make_(self, name, of, null); }
-    public static void make_(Field self, Str name, Type of, Map facets)
+    public static void make_(Field self, string name, Type of) { make_(self, name, of, null); }
+    public static void make_(Field self, string name, Type of, Map facets)
     {
       if (name == null) throw NullErr.make("name is null").val;
       if (of == null) throw NullErr.make("of is null").val;
@@ -47,7 +47,7 @@ namespace Fan.Sys
   // C# Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public Field(Type parent, Str name, int flags, Facets facets, int lineNum, Type of)
+    public Field(Type parent, string name, int flags, Facets facets, int lineNum, Type of)
       : base(parent, name, flags, facets, lineNum)
     {
       this.m_of = of;
@@ -64,13 +64,13 @@ namespace Fan.Sys
 
     public Type of() { return m_of; }
 
-    public override Str signature() { return Str.make(m_of.toStr().val + " " + Str.make(m_name.val)); }
+    public override string signature() { return m_of.toStr() + " " + m_name; }
 
-    public override object trap(Str name, List args)
+    public override object trap(string name, List args)
     {
       // private undocumented access
-      if (name.val == "getter") return m_getter;
-      if (name.val == "setter") return m_setter;
+      if (name == "getter") return m_getter;
+      if (name == "setter") return m_setter;
       return base.trap(name, args);
     }
 
@@ -94,7 +94,7 @@ namespace Fan.Sys
       }
       catch (Exception e)
       {
-        if (m_parent != null && m_parent.m_dynamic)
+        if (m_parent != null && m_parent.isDynamic())
           throw Err.make("Dynamic field must override get()").val;
 
         if (m_reflect == null)
@@ -118,7 +118,7 @@ namespace Fan.Sys
       {
         if (checkConst)
           throw ReadonlyErr.make("Cannot set const field " + qname()).val;
-        else if (value != null && !isImmutable(value).val)
+        else if (value != null && !isImmutable(value))
           throw ReadonlyErr.make("Cannot set const field " + qname() + " with mutable value").val;
       }
 
@@ -149,11 +149,11 @@ namespace Fan.Sys
       }
       catch (Exception e)
       {
-        if (m_parent != null && m_parent.m_dynamic)
+        if (m_parent != null && m_parent.isDynamic())
           throw Err.make("Dynamic field must override set()").val;
 
         if (m_reflect == null)
-          throw Err.make("Field not mapped to java.lang.reflect correctly").val;
+          throw Err.make("Field not mapped to System.Reflection correctly").val;
 
         throw Err.make(e).val;
       }

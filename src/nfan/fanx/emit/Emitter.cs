@@ -116,7 +116,7 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
     /// </summary>
     public void emitClass(string baseQName, string qname, string[] interfaces, TypeAttr attr)
     {
-      string[] s = NameUtil.splitQName(qname);
+      string[] s = FanUtil.splitQName(qname);
       className = qname;
 
       // first check if this type was already stubbed out
@@ -246,7 +246,7 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
       PERWAPI.Type type = (PERWAPI.Type)types[qname];
       if (type == null)
       {
-        string aname = NameUtil.getPodName(qname);
+        string aname = FanUtil.getPodName(qname);
         if (aname == null) aname = "mscorlib";
         if (qname.StartsWith("Fanx.")) aname = "sys";    // hack for support classes
         if (qname.EndsWith("Peer")) aname += "Native_";  // TODO
@@ -256,7 +256,7 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
         if (aname == assemblyName)
         {
           // stub out type - fill get filled in later (we hope)
-          string[] sn = NameUtil.splitQName(qname);
+          string[] sn = FanUtil.splitQName(qname);
           ClassDef stub = null;
           if (qname.IndexOf("/") != -1)
           {
@@ -280,13 +280,23 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
           assemblies[aname] = aref;
         }
 
-        string[] s = NameUtil.splitQName(qname);
+        string[] s = FanUtil.splitQName(qname);
         if (qname.IndexOf("/") != -1)
         {
           // Nested class
           PERWAPI.ClassRef cref = (PERWAPI.ClassRef)findType(s[0]);
           type = cref.AddNestedClass(s[1]);
         }
+        /*
+        else if (qname.IndexOf("<") != -1)
+        {
+          // Generic type
+          //if (type == null) type = aref.AddClass(s[0], s[1]);
+          PERWAPI.ClassRef cref = (PERWAPI.ClassRef)findType(s[0]);
+          cref.SetGenericParams(new GenericParam[] { cref.GetGenericParam(0) });
+          type = cref;
+        }
+        */
         else
         {
           // Normal class
