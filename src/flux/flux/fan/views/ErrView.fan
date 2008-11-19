@@ -31,7 +31,7 @@ internal class ErrView : View
       vgap = 0
       Label
       {
-        image  = Flux.icon(`/x16/dialog-error.png`)
+        image  = Flux.icon(`/x16/err.png`)
         font   = Font("Dialog", 12, true)
         text   = "ERROR: $message"
       }

@@ -732,7 +732,7 @@ internal class RecentTableModel : TableModel
   }
   HistoryItem[] items
   Image[] icons
-  Image def := Flux.icon(`/x16/text-x-generic.png`)
+  Image def := Flux.icon(`/x16/file.png`)
   Font accFont := Font.sys.toSize(Font.sys.size-1)
   Color accColor := Color("#666")
 }
