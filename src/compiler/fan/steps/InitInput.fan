@@ -55,9 +55,9 @@ class InitInput : CompilerStep
 
     // create the appropiate namespace
     if (input.dependsDir == null)
-      compiler.ns = ReflectNamespace.make
+      compiler.ns = ReflectNamespace(compiler)
     else
-      compiler.ns = FPodNamespace.make(input.dependsDir)
+      compiler.ns = FPodNamespace(compiler, input.dependsDir)
 
     // init pod
     podName := input.podName

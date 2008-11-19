@@ -180,7 +180,7 @@ final class FPod : CPod, FConst
       ftype := FType.make(this).readMeta(in)
       ftypes.add(ftype)
       ftypesByName[ftype.name] = ftype
-      ns.types[ftype.qname] = ftype
+      ns.typeCache[ftype.qname] = ftype
     }
     in.close
   }

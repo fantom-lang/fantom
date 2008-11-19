@@ -12,8 +12,17 @@
 ** and slots between the entities currently being compiled and the
 ** entities being imported from pre-compiled pods.
 **
-abstract class CNamespace
+abstract class CNamespace : CompilerSupport
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Construct with associated compiler.
+  **
+  new make(Compiler c) : super(c) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Initialization
@@ -106,8 +115,8 @@ abstract class CNamespace
   {
     t := GenericParameterType.make(this, name)
     n := t.toNullable
-    types[t.signature] = t
-    types[n.signature] = n
+    typeCache[t.signature] = t
+    typeCache[n.signature] = n
     return t
   }
 
@@ -134,7 +143,7 @@ abstract class CNamespace
   private CBridge resolveBridge(Str name, Location? loc)
   {
     // check cache
-    bridge := bridges[name]
+    bridge := bridgeCache[name]
     if (bridge != null) return bridge
 
     // resolve the name by compilerBridge facet
@@ -146,15 +155,15 @@ abstract class CNamespace
 
     // construct bridge instance
     try
-      bridge = t.first.make([this])
+      bridge = t.first.make([compiler])
     catch (Err e)
       throw CompilerErr("Cannot construct FFI bridge '$t.first'", loc, e)
 
     // put into cache
-    bridges[name] = bridge
+    bridgeCache[name] = bridge
     return bridge
   }
-  private Str:CBridge bridges := Str:CBridge[:]  // keyed by pod name
+  private Str:CBridge bridgeCache := Str:CBridge[:]  // keyed by pod name
 
   **
   ** Attempt to import the specified pod name against our
@@ -163,7 +172,7 @@ abstract class CNamespace
   CPod resolvePod(Str podName, Location? loc)
   {
     // check cache
-    pod := pods[podName]
+    pod := podCache[podName]
     if (pod != null) return pod
 
     if (podName[0] == '[')
@@ -183,10 +192,10 @@ abstract class CNamespace
     }
 
     // stash in the cache and return
-    pods[podName] = pod
+    podCache[podName] = pod
     return pod
   }
-  private Str:CPod pods := Str:CPod[:]  // keyed by pod name
+  private Str:CPod podCache := Str:CPod[:]  // keyed by pod name
 
   **
   ** Subclass hook to resolve a pod name to a CPod implementation.
@@ -202,15 +211,15 @@ abstract class CNamespace
   CType resolveType(Str sig)
   {
     // check our cache first
-    t := types[sig]
+    t := typeCache[sig]
     if (t != null) return t
 
     // parse it into a CType
     t = TypeParser.resolve(this, sig)
-    types[sig] = t
+    typeCache[sig] = t
     return t
   }
-  internal Str:CType types := Str:CType[:]   // keyed by signature
+  internal Str:CType typeCache := Str:CType[:]   // keyed by signature
 
   **
   ** Map one of the generic parameter types such as "sys::V" into a CType
