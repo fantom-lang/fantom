@@ -954,7 +954,7 @@ class CheckErrors : CompilerStep
     if (m.isCtor && !call.isCtorChain)
     {
       // ensure we aren't calling constructors on an instance
-      if (call.target != null && call.target.id !== ExprId.staticTarget)
+      if (call.target != null && call.target.id !== ExprId.staticTarget && !call.target.synthetic)
         err("Cannot call constructor '$name' on instance", call.location)
 
       // ensure we aren't calling a constructor on an abstract class
