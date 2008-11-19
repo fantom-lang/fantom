@@ -63,7 +63,7 @@ abstract class Resource
   **
   ** Get a 16x16 icon for the resource.
   **
-  virtual Image icon() { return Flux.icon(`/x16/text-x-generic.png`) }
+  virtual Image icon() { return Flux.icon(`/x16/file.png`) }
 
   **
   ** Return if this resource has or might have children.  This
@@ -143,7 +143,7 @@ class ErrResource : Resource
 
   override Str name() { n := uri.name; return n.isEmpty ? uri.toStr : n }
 
-  override Image icon() { return Flux.icon(`/x16/dialog-error.png`) }
+  override Image icon() { return Flux.icon(`/x16/err.png`) }
 
   override Type[] views() { return Type[,] }
 

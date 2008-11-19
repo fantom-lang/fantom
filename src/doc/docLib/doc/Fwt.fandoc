@@ -177,7 +177,7 @@ example to create a localized "Save" command:
 
   // locale/en.props
   save.name=Save
-  save.icon=fan:/sys/pod/icons/x16/document-save.png
+  save.icon=fan:/sys/pod/icons/x16/save.png
   save.accelerator=Ctrl+S
 
   // create Command instance

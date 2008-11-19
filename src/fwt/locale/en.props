@@ -19,7 +19,7 @@ warn.name=Warning
 warn.image=fan:/sys/pod/icons/x32/warn.png
 
 info.name=Info
-info.image=fan:/sys/pod/icons/x32/info.png
+info.image=fan:/sys/pod/icons/x32/lightBulb.png
 
 question.name=Question
 question.image=fan:/sys/pod/icons/x32/question.png

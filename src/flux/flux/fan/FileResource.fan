@@ -238,7 +238,7 @@ class FileResource : Resource
     if (f.isDir) return Flux.icon(`/x16/folder.png`)
 
     mimeType := f.mimeType
-    if (mimeType == null) return Flux.icon(`/x16/text-x-generic.png`)
+    if (mimeType == null) return Flux.icon(`/x16/file.png`)
 
     if (mimeType.mediaType == "text")
     {
@@ -250,17 +250,17 @@ class FileResource : Resource
       }
       switch (mimeType.subType)
       {
-        case "html": return Flux.icon(`/x16/text-html.png`)
-        default:     return Flux.icon(`/x16/text-x-generic.png`)
+        //case "html": return Flux.icon(`/x16/fileHtml.png`)
+        default:     return Flux.icon(`/x16/file.png`)
       }
     }
 
     switch (mimeType.mediaType)
     {
-      case "audio": return Flux.icon(`/x16/audio-x-generic.png`)
-      case "image": return Flux.icon(`/x16/image-x-generic.png`)
-      case "video": return Flux.icon(`/x16/video-x-generic.png`)
-      default:      return Flux.icon(`/x16/text-x-generic.png`)
+      //case "audio": return Flux.icon(`/x16/audio-x-generic.png`)
+      //case "image": return Flux.icon(`/x16/image-x-generic.png`)
+      //case "video": return Flux.icon(`/x16/video-x-generic.png`)
+      default:      return Flux.icon(`/x16/file.png`)
     }
   }
 

@@ -68,7 +68,7 @@ internal class StartRecentTableModel : TableModel
   HistoryItem[] items
   Image[] icons
   Str[] headers := ["Resource", "Uri"]
-  Image def := Flux.icon(`/x16/text-x-generic.png`)
+  Image def := Flux.icon(`/x16/file.png`)
   Color pathCol := Color("#666")
 }
 
@@ -80,5 +80,5 @@ internal class StartResource : Resource
   new make(Uri uri) { this.uri = uri }
   override Uri uri
   override Str name() { return uri.toStr }
-  override Image icon() { return Flux.icon(`/x16/dialog-information.png`) }
+  override Image icon() { return Flux.icon(`/x16/lightBulb.png`) }
 }
