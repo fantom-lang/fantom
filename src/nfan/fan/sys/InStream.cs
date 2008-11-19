@@ -159,7 +159,7 @@ namespace Fan.Sys
     {
       try
       {
-        long size = FanInt.Chunk;
+        long size = FanInt.Chunk.longValue();
         Buf buf = Buf.make(size);
         while (readBuf(buf, size) != null);
         buf.flip();
@@ -365,7 +365,7 @@ namespace Fan.Sys
       return x;
     }
 
-    public virtual string readLine() { return readLine(Long.valueOf(FanInt.Chunk)); }
+    public virtual string readLine() { return readLine(FanInt.Chunk); }
     public virtual string readLine(Long max)
     {
       // max limit
@@ -401,7 +401,7 @@ namespace Fan.Sys
       return buf.ToString();
     }
 
-    public virtual string readStrToken() { return readStrToken(Long.valueOf(FanInt.Chunk), null); }
+    public virtual string readStrToken() { return readStrToken(FanInt.Chunk, null); }
     public virtual string readStrToken(Long max) { return readStrToken(max, null); }
     public virtual string readStrToken(Long max, Func f)
     {
@@ -664,7 +664,7 @@ namespace Fan.Sys
     {
       try
       {
-        long bufSize = FanInt.Chunk;
+        long bufSize = FanInt.Chunk.longValue();
         Buf buf = Buf.make(bufSize);
         long total = 0;
         if (toPipe == null)

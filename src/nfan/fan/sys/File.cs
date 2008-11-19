@@ -354,7 +354,7 @@ namespace Fan.Sys
 
     public void eachLine(Func f)
     {
-      @in(Long.valueOf(FanInt.Chunk)).eachLine(f);
+      @in(FanInt.Chunk).eachLine(f);
     }
 
     public string readAllStr() { return readAllStr(true); }
