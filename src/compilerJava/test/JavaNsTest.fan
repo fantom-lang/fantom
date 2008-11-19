@@ -15,7 +15,9 @@ class JavaNsTest : Test
 {
   Void test()
   {
-    ns := ReflectNamespace()
+    compiler := Compiler(CompilerInput())
+    ns := ReflectNamespace(compiler)
+    compiler.ns = ns
 
     // java.lang
     lang := ns.resolvePod("[java]java.lang", null)

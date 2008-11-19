@@ -51,7 +51,7 @@ class ReflectPod : CPod
     // my own and my namespace cache
     rt = ReflectType.make(ns, t)
     typeMap[typeName] = rt
-    ns.types[t.signature] = rt
+    ns.typeCache[t.signature] = rt
     return rt
   }
 

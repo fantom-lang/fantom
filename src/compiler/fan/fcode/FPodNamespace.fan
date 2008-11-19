@@ -23,7 +23,8 @@ class FPodNamespace : CNamespace
   ** Make a FPod namespace which looks in the
   ** specified directory to resolve pod files.
   **
-  new make(File dir)
+  new make(Compiler c, File dir)
+    : super(c)
   {
     this.dir = dir
     init
