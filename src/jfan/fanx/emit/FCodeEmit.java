@@ -572,26 +572,54 @@ public class FCodeEmit
 
   private void callNew()
   {
-    call(u2(), CallNew, INVOKESTATIC);
+    // Fan constructor calls are static calls on factory
+    // method; FFI constructor calls are emitted as:
+    //   CallNew Type.<new>  // allocate object
+    //   args...             // arguments are pushed onto stack
+    //   CallCtor <init>     // call to java constructor
+    int index = u2();
+    int[] m = pod.methodRef(index).val;
+    String name = pod.name(m[1]);
+    if (name.equals("<new>"))
+    {
+      String jname = pod.typeRef(m[0]).jname();
+      code.op2(NEW, emit.cls(jname));
+      code.op(DUP);
+    }
+    else
+    {
+      call(index, CallNew, INVOKESTATIC);
+    }
   }
 
   private void callCtor()
   {
     // constructor implementations (without object allow) are
     // implemented as static factory methods with "$" appended
+    // FFI constructor calls are emitted as:
+    //   CallNew Type.<new>  // allocate object
+    //   args...             // arguments are pushed onto stack
+    //   CallCtor <init>     // call to java constructor
     int index = u2();
     int[] m = pod.methodRef(index).val;
     String parent = pod.typeRef(m[0]).jname();
     String name = pod.name(m[1]);
 
+    boolean javaCtor = name.equals("<init>");
     StringBuilder s = new StringBuilder();
-    s.append(parent).append('.').append(name).append('$').append('(');
-    s.append('L').append(parent).append(';');
+    s.append(parent).append('.').append(name);
+    if (javaCtor)
+      s.append('(');
+    else
+      s.append('$').append('(').append('L').append(parent).append(';');
     for (int i=3; i<m.length; ++i) pod.typeRef(m[i]).jsig(s);
     s.append(')').append('V');
 
     int method = emit.method(s.toString());
-    code.op2(INVOKESTATIC, method);
+    if (javaCtor)
+      code.op2(INVOKESPECIAL, method);
+    else
+      code.op2(INVOKESTATIC, method);
   }
 
   private void callStatic()

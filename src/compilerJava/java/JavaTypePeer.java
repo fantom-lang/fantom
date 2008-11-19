@@ -8,6 +8,7 @@
 
 package fan.compilerJava;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -51,6 +52,11 @@ class JavaTypePeer
     Method[] methods = cls.getMethods();
     for (int i=0; i<methods.length; ++i)
       mapMethod(self, slots, methods[i]);
+
+    // map Java constructors to CSlots
+    Constructor[] ctors = cls.getConstructors();
+    for (int i=0; i<ctors.length; ++i)
+      mapCtor(self, slots, ctors[i]);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,28 +83,45 @@ class JavaTypePeer
     fan.setParent(self);
     fan.setName(name);
     fan.setFlags(toFanFlags(java.getModifiers()));
-    fan.setReturnType(toFanType(java.getReturnType()));
+    fan.setReturnTypeSig(toFanType(java.getReturnType()));
     fan.setParamTypes(toFanTypes(java.getParameterTypes()));
+    addSlot(slots, name, fan);
+  }
 
+  void mapCtor(JavaType self, Map slots, Constructor java)
+    throws Exception
+  {
+    String name = java.getName();
+    JavaMethod fan = JavaMethod.make();
+    fan.setParent(self);
+    fan.setName("<init>");
+    fan.setFlags(toFanFlags(java.getModifiers())|FConst.Ctor);
+    fan.setReturnType(self);
+    fan.setParamTypes(toFanTypes(java.getParameterTypes()));
+    addSlot(slots, "make", fan);
+  }
+
+  void addSlot(Map slots, String name, JavaMethod m)
+  {
     // put the first one into the slot, and add
     // the overloads as linked list on that
     JavaSlot x = (JavaSlot)slots.get(name);
-    if (x == null) slots.add(name, fan);
+    if (x == null) { slots.add(name, m); return; }
+
+    // work around for javac (can't access compiler types)
+    if (x instanceof JavaMethod)
+    {
+      m.setNext(((JavaMethod)x).getNext());
+      ((JavaMethod)x).setNext(m);
+    }
     else
     {
-      // work around for javac (can't access compiler types)
-      if (x instanceof JavaMethod)
-      {
-        fan.setNext(((JavaMethod)x).getNext());
-        ((JavaMethod)x).setNext(fan);
-      }
-      else
-      {
-        fan.setNext(((JavaField)x).getNext());
-        ((JavaField)x).setNext(fan);
-      }
+      m.setNext(((JavaField)x).getNext());
+      ((JavaField)x).setNext(m);
     }
   }
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
