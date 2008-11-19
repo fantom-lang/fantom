@@ -82,6 +82,7 @@ SyntaxOptions
   //font = Font("10pt Courier New")
 
   ** color coding
+  highlightCurLine = Color("#f0f0f0")
   text          = RichTextStyle { fg = Color("#000") }
   bracket       = RichTextStyle { fg = Color("#f00") }
   bracketMatch  = RichTextStyle { fg = Color("#f00"); bg=Color("#ff0") }
