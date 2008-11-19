@@ -21,9 +21,8 @@ class JavaType : CType
   **
   ** Construct with loaded Type.
   **
-  new make(CNamespace ns, JavaPod pod, Str name)
+  new make(JavaPod pod, Str name)
   {
-    this.ns     = ns
     this.pod    = pod
     this.name   = name
     this.qname  = pod.name + "::" + name
@@ -35,7 +34,7 @@ class JavaType : CType
 // CType
 //////////////////////////////////////////////////////////////////////////
 
-  override readonly CNamespace ns
+  override CNamespace ns() { return pod.ns }
   override readonly JavaPod pod
   override readonly Str name
   override readonly Str qname
@@ -44,6 +43,8 @@ class JavaType : CType
   override readonly CType? base { get { load; return @base } }
   override readonly CType[] mixins { get { load; return @mixins } }
   override readonly Int flags { get { load; return @flags } }
+
+  override Bool isForeign() { return true }
 
   override Bool isValue() { return false }
 

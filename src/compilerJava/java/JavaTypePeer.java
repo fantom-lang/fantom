@@ -38,7 +38,6 @@ class JavaTypePeer
   {
     // map to Java class
     Class cls = toJavaClass(self);
-    System.out.println("--- cls " + cls);
 
     // map Java modifiers to Fan flags
     self.flags = toFanFlags(cls.getModifiers());
@@ -67,24 +66,38 @@ class JavaTypePeer
     fan.setName(name);
     fan.setFlags(toFanFlags(java.getModifiers()));
     fan.setFieldType(toFanType(java.getType()));
-    fan.java = java;
     slots.add(name, fan);
   }
 
   void mapMethod(JavaType self, Map slots, Method java)
     throws Exception
   {
-    // store all the overloads for each method
     String name = java.getName();
-if (slots.get(name) != null) return;
     JavaMethod fan = JavaMethod.make();
     fan.setParent(self);
     fan.setName(name);
     fan.setFlags(toFanFlags(java.getModifiers()));
     fan.setReturnType(toFanType(java.getReturnType()));
     fan.setParamTypes(toFanTypes(java.getParameterTypes()));
-    fan.java = new List(Sys.ObjType, 4).add(java);
-    slots.add(name, fan);
+
+    // put the first one into the slot, and add
+    // the overloads as linked list on that
+    JavaSlot x = (JavaSlot)slots.get(name);
+    if (x == null) slots.add(name, fan);
+    else
+    {
+      // work around for javac (can't access compiler types)
+      if (x instanceof JavaMethod)
+      {
+        fan.setNext(((JavaMethod)x).getNext());
+        ((JavaMethod)x).setNext(fan);
+      }
+      else
+      {
+        fan.setNext(((JavaField)x).getNext());
+        ((JavaField)x).setNext(fan);
+      }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -933,13 +933,20 @@ class CheckErrors : CompilerStep
     // check protection scope
     checkSlotProtection(call.method, call.location)
 
-    // if dynamic then box all the args otherwise type check them
-    if (!call.isDynamic)
+    if (m.isForeign)
     {
+      // if foreign, then route to the bridge which can handle
+      // overloaded methods and do FFI type checking and coercion
+      m.bridge.checkCall(call)
+    }
+    else if (!call.isDynamic)
+    {
+      // do normal call checking and coercion
       checkArgs(call)
     }
     else
     {
+      // if dynamic all ensure all the args are boxed
       call.args.each |Expr arg, Int i| { call.args[i] = box(call.args[i]) }
     }
 
@@ -1351,7 +1358,7 @@ class CheckErrors : CompilerStep
   ** Coerce the target expression to the specified type.  If
   ** the expression is not type compatible run the onErr function.
   **
-  private static Expr coerce(Expr expr, CType expected, |,| onErr)
+  static Expr coerce(Expr expr, CType expected, |,| onErr)
   {
     // sanity check that expression has been typed
     CType actual := expr.ctype

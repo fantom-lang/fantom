@@ -21,6 +21,10 @@ abstract class JavaSlot : CSlot
   // for native Java
   Void setName(Str n) { name = n }
   Void setFlags(Int f) { flags = f }
+
+  ** linked list of overloaded methods (first one
+  ** may be field or method)
+  JavaMethod? next
 }
 
 **************************************************************************
@@ -37,12 +41,14 @@ class JavaField : JavaSlot, CField
   override Str signature() { return "$fieldType $name" }
   override CType inheritedReturnType() { return fieldType }
 
+  override Bool isForeign() { return true }
+
   // for native Java
   Void setParent(JavaType p) { parent = p }
   Void setFieldType(Obj t) { fieldType = ns.resolveType(t) }
+  JavaMethod? getNext() { return next }
+  Void setNext(JavaMethod? m) { next = m }
 
-  ** java.lang.reflect.Field
-  Obj java
 }
 
 **************************************************************************
@@ -59,6 +65,8 @@ class JavaMethod : JavaSlot, CMethod
   override Str signature() { return "$returnType $name(" + params.join(",") + ")" }
   override CType inheritedReturnType() { return returnType }
 
+  override Bool isForeign() { return true }
+
   // for native Java
   Void setParent(JavaType p) { parent = p }
   Void setReturnType(Str t) { returnType = ns.resolveType(t) }
@@ -69,9 +77,8 @@ class JavaMethod : JavaSlot, CMethod
       return JavaParam { name="p$i"; paramType = ns.resolveType(t) }
     }
   }
-
-  ** java.lang.reflect.Methods
-  Obj[] java := Obj[,]
+  JavaMethod? getNext() { return next }
+  Void setNext(JavaMethod? m) { next = m }
 }
 
 **************************************************************************
