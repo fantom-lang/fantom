@@ -393,7 +393,7 @@ namespace Fan.Sys
     public static readonly long m_minValue = Int64.MinValue;
 
     // default check size for IO buffering (defaults to 4KB)
-    public const long Chunk = 4096;
+    public static readonly Long Chunk = Long.valueOf(4096);
 
     static FanInt()
     {
