@@ -4,6 +4,7 @@ syntax: glob
 # general
 Thumbs.db
 .DS_Store
+adm/pngcrush*
 
 # lib/
 lib/java/*.jar
