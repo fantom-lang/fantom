@@ -69,7 +69,8 @@ class JavaMethod : JavaSlot, CMethod
 
   // for native Java
   Void setParent(JavaType p) { parent = p }
-  Void setReturnType(Str t) { returnType = ns.resolveType(t) }
+  Void setReturnType(JavaType t) { returnType = t }
+  Void setReturnTypeSig(Str t) { returnType = ns.resolveType(t) }
   Void setParamTypes(Obj[] types)
   {
     params = types.map(JavaParam[,]) |Obj t, Int i->CParam|

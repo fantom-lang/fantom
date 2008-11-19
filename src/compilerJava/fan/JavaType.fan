@@ -77,6 +77,30 @@ class JavaType : CType
   private native Void doLoad(Str:CSlot slots)
 
 //////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** We use an implicit constructor called "<new>" on
+  ** each type as the protocol for telling the Java runtime
+  ** to perform a 'new' opcode for object allocation:
+  **   CallNew Type.<new>  // allocate object
+  **   args...             // arguments are pushed onto stack
+  **   CallCtor <init>     // call to java constructor
+  **
+  once CMethod newMethod()
+  {
+    return JavaMethod
+    {
+      parent = this
+      name = "<new>"
+      flags = FConst.Ctor | FConst.Public
+      returnType = this
+      params = JavaParam[,]
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 

@@ -94,6 +94,19 @@ class JavaBridge : CBridge
 
     // if we have a match, then update the call args with coercions
     call.args = newArgs
+
+    // if this is a call to a constructor, then we need to create
+    // an implicit target for the Java runtime to perform the new
+    // opcode to ensure it is on the stack before the arguments (if
+    // not already on static type, then let CheckErrors do error
+    // reporting)
+    if (m.isCtor && call.target.id === ExprId.staticTarget)
+    {
+      loc := call.location
+      newMethod := m.parent.newMethod
+      call.target = CallExpr.makeWithMethod(loc, null, newMethod) { synthetic=true }
+    }
+
     return true
   }
 
