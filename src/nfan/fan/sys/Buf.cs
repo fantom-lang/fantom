@@ -312,7 +312,7 @@ namespace Fan.Sys
 
     public string readStrToken() { return m_in.readStrToken(); }
     public string readStrToken(Long max) { return m_in.readStrToken(max); }
-    public string readStrToken(Long max, Func f) { return m_in.readStrToken(Long.valueOf(FanInt.Chunk), f); }
+    public string readStrToken(Long max, Func f) { return m_in.readStrToken(FanInt.Chunk, f); }
 
     public List readAllLines() { return m_in.readAllLines(); }
 
