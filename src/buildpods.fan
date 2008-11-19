@@ -24,6 +24,7 @@ class Build : BuildGroup
   {
     childrenScripts =
     [
+      `compilerJava/build.fan`,
       `testSys/build.fan`,
       `testNative/build.fan`,
       `testCompiler/build.fan`,

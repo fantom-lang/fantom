@@ -40,6 +40,16 @@ mixin CPod
   abstract CType? resolveType(Str name, Bool checked)
 
   **
+  ** If this a foreign function interface pod.
+  **
+  virtual Bool isForeign() { return false }
+
+  **
+  ** If this a foreign function interface return the bridge.
+  **
+  virtual CBridge? bridge() { return null }
+
+  **
   ** Hash on name.
   **
   override Int hash()

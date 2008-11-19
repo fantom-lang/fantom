@@ -39,6 +39,17 @@ mixin CSlot
   Bool isStorage()   { return flags & FConst.Storage   != 0 }
   Bool isSynthetic() { return flags & FConst.Synthetic != 0 }
   Bool isVirtual()   { return flags & FConst.Virtual   != 0 }
+
+  **
+  ** If this a foreign function interface slot.
+  **
+  virtual Bool isForeign() { return false }
+
+  **
+  ** If this a foreign function return the bridge.
+  **
+  CBridge? bridge() { return parent.pod.bridge }
+
 }
 
 **************************************************************************

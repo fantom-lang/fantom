@@ -54,6 +54,16 @@ mixin CType
   **
   virtual CType deref() { return this }
 
+  **
+  ** If this a foreign function interface type.
+  **
+  virtual Bool isForeign() { return false }
+
+  **
+  ** If this a foreign function return the bridge.
+  **
+  CBridge? bridge() { return pod.bridge }
+
 //////////////////////////////////////////////////////////////////////////
 // Nullable
 //////////////////////////////////////////////////////////////////////////
