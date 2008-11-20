@@ -219,14 +219,14 @@ public class TypeDb
       PodInfo p = (PodInfo)podsByName.get(n);
       if (p == null)
       {
-        log.info("Out-of-date pod added: " + n);
+        log.debug("Out-of-date pod added: " + n);
         return false;
       }
 
       // check pod has not been modified
       if (p.modified != f.lastModified() || p.size != (int)f.length())
       {
-        log.info("Out-of-date pod modified : " + n);
+        log.debug("Out-of-date pod modified : " + n);
         return false;
       }
       p.match = true;
@@ -236,7 +236,7 @@ public class TypeDb
     for (int i=0; i<pods.length; ++i)
       if (!pods[i].match)
       {
-        log.info("Out-of-date pod removed: " + pods[i].name);
+        log.debug("Out-of-date pod removed: " + pods[i].name);
         return false;
       }
 
