@@ -150,12 +150,12 @@ class JavaTypePeer
     {
       if (cls == void.class)    return "sys::Void";
       if (cls == boolean.class) return "sys::Bool";
-      if (cls == int.class)     return "sys::Int";
       if (cls == long.class)    return "sys::Int";
-      if (cls == byte.class)    return "sys::Int";
-      if (cls == short.class)   return "sys::Int";
-      if (cls == float.class)   return "sys::Float";
       if (cls == double.class)  return "sys::Float";
+      if (cls == int.class)     return "[java]::int";
+      if (cls == byte.class)    return "[java]::byte";
+      if (cls == short.class)   return "[java]::short";
+      if (cls == float.class)   return "[java]::float";
       throw new IllegalStateException(cls.toString());
     }
 
