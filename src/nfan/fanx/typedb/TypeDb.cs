@@ -229,7 +229,7 @@ namespace Fanx.Typedb
         // check pod has not been modified
         if (p.modified != f.LastWriteTime.Ticks || p.size != (int)f.Length)
         {
-          log.info("Out-of-date pod modified: " + n);
+          log.debug("Out-of-date pod modified: " + n);
           return false;
         }
         p.match = true;
@@ -239,7 +239,7 @@ namespace Fanx.Typedb
       for (int i=0; i<pods.Length; ++i)
         if (!pods[i].match)
         {
-          log.info("Out-of-date pod removed: " + pods[i].name);
+          log.debug("Out-of-date pod removed: " + pods[i].name);
           return false;
         }
 
