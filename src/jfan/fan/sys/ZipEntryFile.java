@@ -57,7 +57,7 @@ public class ZipEntryFile
 
   public DateTime modified()
   {
-    return DateTime.java(entry.getTime());
+    return DateTime.fromJava(entry.getTime());
   }
 
   public void modified(DateTime time)

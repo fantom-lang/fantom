@@ -302,6 +302,22 @@ const final class DateTime
   static Int weekdayInMonth(Int year, Month mon, Weekday weekday, Int pos)
 
 //////////////////////////////////////////////////////////////////////////
+// Java
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Create date for Java milliseconds since the epoch of 1 Jan 1970
+  ** using the specified timezone (defaults to current).  If millis
+  ** are less than or equal to zero then return null.
+  **
+  static DateTime? fromJava(Int millis, TimeZone tz := TimeZone.current)
+
+  **
+  ** Get this date in Java milliseconds since the epoch of 1 Jan 1970.
+  **
+  Int toJava()
+
+//////////////////////////////////////////////////////////////////////////
 // HTTP
 //////////////////////////////////////////////////////////////////////////
 

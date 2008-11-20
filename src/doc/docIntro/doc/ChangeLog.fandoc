@@ -483,3 +483,5 @@
 *Build 1.0.36 (incomplete)*
 - Java FFI
 - Remove compiler support for for(...); and while(...);
+- DateTime toJava, fromJava
+- Reorganize icons

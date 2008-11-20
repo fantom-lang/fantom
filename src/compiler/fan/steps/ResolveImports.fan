@@ -105,6 +105,7 @@ class ResolveImports : CompilerStep
         catch (CompilerErr e)
         {
           errReport(e)
+          return
         }
       }
 
