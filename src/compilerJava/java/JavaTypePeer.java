@@ -159,6 +159,9 @@ class JavaTypePeer
       throw new IllegalStateException(cls.toString());
     }
 
+    // TODO arrays
+    if (cls.isArray()) return "sys::Obj";
+
     // Fan classes
     if (cls.getName().equals("java.lang.String")) return "sys::Str";
 

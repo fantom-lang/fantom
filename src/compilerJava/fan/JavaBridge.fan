@@ -68,7 +68,7 @@ class JavaBridge : CBridge
     // if no match this is a argument type error
     s := StrBuf()
     s.add("Invalid args ").add(call.method.name).add("(")
-    call.args.each |Expr arg, Int i| { if (i > 0) s.add(","); s.add(arg.ctype) }
+    call.args.each |Expr arg, Int i| { if (i > 0) s.add(", "); s.add(arg.ctype) }
     s.add(")")
     err(s.toStr, call.location)
   }
