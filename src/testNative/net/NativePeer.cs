@@ -23,18 +23,18 @@ namespace Fan.TestNative
       return peer;
     }
 
-    public static Long doStaticA()
+    public static long doStaticA()
     {
-      return Long.valueOf(2006);
+      return 2006;
     }
 
-    public static Long doStaticB(Long a, Long b)
+    public static long doStaticB(long a, long b)
     {
-      return Long.valueOf(a.longValue() + b.longValue());
+      return a + b;
     }
 
-    public Long fX(Native t) { return t.m_x; }
-    public void fX(Native t, Long x) { t.m_x = x; }
+    public long fX(Native t) { return t.m_x; }
+    public void fX(Native t, long x) { t.m_x = x; }
 
     public Long fA(Native t) { return m_fA; }
     public void fA(Native t, Long x) { m_fA = x; }
@@ -42,18 +42,18 @@ namespace Fan.TestNative
     public string fV(Native t) { return m_fV; }
     public void fV(Native t, string x) { m_fV = x; }
 
-    public Long getPeerZ(Native t)
+    public long getPeerZ(Native t)
     {
       return m_z;
     }
 
-    public void setPeerZ(Native t, Long z)
+    public void setPeerZ(Native t, long z)
     {
       if (t.m_peer != this) throw new System.Exception();
       this.m_z = z;
     }
 
-    public Long getCtorY(Native t)
+    public long getCtorY(Native t)
     {
       return m_ctorY;
     }
@@ -66,8 +66,8 @@ namespace Fan.TestNative
     public static string sdefs2(string a, string b) { return a+b;  }
     public static string sdefs3(string a, string b, string c) { return a+b+c;  }
 
-    Long m_ctorY;  // value of y during make()
-    Long m_z;
+    long m_ctorY;  // value of y during make()
+    long m_z;
     Long m_fA = Long.valueOf(444);
     string m_fV = "fV";
 
