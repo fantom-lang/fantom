@@ -46,7 +46,7 @@ class Builder
     persist();
 
     long t2 = System.nanoTime();
-    log.info("Rebuilt type database (" + (t2-t1)/1000000L + "ms)");
+    log.debug("Rebuilt type database (" + (t2-t1)/1000000L + "ms)");
     return this;
   }
 
