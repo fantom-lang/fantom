@@ -195,4 +195,18 @@ public class OpUtil
     throw NotImmutableErr.make(FanObj.type(obj).toStr()).val;
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Primitive Conversions
+//////////////////////////////////////////////////////////////////////////
+
+  public static byte   l2b(long x)   { return (byte)x; }
+  public static short  l2s(long x)   { return (short)x; }
+  public static int    l2i(long x)   { return (int)x; }
+  public static float  d2f(double x) { return (float)x; }
+
+  public static long   b2l(byte x)   { return x; }
+  public static long   s2l(short x)  { return x; }
+  public static long   i2l(int x)    { return x; }
+  public static double f2d(float x)  { return x; }
+
 }

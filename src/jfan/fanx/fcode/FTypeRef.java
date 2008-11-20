@@ -31,7 +31,16 @@ public final class FTypeRef
     boolean nullable = false;
     if (sig.endsWith("?")) { mask |= NULLABLE; nullable = true; }
     if (sig.length() > 1)  mask |= GENERIC_INSTANCE;
-    if (podName.equals("sys"))
+    if (podName.equals("[java]"))
+    {
+      mask |= FFI_PRIMITIVE;
+      if (typeName.equals("int"))        { mask |= FFI_INT;   stackType = 'I'; }
+      else if (typeName.equals("byte"))  { mask |= FFI_BYTE;  stackType = 'B'; }
+      else if (typeName.equals("short")) { mask |= FFI_SHORT; stackType = 'S'; }
+      else if (typeName.equals("float")) { mask |= FFI_FLOAT; stackType = 'F'; }
+      else throw new IllegalStateException(typeName);
+    }
+    else if (podName.equals("sys"))
     {
       switch (typeName.charAt(0))
       {
@@ -143,10 +152,17 @@ public final class FTypeRef
   public static boolean isWide(int stackType) { return stackType == LONG || stackType == DOUBLE; }
 
   /**
+   * Return if is type is in the special primitives pod
+   * such as '[java]::int'.
+   */
+  public boolean isPrimitiveFFI() { return (mask & FFI_PRIMITIVE) != 0; }
+
+  /**
    * Java type name:  fan/sys/Duration, java/lang/Boolean, Z
    */
   public String jname()
   {
+    if (isPrimitiveFFI()) return String.valueOf((char)stackType);
     if (jname == null) jname = FanUtil.toJavaTypeSig(podName, typeName, isNullable());
     return jname;
   }
@@ -224,6 +240,11 @@ public final class FTypeRef
   public static final int SYS_INT          = 0x0010;
   public static final int SYS_FLOAT        = 0x0020;
   public static final int SYS_ERR          = 0x0040;
+  public static final int FFI_PRIMITIVE    = 0x0100;
+  public static final int FFI_BYTE         = 0x0200;
+  public static final int FFI_SHORT        = 0x0400;
+  public static final int FFI_INT          = 0x0800;
+  public static final int FFI_FLOAT        = 0x1000;
 
   // stack type constants
   public static final int VOID   = 'V';

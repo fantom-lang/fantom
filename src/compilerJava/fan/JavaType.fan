@@ -46,6 +46,7 @@ class JavaType : CType
 
   override Bool isForeign() { return true }
 
+  Bool isPrimitive() { return pod === pod.bridge.primitives }
   override Bool isValue() { return false }
 
   override Bool isNullable() { return false }
@@ -70,6 +71,11 @@ class JavaType : CType
     if (loaded) return
     slots := Str:CSlot[:]
     doLoad(slots)
+    loadSlots(slots)
+  }
+
+  internal Void loadSlots(Str:CSlot slots)
+  {
     this.slots = slots
     loaded = true
   }

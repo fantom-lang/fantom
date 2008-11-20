@@ -38,6 +38,9 @@ class JavaBridge : CBridge
   **
   override CPod resolvePod(Str name, Location? loc)
   {
+    // the empty package is used to represent primitives
+    if (name == "") return primitives
+
     // look for package name in classpatch
     classes := cp.classes[name]
     if (classes == null)
@@ -88,12 +91,15 @@ class JavaBridge : CBridge
     m.params.each |JavaParam p, Int i|
     {
       // ensure arg fits parameter type (or auto-cast)
-      newArgs[i] = CheckErrors.coerce(args[i], p.paramType) |,| { isErr = true }
+      newArgs[i] = coerce(args[i], p.paramType) |,| { isErr = true }
     }
     if (isErr) return false
 
     // if we have a match, then update the call args with coercions
-    call.args = newArgs
+    // and update the return type with the specified method we matched
+    call.args   = newArgs
+    call.method = m
+    call.ctype  = m.returnType
 
     // if this is a call to a constructor, then we need to create
     // an implicit target for the Java runtime to perform the new
@@ -110,11 +116,52 @@ class JavaBridge : CBridge
     return true
   }
 
+  **
+  ** Coerce expression to expected type.  If not a type match
+  ** then run the onErr function.
+  **
+  Expr coerce(Expr expr, CType expected, |,| onErr)
+  {
+    // handle Fan to Java primitives
+    if (expected.pod === primitives)
+      return coerceToPrimitive(expr, expected, onErr)
+
+    return CheckErrors.coerce(expr, expected, onErr)
+  }
+
+  **
+  ** Coerce a fan expression to a Java primitive (other
+  ** than the ones we support natively)
+  **
+  Expr coerceToPrimitive(Expr expr, CType expected, |,| onErr)
+  {
+    loc := expr.location
+
+    if (expr.ctype.isInt)
+    {
+      if (expected == primitives.intType)
+        return CallExpr.makeWithMethod(loc, null, primitives.l2i, [expr])
+      if (expected == primitives.shortType)
+        return CallExpr.makeWithMethod(loc, null, primitives.l2s, [expr])
+      if (expected == primitives.byteType)
+        return CallExpr.makeWithMethod(loc, null, primitives.l2b, [expr])
+    }
+
+    if (expr.ctype.isFloat)
+    {
+      if (expected == primitives.floatType)
+        return CallExpr.makeWithMethod(loc, null, primitives.d2f, [expr])
+    }
+
+    onErr()
+    return expr
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  readonly JavaPrimitives primitives := JavaPrimitives(this)
   readonly ClassPath cp
 
 }
