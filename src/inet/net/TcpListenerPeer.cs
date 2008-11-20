@@ -32,14 +32,14 @@ namespace Fan.Inet
   // State
   //////////////////////////////////////////////////////////////////////////
 
-    public Fan.Sys.Boolean isBound(TcpListener fan)
+    public bool isBound(TcpListener fan)
     {
-      return Fan.Sys.Boolean.valueOf(m_bound);
+      return m_bound;
     }
 
-    public Fan.Sys.Boolean isClosed(TcpListener fan)
+    public bool isClosed(TcpListener fan)
     {
-      return Fan.Sys.Boolean.valueOf(m_closed);
+      return m_closed;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -67,12 +67,12 @@ namespace Fan.Inet
   // Methods
   //////////////////////////////////////////////////////////////////////////
 
-    public TcpListener bind(TcpListener fan, IpAddress addr, Long port, Long backlog)
+    public TcpListener bind(TcpListener fan, IpAddress addr, Long port, long backlog)
     {
       IPAddress netAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_net;
       int netPort = (port == null) ? 0 : port.intValue();
       m_net = new System.Net.Sockets.TcpListener(netAddr, netPort);
-      m_net.Start(backlog.intValue());
+      m_net.Start((int)backlog);
       m_bound = true;
       return fan;
     }
@@ -95,17 +95,17 @@ namespace Fan.Inet
       return s;
     }
 
-    public Fan.Sys.Boolean close(TcpListener fan)
+    public bool close(TcpListener fan)
     {
       try
       {
         m_net.Stop();
         m_closed = true;
-        return Fan.Sys.Boolean.True;
+        return true;
       }
       catch (Exception)
       {
-        return Fan.Sys.Boolean.False;
+        return false;
       }
     }
 
@@ -113,25 +113,25 @@ namespace Fan.Inet
   // Socket Options
   //////////////////////////////////////////////////////////////////////////
 
-    public Long getReceiveBufferSize(TcpListener fan)
+    public long getReceiveBufferSize(TcpListener fan)
     {
-      return Long.valueOf(m_net.Server.ReceiveBufferSize);
+      return m_net.Server.ReceiveBufferSize;
     }
 
-    public void setReceiveBufferSize(TcpListener fan, Long v)
+    public void setReceiveBufferSize(TcpListener fan, long v)
     {
-      m_net.Server.ReceiveBufferSize = v.intValue();
+      m_net.Server.ReceiveBufferSize = (int)v;
     }
 
-    public Fan.Sys.Boolean getReuseAddress(TcpListener fan)
+    public bool getReuseAddress(TcpListener fan)
     {
-      return Fan.Sys.Boolean.valueOf(Convert.ToBoolean(
-        m_net.Server.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress)));
+      return Convert.ToBoolean(m_net.Server.GetSocketOption(
+        SocketOptionLevel.Socket, SocketOptionName.ReuseAddress));
     }
 
-    public void setReuseAddress(TcpListener fan, Fan.Sys.Boolean v)
+    public void setReuseAddress(TcpListener fan, bool v)
     {
-      m_net.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v.booleanValue());
+      m_net.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v);
     }
 
     public Duration getReceiveTimeout(TcpListener fan)
