@@ -155,12 +155,12 @@ public class LocalFile
 
   public DateTime modified()
   {
-    return DateTime.java(file.lastModified());
+    return DateTime.fromJava(file.lastModified());
   }
 
   public void modified(DateTime time)
   {
-    file.setLastModified(time.java());
+    file.setLastModified(time.toJava());
   }
 
   public String osPath()
