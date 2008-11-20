@@ -47,7 +47,7 @@ namespace Fanx.Typedb
       persist();
 
       long t2 = System.Environment.TickCount;
-      log.info("Rebuilt type database (" + (t2-t1) + "ms)");
+      log.debug("Rebuilt type database (" + (t2-t1) + "ms)");
       return this;
     }
 
