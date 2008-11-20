@@ -26,14 +26,20 @@ class ClassPath
   {
     jars := File[,]
 
-    // lib/rt.jar
+    // {java}lib/rt.jar
     lib := File.os(Sys.env.get("java.home", "") + File.sep + "lib")
     rt := lib + `rt.jar`
     if (rt.exists) jars.add(rt)
 
-    // lit/ext
+    // {java}lib/ext
     ext := lib + `ext/`
     ext.list.each |File extJar| { if (extJar.ext == "jar") jars.add(extJar) }
+
+    // {fan}lib/java
+    /*
+    libJava := Sys.homeDir + `lib/java/`
+    libJava.list.each |File libJavaJar| { if (libJavaJar.ext == "jar") jars.add(libJavaJar) }
+    */
 
     // -classpath
     Sys.env.get("java.class.path", "").split(File.pathSep[0]).each |Str path|
