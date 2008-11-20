@@ -753,7 +753,7 @@ public final class DateTime
       try
       {
         Date date = httpFormats[i].parse(s);
-        return java(date.getTime());
+        return fromJava(date.getTime());
       }
       catch (Exception e)
       {
@@ -766,7 +766,7 @@ public final class DateTime
 
   public String toHttpStr()
   {
-    return httpFormats[0].format(new Date(java()));
+    return httpFormats[0].format(new Date(toJava()));
   }
 
   private static final SimpleDateFormat httpFormats[] =
@@ -786,13 +786,14 @@ public final class DateTime
 // Java
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime java(long millis)
+  public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.current); }
+  public static DateTime fromJava(long millis, TimeZone tz)
   {
     if (millis <= 0) return null;
     return new DateTime((millis-diffJava)*nsPerMilli, TimeZone.current);
   }
 
-  public long java() { return (ticks / nsPerMilli) + diffJava; }
+  public long toJava() { return (ticks / nsPerMilli) + diffJava; }
 
 //////////////////////////////////////////////////////////////////////////
 // Lookup Tables

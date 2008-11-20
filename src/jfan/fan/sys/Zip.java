@@ -128,7 +128,7 @@ public final class Zip
       String zipPath = path.toString();
       if (zipPath.startsWith("/")) zipPath = zipPath.substring(1);
       ZipEntry entry = new ZipEntry(zipPath);
-      entry.setTime(modifyTime.java());
+      entry.setTime(modifyTime.toJava());
       zipOut.putNextEntry(entry);
       return new SysOutStream(zipOut)
       {
