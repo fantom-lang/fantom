@@ -554,11 +554,7 @@ namespace Fan.Sys
         object ret = m.Invoke(instance, args);
 
         // box the return value
-        if (ret is bool) return Boolean.valueOf((bool)ret);
-        if (ret is double) return Double.valueOf((double)ret);
-        if (ret is long) return Long.valueOf((long)ret);
-        return ret;
-
+        return FanUtil.box(ret);
       }
       catch (ArgumentException e)
       {

@@ -262,25 +262,23 @@ namespace Fanx.Serial
         // decimal literal (or duration)
         if (decimalSuffix || floating)
         {
-          decimal dnum = (s == null) ?
-            new decimal(whole) :
-            BigDecimal.valueOf(s.ToString()).decimalValue();
+          BigDecimal dnum = (s == null) ?
+            BigDecimal.valueOf(whole) :
+            BigDecimal.valueOf(s.ToString());
           if (dur > 0)
           {
-            //this.m_val = Duration.make(((long)dnum) * dur);
-            this.m_val = Duration.make((long)(dnum * (new decimal(dur))));
-            //this.val = Duration.make(num.multiply(new BigDecimal(dur)).longValue());
+            this.m_val = Duration.make(dnum.multiply(BigDecimal.valueOf(dur)).longValue());
             return Token.DURATION_LITERAL;
           }
           else
           {
-            this.m_val = BigDecimal.valueOf(dnum);
+            this.m_val = dnum;
             return Token.DECIMAL_LITERAL;
           }
         }
 
         // int literal (or duration)
-        long num = (s == null) ? whole : (long)decimal.Parse(s.ToString());
+        long num = (s == null) ? whole : BigDecimal.valueOf(s.ToString()).longValue();
         if (dur > 0)
         {
           this.m_val = Duration.make(num*dur);

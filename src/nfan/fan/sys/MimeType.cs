@@ -165,7 +165,7 @@ namespace Fan.Sys
       return
         m_mediaType == x.m_mediaType &&
         m_subType == x.m_subType &&
-        m_params == x.m_params;
+        m_params.Equals(x.m_params);
     }
 
     public override int GetHashCode()

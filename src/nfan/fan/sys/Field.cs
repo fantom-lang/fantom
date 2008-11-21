@@ -9,6 +9,7 @@
 using System;
 using System.Reflection;
 using Fanx.Fcode;
+using Fanx.Util;
 
 namespace Fan.Sys
 {
@@ -90,7 +91,7 @@ namespace Fan.Sys
 
       try
       {
-        return m_reflect.GetValue(instance);
+        return FanUtil.box(m_reflect.GetValue(instance));
       }
       catch (Exception e)
       {

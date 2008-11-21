@@ -136,14 +136,14 @@ namespace Fan.Sys
         int argSize = (args == null) ? 0 : args.sz();
         if (argSize == 0)
         {
-          return f.get(self);
+          return FanUtil.box(f.get(self));
         }
 
         if (argSize == 1)
         {
           object val = args.get(0);
           f.set(self, val);
-          return val;
+          return FanUtil.box(val);
         }
 
         throw ArgErr.make("Invalid number of args to get or set field '" + name + "'").val;

@@ -36,6 +36,11 @@ namespace Fan.Sys
 
     public override int GetHashCode() { return val.GetHashCode(); }
 
+    public BigDecimal multiply(BigDecimal that)
+    {
+      return BigDecimal.valueOf(val * that.val);
+    }
+
     public decimal decimalValue() { return val; }
     public override int intValue() { return (int)val; }
     public override long longValue() { return (long)val; }
