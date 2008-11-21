@@ -22,6 +22,7 @@ namespace Fan.Sys
   // Constants
   //////////////////////////////////////////////////////////////////////////
 
+    internal const long diffJava   = 946684800000L; // 2000-1970 in milliseconds
     internal const long diffNet    = 630822816000000000L; // 2000-0001 in 100's of nanoseconds
     internal const long nsPerYear  = 365L*24L*60L*60L*1000000000L;
     internal const long nsPerDay   = 24L*60L*60L*1000000000L;
@@ -787,7 +788,20 @@ namespace Fan.Sys
     };
 
   //////////////////////////////////////////////////////////////////////////
-  // C#
+  // Java
+  //////////////////////////////////////////////////////////////////////////
+
+    public static DateTime fromJava(long millis) { return fromJava(millis, TimeZone.m_current); }
+    public static DateTime fromJava(long millis, TimeZone tz)
+    {
+      if (millis <= 0) return null;
+      return new DateTime((millis-diffJava)*nsPerMilli, TimeZone.m_current);
+    }
+
+    public long toJava() { return (m_ticks / nsPerMilli) + diffJava; }
+
+  //////////////////////////////////////////////////////////////////////////
+  // .NET
   //////////////////////////////////////////////////////////////////////////
 
     public static DateTime net(long netTicks)

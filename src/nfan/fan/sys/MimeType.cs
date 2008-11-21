@@ -28,7 +28,7 @@ namespace Fan.Sys
       {
         int slash = s.IndexOf('/');
         string media = s.Substring(0, slash);
-        string sub = s.Substring(slash+1); //, s.val.Length-slash+1);
+        string sub = s.Substring(slash+1);
         Map pars = emptyParams();
 
         int semi = sub.IndexOf(';');
