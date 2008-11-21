@@ -31,7 +31,16 @@ public final class FTypeRef
     boolean nullable = false;
     if (sig.endsWith("?")) { mask |= NULLABLE; nullable = true; }
     if (sig.length() > 1)  mask |= GENERIC_INSTANCE;
-    if (podName.equals("sys"))
+    if (podName.equals("[java]"))
+    {
+      if (typeName.equals("int"))        { mask |= PRIMITIVE_INT;   stackType = INT; }
+      else if (typeName.equals("char"))  { mask |= PRIMITIVE_CHAR;  stackType = CHAR; }
+      else if (typeName.equals("byte"))  { mask |= PRIMITIVE_BYTE;  stackType = BYTE; }
+      else if (typeName.equals("short")) { mask |= PRIMITIVE_SHORT; stackType = SHORT; }
+      else if (typeName.equals("float")) { mask |= PRIMITIVE_FLOAT; stackType = FLOAT; }
+      else throw new IllegalStateException(typeName);
+    }
+    else if (podName.equals("sys"))
     {
       switch (typeName.charAt(0))
       {
@@ -39,7 +48,7 @@ public final class FTypeRef
           if (typeName.equals("Bool"))
           {
             mask |= SYS_BOOL;
-            if (!nullable) stackType = INT;
+            if (!nullable) { mask |= PRIMITIVE_BOOL; stackType = BOOL; }
           }
           break;
         case 'E':
@@ -49,14 +58,14 @@ public final class FTypeRef
           if (typeName.equals("Float"))
           {
             mask |= SYS_FLOAT;
-            if (!nullable) stackType = DOUBLE;
+            if (!nullable) { mask |= PRIMITIVE_DOUBLE; stackType = DOUBLE; }
           }
           break;
         case 'I':
           if (typeName.equals("Int"))
           {
             mask |= SYS_INT;
-            if (!nullable) stackType = LONG;
+            if (!nullable) { mask |= PRIMITIVE_LONG; stackType = LONG; }
           }
           break;
         case 'O':
@@ -107,29 +116,14 @@ public final class FTypeRef
   public boolean isBool() { return (mask & SYS_BOOL) != 0; }
 
   /**
-   * Is this sys::Bool, boolean primitive
-   */
-  public boolean isBoolPrimitive() { return stackType == INT && isBool(); }
-
-  /**
    * Is this sys::Int or sys::Int?
    */
   public boolean isInt() { return (mask & SYS_INT) != 0; }
 
   /**
-   * Is this sys::Int, long primitive
-   */
-  public boolean isIntPrimitive() { return stackType == LONG && isInt(); }
-
-  /**
    * Is this sys::Float or sys::Float?
    */
   public boolean isFloat() { return (mask & SYS_FLOAT) != 0; }
-
-  /**
-   * Is this sys::Float, double primitive
-   */
-  public boolean isFloatPrimitive() { return stackType == DOUBLE && isFloat(); }
 
   /**
    * Is this sys::Err or sys::Err?
@@ -157,10 +151,10 @@ public final class FTypeRef
    */
   public String jnameBoxed()
   {
-    if (stackType == OBJ)   return jname();
-    if (isBoolPrimitive())  return "java/lang/Boolean";
-    if (isIntPrimitive())   return "java/lang/Long";
-    if (isFloatPrimitive()) return "java/lang/Double";
+    if (stackType == OBJ)    return jname();
+    if (isPrimitiveBool())   return "java/lang/Boolean";
+    if (isPrimitiveLong())   return "java/lang/Long";
+    if (isPrimitiveDouble()) return "java/lang/Double";
     throw new IllegalStateException(signature);
   }
 
@@ -200,6 +194,30 @@ public final class FTypeRef
   public String toString() { return signature; }
 
 //////////////////////////////////////////////////////////////////////////
+// Primitives
+//////////////////////////////////////////////////////////////////////////
+
+  public boolean isPrimitive()        { return (mask & PRIMITIVE)        != 0; }
+  public boolean isPrimitiveBool()    { return (mask & PRIMITIVE_BOOL)   != 0; }
+  public boolean isPrimitiveByte()    { return (mask & PRIMITIVE_BYTE)   != 0; }
+  public boolean isPrimitiveShort()   { return (mask & PRIMITIVE_SHORT)  != 0; }
+  public boolean isPrimitiveChar()    { return (mask & PRIMITIVE_CHAR)   != 0; }
+  public boolean isPrimitiveInt()     { return (mask & PRIMITIVE_INT)    != 0; }
+  public boolean isPrimitiveLong()    { return (mask & PRIMITIVE_LONG)   != 0; }
+  public boolean isPrimitiveFloat()   { return (mask & PRIMITIVE_FLOAT)  != 0; }
+  public boolean isPrimitiveDouble()  { return (mask & PRIMITIVE_DOUBLE) != 0; }
+
+  /**
+   * Return if this is a byte, short, or int primitive which
+   * are all treated as an int on the JVM stack.
+   */
+  public boolean isPrimitiveIntLike()
+  {
+    int like = PRIMITIVE_INT | PRIMITIVE_CHAR | PRIMITIVE_SHORT | PRIMITIVE_BYTE;
+    return (mask & like) != 0;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
 
@@ -225,10 +243,26 @@ public final class FTypeRef
   public static final int SYS_FLOAT        = 0x0020;
   public static final int SYS_ERR          = 0x0040;
 
+  // mask primitive constants
+  public static final int PRIMITIVE        = 0xff00;
+  public static final int PRIMITIVE_BOOL   = 0x0100;
+  public static final int PRIMITIVE_BYTE   = 0x0200;
+  public static final int PRIMITIVE_SHORT  = 0x0400;
+  public static final int PRIMITIVE_CHAR   = 0x0800;
+  public static final int PRIMITIVE_INT    = 0x1000;
+  public static final int PRIMITIVE_LONG   = 0x2000;
+  public static final int PRIMITIVE_FLOAT  = 0x4000;
+  public static final int PRIMITIVE_DOUBLE = 0x8000;
+
   // stack type constants
   public static final int VOID   = 'V';
+  public static final int BOOL   = 'Z';
+  public static final int BYTE   = 'B';
+  public static final int SHORT  = 'S';
+  public static final int CHAR   = 'C';
   public static final int INT    = 'I';
   public static final int LONG   = 'J';
+  public static final int FLOAT  = 'F';
   public static final int DOUBLE = 'D';
   public static final int OBJ    = 'A';
 

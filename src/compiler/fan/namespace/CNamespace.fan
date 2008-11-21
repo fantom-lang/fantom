@@ -222,6 +222,18 @@ abstract class CNamespace : CompilerSupport
   internal Str:CType typeCache := Str:CType[:]   // keyed by signature
 
   **
+  ** Attempt resolve a slot against our dependency
+  ** library.  If can't be resolved, then throw Err.
+  **
+  CSlot resolveSlot(Str qname)
+  {
+    dot := qname.indexr(".")
+    slot := resolveType(qname[0...dot]).slot(qname[dot+1..-1])
+    if (slot == null) throw Err("Cannot resolve slot: $qname")
+    return slot
+  }
+
+  **
   ** Map one of the generic parameter types such as "sys::V" into a CType
   **
   CType genericParameter(Str id)

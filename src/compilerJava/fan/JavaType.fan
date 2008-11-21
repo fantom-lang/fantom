@@ -46,6 +46,7 @@ class JavaType : CType
 
   override Bool isForeign() { return true }
 
+  Bool isPrimitive() { return pod === pod.bridge.primitives }
   override Bool isValue() { return false }
 
   override Bool isNullable() { return false }
@@ -61,6 +62,17 @@ class JavaType : CType
 
   override CSlot? slot(Str name) { return slots[name] }
 
+  ** Handle the case where a field and method have the same
+  ** name; in this case the field will always be first with
+  ** a linked list to the overloaded methods
+  override CMethod? method(Str name)
+  {
+    x := slots[name]
+    if (x == null) return null
+    if (x is JavaField) return ((JavaField)x).next
+    return x
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Load
 //////////////////////////////////////////////////////////////////////////
@@ -69,7 +81,7 @@ class JavaType : CType
   {
     if (loaded) return
     slots := Str:CSlot[:]
-    doLoad(slots)
+    if (!isPrimitive) doLoad(slots)
     this.slots = slots
     loaded = true
   }

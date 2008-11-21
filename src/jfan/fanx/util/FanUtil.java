@@ -216,6 +216,12 @@ public class FanUtil
       if (!podName.startsWith("[java]"))
         throw new UnsupportedOperationException("Invalid FFI: " + podName);
 
+      if (typeName.equals("int"))   return "I";
+      if (typeName.equals("char"))  return "C";
+      if (typeName.equals("byte"))  return "B";
+      if (typeName.equals("short")) return "S";
+      if (typeName.equals("float")) return "F";
+
       StringBuilder s = new StringBuilder(podName.length()+typeName.length());
       for (int i=6; i<podName.length(); ++i)
       {

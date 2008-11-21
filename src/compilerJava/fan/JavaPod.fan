@@ -14,12 +14,13 @@ using compiler
 class JavaPod : CPod
 {
 
-  new make(JavaBridge bridge, Str package, Str[] classes)
+  new make(JavaBridge bridge, Str package, Str[]? classes)
   {
     this.bridge = bridge
     this.name = "[java]" + package
     this.packageName = package
-    this.types = classes.map(JavaType[,]) |Str n->JavaType| { return JavaType(this, n) }
+    if (classes != null)
+      this.types = classes.map(JavaType[,]) |Str n->JavaType| { return JavaType(this, n) }
   }
 
   override CNamespace ns() { return bridge.ns }
@@ -34,7 +35,7 @@ class JavaPod : CPod
 
   override Bool isForeign() { return true }
 
-  override readonly CType[] types
+  override CType[] types
 
   override JavaType? resolveType(Str typeName, Bool checked)
   {
