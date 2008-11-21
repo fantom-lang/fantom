@@ -65,7 +65,7 @@ namespace Fan.Sys
       if (val == System.Double.PositiveInfinity) return FanFloat.m_PosInfStr;
       if (val == System.Double.NegativeInfinity) return FanFloat.m_NegInfStr;
       string s = val.ToString();
-      if (s.IndexOf('.') == -1) s += ".0";  // to match java behavior
+      if (s.IndexOf('.') == -1 && s.IndexOf("E") == -1) s += ".0";  // to match java behavior
       return s;
     }
     public static string toString(double d) { return new Double(d).ToString(); }

@@ -187,7 +187,7 @@ namespace Fan.Sys
       if (self == System.Double.PositiveInfinity) return m_PosInfStr;
       if (self == System.Double.NegativeInfinity) return m_NegInfStr;
       string s = self.ToString();
-      if (s.IndexOf('.') == -1) s += ".0";  // to match java behavior
+      if (s.IndexOf('.') == -1 && s.IndexOf("E") == -1) s += ".0";  // to match java behavior
       return s;
     }
 

@@ -189,6 +189,18 @@ namespace Fanx.Util
     }
 
     /// <summary>
+    /// If the given object is a .NET primitive, make it as
+    /// a Fan type, otherwise return obj.
+    /// </summary>
+    public static object box(object obj)
+    {
+      if (obj is bool) return Fan.Sys.Boolean.valueOf((bool)obj);
+      if (obj is double) return Fan.Sys.Double.valueOf((double)obj);
+      if (obj is long) return Fan.Sys.Long.valueOf((long)obj);
+      return obj;
+    }
+
+    /// <summary>
     /// Return a new string, where the first letter is uppercase.
     /// If the string is a fully qualified type name, make each
     /// character following a '.' uppercase as well.
