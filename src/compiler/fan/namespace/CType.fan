@@ -360,14 +360,14 @@ mixin CType
   virtual CSlot? slot(Str name) { return slots[name] }
 
   **
-  ** Lookup a field by name.
+  ** Lookup a field by name (null if method).
   **
-  CField? field(Str name) { return (CField?)slot(name) }
+  virtual CField? field(Str name) { return slot(name) as CField }
 
   **
-  ** Lookup a method by name.
+  ** Lookup a method by name (null if field).
   **
-  CMethod? method(Str name) { return (CMethod?)slot(name) }
+  virtual CMethod? method(Str name) { return slot(name) as CMethod }
 
   **
   ** List of the all defined fields (including inherited fields).

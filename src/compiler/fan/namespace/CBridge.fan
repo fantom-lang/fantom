@@ -40,6 +40,16 @@ abstract class CBridge : CompilerSupport
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Coerce the target expression to the specified type.  If
+  ** the expression is not type compatible run the onErr function.
+  ** Default implementation provides standard Fan coercion.
+  **
+  virtual Expr coerce(Expr expr, CType expected, |,| onErr)
+  {
+    return CheckErrors.doCoerce(expr, expected, onErr)
+  }
+
+  **
   ** Type check the arguments for the specified method call.
   ** Insert any conversions needed.
   **

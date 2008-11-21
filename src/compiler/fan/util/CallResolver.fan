@@ -149,7 +149,22 @@ class CallResolver : CompilerSupport
     if (found != null) return
 
     // look it up in base type
-    found = base.slot(name)
+    if (isVar)
+    {
+      // if simple variable access attempt to lookup as field first,
+      // then as method if that fails (only matters in case of FFI)
+      found = base.field(name) ?: base.method(name)
+    }
+    else
+    {
+      // lookup as method
+      found = base.method(name)
+
+      // if we couldn't find as method, see if we
+      // are attempting to call a field like a method
+      if (found == null && base.field(name) != null)
+        throw err("Expected method, not field '$errSig'", location)
+    }
 
     // if slot not found and this call is on a with-block
     // base, then ignore for now - we will recheck in
@@ -175,12 +190,6 @@ class CallResolver : CompilerSupport
         throw err("Unknown method '$errSig'", location)
       }
     }
-
-    // if slot is a field and we are using method call
-    // syntax on a field and need to map to getter/setter
-    field := found as CField
-    if (field != null && !isVar)
-      throw err("Expected method, not field '$errSig'", location)
   }
 
   private Str errSig() { return "${base.qname}.${name}" }

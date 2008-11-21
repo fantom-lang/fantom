@@ -38,6 +38,9 @@ class JavaBridge : CBridge
   **
   override CPod resolvePod(Str name, Location? loc)
   {
+    // the empty package is used to represent primitives
+    if (name == "") return primitives
+
     // look for package name in classpatch
     classes := cp.classes[name]
     if (classes == null)
@@ -88,12 +91,15 @@ class JavaBridge : CBridge
     m.params.each |JavaParam p, Int i|
     {
       // ensure arg fits parameter type (or auto-cast)
-      newArgs[i] = CheckErrors.coerce(args[i], p.paramType) |,| { isErr = true }
+      newArgs[i] = coerce(args[i], p.paramType) |,| { isErr = true }
     }
     if (isErr) return false
 
     // if we have a match, then update the call args with coercions
-    call.args = newArgs
+    // and update the return type with the specified method we matched
+    call.args   = newArgs
+    call.method = m
+    call.ctype  = m.returnType
 
     // if this is a call to a constructor, then we need to create
     // an implicit target for the Java runtime to perform the new
@@ -110,11 +116,93 @@ class JavaBridge : CBridge
     return true
   }
 
+  **
+  ** Coerce expression to expected type.  If not a type match
+  ** then run the onErr function.
+  **
+  override Expr coerce(Expr expr, CType expected, |,| onErr)
+  {
+    // handle easy case
+    actual := expr.ctype
+    if (actual == expected) return expr
+
+    // handle Fan to Java primitives
+    if (expected.pod == primitives)
+      return coerceToPrimitive(expr, expected, onErr)
+
+    // handle Java primitives to Fan
+    if (actual.pod == primitives)
+      return coerceFromPrimitive(expr, expected, onErr)
+
+     // use normal Fan coercion behavior
+    return super.coerce(expr, expected, onErr)
+  }
+
+  **
+  ** Coerce a fan expression to a Java primitive (other
+  ** than the ones we support natively)
+  **
+  Expr coerceToPrimitive(Expr expr, CType expected, |,| onErr)
+  {
+    actual := expr.ctype
+
+    // sys::Int (long) -> int, short, byte
+    if (actual.isInt)
+    {
+      if (expected === primitives.intType ||
+          expected === primitives.charType ||
+          expected === primitives.shortType ||
+          expected === primitives.byteType)
+        return TypeCheckExpr.coerce(expr, expected)
+    }
+
+    // sys::Float (double) -> float
+    if (actual.isFloat)
+    {
+      if (expected === primitives.floatType)
+        return TypeCheckExpr.coerce(expr, expected)
+    }
+
+    // no coercion - type error
+    onErr()
+    return expr
+  }
+
+  **
+  ** Coerce a Java primitive to a Fan type.
+  **
+  Expr coerceFromPrimitive(Expr expr, CType expected, |,| onErr)
+  {
+    loc := expr.location
+    actual := expr.ctype
+
+    // int, short, byte -> sys::Int (long)
+    if (expected.isInt)
+    {
+      if (actual === primitives.intType ||
+          actual === primitives.charType ||
+          actual === primitives.shortType ||
+          actual === primitives.byteType)
+        return TypeCheckExpr.coerce(expr, expected)
+    }
+
+    // float -> sys::Float (float)
+    if (expected.isFloat)
+    {
+      if (actual === primitives.floatType)
+        return TypeCheckExpr.coerce(expr, expected)
+    }
+
+    // no coercion - type error
+    onErr()
+    return expr
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  readonly JavaPrimitives primitives := JavaPrimitives(this)
   readonly ClassPath cp
 
 }

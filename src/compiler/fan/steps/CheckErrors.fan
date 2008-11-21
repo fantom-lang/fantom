@@ -1358,7 +1358,22 @@ class CheckErrors : CompilerStep
   ** Coerce the target expression to the specified type.  If
   ** the expression is not type compatible run the onErr function.
   **
-  static Expr coerce(Expr expr, CType expected, |,| onErr)
+  Expr coerce(Expr expr, CType expected, |,| onErr)
+  {
+    // route to bridge for FFI coercion if either side if foreign
+    if (expected.isForeign) return expected.bridge.coerce(expr, expected, onErr)
+    if (expr.ctype.isForeign) return expr.ctype.bridge.coerce(expr, expected, onErr)
+
+    // normal Fan coercion behavior
+    return doCoerce(expr, expected, onErr)
+  }
+
+  **
+  ** Coerce the target expression to the specified type.  If
+  ** the expression is not type compatible run the onErr function.
+  ** Default Fan behavior.
+  **
+  static Expr doCoerce(Expr expr, CType expected, |,| onErr)
   {
     // sanity check that expression has been typed
     CType actual := expr.ctype
