@@ -62,6 +62,17 @@ class JavaType : CType
 
   override CSlot? slot(Str name) { return slots[name] }
 
+  ** Handle the case where a field and method have the same
+  ** name; in this case the field will always be first with
+  ** a linked list to the overloaded methods
+  override CMethod? method(Str name)
+  {
+    x := slots[name]
+    if (x == null) return null
+    if (x is JavaField) return ((JavaField)x).next
+    return x
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Load
 //////////////////////////////////////////////////////////////////////////
@@ -70,12 +81,7 @@ class JavaType : CType
   {
     if (loaded) return
     slots := Str:CSlot[:]
-    doLoad(slots)
-    loadSlots(slots)
-  }
-
-  internal Void loadSlots(Str:CSlot slots)
-  {
+    if (!isPrimitive) doLoad(slots)
     this.slots = slots
     loaded = true
   }

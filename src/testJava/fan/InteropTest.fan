@@ -54,10 +54,138 @@ class InteropTest : JavaTest
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Primitive Params
+// Primitive Instance Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Void testPrimitives()
+  Void testPrimitiveInstanceFields()
+  {
+    compile(
+     "using [java] fanx.test
+      class Foo
+      {
+        Obj init() { return InteropTest() { numl(9999) } }
+
+        Int num(Obj o) { return ((InteropTest)o).numl() }
+
+        Int getb(Obj o) { return ((InteropTest)o).numb }
+        Int gets(Obj o) { return ((InteropTest)o).nums }
+        Int getc(Obj o) { return ((InteropTest)o).numc }
+        Int geti(Obj o) { return ((InteropTest)o).numi }
+        Int getl(Obj o) { return ((InteropTest)o).numl }
+        Float getf(Obj o) { return ((InteropTest)o).numf }
+        Float getd(Obj o) { return ((InteropTest)o).numd }
+
+        Int? getbx(Obj o) { return ((InteropTest)o).numb }
+        Int? getsx(Obj o) { return ((InteropTest)o).nums }
+        Int? getcx(Obj o) { return ((InteropTest)o).numc }
+        Int? getix(Obj o) { return ((InteropTest)o).numi }
+        Int? getlx(Obj o) { return ((InteropTest)o).numl }
+        Float? getfx(Obj o) { return ((InteropTest)o).numf }
+        Float? getdx(Obj o) { return ((InteropTest)o).numd }
+
+        Int setb(Obj o, Int v) { x := (InteropTest)o; return x.numb = v }
+        Int sets(Obj o, Int v) { x := (InteropTest)o; return x.nums = v }
+        Int? setc(Obj o, Int v) { x := (InteropTest)o; return x.numc = v }
+        Int? seti(Obj o, Int v) { x := (InteropTest)o; return x.numi = v }
+        Float setf(Obj o, Float v) { x := (InteropTest)o; return x.numf = v }
+
+        Int? setbx(Obj o, Int? v) { x := (InteropTest)o; return x.numb = v }
+        Int? setsx(Obj o, Int? v) { x := (InteropTest)o; return x.nums = v }
+        Int setcx(Obj o, Int? v) { x := (InteropTest)o; return x.numc = v }
+        Int setix(Obj o, Int? v) { x := (InteropTest)o; return x.numi = v }
+        Float setfx(Obj o, Float? v) { x := (InteropTest)o; return x.numf = v }
+      }")
+
+    obj := pod.types.first.make
+    x := obj->init
+
+    // non-nullable gets
+    verifyEq(obj->num(x), 9999)
+    verifyEq(obj->getb(x), 'b')
+    verifyEq(obj->gets(x), 's')
+    verifyEq(obj->getc(x), 'c')
+    verifyEq(obj->geti(x), 'i')
+    verifyEq(obj->getl(x), 'l')
+    verifyEq(obj->getf(x), 'f'.toFloat)
+    verifyEq(obj->getd(x), 'd'.toFloat)
+
+    // nullable
+    verifyEq(obj->getbx(x), 'b')
+    verifyEq(obj->getsx(x), 's')
+    verifyEq(obj->getcx(x), 'c')
+    verifyEq(obj->getix(x), 'i')
+    verifyEq(obj->getlx(x), 'l')
+    verifyEq(obj->getfx(x), 'f'.toFloat)
+    verifyEq(obj->getdx(x), 'd'.toFloat)
+
+    // non-nullable sets
+    verifyEq(obj->setb(x, -99), -99)
+    verifyEq(obj->sets(x, 1997), 1997)
+    verifyEq(obj->setc(x, '\u8abc'), '\u8abc')
+    verifyEq(obj->seti(x, 0xbabe), 0xbabe)
+    verify(obj->setf(x, 34e13f)->approx(34e13f))
+
+    // nullable sets
+    verifyEq(obj->setbx(x, -99), -99)
+    verifyEq(obj->setsx(x, 1997), 1997)
+    verifyEq(obj->setcx(x, '\u8abc'), '\u8abc')
+    verifyEq(obj->setix(x, 0xbabe), 0xbabe)
+    verify(obj->setfx(x, 34e13f)->approx(34e13f))
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Primitive Static Fields
+//////////////////////////////////////////////////////////////////////////
+
+  Void testPrimitiveStaticFields()
+  {
+    compile(
+     "using [java] fanx.test
+      class Foo
+      {
+        Int b() { return InteropTest.snumb }
+        Int s() { return InteropTest.snums }
+        Int c() { return InteropTest.snumc }
+        Int i() { return InteropTest.snumi }
+        Int l() { return InteropTest.snuml }
+        Float f() { return InteropTest.snumf }
+        Float d() { return InteropTest.snumd }
+
+        Int? bx() { return InteropTest.snumb }
+        Int? sx() { return InteropTest.snums }
+        Int? cx() { return InteropTest.snumc }
+        Int? ix() { return InteropTest.snumi }
+        Int? lx() { return InteropTest.snuml }
+        Float? fx() { return InteropTest.snumf }
+        Float? dx() { return InteropTest.snumd }
+      }")
+
+    obj := pod.types.first.make
+
+    // non-nullable
+    verifyEq(obj->b, 'B')
+    verifyEq(obj->s, 'S')
+    verifyEq(obj->c, 'C')
+    verifyEq(obj->i, 'I')
+    verifyEq(obj->l, 'L')
+    verifyEq(obj->f, 'F'.toFloat)
+    verifyEq(obj->d, 'D'.toFloat)
+
+    // nullable
+    verifyEq(obj->bx, 'B')
+    verifyEq(obj->sx, 'S')
+    verifyEq(obj->cx, 'C')
+    verifyEq(obj->ix, 'I')
+    verifyEq(obj->lx, 'L')
+    verifyEq(obj->fx, 'F'.toFloat)
+    verifyEq(obj->dx, 'D'.toFloat)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Primitive Methods
+//////////////////////////////////////////////////////////////////////////
+
+  Void testPrimitiveMethods()
   {
     compile(
      "using [java] fanx.test
@@ -65,33 +193,33 @@ class InteropTest : JavaTest
       {
         Obj init() { return InteropTest() }
 
-        Int getb(Obj o) { return ((InteropTest)o).numb }
-        Int gets(Obj o) { return ((InteropTest)o).nums }
-        Int getc(Obj o) { return ((InteropTest)o).numc }
-        Int geti(Obj o) { return ((InteropTest)o).numi }
-        Float getf(Obj o) { return ((InteropTest)o).numf }
+        Int getb(Obj o) { return ((InteropTest)o).numb() }
+        Int gets(Obj o) { return ((InteropTest)o).nums() }
+        Int getc(Obj o) { return ((InteropTest)o).numc() }
+        Int geti(Obj o) { return ((InteropTest)o).numi() }
+        Float getf(Obj o) { return ((InteropTest)o).numf() }
 
-        Int? getbx(Obj o) { return ((InteropTest)o).numb }
-        Int? getsx(Obj o) { return ((InteropTest)o).nums }
-        Int? getcx(Obj o) { return ((InteropTest)o).numc }
-        Int? getix(Obj o) { return ((InteropTest)o).numi }
-        Float? getfx(Obj o) { return ((InteropTest)o).numf }
+        Int? getbx(Obj o) { return ((InteropTest)o).numb() }
+        Int? getsx(Obj o) { return ((InteropTest)o).nums() }
+        Int? getcx(Obj o) { return ((InteropTest)o).numc() }
+        Int? getix(Obj o) { return ((InteropTest)o).numi() }
+        Float? getfx(Obj o) { return ((InteropTest)o).numf() }
 
-        Int setb(Obj o, Int v) { x := (InteropTest)o; x.numb(v); return x.numl }
-        Int sets(Obj o, Int v) { x := (InteropTest)o; x.nums(v); return x.numl }
-        Int setc(Obj o, Int v) { x := (InteropTest)o; x.numc(v); return x.numl }
-        Int seti(Obj o, Int v) { x := (InteropTest)o; x.numi(v); return x.numl }
-        Int setl(Obj o, Int v) { x := (InteropTest)o; x.numl(v); return x.numl }
-        Int setf(Obj o, Float v) { x := (InteropTest)o; x.numf(v); return x.numl }
+        Int setb(Obj o, Int v) { x := (InteropTest)o; x.numb(v); return x.numl() }
+        Int sets(Obj o, Int v) { x := (InteropTest)o; x.nums(v); return x.numl() }
+        Int setc(Obj o, Int v) { x := (InteropTest)o; x.numc(v); return x.numl() }
+        Int seti(Obj o, Int v) { x := (InteropTest)o; x.numi(v); return x.numl() }
+        Int setl(Obj o, Int v) { x := (InteropTest)o; x.numl(v); return x.numl() }
+        Int setf(Obj o, Float v) { x := (InteropTest)o; x.numf(v); return x.numl() }
 
-        Int setbx(Obj o, Int? v) { x := (InteropTest)o; x.numb(v); return x.numl }
-        Int setsx(Obj o, Int? v) { x := (InteropTest)o; x.nums(v); return x.numl }
-        Int setcx(Obj o, Int? v) { x := (InteropTest)o; x.numc(v); return x.numl }
-        Int setix(Obj o, Int? v) { x := (InteropTest)o; x.numi(v); return x.numl }
-        Int setlx(Obj o, Int? v) { x := (InteropTest)o; x.numl(v); return x.numl }
-        Int setfx(Obj o, Float? v) { x := (InteropTest)o; x.numf(v); return x.numl }
+        Int setbx(Obj o, Int? v) { x := (InteropTest)o; x.numb(v); return x.numl() }
+        Int setsx(Obj o, Int? v) { x := (InteropTest)o; x.nums(v); return x.numl() }
+        Int setcx(Obj o, Int? v) { x := (InteropTest)o; x.numc(v); return x.numl() }
+        Int setix(Obj o, Int? v) { x := (InteropTest)o; x.numi(v); return x.numl() }
+        Int setlx(Obj o, Int? v) { x := (InteropTest)o; x.numl(v); return x.numl() }
+        Int setfx(Obj o, Float? v) { x := (InteropTest)o; x.numf(v); return x.numl() }
 
-        Int add(Obj o, Int b, Int s, Int i, Float f) { x := (InteropTest)o; x.numadd(b, s, i, f); return x.numl }
+        Int add(Obj o, Int b, Int s, Int i, Float f) { x := (InteropTest)o; x.numadd(b, s, i, f); return x.numl() }
       }")
 
     obj := pod.types.first.make
