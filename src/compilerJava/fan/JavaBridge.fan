@@ -149,15 +149,18 @@ class JavaBridge : CBridge
     // sys::Int (long) -> int, short, byte
     if (actual.isInt)
     {
-      if (expected === primitives.intType)   return primitiveCast(primitives.l2i, expr)
-      if (expected === primitives.shortType) return primitiveCast(primitives.l2s, expr)
-      if (expected === primitives.byteType)  return primitiveCast(primitives.l2b, expr)
+      if (expected === primitives.intType ||
+          expected === primitives.charType ||
+          expected === primitives.shortType ||
+          expected === primitives.byteType)
+        return TypeCheckExpr.coerce(expr, expected)
     }
 
     // sys::Float (double) -> float
     if (actual.isFloat)
     {
-      if (expected === primitives.floatType) return primitiveCast(primitives.d2f, expr)
+      if (expected === primitives.floatType)
+        return TypeCheckExpr.coerce(expr, expected)
     }
 
     // no coercion - type error
@@ -176,28 +179,23 @@ class JavaBridge : CBridge
     // int, short, byte -> sys::Int (long)
     if (expected.isInt)
     {
-      if (actual === primitives.intType)   return primitiveCast(primitives.i2l, expr)
-      if (actual === primitives.shortType) return primitiveCast(primitives.s2l, expr)
-      if (actual === primitives.byteType)  return primitiveCast(primitives.b2l, expr)
+      if (actual === primitives.intType ||
+          actual === primitives.charType ||
+          actual === primitives.shortType ||
+          actual === primitives.byteType)
+        return TypeCheckExpr.coerce(expr, expected)
     }
 
     // float -> sys::Float (float)
     if (expected.isFloat)
     {
-      if (actual === primitives.floatType) return primitiveCast(primitives.f2d, expr)
+      if (actual === primitives.floatType)
+        return TypeCheckExpr.coerce(expr, expected)
     }
 
     // no coercion - type error
     onErr()
     return expr
-  }
-
-  **
-  ** Generate a primitive cast for the specified expr.
-  **
-  Expr primitiveCast(JavaMethod m, Expr expr)
-  {
-    return CallExpr.makeWithMethod(expr.location, null, m, [expr])
   }
 
 //////////////////////////////////////////////////////////////////////////

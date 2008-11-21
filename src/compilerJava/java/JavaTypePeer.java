@@ -155,6 +155,7 @@ class JavaTypePeer
       if (cls == int.class)     return "[java]::int";
       if (cls == byte.class)    return "[java]::byte";
       if (cls == short.class)   return "[java]::short";
+      if (cls == char.class)    return "[java]::char";
       if (cls == float.class)   return "[java]::float";
       throw new IllegalStateException(cls.toString());
     }

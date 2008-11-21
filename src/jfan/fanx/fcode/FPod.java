@@ -74,10 +74,6 @@ public final class FPod
       FTypeRef typeRef = typeRef(m[0]);
       String name = name(m[1]);
 
-      // if this is a call on a "primitive"
-      if (typeRef.isPrimitiveFFI())
-        return toPrimitiveCall(m, typeRef, name);
-
       // if the type signature is java/lang then we route
       // to static methods on FanObj, FanFloat, etc
       String jname = typeRef.jname();
@@ -122,25 +118,6 @@ public final class FPod
   {
     public boolean invokestatic;
     public String sig;
-  }
-
-  /**
-   * Map a call on a primitive such as '[java]::int.l2i'
-   */
-  public final JCall toPrimitiveCall(int[] m, FTypeRef t, String name)
-  {
-    StringBuilder s = new StringBuilder();
-    s.append("fanx/util/OpUtil.").append(name).append('(');
-    for (int i=3; i<m.length; ++i) typeRef(m[i]).jsig(s);
-    s.append(')');
-
-    FTypeRef ret = typeRef(m[2]);
-    ret.jsig(s);
-
-    JCall call = new JCall();
-    call.invokestatic = true;
-    call.sig = s.toString();
-    return call;
   }
 
   /**
