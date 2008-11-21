@@ -388,11 +388,27 @@ public class FCodeEmit
   {
     switch (stackType)
     {
-      case FTypeRef.INT:    return loadVarInt(code, jindex);
-      case FTypeRef.LONG:   return loadVarLong(code, jindex);
-      case FTypeRef.DOUBLE: return loadVarDouble(code, jindex);
-      case FTypeRef.OBJ:    return loadVarObj(code, jindex);
-      default: throw new IllegalStateException("Register " + jindex + " " + (char)stackType);
+      case FTypeRef.BOOL:
+      case FTypeRef.BYTE:
+      case FTypeRef.SHORT:
+      case FTypeRef.CHAR:
+      case FTypeRef.INT:
+        return loadVarInt(code, jindex);
+
+      case FTypeRef.LONG:
+        return loadVarLong(code, jindex);
+
+      case FTypeRef.FLOAT:
+        return loadVarFloat(code, jindex);
+
+      case FTypeRef.DOUBLE:
+        return loadVarDouble(code, jindex);
+
+      case FTypeRef.OBJ:
+        return loadVarObj(code, jindex);
+
+      default:
+        throw new IllegalStateException("Register " + jindex + " " + (char)stackType);
     }
   }
 
@@ -418,6 +434,19 @@ public class FCodeEmit
       case 2:  code.op(LLOAD_2); break;
       case 3:  code.op(LLOAD_3); break;
       default: code.op1(LLOAD, jindex); break;
+    }
+    return jindex+2;
+  }
+
+  private static int loadVarFloat(CodeEmit code, int jindex)
+  {
+    switch (jindex)
+    {
+      case 0:  code.op(FLOAD_0); break;
+      case 1:  code.op(FLOAD_1); break;
+      case 2:  code.op(FLOAD_2); break;
+      case 3:  code.op(FLOAD_3); break;
+      default: code.op1(FLOAD, jindex); break;
     }
     return jindex+2;
   }
@@ -462,10 +491,30 @@ public class FCodeEmit
   {
     switch (stackType)
     {
-      case FTypeRef.INT:    storeVarInt(jindex); break;
-      case FTypeRef.LONG:   storeVarLong(jindex); break;
-      case FTypeRef.DOUBLE: storeVarDouble(jindex); break;
-      case FTypeRef.OBJ:    storeVarObj(jindex); break;
+      case FTypeRef.BOOL:
+      case FTypeRef.BYTE:
+      case FTypeRef.SHORT:
+      case FTypeRef.CHAR:
+      case FTypeRef.INT:
+        storeVarInt(jindex);
+        break;
+
+      case FTypeRef.LONG:
+        storeVarLong(jindex);
+        break;
+
+      case FTypeRef.FLOAT:
+        storeVarFloat(jindex);
+        break;
+
+      case FTypeRef.DOUBLE:
+        storeVarDouble(jindex);
+        break;
+
+      case FTypeRef.OBJ:
+        storeVarObj(jindex);
+        break;
+
       default: throw new IllegalStateException("Register " + jindex + " " + (char)stackType);
     }
   }
@@ -491,6 +540,18 @@ public class FCodeEmit
       case 2:  code.op(LSTORE_2); break;
       case 3:  code.op(LSTORE_3); break;
       default: code.op1(LSTORE, jindex); break;
+    }
+  }
+
+  private void storeVarFloat(int jindex)
+  {
+    switch (jindex)
+    {
+      case 0:  code.op(FSTORE_0); break;
+      case 1:  code.op(FSTORE_1); break;
+      case 2:  code.op(FSTORE_2); break;
+      case 3:  code.op(FSTORE_3); break;
+      default: code.op1(FSTORE, jindex); break;
     }
   }
 

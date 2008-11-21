@@ -48,7 +48,7 @@ public final class FTypeRef
           if (typeName.equals("Bool"))
           {
             mask |= SYS_BOOL;
-            if (!nullable) { mask |= PRIMITIVE_BOOL; stackType = INT; }
+            if (!nullable) { mask |= PRIMITIVE_BOOL; stackType = BOOL; }
           }
           break;
         case 'E':
@@ -256,6 +256,7 @@ public final class FTypeRef
 
   // stack type constants
   public static final int VOID   = 'V';
+  public static final int BOOL   = 'Z';
   public static final int BYTE   = 'B';
   public static final int SHORT  = 'S';
   public static final int CHAR   = 'C';

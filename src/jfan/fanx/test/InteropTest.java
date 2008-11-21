@@ -33,6 +33,22 @@ public class InteropTest
   public void numd(double x) { num = (long)x; }
   public void numf(float x)  { num = (long)x; }
 
+  public byte   numb = 'b';
+  public short  nums = 's';
+  public char   numc = 'c';
+  public int    numi = 'i';
+  public long   numl = 'l';
+  public float  numf = 'f';
+  public double numd = 'd';
+
+  public static byte   snumb = 'B';
+  public static short  snums = 'S';
+  public static char   snumc = 'C';
+  public static int    snumi = 'I';
+  public static long   snuml = 'L';
+  public static float  snumf = 'F';
+  public static double snumd = 'D';
+
   public void numadd(byte b, short s, int i, float f)  { num = b + s + i + (int)f; }
 
 }
