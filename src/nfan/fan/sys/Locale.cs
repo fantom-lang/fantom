@@ -102,7 +102,7 @@ namespace Fan.Sys
 
     public override long hash() { return FanStr.hash(m_str); }
 
-    public override bool _equals(object obj)
+    public override bool Equals(object obj)
     {
       if (obj is Locale)
       {

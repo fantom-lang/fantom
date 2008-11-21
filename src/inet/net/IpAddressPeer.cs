@@ -131,7 +131,7 @@ namespace Fan.Inet
       return m_net.GetHashCode();
     }
 
-    public bool _equals(IpAddress fan, object obj)
+    public bool equals(IpAddress fan, object obj)
     {
       if (obj is IpAddress)
         return this.m_net.Equals(((IpAddress)obj).m_peer.m_net);

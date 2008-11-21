@@ -278,6 +278,8 @@ namespace Fan.Sys
       return new List(m_of, dup);
     }
 
+    public override int GetHashCode() { return (int)hash(); }
+
     public override long hash()
     {
       long hash = 33;
@@ -289,7 +291,7 @@ namespace Fan.Sys
       return hash;
     }
 
-    public override bool _equals(object that)
+    public override bool Equals(object that)
     {
       if (that is List)
       {

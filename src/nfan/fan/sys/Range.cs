@@ -103,7 +103,7 @@ namespace Fan.Sys
       return acc;
     }
 
-    public override bool _equals(object obj)
+    public override bool Equals(object obj)
     {
       if (obj is Range)
       {

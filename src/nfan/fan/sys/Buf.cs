@@ -53,11 +53,6 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override bool _equals(object that)
-    {
-      return this == that;
-    }
-
     public override string toStr()
     {
       return type().name() + "(pos=" + getPos() + " size=" + getSize() + ")";

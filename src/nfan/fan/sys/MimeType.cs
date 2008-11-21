@@ -158,7 +158,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override bool _equals(object obj)
+    public override bool Equals(object obj)
     {
       if (!(obj is MimeType)) return false;
       MimeType x = (MimeType)obj;

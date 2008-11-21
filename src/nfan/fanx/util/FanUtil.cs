@@ -160,7 +160,7 @@ namespace Fanx.Util
     /// </summary>
     public static string toNetMethodName(string fanName)
     {
-      if (fanName == "equals") return "_equals";
+      if (fanName == "equals") return "Equals";
       return fanName;
     }
 
@@ -169,7 +169,7 @@ namespace Fanx.Util
     /// </summary>
     public static string toFanMethodName(string netName)
     {
-      if (netName == "_equals") return "equals";
+      if (netName == "Equals") return "equals";
       return netName;
     }
 

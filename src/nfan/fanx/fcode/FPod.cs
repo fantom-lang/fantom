@@ -100,8 +100,7 @@ namespace Fanx.Fcode
           if (x != null) return x;
         }
 
-        // equals => _equals (since we can't override
-        // Object.equals by return type)
+        // equals => Equals
         if (!explicitSelf)
           mName = FanUtil.toNetMethodName(mName);
 

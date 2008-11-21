@@ -31,12 +31,11 @@ namespace Fan.Sys
   // Type
   //////////////////////////////////////////////////////////////////////////
 
-    public override long hash()
-    {
-      return FanStr.hash(signature());
-    }
+    public override int GetHashCode() { return (int)hash(); }
 
-    public override bool _equals(object obj)
+    public override long hash() { return FanStr.hash(signature()); }
+
+    public override bool Equals(object obj)
     {
       if (obj is MapType)
       {

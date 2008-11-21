@@ -37,12 +37,11 @@ namespace Fan.Sys
   // Type
   //////////////////////////////////////////////////////////////////////////
 
-    public override long hash()
-    {
-      return FanStr.hash(signature());
-    }
+    public override int GetHashCode() { return (int)hash(); }
 
-    public override bool _equals(object obj)
+    public override long hash() { return FanStr.hash(signature()); }
+
+    public override bool Equals(object obj)
     {
       if (obj is FuncType)
       {
@@ -50,7 +49,7 @@ namespace Fan.Sys
         if (m_params.Length != x.m_params.Length) return false;
         for (int i=0; i<m_params.Length; ++i)
           if (!m_params[i].Equals(x.m_params[i])) return false;
-        return m_ret._equals(x.m_ret);
+        return m_ret.Equals(x.m_ret);
       }
       return false;
     }

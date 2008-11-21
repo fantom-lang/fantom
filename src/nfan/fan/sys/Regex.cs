@@ -36,7 +36,7 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public sealed override bool _equals(object obj)
+    public sealed override bool Equals(object obj)
     {
       if (obj is Regex)
         return ((Regex)obj).m_source == this.m_source;
