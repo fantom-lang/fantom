@@ -69,7 +69,7 @@ class WispReq : WebReq
       {
         header.split(';', false).each |Str s|
         {
-          if (s[0] == '$') return
+          if (s.isEmpty || s[0] == '$') return
           c := Cookie.fromStr(s)
           cookies[c.name] = c.value
         }
