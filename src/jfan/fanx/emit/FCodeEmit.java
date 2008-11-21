@@ -1010,41 +1010,9 @@ public class FCodeEmit
       return;
     }
 
-    // Bool boxing/unboxing
-    if (from.isBoolPrimitive())
-    {
-      if (to.isRef()) { boolBox(); return; }
-      throw new IllegalStateException("Coerce " + from  + " => " + to);
-    }
-    if (to.isBoolPrimitive())
-    {
-      if (from.isRef()) { boolUnbox(!from.isBool()); return; }
-      throw new IllegalStateException("Coerce " + from  + " => " + to);
-    }
-
-    // Int boxing/unboxing
-    if (from.isIntPrimitive())
-    {
-      if (to.isRef()) { intBox(); return; }
-      throw new IllegalStateException("Coerce " + from  + " => " + to);
-    }
-    if (to.isIntPrimitive())
-    {
-      if (from.isRef()) { intUnbox(!from.isInt()); return; }
-      throw new IllegalStateException("Coerce " + from  + " => " + to);
-    }
-
-    // Float boxing/unboxing
-    if (from.isFloatPrimitive())
-    {
-      if (to.isRef()) { floatBox(); return; }
-      throw new IllegalStateException("Coerce " + from  + " => " + to);
-    }
-    if (to.isFloatPrimitive())
-    {
-      if (from.isRef()) { floatUnbox(!from.isFloat()); return; }
-      throw new IllegalStateException("Coerce " + from  + " => " + to);
-    }
+    // handle primitives
+    if (to.isPrimitive())   { coerceToPrimitive(from, to); return; }
+    if (from.isPrimitive()) { coerceFromPrimitive(from, to); return; }
 
     // check nullable => non-nullable
     if (from.isNullable() && !to.isNullable())
@@ -1062,6 +1030,86 @@ public class FCodeEmit
     if (to.isObj()) return;
 
     code.op2(CHECKCAST, emit.cls(to.jname()));
+  }
+
+  private void coerceToPrimitive(FTypeRef from, FTypeRef to)
+  {
+    // Boolean -> boolean
+    if (to.isPrimitiveBool())
+    {
+      if (from.isRef()) { boolUnbox(!from.isBool()); return; }
+    }
+
+    // Long, int -> long
+    if (to.isPrimitiveLong())
+    {
+      if (from.isRef()) { intUnbox(!from.isInt()); return; }
+      if (from.isPrimitiveIntLike()) { code.op(I2L); return; }
+    }
+
+    // Double, float -> double
+    if (to.isPrimitiveDouble())
+    {
+      if (from.isRef()) { floatUnbox(!from.isFloat()); return; }
+      if (from.isPrimitiveFloat()) { code.op(F2D); return; }
+    }
+
+    // long, Long -> int, byte, short
+    if (to.isPrimitiveIntLike())
+    {
+      if (from.isRef() || from.isPrimitiveLong())
+      {
+        if (from.isRef()) intUnbox(!from.isInt());
+        code.op(L2I);
+        if (to.isPrimitiveByte()) code.op(I2B);
+        else if (to.isPrimitiveShort()) code.op(I2S);
+        else if (to.isPrimitiveChar()) code.op(I2C);
+        return;
+      }
+    }
+
+    // double, Double -> float
+    if (to.isPrimitiveFloat())
+    {
+      if (from.isPrimitiveDouble()) { code.op(D2F); return; }
+      if (from.isRef()) { floatUnbox(!from.isFloat()); code.op(D2F); return; }
+    }
+
+    throw new IllegalStateException("Coerce " + from  + " => " + to);
+  }
+
+  private void coerceFromPrimitive(FTypeRef from, FTypeRef to)
+  {
+    // at this point we've already handled any cases where to is
+    // a primitive in the coerceToPrimitive() method - so this
+    // method is strictly about boxing from a primitive
+
+    if (from.isPrimitiveBool())
+    {
+      if (to.isRef()) { boolBox(); return; }
+    }
+
+    if (from.isPrimitiveLong())
+    {
+      if (to.isRef()) { intBox(); return; }
+    }
+
+    if (from.isPrimitiveDouble())
+    {
+      if (to.isRef()) { floatBox(); return; }
+    }
+
+    if (from.isPrimitiveIntLike())
+    {
+      if (to.isRef()) { code.op(I2L); intBox(); return; }
+    }
+
+    if (from.isPrimitiveFloat())
+    {
+      if (to.isRef()) { code.op(F2D); floatBox(); return; }
+    }
+
+    throw new IllegalStateException("Coerce " + from  + " => " + to);
   }
 
   private void cast()

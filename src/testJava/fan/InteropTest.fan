@@ -65,16 +65,31 @@ class InteropTest : JavaTest
       {
         Obj init() { return InteropTest() }
 
+        Int getb(Obj o) { return ((InteropTest)o).numb }
+        Int gets(Obj o) { return ((InteropTest)o).nums }
+        Int getc(Obj o) { return ((InteropTest)o).numc }
+        Int geti(Obj o) { return ((InteropTest)o).numi }
+        Float getf(Obj o) { return ((InteropTest)o).numf }
+
+        Int? getbx(Obj o) { return ((InteropTest)o).numb }
+        Int? getsx(Obj o) { return ((InteropTest)o).nums }
+        Int? getcx(Obj o) { return ((InteropTest)o).numc }
+        Int? getix(Obj o) { return ((InteropTest)o).numi }
+        Float? getfx(Obj o) { return ((InteropTest)o).numf }
+
         Int setb(Obj o, Int v) { x := (InteropTest)o; x.numb(v); return x.numl }
         Int sets(Obj o, Int v) { x := (InteropTest)o; x.nums(v); return x.numl }
+        Int setc(Obj o, Int v) { x := (InteropTest)o; x.numc(v); return x.numl }
         Int seti(Obj o, Int v) { x := (InteropTest)o; x.numi(v); return x.numl }
         Int setl(Obj o, Int v) { x := (InteropTest)o; x.numl(v); return x.numl }
         Int setf(Obj o, Float v) { x := (InteropTest)o; x.numf(v); return x.numl }
 
-        Int getb(Obj o) { return ((InteropTest)o).numb }
-        Int gets(Obj o) { return ((InteropTest)o).nums }
-        Int geti(Obj o) { return ((InteropTest)o).numi }
-        Float getf(Obj o) { return ((InteropTest)o).numf }
+        Int setbx(Obj o, Int? v) { x := (InteropTest)o; x.numb(v); return x.numl }
+        Int setsx(Obj o, Int? v) { x := (InteropTest)o; x.nums(v); return x.numl }
+        Int setcx(Obj o, Int? v) { x := (InteropTest)o; x.numc(v); return x.numl }
+        Int setix(Obj o, Int? v) { x := (InteropTest)o; x.numi(v); return x.numl }
+        Int setlx(Obj o, Int? v) { x := (InteropTest)o; x.numl(v); return x.numl }
+        Int setfx(Obj o, Float? v) { x := (InteropTest)o; x.numf(v); return x.numl }
 
         Int add(Obj o, Int b, Int s, Int i, Float f) { x := (InteropTest)o; x.numadd(b, s, i, f); return x.numl }
       }")
@@ -85,30 +100,51 @@ class InteropTest : JavaTest
     // long -> byte -> long
     verifyEq(obj->setb(x, 127), 127)
     verifyEq(obj->setb(x, -127), -127)
-    verifyEq(obj->setb(x, 0xff7a), 0x7a)
+    verifyEq(obj->setbx(x, 0xff7a), 0x7a)
     verifyEq(obj->getb(x), 0x7a)
+    verifyEq(obj->getbx(x), 0x7a)
     verifyEq(obj->setl(x, -1), -1)
     verifyEq(obj->getb(x), -1)
+    verifyEq(obj->getbx(x), -1)
+    verifyEq(obj->setb(x, 345), 89)
+    verifyEq(obj->getb(x), 89)
 
     // long -> short -> long
     verifyEq(obj->sets(x, 32_000), 32_000)
     verifyEq(obj->sets(x, -32_000), -32_000)
-    verifyEq(obj->sets(x, 0x1234_7abc), 0x7abc)
+    verifyEq(obj->setsx(x, 0x1234_7abc), 0x7abc)
     verifyEq(obj->gets(x), 0x7abc)
+    verifyEq(obj->getsx(x), 0x7abc)
     verifyEq(obj->setl(x, 0xffff_0123), 0xffff_0123)
     verifyEq(obj->gets(x), 0x123)
+    verifyEq(obj->getsx(x), 0x123)
+    verifyEq(obj->sets(x, -70982), -5446)
+    verifyEq(obj->gets(x), -5446)
+
+    // long -> char -> long
+    verifyEq(obj->setc(x, 'A'), 'A')
+    verifyEq(obj->getc(x), 'A')
+    verifyEq(obj->setcx(x, 60_000), 60_000)
+    verifyEq(obj->getcx(x), 60_000)
+    verifyEq(obj->setc(x, 71234), 5698)
+    verifyEq(obj->getcx(x), 5698)
 
     // long -> int -> long
     verifyEq(obj->seti(x, -44), -44)
     verifyEq(obj->geti(x), -44)
-    verifyEq(obj->seti(x, 0xff_1234_abcd), 0x1234_abcd)
+    verifyEq(obj->setix(x, 0xff_1234_abcd), 0x1234_abcd)
     verifyEq(obj->geti(x), 0x1234_abcd)
+    verifyEq(obj->getix(x), 0x1234_abcd)
     verifyEq(obj->setl(x, 0xff_1234_abcd), 0xff_1234_abcd)
     verifyEq(obj->geti(x), 0x1234_abcd)
+    verifyEq(obj->getix(x), 0x1234_abcd)
 
     // double -> float -> long
     verifyEq(obj->setf(x, 88f), 88)
     verifyEq(obj->getf(x), 88f)
+    verifyEq(obj->getfx(x), 88f)
+    verifyEq(obj->setfx(x, -1234f), -1234)
+    verifyEq(obj->getf(x), -1234f)
 
     // multiple primitives on stack
     verifyEq(obj->add(x, 3, 550, -50, -50f), 453)
