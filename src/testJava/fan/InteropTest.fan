@@ -54,7 +54,7 @@ class InteropTest : JavaTest
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Primitives
+// Primitive Params
 //////////////////////////////////////////////////////////////////////////
 
   Void testPrimitives()
@@ -65,11 +65,16 @@ class InteropTest : JavaTest
       {
         Obj init() { return InteropTest() }
 
-        Int b(Obj o, Int v) { x := (InteropTest)o; x.numb(v); return x.numl }
-        Int s(Obj o, Int v) { x := (InteropTest)o; x.nums(v); return x.numl }
-        Int i(Obj o, Int v) { x := (InteropTest)o; x.numi(v); return x.numl }
+        Int setb(Obj o, Int v) { x := (InteropTest)o; x.numb(v); return x.numl }
+        Int sets(Obj o, Int v) { x := (InteropTest)o; x.nums(v); return x.numl }
+        Int seti(Obj o, Int v) { x := (InteropTest)o; x.numi(v); return x.numl }
+        Int setl(Obj o, Int v) { x := (InteropTest)o; x.numl(v); return x.numl }
+        Int setf(Obj o, Float v) { x := (InteropTest)o; x.numf(v); return x.numl }
 
-        Int f(Obj o, Float v) { x := (InteropTest)o; x.numf(v); return x.numl }
+        Int getb(Obj o) { return ((InteropTest)o).numb }
+        Int gets(Obj o) { return ((InteropTest)o).nums }
+        Int geti(Obj o) { return ((InteropTest)o).numi }
+        Float getf(Obj o) { return ((InteropTest)o).numf }
 
         Int add(Obj o, Int b, Int s, Int i, Float f) { x := (InteropTest)o; x.numadd(b, s, i, f); return x.numl }
       }")
@@ -78,21 +83,32 @@ class InteropTest : JavaTest
     x := obj->init
 
     // long -> byte -> long
-    verifyEq(obj->b(x, 127), 127)
-    verifyEq(obj->b(x, -127), -127)
-    verifyEq(obj->b(x, 0xff7a), 0x7a)
+    verifyEq(obj->setb(x, 127), 127)
+    verifyEq(obj->setb(x, -127), -127)
+    verifyEq(obj->setb(x, 0xff7a), 0x7a)
+    verifyEq(obj->getb(x), 0x7a)
+    verifyEq(obj->setl(x, -1), -1)
+    verifyEq(obj->getb(x), -1)
 
     // long -> short -> long
-    verifyEq(obj->s(x, 32_000), 32_000)
-    verifyEq(obj->s(x, -32_000), -32_000)
-    verifyEq(obj->s(x, 0x1234_7abc), 0x7abc)
+    verifyEq(obj->sets(x, 32_000), 32_000)
+    verifyEq(obj->sets(x, -32_000), -32_000)
+    verifyEq(obj->sets(x, 0x1234_7abc), 0x7abc)
+    verifyEq(obj->gets(x), 0x7abc)
+    verifyEq(obj->setl(x, 0xffff_0123), 0xffff_0123)
+    verifyEq(obj->gets(x), 0x123)
 
     // long -> int -> long
-    verifyEq(obj->i(x, -44), -44)
-    verifyEq(obj->i(x, 0xff_1234_abcd), 0x1234_abcd)
+    verifyEq(obj->seti(x, -44), -44)
+    verifyEq(obj->geti(x), -44)
+    verifyEq(obj->seti(x, 0xff_1234_abcd), 0x1234_abcd)
+    verifyEq(obj->geti(x), 0x1234_abcd)
+    verifyEq(obj->setl(x, 0xff_1234_abcd), 0xff_1234_abcd)
+    verifyEq(obj->geti(x), 0x1234_abcd)
 
     // double -> float -> long
-    verifyEq(obj->f(x, 88f), 88)
+    verifyEq(obj->setf(x, 88f), 88)
+    verifyEq(obj->getf(x), 88f)
 
     // multiple primitives on stack
     verifyEq(obj->add(x, 3, 550, -50, -50f), 453)
