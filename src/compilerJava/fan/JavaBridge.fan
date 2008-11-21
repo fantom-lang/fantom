@@ -120,13 +120,22 @@ class JavaBridge : CBridge
   ** Coerce expression to expected type.  If not a type match
   ** then run the onErr function.
   **
-  Expr coerce(Expr expr, CType expected, |,| onErr)
+  override Expr coerce(Expr expr, CType expected, |,| onErr)
   {
+    // handle easy case
+    actual := expr.ctype
+    if (actual == expected) return expr
+
     // handle Fan to Java primitives
-    if (expected.pod === primitives)
+    if (expected.pod == primitives)
       return coerceToPrimitive(expr, expected, onErr)
 
-    return CheckErrors.coerce(expr, expected, onErr)
+    // handle Java primitives to Fan
+    if (actual.pod == primitives)
+      return coerceFromPrimitive(expr, expected, onErr)
+
+     // use normal Fan coercion behavior
+    return super.coerce(expr, expected, onErr)
   }
 
   **
@@ -135,26 +144,60 @@ class JavaBridge : CBridge
   **
   Expr coerceToPrimitive(Expr expr, CType expected, |,| onErr)
   {
-    loc := expr.location
+    actual := expr.ctype
 
-    if (expr.ctype.isInt)
+    // sys::Int (long) -> int, short, byte
+    if (actual.isInt)
     {
-      if (expected == primitives.intType)
-        return CallExpr.makeWithMethod(loc, null, primitives.l2i, [expr])
-      if (expected == primitives.shortType)
-        return CallExpr.makeWithMethod(loc, null, primitives.l2s, [expr])
-      if (expected == primitives.byteType)
-        return CallExpr.makeWithMethod(loc, null, primitives.l2b, [expr])
+      if (expected === primitives.intType)   return primitiveCast(primitives.l2i, expr)
+      if (expected === primitives.shortType) return primitiveCast(primitives.l2s, expr)
+      if (expected === primitives.byteType)  return primitiveCast(primitives.l2b, expr)
     }
 
-    if (expr.ctype.isFloat)
+    // sys::Float (double) -> float
+    if (actual.isFloat)
     {
-      if (expected == primitives.floatType)
-        return CallExpr.makeWithMethod(loc, null, primitives.d2f, [expr])
+      if (expected === primitives.floatType) return primitiveCast(primitives.d2f, expr)
     }
 
+    // no coercion - type error
     onErr()
     return expr
+  }
+
+  **
+  ** Coerce a Java primitive to a Fan type.
+  **
+  Expr coerceFromPrimitive(Expr expr, CType expected, |,| onErr)
+  {
+    loc := expr.location
+    actual := expr.ctype
+
+    // int, short, byte -> sys::Int (long)
+    if (expected.isInt)
+    {
+      if (actual === primitives.intType)   return primitiveCast(primitives.i2l, expr)
+      if (actual === primitives.shortType) return primitiveCast(primitives.s2l, expr)
+      if (actual === primitives.byteType)  return primitiveCast(primitives.b2l, expr)
+    }
+
+    // float -> sys::Float (float)
+    if (expected.isFloat)
+    {
+      if (actual === primitives.floatType) return primitiveCast(primitives.f2d, expr)
+    }
+
+    // no coercion - type error
+    onErr()
+    return expr
+  }
+
+  **
+  ** Generate a primitive cast for the specified expr.
+  **
+  Expr primitiveCast(JavaMethod m, Expr expr)
+  {
+    return CallExpr.makeWithMethod(expr.location, null, m, [expr])
   }
 
 //////////////////////////////////////////////////////////////////////////
