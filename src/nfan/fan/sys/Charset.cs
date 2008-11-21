@@ -291,7 +291,7 @@ namespace Fan.Sys
 
     public override long hash() { return m_encoding.GetHashCode(); }
 
-    public override bool _equals(object obj)
+    public override bool Equals(object obj)
     {
       if (obj is Charset)
       {

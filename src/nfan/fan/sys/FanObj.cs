@@ -29,11 +29,6 @@ namespace Fan.Sys
       return (int)(h ^ (h >> 32));
     }
 
-    public override bool Equals(object obj)
-    {
-      return _equals(obj);
-    }
-
     public override string ToString()
     {
       return toStr();
@@ -45,15 +40,7 @@ namespace Fan.Sys
 
     public static bool equals(object self, object x)
     {
-      if (self is FanObj)
-        return ((FanObj)self)._equals(x);
-      else
-        return self.Equals(x);
-    }
-
-    public virtual bool _equals(object obj)
-    {
-      return this == obj;
+      return self.Equals(x);
     }
 
     public static long compare(object self, object x)

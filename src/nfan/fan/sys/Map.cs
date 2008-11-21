@@ -203,7 +203,7 @@ namespace Fan.Sys
       this.m_def = v;
     }
 
-    public override bool _equals(object that)
+    public override bool Equals(object that)
     {
       if (that is Map)
       {
@@ -235,6 +235,8 @@ namespace Fan.Sys
       }
       return false;
     }
+
+    public override int GetHashCode() { return (int)hash(); }
 
     public override long hash()
     {

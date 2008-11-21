@@ -27,16 +27,15 @@ namespace Fan.Sys
   // Type
   //////////////////////////////////////////////////////////////////////////
 
-    public override long hash()
-    {
-      return FanStr.hash(signature());
-    }
+    public override int GetHashCode() { return (int)hash(); }
 
-    public override bool _equals(object obj)
+    public override long hash() { return FanStr.hash(signature()); }
+
+    public override bool Equals(object obj)
     {
       if (obj is ListType)
       {
-        return m_v._equals(((ListType)obj).m_v);
+        return m_v.Equals(((ListType)obj).m_v);
       }
       return false;
     }

@@ -55,11 +55,6 @@ namespace Fan.Sys
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override sealed bool _equals(object obj)
-    {
-      return this == obj;
-    }
-
     public override sealed long compare(object obj)
     {
       return FanInt.compare(m_ordinal, ((Enum)obj).m_ordinal);
