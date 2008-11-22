@@ -50,7 +50,13 @@ namespace Fan.Sys
 
     public override double doubleValue() { return val; }
     public override float floatValue() { return (float)val; }
-    public override long longValue() { return (long)val; }
+    public override long longValue()
+    {
+      if (System.Double.IsNaN(val)) return 0;
+      if (val == System.Double.PositiveInfinity) return System.Int64.MaxValue;
+      if (val == System.Double.NegativeInfinity) return System.Int64.MinValue;
+      return (long)val;
+    }
     public override int intValue() { return (int)val; }
 
     public bool isNaN() { return System.Double.IsNaN(val); }
@@ -61,7 +67,7 @@ namespace Fan.Sys
 
     public override string ToString()
     {
-      if (Double.isNaN(val)) return FanFloat.m_NaNStr;
+      if (System.Double.IsNaN(val)) return FanFloat.m_NaNStr;
       if (val == System.Double.PositiveInfinity) return FanFloat.m_PosInfStr;
       if (val == System.Double.NegativeInfinity) return FanFloat.m_NegInfStr;
       string s = val.ToString();
