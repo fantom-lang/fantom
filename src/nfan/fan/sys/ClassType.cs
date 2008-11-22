@@ -86,7 +86,7 @@ namespace Fan.Sys
     public override object trap(string name, List args)
     {
       // private undocumented access
-      if (name == "lineNumber") { reflect(); return m_lineNum; }
+      if (name == "lineNumber") { reflect(); return Long.valueOf(m_lineNum); }
       if (name == "sourceFile") { reflect(); return m_sourceFile; }
       return base.trap(name, args);
     }

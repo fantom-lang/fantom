@@ -109,8 +109,8 @@ public virtual bool isConst() { return (m_flags & FConst.Const)     != 0; } // w
     {
       // private undocumented access
       string n = name;
-      if (n == "flags")      return m_flags;
-      if (n == "lineNumber") return m_lineNum;
+      if (n == "flags")      return Long.valueOf(m_flags);
+      if (n == "lineNumber") return Long.valueOf(m_lineNum);
       return base.trap(name, args);
     }
 
