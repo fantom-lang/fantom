@@ -1074,6 +1074,8 @@ public class FCodeEmit
     // handle primitives
     if (to.isPrimitive())   { coerceToPrimitive(from, to); return; }
     if (from.isPrimitive()) { coerceFromPrimitive(from, to); return; }
+    if (to.isArray())       { coerceToArray(from, to); return; }
+    if (from.isArray())     { coerceFromArray(from, to); return; }
 
     // check nullable => non-nullable
     if (from.isNullable() && !to.isNullable())
@@ -1171,6 +1173,22 @@ public class FCodeEmit
     }
 
     throw new IllegalStateException("Coerce " + from  + " => " + to);
+  }
+
+  private void coerceToArray(FTypeRef from, FTypeRef to)
+  {
+    if (!from.isList())
+      throw new IllegalStateException("Coerce " + from  + " => " + to);
+
+    System.out.println("## coerceToArray " + from + " => " + to);
+  }
+
+  private void coerceFromArray(FTypeRef from, FTypeRef to)
+  {
+    if (!to.isList())
+      throw new IllegalStateException("Coerce " + from  + " => " + to);
+
+    listCoerceFromArray();
   }
 
   private void cast()
@@ -1281,6 +1299,12 @@ public class FCodeEmit
   {
     if (parent.TypeToNullable == 0) parent.TypeToNullable = emit.method("fan/sys/Type.toNullable()Lfan/sys/Type;");
     code.op2(INVOKEVIRTUAL, parent.TypeToNullable);
+  }
+
+  private void listCoerceFromArray()
+  {
+    if (parent.ListCoerceFromArray == 0) parent.ListCoerceFromArray = emit.method("fan/sys/List.coerceFromArray([Ljava/lang/Object;)Lfan/sys/List;");
+    code.op2(INVOKESTATIC, parent.ListCoerceFromArray);
   }
 
 //////////////////////////////////////////////////////////////////////////

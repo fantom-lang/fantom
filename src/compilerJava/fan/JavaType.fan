@@ -89,6 +89,38 @@ class JavaType : CType
   private native Void doLoad(Str:CSlot slots)
 
 //////////////////////////////////////////////////////////////////////////
+// Arrays
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Is this a array type such as [java]foo.bar::[Baz
+  **
+  Bool isArray() { return arrayRank > 0 }
+
+  **
+  ** The rank of the array where 0 is not an array,
+  ** 1 is one dimension, 2 is two dimensional, etc.
+  **
+  Int arrayRank := 0
+
+  **
+  ** If this an array, this is the component type.
+  **
+  JavaType? arrayOf
+
+  **
+  ** Get the type which is an array of this type.
+  **
+  once JavaType toArrayOf()
+  {
+    return JavaType(pod, "[" + name)
+    {
+      arrayRank = this.arrayRank + 1
+      arrayOf = this
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
