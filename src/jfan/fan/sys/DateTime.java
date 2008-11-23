@@ -790,7 +790,7 @@ public final class DateTime
   public static DateTime fromJava(long millis, TimeZone tz)
   {
     if (millis <= 0) return null;
-    return new DateTime((millis-diffJava)*nsPerMilli, TimeZone.current);
+    return new DateTime((millis-diffJava)*nsPerMilli, tz);
   }
 
   public long toJava() { return (ticks / nsPerMilli) + diffJava; }
