@@ -49,7 +49,7 @@ class InteropTest : JavaTest
       }")
 
     obj := pod.types.first.make
-    verify(DateTime.fromJava(obj->a) - DateTime.now < 50ms)
+    verify(DateTime.fromJava(obj->a) - DateTime.now <= 50ms)
     verifyEq(obj->b, 1_000_000)
   }
 
@@ -288,7 +288,8 @@ class InteropTest : JavaTest
      "using [java] fanx.test
       class Foo
       {
-        Obj[] a() { return InteropTest().arrayThis }
+        InteropTest x := InteropTest()
+        InteropTest[] a() { return x.arrayThis }
       }")
 
     obj := pod.types.first.make

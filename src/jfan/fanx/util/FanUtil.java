@@ -114,12 +114,9 @@ public class FanUtil
       }
     }
 
+    // if pod starts with [java] parse as FFI name
     if (podName.charAt(0) == '[')
-    {
-      if (!podName.startsWith("[java]"))
-        throw new UnsupportedOperationException("Invalid FFI: " + podName);
-      return podName.substring(6) + "." + typeName;
-    }
+      return ffiToJavaClass(podName, typeName, false);
 
     return "fan." + podName + "." + typeName;
   }
@@ -160,12 +157,9 @@ public class FanUtil
       }
     }
 
+    // if pod starts with [java] parse as FFI name
     if (podName.charAt(0) == '[')
-    {
-      if (!podName.startsWith("[java]"))
-        throw new UnsupportedOperationException("Invalid FFI: " + podName);
-      return podName.substring(6) + "." + typeName;
-    }
+      return ffiToJavaClass(podName, typeName, false);
 
     return "fan." + podName + "." + typeName;
   }
@@ -211,49 +205,64 @@ public class FanUtil
       }
     }
 
+    // if pod starts with [java] parse as FFI name
     if (podName.charAt(0) == '[')
-    {
-      // sanity check
-      if (!podName.startsWith("[java]"))
-        throw new UnsupportedOperationException("Invalid FFI: " + podName);
-
-      // primitives: [java]::int
-      if (podName.length() == 6) // "[java]"
-      {
-        if (typeName.equals("int"))   return "I";
-        if (typeName.equals("char"))  return "C";
-        if (typeName.equals("byte"))  return "B";
-        if (typeName.equals("short")) return "S";
-        if (typeName.equals("float")) return "F";
-      }
-
-      // buffer for signature
-      StringBuilder s = new StringBuilder(podName.length()+typeName.length());
-
-      // arrays: [java]foo.bar::[Baz -> [Lfoo/bar/Baz;
-      boolean isArray = typeName.charAt(0) == '[';
-      if (isArray)
-      {
-        while (typeName.charAt(0) == '[')
-        {
-          s.append('[');
-          typeName = typeName.substring(1);
-        }
-        s.append('L');
-      }
-
-      // build Java class name signature
-      for (int i=6; i<podName.length(); ++i)
-      {
-        char ch = podName.charAt(i);
-        s.append(ch == '.' ? '/' : ch);
-      }
-      s.append('/').append(typeName);
-      if (isArray) s.append(';');
-      return s.toString();
-    }
+      return ffiToJavaClass(podName, typeName, true);
 
     return "fan/" + podName + "/" + typeName;
+  }
+
+  /**
+   * Given a FFI fan signatures such as [java]foo.bar::Baz get the
+   * Java classname.  If sig is true then get as a signature otherwise
+   * as a classname:
+   *   qname            sig=true    sig=false
+   *   --------------   --------    ---------
+   *   [java]::int      I           int
+   *   [java]foo::Bar   foo/Bar     foo.Bar
+   *   [java]foo::[Bar  [Lfoo/Bar;  [Lfoo/Bar;
+   */
+  private static String ffiToJavaClass(String podName, String typeName, boolean sig)
+  {
+    // sanity check
+    if (!podName.startsWith("[java]"))
+      throw new UnsupportedOperationException("Invalid FFI: " + podName);
+
+    // primitives: [java]::int
+    if (podName.length() == 6) // "[java]"
+    {
+      if (typeName.equals("int"))   return sig ? "I" : "int";
+      if (typeName.equals("char"))  return sig ? "C" : "char";
+      if (typeName.equals("byte"))  return sig ? "B" : "byte";
+      if (typeName.equals("short")) return sig ? "S" : "short";
+      if (typeName.equals("float")) return sig ? "F" : "float";
+    }
+
+    // buffer for signature
+    StringBuilder s = new StringBuilder(podName.length()+typeName.length());
+
+    // arrays: [java]foo.bar::[Baz -> [Lfoo/bar/Baz;
+    boolean isArray = typeName.charAt(0) == '[';
+    if (isArray)
+    {
+      while (typeName.charAt(0) == '[')
+      {
+        s.append('[');
+        typeName = typeName.substring(1);
+      }
+      s.append('L');
+    }
+
+    // build Java class name signature
+    for (int i=6; i<podName.length(); ++i)
+    {
+      char ch = podName.charAt(i);
+      if (ch == '.') s.append(sig ? '/' : '.');
+      else s.append(ch);
+    }
+    s.append(sig ? '/' : '.').append(typeName);
+    if (isArray) s.append(';');
+    return s.toString();
   }
 
   /**
