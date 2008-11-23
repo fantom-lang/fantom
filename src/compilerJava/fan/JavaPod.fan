@@ -39,6 +39,9 @@ class JavaPod : CPod
 
   override JavaType? resolveType(Str typeName, Bool checked)
   {
+    if (typeName[0] == '[')
+      return resolveType(typeName[1..-1], checked)?.toArrayOf
+
     x := types.find |JavaType t->Bool| { return t.name == typeName }
     if (x != null) return x
     if (checked) throw UnknownTypeErr(name + "::" + typeName)
