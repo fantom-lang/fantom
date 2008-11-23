@@ -68,6 +68,9 @@ public final class FTypeRef
             if (!nullable) { mask |= PRIMITIVE_LONG; stackType = LONG; }
           }
           break;
+        case 'L':
+          if (typeName.equals("List")) mask |= SYS_LIST;
+          break;
         case 'O':
           if (typeName.equals("Obj")) mask |= SYS_OBJ;
           break;
@@ -131,10 +134,20 @@ public final class FTypeRef
   public boolean isErr() { return (mask & SYS_ERR) != 0; }
 
   /**
+   * Is this some type of sys::List (nullable or parameterized)
+   */
+  public boolean isList() { return (mask & SYS_LIST) != 0; }
+
+  /**
    * Is this a wide stack type (double or long)
    */
   public boolean isWide() { return stackType == LONG || stackType == DOUBLE; }
   public static boolean isWide(int stackType) { return stackType == LONG || stackType == DOUBLE; }
+
+  /**
+   * Is this an array type such as [java]foo.bar::[Baz
+   */
+  public boolean isArray() { return typeName.charAt(0) == '['; }
 
   /**
    * Java type name:  fan/sys/Duration, java/lang/Boolean, Z
@@ -174,7 +187,7 @@ public final class FTypeRef
   public String jsig()
   {
     String jname = jname();
-    if (jname.length() == 1) return jname;
+    if (jname.length() == 1 || jname.charAt(0) == '[') return jname;
     return "L" + jname + ";";
   }
 
@@ -185,7 +198,7 @@ public final class FTypeRef
   public void jsig(StringBuilder s)
   {
     String jname = jname();
-    if (jname.length() == 1)
+    if (jname.length() == 1  || jname.charAt(0) == '[')
       s.append(jname);
     else
       s.append('L').append(jname).append(';');
@@ -242,6 +255,7 @@ public final class FTypeRef
   public static final int SYS_INT          = 0x0010;
   public static final int SYS_FLOAT        = 0x0020;
   public static final int SYS_ERR          = 0x0040;
+  public static final int SYS_LIST         = 0x0080;
 
   // mask primitive constants
   public static final int PRIMITIVE        = 0xff00;

@@ -380,6 +380,10 @@ public abstract class Type
 
   public void finish() {}
 
+  /**
+   * Return if the Fan Type is represented as a Java class
+   * such as sys::Int as java.lang.Long.
+   */
   public abstract boolean javaRepr();
 
 //////////////////////////////////////////////////////////////////////////

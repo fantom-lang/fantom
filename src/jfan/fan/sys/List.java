@@ -82,6 +82,12 @@ public final class List
     this.values = values;
   }
 
+  public static List coerceFromArray(Object[] values)
+  {
+    if (values == null) return null;
+    return new List(Sys.ObjType, values);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////

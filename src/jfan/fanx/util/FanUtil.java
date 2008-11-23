@@ -213,22 +213,43 @@ public class FanUtil
 
     if (podName.charAt(0) == '[')
     {
+      // sanity check
       if (!podName.startsWith("[java]"))
         throw new UnsupportedOperationException("Invalid FFI: " + podName);
 
-      if (typeName.equals("int"))   return "I";
-      if (typeName.equals("char"))  return "C";
-      if (typeName.equals("byte"))  return "B";
-      if (typeName.equals("short")) return "S";
-      if (typeName.equals("float")) return "F";
+      // primitives: [java]::int
+      if (podName.length() == 6) // "[java]"
+      {
+        if (typeName.equals("int"))   return "I";
+        if (typeName.equals("char"))  return "C";
+        if (typeName.equals("byte"))  return "B";
+        if (typeName.equals("short")) return "S";
+        if (typeName.equals("float")) return "F";
+      }
 
+      // buffer for signature
       StringBuilder s = new StringBuilder(podName.length()+typeName.length());
+
+      // arrays: [java]foo.bar::[Baz -> [Lfoo/bar/Baz;
+      boolean isArray = typeName.charAt(0) == '[';
+      if (isArray)
+      {
+        while (typeName.charAt(0) == '[')
+        {
+          s.append('[');
+          typeName = typeName.substring(1);
+        }
+        s.append('L');
+      }
+
+      // build Java class name signature
       for (int i=6; i<podName.length(); ++i)
       {
         char ch = podName.charAt(i);
         s.append(ch == '.' ? '/' : ch);
       }
       s.append('/').append(typeName);
+      if (isArray) s.append(';');
       return s.toString();
     }
 
@@ -251,7 +272,12 @@ public class FanUtil
   public static String toJavaMemberSig(Type t)
   {
     String sig = toJavaTypeSig(t);
+
+    // java type sig for primitives and array is member signature
     if (sig.length() == 1) return sig;
+    if (sig.charAt(0) == '[') return sig;
+
+    // Lfan/foo/Bar;
     return "L" + sig + ";";
   }
 
