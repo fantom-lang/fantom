@@ -55,10 +55,17 @@ public class TypeParser
       {
         throw ArgErr.make("Invalid type signature '" + sig + "', use <pod>::<type>").val;
       }
+
+      // if podName starts with [java] this is a direct Java type
+      if (podName.charAt(0) == '[')
+        return new JavaType(podName, typeName);
+
+      // if the type is from the pod being loaded then return to the pod
       if (loadingPod != null && podName.equals(loadingPod.name()))
         return loadingPod.findType(typeName, checked);
-      else
-        return find(podName, typeName, checked);
+
+      // do a straight lookup
+      return find(podName, typeName, checked);
     }
 
     // we got our work cut out for us - create parser
@@ -116,6 +123,10 @@ public class TypeParser
     // |...| is func
     if (cur == '|')
       type = loadFunc();
+
+    // [java] is java FFI
+    else if (cur == '[' && sig.regionMatches(pos, "[java]", 0, 6))
+      type = loadFFI();
 
     // [...] is map
     else if (cur == '[')
@@ -179,6 +190,26 @@ public class TypeParser
     consume('|');
 
     return new FuncType((Type[])params.toArray(new Type[params.size()]), ret);
+  }
+
+  private Type loadFFI()
+  {
+    // [java]foo.bar.foo
+    int start = pos;
+    for (int i=0; i<6; ++i) consume();
+    while (cur != ':') consume();
+    String podName = sig.substring(start, pos);
+
+    consume(':');
+    consume(':');
+
+    // Baz or [Baz
+    start = pos;
+    while (cur == '[') consume();
+    while (isIdChar(cur)) consume();
+    String typeName = sig.substring(start, pos);
+
+    return new JavaType(podName, typeName);
   }
 
   private Type loadBasic()

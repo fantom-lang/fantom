@@ -352,11 +352,15 @@ public class Pod
     if (ref.isGenericInstance())
       return TypeParser.load(ref.signature, true, this);
 
+    // if the pod name starts with "[java]" this is a direct FFI java type
+    String podName  = ref.podName;
+    String typeName = ref.typeName;
+    if (podName.startsWith("[java]"))
+      return new JavaType(podName, typeName);
+
     // otherwise I need to handle if I am loading my own pod, because
     // I might not yet be added to the system namespace if I'm just
     // loading my own hollow types
-    String podName  = ref.podName;
-    String typeName = ref.typeName;
     Pod pod = podName.equals(name) ? this : Pod.doFind(podName, true, null, null);
     Type type = pod.findType(typeName, false);
     if (type != null)
