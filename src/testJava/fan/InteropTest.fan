@@ -278,4 +278,24 @@ class InteropTest : JavaTest
     verifyEq(obj->add(x, 3, 550, -50, -50f), 453)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Arrays
+//////////////////////////////////////////////////////////////////////////
+
+  Void testArrays()
+  {
+    compile(
+     "using [java] fanx.test
+      class Foo
+      {
+        Obj[] a() { return InteropTest().arrayThis }
+      }")
+
+    obj := pod.types.first.make
+
+    // TODO: need to finish this test once we finish FFI typing
+    Obj[] a := obj->a
+    verifyEq(a.size, 1)
+  }
+
 }

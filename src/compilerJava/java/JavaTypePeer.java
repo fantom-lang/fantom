@@ -130,7 +130,21 @@ class JavaTypePeer
   static Class toJavaClass(JavaType t)
     throws Exception
   {
-    return Class.forName(t.pod.packageName + "." + t.name);
+    StringBuilder s = new StringBuilder();
+    if (t.isArray())
+    {
+      int rank = (int)t.arrayRank;
+      for (int i=0; i<rank; ++i) s.append('[');
+      s.append('L');
+      s.append(t.pod.packageName).append('.');
+      s.append(t.name, rank, t.name.length()-rank+1);
+      s.append(';');
+    }
+    else
+    {
+      s.append(t.pod.packageName).append('.').append(t.name);
+    }
+    return Class.forName(s.toString());
   }
 
   static List toFanTypes(Class[] cls)
@@ -160,8 +174,15 @@ class JavaTypePeer
       throw new IllegalStateException(cls.toString());
     }
 
-    // TODO arrays
-    if (cls.isArray()) return "sys::Obj";
+    // arrays [java]foo.bar::[Baz
+    if (cls.isArray())
+    {
+      Class compCls = cls.getComponentType();
+      if (compCls.isPrimitive()) throw new IllegalStateException("primitive arrays not supported yet: " +  cls.getName());
+      String comp = toFanType(compCls);
+      int colon = comp.lastIndexOf(':');
+      return comp.substring(0, colon+1) + "[" + comp.substring(colon+1);
+    }
 
     // Fan classes
     if (cls.getName().equals("java.lang.String")) return "sys::Str";

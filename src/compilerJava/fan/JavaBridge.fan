@@ -134,6 +134,10 @@ class JavaBridge : CBridge
     if (actual.pod == primitives)
       return coerceFromPrimitive(expr, expected, onErr)
 
+    // handle Java array to Fan list
+    if (actual.name[0] == '[')
+      return coerceFromArray(expr, expected, onErr)
+
      // use normal Fan coercion behavior
     return super.coerce(expr, expected, onErr)
   }
@@ -173,7 +177,6 @@ class JavaBridge : CBridge
   **
   Expr coerceFromPrimitive(Expr expr, CType expected, |,| onErr)
   {
-    loc := expr.location
     actual := expr.ctype
 
     // int, short, byte -> sys::Int (long)
@@ -194,6 +197,27 @@ class JavaBridge : CBridge
     }
 
     // no coercion - type error
+    onErr()
+    return expr
+  }
+
+  **
+  ** Coerce a Java array to a Fan list.
+  **
+  Expr coerceFromArray(Expr expr, CType expected, |,| onErr)
+  {
+    actual := (JavaType)expr.ctype
+    actualOf := actual.arrayOf
+
+    // if expected is list type
+    if (expected.toNonNullable is ListType)
+    {
+      expectedOf := ((ListType)expected.toNonNullable).v
+      if (actualOf.fits(expectedOf))
+        return TypeCheckExpr.coerce(expr, expected)
+    }
+
+    // no coercion available
     onErr()
     return expr
   }

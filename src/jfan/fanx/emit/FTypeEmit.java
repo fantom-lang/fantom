@@ -391,6 +391,7 @@ public abstract class FTypeEmit
   int ErrVal;
   int TypeToNullable;
   int NullErrMakeCoerce;
+  int ListCoerceFromArray;
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
