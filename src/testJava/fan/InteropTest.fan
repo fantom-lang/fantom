@@ -288,15 +288,25 @@ class InteropTest : JavaTest
      "using [java] fanx.test
       class Foo
       {
-        InteropTest x := InteropTest()
-        InteropTest[] a() { return x.arrayThis }
+        InteropTest x := InteropTest().initArray
+        InteropTest a() { return x.a }
+        InteropTest b() { return x.b }
+        InteropTest c() { return x.c }
+
+        InteropTest[] get1() { return x.array1 }
+
+        //Void set1(InteropTest[] a) { x.array1(a) }
       }")
 
     obj := pod.types.first.make
 
-    // TODO: need to finish this test once we finish FFI typing
-    Obj[] a := obj->a
-    verifyEq(a.size, 1)
+    // get one dimension array
+    Obj[] a := obj->get1
+    verifyEq(a.size, 3)
+    verifyEq(a.of.qname, "[java]fanx.test::InteropTest")
+    verifySame(a[0], obj->a)
+    verifySame(a[1], obj->b)
+    verifySame(a[2], obj->c)
   }
 
 }

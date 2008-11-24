@@ -33,7 +33,7 @@ abstract class JavaSlot : CSlot
 
 class JavaField : JavaSlot, CField
 {
-  override JavaType parent
+  override CType parent
   override CType fieldType
   override CMethod? getter
   override CMethod? setter
@@ -57,7 +57,7 @@ class JavaField : JavaSlot, CField
 
 class JavaMethod : JavaSlot, CMethod
 {
-  override JavaType parent
+  override CType parent
   override CType returnType
   override CParam[] params
   override Bool isGeneric
@@ -75,7 +75,7 @@ class JavaMethod : JavaSlot, CMethod
   {
     params = types.map(JavaParam[,]) |Obj t, Int i->CParam|
     {
-      return JavaParam { name="p$i"; paramType = ns.resolveType(t) }
+      return JavaParam("p$i", ns.resolveType(t))
     }
   }
   JavaMethod? getNext() { return next }
@@ -88,6 +88,7 @@ class JavaMethod : JavaSlot, CMethod
 
 class JavaParam : CParam
 {
+  new make(Str n, CType t) { name = n; paramType = t }
   override Str name
   override Bool hasDefault
   override CType paramType

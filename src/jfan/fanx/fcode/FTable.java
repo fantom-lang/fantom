@@ -110,7 +110,7 @@ public abstract class FTable
       size = in.u2();
       table = new Object[size];
       for (int i=0; i<size; ++i)
-        table[i] = FTypeRef.read(in);
+        table[i] = FTypeRef.read(i, in);
       return this;
     }
   }

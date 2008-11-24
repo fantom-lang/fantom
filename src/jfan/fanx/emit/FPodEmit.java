@@ -78,6 +78,13 @@ public class FPodEmit
     for (int i=0; i<literals.uris.size(); ++i)
       cls.getField("U"+i).set(null, literals.uris.get(i));
     literals.uris = null;
+
+    // we only generate type fields for [java] types
+    for (int i=0; i<fpod.typeRefs.size(); ++i)
+    {
+      FTypeRef t = fpod.typeRef(i);
+      if (t.isFFI()) cls.getField("Type" + i).set(null, new JavaType(t.podName, t.typeName));
+    }
   }
 
   private FPodEmit(FPod pod)
@@ -108,6 +115,11 @@ public class FPodEmit
       emitField("Dur" + i, "Lfan/sys/Duration;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.uris.size(); ++i)
       emitField("U" + i, "Lfan/sys/Uri;", EmitConst.PUBLIC | EmitConst.STATIC);
+
+    // we only generate type fields for [java] types
+    for (int i=0; i<pod.typeRefs.size(); ++i)
+      if (pod.typeRef(i).isFFI())
+        emitField("Type" + i, "Lfan/sys/Type;", EmitConst.PUBLIC | EmitConst.STATIC);
 
     return pack();
   }

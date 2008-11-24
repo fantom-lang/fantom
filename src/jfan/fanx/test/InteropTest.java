@@ -59,6 +59,20 @@ public class InteropTest
 // Arrays
 //////////////////////////////////////////////////////////////////////////
 
-  public InteropTest[] arrayThis() { return new InteropTest[] { this }; }
+  public InteropTest a;
+  public InteropTest b;
+  public InteropTest c;
+
+  public InteropTest initArray()
+  {
+    a = new InteropTest();
+    b = new InteropTest();
+    c = new InteropTest();
+    return this;
+  }
+
+  public InteropTest[] array1() { return new InteropTest[] { a, b, c}; }
+
+  public void array1(InteropTest[] x) { a = x[0]; b = x[1]; c = x[2]; }
 
 }

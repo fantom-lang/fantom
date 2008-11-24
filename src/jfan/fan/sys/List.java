@@ -37,6 +37,11 @@ public final class List
     return new List(Sys.ObjType.toNullable(), (int)capacity);
   }
 
+  public static List make(Type of, Object[] values)
+  {
+    return new List(of, values);
+  }
+
   public List(Type of, Object[] values)
   {
     if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
@@ -80,12 +85,6 @@ public final class List
     this.of = Sys.StrType;
     this.size = values.length;
     this.values = values;
-  }
-
-  public static List coerceFromArray(Object[] values)
-  {
-    if (values == null) return null;
-    return new List(Sys.ObjType, values);
   }
 
 //////////////////////////////////////////////////////////////////////////

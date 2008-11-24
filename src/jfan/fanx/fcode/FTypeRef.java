@@ -20,8 +20,9 @@ public final class FTypeRef
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  FTypeRef(String podName, String typeName, String sig)
+  FTypeRef(int id, String podName, String typeName, String sig)
   {
+    this.id = id;
     this.podName  = podName;
     this.typeName = typeName;
 
@@ -139,6 +140,11 @@ public final class FTypeRef
   public boolean isList() { return (mask & SYS_LIST) != 0; }
 
   /**
+   * Is this a FFI direct java type?
+   */
+  public boolean isFFI() { return podName.startsWith("[java]"); }
+
+  /**
    * Is this a wide stack type (double or long)
    */
   public boolean isWide() { return stackType == LONG || stackType == DOUBLE; }
@@ -234,13 +240,13 @@ public final class FTypeRef
 // IO
 //////////////////////////////////////////////////////////////////////////
 
-  public static FTypeRef read(FStore.Input in) throws IOException
+  public static FTypeRef read(int id, FStore.Input in) throws IOException
   {
     FPod fpod = in.fpod;
     String podName = fpod.name(in.u2());
     String typeName = fpod.name(in.u2());
     String sig = in.utf(); // full sig if parameterized, "?" if nullable, or ""
-    return new FTypeRef(podName, typeName, sig);
+    return new FTypeRef(id, podName, typeName, sig);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -280,6 +286,7 @@ public final class FTypeRef
   public static final int DOUBLE = 'D';
   public static final int OBJ    = 'A';
 
+  public final int id;             // constant pool index
   public final String podName;     // pod name "sys"
   public final String typeName;    // simple type name "Bool"
   public final int mask;           // bitmask
