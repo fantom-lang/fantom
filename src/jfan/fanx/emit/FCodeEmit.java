@@ -344,6 +344,15 @@ public class FCodeEmit
       return;
     }
 
+    // if type is [java]... FFI type, then we access as static field
+    // on the pod class since we don't have any bootstrap issues
+    if (ref.isFFI())
+    {
+      code.op2(GETSTATIC, emit.field(podClass + ".Type" + ref.id + ":Lfan/sys/Type;"));
+      if (ref.isNullable()) typeToNullable();
+      return;
+    }
+
     // lazy allocate my parent's type literal map: sig -> fieldName
     if (parent.typeLiteralFields == null) parent.typeLiteralFields= new HashMap();
     HashMap map = parent.typeLiteralFields;
@@ -1185,10 +1194,9 @@ public class FCodeEmit
 
   private void coerceFromArray(FTypeRef from, FTypeRef to)
   {
-    if (!to.isList())
-      throw new IllegalStateException("Coerce " + from  + " => " + to);
-
-    listCoerceFromArray();
+    // coercion from array to List is handled by
+    // explicit calls to List.make(Type, Object[])
+    throw new IllegalStateException("Coerce " + from  + " => " + to);
   }
 
   private void cast()
@@ -1299,12 +1307,6 @@ public class FCodeEmit
   {
     if (parent.TypeToNullable == 0) parent.TypeToNullable = emit.method("fan/sys/Type.toNullable()Lfan/sys/Type;");
     code.op2(INVOKEVIRTUAL, parent.TypeToNullable);
-  }
-
-  private void listCoerceFromArray()
-  {
-    if (parent.ListCoerceFromArray == 0) parent.ListCoerceFromArray = emit.method("fan/sys/List.coerceFromArray([Ljava/lang/Object;)Lfan/sys/List;");
-    code.op2(INVOKESTATIC, parent.ListCoerceFromArray);
   }
 
 //////////////////////////////////////////////////////////////////////////

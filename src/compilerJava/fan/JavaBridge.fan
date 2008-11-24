@@ -109,7 +109,7 @@ class JavaBridge : CBridge
     if (m.isCtor && call.target.id === ExprId.staticTarget)
     {
       loc := call.location
-      newMethod := m.parent.newMethod
+      newMethod := m.parent->newMethod
       call.target = CallExpr.makeWithMethod(loc, null, newMethod) { synthetic=true }
     }
 
@@ -206,6 +206,7 @@ class JavaBridge : CBridge
   **
   Expr coerceFromArray(Expr expr, CType expected, |,| onErr)
   {
+    loc := expr.location
     actual := (JavaType)expr.ctype
     actualOf := actual.arrayOf
 
@@ -214,12 +215,47 @@ class JavaBridge : CBridge
     {
       expectedOf := ((ListType)expected.toNonNullable).v
       if (actualOf.fits(expectedOf))
-        return TypeCheckExpr.coerce(expr, expected)
+      {
+        // List.make(of, Object[])
+        ofExpr := LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, expectedOf)
+        return CallExpr.makeWithMethod(loc, null, listMakeFromArray, [ofExpr, expr])
+      }
     }
 
     // no coercion available
     onErr()
     return expr
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Reflection
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get a CMethod representation for 'List.make(Type, Object[])'
+  **
+  once CMethod listMakeFromArray()
+  {
+    return JavaMethod
+    {
+      parent = ns.listType
+      name = "make"
+      flags = FConst.Public | FConst.Static
+      returnType = ns.listType
+      params =
+      [
+        JavaParam("of", ns.typeType),
+        JavaParam("array", objectArrayType)
+      ]
+    }
+  }
+
+  **
+  ** Get a CType representation for 'java.lang.Object[]'
+  **
+  once JavaType objectArrayType()
+  {
+    return ns.resolveType("[java]java.lang::[Object")
   }
 
 //////////////////////////////////////////////////////////////////////////
