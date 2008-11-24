@@ -942,6 +942,11 @@ public final class List
     }
   }
 
+  public final Object[] asArray()
+  {
+    return values;
+  }
+
   public final Object[] toArray()
   {
     if (values.length == size) return values;

@@ -539,7 +539,7 @@ final class List
   ** Throw ReadonlyErr if readonly.
   **
   ** Example:
-  **   [1, 2, 3, 4].sort  =>  [4, 3, 2, 1]
+  **   [1, 2, 3, 4].reverse  =>  [4, 3, 2, 1]
   **
   L reverse()
 
