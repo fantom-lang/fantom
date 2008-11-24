@@ -295,7 +295,7 @@ class InteropTest : JavaTest
 
         InteropTest[] get1() { return x.array1 }
 
-        //Void set1(InteropTest[] a) { x.array1(a) }
+        Void set1(InteropTest[] a) { x.array1(a) }
       }")
 
     obj := pod.types.first.make
@@ -307,6 +307,19 @@ class InteropTest : JavaTest
     verifySame(a[0], obj->a)
     verifySame(a[1], obj->b)
     verifySame(a[2], obj->c)
+
+    // set one dimension array
+    origa := obj->a
+    origb := obj->b
+    origc := obj->c
+    a.reverse
+    verifySame(obj->a, origa)
+    verifySame(obj->b, origb)
+    verifySame(obj->c, origc)
+    obj->set1(a)
+    verifySame(obj->a, origc)
+    verifySame(obj->b, origb)
+    verifySame(obj->c, origa)
   }
 
 }

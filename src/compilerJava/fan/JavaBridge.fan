@@ -138,6 +138,10 @@ class JavaBridge : CBridge
     if (actual.name[0] == '[')
       return coerceFromArray(expr, expected, onErr)
 
+    // handle Fan list to Java array
+    if (expected.name[0] == '[')
+      return coerceToArray(expr, expected, onErr)
+
      // use normal Fan coercion behavior
     return super.coerce(expr, expected, onErr)
   }
@@ -227,6 +231,32 @@ class JavaBridge : CBridge
     return expr
   }
 
+  **
+  ** Coerce a Fan list to Java array.
+  **
+  Expr coerceToArray(Expr expr, CType expected, |,| onErr)
+  {
+    loc := expr.location
+    expectedOf := ((JavaType)expected).arrayOf
+    actual := expr.ctype
+
+    // if actual is list type
+    if (actual.toNonNullable is ListType)
+    {
+      actualOf := ((ListType)actual.toNonNullable).v
+      if (actualOf.fits(expectedOf))
+      {
+        // (Foo[])list.asArray()
+        asArray := CallExpr.makeWithMethod(loc, expr, listAsArray)
+        return TypeCheckExpr.coerce(asArray, expected)
+      }
+    }
+
+    // no coercion available
+    onErr()
+    return expr
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Reflection
 //////////////////////////////////////////////////////////////////////////
@@ -247,6 +277,21 @@ class JavaBridge : CBridge
         JavaParam("of", ns.typeType),
         JavaParam("array", objectArrayType)
       ]
+    }
+  }
+
+  **
+  ** Get a CMethod representation for 'Object[] List.asArray()'
+  **
+  once CMethod listAsArray()
+  {
+    return JavaMethod
+    {
+      parent = ns.listType
+      name = "asArray"
+      flags = FConst.Public
+      returnType = objectArrayType
+      params = JavaParam[,]
     }
   }
 
