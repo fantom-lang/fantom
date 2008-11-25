@@ -405,7 +405,7 @@ namespace Fan.Sys
       if (pattern == null)
       {
         if (locale == null) locale = Locale.current();
-        pattern = locale.get(FanStr.sysStr, localeKey);
+        pattern = locale.get("sys", localeKey);
       }
 
       // process pattern
