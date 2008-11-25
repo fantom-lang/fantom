@@ -519,7 +519,7 @@ namespace Fan.Sys
         i = x;
       }
       if (x <= len) toks.add(val.Substring(x, len-x));
-      if (toks.sz() == 0) toks.add(Empty);
+      if (toks.sz() == 0) toks.add("");
       return toks;
     }
 
@@ -781,12 +781,6 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
-
-    public static readonly string Empty   = "";
-    public static readonly string nullStr = "null";
-    public static readonly string sysStr  = "sys";
-    public static readonly string thisStr = "this";
-    public static readonly string uriStr  = "uri";
 
     private static readonly Hashtable interns = new Hashtable();
 
