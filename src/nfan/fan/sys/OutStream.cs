@@ -234,14 +234,14 @@ namespace Fan.Sys
 
     public virtual OutStream print(object obj)
     {
-      string s = obj == null ? FanStr.nullStr : toStr(obj);
+      string s = obj == null ? "null" : toStr(obj);
       return writeChars(s, 0, s.Length);
     }
 
-    public virtual OutStream printLine() { return printLine(string.Empty); }
+    public virtual OutStream printLine() { return printLine(""); }
     public virtual OutStream printLine(object obj)
     {
-      string s = obj == null ? FanStr.nullStr : toStr(obj);
+      string s = obj == null ? "null" : toStr(obj);
       writeChars(s, 0, s.Length);
       return writeChar('\n');
     }
