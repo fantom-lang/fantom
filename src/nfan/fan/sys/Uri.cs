@@ -1231,7 +1231,7 @@ namespace Fan.Sys
         Uri baseUri = null;
         try
         {
-          baseUri = (Uri)trap(@base, FanStr.uriStr, null);
+          baseUri = (Uri)trap(@base, "uri", null);
           if (baseUri == null)
             throw UnresolvedErr.make("Base object's uri is null: " + this).val;
         }
