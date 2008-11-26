@@ -84,7 +84,7 @@ namespace Fan.Sys
 
     public override string doc() { return m_base.doc(); }
 
-    public override sealed bool netRepr() { return false; }
+    public override sealed bool dotnetRepr() { return false; }
 
   //////////////////////////////////////////////////////////////////////////
   // Reflect

@@ -23,7 +23,7 @@ class Build : BuildPod
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`, `test/`]
     javaDirs    = [`java/`]
-    netDirs     = [`net/`]
+    dotnetDirs  = [`dotnet/`]
   }
 
 }

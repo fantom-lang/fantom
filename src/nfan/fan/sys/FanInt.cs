@@ -329,13 +329,13 @@ namespace Fan.Sys
     public static long localeUpper(long self)
     {
       long val = self;
-      return Char.ToUpper((char)val, Locale.current().net());
+      return Char.ToUpper((char)val, Locale.current().dotnet());
     }
 
     public static long localeLower(long self)
     {
       long val = self;
-      return Char.ToLower((char)val, Locale.current().net());
+      return Char.ToLower((char)val, Locale.current().dotnet());
     }
 
   //////////////////////////////////////////////////////////////////////////

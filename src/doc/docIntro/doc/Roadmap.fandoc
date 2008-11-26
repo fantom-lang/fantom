@@ -9,7 +9,7 @@
 Current Status [#status]
 ************************
 Fan is currently in development of its initial 1.0 release.  The core
-language and Java runtime are quite stable.  The .Net runtime is almost
+language and Java runtime are quite stable.  The .NET runtime is almost
 there, but not quite.  At this point, we are building out system APIs
 for concurrency, database access, and web applications.
 
@@ -37,7 +37,7 @@ The namespace APIs are a work in progress.  These APIs and the
 design will evolve as we plug new implementations into this framework
 such as HTTP-REST and cloud computing.
 
-.NET Runtime [#dotNot]
+.NET Runtime [#dotnet]
 ======================
 Some of the .NET runtime is incomplete:
   - Get sys tests passing 100%
@@ -145,7 +145,6 @@ Original [discussion]`http://www.fandev.org/sidewalk/topic/25` was
 on grouping tests, but seems like a way to group pods, types, and
 slots in a generic way would be valuable for many application: testing,
 IDE navigation, reflection, etc.
-
 
 
 

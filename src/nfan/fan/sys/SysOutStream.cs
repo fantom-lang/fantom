@@ -105,17 +105,17 @@ namespace Fan.Sys
     /// <summary>
     /// Get a System.IO.Stream for the specified output stream.
     /// </summary>
-    public static Stream net(OutStream outs)
+    public static Stream dotnet(OutStream outs)
     {
       if (outs is SysOutStream)
         return ((SysOutStream)outs).outStream;
       else
-        return new NetOutputStream(outs);
+        return new DotnetOutputStream(outs);
     }
 
-    internal class NetOutputStream : Stream
+    internal class DotnetOutputStream : Stream
     {
-      public NetOutputStream(OutStream outs) { this.outs = outs; }
+      public DotnetOutputStream(OutStream outs) { this.outs = outs; }
 
       // Properties
       public override bool CanRead  { get { return false;  } }

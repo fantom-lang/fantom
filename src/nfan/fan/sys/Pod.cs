@@ -86,7 +86,7 @@ namespace Fan.Sys
       try
       {
         fpod = new FPod(null, null);
-        fpod.readFully(new ZipInputStream(SysInStream.net(@in)));
+        fpod.readFully(new ZipInputStream(SysInStream.dotnet(@in)));
       }
       catch (Exception e)
       {

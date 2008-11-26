@@ -17,7 +17,7 @@ class Build : BuildCs
 
   override Void setup()
   {
-    output = libNetDir + `sys.dll`
+    output = libDotnetDir + `sys.dll`
     targetType = "library"
 
     dirs = [scriptDir + `fan/sys/`,
@@ -30,8 +30,8 @@ class Build : BuildCs
             scriptDir + `fanx/util/`,
             scriptDir + `perwapi/`]
 
-    libs = [libNetDir + `ICSharpCode.SharpZipLib.dll`,
-            libNetDir + `QUT.SymbolWriter.dll`]
+    libs = [libDotnetDir + `ICSharpCode.SharpZipLib.dll`,
+            libDotnetDir + `QUT.SymbolWriter.dll`]
   }
 
 }
