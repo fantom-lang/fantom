@@ -71,7 +71,7 @@ namespace Fanx.Tools
           return current[i];
 
       // otherwise load it from disk
-      string libDir = FileUtil.combine(Sys.HomeDir, "lib", "net");
+      string libDir = FileUtil.combine(Sys.HomeDir, "lib", "dotnet");
       string dll = FileUtil.combine(libDir, asmName + ".dll");
 
       FileInfo f = new FileInfo(dll);
@@ -160,7 +160,7 @@ namespace Fanx.Tools
         string[] tmp = Directory.GetFiles(tmpDir, "*.dll");
         Hashtable keep = new Hashtable();
 
-        string sysDll = FileUtil.combine(Sys.HomeDir, "lib", "net", "sys.dll");
+        string sysDll = FileUtil.combine(Sys.HomeDir, "lib", "dotnet", "sys.dll");
         DateTime sysModified = File.GetLastWriteTime(sysDll);
 
         if (debug)

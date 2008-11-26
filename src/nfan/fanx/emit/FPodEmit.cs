@@ -33,7 +33,7 @@ namespace Fanx.Emit
       TypeAttr tattr = TypeAttr.Public | TypeAttr.Sealed;
       FieldAttr fattr = FieldAttr.Public | FieldAttr.Static;
 
-      emitter.emitClass("System.Object", FanUtil.toNetTypeName(pod.m_podName, "$Pod", false),
+      emitter.emitClass("System.Object", FanUtil.toDotnetTypeName(pod.m_podName, "$Pod", false),
         new string[0], tattr);
 
       pod.readLiterals();
@@ -61,7 +61,7 @@ namespace Fanx.Emit
     public static System.Type load(System.Reflection.Assembly assembly, FPod pod)
     {
       System.Type type = null;
-      string name = FanUtil.toNetTypeName(pod.m_podName, "$Pod", false);
+      string name = FanUtil.toDotnetTypeName(pod.m_podName, "$Pod", false);
 
       if (Sys.usePrecompiledOnly)
         type = System.Type.GetType(name);

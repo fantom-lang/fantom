@@ -18,7 +18,7 @@ const class SqlService : Thread
   ** Make a new SqlService.
   **
   ** - 'threadName' is the unique name used to identify the thread.
-  ** - 'connection' is the connection string.  For java this is the jdbc url.  For .Net
+  ** - 'connection' is the connection string.  For java this is the jdbc url.  For .NET
   **   this is the connection string.
   ** - 'username' is the username for the database login.
   ** - 'password' is the password for the database login.

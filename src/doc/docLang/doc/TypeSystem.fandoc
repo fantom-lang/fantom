@@ -131,7 +131,7 @@ do default to null.
 
 A mapping of Fan types to their runtime representations:
 
-  Fan      Default   Java                .Net
+  Fan      Default   Java                .NET
   ---      -------   ----                ------
   Bool     false     boolean             bool
   Bool?    null      java.lang.Boolean   bool?

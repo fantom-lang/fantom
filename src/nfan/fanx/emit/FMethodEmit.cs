@@ -35,7 +35,7 @@ namespace Fanx.Emit
       this.emit       = emit;
       this.method     = method;
       this.code       = method.m_code;
-      this.name       = FanUtil.toNetMethodName(method.m_name);
+      this.name       = FanUtil.toDotnetMethodName(method.m_name);
       this.paramLen   = method.m_paramCount;
       this.isStatic   = (method.m_flags & FConst.Static) != 0;
       this.isInternal = false; //(method.m_flags & FConst.Internal) != 0;
@@ -235,9 +235,9 @@ namespace Fanx.Emit
     /// </summary>
     public void emitMixinRouter(Method m)
     {
-      string parent  = FanUtil.toNetTypeName(m.parent());
-      string name    = FanUtil.toNetMethodName(m.name());
-      string ret     = FanUtil.toNetTypeName(m.inheritedReturns());
+      string parent  = FanUtil.toDotnetTypeName(m.parent());
+      string name    = FanUtil.toDotnetMethodName(m.name());
+      string ret     = FanUtil.toDotnetTypeName(m.inheritedReturns());
       string[] parTypes = new string[] { parent };
       List pars      = m.@params();
       int paramCount = pars.sz();
@@ -260,7 +260,7 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = FanUtil.toNetTypeName(pt);
+          string s = FanUtil.toDotnetTypeName(pt);
           myParams[j] = s;
           myParamNames[j] = param.name();
           implParams[j+1] = s;
@@ -276,7 +276,7 @@ namespace Fanx.Emit
         {
           // push args
           Param param = (Param)m.@params().get(p);
-          FCodeEmit.loadVar(code, FanUtil.toNetStackType(param.of()), p+1);
+          FCodeEmit.loadVar(code, FanUtil.toDotnetStackType(param.of()), p+1);
         }
         PERWAPI.Method meth = emitter.findMethod(parent + "_", name, implParams, ret);
         code.MethInst(PERWAPI.MethodOp.call, meth);
@@ -318,9 +318,9 @@ namespace Fanx.Emit
     /// </summary>
     public void emitInterfaceRouter(Type implType, Method m)
     {
-      string impl = FanUtil.toNetTypeName(implType);
+      string impl = FanUtil.toDotnetTypeName(implType);
       string name = m.name();
-      string ret  = FanUtil.toNetTypeName(m.inheritedReturns());
+      string ret  = FanUtil.toDotnetTypeName(m.inheritedReturns());
       List pars   = m.@params();
       int paramCount = pars.sz();
 
@@ -340,7 +340,7 @@ namespace Fanx.Emit
         {
           Param param = (Param)m.@params().get(j);
           Type pt = param.of();
-          string s = FanUtil.toNetTypeName(pt);
+          string s = FanUtil.toDotnetTypeName(pt);
           myParams[j] = s;
           myParamNames[j] = param.name();
         }
@@ -355,7 +355,7 @@ namespace Fanx.Emit
         {
           // push args
           Param param = (Param)m.@params().get(p);
-          FCodeEmit.loadVar(code, FanUtil.toNetStackType(param.of()), p+1);
+          FCodeEmit.loadVar(code, FanUtil.toDotnetStackType(param.of()), p+1);
         }
         PERWAPI.Method meth = emitter.findMethod(impl, name, myParams, ret);
         code.MethInst(PERWAPI.MethodOp.call, meth);

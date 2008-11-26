@@ -23,7 +23,7 @@ public class StatementPeer
 
   public Statement prepare(Statement self)
   {
-    // Fan uses the ADO .net prepared statement syntax, so
+    // Fan uses the ADO .NET prepared statement syntax, so
     // for Java the sql needs to be translated and the @param
     // syntax must be replaced with ?.  It's not a simple
     // replace though because we need to keep the key/value

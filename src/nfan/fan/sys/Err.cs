@@ -53,7 +53,7 @@ namespace Fan.Sys
     /// we also need to trap System.NullReferenceException.  Basically this
     /// is the inverse of the mapping done in make(Exception).
     /// </summary>
-    public static string fanToNet(string ftype)
+    public static string fanToDotnet(string ftype)
     {
       // TODO - need to trap as well...
       //if (ftype == "Fan.Sys.IndexErr")) return "ArgumentOutOfRangeException";

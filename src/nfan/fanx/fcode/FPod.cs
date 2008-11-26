@@ -86,7 +86,7 @@ namespace Fanx.Fcode
 
         // if the type signature is java/lang then we route
         // to static methods on FanObj, FanFloat, etc
-        string impl = FanUtil.toNetImplTypeName(type);
+        string impl = FanUtil.toDotnetImplTypeName(type);
         bool explicitSelf = false;
         bool isStatic = false;
         if (type != impl)
@@ -102,7 +102,7 @@ namespace Fanx.Fcode
 
         // equals => Equals
         if (!explicitSelf)
-          mName = FanUtil.toNetMethodName(mName);
+          mName = FanUtil.toDotnetMethodName(mName);
 
         string[] pars;
         if (explicitSelf)
@@ -157,7 +157,7 @@ namespace Fanx.Fcode
       {
         int[] v = fieldRef(index).val;
         nfield = new NField();
-        nfield.parentType = FanUtil.toNetImplTypeName(nname(v[0]));
+        nfield.parentType = FanUtil.toDotnetImplTypeName(nname(v[0]));
         nfield.fieldName  = "m_" + name(v[1]);
         nfield.fieldType  = nname(v[2]);
         m_nfields[index] = nfield;
@@ -305,7 +305,7 @@ namespace Fanx.Fcode
     public FTable m_fieldRefs;    // fields refs:  [parent,name,type]
     public FTable m_methodRefs;   // methods refs: [parent,name,ret,params*]
     public FLiterals m_literals;  // literal constants (on read fully or lazy load)
-    private NMethod[] m_ncalls;   // cached fan methodRef -> .net method signatures
-    private NField[] m_nfields;   // cached fan fieldRef  -> .net field signatures
+    private NMethod[] m_ncalls;   // cached fan methodRef -> .NET method signatures
+    private NField[] m_nfields;   // cached fan fieldRef  -> .NET field signatures
   }
 }

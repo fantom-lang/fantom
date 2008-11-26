@@ -191,7 +191,7 @@ namespace Fan.Sys
 
     private void inHandler()
     {
-      System.IO.Stream input  = SysInStream.net(m_in);
+      System.IO.Stream input  = SysInStream.dotnet(m_in);
       System.IO.Stream output = m_proc.StandardInput.BaseStream;
       byte[] temp = new byte[256];
 

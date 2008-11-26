@@ -49,7 +49,7 @@ namespace Fanx.Emit
       this.buf      = fcode.m_buf;
       this.len      = fcode.m_len;
       this.code     = code;
-      this.podClass = FanUtil.toNetTypeName(pod.m_podName, "$Pod", false);
+      this.podClass = FanUtil.toDotnetTypeName(pod.m_podName, "$Pod", false);
       this.jumps    = new Jumps(code);
       this.regs     = regs;
       this.ret      = ret;
@@ -924,7 +924,7 @@ namespace Fanx.Emit
         if (startPos == tryJump[i])
         {
           FTypeRef typeRef = pod.typeRef(tryErr[i]);
-          netErr = Fan.Sys.Err.fanToNet(typeRef.nname());
+          dotnetErr = Fan.Sys.Err.fanToDotnet(typeRef.nname());
           if (!typeRef.isErr()) exType = typeRef.nname() + "/Val";
           break;
         }
@@ -933,7 +933,7 @@ namespace Fanx.Emit
       errBlocks.Push(getLastTryBlock());
 
       // use a filter if we need to "dual-check" for native exception
-      if (netErr != null)
+      if (dotnetErr != null)
       {
         code.CodeLabel(filterStart = code.NewLabel());
         CILLabel match = code.NewLabel();
@@ -941,7 +941,7 @@ namespace Fanx.Emit
 
         // check native type first
         code.Inst(Op.dup);
-        code.TypeInst(TypeOp.isinst, emitter.findType(netErr));
+        code.TypeInst(TypeOp.isinst, emitter.findType(dotnetErr));
         code.Inst(Op.ldnull);
         code.Branch(BranchOp.bne_un_s, match);
 
@@ -981,11 +981,11 @@ namespace Fanx.Emit
     private void catchEnd()
     {
       PERWAPI.TryBlock lastTry = (PERWAPI.TryBlock)errBlocks.Pop();
-      if (netErr != null)
+      if (dotnetErr != null)
       {
         // use a filter if we need to "dual-check" for native exception
         code.EndFilterBlock(filterStart, lastTry);
-        netErr = null;
+        dotnetErr = null;
         filterStart = null;
       }
       else
@@ -1279,7 +1279,7 @@ namespace Fanx.Emit
     internal Hashtable tryBlocks = new Hashtable(); // hash of opened try blocks
     internal Hashtable lineNums  = new Hashtable(); // map of fcode to line numbers
     internal Stack errBlocks = new Stack();  // stack of try-catch-finally block offsets
-    internal string netErr;                  // used for mapping .NET exceptions -> Fan
+    internal string dotnetErr;               // used for mapping .NET exceptions -> Fan
     internal CILLabel filterStart;           // used for mapping .NET exceptions -> Fan
   }
 }

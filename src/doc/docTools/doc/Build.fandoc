@@ -140,8 +140,8 @@ targets ready to use:
     into a pod file
   - [javaNative]`build::BuildPod.javaNative`: recompiles the
     Java native code
-  - [netNative]`build::BuildPod.netNative`: recompiles the
-    C# .Net native code
+  - [dotnetNative]`build::BuildPod.dotnetNative`: recompiles the
+    C# .NET native code
   - [clean]`build::BuildPod.clean`: deletes all the intermediate
     and derived target files
   - [doc]`build::BuildPod.doc`: compile fandoc to HTML
@@ -157,7 +157,7 @@ By convention pod source directories are organized as follows:
       ClassBeta.fan
     java/
       ClassAlphaPeer.java
-    net/
+    dotnet/
       ClassAlphaPeer.cs
     test/
       TestClassAlpha.fan
@@ -179,7 +179,7 @@ would look like:
       depends     = ["sys 1.0+", "bar 1.1-1.3"]
       srcDirs     = [`fan/`, `test/`]
       javaDirs    = [`java/`]
-      netDirs     = [`net/`]
+      dotnetDirs  = [`dotnet/`]
     }
   }
 
@@ -194,8 +194,7 @@ field with a 'Version' literal or any other expression.
 
 Also note that all the directories are specified as Uris relative
 to the script directory.  If you don't have native code, you can
-omit the 'javaDirs' and 'netDirs' initialization.
-
+omit the 'javaDirs' and 'dotnetDirs' initialization.
 
 
 

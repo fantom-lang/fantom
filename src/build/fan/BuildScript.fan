@@ -79,8 +79,8 @@ abstract class BuildScript
   **   - Linux     => "linux"
   File libJavaExtOsDir
 
-  ** {devHomeDir}/lib/net
-  File libNetDir
+  ** {devHomeDir}/lib/dotnet
+  File libDotnetDir
 
   ** This is the global default version to use when building pods.  It
   ** is initialized by Sys.env["fan.build.globalVersion"], otherwise
@@ -142,7 +142,7 @@ abstract class BuildScript
     libFanDir     = devHomeDir + `lib/fan/`
     libJavaDir    = devHomeDir + `lib/java/`
     libJavaExtDir = devHomeDir + `lib/java/ext/`
-    libNetDir     = devHomeDir + `lib/net/`
+    libDotnetDir  = devHomeDir + `lib/dotnet/`
 
     // try and figure out which lib/ext/{os} to use - this
     // is really going to work long term because it doesn't
@@ -165,7 +165,7 @@ abstract class BuildScript
       log.printLine("  libDir:        $libDir")
       log.printLine("  libFanDir:     $libFanDir")
       log.printLine("  libJavaDir:    $libJavaDir")
-      log.printLine("  libNetDir:     $libNetDir")
+      log.printLine("  libDotnetDir:  $libDotnetDir")
       log.printLine("  globalVersion: $globalVersion")
     }
   }

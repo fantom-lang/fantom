@@ -393,7 +393,7 @@ namespace Fan.Sys
 
     public virtual void finish() {}
 
-    public abstract bool netRepr();
+    public abstract bool dotnetRepr();
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

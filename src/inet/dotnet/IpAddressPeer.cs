@@ -62,8 +62,8 @@ namespace Fan.Inet
       try
       {
         MemBuf mb = bytes as MemBuf;
-        IPAddress net = Dns.GetHostEntry(new IPAddress(mb.bytes())).AddressList[0];
-        return make(net.ToString(), net);
+        IPAddress dotnet = Dns.GetHostEntry(new IPAddress(mb.bytes())).AddressList[0];
+        return make(dotnet.ToString(), dotnet);
       }
       catch (SocketException e)
       {
@@ -83,21 +83,21 @@ namespace Fan.Inet
           // to get IPv6 addresses first, so for now at least, lets
           // attempt to use the IPv4 address
 
-          IPAddress net = null; // Dns.GetHostEntry(hostName).AddressList[0];
+          IPAddress dotnet = null; // Dns.GetHostEntry(hostName).AddressList[0];
           IPAddress[] addr = Dns.GetHostEntry(hostName).AddressList;
           for (int i=0; i<addr.Length; i++)
             if (addr[i].AddressFamily == AddressFamily.InterNetwork)
-              net = addr[i];
+              dotnet = addr[i];
 
-          m_local = make(hostName, net);
+          m_local = make(hostName, dotnet);
         }
         catch (Exception)
         {
           try
           {
             // fallback to explicit loopback
-            IPAddress net = new IPAddress(new byte[] {127, 0, 0, 1});
-            m_local = make(net.ToString(), net);
+            IPAddress dotnet = new IPAddress(new byte[] {127, 0, 0, 1});
+            m_local = make(dotnet.ToString(), dotnet);
           }
           catch (Exception ignore)
           {
@@ -109,16 +109,16 @@ namespace Fan.Inet
       return m_local;
     }
 
-    public static IpAddress make(IPAddress net)
+    public static IpAddress make(IPAddress dotnet)
     {
-      return make(net.ToString(), net);
+      return make(dotnet.ToString(), dotnet);
     }
 
-    public static IpAddress make(string str, IPAddress net)
+    public static IpAddress make(string str, IPAddress dotnet)
     {
       IpAddress fan = IpAddress.internalMake();
       fan.m_peer.m_str = str;
-      fan.m_peer.m_net = net;
+      fan.m_peer.m_dotnet = dotnet;
       return fan;
     }
 
@@ -128,13 +128,13 @@ namespace Fan.Inet
 
     public long hash(IpAddress fan)
     {
-      return m_net.GetHashCode();
+      return m_dotnet.GetHashCode();
     }
 
     public bool equals(IpAddress fan, object obj)
     {
       if (obj is IpAddress)
-        return this.m_net.Equals(((IpAddress)obj).m_peer.m_net);
+        return this.m_dotnet.Equals(((IpAddress)obj).m_peer.m_dotnet);
       else
         return false;
     }
@@ -150,27 +150,27 @@ namespace Fan.Inet
 
     public bool isIPv4(IpAddress fan)
     {
-      return m_net.AddressFamily == AddressFamily.InterNetwork;
+      return m_dotnet.AddressFamily == AddressFamily.InterNetwork;
     }
 
     public bool isIPv6(IpAddress fan)
     {
-      return m_net.AddressFamily == AddressFamily.InterNetworkV6;
+      return m_dotnet.AddressFamily == AddressFamily.InterNetworkV6;
     }
 
     public Buf bytes(IpAddress fan)
     {
-      return new MemBuf(m_net.GetAddressBytes());
+      return new MemBuf(m_dotnet.GetAddressBytes());
     }
 
     public string numeric(IpAddress fan)
     {
-      return m_net.ToString();
+      return m_dotnet.ToString();
     }
 
     public string hostname(IpAddress fan)
     {
-      return Dns.GetHostEntry(m_net).HostName;
+      return Dns.GetHostEntry(m_dotnet).HostName;
       //return m_str;
     }
 
@@ -181,7 +181,7 @@ namespace Fan.Inet
     private static IpAddress m_local;
 
     public string m_str;
-    public IPAddress m_net;
+    public IPAddress m_dotnet;
 
   }
 }
