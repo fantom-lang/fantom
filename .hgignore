@@ -8,8 +8,8 @@ adm/pngcrush*
 
 # lib/
 lib/java/*.jar
-lib/net/*.pdb
-lib/net/sys.dll
+lib/dotnet/*.pdb
+lib/dotnet/sys.dll
 lib/fan/*.pod
 lib/types.db
 
