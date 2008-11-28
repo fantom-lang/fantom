@@ -395,6 +395,12 @@ namespace Fanx.Emit
       // use explicit param count, and clear code
       this.paramLen = paramLen;
       this.code     = null;
+      int numArgs   = isStatic && !self ? paramLen : paramLen+1;
+
+      // TODO - this code probably isn't quite right, since it looks
+      // like we generate local variables even when they might not be
+      // used.  Doesn't hurt anything, but is probably more efficient
+      // if we could determine that from the fcode.
 
       // define our locals
       int numLocals = method.m_paramCount - paramLen;
@@ -419,7 +425,7 @@ namespace Fanx.Emit
       for (int i=paramLen; i<method.m_paramCount; i++)
       {
         FCodeEmit ce = new FCodeEmit(emit, method.m_vars[i].def, code, regs, emit.pod.typeRef(method.m_ret));
-        //ce.paramCount = numArgs;
+        ce.paramCount = numArgs;
         ce.vars = method.m_vars;
         ce.isStatic = isStatic;
 // TODO - is this correct?
