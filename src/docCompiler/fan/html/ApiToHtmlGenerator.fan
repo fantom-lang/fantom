@@ -260,6 +260,7 @@ class ApiToHtmlGenerator : HtmlGenerator
 
     // inherited
     Slot? docFrom := null
+    Slot? overridden := null
     if (slot.isOverride)
     {
       // if no-doc, walk inheritance for doc
@@ -270,26 +271,30 @@ class ApiToHtmlGenerator : HtmlGenerator
         doc = docBody(docFrom?.doc)
         base = base.base
       }
+      overridden = findOverridden(slot)
+    }
 
-      overridden := findOverridden(slot)
+    // slot/doc overriddes
+    if (overridden != null || docFrom != null)
+    {
+      out.print("<div class='slotInfo'>\n")
       if (overridden != null)
       {
-        out.print("<p class='slotinfo'>Overrides ")
+        out.print("<p>Overrides ")
         slotLink(overridden)
-        out.print("</p>")
+        out.print("</p>\n")
       }
+      if (docFrom != null)
+      {
+        out.print("<p>Doc inherited from ")
+        slotLink(docFrom)
+        out.print("</p>\n")
+      }
+      out.print("</div>\n")
     }
 
     if (doc != null)
     {
-      // if doc from another class
-      if (docFrom != null)
-      {
-        out.print("<p class='slotinfo'>Doc inherited from ")
-        slotLink(docFrom)
-        out.print("</p>")
-      }
-
       // fandoc body
       fandoc(slot.qname, doc)
     }
