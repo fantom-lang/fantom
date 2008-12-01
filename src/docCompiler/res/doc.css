@@ -216,18 +216,15 @@ div.sidebar li { margin: 3px 3px 3px 0; }
 }
 .slots .detail dd.hidden { display: none; }
 
-.slotinfo
+.slotInfo
 {
-  color: #7aa3c0;
+  background: #f8f8f8;
+  color: #999;
   font-size: 8pt;
-  font-weight: normal;
+  padding: 0.5em 1em;
 }
-.slotinfo a
-{
-  color: #7aa3c0;
-  font-size: 8pt;
-  font-weight: normal;
-}
+.slotInfo p { margin: 0.5em 0; }
+.slotInfo a { color: #999; }
 
 /*************************************************************************
  * Source Code
