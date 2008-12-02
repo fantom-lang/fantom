@@ -43,7 +43,7 @@ class ExprTest : CompilerTest
     // decimal
     verifyExpr("0.00d", 0.00d)
     verifyExpr("3d",    3d)
-    verifyExpr("4e55d", 4e55d)
+    verifyExpr("4e14d", 4e14d)
     verifyExpr("-5.2d", -5.2d)
 
     // str
