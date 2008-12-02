@@ -38,7 +38,7 @@ namespace Fanx.Tools
       if (verbose)
       {
         writeLine("  <- " + podPath);
-        Pod pod = Pod.find(podName, true, null);
+        Pod pod = Pod.doFind(podName, true, null);
         List list = pod.types();
         string pre = "Fan." + FanUtil.upper(podName) + ".";
         for (int i=0; i<list.sz(); i++)

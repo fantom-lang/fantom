@@ -30,6 +30,11 @@ namespace Fan.Sys
       {
         return Long.valueOf(Convert.ToInt64(s, (int)radix));
       }
+      catch (OverflowException)
+      {
+        if (!check) return null;
+        throw ParseErr.make("Int", s).val;
+      }
       catch (FormatException)
       {
         if (!check) return null;

@@ -721,7 +721,6 @@ namespace Fan.Sys
             if (!dotnetStatic) return;
             if (!method.isStatic() && !method.isCtor()) --numParams;
           }
-
         }
 
         // zero index is full signature up to using max defaults

@@ -74,7 +74,7 @@ namespace Fanx.Tools
 
       writeLine("");
 
-      Pod pod = Pod.find(podName, true, null);
+      Pod pod = Pod.doFind(podName, true, null);
       Type[] t = tests(pod, testName);
       for (int i=0; i<t.Length; i++)
       {

@@ -56,10 +56,13 @@ namespace Fanx.Util
         {
           throw ArgErr.make("Invalid type signature '" + sig + "', use <pod>::<type>").val;
         }
+
+        // if the type is from the pod being loaded then return to the pod
         if (loadingPod != null && podName == loadingPod.name())
           return loadingPod.findType(typeName, check);
-        else
-          return Type.find(podName, typeName, check);
+
+        // do a straight lookup
+        return find(podName, typeName, check);
       }
 
       // we got our work cut out for us - create parser
@@ -75,6 +78,13 @@ namespace Fanx.Util
       {
         throw Err(sig).val;
       }
+    }
+
+    public static Type find(string podName, string typeName, bool check)
+    {
+      Pod pod = Pod.find(podName, check);
+      if (pod == null) return null;
+      return pod.findType(typeName, check);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -192,7 +202,7 @@ namespace Fanx.Util
       if (loadingPod != null && podName == loadingPod.name())
         return loadingPod.findType(typeName, check);
       else
-        return Type.find(podName, typeName, check);
+        return find(podName, typeName, check);
     }
 
   //////////////////////////////////////////////////////////////////////////
