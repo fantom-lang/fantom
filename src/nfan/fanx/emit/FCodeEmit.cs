@@ -445,15 +445,17 @@ namespace Fanx.Emit
 
     private void loadMixinStatic()
     {
+      // mixin fields route to implementation class
       FPod.NField f = pod.nfield(u2(), false);
-      PERWAPI.Field field = emitter.findField(f.parentType, f.fieldName, f.fieldType);
+      PERWAPI.Field field = emitter.findField(f.parentType+"_", f.fieldName, f.fieldType);
       code.FieldInst(FieldOp.ldsfld, field);
     }
 
     private void storeMixinStatic()
     {
+      // mixin fields route to implementation class
       FPod.NField f = pod.nfield(u2(), false);
-      PERWAPI.Field field = emitter.findField(f.parentType, f.fieldName, f.fieldType);
+      PERWAPI.Field field = emitter.findField(f.parentType+"_", f.fieldName, f.fieldType);
       code.FieldInst(FieldOp.stsfld, field);
     }
 
@@ -1103,8 +1105,11 @@ namespace Fanx.Emit
     private void typeToNullable()
     {
       if (parent.TypeToNullable == null)
-       parent.TypeToNullable = emitter.findMethod("Fan.Sys.Type", "toNullable",
-         new string[] {}, "Fan.Sys.Type");
+      {
+        parent.TypeToNullable = emitter.findMethod("Fan.Sys.Type", "toNullable",
+          new string[] {}, "Fan.Sys.Type");
+        parent.TypeToNullable.AddCallConv(CallConv.Instance);
+      }
       code.MethInst(MethodOp.callvirt, parent.TypeToNullable);
     }
 

@@ -69,7 +69,7 @@ namespace Fanx.Emit
         {
           FType ftype = pod.m_types[i];
           FTypeRef tref = ftype.m_pod.typeRef(ftype.m_self);
-          Type parent = Type.find(tref.podName, tref.typeName, true);
+          Type parent = Type.find(tref.podName+"::"+tref.typeName, true);
 
           // make sure we have reflected to setup slots
           parent.reflect();

@@ -299,9 +299,7 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
         */
         else
         {
-          // Normal class
-          // TODO - this broke when I moved to PERWAPI - not sure why
-          // so now I have to check that it doesn't exist b/f adding
+          // Normal class, get/add type
           type = aref.GetClass(s[0], s[1]);
           if (type == null) type = aref.AddClass(s[0], s[1]);
         }
@@ -330,19 +328,15 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
           // out too, which is actually complete and not a stub
           ClassDef cdef = obj as ClassDef;
 
-          // if we try to look up a field on an interface, make sure
-          // we actually route the static impl
-          if ((cdef.GetAttributes() & PERWAPI.TypeAttr.Interface) != 0)
-            return findField(qname+"_", fieldName, fieldType);
-
           // TODO - fix attr
           field = cdef.AddField(FieldAttr.Public, fieldName, ftype);
         }
         else if (obj is ClassRef)
         {
-          // class is external, just add ref
+          // class is external, just get or add ref
           ClassRef cref = obj as ClassRef;
-          field = cref.AddField(fieldName, ftype);
+          field = cref.GetField(fieldName);
+          if (field == null) field = cref.AddField(fieldName, ftype);
         }
         else throw new System.Exception("Don't know how to handle: " + obj.GetType());
 
@@ -388,9 +382,10 @@ public void init(string assemblyName) { init(assemblyName, null); } // TODO
         }
         else if (obj is ClassRef)
         {
-          // class is external, just add ref
+          // class is external, just get or add ref
           ClassRef cref = obj as ClassRef;
-          method = cref.AddMethod(methodName, rtype, pars);
+          method = cref.GetMethod(methodName, pars, new PERWAPI.Type[0]);
+          if (method == null) method = cref.AddMethod(methodName, rtype, pars);
         }
         else throw new System.Exception("Don't know how to handle: " + obj.GetType());
 
