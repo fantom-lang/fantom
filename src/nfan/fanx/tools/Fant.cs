@@ -281,6 +281,14 @@ namespace Fanx.Tools
       System.Console.WriteLine(s);
     }
 
+    static Fant()
+    {
+      // .NET will only create one new thread every 500ms, which will
+      // throw off all the timing in testSys, so if we're running under
+      // fant, create a larger initial thread pool to work around that.
+      System.Threading.ThreadPool.SetMinThreads(10, 10);
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
