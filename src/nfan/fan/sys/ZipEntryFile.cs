@@ -60,7 +60,7 @@ namespace Fan.Sys
 
     public override DateTime modified()
     {
-       return DateTime.net(m_entry.DateTime.Ticks);
+       return DateTime.dotnet(m_entry.DateTime.Ticks);
     }
 
     public override void modified(DateTime time)

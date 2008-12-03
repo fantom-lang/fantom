@@ -91,7 +91,7 @@ namespace Fan.Sys
       if (self is FanObj)
         return ((FanObj)self).isImmutable();
       else
-        return FanUtil.isNetImmutable(self.GetType());
+        return FanUtil.isDotnetImmutable(self.GetType());
     }
 
     public virtual bool isImmutable()

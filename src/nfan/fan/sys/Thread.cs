@@ -13,9 +13,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using NThread = System.Threading.Thread;
-using ThreadPool = System.Threading.ThreadPool;
-using ThreadInterruptedException = System.Threading.ThreadInterruptedException;
 
 namespace Fan.Sys
 {
@@ -93,16 +90,6 @@ namespace Fan.Sys
     {
     }
 
-    static Thread()
-    {
-      // TODO - not sure what these values should be yet (they default to 2/2)
-
-      // it takes like half a second to spawn a new thread if we exceed
-      // the min tread count in the ThreadPool, which throws off all the
-      // timing in sysTest::ThreadTest - so for the time being set to 5
-      ThreadPool.SetMinThreads(5, 2);
-    }
-
   //////////////////////////////////////////////////////////////////////////
   // Management
   //////////////////////////////////////////////////////////////////////////
@@ -132,7 +119,7 @@ namespace Fan.Sys
     public static Thread current()
     {
       if (m_threadLookup == null)
-        throw Err.make("Current thread not a Fan thread: " + NThread.CurrentThread).val;
+        throw Err.make("Current thread not a Fan thread: " + System.Threading.Thread.CurrentThread).val;
       return m_threadLookup;
     }
 
@@ -328,7 +315,7 @@ namespace Fan.Sys
     {
       if (m_state != NEW) throw Err.make("Invalid state for Thread.start").val;
       m_state = RUNNING;
-      ThreadPool.QueueUserWorkItem(new WaitCallback(doRun), this);
+      System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(doRun), this);
       return this;
     }
 
@@ -336,8 +323,8 @@ namespace Fan.Sys
     {
       // run attached thread
       Thread attached = state as Thread;
-//System.Console.WriteLine(" >>> " + attached.m_name + ": doRun() on " +  NThread.CurrentThread.ManagedThreadId);
-      attached.m_thread = NThread.CurrentThread;
+//System.Console.WriteLine(" >>> " + attached.m_name + ": doRun() on " +  System.Threading.Thread.CurrentThread.ManagedThreadId);
+      attached.m_thread = System.Threading.Thread.CurrentThread;
       m_threadLookup = attached;
       try
       {
@@ -408,7 +395,7 @@ namespace Fan.Sys
         m_runResult = null;
         return r;
       }
-      catch (ThreadInterruptedException e)
+      catch (System.Threading.ThreadInterruptedException e)
       {
         throw InterruptedErr.make(e).val;
       }
@@ -418,9 +405,9 @@ namespace Fan.Sys
     {
       try
       {
-        NThread.Sleep((int)duration.millis());
+        System.Threading.Thread.Sleep((int)duration.millis());
       }
-      catch (ThreadInterruptedException e)
+      catch (System.Threading.ThreadInterruptedException e)
       {
         throw InterruptedErr.make(e).val;
       }
@@ -452,9 +439,9 @@ namespace Fan.Sys
       }
     }
 
-    protected void onStart() {}
+    public virtual void onStart() {}
 
-    protected void onStop() {}
+    public virtual void onStop() {}
 
     public void loop(Func received)
     {
@@ -512,7 +499,7 @@ namespace Fan.Sys
         enqueue(msg);
         return msg.waitUntilFinished();
       }
-      catch (ThreadInterruptedException e)
+      catch (System.Threading.ThreadInterruptedException e)
       {
         throw InterruptedErr.make(e).val;
       }
@@ -527,7 +514,7 @@ namespace Fan.Sys
         enqueue(new Message(MSG_ASYNC, obj));
         return this;
       }
-      catch (ThreadInterruptedException e)
+      catch (System.Threading.ThreadInterruptedException e)
       {
         throw InterruptedErr.make(e).val;
       }
@@ -592,7 +579,7 @@ namespace Fan.Sys
     {
       internal long deadline;   // nanoTime expiration
       internal long duration;   // -1 for non-repeating
-      internal object msg;         // message to send
+      internal object msg;      // message to send
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -725,7 +712,7 @@ namespace Fan.Sys
       }
 
       internal int state;       // sync/async in, ok/err out
-      internal object obj;         // message in, return/err out
+      internal object obj;      // message in, return/err out
       internal Message next;    // queue linked list
     }
 
@@ -747,21 +734,22 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private static object topLock = new object();   // top level lock
-    private static Hashtable byName = new Hashtable();  // string -> Thread
+    private static object topLock = new object();          // top level lock
+    private static Hashtable byName = new Hashtable();     // string -> Thread
     private static Hashtable byService = new Hashtable();  // string -> ThreadNode
-    private static int autoNameCount = 0;           // auto-generate unique name
-    private static int maxQueueSize = 1000;         // max messages to queue
-    private static Timer[] noTimers = new Timer[0]; // empty timers
+    private static int autoNameCount = 0;                  // auto-generate unique name
+    private static int maxQueueSize = 1000;                // max messages to queue
+    private static Timer[] noTimers = new Timer[0];        // empty timers
+    public static bool m_fant = false;                     // use to correct timing errors in fant
 
-    private string m_name;                  // thread name
-    private int m_state;                 // current state
-    private NThread m_thread;            // .NET thread if attached
-    private Message m_head, m_tail;      // message queue linked list
-    private int m_size, m_peek;          // message queue size
-    private Timer[] m_timers = noTimers; // timers for sendLater
-    private Func m_run;                  // run method
-    private object m_runResult;             // return of run method
+    private string m_name;                     // thread name
+    private int m_state;                       // current state
+    private System.Threading.Thread m_thread;  // .NET thread if attached
+    private Message m_head, m_tail;            // message queue linked list
+    private int m_size, m_peek;                // message queue size
+    private Timer[] m_timers = noTimers;       // timers for sendLater
+    private Func m_run;                        // run method
+    private object m_runResult;                // return of run method
 
   }
 

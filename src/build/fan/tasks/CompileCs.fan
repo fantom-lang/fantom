@@ -24,20 +24,20 @@ class CompileCs : Task
   new make(BuildScript script)
     : super(script)
   {
-    // netHomeDir
-    netHomeProp := Sys.env["fan.build.netHome"]
+    // dotnetHomeDir
+    dotnetHomeProp := Sys.env["fan.build.dotnetHome"]
     try
     {
-      netHomeDir = netHomeProp.toUri.toFile
-      if (!netHomeDir.exists || !netHomeDir.isDir) throw Err.make
+      dotnetHomeDir = dotnetHomeProp.toUri.toFile
+      if (!dotnetHomeDir.exists || !dotnetHomeDir.isDir) throw Err.make
     }
     catch
     {
-      throw fatal("Missing or invalid URI for fan.build.netHome: $netHomeProp")
+      throw fatal("Missing or invalid URI for fan.build.dotnetHome: $dotnetHomeProp")
     }
 
     // derived files
-    cscExe = netHomeDir + `csc.exe`
+    cscExe = dotnetHomeDir + `csc.exe`
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -104,10 +104,10 @@ class CompileCs : Task
 //////////////////////////////////////////////////////////////////////////
 
   ** Home directory for .NET installation
-  ** configured via Sys.env["fan.build.netHome"]
-  File netHomeDir
+  ** configured via Sys.env["fan.build.dotnetHome"]
+  File dotnetHomeDir
 
-  ** C# compiler executable: {netHomeDir}/csc.exe
+  ** C# compiler executable: {dotnetHomeDir}/csc.exe
   File cscExe
 
   ** Output file created by the compiler.

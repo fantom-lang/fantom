@@ -21,7 +21,7 @@ rem compiler setup
 set includes=/I"%sdk%\Include" /I"%java_home%\include" /I"%java_home%\include\win32"
 set libs="%sdk%\Lib\uuid.lib" "%sdk%\Lib\advapi32.lib"
 set defs=/D_CRT_SECURE_NO_DEPRECATE
-set compile=cl %defs% %includes% launcher.cpp props.cpp java.cpp net.cpp utils.cpp %libs%
+set compile=cl %defs% %includes% launcher.cpp props.cpp java.cpp dotnet.cpp utils.cpp %libs%
 
 rem compile each executable
 %compile% /DFAN_TOOL="\"Fan\""   /Fe%fan_home%\bin\fan.exe

@@ -38,8 +38,11 @@ namespace Fan.Sys
 
     public static List osRoots()
     {
-      // TODO
-      throw IOErr.make("osRoots not implemented yet!").val;
+      List list = new List(Sys.FileType);
+      string[] drives = System.IO.Directory.GetLogicalDrives();
+      for (int i=0; i<drives.Length; i++)
+        list.add(new LocalFile(new System.IO.FileInfo(drives[i]), true));
+      return list;
     }
 
     public static File createTemp() { return createTemp(null, null, null); }

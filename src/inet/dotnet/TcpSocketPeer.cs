@@ -33,11 +33,11 @@ namespace Fan.Inet
 
     public TcpSocketPeer(Socket socket)
     {
-      this.m_net = socket;
+      this.m_dotnet = socket;
 
       // turn off Nagle's algorithm since we should
       // always be doing buffering in the virtual machine
-      try { m_net.NoDelay = true; } catch {}
+      try { m_dotnet.NoDelay = true; } catch {}
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -46,12 +46,12 @@ namespace Fan.Inet
 
     public bool isBound(TcpSocket fan)
     {
-      return m_net.IsBound;
+      return m_dotnet.IsBound;
     }
 
     public bool isConnected(TcpSocket fan)
     {
-      return m_net.Connected;
+      return m_dotnet.Connected;
     }
 
     public bool isClosed(TcpSocket fan)
@@ -65,16 +65,16 @@ namespace Fan.Inet
 
     public IpAddress localAddress(TcpSocket fan)
     {
-      if (!m_net.IsBound) return null;
-      IPEndPoint pt = m_net.LocalEndPoint as IPEndPoint;
+      if (!m_dotnet.IsBound) return null;
+      IPEndPoint pt = m_dotnet.LocalEndPoint as IPEndPoint;
       if (pt == null) return null;
       return IpAddressPeer.make(pt.Address);
     }
 
     public Long localPort(TcpSocket fan)
     {
-      if (!m_net.IsBound) return null;
-      IPEndPoint pt = m_net.LocalEndPoint as IPEndPoint;
+      if (!m_dotnet.IsBound) return null;
+      IPEndPoint pt = m_dotnet.LocalEndPoint as IPEndPoint;
       if (pt == null) return null;
       // TODO - default port?
       return Long.valueOf(pt.Port);
@@ -82,13 +82,13 @@ namespace Fan.Inet
 
     public IpAddress remoteAddress(TcpSocket fan)
     {
-      if (!m_net.Connected) return null;
+      if (!m_dotnet.Connected) return null;
       return m_remoteAddr;
     }
 
     public Long remotePort(TcpSocket fan)
     {
-      if (!m_net.Connected) return null;
+      if (!m_dotnet.Connected) return null;
       return Long.valueOf(m_remotePort);
     }
 
@@ -100,9 +100,9 @@ namespace Fan.Inet
     {
       try
       {
-        IPAddress netAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_net;
-        int netPort = (port == null) ? 0 : port.intValue();
-        m_net.Bind(new IPEndPoint(netAddr, netPort));
+        IPAddress dotnetAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_dotnet;
+        int dotnetPort = (port == null) ? 0 : port.intValue();
+        m_dotnet.Bind(new IPEndPoint(dotnetAddr, dotnetPort));
         return fan;
       }
       catch (SocketException e)
@@ -115,17 +115,17 @@ namespace Fan.Inet
     {
       if (timeout != null)
       {
-        IAsyncResult result = m_net.BeginConnect(addr.m_peer.m_net, (int)port, null, null);
+        IAsyncResult result = m_dotnet.BeginConnect(addr.m_peer.m_dotnet, (int)port, null, null);
         bool success = result.AsyncWaitHandle.WaitOne((int)timeout.millis(), true);
         if (!success)
         {
-          m_net.Close();
+          m_dotnet.Close();
           throw new System.IO.IOException("Connection timed out.");
         }
       }
       else
       {
-        m_net.Connect(addr.m_peer.m_net, (int)port);
+        m_dotnet.Connect(addr.m_peer.m_dotnet, (int)port);
       }
       connected(fan);
       return fan;
@@ -133,11 +133,11 @@ namespace Fan.Inet
 
     internal void connected(TcpSocket fan)
     {
-      IPEndPoint endPoint = m_net.RemoteEndPoint as IPEndPoint;
+      IPEndPoint endPoint = m_dotnet.RemoteEndPoint as IPEndPoint;
       m_remoteAddr = IpAddressPeer.make(endPoint.Address);
       m_remotePort = endPoint.Port;
-      m_in  = SysInStream.make(new NetworkStream(m_net), getInBufferSize(fan));
-      m_out = SysOutStream.make(new NetworkStream(m_net), getOutBufferSize(fan));
+      m_in  = SysInStream.make(new NetworkStream(m_dotnet), getInBufferSize(fan));
+      m_out = SysOutStream.make(new NetworkStream(m_dotnet), getOutBufferSize(fan));
     }
 
     public InStream @in(TcpSocket fan)
@@ -167,7 +167,7 @@ namespace Fan.Inet
 
     public void close()
     {
-      m_net.Close();
+      m_dotnet.Close();
       m_in  = null;
       m_out = null;
       m_closed = true;
@@ -277,91 +277,91 @@ namespace Fan.Inet
 
     public bool getKeepAlive(TcpSocket fan)
     {
-      return Convert.ToBoolean(m_net.GetSocketOption(
+      return Convert.ToBoolean(m_dotnet.GetSocketOption(
         SocketOptionLevel.Socket, SocketOptionName.KeepAlive));
     }
 
     public void setKeepAlive(TcpSocket fan, bool v)
     {
-      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, v);
+      m_dotnet.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, v);
     }
 
     public long getReceiveBufferSize(TcpSocket fan)
     {
-      return m_net.ReceiveBufferSize;
+      return m_dotnet.ReceiveBufferSize;
     }
 
     public void setReceiveBufferSize(TcpSocket fan, long v)
     {
-      m_net.ReceiveBufferSize = (int)v;
+      m_dotnet.ReceiveBufferSize = (int)v;
     }
 
     public long getSendBufferSize(TcpSocket fan)
     {
-      return m_net.SendBufferSize;
+      return m_dotnet.SendBufferSize;
     }
 
     public void setSendBufferSize(TcpSocket fan, long v)
     {
-      m_net.SendBufferSize = (int)v;
+      m_dotnet.SendBufferSize = (int)v;
     }
 
     public bool getReuseAddress(TcpSocket fan)
     {
-      return Convert.ToBoolean(m_net.GetSocketOption(
+      return Convert.ToBoolean(m_dotnet.GetSocketOption(
        SocketOptionLevel.Socket, SocketOptionName.ReuseAddress));
     }
 
     public void setReuseAddress(TcpSocket fan, bool v)
     {
-      m_net.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v);
+      m_dotnet.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v);
     }
 
     public Duration getLinger(TcpSocket fan)
     {
-      if (!m_net.LingerState.Enabled) return null;
-      return Duration.makeSec(m_net.LingerState.LingerTime);
+      if (!m_dotnet.LingerState.Enabled) return null;
+      return Duration.makeSec(m_dotnet.LingerState.LingerTime);
     }
 
     public void setLinger(TcpSocket fan, Duration v)
     {
       if (v == null)
       {
-        m_net.LingerState = new LingerOption(false, 0);
+        m_dotnet.LingerState = new LingerOption(false, 0);
       }
       else
       {
-        m_net.LingerState = new LingerOption(true, (int)(v.sec()));
+        m_dotnet.LingerState = new LingerOption(true, (int)(v.sec()));
       }
     }
 
     public Duration getReceiveTimeout(TcpSocket fan)
     {
-      if (m_net.ReceiveTimeout <= 0) return null;
-      return Duration.makeMillis(m_net.ReceiveTimeout);
+      if (m_dotnet.ReceiveTimeout <= 0) return null;
+      return Duration.makeMillis(m_dotnet.ReceiveTimeout);
     }
 
     public void setReceiveTimeout(TcpSocket fan, Duration v)
     {
       if (v == null)
-        m_net.ReceiveTimeout = 0;
+        m_dotnet.ReceiveTimeout = 0;
       else
-        m_net.ReceiveTimeout = (int)(v.millis());
+        m_dotnet.ReceiveTimeout = (int)(v.millis());
     }
 
     public bool getNoDelay(TcpSocket fan)
     {
-      return m_net.NoDelay;
+      return m_dotnet.NoDelay;
     }
 
     public void setNoDelay(TcpSocket fan, bool v)
     {
-      m_net.NoDelay = v;
+      m_dotnet.NoDelay = v;
     }
 
     public long getTrafficClass(TcpSocket fan)
     {
-      return Convert.ToInt32(m_net.GetSocketOption(
+      return Convert.ToInt32(m_dotnet.GetSocketOption(
         SocketOptionLevel.IP, SocketOptionName.TypeOfService));
     }
 
@@ -369,7 +369,7 @@ namespace Fan.Inet
     {
 //try
 //{
-      m_net.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, v);
+      m_dotnet.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, v);
 //}
 //catch (System.Exception e)
 //{
@@ -382,7 +382,7 @@ namespace Fan.Inet
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private Socket m_net;
+    private Socket m_dotnet;
 
     private int m_inBufSize = 4096;
     private int m_outBufSize = 4096;

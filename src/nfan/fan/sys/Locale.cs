@@ -113,15 +113,15 @@ namespace Fan.Sys
 
     public override string toStr() { return m_str; }
 
-    public CultureInfo net()
+    public CultureInfo dotnet()
     {
-      if (netCulture == null)
+      if (dotnetCulture == null)
       {
         string n = m_lang;
         if (m_country != null) n += "-" + m_country;
-        netCulture = new CultureInfo(n);
+        dotnetCulture = new CultureInfo(n);
       }
-      return netCulture;
+      return dotnetCulture;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -253,7 +253,7 @@ namespace Fan.Sys
     readonly string m_str;
     readonly string m_lang;
     readonly string m_country;
-    CultureInfo netCulture;
+    CultureInfo dotnetCulture;
 
   }
 }

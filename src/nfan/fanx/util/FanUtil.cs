@@ -20,27 +20,27 @@ namespace Fanx.Util
     /// <summary>
     /// Convert .NET type to Fan type.
     /// </summary>
-    public static Fan.Sys.Type toFanType(Type netType, bool check)
+    public static Fan.Sys.Type toFanType(Type dotnetType, bool check)
     {
-      Fan.Sys.Type t = (Fan.Sys.Type)netToFanTypes[netType.FullName];
+      Fan.Sys.Type t = (Fan.Sys.Type)dotnetToFanTypes[dotnetType.FullName];
       if (t != null) return t;
       if (!check) return null;
-      throw Fan.Sys.Err.make("Not a Fan type: " + netType).val;
+      throw Fan.Sys.Err.make("Not a Fan type: " + dotnetType).val;
     }
 
     /// <summary>
     /// Return if the specified .NET type represents an immutable type.
     /// </summary>
-    public static bool isNetImmutable(Type netType)
+    public static bool isDotnetImmutable(Type dotnetType)
     {
-      return netImmutables[netType.FullName] != null;
+      return dotnetImmutables[dotnetType.FullName] != null;
     }
 
     /// <summary>
     /// Return if the Fan Type is represented as a .NET class
     /// such as sys::Int as Fan.Sys.Long.
     /// </summary>
-    public static bool isNetRepresentation(Fan.Sys.Type t)
+    public static bool isDotnetRepresentation(Fan.Sys.Type t)
     {
       if (t.pod() != Fan.Sys.Sys.SysPod) return false;
       return t == Fan.Sys.Sys.ObjType   ||
@@ -55,15 +55,15 @@ namespace Fanx.Util
     /// <summary>
     /// Return the .NET type name for this Fan type.
     /// </summary>
-    public static string toNetTypeName(Fan.Sys.Type type)
+    public static string toDotnetTypeName(Fan.Sys.Type type)
     {
-      return toNetTypeName(type.pod().name(), type.name(), type.isNullable());
+      return toDotnetTypeName(type.pod().name(), type.name(), type.isNullable());
     }
 
     /// <summary>
     /// Return the .NET type name for this Fan pod and type.
     /// </summary>
-    public static string toNetTypeName(string podName, string typeName, bool nullable)
+    public static string toDotnetTypeName(string podName, string typeName, bool nullable)
     {
       if (podName == "sys")
       {
@@ -101,7 +101,7 @@ namespace Fanx.Util
     /// <summary>
     /// Given a Fan qname, get the .NET implementation class name:
     /// </summary>
-    public static string toNetImplTypeName(string podName, string typeName)
+    public static string toDotnetImplTypeName(string podName, string typeName)
     {
       if (podName == "sys")
       {
@@ -137,7 +137,7 @@ namespace Fanx.Util
     /// Given a .NET type signature, return the implementation
     /// class signature for methods and fields:
     /// </summary>
-    public static string toNetImplTypeName(string ntype)
+    public static string toDotnetImplTypeName(string ntype)
     {
       if (ntype[0] == 'S')
       {
@@ -158,7 +158,7 @@ namespace Fanx.Util
     /// <summary>
     /// Return the .NET method name for this Fan method name.
     /// </summary>
-    public static string toNetMethodName(string fanName)
+    public static string toDotnetMethodName(string fanName)
     {
       if (fanName == "equals") return "Equals";
       return fanName;
@@ -167,16 +167,16 @@ namespace Fanx.Util
     /// <summary>
     /// Return the Fan method name for this .NET method name.
     /// </summary>
-    public static string toFanMethodName(string netName)
+    public static string toFanMethodName(string dotnetName)
     {
-      if (netName == "Equals") return "equals";
-      return netName;
+      if (dotnetName == "Equals") return "equals";
+      return dotnetName;
     }
 
     /// <summary>
     /// Given a Fan type, get its stack type: 'A', 'I', 'J', etc
     /// </summary>
-    public static int toNetStackType(Fan.Sys.Type t)
+    public static int toDotnetStackType(Fan.Sys.Type t)
     {
       if (!t.isNullable())
       {
@@ -286,33 +286,33 @@ namespace Fanx.Util
       return s;
     }
 
-    private static Hashtable netToFanTypes = new Hashtable();
-    private static Hashtable netImmutables = new Hashtable();
+    private static Hashtable dotnetToFanTypes = new Hashtable();
+    private static Hashtable dotnetImmutables = new Hashtable();
 
     static FanUtil()
     {
       if (Fan.Sys.Sys.ObjType == null) Fan.Sys.Sys.dumpStack();
 
-      netToFanTypes["System.Boolean"]     = Fan.Sys.Sys.BoolType;
-      netToFanTypes["System.Double"]      = Fan.Sys.Sys.FloatType;
-      netToFanTypes["System.Int64"]       = Fan.Sys.Sys.IntType;
-      netToFanTypes["System.String"]      = Fan.Sys.Sys.StrType;
-      netToFanTypes["System.Object"]      = Fan.Sys.Sys.ObjType;
-      netToFanTypes["Fan.Sys.Boolean"]    = Fan.Sys.Sys.BoolType;
-      netToFanTypes["Fan.Sys.BigDecimal"] = Fan.Sys.Sys.DecimalType;
-      netToFanTypes["Fan.Sys.Double"]     = Fan.Sys.Sys.FloatType;
-      netToFanTypes["Fan.Sys.Long"]       = Fan.Sys.Sys.IntType;
-      netToFanTypes["Fan.Sys.Number"]     = Fan.Sys.Sys.NumType;
+      dotnetToFanTypes["System.Boolean"]     = Fan.Sys.Sys.BoolType;
+      dotnetToFanTypes["System.Double"]      = Fan.Sys.Sys.FloatType;
+      dotnetToFanTypes["System.Int64"]       = Fan.Sys.Sys.IntType;
+      dotnetToFanTypes["System.String"]      = Fan.Sys.Sys.StrType;
+      dotnetToFanTypes["System.Object"]      = Fan.Sys.Sys.ObjType;
+      dotnetToFanTypes["Fan.Sys.Boolean"]    = Fan.Sys.Sys.BoolType;
+      dotnetToFanTypes["Fan.Sys.BigDecimal"] = Fan.Sys.Sys.DecimalType;
+      dotnetToFanTypes["Fan.Sys.Double"]     = Fan.Sys.Sys.FloatType;
+      dotnetToFanTypes["Fan.Sys.Long"]       = Fan.Sys.Sys.IntType;
+      dotnetToFanTypes["Fan.Sys.Number"]     = Fan.Sys.Sys.NumType;
 
-      netImmutables["System.Boolean"]     = true;
-      netImmutables["System.Double"]      = true;
-      netImmutables["System.Int64"]       = true;
-      netImmutables["System.String"]      = true;
-      netImmutables["Fan.Sys.Boolean"]    = true;
-      netImmutables["Fan.Sys.BigDecimal"] = true;
-      netImmutables["Fan.Sys.Double"]     = true;
-      netImmutables["Fan.Sys.Long"]       = true;
-      netImmutables["Fan.Sys.Number"]     = true;
+      dotnetImmutables["System.Boolean"]     = true;
+      dotnetImmutables["System.Double"]      = true;
+      dotnetImmutables["System.Int64"]       = true;
+      dotnetImmutables["System.String"]      = true;
+      dotnetImmutables["Fan.Sys.Boolean"]    = true;
+      dotnetImmutables["Fan.Sys.BigDecimal"] = true;
+      dotnetImmutables["Fan.Sys.Double"]     = true;
+      dotnetImmutables["Fan.Sys.Long"]       = true;
+      dotnetImmutables["Fan.Sys.Number"]     = true;
     }
 
   }

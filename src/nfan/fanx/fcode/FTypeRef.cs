@@ -148,7 +148,7 @@ namespace Fanx.Fcode
     /// </summary>
     public string nname()
     {
-      if (m_nname == null) m_nname = FanUtil.toNetTypeName(podName, typeName, isNullable());
+      if (m_nname == null) m_nname = FanUtil.toDotnetTypeName(podName, typeName, isNullable());
       return m_nname;
     }
 

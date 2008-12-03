@@ -74,7 +74,7 @@ namespace Fanx.Tools
 
       writeLine("");
 
-      Pod pod = Pod.find(podName, true, null);
+      Pod pod = Pod.doFind(podName, true, null);
       Type[] t = tests(pod, testName);
       for (int i=0; i<t.Length; i++)
       {
@@ -192,7 +192,7 @@ namespace Fanx.Tools
 
     class MainThread : Thread
     {
-      public MainThread() : base("main") {}
+      public MainThread() : base("FantMain") {}
       public override object run()
       {
         ret = doRun();
@@ -279,6 +279,14 @@ namespace Fanx.Tools
     static void writeLine(string s)
     {
       System.Console.WriteLine(s);
+    }
+
+    static Fant()
+    {
+      // .NET will only create one new thread every 500ms, which will
+      // throw off all the timing in testSys, so if we're running under
+      // fant, create a larger initial thread pool to work around that.
+      System.Threading.ThreadPool.SetMinThreads(10, 10);
     }
 
   //////////////////////////////////////////////////////////////////////////

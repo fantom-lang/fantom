@@ -49,7 +49,7 @@ namespace Fan.Inet
     public IpAddress localAddress(TcpListener fan)
     {
       if (!m_bound) return null;
-      IPEndPoint pt = m_net.LocalEndpoint as IPEndPoint;
+      IPEndPoint pt = m_dotnet.LocalEndpoint as IPEndPoint;
       if (pt == null) return null;
       return IpAddressPeer.make(pt.Address);
     }
@@ -57,7 +57,7 @@ namespace Fan.Inet
     public Long localPort(TcpListener fan)
     {
       if (!m_bound) return null;
-      IPEndPoint pt = m_net.LocalEndpoint as IPEndPoint;
+      IPEndPoint pt = m_dotnet.LocalEndpoint as IPEndPoint;
       if (pt == null) return null;
       // TODO - null for default port?
       return Long.valueOf(pt.Port);
@@ -69,10 +69,10 @@ namespace Fan.Inet
 
     public TcpListener bind(TcpListener fan, IpAddress addr, Long port, long backlog)
     {
-      IPAddress netAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_net;
-      int netPort = (port == null) ? 0 : port.intValue();
-      m_net = new System.Net.Sockets.TcpListener(netAddr, netPort);
-      m_net.Start((int)backlog);
+      IPAddress dotnetAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_dotnet;
+      int dotnetPort = (port == null) ? 0 : port.intValue();
+      m_dotnet = new System.Net.Sockets.TcpListener(dotnetAddr, dotnetPort);
+      m_dotnet.Start((int)backlog);
       m_bound = true;
       return fan;
     }
@@ -82,14 +82,14 @@ namespace Fan.Inet
       TcpSocket s = TcpSocket.make();
       if (m_timeout > 0)
       {
-        IAsyncResult result = m_net.BeginAcceptSocket(null, null);
+        IAsyncResult result = m_dotnet.BeginAcceptSocket(null, null);
         bool success = result.AsyncWaitHandle.WaitOne(m_timeout, true);
         if (!success) throw new System.IO.IOException("Connection timed out.");
-        s.m_peer = new TcpSocketPeer(m_net.EndAcceptSocket(result));
+        s.m_peer = new TcpSocketPeer(m_dotnet.EndAcceptSocket(result));
       }
       else
       {
-        s.m_peer = new TcpSocketPeer(m_net.AcceptSocket());
+        s.m_peer = new TcpSocketPeer(m_dotnet.AcceptSocket());
       }
       s.m_peer.connected(s);
       return s;
@@ -99,7 +99,7 @@ namespace Fan.Inet
     {
       try
       {
-        m_net.Stop();
+        m_dotnet.Stop();
         m_closed = true;
         return true;
       }
@@ -115,23 +115,23 @@ namespace Fan.Inet
 
     public long getReceiveBufferSize(TcpListener fan)
     {
-      return m_net.Server.ReceiveBufferSize;
+      return m_dotnet.Server.ReceiveBufferSize;
     }
 
     public void setReceiveBufferSize(TcpListener fan, long v)
     {
-      m_net.Server.ReceiveBufferSize = (int)v;
+      m_dotnet.Server.ReceiveBufferSize = (int)v;
     }
 
     public bool getReuseAddress(TcpListener fan)
     {
-      return Convert.ToBoolean(m_net.Server.GetSocketOption(
+      return Convert.ToBoolean(m_dotnet.Server.GetSocketOption(
         SocketOptionLevel.Socket, SocketOptionName.ReuseAddress));
     }
 
     public void setReuseAddress(TcpListener fan, bool v)
     {
-      m_net.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v);
+      m_dotnet.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v);
     }
 
     public Duration getReceiveTimeout(TcpListener fan)
@@ -149,7 +149,7 @@ namespace Fan.Inet
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    private System.Net.Sockets.TcpListener m_net;
+    private System.Net.Sockets.TcpListener m_dotnet;
     private bool m_bound  = false;
     private bool m_closed = false;
     private int m_timeout = 0;       // accept timeout in millis

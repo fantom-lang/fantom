@@ -485,3 +485,4 @@
 - Remove compiler support for for(...); and while(...);
 - DateTime toJava, fromJava
 - Reorganize icons
+- Use 'dotnet' to denote .NET instead of 'net'

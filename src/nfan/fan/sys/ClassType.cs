@@ -584,8 +584,8 @@ namespace Fan.Sys
         {
           try
           {
-            m_netRepr = FanUtil.isNetRepresentation(this);
-            m_type = System.Type.GetType(FanUtil.toNetImplTypeName(podName, m_name));
+            m_dotnetRepr = FanUtil.isDotnetRepresentation(this);
+            m_type = System.Type.GetType(FanUtil.toDotnetImplTypeName(podName, m_name));
           }
           catch (Exception e)
           {
@@ -715,13 +715,12 @@ namespace Fan.Sys
         if (m_pod == Sys.SysPod)
         {
           if (!checkAllFan(pars)) return;
-          if (m_netRepr)
+          if (m_dotnetRepr)
           {
-            bool netStatic = m.IsStatic;
-            if (!netStatic) return;
+            bool dotnetStatic = m.IsStatic;
+            if (!dotnetStatic) return;
             if (!method.isStatic() && !method.isCtor()) --numParams;
           }
-
         }
 
         // zero index is full signature up to using max defaults
@@ -748,7 +747,7 @@ namespace Fan.Sys
       return true;
     }
 
-    public override bool netRepr() { return m_netRepr; }
+    public override bool dotnetRepr() { return m_dotnetRepr; }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
@@ -793,7 +792,7 @@ namespace Fan.Sys
 
     // misc
     ConstructorInfo m_dynamicCtor;  // enabled to store a type per instance
-    internal bool m_netRepr;        // if representation a .NET type, such as Fan.Sys.Long
+    internal bool m_dotnetRepr;     // if representation a .NET type, such as Fan.Sys.Long
 
   }
 }

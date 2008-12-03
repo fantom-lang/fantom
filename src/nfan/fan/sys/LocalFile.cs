@@ -177,12 +177,12 @@ namespace Fan.Sys
 
     public override DateTime modified()
     {
-      return m_file.Exists ? DateTime.net(m_file.LastAccessTime.Ticks) : null;
+      return m_file.Exists ? DateTime.dotnet(m_file.LastAccessTime.Ticks) : null;
     }
 
     public override void modified(DateTime time)
     {
-      m_file.LastAccessTime = new System.DateTime(time.net());
+      m_file.LastAccessTime = new System.DateTime(time.dotnet());
     }
 
     public override string osPath()

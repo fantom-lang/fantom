@@ -23,7 +23,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     internal const long diffJava   = 946684800000L; // 2000-1970 in milliseconds
-    internal const long diffNet    = 630822816000000000L; // 2000-0001 in 100's of nanoseconds
+    internal const long diffDotnet = 630822816000000000L; // 2000-0001 in 100's of nanoseconds
     internal const long nsPerYear  = 365L*24L*60L*60L*1000000000L;
     internal const long nsPerDay   = 24L*60L*60L*1000000000L;
     internal const long nsPerHour  = 60L*60L*1000000000L;
@@ -41,7 +41,7 @@ namespace Fan.Sys
     public static DateTime now()  { return now(toleranceDefault); }
     public static DateTime now(Duration tolerance)
     {
-      long now = (System.DateTime.Now.Ticks - diffNet) * nsPerTick;
+      long now = (System.DateTime.Now.Ticks - diffDotnet) * nsPerTick;
 
       DateTime c = cached;
       if (tolerance != null && now - c.m_ticks <= tolerance.m_ticks)
@@ -53,7 +53,7 @@ namespace Fan.Sys
     public static DateTime nowUtc()  { return nowUtc(toleranceDefault); }
     public static DateTime nowUtc(Duration tolerance)
     {
-      long now = (System.DateTime.Now.Ticks - diffNet) * nsPerTick;
+      long now = (System.DateTime.Now.Ticks - diffDotnet) * nsPerTick;
 
       DateTime c = cachedUtc;
       if (tolerance != null && now - c.m_ticks <= tolerance.m_ticks)
@@ -405,7 +405,7 @@ namespace Fan.Sys
       if (pattern == null)
       {
         if (locale == null) locale = Locale.current();
-        pattern = locale.get(FanStr.sysStr, localeKey);
+        pattern = locale.get("sys", localeKey);
       }
 
       // process pattern
@@ -764,7 +764,7 @@ namespace Fan.Sys
           System.DateTime date = System.DateTime.ParseExact(s, httpFormats,
             CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite |
             DateTimeStyles.AdjustToUniversal);
-          return net(date.Ticks);
+          return dotnet(date.Ticks);
         }
         catch (System.Exception)
         {
@@ -777,7 +777,7 @@ namespace Fan.Sys
 
     public string toHttpStr()
     {
-      return new System.DateTime(net()).ToString(httpFormats[0]);
+      return new System.DateTime(dotnet()).ToString(httpFormats[0]);
     }
 
     static readonly string[] httpFormats = new string[]
@@ -804,13 +804,13 @@ namespace Fan.Sys
   // .NET
   //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime net(long netTicks)
+    public static DateTime dotnet(long dotnetTicks)
     {
-      if (netTicks <= 0) return null;
-      return new DateTime((netTicks-diffNet)*nsPerTick, TimeZone.m_current);
+      if (dotnetTicks <= 0) return null;
+      return new DateTime((dotnetTicks-diffDotnet)*nsPerTick, TimeZone.m_current);
     }
 
-    public long net() { return (m_ticks / nsPerTick) + diffNet; }
+    public long dotnet() { return (m_ticks / nsPerTick) + diffDotnet; }
 
   //////////////////////////////////////////////////////////////////////////
   // Lookup Tables

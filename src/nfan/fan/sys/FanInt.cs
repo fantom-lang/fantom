@@ -30,6 +30,11 @@ namespace Fan.Sys
       {
         return Long.valueOf(Convert.ToInt64(s, (int)radix));
       }
+      catch (OverflowException)
+      {
+        if (!check) return null;
+        throw ParseErr.make("Int", s).val;
+      }
       catch (FormatException)
       {
         if (!check) return null;
@@ -329,13 +334,13 @@ namespace Fan.Sys
     public static long localeUpper(long self)
     {
       long val = self;
-      return Char.ToUpper((char)val, Locale.current().net());
+      return Char.ToUpper((char)val, Locale.current().dotnet());
     }
 
     public static long localeLower(long self)
     {
       long val = self;
-      return Char.ToLower((char)val, Locale.current().net());
+      return Char.ToLower((char)val, Locale.current().dotnet());
     }
 
   //////////////////////////////////////////////////////////////////////////
