@@ -83,14 +83,14 @@ abstract class BuildPod : BuildScript
   ** List of Uris relative to `scriptDir` of directories containing
   ** the C# source files to compile for .NET native dll.
   **
-  Uri[]? netDirs
+  Uri[]? dotnetDirs
 
   **
   ** List of Uris relative to `scriptDir` of .NET assemblies which
   ** are automatically included in the library path when compiling
-  ** the `netDirs`.
+  ** the `dotnetDirs`.
   **
-  Uri[]? netLibs
+  Uri[]? dotnetLibs
 
 //////////////////////////////////////////////////////////////////////////
 // Setup
@@ -127,7 +127,7 @@ abstract class BuildPod : BuildScript
   **
   override Target defaultTarget()
   {
-    if (javaDirs == null && netDirs == null)
+    if (javaDirs == null && dotnetDirs == null)
       return target("compile")
     else
       return target("full")
@@ -165,12 +165,12 @@ abstract class BuildPod : BuildScript
     log.indent
     Delete.make(this, libFanDir+"${podName}.pod".toUri).run
     Delete.make(this, libJavaDir+"${podName}.jar".toUri).run
-    Delete.make(this, libNetDir+"${podName}.dll".toUri).run
-    Delete.make(this, libNetDir+"${podName}.pdb".toUri).run
+    Delete.make(this, libDotnetDir+"${podName}.dll".toUri).run
+    Delete.make(this, libDotnetDir+"${podName}.pdb".toUri).run
     Delete.make(this, libDir+"tmp/${podName}.dll".toUri).run
     Delete.make(this, libDir+"tmp/${podName}.pdb".toUri).run
     Delete.make(this, scriptDir+"temp-java/".toUri).run
-    Delete.make(this, scriptDir+"temp-net/".toUri).run
+    Delete.make(this, scriptDir+"temp-dotnet/".toUri).run
     log.unindent
   }
 
@@ -239,30 +239,30 @@ abstract class BuildPod : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
-// NetNative
+// DotnetNative
 //////////////////////////////////////////////////////////////////////////
 
   @target="build native .NET assembly"
-  virtual Void netNative()
+  virtual Void dotnetNative()
   {
-    if (netDirs == null) return
+    if (dotnetDirs == null) return
 
     if (!isWindows)
     {
-      log.info("netNative skipping [$podName]")
+      log.info("dotnetNative skipping [$podName]")
       return
     }
 
-    log.info("netNative [$podName]")
+    log.info("dotnetNative [$podName]")
     log.indent
 
     // env
-    ntemp := scriptDir + `temp-net/`
+    ntemp := scriptDir + `temp-dotnet/`
     nstub := ntemp + "${podName}.dll".toUri
     nout  := ntemp + "${podName}Native_.dll".toUri
-    ndirs := netDirs
-    nlibs := ["${libNetDir}sys.dll".toUri, nstub.uri]
-    if (netLibs != null) nlibs.addAll(nlibs)
+    ndirs := dotnetDirs
+    nlibs := ["${libDotnetDir}sys.dll".toUri, nstub.uri]
+    if (dotnetLibs != null) nlibs.addAll(nlibs)
     nstubExe := binDir + `nstub`
 
     // start with a clean directory
@@ -304,7 +304,7 @@ abstract class BuildPod : BuildScript
     clean
     compile(true)
     javaNative
-    netNative
+    dotnetNative
   }
 
 //////////////////////////////////////////////////////////////////////////

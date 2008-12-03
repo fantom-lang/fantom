@@ -47,12 +47,6 @@ namespace Fan.Sys
 
     public static Type find(string sig) { return TypeParser.load(sig, true, null); }
     public static Type find(string sig, bool check) { return TypeParser.load(sig, check, null); }
-    public static Type find(string podName, string typeName, bool check)
-    {
-      Pod pod = Fan.Sys.Pod.find(podName, check, null);
-      if (pod == null) return null;
-      return pod.findType(typeName, check);
-    }
 
     public static List findByFacet(string facetName, object facetVal) { return findByFacet(facetName, facetVal, null); }
     public static List findByFacet(string facetName, object facetVal, object options)
@@ -85,6 +79,13 @@ namespace Fan.Sys
     public bool isPublic()    { return (flags() & FConst.Public)    != 0; }
     public bool isSynthetic() { return (flags() & FConst.Synthetic) != 0; }
     internal abstract int flags();
+
+    public override object trap(string name, List args)
+    {
+      // private undocumented access
+      if (name == "flags") return Long.valueOf(flags());
+      return base.trap(name, args);
+    }
 
   //////////////////////////////////////////////////////////////////////////
   // Dynamic
@@ -393,7 +394,7 @@ namespace Fan.Sys
 
     public virtual void finish() {}
 
-    public abstract bool netRepr();
+    public abstract bool dotnetRepr();
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

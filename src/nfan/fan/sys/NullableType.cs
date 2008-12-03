@@ -66,7 +66,7 @@ namespace Fan.Sys
 
     public override string doc() { return m_root.doc(); }
 
-    public override bool netRepr() { return m_root.netRepr(); }
+    public override bool dotnetRepr() { return m_root.dotnetRepr(); }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

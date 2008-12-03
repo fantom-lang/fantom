@@ -78,19 +78,19 @@ can test which runtime is being used via "fan -version":
     sys.version:     1.0.19
 
 Use "lib/sys.props" to configure which runtime is used by default.
-The value must be "java" or "net":
+The value must be "java" or "dotnet":
 
-  // runtime - either "java" or "net"
+  // runtime - either "java" or "dotnet"
   fan.runtime=java
 
 You can override the system property using the "--D" option:
 
-  C:\dev\fan>fan -version --Dfan.runtime=net
+  C:\dev\fan>fan -version --Dfan.runtime=dotnet
 
 You can also override the system property via the "fan_runtime"
 environmental variable:
 
-  C:\dev\fan>set fan_runtime=net
+  C:\dev\fan>set fan_runtime=dotnet
   C:\dev\fan>fan -version
 
 Java Runtime [#javaRuntime]
@@ -123,8 +123,8 @@ is set or the "fan.home" Java system property is set:
 Each of the tools maps to a different class, for example to run 'fant' then run
 the Java class 'fanx.tools.Fant'.
 
-.NET Runtime [#netRuntime]
-==========================
+.NET Runtime [#dotnetRuntime]
+=============================
 The Fan launcher will attempt to use the latest version of .NET installed.
 
 Fan currently requires .NET version 2.0 or greater.
@@ -154,4 +154,3 @@ or .NET environment working:
   --   sys.props:
   --     fan.runtime=java
   ...
-

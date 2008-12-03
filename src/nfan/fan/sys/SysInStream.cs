@@ -210,17 +210,17 @@ namespace Fan.Sys
     /// <summary>
     /// Get a System.IO.Stream for the specified input stream.
     /// </summary>
-    public static Stream net(InStream ins)
+    public static Stream dotnet(InStream ins)
     {
       if (ins is SysInStream)
         return ((SysInStream)ins).inStream;
       else
-        return new NetInputStream (ins);
+        return new DotnetInputStream (ins);
     }
 
-    internal class NetInputStream : Stream
+    internal class DotnetInputStream : Stream
     {
-      public NetInputStream(InStream ins) { this.ins = ins; }
+      public DotnetInputStream(InStream ins) { this.ins = ins; }
 
       // Properties
       public override bool CanRead  { get { return true;  } }

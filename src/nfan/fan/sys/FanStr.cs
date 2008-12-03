@@ -519,7 +519,7 @@ namespace Fan.Sys
         i = x;
       }
       if (x <= len) toks.add(val.Substring(x, len-x));
-      if (toks.sz() == 0) toks.add(Empty);
+      if (toks.sz() == 0) toks.add("");
       return toks;
     }
 
@@ -623,19 +623,19 @@ namespace Fan.Sys
 
     public static long localeCompare(string self, string x)
     {
-      int cmp = String.Compare(self, x, true, Locale.current().net());
+      int cmp = String.Compare(self, x, true, Locale.current().dotnet());
       if (cmp < 0) return -1;
       return cmp == 0 ? 0 : +1;
     }
 
     public static string localeLower(string self)
     {
-      return self.ToLower(Locale.current().net());
+      return self.ToLower(Locale.current().dotnet());
     }
 
     public static string localeUpper(string self)
     {
-      return self.ToUpper(Locale.current().net());
+      return self.ToUpper(Locale.current().dotnet());
     }
 
     public static string localeCapitalize(string self)
@@ -646,7 +646,7 @@ namespace Fan.Sys
         if (Char.IsLower((char)ch))
         {
           StringBuilder s = new StringBuilder(self.Length);
-          s.Append(Char.ToUpper((char)ch, Locale.current().net()));
+          s.Append(Char.ToUpper((char)ch, Locale.current().dotnet()));
           s.Append(self, 1, self.Length-1);
           return s.ToString();
         }
@@ -662,7 +662,7 @@ namespace Fan.Sys
         if (Char.IsUpper((char)ch))
         {
           StringBuilder s = new StringBuilder(self.Length);
-          s.Append(Char.ToLower((char)ch, Locale.current().net()));
+          s.Append(Char.ToLower((char)ch, Locale.current().dotnet()));
           s.Append(self, 1, self.Length-1);
           return s.ToString();
         }
@@ -781,12 +781,6 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
-
-    public static readonly string Empty   = "";
-    public static readonly string nullStr = "null";
-    public static readonly string sysStr  = "sys";
-    public static readonly string thisStr = "this";
-    public static readonly string uriStr  = "uri";
 
     private static readonly Hashtable interns = new Hashtable();
 

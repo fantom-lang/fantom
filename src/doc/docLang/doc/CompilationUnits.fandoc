@@ -15,7 +15,7 @@ as follows:
   podxyz/
     +- fan/       // ".fan" source files
     +- java/      // ".java" Java native peers
-    +- net/       // ".cs" C# native peers
+    +- dotnet/    // ".cs" C# native peers
     +- res/       // resources to bundle with pod
     +- test/      // ".fan" unit tests
     +- build.fan  // build script for pod
@@ -115,6 +115,5 @@ The documentation is written in plain text using a special set of rules
 for structure called [fandoc]`docLib::Fandoc`.  Fandoc allows you to write
 documentation that looks good in plain text source files, but can be
 translated into other formats such as nicely formatted HTML.
-
 
 

@@ -85,7 +85,7 @@ For example to create a SqlService for MySQL:
 4. Open the database for the current thread.
       db.open
 
-Connections in .NET [#net]
+Connections in .NET [#dotnet]
 ==========================
 TODO
 

@@ -10,7 +10,7 @@
 #include <Windows.h>
 #include "launcher.h"
 #include "java.h"
-#include "net.h"
+#include "dotnet.h"
 #include "utils.h"
 
 #ifndef FAN_TOOL
@@ -21,7 +21,7 @@
 // TypeDefs
 //////////////////////////////////////////////////////////////////////////
 
-typedef enum { JavaRuntime, NetRuntime } Runtime;
+typedef enum { JavaRuntime, DotnetRuntime } Runtime;
 
 //////////////////////////////////////////////////////////////////////////
 // Globals
@@ -249,12 +249,12 @@ int getRuntime()
   if (debug) printf("-- getRuntime = %s\n", rt);
 
   if (strcmp(rt, "java") == 0) runtime = JavaRuntime;
-  else if (strcmp(rt, "net") == 0) runtime = NetRuntime;
+  else if (strcmp(rt, "dotnet") == 0) runtime = DotnetRuntime;
   else return err("Unknown fan.runtime %s", rt);
 
   // force stub apps to always use the right runtime
   if (strcmp(FAN_TOOL, "Jstub") == 0) runtime = JavaRuntime;
-  else if (strcmp(FAN_TOOL, "Nstub") == 0) runtime = NetRuntime;
+  else if (strcmp(FAN_TOOL, "Nstub") == 0) runtime = DotnetRuntime;
 
   return 0;
 }
@@ -271,8 +271,8 @@ int main(int argc, char** argv)
   if (getRuntime()) return -1;
   switch (runtime)
   {
-    case JavaRuntime: return runJava();
-    case NetRuntime:  return runNet();
+    case JavaRuntime:   return runJava();
+    case DotnetRuntime: return runDotnet();
     default:          return err("internal error in main");
   }
   return 0;

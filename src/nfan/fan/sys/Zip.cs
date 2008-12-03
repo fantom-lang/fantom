@@ -46,14 +46,14 @@ namespace Fan.Sys
 
     private Zip(InStream ins)
     {
-      this.m_zipIn = new ZipInputStream(SysInStream.net(ins));
+      this.m_zipIn = new ZipInputStream(SysInStream.dotnet(ins));
     }
 
     public static Zip write(OutStream outs) { return new Zip(outs); }
 
     private Zip(OutStream outs)
     {
-      this.m_zipOut = new ZipOutputStream(SysOutStream.net(outs));
+      this.m_zipOut = new ZipOutputStream(SysOutStream.dotnet(outs));
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ namespace Fan.Sys
         string zipPath = path.ToString();
         if (zipPath.StartsWith("/")) zipPath = zipPath.Substring(1);
         ZipEntry entry = new ZipEntry(zipPath);
-        entry.DateTime = new System.DateTime(modifyTime.net());
+        entry.DateTime = new System.DateTime(modifyTime.dotnet());
         m_zipOut.PutNextEntry(entry);
         return new ZipSysOutStream(m_zipOut);
       }

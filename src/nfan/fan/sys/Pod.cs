@@ -37,9 +37,9 @@ namespace Fan.Sys
   // Management
   //////////////////////////////////////////////////////////////////////////
 
-    public static Pod find(string name) { return find(name, true, null); }
-    public static Pod find(string name, bool check) { return find(name, check, null); }
-    public static Pod find(string name, bool check, FPod fpod)
+    public static Pod find(string name) { return doFind(name, true, null); }
+    public static Pod find(string name, bool check) { return doFind(name, check, null); }
+    public static Pod doFind(string name, bool check, FPod fpod)
     {
       try
       {
@@ -86,7 +86,7 @@ namespace Fan.Sys
       try
       {
         fpod = new FPod(null, null);
-        fpod.readFully(new ZipInputStream(SysInStream.net(@in)));
+        fpod.readFully(new ZipInputStream(SysInStream.dotnet(@in)));
       }
       catch (Exception e)
       {
@@ -140,7 +140,7 @@ namespace Fan.Sys
             n = n.Substring(0, n.Length-".pod".Length);
             try
             {
-              pods.add(find(n, true, null));
+              pods.add(doFind(n, true, null));
             }
             catch (Exception e)
             {
@@ -342,7 +342,7 @@ namespace Fan.Sys
       // loading my own hollow types
       string podName  = reference.podName;
       string typeName = reference.typeName;
-      Pod pod = podName == m_name ? this : find(podName, true, null);
+      Pod pod = podName == m_name ? this : doFind(podName, true, null);
       Type type = pod.findType(typeName, false);
       if (type != null)
       {

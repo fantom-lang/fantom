@@ -232,10 +232,10 @@ namespace Fan.Sys
       public override object callOn(object target, List args)
       {
         int argsSize = args == null ? 0 : args.sz();
-        bool netStatic = _isStatic();
+        bool dotnetStatic = _isStatic();
         bool fanStatic = ((m.m_flags & (FConst.Static|FConst.Ctor)) != 0);
 
-        if (netStatic && !fanStatic)
+        if (dotnetStatic && !fanStatic)
         {
           // if Java static doesn't match Fan static, then this is
           // a FanXXX method which we need to call as Java static
@@ -248,7 +248,7 @@ namespace Fan.Sys
         else
         {
           // we don't include target as part of arguments
-          int p = checkArgs(argsSize, netStatic, true);
+          int p = checkArgs(argsSize, dotnetStatic, true);
           object[] a = new object[p];
           if (args != null && a.Length > 0) args.toArray(a, 0, a.Length);
           return m.invoke(target, a);
@@ -518,7 +518,7 @@ namespace Fan.Sys
       {
         // zero index is full signature up to using max defaults
         int index = m_params.sz()-args.Length;
-        if (m_parent.netRepr() && isInstance()) index++;
+        if (m_parent.dotnetRepr() && isInstance()) index++;
         if (index < 0) index = 0;
         MethodInfo m = m_reflect[index];
 
