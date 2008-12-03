@@ -131,7 +131,7 @@ namespace Fan.Inet
       return m_dotnet.GetHashCode();
     }
 
-    public bool equals(IpAddress fan, object obj)
+    public bool Equals(IpAddress fan, object obj)
     {
       if (obj is IpAddress)
         return this.m_dotnet.Equals(((IpAddress)obj).m_peer.m_dotnet);
