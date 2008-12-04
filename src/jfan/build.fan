@@ -22,6 +22,7 @@ class Build : BuildJava
     packages = ["fan.sys",
                 "fanx.emit",
                 "fanx.fcode",
+                "fanx.interop",
                 "fanx.serial",
                 "fanx.typedb",
                 "fanx.test",
