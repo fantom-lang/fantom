@@ -56,7 +56,7 @@ public class InteropTest
   public void numadd(byte b, short s, int i, float f)  { num = b + s + i + (int)f; }
 
 //////////////////////////////////////////////////////////////////////////
-// Arrays
+// Object Arrays
 //////////////////////////////////////////////////////////////////////////
 
   public InteropTest a;
@@ -74,5 +74,18 @@ public class InteropTest
   public InteropTest[] array1() { return new InteropTest[] { a, b, c}; }
 
   public void array1(InteropTest[] x) { a = x[0]; b = x[1]; c = x[2]; }
+
+//////////////////////////////////////////////////////////////////////////
+// Primitive Arrays
+//////////////////////////////////////////////////////////////////////////
+
+  public boolean[] booleanArray(boolean a, boolean b) { return new boolean[] { a, b }; }
+  public byte[] byteArray(byte a, byte b) { return new byte[] { a, b }; }
+  public short[] shortArray(short a, short b) { return new short[] { a, b }; }
+  public char[] charArray(char a, char b) { return new char[] { a, b }; }
+  public int[] intArray(int a, int b) { return new int[] { a, b }; }
+  public long[] longArray(long a, long b) { return new long[] { a, b }; }
+  public float[] floatArray(float a, float b) { return new float[] { a, b }; }
+  public double[] doubleArray(double a, double b) { return new double[] { a, b }; }
 
 }

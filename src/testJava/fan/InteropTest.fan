@@ -322,4 +322,42 @@ class InteropTest : JavaTest
     verifySame(obj->c, origa)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Primitive Arrays
+//////////////////////////////////////////////////////////////////////////
+
+  Void testPrimitiveArrays()
+  {
+    verifyPrimitiveArrays("boolean", "Bool", "true", "false")
+    verifyPrimitiveArrays("byte", "Int", "-88", "126")
+    verifyPrimitiveArrays("short", "Int", "9", "-32004")
+    verifyPrimitiveArrays("int", "Int", "1234", "-99")
+    verifyPrimitiveArrays("long", "Int", "0x1234_abcd_00ef", "-123")
+    verifyPrimitiveArrays("float", "Float", "12f", "4f")
+    verifyPrimitiveArrays("double", "Float", "12f", "4f")
+  }
+
+  Void verifyPrimitiveArrays(Str kind, Str fanOf, Str a, Str b)
+  {
+    fanArray := "${kind.capitalize}Array"
+    compile(
+     "using [java] fanx.test
+      class Foo
+      {
+        InteropTest x := InteropTest().initArray
+        // size
+        Bool test0() { Int v := x.${kind}Array($a, $b).size; return v == 2 }
+        // gets
+        Bool test1() { $fanOf v := x.${kind}Array($a, $b)[0]; return v == $a }
+        Bool test2() { $fanOf v := x.${kind}Array($a, $b)[1]; return v == $b }
+        // sets
+        Bool test3() { array := x.${kind}Array($a, $b); array[1] = $a; $fanOf v := array[1]; return v == $a }
+      }")
+
+    obj := pod.types.first.make
+    verify(obj->test0)
+    verify(obj->test1)
+    verify(obj->test2)
+    verify(obj->test3)
+  }
 }

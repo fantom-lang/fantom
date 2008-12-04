@@ -38,3 +38,11 @@ The "-c" option will dump the opcodes:
       6: Return
     [LineNumber] size=2
        168
+
+Dissembling Scripts [#scripts]
+******************************
+You can print the dissembled code of a script file after it is compiled but
+before it is executed using the "-fcodeDump" argument after the script filename:
+
+  fan script.fan -fcodeDump
+  script.fan -fcodeDump        // if script.fan is directly executable

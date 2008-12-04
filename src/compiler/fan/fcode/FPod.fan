@@ -135,9 +135,9 @@ final class FPod : CPod, FConst
     return methodRefs.add(FMethodRef.make(p, n, r, params))
   }
 
-  Void dump()
+  Void dump(OutStream out := Sys.out)
   {
-    p := FPrinter.make(this)
+    p := FPrinter.make(this, out)
     p.showCode = true
     p.ftypes
   }

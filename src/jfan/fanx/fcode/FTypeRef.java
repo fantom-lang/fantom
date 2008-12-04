@@ -32,14 +32,31 @@ public final class FTypeRef
     boolean nullable = false;
     if (sig.endsWith("?")) { mask |= NULLABLE; nullable = true; }
     if (sig.length() > 1)  mask |= GENERIC_INSTANCE;
-    if (podName.equals("[java]"))
+    if (podName.startsWith("[java]"))
     {
-      if (typeName.equals("int"))        { mask |= PRIMITIVE_INT;   stackType = INT; }
-      else if (typeName.equals("char"))  { mask |= PRIMITIVE_CHAR;  stackType = CHAR; }
-      else if (typeName.equals("byte"))  { mask |= PRIMITIVE_BYTE;  stackType = BYTE; }
-      else if (typeName.equals("short")) { mask |= PRIMITIVE_SHORT; stackType = SHORT; }
-      else if (typeName.equals("float")) { mask |= PRIMITIVE_FLOAT; stackType = FLOAT; }
-      else throw new IllegalStateException(typeName);
+      // [java]::
+      if (podName.length() == 6)
+      {
+        if (typeName.equals("int"))        { mask |= PRIMITIVE_INT;   stackType = INT; }
+        else if (typeName.equals("char"))  { mask |= PRIMITIVE_CHAR;  stackType = CHAR; }
+        else if (typeName.equals("byte"))  { mask |= PRIMITIVE_BYTE;  stackType = BYTE; }
+        else if (typeName.equals("short")) { mask |= PRIMITIVE_SHORT; stackType = SHORT; }
+        else if (typeName.equals("float")) { mask |= PRIMITIVE_FLOAT; stackType = FLOAT; }
+        else throw new IllegalStateException(typeName);
+      }
+
+      // [java]fanx.interop::
+      else if (podName.equals("[java]fanx.interop"))
+      {
+        if (typeName.equals("BooleanArray"))     { mask |= ARRAY_BOOL; }
+        else if (typeName.equals("ByteArray"))   { mask |= ARRAY_BYTE; }
+        else if (typeName.equals("ShortArray"))  { mask |= ARRAY_SHORT; }
+        else if (typeName.equals("CharArray"))   { mask |= ARRAY_CHAR; }
+        else if (typeName.equals("IntArray"))    { mask |= ARRAY_INT; }
+        else if (typeName.equals("LongArray"))   { mask |= ARRAY_LONG; }
+        else if (typeName.equals("FloatArray"))  { mask |= ARRAY_FLOAT; }
+        else if (typeName.equals("DoubleArray")) { mask |= ARRAY_DOUBLE; }
+      }
     }
     else if (podName.equals("sys"))
     {
@@ -151,11 +168,6 @@ public final class FTypeRef
   public static boolean isWide(int stackType) { return stackType == LONG || stackType == DOUBLE; }
 
   /**
-   * Is this an array type such as [java]foo.bar::[Baz
-   */
-  public boolean isArray() { return typeName.charAt(0) == '['; }
-
-  /**
    * Java type name:  fan/sys/Duration, java/lang/Boolean, Z
    */
   public String jname()
@@ -237,6 +249,36 @@ public final class FTypeRef
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Primitive Arrays
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Return if type is represented directly as a Java primitive array
+   * such as "[java]fanx.interop::IntArray".
+   */
+  public boolean isPrimitiveArray()  { return (mask & PRIMITIVE_ARRAY) != 0; }
+
+  /**
+   * If this type is represented as a Java primitive array, get the
+   * stack type of component type: int[] -> INT.
+   */
+  public int arrayOfStackType()
+  {
+    switch (mask & PRIMITIVE_ARRAY)
+    {
+      case ARRAY_BOOL:   return BOOL;
+      case ARRAY_BYTE:   return BYTE;
+      case ARRAY_SHORT:  return SHORT;
+      case ARRAY_CHAR:   return CHAR;
+      case ARRAY_INT:    return INT;
+      case ARRAY_LONG:   return LONG;
+      case ARRAY_FLOAT:  return FLOAT;
+      case ARRAY_DOUBLE: return DOUBLE;
+      default: throw new IllegalStateException(toString());
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
 
@@ -273,6 +315,17 @@ public final class FTypeRef
   public static final int PRIMITIVE_LONG   = 0x2000;
   public static final int PRIMITIVE_FLOAT  = 0x4000;
   public static final int PRIMITIVE_DOUBLE = 0x8000;
+
+  // mask primitive array constants
+  public static final int PRIMITIVE_ARRAY  = 0xff0000;
+  public static final int ARRAY_BOOL       = 0x010000;
+  public static final int ARRAY_BYTE       = 0x020000;
+  public static final int ARRAY_SHORT      = 0x040000;
+  public static final int ARRAY_CHAR       = 0x080000;
+  public static final int ARRAY_INT        = 0x100000;
+  public static final int ARRAY_LONG       = 0x200000;
+  public static final int ARRAY_FLOAT      = 0x400000;
+  public static final int ARRAY_DOUBLE     = 0x800000;
 
   // stack type constants
   public static final int VOID   = 'V';

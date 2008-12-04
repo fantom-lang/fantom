@@ -202,6 +202,9 @@ class Main
 
       logLevel := options["logLevel"]
       if (logLevel != null) input.log.level = (LogLevel)logLevel
+
+      fcodeDump := options["fcodeDump"]
+      if (fcodeDump == true) input.fcodeDump = true
     }
 
     return Compiler.make(input).compile.transientPod
