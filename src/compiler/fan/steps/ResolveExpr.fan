@@ -445,6 +445,9 @@ class ResolveExpr : CompilerStep
   {
     base := call.target.ctype
 
+    // route FFI constructors to bridge
+    if (base.isForeign) return base.bridge.resolveConstruction(call)
+
     // construction always resolves to base type (we
     // double check this in CheckErrors)
     call.ctype = base

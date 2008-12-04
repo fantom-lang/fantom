@@ -82,6 +82,41 @@ class JavaType : CType
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Fits
+//////////////////////////////////////////////////////////////////////////
+
+  override Bool fits(CType t)
+  {
+    if (CType.super.fits(t)) return true
+    if (t is JavaType) return fitsJava(t)
+    return fitsFan(t)
+  }
+
+  private Bool fitsJava(JavaType t)
+  {
+    // * => java.lang.Object
+    if (t.qname == "[java]java.lang::Object") return !isPrimitive
+
+    // array => array
+    if (isArray && t.isArray) return arrayOf.fits(t.arrayOf)
+
+    // doesn't fit
+    return false
+  }
+
+  private Bool fitsFan(CType t)
+  {
+    // floats => Float; byte,short,char,int => Int
+    if (isPrimitive) return name == "float" ? t.isFloat : t.isInt
+
+    // arrays => List
+    if (isArray && t is ListType) return arrayOf.fits(((ListType)t).v)
+
+    // doesn't fit
+    return false
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Load
 //////////////////////////////////////////////////////////////////////////
 
