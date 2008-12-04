@@ -78,7 +78,7 @@ class ResolveExpr : CompilerStep
   {
     // check for type inference
     if (def.ctype == null)
-      def.ctype = def.init.ctype
+      def.ctype = def.init.ctype.inferredAs
 
     // bind to scope as a method variable
     bindToMethodVar(def)

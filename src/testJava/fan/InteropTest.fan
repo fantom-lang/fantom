@@ -360,4 +360,31 @@ class InteropTest : JavaTest
     verify(obj->test2)
     verify(obj->test3)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Inference
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInference()
+  {
+    compile(
+     "using [java] fanx.test
+      class Foo
+      {
+        InteropTest x := InteropTest()
+        Obj[] b() { v := x.numb;   return [v.type, v] }
+        Obj[] s() { v := x.nums(); return [v.type, v] }
+        Obj[] c() { v := x.numc;   return [v.type, v] }
+        Obj[] i() { v := x.numi(); return [v.type, v] }
+        Obj[] f() { v := x.numf;   return [v.type, v] }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->b, [Int#, 'b'])
+    verifyEq(obj->s, [Int#, 1000])
+    verifyEq(obj->c, [Int#, 'c'])
+    verifyEq(obj->i, [Int#, 1000])
+    verifyEq(obj->f, [Float#, 'f'.toFloat])
+  }
+
 }
