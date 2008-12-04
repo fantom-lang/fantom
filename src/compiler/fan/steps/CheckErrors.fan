@@ -933,13 +933,7 @@ class CheckErrors : CompilerStep
     // check protection scope
     checkSlotProtection(call.method, call.location)
 
-    if (m.isForeign)
-    {
-      // if foreign, then route to the bridge which can handle
-      // overloaded methods and do FFI type checking and coercion
-      m.bridge.checkCall(call)
-    }
-    else if (!call.isDynamic)
+    if (!call.isDynamic)
     {
       // do normal call checking and coercion
       checkArgs(call)

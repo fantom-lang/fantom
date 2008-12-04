@@ -62,6 +62,7 @@ class CallResolver : CompilerSupport
       if (result != null) return result
       insertImplicitThis
       resolveToExpr
+      resolveForeign
       constantFolding
       castForThisType
       safeToNullable
@@ -274,6 +275,25 @@ class CallResolver : CompilerSupport
     field.isSafe = expr.isSafe
 
     return field
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// FFI
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** If we have a FFI call, then give the foreign bridge a chance
+  ** to resolve the method and deal with method overloading.  Note
+  ** at this point we've already resolved the call by name to *some*
+  ** method (in the find step).  But this callback gives the bridge
+  ** a chance to resolve to the *correct* overloaded method.  We need
+  ** to this during ResolveExpr in order to infer local variables
+  ** correctly.
+  **
+  private Void resolveForeign()
+  {
+    if (found.isForeign && result is CallExpr)
+      result = found.bridge.resolveCall(result)
   }
 
 //////////////////////////////////////////////////////////////////////////
