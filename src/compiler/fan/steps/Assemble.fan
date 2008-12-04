@@ -38,6 +38,7 @@ class Assemble : CompilerStep
     log.debug("Assemble")
     compiler.fpod = Assembler.make(compiler).assemblePod
     bombIfErr
+    if (compiler.input.fcodeDump) compiler.fpod.dump(log.out)
   }
 
 }

@@ -486,3 +486,4 @@
 - DateTime toJava, fromJava
 - Reorganize icons
 - Use 'dotnet' to denote .NET instead of 'net'
+- Fan launcher -fcodeDump option to disassemble a Fan script
