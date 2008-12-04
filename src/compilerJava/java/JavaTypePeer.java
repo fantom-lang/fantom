@@ -178,7 +178,29 @@ class JavaTypePeer
     if (cls.isArray())
     {
       Class compCls = cls.getComponentType();
-      if (compCls.isPrimitive()) throw new IllegalStateException("primitive arrays not supported yet: " +  cls.getName());
+
+      // TODO we don't support multi-dimensional arrays yet
+      if (compCls.isArray())
+      {
+        System.out.println("WARNING: multi-dimension arrays not supported: " + cls.getName());
+        return "sys::Obj";
+      }
+
+      // if a primary array
+      if (compCls.isPrimitive())
+      {
+        if (cls == boolean[].class) return "[java]fanx.interop::BooleanArray";
+        if (cls == byte[].class)    return "[java]fanx.interop::ByteArray";
+        if (cls == short[].class)   return "[java]fanx.interop::ShortArray";
+        if (cls == char[].class)    return "[java]fanx.interop::CharArray";
+        if (cls == int[].class)     return "[java]fanx.interop::IntArray";
+        if (cls == long[].class)    return "[java]fanx.interop::LongArray";
+        if (cls == float[].class)   return "[java]fanx.interop::FloatArray";
+        if (cls == double[].class)  return "[java]fanx.interop::DoubleArray";
+        throw new IllegalStateException(cls.getName());
+      }
+
+      // return "[java] foo.bar::[Baz"
       String comp = toFanType(compCls);
       int colon = comp.lastIndexOf(':');
       return comp.substring(0, colon+1) + "[" + comp.substring(colon+1);

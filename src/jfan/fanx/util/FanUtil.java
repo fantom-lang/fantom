@@ -216,11 +216,12 @@ public class FanUtil
    * Given a FFI fan signatures such as [java]foo.bar::Baz get the
    * Java classname.  If sig is true then get as a signature otherwise
    * as a classname:
-   *   qname            sig=true    sig=false
-   *   --------------   --------    ---------
-   *   [java]::int      I           int
-   *   [java]foo::Bar   foo/Bar     foo.Bar
-   *   [java]foo::[Bar  [Lfoo/Bar;  [Lfoo/Bar;
+   *   qname                         sig=true    sig=false
+   *   --------------                --------    ---------
+   *   [java]::int                   I           int
+   *   [java]foo::Bar                foo/Bar     foo.Bar
+   *   [java]foo::[Bar               [Lfoo/Bar;  [Lfoo/Bar;
+   *   [java]fanx.interop::IntArray  [I          [int
    */
   private static String ffiToJavaClass(String podName, String typeName, boolean sig)
   {
@@ -236,6 +237,19 @@ public class FanUtil
       if (typeName.equals("byte"))  return sig ? "B" : "byte";
       if (typeName.equals("short")) return sig ? "S" : "short";
       if (typeName.equals("float")) return sig ? "F" : "float";
+    }
+
+    // primitives: [java]fanx.interop
+    if (podName.equals("[java]fanx.interop"))
+    {
+      if (typeName.equals("BooleanArray")) return sig ? "[Z" : "[boolean";
+      if (typeName.equals("ByteArray"))    return sig ? "[B" : "[byte";
+      if (typeName.equals("ShortArray"))   return sig ? "[S" : "[short";
+      if (typeName.equals("CharArray"))    return sig ? "[C" : "[char";
+      if (typeName.equals("IntArray"))     return sig ? "[I" : "[int";
+      if (typeName.equals("LongArray"))    return sig ? "[J" : "[long";
+      if (typeName.equals("FloatArray"))   return sig ? "[F" : "[float";
+      if (typeName.equals("DoubleArray"))  return sig ? "[D" : "[double";
     }
 
     // buffer for signature

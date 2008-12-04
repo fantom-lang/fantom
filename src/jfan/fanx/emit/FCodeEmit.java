@@ -629,6 +629,42 @@ public class FCodeEmit
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Arrays
+//////////////////////////////////////////////////////////////////////////
+
+  public static int loadArrayOp(int stackType)
+  {
+    switch (stackType)
+    {
+      case FTypeRef.BOOL:   return BALOAD;
+      case FTypeRef.BYTE:   return BALOAD;
+      case FTypeRef.SHORT:  return SALOAD;
+      case FTypeRef.CHAR:   return CALOAD;
+      case FTypeRef.INT:    return IALOAD;
+      case FTypeRef.LONG:   return LALOAD;
+      case FTypeRef.FLOAT:  return FALOAD;
+      case FTypeRef.DOUBLE: return DALOAD;
+      default: throw new IllegalStateException(""+stackType);
+    }
+  }
+
+  public static int storeArrayOp(int stackType)
+  {
+    switch (stackType)
+    {
+      case FTypeRef.BOOL:   return BASTORE;
+      case FTypeRef.BYTE:   return BASTORE;
+      case FTypeRef.SHORT:  return SASTORE;
+      case FTypeRef.CHAR:   return CASTORE;
+      case FTypeRef.INT:    return IASTORE;
+      case FTypeRef.LONG:   return LASTORE;
+      case FTypeRef.FLOAT:  return FASTORE;
+      case FTypeRef.DOUBLE: return DASTORE;
+      default: throw new IllegalStateException(""+stackType);
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Calls
 //////////////////////////////////////////////////////////////////////////
 
@@ -699,7 +735,21 @@ public class FCodeEmit
 
   private void callVirtual()
   {
-    call(u2(), CallVirtual, INVOKEVIRTUAL);
+    // check for calls which optimize to a single opcode
+    int index = u2();
+    int[] m = pod.methodRef(index).val;
+    FTypeRef parent = pod.typeRef(m[0]);
+    if (parent.isPrimitiveArray())
+    {
+      String name = pod.name(m[1]);
+      if (name.equals("get"))  { code.op(loadArrayOp(parent.arrayOfStackType())); return; }
+      if (name.equals("set"))  { code.op(storeArrayOp(parent.arrayOfStackType())); return; }
+      if (name.equals("size")) { code.op(ARRAYLENGTH); return; }
+      throw new IllegalStateException(parent + "." + name);
+    }
+
+    // normal call operation
+    call(index, CallVirtual, INVOKEVIRTUAL);
   }
 
   private void callNonVirtual()
