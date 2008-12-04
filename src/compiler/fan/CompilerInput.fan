@@ -101,6 +101,11 @@ class CompilerInput
   Bool isTest := false
 
   **
+  ** If set to true, then disassembled fcode is dumped to 'log.out'.
+  **
+  Bool fcodeDump := false
+
+  **
   ** This mode determines whether the source code is input
   ** from the file system or from an in-memory string.
   **

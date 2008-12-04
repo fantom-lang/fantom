@@ -33,24 +33,29 @@ public class Fan
     File file = new File(target);
     if (file.exists() && !file.isDirectory())
     {
-      return executeFile(file);
+      return executeFile(file, args);
     }
     else
     {
-      return executeType(target);
+      return executeType(target, args);
     }
   }
 
-  public int executeFile(File file)
+  public int executeFile(File file, String[] args)
     throws Exception
   {
     LocalFile f = (LocalFile)(new LocalFile(file).normalize());
+
+    // options
+    Map options = new Map(Sys.StrType, Sys.ObjType);
+    for (int i=0; i<args.length; ++i)
+      if (args[i].equals("-fcodeDump")) options.add("fcodeDump", Boolean.TRUE);
 
     // use Fan reflection to run compiler::Main.compileScript(File)
     Pod pod = null;
     try
     {
-      pod = Sys.compile(f).pod();
+      pod = Sys.compile(f, options).pod();
     }
     catch (Err.Val e)
     {
@@ -85,7 +90,7 @@ public class Fan
     return callMain(type, main);
   }
 
-  public int executeType(String target)
+  public int executeType(String target, String[] args)
     throws Exception
   {
     if (target.indexOf("::") < 0) target += "::Main.main";

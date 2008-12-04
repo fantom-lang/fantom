@@ -44,8 +44,8 @@ class IpAddressTest : Test
     // local
     verifySame(IpAddress.local, IpAddress.local)
 
-    // host lookup (will this test last the test of time...)
-    ms := IpAddress.makeAll("www.microsoft.com")
+    // host lookup (will this test last the test of time...
+    ms := IpAddress.makeAll("microsoft.com")
     verify(ms.size > 1)
 
     // identity
