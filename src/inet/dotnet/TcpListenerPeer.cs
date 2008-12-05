@@ -72,6 +72,8 @@ namespace Fan.Inet
       IPAddress dotnetAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_dotnet;
       int dotnetPort = (port == null) ? 0 : port.intValue();
       m_dotnet = new System.Net.Sockets.TcpListener(dotnetAddr, dotnetPort);
+      m_dotnet.Server.ReceiveBufferSize = (int)m_receiveBufferSize;
+      m_dotnet.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, m_reuseAddress);
       m_dotnet.Start((int)backlog);
       m_bound = true;
       return fan;
@@ -115,23 +117,22 @@ namespace Fan.Inet
 
     public long getReceiveBufferSize(TcpListener fan)
     {
-      return m_dotnet.Server.ReceiveBufferSize;
+      return m_receiveBufferSize;
     }
 
     public void setReceiveBufferSize(TcpListener fan, long v)
     {
-      m_dotnet.Server.ReceiveBufferSize = (int)v;
+      m_receiveBufferSize = v;
     }
 
     public bool getReuseAddress(TcpListener fan)
     {
-      return Convert.ToBoolean(m_dotnet.Server.GetSocketOption(
-        SocketOptionLevel.Socket, SocketOptionName.ReuseAddress));
+      return m_reuseAddress;
     }
 
     public void setReuseAddress(TcpListener fan, bool v)
     {
-      m_dotnet.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v);
+      m_reuseAddress = v;
     }
 
     public Duration getReceiveTimeout(TcpListener fan)
@@ -152,7 +153,9 @@ namespace Fan.Inet
     private System.Net.Sockets.TcpListener m_dotnet;
     private bool m_bound  = false;
     private bool m_closed = false;
-    private int m_timeout = 0;       // accept timeout in millis
+    private long m_receiveBufferSize = 8192;
+    private bool m_reuseAddress = false;
+    private int m_timeout = 0;            // accept timeout in millis
 
   }
 }
