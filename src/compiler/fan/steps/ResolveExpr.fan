@@ -78,7 +78,7 @@ class ResolveExpr : CompilerStep
   {
     // check for type inference
     if (def.ctype == null)
-      def.ctype = def.init.ctype
+      def.ctype = def.init.ctype.inferredAs
 
     // bind to scope as a method variable
     bindToMethodVar(def)
@@ -444,6 +444,9 @@ class ResolveExpr : CompilerStep
   private Expr resolveConstruction(CallExpr call)
   {
     base := call.target.ctype
+
+    // route FFI constructors to bridge
+    if (base.isForeign) return base.bridge.resolveConstruction(call)
 
     // construction always resolves to base type (we
     // double check this in CheckErrors)

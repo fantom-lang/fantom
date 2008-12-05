@@ -20,6 +20,7 @@ class CheckErrorsTest : JavaTest
 
   Void testCalls()
   {
+    // ResolveExpr step
     verifyErrors(
      "using [java] java.lang
       class Foo
@@ -34,7 +35,18 @@ class CheckErrorsTest : JavaTest
           4, 30, "Invalid args getProperty()",
           5, 30, "Invalid args getProperty(sys::Str, sys::Str, sys::Int)",
           6, 30, "Invalid args getProperty(sys::Str, sys::Int)",
-          7, 30, "Cannot call static method 'getProperty' on instance",
+       ])
+
+    // CheckErrors step
+    verifyErrors(
+     "using [java] java.lang
+      class Foo
+      {
+        static System? m00() { m00.getProperty(\"foo\"); return null }
+      }
+      ",
+       [
+          4, 30, "Cannot call static method 'getProperty' on instance",
        ])
   }
 

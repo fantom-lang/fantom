@@ -34,6 +34,7 @@ class TypeRef : Node, CType
   override Str qname()     { return t.qname }
   override Str signature() { return t.signature }
   override CType deref()   { return t }
+  override Bool isForeign() { return t.isForeign }
   override Int flags()     { return t.flags }
 
   override CType? base() { return t.base }
@@ -46,11 +47,16 @@ class TypeRef : Node, CType
   override CType toNullable() { return t.toNullable }
   override CType toNonNullable() { return t.toNonNullable }
 
+  override CType inferredAs() { return t.inferredAs }
+
   override Bool isGeneric() { return t.isGeneric }
   override Bool isParameterized() { return t.isParameterized }
   override Bool isGenericParameter() { return t.isGenericParameter }
   override CType toListOf() { return t.toListOf }
 
+  override CSlot? slot(Str name) { return t.slot(name) }
+  override CField? field(Str name) { return t.field(name) }
+  override CMethod? method(Str name) { return t.method(name) }
   override Str:CSlot slots() { return t.slots }
 
 //////////////////////////////////////////////////////////////////////////

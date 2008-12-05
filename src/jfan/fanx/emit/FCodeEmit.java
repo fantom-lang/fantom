@@ -745,7 +745,6 @@ public class FCodeEmit
       if (name.equals("get"))  { code.op(loadArrayOp(parent.arrayOfStackType())); return; }
       if (name.equals("set"))  { code.op(storeArrayOp(parent.arrayOfStackType())); return; }
       if (name.equals("size")) { code.op(ARRAYLENGTH); return; }
-      throw new IllegalStateException(parent + "." + name);
     }
 
     // normal call operation
