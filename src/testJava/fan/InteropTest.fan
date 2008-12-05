@@ -293,7 +293,9 @@ class InteropTest : JavaTest
         InteropTest b() { return x.b }
         InteropTest c() { return x.c }
 
-        InteropTest[] get1() { return x.array1 }
+        InteropTest[] get1a() { return x.array1 }
+        Obj get1b() { return x.array1 }
+        Obj[] get1c() { return x.array1 }
 
         Void set1(InteropTest[] a) { x.array1(a) }
       }")
@@ -301,12 +303,24 @@ class InteropTest : JavaTest
     obj := pod.types.first.make
 
     // get one dimension array
-    Obj[] a := obj->get1
+    Obj[] a := obj->get1a
     verifyEq(a.size, 3)
     verifyEq(a.of.qname, "[java]fanx.test::InteropTest")
     verifySame(a[0], obj->a)
     verifySame(a[1], obj->b)
     verifySame(a[2], obj->c)
+
+    // get as coerced to Obj
+    a = obj->get1b
+    verifyEq(a.size, 3)
+    verifyEq(a.of.qname, "[java]fanx.test::InteropTest")
+    verifySame(a[2], obj->c)
+
+    // get as coerced to Obj[]
+    a = obj->get1c
+    verifyEq(a.size, 3)
+    verifyEq(a.of.qname, "sys::Obj")
+    verifySame(a[0], obj->a)
 
     // set one dimension array
     origa := obj->a
