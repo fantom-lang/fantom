@@ -1016,6 +1016,13 @@ class CheckErrors : CompilerStep
     // check protection scope
     checkSlotProtection(field, f.location)
 
+    // if a FFI, then verify we aren't using unsupported types
+    if (!field.fieldType.isSupported)
+    {
+      err("Field '$field.name' has unsupported type '$field.fieldType'", f.location)
+      return
+    }
+
     // ensure we aren't calling static methods on an instance
     if (field.isStatic)
     {
