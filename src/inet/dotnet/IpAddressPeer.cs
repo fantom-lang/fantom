@@ -33,7 +33,7 @@ namespace Fan.Inet
     {
       try
       {
-        return make(str, Dns.GetHostEntry(str).AddressList[0]);
+        return make(str, Dns.GetHostAddresses(str)[0]);
       }
       catch (SocketException e)
       {
@@ -45,7 +45,7 @@ namespace Fan.Inet
     {
       try
       {
-        IPAddress[] addr = Dns.GetHostEntry(str).AddressList;
+        IPAddress[] addr = Dns.GetHostAddresses(str);
         List list = new List(Fan.Sys.Sys.ObjType, addr.Length); //IpAddress.$Type, addr.length);
         for (int i=0; i<addr.Length; i++)
           list.add(make(str, addr[i]));
@@ -62,7 +62,7 @@ namespace Fan.Inet
       try
       {
         MemBuf mb = bytes as MemBuf;
-        IPAddress dotnet = Dns.GetHostEntry(new IPAddress(mb.bytes())).AddressList[0];
+        IPAddress dotnet = new IPAddress(mb.bytes());
         return make(dotnet.ToString(), dotnet);
       }
       catch (SocketException e)
@@ -83,8 +83,8 @@ namespace Fan.Inet
           // to get IPv6 addresses first, so for now at least, lets
           // attempt to use the IPv4 address
 
-          IPAddress dotnet = null; // Dns.GetHostEntry(hostName).AddressList[0];
-          IPAddress[] addr = Dns.GetHostEntry(hostName).AddressList;
+          IPAddress dotnet = null;
+          IPAddress[] addr = Dns.GetHostAddresses(hostName);
           for (int i=0; i<addr.Length; i++)
             if (addr[i].AddressFamily == AddressFamily.InterNetwork)
               dotnet = addr[i];
@@ -102,7 +102,7 @@ namespace Fan.Inet
           catch (Exception ignore)
           {
             // should never happen
-            System.Console.WriteLine(ignore);
+            Err.dumpStack(ignore);
           }
         }
       }
@@ -171,7 +171,6 @@ namespace Fan.Inet
     public string hostname(IpAddress fan)
     {
       return Dns.GetHostEntry(m_dotnet).HostName;
-      //return m_str;
     }
 
   //////////////////////////////////////////////////////////////////////////
