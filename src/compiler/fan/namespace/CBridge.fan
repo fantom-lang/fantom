@@ -50,9 +50,16 @@ abstract class CBridge : CompilerSupport
   }
 
   **
-  ** Type check the arguments for the specified method call.
-  ** Insert any conversions needed.
+  ** Resolve a construction call.  Type check the arguments
+  ** and insert any conversions needed.
   **
-  abstract Void checkCall(CallExpr call)
+  abstract Expr resolveConstruction(CallExpr call)
+
+  **
+  ** Resolve a method call.  Type check the arguments
+  ** and insert any conversions needed.
+  **
+  abstract Expr resolveCall(CallExpr call)
+
 
 }

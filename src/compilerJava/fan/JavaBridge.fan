@@ -55,25 +55,44 @@ class JavaBridge : CBridge
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Type check the arguments for the specified method call.
-  ** Insert any conversions needed.
+  ** Resolve a construction call to a Java constructor.
   **
-  override Void checkCall(CallExpr call)
+  override CallExpr resolveConstruction(CallExpr call)
+  {
+    // try to find method called "<init>"
+    JavaType base := call.target.ctype
+    call.method = base.method("<init>")
+
+    // do normal call resolution to deal with overloading
+    call = resolveCall(call)
+
+    // we need to create an implicit target for the Java runtime to
+    // perform the new opcode to ensure it is on the stack before the args
+    loc := call.location
+    call.target = CallExpr.makeWithMethod(loc, null, base.newMethod) { synthetic=true }
+    return call
+  }
+
+  **
+  ** Resolve a method call: try to find the best match
+  ** and apply any coercions needed.
+  **
+  override CallExpr resolveCall(CallExpr call)
   {
     // try to match one of the overloaded methods
     JavaMethod? m := call.method
     while (m != null)
     {
-      if (matchCall(call, m)) return
+      if (matchCall(call, m)) return call
       m = m.next
     }
 
     // if no match this is a argument type error
     s := StrBuf()
-    s.add("Invalid args ").add(call.method.name).add("(")
+    s.add("Invalid args ").add(call.name).add("(")
     call.args.each |Expr arg, Int i| { if (i > 0) s.add(", "); s.add(arg.ctype) }
     s.add(")")
-    err(s.toStr, call.location)
+    throw err(s.toStr, call.location)
   }
 
   **
@@ -100,19 +119,6 @@ class JavaBridge : CBridge
     call.args   = newArgs
     call.method = m
     call.ctype  = m.returnType
-
-    // if this is a call to a constructor, then we need to create
-    // an implicit target for the Java runtime to perform the new
-    // opcode to ensure it is on the stack before the arguments (if
-    // not already on static type, then let CheckErrors do error
-    // reporting)
-    if (m.isCtor && call.target.id === ExprId.staticTarget)
-    {
-      loc := call.location
-      newMethod := m.parent->newMethod
-      call.target = CallExpr.makeWithMethod(loc, null, newMethod) { synthetic=true }
-    }
-
     return true
   }
 

@@ -98,7 +98,7 @@ class JavaTypePeer
     fan.setFlags(toFanFlags(java.getModifiers())|FConst.Ctor);
     fan.setReturnType(self);
     fan.setParamTypes(toFanTypes(java.getParameterTypes()));
-    addSlot(slots, "make", fan);
+    addSlot(slots, "<init>", fan);
   }
 
   void addSlot(Map slots, String name, JavaMethod m)
