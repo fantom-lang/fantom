@@ -47,7 +47,6 @@ class JavaType : CType
   override Bool isForeign() { return true }
   override Bool isSupported() { return arrayRank <= 1 } // multi-dimensional arrays unsupported
 
-  Bool isPrimitive() { return pod === pod.bridge.primitives && arrayRank == 0 }
   override Bool isValue() { return false }
 
   override Bool isNullable() { return false }
@@ -131,6 +130,30 @@ class JavaType : CType
   }
 
   private native Void doLoad(Str:CSlot slots)
+
+//////////////////////////////////////////////////////////////////////////
+// Primitives
+//////////////////////////////////////////////////////////////////////////
+
+  Bool isPrimitive()
+  {
+    return pod === pod.bridge.primitives && arrayRank == 0
+  }
+
+  Bool isPrimitiveIntLike()
+  {
+    primitives := pod.bridge.primitives
+    return this === primitives.intType ||
+           this === primitives.charType ||
+           this === primitives.shortType ||
+           this === primitives.byteType
+  }
+
+  Bool isPrimitiveFloat()
+  {
+    primitives := pod.bridge.primitives
+    return this === primitives.floatType
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Arrays
