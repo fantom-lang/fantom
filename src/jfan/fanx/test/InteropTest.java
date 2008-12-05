@@ -94,12 +94,12 @@ public class InteropTest
 //////////////////////////////////////////////////////////////////////////
 
   public Date[][] dateMulti2() { return new Date[3][]; }
-  public Date[][][] dateMulti3() { return new Date[3][][]; }
+  public Date[][][] dateMulti3;
   public String[][] strMulti2() { return new String[3][]; }
-  public String[][][] strMulti3() { return new String[3][][]; }
+  public String[][][] strMulti3;
   public int[][] intMulti2() { return new int[3][]; }
-  public int[][][] intMulti3() { return new int[3][][]; }
+  public int[][][] intMulti3;
   public double[][] doubleMulti2() { return new double[3][]; }
-  public double[][][] doubleMulti3() { return new double[3][][]; }
+  public double[][][] doubleMulti3;
 
 }
