@@ -156,26 +156,17 @@ class JavaBridge : CBridge
   ** Coerce a fan expression to a Java primitive (other
   ** than the ones we support natively)
   **
-  Expr coerceToPrimitive(Expr expr, CType expected, |,| onErr)
+  Expr coerceToPrimitive(Expr expr, JavaType expected, |,| onErr)
   {
     actual := expr.ctype
 
     // sys::Int (long) -> int, short, byte
-    if (actual.isInt)
-    {
-      if (expected === primitives.intType ||
-          expected === primitives.charType ||
-          expected === primitives.shortType ||
-          expected === primitives.byteType)
-        return TypeCheckExpr.coerce(expr, expected)
-    }
+    if (actual.isInt && expected.isPrimitiveIntLike)
+      return TypeCheckExpr.coerce(expr, expected)
 
     // sys::Float (double) -> float
-    if (actual.isFloat)
-    {
-      if (expected === primitives.floatType)
-        return TypeCheckExpr.coerce(expr, expected)
-    }
+    if (actual.isFloat && expected.isPrimitiveFloat)
+      return TypeCheckExpr.coerce(expr, expected)
 
     // no coercion - type error
     onErr()
@@ -187,22 +178,19 @@ class JavaBridge : CBridge
   **
   Expr coerceFromPrimitive(Expr expr, CType expected, |,| onErr)
   {
-    actual := expr.ctype
+    actual := (JavaType)expr.ctype
 
     // int, short, byte -> sys::Int (long)
-    if (expected.isInt)
+    if (actual.isPrimitiveIntLike)
     {
-      if (actual === primitives.intType ||
-          actual === primitives.charType ||
-          actual === primitives.shortType ||
-          actual === primitives.byteType)
+      if (expected.isInt || expected.isObj)
         return TypeCheckExpr.coerce(expr, expected)
     }
 
     // float -> sys::Float (float)
-    if (expected.isFloat)
+    if (actual.isPrimitiveFloat)
     {
-      if (actual === primitives.floatType)
+      if (expected.isFloat || expected.isObj)
         return TypeCheckExpr.coerce(expr, expected)
     }
 

@@ -205,6 +205,18 @@ class InteropTest : JavaTest
         Int? getix(Obj o) { return ((InteropTest)o).numi() }
         Float? getfx(Obj o) { return ((InteropTest)o).numf() }
 
+        Obj getbo(Obj o) { return ((InteropTest)o).numb() }
+        Obj getso(Obj o) { return ((InteropTest)o).nums() }
+        Obj getco(Obj o) { return ((InteropTest)o).numc() }
+        Obj getio(Obj o) { return ((InteropTest)o).numi() }
+        Obj getfo(Obj o) { return ((InteropTest)o).numf() }
+
+        Obj? getbox(Obj o) { return ((InteropTest)o).numb() }
+        Obj? getsox(Obj o) { return ((InteropTest)o).nums() }
+        Obj? getcox(Obj o) { return ((InteropTest)o).numc() }
+        Obj? getiox(Obj o) { return ((InteropTest)o).numi() }
+        Obj? getfox(Obj o) { return ((InteropTest)o).numf() }
+
         Int setb(Obj o, Int v) { x := (InteropTest)o; x.numb(v); return x.numl() }
         Int sets(Obj o, Int v) { x := (InteropTest)o; x.nums(v); return x.numl() }
         Int setc(Obj o, Int v) { x := (InteropTest)o; x.numc(v); return x.numl() }
@@ -236,6 +248,8 @@ class InteropTest : JavaTest
     verifyEq(obj->getbx(x), -1)
     verifyEq(obj->setb(x, 345), 89)
     verifyEq(obj->getb(x), 89)
+    verifyEq(obj->getbo(x), 89)
+    verifyEq(obj->getbox(x), 89)
 
     // long -> short -> long
     verifyEq(obj->sets(x, 32_000), 32_000)
@@ -248,6 +262,8 @@ class InteropTest : JavaTest
     verifyEq(obj->getsx(x), 0x123)
     verifyEq(obj->sets(x, -70982), -5446)
     verifyEq(obj->gets(x), -5446)
+    verifyEq(obj->getso(x), -5446)
+    verifyEq(obj->getsox(x), -5446)
 
     // long -> char -> long
     verifyEq(obj->setc(x, 'A'), 'A')
@@ -256,6 +272,8 @@ class InteropTest : JavaTest
     verifyEq(obj->getcx(x), 60_000)
     verifyEq(obj->setc(x, 71234), 5698)
     verifyEq(obj->getcx(x), 5698)
+    verifyEq(obj->getco(x), 5698)
+    verifyEq(obj->getcox(x), 5698)
 
     // long -> int -> long
     verifyEq(obj->seti(x, -44), -44)
@@ -266,6 +284,8 @@ class InteropTest : JavaTest
     verifyEq(obj->setl(x, 0xff_1234_abcd), 0xff_1234_abcd)
     verifyEq(obj->geti(x), 0x1234_abcd)
     verifyEq(obj->getix(x), 0x1234_abcd)
+    verifyEq(obj->getio(x), 0x1234_abcd)
+    verifyEq(obj->getiox(x), 0x1234_abcd)
 
     // double -> float -> long
     verifyEq(obj->setf(x, 88f), 88)
@@ -273,6 +293,8 @@ class InteropTest : JavaTest
     verifyEq(obj->getfx(x), 88f)
     verifyEq(obj->setfx(x, -1234f), -1234)
     verifyEq(obj->getf(x), -1234f)
+    verifyEq(obj->getfo(x), -1234f)
+    verifyEq(obj->getfox(x), -1234f)
 
     // multiple primitives on stack
     verifyEq(obj->add(x, 3, 550, -50, -50f), 453)
