@@ -933,6 +933,24 @@ class CheckErrors : CompilerStep
     // check protection scope
     checkSlotProtection(call.method, call.location)
 
+    // if a foreign function, then verify we aren't using unsupported types
+    if (m.isForeign)
+    {
+      // just log one use of unsupported return or param type and return
+      if (!m.returnType.isSupported)
+      {
+        err("Method '$name' uses unsupported type '$m.returnType'", call.location)
+        return
+      }
+      unsupported := m.params.find |CParam p->Bool| { return !p.paramType.isSupported }
+      if (unsupported != null)
+      {
+        err("Method '$name' uses unsupported type '$unsupported.paramType'", call.location)
+        return
+      }
+    }
+
+    // arguments
     if (!call.isDynamic)
     {
       // do normal call checking and coercion

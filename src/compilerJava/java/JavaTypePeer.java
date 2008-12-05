@@ -121,8 +121,6 @@ class JavaTypePeer
     }
   }
 
-
-
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
@@ -159,18 +157,24 @@ class JavaTypePeer
   static String toFanType(Class cls)
     throws Exception
   {
+    return toFanType(cls, false);
+  }
+
+  static String toFanType(Class cls, boolean multiDim)
+    throws Exception
+  {
     // primitives
     if (cls.isPrimitive())
     {
-      if (cls == void.class)    return "sys::Void";
-      if (cls == boolean.class) return "sys::Bool";
-      if (cls == long.class)    return "sys::Int";
-      if (cls == double.class)  return "sys::Float";
-      if (cls == int.class)     return "[java]::int";
-      if (cls == byte.class)    return "[java]::byte";
-      if (cls == short.class)   return "[java]::short";
-      if (cls == char.class)    return "[java]::char";
-      if (cls == float.class)   return "[java]::float";
+      if (cls == java.lang.Void.TYPE)      return multiDim ? "[java]::void"    : "sys::Void";
+      if (cls == java.lang.Boolean.TYPE)   return multiDim ? "[java]::boolean" : "sys::Bool";
+      if (cls == java.lang.Long.TYPE)      return multiDim ? "[java]::long"    : "sys::Int";
+      if (cls == java.lang.Double.TYPE)    return multiDim ? "[java]::double"  : "sys::Float";
+      if (cls == java.lang.Integer.TYPE)   return "[java]::int";
+      if (cls == java.lang.Byte.TYPE)      return "[java]::byte";
+      if (cls == java.lang.Short.TYPE)     return "[java]::short";
+      if (cls == java.lang.Character.TYPE) return "[java]::char";
+      if (cls == java.lang.Float.TYPE)     return "[java]::float";
       throw new IllegalStateException(cls.toString());
     }
 
@@ -179,15 +183,8 @@ class JavaTypePeer
     {
       Class compCls = cls.getComponentType();
 
-      // TODO we don't support multi-dimensional arrays yet
-      if (compCls.isArray())
-      {
-        System.out.println("WARNING: multi-dimension arrays not supported: " + cls.getName());
-        return "sys::Obj";
-      }
-
       // if a primary array
-      if (compCls.isPrimitive())
+      if (compCls.isPrimitive() && !multiDim)
       {
         if (cls == boolean[].class) return "[java]fanx.interop::BooleanArray";
         if (cls == byte[].class)    return "[java]fanx.interop::ByteArray";
@@ -201,13 +198,14 @@ class JavaTypePeer
       }
 
       // return "[java] foo.bar::[Baz"
-      String comp = toFanType(compCls);
+      String comp = toFanType(compCls, true);
       int colon = comp.lastIndexOf(':');
       return comp.substring(0, colon+1) + "[" + comp.substring(colon+1);
     }
 
     // Fan classes
-    if (cls.getName().equals("java.lang.String")) return "sys::Str";
+    if (cls.getName().equals("java.lang.String"))
+      return multiDim ? "[java]java.lang::String" : "sys::Str";
 
     // Java FFI
     return "[java]" + cls.getPackage().getName() + "::" + cls.getSimpleName();

@@ -216,25 +216,32 @@ class JavaBridge : CBridge
   **
   Expr coerceFromArray(Expr expr, CType expected, |,| onErr)
   {
-    loc := expr.location
     actual := (JavaType)expr.ctype
     actualOf := actual.arrayOf
+
+    // if expected is Obj
+    if (expected.isObj) return arrayToList(expr, actualOf)
 
     // if expected is list type
     if (expected.toNonNullable is ListType)
     {
       expectedOf := ((ListType)expected.toNonNullable).v
-      if (actualOf.fits(expectedOf))
-      {
-        // List.make(of, Object[])
-        ofExpr := LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, expectedOf)
-        return CallExpr.makeWithMethod(loc, null, listMakeFromArray, [ofExpr, expr])
-      }
+      if (actualOf.fits(expectedOf)) return arrayToList(expr, expectedOf)
     }
 
     // no coercion available
     onErr()
     return expr
+  }
+
+  **
+  ** Generate List.make(of, expr) where expr is Object[]
+  **
+  private Expr arrayToList(Expr expr, CType of)
+  {
+    loc := expr.location
+    ofExpr := LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, of)
+    return CallExpr.makeWithMethod(loc, null, listMakeFromArray, [ofExpr, expr])
   }
 
   **

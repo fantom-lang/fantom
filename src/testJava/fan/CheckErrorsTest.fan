@@ -50,4 +50,36 @@ class CheckErrorsTest : JavaTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Multi-dimensional Arrays
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMultiDimArrays()
+  {
+    verifyErrors(
+     "using [java] fanx.test
+      class Foo
+      {
+        static Void m00() { v := InteropTest().dateMulti2() }
+        static Void m01() { v := InteropTest().dateMulti3() }
+        static Void m02() { v := InteropTest().strMulti2() }
+        static Void m03() { v := InteropTest().strMulti3() }
+        static Void m04() { v := InteropTest().intMulti2() }
+        static Void m05() { v := InteropTest().intMulti3() }
+        static Void m06() { v := InteropTest().doubleMulti2() }
+        static Void m07() { v := InteropTest().doubleMulti3() }
+      }
+      ",
+       [
+          4, 42, "Method 'dateMulti2' uses unsupported type '[java]java.util::[[Date'",
+          5, 42, "Method 'dateMulti3' uses unsupported type '[java]java.util::[[[Date'",
+          6, 42, "Method 'strMulti2' uses unsupported type '[java]java.lang::[[String'",
+          7, 42, "Method 'strMulti3' uses unsupported type '[java]java.lang::[[[String'",
+          8, 42, "Method 'intMulti2' uses unsupported type '[java]::[[int'",
+          9, 42, "Method 'intMulti3' uses unsupported type '[java]::[[[int'",
+         10, 42, "Method 'doubleMulti2' uses unsupported type '[java]::[[double'",
+         11, 42, "Method 'doubleMulti3' uses unsupported type '[java]::[[[double'",
+       ])
+   }
+
 }

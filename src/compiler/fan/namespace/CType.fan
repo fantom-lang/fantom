@@ -54,16 +54,6 @@ mixin CType
   **
   virtual CType deref() { return this }
 
-  **
-  ** If this a foreign function interface type.
-  **
-  virtual Bool isForeign() { return false }
-
-  **
-  ** If this a foreign function return the bridge.
-  **
-  CBridge? bridge() { return pod.bridge }
-
 //////////////////////////////////////////////////////////////////////////
 // Nullable
 //////////////////////////////////////////////////////////////////////////
@@ -113,12 +103,31 @@ mixin CType
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** If this a foreign function interface type.
+  **
+  virtual Bool isForeign() { return false }
+
+  **
+  ** If this is a foreign function return the bridge.
+  **
+  CBridge? bridge() { return pod.bridge }
+
+  **
   ** If this type is being used for type inference then get the
   ** type as it should be inferred.  Typically we just return this.
   ** However some FFI types such as '[java]::int' are never used
   ** on the stack directly and are inferred to be 'sys::Int'.
   **
   virtual CType inferredAs() { return this }
+
+  **
+  ** Return if type is supported by the Fan type system.  For example
+  ** the Java FFI will correctly model a Java multi-dimensional array
+  ** during compilation, however there is no Fan representation.  We
+  ** check for supported types during CheckErrors when accessing
+  ** fields and methods.
+  **
+  virtual Bool isSupported() { return true }
 
 //////////////////////////////////////////////////////////////////////////
 // Generics

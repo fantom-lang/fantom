@@ -45,8 +45,9 @@ class JavaType : CType
   override readonly Int flags { get { load; return @flags } }
 
   override Bool isForeign() { return true }
+  override Bool isSupported() { return arrayRank <= 1 } // multi-dimensional arrays unsupported
 
-  Bool isPrimitive() { return pod === pod.bridge.primitives }
+  Bool isPrimitive() { return pod === pod.bridge.primitives && arrayRank == 0 }
   override Bool isValue() { return false }
 
   override Bool isNullable() { return false }

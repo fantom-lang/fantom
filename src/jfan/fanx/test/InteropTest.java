@@ -7,6 +7,7 @@
 //
 package fanx.test;
 
+import java.util.*;
 import fanx.util.*;
 
 /**
@@ -87,5 +88,18 @@ public class InteropTest
   public long[] longArray(long a, long b) { return new long[] { a, b }; }
   public float[] floatArray(float a, float b) { return new float[] { a, b }; }
   public double[] doubleArray(double a, double b) { return new double[] { a, b }; }
+
+//////////////////////////////////////////////////////////////////////////
+// Multi-dimensional Arrays
+//////////////////////////////////////////////////////////////////////////
+
+  public Date[][] dateMulti2() { return new Date[3][]; }
+  public Date[][][] dateMulti3() { return new Date[3][][]; }
+  public String[][] strMulti2() { return new String[3][]; }
+  public String[][][] strMulti3() { return new String[3][][]; }
+  public int[][] intMulti2() { return new int[3][]; }
+  public int[][][] intMulti3() { return new int[3][][]; }
+  public double[][] doubleMulti2() { return new double[3][]; }
+  public double[][][] doubleMulti3() { return new double[3][][]; }
 
 }
