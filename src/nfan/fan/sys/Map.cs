@@ -291,7 +291,7 @@ namespace Fan.Sys
       }
     }
 
-    public object eachBreak(Func f)
+    public object eachWhile(Func f)
     {
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())

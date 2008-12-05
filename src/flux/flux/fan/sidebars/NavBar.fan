@@ -222,9 +222,9 @@ internal class NavBar : SideBar
     Obj? node := null
     nodes := active.model.roots
     path  := r.uri.path
-    path.eachBreak |Str s->Obj|
+    path.eachWhile |Str s->Obj|
     {
-      found := nodes.eachBreak |Obj n->Obj?|
+      found := nodes.eachWhile |Obj n->Obj?|
       {
         if (n->name == s)
         {

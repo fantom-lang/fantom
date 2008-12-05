@@ -258,7 +258,7 @@ public final class Map
     }
   }
 
-  public final Object eachBreak(Func f)
+  public final Object eachWhile(Func f)
   {
     Iterator it = map.pairs().iterator();
     while (it.hasNext())

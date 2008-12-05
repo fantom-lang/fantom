@@ -69,7 +69,7 @@ Each (Iteration) [#each]
   list.eachr |Str s| { echo(s) } // reverse iteration
 
   // iterate until b, then return 99
-  list.eachBreak |Str s->Int?| { return s == "b" ? 99 : null }
+  list.eachWhile |Str s->Int?| { return s == "b" ? 99 : null }
 
 Searching [#search]
 *******************
