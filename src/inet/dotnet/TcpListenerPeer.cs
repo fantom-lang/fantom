@@ -115,25 +115,11 @@ namespace Fan.Inet
   // Socket Options
   //////////////////////////////////////////////////////////////////////////
 
-    public long getReceiveBufferSize(TcpListener fan)
-    {
-      return m_receiveBufferSize;
-    }
+    public long getReceiveBufferSize(TcpListener fan) { return m_receiveBufferSize; }
+    public void setReceiveBufferSize(TcpListener fan, long v) { m_receiveBufferSize = v; }
 
-    public void setReceiveBufferSize(TcpListener fan, long v)
-    {
-      m_receiveBufferSize = v;
-    }
-
-    public bool getReuseAddress(TcpListener fan)
-    {
-      return m_reuseAddress;
-    }
-
-    public void setReuseAddress(TcpListener fan, bool v)
-    {
-      m_reuseAddress = v;
-    }
+    public bool getReuseAddress(TcpListener fan) { return m_reuseAddress; }
+    public void setReuseAddress(TcpListener fan, bool v) { m_reuseAddress = v; }
 
     public Duration getReceiveTimeout(TcpListener fan)
     {
