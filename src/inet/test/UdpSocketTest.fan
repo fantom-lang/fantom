@@ -87,7 +87,7 @@ class UdpSocketTest : Test
     Thread.sleep(50ms)
 
     // connect
-    c := UdpSocket.make
+    c := UdpSocket()
     c.connect(IpAddress.local, s.localPort)
     verifyEq(c.isBound, true)
     verifyEq(c.isConnected, true)

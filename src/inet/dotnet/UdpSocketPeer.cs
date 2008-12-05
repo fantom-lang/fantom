@@ -25,15 +25,17 @@ namespace Fan.Inet
       return new UdpSocketPeer();
     }
 
-    // TODO - hardcoded to IPv4!
-    public UdpSocketPeer()
-      : this(new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+    private Socket createSocket()
     {
-    }
-
-    public UdpSocketPeer(Socket socket)
-    {
-      this.m_dotnet = socket;
+      // TODO - hardcoded to IPv4!
+      Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+      s.EnableBroadcast   = m_enableBroadcast;
+      s.ReceiveBufferSize = (int)m_receiveBufferSize;
+      s.SendBufferSize    = (int)m_sendBufferSize;
+      s.ReceiveTimeout    = m_receiveTimeout;
+      s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, m_reuseAddress);
+      s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, (int)m_trafficClass);
+      return s;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -42,12 +44,12 @@ namespace Fan.Inet
 
     public bool isBound(UdpSocket fan)
     {
-      return m_dotnet.IsBound;
+      return (m_dotnet == null) ? false : m_dotnet.IsBound;
     }
 
     public bool isConnected(UdpSocket fan)
     {
-      return m_dotnet.Connected;
+      return (m_dotnet == null) ? false : m_dotnet.Connected;
     }
 
     public bool isClosed(UdpSocket fan)
@@ -61,7 +63,7 @@ namespace Fan.Inet
 
     public IpAddress localAddress(UdpSocket fan)
     {
-      if (!m_dotnet.IsBound) return null;
+      if (!isBound(fan)) return null;
       IPEndPoint pt = m_dotnet.LocalEndPoint as IPEndPoint;
       if (pt == null) return null;
       return IpAddressPeer.make(pt.Address);
@@ -69,7 +71,7 @@ namespace Fan.Inet
 
     public Long localPort(UdpSocket fan)
     {
-      if (!m_dotnet.IsBound) return null;
+      if (!isBound(fan)) return null;
       IPEndPoint pt = m_dotnet.LocalEndPoint as IPEndPoint;
       if (pt == null) return null;
       // TODO - default port?
@@ -78,13 +80,13 @@ namespace Fan.Inet
 
     public IpAddress remoteAddress(UdpSocket fan)
     {
-      if (!m_dotnet.Connected) return null;
+      if (!isConnected(fan)) return null;
       return m_remoteAddr;
     }
 
     public Long remotePort(UdpSocket fan)
     {
-      if (!m_dotnet.Connected) return null;
+      if (!isConnected(fan)) return null;
       return Long.valueOf(m_remotePort);
     }
 
@@ -96,6 +98,7 @@ namespace Fan.Inet
     {
       try
       {
+        if (m_dotnet == null) m_dotnet = createSocket();
         IPAddress dotnetAddr = (addr == null) ? IPAddress.Any : addr.m_peer.m_dotnet;
         int dotnetPort = (port == null) ? 0 : port.intValue();
         m_dotnet.Bind(new IPEndPoint(dotnetAddr, dotnetPort));
@@ -111,6 +114,7 @@ namespace Fan.Inet
     {
       try
       {
+        if (m_dotnet == null) m_dotnet = createSocket();
         m_dotnet.Connect(addr.m_peer.m_dotnet, (int)port);
         IPEndPoint endPoint = m_dotnet.RemoteEndPoint as IPEndPoint;
         m_remoteAddr = IpAddressPeer.make(endPoint.Address);
@@ -134,7 +138,7 @@ namespace Fan.Inet
       // map address, port
       IpAddress addr = packet.address();
       Long port = packet.port();
-      if (m_dotnet.Connected)
+      if (isConnected(fan))
       {
         if (addr != null || port != null)
           throw ArgErr.make("Address and port must be null to send while connected").val;
@@ -155,6 +159,7 @@ namespace Fan.Inet
 
         try
         {
+          if (m_dotnet == null) m_dotnet = createSocket();
           IPEndPoint endPoint = new IPEndPoint(addr.m_peer.m_dotnet, port.intValue());
           m_dotnet.SendTo(buf, off, len, SocketFlags.None, endPoint);
         }
@@ -183,7 +188,7 @@ namespace Fan.Inet
       EndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 
       // receive
-      if (m_dotnet.Connected)
+      if (isConnected(fan))
       {
         try
         {
@@ -192,18 +197,34 @@ namespace Fan.Inet
         }
         catch (SocketException e)
         {
-          throw IOErr.make(e).val;
+          // .NET will truncate contents correctly, but still throws a
+          // SocketException, so catch that specific case and allow it
+          if (e.Message.StartsWith("A message sent on a datagram socket was larger"))
+          {
+            recv = len;
+            sender = m_dotnet.RemoteEndPoint;
+          }
+          else
+          {
+            throw IOErr.make(e).val;
+          }
         }
       }
       else
       {
         try
         {
+          if (m_dotnet == null) m_dotnet = createSocket();
           recv = m_dotnet.ReceiveFrom(buf, off, len, SocketFlags.None, ref sender);
         }
         catch (SocketException e)
         {
-          throw IOErr.make(e).val;
+          // .NET will truncate contents correctly, but still throws a
+          // SocketException, so catch that specific case and allow it
+          if (e.Message.StartsWith("A message sent on a datagram socket was larger"))
+            recv = len;
+          else
+            throw IOErr.make(e).val;
         }
       }
 
@@ -222,6 +243,7 @@ namespace Fan.Inet
       //m_dotnet.Shutdown(SocketShutdown.Both);
       //m_dotnet.Disconnect(true);
       m_dotnet.Close();
+      m_dotnet = null;
 
       m_remoteAddr = null;
       m_remotePort = -1;
@@ -244,6 +266,7 @@ namespace Fan.Inet
     public void close()
     {
       m_dotnet.Close();
+      m_dotnet = null;
       m_closed = true;
     }
 
@@ -257,71 +280,31 @@ namespace Fan.Inet
       return m_options;
     }
 
-    public bool getBroadcast(UdpSocket fan)
-    {
-      return m_dotnet.EnableBroadcast;
-    }
+    public bool getBroadcast(UdpSocket fan) { return m_enableBroadcast; }
+    public void setBroadcast(UdpSocket fan, bool v) { m_enableBroadcast = v; }
 
-    public void setBroadcast(UdpSocket fan, bool v)
-    {
-      m_dotnet.EnableBroadcast = v;
-    }
+    public long getReceiveBufferSize(UdpSocket fan) { return m_receiveBufferSize; }
+    public void setReceiveBufferSize(UdpSocket fan, long v) { m_receiveBufferSize = v; }
 
-    public long getReceiveBufferSize(UdpSocket fan)
-    {
-      return m_dotnet.ReceiveBufferSize;
-    }
+    public long getSendBufferSize(UdpSocket fan) { return m_sendBufferSize; }
+    public void setSendBufferSize(UdpSocket fan, long v) { m_sendBufferSize = v; }
 
-    public void setReceiveBufferSize(UdpSocket fan, long v)
-    {
-      m_dotnet.ReceiveBufferSize = (int)v;
-    }
-
-    public long getSendBufferSize(UdpSocket fan)
-    {
-      return m_dotnet.SendBufferSize;
-    }
-
-    public void setSendBufferSize(UdpSocket fan, long v)
-    {
-      m_dotnet.SendBufferSize = (int)v;
-    }
-
-    public bool getReuseAddress(UdpSocket fan)
-    {
-      return Convert.ToBoolean(m_dotnet.GetSocketOption(
-       SocketOptionLevel.Socket, SocketOptionName.ReuseAddress));
-    }
-
-    public void setReuseAddress(UdpSocket fan, bool v)
-    {
-      m_dotnet.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, v);
-    }
+    public bool getReuseAddress(UdpSocket fan) { return m_reuseAddress; }
+    public void setReuseAddress(UdpSocket fan, bool v) { m_reuseAddress = v; }
 
     public Duration getReceiveTimeout(UdpSocket fan)
     {
-      if (m_dotnet.ReceiveTimeout <= 0) return null;
-      return Duration.makeMillis(m_dotnet.ReceiveTimeout);
+      if (m_receiveTimeout <= 0) return null;
+      return Duration.makeMillis(m_receiveTimeout);
     }
 
     public void setReceiveTimeout(UdpSocket fan, Duration v)
     {
-      if (v == null)
-        m_dotnet.ReceiveTimeout = 0;
-      else
-        m_dotnet.ReceiveTimeout = (int)(v.millis());
+      m_receiveTimeout = (v == null) ? 0 : (int)v.millis();
     }
 
-    public long getTrafficClass(UdpSocket fan)
-    {
-      return Convert.ToInt32(m_dotnet.GetSocketOption(
-        SocketOptionLevel.IP,SocketOptionName.TypeOfService));
-    }
-
-    public void setTrafficClass(UdpSocket fan, long v)
-    {
-      m_dotnet.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, v);
-    }
+    public long getTrafficClass(UdpSocket fan) { return m_trafficClass; }
+    public void setTrafficClass(UdpSocket fan, long v) { m_trafficClass = v; }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
@@ -333,6 +316,13 @@ namespace Fan.Inet
     private int m_remotePort;
     private SocketOptions m_options;
     private bool m_closed;
+
+    private bool m_enableBroadcast   = false;
+    private long m_receiveBufferSize = 8192;
+    private long m_sendBufferSize    = 8192;
+    private bool m_reuseAddress      = false;
+    private int m_receiveTimeout     = 0;
+    private long m_trafficClass      = 0;
 
   }
 }

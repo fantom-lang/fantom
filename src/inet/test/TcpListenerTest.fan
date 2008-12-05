@@ -79,7 +79,7 @@ class TcpListenerTest : Test
     listener.options.receiveTimeout = 100ms
     verifyErr(IOErr#) |,| { listener.accept }
     t2 := Duration.now
-    verify(80ms < t2-t1 && t2-t1 < 140ms)
+    verify(80ms < t2-t1 && t2-t1 < 150ms)
 
     thread := Thread(null, &runClient(listener.localPort)).start
 
