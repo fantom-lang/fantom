@@ -101,7 +101,7 @@ class TcpSocketTest : Test
     verifyErr(IOErr#) |,| { s.connect(IpAddress("1.1.1.1"), 1969, 100ms) }
     t2 := Duration.now
     verifyEq(s.isConnected, false)
-    verify(80ms < t2-t1 && t2-t1 < 130ms)
+    verify(80ms < t2-t1 && t2-t1 < 150ms)
     s.close
 
     verifyEq(s.isClosed, true)

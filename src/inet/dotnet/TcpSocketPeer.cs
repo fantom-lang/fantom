@@ -367,15 +367,7 @@ namespace Fan.Inet
 
     public void setTrafficClass(TcpSocket fan, long v)
     {
-//try
-//{
-      m_dotnet.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, v);
-//}
-//catch (System.Exception e)
-//{
-//  System.Console.WriteLine(" >>> " + v);
-//  Err.dumpStack(e);
-//}
+      m_dotnet.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.TypeOfService, (int)v);
     }
 
   //////////////////////////////////////////////////////////////////////////
