@@ -156,7 +156,7 @@ internal class MarkParser
     names := Str[,]
     f.list.map(names) |File x->Str| { return Desktop.isWindows ? x.name.lower : x.name }
     names.sortr |Str a, Str b->Int| { return a.size <=> b.size }
-    Str? n := names.eachBreak |Str n->Str?| { return rest.startsWith(n) ? n : null }
+    Str? n := names.eachWhile |Str n->Str?| { return rest.startsWith(n) ? n : null }
     if (n != null)
     {
       f = File.make(f.uri + n.toUri, false)

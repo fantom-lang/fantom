@@ -309,7 +309,7 @@ class ApiToHtmlGenerator : HtmlGenerator
   **
   Slot? findOverridden(Slot slot)
   {
-    return slot.parent.inheritance[1..-1].eachBreak |Type t->Slot?|
+    return slot.parent.inheritance[1..-1].eachWhile |Type t->Slot?|
     {
       return t.slot(slot.name, false)
     }

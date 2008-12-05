@@ -179,7 +179,7 @@ final class Map
   ** if the function returns null for every key/value pair.
   ** This method is idempotent.
   **
-  Obj? eachBreak(|V item, K key->Obj?| c)
+  Obj? eachWhile(|V item, K key->Obj?| c)
 
   **
   ** Return the first value in the map for which c returns true.

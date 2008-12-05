@@ -520,7 +520,7 @@ public final class List
     }
   }
 
-  public final Object eachBreak(Func f)
+  public final Object eachWhile(Func f)
   {
     if (f.params.sz() == 1)
     {

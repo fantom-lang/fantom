@@ -500,7 +500,7 @@ namespace Fan.Sys
         f.call2(m_values[i], i);
     }
 
-    public object eachBreak(Func f)
+    public object eachWhile(Func f)
     {
       for (int i=0; i<m_size; i++)
       {

@@ -315,7 +315,7 @@ final class List
   ** resulting object.  Return null if the function returns
   ** null for every item.  This method is idempotent.
   **
-  Obj? eachBreak(|V item, Int index->Obj?| c)
+  Obj? eachWhile(|V item, Int index->Obj?| c)
 
   **
   ** Return the first item in the list for which c returns true.

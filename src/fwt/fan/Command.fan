@@ -171,7 +171,7 @@ class Command
   Window? window()
   {
     if (assocDialog != null) return assocDialog
-    return widgets.eachBreak |Widget w->Window| { return w.window }
+    return widgets.eachWhile |Widget w->Window| { return w.window }
   }
   internal Dialog? assocDialog
 

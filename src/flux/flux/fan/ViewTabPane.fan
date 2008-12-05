@@ -224,7 +224,7 @@ internal class TabBar : Widget
     if (event.id == EventId.mouseDown && event.button == 1)
     {
       close := false
-      tab := tabBounds.eachBreak |Rect r, Int i->Obj?|
+      tab := tabBounds.eachWhile |Rect r, Int i->Obj?|
       {
         if (r.contains(event.pos.x, event.pos.y))
         {
