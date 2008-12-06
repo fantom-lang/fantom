@@ -52,93 +52,10 @@ public final class FPod
 // Tables
 //////////////////////////////////////////////////////////////////////////
 
-  public final String name(int index)       { return (String)names.get(index);   }
-  public final FTypeRef typeRef(int index)  { return (FTypeRef)typeRefs.get(index);  }
-  public final FTuple fieldRef(int index)   { return (FTuple)fieldRefs.get(index);  }
-  public final FTuple methodRef(int index)  { return (FTuple)methodRefs.get(index); }
-
-//////////////////////////////////////////////////////////////////////////
-// Java Emit Utils
-//////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Map a fcode method signature to a Java method emit signature.
-   */
-  public final JCall jcall(int index, int opcode)
-  {
-    if (jcalls == null) jcalls = new JCall[methodRefs.size()];
-    JCall jcall = jcalls[index];
-    if (jcall == null || opcode == CallNonVirtual) // don't use cache on nonvirt (see below)
-    {
-      int[] m = methodRef(index).val;
-      FTypeRef typeRef = typeRef(m[0]);
-      String name = name(m[1]);
-
-      // if the type signature is java/lang then we route
-      // to static methods on FanObj, FanFloat, etc
-      String jname = typeRef.jname();
-      String impl = typeRef.jimpl();
-      boolean explicitSelf = false;
-      if (jname != impl)
-      {
-        explicitSelf = opcode == CallVirtual;
-      }
-      else
-      {
-        // if no object method then ok to use cache
-        if (jcall != null) return jcall;
-      }
-
-      StringBuilder s = new StringBuilder();
-      s.append(impl);
-      if (opcode == CallMixinStatic) s.append('$');
-      s.append('.').append(name).append('(');
-      if (explicitSelf) typeRef.jsig(s);
-      for (int i=3; i<m.length; ++i) typeRef(m[i]).jsig(s);
-      s.append(')');
-
-      FTypeRef ret = typeRef(m[2]);
-      if (opcode == CallNew) typeRef.jsig(s); // factory
-      else ret.jsig(s);
-
-      jcall = new JCall();
-      jcall.invokestatic = explicitSelf;
-      jcall.sig = s.toString();
-
-      // we don't cache nonvirtuals on Obj b/c of conflicting signatures:
-      //  - CallVirtual:     Obj.toStr => static FanObj.toStr(Object)
-      //  - CallNonVirtual:  Obj.toStr => FanObj.toStr()
-      if (jname == impl || opcode != CallNonVirtual)
-        jcalls[index] = jcall;
-    }
-    return jcall;
-  }
-
-  public class JCall
-  {
-    public boolean invokestatic;
-    public String sig;
-  }
-
-  /**
-   * Map a fcode field signature to a Java field emit signature.
-   */
-  public final String jfield(int index, boolean mixin)
-  {
-    if (jfields == null) jfields = new String[fieldRefs.size()];
-    String jfield = jfields[index];
-    if (jfield == null)
-    {
-      int[] f = fieldRef(index).val;
-      StringBuilder s = new StringBuilder();
-      s.append(typeRef(f[0]).jimpl());
-      if (mixin) s.append('$');
-      s.append('.').append(name(f[1])).append(':');
-      typeRef(f[2]).jsig(s);
-      jfield = jfields[index] = s.toString();
-    }
-    return jfield;
-  }
+  public final String name(int index)          { return (String)names.get(index);   }
+  public final FTypeRef typeRef(int index)     { return (FTypeRef)typeRefs.get(index);  }
+  public final FFieldRef fieldRef(int index)   { return (FFieldRef)fieldRefs.get(index);  }
+  public final FMethodRef methodRef(int index) { return (FMethodRef)methodRefs.get(index); }
 
 //////////////////////////////////////////////////////////////////////////
 // Read
@@ -277,7 +194,5 @@ public final class FPod
   public FTable fieldRefs;   // fields refs:  [parent,name,type]
   public FTable methodRefs;  // methods refs: [parent,name,ret,params*]
   public FLiterals literals; // literal constants (on read fully or lazy load)
-  private String[] jfields;  // cached fan fieldRef  -> java field signatures
-  private JCall[] jcalls;    // cached fan methodRef -> java method signatures
 
 }

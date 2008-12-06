@@ -125,9 +125,7 @@ public abstract class FTable
 
     public String toString(int index)
     {
-      int[] val = ((FTuple)table[index]).val;
-      return pod.typeRefs.toString(val[0]) + "." + pod.name(val[1]) +
-        " -> " + pod.typeRefs.toString(val[2]);
+      return ((FFieldRef)table[index]).toString();
     }
 
     public FTable read(FStore.Input in) throws IOException
@@ -136,10 +134,7 @@ public abstract class FTable
       size = in.u2();
       table = new Object[size];
       for (int i=0; i<size; ++i)
-      {
-        int[] x = { in.u2(), in.u2(), in.u2() };
-        table[i] = new FTuple(x);
-      }
+        table[i] = FFieldRef.read(in);
       return this;
     }
   }
@@ -154,17 +149,7 @@ public abstract class FTable
 
     public String toString(int index)
     {
-      int[] val = ((FTuple)table[index]).val;
-      StringBuilder s = new StringBuilder();
-      s.append(pod.typeRefs.toString(val[0])).append(".").append(pod.name(val[1]));
-      s.append('(');
-      for (int i=3; i<val.length; ++i)
-      {
-        if (i > 3) s.append(", ");
-        s.append(pod.typeRefs.toString(val[i]));
-      }
-      s.append(") -> ").append(pod.typeRefs.toString(val[2]));
-      return s.toString();
+      return ((FMethodRef)table[index]).toString();
     }
 
     public FTable read(FStore.Input in) throws IOException
@@ -173,19 +158,7 @@ public abstract class FTable
       size = in.u2();
       table = new Object[size];
       for (int i=0; i<size; ++i)
-      {
-        int parent = in.u2();
-        int name   = in.u2();
-        int ret    = in.u2();
-        int paramn = in.u1();
-        int[] x = new int[3+paramn];
-        x[0] = parent;
-        x[1] = name;
-        x[2] = ret;
-        for (int j=0; j<paramn; ++j)
-          x[j+3] = in.u2();
-        table[i] = new FTuple(x);
-      }
+        table[i] = FMethodRef.read(in);
       return this;
     }
   }
@@ -311,6 +284,5 @@ public abstract class FTable
   FPod pod;
   int size;
   Object[] table;
-  int tupleFormat;
 
 }
