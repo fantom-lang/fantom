@@ -10,13 +10,15 @@ package fanx.fcode;
 
 import java.io.*;
 import java.util.*;
+import fanx.emit.*;
 
 /**
  * FFieldRef is used to reference methods for a field access operation.
- * We use FFieldRef to cache and model the mapping from a Fan field to
- * Java field.
+ * We use FFieldRef to encapsulate how Fan field access opcodes are
+ * emitted to Java bytecode.
  */
 public class FFieldRef
+  implements EmitConst, FConst
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,7 +36,7 @@ public class FFieldRef
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Method
+// Methods
 //////////////////////////////////////////////////////////////////////////
 
   /**
@@ -45,11 +47,55 @@ public class FFieldRef
     return parent + "." + name;
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Emit
+//////////////////////////////////////////////////////////////////////////
+
+  public void emitLoadInstance(CodeEmit code)
+  {
+    int field = code.emit().field(jsig(false));
+    code.op2(GETFIELD, field);
+  }
+
+  public void emitStoreInstance(CodeEmit code)
+  {
+    int field = code.emit().field(jsig(false));
+    code.op2(PUTFIELD, field);
+  }
+
+  public void emitLoadStatic(CodeEmit code)
+  {
+    int field = code.emit().field(jsig(false));
+    code.op2(GETSTATIC, field);
+  }
+
+  public void emitStoreStatic(CodeEmit code)
+  {
+    int field = code.emit().field(jsig(false));
+    code.op2(PUTSTATIC, field);
+  }
+
+  public void emitLoadMixinStatic(CodeEmit code)
+  {
+    int field = code.emit().field(jsig(true));
+    code.op2(GETSTATIC, field);
+  }
+
+  public void emitStoreMixinStatic(CodeEmit code)
+  {
+    int field = code.emit().field(jsig(true));
+    code.op2(PUTSTATIC, field);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fan-to-Java Mapping
+//////////////////////////////////////////////////////////////////////////
+
   /**
    * Java assembler signature for this field:
    *   Lfan/foo/Bar.baz:Lfan/sys/Duration;
    */
-  public String jsig(boolean mixin)
+  private String jsig(boolean mixin)
   {
     if (jsig == null)
     {
