@@ -102,4 +102,14 @@ public class InteropTest
   public double[][] doubleMulti2() { return new double[3][]; }
   public double[][][] doubleMulti3;
 
+//////////////////////////////////////////////////////////////////////////
+// Ambiguous Overloads
+//////////////////////////////////////////////////////////////////////////
+
+  public void ambiguous1(int i) {}
+  public void ambiguous1(long i) {}
+
+  public void ambiguous2(String x) {}
+  public void ambiguous2(InteropTest x) {}
+
 }

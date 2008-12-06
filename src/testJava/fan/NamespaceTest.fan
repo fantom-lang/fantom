@@ -51,13 +51,13 @@ class NamespaceTest : JavaTest
     verifySame(gc.returnType, ns.voidType)
     verifyEq(gc.params.size, 0)
 
-    // java.lang.System.mapLibraryName
+    // java.lang.System.mapLibraryName (all Strings are considered nullable)
     mapLib := sys.method("mapLibraryName")
     verifySame(mapLib.parent, sys)
-    verifySame(mapLib.returnType, ns.strType)
+    verifySame(mapLib.returnType, ns.strType.toNullable)
     verifyEq(mapLib.params.size, 1)
     verifyEq(mapLib.params[0].name, "p0")
-    verifySame(mapLib.params[0].paramType, ns.strType)
+    verifySame(mapLib.params[0].paramType, ns.strType.toNullable)
   }
 
 //////////////////////////////////////////////////////////////////////////

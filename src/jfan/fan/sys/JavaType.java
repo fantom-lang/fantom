@@ -41,11 +41,8 @@ public class JavaType
 
   public boolean isValue() { return false; }
 
-  public final synchronized Type toNullable()
-  {
-    if (nullable == null) nullable = new NullableType(this);
-    return nullable;
-  }
+  public final boolean isNullable() { return true; }
+  public final Type toNullable() { return this; }
 
   public List fields() { throw unsupported(); }
   public List methods() { throw unsupported(); }
