@@ -1134,6 +1134,11 @@ class CheckErrors : CompilerStep
 
   private Void checkTypeCheck(TypeCheckExpr expr)
   {
+    // don't bother checking a synthetic coercion that the
+    // compiler generated itself (which is most coercions)
+    if (expr.synthetic) return
+
+    // verify types are convertible
     check := expr.check
     target := expr.target.ctype
     if (!check.fits(target) && !target.fits(check))

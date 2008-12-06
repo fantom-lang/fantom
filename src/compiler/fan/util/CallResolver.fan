@@ -65,6 +65,7 @@ class CallResolver : CompilerSupport
       resolveForeign
       constantFolding
       castForThisType
+      ffiCoercion
       safeToNullable
       return result
     }
@@ -333,11 +334,32 @@ class CallResolver : CompilerSupport
     // then we also need an implicit cast operation
     result.ctype = base
     if (method.inheritedReturnType != base)
-      result = TypeCheckExpr.coerce(result, base)
+      result = TypeCheckExpr.coerce(result, base) { from = method.inheritedReturnType }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// FFI Coercion
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** If this field access or method call returns a type which
+  ** isn't directly represented in the Fan type system, then
+  ** implicitly coerce it
+  **
+  private Void ffiCoercion()
+  {
+    if (result.ctype.isForeign)
+    {
+      foreign := result.ctype
+      inferred := foreign.inferredAs
+      if (foreign !== inferred)
       {
-        synthetic = true
-        from = method.inheritedReturnType
+        result = foreign.bridge.coerce(result, inferred) |,|
+        {
+          throw err("Cannot coerce call return to Fan type", location)
+        }
       }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -279,6 +279,11 @@ class ResolveExpr : CompilerStep
   **
   private Expr resolveAssign(BinaryExpr expr)
   {
+    // if lhs has synthetic coercion we need to remove it;
+    // this can occur when resolving a FFI field
+    if (expr.lhs.id == ExprId.coerce && expr.lhs.synthetic)
+      expr.lhs = ((TypeCheckExpr)expr.lhs).target
+
     // check for left hand side the [] shortcut, because []= is set
     shortcut := expr.lhs as ShortcutExpr
     if (shortcut != null && shortcut.op == ShortcutOp.get)
