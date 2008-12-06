@@ -12,6 +12,8 @@ import fanx.util.*;
 
 /**
  * FTypeRef stores a typeRef structure used to reference type signatures.
+ * We use FTypeRef to cache and model the mapping from a Fan type to Java
+ * type.
  */
 public final class FTypeRef
 {

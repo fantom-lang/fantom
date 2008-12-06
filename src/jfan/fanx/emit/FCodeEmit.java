@@ -594,37 +594,37 @@ public class FCodeEmit
 
   private void loadInstance()
   {
-    int field = emit.field(pod.jfield(u2(), false));
+    int field = emit.field(pod.fieldRef(u2()).jsig(false));
     code.op2(GETFIELD, field);
   }
 
   private void storeInstance()
   {
-    int field = emit.field(pod.jfield(u2(), false));
+    int field = emit.field(pod.fieldRef(u2()).jsig(false));
     code.op2(PUTFIELD, field);
   }
 
   private void loadStatic()
   {
-    int field = emit.field(pod.jfield(u2(), false));
+    int field = emit.field(pod.fieldRef(u2()).jsig(false));
     code.op2(GETSTATIC, field);
   }
 
   private void storeStatic()
   {
-    int field = emit.field(pod.jfield(u2(), false));
+    int field = emit.field(pod.fieldRef(u2()).jsig(false));
     code.op2(PUTSTATIC, field);
   }
 
   private void loadMixinStatic()
   {
-    int field = emit.field(pod.jfield(u2(), true));
+    int field = emit.field(pod.fieldRef(u2()).jsig(true));
     code.op2(GETSTATIC, field);
   }
 
   private void storeMixinStatic()
   {
-    int field = emit.field(pod.jfield(u2(), true));
+    int field = emit.field(pod.fieldRef(u2()).jsig(true));
     code.op2(PUTSTATIC, field);
   }
 
@@ -684,9 +684,9 @@ public class FCodeEmit
 // Calls
 //////////////////////////////////////////////////////////////////////////
 
-  private void call(int index, int fanOp, int javaOp)
+  private void call(FMethodRef m, int fanOp, int javaOp)
   {
-    FPod.JCall jcall = pod.jcall(index, fanOp);
+    FMethodRef.JCall jcall = m.jcall(fanOp);
     int method = emit.method(jcall.sig);
     if (jcall.invokestatic) javaOp = INVOKESTATIC;
     code.op2(javaOp, method);
@@ -699,18 +699,16 @@ public class FCodeEmit
     //   CallNew Type.<new>  // allocate object
     //   args...             // arguments are pushed onto stack
     //   CallCtor <init>     // call to java constructor
-    int index = u2();
-    int[] m = pod.methodRef(index).val;
-    String name = pod.name(m[1]);
-    if (name.equals("<new>"))
+    FMethodRef m = pod.methodRef(u2());
+    if (m.name.equals("<new>"))
     {
-      String jname = pod.typeRef(m[0]).jname();
+      String jname = m.parent.jname();
       code.op2(NEW, emit.cls(jname));
       code.op(DUP);
     }
     else
     {
-      call(index, CallNew, INVOKESTATIC);
+      call(m, CallNew, INVOKESTATIC);
     }
   }
 
@@ -722,10 +720,9 @@ public class FCodeEmit
     //   CallNew Type.<new>  // allocate object
     //   args...             // arguments are pushed onto stack
     //   CallCtor <init>     // call to java constructor
-    int index = u2();
-    int[] m = pod.methodRef(index).val;
-    String parent = pod.typeRef(m[0]).jname();
-    String name = pod.name(m[1]);
+    FMethodRef m = pod.methodRef(u2());
+    String parent = m.parent.jname();
+    String name = m.name;
 
     boolean javaCtor = name.equals("<init>");
     StringBuilder s = new StringBuilder();
@@ -734,7 +731,7 @@ public class FCodeEmit
       s.append('(');
     else
       s.append('$').append('(').append('L').append(parent).append(';');
-    for (int i=3; i<m.length; ++i) pod.typeRef(m[i]).jsig(s);
+    for (int i=0; i<m.params.length; ++i) m.params[i].jsig(s);
     s.append(')').append('V');
 
     int method = emit.method(s.toString());
@@ -747,34 +744,28 @@ public class FCodeEmit
   private void callStatic()
   {
     // check for calls which optimize to a single opcode
-    int index = u2();
-    int[] m = pod.methodRef(index).val;
-    FTypeRef parent = pod.typeRef(m[0]);
-    if (parent.isPrimitiveArray())
+    FMethodRef m = pod.methodRef(u2());
+    if (m.parent.isPrimitiveArray())
     {
-      String name = pod.name(m[1]);
-      if (name.equals("make")) { code.op1(NEWARRAY, newArrayType(parent.arrayOfStackType())); return; }
+      if (m.name.equals("make")) { code.op1(NEWARRAY, newArrayType(m.parent.arrayOfStackType())); return; }
     }
 
-    call(index, CallStatic, INVOKESTATIC);
+    call(m, CallStatic, INVOKESTATIC);
   }
 
   private void callVirtual()
   {
     // check for calls which optimize to a single opcode
-    int index = u2();
-    int[] m = pod.methodRef(index).val;
-    FTypeRef parent = pod.typeRef(m[0]);
-    if (parent.isPrimitiveArray())
+    FMethodRef m = pod.methodRef(u2());
+    if (m.parent.isPrimitiveArray())
     {
-      String name = pod.name(m[1]);
-      if (name.equals("size")) { code.op(ARRAYLENGTH); return; }
-      if (name.equals("get"))  { code.op(loadArrayOp(parent.arrayOfStackType())); return; }
-      if (name.equals("set"))  { code.op(storeArrayOp(parent.arrayOfStackType())); return; }
+      if (m.name.equals("size")) { code.op(ARRAYLENGTH); return; }
+      if (m.name.equals("get"))  { code.op(loadArrayOp(m.parent.arrayOfStackType())); return; }
+      if (m.name.equals("set"))  { code.op(storeArrayOp(m.parent.arrayOfStackType())); return; }
     }
 
     // normal call operation
-    call(index, CallVirtual, INVOKEVIRTUAL);
+    call(m, CallVirtual, INVOKEVIRTUAL);
   }
 
   private void callNonVirtual()
@@ -782,20 +773,22 @@ public class FCodeEmit
     // invokespecial in Java is really queer - it can only
     // be used for calls in the declaring class (basically
     // for private methods or super call)
-    call(u2(), CallNonVirtual, INVOKESPECIAL);
+    FMethodRef m = pod.methodRef(u2());
+    call(m, CallNonVirtual, INVOKESPECIAL);
   }
 
   private void callMixinStatic()
   {
-    call(u2(), CallMixinStatic, INVOKESTATIC);
+    FMethodRef m = pod.methodRef(u2());
+    call(m, CallMixinStatic, INVOKESTATIC);
   }
 
   private void callMixinVirtual()
   {
-    int index = u2();
-    int nargs = pod.methodRef(index).toInvokeInterfaceNumArgs(pod);
+    FMethodRef m = pod.methodRef(u2());
+    int nargs = m.toInvokeInterfaceNumArgs(pod);
 
-    String sig = pod.jcall(index, CallMixinVirtual).sig;
+    String sig = m.jcall(CallMixinVirtual).sig;
     int method = emit.interfaceRef(sig);
     code.op2(INVOKEINTERFACE, method);
     code.info.u1(nargs);
@@ -806,16 +799,15 @@ public class FCodeEmit
   {
     // call the mixin "$" implementation method
     // directly (but don't use cache)
-    int index = u2();
-    int[] m = pod.methodRef(index).val;
-    String parent = pod.typeRef(m[0]).jname();
-    String name = pod.name(m[1]);
-    FTypeRef ret = pod.typeRef(m[2]);
+    FMethodRef m = pod.methodRef(u2());
+    String parent = m.parent.jname();
+    String name = m.name;
+    FTypeRef ret = m.ret;
 
     StringBuilder s = new StringBuilder();
     s.append(parent).append("$.").append(name).append('(');
     s.append('L').append(parent).append(';');
-    for (int i=3; i<m.length; ++i) pod.typeRef(m[i]).jsig(s);
+    for (int i=0; i<m.params.length; ++i) m.params[i].jsig(s);
     s.append(')');
     ret.jsig(s);
 
