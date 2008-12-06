@@ -86,21 +86,24 @@ public class FCodeEmit
 
         case LoadVar:             loadVar(); break;
         case StoreVar:            storeVar(); break;
-        case LoadInstance:        loadInstance(); break;
-        case StoreInstance:       storeInstance(); break;
-        case LoadStatic:          loadStatic(); break;
-        case StoreStatic:         storeStatic(); break;
-        case LoadMixinStatic:     loadMixinStatic(); break;
-        case StoreMixinStatic:    storeMixinStatic(); break;
 
-        case CallNew:             callNew(); break;
-        case CallCtor:            callCtor(); break;
-        case CallStatic:          callStatic(); break;
-        case CallVirtual:         callVirtual(); break;
-        case CallNonVirtual:      callNonVirtual(); break;
-        case CallMixinStatic:     callMixinStatic(); break;
-        case CallMixinVirtual:    callMixinVirtual(); break;
-        case CallMixinNonVirtual: callMixinNonVirtual(); break;
+        // route field access to FFieldRef
+        case LoadInstance:        pod.fieldRef(u2()).emitLoadInstance(code); break;
+        case StoreInstance:       pod.fieldRef(u2()).emitStoreInstance(code); break;
+        case LoadStatic:          pod.fieldRef(u2()).emitLoadStatic(code); break;
+        case StoreStatic:         pod.fieldRef(u2()).emitStoreStatic(code); break;
+        case LoadMixinStatic:     pod.fieldRef(u2()).emitLoadMixinStatic(code); break;
+        case StoreMixinStatic:    pod.fieldRef(u2()).emitStoreMixinStatic(code); break;
+
+        // route method calls to FMethodRef
+        case CallNew:             pod.methodRef(u2()).emitCallNew(code); break;
+        case CallCtor:            pod.methodRef(u2()).emitCallCtor(code); break;
+        case CallStatic:          pod.methodRef(u2()).emitCallStatic(code); break;
+        case CallVirtual:         pod.methodRef(u2()).emitCallVirtual(code); break;
+        case CallNonVirtual:      pod.methodRef(u2()).emitCallNonVirtual(code); break;
+        case CallMixinStatic:     pod.methodRef(u2()).emitCallMixinStatic(code); break;
+        case CallMixinVirtual:    pod.methodRef(u2()).emitCallMixinVirtual(code); break;
+        case CallMixinNonVirtual: pod.methodRef(u2()).emitCallMixinNonVirtual(code); break;
 
         case Jump:                jump(); break;
         case JumpTrue:            jumpTrue(); break;
@@ -588,232 +591,6 @@ public class FCodeEmit
     }
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Field
-//////////////////////////////////////////////////////////////////////////
-
-  private void loadInstance()
-  {
-    int field = emit.field(pod.fieldRef(u2()).jsig(false));
-    code.op2(GETFIELD, field);
-  }
-
-  private void storeInstance()
-  {
-    int field = emit.field(pod.fieldRef(u2()).jsig(false));
-    code.op2(PUTFIELD, field);
-  }
-
-  private void loadStatic()
-  {
-    int field = emit.field(pod.fieldRef(u2()).jsig(false));
-    code.op2(GETSTATIC, field);
-  }
-
-  private void storeStatic()
-  {
-    int field = emit.field(pod.fieldRef(u2()).jsig(false));
-    code.op2(PUTSTATIC, field);
-  }
-
-  private void loadMixinStatic()
-  {
-    int field = emit.field(pod.fieldRef(u2()).jsig(true));
-    code.op2(GETSTATIC, field);
-  }
-
-  private void storeMixinStatic()
-  {
-    int field = emit.field(pod.fieldRef(u2()).jsig(true));
-    code.op2(PUTSTATIC, field);
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Arrays
-//////////////////////////////////////////////////////////////////////////
-
-  public static int newArrayType(int stackType)
-  {
-    switch (stackType)
-    {
-      case FTypeRef.BOOL:   return 4;
-      case FTypeRef.CHAR:   return 5;
-      case FTypeRef.FLOAT:  return 6;
-      case FTypeRef.DOUBLE: return 7;
-      case FTypeRef.BYTE:   return 8;
-      case FTypeRef.SHORT:  return 9;
-      case FTypeRef.INT:    return 10;
-      case FTypeRef.LONG:   return 11;
-      default: throw new IllegalStateException(""+stackType);
-    }
-  }
-
-  public static int loadArrayOp(int stackType)
-  {
-    switch (stackType)
-    {
-      case FTypeRef.BOOL:   return BALOAD;
-      case FTypeRef.BYTE:   return BALOAD;
-      case FTypeRef.SHORT:  return SALOAD;
-      case FTypeRef.CHAR:   return CALOAD;
-      case FTypeRef.INT:    return IALOAD;
-      case FTypeRef.LONG:   return LALOAD;
-      case FTypeRef.FLOAT:  return FALOAD;
-      case FTypeRef.DOUBLE: return DALOAD;
-      default: throw new IllegalStateException(""+stackType);
-    }
-  }
-
-  public static int storeArrayOp(int stackType)
-  {
-    switch (stackType)
-    {
-      case FTypeRef.BOOL:   return BASTORE;
-      case FTypeRef.BYTE:   return BASTORE;
-      case FTypeRef.SHORT:  return SASTORE;
-      case FTypeRef.CHAR:   return CASTORE;
-      case FTypeRef.INT:    return IASTORE;
-      case FTypeRef.LONG:   return LASTORE;
-      case FTypeRef.FLOAT:  return FASTORE;
-      case FTypeRef.DOUBLE: return DASTORE;
-      default: throw new IllegalStateException(""+stackType);
-    }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Calls
-//////////////////////////////////////////////////////////////////////////
-
-  private void call(FMethodRef m, int fanOp, int javaOp)
-  {
-    FMethodRef.JCall jcall = m.jcall(fanOp);
-    int method = emit.method(jcall.sig);
-    if (jcall.invokestatic) javaOp = INVOKESTATIC;
-    code.op2(javaOp, method);
-  }
-
-  private void callNew()
-  {
-    // Fan constructor calls are static calls on factory
-    // method; FFI constructor calls are emitted as:
-    //   CallNew Type.<new>  // allocate object
-    //   args...             // arguments are pushed onto stack
-    //   CallCtor <init>     // call to java constructor
-    FMethodRef m = pod.methodRef(u2());
-    if (m.name.equals("<new>"))
-    {
-      String jname = m.parent.jname();
-      code.op2(NEW, emit.cls(jname));
-      code.op(DUP);
-    }
-    else
-    {
-      call(m, CallNew, INVOKESTATIC);
-    }
-  }
-
-  private void callCtor()
-  {
-    // constructor implementations (without object allow) are
-    // implemented as static factory methods with "$" appended
-    // FFI constructor calls are emitted as:
-    //   CallNew Type.<new>  // allocate object
-    //   args...             // arguments are pushed onto stack
-    //   CallCtor <init>     // call to java constructor
-    FMethodRef m = pod.methodRef(u2());
-    String parent = m.parent.jname();
-    String name = m.name;
-
-    boolean javaCtor = name.equals("<init>");
-    StringBuilder s = new StringBuilder();
-    s.append(parent).append('.').append(name);
-    if (javaCtor)
-      s.append('(');
-    else
-      s.append('$').append('(').append('L').append(parent).append(';');
-    for (int i=0; i<m.params.length; ++i) m.params[i].jsig(s);
-    s.append(')').append('V');
-
-    int method = emit.method(s.toString());
-    if (javaCtor)
-      code.op2(INVOKESPECIAL, method);
-    else
-      code.op2(INVOKESTATIC, method);
-  }
-
-  private void callStatic()
-  {
-    // check for calls which optimize to a single opcode
-    FMethodRef m = pod.methodRef(u2());
-    if (m.parent.isPrimitiveArray())
-    {
-      if (m.name.equals("make")) { code.op1(NEWARRAY, newArrayType(m.parent.arrayOfStackType())); return; }
-    }
-
-    call(m, CallStatic, INVOKESTATIC);
-  }
-
-  private void callVirtual()
-  {
-    // check for calls which optimize to a single opcode
-    FMethodRef m = pod.methodRef(u2());
-    if (m.parent.isPrimitiveArray())
-    {
-      if (m.name.equals("size")) { code.op(ARRAYLENGTH); return; }
-      if (m.name.equals("get"))  { code.op(loadArrayOp(m.parent.arrayOfStackType())); return; }
-      if (m.name.equals("set"))  { code.op(storeArrayOp(m.parent.arrayOfStackType())); return; }
-    }
-
-    // normal call operation
-    call(m, CallVirtual, INVOKEVIRTUAL);
-  }
-
-  private void callNonVirtual()
-  {
-    // invokespecial in Java is really queer - it can only
-    // be used for calls in the declaring class (basically
-    // for private methods or super call)
-    FMethodRef m = pod.methodRef(u2());
-    call(m, CallNonVirtual, INVOKESPECIAL);
-  }
-
-  private void callMixinStatic()
-  {
-    FMethodRef m = pod.methodRef(u2());
-    call(m, CallMixinStatic, INVOKESTATIC);
-  }
-
-  private void callMixinVirtual()
-  {
-    FMethodRef m = pod.methodRef(u2());
-    int nargs = m.toInvokeInterfaceNumArgs(pod);
-
-    String sig = m.jcall(CallMixinVirtual).sig;
-    int method = emit.interfaceRef(sig);
-    code.op2(INVOKEINTERFACE, method);
-    code.info.u1(nargs);
-    code.info.u1(0);
-  }
-
-  private void callMixinNonVirtual()
-  {
-    // call the mixin "$" implementation method
-    // directly (but don't use cache)
-    FMethodRef m = pod.methodRef(u2());
-    String parent = m.parent.jname();
-    String name = m.name;
-    FTypeRef ret = m.ret;
-
-    StringBuilder s = new StringBuilder();
-    s.append(parent).append("$.").append(name).append('(');
-    s.append('L').append(parent).append(';');
-    for (int i=0; i<m.params.length; ++i) m.params[i].jsig(s);
-    s.append(')');
-    ret.jsig(s);
-
-    int method = emit.method(s.toString());
-    code.op2(INVOKESTATIC, method);
-  }
 
 //////////////////////////////////////////////////////////////////////////
 // Jump
