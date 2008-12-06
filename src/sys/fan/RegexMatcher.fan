@@ -55,11 +55,11 @@ final class RegexMatcher
   **
   ** Return the substring captured by the matching operation.
   ** Group index zero denotes the entire pattern and capturing
-  ** groups are indexed from left to right starting at one.
-  ** Throw exception if failed to match input or group
-  ** index is invalid.
+  ** groups are indexed from left to right starting at one.  Return
+  ** null if group failed to match part of the input.  Throw exception
+  ** if failed to match input or group index is invalid.
   **
-  Str group(Int group := 0)
+  Str? group(Int group := 0)
 
   **
   ** Return the start index of the given `group`.

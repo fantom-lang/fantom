@@ -49,7 +49,7 @@ directly.  It is a compiler error to call the constructor of
 an abstract class.  However abstract classes do have constructors
 for use by their subclasses.
 
-Abstract methods may or may not contain [abstract methods]`Methods#abstract`.
+Abstract classes may or may not contain [abstract methods]`Methods#abstract`.
 Although all classes which contain abstract methods, must be
 declared abstract.
 
@@ -104,7 +104,6 @@ class, you can create new instances reflectively:
   t.make                   // use default make constructor
   t.make(args)             // use make constructor with arguments
   t.method("makeX").call0  // lookup and use a named constructor
-
 
 
 
