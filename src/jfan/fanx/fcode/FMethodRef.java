@@ -54,45 +54,58 @@ public class FMethodRef
 
   public void emitCallNew(CodeEmit code)
   {
-    // Fan constructor calls are static calls on factory
-    // method; FFI constructor calls are emitted as:
+    // FFI constructor calls are emitted as:
     //   CallNew Type.<new>  // allocate object
     //   args...             // arguments are pushed onto stack
     //   CallCtor <init>     // call to java constructor
     if (name.equals("<new>"))
     {
-      String jname = parent.jname();
-      code.op2(NEW, code.emit().cls(jname));
+      code.op2(NEW, code.emit().cls(parent.jname()));
       code.op(DUP);
+      return;
     }
-    else
+
+    // Fan constructor calls are static calls on factory method:
+    //   static Foo make(...) {}
+    if (jsig == null)
     {
-      doEmit(code, CallNew, INVOKESTATIC);
+      StringBuilder s = new StringBuilder();
+      s.append(parent.jname()).append('.').append(name).append('(');
+      for (int i=0; i<params.length; ++i) params[i].jsig(s);
+      s.append(')');
+      parent.jsig(s);
+      jsig = s.toString();
     }
+
+    int method = code.emit().method(jsig);
+    code.op2(INVOKESTATIC, method);
   }
 
   public void emitCallCtor(CodeEmit code)
   {
-    // constructor implementations (without object allow) are
-    // implemented as static factory methods with "$" appended
-    // FFI constructor calls are emitted as:
+    // constructor implementations (without object allocation) are
+    // implemented as static factory methods with "$" appended:
+    //   static make$(Foo self, ...) {}
+    // however if the name is <init> this is a FFI constructor
+    // call which is emitted as:
     //   CallNew Type.<new>  // allocate object
     //   args...             // arguments are pushed onto stack
     //   CallCtor <init>     // call to java constructor
-
-    String parent = this.parent.jname();
-
     boolean javaCtor = name.equals("<init>");
-    StringBuilder s = new StringBuilder();
-    s.append(parent).append('.').append(name);
-    if (javaCtor)
-      s.append('(');
-    else
-      s.append('$').append('(').append('L').append(parent).append(';');
-    for (int i=0; i<params.length; ++i) params[i].jsig(s);
-    s.append(')').append('V');
+    if (jsigAlt == null)
+    {
+      StringBuilder s = new StringBuilder();
+      s.append(parent.jname()).append('.').append(name);
+      if (javaCtor)
+        s.append('(');
+      else
+        s.append("$(L").append(parent.jname()).append(';');
+      for (int i=0; i<params.length; ++i) params[i].jsig(s);
+      s.append(')').append('V');
+      jsigAlt = s.toString();
+    }
 
-    int method = code.emit().method(s.toString());
+    int method = code.emit().method(jsigAlt);
     if (javaCtor)
       code.op2(INVOKESPECIAL, method);
     else
@@ -107,7 +120,18 @@ public class FMethodRef
       if (name.equals("make")) { code.op1(NEWARRAY, newArrayType(parent.arrayOfStackType())); return; }
     }
 
-    doEmit(code, CallStatic, INVOKESTATIC);
+    if (jsig == null)
+    {
+      StringBuilder s = new StringBuilder();
+      s.append(parent.jimpl()).append('.').append(name).append('(');
+      for (int i=0; i<params.length; ++i) params[i].jsig(s);
+      s.append(')');
+      ret.jsig(s);
+      jsig = s.toString();
+    }
+
+    int method = code.emit().method(jsig);
+    code.op2(INVOKESTATIC, method);
   }
 
   public void emitCallVirtual(CodeEmit code)
@@ -120,131 +144,112 @@ public class FMethodRef
       if (name.equals("set"))  { code.op(storeArrayOp(parent.arrayOfStackType())); return; }
     }
 
-    // normal call operation
-    doEmit(code, CallVirtual, INVOKEVIRTUAL);
+    if (jsig == null)
+    {
+      StringBuilder s = new StringBuilder();
+      String jname = parent.jname();
+      String jimpl = parent.jimpl();
+      s.append(jimpl).append('.').append(name).append('(');
+      if (jname != jimpl)
+      {
+        // if the implementation class is different than the representation
+        // class then we route to static such as FanFloat.abs(double self)
+        mask |= INVOKE_VIRT_AS_STATIC;
+        parent.jsig(s);
+      }
+      for (int i=0; i<params.length; ++i) params[i].jsig(s);
+      s.append(')');
+      ret.jsig(s);
+      jsig = s.toString();
+    }
+
+    int method = code.emit().method(jsig);
+    if ((mask & INVOKE_VIRT_AS_STATIC) != 0)
+      code.op2(INVOKESTATIC, method);
+    else
+      code.op2(INVOKEVIRTUAL, method);
   }
 
   public void emitCallNonVirtual(CodeEmit code)
   {
-    // invokespecial in Java is really queer - it can only
-    // be used for calls in the declaring class (basically
-    // for private methods or super call)
-    doEmit(code, CallNonVirtual, INVOKESPECIAL);
+    // nonvirtuals Obj use jsigAlt because we don't
+    // route to static helpers like we do for call virtual
+    //  - CallVirtual:     Obj.toStr => static FanObj.toStr(Object)
+    //  - CallNonVirtual:  Obj.toStr => FanObj.toStr()
+    if (jsigAlt == null)
+    {
+      StringBuilder s = new StringBuilder();
+      String jname = parent.jname();
+      String jimpl = parent.jimpl();
+      s.append(jimpl).append('.').append(name).append('(');
+      for (int i=0; i<params.length; ++i) params[i].jsig(s);
+      s.append(')');
+      ret.jsig(s);
+      jsigAlt = s.toString();
+    }
+
+    int method = code.emit().method(jsigAlt);
+    code.op2(INVOKESPECIAL, method);
   }
 
   public void emitCallMixinStatic(CodeEmit code)
   {
-    doEmit(code, CallMixinStatic, INVOKESTATIC);
+    if (jsig == null)
+    {
+      StringBuilder s = new StringBuilder();
+      s.append(parent.jimpl()).append("$.").append(name).append('(');
+      for (int i=0; i<params.length; ++i) params[i].jsig(s);
+      s.append(')');
+      ret.jsig(s);
+      jsig = s.toString();
+    }
+
+    int method = code.emit().method(jsig);
+    code.op2(INVOKESTATIC, method);
   }
 
   public void emitCallMixinVirtual(CodeEmit code)
   {
-    int nargs = toInvokeInterfaceNumArgs();
+    // when we lazily create jsig we also compute the
+    // number of arguments taking wide parameters into account
+    if (jsig == null)
+    {
+      StringBuilder s = new StringBuilder();
+      s.append(parent.jname()).append('.').append(name).append('(');
+      int numArgs = 1;
+      for (int i=0; i<params.length; ++i)
+      {
+        params[i].jsig(s);
+        numArgs += params[i].isWide() ? 2 : 1;
+      }
+      s.append(')');
+      ret.jsig(s);
+      jsig = s.toString();
+      iiNumArgs = numArgs;
+    }
 
-    String sig = jcall(CallMixinVirtual).sig;
-    int method = code.emit().interfaceRef(sig);
+    int method = code.emit().interfaceRef(jsig);
     code.op2(INVOKEINTERFACE, method);
-    code.info.u1(nargs);
+    code.info.u1(iiNumArgs );
     code.info.u1(0);
   }
 
   public void emitCallMixinNonVirtual(CodeEmit code)
   {
-    // call the mixin "$" implementation method
-    // directly (but don't use cache)
-
-    String parent = this.parent.jname();
-
-    StringBuilder s = new StringBuilder();
-    s.append(parent).append("$.").append(name).append('(');
-    s.append('L').append(parent).append(';');
-    for (int i=0; i<params.length; ++i) params[i].jsig(s);
-    s.append(')');
-    ret.jsig(s);
-
-    int method = code.emit().method(s.toString());
-    code.op2(INVOKESTATIC, method);
-  }
-
-  private void doEmit(CodeEmit code, int fanOp, int javaOp)
-  {
-    FMethodRef.JCall jcall = jcall(fanOp);
-    int method = code.emit().method(jcall.sig);
-    if (jcall.invokestatic) javaOp = INVOKESTATIC;
-    code.op2(javaOp, method);
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Fan-to-Java Mapping
-//////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Map a fcode method signature to a Java method emit signature.
-   */
-  public JCall jcall(int opcode)
-  {
-    JCall jcall = this.jcall;
-    if (jcall == null || opcode == CallNonVirtual) // don't use cache on nonvirt (see below)
+    // call the mixin "$" implementation method directly
+    if (jsigAlt == null)
     {
-      // if the type signature is java/lang then we route
-      // to static methods on FanObj, FanFloat, etc
-      String jname = parent.jname();
-      String impl = parent.jimpl();
-      boolean explicitSelf = false;
-      if (jname != impl)
-      {
-        explicitSelf = opcode == CallVirtual;
-      }
-      else
-      {
-        // if no object method then ok to use cache
-        if (jcall != null) return jcall;
-      }
-
       StringBuilder s = new StringBuilder();
-      s.append(impl);
-      if (opcode == CallMixinStatic) s.append('$');
-      s.append('.').append(name).append('(');
-      if (explicitSelf) parent.jsig(s);
+      s.append(parent.jname()).append("$.").append(name).append('(');
+      parent.jsig(s);
       for (int i=0; i<params.length; ++i) params[i].jsig(s);
       s.append(')');
-
-      if (opcode == CallNew) parent.jsig(s); // factory
-      else ret.jsig(s);
-
-      jcall = new JCall();
-      jcall.invokestatic = explicitSelf;
-      jcall.sig = s.toString();
-
-      // we don't cache nonvirtuals on Obj b/c of conflicting signatures:
-      //  - CallVirtual:     Obj.toStr => static FanObj.toStr(Object)
-      //  - CallNonVirtual:  Obj.toStr => FanObj.toStr()
-      if (jname == impl || opcode != CallNonVirtual)
-        this.jcall = jcall;
+      ret.jsig(s);
+      jsigAlt = s.toString();
     }
-    return jcall;
-  }
 
-  public static class JCall
-  {
-    public boolean invokestatic;
-    public String sig;
-  }
-
-  /**
-   * Get this MethodRef's number of arguments for an invokeinterface
-   * operation taking into account wide parameters.
-   */
-  private int toInvokeInterfaceNumArgs()
-  {
-    if (this.iiNumArgs < 0)
-    {
-      int numArgs = 1;
-      for (int i=0; i<params.length; ++i)
-        numArgs += params[i].isWide() ? 2 : 1;
-      this.iiNumArgs = numArgs;
-    }
-    return this.iiNumArgs;
+    int method = code.emit().method(jsigAlt);
+    code.op2(INVOKESTATIC, method);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -336,10 +341,14 @@ public class FMethodRef
 
   static final FTypeRef[] noParams = new FTypeRef[0];
 
+  static final int INVOKE_VIRT_AS_STATIC = 0x0001;
+
   public final FTypeRef parent;
   public final String name;
   public final FTypeRef ret;
   public final FTypeRef[] params;
-  private int iiNumArgs = -1;
-  private JCall jcall;
+  private String jsig;         // cache for standard Java signature
+  private String jsigAlt;      // alternate cache for ctors and non-virtuals signature
+  private int mask;            // cache for mask - lazy init when jsig is initialized
+  private int iiNumArgs = -1;  // invoke interface - lazy init when jsig is initialized
 }
