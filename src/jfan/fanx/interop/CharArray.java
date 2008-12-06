@@ -12,6 +12,7 @@ package fanx.interop;
  */
 public class CharArray
 {
+  public static CharArray make(int size) { return null; }
   public char get(int index) { return 0; }
   public void set(int index, char val) {}
   public int size() { return 0; }

@@ -12,6 +12,7 @@ package fanx.interop;
  */
 public class LongArray
 {
+  public static LongArray make(int size) { return null; }
   public long get(int index) { return 0; }
   public void set(int index, long val) {}
   public int size() { return 0; }

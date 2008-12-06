@@ -12,6 +12,7 @@ package fanx.interop;
  */
 public class ByteArray
 {
+  public static ByteArray make(int size) { return null; }
   public byte get(int index) { return 0; }
   public void set(int index, byte val) {}
   public int size() { return 0; }

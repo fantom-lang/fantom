@@ -59,17 +59,26 @@ class JavaBridge : CBridge
   **
   override CallExpr resolveConstruction(CallExpr call)
   {
-    // try to find method called "<init>"
+    // if this is an interop array like IntArray/int[] use make
+    // factory otherwise look for Java constructor called <init>
     JavaType base := call.target.ctype
-    call.method = base.method("<init>")
+    if (base.isInteropArray)
+      call.method = base.method("make")
+    else
+      call.method = base.method("<init>")
 
     // do normal call resolution to deal with overloading
     call = resolveCall(call)
 
-    // we need to create an implicit target for the Java runtime to
-    // perform the new opcode to ensure it is on the stack before the args
-    loc := call.location
-    call.target = CallExpr.makeWithMethod(loc, null, base.newMethod) { synthetic=true }
+    // we need to create an implicit target for the Java runtime
+    // to perform the new opcode to ensure it is on the stack
+    // before the args (we don't do this for interop Array classes)
+    if (!base.isInteropArray)
+    {
+      loc := call.location
+      call.target = CallExpr.makeWithMethod(loc, null, base.newMethod) { synthetic=true }
+    }
+
     return call
   }
 

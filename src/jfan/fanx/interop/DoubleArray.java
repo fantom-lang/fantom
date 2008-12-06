@@ -12,6 +12,7 @@ package fanx.interop;
  */
 public class DoubleArray
 {
+  public static DoubleArray make(int size) { return null; }
   public double get(int index) { return 0; }
   public void set(int index, double val) {}
   public int size() { return 0; }

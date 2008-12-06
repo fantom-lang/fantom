@@ -1526,7 +1526,7 @@ public class Parser : CompilerSupport
     // simple literal type(arg)
     if (curt == Token.lparen)
     {
-      construction := CallExpr.make(loc, StaticTargetExpr.make(loc, ctype), "?", ExprId.construction)
+      construction := CallExpr.make(loc, StaticTargetExpr.make(loc, ctype), "<ctor>", ExprId.construction)
       callArgs(construction)
       return construction
     }

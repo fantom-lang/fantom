@@ -160,6 +160,15 @@ class JavaType : CType
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Return if this is an interop array like
+  ** 'fanx.interop.IntArray' which models 'int[]'.
+  **
+  Bool isInteropArray()
+  {
+    return pod.isInterop && name.endsWith("Array")
+  }
+
+  **
   ** Is this a array type such as [java]foo.bar::[Baz
   **
   Bool isArray() { return arrayRank > 0 }

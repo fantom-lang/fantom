@@ -367,6 +367,7 @@ class InteropTest : JavaTest
     verifyPrimitiveArrays("boolean", "Bool", "true", "false")
     verifyPrimitiveArrays("byte", "Int", "-88", "126")
     verifyPrimitiveArrays("short", "Int", "9", "-32004")
+    verifyPrimitiveArrays("char", "Int", "'X'", "'Y'")
     verifyPrimitiveArrays("int", "Int", "1234", "-99")
     verifyPrimitiveArrays("long", "Int", "0x1234_abcd_00ef", "-123")
     verifyPrimitiveArrays("float", "Float", "12f", "4f")
@@ -378,6 +379,7 @@ class InteropTest : JavaTest
     fanArray := "${kind.capitalize}Array"
     compile(
      "using [java] fanx.test
+      using [java] fanx.interop
       class Foo
       {
         InteropTest x := InteropTest().initArray
@@ -388,6 +390,8 @@ class InteropTest : JavaTest
         Bool test2() { $fanOf v := x.${kind}Array($a, $b)[1]; return v == $b }
         // sets
         Bool test3() { array := x.${kind}Array($a, $b); array[1] = $a; $fanOf v := array[1]; return v == $a }
+        // new
+        Bool test4() { array := ${fanArray}(8); return (Int)array.size == 8 }
       }")
 
     obj := pod.types.first.make
@@ -395,6 +399,7 @@ class InteropTest : JavaTest
     verify(obj->test1)
     verify(obj->test2)
     verify(obj->test3)
+    verify(obj->test4)
   }
 
 //////////////////////////////////////////////////////////////////////////
