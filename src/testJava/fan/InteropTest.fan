@@ -418,6 +418,12 @@ class InteropTest : JavaTest
         Obj[] c() { v := x.numc;   return [v.type, v] }
         Obj[] i() { v := x.numi(); return [v.type, v] }
         Obj[] f() { v := x.numf;   return [v.type, v] }
+
+        Obj   m00() { return x.numi.toHex }
+        Obj   m01() { return x.numi().toHex }
+        Obj   m02() { return x.numi == x.numi() }
+        Bool  m03() { return x.numi() < x.numi }
+        Void  m04() { x.numi() } // verify pop
       }")
 
     obj := pod.types.first.make
@@ -426,6 +432,12 @@ class InteropTest : JavaTest
     verifyEq(obj->c, [Int#, 'c'])
     verifyEq(obj->i, [Int#, 1000])
     verifyEq(obj->f, [Float#, 'f'.toFloat])
+
+    verifyEq(obj->m00, 'i'.toHex)
+    verifyEq(obj->m01, 1000.toHex)
+    verifyEq(obj->m02, false)
+    verifyEq(obj->m03, false)
+    obj->m04
   }
 
 }

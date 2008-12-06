@@ -1168,6 +1168,7 @@ class TypeCheckExpr : Expr
     this.from   = target.ctype
     this.check  = to
     this.ctype  = to
+    this.synthetic = true
   }
 
   override Void walkChildren(Visitor v)

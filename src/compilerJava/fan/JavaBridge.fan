@@ -57,7 +57,7 @@ class JavaBridge : CBridge
   **
   ** Resolve a construction call to a Java constructor.
   **
-  override CallExpr resolveConstruction(CallExpr call)
+  override Expr resolveConstruction(CallExpr call)
   {
     // if this is an interop array like IntArray/int[] use make
     // factory otherwise look for Java constructor called <init>
@@ -67,7 +67,7 @@ class JavaBridge : CBridge
     else
       call.method = base.method("<init>")
 
-    // do normal call resolution to deal with overloading
+    // call resolution to deal with overloading
     call = resolveCall(call)
 
     // we need to create an implicit target for the Java runtime
