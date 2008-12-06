@@ -30,10 +30,11 @@ public class FMethodRef
    */
   private FMethodRef(FTypeRef parent, String name, FTypeRef ret, FTypeRef[] params)
   {
-    this.parent = parent;
-    this.name   = name;
-    this.ret    = ret;
-    this.params = params;
+    this.parent  = parent;
+    this.name    = name;
+    this.ret     = ret;
+    this.params  = params;
+    this.special = toSpecial();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -114,11 +115,7 @@ public class FMethodRef
 
   public void emitCallStatic(CodeEmit code)
   {
-    // check for calls which optimize to a single opcode
-    if (parent.isPrimitiveArray())
-    {
-      if (name.equals("make")) { code.op1(NEWARRAY, newArrayType(parent.arrayOfStackType())); return; }
-    }
+    if (special != null) { special.emit(this, code); return; }
 
     if (jsig == null)
     {
@@ -136,13 +133,7 @@ public class FMethodRef
 
   public void emitCallVirtual(CodeEmit code)
   {
-    // check for calls which optimize to a single opcode
-    if (parent.isPrimitiveArray())
-    {
-      if (name.equals("size")) { code.op(ARRAYLENGTH); return; }
-      if (name.equals("get"))  { code.op(loadArrayOp(parent.arrayOfStackType())); return; }
-      if (name.equals("set"))  { code.op(storeArrayOp(parent.arrayOfStackType())); return; }
-    }
+    if (special != null) { special.emit(this, code); return; }
 
     if (jsig == null)
     {
@@ -253,55 +244,190 @@ public class FMethodRef
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Arrays
+// Specials
 //////////////////////////////////////////////////////////////////////////
 
-  static int newArrayType(int stackType)
+  /**
+   * Attempt to map the method reference to a Special function
+   * which emits custom bytecode for the method call.
+   */
+  private Special toSpecial()
   {
-    switch (stackType)
-    {
-      case FTypeRef.BOOL:   return 4;
-      case FTypeRef.CHAR:   return 5;
-      case FTypeRef.FLOAT:  return 6;
-      case FTypeRef.DOUBLE: return 7;
-      case FTypeRef.BYTE:   return 8;
-      case FTypeRef.SHORT:  return 9;
-      case FTypeRef.INT:    return 10;
-      case FTypeRef.LONG:   return 11;
-      default: throw new IllegalStateException(""+stackType);
-    }
+    if (parent.isBool())  return (Special)boolSpecials.get(name);
+    if (parent.isInt())   return (Special)intSpecials.get(name);
+    if (parent.isFloat()) return (Special)floatSpecials.get(name);
+    if (parent.isPrimitiveArray()) return (Special)arraySpecials.get(name);
+    return null;
   }
 
-  static int loadArrayOp(int stackType)
+  /**
+   * Special function which emits the method directly to custom bytecode
+   */
+  static interface Special
   {
-    switch (stackType)
-    {
-      case FTypeRef.BOOL:   return BALOAD;
-      case FTypeRef.BYTE:   return BALOAD;
-      case FTypeRef.SHORT:  return SALOAD;
-      case FTypeRef.CHAR:   return CALOAD;
-      case FTypeRef.INT:    return IALOAD;
-      case FTypeRef.LONG:   return LALOAD;
-      case FTypeRef.FLOAT:  return FALOAD;
-      case FTypeRef.DOUBLE: return DALOAD;
-      default: throw new IllegalStateException(""+stackType);
-    }
+    void emit(FMethodRef m, CodeEmit code);
   }
 
-  static int storeArrayOp(int stackType)
+  /**
+   * SpecialOp maps directly to a single no arg opcode.
+   */
+  static class SpecialOp implements Special
   {
-    switch (stackType)
+    SpecialOp(int op) { this.op = op; }
+    public void emit(FMethodRef m, CodeEmit code) { code.op(op); }
+    int op;
+  }
+
+  /**
+   * SpecialOp2 maps directly to two no arg opcodes.
+   */
+  static class SpecialOp2 implements Special
+  {
+    SpecialOp2(int op1, int op2) { this.op1 = op1; this.op2 = op2; }
+    public void emit(FMethodRef m, CodeEmit code) { code.op(op1); code.op(op2); }
+    int op1, op2;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Bool Specials
+//////////////////////////////////////////////////////////////////////////
+
+  static Special boolAnd = new SpecialOp(IAND);
+  static Special boolOr  = new SpecialOp(IOR);
+  static Special boolXor = new SpecialOp(IXOR);
+
+  static HashMap boolSpecials = new HashMap();
+  static
+  {
+    boolSpecials.put("and", boolAnd);
+    boolSpecials.put("or",  boolOr);
+    boolSpecials.put("xor", boolXor);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Int Specials
+//////////////////////////////////////////////////////////////////////////
+
+  static Special intPlus   = new SpecialOp(LADD);
+  static Special intMinus  = new SpecialOp(LSUB);
+  static Special intMult   = new SpecialOp(LMUL);
+  static Special intDiv    = new SpecialOp(LDIV);
+  static Special intMod    = new SpecialOp(LREM);
+  static Special intAnd    = new SpecialOp(LAND);
+  static Special intOr     = new SpecialOp(LOR);
+  static Special intXor    = new SpecialOp(LXOR);
+  static Special intNegate = new SpecialOp(LNEG);
+  static Special intLshift = new SpecialOp2(L2I, LSHL);
+  static Special intRshift = new SpecialOp2(L2I, LSHR);
+
+  static HashMap intSpecials = new HashMap();
+  static
+  {
+    intSpecials.put("plus",   intPlus);
+    intSpecials.put("minus",  intMinus);
+    intSpecials.put("mult",   intMult);
+    intSpecials.put("div",    intDiv);
+    intSpecials.put("mod",    intMod);
+    intSpecials.put("and",    intAnd);
+    intSpecials.put("or",     intOr);
+    intSpecials.put("xor",    intXor);
+    intSpecials.put("negate", intNegate);
+    intSpecials.put("lshift", intLshift);
+    intSpecials.put("rshift", intRshift);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Float Specials
+//////////////////////////////////////////////////////////////////////////
+
+  static Special floatPlus   = new SpecialOp(DADD);
+  static Special floatMinus  = new SpecialOp(DSUB);
+  static Special floatMult   = new SpecialOp(DMUL);
+  static Special floatDiv    = new SpecialOp(DDIV);
+  static Special floatMod    = new SpecialOp(DREM);
+  static Special floatNegate = new SpecialOp(DNEG);
+
+  static HashMap floatSpecials = new HashMap();
+  static
+  {
+    floatSpecials.put("plus",   floatPlus);
+    floatSpecials.put("minus",  floatMinus);
+    floatSpecials.put("mult",   floatMult);
+    floatSpecials.put("div",    floatDiv);
+    floatSpecials.put("mod",    floatMod);
+    floatSpecials.put("negate", floatNegate);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Array Specials
+//////////////////////////////////////////////////////////////////////////
+
+  static Special arraySize = new SpecialOp(ARRAYLENGTH);
+
+  static Special arrayMake = new Special()
+  {
+    public void emit(FMethodRef m, CodeEmit code)
     {
-      case FTypeRef.BOOL:   return BASTORE;
-      case FTypeRef.BYTE:   return BASTORE;
-      case FTypeRef.SHORT:  return SASTORE;
-      case FTypeRef.CHAR:   return CASTORE;
-      case FTypeRef.INT:    return IASTORE;
-      case FTypeRef.LONG:   return LASTORE;
-      case FTypeRef.FLOAT:  return FASTORE;
-      case FTypeRef.DOUBLE: return DASTORE;
-      default: throw new IllegalStateException(""+stackType);
+      switch (m.parent.arrayOfStackType())
+      {
+        case FTypeRef.BOOL:   code.op1(NEWARRAY, 4); break;
+        case FTypeRef.CHAR:   code.op1(NEWARRAY, 5); break;
+        case FTypeRef.FLOAT:  code.op1(NEWARRAY, 6); break;
+        case FTypeRef.DOUBLE: code.op1(NEWARRAY, 7); break;
+        case FTypeRef.BYTE:   code.op1(NEWARRAY, 8); break;
+        case FTypeRef.SHORT:  code.op1(NEWARRAY, 9); break;
+        case FTypeRef.INT:    code.op1(NEWARRAY, 10); break;
+        case FTypeRef.LONG:   code.op1(NEWARRAY, 11); break;
+        default: throw new IllegalStateException(""+m.parent);
+      }
     }
+  };
+
+  static Special arrayGet = new Special()
+  {
+    public void emit(FMethodRef m, CodeEmit code)
+    {
+      switch (m.parent.arrayOfStackType())
+      {
+        case FTypeRef.BOOL:   code.op(BALOAD); break;
+        case FTypeRef.BYTE:   code.op(BALOAD); break;
+        case FTypeRef.SHORT:  code.op(SALOAD); break;
+        case FTypeRef.CHAR:   code.op(CALOAD); break;
+        case FTypeRef.INT:    code.op(IALOAD); break;
+        case FTypeRef.LONG:   code.op(LALOAD); break;
+        case FTypeRef.FLOAT:  code.op(FALOAD); break;
+        case FTypeRef.DOUBLE: code.op(DALOAD); break;
+        default: throw new IllegalStateException(""+m.parent);
+      }
+    }
+  };
+
+  static Special arraySet = new Special()
+  {
+    public void emit(FMethodRef m, CodeEmit code)
+    {
+      switch (m.parent.arrayOfStackType())
+      {
+        case FTypeRef.BOOL:   code.op(BASTORE); break;
+        case FTypeRef.BYTE:   code.op(BASTORE); break;
+        case FTypeRef.SHORT:  code.op(SASTORE); break;
+        case FTypeRef.CHAR:   code.op(CASTORE); break;
+        case FTypeRef.INT:    code.op(IASTORE); break;
+        case FTypeRef.LONG:   code.op(LASTORE); break;
+        case FTypeRef.FLOAT:  code.op(FASTORE); break;
+        case FTypeRef.DOUBLE: code.op(DASTORE); break;
+        default: throw new IllegalStateException(""+m.parent);
+      }
+    }
+  };
+
+  static HashMap arraySpecials = new HashMap();
+  static
+  {
+    arraySpecials.put("size", arraySize);
+    arraySpecials.put("make", arrayMake);
+    arraySpecials.put("get",  arrayGet);
+    arraySpecials.put("set",  arraySet);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -351,4 +477,5 @@ public class FMethodRef
   private String jsigAlt;      // alternate cache for ctors and non-virtuals signature
   private int mask;            // cache for mask - lazy init when jsig is initialized
   private int iiNumArgs = -1;  // invoke interface - lazy init when jsig is initialized
+  private Special special;
 }
