@@ -12,6 +12,7 @@ package fanx.interop;
  */
 public class FloatArray
 {
+  public static FloatArray make(int size) { return null; }
   public float get(int index) { return 0; }
   public void set(int index, float val) {}
   public int size() { return 0; }

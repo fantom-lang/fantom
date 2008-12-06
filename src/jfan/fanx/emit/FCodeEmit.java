@@ -632,6 +632,22 @@ public class FCodeEmit
 // Arrays
 //////////////////////////////////////////////////////////////////////////
 
+  public static int newArrayType(int stackType)
+  {
+    switch (stackType)
+    {
+      case FTypeRef.BOOL:   return 4;
+      case FTypeRef.CHAR:   return 5;
+      case FTypeRef.FLOAT:  return 6;
+      case FTypeRef.DOUBLE: return 7;
+      case FTypeRef.BYTE:   return 8;
+      case FTypeRef.SHORT:  return 9;
+      case FTypeRef.INT:    return 10;
+      case FTypeRef.LONG:   return 11;
+      default: throw new IllegalStateException(""+stackType);
+    }
+  }
+
   public static int loadArrayOp(int stackType)
   {
     switch (stackType)
@@ -730,7 +746,17 @@ public class FCodeEmit
 
   private void callStatic()
   {
-    call(u2(), CallStatic, INVOKESTATIC);
+    // check for calls which optimize to a single opcode
+    int index = u2();
+    int[] m = pod.methodRef(index).val;
+    FTypeRef parent = pod.typeRef(m[0]);
+    if (parent.isPrimitiveArray())
+    {
+      String name = pod.name(m[1]);
+      if (name.equals("make")) { code.op1(NEWARRAY, newArrayType(parent.arrayOfStackType())); return; }
+    }
+
+    call(index, CallStatic, INVOKESTATIC);
   }
 
   private void callVirtual()
@@ -742,9 +768,9 @@ public class FCodeEmit
     if (parent.isPrimitiveArray())
     {
       String name = pod.name(m[1]);
+      if (name.equals("size")) { code.op(ARRAYLENGTH); return; }
       if (name.equals("get"))  { code.op(loadArrayOp(parent.arrayOfStackType())); return; }
       if (name.equals("set"))  { code.op(storeArrayOp(parent.arrayOfStackType())); return; }
-      if (name.equals("size")) { code.op(ARRAYLENGTH); return; }
     }
 
     // normal call operation

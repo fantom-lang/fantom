@@ -12,6 +12,7 @@ package fanx.interop;
  */
 public class ShortArray
 {
+  public static ShortArray make(int size) { return null; }
   public short get(int index) { return 0; }
   public void set(int index, short val) {}
   public int size() { return 0; }

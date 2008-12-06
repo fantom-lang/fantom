@@ -21,6 +21,7 @@ class JavaPod : CPod
     this.packageName = package
     if (classes != null)
       this.types = classes.map(JavaType[,]) |Str n->JavaType| { return JavaType(this, n) }
+    isInterop = (package == "fanx.interop")
   }
 
   override CNamespace ns() { return bridge.ns }
@@ -47,5 +48,8 @@ class JavaPod : CPod
     if (checked) throw UnknownTypeErr(name + "::" + typeName)
     return null
   }
+
+  ** Is this the fanx.interop package?
+  const Bool isInterop
 
 }

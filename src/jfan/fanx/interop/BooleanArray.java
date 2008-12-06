@@ -12,6 +12,7 @@ package fanx.interop;
  */
 public class BooleanArray
 {
+  public static BooleanArray make(int size) { return null; }
   public boolean get(int index) { return false; }
   public void set(int index, boolean val) {}
   public int size() { return 0; }
