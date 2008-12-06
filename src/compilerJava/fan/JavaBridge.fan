@@ -51,7 +51,7 @@ class JavaBridge : CBridge
   }
 
 //////////////////////////////////////////////////////////////////////////
-// AST
+// Call Resolution
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -88,30 +88,44 @@ class JavaBridge : CBridge
   **
   override CallExpr resolveCall(CallExpr call)
   {
-    // try to match one of the overloaded methods
+    // try to match against all the overloaded methods
+    matches := CallMatch[,]
     JavaMethod? m := call.method
     while (m != null)
     {
-      if (matchCall(call, m)) return call
+      match := matchCall(call, m)
+      if (match != null) matches.add(match)
       m = m.next
     }
 
-    // if no match this is a argument type error
+    // if we have exactly one match use then use that one
+    if (matches.size == 1)
+    {
+      match := matches.first
+      call.args = match.args
+      call.method = match.method
+      call.ctype  = match.method.returnType
+      return call
+    }
+
+    // if we have multiple matches or no matches we report an error
     s := StrBuf()
-    s.add("Invalid args ").add(call.name).add("(")
-    call.args.each |Expr arg, Int i| { if (i > 0) s.add(", "); s.add(arg.ctype) }
+    s.add(matches.isEmpty ? "Invalid args " : "Ambiguous call ")
+    s.add(call.name).add("(")
+    s.add(call.args.join(", ") |Expr arg->Str| { return arg.toTypeStr })
     s.add(")")
     throw err(s.toStr, call.location)
   }
 
   **
   ** Check if the call matches the specified overload method.
+  ** If so return method and coerced args otherwise return null.
   **
-  Bool matchCall(CallExpr call, JavaMethod m)
+  CallMatch? matchCall(CallExpr call, JavaMethod m)
   {
     // first check if have matching numbers of args and params
     args := call.args
-    if (m.params.size != args.size) return false
+    if (m.params.size != args.size) return null
 
     // check if each argument is ok or can be coerced
     isErr := false
@@ -121,15 +135,13 @@ class JavaBridge : CBridge
       // ensure arg fits parameter type (or auto-cast)
       newArgs[i] = coerce(args[i], p.paramType) |,| { isErr = true }
     }
-    if (isErr) return false
-
-    // if we have a match, then update the call args with coercions
-    // and update the return type with the specified method we matched
-    call.args   = newArgs
-    call.method = m
-    call.ctype  = m.returnType
-    return true
+    if (isErr) return null
+    return CallMatch { method = m; args = newArgs }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Coercion
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** Coerce expression to expected type.  If not a type match
@@ -320,4 +332,14 @@ class JavaBridge : CBridge
   readonly JavaPrimitives primitives := JavaPrimitives(this)
   readonly ClassPath cp
 
+}
+
+**************************************************************************
+** CallMatch
+**************************************************************************
+
+internal class CallMatch
+{
+  JavaMethod method  // matched method
+  Expr[] args        // coerced arguments
 }

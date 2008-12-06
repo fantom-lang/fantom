@@ -23,18 +23,26 @@ class CheckErrorsTest : JavaTest
     // ResolveExpr step
     verifyErrors(
      "using [java] java.lang
+      using [java] fanx.test
       class Foo
       {
+        // invalid arguments
         static Void m00() { System.getProperty() }
         static Void m01() { System.getProperty(\"foo\", \"bar\", 4) }
         static Void m02() { System.getProperty(\"foo\", 4) }
         static System? m03() { m03.getProperty(\"foo\"); return null }
+
+        // ambiguous calls
+        static Void m04() { InteropTest().ambiguous1(3) }
+        static Void m05() { InteropTest().ambiguous2(null) }
       }
       ",
        [
-          4, 30, "Invalid args getProperty()",
-          5, 30, "Invalid args getProperty(sys::Str, sys::Str, sys::Int)",
-          6, 30, "Invalid args getProperty(sys::Str, sys::Int)",
+          6, 30, "Invalid args getProperty()",
+          7, 30, "Invalid args getProperty(sys::Str, sys::Str, sys::Int)",
+          8, 30, "Invalid args getProperty(sys::Str, sys::Int)",
+         12, 37, "Ambiguous call ambiguous1(sys::Int)",
+         13, 37, "Ambiguous call ambiguous2(null)",
        ])
 
     // CheckErrors step

@@ -203,9 +203,9 @@ class JavaTypePeer
       return comp.substring(0, colon+1) + "[" + comp.substring(colon+1);
     }
 
-    // Fan classes
+    // any Java use of String is considered potential nullable
     if (cls.getName().equals("java.lang.String"))
-      return multiDim ? "[java]java.lang::String" : "sys::Str";
+      return multiDim ? "[java]java.lang::String" : "sys::Str?";
 
     // Java FFI
     return "[java]" + cls.getPackage().getName() + "::" + cls.getSimpleName();
