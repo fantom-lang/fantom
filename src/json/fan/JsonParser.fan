@@ -28,7 +28,7 @@ internal class JsonParser
 
   private Str:Obj parseObject()
   {
-    pairs := Str:Obj[:]
+    pairs := Str:Obj?[:]
 
     skipWhitespace
 
@@ -54,7 +54,7 @@ internal class JsonParser
 
   private Str:Obj parsePair()
   {
-    map := Str:Obj[:]
+    map := Str:Obj?[:]
 
     skipWhitespace
     key := key
@@ -287,9 +287,9 @@ internal class JsonParser
   }
 
   private InStream buf
-  private Int cur := '?'
-  private Int peek := '?'
-  private Int prev := '?'
+  private Int? cur := '?'
+  private Int? peek := '?'
+  private Int? prev := '?'
   private Int pos := 0
   private static const Str keyAtom := "key_atom"
   private static const Str valueAtom := "value_atom"
