@@ -70,7 +70,7 @@ internal class JsonWriter
     // FIXIT do we want a type??
 
     notFirst := false
-    map.each |Obj val, Str key|
+    map.each |Obj? val, Str key|
     {
       if (notFirst) buf.print(JsonToken.comma.toChar)
       writePair(key, val, buf)
@@ -110,7 +110,7 @@ internal class JsonWriter
     buf.print(JsonToken.arrayEnd.toChar)
   }
 
-  private static Void writePair(Str key, Obj val, OutStream buf)
+  private static Void writePair(Str key, Obj? val, OutStream buf)
   {
       writeKey(key, buf)
       buf.print(JsonToken.colon.toChar)
