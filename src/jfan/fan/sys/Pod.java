@@ -356,7 +356,7 @@ public class Pod
     String podName  = ref.podName;
     String typeName = ref.typeName;
     if (podName.startsWith("[java]"))
-      return new JavaType(podName, typeName);
+      return JavaType.make(podName, typeName);
 
     // otherwise I need to handle if I am loading my own pod, because
     // I might not yet be added to the system namespace if I'm just

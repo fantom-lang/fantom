@@ -209,34 +209,36 @@ public class ClassType
 
   public List inheritance()
   {
-    if (inheritance == null)
-    {
-      HashMap map = new HashMap();
-      List acc = new List(Sys.TypeType);
-
-      // handle Void as a special case
-      if (this == Sys.VoidType)
-      {
-        acc.add(this);
-        return inheritance = acc.trim();
-      }
-
-      // add myself
-      map.put(qname, this);
-      acc.add(this);
-
-      // add my direct inheritance inheritance
-      addInheritance(base(), acc, map);
-      List mixins = mixins();
-      for (int i=0; i<mixins.sz(); ++i)
-        addInheritance((Type)mixins.get(i), acc, map);
-
-      inheritance = acc.trim().ro();
-    }
+    if (inheritance == null) inheritance = inheritance(this);
     return inheritance;
   }
 
-  private void addInheritance(Type t, List acc, HashMap map)
+  static List inheritance(Type self)
+  {
+    HashMap map = new HashMap();
+    List acc = new List(Sys.TypeType);
+
+    // handle Void as a special case
+    if (self == Sys.VoidType)
+    {
+      acc.add(self);
+      return acc.trim().ro();
+    }
+
+    // add myself
+    map.put(self.qname(), self);
+    acc.add(self);
+
+    // add my direct inheritance inheritance
+    addInheritance(self.base(), acc, map);
+    List mixins = self.mixins();
+    for (int i=0; i<mixins.sz(); ++i)
+      addInheritance((Type)mixins.get(i), acc, map);
+
+    return acc.trim().ro();
+  }
+
+  private static void addInheritance(Type t, List acc, HashMap map)
   {
     if (t == null) return;
     List ti = t.inheritance();
@@ -556,6 +558,8 @@ public class ClassType
 // Emit
 //////////////////////////////////////////////////////////////////////////
 
+  public Class toClass() { return emit(); }
+
   /**
    * Emit to a Java class.
    */
@@ -776,7 +780,7 @@ catch (Exception e) { e.printStackTrace(); }
     for (int i=0; i<params.length; ++i)
     {
       Class p = params[i];
-      if (!p.getName().startsWith("fan.") && FanUtil.toFanType(p, false) == null)
+      if (!p.getName().startsWith("fan.") && FanUtil.toFanType(p, false, false) == null)
         return false;
     }
     return true;
