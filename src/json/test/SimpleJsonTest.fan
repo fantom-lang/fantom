@@ -167,6 +167,16 @@ class SimpleJsonTest : Test
     validate(input, map)
   }
 
+  Void testNull()
+  {
+    buf := StrBuf.make
+    stream := OutStream.makeForStrBuf(buf)
+    verifyErr(ArgErr#) |,| { Json.write(null, stream) }
+    stream.close
+
+    verifyErr(ArgErr#) |,| { Json.read(null) }
+  }
+
   Void testRawJson()
   {
     buf := StrBuf.make
@@ -177,7 +187,7 @@ class SimpleJsonTest : Test
     map := Json.read(ins)
     verifyEq(map["type"], "Foobar")
   }
-
+	  
   private Str:Obj doTest(Str:Obj map)
   {
     buf := StrBuf.make
