@@ -17,11 +17,9 @@ public class FanUtil
 {
 
   /**
-   * Convert Java class to Fan type.  If mapFFI is true then map
-   * any Java class to a JavaType.  Otherwise we only map fan.pod.Type
-   * classes and predefined types like boolean, long, Double, etc.
+   * Convert Java class to Fan type.
    */
-  public static Type toFanType(Class cls, boolean mapFFI, boolean checked)
+  public static Type toFanType(Class cls, boolean checked)
   {
     // try a predefined mapping
     String name = cls.getName();
@@ -40,17 +38,14 @@ public class FanUtil
     }
 
     // map to a FFI Java class
-    if (mapFFI) return JavaType.make(cls);
-
-    // error
-    if (!checked) return null;
-    throw UnknownTypeErr.make("Not a Fan type: " + name).val;
+    return JavaType.make(cls);
   }
 
   private static HashMap javaToFanTypes = new HashMap();
   static
   {
     if (Sys.ObjType == null) java.lang.Thread.dumpStack();
+    javaToFanTypes.put("void",                 Sys.VoidType);
     javaToFanTypes.put("boolean",              Sys.BoolType);
     javaToFanTypes.put("long",                 Sys.IntType);
     javaToFanTypes.put("double",               Sys.FloatType);
@@ -61,6 +56,12 @@ public class FanUtil
     javaToFanTypes.put("java.lang.Long",       Sys.IntType);
     javaToFanTypes.put("java.lang.Double",     Sys.FloatType);
     javaToFanTypes.put("java.math.BigDecimal", Sys.DecimalType);
+
+    javaToFanTypes.put("byte",  JavaType.ByteType);
+    javaToFanTypes.put("short", JavaType.ShortType);
+    javaToFanTypes.put("char",  JavaType.CharType);
+    javaToFanTypes.put("int",   JavaType.IntType);
+    javaToFanTypes.put("float", JavaType.FloatType);
   }
 
   /**

@@ -780,7 +780,7 @@ catch (Exception e) { e.printStackTrace(); }
     for (int i=0; i<params.length; ++i)
     {
       Class p = params[i];
-      if (!p.getName().startsWith("fan.") && FanUtil.toFanType(p, false, false) == null)
+      if (!p.getName().startsWith("fan.") && FanUtil.toFanType(p, false) instanceof JavaType)
         return false;
     }
     return true;

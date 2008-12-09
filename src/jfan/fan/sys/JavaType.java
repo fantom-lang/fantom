@@ -27,7 +27,7 @@ public class JavaType
    * Make for a given Java class.  This is only used to map FFI Java types.
    * See FanUtil.toFanType for mapping any class to a sys::Type.
    */
-  public static Type make(Class cls)
+  public static JavaType make(Class cls)
   {
     // at this point we shouldn't have any native fan type
     String clsName = cls.getName();
@@ -81,7 +81,10 @@ public class JavaType
 
   private JavaType(Class cls)
   {
-    this.podName = "[java]" + cls.getPackage().getName();
+    if (cls.getPackage() == null)
+      this.podName = "[java]";
+    else
+      this.podName = "[java]" + cls.getPackage().getName();
     this.typeName = cls.getSimpleName();
     this.cls = cls;
   }
@@ -115,10 +118,16 @@ public class JavaType
     return nullable;
   }
 
-  public List fields() { throw unsupported(); }
-  public List methods() { throw unsupported(); }
-  public List slots() { throw unsupported(); }
-  public Slot slot(String name, boolean checked) { throw unsupported(); }
+  public List fields() { return initSlots().fields; }
+  public List methods() { return initSlots().methods; }
+  public List slots() { return initSlots().slots; }
+  public Slot slot(String name, boolean checked)
+  {
+    Slot slot = (Slot)initSlots().slotsByName.get(name);
+    if (slot != null) return slot;
+    if (checked) throw UnknownSlotErr.make(qname() + "." + name).val;
+    return null;
+  }
 
   public Map facets(boolean inherited) { return Facets.empty().map(); }
   public Object facet(String name, Object def, boolean inherited) { return Facets.empty().get(name, def); }
@@ -134,15 +143,6 @@ public class JavaType
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Map a Fan qname to a Java classname:
-   *  [java]java.util::Date -> java.util.Date
-   */
-  static String toClassName(String podName, String typeName)
-  {
-    return podName.substring(6) + "." + typeName;
-  }
-
-  /**
    * Get the Java class which represents this type.  This is
    * either set in constructor by factor or lazily mapped.
    */
@@ -156,12 +156,13 @@ public class JavaType
     }
     catch (Exception e)
     {
-      throw new RuntimeException("Cannot map Fan type to Java class: " + qname());
+      throw UnknownTypeErr.make("Cannot map Fan type to Java class: " + qname(), e).val;
     }
   }
 
   /**
-   * Init is responsible for lazily initialization
+   * Init is responsible for lazily initialization of type
+   * level information: flags, base, mixins, and iinheritance.
    */
   private JavaType init()
   {
@@ -176,14 +177,14 @@ public class JavaType
 
       // superclass is base class
       Class superclass = cls.getSuperclass();
-      if (superclass != null) base = FanUtil.toFanType(superclass, true, true);
+      if (superclass != null) base = toFanType(superclass);
       else base = Sys.ObjType;
 
       // interfaces are mixins
       Class[] interfaces = cls.getInterfaces();
       mixins = new List(Sys.TypeType, interfaces.length);
       for (int i=0; i<interfaces.length; ++i)
-        mixins.add(FanUtil.toFanType(interfaces[i], true, true));
+        mixins.add(toFanType(interfaces[i]));
       mixins = mixins.ro();
 
       // inheritance
@@ -197,9 +198,109 @@ public class JavaType
     return this;
   }
 
+  /**
+   * Reflect the Java class to map is members to Fan slots.
+   */
+  private synchronized JavaType initSlots()
+  {
+    // if already initialized short circuit
+    if (slots != null) return this;
+
+    // reflect Java members
+    java.lang.reflect.Field[] jfields = toClass().getFields();
+    java.lang.reflect.Method[] jmethods = toClass().getMethods();
+
+    // allocate Fan reflection structurs
+    List slots = new List(Sys.SlotType, jfields.length+jmethods.length+4);
+    List fields = new List(Sys.FieldType, jfields.length);
+    List methods = new List(Sys.MethodType, jfields.length+4);
+    HashMap slotsByName = new HashMap();
+
+    // map the fields
+    for (int i=0; i<jfields.length; ++i)
+    {
+      Field f = toFan(jfields[i]);
+      slots.add(f);
+      fields.add(f);
+      slotsByName.put(f.name(), f);
+    }
+
+    // map the methods
+    for (int i=0; i<jmethods.length; ++i)
+    {
+      Method m = toFan(jmethods[i]);
+
+      // TODO: for now ignore overloads
+      if (slotsByName.get(m.name()) != null) continue;
+
+      slots.add(m);
+      methods.add(m);
+      slotsByName.put(m.name(), m);
+    }
+
+    // finish
+    this.slots = slots.ro();
+    this.fields = fields.ro();
+    this.methods = methods.ro();
+    this.slotsByName = slotsByName;
+    return this;
+  }
+
+  private Field toFan(java.lang.reflect.Field java)
+  {
+    Type parent   = toFanType(java.getDeclaringClass());
+    String name   = java.getName();
+    int flags     = javaModifiersToFanFlags(java.getModifiers());
+    Facets facets = Facets.empty();
+    Type of       = toFanType(java.getType());
+
+    Field fan = new Field(parent, name, flags, facets, -1, of);
+    fan.reflect = java;
+    return fan;
+  }
+
+  private Method toFan(java.lang.reflect.Method java)
+  {
+    Type parent   = toFanType(java.getDeclaringClass());
+    String name   = java.getName();
+    int flags     = javaModifiersToFanFlags(java.getModifiers());
+    Facets facets = Facets.empty();
+    Type ret      = toFanType(java.getReturnType());
+
+    Class[] paramClasses = java.getParameterTypes();
+    List params = new List(Sys.ParamType, paramClasses.length);
+    for (int i=0; i<paramClasses.length; ++i)
+    {
+      Param param = new Param("p"+i, toFanType(java.getDeclaringClass()), 0);
+      params.add(param);
+    }
+
+    Method fan = new Method(parent, name, flags, facets, -1, ret, ret, params.ro());
+    fan.reflect = new java.lang.reflect.Method[] { java };
+    return fan;
+  }
+
 //////////////////////////////////////////////////////////////////////////
-// Flags
+// Utils
 //////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Map a Fan qname to a Java classname:
+   *  [java]java.util::Date -> java.util.Date
+   */
+  static String toClassName(String podName, String typeName)
+  {
+    if (podName.length() == 6) return typeName;
+    return podName.substring(6) + "." + typeName;
+  }
+
+  /**
+   * Map Java class to Fan type.
+   */
+  public static Type toFanType(Class cls)
+  {
+    return FanUtil.toFanType(cls, true);
+  }
 
   /**
    * Map Java modifiers to Fan flags.
@@ -227,13 +328,23 @@ public class JavaType
 
   private static final HashMap cache = new HashMap(); // String -> JavaType
 
-  private String podName;     // ctor
-  private String typeName;    // ctor
-  private Type nullable;      // toNullable()
-  private Class cls;          // init()
-  private int flags = -1;     // init()
-  private Type base;          // init()
-  private List mixins;        // init()
-  private List inheritance;   // init()
+  public static final JavaType ByteType  = make(byte.class);
+  public static final JavaType ShortType = make(short.class);
+  public static final JavaType CharType  = make(char.class);
+  public static final JavaType IntType   = make(int.class);
+  public static final JavaType FloatType = make(float.class);
+
+  private String podName;      // ctor
+  private String typeName;     // ctor
+  private Type nullable;       // toNullable()
+  private Class cls;           // init()
+  private int flags = -1;      // init()
+  private Type base;           // init()
+  private List mixins;         // init()
+  private List inheritance;    // init()
+  private List fields;         // initSlots()
+  private List methods;        // initSlots()
+  private List slots;          // initSlots()
+  private HashMap slotsByName; // initSlots() - String:Slot
 
 }
