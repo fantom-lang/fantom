@@ -18,20 +18,20 @@ internal class JsonParser
   {
     this.buf = buf
   }
-
+  
   // FIXIT need one to parse to Obj as well, doing Map for now
   internal Str:Obj parse()
   {
     consume
     return parseObject
   }
-
+  
   private Str:Obj parseObject()
   {
     pairs := Str:Obj?[:]
-
+    
     skipWhitespace
-
+    
     expect(JsonToken.objectStart)
 
     while (true)
@@ -127,9 +127,10 @@ internal class JsonParser
       while (this.cur.isDigit)
       {
         fractional.add(this.cur.toChar)
-  consume
+	consume
       }
     }
+
     if (this.cur == 'e' || this.cur == 'E')
     {
       exponent.add(this.cur.toChar)
@@ -137,13 +138,13 @@ internal class JsonParser
       if (this.cur == '+') consume
       else if (this.cur == '-')
       {
-  exponent.add(this.cur.toChar)
+	exponent.add(this.cur.toChar)
         consume
       }
       while (this.cur.isDigit)
       {
         exponent.add(this.cur.toChar)
-  consume
+	consume
       }
     }
 
@@ -210,11 +211,12 @@ internal class JsonParser
   {
     s := StrBuf.make
     expect(JsonToken.quote)
-    while (this.cur != JsonToken.quote && this.prev != '\\')
+    while (this.cur != JsonToken.quote || this.prev == '\\')
     {
       s.add(this.cur.toChar)
       consume
     }
+
     expect(JsonToken.quote)
     return s.toStr
   }
@@ -276,7 +278,7 @@ internal class JsonParser
   private Void consume()
   {
     this.prev = this.cur
-    this.cur = this.buf.read ?: -1
+    this.cur = this.buf.readChar ?: -1
     this.peek = this.buf.peek ?: -1
   }
 
