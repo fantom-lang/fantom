@@ -215,22 +215,9 @@ class JavaTypePeer
     return "[java]" + cls.getPackage().getName() + "::" + cls.getSimpleName() + "?";
   }
 
-  static long toFanFlags(int m)
-    throws Exception
+  static int toFanFlags(int modifiers)
   {
-    long flags = 0;
-
-    if (Modifier.isAbstract(m))  flags |= FConst.Abstract;
-    if (Modifier.isFinal(m))     flags |= FConst.Final;
-    if (Modifier.isInterface(m)) flags |= FConst.Mixin;
-    if (Modifier.isStatic(m))    flags |= FConst.Static;
-
-    if (Modifier.isPublic(m))   flags |= FConst.Public;
-    else if (Modifier.isPrivate(m))  flags |= FConst.Private;
-    else if (Modifier.isProtected(m))  flags |= FConst.Protected;
-    else flags |= FConst.Internal;
-
-    return flags;
+    return fan.sys.JavaType.javaModifiersToFanFlags(modifiers);
   }
 
 }

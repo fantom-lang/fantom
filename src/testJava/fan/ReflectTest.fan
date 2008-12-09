@@ -68,4 +68,80 @@ class ReflectTest : JavaTest
     verifyEq(map.params["V"].qname, "[java]java.util::ArrayLsit")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// JavaType: java.util.Date
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDate()
+  {
+    t := Type.find("[java]java.util::Date")
+    verifySame(Type.find("[java]java.util::Date"), t)
+
+    // naming
+    verifyEq(t.name, "Date")
+    verifyEq(t.qname, "[java]java.util::Date")
+    verifyEq(t.signature, "[java]java.util::Date")
+    verifyEq(t.toStr, t.signature)
+
+    // flags
+    verifyEq(t.isPublic, true)
+    verifyEq(t.isInternal, false)
+    verifyEq(t.isAbstract, false)
+    verifyEq(t.isFinal, false)
+    verifyEq(t.isMixin, false)
+    verifyEq(t.isEnum, false)
+    verifyEq(t.isConst, false)
+
+    // inheritance
+    verifyEq(t.base, Obj#)
+    verifyEq(t.mixins.isRO, true)
+    verifyEq(t.inheritance.isRO, true)
+    verifyEq(t.mixins.rw.sort,
+      Type[Type.find("[java]java.io::Serializable"),
+       Type.find("[java]java.lang::Cloneable"),
+       Type.find("[java]java.lang::Comparable"),
+      ].sort)
+    verifyEq(t.inheritance.rw.sort, Type[t, Obj#].addAll(t.mixins).sort)
+    verifyEq(t.fits(Obj#), true)
+    verifyEq(t.fits(t), true)
+    verifyEq(t.fits(Type.find("[java]java.lang::Cloneable")), true)
+    verifyEq(t.fits(Str#), false)
+
+    // nullable
+    verifyEq(t.toNullable.signature, "[java]java.util::Date?")
+    verifyEq(t.toNullable.isNullable, true)
+    verifySame(t.toNullable, t.toNullable)
+    verifySame(t.toNullable.toNonNullable, t)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// JavaType: java.lang.Runnable
+//////////////////////////////////////////////////////////////////////////
+
+  Void testRunnable()
+  {
+    t := Type.find("[java]java.lang::Runnable")
+    verifySame(Type.find("[java]java.lang::Runnable"), t)
+
+    // naming
+    verifyEq(t.name, "Runnable")
+    verifyEq(t.toStr, "[java]java.lang::Runnable")
+
+    // flags
+    verifyEq(t.isPublic, true)
+    verifyEq(t.isInternal, false)
+    verifyEq(t.isAbstract, true)
+    verifyEq(t.isFinal, false)
+    verifyEq(t.isMixin, true)
+    verifyEq(t.isEnum, false)
+    verifyEq(t.isConst, false)
+
+    // inheritance
+    verifyEq(t.base, Obj#)
+    verifyEq(t.mixins.isRO, true)
+    verifyEq(t.inheritance.isRO, true)
+    verifyEq(t.mixins, Type[,])
+    verifyEq(t.inheritance, Type[t, Obj#])
+  }
+
 }

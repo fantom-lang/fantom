@@ -17,15 +17,34 @@ public class FanUtil
 {
 
   /**
-   * Convert Java class to Fan type.
+   * Convert Java class to Fan type.  If mapFFI is true then map
+   * any Java class to a JavaType.  Otherwise we only map fan.pod.Type
+   * classes and predefined types like boolean, long, Double, etc.
    */
-  public static Type toFanType(Class cls, boolean checked)
+  public static Type toFanType(Class cls, boolean mapFFI, boolean checked)
   {
-    // TODO: optimize performance
-    Type t = (Type)javaToFanTypes.get(cls.getName());
+    // try a predefined mapping
+    String name = cls.getName();
+    Type t = (Type)javaToFanTypes.get(name);
     if (t != null) return t;
+
+    // if class name starts with "fan."
+    if (name.startsWith("fan."))
+    {
+      int dot = name.lastIndexOf('.');
+      String podName = name.substring(4, dot);
+      String typeName = name.substring(dot+1);
+      Pod pod = Pod.find(podName, checked);
+      if (pod == null) return null;
+      return pod.findType(typeName, checked);
+    }
+
+    // map to a FFI Java class
+    if (mapFFI) return JavaType.make(cls);
+
+    // error
     if (!checked) return null;
-    throw Err.make("Not a Fan type: " + cls.getName()).val;
+    throw UnknownTypeErr.make("Not a Fan type: " + name).val;
   }
 
   private static HashMap javaToFanTypes = new HashMap();
@@ -49,7 +68,6 @@ public class FanUtil
    */
   public static boolean isJavaImmutable(Class cls)
   {
-    // TODO: optimize performance
     return javaImmutables.get(cls.getName()) != null;
   }
 

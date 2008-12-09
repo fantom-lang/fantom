@@ -63,6 +63,7 @@ public class NullableType
   public String doc() { return root.doc(); }
 
   public boolean javaRepr() { return root.javaRepr(); }
+  public Class toClass() { return root.toClass(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

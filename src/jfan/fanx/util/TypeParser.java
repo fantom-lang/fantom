@@ -58,7 +58,7 @@ public class TypeParser
 
       // if podName starts with [java] this is a direct Java type
       if (podName.charAt(0) == '[')
-        return new JavaType(podName, typeName);
+        return JavaType.make(podName, typeName);
 
       // if the type is from the pod being loaded then return to the pod
       if (loadingPod != null && podName.equals(loadingPod.name()))
@@ -209,7 +209,7 @@ public class TypeParser
     while (isIdChar(cur)) consume();
     String typeName = sig.substring(start, pos);
 
-    return new JavaType(podName, typeName);
+    return JavaType.make(podName, typeName);
   }
 
   private Type loadBasic()

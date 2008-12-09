@@ -100,7 +100,7 @@ public class FanObj
     if (self instanceof FanObj)
       return ((FanObj)self).type();
     else
-      return FanUtil.toFanType(self.getClass(), true);
+      return FanUtil.toFanType(self.getClass(), true, true);
   }
 
   public Type type()
