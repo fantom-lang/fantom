@@ -225,7 +225,7 @@ class JavaBridge : CBridge
   **
   Expr coerceFromArray(Expr expr, CType expected, |,| onErr)
   {
-    actual := (JavaType)expr.ctype
+    actual := (JavaType)expr.ctype.toNonNullable
     actualOf := actual.arrayOf
 
     // if expected is Obj
@@ -259,7 +259,7 @@ class JavaBridge : CBridge
   Expr coerceToArray(Expr expr, CType expected, |,| onErr)
   {
     loc := expr.location
-    expectedOf := ((JavaType)expected).arrayOf
+    expectedOf := ((JavaType)expected.toNonNullable).arrayOf
     actual := expr.ctype
 
     // if actual is list type

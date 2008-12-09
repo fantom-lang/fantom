@@ -79,14 +79,14 @@ class CheckErrorsTest : JavaTest
       }
       ",
        [
-          4, 42, "Method 'dateMulti2' uses unsupported type '[java]java.util::[[Date'",
-          5, 42, "Field 'dateMulti3' has unsupported type '[java]java.util::[[[Date'",
-          6, 42, "Method 'strMulti2' uses unsupported type '[java]java.lang::[[String'",
-          7, 42, "Field 'strMulti3' has unsupported type '[java]java.lang::[[[String'",
-          8, 42, "Method 'intMulti2' uses unsupported type '[java]::[[int'",
-          9, 42, "Field 'intMulti3' has unsupported type '[java]::[[[int'",
-         10, 42, "Method 'doubleMulti2' uses unsupported type '[java]::[[double'",
-         11, 42, "Field 'doubleMulti3' has unsupported type '[java]::[[[double'",
+          4, 42, "Method 'dateMulti2' uses unsupported type '[java]java.util::[[Date?'",
+          5, 42, "Field 'dateMulti3' has unsupported type '[java]java.util::[[[Date?'",
+          6, 42, "Method 'strMulti2' uses unsupported type '[java]java.lang::[[String?'",
+          7, 42, "Field 'strMulti3' has unsupported type '[java]java.lang::[[[String?'",
+          8, 42, "Method 'intMulti2' uses unsupported type '[java]::[[int?'",
+          9, 42, "Field 'intMulti3' has unsupported type '[java]::[[[int?'",
+         10, 42, "Method 'doubleMulti2' uses unsupported type '[java]::[[double?'",
+         11, 42, "Field 'doubleMulti3' has unsupported type '[java]::[[[double?'",
        ])
    }
 

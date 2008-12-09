@@ -58,6 +58,25 @@ class NamespaceTest : JavaTest
     verifyEq(mapLib.params.size, 1)
     verifyEq(mapLib.params[0].name, "p0")
     verifySame(mapLib.params[0].paramType, ns.strType.toNullable)
+
+    // check that APIs considered nullable
+    secMgr := sys.method("getSecurityManager").returnType
+    verifyEq(secMgr.isNullable, true)
+    verifyEq(secMgr.signature, "[java]java.lang::SecurityManager?")
+    verifyEq(secMgr.toNonNullable.signature, "[java]java.lang::SecurityManager")
+    verifyEq(sys.method("getSecurityManager").returnType.signature,
+      "[java]java.lang::SecurityManager?")
+    verifySame(sys.method("identityHashCode").params[0].paramType,
+      ns.objType.toNullable)
+    verifyEq(sys.method("setProperties").params[0].paramType.signature,
+      "[java]java.util::Properties?")
+
+    // primitives/arrays
+    t := ns.resolvePod("[java]fanx.test", null).resolveType("InteropTest", true)
+    verifyEq(t.method("booleanArray").returnType.isNullable, true)
+    verifyEq(t.method("booleanArray").returnType.signature, "[java]fanx.interop::BooleanArray?")
+    verifyEq(t.method("booleanArray").returnType.toNonNullable.signature, "[java]fanx.interop::BooleanArray")
+    verifyEq(t.field("numb").fieldType.signature, "[java]::byte")
   }
 
 //////////////////////////////////////////////////////////////////////////

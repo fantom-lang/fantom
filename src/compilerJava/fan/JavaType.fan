@@ -49,8 +49,8 @@ class JavaType : CType
 
   override Bool isValue() { return false }
 
-  override Bool isNullable() { return !isPrimitive } // all Java reference types are considered nullable
-  override CType toNullable() { return this }
+  override Bool isNullable() { return false }
+  override once CType toNullable() { return NullableType(this) }
 
   override Bool isGeneric() { return false }
   override Bool isParameterized() { return false }

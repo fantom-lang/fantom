@@ -186,29 +186,33 @@ class JavaTypePeer
       // if a primary array
       if (compCls.isPrimitive() && !multiDim)
       {
-        if (cls == boolean[].class) return "[java]fanx.interop::BooleanArray";
-        if (cls == byte[].class)    return "[java]fanx.interop::ByteArray";
-        if (cls == short[].class)   return "[java]fanx.interop::ShortArray";
-        if (cls == char[].class)    return "[java]fanx.interop::CharArray";
-        if (cls == int[].class)     return "[java]fanx.interop::IntArray";
-        if (cls == long[].class)    return "[java]fanx.interop::LongArray";
-        if (cls == float[].class)   return "[java]fanx.interop::FloatArray";
-        if (cls == double[].class)  return "[java]fanx.interop::DoubleArray";
+        if (cls == boolean[].class) return "[java]fanx.interop::BooleanArray?";
+        if (cls == byte[].class)    return "[java]fanx.interop::ByteArray?";
+        if (cls == short[].class)   return "[java]fanx.interop::ShortArray?";
+        if (cls == char[].class)    return "[java]fanx.interop::CharArray?";
+        if (cls == int[].class)     return "[java]fanx.interop::IntArray?";
+        if (cls == long[].class)    return "[java]fanx.interop::LongArray?";
+        if (cls == float[].class)   return "[java]fanx.interop::FloatArray?";
+        if (cls == double[].class)  return "[java]fanx.interop::DoubleArray?";
         throw new IllegalStateException(cls.getName());
       }
 
       // return "[java] foo.bar::[Baz"
       String comp = toFanType(compCls, true);
       int colon = comp.lastIndexOf(':');
-      return comp.substring(0, colon+1) + "[" + comp.substring(colon+1);
+      String sig = comp.substring(0, colon+1) + "[" + comp.substring(colon+1);
+      if (!sig.endsWith("?")) sig += "?";
+      return sig;
     }
 
-    // any Java use of String is considered potential nullable
+    // any Java use of Obj/Str is considered potential nullable
+    if (cls.getName().equals("java.lang.Object"))
+      return multiDim ? "[java]java.lang::Object?" : "sys::Obj?";
     if (cls.getName().equals("java.lang.String"))
-      return multiDim ? "[java]java.lang::String" : "sys::Str?";
+      return multiDim ? "[java]java.lang::String?" : "sys::Str?";
 
     // Java FFI
-    return "[java]" + cls.getPackage().getName() + "::" + cls.getSimpleName();
+    return "[java]" + cls.getPackage().getName() + "::" + cls.getSimpleName() + "?";
   }
 
   static long toFanFlags(int m)
