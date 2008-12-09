@@ -44,6 +44,15 @@ class NullableType : CType
   override Bool isParameterized() { return root.isParameterized }
   override Bool isGenericParameter() { return root.isGenericParameter }
 
+  override Bool isForeign()   { return root.isForeign }
+  override Bool isSupported() { return root.isSupported }
+  override CType inferredAs()
+  {
+    x := root.inferredAs
+    if (x === root) return this
+    return x.toNullable
+  }
+
   override once CType toListOf() { return ListType(this) }
 
   override CType? base() { return root.base }
