@@ -125,9 +125,9 @@ as using primitives in Java and value-types in C#.
 Value-types can be nullable also.  For instance a variable declared to
 be 'Int?' can store null.
 
-Value-types differ from reference types in that fields default to
-null or zero instead of null.  However the nullable versions of value-types
-do default to null.
+Value-types differ from reference types in that fields default to false/zero
+instead of null.  However the nullable versions of value-types do
+default to null.
 
 A mapping of Fan types to their runtime representations:
 

@@ -64,9 +64,9 @@ Slot [#slot]
 ************
 Types encapsulate state and behavior as a collection of slots.  Slots are
 named uniquely within a given type.  The '.' dot is used to combine the parent
-type's qname to create the slot's qname.  For example 'sys::Time.now' is the
+type's qname to create the slot's qname.  For example 'sys::DateTime.now' is the
 globally unique qualified name which identifies the 'now' method within the
-'Time' type within the 'sys' pod.
+'DateTime' type within the 'sys' pod.
 
 There are two types of slots:
   - [Methods]`#method`: model behavior
