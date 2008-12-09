@@ -134,6 +134,12 @@ class SimpleJsonTest : Test
     doTest(["k1":[,]])
   }
 
+
+  Void testArrayWithNull()
+  {
+    doTest(["k1":["foo",null,"bar"]])
+  }
+
   Void testUri()
   {
     doTest(["kuri":`http://fandev.org`])
