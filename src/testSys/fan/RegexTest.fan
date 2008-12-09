@@ -100,15 +100,19 @@ class RegexTest : Test
   Void testGroups()
   {
     // single find
-    m := Regex.fromStr("(a(b)c)d").matcher("abcd")
+    m := Regex("(a(b)c)d").matcher("abcd")
     verifyGroups(m, [ ["abcd", 0, 4], ["abc",  0, 3], ["b",    1, 2] ])
     verify(!m.find)
 
     // double find
-    m = Regex.fromStr("(a(b)c)d").matcher("abcdabcd")
+    m = Regex("(a(b)c)d").matcher("abcdabcd")
     verifyGroups(m, [ ["abcd", 0, 4], ["abc",  0, 3], ["b",    1, 2] ])
     verifyGroups(m, [ ["abcd", 4, 8], ["abc",  4, 7], ["b",    5, 6] ])
     verify(!m.find)
+
+    // find null
+    m = Regex("foo|foo"+r"/(\d*)").matcher("foo/33")
+    verifyGroups(m, [["foo", 0, 3], [null, -1, -1]])
   }
 
   Void verifyGroups(RegexMatcher m, Obj[][] expected)
