@@ -101,7 +101,7 @@ internal class JsonWriter
     // FIXIT we cant really put a type in here, need to infer it
 
     notFirst := false
-    array.each |Obj o|
+    array.each |Obj? o|
     {
       if (notFirst) buf.print(JsonToken.comma.toChar)
       writeValue(o, buf)
