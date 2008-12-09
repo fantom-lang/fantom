@@ -42,9 +42,9 @@ Type Def [#typeDef]
 
   <enumDef>        :=  <enumHeader> <enumBody>
   <enumHeader>     :=  [<doc>] <facets> [<protection>] "enum" [<inheritance>]
-  <enumBody>       :=  "{" <enumDefs> <slotDefs> "}"
+  <enumBody>       :=  "{" <enumValDefs> <slotDefs> "}"
 
-  <mixinDef>       :=  <enumHeader> <enumBody>
+  <mixinDef>       :=  <mixinHeader> <mixinBody>
   <mixinHeader>    :=  [<doc>] <facets> [<protection>] "mixin" [<inheritance>]
   <mixinBody>      :=  "{" <slotDefs> "}"
 
@@ -54,8 +54,8 @@ Type Def [#typeDef]
 Slot Def [#slotDef]
 *******************
 
-  <enumDefs>       :=  <enumDef> ("," <enumDef>)* <eos>
-  <enumDef>        :=  <id> ["(" <args> ")"]
+  <enumValDefs>    :=  <enumValDef> ("," <enumValDef>)* <eos>
+  <enumValDef>     :=  <id> ["(" <args> ")"]
 
   <slotDefs>       :=  <slotDef>*
   <slotDef>        :=  <fieldDef> | <methodDef> | <ctorDef>
@@ -198,7 +198,6 @@ Keywords [#keywords]
   false         protected
   final         public
   finally       readonly
-
 
 
 
