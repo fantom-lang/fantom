@@ -20,6 +20,14 @@ class SimpleJsonTest : Test
     verifyEq(map[key], val)
   }
 
+  Void testEscapedString()
+  {
+    key := "key"
+    val := "val\\\"ue"
+    map := doTest([key:val])
+    verifyEq(map[key], val)
+  }
+
   Void testEmptyString()
   {
     key := "key"
