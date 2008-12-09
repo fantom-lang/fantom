@@ -20,6 +20,14 @@ class SimpleJsonTest : Test
     verifyEq(map[key], val)
   }
 
+  Void testEscapedString()
+  {
+    key := "key"
+    val := "val\\\"ue"
+    map := doTest([key:val])
+    verifyEq(map[key], val)
+  }
+
   Void testEmptyString()
   {
     key := "key"
@@ -126,6 +134,12 @@ class SimpleJsonTest : Test
     doTest(["k1":[,]])
   }
 
+
+  Void testArrayWithNull()
+  {
+    doTest(["k1":["foo",null,"bar"]])
+  }
+
   Void testUri()
   {
     doTest(["kuri":`http://fandev.org`])
@@ -159,17 +173,60 @@ class SimpleJsonTest : Test
     validate(input, map)
   }
 
-  Void testRawJson()
+  Void testNull()
+  {
+    buf := StrBuf.make
+    stream := OutStream.makeForStrBuf(buf)
+    verifyErr(ArgErr#) |,| { Json.write(null, stream) }
+    stream.close
+
+    verifyErr(ArgErr#) |,| { Json.read(null) }
+  }
+
+  Str makeRawJson()
   {
     buf := StrBuf.make
     buf.add("\n{\n  \"type\"\n:\n\"Foobar\",\n \n\n\"age\"\n:\n34,    \n\n\n\n")
     buf.add("\t\"nested\"\t:  \n{\t \"ids\":[3.28, 3.14, 2.14],  \t\t\"dead\":false\n\n,")
     buf.add("\t\n \"friends\"\t:\n null\t  \n}\n\t\n}")
-    ins := InStream.makeForStr(buf.toStr)
-    map := Json.read(ins)
-    verifyEq(map["type"], "Foobar")
+    return buf.toStr
   }
 
+  Void verifyRawJson(Str:Obj? map)
+  {
+    verifyEq(map["type"], "Foobar")    
+    verifyEq(map["age"], 34)    
+    inner := (Str:Obj?) map["nested"]
+    verifyNotEq(inner, null)
+    verifyEq(inner["dead"], false)
+    verifyEq(inner["friends"], null)
+    list := (List)inner["ids"]
+    verifyNotEq(list, null)
+    verifyEq(list.size, 3)
+    verifyEq(map["friends"], null)    
+  }
+
+  Void testRawJson()
+  {
+    ins := InStream.makeForStr(makeRawJson)
+    map := Json.read(ins)
+    verifyRawJson(map)
+  }
+
+  Void testRawUtfJson()
+  {
+    buf := StrBuf.make
+    out := OutStream.makeForStrBuf(buf)
+    out.charset = Charset.utf16BE
+    out.writeChars(makeRawJson)
+    out.close
+    
+    ins := InStream.makeForStr(buf.toStr)
+    ins.charset = Charset.utf16BE
+    map := Json.read(ins)
+    verifyRawJson(map)
+  }
+	  
   private Str:Obj doTest(Str:Obj map)
   {
     buf := StrBuf.make
