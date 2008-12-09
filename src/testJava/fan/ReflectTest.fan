@@ -144,4 +144,57 @@ class ReflectTest : JavaTest
     verifyEq(t.inheritance, Type[t, Obj#])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Field Reflection
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFields()
+  {
+    t := Type.find("[java]java.lang::System")
+    verifyField(t.field("out"), t, Type.find("[java]java.io::PrintStream"))
+
+    t = Type.find("[java]java.io::File")
+    verifyField(t.field("separator"), t, Str#)
+    verifyField(t.field("separatorChar"), t, Type.find("[java]::char"))
+  }
+
+  Void verifyField(Field f, Type parent, Type of)
+  {
+    verifySame(f.parent, parent)
+    verifySame(f.of, of)
+    verify(f.of == of)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Method Reflection
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMethods()
+  {
+    t := Type.find("[java]java.io::DataInput")
+
+    // primitives with direct Fan mappings
+    verifyMethod(t.method("readBoolean"), t, Bool#)
+    verifyMethod(t.method("readLong"),    t, Int#)
+    verifyMethod(t.method("readDouble"),  t, Float#)
+    verifyMethod(t.method("readUTF"),     t, Str#)
+
+    // FFI primitives
+    verifyMethod(t.slot("readByte"),    t, Type.find("[java]::byte"))
+    verifyMethod(t.method("readShort"), t, Type.find("[java]::short"))
+    verifyMethod(t.method("readChar"),  t, Type.find("[java]::char"))
+    verifyMethod(t.method("readInt"),   t, Type.find("[java]::int"))
+    verifyMethod(t.method("readFloat"), t, Type.find("[java]::float"))
+  }
+
+  Void verifyMethod(Method m, Type parent, Type ret, Type[] params := Type[,])
+  {
+    verifySame(m.parent, parent)
+    verifySame(m.returns, ret)
+    verify(m.returns == ret)
+    verifyEq(m.params.isRO, true)
+    verifyEq(m.params.size, params.size)
+    params.each |Type p, Int i| { verifySame(p, m.params[i].of) }
+  }
+
 }
