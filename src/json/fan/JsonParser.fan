@@ -211,11 +211,12 @@ internal class JsonParser
   {
     s := StrBuf.make
     expect(JsonToken.quote)
-    while (this.cur != JsonToken.quote && this.prev != '\\')
+    while (this.cur != JsonToken.quote || this.prev == '\\')
     {
       s.add(this.cur.toChar)
       consume
     }
+
     expect(JsonToken.quote)
     return s.toStr
   }
@@ -277,7 +278,7 @@ internal class JsonParser
   private Void consume()
   {
     this.prev = this.cur
-    this.cur = this.buf.read ?: -1
+    this.cur = this.buf.readChar ?: -1
     this.peek = this.buf.peek ?: -1
   }
 
