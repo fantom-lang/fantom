@@ -52,7 +52,7 @@ internal class JsonParser
     return pairs
   }
 
-  private Str:Obj parsePair()
+  private Str:Obj? parsePair()
   {
     map := Str:Obj?[:]
 
@@ -276,8 +276,8 @@ internal class JsonParser
   private Void consume()
   {
     this.prev = this.cur
-    this.cur = this.buf.read
-    this.peek = this.buf.peek
+    this.cur = this.buf.read ?: -1
+    this.peek = this.buf.peek ?: -1
   }
 
   private Void rewind()
@@ -287,9 +287,9 @@ internal class JsonParser
   }
 
   private InStream buf
-  private Int? cur := '?'
-  private Int? peek := '?'
-  private Int? prev := '?'
+  private Int cur := '?'
+  private Int peek := '?'
+  private Int prev := '?'
   private Int pos := 0
   private static const Str keyAtom := "key_atom"
   private static const Str valueAtom := "value_atom"
