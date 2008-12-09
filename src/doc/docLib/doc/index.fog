@@ -13,6 +13,7 @@
   [`Email`,     "MIME and SMTP email support"],
   [`Sql`,       "relational database APIs"],
   [`Xml`,       "XML parsing and document modeling"],
+  [`Json`,      "JSON encoding and decoding"],
 "Desktop Applications",
   [`Fwt`,       "Fan widget toolkit"],
   [`Flux`,      "Framework for building browser based fwt applications"],

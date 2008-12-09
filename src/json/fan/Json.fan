@@ -11,14 +11,13 @@
 ** objects to and from Javascript Object Notation (JSON).
 **
 ** See [docLib]`docLib::Json` for details.
-** See [docCookbook]`docCookbook::Json` for coding examples.
 **
 class Json
 {
   // FIXIT only map entry point currently, need Obj/slots
   public static Void write(Obj obj, OutStream out)
   {
-    JsonWriter.write(obj, out)    
+    JsonWriter.write(obj, out)
     out.flush
   }
 

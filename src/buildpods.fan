@@ -46,6 +46,7 @@ class Build : BuildGroup
       `icons/build.fan`,
       `flux/build.fan`,
       `xml/build.fan`,
+      `json/build.fan`,
     ]
   }
 

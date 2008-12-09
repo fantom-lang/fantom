@@ -128,7 +128,7 @@ class SimpleJsonTest : Test
 
   Void testUri()
   {
-    doTest(["kuri":`http://fandev.org`]) 
+    doTest(["kuri":`http://fandev.org`])
   }
 
   Void testBoolsAndNull()
@@ -144,7 +144,7 @@ class SimpleJsonTest : Test
     verify(newObj["myTrue"])
     verify(!newObj["myFalse"])
     verify(newObj["myNull"] == null)
-  }  
+  }
 
   Void testObject()
   {
@@ -167,7 +167,7 @@ class SimpleJsonTest : Test
     buf.add("\t\n \"friends\"\t:\n null\t  \n}\n\t\n}")
     ins := InStream.makeForStr(buf.toStr)
     map := Json.read(ins)
-    verifyEq(map["type"], "Foobar") 
+    verifyEq(map["type"], "Foobar")
   }
 
   private Str:Obj doTest(Str:Obj map)
@@ -176,7 +176,7 @@ class SimpleJsonTest : Test
     stream := OutStream.makeForStrBuf(buf)
     Json.write(map, stream)
     stream.close
-    echo(buf.toStr)
+    //echo(buf.toStr)
     ins := InStream.makeForStr(buf.toStr)
     newMap := Json.read(ins)
     validate(map, newMap)
