@@ -489,3 +489,4 @@
 - Fan launcher -fcodeDump option to disassemble a Fan script
 - List, Map eachBreak -> eachWhile
 - Initial json API
+- Emacs support adm/tools/emacs/fan-mode.el
