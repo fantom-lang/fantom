@@ -25,7 +25,7 @@ class Json
   }
 
   // FIXIT need instream entry point
-  public static Str:Obj read(InStream? buf)
+  public static Str:Obj? read(InStream? buf)
   {
     if (buf == null) throw ArgErr("buf")
     json := JsonParser.make(buf)
