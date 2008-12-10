@@ -33,10 +33,10 @@
 
 (eval-when-compile
   (let ((load-path
-	 (if (and (boundp 'byte-compile-dest-file)
-		  (stringp byte-compile-dest-file))
-	     (cons (file-name-directory byte-compile-dest-file) load-path)
-	   load-path)))
+         (if (and (boundp 'byte-compile-dest-file)
+                  (stringp byte-compile-dest-file))
+             (cons (file-name-directory byte-compile-dest-file) load-path)
+           load-path)))
     (load "cc-mode" nil t) ; C# mode has this
     (load "cc-fonts" nil t) ; C# mode has this
     (load "cc-langs" nil t) ; C# mode has this
@@ -78,8 +78,8 @@ it.  The operator group types are:
 'prefix         Unary prefix operators.
 'postfix        Unary postfix operators.
 'postfix-if-paren
-		Unary postfix operators if and only if the chars have
-		parenthesis syntax.
+                Unary postfix operators if and only if the chars have
+                parenthesis syntax.
 'left-assoc     Binary left associative operators (i.e. a+b+c means (a+b)+c).
 'right-assoc    Binary right associative operators (i.e. a=b=c means a=(b=c)).
 'right-assoc-sequence
@@ -232,7 +232,7 @@ since CC Mode treats every identifier as an expression."
 
 (c-lang-defconst c-modifier-kwds
                  fan '( "abstract" "final" "const" "private" "protected" "internal" "public" 
-			   "static" "synchronized" "virtual" "override" "once" ))
+                           "static" "synchronized" "virtual" "override" "once" ))
 
 (c-lang-defconst c-constant-kwds
   fan '( "true" "false" "null" ))
@@ -262,10 +262,17 @@ since CC Mode treats every identifier as an expression."
 ;; This list is odd at best...
 (c-lang-defconst c-primitive-type-kwds
   fan '("Obj" "Str" "Int" "Decimal" "Uri" "Bool" "Void" "Weekday" 
-	"DateTime" "Duration" "Enum" "Field" "Float" "List" "Map" 
-	"Method" "Month" "Range" "Slot" ))
+        "DateTime" "Duration" "Enum" "Field" "Float" "List" "Map" 
+        "Method" "Month" "Range" "Slot" ))
+
+;; comment starter definitions for various languages.  language specific
+(defconst c-fan-comment-start-regexp "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *")
 
 ;; TODO can't seem to get ** comments working...
+(c-lang-defconst c-comment-start  
+  fan "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *")
+(c-lang-defconst c-comment-start-skip
+  fan "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *")
 (c-lang-defconst c-comment-start-regexp  
   fan "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *")
 (c-lang-defconst c-doc-comment-start-regexp
@@ -303,7 +310,7 @@ need for `java-font-lock-extra-types'.")
   "Syntax table used in Fan mode buffers.")
 (or fan-mode-syntax-table
     (setq fan-mode-syntax-table
-	  (funcall (c-lang-const c-make-mode-syntax-table fan))))
+          (funcall (c-lang-const c-make-mode-syntax-table fan))))
 
 (defvar fan-mode-abbrev-table nil
   "Abbreviation table used in fan-mode buffers.")
@@ -343,16 +350,18 @@ Key bindings:
   (c-initialize-cc-mode t)
   (set-syntax-table fan-mode-syntax-table)
   (setq major-mode 'fan-mode
-	mode-name "Fan"
-	local-abbrev-table fan-mode-abbrev-table
-	abbrev-mode t)
+        mode-name "Fan"
+        local-abbrev-table fan-mode-abbrev-table
+        abbrev-mode t)
   (use-local-map fan-mode-map)
   (c-init-language-vars fan-mode)
   (c-common-init 'fan-mode)
-  ;;(setq comment-start-skip "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *"
-;;	comment-start-regexp "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *"
-;;	c-comment-prefix-regexp "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *"
-;;	)
+  (setq comment-start "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *"
+        comment-end ""
+        comment-start-skip "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *"
+        comment-start-regexp "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *"
+        c-comment-prefix-regexp "\\(\\(//+\\|/\\*+\\)\\|\\*\\*\\)\\s *"
+        )
   ;;(easy-menu-add fan-menu)
   ;;(cc-imenu-init cc-imenu-fan-generic-expression)
   (c-run-mode-hooks 'c-mode-common-hook 'fan-mode-hook)
