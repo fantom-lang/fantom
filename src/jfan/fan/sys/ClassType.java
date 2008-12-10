@@ -780,8 +780,14 @@ catch (Exception e) { e.printStackTrace(); }
     for (int i=0; i<params.length; ++i)
     {
       Class p = params[i];
-      if (!p.getName().startsWith("fan.") && FanUtil.toFanType(p, false) instanceof JavaType)
-        return false;
+
+      // anything that starts with fan. is a clean fan type
+      if (p.getName().startsWith("fan.")) continue;
+
+      // try to map to non-FFI Fan type - this handles
+      // things like long, Long, String
+      Type x = FanUtil.toFanType(p, false);
+      if (x == null || x.isJava()) return false;
     }
     return true;
   }
