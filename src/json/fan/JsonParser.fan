@@ -127,7 +127,7 @@ internal class JsonParser
       while (this.cur.isDigit)
       {
         fractional.add(this.cur.toChar)
-	consume
+        consume
       }
     }
 
@@ -138,13 +138,13 @@ internal class JsonParser
       if (this.cur == '+') consume
       else if (this.cur == '-')
       {
-	exponent.add(this.cur.toChar)
+        exponent.add(this.cur.toChar)
         consume
       }
       while (this.cur.isDigit)
       {
         exponent.add(this.cur.toChar)
-	consume
+        consume
       }
     }
 
