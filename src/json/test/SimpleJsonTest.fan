@@ -226,7 +226,7 @@ class SimpleJsonTest : Test
     map := Json.read(ins)
     verifyRawJson(map)
   }
-	  
+          
   private Str:Obj doTest(Str:Obj map)
   {
     buf := StrBuf.make
