@@ -381,6 +381,12 @@ public abstract class Type
   public void finish() {}
 
   /**
+   * Return if this is a JavaType which represents a Java
+   * class imported into the Fan type system via the Java FFI.
+   */
+  public final boolean isJava() { return this instanceof JavaType; }
+
+  /**
    * Return if the Fan Type is represented as a Java class
    * such as sys::Int as java.lang.Long.
    */

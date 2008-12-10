@@ -248,12 +248,20 @@ class ResolveImports : CompilerStep
   **
   static Void checkUsingPod(CompilerSupport cs, Str podName, Location loc)
   {
-    if (!cs.ns.depends.containsKey(podName) &&
-        cs.compiler.pod.name != podName &&
-        !cs.compiler.input.isScript)
-    {
-      cs.err("Using '$podName' which is not a declared dependency for '$cs.compiler.pod.name'", loc)
-    }
+    // scripts don't need dependencies
+    if (cs.compiler.input.isScript) return
+
+    // if we have a declared dependency that is ok
+    if (cs.ns.depends.containsKey(podName)) return
+
+    // if this is the pod being compiled that is obviously ok
+    if (cs.compiler.pod.name == podName) return
+
+    // we don't require explicit dependencies on FFI
+    if (podName.startsWith("[")) return
+
+    // we got a problem
+    cs.err("Using '$podName' which is not a declared dependency for '$cs.compiler.pod.name'", loc)
   }
 
 //////////////////////////////////////////////////////////////////////////
