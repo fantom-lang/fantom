@@ -20,13 +20,13 @@ internal class JsonParser
   }
   
   // FIXIT need one to parse to Obj as well, doing Map for now
-  internal Str:Obj parse()
+  internal Str:Obj? parse()
   {
     consume
     return parseObject
   }
   
-  private Str:Obj parseObject()
+  private Str:Obj? parseObject()
   {
     pairs := Str:Obj?[:]
     
