@@ -173,16 +173,6 @@ class SimpleJsonTest : Test
     validate(input, map)
   }
 
-  Void testNull()
-  {
-    buf := StrBuf.make
-    stream := OutStream.makeForStrBuf(buf)
-    verifyErr(ArgErr#) |,| { Json.write(null, stream) }
-    stream.close
-
-    verifyErr(ArgErr#) |,| { Json.read(null) }
-  }
-
   Str makeRawJson()
   {
     buf := StrBuf.make
@@ -226,7 +216,7 @@ class SimpleJsonTest : Test
     map := Json.read(ins)
     verifyRawJson(map)
   }
-	  
+          
   private Str:Obj doTest(Str:Obj map)
   {
     buf := StrBuf.make
