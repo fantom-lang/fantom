@@ -14,20 +14,24 @@
 **
 class Json
 {
-  // FIXIT only map entry point currently, need Obj/slots
-  public static Void write(Obj? obj, OutStream? out)
+  ***
+  *** Write the given object as JSON to the given stream.
+  *** Currently only Maps are supported fully.
+  *** 
+  public static Void write(Obj obj, OutStream out)
   {
-    if (obj == null) throw ArgErr("obj")
-    if (out == null) throw ArgErr("out")
-
     JsonWriter.write(obj, out)
     out.flush
   }
 
-  // FIXIT need instream entry point
-  public static Str:Obj? read(InStream? buf)
+  ***
+  *** Read JSON from the given stream to a Map.
+  *** Currently only reads to a Map; eventually
+  *** we will incorporate type inforamation to
+  *** return a Obj.
+  ***
+  public static Str:Obj? read(InStream buf)
   {
-    if (buf == null) throw ArgErr("buf")
     json := JsonParser.make(buf)
     return json.parse
   }
