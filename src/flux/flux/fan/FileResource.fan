@@ -247,6 +247,7 @@ class FileResource : Resource
         case "cs":   return Flux.icon(`/x16/fileCs.png`)
         case "fan":  return Flux.icon(`/x16/fileFan.png`)
         case "java": return Flux.icon(`/x16/fileJava.png`)
+        case "js":   return Flux.icon(`/x16/fileJs.png`)
       }
       switch (mimeType.subType)
       {
