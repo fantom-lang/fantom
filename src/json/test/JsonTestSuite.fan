@@ -139,10 +139,10 @@ class JsonTestSuite
        map = ["type":"Girl","stats":["age":38,"location":"Fan","cute":true]]
        description = "Nested object"
      },
-     //     JsonTestCase
-     //{
-     //  map = [:]
-     //  description = "Object nested in array"
-     //},
+     JsonTestCase
+     {
+       map = ["type":"dork", "values":[ ["k1":"v1"], ["k2":"v2"]]]
+       description = "Object nested in array"
+     },
     ]
 }
