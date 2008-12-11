@@ -73,7 +73,7 @@ public class FMethodEmit
    * factory methods, so that that CallNew can just push args
    * and invoke them
    *   fan:
-   *     class Foo { new make(Long a) { ... } }
+   *     class Foo { new make(Int? a) { ... } }
    *   java:
    *     static Foo make(Long a) { return make$(new Foo(), a) }
    *     static Foo make$(Foo self, Long a) { ... return self }
@@ -113,6 +113,48 @@ public class FMethodEmit
     code.maxLocals = pushArgs(code, false, method.paramCount);
     code.maxStack  = code.maxLocals + 2;
     code.op2(INVOKESTATIC, body.ref());
+    code.op(ARETURN);
+
+    // emit factory default parameter wrappers
+    emitWrappers(factory);
+  }
+
+  /**
+   * Emit a Fan constructor for a class which subclasses from
+   * a normal Java class brought into the Fan type system via FFI.
+   * In this case the superclass constructor is a real constructor
+   * so we need to emit the code differently:
+   *   fan:
+   *     class Foo { new make(String a) { ... } }
+   *   java:
+   *     static Foo make(String a) { return new Foo(a) }
+   *     Foo(String a) { ... }
+   */
+  public void emitCtorWithJavaSuper()
+  {
+    String ctorName = this.name;
+
+    // first emit the body as a true Java constructor
+    this.name = "<init>";
+    MethodEmit body = doEmit();
+
+    // emit body default parameter wrappers
+    emitWrappers(body);
+
+    // then emit the factory
+    this.name = ctorName;
+    this.self = false;
+    this.ret  = emit.pod.typeRef(emit.type.self);
+    this.code = null;
+    this.jflags |= STATIC;
+    this.isStatic = true;
+    MethodEmit factory = doEmit();
+    CodeEmit code = factory.emitCode();
+    code.op2(NEW, emit.cls(selfName));
+    code.op(DUP);
+    code.maxLocals = pushArgs(code, false, method.paramCount) + 1;
+    code.maxStack  = code.maxLocals + 2;
+    code.op2(INVOKESPECIAL, body.ref());
     code.op(ARETURN);
 
     // emit factory default parameter wrappers
