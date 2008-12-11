@@ -25,6 +25,7 @@ java=text/plain
 jpeg=image/jpeg
 jpg=image/jpeg
 log=text/plain
+js=text/plain
 mp3=audio/mpeg3
 mpeg=video/mpeg
 pdf=application/pdf
