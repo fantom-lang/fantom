@@ -173,7 +173,7 @@ public class JavaType
       Class cls = toClass();
 
       // flags
-      flags = javaModifiersToFanFlags(cls.getModifiers());
+      flags = classModifiersToFanFlags(cls.getModifiers());
 
       // superclass is base class
       Class superclass = cls.getSuperclass();
@@ -250,7 +250,7 @@ public class JavaType
   {
     Type parent   = toFanType(java.getDeclaringClass());
     String name   = java.getName();
-    int flags     = javaModifiersToFanFlags(java.getModifiers());
+    int flags     = memberModifiersToFanFlags(java.getModifiers());
     Facets facets = Facets.empty();
     Type of       = toFanType(java.getType());
 
@@ -263,7 +263,7 @@ public class JavaType
   {
     Type parent   = toFanType(java.getDeclaringClass());
     String name   = java.getName();
-    int flags     = javaModifiersToFanFlags(java.getModifiers());
+    int flags     = memberModifiersToFanFlags(java.getModifiers());
     Facets facets = Facets.empty();
     Type ret      = toFanType(java.getReturnType());
 
@@ -303,16 +303,34 @@ public class JavaType
   }
 
   /**
-   * Map Java modifiers to Fan flags.
+   * Map Java class modifiers to Fan flags.
    */
-  public static int javaModifiersToFanFlags(int m)
+  public static int classModifiersToFanFlags(int m)
   {
     int flags = 0;
 
     if (Modifier.isAbstract(m))  flags |= FConst.Abstract;
     if (Modifier.isFinal(m))     flags |= FConst.Final;
     if (Modifier.isInterface(m)) flags |= FConst.Mixin;
+
+    if (Modifier.isPublic(m))   flags |= FConst.Public;
+    else flags |= FConst.Internal;
+
+    return flags;
+  }
+
+  /**
+   * Map Java field/method modifiers to Fan flags.
+   */
+  public static int memberModifiersToFanFlags(int m)
+  {
+    int flags = 0;
+
+    if (Modifier.isAbstract(m))  flags |= FConst.Abstract;
     if (Modifier.isStatic(m))    flags |= FConst.Static;
+
+    if (Modifier.isFinal(m)) flags |= FConst.Final;
+    else flags |= FConst.Virtual;
 
     if (Modifier.isPublic(m))   flags |= FConst.Public;
     else if (Modifier.isPrivate(m))  flags |= FConst.Private;

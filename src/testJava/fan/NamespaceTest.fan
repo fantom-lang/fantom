@@ -77,6 +77,13 @@ class NamespaceTest : JavaTest
     verifyEq(t.method("booleanArray").returnType.signature, "[java]fanx.interop::BooleanArray?")
     verifyEq(t.method("booleanArray").returnType.toNonNullable.signature, "[java]fanx.interop::BooleanArray")
     verifyEq(t.field("numb").fieldType.signature, "[java]::byte")
+
+    // protected
+    util := ns.resolvePod("[java]java.util", null)
+    obs := util.resolveType("Observable", true)
+    verifyEq(obs.method("clearChanged").isProtected, true)
+    props := util.resolveType("Properties", true)
+    verifyEq(props.method("rehash").isProtected, true)  // inherited thru HashMap
   }
 
 //////////////////////////////////////////////////////////////////////////
