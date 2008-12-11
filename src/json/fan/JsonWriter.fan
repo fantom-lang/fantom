@@ -145,7 +145,9 @@ internal class JsonWriter
 
   private static Void writeDuration(Duration dur, OutStream buf)
   {
+    buf.print(JsonToken.quote.toChar)
     buf.print(dur.toStr)
+    buf.print(JsonToken.quote.toChar)
   }
 
   private static Void writeBoolean(Bool bool, OutStream buf)
