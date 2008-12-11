@@ -12,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import fan.sys.*;
 import fanx.fcode.*;
 
@@ -41,36 +42,97 @@ class JavaTypePeer
     Class cls = toJavaClass(self);
 
     // map Java modifiers to Fan flags
-    self.flags = toFanFlags(cls.getModifiers());
+    self.flags = toClassFlags(cls.getModifiers());
 
-    // map Java fields to CSlots
-    Field[] fields = cls.getFields();
+    // map Java fields to CSlots (public and protected)
+    Field[] fields = findFields(cls);
     for (int i=0; i<fields.length; ++i)
       mapField(self, slots, fields[i]);
 
-    // map Java methods to CSlots
-    Method[] methods = cls.getMethods();
+    // map Java methods to CSlots (public and protected)
+    Method[] methods = findMethods(cls);
     for (int i=0; i<methods.length; ++i)
       mapMethod(self, slots, methods[i]);
 
     // map Java constructors to CSlots
-    Constructor[] ctors = cls.getConstructors();
+    Constructor[] ctors = cls.getDeclaredConstructors();
     for (int i=0; i<ctors.length; ++i)
       mapCtor(self, slots, ctors[i]);
   }
 
+  /**
+   * Reflect the public and protected fields which Java
+   * reflection makes very difficult.
+   */
+  static Field[] findFields(Class cls)
+  {
+    HashMap acc = new HashMap();
+
+    // first add all the public fields
+    Field[] pubs = cls.getFields();
+    for (int i=0; i<pubs.length; ++i) acc.put(pubs[i], pubs[i]);
+
+    // do protected fields working back up the hierarchy; don't
+    // worry about interfaces b/c they can declare protected members
+    while (cls != null)
+    {
+      Field[] declared = cls.getDeclaredFields();
+      for (int i=0; i<declared.length; ++i)
+      {
+        Field f = declared[i];
+        if (!Modifier.isProtected(f.getModifiers())) continue;
+        if (acc.get(f) == null) acc.put(f, f);
+      }
+      cls = cls.getSuperclass();
+    }
+
+    return (Field[])acc.values().toArray(new Field[acc.size()]);
+  }
+
+  /**
+   * Reflect the public and protected methods which Java
+   * reflection makes very difficult.
+   */
+  static Method[] findMethods(Class cls)
+  {
+    HashMap acc = new HashMap();
+
+    // first add all the public methods
+    Method[] pubs = cls.getMethods();
+    for (int i=0; i<pubs.length; ++i) acc.put(pubs[i], pubs[i]);
+
+    // do protected methods working back up the hierarchy; don't
+    // worry about interfaces b/c they can declare protected members
+    while (cls != null)
+    {
+      Method[] declared = cls.getDeclaredMethods();
+      for (int i=0; i<declared.length; ++i)
+      {
+        Method m = declared[i];
+        if (!Modifier.isProtected(m.getModifiers())) continue;
+        if (acc.get(m) == null) acc.put(m, m);
+      }
+      cls = cls.getSuperclass();
+    }
+
+    return (Method[])acc.values().toArray(new Method[acc.size()]);
+  }
+
 //////////////////////////////////////////////////////////////////////////
-// Field
+// Java Member -> Fan CSlot
 //////////////////////////////////////////////////////////////////////////
 
   void mapField(JavaType self, Map slots, Field java)
     throws Exception
   {
+    int mods = java.getModifiers();
+    if (!Modifier.isPublic(mods) && !Modifier.isProtected(mods)) return;
+
     String name = java.getName();
     JavaField fan = JavaField.make();
     fan.setParent(self);
     fan.setName(name);
-    fan.setFlags(toFanFlags(java.getModifiers()));
+    fan.setFlags(toMemberFlags(mods));
     fan.setFieldType(toFanType(java.getType()));
     slots.add(name, fan);
   }
@@ -78,11 +140,14 @@ class JavaTypePeer
   void mapMethod(JavaType self, Map slots, Method java)
     throws Exception
   {
+    int mods = java.getModifiers();
+    if (!Modifier.isPublic(mods) && !Modifier.isProtected(mods)) return;
+
     String name = java.getName();
     JavaMethod fan = JavaMethod.make();
     fan.setParent(self);
     fan.setName(name);
-    fan.setFlags(toFanFlags(java.getModifiers()));
+    fan.setFlags(toMemberFlags(mods));
     fan.setReturnTypeSig(toFanType(java.getReturnType()));
     fan.setParamTypes(toFanTypes(java.getParameterTypes()));
     addSlot(slots, name, fan);
@@ -91,11 +156,14 @@ class JavaTypePeer
   void mapCtor(JavaType self, Map slots, Constructor java)
     throws Exception
   {
+    int mods = java.getModifiers();
+    if (!Modifier.isPublic(mods) && !Modifier.isProtected(mods)) return;
+
     String name = java.getName();
     JavaMethod fan = JavaMethod.make();
     fan.setParent(self);
     fan.setName("<init>");
-    fan.setFlags(toFanFlags(java.getModifiers())|FConst.Ctor);
+    fan.setFlags(toMemberFlags(mods)|FConst.Ctor);
     fan.setReturnType(self);
     fan.setParamTypes(toFanTypes(java.getParameterTypes()));
     addSlot(slots, "<init>", fan);
@@ -215,9 +283,14 @@ class JavaTypePeer
     return "[java]" + cls.getPackage().getName() + "::" + cls.getSimpleName() + "?";
   }
 
-  static int toFanFlags(int modifiers)
+  static int toClassFlags(int modifiers)
   {
-    return fan.sys.JavaType.javaModifiersToFanFlags(modifiers);
+    return fan.sys.JavaType.classModifiersToFanFlags(modifiers);
+  }
+
+  static int toMemberFlags(int modifiers)
+  {
+    return fan.sys.JavaType.memberModifiersToFanFlags(modifiers);
   }
 
 }
