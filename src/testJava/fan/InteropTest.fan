@@ -6,8 +6,6 @@
 //   20 Nov 08  Brian Frank  Creation
 //
 
-using testCompiler
-
 **
 ** InteropTest
 **

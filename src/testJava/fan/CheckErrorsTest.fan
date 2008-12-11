@@ -6,8 +6,6 @@
 //   20 Nov 08  Brian Frank  Creation
 //
 
-using testCompiler
-
 **
 ** CheckErrorsTest
 **
@@ -89,5 +87,36 @@ class CheckErrorsTest : JavaTest
          11, 42, "Field 'doubleMulti3' has unsupported type '[java]::[[[double?'",
        ])
    }
+
+//////////////////////////////////////////////////////////////////////////
+// ClassDef
+//////////////////////////////////////////////////////////////////////////
+
+  Void testClassDef()
+  {
+    verifyErrors(
+     "using [java] java.util
+      class Foo : Observer, Observable {}
+      ",
+       [
+          2, 1, "Invalid inheritance order, ensure class '[java]java.util::Observable' comes first before mixins",
+       ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Abstract ClassDef
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAbstractClassDef()
+  {
+    verifyErrors(
+     "using [java] java.util
+      class Foo : Observer {}
+      abstract class Bar: Observer {} // ok
+      ",
+       [
+          2, 1, "Class 'Foo' must be abstract since it inherits but doesn't override '[java]java.util::Observer.update'",
+       ])
+  }
 
 }
