@@ -71,8 +71,24 @@ class JsonTestCase
     out.printLine("if (list.length != "+list.size+")")
     fail("List length did not match expected of "+list.size, out)
     out.printLine("else {")
-    // TODO need to check each element, which could be a map or list itself
-    pass("TODO need to check item by item", out)
+
+    // TODO sort first?
+    idx := 0
+    out.printLine("var failed = false;")
+    list.each |Obj? val|
+    {
+      // TODO need to handle list and maps here
+      out.printLine("if (list["+idx+"] != "+val+") {")
+      fail("List @ "+idx+" did not match expected of "+val, out)
+      out.printLine("failed = true;")
+      out.printLine("}")
+      idx++
+    }
+    out.printLine("if (failed)")
+    fail("Array values did not match", out)
+    out.printLine("else")
+    pass("Array values matched", out)
+    
     out.printLine("}")
     out.printLine("}")
   }
