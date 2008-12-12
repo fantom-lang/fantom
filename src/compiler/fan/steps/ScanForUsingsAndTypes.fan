@@ -114,7 +114,7 @@ class UsingAndTypeScanner : CompilerSupport
 
     // using [ffi] pod
     u.podName += consumeId
-    while (curt === Token.dot)
+    while (curt === Token.dot) // allow dots in pod name
     {
       consume
       u.podName += "." + consumeId
@@ -125,6 +125,12 @@ class UsingAndTypeScanner : CompilerSupport
     {
       consume
       u.typeName = consumeId
+      while (curt === Token.dollar) // allow $ in type name
+      {
+        consume
+        u.typeName += "\$"
+        if (curt == Token.identifier) u.typeName += consumeId
+      }
 
       // using [ffi] pod::type as rename
       if (curt === Token.asKeyword)

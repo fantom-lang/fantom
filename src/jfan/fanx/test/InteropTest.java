@@ -124,4 +124,13 @@ public class InteropTest
   public String overload2(int a, Number b) { return "(int, Number)"; }
   public String overload2(int a, Double b) { return "(int, Double)"; }
 
+//////////////////////////////////////////////////////////////////////////
+// Inner Class
+//////////////////////////////////////////////////////////////////////////
+
+  public static class InnerClass
+  {
+    public String name() { return "InnerClass"; }
+  }
+
 }
