@@ -192,6 +192,54 @@ class JavaBridge : CBridge
   }
 
 //////////////////////////////////////////////////////////////////////////
+// CheckErrors
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Called during CheckErrors for a type which extends
+  ** a FFI class or implements any FFI mixins.
+  **
+  override Void checkType(TypeDef def)
+  {
+    // we don't allow deep inheritance of Java classes because
+    // the Fan constructor and Java constructor model don't match
+    // up past one level of inheritance
+    javaBase := def.base
+    while (javaBase != null && !javaBase.isForeign) javaBase = javaBase.base
+    if (javaBase != null && javaBase !== def.base)
+    {
+      err("Cannot subclass Java class more than one level: $javaBase", def.location)
+      return
+    }
+
+    // ensure that when we map Fan constructors to Java
+    // constructors that we don't have duplicate signatures
+    ctors := def.ctorDefs
+    ctors.each |MethodDef a, Int i|
+    {
+      ctors.each |MethodDef b, Int j|
+      {
+        if (i > j && areParamsSame(a, b))
+          err("Duplicate Java FFI constructor signatures: '$b.name' and '$a.name'", a.location)
+      }
+    }
+  }
+
+  **
+  ** Do the two methods have the exact same parameter types.
+  **
+  static Bool areParamsSame(CMethod a, CMethod b)
+  {
+    if (a.params.size != b.params.size) return false
+    for (i:=0; i<a.params.size; ++i)
+    {
+      if (a.params[i].paramType != b.params[i].paramType)
+        return false
+    }
+    return true
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Coercion
 //////////////////////////////////////////////////////////////////////////
 

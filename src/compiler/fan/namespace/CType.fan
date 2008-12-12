@@ -108,6 +108,19 @@ mixin CType
   virtual Bool isForeign() { return false }
 
   **
+  ** If this TypeDef extends from a FFI class or implements any
+  ** FFI mixins, then return the FFI type otherwise return null.
+  **
+  CType? foreignInheritance()
+  {
+    if (base == null) return null
+    if (base.isForeign) return base
+    m := mixins.find |CType t->Bool| { return t.isForeign }
+    if (m != null) return m
+    return base.foreignInheritance
+  }
+
+  **
   ** If this is a foreign function return the bridge.
   **
   CBridge? bridge() { return pod.bridge }

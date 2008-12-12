@@ -68,5 +68,11 @@ abstract class CBridge : CompilerSupport
   **
   abstract Expr resolveCall(CallExpr call)
 
+  **
+  ** Called during CheckErrors for a type which extends
+  ** a FFI class or implements any FFI mixins.
+  **
+  abstract Void checkType(TypeDef def)
+
 
 }
