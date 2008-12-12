@@ -46,13 +46,16 @@ class CheckErrorsTest : JavaTest
     // CheckErrors step
     verifyErrors(
      "using [java] java.lang
+      using [java] java.util
       class Foo
       {
         static System? m00() { m00.getProperty(\"foo\"); return null }
+        static Void m01() { Observable().setChanged }
       }
       ",
        [
-          4, 30, "Cannot call static method 'getProperty' on instance",
+          5, 30, "Cannot call static method 'getProperty' on instance",
+          6, 36, "Protected method '[java]java.util::Observable.setChanged' not accessible",
        ])
   }
 
