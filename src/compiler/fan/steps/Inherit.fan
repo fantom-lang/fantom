@@ -217,6 +217,10 @@ class Inherit : CompilerStep
     if (isOverrideProtectionErr(base, def))
       throw err("Override narrows protection scope of '$base.qname'", loc)
 
+    // if overriding a FFI slot give bridge a hook
+    if (base.isForeign)
+      base.bridge.checkOverride(t, base, def)
+
     // check if this is a method/method override
     if (base is CMethod && def is MethodDef)
     {

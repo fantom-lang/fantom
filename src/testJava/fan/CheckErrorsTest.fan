@@ -184,4 +184,43 @@ class CheckErrorsTest : JavaTest
          22, 1, "Cannot subclass from Java interop array: [java]fanx.interop::IntArray",
        ])
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Abstract Overloads
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAbstractOverloads()
+  {
+    // Inherit
+    verifyErrors(
+     "using [java] fanx.test::InteropTest\$AbstractOverloadsClass as OverloadsClass
+      using [java] fanx.test::InteropTest\$AbstractOverloadsInterface as OverloadsInterface
+      using [java] fanx.test::InteropTest\$AbstractOverloadsA as OverloadsA
+      using [java] fanx.test::InteropTest\$AbstractOverloadsB as OverloadsB
+
+      class A : OverloadsA, OverloadsB {}
+      class B : OverloadsClass { override Void foo() {} }
+      class C : OverloadsInterface { override Void foo(Str? x) {} }
+      ",
+       [
+          6,  1, "Inherited slots have conflicting signatures '[java]fanx.test::InteropTest\$AbstractOverloadsA.foo' and '[java]fanx.test::InteropTest\$AbstractOverloadsB.foo'",
+          7, 28, "Cannot override Java overloaded method: 'foo'",
+          8, 32, "Cannot override Java overloaded method: 'foo'",
+       ])
+
+    // CheckErrors
+    verifyErrors(
+     "using [java] fanx.test::InteropTest\$AbstractOverloadsClass as OverloadsClass
+      using [java] fanx.test::InteropTest\$AbstractOverloadsInterface as OverloadsInterface
+      using [java] fanx.test::InteropTest\$AbstractOverloadsA as OverloadsA
+      using [java] fanx.test::InteropTest\$AbstractOverloadsB as OverloadsB
+
+      class A : OverloadsClass {}
+      class B : OverloadsInterface {}
+      ",
+       [
+          6, 1, "Class 'A' must be abstract since it inherits but doesn't override '[java]fanx.test::InteropTest\$AbstractOverloadsClass.foo'",
+          7, 1, "Class 'B' must be abstract since it inherits but doesn't override '[java]fanx.test::InteropTest\$AbstractOverloadsInterface.foo'",
+       ])
+  }
 }

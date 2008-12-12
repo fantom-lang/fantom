@@ -196,7 +196,21 @@ class JavaBridge : CBridge
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Called during CheckErrors for a type which extends
+  ** Called during Inherit step when a Fan slot overrides a FFI slot.
+  ** Log and throw compiler error if there is a problem.
+  **
+  override Void checkOverride(TypeDef t, CSlot base, SlotDef def)
+  {
+    // we don't allow Fan to override Java methods with multiple
+    // overloaded versions since the Fan type system can't actually
+    // override all the overloaded versions
+    jslot := base as JavaSlot
+    if (jslot == null || jslot.next == null) return
+    err("Cannot override Java overloaded method: '$jslot.name'", def.location)
+  }
+
+  **
+  ** Called during CheckErrors step for a type which extends
   ** a FFI class or implements any FFI mixins.
   **
   override Void checkType(TypeDef def)
