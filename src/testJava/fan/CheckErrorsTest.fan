@@ -149,6 +149,7 @@ class CheckErrorsTest : JavaTest
   {
     verifyErrors(
      "using [java] java.util
+      using [java] fanx.interop
       class Foo : Date
       {
         new makeA() : super() {}
@@ -167,14 +168,20 @@ class CheckErrorsTest : JavaTest
       {
         new make() : super.make() {}
       }
+
+      class Foo3 : IntArray
+      {
+        new ctor() {}
+      }
       ",
        [
-          5, 3, "Duplicate Java FFI constructor signatures: 'makeA' and 'makeB'",
-          7, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeD'",
-          8, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeE'",
-          8, 3, "Duplicate Java FFI constructor signatures: 'makeD' and 'makeE'",
-         11, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
-         16, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
+          6, 3, "Duplicate Java FFI constructor signatures: 'makeA' and 'makeB'",
+          8, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeD'",
+          9, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeE'",
+          9, 3, "Duplicate Java FFI constructor signatures: 'makeD' and 'makeE'",
+         12, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
+         17, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
+         22, 1, "Cannot subclass from Java interop array: [java]fanx.interop::IntArray",
        ])
   }
 }
