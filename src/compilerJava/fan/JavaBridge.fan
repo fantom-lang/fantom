@@ -201,6 +201,13 @@ class JavaBridge : CBridge
   **
   override Void checkType(TypeDef def)
   {
+    // can't subclass a primitive array like ByteArray/byte[]
+    if (def.base.deref is JavaType && def.base.deref->isInteropArray)
+    {
+      err("Cannot subclass from Java interop array: $def.base", def.location)
+      return
+    }
+
     // we don't allow deep inheritance of Java classes because
     // the Fan constructor and Java constructor model don't match
     // up past one level of inheritance
