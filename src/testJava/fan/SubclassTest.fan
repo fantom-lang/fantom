@@ -64,4 +64,25 @@ class SubclassTest : JavaTest
     verify(obj->test3)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Overloads
+//////////////////////////////////////////////////////////////////////////
+
+  Void testOverloads()
+  {
+    compile(
+     "using [java] fanx.test
+      class Foo : InteropTest
+      {
+        Int test1() { return numi }
+        Int test2() { return numi() }
+        Int test3() { numi(33); return numi() }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test1, 'i')
+    verifyEq(obj->test2, 1000)
+    verifyEq(obj->test3, 33)
+  }
+
 }
