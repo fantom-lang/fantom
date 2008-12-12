@@ -64,4 +64,58 @@ class SubclassTest : JavaTest
     verify(obj->test3)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Overloads
+//////////////////////////////////////////////////////////////////////////
+
+  Void testOverloads()
+  {
+    compile(
+     "using [java] fanx.test
+      class Foo : InteropTest
+      {
+        Int test1() { return numi }
+        Int test2() { return numi() }
+        Int test3() { numi(33); return numi() }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test1, 'i')
+    verifyEq(obj->test2, 1000)
+    verifyEq(obj->test3, 33)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Constructors
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCtors()
+  {
+    compile(
+     "using [java] java.util
+      class Foo : Date
+      {
+        new make() : super() {}
+        new makeTicks(Int millis) : super(millis) {}
+        new makeWith(Int year, Int mon, Int day) : super(year-1900, mon, day) {}
+
+        DateTime now := DateTime.now
+
+        Bool test1() { return make.verify(now.year, now.month, now.day) }
+        Bool test2() { return makeTicks(now.toJava).verify(now.year, now.month, now.day) }
+        Bool test3() { return makeWith(2000, 5, 7).verify(2000, Month.jun, 7) }
+
+        Bool verify(Int year, Month mon, Int day)
+        {
+          //Obj.echo(\"year=\$getYear ?= \$year mon=\$getMonth ?= \$mon day=\$getDate ?= \$day\")
+          return getYear+1900 == year && getMonth == mon.ordinal && getDate == day
+        }
+      }")
+
+    obj := pod.types.first.make
+    verify(obj->test1)
+    verify(obj->test2)
+    verify(obj->test3)
+  }
+
 }

@@ -124,7 +124,18 @@ class JavaType : CType
   {
     if (loaded) return
     slots := Str:CSlot[:]
-    if (!isPrimitive) doLoad(slots)
+    if (!isPrimitive)
+    {
+      // map Java members to slots
+      doLoad(slots)
+
+      // merge in sys::Obj slots
+      ns.objType.slots.each |CSlot s|
+      {
+        if (s.isCtor) return
+        if (slots[name] == null) slots[s.name] = s
+      }
+    }
     this.slots = slots
     loaded = true
   }

@@ -31,7 +31,7 @@ class CheckErrorsTest : JavaTest
         static System? m03() { m03.getProperty(\"foo\"); return null }
 
         // ambiguous calls
-        static Void m04() { InteropTest().ambiguous1(3) }
+        static Void m04() { InteropTest().ambiguous1(3, 4) }
         static Void m05() { InteropTest().ambiguous2(null) }
       }
       ",
@@ -39,20 +39,23 @@ class CheckErrorsTest : JavaTest
           6, 30, "Invalid args getProperty()",
           7, 30, "Invalid args getProperty(sys::Str, sys::Str, sys::Int)",
           8, 30, "Invalid args getProperty(sys::Str, sys::Int)",
-         12, 37, "Ambiguous call ambiguous1(sys::Int)",
+         12, 37, "Ambiguous call ambiguous1(sys::Int, sys::Int)",
          13, 37, "Ambiguous call ambiguous2(null)",
        ])
 
     // CheckErrors step
     verifyErrors(
      "using [java] java.lang
+      using [java] java.util
       class Foo
       {
         static System? m00() { m00.getProperty(\"foo\"); return null }
+        static Void m01() { Observable().setChanged }
       }
       ",
        [
-          4, 30, "Cannot call static method 'getProperty' on instance",
+          5, 30, "Cannot call static method 'getProperty' on instance",
+          6, 36, "Protected method '[java]java.util::Observable.setChanged' not accessible",
        ])
   }
 
@@ -119,4 +122,59 @@ class CheckErrorsTest : JavaTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Constructors
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCtors()
+  {
+    verifyErrors(
+     "using [java] java.util
+      class Foo : Date
+      {
+        new make() : super() {}
+        new makeFoo() : this.make() {}
+      }
+      ",
+       [
+          5, 19, "Must use super constructor call in Java FFI",
+       ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Subclass
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSubclass()
+  {
+    verifyErrors(
+     "using [java] java.util
+      class Foo : Date
+      {
+        new makeA() : super() {}
+        new makeB() : super() {}
+        new makeC(Int a) : super() {}
+        new makeD(Int a) : super() {}
+        new makeE(Int a) : super() {}
+      }
+
+      class Foo1 : Foo
+      {
+        new make() : super.makeA() {}
+      }
+
+      class Foo2 : Foo1
+      {
+        new make() : super.make() {}
+      }
+      ",
+       [
+          5, 3, "Duplicate Java FFI constructor signatures: 'makeA' and 'makeB'",
+          7, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeD'",
+          8, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeE'",
+          8, 3, "Duplicate Java FFI constructor signatures: 'makeD' and 'makeE'",
+         11, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
+         16, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
+       ])
+  }
 }

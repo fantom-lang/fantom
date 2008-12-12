@@ -160,11 +160,20 @@ class CallResolver : CompilerSupport
     else
     {
       // lookup as method
-      found = base.method(name)
+      found = base.method(name) ?: base.field(name)
 
-      // if we couldn't find as method, see if we
-      // are attempting to call a field like a method
-      if (found == null && base.field(name) != null)
+      // if we found a FFI field, then try to lookup a method
+      // overloaded by that name; this is a bit hacked b/c since
+      // we don't support overloaded methods in the AST we are
+      // routing this call to the FFI type (such as JavaType);
+      // but this only works if all of our overloads are actually
+      // declared by that class (since we don't support overriding
+      // overloaded methods we can elimate the interface case)
+      if (found is CField && found.isForeign)
+        found = found.parent.method(name)
+
+      // if we resolve a method call against a field that is an error
+      if (found is CField)
         throw err("Expected method, not field '$errSig'", location)
     }
 
