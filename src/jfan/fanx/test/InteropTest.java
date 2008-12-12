@@ -133,4 +133,30 @@ public class InteropTest
     public String name() { return "InnerClass"; }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// AbstractOverrides
+//////////////////////////////////////////////////////////////////////////
+
+  public static abstract class AbstractOverloadsClass
+  {
+    public abstract void foo();
+    public abstract void foo(String x);
+  }
+
+  public static interface AbstractOverloadsInterface
+  {
+    public abstract void foo();
+    public abstract void foo(String x);
+  }
+
+  public static interface AbstractOverloadsA
+  {
+    public abstract void foo(Object x);
+  }
+
+  public static interface AbstractOverloadsB
+  {
+    public abstract void foo(String x);
+  }
+
 }
