@@ -83,6 +83,25 @@ class JavaBridge : CBridge
   }
 
   **
+  ** Resolve a construction chain call where a Fan constructor
+  ** calls the super-class constructor.  Type check the arguments
+  ** and insert any conversions needed.
+  **
+  override Expr resolveConstructorChain(CallExpr call)
+  {
+    // we don't allow chaining to a this ctor for Java FFI
+    if (call.target.id !== ExprId.superExpr)
+      throw err("Must use super constructor call in Java FFI", call.location)
+
+    // route to a superclass constructor
+    JavaType base := call.target.ctype.deref
+    call.method = base.method("<init>")
+
+    // call resolution to deal with overloading
+    return resolveCall(call)
+  }
+
+  **
   ** Resolve a method call: try to find the best match
   ** and apply any coercions needed.
   **
