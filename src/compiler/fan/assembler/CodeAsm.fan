@@ -1263,9 +1263,12 @@ class CodeAsm : CompilerSupport
     {
       // because CallNonVirtual maps to Java's invokespecial, we can't
       // use it for calls outside of the class (consider it like calling
-      // protected method)
+      // protected method); we also don't want to use non-virtual for
+      // any Obj methods since those are implemented as static wrappers
+      // in the Java/.NET runtime
       targetId := call.target.id
-      if (targetId == ExprId.superExpr || (targetId == ExprId.thisExpr && !m.isVirtual))
+      if (targetId == ExprId.superExpr ||
+          (targetId == ExprId.thisExpr && !m.isVirtual && !m.parent.isObj))
         op(FOp.CallNonVirtual, index)
       else
         op(FOp.CallVirtual, index)
