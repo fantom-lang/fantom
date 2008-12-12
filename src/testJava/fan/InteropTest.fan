@@ -485,4 +485,34 @@ class InteropTest : JavaTest
     verifyEq(obj->name, "InnerClass")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// ObjMethods
+//////////////////////////////////////////////////////////////////////////
+
+  Void testObjMethods()
+  {
+    compile(
+     "using [java] fanx.test
+      class Foo : InteropTest
+      {
+        Void foo() { echo(this) }
+        Bool test1() { return this < this }
+        Bool test2() { return this <= this }
+        Bool test3() { return this == this }
+        Str  test4() { return type.name }
+        Bool test5() { return toStr == toString }
+        Bool test6() { return this.isImmutable }
+        Bool test7() { return hash == hashCode }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test1, false)
+    verifyEq(obj->test2, true)
+    verifyEq(obj->test3, true)
+    verifyEq(obj->test4, "Foo")
+    verifyEq(obj->test5, true)
+    verifyEq(obj->test6, false)
+    verifyEq(obj->test7, true)
+  }
+
 }

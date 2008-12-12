@@ -173,6 +173,13 @@ public class FMethodRef
       String jname = parent.jname();
       String jimpl = parent.jimpl();
       s.append(jimpl).append('.').append(name).append('(');
+      if (jname != jimpl)
+      {
+        // if the implementation class is different than the representation
+        // class then we route to static such as FanFloat.abs(double self)
+        mask |= INVOKE_VIRT_AS_STATIC;
+        parent.jsig(s);
+      }
       for (int i=0; i<params.length; ++i) params[i].jsig(s);
       s.append(')');
       ret.jsig(s);
@@ -180,7 +187,10 @@ public class FMethodRef
     }
 
     int method = code.emit().method(jsigAlt);
-    code.op2(INVOKESPECIAL, method);
+    if ((mask & INVOKE_VIRT_AS_STATIC) != 0)
+      code.op2(INVOKESTATIC, method);
+    else
+      code.op2(INVOKESPECIAL, method);
   }
 
   public void emitCallMixinStatic(CodeEmit code)
