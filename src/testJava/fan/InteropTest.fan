@@ -468,4 +468,21 @@ class InteropTest : JavaTest
     verify(obj->f)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Inner Classes
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInnerClasses()
+  {
+    compile(
+     "using [java] fanx.test::InteropTest\$InnerClass as Inner
+      class Foo
+      {
+        Str name() { return Inner().name }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->name, "InnerClass")
+  }
+
 }
