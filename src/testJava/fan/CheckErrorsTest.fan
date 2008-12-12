@@ -31,7 +31,7 @@ class CheckErrorsTest : JavaTest
         static System? m03() { m03.getProperty(\"foo\"); return null }
 
         // ambiguous calls
-        static Void m04() { InteropTest().ambiguous1(3) }
+        static Void m04() { InteropTest().ambiguous1(3, 4) }
         static Void m05() { InteropTest().ambiguous2(null) }
       }
       ",
@@ -39,7 +39,7 @@ class CheckErrorsTest : JavaTest
           6, 30, "Invalid args getProperty()",
           7, 30, "Invalid args getProperty(sys::Str, sys::Str, sys::Int)",
           8, 30, "Invalid args getProperty(sys::Str, sys::Int)",
-         12, 37, "Ambiguous call ambiguous1(sys::Int)",
+         12, 37, "Ambiguous call ambiguous1(sys::Int, sys::Int)",
          13, 37, "Ambiguous call ambiguous2(null)",
        ])
 
