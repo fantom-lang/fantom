@@ -85,4 +85,37 @@ class SubclassTest : JavaTest
     verifyEq(obj->test3, 33)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Constructors
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCtors()
+  {
+    compile(
+     "using [java] java.util
+      class Foo : Date
+      {
+        new make() : super() {}
+        new makeTicks(Int millis) : super(millis) {}
+        new makeWith(Int year, Int mon, Int day) : super(year-1900, mon, day) {}
+
+        DateTime now := DateTime.now
+
+        Bool test1() { return make.verify(now.year, now.month, now.day) }
+        Bool test2() { return makeTicks(now.toJava).verify(now.year, now.month, now.day) }
+        Bool test3() { return makeWith(2000, 5, 7).verify(2000, Month.jun, 7) }
+
+        Bool verify(Int year, Month mon, Int day)
+        {
+          //Obj.echo(\"year=\$getYear ?= \$year mon=\$getMonth ?= \$mon day=\$getDate ?= \$day\")
+          return getYear+1900 == year && getMonth == mon.ordinal && getDate == day
+        }
+      }")
+
+    obj := pod.types.first.make
+    verify(obj->test1)
+    verify(obj->test2)
+    verify(obj->test3)
+  }
+
 }

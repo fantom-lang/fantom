@@ -122,4 +122,23 @@ class CheckErrorsTest : JavaTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Constructors
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCtors()
+  {
+    verifyErrors(
+     "using [java] java.util
+      class Foo : Date
+      {
+        new make() : super() {}
+        new makeFoo() : this.make() {}
+      }
+      ",
+       [
+          5, 19, "Must use super constructor call in Java FFI",
+       ])
+  }
+
 }
