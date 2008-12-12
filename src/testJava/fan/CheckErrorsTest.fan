@@ -141,4 +141,40 @@ class CheckErrorsTest : JavaTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Subclass
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSubclass()
+  {
+    verifyErrors(
+     "using [java] java.util
+      class Foo : Date
+      {
+        new makeA() : super() {}
+        new makeB() : super() {}
+        new makeC(Int a) : super() {}
+        new makeD(Int a) : super() {}
+        new makeE(Int a) : super() {}
+      }
+
+      class Foo1 : Foo
+      {
+        new make() : super.makeA() {}
+      }
+
+      class Foo2 : Foo1
+      {
+        new make() : super.make() {}
+      }
+      ",
+       [
+          5, 3, "Duplicate Java FFI constructor signatures: 'makeA' and 'makeB'",
+          7, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeD'",
+          8, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeE'",
+          8, 3, "Duplicate Java FFI constructor signatures: 'makeD' and 'makeE'",
+         11, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
+         16, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
+       ])
+  }
 }
