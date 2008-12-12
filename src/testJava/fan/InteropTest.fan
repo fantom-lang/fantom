@@ -438,4 +438,34 @@ class InteropTest : JavaTest
     obj->m04
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Overload Resolution
+//////////////////////////////////////////////////////////////////////////
+
+  Void testOverloadResolution()
+  {
+    compile(
+     "using [java] java.lang
+      using [java] fanx.test
+      class Foo
+      {
+        InteropTest x := InteropTest()
+        Bool a() { return x.overload1(this) == \"(Object)\" }
+        Bool b() { return x.overload1(\"foo\") == \"(String)\" }
+        Bool c() { return x.overload1(5) == \"(long)\" }
+
+        Bool d() { return x.overload2(3, this) == \"(int, Object)\" }
+        Bool e() { return x.overload2(3, (Number?)null) == \"(int, Number)\" }
+        Bool f() { return x.overload2(3, (Double?)null) == \"(int, Double)\" }
+      }")
+
+    obj := pod.types.first.make
+    verify(obj->a)
+    verify(obj->b)
+    verify(obj->c)
+    verify(obj->d)
+    verify(obj->e)
+    verify(obj->f)
+  }
+
 }

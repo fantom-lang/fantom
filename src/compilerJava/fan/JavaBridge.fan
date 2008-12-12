@@ -99,16 +99,17 @@ class JavaBridge : CBridge
     }
 
     // if we have exactly one match use then use that one
-    if (matches.size == 1)
+    if (matches.size == 1) return matches[0].apply(call)
+
+    // if we have multiple matches then we try to find
+    // the most specific match according to JLS rules
+    if (matches.size > 1)
     {
-      match := matches.first
-      call.args = match.args
-      call.method = match.method
-      call.ctype  = match.method.returnType
-      return call
+      best := resolveMostSpecific(matches)
+      if (best != null) return best.apply(call)
     }
 
-    // if we have multiple matches or no matches we report an error
+    // zero or multiple ambiguous matches is a compiler error
     s := StrBuf()
     s.add(matches.isEmpty ? "Invalid args " : "Ambiguous call ")
     s.add(call.name).add("(")
@@ -137,6 +138,38 @@ class JavaBridge : CBridge
     }
     if (isErr) return null
     return CallMatch { method = m; args = newArgs }
+  }
+
+  **
+  ** Given a list of overloaed methods find the most specific method
+  ** according to Java Language Specification 15.11.2.2.  The "informal
+  ** intuition" rule is that a method is more specific than another
+  ** if the first could be could be passed onto the second one.
+  **
+  static CallMatch? resolveMostSpecific(CallMatch[] matches)
+  {
+    CallMatch? best := matches[0]
+    for (i:=1; i<matches.size; ++i)
+    {
+      x := matches[i]
+      if (isMoreSpecific(best, x)) { continue }
+      if (isMoreSpecific(x, best)) { best = x; continue }
+      return null
+    }
+    return best
+  }
+
+  **
+  ** Is 'a' more specific than 'b' such that 'a' could be used
+  ** passed to 'b' without a compile time error.
+  **
+  static Bool isMoreSpecific(CallMatch a, CallMatch b)
+  {
+    return a.method.params.all |CParam ap, Int i->Bool|
+    {
+      bp := b.method.params[i]
+      return ap.paramType.fits(bp.paramType)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -340,6 +373,14 @@ class JavaBridge : CBridge
 
 internal class CallMatch
 {
+  CallExpr apply(CallExpr call)
+  {
+    call.args   = args
+    call.method = method
+    call.ctype  = method.returnType
+    return call
+  }
+
   JavaMethod method  // matched method
   Expr[] args        // coerced arguments
 }
