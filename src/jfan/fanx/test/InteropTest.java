@@ -106,10 +106,31 @@ public class InteropTest
 // Ambiguous Overloads
 //////////////////////////////////////////////////////////////////////////
 
-  public void ambiguous1(int i) {}
-  public void ambiguous1(long i) {}
+  public void ambiguous1(Object a, int b) {}
+  public void ambiguous1(int a, Object b) {}
 
   public void ambiguous2(String x) {}
   public void ambiguous2(InteropTest x) {}
+
+//////////////////////////////////////////////////////////////////////////
+// Overload Resolution
+//////////////////////////////////////////////////////////////////////////
+
+  public String overload1(Object a) { return "(Object)"; }
+  public String overload1(String a) { return "(String)"; }
+  public String overload1(long a)   { return "(long)"; }
+
+  public String overload2(int a, Object b) { return "(int, Object)"; }
+  public String overload2(int a, Number b) { return "(int, Number)"; }
+  public String overload2(int a, Double b) { return "(int, Double)"; }
+
+//////////////////////////////////////////////////////////////////////////
+// Inner Class
+//////////////////////////////////////////////////////////////////////////
+
+  public static class InnerClass
+  {
+    public String name() { return "InnerClass"; }
+  }
 
 }
