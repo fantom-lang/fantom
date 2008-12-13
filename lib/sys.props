@@ -52,13 +52,14 @@ sql.test.dialect=sql::MySqlDialect
 // stable "released" version of fan is installed at /dev/rel/
 // used only for Windows launcher, Unix uses fansubstitute script
 fan.runtime.substitutes=                             \
-  /C:/dev/fan/src/buildall.fan       = C:\\dev\\rel  \
-  /C:/dev/fan/src/buildboot.fan      = C:\\dev\\rel  \
-  /C:/dev/fan/src/jfan/build.fan     = C:\\dev\\rel  \
-  /C:/dev/fan/src/nfan/build.fan     = C:\\dev\\rel  \
-  /C:/dev/fan/src/sys/build.fan      = C:\\dev\\rel  \
-  /C:/dev/fan/src/compiler/build.fan = C:\\dev\\rel  \
-  /C:/dev/fan/src/build/build.fan    = C:\\dev\\rel
+  /C:/dev/fan/src/buildall.fan           = C:\\dev\\rel  \
+  /C:/dev/fan/src/buildboot.fan          = C:\\dev\\rel  \
+  /C:/dev/fan/src/jfan/build.fan         = C:\\dev\\rel  \
+  /C:/dev/fan/src/nfan/build.fan         = C:\\dev\\rel  \
+  /C:/dev/fan/src/sys/build.fan          = C:\\dev\\rel  \
+  /C:/dev/fan/src/compiler/build.fan     = C:\\dev\\rel  \
+  /C:/dev/fan/src/compilerJava/build.fan = C:\\dev\\rel  \
+  /C:/dev/fan/src/build/build.fan        = C:\\dev\\rel
 
 // used to change version for all pods at once
 fan.build.globalVersion=1.0.35
@@ -73,4 +74,3 @@ fan.build.dotnetHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 
 // Mac setup
 //fan.build.jdkHome=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/
-

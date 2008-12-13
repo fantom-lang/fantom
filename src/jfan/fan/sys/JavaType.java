@@ -186,7 +186,7 @@ public class JavaType
       Class cls = toClass();
 
       // flags
-      flags = classModifiersToFanFlags(cls.getModifiers());
+      flags = FanUtil.classModifiersToFanFlags(cls.getModifiers());
 
       // superclass is base class
       Class superclass = cls.getSuperclass();
@@ -298,7 +298,7 @@ public class JavaType
   {
     Type parent   = toFanType(java.getDeclaringClass());
     String name   = java.getName();
-    int flags     = memberModifiersToFanFlags(java.getModifiers());
+    int flags     = FanUtil.memberModifiersToFanFlags(java.getModifiers());
     Facets facets = Facets.empty();
     Type of       = toFanType(java.getType());
 
@@ -314,7 +314,7 @@ public class JavaType
   {
     Type parent   = toFanType(java.getDeclaringClass());
     String name   = java.getName();
-    int flags     = memberModifiersToFanFlags(java.getModifiers());
+    int flags     = FanUtil.memberModifiersToFanFlags(java.getModifiers());
     Facets facets = Facets.empty();
     Type ret      = toFanType(java.getReturnType());
 
@@ -535,44 +535,6 @@ public class JavaType
   public static Type toFanType(Class cls)
   {
     return FanUtil.toFanType(cls, true);
-  }
-
-  /**
-   * Map Java class modifiers to Fan flags.
-   */
-  public static int classModifiersToFanFlags(int m)
-  {
-    int flags = 0;
-
-    if (Modifier.isAbstract(m))  flags |= FConst.Abstract;
-    if (Modifier.isFinal(m))     flags |= FConst.Final;
-    if (Modifier.isInterface(m)) flags |= FConst.Mixin;
-
-    if (Modifier.isPublic(m))   flags |= FConst.Public;
-    else flags |= FConst.Internal;
-
-    return flags;
-  }
-
-  /**
-   * Map Java field/method modifiers to Fan flags.
-   */
-  public static int memberModifiersToFanFlags(int m)
-  {
-    int flags = 0;
-
-    if (Modifier.isAbstract(m))  flags |= FConst.Abstract;
-    if (Modifier.isStatic(m))    flags |= FConst.Static;
-
-    if (Modifier.isFinal(m)) flags |= FConst.Final;
-    else flags |= FConst.Virtual;
-
-    if (Modifier.isPublic(m))   flags |= FConst.Public;
-    else if (Modifier.isPrivate(m))  flags |= FConst.Private;
-    else if (Modifier.isProtected(m))  flags |= FConst.Protected;
-    else flags |= FConst.Internal;
-
-    return flags;
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -42,7 +42,7 @@ class JavaType : CType
 
   override readonly CType? base { get { load; return @base } }
   override readonly CType[] mixins { get { load; return @mixins } }
-  override readonly Int flags { get { load; return @flags } }
+  override Int flags { get { load; return @flags } internal set }
 
   override Bool isForeign() { return true }
   override Bool isSupported() { return arrayRank <= 1 } // multi-dimensional arrays unsupported
@@ -126,8 +126,8 @@ class JavaType : CType
     slots := Str:CSlot[:]
     if (!isPrimitive)
     {
-      // map Java members to slots
-      doLoad(slots)
+      // map Java members to slots using Java reflection
+      JavaReflect.load(this, slots)
 
       // merge in sys::Obj slots
       ns.objType.slots.each |CSlot s|
@@ -139,8 +139,6 @@ class JavaType : CType
     this.slots = slots
     loaded = true
   }
-
-  private native Void doLoad(Str:CSlot slots)
 
 //////////////////////////////////////////////////////////////////////////
 // Primitives
