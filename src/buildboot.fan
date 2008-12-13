@@ -31,6 +31,7 @@ class Build : BuildGroup
       `jfan/build.fan`,
       `nfan/build.fan`,
       `compiler/build.fan`,
+      `compilerJava/build.fan`,
       `build/build.fan`,
     ]
   }
