@@ -31,6 +31,9 @@ abstract class JavaSlot : CSlot
 ** JavaField
 **************************************************************************
 
+**
+** JavaField is the implementation of CField for a Java field.
+**
 class JavaField : JavaSlot, CField
 {
   override CType parent
@@ -55,6 +58,9 @@ class JavaField : JavaSlot, CField
 ** JavaMethod
 **************************************************************************
 
+**
+** JavaMethod is the implementation of CMethod for a Java method.
+**
 class JavaMethod : JavaSlot, CMethod
 {
   override CType parent
@@ -86,6 +92,9 @@ class JavaMethod : JavaSlot, CMethod
 ** JavaParam
 **************************************************************************
 
+**
+** JavaParam is the implementation of CParam for a Java method parameter.
+**
 class JavaParam : CParam
 {
   new make(Str n, CType t) { name = n; paramType = t }

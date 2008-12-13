@@ -180,7 +180,7 @@ class JavaType : CType
   }
 
   **
-  ** Is this a array type such as [java]foo.bar::[Baz
+  ** Is this a array type such as '[java]foo.bar::[Baz'
   **
   Bool isArray() { return arrayRank > 0 }
 
