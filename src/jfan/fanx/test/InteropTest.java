@@ -72,9 +72,10 @@ public class InteropTest
   public void xnumd(double x) { num = (long)x; }
   public void xnumf(float x)  { num = (long)x; }
 
-  public long numi(int x, int y) { return num = x + y; }  // 5x overload
-  public long numi(String s) { return num = Integer.parseInt(s); }  // 5x overload
-//  public static int numi(String s, int y) { return Integer.parseInt(s) + y; }  // 5x overload
+  public long numi(int x, int y) { return num = x + y; }  // 4x overload
+  public long numi(String s) { return num = Integer.parseInt(s); }  // 4x overload
+
+  public static int si(String s, int y) { return Integer.parseInt(s) + y; }
 
 //////////////////////////////////////////////////////////////////////////
 // Object Arrays

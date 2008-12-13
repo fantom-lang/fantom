@@ -242,38 +242,39 @@ class ReflectTest : JavaTest
     numiField := it.type.field("numi")
     numi := it.type.method("numi")
     verifySame(it.type.slot("numi"), numiField)
+    si := it.type.method("si") // static test
 
     // numi as field
     verifyEq(numiField.get(it), 'i')
     numiField.set(it, 2008)
     verifyEq(numiField.get(it), 2008)
 
-    // numi 5x overloaded - call
+    // numi 4x overloaded - call
     verifyEq(numi.call([it, 8877]), null)
     verifyEq(numi.call([it]), 8877)
     verifyEq(numi.call([it, 6, 4]), 10)
     verifyEq(numi.call([it, "55"]), 55)
-    //verifyEq(numi.call([null, "55", 6]), 61)
+    verifyEq(si.call(["55", 6]), 61) // static
 
-    // numi 5x overloaded - callX
+    // numi 4x overloaded - callX
     verifyEq(numi.call2(it, 8877), null)
     verifyEq(numi.call1(it), 8877)
     verifyEq(numi.call3(it, 6, 4), 10)
     verifyEq(numi.call2(it, "55"), 55)
-    //verifyEq(numi.call3(null, "55", 6), 61)
+    verifyEq(si.call2("55", 6), 61) // static
 
-    // numi 5x overloaded - callOn
+    // numi 4x overloaded - callOn
     verifyEq(numi.callOn(it, [8877]), null)
     verifyEq(numi.callOn(it, [,]), 8877)
     verifyEq(numi.callOn(it, [6, 4]), 10)
     verifyEq(numi.callOn(it, ["55"]), 55)
-    //verifyEq(numi.callOn(null, ["55", 6]), 61)
+    verifyEq(si.callOn(null, ["55", 6]), 61) // static
 
-    // numi 5x overloaded - trap
+    // numi 4x overloaded - trap
     it->num = -99
     verifyEq(it->numi, -99)
     verifyEq(it->numi(3, 4), 7)
     verifyEq(it->numi("999"), 999)
-    //verifyEq(it->numi("2", 9), 11)
+    verifyEq(it->si("2", 9), 11) // static
   }
 }
