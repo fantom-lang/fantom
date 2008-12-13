@@ -20,7 +20,7 @@ public class InteropTest
 // Primitives
 //////////////////////////////////////////////////////////////////////////
 
-  long num = 1000;
+  public long num = 1000;
 
   public byte   numb() { return (byte)num; }
   public short  nums() { return (short)num; }
@@ -55,6 +55,26 @@ public class InteropTest
   public static double snumd = 'D';
 
   public void numadd(byte b, short s, int i, float f)  { num = b + s + i + (int)f; }
+
+  public byte   xnumb() { return (byte)num; }
+  public short  xnums() { return (short)num; }
+  public char   xnumc() { return (char)num; }
+  public int    xnumi() { return (int)num; }
+  public long   xnuml() { return num; }
+  public double xnumd() { return num; }
+  public float  xnumf() { return num; }
+
+  public void xnumb(byte x)   { num = x; }
+  public void xnums(short x)  { num = x; }
+  public void xnumc(char x)   { num = x; }
+  public void xnumi(int x)    { num = x; }
+  public void xnuml(long x)   { num = x; }
+  public void xnumd(double x) { num = (long)x; }
+  public void xnumf(float x)  { num = (long)x; }
+
+  public long numi(int x, int y) { return num = x + y; }  // 5x overload
+  public long numi(String s) { return num = Integer.parseInt(s); }  // 5x overload
+//  public static int numi(String s, int y) { return Integer.parseInt(s) + y; }  // 5x overload
 
 //////////////////////////////////////////////////////////////////////////
 // Object Arrays
