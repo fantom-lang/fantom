@@ -114,13 +114,12 @@ class JavaReflect
     mods := java.getModifiers
     if (!JModifier.isPublic(mods) && !JModifier.isProtected(mods)) return
 
-    name := java.getName
     fan := JavaField()
-    fan.setParent(self) // TODO
-    fan.setName(name)
-    fan.setFlags(toMemberFlags(mods))
-    fan.setFieldType(toFanType(java.getType))
-    slots.add(name, fan)
+    fan.parent = self
+    fan.name = java.getName
+    fan.flags = toMemberFlags(mods)
+    fan.fieldType = toFanType(self.bridge, java.getType)
+    slots.add(fan.name, fan)
   }
 
   static Void mapMethod(JavaType self, Str:CSlot slots, JMethod java)
@@ -128,14 +127,13 @@ class JavaReflect
     mods := java.getModifiers
     if (!JModifier.isPublic(mods) && !JModifier.isProtected(mods)) return
 
-    name := java.getName
     fan := JavaMethod()
-    fan.setParent(self) // TODO
-    fan.setName(name)
-    fan.setFlags(toMemberFlags(mods))
-    fan.setReturnTypeSig(toFanType(java.getReturnType))
-    fan.setParamTypes(toFanTypes(java.getParameterTypes))
-    addSlot(slots, name, fan)
+    fan.parent = self
+    fan.name = java.getName
+    fan.flags = toMemberFlags(mods)
+    fan.returnType = toFanType(self.bridge, java.getReturnType)
+    fan.setParamTypes(toFanTypes(self.bridge, java.getParameterTypes))
+    addSlot(slots, fan.name, fan)
   }
 
   static Void mapCtor(JavaType self, Str:CSlot slots, JCtor java)
@@ -143,14 +141,13 @@ class JavaReflect
     mods := java.getModifiers
     if (!JModifier.isPublic(mods) && !JModifier.isProtected(mods)) return
 
-    name := java.getName
     fan := JavaMethod()
-    fan.setParent(self) // TODO
-    fan.setName("<init>")
-    fan.setFlags(toMemberFlags(mods)|FConst.Ctor)
-    fan.setReturnType(self);
-    fan.setParamTypes(toFanTypes(java.getParameterTypes))
-    addSlot(slots, "<init>", fan)
+    fan.parent = self
+    fan.name = "<init>"
+    fan.flags = toMemberFlags(mods) | FConst.Ctor
+    fan.returnType = self
+    fan.setParamTypes(toFanTypes(self.bridge, java.getParameterTypes))
+    addSlot(slots, fan.name, fan)
   }
 
   static Void addSlot(Str:CSlot slots, Str name, JavaMethod m)
@@ -160,18 +157,9 @@ class JavaReflect
     JavaSlot? x := slots.get(name)
     if (x == null) { slots.add(name, m); return }
 
-    // work around for javac (can't access compiler types)
-    // TODO
-    if (x is JavaMethod)
-    {
-      m.setNext(((JavaMethod)x).getNext())
-      ((JavaMethod)x).setNext(m)
-    }
-    else
-    {
-      m.setNext(((JavaField)x).getNext())
-      ((JavaField)x).setNext(m)
-    }
+    // create linked list of overloads
+    m.next = x.next
+    x.next = m
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -197,29 +185,30 @@ class JavaReflect
     return Class.forName(s.toStr)
   }
 
-  static Str[] toFanTypes(Class[] cls) // TODO - return type directly?
+  static CType[] toFanTypes(JavaBridge bridge, Class[] cls)
   {
-    acc := Str[,]
-    cls.each |Class c| { acc.add(toFanType(c)) }
-    return acc
+    return cls.map(CType[,]) |Class c->CType| { return toFanType(bridge, c) }
   }
 
-  static Str toFanType(Class cls, Bool multiDim := false) // TODO - return type directly?
+  static CType toFanType(JavaBridge bridge, Class cls, Bool multiDim := false)
   {
+    ns := bridge.ns
+    primitives := bridge.primitives
+
     // primitives
     if (cls.isPrimitive)
     {
       switch (cls.getName)
       {
-        case "void":    return multiDim ? "[java]::void"    : "sys::Void"
-        case "boolean": return multiDim ? "[java]::boolean" : "sys::Bool"
-        case "long":    return multiDim ? "[java]::long"    : "sys::Int"
-        case "double":  return multiDim ? "[java]::double"  : "sys::Float"
-        case "int":     return "[java]::int"
-        case "byte":    return "[java]::byte"
-        case "short":   return "[java]::short"
-        case "char":    return "[java]::char"
-        case "float":   return "[java]::float"
+        case "void":    return ns.voidType
+        case "boolean": return multiDim ? primitives.booleanType : ns.boolType
+        case "long":    return multiDim ? primitives.longType    : ns.intType
+        case "double":  return multiDim ? primitives.doubleType  : ns.floatType
+        case "int":     return primitives.intType
+        case "byte":    return primitives.byteType
+        case "short":   return primitives.shortType
+        case "char":    return primitives.charType
+        case "float":   return primitives.floatType
       }
       throw Err(cls.toStr)
     }
@@ -234,34 +223,33 @@ class JavaReflect
       {
         switch (cls.getName)
         {
-          case "[Z": return "[java]fanx.interop::BooleanArray?"
-          case "[B": return "[java]fanx.interop::ByteArray?"
-          case "[S": return "[java]fanx.interop::ShortArray?"
-          case "[C": return "[java]fanx.interop::CharArray?"
-          case "[I": return "[java]fanx.interop::IntArray?"
-          case "[J": return "[java]fanx.interop::LongArray?"
-          case "[F": return "[java]fanx.interop::FloatArray?"
-          case "[D": return "[java]fanx.interop::DoubleArray?"
+          case "[Z": return ns.resolveType("[java]fanx.interop::BooleanArray?")
+          case "[B": return ns.resolveType("[java]fanx.interop::ByteArray?")
+          case "[S": return ns.resolveType("[java]fanx.interop::ShortArray?")
+          case "[C": return ns.resolveType("[java]fanx.interop::CharArray?")
+          case "[I": return ns.resolveType("[java]fanx.interop::IntArray?")
+          case "[J": return ns.resolveType("[java]fanx.interop::LongArray?")
+          case "[F": return ns.resolveType("[java]fanx.interop::FloatArray?")
+          case "[D": return ns.resolveType("[java]fanx.interop::DoubleArray?")
         }
         throw Err(cls.getName)
       }
 
       // return "[java] foo.bar::[Baz"
-      comp := toFanType(compCls, true)
-      colon := comp.indexr(":")
-      sig := comp[0..colon] + "[" + comp[colon+1..-1]
-      if (!sig.endsWith("?")) sig += "?"
-      return sig
+      comp := toFanType(bridge, compCls, true).toNonNullable
+      if (comp isnot JavaType) throw Err("Not JavaType: $compCls -> $comp")
+      return ((JavaType)comp).toArrayOf.toNullable
     }
 
     // any Java use of Obj/Str is considered potential nullable
     if (cls.getName == "java.lang.Object")
-      return multiDim ? "[java]java.lang::Object?" : "sys::Obj?"
+      return multiDim ? ns.resolveType("[java]java.lang::Object?") : ns.objType.toNullable
     if (cls.getName == "java.lang.String")
-      return multiDim ? "[java]java.lang::String?" : "sys::Str?"
+      return multiDim ? ns.resolveType("[java]java.lang::String?") : ns.strType.toNullable
 
     // Java FFI
-    return "[java]" + cls.getPackage.getName + "::" + cls.getSimpleName + "?"
+    sig := "[java]${cls.getPackage.getName}::${cls.getSimpleName}?"
+    return ns.resolveType(sig)
   }
 
   static Int toClassFlags(Int modifiers)

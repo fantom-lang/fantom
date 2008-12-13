@@ -14,13 +14,10 @@ using compiler
 abstract class JavaSlot : CSlot
 {
   override CNamespace ns() { return parent.ns }
+  override CType parent
   override Str name
   override once Str qname() { return parent.qname + "." + name }
   override Int flags
-
-  // for native Java
-  Void setName(Str n) { name = n }
-  Void setFlags(Int f) { flags = f }
 
   ** linked list of overloaded methods (first one
   ** may be field or method)
@@ -36,7 +33,6 @@ abstract class JavaSlot : CSlot
 **
 class JavaField : JavaSlot, CField
 {
-  override CType parent
   override CType fieldType
   override CMethod? getter
   override CMethod? setter
@@ -45,13 +41,6 @@ class JavaField : JavaSlot, CField
   override CType inheritedReturnType() { return fieldType }
 
   override Bool isForeign() { return true }
-
-  // for native Java
-  Void setParent(JavaType p) { parent = p }
-  Void setFieldType(Obj t) { fieldType = ns.resolveType(t) }
-  JavaMethod? getNext() { return next }
-  Void setNext(JavaMethod? m) { next = m }
-
 }
 
 **************************************************************************
@@ -73,19 +62,13 @@ class JavaMethod : JavaSlot, CMethod
 
   override Bool isForeign() { return true }
 
-  // for native Java
-  Void setParent(JavaType p) { parent = p }
-  Void setReturnType(JavaType t) { returnType = t }
-  Void setReturnTypeSig(Str t) { returnType = ns.resolveType(t) }
-  Void setParamTypes(Obj[] types)
+  Void setParamTypes(CType[] types)
   {
-    params = types.map(JavaParam[,]) |Obj t, Int i->CParam|
+    params = types.map(JavaParam[,]) |CType t, Int i->CParam|
     {
-      return JavaParam("p$i", ns.resolveType(t))
+      return JavaParam("p$i", t)
     }
   }
-  JavaMethod? getNext() { return next }
-  Void setNext(JavaMethod? m) { next = m }
 }
 
 **************************************************************************
