@@ -505,6 +505,11 @@ public class Method
     {
       // don't check args for JavaTypes - we route these calls
       // to the JavaType to deal with method overloading
+      // NOTE: we figure out how to package the arguments into a target
+      // and argument array based on whether the first method overload
+      // is static or not; this means that if a method is overloaded
+      // with both an instance and static version that reflection may
+      // not correctly work when using the callX methods
       if (parent.isJava()) return isStatic || isCallOn ? args : args - 1;
 
       // compuate min/max parameters - reflect contains all the method versions
