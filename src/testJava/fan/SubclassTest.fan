@@ -104,18 +104,25 @@ class SubclassTest : JavaTest
         Bool test1() { return make.verify(now.year, now.month, now.day) }
         Bool test2() { return makeTicks(now.toJava).verify(now.year, now.month, now.day) }
         Bool test3() { return makeWith(2000, 5, 7).verify(2000, Month.jun, 7) }
+        Bool test4() { return foo == 77 }
+        Bool test5() { return sfoo == 88 }
 
         Bool verify(Int year, Month mon, Int day)
         {
           //Obj.echo(\"year=\$getYear ?= \$year mon=\$getMonth ?= \$mon day=\$getDate ?= \$day\")
           return getYear+1900 == year && getMonth == mon.ordinal && getDate == day
         }
+
+        Int foo := 77
+        const static Int sfoo := 88
       }")
 
     obj := pod.types.first.make
     verify(obj->test1)
     verify(obj->test2)
     verify(obj->test3)
+    verify(obj->test4)
+    verify(obj->test5)
   }
 
 }
