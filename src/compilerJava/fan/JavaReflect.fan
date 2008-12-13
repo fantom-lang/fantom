@@ -20,7 +20,7 @@ using [java] fanx.util
 ** JavaReflect provides Java reflection utilities.
 ** It encapsulates the FFI calls out to Java.
 **
-class JavaReflect
+internal class JavaReflect
 {
   **
   ** Map class meta-data and Java members to Fan slots
