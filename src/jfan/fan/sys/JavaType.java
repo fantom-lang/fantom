@@ -456,12 +456,20 @@ public class JavaType
     // do simple instance of check
     if (param.isInstance(arg)) return true;
 
-    // check implicit coercions
+    // check implicit primitive coercions
     if (param.isPrimitive())
     {
       // its either boolean, char/numeric
       if (param == boolean.class) return arg instanceof Boolean;
       return arg instanceof Number;
+    }
+
+    // check implicit array coercions
+    if (param.isArray())
+    {
+      Class ct = param.getComponentType();
+      if (ct.isPrimitive()) return false;
+      return arg instanceof List;
     }
 
     // no coersion to match
@@ -478,6 +486,11 @@ public class JavaType
     if (expected == short.class) return Short.valueOf(((Number)val).shortValue());
     if (expected == char.class)  return Character.valueOf((char)((Number)val).intValue());
     if (expected == float.class) return Float.valueOf(((Number)val).floatValue());
+    if (expected.isArray())
+    {
+      Class ct = expected.getComponentType();
+      if (val instanceof List) return ((List)val).toArray(ct);
+    }
     return val;
   }
 
@@ -493,6 +506,12 @@ public class JavaType
     if (t == Short.class)     return Long.valueOf(((Short)val).longValue());
     if (t == Character.class) return Long.valueOf(((Character)val).charValue());
     if (t == Float.class)     return Double.valueOf(((Float)val).doubleValue());
+    if (t.isArray())
+    {
+      Class ct = t.getComponentType();
+      if (ct.isPrimitive()) return val;
+      return new List(FanUtil.toFanType(ct, true), (Object[])val);
+    }
     return val;
   }
 

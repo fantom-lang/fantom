@@ -212,7 +212,7 @@ class ReflectTest : JavaTest
     verifyEq(date->getYear, now.year-1900)
     verifyEq(date->toString, date.toStr)
 
-    // static field coercion
+    // static field primitive coercion
     it := Type.find("[java]fanx.test::InteropTest").make
     it->snumb = 'a'; verifyEq(it->snumb, 'a')
     it->snums = 'b'; verifyEq(it->snums, 'b')
@@ -276,5 +276,15 @@ class ReflectTest : JavaTest
     verifyEq(it->numi(3, 4), 7)
     verifyEq(it->numi("999"), 999)
     verifyEq(it->si("2", 9), 11) // static
+
+    // Obj[] arrays
+    it->initArray
+    Obj[] array := it->array1
+    verifySame(array[0], it->a)
+    verifySame(array[1], it->b)
+    verifySame(array[2], it->c)
+    array[2] = it->a
+    it->array1(array)
+    verifySame(array[2], it->a)
   }
 }

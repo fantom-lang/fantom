@@ -947,6 +947,13 @@ public final class List
     return values;
   }
 
+  public final Object[] toArray(Class of)
+  {
+    Object[] r = (Object[])java.lang.reflect.Array.newInstance(of, size);
+    System.arraycopy(values, 0, r, 0, size);
+    return r;
+  }
+
   public final Object[] toArray()
   {
     if (values.length == size) return values;
