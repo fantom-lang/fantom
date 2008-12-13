@@ -9,6 +9,8 @@ package fanx.util;
 
 import java.util.*;
 import fan.sys.*;
+import fanx.fcode.*;
+import java.lang.reflect.Modifier;
 
 /**
  * FanUtil defines the mappings between the Fan and Java type systems.
@@ -369,6 +371,44 @@ public class FanUtil
       if (jsig.equals("java/math/BigDecimal")) return "fan/sys/FanDecimal";
     }
     return jsig;
+  }
+
+  /**
+   * Map Java class modifiers to Fan flags.
+   */
+  public static int classModifiersToFanFlags(int m)
+  {
+    int flags = 0;
+
+    if (Modifier.isAbstract(m))  flags |= FConst.Abstract;
+    if (Modifier.isFinal(m))     flags |= FConst.Final;
+    if (Modifier.isInterface(m)) flags |= FConst.Mixin;
+
+    if (Modifier.isPublic(m))   flags |= FConst.Public;
+    else flags |= FConst.Internal;
+
+    return flags;
+  }
+
+  /**
+   * Map Java field/method modifiers to Fan flags.
+   */
+  public static int memberModifiersToFanFlags(int m)
+  {
+    int flags = 0;
+
+    if (Modifier.isAbstract(m))  flags |= FConst.Abstract;
+    if (Modifier.isStatic(m))    flags |= FConst.Static;
+
+    if (Modifier.isFinal(m)) flags |= FConst.Final;
+    else flags |= FConst.Virtual;
+
+    if (Modifier.isPublic(m))   flags |= FConst.Public;
+    else if (Modifier.isPrivate(m))  flags |= FConst.Private;
+    else if (Modifier.isProtected(m))  flags |= FConst.Protected;
+    else flags |= FConst.Internal;
+
+    return flags;
   }
 
 }
