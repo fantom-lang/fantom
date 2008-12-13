@@ -225,6 +225,9 @@ class JavaBridge : CBridge
     // we don't allow deep inheritance of Java classes because
     // the Fan constructor and Java constructor model don't match
     // up past one level of inheritance
+    // NOTE: that that when we remove this restriction we need to
+    // test how field initialization works because instance$init
+    // is almost certain to break with the current emit design
     javaBase := def.base
     while (javaBase != null && !javaBase.isForeign) javaBase = javaBase.base
     if (javaBase != null && javaBase !== def.base)
