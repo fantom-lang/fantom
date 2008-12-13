@@ -197,4 +197,83 @@ class ReflectTest : JavaTest
     params.each |Type p, Int i| { verifySame(p, m.params[i].of) }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Dynamic Invoke
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDynamicInvoke()
+  {
+    // basics
+    now := DateTime.now
+    date := Type.find("[java]java.util::Date").make
+    verifyEq(date.type.method("getYear").callOn(date, [,]), now.year-1900)
+    verifyEq(date.type.method("getYear").call1(date), now.year-1900)
+    verifyEq(date.type.method("getYear").call([date]), now.year-1900)
+    verifyEq(date->getYear, now.year-1900)
+    verifyEq(date->toString, date.toStr)
+
+    // static field coercion
+    it := Type.find("[java]fanx.test::InteropTest").make
+    it->snumb = 'a'; verifyEq(it->snumb, 'a')
+    it->snums = 'b'; verifyEq(it->snums, 'b')
+    it->snumc = 'c'; verifyEq(it->snumc, 'c')
+    it->snumi = 'd'; verifyEq(it->snumi, 'd')
+    it->snuml = 'e'; verifyEq(it->snuml, 'e')
+    it->snumf = 'f'.toFloat; verifyEq(it->snumf, 'f'.toFloat)
+    it->snumd = 'g'.toFloat; verifyEq(it->snumd, 'g'.toFloat)
+
+    // methods override fields
+    verifyEq(it->numi, 1000)
+    it->numi(-1234)
+    verifyEq(it->numf, -1234f)
+    verifyEq(it->num, -1234)
+
+    // methods
+    it->num = 100
+    it->xnumb(100); verifyEq(it->xnumb(), 100)
+    verifyEq(it->xnums(), 100)
+    verifyEq(it->xnumc(), 100)
+    verifyEq(it->xnumi(), 100)
+    verifyEq(it->xnuml(), 100)
+    verifyEq(it->xnumf(), 100.toFloat)
+    verifyEq(it->xnumd(), 100.toFloat)
+
+    // verify numi can be looked up as both field and method
+    numiField := it.type.field("numi")
+    numi := it.type.method("numi")
+    verifySame(it.type.slot("numi"), numiField)
+
+    // numi as field
+    verifyEq(numiField.get(it), 'i')
+    numiField.set(it, 2008)
+    verifyEq(numiField.get(it), 2008)
+
+    // numi 5x overloaded - call
+    verifyEq(numi.call([it, 8877]), null)
+    verifyEq(numi.call([it]), 8877)
+    verifyEq(numi.call([it, 6, 4]), 10)
+    verifyEq(numi.call([it, "55"]), 55)
+    //verifyEq(numi.call([null, "55", 6]), 61)
+
+    // numi 5x overloaded - callX
+    verifyEq(numi.call2(it, 8877), null)
+    verifyEq(numi.call1(it), 8877)
+    verifyEq(numi.call3(it, 6, 4), 10)
+    verifyEq(numi.call2(it, "55"), 55)
+    //verifyEq(numi.call3(null, "55", 6), 61)
+
+    // numi 5x overloaded - callOn
+    verifyEq(numi.callOn(it, [8877]), null)
+    verifyEq(numi.callOn(it, [,]), 8877)
+    verifyEq(numi.callOn(it, [6, 4]), 10)
+    verifyEq(numi.callOn(it, ["55"]), 55)
+    //verifyEq(numi.callOn(null, ["55", 6]), 61)
+
+    // numi 5x overloaded - trap
+    it->num = -99
+    verifyEq(it->numi, -99)
+    verifyEq(it->numi(3, 4), 7)
+    verifyEq(it->numi("999"), 999)
+    //verifyEq(it->numi("2", 9), 11)
+  }
 }

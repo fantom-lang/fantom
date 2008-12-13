@@ -119,7 +119,20 @@ public class JavaType
   }
 
   public List fields() { return initSlots().fields; }
+
   public List methods() { return initSlots().methods; }
+  public Method method(String name, boolean checked)
+  {
+    // check if slot is overloaded by both field and method
+    Slot slot = slot(name, checked);
+    if (slot instanceof Field)
+    {
+      Field f = (Field)slot;
+      if (f.overload != null) return f.overload;
+    }
+    return (Method)slot;
+  }
+
   public List slots() { return initSlots().slots; }
   public Slot slot(String name, boolean checked)
   {
@@ -134,7 +147,7 @@ public class JavaType
 
   public String doc() { return null; }
 
-  public boolean javaRepr() { return true; }
+  public boolean javaRepr() { return false; }
 
   private RuntimeException unsupported() { return new UnsupportedOperationException(); }
 
@@ -228,11 +241,43 @@ public class JavaType
     // map the methods
     for (int i=0; i<jmethods.length; ++i)
     {
-      Method m = toFan(jmethods[i]);
+      // check if we already have a slot by this name
+      java.lang.reflect.Method j = jmethods[i];
+      Slot existing = (Slot)slotsByName.get(j.getName());
 
-      // TODO: for now ignore overloads
-      if (slotsByName.get(m.name()) != null) continue;
+      // if this method overloads a field
+      if (existing instanceof Field)
+      {
+        // if this is the first method overload over
+        // the field then create a link via Field.overload
+        Field x = (Field)existing;
+        if (x.overload == null)
+        {
+          Method m = toFan(j);
+          x.overload = m;
+          methods.add(m);
+          continue;
+        }
 
+        // otherwise set existing to first method and fall-thru to next check
+        existing = x.overload;
+      }
+
+      // if this method overloads another method then all
+      // we do is add this version to our Method.reflect
+      if (existing instanceof Method)
+      {
+        Method x = (Method)existing;
+        java.lang.reflect.Method [] temp = new java.lang.reflect.Method[x.reflect.length+1];
+        System.arraycopy(x.reflect, 0, temp, 0, x.reflect.length);
+        temp[x.reflect.length] = j;
+        x.reflect = temp;
+        continue;
+      }
+
+      // if we've made it here this method does not overload
+      // either a field or method, so we can simply map it
+      Method m = toFan(j);
       slots.add(m);
       methods.add(m);
       slotsByName.put(m.name(), m);
@@ -246,6 +291,9 @@ public class JavaType
     return this;
   }
 
+  /**
+   * Map a Java Field to a Fan field.
+   */
   private Field toFan(java.lang.reflect.Field java)
   {
     Type parent   = toFanType(java.getDeclaringClass());
@@ -259,6 +307,9 @@ public class JavaType
     return fan;
   }
 
+  /**
+   * Map a Java Method to a Fan Method.
+   */
   private Method toFan(java.lang.reflect.Method java)
   {
     Type parent   = toFanType(java.getDeclaringClass());
@@ -278,6 +329,171 @@ public class JavaType
     Method fan = new Method(parent, name, flags, facets, -1, ret, ret, params.ro());
     fan.reflect = new java.lang.reflect.Method[] { java };
     return fan;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Dynamic Resolution and Invocation
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Create the object using its default constructor.
+   */
+  public Object make(List args)
+  {
+    // right now we don't support constructors with arguments
+    if (args != null && args.sz() > 0)
+      throw UnsupportedErr.make("Cannot call make with args on Java type: " + this).val;
+
+    // route to Class.newInstance
+    try { return toClass().newInstance(); }
+    catch (Exception e) { throw Err.make(e).val; }
+  }
+
+  /**
+   * Trap for Field.get against Java type.
+   */
+  static Object get(Field f, Object instance)
+    throws Exception
+  {
+    java.lang.reflect.Field j = f.reflect;
+    Class t = j.getType();
+    if (t.isPrimitive())
+    {
+      if (t == int.class)   return Long.valueOf(j.getLong(instance));
+      if (t == byte.class)  return Long.valueOf(j.getLong(instance));
+      if (t == short.class) return Long.valueOf(j.getLong(instance));
+      if (t == char.class)  return Long.valueOf(j.getLong(instance));
+      if (t == float.class) return Double.valueOf(j.getDouble(instance));
+    }
+    return coerceFromJava(j.get(instance));
+  }
+
+  /**
+   * Trap for Field.set against Java type.
+   */
+  static void set(Field f, Object instance, Object val)
+    throws Exception
+  {
+    java.lang.reflect.Field j = f.reflect;
+    Class t = j.getType();
+    if (t.isPrimitive())
+    {
+      if (t == int.class)   { j.setInt(instance,   ((Number)val).intValue()); return; }
+      if (t == byte.class)  { j.setByte(instance,  ((Number)val).byteValue()); return; }
+      if (t == short.class) { j.setShort(instance, ((Number)val).shortValue()); return; }
+      if (t == char.class)  { j.setChar(instance,  (char)((Number)val).intValue()); return; }
+      if (t == float.class) { j.setFloat(instance, ((Number)val).floatValue()); return; }
+    }
+    j.set(instance, coerceToJava(val, t));
+  }
+
+  /**
+   * Trap for Method.invoke against Java type.
+   */
+  static Object invoke(Method m, Object instance, Object[] args)
+    throws Exception
+  {
+    // resolve the method to use with given arguments
+    java.lang.reflect.Method j = resolve(m, args);
+
+    // coerce the arguments
+    Class[] params = j.getParameterTypes();
+    for (int i=0; i<args.length; ++i)
+      args[i] = coerceToJava(args[i], params[i]);
+
+    // invoke the method via reflection and coerce result back to Fan
+    return coerceFromJava(j.invoke(instance, args));
+  }
+
+  /**
+   * Given a set of arguments try to resolve the best method to
+   * use for reflection.  The overloaded methods are stored in the
+   * Method.reflect array.
+   */
+  static java.lang.reflect.Method resolve(Method m, Object[] args)
+  {
+    // if only one method then this is easy; defer argument
+    // checking until we actually try to invoke it
+    java.lang.reflect.Method[] reflect = m.reflect;
+    if (reflect.length == 1) return reflect[0];
+
+    // find best match
+    java.lang.reflect.Method best = null;
+    for (int i=0; i<reflect.length; ++i)
+    {
+      java.lang.reflect.Method x = reflect[i];
+      Class[] params = x.getParameterTypes();
+      if (!argsMatchParams(args, params)) continue;
+      if (best == null) { best = x; continue; }
+      throw ArgErr.make("Ambiguous method call '" + m.name + "'").val;
+    }
+    if (best != null) return best;
+
+    // no matches
+    throw ArgErr.make("No matching method '" + m.name + "' for arguments").val;
+  }
+
+  /**
+   * Return if given arguments can be used against the specified
+   * parameter types.  We have to take into account that we might
+   * coercing the arguments from their Fan represention to Java.
+   */
+  static boolean argsMatchParams(Object[] args, Class[] params)
+  {
+    if (args.length != params.length) return false;
+    for (int i=0; i<args.length; ++i)
+      if (!argMatchesParam(args[i], params[i])) return false;
+    return true;
+  }
+
+  /**
+   * Return if given argument can be used against the specified
+   * parameter type.  We have to take into account that we might
+   * coercing the arguments from their Fan represention to Java.
+   */
+  static boolean argMatchesParam(Object arg, Class param)
+  {
+    // do simple instance of check
+    if (param.isInstance(arg)) return true;
+
+    // check implicit coercions
+    if (param.isPrimitive())
+    {
+      // its either boolean, char/numeric
+      if (param == boolean.class) return arg instanceof Boolean;
+      return arg instanceof Number;
+    }
+
+    // no coersion to match
+    return false;
+  }
+
+  /**
+   * Coerce the specified Fan representation to the Java class.
+   */
+  static Object coerceToJava(Object val, Class expected)
+  {
+    if (expected == int.class)   return Integer.valueOf(((Number)val).intValue());
+    if (expected == byte.class)  return Byte.valueOf(((Number)val).byteValue());
+    if (expected == short.class) return Short.valueOf(((Number)val).shortValue());
+    if (expected == char.class)  return Character.valueOf((char)((Number)val).intValue());
+    if (expected == float.class) return Float.valueOf(((Number)val).floatValue());
+    return val;
+  }
+
+  /**
+   * Coerce a Java object to its Fan representation.
+   */
+  static Object coerceFromJava(Object val)
+  {
+    if (val == null) return null;
+    Class t = val.getClass();
+    if (t == Integer.class)   return Long.valueOf(((Integer)val).longValue());
+    if (t == Byte.class)      return Long.valueOf(((Byte)val).longValue());
+    if (t == Short.class)     return Long.valueOf(((Short)val).longValue());
+    if (t == Character.class) return Long.valueOf(((Character)val).charValue());
+    if (t == Float.class)     return Double.valueOf(((Float)val).doubleValue());
+    return val;
   }
 
 //////////////////////////////////////////////////////////////////////////
