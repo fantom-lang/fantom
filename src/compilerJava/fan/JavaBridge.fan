@@ -352,6 +352,10 @@ class JavaBridge : CBridge
     actual := (JavaType)expr.ctype.toNonNullable
     actualOf := actual.arrayOf
 
+    // if expected is array type
+    if (expected is JavaType && ((JavaType)expected).isArray)
+      if (actual.fits(((JavaType)expected).arrayOf)) return expr
+
     // if expected is Obj
     if (expected.isObj) return arrayToList(expr, actualOf)
 

@@ -175,7 +175,7 @@ class JavaReflect
       rank.times |,| { s.addChar('[') }
       s.addChar('L')
       s.add(t.pod.packageName).addChar('.')
-      s.add(t.name[rank .. -(rank+1)])
+      s.add(t.name[rank .. -rank])
       s.addChar(';')
     }
     else

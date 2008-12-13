@@ -78,6 +78,9 @@ class JavaType : CType
     if (isPrimitive)
       return name == "float" ? ns.floatType : ns.intType
 
+    if (isArray && !arrayOf.isPrimitive && !arrayOf.isArray)
+      return ListType(arrayOf)
+
     return this
   }
 
@@ -88,6 +91,7 @@ class JavaType : CType
   override Bool fits(CType t)
   {
     if (CType.super.fits(t)) return true
+    t = t.toNonNullable
     if (t is JavaType) return fitsJava(t)
     return fitsFan(t)
   }
