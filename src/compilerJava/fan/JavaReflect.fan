@@ -16,10 +16,10 @@ using [java] java.lang.reflect::Modifier as JModifier
 using [java] java.util
 using [java] fanx.util
 
-/**
- * JavaReflect provides Java reflection utilities.
- ** It encapsulates the FFI calls out to Java.
- */
+**
+** JavaReflect provides Java reflection utilities.
+** It encapsulates the FFI calls out to Java.
+**
 class JavaReflect
 {
   **
@@ -41,8 +41,7 @@ class JavaReflect
     findMethods(cls).each |JMethod j| { mapMethod(self, slots, j) }
 
     // map Java constructors to CSlots
-    JCtor[] x := cls.getDeclaredConstructors // TODO
-    x.each |JCtor j| { mapCtor(self, slots, j) }
+    cls.getDeclaredConstructors.each |JCtor j| { mapCtor(self, slots, j) }
   }
 
   **
@@ -54,15 +53,13 @@ class JavaReflect
     acc := HashMap() // mutable keys
 
     // first add all the public fields
-    JField[] x := cls.getFields  // TODO
-    x.each |JField j| { acc.put(j, j) }
+    cls.getFields.each |JField j| { acc.put(j, j) }
 
     // do protected fields working back up the hierarchy; don't
     // worry about interfaces b/c they can declare protected members
     while (cls != null)
     {
-      x = cls.getDeclaredFields
-      x.each |JField j|
+      cls.getDeclaredFields.each |JField j|
       {
         if (!JModifier.isProtected(j.getModifiers)) return
         if (acc[j] == null) acc.put(j, j)
@@ -84,15 +81,13 @@ class JavaReflect
     acc := HashMap() // mutable keys
 
     // first add all the public methods
-    JMethod[] x := cls.getMethods // TODO
-    x.each |JMethod j| { acc.put(j, j) }
+    cls.getMethods.each |JMethod j| { acc.put(j, j) }
 
     // do protected methods working back up the hierarchy; don't
     // worry about interfaces b/c they can declare protected members
     while (cls != null)
     {
-      x = cls.getDeclaredMethods // TODO
-      x.each |JMethod j|
+      cls.getDeclaredMethods.each |JMethod j|
       {
         if (!JModifier.isProtected(j.getModifiers)) return
         if (acc[j] == null) acc.put(j, j)
