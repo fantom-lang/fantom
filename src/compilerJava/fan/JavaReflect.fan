@@ -31,6 +31,21 @@ class JavaReflect
     // map to Java class
     cls := toJavaClass(self)
 
+    // map superclass
+    if (cls.getSuperclass != null)
+      self.base = toFanType(self.bridge, cls.getSuperclass)
+
+    // map interfaces to mixins
+    mixins := CType[,]
+    cls.getInterfaces.each |Class c|
+    {
+      try
+        mixins.add(toFanType(self.bridge, c))
+      catch (UnknownTypeErr e)
+        errUnknownType(e)
+    }
+    self.mixins = mixins
+
     // map Java modifiers to Fan flags
     self.flags = toClassFlags(cls.getModifiers)
 
@@ -108,41 +123,50 @@ class JavaReflect
   {
     mods := java.getModifiers
     if (!JModifier.isPublic(mods) && !JModifier.isProtected(mods)) return
-
-    fan := JavaField()
-    fan.parent = self
-    fan.name = java.getName
-    fan.flags = toMemberFlags(mods)
-    fan.fieldType = toFanType(self.bridge, java.getType)
-    slots.add(fan.name, fan)
+    try
+    {
+      fan := JavaField()
+      fan.parent = self
+      fan.name = java.getName
+      fan.flags = toMemberFlags(mods)
+      fan.fieldType = toFanType(self.bridge, java.getType)
+      slots.set(fan.name, fan)
+    }
+    catch (UnknownTypeErr e) errUnknownType(e)
   }
 
   static Void mapMethod(JavaType self, Str:CSlot slots, JMethod java)
   {
     mods := java.getModifiers
     if (!JModifier.isPublic(mods) && !JModifier.isProtected(mods)) return
-
-    fan := JavaMethod()
-    fan.parent = self
-    fan.name = java.getName
-    fan.flags = toMemberFlags(mods)
-    fan.returnType = toFanType(self.bridge, java.getReturnType)
-    fan.setParamTypes(toFanTypes(self.bridge, java.getParameterTypes))
-    addSlot(slots, fan.name, fan)
+    try
+    {
+      fan := JavaMethod()
+      fan.parent = self
+      fan.name = java.getName
+      fan.flags = toMemberFlags(mods)
+      fan.returnType = toFanType(self.bridge, java.getReturnType)
+      fan.setParamTypes(toFanTypes(self.bridge, java.getParameterTypes))
+      addSlot(slots, fan.name, fan)
+    }
+    catch (UnknownTypeErr  e) errUnknownType(e)
   }
 
   static Void mapCtor(JavaType self, Str:CSlot slots, JCtor java)
   {
     mods := java.getModifiers
     if (!JModifier.isPublic(mods) && !JModifier.isProtected(mods)) return
-
-    fan := JavaMethod()
-    fan.parent = self
-    fan.name = "<init>"
-    fan.flags = toMemberFlags(mods) | FConst.Ctor
-    fan.returnType = self
-    fan.setParamTypes(toFanTypes(self.bridge, java.getParameterTypes))
-    addSlot(slots, fan.name, fan)
+    try
+    {
+      fan := JavaMethod()
+      fan.parent = self
+      fan.name = "<init>"
+      fan.flags = toMemberFlags(mods) | FConst.Ctor
+      fan.returnType = self
+      fan.setParamTypes(toFanTypes(self.bridge, java.getParameterTypes))
+      addSlot(slots, fan.name, fan)
+    }
+    catch (UnknownTypeErr  e) errUnknownType(e)
   }
 
   static Void addSlot(Str:CSlot slots, Str name, JavaMethod m)
@@ -243,7 +267,8 @@ class JavaReflect
       return multiDim ? ns.resolveType("[java]java.lang::String?") : ns.strType.toNullable
 
     // Java FFI
-    sig := "[java]${cls.getPackage.getName}::${cls.getSimpleName}?"
+    name := cls.getName[cls.getName.indexr(".")+1..-1]
+    sig := "[java]${cls.getPackage.getName}::${name}?"
     return ns.resolveType(sig)
   }
 
@@ -257,4 +282,9 @@ class JavaReflect
     return FanUtil.memberModifiersToFanFlags(modifiers)
   }
 
+  static Void errUnknownType(UnknownTypeErr e)
+  {
+    // just print a warning and ignore problematic APIs
+    echo("WARNING: Cannot map Java type: $e.message")
+  }
 }

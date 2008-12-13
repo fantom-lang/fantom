@@ -120,8 +120,9 @@ class JavaBridge : CBridge
     // if we have exactly one match use then use that one
     if (matches.size == 1) return matches[0].apply(call)
 
-    // if we have multiple matches then we try to find
-    // the most specific match according to JLS rules
+    // if we have multiple matches; resolve to
+    // most specific match according to JLS rules
+    // TODO: this does not correct resolve when using Fan implicit casting
     if (matches.size > 1)
     {
       best := resolveMostSpecific(matches)
@@ -475,6 +476,8 @@ internal class CallMatch
     call.ctype  = method.returnType
     return call
   }
+
+  override Str toStr() { return method.signature }
 
   JavaMethod method  // matched method
   Expr[] args        // coerced arguments

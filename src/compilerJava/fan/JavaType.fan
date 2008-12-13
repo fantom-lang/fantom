@@ -40,8 +40,8 @@ class JavaType : CType
   override readonly Str qname
   override Str signature() { return qname }
 
-  override readonly CType? base { get { load; return @base } }
-  override readonly CType[] mixins { get { load; return @mixins } }
+  override CType? base { get { load; return @base } internal set}
+  override CType[] mixins { get { load; return @mixins } internal set }
   override Int flags { get { load; return @flags } internal set }
 
   override Bool isForeign() { return true }
