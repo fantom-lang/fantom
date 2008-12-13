@@ -1,0 +1,13 @@
+**************************************************************************
+** title:      DotnetFFI
+** author:     Brian Frank
+** created:    13 Dec 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+
+Overview [#overview]
+********************
+Unfortunately the .NET foreign function interface is not available yet.
+If you need it please let us know!

@@ -1,0 +1,279 @@
+**************************************************************************
+** title:      JavaFFI
+** author:     Brian Frank
+** created:    13 Dec 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The Java Foreign Function Interface (or Java FFI) is a feature which
+allows Fan code to easily utilize normal Java libraries.  The Java FFI
+is basically a mapping of the Java type system into the Fan type system:
+  - Java packages => Fan pods
+  - Java classes => Fan classes
+  - Java interfaces => Fan mixins
+  - Java fields => Fan fields
+  - Java methods => Fan methods
+
+Fan was designed to run on the JVM, so mapping between the two worlds is
+fairly straight foward.  However, there is a level of impedance mismatch
+between the two type systems.  Today the Java FFI permits a high level
+of interoperability:
+  - Interop with any Java API except those which use multi-dimensional arrays
+  - Call overloaded method from Fan
+  - Construct Java classes using the Fan [constructor syntax]`Methods#constructionCalls`
+  - Extend Java classes (only one level of inheritance allowed right now)
+  - Implement Java interfaces
+  - Implicit coercion between Java primitives and 'sys::Int' and 'sys::Float'
+  - Implicit coercion between one-dimensional Object arrays and 'sys::List'
+  - Direct mappings for Java one-dimensional primitive arrays
+  - Fan reflection support for Java members
+  - Dynamic invoke support against Java classes
+
+Features which are not yet available in Java FFI:
+  - Multi-dimensional arrays
+  - Subclassing a Java class more than one level deep
+  - Attempting to override a Java overloaded method; this means you
+    cannot subclass or extend from a type with abstract overloaded methods
+
+Features which are not supported result in a compile time error.
+
+Interop Summary [#summary]
+**************************
+The following table summarizes the mapping of Java types to Fan types:
+
+  Java Type           Fan Type
+  -----------         ----------
+  foo.bar.Baz         [java]foo.bar::Baz
+  boolean             sys::Bool
+  byte                sys::Int
+  short               sys::Int
+  char                sys::Int
+  int                 sys::Int
+  long                sys::Int
+  float               sys::Float
+  double              sys::Float
+  java.lang.Boolean   sys::Bool?
+  java.lang.Long      sys::Int?
+  java.lang.Double    sys::Float?
+  java.lang.String    sys::Str
+  Foo[]               Foo[]  // sys::List parameterized with Foo
+  boolean[]           [java]fanx.interop::BooleanArray
+  byte[]              [java]fanx.interop::ByteArray
+  short[]             [java]fanx.interop::ShortArray
+  char[]              [java]fanx.interop::CharArray
+  int[]               [java]fanx.interop::IntArray
+  long[]              [java]fanx.interop::LongArray
+  float[]             [java]fanx.interop::FloatArray
+  double[]            [java]fanx.interop::DoubleArray
+  Foo[][]             // unsupported for both primitivies and Objects
+
+Quick reference for mapping Java code to Fan code:
+  Java                         Fan
+  --------------------------   --------------------------
+  import javax.swing           using [java] javax.swing
+  import java.util.Map.Entry   using [java] java.util::Map$Entry as Entry
+  JFrame f = new JFrame(...)   f := JFrame(...)
+  array.length                 array.size
+  array[i]                     array[i]
+  array[i] = val               array[i] = val
+  int[] x = new int[5]         x := IntArray(5)
+
+How it Works [#howItWorks]
+**************************
+The Java FFI does not use any special Fan syntax.  Java APIs are
+imported into the Fan type system using the normal 'using' statement
+with a special syntax for pod names.  A Java package is mapped to a Fan
+pod by prefixing the string "[java]".  For example the Java package 'javax.swing'
+has the Fan pod name of '[java]javax.swing'.
+
+The Fan compiler itself has no knowledge of Java libraries, rather it supports
+a FFI plugin based on pods being prefixed with "[ffi]".  In the case of the Java
+FFI the [compilerJava]`compilerJava::index` pod is the compiler plugin for
+importing the Java type system into Fan.
+
+Fan code using the Java FFI results in a normal pod file compiled down into
+fcode.  The only difference is that the fcode contains type and member references
+which are Java specific.  This means that Fan pods with Java FFI calls are not
+necessarily portable; attempting to use a Java FFI call on .NET will fail.
+
+Class Path [#classpath]
+***********************
+The current implementation of the 'compilerJava' plugin is pretty simple.  It
+looks for packages and classes using the Fan runtime classpath.  This includes:
+  1. {java}lib/rt.jar
+  2. {java}lib/ext/*.jar
+  3. {fan}/lib/java/*.jar
+  4. jars found in "java.class.path" system property
+
+In order to use a class found in the classpath the 'compilerJava' uses Java
+reflection and resolves class via 'Class.forName' via the current classloader.
+
+Overloaded Methods [#overloadedMethods]
+***************************************
+One impedance mismatch between Java and Fan is that Java permits a field
+and method to have the same name.  Java also method *overloading* where
+multiple methods with the same name may be declared with different parameter
+types.
+
+Fan only allows a single definition of a slot for a given name.  However
+when calling out to Java types the compiler will correctly resolve overloaded
+fields and methods.  Let's consider this Java class:
+
+  class Foo
+  {
+    String a;
+    String a() { return a; }
+    void a(String x) { a = x; }
+    String b() { return a; }
+  }
+
+In the class above 'a' is overloaded by a field and two methods.  Let's
+look at how Fan code is resolved against the Java members:
+
+  foo.a        // lack of parens indicates field get
+  foo.a = "x"  // field set
+  foo.a()      // call Foo.a() method
+  foo.a("x")   // call Foo.a(String) method
+  foo.b()      // call Foo.b() method
+  foo.b        // call Foo.b() method - no ambiguity so we can omit parens
+
+Resolving a call to an overloaded version of the method follows the
+same rules as the Java Language Specification.  If the arguments do not
+match any overloaded methods or match they ambiguously a compiler error
+is reported.
+
+Constructors [#ctors]
+*********************
+Under the covers Fan treats Java constructors just like the Java VM
+treats them - as special methods with the name of "<init>".  The standard
+[constructor syntax]`Methods#constructionCalls` is used to invoke a Java
+constructor:
+
+  a := Date()
+  b := Date(millis)
+  c := Date(2008-1900, 11, 13)
+
+The constructor call is resolved against the Java constructors using the
+same rules for resolving [overloaded methods]`#overloadedMethods`.
+
+Subclassing [#subclassing]
+**************************
+The Java FFI allows you define a Fan class which extends from a Java
+class and implement Java interfaces as Fan mixins.  For example to
+create a subclass of 'java.util.Date':
+
+  using [java] java.util
+  class FanDate : Date
+  {
+    new now() : super() {}
+    new make(Int millis) : super(millis) {}
+  }
+
+The standard [inheritance syntax]`Inheritance#syntax` is used to extend
+and implements Java classes and interfaces.  The class must proceed the
+mixins/interfaces.
+
+The Fan subclass must define how the Fan constructors call the Java superclass
+constructors.  This is done by calling 'super' as an overloaded constructor (if
+the base class has multiple constructors).  You may not use a 'this' constructor
+chain.
+
+Constructors for a Fan class which subclasses from a Java class are emitted
+as true Java constructors.  Therefore you may not declare two Fan constructors
+with the same parameter types as it would result in duplicate Java constructors.
+For example the following code would result in a compile time error:
+
+  class FanDate : Date
+  {
+    new now() : super() {}
+    new epoch() : super(0) {}
+  }
+
+Because of this different in Fan constructors versus Java constructors
+there is currently a restriction that you may only subclass from a Java
+class one level deep.  You may not subclass from a Fan class which itself
+subclasses from a Java class.
+
+Another restriction:  because a Fan class may not override overloaded
+methods, you may not create a concrete Fan class which inherits abstract
+overloaded methods.
+
+Primitives [#primitives]
+************************
+The special Java primitives 'boolean', 'long', and 'double' are implicitly
+mapped to the Fan types 'sys::Bool', 'sys::Int', and 'sys::Float' respectively.
+The other Java primitives are mapped as follows:
+  byte    sys::Int
+  short   sys::Int
+  char    sys::Int
+  int     sys::Int
+  long    sys::Int
+  float   sys::Float
+
+The special primitives above are not directly supported by the Fan type system.
+Therefore you cannot use them as local variables or in field or method signatures.
+They are *always* coerced to/from their Fan representation.
+
+Arrays [#arrays]
+****************
+Arrays of object referenced are implicitly boxed/unboxed as Fan 'sys::List'.
+If you call a method which returns an array of Objects it is boxed into
+a Fan list of the appropriate type.  Likewise if you pass a Fan list of
+the appropriate type whenever a Java array is expected.
+
+Primitive arrays are handled specially without any boxing/unboxing.  They
+are represented in the Fan type system via the special types:
+
+  boolean[]  [java]fanx.interop::BooleanArray
+  byte[]     [java]fanx.interop::ByteArray
+  short[]    [java]fanx.interop::ShortArray
+  char[]     [java]fanx.interop::CharArray
+  int[]      [java]fanx.interop::IntArray
+  long[]     [java]fanx.interop::LongArray
+  float[]    [java]fanx.interop::FloatArray
+  double[]   [java]fanx.interop::DoubleArray
+
+The 'make', 'get', 'set', and 'size' methods provide symbolic representations
+for working with primitive arrays.  They are mapped directly to a single opcode
+in the Java bytecode:
+
+  int[] x = new int[4]  =>  x := IntArray(4)
+  x[2]                  =>  x[3]
+  x[3] = 5              =>  x[3] = 5
+  x.length              =>  x.size
+
+Nullable [#nullable]
+********************
+Any Java API which uses reference types are mapped into the Fan type system
+as nullable:
+
+  // Java method
+  String foo(Object x, int y, Foo z)
+
+  // Fan representation
+  Str? foo(Obj? x, Int y, Foo? z)
+
+Inner Classes [#innerClasses]
+*****************************
+Inner classes in Java source are formatted using a dot, but in the Java VM
+they are represented using the "$" dollar sign.  We import inner classes into
+the Fan type system using the Java VM name:
+
+  using [java] java.util::Map$Entry as Entry
+
+Note that since the "$" is not a legal identifier char in Fan, you must
+[rename]`CompilationUnits#using` the Java inner class to a valid Fan
+identifier with the 'as' keyword.
+
+Dynamic Calls [#dynamicCalls]
+*****************************
+Normal Fan reflection and dynamic invoke is available with Java classes.
+The Fan runtime will correctly map reflective calls and dynamic invokes against
+overloaded methods.  Because it is possible a Java class to have both a field
+and method of the same name, 'Type.field' and 'Type.method' might return different
+results for the same name.  If an attempt is make to use dynamic invoke on slot
+which has both a field and method of that name, then the method always hides
+the field.
