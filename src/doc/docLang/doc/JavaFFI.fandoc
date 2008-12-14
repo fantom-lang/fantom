@@ -105,13 +105,17 @@ Class Path [#classpath]
 ***********************
 The current implementation of the 'compilerJava' plugin is pretty simple.  It
 looks for packages and classes using the Fan runtime classpath.  This includes:
-  1. {java}lib/rt.jar
-  2. {java}lib/ext/*.jar
-  3. {fan}/lib/java/*.jar
+  1. jars found in "sun.boot.class.path"
+  2. {java}lib/rt.jar (only if step above fails to find anything)
+  3. {java}lib/ext/*.jar
   4. jars found in "java.class.path" system property
 
 In order to use a class found in the classpath, 'compilerJava' uses Java
 reflection and resolves the class via 'Class.forName' with the current classloader.
+If you have problems importing classes you can dump the jars and packages
+found using:
+
+  fan compilerJava::ClassPath
 
 Overloaded Methods [#overloadedMethods]
 ***************************************
