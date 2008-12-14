@@ -26,20 +26,32 @@ class ClassPath
   {
     jars := File[,]
 
-    // {java}lib/rt.jar
+    // System.property "sun.boot.class.path"; this is preferable
+    // to trying to figure out rt.jar - on platforms like Mac OS X
+    // the classes are in very non-standard locations
+    Sys.env.get("sun.boot.class.path", "").split(File.pathSep[0]).each |Str path|
+    {
+      f := File.os(path)
+      // skip big jar files we can probably safely ignore
+      if (f.ext != "jar") return
+      if (f.name == "deploy.jar") return
+      if (f.name == "charsets.jar") return
+      if (f.name == "javaws.jar") return
+      jars.add(f)
+    }
+
+    // {java}lib/rt.jar (only if sun.boot.class.path failed)
     lib := File.os(Sys.env.get("java.home", "") + File.sep + "lib")
-    rt := lib + `rt.jar`
-    if (rt.exists) jars.add(rt)
+    if (jars.isEmpty)
+    {
+      rt := lib + `rt.jar`
+      if (rt.exists) jars.add(rt)
+    }
 
     // {java}lib/ext
     ext := lib + `ext/`
     ext.list.each |File extJar| { if (extJar.ext == "jar") jars.add(extJar) }
 
-    // {fan}lib/java
-    /*
-    libJava := Sys.homeDir + `lib/java/`
-    libJava.list.each |File libJavaJar| { if (libJavaJar.ext == "jar") jars.add(libJavaJar) }
-    */
 
     // -classpath
     Sys.env.get("java.class.path", "").split(File.pathSep[0]).each |Str path|
@@ -109,6 +121,7 @@ class ClassPath
       {
         if (uri.ext != "class") return
         package := uri.path[0..-2].join(".")
+        if (package.startsWith("com.sun") || package.startsWith("sun")) return
         name := uri.basename
         if (name == "Void") return
         classes := acc[package]
@@ -120,7 +133,6 @@ class ClassPath
     finally { if (zip != null) zip.close }
   }
 
-  /*
   static Void main()
   {
     t1 := Duration.now
@@ -128,11 +140,11 @@ class ClassPath
     t2:= Duration.now
     echo("ClassPath.makeForCurrent: ${(t2-t1).toMillis}ms")
 
-    t1  = Duration.now
-    echo(cp.classes["java.lang"].rw.sort)
-    t2 = Duration.now
-    echo("ClassPath java.lang ${(t2-t1).toMillis}ms")
+    echo("Jars Found:")
+    cp.jars.each |File f| { echo("  $f") }
+
+    echo("Packages Found:")
+    cp.classes.keys.sort.each |Str p| { echo("  $p [" + cp.classes[p].size + "]") }
   }
-  */
 
 }
