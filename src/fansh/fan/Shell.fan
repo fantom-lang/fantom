@@ -128,9 +128,9 @@ class Shell
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  Var findInScope(Str name)
+  Var? findInScope(Str name)
   {
-    return scope.find |Var v->Bool| { return v.name == name }
+    return scope.find |Var v->Bool| { echo("$v ?= $name"); return v.name == name }
   }
 
 //////////////////////////////////////////////////////////////////////////
