@@ -77,10 +77,10 @@ class FTable
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(FPod pod, |OutStream out, Obj obj| writter, |InStream in->Obj| reader)
+  new make(FPod pod, |OutStream out, Obj obj| writer, |InStream in->Obj| reader)
   {
     this.pod     = pod
-    this.writter = writter
+    this.writer  = writer
     this.reader  = reader
     this.table   = [,]
     this.reverse = Obj:Int[:]
@@ -141,7 +141,7 @@ class FTable
   Void write(OutStream out)
   {
     out.writeI2(table.size)
-    table.each |Obj obj| { writter.call2(out, obj) }
+    table.each |Obj obj| { writer.call2(out, obj) }
     out.close
   }
 
@@ -152,6 +152,6 @@ class FTable
   FPod pod
   Obj[] table
   Obj:Int reverse
-  |OutStream out, Obj obj| writter
+  |OutStream out, Obj obj| writer
   |InStream in->Obj| reader
 }
