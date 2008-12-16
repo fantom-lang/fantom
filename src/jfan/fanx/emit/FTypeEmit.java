@@ -187,7 +187,10 @@ public abstract class FTypeEmit
     }
     else if (isCtor)
     {
-      new FMethodEmit(this, m).emitCtor();
+      if (parent.base().isJava())
+        new FMethodEmit(this, m).emitCtorWithJavaSuper();
+      else
+        new FMethodEmit(this, m).emitCtor();
     }
     else
     {
@@ -197,6 +200,10 @@ public abstract class FTypeEmit
 
   protected void emitInstanceInit(FMethod m)
   {
+    // if base class is normal Java class imported via FFI, then
+    // the Fan constructors are the Java constructors
+    if (parent.base().isJava()) return;
+
     hasInstanceInit = true;
     MethodEmit me = emitMethod("<init>", "()V", EmitConst.PUBLIC);
     // initalize code to call super

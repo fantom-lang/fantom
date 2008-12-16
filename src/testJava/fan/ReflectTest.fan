@@ -144,4 +144,147 @@ class ReflectTest : JavaTest
     verifyEq(t.inheritance, Type[t, Obj#])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Field Reflection
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFields()
+  {
+    t := Type.find("[java]java.lang::System")
+    verifyField(t.field("out"), t, Type.find("[java]java.io::PrintStream"))
+
+    t = Type.find("[java]java.io::File")
+    verifyField(t.field("separator"), t, Str#)
+    verifyField(t.field("separatorChar"), t, Type.find("[java]::char"))
+  }
+
+  Void verifyField(Field f, Type parent, Type of)
+  {
+    verifySame(f.parent, parent)
+    verifySame(f.of, of)
+    verify(f.of == of)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Method Reflection
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMethods()
+  {
+    t := Type.find("[java]java.io::DataInput")
+
+    // primitives with direct Fan mappings
+    verifyMethod(t.method("readBoolean"), t, Bool#)
+    verifyMethod(t.method("readLong"),    t, Int#)
+    verifyMethod(t.method("readDouble"),  t, Float#)
+    verifyMethod(t.method("readUTF"),     t, Str#)
+
+    // FFI primitives
+    verifyMethod(t.slot("readByte"),    t, Type.find("[java]::byte"))
+    verifyMethod(t.method("readShort"), t, Type.find("[java]::short"))
+    verifyMethod(t.method("readChar"),  t, Type.find("[java]::char"))
+    verifyMethod(t.method("readInt"),   t, Type.find("[java]::int"))
+    verifyMethod(t.method("readFloat"), t, Type.find("[java]::float"))
+  }
+
+  Void verifyMethod(Method m, Type parent, Type ret, Type[] params := Type[,])
+  {
+    verifySame(m.parent, parent)
+    verifySame(m.returns, ret)
+    verify(m.returns == ret)
+    verifyEq(m.params.isRO, true)
+    verifyEq(m.params.size, params.size)
+    params.each |Type p, Int i| { verifySame(p, m.params[i].of) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Dynamic Invoke
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDynamicInvoke()
+  {
+    // basics
+    now := DateTime.now
+    date := Type.find("[java]java.util::Date").make
+    verifyEq(date.type.method("getYear").callOn(date, [,]), now.year-1900)
+    verifyEq(date.type.method("getYear").call1(date), now.year-1900)
+    verifyEq(date.type.method("getYear").call([date]), now.year-1900)
+    verifyEq(date->getYear, now.year-1900)
+    verifyEq(date->toString, date.toStr)
+
+    // static field primitive coercion
+    it := Type.find("[java]fanx.test::InteropTest").make
+    it->snumb = 'a'; verifyEq(it->snumb, 'a')
+    it->snums = 'b'; verifyEq(it->snums, 'b')
+    it->snumc = 'c'; verifyEq(it->snumc, 'c')
+    it->snumi = 'd'; verifyEq(it->snumi, 'd')
+    it->snuml = 'e'; verifyEq(it->snuml, 'e')
+    it->snumf = 'f'.toFloat; verifyEq(it->snumf, 'f'.toFloat)
+    it->snumd = 'g'.toFloat; verifyEq(it->snumd, 'g'.toFloat)
+
+    // methods override fields
+    verifyEq(it->numi, 1000)
+    it->numi(-1234)
+    verifyEq(it->numf, -1234f)
+    verifyEq(it->num, -1234)
+
+    // methods
+    it->num = 100
+    it->xnumb(100); verifyEq(it->xnumb(), 100)
+    verifyEq(it->xnums(), 100)
+    verifyEq(it->xnumc(), 100)
+    verifyEq(it->xnumi(), 100)
+    verifyEq(it->xnuml(), 100)
+    verifyEq(it->xnumf(), 100.toFloat)
+    verifyEq(it->xnumd(), 100.toFloat)
+
+    // verify numi can be looked up as both field and method
+    numiField := it.type.field("numi")
+    numi := it.type.method("numi")
+    verifySame(it.type.slot("numi"), numiField)
+    si := it.type.method("si") // static test
+
+    // numi as field
+    verifyEq(numiField.get(it), 'i')
+    numiField.set(it, 2008)
+    verifyEq(numiField.get(it), 2008)
+
+    // numi 4x overloaded - call
+    verifyEq(numi.call([it, 8877]), null)
+    verifyEq(numi.call([it]), 8877)
+    verifyEq(numi.call([it, 6, 4]), 10)
+    verifyEq(numi.call([it, "55"]), 55)
+    verifyEq(si.call(["55", 6]), 61) // static
+
+    // numi 4x overloaded - callX
+    verifyEq(numi.call2(it, 8877), null)
+    verifyEq(numi.call1(it), 8877)
+    verifyEq(numi.call3(it, 6, 4), 10)
+    verifyEq(numi.call2(it, "55"), 55)
+    verifyEq(si.call2("55", 6), 61) // static
+
+    // numi 4x overloaded - callOn
+    verifyEq(numi.callOn(it, [8877]), null)
+    verifyEq(numi.callOn(it, [,]), 8877)
+    verifyEq(numi.callOn(it, [6, 4]), 10)
+    verifyEq(numi.callOn(it, ["55"]), 55)
+    verifyEq(si.callOn(null, ["55", 6]), 61) // static
+
+    // numi 4x overloaded - trap
+    it->num = -99
+    verifyEq(it->numi, -99)
+    verifyEq(it->numi(3, 4), 7)
+    verifyEq(it->numi("999"), 999)
+    verifyEq(it->si("2", 9), 11) // static
+
+    // Obj[] arrays
+    it->initArray
+    Obj[] array := it->array1
+    verifySame(array[0], it->a)
+    verifySame(array[1], it->b)
+    verifySame(array[2], it->c)
+    array[2] = it->a
+    it->array1(array)
+    verifySame(array[2], it->a)
+  }
 }

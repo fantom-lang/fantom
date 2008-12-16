@@ -9,6 +9,8 @@ package fanx.util;
 
 import java.util.*;
 import fan.sys.*;
+import fanx.fcode.*;
+import java.lang.reflect.Modifier;
 
 /**
  * FanUtil defines the mappings between the Fan and Java type systems.
@@ -17,11 +19,9 @@ public class FanUtil
 {
 
   /**
-   * Convert Java class to Fan type.  If mapFFI is true then map
-   * any Java class to a JavaType.  Otherwise we only map fan.pod.Type
-   * classes and predefined types like boolean, long, Double, etc.
+   * Convert Java class to Fan type.
    */
-  public static Type toFanType(Class cls, boolean mapFFI, boolean checked)
+  public static Type toFanType(Class cls, boolean checked)
   {
     // try a predefined mapping
     String name = cls.getName();
@@ -40,17 +40,14 @@ public class FanUtil
     }
 
     // map to a FFI Java class
-    if (mapFFI) return JavaType.make(cls);
-
-    // error
-    if (!checked) return null;
-    throw UnknownTypeErr.make("Not a Fan type: " + name).val;
+    return JavaType.make(cls);
   }
 
   private static HashMap javaToFanTypes = new HashMap();
   static
   {
     if (Sys.ObjType == null) java.lang.Thread.dumpStack();
+    javaToFanTypes.put("void",                 Sys.VoidType);
     javaToFanTypes.put("boolean",              Sys.BoolType);
     javaToFanTypes.put("long",                 Sys.IntType);
     javaToFanTypes.put("double",               Sys.FloatType);
@@ -61,6 +58,12 @@ public class FanUtil
     javaToFanTypes.put("java.lang.Long",       Sys.IntType);
     javaToFanTypes.put("java.lang.Double",     Sys.FloatType);
     javaToFanTypes.put("java.math.BigDecimal", Sys.DecimalType);
+
+    javaToFanTypes.put("byte",  JavaType.ByteType);
+    javaToFanTypes.put("short", JavaType.ShortType);
+    javaToFanTypes.put("char",  JavaType.CharType);
+    javaToFanTypes.put("int",   JavaType.IntType);
+    javaToFanTypes.put("float", JavaType.FloatType);
   }
 
   /**
@@ -368,6 +371,44 @@ public class FanUtil
       if (jsig.equals("java/math/BigDecimal")) return "fan/sys/FanDecimal";
     }
     return jsig;
+  }
+
+  /**
+   * Map Java class modifiers to Fan flags.
+   */
+  public static int classModifiersToFanFlags(int m)
+  {
+    int flags = 0;
+
+    if (Modifier.isAbstract(m))  flags |= FConst.Abstract;
+    if (Modifier.isFinal(m))     flags |= FConst.Final;
+    if (Modifier.isInterface(m)) flags |= FConst.Mixin;
+
+    if (Modifier.isPublic(m))   flags |= FConst.Public;
+    else flags |= FConst.Internal;
+
+    return flags;
+  }
+
+  /**
+   * Map Java field/method modifiers to Fan flags.
+   */
+  public static int memberModifiersToFanFlags(int m)
+  {
+    int flags = 0;
+
+    if (Modifier.isAbstract(m))  flags |= FConst.Abstract;
+    if (Modifier.isStatic(m))    flags |= FConst.Static;
+
+    if (Modifier.isFinal(m)) flags |= FConst.Final;
+    else flags |= FConst.Virtual;
+
+    if (Modifier.isPublic(m))   flags |= FConst.Public;
+    else if (Modifier.isPrivate(m))  flags |= FConst.Private;
+    else if (Modifier.isProtected(m))  flags |= FConst.Protected;
+    else flags |= FConst.Internal;
+
+    return flags;
   }
 
 }

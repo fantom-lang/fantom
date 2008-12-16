@@ -79,6 +79,7 @@ public class Parser : CompilerSupport
     if (curt === Token.doubleColon)
     {
       consume; consumeId
+      while (curt === Token.dollar) { consume; if (curt === Token.identifier) consumeId }
       if (curt === Token.asKeyword) { consume; consumeId }
     }
     endOfStmt

@@ -263,6 +263,14 @@ class TypeDef : DefNode, CType
     return (MethodDef[])slotDefList.findType(MethodDef#)
   }
 
+  **
+  ** Get the constructor MethodDefs declared within this TypeDef.
+  **
+  MethodDef[] ctorDefs()
+  {
+    return methodDefs.findAll |MethodDef m->Bool| { return m.isCtor }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Enum
 //////////////////////////////////////////////////////////////////////////

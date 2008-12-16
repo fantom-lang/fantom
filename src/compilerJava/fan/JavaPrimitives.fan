@@ -22,14 +22,15 @@ class JavaPrimitives : JavaPod
   new make(JavaBridge bridge)
     : super(bridge, "", null)
   {
-    this.byteType   = JavaType(this, "byte")
-    this.shortType  = JavaType(this, "short")
-    this.charType   = JavaType(this, "char")
-    this.intType    = JavaType(this, "int")
-    this.longType   = JavaType(this, "long")
-    this.floatType  = JavaType(this, "float")
-    this.doubleType = JavaType(this, "double")
-    this.types = [intType, charType, byteType, shortType, floatType, longType, doubleType]
+    this.booleanType = JavaType(this, "boolean")
+    this.byteType    = JavaType(this, "byte")
+    this.shortType   = JavaType(this, "short")
+    this.charType    = JavaType(this, "char")
+    this.intType     = JavaType(this, "int")
+    this.longType    = JavaType(this, "long")
+    this.floatType   = JavaType(this, "float")
+    this.doubleType  = JavaType(this, "double")
+    this.types = [intType, charType, byteType, shortType, floatType, longType, doubleType, booleanType]
   }
 
   JavaType byteType
@@ -37,7 +38,8 @@ class JavaPrimitives : JavaPod
   JavaType charType
   JavaType intType
   JavaType floatType
-  JavaType longType    // just used for multi-dim arrays
-  JavaType doubleType  // just used for multi-dim arrays
+  JavaType booleanType  // just used for multi-dim arrays
+  JavaType longType     // just used for multi-dim arrays
+  JavaType doubleType   // just used for multi-dim arrays
 
 }

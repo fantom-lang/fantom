@@ -61,6 +61,10 @@ class CheckErrors : CompilerStep
     // check for const slots in const class
     checkConstType(t)
 
+    // if type extends from any FFI types then give bridge a hook
+    foreign := t.foreignInheritance
+    if (foreign != null) foreign.bridge.checkType(t)
+
     // check some knuckle head doesn't override type
     if (t.slotDef("type") != null && !compiler.isSys)
       err("Cannot override Obj.type()", t.slotDef("type").location)

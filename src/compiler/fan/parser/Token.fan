@@ -84,6 +84,7 @@ enum Token
   safeDot       ("?."),
   safeArrow     ("?->"),
   docComment    ("**"),
+  dollar        ("\$"),
 
   // keywords
   abstractKeyword,

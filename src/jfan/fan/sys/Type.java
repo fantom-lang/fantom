@@ -266,11 +266,11 @@ public abstract class Type
   public abstract List methods();
   public abstract List slots();
 
-  public final Field field(String name) { return (Field)slot(name, true); }
-  public final Field field(String name, boolean checked) { return (Field)slot(name, checked); }
+  public final Field field(String name) { return field(name, true); }
+  public Field field(String name, boolean checked) { return (Field)slot(name, checked); }
 
-  public final Method method(String name) { return (Method)slot(name, true); }
-  public final Method method(String name, boolean checked) { return (Method)slot(name, checked); }
+  public final Method method(String name) { return method(name, true); }
+  public Method method(String name, boolean checked) { return (Method)slot(name, checked); }
 
   public final Slot slot(String name) { return slot(name, true); }
   public abstract Slot slot(String name, boolean checked);
@@ -379,6 +379,12 @@ public abstract class Type
   protected Type reflect() { return this; }
 
   public void finish() {}
+
+  /**
+   * Return if this is a JavaType which represents a Java
+   * class imported into the Fan type system via the Java FFI.
+   */
+  public final boolean isJava() { return this instanceof JavaType; }
 
   /**
    * Return if the Fan Type is represented as a Java class

@@ -845,6 +845,8 @@ class Tokenizer : CompilerSupport
         return TokenVal(Token.rbrace)
       case '~':
         return TokenVal(Token.tilde)
+      case '$':
+        return TokenVal(Token.dollar)
     }
 
     if (c == 0)

@@ -480,12 +480,15 @@
 - Flux: highlight current line
 - Flux: show short filenames in console instead of full paths
 
-*Build 1.0.36 (incomplete)*
+*Build 1.0.36 (13 Dec 08)*
 - Java FFI
+- Use 'dotnet' to denote .NET instead of 'net'
+- Initial json API
 - Remove compiler support for for(...); and while(...);
 - DateTime toJava, fromJava
 - Reorganize icons
-- Use 'dotnet' to denote .NET instead of 'net'
 - Fan launcher -fcodeDump option to disassemble a Fan script
 - List, Map eachBreak -> eachWhile
-- Initial json API
+- Emacs support adm/tools/emacs/fan-mode.el
+
+*Build 1.0.37 (incomplete)*

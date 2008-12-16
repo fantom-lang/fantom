@@ -100,7 +100,7 @@ public class FanObj
     if (self instanceof FanObj)
       return ((FanObj)self).type();
     else
-      return FanUtil.toFanType(self.getClass(), true, true);
+      return FanUtil.toFanType(self.getClass(), true);
   }
 
   public Type type()
@@ -121,6 +121,7 @@ public class FanObj
   private static Object doTrap(Object self, String name, List args, Type type)
   {
     Slot slot = type.slot(name, true);
+
     if (slot instanceof Method)
     {
       Method m = (Method)slot;
@@ -128,13 +129,19 @@ public class FanObj
     }
     else
     {
+      // handle FFI field overloaded with a method
       Field f = (Field)slot;
+      if (f.overload != null)
+        return f.overload.func.callOn(self, args);
+
+      // zero args -> getter
       int argSize = (args == null) ? 0 : args.sz();
       if (argSize == 0)
       {
         return f.get(self);
       }
 
+      // one arg -> setter
       if (argSize == 1)
       {
         Object val = args.get(0);
