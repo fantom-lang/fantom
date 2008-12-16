@@ -8,6 +8,7 @@ adm/pngcrush*
 
 # lib/
 lib/java/*.jar
+lib/javascript/*
 lib/dotnet/*.pdb
 lib/dotnet/sys.dll
 lib/fan/*.pod
