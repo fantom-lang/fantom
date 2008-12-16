@@ -56,10 +56,29 @@ abstract class CBridge : CompilerSupport
   abstract Expr resolveConstruction(CallExpr call)
 
   **
+  ** Resolve a construction chain call where a Fan constructor
+  ** calls the super-class constructor.  Type check the arguments
+  ** and insert any conversions needed.
+  **
+  abstract Expr resolveConstructorChain(CallExpr call)
+
+  **
   ** Resolve a method call.  Type check the arguments
   ** and insert any conversions needed.
   **
   abstract Expr resolveCall(CallExpr call)
+
+  **
+  ** Called during Inherit step when a Fan slot overrides a FFI slot.
+  ** Log and throw compiler error if there is a problem.
+  **
+  abstract Void checkOverride(TypeDef t, CSlot base, SlotDef def)
+
+  **
+  ** Called during CheckErrors step for a type which extends
+  ** a FFI class or implements any FFI mixins.
+  **
+  abstract Void checkType(TypeDef def)
 
 
 }

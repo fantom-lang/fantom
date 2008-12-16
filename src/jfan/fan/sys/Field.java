@@ -88,6 +88,9 @@ public class Field
 
     try
     {
+      // if JavaType handle slot resolution
+      if (parent.isJava()) return JavaType.get(this, instance);
+
       return reflect.get(instance);
     }
     catch (Exception e)
@@ -121,7 +124,7 @@ public class Field
     }
 
     // check static
-    if ((flags & FConst.Static) != 0)
+    if ((flags & FConst.Static) != 0 && !parent.isJava())
       throw ReadonlyErr.make("Cannot set static field " + qname()).val;
 
     // check generic type (the Java runtime will check non-generics)
@@ -139,6 +142,9 @@ public class Field
 
     try
     {
+      // if JavaType handle slot resolution
+      if (parent.isJava()) { JavaType.set(this, instance, value); return; }
+
       reflect.set(instance, value);
     }
     catch (IllegalArgumentException e)
@@ -165,5 +171,6 @@ public class Field
   Method getter;
   Method setter;
   java.lang.reflect.Field reflect;
+  Method overload;   // if overloaded by method in JavaType
 
 }

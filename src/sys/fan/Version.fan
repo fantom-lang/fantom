@@ -84,19 +84,19 @@ const final class Version
 
   **
   ** Get the second segment which represents the minor version.
-  ** If return null if less than two segments.
+  ** Return null if version has less than two segments.
   **
   Int? minor()
 
   **
   ** Get the third segment which represents the build number.
-  ** If return null if less than three segments.
+  ** Return null if version has less than three segments.
   **
   Int? build()
 
   **
   ** Get the fourth segment which represents the patch number.
-  ** If return null if less than four segments.
+  ** Return null if version has less than four segments.
   **
   Int? patch()
 

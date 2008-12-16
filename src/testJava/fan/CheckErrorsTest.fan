@@ -6,8 +6,6 @@
 //   20 Nov 08  Brian Frank  Creation
 //
 
-using testCompiler
-
 **
 ** CheckErrorsTest
 **
@@ -33,7 +31,7 @@ class CheckErrorsTest : JavaTest
         static System? m03() { m03.getProperty(\"foo\"); return null }
 
         // ambiguous calls
-        static Void m04() { InteropTest().ambiguous1(3) }
+        static Void m04() { InteropTest().ambiguous1(3, 4) }
         static Void m05() { InteropTest().ambiguous2(null) }
       }
       ",
@@ -41,20 +39,23 @@ class CheckErrorsTest : JavaTest
           6, 30, "Invalid args getProperty()",
           7, 30, "Invalid args getProperty(sys::Str, sys::Str, sys::Int)",
           8, 30, "Invalid args getProperty(sys::Str, sys::Int)",
-         12, 37, "Ambiguous call ambiguous1(sys::Int)",
+         12, 37, "Ambiguous call ambiguous1(sys::Int, sys::Int)",
          13, 37, "Ambiguous call ambiguous2(null)",
        ])
 
     // CheckErrors step
     verifyErrors(
      "using [java] java.lang
+      using [java] java.util
       class Foo
       {
         static System? m00() { m00.getProperty(\"foo\"); return null }
+        static Void m01() { Observable().setChanged }
       }
       ",
        [
-          4, 30, "Cannot call static method 'getProperty' on instance",
+          5, 30, "Cannot call static method 'getProperty' on instance",
+          6, 36, "Protected method '[java]java.util::Observable.setChanged' not accessible",
        ])
   }
 
@@ -90,4 +91,136 @@ class CheckErrorsTest : JavaTest
        ])
    }
 
+//////////////////////////////////////////////////////////////////////////
+// ClassDef
+//////////////////////////////////////////////////////////////////////////
+
+  Void testClassDef()
+  {
+    verifyErrors(
+     "using [java] java.util
+      class Foo : Observer, Observable {}
+      ",
+       [
+          2, 1, "Invalid inheritance order, ensure class '[java]java.util::Observable' comes first before mixins",
+       ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Abstract ClassDef
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAbstractClassDef()
+  {
+    verifyErrors(
+     "using [java] java.util
+      class Foo : Observer {}
+      abstract class Bar: Observer {} // ok
+      ",
+       [
+          2, 1, "Class 'Foo' must be abstract since it inherits but doesn't override '[java]java.util::Observer.update'",
+       ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Constructors
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCtors()
+  {
+    verifyErrors(
+     "using [java] java.util
+      class Foo : Date
+      {
+        new make() : super() {}
+        new makeFoo() : this.make() {}
+      }
+      ",
+       [
+          5, 19, "Must use super constructor call in Java FFI",
+       ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Subclass
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSubclass()
+  {
+    verifyErrors(
+     "using [java] java.util
+      using [java] fanx.interop
+      class Foo : Date
+      {
+        new makeA() : super() {}
+        new makeB() : super() {}
+        new makeC(Int a) : super() {}
+        new makeD(Int a) : super() {}
+        new makeE(Int a) : super() {}
+      }
+
+      class Foo1 : Foo
+      {
+        new make() : super.makeA() {}
+      }
+
+      class Foo2 : Foo1
+      {
+        new make() : super.make() {}
+      }
+
+      class Foo3 : IntArray
+      {
+        new ctor() {}
+      }
+      ",
+       [
+          6, 3, "Duplicate Java FFI constructor signatures: 'makeA' and 'makeB'",
+          8, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeD'",
+          9, 3, "Duplicate Java FFI constructor signatures: 'makeC' and 'makeE'",
+          9, 3, "Duplicate Java FFI constructor signatures: 'makeD' and 'makeE'",
+         12, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
+         17, 1, "Cannot subclass Java class more than one level: [java]java.util::Date",
+         22, 1, "Cannot subclass from Java interop array: [java]fanx.interop::IntArray",
+       ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Abstract Overloads
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAbstractOverloads()
+  {
+    // Inherit
+    verifyErrors(
+     "using [java] fanx.test::InteropTest\$AbstractOverloadsClass as OverloadsClass
+      using [java] fanx.test::InteropTest\$AbstractOverloadsInterface as OverloadsInterface
+      using [java] fanx.test::InteropTest\$AbstractOverloadsA as OverloadsA
+      using [java] fanx.test::InteropTest\$AbstractOverloadsB as OverloadsB
+
+      class A : OverloadsA, OverloadsB {}
+      class B : OverloadsClass { override Void foo() {} }
+      class C : OverloadsInterface { override Void foo(Str? x) {} }
+      ",
+       [
+          6,  1, "Inherited slots have conflicting signatures '[java]fanx.test::InteropTest\$AbstractOverloadsA.foo' and '[java]fanx.test::InteropTest\$AbstractOverloadsB.foo'",
+          7, 28, "Cannot override Java overloaded method: 'foo'",
+          8, 32, "Cannot override Java overloaded method: 'foo'",
+       ])
+
+    // CheckErrors
+    verifyErrors(
+     "using [java] fanx.test::InteropTest\$AbstractOverloadsClass as OverloadsClass
+      using [java] fanx.test::InteropTest\$AbstractOverloadsInterface as OverloadsInterface
+      using [java] fanx.test::InteropTest\$AbstractOverloadsA as OverloadsA
+      using [java] fanx.test::InteropTest\$AbstractOverloadsB as OverloadsB
+
+      class A : OverloadsClass {}
+      class B : OverloadsInterface {}
+      ",
+       [
+          6, 1, "Class 'A' must be abstract since it inherits but doesn't override '[java]fanx.test::InteropTest\$AbstractOverloadsClass.foo'",
+          7, 1, "Class 'B' must be abstract since it inherits but doesn't override '[java]fanx.test::InteropTest\$AbstractOverloadsInterface.foo'",
+       ])
+  }
 }

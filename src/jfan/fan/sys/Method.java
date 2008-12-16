@@ -503,6 +503,15 @@ public class Method
 
     private int checkArgs(int args, boolean isStatic, boolean isCallOn)
     {
+      // don't check args for JavaTypes - we route these calls
+      // to the JavaType to deal with method overloading
+      // NOTE: we figure out how to package the arguments into a target
+      // and argument array based on whether the first method overload
+      // is static or not; this means that if a method is overloaded
+      // with both an instance and static version that reflection may
+      // not correctly work when using the callX methods
+      if (parent.isJava()) return isStatic || isCallOn ? args : args - 1;
+
       // compuate min/max parameters - reflect contains all the method versions
       // with full params at index zero, and full defaults at reflect.length-1
       int max = params.sz();
@@ -537,20 +546,15 @@ public class Method
 
     try
     {
+      // if parent is FFI Java class, then route to JavaType for handling
+      if (parent.isJava()) return JavaType.invoke(this, instance, args);
+
       // zero index is full signature up to using max defaults
       int index = params.sz()-args.length;
       if (parent.javaRepr() && isInstance()) index++;
       if (index < 0) index = 0;
-/*
-System.out.println("invoke " + qname() + " index=" + index + " java=" + parent.javaRepr + " isInstance" + isInstance());
-System.out.println("  instance=" + instance);
-System.out.println("  args.length=" + args.length);
-for (int i=0; i<args.length; ++i)
-  System.out.println("  args[" + i + "] " + args[i]);
-System.out.println("  reflect.length=" + reflect.length);
-for (int i=0; i<reflect.length; ++i)
-  System.out.println("  reflect[" + i + "] " + reflect[i]);
-*/
+
+      // route to Java reflection
       return reflect[index].invoke(instance, args);
     }
     catch (IllegalArgumentException e)
@@ -569,12 +573,16 @@ for (int i=0; i<reflect.length; ++i)
       if (reflect == null)
         throw Err.make("Method not mapped to java.lang.reflect correctly " + qname()).val;
 
-      //System.out.println("ERROR:      " + signature());
-      //System.out.println("  instance: " + instance);
-      //System.out.println("  args:     " + (args == null ? "null" : ""+args.length));
-      //for (int i=0; args != null && i<args.length; ++i)
-      //  System.out.println("    args[" + i + "] = " + args[i]);
-      //e.printStackTrace();
+      /*
+      System.out.println("ERROR:      " + signature());
+      System.out.println("  instance: " + instance);
+      System.out.println("  args:     " + (args == null ? "null" : ""+args.length));
+      for (int i=0; args != null && i<args.length; ++i)
+        System.out.println("    args[" + i + "] = " + args[i]);
+      for (int i=0; i<reflect.length; ++i)
+        System.out.println("    reflect[" + i + "] = " + reflect[i]);
+      e.printStackTrace();
+      */
 
 
       throw Err.make("Cannot call '" + this + "': " + e).val;

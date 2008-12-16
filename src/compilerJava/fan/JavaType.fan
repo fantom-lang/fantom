@@ -40,9 +40,9 @@ class JavaType : CType
   override readonly Str qname
   override Str signature() { return qname }
 
-  override readonly CType? base { get { load; return @base } }
-  override readonly CType[] mixins { get { load; return @mixins } }
-  override readonly Int flags { get { load; return @flags } }
+  override CType? base { get { load; return @base } internal set}
+  override CType[] mixins { get { load; return @mixins } internal set }
+  override Int flags { get { load; return @flags } internal set }
 
   override Bool isForeign() { return true }
   override Bool isSupported() { return arrayRank <= 1 } // multi-dimensional arrays unsupported
@@ -78,6 +78,9 @@ class JavaType : CType
     if (isPrimitive)
       return name == "float" ? ns.floatType : ns.intType
 
+    if (isArray && !arrayOf.isPrimitive && !arrayOf.isArray)
+      return ListType(arrayOf)
+
     return this
   }
 
@@ -88,6 +91,7 @@ class JavaType : CType
   override Bool fits(CType t)
   {
     if (CType.super.fits(t)) return true
+    t = t.toNonNullable
     if (t is JavaType) return fitsJava(t)
     return fitsFan(t)
   }
@@ -124,12 +128,21 @@ class JavaType : CType
   {
     if (loaded) return
     slots := Str:CSlot[:]
-    if (!isPrimitive) doLoad(slots)
+    if (!isPrimitive)
+    {
+      // map Java members to slots using Java reflection
+      JavaReflect.load(this, slots)
+
+      // merge in sys::Obj slots
+      ns.objType.slots.each |CSlot s|
+      {
+        if (s.isCtor) return
+        if (slots[name] == null) slots[s.name] = s
+      }
+    }
     this.slots = slots
     loaded = true
   }
-
-  private native Void doLoad(Str:CSlot slots)
 
 //////////////////////////////////////////////////////////////////////////
 // Primitives
@@ -169,7 +182,7 @@ class JavaType : CType
   }
 
   **
-  ** Is this a array type such as [java]foo.bar::[Baz
+  ** Is this a array type such as '[java]foo.bar::[Baz'
   **
   Bool isArray() { return arrayRank > 0 }
 

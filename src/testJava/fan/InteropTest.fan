@@ -6,8 +6,6 @@
 //   20 Nov 08  Brian Frank  Creation
 //
 
-using testCompiler
-
 **
 ** InteropTest
 **
@@ -338,10 +336,10 @@ class InteropTest : JavaTest
     verifyEq(a.of.qname, "[java]fanx.test::InteropTest")
     verifySame(a[2], obj->c)
 
-    // get as coerced to Obj[]
+    // get as coerced to InteropTest[]
     a = obj->get1c
     verifyEq(a.size, 3)
-    verifyEq(a.of.qname, "sys::Obj")
+    verifyEq(a.of.qname, "[java]fanx.test::InteropTest")
     verifySame(a[0], obj->a)
 
     // set one dimension array
@@ -438,6 +436,84 @@ class InteropTest : JavaTest
     verifyEq(obj->m02, false)
     verifyEq(obj->m03, false)
     obj->m04
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Overload Resolution
+//////////////////////////////////////////////////////////////////////////
+
+  Void testOverloadResolution()
+  {
+    compile(
+     "using [java] java.lang
+      using [java] fanx.test
+      class Foo
+      {
+        InteropTest x := InteropTest()
+        Bool a() { return x.overload1(this) == \"(Object)\" }
+        Bool b() { return x.overload1(\"foo\") == \"(String)\" }
+        Bool c() { return x.overload1(5) == \"(long)\" }
+
+        Bool d() { return x.overload2(3, this) == \"(int, Object)\" }
+        Bool e() { return x.overload2(3, (Number?)null) == \"(int, Number)\" }
+        Bool f() { return x.overload2(3, (Double?)null) == \"(int, Double)\" }
+      }")
+
+    obj := pod.types.first.make
+    verify(obj->a)
+    verify(obj->b)
+    verify(obj->c)
+    verify(obj->d)
+    // TODO: need to fix JLS resolution rules
+    // verify(obj->e)
+    verify(obj->f)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Inner Classes
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInnerClasses()
+  {
+    compile(
+     "using [java] fanx.test::InteropTest\$InnerClass as Inner
+      class Foo
+      {
+        Str name() { return Inner().name }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->name, "InnerClass")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// ObjMethods
+//////////////////////////////////////////////////////////////////////////
+
+  Void testObjMethods()
+  {
+    compile(
+     "using [java] fanx.test
+      class Foo : InteropTest
+      {
+        Void foo() { echo(this) }
+        Bool test1() { return this < this }
+        Bool test2() { return this <= this }
+        Bool test3() { return this == this }
+        Str  test4() { return type.name }
+        Bool test5() { return toStr == toString }
+        Bool test6() { return this.isImmutable }
+        Bool test7() { return hash == hashCode }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test1, false)
+    verifyEq(obj->test2, true)
+    verifyEq(obj->test3, true)
+    verifyEq(obj->test4, "Foo")
+    verifyEq(obj->test5, true)
+    verifyEq(obj->test6, false)
+    verifyEq(obj->test7, true)
   }
 
 }

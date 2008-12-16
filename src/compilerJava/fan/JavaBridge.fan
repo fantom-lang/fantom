@@ -83,6 +83,25 @@ class JavaBridge : CBridge
   }
 
   **
+  ** Resolve a construction chain call where a Fan constructor
+  ** calls the super-class constructor.  Type check the arguments
+  ** and insert any conversions needed.
+  **
+  override Expr resolveConstructorChain(CallExpr call)
+  {
+    // we don't allow chaining to a this ctor for Java FFI
+    if (call.target.id !== ExprId.superExpr)
+      throw err("Must use super constructor call in Java FFI", call.location)
+
+    // route to a superclass constructor
+    JavaType base := call.target.ctype.deref
+    call.method = base.method("<init>")
+
+    // call resolution to deal with overloading
+    return resolveCall(call)
+  }
+
+  **
   ** Resolve a method call: try to find the best match
   ** and apply any coercions needed.
   **
@@ -99,16 +118,18 @@ class JavaBridge : CBridge
     }
 
     // if we have exactly one match use then use that one
-    if (matches.size == 1)
+    if (matches.size == 1) return matches[0].apply(call)
+
+    // if we have multiple matches; resolve to
+    // most specific match according to JLS rules
+    // TODO: this does not correct resolve when using Fan implicit casting
+    if (matches.size > 1)
     {
-      match := matches.first
-      call.args = match.args
-      call.method = match.method
-      call.ctype  = match.method.returnType
-      return call
+      best := resolveMostSpecific(matches)
+      if (best != null) return best.apply(call)
     }
 
-    // if we have multiple matches or no matches we report an error
+    // zero or multiple ambiguous matches is a compiler error
     s := StrBuf()
     s.add(matches.isEmpty ? "Invalid args " : "Ambiguous call ")
     s.add(call.name).add("(")
@@ -137,6 +158,110 @@ class JavaBridge : CBridge
     }
     if (isErr) return null
     return CallMatch { method = m; args = newArgs }
+  }
+
+  **
+  ** Given a list of overloaed methods find the most specific method
+  ** according to Java Language Specification 15.11.2.2.  The "informal
+  ** intuition" rule is that a method is more specific than another
+  ** if the first could be could be passed onto the second one.
+  **
+  static CallMatch? resolveMostSpecific(CallMatch[] matches)
+  {
+    CallMatch? best := matches[0]
+    for (i:=1; i<matches.size; ++i)
+    {
+      x := matches[i]
+      if (isMoreSpecific(best, x)) { continue }
+      if (isMoreSpecific(x, best)) { best = x; continue }
+      return null
+    }
+    return best
+  }
+
+  **
+  ** Is 'a' more specific than 'b' such that 'a' could be used
+  ** passed to 'b' without a compile time error.
+  **
+  static Bool isMoreSpecific(CallMatch a, CallMatch b)
+  {
+    return a.method.params.all |CParam ap, Int i->Bool|
+    {
+      bp := b.method.params[i]
+      return ap.paramType.fits(bp.paramType)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// CheckErrors
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Called during Inherit step when a Fan slot overrides a FFI slot.
+  ** Log and throw compiler error if there is a problem.
+  **
+  override Void checkOverride(TypeDef t, CSlot base, SlotDef def)
+  {
+    // we don't allow Fan to override Java methods with multiple
+    // overloaded versions since the Fan type system can't actually
+    // override all the overloaded versions
+    jslot := base as JavaSlot
+    if (jslot == null || jslot.next == null) return
+    err("Cannot override Java overloaded method: '$jslot.name'", def.location)
+  }
+
+  **
+  ** Called during CheckErrors step for a type which extends
+  ** a FFI class or implements any FFI mixins.
+  **
+  override Void checkType(TypeDef def)
+  {
+    // can't subclass a primitive array like ByteArray/byte[]
+    if (def.base.deref is JavaType && def.base.deref->isInteropArray)
+    {
+      err("Cannot subclass from Java interop array: $def.base", def.location)
+      return
+    }
+
+    // we don't allow deep inheritance of Java classes because
+    // the Fan constructor and Java constructor model don't match
+    // up past one level of inheritance
+    // NOTE: that that when we remove this restriction we need to
+    // test how field initialization works because instance$init
+    // is almost certain to break with the current emit design
+    javaBase := def.base
+    while (javaBase != null && !javaBase.isForeign) javaBase = javaBase.base
+    if (javaBase != null && javaBase !== def.base)
+    {
+      err("Cannot subclass Java class more than one level: $javaBase", def.location)
+      return
+    }
+
+    // ensure that when we map Fan constructors to Java
+    // constructors that we don't have duplicate signatures
+    ctors := def.ctorDefs
+    ctors.each |MethodDef a, Int i|
+    {
+      ctors.each |MethodDef b, Int j|
+      {
+        if (i > j && areParamsSame(a, b))
+          err("Duplicate Java FFI constructor signatures: '$b.name' and '$a.name'", a.location)
+      }
+    }
+  }
+
+  **
+  ** Do the two methods have the exact same parameter types.
+  **
+  static Bool areParamsSame(CMethod a, CMethod b)
+  {
+    if (a.params.size != b.params.size) return false
+    for (i:=0; i<a.params.size; ++i)
+    {
+      if (a.params[i].paramType != b.params[i].paramType)
+        return false
+    }
+    return true
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -227,6 +352,10 @@ class JavaBridge : CBridge
   {
     actual := (JavaType)expr.ctype.toNonNullable
     actualOf := actual.arrayOf
+
+    // if expected is array type
+    if (expected is JavaType && ((JavaType)expected).isArray)
+      if (actual.fits(((JavaType)expected).arrayOf)) return expr
 
     // if expected is Obj
     if (expected.isObj) return arrayToList(expr, actualOf)
@@ -340,6 +469,16 @@ class JavaBridge : CBridge
 
 internal class CallMatch
 {
+  CallExpr apply(CallExpr call)
+  {
+    call.args   = args
+    call.method = method
+    call.ctype  = method.returnType
+    return call
+  }
+
+  override Str toStr() { return method.signature }
+
   JavaMethod method  // matched method
   Expr[] args        // coerced arguments
 }

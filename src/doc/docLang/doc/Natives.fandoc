@@ -8,7 +8,13 @@
 
 Overview
 ********
-TODO: Native
+Natives should be considered obsolete.  Instead new code should use the
+[Java FFI]`JavaFFI` and [.NET FFI]`DotnetFFI` features to interop with the
+JVM and .NET platforms.
+
+We still have a good chunk of original code such as 'inet' and 'fwt' which
+is built using the natives feature.  So natives will live for a while longer
+until we can redesign it using FFI.
 
 Native Peers [#peers]
 *********************

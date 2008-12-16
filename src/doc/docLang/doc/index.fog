@@ -27,6 +27,10 @@
 "Functions",
   [`Functions`,     "functional programming"],
   [`Closures`,      "deep dive into closures"],
+"Interop",
+  [`JavaFFI`,       "Java foreign function interface"],
+  [`DotnetFFI`,     ".NET foreign function interface"],
+  [`Natives`,       "implementing methods and fields in Java and C# code"],
 "Advanced",
   [`Deployment`,    "how to deploy pods and applications"],
   [`Serialization`, "reading/writing objects"],
@@ -41,8 +45,6 @@
 "Appendix",
   [`Conventions`,   "coding conventions we use"],
   [`Grammar`,       "formal BNF syntax grammar"],
-"TODO",
-  `Natives`
 ]
 
 // type compatibility

@@ -400,6 +400,11 @@ class ResolveExpr : CompilerStep
       return call
     }
 
+    // if this is a constructor chained call to a FFI
+    // super-class then route to the FFI bridge to let it handle
+    if (call.isCtorChain && curType.base.isForeign)
+      return curType.base.bridge.resolveConstructorChain(call)
+
     // if there is no target, attempt to bind to local variable
     if (call.target == null)
     {
