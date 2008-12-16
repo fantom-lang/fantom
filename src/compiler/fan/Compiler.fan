@@ -52,7 +52,7 @@ class Compiler
   ** Compile fan source code from the configured CompilerInput
   ** into a fan pod and return the resulting CompilerOutput.
   **
-  CompilerOutput compile()
+  virtual CompilerOutput compile()
   {
     log.info("Compile [${input.podName}]")
     log.indent
