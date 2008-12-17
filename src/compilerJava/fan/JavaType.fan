@@ -79,7 +79,7 @@ class JavaType : CType
       return name == "float" ? ns.floatType : ns.intType
 
     if (isArray && !arrayOf.isPrimitive && !arrayOf.isArray)
-      return ListType(arrayOf)
+      return inferredArrayOf.toListOf
 
     return this
   }
@@ -128,7 +128,11 @@ class JavaType : CType
   {
     if (loaded) return
     slots := Str:CSlot[:]
-    if (!isPrimitive)
+    if (isPrimitive)
+    {
+      flags = FConst.Public
+    }
+    else
     {
       // map Java members to slots using Java reflection
       JavaReflect.load(this, slots)
@@ -196,6 +200,21 @@ class JavaType : CType
   ** If this an array, this is the component type.
   **
   JavaType? arrayOf
+
+  **
+  ** The arrayOf field always stores a JavaType so that we
+  ** can correctly resolve the FFI qname.  This means that
+  ** that an array of java.lang.Object will have an arrayOf
+  ** value of [java]java.lang::Object.  This method correctly
+  ** maps the arrayOf map to its canonical Fan type.
+  **
+  CType? inferredArrayOf()
+  {
+    if (arrayOf == null) return null
+    if (arrayOf.qname == "[java]java.lang::Object") return ns.objType
+    if (arrayOf.qname == "[java]java.lang::String") return ns.strType
+    return arrayOf
+  }
 
   **
   ** Get the type which is an array of this type.

@@ -109,12 +109,12 @@ class JavaBridge : CBridge
   {
     // try to match against all the overloaded methods
     matches := CallMatch[,]
-    JavaMethod? m := call.method
+    CMethod? m := call.method
     while (m != null)
     {
       match := matchCall(call, m)
       if (match != null) matches.add(match)
-      m = m.next
+      m = m is JavaMethod ? ((JavaMethod)m).next : null
     }
 
     // if we have exactly one match use then use that one
@@ -142,7 +142,7 @@ class JavaBridge : CBridge
   ** Check if the call matches the specified overload method.
   ** If so return method and coerced args otherwise return null.
   **
-  internal CallMatch? matchCall(CallExpr call, JavaMethod m)
+  internal CallMatch? matchCall(CallExpr call, CMethod m)
   {
     // first check if have matching numbers of args and params
     args := call.args
@@ -151,7 +151,7 @@ class JavaBridge : CBridge
     // check if each argument is ok or can be coerced
     isErr := false
     newArgs := args.dup
-    m.params.each |JavaParam p, Int i|
+    m.params.each |CParam p, Int i|
     {
       // ensure arg fits parameter type (or auto-cast)
       newArgs[i] = coerce(args[i], p.paramType) |,| { isErr = true }
@@ -193,7 +193,7 @@ class JavaBridge : CBridge
   }
 
 //////////////////////////////////////////////////////////////////////////
-// CheckErrors
+// Overrides
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -206,9 +206,82 @@ class JavaBridge : CBridge
     // overloaded versions since the Fan type system can't actually
     // override all the overloaded versions
     jslot := base as JavaSlot
-    if (jslot == null || jslot.next == null) return
-    err("Cannot override Java overloaded method: '$jslot.name'", def.location)
+    if (jslot?.next != null)
+      throw err("Cannot override Java overloaded method: '$jslot.name'", def.location)
+
+    // route to method override checking
+    if (base is JavaMethod && def is MethodDef)
+      checkMethodOverride(t, base, def)
   }
+
+  **
+  ** Called on method/method overrides in the checkOverride callback.
+  **
+  private Void checkMethodOverride(TypeDef t, JavaMethod base, MethodDef def)
+  {
+    // bail early if we know things aren't going to work out
+    if (base.params.size != def.params.size) return
+
+    // if the return type is primitive or Java array and the
+    // Fan declaration matches how it is inferred into the Fan
+    // type system, then just change the return type - the compiler
+    // will impliclty do all the return coercions
+    if (isOverrideInferredType(base.returnType, def.returnType))
+    {
+      def.ret = def.inheritedRet = base.returnType
+    }
+
+    // if any of the parameters is a primitive or Java array
+    // and the Fan declaration matches how it is inferred into
+    // the Fan type type, then change the parameter type to
+    // the Java override type and make the Fan type a local
+    // variable:
+    //   Java:   void foo(int a) { ... }
+    //   Fan:    Void foo(Int a) { ... }
+    //   Result: Void foo(int a_$J) { Int a := a_$J; ... }
+    //
+    base.params.eachr |CParam bp, Int i|
+    {
+      dp := def.paramDefs[i]
+      if (!isOverrideInferredType(bp.paramType, dp.paramType)) return
+
+      // add local variable: Int bar := bar_$J
+      local := LocalDefStmt(def.location)
+      local.name  = dp.name
+      local.ctype = dp.paramType
+      local.init  = UnknownVarExpr(def.location, null, dp.name + "_\$J")
+      def.code.stmts.insert(0, local)
+
+      // rename parameter Int bar -> int bar_$J
+      dp.name = dp.name + "_\$J"
+      dp.paramType = bp.paramType
+    }
+  }
+
+  **
+  ** When overriding a Java method check if the base type is
+  ** is a Java primitive or array and the override definition is
+  ** matches how the Java type is inferred in the Fan type system.
+  ** If we have a match return true and we'll swizzle things in
+  ** checkMethodOverride.
+  **
+  static private Bool isOverrideInferredType(CType base, CType def)
+  {
+    // check if base class slot is a JavaType
+    java := base.toNonNullable as JavaType
+    def = def.toNonNullable
+    if (java != null)
+    {
+      // we allow primitives and arrays if the override type matches inferred
+      if (java.isPrimitive || java.isArray)
+        return java.inferredAs == def
+    }
+    return false
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// CheckErrors
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** Called during CheckErrors step for a type which extends
@@ -388,7 +461,7 @@ class JavaBridge : CBridge
   Expr coerceToArray(Expr expr, CType expected, |,| onErr)
   {
     loc := expr.location
-    expectedOf := ((JavaType)expected.toNonNullable).arrayOf
+    expectedOf := ((JavaType)expected.toNonNullable).inferredArrayOf
     actual := expr.ctype
 
     // if actual is list type
@@ -479,6 +552,6 @@ internal class CallMatch
 
   override Str toStr() { return method.signature }
 
-  JavaMethod method  // matched method
-  Expr[] args        // coerced arguments
+  CMethod method    // matched method
+  Expr[] args       // coerced arguments
 }
