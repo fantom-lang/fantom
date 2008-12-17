@@ -142,7 +142,7 @@ class JavaBridge : CBridge
   ** Check if the call matches the specified overload method.
   ** If so return method and coerced args otherwise return null.
   **
-  CallMatch? matchCall(CallExpr call, JavaMethod m)
+  internal CallMatch? matchCall(CallExpr call, JavaMethod m)
   {
     // first check if have matching numbers of args and params
     args := call.args
@@ -166,7 +166,7 @@ class JavaBridge : CBridge
   ** intuition" rule is that a method is more specific than another
   ** if the first could be could be passed onto the second one.
   **
-  static CallMatch? resolveMostSpecific(CallMatch[] matches)
+  internal static CallMatch? resolveMostSpecific(CallMatch[] matches)
   {
     CallMatch? best := matches[0]
     for (i:=1; i<matches.size; ++i)
@@ -183,7 +183,7 @@ class JavaBridge : CBridge
   ** Is 'a' more specific than 'b' such that 'a' could be used
   ** passed to 'b' without a compile time error.
   **
-  static Bool isMoreSpecific(CallMatch a, CallMatch b)
+  internal static Bool isMoreSpecific(CallMatch a, CallMatch b)
   {
     return a.method.params.all |CParam ap, Int i->Bool|
     {

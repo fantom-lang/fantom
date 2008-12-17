@@ -29,7 +29,6 @@ abstract class GenericType : CType
   override CPod pod()      { return ns.sysPod }
   override Str name()      { return base.name }
   override Str qname()     { return base.qname }
-  override Int flags()  { return 0 }
 
   override Bool isValue() { return false }
 
@@ -136,6 +135,11 @@ class ListType : GenericType
     return v.isGenericParameter
   }
 
+  override Int flags()
+  {
+    return v.isPublic ? FConst.Public : FConst.Internal
+  }
+
   override Bool fits(CType t)
   {
     t = t.toNonNullable
@@ -180,6 +184,11 @@ class MapType : GenericType
     this.k = k
     this.v = v
     this.signature = "[${k.signature}:${v.signature}]"
+  }
+
+  override Int flags()
+  {
+    return k.isPublic && v.isPublic ? FConst.Public : FConst.Internal
   }
 
   override Bool isGenericParameter()
@@ -243,6 +252,12 @@ class FuncType : GenericType
     }
     s.add("->").add(ret.signature).add("|")
     this.signature = s.toStr
+  }
+
+  override Int flags()
+  {
+    allPublic := ret.isPublic && params.all |CType p->Bool| { return p.isPublic }
+    return allPublic ? FConst.Public : FConst.Internal
   }
 
   override Bool fits(CType t)
@@ -328,7 +343,7 @@ class GenericParameterType : CType
   override Str name
   override Str qname
   override Str signature() { return qname }
-  override Int flags() { return 0 }
+  override Int flags() { return FConst.Public }
   override Bool isValue() { return false }
   override Bool isNullable() { return false }
   override once CType toNullable() { return NullableType(this) }

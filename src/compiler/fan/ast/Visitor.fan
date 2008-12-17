@@ -155,7 +155,7 @@ mixin Visitor
 **
 ** VisitDepth enumerates how deep to traverse the AST
 **
-internal enum VisitDepth { typeDef, slotDef, stmt, expr }
+enum VisitDepth { typeDef, slotDef, stmt, expr }
 
 **************************************************************************
 ** ExprVisitor

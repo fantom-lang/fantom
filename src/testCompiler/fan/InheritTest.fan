@@ -74,7 +74,7 @@ class InheritTest : CompilerTest
   {
     verifyErrors(
      "class C {}
-      internal mixin M {}
+      mixin M {}
 
       mixin C1 : C {}
       mixin C2 : Buf {}

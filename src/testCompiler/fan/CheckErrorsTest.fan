@@ -312,7 +312,7 @@ class CheckErrorsTest : CompilerTest
     verifyErrors(
      "using $p.name
 
-      class Bar
+      internal class Bar
       {
         Void m00() { echo(Foo.f) }
         Void m01() { Foo.m() }
@@ -359,6 +359,41 @@ class CheckErrorsTest : CompilerTest
       24,  3, "Internal type '$p::Foo' not accessible",
     ])
   }
+
+//////////////////////////////////////////////////////////////////////////
+// API Protection Scopes
+//////////////////////////////////////////////////////////////////////////
+
+  Void testApiProtectionScopes()
+  {
+    // errors
+    verifyErrors(
+     "class Bar : Foo, Goo
+      {
+        Foo? a() { return null }
+        protected Void b(Str:Foo x) {}
+        Foo f
+        protected Foo[] g
+        |Foo| h
+        |Str->Foo| i
+        internal Foo? ai(Foo x) { return null } // ok
+        internal Foo fi // ok
+      }
+
+      internal class Foo {}
+      internal mixin Goo {}",
+       [
+         3, 3, "Public method 'Bar.a' cannot use internal type '$podName::Foo?'",
+         4, 3, "Public method 'Bar.b' cannot use internal type '[sys::Str:$podName::Foo]'",
+         5, 3, "Public field 'Bar.f' cannot use internal type '$podName::Foo'",
+         6, 3, "Public field 'Bar.g' cannot use internal type '$podName::Foo[]'",
+         7, 3, "Public field 'Bar.h' cannot use internal type '|$podName::Foo->sys::Void|'",
+         8, 3, "Public field 'Bar.i' cannot use internal type '|sys::Str->$podName::Foo|'",
+         1, 1, "Public class 'Bar' cannot extend from internal class 'Foo'",
+         1, 1, "Public class 'Bar' cannot implement internal mixin 'Goo'",
+       ])
+  }
+
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

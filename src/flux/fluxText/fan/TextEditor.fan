@@ -200,7 +200,7 @@ class TextEditor : View
   SyntaxRules rules
   RichText richText
   Doc doc
-  TextEditorController controller
+  internal TextEditorController controller
   internal FindBar find
   internal DateTime fileTimeAtLoad
   internal Label caretField := Label()
