@@ -492,4 +492,5 @@
 - Emacs support adm/tools/emacs/fan-mode.el
 
 *Build 1.0.37 (incomplete)*
+- Java FFI: array overrides of methods which use primitives or arrays
 - Protection checks to prevent internal types being used in public APIs
