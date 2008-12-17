@@ -45,6 +45,7 @@ public class ComboPeer
     control = c;
     c.addListener(SWT.DefaultSelection, this);
     c.addModifyListener(this);
+    c.setVisibleItemCount(20);
     return c;
   }
 

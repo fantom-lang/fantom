@@ -138,6 +138,7 @@ home.name=Home
 home.accelerator=Alt+Home
 
 recent.name=Recent
+recent.icon=fan:/sys/pod/icons/x16/history.png
 recent.accelerator=Ctrl+Space
 
 //////////////////////////////////////////////////////////////////////////
