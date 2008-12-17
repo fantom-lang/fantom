@@ -86,6 +86,31 @@ class SubclassTest : JavaTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Java Overrides
+//////////////////////////////////////////////////////////////////////////
+
+  Void testJavaOverrides()
+  {
+    compile(
+     "using [java] fanx.test::InteropTest\$JavaOverrides as JavaOverrides
+      class Foo : JavaOverrides
+      {
+        override Int add(Int a, Int b) { return a + b }
+        override Obj[]? arraySelf() { return Obj[this] }
+        override Obj? arrayGet(Obj[]? a, Int i) { return a[i] }
+
+        Int test1() { return add(4, 5) }
+        Obj test2() { return arraySelf[0] }
+        Obj test3(Obj[] var, Int i) { return arrayGet(var, i) }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test1, 9)
+    verifySame(obj->test2, obj)
+    verifyEq(obj->test3(["a", "b", "c"], 2), "c")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
