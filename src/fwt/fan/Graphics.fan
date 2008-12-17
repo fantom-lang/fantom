@@ -35,6 +35,12 @@ class Graphics
   native Bool antialias
 
   **
+  ** Current alpha value used to render text, images, and shapes.
+  ** The value must be between 0 (transparent) and 255 (opaue).
+  **
+  native Int alpha
+
+  **
   ** Draw a pixel with the current brush.
   **
   native This drawPoint(Int x, Int y)

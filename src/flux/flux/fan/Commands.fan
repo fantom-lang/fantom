@@ -171,8 +171,9 @@ internal class Commands
     {
       addCommand(back)
       addCommand(forward)
-      addCommand(reload)
       addCommand(up)
+      addCommand(reload)
+      addCommand(recent)
     }
   }
 
