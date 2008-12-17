@@ -126,6 +126,16 @@ public class GraphicsPeer
     gc.setTextAntialias(val);
   }
 
+  public long alpha(Graphics self)
+  {
+    return gc.getAlpha();
+  }
+
+  public void alpha(Graphics self, long alpha)
+  {
+    gc.setAlpha((int)alpha);
+  }
+
   public Graphics drawPoint(Graphics self, long x, long y)
   {
     gc.drawPoint((int)x, (int)y);
@@ -240,6 +250,7 @@ public class GraphicsPeer
     s.font  = font;
     s.antialias = gc.getAntialias();
     s.textAntialias = gc.getTextAntialias();
+    s.alpha = gc.getAlpha();
     s.transform = new Transform(gc.getDevice());
     gc.getTransform(s.transform);
     s.clip = gc.getClipping();
@@ -255,6 +266,7 @@ public class GraphicsPeer
     gc.setAntialias(s.antialias);
     gc.setTextAntialias(s.textAntialias);
     gc.setTransform(s.transform);
+    gc.setAlpha(s.alpha);
     s.transform.dispose();
     gc.setClipping(s.clip);
   }
@@ -266,6 +278,7 @@ public class GraphicsPeer
     Font font;
     int antialias;
     int textAntialias;
+    int alpha;
     Transform transform;
     Rectangle clip;
   }
