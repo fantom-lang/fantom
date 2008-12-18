@@ -17,9 +17,11 @@ public class FieldDef : SlotDef, CField
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, TypeDef parent)
+  new make(Location location, TypeDef parent, Str name := "?", Int flags := 0)
      : super(location, parent)
   {
+    this.name = name
+    this.flags = flags
   }
 
 //////////////////////////////////////////////////////////////////////////

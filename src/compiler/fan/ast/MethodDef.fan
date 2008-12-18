@@ -37,9 +37,11 @@ class MethodDef : SlotDef, CMethod
     return def;
   }
 
-  new make(Location location, TypeDef parent)
+  new make(Location location, TypeDef parent, Str name := "?", Int flags := 0)
      : super(location, parent)
   {
+    this.name = name
+    this.flags = flags
     paramDefs = ParamDef[,]
     vars = MethodVar[,]
     needsCvars = false
