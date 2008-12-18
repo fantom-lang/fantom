@@ -23,14 +23,7 @@ internal class NavBar : SideBar
   {
     content = EdgePane
     {
-      top = InsetPane(5,0,4,4)
-      {
-        EdgePane
-        {
-          center = InsetPane(0,4,0,0) { combo }
-          right  = ToolBar { addCommand(closeCmd) }
-        }
-      }
+      top = InsetPane(5,4,5,4) { combo }
       center = BorderPane
       {
         content  = treePane
@@ -98,9 +91,10 @@ internal class NavBar : SideBar
 
     // ignore onModify events while we update combo
     ignore = true
-    old  := combo.selectedIndex
-    name := r == null ? type.loc("navBar.root") : r.name
-    combo.items = combo.items.dup.add(name)
+    old   := combo.selectedIndex
+    name  := r == null ? type.loc("navBar.root") : r.name
+    items := combo.items.size == 0 ? combo.items.dup : combo.items[0...-1]
+    combo.items = items.add(name).add(type.loc("navBar.editList"))
     if (old >= 0) combo.selectedIndex = old
     ignore = false
   }
@@ -129,33 +123,6 @@ internal class NavBar : SideBar
     ignore = true
     combo.selectedIndex = index
     ignore = false
-
-    // update cmd state
-    closeCmd.enabled = tree != trees.first
-  }
-
-  **
-  ** Close the current tree. If there is only one tree
-  ** open, then this method has no effect.
-  **
-  Void close()
-  {
-    index := combo.selectedIndex
-    if (index == 0) return // can't close root
-
-    // remove tree
-    tree := trees.removeAt(index)
-    treePane.remove(tree)
-
-    // remove combo item
-    ignore = true
-    items := combo.items.dup
-    items.removeAt(index)
-    combo.items = items
-    ignore = false
-
-    // select prev tree
-    select(index-1)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -166,7 +133,11 @@ internal class NavBar : SideBar
   {
     if (ignore) return
     index := event.widget->selectedIndex
-    if (index >= 0) select(index)
+    if (index >= 0)
+    {
+      if (index == trees.size) editList
+      else select(index)
+    }
   }
 
   internal Void onAction(Event event)
@@ -246,6 +217,55 @@ internal class NavBar : SideBar
     else Dialog.openErr(frame, "Resource not found in tree")
   }
 
+  internal Void editList()
+  {
+    // reset index back to active
+    ignore = true
+    combo.selectedIndex = trees.findIndex |Tree t->Bool| { return t === active }
+    ignore = false
+
+    // now show dialog
+    list := EditList(combo.items[0...-1])
+    dlg  := Dialog(frame)
+    {
+      title    = type.loc("navBar.edit")
+      body     = list
+      commands = [Dialog.ok, Dialog.cancel]
+    }
+    if (dlg.open == Dialog.ok)
+    {
+      items    := list.getItems
+      newTrees := Tree[,]
+
+      // copy new tree order
+      items.each |Str item|
+      {
+        i := combo.items.findIndex |Str x->Bool| { return item == x }
+        newTrees.add(trees[i])
+      }
+
+      // remove deleted trees
+      trees.each |Tree t|
+      {
+        r := newTrees.find |Tree n->Bool| { return t === n }
+        if (r == null) treePane.remove(t)
+      }
+
+      // try to select the same tree, or if it was removed
+      // fallback to selecting the root
+      index := newTrees.findIndex |Tree t->Bool| { return t === active }
+      if (index == null) index = 0
+
+      // update widget
+      trees = newTrees
+      ignore = true
+      combo.items = items.add(type.loc("navBar.editList"))
+      combo.selectedIndex = index
+      ignore = false
+      select(index)
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -255,7 +275,6 @@ internal class NavBar : SideBar
   Bool ignore  := true
   Combo combo  := Combo() { onModify.add(&onModify) }
   NavTreePane treePane := NavTreePane()
-  Command closeCmd := Command.makeLocale(type.pod, "navBar.close", &close)
 }
 
 **************************************************************************
@@ -297,21 +316,13 @@ internal class NavNode
   {
     return r.map(NavNode[,]) |Resource x->Obj| { return NavNode(x) }
   }
-
   new make(Resource r) { resource = r }
-
   Resource resource
-
   override Str toStr() { return resource.toStr }
-
   Uri uri() { return resource.uri }
-
   Str name() { return resource.name }
-
   Image? icon() { return resource.icon }
-
   Bool hasChildren() { return resource.hasChildren }
-
   NavNode[]? children
   {
     get
@@ -320,7 +331,6 @@ internal class NavNode
       return @children
     }
   }
-
   Void refresh()
   {
     resource = Resource.resolve(resource.uri)
@@ -344,4 +354,97 @@ internal class NavTreePane : Pane
     }
   }
   Widget? active
+}
+
+**************************************************************************
+** EditListWidget
+**************************************************************************
+
+internal class EditList : Widget
+{
+  new make(Obj[] items)
+  {
+    this.items = items.map(Str[,])  |Obj obj->Str|  { return obj.toStr }
+    this.keep  = items.map(Bool[,]) |Obj obj->Bool| { return true }
+    onMouseDown.add(&onPressed)
+  }
+
+  Str[] getItems()
+  {
+    return items.findAll |Str s, Int i->Bool| { return keep[i] }
+  }
+
+  override Size prefSize(Hints hints := Hints.def)
+  {
+    pw := 0
+    ph := rowh * items.size
+    items.each |Str item| { pw = pw.max(font.width(item)) }
+    pw += 64 + 16
+    return Size(pw, ph)
+  }
+
+  override Void onPaint(Graphics g)
+  {
+    g.font = font
+    items.each |Str item, Int i|
+    {
+      dy := i * rowh
+      iy := dy + (rowh - 16) / 2
+      ty := dy + (rowh - font.height) / 2
+      g.push
+      try
+      {
+        if (!keep[i]) g.alpha = 95;
+        if (i>0) g.drawImage(delete, 0, iy)
+        g.drawImage(folder, 20, iy)
+        g.drawText(item, 40, ty)
+        if (i>1) g.drawImage(up, size.w-32, iy)
+        if (i>0 && i<items.size-1) g.drawImage(down, size.w-16, iy)
+      }
+      finally g.pop
+    }
+  }
+
+  Void onPressed(Event e)
+  {
+    row := e.pos.y / rowh
+    if (row < 0) row = 0
+    if (row > items.size-1) row = items.size-1
+    if (row == 0) return  // can't modify row zero, so just bail
+    if (e.pos.x <= 16)    // delete
+    {
+      keep[row] = !keep[row]
+      repaint
+      return
+    }
+    if (e.pos.x > size.w-32) {
+      if (e.pos.x < size.w-16) {
+        if (row > 1)
+        {
+          // move up
+          items.swap(row, row-1)
+          keep.swap(row, row-1)
+        }
+      }
+      else
+      {
+        if (row < items.size-1)
+        {
+          // move down
+          items.swap(row, row+1)
+          keep.swap(row, row+1)
+        }
+      }
+      repaint
+    }
+  }
+
+  private Str[] items
+  private Bool[] keep
+  private Font font    := Font.sys
+  private Image folder := Flux.icon(`/x16/folder.png`)
+  private Image delete := Flux.icon(`/x16/circleDelete.png`)
+  private Image up     := Flux.icon(`/x16/circleArrowUp.png`)
+  private Image down   := Flux.icon(`/x16/circleArrowDown.png`)
+  private Int rowh     := 16.max(font.height) + 4
 }

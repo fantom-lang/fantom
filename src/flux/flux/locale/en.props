@@ -181,6 +181,8 @@ duplicate.name=Duplicate
 
 NavBar.accelerator=Alt+N
 navBar.root=My Computer
+navBar.edit=Edit NavBar
+navBar.editList=Edit this list...
 
 navBar.close.name=Close
 navBar.close.icon=fan:/sys/pod/icons/x16/close.png
