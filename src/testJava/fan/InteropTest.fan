@@ -548,4 +548,36 @@ class InteropTest : JavaTest
     verifyEq(obj->test4, "a|")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Func To Interface
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFuncToInterface()
+  {
+    compile(
+     "using [java] java.lang
+      using [java] fanx.test::InteropTest\$FuncA as FuncA
+      using [java] fanx.test::InteropTest\$FuncB as FuncB
+      using [java] fanx.test::InteropTest\$FuncC as FuncC
+      class Foo
+      {
+        Void run(Runnable r) { r.run }
+        Str? funcA(Str? s, FuncA f) { return f.thru(s) }
+        Int funcB(Int a, Int b, Int c, FuncB f) { return f.add(a, b, c) }
+        Str[] funcC(Str[] a, FuncC f) { return f.swap(a) }
+
+        Int test1() { n := 0; run |,| { n++ }; return n }
+        Str? test2(Str? x) { return funcA(x) |Str? s->Str?| { return s } }
+        Int test3(Int x, Int y, Int z) { return funcB(x, y, z) |Int a, Int b, Int c->Int| { return a+b+c } }
+        Str[] test4(Str[] a) { return funcC(a) |Str[] x->Str[]| { return x.swap(0, 1) } }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test1, 1)
+    verifyEq(obj->test2("fan"), "fan")
+    verifyEq(obj->test2(null), null)
+    verifyEq(obj->test3(2, 3, 7), 12)
+    verifyEq(obj->test4(["hi", "hola"]), Str?["hola", "hi"])
+  }
+
 }

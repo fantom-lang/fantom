@@ -195,4 +195,23 @@ public class InteropTest
     BigDecimal[] addDecimal(BigDecimal[] a, BigDecimal d);
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Funcs
+//////////////////////////////////////////////////////////////////////////
+
+  public static interface FuncA
+  {
+    public String thru(String s);
+  }
+
+  public static interface FuncB
+  {
+    public int add(int a, int b, int c);
+  }
+
+  public static interface FuncC
+  {
+    public String[] swap(String[] x);
+  }
+
 }
