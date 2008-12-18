@@ -493,4 +493,6 @@
 
 *Build 1.0.37 (incomplete)*
 - Java FFI: array overrides of methods which use primitives or arrays
+- Java FFI: coerce sys::Func to Java class with one abstract method
 - Protection checks to prevent internal types being used in public APIs
+- TODO: fix up JavaBridge with new compiler APIs

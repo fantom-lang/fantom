@@ -17,7 +17,7 @@ class TypeDef : DefNode, CType
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(CNamespace ns, Location location, CompilationUnit unit, Str name)
+  new make(CNamespace ns, Location location, CompilationUnit unit, Str name, Int flags := 0)
     : super(location)
   {
     this.ns          = ns
@@ -25,6 +25,7 @@ class TypeDef : DefNode, CType
     this.unit        = unit
     this.name        = name
     this.qname       = pod.name + "::" + name
+    this.flags       = flags
     this.isValue     = CType.isValueType(qname)
     this.mixins      = CType[,]
     this.enumDefs    = EnumDef[,]
