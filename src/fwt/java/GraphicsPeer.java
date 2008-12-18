@@ -40,6 +40,8 @@ public class GraphicsPeer
     {
       if (brush instanceof Color)
       {
+        int ca = (int)((Color)brush).alpha();
+        gc.setAlpha((alpha == 255) ? ca : (int)((alpha * ca) / 255));
         org.eclipse.swt.graphics.Color c = env.color((Color)brush);
         gc.setForeground(c);
         gc.setBackground(c);
@@ -66,11 +68,18 @@ public class GraphicsPeer
 
   private Pattern gradient(Env env, Gradient g)
   {
+    int a1 = (int)g.c1.alpha();
+    int a2 = (int)g.c2.alpha();
+    if (alpha != 255)
+    {
+      a1 = (int)((alpha * a1) / 255);
+      a2 = (int)((alpha * a2) / 255);
+    }
     return new Pattern(env.display,
         (float)g.p1.x, (float)g.p1.y,
         (float)g.p2.x, (float)g.p2.y,
-        env.color(g.c1), (int)g.c1.alpha(),
-        env.color(g.c2), (int)g.c2.alpha());
+        env.color(g.c1), a1,
+        env.color(g.c2), a2);
   }
 
   public Pen pen(Graphics self)
@@ -128,12 +137,13 @@ public class GraphicsPeer
 
   public long alpha(Graphics self)
   {
-    return gc.getAlpha();
+    return alpha;
   }
 
   public void alpha(Graphics self, long alpha)
   {
-    gc.setAlpha((int)alpha);
+    this.alpha = (int)alpha;
+    brush(self, this.brush);
   }
 
   public Graphics drawPoint(Graphics self, long x, long y)
@@ -250,7 +260,7 @@ public class GraphicsPeer
     s.font  = font;
     s.antialias = gc.getAntialias();
     s.textAntialias = gc.getTextAntialias();
-    s.alpha = gc.getAlpha();
+    s.alpha = alpha;
     s.transform = new Transform(gc.getDevice());
     gc.getTransform(s.transform);
     s.clip = gc.getClipping();
@@ -266,7 +276,7 @@ public class GraphicsPeer
     gc.setAntialias(s.antialias);
     gc.setTextAntialias(s.textAntialias);
     gc.setTransform(s.transform);
-    gc.setAlpha(s.alpha);
+    alpha(self, s.alpha);
     s.transform.dispose();
     gc.setClipping(s.clip);
   }
@@ -291,6 +301,7 @@ public class GraphicsPeer
   Pen pen = Pen.def;
   Brush brush = Color.black;
   Font font;
+  int alpha = 255;
   Stack stack = new Stack();
 
 }
