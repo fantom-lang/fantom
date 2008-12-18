@@ -377,8 +377,8 @@ class JavaBridge : CBridge
     if (expected.name[0] == '[')
       return coerceToArray(expr, expected, onErr)
 
-    // handle sys::Func -> Java type
-    if (actual.fits(ns.funcType) && expected.toNonNullable is JavaType)
+    // handle sys::Func -> Java interface
+    if (actual.fits(ns.funcType) && expected.isMixin && expected.toNonNullable is JavaType)
       return coerceFuncToInterface(expr, expected.toNonNullable, onErr)
 
      // use normal Fan coercion behavior
@@ -502,6 +502,18 @@ class JavaBridge : CBridge
     if (abstracts.size != 1) { onErr(); return expr }
     method := abstracts.first
 
+    // sanity check to map to callX method
+    if (method.params.size > 8)
+      throw err("Cannot coerce func to interface with more 8 arguments", expr.location)
+
+    // check if we've already generated a wrapper for this combo
+    loc := expr.location
+    funcType := expr.ctype
+    key := "${funcType.signature}+${method.qname}"
+    cachedCtor := funcWrappers[key]
+    if (cachedCtor != null)
+      return CallExpr.makeWithMethod(loc, null, cachedCtor, [expr])
+
     // convert Fan function to an instance of the expected class:
     //
     //   Fan:    func typed as |Str|
@@ -516,26 +528,18 @@ class JavaBridge : CBridge
     //   }
 
     // generate FuncWrapper class
-    loc := expr.location
-    name := "FuncWrapper" + funcWrapperCount++
+    name := "FuncWrapper" + funcWrappers.size
     cls := TypeDef(ns, loc, compiler.types[0].unit, name)
     ((DefNode)cls).flags = FConst.Internal | FConst.Synthetic // TODO
-    if (expected.isMixin)
-    {
-      cls.base = ns.objType
-      cls.mixins = [expected]
-    }
-    else
-    {
-      cls.base = expected
-    }
+    cls.base = ns.objType
+    cls.mixins = [expected]
     addTypeDef(cls)
 
     // generate FuncWrapper._func field
     field := FieldDef(loc, cls)
     ((SlotDef)field).name = "_func"
     ((DefNode)field).flags = FConst.Private | FConst.Storage | FConst.Synthetic
-    field.fieldType = ns.funcType
+    field.fieldType = funcType
     cls.addSlot(field)
 
     // generate FuncWrapper.make constructor
@@ -543,7 +547,7 @@ class JavaBridge : CBridge
     ((SlotDef)ctor).name = "make" // TODO
     ((DefNode)ctor).flags = FConst.Internal | FConst.Ctor | FConst.Synthetic // TODO
     ctor.ret  = ns.voidType
-    ctor.paramDefs = [ParamDef(loc, ns.funcType, "f")]
+    ctor.paramDefs = [ParamDef(loc, funcType, "f")]
     ctor.code = Block.make(loc)
     ctor.code.stmts.add(BinaryExpr.makeAssign(
       FieldExpr(loc, ThisExpr(loc), field),
@@ -558,15 +562,22 @@ class JavaBridge : CBridge
     over.ret = method.returnType
     over.paramDefs = ParamDef[,]
     over.code = Block.make(loc)
-    call := CallExpr.makeWithMethod(loc, FieldExpr(loc, ThisExpr(loc), field), ns.funcType.method("call0"))
+    callArity := "call" + method.params.size
+    call := CallExpr.makeWithMethod(loc, FieldExpr(loc, ThisExpr(loc), field), funcType.method(callArity))
     method.params.each |CParam param, Int i|
     {
       paramName := "p$i"
       over.params.add(ParamDef(loc, param.paramType, paramName))
+      call.args.add(UnknownVarExpr(loc, null, paramName))
     }
-    over.code.stmts.add(call.toStmt)
-    over.code.stmts.add(ReturnStmt.make(loc))
+    if (method.returnType.isVoid)
+      over.code.stmts.add(call.toStmt).add(ReturnStmt(loc))
+    else
+      over.code.stmts.add(ReturnStmt(loc, call))
     cls.addSlot(over)
+
+    // cache this wrapper type for funcType+method
+    funcWrappers.add(key, ctor);
 
     // replace expr with FuncWrapperX(expr)
     return CallExpr.makeWithMethod(loc, null, ctor, [expr])
@@ -632,7 +643,7 @@ class JavaBridge : CBridge
 
   readonly JavaPrimitives primitives := JavaPrimitives(this)
   readonly ClassPath cp
-  private Int funcWrapperCount := 0
+  private Str:CMethod funcWrappers := Str:CMethod[:]  // funcType+method:ctor
 
 }
 
