@@ -68,6 +68,18 @@ class CheckErrors : CompilerStep
     // check some knuckle head doesn't override type
     if (t.slotDef("type") != null && !compiler.isSys)
       err("Cannot override Obj.type()", t.slotDef("type").location)
+
+    // check that a public class doesn't subclass from internal classes
+    if (t.isPublic)
+    {
+      if (t.base != null && !t.base.isPublic)
+        err("Public class '$t.name' cannot extend from internal class '$t.base.name'", t.location)
+      t.mixins.each |CType m|
+      {
+        if (!m.isPublic)
+          err("Public class '$t.name' cannot implement internal mixin '$m.name'", t.location)
+      }
+    }
   }
 
   private Void checkTypeFlags(TypeDef t)
@@ -183,6 +195,10 @@ class CheckErrors : CompilerStep
 
     // check internal type
     checkTypeProtection(f.fieldType, f.location)
+
+    // check that public field isn't using internal type
+    if (curType.isPublic && (f.isPublic || f.isProtected) && !f.fieldType.isPublic)
+      err("Public field '${curType.name}.${f.name}' cannot use internal type '$f.fieldType'", f.location);
   }
 
   private Void checkFieldFlags(FieldDef f)
@@ -308,6 +324,16 @@ class CheckErrors : CompilerStep
     {
       checkTypeProtection(m.returnType, m.location)
       m.paramDefs.each |ParamDef p| { checkTypeProtection(p.paramType, p.location) }
+    }
+
+    // check that public method isn't using internal types in its signature
+    if (!m.isAccessor && curType.isPublic && (m.isPublic || m.isProtected))
+    {
+      if (!m.returnType.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$m.returnType'", m.location);
+      m.paramDefs.each |ParamDef p|
+      {
+        if (!p.paramType.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$p.paramType'", m.location);
+      }
     }
   }
 
@@ -1299,9 +1325,6 @@ class CheckErrors : CompilerStep
   {
     t = t.toNonNullable
 
-    if (t.isInternal && t.pod != curType.pod)
-      err("Internal type '$t' not accessible", loc)
-
     if (t is GenericType)
     {
       if (t is ListType)
@@ -1321,6 +1344,11 @@ class CheckErrors : CompilerStep
         checkTypeProtection(x.ret, loc)
         x.params.each |CType p| { checkTypeProtection(p, loc) }
       }
+    }
+    else
+    {
+      if (t.isInternal && t.pod != curType.pod)
+        err("Internal type '$t' not accessible", loc)
     }
   }
 
@@ -1344,7 +1372,7 @@ class CheckErrors : CompilerStep
       myType = curType.closure.enclosingType
 
     // consider the slot internal if its parent is internal
-    isInternal := slot.isInternal || slot.parent.isInternal
+    isInternal := slot.isInternal || (slot.parent.isInternal && !slot.parent.isParameterized)
 
     if (slot.isPrivate && myType != slot.parent)
       return "Private $msg '$slot.qname' not accessible"

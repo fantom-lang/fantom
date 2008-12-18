@@ -271,8 +271,8 @@ class UriMapper : DocCompilerSupport
   Uri? targetUri
   Bool targetIsCode
   Bool targetIsSlot
-  Str:CachedUri cache := Str:CachedUri[:]
-  Str:FandocFrags fandocFrags := Str:FandocFrags[:]
+  internal Str:CachedUri cache := Str:CachedUri[:]
+  internal Str:FandocFrags fandocFrags := Str:FandocFrags[:]
 }
 
 internal class CachedUri

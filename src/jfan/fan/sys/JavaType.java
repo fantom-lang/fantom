@@ -489,7 +489,7 @@ public class JavaType
     if (expected.isArray())
     {
       Class ct = expected.getComponentType();
-      if (val instanceof List) return ((List)val).toArray(ct);
+      if (val instanceof List) return ((List)val).asArray(ct);
     }
     return val;
   }
