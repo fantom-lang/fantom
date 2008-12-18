@@ -270,13 +270,13 @@ public class GraphicsPeer
   public void pop(Graphics self)
   {
     State s = (State)stack.pop();
+    alpha = s.alpha;
     pen(self, s.pen);
     brush(self, s.brush);
     font(self, s.font);
     gc.setAntialias(s.antialias);
     gc.setTextAntialias(s.textAntialias);
     gc.setTransform(s.transform);
-    alpha(self, s.alpha);
     s.transform.dispose();
     gc.setClipping(s.clip);
   }
