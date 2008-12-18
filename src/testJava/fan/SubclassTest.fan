@@ -99,11 +99,13 @@ class SubclassTest : JavaTest
         override JavaOverrides[]? arraySelf() { return JavaOverrides[this] }
         override Obj? arrayGet(Obj[]? a, Int i) { return a[i] }
         override Int addfs(Float a, Str? b) { return a.toInt + b.toInt }
+        override Str[] swap(Str[] a) { a.swap(0, 1); return a }
 
         Int test1() { return add(4, 5) }
         Obj test2() { return arraySelf[0] }
         Obj test3(Obj[] var, Int i) { return arrayGet(var, i) }
         Int test4(Float a, Str b) { return addfs(a, b) }
+        Str[] test5(Str[] a) { return swap(a) }
       }")
 
     obj := pod.types.first.make
@@ -111,6 +113,7 @@ class SubclassTest : JavaTest
     verifySame(obj->test2, obj)
     verifyEq(obj->test3(["a", "b", "c"], 2), "c")
     verifyEq(obj->test4(7.2f, "2"), 9)
+    verifyEq(obj->test5(["a", "b"]), ["b", "a"])
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -146,15 +146,23 @@ class JavaBridge : CBridge
   {
     // first check if have matching numbers of args and params
     args := call.args
-    if (m.params.size != args.size) return null
+    if (m.params.size < args.size) return null
 
     // check if each argument is ok or can be coerced
     isErr := false
     newArgs := args.dup
     m.params.each |CParam p, Int i|
     {
-      // ensure arg fits parameter type (or auto-cast)
-      newArgs[i] = coerce(args[i], p.paramType) |,| { isErr = true }
+      if (i >= args.size)
+      {
+        // param has a default value, then that is ok
+        if (!p.hasDefault) isErr = true
+      }
+      else
+      {
+        // ensure arg fits parameter type (or auto-cast)
+        newArgs[i] = coerce(args[i], p.paramType) |,| { isErr = true }
+      }
     }
     if (isErr) return null
     return CallMatch { method = m; args = newArgs }
@@ -424,20 +432,19 @@ class JavaBridge : CBridge
   Expr coerceFromArray(Expr expr, CType expected, |,| onErr)
   {
     actual := (JavaType)expr.ctype.toNonNullable
-    actualOf := actual.arrayOf
 
     // if expected is array type
     if (expected is JavaType && ((JavaType)expected).isArray)
-      if (actual.fits(((JavaType)expected).arrayOf)) return expr
+      if (actual.arrayOf.fits(((JavaType)expected).arrayOf)) return expr
 
     // if expected is Obj
-    if (expected.isObj) return arrayToList(expr, actualOf)
+    if (expected.isObj) return arrayToList(expr, actual.inferredArrayOf)
 
     // if expected is list type
     if (expected.toNonNullable is ListType)
     {
       expectedOf := ((ListType)expected.toNonNullable).v
-      if (actualOf.fits(expectedOf)) return arrayToList(expr, expectedOf)
+      if (actual.inferredArrayOf.fits(expectedOf)) return arrayToList(expr, expectedOf)
     }
 
     // no coercion available

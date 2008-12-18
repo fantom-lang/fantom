@@ -516,4 +516,36 @@ class InteropTest : JavaTest
     verifyEq(obj->test7, true)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// DefaultParams
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDefaultParams()
+  {
+    compile(
+     "using [java] java.util
+      class Foo
+      {
+        Str foo(Date? a := null, Date? b := null, Str? end := null)
+        {
+          s :=  \"\"
+          if (a != null) s += \"a\"
+          if (b != null) s += \"b\"
+          if (end != null) s += end
+          return s
+        }
+
+        Str test1() { return foo }
+        Str test2() { return foo(Date()) }
+        Str test3() { return foo(Date(), Date()) }
+        Str test4() { return foo(Date(), null, \"|\") }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test1, "")
+    verifyEq(obj->test2, "a")
+    verifyEq(obj->test3, "ab")
+    verifyEq(obj->test4, "a|")
+  }
+
 }
