@@ -189,6 +189,7 @@ public class InteropTest
     int add(int a, int b);
     JavaOverrides[] arraySelf();
     Object arrayGet(Object[] a, int index);
+    String[] swap(String[] a);
     long addfs(double d, String s);
   }
 
