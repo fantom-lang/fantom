@@ -185,30 +185,25 @@ internal class JavaReflect
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  **
+  ** Use reflection to map a JavaType to its Java class.
+  **
   static Class toJavaClass(JavaType t)
   {
-    s := StrBuf()
-    if (t.isArray)
-    {
-      rank := t.arrayRank
-      rank.times |,| { s.addChar('[') }
-      s.addChar('L')
-      s.add(t.pod.packageName).addChar('.')
-      s.add(t.name[rank .. -rank])
-      s.addChar(';')
-    }
-    else
-    {
-      s.add(t.pod.packageName).addChar('.').add(t.name)
-    }
-    return Class.forName(s.toStr)
+    return Class.forName(t.toJavaClassName)
   }
 
+  **
+  ** Map an array of Java classes to their CType representations.
+  **
   static CType[] toFanTypes(JavaBridge bridge, Class[] cls)
   {
     return cls.map(CType[,]) |Class c->CType| { return toFanType(bridge, c) }
   }
 
+  **
+  ** Map a Java classes to its CType representation.
+  **
   static CType toFanType(JavaBridge bridge, Class cls, Bool multiDim := false)
   {
     ns := bridge.ns
@@ -260,11 +255,12 @@ internal class JavaReflect
       return ((JavaType)comp).toArrayOf.toNullable
     }
 
-    // any Java use of Obj/Str is considered potential nullable
-    if (cls.getName == "java.lang.Object")
-      return multiDim ? ns.resolveType("[java]java.lang::Object?") : ns.objType.toNullable
-    if (cls.getName == "java.lang.String")
-      return multiDim ? ns.resolveType("[java]java.lang::String?") : ns.strType.toNullable
+    // check for direct mappings of Obj/Str/Decimal (considered nullable)
+    if (!multiDim)
+    {
+      direct := objectClassToDirectFanType(ns, cls.getName)
+      if (direct != null) return direct.toNullable
+    }
 
     // Java FFI
     name := cls.getName[cls.getName.indexr(".")+1..-1]
@@ -272,16 +268,44 @@ internal class JavaReflect
     return ns.resolveType(sig)
   }
 
+  **
+  ** If the specified Java classname maps directly to a Fan type
+  ** then return it, otherwise null.  Direct mappings are 'sys::Obj',
+  ** 'sys::Str', and 'sys::Decimal' - this method only handles
+  ** object classes, not primitives like boolean, long, and double.
+  **
+  internal static CType? objectClassToDirectFanType(CNamespace ns, Str clsname)
+  {
+    switch (clsname)
+    {
+      case "java.lang.Object": return ns.objType
+      case "java.lang.String":  return ns.strType
+      case "java.math.BigDecimal": return ns.decimalType
+      default: return null
+    }
+  }
+
+  **
+  ** Convert Java class modifiers to Fan flags.
+  **
   static Int toClassFlags(Int modifiers)
   {
     return FanUtil.classModifiersToFanFlags(modifiers)
   }
 
+  **
+  ** Convert Java member modifiers to Fan flags.
+  **
   static Int toMemberFlags(Int modifiers)
   {
     return FanUtil.memberModifiersToFanFlags(modifiers)
   }
 
+  **
+  ** Handle an error during the Java mapping process - if we
+  ** can't map a given Java member we just output a warning
+  ** rather than have the whole compilation fail.
+  **
   static Void errUnknownType(UnknownTypeErr e)
   {
     // just print a warning and ignore problematic APIs

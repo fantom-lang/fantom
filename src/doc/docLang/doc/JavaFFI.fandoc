@@ -45,31 +45,32 @@ Interop Summary [#summary]
 **************************
 The following table summarizes the mapping of Java types to Fan types:
 
-  Java Type           Fan Type
-  -----------         ----------
-  foo.bar.Baz         [java]foo.bar::Baz
-  boolean             sys::Bool
-  byte                sys::Int
-  short               sys::Int
-  char                sys::Int
-  int                 sys::Int
-  long                sys::Int
-  float               sys::Float
-  double              sys::Float
-  java.lang.Object    sys::Obj
-  java.lang.String    sys::Str
-  java.lang.Boolean   sys::Bool?
-  java.lang.Long      sys::Int?
-  java.lang.Double    sys::Float?
-  Foo[]               Foo[]  // sys::List parameterized with Foo
-  boolean[]           [java]fanx.interop::BooleanArray
-  byte[]              [java]fanx.interop::ByteArray
-  short[]             [java]fanx.interop::ShortArray
-  char[]              [java]fanx.interop::CharArray
-  int[]               [java]fanx.interop::IntArray
-  long[]              [java]fanx.interop::LongArray
-  float[]             [java]fanx.interop::FloatArray
-  double[]            [java]fanx.interop::DoubleArray
+  Java Type            Fan Type
+  -----------          ----------
+  foo.bar.Baz          [java]foo.bar::Baz
+  boolean              sys::Bool
+  byte                 sys::Int
+  short                sys::Int
+  char                 sys::Int
+  int                  sys::Int
+  long                 sys::Int
+  float                sys::Float
+  double               sys::Float
+  java.lang.Object     sys::Obj
+  java.lang.String     sys::Str
+  java.lang.Boolean    sys::Bool?
+  java.lang.Long       sys::Int?
+  java.lang.Double     sys::Float?
+  java.math.BigDecimal sys::Decimal
+  Foo[]                Foo[]  // sys::List parameterized with Foo
+  boolean[]            [java]fanx.interop::BooleanArray
+  byte[]               [java]fanx.interop::ByteArray
+  short[]              [java]fanx.interop::ShortArray
+  char[]               [java]fanx.interop::CharArray
+  int[]                [java]fanx.interop::IntArray
+  long[]               [java]fanx.interop::LongArray
+  float[]              [java]fanx.interop::FloatArray
+  double[]             [java]fanx.interop::DoubleArray
   Foo[][]             // unsupported for both primitivies and Objects
 
 Quick reference for mapping Java code to Fan code:

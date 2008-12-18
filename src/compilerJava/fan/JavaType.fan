@@ -211,9 +211,7 @@ class JavaType : CType
   CType? inferredArrayOf()
   {
     if (arrayOf == null) return null
-    if (arrayOf.qname == "[java]java.lang::Object") return ns.objType
-    if (arrayOf.qname == "[java]java.lang::String") return ns.strType
-    return arrayOf
+    return JavaReflect.objectClassToDirectFanType(ns, arrayOf.toJavaClassName) ?: arrayOf
   }
 
   **
@@ -231,6 +229,30 @@ class JavaType : CType
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get this type's Java class name:
+  **   [java]java.lang::Class  => java.lang.Class
+  **   [java]java.lang::[Class => [Ljava.lang.Class;
+  **
+  once Str toJavaClassName()
+  {
+    s := StrBuf()
+    if (isArray)
+    {
+      rank := arrayRank
+      rank.times |,| { s.addChar('[') }
+      s.addChar('L')
+      s.add(pod.packageName).addChar('.')
+      s.add(name[rank .. -rank])
+      s.addChar(';')
+    }
+    else
+    {
+      s.add(pod.packageName).addChar('.').add(name)
+    }
+    return s.toStr
+  }
 
   **
   ** We use an implicit constructor called "<new>" on

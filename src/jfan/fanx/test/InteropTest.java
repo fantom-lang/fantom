@@ -8,6 +8,7 @@
 package fanx.test;
 
 import java.util.*;
+import java.math.*;
 import fanx.util.*;
 
 /**
@@ -191,6 +192,7 @@ public class InteropTest
     Object arrayGet(Object[] a, int index);
     String[] swap(String[] a);
     long addfs(double d, String s);
+    BigDecimal[] addDecimal(BigDecimal[] a, BigDecimal d);
   }
 
 }

@@ -100,12 +100,14 @@ class SubclassTest : JavaTest
         override Obj? arrayGet(Obj[]? a, Int i) { return a[i] }
         override Int addfs(Float a, Str? b) { return a.toInt + b.toInt }
         override Str[] swap(Str[] a) { a.swap(0, 1); return a }
+        override Decimal[] addDecimal(Decimal[] a, Decimal? d) { return a.add(d) }
 
         Int test1() { return add(4, 5) }
         Obj test2() { return arraySelf[0] }
         Obj test3(Obj[] var, Int i) { return arrayGet(var, i) }
         Int test4(Float a, Str b) { return addfs(a, b) }
         Str[] test5(Str[] a) { return swap(a) }
+        Decimal[] test6(Decimal[] a, Decimal b) { return addDecimal(a, b) }
       }")
 
     obj := pod.types.first.make
@@ -114,6 +116,7 @@ class SubclassTest : JavaTest
     verifyEq(obj->test3(["a", "b", "c"], 2), "c")
     verifyEq(obj->test4(7.2f, "2"), 9)
     verifyEq(obj->test5(["a", "b"]), ["b", "a"])
+    verifyEq(obj->test6([2d, 3d], 4d), [2d, 3d, 4d])
   }
 
 //////////////////////////////////////////////////////////////////////////
