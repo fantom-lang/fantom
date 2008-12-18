@@ -470,8 +470,9 @@ class JavaBridge : CBridge
       actualOf := ((ListType)actual.toNonNullable).v
       if (actualOf.fits(expectedOf))
       {
-        // (Foo[])list.asArray()
-        asArray := CallExpr.makeWithMethod(loc, expr, listAsArray)
+        // (Foo[])list.asArray(cls)
+        clsLiteral := CallExpr.makeWithMethod(loc, null, JavaType.classLiteral(this, expectedOf))
+        asArray := CallExpr.makeWithMethod(loc, expr, listAsArray, [clsLiteral])
         return TypeCheckExpr.coerce(asArray, expected)
       }
     }
@@ -515,8 +516,16 @@ class JavaBridge : CBridge
       name = "asArray"
       flags = FConst.Public
       returnType = objectArrayType
-      params = JavaParam[,]
+      params = [JavaParam("cls", classType)]
     }
+  }
+
+  **
+  ** Get a CType representation for 'java.lang.Class'
+  **
+  once JavaType classType()
+  {
+    return ns.resolveType("[java]java.lang::Class")
   }
 
   **
@@ -533,6 +542,7 @@ class JavaBridge : CBridge
 
   readonly JavaPrimitives primitives := JavaPrimitives(this)
   readonly ClassPath cp
+
 
 }
 
