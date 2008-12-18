@@ -230,7 +230,6 @@ class CheckErrorsTest : JavaTest
 
   Void testJavaOverrides()
   {
-    // Inherit
     verifyErrors(
      "using [java] fanx.test::InteropTest\$JavaOverrides as JavaOverrides
       class Foo : JavaOverrides
@@ -249,6 +248,33 @@ class CheckErrorsTest : JavaTest
           6, 3, "Parameter mismatch in override of '[java]fanx.test::InteropTest\$JavaOverrides.addfs' - 'addfs(sys::Float, sys::Str?)' != 'addfs(sys::Float?, sys::Str?)'",
           7, 3, "Parameter mismatch in override of '[java]fanx.test::InteropTest\$JavaOverrides.arrayGet' - 'arrayGet(sys::Obj?[]?, sys::Int)' != 'arrayGet(sys::Obj?[], sys::Int)'",
           8, 3, "Return type mismatch in override of '[java]fanx.test::InteropTest\$JavaOverrides.arraySelf' - '[java]fanx.test::InteropTest\$JavaOverrides?[]?' != '[java]fanx.test::InteropTest\$JavaOverrides[]?'",
+       ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Func to Interface
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFuncToInterface()
+  {
+    verifyErrors(
+     "using [java] fanx.test::InteropTest\$FuncA as FuncA
+      class Foo
+      {
+        Void funcA(FuncA x) {}
+
+        Void test00() { funcA |Str? s->Str?| { return null } } // ok
+        Void test01() { funcA |,| {} }  // bad return
+        Void test02() { funcA |Str? s->Int| { return 3} } // bad return
+        Void test03() { funcA |Str? s, Int x->Str?| { return 3} } // not enough params
+        Void test04() { funcA |Int x->Str?| { return 3} } // bad params
+      }
+      ",
+       [
+          7, 19, "Invalid args funcA(|->sys::Void|)",
+          8, 19, "Invalid args funcA(|sys::Str?->sys::Int|)",
+          9, 19, "Invalid args funcA(|sys::Str?,sys::Int->sys::Str?|)",
+         10, 19, "Invalid args funcA(|sys::Int->sys::Str?|)",
        ])
   }
 
