@@ -41,14 +41,28 @@ mixin CSlot
   Bool isVirtual()   { return flags & FConst.Virtual   != 0 }
 
   **
-  ** If this a foreign function interface slot.
+  ** If this a foreign function interface slot.  A FFI slot is one
+  ** declared in another language.  See `usesForeign` to check if the
+  ** slot uses any FFI types in its signature.
   **
   virtual Bool isForeign() { return false }
 
   **
-  ** If this a foreign function return the bridge.
+  ** Return if this slot is foreign or uses any foreign types in its signature.
   **
-  CBridge? bridge() { return parent.pod.bridge }
+  Bool usesForeign() { return usesBridge != null }
+
+  **
+  ** If this a foreign function return the bridge.  See `usesForeign` to
+  ** check if the slot uses any FFI types in its signature.
+  **
+  virtual CBridge? bridge() { return parent.pod.bridge }
+
+  **
+  ** Return the bridge if this slot is foreign or uses any foreign
+  ** types in its signature.
+  **
+  abstract CBridge? usesBridge()
 
 }
 
@@ -87,6 +101,16 @@ mixin CField : CSlot
   ** with the generic type replaced with a real type.
   **
   virtual Bool isParameterized() { return false }
+
+  **
+  ** Return the bridge if this slot is foreign or uses any foreign
+  ** types in its signature.
+  **
+  override CBridge? usesBridge()
+  {
+    if (bridge != null) return bridge
+    return fieldType.bridge
+  }
 }
 
 **************************************************************************
@@ -120,6 +144,17 @@ mixin CMethod : CSlot
   ** don't count This returns as covariant)
   **
   Bool isCovariant() { return isOverride && !returnType.isThis && returnType != inheritedReturnType }
+
+  **
+  ** Return the bridge if this slot is foreign or uses any foreign
+  ** types in its signature.
+  **
+  override CBridge? usesBridge()
+  {
+    if (bridge != null) return bridge
+    if (returnType.bridge != null) return returnType.bridge
+    return params.eachWhile |CParam p->CBridge?| { return p.paramType.bridge }
+  }
 
   **
   ** Does this method contains generic parameters in its signature.

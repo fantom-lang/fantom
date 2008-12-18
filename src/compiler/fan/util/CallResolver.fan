@@ -302,8 +302,9 @@ class CallResolver : CompilerSupport
   **
   private Void resolveForeign()
   {
-    if (found.isForeign && result is CallExpr)
-      result = found.bridge.resolveCall(result)
+    bridge := found.usesBridge
+    if (bridge != null && result is CallExpr)
+      result = bridge.resolveCall(result)
   }
 
 //////////////////////////////////////////////////////////////////////////

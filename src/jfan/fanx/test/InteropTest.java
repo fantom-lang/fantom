@@ -180,4 +180,16 @@ public class InteropTest
     public abstract void foo(String x);
   }
 
+//////////////////////////////////////////////////////////////////////////
+// JavaOverrides
+//////////////////////////////////////////////////////////////////////////
+
+  public interface JavaOverrides
+  {
+    int add(int a, int b);
+    JavaOverrides[] arraySelf();
+    Object arrayGet(Object[] a, int index);
+    long addfs(double d, String s);
+  }
+
 }

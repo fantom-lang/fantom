@@ -199,7 +199,7 @@ class SmtpClient
   ** Query the reply lines to figure out which extensions
   ** the server supports that we might use.
   **
-  Void readExts(SmtpRes res)
+  private Void readExts(SmtpRes res)
   {
     res.lines.each |Str line|
     {

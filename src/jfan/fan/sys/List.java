@@ -942,13 +942,17 @@ public final class List
     }
   }
 
-  public final Object[] asArray()
+  /**
+   * Get this list as an array of the specified class.  The resulting
+   * array could potentially be a direct reference to the backing array.
+   */
+  public final Object[] asArray(Class of)
   {
-    return values;
-  }
+    // short circuit if values is already correct array type
+    if (size == values.length && of == values.getClass().getComponentType())
+      return values;
 
-  public final Object[] toArray(Class of)
-  {
+    // make a safe copy of correct length and type
     Object[] r = (Object[])java.lang.reflect.Array.newInstance(of, size);
     System.arraycopy(values, 0, r, 0, size);
     return r;
