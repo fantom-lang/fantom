@@ -223,4 +223,35 @@ class CheckErrorsTest : JavaTest
           7, 1, "Class 'B' must be abstract since it inherits but doesn't override '[java]fanx.test::InteropTest\$AbstractOverloadsInterface.foo'",
        ])
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Java Overloads
+//////////////////////////////////////////////////////////////////////////
+
+  Void testJavaOverrides()
+  {
+    // Inherit
+    verifyErrors(
+     "using [java] fanx.test::InteropTest\$JavaOverrides as JavaOverrides
+      class Foo : JavaOverrides
+      {
+        override Num add(Int a, Int b) { return a + b }
+        override Decimal?[]? addDecimal(Decimal?[]? a, Decimal d) { return a.add(d) }
+        override Int addfs(Float? a, Str? b) { return a.toInt + b.toInt }
+        override Obj? arrayGet(Obj?[] a, Int i) { return a[i] }
+        override JavaOverrides[]? arraySelf() { return JavaOverrides[this] }
+        override Str?[]? swap(Str?[]? a) { a.swap(0, 1); return a }
+      }
+      ",
+       [
+          4, 3, "Return type mismatch in override of '[java]fanx.test::InteropTest\$JavaOverrides.add' - 'sys::Int' != 'sys::Num'",
+          5, 3, "Parameter mismatch in override of '[java]fanx.test::InteropTest\$JavaOverrides.addDecimal' - 'addDecimal(sys::Decimal?[]?, sys::Decimal?)' != 'addDecimal(sys::Decimal?[]?, sys::Decimal)'",
+          6, 3, "Parameter mismatch in override of '[java]fanx.test::InteropTest\$JavaOverrides.addfs' - 'addfs(sys::Float, sys::Str?)' != 'addfs(sys::Float?, sys::Str?)'",
+          7, 3, "Parameter mismatch in override of '[java]fanx.test::InteropTest\$JavaOverrides.arrayGet' - 'arrayGet(sys::Obj?[]?, sys::Int)' != 'arrayGet(sys::Obj?[], sys::Int)'",
+          8, 3, "Return type mismatch in override of '[java]fanx.test::InteropTest\$JavaOverrides.arraySelf' - '[java]fanx.test::InteropTest\$JavaOverrides?[]?' != '[java]fanx.test::InteropTest\$JavaOverrides[]?'",
+       ])
+  }
+
+
+
 }

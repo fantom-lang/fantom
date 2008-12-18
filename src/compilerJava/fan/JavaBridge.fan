@@ -277,12 +277,13 @@ class JavaBridge : CBridge
   {
     // check if base class slot is a JavaType
     java := base.toNonNullable as JavaType
-    def = def.toNonNullable
     if (java != null)
     {
-      // we allow primitives and arrays if the override type matches inferred
-      if (java.isPrimitive || java.isArray)
-        return java.inferredAs == def
+      // allow primitives is it matches the inferred type
+      if (java.isPrimitive) return java.inferredAs == def
+
+      // allow arrays if mapped as Foo[] -> Foo?[]?
+      if (java.isArray) return java.inferredAs == def.toNonNullable && def.isNullable
     }
     return false
   }

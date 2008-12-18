@@ -211,7 +211,8 @@ class JavaType : CType
   CType? inferredArrayOf()
   {
     if (arrayOf == null) return null
-    return JavaReflect.objectClassToDirectFanType(ns, arrayOf.toJavaClassName) ?: arrayOf
+    x := JavaReflect.objectClassToDirectFanType(ns, arrayOf.toJavaClassName) ?: arrayOf
+    return x.toNullable
   }
 
   **

@@ -96,11 +96,11 @@ class SubclassTest : JavaTest
       class Foo : JavaOverrides
       {
         override Int add(Int a, Int b) { return a + b }
-        override JavaOverrides[]? arraySelf() { return JavaOverrides[this] }
-        override Obj? arrayGet(Obj[]? a, Int i) { return a[i] }
+        override JavaOverrides?[]? arraySelf() { return JavaOverrides[this] }
+        override Obj? arrayGet(Obj?[]? a, Int i) { return a[i] }
         override Int addfs(Float a, Str? b) { return a.toInt + b.toInt }
-        override Str[] swap(Str[] a) { a.swap(0, 1); return a }
-        override Decimal[] addDecimal(Decimal[] a, Decimal? d) { return a.add(d) }
+        override Str?[]? swap(Str?[]? a) { a.swap(0, 1); return a }
+        override Decimal?[]? addDecimal(Decimal?[]? a, Decimal? d) { return a.add(d) }
 
         Int test1() { return add(4, 5) }
         Obj test2() { return arraySelf[0] }
@@ -115,8 +115,8 @@ class SubclassTest : JavaTest
     verifySame(obj->test2, obj)
     verifyEq(obj->test3(["a", "b", "c"], 2), "c")
     verifyEq(obj->test4(7.2f, "2"), 9)
-    verifyEq(obj->test5(["a", "b"]), ["b", "a"])
-    verifyEq(obj->test6([2d, 3d], 4d), [2d, 3d, 4d])
+    verifyEq(obj->test5(["a", "b"]), Str?["b", "a"])
+    verifyEq(obj->test6([2d, 3d], 4d), Decimal?[2d, 3d, 4d])
   }
 
 //////////////////////////////////////////////////////////////////////////
