@@ -118,94 +118,6 @@ found using:
 
   fan compilerJava::ClassPath
 
-Overloaded Methods [#overloadedMethods]
-***************************************
-One impedance mismatch between Java and Fan is that Java permits a field
-and method to have the same name.  Java also allows method *overloading* where
-multiple methods with the same name may be declared with different parameter
-types.
-
-Fan only allows a single definition of a slot for a given name.  However
-when calling out to Java types the compiler will correctly resolve overloaded
-fields and methods.  Let's consider this Java class:
-
-  class Foo
-  {
-    String a;
-    String a() { return a; }
-    void a(String x) { a = x; }
-    String b() { return a; }
-  }
-
-In the class above 'a' is overloaded by a field and two methods.  Let's
-look at how Fan code is resolved against the Java members:
-
-  foo.a        // lack of parens indicates field get
-  foo.a = "x"  // field set
-  foo.a()      // call Foo.a() method
-  foo.a("x")   // call Foo.a(String) method
-  foo.b()      // call Foo.b() method
-  foo.b        // call Foo.b() method - no ambiguity so we can omit parens
-
-Resolving a call to an overloaded version of the method follows the
-same rules as the Java Language Specification. It is a compile time error
-if the arguments do not match any methods or if they match multiple
-methods ambiguously.
-
-Constructors [#ctors]
-*********************
-Under the covers Fan treats Java constructors just like the Java VM
-treats them - as special methods with the name of "<init>".  The standard
-[constructor syntax]`Methods#constructionCalls` is used to invoke a Java
-constructor:
-
-  a := Date()
-  b := Date(millis)
-  c := Date(2008-1900, 11, 13)
-
-The constructor call is resolved against the Java constructors using the
-same rules for resolving [overloaded methods]`#overloadedMethods`.
-
-Subclassing [#subclassing]
-**************************
-The Java FFI enables you to both extend from a Java class and implement Java
-interfaces.  For example to create a subclass of 'java.util.Date':
-
-  using [java] java.util
-  class FanDate : Date
-  {
-    new now() : super() {}
-    new make(Int millis) : super(millis) {}
-  }
-
-The standard [inheritance syntax]`Inheritance#syntax` is used to extend
-and implement Java types.
-
-The Fan subclass must define how the Fan constructors call the Java superclass
-constructors.  This is done by calling 'super' as an overloaded constructor (if
-the base class has multiple constructors).  You may not use a 'this' constructor
-chain.
-
-Constructors for a Fan class which subclasses from a Java class are emitted
-as true Java constructors.  Therefore you may not declare two Fan constructors
-with the same parameter types as it would result in duplicate Java constructors.
-For example the following code would result in a compile time error:
-
-  class FanDate : Date
-  {
-    new now() : super() {}
-    new epoch() : super(0) {}
-  }
-
-Because of this difference between Fan constructors versus Java constructors
-there is currently a restriction that you may only subclass from a Java
-class one level deep.  You may not subclass from a Fan class which itself
-subclasses from a Java class.
-
-Another restriction:  because a Fan class may not override overloaded
-methods, you may not create a concrete Fan class which inherits abstract
-overloaded methods.
-
 Primitives [#primitives]
 ************************
 The special Java primitives 'boolean', 'long', and 'double' are implicitly
@@ -255,11 +167,138 @@ Nullable [#nullable]
 Any Java API which uses reference types are mapped into the Fan type system
 as nullable:
 
-  // Java method
+  // Java methods
   String foo(Object x, int y, Foo z)
+  void bar(String[] x) {}
 
   // Fan representation
   Str? foo(Obj? x, Int y, Foo? z)
+  Void bar(Str?[]? x) {}
+
+Note the case of 'String[]' we assume that the entire array could be null
+or that any of the array items may be null, so the Fan mapping is 'Str?[]?'.
+
+Overloaded Methods [#overloadedMethods]
+***************************************
+One impedance mismatch between Java and Fan is that Java permits a field
+and method to have the same name.  Java also allows method *overloading* where
+multiple methods with the same name may be declared with different parameter
+types.
+
+Fan only allows a single definition of a slot for a given name.  However
+when calling out to Java types the compiler will correctly resolve overloaded
+fields and methods.  Let's consider this Java class:
+
+  class Foo
+  {
+    String a;
+    String a() { return a; }
+    void a(String x) { a = x; }
+    String b() { return a; }
+  }
+
+In the class above 'a' is overloaded by a field and two methods.  Let's
+look at how Fan code is resolved against the Java members:
+
+  foo.a        // lack of parens indicates field get
+  foo.a = "x"  // field set
+  foo.a()      // call Foo.a() method
+  foo.a("x")   // call Foo.a(String) method
+  foo.b()      // call Foo.b() method
+  foo.b        // call Foo.b() method - no ambiguity so we can omit parens
+
+Resolving a call to an overloaded version of the method follows the
+same rules as the Java Language Specification. It is a compile time error
+if the arguments do not match any methods or if they match multiple
+methods ambiguously.
+
+Constructors [#ctors]
+*********************
+Under the covers Fan treats Java constructors just like the Java VM
+treats them - as special methods with the name of '<init>'.  The standard
+[constructor syntax]`Methods#constructionCalls` is used to invoke a Java
+constructor:
+
+  a := Date()
+  b := Date(millis)
+  c := Date(2008-1900, 11, 13) // crazy API to create 13-Dec-2008
+
+The constructor call is resolved against the Java constructors using the
+same rules for resolving [overloaded methods]`#overloadedMethods`.
+
+Subclassing [#subclassing]
+**************************
+The Java FFI enables you to both extend from a Java class and implement Java
+interfaces.  For example to create a subclass of 'java.util.Date':
+
+  using [java] java.util
+  class FanDate : Date
+  {
+    new now() : super() {}
+    new make(Int millis) : super(millis) {}
+  }
+
+The standard [inheritance syntax]`Inheritance#syntax` is used to extend
+and implement Java types.
+
+The Fan subclass must define how the Fan constructors call the Java superclass
+constructors.  This is done by calling 'super' as an overloaded constructor (if
+the base class has multiple constructors).  You may not use a 'this' constructor
+chain.
+
+Constructors for a Fan class which subclasses from a Java class are emitted
+as true Java constructors.  Therefore you may not declare two Fan constructors
+with the same parameter types as it would result in duplicate Java constructors.
+For example the following code would result in a compile time error:
+
+  class FanDate : Date
+  {
+    new now() : super() {}
+    new epoch() : super(0) {}
+  }
+
+Because of this difference between Fan constructors versus Java constructors
+there is currently a restriction that you may only subclass from a Java
+class one level deep.  You may not subclass from a Fan class which itself
+subclasses from a Java class.
+
+Another restriction:  because a Fan class may not override overloaded
+methods, you may not create a concrete Fan class which inherits abstract
+overloaded methods.
+
+Overrides [#overrides]
+**********************
+When a Fan type subclasses a Java type, you can override the Java methods
+using the normal Fan syntax with the following restrictions:
+  - cannot override static or final methods
+  - cannot override a method overloaded by field of same name
+  - cannot override a method overloaded by parameter types
+  - cannot override a method which uses multi-dimensional arrays in its signature
+
+Consider this example:
+
+  // Java class
+  class Java
+  {
+    void alpha() {}
+    void alpha(Java x) {}
+    void beta(Java x) {}
+    int gamma(String[] x) {}
+  }
+
+In the example above, the method 'alpha' is overloaded by parameter types,
+therefore it is not permissible for a Fan class to override it.  However
+we can override 'beta' and 'gamma':
+
+  class Fan : Java
+  {
+    override Void beta(Java? x) {}
+    override Int gamma(Str?[]? x) {}
+  }
+
+When we override a Java method we use the Fan type representation of the signature.
+In the 'gamma' method we map the return type 'int' to 'sys::Int' and the argument
+type from 'String[]' to the Fan list 'Str[]'.
 
 Inner Classes [#innerClasses]
 *****************************
