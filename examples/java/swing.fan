@@ -18,29 +18,25 @@ class SwingDemo
 
   Void main()
   {
-    frame := JFrame("Hello Swing")
-
     button := JButton("Click Me")
-    button.addActionListener(Handler.make |ActionEvent e|
     {
-      JOptionPane.showMessageDialog(null,
-            "<html>Hello from <b>Java</b><br/>" +
-            "Button $e.getActionCommand pressed")
-    })
+      addActionListener |ActionEvent e|
+      {
+        JOptionPane.showMessageDialog(null,
+           "<html>Hello from <b>Java</b><br/>
+            Button $e.getActionCommand pressed")
+      }
+    }
 
-    frame.getContentPane.add(button)
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-    frame.setBounds(100, 100, 200, 200)
-    frame.setVisible(true)
+    frame := JFrame("Hello Swing")
+    {
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+      getContentPane.add(button)
+      setBounds(100, 100, 200, 200)
+      setVisible(true)
+    }
 
     Thread.sleep(9999day) // Fan launcher exits if this thread exists
   }
 
-}
-
-class Handler : ActionListener
-{
-  new make(|ActionEvent| cb) { this.cb = cb }
-  override Void actionPerformed(ActionEvent? e) { cb.call1(e) }
-  |ActionEvent| cb
 }
