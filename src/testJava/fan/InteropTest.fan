@@ -570,6 +570,8 @@ class InteropTest : JavaTest
         Str? test2(Str? x) { return funcA(x) |Str? s->Str?| { return s } }
         Int test3(Int x, Int y, Int z) { return funcB(x, y, z) |Int a, Int b, Int c->Int| { return a+b+c } }
         Str[] test4(Str[] a) { return funcC(a) |Str[] x->Str[]| { return x.swap(0, 1) } }
+        Str test5() { return funcA(\"foo\") |->Str| { return \"fixed\" } }
+        Int test6() { n := 3; run |->Int| { return n++ }; return n }
       }")
 
     obj := pod.types.first.make
@@ -578,6 +580,8 @@ class InteropTest : JavaTest
     verifyEq(obj->test2(null), null)
     verifyEq(obj->test3(2, 3, 7), 12)
     verifyEq(obj->test4(["hi", "hola"]), Str?["hola", "hi"])
+    verifyEq(obj->test5, "fixed")
+    verifyEq(obj->test6, 4)
   }
 
 }

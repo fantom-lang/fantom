@@ -351,6 +351,19 @@ class JavaBridge : CBridge
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Return if we can make the actual type fit the expected
+  ** type, potentially using a coercion.
+  **
+  Bool fits(CType actual, CType expected)
+  {
+    // use dummy expression and route to coerce code
+    dummy := UnknownVarExpr(Location("dummy"), null, "dummy") { ctype = actual }
+    fits := true
+    coerce(dummy, expected) |,| { fits=false }
+    return fits
+  }
+
+  **
   ** Coerce expression to expected type.  If not a type match
   ** then run the onErr function.
   **
@@ -378,7 +391,7 @@ class JavaBridge : CBridge
       return coerceToArray(expr, expected, onErr)
 
     // handle sys::Func -> Java interface
-    if (actual.fits(ns.funcType) && expected.isMixin && expected.toNonNullable is JavaType)
+    if (actual is FuncType && expected.isMixin && expected.toNonNullable is JavaType)
       return coerceFuncToInterface(expr, expected.toNonNullable, onErr)
 
      // use normal Fan coercion behavior
@@ -495,27 +508,65 @@ class JavaBridge : CBridge
     return expr
   }
 
+  **
+  ** Attempt to coerce a parameterized sys::Func expr to a Java
+  ** interface if the interface supports exactly one matching method.
+  **
   Expr coerceFuncToInterface(Expr expr, JavaType expected, |,| onErr)
   {
     // check if we have exactly one abstract method in the expected type
+    loc := expr.location
     abstracts := expected.methods.findAll |CMethod m->Bool| { return m.isAbstract }
     if (abstracts.size != 1) { onErr(); return expr }
     method := abstracts.first
 
-    // sanity check to map to callX method
-    if (method.params.size > 8)
-      throw err("Cannot coerce func to interface with more 8 arguments", expr.location)
+    // check if we have a match
+    FuncType funcType := (FuncType)expr.ctype
+    if (!isFuncToInterfaceMatch(funcType, method)) { onErr(); return expr }
 
     // check if we've already generated a wrapper for this combo
-    loc := expr.location
-    funcType := expr.ctype
     key := "${funcType.signature}+${method.qname}"
-    cachedCtor := funcWrappers[key]
-    if (cachedCtor != null)
-      return CallExpr.makeWithMethod(loc, null, cachedCtor, [expr])
+    ctor := funcWrappers[key]
+    if (ctor == null)
+    {
+      ctor = generateFuncToInterfaceWrapper(expr.location, funcType, expected, method)
+      funcWrappers[key] = ctor
+    }
 
-    // convert Fan function to an instance of the expected class:
-    //
+    // replace expr with FuncWrapperX(expr)
+    return CallExpr.makeWithMethod(loc, null, ctor, [expr])
+  }
+
+  **
+  ** Return if the specified function type can be used to implement
+  ** the specified interface method.
+  **
+  Bool isFuncToInterfaceMatch(FuncType funcType, CMethod method)
+  {
+    // sanity check to map to callX method - can't handle more than 8 args
+    if (method.params.size > 8) return false
+
+    // check if method is match for function; first check is that
+    // method must supply all the arguments required by the function
+    if (funcType.params.size > method.params.size) return false
+
+    // check that func return type fits method return
+    retOk := method.returnType.isVoid || fits(funcType.ret, method.returnType)
+    if (!retOk) return false
+
+    // check all the method parameters fit the function parameters
+    paramsOk := funcType.params.all |CType f, Int i->Bool| { return fits(f, method.params[i].paramType) }
+    if (!paramsOk) return false
+
+    return true
+  }
+
+  **
+  ** Generate the wrapper which implements the specified expected interface
+  ** and overrides the specified method which calls the function.
+  **
+  CMethod generateFuncToInterfaceWrapper(Location loc, FuncType funcType, CType expected, CMethod method)
+  {
     //   Fan:    func typed as |Str|
     //   Java:   interface Foo { void bar(String) }
     //   Result: FuncWrapperX(func)
@@ -562,13 +613,14 @@ class JavaBridge : CBridge
     over.ret = method.returnType
     over.paramDefs = ParamDef[,]
     over.code = Block.make(loc)
-    callArity := "call" + method.params.size
+    callArity := "call" + funcType.params.size
     call := CallExpr.makeWithMethod(loc, FieldExpr(loc, ThisExpr(loc), field), funcType.method(callArity))
     method.params.each |CParam param, Int i|
     {
       paramName := "p$i"
       over.params.add(ParamDef(loc, param.paramType, paramName))
-      call.args.add(UnknownVarExpr(loc, null, paramName))
+      if (i < funcType.params.size)
+        call.args.add(UnknownVarExpr(loc, null, paramName))
     }
     if (method.returnType.isVoid)
       over.code.stmts.add(call.toStmt).add(ReturnStmt(loc))
@@ -576,11 +628,8 @@ class JavaBridge : CBridge
       over.code.stmts.add(ReturnStmt(loc, call))
     cls.addSlot(over)
 
-    // cache this wrapper type for funcType+method
-    funcWrappers.add(key, ctor);
-
-    // replace expr with FuncWrapperX(expr)
-    return CallExpr.makeWithMethod(loc, null, ctor, [expr])
+    // return the ctor which we use for coercion
+    return ctor
   }
 
 //////////////////////////////////////////////////////////////////////////
