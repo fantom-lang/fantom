@@ -712,7 +712,7 @@ class GraphicsDemo : Widget
     g.brush = Color.orange; g.fillRect(10, 10, 50, 60)
     g.brush = Color.blue; g.drawRect(10, 10, 50, 60)
 
-    g.brush = Color.yellow; g.fillOval(40, 40, 120, 100)
+    g.brush = Color("#80ffff00"); g.fillOval(40, 40, 120, 100)
     g.pen = Pen { width = 2; dash=[8,4].toImmutable }
     g.brush = Color.green; g.drawOval(40, 40, 120, 100)
 
@@ -726,8 +726,15 @@ class GraphicsDemo : Widget
     g.font = Font.sysMonospace.toSize(16).toBold; g.drawText("Hello World!", 70, 70)
 
     img := demo.folderIcon
-    g.drawImage(img, 220, 30)
+    g.drawImage(img, 220, 20)
     g.copyImage(img, Rect { x=0; y=0; w=img.size.w; h=img.size.h }, Rect { x=250; y=30; w=64; h=64})
+    g.push
+    try
+    {
+      g.alpha=128; g.drawImage(img, 220, 40)
+      g.alpha=64;  g.drawImage(img, 220, 60)
+    }
+    finally g.pop
 
     // system font/colors
     y := 20
@@ -777,6 +784,59 @@ class GraphicsDemo : Widget
     my += g.font.descent; g.drawLine(tx, my, tx+tw, my)
     g.brush = Color.black
     g.drawText("Font Metrics", tx, ty)
+
+    // alpha
+    g.translate(430, 40)
+    // checkerboard bg
+    g.brush = Color.white
+    g.fillRect(0, 0, 240, 120)
+    g.brush = Color("#ccc")
+    12.times |Int by| {
+      24.times |Int bx| {
+        if (bx.isEven ^ by.isEven)
+          g.fillRect(bx*10, by*10, 10, 10)
+      }
+    }
+    // change both alpha and color
+    a := Color("#ffff0000")
+    b := Color("#80ff0000")
+    g.alpha=255; g.brush=a; g.fillRect(0, 0,  30, 30); g.brush=b; g.fillRect(30, 0,  30, 30)
+    g.alpha=192; g.brush=a; g.fillRect(0, 30, 30, 30); g.brush=b; g.fillRect(30, 30, 30, 30)
+    g.alpha=128; g.brush=a; g.fillRect(0, 60, 30, 30); g.brush=b; g.fillRect(30, 60, 30, 30)
+    g.alpha=64;  g.brush=a; g.fillRect(0, 90, 30, 30); g.brush=b; g.fillRect(30, 90, 30, 30)
+    // change only alpha
+    g.brush = a
+    g.alpha=255; g.fillRect(60, 0,  30, 30);
+    g.alpha=192; g.fillRect(60, 30, 30, 30);
+    g.alpha=128; g.fillRect(60, 60, 30, 30);
+    g.alpha=64;  g.fillRect(60, 90, 30, 30);
+    // change only color
+    g.alpha = 128
+    g.brush = Color("#f00"); g.fillRect(90, 0,  30, 30);
+    g.brush = Color("#ff0"); g.fillRect(90, 30, 30, 30);
+    g.brush = Color("#0f0"); g.fillRect(90, 60, 30, 30);
+    g.brush = Color("#00f"); g.fillRect(90, 90, 30, 30);
+    // gradients
+    g.alpha = 255
+    g.brush = Gradient.makeLinear(
+      Point.make(0,0), Color.red, Point.make(0,120), Color.white)
+      g.fillRect(120, 0, 20, 120)
+    g.brush = Gradient.makeLinear(
+      Point.make(0,0), Color.red, Point.make(0,120), Color("#80ffffff"))
+      g.fillRect(140, 0, 20, 120)
+    g.brush = Gradient.makeLinear(
+      Point.make(0,0), Color("#80ff0000"), Point.make(0,120), Color("#80ffffff"))
+      g.fillRect(160, 0, 20, 120)
+    g.brush = Gradient.makeLinear(
+      Point.make(0,0), Color.red, Point.make(0,120), Color.white)
+    g.alpha = 128 // set alpha after setting gradient
+      g.fillRect(180, 0, 20, 120)
+    g.brush = Gradient.makeLinear(
+      Point.make(0,0), Color.red, Point.make(0,120), Color("#80ffffff"))
+      g.fillRect(200, 0, 20, 120)
+    g.brush = Gradient.makeLinear(
+      Point.make(0,0), Color("#80ff0000"), Point.make(0,120), Color("#80ffffff"))
+      g.fillRect(220, 0, 20, 120)
   }
 
   Int sysColor(Graphics g, Int y, Color c, Str name)
