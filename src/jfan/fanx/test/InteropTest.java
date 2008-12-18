@@ -187,7 +187,7 @@ public class InteropTest
   public interface JavaOverrides
   {
     int add(int a, int b);
-    Object[] arraySelf();
+    JavaOverrides[] arraySelf();
     Object arrayGet(Object[] a, int index);
     long addfs(double d, String s);
   }

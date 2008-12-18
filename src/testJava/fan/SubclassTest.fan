@@ -96,7 +96,7 @@ class SubclassTest : JavaTest
       class Foo : JavaOverrides
       {
         override Int add(Int a, Int b) { return a + b }
-        override Obj[]? arraySelf() { return Obj[this] }
+        override JavaOverrides[]? arraySelf() { return JavaOverrides[this] }
         override Obj? arrayGet(Obj[]? a, Int i) { return a[i] }
         override Int addfs(Float a, Str? b) { return a.toInt + b.toInt }
 

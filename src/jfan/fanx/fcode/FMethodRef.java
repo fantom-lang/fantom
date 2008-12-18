@@ -59,12 +59,7 @@ public class FMethodRef
     //   CallNew Type.<new>  // allocate object
     //   args...             // arguments are pushed onto stack
     //   CallCtor <init>     // call to java constructor
-    if (name.equals("<new>"))
-    {
-      code.op2(NEW, code.emit().cls(parent.jname()));
-      code.op(DUP);
-      return;
-    }
+    if (special != null) { special.emit(this, code); return; }
 
     // Fan constructor calls are static calls on factory method:
     //   static Foo make(...) {}
@@ -185,6 +180,8 @@ public class FMethodRef
 
   public void emitCallMixinStatic(CodeEmit code)
   {
+    if (special != null) { special.emit(this, code); return; }
+
     if (jsig == null)
     {
       StringBuilder s = new StringBuilder();
@@ -253,6 +250,8 @@ public class FMethodRef
    */
   private Special toSpecial()
   {
+    if (name.equals("<new>")) return newSpecial;
+    if (name.equals("<class>")) return classLiteralSpecial;
     if (parent.isBool())  return (Special)boolSpecials.get(name);
     if (parent.isInt())   return (Special)intSpecials.get(name);
     if (parent.isFloat()) return (Special)floatSpecials.get(name);
@@ -287,6 +286,38 @@ public class FMethodRef
     public void emit(FMethodRef m, CodeEmit code) { code.op(op1); code.op(op2); }
     int op1, op2;
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Special Statics on Type
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * The special static call Foo.<new> is used to call the NEW
+   * opcode.  FFI constructor calls are emitted as:
+   *   CallNew Type.<new>  // allocate object
+   *   args...             // arguments are pushed onto stack
+   *   CallCtor <init>     // call to java constructor
+   */
+  static Special newSpecial = new Special()
+  {
+    public void emit(FMethodRef m, CodeEmit code)
+    {
+      code.op2(NEW, code.emit().cls(m.parent.jname()));
+      code.op(DUP);
+    }
+  };
+
+  /**
+   * The special static call Foo.<class> is used to push a
+   * class literal similiar to Java's Foo.class.
+   */
+  static Special classLiteralSpecial = new Special()
+  {
+    public void emit(FMethodRef m, CodeEmit code)
+    {
+      code.op2(LDC_W, code.emit().cls(m.parent.jname()));
+    }
+  };
 
 //////////////////////////////////////////////////////////////////////////
 // Bool Specials

@@ -252,6 +252,23 @@ class JavaType : CType
     }
   }
 
+  **
+  ** We use an implicit method called "<class>" on
+  ** each type as the protocol for telling the Java runtime
+  ** to load a class literal
+  **
+  static CMethod classLiteral(JavaBridge bridge, CType base)
+  {
+    return JavaMethod
+    {
+      parent = base
+      name = "<class>"
+      flags = FConst.Public | FConst.Static
+      returnType = bridge.classType
+      params = JavaParam[,]
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
