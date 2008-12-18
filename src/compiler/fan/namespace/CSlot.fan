@@ -187,7 +187,7 @@ mixin CMethod : CSlot
   Str nameAndParamTypesToStr()
   {
     return name + "(" +
-      params.join(", ", |CParam p->Str| { return p.paramType.signature }) +
+      params.join(", ", |CParam p->Str| { return p.paramType.inferredAs.signature }) +
       ")"
   }
 

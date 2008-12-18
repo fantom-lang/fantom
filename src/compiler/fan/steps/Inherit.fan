@@ -281,7 +281,7 @@ class Inherit : CompilerStep
         // check if new return type is a subtype of original
         // return type (we allow covariant return types)
         if (!defRet.fits(baseRet) || (defRet.isVoid && !baseRet.isVoid) || defRet.isNullable != baseRet.isNullable)
-          throw err("Return type mismatch in override of '$base.qname' - '$baseRet' != '$defRet'", loc)
+          throw err("Return type mismatch in override of '$base.qname' - '$baseRet.inferredAs' != '$defRet'", loc)
 
         // can't use covariance with value types
         if (defRet.isValue || baseRet.isValue)
