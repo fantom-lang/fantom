@@ -181,6 +181,43 @@ class Console : SideBar
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Run
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Run the given function in another thread.
+  ** TODO - this function is experimental and will change!
+  **
+  internal This run(Method method, Str[] params)
+  {
+    if (busy) throw Err("Console is busy")
+    frame.marks = Mark[,]
+    model.clear
+    richText.repaint
+    busy = true
+    execParams := ExecParams
+    {
+      frameId = frame.id
+      command = params
+    }
+    Thread(null, &doRun(method, execParams)).start
+    return this
+  }
+
+  internal static Void doRun(Method method, ExecParams params)
+  {
+    try
+    {
+      results := (Str[])method.call1(params)
+      results.each |Str s| { Desktop.callAsync(&execWrite(params.frameId, s)) }
+    }
+    finally
+    {
+      Desktop.callAsync(&execDone(params.frameId))
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Eventing
 //////////////////////////////////////////////////////////////////////////
 

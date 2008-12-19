@@ -140,11 +140,6 @@ class TextEditor : View
     }
   }
 
-  override Void onUnload()
-  {
-    find.saveHistory
-  }
-
   internal Void loadDoc()
   {
     // read document into memory, if we fail with the
