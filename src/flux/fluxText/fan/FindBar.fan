@@ -23,8 +23,10 @@ internal class FindBar : ContentPane, TextEditorSupport
   {
     this.editor = editor
 
-    findText = Text()
+    findText = Combo() { editable = true }
+    findText.items = FindHistory.load.find
     findText.onFocus.add |Event e| { caretPos = richText.selectStart }
+    findText.onBlur.add |Event e| { updateHistory }
     findText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
     findText.onModify.add |Event e| { find(null, true, true) }
 
@@ -56,7 +58,8 @@ internal class FindBar : ContentPane, TextEditorSupport
       }
     }
 
-    replaceText = Text()
+    replaceText = Combo() { editable = true }
+    replaceText.items = FindHistory.load.replace
     replaceText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
     replaceText.onModify.add |Event e|
     {
@@ -99,6 +102,9 @@ internal class FindBar : ContentPane, TextEditorSupport
         g.drawLine(0, 1, size.w, 1)
       }
     }
+
+    visible = Thread.locals.get("fluxTest.findBar.show", false)
+    replacePane.visible = Thread.locals.get("fluxTest.findBar.showReplace", false)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -125,6 +131,9 @@ internal class FindBar : ContentPane, TextEditorSupport
 
   private Void show(Bool showReplace := false)
   {
+    Thread.locals["fluxTest.findBar.show"] = true
+    Thread.locals["fluxTest.findBar.showReplace"] = showReplace
+
     ignore = true
     oldVisible := visible
     visible = true
@@ -137,7 +146,7 @@ internal class FindBar : ContentPane, TextEditorSupport
 
     // make sure text is focued and selected
     findText.focus
-    findText.selectAll
+    //findText.selectAll
 
     // if text empty, make sure prev/next disabled
     if (findText.text.size == 0)
@@ -156,6 +165,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   Void hide()
   {
+    Thread.locals["fluxTest.findBar.show"] = false
     visible = false
     parent?.parent?.parent?.relayout
   }
@@ -255,6 +265,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void next()
   {
+    updateHistory
     if (!visible) show
     find(richText.caretOffset)
   }
@@ -265,6 +276,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void prev()
   {
+    updateHistory
     if (!visible) show
     find(richText.caretOffset, false)
   }
@@ -274,6 +286,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void replace()
   {
+    updateHistory
     newText := replaceText.text
     start   := richText.selectStart
     len     := richText.selectSize
@@ -297,6 +310,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   internal Void replaceAll()
   {
+    updateHistory
     query   := findText.text
     replace := replaceText.text
     match   := matchCase.selected
@@ -330,6 +344,38 @@ internal class FindBar : ContentPane, TextEditorSupport
       : "$total " + Flux#.loc("find.matches")
   }
 
+  private Void updateHistory()
+  {
+    updateCombo(findText)
+    updateCombo(replaceText)
+  }
+
+  private Void updateCombo(Combo c)
+  {
+    text := c.text
+    if (text.size == 0) return
+    if (text == c.items.first) return
+
+    // bubble text to top
+    ignore = true
+    items := c.items.dup
+    items.remove(text)
+    items.insert(0, text)
+
+    // update combo, limit to 15 items
+    c.items = items[0...15.min(items.size)]
+    c.text = text  // set items nukes text, so reset
+    ignore = false
+  }
+
+  internal Void saveHistory()
+  {
+    history := FindHistory.load
+    history.find = findText.items.dup
+    history.replace = replaceText.items.dup
+    history.save
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -339,8 +385,8 @@ internal class FindBar : ContentPane, TextEditorSupport
 
   private Widget findPane
   private Widget replacePane
-  private Text findText
-  private Text replaceText
+  private Combo findText
+  private Combo replaceText
   private Button matchCase
   private Int total
   private Label msg := Label()
@@ -351,4 +397,18 @@ internal class FindBar : ContentPane, TextEditorSupport
   private Command cmdHide := Command.makeLocale(Flux#.pod, "findHide", &hide)
   private Command cmdReplace    := Command.makeLocale(Flux#.pod, "replace",    &replace)
   private Command cmdReplaceAll := Command.makeLocale(Flux#.pod, "replaceAll", &replaceAll)
+}
+
+**************************************************************************
+** FindHistory
+**************************************************************************
+
+@serializable
+internal class FindHistory
+{
+  static FindHistory load() { return Flux.loadOptions("session/find", FindHistory#) }
+  Void save() { Flux.saveOptions("session/find", this) }
+  Str[] find    := [,]
+  Str[] replace := [,]
+  Uri[] dir     := [,]
 }

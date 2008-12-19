@@ -125,7 +125,7 @@ class TextEditor : View
     controller.register
 
     // update ui
-    find = FindBar(this) { visible = false }
+    find = FindBar(this)
     content = BorderPane
     {
       content  = richText
@@ -138,6 +138,11 @@ class TextEditor : View
         g.drawLine(0, size.h-1, size.w, size.h-1)
       }
     }
+  }
+
+  override Void onUnload()
+  {
+    find.saveHistory
   }
 
   internal Void loadDoc()
