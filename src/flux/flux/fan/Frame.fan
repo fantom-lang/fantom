@@ -81,8 +81,10 @@ class Frame : Window
   {
     // get tab to load
     tab := view.tab
-    if (mode.newTab || view.dirty)
+    if (mode.newTab)
       tab = tabPane.newTab
+    else if (view.dirty && !tab.confirmClose)
+      return
 
     // load the tab
     tab.load(uri, mode)
