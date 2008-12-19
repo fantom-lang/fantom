@@ -22,19 +22,21 @@ internal class FindBar : ContentPane, TextEditorSupport
   new make(TextEditor editor)
   {
     this.editor = editor
+    history := FindHistory.load
 
     findText = Combo() { editable = true }
-    findText.items = FindHistory.load.find
-    findText.onFocus.add |Event e| { caretPos = richText.selectStart }
-    findText.onBlur.add |Event e| { updateHistory }
+    findText.items = history.find
+    findText.onFocus.add |,| { caretPos = richText.selectStart }
+    findText.onBlur.add  |,| { updateHistory }
     findText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
-    findText.onModify.add |Event e| { find(null, true, true) }
+    findText.onModify.add |,| { find(null, true, true) }
 
     matchCase = Button
     {
       mode = ButtonMode.check
       text = Flux#.loc("find.matchCase")
-      onAction.add(&find(null, true, true))
+      onAction.add |,| { updateHistory; find(null, true, true) }
+      selected = history.matchCase
     }
 
     findPane = InsetPane(4,4,4,4)
@@ -59,7 +61,9 @@ internal class FindBar : ContentPane, TextEditorSupport
     }
 
     replaceText = Combo() { editable = true }
-    replaceText.items = FindHistory.load.replace
+    replaceText.items = history.find
+    if (replaceText.items.size > 1)
+      replaceText.selectedIndex = 1
     replaceText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
     replaceText.onModify.add |Event e|
     {
@@ -346,6 +350,15 @@ internal class FindBar : ContentPane, TextEditorSupport
 
   private Void updateHistory()
   {
+    // save history
+    history := FindHistory.load
+    if (replacePane.visible)
+      history.pushFind(replaceText.text)
+    history.pushFind(findText.text)
+    history.matchCase = matchCase.selected
+    history.save
+
+    // update ui
     updateCombo(findText)
     updateCombo(replaceText)
   }
@@ -362,18 +375,10 @@ internal class FindBar : ContentPane, TextEditorSupport
     items.remove(text)
     items.insert(0, text)
 
-    // update combo, limit to 15 items
-    c.items = items[0...15.min(items.size)]
+    // update combo, limit items
+    c.items = items[0...20.min(items.size)]
     c.text = text  // set items nukes text, so reset
     ignore = false
-  }
-
-  internal Void saveHistory()
-  {
-    history := FindHistory.load
-    history.find = findText.items.dup
-    history.replace = replaceText.items.dup
-    history.save
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -397,18 +402,4 @@ internal class FindBar : ContentPane, TextEditorSupport
   private Command cmdHide := Command.makeLocale(Flux#.pod, "findHide", &hide)
   private Command cmdReplace    := Command.makeLocale(Flux#.pod, "replace",    &replace)
   private Command cmdReplaceAll := Command.makeLocale(Flux#.pod, "replaceAll", &replaceAll)
-}
-
-**************************************************************************
-** FindHistory
-**************************************************************************
-
-@serializable
-internal class FindHistory
-{
-  static FindHistory load() { return Flux.loadOptions("session/find", FindHistory#) }
-  Void save() { Flux.saveOptions("session/find", this) }
-  Str[] find    := [,]
-  Str[] replace := [,]
-  Uri[] dir     := [,]
 }

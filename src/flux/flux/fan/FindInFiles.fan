@@ -13,15 +13,84 @@ using fwt
 **
 internal class FindInFiles
 {
-
   **
-  ** Create a new instance to search for the given query
-  ** in the given file or directory.
+  ** Open FindInFiles in a dialog.
   **
-  new make(File file, Str query)
+  static Void dialog(Frame frame)
   {
-    this.query  = query
-    this.file = file
+    query := Combo { editable = true }
+    uri   := Combo { editable = true }
+    err   := Label { fg = Color.red; halign = Halign.right }
+    match := Button { mode = ButtonMode.check; text = Flux#.loc("find.matchCase") }
+
+    history := FindHistory.load
+    query.items = history.find
+    uri.items   = history.dirAsStr
+    if (uri.items.isEmpty) uri.items = [Sys.homeDir.toStr]
+    match.selected = history.matchCase
+
+    content := GridPane
+    {
+      numCols = 2
+      expandCol = 1
+      halignCells = Halign.fill
+      Label { text="Find" }
+      ConstraintPane { minw=300; maxw=300; add(query) }
+      Label { text="In Folder" }
+      ConstraintPane { minw=300; maxw=300; add(uri) }
+      Label {} // spacer
+      GridPane
+      {
+        numCols = 2
+        expandCol = 1
+        halignCells = Halign.fill
+        add(match)
+        add(err)
+      }
+    }
+    dlg := Dialog(frame)
+    {
+      title = FindInFiles#.loc("findInFiles.name")
+      body  = content
+      commands = [Dialog.ok, Dialog.cancel]
+    }
+    query.onAction.add |,| { dlg.close(Dialog.ok) }
+    uri.onAction.add   |,| { dlg.close(Dialog.ok) }
+    uri.onModify.add   |,|
+    {
+      err.text = File(uri.text.toUri, false).exists ? "" : "Directory not found"
+      err.parent?.parent?.relayout
+    }
+    if (Dialog.ok != dlg.open) return
+
+    try
+    {
+      q := query.text
+      f := File(uri.text.toUri, false)
+      if (!f.exists) throw ArgErr("Directory not found: $f")
+
+      // save history
+      history.pushFind(q)
+      history.pushDir(f.uri)
+      history.matchCase = match.selected
+      history.save
+
+      // run in console
+      frame.console.show.run(#doFind, [q, f.uri.toStr, match.selected.toStr])
+    }
+    catch (Err e) { Dialog.openErr(frame, e.message, e) }
+  }
+
+  static Str[] doFind(ExecParams params)
+  {
+    query   := params.command[0]
+    dir     := params.command[1]
+    match   := params.command[2] == "true"
+    results := Str[,]
+    results.add("Files containing \"$query\"...\n")
+    results.addAll(find(query, dir.toUri.toFile, match))
+    results.add("${results.size-1} results found\n")
+    return results
   }
 
   **
@@ -29,15 +98,13 @@ internal class FindInFiles
   ** If a function is passed in, that function is called each
   ** time a match is found.
   **
-  Mark[] find(|Mark m|? func := null)
+  static Str[] find(Str query, File dir, Bool match := false)
   {
-    if ((Obj?)file == null) throw ArgErr("File cannot be null")
-    if (!file.exists) throw ArgErr("File does not exist")
-    if ((Obj?)query == null) throw ArgErr("Query cannot be null")
-    if (query.size == 0) throw ArgErr("Query cannot be empty")
+    if (query.size == 0) return Str[,]
+    if (!dir.exists) throw ArgErr("Directory not found")
 
-    marks := Mark[,]
-    file.walk |File f|
+    results := Str[,]
+    dir.walk |File f|
     {
       if (f.isDir) return
       f = f.normalize
@@ -48,13 +115,11 @@ internal class FindInFiles
         str  := in.readLine
         while (str!= null)
         {
-          col := str.indexIgnoreCase(query)
+          col := match ? str.index(query) : str.indexIgnoreCase(query)
           while (col != null)
           {
-            mark := Mark { uri=f.uri; line=line; col=col }
-            func?.call([mark])
-            marks.add(mark)
-            col = str.indexIgnoreCase(query, ++col)
+            results.add("$f.osPath(${line+1},${col+1}): $str.trim\n")
+            col = match ? str.index(query, ++col) : str.indexIgnoreCase(query, ++col)
           }
           line++
           str = in.readLine
@@ -63,61 +128,7 @@ internal class FindInFiles
       catch (IOErr err) {} // skip files we can't read
       finally in.close
     }
-    return marks.sort
-  }
-
-  readonly File file
-  readonly Str query
-
-  **
-  ** Open FindInFiles in a dialog.
-  **
-  static Void dialog(Frame frame)
-  {
-    query := Text { prefCols=30 }
-    uri   := Text { prefCols=30 }
-
-    query.text = Thread.locals["flux.findInFiles.text"] ?: ""
-    uri.text   = Thread.locals["flux.findInFiles.uri"]  ?: Sys.homeDir.toStr
-
-    content := GridPane
-    {
-      numCols = 2
-      Label { text="Find" }
-      add(query)
-      Label { text="In Folder" }
-      add(uri)
-    }
-    dlg := Dialog(frame)
-    {
-      title = FindInFiles#.loc("findInFiles.name")
-      body  = content
-      commands = [Dialog.ok, Dialog.cancel]
-    }
-    query.onAction.add |,| { dlg.close(Dialog.ok) }
-    uri.onAction.add   |,| { dlg.close(Dialog.ok) }
-    if (Dialog.ok != dlg.open) return
-
-    try
-    {
-      File f := File(uri.text.toUri, false)
-      Str  q := query.text
-
-      Thread.locals["flux.findInFiles.text"] = q
-      Thread.locals["flux.findInFiles.uri"]  = f.toStr
-
-      frame.console.show->clear
-      frame.marks = Mark[,]
-      Console.execWrite(frame.id, "Files containing \"$q\"...\n")
-      marks := FindInFiles(f, q).find |Mark m|
-      {
-        path := m.uri.toFile.osPath
-        Console.execWrite(frame.id, "$path(${m.line+1},${m.col+1})\n")
-      }
-      Console.execWrite(frame.id, "$marks.size results found\n")
-      frame.marks = marks
-    }
-    catch (Err err) { Dialog.openErr(frame, err.message, err) }
+    return results
   }
 
 }

@@ -17,30 +17,41 @@ internal class FindInFilesTest : Test
         f.copyTo(tempDir + f.uri.toStr["/test/files/".size..-1].toUri)
     }
 
-    marks := FindInFiles(tempDir+`alpha.txt`, "foo").find
-    verifyEq(marks.size, 1)
-    verifyMark(marks[0], "alpha.txt", 0, 0)
+    results := FindInFiles.find("foo", tempDir+`alpha.txt`)
+    verifyEq(results.size, 1)
+    verifyMark(results[0], "alpha.txt", 1, 1)
 
-    marks = FindInFiles(tempDir, "foo").find
-    verifyEq(marks.size, 6)
-    verifyMark(marks[0], "alpha.txt", 0, 0)
-    verifyMark(marks[1], "beta.java", 2, 9)
-    verifyMark(marks[2], "beta.java", 2, 12)
-    verifyMark(marks[3], "sub/gamma.fan", 2, 2)
-    verifyMark(marks[4], "sub/gamma.fan", 2, 8)
-    verifyMark(marks[5], "sub/gamma.fan", 5, 2)
+    results = FindInFiles.find("foo", tempDir)
+    verifyEq(results.size, 6)
+    verifyMark(results[0], "alpha.txt", 1, 1)
+    verifyMark(results[1], "beta.java", 3, 10)
+    verifyMark(results[2], "beta.java", 3, 13)
+    verifyMark(results[3], "gamma.fan", 3, 3)
+    verifyMark(results[4], "gamma.fan", 3, 9)
+    verifyMark(results[5], "gamma.fan", 6, 3)
+
+    results = FindInFiles.find("", tempDir)
+    verifyEq(results.size, 0)
 
     //verifyErr(ArgErr#) |,| { FindInFiles(null, "foo").find }
     //verifyErr(ArgErr#) |,| { FindInFiles(tempDir, null).find }
-    verifyErr(ArgErr#) |,| { FindInFiles(tempDir, "").find }
-    verifyErr(ArgErr#) |,| { FindInFiles(tempDir+`dne/`, "foo").find }
+    verifyErr(ArgErr#) |,| { FindInFiles.find("foo", tempDir+`dne/`) }
   }
 
-  Void verifyMark(Mark mark, Str name, Int line, Int col)
+  Void verifyMark(Str result, Str name, Int line, Int col)
   {
-    verifyEq(mark.uri, (tempDir + name.toUri).normalize.uri)
-    verifyEq(mark.line, line)
-    verifyEq(mark.col, col)
+    a := result.indexr(r"\")
+    b := result.index("(", a)
+    c := result.index(",", b)
+    d := result.index(")", c)
+
+    testName := result[a+1...b]
+    testLine := result[b+1...c].toInt
+    testCol  := result[c+1...d].toInt
+
+    verifyEq(testName, name)
+    verifyEq(testLine, line)
+    verifyEq(testCol, col)
   }
 
 }
