@@ -22,7 +22,7 @@ class PodIndexGenerator : HtmlGenerator
   new make(DocCompiler compiler, Location loc, OutStream out)
     : super(compiler, loc, out)
   {
-    sorter := |Type a, Type b -> Int| { return a.name <=> b.name }
+    sorter := |Type a, Type b -> Int| { return a.name.compareIgnoreCase(b.name) }
     filter := |Type t -> Bool| { return showType(t) }
 
     this.pod = compiler.pod
