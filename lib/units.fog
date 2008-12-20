@@ -1,0 +1,522 @@
+//
+// Fan Unit Database
+// Auto-generated conversion from oBIX database
+// Generation script: adm/buildunits.fan
+// Generated at 2008-12-20T09:29:45.959-05:00 New_York
+//
+// This file is formatted as a serialized list of quantities, where each
+// quantity is itself a list. The first item in the quantity list is the
+// name which maps to the Unit.quantity API, and the remainder of the list
+// is the serialized units for the quantity.
+//
+
+using sys::Unit
+
+// top list of quantities
+[
+
+// dimensionless (null)
+[
+  "dimensionless",
+  Unit("percent; %"),
+  Unit("decibel; db"),
+  Unit("power_factor; pf"),
+  Unit("pH"),
+  Unit("percent_relative_humidity; %RH"),
+  Unit("grams_of_water_per_kilogram_dry_air; gH20/kgAir"),
+  Unit("volts_per_degree_kelvin; V/K"),
+  Unit("degree_days_celsius; ºdaysC"),
+  Unit("degree_days_fahrenheit; ºdaysF"),
+  Unit("percent_obscuration_per_foot; %obsc/ft"),
+  Unit("percent_obscuration_per_meter; %obsc/m"),
+  Unit("psi_per_degree_fahrenheit; psi/ºF"),
+  Unit("square_meters_per_newton; m²/N"),
+  Unit("watts_per_square_meter_degree_kelvin; W/m²K"),
+  Unit("ampere_square_meter; Am²"),
+  Unit("db_milliVolt; dBmV"),
+  Unit("db_microVolt; dBuV"),
+  Unit("parts_per_unit; ppu"),
+  Unit("parts_per_million; ppm; ; 1.0E-6"),
+  Unit("parts_per_billion; ppb; ; 1.0E-9"),
+  Unit("grams_per_kilogram; g/kg; ; 0.0010"),
+  Unit("radian; rad"),
+  Unit("degrees_angular; deg; ; 0.017453292519943"),
+  Unit("degrees_phase; degPh; ; 0.017453292519943"),
+  Unit("steradian; sr"),
+  Unit("nephelometric_turbidity_units; ntu"),
+  Unit("formazin_nephelometric_unit; fnu"),
+],
+
+// acceleration (m1*sec-2)
+[
+  "acceleration",
+  Unit("meters_per_second_squared; m/s²; m1*sec-2"),
+],
+
+// angular acceleration (sec-2)
+[
+  "angular acceleration",
+  Unit("radians_per_second_squared; rad/s²; sec-2"),
+],
+
+// angular momentum (kg1*m2*sec-1)
+[
+  "angular momentum",
+  Unit("joule_second; J-s; kg1*m2*sec-1"),
+],
+
+// angular velocity (sec-1)
+[
+  "angular velocity",
+  Unit("radians_per_second; rad/s; sec-1"),
+  Unit("revolutions_per_minute; rpm; sec-1; 6.2831853071796"),
+],
+
+// area (m2)
+[
+  "area",
+  Unit("square_meter; m²; m2"),
+  Unit("square_millimeter; mm²; m2; 1.0E-6"),
+  Unit("square_centimeter; cm²; m2; 1.0E-4"),
+  Unit("square_kilometer; km²; m2; 1000000.0"),
+  Unit("square_inch; in²; m2; 6.45161E-4"),
+  Unit("square_foot; ft²; m2; 0.092903"),
+  Unit("square_yard; yd²; m2; 0.836131"),
+  Unit("square_mile; mile²; m2; 2589988.110336"),
+  Unit("acre; ; m2; 4046.872627"),
+],
+
+// capacitance (kg-1*m-2*sec4*A2)
+[
+  "capacitance",
+  Unit("farad; F; kg-1*m-2*sec4*A2"),
+],
+
+// density (kg1*m-3)
+[
+  "density",
+  Unit("kilograms_per_cubic_meter; kg/m³; kg1*m-3"),
+],
+
+// electric charge (sec1*A1)
+[
+  "electric charge",
+  Unit("coulomb; C; sec1*A1"),
+],
+
+// electric conductance (kg-1*m-2*sec3*A2)
+[
+  "electric conductance",
+  Unit("siemens; S; kg-1*m-2*sec3*A2"),
+],
+
+// electric current (A1)
+[
+  "electric current",
+  Unit("ampere; A; A1"),
+  Unit("milliampere; mA; A1; 0.0010"),
+],
+
+// electric current density (m-2*A1)
+[
+  "electric current density",
+  Unit("amperes_per_square_meter; A/m²; m-2*A1"),
+],
+
+// electric field strength (kg1*m1*sec-3*A-1)
+[
+  "electric field strength",
+  Unit("volts_per_meter; V/m; kg1*m1*sec-3*A-1"),
+],
+
+// electric potential (kg1*m2*sec-3*A-1)
+[
+  "electric potential",
+  Unit("volt; V; kg1*m2*sec-3*A-1"),
+  Unit("millivolt; mV; kg1*m2*sec-3*A-1; 0.0010"),
+  Unit("kilovolt; kV; kg1*m2*sec-3*A-1; 1000.0"),
+  Unit("megavolt; MV; kg1*m2*sec-3*A-1; 1000000.0"),
+],
+
+// electric resistance (kg1*m2*sec-3*A-2)
+[
+  "electric resistance",
+  Unit("ohm; Ω; kg1*m2*sec-3*A-2"),
+  Unit("kilohm; kΩ; kg1*m2*sec-3*A-2; 1000.0"),
+  Unit("megohm; MΩ; kg1*m2*sec-3*A-2; 1000000.0"),
+  Unit("milliohm; mΩ; kg1*m2*sec-3*A-2; 0.0010"),
+],
+
+// electrical conductivity (kg-1*m-3*sec3*A2)
+[
+  "electrical conductivity",
+  Unit("siemens_per_meter; S/m; kg-1*m-3*sec3*A2"),
+],
+
+// electrical resistivity (kg1*m3*sec-3*A-2)
+[
+  "electrical resistivity",
+  Unit("ohm_meter; Ω-m; kg1*m3*sec-3*A-2"),
+],
+
+// energy (kg1*m2*sec-2)
+[
+  "energy",
+  Unit("joule; J; kg1*m2*sec-2"),
+  Unit("kilojoule; kJ; kg1*m2*sec-2; 1000.0"),
+  Unit("watt_hour; W-hr; kg1*m2*sec-2; 3600.0"),
+  Unit("kilowatt_hour; kW-hr; kg1*m2*sec-2; 3600000.0"),
+  Unit("megawatt_hour; MW-hr; kg1*m2*sec-2; 3.6E9"),
+  Unit("btu; BTU; kg1*m2*sec-2; 1054.852"),
+  Unit("kilobtu; kBTU; kg1*m2*sec-2; 1054852.0"),
+  Unit("megabtu; MBTU; kg1*m2*sec-2; 1.054852E9"),
+  Unit("horsepower_hour; hp-hr; kg1*m2*sec-2; 2686088.6"),
+  Unit("calorie; cal; kg1*m2*sec-2; 4.184"),
+  Unit("therm; ; kg1*m2*sec-2; 1.05506E8"),
+  Unit("tons_refrigeration_hour; tR-hr; kg1*m2*sec-2; 1.26606708E7"),
+  Unit("megajoule; MJ; kg1*m2*sec-2; 1000000.0"),
+  Unit("newton_meter; N-m; kg1*m2*sec-2"),
+],
+
+// apparent energy (kg1*m2*sec-2)
+[
+  "apparent energy",
+  Unit("volt_ampere_hour; VA-hr; kg1*m2*sec-2; 3600.0"),
+  Unit("kilovolt_ampere_hour; kVA-hr; kg1*m2*sec-2; 3600000.0"),
+  Unit("megavolt_ampere_hour; MVA-hr; kg1*m2*sec-2; 3.6E9"),
+],
+
+// reactive energy (kg1*m2*sec-2)
+[
+  "reactive energy",
+  Unit("volt_ampere_reactive_hour; VAR-hr; kg1*m2*sec-2; 3600.0"),
+  Unit("kilovolt_ampere_reactive_hour; kVAR-hr; kg1*m2*sec-2; 3600000.0"),
+  Unit("megavolt_ampere_reactive_hour; MVAR-hr; kg1*m2*sec-2; 3.6E9"),
+],
+
+// energy consumption (kg1*sec-2)
+[
+  "energy consumption",
+  Unit("joules_per_square_meter; J/m²; kg1*sec-2"),
+  Unit("kilowatt_hours_per_square_meter; kW-hr/m²; kg1*sec-2; 3600000.0"),
+  Unit("kilowatt_hours_per_square_foot; kW-hr/ft²; kg1*sec-2; 3.8750077500155E7"),
+  Unit("megajoules_per_square_meter; MJ/m²; kg1*sec-2; 1000000.0"),
+  Unit("megajoules_per_square_foot; MJ/ft²; kg1*sec-2; 1.076391041671E7"),
+  Unit("newtons_per_meter; N/m; kg1*sec-2"),
+],
+
+// enthalpy (m2*sec-2)
+[
+  "enthalpy",
+  Unit("joules_per_kilogram; J/kg; m2*sec-2"),
+  Unit("joules_per_gram; J/g; m2*sec-2; 0.0010"),
+  Unit("btu_per_pound; BTU/lb; m2*sec-2; 2325.5576058607867"),
+  Unit("calorie_per_gram; cal/g; m2*sec-2; 4184.0"),
+],
+
+// entropy (kg1*m2*sec-2*K-1)
+[
+  "entropy",
+  Unit("joules_per_degree_kelvin; J/ºK; kg1*m2*sec-2*K-1"),
+  Unit("kilojoules_per_degree_kelvin; kJ/ºK; kg1*m2*sec-2*K-1; 1000.0"),
+  Unit("megajoules_per_degree_kelvin; MJ/ºK; kg1*m2*sec-2*K-1; 1000000.0"),
+],
+
+// force (kg1*m1*sec-2)
+[
+  "force",
+  Unit("newton; N; kg1*m1*sec-2"),
+  Unit("pound_force; lb; kg1*m1*sec-2; 4.448222"),
+],
+
+// frequency (sec-1)
+[
+  "frequency",
+  Unit("hertz; Hz; sec-1"),
+  Unit("kilohertz; kHz; sec-1; 1000.0"),
+  Unit("cycles_per_hour; cph; sec-1; 2.777777777777778E-4"),
+  Unit("cycles_per_minute; cpm; sec-1; 0.016666666666666666"),
+  Unit("megahertz; MHz; sec-1; 1000000.0"),
+  Unit("per_minute; /min; sec-1; 0.016666666666666666"),
+  Unit("per_second; /s; sec-1"),
+  Unit("per_hour; /hr; sec-1; 2.777777777777778E-4"),
+  Unit("percent_per_second; %/s; sec-1"),
+],
+
+// grammage (kg1*m-2)
+[
+  "grammage",
+  Unit("kilograms_per_square_meter; kg/m²; kg1*m-2"),
+  Unit("grams_per_square_meter; g/m²; kg1*m-2; 0.0010"),
+],
+
+// heating rate (sec-1*K1)
+[
+  "heating rate",
+  Unit("degrees_kelvin_per_second; K/s; sec-1*K1"),
+  Unit("degrees_celsius_per_hour; ºC/hr; sec-1*K1; 2.777777777777778E-4"),
+  Unit("degrees_celsius_per_minute; ºC/min; sec-1*K1; 0.016666666666666666"),
+  Unit("degrees_fahrenheit_per_hour; ºF/hr; sec-1*K1; 1.5432098765432E-4"),
+  Unit("degrees_fahrenheit_per_minute; ºF/min; sec-1*K1; 0.0092592592592593"),
+  Unit("degrees_kelvin_per_hour; K/hr; sec-1*K1; 2.777777777777778E-4"),
+  Unit("degrees_kelvin_per_minute; ºC/min; sec-1*K1; 0.016666666666666666"),
+],
+
+// illuminance (m-2*cd1)
+[
+  "illuminance",
+  Unit("lux; lx; m-2*cd1"),
+  Unit("candelas_per_square_meter; cd/m²; m-2*cd1"),
+],
+
+// inductance (kg1*m2*sec-2*A-2)
+[
+  "inductance",
+  Unit("henry; H; kg1*m2*sec-2*A-2"),
+],
+
+// irradiance (kg1*sec-3)
+[
+  "irradiance",
+  Unit("watts_per_square_meter; W/m²; kg1*sec-3"),
+  Unit("watts_per_square_foot; W/ft²; kg1*sec-3; 10.76391041671"),
+],
+
+// length (m1)
+[
+  "length",
+  Unit("meter; m; m1"),
+  Unit("micrometer; um; m1; 1.0E-5"),
+  Unit("millimeter; mm; m1; 0.0010"),
+  Unit("centimeter; cm; m1; 0.01"),
+  Unit("kilometer; km; m1; 1000.0"),
+  Unit("inch; in; m1; 0.0254"),
+  Unit("foot; ft; m1; 0.3048"),
+  Unit("yard; yd; m1; 0.9144"),
+  Unit("mile; ; m1; 1609.344"),
+],
+
+// luminescence (cd1)
+[
+  "luminescence",
+  Unit("candela; cd; cd1"),
+  Unit("footcandle; ftcd; cd1"),
+],
+
+// luminous flux (cd1)
+[
+  "luminous flux",
+  Unit("lumen; lm; cd1"),
+],
+
+// magnetic field strength (m-1*A1)
+[
+  "magnetic field strength",
+  Unit("amperes_per_meter; A/m; m-1*A1"),
+],
+
+// magnetic flux (kg1*m2*sec-2*A-1)
+[
+  "magnetic flux",
+  Unit("weber; Wb; kg1*m2*sec-2*A-1"),
+],
+
+// magnetic flux density (kg1*sec-2*A-1)
+[
+  "magnetic flux density",
+  Unit("tesla; T; kg1*sec-2*A-1"),
+],
+
+// mass (kg1)
+[
+  "mass",
+  Unit("kilogram; kg; kg1"),
+  Unit("milligram; mg; kg1; 1.0E-6"),
+  Unit("gram; g; kg1; 0.0010"),
+  Unit("ounce; oz; kg1; 0.02835"),
+  Unit("pound; lb; kg1; 0.453591"),
+  Unit("metric_ton; ton; kg1; 1000.0"),
+  Unit("short_ton; t; kg1; 907.18474"),
+],
+
+// mass flow (kg1*sec-1)
+[
+  "mass flow",
+  Unit("kilograms_per_second; kg/s; kg1*sec-1"),
+  Unit("kilograms_per_minute; kg/min; kg1*sec-1; 0.016666666666666666"),
+  Unit("kilograms_per_hour; kg/hr; kg1*sec-1; 2.777777777777778E-4"),
+  Unit("pounds_per_minute; lb/min; kg1*sec-1; 0.007559872833333333"),
+  Unit("pounds_per_hour; lb/hr; kg1*sec-1; 1.2599788055555556E-4"),
+  Unit("pounds_per_second; lb/s; kg1*sec-1; 0.45359237"),
+  Unit("grams_per_second; g/s; kg1*sec-1; 0.0010"),
+  Unit("grams_per_minute; g/min; kg1*sec-1; 1.6666666666666667E-5"),
+  Unit("metric_tons_per_hour; ton/hr; kg1*sec-1; 0.2777777777777778"),
+],
+
+// momentum (kg1*m1*sec-1)
+[
+  "momentum",
+  Unit("newton_second; N-s; kg1*m1*sec-1"),
+],
+
+// power (kg1*m2*sec-3)
+[
+  "power",
+  Unit("watt; W; kg1*m2*sec-3"),
+  Unit("milliwatt; mW; kg1*m2*sec-3; 0.0010"),
+  Unit("kilowatt; kW; kg1*m2*sec-3; 1000.0"),
+  Unit("megawatt; MW; kg1*m2*sec-3; 1000000.0"),
+  Unit("gigawatt; GW; kg1*m2*sec-3; 1.0E9"),
+  Unit("btus_per_hour; BTU/hr; kg1*m2*sec-3; 0.292875"),
+  Unit("horsepower; hp; kg1*m2*sec-3; 745.7"),
+  Unit("foot_pounds_per_second; ft-lbs/sec; kg1*m2*sec-3; 1.355818"),
+  Unit("tons_refrigeration; tR; kg1*m2*sec-3; 3516.853"),
+  Unit("kilobtus_per_hour; kBTU/hr; kg1*m2*sec-3; 293.07107017222"),
+],
+
+// apparent power (kg1*m2*sec-3)
+[
+  "apparent power",
+  Unit("volt_ampere; VA; kg1*m2*sec-3"),
+  Unit("kilovolt_ampere; kVA; kg1*m2*sec-3; 1000.0"),
+  Unit("megavolt_ampere; mVA; kg1*m2*sec-3; 1000000.0"),
+],
+
+// reactive power (kg1*m2*sec-3)
+[
+  "reactive power",
+  Unit("volt_ampere_reactive; VAR; kg1*m2*sec-3"),
+  Unit("kilovolt_ampere_reactive; kVAR; kg1*m2*sec-3; 1000.0"),
+  Unit("megavolt_ampere_reactive; MVAR; kg1*m2*sec-3; 1000000.0"),
+],
+
+// pressure (kg1*m-1*sec-2)
+[
+  "pressure",
+  Unit("pascal; Pa; kg1*m-1*sec-2"),
+  Unit("kilopascal; kPa; kg1*m-1*sec-2; 1000.0"),
+  Unit("bar; ; kg1*m-1*sec-2; 100000.0"),
+  Unit("atmosphere; atm; kg1*m-1*sec-2; 101317.1"),
+  Unit("pounds_per_square_inch; psi; kg1*m-1*sec-2; 6894.73"),
+  Unit("centimeters_of_water; cm/wc; kg1*m-1*sec-2; 98.0665"),
+  Unit("inches_of_water; in/wc; kg1*m-1*sec-2; 248.84"),
+  Unit("millimeters_of_mercury; mm Hg; kg1*m-1*sec-2; 133.322368421"),
+  Unit("centimeters_of_mercury; cm Hg; kg1*m-1*sec-2; 1333.22368421"),
+  Unit("inches_of_mercury; in Hg; kg1*m-1*sec-2; 3386.38815789"),
+  Unit("hectopascal; hPa; kg1*m-1*sec-2; 100.0"),
+  Unit("millibar; mbar; kg1*m-1*sec-2; 100.0"),
+],
+
+// specific energy (m2*sec-2)
+[
+  "specific energy",
+  Unit("joules_per_kilogram; J/kg; m2*sec-2"),
+  Unit("joules_per_kilogram_dry_air; J/kg; m2*sec-2"),
+  Unit("btus_per_pound; btu/lb; m2*sec-2; 2326.0"),
+  Unit("btus_per_pound_dry_air; btu/lb; m2*sec-2; 2326.0"),
+  Unit("kilojoules_per_kilogram; kJ/kg; m2*sec-2; 1000.0"),
+  Unit("kilojoules_per_kilogram_dry_air; kJ/kg; m2*sec-2; 1000.0"),
+  Unit("megajoules_per_kilogram_dry_air; MJ/kg; m2*sec-2; 1000000.0"),
+],
+
+// specific entropy (m2*sec-2*K-1)
+[
+  "specific entropy",
+  Unit("joules_per_kilogram_degree_kelvin; J/kgºK; m2*sec-2*K-1"),
+],
+
+// surface tension (kg1*sec-2)
+[
+  "surface tension",
+  Unit("newtons_per_meter; N/m; kg1*sec-2"),
+],
+
+// temperature (K1)
+[
+  "temperature",
+  Unit("fahrenheit; ºF; K1; 0.5555555555555556; 255.37222222222223"),
+  Unit("celsius; ºC; K1; 1.0; 273.15"),
+  Unit("kelvin; ºK; K1"),
+],
+
+// temperature differential (K1)
+[
+  "temperature differential",
+  Unit("fahrenheit_degrees; ΔºF; K1; 0.5555555555555556"),
+  Unit("celsius_degrees; ΔºC; K1"),
+  Unit("kelvin_degrees; ΔºK; K1"),
+],
+
+// thermal conductivity (kg1*m1*sec-3*K-1)
+[
+  "thermal conductivity",
+  Unit("watts_per_meter_degree_kelvin; W/mºK; kg1*m1*sec-3*K-1"),
+],
+
+// time (sec1)
+[
+  "time",
+  Unit("nanosecond; ns; sec1; 1.0E-9"),
+  Unit("microsecond; us; sec1; 1.0E-6"),
+  Unit("millisecond; ms; sec1; 0.0010"),
+  Unit("hundredths_second; cs; sec1; 0.01"),
+  Unit("tenths_second; ds; sec1; 0.1"),
+  Unit("second; s; sec1"),
+  Unit("minute; min; sec1; 60.0"),
+  Unit("hour; hr; sec1; 3600.0"),
+  Unit("day; ; sec1; 86400.0"),
+  Unit("week; wk; sec1; 604800.0"),
+  Unit("julian_month; mo; sec1; 2629800.0"),
+  Unit("year; yr; sec1; 3.1536E7"),
+],
+
+// velocity (m1*sec-1)
+[
+  "velocity",
+  Unit("meters_per_second; m/s; m1*sec-1"),
+  Unit("kilometers_per_second; km/s; m1*sec-1; 1000.0"),
+  Unit("kilometers_per_hour; km/hr; m1*sec-1; 0.277778"),
+  Unit("miles_per_hour; mph; m1*sec-1; 0.447027"),
+  Unit("feet_per_second; ft/s; m1*sec-1; 0.3048"),
+  Unit("feet_per_minute; ft/s; m1*sec-1; 0.00508"),
+  Unit("millimeters_per_second; mm/s; m1*sec-1; 0.0010"),
+  Unit("millimeters_per_minute; mm/min; m1*sec-1; 1.6666666666666667E-5"),
+  Unit("meters_per_minute; m/min; m1*sec-1; 0.016666666666666666"),
+  Unit("meters_per_hour; m/hr; m1*sec-1; 2.777777777777778E-4"),
+],
+
+// volume (m3)
+[
+  "volume",
+  Unit("cubic_meter; m³; m3"),
+  Unit("cubic_millimeter; mm³; m3; 1.0E-9"),
+  Unit("cubic_centimeter; cm³; m3; 1.0E-6"),
+  Unit("milliliter; mL; m3; 1.0E-6"),
+  Unit("liter; L; m3; 0.0010"),
+  Unit("kiloliter; kL; m3"),
+  Unit("cubic_inch; in³; m3; 1.6387064E-5"),
+  Unit("cubic_foot; ft³; m3; 0.028317"),
+  Unit("cubic_yard; yd³; m3; 0.764555"),
+  Unit("gallon; gal; m3; 0.003785"),
+  Unit("quart; qt; m3; 9.46E-4"),
+  Unit("pint; pt; m3; 4.73E-4"),
+  Unit("fluid_ounce; fl oz; m3; 2.95729E-5"),
+  Unit("imperial_gallon; galUK; m3; 0.004546092"),
+],
+
+// volumetric flow (m3*sec-1)
+[
+  "volumetric flow",
+  Unit("cubic_meters_per_second; m³/s; m3*sec-1"),
+  Unit("milliliters_per_second; mL/s; m3*sec-1; 1.0E-6"),
+  Unit("liters_per_second; L/s; m3*sec-1; 0.0010"),
+  Unit("cubic_feet_per_second; cfs; m3*sec-1; 0.028317"),
+  Unit("cubic_feet_per_minute; cfm; m3*sec-1; 4.719474432E-4"),
+  Unit("imperial_gallons_per_minute; galUK/min; m3*sec-1; 0.004546092"),
+  Unit("liters_per_minute; L/min; m3*sec-1; 1.6666666666666667E-5"),
+  Unit("gallons_per_minute; gal/min; m3*sec-1; 6.30901964E-5"),
+  Unit("cubic_meters_per_hour; m³/hr; m3*sec-1; 2.777777777777778E-4"),
+  Unit("liters_per_hour; L/hr; m3*sec-1; 2.7777777777777776E-7"),
+  Unit("cubic_meters_per_minute; m³/min; m3*sec-1; 0.016666666666666666"),
+],
+] // end top list of quantities
