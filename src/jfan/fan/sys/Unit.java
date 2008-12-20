@@ -330,7 +330,7 @@ public final class Unit
   public final double convertTo(double scalar, Unit to)
   {
     if (dim != to.dim) throw Err.make("Incovertable units: " + this + " and " + to).val;
-    return ((scalar - to.offset) / to.scale) * scale + offset;
+    return ((scalar * this.scale + this.offset) - to.offset) / to.scale;
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -156,6 +156,20 @@ class UnitTest : Test
     verifyErr(Err#) |,| { verifyConv(60f, sec, 1f, Unit.find("meter")) }
   }
 
+  Void testConversionTemp()
+  {
+    k := Unit.find("kelvin")
+    c := Unit.find("celsius")
+    f := Unit.find("fahrenheit")
+
+    verifyConv(0f, c, 273.15f, k)
+    verifyConv(273.15f, k, 32f, f)
+    verifyConv(0f, c, 32f, f)
+    verifyConv(100f, c, 212f, f)
+    verifyConv(75f, f, 23.88889f, c)
+    verifyConv(37f, c, 98.6f, f)
+  }
+
   Void verifyConv(Float from, Unit fromUnit, Float to, Unit toUnit)
   {
     actual := fromUnit.convertTo(from, toUnit)
