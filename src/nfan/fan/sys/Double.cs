@@ -64,6 +64,7 @@ namespace Fan.Sys
 
     public static Double valueOf(double d) { return new Double(d); }
     public static Double valueOf(string s) { return new Double(System.Double.Parse(s)); }
+    public static double parseDouble(string s) { return Double.valueOf(s).val; }
 
     public override string ToString()
     {

@@ -234,6 +234,7 @@ namespace Fan.Sys
         RegexMatcherType = builtin("RegexMatcher", ObjType);
         DependType       = builtin("Depend",       ObjType);
         VersionType      = builtin("Version",      ObjType);
+        UnitType         = builtin("Unit",         ObjType);
 
         // scheme
         UriSchemeType    = builtin("UriScheme",    ObjType);
@@ -485,6 +486,7 @@ namespace Fan.Sys
     public static readonly Type RegexMatcherType;
     public static readonly Type DependType;
     public static readonly Type VersionType;
+    public static readonly Type UnitType;
 
     // uri schemes
     public static readonly Type UriSchemeType;
