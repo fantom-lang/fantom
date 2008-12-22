@@ -19,7 +19,7 @@ var sys_Type = sys_Obj.extend(
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  _ctor: function(qname)
+  $ctor: function(qname)
   {
     this.qname = qname;
   },

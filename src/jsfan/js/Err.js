@@ -16,7 +16,7 @@ var sys_Err = sys_Obj.extend(
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  _ctor: function(msg)
+  $ctor: function(msg)
   {
     this.msg  = msg;
   },
