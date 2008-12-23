@@ -69,6 +69,10 @@ if (!script.exists) throw Err("No script found in $p.name")
     {
       runTests(Type.find("$pod::$type"), method)
     }
+    else if (pod != null)
+    {
+      p.types.each |Type t| { if (t.fits(Test#)) runTests(t, "*") }
+    }
     else throw Err("Pattern not supported: $arg")
     t2 := Duration.now
 

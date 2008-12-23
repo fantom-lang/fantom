@@ -76,6 +76,34 @@ sys_Obj.compare = function(self, that)
   }
 }
 
+sys_Obj.is = function(obj, type)
+{
+  if (obj instanceof sys_Obj)
+    return obj instanceof type;
+  else
+  {
+    if ((typeof obj) == "boolean")
+    {
+      if (type === sys_Obj) return true;
+      if (type === sys_Bool) return true;
+      return false;
+    }
+    if ((typeof obj) == "number")
+    {
+      if (type === sys_Obj) return true;
+      if (type === sys_Int) return true;
+      return false;
+    }
+    throw new sys_Err("Not a Fan type: " + obj);
+  }
+}
+
+sys_Obj.as = function(obj, type)
+{
+  if (sys_Obj.is(obj, type)) return obj;
+  return null;
+}
+
 sys_Obj.isImmutable = function(self)
 {
   if (self instanceof sys_Obj)
@@ -83,6 +111,7 @@ sys_Obj.isImmutable = function(self)
   else
   {
     if ((typeof self) == "boolean") return true;
+    if ((typeof self) == "number") return true;
     throw new sys_Err("Not a Fan type: " + self);
   }
 }
