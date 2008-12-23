@@ -62,16 +62,17 @@ class JavascriptWriter : CompilerSupport
   {
     if (m.isStatic) err("Static methods not yet supported: $m.name", m.location)
     if (m.isFieldAccessor) return // getter/setters are defined when field is emitted
+    hasCThis = false
     out.w("$m.name: function(")
     m.vars.each |MethodVar v, Int i|
     {
       if (!v.isParam) return
       if (i > 0) out.w(", ")
-      out.w(v.name)
+      out.w(var(v.name))
     }
     out.w(")").nl
     out.w("{").nl
-    code(m.code, false)
+    block(m.code, false)
     out.w("},").nl
   }
 
@@ -93,10 +94,10 @@ class JavascriptWriter : CompilerSupport
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Code
+// Block
 //////////////////////////////////////////////////////////////////////////
 
-  Void code(Block block, Bool braces := true)
+  Void block(Block block, Bool braces := true)
   {
     if (braces) out.w("{").nl
     out.indent
@@ -109,17 +110,17 @@ class JavascriptWriter : CompilerSupport
 // Stmt
 //////////////////////////////////////////////////////////////////////////
 
-  Void stmt(Stmt stmt)
+  Void stmt(Stmt stmt, Bool nl := true)
   {
     switch (stmt.id)
     {
       case StmtId.nop:          return
-      case StmtId.expr:         exprStmt(stmt->expr);
-      case StmtId.localDef:     out.w("var "); expr(stmt->init); out.w(";").nl
+      case StmtId.expr:         exprStmt(stmt->expr)
+      case StmtId.localDef:     out.w("var "); expr(stmt->init); out.w(";"); if (nl) out.nl
       //case StmtId.ifStmt:       return
-      case StmtId.returnStmt:   out.w("return;").nl
+      case StmtId.returnStmt:   out.w("return;"); if (nl) out.nl
       //case StmtId.throwStmt:    return
-      //case StmtId.forStmt:      return
+      case StmtId.forStmt:      forStmt(stmt)
       //case StmtId.whileStmt:    return
       //case StmtId.breakStmt:    return
       //case StmtId.continueStmt: return
@@ -132,16 +133,35 @@ class JavascriptWriter : CompilerSupport
   Void exprStmt(Expr ex)
   {
     // use cvar def as hook to create local this ptr
+    /*
     if (ex.toStr.startsWith(r"($cvars ="))
     {
       if (!inClosure)
-        out.w("var _this = this;").nl
+        out.w("var \$this = this;").nl
     }
     else
     {
       expr(ex)
       out.w(";").nl
     }
+    */
+    if (!ex.toStr.startsWith(r"($cvars ="))
+    {
+      expr(ex)
+      out.w(";").nl
+    }
+  }
+
+  Void forStmt(ForStmt fs)
+  {
+    out.w("for (")
+    if (fs.init != null) { stmt(fs.init, false); out.w(" ") }
+    else out.w("; ")
+    if (fs.condition != null) expr(fs.condition)
+    out.w("; ")
+    if (fs.update != null) expr(fs.update)
+    out.w(")").nl
+    block(fs.block)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -158,7 +178,7 @@ class JavascriptWriter : CompilerSupport
       case ExprId.intLiteral:   out.w(ex)
       case ExprId.floatLiteral: out.w(ex)
       //case ExprId.decimalLiteral
-      case ExprId.strLiteral:   out.w(ex)
+      case ExprId.strLiteral:   out.w("\"").w(ex.toStr.toCode('\"', true)[3..-4]).w("\"")
       //case ExprId.durationLiteral
       //case ExprId.uriLiteral
       case ExprId.typeLiteral:  out.w("sys_Type.find(\"${ex->val->signature}\")")
@@ -177,14 +197,14 @@ class JavascriptWriter : CompilerSupport
       case ExprId.boolAnd:      condExpr(ex)
       case ExprId.isExpr:       typeCheckExpr(ex)
       //case ExprId.isnotExpr
-      //case ExprId.asExpr
+      case ExprId.asExpr:       typeCheckExpr(ex)
       case ExprId.coerce:       expr(ex->target)
       case ExprId.call:         callExpr(ex)
       //case ExprId.construction
       case ExprId.shortcut:     shortcutExpr(ex)
       case ExprId.field:        fieldExpr(ex)
-      case ExprId.localVar:     out.w(ex)
-      case ExprId.thisExpr:     out.w(inClosure ? "_this" : "this")
+      case ExprId.localVar:     out.w(var(ex.toStr))
+      case ExprId.thisExpr:     out.w(inClosure ? "\$this" : "this")
       //case ExprId.superExpr
       case ExprId.staticTarget: out.w(qname(ex->ctype))
       //case ExprId.unknownVar
@@ -212,22 +232,30 @@ class JavascriptWriter : CompilerSupport
 
   Void typeCheckExpr(TypeCheckExpr te)
   {
+    method := te.id == ExprId.asExpr ? "as" : "is"
+    out.w("sys_Obj.$method(")
     expr(te.target)
-    out.w(" instanceof ${qname(te.check)}")
+    out.w(",").w(qname(te.check)).w(")")
   }
 
   Void callExpr(CallExpr ce)
   {
+    // check if we need a $this local var
+    if (!hasCThis && ce.args.find(|Expr e->Bool| { return e is ClosureExpr }) != null)
+    {
+      hasCThis = true
+      out.w("var \$this = this;").nl
+    }
+
     // check for special cases
     if (isObjMethod(ce.method.name))
     {
-      isNot := (ce is ShortcutExpr && ce->opToken.toStr == "!=")
-      if (isNot) out.w("!")
+      if (ce is ShortcutExpr && ce->opToken.toStr == "!=") out.w("!")
       out.w("sys_Obj.$ce.method.name(")
       expr(ce.target)
       ce.args.each |Expr arg| { out.w(", "); expr(arg) }
       out.w(")")
-      if (ce is ShortcutExpr && ce->isCompare && !isNot && ce->opToken.toStr != "<=>")
+      if (ce is ShortcutExpr && ce->op === ShortcutOp.cmp && ce->opToken.toStr != "<=>")
         out.w(" ${ce->opToken} 0")
       return
     }
@@ -235,10 +263,15 @@ class JavascriptWriter : CompilerSupport
     // normal case
     if (ce.target != null)
     {
-      targetStr := ce.target.toStr
-      if (targetStr == "true" || targetStr == "false")
+      if (ce.target is LiteralExpr ||
+         (ce.target.id == ExprId.localVar && isPrimitive(ce.target.ctype.toStr)) ||
+         (ce.target.id == ExprId.field && ce.target.toStr.startsWith("\$cvars") &&
+            isPrimitive(ce.target.ctype.toStr)))
       {
-        out.w("sys_Bool.$ce.name($targetStr)")
+        out.w("${qname(ce.target.ctype)}.$ce.name(")
+        expr(ce.target)
+        ce.args.each |Expr arg, Int i| { out.w(","); expr(arg) }
+        out.w(")")
         return
       }
       expr(ce.target)
@@ -323,11 +356,18 @@ class JavascriptWriter : CompilerSupport
   Void closureExpr(ClosureExpr ce)
   {
     inClosure = true
-    out.w("function() {")
+    out.w("function(")
+    ce.doCall.vars.each |MethodVar v, Int i|
+    {
+      if (!v.isParam) return
+      if (i > 0) out.w(", ")
+      out.w(var(v.name))
+    }
+    out.w(") {")
     if (ce.doCall?.code != null)
     {
       out.nl
-      code(ce.doCall.code, false)
+      block(ce.doCall.code, false)
     }
     out.w("}")
     inClosure = false
@@ -349,7 +389,7 @@ class JavascriptWriter : CompilerSupport
   }
 
   Bool isPrimitive(Str qname) { return primitiveMap.get(qname, false) }
-  Str:Bool primitiveMap :=
+  const Str:Bool primitiveMap :=
   [
     "sys::Bool":  true,
     "sys::Bool?": true,
@@ -360,12 +400,23 @@ class JavascriptWriter : CompilerSupport
   ]
 
   Bool isObjMethod(Str methodName) { return objMethodMap.get(methodName, false) }
-  Str:Bool objMethodMap :=
+  const Str:Bool objMethodMap :=
   [
     "equals":      true,
     "compare":     true,
     "isImmutable": true,
     "type":        true,
+  ]
+
+  Str var(Str name)
+  {
+    if (vars.get(name, false)) return "\$$name";
+    return name;
+  }
+  const Str:Bool vars :=
+  [
+    "char": true,
+    "var":  true
   ]
 
 //////////////////////////////////////////////////////////////////////////
@@ -375,5 +426,6 @@ class JavascriptWriter : CompilerSupport
   TypeDef typeDef
   AstWriter out
   Bool inClosure := false
+  Bool hasCThis  := false
 
 }
