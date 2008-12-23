@@ -267,7 +267,7 @@ Fan embraces a [REST]`http://en.wikipedia.org/wiki/Representational_State_Transf
 design to provide a unified namespace which maps URIs to resource objects
 in an application.
 
-Namspaces play an important role in concurrency by providing thread safe
+Namespaces play an important role in concurrency by providing thread safe
 access to shared data.  Threads work with thread safe copies of namespace
 resources - sort of like a coarsely grained transactional memory database.
 
