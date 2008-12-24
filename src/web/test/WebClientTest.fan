@@ -23,7 +23,7 @@ class WebClientTest : Test
     verifyErr(Err#) |,| { WebClient { reqUri = `http://foo/`; reqHeaders["host"] = "bad"; open } }
   }
 
-  Void testBasicGet()
+  Void testGetFixed()
   {
     // use skyfoundry.com assuming simple static HTML page served by Apache
     c := WebClient(`http://skyfoundry.com`)
@@ -43,9 +43,34 @@ class WebClientTest : Test
       verifyErr(Err#) |,| { c.resHeader("foo-bar") }
       verifyErr(Err#) |,| { c.resHeader("foo-bar", true) }
 
-      // content
-      html := c.resStr
-      verify(html.startsWith("<!DOCTYPE html"))
+      // fixed content-length
+      len := c.resHeader("Content-Length").toInt
+      html := c.resBuf
+      verifyEq(html.size, len)
+      verify(html.readAllStr.startsWith("<!DOCTYPE html"))
+    }
+    finally
+    {
+      c.close
+    }
+  }
+
+  Void testGetChunked()
+  {
+    // at least for now, google home page uses chunked transfer
+    c := WebClient(`http://www.google.com`)
+    try
+    {
+      // status line
+      c.open
+      verifyEq(c.resVersion, Version("1.1"))
+      verifyEq(c.resCode, 200)
+      verifyEq(c.resPhrase, "OK")
+      verifyEq(c.resHeaders.caseInsensitive, true)
+
+      // chunked transfer
+      verify(c.resHeader("Transfer-Encoding").lower.contains("chunked"))
+      verify(c.resStr.contains("<html"))
     }
     finally
     {

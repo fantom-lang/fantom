@@ -45,4 +45,42 @@ class UtilTest : Test
        ])
   }
 
+  Void testChunkInStream()
+  {
+    str := "3\r\nxyz\r\nB\r\nhello there\r\n0\r\n\r\n"
+
+    // readAllStr
+    in := ChunkInStream(InStream.makeForStr(str))
+    verifyEq(in.readAllStr, "xyzhello there")
+
+    // readBuf chunks
+    in = ChunkInStream(InStream.makeForStr(str))
+    buf := Buf()
+    verifyEq(in.readBuf(buf.clear, 20), 3)
+    verifyEq(buf.flip.readAllStr, "xyz")
+    verifyEq(in.readBuf(buf.clear, 20), 11)
+    verifyEq(buf.flip.readAllStr, "hello there")
+    verifyEq(in.readBuf(buf.clear, 20), null)
+
+    // readBufFully
+    in = ChunkInStream(InStream.makeForStr(str))
+    in.readBufFully(buf.clear, 14)
+    verifyEq(buf.readAllStr, "xyzhello there")
+    verifyEq(in.read, null)
+
+    // unread
+    in = ChunkInStream(InStream.makeForStr(str))
+    verifyEq(in.read, 'x')
+    verifyEq(in.read, 'y')
+    in.unread('?')
+    verifyEq(in.read, '?')
+    in.unread('2').unread('1')
+    in.readBufFully(buf.clear, 14)
+    verifyEq(buf.readAllStr, "12zhello there")
+
+    // fixed chunked stream
+    in = ChunkInStream(InStream.makeForStr("abcdefgh"), 3)
+    verifyEq(in.readAllStr, "abc")
+  }
+
 }
