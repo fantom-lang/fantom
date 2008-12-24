@@ -321,3 +321,21 @@ and method of the same name, 'Type.field' and 'Type.method' might return differe
 results for the same name.  If an attempt is made to use dynamic invoke on slot
 which has both a field and method of that name, then the method always hides
 the field.
+
+Functions as Interfaces [#funcAsInterface]
+******************************************
+Inner classes are often used in Java as a substitute for closures.  The Java FFI
+allows you to use a function where an interface with one method is expected.
+For example the interface 'Runnable' defines one method called 'run', so we can
+use a Fan function whenever a 'Runnable' is expected:
+
+  // Java API
+  void execute(Runnable r)
+
+  // Fan code
+  execute |,| { echo("run!") }
+  execute(&run)
+
+The standard rules for coercion between Java and Fan types apply for how
+the function implements the interface's method.
+
