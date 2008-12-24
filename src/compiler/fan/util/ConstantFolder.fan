@@ -95,12 +95,13 @@ class ConstantFolder : CompilerSupport
     }
   }
 
-  private Expr constToExpr(Expr orig, Obj val)
+  private Expr constToExpr(Expr orig, Obj? val)
   {
-    if (val is Int)      return LiteralExpr.make(orig.location, ExprId.intLiteral,   ns.intType, val)
+    if (val == null)     return LiteralExpr.make(orig.location, ExprId.nullLiteral, ns.objType.toNullable, null)
+    if (val is Int)      return LiteralExpr.make(orig.location, ExprId.intLiteral, ns.intType, val)
     if (val is Float)    return LiteralExpr.make(orig.location, ExprId.floatLiteral, ns.floatType, val)
     if (val is Decimal)  return LiteralExpr.make(orig.location, ExprId.decimalLiteral, ns.decimalType, val)
-    if (val is Str)      return LiteralExpr.make(orig.location, ExprId.strLiteral,   ns.strType, val)
+    if (val is Str)      return LiteralExpr.make(orig.location, ExprId.strLiteral, ns.strType, val)
     if (val is Duration) return LiteralExpr.make(orig.location, ExprId.durationLiteral, ns.durationType, val)
     return orig
   }
