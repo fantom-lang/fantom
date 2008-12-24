@@ -92,21 +92,40 @@ class WebClient
   }
 
   **
-  ** Input stream to read from
+  ** Input stream to read response content.  The input stream
+  ** will correctly handle end of stream when the content has been
+  ** fully read.  If the "Content-Length" header was specified the
+  ** end of stream is based on the fixed number of bytes.  If the
+  ** "Transfer-Encoding" header defines a chunked encoding, then
+  ** chunks are automatically handled.  If the response has no
+  ** content body, then throw IOErr.
   **
-  InStream resIn() { return socket.in }
+  ** The response input stream is automatically configured with
+  ** the correct character encoding if one is specified in the
+  ** "Content-Type" response header.
+  **
+  InStream resIn()
+  {
+    if (resInStream == null) throw IOErr("No input stream for response $resCode")
+    return resInStream
+  }
 
   **
   ** Return the entire response back as an in-memory string.
+  ** Convenience for 'resIn.readAllStr'.
   **
   Str resStr()
   {
-    // TODO: char encoding, chunked streams
-    in := socket.in
-    len := resHeader("Content-Length").toInt
-    str := StrBuf()
-    len.times |,| { str.addChar(in.readChar) }
-    return str.toStr
+    return resIn.readAllStr
+  }
+
+  **
+  ** Return the entire response back as an in-memory byte buffer.
+  ** Convenience for 'resIn.readAllBuf'.
+  **
+  Buf resBuf()
+  {
+    return resIn.readAllBuf
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -167,7 +186,48 @@ class WebClient
     }
     catch throw IOErr("Invalid HTTP response")
 
+    // if there is response content, then create wrap the raw socket
+    // input stream with the appropiate chunked input stream
+    resInStream = wrapInStream
+
+    // if we have a response content, then configure the char encoding
+    if (resInStream != null) resInStream.charset = configContentEncoding
+
     return this
+  }
+
+  **
+  ** Attempt to map the response headers to the appropiate type
+  ** of wrapper around the raw socket input stream.
+  **
+  private InStream? wrapInStream()
+  {
+    // check for fixed content length
+    len := resHeaders["Content-Length"]
+    if (len != null)
+      return ChunkInStream(socket.in, len.toInt)
+
+    // check for chunked transfer encoding
+    if (resHeaders.get("Transfer-Encoding", "").lower.contains("chunked"))
+      return ChunkInStream(socket.in)
+
+    // no content in response
+    return null
+  }
+
+  **
+  ** Map the "Content-Type" response header to the
+  ** appropiate charset or default to UTF-8.
+  **
+  private Charset configContentEncoding()
+  {
+    ct := resHeaders["Content-Type"]
+    if (ct != null)
+    {
+      cs := MimeType(ct).params["charset"]
+      if (cs != null) return Charset(cs)
+    }
+    return Charset.utf8
   }
 
   **
@@ -180,11 +240,13 @@ class WebClient
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Test
+// Fields
 //////////////////////////////////////////////////////////////////////////
 
   private static const Version ver10 := Version("1.0")
   private static const Version ver11 := Version("1.1")
   private static const Str:Str noHeaders := Str:Str[:]
+
+  private InStream? resInStream
 
 }

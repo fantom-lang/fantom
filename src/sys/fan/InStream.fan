@@ -32,7 +32,7 @@ class InStream
   ** handle reads by overriding the following methods: `read`,
   ** `readBuf`, and `unread`.
   **
-  protected new make(InStream out)
+  protected new make(InStream? out)
 
 //////////////////////////////////////////////////////////////////////////
 // Virtuals

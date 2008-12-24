@@ -108,3 +108,78 @@ class WebUtil
   internal const static Int maxTokenSize := 512
 
 }
+
+**************************************************************************
+** ChunkInStream
+**************************************************************************
+
+internal class ChunkInStream : InStream
+{
+  new make(InStream in, Int? fixed := null) : super(null)
+  {
+    this.in = in
+    this.isFixed  = (fixed != null)
+    this.chunkRem = (fixed != null) ? fixed : -1
+  }
+
+  override Int? read()
+  {
+    if (pushback != null && !pushback.isEmpty) return pushback.pop
+    if (!checkChunk) return null
+    chunkRem -= 1
+    return in.read
+  }
+
+  override Int? readBuf(Buf buf, Int n)
+  {
+    if (pushback != null && !pushback.isEmpty && n > 0)
+    {
+      buf.write(pushback.pop)
+      return 1
+    }
+    if (!checkChunk) return null
+    n = chunkRem.min(n)
+    chunkRem -= n
+    return in.readBuf(buf, n)
+  }
+
+  override This unread(Int b)
+  {
+    if (pushback == null) pushback = Int[,]
+    pushback.push(b)
+    return this
+  }
+
+  private Bool checkChunk()
+  {
+    try
+    {
+      // if we have bytes remaining in this chunk return true
+      if (chunkRem > 0) return true
+
+      // if this is a single fixed "chunk" we are at end of stream
+      if (isFixed) return false
+
+      // we expect \r\n unless this is first chunk
+      if (chunkRem != -1 && !in.readLine.isEmpty) throw Err()
+
+      // read the next chunk status line
+      line := in.readLine
+      semi := line.index(";")
+      if (semi != null) line = line[0..semi]
+      chunkRem = line.toInt(16)
+
+      // if we have more chunks keep chugging,
+      // otherwise read any trailing headers
+      if (chunkRem > 0) return true
+      WebUtil.parseHeaders(in)
+      return false
+    }
+    catch throw IOErr("Invalid format for HTTP chunked stream")
+  }
+
+  InStream in         // underlying input stream
+  Bool isFixed        // if non-null, then we're using as one fixed chunk
+  Int chunkRem        // remaining bytes in current chunk (-1 for first chunk)
+  Int[]? pushback     // stack for unread
+}
