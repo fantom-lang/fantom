@@ -76,12 +76,12 @@ internal const class WispThread : Thread
     }
     catch (Err e) return internalServerErr(req, res, e)
 
-    // flush request
-    try { res.out.flush } catch {}
+    // ensure response is committed and close the response
+    // output stream, but don't close the underlying socket
+    try { res.close } catch {}
 
     // return if using persistent connections
-    // TODO: need to do chunked out stream
-    return false
+    return isPersistent(req)
   }
 
   **

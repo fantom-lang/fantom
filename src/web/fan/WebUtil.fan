@@ -98,6 +98,54 @@ class WebUtil
   }
 
 //////////////////////////////////////////////////////////////////////////
+// IO
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Wrap the given input stream to read a fixed number of bytes.
+  ** Once 'fixed' bytes have been read from the underlying input
+  ** stream, the wrapped stream will return end-of-stream.  Closing
+  ** the wrapper stream does not close the underlying stream.
+  **
+  static InStream makeFixedInStream(InStream in, Int fixed)
+  {
+    return ChunkInStream(in, fixed)
+  }
+
+  **
+  ** Wrap the given input stream to read bytes using a HTTP
+  ** chunked transfer encoding.  The wrapped streams provides
+  ** a contiguous stream of bytes until the last chunk is read.
+  ** Closing the wrapper stream does not close the underlying stream.
+  **
+  static InStream makeChunkedInStream(InStream in)
+  {
+    return ChunkInStream(in, null)
+  }
+
+  **
+  ** Wrap the given output stream to write a fixed number of bytes.
+  ** Once 'fixed' bytes have been written, attempting to further
+  ** bytes will throw IOErr.  Closing the wrapper stream does not
+  ** close the underlying stream.
+  **
+  static OutStream makeFixedOutStream(OutStream out, Int fixed)
+  {
+    return FixedOutStream(out, fixed)
+  }
+
+  **
+  ** Wrap the given output stream to write bytes using a HTTP
+  ** chunked transfer encoding.  Closing the wrapper stream
+  ** terminates the chunking, but does not close the underlying
+  ** stream.
+  **
+  static OutStream makeChunkedOutStream(OutStream out)
+  {
+    return ChunkOutStream(out)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
@@ -175,11 +223,123 @@ internal class ChunkInStream : InStream
       WebUtil.parseHeaders(in)
       return false
     }
-    catch throw IOErr("Invalid format for HTTP chunked stream")
+    catch throw IOErr("Invalid format for HTTP chunked transfer encoding")
   }
 
   InStream in         // underlying input stream
   Bool isFixed        // if non-null, then we're using as one fixed chunk
   Int chunkRem        // remaining bytes in current chunk (-1 for first chunk)
   Int[]? pushback     // stack for unread
+}
+
+**************************************************************************
+** FixedOutStream
+**************************************************************************
+
+internal class FixedOutStream : OutStream
+{
+  new make(OutStream out, Int fixed) : super(null)
+  {
+    this.out = out
+    this.fixed = fixed
+  }
+
+  override This write(Int b)
+  {
+    checkChunk(1)
+    out.write(b)
+    return this
+  }
+
+  override This writeBuf(Buf buf, Int n := buf.remaining)
+  {
+    checkChunk(n)
+    out.writeBuf(buf, n)
+    return this
+  }
+
+  override This flush()
+  {
+    out.flush
+    return this
+  }
+
+  override Bool close()
+  {
+    try
+    {
+      this.flush
+      return true
+    }
+    catch (Err e) return false
+  }
+
+  private Void checkChunk(Int n)
+  {
+    written += n
+    if (written > fixed) throw IOErr("Attempt to write more than Content-Length: $fixed")
+  }
+
+  OutStream out      // underlying output stream
+  Int? fixed         // if non-null, then we're using as one fixed chunk
+  Int written        // number of bytes written in this chunk
+}
+
+**************************************************************************
+** ChunkOutStream
+**************************************************************************
+
+internal class ChunkOutStream : OutStream
+{
+  new make(OutStream out) : super(null)
+  {
+    this.out = out
+    this.buffer = Buf(1024)
+  }
+
+  override This write(Int b)
+  {
+    buffer.write(b)
+    checkChunk
+    return this
+  }
+
+  override This writeBuf(Buf buf, Int n := buf.remaining)
+  {
+    buffer.writeBuf(buf, n)
+    checkChunk
+    return this
+  }
+
+  override This flush()
+  {
+    if (buffer.size > 0)
+    {
+      out.print(buffer.size.toHex).print("\r\n")
+      out.writeBuf(buffer.flip, buffer.remaining)
+      out.print("\r\n").flush
+      buffer.clear
+    }
+    return this
+  }
+
+  override Bool close()
+  {
+    try
+    {
+      this.flush
+      out.print("0\r\n\r\n").flush
+      return true
+    }
+    catch return false
+  }
+
+  private Void checkChunk()
+  {
+    if (buffer.size >= 10) flush
+  }
+
+  OutStream out    // underlying output stream
+  Buf? buffer      // buffer for bytes
+
 }

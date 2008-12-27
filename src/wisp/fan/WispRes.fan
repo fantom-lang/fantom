@@ -22,7 +22,7 @@ class WispRes : WebRes
   new make(WispService service, TcpSocket socket)
   {
     this.service = service
-    @out = WebOutStream(socket.out)
+    this.socket  = socket
     headers.caseInsensitive = true
   }
 
@@ -82,15 +82,19 @@ class WispRes : WebRes
   ** Return the WebOutStream for this response.  The first time this
   ** method is accessed the response is committed: all headers
   ** currently set will be written to the stream, and can no longer
-  ** be modified.
+  ** be modified.  If the "Content-Length" header defines a fixed
+  ** number of bytes, then attemps to write too many bytes will throw
+  ** an IOErr.  If "Content-Length" is not defined, then a chunked
+  ** transfer encoding is automatically used.
   **
-  override WebOutStream out
+  override WebOutStream out()
   {
-    get
-    {
-      commit
-      return @out
-    }
+    // if we are grabbing a stream to write response content, then
+    // ensure we are committed with content; it is an illegal state
+    // if another code path committed with no-content
+    commit(true)
+    if (webOut == null) throw Err("Attempt to access WebRes.out after no-content commit")
+    return webOut
   }
 
   **
@@ -104,7 +108,7 @@ class WispRes : WebRes
     this.statusCode = statusCode
     headers["Location"] = uri.encode
     headers["Content-Length"] = "0"
-    commit
+    commit(false)
     done
   }
 
@@ -116,18 +120,24 @@ class WispRes : WebRes
   **
   override Void sendError(Int statusCode, Str? msg := null)
   {
+    // write message to buffer
+    buf := Buf()
+    WebOutStream bufOut := WebOutStream(buf.out)
+    bufOut.docType
+    bufOut.html
+    bufOut.head.title("$statusCode ${statusMsg[statusCode]}").headEnd
+    bufOut.body
+    bufOut.h1(statusMsg[statusCode])
+    if (msg != null) bufOut.w(msg).nl
+    bufOut.bodyEnd
+    bufOut.htmlEnd
+
+    // write response
     checkUncommitted
     this.statusCode = statusCode
-    headers["Content-Type"] = "text/html"
-
-    out.docType
-    out.html
-    out.head.title("$statusCode ${statusMsg[statusCode]}").headEnd
-    out.body
-    out.h1(statusMsg[statusCode])
-    if (msg != null) out.w(msg).nl
-    out.bodyEnd
-    out.htmlEnd
+    headers["Content-Type"] = "text/html; charset=UTF-8"
+    headers["Content-Length"] = buf.size.toStr
+    this.out.writeBuf(buf.flip)
     done
   }
 
@@ -150,22 +160,63 @@ class WispRes : WebRes
   **
   ** If the response has already been committed, then throw an Err.
   **
-  Void checkUncommitted()
+  internal Void checkUncommitted()
   {
     if (isCommitted) throw Err("WebRes already committed")
   }
 
   **
   ** If we haven't committed yet, then write the response header.
+  ** The content flag specifies whether this response will have a
+  ** content body in the response.
   **
-  Void commit()
+  internal Void commit(Bool content)
   {
+    // check if committed
     if (isCommitted) return
     isCommitted = true
-    @out.w("HTTP/1.1 ").w(statusCode).w(" ").w(statusMsg[statusCode]).w("\r\n")
-    @headers.each |Str v, Str k| { @out.w(k).w(": ").w(v).w("\r\n") }
-    @cookies.each |Cookie c| { @out.w("Set-Cookie: ").w(c).w("\r\n") }
-    @out.w("\r\n")
+
+    // if we have content then we need to ensure we have our
+    // headers and response stream are setup correctly
+    sout := socket.out
+    if (content)
+    {
+      // check if a fixed content length was specified, if not
+      // then automatically use a chunked content encoding
+      fixed := @headers["Content-Length"]?.toInt
+      if (fixed == null) @headers["Transfer-Encoding"] = "chunked"
+
+      // if we have content, then create the appropriate wrapper based
+      // on whether we are using a fixed content length or a chunked stream
+      if (fixed != null)
+        webOut = WebOutStream(WebUtil.makeFixedOutStream(sout, fixed))
+      else
+        webOut = WebOutStream(WebUtil.makeChunkedOutStream(sout))
+    }
+
+    // write response line and headers
+    sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(statusMsg[statusCode]).print("\r\n")
+    @headers.each |Str v, Str k| { sout.print(k).print(": ").print(v).print("\r\n") }
+    @cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
+    sout.print("\r\n").flush
   }
+
+  **
+  ** This method is called to close down the response.  We ensure the
+  ** response is committed and if we have a response output stream we
+  ** close it to flush the content body.
+  **
+  internal Void close()
+  {
+    commit(false)
+    if (webOut != null) webOut.close
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  internal TcpSocket socket
+  internal WebOutStream? webOut
 
 }
