@@ -31,7 +31,7 @@ internal const class WispThread : Thread
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Process a HTTP request and response.
+  ** Process a series of HTTP request and response on a socket.
   **
   override Obj? run()
   {
@@ -41,95 +41,117 @@ internal const class WispThread : Thread
       // the client fails to send us data in a timely fashion
       socket.options.receiveTimeout = 10sec
 
-      // make request, response
-      req := WispReq(service, socket)
-      res := WispRes(service, socket)
-
-      // process request
-      try
-      {
-        parseReq(req)
-        initRes(req, res)
-        service.service(req, res)
-      }
-      catch (Err e)
-      {
-        internalServerErr(req, res, e)
-      }
-
-      try { res.out.flush } catch {}
-      return null
+      // loop processing requests with on this socket as
+      // long as a persistent connection is being used and
+      // we don't have any errors
+      while (process) {}
     }
-    finally
+    catch (Err e) { e.trace }
+    finally { try { socket.close } catch {} }
+    return null
+  }
+
+  **
+  ** Process a single HTTP request/response.  Return true if the request
+  ** was processed successfully and that a persistent connection is being
+  ** used. Return false on error or if the socket should be shutdown.
+  **
+  Bool process()
+  {
+    // allocate request, response
+    req := WispReq(service, socket)
+    res := WispRes(service, socket)
+
+    // parse request line
+    if (!parseReqLine(req)) return badReqErr
+
+    // parse headers
+    if (!parseReqHeaders(req)) return badReqErr
+
+    // service request
+    try
     {
-      try { socket.close } catch {}
+      initRes(req, res)
+      service.service(req, res)
     }
+    catch (Err e) return internalServerErr(req, res, e)
+
+    // flush request
+    try { res.out.flush } catch {}
+
+    // return if using persistent connections
+    // TODO: need to do chunked out stream
+    return false
+  }
+
+  **
+  ** Return if the request indicates use of persistent connections.
+  ** If using 1.0 or if the connection header is not "close" then we
+  ** assume persistent connections.
+  **
+  Bool isPersistent(WispReq req)
+  {
+    return req.headers.get("Connection", "").lower != "close" ||
+           req.version.minor == 0
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Parsing
+// Request
 //////////////////////////////////////////////////////////////////////////
 
   **
   ** Parse the first request line.
+  ** Return true on success, false on failure.
   **
-  static Void parseReq(WispReq req)
+  internal static Bool parseReqLine(WispReq req)
   {
-    parseReqLine(req)
-    parseReqHeaders(req)
-  }
+    try
+    {
+      // skip leading CRLF (4.1)
+      line := req.in.readLine
+      if (line == null) return false
+      while (line.isEmpty)
+      {
+        line = req.in.readLine
+        if (line == null) return false
+      }
 
-  **
-  ** Parse the first request line.
-  **
-  private static Void parseReqLine(WispReq req)
-  {
-    in := req.in
+      // parse request-line (5.1)
+      toks   := line.split
+      method := toks[0]
+      uri    := toks[1]
+      ver    := toks[2]
 
-    // skip leading CRLF (4.1)
-    while (in.peek == '\r')
-      in.skip(2) // CRLF
+      // method
+      req.method = method.upper
 
-    // parse request-line (5.1)
-    method := in.readStrToken(64)
-    in.read  // SP
-    uri := in.readStrToken(512)
-    in.read  // SP
-    ver := in.readStrToken(16)
-    in.read  // CR
-    in.read  // LF
+      // uri; immediately reject any uri which starts with ..
+      req.uri = Uri.decode(uri)
+      if (req.uri.path.first == "..") return false
 
-    // map into the WispReq data structures
-    req.method = method.upper
-    try { req.uri = Uri.decode(uri) } catch (Err e) { throw badReq("Invalid uri '$uri: $e") }
-    if (!ver.startsWith("HTTP/")) throw badReq("Invalid HTTP version '$ver'")
-    try { req.version = Version.fromStr(ver[5..-1]) } catch { throw badReq("Invalid HTTP version '$ver'") }
+      // version
+      if (ver == "HTTP/1.1") req.version = ver11
+      else if (ver == "HTTP/1.0") req.version = ver10
+      else return false
 
-    // immediately reject any uri which starts with ..
-    if (req.uri.path.first == "..") throw badReq("Invalid .. in URI: '$uri'")
+      // success
+      return true
+    }
+    catch return false
   }
 
   **
   ** Parse the request headers according to (4.2)
+  ** Return true on success, false on failure.
   **
-  private static Void parseReqHeaders(WispReq req)
+  internal static Bool parseReqHeaders(WispReq req)
   {
     try
     {
       req.headers = WebUtil.parseHeaders(req.in).ro
+      return true
     }
-    catch (Err e)
-    {
-      throw badReq("Invalid HTTP headers: $e")
-    }
-  }
-
-  **
-  ** Return an error during request parsing.
-  **
-  private static BadReqErr badReq(Str msg, Err? cause := null)
-  {
-    return BadReqErr(msg, cause)
+    catch return false
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -143,7 +165,7 @@ internal const class WispThread : Thread
   {
     res.headers["Server"] = "Wisp/" + type.pod.version
     res.headers["Date"] = DateTime.now.toHttpStr
-    res.headers["Connection"] = "Close"
+    res.headers["Connection"] = "keep-alive"
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -151,36 +173,51 @@ internal const class WispThread : Thread
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Process an internal error.
+  ** Send back 400 bad request response.  Return false.
   **
-  private Void internalServerErr(WebReq req, WebRes res, Err err)
+  private Bool badReqErr()
   {
-    // dump to standard out
-    echo("ERROR: $req.uri")
-    err.trace
-
-    // if not committed yet, then return 400 if bad
-    // client request or 500 if server error
-    if (!res.isCommitted)
+    try
     {
-      res.statusCode = err is BadReqErr ? 400 : 500
-      res.headers.clear
-      res.headers["Content-Type"] = "text/plain"
-      res.out.print("ERROR: $req.uri\n")
-      err.trace(res.out)
+      socket.out.print("HTTP/1.1 400 Bad Request\r\n\r\n").flush
     }
+    catch {}
+    return false
+  }
+
+  **
+  ** Send back 500 Internal server error.  Return false.
+  **
+  private Bool internalServerErr(WebReq req, WebRes res, Err err)
+  {
+    try
+    {
+      // dump to standard out
+      echo("ERROR: $req.uri")
+      err.trace
+
+      // if not committed yet, then return 400 if bad
+      // client request or 500 if server error
+      if (!res.isCommitted)
+      {
+        res.statusCode = 500
+        res.headers.clear
+        res.headers["Content-Type"] = "text/plain"
+        res.out.print("ERROR: $req.uri\n")
+        err.trace(res.out)
+      }
+    }
+    catch {}
+    return false
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  static const Version ver10 := Version("1.0")
+  static const Version ver11 := Version("1.1")
+
   const WispService service
   const TcpSocket socket
-}
-
-** Used to indicate an error parsing the request
-internal const class BadReqErr : Err
-{
-  new make(Str msg, Err? cause := null) : super(msg, cause) {}
 }
