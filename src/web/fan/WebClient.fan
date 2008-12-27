@@ -205,11 +205,11 @@ class WebClient
     // check for fixed content length
     len := resHeaders["Content-Length"]
     if (len != null)
-      return ChunkInStream(socket.in, len.toInt)
+      return WebUtil.makeFixedInStream(socket.in, len.toInt)
 
     // check for chunked transfer encoding
     if (resHeaders.get("Transfer-Encoding", "").lower.contains("chunked"))
-      return ChunkInStream(socket.in)
+      return WebUtil.makeChunkedInStream(socket.in)
 
     // no content in response
     return null

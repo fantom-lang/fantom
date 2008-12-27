@@ -59,7 +59,10 @@ abstract class WebRes
   ** Return the WebOutStream for this response.  The first time this
   ** method is accessed the response is committed: all headers
   ** currently set will be written to the stream, and can no longer
-  ** be modified.
+  ** be modified.  If the "Content-Length" header defines a fixed
+  ** number of bytes, then attemps to write too many bytes will throw
+  ** an IOErr.  If "Content-Length" is not defined, then a chunked
+  ** transfer encoding is automatically used.
   **
   abstract WebOutStream out()
 
