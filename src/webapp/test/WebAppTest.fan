@@ -18,12 +18,7 @@ internal class TestWebReq : WebReq
   override Int remotePort
   override Str:Str headers
   override Uri uri
-  override Str:Obj stash := Str:Obj[:]
   override InStream in
-  override Uri absUri
-  override UserAgent? userAgent
-  override Str:Str cookies
-  override [Str:Str]? form
 }
 
 internal class TestWebRes : WebRes
