@@ -65,7 +65,12 @@ abstract class WebReq
   **   http://www.foo.com/a/b/c
   **   http://www.foo.com/a?q=bar
   **
-  abstract Uri absUri()
+  virtual once Uri absUri()
+  {
+    host := headers["Host"]
+    if (host == null) throw Err("Missing Host header")
+    return ("http://" + host + "/").toUri + uri
+  }
 
   **
   ** Map of HTTP request headers.  The headers map is readonly
@@ -80,14 +85,32 @@ abstract class WebReq
   ** Map of cookie values keyed by cookie name.  The
   ** cookies map is readonly and case sensitive.
   **
-  abstract Str:Str cookies()
+  virtual once Str:Str cookies()
+  {
+    cookies := Str:Str[:]
+    try
+    {
+      header := headers["Cookie"]
+      if (header != null)
+      {
+        header.split(';', false).each |Str s|
+        {
+          if (s.isEmpty || s[0] == '$') return
+          c := Cookie.fromStr(s)
+          cookies[c.name] = c.value
+        }
+      }
+    }
+    catch (Err e) e.trace
+    return cookies.ro
+  }
 
   **
   ** Get the session associated with this browser "connection".
   ** The session must be accessed the first time before the
   ** response is committed.
   **
-  once WebSession session()
+  virtual once WebSession session()
   {
     return service.sessionMgr.load(this)
   }
@@ -96,7 +119,16 @@ abstract class WebReq
   ** The UserAgent for this request or null if the
   ** "User-Agent" header was not specified in the request.
   **
-  abstract UserAgent? userAgent()
+  virtual once UserAgent? userAgent()
+  {
+    try
+    {
+      h := headers["User-Agent"]
+      if (h != null) return UserAgent.fromStr(h)
+    }
+    catch (Err e) e.trace
+    return null
+  }
 
   **
   ** Get the key/value pairs of the form data.  If the request
@@ -106,7 +138,17 @@ abstract class WebReq
   ** type is not "application/x-www-form-urlencoded" this method
   ** returns null.
   **
-  abstract [Str:Str]? form()
+  virtual once [Str:Str]? form()
+  {
+    ct := headers.get("Content-Type", "").lower
+    if (ct.startsWith("application/x-www-form-urlencoded"))
+    {
+      len := headers["Content-Length"]
+      if (len == null) throw IOErr("Missing Content-Length header")
+      return Uri.decodeQuery(in.readLine(len.toInt))
+    }
+    return null
+  }
 
   **
   ** The InStream for this request.
@@ -118,7 +160,7 @@ abstract class WebReq
   ** in order to pass data b/w Weblets while processing
   ** this request.
   **
-  abstract Str:Obj stash()
+  Str:Obj? stash := Str:Obj?[:]
 
   **
   ** The namespace object resolved by `uri`.
