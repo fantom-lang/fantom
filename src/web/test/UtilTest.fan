@@ -50,11 +50,11 @@ class UtilTest : Test
     str := "3\r\nxyz\r\nB\r\nhello there\r\n0\r\n\r\n"
 
     // readAllStr
-    in := ChunkInStream(InStream.makeForStr(str))
+    in := WebUtil.makeChunkedInStream(InStream.makeForStr(str))
     verifyEq(in.readAllStr, "xyzhello there")
 
     // readBuf chunks
-    in = ChunkInStream(InStream.makeForStr(str))
+    in = WebUtil.makeChunkedInStream(InStream.makeForStr(str))
     buf := Buf()
     verifyEq(in.readBuf(buf.clear, 20), 3)
     verifyEq(buf.flip.readAllStr, "xyz")
@@ -63,13 +63,13 @@ class UtilTest : Test
     verifyEq(in.readBuf(buf.clear, 20), null)
 
     // readBufFully
-    in = ChunkInStream(InStream.makeForStr(str))
+    in = WebUtil.makeChunkedInStream(InStream.makeForStr(str))
     in.readBufFully(buf.clear, 14)
     verifyEq(buf.readAllStr, "xyzhello there")
     verifyEq(in.read, null)
 
     // unread
-    in = ChunkInStream(InStream.makeForStr(str))
+    in = WebUtil.makeChunkedInStream(InStream.makeForStr(str))
     verifyEq(in.read, 'x')
     verifyEq(in.read, 'y')
     in.unread('?')
@@ -79,8 +79,36 @@ class UtilTest : Test
     verifyEq(buf.readAllStr, "12zhello there")
 
     // fixed chunked stream
-    in = ChunkInStream(InStream.makeForStr("abcdefgh"), 3)
+    in = WebUtil.makeFixedInStream(InStream.makeForStr("abcdefgh"), 3)
     verifyEq(in.readAllStr, "abc")
+  }
+
+  Void testFixedOutStream()
+  {
+    buf := Buf()
+    out := WebUtil.makeFixedOutStream(buf.out, 4)
+    out.print("abcd")
+    verifyErr(IOErr#) |,| { out.write('x') }
+    verifyEq(buf.flip.readAllStr, "abcd")
+
+    buf2 := Buf()
+    buf.seek(0)
+    out = WebUtil.makeFixedOutStream(buf2.out, 2)
+    out.writeBuf(buf, 2)
+    verifyErr(IOErr#) |,| { out.writeBuf(buf, 1) }
+    verifyEq(buf2.flip.readAllStr, "ab")
+  }
+
+  Void testChunkOutStream()
+  {
+    buf := Buf()
+    out := WebUtil.makeChunkedOutStream(buf.out)
+    2000.times |Int i| { out.printLine(i) }
+    out.close
+
+    in := WebUtil.makeChunkedInStream(buf.flip.in)
+    2000.times |Int i| { verifyEq(in.readLine, i.toStr) }
+    verifyEq(in.read, null)
   }
 
 }
