@@ -62,7 +62,8 @@ sys_Type.typeMap = Array();
 sys_Type.toFanType = function(obj)
 {
   if ((typeof obj) == "boolean") return sys_Type.find("sys::Bool");
-  if ((typeof obj) == "number")  return sys_Type.find("sys::Int");
+  //if ((typeof obj) == "number")  return sys_Type.find("sys::Int");
+  if ((typeof obj) == "number")  return sys_Type.find("sys::Float");
   if ((typeof obj) == "string")  return sys_Type.find("sys::Str");
   throw new sys_Err("Not a Fan type: " + obj);
 }
@@ -72,5 +73,6 @@ sys_Type.toFanType = function(obj)
 //////////////////////////////////////////////////////////////////////////
 
 sys_Type.addType("sys::Bool");
+sys_Type.addType("sys::Float");
 sys_Type.addType("sys::Int");
 sys_Type.addType("sys::Str");

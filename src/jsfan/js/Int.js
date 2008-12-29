@@ -39,7 +39,7 @@ sys_Int.fromStr = function(s, radix, checked)
   if (isNaN(num))
   {
     if (checked != null && !checked) return null;
-    throw ParseErr.make("Int", s).val;
+    throw new ParseErr("Int", s);
   }
   return num;
 }
