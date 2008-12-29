@@ -263,14 +263,17 @@ class JavascriptWriter : CompilerSupport
     // normal case
     if (ce.target != null)
     {
-      if (ce.target is LiteralExpr ||
-         (ce.target.id == ExprId.localVar && isPrimitive(ce.target.ctype.toStr)) ||
-         (ce.target.id == ExprId.field && ce.target.toStr.startsWith("\$cvars") &&
-            isPrimitive(ce.target.ctype.toStr)))
+      if (isPrimitive(ce.target.ctype.toStr) || ce.target is TypeCheckExpr)
       {
-        out.w("${qname(ce.target.ctype)}.$ce.name(")
-        expr(ce.target)
-        ce.args.each |Expr arg, Int i| { out.w(","); expr(arg) }
+        ctype := ce.target.ctype
+        if (ce.target is TypeCheckExpr) ctype = ce.target->check
+        out.w("${qname(ctype)}.$ce.name(")
+        if (!ce.method.isStatic)
+        {
+          expr(ce.target)
+          if (ce.args.size > 0) out.w(",")
+        }
+        ce.args.each |Expr arg, Int i| { if (i > 0) out.w(","); expr(arg) }
         out.w(")")
         return
       }
@@ -309,7 +312,7 @@ class JavascriptWriter : CompilerSupport
         else { out.w("--"); expr(lhs) }
         return
       }
-      if (se.op.degree == 1) { out.w(" $se.opToken "); expr(lhs); return }
+      if (se.op.degree == 1) { out.w(se.opToken); expr(lhs); return }
       if (se.op.degree == 2) { expr(lhs); out.w(" $se.opToken "); expr(rhs); return }
     }
 
@@ -391,12 +394,14 @@ class JavascriptWriter : CompilerSupport
   Bool isPrimitive(Str qname) { return primitiveMap.get(qname, false) }
   const Str:Bool primitiveMap :=
   [
-    "sys::Bool":  true,
-    "sys::Bool?": true,
-    "sys::Int":   true,
-    "sys::Int?":  true,
-    "sys::Str":   true,
-    "sys::Str?":  true,
+    "sys::Bool":   true,
+    "sys::Bool?":  true,
+    "sys::Float":  true,
+    "sys::Float?": true,
+    "sys::Int":    true,
+    "sys::Int?":   true,
+    "sys::Str":    true,
+    "sys::Str?":   true,
   ]
 
   Bool isObjMethod(Str methodName) { return objMethodMap.get(methodName, false) }

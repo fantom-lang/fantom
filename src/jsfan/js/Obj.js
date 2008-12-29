@@ -54,6 +54,8 @@ sys_Obj.equals = function(self, that)
 {
   if (self instanceof sys_Obj)
     return self.equals(that);
+  else if ((typeof self) == "number")
+    return sys_Float.equals(self, that);
   else
     return self == that;
 }
@@ -62,6 +64,8 @@ sys_Obj.compare = function(self, that)
 {
   if (self instanceof sys_Obj)
     return self.compare(that);
+  else if ((typeof self) == "number")
+    return sys_Float.compare(self, that);
   else
   {
     if (self == null)
@@ -91,7 +95,9 @@ sys_Obj.is = function(obj, type)
     if ((typeof obj) == "number")
     {
       if (type === sys_Obj) return true;
-      if (type === sys_Int) return true;
+      if (type === sys_Num) return true;
+      //if (type === sys_Int) return true;
+      if (type === sys_Float) return true;
       return false;
     }
     throw new sys_Err("Not a Fan type: " + obj);
