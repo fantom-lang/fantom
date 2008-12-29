@@ -22,7 +22,7 @@ class TestWeblet : Weblet
     res.out.printLine("headers:")
     req.headers.each |Str v, Str k| { res.out.printLine("  $k: $v") }
     res.out.printLine("session:   $req.session.id")
-    req.session.map.each |Obj v, Str k| { res.out.printLine("  $k: $v") }
+    req.session.map.each |Obj? v, Str k| { res.out.printLine("  $k: $v") }
     res.out.printLine("</pre>")
     res.out.printLine("Back up to <a href='/dir/index.html'>/dir/index.html</a>.</p>")
 

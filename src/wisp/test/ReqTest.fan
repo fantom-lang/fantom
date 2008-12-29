@@ -42,7 +42,8 @@ class ReqTest : Test
   Void verifyReq(Str s, Str method, Uri uri, Str:Str headers)
   {
     req := WispReq.makeTest(InStream.makeForStr(s))
-    WispThread.parseReq(req)
+    WispThread.parseReqLine(req)
+    WispThread.parseReqHeaders(req)
     verifyEq(req.method,  method)
     verifyEq(req.uri,     uri)
     verifyEq(req.headers, headers)
@@ -53,7 +54,7 @@ class ReqTest : Test
   {
     uri := Sys.args.first.toUri
     socket := TcpSocket.make
-    socket.connect(IpAddress(uri.host), 80)
+    socket.connect(IpAddress(uri.host), uri.port)
     socket.out.print("GET $uri.pathStr HTTP/1.1\r\n")
     socket.out.print("Host: $uri.host\r\n")
     socket.out.print("\r\n")
