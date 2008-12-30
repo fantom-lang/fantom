@@ -497,6 +497,7 @@
 - New web::WebClient API
 - Wisp support for chunked transfers and persistent connections
 - New sys::Unit API
+- New sys::Uuid API
 - Flux enhancements for goto into, find, find in files
 - Protection checks to prevent internal types being used in public APIs
 - TODO: fix up JavaBridge with new compiler APIs
