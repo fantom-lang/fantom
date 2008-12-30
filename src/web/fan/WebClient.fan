@@ -56,6 +56,21 @@ class WebClient
   **
   Str:Str reqHeaders := Str:Str[:] { caseInsensitive = true }
 
+  **
+  ** Get the output stream used to write the request body.  This
+  ** stream is only available if the request headers included a
+  ** "Content-Type" header.  If an explicit "Content-Length" was
+  ** specified then this is a fixed length output stream, otherwise
+  ** the request is automatically configured to use a chunked
+  ** transfer encoding.  This stream should be closed once the
+  ** content has been fully written.
+  **
+  OutStream reqOut()
+  {
+    if (reqOutStream == null) throw IOErr("No output stream for request")
+    return reqOutStream
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Response
 //////////////////////////////////////////////////////////////////////////
@@ -104,6 +119,8 @@ class WebClient
   ** the correct character encoding if one is specified in the
   ** "Content-Type" response header.
   **
+  ** Also see convenience methods: `resStr` and `resBuf`.
+  **
   InStream resIn()
   {
     if (resInStream == null) throw IOErr("No input stream for response $resCode")
@@ -143,19 +160,52 @@ class WebClient
   private TcpSocket socket := TcpSocket()
 
 //////////////////////////////////////////////////////////////////////////
-// Get
+// Post
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Open the HTTP request - TODO.  Throw IOErr if there is a network or
-  ** protocol error.  Return this.
+  ** Make a post request to the URI with the given form data.
+  ** Set the Content-Type to application/x-www-form-urlencoded.
+  ** Upon completion the response is ready to be read.
   **
-  WebClient open()
+  This postForm(Str:Str form)
+  {
+    body := Uri.encodeQuery(form)
+    reqHeaders["Content-Type"] = "application/x-www-form-urlencoded"
+    reqHeaders["Content-Length"] = body.size.toStr // encoded form is ASCII
+    writeReq
+    reqOut.print(body).close
+    readRes
+    return this
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Service
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Write the request line and request headers.  Once this method
+  ** completes the request body may be written via `reqOut`, or the
+  ** response may be immediately read via `readRes`.  Throw IOErr
+  ** if there is a network or protocol error.  Return this.
+  **
+  This writeReq()
   {
     // sanity checks
     if (!reqUri.isAbs) throw Err("reqUri is not absolute: `$reqUri`")
     if (!reqHeaders.caseInsensitive) throw Err("reqHeaders must be case insensitive")
     if (reqHeaders.containsKey("Host")) throw Err("reqHeaders must not define 'Host'")
+
+    // if we have a content-type but not content-length assume chunked transfer
+    body := false
+    Int? fixed := null
+    if (reqHeaders.containsKey("Content-Type"))
+    {
+      body = true
+      fixed = reqHeaders["Content-Length"]?.toInt
+      if (fixed == null)
+        reqHeaders["Transfer-Encoding"] = "chunked"
+    }
 
     // connect to the host:port
     socket.connect(IpAddress(reqUri.host), reqUri.port ?: 80)
@@ -169,6 +219,29 @@ class WebClient
     out.print("\r\n")
     out.flush
 
+    // if we have a request body create appropiate output stream wrapper
+    reqOutStream = null
+    if (body)
+    {
+      if (fixed != null)
+        reqOutStream = WebUtil.makeFixedOutStream(out, fixed)
+      else
+        reqOutStream = WebUtil.makeChunkedOutStream(out)
+    }
+
+    return this
+  }
+
+  **
+  ** Read the response status line and response headers.  This method
+  ** may be called after the request has been written via `writeReq`
+  ** and `reqOut`.  Once this method completes the response status and
+  ** headers are available.  If there is a response body, it is available
+  ** for reading via `resIn`.  Throw IOErr if there is a network or
+  ** protocol error.  Return this.
+  **
+  This readRes()
+  {
     // read response
     in := socket.in
     try
@@ -248,5 +321,6 @@ class WebClient
   private static const Str:Str noHeaders := Str:Str[:]
 
   private InStream? resInStream
+  private OutStream? reqOutStream
 
 }
