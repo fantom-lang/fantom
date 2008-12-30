@@ -11,11 +11,9 @@ Overview [#overview]
 The [web]`web::index` pod defines the standard APIs used to handle
 both client and server side HTTP requests.
 
-TODO: Client side HTTP requests aren't implemented yet, but will
-be organized into two primary classes:
+Client side HTTP requests:
 
-  - 'WebClient': handles the HTTP client side protocol
-  - 'WebFile': models a client side HTTP 'sys::File'
+  - [WebClient]`web::WebClient`: manages client side of the HTTP protocol
 
 Server side web APIs are organized into the primary classes:
 
@@ -27,6 +25,24 @@ Server side web APIs are organized into the primary classes:
     such as the status code, response headers, and output stream.
   - [WebService]`web::WebService`: base class for the HTTP server
     implementations and used to configure the web pipeline.
+
+WebClient [#webClient]
+**********************
+The 'WebClient' class is used to manage client side HTTP requests
+and responses.  The basic lifecycle of WebClient:
+  1. configure request fields such as 'reqUri', 'reqMethod', and 'reqHeaders'
+  2. send request headers via 'writeReq'
+  3. optionally write request body via 'reqOut'
+  4. read response status and headers via 'readRes'
+  5. process response fields such as 'resCode' and 'resHeaders'
+  6. optionally read response body via 'resIn'
+
+Using the low level methods 'writeReq' and 'readRes' enables HTTP
+pipelining (multiple requests and responses on the same TCP socket
+connection).  There are also a series of convenience methods which
+make common cases easier.
+
+See [docCookbook::Web]`docCookbook::Web#webClient` for example code.
 
 Weblets [#weblet]
 *****************
@@ -148,6 +164,4 @@ configured on the const WebService.  The web pod itself is a low
 layer API and doesn't define any WebSteps itself.  The [webapp]`WebApp`
 pod is layered above the web pod and defines a whole mini-framework
 of steps you can use.
-
-
 

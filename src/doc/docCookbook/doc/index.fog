@@ -13,6 +13,6 @@
   [`Files`,      "sample code for sys::File"],
   [`Reflection`, "sample code for pod, type, and slot reflection"],
   [`Logging`,    "sample code for sys::Log"],
+  [`Web`,        "sample code for web client and web server APIs"],
   [`Email`,      "sample code for email pod"],
 ]
-
