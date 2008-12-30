@@ -8,7 +8,6 @@
 package fan.sys;
 
 import java.io.*;
-import sun.nio.cs.StreamEncoder;
 
 /**
  * StrBufOutStream
