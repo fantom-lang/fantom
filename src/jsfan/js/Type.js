@@ -33,6 +33,11 @@ var sys_Type = sys_Obj.extend(
     return sys_Type.find("sys::Type");
   },
 
+  toString: function()
+  {
+    return this.qname;
+  }
+
 });
 
 //////////////////////////////////////////////////////////////////////////

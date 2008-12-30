@@ -42,11 +42,13 @@ class JavascriptWriter : CompilerSupport
     if (typeDef.isClosure) return
     if (typeDef.qname.contains(r"$Cvars")) return
 
-    name := qname(typeDef)
-    base := qname(typeDef.base)
-    out.w("var $name = ${base}.extend(").nl
+    fname := typeDef.qname
+    jname := qname(typeDef)
+    jbase := qname(typeDef.base)
+    out.w("var $jname = ${jbase}.extend(").nl
     out.w("{").nl
-    out.w("  init: function() {},").nl
+    out.w("  \$ctor: function() { sys_Type.addType(\"$fname\"); },").nl
+    out.w("  type: function() { return sys_Type.find(\"$fname\"); },").nl
     out.indent
     typeDef.methodDefs.each |MethodDef m| { method(m) }
     typeDef.fieldDefs.each |FieldDef f| { field(f) }
@@ -117,8 +119,8 @@ class JavascriptWriter : CompilerSupport
       case StmtId.nop:          return
       case StmtId.expr:         exprStmt(stmt->expr)
       case StmtId.localDef:     out.w("var "); expr(stmt->init); out.w(";"); if (nl) out.nl
-      //case StmtId.ifStmt:       return
-      case StmtId.returnStmt:   out.w("return;"); if (nl) out.nl
+      case StmtId.ifStmt:       ifStmt(stmt)
+      case StmtId.returnStmt:   returnStmt(stmt); if (nl) out.nl
       //case StmtId.throwStmt:    return
       case StmtId.forStmt:      forStmt(stmt)
       //case StmtId.whileStmt:    return
@@ -132,23 +134,28 @@ class JavascriptWriter : CompilerSupport
 
   Void exprStmt(Expr ex)
   {
-    // use cvar def as hook to create local this ptr
-    /*
-    if (ex.toStr.startsWith(r"($cvars ="))
-    {
-      if (!inClosure)
-        out.w("var \$this = this;").nl
-    }
-    else
-    {
-      expr(ex)
-      out.w(";").nl
-    }
-    */
     if (!ex.toStr.startsWith(r"($cvars ="))
     {
       expr(ex)
       out.w(";").nl
+    }
+  }
+
+  Void returnStmt(ReturnStmt rs)
+  {
+    out.w("return")
+    if (rs.expr != null) { out.w(" "); expr(rs.expr) }
+    out.w(";")
+  }
+
+  Void ifStmt(IfStmt fs)
+  {
+    out.w("if ("); expr(fs.condition); out.w(")").nl
+    block(fs.trueBlock)
+    if (fs.falseBlock != null)
+    {
+      out.w("else").nl
+      block(fs.falseBlock)
     }
   }
 
@@ -178,12 +185,12 @@ class JavascriptWriter : CompilerSupport
       case ExprId.intLiteral:   out.w(ex)
       case ExprId.floatLiteral: out.w(ex)
       //case ExprId.decimalLiteral
-      case ExprId.strLiteral:   out.w("\"").w(ex.toStr.toCode('\"', true)[3..-4]).w("\"")
+      case ExprId.strLiteral:   out.w("\"").w(ex->val.toStr.toCode('\"', true)[1..-2]).w("\"")
       //case ExprId.durationLiteral
       //case ExprId.uriLiteral
       case ExprId.typeLiteral:  out.w("sys_Type.find(\"${ex->val->signature}\")")
       //case ExprId.slotLiteral
-      //case ExprId.rangeLiteral
+      case ExprId.rangeLiteral: rangeLiteralExpr(ex)
       case ExprId.listLiteral:  listLiteralExpr(ex)
       //case ExprId.mapLiteral
       case ExprId.boolNot:      out.w("!"); expr(ex->operand)
@@ -192,7 +199,7 @@ class JavascriptWriter : CompilerSupport
       //case ExprId.elvis
       case ExprId.assign:       expr(ex->lhs); out.w(" = "); expr(ex->rhs)
       case ExprId.same:         expr(ex->lhs); out.w(" === "); expr(ex->rhs)
-      //case ExprId.notSame
+      case ExprId.notSame:      out.w("!("); expr(ex->lhs); out.w(" === "); expr(ex->rhs); out.w(")")
       case ExprId.boolOr:       condExpr(ex)
       case ExprId.boolAnd:      condExpr(ex)
       case ExprId.isExpr:       typeCheckExpr(ex)
@@ -217,6 +224,16 @@ class JavascriptWriter : CompilerSupport
       case ExprId.closure:      closureExpr(ex)
       default: err("Unknown ExprId: $ex.id", ex.location)
     }
+  }
+
+  Void rangeLiteralExpr(RangeLiteralExpr re)
+  {
+    out.w("sys_Range.make(")
+    expr(re.start)
+    out.w(",")
+    expr(re.end)
+    if (re.exclusive) out.w(",true")
+    out.w(")")
   }
 
   Void listLiteralExpr(ListLiteralExpr le)
@@ -296,7 +313,8 @@ class JavascriptWriter : CompilerSupport
   Void shortcutExpr(ShortcutExpr se)
   {
     // try to optimize the primitive case
-    if (isPrimitive(se.target.ctype?.qname) && se.method.name != "compare")
+    if (isPrimitive(se.target.ctype?.qname) &&
+        se.method.name != "compare" && se.method.name != "get" && se.method.name != "slice")
     {
       lhs := se.target
       rhs := se.args.first
@@ -313,11 +331,20 @@ class JavascriptWriter : CompilerSupport
         return
       }
       if (se.op.degree == 1) { out.w(se.opToken); expr(lhs); return }
-      if (se.op.degree == 2) { expr(lhs); out.w(" $se.opToken "); expr(rhs); return }
+      if (se.op.degree == 2)
+      {
+        out.w("(")
+        expr(lhs)
+        out.w(" $se.opToken ")
+        expr(rhs)
+        out.w(")")
+        return
+      }
     }
 
     // check for list access
-    if (se.op == ShortcutOp.get || se.op == ShortcutOp.set)
+    if (!isPrimitive(se.target.ctype?.qname) &&
+        se.op == ShortcutOp.get || se.op == ShortcutOp.set)
     {
       expr(se.target)
       out.w("[$se.args.first]")
