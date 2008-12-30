@@ -186,9 +186,9 @@ internal class ChunkInStream : InStream
       return 1
     }
     if (!checkChunk) return null
-    n = chunkRem.min(n)
-    chunkRem -= n
-    return in.readBuf(buf, n)
+    numRead := in.readBuf(buf, chunkRem.min(n))
+    chunkRem -= numRead
+    return numRead
   }
 
   override This unread(Int b)

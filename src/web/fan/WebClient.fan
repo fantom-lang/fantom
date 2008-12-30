@@ -152,12 +152,51 @@ class WebClient
   **
   ** Socket options for the TCP socket used for requests.
   **
-  SocketOptions socketOptions() { return socket.options }
+  SocketOptions socketOptions() { return options }
+
+//////////////////////////////////////////////////////////////////////////
+// Get
+//////////////////////////////////////////////////////////////////////////
 
   **
-  ** Socket used to service requests.
+  ** Make a GET request and return the response content as
+  ** an in-memory string.  The web client is automatically closed.
+  ** Throw IOErr is response is not 200.
   **
-  private TcpSocket socket := TcpSocket()
+  Str getStr()
+  {
+    try
+      return getIn.readAllStr
+    finally
+      close
+  }
+
+  **
+  ** Make a GET request and return the response content as
+  ** an in-memory byte buffer.  The web client is automatically closed.
+  ** Throw IOErr is response is not 200.
+  **
+  Buf getBuf()
+  {
+    try
+      return getIn.readAllBuf
+    finally
+      close
+  }
+
+  **
+  ** Make a GET request and return the input stream to the
+  ** response or throw IOErr if response is not 200.  It is the
+  ** caller's responsibility to close this web client.
+  **
+  InStream getIn()
+  {
+    reqMethod = "GET"
+    writeReq
+    readRes
+    if (resCode != 200) throw IOErr("Bad HTTP response $resCode $resPhrase")
+    return resIn
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Post
@@ -207,8 +246,13 @@ class WebClient
         reqHeaders["Transfer-Encoding"] = "chunked"
     }
 
-    // connect to the host:port
-    socket.connect(IpAddress(reqUri.host), reqUri.port ?: 80)
+    // connect to the host:port if we aren't already connected
+    if (!isConnected)
+    {
+      socket = TcpSocket()
+      socket.options.copyFrom(this.options)
+      socket.connect(IpAddress(reqUri.host), reqUri.port ?: 80)
+    }
 
     // send request
     out := socket.out
@@ -243,6 +287,7 @@ class WebClient
   This readRes()
   {
     // read response
+    if (!isConnected) throw IOErr("Not connected")
     in := socket.in
     try
     {
@@ -304,11 +349,20 @@ class WebClient
   }
 
   **
+  ** Return if this web client is currently connected to the remote host.
+  **
+  Bool isConnected()
+  {
+    return socket != null && socket.isConnected
+  }
+
+  **
   ** Close the HTTP request and the underlying socket.  Return this.
   **
   This close()
   {
-    socket.close
+    if (socket != null) socket.close
+    socket = null
     return this
   }
 
@@ -322,5 +376,7 @@ class WebClient
 
   private InStream? resInStream
   private OutStream? reqOutStream
+  private SocketOptions options := TcpSocket().options
+  private TcpSocket? socket
 
 }
