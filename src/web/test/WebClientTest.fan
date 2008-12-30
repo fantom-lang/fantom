@@ -27,10 +27,12 @@ class WebClientTest : Test
   {
     // use skyfoundry.com assuming simple static HTML page served by Apache
     c := WebClient(`http://skyfoundry.com`)
+    verify(!c.isConnected)
     try
     {
       // status line
       c.writeReq.readRes
+      verify(c.isConnected)
       verifyEq(c.resVersion, Version("1.1"))
       verifyEq(c.resCode, 200)
       verifyEq(c.resPhrase, "OK")
@@ -59,10 +61,12 @@ class WebClientTest : Test
   {
     // at least for now, google home page uses chunked transfer
     c := WebClient(`http://www.google.com`)
+    verify(!c.isConnected)
     try
     {
       // status line
       c.writeReq.readRes
+      verify(c.isConnected)
       verifyEq(c.resVersion, Version("1.1"))
       verifyEq(c.resCode, 200)
       verifyEq(c.resPhrase, "OK")
@@ -77,5 +81,50 @@ class WebClientTest : Test
       c.close
     }
   }
+
+  Void testGetConvenience()
+  {
+    c := WebClient(`http://www.google.com`)
+    verify(c.getStr.contains("<html"))
+    Thread.sleep(100ms)
+    verify(!c.isConnected)
+
+    verify(c.getBuf.readAllStr.contains("<html"))
+    verify(!c.isConnected)
+
+    try
+      verify(c.getIn.readAllStr.contains("<html"))
+    finally
+      c.close
+  }
+
+  Void testPipeline()
+  {
+    c := WebClient(`http://www.google.com`)
+    try
+    {
+      c.writeReq
+      c.writeReq
+      c.reqUri = `http://www.google.com/bad-bad`
+      c.writeReq
+
+      c.readRes
+      verifyEq(c.resCode, 200)
+      verify(c.resStr.contains("<html"))
+
+      c.readRes
+      verifyEq(c.resCode, 200)
+      verify(c.resStr.contains("<html"))
+
+      c.readRes
+      verifyEq(c.resCode, 404)
+    }
+    finally
+    {
+      c.close
+    }
+
+  }
+
 
 }
