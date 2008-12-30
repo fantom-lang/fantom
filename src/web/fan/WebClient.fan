@@ -9,7 +9,21 @@
 using inet
 
 **
-** WebClient manages client side HTTP requests.
+** The 'WebClient' class is used to manage client side HTTP requests
+** and responses.  The basic lifecycle of WebClient:
+**   1. configure request fields such as 'reqUri', 'reqMethod', and 'reqHeaders'
+**   2. send request headers via 'writeReq'
+**   3. optionally write request body via 'reqOut'
+**   4. read response status and headers via 'readRes'
+**   5. process response fields such as 'resCode' and 'resHeaders'
+**   6. optionally read response body via 'resIn'
+**
+** Using the low level methods 'writeReq' and 'readRes' enables HTTP
+** pipelining (multiple requests and responses on the same TCP socket
+** connection).  There are also a series of convenience methods which
+** make common cases easier.
+**
+** See [docLib::Web]`docLib::Web#webClient` and `docCookbook::Web`.
 **
 class WebClient
 {
