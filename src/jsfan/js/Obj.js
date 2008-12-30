@@ -100,6 +100,11 @@ sys_Obj.is = function(obj, type)
       if (type === sys_Float) return true;
       return false;
     }
+    if ((typeof obj) == "string")
+    {
+      if (type === sys_Str) return true;
+      return false;
+    }
     throw new sys_Err("Not a Fan type: " + obj);
   }
 }
