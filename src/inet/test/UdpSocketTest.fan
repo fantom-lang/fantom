@@ -246,6 +246,14 @@ class UdpSocketTest : Test
     verifyErr(UnsupportedErr#) |,| { echo(so.noDelay) }
     verifyErr(UnsupportedErr#) |,| { so.noDelay = true }
 
+    xo := TcpSocket().options
+    xo.copyFrom(so)
+    verifyEq(xo.broadcast, so.broadcast)
+    verifyEq(xo.receiveBufferSize, so.receiveBufferSize)
+    verifyEq(xo.sendBufferSize, so.sendBufferSize)
+    verifyEq(xo.reuseAddress, so.reuseAddress)
+    verifyEq(xo.receiveTimeout, so.receiveTimeout)
+
     s.close
   }
 

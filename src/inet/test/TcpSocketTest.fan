@@ -288,6 +288,19 @@ class TcpSocketTest : Test
     verifyErr(UnsupportedErr#) |,| { echo(so.broadcast) }
     verifyErr(UnsupportedErr#) |,| { so.broadcast = false }
 
+    xo := TcpSocket().options
+    xo.copyFrom(so)
+    verifyEq(xo.inBufferSize, so.inBufferSize)
+    verifyEq(xo.outBufferSize, so.outBufferSize)
+    verifyEq(xo.keepAlive, so.keepAlive)
+    verifyEq(xo.receiveBufferSize, so.receiveBufferSize)
+    verifyEq(xo.sendBufferSize, so.sendBufferSize)
+    verifyEq(xo.reuseAddress, so.reuseAddress)
+    verifyEq(xo.linger, so.linger)
+    verifyEq(xo.receiveTimeout, so.receiveTimeout)
+    verifyEq(xo.noDelay, so.noDelay)
+    verifyEq(xo.trafficClass, so.trafficClass)
+
     s.close
   }
 
