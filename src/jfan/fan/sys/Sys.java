@@ -271,6 +271,7 @@ public final class Sys
   public static final Type DependType       = builtin("Depend",       ObjType);
   public static final Type VersionType      = builtin("Version",      ObjType);
   public static final Type UnitType         = builtin("Unit",         ObjType);
+  public static final Type UuidType         = builtin("Uuid",         ObjType);
 
   // uri schemes
   public static final Type UriSchemeType    = builtin("UriScheme",    ObjType);
