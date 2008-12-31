@@ -331,7 +331,7 @@ public class FMethodEmit
       FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code, regs, emit.pod.typeRef(method.ret));
       e.emit();
     }
-    code.maxStack = code.maxLocals + 2; // leave room for wide return or type literal loading
+    code.maxStack = code.maxLocals + 4; // leave room for wide return or type literal loading and null coercion
 
     // call master implementation
     code.op2((main.flags & STATIC) != 0 ? INVOKESTATIC : INVOKEVIRTUAL, main.ref());
