@@ -1,0 +1,59 @@
+**************************************************************************
+** title:      Web
+** author:     Brian Frank
+** created:    30 Dec 08
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+WebClient [#webClient]
+**********************
+  // simple gets
+  str := WebClient(`http://host/`).getStr
+  buf := WebClient(`http://host/`).getBuf
+
+  // get as input stream
+  c := WebClient(`http://host/path`)
+  try
+  {
+    in := c.getIn
+    // process input stream
+  }
+  finally c.close
+
+  // dump get response headers and string body
+  c := WebClient(`http://foo.com/`).writeReq.readRes
+  echo("$c.reqUri => $c.resCode $c.resPhrase")
+  c.resHeaders.each |Str v, Str k| { echo("$k: $v") }
+  echo(c.resStr)
+  c.close
+
+  // post form
+  c := WebClient(`http://foo/post.cgi`)
+  c.postForm(["firstName":"Bob", "lastName":"Smith"])
+  echo(c.resStr) // process response
+  c.close
+
+  // post content with fixed length
+  c := WebClient(`http://foo/post.cgi`)
+  c.reqMethod = "POST"
+  c.reqHeaders["Content-Type"] = "text/plain; charset=utf-8"
+  c.reqHeaders["Content-Length"] = "5"
+  c.writeReq
+  c.reqOut.print("hello").close
+  c.readRes
+  echo(c.resStr) // process response
+  c.close
+
+  // pipelining: write 2 requests, then read 2 responses
+  c := WebClient()
+  c.reqUri = `http://foo/path1`
+  c.writeReq
+  c.reqUri = `http://foo/path2`
+  c.writeReq
+  c.readRes
+  echo(c.resStr) // process path1 response
+  c.readRes
+  echo(c.resStr) // process path2 response
+
+Also [docLib]`docLib::Web#webClient`.
