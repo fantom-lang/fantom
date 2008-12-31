@@ -98,7 +98,7 @@ namespace Fan.Sys
       {
         unit = parseUnit(str);
       }
-      catch (Exception e)
+      catch (Exception)
       {
         if (!check) return null;
         throw ParseErr.make("Unit", str).val;
