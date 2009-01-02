@@ -508,4 +508,27 @@ class ClosureTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Closure in Ctor
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInCtor()
+  {
+    compile(
+     "class Foo
+      {
+        new make() { f := |,| { i = 4 }; f()  }
+        const Int i
+
+        static const Int j
+        static  { f := |,| { j = 7 }; f()  }
+      }")
+
+    // compiler.fpod.dump
+    t  := pod.types[0]
+    obj := t.make
+    verifyEq(obj->i, 4)
+    verifyEq(obj->j, 7)
+  }
+
 }

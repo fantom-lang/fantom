@@ -885,8 +885,18 @@ class CheckErrors : CompilerStep
     // if not-const we are done
     if (!field.isConst) return rhs
 
+    // for purposes of const field checking, consider closures
+    // inside a constructor or static initializer to be ok
+    inType := curType
+    inMethod := curMethod
+    if (inType.isClosure)
+    {
+      inType = inType.closure.enclosingType
+      inMethod = (curType.closure.enclosingSlot as MethodDef) ?: curMethod
+    }
+
     // check attempt to set static field outside of static initializer
-    if (field.isStatic && !curMethod.isStaticInit)
+    if (field.isStatic && !inMethod.isStaticInit)
     {
       err("Cannot set const static field '$field.name' outside of static initializer", lhs.location)
       return rhs
@@ -897,14 +907,14 @@ class CheckErrors : CompilerStep
     if (!(lhs.target is WithBaseExpr) || !lhs.target->isCtorWithBlock)
     {
       // check attempt to set field outside of owning class
-      if (field.parent != curType)
+      if (field.parent != inType)
       {
         err("Cannot set const field '$field.qname'", lhs.location)
         return rhs
       }
 
       // check attempt to set instance field outside of ctor
-      if (!field.isStatic && !(curMethod.isInstanceInit || curMethod.isCtor))
+      if (!field.isStatic && !(inMethod.isInstanceInit || inMethod.isCtor))
       {
         err("Cannot set const field '$field.name' outside of constructor", lhs.location)
         return rhs
