@@ -207,7 +207,7 @@ public final class FanInt
   {
     try
     {
-      return self < 128 && (charMap[(int)self] & (UPPER|LOWER)) != 0;
+      return self < 128 && (charMap[(int)self] & ALPHA) != 0;
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
@@ -221,7 +221,7 @@ public final class FanInt
   {
     try
     {
-      return (self < 128 && (charMap[(int)self] & (UPPER|LOWER|DIGIT)) != 0);
+      return (self < 128 && (charMap[(int)self] & ALPHANUM) != 0);
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
@@ -335,11 +335,13 @@ public final class FanInt
   }
 
   static final byte[] charMap = new byte[128];
-  static final int SPACE = 0x01;
-  static final int UPPER = 0x02;
-  static final int LOWER = 0x04;
-  static final int DIGIT = 0x08;
-  static final int HEX   = 0x10;
+  static final int SPACE    = 0x01;
+  static final int UPPER    = 0x02;
+  static final int LOWER    = 0x04;
+  static final int DIGIT    = 0x08;
+  static final int HEX      = 0x10;
+  static final int ALPHA    = UPPER | LOWER;
+  static final int ALPHANUM = UPPER | LOWER | DIGIT;
   static
   {
     charMap[' ']  |= SPACE;

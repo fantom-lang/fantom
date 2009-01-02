@@ -721,6 +721,28 @@ class StrTest : Test
     verifyEq("a b".isLower, false)
   }
 
+  Void testIsAlpha()
+  {
+    verifyEq("".isAlpha, true)
+    verifyEq(".".isAlpha, false)
+    verifyEq("3".isAlpha, false)
+    verifyEq("x".isAlpha, true)
+    verifyEq("Bad".isAlpha, true)
+    verifyEq("Bad ass".isAlpha, false)
+    verifyEq("Bad7".isAlpha, false)
+    verifyEq("AbCdE".isAlpha, true)
+  }
+
+  Void testIsAlphaNum()
+  {
+    verifyEq("".isAlphaNum, true)
+    verifyEq(".".isAlphaNum, false)
+    verifyEq("3".isAlphaNum, true)
+    verifyEq("2Y".isAlphaNum, true)
+    verifyEq("G3x9P".isAlphaNum, true)
+    verifyEq("a b".isAlphaNum, false)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Just
 //////////////////////////////////////////////////////////////////////////

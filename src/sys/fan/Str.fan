@@ -432,6 +432,16 @@ const final class Str
   **
   Bool isLower()
 
+  **
+  ** Return if every char is an ASCII [letter]`Int.isAlpha`.
+  **
+  Bool isAlpha()
+
+  **
+  ** Return if every char is an ASCII [alpha-numeric]`Int.isAlphaNum`.
+  **
+  Bool isAlphaNum()
+
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
