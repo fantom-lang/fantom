@@ -584,6 +584,30 @@ public class FanStr
     return true;
   }
 
+  public static boolean isAlpha(String self)
+  {
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+    {
+      int ch = self.charAt(i);
+      if (ch >= 128 || (FanInt.charMap[ch] & FanInt.ALPHA) == 0)
+        return false;
+    }
+    return true;
+  }
+
+  public static boolean isAlphaNum(String self)
+  {
+    int len = self.length();
+    for (int i=0; i<len; ++i)
+    {
+      int ch = self.charAt(i);
+      if (ch >= 128 || (FanInt.charMap[ch] & FanInt.ALPHANUM) == 0)
+        return false;
+    }
+    return true;
+  }
+
   public static boolean isEveryChar(String self, int ch)
   {
     int len = self.length();
