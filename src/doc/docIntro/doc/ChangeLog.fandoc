@@ -501,6 +501,7 @@
 - Str isAlpha, isAlphaNum
 - OutStream sync
 - Allow closures in constructor to set const fields (same for static ctors)
+- Change Obj.trap arg signature to Obj?[]?
 - Flux enhancements for goto into, find, find in files
 - Protection checks to prevent internal types being used in public APIs
 - TODO: fix up JavaBridge with new compiler APIs

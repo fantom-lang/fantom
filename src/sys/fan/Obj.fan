@@ -70,7 +70,7 @@ abstract class Obj
   ** is one, set the field and return args[0].  Otherwise throw
   ** UnknownSlotErr.
   **
-  virtual Obj? trap(Str name, Obj[]? args)
+  virtual Obj? trap(Str name, Obj?[]? args)
 
 //////////////////////////////////////////////////////////////////////////
 // Type
