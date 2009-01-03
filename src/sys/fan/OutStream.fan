@@ -61,6 +61,13 @@ class OutStream
   virtual This flush()
 
   **
+  ** If this output stream is mapped to a file device, then
+  ** synchronize all memory buffers to the physical storage device.
+  ** Throw IOErr on error.  Return this.
+  **
+  virtual This sync()
+
+  **
   ** Close the input stream.  This method is guaranteed to never
   ** throw an IOErr.  Return true if the stream was closed successfully
   ** or false if the stream was closed abnormally.  Default implementation

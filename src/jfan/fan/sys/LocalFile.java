@@ -7,6 +7,7 @@
 //
 package fan.sys;
 
+import java.io.FileDescriptor;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -366,12 +367,39 @@ public class LocalFile
     {
       java.io.File parent = file.getParentFile();
       if (parent != null && !parent.exists()) parent.mkdirs();
-      return SysOutStream.make(new java.io.FileOutputStream(file, append), bufSize);
+      java.io.FileOutputStream fout = new java.io.FileOutputStream(file, append);
+      java.io.OutputStream bout = SysOutStream.toBuffered(fout, bufSize);
+      return new LocalFileOutStream(bout, fout.getFD());
     }
     catch (java.io.IOException e)
     {
       throw IOErr.make(e).val;
     }
+  }
+
+  static class LocalFileOutStream extends SysOutStream
+  {
+    LocalFileOutStream(java.io.OutputStream out, FileDescriptor fd)
+    {
+      super(out);
+      this.fd = fd;
+    }
+
+    public OutStream sync()
+    {
+      try
+      {
+        flush();
+        fd.sync();
+        return this;
+      }
+      catch (java.io.IOException e)
+      {
+        throw IOErr.make(e).val;
+      }
+    }
+
+    FileDescriptor fd;
   }
 
 //////////////////////////////////////////////////////////////////////////

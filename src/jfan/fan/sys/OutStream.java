@@ -450,6 +450,12 @@ public class OutStream
     return this;
   }
 
+  public OutStream sync()
+  {
+    if (out != null) out.sync();
+    return this;
+  }
+
   public boolean close()
   {
     if (out != null) return out.close();

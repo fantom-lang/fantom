@@ -580,4 +580,14 @@ class FileTest : Test
     verify(eq)
   }
 
+  Void testSync()
+  {
+    f := tempDir + `testsync`
+    out := f.out
+    out.print("hello there!")
+    out.sync
+    verifyEq(f.readAllStr, "hello there!")
+    out.close
+  }
+
 }
