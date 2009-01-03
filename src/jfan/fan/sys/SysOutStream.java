@@ -23,10 +23,15 @@ public class SysOutStream
 
   public static SysOutStream make(java.io.OutputStream out, Long bufSize)
   {
+    return new SysOutStream(toBuffered(out, bufSize));
+  }
+
+  public static OutputStream toBuffered(java.io.OutputStream out, Long bufSize)
+  {
     if (bufSize == null || bufSize.longValue() == 0)
-      return new SysOutStream(out);
+      return out;
     else
-      return new SysOutStream(new java.io.BufferedOutputStream(out, bufSize.intValue()));
+      return new java.io.BufferedOutputStream(out, bufSize.intValue());
   }
 
   public SysOutStream(OutputStream out)

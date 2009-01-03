@@ -499,6 +499,7 @@
 - New sys::Unit API
 - New sys::Uuid API
 - Str isAlpha, isAlphaNum
+- OutStream sync
 - Allow closures in constructor to set const fields (same for static ctors)
 - Flux enhancements for goto into, find, find in files
 - Protection checks to prevent internal types being used in public APIs
