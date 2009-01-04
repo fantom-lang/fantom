@@ -458,6 +458,12 @@ namespace Fan.Sys
       return this;
     }
 
+    public virtual OutStream sync()
+    {
+      if (m_out != null) m_out.sync();
+      return this;
+    }
+
     public virtual bool close()
     {
       if (m_out != null) return m_out.close();
