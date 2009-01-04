@@ -458,16 +458,42 @@ namespace Fan.Sys
         //java.io.File parent = file.getParentFile();
         //if (!parent.exists()) parent.mkdirs();
 
-        System.IO.Stream stream = (m_file as FileInfo).Open(
+        System.IO.Stream fout = (m_file as FileInfo).Open(
           append ? System.IO.FileMode.Append : System.IO.FileMode.Create,
           System.IO.FileAccess.Write);
+        System.IO.Stream bout = SysOutStream.toBuffered(fout, bufSize);
         m_file.Refresh();
-        return SysOutStream.make(stream, bufSize);
+        return new LocalFileOutStream(bout/*, fout.getFD()*/);
       }
       catch (System.IO.IOException e)
       {
         throw IOErr.make(e).val;
       }
+    }
+
+    internal class LocalFileOutStream : SysOutStream
+    {
+      public LocalFileOutStream(System.IO.Stream @out/*, FileDescriptor fd*/)
+        : base(@out)
+      {
+        /*this.fd = fd;*/
+      }
+
+      public override OutStream sync()
+      {
+        try
+        {
+          flush();
+          /*fd.sync();*/
+          return this;
+        }
+        catch (System.IO.IOException e)
+        {
+          throw IOErr.make(e).val;
+        }
+      }
+
+      /*FileDescriptor fd;*/
     }
 
   //////////////////////////////////////////////////////////////////////////

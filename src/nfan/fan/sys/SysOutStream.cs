@@ -23,10 +23,15 @@ namespace Fan.Sys
 
     public static SysOutStream make(Stream output, Long bufSize)
     {
+      return new SysOutStream(toBuffered(output, bufSize));
+    }
+
+    public static Stream toBuffered(Stream output, Long bufSize)
+    {
       if (bufSize == null || bufSize.longValue() == 0)
-        return new SysOutStream(output);
+        return output;
       else
-        return new SysOutStream(new BufferedStream(output, bufSize.intValue()));
+        return new BufferedStream(output, bufSize.intValue());
     }
 
     public SysOutStream(Stream output)

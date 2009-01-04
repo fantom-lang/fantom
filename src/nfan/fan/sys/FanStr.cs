@@ -609,6 +609,30 @@ namespace Fan.Sys
       return true;
     }
 
+    public static bool isAlpha(string self)
+    {
+      int len = self.Length;
+      for (int i=0; i<len; ++i)
+      {
+        int ch = self[i];
+        if (ch >= 128 || (FanInt.charMap[ch] & FanInt.ALPHA) == 0)
+          return false;
+      }
+      return true;
+    }
+
+    public static bool isAlphaNum(string self)
+    {
+      int len = self.Length;
+      for (int i=0; i<len; ++i)
+      {
+        int ch = self[i];
+        if (ch >= 128 || (FanInt.charMap[ch] & FanInt.ALPHANUM) == 0)
+          return false;
+      }
+      return true;
+    }
+
     public static bool isEveryChar(string self, int ch)
     {
       int len = self.Length;

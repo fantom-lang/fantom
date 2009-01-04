@@ -146,12 +146,11 @@ namespace Fan.Sys
   // Char
   //////////////////////////////////////////////////////////////////////////
 
-    public static bool isSpace(long self) { return isSpace((int)self); }
-    public static bool isSpace(int val)
+    public static bool isSpace(long self)
     {
       try
       {
-        return (val < 128 && (charMap[(int)val] & SPACE) != 0);
+        return (self < 128 && (charMap[(int)self] & SPACE) != 0);
       }
       catch (IndexOutOfRangeException)
       {
@@ -161,12 +160,11 @@ namespace Fan.Sys
       }
     }
 
-    public static bool isAlpha(long self) { return isAlpha((int)self); }
-    public static bool isAlpha(int val)
+    public static bool isAlpha(long self)
     {
       try
       {
-        return (val < 128 && (charMap[val] & (UPPER|LOWER)) != 0);
+        return (self < 128 && (charMap[(int)self] & ALPHA) != 0);
       }
       catch (IndexOutOfRangeException)
       {
@@ -176,15 +174,11 @@ namespace Fan.Sys
       }
     }
 
-    public static bool isAlphaNum(long self) { return isAlphaNum((int)self); }
-    public static bool isAlphaNum(int val)
+    public static bool isAlphaNum(int self)
     {
       try
       {
-        if (val < 128 && (charMap[(int)val] & (UPPER|LOWER|DIGIT)) != 0)
-          return true;
-        else
-          return false;
+        return (self < 128 && (charMap[(int)self] & ALPHANUM) != 0);
       }
       catch (IndexOutOfRangeException)
       {
@@ -308,11 +302,14 @@ namespace Fan.Sys
     }
 
     internal static readonly byte[] charMap = new byte[128];
-    internal static readonly byte SPACE = 0x01;
-    internal static readonly byte UPPER = 0x02;
-    internal static readonly byte LOWER = 0x04;
-    internal static readonly byte DIGIT = 0x08;
-    internal static readonly byte HEX   = 0x10;
+    internal static readonly byte SPACE   = 0x01;
+    internal static readonly byte UPPER   = 0x02;
+    internal static readonly byte LOWER   = 0x04;
+    internal static readonly byte DIGIT   = 0x08;
+    internal static readonly byte HEX     = 0x10;
+    internal static readonly int ALPHA    = UPPER | LOWER;
+    internal static readonly int ALPHANUM = UPPER | LOWER | DIGIT;
+
     // static initializer below
 
   //////////////////////////////////////////////////////////////////////////
