@@ -57,6 +57,7 @@ const class FindResourceStep : WebAppStep
     {
       obj := resolve(homePage)
       if (obj == null) log.warn("Invalid FindResourceStep.homePage: $homePage")
+      if (obj is Type) return obj->make
       return obj
     }
 
