@@ -10,7 +10,7 @@
 **
 ** JsonTestSuite
 **
-class JsonTestSuite
+internal class JsonTestSuite
 {
   List tests :=
     [

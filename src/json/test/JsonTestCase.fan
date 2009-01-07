@@ -9,7 +9,7 @@
 **
 ** JsonTestCase
 **
-class JsonTestCase
+internal class JsonTestCase
 {
   Str:Obj? map
   Str description
