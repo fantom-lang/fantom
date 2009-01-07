@@ -10,7 +10,7 @@
 **
 ** BrowserTest
 **
-class BrowserTest
+internal class BrowserTest
 {
   public static Void main(Str[] args)
   {
