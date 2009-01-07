@@ -69,10 +69,13 @@ public abstract class File
     }
   }
 
-  protected File(Uri uri)
+  protected static void init$(File self, Uri uri)
   {
-    this.uri = uri;
+    self.uri = uri;
   }
+
+  protected File(Uri uri) { this.uri = uri; }
+  protected File() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
@@ -316,19 +319,19 @@ public abstract class File
 // IO
 //////////////////////////////////////////////////////////////////////////
 
-  public final Buf open() { return open("rw"); }
+  public Buf open() { return open("rw"); }
   public abstract Buf open(String mode);
 
-  public final Buf mmap() { return mmap("rw", 0L, null); }
-  public final Buf mmap(String mode) { return mmap(mode, 0L, null); }
-  public final Buf mmap(String mode, long pos) { return mmap(mode, pos, null); }
+  public Buf mmap() { return mmap("rw", 0L, null); }
+  public Buf mmap(String mode) { return mmap(mode, 0L, null); }
+  public Buf mmap(String mode, long pos) { return mmap(mode, pos, null); }
   public abstract Buf mmap(String mode, long pos, Long size);
 
-  public final InStream in() { return in(FanInt.Chunk); }
+  public InStream in() { return in(FanInt.Chunk); }
   public abstract InStream in(Long bufSize);
 
-  public final OutStream out() { return out(false, FanInt.Chunk); }
-  public final OutStream out(boolean append) { return out(append, FanInt.Chunk); }
+  public OutStream out() { return out(false, FanInt.Chunk); }
+  public OutStream out(boolean append) { return out(append, FanInt.Chunk); }
   public abstract OutStream out(boolean append, Long bufSize);
 
   public final Buf readAllBuf()
@@ -397,5 +400,5 @@ public abstract class File
   public static final String sep = java.io.File.separator;
   public static final String pathSep = java.io.File.pathSeparator;
 
-  final Uri uri;
+  Uri uri;
 }

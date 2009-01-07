@@ -504,4 +504,5 @@
 - Change Obj.trap arg signature to Obj?[]?
 - Flux enhancements for goto into, find, find in files
 - Protection checks to prevent internal types being used in public APIs
+- Expose sys::File ctor to allow new implementations
 - TODO: fix up JavaBridge with new compiler APIs
