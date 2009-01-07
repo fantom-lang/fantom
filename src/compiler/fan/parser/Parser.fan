@@ -61,8 +61,8 @@ public class Parser : CompilerSupport
   **   <usingPod>  :=  "using" <podSpec> <eos>
   **   <usingType> :=  "using" <podSpec> "::" <id> <eos>
   **   <usingAs>   :=  "using" <podSpec> "::" <id> "as" <id> <eos>
-  **   <podSpec>        :=  [ffi] <id> ("." <id>)*
-  **   <ffi>            :=  "[" <id> "]"
+  **   <podSpec>   :=  [ffi] <id> ("." <id>)*
+  **   <ffi>       :=  "[" <id> "]"
   **
   private Void usings()
   {
@@ -1696,6 +1696,7 @@ public class Parser : CompilerSupport
       call.name      = name
       call.isDynamic = true
       call.isSafe    = safeCall
+      call.noParens  = true
       return call
     }
 
