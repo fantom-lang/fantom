@@ -1,27 +1,33 @@
 # ignore files for fan
+
+# globs in any directory
 syntax: glob
 
-# general
 Thumbs.db
 .DS_Store
-adm/pngcrush*
+
+# Specific directories and files
+syntax: regexp
+
+# general
+^adm/pngcrush
 
 # lib/
-lib/java/*.jar
-lib/javascript/*
-lib/dotnet/*.pdb
-lib/dotnet/sys.dll
-lib/fan/*.pod
-lib/types.db
+^lib/java/.*jar
+^lib/javascript/
+^lib/dotnet/.*pdb
+^lib/dotnet/sys.dll
+^lib/fan/.*pod
+^lib/types.db
 
 # doc/
-doc/*
+^doc/
 
 # flux
-flux/session/*
+^flux/session/
 
 # src/
-src/jfan/temp/*
+^src/jfan/temp/
 
 # tmp/
-tmp/*
+^tmp/
