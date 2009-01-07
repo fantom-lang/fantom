@@ -35,12 +35,30 @@ var sys_Int = sys_Obj.extend(
 
 sys_Int.fromStr = function(s, radix, checked)
 {
+  var num = 0;
+
+  // TODO - only supports radix=10 right now
+  for (var i=s.length-1; i>=0; i--)
+  {
+    ch = s.charCodeAt(i);
+    if (ch < 48 || ch > 57)
+    {
+      if (checked != null && !checked) return null;
+      throw new ParseErr("Int", s);
+    }
+    val = ch-48;
+    if (s.length-i > 0) val += 10 * (s.length-1)
+    num += val;
+  }
+
+  /*
   var num = parseInt(s, radix);
   if (isNaN(num))
   {
     if (checked != null && !checked) return null;
     throw new ParseErr("Int", s);
   }
+  */
   return num;
 }
 
