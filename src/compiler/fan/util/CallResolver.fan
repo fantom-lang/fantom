@@ -261,8 +261,9 @@ class CallResolver : CompilerSupport
       call.name   = name
       call.args   = args
     }
-    call.target = target
-    call.isSafe = expr.isSafe
+    call.target   = target
+    call.isSafe   = expr.isSafe
+    call.noParens = isVar
 
     call.method = method
     if (method.isCtor)
