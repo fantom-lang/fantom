@@ -73,7 +73,8 @@ class CompilerJavascript : Compiler
     out  := file.out
     types.each |TypeDef def|
     {
-      JavascriptWriter(this, def, out).write
+      if (force || def.facets?.get("javascript")?->toStr == "@javascript=true")
+        JavascriptWriter(this, def, out).write
     }
     out.close
     // bombIfErr...
@@ -84,5 +85,11 @@ class CompilerJavascript : Compiler
   ** Directory to write compiled Javascript source files to
   **
   File outDir
+
+  **
+  ** Force all types and slots to be compiled even if they do
+  ** have the @javascript facet.
+  **
+  Bool force := false
 
 }

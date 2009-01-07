@@ -47,13 +47,22 @@ class JavascriptWriter : CompilerSupport
     jbase := qname(typeDef.base)
     out.w("var $jname = ${jbase}.extend(").nl
     out.w("{").nl
-    out.w("  \$ctor: function() { sys_Type.addType(\"$fname\"); },").nl
+    out.w("  \$ctor: function()").nl
+    out.w("  {").nl
+    out.w("    sys_Type.addType(\"$fname\");").nl
+    typeDef.fieldDefs.each |FieldDef f|
+    {
+      out.w("    this.${f.name}.parent = this;").nl
+    }
+    out.w("    this.make();").nl
+    out.w("  },").nl
     out.w("  type: function() { return sys_Type.find(\"$fname\"); },").nl
     out.indent
     typeDef.methodDefs.each |MethodDef m| { method(m) }
     typeDef.fieldDefs.each |FieldDef f| { field(f) }
     out.unindent
     out.w("});").nl
+    staticMethods.each |MethodDef m| { staticMethod(m) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -62,10 +71,27 @@ class JavascriptWriter : CompilerSupport
 
   Void method(MethodDef m)
   {
-    if (m.isStatic) err("Static methods not yet supported: $m.name", m.location)
+    if (m.isNative) return
+    if (m.isStatic) { staticMethods.add(m); return }
     if (m.isFieldAccessor) return // getter/setters are defined when field is emitted
+    out.w("$m.name: ")
+    doMethod(m)
+    out.w(",").nl
+  }
+
+  Void staticMethod(MethodDef m)
+  {
+    if (m.isNative) return
+    if (!m.isStatic) err("Method must be static: $m.name", m.location)
+    out.w("${qname(m.parent)}.$m.name = ")
+    doMethod(m)
+    out.nl
+  }
+
+  private Void doMethod(MethodDef m)
+  {
     hasCThis = false
-    out.w("$m.name: function(")
+    out.w("function(")
     m.vars.each |MethodVar v, Int i|
     {
       if (!v.isParam) return
@@ -75,7 +101,7 @@ class JavascriptWriter : CompilerSupport
     out.w(")").nl
     out.w("{").nl
     block(m.code, false)
-    out.w("},").nl
+    out.w("}")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -84,14 +110,12 @@ class JavascriptWriter : CompilerSupport
 
   Void field(FieldDef f)
   {
+    if (f.isNative) return
     if (f.isStatic) err("Static fields not yet supported: $f.name", f.location)
     out.w("$f.name: {").nl
     out.w("  get: function() { return this.val },").nl
     out.w("  set: function(val) { this.val = val; },").nl
-    out.w("  val: ")
-    if (f.init != null) expr(f.init)
-    else out.w("null")
-    out.w(",").nl
+    out.w("  val: null").nl
     out.w("},").nl
   }
 
@@ -197,7 +221,7 @@ class JavascriptWriter : CompilerSupport
       case ExprId.cmpNull:      expr(ex->operand); out.w(" == null")
       case ExprId.cmpNotNull:   expr(ex->operand); out.w(" != null")
       //case ExprId.elvis
-      case ExprId.assign:       expr(ex->lhs); out.w(" = "); expr(ex->rhs)
+      case ExprId.assign:       assignExpr(ex)
       case ExprId.same:         expr(ex->lhs); out.w(" === "); expr(ex->rhs)
       case ExprId.notSame:      out.w("!("); expr(ex->lhs); out.w(" === "); expr(ex->rhs); out.w(")")
       case ExprId.boolOr:       condExpr(ex)
@@ -247,6 +271,17 @@ class JavascriptWriter : CompilerSupport
     out.w("]")
   }
 
+  Void assignExpr(BinaryExpr be)
+  {
+    if (be.lhs is FieldExpr)
+    {
+      fe := be.lhs as FieldExpr
+      if (fe.useAccessor) { fieldExpr(fe); out.w(".set("); expr(be.rhs); out.w(")") }
+      else { fieldExpr(fe); out.w(" = "); expr(be.rhs); }
+    }
+    else { expr(be.lhs); out.w(" = "); expr(be.rhs) }
+  }
+
   Void typeCheckExpr(TypeCheckExpr te)
   {
     method := te.id == ExprId.asExpr ? "as" : "is"
@@ -294,14 +329,31 @@ class JavascriptWriter : CompilerSupport
         out.w(")")
         return
       }
+      if (ce.target is StaticTargetExpr && ce.target->ctype->qname == "compilerJavascript::Util")
+      {
+        out.w(ce.args.first->val)
+        if (ce.args.size > 1)
+        {
+          out.w("(")
+          (ce.args[1] as ListLiteralExpr).vals.each |Expr arg, Int i|
+          {
+            if (i > 0) out.w(", ")
+            expr(arg)
+          }
+          out.w(")")
+        }
+        return
+      }
       expr(ce.target)
       out.w(".")
     }
     else if (ce.method != null && (ce.method.isStatic || ce.method.isCtor))
     {
-      out.w("<$ce.method.parent.qname>").w(".")
+      out.w(qname(ce.method.parent)).w(".")
     }
-    out.w(ce.name).w("(")
+    out.w(ce.name)
+    if (ce.isDynamic && ce.args.size == 0) return
+    out.w("(")
     ce.args.each |Expr arg, Int i|
     {
       if (i > 0) out.w(", ")
@@ -459,5 +511,5 @@ class JavascriptWriter : CompilerSupport
   AstWriter out
   Bool inClosure := false
   Bool hasCThis  := false
-
+  MethodDef[] staticMethods := [,]  // static methods
 }

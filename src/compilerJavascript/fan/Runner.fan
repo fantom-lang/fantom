@@ -78,6 +78,12 @@ if (!script.exists) throw Err("No script found in $p.name")
   **
   static Void evalSys(ScriptEngine engine)
   {
+    script := Sys.homeDir + "lib/javascript/sys.js".toUri
+    if (!script.exists) throw Err("Sys script not found")
+    try engine.eval(script.readAllStr);
+    catch (Err e) throw Err("Sys script eval failed", e)
+
+    /*
     // load script zip
     sys := Sys.homeDir + `lib/javascript/sys.zip`
     zip := Zip.read(sys.in)
@@ -108,5 +114,6 @@ if (!script.exists) throw Err("No script found in $p.name")
       try engine.eval(scripts[k])
       catch (Err e) throw Err("Sys pod eval failed: $k", e)
     }
+    */
   }
 }
