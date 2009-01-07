@@ -20,18 +20,43 @@ class Build : BuildScript
     return target("zip")
   }
 
-  @target="zip Javascript into sys.zip"
+  @target="assemble Javascript into sys.js"
   Void zip()
   {
     libJsDir := devHomeDir + `lib/javascript/`
-    js  := scriptDir + `js/`
-    zip := Zip.write(libJsDir.createFile("sys.zip").out)
-    js.listFiles.each |File f|
+    src := (scriptDir + `js/`).listFiles
+    out := libJsDir.createFile("sys.js").out
+
+    order.each |Str name|
     {
-      out := zip.writeNext(f.name.toUri)
-      f.in.pipe(out)
+      f := src.find |File f->Bool| { return f.name == name }
+      if (f == null) throw Err("$name not found")
+      append(f, out)
     }
-    zip.close
+
+    src.each |File f|
+    {
+      if (order.contains(f.name)) return
+      append(f, out)
+    }
+    out.close
   }
+
+  private Void append(File f, OutStream out)
+  {
+    block := false
+    f.readAllLines.each |Str line|
+    {
+      s := line.trim
+      if (s.size == 0) return
+      if (s.startsWith("//")) return
+      if (s.startsWith("/*")) { block = true; return }
+      if (s.startsWith("*/")) { block = false; return }
+      if (block) return
+      out.printLine(line)
+    }
+  }
+
+  Str[] order := ["Sys.js", "Obj.js", "Type.js", "Num.js"]
 
 }
