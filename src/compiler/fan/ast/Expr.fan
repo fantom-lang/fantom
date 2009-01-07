@@ -791,6 +791,7 @@ class CallExpr : NameExpr
   Expr[] args         // Expr[] arguments to pass
   Bool isDynamic      // true if this is a -> dynamic call
   Bool isCtorChain    // true if this is MethodDef.ctorChain call
+  Bool noParens       // was this call accessed without parens
   CMethod? method     // resolved method
   override Bool synthetic := false
 }
