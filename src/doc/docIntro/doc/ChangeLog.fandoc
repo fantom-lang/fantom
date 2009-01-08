@@ -505,4 +505,5 @@
 - Flux enhancements for goto into, find, find in files
 - Protection checks to prevent internal types being used in public APIs
 - Expose sys::File ctor to allow new implementations
+- Optimize common MimeTypes to be interned
 - TODO: fix up JavaBridge with new compiler APIs
