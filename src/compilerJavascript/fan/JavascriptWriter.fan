@@ -87,7 +87,7 @@ class JavascriptWriter : CompilerSupport
     doMethodSig(m)
     out.nl
     out.w("{").nl
-    out.w("  var instance = ${qname(m.parent)}();").nl
+    out.w("  var instance = new ${qname(m.parent)}();").nl
     out.w("  instance.\$$m.name"); doMethodSig(m); out.w(";").nl
     out.w("  return instance;").nl
     out.w("}").nl
