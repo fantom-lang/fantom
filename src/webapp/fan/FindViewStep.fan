@@ -42,6 +42,10 @@ const class FindViewStep : WebAppStep
       }
     }
 
+    // if this resouce is Weblet, instanciate it and use it directly
+    if (req.resource is Type && req.resource->fits(Weblet#))
+      req.resource = req.resource->make
+
     // if resource is itself a Weblet, then it is its own view
     if (req.resource is Weblet)
     {
