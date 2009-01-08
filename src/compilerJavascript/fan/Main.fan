@@ -26,15 +26,18 @@ class Main
       help
       Sys.exit(-1)
     }
+    run(Sys.args.first.toUri)
+  }
 
-    pod := Pod.find(Sys.args.first)
-    scriptFile := Sys.homeDir + "src/$pod.name/build.fan".toUri
+  Void run(Uri scriptUri)
+  {
+    scriptFile := Sys.appDir + scriptUri
     tempDir := scriptFile.parent + `temp-javascript/`
     tempDir.delete
     tempDir.create
 
-    echo("javascript [$pod.name]")
     script := Sys.compile(scriptFile).make
+    echo("javascript [${script->podName}]")
     compile(script, tempDir)
     assemble(script, tempDir)
 

@@ -19,6 +19,7 @@ syntax: regexp
 ^lib/dotnet/sys.dll
 ^lib/fan/.*pod
 ^lib/types.db
+^lib/tmp/
 
 # doc/
 ^doc/
