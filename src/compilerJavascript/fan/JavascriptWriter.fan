@@ -54,7 +54,6 @@ class JavascriptWriter : CompilerSupport
     {
       out.w("    this.${f.name}.parent = this;").nl
     }
-    out.w("    this.make();").nl
     out.w("  },").nl
     out.w("  type: function() { return sys_Type.find(\"$fname\"); },").nl
     out.indent
@@ -62,6 +61,7 @@ class JavascriptWriter : CompilerSupport
     typeDef.fieldDefs.each |FieldDef f| { field(f) }
     out.unindent
     out.w("});").nl
+    ctors.each |MethodDef m| { ctor(m) }
     staticMethods.each |MethodDef m| { staticMethod(m) }
   }
 
@@ -74,9 +74,23 @@ class JavascriptWriter : CompilerSupport
     if (m.isNative) return
     if (m.isStatic) { staticMethods.add(m); return }
     if (m.isFieldAccessor) return // getter/setters are defined when field is emitted
+    if (m.isCtor) { ctors.add(m); out.w("\$") }
     out.w("$m.name: ")
     doMethod(m)
     out.w(",").nl
+  }
+
+  Void ctor(MethodDef m)
+  {
+    if (!m.isCtor) err("Method must be a ctor: $m.name", m.location)
+    out.w("${qname(m.parent)}.$m.name = function")
+    doMethodSig(m)
+    out.nl
+    out.w("{").nl
+    out.w("  var instance = ${qname(m.parent)}();").nl
+    out.w("  instance.\$$m.name"); doMethodSig(m); out.w(";").nl
+    out.w("  return instance;").nl
+    out.w("}").nl
   }
 
   Void staticMethod(MethodDef m)
@@ -90,18 +104,24 @@ class JavascriptWriter : CompilerSupport
 
   private Void doMethod(MethodDef m)
   {
-    hasCThis = false
-    out.w("function(")
+    out.w("function"); doMethodSig(m); out.nl
+    out.w("{").nl
+    if (ClosureFinder(m).exists)
+      out.w("  var \$this = this;").nl
+    block(m.code, false)
+    out.w("}")
+  }
+
+  private Void doMethodSig(MethodDef m)
+  {
+    out.w("(")
     m.vars.each |MethodVar v, Int i|
     {
       if (!v.isParam) return
       if (i > 0) out.w(", ")
       out.w(var(v.name))
     }
-    out.w(")").nl
-    out.w("{").nl
-    block(m.code, false)
-    out.w("}")
+    out.w(")")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -211,7 +231,7 @@ class JavascriptWriter : CompilerSupport
       //case ExprId.decimalLiteral
       case ExprId.strLiteral:   out.w("\"").w(ex->val.toStr.toCode('\"', true)[1..-2]).w("\"")
       //case ExprId.durationLiteral
-      //case ExprId.uriLiteral
+      case ExprId.uriLiteral:   out.w("\"").w(ex->val.toStr.toCode(null)).w("\"")
       case ExprId.typeLiteral:  out.w("sys_Type.find(\"${ex->val->signature}\")")
       //case ExprId.slotLiteral
       case ExprId.rangeLiteral: rangeLiteralExpr(ex)
@@ -231,7 +251,7 @@ class JavascriptWriter : CompilerSupport
       case ExprId.asExpr:       typeCheckExpr(ex)
       case ExprId.coerce:       expr(ex->target)
       case ExprId.call:         callExpr(ex)
-      //case ExprId.construction
+      case ExprId.construction: callExpr(ex)
       case ExprId.shortcut:     shortcutExpr(ex)
       case ExprId.field:        fieldExpr(ex)
       case ExprId.localVar:     out.w(var(ex.toStr))
@@ -292,13 +312,6 @@ class JavascriptWriter : CompilerSupport
 
   Void callExpr(CallExpr ce)
   {
-    // check if we need a $this local var
-    if (!hasCThis && ce.args.find(|Expr e->Bool| { return e is ClosureExpr }) != null)
-    {
-      hasCThis = true
-      out.w("var \$this = this;").nl
-    }
-
     // check for special cases
     if (isObjMethod(ce.method.name))
     {
@@ -329,21 +342,6 @@ class JavascriptWriter : CompilerSupport
         out.w(")")
         return
       }
-      if (ce.target is StaticTargetExpr && ce.target->ctype->qname == "compilerJavascript::Util")
-      {
-        out.w(ce.args.first->val)
-        if (ce.args.size > 1)
-        {
-          out.w("(")
-          (ce.args[1] as ListLiteralExpr).vals.each |Expr arg, Int i|
-          {
-            if (i > 0) out.w(", ")
-            expr(arg)
-          }
-          out.w(")")
-        }
-        return
-      }
       expr(ce.target)
       out.w(".")
     }
@@ -351,7 +349,7 @@ class JavascriptWriter : CompilerSupport
     {
       out.w(qname(ce.method.parent)).w(".")
     }
-    out.w(ce.name)
+    out.w(ce.method.isCtor ? "make" : ce.name)
     if (ce.isDynamic && ce.args.size == 0) return
     out.w("(")
     ce.args.each |Expr arg, Int i|
@@ -510,6 +508,27 @@ class JavascriptWriter : CompilerSupport
   TypeDef typeDef
   AstWriter out
   Bool inClosure := false
-  Bool hasCThis  := false
+  MethodDef[] ctors := [,]          // ctors
   MethodDef[] staticMethods := [,]  // static methods
+}
+
+**************************************************************************
+** ClosureFinder
+**************************************************************************
+
+internal class ClosureFinder : Visitor
+{
+  new make(Node node) { this.node = node }
+  Bool exists()
+  {
+    node->walk(this, VisitDepth.expr)
+    return found
+  }
+  override Expr visitExpr(Expr expr)
+  {
+    if (expr is ClosureExpr) found = true
+    return Visitor.super.visitExpr(expr)
+  }
+  Node node
+  Bool found := false
 }
