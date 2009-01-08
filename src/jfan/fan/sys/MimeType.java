@@ -29,6 +29,24 @@ public final class MimeType
   {
     try
     {
+      // common interned mime types
+      switch (s.charAt(0))
+      {
+        case 'i':
+          if (s.equals("image/png"))  return imagePng;
+          if (s.equals("image/jpeg")) return imageJpeg;
+          if (s.equals("image/gif"))  return imageGif;
+          break;
+        case 't':
+          if (s.equals("text/plain")) return textPlain;
+          if (s.equals("text/html"))  return textHtml;
+          if (s.equals("text/xml"))   return textXml;
+          break;
+        case 'x':
+          if (s.equals("x-directory/normal")) return dir;
+          break;
+      }
+
       int slash = s.indexOf('/');
       String media = s.substring(0, slash);
       String sub = s.substring(slash+1, s.length());
@@ -231,10 +249,30 @@ public final class MimeType
   static Map emptyQuery;
 
 //////////////////////////////////////////////////////////////////////////
+// Predefined
+//////////////////////////////////////////////////////////////////////////
+
+  static MimeType predefined(String media, String sub)
+  {
+    MimeType t = new MimeType();
+    t.mediaType = media;
+    t.subType = sub;
+    t.params = emptyParams();
+    t.str = media + "/" + sub;
+    return t;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  static final MimeType dir = fromStr("x-directory/normal");
+  static final MimeType imagePng   = predefined("image", "png");
+  static final MimeType imageGif   = predefined("image", "gif");
+  static final MimeType imageJpeg  = predefined("image", "jpeg");
+  static final MimeType textPlain  = predefined("text", "plain");
+  static final MimeType textHtml   = predefined("text", "html");
+  static final MimeType textXml    = predefined("text", "xml");
+  static final MimeType dir        = predefined("x-directory", "normal");
 
   private String mediaType;
   private String subType;

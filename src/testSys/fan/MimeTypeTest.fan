@@ -28,6 +28,32 @@ class MimeTypeTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Predefined
+//////////////////////////////////////////////////////////////////////////
+
+  Void testPredefined()
+  {
+    verifyPredefined("image", "gif")
+    verifyPredefined("image", "png")
+    verifyPredefined("image", "jpeg")
+    verifyPredefined("text", "plain")
+    verifyPredefined("text", "html")
+    verifyPredefined("text", "xml")
+    verifyPredefined("x-directory", "normal")
+  }
+
+  Void verifyPredefined(Str media, Str sub)
+  {
+    m := MimeType("$media/$sub")
+    verifyEq(m.mediaType, media)
+    verifyEq(m.subType, sub)
+    verifyEq(m.toStr, "$media/$sub")
+    verifyEq(m.params.isRO, true)
+    verifyEq(m.params.size, 0)
+    verifySame(m, MimeType(m.toStr))
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // FromStr
 //////////////////////////////////////////////////////////////////////////
 
