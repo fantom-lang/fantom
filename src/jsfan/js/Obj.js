@@ -44,6 +44,16 @@ var sys_Obj = Class.extend(
     return sys_Type.find("sys::Obj")
   },
 
+  toStr: function()
+  {
+    return "" + this.type();
+  },
+
+  toString: function()
+  {
+    return "" + this.toStr();
+  }
+
 });
 
 //////////////////////////////////////////////////////////////////////////
