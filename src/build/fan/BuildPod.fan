@@ -92,6 +92,12 @@ abstract class BuildPod : BuildScript
   **
   Uri[]? dotnetLibs
 
+  **
+  ** If true compile any Types with the '@javascript' facet into
+  ** Javascript source.
+  **
+  Bool hasJavascript
+
 //////////////////////////////////////////////////////////////////////////
 // Setup
 //////////////////////////////////////////////////////////////////////////
@@ -127,7 +133,7 @@ abstract class BuildPod : BuildScript
   **
   override Target defaultTarget()
   {
-    if (javaDirs == null && dotnetDirs == null)
+    if (javaDirs == null && dotnetDirs == null && !hasJavascript)
       return target("compile")
     else
       return target("full")
@@ -295,6 +301,20 @@ abstract class BuildPod : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
+// CompileJavascript
+//////////////////////////////////////////////////////////////////////////
+
+  @target="compile Fan source to Javasript"
+  virtual Void compileJavascript()
+  {
+    if (!hasJavascript) return
+    // use compilerJavascript reflectively
+    compilerJavascript := Type.find("compilerJavascript::Main").make
+    Int r := compilerJavascript->run(scriptFile.uri)
+    if (r != 0) fatal("Cannot compile javascript '$podName'")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Full
 //////////////////////////////////////////////////////////////////////////
 
@@ -305,6 +325,7 @@ abstract class BuildPod : BuildScript
     compile(true)
     javaNative
     dotnetNative
+    compileJavascript
   }
 
 //////////////////////////////////////////////////////////////////////////
