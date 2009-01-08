@@ -140,6 +140,9 @@ abstract class Widget : Weblet
   **
   **   req.uri.plusQuery(["invoke":"$uri/$name"])
   **
+  ** The Widget must be mounted, or be the root widget in order
+  ** for this Uri to correctly resolve.
+  **
   Uri toInvoke(Obj func)
   {
     Str? name := null
@@ -156,8 +159,8 @@ abstract class Widget : Weblet
       throw ArgErr("func must be Method or Str: $func.type")
     }
     uri := uri
-    if (uri == null) throw Err("Widget not mounted")
-    return req.uri.plusQuery(["invoke":"$uri/$name"])
+    val := uri == null ? name : "$uri/$name"
+    return req.uri.plusQuery(["invoke":val])
   }
 
   **
