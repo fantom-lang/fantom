@@ -156,6 +156,7 @@ final class Sys
   **     the compilation process and errors
   **   - log: the `compiler::CompilerLog` to use for
   **     logging the compilation process and errors
+  **   - logOut: an output stream to capture logging
   **   - force: pass 'true' to not use caching, always forces
   **     a recompile
   **

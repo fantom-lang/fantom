@@ -198,10 +198,13 @@ class Main
     if (options != null)
     {
       log := options["log"]
-      if (log != null) input.log = (CompilerLog)log
+      if (log != null) input.log = log
+
+      logOut := options["logOut"]
+      if (logOut != null) input.log = CompilerLog(logOut)
 
       logLevel := options["logLevel"]
-      if (logLevel != null) input.log.level = (LogLevel)logLevel
+      if (logLevel != null) input.log.level = logLevel
 
       fcodeDump := options["fcodeDump"]
       if (fcodeDump == true) input.fcodeDump = true
