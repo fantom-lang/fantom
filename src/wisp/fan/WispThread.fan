@@ -62,11 +62,9 @@ internal const class WispThread : Thread
     req := WispReq(service, socket)
     res := WispRes(service, socket)
 
-    // parse request line
-    if (!parseReqLine(req)) return badReqErr
-
-    // parse headers
-    if (!parseReqHeaders(req)) return badReqErr
+    // parse request line and headers, on error return false to
+    // close socket and terminate processing on this thread and socket
+    if (!parseReq(req)) return false
 
     // service request
     success := false
@@ -105,10 +103,10 @@ internal const class WispThread : Thread
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Parse the first request line.
+  ** Parse the first request line and request headers.
   ** Return true on success, false on failure.
   **
-  internal static Bool parseReqLine(WispReq req)
+  internal static Bool parseReq(WispReq req)
   {
     try
     {
@@ -139,24 +137,13 @@ internal const class WispThread : Thread
       else if (ver == "HTTP/1.0") req.version = ver10
       else return false
 
+      // parse headers
+      req.headers = WebUtil.parseHeaders(req.in).ro
+
       // success
       return true
     }
-    catch return false
-  }
-
-  **
-  ** Parse the request headers according to (4.2)
-  ** Return true on success, false on failure.
-  **
-  internal static Bool parseReqHeaders(WispReq req)
-  {
-    try
-    {
-      req.headers = WebUtil.parseHeaders(req.in).ro
-      return true
-    }
-    catch return false
+    catch (Err e) { return false }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -176,19 +163,6 @@ internal const class WispThread : Thread
 //////////////////////////////////////////////////////////////////////////
 // Error Handling
 //////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Send back 400 bad request response.  Return false.
-  **
-  private Bool badReqErr()
-  {
-    try
-    {
-      socket.out.print("HTTP/1.1 400 Bad Request\r\n\r\n").flush
-    }
-    catch {}
-    return false
-  }
 
   **
   ** Send back 500 Internal server error.

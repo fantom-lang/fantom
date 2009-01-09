@@ -42,8 +42,7 @@ class ReqTest : Test
   Void verifyReq(Str s, Str method, Uri uri, Str:Str headers)
   {
     req := WispReq.makeTest(InStream.makeForStr(s))
-    WispThread.parseReqLine(req)
-    WispThread.parseReqHeaders(req)
+    WispThread.parseReq(req)
     verifyEq(req.method,  method)
     verifyEq(req.uri,     uri)
     verifyEq(req.headers, headers)
