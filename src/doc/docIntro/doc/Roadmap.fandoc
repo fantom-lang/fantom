@@ -28,7 +28,7 @@ namespaces, and webapp - these are the most likely to change.
 
 New Features [#newFeatures]
 ***************************
-The list of features on our radar for the next year or two (in no
+The list of features on our radar for the next year or so (in no
 particular order):
 
 Namespaces [#namespaces]
@@ -36,13 +36,6 @@ Namespaces [#namespaces]
 The namespace APIs are a work in progress.  These APIs and the
 design will evolve as we plug new implementations into this framework
 such as HTTP-REST and cloud computing.
-
-.NET Runtime [#dotnet]
-======================
-Some of the .NET runtime is incomplete:
-  - Get sys tests passing 100%
-  - We need to get the 'sql' APIs working on .NET.
-  - Performance needs to be improved
 
 Threadlocals [#threadlocals]
 ============================
@@ -56,23 +49,17 @@ example Weblet can declare req/res as thread locals.
 
 See [design proposal]`http://www.fandev.org/sidewalk/topic/204`
 
-Native Java/.NET Integration [#nativeIntegration]
+.NET Runtime [#dotnet]
+======================
+Some of the .NET runtime is incomplete:
+  - We need to get the 'sql' APIs working on .NET (if you want to help let us know).
+  - Performance needs to be improved
+
+.NET FFI [#dotnetFFI]
 =================================================
-Our main focus has been on making Fan APIs portable between both
-Java and .NET.  As a result little effort has been made to easily
-allow Fan code to call out to native Java or .NET APIs.  From a simple
-perspective it would be nice to access native Objects and work with
-them dynamically using the '->' operator.  Other efforts might include
-tools to generate Fan stubs for Java or .NET class libraries.  But
-there is definitely a lot we can do to make Fan suitable as an alternative
-language using the existing Java or .NET class libraries.
-
-See [discussion]`http://www.fandev.org/sidewalk/topic/384`
-
-JSON [#json]
-============
-A library to read/write Fan objects to JavaScript object notation
-would be handy (in progress).
+Fan includes a [Java FFI]`docLang::JavaFFI.html` for seamlessly working
+with Java libraries.  But we still need to implement the .NET FFI.  If
+you would like to help please let us know.
 
 Email [#email]
 ==============
@@ -88,7 +75,7 @@ Some of the 'sys' APIs are imcomplete, such as 'Regex'.
 
 Web APIs [#web]
 ===============
-The 'web' APIs are incomplete, such as client side HTTP support and HTTPS.
+The 'web' APIs are incomplete: "http" UriScheme and HTTPS.
 
 Web App [#webapp]
 ===============
@@ -112,7 +99,7 @@ IDE Support [#ide]
 ==================
 We aren't IDE users ourselves, so this isn't our highest priority.
 But we realize it is a requirement for a successful ecosystem, so
-we'll be keeping our eye on this one.
+we'll be keeping our eye on this one.  Help is always welcome.
 
 Web Server Integration [#webServers]
 ====================================
@@ -146,7 +133,10 @@ on grouping tests, but seems like a way to group pods, types, and
 slots in a generic way would be valuable for many application: testing,
 IDE navigation, reflection, etc.
 
-
+Pod Repositories [#podRepositories]
+===================================
+Today a Fan environment is a simple flat directory of pods.  Eventually
+we need a more sophisticated solution.  See [discussion]`http://fandev.org/sidewalk/topic/425#c2420`.
 
 
 

@@ -33,9 +33,37 @@ abstract const class WebAppStep : WebStep
     // a type and create instance of that type
     f := obj as File
     if (f != null && f.ext == "fan")
-      return Sys.compile(f).make
+      return compile(f).make
 
     return obj
+  }
+
+  **
+  ** Compile a script file and return the first declared type.
+  ** If the script cannot compile, then log and display an error.
+  **
+  Type compile(File f)
+  {
+    logBuf := Buf()
+    Err? ex
+
+    // try to compile
+    try
+      return Sys.compile(f, ["logOut":logBuf.out])
+    catch (Err e)
+      ex = e
+
+    // if we fell thru, then output the compiler log
+    log.error("Cannot compile script: $f")
+    echo(logBuf.seek(0).readAllStr)
+
+    // display compiler errors in error page
+    res := (WebRes)Thread.locals["web.res"]
+    msg := "<pre>" + logBuf.seek(0).readAllStr.toXml + "</pre>"
+    res.sendError(500, msg)
+
+    // rethrow the exception
+    throw ex
   }
 
   ** Web app logging
