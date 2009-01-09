@@ -5,6 +5,7 @@ syntax: glob
 
 Thumbs.db
 .DS_Store
+*.log
 
 # Specific directories and files
 syntax: regexp
