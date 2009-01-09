@@ -69,7 +69,7 @@ public abstract class File
     }
   }
 
-  protected static void init$(File self, Uri uri)
+  protected static void makeNew$(File self, Uri uri)
   {
     self.uri = uri;
   }

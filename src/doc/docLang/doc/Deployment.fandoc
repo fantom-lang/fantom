@@ -43,8 +43,7 @@ directory.  For .NET natives a dll file is generated under "lib/dotnet".  Also
 see [docTools]`docTools::Build#buildPod` for how to build pods with native
 code.
 
-Note: this architecture is likely to change when Fan is enhanced for
-[language interop]`docIntro::Roadmap#nativeIntegration`.
+Note: natives have been obseleted by the [Java FFI]`JavaFFI`.
 
 Dependencies [#depends]
 ***********************

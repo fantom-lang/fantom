@@ -69,19 +69,24 @@ internal const class WispThread : Thread
     if (!parseReqHeaders(req)) return badReqErr
 
     // service request
+    success := false
     try
     {
       initRes(req, res)
       service.service(req, res)
+      success = true
     }
-    catch (Err e) return internalServerErr(req, res, e)
+    catch (Err e)
+    {
+      internalServerErr(req, res, e)
+    }
 
     // ensure response is committed and close the response
     // output stream, but don't close the underlying socket
-    try { res.close } catch {}
+    try { res.close } catch (Err e) { e.trace }
 
     // return if using persistent connections
-    return isPersistent(req)
+    return success && isPersistent(req)
   }
 
   **
@@ -186,15 +191,14 @@ internal const class WispThread : Thread
   }
 
   **
-  ** Send back 500 Internal server error.  Return false.
+  ** Send back 500 Internal server error.
   **
-  private Bool internalServerErr(WebReq req, WebRes res, Err err)
+  private Void internalServerErr(WebReq req, WebRes res, Err err)
   {
     try
     {
-      // dump to standard out
-      echo("ERROR: $req.uri")
-      err.trace
+      // log internal error
+      WispService.log.error("Internal error processing: $req.uri", err)
 
       // if not committed yet, then return 400 if bad
       // client request or 500 if server error
@@ -207,8 +211,7 @@ internal const class WispThread : Thread
         err.trace(res.out)
       }
     }
-    catch {}
-    return false
+    catch (Err e) { e.trace }
   }
 
 //////////////////////////////////////////////////////////////////////////

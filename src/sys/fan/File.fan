@@ -58,9 +58,9 @@ abstract const class File
   static File createTemp(Str prefix := "fan", Str suffix := ".tmp", File? dir := null)
 
   **
-  ** Protected constructor.
+  ** Protected constructor for subclasses.
   **
-  protected new init(Uri uri)
+  protected new makeNew(Uri uri)
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
