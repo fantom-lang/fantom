@@ -29,19 +29,28 @@ class Main
     run(Sys.args.first.toUri)
   }
 
-  Void run(Uri scriptUri)
+  Int run(Uri scriptUri)
   {
-    scriptFile := Sys.appDir + scriptUri
-    tempDir := scriptFile.parent + `temp-javascript/`
-    tempDir.delete
-    tempDir.create
+    try
+    {
+      scriptFile := Sys.appDir + scriptUri
+      tempDir := scriptFile.parent + `temp-javascript/`
+      tempDir.delete
+      tempDir.create
 
-    script := Sys.compile(scriptFile).make
-    echo("javascript [${script->podName}]")
-    compile(script, tempDir)
-    assemble(script, tempDir)
+      script := Sys.compile(scriptFile).make
+      echo("javascript [${script->podName}]")
+      compile(script, tempDir)
+      assemble(script, tempDir)
 
-    tempDir.delete
+      tempDir.delete
+      return 0
+    }
+    catch (Err e)
+    {
+      e.trace
+      return -1
+    }
   }
 
   Void help()
@@ -81,17 +90,9 @@ class Main
 
   Void assemble(BuildPod script, File srcDir)
   {
-    // TODO - we can't stick inside the pod file unless we run
-    // with rel install, so just stick in /lib/javascript for now
-
-    /*
     jar := JdkTask.make(script).jarExe
     pod := Sys.homeDir + "lib/fan/${script->podName}.pod".toUri
     Exec.make(script, [jar.osPath, "fu", pod.osPath, "-C", srcDir.osPath, "."], srcDir).run
-    */
-
-    js := srcDir + "${script.podName}.js".toUri
-    js.copyTo(Sys.homeDir + "lib/javascript/$js.name".toUri, ["overwrite":true])
   }
 
 //////////////////////////////////////////////////////////////////////////
