@@ -45,17 +45,17 @@ class Build : BuildPod
     }
 
     // output ordered files first
-    //ordered.each |Str name|
-    //{
-    //  f := src[name]
-    //  if (f == null) throw Err("Required file not found: $name")
-    //  append(f, out)
-    //}
+    ordered.each |Str name|
+    {
+      f := src[name]
+      if (f == null) throw Err("Required file not found: $name")
+      append(f, out)
+    }
 
     // output everyone else
     src.each |File f|
     {
-      //if (ordered.contains(f.name)) return
+      if (ordered.contains(f.name)) return
       append(f, out)
     }
 
@@ -81,6 +81,6 @@ class Build : BuildPod
     }
   }
 
-  //Str[] ordered := ["Sys.js", "Obj.js", "Type.js", "Num.js"]
+  Str[] ordered := ["Sys.js", "Obj.js", "Type.js", "Num.js"]
 
 }
