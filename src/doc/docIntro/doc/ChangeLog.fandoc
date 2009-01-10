@@ -494,10 +494,11 @@
 *Build 1.0.37 (incomplete)*
 - Java FFI: array overrides of methods which use primitives or arrays
 - Java FFI: coerce sys::Func to Java interface with one abstract method
-- New web::WebClient API
-- Wisp support for chunked transfers and persistent connections
+- New sys::Date and sys::Time APIs
 - New sys::Unit API
 - New sys::Uuid API
+- New web::WebClient API
+- Wisp support for chunked transfers and persistent connections
 - Str isAlpha, isAlphaNum
 - OutStream sync
 - Allow closures in constructor to set const fields (same for static ctors)

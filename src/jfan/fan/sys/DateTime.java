@@ -348,6 +348,10 @@ public final class DateTime
 
   public final long ticks() { return ticks; }
 
+  public final Date date() { return new Date(getYear(), month().ord, getDay()); }
+
+  public final Time time() { return new Time(getHour(), getMin(), getSec(), getNanoSec()); }
+
   public final long year() { return (fields & 0xff) + 1900; }
   public final int getYear() { return (fields & 0xff) + 1900; }
 
@@ -752,7 +756,7 @@ public final class DateTime
     {
       try
       {
-        Date date = httpFormats[i].parse(s);
+        java.util.Date date = httpFormats[i].parse(s);
         return fromJava(date.getTime());
       }
       catch (Exception e)
@@ -766,7 +770,7 @@ public final class DateTime
 
   public String toHttpStr()
   {
-    return httpFormats[0].format(new Date(toJava()));
+    return httpFormats[0].format(new java.util.Date(toJava()));
   }
 
   private static final SimpleDateFormat httpFormats[] =

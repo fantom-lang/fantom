@@ -39,11 +39,11 @@ class InteropTest : JavaTest
   Void testCtors()
   {
     compile(
-     "using [java] java.util
+     "using [java] java.util::Date as JDate
       class Foo
       {
-        Int a() { return Date().getTime }
-        Int b() { return Date(1_000_000).getTime }
+        Int a() { return JDate().getTime }
+        Int b() { return JDate(1_000_000).getTime }
       }")
 
     obj := pod.types.first.make
@@ -523,10 +523,10 @@ class InteropTest : JavaTest
   Void testDefaultParams()
   {
     compile(
-     "using [java] java.util
+     "using [java] java.util::Date as JDate
       class Foo
       {
-        Str foo(Date? a := null, Date? b := null, Str? end := null)
+        Str foo(JDate? a := null, JDate? b := null, Str? end := null)
         {
           s :=  \"\"
           if (a != null) s += \"a\"
@@ -536,9 +536,9 @@ class InteropTest : JavaTest
         }
 
         Str test1() { return foo }
-        Str test2() { return foo(Date()) }
-        Str test3() { return foo(Date(), Date()) }
-        Str test4() { return foo(Date(), null, \"|\") }
+        Str test2() { return foo(JDate()) }
+        Str test3() { return foo(JDate(), JDate()) }
+        Str test4() { return foo(JDate(), null, \"|\") }
       }")
 
     obj := pod.types.first.make

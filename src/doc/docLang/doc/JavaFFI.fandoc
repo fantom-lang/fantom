@@ -231,8 +231,8 @@ Subclassing [#subclassing]
 The Java FFI enables you to both extend from a Java class and implement Java
 interfaces.  For example to create a subclass of 'java.util.Date':
 
-  using [java] java.util
-  class FanDate : Date
+  using [java] java.util::Date as JDate
+  class FanDate : JDate
   {
     new now() : super() {}
     new make(Int millis) : super(millis) {}
@@ -338,4 +338,3 @@ use a Fan function whenever a 'Runnable' is expected:
 
 The standard rules for coercion between Java and Fan types apply for how
 the function implements the interface's method.
-

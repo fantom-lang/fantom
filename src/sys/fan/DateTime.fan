@@ -130,6 +130,16 @@ const final class DateTime
   Int ticks()
 
   **
+  ** Get the date component of this timestamp.
+  **
+  Date date()
+
+  **
+  ** Get the time component of this timestamp.
+  **
+  Time time()
+
+  **
   ** Get the year as a number such as 2007.
   **
   Int year()
