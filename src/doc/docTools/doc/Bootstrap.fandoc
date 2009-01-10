@@ -14,7 +14,7 @@ a compiler?  To solve this problem, the bootstrap process requires
 two Fan installations:
 
   1.  *rel*: known good Fan installation (typically the last build)
-  2.  *dev*: development environment to build
+  2.  *dev*: development environment to build (probably pulled from hg)
 
 By convention we structure our development directory tree like this:
 
@@ -48,13 +48,14 @@ to reference the *dev* directory using a URI (not OS path):
 
 If you forget to do this, then you will get a build error which
 looks something like this:
-C:\dev\fan\src>jfan\build
 
-  Error: Must update /lib/sys.props devHome for bootstrap build
-  Error: Error initializing script [C:\dev\fan\src\jfan\build.fan]
-  build::FatalBuildErr
-    build::BuildScript.fatal (BuildScript.fan:429)
-    ...
+  C:\dev\fan\src>jfan\build
+
+    Error: Must update /lib/sys.props devHome for bootstrap build
+    Error: Error initializing script [C:\dev\fan\src\jfan\build.fan]
+    build::FatalBuildErr
+      build::BuildScript.fatal (BuildScript.fan:429)
+      ...
 
 Substitutes [#substitutes]
 **************************
@@ -99,11 +100,26 @@ using the following shebang:
 
 The fansubstitute script explictly sets FAN_HOME to the value
 of the FAN_SUBSTITUTE variable before launching.  So you will
-need to export FAN_SUBSTITUTE to reference your "rel" installation.
+need to export FAN_SUBSTITUTE to reference your *rel* installation.
 And of course you have to run your scripts as executables so
 that the shebang takes effect.
 
 Also note that building on Unix will skip any .NET targets.
+
+JDK and .NET Tools [#otherTools]
+********************************
+In order to compile from source you will need to setup some system
+properties to reference your JDK and .NET home directories:
+
+  fan.build.jdkHome=/C:/dev/tools/java/
+  fan.build.dotnetHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
+
+These paths should be formatted as file system Uris (not OS paths).
+These properties should be configured in "lib/sys.props" of **both**
+your *rel* and *dev* environments.
+
+The .NET targets are automatically skipped if not running Windows.
+So you can ignore the .NET configuration on Unix platforms.
 
 Buildall [#buildall]
 ********************
@@ -121,6 +137,7 @@ rebuilding the core runtime modules:
   jfan/build.fan
   nfan/build.fan
   compiler/build.fan
+  compilerJava/build.fan
   build/build.fan
 
 Once the bootstrap modules are compiled, the development environment is
@@ -132,26 +149,86 @@ Dependencies [#dependencies]
 The bootstrap issue can cause some confusing dependency issues which
 are summarized here:
 
-  - The rel compiler will be generating the 'sys', 'compiler', and 'build'
-    pod files.  This means that the rel compiler must be able to
-    generate fcode that the dev runtime can read.  It also means that
-    the rel compiler must be able to read any new syntax used by dev
+  - The *rel* compiler will be generating the 'sys', 'compiler', and 'build'
+    pod files.  This means that the *rel* compiler must be able to
+    generate fcode that the *dev* runtime can read.  It also means that
+    the *rel* compiler must be able to read any new syntax used by *dev*
     versions of 'sys', 'compiler', and 'build'.
 
-  - The rel compiler will actually use the dev versions of the pods
-    to resolve dependencies.  For example dev compiler can reference
-    new sys APIs defined in dev but not rel.  Under the covers this
+  - The *rel* compiler will actually use the *dev* versions of the pods
+    to resolve dependencies.  For example *dev* compiler can reference
+    new sys APIs defined in *dev* but not *rel*.  Under the covers this
     works because the 'compiler' and 'build' pod's build scripts specify
     a non-default [dependsDir]`build::BuildPod.dependsDir`.
 
 Because of these restrictions, adding new language features and fcode
 changes require some careful planning.
 
-Summary [#summmary]
-*******************
-In summary, you want to make sure of four key things:
+Debugging [#debugging]
+**********************
+You can use the "dumpenv" build target to dump key aspects of your
+build script environment.  You can run target on "buildall.fan", although
+a more concise report is to dumpenv on "buildboot.fan" and one of the
+non bootstrap pods like "testSys/build.fan".
 
-  1. setup your rel installation and never touch it (consider it readonly)
-  2. ensure rel/lib/sys.props devHome points to your dev installation
-  3. make sure your FAN_SUBSTITUTE env points to the rel installation
-  4. always run your scripts from the dev installation
+On Windows you should see something like this:
+
+  C:\dev\fan\src>buildboot dumpenv
+  ---------------
+    scriptFile:  /C:/dev/fan/src/buildboot.fan [build::BuildGroup]
+    fanHome:     /C:/dev/rel/
+    devHomeDir:  /C:/dev/fan/
+  ---------------
+    scriptFile:  /C:/dev/fan/src/sys/build.fan [build::BuildPod]
+    fanHome:     /C:/dev/rel/
+    devHomeDir:  /C:/dev/fan/
+  ---------------
+    scriptFile:  /C:/dev/fan/src/jfan/build.fan [build::BuildJava]
+    fanHome:     /C:/dev/rel/
+    devHomeDir:  /C:/dev/fan/
+    javaHome:    /C:/dev/tools/java/
+  ---------------
+    scriptFile:  /C:/dev/fan/src/nfan/build.fan [build::BuildCs]
+    fanHome:     /C:/dev/rel/
+    devHomeDir:  /C:/dev/fan/
+    dotnetHome:  /C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
+  ---------------
+    scriptFile:  /C:/dev/fan/src/compiler/build.fan [build::BuildPod]
+    fanHome:     /C:/dev/rel/
+    devHomeDir:  /C:/dev/fan/
+  ---------------
+    scriptFile:  /C:/dev/fan/src/compilerJava/build.fan [build::BuildPod]
+    fanHome:     /C:/dev/rel/
+    devHomeDir:  /C:/dev/fan/
+  ---------------
+    scriptFile:  /C:/dev/fan/src/build/build.fan [build::BuildPod]
+    fanHome:     /C:/dev/rel/
+    devHomeDir:  /C:/dev/fan/
+
+
+  C:\dev\fan\src>testSys\build dumpenv
+  ---------------
+    scriptFile:  /C:/dev/fan/src/testSys/build.fan [build::BuildPod]
+    fanHome:     /c:/dev/fan/
+    devHomeDir:  /c:/dev/fan/
+
+Key things to note about your environment:
+  1. all scripts should be using *dev* for devHomeDir
+  2. bootbuild scripts should be using *rel* for fanHome
+  3. non-bootbuild scripts like testSys should be using *dev* for fanHome
+  4. verify javaHome for jfan/build.fan
+  5. verify dotnetHome for nfan/build.fan (if running on Windows)
+
+Summary [#summary]
+******************
+In summary, you want to make sure of a couple key things:
+
+  1. setup your *rel* installation and never touch it (consider it readonly)
+  2. ensure jdkHome and dotnetHome are configured in both *rel*
+     and *dev* lib/sys.props
+  3. ensure *rel* lib/sys.props devHome points to your *dev* installation
+  4. make sure your substitutes are configured correctly:
+     a. on Unix make sure your FAN_SUBSTITUTE env points to the *rel* installation
+     b. on Windows make sure your *dev* lib/sys.props substitutes are configured
+  5. only put *dev* bin your path and always run your scripts from
+     the *dev* installation
