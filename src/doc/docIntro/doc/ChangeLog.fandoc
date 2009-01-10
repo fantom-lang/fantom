@@ -506,4 +506,6 @@
 - Protection checks to prevent internal types being used in public APIs
 - Expose sys::File ctor to allow new implementations
 - Optimize common MimeTypes to be interned
+- BuildScript dumpenv target
 - TODO: fix up JavaBridge with new compiler APIs
+- TODO: fix up buildall.fan with dumpenv

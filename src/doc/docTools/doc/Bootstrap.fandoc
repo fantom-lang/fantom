@@ -46,9 +46,15 @@ to reference the *dev* directory using a URI (not OS path):
 
   fan.build.devHome=/C:/dev/fan/
 
-If you forget to do this, then you will likely get IO exceptions -
-or worse it might corrupt your rel install and you will need to
-do a fresh installation.
+If you forget to do this, then you will get a build error which
+looks something like this:
+C:\dev\fan\src>jfan\build
+
+  Error: Must update /lib/sys.props devHome for bootstrap build
+  Error: Error initializing script [C:\dev\fan\src\jfan\build.fan]
+  build::FatalBuildErr
+    build::BuildScript.fatal (BuildScript.fan:429)
+    ...
 
 Substitutes [#substitutes]
 **************************

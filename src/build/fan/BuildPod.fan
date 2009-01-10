@@ -50,7 +50,9 @@ abstract class BuildPod : BuildScript
   ** The directory to look in for the dependency pod file (and
   ** potentially their recursive dependencies).  If null then we
   ** use the compiler's own pod definitions via reflection (which
-  ** is more efficient).
+  ** is more efficient).  As a general rule you shouldn't mess
+  ** with this field - it is used by the 'build' and 'compiler'
+  ** build scripts for bootstrap build.
   **
   Uri dependsDir
 

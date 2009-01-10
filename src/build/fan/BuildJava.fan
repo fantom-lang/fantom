@@ -66,6 +66,25 @@ abstract class BuildJava : BuildScript
   override Target defaultTarget() { return target("compile") }
 
 //////////////////////////////////////////////////////////////////////////
+// Dump Env
+//////////////////////////////////////////////////////////////////////////
+
+  @target="Dump env details to help build debugging"
+  override Void dumpenv()
+  {
+    super.dumpenv
+
+    oldLevel := log.level
+    log.level = LogLevel.silent
+    try
+      log.out.printLine("  javaHome:    ${JdkTask(this).jdkHomeDir}")
+    catch (Err e)
+      log.out.printLine("  javaHome:    $e")
+    finally
+      log.level = oldLevel
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Compile
 //////////////////////////////////////////////////////////////////////////
 

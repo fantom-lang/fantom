@@ -43,7 +43,7 @@ abstract class BuildGroup : BuildScript
     children = BuildScript[,]
     resolveFiles(childrenScripts).each |File f|
     {
-      log.info("CompileScript [$f]")
+      log.debug("CompileScript [$f]")
       s := (BuildScript)FanScript.make(this, f).compile.types.first.make
       s.log = log
       children.add(s)
@@ -82,9 +82,12 @@ abstract class BuildGroup : BuildScript
         names = names.union(n)
     }
 
+    // get my own targets, which trump children targets
+    myTargets := super.makeTargets
+
     // now create a Target for each name
     targets := Target[,]
-    names.map(targets) |Str name->Target| { return toTarget(name) }
+    names.map(targets) |Str name->Target| { return toTarget(name, myTargets) }
     return targets
   }
 
@@ -92,8 +95,13 @@ abstract class BuildGroup : BuildScript
   ** Make a target which will run the specified target
   ** name on all my children scripts.
   **
-  private Target toTarget(Str name)
+  private Target toTarget(Str name, Target[] myTargets)
   {
+    // my explicit targets trump children targets
+    myTarget := myTargets.find |Target t->Bool| { return t.name == name }
+    if (myTarget != null) return myTarget
+
+    // make a target which runs on the children scripts
     return Target.make(this, name, "run '$name' on all children") |,| { runOnChildren(name) }
   }
 
@@ -127,6 +135,17 @@ abstract class BuildGroup : BuildScript
         Exec.make(this, [fanExe, child.scriptFile.osPath, targetName]).run
       }
     }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Debug Env Target
+//////////////////////////////////////////////////////////////////////////
+
+  @target="Dump env details to help build debugging"
+  override Void dumpenv()
+  {
+    super.dumpenv
+    runOnChildren("dumpenv")
   }
 
 //////////////////////////////////////////////////////////////////////////

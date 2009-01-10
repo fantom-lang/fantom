@@ -65,6 +65,31 @@ abstract class BuildCs : BuildScript
   override Target defaultTarget() { return target("compile") }
 
 //////////////////////////////////////////////////////////////////////////
+// Dump Env
+//////////////////////////////////////////////////////////////////////////
+
+  @target="Dump env details to help build debugging"
+  override Void dumpenv()
+  {
+    super.dumpenv
+
+    if (!isWindows)
+    {
+      log.out.printLine("  skipped (not windows)")
+      return
+    }
+
+    oldLevel := log.level
+    log.level = LogLevel.silent
+    try
+      log.out.printLine("  dotnetHome:  ${CompileCs(this).dotnetHomeDir}")
+    catch (Err e)
+      log.out.printLine("  dotnetHome:  $e")
+    finally
+      log.level = oldLevel
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
