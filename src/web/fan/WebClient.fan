@@ -55,7 +55,7 @@ class WebClient
   **
   ** The HTTP method for the request.  Defaults to "GET".
   **
-  Str reqMethod := "GET"
+  Str reqMethod := "GET" { set { @reqMethod = val.upper } }
 
   **
   ** HTTP version to use for request must be 1.0 or 1.1.
@@ -167,6 +167,14 @@ class WebClient
   ** Socket options for the TCP socket used for requests.
   **
   SocketOptions socketOptions() { return options }
+
+  **
+  ** When set to true a 3xx response with a Location header
+  ** will automatically update the `reqUri` field and retry the
+  ** request using the alternate URI.  Redirects are not followed
+  ** if the request has a content body.
+  **
+  Bool followRedirects := true
 
 //////////////////////////////////////////////////////////////////////////
 // Get
@@ -318,6 +326,9 @@ class WebClient
     }
     catch throw IOErr("Invalid HTTP response")
 
+    // check for redirect
+    checkFollowRedirect
+
     // if there is response content, then create wrap the raw socket
     // input stream with the appropiate chunked input stream
     resInStream = wrapInStream
@@ -326,6 +337,32 @@ class WebClient
     if (resInStream != null) resInStream.charset = configContentEncoding
 
     return this
+  }
+
+  **
+  ** If we have a 3xx statu code with a location header,
+  ** then check for an automate redirect.
+  **
+  private Void checkFollowRedirect()
+  {
+    // only redirect on 3xx status code
+    if (resCode / 100 != 3) return
+
+    // must be explicitly configured for redirects
+    if (!followRedirects) return
+
+    // only redirect when there is no request content
+    if (reqOutStream != null) return
+
+    // only redirect if a location header was given
+    loc := resHeaders["Location"]
+    if (loc == null) return
+
+    // redirect
+    close
+    reqUri = Uri.decode(loc)
+    writeReq
+    readRes
   }
 
   **
