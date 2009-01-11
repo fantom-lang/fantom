@@ -190,7 +190,7 @@ Let's look at some example code (this script is available under
 
     override Void setup()
     {
-      Sys.ns.create(`/homePage`, Hello.make)
+      Sys.ns.create(`/homePage`, Hello())
     }
   }
 

@@ -23,8 +23,10 @@ abstract class Weblet
   **
   new make()
   {
-    req = (WebReq)Thread.locals["web.req"]
-    res = (WebRes)Thread.locals["web.res"]
+    req := Thread.locals["web.req"] as WebReq
+    res := Thread.locals["web.res"] as WebRes
+    if (req != null) this.req = req
+    if (res != null) this.res = res
   }
 
 //////////////////////////////////////////////////////////////////////////
