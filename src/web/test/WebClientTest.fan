@@ -51,16 +51,13 @@ class WebClientTest : Test
       verifyEq(html.size, len)
       verify(html.readAllStr.startsWith("<!DOCTYPE html"))
     }
-    finally
-    {
-      c.close
-    }
+    finally c.close
   }
 
   Void testGetChunked()
   {
     // at least for now, google home page uses chunked transfer
-    c := WebClient(`http://www.google.com`)
+    c := WebClient(`http://google.com`)
     verify(!c.isConnected)
     try
     {
@@ -76,15 +73,12 @@ class WebClientTest : Test
       verify(c.resHeader("Transfer-Encoding").lower.contains("chunked"))
       verify(c.resStr.contains("<html"))
     }
-    finally
-    {
-      c.close
-    }
+    finally c.close
   }
 
   Void testGetConvenience()
   {
-    c := WebClient(`http://www.google.com`)
+    c := WebClient(`http://google.com`)
     verify(c.getStr.contains("<html"))
     Thread.sleep(100ms)
     verify(!c.isConnected)
@@ -96,6 +90,28 @@ class WebClientTest : Test
       verify(c.getIn.readAllStr.contains("<html"))
     finally
       c.close
+  }
+
+  Void testRedirects()
+  {
+    origUri := `http://google.com`
+    c := WebClient(origUri)
+    try
+    {
+      // disable auto redirects - should get a 3xx
+      // redirect to www or country specific URL
+      c.followRedirects = false
+      c.writeReq.readRes
+      verifyEq(c.resCode/100, 3)
+      c.close
+
+      // now enable auto redirects to true and try again
+      c.followRedirects = true
+      c.writeReq.readRes
+      verifyEq(c.resCode, 200)
+      verifyNotEq(c.reqUri, origUri)
+    }
+    finally c.close
   }
 
   Void testPipeline()
@@ -119,11 +135,7 @@ class WebClientTest : Test
       c.readRes
       verifyEq(c.resCode, 404)
     }
-    finally
-    {
-      c.close
-    }
-
+    finally c.close
   }
 
 
