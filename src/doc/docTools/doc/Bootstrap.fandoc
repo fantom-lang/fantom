@@ -108,6 +108,11 @@ Also note that building on Unix will skip any .NET targets.
 
 JDK and .NET Tools [#otherTools]
 ********************************
+You need JDK 1.6 or greater to compile from source (only 1.5 is required
+for the Java runtime).
+
+Version 2.0 or greater of .NET is required.
+
 In order to compile from source you will need to setup some system
 properties to reference your JDK and .NET home directories:
 
@@ -117,6 +122,7 @@ properties to reference your JDK and .NET home directories:
 These paths should be formatted as file system Uris (not OS paths).
 These properties should be configured in "lib/sys.props" of **both**
 your *rel* and *dev* environments.
+
 
 The .NET targets are automatically skipped if not running Windows.
 So you can ignore the .NET configuration on Unix platforms.
