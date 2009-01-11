@@ -178,14 +178,12 @@ class Build : BuildGroup
 // Debug Env
 //////////////////////////////////////////////////////////////////////////
 
-/* TODO once we do build 1.0.37
   @target="Dump env details to help debugging bootstrap"
   override Void dumpenv()
   {
     super.dumpenv
     spawnOnChildren("dumpenv")
   }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
