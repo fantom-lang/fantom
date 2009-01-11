@@ -491,7 +491,7 @@
 - List, Map eachBreak -> eachWhile
 - Emacs support adm/tools/emacs/fan-mode.el
 
-*Build 1.0.37 (incomplete)*
+*Build 1.0.37 (11 Jan 09)*
 - Java FFI: array overrides of methods which use primitives or arrays
 - Java FFI: coerce sys::Func to Java interface with one abstract method
 - New sys::Date and sys::Time APIs
@@ -508,5 +508,3 @@
 - Expose sys::File ctor to allow new implementations
 - Optimize common MimeTypes to be interned
 - BuildScript dumpenv target
-- TODO: fix up JavaBridge with new compiler APIs
-- TODO: fix up buildall.fan with dumpenv
