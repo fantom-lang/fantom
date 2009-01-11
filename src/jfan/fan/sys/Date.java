@@ -36,9 +36,9 @@ public final class Date
     if (month < 0 || month > 11)    throw ArgErr.make("month " + month).val;
     if (day < 1 || day > DateTime.numDaysInMonth(year, month)) throw ArgErr.make("day " + day).val;
 
-    this.year    = year;
-    this.month   = month;
-    this.day     = day;
+    this.year  = (short)year;
+    this.month = (byte)month;
+    this.day   = (byte)day;
   }
 
   public static Date fromStr(String s) { return fromStr(s, true); }
@@ -262,8 +262,8 @@ public final class Date
   private static final String localeKey = "date";
 
 
-  private final int year;
-  private final int month;
-  private final int day;
+  private final short year;
+  private final byte month;
+  private final byte day;
 
 }
