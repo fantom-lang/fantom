@@ -189,6 +189,8 @@ namespace Fan.Sys
         SysType      = builtin("Sys",      ObjType);
         TestType     = builtin("Test",     ObjType);
         DateTimeType = builtin("DateTime", ObjType);
+        DateType     = builtin("Date",     ObjType);
+        TimeType     = builtin("Time",     ObjType);
         TimeZoneType = builtin("TimeZone", ObjType);
         ThreadType   = builtin("Thread",   ObjType);
         TypeType     = builtin("Type",     ObjType);
@@ -443,6 +445,8 @@ namespace Fan.Sys
     public static readonly Type TestType;
     public static readonly Type DateTimeType;
     public static readonly Type TimeZoneType;
+    public static readonly Type DateType;
+    public static readonly Type TimeType;
     public static readonly Type ThreadType;
     public static readonly Type TypeType;
     public static readonly Type UriType;

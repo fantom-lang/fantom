@@ -41,9 +41,9 @@ public final class Time
     if (sec < 0 || sec > 59)       throw ArgErr.make("sec " + sec).val;
     if (ns < 0 || ns > 999999999)  throw ArgErr.make("ns " + ns).val;
 
-    this.hour = hour;
-    this.min  = min;
-    this.sec  = sec;
+    this.hour = (byte)hour;
+    this.min  = (byte)min;
+    this.sec  = (byte)sec;
     this.ns   = ns;
   }
 
@@ -300,9 +300,9 @@ public final class Time
 
   private static final String localeKey = "time";
 
-  private final int hour;
-  private final int min;
-  private final int sec;
+  private final byte hour;
+  private final byte min;
+  private final byte sec;
   private final int ns;
 
 }
