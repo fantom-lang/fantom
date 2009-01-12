@@ -129,8 +129,8 @@ class CheckErrorsTest : JavaTest
   Void testCtors()
   {
     verifyErrors(
-     "using [java] java.util
-      class Foo : Date
+     "using [java] java.util::Date as JDate
+      class Foo : JDate
       {
         new make() : super() {}
         new makeFoo() : this.make() {}
@@ -148,9 +148,9 @@ class CheckErrorsTest : JavaTest
   Void testSubclass()
   {
     verifyErrors(
-     "using [java] java.util
+     "using [java] java.util::Date as JDate
       using [java] fanx.interop
-      class Foo : Date
+      class Foo : JDate
       {
         new makeA() : super() {}
         new makeB() : super() {}

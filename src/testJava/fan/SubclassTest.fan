@@ -126,8 +126,8 @@ class SubclassTest : JavaTest
   Void testCtors()
   {
     compile(
-     "using [java] java.util
-      class Foo : Date
+     "using [java] java.util::Date as JDate
+      class Foo : JDate
       {
         new make() : super() {}
         new makeTicks(Int millis) : super(millis) {}

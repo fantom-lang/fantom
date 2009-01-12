@@ -1,0 +1,131 @@
+//
+// Copyright (c) 2009, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   10 Jan 09  Brian Frank  Creation
+//
+
+**
+** Time represents a time of day independent of a specific
+** date or timezone.
+**
+@simple
+const final class Time
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the current time using the default timezone.  Convenience for:
+  **   DateTime.now.time
+  **
+  static Time now()
+
+  **
+  ** Make for the specified time values:
+  **  - hour:  0-23
+  **  - min:   0-59
+  **  - sec:   0-59
+  **  - ns:    0-999_999_999
+  **
+  ** Throw ArgErr is any of the parameters are out of range.
+  **
+  static Time make(Int hour, Int min, Int sec := 0, Int ns := 0)
+
+  **
+  ** Parse the string into a Time from the programmatic encoding
+  ** defined by `toStr`.  If the string cannot be parsed into a valid
+  ** Time and checked is false then return null, otherwise throw
+  ** ParseErr.
+  **
+  static Time? fromStr(Str s, Bool checked := true)
+
+  **
+  ** Private constructor.
+  **
+  private new privateMake()
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Two times are equal if have identical hour, min, sec, and ns values.
+  **
+  override Bool equals(Obj? that)
+
+  **
+  ** Return hash of hour, min, sec, and ns values.
+  **
+  override Int hash()
+
+  **
+  ** Compare based on hour, min, sec, and ns values.
+  **
+  override Int compare(Obj obj)
+
+  **
+  ** Return programmatic ISO 8601 string encoding formatted as follows:
+  **   hh:mm:ss.FFFFFFFFF
+  **   12:06:00.0
+  **
+  ** Also see `toLocale`.
+  **
+  override Str toStr()
+
+//////////////////////////////////////////////////////////////////////////
+// Access
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the hour of the time as a number between 0 and 23.
+  **
+  Int hour()
+
+  **
+  ** Get the minutes of the time as a number between 0 and 59.
+  **
+  Int min()
+
+  **
+  ** Get the whole seconds of the time as a number between 0 and 59.
+  **
+  Int sec()
+
+  **
+  ** Get the number of nanoseconds (the fraction of seconds) as
+  ** a number between 0 and 999,999,999.
+  **
+  Int nanoSec()
+
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Format this date according to the specified pattern.  If
+  ** pattern is null, then a localized default is used.  The
+  ** pattern format is the same as `DateTime.toLocale`:
+  **
+  **   h      One digit 24 hour (0-23)   3, 22
+  **   hh     Two digit 24 hour (0-23)   03, 22
+  **   k      One digit 12 hour (1-12)   3, 11
+  **   kk     Two digit 12 hour (1-12)   03, 11
+  **   m      One digit minutes (0-59)   4, 45
+  **   mm     Two digit minutes (0-59)   04, 45
+  **   s      One digit seconds (0-59)   4, 45
+  **   ss     Two digit seconds (0-59)   04, 45
+  **   f*     Fractional secs trailing zeros
+  **   F*     Fractional secs no trailing zeros
+  **   a      AM/PM marker               AM, PM
+  **   'xyz'  Literal characters
+  **
+  ** A symbol immediately preceding a "F" pattern with a no
+  ** fraction to print is skipped.
+  **
+  Str toLocale(Str? pattern := null)
+
+}

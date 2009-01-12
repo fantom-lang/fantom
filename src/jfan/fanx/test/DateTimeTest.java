@@ -9,6 +9,7 @@ package fanx.test;
 
 import fan.sys.*;
 import java.text.*;
+import java.util.Date;
 import java.util.*;
 
 /**

@@ -491,13 +491,14 @@
 - List, Map eachBreak -> eachWhile
 - Emacs support adm/tools/emacs/fan-mode.el
 
-*Build 1.0.37 (incomplete)*
+*Build 1.0.37 (11 Jan 09)*
 - Java FFI: array overrides of methods which use primitives or arrays
 - Java FFI: coerce sys::Func to Java interface with one abstract method
-- New web::WebClient API
-- Wisp support for chunked transfers and persistent connections
+- New sys::Date and sys::Time APIs
 - New sys::Unit API
 - New sys::Uuid API
+- New web::WebClient API
+- Wisp support for chunked transfers and persistent connections
 - Str isAlpha, isAlphaNum
 - OutStream sync
 - Allow closures in constructor to set const fields (same for static ctors)
@@ -506,4 +507,4 @@
 - Protection checks to prevent internal types being used in public APIs
 - Expose sys::File ctor to allow new implementations
 - Optimize common MimeTypes to be interned
-- TODO: fix up JavaBridge with new compiler APIs
+- BuildScript dumpenv target

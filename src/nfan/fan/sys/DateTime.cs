@@ -349,7 +349,9 @@ namespace Fan.Sys
   // Access
   //////////////////////////////////////////////////////////////////////////
 
-    // TODO - cleanup dups
+    public Date date() { return new Date(getYear(), month().ord, getDay()); }
+
+    public Time time() { return new Time(getHour(), getMin(), getSec(), getNanoSec()); }
 
     public long ticks() { return m_ticks; }
     public long getTicks() { return m_ticks; }
@@ -709,7 +711,7 @@ namespace Fan.Sys
     /// <summary>
     /// Get the number days in the specified month (0-11).
     /// </summary>
-    static int numDaysInMonth(int year, int month)
+    internal static int numDaysInMonth(int year, int month)
     {
       if (month == 1 && isLeapYear(year))
         return 29;
@@ -732,7 +734,7 @@ namespace Fan.Sys
     /// <summary>
     /// Get the first weekday of the specified year and month (0-11).
     /// </summary>
-    static int firstWeekday(int year, int mon)
+    internal static int firstWeekday(int year, int mon)
     {
       // get the 1st day of this month as a day of year (0-365)
       int firstDayOfYear = isLeapYear(year) ? dayOfYearForFirstOfMonLeap[mon] : dayOfYearForFirstOfMon[mon];
