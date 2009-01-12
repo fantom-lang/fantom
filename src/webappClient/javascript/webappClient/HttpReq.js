@@ -58,9 +58,11 @@ var webappClient_HttpReq = sys_Obj.extend(
     }
     req.send(content);
   }
-}
+});
 
-webappClient_HttpReq.make = function()
+webappClient_HttpReq.make = function(uri)
 {
-  return new webappClient_HttpReq();
+  var req = new webappClient_HttpReq();
+  if (uri != null) req.uri.val = uri;
+  return req;
 }
