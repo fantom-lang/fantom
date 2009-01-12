@@ -192,8 +192,16 @@ public final class Uuid
 
     private long resolveNodeAddr()
     {
-      try { return resolveMacAddr(); } catch (Throwable e) { e.printStackTrace(); }
-      try { return resolveIpAddr();  } catch (Throwable e) { e.printStackTrace(); }
+      // first try MAC address
+      try { return resolveMacAddr(); }
+      catch (NoSuchMethodError e) {}  // ignore if not on 1.6
+      catch (Throwable e) { e.printStackTrace(); }
+
+      // then try local IP address
+      try { return resolveIpAddr();  }
+      catch (Throwable e) { e.printStackTrace(); }
+
+      // last fallback to just a random number
       return FanInt.random.nextLong();
     }
 

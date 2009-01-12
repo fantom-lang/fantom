@@ -202,7 +202,7 @@ abstract class BuildScript
     if ((Obj?)targets == null) throw Err.make("script not setup yet")
     t := targets.find |Target t->Bool| { return t.name == name }
     if (t != null) return t
-    if (checked) throw Err.make("Target not found: $name")
+    if (checked) throw Err.make("Target not found '$name' in $scriptFile")
     return null
   }
 
@@ -239,8 +239,21 @@ abstract class BuildScript
     return targets
   }
 
-  // TODO: need Func.curry
   private Func toFunc(Method m) { return |,| { m.callOn(this, null) } }
+
+//////////////////////////////////////////////////////////////////////////
+// Debug Env Target
+//////////////////////////////////////////////////////////////////////////
+
+  @target="Dump env details to help build debugging"
+  virtual Void dumpenv()
+  {
+    log.out.printLine("---------------")
+    log.out.printLine("  scriptFile:  $scriptFile [$type.base]")
+    log.out.printLine("  fanHome:     $Sys.homeDir")
+    log.out.printLine("  devHomeDir:  $devHomeDir")
+    log.level = LogLevel.warn // suppress success message
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Arguments
@@ -426,7 +439,7 @@ abstract class BuildScript
   FatalBuildErr fatal(Str msg, Err? err := null)
   {
     log.error(msg, err)
-    return FatalBuildErr.make
+    return FatalBuildErr(msg, err)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -459,9 +472,14 @@ abstract class BuildScript
     t2 := Duration.now
 
     if (success)
-      echo("BUILD SUCCESS [${(t2-t1).toMillis}ms]!")
+    {
+      if (log.level <= LogLevel.info)
+        log.out.printLine("BUILD SUCCESS [${(t2-t1).toMillis}ms]!")
+    }
     else
-      echo("BUILD FAILED [${(t2-t1).toMillis}ms]!")
+    {
+      log.out.printLine("BUILD FAILED [${(t2-t1).toMillis}ms]!")
+    }
     return success ? 0 : -1
   }
 

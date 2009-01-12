@@ -225,6 +225,8 @@ public final class Sys
   public static final Type TestType      = builtin("Test",     ObjType);
   public static final Type ThreadType    = builtin("Thread",   ObjType);
   public static final Type DateTimeType  = builtin("DateTime", ObjType);
+  public static final Type DateType      = builtin("Date",     ObjType);
+  public static final Type TimeType      = builtin("Time",     ObjType);
   public static final Type TimeZoneType  = builtin("TimeZone", ObjType);
   public static final Type TypeType      = builtin("Type",     ObjType);
   public static final Type WeekdayType   = builtin("Weekday",  EnumType);

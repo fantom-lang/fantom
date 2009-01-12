@@ -21,11 +21,11 @@ class ReflectTest : JavaTest
   Void testLiterals()
   {
     compile(
-     "using [java] java.util
+     "using [java] java.util::Date as JDate
 
       class Foo
       {
-        Type date()  { return Date# }
+        Type date()  { return JDate# }
         Type jint()  { return Type.find(\"[java]::int\") }
         Type array() { return Type.find(\"[java]java.util::[Date\") }
         Type list()  { return Type.find(\"[java]java.util::Date[]\") }

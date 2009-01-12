@@ -79,6 +79,23 @@ class DateTimeTest : Test
     verifyEq(DateTime.makeTicks(123_456_789).hash, 123_456_789)
   }
 
+  Void testDateEquals()
+  {
+    verifyEq(Date(2000, Month.jun, 6), Date(2000, Month.jun, 6))
+    verifyNotEq(Date(2000, Month.jun, 6), Date(2000, Month.jun, 8))
+    verifyNotEq(Date(2000, Month.jun, 6), Date(2000, Month.jul, 6))
+    verifyNotEq(Date(2000, Month.jun, 6), Date(2001, Month.jun, 6))
+  }
+
+  Void testTimeEquals()
+  {
+    verifyEq(Time(1, 2, 3, 4), Time(1, 2, 3, 4))
+    verifyNotEq(Time(1, 2, 3, 4), Time(9, 2, 3, 4))
+    verifyNotEq(Time(1, 2, 3, 4), Time(1, 9, 3, 4))
+    verifyNotEq(Time(1, 2, 3, 4), Time(1, 2, 9, 4))
+    verifyNotEq(Time(1, 2, 3, 4), Time(1, 2, 3, 9))
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Compare
 //////////////////////////////////////////////////////////////////////////
@@ -89,6 +106,30 @@ class DateTimeTest : Test
     verify(DateTime.makeTicks(123_456_789) >= DateTime.makeTicks(123_456_789))
     verify(DateTime.makeTicks(123_456_789) <= DateTime.makeTicks(123_456_789))
     verify(DateTime.makeTicks(123_456_789) <  DateTime.makeTicks(723_456_789))
+  }
+
+  Void testDateCompare()
+  {
+    verify(Date(2000, aug, 10) <= Date(2000, aug, 10))
+    verify(Date(2000, aug, 10) >= Date(2000, aug, 10))
+
+    verify(Date(2000, aug, 10) < Date(2000, aug, 11))
+    verify(Date(2000, aug, 10) < Date(2000, sep, 10))
+    verify(Date(2000, aug, 10) < Date(2001, aug, 10))
+
+    verifyFalse(Date(2000, aug, 10) > Date(2000, aug, 11))
+    verifyFalse(Date(2000, aug, 10) > Date(2000, dec, 10))
+  }
+
+  Void testTimeCompare()
+  {
+    verify(Time(1, 2, 3, 4) <= Time(1, 2, 3, 4))
+    verifyFalse(Time(1, 2, 3, 4) < Time(1, 2, 3, 4))
+
+    verify(Time(1, 2, 3, 4) < Time(1, 2, 3, 9))
+    verify(Time(1, 2, 3, 4) < Time(1, 2, 9, 4))
+    verify(Time(1, 2, 3, 4) < Time(1, 9, 3, 4))
+    verify(Time(1, 2, 3, 4) < Time(9, 2, 3, 4))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -112,6 +153,13 @@ class DateTimeTest : Test
 
     c := DateTime.now(180ms)
     verify(b !== c)
+
+    verifyEq(Date.today, DateTime.now.date)
+
+    dt1 := DateTime.now
+    t   := Time.now
+    dt2  := DateTime.now
+    verify(dt1.time <= t && t <= dt2.time)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -650,6 +698,17 @@ class DateTimeTest : Test
       verifyEq(dt.dst,     isDST)
       verifyEq(dt.timeZoneAbbr, isDST ? tz.dstAbbr(year) : tz.stdAbbr(year))
       if (doy != null) verifyEq(dt.dayOfYear, doy)
+
+      verifyEq(dt.date.year,    year)
+      verifyEq(dt.date.month,   month)
+      verifyEq(dt.date.day,     day)
+      verifyEq(dt.date.weekday, weekday)
+      if (doy != null) verifyEq(dt.date.dayOfYear, doy)
+
+      verifyEq(dt.time.hour,    hr)
+      verifyEq(dt.time.min,     min)
+      verifyEq(dt.time.sec,     sec)
+      verifyEq(dt.time.nanoSec, nanoSec)
     }
 
     dtA := DateTime.makeTicks(ticks, tz)
@@ -662,6 +721,16 @@ class DateTimeTest : Test
     verifyEq(dtA, dtR)
     verifyEq(dtA.toStr, dtR.toStr)
     func(dtR)
+
+    // verify date.toStr -> Date.fromStr round trip
+    dR := Date.fromStr(dtA.date.toStr)
+    verifyEq(dtA.date, dR)
+    verifyEq(dtA.date.toStr, dR.toStr)
+
+    // verify time.toStr -> Time.fromStr round trip
+    tR := Time.fromStr(dtA.time.toStr)
+    verifyEq(dtA.time, tR)
+    verifyEq(dtA.time.toStr, tR.toStr)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -701,6 +770,31 @@ class DateTimeTest : Test
     verifyFromStrErr("2009-03-01T12:61:00+01:00 Amsterdam")
     verifyFromStrErr("2009-03-01T12:00:99+01:00 Amsterdam")
     verifyFromStrErr("2009-03-01T12:00:00+01 Amsterdam")
+  }
+
+  Void testDateToStr()
+  {
+    verifyEq(Date(2009, Month.jan, 3).toStr, "2009-01-03")
+    verifyEq(Date(2009, Month.dec, 30).toStr, "2009-12-30")
+
+    verifyEq(Date.fromStr("1972-06-03"), Date(1972, Month.jun, 3))
+    verifyEq(Date.fromStr("2009/05/03", false), null)
+    verifyErr(ParseErr#) |,| { Date.fromStr("1990") }
+  }
+
+  Void testTimeToStr()
+  {
+    verifyEq(Time(2, 30).toStr, "02:30:00")
+    verifyEq(Time(13, 4, 5).toStr, "13:04:05")
+    verifyEq(Time(23, 0, 0, 123).toStr, "23:00:00.000000123")
+    verifyEq(Time(23, 0, 0, 123_456).toStr, "23:00:00.000123456")
+    verifyEq(Time(23, 0, 43, 123_456_987).toStr, "23:00:43.123456987")
+
+    verifyEq(Time.fromStr("01:02:03"), Time(1, 2, 3))
+    verifyEq(Time.fromStr("01:02:03.9"), Time(1, 2, 3, 900_000_000))
+    verifyEq(Time.fromStr("01:02:03.308"), Time(1, 2, 3, 308_000_000))
+    verifyEq(Time.fromStr("30:99", false), null)
+    verifyErr(ParseErr#) |,| { Time.fromStr("") }
   }
 
   Void verifyFromStrErr(Str s)
@@ -784,6 +878,27 @@ class DateTimeTest : Test
     verifyErr(ArgErr#) |,| { x.toLocale("aa") }
     verifyErr(ArgErr#) |,| { x.toLocale("mmm") }
     verifyErr(ArgErr#) |,| { x.toLocale("sss") }
+  }
+
+  Void testDateLocale()
+  {
+    d := Date(2009, Month.jan, 10)
+    verifyEq(d.toLocale("D/M/YYYY"), "10/1/2009")
+    verifyEq(d.toLocale("WWW D-MMM-YYYY"), "Sat 10-Jan-2009")
+
+    d = Date(1776, Month.jul, 4)
+    verifyEq(d.toLocale("MMMM D, YYYY"), "July 4, 1776")
+  }
+
+  Void testTimeLocale()
+  {
+    t := Time(13, 2, 4, 123_000_678)
+    verifyEq(t.toLocale("h:mma"),  "13:02PM")
+    verifyEq(t.toLocale("k:mma"),  "1:02PM")
+    verifyEq(t.toLocale("kk:mma"), "01:02PM")
+    verifyEq(t.toLocale("k:mm:ss.F a"), "1:02:04.1 PM")
+    verifyEq(t.toLocale("h:mm:ss.ffffff"), "13:02:04.123000")
+    verifyEq(t.toLocale("h:mm:ss.FFFFFFFFF"), "13:02:04.123000678")
   }
 
 //////////////////////////////////////////////////////////////////////////
