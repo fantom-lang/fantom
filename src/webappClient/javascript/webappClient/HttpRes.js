@@ -33,7 +33,7 @@ var webappClient_HttpRes = sys_Obj.extend(
     set: function(val) { this.val = val; },
     val: true
   }
-}
+});
 
 webappClient_HttpRes.make = function()
 {
