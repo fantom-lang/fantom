@@ -66,6 +66,8 @@ sys_Obj.equals = function(self, that)
     return self.equals(that);
   else if ((typeof self) == "number")
     return sys_Float.equals(self, that);
+  else if (self != null && self.constructor == Array)
+    return sys_List.equals(self, that);
   else
     return self == that;
 }

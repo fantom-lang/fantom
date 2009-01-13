@@ -50,18 +50,12 @@ class TestRunner
       type   = type[0..i-1]
     }
 
-    // get our script engine instance
-    engine = ScriptEngineManager().getEngineByName("js")
-    Runner.evalSys(engine)
-
-    // eval pod script
+    // create engine and eval pods
+    // TODO - eval pod dependencies
     p := Pod.find(pod)
-    //script := p.files["/${p.name}.js".toUri]
-    //if (script == null) throw Err("No script found in $p.name")
-script := Sys.homeDir + "lib/javascript/${p.name}.js".toUri
-if (!script.exists) throw Err("No script found in $p.name")
-    try engine.eval(script.readAllStr);
-    catch (Err e) throw Err("Pod eval failed: $p.name", e)
+    engine = ScriptEngineManager().getEngineByName("js");
+    Runner.evalPodScript(engine, Pod.find("webappClient"))
+    Runner.evalPodScript(engine, p)
 
     // run tests
     t1 := Duration.now
