@@ -999,10 +999,14 @@ class StrTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// TODO
+// In
 //////////////////////////////////////////////////////////////////////////
 
-  // TODO - need to fix when do const folding optimization
-  // TODO - need to check field rvalues
+  Void testIn()
+  {
+    verifyEq("hi test".in.readAllStr, "hi test")
+    verifyEq("hi\ntest".in.readAllLines, ["hi", "test"])
+  }
+
 
 }
