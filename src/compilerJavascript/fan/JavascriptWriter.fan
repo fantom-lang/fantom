@@ -270,7 +270,7 @@ class JavascriptWriter : CompilerSupport
       case ExprId.staticTarget: out.w(qname(ex->ctype))
       //case ExprId.unknownVar
       //case ExprId.storage
-      //case ExprId.ternary
+      case ExprId.ternary:      expr(ex->condition); out.w(" ? "); expr(ex->trueExpr); out.w(" : "); expr(ex->falseExpr)
       //case ExprId.withBlock
       //case ExprId.withSub
       //case ExprId.withBase
