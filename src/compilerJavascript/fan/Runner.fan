@@ -51,19 +51,11 @@ class Runner
     t := Type.find("$pod::$type")
     m := t.method(method)
 
-    // eval sys lib
-    engine := ScriptEngineManager().getEngineByName("js");
-    evalSys(engine)
-
+    // create engine and eval pods
     // TODO - eval pod dependencies
-
-    // eval pod
-    //script := p.files["/${p.name}.js".toUri]
-    //if (script == null) throw Err("No script found in $p.name")
-script := Sys.homeDir + "lib/javascript/${p.name}.js".toUri
-if (!script.exists) throw Err("No script found in $p.name")
-    try engine.eval(script.readAllStr);
-    catch (Err e) throw Err("Pod eval failed: $p.name", e)
+    engine := ScriptEngineManager().getEngineByName("js");
+    evalPodScript(engine, Pod.find("webappClient"))
+    evalPodScript(engine, p)
 
     // invoke target method
     jsname := t.qname.replace("::", "_")
@@ -74,46 +66,16 @@ if (!script.exists) throw Err("No script found in $p.name")
   }
 
   **
-  ** Load in the sys library.
+  ** Load and eval the pod script file in the
+  ** specifed ScriptEngine.
   **
-  static Void evalSys(ScriptEngine engine)
+  static Void evalPodScript(ScriptEngine engine, Pod pod)
   {
-    script := Sys.homeDir + "lib/javascript/sys.js".toUri
-    if (!script.exists) throw Err("Sys script not found")
+    script := pod.files["/${pod.name}.js".toUri]
+    if (script == null)
+     throw Err("No script found in $pod.name")
+
     try engine.eval(script.readAllStr);
-    catch (Err e) throw Err("Sys script eval failed", e)
-
-    /*
-    // load script zip
-    sys := Sys.homeDir + `lib/javascript/sys.zip`
-    zip := Zip.read(sys.in)
-
-    // read all script files
-    scripts := Str:Str[:]
-    File? script
-    while ((script = zip.readNext) != null)
-      scripts[script.name] = script.readAllStr
-
-    // sort in depends order
-    keys := scripts.keys
-    keys.sort |Str a, Str b->Int|
-    {
-      // Sys always first
-      if (a == "Sys.js") return -1
-      if (b == "Sys.js") return 1
-      // then Obj
-      if (a == "Obj.js") return -1
-      if (b == "Obj.js") return 1
-      // doesn't matter after that
-      return 0
-    }
-
-    // now eval everything
-    keys.each |Str k|
-    {
-      try engine.eval(scripts[k])
-      catch (Err e) throw Err("Sys pod eval failed: $k", e)
-    }
-    */
+    catch (Err e) throw Err("Pod eval failed: $pod.name", e)
   }
 }

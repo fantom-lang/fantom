@@ -133,7 +133,7 @@ class JavascriptWriter : CompilerSupport
     if (f.isNative) return
     if (f.isStatic) err("Static fields not yet supported: $f.name", f.location)
     out.w("$f.name: {").nl
-    out.w("  get: function() { return this.val },").nl
+    out.w("  get: function() { return this.val; },").nl
     out.w("  set: function(val) { this.val = val; },").nl
     out.w("  val: null").nl
     out.w("},").nl
@@ -170,7 +170,7 @@ class JavascriptWriter : CompilerSupport
       //case StmtId.whileStmt:    return
       //case StmtId.breakStmt:    return
       //case StmtId.continueStmt: return
-      //case StmtId.tryStmt:      return
+      case StmtId.tryStmt:      tryStmt(stmt)
       //case StmtId.switchStmt:   return
       default: err("Unknown StmtId: $stmt.id", stmt.location)
     }
@@ -213,6 +213,16 @@ class JavascriptWriter : CompilerSupport
     if (fs.update != null) expr(fs.update)
     out.w(")").nl
     block(fs.block)
+  }
+
+  Void tryStmt(TryStmt ts)
+  {
+    out.w("try").nl
+    block(ts.block)
+    ts.catches.each |Catch c|
+    {
+      out.w("catch (err) { alert(err); }").nl
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -296,7 +306,7 @@ class JavascriptWriter : CompilerSupport
     if (be.lhs is FieldExpr)
     {
       fe := be.lhs as FieldExpr
-      if (fe.useAccessor) { fieldExpr(fe); out.w(".set("); expr(be.rhs); out.w(")") }
+      if (fe.useAccessor) { fieldExpr(fe,false); out.w("("); expr(be.rhs); out.w(")") }
       else { fieldExpr(fe); out.w(" = "); expr(be.rhs); }
     }
     else { expr(be.lhs); out.w(" = "); expr(be.rhs) }
@@ -328,11 +338,16 @@ class JavascriptWriter : CompilerSupport
     // normal case
     if (ce.target != null)
     {
-      if (isPrimitive(ce.target.ctype.toStr) || ce.target is TypeCheckExpr)
+      if (isPrimitive(ce.target.ctype.toStr) ||
+          ce.target.ctype.isList ||
+          ce.target is TypeCheckExpr)
       {
         ctype := ce.target.ctype
         if (ce.target is TypeCheckExpr) ctype = ce.target->check
-        out.w("${qname(ctype)}.$ce.name(")
+        if (ctype.isList)
+          out.w("sys_List.$ce.name(")
+        else
+          out.w("${qname(ctype)}.$ce.name(")
         if (!ce.method.isStatic)
         {
           expr(ce.target)
@@ -397,7 +412,22 @@ class JavascriptWriter : CompilerSupport
         se.op == ShortcutOp.get || se.op == ShortcutOp.set)
     {
       expr(se.target)
-      out.w("[$se.args.first]")
+      i := "$se.args.first".toInt
+      if (i < 0)
+      {
+        out.w("[")
+        expr(se.target)
+        out.w(".length$i]")
+      }
+      else
+      {
+        out.w("[$i]")
+      }
+      if (se.args.size > 1)
+      {
+        out.w(" = ")
+        expr(se.args[1])
+      }
       return
     }
 
@@ -414,8 +444,14 @@ class JavascriptWriter : CompilerSupport
     }
   }
 
-  Void fieldExpr(FieldExpr fe)
+  Void fieldExpr(FieldExpr fe, Bool get := true)
   {
+    if (fe.target?.ctype.isList && fe.name == "size")
+    {
+      expr(fe.target)
+      out.w(".length")
+      return
+    }
     cvar := fe.target?.toStr == r"$cvars"
     name := fe.name
     if (fe.target != null && !cvar)
@@ -430,7 +466,9 @@ class JavascriptWriter : CompilerSupport
       else { i := name.index(r"$"); if (i != null) name = name[0...i] }
     }
     out.w(name)
-    if (!cvar && !fe.useAccessor) out.w(".val")
+    if (!cvar) out.w(fe.useAccessor
+      ? (get ? ".get()" : ".set")
+      : ".val")
   }
 
   Void closureExpr(ClosureExpr ce)
