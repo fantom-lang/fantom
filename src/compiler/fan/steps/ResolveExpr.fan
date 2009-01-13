@@ -335,6 +335,17 @@ class ResolveExpr : CompilerStep
   {
     // resolve as normal unknown variable
     resolved := resolveVar(var)
+
+    // handle case where we have a local variable hiding a
+    // field since the @x is assumed to be @this.x
+    if (resolved.id === ExprId.localVar)
+    {
+      field := curType.field(var.name)
+      if (field != null)
+        resolved = FieldExpr(var.location, ThisExpr(var.location), field)
+    }
+
+    // is we can't resolve as field, then this is an error
     if (resolved.id !== ExprId.field)
     {
       if (resolved.ctype !== ns.error)
