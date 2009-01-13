@@ -510,4 +510,5 @@
 - BuildScript dumpenv target
 
 *Build 1.0.38 (incomplete)*
+- Str.in to get string as InStream
 - Map.ordered to use LinkedHashMap backing store
