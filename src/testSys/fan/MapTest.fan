@@ -568,6 +568,104 @@ class MapTest : Test
     verifyErr(UnsupportedErr#) |,| { Int:Str[:].caseInsensitive = true }
     verifyErr(UnsupportedErr#) |,| { Obj:Str[:].caseInsensitive = true }
     verifyErr(UnsupportedErr#) |,| { ["a":0].caseInsensitive = true }
+    verifyErr(UnsupportedErr#) |,| { Str:Str[:] { ordered = true; caseInsensitive = true } }
+    verifyErr(ReadonlyErr#) |,| { xro := Str:Str[:].ro; xro.caseInsensitive = true }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Ordered
+//////////////////////////////////////////////////////////////////////////
+
+  Void testOrdered()
+  {
+    m := Str:Int[:] { ordered = true }
+
+    // add, get, containsKey
+    10.times |Int i| { m.add(i.toStr, i) }
+    verifyEq(m["0"], 0)
+    verifyEq(m["9"], 9)
+    verifyEq(m.containsKey("2"), true)
+    verifyEq(m.containsKey("7"), true)
+    verifyEq(m.containsKey("x"), false)
+    verifyErr(ArgErr#) |,| { m.add("4", 99) }
+
+    // keys, values
+    verifyEq(m.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
+    verifyEq(m.values, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    // each
+    n := 0
+    m.each |Int v, Str k|
+    {
+      verifyEq(v, n)
+      verifyEq(k, n.toStr)
+      n++
+    }
+
+    // find, findAll, exclude, reduce, map
+    verifyEq(m.find |Int v, Str k->Bool| { return k == "4" }, 4)
+    verifyEq(m.find |Int v, Str k->Bool| { return k == "x" }, null)
+    verifyEq(m.findAll |Int v, Str k->Bool| { return k.toInt.isOdd  }, ["1":1, "3":3, "5":5, "7":7, "9":9])
+    verifyEq(m.exclude |Int v, Str k->Bool| { return k.toInt.isOdd }, ["0":0, "2":2, "4":4, "6":6, "8":8])
+    verifyEq(m.reduce("") |Str r, Int v->Obj| { return r+v }, "0123456789")
+
+    // dup
+    d := m.dup
+    verifyEq(d.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
+    verifyEq(d.values, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    // remove
+    verifyEq(m.remove("5"), 5)
+    verifyEq(m["5"], null)
+    verifyEq(m.containsKey("5"), false)
+    verifyEq(m.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9"])
+    verifyEq(m.values, [0, 1, 2, 3, 4, 6, 7, 8, 9])
+
+    // addAll
+    m.addAll(Str:Int[:] { ordered = true; add("5", 5); add("10",10) })
+    verifyEq(m.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
+    verifyEq(m.values, [0, 1, 2, 3, 4, 6, 7, 8, 9, 5, 10])
+
+    // setAll
+    m["1"] = 11
+    m.setAll(["6":66, "8":88])
+    verifyEq(m.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
+    verifyEq(m.values, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
+
+    // to readonly
+    r := m.ro
+    verifyEq(r.ordered, true)
+    verifyEq(r.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
+    verifyEq(r.values, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
+    verifyEq(r["6"], 66)
+    verifyErr(ReadonlyErr#) |,| { r["3"] = 333 }
+
+    // to immutable
+    i := m.toImmutable
+    m.clear
+    verifyEq(i.ordered, true)
+    verifyEq(i.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5", "10"])
+    verifyEq(i.values, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5, 10])
+    verifyEq(i["10"], 10)
+    verifyErr(ReadonlyErr#) |,| { i["3"] = 333 }
+
+    // to rw
+    rw := r.rw
+    verifyEq(rw.ordered, true)
+    verifyEq(rw.remove("10"), 10)
+    verifyEq(rw.keys, ["0", "1", "2", "3", "4", "6", "7", "8", "9", "5"])
+    verifyEq(rw.values, [0, 11, 2, 3, 4, 66, 7, 88, 9, 5])
+
+    // set false
+    m.ordered = false
+    10.times |Int j| { m.add(j.toStr, j) }
+    verifyNotEq(m.keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
+    verifyNotEq(m.values, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    // errors
+    verifyErr(UnsupportedErr#) |,| { ["a":0].ordered = true }
+    verifyErr(UnsupportedErr#) |,| { Str:Str[:] { caseInsensitive = true; ordered = true } }
+    verifyErr(ReadonlyErr#) |,| { xro := Str:Str[:].ro; xro.ordered = true }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -824,8 +922,8 @@ class MapTest : Test
     verifyEq(r.findAll |Str s->Bool| { return true }, [0:"a", 1:"b", 2:"c"])
     verifyEq(r.toStr, [0:"a", 1:"b", 2:"c"].toStr)
     verifyEq(r.caseInsensitive, false)
+    verifyEq(r.ordered, false)
     verifyEq(r.def, null)
-//verifyEq(r.join, "abc")
 
     // verify all modification methods throw ReadonlyErr
     verifyErr(ReadonlyErr#) |,| { r[2] = "x" }
@@ -837,6 +935,7 @@ class MapTest : Test
     verifyErr(ReadonlyErr#) |,| { r.remove(5) }
     verifyErr(ReadonlyErr#) |,| { r.clear }
     verifyErr(ReadonlyErr#) |,| { r.caseInsensitive = true }
+    verifyErr(ReadonlyErr#) |,| { r.ordered = true }
     verifyErr(ReadonlyErr#) |,| { r.def = "" }
 
     // verify rw detaches ro
