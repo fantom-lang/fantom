@@ -141,9 +141,23 @@ final class Map
   **
   ** Getting this field is idempotent.  If you attempt to set this method
   ** on a map which is not empty or not typed to use Str keys, then throw
-  ** UnsupportedOperation.  Throw ReadonlyErr if set when readonly.
+  ** UnsupportedOperation.  Throw ReadonlyErr if set when readonly.  This
+  ** mode cannot be used concurrently with `ordered`.
   **
   Bool caseInsensitive := false
+
+  **
+  ** When set to true, the map maintains the order in which key/value
+  ** pairs are added to the map.  The implementation is based on using
+  ** a linked list in addition to the normal hashmap.  This field defaults
+  ** to false.
+  **
+  ** Getting this field is idempotent.  If you attempt to set this method
+  ** on a map which is not empty, then throw UnsupportedOperation.  Throw
+  ** ReadonlyErr if set when readonly.  This mode cannot be used concurrently
+  ** with `caseInsensitive`.
+  **
+  Bool ordered := false
 
   **
   ** The default value to use for `get` when a key isn't mapped.

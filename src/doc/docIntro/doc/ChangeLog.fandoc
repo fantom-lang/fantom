@@ -508,3 +508,6 @@
 - Expose sys::File ctor to allow new implementations
 - Optimize common MimeTypes to be interned
 - BuildScript dumpenv target
+
+*Build 1.0.38 (incomplete)*
+- Map.ordered to use LinkedHashMap backing store
