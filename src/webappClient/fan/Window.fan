@@ -26,11 +26,11 @@ class Window
   **
   ** Get the URI for this window.
   **
-  static Uri uri() { return `.` }
+  static Str uri() { return "" }
 
   **
   ** Hyperlink to the given URI in this window.
   **
-  static Void hyperlink(Uri uri) {}
+  static Void hyperlink(Str uri) {}
 
 }
