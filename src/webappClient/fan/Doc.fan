@@ -21,6 +21,12 @@ class Doc
   **
   ** Get the body element.
   **
-  static Elem body() { return Elem() }
+  static Elem body() { return Elem("") }
+
+  **
+  ** Get the element with this 'id', or 'null' if no
+  ** element is found with this 'id'.
+  **
+  static Elem? getById(Str id) { return null }
 
 }
