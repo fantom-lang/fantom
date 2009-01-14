@@ -9,6 +9,7 @@ package fanx.serial;
 
 import fan.sys.*;
 import fanx.util.*;
+import java.util.HashMap;
 
 /**
  * ObjDecoder parses an object tree from an input stream.
@@ -377,7 +378,7 @@ public class ObjDecoder
   private Object readMap(MapType mapType, Object firstKey)
   {
     // setup accumulator
-    Map.FanHashMap map = new Map.FanHashMap();
+    HashMap map = new HashMap();
 
     // finish first pair
     consume(Token.COLON, "Expected ':'");

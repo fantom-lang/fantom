@@ -12,6 +12,7 @@ import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.Set;
 import fanx.serial.*;
@@ -31,20 +32,20 @@ public final class Map
 
   public static Map make(Type type)
   {
-    return new Map((MapType)type, new FanHashMap());
+    return new Map((MapType)type, new HashMap());
   }
 
   public Map(Type k, Type v)
   {
-    this(new MapType(k, v), new FanHashMap());
+    this(new MapType(k, v), new HashMap());
   }
 
   public Map(MapType type)
   {
-    this(type, new FanHashMap());
+    this(type, new HashMap());
   }
 
-  public Map(MapType type, FanHashMap map)
+  public Map(MapType type, HashMap map)
   {
     if (type == null || map == null) { Thread.dumpStack(); throw new NullErr().val; }
     this.type = type;
@@ -96,7 +97,7 @@ public final class Map
   public final List keys()
   {
     Object[] keys = new Object[map.size()];
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     for (int i=0; it.hasNext(); ++i)
       keys[i] = ((Entry)it.next()).getKey();
     return new List(type.k, keys);
@@ -137,7 +138,7 @@ public final class Map
   public final Map setAll(Map m)
   {
     modify();
-    Iterator it = m.map.pairs().iterator();
+    Iterator it = m.pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -149,7 +150,7 @@ public final class Map
   public final Map addAll(Map m)
   {
     modify();
-    Iterator it = m.map.pairs().iterator();
+    Iterator it = m.pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -167,7 +168,7 @@ public final class Map
   public final Map dup()
   {
     Map dup = new Map(type);
-    dup.map = (FanHashMap)this.map.clone();
+    dup.map = (HashMap)this.map.clone();
     return dup;
   }
 
@@ -177,7 +178,11 @@ public final class Map
     map.clear();
   }
 
-  public final boolean caseInsensitive() { return caseInsensitive; }
+  public final boolean caseInsensitive()
+  {
+    return map instanceof CIHashMap;
+  }
+
   public final void caseInsensitive(boolean v)
   {
     modify();
@@ -188,13 +193,38 @@ public final class Map
     if (map.size() != 0)
       throw UnsupportedErr.make("Map not empty").val;
 
-    if (this.caseInsensitive == v) return;
-    this.caseInsensitive = v;
+    if (v && ordered())
+      throw UnsupportedErr.make("Map cannot be caseInsensitive and ordered").val;
 
-    if (caseInsensitive)
+    if (caseInsensitive() == v) return;
+
+    if (v)
       map = new CIHashMap();
     else
-      map = new FanHashMap();
+      map = new HashMap();
+  }
+
+  public final boolean ordered()
+  {
+    return map instanceof LinkedHashMap;
+  }
+
+  public final void ordered(boolean v)
+  {
+    modify();
+
+    if (map.size() != 0)
+      throw UnsupportedErr.make("Map not empty").val;
+
+    if (v && caseInsensitive())
+      throw UnsupportedErr.make("Map cannot be caseInsensitive and ordered").val;
+
+    if (ordered() == v) return;
+
+    if (v)
+      map = new LinkedHashMap();
+    else
+      map = new HashMap();
   }
 
   public final Object def() { return def; }
@@ -226,7 +256,7 @@ public final class Map
     StringBuilder s = new StringBuilder(32+map.size()*32);
     s.append("[");
     boolean first = true;
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -250,7 +280,7 @@ public final class Map
 
   public final void each(Func f)
   {
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -260,7 +290,7 @@ public final class Map
 
   public final Object eachWhile(Func f)
   {
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -272,7 +302,7 @@ public final class Map
 
   public final Object find(Func f)
   {
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -287,7 +317,7 @@ public final class Map
   public final Map findAll(Func f)
   {
     Map acc = new Map(type);
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -302,7 +332,7 @@ public final class Map
   public final Map exclude(Func f)
   {
     Map acc = new Map(type);
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -316,7 +346,7 @@ public final class Map
 
   public final Object reduce(Object reduction, Func f)
   {
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -329,7 +359,7 @@ public final class Map
 
   public final Map map(Map acc, Func f)
   {
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -359,10 +389,9 @@ public final class Map
     if (!readonly) return this;
 
     Map rw = new Map(type);
-    rw.map = (FanHashMap)map.clone();
+    rw.map = (HashMap)map.clone();
     rw.readonly = false;
     rw.readonlyMap = this;
-    rw.caseInsensitive = caseInsensitive;
     rw.def = def;
     return rw;
   }
@@ -374,7 +403,6 @@ public final class Map
     {
       Map ro = new Map(type);
       ro.map = map;
-      ro.caseInsensitive = caseInsensitive;
       ro.def = def;
       ro.readonly = true;
       readonlyMap = ro;
@@ -391,9 +419,14 @@ public final class Map
   {
     if (immutable) return this;
 
+    // allocate new map of correct type
+    HashMap temp;
+    if (caseInsensitive()) temp = new CIHashMap(map.size()*2+3);
+    else if (ordered()) temp = new LinkedHashMap(map.size()*2+3);
+    else temp = new HashMap(map.size()*2+3);
+
     // make safe copy
-    FanHashMap temp = caseInsensitive ? new CIHashMap() : new FanHashMap();
-    Iterator it = map.pairs().iterator();
+    Iterator it = pairsIterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
@@ -418,7 +451,6 @@ public final class Map
     Map ro = new Map(type, temp);
     ro.readonly = true;
     ro.immutable = true;
-    ro.caseInsensitive = caseInsensitive;
     ro.def = def;
     return ro;
   }
@@ -433,7 +465,7 @@ public final class Map
     // it so it remains immutable
     if (readonlyMap != null)
     {
-      readonlyMap.map = (FanHashMap)map.clone();
+      readonlyMap.map = (HashMap)map.clone();
       readonlyMap = null;
     }
   }
@@ -444,7 +476,10 @@ public final class Map
 
   public Iterator pairsIterator()
   {
-    return map.pairs().iterator();
+    if (map instanceof CIHashMap)
+      return ((CIHashMap)map).pairs().iterator();
+    else
+      return map.entrySet().iterator();
   }
 
   public Iterator keysIterator()
@@ -453,20 +488,13 @@ public final class Map
   }
 
 //////////////////////////////////////////////////////////////////////////
-// FanHashMap
-//////////////////////////////////////////////////////////////////////////
-
-  public static class FanHashMap extends HashMap
-  {
-    public Set pairs() { return entrySet(); }
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // CIHashMap (Case Insensitive)
 //////////////////////////////////////////////////////////////////////////
 
-  static class CIHashMap extends FanHashMap
+  static class CIHashMap extends HashMap
   {
+    public CIHashMap() {}
+    public CIHashMap(int capacity) { super(capacity); }
     public Object get(Object key) { return super.get(new CIKey((String)key)); }
     public boolean containsKey(Object key) { return super.containsKey(new CIKey((String)key)); }
     public Object put(Object key, Object val) { return super.put(new CIKey((String)key), val); }
@@ -485,8 +513,8 @@ public final class Map
 
     public boolean equals(Object obj)
     {
-      if (!(obj instanceof FanHashMap)) return false;
-      FanHashMap that = (FanHashMap)obj;
+      if (!(obj instanceof HashMap)) return false;
+      HashMap that = (HashMap)obj;
       if (size() != that.size()) return false;
       Iterator it = pairs().iterator();
       while (it.hasNext())
@@ -544,11 +572,10 @@ public final class Map
 //////////////////////////////////////////////////////////////////////////
 
   private MapType type;
-  private FanHashMap map;
+  private HashMap map;
   private Map readonlyMap;
   private boolean readonly;
   private boolean immutable;
-  private boolean caseInsensitive;
   private Object def;
 
 }
