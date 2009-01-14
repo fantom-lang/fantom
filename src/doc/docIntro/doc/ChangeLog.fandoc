@@ -508,3 +508,8 @@
 - Expose sys::File ctor to allow new implementations
 - Optimize common MimeTypes to be interned
 - BuildScript dumpenv target
+
+*Build 1.0.38 (incomplete)*
+- Str.in to get string as InStream
+- Map.ordered to use LinkedHashMap backing store
+- Compiler fix when local variable shadows field with storage operator

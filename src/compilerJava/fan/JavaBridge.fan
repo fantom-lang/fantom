@@ -580,8 +580,7 @@ class JavaBridge : CBridge
 
     // generate FuncWrapper class
     name := "FuncWrapper" + funcWrappers.size
-    cls := TypeDef(ns, loc, compiler.types[0].unit, name)
-    ((DefNode)cls).flags = FConst.Internal | FConst.Synthetic // TODO
+    cls := TypeDef(ns, loc, compiler.types[0].unit, name, FConst.Internal | FConst.Synthetic)
     cls.base = ns.objType
     cls.mixins = [expected]
     addTypeDef(cls)
@@ -594,9 +593,7 @@ class JavaBridge : CBridge
     cls.addSlot(field)
 
     // generate FuncWrapper.make constructor
-    ctor := MethodDef(loc, cls)
-    ((SlotDef)ctor).name = "make" // TODO
-    ((DefNode)ctor).flags = FConst.Internal | FConst.Ctor | FConst.Synthetic // TODO
+    ctor := MethodDef(loc, cls, "make", FConst.Internal | FConst.Ctor | FConst.Synthetic)
     ctor.ret  = ns.voidType
     ctor.paramDefs = [ParamDef(loc, funcType, "f")]
     ctor.code = Block.make(loc)
@@ -607,9 +604,7 @@ class JavaBridge : CBridge
     cls.addSlot(ctor)
 
     // generate FuncWrapper override of abstract method
-    over := MethodDef(loc, cls)
-    ((SlotDef)over).name = method.name // TODO
-    ((DefNode)over).flags = FConst.Public | FConst.Override | FConst.Synthetic // TODO
+    over := MethodDef(loc, cls, method.name, FConst.Public | FConst.Override | FConst.Synthetic)
     over.ret = method.returnType
     over.paramDefs = ParamDef[,]
     over.code = Block.make(loc)

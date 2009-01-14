@@ -380,6 +380,10 @@ class WebClient
     if (resHeaders.get("Transfer-Encoding", "").lower.contains("chunked"))
       return WebUtil.makeChunkedInStream(socket.in)
 
+    // if content-type is specified assume open ended content until close
+    if (resHeaders.containsKey("Content-Type"))
+      return socket.in
+
     // no content in response
     return null
   }
