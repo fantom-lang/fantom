@@ -52,9 +52,7 @@ class Runner
     m := t.method(method)
 
     // create engine and eval pods
-    // TODO - eval pod dependencies
     engine := ScriptEngineManager().getEngineByName("js");
-    evalPodScript(engine, Pod.find("webappClient"))
     evalPodScript(engine, p)
 
     // invoke target method
@@ -66,15 +64,25 @@ class Runner
   }
 
   **
-  ** Load and eval the pod script file in the
-  ** specifed ScriptEngine.
+  ** Load and eval the pod script file, and all its
+  ** dependenceis in the specifed ScriptEngine.
   **
   static Void evalPodScript(ScriptEngine engine, Pod pod)
   {
-    script := pod.files["/${pod.name}.js".toUri]
-    if (script == null)
-     throw Err("No script found in $pod.name")
+    // eval dependecies
+    pod.depends.each |Depend d|
+    {
+      script := Pod.find(d.name).files["/${d.name}.js".toUri]
+      if (script != null)
+      {
+        try engine.eval(script.readAllStr)
+        catch (Err e) throw Err("Pod eval failed: $d.name", e)
+      }
+    }
 
+    // eval given pod
+    script := pod.files["/${pod.name}.js".toUri]
+    if (script == null) throw Err("No script found in $pod.name")
     try engine.eval(script.readAllStr);
     catch (Err e) throw Err("Pod eval failed: $pod.name", e)
   }

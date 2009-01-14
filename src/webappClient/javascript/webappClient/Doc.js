@@ -16,3 +16,10 @@ webappClient_Doc.body = function()
 {
   return webappClient_Elem.makeFrom(document.body);
 }
+
+webappClient_Doc.getById = function(id)
+{
+  var elem = document.getElementById(id);
+  if (elem == null) return null;
+  return webappClient_Elem.make(elem);
+}

@@ -51,10 +51,8 @@ class TestRunner
     }
 
     // create engine and eval pods
-    // TODO - eval pod dependencies
     p := Pod.find(pod)
     engine = ScriptEngineManager().getEngineByName("js");
-    Runner.evalPodScript(engine, Pod.find("webappClient"))
     Runner.evalPodScript(engine, p)
 
     // run tests
