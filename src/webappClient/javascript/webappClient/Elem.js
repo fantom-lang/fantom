@@ -8,17 +8,8 @@
 
 var webappClient_Elem = sys_Obj.extend(
 {
-  $ctor: function()
-  {
-    sys_Type.addType("webappClient::Elem");
-    //this.html.parent = this;
-    //this.value.parent = this;
-  },
-
-  type: function()
-  {
-    return sys_Type.find("webappClient::Elem");
-  },
+  $ctor: function() { sys_Type.addType("webappClient::Elem"); },
+  type: function() { return sys_Type.find("webappClient::Elem"); },
 
   get: function(name, def)
   {
