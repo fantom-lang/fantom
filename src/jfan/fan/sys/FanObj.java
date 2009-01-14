@@ -73,6 +73,8 @@ public class FanObj
   {
     if (self instanceof FanObj)
       return ((FanObj)self).toStr();
+    else if (self.getClass() == java.lang.Double.class)
+      return FanFloat.toStr(((java.lang.Double)self).doubleValue());
     else
       return self.toString();
   }
