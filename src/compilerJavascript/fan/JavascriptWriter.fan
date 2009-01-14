@@ -47,14 +47,7 @@ class JavascriptWriter : CompilerSupport
     jbase := qname(typeDef.base)
     out.w("var $jname = ${jbase}.extend(").nl
     out.w("{").nl
-    out.w("  \$ctor: function()").nl
-    out.w("  {").nl
-    out.w("    sys_Type.addType(\"$fname\");").nl
-    typeDef.fieldDefs.each |FieldDef f|
-    {
-      out.w("    this.${f.name}.parent = this;").nl
-    }
-    out.w("  },").nl
+    out.w("  \$ctor: function() { sys_Type.addType(\"$fname\"); },").nl
     out.w("  type: function() { return sys_Type.find(\"$fname\"); },").nl
     out.indent
     typeDef.methodDefs.each |MethodDef m| { method(m) }
@@ -132,11 +125,9 @@ class JavascriptWriter : CompilerSupport
   {
     if (f.isNative) return
     if (f.isStatic) err("Static fields not yet supported: $f.name", f.location)
-    out.w("$f.name: {").nl
-    out.w("  get: function() { return this.val; },").nl
-    out.w("  set: function(val) { this.val = val; },").nl
-    out.w("  val: null").nl
-    out.w("},").nl
+    out.w("$f.name\$get: function() { return this.$f.name; },").nl
+    out.w("$f.name\$set: function(val) { this.$f.name = val; },").nl
+    out.w("$f.name: null,").nl
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -165,7 +156,7 @@ class JavascriptWriter : CompilerSupport
       case StmtId.localDef:     out.w("var "); expr(stmt->init); out.w(";"); if (nl) out.nl
       case StmtId.ifStmt:       ifStmt(stmt)
       case StmtId.returnStmt:   returnStmt(stmt); if (nl) out.nl
-      //case StmtId.throwStmt:    return
+      case StmtId.throwStmt:    throwStmt(stmt); if(nl) out.nl
       case StmtId.forStmt:      forStmt(stmt)
       //case StmtId.whileStmt:    return
       //case StmtId.breakStmt:    return
@@ -189,6 +180,13 @@ class JavascriptWriter : CompilerSupport
   {
     out.w("return")
     if (rs.expr != null) { out.w(" "); expr(rs.expr) }
+    out.w(";")
+  }
+
+  Void throwStmt(ThrowStmt ts)
+  {
+    out.w("throw ")
+    expr(ts.exception)
     out.w(";")
   }
 
@@ -412,7 +410,15 @@ class JavascriptWriter : CompilerSupport
         se.op == ShortcutOp.get || se.op == ShortcutOp.set)
     {
       expr(se.target)
-      i := "$se.args.first".toInt
+      i := "$se.args.first".toInt(10, false)
+      if (i == null)
+      {
+        out.w(se.args.size == 1 ? ".get" : ".set")
+        out.w("($se.args.first")
+        if (se.args.size > 1) out.w(",${se.args[1]}")
+        out.w(")")
+        return
+      }
       if (i < 0)
       {
         out.w("[")
@@ -466,9 +472,7 @@ class JavascriptWriter : CompilerSupport
       else { i := name.index(r"$"); if (i != null) name = name[0...i] }
     }
     out.w(name)
-    if (!cvar) out.w(fe.useAccessor
-      ? (get ? ".get()" : ".set")
-      : ".val")
+    if (!cvar && fe.useAccessor) out.w(get ? "\$get()" : "\$set")
   }
 
   Void closureExpr(ClosureExpr ce)
