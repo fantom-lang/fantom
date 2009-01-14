@@ -141,6 +141,13 @@ class ParserTest : XmlTest
       {
         root = XElem("root") { addAttr("foo", "< >") }
       })
+
+    verifyParse(
+      "<root a='&apos; &quot;' b=\"&apos; &quot;\" />",
+      XDoc
+      {
+        root = XElem("root") { addAttr("a", "' \""); addAttr("b", "' \"") }
+      })
   }
 
 //////////////////////////////////////////////////////////////////////////

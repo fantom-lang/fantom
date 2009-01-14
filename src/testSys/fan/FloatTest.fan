@@ -422,6 +422,10 @@ class FloatTest : Test
     verifyEq(Float.posInf.toStr, "INF")
     verifyEq(Float.negInf.toStr, "-INF")
     verifyEq(Float.nan.toStr,    "NaN")
+
+    verifyEq(((Obj)Float.posInf).toStr, "INF")
+    verifyEq(((Obj)Float.negInf).toStr, "-INF")
+    verifyEq(((Obj)Float.nan).toStr,    "NaN")
   }
 
 //////////////////////////////////////////////////////////////////////////
