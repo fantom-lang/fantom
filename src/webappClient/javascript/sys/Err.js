@@ -18,6 +18,7 @@ var sys_Err = sys_Obj.extend(
 
   $ctor: function(msg)
   {
+    sys_Type.addType("sys::Err");
     this.msg  = msg;
   },
 
@@ -44,8 +45,8 @@ var sys_Err = sys_Obj.extend(
 sys_Err.make = function(cause)
 {
   // TODO - needs alot of work!
-  if (cause instanceof TypeError)
-    return new sys_NullErr(cause.message);
+  if (cause instanceof TypeError) return new sys_NullErr(cause.message);
+  if ((typeof cause) == "string") return new sys_Err(cause);
   return new sys_Err(cause.message);
 }
 

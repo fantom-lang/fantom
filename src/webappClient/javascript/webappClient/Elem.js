@@ -11,8 +11,8 @@ var webappClient_Elem = sys_Obj.extend(
   $ctor: function()
   {
     sys_Type.addType("webappClient::Elem");
-    this.html.parent = this;
-    this.value.parent = this;
+    //this.html.parent = this;
+    //this.value.parent = this;
   },
 
   type: function()
@@ -20,22 +20,29 @@ var webappClient_Elem = sys_Obj.extend(
     return sys_Type.find("webappClient::Elem");
   },
 
+  get: function(name, def)
+  {
+    var val = this.elem[name];
+    if (val != null) return val;
+    if (def != null) return def;
+    return null;
+  },
+
+  set: function(name, val)
+  {
+    this.elem.setAttribute(name, val);
+  },
+
   tagName: function()
   {
     return sys_Str.lower(this.elem.nodeName);
   },
 
-  html:
-  {
-    get: function() { return this.parent.elem.innerHTML },
-    set: function(val) { this.parent.elem.innerHTML = val; }
-  },
+  html$get: function() { return this.elem.innerHTML },
+  html$set: function(val) { this.elem.innerHTML = val; },
 
-  value:
-  {
-    get: function() { return this.parent.elem.value },
-    set: function(val) { this.parent.elem.value = val; }
-  },
+  value$get: function() { return this.elem.value },
+  value$set: function(val) { this.elem.value = val; },
 
   parent: function()
   {
@@ -49,7 +56,8 @@ var webappClient_Elem = sys_Obj.extend(
     var list = new Array();
     var kids = this.elem.childNodes;
     for (var i=0; i<kids.length; i++)
-      list.push(webappClient_Elem.make(kids[i]));
+      if (kids[i].nodeType == 1)
+        list.push(webappClient_Elem.make(kids[i]));
     return list;
   },
 
@@ -65,6 +73,19 @@ var webappClient_Elem = sys_Obj.extend(
     var sib = this.elem.nextSibling;
     if (sib == null) return null;
     return webappClient_Elem.make(sib);
+  },
+
+  findAll: function(func, acc)
+  {
+    if (acc == null) acc = new Array();
+    var kids = this.children();
+    for (var i=0; i<kids.length; i++)
+    {
+      var kid = kids[i];
+      if (func(kid)) acc.push(kid);
+      kid.findAll(func, acc);
+    }
+    return acc;
   },
 
   toStr: function()
