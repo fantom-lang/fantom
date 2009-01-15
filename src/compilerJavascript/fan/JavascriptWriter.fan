@@ -410,16 +410,17 @@ class JavascriptWriter : CompilerSupport
         se.op == ShortcutOp.get || se.op == ShortcutOp.set)
     {
       expr(se.target)
-      i := "$se.args.first".toInt(10, false)
-      if (i == null)
+      if (!se.args.first.ctype.isInt)
       {
         out.w(se.args.size == 1 ? ".get" : ".set")
-        out.w("($se.args.first")
+        out.w("(")
+        expr(se.args.first)
         if (se.args.size > 1) { out.w(","); expr(se.args[1]) }
         out.w(")")
         return
       }
-      if (i < 0)
+      i := "$se.args.first".toInt(10, false)
+      if (i != null && i < 0)
       {
         out.w("[")
         expr(se.target)
@@ -427,7 +428,9 @@ class JavascriptWriter : CompilerSupport
       }
       else
       {
-        out.w("[$i]")
+        out.w("[")
+        expr(se.args.first)
+        out.w("]")
       }
       if (se.args.size > 1)
       {

@@ -82,6 +82,31 @@ sys_List.clear = function(self)
   self.splice(0, self.length);
   return self;
 }
+sys_List.slice = function(self, range)
+{
+  var size = self.length;
+  var s = range.start(size);
+  var e = range.end(size);
+  if (e+1 < s) throw new sys_IndexErr(r);
+  return self.slice(s, e+1);
+}
+sys_List.sort = function(self, func)
+{
+  if (func != null)
+    return self.sort(func);
+  else
+    return self.sort();
+}
+sys_List.first = function(self)
+{
+  if (self.length == 0) return null;
+  return self[0];
+}
+sys_List.last = function(self)
+{
+  if (self.length == 0) return null;
+  return self[self.length-1];
+}
 // Iterators
 sys_List.each = function(self, func)
 {
@@ -93,6 +118,19 @@ sys_List.each = function(self, func)
   else
   {
     for (var i=0; i<self.length; i++)
+      func(self[i], i)
+  }
+}
+sys_List.eachr = function(self, func)
+{
+  if (func.length == 1)
+  {
+    for (var i=self.length-1; i>=0; i--)
+      func(self[i])
+  }
+  else
+  {
+    for (var i=self.length-1; i>=0; i--)
       func(self[i], i)
   }
 }

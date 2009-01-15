@@ -12,9 +12,9 @@ var webappClient_Window = sys_Obj.extend(
   type: function() { return sys_Type.find("webappClient::Window"); },
 });
 
-webappClient_Window.alert = function(str)
+webappClient_Window.alert = function(obj)
 {
-  alert(str);
+  alert(obj);
 }
 
 webappClient_Window.uri = function()
