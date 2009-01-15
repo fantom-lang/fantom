@@ -24,8 +24,7 @@ class SimpleJsonTest : Test
 
   Void testRawJson()
   {
-    ins := InStream.makeForStr(makeRawJson)
-    map := Json.read(ins)
+    map := Json.read(makeRawJson.in)
     verifyRawJson(map)
   }
 
@@ -37,12 +36,12 @@ class SimpleJsonTest : Test
     out.writeChars(makeRawJson)
     out.close
     
-    ins := InStream.makeForStr(buf.toStr)
+    ins := buf.toStr.in
     ins.charset = Charset.utf16BE
     map := Json.read(ins)
     verifyRawJson(map)
   }
-          
+
   private Str:Obj doTest(Str:Obj map)
   {
     buf := StrBuf.make
@@ -50,8 +49,7 @@ class SimpleJsonTest : Test
     Json.write(map, stream)
     stream.close
     //echo(buf.toStr)
-    ins := InStream.makeForStr(buf.toStr)
-    newMap := Json.read(ins)
+    newMap := Json.read(buf.toStr.in)
     validate(map, newMap)
     return newMap
   }
