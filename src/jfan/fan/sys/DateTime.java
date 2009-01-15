@@ -291,8 +291,19 @@ public final class DateTime
       }
 
       // timezone
-      if (s.charAt(i++) != ' ') throw new Exception();
-      TimeZone tz = TimeZone.fromStr(s.substring(i), true);
+      TimeZone tz;
+      if (i < s.length())
+      {
+        if (s.charAt(i++) != ' ') throw new Exception();
+        tz = TimeZone.fromStr(s.substring(i), true);
+      }
+      else
+      {
+        if (offset == 0)
+          tz = TimeZone.utc();
+        else
+          tz = TimeZone.fromStr("GMT" + (offset < 0 ? "" : "+") + offset/3600);
+      }
 
       return new DateTime(year, month, day, hour, min, sec, ns, offset, tz);
     }
@@ -586,7 +597,7 @@ public final class DateTime
           break;
 
         default:
-          if (c != 'T' && FanInt.isAlpha(c))
+          if (FanInt.isAlpha(c))
             throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
 
           // don't display symbol between ss.FFF if fractions is zero

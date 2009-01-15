@@ -293,8 +293,19 @@ namespace Fan.Sys
         }
 
         // timezone
-        if (s[i++] != ' ') throw new System.Exception();
-        TimeZone tz = TimeZone.fromStr(s.Substring(i), true);
+        TimeZone tz;
+        if (i < s.Length)
+        {
+          if (s[i++] != ' ') throw new System.Exception();
+          tz = TimeZone.fromStr(s.Substring(i), true);
+        }
+        else
+        {
+          if (offset == 0)
+            tz = TimeZone.utc();
+          else
+            tz = TimeZone.fromStr("GMT" + (offset < 0 ? "" : "+") + offset/3600);
+        }
 
         return new DateTime(year, month, day, hour, min, sec, ns, offset, tz);
       }

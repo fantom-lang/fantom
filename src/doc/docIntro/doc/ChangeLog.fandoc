@@ -514,4 +514,5 @@
 - Buf.dup, fill, hmac
 - Map.ordered to use LinkedHashMap backing store
 - Compiler fix when local variable shadows field with storage operator
+- Enhance DateTime.fromStr to parse ISO 8601 without timezone id
 - New obix API
