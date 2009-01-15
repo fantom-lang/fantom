@@ -35,6 +35,9 @@ var webappClient_Elem = sys_Obj.extend(
   value$get: function() { return this.elem.value },
   value$set: function(val) { this.elem.value = val; },
 
+  checked$get: function() { return this.elem.checked },
+  checked$set: function(val) { this.elem.checked = val; },
+
   x: function() { return this.elem.offsetLeft; },
   y: function() { return this.elem.offsetTop; },
   w: function() { return this.elem.offsetWidth; },
