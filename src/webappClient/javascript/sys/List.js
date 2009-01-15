@@ -82,6 +82,14 @@ sys_List.clear = function(self)
   self.splice(0, self.length);
   return self;
 }
+sys_List.slice = function(self, range)
+{
+  var size = self.length;
+  var s = range.start(size);
+  var e = range.end(size);
+  if (e+1 < s) throw new sys_IndexErr(r);
+  return self.slice(s, e+1);
+}
 // Iterators
 sys_List.each = function(self, func)
 {

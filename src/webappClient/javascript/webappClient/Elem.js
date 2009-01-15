@@ -42,7 +42,7 @@ var webappClient_Elem = sys_Obj.extend(
 
   parent: function()
   {
-    var parent = this.elem.parent;
+    var parent = this.elem.parentNode;
     if (parent == null) return null;
     return webappClient_Elem.make(parent);
   },
