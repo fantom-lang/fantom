@@ -160,6 +160,20 @@ class XmlTest : ObixTest
        })
    }
 
+  Void testEnum()
+  {
+    verifyParse(
+      "<obj>
+        <enum name='def'/>
+        <enum name='a' val='slow'/>
+       </obj>",
+       ObixObj
+       {
+         ObixObj { elemName="enum"; name="def"; isNull=true }
+         ObixObj { elemName="enum"; name="a"; val="slow" }
+       })
+   }
+
   Void testAbstime()
   {
     verifyParse(
@@ -167,16 +181,50 @@ class XmlTest : ObixTest
         <abstime name='def'/>
         <abstime name='a' val='2009-01-15T13:54:00Z'/>
         <abstime name='b' val='2009-01-15T13:54:00-05:00'/>
-        <abstime name='c' val='2009-01-15T13:54:00-05:00' tz='America/New_York'/>
+        <abstime name='c' val='2009-01-15T13:54:00Z' tz='London'/>
+        <abstime name='d' val='2009-01-15T13:54:00-05:00' tz='America/New_York'/>
        </obj>",
        ObixObj
        {
          ObixObj { name="def"; elemName="abstime"; isNull=true }
          ObixObj { name="a"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone.utc) }
          ObixObj { name="b"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("Etc/GMT+5")) }
-         ObixObj { name="c"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("New_York")) }
+         ObixObj { name="c"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("London")) }
+         ObixObj { name="d"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("New_York")); tz=TimeZone("New_York") }
        })
   }
+
+  Void testDate()
+  {
+    verifyParse(
+      "<obj>
+        <date name='def'/>
+        <date name='a' val='2010-01-30'/>
+        <date name='b' val='1995-12-05' tz='America/Chicago'/>
+       </obj>",
+       ObixObj
+       {
+         ObixObj { elemName="date"; name="def"; isNull=true }
+         ObixObj { name="a"; val=Date(2010, Month.jan, 30) }
+         ObixObj { name="b"; val=Date(1995, Month.dec, 05); tz=TimeZone("Chicago") }
+       })
+   }
+
+  Void testTime()
+  {
+    verifyParse(
+      "<obj>
+        <time name='def'/>
+        <time name='a' val='05:30:20'/>
+        <time name='b' val='23:00:00.456' tz='Europe/London'/>
+       </obj>",
+       ObixObj
+       {
+         ObixObj { elemName="time"; name="def"; isNull=true }
+         ObixObj { name="a"; val=Time(5, 30, 20) }
+         ObixObj { name="b"; val=Time(23, 0, 0, 456ms.ticks); tz=TimeZone("London") }
+       })
+   }
 
   Void testValErrors()
   {

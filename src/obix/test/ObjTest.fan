@@ -119,4 +119,37 @@ class ObjTest : ObixTest
     verifyEq(obj.elemName, elemName)
     verifySame(obj.val, val)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// TimeZone
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTimeZone()
+  {
+    ny := TimeZone("New_York")
+    utc := TimeZone.utc
+    gmt5 := TimeZone("Etc/GMT+5")
+    utcNow := DateTime.nowUtc
+    nyNow := utcNow.toTimeZone(ny)
+    gmt5Now := utcNow.toTimeZone(gmt5)
+
+    // setting value implictly sets timzone
+    obj := ObixObj { val = nyNow }
+    verifyEq(obj.val->ticks, nyNow.ticks)
+    verifyEq(obj.val->timeZone, ny)
+    verifyEq(obj.tz, ny)
+
+    // setting value to UTC does not set timzone
+    obj = ObixObj { val = utcNow }
+    verifyEq(obj.val->ticks, utcNow.ticks)
+    verifyEq(obj.val->timeZone, utc)
+    verifyEq(obj.tz, null)
+
+    // setting value to Etc/* does not set timzone
+    obj = ObixObj { val = gmt5Now }
+    verifyEq(obj.val->ticks, gmt5Now.ticks)
+    verifyEq(obj.val->timeZone, gmt5)
+    verifyEq(obj.tz, null)
+  }
+
 }
