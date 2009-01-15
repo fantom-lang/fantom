@@ -78,7 +78,7 @@ const final class DateTime
   ** If a timezone offset is specified, then one the predefined "Etc/GMT+x"
   ** timezones are used for the result:
   **   DateTime("2009-01-15T12:00:00Z")       =>  2009-01-15T12:00:00Z UTC
-  **   DateTime("2009-01-15T12:00:00-05:00")  =>  2009-01-15T12:00:00+05:00 GMT-5
+  **   DateTime("2009-01-15T12:00:00-05:00")  =>  2009-01-15T12:00:00-05:00 GMT+5
   **
   static DateTime? fromStr(Str s, Bool checked := true)
 
