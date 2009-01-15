@@ -774,12 +774,12 @@ class DateTimeTest : Test
 
   Void testIso8601FromStr()
   {
-    verifyIso8601FromStr("2000-01-15T02:03:04Z", 2000, jan, 15, 2, 3, 4, 0, utc)
-    verifyIso8601FromStr("2009-02-15T23:00:00.5-05:00", 2009, feb, 15, 23, 0, 0, 500ms.ticks, TimeZone("Etc/GMT-5"))
-    verifyIso8601FromStr("2009-02-15T23:00:00.0+10:00", 2009, feb, 15, 23, 0, 0, 0, TimeZone("Etc/GMT+10"))
+    verifyIso8601FromStr("2000-01-15T02:03:04Z", 2000, jan, 15, 2, 3, 4, 0, utc, 0hr)
+    verifyIso8601FromStr("2009-02-15T23:00:00.5-05:00", 2009, feb, 15, 23, 0, 0, 500ms.ticks, TimeZone("Etc/GMT+5"), -5hr)
+    verifyIso8601FromStr("2009-02-15T23:00:00.0+10:00", 2009, feb, 15, 23, 0, 0, 0, TimeZone("Etc/GMT-10"), +10hr)
   }
 
-  Void verifyIso8601FromStr(Str s, Int y, Month mon, Int day, Int h, Int min, Int sec, Int ns, TimeZone tz)
+  Void verifyIso8601FromStr(Str s, Int y, Month mon, Int day, Int h, Int min, Int sec, Int ns, TimeZone tz, Duration offset)
   {
     d := DateTime(s)
     verifyEq(d.year, y)
@@ -790,6 +790,8 @@ class DateTimeTest : Test
     verifyEq(d.sec, sec)
     verifyEq(d.nanoSec, ns)
     verifyEq(d.timeZone, tz)
+    verifyEq(d.timeZone.offset(y), offset)
+    verifyEq(d.ticks, DateTime(y, mon, day, h, min, sec, ns, tz).ticks)
   }
 
   Void testDateToStr()

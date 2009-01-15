@@ -304,7 +304,9 @@ namespace Fan.Sys
           if (offset == 0)
             tz = TimeZone.utc();
           else
-            tz = TimeZone.fromStr("GMT" + (offset < 0 ? "" : "+") + offset/3600);
+            tz = TimeZone.fromStr("GMT" + (offset < 0 ?
+              ("+" + (-offset/3600)) :
+              ("-" + (offset/3600))));
         }
 
         return new DateTime(year, month, day, hour, min, sec, ns, offset, tz);

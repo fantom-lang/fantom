@@ -81,7 +81,7 @@ internal class ObixXmlParser
       try
         obj.add(parseObj)
       catch (ArgErr e)
-        throw XErr(e.toStr)
+        throw err(e.toStr)
     }
 
     // advance past element end
@@ -89,7 +89,13 @@ internal class ObixXmlParser
 
     // if a value wasn't specified, check for default
     if (obj.val == null)
-      obj.val = ObixUtil.elemNameToDefaultVal[obj.elemName]
+    {
+      defVal := ObixUtil.elemNameToDefaultVal[obj.elemName]
+      if (defVal === ObixUtil.defaultsToNull)
+        obj.isNull = true
+      else
+        obj.val = defVal
+    }
 
     return obj
   }
@@ -104,6 +110,7 @@ internal class ObixXmlParser
         case "href": obj.href = Uri.decode(attr.val)
         case "val":  obj.val = parseVal(attr.val, elem)
         case "null": obj.isNull = attr.val.toBool
+        case "tz":   if (obj.tz == null) obj.tz = TimeZone(attr.val)
       }
     }
     catch (XErr e) throw e

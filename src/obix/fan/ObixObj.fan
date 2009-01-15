@@ -112,11 +112,18 @@ class ObixObj
   {
     set
     {
+      // TODO: clean this up
+      if (elemName == "enum" && val is Str) { @val = val; return }
       if (val != null)
       {
         elem := ObixUtil.valTypeToElemName[val.type]
         if (elem == null) throw ArgErr("Invalid val type: $val.type")
         @elemName = elem
+        if (val is DateTime && tz == null)
+        {
+          tz := ((DateTime)val).timeZone
+          if (!tz.fullName.startsWith("Etc/")) this.tz = tz
+        }
       }
       @val = val
     }
@@ -279,6 +286,19 @@ class ObixObj
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Facets
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** TimeZone facet assocaited with abstime, date, and time objects.
+  ** This field is automatically updated when `val` is assigned a
+  ** DateTime unless its timezone is UTC or starts with "Etc/".  After
+  ** decoding this field is set only if an explicit "tz" attribute was
+  ** specified.
+  **
+  TimeZone? tz
+
+//////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
 
@@ -302,8 +322,12 @@ class ObixObj
     out.print(Str.spaces(indent)).print("<").print(elemName)
     if (name != null) out.print(" name='").writeXml(name, xmlEsc).print("'")
     if (href != null) out.print(" href='").print(href.encode).print("'")
-    if (val != null) out.print(" val='").writeXml(valToStr, xmlEsc).print("'")
-    if (val is DateTime) out.print(" tz='").print(((DateTime)val).timeZone.fullName).print("'")
+    if (isNull) out.print(" isNull='true'")
+    if (val != null)
+    {
+      out.print(" val='").writeXml(valToStr, xmlEsc).print("'")
+      if (tz != null) out.print(" tz='").print(tz.fullName).print("'")
+    }
     if (isEmpty) out.print("/>\n")
     else
     {

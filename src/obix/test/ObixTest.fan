@@ -18,6 +18,7 @@ abstract class ObixTest : Test
   Void verifyObj(ObixObj a, ObixObj b)
   {
     // identity
+    verifyEq(a.elemName, b.elemName)
     verifyEq(a.name, b.name)
     verifyEq(a.href, b.href)
     verifyEq(a.contracts, b.contracts)
@@ -25,6 +26,7 @@ abstract class ObixTest : Test
     // value
     verifyEq(a.val, b.val)
     verifyEq(a.isNull, b.isNull)
+    verifyEq(a.tz, b.tz)
 
     // children
     verifyEq(a.size, b.size)
