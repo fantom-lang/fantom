@@ -48,6 +48,7 @@ class Build : BuildGroup
       `flux/build.fan`,
       `xml/build.fan`,
       `json/build.fan`,
+      `obix/build.fan`,
     ]
   }
 
