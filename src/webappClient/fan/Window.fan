@@ -21,7 +21,7 @@ class Window
   **
   ** Display a modal message box with the given text.
   **
-  static Void alert(Str str) {}
+  static Void alert(Obj obj) {}
 
   **
   ** Get the URI for this window.
