@@ -586,7 +586,7 @@ public final class DateTime
           break;
 
         default:
-          if (FanInt.isAlpha(c))
+          if (c != 'T' && FanInt.isAlpha(c))
             throw ArgErr.make("Invalid pattern: unsupported char '" + (char)c + "'").val;
 
           // don't display symbol between ss.FFF if fractions is zero

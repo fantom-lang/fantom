@@ -514,3 +514,4 @@
 - Buf.dup, fill, hmac
 - Map.ordered to use LinkedHashMap backing store
 - Compiler fix when local variable shadows field with storage operator
+- New obix API
