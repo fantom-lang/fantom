@@ -510,6 +510,7 @@
 - BuildScript dumpenv target
 
 *Build 1.0.38 (incomplete)*
-- Str.in to get string as InStream
+- Str in, toBuf for working for string I/O
+- Buf.dup, fill, hmac
 - Map.ordered to use LinkedHashMap backing store
 - Compiler fix when local variable shadows field with storage operator

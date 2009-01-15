@@ -180,7 +180,7 @@ public final class MemBuf
     int newCapacity = (int)c;
     if (newCapacity < size) throw ArgErr.make("capacity < size").val;
     byte[] temp = new byte[newCapacity];
-    System.arraycopy(buf, 0, temp, 0, newCapacity);
+    System.arraycopy(buf, 0, temp, 0, Math.min(size, newCapacity));
     buf = temp;
   }
 
@@ -252,6 +252,75 @@ public final class MemBuf
     {
       throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
     }
+  }
+
+  public Buf hmac(String algorithm, Buf keyBuf)
+  {
+    // get digest algorthim
+    MessageDigest md = null;
+    int blockSize = 64;
+    try
+    {
+      md = MessageDigest.getInstance(algorithm);
+    }
+    catch (NoSuchAlgorithmException e)
+    {
+      throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
+    }
+
+    // get secret key bytes
+    byte[] keyBytes = null;
+    int keySize = 0;
+    try
+    {
+      // get key bytes
+      MemBuf keyMemBuf = (MemBuf)keyBuf;
+      keyBytes = keyMemBuf.buf;
+      keySize  = keyMemBuf.size;
+
+      // key is greater than block size we hash it first
+      if (keySize > blockSize)
+      {
+        md.update(keyBytes, 0, keySize);
+        keyBytes = md.digest();
+        keySize = keyBytes.length;
+        md.reset();
+      }
+    }
+    catch (ClassCastException e)
+    {
+      throw UnsupportedErr.make("key parameter must be memory buffer").val;
+    }
+
+    // RFC 2104:
+    //   ipad = the byte 0x36 repeated B times
+    //   opad = the byte 0x5C repeated B times
+    //   H(K XOR opad, H(K XOR ipad, text))
+
+    // inner digest: H(K XOR ipad, text)
+    for (int i=0; i<blockSize; ++i)
+    {
+      if (i < keySize)
+        md.update((byte)(keyBytes[i] ^ 0x36));
+      else
+        md.update((byte)0x36);
+    }
+    md.update(buf, 0, size);
+    byte[] innerDigest = md.digest();
+
+    // outer digest: H(K XOR opad, innerDigest)
+    md.reset();
+    for (int i=0; i<blockSize; ++i)
+    {
+      if (i < keySize)
+        md.update((byte)(keyBytes[i] ^ 0x5C));
+      else
+        md.update((byte)0x5C);
+    }
+    md.update(innerDigest);
+
+    // return result
+    return new MemBuf(md.digest());
   }
 
 //////////////////////////////////////////////////////////////////////////
