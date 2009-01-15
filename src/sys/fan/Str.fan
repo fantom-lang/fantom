@@ -443,7 +443,7 @@ const final class Str
   Bool isAlphaNum()
 
   **
-  ** Get this string as an InStream - see `InStream.makeFromStr`.
+  ** Get this string as an InStream - see `InStream.makeForStr`.
   **
   InStream in()
 
