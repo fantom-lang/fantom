@@ -71,6 +71,18 @@ var webappClient_Elem = sys_Obj.extend(
     return webappClient_Elem.make(sib);
   },
 
+  add: function(child)
+  {
+    this.elem.appendChild(child.elem);
+    return this;
+  },
+
+  remove: function(child)
+  {
+    this.elem.removeChild(child.elem);
+    return this;
+  },
+
   findAll: function(func, acc)
   {
     if (acc == null) acc = new Array();

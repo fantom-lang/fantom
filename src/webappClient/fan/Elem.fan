@@ -101,6 +101,16 @@ class Elem
   **
   Elem? next() { return null }
 
+  **
+  ** Add a new element as a child to this element. Return this.
+  **
+  This add(Elem child) { return this }
+
+  **
+  ** Remove a child element from this element. Return this.
+  **
+  This remove(Elem child) { return this }
+
 //////////////////////////////////////////////////////////////////////////
 // Find
 //////////////////////////////////////////////////////////////////////////
