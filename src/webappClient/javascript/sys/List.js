@@ -90,6 +90,23 @@ sys_List.slice = function(self, range)
   if (e+1 < s) throw new sys_IndexErr(r);
   return self.slice(s, e+1);
 }
+sys_List.sort = function(self, func)
+{
+  if (func != null)
+    return self.sort(func);
+  else
+    return self.sort();
+}
+sys_List.first = function(self)
+{
+  if (self.length == 0) return null;
+  return self[0];
+}
+sys_List.last = function(self)
+{
+  if (self.length == 0) return null;
+  return self[self.length-1];
+}
 // Iterators
 sys_List.each = function(self, func)
 {
