@@ -423,6 +423,9 @@ class ApiToHtmlGenerator : HtmlGenerator
       }
     }
 
+     // Skip FFI types for now
+    if (t.toStr[0] == '[') return t.toStr
+
     link := (t.pod.name == "sys" && t.name.size == 1) ?
        "<a href='${map(Obj#)}'>$t.name</a>" :
        "<a href='${map(t)}'>$t.name</a>"
