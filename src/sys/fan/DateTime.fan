@@ -67,8 +67,18 @@ const final class DateTime
   **
   ** Parse the string into a DateTime from the programmatic encoding
   ** defined by `toStr`.  If the string cannot be parsed into a valid
-  ** DateTime and checked is false then return null, otherwise throw
-  ** ParseErr.
+  ** DateTime and checked is false then return null, otherwise throw ParseErr.
+  **
+  ** This method will also parse a ISO 8601 formatted as one of the
+  ** following:
+  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]
+  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]+HH::MM
+  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]-HH::MM
+  **
+  ** If a timezone offset is specified, then one the predefined "Etc/GMT+x"
+  ** timezones are used for the result:
+  **   DateTime("2009-01-15T12:00:00Z")       =>  2009-01-15T12:00:00Z UTC
+  **   DateTime("2009-01-15T12:00:00-05:00")  =>  2009-01-15T12:00:00+05:00 GMT-5
   **
   static DateTime? fromStr(Str s, Bool checked := true)
 
@@ -240,6 +250,9 @@ const final class DateTime
   **
   ** A symbol immediately preceding a "F" pattern with a no
   ** fraction to print is skipped.
+  **
+  ** For example to use format as ISO 8601:
+  **   DateTime.now.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFz")
   **
   Str toLocale(Str? pattern := null)
 
