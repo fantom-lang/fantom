@@ -46,9 +46,17 @@ class Elem
 
   **
   ** The value attribute for this element, or null if one
-  ** does not exist.
+  ** does not exist.  This is typically only valid for form
+  ** elements.
   **
   Obj? value
+
+  **
+  ** Return the checked attribute for this element, or null
+  ** if one does not exist.  This is typically only valid for
+  ** some form elements.
+  **
+  Bool? checked
 
 //////////////////////////////////////////////////////////////////////////
 // Size
