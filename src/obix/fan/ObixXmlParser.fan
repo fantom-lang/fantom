@@ -89,7 +89,13 @@ internal class ObixXmlParser
 
     // if a value wasn't specified, check for default
     if (obj.val == null)
-      obj.val = ObixUtil.elemNameToDefaultVal[obj.elemName]
+    {
+      defVal := ObixUtil.elemNameToDefaultVal[obj.elemName]
+      if (defVal === ObixUtil.defaultsToNull)
+        obj.isNull = true
+      else
+        obj.val = defVal
+    }
 
     return obj
   }
