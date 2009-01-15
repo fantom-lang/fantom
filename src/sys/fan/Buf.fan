@@ -155,6 +155,11 @@ class Buf
   **
   Buf slice(Range range)
 
+  **
+  ** Create a new buffer in memory which deeply clones this buffer.
+  **
+  Buf dup()
+
 //////////////////////////////////////////////////////////////////////////
 // Modification
 //////////////////////////////////////////////////////////////////////////
@@ -198,6 +203,14 @@ class Buf
   ** Character set for both the OutStream and InStream.
   **
   Charset charset
+
+  **
+  ** Write the specified byte to the end of the buffer using given count.
+  **
+  ** Examples:
+  **   Buf().fill(0xff, 4)  =>  0xffffffff
+  **
+  This fill(Int byte, Int times)
 
 //////////////////////////////////////////////////////////////////////////
 // OutStream
@@ -526,6 +539,28 @@ class Buf
   **    =>  "b305cadbb3bce54f3aa59c64fec00dea"
   **
   Buf toDigest(Str algorithm)
+
+  **
+  ** Generate an HMAC message authentication as specified by RFC 2104.
+  ** This buffer is the data input, 'algorithm' specifies the hash digest,
+  ** and 'key' represents the secret key:
+  **   - 'H': specified by algorthim parameter - "MD5" or "SHA1"
+  **   - 'K': secret key specified by key parameter
+  **   - 'B': fixed at 64
+  **   - 'text': this instance
+  **
+  ** The HMAC is computed using:
+  **   ipad = the byte 0x36 repeated B times
+  **   opad = the byte 0x5C repeated B times
+  **   H(K XOR opad, H(K XOR ipad, text))
+  **
+  ** Throw ArgErr if the algorithm is not available.  This method is
+  ** only supported for memory buffers.
+  **
+  ** Examples:
+  **   "hi there".toBuf.hmac("MD5", "secret".toBuf)
+  **
+  Buf hmac(Str algorithm, Buf key)
 
 }
 

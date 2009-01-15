@@ -616,11 +616,6 @@ public class FanStr
     return true;
   }
 
-  public static InStream in(String self)
-  {
-    return InStream.makeForStr(self);
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
@@ -789,6 +784,20 @@ public class FanStr
     xmlEsc['>']  = "&gt;";
     xmlEsc['\''] = "&apos;";
     xmlEsc['"']  = "&quot;";
+  }
+
+  public static InStream in(String self)
+  {
+    return InStream.makeForStr(self);
+  }
+
+  public static Buf toBuf(String self) { return toBuf(self, Charset.utf8); }
+  public static Buf toBuf(String self, Charset charset)
+  {
+    MemBuf buf = new MemBuf(self.length()*2);
+    buf.charset(charset);
+    buf.print(self);
+    return buf.flip();
   }
 
 //////////////////////////////////////////////////////////////////////////

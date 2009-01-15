@@ -158,6 +158,17 @@ public abstract class Buf
     return result;
   }
 
+  public final Buf dup()
+  {
+    int size = (int)size();
+    byte[] copy = new byte[size];
+    getBytes(0, copy, 0, size);
+
+    Buf result = new MemBuf(copy, size);
+    result.charset(charset());
+    return result;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Modification
 //////////////////////////////////////////////////////////////////////////
@@ -202,6 +213,14 @@ public abstract class Buf
   {
     out.charset(charset);
     in.charset(charset);
+  }
+
+  public final Buf fill(long b, long times)
+  {
+    if (capacity() < size()+times) capacity(size()+times);
+    int t = (int)times;
+    for (int i=0; i<t; ++i) out.write(b);
+    return this;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -415,6 +434,11 @@ public abstract class Buf
   public Buf toDigest(String algorithm)
   {
     throw UnsupportedErr.make(type()+".toDigest").val;
+  }
+
+  public Buf hmac(String algorithm, Buf key)
+  {
+    throw UnsupportedErr.make(type()+".hmac").val;
   }
 
 //////////////////////////////////////////////////////////////////////////

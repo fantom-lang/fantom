@@ -442,11 +442,6 @@ const final class Str
   **
   Bool isAlphaNum()
 
-  **
-  ** Get this string as an InStream - see `InStream.makeForStr`.
-  **
-  InStream in()
-
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
@@ -539,5 +534,15 @@ const final class Str
   ** Convenience for `Uri.fromStr` using this string.
   **
   Uri toUri()
+
+  **
+  ** Get this string as an InStream - see `InStream.makeForStr`.
+  **
+  InStream in()
+
+  **
+  ** Get this string encoded into a buffer of bytes.
+  **
+  Buf toBuf(Charset charset := Charset.utf8)
 
 }

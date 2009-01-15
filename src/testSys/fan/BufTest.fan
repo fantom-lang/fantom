@@ -305,6 +305,53 @@ class BufTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Fill
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFill()
+  {
+    buf := Buf().fill(0xab, 4)
+    verifyEq(buf.toHex, "abababab")
+    buf.fill(0x0f, 2)
+    verifyEq(buf.toHex, "abababab0f0f")
+    buf.seek(2).fill(0xff, 3)
+    verifyEq(buf.toHex, "ababffffff0f")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Dup
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDup()
+  {
+    verifyDup(makeMem)
+    verifyDup(makeFile)
+  }
+
+  Void verifyDup(Buf buf)
+  {
+    buf.write(0xaa).write(0xbb).write(0xcc).write(0xdd)
+
+    dup := buf.dup
+    verifyEq(dup.pos, 0)
+    verifyEq(dup.size, buf.size)
+
+    verifyNotSame(buf, dup)
+    verifyEq(buf.toHex, dup.toHex)
+
+    dup[0] = 0; dup[3] = 99
+    verifyEq(dup[0], 0)
+    verifyEq(dup[1], 0xbb)
+    verifyEq(dup[2], 0xcc)
+    verifyEq(dup[3], 99)
+
+    verifyEq(buf[0], 0xaa)
+    verifyEq(buf[1], 0xbb)
+    verifyEq(buf[2], 0xcc)
+    verifyEq(buf[3], 0xdd)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Dummies
 //////////////////////////////////////////////////////////////////////////
 
@@ -810,6 +857,78 @@ class BufTest : Test
   {
     verifyEq(makeMem.print(text).toDigest(algorithm).toHex, digest)
     verifyEq(makeFile.print(text).toDigest(algorithm).toHex, digest)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// HMAC
+//////////////////////////////////////////////////////////////////////////
+
+  Void testHmac()
+  {
+    // tests from RFC 2202 http://www.faqs.org/rfcs/rfc2202.html
+
+    // MD5
+    verifyHmac("Hi There".toBuf,
+               Buf().fill(0x0b, 16), "MD5",
+               "9294727a3638bb1c13f48ef8158bfc9d")
+
+    verifyHmac("what do ya want for nothing?".toBuf,
+               "Jefe".toBuf, "MD5",
+               "750c783e6ab0b503eaa86e310a5db738")
+
+    verifyHmac(Buf().fill(0xdd, 50),
+               Buf().fill(0xaa, 16), "MD5",
+               "56be34521d144c88dbb8c733f0e8b3f6")
+
+    verifyHmac(Buf().fill(0xcd, 50),
+               Buf.fromHex("0102030405060708090a0b0c0d0e0f10111213141516171819"), "MD5",
+               "697eaf0aca3a3aea3a75164746ffaa79")
+
+    verifyHmac("Test With Truncation".toBuf,
+               Buf().fill(0x0c, 16), "MD5",
+               "56461ef2342edc00f9bab995690efd4c")
+
+    verifyHmac("Test Using Larger Than Block-Size Key - Hash Key First".toBuf,
+               Buf().fill(0xaa, 80), "MD5",
+               "6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd")
+
+    verifyHmac("Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data".toBuf,
+               Buf().fill(0xaa, 80), "MD5",
+               "6f630fad67cda0ee1fb1f562db3aa53e")
+
+    // SHA1
+    verifyHmac("Hi There".toBuf,
+               Buf().fill(0x0b, 20), "SHA1",
+               "b617318655057264e28bc0b6fb378c8ef146be00")
+
+    verifyHmac("what do ya want for nothing?".toBuf,
+               "Jefe".toBuf, "SHA1",
+               "effcdf6ae5eb2fa2d27416d5f184df9c259a7c79")
+
+    verifyHmac(Buf().fill(0xdd, 50),
+               Buf().fill(0xaa, 20), "SHA1",
+               "125d7342b9ac11cd91a39af48aa17b4f63f175d3")
+
+    verifyHmac(Buf().fill(0xcd, 50),
+               Buf.fromHex("0102030405060708090a0b0c0d0e0f10111213141516171819"), "SHA1",
+               "4c9007f4026250c6bc8414f9bf50c86c2d7235da")
+
+    verifyHmac("Test With Truncation".toBuf,
+               Buf().fill(0x0c, 20), "SHA1",
+               "4c1a03424b55e07fe7f27be1d58bb9324a9a5a04")
+
+    verifyHmac("Test Using Larger Than Block-Size Key - Hash Key First".toBuf,
+               Buf().fill(0xaa, 80), "SHA1",
+               "aa4ae5e15272d00e95705637ce8a3b55ed402112")
+
+    verifyHmac("Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data".toBuf,
+               Buf().fill(0xaa, 80), "SHA1",
+               "e8e99d0f45237d786d6bbaa7965c7808bbff1a91")
+  }
+
+  Void verifyHmac(Buf data, Buf key, Str algorithm, Str expected)
+  {
+    verifyEq(data.hmac(algorithm, key).toHex, expected)
   }
 
 //////////////////////////////////////////////////////////////////////////
