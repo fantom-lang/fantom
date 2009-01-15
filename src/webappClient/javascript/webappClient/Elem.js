@@ -42,7 +42,7 @@ var webappClient_Elem = sys_Obj.extend(
 
   parent: function()
   {
-    var parent = this.elem.parent;
+    var parent = this.elem.parentNode;
     if (parent == null) return null;
     return webappClient_Elem.make(parent);
   },
@@ -69,6 +69,18 @@ var webappClient_Elem = sys_Obj.extend(
     var sib = this.elem.nextSibling;
     if (sib == null) return null;
     return webappClient_Elem.make(sib);
+  },
+
+  add: function(child)
+  {
+    this.elem.appendChild(child.elem);
+    return this;
+  },
+
+  remove: function(child)
+  {
+    this.elem.removeChild(child.elem);
+    return this;
   },
 
   findAll: function(func, acc)
