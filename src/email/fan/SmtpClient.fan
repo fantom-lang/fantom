@@ -237,34 +237,16 @@ class SmtpClient
     writeReq("AUTH CRAM-MD5")
     res := readRes
     if (res.code != 334) throw SmtpErr.makeRes(res)
-    nonce := Buf.fromBase64(res.line.trim).readAllStr
 
-    // digest = MD5((password XOR opad), MD5((password XOR ipad), nonce))
-    // ipad = the byte 0x36 repeated B times
-    // opad = the byte 0x5C repeated B times.
-    // B = 64
-    ipad := xorPad(password, 0x36, 64)
-    opad := xorPad(password, 0x5C, 64)
-    digest := Buf.make
-      .writeBuf(opad)
-      .writeBuf(Buf.make.writeBuf(ipad).print(nonce).toDigest("MD5"))
-      .toDigest("MD5")
-    cred := "$username $digest.toHex.lower"
+    // generate HMAC from nonce and password
+    nonce := Buf.fromBase64(res.line.trim)
+    hmac := nonce.hmac("MD5", password.toBuf)
+    cred := "$username $hmac.toHex.lower"
 
     // submit username space digest
-    writeReq(Buf.make.print(cred).toBase64)
+    writeReq(cred.toBuf.toBase64)
     res = readRes
     if (res.code != 235) throw SmtpErr.makeRes(res)
-  }
-
-  private Buf xorPad(Str text, Int pad, Int blockSize)
-  {
-    buf := Buf.make.print(text)
-    if (buf.size > blockSize) throw Err("CRAM-MD5 password too big")
-    while (buf.size < blockSize) buf.write(0)
-    blockSize.times |Int i| { buf[i] = buf[i] ^ pad }
-    buf.seek(0)
-    return buf
   }
 
   **
@@ -278,12 +260,12 @@ class SmtpClient
     if (res.code != 334 || res.line != "VXNlcm5hbWU6") throw SmtpErr.makeRes(res)
 
     // username
-    writeReq(Buf.make.print(username).toBase64)
+    writeReq(username.toBuf.toBase64)
     res = readRes
     if (res.code != 334 || res.line != "UGFzc3dvcmQ6") throw SmtpErr.makeRes(res)
 
     // password
-    writeReq(Buf.make.print(password).toBase64)
+    writeReq(password.toBuf.toBase64)
     res = readRes
     if (res.code != 235) throw SmtpErr.makeRes(res)
   }
@@ -294,7 +276,7 @@ class SmtpClient
   Void authPlain()
   {
     // not tested against real SMTP server
-    creds := Buf.make.write(0).print(username).write(0).print(password)
+    creds := Buf().write(0).print(username).write(0).print(password)
     writeReq("AUTH PLAIN $creds.toBase64")
     res := readRes
     if (res.code != 235) throw SmtpErr.makeRes(res)
