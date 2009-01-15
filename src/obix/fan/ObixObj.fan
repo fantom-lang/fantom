@@ -302,8 +302,12 @@ class ObixObj
     out.print(Str.spaces(indent)).print("<").print(elemName)
     if (name != null) out.print(" name='").writeXml(name, xmlEsc).print("'")
     if (href != null) out.print(" href='").print(href.encode).print("'")
-    if (val != null) out.print(" val='").writeXml(valToStr, xmlEsc).print("'")
-    if (val is DateTime) out.print(" tz='").print(((DateTime)val).timeZone.fullName).print("'")
+    if (isNull) out.print(" isNull='true'")
+    if (val != null)
+    {
+      out.print(" val='").writeXml(valToStr, xmlEsc).print("'")
+      if (val is DateTime) out.print(" tz='").print(((DateTime)val).timeZone.fullName).print("'")
+    }
     if (isEmpty) out.print("/>\n")
     else
     {

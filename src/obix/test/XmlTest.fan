@@ -160,7 +160,6 @@ class XmlTest : ObixTest
        })
    }
 
-  /*
   Void testAbstime()
   {
     verifyParse(
@@ -172,13 +171,12 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="def"; elemName="abstime" }
+         ObixObj { name="def"; elemName="abstime"; isNull=true }
          ObixObj { name="a"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone.utc) }
-         ObixObj { name="b"; val=DateTime(2009, Month.jan, 18, 13, 54, 0, 0, TimeZone.utc) }
+         ObixObj { name="b"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("Etc/GMT+5")) }
          ObixObj { name="c"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("New_York")) }
        })
-   }
- */
+  }
 
   Void testValErrors()
   {

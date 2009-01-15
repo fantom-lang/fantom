@@ -43,7 +43,7 @@ internal class ObixUtil
   internal static const Type:|Obj->Str| valTypeToStrFunc :=
   [
     Uri#:      |Uri v->Str| { return v.encode },
-    DateTime#: |DateTime v->Str| { return v.toLocale("YYYY-MM-DDThh:mm:ss.FFFz") }
+    DateTime#: |DateTime v->Str| { return v.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFz") }
   ]
 
 //////////////////////////////////////////////////////////////////////////
@@ -66,9 +66,12 @@ internal class ObixUtil
 
   internal static DateTime parseAbstime(Str s, XElem elem)
   {
-    tzAttr := elem.get("tz", false) ?: "UTC"
-    tz := TimeZone.fromStr(tzAttr, false) ?: TimeZone.utc
-    s = "$s $tz"
+    tzAttr := elem.get("tz", false)
+    if (tzAttr != null)
+    {
+      tz := TimeZone.fromStr(tzAttr, false)
+      if (tz != null) s = "$s $tz"
+    }
     return DateTime.fromStr(s, true)
   }
 
@@ -77,6 +80,7 @@ internal class ObixUtil
 //////////////////////////////////////////////////////////////////////////
 
   ** Map of element names to default values
+  internal const static Str defaultsToNull := "__null!__"
   internal const static Str:Obj elemNameToDefaultVal :=
   [
     "bool":    false,
@@ -85,6 +89,9 @@ internal class ObixUtil
     "str":     "",
     "uri":     ``,
     "reltime": 0sec,
+    "abstime": defaultsToNull,
+    "date":    defaultsToNull,
+    "time":    defaultsToNull,
   ]
 
 }
