@@ -104,3 +104,16 @@ sys_List.each = function(self, func)
       func(self[i], i)
   }
 }
+sys_List.eachr = function(self, func)
+{
+  if (func.length == 1)
+  {
+    for (var i=self.length-1; i>=0; i--)
+      func(self[i])
+  }
+  else
+  {
+    for (var i=self.length-1; i>=0; i--)
+      func(self[i], i)
+  }
+}
