@@ -35,6 +35,11 @@ var webappClient_Elem = sys_Obj.extend(
   value$get: function() { return this.elem.value },
   value$set: function(val) { this.elem.value = val; },
 
+  x: function() { return this.elem.offsetLeft; },
+  y: function() { return this.elem.offsetTop; },
+  w: function() { return this.elem.offsetWidth; },
+  h: function() { return this.elem.offsetHeight; },
+
   parent: function()
   {
     var parent = this.elem.parent;
