@@ -415,7 +415,7 @@ class JavascriptWriter : CompilerSupport
       {
         out.w(se.args.size == 1 ? ".get" : ".set")
         out.w("($se.args.first")
-        if (se.args.size > 1) out.w(",${se.args[1]}")
+        if (se.args.size > 1) { out.w(","); expr(se.args[1]) }
         out.w(")")
         return
       }
