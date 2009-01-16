@@ -8,61 +8,40 @@
 
 var webappClient_HttpReq = sys_Obj.extend(
 {
-  $ctor: function()
-  {
-    sys_Type.addType("webappClient::HttpReq");
-    this.uri.parent = this;
-    this.method.parent = this;
-    this.async.parent = this;
-  },
+  $ctor: function() { sys_Type.addType("webappClient::HttpReq"); },
+  type: function() { return sys_Type.find("webappClient::HttpReq"); },
 
-  type: function()
-  {
-    return sys_Type.find("webappClient::HttpReq");
-  },
+  uri$get: function() { return this.uri },
+  uri$set: function(val) { this.uri = val; },
+  uri: "",
 
-  uri:
-  {
-    get: function() { return val },
-    set: function(val) { this.val = val; },
-    val: ""
-  },
+  method$get: function() { return this.method },
+  method$set: function(val) { this.method = val; },
+  method: "POST",
 
-  method:
-  {
-    get: function() { return val },
-    set: function(val) { this.val = val; },
-    val: "POST"
-  },
-
-  async:
-  {
-    get: function() { return val },
-    set: function(val) { this.val = val; },
-    val: true
-  },
+  async$get: function() { return this.async },
+  async$set: function(val) { this.async = val; },
+  async: true,
 
   send: function(content, func)
   {
     var req = new XMLHttpRequest();
-    req.open(this.method.val, this.uri.val, this.async.val);
-    req.onreadystatechange = function ()
+    req.open(this.method, this.uri, this.async);
+    if (this.async)
     {
-      if (req.readyState == 4)
-      {
-        var res = webappClient_HttpRes.make();
-        res.status.val = req.status;
-        res.content.val = req.responseText;
-        func(res);
+      req.onreadystatechange = function () {
+        if (req.readyState == 4)
+          func(webappClient_HttpRes.make(req));
       }
     }
     req.send(content);
+    if (!this.async) func(webappClient_HttpRes.make(req));
   }
 });
 
 webappClient_HttpReq.make = function(uri)
 {
   var req = new webappClient_HttpReq();
-  if (uri != null) req.uri.val = uri;
+  if (uri != null) req.uri = uri;
   return req;
 }
