@@ -106,11 +106,26 @@ internal class ObixXmlParser
     {
       switch (attr.name)
       {
+        // identity
         case "name": obj.name = attr.val
         case "href": obj.href = Uri.decode(attr.val)
+
+        // value
         case "val":  obj.val = parseVal(attr.val, elem)
         case "null": obj.isNull = attr.val.toBool
-        case "tz":   if (obj.tz == null) obj.tz = TimeZone(attr.val)
+
+        // facets
+        case "displayName": obj.displayName = attr.val
+        case "display":     obj.display = attr.val
+        case "icon":        obj.icon = Uri.decode(attr.val)
+        case "min":         obj.min = parseMinMax(attr.val, elem)
+        case "max":         obj.max = parseMinMax(attr.val, elem)
+        case "range":       obj.range = Uri.decode(attr.val)
+        case "precision":   obj.precision = attr.val.toInt
+        case "status":      obj.status = Status(attr.val)
+        case "tz":          if (obj.tz == null) obj.tz = TimeZone(attr.val)
+        case "unit":        if (attr.val.startsWith("obix:units/")) obj.unit = Unit.find(attr.val[11..-1], false)
+        case "writable":    obj.writable = attr.val.toBool
       }
     }
     catch (XErr e) throw e
@@ -125,6 +140,16 @@ internal class ObixXmlParser
       return func(valStr, elem)
     catch (Err e)
       throw err("Cannot parse <$elem.name> value: $valStr.toCode", e)
+  }
+
+  private Obj parseMinMax(Str valStr, XElem elem)
+  {
+    func := ObixUtil.elemNameToMinMaxFunc[elem.name]
+    if (func == null) throw err("Element <$elem.name> cannot have val min/max")
+    try
+      return func(valStr, elem)
+    catch (Err e)
+      throw err("Cannot parse <$elem.name> min/max: $valStr.toCode", e)
   }
 
 //////////////////////////////////////////////////////////////////////////

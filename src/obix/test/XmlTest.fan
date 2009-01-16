@@ -251,6 +251,162 @@ class XmlTest : ObixTest
    }
 
 //////////////////////////////////////////////////////////////////////////
+// Facets
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDisplay()
+  {
+    verifyParse(
+      "<obj>
+        <obj name='a' displayName='Alpha' />
+        <obj name='b' display='The Beta'/>
+        <int name='c' displayName='Gamma' display='The Gamma' val='5'/>
+        <obj name='d' displayName='&apos;\"&lt;&gt;' />
+        <obj name='e' display='&apos;\"&lt;&gt;' />
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="a"; displayName="Alpha" }
+         ObixObj { name="b"; display="The Beta" }
+         ObixObj { name="c"; displayName="Gamma"; display="The Gamma"; val=5 }
+         ObixObj { name="d"; displayName="'\"<>" }
+         ObixObj { name="e"; display="'\"<>" }
+       })
+   }
+
+  Void testIcon()
+  {
+    verifyParse(
+      "<obj>
+        <obj name='a' icon='http://foo/icons/a.png' />
+        <obj name='b' icon=\"http://foo/icon%20dir/?foo=bar+bar\" />
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="a"; icon=`http://foo/icons/a.png` }
+         ObixObj { name="b"; icon=`http://foo/icon dir/?foo=bar bar` }
+       })
+   }
+
+  Void testMinMax()
+  {
+    verifyParse(
+      "<obj>
+        <int name='a' min='0'/>
+        <int name='b' max='100'/>
+        <real name='c' min='1' max='99' />
+        <real name='d' min='-INF' max='INF'/>
+        <str name='e' min='2' max='20'/>
+        <abstime name='f' isNull='true' min='2000-01-01T00:00:00Z' max='2000-12-31T23:59:59Z'/>
+        <reltime name='g' min='PT3S' max='PT1M'/>
+        <date name='h' isNull='true' min='2000-01-01' max='2000-12-31'/>
+        <time name='i' isNull='true' min='01:00:00' max='12:00:00'/>
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="a"; val=0; min=0 }
+         ObixObj { name="b"; val=0; max=100 }
+         ObixObj { name="c"; val=0f; min=1f; max=99f }
+         ObixObj { name="d"; val=0f; min=Float.negInf; max=Float.posInf }
+         ObixObj { name="e"; val=""; min=2; max=20 }
+         ObixObj { name="f"; elemName="abstime"; isNull=true;
+                   min=DateTime(2000, Month.jan, 1, 0, 0, 0, 0, TimeZone.utc)
+                   max=DateTime(2000, Month.dec, 31, 23, 59, 59, 0, TimeZone.utc) }
+         ObixObj { name="g"; val=0sec; min=3sec; max=1min }
+         ObixObj { name="h"; elemName="date"; isNull=true
+                   min=Date(2000, Month.jan, 1); max=Date(2000, Month.dec, 31) }
+         ObixObj { name="i"; elemName="time"; isNull=true
+                   min=Time(1, 0, 0); max=Time(12, 0, 0) }
+       })
+   }
+
+  Void testPrecision()
+  {
+    verifyParse(
+      "<obj>
+        <real name='a' val='75.00' precision='2' />
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="a"; val=75f; precision=2 }
+       })
+   }
+
+  Void testRange()
+  {
+    verifyParse(
+      "<obj>
+        <enum name='a' val='1' range='http://foo/range' />
+        <enum name='b' val='2' range=\"http://foo/range%20val/\" />
+       </obj>",
+       ObixObj
+       {
+         ObixObj { elemName="enum"; name="a"; val="1"; range=`http://foo/range` }
+         ObixObj { elemName="enum"; name="b"; val="2"; range=`http://foo/range val/` }
+       })
+   }
+
+  Void testStatus()
+  {
+    verifyParse(
+      "<obj>
+        <obj name='a' />
+        <obj name='b' status='disabled'/>
+        <obj name='c' status='fault'/>
+        <obj name='d' status='down'/>
+        <obj name='e' status='unackedAlarm'/>
+        <obj name='f' status='alarm'/>
+        <obj name='g' status='unacked'/>
+        <obj name='h' status='overridden'/>
+        <obj name='i' status='ok'/>
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="a"; status=Status.ok }
+         ObixObj { name="b"; status=Status.disabled }
+         ObixObj { name="c"; status=Status.fault }
+         ObixObj { name="d"; status=Status.down }
+         ObixObj { name="e"; status=Status.unackedAlarm }
+         ObixObj { name="f"; status=Status.alarm }
+         ObixObj { name="g"; status=Status.unacked }
+         ObixObj { name="h"; status=Status.overridden }
+         ObixObj { name="i"; status=Status.ok }
+       })
+   }
+
+  Void testUnit()
+  {
+    verifyParse(
+      "<obj>
+        <int name='a' unit='obix:units/meter' />
+        <int name='b' unit='obix:units/fahrenheit' />
+        <int name='c' unit='obix:units/unknown_unit' />
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="a"; val=0; unit=Unit.find("meter") }
+         ObixObj { name="b"; val=0; unit=Unit.find("fahrenheit") }
+         ObixObj { name="c"; val=0 }
+       })
+   }
+
+  Void testWritable()
+  {
+    verifyParse(
+      "<obj>
+        <int name='a' />
+        <int name='b' writable='true'/>
+        <int name='c' writable='false'/>
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="a"; val=0; writable=false }
+         ObixObj { name="b"; val=0; writable=true }
+         ObixObj { name="c"; val=0; writable=false }
+       })
+   }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
