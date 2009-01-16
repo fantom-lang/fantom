@@ -72,6 +72,28 @@ namespace Fan.Sys
       verifyCount++;
     }
 
+    public void verifyNull(object a) { verifyNull(a, null); }
+    public void verifyNull(object a, string msg)
+    {
+      if (a != null)
+      {
+        if (msg == null) msg = s(a) + " is not null";
+        fail(msg);
+      }
+      verifyCount++;
+    }
+
+    public void verifyNotNull(object a) { verifyNotNull(a, null); }
+    public void verifyNotNull(object a, string msg)
+    {
+      if (a == null)
+      {
+        if (msg == null) msg = "is null";
+        fail(msg);
+      }
+      verifyCount++;
+    }
+
     public void verifyEq(object expected, object actual) { verifyEq(expected, actual, null); }
     public void verifyEq(object expected, object actual, string msg)
     {
