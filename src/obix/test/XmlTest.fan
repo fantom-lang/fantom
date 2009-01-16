@@ -194,6 +194,24 @@ class XmlTest : ObixTest
        })
   }
 
+  Void testReltime()
+  {
+    verifyParse(
+      "<obj>
+        <reltime name='def'/>
+        <reltime name='a' val='PT45S'/>
+        <reltime name='b' val='PT0.1S'/>
+        <reltime name='c' val='P2DT20H15M'/>
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="def"; val=0sec }
+         ObixObj { name="a";   val=45sec }
+         ObixObj { name="b";   val=100ms }
+         ObixObj { name="c";   val=2day+20hr+15min }
+       })
+  }
+
   Void testDate()
   {
     verifyParse(
