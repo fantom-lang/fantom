@@ -72,7 +72,7 @@ const final class Time
   **   hh:mm:ss.FFFFFFFFF
   **   12:06:00.0
   **
-  ** Also see `toLocale`.
+  ** Also see `fromStr`, `toIso`, and `toLocale`.
   **
   override Str toStr()
 
@@ -127,5 +127,27 @@ const final class Time
   ** fraction to print is skipped.
   **
   Str toLocale(Str? pattern := null)
+
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Parse an ISO 8601 time.  If invalid format and checked is
+  ** false return null, otherwise throw ParseErr.  The following
+  ** format is supported:
+  **   hh:mm:ss.FFFFFFFFF
+  **
+  ** Also see `toIso` and `fromStr`.
+  **
+  static Time? fromIso(Str s, Bool checked := true)
+
+  **
+  ** Format this instance according to ISO 8601 using the pattern:
+  **   hh:mm:ss.FFFFFFFFF
+  **
+  ** Also see `fromIso` and `toStr`.
+  **
+  Str toIso()
 
 }

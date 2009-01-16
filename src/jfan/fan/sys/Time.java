@@ -79,6 +79,9 @@ public final class Time
         }
       }
 
+      // verify everything has been parsed
+      if (i < s.length()) throw new Exception();
+
       return new Time(hour, min, sec, ns);
     }
     catch (Exception e)
@@ -293,6 +296,15 @@ public final class Time
 
     return s.toString();
   }
+
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+  public String toIso() { return toStr(); }
+
+  public static Time fromIso(String s) { return fromStr(s, true); }
+  public static Time fromIso(String s, boolean checked) { return fromStr(s, checked); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

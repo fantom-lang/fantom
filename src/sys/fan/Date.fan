@@ -69,7 +69,7 @@ const final class Date
   **   YYYY-MM-DD
   **   2009-01-10
   **
-  ** Also `toLocale`.
+  ** Also `fromStr`, `toIso`, and `toLocale`.
   **
   override Str toStr()
 
@@ -125,5 +125,27 @@ const final class Date
   **   'xyz'  Literal characters
   **
   Str toLocale(Str? pattern := null)
+
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Parse an ISO 8601 date.  If invalid format and checked is
+  ** false return null, otherwise throw ParseErr.  The following
+  ** format is supported:
+  **   YYYY-MM-DD
+  **
+  ** Also see `toIso` and `fromStr`.
+  **
+  static Date? fromIso(Str s, Bool checked := true)
+
+  **
+  ** Format this instance according to ISO 8601 using the pattern:
+  **   YYYY-MM-DD
+  **
+  ** Also see `fromIso` and `toStr`.
+  **
+  Str toIso()
 
 }

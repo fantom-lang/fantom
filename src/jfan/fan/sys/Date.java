@@ -51,8 +51,8 @@ public final class Date
       int month = num(s, 5)*10   + num(s, 6) - 1;
       int day   = num(s, 8)*10   + num(s, 9);
 
-      // check separator symbols
-      if (s.charAt(4)  != '-' || s.charAt(7)  != '-')
+      // check separator symbols and length
+      if (s.charAt(4)  != '-' || s.charAt(7)  != '-' || s.length() != 10)
         throw new Exception();
 
       return new Date(year, month, day);
@@ -254,6 +254,15 @@ public final class Date
 
     return s.toString();
   }
+
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+  public String toIso() { return toStr(); }
+
+  public static Date fromIso(String s) { return fromStr(s, true); }
+  public static Date fromIso(String s, boolean checked) { return fromStr(s, checked); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
