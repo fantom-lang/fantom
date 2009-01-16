@@ -71,6 +71,28 @@ public class Test
     verifyCount++;
   }
 
+  public void verifyNull(Object a) { verifyNull(a, null); }
+  public void verifyNull(Object a, String msg)
+  {
+    if (a != null)
+    {
+      if (msg == null) msg = s(a) + " is not null";
+      fail(msg);
+    }
+    verifyCount++;
+  }
+
+  public void verifyNotNull(Object a) { verifyNotNull(a, null); }
+  public void verifyNotNull(Object a, String msg)
+  {
+    if (a == null)
+    {
+      if (msg == null) msg = "is null";
+      fail(msg);
+    }
+    verifyCount++;
+  }
+
   public void verifyEq(Object expected, Object actual) { verifyEq(expected, actual, null); }
   public void verifyEq(Object expected, Object actual, String msg)
   {

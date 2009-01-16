@@ -60,6 +60,20 @@ abstract class Test
   Void verifyFalse(Bool cond, Str? msg := null)
 
   **
+  ** Verify that a is null, otherwise throw a test failure
+  ** exception.  If msg is non-null, include it in a failure
+  ** exception.
+  **
+  Void verifyNull(Obj? a, Str? msg := null)
+
+  **
+  ** Verify that a is not null, otherwise throw a test failure
+  ** exception.  If msg is non-null, include it in a failure
+  ** exception.
+  **
+  Void verifyNotNull(Obj? a, Str? msg := null)
+
+  **
   ** Verify that a == b, otherwise throw a test failure exception.
   ** If both a and b are nonnull, then this method also ensures
   ** that a.hash == b.hash, because any two objects which return
