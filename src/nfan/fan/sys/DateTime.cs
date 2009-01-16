@@ -243,8 +243,9 @@ namespace Fan.Sys
 // Constructor - FromStr
 //////////////////////////////////////////////////////////////////////////
 
-    public static DateTime fromStr(string s) { return fromStr(s, true); }
-    public static DateTime fromStr(string s, bool check)
+    public static DateTime fromStr(string s) { return fromStr(s, true, false); }
+    public static DateTime fromStr(string s, bool check) { return fromStr(s, check, false); }
+    private static DateTime fromStr(string s, bool check, bool iso)
     {
       try
       {
@@ -292,21 +293,21 @@ namespace Fan.Sys
           else if (ch != '+') throw new System.Exception();
         }
 
-        // timezone
+        // timezone - we share this method b/w fromStr and fromIso
         TimeZone tz;
-        if (i < s.Length)
+        if (iso)
         {
-          if (s[i++] != ' ') throw new System.Exception();
-          tz = TimeZone.fromStr(s.Substring(i), true);
-        }
-        else
-        {
+          if (i < s.Length) throw new System.Exception();
           if (offset == 0)
             tz = TimeZone.utc();
           else
-            tz = TimeZone.fromStr("GMT" + (offset < 0 ?
-              ("+" + (-offset/3600)) :
-              ("-" + (offset/3600))));
+            tz = TimeZone.fromStr("GMT" +
+              (offset < 0 ? ("+" + (-offset/3600)) : ("-" + (offset/3600))));
+        }
+        else
+        {
+          if (s[i++] != ' ') throw new System.Exception();
+          tz = TimeZone.fromStr(s.Substring(i), true);
         }
 
         return new DateTime(year, month, day, hour, min, sec, ns, offset, tz);
@@ -826,6 +827,15 @@ namespace Fan.Sys
     }
 
     public long dotnet() { return (m_ticks / nsPerTick) + diffDotnet; }
+
+  //////////////////////////////////////////////////////////////////////////
+  // ISO 8601
+  //////////////////////////////////////////////////////////////////////////
+
+    public string toIso() { return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFz"); }
+
+    public static DateTime fromIso(string s) { return fromStr(s, true, true); }
+    public static DateTime fromIso(string s, bool check) { return fromStr(s, check, true); }
 
   //////////////////////////////////////////////////////////////////////////
   // Lookup Tables

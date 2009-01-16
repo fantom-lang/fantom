@@ -302,6 +302,176 @@ namespace Fan.Sys
       return s.ToString();
     }
 
+  //////////////////////////////////////////////////////////////////////////
+  // ISO 8601
+  //////////////////////////////////////////////////////////////////////////
+
+    public string toIso()
+    {
+      StringBuilder s = new StringBuilder();
+      long ticks = this.m_ticks;
+      if (ticks == 0) return "PT0S";
+
+      if (ticks < 0) s.Append('-');
+      s.Append('P');
+      long abs  = ticks < 0 ? -ticks : ticks;
+      long sec  = abs / nsPerSec;
+      long frac = abs % nsPerSec;
+
+      // days
+      if (sec > secPerDay) { s.Append(sec/secPerDay).Append('D'); sec = sec % secPerDay; }
+      if (sec == 0 && frac == 0) return s.ToString();
+      s.Append('T');
+
+      // hours, minutes
+      if (sec > secPerHr)  { s.Append(sec/secPerHr).Append('H');  sec = sec % secPerHr; }
+      if (sec > secPerMin) { s.Append(sec/secPerMin).Append('M'); sec = sec % secPerMin; }
+      if (sec == 0 && frac == 0) return s.ToString();
+
+      // seconds and fractional seconds
+      s.Append(sec);
+      if (frac != 0)
+      {
+        s.Append('.');
+        for (int i=10; i<=100000000; i*=10) if (frac < i) s.Append('0');
+        s.Append(frac);
+        while (s[s.Length-1] == '0') s.Length = s.Length -1;
+      }
+      s.Append('S');
+      return s.ToString();
+    }
+
+    public static Duration fromIso(string s) { return fromIso(s, true); }
+    public static Duration fromIso(string s, bool check)
+    {
+      try
+      {
+        long ticks = 0;
+        bool neg = false;
+        IsoParser p = new IsoParser(s);
+
+        // check for negative
+        if (p.cur == '-') { neg = true; p.consume(); }
+        else if (p.cur == '+') { p.consume(); }
+
+        // next char must be P
+        p.consume('P');
+        if (p.cur == -1) throw new System.Exception();
+
+        // D
+        int num = 0;
+        if (p.cur != 'T')
+        {
+          num = p.num();
+          p.consume('D');
+          ticks += num * nsPerDay;
+          if (p.cur == -1) return new Duration(ticks);
+        }
+
+        // next char must be T
+        p.consume('T');
+        if (p.cur == -1) throw new System.Exception();
+        num = p.num();
+
+        // H
+        if (num >= 0 && p.cur == 'H')
+        {
+          p.consume();
+          ticks += num * nsPerHr;
+          num = p.num();
+        }
+
+        // M
+        if (num >= 0 && p.cur == 'M')
+        {
+          p.consume();
+          ticks += num * nsPerMin;
+          num = p.num();
+        }
+
+        // S
+        if (num >= 0 && p.cur == 'S' || p.cur == '.')
+        {
+          ticks += num * nsPerSec;
+          if (p.cur == '.') { p.consume(); ticks += p.frac(); }
+          p.consume('S');
+        }
+
+        // verify we parsed everything
+        if (p.cur != -1) throw new System.Exception();
+
+        // negate if necessary and return result
+        if (neg) ticks = -ticks;
+        return new Duration(ticks);
+      }
+      catch(System.Exception)
+      {
+        if (!check) return null;
+        throw ParseErr.make("ISO 8601 Duration", s).val;
+      }
+    }
+
+    class IsoParser
+    {
+      internal IsoParser(string s)
+      {
+        this.s = s;
+        this.cur = s[0];
+      }
+
+      internal int num()
+      {
+        if (!curIsDigit && cur != -1 && cur != '.')
+          throw new System.Exception();
+        int num = 0;
+        while(curIsDigit)
+        {
+          num = num*10 + digit();
+          consume();
+        }
+        return num;
+      }
+
+      internal int frac()
+      {
+        // get up to nine decimal places as milliseconds within a fraction
+        int ticks = 0;
+        for (int i=100000000; i>=0; i/=10)
+        {
+          if (!curIsDigit) break;
+          ticks += digit() * i;
+          consume();
+        }
+        return ticks;
+      }
+
+      int digit() { return cur - '0'; }
+
+      internal void consume(int ch)
+      {
+        if (cur != ch) throw new System.Exception();
+        consume();
+      }
+
+      internal void consume()
+      {
+        off++;
+        if (off < s.Length)
+        {
+          cur = s[off];
+          curIsDigit = '0' <= cur && cur <= '9';
+        }
+        else
+        {
+          cur = -1;
+          curIsDigit = false;
+        }
+      }
+
+      internal String s;
+      internal int off, cur;
+      internal bool curIsDigit;
+    }
 
   //////////////////////////////////////////////////////////////////////////
   // C#
@@ -327,6 +497,9 @@ namespace Fan.Sys
     public const long nsPerMin   = 60000000000L;
     public const long nsPerSec   = 1000000000L;
     public const long nsPerMilli = 1000000L;
+    public const long secPerDay  = 86400L;
+    public const long secPerHr   = 3600L;
+    public const long secPerMin  = 60L;
     static readonly Duration m_boot = now();
 
     public readonly long m_ticks;

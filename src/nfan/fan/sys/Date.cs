@@ -51,7 +51,7 @@ namespace Fan.Sys
         int day   = num(s, 8)*10   + num(s, 9);
 
         // check separator symbols
-        if (s[4]  != '-' || s[7]  != '-')
+        if (s[4]  != '-' || s[7]  != '-' || s.Length != 10)
           throw new System.Exception();
 
         return new Date(year, month, day);
@@ -254,6 +254,15 @@ namespace Fan.Sys
 
       return s.ToString();
     }
+
+  //////////////////////////////////////////////////////////////////////////
+  // ISO 8601
+  //////////////////////////////////////////////////////////////////////////
+
+    public string toIso() { return toStr(); }
+
+    public static Date fromIso(string s) { return fromStr(s, true); }
+    public static Date fromIso(string s, bool check) { return fromStr(s, check); }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields

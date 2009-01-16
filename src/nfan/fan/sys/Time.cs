@@ -79,6 +79,9 @@ namespace Fan.Sys
           }
         }
 
+        // verify everything has been parsed
+        if (i < s.Length) throw new System.Exception();
+
         return new Time(hour, min, sec, ns);
       }
       catch (System.Exception)
@@ -294,6 +297,15 @@ namespace Fan.Sys
 
       return s.ToString();
     }
+
+  //////////////////////////////////////////////////////////////////////////
+  // ISO 8601
+  //////////////////////////////////////////////////////////////////////////
+
+    public string toIso() { return toStr(); }
+
+    public static Time fromIso(string s) { return fromStr(s, true); }
+    public static Time fromIso(string s, bool check) { return fromStr(s, check); }
 
   //////////////////////////////////////////////////////////////////////////
   // Fields
