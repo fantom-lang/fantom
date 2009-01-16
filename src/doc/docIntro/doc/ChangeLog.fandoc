@@ -512,7 +512,7 @@
 *Build 1.0.38 (incomplete)*
 - Str in, toBuf for working for string I/O
 - Buf.dup, fill, hmac
-- Duration, DateTime - toIso, fromIso
+- Duration, DateTime, Date, Time - toIso, fromIso
 - Map.ordered to use LinkedHashMap backing store
 - Test verifyNull, verifyNotNull
 - Compiler fix when local variable shadows field with storage operator

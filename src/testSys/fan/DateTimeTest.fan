@@ -774,27 +774,48 @@ class DateTimeTest : Test
 
   Void testDateToStr()
   {
-    verifyEq(Date(2009, Month.jan, 3).toStr, "2009-01-03")
-    verifyEq(Date(2009, Month.dec, 30).toStr, "2009-12-30")
+    verifyDateToStr(Date(2009, Month.jan, 3), "2009-01-03")
+    verifyDateToStr(Date(2009, Month.dec, 30), "2009-12-30")
 
     verifyEq(Date.fromStr("1972-06-03"), Date(1972, Month.jun, 3))
-    verifyEq(Date.fromStr("2009/05/03", false), null)
+    verifyEq(Date.fromIso("2009/05/03", false), null)
     verifyErr(ParseErr#) |,| { Date.fromStr("1990") }
+    verifyErr(ParseErr#) |,| { Date.fromIso("2009-12-30Z") }
+    verifyErr(ParseErr#) |,| { Date.fromIso("2009-12-30-04:30") }
+  }
+
+  Void verifyDateToStr(Date d, Str s)
+  {
+    verifyEq(d.toStr, s)
+    verifyEq(d.toIso, s)
+    verifyEq(Date.fromStr(s), d)
+    verifyEq(Date.fromIso(s), d)
   }
 
   Void testTimeToStr()
   {
-    verifyEq(Time(2, 30).toStr, "02:30:00")
-    verifyEq(Time(13, 4, 5).toStr, "13:04:05")
-    verifyEq(Time(23, 0, 0, 123).toStr, "23:00:00.000000123")
-    verifyEq(Time(23, 0, 0, 123_456).toStr, "23:00:00.000123456")
-    verifyEq(Time(23, 0, 43, 123_456_987).toStr, "23:00:43.123456987")
+    verifyTimeToStr(Time(2, 30), "02:30:00")
+    verifyTimeToStr(Time(13, 4, 5), "13:04:05")
+    verifyTimeToStr(Time(23, 0, 0, 123), "23:00:00.000000123")
+    verifyTimeToStr(Time(23, 0, 0, 123_456), "23:00:00.000123456")
+    verifyTimeToStr(Time(23, 0, 43, 123_456_987), "23:00:43.123456987")
 
     verifyEq(Time.fromStr("01:02:03"), Time(1, 2, 3))
     verifyEq(Time.fromStr("01:02:03.9"), Time(1, 2, 3, 900_000_000))
     verifyEq(Time.fromStr("01:02:03.308"), Time(1, 2, 3, 308_000_000))
+
     verifyEq(Time.fromStr("30:99", false), null)
+    verifyEq(Time.fromIso("12:30:00Z", false), null)
     verifyErr(ParseErr#) |,| { Time.fromStr("") }
+    verifyErr(ParseErr#) |,| { Time.fromIso("12:30:00+05:00") }
+  }
+
+  Void verifyTimeToStr(Time t, Str s)
+  {
+    verifyEq(t.toStr, s)
+    verifyEq(t.toIso, s)
+    verifyEq(Time.fromStr(s), t)
+    verifyEq(Time.fromIso(s), t)
   }
 
   Void verifyFromStrErr(Str s)
