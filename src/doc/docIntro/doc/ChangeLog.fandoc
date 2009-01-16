@@ -516,5 +516,5 @@
 - Map.ordered to use LinkedHashMap backing store
 - Test verifyNull, verifyNotNull
 - Compiler fix when local variable shadows field with storage operator
-- Enhance DateTime.fromStr to parse ISO 8601 without timezone id
+- New compilerJavascript and webappClient APIs
 - New obix API
