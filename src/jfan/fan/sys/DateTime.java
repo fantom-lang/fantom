@@ -241,8 +241,9 @@ public final class DateTime
 // Constructor - FromStr
 //////////////////////////////////////////////////////////////////////////
 
-  public static DateTime fromStr(String s) { return fromStr(s, true); }
-  public static DateTime fromStr(String s, boolean checked)
+  public static DateTime fromStr(String s) { return fromStr(s, true, false); }
+  public static DateTime fromStr(String s, boolean checked) { return fromStr(s, checked, false); }
+  private static DateTime fromStr(String s, boolean checked, boolean iso)
   {
     try
     {
@@ -290,19 +291,20 @@ public final class DateTime
         else if (c != '+') throw new Exception();
       }
 
-      // timezone
+      // timezone - we share this method b/w fromStr and fromIso
       TimeZone tz;
-      if (i < s.length())
+      if (iso)
       {
-        if (s.charAt(i++) != ' ') throw new Exception();
-        tz = TimeZone.fromStr(s.substring(i), true);
-      }
-      else
-      {
+        if (i < s.length()) throw new Exception();
         if (offset == 0)
           tz = TimeZone.utc();
         else
           tz = TimeZone.fromStr("GMT" + (offset < 0 ? "+" : "-") + Math.abs(offset)/3600);
+      }
+      else
+      {
+        if (s.charAt(i++) != ' ') throw new Exception();
+        tz = TimeZone.fromStr(s.substring(i), true);
       }
 
       return new DateTime(year, month, day, hour, min, sec, ns, offset, tz);
@@ -609,7 +611,7 @@ public final class DateTime
 
       // if invalid number of characters
       if (invalidNum)
-        throw ArgErr.make("Invalid pattern: unsupported num '" + (char)c + "' (x" + n + ")").val;
+        throw ArgErr.make("Invalid pattern: unsupported num of '" + (char)c + "' (x" + n + ")").val;
     }
 
     return s.toString();
@@ -809,6 +811,15 @@ public final class DateTime
   }
 
   public long toJava() { return (ticks / nsPerMilli) + diffJava; }
+
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+  public String toIso() { return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFz"); }
+
+  public static DateTime fromIso(String s) { return fromStr(s, true, true); }
+  public static DateTime fromIso(String s, boolean checked) { return fromStr(s, checked, true); }
 
 //////////////////////////////////////////////////////////////////////////
 // Lookup Tables

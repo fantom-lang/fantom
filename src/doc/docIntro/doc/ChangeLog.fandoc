@@ -512,8 +512,9 @@
 *Build 1.0.38 (incomplete)*
 - Str in, toBuf for working for string I/O
 - Buf.dup, fill, hmac
-- Duration toIso, fromIso
+- Duration, DateTime - toIso, fromIso
 - Map.ordered to use LinkedHashMap backing store
+- Test verifyNull, verifyNotNull
 - Compiler fix when local variable shadows field with storage operator
 - Enhance DateTime.fromStr to parse ISO 8601 without timezone id
 - New obix API

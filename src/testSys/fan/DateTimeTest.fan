@@ -772,28 +772,6 @@ class DateTimeTest : Test
     verifyFromStrErr("2009-03-01T12:00:00+01 Amsterdam")
   }
 
-  Void testIso8601FromStr()
-  {
-    verifyIso8601FromStr("2000-01-15T02:03:04Z", 2000, jan, 15, 2, 3, 4, 0, utc, 0hr)
-    verifyIso8601FromStr("2009-02-15T23:00:00.5-05:00", 2009, feb, 15, 23, 0, 0, 500ms.ticks, TimeZone("Etc/GMT+5"), -5hr)
-    verifyIso8601FromStr("2009-02-15T23:00:00.0+10:00", 2009, feb, 15, 23, 0, 0, 0, TimeZone("Etc/GMT-10"), +10hr)
-  }
-
-  Void verifyIso8601FromStr(Str s, Int y, Month mon, Int day, Int h, Int min, Int sec, Int ns, TimeZone tz, Duration offset)
-  {
-    d := DateTime(s)
-    verifyEq(d.year, y)
-    verifyEq(d.month, mon)
-    verifyEq(d.day, day)
-    verifyEq(d.hour, h)
-    verifyEq(d.min, min)
-    verifyEq(d.sec, sec)
-    verifyEq(d.nanoSec, ns)
-    verifyEq(d.timeZone, tz)
-    verifyEq(d.timeZone.offset(y), offset)
-    verifyEq(d.ticks, DateTime(y, mon, day, h, min, sec, ns, tz).ticks)
-  }
-
   Void testDateToStr()
   {
     verifyEq(Date(2009, Month.jan, 3).toStr, "2009-01-03")
@@ -938,6 +916,37 @@ class DateTimeTest : Test
     verifyEq(x.min, 49)
     verifyEq(x.toJava, 1227185341155)
  }
+
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+  Void testIso()
+  {
+    verifyIso("2000-01-15T02:03:04Z", 2000, jan, 15, 2, 3, 4, 0, utc, 0hr)
+    verifyIso("2009-02-15T23:00:00.5-05:00", 2009, feb, 15, 23, 0, 0, 500ms.ticks, TimeZone("Etc/GMT+5"), -5hr)
+    verifyIso("2009-02-15T23:00:00.0+10:00", 2009, feb, 15, 23, 0, 0, 0, TimeZone("Etc/GMT-10"), +10hr)
+
+    verifyNull(DateTime.fromIso(DateTime.now.toStr, false))
+    verifyNotNull(DateTime.fromIso(DateTime.now.toIso, false))
+    verifyErr(ParseErr#) |,| { DateTime.fromIso(DateTime.now.toStr) }
+  }
+
+  Void verifyIso(Str s, Int y, Month mon, Int day, Int h, Int min, Int sec, Int ns, TimeZone tz, Duration offset)
+  {
+    verifyErr(ParseErr#) |,| { DateTime.fromStr(s); }
+    d := DateTime.fromIso(s)
+    verifyEq(d.year, y)
+    verifyEq(d.month, mon)
+    verifyEq(d.day, day)
+    verifyEq(d.hour, h)
+    verifyEq(d.min, min)
+    verifyEq(d.sec, sec)
+    verifyEq(d.nanoSec, ns)
+    verifyEq(d.timeZone, tz)
+    verifyEq(d.timeZone.offset(y), offset)
+    verifyEq(d.ticks, DateTime(y, mon, day, h, min, sec, ns, tz).ticks)
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // HTTP
