@@ -34,6 +34,7 @@ var webappClient_HttpReq = sys_Obj.extend(
           func(webappClient_HttpRes.make(req));
       }
     }
+    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.send(content);
     if (!this.async) func(webappClient_HttpRes.make(req));
   }

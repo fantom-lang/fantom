@@ -14,17 +14,17 @@ class HttpReq
 {
 
   **
-  ** Create a new HttpReq instance with for the given URI.
+  ** Create a new HttpReq instance with for the given Uri.
   **
-  new make(Uri uri)
+  new make(Str uri)
   {
     this.uri = uri
   }
 
   **
-  ** The URI to send the request.
+  ** The Uri to send the request.
   **
-  Uri uri
+  Str uri
 
   **
   ** The HTTP method to use.  Defaults to 'POST'.
