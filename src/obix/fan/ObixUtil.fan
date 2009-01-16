@@ -42,8 +42,11 @@ internal class ObixUtil
   ** funcs (only those that don't use toStr)
   internal static const Type:|Obj->Str| valTypeToStrFunc :=
   [
-    Uri#:      |Uri v->Str| { return v.encode },
-    DateTime#: |DateTime v->Str| { return v.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFz") }
+    Uri#:      |Uri v->Str|      { return v.encode },
+    DateTime#: |DateTime v->Str| { return v.toIso },
+    Duration#: |Duration v->Str| { return v.toIso },
+    Date#:     |Date v->Str|     { return v.toIso },
+    Time#:     |Time v->Str|     { return v.toIso },
   ]
 
 //////////////////////////////////////////////////////////////////////////
@@ -60,20 +63,18 @@ internal class ObixUtil
     "uri":     |Str s->Obj| { return Uri.decode(s) },
     "enum":    |Str s->Obj| { return s },
     "abstime": |Str s, XElem elem->Obj| { return parseAbstime(s, elem) },
-    "reltime": |Str s->Obj| { throw Err("TODO") },
-    "date":    |Str s->Obj| { return Date.fromStr(s, true) },
-    "time":    |Str s->Obj| { return Time.fromStr(s, true) }
+    "reltime": |Str s->Obj| { return Duration.fromIso(s, true) },
+    "date":    |Str s->Obj| { return Date.fromIso(s, true) },
+    "time":    |Str s->Obj| { return Time.fromIso(s, true) }
   ]
 
   internal static DateTime parseAbstime(Str s, XElem elem)
   {
-    tzAttr := elem.get("tz", false)
-    if (tzAttr != null)
-    {
-      tz := TimeZone.fromStr(tzAttr, false)
-      if (tz != null) s = "$s $tz"
-    }
-    return DateTime.fromStr(s, true)
+    tz := elem.get("tz", false)
+    if (tz != null)
+      return DateTime.fromStr("$s $tz", true)
+    else
+      return DateTime.fromIso(s, true)
   }
 
 //////////////////////////////////////////////////////////////////////////
