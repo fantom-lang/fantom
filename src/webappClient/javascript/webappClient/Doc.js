@@ -14,12 +14,18 @@ var webappClient_Doc = sys_Obj.extend(
 
 webappClient_Doc.body = function()
 {
-  return webappClient_Elem.makeFrom(document.body);
+  return webappClient_Elem.make(document.body);
 }
 
 webappClient_Doc.getById = function(id)
 {
   var elem = document.getElementById(id);
   if (elem == null) return null;
+  return webappClient_Elem.make(elem);
+}
+
+webappClient_Doc.createElem = function(tagName)
+{
+  var elem = document.createElement(tagName);
   return webappClient_Elem.make(elem);
 }

@@ -29,4 +29,9 @@ class Doc
   **
   static Elem? getById(Str id) { return null }
 
+  **
+  ** Create a new element with the given tag name.
+  **
+  static Elem createElem(Str tagName) { return Elem("") }
+
 }

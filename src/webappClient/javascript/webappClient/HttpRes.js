@@ -8,34 +8,25 @@
 
 var webappClient_HttpRes = sys_Obj.extend(
 {
-  $ctor: function()
-  {
-    sys_Type.addType("webappClient::HttpRes");
-    this.status.parent = this;
-    this.content.parent = this;
-  },
+  $ctor: function() { sys_Type.addType("webappClient::HttpRes"); },
+  type: function() { return sys_Type.find("webappClient::HttpRes"); },
 
-  type: function()
-  {
-    return sys_Type.find("webappClient::HttpRes");
-  },
+  status$get: function() { return this.status },
+  status$set: function(val) { this.status = val; },
+  status: null,
 
-  status:
-  {
-    get: function() { return val },
-    set: function(val) { this.val = val; },
-    val: true
-  },
-
-  content:
-  {
-    get: function() { return val },
-    set: function(val) { this.val = val; },
-    val: true
-  }
+  content$get: function() { return this.content },
+  content$set: function(val) { this.content = val; },
+  content: null,
 });
 
-webappClient_HttpRes.make = function()
+webappClient_HttpRes.make = function(req)
 {
-  return new webappClient_HttpRes();
+  var res = new webappClient_HttpRes();
+  if (req != null)
+  {
+    res.status = req.status;
+    res.content = req.responseText;
+  }
+  return res;
 }
