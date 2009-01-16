@@ -68,17 +68,7 @@ const final class DateTime
   ** Parse the string into a DateTime from the programmatic encoding
   ** defined by `toStr`.  If the string cannot be parsed into a valid
   ** DateTime and checked is false then return null, otherwise throw ParseErr.
-  **
-  ** This method will also parse a ISO 8601 formatted as one of the
-  ** following:
-  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]
-  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]+HH::MM
-  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]-HH::MM
-  **
-  ** If a timezone offset is specified, then one the predefined "Etc/GMT+x"
-  ** timezones are used for the result:
-  **   DateTime("2009-01-15T12:00:00Z")       =>  2009-01-15T12:00:00Z UTC
-  **   DateTime("2009-01-15T12:00:00-05:00")  =>  2009-01-15T12:00:00-05:00 GMT+5
+  ** Also see `fromIso` and `fromHttpStr`.
   **
   static DateTime? fromStr(Str s, Bool checked := true)
 
@@ -119,7 +109,7 @@ const final class DateTime
   ** string encoding conforms to ISO 8601 and XML Schema
   ** Part 2.  The Fan format also appends the timezone name to
   ** avoid the ambiguities associated with interpretting the time
-  ** zone offset.
+  ** zone offset.  Also see `toIso` and `toHttpStr`.
   **
   ** Examples:
   **   "2000-04-03T00:00:00.123Z UTC"
@@ -251,8 +241,13 @@ const final class DateTime
   ** A symbol immediately preceding a "F" pattern with a no
   ** fraction to print is skipped.
   **
-  ** For example to use format as ISO 8601:
-  **   DateTime.now.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFz")
+  ** Examples:
+  **   YYYY-MM-DD'T'hh:mm:ss.FFFz  =>  2009-01-16T09:57:35.097-05:00
+  **   DD MMM YYYY                 =>  06 Jan 2009
+  **   DD/MMM/YY                   =>  06/Jan/09
+  **   MMMM D, YYYY                =>  January 16, 2009
+  **   hh:mm:ss.fff zzzz           =>  09:58:54.845 New_York
+  **   k:mma                       =>  9:58AM
   **
   Str toLocale(Str? pattern := null)
 
@@ -339,6 +334,35 @@ const final class DateTime
   ** Get this date in Java milliseconds since the epoch of 1 Jan 1970.
   **
   Int toJava()
+
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Parse an ISO 8601 timestamp.  If invalid format and checked is
+  ** false return null, otherwise throw ParseErr.  The following formats
+  ** are supported:
+  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]
+  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]+HH::MM
+  **   YYYY-MM-DD'T'hh:mm:ss[.FFFFFFFFF]-HH::MM
+  **
+  ** If a timezone offset is specified, then one the predefined "Etc/GMT+x"
+  ** timezones are used for the result:
+  **   DateTime("2009-01-15T12:00:00Z")       =>  2009-01-15T12:00:00Z UTC
+  **   DateTime("2009-01-15T12:00:00-05:00")  =>  2009-01-15T12:00:00-05:00 GMT+5
+  **
+  ** Also see `toIso`, `fromStr`, and `fromHttpStr`.
+  **
+  static DateTime? fromIso(Str s, Bool checked := true)
+
+  **
+  ** Format this instance according to ISO 8601 using the pattern:
+  **   YYYY-MM-DD'T'hh:mm:ss.FFFz
+  **
+  ** Also see `fromIso`, `toStr`, and `toHttpStr`.
+  **
+  Str toIso()
 
 //////////////////////////////////////////////////////////////////////////
 // HTTP
