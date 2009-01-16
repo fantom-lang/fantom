@@ -212,4 +212,47 @@ class DurationTest : Test
     verifyEq((3day + 55sec).toLocale, "3days 0hr 0min 55sec")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+  Void testIso()
+  {
+    verifyIso(0ms,     "PT0S")
+    verifyIso(2ns,     "PT0.000000002S")
+    verifyIso(89ns,    "PT0.000000089S")
+    verifyIso(123ns,   "PT0.000000123S")
+    verifyIso(9876ns,  "PT0.000009876S")
+    verifyIso(80004ns, "PT0.000080004S")
+    verifyIso(800ns,   "PT0.0000008S")
+    verifyIso(50ms,    "PT0.05S")
+    verifyIso(3sec,    "PT3S")
+    verifyIso(-3.6sec, "-PT3.6S")
+    verifyIso(24sec,   "PT24S")
+    verifyIso(6min,    "PT6M")
+    verifyIso(63sec,   "PT1M3S")
+    verifyIso(4hr,     "PT4H")
+    verifyIso(99day,   "P99D")
+    verifyIso(-26hr,   "-P1DT2H")
+    verifyIso(1day+2hr+3min+4sec+5ms, "P1DT2H3M4.005S")
+    verifyEq(Duration.fromIso("PT.7S"), 0.7sec) // string is PT0.7S
+
+    verifyEq(Duration.fromIso("", false), null)
+    verifyEq(Duration.fromIso("PTH4M", false), null)
+    verifyEq(Duration.fromIso("PT4D", false), null)
+    verifyEq(Duration.fromIso("P4ST", false), null)
+    verifyErr(ParseErr#) |,| { Duration.fromIso("3") }
+    verifyErr(ParseErr#) |,| { Duration.fromIso("3S", true) }
+    verifyErr(ParseErr#) |,| { Duration.fromIso("P3S") }
+    verifyErr(ParseErr#) |,| { Duration.fromIso("PT3S5") }
+    verifyErr(ParseErr#) |,| { Duration.fromIso("P5.0M") }
+    verifyErr(ParseErr#) |,| { Duration.fromIso("P2Y") }
+  }
+
+  Void verifyIso(Duration d, Str s)
+  {
+    verifyEq(d.toIso, s)
+    verifyEq(Duration.fromIso(s), d)
+  }
+
 }

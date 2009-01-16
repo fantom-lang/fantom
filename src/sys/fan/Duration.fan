@@ -175,4 +175,33 @@ const final class Duration
   **
   Str toLocale()
 
+//////////////////////////////////////////////////////////////////////////
+// Conversions
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Format this duration according to ISO 8601.  Also see `fromIso`.
+  **
+  ** Examples:
+  **   8ns.toIso             =>  PT0.000000008S
+  **   100ms.toIso           =>  PT0.1S
+  **   (-20sec).toIso        =>  -PT20S
+  **   3.5min.toIso          =>  PT3M30S
+  **   1day.toIso            =>  PT24H
+  **   (1day+2hr+3min).toIso =>  P1DT2H3M
+  **
+  Str toIso()
+
+  **
+  ** Parse a duration according to ISO 8601.  If invalid format
+  ** and checked is false return null, otherwise throw ParseErr.
+  ** The following restrictions are enforced:
+  **   - Cannot specify a 'Y' year or 'M' month component
+  **     since it is ambiguous
+  **   - Only the 'S' seconds component may include a fraction
+  **   - Only nanosecond resolution is supported
+  ** See `toIso` for example formats.
+  **
+  static Duration fromIso(Str s, Bool checked := true)
+
 }

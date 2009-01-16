@@ -291,6 +291,177 @@ public final class Duration
   }
 
 //////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+  public String toIso()
+  {
+    StringBuilder s = new StringBuilder();
+    long ticks = this.ticks;
+    if (ticks == 0) return "PT0S";
+
+    if (ticks < 0) s.append('-');
+    s.append('P');
+    long abs  = Math.abs(ticks);
+    long sec  = abs / nsPerSec;
+    long frac = abs % nsPerSec;
+
+    // days
+    if (sec > secPerDay) { s.append(sec/secPerDay).append('D'); sec = sec % secPerDay; }
+    if (sec == 0 && frac == 0) return s.toString();
+    s.append('T');
+
+    // hours, minutes
+    if (sec > secPerHr)  { s.append(sec/secPerHr).append('H');  sec = sec % secPerHr; }
+    if (sec > secPerMin) { s.append(sec/secPerMin).append('M'); sec = sec % secPerMin; }
+    if (sec == 0 && frac == 0) return s.toString();
+
+    // seconds and fractional seconds
+    s.append(sec);
+    if (frac != 0)
+    {
+      s.append('.');
+      for (int i=10; i<=100000000; i*=10) if (frac < i) s.append('0');
+      s.append(frac);
+      while (s.charAt(s.length()-1) == '0') s.setLength(s.length()-1);
+    }
+    s.append('S');
+    return s.toString();
+  }
+
+  public static Duration fromIso(String s) { return fromIso(s, true); }
+  public static Duration fromIso(String s, boolean checked)
+  {
+    try
+    {
+      long ticks = 0;
+      boolean neg = false;
+      IsoParser p = new IsoParser(s);
+
+      // check for negative
+      if (p.cur == '-') { neg = true; p.consume(); }
+      else if (p.cur == '+') { p.consume(); }
+
+      // next char must be P
+      p.consume('P');
+      if (p.cur == -1) throw new Exception();
+
+      // D
+      int num = 0;
+      if (p.cur != 'T')
+      {
+        num = p.num();
+        p.consume('D');
+        ticks += num * nsPerDay;
+        if (p.cur == -1) return new Duration(ticks);
+      }
+
+      // next char must be T
+      p.consume('T');
+      if (p.cur == -1) throw new Exception();
+      num = p.num();
+
+      // H
+      if (num >= 0 && p.cur == 'H')
+      {
+        p.consume();
+        ticks += num * nsPerHr;
+        num = p.num();
+      }
+
+      // M
+      if (num >= 0 && p.cur == 'M')
+      {
+        p.consume();
+        ticks += num * nsPerMin;
+        num = p.num();
+      }
+
+      // S
+      if (num >= 0 && p.cur == 'S' || p.cur == '.')
+      {
+        ticks += num * nsPerSec;
+        if (p.cur == '.') { p.consume(); ticks += p.frac(); }
+        p.consume('S');
+      }
+
+      // verify we parsed everything
+      if (p.cur != -1) throw new Exception();
+
+      // negate if necessary and return result
+      if (neg) ticks = -ticks;
+      return new Duration(ticks);
+    }
+    catch(Exception e)
+    {
+      if (!checked) return null;
+      throw ParseErr.make("ISO 8601 Duration",  s).val;
+    }
+  }
+
+  static class IsoParser
+  {
+    IsoParser(String s)
+    {
+      this.s = s;
+      this.cur = s.charAt(0);
+    }
+
+    int num()
+    {
+      if (!curIsDigit && cur != -1 && cur != '.')
+        throw new IllegalStateException();
+      int num = 0;
+      while(curIsDigit)
+      {
+        num = num*10 + digit();
+        consume();
+      }
+      return num;
+    }
+
+    int frac()
+    {
+      // get up to nine decimal places as milliseconds within a fraction
+      int ticks = 0;
+      for (int i=100000000; i>=0; i/=10)
+      {
+        if (!curIsDigit) break;
+        ticks += digit() * i;
+        consume();
+      }
+      return ticks;
+    }
+
+    int digit() { return cur - '0'; }
+
+    void consume(int ch)
+    {
+      if (cur != ch) throw new IllegalStateException();
+      consume();
+    }
+
+    void consume()
+    {
+      off++;
+      if (off < s.length())
+      {
+        cur = s.charAt(off);
+        curIsDigit = '0' <= cur && cur <= '9';
+      }
+      else
+      {
+        cur = -1;
+        curIsDigit = false;
+      }
+    }
+
+    String s;
+    int off, cur;
+    boolean curIsDigit;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Java
 //////////////////////////////////////////////////////////////////////////
 
@@ -314,6 +485,9 @@ public final class Duration
   public static final long nsPerMin   = 60000000000L;
   public static final long nsPerSec   = 1000000000L;
   public static final long nsPerMilli = 1000000L;
+  public static final long secPerDay  = 86400L;
+  public static final long secPerHr   = 3600L;
+  public static final long secPerMin  = 60L;
   private static final Duration boot = now();
 
   public final long ticks;
