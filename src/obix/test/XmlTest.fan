@@ -33,14 +33,15 @@ class XmlTest : ObixTest
          <obj name='a'>
            <obj name='ax'/>
          </obj>
-         <!-- pi -->
+         <?pi?>
          <obj name='b'>
+           <!-- comment -->
            <obj name='bx'/>
            <obj name='by'>
              <obj name='byi'/>
            </obj>
-           <!-- pi -->
-           <obj name='bz'><!-- pi --></obj>
+           <?pi?>
+           <obj name='bz'><?pi?></obj>
          </obj>
        </obj>
        ",
@@ -483,6 +484,31 @@ class XmlTest : ObixTest
          ObixObj { elemName="feed"; name="a"; of=Contract([`/in`]) }
          ObixObj { elemName="feed"; name="b"; out=Contract([`/out1`, `/out2`]) }
          ObixObj { elemName="feed"; name="c"; of=Contract([`/in`]); out=Contract([`/out`]) }
+       })
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Unknown Elements
+//////////////////////////////////////////////////////////////////////////
+
+  Void testUnknownElems()
+  {
+    verifyParse(
+      "<obj>
+         <newOne/>
+         <int name='a' val='100' custom='foo'><custom/></int>
+         <foo>
+           <bar/>
+           <obj name='foo'/>
+         </foo>
+         <obj name='b'>
+           <real name='c' val='0'/>
+         </obj>
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="a"; val=100 }
+         ObixObj { name="b"; ObixObj { name="c"; val=0f } }
        })
   }
 

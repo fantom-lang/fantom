@@ -38,7 +38,13 @@ internal class ObixXmlParser
   {
     try
     {
+      // advance to first node
       xparser.next
+
+      // skip processing instructions
+      while (xparser.nodeType === XNodeType.pi) xparser.next
+
+      // parse object
       return parseObj
     }
     finally
@@ -57,10 +63,6 @@ internal class ObixXmlParser
   **
   private ObixObj parseObj()
   {
-    // skip processing instructions
-    while (xparser.nodeType === XNodeType.pi)
-      xparser.next
-
     // should be on element start
     if (xparser.nodeType !== XNodeType.elemStart)
       throw err("Expected element start not $xparser.nodeType")
@@ -77,6 +79,21 @@ internal class ObixXmlParser
     xparser.next
     while (xparser.nodeType !== XNodeType.elemEnd)
     {
+      // if processing instruction skip it
+      if (xparser.nodeType === XNodeType.pi)
+      {
+        xparser.next
+        continue
+      }
+
+      // if unknown element, then gracefully skip it
+      if (!ObixUtil.elemNames[xparser.elem.name])
+      {
+        xparser.skip
+        xparser.next
+        continue
+      }
+
       // assume next node is an object element
       try
         obj.add(parseObj)
