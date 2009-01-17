@@ -70,7 +70,7 @@ internal const class WispThread : Thread
     success := false
     try
     {
-      initRes(req, res)
+      initReqRes(req, res)
       service.service(req, res)
       success = true
     }
@@ -111,11 +111,12 @@ internal const class WispThread : Thread
     try
     {
       // skip leading CRLF (4.1)
-      line := req.in.readLine
+      in := req.socket.in
+      line := in.readLine
       if (line == null) return false
       while (line.isEmpty)
       {
-        line = req.in.readLine
+        line = in.readLine
         if (line == null) return false
       }
 
@@ -138,7 +139,7 @@ internal const class WispThread : Thread
       else return false
 
       // parse headers
-      req.headers = WebUtil.parseHeaders(req.in).ro
+      req.headers = WebUtil.parseHeaders(in).ro
 
       // success
       return true
@@ -151,10 +152,14 @@ internal const class WispThread : Thread
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Initialize a response with the predefined headers.
+  ** Initialize the request and response.
   **
-  private Void initRes(WebReq req, WebRes res)
+  private Void initReqRes(WispReq req, WispRes res)
   {
+    // init request - create content input stream wrapper
+    req.webIn = WebUtil.makeContentInStream(req.headers, req.socket.in)
+
+    // init response - set predefined headers
     res.headers["Server"] = "Wisp/" + type.pod.version
     res.headers["Date"] = DateTime.now.toHttpStr
     res.headers["Connection"] = "keep-alive"

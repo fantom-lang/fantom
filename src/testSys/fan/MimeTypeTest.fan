@@ -112,4 +112,14 @@ class MimeTypeTest : Test
     //verifyEq(MimeType.forExt(null), null)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Charset
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCharset()
+  {
+    verifyEq(MimeType("text/plain; charset=UTF-16BE").charset, Charset.utf16BE)
+    verifyEq(MimeType("text/html").charset, Charset.utf8)
+  }
+
 }

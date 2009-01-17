@@ -102,6 +102,78 @@ class WebUtil
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Given a set of headers, wrap the specified input stream
+  ** to read the content body:
+  **   1. If Content-Length then `makeFixedInStream`
+  **   2. If Transfer-Encoding is chunked then `makeChunkedInStream`
+  **   3. If Content-Type assume non-pipelined connection and
+  **      return 'in' directly
+  **   4. Assume no content and return null
+  **
+  ** If a stream is returned, then it is automatically configured
+  ** with the correct content encoding based on the Content-Type.
+  **
+  static InStream? makeContentInStream(Str:Str headers, InStream in)
+  {
+    // map the "Content-Type" response header to the
+    // appropiate charset or default to UTF-8.
+    Charset cs := Charset.utf8
+    ct := headers["Content-Type"]
+    if (ct != null) cs = MimeType(ct).charset
+
+    // check for fixed content length
+    len := headers["Content-Length"]
+    if (len != null)
+      return makeFixedInStream(in, len.toInt) { charset = cs }
+
+    // check for chunked transfer encoding
+    if (headers.get("Transfer-Encoding", "").lower.contains("chunked"))
+      return makeChunkedInStream(in) { charset = cs }
+
+    // if content-type is specified assume open ended content until close
+    if (ct != null)
+      return in
+
+    // no content in response
+    return null
+  }
+
+  **
+  ** Given a set of headers, wrap the specified output stream
+  ** to write the content body:
+  **   1. If Content-Length then `makeFixedOutStream`
+  **   2. If Content-Type then set Transfer-Encoding header to
+  **      chunked and return `makeChunkedOutStream`
+  **   3. Assume no content and return null
+  **
+  ** If a stream is returned, then it is automatically configured
+  ** with the correct content encoding based on the Content-Type.
+  **
+  static OutStream? makeContentOutStream(Str:Str headers, OutStream out)
+  {
+    // map the "Content-Type" response header to the
+    // appropiate charset or default to UTF-8.
+    Charset cs := Charset.utf8
+    ct := headers["Content-Type"]
+    if (ct != null) cs = MimeType(ct).charset
+
+    // check for fixed content length
+    len := headers["Content-Length"]
+    if (len != null)
+      return makeFixedOutStream(out, len.toInt) { charset = cs }
+
+    // if content-type then assumed chunked output
+    if (ct != null)
+    {
+      headers["Transfer-Encoding"] = "chunked"
+      return makeChunkedOutStream(out) { charset = cs }
+    }
+
+    // no content
+    return null
+  }
+
+  **
   ** Wrap the given input stream to read a fixed number of bytes.
   ** Once 'fixed' bytes have been read from the underlying input
   ** stream, the wrapped stream will return end-of-stream.  Closing
