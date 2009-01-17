@@ -51,13 +51,17 @@ class ObixObj
   }
 
   **
-  ** The XML element name to use for this object.
+  ** The XML element name to use for this object.  If not
+  ** one of the valid oBIX element names then throw ArgErr.
+  ** Valid element names are:
+  **   obj, bool, int, real, str, enum, uri, abstime,
+  **   reltime, date, time, list, op, feed, ref, err
   **
   Str elemName := "obj"
   {
     set
     {
-      // TODO
+      if (!ObixUtil.elemNames[val]) throw ArgErr("Invalid elemName: $val")
       @elemName = val
     }
   }

@@ -15,6 +15,33 @@ internal class ObixUtil
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Element Names
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Map val types to element names
+  **
+  internal static const Str:Bool elemNames :=
+  [
+    "obj":     true,
+    "bool":    true,
+    "int":     true,
+    "real":    true,
+    "str":     true,
+    "enum":    true,
+    "uri":     true,
+    "abstime": true,
+    "reltime": true,
+    "date":    true,
+    "time":    true,
+    "list":    true,
+    "op":      true,
+    "feed":    true,
+    "ref":     true,
+    "err":     true,
+  ] { def = false }
+
+//////////////////////////////////////////////////////////////////////////
 // Value -> Element
 //////////////////////////////////////////////////////////////////////////
 
