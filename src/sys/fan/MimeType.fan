@@ -84,4 +84,10 @@ const final class MimeType
   **
   Str:Str params()
 
+  **
+  ** If a charset parameter is specified, then map it to
+  ** the 'Charset' instance, otherwise return 'Charset.utf8'.
+  **
+  Charset charset()
+
 }

@@ -230,6 +230,13 @@ public final class MimeType
     return params;
   }
 
+  public Charset charset()
+  {
+    String s = (String)params().get("charset");
+    if (s == null) return Charset.utf8;
+    return Charset.fromStr(s);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Lazy Load
 //////////////////////////////////////////////////////////////////////////
