@@ -407,6 +407,86 @@ class XmlTest : ObixTest
    }
 
 //////////////////////////////////////////////////////////////////////////
+// Contracts
+//////////////////////////////////////////////////////////////////////////
+
+  Void testIs()
+  {
+    verifyParse(
+      "<obj>
+        <obj name='a' is='obix:Point'/>
+        <obj name='b' is='obix:Point obix:WritablePoint'/>
+        <obj name='c' is='http://foo/a%20b'/>
+       </obj>",
+       ObixObj
+       {
+         ObixObj { name="a"; contract=Contract([`obix:Point`]) }
+         ObixObj { name="b"; contract=Contract([`obix:Point`, `obix:WritablePoint`]) }
+         ObixObj { name="c"; contract=Contract([`http://foo/a b`]) }
+       })
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// List
+//////////////////////////////////////////////////////////////////////////
+
+  Void testList()
+  {
+    verifyParse(
+      "<list of='obix:Point'>
+         <real val='1'/>
+         <real val='2'/>
+       </list>",
+       ObixObj
+       {
+         elemName = "list"
+         of = Contract([`obix:Point`])
+         ObixObj { val=1f }
+         ObixObj { val=2f }
+       })
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Op
+//////////////////////////////////////////////////////////////////////////
+
+  Void testOp()
+  {
+    verifyParse(
+      "<obj>
+         <op name='a' in='/in'/>
+         <op name='b' out='/out1 /out2'/>
+         <op name='c' in='/in' out='/out' />
+       </obj>",
+       ObixObj
+       {
+         ObixObj { elemName="op"; name="a"; in=Contract([`/in`]) }
+         ObixObj { elemName="op"; name="b"; out=Contract([`/out1`, `/out2`]) }
+         ObixObj { elemName="op"; name="c"; in=Contract([`/in`]); out=Contract([`/out`]) }
+       })
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Feed
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFeed()
+  {
+    verifyParse(
+      "<obj>
+         <feed name='a' of='/in'/>
+         <feed name='b' out='/out1 /out2'/>
+         <feed name='c' of='/in' out='/out' />
+       </obj>",
+       ObixObj
+       {
+         ObixObj { elemName="feed"; name="a"; of=Contract([`/in`]) }
+         ObixObj { elemName="feed"; name="b"; out=Contract([`/out1`, `/out2`]) }
+         ObixObj { elemName="feed"; name="c"; of=Contract([`/in`]); out=Contract([`/out`]) }
+       })
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
@@ -414,7 +494,7 @@ class XmlTest : ObixTest
   {
     // parse and compare actual result
     actual := ObixXmlParser(s.in).parse
-    verifyObj(actual, expected)
+   verifyObj(actual, expected)
 
     // write to string and roundtrip
     buf := Buf()
