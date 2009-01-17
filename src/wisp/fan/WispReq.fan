@@ -17,23 +17,28 @@ class WispReq : WebReq
   new make(WispService service, TcpSocket socket)
   {
     this.service       = service
-    this.remoteAddress = socket.remoteAddress
-    this.remotePort    = socket.remotePort
-    this.in            = socket.in
+    this.socket        = socket
   }
 
   new makeTest(InStream in)
   {
-    this.in = in
+    this.webIn = in
   }
 
   override WispService service
   override Str method
   override Version version
-  override IpAddress remoteAddress
-  override Int remotePort
+  override IpAddress remoteAddress() { return socket.remoteAddress }
+  override Int remotePort() { return socket.remotePort }
   override Str:Str headers
   override Uri uri
-  override InStream in
 
+  override InStream in()
+  {
+    if (webIn == null) throw Err("Attempt to access WebReq.in with no content")
+    return webIn
+  }
+
+  internal TcpSocket socket
+  internal InStream? webIn
 }

@@ -26,7 +26,20 @@ abstract class ObixTest : Test
     // value
     verifyEq(a.val, b.val)
     verifyEq(a.isNull, b.isNull)
+
+    // facets
+    verifyEq(a.displayName, b.displayName)
+    verifyEq(a.display, b.display)
+    verifyEq(a.icon, b.icon)
+    verifyEq(a.min, b.min)
+    verifyEq(a.max, b.max)
+    verifyEq(a.precision, b.precision)
+    verifyEq(a.range, b.range)
+    verifyEq(a.precision, b.precision)
+    verifyEq(a.status, b.status)
     verifyEq(a.tz, b.tz)
+    verifyEq(a.unit, b.unit)
+    verifyEq(a.writable, b.writable)
 
     // children
     verifyEq(a.size, b.size)

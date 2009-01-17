@@ -38,6 +38,15 @@ internal class ObixUtil
 // Value -> Str
 //////////////////////////////////////////////////////////////////////////
 
+  ** Encode the value in its XML string encoding (not necessarily escaped)
+  internal static Str valToStr(Obj? val)
+  {
+    if (val == null) return "null"
+    func := valTypeToStrFunc[val.type]
+    if (func != null) return func(val)
+    return val.toStr
+  }
+
   ** Map of value types to string format
   ** funcs (only those that don't use toStr)
   internal static const Type:|Obj->Str| valTypeToStrFunc :=
@@ -62,6 +71,18 @@ internal class ObixUtil
     "str":     |Str s->Obj| { return s },
     "uri":     |Str s->Obj| { return Uri.decode(s) },
     "enum":    |Str s->Obj| { return s },
+    "abstime": |Str s, XElem elem->Obj| { return parseAbstime(s, elem) },
+    "reltime": |Str s->Obj| { return Duration.fromIso(s, true) },
+    "date":    |Str s->Obj| { return Date.fromIso(s, true) },
+    "time":    |Str s->Obj| { return Time.fromIso(s, true) }
+  ]
+
+  ** Map of element names to functions to parse a min/max string
+  internal const static Str:|Str,XElem->Obj| elemNameToMinMaxFunc :=
+  [
+    "int":     |Str s->Obj| { return Int.fromStr(s, 10, true) },
+    "real":    |Str s->Obj| { return Float.fromStr(s, true) },
+    "str":     |Str s->Obj| { return Int.fromStr(s, 10, true) },
     "abstime": |Str s, XElem elem->Obj| { return parseAbstime(s, elem) },
     "reltime": |Str s->Obj| { return Duration.fromIso(s, true) },
     "date":    |Str s->Obj| { return Date.fromIso(s, true) },

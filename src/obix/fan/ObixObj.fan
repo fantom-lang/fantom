@@ -77,7 +77,7 @@ class ObixObj
     s.add("<").add(elemName)
     if (name != null) s.add(" name='").add(name).add("'")
     if (href != null) s.add(" href='").add(href).add("'")
-    if (val != null)  s.add(" val='").add(valToStr).add("'")
+    if (val != null)  s.add(" val='").add(ObixUtil.valToStr(val)).add("'")
     s.add(">");
     return s.toStr
   }
@@ -130,16 +130,12 @@ class ObixObj
   }
 
   **
-  ** Get the value encoded as a string.  If the value
-  ** is null then return "null".
+  ** Get the value encoded as a string.  The string is *not*
+  ** XML escaped.  If value is null return "null".
   **
   Str valToStr()
   {
-    // everything but Uri and DateTime uses its toStr format
-    if (val == null) return "null"
-    func := ObixUtil.valTypeToStrFunc[val.type]
-    if (func != null) return func(val)
-    return val.toStr
+    return ObixUtil.valToStr(val)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -290,6 +286,46 @@ class ObixObj
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Localized human readable version of the name attribute.
+  **
+  Str? displayName
+
+  **
+  ** Localized human readable string summary of the object.
+  **
+  Str? display
+
+  **
+  ** Reference to the graphical icon.
+  **
+  Uri? icon
+
+  **
+  ** Inclusive minium for value.
+  **
+  Obj? min
+
+  **
+  ** Inclusive maximum for value.
+  **
+  Obj? max
+
+  **
+  ** Number of decimal places to use for a real value.
+  **
+  Int? precision
+
+  **
+  ** Reference to the range definition of an enum or bool value.
+  **
+  Uri? range
+
+  **
+  ** Status facet indicates quality and state.
+  **
+  Status status := Status.ok
+
+  **
   ** TimeZone facet assocaited with abstime, date, and time objects.
   ** This field is automatically updated when `val` is assigned a
   ** DateTime unless its timezone is UTC or starts with "Etc/".  After
@@ -297,6 +333,20 @@ class ObixObj
   ** specified.
   **
   TimeZone? tz
+
+  **
+  ** Unit of measurement for int and real values.  We only support units
+  ** which are predefind in the oBIX unit database and specified using the
+  ** URI "obix:units/".  These units are mapped to the `sys::Unit` API.
+  ** If an unknown unit URI is decoded, then it is silently ignored and
+  ** this field will be null.
+  **
+  Unit? unit
+
+  **
+  ** Specifies is this object can be written, or false if readonly.
+  **
+  Bool writable
 
 //////////////////////////////////////////////////////////////////////////
 // IO
@@ -319,15 +369,30 @@ class ObixObj
   **
   virtual Void writeXml(OutStream out, Int indent := 0)
   {
+    // identity
     out.print(Str.spaces(indent)).print("<").print(elemName)
     if (name != null) out.print(" name='").writeXml(name, xmlEsc).print("'")
     if (href != null) out.print(" href='").print(href.encode).print("'")
+
+    // value
+    if (val != null) out.print(" val='").writeXml(valToStr, xmlEsc).print("'")
     if (isNull) out.print(" isNull='true'")
-    if (val != null)
-    {
-      out.print(" val='").writeXml(valToStr, xmlEsc).print("'")
-      if (tz != null) out.print(" tz='").print(tz.fullName).print("'")
-    }
+
+    // facets
+    if (displayName != null) out.print(" displayName='").writeXml(displayName, xmlEsc).print("'")
+    if (display != null) out.print(" display='").writeXml(display, xmlEsc).print("'")
+    if (icon != null) out.print(" icon='").print(icon.encode).print("'")
+    if (min != null) out.print(" min='").print(ObixUtil.valToStr(min)).print("'")
+    if (max != null) out.print(" max='").print(ObixUtil.valToStr(max)).print("'")
+    if (precision != null) out.print(" precision='").print(precision).print("'")
+    if (range != null) out.print(" range='").print(range.encode).print("'")
+    if (status !== Status.ok) out.print(" status='").print(status).print("'")
+    if (status !== Status.ok) out.print(" status='").print(status).print("'")
+    if (tz != null) out.print(" tz='").print(tz.fullName).print("'")
+    if (unit != null) out.print(" unit='obix:units/").print(unit.name).print("'")
+    if (writable) out.print(" writable='true'")
+
+    // children
     if (isEmpty) out.print("/>\n")
     else
     {
