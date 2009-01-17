@@ -405,6 +405,25 @@ class MapTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Join
+//////////////////////////////////////////////////////////////////////////
+
+  Void testJoin()
+  {
+    map := [0:"zero", 1:"one", 2:"two"]
+    verifyEq([:].join(","), "")
+    verifyJoin(map, ',', ["0: zero", "1: one", "2: two"], null)
+    verifyJoin(map, '|', ["(0=zero)", "(1=one)", "(2=two)"]) |Str v, Int k->Str| { return "($k=$v)" }
+  }
+
+  Void verifyJoin(Int:Str map, Int sep, Str[] expected, |Str,Int->Str|? f)
+  {
+    actual := map.join(sep.toChar, f).split(sep)
+    verifyEq(actual.sort, expected.sort)
+    verifyEq(map.join(sep.toChar), map.join(sep.toChar, null))
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Case Insensitive
 //////////////////////////////////////////////////////////////////////////
 
