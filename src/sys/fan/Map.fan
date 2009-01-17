@@ -168,13 +168,23 @@ final class Map
   V? def
 
 //////////////////////////////////////////////////////////////////////////
-// Conversion
+// Str
 //////////////////////////////////////////////////////////////////////////
 
   **
   ** Return a string representation the Map.  This method is idempotent.
   **
   override Str toStr()
+
+  **
+  ** Return a string by concatenating each key/value pair using
+  ** the specified separator string.  If c is non-null then it
+  ** is used to format each pair into a string, otherwise "$k: $v"
+  ** is used.  This method is idempotent.
+  **
+  ** Example:
+  **
+  Str join(Str separator, |V value, K key->Str|? c := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Iterators

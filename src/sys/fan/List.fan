@@ -572,7 +572,7 @@ final class List
 
   **
   ** Return a string by concatenating each item's toStr result
-  ** using the the specified separator string.  If c is non-null
+  ** using the specified separator string.  If c is non-null
   ** then it is used to format each item into a string, otherwise
   ** Obj.toStr is used.  This method is idempotent.
   **

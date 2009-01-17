@@ -371,6 +371,31 @@ public final class Map
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Conversion
+//////////////////////////////////////////////////////////////////////////
+
+  public final String join(String sep) { return join(sep, null); }
+  public final String join(String sep, Func f)
+  {
+    int size = (int)size();
+    if (size == 0) return "";
+    StringBuilder s = new StringBuilder(32+size*32);
+    Iterator it = pairsIterator();
+    while (it.hasNext())
+    {
+      Entry e = (Entry)it.next();
+      Object key = e.getKey();
+      Object val = e.getValue();
+      if (s.length() > 0) s.append(sep);
+      if (f == null)
+        s.append(key).append(": ").append(val);
+      else
+        s.append(f.call2(val, key));
+    }
+    return s.toString();
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Readonly
 //////////////////////////////////////////////////////////////////////////
 

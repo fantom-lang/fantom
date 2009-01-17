@@ -24,7 +24,7 @@ WebClient [#webClient]
   // dump get response headers and string body
   c := WebClient(`http://foo.com/`).writeReq.readRes
   echo("$c.reqUri => $c.resCode $c.resPhrase")
-  c.resHeaders.each |Str v, Str k| { echo("$k: $v") }
+  echo(c.resHeaders.join("\n"))
   echo(c.resStr)
   c.close
 

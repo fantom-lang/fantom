@@ -370,6 +370,30 @@ namespace Fan.Sys
     }
 
   //////////////////////////////////////////////////////////////////////////
+  // Join
+  //////////////////////////////////////////////////////////////////////////
+
+    public string join(string sep) { return join(sep, null); }
+    public string join(string sep, Func f)
+    {
+      int size = (int)this.size();
+      if (size == 0) return "";
+      StringBuilder s = new StringBuilder(32+size*32);
+      IDictionaryEnumerator en = m_map.GetEnumerator();
+      while (en.MoveNext())
+      {
+        object key = en.Key;
+        object val = en.Value;
+        if (s.Length > 0) s.Append(sep);
+        if (f == null)
+          s.Append(key).Append(": ").Append(val);
+        else
+          s.Append(f.call2(val, key));
+      }
+      return s.ToString();
+    }
+
+  //////////////////////////////////////////////////////////////////////////
   // Readonly
   //////////////////////////////////////////////////////////////////////////
 
