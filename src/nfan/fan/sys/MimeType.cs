@@ -26,6 +26,24 @@ namespace Fan.Sys
     {
       try
       {
+        // common interned mime types
+        switch (s[0])
+        {
+          case 'i':
+            if (s == "image/png")  return m_imagePng;
+            if (s == "image/jpeg") return m_imageJpeg;
+            if (s == "image/gif")  return m_imageGif;
+            break;
+          case 't':
+            if (s == "text/plain") return m_textPlain;
+            if (s == "text/html")  return m_textHtml;
+            if (s == "text/xml")   return m_textXml;
+            break;
+          case 'x':
+            if (s == "x-directory/normal") return m_dir;
+            break;
+        }
+
         int slash = s.IndexOf('/');
         string media = s.Substring(0, slash);
         string sub = s.Substring(slash+1);
@@ -209,6 +227,13 @@ namespace Fan.Sys
       return m_params;
     }
 
+    public Charset charset()
+    {
+      string s = (string)m_params.get("charset");
+      if (s == null) return Charset.utf8();
+      return Charset.fromStr(s);
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Lazy Load
   //////////////////////////////////////////////////////////////////////////
@@ -228,10 +253,30 @@ namespace Fan.Sys
     static Map m_emptyQuery;
 
   //////////////////////////////////////////////////////////////////////////
+  // Predefined
+  //////////////////////////////////////////////////////////////////////////
+
+    static MimeType predefined(string media, string sub)
+    {
+      MimeType t = new MimeType();
+      t.m_mediaType = media;
+      t.m_subType = sub;
+      t.m_params = emptyParams();
+      t.m_str = media + "/" + sub;
+      return t;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
-    internal static MimeType m_dir = fromStr("x-directory/normal");
+    internal static MimeType m_imagePng   = predefined("image", "png");
+    internal static MimeType m_imageGif   = predefined("image", "gif");
+    internal static MimeType m_imageJpeg  = predefined("image", "jpeg");
+    internal static MimeType m_textPlain  = predefined("text", "plain");
+    internal static MimeType m_textHtml   = predefined("text", "html");
+    internal static MimeType m_textXml    = predefined("text", "xml");
+    internal static MimeType m_dir        = predefined("x-directory", "normal");
 
     private string m_mediaType;
     private string m_subType;
