@@ -109,6 +109,10 @@ internal class ObixXmlParser
         // identity
         case "name": obj.name = attr.val
         case "href": obj.href = Uri.decode(attr.val)
+        case "is":   obj.contract = Contract(attr.val)
+        case "of":   obj.of = Contract(attr.val)
+        case "in":   obj.in = Contract(attr.val)
+        case "out":  obj.out = Contract(attr.val)
 
         // value
         case "val":  obj.val = parseVal(attr.val, elem)

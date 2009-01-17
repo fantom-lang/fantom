@@ -21,7 +21,12 @@ abstract class ObixTest : Test
     verifyEq(a.elemName, b.elemName)
     verifyEq(a.name, b.name)
     verifyEq(a.href, b.href)
-    verifyEq(a.contracts, b.contracts)
+
+    // contracts
+    verifyEq(a.contract, b.contract)
+    verifyEq(a.of, b.of)
+    verifyEq(a.in, b.in)
+    verifyEq(a.out, b.out)
 
     // value
     verifyEq(a.val, b.val)

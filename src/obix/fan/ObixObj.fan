@@ -51,12 +51,6 @@ class ObixObj
   }
 
   **
-  ** The list of contracts this object implemented as specified
-  ** by 'is' attribute.
-  **
-  Uri[] contracts := noUris
-
-  **
   ** The XML element name to use for this object.
   **
   Str elemName := "obj"
@@ -81,6 +75,31 @@ class ObixObj
     s.add(">");
     return s.toStr
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Contracts
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** The list of contract URIs this object implemented
+  ** as specified by 'is' attribute.
+  **
+  Contract contract := Contract.empty
+
+  **
+  ** The 'of' contract for lists and feeds.
+  **
+  Contract? of
+
+  **
+  ** The 'in' contract for operations and feeds.
+  **
+  Contract? in
+
+  **
+  ** The 'out' contract for operations.
+  **
+  Contract? out
 
 //////////////////////////////////////////////////////////////////////////
 // Value
@@ -373,6 +392,12 @@ class ObixObj
     out.print(Str.spaces(indent)).print("<").print(elemName)
     if (name != null) out.print(" name='").writeXml(name, xmlEsc).print("'")
     if (href != null) out.print(" href='").print(href.encode).print("'")
+
+    // contracts
+    if (!contract.isEmpty) out.print(" is='").print(contract).print("'")
+    if (of != null && !of.isEmpty) out.print(" of='").print(of).print("'")
+    if (in != null && !in.isEmpty) out.print(" in='").print(in).print("'")
+    if (this.out != null && !this.out.isEmpty) out.print(" out='").print(this.out).print("'")
 
     // value
     if (val != null) out.print(" val='").writeXml(valToStr, xmlEsc).print("'")
