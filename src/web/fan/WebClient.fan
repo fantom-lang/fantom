@@ -257,17 +257,6 @@ class WebClient
     if (!reqHeaders.caseInsensitive) throw Err("reqHeaders must be case insensitive")
     if (reqHeaders.containsKey("Host")) throw Err("reqHeaders must not define 'Host'")
 
-    // if we have a content-type but not content-length assume chunked transfer
-    body := false
-    Int? fixed := null
-    if (reqHeaders.containsKey("Content-Type"))
-    {
-      body = true
-      fixed = reqHeaders["Content-Length"]?.toInt
-      if (fixed == null)
-        reqHeaders["Transfer-Encoding"] = "chunked"
-    }
-
     // connect to the host:port if we aren't already connected
     if (!isConnected)
     {
@@ -276,24 +265,17 @@ class WebClient
       socket.connect(IpAddress(reqUri.host), reqUri.port ?: 80)
     }
 
-    // send request
+    // figure out if/how we are streaming out content body
     out := socket.out
+    reqOutStream = WebUtil.makeContentOutStream(reqHeaders, out)
+
+    // send request
     out.print(reqMethod).print(" ").print(reqUri.relToAuth.encode)
        .print(" HTTP/").print(reqVersion).print("\r\n")
     out.print("Host: ").print(reqUri.host).print("\r\n")
     reqHeaders.each |Str v, Str k| { out.print(k).print(": ").print(v).print("\r\n") }
     out.print("\r\n")
     out.flush
-
-    // if we have a request body create appropiate output stream wrapper
-    reqOutStream = null
-    if (body)
-    {
-      if (fixed != null)
-        reqOutStream = WebUtil.makeFixedOutStream(out, fixed)
-      else
-        reqOutStream = WebUtil.makeChunkedOutStream(out)
-    }
 
     return this
   }
@@ -331,10 +313,7 @@ class WebClient
 
     // if there is response content, then create wrap the raw socket
     // input stream with the appropiate chunked input stream
-    resInStream = wrapInStream
-
-    // if we have a response content, then configure the char encoding
-    if (resInStream != null) resInStream.charset = configContentEncoding
+    resInStream = WebUtil.makeContentInStream(resHeaders, socket.in)
 
     return this
   }
@@ -363,44 +342,6 @@ class WebClient
     reqUri = Uri.decode(loc)
     writeReq
     readRes
-  }
-
-  **
-  ** Attempt to map the response headers to the appropiate type
-  ** of wrapper around the raw socket input stream.
-  **
-  private InStream? wrapInStream()
-  {
-    // check for fixed content length
-    len := resHeaders["Content-Length"]
-    if (len != null)
-      return WebUtil.makeFixedInStream(socket.in, len.toInt)
-
-    // check for chunked transfer encoding
-    if (resHeaders.get("Transfer-Encoding", "").lower.contains("chunked"))
-      return WebUtil.makeChunkedInStream(socket.in)
-
-    // if content-type is specified assume open ended content until close
-    if (resHeaders.containsKey("Content-Type"))
-      return socket.in
-
-    // no content in response
-    return null
-  }
-
-  **
-  ** Map the "Content-Type" response header to the
-  ** appropiate charset or default to UTF-8.
-  **
-  private Charset configContentEncoding()
-  {
-    ct := resHeaders["Content-Type"]
-    if (ct != null)
-    {
-      cs := MimeType(ct).params["charset"]
-      if (cs != null) return Charset(cs)
-    }
-    return Charset.utf8
   }
 
   **

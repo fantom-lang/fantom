@@ -181,17 +181,8 @@ class WispRes : WebRes
     sout := socket.out
     if (content)
     {
-      // check if a fixed content length was specified, if not
-      // then automatically use a chunked content encoding
-      fixed := @headers["Content-Length"]?.toInt
-      if (fixed == null) @headers["Transfer-Encoding"] = "chunked"
-
-      // if we have content, then create the appropriate wrapper based
-      // on whether we are using a fixed content length or a chunked stream
-      if (fixed != null)
-        webOut = WebOutStream(WebUtil.makeFixedOutStream(sout, fixed))
-      else
-        webOut = WebOutStream(WebUtil.makeChunkedOutStream(sout))
+      cout := WebUtil.makeContentOutStream(@headers, sout)
+      if (cout != null) webOut = WebOutStream(cout)
     }
 
     // write response line and headers
