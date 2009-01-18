@@ -197,7 +197,7 @@ Let's look at some example code (this script is available under
   @serializable
   class Hello : Weblet
   {
-    override Void doGet()
+    override Void onGet()
     {
       res.headers["Content-Type"] = "text/plain"
       res.out.printLine("hello world #4")
