@@ -296,6 +296,10 @@ abstract class Widget : Weblet
       res.out.head
       res.out.printLine("<meta http-equiv='Content-Type' content='text/html; charset=$charset'/>")
     }
+    else
+    {
+      res.headers["Content-Length"] = (head.size + body.size).toStr
+    }
     res.out.writeBuf(head.flip)
     if (get)
     {
