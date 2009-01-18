@@ -63,6 +63,8 @@ var webappClient_Elem = sys_Obj.extend(
   prev: function()
   {
     var sib = this.elem.previousSibling;
+    while (sib != null && sib.nodeType != 1)
+      sib = sib.previousSibling;
     if (sib == null) return null;
     return webappClient_Elem.make(sib);
   },
@@ -70,6 +72,8 @@ var webappClient_Elem = sys_Obj.extend(
   next: function()
   {
     var sib = this.elem.nextSibling;
+    while (sib != null && sib.nodeType != 1)
+      sib = sib.nextSibling;
     if (sib == null) return null;
     return webappClient_Elem.make(sib);
   },
