@@ -185,7 +185,7 @@ sys_Str.slice = function(self, range)
   var size = self.length;
   var s = range.start(size);
   var e = range.end(size);
-  if (e+1 < s) throw new sys_IndexErr(r);
+  if (e+1 < s) throw new sys_IndexErr(range);
   return self.substr(s, (e-s)+1);
 }
 
