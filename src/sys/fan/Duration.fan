@@ -61,6 +61,11 @@ const final class Duration
   static Duration uptime()
 
   **
+  ** Default value is 0ns.
+  **
+  static const Duration defVal
+
+  **
   ** Private constructor.
   **
   private new privateMake()

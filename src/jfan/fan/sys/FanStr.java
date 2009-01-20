@@ -811,4 +811,6 @@ public class FanStr
       ascii[i] = String.valueOf((char)i).intern();
   }
 
+  public static final String defVal = "";
+
 }

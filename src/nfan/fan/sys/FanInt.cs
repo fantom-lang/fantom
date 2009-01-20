@@ -394,6 +394,9 @@ namespace Fan.Sys
     /// <summary>sys::Int.maxValue</summary>
     public static readonly long m_minValue = Int64.MinValue;
 
+    /// <summary>sys::Int.defVal</summary>
+    public static readonly long m_defVal = 0;
+
     // default check size for IO buffering (defaults to 4KB)
     public static readonly Long Chunk = Long.valueOf(4096);
 

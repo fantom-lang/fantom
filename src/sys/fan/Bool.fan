@@ -26,7 +26,12 @@ const final class Bool
   **
   ** Private constructor.
   **
-  private new make()
+  private new privateMake()
+
+  **
+  ** Default value is false.
+  **
+  const static Bool defVal
 
 //////////////////////////////////////////////////////////////////////////
 // Obj Overrides

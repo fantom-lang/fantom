@@ -44,6 +44,11 @@ const final class Time
   static Time? fromStr(Str s, Bool checked := true)
 
   **
+  ** Default value is "00:00:00".
+  **
+  const static Time defVal
+
+  **
   ** Private constructor.
   **
   private new privateMake()

@@ -314,6 +314,7 @@ public final class FanFloat
   public static final double nan    = Double.NaN;
   public static final double e      = Math.E;
   public static final double pi     = Math.PI;
+  public static final double defVal = 0.0;
   public static final String PosInfStr = "INF";
   public static final String NegInfStr = "-INF";
   public static final String NaNStr    = "NaN";

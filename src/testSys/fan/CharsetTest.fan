@@ -12,6 +12,12 @@
 class CharsetTest : Test
 {
 
+  Void testDefVal()
+  {
+    verifySame(Charset.defVal, Charset.utf8)
+    verifySame(Charset#.make, Charset.utf8)
+  }
+
   Void testIdentity()
   {
     // verify name, toStr, equals, hash

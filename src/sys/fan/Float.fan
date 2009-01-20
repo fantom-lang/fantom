@@ -43,9 +43,14 @@ const final class Float : Num
   static Float? fromStr(Str s, Bool checked := true)
 
   **
+  ** Default value is 0f.
+  **
+  static const Float defVal
+
+  **
   ** Private constructor.
   **
-  private new make()
+  private new privateMake()
 
   **
   ** Float value for positive infinity.

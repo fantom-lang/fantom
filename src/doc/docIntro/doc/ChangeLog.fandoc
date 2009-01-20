@@ -515,6 +515,7 @@
 - Duration, DateTime, Date, Time: toIso, fromIso
 - Map: ordered, join
 - Test: verifyNull, verifyNotNull
+- Type: make support for defVal
 - MimeType: charset
 - Compiler fix when local variable shadows field with storage operator
 - New compilerJavascript and webappClient APIs

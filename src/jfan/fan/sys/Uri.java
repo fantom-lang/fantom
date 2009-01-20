@@ -1416,6 +1416,8 @@ public final class Uri
 
   static final Range parentRange = Range.make(0L, -2L, false);
 
+  public static final Uri defVal = fromStr("");
+
   final String str;
   final String scheme;
   final String userInfo;

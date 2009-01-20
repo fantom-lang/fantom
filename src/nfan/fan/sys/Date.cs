@@ -270,6 +270,8 @@ namespace Fan.Sys
 
     private static readonly string m_localeKey = "date";
 
+    public static readonly Date m_defVal = new Date(2000, 0, 1);
+
     private readonly short m_year;
     private readonly byte m_month;
     private readonly byte m_day;

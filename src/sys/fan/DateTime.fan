@@ -78,6 +78,11 @@ const final class DateTime
   static DateTime boot()
 
   **
+  ** Default value is "2000-01-01T00:00:00Z UTC".
+  **
+  static const DateTime defVal
+
+  **
   ** Private constructor.
   **
   private new privateMake()

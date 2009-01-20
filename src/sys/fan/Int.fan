@@ -38,7 +38,12 @@ const final class Int : Num
   **
   ** Private constructor.
   **
-  private new make()
+  private new privateMake()
+
+  **
+  ** Default value is zero.
+  **
+  const static Int defVal
 
   **
   ** Maximum value which can be stored in a

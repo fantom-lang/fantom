@@ -312,6 +312,8 @@ public final class Time
 
   private static final String localeKey = "time";
 
+  public static final Time defVal = new Time(0, 0, 0, 0);
+
   private final byte hour;
   private final byte min;
   private final byte sec;

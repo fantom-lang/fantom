@@ -905,6 +905,8 @@ namespace Fan.Sys
     static readonly DateTime m_boot;
     static readonly string localeKey = "dateTime";
 
+    public static readonly DateTime m_defVal = make(2000, Month.m_jan, 1, 0, 0, 0, 0, TimeZone.utc());
+
     // Fields Bitmask
     //   Field       Width    Mask   Start Bit
     //   ---------   ------   -----  ---------

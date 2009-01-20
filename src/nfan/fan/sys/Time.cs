@@ -313,6 +313,8 @@ namespace Fan.Sys
 
     private static readonly string m_localeKey = "time";
 
+    public static readonly Time m_defVal = new Time(0, 0, 0, 0);
+
     private readonly byte m_hour;
     private readonly byte m_min;
     private readonly byte m_sec;
