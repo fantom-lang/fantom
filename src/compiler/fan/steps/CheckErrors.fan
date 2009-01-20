@@ -1028,11 +1028,16 @@ class CheckErrors : CompilerStep
         err("Cannot call instance method '$name' in static context", call.location)
     }
 
-    // if using super check that concrete
+    // if using super
     if (call.target != null && call.target.id === ExprId.superExpr)
     {
+      // check that super is concrete
       if (m.isAbstract)
         err("Cannot use super to call abstract method '$m.qname'", call.target.location)
+
+      // check that calling super with exact param match otherwise stack overflow
+      if (call.args.size != m.params.size && m.name == curMethod.name)
+        err("Must call super method '$m.qname' with exactly $m.params.size arguments", call.target.location)
     }
 
     // don't allow safe calls on non-nullable type
