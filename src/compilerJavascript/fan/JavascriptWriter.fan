@@ -363,7 +363,17 @@ class JavascriptWriter : CompilerSupport
       out.w(qname(ce.method.parent)).w(".")
     }
     out.w(ce.method.isCtor ? "make" : ce.name)
-    if (ce.isDynamic && ce.args.size == 0) return
+    if (ce.isDynamic && ce.noParens)
+    {
+      if (ce.args.size == 0) return
+      if (ce.args.size == 1)
+      {
+        out.w(" = ")
+        expr(ce.args.first)
+        return
+      }
+      throw ArgErr("Parens required for multiple args")
+    }
     out.w("(")
     ce.args.each |Expr arg, Int i|
     {
