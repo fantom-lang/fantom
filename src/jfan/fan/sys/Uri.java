@@ -455,7 +455,7 @@ public final class Uri
 
     private void addQueryParam(Map map, String q, int start, int eq, int end, boolean escaped)
     {
-      if (start == eq)
+      if (start == eq && q.charAt(start) != '=')
         map.set(toQueryStr(q, start, end, escaped), "true");
       else
         map.set(toQueryStr(q, start, eq, escaped), toQueryStr(q, eq+1, end, escaped));

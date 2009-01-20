@@ -146,6 +146,20 @@ class UriTest : Test
     verifyQueryEncoding(
       "a=boo+hoo&%E3%82%A2=%c3%a9!",
       ["a":"boo hoo", "\u30A2":"\u00e9!"])
+
+    // Safari tests which encode unnamed form elements as ""
+
+    verifyQueryEncoding(
+      "=x",
+      ["":"x"])
+
+    verifyQueryEncoding(
+      "a=b;=x",
+      ["a":"b", "":"x"])
+
+    verifyQueryEncoding(
+      "=x;=foo;alpha=beta;=z;foo=bar",
+      ["alpha":"beta", "":"z", "foo":"bar"])
   }
 
   Void verifyQueryEncoding(Str encoded, Str:Str q, Bool exact := true)
