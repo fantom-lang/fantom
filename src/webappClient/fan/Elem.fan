@@ -24,20 +24,24 @@ class Elem
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get an attribute by name.  If not found return
-  ** the specificed default value.
-  **
-  Obj? get(Str name, Obj? def := null) { return null }
-
-  **
-  ** Set an attribute to the given value.
-  **
-  Void set(Str name, Obj? val) {}
-
-  **
   ** Get the tag name for this element.
   **
   Str tagName() { return "" }
+
+  **
+  ** The id for this element.
+  **
+  Str id
+
+  **
+  ** The CSS class name(s) for this element.
+  **
+  Str className
+
+  **
+  ** Get the style object for this element.
+  **
+  Obj style() { return "" }
 
   **
   ** The HTML markup contained in this element.
@@ -52,11 +56,22 @@ class Elem
   Obj? value
 
   **
-  ** Return the checked attribute for this element, or null
-  ** if one does not exist.  This is typically only valid for
-  ** some form elements.
+  ** The checked attribute for this element, or null if one
+  ** does not exist.  This is typically only valid for some
+  ** form elements.
   **
   Bool? checked
+
+  **
+  ** Get an attribute by name.  If not found return
+  ** the specificed default value.
+  **
+  Obj? get(Str name, Obj? def := null) { return null }
+
+  **
+  ** Set an attribute to the given value.
+  **
+  Void set(Str name, Obj? val) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Size

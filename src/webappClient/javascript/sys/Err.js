@@ -18,8 +18,7 @@ var sys_Err = sys_Obj.extend(
 
   $ctor: function(msg)
   {
-    sys_Type.addType("sys::Err");
-    this.msg  = msg;
+    this.msg = msg;
   },
 
 //////////////////////////////////////////////////////////////////////////
@@ -45,6 +44,7 @@ var sys_Err = sys_Obj.extend(
 sys_Err.make = function(cause)
 {
   // TODO - needs alot of work!
+  if (cause instanceof sys_Err) return cause;
   if (cause instanceof TypeError) return new sys_NullErr(cause.message);
   if ((typeof cause) == "string") return new sys_Err(cause);
   return new sys_Err(cause.message);
@@ -54,33 +54,30 @@ sys_Err.make = function(cause)
 // Err subclasses
 //////////////////////////////////////////////////////////////////////////
 
+sys_Type.addType("sys::Err");
+sys_Type.addType("sys::NullErr");
+sys_Type.addType("sys::IndexErr");
+sys_Type.addType("sys::ParseErr");
+
 var sys_NullErr  = sys_Err.extend(
 {
-  type: function()
-  {
-    return sys_Type.find("sys::NullErr");
-  }
+  $ctor: function(msg) { this._super(msg); },
+  type: function() { return sys_Type.find("sys::NullErr"); }
 });
 
 var sys_IndexErr = sys_Err.extend(
 {
-  type: function()
-  {
-    return sys_Type.find("sys::IndexErr");
-  }
+  $ctor: function(msg) { this._super(msg); },
+  type: function() { return sys_Type.find("sys::IndexErr"); }
 });
 
 var sys_ParseErr = sys_Err.extend(
 {
-  _ctor: function(type, val, more)
+  $ctor: function(type, val, more)
   {
     var msg = "Invalid " + type + ": '" + val + "'";
     if (more != null) msg += ": " + more;
     this._super(msg)
   },
-
-  type: function()
-  {
-    return sys_Type.find("sys::ParseErr");
-  }
+  type: function() { return sys_Type.find("sys::ParseErr"); }
 });
