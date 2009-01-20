@@ -38,7 +38,7 @@ sys_Bool.fromStr = function(s, checked)
   if (s == "true") return true;
   if (s == "false") return false;
   if (checked != null && !checked) return null;
-  throw new ParseErr("Bool", s).val;
+  throw new sys_ParseErr("Bool", s);
 }
 
 sys_Bool.toStr =  function(self)

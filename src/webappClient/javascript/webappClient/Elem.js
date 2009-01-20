@@ -11,23 +11,15 @@ var webappClient_Elem = sys_Obj.extend(
   $ctor: function() { sys_Type.addType("webappClient::Elem"); },
   type: function() { return sys_Type.find("webappClient::Elem"); },
 
-  get: function(name, def)
-  {
-    var val = this.elem[name];
-    if (val != null) return val;
-    if (def != null) return def;
-    return null;
-  },
+  tagName: function() { return sys_Str.lower(this.elem.nodeName); },
 
-  set: function(name, val)
-  {
-    this.elem.setAttribute(name, val);
-  },
+  id$get: function() { return this.elem.id; },
+  id$set: function(val) { return this.elem.id = val; },
 
-  tagName: function()
-  {
-    return sys_Str.lower(this.elem.nodeName);
-  },
+  className$get: function() { return this.elem.className; },
+  className$set: function(val) { return this.elem.className = val; },
+
+  style: function() { return this.elem.style; },
 
   html$get: function() { return this.elem.innerHTML },
   html$set: function(val) { this.elem.innerHTML = val; },
@@ -37,6 +29,29 @@ var webappClient_Elem = sys_Obj.extend(
 
   checked$get: function() { return this.elem.checked },
   checked$set: function(val) { this.elem.checked = val; },
+
+  get: function(name, def)
+  {
+    if (name == "id")      return this.id$get();
+    if (name == "class")   return this.className$get();
+    if (name == "style")   return this.style();
+    if (name == "value")   return this.value$get();
+    if (name == "checked") return this.checked$get();
+
+    var val = this.elem[name];
+    if (val != null) return val;
+    if (def != null) return def;
+    return null;
+  },
+
+  set: function(name, val)
+  {
+    if (name == "id")           this.id$set(val);
+    else if (name == "class")   this.className$set(val);
+    else if (name == "value")   this.value$set(val);
+    else if (name == "checked") this.checked$set(val);
+    else this.elem.setAttribute(name, val);
+  },
 
   x: function() { return this.elem.offsetLeft; },
   y: function() { return this.elem.offsetTop; },

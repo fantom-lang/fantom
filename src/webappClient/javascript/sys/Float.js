@@ -94,7 +94,7 @@ sys_Float.fromStr = function(s, checked)
   if (isNaN(num))
   {
     if (checked != null && !checked) return null;
-    throw new ParseErr("Float", s);
+    throw new sys_ParseErr("Float", s);
   }
   return num;
 }
