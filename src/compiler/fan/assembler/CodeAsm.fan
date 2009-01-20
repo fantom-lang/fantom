@@ -1194,7 +1194,7 @@ class CodeAsm : CompilerSupport
     if (call.isSafe)
     {
       // if the method return a value type, ensure it is coerced to nullable
-      if (method.returnType.isValue)
+      if (method.returnType.isValue && call.leave)
         coerceOp(method.returnType, call.ctype.toNullable)
 
       // jump to end after successful call and push null onto

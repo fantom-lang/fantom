@@ -246,6 +246,8 @@ class ExprTest : CompilerTest
     verifyExpr("a?->size?->plus(6)", null, xNull, null, "", true)
   }
 
+  // also see MiscTest.testSafe for more complicated test
+
 //////////////////////////////////////////////////////////////////////////
 // Elvis
 //////////////////////////////////////////////////////////////////////////
@@ -462,6 +464,8 @@ class ExprTest : CompilerTest
     verifyExpr("x?.f", 7, 0, 0, "f = 7; Foo? x := this;", true)
     verifyExpr("x?.f", null, 0, 0, "f = 7; Foo? x := null;", true)
   }
+
+  // also see MiscTest.testSafe for more complicated test
 
 //////////////////////////////////////////////////////////////////////////
 // Str Concat
