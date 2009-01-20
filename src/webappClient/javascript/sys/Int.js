@@ -44,7 +44,7 @@ sys_Int.fromStr = function(s, radix, checked)
     if (ch < 48 || ch > 57)
     {
       if (checked != null && !checked) return null;
-      throw new ParseErr("Int", s);
+      throw new sys_ParseErr("Int", s);
     }
     val = ch-48;
     if (s.length-i > 0) val += 10 * (s.length-1)
@@ -56,7 +56,7 @@ sys_Int.fromStr = function(s, radix, checked)
   if (isNaN(num))
   {
     if (checked != null && !checked) return null;
-    throw new ParseErr("Int", s);
+    throw new sys_ParseErr("Int", s);
   }
   */
   return num;
