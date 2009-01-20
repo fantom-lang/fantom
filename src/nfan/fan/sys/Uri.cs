@@ -459,7 +459,7 @@ namespace Fan.Sys
 
       private void addQueryParam(Map map, string q, int start, int eq, int end, bool escaped)
       {
-        if (start == eq)
+        if (start == eq && q[start] != '=')
           map.set(toQueryStr(q, start, end, escaped), "true");
         else
           map.set(toQueryStr(q, start, eq, escaped), toQueryStr(q, eq+1, end, escaped));
