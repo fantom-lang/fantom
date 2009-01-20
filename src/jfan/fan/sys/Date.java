@@ -270,6 +270,7 @@ public final class Date
 
   private static final String localeKey = "date";
 
+  public static final Date defVal = new Date(2000, 0, 1);
 
   private final short year;
   private final byte month;

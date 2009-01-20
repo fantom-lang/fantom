@@ -67,6 +67,16 @@ const class TimeZone
   static TimeZone current()
 
   **
+  ** Default value is UTC.
+  **
+  static TimeZone defVal()
+
+  **
+  ** Private constructor.
+  **
+  private new privateMake()
+
+  **
   ** Get the identifier of this time zone in the time zone
   ** database.  Name is the city name portion of the zoneinfo
   ** `fullName` identifier such as "New_York" or "London".

@@ -157,7 +157,7 @@ namespace Fan.Sys
     public override sealed object make(List args)
     {
       if (m_dynamic) return makeDynamicInstance();
-      return method("make", true).call(args);
+      return base.make(args);
     }
 
     private object makeDynamicInstance()

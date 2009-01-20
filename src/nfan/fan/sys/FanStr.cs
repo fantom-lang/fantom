@@ -813,6 +813,8 @@ namespace Fan.Sys
 
     private static readonly Hashtable interns = new Hashtable();
 
+    public static readonly string m_defVal = "";
+
     internal static readonly string[] m_ascii = new string[128];
     internal static string[] m_spaces = new string[20];
     internal static readonly char[] m_trimChars;

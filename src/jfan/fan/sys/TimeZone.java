@@ -83,6 +83,11 @@ public final class TimeZone
     return null;
   }
 
+  public static TimeZone defVal()
+  {
+    return utc;
+  }
+
   public static TimeZone utc()
   {
     return utc;

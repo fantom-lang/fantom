@@ -213,5 +213,7 @@ namespace Fan.Sys
     public static readonly string m_NegInfStr = "-INF";
     public static readonly string m_NaNStr    = "NaN";
 
+    public static readonly double m_defVal = 0d;
+
   }
 }

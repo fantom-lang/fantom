@@ -374,9 +374,12 @@ class Type
   Void remove(Slot slot)
 
   **
-  ** Create a new instance of this Type using a public constructor
-  ** called "make".  Throw Err if public constructor "make" is
-  ** not available.
+  ** Create a new instance of this Type using the following rules:
+  **   1. Call public constructor 'make' with specified arguments
+  **   2. If no public constructor called 'make' or invalid number of
+  **      of required arguments, then return value of 'defVal' slot (must
+  **      be static field or static method with zero params)
+  **   3. If no public 'defVal' field, then throw Err
   **
   Obj make(Obj[]? args := null)
 

@@ -436,6 +436,9 @@ public final class FanInt
   /** sys::Int.minValue */
   public static final long minValue = Long.MIN_VALUE;
 
+  /** sys::Int.defVal */
+  public static final long defVal = 0L;
+
   // default chunk size for IO buffering (defaults to 4KB)
   public static final Long Chunk = Long.valueOf(4096);
 

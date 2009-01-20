@@ -1423,6 +1423,8 @@ namespace Fan.Sys
     static readonly Range parentRange = Range.make(0, -2, false);
     static readonly string dotDot = "..";
 
+    public static readonly Uri m_defVal = fromStr("");
+
     internal readonly string m_str;
     internal readonly string m_scheme;
     internal readonly string m_userInfo;

@@ -288,7 +288,21 @@ public abstract class Type
   public final Object make() { return make(null); }
   public Object make(List args)
   {
-    return method("make", true).func.call(args);
+    Method make = method("make", false);
+    if (make != null)
+    {
+      int numArgs = args == null ? 0 : args.sz();
+      List params = make.params();
+      if ((numArgs == params.sz()) ||
+          (numArgs < params.sz() && ((Param)params.get(numArgs)).hasDefault()))
+        return make.func.call(args);
+    }
+
+    Slot defVal = slot("defVal", false);
+    if (defVal instanceof Field) return ((Field)defVal).get(null);
+    if (defVal instanceof Method) return ((Method)defVal).func.call(null);
+
+    throw Err.make("Type missing 'make' or 'defVal' slots: " + this).val;
   }
 
 //////////////////////////////////////////////////////////////////////////

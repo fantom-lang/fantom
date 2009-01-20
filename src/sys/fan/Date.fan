@@ -41,6 +41,11 @@ const final class Date
   static Date? fromStr(Str s, Bool checked := true)
 
   **
+  ** Default value is "2000-01-01".
+  **
+  static const Date defVal
+
+  **
   ** Private constructor.
   **
   private new privateMake()

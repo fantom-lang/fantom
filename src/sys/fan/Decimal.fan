@@ -25,9 +25,14 @@ const final class Decimal : Num
   static Decimal? fromStr(Str s, Bool checked := true)
 
   **
+  ** Default value is 0.
+  **
+  static const Decimal defVal
+
+  **
   ** Private constructor.
   **
-  private new make()
+  private new privateMake()
 
 //////////////////////////////////////////////////////////////////////////
 // Obj Overrides

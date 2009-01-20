@@ -91,6 +91,16 @@ const final class Uri
   **
   static Uri? decode(Str s, Bool checked := true)
 
+  **
+  ** Default value is '``'.
+  **
+  static const Uri defVal
+
+  **
+  ** Private constructor
+  **
+  private new privateMake()
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////

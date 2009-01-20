@@ -502,6 +502,8 @@ namespace Fan.Sys
     public const long secPerMin  = 60L;
     static readonly Duration m_boot = now();
 
+    public static readonly Duration m_defVal = Zero;
+
     public readonly long m_ticks;
 
   }

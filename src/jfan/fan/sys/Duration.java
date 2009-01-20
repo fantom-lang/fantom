@@ -490,6 +490,8 @@ public final class Duration
   public static final long secPerMin  = 60L;
   private static final Duration boot = now();
 
+  public static final Duration defVal = Zero;
+
   public final long ticks;
   private String str;
 

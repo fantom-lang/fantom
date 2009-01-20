@@ -891,6 +891,8 @@ public final class DateTime
   private static final String localeKey = "dateTime";
   private static final DateTime boot = now();
 
+  public static final DateTime defVal = make(2000, Month.jan, 1, 0, 0, 0, 0, TimeZone.utc());
+
 
   // Fields Bitmask
   //   Field       Width    Mask   Start Bit

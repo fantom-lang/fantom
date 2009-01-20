@@ -79,6 +79,11 @@ namespace Fan.Sys
       return null;
     }
 
+    public static TimeZone defVal()
+    {
+      return m_utc;
+    }
+
     public static TimeZone utc()
     {
       return m_utc;

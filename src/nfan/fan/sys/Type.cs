@@ -300,8 +300,22 @@ namespace Fan.Sys
     public object make() { return make(null); }
     public virtual object make(List args)
     {
-      return method("make", true).call(args);
-    }
+      Method make = method("make", false);
+      if (make != null)
+      {
+        int numArgs = args == null ? 0 : args.sz();
+        List p = make.@params();
+        if ((numArgs == p.sz()) ||
+            (numArgs < p.sz() && ((Param)p.get(numArgs)).hasDefault()))
+          return make.m_func.call(args);
+      }
+
+      Slot defVal = slot("defVal", false);
+      if (defVal is Field) return ((Field)defVal).get(null);
+      if (defVal is Method) return ((Method)defVal).m_func.call(null);
+
+      throw Err.make("Type missing 'make' or 'defVal' slots: " + this).val;
+   }
 
   //////////////////////////////////////////////////////////////////////////
   // Inheritance

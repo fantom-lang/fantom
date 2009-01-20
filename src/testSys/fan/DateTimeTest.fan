@@ -985,4 +985,23 @@ class DateTimeTest : Test
     verifyErr(ParseErr#) |,| { DateTime.fromHttpStr("Sun, 06 Nov 08:49:37 GMT") }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Default Values
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDefVal()
+  {
+    verifySame(TimeZone.defVal, TimeZone.utc)
+    verifySame(TimeZone#.make, TimeZone.utc)
+
+    verifyEq(DateTime.defVal, DateTime(2000, jan, 1, 0, 0, 0, 0, TimeZone.utc))
+    verifyEq(DateTime#.make, DateTime(2000, jan, 1, 0, 0, 0, 0, TimeZone.utc))
+
+    verifyEq(Date.defVal, Date(2000, jan, 1))
+    verifyEq(Date#.make, Date(2000, jan, 1))
+
+    verifyEq(Time.defVal, Time(0, 0, 0))
+    verifyEq(Time#.make, Time(0, 0, 0))
+  }
+
 }

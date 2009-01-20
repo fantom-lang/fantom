@@ -19,7 +19,12 @@ const final class Str
   **
   ** Private constructor.
   **
-  private new make()
+  private new privateMake()
+
+  **
+  ** Default value is "".
+  **
+  const static Str defVal
 
 //////////////////////////////////////////////////////////////////////////
 // Obj Overrides
