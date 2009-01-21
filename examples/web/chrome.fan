@@ -5,26 +5,29 @@ using testWeb
 class Chrome : Widget
 {
 
-  new make()
-  {
-    tabs = TabPane
-    {
-      addTab(`/`, "Home")
-      addTab(`/examples/mounting`, "Mounting")
-      addTab(`/examples/flash`, "Flash")
-      addTab(`/examples/actions`, "Actions")
-      addTab(`/examples/serialization`, "Serialization")
-    }
-    add(view = req.stash["webapp.view"])
-  }
-
   override Void onGet()
   {
-    tabs.onGet
+    // nav
+    body.p("style='background: #eee; border:1px solid #ccc; padding: 10px'")
+    body.a(`/`).w("Home").aEnd
+    body.w(" | ")
+    body.a(`/examples/mounting`).w("Mounting").aEnd
+    /*
+    body.w(" | ")
+    body.a(`/examples/flash`).w("Flash").aEnd
+    body.w(" | ")
+    body.a(`/examples/actions`).w("Actions").aEnd
+    body.w(" | ")
+    body.a(`/examples/serialization`).w("Serialization").aEnd
+    */
+    body.pEnd
+
+    // view
     body.div("style='padding: 0 20px 20px 20px'")
-    view.onGet
+    req.stash["webapp.chromeView"]->onGet
     body.divEnd
 
+    /*
     // Test root widget actions
     head.w(
      "<script type='text/javascript'>
@@ -41,13 +44,14 @@ class Chrome : Widget
     body.div("style='border-top: 1px solid #ccc; padding: 1em'")
     body.a(`#`, "onclick='chromeTest(\"$uri\"); return false;'").w("Chrome Action").aEnd
     body.divEnd
+    */
   }
 
-  override Void onPost() { view.onPost }
+  override Void onPost()
+  {
+    req.stash["webapp.chromeView"]->onPost
+  }
 
-  Void onAction() { echo("Chrome Action!"); body.w("Chrome Action!") }
-
-  TabPane tabs
-  Widget view
+  //Void onAction() { echo("Chrome Action!"); body.w("Chrome Action!") }
 
 }
