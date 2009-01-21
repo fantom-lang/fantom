@@ -38,18 +38,10 @@ class HttpReq
   Bool async := true
 
   **
-  ** Send the request, after receiving the response, call
-  ** the given closure with the resulting HttpRes.
+  ** Send the request with the specificed content, after
+  ** receiving the response, call the given closure with
+  ** the resulting HttpRes.
   **
-  ** If 'content' is a Map type, then the contents are
-  ** encoded as form values. If the Content-Type header
-  ** has not been set then it will set to
-  ** "application/x-www-form-urlencoded".
-  **
-  ** If 'content' is any other type, 'toStr' is called
-  ** and the content is sent as is.  If the Content-Type
-  ** has not been set, it will be set to 'text/plain'.
-  **
-  Void send(Obj content, |HttpRes res| c) {}
+  Void send(Str content, |HttpRes res| c) {}
 
 }
