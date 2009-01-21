@@ -1036,7 +1036,7 @@ class CheckErrors : CompilerStep
         err("Cannot use super to call abstract method '$m.qname'", call.target.location)
 
       // check that calling super with exact param match otherwise stack overflow
-      if (call.args.size != m.params.size && m.name == curMethod.name)
+      if (call.args.size != m.params.size && m.name == curMethod.name && !m.isCtor)
         err("Must call super method '$m.qname' with exactly $m.params.size arguments", call.target.location)
     }
 
