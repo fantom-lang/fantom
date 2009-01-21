@@ -194,6 +194,19 @@ namespace Fan.Sys
         m_map = new Hashtable();
     }
 
+    public bool ordered()
+    {
+      throw UnsupportedErr.make("Not yet implemented").val;
+    }
+
+    public void ordered(bool v)
+    {
+      // TODO
+      // http://hg.fandev.org/repos/fan-1.0?cs=bc1b2c7e511f
+
+      throw UnsupportedErr.make("Not yet implemented").val;
+    }
+
     public object def() { return m_def; }
     public void def(object v)
     {
