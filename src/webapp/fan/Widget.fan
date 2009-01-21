@@ -48,7 +48,7 @@ abstract class Widget : Weblet
       Thread.locals["webapp.widget.body"] = WebOutStream(body.out)
 
       // write content
-      res.headers["Content-Type"] = "text/html; charset=utf8"
+      res.headers["Content-Type"] = "text/html; charset=UTF-8"
       startRes
       q := req.uri.query["webappWidgetCall"]
       if (q != null)
