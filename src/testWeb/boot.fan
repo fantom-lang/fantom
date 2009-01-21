@@ -33,6 +33,21 @@ class Boot : BootScript
 
   override Void setup()
   {
-    Sys.ns.create(`/homePage`, WebappClientTest#)
+    Sys.ns.create(`/homePage`, Index#)
+    Sys.ns.create(`/webappClient`, WebappClientTest#)
+    Sys.ns.create(`/call`,         CallTest#)
+  }
+}
+
+class Index : Widget
+{
+  override Void onGet()
+  {
+    head.title("testWeb Tests")
+    body.h1("testWeb Tests")
+    body.ul
+    body.li.a(`/webappClient`).w("webappClient unit tests").aEnd.liEnd
+    body.li.a(`/call`).w("Call tests").aEnd.liEnd
+    body.ulEnd
   }
 }
