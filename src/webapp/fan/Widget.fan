@@ -65,9 +65,12 @@ abstract class Widget : Weblet
       finishRes
 
       // flush streams
-      res.headers["Content-Length"] = (head.size + body.size).toStr
-      res.out.writeBuf(head.flip)
-      res.out.writeBuf(body.flip)
+      if (!res.isCommitted)
+      {
+        res.headers["Content-Length"] = (head.size + body.size).toStr
+        res.out.writeBuf(head.flip)
+        res.out.writeBuf(body.flip)
+      }
     }
     finally
     {
