@@ -646,6 +646,15 @@ namespace Fan.Sys
       return InStream.makeForStr(self);
     }
 
+    public static Buf toBuf(string self) { return toBuf(self, Charset.m_utf8); }
+    public static Buf toBuf(string self, Charset charset)
+    {
+      MemBuf buf = new MemBuf(self.Length*2);
+      buf.charset(charset);
+      buf.print(self);
+      return buf.flip();
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Locale
   //////////////////////////////////////////////////////////////////////////

@@ -162,7 +162,7 @@ namespace Fan.Sys
       int newCapacity = (int)c;
       if (newCapacity < m_size) throw ArgErr.make("capacity < size").val;
       byte[] temp = new byte[newCapacity];
-      System.Array.Copy(m_buf, 0, temp, 0, newCapacity);
+      System.Array.Copy(m_buf, 0, temp, 0, Math.Min(m_size, newCapacity));
       m_buf = temp;
     }
 
@@ -227,6 +227,71 @@ namespace Fan.Sys
       if (ha == null)
         throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
       return new MemBuf(ha.ComputeHash(m_buf, 0, m_size));
+    }
+
+    public override Buf hmac(string algorithm, Buf keyBuf)
+    {
+      // get digest algorthim
+      string alg = algorithm;
+      if (alg == "SHA-1") alg = "SHA1";  // to make .NET happy
+      HashAlgorithm ha = HashAlgorithm.Create(alg);
+      if (ha == null)
+        throw ArgErr.make("Unknown digest algorthm: " + algorithm).val;
+
+      // get secret key bytes
+      int blockSize = 64;
+      byte[] keyBytes = null;
+      int keySize = 0;
+      try
+      {
+        // get key bytes
+        MemBuf keyMemBuf = (MemBuf)keyBuf;
+        keyBytes = keyMemBuf.m_buf;
+        keySize  = keyMemBuf.m_size;
+
+        // key is greater than block size we hash it first
+        if (keySize > blockSize)
+        {
+          keyBytes = ha.ComputeHash(keyBytes, 0, keySize);
+          keySize = keyBytes.Length;
+        }
+      }
+      catch (System.InvalidCastException)
+      {
+        throw UnsupportedErr.make("key parameter must be memory buffer").val;
+      }
+
+      // RFC 2104:
+      //   ipad = the byte 0x36 repeated B times
+      //   opad = the byte 0x5C repeated B times
+      //   H(K XOR opad, H(K XOR ipad, text))
+
+      MemBuf acc = new MemBuf(1024);
+
+      // inner digest: H(K XOR ipad, text)
+      for (int i=0; i<blockSize; ++i)
+      {
+        if (i < keySize)
+          acc.write((byte)(keyBytes[i] ^ 0x36));
+        else
+          acc.write((byte)0x36);
+      }
+      acc.pipeFrom(m_buf, 0, m_size);
+      byte[] innerDigest = ha.ComputeHash(acc.m_buf, 0, acc.m_size);
+
+      // outer digest: H(K XOR opad, innerDigest)
+      acc.clear();
+      for (int i=0; i<blockSize; ++i)
+      {
+        if (i < keySize)
+          acc.write((byte)(keyBytes[i] ^ 0x5C));
+        else
+          acc.write((byte)0x5C);
+      }
+      acc.pipeFrom(innerDigest, 0, innerDigest.Length);
+
+      // return result
+      return new MemBuf(ha.ComputeHash(acc.m_buf, 0, acc.m_size));
     }
 
   //////////////////////////////////////////////////////////////////////////
