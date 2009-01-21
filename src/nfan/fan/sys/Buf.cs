@@ -164,6 +164,17 @@ namespace Fan.Sys
       return result;
     }
 
+    public Buf dup()
+    {
+      int size = (int)this.size();
+      byte[] copy = new byte[size];
+      getBytes(0, copy, 0, size);
+
+      Buf result = new MemBuf(copy, size);
+      result.charset(charset());
+      return result;
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Modification
   //////////////////////////////////////////////////////////////////////////
@@ -208,6 +219,14 @@ namespace Fan.Sys
     {
       m_out.charset(charset);
       m_in.charset(charset);
+    }
+
+    public Buf fill(long b, long times)
+    {
+      if (capacity() < size()+times) capacity(size()+times);
+      int t = (int)times;
+      for (int i=0; i<t; ++i) m_out.write(b);
+      return this;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -402,6 +421,11 @@ namespace Fan.Sys
     public virtual Buf toDigest(string algorithm)
     {
       throw UnsupportedErr.make(type()+".toDigest").val;
+    }
+
+    public virtual Buf hmac(String algorithm, Buf key)
+    {
+      throw UnsupportedErr.make(type()+".hmac").val;
     }
 
   //////////////////////////////////////////////////////////////////////////
