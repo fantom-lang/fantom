@@ -16,7 +16,6 @@ class TestWeblet : Widget
   {
     head.title("webappClient Test")
     head.js(`/sys/pod/webappClient/webappClient.js`)
-    head.js(`/sys/pod/testWebappClient/testWebappClient.js`)
     head.w(
       "<style type='text/css'>
          .hidden { display: none; }
@@ -31,7 +30,7 @@ class TestWeblet : Widget
            var results = document.getElementById('results');
            try
            {
-             var test = testWebappClient_TestClient.make();
+             var test = webappClient_TestClient.make();
              print('testAttrs');  test.testAttrs();
              print('testBasics'); test.testBasics();
              results.style.color = 'green';
