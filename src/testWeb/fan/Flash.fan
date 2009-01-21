@@ -6,6 +6,7 @@
 //   25 Jul 08  Andy Frank  Creation
 //
 
+/*
 using web
 using webapp
 
@@ -51,3 +52,4 @@ class Flash : Widget
   Str bg    := "#ff8"
 
 }
+*/

@@ -17,12 +17,13 @@ class Build : BuildPod
 
   override Void setup()
   {
-    podName     = "testWeb"
-    version     = globalVersion
-    description = "Web test suite"
-    depends     = ["sys 1.0", "inet 1.0", "web 1.0", "webapp 1.0"]
-    srcDirs     = [`fan/`]
-    podFacets   = ["doc": false]
+    podName       = "testWeb"
+    version       = globalVersion
+    description   = "Web test suite"
+    depends       = ["sys 1.0", "inet 1.0", "web 1.0", "webapp 1.0", "webappClient 1.0"]
+    srcDirs       = [`fan/`]
+    podFacets     = ["doc": false]
+    hasJavascript = true
   }
 
 }
