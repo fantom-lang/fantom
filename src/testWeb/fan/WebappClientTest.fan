@@ -9,13 +9,15 @@
 
 using web
 using webapp
+using webappClient
 
-class TestWeblet : Widget
+class WebappClientTest : Widget
 {
   override Void onGet()
   {
     head.title("webappClient Test")
     head.js(`/sys/pod/webappClient/webappClient.js`)
+    head.js(`/sys/pod/testWeb/testWeb.js`)
     head.w(
       "<style type='text/css'>
          .hidden { display: none; }
@@ -24,13 +26,13 @@ class TestWeblet : Widget
          function print(name)
          {
            var p = document.getElementById('tests');
-           p.innerHTML = p.innerHTML + ' -- ' + name + '...<br/>';
+           p.innerHTML = p.innerHTML + ' -- ' + name + '...<'+'br/>';
          }
          window.onload = function() {
            var results = document.getElementById('results');
            try
            {
-             var test = webappClient_TestClient.make();
+             var test = testWeb_TestClient.make();
              print('testAttrs');  test.testAttrs();
              print('testBasics'); test.testBasics();
              results.style.color = 'green';
@@ -50,8 +52,8 @@ class TestWeblet : Widget
     // testAttrs
     body.div("id='testAttrs' class='hidden'")
     body.input("type='text' value='foo'")
-    body.checkbox("type='checkbox' checked='true'")
-    body.checkbox("type='checkbox' checked='false'")
+    body.checkbox("checked='checked'")
+    body.checkbox
     body.divEnd
 
     // testBasics
