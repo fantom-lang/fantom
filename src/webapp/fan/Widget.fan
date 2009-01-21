@@ -50,7 +50,18 @@ abstract class Widget : Weblet
       // write content
       res.headers["Content-Type"] = "text/html; charset=utf8"
       startRes
-      super.service
+      q := req.uri.query["webappWidgetCall"]
+      if (q != null)
+      {
+        m := Slot.findMethod(q)
+        if (!m.parent.fits(Widget#))
+          throw ArgErr("Type not Widget: $m.parent")
+        m.call1(m.parent.make())
+      }
+      else
+      {
+        super.service
+      }
       finishRes
 
       // flush streams
@@ -116,6 +127,18 @@ abstract class Widget : Weblet
     buf := Thread.locals["webapp.widget.body"] as WebOutStream
     if (buf == null) throw Err("Widget.body not found")
     return buf
+  }
+
+  **
+  ** Return a Uri that can be used to call a specific method
+  ** on a Widget, bypassing the normal 'service' implementation.
+  **
+  Uri call(Method m, Uri uri := req.uri)
+  {
+    if (!m.parent.fits(Widget#))
+      throw ArgErr("Type must be Widget: $m.parent")
+
+    return uri.plusQuery(["webappWidgetCall":m.qname])
   }
 
 }
