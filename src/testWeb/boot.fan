@@ -8,10 +8,11 @@
 //
 
 using fand
+using wisp
 using web
 using webapp
 using webappClient
-using wisp
+using testWeb
 
 class Boot : BootScript
 {
@@ -32,6 +33,6 @@ class Boot : BootScript
 
   override Void setup()
   {
-    Sys.ns.create(`/homePage`, TestWeblet#)
+    Sys.ns.create(`/homePage`, WebappClientTest#)
   }
 }
