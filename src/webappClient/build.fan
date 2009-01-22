@@ -21,7 +21,7 @@ class Build : BuildPod
     version       = globalVersion
     description   = "Client-side framework for building web applications"
     depends       = ["sys 1.0", "web 1.0", "webapp 1.0"]
-    srcDirs       = [`fan/`, `test/`]
+    srcDirs       = [`fan/`]
     hasJavascript = true
   }
 
