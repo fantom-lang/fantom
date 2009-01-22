@@ -415,6 +415,51 @@ namespace Fan.Sys
       return self;
     }
 
+    public static string toDisplayName(string self)
+    {
+      if (self.Length == 0) return "";
+      StringBuilder s = new StringBuilder(self.Length+4);
+      s.Append((char)(self[0] & ~0x20));
+      int last = self[0];
+      for (int i=1; i<self.Length; ++i)
+      {
+        int c = self[i];
+        if ('A' <= c && c <= 'Z')
+        {
+          int next = i+1 < self.Length ? self[i+1] : 'Q';
+          if (!('A' <= last && last <= 'Z') || !('A' <= next && next <= 'Z'))
+            s.Append(' ');
+        }
+        else if ('0' <= c && c <= '9' && !('0' <= last && last <= '9'))
+          s.Append(' ');
+        s.Append((char)c);
+        last = c;
+      }
+      return s.ToString();
+    }
+
+    public static string fromDisplayName(string self)
+    {
+      if (self.Length == 0) return "";
+      StringBuilder s = new StringBuilder(self.Length);
+      int c = self[0];
+      int c2 = self.Length == 1 ? 0 : self[1];
+      if ('A' <= c && c <= 'Z' && !('A' <= c2 && c2 <= 'Z')) c |= 0x20;
+      s.Append((char)c);
+      int last = c;
+      for (int i=1; i<self.Length; ++i)
+      {
+        c = self[i];
+        if (c != ' ')
+        {
+          if (last == ' ' && 'a' <= c && c <= 'z') c &= ~0x20;
+          s.Append((char)c);
+        }
+        last = c;
+      }
+      return s.ToString();
+    }
+
     public static string justl(string self, long width)
     {
       int w = (int)width;

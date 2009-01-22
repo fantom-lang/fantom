@@ -649,6 +649,48 @@ class StrTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Display Name
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDisplayName()
+  {
+    // normalized round trippers
+    verifyDisplayName("", "")
+    verifyDisplayName("a", "A")
+    verifyDisplayName("z", "Z")
+    verifyDisplayName("foo", "Foo")
+    verifyDisplayName("fooBar", "Foo Bar")
+    verifyDisplayName("roomZ", "Room Z")
+    verifyDisplayName("reallyLongNameHere", "Really Long Name Here")
+    verifyDisplayName("point5", "Point 5")
+    verifyDisplayName("point23", "Point 23")
+    verifyDisplayName("p\u01fct23Here", "P\u01fct 23 Here")
+
+    // un-normalized toDisplayName
+    verifyEq("Zoo\u01fc".toDisplayName, "Zoo\u01fc")
+    verifyEq("IO".toDisplayName,  "IO")
+    verifyEq("XML".toDisplayName, "XML")
+    verifyEq("XMLCode".toDisplayName, "XML Code")
+    verifyEq("OATemp3".toDisplayName,  "OA Temp 3")
+    verifyEq("thisPV".toDisplayName, "This PV")
+    verifyEq("fileCSV".toDisplayName, "File CSV")
+
+    // un-normalized fromDisplayName
+    verifyEq("foo".fromDisplayName, "foo")
+    verifyEq("foo bar".fromDisplayName, "fooBar")
+    verifyEq("foo 3".fromDisplayName, "foo3")
+    verifyEq("foo 3 baz".fromDisplayName, "foo3Baz")
+    verifyEq("file XML".fromDisplayName, "fileXML")
+    verifyEq("IO File".fromDisplayName, "IOFile")
+  }
+
+  Void verifyDisplayName(Str p, Str d)
+  {
+    verifyEq(p.toDisplayName, d)
+    verifyEq(d.fromDisplayName, p)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
