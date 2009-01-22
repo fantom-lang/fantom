@@ -291,6 +291,37 @@ const final class Str
   Str decapitalize()
 
   **
+  ** Translate a programmer name like "fooBar" to "Foo Bar".
+  ** This method capitalizes the first letter, then walks
+  ** the string looking for ASCII capital letters and inserting
+  ** a space.  Also see `fromDisplayName`.
+  **
+  ** Examples:
+  **   "foo".toDisplayName       ->  "Foo
+  **   "fooBar".toDisplayName    ->  "Foo Bar"
+  **   "fooBarBaz".toDisplayName ->  "Foo Bar Baz"
+  **   "foo33".toDisplayName     ->  "Foo 33"
+  **   "fooXML".toDisplayName    ->  "Foo XML"
+  **   "Foo".toDisplayName       ->  "Foo"
+  **
+  Str toDisplayName()
+
+  **
+  ** Translate a display name like "Foo Bar" to a programmatic
+  ** name "fooBar".  This method decapitalizes the first letter,
+  ** then walks the string removing spaces.  Also see `toDisplayName`.
+  **
+  ** Examples:
+  **   "Foo".fromDisplayName         ->  "foo"
+  **   "Foo Bar".fromDisplayName     ->  "fooBar"
+  **   "Foo Bar Baz".fromDisplayName ->  "fooBarBaz"
+  **   "Foo 33 Bar".fromDisplayName  ->  "foo33Bar"
+  **   "Foo XML".fromDisplayName     ->  "fooXML"
+  **   "foo bar".fromDisplayName     ->  "fooBar"
+  **
+  Str fromDisplayName()
+
+  **
   ** If size is less than width, then add spaces to the right
   ** to create a left justified string.
   **
@@ -549,5 +580,6 @@ const final class Str
   ** Get this string encoded into a buffer of bytes.
   **
   Buf toBuf(Charset charset := Charset.utf8)
+
 
 }

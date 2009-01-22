@@ -389,6 +389,51 @@ public class FanStr
     return self;
   }
 
+  public static String toDisplayName(String self)
+  {
+    if (self.length() == 0) return "";
+    StringBuilder s = new StringBuilder(self.length()+4);
+    s.append((char)(self.charAt(0) & ~0x20));
+    int last = self.charAt(0);
+    for (int i=1; i<self.length(); ++i)
+    {
+      int c = self.charAt(i);
+      if ('A' <= c && c <= 'Z')
+      {
+        int next = i+1 < self.length() ? self.charAt(i+1) : 'Q';
+        if (!('A' <= last && last <= 'Z') || !('A' <= next && next <= 'Z'))
+          s.append(' ');
+      }
+      else if ('0' <= c && c <= '9' && !('0' <= last && last <= '9'))
+        s.append(' ');
+      s.append((char)c);
+      last = c;
+    }
+    return s.toString();
+  }
+
+  public static String fromDisplayName(String self)
+  {
+    if (self.length() == 0) return "";
+    StringBuilder s = new StringBuilder(self.length());
+    int c = self.charAt(0);
+    int c2 = self.length() == 1 ? 0 : self.charAt(1);
+    if ('A' <= c && c <= 'Z' && !('A' <= c2 && c2 <= 'Z')) c |= 0x20;
+    s.append((char)c);
+    int last = c;
+    for (int i=1; i<self.length(); ++i)
+    {
+      c = self.charAt(i);
+      if (c != ' ')
+      {
+        if (last == ' ' && 'a' <= c && c <= 'z') c &= ~0x20;
+        s.append((char)c);
+      }
+      last = c;
+    }
+    return s.toString();
+  }
+
   public static String justl(String self, long width)
   {
     int w = (int)width;

@@ -510,7 +510,7 @@
 - BuildScript dumpenv target
 
 *Build 1.0.38 (incomplete)*
-- Str: in, toBuf for working for string I/O
+- Str: in, toBuf, toDisplayName, fromDisplayName
 - Buf: dup, fill, hmac
 - Duration, DateTime, Date, Time: toIso, fromIso
 - Map: ordered, join
@@ -519,6 +519,7 @@
 - MimeType: charset
 - New compilerJavascript and webappClient APIs
 - New obix API
+- Rework webapp APIs
 - Compiler fix when local variable shadows field with storage operator
 - Compiler fix when using null safe call with no-leave primitive return
 - Compiler fix when calling super with default params results in stack overflow
