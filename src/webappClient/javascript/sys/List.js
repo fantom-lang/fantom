@@ -134,3 +134,17 @@ sys_List.eachr = function(self, func)
       func(self[i], i)
   }
 }
+sys_List.map = function(self, acc, func)
+{
+  if (func.length == 1)
+  {
+    for (var i=0; i<self.length; ++i)
+      acc.push(func(self[i]));
+  }
+  else
+  {
+    for (var i=0; i<self.length; ++i)
+      acc.push(func(self[i], i));
+  }
+  return acc;
+}
