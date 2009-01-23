@@ -70,9 +70,19 @@ internal const class WispThread : Thread
     success := false
     try
     {
+      // initialize the req and res
       initReqRes(req, res)
+
+      // service which runs thru the installed web steps
       service.service(req, res)
+
+      // assume success which allows us to re-use this connection
       success = true
+
+      // if the weblet didn't finishing reading the content
+      // stream then don't attempt to reuse this connection,
+      // safest thing is to just close the socket
+      if (req.webIn != null && req.webIn.read != null) success = false
     }
     catch (Err e)
     {
