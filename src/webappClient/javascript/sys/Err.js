@@ -55,9 +55,16 @@ sys_Err.make = function(cause)
 //////////////////////////////////////////////////////////////////////////
 
 sys_Type.addType("sys::Err");
+sys_Type.addType("sys::ArgErr");
 sys_Type.addType("sys::NullErr");
 sys_Type.addType("sys::IndexErr");
 sys_Type.addType("sys::ParseErr");
+
+var sys_ArgErr = sys_Err.extend(
+{
+  $ctor: function(msg) { this._super(msg); },
+  type: function() { return sys_Type.find("sys::ArgErr"); }
+});
 
 var sys_NullErr  = sys_Err.extend(
 {

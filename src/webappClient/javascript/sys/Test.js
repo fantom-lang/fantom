@@ -38,7 +38,7 @@ var sys_Test = sys_Obj.extend(
   {
     if (!sys_Obj.equals(expected, actual))
     {
-      if (msg == null) msg = expected + " != " + actual;
+      if (msg == null) msg = sys_Obj._toStr(expected) + " != " + sys_Obj._toStr(actual);
       this.fail(msg);
     }
     /*
@@ -59,7 +59,7 @@ var sys_Test = sys_Obj.extend(
   {
     if (sys_Obj.equals(expected, actual))
     {
-      if (msg == null) msg = expected + " == " + actual;
+      if (msg == null) msg = sys_Obj._toStr(expected) + " == " + sys_Obj._toStr(actual);
       this.fail(msg);
     }
     this.verifyCount++;
@@ -69,7 +69,7 @@ var sys_Test = sys_Obj.extend(
   {
     if (!sys_Obj.equals(expected, actual))
     {
-      if (msg == null) msg = expected + " !== " + actual;
+      if (msg == null) msg = sys_Obj._toStr(expected) + " !== " + sys_Obj._toStr(actual);
       this.fail(msg);
     }
     this.verifyCount++;
@@ -79,7 +79,7 @@ var sys_Test = sys_Obj.extend(
   {
     if (sys_Obj.equals(expected == actual))
     {
-      if (msg == null) msg = expected + " === " + actual;
+      if (msg == null) msg = sys_Obj._toStr(expected) + " === " + sys_Obj._toStr(actual);
       this.fail(msg);
     }
     this.verifyCount++;

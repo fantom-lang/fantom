@@ -146,3 +146,16 @@ sys_Obj.type = function(self)
   else
     return sys_Type.toFanType(self);
 }
+
+sys_Obj._toStr = function(obj)
+{
+  if (obj == null) return "null";
+  if (typeof obj == "string") return obj;
+  if (obj.constructor == Array) return sys_List.toStr(obj);
+  return obj.toString();
+}
+
+sys_Obj.echo = function(str)
+{
+  println(sys_Obj._toStr(str));
+}
