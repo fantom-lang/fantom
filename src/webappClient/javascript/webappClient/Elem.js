@@ -6,9 +6,10 @@
 //   8 Jan 09  Andy Frank  Creation
 //
 
+sys_Type.addType("webappClient::Elem");
 var webappClient_Elem = sys_Obj.extend(
 {
-  $ctor: function() { sys_Type.addType("webappClient::Elem"); },
+  $ctor: function() {},
   type: function() { return sys_Type.find("webappClient::Elem"); },
 
   tagName: function() { return sys_Str.lower(this.elem.nodeName); },

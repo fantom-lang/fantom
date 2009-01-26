@@ -6,9 +6,10 @@
 //   8 Jan 09  Andy Frank  Creation
 //
 
+sys_Type.addType("webappClient::Doc");
 var webappClient_Doc = sys_Obj.extend(
 {
-  $ctor: function() { sys_Type.addType("webappClient::Doc"); },
+  $ctor: function() {},
   type: function() { return sys_Type.find("webappClient::Doc"); },
 });
 

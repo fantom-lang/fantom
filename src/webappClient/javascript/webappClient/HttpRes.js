@@ -6,9 +6,10 @@
 //   8 Jan 09  Andy Frank  Creation
 //
 
+sys_Type.addType("webappClient::HttpRes");
 var webappClient_HttpRes = sys_Obj.extend(
 {
-  $ctor: function() { sys_Type.addType("webappClient::HttpRes"); },
+  $ctor: function() {},
   type: function() { return sys_Type.find("webappClient::HttpRes"); },
 
   status$get: function() { return this.status },

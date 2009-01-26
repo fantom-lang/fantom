@@ -92,6 +92,8 @@ class TestRunner
 
   Void runTests(Type type, Str methodName := "*")
   {
+    //if (skip(type, methodName)) return
+
     echo("")
     methods := methods(type, methodName)
     methods.each |Method m|
@@ -115,10 +117,15 @@ class TestRunner
 
   Method[] methods(Type type, Str methodName)
   {
-    if (methodName != "*") return [type.method(methodName)]
     return type.methods.findAll |Method m->Bool|
     {
-      return m.name.startsWith("test") && !m.isAbstract
+      if (m.isAbstract) return false
+      if (m.name.startsWith("test"))
+      {
+        if (methodName == "*") return true
+        return methodName == m.name
+      }
+      return false
     }
   }
 
@@ -173,6 +180,23 @@ class TestRunner
     //echo("  -version       print version");
     //echo("  -v             verbose mode");
     //echo("  -all           test all pods");
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Whitelist
+//////////////////////////////////////////////////////////////////////////
+
+  Bool skip(Type type, Str methodName)
+  {
+    if (type.pod.name == "testSys")
+    {
+      if (type.name == "BoolTest")  return false
+      //if (type.name == "FloatTest") return false
+      //if (type.name == "IntTest")   return false
+      //if (type.name == "ListTest")  return false
+      //if (type.name == "StrTest")   return false
+    }
+    return true
   }
 
 //////////////////////////////////////////////////////////////////////////
