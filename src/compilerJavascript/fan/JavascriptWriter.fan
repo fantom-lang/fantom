@@ -244,7 +244,7 @@ class JavascriptWriter : CompilerSupport
       //case ExprId.slotLiteral
       case ExprId.rangeLiteral: rangeLiteralExpr(ex)
       case ExprId.listLiteral:  listLiteralExpr(ex)
-      //case ExprId.mapLiteral
+      case ExprId.mapLiteral:   mapLiteralExpr(ex)
       case ExprId.boolNot:      out.w("!"); expr(ex->operand)
       case ExprId.cmpNull:      expr(ex->operand); out.w(" == null")
       case ExprId.cmpNotNull:   expr(ex->operand); out.w(" != null")
@@ -297,6 +297,21 @@ class JavascriptWriter : CompilerSupport
       expr(ex)
     }
     out.w("]")
+  }
+
+  Void mapLiteralExpr(MapLiteralExpr me)
+  {
+    out.w("sys_Map.fromLiteral([")
+    me.keys.each |Expr key, Int i| { if (i > 0) out.w(","); expr(key) }
+    out.w("],[")
+    me.vals.each |Expr val, Int i| { if (i > 0) out.w(","); expr(val) }
+    out.w("]")
+    if (me.explicitType != null)
+    {
+      out.w(",\"").w(me.explicitType.k).w("\"")
+      out.w(",\"").w(me.explicitType.v).w("\"")
+    }
+    out.w(")")
   }
 
   Void assignExpr(BinaryExpr be)
