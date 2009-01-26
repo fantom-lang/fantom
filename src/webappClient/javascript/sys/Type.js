@@ -74,10 +74,19 @@ sys_Type.toFanType = function(obj)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Primitive Types
+// Built-in Types
 //////////////////////////////////////////////////////////////////////////
 
 sys_Type.addType("sys::Bool");
+sys_Type.addType("sys::Err");
 sys_Type.addType("sys::Float");
 sys_Type.addType("sys::Int");
+sys_Type.addType("sys::List");
+sys_Type.addType("sys::Map");
+sys_Type.addType("sys::Num");
+sys_Type.addType("sys::Obj");
+sys_Type.addType("sys::Range");
 sys_Type.addType("sys::Str");
+sys_Type.addType("sys::StrBuf");
+sys_Type.addType("sys::Test");
+sys_Type.addType("sys::Type");
