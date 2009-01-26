@@ -32,6 +32,11 @@ class HttpReq
   Str method := "POST"
 
   **
+  ** The request headers to send.
+  **
+  Str:Str headers := Str:Str[:]
+
+  **
   ** If true then perform this request asynchronously.
   ** Defaults to 'true'
   **
@@ -43,5 +48,12 @@ class HttpReq
   ** the resulting HttpRes.
   **
   Void send(Str content, |HttpRes res| c) {}
+
+  **
+  ** Send the request with the specified name/value pairs
+  ** as an HTML form submission, and call the given closure
+  ** with the resulting HttpRes response.
+  **
+  Void sendForm(Str:Str form, |HttpRes res| c) {}
 
 }
