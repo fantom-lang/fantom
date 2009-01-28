@@ -26,7 +26,6 @@ class CheckErrorsTest : CompilerTest
       const final enum D { none }
       public public class E {}
       abstract internal abstract class F {}
-      const mixin G {}
       ",
        [
          1,  10, "The 'abstract' modifier is implied on mixin",
@@ -36,7 +35,6 @@ class CheckErrorsTest : CompilerTest
          4,  13, "The 'final' modifier is implied on enum",
          5,   8, "Repeated modifier",
          6,  19, "Repeated modifier",
-         7,   7, "Cannot use 'const' modifier on mixin",
        ])
 
     // check errors stage
@@ -108,6 +106,34 @@ class CheckErrorsTest : CompilerTest
        [
          1, 11, "Cannot override Obj.type()",
          2, 11, "Cannot override Obj.type()",
+       ])
+  }
+
+  Void testConstInheritance()
+  {
+    // check errors stage
+    verifyErrors(
+     "const class Q {}
+      const mixin X {}
+      const mixin Y {}
+      mixin Z {}
+
+      class A : Q {}
+      class B : X {}
+      class C : Q, X, Y {}
+      class D : Z, X {}
+      mixin E : X {}
+      mixin F : Z, Y {}
+      ",
+       [
+         6, 1, "Non-const type 'A' cannot subclass const class 'Q'",
+         7, 1, "Non-const type 'B' cannot implement const mixin 'X'",
+         8, 1, "Non-const type 'C' cannot subclass const class 'Q'",
+         8, 1, "Non-const type 'C' cannot implement const mixin 'X'",
+         8, 1, "Non-const type 'C' cannot implement const mixin 'Y'",
+         9, 1, "Non-const type 'D' cannot implement const mixin 'X'",
+        10, 1, "Non-const type 'E' cannot implement const mixin 'X'",
+        11, 1, "Non-const type 'F' cannot implement const mixin 'Y'",
        ])
   }
 
@@ -389,8 +415,8 @@ class CheckErrorsTest : CompilerTest
          6, 3, "Public field 'Bar.g' cannot use internal type '$podName::Foo[]'",
          7, 3, "Public field 'Bar.h' cannot use internal type '|$podName::Foo->sys::Void|'",
          8, 3, "Public field 'Bar.i' cannot use internal type '|sys::Str->$podName::Foo|'",
-         1, 1, "Public class 'Bar' cannot extend from internal class 'Foo'",
-         1, 1, "Public class 'Bar' cannot implement internal mixin 'Goo'",
+         1, 1, "Public type 'Bar' cannot extend from internal class 'Foo'",
+         1, 1, "Public type 'Bar' cannot implement internal mixin 'Goo'",
        ])
   }
 
@@ -661,12 +687,12 @@ class CheckErrorsTest : CompilerTest
         26,  3, "Const field 'n' has non-const type '[sys::Buf:sys::Int]'",
         */
 
-         1,  7, "Const class 'Foo' cannot subclass non-const class '$podName::Bar'",
-        22,  3, "Const class 'Foo' cannot contain non-const field 'j'",
-        30,  3, "Const class 'Foo' cannot contain once method 'p'",
+         1,  7, "Const type 'Foo' cannot subclass non-const class 'Bar'", // further tests in testConstInheritance
+        22,  3, "Const type 'Foo' cannot contain non-const field 'j'",
+        30,  3, "Const type 'Foo' cannot contain once method 'p'",
 
-        34,  1, "Non-const class 'Roo' cannot subclass const class '$podName::Foo'",
-        35, 19, "Const class 'Boo' cannot contain non-const field 'x'",
+        34,  1, "Non-const type 'Roo' cannot subclass const class 'Foo'",
+        35, 19, "Const type 'Boo' cannot contain non-const field 'x'",
 
         39, 16, "Cannot set const field '$podName::Foo.f'",
         40, 12, "Cannot set const field '$podName::Foo.b'",
