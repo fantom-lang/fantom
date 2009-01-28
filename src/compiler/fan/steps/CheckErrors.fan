@@ -1186,7 +1186,7 @@ class CheckErrors : CompilerStep
     // verify types are convertible
     check := expr.check
     target := expr.target.ctype
-    if (!check.fits(target) && !target.fits(check))
+    if (!check.fits(target) && !target.fits(check) && !check.isMixin)
       err("Inconvertible types '$target' and '$check'", expr.location)
 
     // don't allow is, as, isnot (everything but coerce) to be
