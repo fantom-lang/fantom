@@ -81,6 +81,6 @@ class Build : BuildPod
     }
   }
 
-  Str[] ordered := ["Sys.js", "Obj.js", "Type.js", "Num.js"]
+  Str[] ordered := ["Sys.js", "Obj.js", "Type.js", "Num.js", "List.js", "Map.js"]
 
 }

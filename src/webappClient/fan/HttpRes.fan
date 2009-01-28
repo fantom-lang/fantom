@@ -19,6 +19,11 @@ class HttpRes
   Int status
 
   **
+  ** The response headers.
+  **
+  Str:Str headers := Str:Str[:]
+
+  **
   ** The content of the response.
   **
   Str content
