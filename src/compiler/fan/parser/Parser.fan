@@ -131,7 +131,6 @@ public class Parser : CompilerSupport
     if (curt === Token.mixinKeyword)
     {
       if (flags & FConst.Abstract != 0) err("The 'abstract' modifier is implied on mixin", loc)
-      if (flags & FConst.Const != 0) err("Cannot use 'const' modifier on mixin", loc)
       if (flags & FConst.Final != 0) err("Cannot use 'final' modifier on mixin", loc)
       flags |= FConst.Mixin | FConst.Abstract
       isMixin = true

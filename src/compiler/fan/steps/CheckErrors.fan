@@ -69,17 +69,9 @@ class CheckErrors : CompilerStep
     if (t.slotDef("type") != null && !compiler.isSys)
       err("Cannot override Obj.type()", t.slotDef("type").location)
 
-    // check that a public class doesn't subclass from internal classes
-    if (t.isPublic)
-    {
-      if (t.base != null && !t.base.isPublic)
-        err("Public class '$t.name' cannot extend from internal class '$t.base.name'", t.location)
-      t.mixins.each |CType m|
-      {
-        if (!m.isPublic)
-          err("Public class '$t.name' cannot implement internal mixin '$m.name'", t.location)
-      }
-    }
+    // check inheritance
+    if (t.base != null) checkBase(t, t.base)
+    t.mixins.each |CType m| { checkMixin(t, m) }
   }
 
   private Void checkTypeFlags(TypeDef t)
@@ -137,18 +129,12 @@ class CheckErrors : CompilerStep
 
   private Void checkConstType(TypeDef t)
   {
-    // if not const, nothing to check
-    if (!t.isConst)
-    {
-      // non-const cannot inherit from const class
-      if (t.base != null && t.base.isConst)
-        err("Non-const class '$t.name' cannot subclass const class '$t.base'", t.location)
-      return
-    }
+    // if not const then nothing to check
+    if (!t.isConst) return
 
     // const class cannot inherit from non-const class
     if (t.base != null && t.base != ns.objType && !t.base.isConst)
-      err("Const class '$t.name' cannot subclass non-const class '$t.base'", t.location)
+      err("Const type '$t.name' cannot subclass non-const class '$t.base.name'", t.location)
 
     // check that each field is const or has no storage; don't
     // worry about statics because they are forced to be const
@@ -156,15 +142,37 @@ class CheckErrors : CompilerStep
     t.fieldDefs.each |FieldDef f|
     {
       if (!f.isConst && !f.isStatic && f.isStorage && !isSys)
-        err("Const class '$t.name' cannot contain non-const field '$f.name'", f.location)
+        err("Const type '$t.name' cannot contain non-const field '$f.name'", f.location)
     }
 
     // check that no once methods
     t.methodDefs.each |MethodDef m|
     {
       if (m.isOnce)
-        err("Const class '$t.name' cannot contain once method '$m.name'", m.location)
+        err("Const type '$t.name' cannot contain once method '$m.name'", m.location)
     }
+  }
+
+  private Void checkBase(TypeDef t, CType base)
+  {
+    // check that a public class doesn't subclass from internal classes
+    if (t.isPublic && !base.isPublic)
+      err("Public type '$t.name' cannot extend from internal class '$base.name'", t.location)
+
+    // if base is const, then t must be const
+    if (!t.isConst && base.isConst)
+      err("Non-const type '$t.name' cannot subclass const class '$base.name'", t.location)
+  }
+
+  private Void checkMixin(TypeDef t, CType m)
+  {
+    // check that a public class doesn't implement from internal mixin
+    if (t.isPublic && !m.isPublic)
+      err("Public type '$t.name' cannot implement internal mixin '$m.name'", t.location)
+
+    // if mixin is const, then t must be const
+    if (!t.isConst && m.isConst)
+      err("Non-const type '$t.name' cannot implement const mixin '$m.name'", t.location)
   }
 
 //////////////////////////////////////////////////////////////////////////

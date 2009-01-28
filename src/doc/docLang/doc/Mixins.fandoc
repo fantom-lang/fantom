@@ -38,6 +38,11 @@ mixins might look if translated to Java.
 Mixin Modifiers [#modifiers]
 ****************************
 Mixins can be annotated with the 'public' or 'internal' modifiers
-just like [classes]`Classes#protection`.  It is a compile time
-error to use the 'abstract', 'final', or 'const' modifiers with
-a mixin.
+just like [classes]`Classes#protection`.
+
+A mixin can be declared with the 'const' modifier which requires
+that any class using it must also be 'const'.
+
+It is a compile time error to use the 'abstract' or 'final' modifier
+with a mixin.
+
