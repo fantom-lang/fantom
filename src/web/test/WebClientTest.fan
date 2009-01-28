@@ -83,7 +83,9 @@ class WebClientTest : Test
     Thread.sleep(100ms)
     verify(!c.isConnected)
 
-    verify(c.getBuf.readAllStr.contains("<html"))
+    buf := c.getBuf
+    cs := MimeType(c.resHeaders["Content-Type"]).charset
+    verify(buf { charset = cs }.readAllStr.contains("<html"))
     verify(!c.isConnected)
 
     try
