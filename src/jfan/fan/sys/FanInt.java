@@ -416,6 +416,14 @@ public final class FanInt
     return String.valueOf(self);
   }
 
+  public static String toCode(long self) { return String.valueOf(self); }
+  public static String toCode(long self, long base)
+  {
+    if (base == 10) return String.valueOf(self);
+    if (base == 16) return "0x" + Long.toHexString(self);
+    throw ArgErr.make("Invalid base " + base).val;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Closures
 //////////////////////////////////////////////////////////////////////////

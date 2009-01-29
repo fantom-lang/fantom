@@ -301,4 +301,9 @@ const final class Float : Num
   **
   override Str toStr()
 
+  **
+  ** Get this Float as a Fan code literal.
+  **
+  Str toCode()
+
 }

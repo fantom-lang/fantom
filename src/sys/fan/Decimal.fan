@@ -127,4 +127,9 @@ const final class Decimal : Num
   **
   override Str toStr()
 
+  **
+  ** Get this Decimal as a Fan code literal.
+  **
+  Str toCode()
+
 }

@@ -199,6 +199,14 @@ namespace Fan.Sys
       else @out.w(toStr(self)).w("f");
     }
 
+    public static string toCode(double self)
+    {
+      if (System.Double.IsNaN(self)) return "Float.nan";
+      if (self == System.Double.PositiveInfinity) return "Float.posInf";
+      if (self == System.Double.NegativeInfinity) return "Float.negInf";
+      return toStr(self) + "f";
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////

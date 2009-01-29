@@ -574,4 +574,17 @@ class IntTest : Test
     verifyEq(x->toHex(2), "0a")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// To Code
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToCode()
+  {
+    verifyEq(0.toCode, "0")
+    verifyEq(493446.toCode, "493446")
+    verifyEq((-3345).toCode(10), "-3345")
+    verifyEq(0xabcd.toCode(16), "0xabcd")
+    verifyErr(ArgErr#) |,| { 3999.toCode(8) }
+  }
+
 }

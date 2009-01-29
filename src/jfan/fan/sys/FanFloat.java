@@ -305,6 +305,14 @@ public final class FanFloat
     else out.w(Double.toString(self)).w("f");
   }
 
+  public static String toCode(double self)
+  {
+    if (Double.isNaN(self)) return "Float.nan";
+    if (self == Double.POSITIVE_INFINITY) return "Float.posInf";
+    if (self == Double.NEGATIVE_INFINITY) return "Float.negInf";
+    return Double.toString(self) + "f";
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

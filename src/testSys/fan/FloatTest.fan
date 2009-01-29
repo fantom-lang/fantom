@@ -471,4 +471,17 @@ class FloatTest : Test
     verifyEq(Float#negate.callOn(5f, null), -5f)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// To Code
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToCode()
+  {
+    verifyEq(0f.toCode, "0.0f")
+    verifyEq((-98f).toCode, "-98.0f")
+    verifyEq(Float.nan.toCode, "Float.nan")
+    verifyEq(Float.posInf.toCode, "Float.posInf")
+    verifyEq(Float.negInf.toCode, "Float.negInf")
+  }
+
 }
