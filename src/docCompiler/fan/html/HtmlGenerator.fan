@@ -193,17 +193,18 @@ abstract class HtmlGenerator : HtmlDocWriter
 
   static Bool showType(Type t)
   {
-    v := t.isPublic
-    v &= !t.isSynthetic
-    v &= t == Test# || !t.fits(Test#)
-    return v
+    if (t.isInternal) return false
+    if (t.isSynthetic) return false
+    if (t.fits(Test#) && t != Test#) return false
+    if (t.facet("nodoc") == true) return false
+    return true
   }
 
   static Bool showSlot(Type t, Slot s)
   {
-// TODO - inherited slots
-//    return !s.isSynthetic
-    return !s.isSynthetic && t == s.parent
+    if (s.isSynthetic) return false
+    if (s.facet("nodoc") == true) return false
+    return t == s.parent
   }
 
   static Bool showByDefault(Type t, Slot s)
