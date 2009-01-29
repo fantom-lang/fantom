@@ -517,6 +517,7 @@
 - Test: verifyNull, verifyNotNull
 - Type: make support for defVal
 - MimeType: charset
+- Add toCode: Bool, Int, Float, Decimal, Uri, DateTime, Date, Time
 - New compilerJavascript and webappClient APIs
 - New obix API
 - Rework webapp APIs
