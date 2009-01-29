@@ -914,6 +914,21 @@ public final class List
     return s.toString();
   }
 
+  public final String toCode()
+  {
+    StringBuilder s = new StringBuilder(32+size*32);
+    s.append(of.signature());
+    s.append('[');
+    if (size == 0) s.append(',');
+    for (int i=0; i<size; ++i)
+    {
+      if (i > 0) s.append(',').append(' ');
+      s.append(FanObj.trap(values[i], "toCode", null));
+    }
+    s.append(']');
+    return s.toString();
+  }
+
   public final void encode(ObjEncoder out)
   {
     // route back to obj encoder

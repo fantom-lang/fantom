@@ -406,6 +406,29 @@ namespace Fan.Sys
       return s.ToString();
     }
 
+    public string toCode()
+    {
+      int size = (int)this.size();
+      StringBuilder s = new StringBuilder(32+size*32);
+      s.Append(type().signature());
+      s.Append('[');
+      if (size == 0) s.Append(':');
+      bool first = true;
+      IDictionaryEnumerator en = m_map.GetEnumerator();
+      while (en.MoveNext())
+      {
+        object key = en.Key;
+        object val = en.Value;
+        if (first) first = false;
+        else s.Append(',').Append(' ');
+        s.Append(FanObj.trap(key, "toCode", null))
+         .Append(':')
+         .Append(FanObj.trap(val, "toCode", null));
+      }
+      s.Append(']');
+      return s.ToString();
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Readonly
   //////////////////////////////////////////////////////////////////////////

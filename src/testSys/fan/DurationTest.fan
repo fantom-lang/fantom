@@ -265,4 +265,19 @@ class DurationTest : Test
     verifyEq(Duration.fromIso(s), d)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// ToCode
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToCode()
+  {
+    verifyEq(0ns.toCode, "0ns")
+    verifyEq(3ns.toCode, "3ns")
+    verifyEq((-9ms).toCode, "-9ms")
+    verifyEq(40sec.toCode, "40sec")
+    verifyEq(1.5hr.toCode, "90min")
+    verifyEq(5hr.toCode, "5hr")
+    verifyEq(2day.toCode, "2day")
+  }
+
 }

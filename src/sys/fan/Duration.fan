@@ -185,6 +185,11 @@ const final class Duration
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Get this Duration as a Fan code literal.
+  **
+  Str toCode()
+
+  **
   ** Format this duration according to ISO 8601.  Also see `fromIso`.
   **
   ** Examples:

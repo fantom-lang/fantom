@@ -583,6 +583,12 @@ final class List
   **
   Str join(Str separator := "", |V item, Int index->Str|? c := null)
 
+  **
+  ** Get this list as a Fan expression suitable for code generation.
+  ** The individual items must all respond to the 'toCode' method.
+  **
+  Str toCode()
+
 //////////////////////////////////////////////////////////////////////////
 // Readonly
 //////////////////////////////////////////////////////////////////////////

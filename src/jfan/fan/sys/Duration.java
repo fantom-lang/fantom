@@ -190,16 +190,6 @@ public final class Duration
 
   public String toStr()
   {
-    return str();
-  }
-
-  public void encode(ObjEncoder out)
-  {
-    out.w(str());
-  }
-
-  public String str()
-  {
     if (ticks == 0) return "0ns";
 
     // if clean millisecond boundary
@@ -215,6 +205,16 @@ public final class Duration
 
     // return in nanoseconds
     return ns + "ns";
+  }
+
+  public void encode(ObjEncoder out)
+  {
+    out.w(toStr());
+  }
+
+  public String toCode()
+  {
+    return toStr();
   }
 
   public final long toMillis()

@@ -201,16 +201,6 @@ namespace Fan.Sys
 
     public override string toStr()
     {
-      return str();
-    }
-
-    public void encode(ObjEncoder @out)
-    {
-      @out.w(str());
-    }
-
-    public string str()
-    {
       if (m_ticks == 0) return "0ns";
 
       // if clean millisecond boundary
@@ -226,6 +216,16 @@ namespace Fan.Sys
 
       // return in nanoseconds
       return ns + "ns";
+    }
+
+    public string toCode()
+    {
+      return toStr();
+    }
+
+    public void encode(ObjEncoder @out)
+    {
+      @out.w(toStr());
     }
 
     public long toMillis()
