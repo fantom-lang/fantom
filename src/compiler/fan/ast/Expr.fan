@@ -129,7 +129,7 @@ abstract class Expr : Node
   **
   virtual Str serialize()
   {
-    throw CompilerErr.make("'$id' not serializable", location)
+    throw CompilerErr("'$id' not serializable", location)
   }
 
   **
@@ -982,7 +982,7 @@ class FieldExpr : NameExpr
           enumDef := fieldDef.parentDef.enumDef(field.name)
           if (enumDef != null) return enumDef.ordinal
         default:
-          throw CompilerErr.make("Invalid field for tableswitch: " + field.type, location)
+          throw CompilerErr("Invalid field for tableswitch: " + field.type, location)
       }
     }
     return null

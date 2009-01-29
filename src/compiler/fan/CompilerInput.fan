@@ -186,7 +186,7 @@ class CompilerInput
   {
     val := type.field(field).get(this)
     if (val == null)
-      throw CompilerErr.make("CompilerInput.${field} not set", null)
+      throw ArgErr("CompilerInput.${field} not set", null)
   }
 }
 
