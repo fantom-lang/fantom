@@ -132,7 +132,7 @@ class CallResolver : CompilerSupport
 
     // if base is the error type, then we already logged an error
     // trying to resolve the target and it's pointless to continue
-    if (base === ns.error) throw CompilerErr.make("ignore", location, null)
+    if (base === ns.error) throw CompilerErr("ignore", location, null)
 
     // sanity check
     if (base == null) throw err("Internal error", location)

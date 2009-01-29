@@ -307,7 +307,7 @@ class CodeAsm : CompilerSupport
           expr := c.cases[i]
           // TODO: need to handle static const Int fields here
           literal := expr.asTableSwitchCase
-          if (literal == null) throw CompilerErr.make("return null", c.location)
+          if (literal == null) throw CompilerErr("return null", c.location)
           if (literal < min) min = literal
           if (literal > max) max = literal
         }
