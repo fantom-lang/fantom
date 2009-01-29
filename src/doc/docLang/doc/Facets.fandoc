@@ -114,5 +114,11 @@ this facet must follow these rules where 'Item' is the item type:
 
 See the [Serialization Doc]`docLang::Serialization` for details.
 
+nodoc (Bool, on Types or Slots) [#nodoc]
+========================================
+This facet is used on public types and slots to indicate they should
+not be documented with automated tools such as [Fandoc]`docLib::Fandoc`.
+As a developer you should avoid using these types and slots since they
+are explicitly marked as not part of the public API.
 
 
