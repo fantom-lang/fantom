@@ -199,4 +199,15 @@ class DecimalTest : Test
     verifyErr(ParseErr#) |,| { Decimal.fromStr("%\$##", true) }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// To Code
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToCode()
+  {
+    verifyEq(0d.toCode, "0d")
+    verifyEq((-88.45d).toCode, "-88.45d")
+  }
+
+
 }

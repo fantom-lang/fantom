@@ -255,4 +255,14 @@ class BoolTest : Test
     verifyErr(ParseErr#) |,| { Bool.fromStr("") }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// To Code
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToCode()
+  {
+    verifyEq(true.toCode, "true")
+    verifyEq(false.toCode, "false")
+  }
+
 }

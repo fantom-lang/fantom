@@ -368,6 +368,14 @@ namespace Fan.Sys
       return self.ToString();
     }
 
+    public static string toCode(long self) { return self.ToString(); }
+    public static string toCode(long self, long b)
+    {
+      if (b == 10) return self.ToString();
+      if (b == 16) return "0x" + toHex(self);
+      throw ArgErr.make("Invalid base " + b).val;
+    }
+
     public static void encode(long self, ObjEncoder @out)
     {
       @out.w(self.ToString());
