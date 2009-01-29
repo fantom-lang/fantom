@@ -424,6 +424,24 @@ class MapTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// To Code
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToCode()
+  {
+    verifyEq([:].toCode, "[sys::Obj:sys::Obj?][:]")
+
+    verifyEq(Str:Str[:].toCode, "[sys::Str:sys::Str][:]")
+
+    s := [3:"three", 4:"four"].toCode
+    verify(s == "[sys::Int:sys::Str][3:\"three\", 4:\"four\"]" ||
+           s == "[sys::Int:sys::Str][4:\"four\", 3:\"three\"]")
+
+    verifyEq(Int:Num[][1:[2,3f]].toCode,
+             "[sys::Int:sys::Num[]][1:sys::Num[2, 3.0f]]")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Case Insensitive
 //////////////////////////////////////////////////////////////////////////
 

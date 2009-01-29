@@ -844,6 +844,21 @@ namespace Fan.Sys
       return s.ToString();
     }
 
+    public string toCode()
+    {
+      StringBuilder s = new StringBuilder(32+m_size*32);
+      s.Append(m_of.signature());
+      s.Append('[');
+      if (m_size == 0) s.Append(',');
+      for (int i=0; i<m_size; ++i)
+      {
+        if (i > 0) s.Append(',').Append(' ');
+        s.Append(FanObj.trap(m_values[i], "toCode", null));
+      }
+      s.Append(']');
+      return s.ToString();
+    }
+
     public void encode(ObjEncoder @out)
     {
       // route back to obj encoder

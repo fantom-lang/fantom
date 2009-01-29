@@ -395,6 +395,30 @@ public final class Map
     return s.toString();
   }
 
+  public final String toCode()
+  {
+    int size = (int)size();
+    StringBuilder s = new StringBuilder(32+size*32);
+    s.append(type.signature());
+    s.append('[');
+    if (size == 0) s.append(':');
+    Iterator it = pairsIterator();
+    boolean first = true;
+    while (it.hasNext())
+    {
+      Entry e = (Entry)it.next();
+      Object key = e.getKey();
+      Object val = e.getValue();
+      if (first) first = false;
+      else s.append(',').append(' ');
+      s.append(FanObj.trap(key, "toCode", null))
+       .append(':')
+       .append(FanObj.trap(val, "toCode", null));
+    }
+    s.append(']');
+    return s.toString();
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Readonly
 //////////////////////////////////////////////////////////////////////////
