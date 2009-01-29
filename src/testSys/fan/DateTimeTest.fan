@@ -1004,4 +1004,23 @@ class DateTimeTest : Test
     verifyEq(Time#.make, Time(0, 0, 0))
   }
 
+//////////////////////////////////////////////////////////////////////////
+// To Code
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToCode()
+  {
+    // DateTime
+    verifyEq(DateTime.defVal.toCode, "DateTime.defVal")
+    verifyEq(DateTime(2009, Month.jan, 29, 13, 30, 0, 0, TimeZone.utc).toCode, "DateTime(\"2009-01-29T13:30:00Z UTC\")")
+
+    // Date
+    verifyEq(Date.defVal.toCode, "Date.defVal")
+    verifyEq(Date(2009, Month.jun, 7).toCode, "Date(\"2009-06-07\")")
+
+    // Time
+    verifyEq(Time.defVal.toCode, "Time.defVal")
+    verifyEq(Time(8, 30, 8).toCode, "Time(\"08:30:08\")")
+  }
+
 }
