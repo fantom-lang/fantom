@@ -353,6 +353,35 @@ class MapTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// SetList / AddList
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSetAddList()
+  {
+    verifyEq([2:20, 3:30].setList([3, 4, 5]),
+             [2:20, 3:3, 4:4, 5:5])
+
+    verifyEq([2:20, 3:30].setList([3, 4, 5]) |Int v->Int| { return v*10 },
+             [2:20, 3:30, 30:3, 40:4, 50:5])
+
+    verifyEq([2:20, 3:30, 6:60].setList([3, 4, 5]) |Int v, Int i->Int| { return i },
+             [0:3, 1:4, 2:5, 3:30, 6:60])
+
+    verifyEq([2:20, 3:30].addList([4, 5]),
+             [2:20, 3:30, 4:4, 5:5])
+
+    verifyEq([2:2ns, 3:3ns].addList([4ns, 5ns]) |Duration v->Int| { return v.ticks },
+             [2:2ns, 3:3ns, 4:4ns, 5:5ns])
+
+    verifyEq([2:2ns, 3:3ns].addList([4ns, 5ns]) |Duration v, Int i->Int| { return i },
+             [2:2ns, 3:3ns, 0:4ns, 1:5ns])
+
+    verifyErr(ArgErr#) |,| { [2:20].addList([2]) }
+    verifyErr(ArgErr#) |,| { [2:20].addList([33]) |Int v->Int| { return 2 } }
+    verifyErr(ArgErr#) |,| { [2:20].addList([33]) |Int v, Int i->Int| { return 2 } }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Clear
 //////////////////////////////////////////////////////////////////////////
 
@@ -968,6 +997,8 @@ class MapTest : Test
     verifyErr(ReadonlyErr#) |,| { r.add(2, "?") }
     verifyErr(ReadonlyErr#) |,| { r.setAll([1:"yikes!"]) }
     verifyErr(ReadonlyErr#) |,| { r.addAll([1:"yikes!"]) }
+    verifyErr(ReadonlyErr#) |,| { r.setList(["foo"]) |Str v->Int| { return 99 } }
+    verifyErr(ReadonlyErr#) |,| { r.addList(["foo"]) |Str v->Int| { return 99 } }
     verifyErr(ReadonlyErr#) |,| { r.remove(0) }
     verifyErr(ReadonlyErr#) |,| { r.remove(5) }
     verifyErr(ReadonlyErr#) |,| { r.clear }

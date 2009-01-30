@@ -153,6 +153,50 @@ namespace Fan.Sys
       return this;
     }
 
+    public Map setList(List list) { return setList(list, null); }
+    public Map setList(List list, Func f)
+    {
+      modify();
+      if (f == null)
+      {
+        for (int i=0; i<list.sz(); ++i)
+          set(list.get(i), list.get(i));
+      }
+      else if (f.@params().sz() == 1)
+      {
+        for (int i=0; i<list.sz(); ++i)
+          set(f.call1(list.get(i)), list.get(i));
+      }
+      else
+      {
+        for (int i=0; i<list.sz(); ++i)
+          set(f.call2(list.get(i), i), list.get(i));
+      }
+      return this;
+    }
+
+    public Map addList(List list) { return addList(list, null); }
+    public Map addList(List list, Func f)
+    {
+      modify();
+      if (f == null)
+      {
+        for (int i=0; i<list.sz(); ++i)
+          add(list.get(i), list.get(i));
+      }
+      else if (f.@params().sz() == 1)
+      {
+        for (int i=0; i<list.sz(); ++i)
+          add(f.call1(list.get(i)), list.get(i));
+      }
+      else
+      {
+        for (int i=0; i<list.sz(); ++i)
+          add(f.call2(list.get(i), i), list.get(i));
+      }
+      return this;
+    }
+
     public object remove(object key)
     {
       modify();
