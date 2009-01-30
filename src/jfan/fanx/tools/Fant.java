@@ -83,10 +83,11 @@ public class Fant
     Type[] tests = tests(pod, testName);
     for (int i=0; i<tests.length; ++i)
     {
-      Method[] methods = methods(tests[i], methodName);
+      Type testType = tests[i];
+      Method[] methods = methods(testType, methodName);
       for (int j=0; j<methods.length; ++j)
       {
-        String name = methods[j].toStr();
+        String name = testType.qname() + "." + methods[j].name();
         System.out.println("-- Run:  " + name + "...");
         System.out.flush();
         int verifyCount = runTest(tests[i], methods[j]);
