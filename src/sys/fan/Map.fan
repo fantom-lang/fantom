@@ -103,7 +103,7 @@ final class Map
   ** Append the specified map to this map by setting every key/value in
   ** m in this map.  Keys in m not yet mapped are added and keys already
   ** mapped are overwritten.  Return this.  Throw ReadonlyErr if readonly.
-  ** This method is semanatically equivalent to:
+  ** Also see `addAll`.  This method is semanatically equivalent to:
   **   m.each |K k, V v| { this.set(k, v) }
   **
   M setAll(M m)
@@ -113,10 +113,39 @@ final class Map
   ** m in this map.  If any key in m is already mapped then this method
   ** will fail (any previous keys will remain mapped potentially leaving
   ** this map in an inconsistent state).  Return this.  Throw ReadonlyErr if
-  ** readonly.  This method is semanatically equivalent to:
+  ** readonly.  Also see `setAll`. This method is semanatically equivalent to:
   **   m.each |K k, V v| { this.add(k, v) }
   **
   M addAll(M m)
+
+  **
+  ** Add the specified list to this map where the values are the list items
+  ** and the keys are derived by calling the specified function on each item.
+  ** If the function is null, then the items themselves are used as the keys.
+  ** If any key already mapped then it is overwritten.  Return this.  Throw
+  ** ReadonlyErr if readonly.  Also see `addList`.
+  **
+  ** Examples:
+  **   m := [0:"0", 2:"old"]
+  **   m.setList(["1","2"]) |Str s->Int| { return s.toInt }
+  **   m  =>  [0:0, 1:1, 2:2]
+  **
+  M setList(V[] list, |V item, Int index->K|? c := null)
+
+  **
+  ** Add the specified list to this map where the values are the list items
+  ** and the keys are derived by calling the specified function on each item.
+  ** If the function is null, then the items themselves are used as the keys.
+  ** If any key already mapped then this method will fail (any previous keys
+  ** will remain mapped potentially leaving this map in an inconsistent state).
+  ** Return this.  Throw ReadonlyErr if readonly.  Also see `setList`.
+  **
+  ** Examples:
+  **   m := [0:"0"]
+  **   m.addList(["1","2"]) |Str s->Int| { return s.toInt }
+  **   m  =>  [0:0, 1:1, 2:2]
+  **
+  M addList(V[] list, |V item, Int index->K|? c := null)
 
   **
   ** Remove the key/value pair identified by the specified key

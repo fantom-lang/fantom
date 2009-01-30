@@ -513,7 +513,7 @@
 - Str: in, toBuf, toDisplayName, fromDisplayName
 - Buf: dup, fill, hmac
 - Duration, DateTime, Date, Time: toIso, fromIso
-- Map: ordered, join
+- Map: ordered, join, setList, addList
 - Test: verifyNull, verifyNotNull
 - Type: make support for defVal
 - MimeType: charset
