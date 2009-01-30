@@ -247,6 +247,8 @@ class ClosureTest : Test
     verify(s.endsWith(" 0 1 2"))
     Thread.sleep(10ms)
     verifyEq(onceIt, s)
+
+    verifyEq(onceAgain, "(A,B)(a,b)")
   }
 
   once Str onceIt()
@@ -256,16 +258,37 @@ class ClosureTest : Test
     return s.toStr
   }
 
-  // TODO:
-  //   this should map to outer this:
-  //     echo(this)
-  //     echo(type)
-  //     echo(toStr)
-  //     echo(this#)
-  //   calling make on outer class doesn't work unless explictly scoped
-  //
-  //   subclassing from Method means that methods like Slot.facets, Slot.name
-  //   will trump access to the outer class which is very confusing!
+  once Str onceAgain()
+  {
+    Str r := ""
+    a := "A"
+    b := "B"
+    f := |,| { r = r + "(" + a + "," + b + ")" }
+    f()
+    a = "a"
+    b = "b"
+    f()
+    return r
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// This In Closure
+//////////////////////////////////////////////////////////////////////////
+
+  Void testThis()
+  {
+    str := this.toStr
+    x := ""
+    f := |,|
+    {
+      x = this.toStr
+      verifyEq(toStr, str)
+      verifyEq(this.type, ClosureTest#)
+      verifyEq(type, ClosureTest#)
+    }
+    f()
+    verifyEq(x, str)
+  }
 
 }
 
@@ -282,4 +305,3 @@ class ClosureFieldB
 {
   const |->Str| f := |->Str| { return toStr } // uses this
 }
-

@@ -174,23 +174,29 @@ class Normalize : CompilerStep
     curType.addSlot(f)
      iInit.add(fieldInitStmt(f))
 
-    // replace original method with our delegate:
+    // add name$Once with original code
+    x := MethodDef.make(loc, curType)
+    x.flags        = FConst.Private | FConst.Synthetic
+    x.name         = m.name + "\$Once"
+    x.ret          = ns.objType.toNullable
+    x.inheritedRet = null
+    x.paramDefs    = m.paramDefs
+    x.vars         = m.vars
+    x.needsCvars   = m.needsCvars
+    x.code         = m.code
+    curType.addSlot(x)
+
+    // swizzle any closures using that method to the name$Once version
+    curType.closures.each |ClosureExpr c|
+    {
+      if (c.enclosingSlot === m) c.enclosingSlot = x
+    }
+
+    // replace original method code with our delegate:
     //   if (name$Store == "_once_")
     //     name$Store = name$Once()
     //   return (RetType)name$Store
-    d := MethodDef.make(loc, curType)
-    d.flags = m.flags
-    d.name  = m.name
-    d.ret   = m.ret
-    d.code  = Block.make(loc)
-    curType.replaceSlot(m, d);
-
-    // rename orignal method as name$Once
-    m.flags = FConst.Private | FConst.Synthetic
-    m.name  = m.name + "\$Once"
-    m.ret   = ns.objType.toNullable
-    m.inheritedRet = null
-    curType.addSlot(m)
+    m.code  = Block.make(loc)
 
     // if (name$Store == "_once_")
     ifStmt := IfStmt.make(loc)
@@ -198,22 +204,22 @@ class Normalize : CompilerStep
       f.makeAccessorExpr(loc, false),
       Token.same,
       LiteralExpr.makeFor(loc, ns, "_once_"))
-    d.code.add(ifStmt)
+    m.code.add(ifStmt)
 
     // name$Store = name$Once()
     ifStmt.trueBlock = Block.make(loc)
     ifStmt.trueBlock.add(BinaryExpr.make(
         f.makeAccessorExpr(loc, false),
         Token.assign,
-        CallExpr.makeWithMethod(loc, ThisExpr.make(loc), m)
+        CallExpr.makeWithMethod(loc, ThisExpr.make(loc), x)
       ).toStmt)
 
     // return (RetType)name$Store
     retStmt := ReturnStmt.make(loc)
     retStmt.expr = TypeCheckExpr.coerce(
       f.makeAccessorExpr(loc, false),
-      d.ret)
-    d.code.add(retStmt)
+      m.ret)
+    m.code.add(retStmt)
   }
 
   private Void callInstanceInit(TypeDef t, MethodDef ii)
