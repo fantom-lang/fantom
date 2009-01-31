@@ -527,3 +527,4 @@
 - Compiler fix when calling super with default params results in stack overflow
 - Compiler fix allow mixins use const keyword
 - Compiler fix for once methods used with subclasses in same pod
+- Compiler fix for construction call against fromStr in super class

@@ -477,7 +477,7 @@ class ResolveExpr : CompilerStep
     if (call.args.size == 1 && call.args.first.ctype.isStr)
     {
       fromStr := base.method("fromStr")
-      if (fromStr != null)
+      if (fromStr != null && fromStr.parent == base)
       {
         call.method = fromStr
         return call

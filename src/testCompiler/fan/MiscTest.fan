@@ -950,4 +950,30 @@ class MiscTest : CompilerTest
     verifyEq(obj->test9, 9)
     verifyEq(obj->test10, null)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// FromStrSubs
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFromStrSubs()
+  {
+    compile(
+       "class Foo
+        {
+          Foo b(Str s) { return Bar(s) }
+          Foo? fromStr(Str s) { return null }
+        }
+
+        class Bar : Foo
+        {
+          new make(Str s) { this.s = s}
+          Str s
+        }
+        ")
+
+    t := pod.types[0]
+    obj := t.make
+    verifyEq(obj->b("boo")->s, "boo")
+  }
+
 }
