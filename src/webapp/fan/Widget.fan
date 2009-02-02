@@ -144,4 +144,16 @@ abstract class Widget : Weblet
     return uri.plusQuery(["webappWidgetCall":m.qname])
   }
 
+  **
+  ** Return a new Uri that removes the 'Widget.call' specifics
+  ** from the given Uri.
+  **
+  Uri minusCall(Uri uri)
+  {
+    path  := uri.pathStr
+    query := uri.query.rw
+    query.remove("webappWidgetCall")
+    return path.toUri.plusQuery(query)
+  }
+
 }
