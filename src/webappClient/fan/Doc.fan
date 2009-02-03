@@ -27,7 +27,7 @@ class Doc
   ** Get the element with this 'id', or 'null' if no
   ** element is found with this 'id'.
   **
-  static Elem? getById(Str id) { return null }
+  static Elem? elemById(Str id) { return null }
 
   **
   ** Create a new element with the given tag name.
