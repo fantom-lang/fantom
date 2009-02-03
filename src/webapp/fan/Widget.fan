@@ -56,7 +56,7 @@ abstract class Widget : Weblet
         m := Slot.findMethod(q)
         if (!m.parent.fits(Widget#))
           throw ArgErr("Type not Widget: $m.parent")
-        m.call1(m.parent.make())
+        m.parent.make()->onCall(m)
       }
       else
       {
@@ -154,6 +154,14 @@ abstract class Widget : Weblet
     query := uri.query.rw
     query.remove("webappWidgetCall")
     return path.toUri.plusQuery(query)
+  }
+
+  **
+  ** Handle invoking a method requested using the 'call' Uri.
+  **
+  virtual Void onCall(Method m)
+  {
+    m.call1(this)
   }
 
 }
