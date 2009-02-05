@@ -106,6 +106,11 @@ var webappClient_Elem = sys_Obj.extend(
     return this;
   },
 
+  focus: function()
+  {
+    this.elem.focus();
+  },
+
   findAll: function(func, acc)
   {
     if (acc == null) acc = new Array();
