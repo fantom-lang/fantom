@@ -157,7 +157,7 @@ abstract class Widget : Weblet
   }
 
   **
-  ** Handle invoking a method requested using the 'call' Uri.
+  ** Handle invoking a method requested using a Uri from 'Widget.call'.
   **
   virtual Void onCall(Method m)
   {
