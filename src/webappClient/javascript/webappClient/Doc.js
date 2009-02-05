@@ -18,7 +18,7 @@ webappClient_Doc.body = function()
   return webappClient_Elem.make(document.body);
 }
 
-webappClient_Doc.elemById = function(id)
+webappClient_Doc.elem = function(id)
 {
   var elem = document.getElementById(id);
   if (elem == null) return null;

@@ -74,7 +74,7 @@ class TestClient
 {
   Void testAttrs()
   {
-    elem := Doc.elemById("testAttrs")
+    elem := Doc.elem("testAttrs")
     verify(elem != null)
 
     verifyEq(elem.id,    "testAttrs")
@@ -106,7 +106,7 @@ class TestClient
 
   Void testBasics()
   {
-    elem := Doc.elemById("testBasics")
+    elem := Doc.elem("testBasics")
     verify(elem != null)
     kids := elem.children
     verifyEq(kids.size, 3)
