@@ -5,8 +5,8 @@ class TestWeblet : Weblet
   override Void onGet()
   {
    s := req.session
-    res.cookies.add(Cookie { name="foo"; val="alpha" })
-    res.cookies.add(Cookie { name="bar"; val="beta" })
+    res.cookies.add(Cookie("foo", "alpha"))
+    res.cookies.add(Cookie("bar", "beta"))
     if (s["testcounter"] == 10) s.delete
 
     res.statusCode = 200
@@ -19,6 +19,8 @@ class TestWeblet : Weblet
     res.out.printLine("stash:     $req.stash")
     res.out.printLine("userAgent: $req.userAgent")
     res.out.printLine("cookies:   $req.cookies")
+    res.out.printLine("  foo:     " + req.cookies["foo"])
+    res.out.printLine("  bar:     " + req.cookies["bar"])
     res.out.printLine("headers:")
     req.headers.each |Str v, Str k| { res.out.printLine("  $k: $v") }
     res.out.printLine("session:   $req.session.id")
