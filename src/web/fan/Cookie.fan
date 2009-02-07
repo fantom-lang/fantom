@@ -40,7 +40,7 @@ class Cookie
     {
       if (!WebUtil.isToken(val) || val[0] == '$')
         throw ArgErr("Cookie name has illegal chars: $val")
-      @val = val
+      @name = val
     }
   }
 
