@@ -70,7 +70,17 @@ class FileWeblet : Weblet
   {
     // set identity headers
     res.headers["ETag"] = etag
+// TODO
+try
     res.headers["Last-Modified"] = modified.toHttpStr
+catch (Err e)
+    echo("##
+          ##
+          ## ERROR: FileWeblet.onGet
+          ##   file.modified: $file.modified
+          ##   modified:      $modified
+          ##   $e
+          ##")
 
     // check if we can return a 304 not modified
     if (checkNotModified) return
