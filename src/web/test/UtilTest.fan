@@ -123,9 +123,9 @@ class UtilTest : Test
 
   Void testCookie()
   {
-    verifyErr(ArgErr#) |,| { c := Cookie { name="\$path"; val="bar" } }
-    verifyErr(ArgErr#) |,| { c := Cookie { name="foo bar"; val="bar" } }
-    verifyErr(ArgErr#) |,| { c := Cookie { name="foo"; val="bar;baz" } }
+    verifyErr(ArgErr#) |,| { c := Cookie("\$path", "bar") }
+    verifyErr(ArgErr#) |,| { c := Cookie("foo bar", "bar") }
+    verifyErr(ArgErr#) |,| { c := Cookie("foo", "bar;baz") }
   }
 
 }

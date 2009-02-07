@@ -522,8 +522,9 @@
 - New obix API
 - Rework webapp APIs
 - Doc compiler support for @nodoc facet
-- Web fix use both max-age and expires for cookies for IE and Safari
-- Web rename Cookie.value to val and enforce as valid HTTP token string
+- Web Cookie constructor requires name and val
+- Web Cookie.value renamed to val and enforced as valid HTTP token string
+- Web Cookie fix use both max-age and expires for cookies for IE and Safari
 - Flux add findInFiles into context popup of dirs
 - Flux fix undo/redo stack to check point on save
 - Compiler fix when local variable shadows field with storage operator
