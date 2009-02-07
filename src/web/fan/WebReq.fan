@@ -97,7 +97,7 @@ abstract class WebReq
         {
           if (s.isEmpty || s[0] == '$') return
           c := Cookie.fromStr(s)
-          cookies[c.name] = c.value
+          cookies[c.name] = c.val
         }
       }
     }

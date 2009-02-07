@@ -64,7 +64,7 @@ class WebSession
   {
     isDeleted = true
     WebRes res := Thread.locals["web.res"]
-    res.cookies.add(Cookie { name="fanws"; value=id; maxAge=0sec })
+    res.cookies.add(Cookie { name="fanws"; val=id; maxAge=0sec })
   }
 
   internal Bool isDeleted := false
@@ -101,7 +101,7 @@ internal const class WebSessionMgr : Thread
     {
       ws = sendSync("_new")
       WebRes res := Thread.locals["web.res"]
-      res.cookies.add(Cookie { name="fanws"; value=ws.id })
+      res.cookies.add(Cookie { name="fanws"; val=ws.id })
     }
 
     Thread.locals["web.session"] = ws

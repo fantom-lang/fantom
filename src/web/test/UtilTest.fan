@@ -12,6 +12,16 @@
 class UtilTest : Test
 {
 
+  Void testIsToken()
+  {
+    verifyEq(WebUtil.isToken(""), false)
+    verifyEq(WebUtil.isToken("x"), true)
+    verifyEq(WebUtil.isToken("x y"), false)
+    verifyEq(WebUtil.isToken("5a-3dd_33*&^%22!~"), true)
+    verifyEq(WebUtil.isToken("(foo)"), false)
+    verifyEq(WebUtil.isToken("foo;bar"), false)
+  }
+
   Void testParseList()
   {
     verifyEq(WebUtil.parseList("a"), ["a"])
@@ -109,6 +119,13 @@ class UtilTest : Test
     in := WebUtil.makeChunkedInStream(buf.flip.in)
     2000.times |Int i| { verifyEq(in.readLine, i.toStr) }
     verifyEq(in.read, null)
+  }
+
+  Void testCookie()
+  {
+    verifyErr(ArgErr#) |,| { c := Cookie { name="\$path"; val="bar" } }
+    verifyErr(ArgErr#) |,| { c := Cookie { name="foo bar"; val="bar" } }
+    verifyErr(ArgErr#) |,| { c := Cookie { name="foo"; val="bar;baz" } }
   }
 
 }
