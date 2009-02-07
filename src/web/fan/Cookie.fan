@@ -25,8 +25,8 @@ class Cookie
     eq := s.index("=")
     if (eq == null) throw ParseErr(s)
     c := make
-    c.name = s[0...eq].trim
-    c.val  = s[eq+1..-1].trim
+    c.@name = s[0...eq].trim
+    c.@val  = s[eq+1..-1].trim
     return c
   }
 
