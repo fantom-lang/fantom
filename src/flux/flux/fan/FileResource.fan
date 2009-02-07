@@ -108,14 +108,24 @@ class FileResource : Resource
     menu := super.popup(frame, event)
     if (file.isDir)
     {
-      menu.add(MenuItem { command=Command.makeLocale(type.pod, "openIn", &openIn(file)) })
+      menu.addCommand(Command.makeLocale(type.pod, "openIn", &openIn(file)))
+      menu.addCommand(Command.makeLocale(type.pod, CommandId.findInFiles, &findInFiles(frame, file)) { accelerator = null })
       menu.addSep
-      menu.add(MenuItem { command=Command.makeLocale(type.pod, "newDir", &newDir(frame,file)) })
+      menu.addCommand(Command.makeLocale(type.pod, "newDir", &newDir(frame,file)))
     }
     else menu.addSep
-    menu.add(MenuItem { command=Command.makeLocale(type.pod, "duplicate", &duplicate(frame,file)) })
-    menu.add(MenuItem { command=Command.makeLocale(type.pod, "rename", &rename(frame,file)) })
+    menu.addCommand(Command.makeLocale(type.pod, "duplicate", &duplicate(frame,file)))
+    menu.addCommand(Command.makeLocale(type.pod, "rename", &rename(frame,file)))
     return menu
+  }
+
+  **
+  ** Invoke the find-in-files command on the specified directory
+  **
+  internal Void findInFiles(Frame? frame, File dir)
+  {
+    FindHistory.load.pushDir(dir.uri)
+    frame?.command(CommandId.findInFiles)?.invoke(null)
   }
 
   **
