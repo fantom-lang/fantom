@@ -139,6 +139,7 @@ internal const class WebSessionMgr : Thread
         id := Buf.random(12).toHex
         if (sessions[id] != null) continue
         ws := WebSession(id)
+        ws.lastAccess = Duration.now
         sessions[id] = ws
         return ws
       }

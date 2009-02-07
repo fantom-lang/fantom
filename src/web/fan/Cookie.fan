@@ -7,8 +7,10 @@
 //
 
 **
-** Cookie models an HTTP cookie used to pass data between
-** the server and brower as defined by RFC 2965 and RFC 2109.
+** Cookie models an HTTP cookie used to pass data between the server
+** and brower as defined by the original Netscape cookie specification
+** and RFC 2109.  Note the newer RFC 2965 is unsupported by most browsers,
+** and even 2109 isn't really supported by some of the major browsers.
 ** See `WebReq.cookies` and `WebRes.cookies`.
 **
 class Cookie
@@ -51,7 +53,9 @@ class Cookie
   ** is floored to seconds (fractional seconds are truncated).
   ** If maxAge is null (the default) then the  cookie persists
   ** until the client is shutdown.  If zero is specified, the
-  ** cookie is discarded immediately.
+  ** cookie is discarded immediately.  Note that many browsers
+  ** still don't recognize max-age, so setting max-age also
+  ** always includes an expires attribute.
   **
   Duration? maxAge
 
@@ -79,12 +83,6 @@ class Cookie
   Bool secure := false
 
   **
-  ** Specified which version of HTTP statement management
-  ** is being used.  Default is "1".
-  **
-  Str version := "1"
-
-  **
   ** Return the cookie formatted as an HTTP header.
   **
   override Str toStr()
@@ -92,11 +90,19 @@ class Cookie
     s := StrBuf(64)
     s.add(name).add("=").add(value)
     if (comment != null) s.add(";Comment=").add(comment)
-    if (maxAge  != null) s.add(";Max-Age=").add(maxAge.toSec)
+    if (maxAge != null)
+    {
+      // we need to use Max-Age *and* Expires since many browsers
+      // such as Safari and IE still don't recognize max-age
+      s.add(";Max-Age=").add(maxAge.toSec)
+      if (maxAge.ticks <= 0)
+        s.add(";Expires=").add("Sat, 01 Jan 2000 00:00:00 GMT")
+      else
+        s.add(";Expires=").add((DateTime.nowUtc+maxAge).toHttpStr)
+    }
     if (domain != null) s.add(";Domain=").add(domain)
     if (path != null) s.add(";Path=").add(path)
     if (secure) s.add(";Secure")
-    s.add(";Version=").add(version)
     return s.toStr
   }
 
