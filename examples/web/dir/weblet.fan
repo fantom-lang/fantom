@@ -5,8 +5,8 @@ class TestWeblet : Weblet
   override Void onGet()
   {
    s := req.session
-    res.cookies.add(Cookie { name="foo"; value="alpha" })
-    res.cookies.add(Cookie { name="bar"; value="beta" })
+    res.cookies.add(Cookie { name="foo"; val="alpha" })
+    res.cookies.add(Cookie { name="bar"; val="beta" })
     if (s["testcounter"] == 10) s.delete
 
     res.statusCode = 200

@@ -25,27 +25,38 @@ class Cookie
     eq := s.index("=")
     if (eq == null) throw ParseErr(s)
     c := make
-    c.name  = s[0...eq].trim
-    c.value = s[eq+1..-1].trim
+    c.name = s[0...eq].trim
+    c.val  = s[eq+1..-1].trim
     return c
   }
 
   **
-  ** Name of the cookie.  Names must be HTTP tokens
-  ** and never start with '$'.
+  ** Name of the cookie.  Throw ArgErr on set if name is not
+  ** a valid HTTP token or starts with "$" - see `WebUtil.isToken`.
   **
   Str name
+  {
+    set
+    {
+      if (!WebUtil.isToken(val) || val[0] == '$')
+        throw ArgErr("Cookie name has illegal chars: $val")
+      @val = val
+    }
+  }
 
   **
-  ** Value string of the cookie.
+  ** Value string of the cookie.  Throw ArgErr on set if
+  ** value is not a valid HTTP token - see `WebUtil.isToken`.
   **
-  Str value
-
-  **
-  ** Provided to allow users to organize their cookies.
-  ** Defaults to null.
-  **
-  Str? comment
+  Str val
+  {
+    set
+    {
+      if (!WebUtil.isToken(val))
+        throw ArgErr("Cookie value has illegal chars: $val")
+      @val = val
+    }
+  }
 
   **
   ** Defines the lifetime of the cookie, after the the max-age
@@ -88,8 +99,7 @@ class Cookie
   override Str toStr()
   {
     s := StrBuf(64)
-    s.add(name).add("=").add(value)
-    if (comment != null) s.add(";Comment=").add(comment)
+    s.add(name).add("=").add(val)
     if (maxAge != null)
     {
       // we need to use Max-Age *and* Expires since many browsers

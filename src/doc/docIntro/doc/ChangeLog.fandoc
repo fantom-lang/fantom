@@ -523,6 +523,7 @@
 - Rework webapp APIs
 - Doc compiler support for @nodoc facet
 - Web fix use both max-age and expires for cookies for IE and Safari
+- Web rename Cookie.value to val and enforce as valid HTTP token string
 - Compiler fix when local variable shadows field with storage operator
 - Compiler fix when using null safe call with no-leave primitive return
 - Compiler fix when calling super with default params results in stack overflow

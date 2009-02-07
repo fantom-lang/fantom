@@ -13,6 +13,38 @@ class WebUtil
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Chars
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return if the specified string is a valid HTTP token production
+  ** which is any ASCII character which is not a control char or a
+  ** separator.  The separators characters are:
+  **   "(" | ")" | "<" | ">" | "@" |
+  **   "," | ";" | ":" | "\" | <"> |
+  **   "/" | "[" | "]" | "?" | "=" |
+  **   "{" | "}" | SP | HT
+  **
+  static Bool isToken(Str s)
+  {
+    if (s.isEmpty) return false
+    return s.all |Int c->Bool| { return c < 127 && tokenChars[c] }
+  }
+
+  private static const Bool[] tokenChars
+  static
+  {
+    m := Bool[,]
+    for (i:=0; i<127; ++i) m.add(i > 0x20)
+    m['(']  = false;  m[')'] = false;  m['<']  = false;  m['>'] = false
+    m['@']  = false;  m[','] = false;  m[';']  = false;  m[':'] = false
+    m['\\'] = false;  m['"'] = false;  m['/']  = false;  m['['] = false
+    m[']']  = false;  m['?'] = false;  m['=']  = false;  m['{'] = false
+    m['}']  = false;  m[' '] = false;  m['\t'] = false;
+    tokenChars = m
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Parsing
 //////////////////////////////////////////////////////////////////////////
 
