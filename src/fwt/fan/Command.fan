@@ -271,7 +271,7 @@ class Command
 **
 ** Manages a stack of commands for undo/redo.
 **
-class CommandStack
+final class CommandStack
 {
   **
   ** Max number of undo commands stored in the stack.
@@ -359,6 +359,27 @@ class CommandStack
     undoStack.push(c)
     fireModified
     return c
+  }
+
+  **
+  ** Return debug string representation.
+  **
+  override Str toStr()
+  {
+    return "CommandStack undo=${listUndo.size} redo=${listRedo.size}"
+  }
+
+  **
+  ** Create a shallow copy of the undo and redo stacks.  The
+  ** copy maintains references to the original command instances.
+  **
+  This dup()
+  {
+    return CommandStack
+    {
+      undoStack = this.undoStack.dup
+      redoStack = this.redoStack.dup
+    }
   }
 
   private Command[] undoStack := Command[,]

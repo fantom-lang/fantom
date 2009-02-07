@@ -103,7 +103,6 @@ internal class ViewTab : EdgePane
     // unload old view
     deactivate
     try { oldView.onUnload  } catch (Err e) { e.trace }
-    storeState
     oldView.tab = null
     oldView.frame = null
     oldView.resource = null
@@ -130,7 +129,7 @@ internal class ViewTab : EdgePane
     this.top = doBuildToolBar(newView)
     this.center = newView
     this.bottom = doBuildStatusBar(newView)
-    loadState
+    loadCommandStack
     parent?.relayout
 
     // resume dirty handling
@@ -218,20 +217,22 @@ internal class ViewTab : EdgePane
   }
 
 //////////////////////////////////////////////////////////////////////////
-// State
+// Command Undo/Redo Stack
 //////////////////////////////////////////////////////////////////////////
 
-  Void storeState()
+  Void storeCommandStack()
   {
     if (resource == null) return
 
     // save undo/redo stack if not empty
     key := "flux.view.commandStack.${resource.uri}"
     if (!view.commandStack.isEmpty)
-      Thread.locals[key] = view.commandStack
+    {
+      Thread.locals[key] = view.commandStack.dup
+    }
   }
 
-  Void loadState()
+  Void loadCommandStack()
   {
     if (resource == null) return
 
@@ -240,8 +241,7 @@ internal class ViewTab : EdgePane
     cs := Thread.locals[key]
     if (cs != null)
     {
-      view.commandStack = cs
-      Thread.locals[key] = null
+      view.commandStack = cs->dup
     }
   }
 
@@ -262,6 +262,7 @@ internal class ViewTab : EdgePane
       e.trace
       Dialog.openErr(frame, "Cannot save view $resource.name", e)
     }
+    storeCommandStack
   }
 
   Bool dirty() { return view.dirty }
