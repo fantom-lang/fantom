@@ -309,7 +309,10 @@ public class Parser : CompilerSupport
     while (curt === Token.comma)
     {
       consume
-      def.enumDefs.add(enumDef(ordinal++))
+      enumDef := enumDef(ordinal++)
+      if (def.enumDefs.any |EnumDef e->Bool| { return e.name == enumDef.name })
+        err("Duplicate enum name '$enumDef.name'", enumDef.location)
+      def.enumDefs.add(enumDef)
     }
     endOfStmt
   }
@@ -618,7 +621,10 @@ public class Parser : CompilerSupport
     {
       while (true)
       {
-        method.params.add(paramDef)
+        newParam := paramDef
+        if (method.params.any |ParamDef p->Bool| { return p.name == newParam.name })
+          err("Duplicate parameter name '$newParam.name'", newParam.location)
+        method.params.add(newParam)
         if (curt === Token.rparen) break
         consume(Token.comma)
       }

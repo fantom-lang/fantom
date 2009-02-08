@@ -130,7 +130,7 @@ const class LogStep : WebAppStep
     "time-taken":   (&formatTimeTaken).method,
   ]
 
-  internal static Str formatDate(WebReq req, WebRes req)
+  internal static Str formatDate(WebReq req, WebRes res)
   {
     return DateTime.nowUtc.toLocale("DD-MM-YYYY")
   }
