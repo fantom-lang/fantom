@@ -6,6 +6,7 @@
 //   16 May 08  Andy Frank  Creation
 //
 
+using System.Text;
 using System.Collections;
 
 namespace Fan.Sys
@@ -52,56 +53,7 @@ namespace Fan.Sys
         int semi = sub.IndexOf(';');
         if (semi > 0)
         {
-          pars = new Map(Sys.StrType, Sys.StrType);
-          pars.caseInsensitive(true);
-          bool inQuotes = false;
-          int keyStart = semi+1;
-          int valStart = -1;
-          int valEnd   = -1;
-          int eq       = -1;
-          for (int i = keyStart; i<sub.Length; ++i)
-          {
-            int c = sub[i];
-
-            if (c == '(' && !inQuotes)
-              throw ParseErr.make("MimeType", s, "comments not supported").val;
-
-            if (c == '=' && !inQuotes)
-            {
-              eq = i++;
-              while (FanInt.isSpace(sub[i])) ++i;
-              if (sub[i] == '"') { inQuotes = true; ++i; }
-              else inQuotes = false;
-              valStart = i;
-            }
-
-            if (eq < 0) continue;
-
-            if (c == '"' && inQuotes)
-            {
-              valEnd = i-1;
-              inQuotes = false;
-            }
-
-            if (c == ';' && !inQuotes)
-            {
-              if (valEnd < 0) valEnd = i-1;
-              string key = sub.Substring(keyStart, eq-keyStart).Trim();
-              string val = sub.Substring(valStart, valEnd+1-valStart).Trim();
-              pars.set(key, val);
-              keyStart = i+1;
-              eq = valStart = valEnd = -1;
-            }
-          }
-
-          if (keyStart < sub.Length)
-          {
-            if (valEnd < 0) valEnd = sub.Length-1;
-            string key = sub.Substring(keyStart, eq-keyStart).Trim();
-            string val = sub.Substring(valStart, valEnd+1-valStart).Trim();
-            pars.set(key, val);
-          }
-
+          pars = doParseParams(sub, semi+1);
           sub = sub.Substring(0, semi).Trim();
         }
 
@@ -122,6 +74,103 @@ namespace Fan.Sys
         if (!check) return null;
         throw ParseErr.make("MimeType",  s).val;
       }
+    }
+
+    public static Map parseParams(string s) { return parseParams(s, true); }
+    public static Map parseParams(string s, bool check)
+    {
+      try
+      {
+        return doParseParams(s, 0);
+      }
+      catch (ParseErr.Val e)
+      {
+        if (!check) return null;
+        throw e;
+      }
+      catch (System.Exception)
+      {
+        if (!check) return null;
+        throw ParseErr.make("MimeType params",  s).val;
+      }
+    }
+
+    private static Map doParseParams(string s, int offset)
+    {
+      Map pars = new Map(Sys.StrType, Sys.StrType);
+      pars.caseInsensitive(true);
+      bool inQuotes = false;
+      int keyStart = offset;
+      int valStart = -1;
+      int valEnd   = -1;
+      int eq       = -1;
+      bool hasEsc  = false;
+      for (int i = keyStart; i<s.Length; ++i)
+      {
+        int c = s[i];
+
+        if (c == '(' && !inQuotes)
+          throw ParseErr.make("MimeType", s, "comments not supported").val;
+
+        if (c == '=' && !inQuotes)
+        {
+          eq = i++;
+          while (FanInt.isSpace(s[i])) ++i;
+          if (s[i] == '"') { inQuotes = true; ++i; }
+          else inQuotes = false;
+          valStart = i;
+        }
+
+        if (eq < 0) continue;
+
+        if (c == '\\' && inQuotes)
+        {
+          ++i;
+          hasEsc = true;
+          continue;
+        }
+
+        if (c == '"' && inQuotes)
+        {
+          valEnd = i-1;
+          inQuotes = false;
+        }
+
+        if (c == ';' && !inQuotes)
+        {
+          if (valEnd < 0) valEnd = i-1;
+          string key = s.Substring(keyStart, eq-keyStart).Trim();
+          string val = s.Substring(valStart, valEnd+1-valStart).Trim();
+          if (hasEsc) val = unescape(val);
+          pars.set(key, val);
+          keyStart = i+1;
+          eq = valStart = valEnd = -1;
+          hasEsc = false;
+        }
+      }
+
+      if (keyStart < s.Length)
+      {
+        if (valEnd < 0) valEnd = s.Length-1;
+        string key = s.Substring(keyStart, eq-keyStart).Trim();
+        string val = s.Substring(valStart, valEnd+1-valStart).Trim();
+        if (hasEsc) val = unescape(val);
+        pars.set(key, val);
+      }
+
+      return pars;
+    }
+
+    private static string unescape(string s)
+    {
+      StringBuilder buf = new StringBuilder(s.Length);
+      for (int i=0; i<s.Length; ++i)
+      {
+        int c = s[i];
+        if (c != '\\') buf.Append((char)c);
+        else if (s[i+1] == '\\') { buf.Append('\\'); i++; }
+      }
+      return buf.ToString();
     }
 
   //////////////////////////////////////////////////////////////////////////

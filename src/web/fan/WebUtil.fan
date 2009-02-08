@@ -8,6 +8,7 @@
 
 **
 ** WebUtil encapsulates several useful utility web methods.
+** Also see `sys::MimeType` and its utility methods.
 **
 class WebUtil
 {

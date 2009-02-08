@@ -99,6 +99,34 @@ class MimeTypeTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// ParseParams
+//////////////////////////////////////////////////////////////////////////
+
+  Void testParseParams()
+  {
+    verifyParseParams("", Str:Str[:])
+    verifyParseParams("n=v", ["n":"v"])
+    verifyParseParams("a= b; c = d;", ["a":"b", "c":"d"])
+    verifyParseParams("aaa = \"bbb\"; ccc=\"ddd\"", ["aaa":"bbb", "ccc":"ddd"])
+    verifyParseParams("aaa = \"bbb\"; ccc=\"ddd\"", ["aaa":"bbb", "ccc":"ddd"])
+    verifyParseParams("name=\"a=b;c=d\"", ["name":"a=b;c=d"])
+    verifyParseParams("name=\"_\\\"quoted\\\"_\"", ["name":"_\"quoted\"_"])
+    verifyParseParams("a=\"quot=\\\"\"; b=c; d=\"bs=\\\\\"; e=\"_\\\\\\\"_\"", ["a":"quot=\"", "b":"c", "d":"bs=\\", "e":"_\\\"_"])
+
+    verifyEq(MimeType.parseParams("n=", false), null)
+    verifyErr(ParseErr#) |,| { MimeType.parseParams("x", true) }
+    verifyErr(ParseErr#) |,| { MimeType.parseParams("x=f;y=") }
+    verifyErr(ParseErr#) |,| { MimeType.parseParams("x=f (comment)") }
+  }
+
+  Void verifyParseParams(Str s, Str:Str params)
+  {
+    p := MimeType.parseParams(s)
+    verifyEq(p, params)
+    verifyEq(p.caseInsensitive, true)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // ForExt
 //////////////////////////////////////////////////////////////////////////
 

@@ -26,6 +26,18 @@ const final class MimeType
   static MimeType? fromStr(Str s, Bool checked := true)
 
   **
+  ** Parse a set of attribute-value parameters where the
+  ** values may be tokens or quoted-strings.  The resulting map
+  ** is case insensitive.  If invalid format and checked is
+  ** false return null, otherwise throw ParseErr.  Parenthesis
+  ** comments are not supported.
+  **
+  ** Examples:
+  **   a=b; c="d"  =>  ["a":"b", "c"="d"]
+  **
+  static [Str:Str]? parseParams(Str s, Bool checked := true)
+
+  **
   ** Map a case insensitive file extension to a MimeType.
   ** This mapping is configured via "lib/ext2mime.props".  If
   ** no mapping is available return null.
