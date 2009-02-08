@@ -44,6 +44,38 @@ class WebUtil
     tokenChars = m
   }
 
+  **
+  ** Return the specified string as a HTTP quoted string according
+  ** to RFC 2616 Section 2.2.  The result is wrapped in quotes.  Throw
+  ** ArgErr if any character is outside of the ASCII range of 0x20
+  ** to 0x7e.  The quote char itself is backslash escaped.
+  ** See `fromQuotedStr`.
+  **
+  static Str toQuotedStr(Str s)
+  {
+    buf := StrBuf()
+    buf.addChar('"')
+    s.each |Int c|
+    {
+      if (c < 0x20 || c > 0x7e) throw ArgErr("Invalid quoted str chars: $s")
+      if (c == '"') buf.addChar('\\')
+      buf.addChar(c)
+    }
+    buf.addChar('"')
+    return buf.toStr
+  }
+
+  **
+  ** Decode a HTTP quoted string according to RFC 2616 Section 2.2.
+  ** The given string must be wrapped in quotes.  See `toQuotedStr`.
+  **
+  static Str fromQuotedStr(Str s)
+  {
+    if (s.size < 2 || s[0] != '"' || s[-1] != '"')
+      throw ArgErr("Not quoted str: $s")
+    return s[1..-2].replace("\\\"", "\"")
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Parsing
 //////////////////////////////////////////////////////////////////////////

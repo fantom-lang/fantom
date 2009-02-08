@@ -22,6 +22,28 @@ class UtilTest : Test
     verifyEq(WebUtil.isToken("foo;bar"), false)
   }
 
+  Void testToQuotedStr()
+  {
+    verifyQuotedStr("", "\"\"")
+    verifyQuotedStr("foo bar", "\"foo bar\"")
+    verifyQuotedStr("foo\"bar\"baz", "\"foo\\\"bar\\\"baz\"")
+
+    verifyErr(ArgErr#) |,| { WebUtil.toQuotedStr("foo\nbar") }
+    verifyErr(ArgErr#) |,| { WebUtil.toQuotedStr("\u007f") }
+    verifyErr(ArgErr#) |,| { WebUtil.toQuotedStr("\u024a") }
+
+    verifyErr(ArgErr#) |,| { WebUtil.fromQuotedStr("") }
+    verifyErr(ArgErr#) |,| { WebUtil.fromQuotedStr("\"") }
+    verifyErr(ArgErr#) |,| { WebUtil.fromQuotedStr("\"x") }
+    verifyErr(ArgErr#) |,| { WebUtil.fromQuotedStr("x\"") }
+  }
+
+  Void verifyQuotedStr(Str s, Str expected)
+  {
+    verifyEq(WebUtil.toQuotedStr(s), expected)
+    verifyEq(WebUtil.fromQuotedStr(expected), s)
+  }
+
   Void testParseList()
   {
     verifyEq(WebUtil.parseList("a"), ["a"])
@@ -119,13 +141,6 @@ class UtilTest : Test
     in := WebUtil.makeChunkedInStream(buf.flip.in)
     2000.times |Int i| { verifyEq(in.readLine, i.toStr) }
     verifyEq(in.read, null)
-  }
-
-  Void testCookie()
-  {
-    verifyErr(ArgErr#) |,| { c := Cookie("\$path", "bar") }
-    verifyErr(ArgErr#) |,| { c := Cookie("foo bar", "bar") }
-    verifyErr(ArgErr#) |,| { c := Cookie("foo", "bar;baz") }
   }
 
 }
