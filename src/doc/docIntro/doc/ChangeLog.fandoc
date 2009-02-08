@@ -516,7 +516,7 @@
 - Map: ordered, join, setList, addList
 - Test: verifyNull, verifyNotNull
 - Type: make support for defVal
-- MimeType: charset
+- MimeType: charset, parseParams
 - Add toCode: Bool, Int, Float, Decimal, Uri, Duration, DateTime, Date, Time, List, Map
 - New compilerJavascript and webappClient APIs
 - New obix API

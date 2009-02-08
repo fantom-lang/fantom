@@ -83,26 +83,15 @@ abstract class WebReq
 
   **
   ** Map of cookie values keyed by cookie name.  The
-  ** cookies map is readonly and case sensitive.
+  ** cookies map is readonly and case insensitive.
   **
   virtual once Str:Str cookies()
   {
-    cookies := Str:Str[:]
     try
-    {
-      header := headers["Cookie"]
-      if (header != null)
-      {
-        header.split(';', false).each |Str s|
-        {
-          if (s.isEmpty || s[0] == '$') return
-          c := Cookie.fromStr(s)
-          cookies[c.name] = c.val
-        }
-      }
-    }
-    catch (Err e) e.trace
-    return cookies.ro
+      return MimeType.parseParams(headers.get("Cookie", "")).ro
+    catch (Err e)
+      e.trace
+    return Str:Str[:].ro
   }
 
   **
