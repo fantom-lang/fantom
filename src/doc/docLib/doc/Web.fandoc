@@ -69,7 +69,7 @@ Common methods you will use include:
     of the request HTTP headers
   - [in]`web::WebReq.in`: access to the raw input stream of the request
   - [form]`web::WebReq.form`:  access to the parsed form data
-  - [cookies]`web::WebReq.cookies`: a 'Str:Str' map of cookies
+  - [cookies]`web::WebReq.cookies`: a 'Str:Cookie' map of cookies
   - [session]`web::WebReq.session`: a 'Str:Obj' map used to stash
     stuff for the browser "connection" between HTTP requests
   - [stash]`web::WebReq.stash`: a 'Str:Obj' map used to stash stuff
@@ -164,4 +164,3 @@ configured on the const WebService.  The web pod itself is a low
 layer API and doesn't define any WebSteps itself.  The [webapp]`WebApp`
 pod is layered above the web pod and defines a whole mini-framework
 of steps you can use.
-

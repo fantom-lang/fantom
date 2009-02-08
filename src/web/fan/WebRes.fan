@@ -43,7 +43,8 @@ abstract class WebRes
   ** response is already committed.
   **
   ** Example:
-  **   res.cookies.add(Cookie { name="foo"; value="123"; maxAge=3day })
+  **   res.cookies.add(Cookie("foo", "123"))
+  **   res.cookies.add(Cookie("persistent", "some val") { maxAge = 3day })
   **
   abstract Cookie[] cookies()
 

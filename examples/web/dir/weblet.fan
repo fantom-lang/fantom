@@ -6,7 +6,7 @@ class TestWeblet : Weblet
   {
    s := req.session
     res.cookies.add(Cookie("foo", "alpha"))
-    res.cookies.add(Cookie("bar", "beta"))
+    res.cookies.add(Cookie("bar", "some \"quoted\" text!"))
     if (s["testcounter"] == 10) s.delete
 
     res.statusCode = 200

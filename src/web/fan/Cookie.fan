@@ -13,7 +13,7 @@
 ** and even 2109 isn't really supported by some of the major browsers.
 ** See `WebReq.cookies` and `WebRes.cookies`.
 **
-class Cookie
+const class Cookie
 {
 
   **
@@ -24,45 +24,42 @@ class Cookie
   {
     eq := s.index("=")
     if (eq == null) throw ParseErr(s)
-    return make(s[0...eq].trim, s[eq+1..-1].trim)
+    name := s[0...eq].trim
+    val := s[eq+1..-1].trim
+    if (val.size >= 2 && val[0] == '"' && val[-1] == '"')
+      val = WebUtil.fromQuotedStr(val)
+    return make(name, val)
   }
 
   **
-  ** Construct with name and value.
+  ** Construct with name and value.  The name must be a valid
+  ** HTTP token and must not start with "$" (see `WebUtil.isToken`).
+  ** The value string must be an ASCII string within the inclusive
+  ** range of 0x20 and 0x7e (see `WebUtil.toQuotedStr`).
   **
   new make(Str name, Str val)
   {
+    // validate name
+    if (!WebUtil.isToken(name) || name[0] == '$')
+      throw ArgErr("Cookie name has illegal chars: $val")
+
+    // validate value
+    if (!val.all |Int c->Bool| { return 0x20 <= c && c <= 0x7e })
+      throw ArgErr("Cookie value has illegal chars: $val")
+
     this.name = name
     this.val = val
   }
 
   **
-  ** Name of the cookie.  Throw ArgErr on set if name is not
-  ** a valid HTTP token or starts with "$" - see `WebUtil.isToken`.
+  ** Name of the cookie.
   **
-  Str name
-  {
-    set
-    {
-      if (!WebUtil.isToken(val) || val[0] == '$')
-        throw ArgErr("Cookie name has illegal chars: $val")
-      @name = val
-    }
-  }
+  const Str name
 
   **
-  ** Value string of the cookie.  Throw ArgErr on set if
-  ** value is not a valid HTTP token - see `WebUtil.isToken`.
+  ** Value string of the cookie.
   **
-  Str val
-  {
-    set
-    {
-      if (!WebUtil.isToken(val))
-        throw ArgErr("Cookie value has illegal chars: $val")
-      @val = val
-    }
-  }
+  const Str val
 
   **
   ** Defines the lifetime of the cookie, after the the max-age
@@ -74,7 +71,7 @@ class Cookie
   ** still don't recognize max-age, so setting max-age also
   ** always includes an expires attribute.
   **
-  Duration? maxAge
+  const Duration? maxAge
 
   **
   ** Specifies the domain for which the cookie is valid.
@@ -82,7 +79,7 @@ class Cookie
   ** null (the default) then the cookie only applies to
   ** the server which set it.
   **
-  Str? domain
+  const Str? domain
 
   **
   ** Specifies the subset of URLs to which the cookie applies.
@@ -91,13 +88,13 @@ class Cookie
   ** path as the document being described by the header which
   ** contains the cookie.
   **
-  Str? path := "/"
+  const Str? path := "/"
 
   **
   ** If true, then the client only sends this cookie using a
   ** secure protocol such as HTTPS.  Defaults to false.
   **
-  Bool secure := false
+  const Bool secure := false
 
   **
   ** Return the cookie formatted as an HTTP header.
@@ -105,7 +102,7 @@ class Cookie
   override Str toStr()
   {
     s := StrBuf(64)
-    s.add(name).add("=").add(val)
+    s.add(name).add("=").add(WebUtil.toQuotedStr(val))
     if (maxAge != null)
     {
       // we need to use Max-Age *and* Expires since many browsers
