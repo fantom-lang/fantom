@@ -534,3 +534,4 @@
 - Compiler fix allow mixins use const keyword
 - Compiler fix for once methods used with subclasses in same pod
 - Compiler fix for construction call against fromStr in super class
+- Compiler fix to check for dup method params and dup enum defs

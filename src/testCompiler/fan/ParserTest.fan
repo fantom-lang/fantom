@@ -254,7 +254,8 @@ class ParserTest : CompilerTest
         b,
         c
       }
-      ** trailing comment")
+      ** trailing comment
+      ")
 
     verifyEq(t.enumDefs.size, 3)
     verifyEq(t.enumDefs[0].ordinal, 0)
@@ -282,6 +283,23 @@ class ParserTest : CompilerTest
     verifyEq(t.enumDefs[1].ordinal, 1)
     verifyEq(t.enumDefs[1].name, "b")
     verifyEq(t.enumDefs[1].ctorArgs.size, 1)
+  }
+
+  Void testDupEnums()
+  {
+    verifyErrors(
+     "enum Foo
+      {
+        a,
+        b,
+        a,
+        c,
+        b
+      }",
+    [
+     5, 3, "Duplicate enum name 'a'",
+     7, 3, "Duplicate enum name 'b'",
+    ])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -502,6 +520,21 @@ class ParserTest : CompilerTest
   {
     verifyEq(p.paramType.qname, typeName)
     verifyEq(p.name, name)
+  }
+
+  Void testDupParams()
+  {
+    verifyErrors(
+     "class Foo
+      {
+        new make(Obj a, Obj a) {}
+        Void foo(Int xxx, Str y, Str? xxx := null, Int xxx := 9) {}
+      }",
+    [
+     3, 19, "Duplicate parameter name 'a'",
+     4, 28, "Duplicate parameter name 'xxx'",
+     4, 46, "Duplicate parameter name 'xxx'",
+    ])
   }
 
 //////////////////////////////////////////////////////////////////////////
