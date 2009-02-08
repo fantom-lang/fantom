@@ -84,6 +84,20 @@ class ObjTest : Test
     verifyEq(ObjWrapper.make("s"), ObjWrapper.make("s"))
     verifyNotEq(ObjWrapper.make("s"), ObjWrapper.make(7))
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Unsafe
+//////////////////////////////////////////////////////////////////////////
+
+  Void testUnsafe()
+  {
+    verifyEq(this.isImmutable, false)
+    verifyEq(Unsafe(this).isImmutable, true)
+    verifyEq(Unsafe(this).type, Unsafe#)
+    verifyEq(Unsafe(this).type.qname, "sys::Unsafe")
+    verifySame(Unsafe(this).val, this)
+  }
+
 }
 
 //////////////////////////////////////////////////////////////////////////
