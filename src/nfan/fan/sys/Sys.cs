@@ -237,6 +237,7 @@ namespace Fan.Sys
         DependType       = builtin("Depend",       ObjType);
         VersionType      = builtin("Version",      ObjType);
         UnitType         = builtin("Unit",         ObjType);
+        UnsafeType       = builtin("Unsafe",       ObjType);
         UuidType         = builtin("Uuid",         ObjType);
 
         // scheme
@@ -492,6 +493,7 @@ namespace Fan.Sys
     public static readonly Type DependType;
     public static readonly Type VersionType;
     public static readonly Type UnitType;
+    public static readonly Type UnsafeType;
     public static readonly Type UuidType;
 
     // uri schemes
