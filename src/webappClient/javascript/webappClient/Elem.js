@@ -17,6 +17,9 @@ var webappClient_Elem = sys_Obj.extend(
   id$get: function() { return this.elem.id; },
   id$set: function(val) { return this.elem.id = val; },
 
+  name$get: function() { return this.elem.name; },
+  name$set: function(val) { return this.elem.name = val; },
+
   className$get: function() { return this.elem.className; },
   className$set: function(val) { return this.elem.className = val; },
 
@@ -34,6 +37,7 @@ var webappClient_Elem = sys_Obj.extend(
   get: function(name, def)
   {
     if (name == "id")      return this.id$get();
+    if (name == "name")    return this.name$get();
     if (name == "class")   return this.className$get();
     if (name == "style")   return this.style();
     if (name == "value")   return this.value$get();
@@ -48,6 +52,7 @@ var webappClient_Elem = sys_Obj.extend(
   set: function(name, val)
   {
     if (name == "id")           this.id$set(val);
+    else if (name == "name")    this.name$set(val);
     else if (name == "class")   this.className$set(val);
     else if (name == "value")   this.value$set(val);
     else if (name == "checked") this.checked$set(val);
