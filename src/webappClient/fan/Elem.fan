@@ -34,6 +34,11 @@ class Elem
   Str id
 
   **
+  ** The name attribute for this element.
+  **
+  Str name
+
+  **
   ** The CSS class name(s) for this element.
   **
   Str className

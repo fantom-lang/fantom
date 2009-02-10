@@ -51,8 +51,8 @@ class WebappClientTest : Widget
 
     // testAttrs
     body.div("id='testAttrs' class='hidden'")
-    body.input("type='text' value='foo'")
-    body.checkbox("checked='checked'")
+    body.input("type='text' name='alpha' value='foo'")
+    body.checkbox("name='beta' checked='checked'")
     body.checkbox
     body.divEnd
 
@@ -92,8 +92,12 @@ class TestClient
     verifyEq(elem["value"],   null)
     verifyEq(elem.checked,    null)
     verifyEq(elem["checked"], null)
+    verifyEq(elem.children[0].name,      "alpha")
+    verifyEq(elem.children[0]["name"],   "alpha")
     verifyEq(elem.children[0].value,     "foo")
     verifyEq(elem.children[0]["value"],  "foo")
+    verifyEq(elem.children[1].name,       "beta")
+    verifyEq(elem.children[1]["name"],    "beta")
     verifyEq(elem.children[1].checked,    true)
     verifyEq(elem.children[1]["checked"], true)
     verifyEq(elem.children[2].checked,    false)
