@@ -13,7 +13,7 @@ class TestWidget: Widget
     body.tr.td.w("type").tdEnd.td.w(type.qname).tdEnd.trEnd
     body.tableEnd
 
-    body.form("method='post' action='${toInvoke(&onFoo)}'")
+    body.form("method='post' action='${call(#onFoo).encode.toXml}'")
     body.p
     body.submit
     body.pEnd
