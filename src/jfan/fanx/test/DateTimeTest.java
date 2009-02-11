@@ -8,6 +8,7 @@
 package fanx.test;
 
 import fan.sys.*;
+import fan.sys.TimeZone;
 import java.text.*;
 import java.util.Date;
 import java.util.*;
@@ -94,6 +95,8 @@ public class DateTimeTest
     verifyTz("Europe/Riga", 1995);
     verifyTz("Australia/Sydney", 2000);
     verifyTz("America/Godthab", 2000);
+
+    verifyTzInit();
 
     // this test is basically a brute-force check and very slow,
     // we don't normally run thru every timezone
@@ -182,6 +185,42 @@ public class DateTimeTest
 
     num++;
     //if (num % 1000 == 0) System.out.println("  " + f.format(cal.getTime()));
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Test the various hacks for dealing with Unix boxes
+//////////////////////////////////////////////////////////////////////////
+
+  public void verifyTzInit()
+  {
+    Sys.homeDir();
+    verifyTzInit("New_York", "America/New_York");
+    verifyTzInit("America/New_York", "America/New_York");
+    verifyTzInit("Europe/London", "Europe/London");
+
+    verifyTzInit("GMT0", "Etc/UTC");
+    verifyTzInit("GMT+00:00", "Etc/UTC");
+    verifyTzInit("GMT-00:00", "Etc/UTC");
+
+    verifyTzInit("GMT-13:00", "Etc/GMT-13");
+    verifyTzInit("GMT-10:00", "Etc/GMT-10");
+    verifyTzInit("GMT-05:00", "Etc/GMT-5");
+    verifyTzInit("GMT+06:00", "Etc/GMT+6");
+    verifyTzInit("GMT+12:00", "Etc/GMT+12");
+    verifyTzInit("GMT+6:00",  "Etc/GMT+6");
+    verifyTzInit("GMT-5:00",  "Etc/GMT-5");
+
+    verifyTzInit("US/Eastern",  "America/New_York");
+    verifyTzInit("US/Central",  "America/Chicago");
+    verifyTzInit("US/Mountain", "America/Denver");
+    verifyTzInit("US/Pacific",  "America/Los_Angeles");
+    verifyTzInit("US/Arizona",  "America/Phoenix");
+  }
+
+  public void verifyTzInit(String java, String fullName)
+  {
+    TimeZone tz = TimeZone.fromJava(java);
+    verify(tz.fullName(), fullName);
   }
 
   static class ErrRec implements Comparable
