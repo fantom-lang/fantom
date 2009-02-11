@@ -5,8 +5,9 @@ class TestWeblet : Weblet
   override Void onGet()
   {
    s := req.session
-    res.cookies.add(Cookie("foo", "alpha"))
+    res.cookies.add(Cookie("foo", "a,b,c"))
     res.cookies.add(Cookie("bar", "some \"quoted\" text!"))
+    res.cookies.add(Cookie("baz", "xy;zfoo;".toBuf.toBase64))
     if (s["testcounter"] == 10) s.delete
 
     res.statusCode = 200
@@ -21,6 +22,7 @@ class TestWeblet : Weblet
     res.out.printLine("cookies:   $req.cookies")
     res.out.printLine("  foo:     " + req.cookies["foo"])
     res.out.printLine("  bar:     " + req.cookies["bar"])
+    res.out.printLine("  baz:     " + Buf.fromBase64(req.cookies.get("baz", "")).readAllStr)
     res.out.printLine("headers:")
     req.headers.each |Str v, Str k| { res.out.printLine("  $k: $v") }
     res.out.printLine("session:   $req.session.id")
