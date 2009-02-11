@@ -35,7 +35,20 @@ const class Cookie
   ** Construct with name and value.  The name must be a valid
   ** HTTP token and must not start with "$" (see `WebUtil.isToken`).
   ** The value string must be an ASCII string within the inclusive
-  ** range of 0x20 and 0x7e (see `WebUtil.toQuotedStr`).
+  ** range of 0x20 and 0x7e (see `WebUtil.toQuotedStr`) with the
+  ** exception of the semicolon.
+  **
+  ** Fan cookies will use quoted string values, however some browsers
+  ** such as IE won't parse a quoted string with semicolons correctly,
+  ** so we make semicolons illegal.  If you have a value which might
+  ** include non-ASCII characters or semicolons, then consider encoding
+  ** using something like Base64:
+  **
+  **   // write response
+  **   res.cookies.add(Cookie("baz", val.toBuf.toBase64))
+  **
+  **   // read from request
+  **   val := Buf.fromBase64(req.cookies.get("baz", "")).readAllStr
   **
   new make(Str name, Str val)
   {
@@ -44,7 +57,7 @@ const class Cookie
       throw ArgErr("Cookie name has illegal chars: $val")
 
     // validate value
-    if (!val.all |Int c->Bool| { return 0x20 <= c && c <= 0x7e })
+    if (!val.all |Int c->Bool| { return 0x20 <= c && c <= 0x7e && c != ';'})
       throw ArgErr("Cookie value has illegal chars: $val")
 
     this.name = name

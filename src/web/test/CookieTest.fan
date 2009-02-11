@@ -22,6 +22,7 @@ class CookieTest : Test
     verifyErr(ArgErr#) |,| { c := Cookie("foo bar", "bar") }
     verifyErr(ArgErr#) |,| { c := Cookie("foo", "bar\nbaz") }
     verifyErr(ArgErr#) |,| { c := Cookie("foo", "del is \u007f") }
+    verifyErr(ArgErr#) |,| { c := Cookie("foo", "a;b;c") }
   }
 
   Void verifyCookie(Str s, Cookie c)
