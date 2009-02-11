@@ -526,6 +526,7 @@
 - Web Cookie refactor into const class
 - Web Cookie enforce name and value chars and use quoted string value
 - Web Cookie fix use both max-age and expires for cookies for IE and Safari
+- More linux timezone work arounds
 - Flux add findInFiles into context popup of dirs
 - Flux fix undo/redo stack to check point on save
 - Compiler fix when local variable shadows field with storage operator

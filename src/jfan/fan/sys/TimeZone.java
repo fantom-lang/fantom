@@ -483,6 +483,10 @@ public final class TimeZone
   static TimeZone utc;
   static TimeZone current;
 
+//////////////////////////////////////////////////////////////////////////
+// Initialization
+//////////////////////////////////////////////////////////////////////////
+
   static
   {
     try
@@ -510,23 +514,15 @@ public final class TimeZone
 
     try
     {
-      // first check system property
+      // first check system property, otherwise try to use Java timezone
       String sysProp = (String)Sys.env().get("fan.timezone");
       if (sysProp != null)
       {
         current = fromStr(sysProp);
       }
-
-      // Java mostly uses Olsen name, except for some Unix
-      // variants which use GMT+/-hh:mm which we map to Etc
       else
       {
-        String javatz = java.util.TimeZone.getDefault().getID();
-        if (javatz.equals("GMT0"))
-          javatz = "Etc/UTC";
-        else if (javatz.startsWith("GMT") && javatz.endsWith(":00"))
-          javatz = javatz.substring(0, javatz.length()-3);
-        current = fromStr(javatz);
+        current = fromJava(java.util.TimeZone.getDefault().getID());
       }
     }
     catch (Throwable e)
@@ -536,6 +532,43 @@ public final class TimeZone
 
       current = utc;
     }
+  }
+
+  /**
+   * Convert a Java timezone name to a Olsen timezone identifier
+   * as used by Fan.  For Windows and OS X, Java reports the timezone
+   * correctly.  However Unix variants all seems to do things a bit
+   * differently and do it wrong.  Instead of reporting a real timezone,
+   * many Unix variants report a GMT offset (which doesn't map to a
+   * political region's DST rules).
+   */
+  public static TimeZone fromJava(String javatz)
+  {
+    // handle various UTC (we haven't seen all these, but just to be safe)
+    if (javatz.equals("GMT0")) return utc;
+    if (javatz.equals("GMT+00:00")) return utc;
+    if (javatz.equals("GMT-00:00")) return utc;
+
+    // Solarsis and many Linux distros seem to use
+    // use GMT+/-hh:mm which we map to Etc
+    if (javatz.startsWith("GMT"))
+    {
+      if (javatz.endsWith(":00")) javatz = javatz.substring(0, javatz.length()-3);
+      if (javatz.startsWith("GMT-0")) javatz = "GMT-" + javatz.substring(5);
+      if (javatz.startsWith("GMT+0")) javatz = "GMT+" + javatz.substring(5);
+      return fromStr(javatz);
+    }
+
+    // we've had reports that Ubuntu uses timezone names
+    // deprecated back in 1993, but handle some of the common ones
+    if (javatz.equals("US/Eastern"))  return fromStr("New_York");
+    if (javatz.equals("US/Central"))  return fromStr("Chicago");
+    if (javatz.equals("US/Mountain")) return fromStr("Denver");
+    if (javatz.equals("US/Pacific"))  return fromStr("Los_Angeles");
+    if (javatz.equals("US/Arizona"))  return fromStr("Phoenix");
+
+    // assume we have an actual timezone or throw exception
+    return fromStr(javatz);
   }
 
 //////////////////////////////////////////////////////////////////////////
