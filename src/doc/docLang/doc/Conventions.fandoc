@@ -21,6 +21,23 @@ Source Files [#sourceFiles]
   - If you have a bunch of little classes, coalesce into a single source
   - Separate test classes into separate "test/" directory
 
+Naming [#naming]
+****************
+  - Type names are upper camel case such as "FooBar"
+  - Slot names are lower camel case such as "fooBar" (this includes all
+    fields and methods, even const fields)
+  - Never use screaming caps such as "FOO_BAR"
+  - Facet names are lower camel case with prefix which matches the
+    declaring pod such as "fluxView"
+  - Pod names are lower camel case and globally unique.  You should prefix
+    your pod names with something to avoid naming conflicts.  For example
+    a SourceForge or Google Code project name is a safe naming convention.
+    Or prefix pods with an organization or domain name. If you own a ".com"
+    domain, don't include the "com" in your pod names.
+  - Don't use words which are fully capitalized in your identifiers:
+      - Use "someId" instead of "someID"
+      - Use "readXml" instead of "readXML"
+
 Indention [#indention]
 **********************
   - Do not use tab characters, use spaces only
@@ -82,5 +99,3 @@ Comments [#comments]
       // History:
       //   28 Aug 08  Brian Frank  Creation
       //
-
-
