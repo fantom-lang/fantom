@@ -19,9 +19,8 @@ Pod [#pod]
 Pods are the top of Fan's namespace as well as the unit of deployment.  A pod's
 name is globally unique and is used to organize the top level of Fan's namespace.
 Pod names are similar to Java packages or C# namespaces.  To guarantee uniqueness,
-organizations should prefix their pod names using reverse DNS names in camel case.
-For example a company which owns "acme.com" and wishes to create a pod
-called "Foo" would name the pod "comAcmeFoo".
+try use a naming convention which won't produce conflicts (see
+[conventions]`Conventions#naming`).
 
 Pods are also the fundamental unit of deployment, versioning, and dependency
 management.  In this role pods are like Java JAR files or .NET DLLs (although
@@ -32,10 +31,10 @@ associated file resources.
 The `sys::Pod` type is the reflection API for working with pods installed in a
 given Fan installation.  Code examples for common pod operations:
 
-  Pod.list                       // list the pods installed
-  Pod.find("comAcmeFoo")         // find a pod (throws exception if not found)
-  Pod.find("comAcmeFoo", false)  // find a pod (returns null if not found)
-  myPod.files[`/img/icon.png`]   // lookup a resource file in myPod
+  Pod.list                      // list the pods installed
+  Pod.find("acmeFoo")           // find a pod (throws exception if not found)
+  Pod.find("acmeFoo", false)    // find a pod (returns null if not found)
+  myPod.files[`/img/icon.png`]  // lookup a resource file in myPod
 
 Type [#type]
 ************
