@@ -254,6 +254,24 @@ class TypeTest : Test
     verifyEq(Str:Buf#.toListOf, [Str:Buf][]#)
   }
 
+  Void testEmptyList()
+  {
+    s :=  Str#.emptyList
+    verifyEq(s, Str[,])
+    verifyEq(s.isImmutable, true)
+    verifyEq(s.type.signature, "sys::Str[]")
+    verifySame(s, Str#.emptyList)
+    verifyErr(ReadonlyErr#) |,| { s.add("foo") }
+
+    sl :=  Str[]#.emptyList
+    verifyEq(sl, Str[][,])
+    verifyEq(sl.isImmutable, true)
+    verifyEq(sl.type.signature, "sys::Str[][]")
+    verifySame(sl, Str[]#.emptyList)
+    verifyNotSame(sl, s)
+    verifyErr(ReadonlyErr#) |,| { sl.add(Str[,]) }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Reflection
 //////////////////////////////////////////////////////////////////////////
