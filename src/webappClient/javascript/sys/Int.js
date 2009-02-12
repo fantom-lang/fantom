@@ -61,6 +61,10 @@ sys_Int.fromStr = function(s, radix, checked)
   */
   return num;
 }
+sys_Int.toStr = function(self)
+{
+  return ""+self;
+}
 
 sys_Int.abs = function(self) { return self < 0 ? -self : self; }
 sys_Int.min = function(self, val) { return self < val ? self : val; }
