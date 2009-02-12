@@ -154,7 +154,7 @@ class WebUtil
 
     // sanity checking
     if (tok == null) throw IOErr("Unexpected end of stream")
-    if (tok.size >= 512) throw ParseErr("Token too big")
+    if (tok.size >= maxTokenSize) throw ParseErr("Token too big")
 
     // read separator
     in.read
@@ -290,7 +290,7 @@ class WebUtil
   internal const static Int LF  := '\n'
   internal const static Int HT  := '\t'
   internal const static Int SP  := ' '
-  internal const static Int maxTokenSize := 512
+  internal const static Int maxTokenSize := 4096
 
 }
 
