@@ -59,6 +59,8 @@ const class Cookie
     // validate value
     if (!val.all |Int c->Bool| { return 0x20 <= c && c <= 0x7e && c != ';'})
       throw ArgErr("Cookie value has illegal chars: $val")
+    if (val.size + 32 >= WebUtil.maxTokenSize) // fudge room for quotes & escapes
+      throw ArgErr("Cookie value too big")
 
     this.name = name
     this.val = val
