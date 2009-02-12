@@ -258,6 +258,12 @@ public abstract class Type
     return listOf;
   }
 
+  public final List emptyList()
+  {
+    if (emptyList == null) emptyList = new List(this, 0).toImmutable();
+    return emptyList;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Slots
 //////////////////////////////////////////////////////////////////////////
@@ -419,5 +425,6 @@ public abstract class Type
   static Object noParams;
 
   Type listOf;     // cached value of toListOf()
+  List emptyList;  // cached value of emptyList()
 
 }

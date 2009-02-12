@@ -270,6 +270,12 @@ namespace Fan.Sys
       return m_listOf;
     }
 
+    public List emptyList()
+    {
+      if (m_emptyList == null) m_emptyList = new List(this, 0).toImmutable();
+      return m_emptyList;
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Slots
   //////////////////////////////////////////////////////////////////////////
@@ -418,6 +424,7 @@ namespace Fan.Sys
     internal static object noParams;
 
     Type m_listOf;     // cached value of toListOf()
+    List m_emptyList;  // cached value of emptyList()
 
   }
 }
