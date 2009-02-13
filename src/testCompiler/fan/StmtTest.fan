@@ -13,6 +13,42 @@ class StmtTest : CompilerTest
 {
 
 /////////////////////////////////////////////////////////////////////////
+// Return
+//////////////////////////////////////////////////////////////////////////
+
+  Void testReturn()
+  {
+    compile(
+     "class Foo
+      {
+        Int a() { 7 }
+        Int b(Bool b) { b ? 2 : 3 }
+        Str[] c(Str[] x) { x.sort |Str a,Str b->Int| { a.size <=> b.size } }
+      }")
+
+     o := pod.types.first.make
+     verifyEq(o->a, 7)
+     verifyEq(o->b(true), 2)
+     verifyEq(o->b(false), 3)
+     verifyEq(o->c(["c", "aaa", "bb"]), ["c", "bb", "aaa"])
+
+    verifyErrors(
+      "class Foo
+       {
+         Int a() { echo(3.toStr); 3 }
+         Void b() { 999 }
+         Void c(Obj[] x) { x.sort |Obj a, Obj b->Int| { echo(3.toStr); 0 } }
+       }
+       ",
+       [3, 28, "Not a statement",
+        3, 11, "Must return a value from non-Void method",
+        4, 14, "Not a statement",
+        5, 65, "Not a statement",
+        5, 48, "Must return a value from non-Void method",
+       ])
+  }
+
+/////////////////////////////////////////////////////////////////////////
 // If
 //////////////////////////////////////////////////////////////////////////
 
