@@ -125,7 +125,7 @@ or by iterating the rows with a closure.
 
 To fetch as a list of rows:
       stmt := db.sql("select title, year from Books
-                      where author = @author" and year > @year").prepare
+                      where author = @author and year > @year").prepare
       dickensNovels := stmt.query(["author":"Charles Dickens", "year":1850])
       kiplingNovels := stmt.query(["author":"Rudyard Kipling", "year":1890])
 
