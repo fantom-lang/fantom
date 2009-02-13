@@ -476,6 +476,13 @@ public class Parser : CompilerSupport
       if (field.set.code == null) genSyntheticSet(field)
     }
 
+    // const override has getter only
+    if (field.isConst && field.isOverride)
+    {
+      defGet(field)
+      genSyntheticGet(field)
+    }
+
     // readonly is syntatic sugar for { private set }
     if (flags & Readonly != 0)
     {
@@ -488,17 +495,26 @@ public class Parser : CompilerSupport
 
   private Void defGetAndSet(FieldDef f)
   {
-    loc := f.location
+    defGet(f)
+    defSet(f)
+  }
 
+  private Void defGet(FieldDef f)
+  {
     // getter MethodDef
+    loc := f.location
     get := MethodDef.make(loc, f.parentDef)
     get.accessorFor = f
     get.flags = f.flags | FConst.Getter
     get.name  = f.name
     get.ret   = f.fieldType
     f.get = get
+  }
 
+  private Void defSet(FieldDef f)
+  {
     // setter MethodDef
+    loc := f.location
     set := MethodDef.make(loc, f.parentDef)
     set.accessorFor = f
     set.flags = f.flags | FConst.Setter

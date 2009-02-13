@@ -66,6 +66,7 @@ Statements [#stmts]
   - Prefer type inference for local variables
   - Prefer implicit casting to explicit casting
   - Prefer 'Obj[]' to 'List' and 'Obj:Obj' to 'Map'
+  - Prefer to omit 'return' keyword in single statement methods and closures
 
 Comments [#comments]
 ********************

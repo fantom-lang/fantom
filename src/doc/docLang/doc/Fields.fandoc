@@ -148,6 +148,18 @@ Const fields do not use accessor methods.  It is a compile time error to
 declare accessors on a const field.  All field access is performed directly
 against storage.
 
+Const fields cannot be declared 'abstract' or 'virtual'.  However a const
+field can [override]`#overrideMethod` a virtual method with no parameters.
+But const fields cannot override fields since that would imply the field
+could be set.  Example of using this technique to use a pre-calcualted
+string for 'Obj.toStr':
+
+  const class Something
+  {
+    new make(...) { toStr = "..." }
+    override const Str toStr
+  }
+
 Static Fields [#static]
 ***********************
 The keyword 'static' is used to create a static class level field:
