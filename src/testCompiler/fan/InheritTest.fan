@@ -1152,4 +1152,131 @@ class InheritTest : CompilerTest
      ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Const Overrides
+//////////////////////////////////////////////////////////////////////////
+
+  Void testConstOverrides()
+  {
+    compile(
+     "mixin X
+      {
+        virtual Str x() { return \"X.a\" }
+        Str xToStr() { return x.toStr }
+      }
+
+      mixin Y
+      {
+        abstract Str y()
+        Str yToStr() { return y.toStr }
+      }
+
+      abstract class A
+      {
+        virtual Str a1() { return \"A.a1\" }
+        abstract Str a2()
+
+        Str aToStr() { return \"\$a1,\$a2\" }
+      }
+
+      class Foo : A, X, Y
+      {
+        new make(Str? x := null, Str? y := null)
+        {
+          if (x != null) this.x = x
+          if (y != null) this.y = y
+        }
+        override const Str x := \"Foo.x\"
+        override const Str y := \"Foo.y\"
+        override const Str a1 := \"Foo.a1\"
+        override const Str a2 := \"Foo.a2\"
+
+        override Str toStr() { return \"\$x,\$y,\$a1,\$a2\" }
+      }
+      ")
+
+     t := pod.findType("Foo")
+     obj := t.make
+     verifyEq(obj.toStr, "Foo.x,Foo.y,Foo.a1,Foo.a2")
+     verifyEq(obj->aToStr, "Foo.a1,Foo.a2")
+     verifyEq(obj->xToStr, "Foo.x")
+     verifyEq(obj->yToStr, "Foo.y")
+
+     obj = t.make(["q", "r"])
+     verifyEq(obj.toStr, "q,r,Foo.a1,Foo.a2")
+     verifyEq(obj->aToStr, "Foo.a1,Foo.a2")
+     verifyEq(obj->xToStr, "q")
+     verifyEq(obj->yToStr, "r")
+  }
+
+  Void testConstOverridesErrors()
+  {
+    // Parser step
+    verifyErrors(
+     "class Foo : A
+      {
+        override const Str a { get { return 5 } }
+        override const Str b { set {} }
+        override const Str c { get { return 5 } set { @c = 6 } }
+      }
+
+      class A
+      {
+        virtual Int a
+        virtual Int b
+        virtual Int c
+      }
+      ",
+      [
+        3, 26, "Const field 'a' cannot have getter",
+        4, 26, "Const field 'b' cannot have setter",
+        5, 26, "Const field 'c' cannot have getter",
+        5, 43, "Const field 'c' cannot have setter",
+     ])
+
+    // Inherit step
+    verifyErrors(
+     "class Foo : A, X
+      {
+        override const Int a
+        override Str b // shouldn't work with non-const either
+        override const Str c
+        override const Str d
+      }
+
+      class A
+      {
+        virtual Int a
+      }
+
+      mixin X
+      {
+        virtual Str b(Str x) { return x}
+        virtual Str c(Str x) { return x}
+        abstract Str d
+      }
+
+      ",
+      [
+        3, 3, "Const field 'a' cannot override field '$podName::A.a'",
+        4, 3, "Field 'b' cannot override method with params '$podName::X.b'",
+        5, 3, "Field 'c' cannot override method with params '$podName::X.c'",
+        6, 3, "Const field 'd' cannot override field '$podName::X.d'",
+     ])
+
+    // CheckErrors step
+    verifyErrors(
+     "abstract class Foo
+      {
+        abstract const Str a
+        virtual const Str b
+      }
+      ",
+      [
+        3, 3, "Invalid combination of 'const' and 'abstract' modifiers",
+        4, 3, "Invalid combination of 'const' and 'virtual' modifiers",
+     ])
+
+  }
+
 }

@@ -531,6 +531,7 @@
 - Flux add findInFiles into context popup of dirs
 - Flux fix undo/redo stack to check point on save
 - Compiler allow single statement expression based return
+- Compiler allow const field to override a method
 - Compiler fix when local variable shadows field with storage operator
 - Compiler fix when using null safe call with no-leave primitive return
 - Compiler fix when calling super with default params results in stack overflow

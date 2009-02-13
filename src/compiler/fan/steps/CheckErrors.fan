@@ -235,8 +235,7 @@ class CheckErrors : CompilerStep
     {
       // invalid const flag combo
       if (flags & FConst.Abstract != 0) err("Invalid combination of 'const' and 'abstract' modifiers", loc)
-      else if (flags & FConst.Override != 0) err("Invalid combination of 'const' and 'override' modifiers", loc)
-      else if (flags & FConst.Virtual != 0) err("Invalid combination of 'const' and 'virtual' modifiers", loc)
+      else if (flags & FConst.Virtual != 0 && flags & FConst.Override == 0) err("Invalid combination of 'const' and 'virtual' modifiers", loc)
 
       // invalid type
       if (!isConstFieldType(f.fieldType))
@@ -1137,8 +1136,8 @@ class CheckErrors : CompilerStep
 
   private Bool useFieldAccessor(CField f)
   {
-    // if there is no getter, then use field directly (constants)
-    if (f.getter == null) return false
+    // if const field then use field directly
+    if (f.isConst || f.getter == null) return false
 
     // always use accessor if field is imported from another
     // pod (in which case it isn't a def in my compilation unit)
