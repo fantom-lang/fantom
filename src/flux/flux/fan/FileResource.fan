@@ -254,6 +254,7 @@ class FileResource : Resource
     {
       switch (f.ext)
       {
+        case "as":   return Flux.icon(`/x16/fileAs.png`)
         case "cs":   return Flux.icon(`/x16/fileCs.png`)
         case "fan":  return Flux.icon(`/x16/fileFan.png`)
         case "java": return Flux.icon(`/x16/fileJava.png`)

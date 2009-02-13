@@ -2,6 +2,7 @@
 // mime.props
 //
 
+as=text/plain
 atom=application/atom+xml
 c=text/plain
 class=application/java
