@@ -29,6 +29,7 @@ log=text/plain
 js=text/plain
 mp3=audio/mpeg3
 mpeg=video/mpeg
+obix=text/xml
 pdf=application/pdf
 png=image/png
 ppt=application/mspowerpoint
