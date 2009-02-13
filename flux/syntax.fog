@@ -26,6 +26,9 @@ SyntaxOptions
     // batch rules
     "bat": "batch",
 
+    // as rules
+    "as": "as",
+
     // cpp rules
     "h":   "cpp",
     "c":   "cpp",
