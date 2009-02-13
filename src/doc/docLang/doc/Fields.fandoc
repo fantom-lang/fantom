@@ -151,7 +151,14 @@ against storage.
 Const fields cannot be declared 'abstract' or 'virtual'.  However a const
 field can [override]`#overrideMethod` a virtual method with no parameters.
 But const fields cannot override fields since that would imply the field
-could be set.
+could be set.  Example of using this technique to use a pre-calcualted
+string for 'Obj.toStr':
+
+  const class Something
+  {
+    new make(...) { toStr = "..." }
+    override const Str toStr
+  }
 
 Static Fields [#static]
 ***********************
