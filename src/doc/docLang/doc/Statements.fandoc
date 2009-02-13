@@ -85,6 +85,14 @@ back to the code which called the method.  If the enclosing method
 is non-void, then the 'return' statement includes the expression
 used to return a result object to the caller.
 
+Fan allows you omit the 'return' keyword if your method or closure
+contains exactly one statement:
+
+  Str name() { return "Bob" } // long version
+  Str name() { "Bob" }        // short version
+
+Convention is to omit the 'return' keyword for single statement returns.
+
 Local Variables [#localDef]
 ***************************
 Local variables may be declared using the following syntax:
@@ -298,5 +306,4 @@ Exception Handling [#exceptions]
 Fan supports 'throw' and 'try' statements with a syntax very similar
 to Java and C#.  These statements are discussed separately in
 the [exception handling]`Exceptions` chapter.
-
 

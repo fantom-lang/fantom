@@ -116,8 +116,15 @@ class Normalize : CompilerStep
     code := m.code
     if (code == null) return
 
-    // add implicit return
-    if (!code.isExit) code.add(ReturnStmt.make(code.location))
+    // add implicit return, we allow return keyword to
+    // be omitted if there is exactly one statement
+    if (!code.isExit)
+    {
+      if (code.size == 1 && !m.returnType.isVoid && code.stmts[0].id == StmtId.expr)
+        code.stmts[0] = ReturnStmt(code.stmts[0].location, code.stmts[0]->expr)
+      else
+        code.add(ReturnStmt(code.location))
+    }
 
     // insert super constructor call
     if (m.isCtor) insertSuperCtor(m)
