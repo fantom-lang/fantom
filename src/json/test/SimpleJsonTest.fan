@@ -17,7 +17,7 @@ class SimpleJsonTest : Test
     suite := JsonTestSuite.make
     suite.tests.each |JsonTestCase tc|
     {
-      echo("Running "+tc.description)
+      // echo("Running "+tc.description)
       map := doTest(tc.map)
     }
   }
@@ -35,18 +35,27 @@ class SimpleJsonTest : Test
     out.charset = Charset.utf16BE
     out.writeChars(makeRawJson)
     out.close
-    
+
     ins := buf.toStr.in
     ins.charset = Charset.utf16BE
     map := Json.read(ins)
     verifyRawJson(map)
   }
 
+  Void testTopAsList()
+  {
+    verifyEq(Json.read("[3, 4.0, null, \"hi\"]".in), [3, 4.0, null, "hi"])
+
+    buf := Buf()
+    Json.write(buf.out, [3, 4.0, null, "hi"])
+    verifyEq(buf.flip.readAllStr, "[3,4.0,null,\"hi\"]")
+  }
+
   private Str:Obj doTest(Str:Obj map)
   {
     buf := StrBuf.make
     stream := OutStream.makeForStrBuf(buf)
-    Json.write(map, stream)
+    Json.write(stream, map)
     stream.close
     //echo(buf.toStr)
     newMap := Json.read(buf.toStr.in)
@@ -74,8 +83,8 @@ class SimpleJsonTest : Test
 
   private Void verifyRawJson(Str:Obj? map)
   {
-    verifyEq(map["type"], "Foobar")    
-    verifyEq(map["age"], 34)    
+    verifyEq(map["type"], "Foobar")
+    verifyEq(map["age"], 34)
     inner := (Str:Obj?) map["nested"]
     verifyNotEq(inner, null)
     verifyEq(inner["dead"], false)
@@ -83,7 +92,7 @@ class SimpleJsonTest : Test
     list := (List)inner["ids"]
     verifyNotEq(list, null)
     verifyEq(list.size, 3)
-    verifyEq(map["friends"], null)    
+    verifyEq(map["friends"], null)
   }
 
 }

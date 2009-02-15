@@ -18,20 +18,24 @@ internal class JsonParser
   {
     this.buf = buf
   }
-  
-  // FIXIT need one to parse to Obj as well, doing Map for now
-  internal Str:Obj? parse()
+
+  // FIXIT need one to parse to Obj as well, doing Map/List for now
+  internal Obj parse()
   {
     consume
-    return parseObject
+    skipWhitespace
+    if (cur == JsonToken.arrayStart)
+      return array
+    else
+      return parseObject
   }
-  
+
   private Str:Obj? parseObject()
   {
     pairs := Str:Obj?[:]
-    
+
     skipWhitespace
-    
+
     expect(JsonToken.objectStart)
 
     while (true)
