@@ -617,7 +617,10 @@ class Box : Widget
 {
   Color color := Color.green
 
-  override Size prefSize := Size.make(Int.random(20..100), Int.random(20..80))
+  override Size prefSize(Hints hints := Hints.def)
+  {
+    Size(Int.random(20..100), Int.random(20..80))
+  }
 
   override Void onPaint(Graphics g)
   {
