@@ -14,25 +14,23 @@
 **
 class Json
 {
-  ***
-  *** Write the given object as JSON to the given stream.
-  *** Currently only Maps are supported fully.
-  *** 
-  public static Void write(Obj obj, OutStream out)
+  **
+  ** Write the given object as JSON to the given stream.
+  ** The object passed must be with a 'Str:Obj?' map or
+  ** a 'Obj?[]' list.
+  **
+  public static Void write(OutStream out, Obj obj)
   {
     JsonWriter.write(obj, out)
     out.flush
   }
 
-  ***
-  *** Read JSON from the given stream to a Map.
-  *** Currently only reads to a Map; eventually
-  *** we will incorporate type inforamation to
-  *** return a Obj.
-  ***
-  public static Str:Obj? read(InStream buf)
+  **
+  ** Read a JSON object from the given stream and return
+  ** either a 'Str:Obj?' map or a 'Obj?[]' list.
+  **
+  public static Obj read(InStream in)
   {
-    json := JsonParser.make(buf)
-    return json.parse
+    return JsonParser(in).parse
   }
 }

@@ -58,7 +58,7 @@ internal class BrowserTest
       this.out.printLine("<ul>")
       this.out.printLine("<script>")
       this.out.print("var json = ")
-      Json.write(tc.map, this.out)
+      Json.write(this.out, tc.map)
       this.out.printLine("; var result = eval(json);")
       tc.javascript("result",this.out)
       this.out.printLine("</script>")

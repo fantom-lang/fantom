@@ -528,6 +528,8 @@
 - Web Cookie enforce name and value chars and use quoted string value
 - Web Cookie fix use both max-age and expires for cookies for IE and Safari
 - More linux timezone work arounds
+- Json fix for parsing top level array
+- Json.write API change
 - Flux add findInFiles into context popup of dirs
 - Flux fix undo/redo stack to check point on save
 - Compiler allow single statement expression based return

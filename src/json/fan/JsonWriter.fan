@@ -34,8 +34,7 @@ internal class JsonWriter
     // Uri -> literal, done
     // Version
     // Weekday
-    if (obj is Map) writeMap(obj as Map, buf)
-    else writeObj(obj, buf)
+    writeValue(obj, buf)
   }
 
   private static Void writeObj(Obj obj, OutStream buf)
