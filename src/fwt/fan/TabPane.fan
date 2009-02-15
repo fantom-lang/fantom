@@ -34,12 +34,12 @@ class TabPane : Widget
   **
   ** The currently selected index of `tabs`.
   **
-  native Int? selectedIndex
+  @transient native Int? selectedIndex
 
   **
   ** The currently selected tab.
   **
-  Tab? selected
+  @transient Tab? selected
   {
     get { i := selectedIndex; return i == null ? null : tabs[i] }
     set { i := index(val); if (i != null) selectedIndex = i }

@@ -66,13 +66,13 @@ class Combo : Widget
   **
   ** The currently selected index of `items` or null if no selection.
   **
-  native Int? selectedIndex
+  @transient native Int? selectedIndex
 
   **
   ** The currently selected item.  Items are matched
   ** to the `items` list using `index`.
   **
-  Obj? selected
+  @transient Obj? selected
   {
     get { i := selectedIndex; return i == null ? null : items[i] }
     set { i := index(val); if (i != null) selectedIndex = i }

@@ -184,7 +184,7 @@ public class Fan
     for (int i=0; i<pods.sz(); ++i)
     {
       Pod pod = (Pod)pods.get(i);
-      System.out.println("  " + FanStr.justl(pod.name(), 14L) + "  " + pod.version());
+      System.out.println("  " + FanStr.justl(pod.name(), 18L) + "  " + pod.version());
     }
   }
 
