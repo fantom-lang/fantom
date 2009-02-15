@@ -115,7 +115,8 @@ public class Pod
     synchronized(podsByName)
     {
       // check for duplicate pod name
-      if (podsByName.get(name) != null)
+      SoftReference ref = (SoftReference)podsByName.get(name);
+      if (ref != null && ref.get() != null)
         throw Err.make("Duplicate pod name: " + name).val;
 
       // create Pod and add to master table
