@@ -15,7 +15,12 @@
 **
 internal class JsonWriter
 {
-  internal static Void write(OutStream out, Obj obj)
+  internal new make(OutStream out)
+  {
+    this.out = out
+  }
+
+  internal Void write(Obj obj)
   {
     // Map is written with no top level type information;
     // pairs may have type info of course
@@ -34,129 +39,130 @@ internal class JsonWriter
     // Uri -> literal, done
     // Version
     // Weekday
-    writeValue(out, obj)
+    writeValue(obj)
   }
 
-  private static Void writeObj(OutStream out, Obj obj)
+  private Void writeObj(Obj obj)
   {
     type := obj.type
 
-    out.print(JsonToken.objectStart.toChar)
-    writePair(out, "fanType", type.signature)
+    this.out.print(JsonToken.objectStart.toChar)
+    writePair("fanType", type.signature)
     if (type.facet("simple", null, true))
     {
-      out.print(",")
-      writePair(out, "fanValue", obj.toStr)
+      this.out.print(",")
+      writePair("fanValue", obj.toStr)
     }
     else
     {
       type.fields.each |Field f|
       {
-        out.print(",")
+        this.out.print(",")
         key := f.name
         // skip static and all that stuff in objencoder
         val := f.get(obj)
-        writePair(out, f.name, val)
+        writePair(f.name, val)
       }
     }
-    out.print(JsonToken.objectEnd.toChar)
+    this.out.print(JsonToken.objectEnd.toChar)
   }
 
-  private static Void writeMap(OutStream out, Str:Obj map)
+  private Void writeMap(Str:Obj map)
   {
-    out.print(JsonToken.objectStart.toChar)
+    this.out.print(JsonToken.objectStart.toChar)
 
     // FIXIT do we want a type??
 
     notFirst := false
     map.each |Obj? val, Str key|
     {
-      if (notFirst) out.print(JsonToken.comma.toChar)
-      writePair(out, key, val)
+      if (notFirst) this.out.print(JsonToken.comma.toChar)
+      writePair(key, val)
       notFirst = true
     }
-    out.print(JsonToken.objectEnd.toChar)
+    this.out.print(JsonToken.objectEnd.toChar)
   }
 
   // FIXIT actually need to write values out for number, obj, array, true,
   // false, null
-  private static Void writeValue(OutStream out, Obj? val)
+  private Void writeValue(Obj? val)
   {
     // FIXIT need route for DateTime
-    if (val is Str) writeString(out, val as Str)
-    else if (val is Duration) writeDuration(out, val as Duration)
-    else if (val is Num) writeNumber(out, val as Num)
-    else if (val is List) writeArray(out, val as List)
-    else if (val is Bool) writeBoolean(out, val as Bool)
-    else if (val == null) writeNull(out)
-    else if (val is Map) writeMap(out, val)
-    else if (val is Uri) writeUri(out, val as Uri)
-    else writeObj(out, val)
+    if (val is Str) writeString(val as Str)
+    else if (val is Duration) writeDuration(val as Duration)
+    else if (val is Num) writeNumber(val as Num)
+    else if (val is List) writeArray(val as List)
+    else if (val is Bool) writeBoolean(val as Bool)
+    else if (val == null) writeNull
+    else if (val is Map) writeMap(val)
+    else if (val is Uri) writeUri(val as Uri)
+    else writeObj(val)
   }
 
-  private static Void writeArray(OutStream out, Obj[] array)
+  private Void writeArray(Obj[] array)
   {
-    out.print(JsonToken.arrayStart.toChar)
+    this.out.print(JsonToken.arrayStart.toChar)
     // FIXIT we cant really put a type in here, need to infer it
 
     notFirst := false
     array.each |Obj? o|
     {
-      if (notFirst) out.print(JsonToken.comma.toChar)
-      writeValue(out, o)
+      if (notFirst) this.out.print(JsonToken.comma.toChar)
+      writeValue(o)
       notFirst = true
     }
-    out.print(JsonToken.arrayEnd.toChar)
+    this.out.print(JsonToken.arrayEnd.toChar)
   }
 
-  private static Void writePair(OutStream out, Str key, Obj? val)
+  private Void writePair(Str key, Obj? val)
   {
-      writeKey(out, key)
-      out.print(JsonToken.colon.toChar)
-      writeValue(out, val)
+      writeKey(key)
+      this.out.print(JsonToken.colon.toChar)
+      writeValue(val)
   }
 
-  private static Void writeKey(OutStream out, Str key)
+  private Void writeKey(Str key)
   {
-    writeString(out, key)
+    writeString(key)
   }
 
-  private static Void writeString(OutStream out, Str str)
+  private Void writeString(Str str)
   {
-    out.print(JsonToken.quote.toChar)
-    out.print(str)
-    out.print(JsonToken.quote.toChar)
+    this.out.print(JsonToken.quote.toChar)
+    this.out.print(str)
+    this.out.print(JsonToken.quote.toChar)
   }
 
-  private static Void writeUri(OutStream out, Uri uri)
+  private Void writeUri(Uri uri)
   {
-    out.print(JsonToken.quote.toChar)
-    out.print(JsonToken.grave.toChar)
-    out.print(uri);
-    out.print(JsonToken.grave.toChar)
-    out.print(JsonToken.quote.toChar)
+    this.out.print(JsonToken.quote.toChar)
+    this.out.print(JsonToken.grave.toChar)
+    this.out.print(uri);
+    this.out.print(JsonToken.grave.toChar)
+    this.out.print(JsonToken.quote.toChar)
   }
 
-  private static Void writeNumber(OutStream out, Num num)
+  private Void writeNumber(Num num)
   {
     out.print(num)
   }
 
-  private static Void writeDuration(OutStream out, Duration dur)
+  private Void writeDuration(Duration dur)
   {
-    out.print(JsonToken.quote.toChar)
-    out.print(dur.toStr)
-    out.print(JsonToken.quote.toChar)
+    this.out.print(JsonToken.quote.toChar)
+    this.out.print(dur.toStr)
+    this.out.print(JsonToken.quote.toChar)
   }
 
-  private static Void writeBoolean(OutStream out, Bool bool)
+  private Void writeBoolean(Bool bool)
   {
-    out.print(bool)
+    this.out.print(bool)
   }
 
-  private static Void writeNull(OutStream out)
+  private Void writeNull()
   {
-    out.print("null")
+    this.out.print("null")
   }
 
+  private OutStream out
 }

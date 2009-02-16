@@ -21,7 +21,7 @@ class Json
   **
   public static Void write(OutStream out, Obj obj)
   {
-    JsonWriter.write(out, obj)
+    JsonWriter(out).write(obj)
     out.flush
   }
 
