@@ -509,7 +509,7 @@
 - Optimize common MimeTypes to be interned
 - BuildScript dumpenv target
 
-*Build 1.0.38 (incomplete)*
+*Build 1.0.38 (15 Feb 09)*
 - Str: in, toBuf, toDisplayName, fromDisplayName
 - Buf: dup, fill, hmac
 - Duration, DateTime, Date, Time: toIso, fromIso
@@ -532,6 +532,7 @@
 - Json.write API change
 - Flux add findInFiles into context popup of dirs
 - Flux fix undo/redo stack to check point on save
+- Flux syntax definition for ActionScript
 - Compiler allow single statement expression based return
 - Compiler allow const field to override a method
 - Compiler fix when local variable shadows field with storage operator
