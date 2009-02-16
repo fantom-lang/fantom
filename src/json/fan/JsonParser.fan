@@ -14,9 +14,9 @@
 **
 internal class JsonParser
 {
-  new make(InStream buf)
+  new make(InStream in)
   {
-    this.buf = buf
+    this.in = in
   }
 
   // FIXIT need one to parse to Obj as well, doing Map/List for now
@@ -282,8 +282,8 @@ internal class JsonParser
   private Void consume()
   {
     this.prev = this.cur
-    this.cur = this.buf.readChar ?: -1
-    this.peek = this.buf.peek ?: -1
+    this.cur = this.in.readChar ?: -1
+    this.peek = this.in.peek ?: -1
   }
 
   private Void rewind()
@@ -292,7 +292,7 @@ internal class JsonParser
     this.cur = this.prev
   }
 
-  private InStream buf
+  private InStream in
   private Int cur := '?'
   private Int peek := '?'
   private Int prev := '?'
