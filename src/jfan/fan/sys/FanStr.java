@@ -436,23 +436,35 @@ public class FanStr
 
   public static String justl(String self, long width)
   {
-    int w = (int)width;
-    if (self.length() >= w) return self;
-    StringBuilder s = new StringBuilder(w);
-    s.append(self);
-    for (int i=self.length(); i<w; ++i)
-      s.append(' ');
-    return s.toString();
+    return padr(self, width, ' ');
   }
 
   public static String justr(String self, long width)
   {
+    return padl(self, width, ' ');
+  }
+
+  public static String padl(String self, long width) { return padl(self, width, ' '); }
+  public static String padl(String self, long width, long ch)
+  {
     int w = (int)width;
     if (self.length() >= w) return self;
+    char c = (char)ch;
     StringBuilder s = new StringBuilder(w);
-    for (int i=self.length(); i<w; ++i)
-      s.append(' ');
+    for (int i=self.length(); i<w; ++i) s.append(c);
     s.append(self);
+    return s.toString();
+  }
+
+  public static String padr(String self, long width) { return padr(self, width, ' '); }
+  public static String padr(String self, long width, long ch)
+  {
+    int w = (int)width;
+    if (self.length() >= w) return self;
+    char c = (char)ch;
+    StringBuilder s = new StringBuilder(w);
+    s.append(self);
+    for (int i=self.length(); i<w; ++i) s.append(c);
     return s.toString();
   }
 
