@@ -542,3 +542,7 @@
 - Compiler fix for once methods used with subclasses in same pod
 - Compiler fix for construction call against fromStr in super class
 - Compiler fix to check for dup method params and dup enum defs
+
+*Build 1.0.39 (incomplete)*
+- Str: padr, padl
+

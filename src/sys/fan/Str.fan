@@ -323,7 +323,7 @@ const final class Str
 
   **
   ** If size is less than width, then add spaces to the right
-  ** to create a left justified string.
+  ** to create a left justified string.  Also see `padr`.
   **
   ** Examples:
   **   "xyz".justl(2) => "xyz"
@@ -333,13 +333,33 @@ const final class Str
 
   **
   ** If size is less than width, then add spaces to the left
-  ** to create a right justified string.
+  ** to create a right justified string.  Also see `padl`.
   **
   ** Examples:
   **   "xyz".justr(2) => "xyz"
   **   "xyz".justr(4) => " xyz"
   **
   Str justr(Int width)
+
+  **
+  ** If size is less than width, then add the given char to the
+  ** left to achieve the specified width.  Also see `justr`.
+  **
+  ** Examples:
+  **   "3".padl(3, '0') => "003"
+  **   "123".padl(2, '0') => "123"
+  **
+  Str padl(Int width, Int char := ' ')
+
+  **
+  ** If size is less than width, then add the given char to
+  ** the left to acheive the specified with.  Also see `justl`.
+  **
+  ** Examples:
+  **   "xyz".padr(2, '.') => "xyz"
+  **   "xyz".padr(5, '-') => "xyz--"
+  **
+  Str padr(Int width, Int char := ' ')
 
   **
   ** Reverse the contents of this string.

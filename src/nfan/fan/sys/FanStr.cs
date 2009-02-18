@@ -462,23 +462,35 @@ namespace Fan.Sys
 
     public static string justl(string self, long width)
     {
-      int w = (int)width;
-      if (self.Length >= w) return self;
-      StringBuilder s = new StringBuilder(w);
-      s.Append(self);
-      for (int i=self.Length; i<w; i++)
-        s.Append(' ');
-      return s.ToString();
+      return padr(self, width, ' ');
     }
 
     public static string justr(string self, long width)
     {
+      return padl(self, width, ' ');
+    }
+
+    public static string padl(string self, long width) { return padl(self, width, ' '); }
+    public static string padl(string self, long width, long ch)
+    {
       int w = (int)width;
       if (self.Length >= w) return self;
+      char c = (char)ch;
       StringBuilder s = new StringBuilder(w);
-      for (int i=self.Length; i<w; i++)
-        s.Append(' ');
+      for (int i=self.Length; i<w; i++) s.Append(c);
       s.Append(self);
+      return s.ToString();
+    }
+
+    public static string padr(string self, long width) { return padr(self, width, ' '); }
+    public static string padr(string self, long width, long ch)
+    {
+      int w = (int)width;
+      if (self.Length >= w) return self;
+      char c = (char)ch;
+      StringBuilder s = new StringBuilder(w);
+      s.Append(self);
+      for (int i=self.Length; i<w; i++) s.Append(c);
       return s.ToString();
     }
 
