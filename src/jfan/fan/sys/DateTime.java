@@ -655,6 +655,16 @@ public final class DateTime
     return makeTicks(ticks - (ticks % accuracy.ticks), timeZone);
   }
 
+  public final DateTime midnight()
+  {
+    return makeTicks(ticks
+                     - getHour()* nsPerHour
+                     - getMin() * nsPerMin
+                     - getSec() * nsPerSec
+                     - getNanoSec(),
+                     timeZone);
+  }
+
   public final String toStr()
   {
     return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");

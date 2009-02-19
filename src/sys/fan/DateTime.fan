@@ -304,6 +304,11 @@ const final class DateTime
   DateTime floor(Duration accuracy)
 
   **
+  ** Return a DateTime for the beginning of the current day at midnight.
+  **
+  DateTime midnight()
+
+  **
   ** Return if the specified year is a leap year.
   **
   static Bool isLeapYear(Int year)
