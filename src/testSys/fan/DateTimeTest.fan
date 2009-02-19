@@ -1023,4 +1023,17 @@ class DateTimeTest : Test
     verifyEq(Time(8, 30, 8).toCode, "Time(\"08:30:08\")")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Midnight
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMidnight()
+  {
+    verifyEq(DateTime.now.midnight.time, Time(0, 0, 0))
+    verifyEq(DateTime(2008, apr, 14, 2, 3, 4, 0, utc).midnight,
+             DateTime(2008, apr, 14, 0, 0, 0, 0, utc))
+    verifyEq(DateTime(1990, feb, 28, 12, 33, 45, 666_777, la).midnight,
+             DateTime(1990, feb, 28, 0, 0, 0, 0, la))
+  }
+
 }
