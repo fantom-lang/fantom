@@ -307,7 +307,7 @@ abstract class BuildPod : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   @target="compile Fan source to Javasript"
-  virtual Void compileJavascript()
+  virtual Void javascript()
   {
     if (!hasJavascript) return
     // use compilerJavascript reflectively
@@ -327,7 +327,7 @@ abstract class BuildPod : BuildScript
     compile(true)
     javaNative
     dotnetNative
-    compileJavascript
+    javascript
   }
 
 //////////////////////////////////////////////////////////////////////////

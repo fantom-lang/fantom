@@ -26,7 +26,7 @@ class Build : BuildPod
   }
 
   @target="compile Fan source to Javasript"
-  override Void compileJavascript()
+  override Void javascript()
   {
     echo("javascript [$podName]")
 
