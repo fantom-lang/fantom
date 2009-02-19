@@ -22,7 +22,7 @@ class Target
   **
   ** Construct a target to run under the specified build script.
   ** The name is the key used to invoke this target from the command
-  ** line.  Description is used for usage summary.  Method is invoked
+  ** line. Description is used for usage summary.  Func is invoked
   ** when this target is executed.
   **
   new make(BuildScript script, Str name, Str description, Func func)
