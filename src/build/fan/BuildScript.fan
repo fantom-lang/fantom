@@ -188,8 +188,16 @@ abstract class BuildScript
 
   **
   ** Return the default target to execute when this script is run.
+  ** If this method is not overridden, then the default is to
+  ** return the first target declared in the script itself.
   **
-  abstract Target defaultTarget()
+  virtual Target defaultTarget()
+  {
+    targets := makeTargets
+    if (targets.isEmpty) throw Err("No targets declared")
+    def := targets.find |Target t->Bool| { !t.name.startsWith("dump") }
+    return def ?: targets.first
+  }
 
   **
   ** Lookup a target by name.  If not found and checked is
@@ -234,7 +242,7 @@ abstract class BuildScript
         return
       }
 
-      targets.add(Target.make(this, m.name, description, toFunc(m)))
+      targets.add(Target(this, m.name, description, toFunc(m)))
     }
     return targets
   }
@@ -327,7 +335,7 @@ abstract class BuildScript
     def := defaultTarget
     targets.each |Target t, Int i|
     {
-      n := t == def ? "${t.name}*" : "${t.name} "
+      n := t.name == def.name ? "${t.name}*" : "${t.name} "
       log.print("  ${n.justl(14)} $t.description")
       log.printLine
     }

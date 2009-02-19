@@ -41,8 +41,6 @@ Let's create a build script called "buildtest.fan":
 
   class Build : BuildScript
   {
-    override Target defaultTarget() { return target("compile") }
-
     @target="Compile everything"
     Void compile() { log.info("Compile away!") }
 
@@ -61,12 +59,14 @@ string description.  To print the usage of this script use "-?":
     -? -help       print usage summary
     -v             verbose debug logging
   targets:
+    dumpenv        Dump env details to help build debugging
     compile*       Compile everything
     clean          Clean it all up
 
 Note that the "compile" target is marked with an asterisk indicating
-it is the default target.  If we invoke the script with no arguments
-the "compile" target is executed:
+it is the default target because it is the first one declared.  You can
+also explicitly override 'defaultTarget'.  If we invoke the script
+with no arguments the "compile" target is executed:
 
   C:\dev\fan\src>buildtest
   Compile away!
@@ -195,8 +195,6 @@ field with a 'Version' literal or any other expression.
 Also note that all the directories are specified as Uris relative
 to the script directory.  If you don't have native code, you can
 omit the 'javaDirs' and 'dotnetDirs' initialization.
-
-
 
 
 
