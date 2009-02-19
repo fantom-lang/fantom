@@ -545,4 +545,4 @@
 
 *Build 1.0.39 (incomplete)*
 - Str: padr, padl
-
+- DateTime: midnight

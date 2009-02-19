@@ -93,7 +93,7 @@ class WispRes : WebRes
     // ensure we are committed with content; it is an illegal state
     // if another code path committed with no-content
     commit(true)
-    if (webOut == null) throw Err("Attempt to access WebRes.out after no-content commit")
+    if (webOut == null) throw Err("Must set Content-Length or Content-Type to write content")
     return webOut
   }
 
