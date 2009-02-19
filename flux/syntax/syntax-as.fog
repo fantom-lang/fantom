@@ -53,6 +53,7 @@ SyntaxRules
     "label",
     "namespace",
     "native",
+    "new",
     "null",
     "override",
     "package",
