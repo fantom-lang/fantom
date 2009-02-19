@@ -663,6 +663,16 @@ namespace Fan.Sys
       return makeTicks(m_ticks - (m_ticks % accuracy.m_ticks), m_timeZone);
     }
 
+    public DateTime midnight()
+    {
+      return makeTicks(m_ticks
+                       - getHour()* nsPerHour
+                       - getMin() * nsPerMin
+                       - getSec() * nsPerSec
+                       - getNanoSec(),
+                       m_timeZone);
+    }
+
     public override string toStr()
     {
       return toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
