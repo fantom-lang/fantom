@@ -316,13 +316,6 @@ abstract class BuildPod : BuildScript
     if (r != 0) fatal("Cannot compile javascript '$podName'")
   }
 
-// TODO: remove this target
-  @target="compile Fan source to Javasript"
-  virtual Void compileJavascript()
-  {
-    javascript
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Full
 //////////////////////////////////////////////////////////////////////////

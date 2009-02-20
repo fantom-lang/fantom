@@ -1065,4 +1065,19 @@ class DateTimeTest : Test
     f(Date(2008, Month.feb, 28).toDateTime(Time(23, 0), la))
     f(Time(23, 0).toDateTime(Date(2008, Month.feb, 28), la))
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Time.toDuration
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToDuration()
+  {
+    verifyEq(Time(0, 0, 0, 0).toDuration, 0ns)
+    verifyEq(Time(0, 0, 0, 1).toDuration, 1ns)
+    verifyEq(Time(0, 0, 2, 0).toDuration, 2sec)
+    verifyEq(Time(0, 3, 0, 0).toDuration, 3min)
+    verifyEq(Time(4, 0, 0, 0).toDuration, 4hr)
+    verifyEq(Time(4, 3, 2, 1).toDuration, 4hr+3min+2sec+1ns)
+  }
+
 }

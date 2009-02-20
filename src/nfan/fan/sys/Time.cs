@@ -311,6 +311,14 @@ namespace Fan.Sys
   // Misc
   //////////////////////////////////////////////////////////////////////////
 
+    public Duration toDuration()
+    {
+      return Duration.make(m_hour*Duration.nsPerHr +
+                           m_min*Duration.nsPerMin +
+                           m_sec*Duration.nsPerSec +
+                           m_ns);
+    }
+
     public DateTime toDateTime(Date d) { return DateTime.makeDT(d, this); }
     public DateTime toDateTime(Date d, TimeZone tz) { return DateTime.makeDT(d, this, tz); }
 

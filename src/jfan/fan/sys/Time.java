@@ -310,6 +310,14 @@ public final class Time
 // Misc
 //////////////////////////////////////////////////////////////////////////
 
+  public Duration toDuration()
+  {
+    return Duration.make(hour*Duration.nsPerHr +
+                         min*Duration.nsPerMin +
+                         sec*Duration.nsPerSec +
+                         ns);
+  }
+
   public DateTime toDateTime(Date d) { return DateTime.makeDT(d, this); }
   public DateTime toDateTime(Date d, TimeZone tz) { return DateTime.makeDT(d, this, tz); }
 
