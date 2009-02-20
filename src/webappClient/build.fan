@@ -22,14 +22,18 @@ class Build : BuildPod
     description   = "Client-side framework for building web applications"
     depends       = ["sys 1.0", "web 1.0", "webapp 1.0"]
     srcDirs       = [`fan/`]
-    hasJavascript = true
   }
 
-  @target="compile Fan source to Javasript"
-// TODO: rename
-  override Void compileJavascript()
+  @target="compile fan source into pod"
+  override Void compile(Bool full := false)
   {
-    echo("javascript [$podName]")
+    super.compile(full)
+    doJavascript
+  }
+
+  private Void doJavascript()
+  {
+    log.info("javascript [$podName]")
 
     tempDir := scriptFile.parent + `temp-javascript/`
     tempDir.delete
@@ -49,6 +53,7 @@ class Build : BuildPod
     ordered.each |Str name|
     {
       f := src[name]
+      if (log.isDebug) log.printLine("  [$f]")
       if (f == null) throw Err("Required file not found: $name")
       append(f, out)
     }
@@ -57,6 +62,7 @@ class Build : BuildPod
     src.each |File f|
     {
       if (ordered.contains(f.name)) return
+      if (log.isDebug) log.printLine("  [$f]")
       append(f, out)
     }
 
