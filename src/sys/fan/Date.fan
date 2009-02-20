@@ -158,6 +158,11 @@ const final class Date
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Combine this Date with the given Time to return a DateTime.
+  **
+  DateTime toDateTime(Time t, TimeZone tz := TimeZone.current)
+
+  **
   ** Get this Date as a Fan expression suitable for code generation.
   **
   Str toCode()
