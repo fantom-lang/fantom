@@ -310,6 +310,22 @@ public final class Time
 // Misc
 //////////////////////////////////////////////////////////////////////////
 
+  public static Time fromDuration(Duration d)
+  {
+    long ticks = d.ticks;
+    if (ticks == 0) return defVal;
+
+    if (ticks < 0 || ticks > Duration.nsPerDay )
+      throw ArgErr.make("Duration out of range: " + d).val;
+
+    int hour = (int)(ticks / Duration.nsPerHr);  ticks %= Duration.nsPerHr;
+    int min  = (int)(ticks / Duration.nsPerMin); ticks %= Duration.nsPerMin;
+    int sec  = (int)(ticks / Duration.nsPerSec); ticks %= Duration.nsPerSec;
+    int ns   = (int)ticks;
+
+    return new Time(hour, min, sec, ns);
+  }
+
   public Duration toDuration()
   {
     return Duration.make(hour*Duration.nsPerHr +

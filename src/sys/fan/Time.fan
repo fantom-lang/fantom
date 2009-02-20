@@ -160,7 +160,18 @@ const final class Time
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Translate a duration of time which has elapsed since midnight
+  ** into a Time of day.  See `toDuration`.  If the duration is not
+  ** between 0 and 24hr throw ArgErr.
+  **
+  ** Example:
+  **   Time.fromDuration(150min)  =>  02:30:00
+  **
+  static Time fromDuration(Duration d)
+
+  **
   ** Return the duration of time which has elapsed since midnight.
+  ** See `fromDuration`.
   **
   ** Example:
   **   Time(2, 30).toDuration  =>  150min
