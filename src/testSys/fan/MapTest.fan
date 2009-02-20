@@ -314,6 +314,29 @@ class MapTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Null Vals
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNullVals()
+  {
+    m := ["a": "A", "b": null]
+
+    verifyEq(m.size, 2)
+
+    verify(m.containsKey("a"))
+    verify(m.containsKey("b"))
+
+    verifyEq(m["a"], "A")
+    verifyEq(m["b"], null)
+
+    keys := Str[,]
+    vals := Str?[,]
+    m.each |Str? v, Str k| { keys.add(k); vals.add(v) }
+    verifyEq(keys.sort, ["a", "b"])
+    verifyEq(vals.sort, [null, "A"])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Duplicate
 //////////////////////////////////////////////////////////////////////////
 
