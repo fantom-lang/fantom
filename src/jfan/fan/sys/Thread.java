@@ -766,7 +766,7 @@ public class Thread
       {
         case MSG_SYNC:       throw InterruptedErr.make("sendSync timed out").val;
         case MSG_FINISH_OK:  return obj;
-        case MSG_FINISH_ERR: throw ((Err)obj).val;
+        case MSG_FINISH_ERR: throw Err.make("sendSync failed: " + obj, (Err)obj).val;
         case MSG_STOPPED:    throw InterruptedErr.make("thread stopped").val;
         default: throw new IllegalStateException(""+state);
       }
