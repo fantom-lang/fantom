@@ -546,7 +546,8 @@
 *Build 1.0.39 (incomplete)*
 - Str: padr, padl
 - DateTime: midnight
-- Date, Time: toDateTime
+- Date: toDateTime
+- Time: toDateTime, toDuration
 - BuildScript: defaultTarget now defaults to first script declared
 - BuildPod: rename compileJavascript to javascript
 - TODO: fix BuildPod & webappClient/build.fan

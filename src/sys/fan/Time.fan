@@ -160,6 +160,14 @@ const final class Time
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Return the duration of time which has elapsed since midnight.
+  **
+  ** Example:
+  **   Time(2, 30).toDuration  =>  150min
+  **
+  Duration toDuration()
+
+  **
   ** Combine this Time with the given Date to return a DateTime.
   **
   DateTime toDateTime(Date d, TimeZone tz := TimeZone.current)
