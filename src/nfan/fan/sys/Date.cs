@@ -268,6 +268,9 @@ namespace Fan.Sys
   // Misc
   //////////////////////////////////////////////////////////////////////////
 
+    public DateTime toDateTime(Time t) { return DateTime.makeDT(this, t); }
+    public DateTime toDateTime(Time t, TimeZone tz) { return DateTime.makeDT(this, t, tz); }
+
     public string toCode()
     {
       if (Equals(m_defVal)) return "Date.defVal";
@@ -282,9 +285,9 @@ namespace Fan.Sys
 
     public static readonly Date m_defVal = new Date(2000, 0, 1);
 
-    private readonly short m_year;
-    private readonly byte m_month;
-    private readonly byte m_day;
+    internal readonly short m_year;
+    internal readonly byte m_month;
+    internal readonly byte m_day;
 
   }
 }

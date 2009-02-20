@@ -1036,4 +1036,33 @@ class DateTimeTest : Test
              DateTime(1990, feb, 28, 0, 0, 0, 0, la))
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Date, Time toDateTime
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToDateTime()
+  {
+    f := |DateTime dt|
+    {
+      verifyEq(dt, DateTime(2009, Month.dec, 31, 12, 30, 47, 123_456))
+      verifyEq(dt.timeZone, TimeZone.current)
+      verifyEq(dt.year, 2009)
+      verifyEq(dt.month, Month.dec)
+      verifyEq(dt.day, 31)
+      verifyEq(dt.hour, 12)
+      verifyEq(dt.min, 30)
+      verifyEq(dt.sec, 47)
+      verifyEq(dt.nanoSec, 123_456)
+    }
+    f(Date(2009, Month.dec, 31).toDateTime(Time(12, 30, 47, 123_456)))
+    f(Time(12, 30, 47, 123_456).toDateTime(Date(2009, Month.dec, 31)))
+
+    f = |DateTime dt|
+    {
+      verifyEq(dt, DateTime(2008, Month.feb, 28, 23, 0, 0, 0, la))
+      verifyEq(dt.timeZone, la)
+    }
+    f(Date(2008, Month.feb, 28).toDateTime(Time(23, 0), la))
+    f(Time(23, 0).toDateTime(Date(2008, Month.feb, 28), la))
+  }
 }

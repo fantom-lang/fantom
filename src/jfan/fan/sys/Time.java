@@ -310,6 +310,9 @@ public final class Time
 // Misc
 //////////////////////////////////////////////////////////////////////////
 
+  public DateTime toDateTime(Date d) { return DateTime.makeDT(d, this); }
+  public DateTime toDateTime(Date d, TimeZone tz) { return DateTime.makeDT(d, this, tz); }
+
   public String toCode()
   {
     if (equals(defVal)) return "Time.defVal";
@@ -324,9 +327,9 @@ public final class Time
 
   public static final Time defVal = new Time(0, 0, 0, 0);
 
-  private final byte hour;
-  private final byte min;
-  private final byte sec;
-  private final int ns;
+  final byte hour;
+  final byte min;
+  final byte sec;
+  final int ns;
 
 }

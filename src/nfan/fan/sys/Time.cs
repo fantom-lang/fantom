@@ -311,6 +311,9 @@ namespace Fan.Sys
   // Misc
   //////////////////////////////////////////////////////////////////////////
 
+    public DateTime toDateTime(Date d) { return DateTime.makeDT(d, this); }
+    public DateTime toDateTime(Date d, TimeZone tz) { return DateTime.makeDT(d, this, tz); }
+
     public string toCode()
     {
       if (Equals(m_defVal)) return "Time.defVal";
@@ -325,10 +328,10 @@ namespace Fan.Sys
 
     public static readonly Time m_defVal = new Time(0, 0, 0, 0);
 
-    private readonly byte m_hour;
-    private readonly byte m_min;
-    private readonly byte m_sec;
-    private readonly int m_ns;
+    internal readonly byte m_hour;
+    internal readonly byte m_min;
+    internal readonly byte m_sec;
+    internal readonly int m_ns;
 
   }
 }

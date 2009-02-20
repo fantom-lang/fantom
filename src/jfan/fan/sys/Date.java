@@ -268,6 +268,9 @@ public final class Date
 // Misc
 //////////////////////////////////////////////////////////////////////////
 
+  public DateTime toDateTime(Time t) { return DateTime.makeDT(this, t); }
+  public DateTime toDateTime(Time t, TimeZone tz) { return DateTime.makeDT(this, t, tz); }
+
   public String toCode()
   {
     if (equals(defVal)) return "Date.defVal";
@@ -282,8 +285,8 @@ public final class Date
 
   public static final Date defVal = new Date(2000, 0, 1);
 
-  private final short year;
-  private final byte month;
-  private final byte day;
+  final short year;
+  final byte month;
+  final byte day;
 
 }
