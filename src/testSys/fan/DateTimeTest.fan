@@ -1072,12 +1072,21 @@ class DateTimeTest : Test
 
   Void testToDuration()
   {
-    verifyEq(Time(0, 0, 0, 0).toDuration, 0ns)
-    verifyEq(Time(0, 0, 0, 1).toDuration, 1ns)
-    verifyEq(Time(0, 0, 2, 0).toDuration, 2sec)
-    verifyEq(Time(0, 3, 0, 0).toDuration, 3min)
-    verifyEq(Time(4, 0, 0, 0).toDuration, 4hr)
-    verifyEq(Time(4, 3, 2, 1).toDuration, 4hr+3min+2sec+1ns)
+    verifyToDuration(Time(0, 0, 0, 0), 0ns)
+    verifyToDuration(Time(0, 0, 0, 1), 1ns)
+    verifyToDuration(Time(0, 0, 2, 0), 2sec)
+    verifyToDuration(Time(0, 3, 0, 0), 3min)
+    verifyToDuration(Time(4, 0, 0, 0), 4hr)
+    verifyToDuration(Time(4, 3, 2, 1), 4hr+3min+2sec+1ns)
+    verifyToDuration(Time(23, 59, 12, 123_000_789), 23hr+59min+12sec+123_000_789ns)
+    verifyErr(ArgErr#) |,| { Time.fromDuration(-10hr) }
+    verifyErr(ArgErr#) |,| { Time.fromDuration(25hr) }
+  }
+
+  Void verifyToDuration(Time t, Duration d)
+  {
+    verifyEq(t.toDuration, d)
+    verifyEq(Time.fromDuration(d), t)
   }
 
 }
