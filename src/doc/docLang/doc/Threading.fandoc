@@ -140,7 +140,7 @@ Coalescing Messages [#coalescing]
 =================================
 Often when sending messages to a thread, we can merge two messages
 into a single message to save ourselves some work.  For example, it is common
-in windowing systems is to maintain a single union of all the dirty portions
+in windowing systems to maintain a single union of all the dirty portions
 of a window rather than of a bunch of little rectangles.  A thread can
 have its messages automatically coalesced using the [loopCoalescing]`sys::Thread.loopCoalescing`
 method.
