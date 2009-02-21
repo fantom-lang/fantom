@@ -364,6 +364,96 @@ class ThreadTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Loop Coalescing
+//////////////////////////////////////////////////////////////////////////
+
+  Void testLoopCoalescing()
+  {
+    try
+    {
+      x := Thread.make(null, &runCoalesce)
+      x.start
+      Thread.sleep(100ms)
+      x.sendAsync(100ms)
+      x.sendAsync("one")
+      x.sendAsync("two")
+      x.sendAsync("one")
+      x.sendAsync("two")
+      x.sendAsync("three")
+      x.sendAsync("four")
+      x.sendAsync("one")
+      x.sendAsync("four")
+      x.sendAsync("three")
+      x.sendAsync(null)
+      x.join
+      Thread.sleep(100ms)
+      Obj[] results := Sys.ns[`/testSys/coalesce`]
+      verifyEq(results, ["one", "two", "three", "four"])
+    }
+    finally
+    {
+      try { Sys.ns.delete(`/testSys/coalesce`) } catch {}
+    }
+  }
+
+  static Void runCoalesce(Thread t)
+  {
+    msgs := Str[,]
+    t.loopCoalescing(null, null) |Obj? msg|
+    {
+      if (msg == null) { t.stop; return }
+      if (msg is Duration) { Thread.sleep(msg); return }
+      msgs.add(msg)
+    }
+    Sys.ns.create(`/testSys/coalesce`, msgs)
+  }
+
+  Void testLoopCoalescingFuncs()
+  {
+    try
+    {
+      x := Thread.make(null, &runCoalesceFuncs)
+      x.start
+      Thread.sleep(100ms)
+      x.sendAsync(100ms)
+      x.sendAsync(["a", 2])
+      x.sendAsync(["b", 10])
+      x.sendAsync(["a", 3])
+      x.sendAsync(["a", 4])
+      x.sendAsync(["b", 20])
+      x.sendAsync(["c", 100])
+      x.sendAsync(["a", 5])
+      x.sendAsync(["c", 200])
+      x.sendAsync(null)
+      x.join
+      Thread.sleep(100ms)
+      Obj[] results := Sys.ns[`/testSys/coalesce`]
+      verifyEq(results,
+        [["a", 2, 3, 4, 5],
+         ["b", 10, 20],
+         ["c", 100, 200]])
+    }
+    finally
+    {
+      try { Sys.ns.delete(`/testSys/coalesce`) } catch {}
+    }
+  }
+
+  static Void runCoalesceFuncs(Thread t)
+  {
+    msgs := Obj[][,]
+    toKey := |Obj? msg->Obj?| { msg is List ? msg->get(0): null }
+    coalesce := |Obj[] a, Obj[] b->Obj| { Obj[,].add(a[0]).addAll(a[1..-1]).addAll(b[1..-1]) }
+    t.loopCoalescing(toKey, coalesce) |Obj? msg|
+    {
+      if (msg == null) { t.stop; return }
+      if (msg is Duration) { Thread.sleep(msg); return }
+      msgs.add(msg)
+    }
+    Sys.ns.create(`/testSys/coalesce`, msgs)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Thread Locals
 //////////////////////////////////////////////////////////////////////////
 
