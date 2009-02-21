@@ -174,7 +174,7 @@ namespace Fan.Sys
       }
     }
 
-    public static bool isAlphaNum(int self)
+    public static bool isAlphaNum(long self)
     {
       try
       {
