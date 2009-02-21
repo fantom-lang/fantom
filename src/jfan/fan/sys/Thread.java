@@ -545,6 +545,12 @@ public class Thread
     }
   }
 
+  public final void loopCoalescing(Func toKey, Func coalesce, Func received)
+  {
+    coalescer = new Coalescer(toKey, coalesce);
+    loop(received);
+  }
+
   private void dispatch(Func received, Message msg)
   {
     try
@@ -717,6 +723,7 @@ public class Thread
     if (head == null) tail = null;
     m.next = null;
     size--;
+    if (coalescer != null) coalescer.dequeue(m);
 
     // notify enqueue (if blocked on max queue)
     notifyAll();
@@ -731,6 +738,12 @@ public class Thread
     // ensure new or running
     if (state > RUNNING)
       throw Err.make("thread not active").val;
+
+    // check for coalescing
+    if (coalescer != null)
+    {
+      if (coalescer.enqueue(m)) return;
+    }
 
     // flow control wait if at max
     if (size >= maxQueueSize) wait();
@@ -791,7 +804,7 @@ public class Thread
     }
 
     int state;       // sync/async in, ok/err out
-    Object obj;         // message in, return/err out
+    Object obj;      // message in, return/err out
     Message next;    // queue linked list
   }
 
@@ -821,6 +834,73 @@ public class Thread
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Coalesce
+//////////////////////////////////////////////////////////////////////////
+
+  static class Coalescer
+  {
+    Coalescer(Func toKeyFunc, Func coalesceFunc)
+    {
+      this.toKeyFunc = toKeyFunc;
+      this.coalesceFunc = coalesceFunc;
+    }
+
+    /** Attempt to coalesce and return true if we coalesced */
+    boolean enqueue(Message incoming)
+    {
+      try
+      {
+        Object key = toKey(incoming.obj);
+        if (key == null) return false;
+        Message orig = (Message)pending.get(key);
+        if (orig == null)
+        {
+          pending.put(key, incoming);
+          return false;
+        }
+        else
+        {
+          orig.obj = coalesce(orig.obj, incoming.obj);
+          return true;
+        }
+      }
+      catch (Throwable e)
+      {
+        e.printStackTrace();
+        return false;
+      }
+    }
+
+    /** Notification that we are dequeuing, remove from pending map */
+    void dequeue(Message m)
+    {
+      try
+      {
+        Object key = toKey(m.obj);
+        if (key == null) return;
+        pending.remove(key);
+      }
+      catch (Throwable e)
+      {
+        e.printStackTrace();
+      }
+    }
+
+    private Object toKey(Object obj)
+    {
+      return toKeyFunc == null ? obj : toKeyFunc.call1(obj);
+    }
+
+    private Object coalesce(Object orig, Object incoming)
+    {
+      return coalesceFunc == null ? orig : coalesceFunc.call2(orig, incoming);
+    }
+
+    Func toKeyFunc, coalesceFunc;
+    HashMap pending = new HashMap();
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
@@ -833,7 +913,7 @@ public class Thread
   private static int maxQueueSize = 1000;         // max messages to queue
   private static Timer[] noTimers = new Timer[0]; // empty timers
 
-  private String name;                  // thread name
+  private String name;               // thread name
   private int state;                 // current state
   private Val val;                   // Java thread if attached
   private Message head, tail;        // message queue linked list
@@ -841,5 +921,5 @@ public class Thread
   private Timer[] timers = noTimers; // timers for sendLater
   private Func run;                  // run method
   private Object runResult;          // return of run method
-
+  private Coalescer coalescer;       // if we are coalescing the messages
 }

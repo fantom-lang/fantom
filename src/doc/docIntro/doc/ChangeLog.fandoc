@@ -548,5 +548,6 @@
 - DateTime: midnight
 - Date: toDateTime
 - Time: toDateTime, toDuration, fromDuration
+- Thread: loopCoalescing
 - BuildScript: defaultTarget now defaults to first script declared
 - BuildPod: rename compileJavascript to javascript

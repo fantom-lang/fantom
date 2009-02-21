@@ -136,6 +136,35 @@ two additional methods:
     reflector.start
     ...
 
+Coalescing Messages [#coalescing]
+=================================
+Often when sending messages to a thread, we can merge two messages
+into a single message to save ourselves some work.  For example, it is common
+in windowing systems is to maintain a single union of all the dirty portions
+of a window rather than of a bunch of little rectangles.  A thread can
+have its messages automatically coalesced using the [loopCoalescing]`sys::Thread.loopCoalescing`
+method.
+
+Let's look at an example:
+
+  class Repaint
+  {
+    new make(Window w, Rect d) { ... }
+    Window window
+    Rect dirty
+  }
+
+  toKey := |Repaint msg->Obj| { msg.window }
+  coalesce := |Repaint a, Repaint b->Obj| { Repaint(a.window, a.dirty.union(b.dirty)) }
+  loopCoalescing(toKey, coalesce) |Repaint msg| {...}
+
+In this example the messages are instances of 'Repaint'.  The 'toKey' function
+is used to obtain the key which determines if two messages can be coalesced.
+In this example we coalesce repaints per window. If the thread detects two
+pending messages with the same key (the window in this case), then it calls
+the 'coalesce' function to merge the messages.  In example we return
+a new 'Repaint' event with the union of the two dirty regions.
+
 Flow Control [#flowControl]
 ===========================
 There are various approaches to flow control, but for now Fan uses a

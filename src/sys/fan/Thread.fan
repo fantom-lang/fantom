@@ -224,7 +224,34 @@ const class Thread
   **
   ** See [docLang]`docLang::Threading#messages`.
   **
-  Void loop(|Obj msg->Obj| receive)
+  Void loop(|Obj? msg->Obj?| receive)
+
+  **
+  ** Enter a coalescing message loop.  This method follows the same
+  ** semantics as `loop`, but has the ability to coalesce the messages
+  ** pending in the thread's message queue.
+  **
+  ** The 'toKey' function is used to derive a key for each message,
+  ** or if null then the message itself is used as the key.  If the 'toKey'
+  ** function returns null, then the message is not considered for coalescing.
+  ** Internally messages are indexed by key for efficient coalescing.
+  **
+  ** If an incoming message has the same key as a pending message
+  ** in the queue, then the 'coalesce' function is called to coalesce
+  ** the messages into a new merged message.  If 'coalesce' is null,
+  ** then we use the original message.  The coalesced message occupies
+  ** the same position in the queue as the original and the incoming
+  ** message is discarded.
+  **
+  ** Both the 'toKey' and 'coalesce' functions are called while holding
+  ** an internal lock on the queue.  So the functions must be efficient
+  ** and never attempt to interact with other threads.
+  **
+  ** See [docLang]`docLang::Threading#coalescing` for more information.
+  **
+  Void loopCoalescing(|Obj? msg->Obj?|? toKey,
+                      |Obj? orig, Obj? incoming->Obj?|? coalesce,
+                      |Obj? msg->Obj?| receive)
 
 //////////////////////////////////////////////////////////////////////////
 // Messaging
