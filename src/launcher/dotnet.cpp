@@ -113,7 +113,11 @@ int runDotnetMain()
   ULONG sz = strlen(sysPath) + 1;
   LPWSTR wSysPath = new WCHAR[sz];
   MultiByteToWideChar(CP_ACP, 0, sysPath, sz, wSysPath, sz);
-  if (debug) printf("--   sysPath = %s\n", sysPath);
+  if (debug)
+  {
+    printf("--   sysPath  = %s\n", sysPath);
+    printf("--   wSysPath = %S\n", wSysPath);
+  }
 
   // figure out main
   char mainClassName[256];
@@ -121,13 +125,18 @@ int runDotnetMain()
   sz = strlen(mainClassName) + 1;
   LPWSTR wMainClassName = new WCHAR[sz];
   MultiByteToWideChar(CP_ACP, 0, mainClassName, sz, wMainClassName, sz);
-  if (debug) printf("--   fan.main = %S\n", mainClassName);
+  if (debug)
+  {
+    printf("--   mainClassName  = %s\n", mainClassName);
+    printf("--   wMainClassName = %S\n", wMainClassName);
+  }
 
   // since we only have a single str to work with
   // stuff everything into our reserved str, delimited
   // with newlines
 
-  char reserved[255];
+  char reserved[1024];
+  reserved[0] = '\0'; // need this or we get garbage at beginning of str
   strcat(reserved, fanHome);
   strcat(reserved, "\n");
   for (int i=0; i<fanArgc; i++)
@@ -138,6 +147,7 @@ int runDotnetMain()
   sz = strlen(reserved) + 1;
   LPWSTR wReserved = new WCHAR[sz];
   MultiByteToWideChar(CP_ACP, 0, reserved, sz, wReserved, sz);
+  if (debug) printf("--   wReserved = %S\n", wReserved);
 
   DWORD retVal = 0;
   HRESULT hr = pClrHost->ExecuteInDefaultAppDomain(
