@@ -192,16 +192,26 @@ public class Thread
     try
     {
       List types = thread.type().inheritance();
-      for (int i=0; i<types.sz(); ++i)
+      nextType: for (int i=0; i<types.sz(); ++i)
       {
+        // get next type in inheritance and check if service type
         Type t = (Type)types.get(i);
-        if (!isServiceType(t)) continue;
+        if (!isServiceType(t)) continue nextType;
 
+        // lookup linked list for that type
         ThreadNode node = (ThreadNode)byService.get(t.qname());
-        if (node == null) continue;
+        if (node == null) continue nextType;
 
+        // find this thread in the linked list
         ThreadNode last = null;
-        while (node.thread != thread) { last = node; node = node.next; }
+        while (node.thread != thread)
+        {
+          last = node;
+          node = node.next;
+          if (node == null) continue nextType;
+        }
+
+        // update the byService map or linked list
         if (last == null)
           byService.put(t.qname(), node.next);
         else
@@ -304,9 +314,16 @@ public class Thread
     if (state == DEAD) return this;
     unmount();
 
-    // assume if we have or had messages in the queue, that the thread is
-    // running (or will be running) with a loop and enqueue a stop msg
-    if (size > 0 || peak > 0)
+    // assume if we are in the loop or have messages in the queue,
+    // that the thread is running (or will be running) with a loop so
+    // enqueue a stop msg;
+    //
+    // TODO: if no messages have never been enqueued, there is a window
+    // between startup and before the thread enters the loop where will we
+    // just the drop to the interrupt message below; so should we force
+    // this method to be used only with message loop threads?  if so how
+    // do we detect that to prevent orphan threads
+    if (inLoop || size > 0)
     {
       try
       {
@@ -319,7 +336,8 @@ public class Thread
     }
 
     // otherwise if the thread isn't processing messages in its
-    // run method, then just sent it an interrupt
+    // run method, then just sent it an interrupt (in this case stop
+    // works just like kill), but see note above
     else
     {
       state = DEAD;
@@ -562,27 +580,35 @@ public class Thread
 
   public final void loop(Func receive)
   {
-    // ensure only called by myself
-    if (current() != this)
-      throw Err.make("Thread.current != this").val;
-
-    // ensure received not null
-    if (receive == null)
-      throw NullErr.make("receive callback null").val;
-
-    // main loop
-    while (state == RUNNING)
+    inLoop = true;
+    try
     {
-      try
+      // ensure only called by myself
+      if (current() != this)
+        throw Err.make("Thread.current != this").val;
+
+      // ensure received not null
+      if (receive == null)
+        throw NullErr.make("receive callback null").val;
+
+      // main loop
+      while (state == RUNNING)
       {
-        Message msg = dequeue();
-        if (msg.state == MSG_STOP) break;
-        dispatch(receive, msg);
+        try
+        {
+          Message msg = dequeue();
+          if (msg.state == MSG_STOP) break;
+          dispatch(receive, msg);
+        }
+        catch (Throwable e)
+        {
+          if (state == RUNNING) e.printStackTrace();
+        }
       }
-      catch (Throwable e)
-      {
-        if (state == RUNNING) e.printStackTrace();
-      }
+    }
+    finally
+    {
+      inLoop = false;
     }
   }
 
@@ -892,6 +918,9 @@ public class Thread
     {
       try
       {
+        // don't coalesce internal stop message
+        if (incoming.state ==  MSG_STOP) return false;
+
         Object key = toKey(incoming.obj);
         if (key == null) return false;
         Message orig = (Message)pending.get(key);
@@ -918,6 +947,9 @@ public class Thread
     {
       try
       {
+        // don't coalesce internal stop message
+        if (m.state == MSG_STOP) return;
+
         Object key = toKey(m.obj);
         if (key == null) return;
         pending.remove(key);
@@ -964,4 +996,5 @@ public class Thread
   private Func run;                  // run method
   private Object runResult;          // return of run method
   private Coalescer coalescer;       // if we are coalescing the messages
+  private boolean inLoop;            // are we in the message loop
 }
