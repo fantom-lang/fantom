@@ -48,9 +48,11 @@ creating thread).
 
 A thread is started with the [Thread.start]`sys::Thread.start` method.  A
 thread runs until either it's run function terminates or someone calls
-the [Thread.stop]`sys::Thread.stop` method.  The 'stop' method only sets
-a flag, it does not immediately stop the thread.  The thread doesn't actually
-stop until it comes to an interruptible point and rechecks the flag.
+either [Thread.stop]`sys::Thread.stop` or [Thread.kill]`sys::Thread.kill`.
+The 'stop' method allows the thread to finish processing any pending messages
+in its queue.  The 'kill' method discards any pending messages and raises
+InterruptedErr on the thread's run method and any threads blocking on
+'sendSync'.
 
 Join [#join]
 ************

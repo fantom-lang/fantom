@@ -243,9 +243,13 @@ class ThreadTest : Test
 
   static Obj runStopKill(Thread t)
   {
-    try Thread.sleep(100ms); catch {}
     acc := Obj[,]
-    t.loop |Obj msg| { acc.add(msg) }
+    try
+    {
+      Thread.sleep(50ms)
+      t.loop |Obj msg| { acc.add(msg) }
+    }
+    catch (InterruptedErr e) {}
     return acc
   }
 
