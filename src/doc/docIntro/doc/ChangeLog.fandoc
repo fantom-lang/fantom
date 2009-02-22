@@ -547,6 +547,7 @@
 - Str: padr, padl
 - DateTime: midnight
 - Date: toDateTime
+- Map: any, all
 - Time: toDateTime, toDuration, fromDuration
 - Thread: loopCoalescing
 - BuildScript: defaultTarget now defaults to first script declared

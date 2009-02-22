@@ -914,6 +914,28 @@ class MapTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Any/All
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAnyAll()
+  {
+    verifyEq([:].any |Obj o->Bool| { false }, false)
+    verifyEq([:].all |Obj o->Bool| { false }, true)
+
+    m := ['a':"Alpha", 'b': "Bravo", 'c':"Charlie", 'd':"Delta", 'e':"Echo"]
+
+    verifyEq(m.any |Str v->Bool| { v == "Charlie" }, true)
+    verifyEq(m.any |Str v->Bool| { v == "Foxtrot" }, false)
+    verifyEq(m.all |Str v->Bool| { v[0].isUpper }, true)
+    verifyEq(m.all |Str v->Bool| { v == "Charlie" }, false)
+
+    verifyEq(m.any |Str v, Int k->Bool| { k == 'e' }, true)
+    verifyEq(m.any |Str v, Int k->Bool| { k == 'f' }, false)
+    verifyEq(m.all |Str v, Int k->Bool| { k.isLower }, true)
+    verifyEq(m.all |Str v, Int k->Bool| { k == 'e' }, false)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Reduce
 //////////////////////////////////////////////////////////////////////////
 

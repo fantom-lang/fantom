@@ -402,6 +402,34 @@ namespace Fan.Sys
       return acc;
     }
 
+    public bool any(Func f)
+    {
+      if (m_map.Count == 0) return false;
+      IDictionaryEnumerator en = m_map.GetEnumerator();
+      while (en.MoveNext())
+      {
+        object key = en.Key;
+        object val = en.Value;
+        if (f.call2(val, key) == Boolean.True)
+          return true;
+      }
+      return false;
+    }
+
+    public bool all(Func f)
+    {
+      if (m_map.Count == 0) return true;
+      IDictionaryEnumerator en = m_map.GetEnumerator();
+      while (en.MoveNext())
+      {
+        object key = en.Key;
+        object val = en.Value;
+        if (f.call2(val, key) == Boolean.False)
+          return false;
+      }
+      return true;
+    }
+
     public object reduce(object reduction, Func f)
     {
       IDictionaryEnumerator en = m_map.GetEnumerator();
