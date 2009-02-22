@@ -233,8 +233,9 @@ class ThreadTest : Test
 
     // a should have accumulated all 1000, b might or might not since it was killed
     Int aNum := a.join->size
-    Int bNum := b.join->size
     verifyEq(aNum, 1000)
+
+    Int? bNum := b.join?->size
     verifyEq(bNum <= 1000, true)
 
     verifyEq(a.isDead, true)
