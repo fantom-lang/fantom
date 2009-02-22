@@ -196,7 +196,10 @@ public class Thread
       {
         Type t = (Type)types.get(i);
         if (!isServiceType(t)) continue;
+
         ThreadNode node = (ThreadNode)byService.get(t.qname());
+        if (node == null) continue;
+
         ThreadNode last = null;
         while (node.thread != thread) { last = node; node = node.next; }
         if (last == null)
