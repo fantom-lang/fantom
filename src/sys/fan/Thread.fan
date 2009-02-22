@@ -152,17 +152,28 @@ const class Thread
   **
   ** Start this thread running.  If the thread is already
   ** running or has been stopped, then throw Err.  Return this.
+  ** Also see `stop` and `kill`.
   **
   This start()
 
   **
-  ** Stop this thread from running.  If this thread
-  ** is not currently running, then this method does nothing.
-  ** Note that the thread likely doesn't actually terminate
-  ** until it reaches an interruptable point in its main loop.
-  ** Return this.
+  ** Stop this thread from running with a clean shutdown.
+  ** The thread finishes processing all the pending messages
+  ** on its queue, then exits gracefully.  If not currently
+  ** running, then this method does nothing.  Return this.
+  ** Also see `kill` to discard pending messages.
   **
   This stop()
+
+  **
+  ** Kill this thread from running as soon as possible.  Any
+  ** pending messages in the queue are discarded, and the thread
+  ** is terminated as soon as reaches an interruptable point in
+  ** its main loop.  InterruptedErr is raised on any threads waiting
+  ** for sendSync responses. If not currently running then do nothing.
+  ** Return this.  Also see `stop` to gracefully shutdown.
+  **
+  This kill()
 
   **
   ** Wait for this thread to stop.  If timeout is non-null,

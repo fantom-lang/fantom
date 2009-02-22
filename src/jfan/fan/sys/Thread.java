@@ -64,6 +64,15 @@ public class Thread
     }
   }
 
+  private void unmount()
+  {
+    synchronized (topLock)
+    {
+      byName.remove(name);
+      if (isService()) unmountService(this);
+    }
+  }
+
   public Thread(String name)
   {
     synchronized (topLock)
@@ -290,13 +299,40 @@ public class Thread
   public final synchronized Thread stop()
   {
     if (state == DEAD) return this;
-    state = DEAD;
-    synchronized (topLock)
+    unmount();
+
+    // assume if we have or had messages in the queue, that the thread is
+    // running (or will be running) with a loop and enqueue a stop msg
+    if (size > 0 || peak > 0)
     {
-      byName.remove(name);
-      if (isService()) unmountService(this);
+      try
+      {
+        enqueue(new Message(MSG_STOP, null));
+      }
+      catch (InterruptedException e)
+      {
+        throw InterruptedErr.make(e).val;
+      }
     }
-    stopMessages();
+
+    // otherwise if the thread isn't processing messages in its
+    // run method, then just sent it an interrupt
+    else
+    {
+      state = DEAD;
+      notifyAll();
+      if (val != null) val.interrupt();
+    }
+
+    return this;
+  }
+
+  public final synchronized Thread kill()
+  {
+    if (state == DEAD) return this;
+    state = DEAD;
+    unmount();
+    killMessages();
     notifyAll();
     if (val != null) val.interrupt();
     return this;
@@ -466,7 +502,7 @@ public class Thread
 
         // attached thread is now dead
         detach();
-        attached.stop();
+        attached.kill();
 
         synchronized (this)
         {
@@ -521,22 +557,24 @@ public class Thread
 
   protected void onStop() {}
 
-  public final void loop(Func received)
+  public final void loop(Func receive)
   {
     // ensure only called by myself
     if (current() != this)
       throw Err.make("Thread.current != this").val;
 
     // ensure received not null
-    if (received == null)
-      throw NullErr.make("received callback null").val;
+    if (receive == null)
+      throw NullErr.make("receive callback null").val;
 
     // main loop
     while (state == RUNNING)
     {
       try
       {
-        dispatch(received, dequeue());
+        Message msg = dequeue();
+        if (msg.state == MSG_STOP) break;
+        dispatch(receive, msg);
       }
       catch (Throwable e)
       {
@@ -672,10 +710,10 @@ public class Thread
 // Queue
 //////////////////////////////////////////////////////////////////////////
 
-  synchronized void stopMessages()
+  synchronized void killMessages()
   {
     for (Message m = head; m != null; m = m.next)
-      m.finish(MSG_STOPPED, null);
+      m.finish(MSG_KILLED, null);
     head = tail = null;
     size = 0;
   }
@@ -752,7 +790,7 @@ public class Thread
     if (tail == null) { head = tail = m; m.next = null; }
     else { tail.next = m; tail = m; }
     size++;
-    if (size > peek) peek = size;
+    if (size > peak) peak = size;
 
     // notify get thread
     notifyAll();
@@ -780,7 +818,7 @@ public class Thread
         case MSG_SYNC:       throw InterruptedErr.make("sendSync timed out").val;
         case MSG_FINISH_OK:  return obj;
         case MSG_FINISH_ERR: throw ((Err)obj).rebase();
-        case MSG_STOPPED:    throw InterruptedErr.make("thread stopped").val;
+        case MSG_KILLED:     throw InterruptedErr.make("thread killed").val;
         default: throw new IllegalStateException(""+state);
       }
     }
@@ -812,7 +850,8 @@ public class Thread
   static final int MSG_SYNC       = 1;
   static final int MSG_FINISH_OK  = 2;
   static final int MSG_FINISH_ERR = 3;
-  static final int MSG_STOPPED    = 4;
+  static final int MSG_KILLED     = 4;
+  static final int MSG_STOP       = 5;
 
 //////////////////////////////////////////////////////////////////////////
 // State Constants
@@ -917,7 +956,7 @@ public class Thread
   private int state;                 // current state
   private Val val;                   // Java thread if attached
   private Message head, tail;        // message queue linked list
-  private int size, peek;            // message queue size
+  private int size, peak;            // message queue size
   private Timer[] timers = noTimers; // timers for sendLater
   private Func run;                  // run method
   private Object runResult;          // return of run method
