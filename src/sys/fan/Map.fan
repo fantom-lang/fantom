@@ -229,7 +229,7 @@ final class Map
   ** Call the specified function for every key/value in the list.
   ** This method is idempotent.
   **
-  Void each(|V value, K key| c)
+  Void each(|V val, K key| c)
 
   **
   ** Iterate every key/value pair in the map until the function
@@ -238,14 +238,14 @@ final class Map
   ** if the function returns null for every key/value pair.
   ** This method is idempotent.
   **
-  Obj? eachWhile(|V item, K key->Obj?| c)
+  Obj? eachWhile(|V val, K key->Obj?| c)
 
   **
   ** Return the first value in the map for which c returns true.
   ** If c returns false for every pair, then return null.  This
   ** method is idempotent.
   **
-  V? find(|V value, K key->Bool| c)
+  V? find(|V val, K key->Bool| c)
 
   **
   ** Return a new map containing the key/value pairs for which c
@@ -253,7 +253,7 @@ final class Map
   ** an empty map.  The inverse of this method is exclude(). This
   ** method is idempotent.
   **
-  M findAll(|V value, K key->Bool| c)
+  M findAll(|V val, K key->Bool| c)
 
   **
   ** Return a new map containing the key/value pairs for which c
@@ -265,7 +265,21 @@ final class Map
   **   map := ["off":0, "slow":50, "fast":100]
   **   map.exclude |Int v->Bool| { return v == 0 } => ["slow":50, "fast":100]
   **
-  M exclude(|V item, K key->Bool| c)
+  M exclude(|V val, K key->Bool| c)
+
+  **
+  ** Return true if c returns true for any of the key/value pairs
+  ** in the map.  If the map is empty, return false.  This method
+  ** is idempotent.
+  **
+  Bool any(|V val, K key->Bool| c)
+
+  **
+  ** Return true if c returns true for all of the key/value pairs
+  ** in the map.  If the list is empty, return true.  This method
+  ** is idempotent.
+  **
+  Bool all(|V val, K key->Bool| c)
 
   **
   ** Reduce is used to iterate through every value in the map
@@ -278,7 +292,7 @@ final class Map
   **   m := ["2":2, "3":3, "4":4]
   **   m.reduce(100) |Obj r, Int v->Obj| { return (Int)r + v } => 109
   **
-  Obj? reduce(Obj? init, |Obj? reduction, V item, K key->Obj?| c)
+  Obj? reduce(Obj? init, |Obj? reduction, V val, K key->Obj?| c)
 
   **
   ** Create a new map with the same keys, but apply the specified
@@ -290,7 +304,7 @@ final class Map
   **   x := m.map(Str:Int[:]) |Int v->Obj| { return v*2 }
   **   x => [2:4, 3:6, 4:8]
   **
-  Map map(Map acc, |V item, K key->Obj| c)
+  Map map(Map acc, |V val, K key->Obj| c)
 
 //////////////////////////////////////////////////////////////////////////
 // Readonly

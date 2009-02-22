@@ -388,6 +388,36 @@ public final class Map
     return acc;
   }
 
+  public final boolean any(Func f)
+  {
+    if (map.size() == 0) return false;
+    Iterator it = pairsIterator();
+    while (it.hasNext())
+    {
+      Entry e = (Entry)it.next();
+      Object key = e.getKey();
+      Object val = e.getValue();
+      if (f.call2(val, key) == Boolean.TRUE)
+        return true;
+    }
+    return false;
+  }
+
+  public final boolean all(Func f)
+  {
+    if (map.size() == 0) return true;
+    Iterator it = pairsIterator();
+    while (it.hasNext())
+    {
+      Entry e = (Entry)it.next();
+      Object key = e.getKey();
+      Object val = e.getValue();
+      if (f.call2(val, key) == Boolean.FALSE)
+        return false;
+    }
+    return true;
+  }
+
   public final Object reduce(Object reduction, Func f)
   {
     Iterator it = pairsIterator();
