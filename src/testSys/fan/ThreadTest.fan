@@ -184,7 +184,7 @@ class ThreadTest : Test
       {
         case "throw":    throw IOErr.make()
         case "mutable":  return ThreadTest.make
-        case "die":      t.stop; return null
+        case "die":      t.kill; return null
       }
       return null
     }
@@ -216,26 +216,60 @@ class ThreadTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Sync Stop
+// StopKill
 //////////////////////////////////////////////////////////////////////////
 
-  Void testSyncStop()
+  Void testStopKill()
   {
-    verifySyncStop(true)
-    verifySyncStop(false)
+    a := Thread(null, &runStopKill).start
+    b := Thread(null, &runStopKill).start
+
+    // fire off a bunch of messages accumlated by thread
+    1000.times |Int i| { a.sendAsync(i); b.sendAsync(i) }
+
+    // stop a, kill b
+    a.stop.stop.stop
+    b.kill
+
+    // a should have accumulated all 1000, b might or might not since it was killed
+    Int aNum := a.join->size
+    Int bNum := b.join->size
+    verifyEq(aNum, 1000)
+    verifyEq(bNum <= 1000, true)
+
+    verifyEq(a.isDead, true)
+    verifyEq(b.isDead, true)
   }
 
-  Void verifySyncStop(Bool explicitStop)
+  static Obj runStopKill(Thread t)
   {
-    x := Thread.make(null, &runSyncStopMain).start
-    a := Thread.make(null, &runSyncStop(x)).start
-    b := Thread.make(null, &runSyncStop(x)).start
-    c := Thread.make(null, &runSyncStop(x)).start
+    try Thread.sleep(100ms); catch {}
+    acc := Obj[,]
+    t.loop |Obj msg| { acc.add(msg) }
+    return acc
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Sync Kill
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSyncKill()
+  {
+    verifySyncKill(true)
+    verifySyncKill(false)
+  }
+
+  Void verifySyncKill(Bool explicitStop)
+  {
+    x := Thread(null, &runSyncKillMain).start
+    a := Thread(null, &runSyncKill(x)).start
+    b := Thread(null, &runSyncKill(x)).start
+    c := Thread(null, &runSyncKill(x)).start
 
     if (explicitStop)
     {
       Thread.sleep(50ms)
-      x.stop
+      x.kill
     }
     else
     {
@@ -250,7 +284,7 @@ class ThreadTest : Test
     verify(t2-t1 < 50ms)
   }
 
-  static Void runSyncStopMain(Thread t)
+  static Void runSyncKillMain(Thread t)
   {
     try
     {
@@ -261,7 +295,7 @@ class ThreadTest : Test
     }
   }
 
-  static Obj? runSyncStop(Thread main, Thread t)
+  static Obj? runSyncKill(Thread main, Thread t)
   {
     try
     {
@@ -293,7 +327,7 @@ class ThreadTest : Test
         Thread.sleep(20ms)
         verifyEq(Sys.ns[`/testSys/onStart`], true)
 
-        t.stop
+        if (mode.isOdd) t.kill; else t.stop
         Thread.sleep(20ms)
         verifyEq(Sys.ns[`/testSys/onStart`], true)
         verifyEq(Sys.ns[`/testSys/run`],     mode >= 1)
@@ -318,7 +352,7 @@ class ThreadTest : Test
     {
       x := Thread.make(null, &runTimerTest)
       x.start.join
-      Thread.sleep(20ms)
+      Thread.sleep(50ms)
       Obj[][] results := Sys.ns[`/testSys/timer`]
       verifyTimer(results[0], 100ms, "100ms")
       verifyTimer(results[1], 100ms, "100ms repeat")
@@ -330,7 +364,7 @@ class ThreadTest : Test
     }
     finally
     {
-      Sys.ns.delete(`/testSys/timer`)
+      try { Sys.ns.delete(`/testSys/timer`) } catch {}
     }
   }
 

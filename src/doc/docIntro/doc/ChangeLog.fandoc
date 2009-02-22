@@ -549,6 +549,6 @@
 - Date: toDateTime
 - Map: any, all
 - Time: toDateTime, toDuration, fromDuration
-- Thread: loopCoalescing
+- Thread: loopCoalescing, stop/kill
 - BuildScript: defaultTarget now defaults to first script declared
 - BuildPod: rename compileJavascript to javascript
