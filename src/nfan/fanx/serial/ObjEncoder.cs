@@ -76,7 +76,7 @@ namespace Fanx.Serial
       }
 
       Type type = FanObj.type(obj);
-      if (type.facet("simple", null, false) == Boolean.True)
+      if (type.facet("simple", null, true) == Boolean.True)
       {
         writeSimple(type, obj);
       }
