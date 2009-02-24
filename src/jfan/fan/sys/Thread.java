@@ -967,7 +967,7 @@ public class Thread
 
     private Object coalesce(Object orig, Object incoming)
     {
-      return coalesceFunc == null ? orig : coalesceFunc.call2(orig, incoming);
+      return coalesceFunc == null ? incoming : coalesceFunc.call2(orig, incoming);
     }
 
     Func toKeyFunc, coalesceFunc;

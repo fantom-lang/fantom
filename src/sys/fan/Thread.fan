@@ -250,7 +250,7 @@ const class Thread
   ** If an incoming message has the same key as a pending message
   ** in the queue, then the 'coalesce' function is called to coalesce
   ** the messages into a new merged message.  If 'coalesce' is null,
-  ** then we use the original message.  The coalesced message occupies
+  ** then we use the incoming message.  The coalesced message occupies
   ** the same position in the queue as the original and the incoming
   ** message is discarded.
   **
