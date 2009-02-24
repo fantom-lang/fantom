@@ -68,7 +68,7 @@ public class ObjEncoder
     }
 
     Type type = FanObj.type(obj);
-    if (type.facet("simple", null, false) == Boolean.TRUE)
+    if (type.facet("simple", null, true) == Boolean.TRUE)
     {
       writeSimple(type, obj);
     }
