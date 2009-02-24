@@ -16,8 +16,8 @@ class CallTest : Widget
   override Void onGet()
   {
     head.title("Call Test")
-    head.js(`/sys/pod/webappClient/webappClient.js`)
-    head.js(`/sys/pod/testWeb/testWeb.js`)
+    head.includeJs(`/sys/pod/webappClient/webappClient.js`)
+    head.includeJs(`/sys/pod/testWeb/testWeb.js`)
 
     body.h1("Call Test")
 

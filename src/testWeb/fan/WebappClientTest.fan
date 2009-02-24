@@ -16,8 +16,8 @@ class WebappClientTest : Widget
   override Void onGet()
   {
     head.title("webappClient Test")
-    head.js(`/sys/pod/webappClient/webappClient.js`)
-    head.js(`/sys/pod/testWeb/testWeb.js`)
+    head.includeJs(`/sys/pod/webappClient/webappClient.js`)
+    head.includeJs(`/sys/pod/testWeb/testWeb.js`)
     head.w(
       "<style type='text/css'>
          .hidden { display: none; }
