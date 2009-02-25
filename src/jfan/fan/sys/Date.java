@@ -153,7 +153,7 @@ public final class Date
     if (pattern == null)
     {
       if (locale == null) locale = Locale.current();
-      pattern = locale.get("sys", localeKey);
+      pattern = locale.get("sys", localeKey, "D-MMM-YYYY");
     }
 
     // process pattern

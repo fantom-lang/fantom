@@ -177,7 +177,7 @@ public final class Time
     if (pattern == null)
     {
       if (locale == null) locale = Locale.current();
-      pattern = locale.get("sys", localeKey);
+      pattern = locale.get("sys", localeKey, "hh:mm:ss");
     }
 
     // process pattern
