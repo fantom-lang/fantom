@@ -108,6 +108,11 @@ class TestClient
     verifyEq(b.hasClassName("a"), false)
     c.removeClassName("c")
     verifyEq(c.hasClassName("c"), false)
+    verifyEq(b.className, "b c")
+    b.addClassName("b")
+    verifyEq(b.className, "b c")
+    b.removeClassName("x")
+    verifyEq(b.className, "b c")
 
     verifyEq(elem.style->cssText, "")
     elem.style->color = "red"
