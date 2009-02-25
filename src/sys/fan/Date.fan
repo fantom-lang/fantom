@@ -154,6 +154,30 @@ const final class Date
   Str toIso()
 
 //////////////////////////////////////////////////////////////////////////
+// Past/Future
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Add the specified number of days to this date to get a date in
+  ** the future.  Throw ArgErr if 'days' parameter it not an even number
+  ** of days.
+  **
+  ** Example:
+  **   Date(2008, Month.feb, 28) + 2day  =>  2008-03-01
+  **
+  Date plus(Duration days)
+
+  **
+  ** Subtract the specified number of days from this date to get a date in
+  ** the past.  Throw ArgErr if 'days' parameter it not an even number
+  ** of days.
+  **
+  ** Example:
+  **   Date(2009, Month.jan, 1) - 1day  =>  2008-12-31
+  **
+  Date minus(Duration days)
+
+//////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////
 

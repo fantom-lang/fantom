@@ -265,6 +265,63 @@ namespace Fan.Sys
     public static Date fromIso(string s, bool check) { return fromStr(s, check); }
 
   //////////////////////////////////////////////////////////////////////////
+  // Past/Future
+  //////////////////////////////////////////////////////////////////////////
+
+    public Date plus(Duration d) { return add(d.m_ticks); }
+
+    public Date minus(Duration d) { return add(-d.m_ticks); }
+
+    private Date add(long ticks)
+    {
+      // check even number of days
+      if (ticks % Duration.nsPerDay != 0)
+        throw ArgErr.make("Duration must be even num of days").val;
+
+      int year = this.m_year;
+      int month = this.m_month;
+      int day = this.m_day;
+
+      int numDays = (int)(ticks / Duration.nsPerDay);
+      int dayIncr = numDays < 0 ? +1 : -1;
+      while (numDays != 0)
+      {
+        if (numDays > 0)
+        {
+          day++;
+          if (day > numDaysInMon(year, month))
+          {
+            day = 1;
+            month++;
+            if (month >= 12) { month = 0; year++; }
+          }
+          numDays--;
+        }
+        else
+        {
+          day--;
+          if (day <= 0)
+          {
+            month--;
+            if (month < 0) { month = 11; year--; }
+            day = numDaysInMon(year, month);
+          }
+          numDays++;
+        }
+      }
+
+      return new Date(year, month, day);
+    }
+
+    private static int numDaysInMon(int year, int mon)
+    {
+      if (DateTime.isLeapYear(year))
+        return DateTime.daysInMonLeap[mon];
+      else
+        return DateTime.daysInMon[mon];
+    }
+
+  //////////////////////////////////////////////////////////////////////////
   // Misc
   //////////////////////////////////////////////////////////////////////////
 
