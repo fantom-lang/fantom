@@ -90,18 +90,18 @@ class WebOutStreamTest : Test
     out.title("Test")
     verifyOut(buf, "<title>Test</title>")
 
-    out.css(`foo.css`)
+    out.includeCss(`foo.css`)
     verifyOut(buf, "<link rel='stylesheet' type='text/css' href='foo.css' />")
-    out.css(`foo.css?a=foo&b=[bar]`)
+    out.includeCss(`foo.css?a=foo&b=[bar]`)
     verifyOut(buf, "<link rel='stylesheet' type='text/css' href='foo.css?a=foo&amp;b=%5Bbar%5D' />")
-    out.css(`foo.css`)
+    out.includeCss(`foo.css`)
     verifyOut(buf, null)
 
-    out.js(`foo.js`)
+    out.includeJs(`foo.js`)
     verifyOut(buf, "<script type='text/javascript' src='foo.js'></script>")
-    out.js(`foo.js?a=foo&b=[bar]`)
+    out.includeJs(`foo.js?a=foo&b=[bar]`)
     verifyOut(buf, "<script type='text/javascript' src='foo.js?a=foo&amp;b=%5Bbar%5D'></script>")
-    out.js(`foo.js`)
+    out.includeJs(`foo.js`)
     verifyOut(buf, null)
 
     out.atom(`foo.xml`)
@@ -117,6 +117,20 @@ class WebOutStreamTest : Test
     verifyOut(buf, "<link rel='alternate' type='application/rss+xml' href='foo.xml?a=foo&amp;b=%5Bbar%5D' />")
     out.rss(`foo.xml`, "title='bar'")
     verifyOut(buf, "<link rel='alternate' type='application/rss+xml' href='foo.xml' title='bar' />")
+
+    out.style
+    verifyOut(buf, "<style type='text/css'>")
+    out.style(null)
+    verifyOut(buf, "<style>")
+    out.styleEnd
+    verifyOut(buf, "</style>")
+
+    out.script
+    verifyOut(buf, "<script type='text/javascript'>")
+    out.script(null)
+    verifyOut(buf, "<script>")
+    out.scriptEnd
+    verifyOut(buf, "</script>")
 
     //////////////////////////////////////////////////////////////////////////
     // General
