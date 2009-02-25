@@ -158,6 +158,13 @@ var webappClient_Elem = sys_Obj.extend(
     return acc;
   },
 
+  onEvent: function(type, handler)
+  {
+    this.elem.addEventListener(type, function(e) {
+      handler(webappClient_Event.make(e));
+    }, false);
+  },
+
   toStr: function()
   {
     var name = this.elem.nodeName;

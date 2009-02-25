@@ -178,4 +178,13 @@ class Elem
   **
   Elem[] findAll(|Elem e->Bool| c) { return Elem[,] }
 
+//////////////////////////////////////////////////////////////////////////
+// Events
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Attach an event handler to the given event on this element.
+  **
+  Void onEvent(Str type, |Event e| handler) {}
+
 }
