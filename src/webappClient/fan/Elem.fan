@@ -44,6 +44,26 @@ class Elem
   Str className
 
   **
+  ** Return true if this element has the given CSS class name,
+  ** or false if it does not.
+  **
+  Bool hasClassName(Str className) { return false }
+
+  **
+  ** Add the given CSS class name to this element.  If this
+  ** element already contains the given class name, then this
+  ** method does nothing. Returns this.
+  **
+  This addClassName(Str className) { return this }
+
+  **
+  ** Remove the given CSS class name to this element. If this
+  ** element does not have the given class name, this method
+  ** does nothing. Returns this.
+  **
+  This removeClassName(Str className) { return this }
+
+  **
   ** Get the style object for this element.
   **
   Obj style() { return "" }

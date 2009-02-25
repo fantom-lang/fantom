@@ -23,6 +23,35 @@ var webappClient_Elem = sys_Obj.extend(
   className$get: function() { return this.elem.className; },
   className$set: function(val) { return this.elem.className = val; },
 
+  hasClassName: function(className)
+  {
+    var arr = this.elem.className.split(" ");
+    for (var i=0; i<arr.length; i++)
+      if (arr[i] == className)
+        return true;
+    return false;
+  },
+
+  addClassName: function(className)
+  {
+    if (!this.hasClassName(className))
+      this.elem.className += " " + className;
+    return this;
+  },
+
+  removeClassName: function(className)
+  {
+    var arr = this.elem.className.split(" ");
+    for (var i=0; i<arr.length; i++)
+      if (arr[i] == className)
+      {
+        arr.splice(i, 1);
+        break;
+      }
+    this.elem.className = arr.join(" ");
+    return this;
+  },
+
   style: function() { return this.elem.style; },
 
   html$get: function() { return this.elem.innerHTML },
