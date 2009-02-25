@@ -54,6 +54,9 @@ class WebappClientTest : Widget
     body.input("type='text' name='alpha' value='foo'")
     body.checkbox("name='beta' checked='checked'")
     body.checkbox
+    body.div("class='a'").divEnd
+    body.div("class='a b'").divEnd
+    body.div.divEnd
     body.divEnd
 
     // testBasics
@@ -82,6 +85,29 @@ class TestClient
 
     verifyEq(elem.className, "hidden")
     verifyEq(elem["class"],  "hidden")
+
+    a := elem.children[3]
+    b := elem.children[4]
+    c := elem.children[5]
+    verifyEq(a.hasClassName("a"), true)
+    verifyEq(a.hasClassName("b"), false)
+    verifyEq(a.hasClassName("c"), false)
+    verifyEq(b.hasClassName("a"), true)
+    verifyEq(b.hasClassName("b"), true)
+    verifyEq(b.hasClassName("c"), false)
+    verifyEq(c.hasClassName("a"), false)
+    a.addClassName("c")
+    b.addClassName("c")
+    c.addClassName("c")
+    verifyEq(a.hasClassName("c"), true)
+    verifyEq(b.hasClassName("c"), true)
+    verifyEq(c.hasClassName("c"), true)
+    a.removeClassName("a")
+    b.removeClassName("a")
+    verifyEq(a.hasClassName("a"), false)
+    verifyEq(b.hasClassName("a"), false)
+    c.removeClassName("c")
+    verifyEq(c.hasClassName("c"), false)
 
     verifyEq(elem.style->cssText, "")
     elem.style->color = "red"
