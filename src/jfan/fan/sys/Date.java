@@ -265,6 +265,63 @@ public final class Date
   public static Date fromIso(String s, boolean checked) { return fromStr(s, checked); }
 
 //////////////////////////////////////////////////////////////////////////
+// Past/Future
+//////////////////////////////////////////////////////////////////////////
+
+  public final Date plus(Duration d) { return add(d.ticks); }
+
+  public final Date minus(Duration d) { return add(-d.ticks); }
+
+  private final Date add(long ticks)
+  {
+    // check even number of days
+    if (ticks % Duration.nsPerDay != 0)
+      throw ArgErr.make("Duration must be even num of days").val;
+
+    int year = this.year;
+    int month = this.month;
+    int day = this.day;
+
+    int numDays = (int)(ticks / Duration.nsPerDay);
+    int dayIncr = numDays < 0 ? +1 : -1;
+    while (numDays != 0)
+    {
+      if (numDays > 0)
+      {
+        day++;
+        if (day > numDays(year, month))
+        {
+          day = 1;
+          month++;
+          if (month >= 12) { month = 0; year++; }
+        }
+        numDays--;
+      }
+      else
+      {
+        day--;
+        if (day <= 0)
+        {
+          month--;
+          if (month < 0) { month = 11; year--; }
+          day = numDays(year, month);
+        }
+        numDays++;
+      }
+    }
+
+    return new Date(year, month, day);
+  }
+
+  private static int numDays(int year, int mon)
+  {
+    if (DateTime.isLeapYear(year))
+      return DateTime.daysInMonLeap[mon];
+    else
+      return DateTime.daysInMon[mon];
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////
 

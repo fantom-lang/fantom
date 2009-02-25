@@ -1089,4 +1089,25 @@ class DateTimeTest : Test
     verifyEq(Time.fromDuration(d), t)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Date plus/minus
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDateMath()
+  {
+    verifyEq(Date(2009, feb, 24) + 1day,   Date(2009, feb, 25))
+    verifyEq(Date(2009, feb, 24) - 3day,   Date(2009, feb, 21))
+    verifyEq(Date(2009, feb, 25) + 4day,   Date(2009, mar, 1))
+    verifyEq(Date(2009, feb, 1)  + -2day,  Date(2009, jan, 30))
+    verifyEq(Date(2009, dec, 31) + 5day,   Date(2010, jan, 5))
+    verifyEq(Date(2010, jan, 5)  - 5day,   Date(2009, dec, 31))
+    verifyEq(Date(2008, jan, 5)  + 365day, Date(2009, jan, 4))
+    verifyEq(Date(2010, jan, 5)  + 365day, Date(2011, jan, 5))
+    verifyEq(Date(1972, jun, 7)  - (-1day),Date(1972, jun, 8))
+    verifyEq(Date(1972, jun, 7)  - 1day,   Date(1972, jun, 6))
+
+    verifyErr(ArgErr#) |,| { x := Date.today + 22hr }
+    verifyErr(ArgErr#) |,| { x := Date.today - 13min }
+  }
+
 }
