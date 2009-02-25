@@ -158,7 +158,7 @@ class JavascriptWriter : CompilerSupport
       case StmtId.returnStmt:   returnStmt(stmt); if (nl) out.nl
       case StmtId.throwStmt:    throwStmt(stmt); if(nl) out.nl
       case StmtId.forStmt:      forStmt(stmt)
-      //case StmtId.whileStmt:    return
+      case StmtId.whileStmt:    whileStmt(stmt)
       //case StmtId.breakStmt:    return
       //case StmtId.continueStmt: return
       case StmtId.tryStmt:      tryStmt(stmt)
@@ -211,6 +211,14 @@ class JavascriptWriter : CompilerSupport
     if (fs.update != null) expr(fs.update)
     out.w(")").nl
     block(fs.block)
+  }
+
+  Void whileStmt(WhileStmt ws)
+  {
+    out.w("while (")
+    expr(ws.condition)
+    out.w(")").nl
+    block(ws.block)
   }
 
   Void tryStmt(TryStmt ts)
