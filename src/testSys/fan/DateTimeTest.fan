@@ -1029,11 +1029,17 @@ class DateTimeTest : Test
 
   Void testMidnight()
   {
+    // DateTime.midnight
     verifyEq(DateTime.now.midnight.time, Time(0, 0, 0))
     verifyEq(DateTime(2008, apr, 14, 2, 3, 4, 0, utc).midnight,
              DateTime(2008, apr, 14, 0, 0, 0, 0, utc))
     verifyEq(DateTime(1990, feb, 28, 12, 33, 45, 666_777, la).midnight,
              DateTime(1990, feb, 28, 0, 0, 0, 0, la))
+
+    // Date.midnight
+    verifyEq(Date.today.midnight.date, Date.today)
+    verifyEq(Date.today.midnight.time, Time(0, 0, 0))
+    verifyEq(Date(2008, apr, 14).midnight(la), DateTime(2008, apr, 14, 0, 0, 0, 0, la))
   }
 
 //////////////////////////////////////////////////////////////////////////

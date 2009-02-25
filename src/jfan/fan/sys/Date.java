@@ -328,6 +328,9 @@ public final class Date
   public DateTime toDateTime(Time t) { return DateTime.makeDT(this, t); }
   public DateTime toDateTime(Time t, TimeZone tz) { return DateTime.makeDT(this, t, tz); }
 
+  public DateTime midnight() { return DateTime.makeDT(this, Time.defVal); }
+  public DateTime midnight(TimeZone tz) { return DateTime.makeDT(this, Time.defVal, tz); }
+
   public String toCode()
   {
     if (equals(defVal)) return "Date.defVal";

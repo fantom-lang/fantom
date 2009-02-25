@@ -328,6 +328,9 @@ namespace Fan.Sys
     public DateTime toDateTime(Time t) { return DateTime.makeDT(this, t); }
     public DateTime toDateTime(Time t, TimeZone tz) { return DateTime.makeDT(this, t, tz); }
 
+    public DateTime midnight() { return DateTime.makeDT(this, Time.m_defVal); }
+    public DateTime midnight(TimeZone tz) { return DateTime.makeDT(this, Time.m_defVal, tz); }
+
     public string toCode()
     {
       if (Equals(m_defVal)) return "Date.defVal";
