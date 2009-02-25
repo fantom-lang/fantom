@@ -552,3 +552,4 @@
 - Thread: loopCoalescing, stop/kill
 - BuildScript: defaultTarget now defaults to first script declared
 - BuildPod: rename compileJavascript to javascript
+- WebOutStream: css->includeCss, js->includeJs, style, script

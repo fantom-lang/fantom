@@ -160,7 +160,7 @@ class WebOutStream : OutStream
   ** If this URI has already been included in this WebOutStream
   ** instance, then this method does nothing.
   **
-  This css(Uri href)
+  This includeCss(Uri href)
   {
     if (cssUris == null) cssUris = Uri[,]
     if (!cssUris.contains(href))
@@ -177,7 +177,7 @@ class WebOutStream : OutStream
   ** If this URI has already been included in this WebOutStream
   ** instance, then this method does nothing.
   **
-  This js(Uri href)
+  This includeJs(Uri? href := null)
   {
     if (jsUris == null) jsUris = Uri[,]
     if (!jsUris.contains(href))
@@ -203,6 +203,46 @@ class WebOutStream : OutStream
   This rss(Uri href, Str? attrs := null)
   {
     return tag("link rel='alternate' type='application/rss+xml' href='$href.encode.toXml'", attrs, true).nl
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// style
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Start a <style> tag.
+  **
+  This style(Str? attrs := "type='text/css'")
+  {
+    return tag("style", attrs).nl
+  }
+
+  **
+  ** End a <style> tag.
+  **
+  This styleEnd()
+  {
+    return tagEnd("style").nl
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// script
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Start a <script> tag.
+  **
+  This script(Str? attrs := "type='text/javascript'")
+  {
+    return tag("script", attrs).nl
+  }
+
+  **
+  ** End a <script> tag.
+  **
+  This scriptEnd()
+  {
+    return tagEnd("script").nl
   }
 
 //////////////////////////////////////////////////////////////////////////
