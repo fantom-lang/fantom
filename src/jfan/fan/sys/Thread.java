@@ -609,6 +609,7 @@ public class Thread
     finally
     {
       inLoop = false;
+      exitedLoop = true;
     }
   }
 
@@ -645,6 +646,10 @@ public class Thread
   public final Object sendSync(Object obj)
   {
     obj = Namespace.safe(obj);
+
+    // TODO: this a fail-safe to never block once the thread
+    // has exited its message loop
+    if (exitedLoop) throw Err.make("Thread is shutting down").val;
 
     try
     {
@@ -997,4 +1002,5 @@ public class Thread
   private Object runResult;          // return of run method
   private Coalescer coalescer;       // if we are coalescing the messages
   private boolean inLoop;            // are we in the message loop
+  private volatile boolean exitedLoop; // TODO, temp hack before Actor API
 }
