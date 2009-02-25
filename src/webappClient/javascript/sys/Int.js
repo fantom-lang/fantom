@@ -144,6 +144,13 @@ sys_Int.isAlpha    = function(self) { return sys_Int.isUpper(self) || sys_Int.is
 sys_Int.isAlphaNum = function(self) { return sys_Int.isAlpha(self) || sys_Int.isDigit(self); }
 sys_Int.equalsIgnoreCase = function(self, ch) { return (self|0x20) == (ch|0x20); }
 
+// Iterators
+sys_Int.times = function(self, func)
+{
+  for (var i=0; i<self; i++)
+    func(i);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Static Fields
 //////////////////////////////////////////////////////////////////////////
