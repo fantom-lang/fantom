@@ -131,12 +131,12 @@ class ThreadTest : Test
       Thread.make("testSys.testMessaging") |Thread thread| { fail }
     }
 
-    // create thread which takes an Int msg and doubles it
-    t := Thread.make("testSys.testMessaging", &runMessaging)
-    t.start
-
     // verify this thread can't call t's loop
+    t := Thread("testSys.testMessagingBadLoop", &runMessaging).start
     verifyErr(Err#) |,| { t.loop |Obj m->Obj| { return m } }
+
+    // create fresh thread, which takes an Int msg and doubles it
+    t = Thread("testSys.testMessaging", &runMessaging).start
 
     // send some sync messages
     10.times |Int i|
@@ -186,6 +186,7 @@ class ThreadTest : Test
         case "mutable":  return ThreadTest.make
         case "die":      t.kill; return null
       }
+
       return null
     }
   }
