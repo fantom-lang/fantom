@@ -187,6 +187,11 @@ const final class Date
   DateTime toDateTime(Time t, TimeZone tz := TimeZone.current)
 
   **
+  ** Return a DateTime for the beginning of the this day at midnight.
+  **
+  DateTime midnight(TimeZone tz := TimeZone.current)
+
+  **
   ** Get this Date as a Fan expression suitable for code generation.
   **
   Str toCode()
