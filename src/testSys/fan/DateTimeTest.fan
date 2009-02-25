@@ -845,9 +845,22 @@ class DateTimeTest : Test
     verifyEq(x.toLocale("F, fF, ffF, ffFF, ffffF"), "1, 12, 123, 123, 1230")
     verifyEq(x.toLocale("z, zzz, zzzz"), "-05:00, EST, New_York")
 
-    // US locale default pattern
-    verifyEq(x.toLocale(),     "5-Feb-2008 Tue 03:07:20 EST")
-    verifyEq(x.toLocale(null), "5-Feb-2008 Tue 03:07:20 EST")
+    // US locale default pattern (12 hour time)
+    verifyEq(x.toLocale(),     "5-Feb-2008 Tue 3:07:20AM EST")
+    verifyEq(x.toLocale(null), "5-Feb-2008 Tue 3:07:20AM EST")
+    verifyEq(x.date.toLocale(),     "5-Feb-2008")
+    verifyEq(x.date.toLocale(null), "5-Feb-2008")
+    verifyEq(x.time.toLocale(),     "3:07AM")
+    verifyEq(x.time.toLocale(null), "3:07AM")
+
+    // non-US 24 hour time
+    Locale("en").with |,|
+    {
+      verifyEq(x.toLocale(),     "5-Feb-2008 Tue 03:07:20 EST")
+      verifyEq(x.toLocale(null), "5-Feb-2008 Tue 03:07:20 EST")
+      verifyEq(x.time.toLocale(),     "03:07")
+      verifyEq(x.time.toLocale(null), "03:07")
+    }
 
     // 12-hour AM/PM
     x = DateTime.make(2007, Month.may, 9, 0, 5, 0, 0, ny)

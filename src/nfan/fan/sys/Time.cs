@@ -177,7 +177,7 @@ namespace Fan.Sys
       if (pattern == null)
       {
         if (locale == null) locale = Locale.current();
-        pattern = locale.get("sys", m_localeKey);
+        pattern = locale.get("sys", m_localeKey, "hh:mm:ss");
       }
 
       // process pattern
