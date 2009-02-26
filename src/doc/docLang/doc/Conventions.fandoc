@@ -41,10 +41,15 @@ Naming [#naming]
 Common Names [#commonNames]
 ***************************
   - Prefer val to value
+  - Prefer io/IO to Io
+  - Prefer ro/RO to Ro
+  - Prefer rw/RW to Rw
   - Prefer id/Id to ID or Identifier
   - Prefer xml/Xml to XML
   - Prefer html/Html to HTML
   - Prefer http/Http to HTTP
+  - Prefer dotnet/Dotnet
+  - Prefer size to length or count
 
 Indention [#indention]
 **********************
