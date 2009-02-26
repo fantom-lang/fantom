@@ -397,10 +397,10 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     /// <summary>sys::Int.maxValue</summary>
-    public static readonly long m_maxValue = Int64.MaxValue;
+    public static readonly long m_maxVal = Int64.MaxValue;
 
     /// <summary>sys::Int.maxValue</summary>
-    public static readonly long m_minValue = Int64.MinValue;
+    public static readonly long m_minVal = Int64.MinValue;
 
     /// <summary>sys::Int.defVal</summary>
     public static readonly long m_defVal = 0;

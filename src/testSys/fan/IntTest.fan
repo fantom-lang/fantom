@@ -18,8 +18,8 @@ class IntTest : Test
 
   Void testConstants()
   {
-    verifyEq(Int.maxValue, 9223372036854775807)
-    verifyEq(Int.minValue, -9223372036854775807-1)
+    verifyEq(Int.maxVal, 9223372036854775807)
+    verifyEq(Int.minVal, -9223372036854775807-1)
   }
 
 //////////////////////////////////////////////////////////////////////////

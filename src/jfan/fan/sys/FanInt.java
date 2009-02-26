@@ -439,10 +439,10 @@ public final class FanInt
 //////////////////////////////////////////////////////////////////////////
 
   /** sys::Int.maxValue */
-  public static final long maxValue = Long.MAX_VALUE;
+  public static final long maxVal = Long.MAX_VALUE;
 
   /** sys::Int.minValue */
-  public static final long minValue = Long.MIN_VALUE;
+  public static final long minVal = Long.MIN_VALUE;
 
   /** sys::Int.defVal */
   public static final long defVal = 0L;

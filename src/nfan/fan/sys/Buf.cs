@@ -91,7 +91,7 @@ namespace Fan.Sys
 
     public virtual long capacity()
     {
-      return FanInt.m_maxValue;
+      return FanInt.m_maxVal;
     }
 
     public virtual void capacity(long c)

@@ -49,13 +49,13 @@ const final class Int : Num
   ** Maximum value which can be stored in a
   ** signed 64-bit Int: 9,223,372,036,854,775,807
   **
-  const static Int maxValue
+  const static Int maxVal
 
   **
   ** Minimum value which can be stored in a
   ** signed 64-bit Int: -9,223,372,036,854,775,808
   **
-  const static Int minValue
+  const static Int minVal
 
 //////////////////////////////////////////////////////////////////////////
 // Obj Overrides

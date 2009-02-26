@@ -261,9 +261,9 @@ class BufTest : Test
     verifyErr(IndexErr#) |->Int| { return b[7] }
 
     f := makeFile
-    verifyEq(f.capacity, Int.maxValue)
+    verifyEq(f.capacity, Int.maxVal)
     f.capacity = 10
-    verifyEq(f.capacity, Int.maxValue)
+    verifyEq(f.capacity, Int.maxVal)
   }
 
 //////////////////////////////////////////////////////////////////////////
