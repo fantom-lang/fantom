@@ -94,7 +94,7 @@ abstract class BootScript
     try
     {
       run
-      Thread.sleep(Duration(Int.maxValue))
+      Thread.sleep(Duration(Int.maxVal))
       return 0
     }
     catch (Err err)

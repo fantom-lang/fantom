@@ -213,7 +213,7 @@ final class Map
   **
   ** Example:
   **
-  Str join(Str separator, |V value, K key->Str|? c := null)
+  Str join(Str separator, |V val, K key->Str|? c := null)
 
   **
   ** Get this map as a Fan expression suitable for code generation.

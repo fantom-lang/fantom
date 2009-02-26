@@ -38,6 +38,14 @@ Naming [#naming]
       - Use "someId" instead of "someID"
       - Use "readXml" instead of "readXML"
 
+Common Names [#commonNames]
+***************************
+  - Prefer val to value
+  - Prefer id/Id to ID or Identifier
+  - Prefer xml/Xml to XML
+  - Prefer html/Html to HTML
+  - Prefer http/Http to HTTP
+
 Indention [#indention]
 **********************
   - Do not use tab characters, use spaces only

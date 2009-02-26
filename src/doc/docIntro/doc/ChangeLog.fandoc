@@ -544,6 +544,7 @@
 - Compiler fix to check for dup method params and dup enum defs
 
 *Build 1.0.39 (incomplete)*
+- Int: minValue/maxValue -> minVal/maxVal
 - Str: padr, padl
 - DateTime: midnight
 - Date: toDateTime, midnight, plus, minus
