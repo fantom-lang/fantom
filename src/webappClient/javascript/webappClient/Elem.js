@@ -145,6 +145,17 @@ var webappClient_Elem = sys_Obj.extend(
     this.elem.focus();
   },
 
+  find: function(func, acc)
+  {
+    var kids = this.children();
+    for (var i=0; i<kids.length; i++)
+    {
+      var kid = kids[i];
+      if (func(kid)) return kid;
+    }
+    return null;
+  },
+
   findAll: function(func, acc)
   {
     if (acc == null) acc = new Array();

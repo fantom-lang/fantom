@@ -173,6 +173,12 @@ class Elem
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Return the first descendant for which c returns true.
+  ** Return null if no element returns true.
+  **
+  Elem? find(|Elem e->Bool| c) { return null }
+
+  **
   ** Return a list of all descendants for which c returns
   ** true.  Return an empty list if no element returns true.
   **
