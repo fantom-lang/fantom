@@ -43,11 +43,12 @@ class JavascriptWriter : CompilerSupport
     if (typeDef.qname.contains(r"$Cvars")) return
 
     fname := typeDef.qname
+    bname := typeDef.base ?: "sys::Obj"
     jname := qname(typeDef)
     jbase := qname(typeDef.base)
     out.w("var $jname = ${jbase}.extend(").nl
     out.w("{").nl
-    out.w("  \$ctor: function() { sys_Type.addType(\"$fname\"); },").nl
+    out.w("  \$ctor: function() { sys_Type.addType(\"$fname\", \"$bname\"); },").nl
     out.w("  type: function() { return sys_Type.find(\"$fname\"); },").nl
     out.indent
     typeDef.methodDefs.each |MethodDef m| { method(m) }
@@ -56,6 +57,8 @@ class JavascriptWriter : CompilerSupport
     out.w("});").nl
     ctors.each |MethodDef m| { ctor(m) }
     staticMethods.each |MethodDef m| { staticMethod(m) }
+    staticFields.each |FieldDef f| { staticField(f) }
+    staticInits.each |Block b| { staticInit(b) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -90,6 +93,7 @@ class JavascriptWriter : CompilerSupport
   {
     if (m.isNative) return
     if (!m.isStatic) err("Method must be static: $m.name", m.location)
+    if (m.name == "static\$init") { staticInits.add(m.code); return }
     out.w("${qname(m.parent)}.$m.name = ")
     doMethod(m)
     out.nl
@@ -99,6 +103,12 @@ class JavascriptWriter : CompilerSupport
   {
     out.w("function"); doMethodSig(m); out.nl
     out.w("{").nl
+    if (m.isCtor)
+    {
+      out.w("  this._super")
+      doMethodSig(m)
+      out.w(";").nl
+    }
     if (ClosureFinder(m).exists)
       out.w("  var \$this = this;").nl
     block(m.code, false)
@@ -118,28 +128,49 @@ class JavascriptWriter : CompilerSupport
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Fields
 //////////////////////////////////////////////////////////////////////////
 
   Void field(FieldDef f)
   {
     if (f.isNative) return
-    if (f.isStatic) err("Static fields not yet supported: $f.name", f.location)
+    if (f.isStatic) { staticFields.add(f); return }
     out.w("$f.name\$get: function() { return this.$f.name; },").nl
     out.w("$f.name\$set: function(val) { this.$f.name = val; },").nl
     out.w("$f.name: null,").nl
+  }
+
+  Void staticField(FieldDef f)
+  {
+    if (f.isNative) return
+    if (!f.isStatic) err("Field must be static: $f.name", f.location)
+    qname := qname(f.parent)
+    out.w("${qname}.$f.name\$get = function() { return ${qname}.$f.name; };").nl
+    out.w("${qname}.$f.name\$set = function(val) { ${qname}.$f.name = val; };").nl
+    out.w("${qname}.$f.name = null;").nl
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Static Init
+//////////////////////////////////////////////////////////////////////////
+
+  Void staticInit(Block code)
+  {
+    inStaticInit = true
+    block(code, false, false)
+    inStaticInit = false
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Block
 //////////////////////////////////////////////////////////////////////////
 
-  Void block(Block block, Bool braces := true)
+  Void block(Block block, Bool braces := true, Bool indent := true)
   {
     if (braces) out.w("{").nl
-    out.indent
+    if (indent) out.indent
     block.stmts.each |Stmt s| { stmt(s) }
-    out.unindent
+    if (indent) out.unindent
     if (braces) out.w("}").nl
   }
 
@@ -178,6 +209,7 @@ class JavascriptWriter : CompilerSupport
 
   Void returnStmt(ReturnStmt rs)
   {
+    if (inStaticInit) return
     out.w("return")
     if (rs.expr != null) { out.w(" "); expr(rs.expr) }
     out.w(";")
@@ -381,11 +413,18 @@ class JavascriptWriter : CompilerSupport
       expr(ce.target)
       out.w(".")
     }
+    /*
     else if (ce.method != null && (ce.method.isStatic || ce.method.isCtor))
     {
       out.w(qname(ce.method.parent)).w(".")
     }
     out.w(ce.method.isCtor ? "make" : ce.name)
+    */
+    else if (ce.method.isStatic || ce.method.isCtor)
+    {
+      out.w(qname(ce.method.parent)).w(".")
+    }
+    out.w(ce.method.isCtor || ce.name == "<ctor>" ? "make" : ce.name)
     if (ce.isDynamic && ce.noParens)
     {
       if (ce.args.size == 0) return
@@ -488,7 +527,7 @@ class JavascriptWriter : CompilerSupport
 
   Void fieldExpr(FieldExpr fe, Bool get := true)
   {
-    if (fe.target?.ctype.isList && fe.name == "size")
+    if (fe.target?.ctype?.isList == true && fe.name == "size")
     {
       expr(fe.target)
       out.w(".length")
@@ -506,6 +545,10 @@ class JavascriptWriter : CompilerSupport
     {
       if (name[0] == '$') name = name[1..-1]
       else { i := name.index(r"$"); if (i != null) name = name[0...i] }
+    }
+    if (fe.target == null && fe.field.isStatic)
+    {
+      out.w(qname(fe.field.parent)).w(".")
     }
     out.w(name)
     if (!cvar && fe.useAccessor) out.w(get ? "\$get()" : "\$set")
@@ -586,8 +629,11 @@ class JavascriptWriter : CompilerSupport
   TypeDef typeDef
   AstWriter out
   Bool inClosure := false
+  Bool inStaticInit := false
   MethodDef[] ctors := [,]          // ctors
   MethodDef[] staticMethods := [,]  // static methods
+  FieldDef[] staticFields := [,]    // static fields
+  Block[] staticInits := [,]        // static init blocks
 }
 
 **************************************************************************

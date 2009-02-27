@@ -19,24 +19,34 @@ var sys_Type = sys_Obj.extend(
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function(qname)
+  $ctor: function(qname, base)
   {
-    this.qname = qname;
+    this.m_qname = qname;
+    this.n_name = qname.split("::")[1];
+    if (base != null) this.m_base = base;
   },
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  type: function()
-  {
-    return sys_Type.find("sys::Type");
-  },
+  base: function()      { return sys_Type.find(this.m_base); },
+  isClass: function()   { return this.m_base != "sys::Enum" && this.m_base != "sys::Mixin"; },
+  isEnum: function()    { return this.m_base == "sys::Enum"; },
+  isMixin: function()   { return this.m_base == "sys::Mixin"; },
+  name: function()      { return this.n_name; },
+  qname: function()     { return this.m_qname; },
+  signature: function() { return this.m_qname; },
+  toString: function()  { return this.m_qname; },
+  type: function()      { return sys_Type.find("sys::Type"); },
 
-  toString: function()
-  {
-    return this.qname;
-  }
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  m_base: "sys::Obj",
+  m_qname: "",
+  m_name: "",
 
 });
 
@@ -55,9 +65,9 @@ sys_Type.find = function(qname)
 /**
  * Add a Fan type for this qname.
  */
-sys_Type.addType = function(qname)
+sys_Type.addType = function(qname, base)
 {
-  sys_Type.typeMap[qname] = new sys_Type(qname);
+  sys_Type.typeMap[qname] = new sys_Type(qname, base);
 }
 sys_Type.typeMap = Array();
 
@@ -78,10 +88,12 @@ sys_Type.toFanType = function(obj)
 //////////////////////////////////////////////////////////////////////////
 
 sys_Type.addType("sys::Bool");
+sys_Type.addType("sys::Date");
 sys_Type.addType("sys::Duration");
+sys_Type.addType("sys::Enum");
 sys_Type.addType("sys::Err");
-sys_Type.addType("sys::Float");
-sys_Type.addType("sys::Int");
+sys_Type.addType("sys::Float", "sys::Num");
+sys_Type.addType("sys::Int", "sys::Num");
 sys_Type.addType("sys::List");
 sys_Type.addType("sys::Map");
 sys_Type.addType("sys::Num");
