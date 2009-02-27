@@ -246,7 +246,7 @@ class JavascriptWriter : CompilerSupport
       case ExprId.floatLiteral: out.w(ex)
       //case ExprId.decimalLiteral
       case ExprId.strLiteral:   out.w("\"").w(ex->val.toStr.toCode('\"', true)[1..-2]).w("\"")
-      //case ExprId.durationLiteral
+      case ExprId.durationLiteral: out.w("sys_Duration.fromStr(\"").w(ex).w("\")")
       case ExprId.uriLiteral:   out.w("\"").w(ex->val.toStr.toCode(null)).w("\"")
       case ExprId.typeLiteral:  out.w("sys_Type.find(\"${ex->val->signature}\")")
       //case ExprId.slotLiteral

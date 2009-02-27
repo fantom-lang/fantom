@@ -78,6 +78,7 @@ sys_Type.toFanType = function(obj)
 //////////////////////////////////////////////////////////////////////////
 
 sys_Type.addType("sys::Bool");
+sys_Type.addType("sys::Duration");
 sys_Type.addType("sys::Err");
 sys_Type.addType("sys::Float");
 sys_Type.addType("sys::Int");
