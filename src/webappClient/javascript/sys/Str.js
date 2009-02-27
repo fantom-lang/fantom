@@ -208,6 +208,17 @@ sys_Str.spaces = function(n)
 }
 sys_Str.$spaces = null;
 
+sys_Str.capitalize = function(self)
+{
+  if (self.length > 0)
+  {
+    var ch = self.charCodeAt(0);
+    if (97 <= ch && ch <= 122)
+      return String.fromCharCode(ch & ~0x20) + self.substring(1);
+  }
+  return self;
+}
+
 sys_Str.startsWith = function(self, test)
 {
   if (self.length < test.length) return false;
