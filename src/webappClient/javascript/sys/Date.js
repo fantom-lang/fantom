@@ -71,6 +71,10 @@ var sys_Date = sys_Obj.extend(
     return y + "-" + (m < 10 ? "0"+m : m) + "-" + (d < 10 ? "0"+d : d);
   },
 
+  year: function() { return this.m_year; },
+  month: function() { return sys_Month.values[this.m_month]; },
+  day: function() { return this.m_day; },
+
   plus: function(d) { return this.add(d.m_ticks); },
   minus: function(d) { return this.add(-d.m_ticks); },
   add: function(ticks)
