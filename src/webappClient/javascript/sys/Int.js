@@ -35,10 +35,22 @@ var sys_Int = sys_Obj.extend(
 
 sys_Int.fromStr = function(s, radix, checked)
 {
-  var num = 0;
-
   // TODO - only supports radix=10 right now
-  for (var i=s.length-1; i>=0; i--)
+  if (radix != null && radix != 10)
+    throw Error("Only radix=10 supported!");
+
+  var num = 0;
+  var pos = true;
+
+  if (s.charCodeAt(0) == 45)
+  {
+    s = s.substring(1);
+    pos = false;
+  }
+
+  // radix 10
+  var len = s.length-1;
+  for (var i=len; i>=0; i--)
   {
     ch = s.charCodeAt(i);
     if (ch < 48 || ch > 57)
@@ -47,19 +59,11 @@ sys_Int.fromStr = function(s, radix, checked)
       throw new sys_ParseErr("Int", s);
     }
     val = ch-48;
-    if (s.length-i > 0) val += 10 * (s.length-1)
+    if (len-i > 0) val *= Math.pow(10, (len-i));
     num += val;
   }
 
-  /*
-  var num = parseInt(s, radix);
-  if (isNaN(num))
-  {
-    if (checked != null && !checked) return null;
-    throw new sys_ParseErr("Int", s);
-  }
-  */
-  return num;
+  return pos ? num : -num;
 }
 sys_Int.toStr = function(self)
 {
