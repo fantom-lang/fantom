@@ -140,7 +140,7 @@ class TestRunner
         {
           try
           {
-            var test = new $js();
+            var test = ${js}.make();
             test.$m.name();
             return test.verifyCount;
           }

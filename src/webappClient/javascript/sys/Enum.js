@@ -35,7 +35,6 @@ var sys_Enum = sys_Obj.extend(
 
   compare: function(that)
   {
-    if (that == null) return +1;
     if (this.m_ordinal < that.m_ordinal) return -1;
     if (this.m_ordinal == that.m_ordinal) return 0;
     return +1;
