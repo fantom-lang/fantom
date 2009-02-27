@@ -35,7 +35,6 @@ var sys_Duration = sys_Obj.extend(
 
   compare: function(that)
   {
-    if (that == null) return +1;
     if (this.m_ticks < that.m_ticks) return -1;
     if (this.m_ticks == that.m_ticks) return 0;
     return +1;

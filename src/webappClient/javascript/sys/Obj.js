@@ -17,6 +17,7 @@ var sys_Obj = Class.extend(
 //////////////////////////////////////////////////////////////////////////
 
   $ctor: function() {},
+  $make: function() {},
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
@@ -75,9 +76,14 @@ sys_Obj.equals = function(self, that)
 sys_Obj.compare = function(self, that)
 {
   if (self instanceof sys_Obj)
+  {
+    if (that == null) return +1;
     return self.compare(that);
+  }
   else if ((typeof self) == "number")
+  {
     return sys_Float.compare(self, that);
+  }
   else
   {
     if (self == null)
