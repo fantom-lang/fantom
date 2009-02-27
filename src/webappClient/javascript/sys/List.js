@@ -131,3 +131,8 @@ sys_List.map = function(self, acc, func)
   }
   return acc;
 }
+sys_List.toImmutable = function(self)
+{
+  // TODO
+  return self;
+}
