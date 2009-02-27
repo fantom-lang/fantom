@@ -22,7 +22,7 @@ var sys_Duration = sys_Obj.extend(
   },
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Identity
 //////////////////////////////////////////////////////////////////////////
 
   equals: function(that)
@@ -63,6 +63,21 @@ var sys_Duration = sys_Obj.extend(
 
     // return in nanoseconds
     return ns + "ns";
+  },
+
+//////////////////////////////////////////////////////////////////////////
+// Operators
+//////////////////////////////////////////////////////////////////////////
+
+  negate: function() { return sys_Duration.make(-this.m_ticks); },
+  plus: function(x)  { return sys_Duration.make(this.m_ticks + x.m_ticks); },
+  minus: function(x) { return sys_Duration.make(this.m_ticks - x.m_ticks); },
+  mult: function(x)  { return sys_Duration.make(this.m_ticks * x); },
+  div: function(x)   { return sys_Duration.make(this.m_ticks / x); },
+  floor: function(accuracy)
+  {
+    if (this.m_ticks % accuracy.m_ticks == 0) return this;
+    return sys_Duration.make(this.m_ticks - (this.m_ticks % accuracy.m_ticks));
   },
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,17 +135,24 @@ sys_Duration.fromStr = function(s, checked)
         break;
     }
 
-    if (mult < 0) throw new sys_Err();
+    if (mult < 0) throw new Error();
 
     s = s.substring(0, len-suffixLen);
     if (dot)
-      return new sys_Duration(Math.floor(parseFloat(s)*mult));
+    {
+      var num = parseFloat(s);
+      if (isNaN(num)) throw new Error();
+      return new sys_Duration(Math.floor(num*mult));
+    }
     else
-      return new sys_Duration(parseInt(s)*mult);
+    {
+      var num = sys_Int.fromStr(s);
+      return new sys_Duration(num*mult);
+    }
   }
   catch (err)
   {
-    if (!checked) return null;
+    if (checked != null && !checked) return null;
     throw new sys_ParseErr("Duration", s);
   }
 }
