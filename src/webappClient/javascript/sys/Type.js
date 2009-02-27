@@ -89,6 +89,7 @@ sys_Type.toFanType = function(obj)
 
 sys_Type.addType("sys::Bool");
 sys_Type.addType("sys::Date");
+sys_Type.addType("sys::DateTime");
 sys_Type.addType("sys::Duration");
 sys_Type.addType("sys::Enum");
 sys_Type.addType("sys::Err");
@@ -96,6 +97,7 @@ sys_Type.addType("sys::Float", "sys::Num");
 sys_Type.addType("sys::Int", "sys::Num");
 sys_Type.addType("sys::List");
 sys_Type.addType("sys::Map");
+sys_Type.addType("sys::Month", "sys::Enum");
 sys_Type.addType("sys::Num");
 sys_Type.addType("sys::Obj");
 sys_Type.addType("sys::Range");
