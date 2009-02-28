@@ -665,6 +665,8 @@ class StrTest : Test
     verifyDisplayName("point5", "Point 5")
     verifyDisplayName("point23", "Point 23")
     verifyDisplayName("p\u01fct23Here", "P\u01fct 23 Here")
+    verifyDisplayName("2Days55F", "2 Days 55 F")
+    verifyDisplayName("23Days5Foo", "23 Days 5 Foo")
 
     // un-normalized toDisplayName
     verifyEq("Zoo\u01fc".toDisplayName, "Zoo\u01fc")
@@ -674,6 +676,11 @@ class StrTest : Test
     verifyEq("OATemp3".toDisplayName,  "OA Temp 3")
     verifyEq("thisPV".toDisplayName, "This PV")
     verifyEq("fileCSV".toDisplayName, "File CSV")
+    verifyEq("2days5foo".toDisplayName, "2 Days 5 Foo")
+    verifyEq("23days55foo".toDisplayName, "23 Days 55 Foo")
+    verifyEq("f_b".toDisplayName, "F B")
+    verifyEq("foo_bar".toDisplayName, "Foo Bar")
+    verifyEq("foo_Bar_bazRoo".toDisplayName, "Foo Bar Baz Roo")
 
     // un-normalized fromDisplayName
     verifyEq("foo".fromDisplayName, "foo")

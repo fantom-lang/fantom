@@ -393,19 +393,38 @@ public class FanStr
   {
     if (self.length() == 0) return "";
     StringBuilder s = new StringBuilder(self.length()+4);
-    s.append((char)(self.charAt(0) & ~0x20));
-    int last = self.charAt(0);
+
+    // capitalize first word
+    int c = self.charAt(0);
+    if ('a' <= c && c <= 'z') c &= ~0x20;
+    s.append((char)c);
+
+    // insert spaces before every capital
+    int last = c;
     for (int i=1; i<self.length(); ++i)
     {
-      int c = self.charAt(i);
-      if ('A' <= c && c <= 'Z')
+      c = self.charAt(i);
+      if ('A' <= c && c <= 'Z' && last != '_')
       {
         int next = i+1 < self.length() ? self.charAt(i+1) : 'Q';
-        if (!('A' <= last && last <= 'Z') || !('A' <= next && next <= 'Z'))
+        if (!('A' <= last && last <= 'Z' ) || !('A' <= next && next <= 'Z'))
           s.append(' ');
       }
-      else if ('0' <= c && c <= '9' && !('0' <= last && last <= '9'))
+      else if ('a' <= c && c <= 'z')
+      {
+        if (('0' <= last && last <= '9')) { s.append(' '); c &= ~0x20; }
+        else if (last == '_') c &= ~0x20;
+      }
+      else if ('0' <= c && c <= '9')
+      {
+        if (!('0' <= last && last <= '9')) s.append(' ');
+      }
+      else if (c == '_')
+      {
         s.append(' ');
+        last = c;
+        continue;
+      }
       s.append((char)c);
       last = c;
     }

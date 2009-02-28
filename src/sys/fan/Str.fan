@@ -294,7 +294,8 @@ const final class Str
   ** Translate a programmer name like "fooBar" to "Foo Bar".
   ** This method capitalizes the first letter, then walks
   ** the string looking for ASCII capital letters and inserting
-  ** a space.  Also see `fromDisplayName`.
+  ** a space.  Any underbars are replaced with a space.  Also
+  ** see `fromDisplayName`.
   **
   ** Examples:
   **   "foo".toDisplayName       ->  "Foo
@@ -303,6 +304,7 @@ const final class Str
   **   "foo33".toDisplayName     ->  "Foo 33"
   **   "fooXML".toDisplayName    ->  "Foo XML"
   **   "Foo".toDisplayName       ->  "Foo"
+  **   "foo_bar".toDisplayName   ->  "Foo Bar"
   **
   Str toDisplayName()
 

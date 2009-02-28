@@ -419,19 +419,38 @@ namespace Fan.Sys
     {
       if (self.Length == 0) return "";
       StringBuilder s = new StringBuilder(self.Length+4);
-      s.Append((char)(self[0] & ~0x20));
-      int last = self[0];
+
+      // capitalize first word
+      int c = self[0];
+      if ('a' <= c && c <= 'z') c &= ~0x20;
+      s.Append((char)c);
+
+      // insert spaces before every capital
+      int last = c;
       for (int i=1; i<self.Length; ++i)
       {
-        int c = self[i];
-        if ('A' <= c && c <= 'Z')
+        c = self[i];
+        if ('A' <= c && c <= 'Z' && last != '_')
         {
           int next = i+1 < self.Length ? self[i+1] : 'Q';
           if (!('A' <= last && last <= 'Z') || !('A' <= next && next <= 'Z'))
             s.Append(' ');
         }
-        else if ('0' <= c && c <= '9' && !('0' <= last && last <= '9'))
+        else if ('a' <= c && c <= 'z')
+        {
+          if ('0' <= last && last <= '9') { s.Append(' '); c &= ~0x20; }
+          else if (last == '_') c &= ~0x20;
+        }
+        else if ('0' <= c && c <= '9')
+        {
+          if (!('0' <= last && last <= '9')) s.Append(' ');
+        }
+        else if (c == '_')
+        {
           s.Append(' ');
+          last = c;
+          continue;
+        }
         s.Append((char)c);
         last = c;
       }
