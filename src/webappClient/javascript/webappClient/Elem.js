@@ -145,13 +145,15 @@ var webappClient_Elem = sys_Obj.extend(
     this.elem.focus();
   },
 
-  find: function(func, acc)
+  find: function(func)
   {
     var kids = this.children();
     for (var i=0; i<kids.length; i++)
     {
       var kid = kids[i];
       if (func(kid)) return kid;
+      kid = kid.find(func);
+      if (kid != null) return kid;
     }
     return null;
   },
