@@ -164,4 +164,16 @@ abstract class Widget : Weblet
     m.call1(this)
   }
 
+  **
+  ** Return a name that is unique to this web request.  The name
+  ** returned can be used as a valid HTML name or id attribute, as
+  ** well as a JavaScript variable name.
+  **
+  Str unique()
+  {
+    Int last := Thread.locals.get("webapp.widget.unique", -1)
+    Thread.locals["webapp.widget.unique"] = ++last
+    return "n$last"
+  }
+
 }
