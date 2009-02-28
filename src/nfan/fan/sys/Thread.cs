@@ -361,7 +361,8 @@ namespace Fan.Sys
     [MethodImpl(MethodImplOptions.Synchronized)]
     public Thread stop()
     {
-      throw Err.make("TODO: Thread.stop not implemented for .NET yet").val;
+      // TODO
+      return kill();
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
