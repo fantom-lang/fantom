@@ -24,8 +24,18 @@ class Event
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Returns the target to which the event was dispatched.
+  ** The target to which the event was dispatched.
   **
   Elem target() { return Elem("") }
+
+  **
+  ** The x position of the event.
+  **
+  Int x() { return 0 }
+
+  **
+  ** The y position of the event.
+  **
+  Int y() { return 0 }
 
 }

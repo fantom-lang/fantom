@@ -17,6 +17,9 @@ var webappClient_Event = sys_Obj.extend(
     return webappClient_Elem.make(this.event.target);
   },
 
+  x: function() { return this.event.pageX; },
+  y: function() { return this.event.pageY; },
+
 });
 
 webappClient_Event.make = function(event)
