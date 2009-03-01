@@ -171,11 +171,11 @@ var webappClient_Elem = sys_Obj.extend(
     return acc;
   },
 
-  onEvent: function(type, handler)
+  onEvent: function(type, useCapture, handler)
   {
     this.elem.addEventListener(type, function(e) {
       handler(webappClient_Event.make(e));
-    }, false);
+    }, useCapture);
   },
 
   toStr: function()

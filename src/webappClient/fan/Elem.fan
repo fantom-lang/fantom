@@ -191,6 +191,6 @@ class Elem
   **
   ** Attach an event handler to the given event on this element.
   **
-  Void onEvent(Str type, |Event e| handler) {}
+  Void onEvent(Str type, Bool useCapture, |Event e| handler) {}
 
 }
