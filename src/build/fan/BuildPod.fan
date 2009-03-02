@@ -100,9 +100,34 @@ abstract class BuildPod : BuildScript
   **
   Bool hasJavascript
 
+  **
+  ** Include the full set of source code in the pod file.
+  ** This is required to generate links in HTML doc to HTML
+  ** formatted source.  Defaults to false.
+  **
+  Bool includeSrc
+
+  **
+  ** Include the fandoc API in the pod file.  This is required to
+  ** access the doc at runtime and to run the fandoc compiler.
+  ** Default is true.
+  **
+  Bool includeFandoc
+
+
 //////////////////////////////////////////////////////////////////////////
 // Setup
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Internal initialization before setup is called
+  **
+  internal override Void initEnv()
+  {
+    super.initEnv
+    includeSrc = false
+    includeFandoc = true
+  }
 
   **
   ** Validate subclass constructor setup required meta-data.
@@ -146,13 +171,15 @@ abstract class BuildPod : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   @target="compile fan source into pod"
-  virtual Void compile(Bool full := false)
+  virtual Void compile(Bool includeFandocAndSrc := false)
   {
     log.info("compile [$podName]")
     log.indent
     fanc := CompileFan.make(this)
-      fanc.includeDoc = full
-      fanc.includeSrc = full
+    {
+      includeDoc = includeFandocAndSrc && includeFandoc
+      includeSrc = includeFandocAndSrc && includeSrc
+    }
     fanc.run
     log.unindent
   }
@@ -314,6 +341,19 @@ abstract class BuildPod : BuildScript
     compilerJavascript := Type.find("compilerJavascript::Main").make
     Int r := compilerJavascript->run(scriptFile.uri)
     if (r != 0) fatal("Cannot compile javascript '$podName'")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// CompileAll
+//////////////////////////////////////////////////////////////////////////
+
+  @target="compile+native (no fandoc+src)"
+  virtual Void compileAll()
+  {
+    compile(false)
+    javaNative
+    dotnetNative
+    javascript
   }
 
 //////////////////////////////////////////////////////////////////////////

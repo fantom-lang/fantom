@@ -93,7 +93,7 @@ abstract class BuildScript
   **
   ** Initialize the environment
   **
-  private Void initEnv()
+  internal virtual Void initEnv()
   {
     // init devHomeDir
     devHomeDir = Sys.homeDir
