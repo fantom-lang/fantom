@@ -21,6 +21,8 @@ class Build : BuildPod
     description = "Test suite for compiler"
     depends     = ["sys 1.0", "compiler 1.0"]
     srcDirs     = [`fan/`]
+    includeSrc  = false
+    includeFandoc = false
     podFacets   =
     [
       "doc": false

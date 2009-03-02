@@ -24,6 +24,7 @@ class Build : BuildPod
     srcDirs     = [`fan/`]
     javaDirs    = [`java/`]
     javaLibs    = [`ext/servlet-api.jar`]
+    includeSrc  = true
   }
 
 }

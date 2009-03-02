@@ -23,6 +23,7 @@ class Build : BuildPod
     depends     = Str[,]
     srcDirs     = [`fan/`]
     resDirs     = [`locale/`]
+    includeSrc  = true
     podFacets   = ["indexFacets":["uriScheme"]]
   }
 

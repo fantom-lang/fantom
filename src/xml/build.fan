@@ -22,6 +22,7 @@ class Build : BuildPod
     description = "XML Parser and Document Modeling"
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`, `test/`]
+    includeSrc  = true
   }
 
 }

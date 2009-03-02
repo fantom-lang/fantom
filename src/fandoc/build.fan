@@ -22,6 +22,7 @@ class Build : BuildPod
     description = "Fandoc parser and tools"
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`, `test/`]
+    includeSrc  = true
   }
 
 }

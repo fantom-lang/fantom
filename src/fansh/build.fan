@@ -22,6 +22,7 @@ class Build : BuildPod
     description = "Interactive Fan Shell"
     depends     = ["sys 1.0", "compiler 1.0"]
     srcDirs     = [`fan/`]
+    includeSrc  = true
   }
 
 }

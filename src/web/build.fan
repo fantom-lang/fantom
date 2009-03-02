@@ -22,6 +22,7 @@ class Build : BuildPod
     description = "Standard weblet APIs for processing HTTP requests"
     depends     = ["sys 1.0", "inet 1.0"]
     srcDirs     = [`fan/`, `test/`]
+    includeSrc  = true
   }
 
 }

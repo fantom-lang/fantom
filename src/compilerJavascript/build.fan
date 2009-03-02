@@ -22,6 +22,7 @@ class Build : BuildPod
     description = "Fan to Javascript Compiler"
     depends     = ["sys 1.0", "compiler 1.0", "build 1.0"]
     srcDirs     = [`fan/`]
+    includeSrc  = true
   }
 
 }

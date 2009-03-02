@@ -60,6 +60,16 @@ class Build : BuildGroup
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Compile All
+//////////////////////////////////////////////////////////////////////////
+
+  @target="run compileAll on all pods"
+  Void compileAll()
+  {
+    spawnOnChildren("compileAll")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Full
 //////////////////////////////////////////////////////////////////////////
 
@@ -107,6 +117,9 @@ class Build : BuildGroup
   {
     // fanLib nuke it all
     Delete.make(this, libFanDir).run
+
+    // doc nuke it all
+    Delete.make(this, devHomeDir + `doc/`).run
 
     // javaLib (keep ext/)
     libJavaDir.list.each |File f|
@@ -157,7 +170,7 @@ class Build : BuildGroup
     zip
   }
 
-  @target="delete non-distribuation files"
+  @target="delete non-distribution files"
   Void deleteNonDist()
   {
     Delete.make(this, devHomeDir+`tmp/`).run

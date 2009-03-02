@@ -22,6 +22,7 @@ class Build : BuildPod
     description = "Wisp web Server"
     depends     = ["sys 1.0", "inet 1.0", "web 1.0"]
     srcDirs     = [`fan/`, `test/`]
+    includeSrc  = true
   }
 
 }
