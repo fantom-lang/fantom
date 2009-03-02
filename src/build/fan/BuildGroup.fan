@@ -82,8 +82,9 @@ abstract class BuildGroup : BuildScript
         names = names.union(n)
     }
 
-    // get my own targets, which trump children targets
+    // add my own targets, which trump children targets in toTarget
     myTargets := super.makeTargets
+    myTargets.each |Target t| { if (!names.contains(t.name)) names.add(t.name) }
 
     // now create a Target for each name
     targets := Target[,]
