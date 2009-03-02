@@ -246,6 +246,53 @@ sys_Str.trim = function(self, trimStart, trimEnd)
 sys_Str.trimStart = function(self) { return sys_Str.trim(self, true, false); }
 sys_Str.trimEnd   = function(self) { return sys_Str.trim(self, false, true); }
 
+sys_Str.split = function(self, sep, trimmed)
+{
+  if (sep == null) return sys_Str.splitws(self);
+  var toks = new Array();
+  var trim = (trimmed != null) ? trimmed : true;
+  var len = self.length;
+  var x = 0;
+  for (var i=0; i<len; ++i)
+  {
+    if (self.charCodeAt(i) != sep) continue;
+    if (x <= i) toks.push(sys_Str.splitStr(self, x, i, trim));
+    x = i+1;
+  }
+  if (x <= len) toks.push(sys_Str.splitStr(self, x, len, trim));
+  return toks;
+}
+
+sys_Str.splitStr = function(val, s, e, trim)
+{
+  if (trim == true)
+  {
+    while (s < e && val.charCodeAt(s) <= 32) ++s;
+    while (e > s && val.charCodeAt(e-1) <= 32) --e;
+  }
+  return val.substring(s, e);
+}
+
+sys_Str.splitws = function(val)
+{
+  var toks = new Array();
+  var len = val.length;
+  while (len > 0 && val.charCodeAt(len-1) <= 32) --len;
+  var x = 0;
+  while (x < len && val.charCodeAt(x) <= 32) ++x;
+  for (var i=x; i<len; ++i)
+  {
+    if (val.charCodeAt(i) > 32) continue;
+    toks.push(val.substring(x, i));
+    x = i + 1;
+    while (x < len && val.charCodeAt(x) <= 32) ++x;
+    i = x;
+  }
+  if (x <= len) toks.push(val.substring(x, len));
+  if (toks.length == 0) toks.push("");
+  return toks;
+}
+
 sys_Str.upper = function(self)
 {
   return self.toUpperCase();
