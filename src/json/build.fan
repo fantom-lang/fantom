@@ -22,6 +22,7 @@ class Build : BuildPod
     description = "JSON (Javascript Object Notation) serialization"
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`, `test/`]
+    includeSrc  = true
   }
 
 }

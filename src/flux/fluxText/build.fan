@@ -23,6 +23,7 @@ class Build : BuildPod
     depends     = ["sys 1.0", "fwt 1.0", "flux 1.0"]
     srcDirs     = [`fan/`, `test/`]
     resDirs     = [`locale/`]
+    includeSrc  = true
   }
 
 }

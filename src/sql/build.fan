@@ -23,6 +23,7 @@ class Build : BuildPod
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`, `fan/dialects/`, `test/`]
     javaDirs    = [`java/`]
+    includeSrc  = true
   }
 
 }

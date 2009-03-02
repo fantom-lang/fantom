@@ -30,6 +30,7 @@ class Build : BuildPod
                    `fan/parser/`,
                    `fan/steps/`,
                    `fan/util/`]
+    includeSrc  = true
     podFacets =
     [
       "indexFacets": ["compilerBridge"]

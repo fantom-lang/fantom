@@ -22,6 +22,7 @@ class Build : BuildPod
     description = "Email support"
     depends     = ["sys 1.0", "inet 1.0"]
     srcDirs     = [`fan/`, `test/`]
+    includeSrc  = true
   }
 
 }

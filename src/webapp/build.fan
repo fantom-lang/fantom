@@ -22,6 +22,7 @@ class Build : BuildPod
     description = "Framework for building web applications"
     depends     = ["sys 1.0", "inet 1.0", "web 1.0", "fand 1.0"]
     srcDirs     = [`fan/`, `test/`]
+    includeSrc  = true
     podFacets =
     [
       "indexFacets": ["webView"]

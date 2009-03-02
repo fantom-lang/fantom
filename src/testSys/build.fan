@@ -23,6 +23,8 @@ class Build : BuildPod
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`]
     resDirs     = [`res/`, `locale/`]
+    includeSrc  = false
+    includeFandoc = false
     podFacets =
     [
       "doc": false,

@@ -23,6 +23,7 @@ class Build : BuildPod
     depends     = ["sys 1.0", "compiler 1.0"]
     dependsDir  = libFanDir.uri
     srcDirs     = [`fan/`, `fan/tasks/`]
+    includeSrc  = true
   }
 
 }

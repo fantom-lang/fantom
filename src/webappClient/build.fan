@@ -22,6 +22,7 @@ class Build : BuildPod
     description   = "Client-side framework for building web applications"
     depends       = ["sys 1.0", "web 1.0", "webapp 1.0"]
     srcDirs       = [`fan/`]
+    includeSrc    = true
   }
 
   @target="compile fan source into pod"

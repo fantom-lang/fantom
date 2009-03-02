@@ -25,6 +25,7 @@ class Build : BuildPod
     javaDirs    = [`java/`]
     //dotnetDirs  = [`dotnet/`]
     resDirs     = [`locale/`]
+    includeSrc  = true
   }
 
 }

@@ -21,6 +21,7 @@ class Build : BuildPod
     description = "Fan daemon framework"
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`]
+    includeSrc  = true
   }
 
 }

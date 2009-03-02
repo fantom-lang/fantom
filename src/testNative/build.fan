@@ -24,6 +24,8 @@ class Build : BuildPod
     srcDirs     = [`fan/`]
     javaDirs    = [`java/`]
     dotnetDirs  = [`dotnet/`]
+    includeSrc  = false
+    includeFandoc = false
     podFacets   =
     [
       "doc": false
