@@ -276,6 +276,19 @@ const final class Int : Num
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Format this integer number for the current locale.
+  ** If pattern is null, then the locale's default pattern is used.
+  ** See `Float.toLocale` for pattern language.  Fractional formatting
+  ** is not supported for integers.
+  **
+  ** Examples:
+  **   3.toLocale("00")             =>  03
+  **   3.toLocale("000")            =>  003
+  **   123456789.toLocale("#,###")  =>  123,456,789
+  **
+  Str toLocale(Str? pattern := null)
+
+  **
   ** Return if this Unicode char is an uppercase letter in
   ** the current locale.  See also `localeIsLower` and `isUpper`.
   **

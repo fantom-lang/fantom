@@ -11,6 +11,8 @@ dateTime=D-MMM-YYYY WWW hh:mm:ss zzz
 date=D-MMM-YYYY
 time=hh:mm
 float=#,###.0##
+decimal=#,###.0##
+int=#,###
 
 //////////////////////////////////////////////////////////////////////////
 // Month

@@ -132,4 +132,15 @@ const final class Decimal : Num
   **
   Str toCode()
 
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Format this decimal number for the current locale.
+  ** If pattern is null, then the locale's default pattern is used.
+  ** See `Float.toLocale` for pattern language and examples.
+  **
+  Str toLocale(Str? pattern := null)
+
 }
