@@ -520,7 +520,7 @@ class FloatTest : Test
     // no wholes
     verifyLocale(7.123f, "#.000", "7.123")
     verifyLocale(0.123f, "#.000", ".123")
-    verifyLocale(-0.005f, "#.###", "-0.005")
+    verifyLocale(-0.005f, "#.###", "-.005", true)
 
     // max fractions
     verifyLocale(1234.1234f, "#.#", "1234.1")
@@ -620,7 +620,20 @@ class FloatTest : Test
     verifyLocale(99.97f,  "0.0",  "100.0")
     verifyLocale(-0.994f, "0.00", "-0.99")
     verifyLocale(-0.996f, "0.00", "-1.00")
-    verifyLocale(-0.937f, "#.##", "-0.94")
+    verifyLocale(-0.937f, "00.##", "-00.94")
+    verifyLocale(-0.937f, "#.##", "-.94", true)
+
+    // more random testing
+    verifyLocale(-2.87E-5f, "#.000000", "-.000029")
+    verifyLocale(2.87E-5f, "#.######",  ".000029", true)
+    verifyLocale(-7.009E+8f, "##,###.0", "-700,900,000.0")
+    verifyLocale(10f/3f, "0.000", "3.333")
+    verifyLocale(10f/6f, "0.000", "1.667")
+    verifyLocale(Float.pi, "0.0", "3.1")
+    verifyLocale(Float.pi, "0.00", "3.14")
+    verifyLocale(Float.pi, "0.000", "3.142")
+    verifyLocale(Float.pi, "0.0000", "3.1416")
+    verifyLocale(Float.pi, "0.00000", "3.14159")
 
     // specials
     verifyLocale(Float.nan, "#.#", "\ufffd")
@@ -628,18 +641,20 @@ class FloatTest : Test
     verifyLocale(Float.negInf, "#.#", "-\u221e")
   }
 
-  Void verifyLocale(Float f, Str? pattern, Str expected)
+  Void verifyLocale(Float f, Str? pattern, Str expected, Bool javaWrong := false)
   {
     Locale("en-US").with |,|
     {
-      // echo("====> $f $pattern ?= $expected")
+      //echo("====> $f $pattern ?= $expected")
       actual := f.toLocale(pattern)
       // echo("   ==> $actual ?= $expected")
       verifyEq(actual, expected)
 
       // try to verify against what Java does (need using stmt up top)
-      // using [java] java.text
-      //v erifyEq(actual, DecimalFormat(pattern).format(f))
+      /*
+      using [java] java.text
+      if (!javaWrong) verifyEq(actual, DecimalFormat(pattern).format(f))
+      */
     }
   }
 
