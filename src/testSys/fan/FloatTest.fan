@@ -639,6 +639,10 @@ class FloatTest : Test
     verifyLocale(Float.nan, "#.#", "\ufffd")
     verifyLocale(Float.posInf, "#.#", "\u221e")
     verifyLocale(Float.negInf, "#.#", "-\u221e")
+
+    // default, alternate locale
+    verifyLocale(12345.4f, null, "12,345.4")
+    Locale("fr").with |,| { verifyEq(12345.4f.toLocale("#,###.0"), "12\u00a0345,4") }
   }
 
   Void verifyLocale(Float f, Str? pattern, Str expected, Bool javaWrong := false)
