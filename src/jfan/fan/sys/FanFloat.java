@@ -314,6 +314,54 @@ public final class FanFloat
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Conversion
+//////////////////////////////////////////////////////////////////////////
+
+  public static String toLocale(double self) { return toLocale(self, null); }
+  public static String toLocale(double self, String pattern)
+  {
+    // get current locale
+    Locale locale = Locale.current();
+    java.text.DecimalFormatSymbols df = locale.decimal();
+
+    // handle special values
+    if (Double.isNaN(self)) return df.getNaN();
+    if (self == Double.POSITIVE_INFINITY) return df.getInfinity();
+    if (self == Double.NEGATIVE_INFINITY) return df.getMinusSign() + df.getInfinity();
+
+    // get default pattern if necessary
+    if (pattern == null) pattern = locale.get("sys", "float", "#,###.0##");
+
+    // parse pattern and get double digits
+    NumPattern p = new NumPattern(pattern);
+    NumDigits d = new NumDigits(self);
+
+    // walk thru the digits apply locale symbols
+    StringBuilder s = new StringBuilder();
+    if (d.negative) s.append(df.getMinusSign());
+    for (int i=0; i<d.size; ++i)
+    {
+      if (i < d.decimal)
+      {
+        if ((d.decimal - i) % p.group == 0 && i > 0)
+          s.append(df.getGroupingSeparator());
+      }
+      else
+      {
+        if (i == d.decimal && p.maxFrac > 0) s.append(df.getDecimalSeparator());
+        if (i-d.decimal >= p.maxFrac) break;
+      }
+      s.append(d.digits[i]);
+    }
+
+    // trailing zeros
+    for (int i=0; i<p.minFrac-d.fracSize(); ++i)
+      s.append('0');
+
+    return s.toString();
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 

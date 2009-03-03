@@ -128,6 +128,13 @@ public class Locale
     return javaCollator;
   }
 
+  public java.text.DecimalFormatSymbols decimal()
+  {
+    if (javaDecimal == null)
+      javaDecimal = new java.text.DecimalFormatSymbols(java());
+    return javaDecimal;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Properties
 //////////////////////////////////////////////////////////////////////////
@@ -260,5 +267,6 @@ public class Locale
   final String country;
   java.util.Locale javaLocale;
   java.text.Collator javaCollator;
+  java.text.DecimalFormatSymbols javaDecimal;
 
 }

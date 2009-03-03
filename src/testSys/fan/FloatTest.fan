@@ -484,4 +484,107 @@ class FloatTest : Test
     verifyEq(Float.negInf.toCode, "Float.negInf")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Num Locale
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNumLocale()
+  {
+    Locale("en-US").with |,|
+    {
+      verifyEq(Num.localeDecimal,  '.')
+      verifyEq(Num.localeGrouping, ',')
+      verifyEq(Num.localeMinus,    '-')
+      verifyEq(Num.localePercent,  '%')
+      verifyEq(Num.localeInf, "\u221e")
+      verifyEq(Num.localeNaN, "\ufffd") // not sure about replacement char
+    }
+    Locale("fr").with |,|
+    {
+      verifyEq(Num.localeDecimal,  ',')
+      verifyEq(Num.localeGrouping, 0xa0)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  Void testLocale()
+  {
+    // max fractions
+    verifyLocale(1234.1234f, "#.#", "1234.1")
+    verifyLocale(1234.1234f, "#.##", "1234.12")
+    verifyLocale(1234.1234f, "#.###", "1234.123")
+    verifyLocale(1234.1234f, "#.####", "1234.1234")
+    verifyLocale(1234.1234f, "#.#####", "1234.1234")
+    verifyLocale(-1234.1234f, "#.#####", "-1234.1234")
+
+    // min fractions
+    verifyLocale(1234.1234f, "#", "1234")
+    verifyLocale(1234f,      "#.0", "1234.0")
+    verifyLocale(1234.3f,    "#.0", "1234.3")
+    verifyLocale(1234.34f,   "#.0", "1234.3")
+    verifyLocale(1234.345f,  "#.0", "1234.3")
+    verifyLocale(1234f,      "#.00", "1234.00")
+    verifyLocale(1234.3f,    "#.00", "1234.30")
+    verifyLocale(1234.34f,   "#.00", "1234.34")
+    verifyLocale(1234.342f,  "#.00", "1234.34")
+    verifyLocale(1234f,      "#.000", "1234.000")
+    verifyLocale(1234.3f,    "#.000", "1234.300")
+    verifyLocale(1234.34f,   "#.000", "1234.340")
+    verifyLocale(1234.342f,  "#.000", "1234.342")
+    verifyLocale(1234.3421f, "#.000", "1234.342")
+
+    // min/max fractions
+    verifyLocale(3.123432f, "#.00##", "3.1234")
+    verifyLocale(3.12343f,  "#.00##", "3.1234")
+    verifyLocale(3.1234f,   "#.00##", "3.1234")
+    verifyLocale(3.123f,    "#.00##", "3.123")
+    verifyLocale(3.12f,     "#.00##", "3.12")
+    verifyLocale(3.1f,      "#.00##", "3.10")
+    verifyLocale(-3f,       "#.00##", "-3.00")
+    verifyLocale(-3.1234f,  "#.0##",  "-3.123")
+    verifyLocale(-3.123f,   "#.0##",  "-3.123")
+    verifyLocale(-3.12f,    "#.0##",  "-3.12")
+    verifyLocale(-3.1f,     "#.0##",  "-3.1")
+    verifyLocale(-3f,       "#.0##",  "-3.0")
+
+    // grouping
+    verifyLocale(1.0f, "#,###.0", "1.0")
+    verifyLocale(12.0f, "#,###.0", "12.0")
+    verifyLocale(123.0f, "#,###.0", "123.0")
+    verifyLocale(1234.0f, "#,###.0", "1,234.0")
+    verifyLocale(12345.0f, "#,###.0", "12,345.0")
+    verifyLocale(123456.0f, "#,###.0", "123,456.0")
+    verifyLocale(1234567.0f, "#,###.0", "1,234,567.0")
+    verifyLocale(12345000.0f, "#,###.0", "12,345,000.0")
+    verifyLocale(-12345000.0f, "#,###.0", "-12,345,000.0")
+    verifyLocale(12345000.0f, "#,####.0", "1234,5000.0")
+    verifyLocale(-12345000.0f, "#,####.0", "-1234,5000.0")
+    verifyLocale(12345000.0f, "#,##,##.0",  "12,34,50,00.0")
+    verifyLocale(-12345000.0f, "#,##,##.0", "-12,34,50,00.0")
+    verifyLocale(2.34E+11f, "###,###.0", "234,000,000,000.0")
+    verifyLocale(-2.34E+11f, "###,###,###.0", "-234,000,000,000.0")
+
+    // zero
+    verifyLocale(0f, "#.0", "0.0")
+//    verifyLocale(0f, "#.#", "0")
+
+    // specials
+    verifyLocale(Float.nan, "#.#", "\ufffd")
+    verifyLocale(Float.posInf, "#.#", "\u221e")
+    verifyLocale(Float.negInf, "#.#", "-\u221e")
+  }
+
+  Void verifyLocale(Float f, Str? pattern, Str expected)
+  {
+    Locale("en-US").with |,|
+    {
+      actual := f.toLocale(pattern)
+//echo("====> $actual ?= $expected")
+      verifyEq(actual, expected)
+    }
+  }
+
 }
