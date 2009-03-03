@@ -122,6 +122,19 @@ class NumDigits
 
   int fracSize() { return size - decimal; }
 
+  boolean zeroInt()
+  {
+    for (int i=0; i<decimal; ++i) if (digits[i] != '0') return false;
+    return true;
+  }
+
+  boolean zeroFrac(int maxFracs)
+  {
+    int until = decimal + maxFracs;
+    for (int i=decimal; i<until; ++i) if (digits[i] != '0') return false;
+    return true;
+  }
+
   public String toString()
   {
     return new String(digits, 0, size) + " neg=" + negative + " decimal=" + decimal;
@@ -146,8 +159,10 @@ class NumPattern
   {
     pattern = s;
     group = Integer.MAX_VALUE;
+    optInt = true;
     boolean comma = false;
     boolean decimal = false;
+    int last = 0;
     for (int i=0; i<s.length(); ++i)
     {
       int c = s.charAt(i);
@@ -171,18 +186,22 @@ class NumPattern
           break;
         case '.':
           decimal = true;
+          optInt  = last == '#';
           break;
       }
+      last = c;
     }
   }
 
   public String toString()
   {
-    return pattern + " group=" + group + " minInt=" + minInt + " maxFrac=" + maxFrac + " minFrac=" + minFrac;
+    return pattern + " group=" + group + " minInt=" + minInt +
+      " maxFrac=" + maxFrac + " minFrac=" + minFrac + " optInt=" + optInt;
   }
 
   String pattern;  // pattern parsed
   int group;       // grouping size (typically 3 for 1000)
+  boolean optInt;  // if we have "#." then the int part if optional (no leading zero)
   int minInt;      // min digits in integer part (leading zeros)
   int minFrac;     // min digits in fractional part (trailing zeros)
   int maxFrac;     // max digits in fractional part (clipping)

@@ -336,10 +336,24 @@ public final class FanFloat
     NumPattern p = new NumPattern(pattern);
     NumDigits d = new NumDigits(self);
 
-    // walk thru the digits apply locale symbols
+    // if min required fraction digits are zero and we
+    // have nothing but zeros, then truncate to a whole number
+    if (p.minFrac == 0 && d.zeroFrac(p.maxFrac)) d.size = d.decimal;
+
+    // if we have an optional integer part, and only
+    // fractional digits, then don't include leading zero
+    int start = 0;
+    if (p.optInt && d.zeroInt()) start = d.decimal;
+
+    // string buffer
     StringBuilder s = new StringBuilder();
     if (d.negative) s.append(df.getMinusSign());
-    for (int i=0; i<d.size; ++i)
+
+    // leading zeros
+    for (int i=0; i<p.minInt-d.decimal; ++i) s.append('0');
+
+    // walk thru the digits and apply locale symbols
+    for (int i=start; i<d.size; ++i)
     {
       if (i < d.decimal)
       {
@@ -357,6 +371,9 @@ public final class FanFloat
     // trailing zeros
     for (int i=0; i<p.minFrac-d.fracSize(); ++i)
       s.append('0');
+
+    // handle #.# case
+    if (s.length() == 0) return "0";
 
     return s.toString();
   }

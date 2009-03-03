@@ -512,7 +512,22 @@ class FloatTest : Test
 
   Void testLocale()
   {
+    // no fractions
+    verifyLocale(4.0f, "#", "4")
+    verifyLocale(1234.3f, "#", "1234")
+    verifyLocale(-123.1234f, "#", "-123")
+
+    // no wholes
+    verifyLocale(7.123f, "#.000", "7.123")
+    verifyLocale(0.123f, "#.000", ".123")
+
     // max fractions
+    verifyLocale(1234.1234f, "#.#", "1234.1")
+    verifyLocale(1234.1f,    "#.#", "1234.1")
+    verifyLocale(1234.0f,    "#.#", "1234")
+    verifyLocale(1230.0f,    "#.#", "1230")
+    verifyLocale(-1230.00f,  "#.#", "-1230")
+    verifyLocale(1230.003f,  "#.#", "1230")
     verifyLocale(1234.1234f, "#.#", "1234.1")
     verifyLocale(1234.1234f, "#.##", "1234.12")
     verifyLocale(1234.1234f, "#.###", "1234.123")
@@ -526,21 +541,21 @@ class FloatTest : Test
     verifyLocale(1234.3f,    "#.0", "1234.3")
     verifyLocale(1234.34f,   "#.0", "1234.3")
     verifyLocale(1234.345f,  "#.0", "1234.3")
-    verifyLocale(1234f,      "#.00", "1234.00")
+    verifyLocale(-1234f,     "#.00", "-1234.00")
     verifyLocale(1234.3f,    "#.00", "1234.30")
     verifyLocale(1234.34f,   "#.00", "1234.34")
     verifyLocale(1234.342f,  "#.00", "1234.34")
     verifyLocale(1234f,      "#.000", "1234.000")
     verifyLocale(1234.3f,    "#.000", "1234.300")
-    verifyLocale(1234.34f,   "#.000", "1234.340")
-    verifyLocale(1234.342f,  "#.000", "1234.342")
-    verifyLocale(1234.3421f, "#.000", "1234.342")
+    verifyLocale(1234.04f,   "#.000", "1234.040")
+    verifyLocale(1234.002f,  "#.000", "1234.002")
+    verifyLocale(1234.0012f, "#.000", "1234.001")
 
     // min/max fractions
     verifyLocale(3.123432f, "#.00##", "3.1234")
     verifyLocale(3.12343f,  "#.00##", "3.1234")
-    verifyLocale(3.1234f,   "#.00##", "3.1234")
-    verifyLocale(3.123f,    "#.00##", "3.123")
+    verifyLocale(3.0234f,   "#.00##", "3.0234")
+    verifyLocale(3.003f,    "#.00##", "3.003")
     verifyLocale(3.12f,     "#.00##", "3.12")
     verifyLocale(3.1f,      "#.00##", "3.10")
     verifyLocale(-3f,       "#.00##", "-3.00")
@@ -549,6 +564,15 @@ class FloatTest : Test
     verifyLocale(-3.12f,    "#.0##",  "-3.12")
     verifyLocale(-3.1f,     "#.0##",  "-3.1")
     verifyLocale(-3f,       "#.0##",  "-3.0")
+
+    // leading zeros
+    verifyLocale(0.3f,      "00.0",  "00.3")
+    verifyLocale(3f,        "00.0",  "03.0")
+    verifyLocale(30f,       "00.0",  "30.0")
+    verifyLocale(123f,       "0.#",  "123")
+    verifyLocale(123f,    "0000.#",  "0123")
+    verifyLocale(0.5f,    "0000.#",  "0000.5")
+    verifyLocale(0.01f,   "0000.#",  "0000")
 
     // grouping
     verifyLocale(1.0f, "#,###.0", "1.0")
@@ -568,8 +592,12 @@ class FloatTest : Test
     verifyLocale(-2.34E+11f, "###,###,###.0", "-234,000,000,000.0")
 
     // zero
-    verifyLocale(0f, "#.0", "0.0")
-//    verifyLocale(0f, "#.#", "0")
+    verifyLocale(0f, "#.0", ".0")
+    verifyLocale(0f, "#.#", "0")
+    verifyLocale(0f, "0",   "0")
+    verifyLocale(0f, "0.#", "0")
+    verifyLocale(0f, "0.0", "0.0")
+    verifyLocale(0f, "00.00", "00.00")
 
     // specials
     verifyLocale(Float.nan, "#.#", "\ufffd")
@@ -581,9 +609,13 @@ class FloatTest : Test
   {
     Locale("en-US").with |,|
     {
+      // echo("====> $f $pattern ?= $expected")
       actual := f.toLocale(pattern)
-//echo("====> $actual ?= $expected")
+      // echo("    > $actual ?= $expected")
       verifyEq(actual, expected)
+
+      // try to verify against what Java does (need using up top)
+      // verifyEq(actual, DecimalFormat(pattern).format(f))
     }
   }
 
