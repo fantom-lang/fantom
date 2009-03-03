@@ -41,29 +41,35 @@ public class FanNum
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public static long localeDecimal()
+  public static String localeDecimal()
   {
-    return Locale.current().decimal().getDecimalSeparator();
+    return FanInt.toChar(Locale.current().decimal().getDecimalSeparator());
   }
 
-  public static long localeGrouping()
+  public static String localeGrouping()
   {
-    return Locale.current().decimal().getGroupingSeparator();
+    return FanInt.toChar(Locale.current().decimal().getGroupingSeparator());
   }
 
-  public static long localeMinus()
+  public static String localeMinus()
   {
-    return Locale.current().decimal().getMinusSign();
+    return FanInt.toChar(Locale.current().decimal().getMinusSign());
   }
 
-  public static long localePercent()
+  public static String localePercent()
   {
-    return Locale.current().decimal().getPercent();
+    return FanInt.toChar(Locale.current().decimal().getPercent());
   }
 
-  public static String localeInf()
+  public static String localePosInf()
   {
     return Locale.current().decimal().getInfinity();
+  }
+
+  public static String localeNegInf()
+  {
+    Locale locale = Locale.current();
+    return locale.decimal().getMinusSign() + locale.decimal().getInfinity();
   }
 
   public static String localeNaN()

@@ -124,6 +124,13 @@ namespace Fan.Sys
       return dotnetCulture;
     }
 
+    public NumberFormatInfo dec()
+    {
+      if (m_dec == null)
+        m_dec = dotnet().NumberFormat;
+      return m_dec;
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Properties
   //////////////////////////////////////////////////////////////////////////
@@ -254,6 +261,7 @@ namespace Fan.Sys
     readonly string m_lang;
     readonly string m_country;
     CultureInfo dotnetCulture;
+    NumberFormatInfo m_dec;
 
   }
 }

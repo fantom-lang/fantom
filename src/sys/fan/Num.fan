@@ -45,31 +45,36 @@ abstract const class Num
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the current locale's decimal separator character.
+  ** Get the current locale's decimal separator.
   ** For example in the the US this is a dot.
   **
-  static Int localeDecimal()
+  static Str localeDecimal()
 
   **
-  ** Get the current locale's separator character for grouping thousands
+  ** Get the current locale's separator for grouping thousands
   ** together.  For example in the the US this is a comma.
   **
-  static Int localeGrouping()
+  static Str localeGrouping()
 
   **
   ** Get the current locale's minus sign used to represent a negative number.
   **
-  static Int localeMinus()
+  static Str localeMinus()
 
   **
-  ** Get the current locale's character for the percent sign.
+  ** Get the current locale's symbol for the percent sign.
   **
-  static Int localePercent()
+  static Str localePercent()
 
   **
-  ** Get the current locale's string representation for infinity.
+  ** Get the current locale's string representation for positive infinity.
   **
-  static Str localeInf()
+  static Str localePosInf()
+
+  **
+  ** Get the current locale's string representation for negative infinity.
+  **
+  static Str localeNegInf()
 
   **
   ** Get the current locale's string representation for not-a-number.
