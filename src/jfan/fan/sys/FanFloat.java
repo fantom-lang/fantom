@@ -346,13 +346,7 @@ public final class FanFloat
     // if we have an optional integer part, and only
     // fractional digits, then don't include leading zero
     int start = 0;
-    if (p.optInt && d.zeroInt())
-    {
-      start = d.decimal;
-      // Java DecimalFormat doesn't do this for negative numbers,
-      // which seems a bit inconsistent, but duplicate that behavior
-      if (d.negative) s.append('0');
-    }
+    if (p.optInt && d.zeroInt()) start = d.decimal;
 
     // if min required fraction digits are zero and we
     // have nothing but zeros, then truncate to a whole number
