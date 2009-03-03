@@ -520,6 +520,7 @@ class FloatTest : Test
     // no wholes
     verifyLocale(7.123f, "#.000", "7.123")
     verifyLocale(0.123f, "#.000", ".123")
+    verifyLocale(-0.005f, "#.###", "-0.005")
 
     // max fractions
     verifyLocale(1234.1234f, "#.#", "1234.1")
@@ -594,10 +595,32 @@ class FloatTest : Test
     // zero
     verifyLocale(0f, "#.0", ".0")
     verifyLocale(0f, "#.#", "0")
-    verifyLocale(0f, "0",   "0")
     verifyLocale(0f, "0.#", "0")
     verifyLocale(0f, "0.0", "0.0")
     verifyLocale(0f, "00.00", "00.00")
+
+    // fixed size numbers
+    verifyLocale(0f,   "0",   "0")
+    verifyLocale(0f,   "00",  "00")
+    verifyLocale(0f,   "000", "000")
+    verifyLocale(2f,   "0",   "2")
+    verifyLocale(-2f,  "00",  "-02")
+    verifyLocale(2.3f, "000",  "002")
+    verifyLocale(20f,  "000",  "020")
+    verifyLocale(500f, "000",  "500")
+    verifyLocale(501f, "0000", "0501")
+
+    // rounding
+    verifyLocale(2.06f,   "0.0", "2.1")
+    verifyLocale(19.288f, "0.00", "19.29")
+    verifyLocale(19.298f, "0.00", "19.30")
+    verifyLocale(19.97f,  "0.##", "19.97")
+    verifyLocale(19.97f,  "0.#",  "20")
+    verifyLocale(19.97f,  "0.0",  "20.0")
+    verifyLocale(99.97f,  "0.0",  "100.0")
+    verifyLocale(-0.994f, "0.00", "-0.99")
+    verifyLocale(-0.996f, "0.00", "-1.00")
+    verifyLocale(-0.937f, "#.##", "-0.94")
 
     // specials
     verifyLocale(Float.nan, "#.#", "\ufffd")
@@ -611,12 +634,32 @@ class FloatTest : Test
     {
       // echo("====> $f $pattern ?= $expected")
       actual := f.toLocale(pattern)
-      // echo("    > $actual ?= $expected")
+      // echo("   ==> $actual ?= $expected")
       verifyEq(actual, expected)
 
-      // try to verify against what Java does (need using up top)
-      // verifyEq(actual, DecimalFormat(pattern).format(f))
+      // try to verify against what Java does (need using stmt up top)
+      // using [java] java.text
+      //v erifyEq(actual, DecimalFormat(pattern).format(f))
     }
   }
+
+  /*
+  Void testLocalePerf()
+  {
+    count := 1_000_000
+    pattern := "#,###.00"
+    for (i:=0; i<10_000; ++i) i.toFloat.toLocale(pattern)
+    for (i:=0; i<10_000; ++i) DecimalFormat(pattern).format(i.toFloat)
+
+    t1 := Duration.now
+    for (i:=0; i<count; ++i) i.toFloat.toLocale("#,###.00")
+    t2 := Duration.now
+    for (i:=0; i<count; ++i) DecimalFormat(pattern).format(i.toFloat)
+    t3 := Duration.now
+
+    echo("Fan  ${(t2-t1).toMillis}ms")
+    echo("Java ${(t3-t2).toMillis}ms")
+  }
+  */
 
 }

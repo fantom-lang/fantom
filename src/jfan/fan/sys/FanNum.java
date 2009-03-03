@@ -128,11 +128,29 @@ class NumDigits
     return true;
   }
 
-  boolean zeroFrac(int maxFracs)
+  boolean zeroFrac(int maxFrac)
   {
-    int until = decimal + maxFracs;
+    int until = decimal + maxFrac;
     for (int i=decimal; i<until; ++i) if (digits[i] != '0') return false;
     return true;
+  }
+
+  void round(int maxFrac)
+  {
+    if (fracSize() <= maxFrac) return;
+    if (digits[decimal+maxFrac] < '5') return;
+    int i = decimal + maxFrac - 1;
+    while (true)
+    {
+      if (digits[i] < '9') { digits[i]++; break; }
+      digits[i--] = '0';
+      if (i < 0)
+      {
+        System.arraycopy(digits, 0, digits, 1, size);
+        digits[0] = '1'; size++; decimal++;
+        break;
+      }
+    }
   }
 
   public String toString()
@@ -153,15 +171,36 @@ class NumDigits
 /**
  * NumPattern parses and models a numeric locale pattern.
  */
-class NumPattern
+final class NumPattern
 {
-  NumPattern(String s)
+  // pre-compute common patterns to avoid parsing
+  private static java.util.HashMap cache = new java.util.HashMap();
+  private static void cache(String p) { cache.put(p, new NumPattern(p)); }
+  static
   {
-    pattern = s;
-    group = Integer.MAX_VALUE;
-    optInt = true;
+    cache("00");    cache("000");       cache("0000");
+    cache("0.0");   cache("0.00");      cache("0.000");
+    cache("0.#");   cache("#,###.0");   cache("#,###.#");
+    cache("0.##");  cache("#,###.00");  cache("#,###.##");
+    cache("0.###"); cache("#,###.000"); cache("#,###.###");
+    cache("0.0#");  cache("#,###.0#");  cache("#,###.0#");
+    cache("0.0##"); cache("#,###.0##"); cache("#,###.0##");
+  }
+
+  static NumPattern parse(String s)
+  {
+    NumPattern x = (NumPattern)cache.get(s);
+    if (x != null) return x;
+    return new NumPattern(s);
+  }
+
+  private NumPattern(String s)
+  {
+    int group = Integer.MAX_VALUE;
+    boolean optInt = true;
     boolean comma = false;
     boolean decimal = false;
+    int minInt = 0, minFrac = 0, maxFrac = 0;
     int last = 0;
     for (int i=0; i<s.length(); ++i)
     {
@@ -191,6 +230,14 @@ class NumPattern
       }
       last = c;
     }
+    if (!decimal) optInt = last == '#';
+
+    this.pattern = s;
+    this.group   = group;
+    this.optInt  = optInt;
+    this.minInt  = minInt;
+    this.minFrac = minFrac;
+    this.maxFrac = maxFrac;
   }
 
   public String toString()
@@ -199,10 +246,10 @@ class NumPattern
       " maxFrac=" + maxFrac + " minFrac=" + minFrac + " optInt=" + optInt;
   }
 
-  String pattern;  // pattern parsed
-  int group;       // grouping size (typically 3 for 1000)
-  boolean optInt;  // if we have "#." then the int part if optional (no leading zero)
-  int minInt;      // min digits in integer part (leading zeros)
-  int minFrac;     // min digits in fractional part (trailing zeros)
-  int maxFrac;     // max digits in fractional part (clipping)
+  final String pattern;  // pattern parsed
+  final int group;       // grouping size (typically 3 for 1000)
+  final boolean optInt;  // if we have "#." then the int part if optional (no leading zero)
+  final int minInt;      // min digits in integer part (leading zeros)
+  final int minFrac;     // min digits in fractional part (trailing zeros)
+  final int maxFrac;     // max digits in fractional part (clipping)
 }

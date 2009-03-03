@@ -333,21 +333,30 @@ public final class FanFloat
     if (pattern == null) pattern = locale.get("sys", "float", "#,###.0##");
 
     // parse pattern and get double digits
-    NumPattern p = new NumPattern(pattern);
+    NumPattern p = NumPattern.parse(pattern);
     NumDigits d = new NumDigits(self);
-
-    // if min required fraction digits are zero and we
-    // have nothing but zeros, then truncate to a whole number
-    if (p.minFrac == 0 && d.zeroFrac(p.maxFrac)) d.size = d.decimal;
-
-    // if we have an optional integer part, and only
-    // fractional digits, then don't include leading zero
-    int start = 0;
-    if (p.optInt && d.zeroInt()) start = d.decimal;
 
     // string buffer
     StringBuilder s = new StringBuilder();
     if (d.negative) s.append(df.getMinusSign());
+
+    // if we have more frac digits then maxFrac, then round off
+    d.round(p.maxFrac);
+
+    // if we have an optional integer part, and only
+    // fractional digits, then don't include leading zero
+    int start = 0;
+    if (p.optInt && d.zeroInt())
+    {
+      start = d.decimal;
+      // Java DecimalFormat doesn't do this for negative numbers,
+      // which seems a bit inconsistent, but duplicate that behavior
+      if (d.negative) s.append('0');
+    }
+
+    // if min required fraction digits are zero and we
+    // have nothing but zeros, then truncate to a whole number
+    if (p.minFrac == 0 && d.zeroFrac(p.maxFrac)) d.size = d.decimal;
 
     // leading zeros
     for (int i=0; i<p.minInt-d.decimal; ++i) s.append('0');
@@ -369,8 +378,7 @@ public final class FanFloat
     }
 
     // trailing zeros
-    for (int i=0; i<p.minFrac-d.fracSize(); ++i)
-      s.append('0');
+    for (int i=0; i<p.minFrac-d.fracSize(); ++i) s.append('0');
 
     // handle #.# case
     if (s.length() == 0) return "0";
