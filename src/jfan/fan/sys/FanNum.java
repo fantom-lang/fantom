@@ -9,6 +9,7 @@
 package fan.sys;
 
 import java.math.*;
+import java.text.DecimalFormatSymbols;
 
 /**
  * FanNum defines the methods for sys::Num.  The actual
@@ -70,6 +71,61 @@ public class FanNum
     return Locale.current().decimal().getNaN();
   }
 
+  static String toLocale(NumPattern p, NumDigits d, DecimalFormatSymbols df)
+  {
+    // string buffer
+    StringBuilder s = new StringBuilder();
+    if (d.negative) s.append(df.getMinusSign());
+
+    // if we have more frac digits then maxFrac, then round off
+    d.round(p.maxFrac);
+
+    // if we have an optional integer part, and only
+    // fractional digits, then don't include leading zero
+    int start = 0;
+    if (p.optInt && d.zeroInt()) start = d.decimal;
+
+    // if min required fraction digits are zero and we
+    // have nothing but zeros, then truncate to a whole number
+    if (p.minFrac == 0 && d.zeroFrac(p.maxFrac)) d.size = d.decimal;
+
+    // leading zeros
+    for (int i=0; i<p.minInt-d.decimal; ++i) s.append('0');
+
+    // walk thru the digits and apply locale symbols
+    boolean decimal = false;
+    for (int i=start; i<d.size; ++i)
+    {
+      if (i < d.decimal)
+      {
+        if ((d.decimal - i) % p.group == 0 && i > 0)
+          s.append(df.getGroupingSeparator());
+      }
+      else
+      {
+        if (i == d.decimal && p.maxFrac > 0)
+        {
+          s.append(df.getDecimalSeparator());
+          decimal = true;
+        }
+        if (i-d.decimal >= p.maxFrac) break;
+      }
+      s.append(d.digits[i]);
+    }
+
+    // trailing zeros
+    for (int i=0; i<p.minFrac-d.fracSize(); ++i)
+    {
+      if (!decimal) { s.append(df.getDecimalSeparator()); decimal = true; }
+      s.append('0');
+    }
+
+    // handle #.# case
+    if (s.length() == 0) return "0";
+
+    return s.toString();
+  }
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,15 +134,28 @@ public class FanNum
 
 /**
  * NumDigits is used to represents the character digits in
- * a number for locale pattern processing.
+ * a number for locale pattern processing.  It inputs a long,
+ * double, or BigDecimal into an array of digit chars and the
+ * index to the decimal point.
  */
 class NumDigits
 {
   NumDigits(double d)
   {
-    // use Double.toString to get the default string format
+    this(Double.toString(d));
+  }
+
+  NumDigits(BigDecimal d)
+  {
+    this(d.toString());
+  }
+
+  private NumDigits(String s)
+  {
+    digits = new char[s.length()+16];
+
     int expPos = -1;
-    String s = Double.toString(d);
+    decimal = -99;
     for (int i=0; i<s.length(); ++i)
     {
       int c = s.charAt(i);
@@ -95,6 +164,7 @@ class NumDigits
       if (c == 'e' || c == 'E') { expPos = i; break; }
       digits[size++] = (char)c;
     }
+    if (decimal < 0) decimal = size;
 
     // if we had an exponent, then we need to normalize it
     if (expPos >= 0)
@@ -118,6 +188,15 @@ class NumDigits
     }
   }
 
+  NumDigits(long d)
+  {
+    if (d < 0) { negative = true; d = -d; }
+    String s = String.valueOf(d);
+    if (s.charAt(0) == '-') s = "9223372036854775808"; // handle overflow case
+    digits = s.toCharArray();
+    size = decimal = digits.length;
+  }
+
   int intSize()  { return decimal; }
 
   int fracSize() { return size - decimal; }
@@ -137,20 +216,29 @@ class NumDigits
 
   void round(int maxFrac)
   {
+    // if frac sie already eq or less than maxFrac no rounding needed
     if (fracSize() <= maxFrac) return;
-    if (digits[decimal+maxFrac] < '5') return;
-    int i = decimal + maxFrac - 1;
-    while (true)
+
+    // if we need to round, then round the prev digit
+    if (digits[decimal+maxFrac] >= '5')
     {
-      if (digits[i] < '9') { digits[i]++; break; }
-      digits[i--] = '0';
-      if (i < 0)
+      int i = decimal + maxFrac - 1;
+      while (true)
       {
-        System.arraycopy(digits, 0, digits, 1, size);
-        digits[0] = '1'; size++; decimal++;
-        break;
+        if (digits[i] < '9') { digits[i]++; break; }
+        digits[i--] = '0';
+        if (i < 0)
+        {
+          System.arraycopy(digits, 0, digits, 1, size);
+          digits[0] = '1'; size++; decimal++;
+          break;
+        }
       }
     }
+
+    // update size and clip any trailing zeros
+    size = decimal + maxFrac;
+    while (digits[size-1] == '0' && size > decimal) size--;
   }
 
   public String toString()
@@ -158,10 +246,10 @@ class NumDigits
     return new String(digits, 0, size) + " neg=" + negative + " decimal=" + decimal;
   }
 
-  char[] digits = new char[64];  // char digits
-  int decimal;                   // index where decimal fits into digits
-  int size;                      // size of digits used
-  boolean negative;              // is this a negative number
+  char[] digits;       // char digits
+  int decimal;         // index where decimal fits into digits
+  int size;            // size of digits used
+  boolean negative;    // is this a negative number
 }
 
 //////////////////////////////////////////////////////////////////////////

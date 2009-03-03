@@ -587,4 +587,43 @@ class IntTest : Test
     verifyErr(ArgErr#) |,| { 3999.toCode(8) }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToLocale()
+  {
+    verifyToLocale(4, "#", "4")
+    verifyToLocale(1234, "#,###", "1,234")
+    verifyToLocale(123_456_789, "#,####", "1,2345,6789")
+    verifyToLocale(123_456_789, "#,###",  "123,456,789")
+    verifyToLocale(-123_456_789, "#,##",  "-1,23,45,67,89")
+    verifyToLocale(Int.maxVal, "#,###",   "9,223,372,036,854,775,807")
+    verifyToLocale(Int.minVal, "#,###",   "-9,223,372,036,854,775,808")
+
+    verifyToLocale(4, "0",   "4")
+    verifyToLocale(4, "00",  "04")
+    verifyToLocale(4, "000", "004")
+    verifyToLocale(-45, "000", "-045")
+    verifyToLocale(-70, "0000", "-0070")
+
+    verifyToLocale(0, "#", "0")
+    verifyToLocale(0, "0", "0")
+
+    // default, alternate locale
+    verifyToLocale(12345, null, "12,345")
+    Locale("fr").with |,| { verifyEq(12345.toLocale("#,###"), "12\u00a0345") }
+  }
+
+  Void verifyToLocale(Int i, Str? pattern, Str expected)
+  {
+    Locale("en-US").with |,|
+    {
+      // echo("====> $i $pattern ?= $expected")
+      actual := i.toLocale(pattern)
+      // echo("   ==> $actual ?= $expected")
+      verifyEq(actual, expected)
+    }
+  }
+
 }

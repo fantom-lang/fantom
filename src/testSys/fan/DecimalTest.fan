@@ -209,5 +209,33 @@ class DecimalTest : Test
     verifyEq((-88.45d).toCode, "-88.45d")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToLocale()
+  {
+    // NOTE: most testing is done in FloatTest.testLocale, we just
+    //  test decimals which exceed 64-bit int/float range
+
+    verifyToLocale(123_456_789.123_456_789, "#,####.###", "1,2345,6789.123")
+    verifyToLocale(123_456_789_123_456_789_123_456_789d, "#,###.0#",  "123,456,789,123,456,789,123,456,789.0")
+    verifyToLocale(-123_456_789_123_456_789_123_456_789.55d, "#,###.0",  "-123,456,789,123,456,789,123,456,789.6")
+
+    // default, alternate locale
+    verifyToLocale(12345.68d, null, "12,345.68")
+    Locale("fr").with |,| { verifyEq(1345.6d.toLocale("#,###.00"), "1\u00a0345,60") }
+  }
+
+  Void verifyToLocale(Decimal d, Str? pattern, Str expected)
+  {
+    Locale("en-US").with |,|
+    {
+      // echo("====> $d $pattern ?= $expected")
+      actual := d.toLocale(pattern)
+      // echo("   ==> $actual ?= $expected")
+      verifyEq(actual, expected)
+    }
+  }
 
 }
