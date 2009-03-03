@@ -306,4 +306,16 @@ const final class Float : Num
   **
   Str toCode()
 
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Format this floating point number for the current locale.
+  ** If pattern is null, then the locale's default pattern is used.
+  ** The pattern format:
+  **   TODO
+  **
+  Str toLocale(Str? pattern := null)
+
 }
