@@ -313,8 +313,20 @@ const final class Float : Num
   **
   ** Format this floating point number for the current locale.
   ** If pattern is null, then the locale's default pattern is used.
+  ** Also see `Num.localeDecimal`, `Num.localeGrouping`, etc.
+  **
   ** The pattern format:
-  **   TODO
+  **   #   optional digit
+  **   0   required digit
+  **   .   decimal point
+  **   ,   grouping separator (only last one before decimal matters)
+  **
+  ** Examples:
+  **   12345.786f.toLocale("#,###.0")  =>  12,345.8
+  **   7.1234f.toLocale("#.000")       =>  7.123
+  **   0.1234f.toLocale("#.000")       =>  .123
+  **   0.1234f.toLocale("0.00")        =>  0.12
+  **   70.12f.toLocale("0.0000")       =>  70.1200
   **
   Str toLocale(Str? pattern := null)
 
