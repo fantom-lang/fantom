@@ -651,13 +651,21 @@ class FloatTest : Test
     {
       //echo("====> $f $pattern ?= $expected")
       actual := f.toLocale(pattern)
-      // echo("   ==> $actual ?= $expected")
+      //echo("   ==> $actual ?= $expected")
       verifyEq(actual, expected)
+
+      if (f <=> Float.nan != 0 && f != Float.posInf && f != Float.negInf)
+      {
+        decimal := f.toDecimal.toLocale(pattern)
+        //echo("   dec $f.toDecimal")
+        //echo("   ==> $decimal ?= $expected")
+        verifyEq(decimal, expected)
+      }
 
       // try to verify against what Java does (need using stmt up top)
       /*
       using [java] java.text
-      if (!javaWrong) verifyEq(actual, DecimalFormat(pattern).format(f))
+      if (!javaWrong && pattern != null) verifyEq(actual, DecimalFormat(pattern).format(f))
       */
     }
   }
