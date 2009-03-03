@@ -484,4 +484,201 @@ class FloatTest : Test
     verifyEq(Float.negInf.toCode, "Float.negInf")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Num Locale
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNumLocale()
+  {
+    Locale("en-US").with |,|
+    {
+      verifyEq(Num.localeDecimal,  '.')
+      verifyEq(Num.localeGrouping, ',')
+      verifyEq(Num.localeMinus,    '-')
+      verifyEq(Num.localePercent,  '%')
+      verifyEq(Num.localeInf, "\u221e")
+      verifyEq(Num.localeNaN, "\ufffd") // not sure about replacement char
+    }
+    Locale("fr").with |,|
+    {
+      verifyEq(Num.localeDecimal,  ',')
+      verifyEq(Num.localeGrouping, 0xa0)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+  Void testLocale()
+  {
+    // no fractions
+    verifyLocale(4.0f, "#", "4")
+    verifyLocale(1234.3f, "#", "1234")
+    verifyLocale(-123.1234f, "#", "-123")
+
+    // no wholes
+    verifyLocale(7.123f, "#.000", "7.123")
+    verifyLocale(0.123f, "#.000", ".123")
+    verifyLocale(-0.005f, "#.###", "-.005", true)
+
+    // max fractions
+    verifyLocale(1234.1234f, "#.#", "1234.1")
+    verifyLocale(1234.1f,    "#.#", "1234.1")
+    verifyLocale(1234.0f,    "#.#", "1234")
+    verifyLocale(1230.0f,    "#.#", "1230")
+    verifyLocale(-1230.00f,  "#.#", "-1230")
+    verifyLocale(1230.003f,  "#.#", "1230")
+    verifyLocale(1234.1234f, "#.#", "1234.1")
+    verifyLocale(1234.1234f, "#.##", "1234.12")
+    verifyLocale(1234.1234f, "#.###", "1234.123")
+    verifyLocale(1234.1234f, "#.####", "1234.1234")
+    verifyLocale(1234.1234f, "#.#####", "1234.1234")
+    verifyLocale(-1234.1234f, "#.#####", "-1234.1234")
+
+    // min fractions
+    verifyLocale(1234.1234f, "#", "1234")
+    verifyLocale(1234f,      "#.0", "1234.0")
+    verifyLocale(1234.3f,    "#.0", "1234.3")
+    verifyLocale(1234.34f,   "#.0", "1234.3")
+    verifyLocale(1234.345f,  "#.0", "1234.3")
+    verifyLocale(-1234f,     "#.00", "-1234.00")
+    verifyLocale(1234.3f,    "#.00", "1234.30")
+    verifyLocale(1234.34f,   "#.00", "1234.34")
+    verifyLocale(1234.342f,  "#.00", "1234.34")
+    verifyLocale(1234f,      "#.000", "1234.000")
+    verifyLocale(1234.3f,    "#.000", "1234.300")
+    verifyLocale(1234.04f,   "#.000", "1234.040")
+    verifyLocale(1234.002f,  "#.000", "1234.002")
+    verifyLocale(1234.0012f, "#.000", "1234.001")
+
+    // min/max fractions
+    verifyLocale(3.123432f, "#.00##", "3.1234")
+    verifyLocale(3.12343f,  "#.00##", "3.1234")
+    verifyLocale(3.0234f,   "#.00##", "3.0234")
+    verifyLocale(3.003f,    "#.00##", "3.003")
+    verifyLocale(3.12f,     "#.00##", "3.12")
+    verifyLocale(3.1f,      "#.00##", "3.10")
+    verifyLocale(-3f,       "#.00##", "-3.00")
+    verifyLocale(-3.1234f,  "#.0##",  "-3.123")
+    verifyLocale(-3.123f,   "#.0##",  "-3.123")
+    verifyLocale(-3.12f,    "#.0##",  "-3.12")
+    verifyLocale(-3.1f,     "#.0##",  "-3.1")
+    verifyLocale(-3f,       "#.0##",  "-3.0")
+
+    // leading zeros
+    verifyLocale(0.3f,      "00.0",  "00.3")
+    verifyLocale(3f,        "00.0",  "03.0")
+    verifyLocale(30f,       "00.0",  "30.0")
+    verifyLocale(123f,       "0.#",  "123")
+    verifyLocale(123f,    "0000.#",  "0123")
+    verifyLocale(0.5f,    "0000.#",  "0000.5")
+    verifyLocale(0.01f,   "0000.#",  "0000")
+
+    // grouping
+    verifyLocale(1.0f, "#,###.0", "1.0")
+    verifyLocale(12.0f, "#,###.0", "12.0")
+    verifyLocale(123.0f, "#,###.0", "123.0")
+    verifyLocale(1234.0f, "#,###.0", "1,234.0")
+    verifyLocale(12345.0f, "#,###.0", "12,345.0")
+    verifyLocale(123456.0f, "#,###.0", "123,456.0")
+    verifyLocale(1234567.0f, "#,###.0", "1,234,567.0")
+    verifyLocale(12345000.0f, "#,###.0", "12,345,000.0")
+    verifyLocale(-12345000.0f, "#,###.0", "-12,345,000.0")
+    verifyLocale(12345000.0f, "#,####.0", "1234,5000.0")
+    verifyLocale(-12345000.0f, "#,####.0", "-1234,5000.0")
+    verifyLocale(12345000.0f, "#,##,##.0",  "12,34,50,00.0")
+    verifyLocale(-12345000.0f, "#,##,##.0", "-12,34,50,00.0")
+    verifyLocale(2.34E+11f, "###,###.0", "234,000,000,000.0")
+    verifyLocale(-2.34E+11f, "###,###,###.0", "-234,000,000,000.0")
+
+    // zero
+    verifyLocale(0f, "#.0", ".0")
+    verifyLocale(0f, "#.#", "0")
+    verifyLocale(0f, "0.#", "0")
+    verifyLocale(0f, "0.0", "0.0")
+    verifyLocale(0f, "00.00", "00.00")
+
+    // fixed size numbers
+    verifyLocale(0f,   "0",   "0")
+    verifyLocale(0f,   "00",  "00")
+    verifyLocale(0f,   "000", "000")
+    verifyLocale(2f,   "0",   "2")
+    verifyLocale(-2f,  "00",  "-02")
+    verifyLocale(2.3f, "000",  "002")
+    verifyLocale(20f,  "000",  "020")
+    verifyLocale(500f, "000",  "500")
+    verifyLocale(501f, "0000", "0501")
+
+    // rounding
+    verifyLocale(2.06f,   "0.0", "2.1")
+    verifyLocale(19.288f, "0.00", "19.29")
+    verifyLocale(19.298f, "0.00", "19.30")
+    verifyLocale(19.97f,  "0.##", "19.97")
+    verifyLocale(19.97f,  "0.#",  "20")
+    verifyLocale(19.97f,  "0.0",  "20.0")
+    verifyLocale(99.97f,  "0.0",  "100.0")
+    verifyLocale(-0.994f, "0.00", "-0.99")
+    verifyLocale(-0.996f, "0.00", "-1.00")
+    verifyLocale(-0.937f, "00.##", "-00.94")
+    verifyLocale(-0.937f, "#.##", "-.94", true)
+
+    // more random testing
+    verifyLocale(-2.87E-5f, "#.000000", "-.000029")
+    verifyLocale(2.87E-5f, "#.######",  ".000029", true)
+    verifyLocale(-7.009E+8f, "##,###.0", "-700,900,000.0")
+    verifyLocale(10f/3f, "0.000", "3.333")
+    verifyLocale(10f/6f, "0.000", "1.667")
+    verifyLocale(Float.pi, "0.0", "3.1")
+    verifyLocale(Float.pi, "0.00", "3.14")
+    verifyLocale(Float.pi, "0.000", "3.142")
+    verifyLocale(Float.pi, "0.0000", "3.1416")
+    verifyLocale(Float.pi, "0.00000", "3.14159")
+
+    // specials
+    verifyLocale(Float.nan, "#.#", "\ufffd")
+    verifyLocale(Float.posInf, "#.#", "\u221e")
+    verifyLocale(Float.negInf, "#.#", "-\u221e")
+
+    // default, alternate locale
+    verifyLocale(12345.4f, null, "12,345.4")
+    Locale("fr").with |,| { verifyEq(12345.4f.toLocale("#,###.0"), "12\u00a0345,4") }
+  }
+
+  Void verifyLocale(Float f, Str? pattern, Str expected, Bool javaWrong := false)
+  {
+    Locale("en-US").with |,|
+    {
+      //echo("====> $f $pattern ?= $expected")
+      actual := f.toLocale(pattern)
+      // echo("   ==> $actual ?= $expected")
+      verifyEq(actual, expected)
+
+      // try to verify against what Java does (need using stmt up top)
+      /*
+      using [java] java.text
+      if (!javaWrong) verifyEq(actual, DecimalFormat(pattern).format(f))
+      */
+    }
+  }
+
+  /*
+  Void testLocalePerf()
+  {
+    count := 1_000_000
+    pattern := "#,###.00"
+    for (i:=0; i<10_000; ++i) i.toFloat.toLocale(pattern)
+    for (i:=0; i<10_000; ++i) DecimalFormat(pattern).format(i.toFloat)
+
+    t1 := Duration.now
+    for (i:=0; i<count; ++i) i.toFloat.toLocale("#,###.00")
+    t2 := Duration.now
+    for (i:=0; i<count; ++i) DecimalFormat(pattern).format(i.toFloat)
+    t3 := Duration.now
+
+    echo("Fan  ${(t2-t1).toMillis}ms")
+    echo("Java ${(t3-t2).toMillis}ms")
+  }
+  */
+
 }
