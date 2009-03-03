@@ -612,7 +612,7 @@ class IntTest : Test
 
     // default, alternate locale
     verifyToLocale(12345, null, "12,345")
-    Locale("fr").with |,| { verifyEq(12345.toLocale("#,###"), "12\u00a0345") }
+    Locale("fr-FR").with |,| { verifyEq(12345.toLocale("#,###"), "12\u00a0345") }
   }
 
   Void verifyToLocale(Int i, Str? pattern, Str expected)

@@ -7,6 +7,7 @@
 //
 
 using System;
+using System.Globalization;
 using Fanx.Serial;
 
 namespace Fan.Sys
@@ -315,6 +316,24 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
   // Locale
   //////////////////////////////////////////////////////////////////////////
+
+    public static String toLocale(long self) { return toLocale(self, null); }
+    public static String toLocale(long self, string pattern)
+    {
+      // get current locale
+      Locale locale = Locale.current();
+      NumberFormatInfo df = locale.dec();
+
+      // get default pattern if necessary
+      if (pattern == null) pattern = locale.get("sys", "int", "#,###");
+
+      // parse pattern and get digits
+      NumPattern p = NumPattern.parse(pattern);
+      NumDigits d = new NumDigits(self);
+
+      // route to common FanNum method
+      return FanNum.toLocale(p, d, df);
+    }
 
     public static bool localeIsUpper(long self)
     {

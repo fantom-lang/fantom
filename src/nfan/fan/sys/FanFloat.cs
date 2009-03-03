@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Globalization;
 using Fanx.Serial;
 
 namespace Fan.Sys
@@ -205,6 +206,33 @@ namespace Fan.Sys
       if (self == System.Double.PositiveInfinity) return "Float.posInf";
       if (self == System.Double.NegativeInfinity) return "Float.negInf";
       return toStr(self) + "f";
+    }
+
+  /////////////////////////////////////////////////////////////////////////
+  // Locale
+  //////////////////////////////////////////////////////////////////////////
+
+    public static string toLocale(double self) { return toLocale(self, null); }
+    public static string toLocale(double self, string pattern)
+    {
+      // get current locale
+      Locale locale = Locale.current();
+      NumberFormatInfo df = locale.dec();
+
+      // handle special values
+      if (System.Double.IsNaN(self)) return df.NaNSymbol;
+      if (self == System.Double.PositiveInfinity) return df.PositiveInfinitySymbol;
+      if (self == System.Double.NegativeInfinity) return df.NegativeInfinitySymbol;
+
+      // get default pattern if necessary
+      if (pattern == null) pattern = locale.get("sys", "float", "#,###.0##");
+
+      // parse pattern and get digits
+      NumPattern p = NumPattern.parse(pattern);
+      NumDigits d = new NumDigits(self);
+
+      // route to common FanNum method
+      return FanNum.toLocale(p, d, df);
     }
 
   //////////////////////////////////////////////////////////////////////////

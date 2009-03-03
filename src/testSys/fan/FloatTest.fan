@@ -492,17 +492,18 @@ class FloatTest : Test
   {
     Locale("en-US").with |,|
     {
-      verifyEq(Num.localeDecimal,  '.')
-      verifyEq(Num.localeGrouping, ',')
-      verifyEq(Num.localeMinus,    '-')
-      verifyEq(Num.localePercent,  '%')
-      verifyEq(Num.localeInf, "\u221e")
-      verifyEq(Num.localeNaN, "\ufffd") // not sure about replacement char
+      verifyEq(Num.localeDecimal,  ".")
+      verifyEq(Num.localeGrouping, ",")
+      verifyEq(Num.localeMinus,    "-")
+      verifyEq(Num.localePercent,  "%")
+      verify(Num.localePosInf == "\u221e"  || Num.localePosInf == "Infinity")
+      verify(Num.localeNegInf == "-\u221e" || Num.localeNegInf == "-Infinity")
+      verify(Num.localeNaN == "\ufffd" || Num.localeNaN == "NaN") // not sure about replacement char
     }
-    Locale("fr").with |,|
+    Locale("fr-FR").with |,|
     {
-      verifyEq(Num.localeDecimal,  ',')
-      verifyEq(Num.localeGrouping, 0xa0)
+      verifyEq(Num.localeDecimal,  ",")
+      verifyEq(Num.localeGrouping, "\u00a0")
     }
   }
 
@@ -636,13 +637,16 @@ class FloatTest : Test
     verifyLocale(Float.pi, "0.00000", "3.14159")
 
     // specials
-    verifyLocale(Float.nan, "#.#", "\ufffd")
-    verifyLocale(Float.posInf, "#.#", "\u221e")
-    verifyLocale(Float.negInf, "#.#", "-\u221e")
+    if (Sys.env["java.home"] != null)
+    {
+      verifyLocale(Float.nan, "#.#", "\ufffd")
+      verifyLocale(Float.posInf, "#.#", "\u221e")
+      verifyLocale(Float.negInf, "#.#", "-\u221e")
+    }
 
     // default, alternate locale
     verifyLocale(12345.4f, null, "12,345.4")
-    Locale("fr").with |,| { verifyEq(12345.4f.toLocale("#,###.0"), "12\u00a0345,4") }
+    Locale("fr-FR").with |,| { verifyEq(12345.4f.toLocale("#,###.0"), "12\u00a0345,4") }
   }
 
   Void verifyLocale(Float f, Str? pattern, Str expected, Bool javaWrong := false)
