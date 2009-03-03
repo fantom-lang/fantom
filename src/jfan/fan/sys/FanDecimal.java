@@ -148,6 +148,24 @@ public final class FanDecimal
     return self.toString() + "d";
   }
 
+  public static String toLocale(BigDecimal self) { return toLocale(self, null); }
+  public static String toLocale(BigDecimal self, String pattern)
+  {
+    // get current locale
+    Locale locale = Locale.current();
+    java.text.DecimalFormatSymbols df = locale.decimal();
+
+    // get default pattern if necessary
+    if (pattern == null) pattern = locale.get("sys", "decimal", "#,###.0##");
+
+    // parse pattern and get digits
+    NumPattern p = NumPattern.parse(pattern);
+    NumDigits d = new NumDigits(self);
+
+    // route to common FanNum method
+    return FanNum.toLocale(p, d, df);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

@@ -367,6 +367,24 @@ public final class FanInt
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
+  public static String toLocale(long self) { return toLocale(self, null); }
+  public static String toLocale(long self, String pattern)
+  {
+    // get current locale
+    Locale locale = Locale.current();
+    java.text.DecimalFormatSymbols df = locale.decimal();
+
+    // get default pattern if necessary
+    if (pattern == null) pattern = locale.get("sys", "int", "#,###");
+
+    // parse pattern and get digits
+    NumPattern p = NumPattern.parse(pattern);
+    NumDigits d = new NumDigits(self);
+
+    // route to common FanNum method
+    return FanNum.toLocale(p, d, df);
+  }
+
   public static boolean localeIsUpper(long self)
   {
     return Character.isUpperCase((int)self);

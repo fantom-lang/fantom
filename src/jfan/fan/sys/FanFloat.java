@@ -313,8 +313,8 @@ public final class FanFloat
     return Double.toString(self) + "f";
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Conversion
+/////////////////////////////////////////////////////////////////////////
+// Locale
 //////////////////////////////////////////////////////////////////////////
 
   public static String toLocale(double self) { return toLocale(self, null); }
@@ -332,52 +332,12 @@ public final class FanFloat
     // get default pattern if necessary
     if (pattern == null) pattern = locale.get("sys", "float", "#,###.0##");
 
-    // parse pattern and get double digits
+    // parse pattern and get digits
     NumPattern p = NumPattern.parse(pattern);
     NumDigits d = new NumDigits(self);
 
-    // string buffer
-    StringBuilder s = new StringBuilder();
-    if (d.negative) s.append(df.getMinusSign());
-
-    // if we have more frac digits then maxFrac, then round off
-    d.round(p.maxFrac);
-
-    // if we have an optional integer part, and only
-    // fractional digits, then don't include leading zero
-    int start = 0;
-    if (p.optInt && d.zeroInt()) start = d.decimal;
-
-    // if min required fraction digits are zero and we
-    // have nothing but zeros, then truncate to a whole number
-    if (p.minFrac == 0 && d.zeroFrac(p.maxFrac)) d.size = d.decimal;
-
-    // leading zeros
-    for (int i=0; i<p.minInt-d.decimal; ++i) s.append('0');
-
-    // walk thru the digits and apply locale symbols
-    for (int i=start; i<d.size; ++i)
-    {
-      if (i < d.decimal)
-      {
-        if ((d.decimal - i) % p.group == 0 && i > 0)
-          s.append(df.getGroupingSeparator());
-      }
-      else
-      {
-        if (i == d.decimal && p.maxFrac > 0) s.append(df.getDecimalSeparator());
-        if (i-d.decimal >= p.maxFrac) break;
-      }
-      s.append(d.digits[i]);
-    }
-
-    // trailing zeros
-    for (int i=0; i<p.minFrac-d.fracSize(); ++i) s.append('0');
-
-    // handle #.# case
-    if (s.length() == 0) return "0";
-
-    return s.toString();
+    // route to common FanNum method
+    return FanNum.toLocale(p, d, df);
   }
 
 //////////////////////////////////////////////////////////////////////////
