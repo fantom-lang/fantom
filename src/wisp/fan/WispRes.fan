@@ -125,9 +125,9 @@ class WispRes : WebRes
     WebOutStream bufOut := WebOutStream(buf.out)
     bufOut.docType
     bufOut.html
-    bufOut.head.title("$statusCode ${statusMsg[statusCode]}").headEnd
+    bufOut.head.title.w("$statusCode ${statusMsg[statusCode]}").titleEnd.headEnd
     bufOut.body
-    bufOut.h1(statusMsg[statusCode])
+    bufOut.h1.w(statusMsg[statusCode]).h1End
     if (msg != null) bufOut.w(msg).nl
     bufOut.bodyEnd
     bufOut.htmlEnd

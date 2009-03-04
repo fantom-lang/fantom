@@ -7,8 +7,8 @@ class Index : Widget
 
   override Void onGet()
   {
-    head.title("Fan Web Demo")
-    body.h1("Fan Web Demo")
+    head.title.w("Fan Web Demo").titleEnd
+    body.h1.w("Fan Web Demo").h1End
   }
 
 }

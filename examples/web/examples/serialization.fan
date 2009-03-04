@@ -22,8 +22,8 @@ class SerializationTest : Widget
 
   override Void onGet()
   {
-    head.title("Serialization")
-    body.h1("Serialization")
+    head.title.w("Serialization").titleEnd
+    body.h1.w("Serialization").h1End
     body.table("width='100%'")
     body.tr
 

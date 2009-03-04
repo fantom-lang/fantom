@@ -7,7 +7,7 @@ class Actions : Widget
 
   override Void onGet()
   {
-    head.title("Actions")
+    head.title.w("Actions").titleEnd
     head.w(
      "<script type='text/javascript'>
       function test(uri)
@@ -24,7 +24,7 @@ class Actions : Widget
     uriBeta  := toInvoke(&onBeta)
     uriGamma := toInvoke("onGamma")
 
-    body.h1("Actions")
+    body.h1.w("Actions").h1End
     body.p.a(`#`, "onclick='test(\"$uriAlpha\"); return false;'").w("Alpha").aEnd.pEnd
     body.p.a(`#`, "onclick='test(\"$uriBeta\");  return false;'").w("Beta").aEnd.pEnd
     body.p.a(`#`, "onclick='test(\"$uriGamma\"); return false;'").w("Gamma").aEnd.pEnd

@@ -134,26 +134,22 @@ class WebOutStream : OutStream
   **
   ** Start a <head> tag.
   **
-  This head()
-  {
-    return tag("head").nl
-  }
+  This head() { return tag("head").nl }
 
   **
   ** End a <head> tag.
   **
-  This headEnd()
-  {
-    return tagEnd("head").nl
-  }
+  This headEnd() { return tagEnd("head").nl }
 
   **
   ** Write a complete <title> tag.
   **
-  This title(Str title)
-  {
-    return tag("title").w(title).tagEnd("title").nl
-  }
+  This title(Str? attrs := null) { return tag("title", attrs) }
+
+  **
+  ** End a <title> tag.
+  **
+  This titleEnd() { return tagEnd("title").nl }
 
   **
   ** Write a complete <link> tag for an external CSS stylesheet.
@@ -212,18 +208,12 @@ class WebOutStream : OutStream
   **
   ** Start a <style> tag.
   **
-  This style(Str? attrs := "type='text/css'")
-  {
-    return tag("style", attrs).nl
-  }
+  This style(Str? attrs := "type='text/css'") { return tag("style", attrs).nl }
 
   **
   ** End a <style> tag.
   **
-  This styleEnd()
-  {
-    return tagEnd("style").nl
-  }
+  This styleEnd() { return tagEnd("style").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // script
@@ -232,18 +222,12 @@ class WebOutStream : OutStream
   **
   ** Start a <script> tag.
   **
-  This script(Str? attrs := "type='text/javascript'")
-  {
-    return tag("script", attrs).nl
-  }
+  This script(Str? attrs := "type='text/javascript'") { return tag("script", attrs).nl }
 
   **
   ** End a <script> tag.
   **
-  This scriptEnd()
-  {
-    return tagEnd("script").nl
-  }
+  This scriptEnd() { return tagEnd("script").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // body
@@ -252,70 +236,76 @@ class WebOutStream : OutStream
   **
   ** Start a <body> tag.
   **
-  This body(Str? attrs := null)
-  {
-    return tag("body", attrs).nl
-  }
+  This body(Str? attrs := null) { return tag("body", attrs).nl }
 
   **
   ** End a <body> tag.
   **
-  This bodyEnd()
-  {
-    return tagEnd("body").nl
-  }
+  This bodyEnd() { return tagEnd("body").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // h1, h2, h3, h4, h5, h6
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Write a complete <h1> tag.
+  ** Start a <h1> tag.
   **
-  This h1(Str content, Str? attrs := null)
-  {
-    return tag("h1", attrs).w(content).tagEnd("h1").nl
-  }
+  This h1(Str? attrs := null) { return tag("h1", attrs) }
 
   **
-  ** Write a complete <h2> tag.
+  ** End a <h1> tag.
   **
-  This h2(Str content, Str? attrs := null)
-  {
-    return tag("h2", attrs).w(content).tagEnd("h2").nl
-  }
+  This h1End() { return tagEnd("h1").nl }
 
   **
-  ** Write a complete <h3> tag.
+  ** Start a <h2> tag.
   **
-  This h3(Str content, Str? attrs := null)
-  {
-    return tag("h3", attrs).w(content).tagEnd("h3").nl
-  }
+  This h2(Str? attrs := null) { return tag("h2", attrs) }
 
   **
-  ** Write a complete <h4> tag.
+  ** End a <h2> tag.
   **
-  This h4(Str content, Str? attrs := null)
-  {
-    return tag("h4", attrs).w(content).tagEnd("h4").nl
-  }
+  This h2End() { return tagEnd("h2").nl }
 
   **
-  ** Write a complete <h5> tag.
+  ** Start a <h3> tag.
   **
-  This h5(Str content, Str? attrs := null)
-  {
-    return tag("h5", attrs).w(content).tagEnd("h5").nl
-  }
+  This h3(Str? attrs := null) { return tag("h3", attrs) }
 
   **
-  ** Write a complete <h6> tag.
+  ** End a <h3> tag.
   **
-  This h6(Str content, Str? attrs := null)
-  {
-    return tag("h6", attrs).w(content).tagEnd("h6").nl
-  }
+  This h3End() { return tagEnd("h3").nl }
+
+  **
+  ** Start a <h4> tag.
+  **
+  This h4(Str? attrs := null) { return tag("h4", attrs) }
+
+  **
+  ** End a <h4> tag.
+  **
+  This h4End() { return tagEnd("h4").nl }
+
+  **
+  ** Start a <h5> tag.
+  **
+  This h5(Str? attrs := null) { return tag("h5", attrs) }
+
+  **
+  ** End a <h5> tag.
+  **
+  This h5End() { return tagEnd("h5").nl }
+
+  **
+  ** Start a <h6> tag.
+  **
+  This h6(Str? attrs := null) { return tag("h6", attrs) }
+
+  **
+  ** End a <h6> tag.
+  **
+  This h6End() { return tagEnd("h6").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // div
@@ -324,18 +314,12 @@ class WebOutStream : OutStream
   **
   ** Start a <div> tag.
   **
-  This div(Str? attrs := null)
-  {
-    return tag("div", attrs).nl
-  }
+  This div(Str? attrs := null) { return tag("div", attrs).nl }
 
   **
   ** End a <div> tag.
   **
-  This divEnd()
-  {
-    return tagEnd("div").nl
-  }
+  This divEnd() { return tagEnd("div").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // span
@@ -344,18 +328,12 @@ class WebOutStream : OutStream
   **
   ** Start a <span> tag.
   **
-  This span(Str? attrs := null)
-  {
-    return tag("span", attrs)
-  }
+  This span(Str? attrs := null) { return tag("span", attrs) }
 
   **
   ** End a <span> tag.
   **
-  This spanEnd()
-  {
-    return tagEnd("span")
-  }
+  This spanEnd() { return tagEnd("span") }
 
 //////////////////////////////////////////////////////////////////////////
 // p
@@ -364,18 +342,12 @@ class WebOutStream : OutStream
   **
   ** Start a <p> tag.
   **
-  This p(Str? attrs := null)
-  {
-    return tag("p", attrs).nl
-  }
+  This p(Str? attrs := null) { return tag("p", attrs).nl }
 
   **
   ** End a <p> tag.
   **
-  This pEnd()
-  {
-    return tagEnd("p").nl
-  }
+  This pEnd() { return tagEnd("p").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // b
@@ -384,18 +356,12 @@ class WebOutStream : OutStream
   **
   ** Start a <b> tag.
   **
-  This b(Str? attrs := null)
-  {
-    return tag("b", attrs).nl
-  }
+  This b(Str? attrs := null) { return tag("b", attrs) }
 
   **
   ** End a <b> tag.
   **
-  This bEnd()
-  {
-    return tagEnd("b").nl
-  }
+  This bEnd() { return tagEnd("b") }
 
 //////////////////////////////////////////////////////////////////////////
 // i
@@ -404,18 +370,12 @@ class WebOutStream : OutStream
   **
   ** Start a <i> tag.
   **
-  This i(Str? attrs := null)
-  {
-    return tag("i", attrs).nl
-  }
+  This i(Str? attrs := null) { return tag("i", attrs)  }
 
   **
   ** End a <i> tag.
   **
-  This iEnd()
-  {
-    return tagEnd("i").nl
-  }
+  This iEnd() { return tagEnd("i") }
 
 //////////////////////////////////////////////////////////////////////////
 // em
@@ -424,18 +384,12 @@ class WebOutStream : OutStream
   **
   ** Start a <em> tag.
   **
-  This em(Str? attrs := null)
-  {
-    return tag("em", attrs).nl
-  }
+  This em(Str? attrs := null) { return tag("em", attrs) }
 
   **
   ** End a <em> tag.
   **
-  This emEnd()
-  {
-    return tagEnd("em").nl
-  }
+  This emEnd() { return tagEnd("em") }
 
 //////////////////////////////////////////////////////////////////////////
 // pre
@@ -444,18 +398,12 @@ class WebOutStream : OutStream
   **
   ** Start a <pre> tag.
   **
-  This pre(Str? attrs := null)
-  {
-    return tag("pre", attrs)
-  }
+  This pre(Str? attrs := null) { return tag("pre", attrs) }
 
   **
   ** End a <pre> tag.
   **
-  This preEnd()
-  {
-    return tagEnd("pre").nl
-  }
+  This preEnd() { return tagEnd("pre").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // code
@@ -464,18 +412,12 @@ class WebOutStream : OutStream
   **
   ** Start a <code> tag.
   **
-  This code(Str? attrs := null)
-  {
-    return tag("code", attrs)
-  }
+  This code(Str? attrs := null) { return tag("code", attrs) }
 
   **
   ** End a <code> tag.
   **
-  This codeEnd()
-  {
-    return tagEnd("code")
-  }
+  This codeEnd() { return tagEnd("code") }
 
 //////////////////////////////////////////////////////////////////////////
 // hr
@@ -484,10 +426,7 @@ class WebOutStream : OutStream
   **
   ** Write out a complete <hr/> tag.
   **
-  This hr()
-  {
-    return tag("hr", null, true).nl
-  }
+  This hr() { return tag("hr", null, true).nl }
 
 //////////////////////////////////////////////////////////////////////////
 // br
@@ -496,10 +435,7 @@ class WebOutStream : OutStream
   **
   ** Write out a complete <br/> tag.
   **
-  This br()
-  {
-    return tag("br", null, true)
-  }
+  This br() { return tag("br", null, true) }
 
 //////////////////////////////////////////////////////////////////////////
 // a
@@ -516,10 +452,7 @@ class WebOutStream : OutStream
   **
   ** End a <a> tag.
   **
-  This aEnd()
-  {
-    return tagEnd("a")
-  }
+  This aEnd() { return tagEnd("a") }
 
 //////////////////////////////////////////////////////////////////////////
 // img
@@ -540,18 +473,12 @@ class WebOutStream : OutStream
   **
   ** Start a <table> tag.
   **
-  This table(Str? attrs := null)
-  {
-    return tag("table", attrs).nl
-  }
+  This table(Str? attrs := null) { return tag("table", attrs).nl }
 
   **
   ** End a <table> tag.
   **
-  This tableEnd()
-  {
-    return tagEnd("table").nl
-  }
+  This tableEnd() { return tagEnd("table").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // tr
@@ -560,18 +487,12 @@ class WebOutStream : OutStream
   **
   ** Start a <tr> tag.
   **
-  This tr(Str? attrs := null)
-  {
-    return tag("tr", attrs).nl
-  }
+  This tr(Str? attrs := null) { return tag("tr", attrs).nl }
 
   **
   ** End a <tr> tag.
   **
-  This trEnd()
-  {
-    return tagEnd("tr").nl
-  }
+  This trEnd() { return tagEnd("tr").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // th
@@ -580,18 +501,12 @@ class WebOutStream : OutStream
   **
   ** Start a <th> tag.
   **
-  This th(Str? attrs := null)
-  {
-    return tag("th", attrs)
-  }
+  This th(Str? attrs := null) { return tag("th", attrs) }
 
   **
   ** End a <th> tag.
   **
-  This thEnd()
-  {
-    return tagEnd("th").nl
-  }
+  This thEnd() { return tagEnd("th").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // td
@@ -600,18 +515,12 @@ class WebOutStream : OutStream
   **
   ** Start a <td> tag.
   **
-  This td(Str? attrs := null)
-  {
-    return tag("td", attrs)
-  }
+  This td(Str? attrs := null) { return tag("td", attrs) }
 
   **
   ** End a <td> tag.
   **
-  This tdEnd()
-  {
-    return tagEnd("td").nl
-  }
+  This tdEnd() { return tagEnd("td").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // ul/ol/li
@@ -620,50 +529,32 @@ class WebOutStream : OutStream
   **
   ** Start a <ul> tag.
   **
-  This ul(Str? attrs := null)
-  {
-    return tag("ul", attrs).nl
-  }
+  This ul(Str? attrs := null) { return tag("ul", attrs).nl }
 
   **
   ** End a <ul> tag.
   **
-  This ulEnd()
-  {
-    return tagEnd("ul").nl
-  }
+  This ulEnd() { return tagEnd("ul").nl }
 
   **
   ** Start a <ol> tag.
   **
-  This ol(Str? attrs := null)
-  {
-    return tag("ol", attrs).nl
-  }
+  This ol(Str? attrs := null) { return tag("ol", attrs).nl }
 
   **
   ** End a <ol> tag.
   **
-  This olEnd()
-  {
-    return tagEnd("ol").nl
-  }
+  This olEnd() { return tagEnd("ol").nl }
 
   **
   ** Start a <li> tag.
   **
-  This li(Str? attrs := null)
-  {
-    return tag("li", attrs).nl
-  }
+  This li(Str? attrs := null) { return tag("li", attrs).nl }
 
   **
   ** End a <li> tag.
   **
-  This liEnd()
-  {
-    return tagEnd("li").nl
-  }
+  This liEnd() { return tagEnd("li").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // dl/dd/dt
@@ -672,50 +563,32 @@ class WebOutStream : OutStream
   **
   ** Start a <dl> tag.
   **
-  This dl(Str? attrs := null)
-  {
-    return tag("dl", attrs).nl
-  }
+  This dl(Str? attrs := null) { return tag("dl", attrs).nl }
 
   **
   ** End a <dl> tag.
   **
-  This dlEnd()
-  {
-    return tagEnd("dl").nl
-  }
+  This dlEnd() { return tagEnd("dl").nl }
 
   **
   ** Start a <dt> tag.
   **
-  This dt(Str? attrs := null)
-  {
-    return tag("dt", attrs).nl
-  }
+  This dt(Str? attrs := null) { return tag("dt", attrs).nl }
 
   **
   ** End a <dt> tag.
   **
-  This dtEnd()
-  {
-    return tagEnd("dt").nl
-  }
+  This dtEnd() { return tagEnd("dt").nl }
 
   **
   ** Start a <dd> tag.
   **
-  This dd(Str? attrs := null)
-  {
-    return tag("dd", attrs).nl
-  }
+  This dd(Str? attrs := null) { return tag("dd", attrs).nl }
 
   **
   ** End a <dd> tag.
   **
-  This ddEnd()
-  {
-    return tagEnd("dd").nl
-  }
+  This ddEnd() { return tagEnd("dd").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // form
@@ -724,18 +597,12 @@ class WebOutStream : OutStream
   **
   ** Start a <form> tag.
   **
-  This form(Str? attrs := null)
-  {
-    return tag("form", attrs).nl
-  }
+  This form(Str? attrs := null) { return tag("form", attrs).nl }
 
   **
   ** End a <form> tag.
   **
-  This formEnd()
-  {
-    return tagEnd("form").nl
-  }
+  This formEnd() { return tagEnd("form").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // input
@@ -812,34 +679,22 @@ class WebOutStream : OutStream
   **
   ** Start a <select> tag.
   **
-  This select(Str? attrs := null)
-  {
-    return tag("select", attrs).nl
-  }
+  This select(Str? attrs := null) { return tag("select", attrs).nl }
 
   **
   ** End a <select> tag.
   **
-  This selectEnd()
-  {
-    return tagEnd("select").nl
-  }
+  This selectEnd() { return tagEnd("select").nl }
 
   **
   ** Start a <option> tag.
   **
-  This option(Str? attrs := null)
-  {
-    return tag("option", attrs)
-  }
+  This option(Str? attrs := null) { return tag("option", attrs) }
 
   **
   ** End a <option> tag.
   **
-  This optionEnd()
-  {
-    return tagEnd("option").nl
-  }
+  This optionEnd() { return tagEnd("option").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // textarea
@@ -848,18 +703,12 @@ class WebOutStream : OutStream
   **
   ** Start a <textarea> tag.
   **
-  This textArea(Str? attrs := null)
-  {
-    return tag("textarea", attrs).nl
-  }
+  This textArea(Str? attrs := null) { return tag("textarea", attrs).nl }
 
   **
   ** End a <textarea> tag.
   **
-  This textAreaEnd()
-  {
-    return tagEnd("textarea").nl
-  }
+  This textAreaEnd() { return tagEnd("textarea").nl }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

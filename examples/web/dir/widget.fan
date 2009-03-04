@@ -5,8 +5,8 @@ class TestWidget: Widget
 {
   override Void onGet()
   {
-    head.title("Title It Up!")
-    body.h1("Does this thing work?")
+    head.title.w("Title It Up!").titleEnd
+    body.h1.w("Does this thing work?").h1End
 
     body.table("border='1' cellpadding='5'")
     body.tr.td.w("uri").tdEnd.td.w(req.uri).tdEnd.trEnd

@@ -15,13 +15,13 @@ class CallTest : Widget
 {
   override Void onGet()
   {
-    head.title("Call Test")
+    head.title.w("Call Test").titleEnd
     head.includeJs(`/sys/pod/webappClient/webappClient.js`)
     head.includeJs(`/sys/pod/testWeb/testWeb.js`)
 
-    body.h1("Call Test")
+    body.h1.w("Call Test").h1End
 
-    body.h3("GET")
+    body.h3.w("GET").h3End
     body.ul
     doCall("GET", "Alpha", #alpha)
     doCall("GET", "Beta", #beta)
@@ -29,7 +29,7 @@ class CallTest : Widget
     doCall("GET", "Error", `/call?webappWidgetCall=sys::Obj.echo`)
     body.ulEnd
 
-    body.h3("POST")
+    body.h3.w("POST").h3End
     body.ul
     doCall("POST", "Gamma", #gamma)
     doCall("POST", "Error", `/call?webappWidgetCall=testWeb::CallTest.noexist`)
@@ -55,8 +55,8 @@ class CallTest : Widget
     body.w(name).aEnd.w(" - $uri.encode.toXml").liEnd
   }
 
-  Void alpha() { head.title("CallTest#alpha"); body.h1("CallTest#alpha") }
-  Void beta()  { head.title("CallTest#beta"); body.h1("CallTest#beta") }
+  Void alpha() { head.title.w("CallTest#alpha").titleEnd; body.h1.w("CallTest#alpha").h1End }
+  Void beta()  { head.title.w("CallTest#beta").titleEnd; body.h1.w("CallTest#beta").h1End }
   Void gamma() { body.w("CallTest#gamma") }
 }
 

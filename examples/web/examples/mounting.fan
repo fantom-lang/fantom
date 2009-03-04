@@ -7,10 +7,10 @@ class Mounting : Widget
 
   override Void onGet()
   {
-    head.title("Demo Index")
-    body.h1("Mounting directories into Namespace")
+    head.title.w("Demo Index").titleEnd
+    body.h1.w("Mounting directories into Namespace").h1End
 
-    body.h2("FindResourceStep Directory")
+    body.h2.w("FindResourceStep Directory").h2End
     body.ul
     body.li.a(`../dir`).w("/dir").aEnd.liEnd
     body.li.a(`../dir/`).w("/dir/").aEnd.liEnd
@@ -18,7 +18,7 @@ class Mounting : Widget
     body.li.a(`../dir/index.html`).w("/dir/index.html").aEnd.liEnd
     body.ulEnd
 
-    body.h2("Mounting a tree of HTML")
+    body.h2.w("Mounting a tree of HTML").h2End
 
     body.ul
     body.li.a(`/doc`).w("/doc").aEnd.liEnd

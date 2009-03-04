@@ -31,8 +31,8 @@ directly from a Widget.
     override Void onGet()
     {
       // always use head and body bufs
-      head.title("My title!")
-      body.h1("This is my widget!")
+      head.title.w("My title!").titleEnd
+      body.h1.w("This is my widget!").h1End
     }
   }
 
