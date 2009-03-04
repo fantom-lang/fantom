@@ -14,8 +14,8 @@ class FlashTest : Widget
 
   override Void onGet()
   {
-    head.title("Flash")
-    body.h1("Flash")
+    head.title.w("Flash").titleEnd
+    body.h1.w("Flash").h1End
     children.each |Widget w| { w.onGet }
     body.hr
     body.p

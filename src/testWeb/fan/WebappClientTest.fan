@@ -15,7 +15,7 @@ class WebappClientTest : Widget
 {
   override Void onGet()
   {
-    head.title("webappClient Test")
+    head.title.w("webappClient Test").titleEnd
     head.includeJs(`/sys/pod/webappClient/webappClient.js`)
     head.includeJs(`/sys/pod/testWeb/testWeb.js`)
     head.w(
@@ -46,7 +46,7 @@ class WebappClientTest : Widget
          }
        </script>").nl
 
-    body.h1("webappClient Test")
+    body.h1.w("webappClient Test").h1End
     body.hr
 
     // testAttrs

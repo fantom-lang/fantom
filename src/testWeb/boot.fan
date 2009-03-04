@@ -43,8 +43,8 @@ class Index : Widget
 {
   override Void onGet()
   {
-    head.title("testWeb Tests")
-    body.h1("testWeb Tests")
+    head.title.w("testWeb Tests").titleEnd
+    body.h1.w("testWeb Tests").h1End
     body.ul
     body.li.a(`/webappClient`).w("webappClient unit tests").aEnd.liEnd
     body.li.a(`/call`).w("Call tests").aEnd.liEnd

@@ -87,7 +87,7 @@ class WebOutStreamTest : Test
     out.headEnd
     verifyOut(buf, "</head>")
 
-    out.title("Test")
+    out.title.w("Test").titleEnd
     verifyOut(buf, "<title>Test</title>")
 
     out.includeCss(`foo.css`)
@@ -143,34 +143,34 @@ class WebOutStreamTest : Test
     out.bodyEnd
     verifyOut(buf, "</body>")
 
-    out.h1("foo")
+    out.h1.w("foo").h1End
     verifyOut(buf, "<h1>foo</h1>")
-    out.h1("bar", "class='bar'")
+    out.h1("class='bar'").w("bar").h1End
     verifyOut(buf, "<h1 class='bar'>bar</h1>")
 
-    out.h2("foo")
+    out.h2.w("foo").h2End
     verifyOut(buf, "<h2>foo</h2>")
-    out.h2("bar", "class='bar'")
+    out.h2("class='bar'").w("bar").h2End
     verifyOut(buf, "<h2 class='bar'>bar</h2>")
 
-    out.h3("foo")
+    out.h3.w("foo").h3End
     verifyOut(buf, "<h3>foo</h3>")
-    out.h3("bar", "class='bar'")
+    out.h3("class='bar'").w("bar").h3End
     verifyOut(buf, "<h3 class='bar'>bar</h3>")
 
-    out.h4("foo")
+    out.h4.w("foo").h4End
     verifyOut(buf, "<h4>foo</h4>")
-    out.h4("bar", "class='bar'")
+    out.h4("class='bar'").w("bar").h4End
     verifyOut(buf, "<h4 class='bar'>bar</h4>")
 
-    out.h5("foo")
+    out.h5.w("foo").h5End
     verifyOut(buf, "<h5>foo</h5>")
-    out.h5("bar", "class='bar'")
+    out.h5("class='bar'").w("bar").h5End
     verifyOut(buf, "<h5 class='bar'>bar</h5>")
 
-    out.h6("foo")
+    out.h6.w("foo").h6End
     verifyOut(buf, "<h6>foo</h6>")
-    out.h6("bar", "class='bar'")
+    out.h6("class='bar'").w("bar").h6End
     verifyOut(buf, "<h6 class='bar'>bar</h6>")
 
     out.div
