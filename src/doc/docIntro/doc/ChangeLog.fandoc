@@ -550,7 +550,7 @@
 - Date: toDateTime, midnight, plus, minus
 - Decimal: toLocale
 - Float: toLocale
-- Int: toLocale
+- Int: toLocale, toDuration, toDateTime
 - Num: localeDecimal, localeGrouping, localePercent, localeInf, localeNaN
 - Map: any, all
 - Time: toDateTime, toDuration, fromDuration

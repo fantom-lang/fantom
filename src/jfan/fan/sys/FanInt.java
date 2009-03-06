@@ -442,6 +442,11 @@ public final class FanInt
     throw ArgErr.make("Invalid base " + base).val;
   }
 
+  public static Duration toDuration(long self) { return Duration.make(self); }
+
+  public static DateTime toDateTime(long self) { return DateTime.makeTicks(self); }
+  public static DateTime toDateTime(long self, TimeZone tz) { return DateTime.makeTicks(self, tz); }
+
 //////////////////////////////////////////////////////////////////////////
 // Closures
 //////////////////////////////////////////////////////////////////////////
