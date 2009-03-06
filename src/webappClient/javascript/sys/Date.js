@@ -62,6 +62,12 @@ var sys_Date = sys_Obj.extend(
     return this.toStr();
   },
 
+  toLocale: function(pattern)
+  {
+    // TODO
+    return this.toStr();
+  },
+
   toStr: function()
   {
     // TODO
