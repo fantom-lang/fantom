@@ -60,6 +60,11 @@ public final class DateTime
     return cachedUtc = new DateTime(now, TimeZone.utc);
   }
 
+  public static long nowTicks()
+  {
+    return (System.currentTimeMillis() - diffJava) * nsPerMilli;
+  }
+
   public static DateTime boot()  { return boot; }
 
 //////////////////////////////////////////////////////////////////////////

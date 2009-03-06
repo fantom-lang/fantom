@@ -546,7 +546,7 @@
 *Build 1.0.39 (incomplete)*
 - Int: minValue/maxValue -> minVal/maxVal
 - Str: padr, padl
-- DateTime: midnight
+- DateTime: midnight, nowTicks
 - Date: toDateTime, midnight, plus, minus
 - Decimal: toLocale
 - Float: toLocale
