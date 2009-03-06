@@ -30,8 +30,10 @@ class Doc
   static Elem? elem(Str id) { return null }
 
   **
-  ** Create a new element with the given tag name.
+  ** Create a new element with the given tag name.  If the
+  ** attrib map is specified, set the new elements attributes
+  ** to the given values.
   **
-  static Elem createElem(Str tagName) { return Elem("") }
+  static Elem createElem(Str tagName, [Str:Str]? attrib := null) { return Elem("") }
 
 }

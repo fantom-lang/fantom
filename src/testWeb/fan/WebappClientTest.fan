@@ -35,6 +35,7 @@ class WebappClientTest : Widget
              var test = testWeb_TestClient.make();
              print('testAttrs');  test.testAttrs();
              print('testBasics'); test.testBasics();
+             print('testCreate'); test.testCreate();
              results.style.color = 'green';
              results.innerHTML = 'All tests passed! [' + test.verifies + ' verifies]';
            }
@@ -148,6 +149,22 @@ class TestClient
     verifyEq(kids[0].html.trim, "alpha")
     verifyEq(kids[1].html, "beta")
     verifyEq(kids[2].html, "gamma")
+  }
+
+  Void testCreate()
+  {
+    elem := Doc.createElem("div")
+    verifyEq(elem.tagName, "div")
+
+    elem = Doc.createElem("div", ["class":"foo"])
+    verifyEq(elem.tagName, "div")
+    verifyEq(elem.className, "foo")
+
+    elem = Doc.createElem("div", ["id":"cool", "name":"yay", "class":"foo"])
+    verifyEq(elem.tagName, "div")
+    verifyEq(elem["id"], "cool")
+    verifyEq(elem["name"], "yay")
+    verifyEq(elem["class"], "foo")
   }
 
   Void verify(Bool v)
