@@ -556,7 +556,7 @@ class JavascriptWriter : CompilerSupport
 
   Void closureExpr(ClosureExpr ce)
   {
-    inClosure = true
+    closureLevel++
     out.w("function(")
     ce.doCall.vars.each |MethodVar v, Int i|
     {
@@ -571,12 +571,20 @@ class JavascriptWriter : CompilerSupport
       block(ce.doCall.code, false)
     }
     out.w("}")
-    inClosure = false
+    closureLevel--
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Util
 //////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return true if we are inside a closure.
+  **
+  Bool inClosure()
+  {
+    return closureLevel > 0
+  }
 
   **
   ** Return the Javascript qname for this TypeDef.
@@ -628,7 +636,7 @@ class JavascriptWriter : CompilerSupport
 
   TypeDef typeDef
   AstWriter out
-  Bool inClosure := false
+  Int closureLevel  := 0            // closure level, 0=no closure
   Bool inStaticInit := false
   MethodDef[] ctors := [,]          // ctors
   MethodDef[] staticMethods := [,]  // static methods
