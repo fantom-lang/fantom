@@ -25,8 +25,15 @@ webappClient_Doc.elem = function(id)
   return webappClient_Elem.make(elem);
 }
 
-webappClient_Doc.createElem = function(tagName)
+webappClient_Doc.createElem = function(tagName, attribs)
 {
   var elem = document.createElement(tagName);
-  return webappClient_Elem.make(elem);
+  var wrap = webappClient_Elem.make(elem);
+  if (attribs != null)
+  {
+    var k = attribs.keys();
+    for (var i=0; i<k.length; i++)
+      wrap.set(k[i], attribs.get(k[i]));
+  }
+  return wrap;
 }
