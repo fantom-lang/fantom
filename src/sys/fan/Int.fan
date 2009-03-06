@@ -348,6 +348,18 @@ const final class Int : Num
   **
   Str toCode(Int base := 10)
 
+  **
+  ** Convert nano-seconds ticks to a Duration.
+  ** Convenience for `Duration.make`.
+  **
+  Duration toDuration()
+
+  **
+  ** Convert nano-seconds ticks since 1-Jan-2000 to a DateTime.
+  ** Convenience for `DateTime.makeTicks`.
+  **
+  DateTime toDateTime(TimeZone tz := TimeZone.current)
+
 /////////////////////////////////////////////////////////////////////////
 // Closures
 //////////////////////////////////////////////////////////////////////////

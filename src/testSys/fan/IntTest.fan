@@ -588,6 +588,21 @@ class IntTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Conversions
+//////////////////////////////////////////////////////////////////////////
+
+  Void testConversions()
+  {
+    verifyEq(3_000_000.toDuration, 3ms)
+    verifyEq(-5_000_000_000.toDuration, -5sec)
+
+    now := DateTime.now
+    verifyEq(now.ticks.toDateTime, now)
+    verifyEq(0.toDateTime(TimeZone.utc), DateTime.defVal)
+    verifyEq(289658280000000000.toDateTime(TimeZone("New_York")), DateTime(2009, Month.mar, 6, 7, 38, 0, 0, TimeZone("New_York")))
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
