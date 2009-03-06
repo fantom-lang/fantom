@@ -105,3 +105,4 @@ sys_Type.addType("sys::Str");
 sys_Type.addType("sys::StrBuf");
 sys_Type.addType("sys::Test");
 sys_Type.addType("sys::Type");
+sys_Type.addType("sys::Weekday");
