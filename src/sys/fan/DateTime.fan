@@ -43,6 +43,11 @@ const final class DateTime
   static DateTime nowUtc(Duration? tolerance := 250ms)
 
   **
+  ** Return the current time as nanosecond ticks since 1 Jan 2000 GMT.
+  **
+  static Int nowTicks()
+
+  **
   ** Make for nanosecond ticks since 1 Jan 2000 GMT.  Throw
   ** ArgErr if ticks represent a year out of the range 1901
   ** to 2099.

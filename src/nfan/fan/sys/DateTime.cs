@@ -62,6 +62,11 @@ namespace Fan.Sys
       return cachedUtc = new DateTime(now, TimeZone.m_utc);
     }
 
+    public static long nowTicks()
+    {
+      return (System.DateTime.Now.Ticks - diffDotnet) * nsPerTick;
+    }
+
     public static DateTime boot()  { return m_boot; }
 
   //////////////////////////////////////////////////////////////////////////
