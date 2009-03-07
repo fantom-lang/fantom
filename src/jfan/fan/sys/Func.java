@@ -104,6 +104,7 @@ public abstract class Func
   public static abstract class Indirect0 extends Indirect
   {
     protected Indirect0(FuncType type) { super(type); }
+    protected Indirect0() { super(new FuncType(new Type[] {}, Sys.ObjType)); }
     public final Object call(List args) { return call0(); }
     public abstract Object call0();
     public final Object call1(Object a) { return call0(); }
@@ -119,6 +120,7 @@ public abstract class Func
   public static abstract class Indirect1 extends Indirect
   {
     protected Indirect1(FuncType type) { super(type); }
+    protected Indirect1() { super(new FuncType(new Type[] { Sys.ObjType }, Sys.ObjType)); }
     public final Object call(List args) { return call1(args.get(0)); }
     public final Object call0() { throw tooFewArgs(0); }
     public abstract Object call1(Object a);
@@ -134,6 +136,7 @@ public abstract class Func
   public static abstract class Indirect2 extends Indirect
   {
     protected Indirect2(FuncType type) { super(type); }
+    protected Indirect2() { super(new FuncType(new Type[] { Sys.ObjType, Sys.ObjType }, Sys.ObjType)); }
     public final Object call(List args) { return call2(args.get(0), args.get(1)); }
     public final Object call0() { throw tooFewArgs(0); }
     public final Object call1(Object a) { throw tooFewArgs(1); }
@@ -149,6 +152,7 @@ public abstract class Func
   public static abstract class Indirect3 extends Indirect
   {
     protected Indirect3(FuncType type) { super(type); }
+    protected Indirect3() { super(new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType)); }
     public final Object call(List args) { return call3(args.get(0), args.get(1), args.get(2)); }
     public final Object call0() { throw tooFewArgs(0); }
     public final Object call1(Object a) { throw tooFewArgs(1); }
@@ -164,6 +168,7 @@ public abstract class Func
   public static abstract class Indirect4 extends Indirect
   {
     protected Indirect4(FuncType type) { super(type); }
+    protected Indirect4() { super(new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType)); }
     public final Object call(List args) { return call4(args.get(0), args.get(1), args.get(2), args.get(3)); }
     public final Object call0() { throw tooFewArgs(0); }
     public final Object call1(Object a) { throw tooFewArgs(1); }
