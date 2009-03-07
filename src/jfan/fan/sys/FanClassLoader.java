@@ -9,6 +9,7 @@ package fan.sys;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.security.*;
 import java.util.*;
 import fanx.emit.*;
 import fanx.util.*;
@@ -18,7 +19,7 @@ import fanx.util.*;
  * the "fan." namespace to map to dynamically loaded Fan classes.
  */
 public class FanClassLoader
-  extends ClassLoader
+  extends SecureClassLoader
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,7 @@ public class FanClassLoader
       throw new IllegalStateException("Attempt to use FanClassLoader under precompiled only mode");
 
     if (classfile == null)
-      throw new IllegalArgumentException();
+      throw new IllegalStateException("null classfile");
 
     try
     {
@@ -55,16 +56,36 @@ public class FanClassLoader
   public FanClassLoader()
   {
     super(FanClassLoader.class.getClassLoader());
+    init();
   }
 
   private FanClassLoader(ClassLoader parent)
   {
     super(parent);
+    init();
+  }
+
+  private void init()
+  {
+    try
+    {
+      this.allPermissions = new AllPermission().newPermissionCollection();
+      this.codeSource = new CodeSource(new java.net.URL("file://"), (CodeSigner[])null);
+    }
+    catch (Throwable e)
+    {
+      e.printStackTrace();
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
 // ClassLoader
 //////////////////////////////////////////////////////////////////////////
+
+  protected PermissionCollection getPermissions(CodeSource src)
+  {
+    return allPermissions;
+  }
 
   protected Class findClass(String name)
     throws ClassNotFoundException
@@ -81,7 +102,7 @@ public class FanClassLoader
     if (pending != null)
     {
 //if (name.endsWith("")) dumpToFile(name, pending);
-      Class cls = defineClass(name, pending.buf, 0, pending.len);
+      Class cls = defineClass(name, pending.buf, 0, pending.len, codeSource);
       return cls;
     }
 
@@ -104,7 +125,7 @@ public class FanClassLoader
           if (precompiled != null)
           {
 //dumpToFile(name, precompiled);
-            Class cls = defineClass(name, precompiled.buf, 0, precompiled.len);
+            Class cls = defineClass(name, precompiled.buf, 0, precompiled.len, codeSource);
 
             // if the precompiled class is a fan type, then we need
             // to finish the emit process since we skipped the normal
@@ -179,4 +200,6 @@ public class FanClassLoader
   private static FanClassLoader classLoader = new FanClassLoader(FanClassLoader.class.getClassLoader());
   private static HashMap pendingClasses = new HashMap(); // name -> Box
 
+  private PermissionCollection allPermissions;
+  private CodeSource codeSource;
 }
