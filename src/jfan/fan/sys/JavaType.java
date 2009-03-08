@@ -55,7 +55,13 @@ public class JavaType
   public static JavaType make(String podName, String typeName)
   {
     // we shouldn't be using this method for pure Fan types
-    if (!podName.startsWith("[java]")) throw new IllegalStateException(podName);
+    if (!podName.startsWith("[java]"))
+      throw ArgErr.make("Unsupported FFI type: " + podName + "::" + typeName).val;
+
+    // ensure unnormalized "[java] package::Type" isn't used (since
+    // it took me an hour to track down a bug related to this)
+    if (podName.length() >= 7 && podName.charAt(6) == ' ')
+      throw ArgErr.make("Java FFI qname cannot contain space: " + podName + "::" + typeName).val;
 
     // cache all the java types statically
     synchronized (cache)
@@ -526,6 +532,7 @@ public class JavaType
   static String toClassName(String podName, String typeName)
   {
     if (podName.length() == 6) return typeName;
+    if (podName.charAt(6) == ' ') throw new IllegalStateException();
     return podName.substring(6) + "." + typeName;
   }
 
