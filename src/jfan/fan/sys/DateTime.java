@@ -672,12 +672,7 @@ public final class DateTime
 
   public final DateTime midnight()
   {
-    return makeTicks(ticks
-                     - getHour()* nsPerHour
-                     - getMin() * nsPerMin
-                     - getSec() * nsPerSec
-                     - getNanoSec(),
-                     timeZone);
+    return make(year(), month(), day(), 0, 0, 0, 0, timeZone);
   }
 
   public final String toStr()

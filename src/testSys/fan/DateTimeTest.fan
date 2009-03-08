@@ -1055,6 +1055,10 @@ class DateTimeTest : Test
     verifyEq(Date.today.midnight.date, Date.today)
     verifyEq(Date.today.midnight.time, Time(0, 0, 0))
     verifyEq(Date(2008, apr, 14).midnight(la), DateTime(2008, apr, 14, 0, 0, 0, 0, la))
+
+    // DST
+    verifyEq(DateTime(2009, Month.mar, 7, 4, 5, 0, 0, ny).midnight.time, Time(0, 0))
+    verifyEq(DateTime(2009, Month.nov, 1, 4, 5, 0, 0, ny).midnight.time, Time(0, 0))
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -680,12 +680,7 @@ namespace Fan.Sys
 
     public DateTime midnight()
     {
-      return makeTicks(m_ticks
-                       - getHour()* nsPerHour
-                       - getMin() * nsPerMin
-                       - getSec() * nsPerSec
-                       - getNanoSec(),
-                       m_timeZone);
+      return make(year(), month(), day(), 0, 0, 0, 0, m_timeZone);
     }
 
     public override string toStr()
