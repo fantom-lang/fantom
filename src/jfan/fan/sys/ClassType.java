@@ -415,8 +415,8 @@ public class ClassType
     HashMap nameToIndex = new HashMap();   // String -> Int
 
     // merge in base class and mixin classes
-    merge(base, slots, nameToSlot, nameToIndex);
     for (int i=0; i<mixins().sz(); ++i) merge((Type)mixins.get(i), slots, nameToSlot, nameToIndex);
+    merge(base, slots, nameToSlot, nameToIndex);
 
     // merge in all my slots
     if (!dynamic)
@@ -471,7 +471,7 @@ public class ClassType
   {
     if (inheritedType == null) return;
     List inheritedSlots = inheritedType.reflect().slots();
-    for (int i=0; i<inheritedSlots.sz(); ++i)
+     for (int i=0; i<inheritedSlots.sz(); ++i)
       merge((Slot)inheritedSlots.get(i), slots, nameToSlot, nameToIndex);
   }
 
@@ -499,6 +499,12 @@ public class ClassType
       // override in which case we definitely don't want to
       // override with the sys::Object version
       if (slot.parent() == Sys.ObjType)
+        return;
+
+      // if given the choice between two *inherited* slots where
+      // one is concrete and abstract, then choose the concrete one
+      Slot dupSlot = (Slot)slots.get(dup);
+      if (slot.parent() != this && slot.isAbstract() && !dupSlot.isAbstract())
         return;
 
       // check if this is a Getter or Setter, in which case the Field
