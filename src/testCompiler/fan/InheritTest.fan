@@ -440,7 +440,7 @@ class InheritTest : CompilerTest
      objD := typeD.make
      verifyEq(typeD.name, "D")
      verifyEq(typeD.method("a").call([objD]), "B.a")
-     verifyEq(typeD.method("b").call([objD]), "B.b")  // TODO - reflect should be Field
+     verifyEq(typeD.field("b").get(objD), "B.b")
      verifyEq(typeD.method("hash").call([objD]), 77)
      verifyEq(typeD.method("toStr").call([objD]), "C.toStr")
   }

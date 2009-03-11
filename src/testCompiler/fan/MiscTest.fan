@@ -976,4 +976,50 @@ class MiscTest : CompilerTest
     verifyEq(obj->b("boo")->s, "boo")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Inherit Bug Mar 2009
+//////////////////////////////////////////////////////////////////////////
+
+  Void testBug0903()
+  {
+    recPod := podName
+    compile(
+       "class RecImpl : Rec
+        {
+          override Str foo() { return \"foo\" }
+          override Str baz() { return \"baz 2\" }
+        }
+
+        class SubRecImpl : RecImpl, SubRec
+        {
+          override Str bar() { return \"bar\" }
+          override Str baz() { return \"baz 3\" }
+        }
+
+        mixin Rec
+        {
+          abstract Str foo()
+          abstract Str baz()
+        }
+
+        mixin SubRec : Rec
+        {
+          abstract Str bar()
+          override Str baz() { return \"baz 1\" }
+          Str goo() { return \"goo\" }
+        }")
+
+    compile("class Derived : $recPod::SubRecImpl {}")
+
+    obj := pod.types[0].make
+    verifyEq(obj->foo, "foo")
+    verifyEq(obj->bar, "bar")
+    verifyEq(obj->baz, "baz 3")
+    verifyEq(obj->goo, "goo")
+    verifyEq(obj.type.method("foo").parent.name, "RecImpl")
+    verifyEq(obj.type.method("bar").parent.name, "SubRecImpl")
+    verifyEq(obj.type.method("baz").parent.name, "SubRecImpl")
+    verifyEq(obj.type.method("goo").parent.name, "SubRec")
+  }
+
 }
