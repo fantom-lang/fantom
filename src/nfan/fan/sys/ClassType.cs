@@ -418,8 +418,8 @@ namespace Fan.Sys
       Hashtable nameToIndex = new Hashtable();   // String -> Long
 
       // merge in base class and mixin classes
-      merge(m_base, slots, nameToSlot, nameToIndex);
       for (int i=0; i<m_mixins.sz(); i++) merge((Type)m_mixins.get(i), slots, nameToSlot, nameToIndex);
+      merge(m_base, slots, nameToSlot, nameToIndex);
 
       // merge in all my slots
       if (!m_dynamic)
@@ -472,12 +472,8 @@ namespace Fan.Sys
     private void merge(Type inheritedType, List slots, Hashtable nameToSlot, Hashtable nameToIndex)
     {
       if (inheritedType == null) return;
-      List inheritedSlots;
-      if (inheritedType is GenericType)
-        inheritedSlots = ((GenericType)inheritedType.reflect()).m_slots;
-      else
-        inheritedSlots = ((ClassType)inheritedType.reflect()).m_slots;
-      for (int i=0; i<inheritedSlots.sz(); i++)
+      List inheritedSlots = inheritedType.reflect().slots();
+      for (int i=0; i<inheritedSlots.sz(); ++i)
         merge((Slot)inheritedSlots.get(i), slots, nameToSlot, nameToIndex);
     }
 
@@ -506,6 +502,12 @@ namespace Fan.Sys
         // override in which case we definitely don't want to
         // override with the sys::Obj version
         if (slot.parent() == Sys.ObjType)
+          return;
+
+        // if given the choice between two *inherited* slots where
+        // one is concrete and abstract, then choose the concrete one
+        Slot dupSlot = (Slot)slots.get(dup);
+        if (slot.parent() != this && slot.isAbstract() && !dupSlot.isAbstract())
           return;
 
         // check if this is a Getter or Setter, in which case the Field
