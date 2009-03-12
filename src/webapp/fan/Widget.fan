@@ -49,7 +49,6 @@ abstract class Widget : Weblet
 
       // write content
       res.headers["Content-Type"] = "text/html; charset=UTF-8"
-      startRes
       q := req.uri.query["webappWidgetCall"]
       if (q != null)
       {
@@ -60,9 +59,10 @@ abstract class Widget : Weblet
       }
       else
       {
+        startRes
         super.service
+        finishRes
       }
-      finishRes
 
       // flush streams
       if (!res.isCommitted)
