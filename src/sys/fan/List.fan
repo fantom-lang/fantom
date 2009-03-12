@@ -258,6 +258,15 @@ final class List
   **
   L trim()
 
+  **
+  ** Append a value to the end of the list the given number of times.
+  ** Return this. Throw ReadonlyErr if readonly.
+  **
+  ** Example:
+  **   Int[,].fill(0, 3)  =>  [0, 0, 0]
+  **
+  L fill(V val, Int times)
+
 //////////////////////////////////////////////////////////////////////////
 // Stack
 //////////////////////////////////////////////////////////////////////////
