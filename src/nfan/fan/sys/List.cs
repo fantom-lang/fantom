@@ -452,6 +452,15 @@ namespace Fan.Sys
       return this;
     }
 
+    public List fill(object val, long times)
+    {
+      modify();
+      int t = (int)times;
+      if (m_values.Length < m_size+t) grow(m_size+t);
+      for (int i=0; i<t; ++i) add(val);
+      return this;
+    }
+
     public List clear()
     {
       modify();

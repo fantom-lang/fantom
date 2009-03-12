@@ -544,16 +544,17 @@
 - Compiler fix to check for dup method params and dup enum defs
 
 *Build 1.0.39 (incomplete)*
-- Bool: toLocale
 - Int: minValue/maxValue -> minVal/maxVal
-- Str: padr, padl, toLocale
-- DateTime: midnight, nowTicks
+- Bool: toLocale
 - Date: toDateTime, midnight, plus, minus
+- DateTime: midnight, nowTicks
 - Decimal: toLocale
 - Float: toLocale
 - Int: toLocale, toDuration, toDateTime
+- List: fill
 - Num: localeDecimal, localeGrouping, localePercent, localeInf, localeNaN
 - Map: any, all
+- Str: padr, padl, toLocale
 - Time: toDateTime, toDuration, fromDuration
 - Thread: loopCoalescing, stop/kill
 - Type: toLocale

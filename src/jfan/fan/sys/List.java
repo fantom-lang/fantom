@@ -465,6 +465,15 @@ public final class List
     return this;
   }
 
+  public final List fill(Object val, long times)
+  {
+    modify();
+    int t = (int)times;
+    if (values.length < size+t) grow(size+t);
+    for (int i=0; i<t; ++i) add(val);
+    return this;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Stack
 //////////////////////////////////////////////////////////////////////////

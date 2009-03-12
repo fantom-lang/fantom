@@ -517,6 +517,17 @@ class ListTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Fill
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFill()
+  {
+    list := Int[,]
+    verifyEq(list.fill(0, 3), [0, 0, 0])
+    verifyEq(list.fill(0xff, 2), [0, 0, 0, 0xff, 0xff])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Contains/Index
 //////////////////////////////////////////////////////////////////////////
 
@@ -1264,6 +1275,7 @@ class ListTest : Test
     verifyErr(ReadonlyErr#) |,| { r.removeSame("a") }
     verifyErr(ReadonlyErr#) |,| { r.clear }
     verifyErr(ReadonlyErr#) |,| { r.trim }
+    verifyErr(ReadonlyErr#) |,| { r.fill("", 3) }
     verifyErr(ReadonlyErr#) |,| { r.pop }
     verifyErr(ReadonlyErr#) |,| { r.push("x") }
     verifyErr(ReadonlyErr#) |,| { r.sort }
