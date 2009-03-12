@@ -100,6 +100,9 @@ class StrTest : Test
     verify(x != null)
     verify(null != x)
     verify("wow" as Obj != 4)
+
+    verifySame("foo".toStr, "foo")
+    verifySame("foo".toLocale, "foo")
   }
 
   Void testEqualsIgnoreCase()

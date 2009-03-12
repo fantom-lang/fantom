@@ -63,6 +63,8 @@ class UriTest : Test
     verifyEq(uri.query,    ["a":"b", "c":"d"])
     verifyEq(uri.queryStr, "a=b&c=d")
     verifyEq(uri.frag,     "frag")
+    verifyEq(uri.toStr,    "http://user@host:88/a/b/c.txt?a=b&c=d#frag")
+    verifyEq(uri.toLocale, "http://user@host:88/a/b/c.txt?a=b&c=d#frag")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,6 +80,7 @@ class UriTest : Test
     [u1, u2].each |Uri u|
     {
       verifyEq(s.toStr, s)
+      verifyEq(s.toLocale, s)
       verifyEq(u.scheme, "a+b")
       verifyEq(u.userInfo, "c + \u30A2")
       verifyEq(u.host, "d + \u00c0")

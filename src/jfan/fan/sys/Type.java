@@ -373,6 +373,8 @@ public abstract class Type
 
   public String toStr() { return signature(); }
 
+  public String toLocale() { return signature(); }
+
   public boolean isImmutable() { return true; }
 
   public Type toImmutable() { return this; }

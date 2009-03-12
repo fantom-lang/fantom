@@ -83,6 +83,11 @@ public final class FanBool
     return self ? "true" : "false";
   }
 
+  public static String toLocale(boolean self)
+  {
+    return Locale.current().get("sys", self ? "boolTrue" : "boolFalse", toStr(self));
+  }
+
   public static void encode(boolean self, ObjEncoder out)
   {
     out.w(self ? "true" : "false");

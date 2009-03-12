@@ -119,6 +119,11 @@ namespace Fan.Sys
       return self;
     }
 
+    public static string toLocale(string self)
+    {
+      return self;
+    }
+
     public static Type type(string self)
     {
       return Sys.StrType;

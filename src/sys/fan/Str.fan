@@ -79,6 +79,12 @@ const final class Str
   **
   override Str toStr()
 
+  **
+  ** Return this.  This method is used to enable 'toLocale' to
+  ** be used with duck typing across most built-in types.
+  **
+  Str toLocale()
+
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////

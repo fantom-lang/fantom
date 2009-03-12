@@ -704,6 +704,11 @@ public final class Uri
     return str;
   }
 
+  public String toLocale()
+  {
+    return str;
+  }
+
   public void encode(ObjEncoder out)
   {
     out.wStrLiteral(str, '`');

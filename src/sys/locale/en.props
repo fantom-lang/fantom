@@ -13,6 +13,8 @@ time=hh:mm
 float=#,###.0##
 decimal=#,###.0##
 int=#,###
+boolTrue=True
+boolFalse=False
 
 //////////////////////////////////////////////////////////////////////////
 // Month
