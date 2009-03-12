@@ -436,6 +436,14 @@ class Type
   override Str toStr()
 
   **
+  ** Return `signature`.  This method is used to enable 'toLocale' to
+  ** be used with duck typing across most built-in types.  Note: we may
+  ** change the specification of this method in the future to allow
+  ** localized type names.
+  **
+  Str toLocale()
+
+  **
   ** If this type is not dynamic, then return this.  If this
   ** type is dynamic, then NotImmutableErr is thrown.  This method
   ** must be used whenever setting a const Type field.

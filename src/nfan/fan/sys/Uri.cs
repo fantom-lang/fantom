@@ -709,6 +709,11 @@ namespace Fan.Sys
       return m_str;
     }
 
+    public string toLocale()
+    {
+      return m_str;
+    }
+
     public void encode(ObjEncoder @out)
     {
       @out.wStrLiteral(m_str, '`');

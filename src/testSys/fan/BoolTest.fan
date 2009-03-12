@@ -265,4 +265,17 @@ class BoolTest : Test
     verifyEq(false.toCode, "false")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// To Locale
+//////////////////////////////////////////////////////////////////////////
+
+  Void testToLocale()
+  {
+    Locale("en-US").with |,|
+    {
+      verifyEq(true.toLocale, "True")
+      verifyEq(false.toLocale, "False")
+    }
+  }
+
 }

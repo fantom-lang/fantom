@@ -96,6 +96,11 @@ namespace Fan.Sys
       return self ? "true" : "false";
     }
 
+    public static string toLocale(bool self)
+    {
+      return Locale.current().get("sys", self ? "boolTrue" : "boolFalse", toStr(self));
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////

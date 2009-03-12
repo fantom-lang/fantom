@@ -109,6 +109,11 @@ public class FanStr
     return self;
   }
 
+  public static String toLocale(String self)
+  {
+    return self;
+  }
+
   public static Type type(String self)
   {
     return Sys.StrType;

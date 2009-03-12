@@ -385,6 +385,8 @@ namespace Fan.Sys
 
     public override string toStr() { return signature(); }
 
+    public string toLocale() { return signature(); }
+
     public override bool isImmutable() { return true; }
 
     public virtual Type toImmutable() { return this; }

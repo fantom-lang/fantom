@@ -163,6 +163,12 @@ const final class Uri
   override Str toStr()
 
   **
+  ** Return `toStr`.  This method is used to enable 'toLocale' to
+  ** be used with duck typing across most built-in types.
+  **
+  Str toLocale()
+
+  **
   ** Return the percent encoded string for this Uri according to
   ** RFC 3986.  Each section of the Uri is UTF-8 encoded into octects
   ** and then percent encoded according to its valid character set.

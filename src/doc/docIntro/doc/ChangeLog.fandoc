@@ -544,8 +544,9 @@
 - Compiler fix to check for dup method params and dup enum defs
 
 *Build 1.0.39 (incomplete)*
+- Bool: toLocale
 - Int: minValue/maxValue -> minVal/maxVal
-- Str: padr, padl
+- Str: padr, padl, toLocale
 - DateTime: midnight, nowTicks
 - Date: toDateTime, midnight, plus, minus
 - Decimal: toLocale
@@ -555,6 +556,8 @@
 - Map: any, all
 - Time: toDateTime, toDuration, fromDuration
 - Thread: loopCoalescing, stop/kill
+- Type: toLocale
+- Uri: toLocale
 - BuildScript: defaultTarget now defaults to first script declared
 - BuildPod: rename compileJavascript to javascript
 - WebOutStream: css->includeCss, js->includeJs, style, script
