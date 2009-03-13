@@ -127,7 +127,12 @@ const class FindResourceStep : WebAppStep
         index = dir + f
         return index.exists
       }
-      if (found) return index
+      if (found)
+      {
+        if (index.ext == "fan")
+          return compile(index).make
+        return index
+      }
     }
     return dir
   }
@@ -151,6 +156,6 @@ const class FindResourceStep : WebAppStep
   ** List of file names to search for to map a File
   ** directory to a resource.
   **
-  const Uri[]? dirIndex := [`index.html`]
+  const Uri[]? dirIndex := [`index.html`, `index.fan`]
 
 }
