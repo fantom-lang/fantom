@@ -27,6 +27,7 @@ SyntaxRules
   // keyword list
   keywords =
   [
+    "as",
     "break",
     "case",
     "catch",
@@ -36,6 +37,7 @@ SyntaxRules
     "default",
     "do",
     "dynamic",
+    "each",
     "else",
     "extends",
     "false",
@@ -45,6 +47,8 @@ SyntaxRules
     "function",
     "get",
     "if",
+    "in",
+    "is",
     "implements",
     "import",
     "include",
