@@ -549,6 +549,7 @@
 - Date: toDateTime, midnight, plus, minus
 - DateTime: midnight, nowTicks
 - Decimal: toLocale
+- Duration: abs
 - Float: toLocale
 - Int: toLocale, toDuration, toDateTime
 - List: fill
