@@ -195,6 +195,12 @@ namespace Fan.Sys
       return make(m_ticks - (m_ticks % accuracy.m_ticks));
     }
 
+    public Duration abs()
+    {
+      if (m_ticks >= 0) return this;
+      return make(-m_ticks);
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Conversion
   //////////////////////////////////////////////////////////////////////////

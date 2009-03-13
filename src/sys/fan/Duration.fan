@@ -129,6 +129,12 @@ const final class Duration
   **
   Duration minus(Duration b)
 
+  **
+  ** Absolute value - if this is a negative duration,
+  ** then return its positive value.
+  **
+  Duration abs()
+
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////

@@ -184,6 +184,12 @@ public final class Duration
     return make(ticks - (ticks % accuracy.ticks));
   }
 
+  public final Duration abs()
+  {
+    if (ticks >= 0) return this;
+    return make(-ticks);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
