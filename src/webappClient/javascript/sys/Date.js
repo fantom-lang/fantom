@@ -65,7 +65,24 @@ var sys_Date = sys_Obj.extend(
   toLocale: function(pattern)
   {
     // TODO
-    return this.toStr();
+    var s = "" + this.m_day + "-";
+    switch (this.m_month)
+    {
+      case 0:  s += "Jan"; break;
+      case 1:  s += "Feb"; break;
+      case 2:  s += "Mar"; break;
+      case 3:  s += "Apr"; break;
+      case 4:  s += "May"; break;
+      case 5:  s += "Jun"; break;
+      case 6:  s += "Jul"; break;
+      case 7:  s += "Aug"; break;
+      case 8:  s += "Sep"; break;
+      case 9:  s += "Oct"; break;
+      case 10: s += "Nov"; break;
+      case 11: s += "Dec"; break;
+    }
+    s += "-" + this.m_year;
+    return s;
   },
 
   toStr: function()
