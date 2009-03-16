@@ -43,6 +43,13 @@ sys_DateTime.isLeapYear = function(year)
   return (year % 100 != 0) || (year % 400 == 0);
 }
 
+sys_DateTime.dayOfYear = function(year, mon, day)
+{
+  return sys_DateTime.isLeapYear(year) ?
+    sys_DateTime.dayOfYearForFirstOfMonLeap[mon] + day - 1 :
+    sys_DateTime.dayOfYearForFirstOfMon[mon] + day - 1;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Static Fields
 //////////////////////////////////////////////////////////////////////////
@@ -50,3 +57,15 @@ sys_DateTime.isLeapYear = function(year)
 // number of days in each month indexed by month (0-11)
 sys_DateTime.daysInMon     = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
 sys_DateTime.daysInMonLeap = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+// day of year (0-365) for 1st day of month (0-11)
+sys_DateTime.dayOfYearForFirstOfMon     = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+sys_DateTime.dayOfYearForFirstOfMonLeap = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+for (var i=1; i<12; ++i)
+{
+  sys_DateTime.dayOfYearForFirstOfMon[i] =
+    sys_DateTime.dayOfYearForFirstOfMon[i-1] + sys_DateTime.daysInMon[i-1];
+
+  sys_DateTime.dayOfYearForFirstOfMonLeap[i] =
+    sys_DateTime.dayOfYearForFirstOfMonLeap[i-1] + sys_DateTime.daysInMonLeap[i-1];
+}

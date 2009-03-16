@@ -98,10 +98,15 @@ var sys_Date = sys_Obj.extend(
   month: function() { return sys_Month.values[this.m_month]; },
   day: function() { return this.m_day; },
 
-  plus: function(d) { return this.add(d.m_ticks); },
-  minus: function(d) { return this.add(-d.m_ticks); },
-  add: function(ticks)
+  dayOfYear: function()
   {
+    return sys_DateTime.dayOfYear(this.year(), this.m_month, this.day()+1);
+  },
+
+  plus: function(d)
+  {
+    var ticks = d.m_ticks;
+
     // check even number of days
     if (ticks % sys_Duration.nsPerDay != 0)
       throw new sys_ArgErr("Duration must be even num of days");
@@ -139,6 +144,37 @@ var sys_Date = sys_Obj.extend(
     }
 
     return new sys_Date(year, month, day);
+  },
+
+  minus: function(that)
+  {
+    // short circuit if equal
+    if (this.equals(that)) return sys_Duration.defVal;
+
+    // compute so that a < b
+    var a = this;
+    var b = that;
+    if (a.compare(b) > 0) { b = this; a = that; }
+
+    // compute difference in days
+    var days = 0;
+    if (a.m_year == b.m_year)
+    {
+      days = b.dayOfYear() - a.dayOfYear();
+    }
+    else
+    {
+      days = (sys_DateTime.isLeapYear(a.m_year) ? 366 : 365) - a.dayOfYear();
+      days += b.dayOfYear();
+      for (var i=a.m_year+1; i<b.m_year; ++i)
+        days += sys_DateTime.isLeapYear(i) ? 366 : 365;
+    }
+
+    // negate if necessary if a was this
+    if (a == this) days = -days;
+
+    // map days into ns ticks
+    return sys_Duration.make(days * sys_Duration.nsPerDay);
   },
 
   numDays: function(year, mon)
