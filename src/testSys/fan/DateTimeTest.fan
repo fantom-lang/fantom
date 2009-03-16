@@ -1120,19 +1120,33 @@ class DateTimeTest : Test
 
   Void testDateMath()
   {
-    verifyEq(Date(2009, feb, 24) + 1day,   Date(2009, feb, 25))
-    verifyEq(Date(2009, feb, 24) - 3day,   Date(2009, feb, 21))
-    verifyEq(Date(2009, feb, 25) + 4day,   Date(2009, mar, 1))
-    verifyEq(Date(2009, feb, 1)  + -2day,  Date(2009, jan, 30))
-    verifyEq(Date(2009, dec, 31) + 5day,   Date(2010, jan, 5))
-    verifyEq(Date(2010, jan, 5)  - 5day,   Date(2009, dec, 31))
-    verifyEq(Date(2008, jan, 5)  + 365day, Date(2009, jan, 4))
-    verifyEq(Date(2010, jan, 5)  + 365day, Date(2011, jan, 5))
-    verifyEq(Date(1972, jun, 7)  - (-1day),Date(1972, jun, 8))
-    verifyEq(Date(1972, jun, 7)  - 1day,   Date(1972, jun, 6))
+    verifyDateMath(Date(2009, mar, 16),  Date(2009, mar, 16),  0day)
+    verifyDateMath(Date(2009, feb, 24),  Date(2009, feb, 25),  1day)
+    verifyDateMath(Date(2009, feb, 24),  Date(2009, feb, 21),  -3day)
+    verifyDateMath(Date(2009, feb, 25),  Date(2009, mar, 1),   4day)
+    verifyDateMath(Date(2009, feb, 1),   Date(2009, jan, 30),  -2day)
+    verifyDateMath(Date(2009, dec, 31),  Date(2010, jan, 5),   5day)
+    verifyDateMath(Date(2010, jan, 5),   Date(2009, dec, 31),  -5day)
+    verifyDateMath(Date(2008, jan, 5),   Date(2009, jan, 4),   365day)
+    verifyDateMath(Date(2010, jan, 5),   Date(2011, jan, 5),   365day)
+    verifyDateMath(Date(1972, jun, 7),   Date(1972, jun, 6),   -1day)
+    verifyDateMath(Date(2000, jan, 1),   Date(2010, jan, 1),   3653day)
+    verifyDateMath(Date(1999, dec, 31),  Date(2010, jan, 1),   3654day)
+    verifyDateMath(Date(1999, dec, 30),  Date(2010, jan, 1),   3655day)
+    verifyDateMath(Date(1999, dec, 30),  Date(2010, jan, 3),   3657day)
+    verifyDateMath(Date(1980, feb, 3),   Date(1979, dec, 15),  -50day)
+    verifyDateMath(Date(1981, feb, 3),   Date(1979, dec, 15),  -416day)
 
     verifyErr(ArgErr#) |,| { x := Date.today + 22hr }
-    verifyErr(ArgErr#) |,| { x := Date.today - 13min }
+    verifyErr(ArgErr#) |,| { x := Date.today + -13min }
+  }
+
+  Void verifyDateMath(Date a, Date b, Duration diff)
+  {
+    verifyEq(a + diff, b)
+    verifyEq(b + -diff, a)
+    verifyEq(b - a, diff)
+    verifyEq(a - b, -diff)
   }
 
 }

@@ -168,14 +168,14 @@ const final class Date
   Date plus(Duration days)
 
   **
-  ** Subtract the specified number of days from this date to get a date in
-  ** the past.  Throw ArgErr if 'days' parameter it not an even number
-  ** of days.
+  ** Return the delta between this and the given date.  The result is
+  ** always an exact multiple of 24 hour days.  If you wish to subtract a
+  ** Duration, use the `plus` method with a negative duration.
   **
   ** Example:
-  **   Date(2009, Month.jan, 1) - 1day  =>  2008-12-31
+  **   Date(2009, Month.jan, 5) - Date(2009, Month.jan, 2)  =>  3day
   **
-  Date minus(Duration days)
+  Duration minus(Date days)
 
 //////////////////////////////////////////////////////////////////////////
 // Misc
