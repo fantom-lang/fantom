@@ -202,7 +202,7 @@ class TextEditor : View
   Doc doc
   internal TextEditorController controller
   internal FindBar find
-  internal DateTime fileTimeAtLoad
+  internal DateTime? fileTimeAtLoad
   internal Label caretField := Label()
   internal Label charsetField := Label()
 }
