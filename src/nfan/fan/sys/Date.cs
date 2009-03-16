@@ -268,13 +268,10 @@ namespace Fan.Sys
   // Past/Future
   //////////////////////////////////////////////////////////////////////////
 
-    public Date plus(Duration d) { return add(d.m_ticks); }
-
-    public Date minus(Duration d) { return add(-d.m_ticks); }
-
-    private Date add(long ticks)
+    public Date plus(Duration d)
     {
       // check even number of days
+      long ticks = d.m_ticks;
       if (ticks % Duration.nsPerDay != 0)
         throw ArgErr.make("Duration must be even num of days").val;
 
@@ -311,6 +308,37 @@ namespace Fan.Sys
       }
 
       return new Date(year, month, day);
+    }
+
+    public Duration minus(Date that)
+    {
+      // short circuit if equal
+      if (this.Equals(that)) return Duration.Zero;
+
+      // compute so that a < b
+      Date a = this;
+      Date b = that;
+      if (a.compare(b) > 0) { b = this; a = that; }
+
+      // compute difference in days
+      long days = 0;
+      if (a.m_year == b.m_year)
+      {
+        days = b.dayOfYear() - a.dayOfYear();
+      }
+      else
+      {
+        days = (DateTime.isLeapYear(a.m_year) ? 366 : 365) - a.dayOfYear();
+        days += b.dayOfYear();
+        for (int i=a.m_year+1; i<b.m_year; ++i)
+          days += DateTime.isLeapYear(i) ? 366 : 365;
+      }
+
+      // negate if necessary if a was this
+      if (a == this) days = -days;
+
+      // map days into ns ticks
+      return Duration.make(days * Duration.nsPerDay);
     }
 
     private static int numDaysInMon(int year, int mon)
