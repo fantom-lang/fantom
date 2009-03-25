@@ -324,10 +324,6 @@ namespace Fan.Sys
 
     public string toLocale() { return signature(); }
 
-// TODO
-public override bool isImmutable() { return true; }
-public Type toImmutable() { return this; }
-
     public void encode(ObjEncoder @out)
     {
       @out.w(signature()).w("#");
