@@ -144,10 +144,14 @@ abstract class BuildPod : BuildScript
 
     // boot strap checking - ensure that we aren't
     // overwriting sys, build, or compiler
-    if (podName == "sys" || podName == "build" || podName == "compiler")
+    if (podName == "sys" || podName == "build" ||
+        podName == "compiler" || podName == "compilerJava")
     {
       if (Sys.homeDir == devHomeDir)
-        throw fatal("Must update /lib/sys.props devHome for bootstrap build")
+      {
+        props := Sys.homeDir + `lib/sys.props`
+        throw fatal("Must update $props.osPath 'fan.build.devHome' for bootstrap build")
+      }
     }
   }
 
