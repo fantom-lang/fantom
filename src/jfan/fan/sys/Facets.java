@@ -48,7 +48,7 @@ public final class Facets
   }
 
   /**
-   * This is the constructor used by Type.makeDynamic.
+   * Create from map.
    */
   public static Facets make(Map map)
   {

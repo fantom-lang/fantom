@@ -17,11 +17,9 @@ const class Field : Slot
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Dynamic slot constructor.  Dynamic fields must subclass 'Field'
-  ** and override 'get' and 'set' with an implementation for managing
-  ** the state of the field.
+  ** Private constructor.
   **
-  protected new make(Str name, Type of, [Str:Obj]? facets := null)
+  private new privateMake()
 
 //////////////////////////////////////////////////////////////////////////
 // Identity

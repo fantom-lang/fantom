@@ -52,7 +52,6 @@ public class ClassType
     this.qname    = pod.name + "::" + name;
     this.nullable = new NullableType(this);
     this.flags    = ftype.flags;
-    this.dynamic  = false;
     if (Debug) System.out.println("-- init:   " + qname);
   }
 
@@ -64,7 +63,6 @@ public class ClassType
     this.qname    = pod.name + "::" + name;
     this.nullable = new NullableType(this);
     this.flags    = flags;
-    this.dynamic  = false;
     this.facets   = facets;
   }
 
@@ -94,23 +92,6 @@ public class ClassType
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Dynamic
-//////////////////////////////////////////////////////////////////////////
-
-  // dynamic constructor
-  protected ClassType()
-  {
-    this.pod     = null;
-    this.name    = "dynamic";
-    this.qname   = name;
-    this.flags   = 0;
-    this.dynamic = true;
-    this.nullable = new NullableType(this);
-  }
-
-  public boolean isDynamic() { return dynamic; }
-
-//////////////////////////////////////////////////////////////////////////
 // Slots
 //////////////////////////////////////////////////////////////////////////
 
@@ -126,77 +107,9 @@ public class ClassType
     return null;
   }
 
-  public final void add(Slot slot)
-  {
-    if (!dynamic) throw Err.make("Type is not dynamic: " + qname).val;
-    reflect();
-    if (slotsByName.containsKey(slot.name)) throw Err.make("Duplicate slot name: " + qname).val;
-    if (slot.parent != null) throw Err.make("Slot is already parented: " + slot).val;
-
-    slot.parent = this;
-    slotsByName.put(slot.name, slot);
-    slots.add(slot);
-    if (slot instanceof Field)
-      fields.add(slot);
-    else
-      methods.add(slot);
-  }
-
-  public final void remove(Slot slot)
-  {
-    if (!dynamic) throw Err.make("Type is not dynamic: " + qname).val;
-    if (slot.parent != this) throw Err.make("Slot.parent != this: " + slot).val;
-
-    slot.parent = null;
-    slotsByName.remove(slot.name);
-    slots.remove(slot);
-    if (slot instanceof Field)
-      fields.remove(slot);
-    else
-      methods.remove(slot);
-  }
-
   public final Object make(List args)
   {
-    if (dynamic) return makeDynamicInstance();
     return super.make(args);
-  }
-
-  private Object makeDynamicInstance()
-  {
-    // dynamic make requires generation of a special subclass which can
-    // store the type per instance.  Once generated we keep a reference
-    // to the constructor and use that to generate instances bound to this
-    // specific dynamic type.  Because we are by-passing the normal ctor/default
-    // param infastructure we make our lives simple by just requiring a no arg
-    // make ctor (eventually it would be nice to enhance this to allow args).
-    try
-    {
-      // lazy generation
-      if (dynamicCtor == null)
-      {
-        // check for no-arg make on base class
-        Method make = base.method("make", true);
-        if (!make.isCtor() || make.params().sz() != 0)
-          throw Err.make("Dynamic base type requires no arg make ctor: " + base).val;
-
-        // generate the class and store the Java constructor
-        Class cls = FDynamicEmit.emitAndLoad(base);
-        dynamicCtor = cls.getConstructor(new Class[] { Type.class });
-      }
-
-      // use our special subclass which can store type per instance
-      return dynamicCtor.newInstance(new Object[] { this });
-    }
-    catch (Err.Val e)
-    {
-      throw e;
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-      throw Err.make("Cannot generate/call dynamic type ctor", e).val;
-    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -360,14 +273,6 @@ public class ClassType
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public boolean isImmutable() { return !dynamic; }
-
-  public final Type toImmutable()
-  {
-    if (!dynamic) return this;
-    throw NotImmutableErr.make("Type is dynamic").val;
-  }
-
   public void encode(ObjEncoder out)
   {
     out.w(qname).w("#");
@@ -395,7 +300,7 @@ public class ClassType
   {
     // if the ftype is non-null, that means it was passed in non-hollow
     // ftype (in-memory compile), otherwise we need to read it from the pod
-    if (!dynamic && ftype.hollow)
+    if (ftype.hollow)
     {
       try
       {
@@ -419,20 +324,17 @@ public class ClassType
     merge(base, slots, nameToSlot, nameToIndex);
 
     // merge in all my slots
-    if (!dynamic)
+    FPod fpod   = this.pod.fpod;
+    FType ftype = this.ftype;
+    for (int i=0; i<ftype.fields.length; ++i)
     {
-      FPod fpod   = this.pod.fpod;
-      FType ftype = this.ftype;
-      for (int i=0; i<ftype.fields.length; ++i)
-      {
-        Field f = map(fpod, ftype.fields[i]);
-        merge(f, slots, nameToSlot, nameToIndex);
-      }
-      for (int i=0; i<ftype.methods.length; ++i)
-      {
-        Method m = map(fpod, ftype.methods[i]);
-        merge(m, slots, nameToSlot, nameToIndex);
-      }
+      Field f = map(fpod, ftype.fields[i]);
+      merge(f, slots, nameToSlot, nameToIndex);
+    }
+    for (int i=0; i<ftype.methods.length; ++i)
+    {
+      Method m = map(fpod, ftype.methods[i]);
+      merge(m, slots, nameToSlot, nameToIndex);
     }
 
 
@@ -453,12 +355,9 @@ public class ClassType
     this.slotsByName = nameToSlot;
 
     // facets
-    if (!dynamic)
-    {
-      this.facets     = ftype.attrs.facets();
-      this.lineNum    = ftype.attrs.lineNum;
-      this.sourceFile = ftype.attrs.sourceFile;
-    }
+    this.facets     = ftype.attrs.facets();
+    this.lineNum    = ftype.attrs.lineNum;
+    this.sourceFile = ftype.attrs.sourceFile;
   }
 
   /**
@@ -571,7 +470,7 @@ public class ClassType
    */
   public synchronized Class emit()
   {
-    if (cls == null && !dynamic)
+    if (cls == null)
     {
       if (Debug) System.out.println("-- emit:   " + qname);
 
@@ -694,8 +593,6 @@ catch (Exception e) { e.printStackTrace(); }
    */
   private void finishSlots(Class cls, boolean staticOnly)
   {
-    if (dynamic) return;
-
     // map the class's fields to my slots
     java.lang.reflect.Field[] fields = cls.getDeclaredFields();
     for (int i=0; i<fields.length; ++i)
@@ -812,7 +709,6 @@ catch (Exception e) { e.printStackTrace(); }
   final String name;
   final String qname;
   final int flags;
-  final boolean dynamic;
   final Type nullable;
   int lineNum;
   String sourceFile = "";
@@ -839,7 +735,6 @@ catch (Exception e) { e.printStackTrace(); }
   String finishing;
 
   // misc
-  Constructor dynamicCtor;  // enabled to store a type per instance
-  boolean javaRepr;         // if representation a Java type, such as java.lang.Long
+  boolean javaRepr;   // if representation a Java type, such as java.lang.Long
 
 }

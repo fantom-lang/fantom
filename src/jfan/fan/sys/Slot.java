@@ -67,11 +67,6 @@ public abstract class Slot
     this.lineNum = lineNum;
   }
 
-  // ctor for Field and Method make()
-  Slot()
-  {
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
@@ -139,11 +134,11 @@ public abstract class Slot
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  int flags;
-  String name;
-  String qname;
+  final int flags;
+  final String name;
+  final String qname;
   Type parent;
-  Facets facets;
+  final Facets facets;
   public String doc;
   int lineNum;
 
