@@ -19,6 +19,8 @@ abstract class JavaSlot : CSlot
   override once Str qname() { return parent.qname + "." + name }
   override Int flags
 
+  override Bool isForeign() { return true }
+
   ** linked list of overloaded methods (first one
   ** may be field or method)
   JavaMethod? next
@@ -40,7 +42,6 @@ class JavaField : JavaSlot, CField
   override Str signature() { return "$fieldType $name" }
   override CType inheritedReturnType() { return fieldType }
 
-  override Bool isForeign() { return true }
 }
 
 **************************************************************************
@@ -59,8 +60,6 @@ class JavaMethod : JavaSlot, CMethod
 
   override Str signature() { return "$returnType $name(" + params.join(",") + ")" }
   override CType inheritedReturnType() { return returnType }
-
-  override Bool isForeign() { return true }
 
   Void setParamTypes(CType[] types)
   {
