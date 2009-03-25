@@ -51,7 +51,6 @@ namespace Fan.Sys
       this.m_qname    = pod.m_name + "::" + m_name;
       this.m_nullable = new NullableType(this);
       this.m_flags    = ftype.m_flags;
-      this.m_dynamic  = false;
       if (Debug) Console.WriteLine("-- init:   " + m_qname);
     }
 
@@ -92,23 +91,6 @@ namespace Fan.Sys
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Dynamic
-  //////////////////////////////////////////////////////////////////////////
-
-    // dynamic constructor
-    public ClassType()
-    {
-      this.m_pod      = null;
-      this.m_name     = "dynamic";
-      this.m_qname    = m_name;
-      this.m_flags    = 0;
-      this.m_dynamic  = true;
-      this.m_nullable = new NullableType(this);
-    }
-
-    public override bool isDynamic() { return m_dynamic; }
-
-  //////////////////////////////////////////////////////////////////////////
   // Slots
   //////////////////////////////////////////////////////////////////////////
 
@@ -124,78 +106,9 @@ namespace Fan.Sys
       return null;
     }
 
-    public override sealed void add(Slot slot)
-    {
-      if (!m_dynamic) throw Err.make("Type is not dynamic: " + m_qname).val;
-      reflect();
-      if (m_slotsByName.ContainsKey(slot.m_name)) throw Err.make("Duplicate slot name: " + m_qname).val;
-      if (slot.m_parent != null) throw Err.make("Slot is already parented: " + slot).val;
-
-      slot.m_parent = this;
-      m_slotsByName[slot.m_name] = slot;
-      m_slots.add(slot);
-      if (slot is Field)
-        m_fields.add(slot);
-      else
-        m_methods.add(slot);
-    }
-
-    public override sealed void remove(Slot slot)
-    {
-      if (!m_dynamic) throw Err.make("Type is not dynamic: " + m_qname).val;
-      if (slot.m_parent != this) throw Err.make("Slot.parent != this: " + slot).val;
-
-      slot.m_parent = null;
-      m_slotsByName.Remove(slot.m_name);
-      m_slots.remove(slot);
-      if (slot is Field)
-        m_fields.remove(slot);
-      else
-        m_methods.remove(slot);
-    }
-
     public override sealed object make(List args)
     {
-      if (m_dynamic) return makeDynamicInstance();
       return base.make(args);
-    }
-
-    private object makeDynamicInstance()
-    {
-      // dynamic make requires generation of a special subclass which can
-      // store the type per instance.  Once generated we keep a reference
-      // to the constructor and use that to generate instances bound to this
-      // specific dynamic type.  Because we are by-passing the normal ctor/default
-      // param infastructure we make our lives simple by just requiring a no arg
-      // make ctor (eventually it would be nice to enhance this to allow args).
-      try
-      {
-        // lazy generation
-        if (m_dynamicCtor == null)
-        {
-          // check for no-arg make on base class
-          Method make = m_base.method("make", true);
-          if (!make.isCtor() || make.m_func.m_params.sz() != 0)
-            throw Err.make("Dynamic base type requires no arg make ctor: " + m_base).val;
-
-          // generate the class and store the .NET constructor
-          System.Type type = FDynamicEmit.emitAndLoad(m_base);
-          m_dynamicCtor = type.GetConstructor(
-            new System.Type[] { System.Type.GetType("Fan.Sys.Type") });
-        }
-
-        // use our special subclass which can store type per instance
-        return m_dynamicCtor.Invoke(new object[] { this });
-      }
-      catch (Err.Val e)
-      {
-        throw e;
-      }
-      catch (Exception e)
-      {
-        Err.dumpStack(e);
-        throw Err.make("Cannot generate/call dynamic type ctor", e).val;
-      }
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -359,14 +272,6 @@ namespace Fan.Sys
   // Conversion
   //////////////////////////////////////////////////////////////////////////
 
-    public override bool isImmutable() { return !m_dynamic; }
-
-    public override sealed Type toImmutable()
-    {
-      if (!m_dynamic) return this;
-      throw NotImmutableErr.make("Type is dynamic").val;
-    }
-
 //TODO
 /*
     public void encode(ObjEncoder @out)
@@ -398,7 +303,7 @@ namespace Fan.Sys
     {
       // if the ftype is non-null, that means it was passed in non-hollow
       // ftype (in-memory compile), otherwise we need to read it from the pod
-      if (!m_dynamic && m_ftype.m_hollow)
+      if (m_ftype.m_hollow)
       {
         try
         {
@@ -422,20 +327,17 @@ namespace Fan.Sys
       merge(m_base, slots, nameToSlot, nameToIndex);
 
       // merge in all my slots
-      if (!m_dynamic)
+      FPod fpod   = this.m_pod.fpod;
+      FType ftype = this.m_ftype;
+      for (int i=0; i<ftype.m_fields.Length; i++)
       {
-        FPod fpod   = this.m_pod.fpod;
-        FType ftype = this.m_ftype;
-        for (int i=0; i<ftype.m_fields.Length; i++)
-        {
-          Field f = map(fpod, ftype.m_fields[i]);
-          merge(f, slots, nameToSlot, nameToIndex);
-        }
-        for (int i=0; i<ftype.m_methods.Length; i++)
-        {
-          Method m = map(fpod, ftype.m_methods[i]);
-          merge(m, slots, nameToSlot, nameToIndex);
-        }
+        Field f = map(fpod, ftype.m_fields[i]);
+        merge(f, slots, nameToSlot, nameToIndex);
+      }
+      for (int i=0; i<ftype.m_methods.Length; i++)
+      {
+        Method m = map(fpod, ftype.m_methods[i]);
+        merge(m, slots, nameToSlot, nameToIndex);
       }
 
       // break out into fields and methods
@@ -455,12 +357,9 @@ namespace Fan.Sys
       this.m_slotsByName = nameToSlot;
 
       // facets
-      if (!m_dynamic)
-      {
-        this.m_facets     = m_ftype.m_attrs.facets();
-        this.m_lineNum    = m_ftype.m_attrs.m_lineNum;
-        this.m_sourceFile = m_ftype.m_attrs.m_sourceFile;
-      }
+      this.m_facets     = m_ftype.m_attrs.facets();
+      this.m_lineNum    = m_ftype.m_attrs.m_lineNum;
+      this.m_sourceFile = m_ftype.m_attrs.m_sourceFile;
     }
 
     /// <summary>
@@ -573,7 +472,7 @@ namespace Fan.Sys
     [MethodImpl(MethodImplOptions.Synchronized)]
     public System.Type emit()
     {
-      if (m_type == null && !m_dynamic)
+      if (m_type == null)
       {
         if (Debug) Console.WriteLine("-- emit:   " + m_qname);
 
@@ -661,8 +560,6 @@ namespace Fan.Sys
     /// </summary>
     private void finishSlots(System.Type type, bool staticOnly)
     {
-      if (m_dynamic) return;
-
       // map the class's fields to my slots
       FieldInfo[] fields = type.GetFields();
       for (int i=0; i<fields.Length; i++)
@@ -766,7 +663,6 @@ namespace Fan.Sys
     internal readonly string m_name;
     internal readonly string m_qname;
     internal readonly int m_flags;
-    internal readonly bool m_dynamic;
     internal readonly Type m_nullable;
     internal int m_lineNum;
     internal string m_sourceFile = "";
@@ -793,7 +689,6 @@ namespace Fan.Sys
     string m_finishing;
 
     // misc
-    ConstructorInfo m_dynamicCtor;  // enabled to store a type per instance
     internal bool m_dotnetRepr;     // if representation a .NET type, such as Fan.Sys.Long
 
   }
