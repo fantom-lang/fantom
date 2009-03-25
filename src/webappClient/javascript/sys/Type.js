@@ -40,6 +40,10 @@ var sys_Type = sys_Obj.extend(
   toString: function()  { return this.m_qname; },
   type: function()      { return sys_Type.find("sys::Type"); },
 
+  // TODO
+  make: function() { throw new Error("Type.make not yet implemented"); },
+  slot: function(name, checked) { throw new Error("Type.slot not yet implemented"); },
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -88,21 +92,30 @@ sys_Type.toFanType = function(obj)
 //////////////////////////////////////////////////////////////////////////
 
 sys_Type.addType("sys::Bool");
+sys_Type.addType("sys::Charset");
 sys_Type.addType("sys::Date");
 sys_Type.addType("sys::DateTime");
 sys_Type.addType("sys::Duration");
 sys_Type.addType("sys::Enum");
 sys_Type.addType("sys::Err");
+sys_Type.addType("sys::Field", "sys::Slot");
 sys_Type.addType("sys::Float", "sys::Num");
+sys_Type.addType("sys::Func");
 sys_Type.addType("sys::Int", "sys::Num");
 sys_Type.addType("sys::List");
+sys_Type.addType("sys::Log");
 sys_Type.addType("sys::Map");
+sys_Type.addType("sys::Method");
 sys_Type.addType("sys::Month", "sys::Enum");
+sys_Type.addType("sys::Namespace");
 sys_Type.addType("sys::Num");
 sys_Type.addType("sys::Obj");
 sys_Type.addType("sys::Range");
+sys_Type.addType("sys::Slot");
 sys_Type.addType("sys::Str");
 sys_Type.addType("sys::StrBuf");
 sys_Type.addType("sys::Test");
+sys_Type.addType("sys::Thread");
 sys_Type.addType("sys::Type");
+sys_Type.addType("sys::Uri");
 sys_Type.addType("sys::Weekday");
