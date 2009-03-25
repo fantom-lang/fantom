@@ -10,7 +10,7 @@
 ** Universally Unique Identifier.  UUIDs are 128-bit identifiers which
 ** are unique across space and time making them ideal for naming without
 ** a central naming authority.  Fan's UUIDs are loosely based on RFC 4122
-** with the following bitwise format:
+** with the following parts used in the generation:
 **
 **   - 8 bytes: nanosecond ticks since 1 Jan 2000 UTC
 **   - 2 bytes: sequence number
@@ -21,8 +21,8 @@
 ** The node address is ideally mapped to the MAC address if available,
 ** or the IP address hashed with a random number.
 **
-** Fan's UUIDs are explicitly designed to extract the creation timestamp
-** via the 'created' method.
+** No guarantee is made how the bytes are laid out.  Future versions
+** might hash these bytes, or use alternate mechanisms.
 **
 ** The string format for the UUID follows the canonical format of
 ** 32 hexadecimal digits displayed in five groups for "8-4-4-4-12".
@@ -72,17 +72,6 @@ const final class Uuid
   ** Get the least significant 64 bits of this 128 bit UUID.
   **
   Int bitsLo()
-
-  **
-  ** Get this UUID's creation time as the number of nanosecond
-  ** ticks since 1 Jan 2000 UTC.
-  **
-  Int createdTicks()
-
-  **
-  ** Get this UUID's creation time using the specified timezone.
-  **
-  DateTime created(TimeZone tz := TimeZone.current)
 
   **
   ** Return if the specified object is a Uuid with the same 128 bits.

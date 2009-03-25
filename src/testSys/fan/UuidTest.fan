@@ -40,25 +40,6 @@ class UuidTest : Test
     verifySame(a.type, Uuid#)
   }
 
-  Void testCreated()
-  {
-    verify((Uuid().createdTicks - DateTime.now.ticks).abs < 10ms.ticks)
-
-    t := Uuid().created
-    now := DateTime.now
-    verifyEq(t.year, now.year)
-    verifyEq(t.month, now.month)
-    verifyEq(t.day, now.day)
-
-    t = Uuid("03f0e406-71b5-8740-b9e1-00323f788344").created(TimeZone("New_York"))
-    verifyEq(t.year, 2008)
-    verifyEq(t.month, Month.dec)
-    verifyEq(t.day, 30)
-    verifyEq(t.hour, 13)
-    verifyEq(t.min, 38)
-    verifyEq(t.sec, 12)
-  }
-
   Void testParse()
   {
     verifyParse(Uuid())
