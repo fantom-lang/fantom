@@ -115,10 +115,14 @@ class TestClient
     b.removeClassName("x")
     verifyEq(b.className, "b c")
 
+    /*
+    NOTE: "style.cssText" is not supported in Opera
+
     verifyEq(elem.style->cssText, "")
     elem.style->color = "red"
     str := (elem.style->cssText as Str).lower.trim
     verify(str.contains("color: red"))
+    */
 
     verifyEq(elem.value,      null)
     verifyEq(elem["value"],   null)

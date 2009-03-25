@@ -33,7 +33,7 @@ var sys_Err = sys_Obj.extend(
   toString: function()
   {
     return this.type() + ": " + this.msg;
-  },
+  }
 
 });
 

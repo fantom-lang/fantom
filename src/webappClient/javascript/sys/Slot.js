@@ -12,5 +12,5 @@
 var sys_Slot = sys_Obj.extend(
 {
   $ctor: function() {},
-  type: function() { return sys_Type.find("sys::Slot"); },
+  type: function() { return sys_Type.find("sys::Slot"); }
 });

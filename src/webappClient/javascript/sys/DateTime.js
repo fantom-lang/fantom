@@ -25,7 +25,7 @@ var sys_DateTime = sys_Obj.extend(
   type: function()
   {
     return sys_Type.find("sys::DateTime");
-  },
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

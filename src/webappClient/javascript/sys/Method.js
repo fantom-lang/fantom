@@ -12,5 +12,5 @@
 var sys_Method = sys_Slot.extend(
 {
   $ctor: function() {},
-  type: function() { return sys_Type.find("sys::Method"); },
+  type: function() { return sys_Type.find("sys::Method"); }
 });

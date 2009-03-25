@@ -25,7 +25,7 @@ var sys_Str = sys_Obj.extend(
   type: function()
   {
     return sys_Type.find("sys::Str");
-  },
+  }
 
 });
 

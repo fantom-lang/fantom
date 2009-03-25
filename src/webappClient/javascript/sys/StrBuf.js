@@ -39,7 +39,7 @@ var sys_StrBuf = sys_Obj.extend(
   toStr: function()
   {
     return this.m_str;
-  },
+  }
 
 });
 
@@ -48,5 +48,4 @@ var sys_StrBuf = sys_Obj.extend(
 //////////////////////////////////////////////////////////////////////////
 
 sys_StrBuf.make = function() { return new sys_StrBuf(); }
-
 

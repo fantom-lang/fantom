@@ -51,8 +51,10 @@ class JavascriptWriter : CompilerSupport
     out.w("  \$ctor: function() { sys_Type.addType(\"$fname\", \"$bname\"); },").nl
     out.w("  type: function() { return sys_Type.find(\"$fname\"); },").nl
     out.indent
-    typeDef.methodDefs.each |MethodDef m| { method(m) }
-    typeDef.fieldDefs.each |FieldDef f| { field(f) }
+    cs := 0
+    mx := typeDef.methodDefs.size + typeDef.fieldDefs.size - 1
+    typeDef.methodDefs.each |MethodDef m| { method(m, cs++ != mx) }
+    typeDef.fieldDefs.each |FieldDef f| { field(f, cs++ != mx) }
     out.unindent
     out.w("});").nl
     ctors.each |MethodDef m| { ctor(m) }
@@ -65,7 +67,7 @@ class JavascriptWriter : CompilerSupport
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  Void method(MethodDef m)
+  Void method(MethodDef m, Bool trailingComma)
   {
     if (m.isNative) return
     if (m.isStatic) { staticMethods.add(m); return }
@@ -73,7 +75,8 @@ class JavascriptWriter : CompilerSupport
     if (m.isCtor) { ctors.add(m); out.w("\$") }
     out.w("${var(m.name)}: ")
     doMethod(m)
-    out.w(",").nl
+    if (trailingComma) out.w(",")
+    out.nl
   }
 
   Void ctor(MethodDef m)
@@ -134,13 +137,15 @@ class JavascriptWriter : CompilerSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Void field(FieldDef f)
+  Void field(FieldDef f, Bool trailingComma)
   {
     if (f.isNative) return
     if (f.isStatic) { staticFields.add(f); return }
     out.w("${var(f.name)}\$get: function() { return this.${var(f.name)}; },").nl
     out.w("${var(f.name)}\$set: function(val) { this.${var(f.name)} = val; },").nl
-    out.w("${var(f.name)}: null,").nl
+    out.w("${var(f.name)}: null")
+    if (trailingComma) out.w(",")
+    out.nl
   }
 
   Void staticField(FieldDef f)

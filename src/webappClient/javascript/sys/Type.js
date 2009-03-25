@@ -50,7 +50,7 @@ var sys_Type = sys_Obj.extend(
 
   m_base: "sys::Obj",
   m_qname: "",
-  m_name: "",
+  m_name: ""
 
 });
 

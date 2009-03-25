@@ -12,7 +12,7 @@
 var sys_Charset = sys_Obj.extend(
 {
   $ctor: function() {},
-  type: function() { return sys_Type.find("sys::Charset"); },
+  type: function() { return sys_Type.find("sys::Charset"); }
 });
 sys_Charset.utf16BE = function() { return null; }
 sys_Charset.utf16LE = function() { return null; }

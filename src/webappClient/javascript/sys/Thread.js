@@ -12,5 +12,5 @@
 var sys_Thread = sys_Obj.extend(
 {
   $ctor: function() {},
-  type: function() { return sys_Type.find("sys::Thread"); },
+  type: function() { return sys_Type.find("sys::Thread"); }
 });

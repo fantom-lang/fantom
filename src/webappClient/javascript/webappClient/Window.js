@@ -10,7 +10,7 @@ sys_Type.addType("webappClient::Window");
 var webappClient_Window = sys_Obj.extend(
 {
   $ctor: function() {},
-  type: function() { return sys_Type.find("webappClient::Window"); },
+  type: function() { return sys_Type.find("webappClient::Window"); }
 });
 
 webappClient_Window.alert = function(obj)
