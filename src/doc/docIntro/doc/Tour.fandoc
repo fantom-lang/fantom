@@ -307,9 +307,6 @@ pass it to a method call without an explicit cast:
   Str s := obj->foo     // Str s := (Str)obj->foo
   Int.fromStr(obj)      // Int.fromStr((Str)obj)
 
-You can also create [dynamic types]`docLang::DynamicTypes`
-at runtime.
-
 Nullable Types [#nullableTypes]
 ******************************
 Types may be nullable or non-nullable. A non-nullable type is guaranteed

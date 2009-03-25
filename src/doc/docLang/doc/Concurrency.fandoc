@@ -43,7 +43,6 @@ constructed it never changes state.  Fan supports these types of
 immutable objects:
 
   - Any object instance of a [const class]`Classes#const`
-  - A [non-dynamic]`DynamicTypes#overview` Type instance
   - Some `sys::Func` instances are immutable
   - The result of [List.toImmutable]`sys::List.toImmutable`
     or [Map.toImmutable]`sys::Map.toImmutable`

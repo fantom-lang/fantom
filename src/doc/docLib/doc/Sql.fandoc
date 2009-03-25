@@ -139,21 +139,17 @@ Or to iterate through the rows:
 
 sql::Row [#row]
 ===============
-The rows for a given query result all share a
-[dynamic type]`docLang::DynamicTypes` which describes the meta-data.
-To get the columns, just use normal reflection to get the fields -
-each field will actually be a subclass of `sql::Col`.  To examine the
-results of the query from above:
+The rows for a given query result all share a list of [sql::Cols]`sql::Col`
+which describes the meta-data.  You can use access the column of each
+row using the 'get(Col)' or with [dynamic invoke]`docLang::Methods#dynamicInvoke`:
 
   // using dynamic invoke
-  dickensNovels.each |Obj book| { echo("${book->title}, ${book->year}") }
+  dickensNovels.each |Row book| { echo("${book->title}, ${book->year}") }
 
-  // using reflection
-  title := rows.of.field("title")
-  year  := rows.of.field("year")
-  dickensNovels.each |Obj book| { echo("${title[book]}, ${year[book]}") }
+  // using col
+  title := row.col("title")
+  year  := row.col("year")
+  dickensNovels.each |Row book| { echo("${book[title]}, ${book[year]}") }
 
-The dynamic type system is used to map the query result columns into
-normal fields.  So we can access the row's cells using either the
-'->' dynamic invoke operator or normal reflection.  If you have a large query
-result, using reflection provides a little better performance.
+If you have a large query result, using 'get(Col)' provides a little
+better performance.

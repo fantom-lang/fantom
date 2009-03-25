@@ -7,7 +7,8 @@
 //
 
 **
-** Col models a column of a relational table.
+** Col models a column of a relational table.  Columns
+** are accessed from rows with `Row.col` and `Row.cols`
 **
 ** See `docLib::Sql`.
 **
