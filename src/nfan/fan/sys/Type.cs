@@ -88,59 +88,6 @@ namespace Fan.Sys
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Dynamic
-  //////////////////////////////////////////////////////////////////////////
-
-    public static Type makeDynamic(List supers) { return makeDynamic(supers, null); }
-    public static Type makeDynamic(List supers, Map facets)
-    {
-      ClassType t = new ClassType();
-      makeDynamic_(t, supers, facets);
-      return t;
-    }
-
-    public static void makeDynamic_(Type self, List supers) { makeDynamic_(self, supers, null); }
-    public static void makeDynamic_(Type self, List supers, Map facets)
-    {
-      ClassType t = (ClassType)self;
-      if (supers == null || supers.sz() == 0)
-        throw ArgErr.make("Must pass in a supers list with at least one type").val;
-
-      // check that first is a class type
-      t.m_base = (Type)supers.get(0);
-      if (t.m_base.isMixin()) throw ArgErr.make("Not a class: " + t.m_base).val;
-      t.m_base.checkOkForDynamic();
-
-      // TODO: we don't support mixins yet
-      if (supers.sz() > 1)
-        throw ArgErr.make("Sorry - mixins not supported yet").val;
-
-      // check that the rest are mixin types
-      List mixins = new List(Sys.TypeType);
-      for (int i=1; i<supers.sz(); ++i)
-      {
-        Type m = (Type)supers.get(i);
-        if (!m.isMixin()) throw ArgErr.make("Not mixin: " + m).val;
-        m.checkOkForDynamic();
-        mixins.add(m);
-      }
-      t.m_mixins = mixins.ro();
-
-      // facets
-      t.m_facets = Facets.make(facets);
-    }
-
-    private void checkOkForDynamic()
-    {
-      if ((flags() & (FConst.Abstract|FConst.Final|FConst.Const)) != 0)
-        throw ArgErr.make("Cannot use abstract, final, or const in makeDynamic: " + this).val;
-      if (isDynamic())
-        throw ArgErr.make("Cannot use dynamic in makeDynamic: " + this).val;
-    }
-
-    public virtual bool isDynamic() { return false; }
-
-  //////////////////////////////////////////////////////////////////////////
   // Value Types
   //////////////////////////////////////////////////////////////////////////
 
@@ -293,16 +240,6 @@ namespace Fan.Sys
     public Slot slot(string name) { return slot(name, true); }
     public abstract Slot slot(string name, bool check);
 
-    public virtual void add(Slot slot)
-    {
-      throw Err.make("Type is not dynamic: " + signature()).val;
-    }
-
-    public virtual void remove(Slot slot)
-    {
-      throw Err.make("Type is not dynamic: " + signature()).val;
-    }
-
     public object make() { return make(null); }
     public virtual object make(List args)
     {
@@ -387,9 +324,9 @@ namespace Fan.Sys
 
     public string toLocale() { return signature(); }
 
-    public override bool isImmutable() { return true; }
-
-    public virtual Type toImmutable() { return this; }
+// TODO
+public override bool isImmutable() { return true; }
+public Type toImmutable() { return this; }
 
     public void encode(ObjEncoder @out)
     {
