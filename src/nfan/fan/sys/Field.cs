@@ -20,31 +20,6 @@ namespace Fan.Sys
   {
 
   //////////////////////////////////////////////////////////////////////////
-  // Fan Constructor
-  //////////////////////////////////////////////////////////////////////////
-
-    public static Field make(string name, Type of) { return make(name, of, null); }
-    public static Field make(string name, Type of, Map facets)
-    {
-      Field f = new Field();
-      make_(f, name, of, facets);
-      return f;
-    }
-
-    public static void make_(Field self, string name, Type of) { make_(self, name, of, null); }
-    public static void make_(Field self, string name, Type of, Map facets)
-    {
-      if (name == null) throw NullErr.make("name is null").val;
-      if (of == null) throw NullErr.make("of is null").val;
-
-      self.m_flags  = FConst.Public;
-      self.m_name   = name;
-      self.m_qname  = name;
-      self.m_of     = of;
-      self.m_facets = Facets.make(facets);
-    }
-
-  //////////////////////////////////////////////////////////////////////////
   // C# Constructors
   //////////////////////////////////////////////////////////////////////////
 
@@ -53,9 +28,6 @@ namespace Fan.Sys
     {
       this.m_of = of;
     }
-
-    // ctor for make()
-    public Field() {}
 
   //////////////////////////////////////////////////////////////////////////
   // Signature
@@ -95,9 +67,6 @@ namespace Fan.Sys
       }
       catch (Exception e)
       {
-        if (m_parent != null && m_parent.isDynamic())
-          throw Err.make("Dynamic field must override get()").val;
-
         if (m_reflect == null)
           throw Err.make("Field not mapped to System.Reflection.FieldInfo correctly").val;
 
@@ -150,9 +119,6 @@ namespace Fan.Sys
       }
       catch (Exception e)
       {
-        if (m_parent != null && m_parent.isDynamic())
-          throw Err.make("Dynamic field must override set()").val;
-
         if (m_reflect == null)
           throw Err.make("Field not mapped to System.Reflection correctly").val;
 

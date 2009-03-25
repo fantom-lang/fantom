@@ -49,8 +49,8 @@ namespace Fan.Sys
 
     }
 
-    // <summary>
-    /// This is the constructor used by Type.makeDynamic.
+    /// <summary>
+    /// Create from map.
     /// </summary>
     public static Facets make(Map map)
     {
