@@ -7,42 +7,35 @@
 //
 
 **
-** Col models a column of a relational table.  Col is a
-** subclass of Field and uses the standard reflection APIs.
+** Col models a column of a relational table.
 **
 ** See `docLib::Sql`.
 **
-const class Col : Field
+const class Col
 {
 
   **
   ** Construct a column for the given meta-data.
   **
-  new make(Int index, Str name, Type of, Str sqlType, [Str:Obj]? facets := null)
-    : super(name, of, facets)
+  new make(Int index, Str name, Type of, Str sqlType)
   {
     this.index   = index
+    this.name    = name
+    this.of      = of
     this.sqlType = sqlType
   }
 
-  **
-  ** Get the column value for the specified row.
-  **
-  override Obj? get(Obj? row)
-  {
-    return ((Row)row).get(this)
-  }
-
-  **
-  ** Set the column value for the specified row.
-  **
-  override Void set(Obj? row, Obj? val)
-  {
-    ((Row)row).set(this, val)
-  }
+  ** Return 'name'.
+  override Str toStr() { name }
 
   ** Zero based index of the column in the query result.
   const Int index
+
+  ** Name of the column.
+  const Str name
+
+  ** Type of the column.
+  const Type of
 
   ** The type of the column as defined by the SQL database.
   const Str sqlType

@@ -12,6 +12,31 @@ import fan.sys.*;
 
 public class SqlUtil
 {
+
+  /**
+   * Type literal for sql::Col
+   */
+  public static final Type colType;
+  static
+  {
+    Type t = null;
+    try { t = Type.find("sql::Col"); }
+    catch (Exception e) { e.printStackTrace(); }
+    colType = t;
+  }
+
+  /**
+   * Type literal for sql::Row
+   */
+  public static final Type rowType;
+  static
+  {
+    Type t = null;
+    try { t = Type.find("sql::Row"); }
+    catch (Exception e) { e.printStackTrace(); }
+    rowType = t;
+  }
+
   /**
    * Map an java.sql.Types code to a Fan type.
    */

@@ -26,6 +26,17 @@ public class RowPeer
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
+  public List cols(Row row) { return cols.list; }
+
+  public Col col(Row row, String name) { return col(row, name, true); }
+  public Col col(Row row, String name, boolean checked)
+  {
+    Col col = cols.get(name);
+    if (col != null) return col;
+    if (checked) throw ArgErr.make("Col not found: " + name).val;
+    return null;
+  }
+
   public Object get(Row row, Col col)
   {
     return cells[(int)col.index];
@@ -40,6 +51,7 @@ public class RowPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  public Cols cols;
   public Object[] cells;  // set in ConnectionPeer.query
 
 }

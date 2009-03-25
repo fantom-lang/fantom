@@ -122,7 +122,7 @@ public class ConnectionPeer
     }
   }
 
-  public Object tableRow(Connection self, String tableName)
+  public Row tableRow(Connection self, String tableName)
   {
     try
     {
@@ -130,7 +130,7 @@ public class ConnectionPeer
       ResultSet columns = dbData.getColumns(null, null, tableName, null);
 
       // map the meta-data to a dynamic type
-      Type t = Type.makeDynamic(listOfRow);
+      List cols = new List(SqlUtil.colType);
 
       int nameIndex = columns.findColumn("COLUMN_NAME");
       int typeIndex = columns.findColumn("DATA_TYPE");
@@ -146,14 +146,15 @@ public class ConnectionPeer
           System.out.println("WARNING: Cannot map " + typeName + " to Fan type");
           fanType = Sys.StrType;
         }
-        t.add(Col.make(Long.valueOf(colIndex++), name, fanType, typeName, null));
+        cols.add(Col.make(Long.valueOf(colIndex++), name, fanType, typeName));
       }
 
       if (colIndex == 0)
         throw SqlErr.make("Table not found: " + tableName).val;
 
-      Row row = (Row)t.make();
-      row.peer.cells = new Object[t.fields().sz()];;
+      Row row = Row.make();
+      row.peer.cols = new Cols(cols);
+      row.peer.cells = new Object[cols.sz()];
       return row;
     }
     catch (SQLException ex)
