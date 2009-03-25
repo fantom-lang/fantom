@@ -215,6 +215,8 @@ class SqlServiceTest : Test
     verifyEq(f->ducks,    null)
     verifyEq(f->height,   5.3f)
     verifyEq(f->weight,   120.0f)
+
+    verifyEq(f[f.col("pet")], "Pooh")
   }
 
   Void insertFarmer(Obj[] row)

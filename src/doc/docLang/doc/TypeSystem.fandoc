@@ -46,10 +46,9 @@ with domain specific terminology.
 
 Types [#types]
 **************
-There are three kinds of types in Fan:
+There are two kinds of types in Fan:
   - Classes
   - Mixins
-  - Dynamic Types
 
 Classes [#classes]
 ==================
@@ -73,11 +72,6 @@ You can't create instances of a mixin - they are an abstract type designed
 to provide reuse when inherited into classes.  Mixins also can't store
 state - although they can contain [abstract fields]`Fields#abstract` to
 define a type contract which requires a field signature.
-
-Dynamic Types [#dynamicTypes]
-=============================
-Dynamic types are types constructed at runtime.  They are discussed later
-in `DynamicTypes`.
 
 Pure Object Oriented [#pureOO]
 ******************************
