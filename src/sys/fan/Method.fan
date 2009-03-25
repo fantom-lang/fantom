@@ -18,10 +18,9 @@ const class Method : Slot
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Dynamic slot constructor.  Dynamic methods take an implementation
-  ** function which defines the return type and parameters of the method.
+  ** Private constructor.
   **
-  public new make(Str name, Func func, [Str:Obj]? facets := null)
+  private new privateMake()
 
 //////////////////////////////////////////////////////////////////////////
 // Signature

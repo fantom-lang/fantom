@@ -19,32 +19,6 @@ public class Method
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Fan Constructor
-//////////////////////////////////////////////////////////////////////////
-
-  public static Method make(String name, Func func) { return make(name, func, null); }
-  public static Method make(String name, Func func, Map facets)
-  {
-    Method m = new Method();
-    make$(m, name, func, facets);
-    return m;
-  }
-
-  public static void make$(Method self, String name, Func func) { make$(self, name, func, null); }
-  public static void make$(Method self, String name, Func func, Map facets)
-  {
-    if (name == null) throw NullErr.make("name is null").val;
-    if (func == null) throw NullErr.make("func is null").val;
-
-    self.flags  = FConst.Public;
-    self.name   = name;
-    self.qname  = name;
-    self.func   = func;
-    self.params = func.params;
-    self.facets = Facets.make(facets);
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Java Constructor
 //////////////////////////////////////////////////////////////////////////
 
@@ -79,11 +53,6 @@ public class Method
     this.mask = (generic != null) ? 0 : toMask(parent, returns, params);
     this.generic = generic;
   }
-
-  /**
-   * Default constructor used by make
-   */
-  public Method() {}
 
   /**
    * Compute if the method signature contains generic parameter types.

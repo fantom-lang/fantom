@@ -77,59 +77,6 @@ public abstract class Type
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Dynamic
-//////////////////////////////////////////////////////////////////////////
-
-  public static Type makeDynamic(List supers) { return makeDynamic(supers, null); }
-  public static Type makeDynamic(List supers, Map facets)
-  {
-    ClassType t = new ClassType();
-    makeDynamic$(t, supers, facets);
-    return t;
-  }
-
-  public static void makeDynamic$(Type self, List supers) { makeDynamic$(self, supers, null); }
-  public static void makeDynamic$(Type self, List supers, Map facets)
-  {
-    ClassType t = (ClassType)self;
-    if (supers == null || supers.sz() == 0)
-      throw ArgErr.make("Must pass in a supers list with at least one type").val;
-
-    // check that first is a class type
-    t.base = (Type)supers.get(0);
-    if (t.base.isMixin()) throw ArgErr.make("Not a class: " + t.base).val;
-    t.base.checkOkForDynamic();
-
-    // TODO: we don't support mixins yet
-    if (supers.sz() > 1)
-      throw ArgErr.make("Sorry - mixins not supported yet").val;
-
-    // check that the rest are mixin types
-    List mixins = new List(Sys.TypeType);
-    for (int i=1; i<supers.sz(); ++i)
-    {
-      Type m = (Type)supers.get(i);
-      if (!m.isMixin()) throw ArgErr.make("Not mixin: " + m).val;
-      m.checkOkForDynamic();
-      mixins.add(m);
-    }
-    t.mixins = mixins.ro();
-
-    // facets
-    t.facets = Facets.make(facets);
-  }
-
-  private void checkOkForDynamic()
-  {
-    if ((flags() & (FConst.Abstract|FConst.Final|FConst.Const)) != 0)
-      throw ArgErr.make("Cannot use abstract, final, or const in makeDynamic: " + this).val;
-    if (isDynamic())
-      throw ArgErr.make("Cannot use dynamic in makeDynamic: " + this).val;
-  }
-
-  public boolean isDynamic() { return false; }
-
-//////////////////////////////////////////////////////////////////////////
 // Value Types
 //////////////////////////////////////////////////////////////////////////
 
@@ -281,16 +228,6 @@ public abstract class Type
   public final Slot slot(String name) { return slot(name, true); }
   public abstract Slot slot(String name, boolean checked);
 
-  public void add(Slot slot)
-  {
-    throw Err.make("Type is not dynamic: " + signature()).val;
-  }
-
-  public void remove(Slot slot)
-  {
-    throw Err.make("Type is not dynamic: " + signature()).val;
-  }
-
   public final Object make() { return make(null); }
   public Object make(List args)
   {
@@ -375,9 +312,9 @@ public abstract class Type
 
   public String toLocale() { return signature(); }
 
-  public boolean isImmutable() { return true; }
-
-  public Type toImmutable() { return this; }
+// TODO
+public boolean isImmutable() { return true; }
+public Type toImmutable() { return this; }
 
   public void encode(ObjEncoder out)
   {

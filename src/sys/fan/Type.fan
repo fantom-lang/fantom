@@ -9,11 +9,19 @@
 **
 ** Type defines the contract of an Obj by the slots its supports.
 ** Types model the inheritance relationships and provide a mapping
-** for all the slots both inherited and declared.  You can create
-** new types at runtime via the `Type.makeDynamic` constructor.
+** for all the slots both inherited and declared.
 **
-class Type
+const class Type
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Private constructor.
+  **
+  private new privateMake()
 
 //////////////////////////////////////////////////////////////////////////
 // Management
@@ -40,29 +48,12 @@ class Type
   static Type[] findByFacet(Str facetName, Obj facetVal, Obj? options := null)
 
 //////////////////////////////////////////////////////////////////////////
-// Constructor
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Make a dynamic type which implements the specified list of existing
-  ** types.  Only one 'class' type may be specified and it must be the
-  ** first item in the list.  All other types must be mixins.  None of
-  ** the 'supers' may be dynamic, abstract, final, or const.
-  **
-  ** Refer to [Dynamic Types]`docLang::DynamicTypes` for more details.
-  **
-  ** NOTE: creating dynamics using mixins is not supported yet.
-  **
-  new makeDynamic(Type[] supers, [Str:Obj]? facets := null)
-
-//////////////////////////////////////////////////////////////////////////
 // Naming
 //////////////////////////////////////////////////////////////////////////
 
   **
   ** Parent pod which defines this type.  For parameterized types derived
   ** from List, Map, or Func, this method always returns the sys pod.
-  ** Return null if dynamic type.
   **
   ** Examples:
   **   Str#.pod         => sys
@@ -74,7 +65,7 @@ class Type
   **
   ** Simple name of the type such as "Str".  For parameterized types derived
   ** from List, Map, or Func, this method always returns "List", "Map",
-  ** or "Func" respectively.  Return "dynamic" if dynamic type.
+  ** or "Func" respectively.
   **
   ** Examples:
   **   Str#.name         => "Str"
@@ -87,8 +78,7 @@ class Type
   ** Qualified name formatted as "pod::name".  For parameterized
   ** types derived from List, Map, or Func, this method always returns
   ** "sys::List", "sys::Map", or "sys::Func" respectively.  If this
-  ** a nullable type, the qname does *not* include the "?".  Return
-  ** "dynamic" if dynamic type.
+  ** a nullable type, the qname does *not* include the "?".
   **
   ** Examples:
   **   Str#.qname         => "sys::Str"
@@ -99,10 +89,10 @@ class Type
   Str qname()
 
   **
-  ** Return the formal signature of this type.  In the case of non-parameterized
-  ** types the signature is the same as qname.  Return "dynamic" if dynamic type.
-  ** For parameterized types derived from List, Map, or Func the signature uses
-  ** the following special syntax:
+  ** Return the formal signature of this type.  In the case of
+  ** non-parameterized types the signature is the same as qname.
+  ** For parameterized types derived from List, Map, or Func the
+  ** signature uses the following special syntax:
   **   List => V[]
   **   Map  => [K:V]
   **   Func => |A,B...->R|
@@ -279,12 +269,6 @@ class Type
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return if this is a dynamic type which was created at
-  ** runtime via the `Type.makeDynamic` method.
-  **
-  Bool isDynamic()
-
-  **
   ** Return if this Type is abstract and cannot be instantiated.  This
   ** method will always return true if the type is a mixin.
   **
@@ -368,22 +352,6 @@ class Type
   Slot? slot(Str name, Bool checked := true)
 
   **
-  ** Add a new slot to a dynamic type.  If not a dynamic
-  ** type or a duplicate slot name exists, then throw Err.
-  **
-  ** Refer to [Dynamic Types]`docLang::DynamicTypes` for more details.
-  **
-  Void add(Slot slot)
-
-  **
-  ** Remove a slot from a dynamic type.  If not a dynamic
-  ** type or the slot is inherited, then throw Err.
-  **
-  ** Refer to [Dynamic Types]`docLang::DynamicTypes` for more details.
-  **
-  Void remove(Slot slot)
-
-  **
   ** Create a new instance of this Type using the following rules:
   **   1. Call public constructor 'make' with specified arguments
   **   2. If no public constructor called 'make' or invalid number of
@@ -443,11 +411,7 @@ class Type
   **
   Str toLocale()
 
-  **
-  ** If this type is not dynamic, then return this.  If this
-  ** type is dynamic, then NotImmutableErr is thrown.  This method
-  ** must be used whenever setting a const Type field.
-  **
+** TODO
   Type toImmutable()
 
 //////////////////////////////////////////////////////////////////////////

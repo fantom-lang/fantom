@@ -17,31 +17,6 @@ public class Field
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Fan Constructor
-//////////////////////////////////////////////////////////////////////////
-
-  public static Field make(String name, Type of) { return make(name, of, null); }
-  public static Field make(String name, Type of, Map facets)
-  {
-    Field f = new Field();
-    make$(f, name, of, facets);
-    return f;
-  }
-
-  public static void make$(Field self, String name, Type of) { make$(self, name, of, null); }
-  public static void make$(Field self, String name, Type of, Map facets)
-  {
-    if (name == null) throw NullErr.make("name is null").val;
-    if (of == null) throw NullErr.make("of is null").val;
-
-    self.flags  = FConst.Public;
-    self.name   = name;
-    self.qname  = name;
-    self.of     = of;
-    self.facets = Facets.make(facets);
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Java Constructor
 //////////////////////////////////////////////////////////////////////////
 
@@ -50,9 +25,6 @@ public class Field
     super(parent, name, flags, facets, lineNum);
     this.of = of;
   }
-
-  // ctor for make()
-  public Field() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Signature
@@ -95,9 +67,6 @@ public class Field
     }
     catch (Exception e)
     {
-      if (parent != null && parent.isDynamic())
-        throw Err.make("Dynamic field must override get()").val;
-
       if (reflect == null)
         throw Err.make("Field not mapped to java.lang.reflect correctly").val;
 
@@ -153,9 +122,6 @@ public class Field
     }
     catch (Exception e)
     {
-      if (parent != null && parent.isDynamic())
-        throw Err.make("Dynamic field must override set()").val;
-
       if (reflect == null)
         throw Err.make("Field not mapped to java.lang.reflect correctly").val;
 
