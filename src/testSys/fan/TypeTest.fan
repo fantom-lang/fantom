@@ -21,7 +21,6 @@ class TypeTest : Test
   Void testIdentity()
   {
     verifyEq(this.type.isImmutable, true)
-    verifySame(this.type.toImmutable, this.type)
     verifyEq(this.type.toStr, "testSys::TypeTest")
     verifyEq(this.type.toLocale, "testSys::TypeTest")
   }
