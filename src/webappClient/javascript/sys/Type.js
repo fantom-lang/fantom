@@ -40,8 +40,14 @@ var sys_Type = sys_Obj.extend(
   toString: function()  { return this.m_qname; },
   type: function()      { return sys_Type.find("sys::Type"); },
 
+  make: function()
+  {
+    var jst = this.m_qname.replace("::", "_");
+    var str = "(" + jst+ ".defVal != null) ? " + jst + ".defVal : " + jst + ".make();";
+    return eval(str);
+  },
+
   // TODO
-  make: function() { throw new Error("Type.make not yet implemented"); },
   slot: function(name, checked) { throw new Error("Type.slot not yet implemented"); },
 
 //////////////////////////////////////////////////////////////////////////

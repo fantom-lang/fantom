@@ -21,47 +21,21 @@ namespace Fan.Sys
   {
 
   //////////////////////////////////////////////////////////////////////////
-  // Fan Constructor
-  //////////////////////////////////////////////////////////////////////////
-
-    public static Method make(string name, Func func) { return make(name, func, null); }
-    public static Method make(string name, Func func, Map facets)
-    {
-      Method m = new Method();
-      make_(m, name, func, facets);
-      return m;
-    }
-
-    public static void make_(Method self, string name, Func func) { make_(self, name, func, null); }
-    public static void make_(Method self, string name, Func func, Map facets)
-    {
-      if (name == null) throw NullErr.make("name is null").val;
-      if (func == null) throw NullErr.make("func is null").val;
-
-      self.m_flags  = FConst.Public;
-      self.m_name   = name;
-      self.m_qname  = name;
-      self.m_func   = func;
-      self.m_params = func.m_params;
-      self.m_facets = Facets.make(facets);
-    }
-
-  //////////////////////////////////////////////////////////////////////////
   // C# Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Constructor used by Type.reflect.
-     */
+    /// <summary>
+    /// Constructor used by Type.reflect.
+    /// </summary>
     public Method(Type parent, string name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars)
      : this(parent, name, flags, facets, lineNum, returns, inheritedReturns, pars, null)
     {
     }
 
-    /**
-     * Constructor used by GenericType and we are given the generic
-     * method that is being parameterized.
-     */
+    /// <summary>
+    /// Constructor used by GenericType and we are given the generic
+    /// method that is being parameterized.
+    /// </summary>
     public Method(Type parent, string name, int flags, Facets facets, int lineNum, Type returns, Type inheritedReturns, List pars, Method generic)
       : base(parent, name, flags, facets, lineNum)
     {
@@ -81,14 +55,9 @@ namespace Fan.Sys
       this.m_generic = generic;
     }
 
-    /**
-     * Default constructor used by make
-     */
-    public Method() {}
-
-    /**
-     * Compute if the method signature contains generic parameter types.
-     */
+    /// <summary>
+    /// Compute if the method signature contains generic parameter types.
+    /// </summary>
     private static int toMask(Type parent, Type returns, List pars)
     {
       // we only use generics in Sys
@@ -144,29 +113,29 @@ namespace Fan.Sys
   // Generics
   //////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Return if this method contains generic parameters in it's signature.
-     */
+    /// <summary>
+    /// Return if this method contains generic parameters in it's signature.
+    /// </summary>
     public bool isGenericMethod()
     {
       return (m_mask & GENERIC) != 0;
     }
 
-    /**
-     * Return if this method is the parameterization of a generic method,
-     * with all the generic parameters filled in with real types.
-     */
+    /// <summary>
+    /// Return if this method is the parameterization of a generic method,
+    /// with all the generic parameters filled in with real types.
+    /// </summary>
     public bool isGenericInstance()
     {
       return m_generic != null;
     }
 
-    /**
-     * If isGenericInstance is true, then return the generic method which
-     * this method instantiates.  The generic method may be used to access
-     * the actual signatures used in the Java code (via getRawType).  If
-     * this method is not a generic instance, return null.
-     */
+    /// <summary>
+    /// If isGenericInstance is true, then return the generic method which
+    /// this method instantiates.  The generic method may be used to access
+    /// the actual signatures used in the Java code (via getRawType).  If
+    /// this method is not a generic instance, return null.
+    /// </summary>
     public Method getGenericMethod()
     {
       return m_generic;
