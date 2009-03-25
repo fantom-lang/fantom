@@ -54,8 +54,6 @@ namespace Fan.Sys
     public override Map @params() { return m_root.@params(); }
     public override Type parameterize(Map pars) { return m_root.parameterize(pars).toNullable(); }
 
-    public override bool isDynamic() { return false; }
-
     public override List fields() { return m_root.fields(); }
     public override List methods() { return m_root.methods(); }
     public override List slots() { return m_root.slots(); }
