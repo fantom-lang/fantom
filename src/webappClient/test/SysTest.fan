@@ -28,7 +28,7 @@ internal class SysTest : Test
     }
   }
 
-  Void test() { doTest }
+  //Void test() { doTest }
   internal Void doTest(Str tp := "*", Str mp := "*")
   {
     pod := Pod.find("testSys")
