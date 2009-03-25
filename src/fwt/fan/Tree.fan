@@ -102,6 +102,12 @@ class Tree : Widget
   **
   native Void refreshNode(Obj node)
 
+  **
+  ** Return the tree node at the specified coordinate relative
+  ** to this widget.  Return null if no node at given coordinate.
+  **
+  native Obj? nodeAt(Point pos)
+
 }
 
 **************************************************************************

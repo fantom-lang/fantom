@@ -171,6 +171,20 @@ public class TreePeer
     item.clearAll(true);
   }
 
+  public Object nodeAt(fan.fwt.Tree self, fan.fwt.Point pos)
+  {
+    Tree c = (Tree)this.control;
+    if (c == null) return null;
+
+    TreeItem item = c.getItem(point(pos));
+    if (item == null) return null;
+
+    Data data = (Data)item.getData();
+    if (data == null) return null;
+
+    return data.node;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Eventing
 //////////////////////////////////////////////////////////////////////////

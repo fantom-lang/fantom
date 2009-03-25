@@ -363,6 +363,7 @@ class FwtDemo
       onAction.add |Event e| { echo(e) }
       onSelect.add |Event e| { echo(e); echo("selected=${e->widget->selected}") }
       onPopup.add |Event e|  { echo(e); e.popup = makePopup }
+      // onMouseMove.add |Event e| { echo(e.pos + ": " + e->widget->nodeAt(e.pos)) }
     }
 
     table := Table
@@ -372,6 +373,7 @@ class FwtDemo
       onAction.add |Event e| { echo(e) }
       onSelect.add |Event e| { echo(e); echo("selected=${e->widget->selected}") }
       onPopup.add |Event e|  { echo(e); e.popup = makePopup }
+      // onMouseMove.add |Event e| { Int? row := e->widget->rowAt(e.pos); Int? col := e->widget->colAt(e.pos); echo("Row: $row Col: $col " + ((row != null && col != null) ? e->widget->model->text(col, row) : "")) }
     }
 
     updateTable := |File dir| { table.model->dir = dir.list; table.refreshAll }

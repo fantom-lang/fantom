@@ -11,6 +11,8 @@ import fan.sys.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
@@ -94,6 +96,38 @@ public class TablePeer
     c.removeAll();
     c.setItemCount((int)model.numRows());
     c.clearAll();
+  }
+
+  public Long rowAt(fan.fwt.Table self, fan.fwt.Point pos)
+  {
+    Table c = (Table)this.control;
+    if (c == null) return null;
+
+    TableItem item = (TableItem)c.getItem(point(pos));
+    if (item == null) return null;
+
+    int index = c.indexOf(item);
+    if (index < 0) return null;
+
+    return Long.valueOf(index);
+  }
+
+  public Long colAt(fan.fwt.Table self, fan.fwt.Point fanPos)
+  {
+    Table c = (Table)this.control;
+    if (c == null) return null;
+
+    Point swtPos = point(fanPos);
+    TableItem item = (TableItem)c.getItem(swtPos);
+    if (item == null) return null;
+
+    for (int i=0; i<c.getColumnCount(); ++i)
+    {
+      if (item.getBounds(i).contains(swtPos))
+        return Long.valueOf(i);
+    }
+
+    return null;
   }
 
 //////////////////////////////////////////////////////////////////////////

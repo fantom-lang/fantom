@@ -487,6 +487,11 @@ public class WidgetPeer
     return fan.fwt.Point.make(pt.x, pt.y);
   }
 
+  static Point point(fan.fwt.Point pt)
+  {
+    return new Point((int)pt.x, (int)pt.y);
+  }
+
   static fan.fwt.Size size(int w, int h)
   {
     return fan.fwt.Size.make(w, h);
