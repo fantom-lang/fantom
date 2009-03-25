@@ -79,13 +79,35 @@ class Build : BuildPod
 
   private Void append(File f, OutStream out)
   {
+    inBlock := false
     f.readAllLines.each |Str line|
     {
-      // TODO - improve comment stripping, whitespace, etc
-      s := line.trim
+      s := line
+      // line comments
+      i := s.index("//")
+      if (i != null) s = s[0...i]
+      // block comments
+      temp := s
+      a := temp.index("/*")
+      if (a != null)
+      {
+        s = temp[0...a]
+        inBlock = true
+      }
+      if (inBlock)
+      {
+        b := temp.index("*/")
+        if (b != null)
+        {
+          s = (a == null) ? temp[b+2..-1] : s + temp[b+2..-1]
+          inBlock = false
+        }
+      }
+      // trim and print
+      s = s.trim
+      if (inBlock) return
       if (s.size == 0) return
-      if (s.startsWith("//")) return
-      out.printLine(line)
+      out.printLine(s)
     }
   }
 
