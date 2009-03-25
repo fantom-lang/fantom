@@ -107,7 +107,6 @@ abstract class CNamespace : CompilerSupport
     slotFindFunc       = sysMethod(slotType,   "findFunc")
     typeField          = sysMethod(typeType,   "field")
     typeMethod         = sysMethod(typeType,   "method")
-    typeToImmutable    = sysMethod(typeType,   "toImmutable")
     funcToImmutable    = sysMethod(funcType,   "toImmutable")
   }
 
@@ -311,7 +310,6 @@ abstract class CNamespace : CompilerSupport
   readonly CMethod slotFindFunc
   readonly CMethod typeField
   readonly CMethod typeMethod
-  readonly CMethod typeToImmutable
   readonly CMethod funcToImmutable
 
 }

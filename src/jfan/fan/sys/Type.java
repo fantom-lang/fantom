@@ -312,10 +312,6 @@ public abstract class Type
 
   public String toLocale() { return signature(); }
 
-// TODO
-public boolean isImmutable() { return true; }
-public Type toImmutable() { return this; }
-
   public void encode(ObjEncoder out)
   {
     out.w(signature()).w("#");

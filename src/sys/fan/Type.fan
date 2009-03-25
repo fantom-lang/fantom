@@ -412,7 +412,7 @@ const class Type
   Str toLocale()
 
 ** TODO
-  Type toImmutable()
+Type toImmutable()
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

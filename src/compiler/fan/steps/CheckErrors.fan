@@ -300,7 +300,7 @@ class CheckErrors : CompilerStep
       return true
     }
 
-    if (t.isType || t.isFunc)
+    if (t.isFunc)
     {
       return true
     }
@@ -930,11 +930,10 @@ class CheckErrors : CompilerStep
 
     // any other errors should already be logged at this point (see isConstFieldType)
 
-    // if List/Map/Type make an implicit call toImmutable
+    // if List/Map make an implicit call toImmutable
     ftype := field.fieldType
     if (ftype.isList) return implicitToImmutable(ftype, rhs, ns.listToImmutable)
     if (ftype.isMap)  return implicitToImmutable(ftype, rhs, ns.mapToImmutable)
-    if (ftype.isType) return implicitToImmutable(ftype, rhs, ns.typeToImmutable)
     if (ftype.isFunc) return implicitToImmutable(ftype, rhs, ns.funcToImmutable)
     return rhs
   }
