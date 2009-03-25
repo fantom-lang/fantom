@@ -21,7 +21,7 @@ class Build : BuildPod
     version       = globalVersion
     description   = "Client-side framework for building web applications"
     depends       = ["sys 1.0", "web 1.0", "webapp 1.0"]
-    srcDirs       = [`fan/`]
+    srcDirs       = [`fan/`, `test/`]
     includeSrc    = true
   }
 
@@ -89,6 +89,7 @@ class Build : BuildPod
     }
   }
 
-  Str[] ordered := ["Sys.js", "Obj.js", "Type.js", "Num.js", "List.js", "Map.js", "Enum.js"]
+  Str[] ordered := ["Sys.js", "Obj.js", "Type.js", "Slot.js", "Num.js", "List.js",
+                    "Map.js", "Enum.js"]
 
 }

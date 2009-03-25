@@ -1,31 +1,45 @@
 //
-// Copyright (c) 2008, Brian Frank and Andy Frank
+// Copyright (c) 2009, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   15 Dec 08  Andy Frank  Creation
+//   24 Mar 09  Andy Frank  Creation
 //
 
 /**
- * Bool
+ * Uri
  */
-var sys_Bool = sys_Obj.extend(
+var sys_Uri = sys_Obj.extend(
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function() {},
+  $ctor: function(uri)
+  {
+    this.m_uri = uri;
+  },
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Identity
 //////////////////////////////////////////////////////////////////////////
 
   type: function()
   {
-    return sys_Type.find("sys::Bool");
+    return sys_Type.find("sys::Uri");
   },
+
+  toStr: function()
+  {
+    return m_uri;
+  },
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  m_uri: ""
 
 });
 
@@ -33,14 +47,12 @@ var sys_Bool = sys_Obj.extend(
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Bool.fromStr = function(s, checked)
+sys_Uri.make = function(uri)
 {
-  if (s == "true") return true;
-  if (s == "false") return false;
-  if (checked != null && !checked) return null;
-  throw new sys_ParseErr("Bool", s);
+  return new sys_Uri(uri);
 }
 
-sys_Bool.toStr  = function(self) { return self ? "true" : "false"; }
-sys_Bool.toCode = function(self) { return self ? "true" : "false"; }
-sys_Bool.defVal = false;
+sys_Uri.fromStr = function(s)
+{
+  return new sys_Uri(uri);
+}

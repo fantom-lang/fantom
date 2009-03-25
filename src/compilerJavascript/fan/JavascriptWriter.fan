@@ -71,7 +71,7 @@ class JavascriptWriter : CompilerSupport
     if (m.isStatic) { staticMethods.add(m); return }
     if (m.isFieldAccessor) return // getter/setters are defined when field is emitted
     if (m.isCtor) { ctors.add(m); out.w("\$") }
-    out.w("$m.name: ")
+    out.w("${var(m.name)}: ")
     doMethod(m)
     out.w(",").nl
   }
@@ -94,7 +94,7 @@ class JavascriptWriter : CompilerSupport
     if (m.isNative) return
     if (!m.isStatic) err("Method must be static: $m.name", m.location)
     if (m.name == "static\$init") { staticInits.add(m.code); return }
-    out.w("${qname(m.parent)}.$m.name = ")
+    out.w("${qname(m.parent)}.${var(m.name)} = ")
     doMethod(m)
     out.nl
   }
@@ -109,9 +109,12 @@ class JavascriptWriter : CompilerSupport
       doMethodSig(m)
       out.w(";").nl
     }
-    if (ClosureFinder(m).exists)
-      out.w("  var \$this = this;").nl
-    block(m.code, false)
+    if (m.code != null)
+    {
+      if (ClosureFinder(m).exists)
+        out.w("  var \$this = this;").nl
+      block(m.code, false)
+    }
     out.w("}")
   }
 
@@ -135,9 +138,9 @@ class JavascriptWriter : CompilerSupport
   {
     if (f.isNative) return
     if (f.isStatic) { staticFields.add(f); return }
-    out.w("$f.name\$get: function() { return this.$f.name; },").nl
-    out.w("$f.name\$set: function(val) { this.$f.name = val; },").nl
-    out.w("$f.name: null,").nl
+    out.w("${var(f.name)}\$get: function() { return this.${var(f.name)}; },").nl
+    out.w("${var(f.name)}\$set: function(val) { this.${var(f.name)} = val; },").nl
+    out.w("${var(f.name)}: null,").nl
   }
 
   Void staticField(FieldDef f)
@@ -145,9 +148,9 @@ class JavascriptWriter : CompilerSupport
     if (f.isNative) return
     if (!f.isStatic) err("Field must be static: $f.name", f.location)
     qname := qname(f.parent)
-    out.w("${qname}.$f.name\$get = function() { return ${qname}.$f.name; };").nl
-    out.w("${qname}.$f.name\$set = function(val) { ${qname}.$f.name = val; };").nl
-    out.w("${qname}.$f.name = null;").nl
+    out.w("${qname}.${var(f.name)}\$get = function() { return ${qname}.${var(f.name)}; };").nl
+    out.w("${qname}.${var(f.name)}\$set = function(val) { ${qname}.${var(f.name)} = val; };").nl
+    out.w("${qname}.${var(f.name)} = null;").nl
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -184,16 +187,16 @@ class JavascriptWriter : CompilerSupport
     {
       case StmtId.nop:          return
       case StmtId.expr:         exprStmt(stmt->expr)
-      case StmtId.localDef:     out.w("var "); expr(stmt->init); out.w(";"); if (nl) out.nl
+      case StmtId.localDef:     localDef(stmt); if (nl) out.nl
       case StmtId.ifStmt:       ifStmt(stmt)
       case StmtId.returnStmt:   returnStmt(stmt); if (nl) out.nl
       case StmtId.throwStmt:    throwStmt(stmt); if(nl) out.nl
       case StmtId.forStmt:      forStmt(stmt)
       case StmtId.whileStmt:    whileStmt(stmt)
-      //case StmtId.breakStmt:    return
-      //case StmtId.continueStmt: return
+      case StmtId.breakStmt:    out.w("break;"); if (nl) out.nl
+      case StmtId.continueStmt: out.w("continue;"); if (nl) out.nl
       case StmtId.tryStmt:      tryStmt(stmt)
-      //case StmtId.switchStmt:   return
+      case StmtId.switchStmt:   switchStmt(stmt)
       default: err("Unknown StmtId: $stmt.id", stmt.location)
     }
   }
@@ -205,6 +208,14 @@ class JavascriptWriter : CompilerSupport
       expr(ex)
       out.w(";").nl
     }
+  }
+
+  Void localDef(LocalDefStmt lds)
+  {
+    out.w("var ")
+    if (lds.init == null) out.w(lds.name)
+    else expr(lds.init)
+    out.w(";")
   }
 
   Void returnStmt(ReturnStmt rs)
@@ -257,10 +268,35 @@ class JavascriptWriter : CompilerSupport
   {
     out.w("try").nl
     block(ts.block)
-    ts.catches.each |Catch c|
+    // TODO
+    //ts.catches.each |Catch c|
+c := ts.catches.first
+if (c != null)
     {
-      out.w("catch (err) { alert(err); }").nl
+      errVar := c.errVariable ?: "err"
+      out.w("catch ($errVar)").nl
+      block(c.block)
     }
+    if (ts.catches.size == 0) out.w("catch (err) {}").nl
+  }
+
+  Void switchStmt(SwitchStmt ss)
+  {
+    out.w("switch ("); expr(ss.condition); out.w(")").nl
+    out.w("{").nl
+    out.indent
+    ss.cases.each |Case c|
+    {
+      c.cases.each |Expr e| { out.w("case "); expr(e); out.w(":").nl }
+      if (c.block != null) block(c.block, false, true)
+    }
+    if (ss.defaultBlock != null)
+    {
+      out.w("default:").nl
+      block(ss.defaultBlock, false, true)
+    }
+    out.unindent
+    out.w("}").nl
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -276,26 +312,26 @@ class JavascriptWriter : CompilerSupport
       case ExprId.falseLiteral: out.w("false")
       case ExprId.intLiteral:   out.w(ex)
       case ExprId.floatLiteral: out.w(ex)
-      //case ExprId.decimalLiteral
+      case ExprId.decimalLiteral: out.w(ex)
       case ExprId.strLiteral:   out.w("\"").w(ex->val.toStr.toCode('\"', true)[1..-2]).w("\"")
       case ExprId.durationLiteral: out.w("sys_Duration.fromStr(\"").w(ex).w("\")")
-      case ExprId.uriLiteral:   out.w("\"").w(ex->val.toStr.toCode(null)).w("\"")
+      case ExprId.uriLiteral:   out.w("sys_Uri.fromStr(").w(ex->val.toStr.toCode('\"', true)).w(")")
       case ExprId.typeLiteral:  out.w("sys_Type.find(\"${ex->val->signature}\")")
-      //case ExprId.slotLiteral
+      case ExprId.slotLiteral:  out.w("sys_Type.find(\"${ex->parent->signature}\").slot(\"${ex->name}\")")
       case ExprId.rangeLiteral: rangeLiteralExpr(ex)
       case ExprId.listLiteral:  listLiteralExpr(ex)
       case ExprId.mapLiteral:   mapLiteralExpr(ex)
       case ExprId.boolNot:      out.w("!"); expr(ex->operand)
       case ExprId.cmpNull:      expr(ex->operand); out.w(" == null")
       case ExprId.cmpNotNull:   expr(ex->operand); out.w(" != null")
-      //case ExprId.elvis
+      case ExprId.elvis:        elvisExpr(ex)
       case ExprId.assign:       assignExpr(ex)
       case ExprId.same:         expr(ex->lhs); out.w(" === "); expr(ex->rhs)
       case ExprId.notSame:      out.w("!("); expr(ex->lhs); out.w(" === "); expr(ex->rhs); out.w(")")
       case ExprId.boolOr:       condExpr(ex)
       case ExprId.boolAnd:      condExpr(ex)
       case ExprId.isExpr:       typeCheckExpr(ex)
-      //case ExprId.isnotExpr
+      case ExprId.isnotExpr:    out.w("!"); typeCheckExpr(ex)
       case ExprId.asExpr:       typeCheckExpr(ex)
       case ExprId.coerce:       expr(ex->target)
       case ExprId.call:         callExpr(ex)
@@ -304,12 +340,12 @@ class JavascriptWriter : CompilerSupport
       case ExprId.field:        fieldExpr(ex)
       case ExprId.localVar:     out.w(var(ex.toStr))
       case ExprId.thisExpr:     out.w(inClosure ? "\$this" : "this")
-      //case ExprId.superExpr
+      case ExprId.superExpr:    out.w("this._super")
       case ExprId.staticTarget: out.w(qname(ex->ctype))
       //case ExprId.unknownVar
       //case ExprId.storage
       case ExprId.ternary:      expr(ex->condition); out.w(" ? "); expr(ex->trueExpr); out.w(" : "); expr(ex->falseExpr)
-      //case ExprId.withBlock
+      case ExprId.withBlock:    withBlockExpr(ex)
       //case ExprId.withSub
       //case ExprId.withBase
       //case ExprId.curry
@@ -352,6 +388,13 @@ class JavascriptWriter : CompilerSupport
       out.w(",\"").w(me.explicitType.v).w("\"")
     }
     out.w(")")
+  }
+
+  Void elvisExpr(BinaryExpr be)
+  {
+    out.w("("); expr(be.lhs); out.w(" != null)")
+    out.w(" ? ("); expr(be.lhs); out.w(")")
+    out.w(" : ("); expr(be.rhs); out.w(")")
   }
 
   Void assignExpr(BinaryExpr be)
@@ -398,9 +441,9 @@ class JavascriptWriter : CompilerSupport
         ctype := ce.target.ctype
         if (ce.target is TypeCheckExpr) ctype = ce.target->check
         if (ctype.isList)
-          out.w("sys_List.$ce.name(")
+          out.w("sys_List.${var(ce.name)}(")
         else
-          out.w("${qname(ctype)}.$ce.name(")
+          out.w("${qname(ctype)}.${var(ce.name)}(")
         if (!ce.method.isStatic)
         {
           expr(ce.target)
@@ -424,7 +467,7 @@ class JavascriptWriter : CompilerSupport
     {
       out.w(qname(ce.method.parent)).w(".")
     }
-    out.w(ce.method.isCtor || ce.name == "<ctor>" ? "make" : ce.name)
+    out.w(ce.method.isCtor || ce.name == "<ctor>" ? "make" : var(ce.name))
     if (ce.isDynamic && ce.noParens)
     {
       if (ce.args.size == 0) return
@@ -550,8 +593,17 @@ class JavascriptWriter : CompilerSupport
     {
       out.w(qname(fe.field.parent)).w(".")
     }
-    out.w(name)
+    out.w(var(name))
     if (!cvar && fe.useAccessor) out.w(get ? "\$get()" : "\$set")
+  }
+
+  Void withBlockExpr(WithBlockExpr wbe)
+  {
+    // TODO
+    //out.w("with("); expr(wbe.base); out.w(") {")
+    ////subs.each |Expr sub| { s.add("$sub; ") }
+    //out.w("}")
+    out.w("null");
   }
 
   Void closureExpr(ClosureExpr ce)
@@ -600,14 +652,16 @@ class JavascriptWriter : CompilerSupport
   Bool isPrimitive(Str qname) { return primitiveMap.get(qname, false) }
   const Str:Bool primitiveMap :=
   [
-    "sys::Bool":   true,
-    "sys::Bool?":  true,
-    "sys::Float":  true,
-    "sys::Float?": true,
-    "sys::Int":    true,
-    "sys::Int?":   true,
-    "sys::Str":    true,
-    "sys::Str?":   true,
+    "sys::Bool":     true,
+    "sys::Bool?":    true,
+    "sys::Decimal":  true,
+    "sys::Decimal?": true,
+    "sys::Float":    true,
+    "sys::Float?":   true,
+    "sys::Int":      true,
+    "sys::Int?":     true,
+    "sys::Str":      true,
+    "sys::Str?":     true,
   ]
 
   Bool isObjMethod(Str methodName) { return objMethodMap.get(methodName, false) }
@@ -626,8 +680,11 @@ class JavascriptWriter : CompilerSupport
   }
   const Str:Bool vars :=
   [
-    "char": true,
-    "var":  true
+    "char":   true,
+    "delete": true,
+    "in":     true,
+    "var":    true,
+    "with":   true
   ]
 
 //////////////////////////////////////////////////////////////////////////
