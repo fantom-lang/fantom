@@ -202,6 +202,28 @@ class Build : BuildGroup
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  override Void spawnOnChildren(Str target)
+  {
+    // make exec task to spawn buildboot and buildpods
+    boot := makeSpawnExec(`buildboot.fan`, target)
+    pods := makeSpawnExec(`buildpods.fan`, target)
+
+    // ensure that buildpods has its FAN_HOME variable set correctly
+    // because on UNIX this script's FAN_SUBSTITUTE will export the
+    // wrong FAN_HOME to buildpods.fan
+    pods.process.env["FAN_HOME"] = devHomeDir.osPath
+
+    // spawn
+    boot.run
+    pods.run
+  }
+
+  private Exec makeSpawnExec(Uri script, Str target)
+  {
+    fanExe := (binDir + "fan$exeExt".toUri).osPath
+    return Exec.make(this, [fanExe, (scriptDir + script).osPath, target])
+  }
+
   BuildPod[] allBuildPodScripts(BuildScript[] children := this.children)
   {
     // recursively find all the BuildPod scripts in
