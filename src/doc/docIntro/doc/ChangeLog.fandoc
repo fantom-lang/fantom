@@ -545,6 +545,7 @@
 
 *Build 1.0.39 (incomplete)*
 - Int: minValue/maxValue -> minVal/maxVal
+- Uuid: removed createdTicks and created
 - Bool: toLocale
 - Date: toDateTime, midnight, plus, minus
 - DateTime: midnight, nowTicks

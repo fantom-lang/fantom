@@ -78,14 +78,6 @@ public final class Uuid
 
   public long bitsLo() { return lo; }
 
-  public DateTime created() { return created(TimeZone.current()); }
-  public DateTime created(TimeZone tz)
-  {
-    return DateTime.makeTicks(createdTicks(), tz);
-  }
-
-  public long createdTicks() { return hi; }
-
   public boolean equals(Object obj)
   {
     if (obj instanceof Uuid)

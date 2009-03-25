@@ -82,14 +82,6 @@ namespace Fan.Sys
 
     public long bitsLo() { return m_lo; }
 
-    public DateTime created() { return created(TimeZone.current()); }
-    public DateTime created(TimeZone tz)
-    {
-      return DateTime.makeTicks(createdTicks(), tz);
-    }
-
-    public long createdTicks() { return m_hi; }
-
     public override bool Equals(object obj)
     {
       if (obj is Uuid)
