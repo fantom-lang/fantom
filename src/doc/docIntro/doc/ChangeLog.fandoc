@@ -561,6 +561,8 @@
 - Thread: loopCoalescing, stop/kill
 - Type: toLocale
 - Uri: toLocale
+- Tree: nodeAt
+- Table: rowAt, colAt
 - BuildScript: defaultTarget now defaults to first script declared
 - BuildPod: rename compileJavascript to javascript
 - WebOutStream: css->includeCss, js->includeJs, style, script

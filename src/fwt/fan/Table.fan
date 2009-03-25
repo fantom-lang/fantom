@@ -83,6 +83,19 @@ class Table : Widget
   ** Get and set the selected row indices.
   **
   native Int[] selected
+
+  **
+  ** Get the zero based row index at the specified coordinate
+  ** relative to this widget or null if not over a valid cell.
+  **
+  native Int? rowAt(Point pos)
+
+  **
+  ** Get the zero based column index at the specified coordinate
+  ** relative to this widget or null if not over a valid cell.
+  **
+  native Int? colAt(Point pos)
+
 }
 
 **************************************************************************
