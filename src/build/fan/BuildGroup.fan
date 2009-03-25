@@ -110,7 +110,7 @@ abstract class BuildGroup : BuildScript
   ** Run the specified target name on each of the
   ** children scripts that support the specified name.
   **
-  Void runOnChildren(Str targetName)
+  virtual Void runOnChildren(Str targetName)
   {
     children.each |BuildScript child, Int i|
     {
@@ -125,7 +125,7 @@ abstract class BuildGroup : BuildScript
   ** this method actually spawns a new process to run the child
   ** script.
   **
-  Void spawnOnChildren(Str targetName)
+  virtual Void spawnOnChildren(Str targetName)
   {
     fanExe := (binDir + "fan$exeExt".toUri).osPath
     children.each |BuildScript child, Int i|

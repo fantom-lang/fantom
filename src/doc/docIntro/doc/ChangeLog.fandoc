@@ -565,3 +565,4 @@
 - WebOutStream: css->includeCss, js->includeJs, style, script
 - WebOutStream: change title,h1,h2,h3,h4,h5,h6 to use separate start/end tags
 - Reflection fix to inherit concrete slot over abstract slot if two choices
+- Fix buildall.pods to bootstrap correctly on Unix
