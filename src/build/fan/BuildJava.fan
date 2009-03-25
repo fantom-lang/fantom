@@ -52,7 +52,10 @@ abstract class BuildJava : BuildScript
     if (jar.name == "sys.jar")
     {
       if (Sys.homeDir == devHomeDir)
-        throw fatal("Must update /lib/sys.props devHome for bootstrap build")
+      {
+        props := Sys.homeDir + `lib/sys.props`
+        throw fatal("Must update $props.osPath 'fan.build.devHome' for bootstrap build")
+      }
     }
   }
 
