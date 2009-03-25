@@ -52,8 +52,7 @@ class TestRunner
 
     // create engine and eval pods
     p := Pod.find(pod)
-    engine = ScriptEngineManager().getEngineByName("js");
-    Runner.evalPodScript(engine, p)
+    evalPod(p)
 
     // run tests
     t1 := Duration.now
@@ -71,7 +70,17 @@ class TestRunner
     echo("")
     echo("Time: ${(t2-t1).toMillis}ms")
     echo("")
+    results
+  }
 
+  Void evalPod(Pod p)
+  {
+    if (engine == null) engine = ScriptEngineManager().getEngineByName("js");
+    Runner.evalPodScript(engine, p)
+  }
+
+  Void results()
+  {
     if (failureNames.size > 0)
     {
       echo("Failed:")
@@ -203,7 +212,7 @@ class TestRunner
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  ScriptEngine engine
+  ScriptEngine? engine
   Int testCount        := 0
   Int methodCount      := 0
   Int totalVerifyCount := 0
