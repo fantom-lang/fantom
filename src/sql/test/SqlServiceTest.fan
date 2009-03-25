@@ -149,19 +149,31 @@ class SqlServiceTest : Test
       ").execute
 
     row := db.tableRow("farmers")
-    rowType := row.type
+    cols := row.cols
 
-    verify(rowType.field("farmer_id", false) != null, "Missing farmer_id")
-    verify(rowType.field("name", false) != null,      "Missing name")
-    verify(rowType.field("married", false) != null,   "Missing married")
-    verify(rowType.field("pet", false) != null,       "Missing pet")
-    verify(rowType.field("ss", false) != null,        "Missing ss")
-    verify(rowType.field("age", false) != null,       "Missing age")
-    verify(rowType.field("pigs", false) != null,      "Missing pigs")
-    verify(rowType.field("cows", false) != null,      "Missing cows")
-    verify(rowType.field("ducks", false) != null,     "Missing ducks")
-    verify(rowType.field("height", false) != null,    "Missing height")
-    verify(rowType.field("weight", false) != null,    "Missing weight")
+    verifyEq(cols.size, 11)
+    verifyEq(cols.isRO, true)
+    verifyEq(cols is Col[], true)
+    verifyEq(cols.type, Col[]#)
+    verifyFarmerCols(row)
+
+    /*
+    verifyCol(row.col("farmer_id"),     0,  "farmer_id", Int#,   "int")
+    verifyCol(row.col("name", false),   1,  "name",      Str#,   "varchar")
+    verifyCol(row.col("married", true), 2,  "married",   Bool#,  "bit")
+    verifyCol(row.col("pet"),           3,  "pet",       Str#,   "varchar")
+    verifyCol(row.col("ss"),            4,  "ss",        Str#,   "char")
+    verifyCol(row.col("age"),           5,  "age",       Int#,   "tinyint")
+    verifyCol(row.col("pigs"),          6,  "pigs",      Int#,   "smallint")
+    verifyCol(row.col("cows"),          7,  "cows",      Int#,   "int")
+    verifyCol(row.col("ducks"),         8,  "ducks",     Int#,   "bigint")
+    verifyCol(row.col("height"),        9,  "height",    Float#, "float")
+    verifyCol(row.col("weight"),        10, "weight",    Float#, "double")
+    */
+
+    verifyEq(row.col("foobar", false), null)
+    verifyErr(ArgErr#) |,| { row.col("foobar") }
+    verifyErr(ArgErr#) |,| { row.col("foobar", true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -182,12 +194,13 @@ class SqlServiceTest : Test
 
     // query
     rows := query("select * from farmers order by farmer_id")
-    verifyPlayCols(rows.of)
+    verifyFarmerCols(rows.first)
     verifyEq(data.size, rows.size)
     data.each |Obj[] d, Int i| { verifyRow(rows[i], d) }
 
     // query with type
     farmers := db.sql("select * from farmers order by farmer_id").query
+    verifyEq(farmers.type, Row[]#)
     verifyEq(farmers is Row[], true)
     verifyEq(farmers[0] is Row, true)
     f := farmers[0]
@@ -217,23 +230,23 @@ class SqlServiceTest : Test
     verifyEq(execute(s), 1)
   }
 
-  Void verifyPlayCols(Type t)
+  Void verifyFarmerCols(Row r)
   {
-    verifyEq(t.isDynamic, true)
-    verifyEq(t.fields.size, 11)
+    verifyEq(r.cols.size, 11)
+    verifyEq(r.cols.isRO, true)
 // TODO
 //    verifyCol(t.fields[0],  0,  "farmer_id", Int#,   "INT")
-    verifyCol(t.fields[1],  1,  "name",      Str#,   "VARCHAR")
-    verifyCol(t.fields[2],  2,  "married",   Bool#,  "BIT")
-    verifyCol(t.fields[3],  3,  "pet",       Str#,   "VARCHAR")
-    verifyCol(t.fields[4],  4,  "ss",        Str#,   "CHAR")
-    verifyCol(t.fields[5],  5,  "age",       Int#,   "TINYINT")
-    verifyCol(t.fields[6],  6,  "pigs",      Int#,   "SMALLINT")
+    verifyCol(r.cols[1],  1,  "name",      Str#,   "VARCHAR")
+    verifyCol(r.cols[2],  2,  "married",   Bool#,  "BIT")
+    verifyCol(r.cols[3],  3,  "pet",       Str#,   "VARCHAR")
+    verifyCol(r.cols[4],  4,  "ss",        Str#,   "CHAR")
+    verifyCol(r.cols[5],  5,  "age",       Int#,   "TINYINT")
+    verifyCol(r.cols[6],  6,  "pigs",      Int#,   "SMALLINT")
 // TODO
 //    verifyCol(t.fields[7],  7,  "cows",      Int#,   "INT")
-    verifyCol(t.fields[8],  8,  "ducks",     Int#,   "BIGINT")
-    verifyCol(t.fields[9],  9,  "height",    Float#, "FLOAT")
-    verifyCol(t.fields[10], 10, "weight",    Float#, "DOUBLE")
+    verifyCol(r.cols[8],  8,  "ducks",     Int#,   "BIGINT")
+    verifyCol(r.cols[9],  9,  "height",    Float#, "FLOAT")
+    verifyCol(r.cols[10], 10, "weight",    Float#, "DOUBLE")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -279,11 +292,11 @@ class SqlServiceTest : Test
     db.sql("select * from farmers").queryEach(null) |Row row|
     {
       if (i != 0) return
-      verifyEq(row.type.fields.size, Farmer#.fields.size)
+      verifyEq(row.cols.size, Farmer#.fields.size)
       Farmer#.fields.each |Field f, Int index|
       {
         //verifyEq(row.type.field(f.name), null)
-        col := row.type.field(f.name)
+        col := row.col(f.name)
         verify(col != null)
         if (f.name == "farmer_id") verifyEq(col.of, Int#)
         if (f.name == "married") verifyEq(col.of, Bool#)
@@ -380,22 +393,20 @@ class SqlServiceTest : Test
     return db.sql(sql).execute
   }
 
-  Void verifyCol(Field f, Int index, Str name, Type of, Str sqlType)
+  Void verifyCol(Col col, Int index, Str name, Type of, Str sqlType)
   {
-    col := f as Col
     verifyEq(col.index, index)
     verifyEq(col.name, name)
     verifySame(col.of, of)
-    verifyEq(col.sqlType, sqlType)
+    verifyEq(col.sqlType.upper, sqlType.upper)
   }
 
-  Void verifyRow(Obj row, Obj[] cells)
+  Void verifyRow(Row r, Obj[] cells)
   {
-    r := row as Row
-    verifyEq(r.type.fields.size, cells.size)
-    r.type.fields.each |Field f, Int i|
+    verifyEq(r.cols.size, cells.size)
+    r.cols.each |Col c, Int i|
     {
-      verifyEq(f.get(r), cells[i])
+      verifyEq(r.get(c), cells[i])
     }
   }
 

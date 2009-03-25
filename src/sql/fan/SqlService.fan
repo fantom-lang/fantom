@@ -165,7 +165,7 @@ const class SqlService : Thread
   ** Get a default row instance for the specified table.  The
   ** result has a field for each table column.
   **
-  Obj tableRow(Str tableName)
+  Row tableRow(Str tableName)
   {
     return threadConnection.tableRow(tableName)
   }

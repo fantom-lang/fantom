@@ -74,30 +74,30 @@ public class StatementPeer
   void each(ResultSet rs, Func eachFunc)
     throws SQLException
   {
-    Type dtype = makeDynamicType(rs);
+    Cols cols = makeCols(rs);
     Row row = null;
     SqlUtil.SqlToFan[] converters = makeConverters(rs);
     while (rs.next())
     {
       if (row == null)
-        row = makeDynamicRow(rs, dtype, converters);
+        row = makeRow(rs, cols, converters);
       else
-        updateDynamicRow(rs, row, converters);
+        updateRow(rs, row, converters);
       eachFunc.call1(row);
     }
   }
 
   /**
-   * Make a dynamic type to map the columns of the
+   * Map result set columns to Fan columns.
    * result set.
    */
-  Type makeDynamicType(ResultSet rs)
+  Cols makeCols(ResultSet rs)
     throws SQLException
   {
     // map the meta-data to a dynamic type
-    Type t = Type.makeDynamic(ConnectionPeer.listOfRow);
     ResultSetMetaData meta = rs.getMetaData();
     int numCols = meta.getColumnCount();
+    List cols = new List(SqlUtil.colType, numCols);
     for (int i=0; i<numCols; ++i)
     {
       String name = meta.getColumnLabel(i+1);
@@ -108,25 +108,22 @@ public class StatementPeer
         System.out.println("WARNING: Cannot map " + typeName + " to Fan type");
         fanType = Sys.StrType;
       }
-      t.add(Col.make(Long.valueOf(i), name, fanType, typeName, null));
+      cols.add(Col.make(Long.valueOf(i), name, fanType, typeName));
     }
-
-    return t;
+    return new Cols(cols);
   }
 
   /**
    * Make a row of the specified dynamic type and set the cell values
    * from the specified result set.
    */
-  Row makeDynamicRow(ResultSet rs, Type of, SqlUtil.SqlToFan[] converters)
+  Row makeRow(ResultSet rs, Cols cols, SqlUtil.SqlToFan[] converters)
     throws SQLException
   {
-    if (!of.isDynamic())
-      throw SqlErr.make("Expecting dynamic type, not " + of).val;
-
-    Row row = (Row)of.make();
+    Row row = Row.make();
     int numCols = rs.getMetaData().getColumnCount();
     Object[] cells = new Object[numCols];
+    row.peer.cols = cols;
     row.peer.cells = cells;
     for (int i=0; i<numCols; ++i)
       cells[i] = converters[i].toObj(rs, i+1);
@@ -136,7 +133,7 @@ public class StatementPeer
   /**
    * Update an existing row with new values from the specified result set.
    */
-  Object updateDynamicRow(ResultSet rs, Row row, SqlUtil.SqlToFan[] converters)
+  Object updateRow(ResultSet rs, Row row, SqlUtil.SqlToFan[] converters)
     throws SQLException
   {
     int numCols = rs.getMetaData().getColumnCount();
@@ -165,12 +162,10 @@ public class StatementPeer
   List toRows(ResultSet rs)
     throws SQLException
   {
-    Type dtype = makeDynamicType(rs);
+    Cols cols = makeCols(rs);
     SqlUtil.SqlToFan[] converters = makeConverters(rs);
-    List rows = new List(dtype);
-    while (rs.next())
-      rows.add(makeDynamicRow(rs, dtype, converters));
-
+    List rows = new List(SqlUtil.rowType);
+    while (rs.next()) rows.add(makeRow(rs, cols, converters));
     return rows;
   }
 

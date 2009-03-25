@@ -65,7 +65,7 @@ internal class Connection
   ** Get a default row instance for the specified table.  The
   ** result has a field for each table column.
   **
-  native Obj tableRow(Str tableName)
+  native Row tableRow(Str tableName)
 
 //////////////////////////////////////////////////////////////////////////
 // Statements

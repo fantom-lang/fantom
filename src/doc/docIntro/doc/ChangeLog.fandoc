@@ -544,6 +544,8 @@
 - Compiler fix to check for dup method params and dup enum defs
 
 *Build 1.0.39 (incomplete)*
+- Remove dynamic types
+- Redesign sql::Row API
 - Int: minValue/maxValue -> minVal/maxVal
 - Uuid: removed createdTicks and created
 - Bool: toLocale
