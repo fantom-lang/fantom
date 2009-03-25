@@ -25,7 +25,7 @@ var sys_Int = sys_Obj.extend(
   type: function()
   {
     return sys_Type.find("sys::Int");
-  },
+  }
 
 });
 

@@ -25,7 +25,7 @@ var sys_Float = sys_Num.extend(
   type: function()
   {
     return sys_Type.find("sys::Float");
-  },
+  }
 
 });
 

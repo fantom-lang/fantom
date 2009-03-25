@@ -12,5 +12,5 @@
 var sys_Field = sys_Slot.extend(
 {
   $ctor: function() {},
-  type: function() { return sys_Type.find("sys::Field"); },
+  type: function() { return sys_Type.find("sys::Field"); }
 });

@@ -21,7 +21,7 @@ var webappClient_HttpRes = sys_Obj.extend(
 
   content$get: function() { return this.content },
   content$set: function(val) { this.content = val; },
-  content: null,
+  content: null
 });
 
 webappClient_HttpRes.make = function(req)

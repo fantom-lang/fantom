@@ -40,7 +40,7 @@ var sys_Weekday = sys_Enum.extend(
   type: function()
   {
     return sys_Type.find("sys::Weekday");
-  },
+  }
 
 });
 

@@ -12,7 +12,7 @@
 var sys_List = sys_Obj.extend(
 {
   $ctor: function() { sys_Type.addType("sys::List"); },
-  type: function()  { return sys_Type.find("sys::List"); },
+  type: function()  { return sys_Type.find("sys::List"); }
 });
 
 //////////////////////////////////////////////////////////////////////////

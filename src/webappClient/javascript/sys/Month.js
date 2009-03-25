@@ -50,7 +50,7 @@ var sys_Month = sys_Enum.extend(
   type: function()
   {
     return sys_Type.find("sys::Month");
-  },
+  }
 
 });
 

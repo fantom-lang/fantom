@@ -110,7 +110,7 @@ var sys_Map = sys_Obj.extend(
   keyType: "sys::Obj",
   valType: "sys::Obj",
 
-  map: null,
+  map: null
 
 });
 

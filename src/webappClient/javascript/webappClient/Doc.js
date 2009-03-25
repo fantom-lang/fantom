@@ -10,7 +10,7 @@ sys_Type.addType("webappClient::Doc");
 var webappClient_Doc = sys_Obj.extend(
 {
   $ctor: function() {},
-  type: function() { return sys_Type.find("webappClient::Doc"); },
+  type: function() { return sys_Type.find("webappClient::Doc"); }
 });
 
 webappClient_Doc.body = function()
