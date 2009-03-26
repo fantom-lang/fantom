@@ -262,6 +262,7 @@ public final class Sys
   public static final Type ZipType          = builtin("Zip",          ObjType);
 
   // utils
+  public static final Type DependType       = builtin("Depend",       ObjType);
   public static final Type LogType          = builtin("Log",          ObjType);
   public static final Type LogLevelType     = builtin("LogLevel",     EnumType);
   public static final Type LogRecordType    = builtin("LogRecord",    ObjType);
@@ -270,7 +271,7 @@ public final class Sys
   public static final Type ProcessType      = builtin("Process",      ObjType);
   public static final Type RegexType        = builtin("Regex",        ObjType);
   public static final Type RegexMatcherType = builtin("RegexMatcher", ObjType);
-  public static final Type DependType       = builtin("Depend",       ObjType);
+  public static final Type ServiceType      = builtin("Service",      ObjType);
   public static final Type VersionType      = builtin("Version",      ObjType);
   public static final Type UnitType         = builtin("Unit",         ObjType);
   public static final Type UnsafeType       = builtin("Unsafe",       ObjType);
@@ -282,24 +283,24 @@ public final class Sys
   public static final Type FileSchemeType   = builtin("FileScheme",   UriSchemeType);
 
   // exceptions
-  public static final Type ErrType              = builtin("Err",              ObjType);
-  public static final Type ArgErrType           = builtin("ArgErr",           ErrType);
-  public static final Type CastErrType          = builtin("CastErr",          ErrType);
-  public static final Type IOErrType            = builtin("IOErr",            ErrType);
-  public static final Type IndexErrType         = builtin("IndexErr",         ErrType);
-  public static final Type InterruptedErrType   = builtin("InterruptedErr",   ErrType);
-  public static final Type NameErrType          = builtin("NameErr",          ErrType);
-  public static final Type NotImmutableErrType  = builtin("NotImmutableErr",  ErrType);
-  public static final Type NullErrType          = builtin("NullErr",          ErrType);
-  public static final Type ParseErrType         = builtin("ParseErr",         ErrType);
-  public static final Type ReadonlyErrType      = builtin("ReadonlyErr",      ErrType);
-  public static final Type TestErrType          = builtin("TestErr",          ErrType);
-  public static final Type UnknownPodErrType    = builtin("UnknownPodErr",    ErrType);
-  public static final Type UnknownSlotErrType   = builtin("UnknownSlotErr",   ErrType);
-  public static final Type UnknownTypeErrType   = builtin("UnknownTypeErr",   ErrType);
-  public static final Type UnknownThreadErrType = builtin("UnknownThreadErr", ErrType);
-  public static final Type UnresolvedErrType    = builtin("UnresolvedErr",    ErrType);
-  public static final Type UnsupportedErrType   = builtin("UnsupportedErr",   ErrType);
+  public static final Type ErrType               = builtin("Err",               ObjType);
+  public static final Type ArgErrType            = builtin("ArgErr",            ErrType);
+  public static final Type CastErrType           = builtin("CastErr",           ErrType);
+  public static final Type IOErrType             = builtin("IOErr",             ErrType);
+  public static final Type IndexErrType          =  builtin("IndexErr",         ErrType);
+  public static final Type InterruptedErrType    = builtin("InterruptedErr",    ErrType);
+  public static final Type NameErrType           = builtin("NameErr",           ErrType);
+  public static final Type NotImmutableErrType   = builtin("NotImmutableErr",   ErrType);
+  public static final Type NullErrType           = builtin("NullErr",           ErrType);
+  public static final Type ParseErrType          = builtin("ParseErr",          ErrType);
+  public static final Type ReadonlyErrType       = builtin("ReadonlyErr",       ErrType);
+  public static final Type TestErrType           = builtin("TestErr",           ErrType);
+  public static final Type UnknownPodErrType     = builtin("UnknownPodErr",     ErrType);
+  public static final Type UnknownServiceErrType = builtin("UnknownServiceErr", ErrType);
+  public static final Type UnknownSlotErrType    = builtin("UnknownSlotErr",    ErrType);
+  public static final Type UnknownTypeErrType    = builtin("UnknownTypeErr",    ErrType);
+  public static final Type UnresolvedErrType     = builtin("UnresolvedErr",     ErrType);
+  public static final Type UnsupportedErrType    = builtin("UnsupportedErr",    ErrType);
 
   // generic parameter types used with generic types List, Map, and Method
   public static final ClassType[] GenericParameterTypes = new ClassType[256];

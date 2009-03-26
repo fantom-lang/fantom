@@ -101,7 +101,7 @@ namespace Fan.Sys
       {
         Thread thread = (Thread)byName[name];
         if (thread != null) return thread;
-        if (check) throw UnknownThreadErr.make(name).val;
+        if (check) throw UnknownServiceErr.make(name).val;
         return null;
       }
     }
@@ -144,7 +144,7 @@ namespace Fan.Sys
       {
         ThreadNode node = (ThreadNode)byService[qname];
         if (node != null) return node.thread;
-        if (check) throw UnknownThreadErr.make("service: " + qname).val;
+        if (check) throw UnknownServiceErr.make("service: " + qname).val;
         return null;
       }
     }

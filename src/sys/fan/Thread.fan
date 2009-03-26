@@ -46,7 +46,7 @@ const class Thread
   **
   ** Lookup a thread in this VM by name.  If the thread doesn't
   ** exist and checked is false then return null, otherwise throw
-  ** UnknownThreadErr.  Only active threads which are in the new
+  ** UnknownServiceErr.  Only active threads which are in the new
   ** or running state may be found by name.
   **
   static Thread? find(Str name, Bool checked := true)
@@ -78,7 +78,7 @@ const class Thread
   **
   ** Lookup a service thread by type.  If the service doesn't
   ** exist and checked is false then return null, otherwise throw
-  ** UnknownThreadErr.  See `isService`.
+  ** UnknownServiceErr.  See `isService`.
   **
   static Thread? findService(Type t, Bool checked := true)
 

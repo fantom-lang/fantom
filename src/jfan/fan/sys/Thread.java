@@ -104,7 +104,7 @@ public class Thread
     {
       Thread thread = (Thread)byName.get(name);
       if (thread != null) return thread;
-      if (checked) throw UnknownThreadErr.make(name).val;
+      if (checked) throw UnknownServiceErr.make(name).val;
       return null;
     }
   }
@@ -150,7 +150,7 @@ public class Thread
     {
       ThreadNode node = (ThreadNode)byService.get(qname);
       if (node != null) return node.thread;
-      if (checked) throw UnknownThreadErr.make("service: " + qname).val;
+      if (checked) throw UnknownServiceErr.make("service: " + qname).val;
       return null;
     }
   }

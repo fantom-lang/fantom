@@ -12,41 +12,41 @@ using System.IO;
 namespace Fan.Sys
 {
   /// <summary>
-  /// UnknownThreadErr
+  /// UnknownServiceErr
   /// </summary>
-  public class UnknownThreadErr : Err
+  public class UnknownServiceErr : Err
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Fan Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public new static UnknownThreadErr make() { return make((string)null, (Err)null); }
-    public new static UnknownThreadErr make(string msg) { return make(msg, (Err)null); }
-    public new static UnknownThreadErr make(string msg, Err cause)
+    public new static UnknownServiceErr make() { return make((string)null, (Err)null); }
+    public new static UnknownServiceErr make(string msg) { return make(msg, (Err)null); }
+    public new static UnknownServiceErr make(string msg, Err cause)
     {
-      UnknownThreadErr err = new UnknownThreadErr();
+      UnknownServiceErr err = new UnknownServiceErr();
       make_(err, msg, cause);
       return err;
     }
 
-    public static void make_(UnknownThreadErr self) { make_(self, null);  }
-    public static void make_(UnknownThreadErr self, string msg) { make_(self, msg, null); }
-    public static void make_(UnknownThreadErr self, string msg, Err cause) { Err.make_(self, msg, cause); }
+    public static void make_(UnknownServiceErr self) { make_(self, null);  }
+    public static void make_(UnknownServiceErr self, string msg) { make_(self, msg, null); }
+    public static void make_(UnknownServiceErr self, string msg, Err cause) { Err.make_(self, msg, cause); }
 
   //////////////////////////////////////////////////////////////////////////
   // C# Constructors
   //////////////////////////////////////////////////////////////////////////
 
-    public UnknownThreadErr(Err.Val val) : base(val) {}
-    public UnknownThreadErr() : base(new UnknownThreadErr.Val()) {}
-    public UnknownThreadErr(Exception actual) : base(new UnknownThreadErr.Val(), actual) {}
+    public UnknownServiceErr(Err.Val val) : base(val) {}
+    public UnknownServiceErr() : base(new UnknownServiceErr.Val()) {}
+    public UnknownServiceErr(Exception actual) : base(new UnknownServiceErr.Val(), actual) {}
 
   //////////////////////////////////////////////////////////////////////////
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.UnknownThreadErrType; }
+    public override Type type() { return Sys.UnknownServiceErrType; }
 
   //////////////////////////////////////////////////////////////////////////
   // Val - C# Exception Type
