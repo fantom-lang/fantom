@@ -573,5 +573,6 @@
 - Fix buildall.pods to bootstrap correctly on Unix
 
 *Build 1.0.30 (incomplete)*
-- Added sys::Service mixin
+- Added sys::Service API
+- Added sys::Actor API
 - Renamed UnknownThreadErr to UnknownServiceErr

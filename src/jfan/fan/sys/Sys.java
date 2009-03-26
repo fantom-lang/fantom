@@ -261,6 +261,12 @@ public final class Sys
   public static final Type UriType          = builtin("Uri",          ObjType);
   public static final Type ZipType          = builtin("Zip",          ObjType);
 
+  // actos
+  public static final Type ActorType        = builtin("Actor",        ObjType);
+  public static final Type ActorGroupType   = builtin("ActorGroup",   ObjType);
+  public static final Type ContextType      = builtin("Context",      ObjType);
+  public static final Type FutureType       = builtin("Future",       ObjType);
+
   // utils
   public static final Type DependType       = builtin("Depend",       ObjType);
   public static final Type LogType          = builtin("Log",          ObjType);
@@ -285,9 +291,10 @@ public final class Sys
   // exceptions
   public static final Type ErrType               = builtin("Err",               ObjType);
   public static final Type ArgErrType            = builtin("ArgErr",            ErrType);
+  public static final Type CancelledErrType      = builtin("CancelledErr",         ErrType);
   public static final Type CastErrType           = builtin("CastErr",           ErrType);
   public static final Type IOErrType             = builtin("IOErr",             ErrType);
-  public static final Type IndexErrType          =  builtin("IndexErr",         ErrType);
+  public static final Type IndexErrType          = builtin("IndexErr",         ErrType);
   public static final Type InterruptedErrType    = builtin("InterruptedErr",    ErrType);
   public static final Type NameErrType           = builtin("NameErr",           ErrType);
   public static final Type NotImmutableErrType   = builtin("NotImmutableErr",   ErrType);
