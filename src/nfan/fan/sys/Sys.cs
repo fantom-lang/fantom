@@ -261,7 +261,7 @@ namespace Fan.Sys
         UnknownPodErrType    = builtin("UnknownPodErr",    ErrType);
         UnknownSlotErrType   = builtin("UnknownSlotErr",   ErrType);
         UnknownTypeErrType   = builtin("UnknownTypeErr",   ErrType);
-        UnknownThreadErrType = builtin("UnknownThreadErr", ErrType);
+        UnknownServiceErrType = builtin("UnknownServiceErr", ErrType);
         UnresolvedErrType    = builtin("UnresolvedErr",    ErrType);
         UnsupportedErrType   = builtin("UnsupportedErr",   ErrType);
 
@@ -517,7 +517,7 @@ namespace Fan.Sys
     public static readonly Type UnknownPodErrType;
     public static readonly Type UnknownSlotErrType;
     public static readonly Type UnknownTypeErrType;
-    public static readonly Type UnknownThreadErrType;
+    public static readonly Type UnknownServiceErrType;
     public static readonly Type UnresolvedErrType;
     public static readonly Type UnsupportedErrType;
 

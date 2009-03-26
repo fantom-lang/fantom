@@ -1,15 +1,17 @@
 //
-// Copyright (c) 2007, Brian Frank and Andy Frank
+// Copyright (c) 2009, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
 //   21 Dec 07  Brian Frank  Creation
+//   26 Mar 09  Brian Frank  Renamed from UnknownThreadErr
 //
 
 **
-** UnknownThreadErr indicates an attempt to lookup an unknown thread.
+** UnknownServiceErr indicates an attempt to lookup an service
+** not installed.  See `Service.find`.
 **
-const class UnknownThreadErr : Err
+const class UnknownServiceErr : Err
 {
 
   **

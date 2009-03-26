@@ -53,8 +53,8 @@ class ThreadTest : Test
     verifySame(Thread.find("testSys.foo"), a)
     verifySame(Thread.find(d.name), d)
     verifyEq(Thread.find("testSys.forget it", false), null)
-    verifyErr(UnknownThreadErr#) |,| { Thread.find("testSys.forget it") }
-    verifyErr(UnknownThreadErr#) |,| { Thread.find("testSys.forget it", true) }
+    verifyErr(UnknownServiceErr#) |,| { Thread.find("testSys.forget it") }
+    verifyErr(UnknownServiceErr#) |,| { Thread.find("testSys.forget it", true) }
 
     // list
     verify(Thread.list.isRO)
@@ -562,6 +562,7 @@ class ThreadTest : Test
 // Service
 //////////////////////////////////////////////////////////////////////////
 
+/* Moved to ServiceTest
   Void testService()
   {
     n := ThreadCount.make
@@ -626,6 +627,7 @@ class ThreadTest : Test
       verifySame(Sys.ns.get(uri, true), s)
     }
   }
+*/
 
 }
 
@@ -698,6 +700,7 @@ const class ThreadCallbacks : Thread
 ** TestService
 **************************************************************************
 
+/* TODO Moved to ServiceTest
 mixin MTestService {}
 const class ATestService : Thread { new make() : super() {} }
 const class TestService : ATestService, MTestService
@@ -705,3 +708,4 @@ const class TestService : ATestService, MTestService
   override Bool isService() { return true }
   override Obj? run() { while (isRunning) sleep(20ms); return null }
 }
+*/

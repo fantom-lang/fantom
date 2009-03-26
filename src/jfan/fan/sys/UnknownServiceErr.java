@@ -4,13 +4,14 @@
 //
 // History:
 //   21 Dec 07  Brian Frank  Creation
+//   26 Mar 09  Brian Frank  Renamed from UnknownThreadErr
 //
 package fan.sys;
 
 /**
- * UnknownThreadErr
+ * UnknownServiceErr
  */
-public class UnknownThreadErr
+public class UnknownServiceErr
   extends Err
 {
 
@@ -18,31 +19,31 @@ public class UnknownThreadErr
 // Fan Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static UnknownThreadErr make() { return make((String)null, (Err)null); }
-  public static UnknownThreadErr make(String msg) { return make(msg, (Err)null); }
-  public static UnknownThreadErr make(String msg, Err cause)
+  public static UnknownServiceErr make() { return make((String)null, (Err)null); }
+  public static UnknownServiceErr make(String msg) { return make(msg, (Err)null); }
+  public static UnknownServiceErr make(String msg, Err cause)
   {
-    UnknownThreadErr err = new UnknownThreadErr();
+    UnknownServiceErr err = new UnknownServiceErr();
     make$(err, msg, cause);
     return err;
   }
 
-  public static void make$(UnknownThreadErr self) { make$(self, null);  }
-  public static void make$(UnknownThreadErr self, String msg) { make$(self, msg, null); }
-  public static void make$(UnknownThreadErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
+  public static void make$(UnknownServiceErr self) { make$(self, null);  }
+  public static void make$(UnknownServiceErr self, String msg) { make$(self, msg, null); }
+  public static void make$(UnknownServiceErr self, String msg, Err cause) { Err.make$(self, msg, cause); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public UnknownThreadErr(Err.Val val) { super(val); }
-  public UnknownThreadErr() { super(new UnknownThreadErr.Val()); }
+  public UnknownServiceErr(Err.Val val) { super(val); }
+  public UnknownServiceErr() { super(new UnknownServiceErr.Val()); }
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.UnknownThreadErrType; }
+  public Type type() { return Sys.UnknownServiceErrType; }
 
 //////////////////////////////////////////////////////////////////////////
 // Val - Java Exception Type
