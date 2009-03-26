@@ -543,7 +543,7 @@
 - Compiler fix for construction call against fromStr in super class
 - Compiler fix to check for dup method params and dup enum defs
 
-*Build 1.0.39 (incomplete)*
+*Build 1.0.39 (25 Mar 09)*
 - Remove dynamic types
 - Redesign sql::Row API
 - Int: minValue/maxValue -> minVal/maxVal
