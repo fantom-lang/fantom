@@ -113,17 +113,27 @@ class ActorTest : Test
     a := Actor(group, &messaging)
 
     // const
-    verifySame(a.send("const").get, a)
+    f := a.send("const")
+    verifySame(f.get, a)
+    verifySame(f.get, a)
+    verify(f.isDone)
 
     // serializable
-    verifyEq(a.send("serial").get, SerA { i = 123_321 })
+    f = a.send("serial")
+    verifyEq(f.get, SerA { i = 123_321 })
+    verifyEq(f.get, SerA { i = 123_321 })
+    verifyNotSame(f.get, f.get)
+    verify(f.isDone)
 
     // non-serializable mutables
     verifyErr(IOErr#) |,| { a.send(this) }
     verifyErr(IOErr#) |,| { a.send("mutable").get }
 
     // receive raises error
-    verifyErr(UnknownServiceErr#) |,| { a.send("throw").get }
+    f = a.send("throw")
+    verifyErr(UnknownServiceErr#) |,| { f.get }
+    verifyErr(UnknownServiceErr#) |,| { f.get }
+    verify(f.isDone)
   }
 
   static Obj? messaging(Context cx, Str msg)
