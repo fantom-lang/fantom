@@ -72,19 +72,26 @@ public class ActorGroup
   public final ActorGroup join(Duration timeout)
   {
     long ms = timeout == null ? Long.MAX_VALUE : timeout.millis();
-    threadPool.join(ms);
-    return this;
-  }
-
-  final void submit(Actor actor)
-  {
-    threadPool.submit(actor);
+    try
+    {
+      if (threadPool.join(ms)) return this;
+    }
+    catch (InterruptedException e)
+    {
+      throw InterruptedErr.make(e).val;
+    }
+    throw TimeoutErr.make("ActorGroup.join timed out").val;
   }
 
   public Object trap(String name, List args)
   {
     if (name.equals("dump")) { threadPool.dump(args); return null; }
     return super.trap(name, args);
+  }
+
+  final void submit(Actor actor)
+  {
+    threadPool.submit(actor);
   }
 
 //////////////////////////////////////////////////////////////////////////
