@@ -49,6 +49,7 @@ public final class Future
   public final Object get() { return get(null); }
   public final synchronized Object get(Duration timeout)
   {
+    Object r = null;
     try
     {
       // wait until we enter a done state
@@ -66,18 +67,18 @@ public final class Future
 
       // if error was raised, raise it to caller
       if (state == DONE_ERR)
-        throw ((Err)result).val;
+        throw ((Err)result).rebase();
 
-      // if mutable we only return result to one thread
-      Object r = result;
-      if (r != null && !FanObj.isImmutable(r))
-        result = null;
-      return r;
+      // assign result to local variable to return
+      r = result;
     }
     catch (InterruptedException e)
     {
       throw InterruptedErr.make(e).val;
     }
+
+    // ensure immutable or safe copy
+    return Namespace.safe(r);
   }
 
   public final synchronized void cancel()

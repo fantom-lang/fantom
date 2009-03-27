@@ -145,12 +145,12 @@ public class Err
 // Trace
 //////////////////////////////////////////////////////////////////////////
 
-  public Err trace() { return trace(Sys.StdOut, 0); }
-  public Err trace(OutStream out) { return trace(out, 0); }
-  public Err trace(OutStream out, int indent)
+  public Err trace() { return trace(Sys.StdOut, 0, true); }
+  public Err trace(OutStream out) { return trace(out, 0, true); }
+  public Err trace(OutStream out, int indent, boolean useActual)
   {
     // map exception to stack trace
-    Throwable ex = actual != null ? actual : val;
+    Throwable ex = actual != null && useActual ? actual : val;
     StackTraceElement[] elems = ex.getStackTrace();
 
     // skip calls to make the Err itself
@@ -158,10 +158,12 @@ public class Err
     for (; start<elems.length; ++start)
     {
       StackTraceElement elem = elems[start];
-      if (!elem.getClassName().endsWith("Err") ||
-          (!elem.getMethodName().equals("make") &&
-           !elem.getMethodName().equals("<init>")))
-        break;
+      if (elem.getClassName().endsWith("Err"))
+      {
+        String m = elem.getMethodName();
+        if (m.equals("make") || m.equals("<init>") || m.equals("rebase")) continue;
+      }
+      break;
     }
 
     // print each level of the stack trace
@@ -173,11 +175,15 @@ public class Err
     }
     out.flush();
 
+    // if this was a rebase, then dump original stack trace
+    if (useActual && actual instanceof RebaseException)
+      trace(out, indent+2, false);
+
     // if there is a cause, then recurse
     if (cause != null)
     {
       out.indent(indent).writeChars("Cause:\n");
-      cause.trace(out, indent+2);
+      cause.trace(out, indent+2, true);
     }
 
     return this;
@@ -246,10 +252,18 @@ public class Err
     return buf.flip().readAllStr();
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Rebasing
+//////////////////////////////////////////////////////////////////////////
+
   Val rebase()
   {
-    actual = new Exception();
+    actual = new RebaseException();
     return val;
+  }
+
+  public static class RebaseException extends RuntimeException
+  {
   }
 
 //////////////////////////////////////////////////////////////////////////
