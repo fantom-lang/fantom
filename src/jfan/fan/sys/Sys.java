@@ -291,10 +291,10 @@ public final class Sys
   // exceptions
   public static final Type ErrType               = builtin("Err",               ObjType);
   public static final Type ArgErrType            = builtin("ArgErr",            ErrType);
-  public static final Type CancelledErrType      = builtin("CancelledErr",         ErrType);
+  public static final Type CancelledErrType      = builtin("CancelledErr",      ErrType);
   public static final Type CastErrType           = builtin("CastErr",           ErrType);
   public static final Type IOErrType             = builtin("IOErr",             ErrType);
-  public static final Type IndexErrType          = builtin("IndexErr",         ErrType);
+  public static final Type IndexErrType          = builtin("IndexErr",          ErrType);
   public static final Type InterruptedErrType    = builtin("InterruptedErr",    ErrType);
   public static final Type NameErrType           = builtin("NameErr",           ErrType);
   public static final Type NotImmutableErrType   = builtin("NotImmutableErr",   ErrType);
@@ -302,6 +302,7 @@ public final class Sys
   public static final Type ParseErrType          = builtin("ParseErr",          ErrType);
   public static final Type ReadonlyErrType       = builtin("ReadonlyErr",       ErrType);
   public static final Type TestErrType           = builtin("TestErr",           ErrType);
+  public static final Type TimeoutErrType        = builtin("TimeoutErr",        ErrType);
   public static final Type UnknownPodErrType     = builtin("UnknownPodErr",     ErrType);
   public static final Type UnknownServiceErrType = builtin("UnknownServiceErr", ErrType);
   public static final Type UnknownSlotErrType    = builtin("UnknownSlotErr",    ErrType);

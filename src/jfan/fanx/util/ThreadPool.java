@@ -64,10 +64,9 @@ public class ThreadPool
   /**
    * Orderly shutdown of threads.  All pending work items are processed.
    */
-  public final synchronized void stop()
+  public final void stop()
   {
     state = STOPPING;
-    // TODO
   }
 
   /**
@@ -83,9 +82,26 @@ public class ThreadPool
     while (it.hasNext()) ((Worker)it.next()).interrupt();
   }
 
-  public void join(long timeout)
+  /**
+   * Wait for all threads to stop.
+   ** Return true on success or false on timeout.
+   */
+  public final synchronized boolean join(long msTimeout)
+    throws InterruptedException
   {
-    // TODO
+    long deadline = System.nanoTime()/1000000L + msTimeout;
+    while (true)
+    {
+      // if all workers have completed, then return success
+      if (workers.size() == 0) return true;
+
+      // if we have gone past our deadline, return false
+      long toSleep = deadline - System.nanoTime()/1000000L;
+      if (toSleep <= 0) return false;
+
+      // sleep until something interesting happens
+      wait(toSleep);
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -102,9 +118,6 @@ public class ThreadPool
    */
   public synchronized void submit(Work work)
   {
-    // cannot sumit work if not running
-    if (state != RUNNING) throw new IllegalStateException("ThreadPool is not running");
-
     // if we have an idle thread, use it
     Worker worker = (Worker)idle.poll();
     if (worker != null)
@@ -138,11 +151,13 @@ public class ThreadPool
     Work work = (Work)pending.poll();
     if (work != null) return work;
 
-    // if the worker's idle time is over, then free it and let it die
-    if (idleTimeOver)
+    // if the worker's idle time is over or we are
+    // shutting down, then free the worker and let it die
+    if (idleTimeOver || state != RUNNING)
     {
       idle.remove(w);
       workers.remove(w);
+      notifyAll();
       return null;
     }
 

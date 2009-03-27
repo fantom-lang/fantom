@@ -147,4 +147,40 @@ class ActorTest : Test
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Stopping
+//////////////////////////////////////////////////////////////////////////
+
+  Void testStop()
+  {
+    // launch a bunch of threads which sleep for a random time
+    actors := Actor[,]
+    durs := Duration[,]
+    futures := Future[,]
+    20.times |Int i|
+    {
+      dur := 1ms * Int.random(0...300).toFloat
+      actor := Actor(group, &sleep)
+      actors.add(actor)
+      durs.add(dur)
+      Int.random(100...1000).times |Int j| { actor.send(j) }
+      futures.add(actor.send(dur))
+    }
+
+    // stop them all
+    t1 := Duration.now
+    group.stop.join
+    t2 := Duration.now
+    verify(t2 - t1 <= 320ms) // max sleep was 300ms
+
+    // verify all futures have completed
+    futures.each |Future f| { verify(f.isDone) }
+    futures.each |Future f, Int i| { verifyEq(f.get, durs[i]) }
+  }
+
+  static Obj? sleep(Context cx, Obj? msg)
+  {
+    if (msg is Duration) Thread.sleep(msg)
+    return msg
+  }
 }
