@@ -7,13 +7,14 @@
 //
 package fan.sys;
 
-import java.util.concurrent.Callable;
+import fanx.util.ThreadPool;
 
 /**
  * Actor is a worker who processes messages asynchronously.
  */
 public class Actor
   extends FanObj
+  implements ThreadPool.Work
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,7 +50,6 @@ public class Actor
   public Actor()
   {
     this.context  = new Context(this);
-    this.runnable = new RunWrapper(this);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ public class Actor
 // Implementation
 //////////////////////////////////////////////////////////////////////////
 
-  final void _dispatch()
+  public final void _work()
   {
     // dequeue everything pending and clear queue
     Future queue = null;
@@ -181,27 +181,11 @@ public class Actor
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  /**
-   * Used to submit Actors to the ExecutorService without
-   * polluting the Actor's namespace with a run() method.
-   */
-  static class RunWrapper implements Runnable
-  {
-    RunWrapper(Actor actor) { this.actor = actor; }
-    public void run() { actor._dispatch(); }
-    public final Actor actor;
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  final RunWrapper runnable;               // runnable wrapper for actor
-  final Context context;                   // mutable world state of actor
-  private ActorGroup group;                // group controller
-  private Func receive;                    // func to invoke on receive or null
-  private Object lock = new Object();      // lock for message queue
-  private Future head, tail;               // message queue linked list
-  private boolean dispatching = false;     // are we currently dispatching
+  final Context context;                 // mutable world state of actor
+  private ActorGroup group;              // group controller
+  private Func receive;                  // func to invoke on receive or null
+  private Object lock = new Object();    // lock for message queue
+  private Future head, tail;             // message queue linked list
+  private boolean dispatching = false;   // are we currently dispatching
 
 }
