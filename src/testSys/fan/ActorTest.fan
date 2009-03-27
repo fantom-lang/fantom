@@ -77,16 +77,15 @@ class ActorTest : Test
   Void testOrdering()
   {
     // build a bunch actors
-    // TODO: make this a 100 and we are broke
     actors := Actor[,]
-    90.times |,| { actors.add(Actor(group, &order)) }
+    200.times |,| { actors.add(Actor(group, &order)) }
 
     // randomly send increasing ints to the actors
     100_000.times |Int i| { actors[Int.random(0...actors.size)].send(i) }
 
     // get the results
     futures := Future[,]
-    actors.each |Actor a| { futures.add(a.send("result")) }
+    actors.each |Actor a, Int i| { futures.add(a.send("result-$i")) }
 
     futures.each |Future f, Int i|
     {
@@ -99,7 +98,7 @@ class ActorTest : Test
   {
     Int[]? r := cx.get("foo")
     if (r == null) cx.set("foo", r = Int[,])
-    if (msg == "result") return r
+    if (msg.toStr.startsWith("result")) return r
     r.add(msg)
     return null
   }

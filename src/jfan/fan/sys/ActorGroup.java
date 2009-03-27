@@ -7,7 +7,7 @@
 //
 package fan.sys;
 
-import java.util.concurrent.*;
+import fanx.util.ThreadPool;
 
 /**
  * Controller for a group of actors which manages their execution.
@@ -33,8 +33,7 @@ public class ActorGroup
 
   public ActorGroup()
   {
-    // TODO: not an effective flow control policy
-    executor = new ThreadPoolExecutor(1, 100, 60, TimeUnit.SECONDS, new SynchronousQueue());
+    threadPool = new ThreadPool(100);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,51 +48,49 @@ public class ActorGroup
 
   public final boolean isStopped()
   {
-    return executor.isShutdown();
+    return threadPool.isStopped();
   }
 
   public final boolean isDone()
   {
-    return executor.isTerminated();
+    return threadPool.isDone();
   }
 
   public final ActorGroup stop()
   {
-    executor.shutdown();
+    threadPool.stop();
     return this;
   }
 
   public final ActorGroup kill()
   {
-    java.util.List pending = executor.shutdownNow();
-    for (int i=0; i<pending.size(); ++i)
-      ((Actor.RunWrapper)pending.get(i)).actor._kill();
+    threadPool.kill();
     return this;
   }
 
   public final ActorGroup join() { return join(null); }
   public final ActorGroup join(Duration timeout)
   {
-    long ns = timeout == null ? Long.MAX_VALUE : timeout.ticks;
-    try
-    {
-      executor.awaitTermination(ns, TimeUnit.NANOSECONDS);
-    }
-    catch (InterruptedException e)
-    {
-      throw InterruptedErr.make(e).val;
-    }
+    long ms = timeout == null ? Long.MAX_VALUE : timeout.millis();
+    threadPool.join(ms);
     return this;
   }
 
   final void submit(Actor actor)
   {
-    executor.execute(actor.runnable);
+    threadPool.submit(actor);
+  }
+
+  public Object trap(String name, List args)
+  {
+    if (name.equals("dump")) { threadPool.dump(args); return null; }
+    return super.trap(name, args);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private final ExecutorService executor;
+  private final ThreadPool threadPool;
+
 }
