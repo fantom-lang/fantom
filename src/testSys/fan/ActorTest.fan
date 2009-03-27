@@ -104,4 +104,38 @@ class ActorTest : Test
     return null
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Messaging
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMessaging()
+  {
+    a := Actor(group, &messaging)
+
+    // const
+    verifySame(a.send("const").get, a)
+
+    // serializable
+    verifyEq(a.send("serial").get, SerA { i = 123_321 })
+
+    // non-serializable mutables
+    verifyErr(IOErr#) |,| { a.send(this) }
+    verifyErr(IOErr#) |,| { a.send("mutable").get }
+
+    // receive raises error
+    verifyErr(UnknownServiceErr#) |,| { a.send("throw").get }
+  }
+
+  static Obj? messaging(Context cx, Str msg)
+  {
+    switch (msg)
+    {
+      case "const":   return cx.actor
+      case "serial":  return SerA { i = 123_321 }
+      case "throw":   throw UnknownServiceErr()
+      case "mutable": return cx
+      default: return "?"
+    }
+  }
+
 }

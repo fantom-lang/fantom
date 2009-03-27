@@ -22,8 +22,7 @@ final const class Future
   ** Wait for the actor's result.  If timeout occurs then TimeoutErr
   ** is raised.  A null timeout blocks forever.  If an exception was
   ** raised by the Actor, then it is raised to the caller of this method.
-  ** If the result is mutable, then only the first caller to this method
-  ** receives the result, subsequent calls will return null.
+  ** If msg is not immutable or serializable, then IOErr is thrown.
   **
   Obj? get(Duration? timeout := null)
 

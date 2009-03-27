@@ -59,7 +59,7 @@ public class LogRecord
     synchronized (out)
     {
       out.printLine(toStr());
-      if (err != null) err.trace(out, 2);
+      if (err != null) err.trace(out, 2, true);
     }
   }
 
