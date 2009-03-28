@@ -71,7 +71,9 @@ abstract class Image
   native Void dispose()
 
   **
-  ** Resize this image into a new image.
+  ** Resize this image into a new image.  Also see `Graphics.copyImage`.
+  ** Note: this method doesn't support transparency correctly yet.
+  **
   **
   native Image resize(Size size)
 
