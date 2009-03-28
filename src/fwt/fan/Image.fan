@@ -71,6 +71,11 @@ abstract class Image
   native Void dispose()
 
   **
+  ** Resize this image into a new image.
+  **
+  native Image resize(Size size)
+
+  **
   ** Return the uri used to load this file, or null if this
   ** image wasn't created from a uri.
   **
@@ -78,6 +83,18 @@ abstract class Image
 
 }
 
+**************************************************************************
+** MemImage
+**************************************************************************
+
+internal class MemImage : Image
+{
+  internal new internalMake() {}
+
+  override Uri? uri() { null }
+
+  override Str toStr() { "MemImage" }
+}
 
 **************************************************************************
 ** FileImage
