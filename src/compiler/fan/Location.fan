@@ -57,6 +57,30 @@ class Location
     }
   }
 
+  override Int hash()
+  {
+    hash := 33
+    if (file != null) hash ^= file.hash
+    if (line != null) hash ^= line.hash
+    if (col  != null) hash ^= col.hash
+    return hash
+  }
+
+  override Bool equals(Obj? that)
+  {
+    x := that as Location
+    if (x == null) return false
+    return file == x.file && line == x.line && col == x.col
+  }
+
+  override Int compare(Obj that)
+  {
+    x := (Location)that
+    if (file != x.file) return file <=> x.file
+    if (line != x.line) return line <=> x.line
+    return col <=> x.col
+  }
+
   override Str toStr()
   {
     return toLocationStr

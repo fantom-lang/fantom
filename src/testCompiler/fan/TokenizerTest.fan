@@ -16,6 +16,31 @@ class TokenizerTest : Test
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Location
+//////////////////////////////////////////////////////////////////////////
+
+  Void testLocation()
+  {
+    verifyEq(Location("foo"), Location("foo"))
+    verifyEq(Location("foo", 4), Location("foo", 4))
+    verifyEq(Location("foo", 4, 6), Location("foo", 4, 6))
+
+    verifyNotEq(Location("foo"), Location("bar"))
+    verifyNotEq(Location("foo", 4), Location("foo", 5))
+    verifyNotEq(Location("foo", 4, 6), Location("foo", 4, 4))
+
+    verify(Location("foo") <= Location("foo"))
+    verify(Location("foo", 5) <= Location("foo", 5))
+    verify(Location("foo", 5, 7) >= Location("foo", 5, 7))
+
+    verify(Location("foo") > Location("bar"))
+    verify(Location("bar") < Location("foo"))
+    verify(Location("foo", 10) > Location("foo", 6))
+    verify(Location("foo", 99, 2) > Location("foo", 9, 100))
+    verify(Location("foo", 5, 2) < Location("foo", 5, 10))
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Empty
 //////////////////////////////////////////////////////////////////////////
 
