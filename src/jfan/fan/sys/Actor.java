@@ -126,8 +126,7 @@ public class Actor
     }
 
     // dispatch messages
-    java.lang.Thread thread = java.lang.Thread.currentThread();
-    while (queue != null && !thread.isInterrupted())
+    while (queue != null)
     {
       _dispatch(cx, queue);
       queue = queue.next;
@@ -147,6 +146,7 @@ public class Actor
     try
     {
       if (msg.isCancelled()) return;
+      if (group.killed) { msg.cancel(); return; }
       msg.set(receive(cx, msg.msg));
     }
     catch (Err.Val e)
@@ -159,7 +159,7 @@ public class Actor
     }
   }
 
-  void _kill()
+  public void _kill()
   {
     // get the pending queue
     Future queue = null;

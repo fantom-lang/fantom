@@ -83,7 +83,8 @@ public final class Future
 
   public final synchronized void cancel()
   {
-    if ((state & DONE) != 0) state = DONE_CANCEL;
+    if ((state & DONE) == 0) state = DONE_CANCEL;
+    notifyAll();
   }
 
   final synchronized void set(Object r)
