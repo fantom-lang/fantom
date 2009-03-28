@@ -14,7 +14,7 @@ const class ActorGroup
 
   **
   ** Return true if this group has been stopped or killed.  Once a
-  ** a group is stopped, messages may not be delivered to any of its
+  ** a group is stopped, new messages may not be delivered to any of its
   ** actors.  A stopped group is not necessarily done until all its
   ** actors have finished processing.  Also see `isDone` and `join`.
   **
@@ -31,12 +31,14 @@ const class ActorGroup
   Bool isDone()
 
   **
-  ** Perform an orderly shutdown.  Once stopped, no new messages
-  ** may be sent to this group's actors.  However, any pending
-  ** messages will be processed.  Use `join` to wait for all actors
-  ** to complete their message queue.  To perform an immediate shutdown
-  ** use `kill`.  If the group has already been stopped, then do
-  ** nothing.  Return this.
+  ** Perform an orderly shutdown.  Once stopped, no new messages may
+  ** be sent to this group's actors.  However, any pending messages
+  ** will be processed.  Note that scheduled messages are *not*
+  ** guaranteed to be processed, only those delivered with 'Actor.send'.
+  **
+  ** Use `join` to wait for all actors to complete their message queue.
+  ** To perform an immediate shutdown use `kill`.  If the group has
+  ** already been stopped, then do nothing.  Return this.
   **
   This stop()
 

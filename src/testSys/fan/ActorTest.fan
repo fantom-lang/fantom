@@ -293,4 +293,57 @@ class ActorTest : Test
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Schedule
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSchedule()
+  {
+    // warm up a threads with dummy requests
+    5.times |,| { Actor(group, &returnNow).schedule(10ms, "dummy") }
+
+    // schedule a bunch of actors and messages
+    start := Duration.now
+    actors := Actor[,]
+    futures := Future[,]
+    durs := Duration?[,]
+    5.times |,|
+    {
+      a := Actor(group, &returnNow)
+      10.times |,|
+      {
+        // schedule something randonly between 0ms and 600ms
+        Duration? dur := 1ms * Int.random(0...600).toFloat
+        f := a.schedule(dur, dur)
+
+        // cancel some anything over 500ms
+        if (dur > 500ms) { f.cancel; dur = null }
+
+        durs.add(dur)
+        futures.add(f)
+      }
+    }
+
+    // verify cancellation or that scheduling was reasonably accurate
+    futures.each |Future f, Int i|
+    {
+      dur := durs[i]
+      if (dur == null)
+      {
+        verify(f.isCancelled)
+        verify(f.isDone)
+        verifyErr(CancelledErr#) |,| { f.get }
+      }
+      else
+      {
+        Duration elapsed := (Duration)f.get(3sec) - start
+        diff := (dur - elapsed ).abs
+        // echo("$dur.toLocale != $elapsed.toLocale ($diff.toLocale)")
+        verify(diff < 60ms, "$i $dur.toLocale != $elapsed.toLocale ($diff.toLocale)")
+      }
+    }
+  }
+
+  static Obj? returnNow(Context cx, Obj? msg) { Duration.now }
+
 }
