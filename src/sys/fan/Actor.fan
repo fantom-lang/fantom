@@ -13,16 +13,16 @@ const class Actor
 {
   **
   ** Create an actor whose execution is controlled by the given ActorGroup.
-  ** If receive is non-null, then it is invoked to process messages sent
-  ** to this actor.  If receive is specified then it must be an immutable
+  ** If receive is non-null, then it is used to process messages sent to
+  ** this actor.  If receive is specified then it must be an immutable
   ** function (it cannot capture state from the calling thread), otherwise
   ** NotImmutableErr is thrown.  If receive is null, then you must subclass
-  ** Actor and override the receive() method.
+  ** Actor and override the `receive` method.
   **
   new make(ActorGroup group, |Context,Obj? -> Obj?|? receive := null)
 
   **
-  ** Get the group used to control execution of this actor.
+  ** The group used to control execution of this actor.
   **
   ActorGroup group()
 
@@ -36,7 +36,12 @@ const class Actor
   Future send(Obj? msg)
 
   **
-  ** TODO: not working yet
+  ** Schedule a message for delivery after the specified period of
+  ** duration has elapsed.  Once the period has elapsed the message is
+  ** appended to the end of this actor's queue.  Accuracy of scheduling
+  ** is dependent on thread coordination and pending messages in the queue.
+  ** Scheduled messages are not guaranteed to be processed if the
+  ** actor's grouped is stopped.
   **
   Future schedule(Duration d, Obj? msg)
 
@@ -47,15 +52,5 @@ const class Actor
   ** is raised by this method, then it is raised by 'Future.get'.
   **
   protected virtual Obj? receive(Context cx, Obj? msg)
-
-  **
-  ** TODO: not working yet
-  **
-  protected virtual Void onStart(Context cx)
-
-  **
-  ** TODO: not working yet
-  **
-  protected virtual Void onStop(Context cx)
 
 }

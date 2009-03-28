@@ -93,6 +93,7 @@ public final class Future
   public final synchronized void cancel()
   {
     if ((state & DONE) == 0) state = DONE_CANCEL;
+    msg = result = null;  // allow gc
     notifyAll();
   }
 
@@ -115,13 +116,12 @@ public final class Future
 //////////////////////////////////////////////////////////////////////////
 
   static final int PENDING     = 0x00;
-  static final int PROCESSING  = 0x01;
-  static final int DONE        = 0x02;
-  static final int DONE_CANCEL = 0x12;
-  static final int DONE_OK     = 0x22;
-  static final int DONE_ERR    = 0x42;
+  static final int DONE        = 0x0f;
+  static final int DONE_CANCEL = 0x1f;
+  static final int DONE_OK     = 0x2f;
+  static final int DONE_ERR    = 0x4f;
 
-  final Object msg;            // message send to Actor
+  Object msg;                  // message send to Actor
   Future next;                 // linked list in Actor
   private volatile int state;  // processing state of message
   private Object result;       // result or exception of processing

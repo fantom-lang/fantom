@@ -64,7 +64,22 @@ public class Actor
 
   public final ActorGroup group() { return group; }
 
-  public final Future send(Object msg)
+  public final Future send(Object msg) { return _send(msg, null); }
+
+  public final Future schedule(Duration d, Object msg) { return _send(msg, d); }
+
+  protected Object receive(Context cx, Object msg)
+  {
+    if (receive != null) return receive.call2(cx, msg);
+    System.out.println("WARNING: " + type() + ".receive not overridden");
+    return null;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Implementation
+//////////////////////////////////////////////////////////////////////////
+
+  private Future _send(Object msg, Duration dur)
   {
     // ensure immutable or safe copy
     msg = Namespace.safe(msg);
@@ -75,7 +90,17 @@ public class Actor
     // get the future instance to manage this message's lifecycle
     Future f = new Future(msg);
 
-    // enqueue the message
+    // either enqueue immediately or schedule with group
+    if (dur == null)
+      _enqueue(f);
+    else
+      group.schedule(this, dur, f);
+
+    return f;
+  }
+
+  final void _enqueue(Future f)
+  {
     synchronized (lock)
     {
       if (head == null)
@@ -89,28 +114,7 @@ public class Actor
         tail = f;
       }
     }
-    return f;
   }
-
-  public final Future schedule(Duration d, Object msg)
-  {
-    throw new RuntimeException("TODO");
-  }
-
-  protected void onStart(Context cx) {}
-
-  protected void onStop(Context cx) {}
-
-  protected Object receive(Context cx, Object msg)
-  {
-    if (receive != null) return receive.call2(cx, msg);
-    System.out.println("WARNING: " + type() + ".receive not overridden");
-    return null;
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Implementation
-//////////////////////////////////////////////////////////////////////////
 
   public final void _work()
   {

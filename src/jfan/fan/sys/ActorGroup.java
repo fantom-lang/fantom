@@ -8,6 +8,7 @@
 package fan.sys;
 
 import fanx.util.ThreadPool;
+import fanx.util.Scheduler;
 
 /**
  * Controller for a group of actors which manages their execution.
@@ -34,6 +35,7 @@ public class ActorGroup
   public ActorGroup()
   {
     threadPool = new ThreadPool(100);
+    scheduler = new Scheduler();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,11 +97,31 @@ public class ActorGroup
     threadPool.submit(actor);
   }
 
+  final void schedule(Actor a, Duration d, Future f)
+  {
+    scheduler.schedule(d.ticks(), new ScheduledWork(a, f));
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// ScheduledWork
+//////////////////////////////////////////////////////////////////////////
+
+  static class ScheduledWork implements Scheduler.Work
+  {
+    ScheduledWork(Actor a, Future f) { actor = a; future = f; }
+    public String toString() { return "ScheduledWork msg=" + future.msg; }
+    public void work() { if (!future.isCancelled()) actor._enqueue(future); }
+    public void cancel() { future.cancel(); }
+    final Actor actor;
+    final Future future;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   private final ThreadPool threadPool;
+  private final Scheduler scheduler;
   volatile boolean killed;
 
 }
