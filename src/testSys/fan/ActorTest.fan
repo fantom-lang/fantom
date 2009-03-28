@@ -195,15 +195,23 @@ class ActorTest : Test
     actors := Actor[,]
     durs := Duration[,]
     futures := Future[,]
+    scheduled := Future[,]
     20.times |Int i|
     {
-      dur := 1ms * Int.random(0...300).toFloat
-      if (i == 0) dur = 300ms
       actor := Actor(group, &sleep)
       actors.add(actor)
-      durs.add(dur)
+
+      // send some dummy messages
       Int.random(100...1000).times |Int j| { actor.send(j) }
+
+      // send sleep duration 0 to 300ms
+      dur := 1ms * Int.random(0...300).toFloat
+      if (i == 0) dur = 300ms
+      durs.add(dur)
       futures.add(actor.send(dur))
+
+      // schedule some messages in future well after we stop
+      3.times |Int j| { scheduled.add(actor.schedule(10sec + 1sec * j.toFloat, j)) }
     }
 
     // still running
@@ -218,19 +226,37 @@ class ActorTest : Test
     verifyEq(group.isStopped, true)
     verifyEq(group.isDone, false)
 
-    // verify can't send anymore
-    actors.each |Actor a| { verifyErr(Err#) |,| { a.send(10sec) } }
+    // verify can't send or schedule anymore
+    actors.each |Actor a|
+    {
+      verifyErr(Err#) |,| { a.send(10sec) }
+      verifyErr(Err#) |,| { a.schedule(1sec, 1sec) }
+    }
 
     // stop again, join with no timeout
     group.stop.join
     t2 = Duration.now
-    verify(t2 - t1 <= 320ms, (t2-t1).toLocale)
+    verify(t2 - t1 <= 340ms, (t2-t1).toLocale)
     verifyEq(group.isStopped, true)
     verifyEq(group.isDone, true)
 
     // verify all futures have completed
     futures.each |Future f| { verify(f.isDone) }
     futures.each |Future f, Int i| { verifyEq(f.get, durs[i]) }
+
+    // verify all scheduled messages were canceled
+    verifyAllCancelled(scheduled)
+  }
+
+  Void verifyAllCancelled(Future[] futures)
+  {
+    futures.each |Future f|
+    {
+      verify(f.isDone)
+      verify(f.isCancelled)
+      verifyErr(CancelledErr#) |,| { f.get }
+      verifyErr(CancelledErr#) |,| { f.get(200ms) }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -242,15 +268,21 @@ class ActorTest : Test
     // spawn off a bunch of actors and sleep messages
     futures := Future[,]
     durs := Duration[,]
+    scheduled := Future[,]
     200.times |,|
     {
       actor := Actor(group, &sleep)
-      6.times |Int i|  // 6x 0ms - 50ms, max 600ms
+
+      // send 6x 0ms - 50ms, max 600ms
+      6.times |Int i|
       {
         dur := 1ms * Int.random(0...50).toFloat
         futures.add(actor.send(dur))
         durs.add(dur)
       }
+
+      // schedule some messages in future well after we stop
+      scheduled.add(actor.schedule(3sec, actor))
     }
 
     verifyEq(group.isStopped, false)
@@ -291,6 +323,9 @@ class ActorTest : Test
           verifyErr(InterruptedErr#) |,| { f.get }
       }
     }
+
+    // verify all scheduled messages were canceled
+    verifyAllCancelled(scheduled)
   }
 
 //////////////////////////////////////////////////////////////////////////
