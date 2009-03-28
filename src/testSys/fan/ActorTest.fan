@@ -148,6 +148,44 @@ class ActorTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Timeout/Cancel
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTimeoutCancel()
+  {
+    a := Actor(group, &sleep)
+    f := a.send(1sec)
+
+    // get with timeout
+    t1 := Duration.now
+    verifyErr(TimeoutErr#) |,| { f.get(50ms) }
+    t2 := Duration.now
+    verify(t2-t1 < 70ms, (t2-t1).toLocale)
+
+    // launch an actor to cancel the future
+    Actor(group, &cancel).send(f)
+
+    // block on future until canceled
+    verifyErr(CancelledErr#) |,| { f.get }
+    verifyErr(CancelledErr#) |,| { f.get }
+    verify(f.isDone)
+    verify(f.isCancelled)
+  }
+
+  static Obj? sleep(Context cx, Obj? msg)
+  {
+    if (msg is Duration) Thread.sleep(msg)
+    return msg
+  }
+
+  static Obj? cancel(Context cx, Future f)
+  {
+    Thread.sleep(20ms)
+    f.cancel
+    return f
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Stop
 //////////////////////////////////////////////////////////////////////////
 
@@ -192,12 +230,6 @@ class ActorTest : Test
     futures.each |Future f, Int i| { verifyEq(f.get, durs[i]) }
   }
 
-  static Obj? sleep(Context cx, Obj? msg)
-  {
-    if (msg is Duration) Thread.sleep(msg)
-    return msg
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Kill
 //////////////////////////////////////////////////////////////////////////
@@ -225,7 +257,6 @@ class ActorTest : Test
     t1 := Duration.now
     group.kill
     verifyEq(group.isStopped, true)
-    verifyEq(group.isDone, false)
 
     // join
     group.join
