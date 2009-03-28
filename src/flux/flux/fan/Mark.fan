@@ -213,6 +213,7 @@ internal class MarkParser
           roots.add(path)
         }
       }
+      roots.sortr |Str a, Str b->Int| { a.size <=> b.size }
       Thread.locals["flux.Mark.roots"] = roots
     }
     return roots
