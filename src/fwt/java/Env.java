@@ -191,6 +191,7 @@ public class Env
   public Image image(fan.fwt.Image i)
   {
     if (i == null) return null;
+    if (i.peer.swt != null) return i.peer.swt;
     FileImage fi = (FileImage)i;
     Image x = (Image)images.get(fi.file.uri());
     if (x == null)
@@ -199,6 +200,7 @@ public class Env
       try
       {
         x = new Image(display, in);
+        i.peer.swt = x;
         images.put(fi.file.uri(), x);
       }
       catch (Exception e)

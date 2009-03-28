@@ -733,6 +733,7 @@ class GraphicsDemo : Widget
     img := demo.folderIcon
     g.drawImage(img, 220, 20)
     g.copyImage(img, Rect { x=0; y=0; w=img.size.w; h=img.size.h }, Rect { x=250; y=30; w=64; h=64})
+    g.drawImage(img.resize(Size(64, 64)), 320, 30)
     g.push
     try
     {
