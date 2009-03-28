@@ -218,6 +218,9 @@ class ActorTest : Test
     verifyEq(group.isStopped, true)
     verifyEq(group.isDone, false)
 
+    // verify can't send anymore
+    actors.each |Actor a| { verifyErr(Err#) |,| { a.send(10sec) } }
+
     // stop again, join with no timeout
     group.stop.join
     t2 = Duration.now
@@ -257,6 +260,9 @@ class ActorTest : Test
     t1 := Duration.now
     group.kill
     verifyEq(group.isStopped, true)
+
+    // verify can't send anymore
+    verifyErr(Err#) |,| { Actor(group, &sleep).send(10sec) }
 
     // join
     group.join
