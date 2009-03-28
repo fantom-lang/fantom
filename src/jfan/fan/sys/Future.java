@@ -52,13 +52,22 @@ public final class Future
     Object r = null;
     try
     {
-      // wait until we enter a done state
-      while ((state & DONE) == 0)
+      // wait until we enter a done state, the only notifies
+      // on this object should be from cancel, set, or err
+      if (timeout == null)
       {
-        if (timeout == null)
-          wait();
-        else
+        // wait forever until done
+        while ((state & DONE) == 0) wait();
+      }
+      else
+      {
+        // if not done, then wait with timeout and then
+        // if still not done throw a timeout exception
+        if ((state & DONE) == 0)
+        {
           wait(timeout.millis());
+          if ((state & DONE) == 0) throw TimeoutErr.make("Future.get timed out").val;
+        }
       }
 
       // if canceled throw CancelErr
