@@ -107,15 +107,20 @@ public class Scheduler implements Runnable
    */
   public synchronized void stop()
   {
+    // kill background thread
     alive = false;
     try { thread.interrupt(); } catch (Throwable e) {}
 
+    // call cancel on everything in queue
     Node node = head;
     while (node != null)
     {
       try { node.work.cancel(); } catch (Throwable e) { e.printStackTrace(); }
       node = node.next;
     }
+
+    // clear queue
+    head = null;
   }
 
   /**

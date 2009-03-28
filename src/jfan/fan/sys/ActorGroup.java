@@ -60,6 +60,7 @@ public class ActorGroup
 
   public final ActorGroup stop()
   {
+    scheduler.stop();
     threadPool.stop();
     return this;
   }
@@ -67,6 +68,7 @@ public class ActorGroup
   public final ActorGroup kill()
   {
     killed = true;
+    scheduler.stop();
     threadPool.kill();
     return this;
   }
