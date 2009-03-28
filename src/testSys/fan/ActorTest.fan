@@ -302,7 +302,41 @@ class ActorTest : Test
     // warm up a threads with dummy requests
     5.times |,| { Actor(group, &returnNow).schedule(10ms, "dummy") }
 
-    // schedule a bunch of actors and messages
+    start := Duration.now
+    x100 := Actor(group, &returnNow).schedule(100ms, null)
+    x150 := Actor(group, &returnNow).schedule(150ms, null)
+    x200 := Actor(group, &returnNow).schedule(200ms, null)
+    x250 := Actor(group, &returnNow).schedule(250ms, null)
+    x300 := Actor(group, &returnNow).schedule(300ms, null)
+    verifySchedule(start, x100, 100ms)
+    verifySchedule(start, x150, 150ms)
+    verifySchedule(start, x200, 200ms)
+    verifySchedule(start, x250, 250ms)
+    verifySchedule(start, x300, 300ms)
+
+    start = Duration.now
+    x100 = Actor(group, &returnNow).schedule(100ms, null)
+    verifySchedule(start, x100, 100ms)
+
+    start = Duration.now
+    x300 = Actor(group, &returnNow).schedule(300ms, null)
+    x200 = Actor(group, &returnNow).schedule(200ms, null)
+    x100 = Actor(group, &returnNow).schedule(100ms, null)
+    x150 = Actor(group, &returnNow).schedule(150ms, null)
+    x250 = Actor(group, &returnNow).schedule(250ms, null)
+    verifySchedule(start, x100, 100ms)
+    verifySchedule(start, x150, 150ms)
+    verifySchedule(start, x200, 200ms)
+    verifySchedule(start, x250, 250ms)
+    verifySchedule(start, x300, 300ms)
+  }
+
+  Void testScheduleRand()
+  {
+    // warm up a threads with dummy requests
+    5.times |,| { Actor(group, &returnNow).schedule(10ms, "dummy") }
+
+    // schedule a bunch of actors and messages with random times
     start := Duration.now
     actors := Actor[,]
     futures := Future[,]
@@ -312,8 +346,8 @@ class ActorTest : Test
       a := Actor(group, &returnNow)
       10.times |,|
       {
-        // schedule something randonly between 0ms and 600ms
-        Duration? dur := 1ms * Int.random(0...600).toFloat
+        // schedule something randonly between 0ms and 1sec
+        Duration? dur := 1ms * Int.random(0...1000).toFloat
         f := a.schedule(dur, dur)
 
         // cancel some anything over 500ms
@@ -325,22 +359,23 @@ class ActorTest : Test
     }
 
     // verify cancellation or that scheduling was reasonably accurate
-    futures.each |Future f, Int i|
+    futures.each |Future f, Int i| { verifySchedule(start, f, durs[i], 100ms) }
+  }
+
+  Void verifySchedule(Duration start, Future f, Duration? expected, Duration tolerance := 20ms)
+  {
+    if (expected == null)
     {
-      dur := durs[i]
-      if (dur == null)
-      {
-        verify(f.isCancelled)
-        verify(f.isDone)
-        verifyErr(CancelledErr#) |,| { f.get }
-      }
-      else
-      {
-        Duration elapsed := (Duration)f.get(3sec) - start
-        diff := (dur - elapsed ).abs
-        // echo("$dur.toLocale != $elapsed.toLocale ($diff.toLocale)")
-        verify(diff < 60ms, "$i $dur.toLocale != $elapsed.toLocale ($diff.toLocale)")
-      }
+      verify(f.isCancelled)
+      verify(f.isDone)
+      verifyErr(CancelledErr#) |,| { f.get }
+    }
+    else
+    {
+      Duration actual := (Duration)f.get(3sec) - start
+      diff := (expected - actual).abs
+      // echo("$expected.toLocale != $actual.toLocale ($diff.toLocale)")
+      verify(diff < tolerance, "$expected.toLocale != $actual.toLocale ($diff.toLocale)")
     }
   }
 
