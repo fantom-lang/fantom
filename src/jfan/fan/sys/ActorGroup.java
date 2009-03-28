@@ -64,6 +64,7 @@ public class ActorGroup
 
   public final ActorGroup kill()
   {
+    killed = true;
     threadPool.kill();
     return this;
   }
@@ -99,5 +100,6 @@ public class ActorGroup
 //////////////////////////////////////////////////////////////////////////
 
   private final ThreadPool threadPool;
+  volatile boolean killed;
 
 }

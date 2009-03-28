@@ -64,9 +64,17 @@ public class ThreadPool
   /**
    * Orderly shutdown of threads.  All pending work items are processed.
    */
-  public final void stop()
+  public final synchronized void stop()
   {
     state = STOPPING;
+
+    // immediately wake up all the idle workers so they can die
+    while (true)
+    {
+      Worker w = (Worker)idle.poll();
+      if (w == null) break;
+      w.run(null);
+    }
   }
 
   /**
@@ -76,6 +84,14 @@ public class ThreadPool
   public final synchronized void kill()
   {
     state = STOPPING;
+
+    // kill all the pending work
+    while (true)
+    {
+      Work work = (Work)pending.poll();
+      if (work == null) break;
+      work._kill();
+    }
 
     // interupt each thread
     Iterator it = workers.values().iterator();
@@ -282,6 +298,7 @@ public class ThreadPool
   public static interface Work
   {
     public void _work();
+    public void _kill();
   }
 
 //////////////////////////////////////////////////////////////////////////
