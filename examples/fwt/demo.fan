@@ -198,10 +198,10 @@ class FwtDemo
       numCols = 1
       hgap = 20
       halignCells = Halign.fill
-      ProgressBar { value=25; }
-      ProgressBar { min=0; max=100; value=75; }
-      ProgressBar { min=-100; max=100; value=80; }
-      ProgressBar { min=-100; max=100; value=25; }
+      ProgressBar { val=25; }
+      ProgressBar { min=0; max=100; val=75; }
+      ProgressBar { min=-100; max=100; val=80; }
+      ProgressBar { min=-100; max=100; val=25; }
       ProgressBar { indeterminate = true }
     }
   }

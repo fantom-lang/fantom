@@ -527,6 +527,13 @@ public class WidgetPeer
     throw new IllegalStateException(orientation.toString());
   }
 
+  static Orientation orientation(int style)
+  {
+    if ((style & SWT.HORIZONTAL) != 0) return Orientation.horizontal;
+    if ((style & SWT.VERTICAL) != 0) return Orientation.vertical;
+    throw new IllegalStateException(Integer.toHexString(style));
+  }
+
   static int accelerator(Key key)
   {
     if (key == null) return 0;

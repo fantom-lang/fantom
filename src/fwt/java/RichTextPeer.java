@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.events.*;
 
 public class RichTextPeer
@@ -65,6 +66,11 @@ public class RichTextPeer
     t.addVerifyKeyListener(this);
     t.addVerifyListener(this);
     t.addSelectionListener(this);
+
+    ScrollBar hbar = t.getHorizontalBar();
+    ScrollBar vbar = t.getVerticalBar();
+    if (hbar != null) self.hbar().peer.attachTo(hbar);
+    if (vbar != null) self.vbar().peer.attachTo(vbar);
 
     // this is a hack, but seems to be the only way to set
     // the margins hidden away as private fields in StyledText
