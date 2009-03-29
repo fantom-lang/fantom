@@ -47,39 +47,42 @@ public final class Future
   }
 
   public final Object get() { return get(null); }
-  public final synchronized Object get(Duration timeout)
+  public final Object get(Duration timeout)
   {
     Object r = null;
     try
     {
-      // wait until we enter a done state, the only notifies
-      // on this object should be from cancel, set, or err
-      if (timeout == null)
+      synchronized (this)
       {
-        // wait forever until done
-        while ((state & DONE) == 0) wait();
-      }
-      else
-      {
-        // if not done, then wait with timeout and then
-        // if still not done throw a timeout exception
-        if ((state & DONE) == 0)
+        // wait until we enter a done state, the only notifies
+        // on this object should be from cancel, set, or err
+        if (timeout == null)
         {
-          wait(timeout.millis());
-          if ((state & DONE) == 0) throw TimeoutErr.make("Future.get timed out").val;
+          // wait forever until done
+          while ((state & DONE) == 0) wait();
         }
+        else
+        {
+          // if not done, then wait with timeout and then
+          // if still not done throw a timeout exception
+          if ((state & DONE) == 0)
+          {
+            wait(timeout.millis());
+            if ((state & DONE) == 0) throw TimeoutErr.make("Future.get timed out").val;
+          }
+        }
+
+        // if canceled throw CancelErr
+        if (state == DONE_CANCEL)
+          throw CancelledErr.make("message canceled").val;
+
+        // if error was raised, raise it to caller
+        if (state == DONE_ERR)
+          throw ((Err)result).rebase();
+
+        // assign result to local variable for return
+        r = result;
       }
-
-      // if canceled throw CancelErr
-      if (state == DONE_CANCEL)
-        throw CancelledErr.make("message canceled").val;
-
-      // if error was raised, raise it to caller
-      if (state == DONE_ERR)
-        throw ((Err)result).rebase();
-
-      // assign result to local variable to return
-      r = result;
     }
     catch (InterruptedException e)
     {
@@ -97,11 +100,15 @@ public final class Future
     notifyAll();
   }
 
-  final synchronized void set(Object r)
+  final void set(Object r)
   {
-    state = DONE_OK;
-    result = r;
-    notifyAll();
+    r = Namespace.safe(r);
+    synchronized (this)
+    {
+      state = DONE_OK;
+      result = r;
+      notifyAll();
+    }
   }
 
   final synchronized void err(Err e)

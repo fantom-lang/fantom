@@ -7,6 +7,7 @@
 //
 package fan.sys;
 
+import java.util.HashMap;
 import fanx.util.ThreadPool;
 
 /**
@@ -45,6 +46,28 @@ public class Actor
     // init
     self.group = group;
     self.receive = receive;
+    self.queue = new Queue();
+  }
+
+  public static Actor makeCoalescing(ActorGroup group, Func k, Func c) { return makeCoalescing(group, k, c, null); }
+  public static Actor makeCoalescing(ActorGroup group, Func k, Func c, Func r)
+  {
+    Actor self = new Actor();
+    makeCoalescing$(self, group, k, c, r);
+    return self;
+  }
+
+  public static void makeCoalescing$(Actor self, ActorGroup group, Func k, Func c) { makeCoalescing$(self, group, k, c, null); }
+  public static void makeCoalescing$(Actor self, ActorGroup group, Func k, Func c, Func r)
+  {
+    if (k != null && !k.isImmutable())
+      throw NotImmutableErr.make("Coalescing toKey func not immutable: " + k).val;
+
+    if (c != null && !c.isImmutable())
+      throw NotImmutableErr.make("Coalescing coalesce func not immutable: " + c).val;
+
+    make$(self, group, r);
+    self.queue = new CoalescingQueue(k, c);
   }
 
   public Actor()
@@ -92,93 +115,206 @@ public class Actor
 
     // either enqueue immediately or schedule with group
     if (dur == null)
-      _enqueue(f);
+      f = _enqueue(f, true);
     else
       group.schedule(this, dur, f);
 
     return f;
   }
 
-  final void _enqueue(Future f)
+  final Future _enqueue(Future f, boolean coalesce)
   {
     synchronized (lock)
     {
-      if (head == null)
+      // attempt to coalesce
+      if (coalesce)
       {
-        head = tail = f;
-        if (!dispatching) group.submit(this);
+        Future c = queue.coalesce(f);
+        if (c != null) return c;
       }
-      else
+
+      // add to queue
+      queue.add(f);
+
+      // submit to thread pool if not submitted or current running
+      if (!submitted)
       {
-        tail.next = f;
-        tail = f;
+        submitted = true;
+        group.submit(this);
       }
+
+      return f;
     }
   }
 
   public final void _work()
   {
-    // dequeue everything pending and clear queue
-    Future queue = null;
-    Context cx = null;
-    synchronized (lock)
+    // process up to 100 messages before yielding the thread
+    for (int count = 0; count < 100; count++)
     {
-      queue = head;
-      head = tail = null;
-      cx = context;
-      dispatching = true;
+      // get next message, or if none pending we are done
+      Future future = null;
+      synchronized (lock) { future = queue.get(); }
+      if (future == null) break;
+
+      // dispatch the messge
+      _dispatch(future);
     }
 
-    // dispatch messages
-    while (queue != null)
-    {
-      _dispatch(cx, queue);
-      queue = queue.next;
-    }
-
-    // done dispatching, if new messages have arrived since
-    // we started, submit back to the group for execution
+    // done dispatching, either clear the submitted
+    // flag or resubmit to the thread pool
     synchronized (lock)
     {
-      dispatching = false;
-      if (head != null) group.submit(this);
+      if (queue.size == 0)
+      {
+        submitted = false;
+      }
+      else
+      {
+        submitted = true;
+        group.submit(this);
+      }
     }
   }
 
-  final void _dispatch(Context cx, Future msg)
+  final void _dispatch(Future future)
   {
     try
     {
-      if (msg.isCancelled()) return;
-      if (group.killed) { msg.cancel(); return; }
-      msg.set(receive(cx, msg.msg));
+      if (future.isCancelled()) return;
+      if (group.killed) { future.cancel(); return; }
+      future.set(receive(context, future.msg));
     }
     catch (Err.Val e)
     {
-      msg.err(e.err);
+      future.err(e.err);
     }
     catch (Throwable e)
     {
-      msg.err(Err.make(e));
+      future.err(Err.make(e));
     }
   }
 
   public void _kill()
   {
-    // get the pending queue
-    Future queue = null;
+    // get/reset the pending queue
+    Queue queue = null;
     synchronized (lock)
     {
-      queue = head;
-      head = null;
+      queue = this.queue;
+      this.queue = new Queue();
     }
 
     // cancel all pending messages
-    while (queue != null)
+    while (true)
     {
-      queue.cancel();
-      queue = queue.next;
+      Future future = queue.get();
+      if (future == null) break;
+      future.cancel();
     }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Queue
+//////////////////////////////////////////////////////////////////////////
+
+  static class Queue
+  {
+    public Future get()
+    {
+      if (head == null) return null;
+      Future f = head;
+      head = f.next;
+      if (head == null) tail = null;
+      f.next = null;
+      size--;
+      return f;
+    }
+
+    public void add(Future f)
+    {
+      if (tail == null) { head = tail = f; f.next = null; }
+      else { tail.next = f; tail = f; }
+      size++;
+    }
+
+    public Future coalesce(Future f)
+    {
+      return null;
+    }
+
+    Future head, tail;
+    int size;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// CoalescingQueue
+//////////////////////////////////////////////////////////////////////////
+
+  static class CoalescingQueue extends Queue
+  {
+    CoalescingQueue(Func toKeyFunc, Func coalesceFunc)
+    {
+      this.toKeyFunc = toKeyFunc;
+      this.coalesceFunc = coalesceFunc;
+    }
+
+    public Future get()
+    {
+      Future f = super.get();
+      if (f != null)
+      {
+        try
+        {
+          Object key = toKey(f.msg);
+          if (key != null) pending.remove(key);
+        }
+        catch (Throwable e)
+        {
+          e.printStackTrace();
+        }
+      }
+      return f;
+    }
+
+    public void add(Future f)
+    {
+      try
+      {
+        Object key = toKey(f.msg);
+        if (key != null) pending.put(key, f);
+      }
+      catch (Throwable e)
+      {
+        e.printStackTrace();
+      }
+      super.add(f);
+    }
+
+    public Future coalesce(Future incoming)
+    {
+      Object key = toKey(incoming.msg);
+      if (key == null) return null;
+
+      Future orig = (Future)pending.get(key);
+      if (orig == null) return null;
+
+      orig.msg = coalesce(orig.msg, incoming.msg);
+      return orig;
+    }
+
+    private Object toKey(Object obj)
+    {
+      return toKeyFunc == null ? obj : toKeyFunc.call1(obj);
+    }
+
+    private Object coalesce(Object orig, Object incoming)
+    {
+      return coalesceFunc == null ? incoming : coalesceFunc.call2(orig, incoming);
+    }
+
+    Func toKeyFunc, coalesceFunc;
+    HashMap pending = new HashMap();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -189,7 +325,7 @@ public class Actor
   private ActorGroup group;              // group controller
   private Func receive;                  // func to invoke on receive or null
   private Object lock = new Object();    // lock for message queue
-  private Future head, tail;             // message queue linked list
-  private boolean dispatching = false;   // are we currently dispatching
+  private Queue queue;                   // message queue linked list
+  private boolean submitted = false;     // is actor submitted to thread pool
 
 }
