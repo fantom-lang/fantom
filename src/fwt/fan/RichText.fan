@@ -81,6 +81,16 @@ class RichText : TextWidget
   @transient readonly EventListeners onCaret := EventListeners()
 
   **
+  ** Horizontal scroll bar.
+  **
+  ScrollBar hbar := ScrollBar()  { private set }
+
+  **
+  ** Vertical scroll bar.
+  **
+  ScrollBar vbar := ScrollBar() { private set }
+
+  **
   ** Backing data model of text document.
   **
   RichTextModel? model

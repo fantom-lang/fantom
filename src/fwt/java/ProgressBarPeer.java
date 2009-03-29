@@ -41,10 +41,10 @@ public class ProgressBarPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  // Int value := 0
-  public long value(fan.fwt.ProgressBar self) { return value.get(); }
-  public void value(fan.fwt.ProgressBar self, long v) { value.set(v); }
-  public final Prop.IntProp value = new Prop.IntProp(this, 0)
+  // Int val := 0
+  public long val(fan.fwt.ProgressBar self) { return val.get(); }
+  public void val(fan.fwt.ProgressBar self, long v) { val.set(v); }
+  public final Prop.IntProp val = new Prop.IntProp(this, 0)
   {
     public int get(Widget w) { return ((ProgressBar)w).getSelection(); }
     public void set(Widget w, int v) { ((ProgressBar)w).setSelection(v); }

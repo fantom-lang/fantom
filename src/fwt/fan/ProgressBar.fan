@@ -16,7 +16,7 @@ class ProgressBar : Widget
   ** The current value of the progess. Must be >= 0.
   ** Defaults to 0.
   **
-  native Int value
+  native Int val
 
   **
   ** The minimum value of the progess. Must be >= 0.

@@ -576,3 +576,6 @@
 - Added sys::Service API
 - Added sys::Actor API
 - Renamed UnknownThreadErr to UnknownServiceErr
+- Image resize
+- ScrollBar added
+- ProgressBar.value renamed val
