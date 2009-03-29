@@ -364,6 +364,8 @@ class FwtDemo
       onSelect.add |Event e| { echo(e); echo("selected=${e->widget->selected}") }
       onPopup.add |Event e|  { echo(e); e.popup = makePopup }
       // onMouseMove.add |Event e| { echo(e.pos + ": " + e->widget->nodeAt(e.pos)) }
+      // hbar.onModify.add(&onScroll("Tree.hbar"))
+      // vbar.onModify.add(&onScroll("Tree.vbar"))
     }
 
     table := Table
@@ -374,6 +376,8 @@ class FwtDemo
       onSelect.add |Event e| { echo(e); echo("selected=${e->widget->selected}") }
       onPopup.add |Event e|  { echo(e); e.popup = makePopup }
       // onMouseMove.add |Event e| { Int? row := e->widget->rowAt(e.pos); Int? col := e->widget->colAt(e.pos); echo("Row: $row Col: $col " + ((row != null && col != null) ? e->widget->model->text(col, row) : "")) }
+      // hbar.onModify.add(&onScroll("Table.hbar"))
+      // vbar.onModify.add(&onScroll("Table.vbar"))
     }
 
     updateTable := |File dir| { table.model->dir = dir.list; table.refreshAll }
@@ -537,6 +541,12 @@ class FwtDemo
       MenuItem { text = "Popup 2"; onAction.add(&cb) }
       MenuItem { text = "Popup 3"; onAction.add(&cb) }
     }
+  }
+
+  static Void onScroll(Str name, Event e)
+  {
+    ScrollBar sb := e.widget
+    echo("-- onScroll $name $e  [val=$sb.val min=$sb.min max=$sb.max thumb=$sb.thumb page=$sb.page orient=$sb.orientation")
   }
 
   WebBrowser browser := WebBrowser {}

@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Widget;
@@ -54,6 +55,11 @@ public class TablePeer
     t.addListener(SWT.MenuDetect, this);
     t.addSelectionListener(this);
     t.setMenu(new Menu(t));
+
+    ScrollBar hbar = t.getHorizontalBar();
+    ScrollBar vbar = t.getVerticalBar();
+    if (hbar != null) self.hbar().peer.attachTo(hbar);
+    if (vbar != null) self.vbar().peer.attachTo(vbar);
 
     this.control = t;
     rebuild();
