@@ -15,6 +15,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.Widget;
 
@@ -53,6 +54,11 @@ public class TreePeer
     t.addListener(SWT.MenuDetect, this);
     t.addSelectionListener(this);
     t.setMenu(new Menu(t));
+
+    ScrollBar hbar = t.getHorizontalBar();
+    ScrollBar vbar = t.getVerticalBar();
+    if (hbar != null) self.hbar().peer.attachTo(hbar);
+    if (vbar != null) self.vbar().peer.attachTo(vbar);
 
     if (Env.isWindows())
     {

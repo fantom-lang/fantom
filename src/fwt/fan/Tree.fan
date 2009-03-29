@@ -53,6 +53,16 @@ class Tree : Widget
   @transient readonly EventListeners onPopup := EventListeners()
 
   **
+  ** Horizontal scroll bar.
+  **
+  ScrollBar hbar := ScrollBar()  { private set }
+
+  **
+  ** Vertical scroll bar.
+  **
+  ScrollBar vbar := ScrollBar() { private set }
+
+  **
   ** Draw a border around the widget.  Default is true.  This
   ** field cannot be changed once the widget is constructed.
   **
