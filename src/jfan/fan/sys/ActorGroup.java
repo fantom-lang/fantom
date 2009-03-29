@@ -112,7 +112,7 @@ public class ActorGroup
   {
     ScheduledWork(Actor a, Future f) { actor = a; future = f; }
     public String toString() { return "ScheduledWork msg=" + future.msg; }
-    public void work() { if (!future.isCancelled()) actor._enqueue(future); }
+    public void work() { if (!future.isCancelled()) actor._enqueue(future, false); }
     public void cancel() { future.cancel(); }
     final Actor actor;
     final Future future;

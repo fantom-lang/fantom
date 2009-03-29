@@ -416,4 +416,136 @@ class ActorTest : Test
 
   static Obj? returnNow(Context cx, Obj? msg) { Duration.now }
 
+//////////////////////////////////////////////////////////////////////////
+// Coalescing (no funcs)
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCoalescing()
+  {
+    a := Actor.makeCoalescing(group, null, null, &coalesce)
+    fstart  := a.send(100ms)
+
+    f1s := Future[,]
+    f2s := Future[,]
+    f3s := Future[,]
+    f4s := Future[,]
+    ferr := Future[,]
+    fcancel := Future[,]
+
+    f1s.add(a.send("one"))
+    fcancel.add(a.send("cancel"))
+    f2s.add(a.send("two"))
+    f1s.add(a.send("one"))
+    f2s.add(a.send("two"))
+    f3s.add(a.send("three"))
+    ferr.add(a.send("throw"))
+    f4s.add(a.send("four"))
+    fcancel.add(a.send("cancel"))
+    f1s.add(a.send("one"))
+    ferr.add(a.send("throw"))
+    f4s.add(a.send("four"))
+    fcancel.add(a.send("cancel"))
+    fcancel.add(a.send("cancel"))
+    f3s.add(a.send("three"))
+    ferr.add(a.send("throw"))
+    ferr.add(a.send("throw"))
+
+    fcancel.first.cancel
+
+    a.send(10ms).get(2sec) // wait until completed
+
+    verifyAllSame(f1s)
+    verifyAllSame(f2s)
+    verifyAllSame(f3s)
+    verifyAllSame(f4s)
+    verifyAllSame(ferr)
+    verifyAllSame(fcancel)
+
+    f1s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["one"]) }
+    f2s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["one", "two"]) }
+    f3s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["one", "two", "three"]) }
+    f4s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["one", "two", "three", "four"]) }
+    ferr.each |Future f| { verify(f.isDone); verifyErr(IndexErr#) |,| { f.get } }
+    verifyAllCancelled(fcancel)
+  }
+
+  static Obj? coalesce(Context cx, Obj? msg)
+  {
+    if (msg is Duration) { Thread.sleep(msg); cx["msgs"] = Str[,]; return msg }
+    if (msg == "throw") throw IndexErr("foo bar")
+    Str[] msgs := cx.get("msgs")
+    msgs.add(msg)
+    return msgs
+  }
+
+  Void verifyAllSame(Obj[] list)
+  {
+    x := list.first
+    list.each |Obj y| { verifySame(x, y) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Coalescing (with funcs)
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCoalescingFunc()
+  {
+    a := Actor.makeCoalescing(group, &coalesceKey, &coalesceCoalesce, &coalesceReceive)
+
+    fstart  := a.send(100ms)
+
+    f1s := Future[,]
+    f2s := Future[,]
+    f3s := Future[,]
+    ferr := Future[,]
+    fcancel := Future[,]
+
+    ferr.add(a.send(["throw"]))
+    f1s.add(a.send(["1", 1]))
+    f2s.add(a.send(["2", 10]))
+    f2s.add(a.send(["2", 20]))
+    ferr.add(a.send(["throw"]))
+    f2s.add(a.send(["2", 30]))
+    fcancel.add(a.send(["cancel"]))
+    fcancel.add(a.send(["cancel"]))
+    f3s.add(a.send(["3", 100]))
+    f1s.add(a.send(["1", 2]))
+    f3s.add(a.send(["3", 200]))
+    fcancel.add(a.send(["cancel"]))
+    ferr.add(a.send(["throw"]))
+
+    fcancel.first.cancel
+
+    a.send(10ms).get(2sec) // wait until completed
+
+    verifyAllSame(f1s)
+    verifyAllSame(f2s)
+    verifyAllSame(f3s)
+    verifyAllSame(ferr)
+    verifyAllSame(fcancel)
+
+    f1s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["1", 1, 2]) }
+    f2s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["2", 10, 20, 30]) }
+    f3s.each |Future f| { verify(f.isDone); verifyEq(f.get, ["3", 100, 200]) }
+    ferr.each |Future f| { verify(f.isDone); verifyErr(IndexErr#) |,| { f.get } }
+    verifyAllCancelled(fcancel)
+  }
+
+  static Obj? coalesceKey(Obj? msg)
+  {
+    msg is List ? msg->get(0): null
+  }
+
+  static Obj? coalesceCoalesce(Obj[] a, Obj[] b)
+  {
+    Obj[,].add(a[0]).addAll(a[1..-1]).addAll(b[1..-1])
+  }
+
+  static Obj? coalesceReceive(Context cx, Obj? msg)
+  {
+    if (msg is Duration) { Thread.sleep(msg); return msg }
+    if (msg->first == "throw") throw IndexErr("foo bar")
+    return msg
+  }
+
 }

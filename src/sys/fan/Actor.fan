@@ -22,6 +22,34 @@ const class Actor
   new make(ActorGroup group, |Context,Obj? -> Obj?|? receive := null)
 
   **
+  ** Create an actor with a coalescing message loop.  This constructor
+  ** follows the same semantics as `make`, but has the ability to coalesce
+  ** the messages pending in the thread's message queue.  Coalesced
+  ** messages are merged into a single pending message with a shared
+  ** Future.
+  **
+  ** The 'toKey' function is used to derive a key for each message,
+  ** or if null then the message itself is used as the key.  If the 'toKey'
+  ** function returns null, then the message is not considered for coalescing.
+  ** Internally messages are indexed by key for efficient coalescing.
+  **
+  ** If an incoming message has the same key as a pending message
+  ** in the queue, then the 'coalesce' function is called to coalesce
+  ** the messages into a new merged message.  If 'coalesce' is null,
+  ** then we use the incoming message (last one wins).  The coalesced
+  ** message occupies the same position in the queue as the original
+  ** and reuses the original message's Future instance.
+  **
+  ** Both the 'toKey' and 'coalesce' functions are called while holding
+  ** an internal lock on the queue.  So the functions must be efficient
+  ** and never attempt to interact with other actors.
+  **
+  new makeCoalescing(ActorGroup group,
+                     |Obj? msg->Obj?|? toKey,
+                     |Obj? orig, Obj? incoming->Obj?|? coalesce,
+                     |Context,Obj? -> Obj?|? receive := null)
+
+  **
   ** The group used to control execution of this actor.
   **
   ActorGroup group()
@@ -31,7 +59,8 @@ const class Actor
   ** If msg is not immutable or serializable, then IOErr is thrown.
   ** Throw Err if this actor's group has been stopped.  Return
   ** a future which may be used to obtain the result once it the
-  ** actor has processed the message.
+  ** actor has processed the message.  If the message is coalesced
+  ** then this method returns the original message's future reference.
   **
   Future send(Obj? msg)
 
