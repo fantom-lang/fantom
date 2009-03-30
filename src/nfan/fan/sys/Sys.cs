@@ -76,6 +76,11 @@ namespace Fan.Sys
       return System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
     }
 
+    public static long nanoTime()
+    {
+      return System.DateTime.Now.Ticks * DateTime.nsPerTick;
+    }
+
     public static Map diagnostics()
     {
       Map d = new Map(StrType, ObjType);
@@ -86,11 +91,6 @@ namespace Fan.Sys
     public static void dumpStack()
     {
       System.Console.WriteLine(new System.Diagnostics.StackTrace(true));
-    }
-
-    public static long ticks()
-    {
-      return System.DateTime.Now.Ticks * DateTime.nsPerTick;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -225,7 +225,14 @@ namespace Fan.Sys
         ZipEntryFileType = builtin("ZipEntryFile", FileType);
         ZipType          = builtin("Zip",          ObjType);
 
+        // actos
+        ActorType        = builtin("Actor",        ObjType);
+        ActorGroupType   = builtin("ActorGroup",   ObjType);
+        ContextType      = builtin("Context",      ObjType);
+        FutureType       = builtin("Future",       ObjType);
+
         // utils
+        DependType       = builtin("Depend",       ObjType);
         LogType          = builtin("Log",          ObjType);
         LogLevelType     = builtin("LogLevel",     EnumType);
         LogRecordType    = builtin("LogRecord",    ObjType);
@@ -234,7 +241,7 @@ namespace Fan.Sys
         ProcessType      = builtin("Process",      ObjType);
         RegexType        = builtin("Regex",        ObjType);
         RegexMatcherType = builtin("RegexMatcher", ObjType);
-        DependType       = builtin("Depend",       ObjType);
+        ServiceType      = builtin("Service",      ObjType);
         VersionType      = builtin("Version",      ObjType);
         UnitType         = builtin("Unit",         ObjType);
         UnsafeType       = builtin("Unsafe",       ObjType);
@@ -246,24 +253,26 @@ namespace Fan.Sys
         FileSchemeType   = builtin("FileScheme",   UriSchemeType);
 
         // exceptions
-        ErrType              = builtin("Err",              ObjType);
-        ArgErrType           = builtin("ArgErr",           ErrType);
-        CastErrType          = builtin("CastErr",          ErrType);
-        IndexErrType         = builtin("IndexErr",         ErrType);
-        InterruptedErrType   = builtin("InterruptedErr",   ErrType);
-        IOErrType            = builtin("IOErr",            ErrType);
-        NameErrType          = builtin("NameErr",          ErrType);
-        NotImmutableErrType  = builtin("NotImmutableErr",  ErrType);
-        NullErrType          = builtin("NullErr",          ErrType);
-        ParseErrType         = builtin("ParseErr",         ErrType);
-        ReadonlyErrType      = builtin("ReadonlyErr",      ErrType);
-        TestErrType          = builtin("TestErr",          ErrType);
-        UnknownPodErrType    = builtin("UnknownPodErr",    ErrType);
-        UnknownSlotErrType   = builtin("UnknownSlotErr",   ErrType);
-        UnknownTypeErrType   = builtin("UnknownTypeErr",   ErrType);
+        ErrType               = builtin("Err",               ObjType);
+        ArgErrType            = builtin("ArgErr",            ErrType);
+        CancelledErrType      = builtin("CancelledErr",      ErrType);
+        CastErrType           = builtin("CastErr",           ErrType);
+        IndexErrType          = builtin("IndexErr",          ErrType);
+        InterruptedErrType    = builtin("InterruptedErr",    ErrType);
+        IOErrType             = builtin("IOErr",             ErrType);
+        NameErrType           = builtin("NameErr",           ErrType);
+        NotImmutableErrType   = builtin("NotImmutableErr",   ErrType);
+        NullErrType           = builtin("NullErr",           ErrType);
+        ParseErrType          = builtin("ParseErr",          ErrType);
+        ReadonlyErrType       = builtin("ReadonlyErr",       ErrType);
+        TestErrType           = builtin("TestErr",           ErrType);
+        TimeoutErrType        = builtin("TimeoutErr",        ErrType);
+        UnknownPodErrType     = builtin("UnknownPodErr",     ErrType);
+        UnknownSlotErrType    = builtin("UnknownSlotErr",    ErrType);
+        UnknownTypeErrType    = builtin("UnknownTypeErr",    ErrType);
         UnknownServiceErrType = builtin("UnknownServiceErr", ErrType);
-        UnresolvedErrType    = builtin("UnresolvedErr",    ErrType);
-        UnsupportedErrType   = builtin("UnsupportedErr",   ErrType);
+        UnresolvedErrType     = builtin("UnresolvedErr",     ErrType);
+        UnsupportedErrType    = builtin("UnsupportedErr",    ErrType);
 
         // generic types
         GenericParameterTypes['A'] = AType = new ClassType(SysPod, "A", 0, null);  // A-H Params
@@ -481,7 +490,14 @@ namespace Fan.Sys
     public static readonly Type ZipEntryFileType;
     public static readonly Type ZipType;
 
+    // actos
+    public static readonly Type ActorType;
+    public static readonly Type ActorGroupType;
+    public static readonly Type ContextType;
+    public static readonly Type FutureType;
+
     // utils
+    public static readonly Type DependType;
     public static readonly Type LogType;
     public static readonly Type LogLevelType;
     public static readonly Type LogRecordType;
@@ -490,7 +506,7 @@ namespace Fan.Sys
     public static readonly Type ProcessType;
     public static readonly Type RegexType;
     public static readonly Type RegexMatcherType;
-    public static readonly Type DependType;
+    public static readonly Type ServiceType;
     public static readonly Type VersionType;
     public static readonly Type UnitType;
     public static readonly Type UnsafeType;
@@ -504,6 +520,7 @@ namespace Fan.Sys
     // exceptions
     public static readonly Type ErrType;
     public static readonly Type ArgErrType;
+    public static readonly Type CancelledErrType;
     public static readonly Type CastErrType;
     public static readonly Type IndexErrType;
     public static readonly Type InterruptedErrType;
@@ -514,6 +531,7 @@ namespace Fan.Sys
     public static readonly Type ParseErrType;
     public static readonly Type ReadonlyErrType;
     public static readonly Type TestErrType;
+    public static readonly Type TimeoutErrType;
     public static readonly Type UnknownPodErrType;
     public static readonly Type UnknownSlotErrType;
     public static readonly Type UnknownTypeErrType;
