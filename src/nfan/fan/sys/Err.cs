@@ -137,26 +137,16 @@ namespace Fan.Sys
       return m_cause;
     }
 
-    public Err trace() { return trace(0); }
-    public Err trace(int indent)
+    public Err trace() { return trace(Sys.StdOut, 0, true); }
+    public Err trace(OutStream @out) { return trace(@out, 0, true); }
+    public Err trace(OutStream @out, int indent, bool useActual)
     {
-      dumpStack(toStr(), m_actual != null ? m_actual : val, indent);
-      if (m_cause != null)
-      {
-        System.Console.WriteLine("Cause:");
-        m_cause.trace(indent+2);
-      }
-      return this;
-    }
-
-    public Err trace(OutStream @out) { return trace(@out, 0); }
-    public Err trace(OutStream @out, int indent)
-    {
-      dumpStack(toStr(), m_actual != null ? m_actual : val, @out, indent);
+      Exception ex = m_actual != null && useActual ? m_actual : val;
+      dumpStack(toStr(), ex, @out, indent);
       if (m_cause != null)
       {
         @out.printLine("Cause:");
-        m_cause.trace(@out, indent+2);
+        m_cause.trace(@out, indent+2, useActual);
       }
       return this;
     }
@@ -179,6 +169,20 @@ namespace Fan.Sys
         return type().qname();
       else
         return type().qname() + ": " + m_message;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Rebasing
+  //////////////////////////////////////////////////////////////////////////
+
+    internal Val rebase()
+    {
+      m_actual = new RebaseException();
+      return val;
+    }
+
+    public class RebaseException : Exception
+    {
     }
 
   //////////////////////////////////////////////////////////////////////////

@@ -557,7 +557,7 @@ namespace Fan.Sys
 
         // allocate timer structure
         Timer t = new Timer();
-        t.deadline = Sys.ticks() + dur.m_ticks;
+        t.deadline = Sys.nanoTime() + dur.m_ticks;
         t.duration = repeat ? dur.m_ticks : -1;
         t.msg = obj;
         m_timers[id] = t;
@@ -608,7 +608,7 @@ namespace Fan.Sys
       while (m_state == RUNNING)
       {
         // check for expired timers
-        long now = Sys.ticks();
+        long now = Sys.nanoTime();
         long snooze = Int64.MaxValue;
         for (int i=0; i<m_timers.Length; ++i)
         {

@@ -58,8 +58,11 @@ namespace Fan.Sys
     public void print() { print(Sys.@out()); }
     public void print(OutStream @out)
     {
-      @out.printLine(toStr());
-      if (m_err != null) m_err.trace(@out, 2);
+      lock (@out)
+      {
+        @out.printLine(toStr());
+        if (m_err != null) m_err.trace(@out, 2, true);
+      }
     }
 
   //////////////////////////////////////////////////////////////////////////
