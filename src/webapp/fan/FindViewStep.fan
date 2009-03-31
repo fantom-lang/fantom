@@ -54,7 +54,7 @@ const class FindViewStep : WebAppStep
     }
 
     // use typedb to match resource type to weblet type
-    viewTypes := Type.findByFacet("webView", req.resource.type, true)
+    viewTypes := findViews(req, res)
     if (viewTypes.isEmpty)
     {
       log.warn("No view available for $req.resource.type")
@@ -70,7 +70,11 @@ const class FindViewStep : WebAppStep
       viewTypes.each |Type vt|
       {
         Int priority := vt.facet("webViewPriority", 0)
-        if (priority > max) viewType = vt
+        if (priority > max)
+        {
+          max = priority
+          viewType = vt
+        }
       }
     }
 
@@ -86,5 +90,12 @@ const class FindViewStep : WebAppStep
     req.stash["webapp.view"] = view
   }
 
+  **
+  ** Return the list of avaiable views for the current resource.
+  **
+  virtual Type[] findViews(WebReq req, WebRes res)
+  {
+    return Type.findByFacet("webView", req.resource.type, true)
+  }
 
 }
