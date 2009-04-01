@@ -7,6 +7,8 @@
 //
 package fan.sys;
 
+import java.util.ArrayList;
+
 /**
  * Future is used to manage the entire lifecycle of each
  * message send to an Actor.  An actor's queue is a linked
@@ -93,29 +95,89 @@ public final class Future
     return Namespace.safe(r);
   }
 
-  public final synchronized void cancel()
+  public final void cancel()
   {
-    if ((state & DONE) == 0) state = DONE_CANCEL;
-    msg = result = null;  // allow gc
-    notifyAll();
+    ArrayList wd;
+    synchronized (this)
+    {
+      if ((state & DONE) == 0) state = DONE_CANCEL;
+      msg = result = null;  // allow gc
+      notifyAll();
+      wd = whenDone; whenDone = null;
+    }
+    sendWhenDone(wd);
   }
 
   final void set(Object r)
   {
     r = Namespace.safe(r);
+    ArrayList wd;
     synchronized (this)
     {
       state = DONE_OK;
       result = r;
       notifyAll();
+      wd = whenDone; whenDone = null;
+    }
+    sendWhenDone(wd);
+  }
+
+  final void err(Err e)
+  {
+    ArrayList wd;
+    synchronized (this)
+    {
+      state = DONE_ERR;
+      result = e;
+      notifyAll();
+      wd = whenDone; whenDone = null;
+    }
+    sendWhenDone(wd);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// When Done
+//////////////////////////////////////////////////////////////////////////
+
+  final void sendWhenDone(Actor a, Future f)
+  {
+    // if already done, then set immediate flag
+    // otherwise add to our when done list
+    boolean immediate = false;
+    synchronized (this)
+    {
+      if (isDone()) immediate = true;
+      else
+      {
+        if (whenDone == null) whenDone = new ArrayList();
+        whenDone.add(new WhenDone(a, f));
+      }
+    }
+
+    // if immediate we are already done so enqueue immediately
+    if (immediate)
+    {
+      try { a._enqueue(f, false); }
+      catch (Throwable e) { e.printStackTrace(); }
     }
   }
 
-  final synchronized void err(Err e)
+  static void sendWhenDone(ArrayList list)
   {
-    state = DONE_ERR;
-    result = e;
-    notifyAll();
+    if (list == null) return;
+    for (int i=0; i<list.size(); ++i)
+    {
+      WhenDone wd = (WhenDone)list.get(i);
+      try { wd.actor._enqueue(wd.future, false); }
+      catch (Throwable e) { e.printStackTrace(); }
+    }
+  }
+
+  static class WhenDone
+  {
+    WhenDone(Actor a, Future f) { actor = a; future = f; }
+    Actor actor;
+    Future future;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -132,5 +194,6 @@ public final class Future
   Future next;                 // linked list in Actor
   private volatile int state;  // processing state of message
   private Object result;       // result or exception of processing
+  private ArrayList whenDone;  // list of messages to deliver when done
 
 }
