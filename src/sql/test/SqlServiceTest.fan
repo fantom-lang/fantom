@@ -21,7 +21,6 @@ class SqlServiceTest : Test
   once SqlService db()
   {
     return SqlService(
-      null,
       Sys.env["sql.test.connection"],
       Sys.env["sql.test.username"],
       Sys.env["sql.test.password"],
@@ -56,7 +55,6 @@ class SqlServiceTest : Test
     {
       db.close
       verify(db.isClosed)
-      db.stop
     }
   }
 
@@ -68,7 +66,6 @@ class SqlServiceTest : Test
   {
     try
     {
-      db.start
       db.open
       db.close
       return true

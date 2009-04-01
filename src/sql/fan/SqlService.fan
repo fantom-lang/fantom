@@ -12,12 +12,11 @@
 **
 ** See `docLib::Sql`.
 **
-const class SqlService : Thread
+const class SqlService : Service
 {
   **
   ** Make a new SqlService.
   **
-  ** - 'threadName' is the unique name used to identify the thread.
   ** - 'connection' is the connection string.  For java this is the jdbc url.  For .NET
   **   this is the connection string.
   ** - 'username' is the username for the database login.
@@ -25,34 +24,20 @@ const class SqlService : Thread
   ** - 'dialect' is the database specific dialect implementation.  If null,
   **   MySqlDialect is assumed.
   **
-  new make(Str? threadName  := null,
-           Str connection  := "",
+  new make(Str connection  := "",
            Str? username    := "",
            Str? password    := "",
-           Dialect? dialect := null) : super(threadName)
+           Dialect? dialect := null)
   {
     this.connection = connection
     this.username   = username
     this.password   = password
+    this.id         = "SqlService-" + Int.random.toHex
 
     if (dialect == null)
       dialect = MySqlDialect.make
     else
       this.dialect = dialect
-  }
-
-  **
-  ** Return true.
-  **
-  override Bool isService() { return true }
-
-  override protected Obj? run()
-  {
-    log.info("SqlService started ($name)")
-    log.info("SqlService connection: $connection")
-    loop |Obj->Obj?| { return null }
-    log.info("SqlService stopped ($name)")
-    return null
   }
 
   **
@@ -65,13 +50,13 @@ const class SqlService : Thread
   **
   SqlService open()
   {
-    if (!isRunning()) throw Err("SqlService not started")
+    log.info("SqlService opened [$connection]")
 
-    Connection? conn := Actor.locals[name]
+    Connection? conn := Actor.locals[id]
     if (conn == null)
     {
       conn = Connection.open(connection, username, password)
-      Actor.locals[name] = conn
+      Actor.locals[id] = conn
     }
     else
     {
@@ -86,7 +71,7 @@ const class SqlService : Thread
   **
   private Connection? threadConnection(Bool checked := true)
   {
-    Connection? conn := Actor.locals[name]
+    Connection? conn := Actor.locals[id]
     if (conn == null)
     {
       if (checked)
@@ -100,7 +85,7 @@ const class SqlService : Thread
       if (checked)
       {
         conn.close
-        Actor.locals.remove(name)
+        Actor.locals.remove(id)
         throw SqlErr("Database has been closed.")
       }
       else
@@ -119,13 +104,13 @@ const class SqlService : Thread
   **
   Void close()
   {
-    Connection? conn := Actor.locals[name]
+    Connection? conn := Actor.locals[id]
     if (conn != null)
     {
       if (conn.decrement == 0)
       {
         conn.close
-        Actor.locals.remove(name)
+        Actor.locals.remove(id)
       }
     }
   }
@@ -258,4 +243,8 @@ const class SqlService : Thread
   **
   const Str connection
 
+  **
+  ** Unique identifier for VM used to key thread locals
+  **
+  private const Str id
 }
