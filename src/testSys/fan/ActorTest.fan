@@ -64,7 +64,7 @@ class ActorTest : Test
     }
   }
 
-  static Int incr(Context cx, Int msg)
+  static Int incr(Int msg, Context cx)
   {
     if (cx.type != Context#) echo("ERROR: Context.type hosed")
     return msg+1
@@ -94,7 +94,7 @@ class ActorTest : Test
     }
   }
 
-  static Obj? order(Context cx, Obj msg)
+  static Obj? order(Obj msg, Context cx)
   {
     Int[]? r := cx.get("foo")
     if (r == null) cx.set("foo", r = Int[,])
@@ -135,7 +135,7 @@ class ActorTest : Test
     verify(f.isDone)
   }
 
-  static Obj? messaging(Context cx, Str msg)
+  static Obj? messaging(Str msg, Context cx)
   {
     switch (msg)
     {
@@ -172,13 +172,13 @@ class ActorTest : Test
     verify(f.isCancelled)
   }
 
-  static Obj? sleep(Context cx, Obj? msg)
+  static Obj? sleep(Obj? msg)
   {
     if (msg is Duration) Actor.sleep(msg)
     return msg
   }
 
-  static Obj? cancel(Context cx, Future f)
+  static Obj? cancel(Future f)
   {
     Actor.sleep(20ms)
     f.cancel
@@ -414,7 +414,7 @@ class ActorTest : Test
     }
   }
 
-  static Obj? returnNow(Context cx, Obj? msg) { Duration.now }
+  static Obj? returnNow(Obj? msg) { Duration.now }
 
 //////////////////////////////////////////////////////////////////////////
 // When Done
@@ -476,14 +476,14 @@ class ActorTest : Test
     verifyEq(c.get(2sec), expected)
   }
 
-  static Obj? whenDoneA(Context cx, Obj? msg)
+  static Obj? whenDoneA(Obj? msg)
   {
     if (msg == "throw") throw IndexErr()
     if (msg is Duration) Actor.sleep(msg)
     return msg
   }
 
-  static Obj? whenDoneB(Context cx, Future msg)
+  static Obj? whenDoneB(Future msg, Context cx)
   {
     Str x := cx.get("x", "")
     if (!x.isEmpty) x += ","
@@ -549,7 +549,7 @@ class ActorTest : Test
     verifyAllCancelled(fcancel)
   }
 
-  static Obj? coalesce(Context cx, Obj? msg)
+  static Obj? coalesce(Obj? msg, Context cx)
   {
     if (msg is Duration) { Actor.sleep(msg); cx["msgs"] = Str[,]; return msg }
     if (msg == "throw") throw IndexErr("foo bar")
@@ -621,7 +621,7 @@ class ActorTest : Test
     Obj[,].add(a[0]).addAll(a[1..-1]).addAll(b[1..-1])
   }
 
-  static Obj? coalesceReceive(Context cx, Obj? msg)
+  static Obj? coalesceReceive(Obj? msg)
   {
     if (msg is Duration) { Actor.sleep(msg); return msg }
     if (msg->first == "throw") throw IndexErr("foo bar")
@@ -644,7 +644,7 @@ class ActorTest : Test
     }
   }
 
-  static Obj? locals(Int num, Context cx, Obj? msg)
+  static Obj? locals(Int num, Obj? msg)
   {
     if (Actor.locals["testLocal"] == null) Actor.locals["testLocal"] = num
     return Actor.locals["testLocal"]

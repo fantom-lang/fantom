@@ -1,0 +1,201 @@
+**************************************************************************
+** title:      Actors
+** author:     Brian Frank
+** created:    10 Dec 07
+** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Fan includes a [actor framework]`http://en.wikipedia.org/wiki/Actor_model`
+for concurrency.  [Actors]`sys::Actor` are light weight objects which
+asynchronously process work on a background thread.  Actors are given
+work by sending them asynchronous messages.  Actor's then process those
+messages on background threads controlled by an [ActorGroup]`#group`.
+
+Actors [#actors]
+****************
+The [Actor]`sys::Actor` class is used to define new actors.  All actors
+are constructed within an [ActorGroup]`#groups` which defines how the
+actor is executed.  Actors are sent messages via [send]`sys::Actor.send`
+are those are messages are processed the [receive]`sys::Actor.receive`
+method.
+
+Actors may define their receive behavior in one of two ways:
+  1. Pass a function to the Actor's constructor
+  2. Subclass 'Actor' and override 'receive'
+
+Here are two simple examples of an actor which receives an Int
+message and returns the increment:
+
+  // with receive function
+  a := Actor(group) |Int msg->Int| { msg + 1 }
+
+  // subclass
+  const class IncrActor : Actor
+  {
+    new make(ActorGroup g) : super(g) {}
+    override Obj? receive(Obj? msg, Context cx) { msg->increment }
+  }
+
+Message Passing [#messages]
+***************************
+Actors communicate by sending each other messages.  Messages can be
+any 'Obj'.  True to the Fan [concurrency model]`Concurrency` messages
+cannot be used to pass mutable state between actors.  If a message
+is [immutable]`Concurrency#immutability` then it passed by reference.
+Otherwise the message must be [serializable]`Serialization` in which
+case a serialized copy of the object is passed.  If a message is
+neither immutable or serializable, then 'IOErr' is thrown.
+
+Messages are sent an actor using of three methods:
+  - [send]`sys::Actor.send`: enqueues the message immediately
+  - [sendLater]`sys::Actor.sendLater`: enqueues the message
+    after a period of time has elapsed
+  - [sendWhenDone]`sys::Actor.sendWhenDone`: enqueues the message
+    once another message completes processing
+
+Futures [#futures]
+******************
+All three send methods return a [Future]`sys::Future` which may
+used to access the result of that message.  You can poll for the
+result using [Future.isDone]`sys::Future.isDone`.  A future
+enters the done state by one of three transitions:
+  - The actor processes the message and returns a result
+  - The actor raised an exception while processing the message
+  - The future is cancelled (see [Future.cancel]`sys::Future.cancel`)
+
+Once a future enters the done state, the result is available via
+the [Future.get]`sys::Future.get` method:
+  - If the message was processed successfully 'get' will
+    return the result
+  - If the actor's raised an exception processing the message,
+    then that same exception is raised to the caller of 'get'
+  - If the future was cancelled, then calling 'get' will
+    raise 'CancelledErr'
+  - If a timeout used, then 'TimeoutErr' is thrown if the actor
+    doesn't process the message before the timeout elaspses
+
+Actors which call other block via 'Future.get' should never receive
+messages themselves as this might lead to deadlocks.  Best practice is
+to design service actors using strictly asynchronous messaging, and
+keep synchronous messaging on client actors which don't service
+requests themselves.
+
+Timers [#timers]
+****************
+The [sendLater]`sys::Actor.sendLater` method can be used to setup
+a timer.  Timers post a message back to the actor's queue when they
+expire.  Example:
+
+  group := ActorGroup()
+  a := Actor(group) |Obj msg| { echo("$Time.now: $msg") }
+  a.send("start")
+  a.sendLater(1sec, "1sec")
+  a.sendLater(3sec, "3sec")
+  a.sendLater(2sec, "2sec")
+  Actor.sleep(5sec)
+
+The 'sendLater' method returns a 'Future' which may be used to cancel
+the timer or poll/block until the message has been processed.
+
+Chaining [#chaining]
+********************
+The [sendWhenDone]`sys::Actor.sendWhenDone` method is used to
+deliver a message only once another message has completed processing.
+
+Coalescing Messages [#coalescing]
+*********************************
+Often when sending messages to a actor, we can merge two messages
+into a single message to save ourselves some work.  For example, it is
+common in windowing systems to maintain a single union of all the dirty
+portions of a window rather than of a bunch of little rectangles.  An
+actor can have its messages automatically coalesced using the
+[makeCoalescing]`sys::Actor.makeCoalescing` constructor.
+
+Let's look at an example:
+
+  class Repaint
+  {
+    new make(Window w, Rect d) { ... }
+    Window window
+    Rect dirty
+  }
+
+  toKey := |Repaint msg->Obj| { msg.window }
+  coalesce := |Repaint a, Repaint b->Obj| { Repaint(a.window, a.dirty.union(b.dirty)) }
+  a := Actor.makeCoalescing(g, toKey, coalesce) |Repaint msg| {...}
+
+In this example the messages are instances of 'Repaint'.  The 'toKey' function
+is used to obtain the key which determines if two messages can be coalesced.
+In this example we coalesce repaints per window. If the thread detects two
+pending messages with the same key (the window in this case), then it calls
+the 'coalesce' function to merge the messages.  In example we return
+a new 'Repaint' event with the union of the two dirty regions.
+
+Messages sent with 'sendLater' and 'sendWhenDone' are never coalsesed.
+
+Flow Control [#flowControl]
+***************************
+The current implementation of Fan uses *unbounded* message queues.  This
+means if an actor is receiving messages faster than it can process them then
+its queue will continue to grow.  Eventually this might resuilt in out of
+memory exceptions.  You can use some of the following techniques to implement
+flow control to prevent unbounded queues from growing forever:
+  - Use 'Future.get' with timeouts and cancel messages which aren't
+    processed after a period of time
+  - Use [coalescing queues]`#coalescing` to merge pending messages
+  - Use [sendLater]`#timers` to schedule watch dog timers on an actor's queue
+
+Actor Groups [#groups]
+**********************
+All actor's are created within an [ActorGroup]`sys::ActorGroup`.
+ActorGroups manage the execution of actors with a thread pool.
+
+Thread Pool [#threadPool]
+=========================
+As actors receive work they are allocated a thread to perform
+their work.  In the current implementation, an ActorGroup will
+create up to 100 threads, after which actor's must wait for a thread
+to free up.  Once a thread frees up it processes the next actor.  If
+no actor's have pending work, then the thread lingers for a seconds
+before being released back to the operating system.  In this model
+an ActorGroup utilizes between zero and a peek of 100 threads
+depending on how many actor's currently have work.
+
+Lifecycle [#lifecycle]
+======================
+An ActorGroup is immediately considered *running* as soon as it is
+constructed.  However, it doesn't actually spawn its first thread
+until its first actor receives its first message.  If all of a group's
+actors finish processing their messages, then eventually all of a
+group's threads will also be freed after their linger period.
+
+An ActorGroup can also be manually shutdown using the [stop]`sys::ActorGroup.stop`
+method.  Once 'stop' is called, the group enters the *stopped* state and
+actors within the group may not receive any more messages.  However all
+pending messages are allowed to continue processing.  Once all pending
+messages have been processed, the group enters the *done* state.  Use the
+[join]`sys::ActorGroup.join` method to block until an ActorGroup has
+fully shutdown.
+
+The [kill]`sys::ActorGroup.kill` method can be used to perform an unorderly
+shutdown.  Unlike 'stop', kill doesn't give actors a chance to finish
+processing their pending message queues - all pending messages are cancelled.
+Actors which are currently  executing a message are interrupted (which may
+or may not immediately terminate that thread).  Once all actor's have
+relinquished their threads the actor group enters the *done* state.
+
+Actor Locals [#locals]
+***********************
+Every actor has *actor locals* - a string/object map for storing
+thread global variables.  Locals are accessed using the
+[Actor.locals]`sys::Actor.locals` method.  To prevent naming
+collisions, you should prefix your map keys with your pod name:
+
+    // store a actor local
+    Actor.locals["acme.global"] = "hum bug"
+
+    // get a thread local
+    Actor.locals["acme.global"]

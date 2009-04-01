@@ -281,7 +281,7 @@ Immutable Functions [#immutable]
 An immutable function is one proven to be thread safe.  Immutability
 is determined by the compiler.  You can check immutability at runtime
 via `sys::Obj.isImmutable`.  Immutable functions are often required
-when working with [threads]`Threading`.
+when working with [actors]`Actors`.
 
 The compiler marks functions as immutable based on the following analysis:
    - static methods are always automatically immutable

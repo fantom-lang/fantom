@@ -9,6 +9,8 @@
 **
 ** Controller for a group of actors which manages their execution.
 **
+** See [docLang::Actors]`docLang::Actors`
+**
 const class ActorGroup
 {
 
