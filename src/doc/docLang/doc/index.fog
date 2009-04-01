@@ -35,7 +35,7 @@
   [`Serialization`, "reading/writing objects"],
   [`Facets`,        "annotating types and slots with meta-data"],
   [`Concurrency`,   "model for sharing data between threads"],
-  [`Threading`,     "working with threads and message passing"],
+  [`Actors`,        "message passing concurrency"],
   [`Naming`,        "URI naming system"],
   [`Namespaces`,    "Using and creating custom namespaces"],
   [`TypeDatabase`,  "indexing and querying installed types"],

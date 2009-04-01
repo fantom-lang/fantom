@@ -9,7 +9,7 @@
 
 **
 ** Thread models a thread of execution within a process.
-** See `docLang::Threading` for details.
+** TODO: obsoleted by Actor`
 **
 const class Thread
 {
@@ -233,8 +233,6 @@ const class Thread
   ** returned to the caller and must be immutable or serializable;
   ** exceptions are raised to the caller.
   **
-  ** See [docLang]`docLang::Threading#messages`.
-  **
   Void loop(|Obj? msg->Obj?| receive)
 
   **
@@ -258,8 +256,6 @@ const class Thread
   ** an internal lock on the queue.  So the functions must be efficient
   ** and never attempt to interact with other threads.
   **
-  ** See [docLang]`docLang::Threading#coalescing` for more information.
-  **
   Void loopCoalescing(|Obj? msg->Obj?|? toKey,
                       |Obj? orig, Obj? incoming->Obj?|? coalesce,
                       |Obj? msg->Obj?| receive)
@@ -280,8 +276,6 @@ const class Thread
   ** the caller until there is enough space in this thread's message
   ** queue.
   **
-  ** See [docLang]`docLang::Threading#messages`.
-  **
   Obj? sendSync(Obj? msg)
 
   **
@@ -293,8 +287,6 @@ const class Thread
   ** caller until there is enough space in this thread's message
   ** queue.  Return this.
   **
-  ** See [docLang]`docLang::Threading#messages`.
-  **
   This sendAsync(Obj? msg)
 
   **
@@ -305,8 +297,6 @@ const class Thread
   ** messages posted by `sendSync` and `sendAsync`.  Return an opaque
   ** ticket which may used to cancel the timer via `cancelLater`.
   ** If msg is not immutable or serializable, then IOErr is thrown.
-  **
-  ** See [docLang]`docLang::Threading#timers`.
   **
   Obj sendLater(Duration dur, Obj? msg, Bool repeat := false)
 
