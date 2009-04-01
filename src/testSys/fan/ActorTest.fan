@@ -636,18 +636,32 @@ class ActorTest : Test
   {
     // schedule a bunch of actors (more than thread pool)
     actors := Actor[,]
-    300.times |Int i| { actors.add(Actor(group, &locals(i))) }
+    locales := Locale[,]
+    localesPool := [Locale("en-US"), Locale("en-UK"), Locale("fr"), Locale("ja")]
+    300.times |Int i|
+    {
+      locale := localesPool[Int.random(0...localesPool.size)]
+      actors.add(Actor(group, &locals(i, locale)))
+      locales.add(locale)
+      actors.last.send("bar")
+    }
 
     actors.each |Actor a, Int i|
     {
-      verifyEq(a.send("foo").get, i)
+      verifyEq(a.send("foo").get, "$i " + locales[i])
     }
   }
 
-  static Obj? locals(Int num, Obj? msg)
+  static Obj? locals(Int num, Locale locale, Obj? msg)
   {
-    if (Actor.locals["testLocal"] == null) Actor.locals["testLocal"] = num
-    return Actor.locals["testLocal"]
+    // first time thru
+    if (Actor.locals["testLocal"] == null)
+    {
+      Actor.locals["testLocal"] = num
+      Locale.setCurrent(locale)
+    }
+
+    return Actor.locals["testLocal"].toStr + " " + Locale.current
   }
 
 }
