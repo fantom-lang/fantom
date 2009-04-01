@@ -11,6 +11,11 @@
 **
 const class Actor
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
   **
   ** Create an actor whose execution is controlled by the given ActorGroup.
   ** If receive is non-null, then it is used to process messages sent to
@@ -49,17 +54,14 @@ const class Actor
                      |Obj? orig, Obj? incoming->Obj?|? coalesce,
                      |Context,Obj? -> Obj?|? receive := null)
 
+//////////////////////////////////////////////////////////////////////////
+// Messaging
+//////////////////////////////////////////////////////////////////////////
+
   **
   ** The group used to control execution of this actor.
   **
   ActorGroup group()
-
-  **
-  ** Put the currently executing actor thread to sleep for the
-  ** specified period.  If the thread is interrupted for any
-  ** reason while sleeping, then InterruptedErr is thrown.
-  **
-  static Void sleep(Duration duration)
 
   **
   ** Asynchronously send a message to this actor for processing.
@@ -98,5 +100,24 @@ const class Actor
   ** is raised by this method, then it is raised by 'Future.get'.
   **
   protected virtual Obj? receive(Context cx, Obj? msg)
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Put the currently executing actor thread to sleep for the
+  ** specified period.  If the thread is interrupted for any
+  ** reason while sleeping, then InterruptedErr is thrown.
+  **
+  static Void sleep(Duration duration)
+
+  **
+  ** Return the map of actor local variables.  This is a map of "global"
+  ** variables visible only on the actor's current thread.  These variables are
+  ** keyed by a string name - by convention use a dotted notation beginning
+  ** with your pod name to avoid naming collisions.
+  **
+  static Str:Obj? locals()
 
 }

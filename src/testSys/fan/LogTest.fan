@@ -206,7 +206,7 @@ class LogTest : Test
     {
       h := |LogRecord rec|
       {
-        Thread.locals["testSys.logRecord"] = rec
+        Actor.locals["testSys.logRecord"] = rec
       }
 
       Log.addHandler(h)
@@ -239,7 +239,7 @@ class LogTest : Test
   Void verifyLog(LogLevel? level, Str? msg := null, Err? err := null)
   {
     log := log()
-    LogRecord? rec := Thread.locals["testSys.logRecord"]
+    LogRecord? rec := Actor.locals["testSys.logRecord"]
     if (level == null)
     {
       verifyEq(level, null)
@@ -255,7 +255,7 @@ class LogTest : Test
 
   Void reset()
   {
-    Thread.locals["testSys.logRecord"] = null
+    Actor.locals["testSys.logRecord"] = null
   }
 
   // Lazy Log Construction
@@ -281,7 +281,7 @@ const class TestLog : Log
   {
     // super.log(time, level, msg, err)
     if (isEnabled(level))
-      Thread.locals["testSys.logRecord"] = rec
+      Actor.locals["testSys.logRecord"] = rec
   }
 
 }

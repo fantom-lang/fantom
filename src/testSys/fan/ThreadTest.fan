@@ -499,8 +499,8 @@ class ThreadTest : Test
 
   Void testLocals()
   {
-    Thread.locals["testSys.x"] = "main"
-    verifyEq(Thread.locals["testSys.x"], "main")
+    Actor.locals["testSys.x"] = "main"
+    verifyEq(Actor.locals["testSys.x"], "main")
 
     a := Thread.make(null, &runLocal("alpha")).start
     b := Thread.make(null, &runLocal("beta")).start
@@ -509,7 +509,7 @@ class ThreadTest : Test
     verifyEq(a.join, "alpha")
     verifyEq(b.join, "beta")
     verifyEq(c.join, "gamma")
-    verifyEq(Thread.locals["testSys.x"], "main")
+    verifyEq(Actor.locals["testSys.x"], "main")
   }
 
   static Obj runLocal(Str val)
@@ -517,8 +517,8 @@ class ThreadTest : Test
     r := val
     3.times |,|
     {
-      Thread.locals["testSys.x"] = val
-      if (Thread.locals["testSys.x"] != val)
+      Actor.locals["testSys.x"] = val
+      if (Actor.locals["testSys.x"] != val)
       {
         Err.make.trace
         r = "bad bad bad"

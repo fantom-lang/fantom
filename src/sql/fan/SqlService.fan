@@ -67,11 +67,11 @@ const class SqlService : Thread
   {
     if (!isRunning()) throw Err("SqlService not started")
 
-    Connection? conn := Thread.locals[name]
+    Connection? conn := Actor.locals[name]
     if (conn == null)
     {
       conn = Connection.open(connection, username, password)
-      Thread.locals[name] = conn
+      Actor.locals[name] = conn
     }
     else
     {
@@ -86,7 +86,7 @@ const class SqlService : Thread
   **
   private Connection? threadConnection(Bool checked := true)
   {
-    Connection? conn := Thread.locals[name]
+    Connection? conn := Actor.locals[name]
     if (conn == null)
     {
       if (checked)
@@ -100,7 +100,7 @@ const class SqlService : Thread
       if (checked)
       {
         conn.close
-        Thread.locals.remove(name)
+        Actor.locals.remove(name)
         throw SqlErr("Database has been closed.")
       }
       else
@@ -119,13 +119,13 @@ const class SqlService : Thread
   **
   Void close()
   {
-    Connection? conn := Thread.locals[name]
+    Connection? conn := Actor.locals[name]
     if (conn != null)
     {
       if (conn.decrement == 0)
       {
         conn.close
-        Thread.locals.remove(name)
+        Actor.locals.remove(name)
       }
     }
   }

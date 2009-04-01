@@ -123,17 +123,17 @@ class CtorTest : Test
 
   Void testOrder()
   {
-    Thread.locals["testSys.order"] = 0
+    Actor.locals["testSys.order"] = 0
     a := CtorOrderA.make
     verifyEq(a.q, "0,1")
 
-    Thread.locals["testSys.order"] = 0
+    Actor.locals["testSys.order"] = 0
     b := CtorOrderB.make
     verifyEq(b.q, "0,1")
     verifyEq(b.r, "0,1,2,3")
     verifyEq(b.x, 1)
 
-    Thread.locals["testSys.order"] = 0
+    Actor.locals["testSys.order"] = 0
     b = CtorOrderB.makeThis
     verifyEq(b.q, "0,1")
     verifyEq(b.r, "0,1,2,3")
@@ -142,9 +142,9 @@ class CtorTest : Test
 
   static Int orderInit()
   {
-    Int i := Thread.locals["testSys.order"]
+    Int i := Actor.locals["testSys.order"]
     i += 1
-    Thread.locals["testSys.order"] = i
+    Actor.locals["testSys.order"] = i
     return i
   }
 

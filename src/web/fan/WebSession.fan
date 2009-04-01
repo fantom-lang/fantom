@@ -63,7 +63,7 @@ class WebSession
   Void delete()
   {
     isDeleted = true
-    WebRes res := Thread.locals["web.res"]
+    WebRes res := Actor.locals["web.res"]
     res.cookies.add(Cookie("fanws", id) { maxAge=0sec })
   }
 
@@ -100,11 +100,11 @@ internal const class WebSessionMgr : Thread
     if (ws == null)
     {
       ws = sendSync("_new")
-      WebRes res := Thread.locals["web.res"]
+      WebRes res := Actor.locals["web.res"]
       res.cookies.add(Cookie("fanws", ws.id))
     }
 
-    Thread.locals["web.session"] = ws
+    Actor.locals["web.session"] = ws
     return ws
   }
 
@@ -112,7 +112,7 @@ internal const class WebSessionMgr : Thread
   {
     try
     {
-      WebSession? ws := Thread.locals.remove("web.session")
+      WebSession? ws := Actor.locals.remove("web.session")
       if (ws != null) sendAsync(ws)
     }
     catch (Err e)

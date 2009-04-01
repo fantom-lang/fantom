@@ -34,7 +34,7 @@ class Frame : Window
   **
   static Frame? findById(Str id, Bool checked := true)
   {
-    Frame? f := Thread.locals["flux.$id"]
+    Frame? f := Actor.locals["flux.$id"]
     if (f != null) return f
     if (!checked) return null
     throw Err("Frame not found $id")
@@ -46,10 +46,10 @@ class Frame : Window
   internal Str initId()
   {
     // allocate next id and register as thread local
-    Int idInt := Thread.locals.get("flux.nextFrameId", 0)
-    Thread.locals.set("flux.nextFrameId", idInt+1)
+    Int idInt := Actor.locals.get("flux.nextFrameId", 0)
+    Actor.locals.set("flux.nextFrameId", idInt+1)
     id := "Frame-$idInt"
-    Thread.locals["flux.$id"] = this
+    Actor.locals["flux.$id"] = this
     return id
   }
 

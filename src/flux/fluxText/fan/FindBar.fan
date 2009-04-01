@@ -107,8 +107,8 @@ internal class FindBar : ContentPane, TextEditorSupport
       }
     }
 
-    visible = Thread.locals.get("fluxTest.findBar.show", false)
-    replacePane.visible = Thread.locals.get("fluxTest.findBar.showReplace", false)
+    visible = Actor.locals.get("fluxTest.findBar.show", false)
+    replacePane.visible = Actor.locals.get("fluxTest.findBar.showReplace", false)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,8 +135,8 @@ internal class FindBar : ContentPane, TextEditorSupport
 
   private Void show(Bool showReplace := false)
   {
-    Thread.locals["fluxTest.findBar.show"] = true
-    Thread.locals["fluxTest.findBar.showReplace"] = showReplace
+    Actor.locals["fluxTest.findBar.show"] = true
+    Actor.locals["fluxTest.findBar.showReplace"] = showReplace
 
     ignore = true
     oldVisible := visible
@@ -169,7 +169,7 @@ internal class FindBar : ContentPane, TextEditorSupport
   **
   Void hide()
   {
-    Thread.locals["fluxTest.findBar.show"] = false
+    Actor.locals["fluxTest.findBar.show"] = false
     visible = false
     parent?.parent?.parent?.relayout
   }
