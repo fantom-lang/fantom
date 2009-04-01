@@ -377,26 +377,14 @@ method:
 
   vowels := ['a','e','i','o','u'].toImmutable
 
-Threads [#threads]
+Actors [#actors]
 ******************
-All Fan [threads]`docLang::Threading` include support for
-message passing:
+Fan includes an [actor framework]`docLang::Actors` for building
+concurrent applications:
 
-  // make a thread which receives messages, prints
-  // them, and then returns them back to the caller
-  r := Thread("reflector") |Thread t|
-  {
-    t.loop |Obj msg->Obj|
-    {
-      echo("reflector received $msg")
-      return msg
-    }
-  }
-  r.start
+  // spawn actor which aynchronously increments an Int msg
+  group := ActorGroup()
+  actor := Actor(group) |Context cx, Int msg->Int| { msg + 1 }
 
-  // send some messages to the thread
-  for (i:=0; i<5; ++i)
-  {
-    Thread.sleep(500ms)
-    echo("ping -> " + r.sendSync(i))
-  }
+  // send some messages to the actor and block for result
+  for (i:=0; i<5; ++i) echo(actor.send(i).get)

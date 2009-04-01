@@ -11,8 +11,8 @@ Overview [#overview]
 Serialization is the process of writing objects to an output stream,
 and reading them back from an input stream.  Serialization provides
 a simple mechanism to persist objects to a file or to pass objects over a
-network.  Serialization is also used with [threading]`Threading` as a
-safe way to pass messages between threads.  Fan serialization uses a human
+network.  Serialization is also used with [actors]`Actors` as a
+safe way to pass messages between actors.  Fan serialization uses a human
 friendly text format which looks a lot just like Fan source code (in fact it
 is a subset of the source grammar).
 
