@@ -289,7 +289,7 @@ function sys_Buf_Md5(buf)
     var size = bytes.length;
 
     // handle full 32-bit words
-    for (var i=0; size>3 && i<size/4; i+=4)
+    for (var i=0; size>3 && (i+4)<size; i+=4)
     {
       words.push((bytes[i+3]<<24) | (bytes[i+2]<<16) | (bytes[i+1]<<8) | bytes[i]);
     }
@@ -431,7 +431,7 @@ function sys_Buf_Sha1(buf)
     var size = bytes.length;
 
     // handle full 32-bit words
-    for (var i=0; size>3 && i<size/4; i+=4)
+    for (var i=0; size>3 && (i+4)<size; i+=4)
     {
       words.push((bytes[i]<<24) | (bytes[i+1]<<16) | (bytes[i+2]<<8) | bytes[i+3]);
     }
