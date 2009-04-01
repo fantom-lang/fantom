@@ -98,6 +98,7 @@ sys_Type.toFanType = function(obj)
 //////////////////////////////////////////////////////////////////////////
 
 sys_Type.addType("sys::Bool");
+sys_Type.addType("sys::Buf");
 sys_Type.addType("sys::Charset");
 sys_Type.addType("sys::Date");
 sys_Type.addType("sys::DateTime");
