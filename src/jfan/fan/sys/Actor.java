@@ -93,9 +93,9 @@ public class Actor
 
   public final Future sendWhenDone(Future f, Object msg) { return _send(msg, null, f); }
 
-  protected Object receive(Context cx, Object msg)
+  protected Object receive(Object msg, Context cx)
   {
-    if (receive != null) return receive.call2(cx, msg);
+    if (receive != null) return receive.call2(msg, cx);
     System.out.println("WARNING: " + type() + ".receive not overridden");
     return null;
   }
@@ -216,7 +216,7 @@ public class Actor
     {
       if (future.isCancelled()) return;
       if (group.killed) { future.cancel(); return; }
-      future.set(receive(context, future.msg));
+      future.set(receive(future.msg, context));
     }
     catch (Err.Val e)
     {
