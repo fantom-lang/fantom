@@ -85,19 +85,6 @@ public class Actor
 // Actor
 //////////////////////////////////////////////////////////////////////////
 
-  public static void sleep(Duration duration)
-  {
-    try
-    {
-      long ticks = duration.ticks;
-      java.lang.Thread.sleep(ticks/1000000L, (int)(ticks%1000000L));
-    }
-    catch (InterruptedException e)
-    {
-      throw InterruptedErr.make(e).val;
-    }
-  }
-
   public final ActorGroup group() { return group; }
 
   public final Future send(Object msg) { return _send(msg, null, null); }
@@ -112,6 +99,32 @@ public class Actor
     System.out.println("WARNING: " + type() + ".receive not overridden");
     return null;
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  public static void sleep(Duration duration)
+  {
+    try
+    {
+      long ticks = duration.ticks;
+      java.lang.Thread.sleep(ticks/1000000L, (int)(ticks%1000000L));
+    }
+    catch (InterruptedException e)
+    {
+      throw InterruptedErr.make(e).val;
+    }
+  }
+
+  public static Map locals() { return (Map)locals.get(); }
+  private static final ThreadLocal locals = new ThreadLocal()
+  {
+    protected Object initialValue()
+    {
+      return new Map(Sys.StrType, Sys.ObjType);
+    }
+  };
 
 //////////////////////////////////////////////////////////////////////////
 // Implementation

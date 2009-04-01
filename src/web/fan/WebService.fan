@@ -55,8 +55,8 @@ abstract const class WebService : Thread
   virtual Void service(WebReq req, WebRes res)
   {
     // init thread locals
-    Thread.locals["web.req"] = req
-    Thread.locals["web.res"] = res
+    Actor.locals["web.req"] = req
+    Actor.locals["web.res"] = res
     try
     {
       // if pipeline is empty
@@ -87,8 +87,8 @@ abstract const class WebService : Thread
       sessionMgr.save
 
       // cleanup thread locals
-      Thread.locals.remove("web.req")
-      Thread.locals.remove("web.res")
+      Actor.locals.remove("web.req")
+      Actor.locals.remove("web.res")
     }
   }
 

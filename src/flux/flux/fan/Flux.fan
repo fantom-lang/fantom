@@ -32,8 +32,8 @@ class Flux
   **
   static Obj? loadOptions(Str name, Type? t)
   {
-    [Str:CachedOptions]? options := Thread.locals["flux.options"]
-    if (options == null) Thread.locals["flux.options"] = options = Str:CachedOptions[:]
+    [Str:CachedOptions]? options := Actor.locals["flux.options"]
+    if (options == null) Actor.locals["flux.options"] = options = Str:CachedOptions[:]
 
     // check cache
     cached := options[name]

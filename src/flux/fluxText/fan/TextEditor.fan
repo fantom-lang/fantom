@@ -69,8 +69,8 @@ class TextEditor : View
     frame.command(CommandId.goto).enabled = true
 
     // restore viewport and caret position
-    caretOffset := Thread.locals["fluxText.caretOffset.$resource.uri"]
-    topLine := Thread.locals["fluxText.topLine.$resource.uri"]
+    caretOffset := Actor.locals["fluxText.caretOffset.$resource.uri"]
+    topLine := Actor.locals["fluxText.topLine.$resource.uri"]
     if (caretOffset != null) richText.caretOffset = caretOffset
     if (topLine != null) richText.topLine = topLine
     richText.focus
@@ -79,8 +79,8 @@ class TextEditor : View
   override Void onInactive()
   {
     // save viewport and caret position
-    Thread.locals["fluxText.caretOffset.$resource.uri"] = richText.caretOffset
-    Thread.locals["fluxText.topLine.$resource.uri"] = richText.topLine
+    Actor.locals["fluxText.caretOffset.$resource.uri"] = richText.caretOffset
+    Actor.locals["fluxText.topLine.$resource.uri"] = richText.topLine
   }
 
   override Void onCommand(Str id, Event? event)

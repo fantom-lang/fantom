@@ -200,7 +200,7 @@ internal class MarkParser
   **
   internal static Str[] rootDirs()
   {
-    Str[]? roots := Thread.locals["flux.Mark.roots"]
+    Str[]? roots := Actor.locals["flux.Mark.roots"]
     if (roots == null)
     {
       roots = Str[,]
@@ -214,7 +214,7 @@ internal class MarkParser
         }
       }
       roots.sortr |Str a, Str b->Int| { a.size <=> b.size }
-      Thread.locals["flux.Mark.roots"] = roots
+      Actor.locals["flux.Mark.roots"] = roots
     }
     return roots
   }

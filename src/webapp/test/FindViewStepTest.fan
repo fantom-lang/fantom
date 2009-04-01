@@ -13,14 +13,14 @@ class FindViewStepTest : Test
 
   override Void setup()
   {
-    Thread.locals["web.req"] = TestWebReq()
-    Thread.locals["web.res"] = TestWebRes()
+    Actor.locals["web.req"] = TestWebReq()
+    Actor.locals["web.res"] = TestWebRes()
   }
 
   override Void teardown()
   {
-    Thread.locals["web.req"] = null
-    Thread.locals["web.res"] = null
+    Actor.locals["web.req"] = null
+    Actor.locals["web.res"] = null
   }
 
   Void test()

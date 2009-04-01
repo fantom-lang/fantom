@@ -166,24 +166,24 @@ class NamespaceTest : Test
     verifyErr(UnresolvedErr#) |,| { Sys.ns.get(`/testns`, true) }
 
     // get
-    Thread.locals["/testns"] = "argo"
-    Thread.locals["/testns/wildstar"] = ["derek", "wildstar"]
+    Actor.locals["/testns"] = "argo"
+    Actor.locals["/testns/wildstar"] = ["derek", "wildstar"]
     verifyEq(Sys.ns.get(`/testns`), "argo")
     verifyEq(Sys.ns.get(`/testns/wildstar`), ["derek", "wildstar"])
 
     // create
     verifyEq(Sys.ns.create(`/testns/venture`, "mark"), `/testns/venture`)
-    verifyEq(Thread.locals["/testns/venture"], "mark")
+    verifyEq(Actor.locals["/testns/venture"], "mark")
     verifyEq(Sys.ns[`/testns/venture`], "mark")
 
     // put
     Sys.ns.put(`/testns/venture`, "Mark Venture")
-    verifyEq(Thread.locals["/testns/venture"], "Mark Venture")
+    verifyEq(Actor.locals["/testns/venture"], "Mark Venture")
     verifyEq(Sys.ns[`/testns/venture`], "Mark Venture")
 
     // delete
     Sys.ns.delete(`/testns/venture`)
-    verifyEq(Thread.locals["/testns/venture"], null)
+    verifyEq(Actor.locals["/testns/venture"], null)
     verifyErr(UnresolvedErr#) |,| { Sys.ns.get(`/testns/venture`) }
 
     Sys.unmount(`/testns`)
@@ -212,7 +212,7 @@ const class TestNamespace : Namespace
 
   override Obj? get(Uri uri, Bool checked := true)
   {
-    x := Thread.locals[uri.toStr]
+    x := Actor.locals[uri.toStr]
     if (x != null) return x
     if (!checked) return null
     throw UnresolvedErr.make(uri.toStr)
@@ -220,18 +220,18 @@ const class TestNamespace : Namespace
 
   override Uri create(Uri? uri, Obj obj)
   {
-    Thread.locals[uri.toStr] = obj
+    Actor.locals[uri.toStr] = obj
     return uri
   }
 
   override Void put(Uri uri, Obj obj)
   {
-    Thread.locals[uri.toStr] = obj
+    Actor.locals[uri.toStr] = obj
   }
 
   override Void delete(Uri uri)
   {
-    Thread.locals.remove(uri.toStr)
+    Actor.locals.remove(uri.toStr)
   }
 
 }

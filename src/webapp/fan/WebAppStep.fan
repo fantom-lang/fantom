@@ -58,7 +58,7 @@ abstract const class WebAppStep : WebStep
     echo(logBuf.seek(0).readAllStr)
 
     // display compiler errors in error page
-    res := (WebRes)Thread.locals["web.res"]
+    res := (WebRes)Actor.locals["web.res"]
     msg := "<pre>" + logBuf.seek(0).readAllStr.toXml + "</pre>"
     res.sendError(500, msg)
 

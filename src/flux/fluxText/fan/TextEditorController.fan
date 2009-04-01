@@ -269,13 +269,13 @@ internal class TextEditorController : TextEditorSupport
 
   Void onGoto(Event event)
   {
-    Str last := Thread.locals.get("fluxText.gotoLast", "1")
+    Str last := Actor.locals.get("fluxText.gotoLast", "1")
     r := Dialog.openPromptStr(frame, "Goto Line:", last, 6)
     if (r == null) return
 
     line := r.toInt(10, false)
     if (line == null) return
-    Thread.locals.set("fluxText.gotoLast", r)
+    Actor.locals.set("fluxText.gotoLast", r)
 
     line -= 1
     if (line >= doc.lineCount) line = doc.lineCount-1

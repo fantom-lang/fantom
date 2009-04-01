@@ -228,7 +228,7 @@ internal class ViewTab : EdgePane
     key := "flux.view.commandStack.${resource.uri}"
     if (!view.commandStack.isEmpty)
     {
-      Thread.locals[key] = view.commandStack.dup
+      Actor.locals[key] = view.commandStack.dup
     }
   }
 
@@ -238,7 +238,7 @@ internal class ViewTab : EdgePane
 
     // restore undo/redo stack for uri
     key := "flux.view.commandStack.${resource.uri}"
-    cs := Thread.locals[key]
+    cs := Actor.locals[key]
     if (cs != null)
     {
       view.commandStack = cs->dup

@@ -80,8 +80,8 @@ public class ServletEnvPeer
     }
 
     // cache req/res
-    fan.sys.Thread.locals().set(Str.make("web.req"), req);
-    fan.sys.Thread.locals().set(Str.make("web.res"), res);
+    fan.sys.Actor.locals().set(Str.make("web.req"), req);
+    fan.sys.Actor.locals().set(Str.make("web.res"), res);
 
     // hard code fandoc::FandocWeblet for now
     Pod pod = Pod.find("fandoc", true, null);

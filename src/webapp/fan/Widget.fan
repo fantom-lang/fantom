@@ -31,7 +31,7 @@ abstract class Widget : Weblet
   {
     // if service has already been called on this thread
     // then just route to the default implementation
-    if (Thread.locals["webapp.widget.head"] != null)
+    if (Actor.locals["webapp.widget.head"] != null)
     {
       super.service
       return
@@ -44,8 +44,8 @@ abstract class Widget : Weblet
       body := Buf(8192)
 
       // add thread locals
-      Thread.locals["webapp.widget.head"] = WebOutStream(head.out)
-      Thread.locals["webapp.widget.body"] = WebOutStream(body.out)
+      Actor.locals["webapp.widget.head"] = WebOutStream(head.out)
+      Actor.locals["webapp.widget.body"] = WebOutStream(body.out)
 
       // write content
       res.headers["Content-Type"] = "text/html; charset=UTF-8"
@@ -75,8 +75,8 @@ abstract class Widget : Weblet
     finally
     {
       // remove thread locals
-      Thread.locals.remove("webapp.widget.head")
-      Thread.locals.remove("webapp.widget.body")
+      Actor.locals.remove("webapp.widget.head")
+      Actor.locals.remove("webapp.widget.body")
     }
   }
 
@@ -117,7 +117,7 @@ abstract class Widget : Weblet
   **
   once WebOutStream head()
   {
-    buf := Thread.locals["webapp.widget.head"] as WebOutStream
+    buf := Actor.locals["webapp.widget.head"] as WebOutStream
     if (buf == null) throw Err("Widget.head not found")
     return buf
   }
@@ -127,7 +127,7 @@ abstract class Widget : Weblet
   **
   once WebOutStream body()
   {
-    buf := Thread.locals["webapp.widget.body"] as WebOutStream
+    buf := Actor.locals["webapp.widget.body"] as WebOutStream
     if (buf == null) throw Err("Widget.body not found")
     return buf
   }
@@ -171,8 +171,8 @@ abstract class Widget : Weblet
   **
   Str unique()
   {
-    Int last := Thread.locals.get("webapp.widget.unique", -1)
-    Thread.locals["webapp.widget.unique"] = ++last
+    Int last := Actor.locals.get("webapp.widget.unique", -1)
+    Actor.locals["webapp.widget.unique"] = ++last
     return "n$last"
   }
 
