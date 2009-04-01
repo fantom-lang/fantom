@@ -87,9 +87,11 @@ public class Actor
 
   public final ActorGroup group() { return group; }
 
-  public final Future send(Object msg) { return _send(msg, null); }
+  public final Future send(Object msg) { return _send(msg, null, null); }
 
-  public final Future sendLater(Duration d, Object msg) { return _send(msg, d); }
+  public final Future sendLater(Duration d, Object msg) { return _send(msg, d, null); }
+
+  public final Future sendWhenDone(Future f, Object msg) { return _send(msg, null, f); }
 
   protected Object receive(Context cx, Object msg)
   {
@@ -102,7 +104,7 @@ public class Actor
 // Implementation
 //////////////////////////////////////////////////////////////////////////
 
-  private Future _send(Object msg, Duration dur)
+  private Future _send(Object msg, Duration dur, Future whenDone)
   {
     // ensure immutable or safe copy
     msg = Namespace.safe(msg);
@@ -114,10 +116,12 @@ public class Actor
     Future f = new Future(msg);
 
     // either enqueue immediately or schedule with group
-    if (dur == null)
-      f = _enqueue(f, true);
-    else
+    if (dur != null)
       group.schedule(this, dur, f);
+    else if (whenDone != null)
+      whenDone.sendWhenDone(this, f);
+    else
+      f = _enqueue(f, true);
 
     return f;
   }

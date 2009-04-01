@@ -417,6 +417,86 @@ class ActorTest : Test
   static Obj? returnNow(Context cx, Obj? msg) { Duration.now }
 
 //////////////////////////////////////////////////////////////////////////
+// When Done
+//////////////////////////////////////////////////////////////////////////
+
+  Void testWhenDone()
+  {
+    a := Actor(group, &whenDoneA)
+    b := Actor(group, &whenDoneB)
+    c := Actor(group, &whenDoneB)
+
+    // send/complete normal,error,cancel on a
+    a.send(50ms)
+    a0 := a.send("start")
+    a1 := a.send("throw")
+    a2 := a.send("cancel")
+    a2.cancel
+    verifyEq(a0.get, "start")
+    verifyErr(IndexErr#) |,| { a1.get }
+    verifyErr(CancelledErr#) |,| { a2.get }
+
+    // send some messages with futures already done
+    b0 := b.sendWhenDone(a0, a0); c0 := c.sendWhenDone(a0, a0)
+    b1 := b.sendWhenDone(a1, a1); c1 := c.sendWhenDone(a1, a1)
+    b2 := b.sendWhenDone(a2, a2); c2 := c.sendWhenDone(a2, a2)
+
+    // get some pending messages sent to a
+    a.send(50ms)
+    a3 := a.send("foo")
+    a4 := a.send("bar")
+    a5 := a.send("throw")
+    ax := a.send("cancel again")
+    a6 := a.send("baz")
+
+    // send some messages with futures not done yet
+    b3 := b.sendWhenDone(a3, a3); c3 := c.sendWhenDone(a3, a3)
+    b4 := b.sendWhenDone(a4, a4); c4 := c.sendWhenDone(a4, a4)
+    b5 := b.sendWhenDone(a5, a5); c5 := c.sendWhenDone(a5, a5)
+    bx := b.sendWhenDone(ax, ax); cx := c.sendWhenDone(ax, ax)
+    b6 := b.sendWhenDone(a6, a6); c6 := c.sendWhenDone(a6, a6)
+
+    // cancel ax (this should happen before a3, a4, etc)
+    ax.cancel
+
+    // verify
+    verifyWhenDone(b0, c0, "start")
+    verifyWhenDone(b1, c1, "start,IndexErr")
+    verifyWhenDone(b2, c2, "start,IndexErr,CancelledErr")
+    verifyWhenDone(bx, cx, "start,IndexErr,CancelledErr,CancelledErr")
+    verifyWhenDone(b3, c3, "start,IndexErr,CancelledErr,CancelledErr,foo")
+    verifyWhenDone(b4, c4, "start,IndexErr,CancelledErr,CancelledErr,foo,bar")
+    verifyWhenDone(b5, c5, "start,IndexErr,CancelledErr,CancelledErr,foo,bar,IndexErr")
+    verifyWhenDone(b6, c6, "start,IndexErr,CancelledErr,CancelledErr,foo,bar,IndexErr,baz")
+  }
+
+  Void verifyWhenDone(Future b, Future c, Str expected)
+  {
+    verifyEq(b.get(2sec), expected)
+    verifyEq(c.get(2sec), expected)
+  }
+
+  static Obj? whenDoneA(Context cx, Obj? msg)
+  {
+    if (msg == "throw") throw IndexErr()
+    if (msg is Duration) Thread.sleep(msg)
+    return msg
+  }
+
+  static Obj? whenDoneB(Context cx, Future msg)
+  {
+    Str x := cx.get("x", "")
+    if (!x.isEmpty) x += ","
+    if (!msg.isDone) throw Err("not done yet!")
+    try
+      x += msg.get.toStr
+    catch (Err e)
+      x += e.type.name
+    cx["x"] = x
+    return x
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Coalescing (no funcs)
 //////////////////////////////////////////////////////////////////////////
 

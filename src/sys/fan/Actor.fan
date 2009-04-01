@@ -71,14 +71,16 @@ const class Actor
   ** appended to the end of this actor's queue.  Accuracy of scheduling
   ** is dependent on thread coordination and pending messages in the queue.
   ** Scheduled messages are not guaranteed to be processed if the
-  ** actor's grouped is stopped.  Also see `send` and `sendWhenDone`.
+  ** actor's grouped is stopped.  Scheduled messages are never coalesced.
+  ** Also see `send` and `sendWhenDone`.
   **
   Future sendLater(Duration d, Obj? msg)
 
   **
   ** Schedule a message for delivery after the given future has completed.
   ** Completion may be due to the future returning a result, throwing an
-  ** exception, or cancellation.  Also see `send` and `sendLater`.
+  ** exception, or cancellation.  Send when done messages are never
+  ** coalesced.  Also see `send` and `sendLater`.
   **
   Future sendWhenDone(Future f, Obj? msg)
 
