@@ -211,7 +211,7 @@ class ActorTest : Test
       futures.add(actor.send(dur))
 
       // schedule some messages in future well after we stop
-      3.times |Int j| { scheduled.add(actor.schedule(10sec + 1sec * j.toFloat, j)) }
+      3.times |Int j| { scheduled.add(actor.sendLater(10sec + 1sec * j.toFloat, j)) }
     }
 
     // still running
@@ -230,7 +230,7 @@ class ActorTest : Test
     actors.each |Actor a|
     {
       verifyErr(Err#) |,| { a.send(10sec) }
-      verifyErr(Err#) |,| { a.schedule(1sec, 1sec) }
+      verifyErr(Err#) |,| { a.sendLater(1sec, 1sec) }
     }
 
     // stop again, join with no timeout
@@ -282,7 +282,7 @@ class ActorTest : Test
       }
 
       // schedule some messages in future well after we stop
-      scheduled.add(actor.schedule(3sec, actor))
+      scheduled.add(actor.sendLater(3sec, actor))
     }
 
     verifyEq(group.isStopped, false)
@@ -329,47 +329,47 @@ class ActorTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Schedule
+// Later
 //////////////////////////////////////////////////////////////////////////
 
-  Void testSchedule()
+  Void testLater()
   {
     // warm up a threads with dummy requests
-    5.times |,| { Actor(group, &returnNow).schedule(10ms, "dummy") }
+    5.times |,| { Actor(group, &returnNow).sendLater(10ms, "dummy") }
 
     start := Duration.now
-    x100 := Actor(group, &returnNow).schedule(100ms, null)
-    x150 := Actor(group, &returnNow).schedule(150ms, null)
-    x200 := Actor(group, &returnNow).schedule(200ms, null)
-    x250 := Actor(group, &returnNow).schedule(250ms, null)
-    x300 := Actor(group, &returnNow).schedule(300ms, null)
-    verifySchedule(start, x100, 100ms)
-    verifySchedule(start, x150, 150ms)
-    verifySchedule(start, x200, 200ms)
-    verifySchedule(start, x250, 250ms)
-    verifySchedule(start, x300, 300ms)
+    x100 := Actor(group, &returnNow).sendLater(100ms, null)
+    x150 := Actor(group, &returnNow).sendLater(150ms, null)
+    x200 := Actor(group, &returnNow).sendLater(200ms, null)
+    x250 := Actor(group, &returnNow).sendLater(250ms, null)
+    x300 := Actor(group, &returnNow).sendLater(300ms, null)
+    verifyLater(start, x100, 100ms)
+    verifyLater(start, x150, 150ms)
+    verifyLater(start, x200, 200ms)
+    verifyLater(start, x250, 250ms)
+    verifyLater(start, x300, 300ms)
 
     start = Duration.now
-    x100 = Actor(group, &returnNow).schedule(100ms, null)
-    verifySchedule(start, x100, 100ms)
+    x100 = Actor(group, &returnNow).sendLater(100ms, null)
+    verifyLater(start, x100, 100ms)
 
     start = Duration.now
-    x300 = Actor(group, &returnNow).schedule(300ms, null)
-    x200 = Actor(group, &returnNow).schedule(200ms, null)
-    x100 = Actor(group, &returnNow).schedule(100ms, null)
-    x150 = Actor(group, &returnNow).schedule(150ms, null)
-    x250 = Actor(group, &returnNow).schedule(250ms, null)
-    verifySchedule(start, x100, 100ms)
-    verifySchedule(start, x150, 150ms)
-    verifySchedule(start, x200, 200ms)
-    verifySchedule(start, x250, 250ms)
-    verifySchedule(start, x300, 300ms)
+    x300 = Actor(group, &returnNow).sendLater(300ms, null)
+    x200 = Actor(group, &returnNow).sendLater(200ms, null)
+    x100 = Actor(group, &returnNow).sendLater(100ms, null)
+    x150 = Actor(group, &returnNow).sendLater(150ms, null)
+    x250 = Actor(group, &returnNow).sendLater(250ms, null)
+    verifyLater(start, x100, 100ms)
+    verifyLater(start, x150, 150ms)
+    verifyLater(start, x200, 200ms)
+    verifyLater(start, x250, 250ms)
+    verifyLater(start, x300, 300ms)
   }
 
-  Void testScheduleRand()
+  Void testLaterRand()
   {
     // warm up a threads with dummy requests
-    5.times |,| { Actor(group, &returnNow).schedule(10ms, "dummy") }
+    5.times |,| { Actor(group, &returnNow).sendLater(10ms, "dummy") }
 
     // schedule a bunch of actors and messages with random times
     start := Duration.now
@@ -383,7 +383,7 @@ class ActorTest : Test
       {
         // schedule something randonly between 0ms and 1sec
         Duration? dur := 1ms * Int.random(0...1000).toFloat
-        f := a.schedule(dur, dur)
+        f := a.sendLater(dur, dur)
 
         // cancel some anything over 500ms
         if (dur > 500ms) { f.cancel; dur = null }
@@ -394,10 +394,10 @@ class ActorTest : Test
     }
 
     // verify cancellation or that scheduling was reasonably accurate
-    futures.each |Future f, Int i| { verifySchedule(start, f, durs[i], 100ms) }
+    futures.each |Future f, Int i| { verifyLater(start, f, durs[i], 100ms) }
   }
 
-  Void verifySchedule(Duration start, Future f, Duration? expected, Duration tolerance := 20ms)
+  Void verifyLater(Duration start, Future f, Duration? expected, Duration tolerance := 20ms)
   {
     if (expected == null)
     {
