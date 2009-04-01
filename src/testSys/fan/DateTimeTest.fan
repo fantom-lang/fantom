@@ -148,7 +148,7 @@ class DateTimeTest : Test
     verify(a !== b)
     verify(b === DateTime.now)
 
-    Thread.sleep(200ms)
+    Actor.sleep(200ms)
     verify(b === DateTime.now)
 
     c := DateTime.now(180ms)
@@ -180,7 +180,7 @@ class DateTimeTest : Test
     verify(a !== b)
     verify(b === DateTime.nowUtc)
 
-    Thread.sleep(200ms)
+    Actor.sleep(200ms)
     verify(b === DateTime.nowUtc)
 
     c := DateTime.now(180ms)

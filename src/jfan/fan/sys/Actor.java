@@ -85,6 +85,19 @@ public class Actor
 // Actor
 //////////////////////////////////////////////////////////////////////////
 
+  public static void sleep(Duration duration)
+  {
+    try
+    {
+      long ticks = duration.ticks;
+      java.lang.Thread.sleep(ticks/1000000L, (int)(ticks%1000000L));
+    }
+    catch (InterruptedException e)
+    {
+      throw InterruptedErr.make(e).val;
+    }
+  }
+
   public final ActorGroup group() { return group; }
 
   public final Future send(Object msg) { return _send(msg, null, null); }

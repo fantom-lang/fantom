@@ -245,7 +245,7 @@ class ClosureTest : Test
   {
     s := onceIt
     verify(s.endsWith(" 0 1 2"))
-    Thread.sleep(10ms)
+    Actor.sleep(10ms)
     verifyEq(onceIt, s)
 
     verifyEq(onceAgain, "(A,B)(a,b)")

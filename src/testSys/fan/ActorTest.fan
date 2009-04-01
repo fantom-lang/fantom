@@ -174,13 +174,13 @@ class ActorTest : Test
 
   static Obj? sleep(Context cx, Obj? msg)
   {
-    if (msg is Duration) Thread.sleep(msg)
+    if (msg is Duration) Actor.sleep(msg)
     return msg
   }
 
   static Obj? cancel(Context cx, Future f)
   {
-    Thread.sleep(20ms)
+    Actor.sleep(20ms)
     f.cancel
     return f
   }
@@ -479,7 +479,7 @@ class ActorTest : Test
   static Obj? whenDoneA(Context cx, Obj? msg)
   {
     if (msg == "throw") throw IndexErr()
-    if (msg is Duration) Thread.sleep(msg)
+    if (msg is Duration) Actor.sleep(msg)
     return msg
   }
 
@@ -551,7 +551,7 @@ class ActorTest : Test
 
   static Obj? coalesce(Context cx, Obj? msg)
   {
-    if (msg is Duration) { Thread.sleep(msg); cx["msgs"] = Str[,]; return msg }
+    if (msg is Duration) { Actor.sleep(msg); cx["msgs"] = Str[,]; return msg }
     if (msg == "throw") throw IndexErr("foo bar")
     Str[] msgs := cx.get("msgs")
     msgs.add(msg)
@@ -623,7 +623,7 @@ class ActorTest : Test
 
   static Obj? coalesceReceive(Context cx, Obj? msg)
   {
-    if (msg is Duration) { Thread.sleep(msg); return msg }
+    if (msg is Duration) { Actor.sleep(msg); return msg }
     if (msg->first == "throw") throw IndexErr("foo bar")
     return msg
   }
