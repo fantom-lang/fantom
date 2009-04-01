@@ -89,7 +89,7 @@ public class Actor
 
   public final Future send(Object msg) { return _send(msg, null); }
 
-  public final Future schedule(Duration d, Object msg) { return _send(msg, d); }
+  public final Future sendLater(Duration d, Object msg) { return _send(msg, d); }
 
   protected Object receive(Context cx, Object msg)
   {

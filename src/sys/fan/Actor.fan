@@ -61,6 +61,7 @@ const class Actor
   ** a future which may be used to obtain the result once it the
   ** actor has processed the message.  If the message is coalesced
   ** then this method returns the original message's future reference.
+  ** Also see `sendLater` and `sendWhenDone`.
   **
   Future send(Obj? msg)
 
@@ -70,9 +71,16 @@ const class Actor
   ** appended to the end of this actor's queue.  Accuracy of scheduling
   ** is dependent on thread coordination and pending messages in the queue.
   ** Scheduled messages are not guaranteed to be processed if the
-  ** actor's grouped is stopped.
+  ** actor's grouped is stopped.  Also see `send` and `sendWhenDone`.
   **
-  Future schedule(Duration d, Obj? msg)
+  Future sendLater(Duration d, Obj? msg)
+
+  **
+  ** Schedule a message for delivery after the given future has completed.
+  ** Completion may be due to the future returning a result, throwing an
+  ** exception, or cancellation.  Also see `send` and `sendLater`.
+  **
+  Future sendWhenDone(Future f, Obj? msg)
 
   **
   ** The receive behavior for this actor is handled by overriding
