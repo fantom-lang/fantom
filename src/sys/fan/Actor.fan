@@ -9,6 +9,8 @@
 **
 ** Actor is a worker who processes messages asynchronously.
 **
+** See [docLang::Actors]`docLang::Actors`
+**
 const class Actor
 {
 
@@ -24,7 +26,7 @@ const class Actor
   ** NotImmutableErr is thrown.  If receive is null, then you must subclass
   ** Actor and override the `receive` method.
   **
-  new make(ActorGroup group, |Context,Obj? -> Obj?|? receive := null)
+  new make(ActorGroup group, |Obj?,Context-> Obj?|? receive := null)
 
   **
   ** Create an actor with a coalescing message loop.  This constructor
@@ -52,7 +54,7 @@ const class Actor
   new makeCoalescing(ActorGroup group,
                      |Obj? msg->Obj?|? toKey,
                      |Obj? orig, Obj? incoming->Obj?|? coalesce,
-                     |Context,Obj? -> Obj?|? receive := null)
+                     |Obj?,Context->Obj?|? receive := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Messaging
@@ -99,7 +101,7 @@ const class Actor
   ** the result made available by the Future.  If an exception
   ** is raised by this method, then it is raised by 'Future.get'.
   **
-  protected virtual Obj? receive(Context cx, Obj? msg)
+  protected virtual Obj? receive(Obj? msg, Context cx)
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

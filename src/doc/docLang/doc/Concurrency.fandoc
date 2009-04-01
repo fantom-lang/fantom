@@ -27,8 +27,8 @@ The Fan model of concurrency is based upon the following principles:
    the language itself.  Immutable data can be efficiently and safely
    shared between threads (for example via a static field);
 
- - **Message Passing**: the threading API is built around the
-   idea of [passing messages]`Threading` between threads;
+ - **Message Passing**: the actor  API is built around the idea
+   of [passing messages]`Actors` between asynchronous workers;
 
  - **REST**: Fan applications are built using a [namespace]`Namespaces`
    of resources identified with URIs.  This namespace provides a
@@ -75,29 +75,28 @@ example to declare a const list of strings:
     const static Str[] names := ["Stan", "Cartman", "Kenny"]?.toImmutable
   }
 
-If assigning to a 'const Type' field, then the compiler will
-also implicitly insert a call to 'toImmutable'.
-
 You can check if an object is immutable via the
 [Obj.isImmutable]`sys::Obj.isImmutable` method.
 
 Shared Objects [#sharedObjects]
 *******************************
-Both message passing and resources provide a mechanism to share objects
-between threads.  For example, specific APIs which will pass an object
-to another thread include:
+Both message passing and namespace resources provide a mechanism to share
+objects between threads.  For example, specific APIs which will pass an
+object to another thread include:
 
-  - [Thread.sendAsync]`sys::Thread.sendAsync`
-  - [Thread.sendSync]`sys::Thread.sendSync`
+  - [Actor.send]`sys::Actor.send`
+  - [Actor.sendLater]`sys::Actor.sendLater`
+  - [Actor.sendWhenDone]`sys::Actor.sendWhenDone`
+  - [Future.get]`sys::Future.get`
   - [Namespace.create]`sys::Namespace.create`
   - [Namespace.put]`sys::Namespace.put`
 
 All of these APIs use the same pattern to safely pass an object
-between threads.  If an object is immutable then we can safely
+between threads.  If an object is immutable then we can safely pass
 it to another thread by reference.  Otherwise we assume the object
 is [serializable]`Serialization` and pass a serialized copy of the
 object to another thread.  Both of these approaches have their
-pros and cons to consider in your application design :
+pros and cons to consider in your application design:
 
   - immutable:
      - ideal for simple structures if fast to create
