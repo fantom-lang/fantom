@@ -55,6 +55,13 @@ const class Actor
   ActorGroup group()
 
   **
+  ** Put the currently executing actor thread to sleep for the
+  ** specified period.  If the thread is interrupted for any
+  ** reason while sleeping, then InterruptedErr is thrown.
+  **
+  static Void sleep(Duration duration)
+
+  **
   ** Asynchronously send a message to this actor for processing.
   ** If msg is not immutable or serializable, then IOErr is thrown.
   ** Throw Err if this actor's group has been stopped.  Return

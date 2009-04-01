@@ -80,7 +80,7 @@ class WebClientTest : Test
   {
     c := WebClient(`http://google.com`)
     verify(c.getStr.contains("<html"))
-    Thread.sleep(100ms)
+    Actor.sleep(100ms)
     verify(!c.isConnected)
 
     buf := c.getBuf
