@@ -10,6 +10,8 @@
 ** Future represents the result of an actor's asynchronous
 ** computation of a message.
 **
+** See [docLang::Actors]`docLang::Actors`
+**
 final const class Future
 {
 

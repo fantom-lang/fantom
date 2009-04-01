@@ -383,8 +383,7 @@ Fan includes an [actor framework]`docLang::Actors` for building
 concurrent applications:
 
   // spawn actor which aynchronously increments an Int msg
-  group := ActorGroup()
-  actor := Actor(group) |Context cx, Int msg->Int| { msg + 1 }
+  actor := Actor(group) |Int msg->Int| { msg + 1 }
 
   // send some messages to the actor and block for result
   for (i:=0; i<5; ++i) echo(actor.send(i).get)
