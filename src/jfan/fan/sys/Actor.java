@@ -122,7 +122,7 @@ public class Actor
   {
     protected Object initialValue()
     {
-      return new Map(Sys.StrType, Sys.ObjType);
+      return new Map(Sys.StrType, Sys.ObjType.toNullable());
     }
   };
 
@@ -179,6 +179,9 @@ public class Actor
 
   public final void _work()
   {
+    // set locals for this actor
+    locals.set(context.locals);
+
     // process up to 100 messages before yielding the thread
     for (int count = 0; count < 100; count++)
     {

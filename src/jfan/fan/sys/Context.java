@@ -48,4 +48,5 @@ public final class Context
 
   final Actor actor;
   final Map map = new Map(Sys.StrType, Sys.ObjType.toNullable());
+  final Map locals = new Map(Sys.StrType, Sys.ObjType.toNullable());
 }

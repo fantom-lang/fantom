@@ -113,10 +113,11 @@ const class Actor
   static Void sleep(Duration duration)
 
   **
-  ** Return the map of actor local variables.  This is a map of "global"
-  ** variables visible only on the actor's current thread.  These variables are
-  ** keyed by a string name - by convention use a dotted notation beginning
-  ** with your pod name to avoid naming collisions.
+  ** Return the map of thread local variables for current actor.  This
+  ** is a map of "global" variables visible only on the current thread.
+  ** These variables are keyed by a string name - by convention use a
+  ** dotted notation beginning with your pod name to avoid naming
+  ** collisions.
   **
   static Str:Obj? locals()
 

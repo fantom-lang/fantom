@@ -628,4 +628,26 @@ class ActorTest : Test
     return msg
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Locals
+//////////////////////////////////////////////////////////////////////////
+
+  Void testLocals()
+  {
+    // schedule a bunch of actors (more than thread pool)
+    actors := Actor[,]
+    300.times |Int i| { actors.add(Actor(group, &locals(i))) }
+
+    actors.each |Actor a, Int i|
+    {
+      verifyEq(a.send("foo").get, i)
+    }
+  }
+
+  static Obj? locals(Int num, Context cx, Obj? msg)
+  {
+    if (Actor.locals["testLocal"] == null) Actor.locals["testLocal"] = num
+    return Actor.locals["testLocal"]
+  }
+
 }
