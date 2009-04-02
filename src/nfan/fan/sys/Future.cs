@@ -6,6 +6,7 @@
 //   30 Mar 09  Andy Frank  Creation
 //
 
+using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -96,31 +97,89 @@ namespace Fan.Sys
       return Namespace.safe(r);
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
     public void cancel()
     {
-      if ((m_state & DONE) == 0) m_state = DONE_CANCEL;
-      m_msg = m_result = null;  // allow gc
-      Monitor.PulseAll(this);
+      ArrayList wd;
+      lock (this)
+      {
+        if ((m_state & DONE) == 0) m_state = DONE_CANCEL;
+        m_msg = m_result = null;  // allow gc
+        Monitor.PulseAll(this);
+        wd = whenDone; whenDone = null;
+      }
+      sendWhenDone(wd);
     }
 
     internal void set(object r)
     {
       r = Namespace.safe(r);
+      ArrayList wd;
       lock (this)
       {
         m_state = DONE_OK;
         m_result = r;
         Monitor.PulseAll(this);
+        wd = whenDone; whenDone = null;
+      }
+      sendWhenDone(wd);
+    }
+
+    internal void err(Err e)
+    {
+      ArrayList wd;
+      lock (this)
+      {
+        m_state = DONE_ERR;
+        m_result = e;
+        Monitor.PulseAll(this);
+        wd = whenDone; whenDone = null;
+      }
+      sendWhenDone(wd);
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // When Done
+  //////////////////////////////////////////////////////////////////////////
+
+    internal void sendWhenDone(Actor a, Future f)
+    {
+      // if already done, then set immediate flag
+      // otherwise add to our when done list
+      bool immediate = false;
+      lock (this)
+      {
+        if (isDone()) immediate = true;
+        else
+        {
+          if (whenDone == null) whenDone = new ArrayList();
+          whenDone.Add(new WhenDone(a, f));
+        }
+      }
+
+      // if immediate we are already done so enqueue immediately
+      if (immediate)
+      {
+        try { a._enqueue(f, false); }
+        catch (System.Exception e) { Err.dumpStack(e); }
       }
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    internal void err(Err e)
+    internal static void sendWhenDone(ArrayList list)
     {
-      m_state = DONE_ERR;
-      m_result = e;
-      Monitor.PulseAll(this);
+      if (list == null) return;
+      for (int i=0; i<list.Count; ++i)
+      {
+        WhenDone wd = (WhenDone)list[i];
+        try { wd.actor._enqueue(wd.future, false); }
+        catch (System.Exception e) { Err.dumpStack(e); }
+      }
+    }
+
+    internal class WhenDone
+    {
+      public WhenDone(Actor a, Future f) { actor = a; future = f; }
+      public Actor actor;
+      public Future future;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -137,6 +196,7 @@ namespace Fan.Sys
     internal Future m_next;        // linked list in Actor
     private volatile int m_state;  // processing state of message
     private object m_result;       // result or exception of processing
+    private ArrayList whenDone;    // list of messages to deliver when done
 
   }
 }

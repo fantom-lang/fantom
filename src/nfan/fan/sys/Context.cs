@@ -48,5 +48,8 @@ namespace Fan.Sys
 
     internal readonly Actor m_actor;
     internal readonly Map m_map = new Map(Sys.StrType, Sys.ObjType.toNullable());
+    internal readonly Map m_locals = new Map(Sys.StrType, Sys.ObjType.toNullable());
+    internal Locale m_locale = Locale.current();
+
   }
 }
