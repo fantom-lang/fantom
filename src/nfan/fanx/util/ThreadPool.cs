@@ -180,21 +180,34 @@ namespace Fanx.Util
     {
       // if we have a pending work, then immediately reuse the worker
       LinkedListNode<Work> node = pending.First;
-      if (node != null) return node.Value;
+      if (node != null)
+      {
+        pending.RemoveFirst();
+        return node.Value;
+      }
 
       // if the worker's idle time is over or we are
       // shutting down, then free the worker and let it die
       if (idleTimeOver || state != RUNNING)
       {
-        idle.Remove(w);
-        workers.Remove(w);
-        Monitor.PulseAll(this);
+        free(w);
         return null;
       }
 
       // add to head of idle list (we let oldest threads die out first)
       idle.AddFirst(w);
       return null;
+    }
+
+    /// <summary>
+    /// Free worker from all data structures and let it die.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    internal void free(Worker w)
+    {
+      idle.Remove(w);
+      workers.Remove(w);
+      Monitor.PulseAll(this);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -265,11 +278,7 @@ namespace Fanx.Util
             {
               // let the thread pool know I am idle, if it has pending
               // work for me, then immediately execute it
-              while (true)
-              {
-                try { work = pool.ready(this, false); break; }
-                catch (ThreadInterruptedException) {}
-              }
+              work = pool.ready(this, false);
               if (work != null) continue;
 
               // idle this thread for a period of time to
@@ -281,20 +290,16 @@ namespace Fanx.Util
 
               // check back again for pending work but this time pass true for
               // idleTimeOver, if still no work for me then it is time to die
-              while (true)
-              {
-                try { work = pool.ready(this, true); break; }
-                catch (ThreadInterruptedException) {}
-              }
+              work = pool.ready(this, true);
               if (work == null) return;
             }
           }
         }
         catch (System.Exception e)
         {
-          // if an exception is raised we have serious problems
+          // if an exception is raised, free worker
           Fan.Sys.Err.dumpStack(e);
-          return;
+          pool.free(this);
         }
       }
 
