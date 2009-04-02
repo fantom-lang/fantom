@@ -161,3 +161,4 @@ sys_Int.times = function(self, func)
 
 sys_Int.maxValue = { val: 9223372036854775807 };
 sys_Int.minValue = { val: -9223372036854775808 };
+sys_Int.defVal = 0;
