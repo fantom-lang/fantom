@@ -28,11 +28,10 @@ class Boot : BootScript
 
   override Void setup()
   {
-    Sys.ns.create(`/homePage`, Hello())
+    Sys.ns.create(`/homePage`, Hello#)
   }
 }
 
-@serializable
 class Hello : Weblet
 {
   override Void onGet()
