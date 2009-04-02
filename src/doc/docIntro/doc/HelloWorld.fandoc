@@ -179,9 +179,9 @@ Let's look at some example code (this script is available under
 
   class Boot : BootScript
   {
-    override Thread[] services :=
+    override Service[] services :=
     [
-      WispService("web")
+      WispService
       {
         port = 8080
         pipeline = [FindResourceStep {}, FindViewStep {}, ServiceViewStep {}]
@@ -190,11 +190,10 @@ Let's look at some example code (this script is available under
 
     override Void setup()
     {
-      Sys.ns.create(`/homePage`, Hello())
+      Sys.ns.create(`/homePage`, Hello#)
     }
   }
 
-  @serializable
   class Hello : Weblet
   {
     override Void onGet()
