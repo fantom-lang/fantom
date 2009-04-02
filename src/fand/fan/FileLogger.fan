@@ -10,34 +10,44 @@
 ** FileLogger appends Str log entries to a file.  You
 ** can add a FileLogger as a Log handler:
 **
-**    sysLogger := FileLogger(null, scriptDir + `logs/sys.log`)
+**    sysLogger := FileLogger(scriptDir + `logs/sys.log`)
 **    sysLogger.start
 **    Log.addHandler(&sysLogger.writeLogRecord)
 **
 **
-const class FileLogger : Thread
+const class FileLogger : ActorGroup
 {
 
   **
   ** Constructor.
   **
-  new make(Str? name := null, File? file := null)
-    : super(name)
+  new make(File? file := null)
   {
-    if (file != null) this.file = file
+    this.file = file
   }
 
   **
-  ** File to append log records.
+  ** File to append log records.  This value can be
+  ** configured as a const field, or by `open` method.
   **
-  const File file
+  const File? file
+
+  **
+  ** Open the specified file to write for the file logger.
+  ** The file is used instead of the `file` field.  This method
+  ** must be called before attempting to write to the log.
+  **
+  Void open(File file)
+  {
+    actor.send(file)
+  }
 
   **
   ** Append string log message to file.
   **
   Void writeLogRecord(LogRecord rec)
   {
-    writeStr(rec.toStr)
+    actor.send(rec.toStr)
   }
 
   **
@@ -45,44 +55,59 @@ const class FileLogger : Thread
   **
   Void writeStr(Str msg)
   {
-    sendAsync(msg)
+    actor.send(msg)
   }
 
   **
   ** Run the script
   **
-  override Obj? run()
+  internal Void receive(Obj msg, Context cx)
   {
-    // open file
-    OutStream? out := null
-    try
+    // if file message, this is an open()
+    file := this.file
+    write := true
+    if (msg is File)
     {
-      if ((Obj?)file == null)
+      file = msg
+      write = false
+      cx["error"] = null
+    }
+
+    // if we are in error condition ignore
+    if (cx["error"] != null) return
+
+    // open file if first time thru
+    OutStream? out := cx["out"]
+    if (out == null)
+    {
+      // if no file configured
+      if (file == null)
       {
+        cx["error"] = true
         log.error("No file configured")
+        return
       }
-      else
+
+      // open it to append
+      try
       {
         if (!file.exists) file.create
         out = file.out(true)
+        cx["out"] = out
+      }
+      catch (Err e)
+      {
+        cx["error"] = true
+        log.error("Cannot open log file: $file", e)
+        return
       }
     }
-    catch (Err e)
-    {
-      log.error("Cannot open log file: $file", e)
-      return null
-    }
 
-    // dequeue strings and append to file
-    loop |Obj msg->Obj?|
-    {
-      if (out != null) out.printLine(msg).flush
-      return null
-    }
-
-    return null
+    // append to file
+    if (write) out.printLine(msg).flush
   }
 
   private const static Log log := Log.get("logger")
+  private const Actor actor := Actor(this, &receive)
 
 }

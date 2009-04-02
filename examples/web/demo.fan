@@ -9,9 +9,9 @@ using wisp
 **
 class Boot : BootScript
 {
-  override Thread[] services :=
+  override Service[] services :=
   [
-    WispService("web")
+    WispService
     {
       port = 8080
       pipeline =
@@ -28,7 +28,6 @@ class Boot : BootScript
   override Void setup()
   {
     sysLogger := FileLogger { file = scriptDir + `logs/sys.log` }
-    sysLogger.start
     Log.addHandler(&sysLogger.writeLogRecord)
 
     Sys.ns.create(`/homePage`, scriptDir + `index.fan`)
