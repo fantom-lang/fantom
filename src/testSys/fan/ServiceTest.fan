@@ -13,14 +13,86 @@
 class ServiceTest : Test
 {
 
-  Void testService()
+//////////////////////////////////////////////////////////////////////////
+// Lifecycle
+//////////////////////////////////////////////////////////////////////////
+
+  Void testLifecycle()
+  {
+    s := TestServiceB()
+
+    // initial state
+    verifyEq(s.isInstalled, false)
+    verifyEq(s.isRunning, false)
+    verifyEq(Actor.locals["TestServiceB"], null)
+    verifyService(TestServiceB#, null)
+
+    // install
+    verifySame(s.install, s)
+    verifySame(s.install, s)
+    verifyEq(s.isInstalled, true)
+    verifyEq(s.isRunning, false)
+    verifyEq(Actor.locals["TestServiceB"], null)
+    verifyService(TestServiceB#, s)
+
+    // start
+    verifySame(s.start, s)
+    verifySame(s.start, s)
+    verifyEq(s.isInstalled, true)
+    verifyEq(s.isRunning, true)
+    verifyEq(Actor.locals["TestServiceB"], "onStart")
+    verifyService(TestServiceB#, s)
+
+    // stop
+    verifySame(s.stop, s)
+    verifySame(s.stop, s)
+    verifyEq(s.isInstalled, true)
+    verifyEq(s.isRunning, false)
+    verifyEq(Actor.locals["TestServiceB"], "onStop")
+    verifyService(TestServiceB#, s)
+
+    // uninstall
+    verifySame(s.uninstall, s)
+    verifySame(s.uninstall, s)
+    verifyEq(s.isInstalled, false)
+    verifyEq(s.isRunning, false)
+    verifyEq(Actor.locals["TestServiceB"], "onStop")
+    verifyService(TestServiceB#, null)
+
+    // stop doesn't hurt anything after until
+    verifySame(s.stop, s)
+    verifyEq(s.isInstalled, false)
+    verifyEq(s.isRunning, false)
+    verifyEq(Actor.locals["TestServiceB"], "onStop")
+    verifyService(TestServiceB#, null)
+
+    // start implies
+    verifySame(s.start, s)
+    verifyEq(s.isInstalled, true)
+    verifyEq(s.isRunning, true)
+    verifyEq(Actor.locals["TestServiceB"], "onStart")
+    verifyService(TestServiceB#, s)
+
+    // uninstall implies stop
+    verifySame(s.uninstall, s)
+    verifyEq(s.isInstalled, false)
+    verifyEq(s.isRunning, false)
+    verifyEq(Actor.locals["TestServiceB"], "onStop")
+    verifyService(TestServiceB#, null)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Registry
+//////////////////////////////////////////////////////////////////////////
+
+  Void testRegistry()
   {
     a  := TestServiceA()
     b  := TestServiceB()
     a2 := TestServiceA()
     b2 := TestServiceB()
 
-    // start
+    // starting state
     verifyService(ServiceTest#,  null)
     verifyService(TestServiceM#, null)
     verifyService(TestServiceA#, null)
@@ -149,4 +221,8 @@ class ServiceTest : Test
 
 mixin TestServiceM {}
 const class TestServiceA : TestServiceM, Service {}
-const class TestServiceB : TestServiceA {}
+const class TestServiceB : TestServiceA
+{
+  protected override Void onStart() { Actor.locals["TestServiceB"] = "onStart" }
+  protected override Void onStop()  { Actor.locals["TestServiceB"] = "onStop" }
+}

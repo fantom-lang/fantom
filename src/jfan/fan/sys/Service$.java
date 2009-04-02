@@ -15,15 +15,19 @@ import java.util.HashMap;
 public class Service$
 {
 
+//////////////////////////////////////////////////////////////////////////
+// Registry
+//////////////////////////////////////////////////////////////////////////
+
   private static Object lock = new Object();
-  private static HashMap map = new HashMap();  // Type:Node
-  private static List list = new List(Sys.ServiceType);
+  private static HashMap byService = new HashMap();  // Service:State
+  private static HashMap byType = new HashMap();     // Type:Node
 
   public static List list()
   {
     synchronized (lock)
     {
-      return list.dup().ro();
+      return new List(Sys.ServiceType, byService.keySet().toArray(new Service[byService.size()]));
     }
   }
 
@@ -33,7 +37,7 @@ public class Service$
     String qname = t.qname();
     synchronized (lock)
     {
-      Node node = (Node)map.get(qname);
+      Node node = (Node)byType.get(qname);
       if (node != null) return node.service;
       if (checked) throw UnknownServiceErr.make(qname).val;
       return null;
@@ -46,7 +50,7 @@ public class Service$
     List list = new List(Sys.ServiceType);
     synchronized (lock)
     {
-      Node node = (Node)map.get(qname);
+      Node node = (Node)byType.get(qname);
       while (node != null)
       {
         list.add(node.service);
@@ -56,6 +60,46 @@ public class Service$
     return list.ro();
   }
 
+  static boolean isServiceType(Type t)
+  {
+    return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+  public static long hash(Service self)
+  {
+    return System.identityHashCode(self);
+  }
+
+  public static boolean equals(Service self, Object that)
+  {
+    return self == that;
+  }
+
+  public static boolean isInstalled(Service self)
+  {
+    synchronized (lock)
+    {
+      return byService.get(self) != null;
+    }
+  }
+
+  public static boolean isRunning(Service self)
+  {
+    synchronized (lock)
+    {
+      State state = (State)byService.get(self);
+      return state != null && state.running;
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Lifecycle
+//////////////////////////////////////////////////////////////////////////
+
   public static Service install(Service self)
   {
     try
@@ -64,20 +108,19 @@ public class Service$
       synchronized (lock)
       {
         // if already installed, short circuit
-        if (list.containsSame(self)) return self;
+        if (self.isInstalled()) return self;
 
-        // add to list
-        list.add(self);
+        // add to byService map
+        byService.put(self, new State(self));
 
         // add to map for each type service implements
         for (int i=0; i<types.sz(); ++i)
         {
           Type t = (Type)types.get(i);
           if (!isServiceType(t)) continue;
-          Node node = new Node();
-          node.service = self;
-          Node x = (Node)map.get(t.qname());
-          if (x == null) map.put(t.qname(), node);
+          Node node = new Node(self);
+          Node x = (Node)byType.get(t.qname());
+          if (x == null) byType.put(t.qname(), node);
           else
           {
             while (x.next != null) x = x.next;
@@ -100,8 +143,11 @@ public class Service$
       List types = FanObj.type(self).inheritance();
       synchronized (lock)
       {
-        // remove from list, it not installed short circuit
-        if (list.removeSame(self) == null) return self;
+        // ensure service is stopped
+        stop(self);
+
+        // remove from byService map, it not installed short circuit
+        if (byService.remove(self) == null) return self;
 
         // remove from map for each type implemented by service
         nextType: for (int i=0; i<types.sz(); ++i)
@@ -111,7 +157,7 @@ public class Service$
           if (!isServiceType(t)) continue nextType;
 
           // lookup linked list for that type
-          Node node = (Node)map.get(t.qname());
+          Node node = (Node)byType.get(t.qname());
           if (node == null) continue nextType;
 
           // find this thread in the linked list
@@ -125,7 +171,7 @@ public class Service$
 
           // update the map or linked list
           if (last == null)
-            map.put(t.qname(), node.next);
+            byType.put(t.qname(), node.next);
           else
             last.next = node.next;
         }
@@ -138,13 +184,77 @@ public class Service$
     return self;
   }
 
-  static boolean isServiceType(Type t)
+  public static Service start(Service self)
   {
-    return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic();
+    try
+    {
+      synchronized (lock)
+      {
+        // start implies install
+        install(self);
+
+        // if already running, short circuit
+        State state = (State)byService.get(self);
+        if (state.running) return self;
+
+        // put into the running state
+        state.running = true;
+      }
+
+      // onStart callback (outside of lock)
+      self.onStart();
+    }
+    catch (Throwable e)
+    {
+      e.printStackTrace();
+    }
+    return self;
   }
 
+  public static Service stop(Service self)
+  {
+    try
+    {
+      synchronized (lock)
+      {
+        // if not running, short circuit
+        State state = (State)byService.get(self);
+        if (state == null || !state.running) return self;
+
+        // take out of the running state
+        state.running = false;
+      }
+
+      // onStop (outside of lock)
+      self.onStop();
+    }
+    catch (Throwable e)
+    {
+      e.printStackTrace();
+    }
+    return self;
+  }
+
+  public static void onStart(Service self) {}
+
+  public static void onStop(Service self) {}
+
+//////////////////////////////////////////////////////////////////////////
+// State/Node
+//////////////////////////////////////////////////////////////////////////
+
+  /** Value for byService map */
+  static class State
+  {
+    State(Service s) { service = s; }
+    Service service;
+    boolean running;
+  }
+
+  /** Value for byType map */
   static class Node
   {
+    Node(Service s) { service = s; }
     Service service;
     Node next;
   }

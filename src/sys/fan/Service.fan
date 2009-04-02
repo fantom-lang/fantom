@@ -13,8 +13,30 @@
 ** automatically mapped into the namespace under "/sys/service/{qname}"
 ** for all their public types.
 **
+** The following table illustrates the service lifecycle:
+**
+**   Method        isInstalled  isRunning
+**   -----------   -----------  ----------
+**   constructed   false        false
+**   install       true         false
+**   start         true         true
+**   stop          true         false
+**   uninstall     false        false
+**
+** While the service is installed, it may be looked up in the
+** registry via `find` and `findAll`.  The running state is used
+** to invoke the `onStart` and `onStop` callbacks which gives
+** the service a chance to setup/shutdown its actors and associated
+** resources.
+**
+** Services are typically configured in a `fand::BootScript`.
+**
 const mixin Service
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Registry
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** List all the installed services.
@@ -35,6 +57,38 @@ const mixin Service
   **
   static Service[] findAll(Type t)
 
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Services are required to implement equality by reference.
+  **
+  final override Bool equals(Obj? that)
+
+  **
+  ** Services are required to implement equality by reference.
+  **
+  final override Int hash()
+
+  **
+  ** Is the service in the installed state.
+  ** Note this method requires accessing a global hash table, so
+  ** it should not be heavily polled in a concurrent environment.
+  **
+  Bool isInstalled()
+
+  **
+  ** Is the service in the running state.
+  ** Note this method requires accessing a global hash table, so
+  ** it should not be heavily polled in a concurrent environment.
+  **
+  Bool isRunning()
+
+//////////////////////////////////////////////////////////////////////////
+// Lifecycle
+//////////////////////////////////////////////////////////////////////////
+
   **
   ** Install this service into the VM's service registry.
   ** If already installed, do nothing.  Return this.
@@ -42,9 +96,33 @@ const mixin Service
   This install()
 
   **
+  ** Start this service.  If not installed, this method
+  ** autoamatically calls `install`.  If already running,
+  ** do nothing.  Return this.
+  **
+  This start()
+
+  **
+  ** Stop this service.  If not running, do nothing.
+  ** Return this.
+  **
+  This stop()
+
+  **
   ** Uninstall this service from the VM's service registry.
-  ** If not installed, do nothing.  Return this.
+  ** If the service is running, this method automatically
+  ** calls `stop`.  If not installed, do nothing.  Return this.
   **
   This uninstall()
+
+  **
+  ** Callback when service transitions into running state.
+  **
+  protected virtual Void onStart()
+
+  **
+  ** Callback when service transitions out of the running state.
+  **
+  protected virtual Void onStop()
 
 }
