@@ -171,15 +171,23 @@ public class ThreadPool
     // shutting down, then free the worker and let it die
     if (idleTimeOver || state != RUNNING)
     {
-      idle.remove(w);
-      workers.remove(w);
-      notifyAll();
+      free(w);
       return null;
     }
 
     // add to head of idle list (we let oldest threads die out first)
     idle.addFirst(w);
     return null;
+  }
+
+  /**
+   * Free worker from all data structures and let it die.
+   */
+  synchronized void free(Worker w)
+  {
+    idle.remove(w);
+    workers.remove(w);
+    notifyAll();
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -269,8 +277,9 @@ public class ThreadPool
       }
       catch (Throwable e)
       {
-        // if an exception is raised we have serious problems
+        // if an exception is raised, free worker
         e.printStackTrace();
+        free(this);
       }
     }
 
