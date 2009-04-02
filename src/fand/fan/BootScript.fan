@@ -10,6 +10,8 @@
 ** BootScript is the base class for the scripts used to
 ** boot up a fand process.
 **
+** See [docLib]`docLib::Fand`.
+**
 abstract class BootScript
 {
 

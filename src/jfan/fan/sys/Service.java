@@ -12,9 +12,20 @@ package fan.sys;
  */
 public interface Service
 {
+  public boolean isInstalled();
+
+  public boolean isRunning();
 
   public Service install();
 
   public Service uninstall();
+
+  public Service start();
+
+  public Service stop();
+
+  public void onStart();
+
+  public void onStop();
 
 }
