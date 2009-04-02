@@ -101,7 +101,6 @@ abstract const class WebService : Thread
   **
   protected override Void onStart()
   {
-    sessionMgr.start
     pipeline.each |WebStep step|
     {
       try { step.onStart(this) } catch (Err e) { log.error("Starting $step.type", e) }
