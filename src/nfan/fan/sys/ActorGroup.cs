@@ -76,7 +76,7 @@ namespace Fan.Sys
     public ActorGroup join() { return join(null); }
     public ActorGroup join(Duration timeout)
     {
-      long ms = timeout == null ? System.Int64.MaxValue : timeout.millis();
+      long ms = timeout == null ? System.Int32.MaxValue : timeout.millis();
       try
       {
         if (m_threadPool.join(ms)) return this;

@@ -89,8 +89,6 @@ namespace Fanx.Util
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void kill()
     {
-throw new System.Exception("ThreadPool.kill() not implemented");
-      /*
       state = STOPPING;
 
       // kill all the pending work
@@ -105,8 +103,7 @@ throw new System.Exception("ThreadPool.kill() not implemented");
 
       // interupt each thread
       IEnumerator en = workers.Values.GetEnumerator();
-      while (en.MoveNext()) ((Worker)en.Current).Interrupt();
-      */
+      while (en.MoveNext()) ((Worker)en.Current).thread.Interrupt();
     }
 
     /// <summary>
@@ -146,8 +143,6 @@ throw new System.Exception("ThreadPool.kill() not implemented");
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void submit(Work work)
     {
-throw new System.Exception("ThreadPool.submit() not implemented");
-      /*
       // if we have an idle thread, use it
       LinkedListNode<Worker> node = idle.First;
       if (node != null)
@@ -161,15 +156,17 @@ throw new System.Exception("ThreadPool.submit() not implemented");
       // if we are below max, then spawn a new thread
       if (workers.Count < max)
       {
-        Worker worker = new Worker("ThreadPool-Worker-" + (counter++), work);
-        worker.Start();
+        Worker worker = new Worker(this, work);
+        Thread thread = new Thread(worker.run);
+        thread.Name = "ThreadPool-Worker-" + (counter++);
+        worker.thread = thread;
+        thread.Start();
         workers[worker] = worker;
         return;
       }
 
       // queue the runnable until we have an idle thread
       pending.AddLast(work);
-      */
     }
 
     /// <summary>
@@ -229,14 +226,14 @@ throw new System.Exception("ThreadPool.submit() not implemented");
     /// <summary>
     /// Worker is a reusable thread within the thread pool.
     /// </summary>
-    internal class Worker// : Thread
+    internal class Worker
     {
       /// <summary>
       /// Construct with name and initial work to execute.
       /// </summary>
-      public Worker(string name, Work work)
+      public Worker(ThreadPool pool, Work work)
       {
-//        super(name);
+        this.pool = pool;
         this.work = work;
       }
 
@@ -253,8 +250,6 @@ throw new System.Exception("ThreadPool.submit() not implemented");
       /// </summary>
       public void run()
       {
-throw new System.Exception("ThreadPool$Worker.run() not implemented");
-        /*
         try
         {
           // loop processing runnables
@@ -270,19 +265,27 @@ throw new System.Exception("ThreadPool$Worker.run() not implemented");
             {
               // let the thread pool know I am idle, if it has pending
               // work for me, then immediately execute it
-              work = ready(this, false);
+              while (true)
+              {
+                try { work = pool.ready(this, false); break; }
+                catch (ThreadInterruptedException) {}
+              }
               if (work != null) continue;
 
               // idle this thread for a period of time to
               // see if any new work becomes available
-              try { Monitor.Wait(this, idleTime); } catch (ThreadInterruptedException e) {}
+              try { Monitor.Wait(this, pool.idleTime); } catch (ThreadInterruptedException) {}
 
               // if work was given to me while I was waiting, then do it
               if (work != null) continue;
 
               // check back again for pending work but this time pass true for
               // idleTimeOver, if still no work for me then it is time to die
-              work = ready(this, true);
+              while (true)
+              {
+                try { work = pool.ready(this, true); break; }
+                catch (ThreadInterruptedException) {}
+              }
               if (work == null) return;
             }
           }
@@ -291,8 +294,8 @@ throw new System.Exception("ThreadPool$Worker.run() not implemented");
         {
           // if an exception is raised we have serious problems
           Fan.Sys.Err.dumpStack(e);
+          return;
         }
-        */
       }
 
       /// <summary>
@@ -306,6 +309,8 @@ throw new System.Exception("ThreadPool$Worker.run() not implemented");
         Monitor.PulseAll(this);
       }
 
+      internal ThreadPool pool;
+      internal Thread thread;
       internal Work work;
     }
 

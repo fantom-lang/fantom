@@ -43,22 +43,20 @@ namespace Fanx.Util
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void schedule(long ns, Work work)
     {
-throw new System.Exception("Scheduler.scheder() not implemented");
-      /*
       // insert into our linked list
       bool newHead = add(ns, work);
 
       // if we haven't launched our thread yet, then launch it
       if (thread == null)
       {
-        thread = new Thread(this, "Scheduler");
+        thread = new Thread(run);
+        thread.Name = "Scheduler";
         thread.Start();
       }
 
       // if we added to the head of our linked list, then we
       // modified our earliest deadline, so we need to notify thread
       if (newHead) Monitor.PulseAll(this);
-      */
     }
 
     /// <summary>
