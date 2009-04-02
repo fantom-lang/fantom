@@ -10,9 +10,9 @@ using inet
 using web
 
 **
-** WispThread
+** WispActor
 **
-internal const class WispThread : Thread
+internal const class WispActor : Actor
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ internal const class WispThread : Thread
 //////////////////////////////////////////////////////////////////////////
 
   new make(WispService service, TcpSocket socket)
-    : super()
+    : super(service.processorGroup)
   {
     this.service = service
     this.socket  = socket
@@ -31,9 +31,9 @@ internal const class WispThread : Thread
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Process a series of HTTP request and response on a socket.
+  ** Process a series of HTTP requests and responses on a socket.
   **
-  override Obj? run()
+  override Obj? receive(Obj? msg, Context cx)
   {
     try
     {

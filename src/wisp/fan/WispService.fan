@@ -20,32 +20,38 @@ const class WispService : WebService
   **
   const Int port := 80
 
-  **
-  ** Constructor with thread name.
-  **
-  new make(Str? name := null) : super.make(name) {}
-
-  **
-  ** Main loop.
-  **
-  override Obj? run()
+  override Void onStart()
   {
-    listener := TcpListener.make
+    super.onStart
+    Actor(listenerGroup, &listen).send(null)
+  }
+
+  override Void onStop()
+  {
+    listenerGroup.stop
+    processorGroup.stop
+  }
+
+  internal Void listen()
+  {
+    listener := TcpListener()
     listener.bind(null, port)
     log.info("WispService started on port ${port}")
 
     numReqs := 0
     Sys.ns.create(`/wisp/numReqs`, numReqs)
 
-    while (isRunning)
+    while (!listenerGroup.isStopped)
     {
       socket := listener.accept
-      WispThread(this, socket).start
+      WispActor(this, socket).send(null)
 
       numReqs++
       Sys.ns.put(`/wisp/numReqs`, numReqs)
     }
-    return null
   }
+
+  const ActorGroup listenerGroup := ActorGroup()
+  const ActorGroup processorGroup := ActorGroup()
 
 }
