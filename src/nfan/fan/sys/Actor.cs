@@ -6,7 +6,9 @@
 //   30 Mar 09  Andy Frank  Creation
 //
 
+using System;
 using System.Collections;
+using System.Threading;
 using Fanx.Util;
 
 namespace Fan.Sys
@@ -14,7 +16,7 @@ namespace Fan.Sys
   /// <summary>
   /// Actor is a worker who processes messages asynchronously.
   /// </summary>
-  public class Actor : FanObj, ThreadPool.Work
+  public class Actor : FanObj, Fanx.Util.ThreadPool.Work
   {
 
   //////////////////////////////////////////////////////////////////////////
@@ -86,22 +88,49 @@ namespace Fan.Sys
 
     public ActorGroup group() { return m_group; }
 
-    public Future send(object msg) { return _send(msg, null); }
+    public Future send(object msg) { return _send(msg, null, null); }
 
-    public Future schedule(Duration d, object msg) { return _send(msg, d); }
+    public Future sendLater(Duration d, object msg) { return _send(msg, d, null); }
 
-    protected object receive(Context cx, object msg)
+    public Future sendWhenDone(Future f, object msg) { return _send(msg, null, f); }
+
+    protected object receive(object msg, Context cx)
     {
-      if (m_receive != null) return m_receive.call2(cx, msg);
+      if (m_receive != null) return m_receive.call2(msg, cx);
       System.Console.WriteLine("WARNING: " + type() + ".receive not overridden");
       return null;
     }
 
   //////////////////////////////////////////////////////////////////////////
+  // Utils
+  //////////////////////////////////////////////////////////////////////////
+
+    public static void sleep(Duration duration)
+    {
+      try
+      {
+        long ticks = duration.m_ticks;
+        System.Threading.Thread.Sleep(new System.TimeSpan(ticks/100));
+      }
+      catch (ThreadInterruptedException e)
+      {
+        throw InterruptedErr.make(e).val;
+      }
+    }
+
+    public static Map locals()
+    {
+      if (m_locals == null)
+        m_locals = new Map(Sys.StrType, Sys.ObjType.toNullable());
+      return m_locals;
+    }
+    [ThreadStatic] static Map m_locals;
+
+  //////////////////////////////////////////////////////////////////////////
   // Implementation
   //////////////////////////////////////////////////////////////////////////
 
-    private Future _send(object msg, Duration dur)
+    private Future _send(object msg, Duration dur, Future whenDone)
     {
       // ensure immutable or safe copy
       msg = Namespace.safe(msg);
@@ -113,10 +142,12 @@ namespace Fan.Sys
       Future f = new Future(msg);
 
       // either enqueue immediately or schedule with group
-      if (dur == null)
-        f = _enqueue(f, true);
-      else
+      if (dur != null)
         m_group.schedule(this, dur, f);
+      else if (whenDone != null)
+        whenDone.sendWhenDone(this, f);
+      else
+        f = _enqueue(f, true);
 
       return f;
     }
@@ -148,6 +179,10 @@ namespace Fan.Sys
 
     public void _work()
     {
+      // set locals for this actor
+      m_locals = m_context.m_locals;
+      Locale.setCurrent(m_context.m_locale);
+
       // process up to 100 messages before yielding the thread
       for (int count = 0; count < 100; count++)
       {
@@ -159,6 +194,9 @@ namespace Fan.Sys
         // dispatch the messge
         _dispatch(future);
       }
+
+      // flush locals back to context
+      m_context.m_locale = Locale.current();
 
       // done dispatching, either clear the submitted
       // flag or resubmit to the thread pool
@@ -182,7 +220,7 @@ namespace Fan.Sys
       {
         if (future.isCancelled()) return;
         if (m_group.m_killed) { future.cancel(); return; }
-        future.set(receive(m_context, future.m_msg));
+        future.set(receive(future.m_msg, m_context));
       }
       catch (Err.Val e)
       {
