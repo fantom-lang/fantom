@@ -24,7 +24,7 @@ const class LogStep : WebAppStep
   **
   ** Output log file.
   **
-  const File file
+  const File? file
 
   **
   ** Format of the log records as a string of #Fields names.
@@ -38,16 +38,14 @@ const class LogStep : WebAppStep
 
   override Void onStart(WebService service)
   {
-    if ((Obj?)file == null)
+    if (file == null)
     {
       log.error("LogStep.file not configured")
       return
     }
 
-    // start the logger thread
-    log.info("Log file: $file")
-    logger := FileLogger(service.name + "-Logger", file)
-    logger.start
+    // init logger
+    logger.open(file)
 
     // write prefix
     logger.writeStr("#Remark ==========================================================================")
@@ -60,8 +58,7 @@ const class LogStep : WebAppStep
 
   override Void onStop(WebService service)
   {
-    logger := Thread.find(service.name + "-Logger", false)
-    if (logger != null) logger.stop
+    logger.stop
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,9 +74,6 @@ const class LogStep : WebAppStep
   {
     try
     {
-      FileLogger? logger := Thread.find(req.service.name + "-Logger", false) as FileLogger
-      if (logger == null) return
-
       s := StrBuf(256)
       fields.split.each |Str field, Int i|
       {
@@ -188,4 +182,11 @@ const class LogStep : WebAppStep
     if (s == null || s.isEmpty) return "-"
     return "\"" + s.replace("\"", "\"\"") + "\""
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  private const FileLogger logger := FileLogger()
+
 }

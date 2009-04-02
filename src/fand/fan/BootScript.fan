@@ -55,14 +55,22 @@ abstract class BootScript
   **
   ** The services are the list of threads to spawn on startup.
   **
-  abstract Thread[] services
+  abstract Service[] services
+
+  **
+  ** Install all the threads
+  **
+  virtual Void installServices()
+  {
+    services.each |Service s| { s.install }
+  }
 
   **
   ** Start all the threads
   **
   virtual Void startServices()
   {
-    services.each |Thread t| { t.start }
+    services.each |Service s| { s.start }
     Thread.sleep(50ms)
   }
 
@@ -83,6 +91,7 @@ abstract class BootScript
   virtual Void run()
   {
     log.info("booting...")
+    installServices
     startServices
   }
 

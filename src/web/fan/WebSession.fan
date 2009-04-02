@@ -80,9 +80,16 @@ class WebSession
 ** WebSessionMgr is a pod internal class which is a background
 ** thread used to manage WebSession storage and cleanup.
 **
-internal const class WebSessionMgr : Thread
+internal const class WebSessionMgr : ActorGroup
 {
-  new make() : super(null) {}
+  const Actor actor := Actor(this, &receive)
+
+  const Duration houseKeepingPeriod := 1min
+
+  new make()
+  {
+    actor.sendLater(houseKeepingPeriod, "_houseKeeping")
+  }
 
   WebSession load(WebReq req)
   {
@@ -92,14 +99,14 @@ internal const class WebSessionMgr : Thread
     cookie := req.cookies["fanws"]
     if (cookie != null)
     {
-      ws = sendSync(cookie)
+      ws = actor.send(cookie).get
     }
 
     // if we still don't have a session, we need to
     // create one and add the cookie to the response
     if (ws == null)
     {
-      ws = sendSync("_new")
+      ws = actor.send("_new").get
       WebRes res := Actor.locals["web.res"]
       res.cookies.add(Cookie("fanws", ws.id))
     }
@@ -113,7 +120,7 @@ internal const class WebSessionMgr : Thread
     try
     {
       WebSession? ws := Actor.locals.remove("web.session")
-      if (ws != null) sendAsync(ws)
+      if (ws != null) actor.send(ws)
     }
     catch (Err e)
     {
@@ -121,16 +128,11 @@ internal const class WebSessionMgr : Thread
     }
   }
 
-  override Obj? run()
+  Obj? receive(Obj? msg, Context cx)
   {
-    sessions := Str:WebSession[:]
-    sendLater(13min, "_houseKeeping", true)
-    loop(&process(sessions))
-    return null
-  }
+    [Str:WebSession]? sessions := cx["sessions"]
+    if (sessions == null) cx["sessions"] = sessions = Str:WebSession[:]
 
-  Obj? process(Str:WebSession sessions, Obj? msg)
-  {
     // generate new session
     if (msg === "_new")
     {
@@ -154,6 +156,7 @@ internal const class WebSessionMgr : Thread
         return now - s.lastAccess > 24hr
       }
       old.each |WebSession s| { sessions.remove(s.id) }
+      actor.sendLater(houseKeepingPeriod, "_houseKeeping")
       return null
     }
 
