@@ -12,26 +12,8 @@
 **
 ** See [docLib::Web]`docLib::Web#webServices`
 **
-abstract const class WebService : Thread
+abstract const class WebService : Service
 {
-
-//////////////////////////////////////////////////////////////////////////
-// Construction
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Constructor with thread name.
-  **
-  new make(Str? name) : super(name) {}
-
-//////////////////////////////////////////////////////////////////////////
-// Service
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Return true.
-  **
-  override Bool isService() { return true }
 
 //////////////////////////////////////////////////////////////////////////
 // Pipeline
@@ -101,7 +83,6 @@ abstract const class WebService : Thread
   **
   protected override Void onStart()
   {
-    sessionMgr.start
     pipeline.each |WebStep step|
     {
       try { step.onStart(this) } catch (Err e) { log.error("Starting $step.type", e) }

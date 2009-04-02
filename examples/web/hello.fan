@@ -17,9 +17,9 @@ using wisp
 **
 class Boot : BootScript
 {
-  override Thread[] services :=
+  override Service[] services :=
   [
-    WispService.make("web")
+    WispService
     {
       port = 8080
       pipeline = [FindResourceStep {}, FindViewStep {}, ServiceViewStep {}]
