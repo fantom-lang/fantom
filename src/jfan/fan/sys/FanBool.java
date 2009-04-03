@@ -37,7 +37,10 @@ public final class FanBool
 
   public static boolean equals(boolean self, Object obj)
   {
-    return self == obj;
+    if (obj instanceof Boolean)
+      return self == ((Boolean)obj).booleanValue();
+    else
+      return false;
   }
 
   public static long hash(boolean self)
