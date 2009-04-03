@@ -42,8 +42,8 @@ const class Actor
   **
   ** If an incoming message has the same key as a pending message
   ** in the queue, then the 'coalesce' function is called to coalesce
-  ** the messages into a new merged message.  If 'coalesce' is null,
-  ** then we use the incoming message (last one wins).  The coalesced
+  ** the messages into a new merged message.  If 'coalesce' function itself
+  ** is null, then we use the incoming message (last one wins).  The coalesced
   ** message occupies the same position in the queue as the original
   ** and reuses the original message's Future instance.
   **
