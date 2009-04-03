@@ -497,6 +497,8 @@ public final class Duration
   private static final Duration boot = now();
 
   public static final Duration defVal = Zero;
+  public static final Duration minVal = make(FanInt.minVal);
+  public static final Duration maxVal = make(FanInt.maxVal);
 
   public final long ticks;
   private String str;

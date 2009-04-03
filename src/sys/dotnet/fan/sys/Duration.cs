@@ -509,6 +509,8 @@ namespace Fan.Sys
     static readonly Duration m_boot = now();
 
     public static readonly Duration m_defVal = Zero;
+    public static readonly Duration m_minVal = make(FanInt.m_minVal);
+    public static readonly Duration m_maxVal = make(FanInt.m_maxVal);
 
     public readonly long m_ticks;
 
