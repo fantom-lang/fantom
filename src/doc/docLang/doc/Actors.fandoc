@@ -54,7 +54,7 @@ Instead the actor's "mutable world state" is stored in a
 [Context]`sys::Context`.  Context is basically an arbitrary map
 of name/value pairs which is passed to your receive method.
 
-For example to build an actor which maintains a counter everytime
+For example to build an actor which maintains a counter every time
 it receives a message:
 
   group := ActorGroup()
@@ -65,8 +65,11 @@ it receives a message:
     return count
   }
 
-  for (i:=0; i<100; ++i) a.send(i)
+  for (i:=0; i<100; ++i) a.send("ignored")
   echo("Count is now " + a.send("ignored").get)
+
+Note that in this example, the actor ignores the messages
+sent to it, so it doesn't really matter what we pass.
 
 Message Passing [#messages]
 ***************************
@@ -105,7 +108,7 @@ Calling 'get' results in one of these outcomes:
     then that same exception is raised to the caller of 'get'
   - If the future was cancelled, then calling 'get' will
     raise 'CancelledErr'
-  - If a timeout used, then 'TimeoutErr' is thrown if the actor
+  - If a timeout is used, then 'TimeoutErr' is thrown if the actor
     doesn't process the message before the timeout elapses
 
 Actors which block via 'Future.get' should never receive messages
@@ -153,7 +156,7 @@ completes: successfully, with an error, or cancellation.
 
 Coalescing Messages [#coalescing]
 *********************************
-Often when sending messages to a actor, we can merge two messages
+Often when sending messages to an actor, we can merge two messages
 into a single message to save ourselves some work.  For example, it is
 common in windowing systems to maintain a single union of all the dirty
 portions of a window rather than of a bunch of little rectangles.  An
@@ -215,7 +218,7 @@ create up to 100 threads, after which actor's must wait for a thread
 to free up.  Once a thread frees up, then it is used to process the
 next actor.  If no actor's have pending work, then the thread lingers
 for a few seconds before being released back to the operating system.  In
-this model an ActorGroup utilizes between zero and a peek of 100 threads
+this model an ActorGroup utilizes between zero and a peak of 100 threads
 depending on how many actor's currently have work.
 
 An ActorGroup is immediately considered *running* as soon as it is
@@ -236,7 +239,7 @@ The [kill]`sys::ActorGroup.kill` method can be used to perform an unorderly
 shutdown.  Unlike 'stop', kill doesn't give actors a chance to finish
 processing their pending message queues - all pending messages are cancelled.
 Actors which are currently  executing a message are interrupted (which may
-or may not immediately terminate that thread).  Once all actor's have
+or may not immediately terminate that thread).  Once all actors have
 relinquished their threads, the ActorGroup enters the *done* state.
 
 Actor Locals [#locals]
