@@ -34,10 +34,10 @@ namespace Fan.Sys
       }
     }
 
-    public static Service find(Type t) { return find(t, true); }
-    public static Service find(Type t, bool check)
+    public static Service find(Type t) { return find(t.qname(), true); }
+    public static Service find(Type t, bool check) { return find(t.qname(), check); }
+    public static Service find(string qname, bool check)
     {
-      string qname = t.qname();
       lock (m_lock)
       {
         Node node = (Node)byType[qname];
@@ -65,7 +65,7 @@ namespace Fan.Sys
 
     static bool isServiceType(Type t)
     {
-      return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic();
+      return t != Sys.ObjType && t != Sys.ServiceType && t.isPublic();
     }
 
   //////////////////////////////////////////////////////////////////////////

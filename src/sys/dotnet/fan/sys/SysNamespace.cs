@@ -65,8 +65,8 @@ namespace Fan.Sys
       if (uri.path().sz() == 3)
       {
         string qname = uri.path().get(2).ToString();
-        Thread t = Thread.findService(qname, false);
-        if (t != null) return t;
+        Service s = Service_.find(qname, false);
+        if (s != null) return s;
       }
 
       return unresolved(uri, check);

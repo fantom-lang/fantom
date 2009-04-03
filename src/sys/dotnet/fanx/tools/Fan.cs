@@ -186,61 +186,52 @@ namespace Fanx.Tools
 
     public static int run(string reserved)
     {
-      sysInit(reserved);
-      MainThread t = new MainThread();
-      t.start().join();
-      return t.ret;
-    }
-
-    class MainThread : Thread
-    {
-      public MainThread() : base("FanMain") {}
-      public override object run()
+      try
       {
-        ret = doRun();
-        return null;
-      }
-      public int ret;
-    }
+        sysInit(reserved);
 
-    static int doRun()
-    {
-      // process args
-      string[] args = Tool.getArgv();
-      for (int i=0; i<args.Length; i++)
+        // process args
+        string[] args = Tool.getArgv();
+        for (int i=0; i<args.Length; i++)
+        {
+          string a = args[i];
+          if (a.Length == 0) continue;
+          if (a == "-help" || a == "-h" || a == "-?")
+          {
+            help();
+            return 2;
+          }
+          else if (a == "-version")
+          {
+            version("Fan Launcher");
+            return 3;
+          }
+          else if (a == "-pods")
+          {
+            pods("Fan Launcher");
+            return 4;
+          }
+          else if (a[0] == '-')
+          {
+            writeLine("WARNING: Unknown option " + a);
+          }
+          else
+          {
+            string target = a;
+            string[] targetArgs = new string[args.Length-i-1];
+            Array.Copy(args, i+1, targetArgs, 0, targetArgs.Length);
+            return new Fan().execute(target, targetArgs);
+          }
+        }
+
+        help();
+        return 2;
+      }
+      catch (Exception e)
       {
-        string a = args[i];
-        if (a.Length == 0) continue;
-        if (a == "-help" || a == "-h" || a == "-?")
-        {
-          help();
-          return -1;
-        }
-        else if (a == "-version")
-        {
-          version("Fan Launcher");
-          return -1;
-        }
-        else if (a == "-pods")
-        {
-          pods("Fan Launcher");
-          return -1;
-        }
-        else if (a[0] == '-')
-        {
-          writeLine("WARNING: Unknown option " + a);
-        }
-        else
-        {
-          string target = a;
-          string[] targetArgs = new string[args.Length-i-1];
-          Array.Copy(args, i+1, targetArgs, 0, targetArgs.Length);
-          return new Fan().execute(target, targetArgs);
-        }
+        Err.dumpStack(e);
+        return 1;
       }
-
-      help();
-      return -1;
     }
 
     static void help()

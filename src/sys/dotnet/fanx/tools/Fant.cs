@@ -183,28 +183,11 @@ namespace Fanx.Tools
 
     public static int run(string reserved)
     {
-      sysInit(reserved);
-      SysProps.putProperty("fan.appDir", "$home/tmp/test/");
-      MainThread t = new MainThread();
-      t.start().join();
-      return t.ret;
-    }
-
-    class MainThread : Thread
-    {
-      public MainThread() : base("FantMain") {}
-      public override object run()
-      {
-        ret = doRun();
-        return null;
-      }
-      public int ret;
-    }
-
-    static int doRun()
-    {
       try
       {
+        sysInit(reserved);
+        SysProps.putProperty("fan.appDir", "$home/tmp/test/");
+
         //bool self = false;
         bool verbose = false;
         ArrayList targets = new ArrayList();

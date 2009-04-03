@@ -370,7 +370,7 @@ abstract class BuildPod : BuildScript
     clean
     compile(true)
     javaNative
-//    dotnetNative
+    dotnetNative
     javascript
   }
 
