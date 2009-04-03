@@ -10,7 +10,9 @@
 using build
 
 **
-** Build: nfan
+** Build: sys.dll
+**
+** Note: this script builds the .NET runtime for Fan's sys pod.
 **
 class Build : BuildCs
 {

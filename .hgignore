@@ -29,7 +29,7 @@ syntax: regexp
 ^flux/session/
 
 # src/
-^src/jfan/temp/
+^src/sys/java/temp/
 
 # tmp/
 ^tmp/

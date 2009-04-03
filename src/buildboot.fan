@@ -28,8 +28,8 @@ class Build : BuildGroup
     childrenScripts =
     [
       `sys/build.fan`,
-      `jfan/build.fan`,
-      `nfan/build.fan`,
+      `sys/java/build.fan`,
+      `sys/dotnet/build.fan`,
       `compiler/build.fan`,
       `compilerJava/build.fan`,
       `build/build.fan`,
