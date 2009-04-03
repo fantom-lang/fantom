@@ -66,6 +66,16 @@ const final class Duration
   static const Duration defVal
 
   **
+  ** Min value is equivalent to 'make(Int.minVal)'.
+  **
+  static const Duration minVal
+
+  **
+  ** Max value is equivalent to 'make(Int.maxVal)'.
+  **
+  static const Duration maxVal
+
+  **
   ** Private constructor.
   **
   private new privateMake()
