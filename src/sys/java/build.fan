@@ -10,7 +10,9 @@
 using build
 
 **
-** Build: jfan
+** Build: sys.jar
+**
+** Note: this script builds the Java runtime for Fan's sys pod.
 **
 class Build : BuildJava
 {

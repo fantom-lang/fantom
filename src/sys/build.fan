@@ -12,6 +12,10 @@ using build
 **
 ** Build: sys
 **
+** Note: this script just builds the Fan sys.pod; scripts in
+** the java/ and dotnet/ subdirectories are used to build
+** sys.jar and sys.dll
+**
 class Build : BuildPod
 {
 
