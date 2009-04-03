@@ -82,27 +82,22 @@ class LocaleTest : Test
     }
     verifyEq(Locale.current.toStr, "zh-TW")
 
-    // create thread that accepts
+    // create actor that accepts
     // messages to change its own locale
-    thread := Thread.make(null) |Thread t|
+    actor := Actor(ActorGroup()) |Obj msg->Obj|
     {
-      t.loop |Obj msg->Obj|
-      {
-        if (msg == ".")  return Locale.current
-        loc := Locale.fromStr(msg)
-        Locale.setCurrent(loc)
-        return Locale.current
-      }
+      if (msg == ".")  return Locale.current
+      loc := Locale.fromStr(msg)
+      Locale.setCurrent(loc)
+      return Locale.current
     }
-    thread.start
 
     // check that changes on other thread don't effect my thread
-    verifyEq(thread.sendSync("."), orig)
-    verifyEq(thread.sendSync("fr-FR"), fr)
+    verifyEq(actor.send(".").get, Locale("zh-TW"))
+    verifyEq(actor.send("fr-FR").get, fr)
     verifyEq(Locale.current.toStr, "zh-TW")
-    verifyEq(thread.sendSync("de"), Locale.fromStr("de"))
+    verifyEq(actor.send("de").get, Locale("de"))
     verifyEq(Locale.current.toStr, "zh-TW")
-    thread.stop
   }
 
   Void testProps()

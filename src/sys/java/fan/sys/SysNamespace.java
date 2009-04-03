@@ -65,8 +65,8 @@ final class SysNamespace
     if (uri.path().sz() == 3)
     {
       String qname = uri.path().get(2).toString();
-      Thread t = Thread.findService(qname, false);
-      if (t != null) return t;
+      Service s = Service$.find(qname, false);
+      if (s != null) return s;
     }
 
     return unresolved(uri, checked);

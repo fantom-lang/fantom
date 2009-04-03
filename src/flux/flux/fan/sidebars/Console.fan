@@ -138,7 +138,7 @@ class Console : SideBar
       command = command
       dir = dir
     }
-    Thread(null, &execRun(params)).start
+    Actor(ActorGroup(), &execRun(params)).send(null)
     return this
   }
 
@@ -200,7 +200,7 @@ class Console : SideBar
       frameId = frame.id
       command = params
     }
-    Thread(null, &doRun(method, execParams)).start
+    Actor(ActorGroup(), &doRun(method, execParams)).send(null)
     return this
   }
 

@@ -10,7 +10,6 @@ package fanx.tools;
 import java.util.*;
 import fan.sys.*;
 import fan.sys.List;
-import fan.sys.Thread;
 
 /**
  * Fant is the command line used to run Fan unit tests.
@@ -287,15 +286,7 @@ public class Fant
     throws Exception
   {
     System.getProperties().put("fan.appDir", "$home/tmp/test/");
-    new Thread("FantMain")
-    {
-      public Object run()
-      {
-        int r = new Fant().run(args);
-        System.exit(r);
-        return null;
-      }
-    }.start().join();
+    System.exit(new Fant().run(args));
   }
 
 //////////////////////////////////////////////////////////////////////////

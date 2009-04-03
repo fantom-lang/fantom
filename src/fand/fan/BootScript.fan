@@ -71,7 +71,7 @@ abstract class BootScript
   virtual Void startServices()
   {
     services.each |Service s| { s.start }
-    Thread.sleep(50ms)
+    Actor.sleep(50ms)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ abstract class BootScript
     try
     {
       run
-      Thread.sleep(Duration(Int.maxVal))
+      Actor.sleep(Duration.maxVal)
       return 0
     }
     catch (Err err)

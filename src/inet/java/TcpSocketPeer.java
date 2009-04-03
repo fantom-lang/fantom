@@ -10,7 +10,6 @@ package fan.inet;
 import java.io.*;
 import java.net.*;
 import fan.sys.*;
-import fan.sys.Thread;
 
 public class TcpSocketPeer
   extends Socket
@@ -160,72 +159,6 @@ public class TcpSocketPeer
     this.in  = null;
     this.out = null;
   }
-
-//////////////////////////////////////////////////////////////////////////
-// Threading
-//////////////////////////////////////////////////////////////////////////
-
-/* TODO - remove when I make final decision to keep TcpSocket const
-
-  **
-  ** Fork this socket onto another thread.  A new thread is automatically
-  ** created with the given name (pass null to auto-generate a name).
-  ** The new thread is started using the specified run method and this
-  ** socket as the argument.  The run method must be a const method (it
-  ** cannot capture state from the calling thread), otherwise NotImmutableErr
-  ** is thrown.  Once a socket is forked onto a new thread,  it is detached
-  ** from the calling thread and all methods will throw UnsupportedErr.
-  **
-  native Thread fork(Str threadName, |TcpSocket s->Obj| run)
-
-  public Thread fork(TcpSocket oldSock, Str name, final Method run)
-  {
-    // error checking
-    checkDetached();
-    if (!run.isConst().val)
-      throw NotImmutableErr.make("Run method not const: " + run).val;
-
-    // increment fork counter
-    int n = -1;
-    synchronized (topLock) { n = forkCount++; }
-
-    // generate name if null
-    if (name == null) name = Str.make("inet.TcpSocket" + n);
-
-    // create new detached thread-safe socket
-    final TcpSocket newSock = detach(oldSock);
-
-    // create new thread
-    Thread thread = new Thread(name)
-    {
-      public Obj run()
-      {
-        return run.call1(newSock);
-      }
-    };
-
-    // start thread
-    return thread.start();
-  }
-
-  private TcpSocket detach(TcpSocket oldSock)
-  {
-    // detach old TcpSocket from this peer
-    oldSock.peer = new TcpSocketPeer();
-    oldSock.peer.detached = true;
-
-    // create new thread safe TcpSocket
-    final TcpSocket newSock = new TcpSocket();
-    newSock.peer = this;
-    return newSock;
-  }
-
-  private void checkDetached()
-  {
-    if (detached)
-      throw UnsupportedErr.make("TcpSocket forked onto new thread").val;
-  }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Streaming Options

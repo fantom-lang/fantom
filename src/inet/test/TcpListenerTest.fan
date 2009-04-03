@@ -81,7 +81,8 @@ class TcpListenerTest : Test
     t2 := Duration.now
     verify(80ms < t2-t1 && t2-t1 < 150ms)
 
-    thread := Thread(null, &runClient(listener.localPort)).start
+    actor := Actor(ActorGroup(), &runClient(listener.localPort))
+    future := actor.send(null)
 
     // accept
     trace("s: accept...")
@@ -96,7 +97,7 @@ class TcpListenerTest : Test
 
     // write response and verify it is returned back on join
     s.out.printLine("how you doing?").flush
-    res := thread.join
+    res := future.get(5sec)
     trace("s: response = $res")
     verifyEq(res, "how you doing?")
 

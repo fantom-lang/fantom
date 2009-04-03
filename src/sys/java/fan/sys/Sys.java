@@ -223,7 +223,6 @@ public final class Sys
   public static final Type StrBufType    = builtin("StrBuf",   ObjType);
   public static final Type SysType       = builtin("Sys",      ObjType);
   public static final Type TestType      = builtin("Test",     ObjType);
-  public static final Type ThreadType    = builtin("Thread",   ObjType);
   public static final Type DateTimeType  = builtin("DateTime", ObjType);
   public static final Type DateType      = builtin("Date",     ObjType);
   public static final Type TimeType      = builtin("Time",     ObjType);
