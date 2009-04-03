@@ -11,7 +11,7 @@ Overview [#overview]
 Fan includes an [actor framework]`http://en.wikipedia.org/wiki/Actor_model`
 for concurrency.  [Actors]`sys::Actor` are light weight objects which
 asynchronously process work on a background thread.  Actors are given
-work by sending them sasynchronous message.  Actor's then process those
+work by sending them asynchronous message.  Actor's then process those
 messages on background threads controlled by an [ActorGroup]`#groups`.
 
 Actors [#actors]

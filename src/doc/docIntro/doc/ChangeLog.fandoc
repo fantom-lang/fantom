@@ -572,9 +572,9 @@
 - Reflection fix to inherit concrete slot over abstract slot if two choices
 - Fix buildall.pods to bootstrap correctly on Unix
 
-*Build 1.0.30 (incomplete)*
-- Added sys::Service API
+*Build 1.0.40 (2 Apr 09)*
 - Added sys::Actor API
+- Added sys::Service API
 - Renamed UnknownThreadErr to UnknownServiceErr
 - Refactor fand to work with Services
 - SqlService API changed from Thread to Service
