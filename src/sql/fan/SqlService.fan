@@ -40,6 +40,11 @@ const class SqlService : Service
       this.dialect = dialect
   }
 
+  override Void onStart()
+  {
+    log.info("SqlService started [$connection]")
+  }
+
   **
   ** Open the database.  This opens a connection to the database
   ** for the calling thread.  A database must be open before
@@ -50,8 +55,6 @@ const class SqlService : Service
   **
   SqlService open()
   {
-    log.info("SqlService opened [$connection]")
-
     Connection? conn := Actor.locals[id]
     if (conn == null)
     {
