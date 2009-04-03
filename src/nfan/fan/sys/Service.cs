@@ -17,9 +17,21 @@ namespace Fan.Sys
   public interface Service
   {
 
+    bool isInstalled();
+
+    bool isRunning();
+
     Service install();
 
     Service uninstall();
+
+    Service start();
+
+    Service stop();
+
+    void onStart();
+
+    void onStop();
 
   }
 }

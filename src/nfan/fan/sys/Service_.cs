@@ -16,15 +16,21 @@ namespace Fan.Sys
   public class Service_
   {
 
+  //////////////////////////////////////////////////////////////////////////
+  // Registry
+  //////////////////////////////////////////////////////////////////////////
+
     private static object m_lock = new object();
-    private static Hashtable m_map = new Hashtable();  // Type:Node
-    private static List m_list = new List(Sys.ServiceType);
+    private static Hashtable byService = new Hashtable();  // Service:State
+    private static Hashtable byType = new Hashtable();     // Type:Node
 
     public static List list()
     {
       lock (m_lock)
       {
-        return m_list.dup().ro();
+        Service[] array = new Service[byService.Count];
+        byService.Keys.CopyTo(array, 0);
+        return new List(Sys.ServiceType, array);
       }
     }
 
@@ -34,7 +40,7 @@ namespace Fan.Sys
       string qname = t.qname();
       lock (m_lock)
       {
-        Node node = (Node)m_map[qname];
+        Node node = (Node)byType[qname];
         if (node != null) return node.service;
         if (check) throw UnknownServiceErr.make(qname).val;
         return null;
@@ -47,15 +53,63 @@ namespace Fan.Sys
       List list = new List(Sys.ServiceType);
       lock (m_lock)
       {
-        Node node = (Node)m_map[qname];
+        Node node = (Node)byType[qname];
         while (node != null)
         {
-          m_list.add(node.service);
+          list.add(node.service);
           node = node.next;
         }
       }
       return list.ro();
     }
+
+    static bool isServiceType(Type t)
+    {
+      return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic();
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Identity
+  //////////////////////////////////////////////////////////////////////////
+
+    public static long hash(Service self)
+    {
+      return Sys.idHash(self);
+    }
+
+    // TODO - there appears to be a bug in my
+    // emit code that mixins look for this method
+    // on the impl class
+    public static bool Equals(Service self, object that)
+    {
+      return self == that;
+    }
+
+    public static bool equals(Service self, object that)
+    {
+      return self == that;
+    }
+
+    public static bool isInstalled(Service self)
+    {
+      lock (m_lock)
+      {
+        return byService[self] != null;
+      }
+    }
+
+    public static bool isRunning(Service self)
+    {
+      lock (m_lock)
+      {
+        State state = (State)byService[self];
+        return state != null && state.running;
+      }
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Lifecycle
+  //////////////////////////////////////////////////////////////////////////
 
     public static Service install(Service self)
     {
@@ -65,20 +119,19 @@ namespace Fan.Sys
         lock (m_lock)
         {
           // if already installed, short circuit
-          if (m_list.containsSame(self)) return self;
+          if (self.isInstalled()) return self;
 
-          // add to list
-          m_list.add(self);
+          // add to byService map
+          byService[self] = new State(self);
 
           // add to map for each type service implements
           for (int i=0; i<types.sz(); ++i)
           {
             Type t = (Type)types.get(i);
             if (!isServiceType(t)) continue;
-            Node node = new Node();
-            node.service = self;
-            Node x = (Node)m_map[t.qname()];
-            if (x == null) m_map[t.qname()] = node;
+            Node node = new Node(self);
+            Node x = (Node)byType[t.qname()];
+            if (x == null) byType[t.qname()] = node;
             else
             {
               while (x.next != null) x = x.next;
@@ -96,62 +149,132 @@ namespace Fan.Sys
 
     public static Service uninstall(Service self)
     {
-throw new System.Exception("Service_.uninstall() not implemented");
-      /*
       try
       {
         List types = FanObj.type(self).inheritance();
         lock (m_lock)
         {
-          // remove from list, it not installed short circuit
-          if (list.removeSame(self) == null) return self;
+          // ensure service is stopped
+          stop(self);
+
+          // remove from byService map, it not installed short circuit
+          if (byService[self] == null) return self;
+          byService.Remove(self);
 
           // remove from map for each type implemented by service
-          nextType: for (int i=0; i<types.sz(); ++i)
+          for (int i=0; i<types.sz(); ++i)
           {
             // get next type in inheritance and check if service type
             Type t = (Type)types.get(i);
-            if (!isServiceType(t)) continue nextType;
+            if (!isServiceType(t)) continue;
 
             // lookup linked list for that type
-            Node node = (Node)m_map[t.qname()];
-            if (node == null) continue nextType;
+            Node node = (Node)byType[t.qname()];
+            if (node == null) continue;
 
             // find this thread in the linked list
             Node last = null;
+            bool cont = false;
             while (node.service != self)
             {
               last = node;
               node = node.next;
-              if (node == null) continue nextType;
+              if (node == null) { cont=true; break; }
             }
+            if (cont) continue;
 
             // update the map or linked list
             if (last == null)
-              map[t.qname()] = node.next;
+              byType[t.qname()] = node.next;
             else
               last.next = node.next;
           }
         }
       }
-      catch (Throwable e)
+      catch (System.Exception e)
       {
         Err.dumpStack(e);
       }
       return self;
-      */
     }
 
-    internal static bool isServiceType(Type t)
+    public static Service start(Service self)
     {
-      return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic();
+      try
+      {
+        lock (m_lock)
+        {
+          // start implies install
+          install(self);
+
+          // if already running, short circuit
+          State state = (State)byService[self];
+          if (state.running) return self;
+
+          // put into the running state
+          state.running = true;
+        }
+
+        // onStart callback (outside of lock)
+        self.onStart();
+      }
+      catch (System.Exception e)
+      {
+        Err.dumpStack(e);
+      }
+      return self;
     }
 
+    public static Service stop(Service self)
+    {
+      try
+      {
+        lock (m_lock)
+        {
+          // if not running, short circuit
+          State state = (State)byService[self];
+          if (state == null || !state.running) return self;
+
+          // take out of the running state
+          state.running = false;
+        }
+
+        // onStop (outside of lock)
+        self.onStop();
+      }
+      catch (System.Exception e)
+      {
+        Err.dumpStack(e);
+      }
+      return self;
+    }
+
+    public static void onStart(Service self) {}
+
+    public static void onStop(Service self) {}
+
+  //////////////////////////////////////////////////////////////////////////
+  // State/Node
+  //////////////////////////////////////////////////////////////////////////
+
+    /// <summary>
+    /// Value for byService map
+    /// </summary>
+    internal class State
+    {
+      public State(Service s) { service = s; }
+      public Service service;
+      public bool running;
+    }
+
+    /// <summary>
+    /// Value for byType map
+    /// </summary>
     internal class Node
     {
-      internal Service service;
-      internal Node next;
+      public Node(Service s) { service = s; }
+      public Service service;
+      public Node next;
     }
-
   }
 }
