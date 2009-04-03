@@ -24,24 +24,6 @@ namespace Fanx.Tools
     public static int run(string reserved)
     {
       sysInit(reserved);
-      MainThread t = new MainThread();
-      t.start().join();
-      return t.ret;
-    }
-
-    class MainThread : Thread
-    {
-      public MainThread() : base("FanpMain") {}
-      public override object run()
-      {
-        ret = doRun();
-        return null;
-      }
-      public int ret;
-    }
-
-    static int doRun()
-    {
       return new Fan().execute("compiler::Fanp.main", Tool.getArgv());
     }
 
