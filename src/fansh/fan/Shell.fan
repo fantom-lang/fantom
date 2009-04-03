@@ -51,7 +51,7 @@ class Shell
     // launch a dummy evaluator to preload
     // all the compiler code into memory
     f := |,| { Evaluator(null).eval("0") }
-    Thread(null, f).start
+    Actor(ActorGroup(), f).send(null)
   }
 
 //////////////////////////////////////////////////////////////////////////

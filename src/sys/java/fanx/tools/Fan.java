@@ -9,7 +9,6 @@ package fanx.tools;
 
 import java.io.File;
 import fan.sys.*;
-import fan.sys.Thread;
 import fanx.util.*;
 
 /**
@@ -265,14 +264,7 @@ public class Fan
   public static void main(final String[] args)
     throws Exception
   {
-    new Thread("FanMain")
-    {
-      public Object run()
-      {
-        System.exit(new Fan().run(args));
-        return null;
-      }
-    }.start().join();
+    System.exit(new Fan().run(args));
   }
 
 }

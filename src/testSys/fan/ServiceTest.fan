@@ -191,11 +191,9 @@ class ServiceTest : Test
       verifyErr(UnknownServiceErr#) |,| { Service.find(t) }
       verifyErr(UnknownServiceErr#) |,| { Service.find(t, true) }
 
-/* TODO
       verifyEq(Sys.ns.get(uri, false), null)
       verifyErr(UnresolvedErr#) |,| { Sys.ns.get(uri) }
       verifyErr(UnresolvedErr#) |,| { Sys.ns.get(uri, true) }
-*/
     }
     else
     {
@@ -205,11 +203,9 @@ class ServiceTest : Test
       verifySame(Service.find(t, false), s)
       verifySame(Service.find(t, true), s)
 
-/* TODO
       verifySame(Sys.ns[uri], s)
       verifySame(Sys.ns.get(uri, false), s)
       verifySame(Sys.ns.get(uri, true), s)
-*/
     }
   }
 

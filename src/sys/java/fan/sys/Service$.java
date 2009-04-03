@@ -31,10 +31,10 @@ public class Service$
     }
   }
 
-  public static Service find(Type t) { return find(t, true); }
-  public static Service find(Type t, boolean checked)
+  public static Service find(Type t) { return find(t.qname(), true); }
+  public static Service find(Type t, boolean checked) { return find(t.qname(), checked); }
+  public static Service find(String qname, boolean checked)
   {
-    String qname = t.qname();
     synchronized (lock)
     {
       Node node = (Node)byType.get(qname);
@@ -62,7 +62,7 @@ public class Service$
 
   static boolean isServiceType(Type t)
   {
-    return t != Sys.ObjType && t != Sys.ThreadType && t.isPublic();
+    return t != Sys.ObjType && t != Sys.ServiceType && t.isPublic();
   }
 
 //////////////////////////////////////////////////////////////////////////

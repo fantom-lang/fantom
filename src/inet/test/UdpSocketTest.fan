@@ -83,8 +83,9 @@ class UdpSocketTest : Test
   {
     // launch server
     s := UdpSocket.make.bind(null, null)
-    sthread := Thread(null, &runServer(s)).start
-    Thread.sleep(50ms)
+    sactor := Actor(ActorGroup(), &runServer(s))
+    sfuture := sactor.send(null)
+    Actor.sleep(50ms)
 
     // connect
     c := UdpSocket()
@@ -173,7 +174,7 @@ class UdpSocketTest : Test
 
     // send kill and join
     c.send(UdpPacket(null, null, (Buf)buf.clear.print("kill")->flip))
-    sthread.join
+    sfuture.get(5sec)
 
     //cleanup
     s.close
