@@ -1079,14 +1079,11 @@ class ThisExpr : LocalVarExpr
     this.ctype = ctype
   }
 
-  override Bool isAssignable() { return false }
+  override Bool isAssignable() { false }
 
-  override Int register() { return 0 }
+  override Int register() { 0 }
 
-  override Str toStr()
-  {
-    return "this"
-  }
+  override Str toStr() { "this" }
 }
 
 **************************************************************************
@@ -1106,9 +1103,9 @@ class SuperExpr : LocalVarExpr
     this.explicitType = explicitType
   }
 
-  override Bool isAssignable() { return false }
+  override Bool isAssignable() { false }
 
-  override Int register() { return 0 }
+  override Int register() { 0 }
 
   override Str toStr()
   {
@@ -1119,6 +1116,27 @@ class SuperExpr : LocalVarExpr
   }
 
   CType? explicitType   // if "named super"
+}
+
+**************************************************************************
+** ItExpr
+**************************************************************************
+
+**
+** ItExpr models the "it" keyword to access the implicit
+** target of an it-block.
+**
+class ItExpr : LocalVarExpr
+{
+  new make(Location location, CType? ctype := null)
+    : super(location, null, ExprId.itExpr)
+  {
+    this.ctype = ctype
+  }
+
+  override Bool isAssignable() { false }
+
+  override Str toStr() { "it" }
 }
 
 **************************************************************************
@@ -1528,6 +1546,7 @@ enum ExprId
   localVar,         // LocalVarExpr
   thisExpr,         // ThisExpr
   superExpr,        // SuperExpr
+  itExpr,           // ItExpr
   staticTarget,     // StaticTargetExpr
   unknownVar,       // UnknownVarExpr
   storage,

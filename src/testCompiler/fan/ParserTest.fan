@@ -665,7 +665,7 @@ class ParserTest : CompilerTest
 
   Stmt verifyStmt(Str stmtStr, StmtId id)
   {
-    parse("class Foo { Int it() { $stmtStr } }")
+    parse("class Foo { Int m() { $stmtStr } }")
     m := (MethodDef)t.slotDefs.first
     stmt := m.code.stmts.first
     // echo("-----------"); stmt.dump
@@ -991,8 +991,8 @@ class ParserTest : CompilerTest
       verifyEq(expr->args->last->id, ExprId.closure)
       verifyEq(expr->args->last->signature->signature, "|->sys::Void|")
       verifyEq(expr->args->last->enclosingType->name, "Foo")
-      verifyEq(expr->args->last->enclosingSlot->name, "it")
-      verifyEq(expr->args->last->name, "Foo\$it\$0")
+      verifyEq(expr->args->last->enclosingSlot->name, "m")
+      verifyEq(expr->args->last->name, "Foo\$m\$0")
       verifySame(closures[0], expr->args->last)
 
     expr = verifyExpr("x() |Str a| {}", ExprId.call)
@@ -1054,7 +1054,7 @@ class ParserTest : CompilerTest
 
   Expr verifyExpr(Str exprStr, ExprId id)
   {
-    parse("class Foo { Void it() { $exprStr } }")
+    parse("class Foo { Void m() { $exprStr } }")
     m := (MethodDef)t.slotDefs.first
     stmt := m.code.stmts.first
     expr := ((ExprStmt)stmt).expr
@@ -1315,7 +1315,7 @@ class ParserTest : CompilerTest
 
   CType verifyType(Str typeStr)
   {
-    parse("class Foo { Void it($typeStr x) {} }")
+    parse("class Foo { Void m($typeStr x) {} }")
     m := (MethodDef)t.slotDefs.first
     // echo(" --> $m.params.first.ctype")
     return m.paramDefs.first.paramType

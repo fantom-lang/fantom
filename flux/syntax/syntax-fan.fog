@@ -51,6 +51,7 @@ SyntaxRules
     "internal",
     "is",
     "isnot",
+    "it",
     "mixin",
     "native",
     "new",
@@ -76,6 +77,5 @@ SyntaxRules
     "while",
   ]
 }
-
 
 

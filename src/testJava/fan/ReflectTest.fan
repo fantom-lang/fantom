@@ -216,78 +216,78 @@ class ReflectTest : JavaTest
     verifyEq(date->toString, date.toStr)
 
     // static field primitive coercion
-    it := Type.find("[java]fanx.test::InteropTest").make
-    it->snumb = 'a'; verifyEq(it->snumb, 'a')
-    it->snums = 'b'; verifyEq(it->snums, 'b')
-    it->snumc = 'c'; verifyEq(it->snumc, 'c')
-    it->snumi = 'd'; verifyEq(it->snumi, 'd')
-    it->snuml = 'e'; verifyEq(it->snuml, 'e')
-    it->snumf = 'f'.toFloat; verifyEq(it->snumf, 'f'.toFloat)
-    it->snumd = 'g'.toFloat; verifyEq(it->snumd, 'g'.toFloat)
+    x := Type.find("[java]fanx.test::InteropTest").make
+    x->snumb = 'a'; verifyEq(x->snumb, 'a')
+    x->snums = 'b'; verifyEq(x->snums, 'b')
+    x->snumc = 'c'; verifyEq(x->snumc, 'c')
+    x->snumi = 'd'; verifyEq(x->snumi, 'd')
+    x->snuml = 'e'; verifyEq(x->snuml, 'e')
+    x->snumf = 'f'.toFloat; verifyEq(x->snumf, 'f'.toFloat)
+    x->snumd = 'g'.toFloat; verifyEq(x->snumd, 'g'.toFloat)
 
     // methods override fields
-    verifyEq(it->numi, 1000)
-    it->numi(-1234)
-    verifyEq(it->numf, -1234f)
-    verifyEq(it->num, -1234)
+    verifyEq(x->numi, 1000)
+    x->numi(-1234)
+    verifyEq(x->numf, -1234f)
+    verifyEq(x->num, -1234)
 
     // methods
-    it->num = 100
-    it->xnumb(100); verifyEq(it->xnumb(), 100)
-    verifyEq(it->xnums(), 100)
-    verifyEq(it->xnumc(), 100)
-    verifyEq(it->xnumi(), 100)
-    verifyEq(it->xnuml(), 100)
-    verifyEq(it->xnumf(), 100.toFloat)
-    verifyEq(it->xnumd(), 100.toFloat)
+    x->num = 100
+    x->xnumb(100); verifyEq(x->xnumb(), 100)
+    verifyEq(x->xnums(), 100)
+    verifyEq(x->xnumc(), 100)
+    verifyEq(x->xnumi(), 100)
+    verifyEq(x->xnuml(), 100)
+    verifyEq(x->xnumf(), 100.toFloat)
+    verifyEq(x->xnumd(), 100.toFloat)
 
     // verify numi can be looked up as both field and method
-    numiField := it.type.field("numi")
-    numi := it.type.method("numi")
-    verifySame(it.type.slot("numi"), numiField)
-    si := it.type.method("si") // static test
+    numiField := x.type.field("numi")
+    numi := x.type.method("numi")
+    verifySame(x.type.slot("numi"), numiField)
+    si := x.type.method("si") // static test
 
     // numi as field
-    verifyEq(numiField.get(it), 'i')
-    numiField.set(it, 2008)
-    verifyEq(numiField.get(it), 2008)
+    verifyEq(numiField.get(x), 'i')
+    numiField.set(x, 2008)
+    verifyEq(numiField.get(x), 2008)
 
     // numi 4x overloaded - call
-    verifyEq(numi.call([it, 8877]), null)
-    verifyEq(numi.call([it]), 8877)
-    verifyEq(numi.call([it, 6, 4]), 10)
-    verifyEq(numi.call([it, "55"]), 55)
+    verifyEq(numi.call([x, 8877]), null)
+    verifyEq(numi.call([x]), 8877)
+    verifyEq(numi.call([x, 6, 4]), 10)
+    verifyEq(numi.call([x, "55"]), 55)
     verifyEq(si.call(["55", 6]), 61) // static
 
     // numi 4x overloaded - callX
-    verifyEq(numi.call2(it, 8877), null)
-    verifyEq(numi.call1(it), 8877)
-    verifyEq(numi.call3(it, 6, 4), 10)
-    verifyEq(numi.call2(it, "55"), 55)
+    verifyEq(numi.call2(x, 8877), null)
+    verifyEq(numi.call1(x), 8877)
+    verifyEq(numi.call3(x, 6, 4), 10)
+    verifyEq(numi.call2(x, "55"), 55)
     verifyEq(si.call2("55", 6), 61) // static
 
     // numi 4x overloaded - callOn
-    verifyEq(numi.callOn(it, [8877]), null)
-    verifyEq(numi.callOn(it, [,]), 8877)
-    verifyEq(numi.callOn(it, [6, 4]), 10)
-    verifyEq(numi.callOn(it, ["55"]), 55)
+    verifyEq(numi.callOn(x, [8877]), null)
+    verifyEq(numi.callOn(x, [,]), 8877)
+    verifyEq(numi.callOn(x, [6, 4]), 10)
+    verifyEq(numi.callOn(x, ["55"]), 55)
     verifyEq(si.callOn(null, ["55", 6]), 61) // static
 
     // numi 4x overloaded - trap
-    it->num = -99
-    verifyEq(it->numi, -99)
-    verifyEq(it->numi(3, 4), 7)
-    verifyEq(it->numi("999"), 999)
-    verifyEq(it->si("2", 9), 11) // static
+    x->num = -99
+    verifyEq(x->numi, -99)
+    verifyEq(x->numi(3, 4), 7)
+    verifyEq(x->numi("999"), 999)
+    verifyEq(x->si("2", 9), 11) // static
 
     // Obj[] arrays
-    it->initArray
-    Obj[] array := it->array1
-    verifySame(array[0], it->a)
-    verifySame(array[1], it->b)
-    verifySame(array[2], it->c)
-    array[2] = it->a
-    it->array1(array)
-    verifySame(array[2], it->a)
+    x->initArray
+    Obj[] array := x->array1
+    verifySame(array[0], x->a)
+    verifySame(array[1], x->b)
+    verifySame(array[2], x->c)
+    array[2] = x->a
+    x->array1(array)
+    verifySame(array[2], x->a)
   }
 }
