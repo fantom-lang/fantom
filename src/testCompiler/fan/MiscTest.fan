@@ -234,8 +234,8 @@ class MiscTest : CompilerTest
     compile(
      "class Foo : Test
       {
-        static Str it(Int[] a, Int:Str b, |Int x| c) { return a.toStr }
-        Obj testIt() { return type.method(\"it\").call3([1, 2, 3], [4:4.toStr], |Int x| {}) }
+        static Str x(Int[] a, Int:Str b, |Int x| c) { return a.toStr }
+        Obj testIt() { return type.method(\"x\").call3([1, 2, 3], [4:4.toStr], |Int x| {}) }
       }")
 
      t := pod.types.first
@@ -489,12 +489,12 @@ class MiscTest : CompilerTest
     compile(
      "class Foo
       {
-        static Void it(Int[] x) { x[0] += 3 }
+        static Void baz(Int[] x) { x[0] += 3 }
         static Int wow(Int[] x) { return ++x[0] }
         static Int wee(Int[] x) { return x[0]++ }
 
         Int[] f := [99, 2]
-        Void fit() { f[1] += 3 }
+        Void fbaz() { f[1] += 3 }
         Int fwow() { return ++f[1] }
         Int fwee() { return f[1]++ }
       }")
@@ -504,7 +504,7 @@ class MiscTest : CompilerTest
 
     x := [2]
     verifyEq(x[0], 2)
-    t.method("it").call1(x)
+    t.method("baz").call1(x)
     verifyEq(x[0], 5)
     verifyEq(t.method("wow").call1(x), 6)
     verifyEq(x[0], 6)
@@ -513,7 +513,7 @@ class MiscTest : CompilerTest
 
     o := t.make
     verifyEq(o->f, [99, 2])
-    o->fit()
+    o->fbaz()
     verifyEq(o->f, [99, 5])
     verifyEq(o->fwow, 6)
     verifyEq(o->f, [99, 6])
@@ -524,10 +524,10 @@ class MiscTest : CompilerTest
       "class Foo
        {
          Str get(Str s) { return s}
-         Void it(Str s) { this[s] += s }
+         Void bar(Str s) { this[s] += s }
        }
        ",
-       [4, 24, "No matching 'set' method for '$podName::Foo.get'",
+       [4, 25, "No matching 'set' method for '$podName::Foo.get'",
        ])
   }
 

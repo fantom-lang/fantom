@@ -25,42 +25,42 @@ class ClosureTest : CompilerTest
       {
         static Void x()
         {
-          gt := |,| {}
-          ht := |Int x, Str y->Str| { return \"x\" }
-          it := |Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int j| {}
+          at := |,| {}
+          bt := |Int x, Str y->Str| { return \"x\" }
+          ct := |Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int j| {}
         }
       }")
 
-     g := compiler.types[1]
-     h := compiler.types[2]
-     i := compiler.types[3]
+     a := compiler.types[1]
+     b := compiler.types[2]
+     c := compiler.types[3]
 
      // compiler.pod.dump
 
-     verifyEq(g.name, "Foo\$x\$0")
-     verifyEq(g.slotDef("make")->isCtor, true)
-     verifyEq(g.slotDef("call0")->code->size, 2)
-     verifyEq(g.slotDef("call0")->code->stmts->get(0)->expr->method->name, "doCall")
-     verifyEq(g.slotDef("call0")->code->stmts->get(1)->expr->id, ExprId.nullLiteral)
+     verifyEq(a.name, "Foo\$x\$0")
+     verifyEq(a.slotDef("make")->isCtor, true)
+     verifyEq(a.slotDef("call0")->code->size, 2)
+     verifyEq(a.slotDef("call0")->code->stmts->get(0)->expr->method->name, "doCall")
+     verifyEq(a.slotDef("call0")->code->stmts->get(1)->expr->id, ExprId.nullLiteral)
 
-     verifyEq(h.name, "Foo\$x\$1")
-     verifyEq(h.slotDef("call2")->code->size, 1)
-     c := h.slotDef("call2")->code->stmts->get(0)->expr as CallExpr
-     verifyEq(c.method.name, "doCall")
-     verifyEq(c.args[0].id, ExprId.coerce)
-     verifyEq(c.args[0]->check->qname, "sys::Int")
-     verifyEq(c.args[1].id, ExprId.coerce)
-     verifyEq(c.args[1]->check->qname, "sys::Str")
+     verifyEq(b.name, "Foo\$x\$1")
+     verifyEq(b.slotDef("call2")->code->size, 1)
+     call := b.slotDef("call2")->code->stmts->get(0)->expr as CallExpr
+     verifyEq(call.method.name, "doCall")
+     verifyEq(call.args[0].id, ExprId.coerce)
+     verifyEq(call.args[0]->check->qname, "sys::Int")
+     verifyEq(call.args[1].id, ExprId.coerce)
+     verifyEq(call.args[1]->check->qname, "sys::Str")
 
-     verifyEq(i.name, "Foo\$x\$2")
-     verifyEq(i.slotDef("call")->params->get(0)->paramType->qname, "sys::List")
-     c = i.slotDef("call")->code->stmts->get(0)->expr as CallExpr
-     verifyEq(c.args[0].id, ExprId.coerce)
-     verifyEq(c.args[0]->check->qname, "sys::Int")
-     verifyEq(c.args[0]->target->method->qname, "sys::List.get")
-     verifyEq(c.args[8].id, ExprId.coerce)
-     verifyEq(c.args[8]->check->qname, "sys::Int")
-     verifyEq(c.args[8]->target->method->qname, "sys::List.get")
+     verifyEq(c.name, "Foo\$x\$2")
+     verifyEq(c.slotDef("call")->params->get(0)->paramType->qname, "sys::List")
+     call = c.slotDef("call")->code->stmts->get(0)->expr as CallExpr
+     verifyEq(call.args[0].id, ExprId.coerce)
+     verifyEq(call.args[0]->check->qname, "sys::Int")
+     verifyEq(call.args[0]->target->method->qname, "sys::List.get")
+     verifyEq(call.args[8].id, ExprId.coerce)
+     verifyEq(call.args[8]->check->qname, "sys::Int")
+     verifyEq(call.args[8]->target->method->qname, "sys::List.get")
   }
 
 //////////////////////////////////////////////////////////////////////////

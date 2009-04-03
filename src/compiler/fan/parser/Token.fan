@@ -109,6 +109,7 @@ enum Token
   internalKeyword,
   isKeyword,
   isnotKeyword,
+  itKeyword,
   mixinKeyword,
   nativeKeyword,
   newKeyword,
