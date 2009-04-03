@@ -109,6 +109,7 @@ abstract class BuildJava : BuildScript
     outOfDate := findOutOfDateDirs(temp)
     if (outOfDate.isEmpty)
     {
+      log.unindent
       log.info("Up to date!")
       return
     }
