@@ -27,10 +27,10 @@ Actors may define their receive behavior in one of two ways:
 Here are two simple examples of an actor which receives an Int
 message and returns the increment:
 
-  // with receive function
+  // pass receive to constructor as a closure function
   a := Actor(group) |Int msg->Int| { msg + 1 }
 
-  // subclass
+  // subclass and override receive
   const class IncrActor : Actor
   {
     new make(ActorGroup g) : super(g) {}
