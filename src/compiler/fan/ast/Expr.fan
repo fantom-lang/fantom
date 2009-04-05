@@ -1136,6 +1136,8 @@ class ItExpr : LocalVarExpr
 
   override Bool isAssignable() { false }
 
+  override Int register() { 1 }  // Void doCall(Type it)
+
   override Str toStr() { "it" }
 }
 
@@ -1454,7 +1456,6 @@ class ClosureExpr : Expr
     this.enclosingClosure = enclosingClosure
     this.signature        = signature
     this.name             = name
-    this.code             = code
     this.usesCvars        = false
   }
 
@@ -1485,13 +1486,28 @@ class ClosureExpr : Expr
     }
   }
 
+  Void setInferredSignature(FuncType t)
+  {
+    // bail if we didn't expect an inferred the signature
+    if (!inferredSignature) return
+
+    // update my signature and the doCall signature
+    signature = t
+    doCall.paramDefs = signature.toParamDefs(location)
+
+    // if an itBlock, set type of it
+    if (itBlock) itType = t.params.first
+  }
+
   // Parse
   TypeDef enclosingType         // enclosing class
   SlotDef enclosingSlot         // enclosing method or field initializer
   ClosureExpr? enclosingClosure // if nested closure
-  FuncType signature            // parameter and return signature
+  FuncType signature            // function signature
+  Bool inferredSignature        // does closure require type inference for its sig
   Block? code                   // moved into a MethodDef in InitClosures
   Str name                      // anonymous class name
+  Bool itBlock                  // does closure have implicit it scope
 
   // InitClosures
   CallExpr? substitute          // expression to substitute during assembly
@@ -1501,6 +1517,7 @@ class ClosureExpr : Expr
   // ResolveExpr
   [Str:MethodVar]? enclosingLocals // locals in scope
   Bool usesCvars                // does this guy use vars from outer scope
+  CType? itType                 // type of implicit it
 }
 
 **************************************************************************

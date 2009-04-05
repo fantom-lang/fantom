@@ -60,8 +60,9 @@ class CallResolver : CompilerSupport
       resolveBase
       find
       if (result != null) return result
-      insertImplicitThis
+      insertImplicitThisOrIt
       resolveToExpr
+      inferClosureType
       resolveForeign
       constantFolding
       castForThisType
@@ -115,10 +116,12 @@ class CallResolver : CompilerSupport
     // class otherwise the slot must be on the target type
     if (target == null)
     {
-      // if we are in a closure - then base is the enclosing class
+      // if we are in a closure - then base is the enclosing class;
+      // if closure is it-block when we need to keep track of it too
       if (curType.isClosure)
       {
         base = curType.closure.enclosingType
+        if (curType.closure.itBlock) baseIt = curType.closure.itType
       }
       else
       {
@@ -151,30 +154,23 @@ class CallResolver : CompilerSupport
     if (found != null) return
 
     // look it up in base type
-    if (isVar)
-    {
-      // if simple variable access attempt to lookup as field first,
-      // then as method if that fails (only matters in case of FFI)
-      found = base.field(name) ?: base.method(name)
-    }
-    else
-    {
-      // lookup as method
-      found = base.method(name) ?: base.field(name)
+    found = findOn(base)
 
-      // if we found a FFI field, then try to lookup a method
-      // overloaded by that name; this is a bit hacked b/c since
-      // we don't support overloaded methods in the AST we are
-      // routing this call to the FFI type (such as JavaType);
-      // but this only works if all of our overloads are actually
-      // declared by that class (since we don't support overriding
-      // overloaded methods we can elimate the interface case)
-      if (found is CField && found.isForeign)
-        found = found.parent.method(name)
+    // if we have an it in scope, then also attempt to resolve against it
+    if (baseIt != null)
+    {
+      foundIt := findOn(baseIt)
 
-      // if we resolve a method call against a field that is an error
-      if (found is CField)
-        throw err("Expected method, not field '$errSig'", location)
+      // if we found a match on both base and it, that is an error
+      if (found != null && foundIt != null)
+        throw err("Ambiguous slot '$name' on both 'this' ($base) and 'it' ($baseIt)", location)
+
+      // resolved against implicit it
+      if (foundIt != null)
+      {
+        found = foundIt
+        foundOnIt = true
+      }
     }
 
     // if slot not found and this call is on a with-block
@@ -203,6 +199,32 @@ class CallResolver : CompilerSupport
     }
   }
 
+  private CSlot? findOn(CType base)
+  {
+    // if simple variable access attempt to lookup as field first,
+    // then as method if that fails (only matters in case of FFI)
+    if (isVar) return base.field(name) ?: base.method(name)
+
+    // lookup as method
+    CSlot? found := base.method(name) ?: base.field(name)
+
+    // if we found a FFI field, then try to lookup a method
+    // overloaded by that name; this is a bit hacked b/c since
+    // we don't support overloaded methods in the AST we are
+    // routing this call to the FFI type (such as JavaType);
+    // but this only works if all of our overloads are actually
+    // declared by that class (since we don't support overriding
+    // overloaded methods we can elimate the interface case)
+    if (found is CField && found.isForeign)
+      found = found.parent.method(name)
+
+    // if we resolve a method call against a field that is an error
+    if (found is CField)
+      throw err("Expected method, not field '$errSig'", location)
+
+    return found
+  }
+
   private Str errSig() { return "${base.qname}.${name}" }
 
 //////////////////////////////////////////////////////////////////////////
@@ -211,15 +233,19 @@ class CallResolver : CompilerSupport
 
   **
   ** If the call has no explicit target, and is a instance field
-  ** or method, then we need to insert an implicit this.
+  ** or method, then we need to insert an implicit this or it.
   **
-  private Void insertImplicitThis()
+  private Void insertImplicitThisOrIt()
   {
     if (target != null) return
     if (found.isStatic || found.isCtor) return
     if (curMethod.isStatic) return
 
-    if (curType.isClosure)
+    if (foundOnIt)
+    {
+      target = ItExpr.make(location, baseIt)
+    }
+    else if (curType.isClosure)
     {
       closure := curType.closure
       if (!closure.enclosingSlot.isStatic)
@@ -286,6 +312,30 @@ class CallResolver : CompilerSupport
     field.isSafe = expr.isSafe
 
     return field
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Infer Closure Type
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** If the last argument to the resolved call is a closure,
+  ** then use the method to infer the function type
+  **
+  private Void inferClosureType()
+  {
+    // check if last argument is closure
+    closureArg := args.last as ClosureExpr
+    if (closureArg == null) return
+
+    // get last parameter type
+    method := found as CMethod
+    if (method == null) return
+    lastParam := method.params.last?.paramType?.deref?.toNonNullable
+
+    // if last param type is func type, apply to closure
+    if (lastParam is FuncType)
+      closureArg.setInferredSignature(lastParam)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -442,7 +492,9 @@ class CallResolver : CompilerSupport
   Bool isVar           // are we resolving simple variable
   Expr[] args          // arguments or null if simple variable
   CType? base          // resolveBase()
+  CType? baseIt        // resolveBase()
   CSlot? found         // find()
+  Bool foundOnIt       // was find() resolved against it
   Expr? result         // resolveToExpr()
 
 }
