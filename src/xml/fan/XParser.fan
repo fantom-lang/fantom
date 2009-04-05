@@ -554,7 +554,7 @@ class XParser
   **
   private Str parseQuotedStr(Int quote)
   {
-    buf = this.buf
+    buf := this.buf
     buf.clear
     c := 0
     while ((c = read) != quote) buf.addChar(toCharData(c))

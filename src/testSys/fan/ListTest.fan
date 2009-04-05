@@ -376,7 +376,7 @@ class ListTest : Test
     verifyEq(x.capacity, 10)
     verifyEq(x, Str?["x"])
 
-    x.size = x.size
+    x.size = 1
     verifyEq(x.size, 1)
     verifyEq(x.capacity, 1)
     verifyEq(x, Str?["x"])
