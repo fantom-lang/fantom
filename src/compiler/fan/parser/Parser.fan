@@ -16,6 +16,9 @@
 public class Parser : CompilerSupport
 {
 
+// TODO:
+Bool withBlockOn := true
+
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
@@ -1553,12 +1556,12 @@ public class Parser : CompilerSupport
       return construction
     }
 
-    // complex literal type {...}
-    if (curt == Token.lbrace)
-    {
-      base := UnknownVarExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
-      return withBlock(base) ?: base
-    }
+    // constructor it-block {...}
+if (withBlockOn && curt == Token.lbrace)
+{
+  base := UnknownVarExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
+  return withBlock(base) ?: base
+}
 
     throw err("Unexpected type literal", loc)
   }
@@ -1569,7 +1572,7 @@ public class Parser : CompilerSupport
   ** target expression contains a chained access, then return the new
   ** expression, otherwise return null.
   **
-  **   <termChain>      :=  <compiledCall> | <dynamicCall> | <indexExpr> | <withBlock>
+  **   <termChain>      :=  <compiledCall> | <dynamicCall> | <indexExpr>
   **   <compiledCall>   :=  "." <idExpr>
   **   <dynamicCall>    :=  "->" <idExpr>
   **
@@ -1600,7 +1603,7 @@ public class Parser : CompilerSupport
     if (cur.isCallOpenParen) return callOp(target)
 
     // if target {...}
-    if (curt == Token.lbrace) return withBlock(target)
+if (withBlockOn && curt == Token.lbrace) return withBlock(target)
 
     // we treat a with base as a dot slot access
     if (target.id === ExprId.withBase) return idExpr(target, false, false)
@@ -1620,7 +1623,7 @@ public class Parser : CompilerSupport
     // "set", or a keyword like "private"
     if (inFieldInit)
     {
-      if (peek.kind.keyword) return null
+      if (peek.kind.keyword) return null  // TODO
       if (peekt == Token.identifier)
       {
         if (peek.val == "get" || peek.val == "set") return null
@@ -1932,7 +1935,13 @@ public class Parser : CompilerSupport
   {
     loc := cur
 
-    // if no pipe, then no closure
+    // if curly brace, then this is it-block closure
+if (!withBlockOn)
+{
+    if (curt === Token.lbrace) return itBlock(loc)
+}
+
+    // if not pipe then not closure
     if (curt !== Token.pipe) return null
 
     // otherwise this can only be a FuncType declaration,
@@ -1945,6 +1954,19 @@ public class Parser : CompilerSupport
     if (curt !== Token.lbrace) { reset(mark); return null }
 
     return closure(loc, funcType)
+  }
+
+  **
+  ** Parse it-block closure.
+  **
+  private ClosureExpr itBlock(Location loc)
+  {
+    return closure(loc, ns.itBlockType)
+    {
+      inferredSignature = true
+      itBlock = true
+      itType = ns.error
+    }
   }
 
   **

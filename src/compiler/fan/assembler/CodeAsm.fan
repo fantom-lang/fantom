@@ -626,7 +626,8 @@ class CodeAsm : CompilerSupport
       case ExprId.asExpr:          asExpr((TypeCheckExpr)expr)
       case ExprId.localVar:
       case ExprId.thisExpr:
-      case ExprId.superExpr:       loadLocalVar((LocalVarExpr)expr)
+      case ExprId.superExpr:
+      case ExprId.itExpr:          loadLocalVar((LocalVarExpr)expr)
       case ExprId.call:
       case ExprId.construction:    call((CallExpr)expr)
       case ExprId.shortcut:        shortcut((ShortcutExpr)expr)

@@ -680,7 +680,7 @@ class ResolveExpr : CompilerStep
     // if not in method, then we can't have a local
     if (curMethod == null) return null
 
-    // attempt to a name in the current scope
+    // attempt to bind a name in the current scope
     binding := curMethod.vars.find |MethodVar var->Bool|
     {
       return var.name == name && isBlockInScope(var.scope)

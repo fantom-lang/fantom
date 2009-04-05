@@ -194,10 +194,10 @@ enum Token
     }
   }
 
-  /**
-   * Map an operator token to it's shortcut operator enum.
-   * Degree is 1 for unary and 2 for binary.
-   */
+  **
+  ** Map an operator token to it's shortcut operator enum.
+  ** Degree is 1 for unary and 2 for binary.
+  **
   ShortcutOp toShortcutOp(Int degree)
   {
     switch (this)

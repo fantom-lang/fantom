@@ -108,6 +108,8 @@ abstract class CNamespace : CompilerSupport
     typeField          = sysMethod(typeType,   "field")
     typeMethod         = sysMethod(typeType,   "method")
     funcToImmutable    = sysMethod(funcType,   "toImmutable")
+
+    itBlockType = FuncType([objType], ["it"], objType)
   }
 
   private CType genericParam(Str name)
@@ -262,6 +264,9 @@ abstract class CNamespace : CompilerSupport
 
   // place holder type used for resolve errors
   readonly CType error
+
+  // generic type for it block until we can infer type
+  readonly FuncType itBlockType
 
   readonly CType objType
   readonly CType boolType
