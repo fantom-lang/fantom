@@ -341,17 +341,17 @@ class ExprTest : CompilerTest
   {
     verifyExpr("$v", 2, 1, 2, "$v = b;")
 
-    verifyExpr("$v", 5, 2, 3, "$v = a; $v+= b;")
-    verifyExpr("$v", -1, 2, 3, "$v = a; $v-= b;")
-    verifyExpr("$v", 6, 2, 3, "$v = a; $v*= b;")
-    verifyExpr("$v", 3, 6, 2, "$v = a; $v/= b;")
-    verifyExpr("$v", 2, 8, 3, "$v = a; $v%= b;")
+    verifyExpr("$v", 5, 2, 3,  "x := a; $v = x; $v += b;")
+    verifyExpr("$v", -1, 2, 3, "x := a; $v = x; $v-= b;")
+    verifyExpr("$v", 6, 2, 3,  "x := a; $v = x; $v*= b;")
+    verifyExpr("$v", 3, 6, 2,  "x := a; $v = x; $v/= b;")
+    verifyExpr("$v", 2, 8, 3,  "x := a; $v = x; $v%= b;")
 
-    verifyExpr("$v", 0xab, 0xabcd, 8, "$v = a; $v>>= b;")
-    verifyExpr("$v", 0xabcd0, 0xabcd, 4, "$v = a; $v<<= b;")
-    verifyExpr("$v", 0x8a, 0xab, 0x9e, "$v = a; $v&= b;")
-    verifyExpr("$v", 0xbf, 0xab, 0x9e, "$v = a; $v|= b;")
-    verifyExpr("$v", 0x35, 0xab, 0x9e, "$v = a; $v^= b;")
+    verifyExpr("$v", 0xab, 0xabcd, 8,    "x := a; $v = x; $v>>= b;")
+    verifyExpr("$v", 0xabcd0, 0xabcd, 4, "x := a; $v = x; $v<<= b;")
+    verifyExpr("$v", 0x8a, 0xab, 0x9e,   "x := a; $v = x; $v&= b;")
+    verifyExpr("$v", 0xbf, 0xab, 0x9e,   "x := a; $v = x; $v|= b;")
+    verifyExpr("$v", 0x35, 0xab, 0x9e,   "x := a; $v = x; $v^= b;")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -365,13 +365,13 @@ class ExprTest : CompilerTest
 
   Void verifyIncrementOps(Str v, Bool testFloat)
   {
-    verifyExpr("++$v", 3, 2, 0, "$v = a;")
-    verifyExpr("$v++", 2, 2, 0, "$v = a;")
+    verifyExpr("++$v", 3, 2, 0, "x := a; $v = x;")
+    verifyExpr("$v++", 2, 2, 0, "x := a; $v = x;")
     verifyExpr("[$v,b]", [2,3], 0, 2, "$v = b++;")
     verifyExpr("[$v,b]", [3,3], 0, 2, "$v = ++b;")
 
-    verifyExpr("--$v", 1, 2, 0, "$v = a;")
-    verifyExpr("$v--", 2, 2, 0, "$v = a;")
+    verifyExpr("--$v", 1, 2, 0, "x := a; $v = x;")
+    verifyExpr("$v--", 2, 2, 0, "x := a; $v = x;")
     verifyExpr("[$v,b]", [2,1], 0, 2, "$v = b--;")
     verifyExpr("[$v,b]", [1,1], 0, 2, "$v = --b;")
 

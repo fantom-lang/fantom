@@ -810,6 +810,10 @@ class CheckErrors : CompilerStep
     if (!expr.lhs.isAssignable)
       err("Left hand side is not assignable", expr.lhs.location)
 
+    // check not assigning to same variable
+    if (expr.lhs.sameVarAs(expr.rhs))
+      err("Self assignment", expr.lhs.location)
+
     // check left hand side field (common code with checkShortcut)
     if (expr.lhs.id === ExprId.field)
       expr.rhs = checkAssignField((FieldExpr)expr.lhs, expr.rhs)

@@ -1022,4 +1022,36 @@ class MiscTest : CompilerTest
     verifyEq(obj.type.method("goo").parent.name, "SubRec")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Self Assignment
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSelfAssignment()
+  {
+    verifyErrors(
+      "class Foo
+       {
+         Void m01() { x := 7; x = x }
+         Void m02() { f = f }
+         Void m03() { f = this.f }
+         Void m04() { this.f = f }
+         Void m05() { this.f = this.f }
+         Void m06() { foo.f = foo.f }
+         Void m07() { foo.f = this.foo.f }
+         Void m08(Foo x) { f = x.f } // ok
+         Void m09(Foo x) { foo.f = x.foo.f } // ok
+         Int f
+         Foo foo
+       }",
+       [
+         3, 24, "Self assignment",
+         4, 16, "Self assignment",
+         5, 16, "Self assignment",
+         6, 21, "Self assignment",
+         7, 21, "Self assignment",
+         8, 20, "Self assignment",
+         9, 20, "Self assignment",
+       ])
+  }
+
 }

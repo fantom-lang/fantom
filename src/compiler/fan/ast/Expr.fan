@@ -88,6 +88,15 @@ abstract class Expr : Node
   }
 
   **
+  ** Return if this expression represents the same variable or
+  ** field as that.  This is used for self assignment checks.
+  **
+  virtual Bool sameVarAs(Expr that)
+  {
+    return false
+  }
+
+  **
   ** Map the list of expressions into their list of types
   **
   static CType[] ctypes(Expr[] exprs)
@@ -967,6 +976,13 @@ class FieldExpr : NameExpr
 
   override Bool assignRequiresTempVar() { return !field.isStatic }
 
+  override Bool sameVarAs(Expr that)
+  {
+    x := that as FieldExpr
+    if (x == null) return false
+    return field == x.field && target.sameVarAs(x.target)
+  }
+
   override Int? asTableSwitchCase()
   {
     // TODO - this should probably be tightened up if we switch to const
@@ -1044,9 +1060,11 @@ class LocalVarExpr : Expr
     }
   }
 
-  override Bool isAssignable() { return true }
+  override Bool isAssignable() { true }
 
-  override Bool assignRequiresTempVar() { return var.usedInClosure }
+  override Bool assignRequiresTempVar() { var.usedInClosure }
+
+  override Bool sameVarAs(Expr that) { that is LocalVarExpr && ((LocalVarExpr)that).register == register }
 
   virtual Int register() { return var.register }
 
