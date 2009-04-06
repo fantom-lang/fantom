@@ -131,14 +131,6 @@ class Normalize : CompilerStep
     code := m.code
     loc := code.location
 
-    // if this is an it-block closure, there is an implied
-    // return of the it parameter to be left on the stack
-    if (m.params.size == 1 && m.params[0].name == "it")
-    {
-      code.add(ReturnStmt(loc, ItExpr(loc)))
-      return
-    }
-
     // we allow return keyword to be omitted if there is exactly one statement
     if (code.size == 1 && !m.returnType.isVoid && code.stmts[0].id == StmtId.expr)
     {

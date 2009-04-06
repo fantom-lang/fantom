@@ -1506,9 +1506,10 @@ class ClosureExpr : Expr
 
   Expr toWith(Expr target)
   {
-    setInferredSignature(FuncType.makeItBlock(target.ctype))
+    if (target.ctype != null) setInferredSignature(FuncType.makeItBlock(target.ctype))
     x := CallExpr.makeWithMethod(location, target, enclosingType.ns.objWith, [this])
     // TODO: this coercion should be added automatically later in the pipeline
+    if (target.ctype == null) return x
     return TypeCheckExpr.coerce(x, target.ctype)
   }
 
@@ -1520,14 +1521,10 @@ class ClosureExpr : Expr
 
     // update my signature and the doCall signature
     signature = t
-    doCall.paramDefs = signature.toParamDefs(location)
+    if (doCall != null) doCall.paramDefs = signature.toParamDefs(location)
 
     // if an itBlock, set type of it
-    if (isItBlock)
-    {
-      itType = t.params.first
-      doCall.ret = itType
-    }
+    if (isItBlock) itType = t.params.first
   }
 
   // Parse

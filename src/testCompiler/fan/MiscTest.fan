@@ -181,14 +181,15 @@ class MiscTest : CompilerTest
         b := 0
         c := \"hello\"
         d := d+1
-        e := d { get { return d } }
+        // e := d { get { return d } }
       }",
       [
         4, 3, "Type inference not supported for fields",
         5, 3, "Type inference not supported for fields",
         6, 3, "Type inference not supported for fields",
         7, 3, "Type inference not supported for fields",
-        8, 3, "Type inference not supported for fields",
+// TODO-IT
+//        8, 3, "Type inference not supported for fields",
       ])
   }
 

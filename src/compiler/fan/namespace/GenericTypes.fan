@@ -255,7 +255,7 @@ class FuncType : GenericType
   }
 
   new makeItBlock(CType itType)
-    : this.make([itType], ["it"], itType)
+    : this.make([itType], ["it"], itType.ns.voidType)
   {
   }
 
@@ -317,6 +317,15 @@ class FuncType : GenericType
       case 'R': return ret
       default:  throw Err.make(ch.toChar)
     }
+  }
+
+  **
+  ** Replace any occurance of "sys::This" with thisType.
+  **
+  FuncType parameterizeThis(CType thisType)
+  {
+    f := |CType t->CType| { t.isThis ? thisType : t }
+    return FuncType(params.map(CType[,], f), names, f(ret))
   }
 
   readonly CType[] params  // a, b, c ...
