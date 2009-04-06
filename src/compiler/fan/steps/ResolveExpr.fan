@@ -137,14 +137,14 @@ class ResolveExpr : CompilerStep
   {
     switch (expr.id)
     {
-      case ExprId.slotLiteral:     return resolveSlotLiteral((SlotLiteralExpr)expr)
-      case ExprId.listLiteral:     return resolveList((ListLiteralExpr)expr)
-      case ExprId.mapLiteral:      return resolveMap((MapLiteralExpr)expr)
+      case ExprId.slotLiteral:     return resolveSlotLiteral(expr)
+      case ExprId.listLiteral:     return resolveList(expr)
+      case ExprId.mapLiteral:      return resolveMap(expr)
       case ExprId.boolNot:
       case ExprId.cmpNull:
       case ExprId.cmpNotNull:      expr.ctype = ns.boolType
-      case ExprId.assign:          return resolveAssign((BinaryExpr)expr)
-      case ExprId.elvis:           resolveElvis((BinaryExpr)expr)
+      case ExprId.assign:          return resolveAssign(expr)
+      case ExprId.elvis:           resolveElvis(expr)
       case ExprId.same:
       case ExprId.notSame:
       case ExprId.boolOr:
@@ -152,18 +152,19 @@ class ResolveExpr : CompilerStep
       case ExprId.isExpr:          expr.ctype = ns.boolType
       case ExprId.isnotExpr:       expr.ctype = ns.boolType
       case ExprId.asExpr:          expr.ctype = ((TypeCheckExpr)expr).check.toNullable
-      case ExprId.call:            return resolveCall((CallExpr)expr)
-      case ExprId.construction:    return resolveConstruction((CallExpr)expr)
-      case ExprId.shortcut:        return resolveShortcut((ShortcutExpr)expr)
-      case ExprId.thisExpr:        return resolveThis((ThisExpr)expr)
-      case ExprId.superExpr:       return resolveSuper((SuperExpr)expr)
-      case ExprId.unknownVar:      return resolveVar((UnknownVarExpr)expr)
-      case ExprId.storage:         return resolveStorage((UnknownVarExpr)expr)
+      case ExprId.call:            return resolveCall(expr)
+      case ExprId.construction:    return resolveConstruction(expr)
+      case ExprId.shortcut:        return resolveShortcut(expr)
+      case ExprId.thisExpr:        return resolveThis(expr)
+      case ExprId.superExpr:       return resolveSuper(expr)
+      case ExprId.itExpr:          return resolveIt(expr)
+      case ExprId.unknownVar:      return resolveVar(expr)
+      case ExprId.storage:         return resolveStorage(expr)
       case ExprId.coerce:          expr.ctype = ((TypeCheckExpr)expr).check
-      case ExprId.ternary:         resolveTernary((TernaryExpr)expr)
-      case ExprId.withSub:         resolveWithSub((WithSubExpr)expr)
-      case ExprId.curry:           return resolveCurry((CurryExpr)expr)
-      case ExprId.closure:         resolveClosure((ClosureExpr)expr)
+      case ExprId.ternary:         resolveTernary(expr)
+      case ExprId.withSub:         resolveWithSub(expr)
+      case ExprId.curry:           return resolveCurry(expr)
+      case ExprId.closure:         resolveClosure(expr)
     }
 
     return expr
@@ -271,6 +272,24 @@ class ResolveExpr : CompilerStep
     else
       expr.ctype = curType.base
 
+    return expr
+  }
+
+  **
+  ** Resolve it keyword expression
+  **
+  private Expr resolveIt(ItExpr expr)
+  {
+    // can't use it keyword outside of an it-block
+    if (!inClosure || !curType.closure.isItBlock)
+    {
+      err("Invalid use of 'it' outside of it-block", expr.location)
+      expr.ctype = ns.error
+      return expr
+    }
+
+    // closure's itType should be defined at this point
+    expr.ctype = curType.closure.itType
     return expr
   }
 
@@ -434,6 +453,16 @@ class ResolveExpr : CompilerStep
   **
   private Expr resolveCallOnLocalVar(CallExpr call, LocalVarExpr binding)
   {
+    // if the call was generated as an it-block on local
+    if (call.noParens && call.args.size == 1 && call.args[0].isItBlock)
+    {
+      ClosureExpr itBlock := call.args[0]
+      itBlock.setInferredSignature(FuncType.makeItBlock(binding.ctype))
+      itBlock.isImmediate = true
+      itBlock.immediateTarget = binding
+      return itBlock
+    }
+
     // if binding isn't a sys::Func then no can do
     if (!binding.ctype.fits(ns.funcType))
     {

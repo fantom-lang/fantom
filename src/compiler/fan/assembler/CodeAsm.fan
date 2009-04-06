@@ -600,42 +600,42 @@ class CodeAsm : CompilerSupport
     {
       case ExprId.nullLiteral:     nullLiteral
       case ExprId.trueLiteral:
-      case ExprId.falseLiteral:    boolLiteral((LiteralExpr)expr)
-      case ExprId.intLiteral:      intLiteral((LiteralExpr)expr)
-      case ExprId.floatLiteral:    floatLiteral((LiteralExpr)expr)
-      case ExprId.decimalLiteral:  decimalLiteral((LiteralExpr)expr)
-      case ExprId.strLiteral:      strLiteral((LiteralExpr)expr)
-      case ExprId.durationLiteral: durationLiteral((LiteralExpr)expr)
-      case ExprId.uriLiteral:      uriLiteral((LiteralExpr)expr)
-      case ExprId.typeLiteral:     typeLiteral((LiteralExpr)expr)
-      case ExprId.slotLiteral:     slotLiteral((SlotLiteralExpr)expr)
-      case ExprId.rangeLiteral:    rangeLiteral((RangeLiteralExpr)expr)
-      case ExprId.listLiteral:     listLiteral((ListLiteralExpr)expr)
-      case ExprId.mapLiteral:      mapLiteral((MapLiteralExpr)expr)
-      case ExprId.boolNot:         not((UnaryExpr)expr)
-      case ExprId.cmpNull:         cmpNull((UnaryExpr)expr)
-      case ExprId.cmpNotNull:      cmpNotNull((UnaryExpr)expr)
-      case ExprId.elvis:           elvis((BinaryExpr)expr)
-      case ExprId.assign:          assign((BinaryExpr)expr)
-      case ExprId.same:            same((BinaryExpr)expr)
-      case ExprId.notSame:         notSame((BinaryExpr)expr)
-      case ExprId.boolOr:          or((CondExpr)expr, null)
-      case ExprId.boolAnd:         and((CondExpr)expr, null)
-      case ExprId.isExpr:          isExpr((TypeCheckExpr)expr)
-      case ExprId.isnotExpr:       isnotExpr((TypeCheckExpr)expr)
-      case ExprId.asExpr:          asExpr((TypeCheckExpr)expr)
+      case ExprId.falseLiteral:    boolLiteral(expr)
+      case ExprId.intLiteral:      intLiteral(expr)
+      case ExprId.floatLiteral:    floatLiteral(expr)
+      case ExprId.decimalLiteral:  decimalLiteral(expr)
+      case ExprId.strLiteral:      strLiteral(expr)
+      case ExprId.durationLiteral: durationLiteral(expr)
+      case ExprId.uriLiteral:      uriLiteral(expr)
+      case ExprId.typeLiteral:     typeLiteral(expr)
+      case ExprId.slotLiteral:     slotLiteral(expr)
+      case ExprId.rangeLiteral:    rangeLiteral(expr)
+      case ExprId.listLiteral:     listLiteral(expr)
+      case ExprId.mapLiteral:      mapLiteral(expr)
+      case ExprId.boolNot:         not(expr)
+      case ExprId.cmpNull:         cmpNull(expr)
+      case ExprId.cmpNotNull:      cmpNotNull(expr)
+      case ExprId.elvis:           elvis(expr)
+      case ExprId.assign:          assign(expr)
+      case ExprId.same:            same(expr)
+      case ExprId.notSame:         notSame(expr)
+      case ExprId.boolOr:          or(expr, null)
+      case ExprId.boolAnd:         and(expr, null)
+      case ExprId.isExpr:          isExpr(expr)
+      case ExprId.isnotExpr:       isnotExpr(expr)
+      case ExprId.asExpr:          asExpr(expr)
       case ExprId.localVar:
       case ExprId.thisExpr:
       case ExprId.superExpr:
-      case ExprId.itExpr:          loadLocalVar((LocalVarExpr)expr)
+      case ExprId.itExpr:          loadLocalVar(expr)
       case ExprId.call:
-      case ExprId.construction:    call((CallExpr)expr)
-      case ExprId.shortcut:        shortcut((ShortcutExpr)expr)
-      case ExprId.field:           loadField((FieldExpr)expr)
-      case ExprId.coerce:          coerce((TypeCheckExpr)expr)
-      case ExprId.closure:         this.expr(((ClosureExpr)expr).substitute)
-      case ExprId.ternary:         ternary((TernaryExpr)expr)
-      case ExprId.withBlock:       withBlock((WithBlockExpr)expr)
+      case ExprId.construction:    call(expr)
+      case ExprId.shortcut:        shortcut(expr)
+      case ExprId.field:           loadField(expr)
+      case ExprId.coerce:          coerce(expr)
+      case ExprId.closure:         closure(expr)
+      case ExprId.ternary:         ternary(expr)
+      case ExprId.withBlock:       withBlock(expr)
       case ExprId.withBase:        return
       case ExprId.staticTarget:    return
       default:                     throw Err.make(expr.id.toStr)
@@ -942,6 +942,23 @@ class CodeAsm : CompilerSupport
     backpatch(falseLabel)
     expr(ternary.falseExpr)
     backpatch(endLabel)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Closure
+//////////////////////////////////////////////////////////////////////////
+
+  private Void closure(ClosureExpr c)
+  {
+    // if not immediate, we replace the closure with its
+    // substitute expression - call to closure constructor
+    expr(c.substitute)
+    if (!c.isImmediate) return
+
+    // if this is an immediate it-block
+    expr(c.immediateTarget)
+    op(FOp.CallVirtual, fpod.addMethodRef(c.doCall))
+    if (!c.leave) opType(FOp.Pop, c.doCall.ret)
   }
 
 //////////////////////////////////////////////////////////////////////////

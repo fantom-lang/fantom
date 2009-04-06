@@ -254,6 +254,11 @@ class FuncType : GenericType
     this.signature = s.toStr
   }
 
+  new makeItBlock(CType itType)
+    : this.make([itType], ["it"], itType)
+  {
+  }
+
   override Int flags()
   {
     allPublic := ret.isPublic && params.all |CType p->Bool| { return p.isPublic }

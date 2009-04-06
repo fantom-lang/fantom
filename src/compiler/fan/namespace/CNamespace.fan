@@ -109,7 +109,7 @@ abstract class CNamespace : CompilerSupport
     typeMethod         = sysMethod(typeType,   "method")
     funcToImmutable    = sysMethod(funcType,   "toImmutable")
 
-    itBlockType = FuncType([objType], ["it"], objType)
+    itBlockType = FuncType.makeItBlock(objType)
   }
 
   private CType genericParam(Str name)

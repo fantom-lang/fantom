@@ -159,6 +159,16 @@ abstract class Expr : Node
     return result
   }
 
+  **
+  ** Is this a closure expression?
+  **
+  virtual Bool isClosure() { false }
+
+  **
+  ** Is this expression an it-block closure?
+  **
+  virtual Bool isItBlock() { false}
+
 //////////////////////////////////////////////////////////////////////////
 // Doc
 //////////////////////////////////////////////////////////////////////////
@@ -1483,6 +1493,10 @@ class ClosureExpr : Expr
     return ClosureVars.makeOuterThisField(this)
   }
 
+  override Bool isClosure() { true }
+
+  override Bool isStmt() { isItBlock && isImmediate }
+
   override Str toStr()
   {
     return "$signature { ... }"
@@ -1490,6 +1504,7 @@ class ClosureExpr : Expr
 
   override Void print(AstWriter out)
   {
+    if (immediateTarget != null) immediateTarget.print(out)
     out.w(signature.toStr)
     if (substitute != null)
     {
@@ -1508,13 +1523,18 @@ class ClosureExpr : Expr
   {
     // bail if we didn't expect an inferred the signature
     if (!inferredSignature) return
+    inferredSignature = false
 
     // update my signature and the doCall signature
     signature = t
     doCall.paramDefs = signature.toParamDefs(location)
 
     // if an itBlock, set type of it
-    if (itBlock) itType = t.params.first
+    if (isItBlock)
+    {
+      itType = t.params.first
+      doCall.ret = itType
+    }
   }
 
   // Parse
@@ -1525,7 +1545,7 @@ class ClosureExpr : Expr
   Bool inferredSignature        // does closure require type inference for its sig
   Block? code                   // moved into a MethodDef in InitClosures
   Str name                      // anonymous class name
-  Bool itBlock                  // does closure have implicit it scope
+  override Bool isItBlock       // does closure have implicit it scope
 
   // InitClosures
   CallExpr? substitute          // expression to substitute during assembly
@@ -1536,6 +1556,8 @@ class ClosureExpr : Expr
   [Str:MethodVar]? enclosingLocals // locals in scope
   Bool usesCvars                // does this guy use vars from outer scope
   CType? itType                 // type of implicit it
+  Expr? immediateTarget         // base target of immediate it-block
+  Bool isImmediate              // invoke it-block immediately
 }
 
 **************************************************************************
