@@ -1562,6 +1562,12 @@ if (withBlockOn && curt == Token.lbrace)
   base := UnknownVarExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
   return withBlock(base) ?: base
 }
+    if (curt == Token.lbrace)
+    {
+      ctor := CallExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
+      ctor.args.add(itBlock)
+      return ctor
+    }
 
     throw err("Unexpected type literal", loc)
   }
@@ -1604,6 +1610,7 @@ if (withBlockOn && curt == Token.lbrace)
 
     // if target {...}
 if (withBlockOn && curt == Token.lbrace) return withBlock(target)
+if (curt == Token.lbrace) return withBlock(target)
 
     // we treat a with base as a dot slot access
     if (target.id === ExprId.withBase) return idExpr(target, false, false)
@@ -1705,9 +1712,10 @@ if (withBlockOn && curt == Token.lbrace) return withBlock(target)
     if (closure != null)
     {
       call := CallExpr.make(loc)
-      call.target = target
-      call.name   = name
-      call.isSafe = safeCall
+      call.target   = target
+      call.name     = name
+      call.isSafe   = safeCall
+      call.noParens = true
       call.args.add(closure)
       return call
     }
@@ -1938,7 +1946,7 @@ if (withBlockOn && curt == Token.lbrace) return withBlock(target)
     // if curly brace, then this is it-block closure
 if (!withBlockOn)
 {
-    if (curt === Token.lbrace) return itBlock(loc)
+    if (curt === Token.lbrace) return itBlock
 }
 
     // if not pipe then not closure
@@ -1959,14 +1967,13 @@ if (!withBlockOn)
   **
   ** Parse it-block closure.
   **
-  private ClosureExpr itBlock(Location loc)
+  private ClosureExpr itBlock()
   {
-    return closure(loc, ns.itBlockType)
-    {
-      inferredSignature = true
-      itBlock = true
-      itType = ns.error
-    }
+    ib := closure(cur, ns.itBlockType)
+    ib.inferredSignature = true
+    ib.isItBlock = true
+    ib.itType = ns.error
+    return ib
   }
 
   **

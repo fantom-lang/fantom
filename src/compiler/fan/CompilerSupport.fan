@@ -83,6 +83,16 @@ class CompilerSupport
     compiler.types.add(t)
   }
 
+  **
+  ** Remove a synthetic type
+  **
+  Void removeTypeDef(TypeDef t)
+  {
+    t.unit.types.removeSame(t)
+    pod.typeDefs.remove(t.name)
+    compiler.types.removeSame(t)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Errors
 //////////////////////////////////////////////////////////////////////////

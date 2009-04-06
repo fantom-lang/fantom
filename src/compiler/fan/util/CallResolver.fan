@@ -121,7 +121,7 @@ class CallResolver : CompilerSupport
       if (curType.isClosure)
       {
         base = curType.closure.enclosingType
-        if (curType.closure.itBlock) baseIt = curType.closure.itType
+        if (curType.closure.isItBlock) baseIt = curType.closure.itType
       }
       else
       {
@@ -201,6 +201,9 @@ class CallResolver : CompilerSupport
 
   private CSlot? findOn(CType base)
   {
+    // if base is the error type, short circuit
+    if (base === ns.error) return null
+
     // if simple variable access attempt to lookup as field first,
     // then as method if that fails (only matters in case of FFI)
     if (isVar) return base.field(name) ?: base.method(name)
@@ -325,17 +328,34 @@ class CallResolver : CompilerSupport
   private Void inferClosureType()
   {
     // check if last argument is closure
-    closureArg := args.last as ClosureExpr
-    if (closureArg == null) return
+    c := args.last as ClosureExpr
+    if (c == null) return
 
-    // get last parameter type
+    // if the resolved slot is a method where the last param
+    // is expected to be a function type, then use that to
+    // infer the type signature of the closure
     method := found as CMethod
-    if (method == null) return
-    lastParam := method.params.last?.paramType?.deref?.toNonNullable
+    if (method != null)
+    {
+      lastParam := method.params.last?.paramType?.deref?.toNonNullable
+      if (lastParam is FuncType)
+      {
+        c.setInferredSignature(lastParam)
+        return
+      }
+    }
 
-    // if last param type is func type, apply to closure
-    if (lastParam is FuncType)
-      closureArg.setInferredSignature(lastParam)
+    // otherwise if the closure is an it-block, we infer
+    // its type to be the result of the target expression
+    if (c.isItBlock && c.inferredSignature)
+    {
+      result->args->removeAt(-1)
+      c.setInferredSignature(FuncType.makeItBlock(result.ctype))
+      c.isImmediate = true
+      c.immediateTarget = result
+      c.ctype = result.ctype
+      result = c
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

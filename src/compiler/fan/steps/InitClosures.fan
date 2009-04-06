@@ -136,7 +136,7 @@ class InitClosures : CompilerStep
   {
     doCall = MethodDef.make(loc, cls)
     doCall.name  = "doCall"
-    doCall.flags = FConst.Private | FConst.Synthetic
+    doCall.flags = FConst.Internal | FConst.Synthetic
     doCall.code  = closure.code
     doCall.ret = signature.ret
     doCall.paramDefs = signature.toParamDefs(loc)
@@ -242,6 +242,10 @@ class InitClosures : CompilerStep
 // Substitute
 //////////////////////////////////////////////////////////////////////////
 
+  **
+  ** Generate in-place subtitution of closure:
+  **   |,| { ... }  =>  Closure$Cls.make()
+  **
   private Void substitute()
   {
     closure.code = null

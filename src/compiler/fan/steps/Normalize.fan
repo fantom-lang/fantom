@@ -116,21 +116,38 @@ class Normalize : CompilerStep
     code := m.code
     if (code == null) return
 
-    // add implicit return, we allow return keyword to
-    // be omitted if there is exactly one statement
-    if (!code.isExit)
-    {
-      if (code.size == 1 && !m.returnType.isVoid && code.stmts[0].id == StmtId.expr)
-        code.stmts[0] = ReturnStmt(code.stmts[0].location, code.stmts[0]->expr)
-      else
-        code.add(ReturnStmt(code.location))
-    }
+    // add implicit return
+    if (!code.isExit) addImplicitReturn(m)
 
     // insert super constructor call
     if (m.isCtor) insertSuperCtor(m)
 
     // once
     if (m.isOnce) normalizeOnce(m, iInit)
+  }
+
+  private Void addImplicitReturn(MethodDef m)
+  {
+    code := m.code
+    loc := code.location
+
+    // if this is an it-block closure, there is an implied
+    // return of the it parameter to be left on the stack
+    if (m.params.size == 1 && m.params[0].name == "it")
+    {
+      code.add(ReturnStmt(loc, ItExpr(loc)))
+      return
+    }
+
+    // we allow return keyword to be omitted if there is exactly one statement
+    if (code.size == 1 && !m.returnType.isVoid && code.stmts[0].id == StmtId.expr)
+    {
+      code.stmts[0] = ReturnStmt(code.stmts[0].location, code.stmts[0]->expr)
+      return
+    }
+
+    // return is implied as simple method exit
+    code.add(ReturnStmt(loc))
   }
 
   private Void insertSuperCtor(MethodDef m)
