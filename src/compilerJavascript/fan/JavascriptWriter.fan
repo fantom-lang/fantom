@@ -350,7 +350,6 @@ if (c != null)
       //case ExprId.unknownVar
       //case ExprId.storage
       case ExprId.ternary:      expr(ex->condition); out.w(" ? "); expr(ex->trueExpr); out.w(" : "); expr(ex->falseExpr)
-      case ExprId.withBlock:    withBlockExpr(ex)
       //case ExprId.withSub
       //case ExprId.withBase
       //case ExprId.curry
@@ -600,15 +599,6 @@ if (c != null)
     }
     out.w(var(name))
     if (!cvar && fe.useAccessor) out.w(get ? "\$get()" : "\$set")
-  }
-
-  Void withBlockExpr(WithBlockExpr wbe)
-  {
-    // TODO
-    //out.w("with("); expr(wbe.base); out.w(") {")
-    ////subs.each |Expr sub| { s.add("$sub; ") }
-    //out.w("}")
-    out.w("null");
   }
 
   Void closureExpr(ClosureExpr ce)

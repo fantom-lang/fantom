@@ -635,8 +635,6 @@ class CodeAsm : CompilerSupport
       case ExprId.coerce:          coerce(expr)
       case ExprId.closure:         closure(expr)
       case ExprId.ternary:         ternary(expr)
-      case ExprId.withBlock:       withBlock(expr)
-      case ExprId.withBase:        return
       case ExprId.staticTarget:    return
       default:                     throw Err.make(expr.id.toStr)
     }
@@ -953,22 +951,6 @@ class CodeAsm : CompilerSupport
     // we replace the closure with its substitute
     // expression - call to closure constructor
     expr(c.substitute)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// WithBlock
-//////////////////////////////////////////////////////////////////////////
-
-  private Void withBlock(WithBlockExpr withBlock)
-  {
-    expr(withBlock.base)
-    withBlock.subs.each |WithSubExpr sub|
-    {
-      opType(FOp.Dup, withBlock.ctype)
-      expr(sub.expr)
-      if (sub.expr.leave) throw Err.make("should never leave with expr " + sub.location)
-    }
-    if (!withBlock.leave) opType(FOp.Pop, withBlock.ctype)
   }
 
 //////////////////////////////////////////////////////////////////////////

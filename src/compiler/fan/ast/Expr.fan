@@ -178,16 +178,8 @@ abstract class Expr : Node
       s := toStr
       if (s[0] == '(' && s[-1] == ')') s = s[1..-2]
 
-      if (s.contains("{"))
-      {
-        // with blocks
-        s = s.replace("with.", "")
-      }
-      else
-      {
-        // hide implicit assignments
-        if (s.contains("=")) s = s[s.index("=")+1..-1].trim
-      }
+      // hide implicit assignments
+      if (s.contains("=")) s = s[s.index("=")+1..-1].trim
 
       // remove extra parens with binary ops
       if (s[0] == '(' && s[-1] == ')') s = s[1..-2]
@@ -1006,9 +998,6 @@ class FieldExpr : NameExpr
 
   override Str serialize()
   {
-    if (target != null && target.id === ExprId.withBase)
-      return "$name"
-
     if (field.isStatic)
     {
       if (field.parent.isFloat)
@@ -1294,129 +1283,6 @@ class TernaryExpr : Expr
 }
 
 **************************************************************************
-** WithBlockExpr
-**************************************************************************
-
-**
-** WithBlockExpr is used enclose a series of sub-expressions
-** against a base expression:
-**   base { a = b; c() }
-** Translates to:
-**   temp := base
-**   temp.a = b
-**   temp.c()
-**
-class WithBlockExpr : Expr
-{
-  new make(Expr base)
-    : super(base.location, ExprId.withBlock)
-  {
-    this.base = base
-    this.subs = WithSubExpr[,]
-  }
-
-  override Void walkChildren(Visitor v)
-  {
-    base  = base.walk(v)
-    ctype = base.ctype
-    subs  = (WithSubExpr[])walkExprs(v, subs)
-  }
-
-  override Bool isStmt() { return true }
-
-  Bool isCtorWithBlock()
-  {
-    return (base.id == ExprId.call || base.id == ExprId.construction) && base->method->isCtor
-  }
-
-  override Str serialize()
-  {
-    if (base.id != ExprId.call || base->method->isCtor != true ||
-        base->name != "make" || base->args->size != 0)
-      return super.serialize
-
-    s := StrBuf.make
-    s.add("${base->target}{")
-    subs.each |Expr sub| { s.add("$sub.serialize;") }
-    s.add("}")
-    return s.toStr
-  }
-
-  override Str toStr()
-  {
-    s := StrBuf.make
-    s.add("$base { ")
-    subs.each |Expr sub| { s.add("$sub; ") }
-    s.add("}")
-    return s.toStr
-  }
-
-  Expr base           // base expression
-  WithSubExpr[] subs  // sub-expressions applied to base
-}
-
-**
-** WithSubExpr wraps each sub-expr within a with-block.
-**
-class WithSubExpr : Expr
-{
-  new make(WithBlockExpr withBlock, Expr expr)
-    : super(expr.location, ExprId.withSub)
-  {
-    this.withBlock = withBlock
-    this.expr = expr
-  }
-
-  override Void walkChildren(Visitor v)
-  {
-    expr = expr.walk(v)
-  }
-
-  override Bool isStmt() { return expr.isStmt }
-  override Str serialize() { return expr.serialize }
-  override Str toStr() { return expr.toStr }
-
-  WithBlockExpr withBlock
-  Expr expr
-  CMethod? add   // if 'with.add(expr)'
-}
-
-**
-** WithBaseExpr is a place holder used as the target of
-** sub-expressions within a with block typed to the with base.
-**
-class WithBaseExpr : Expr
-{
-  new make(WithBlockExpr withBlock, WithSubExpr? withSub := null)
-    : super(withBlock.location, ExprId.withBase)
-  {
-    this.ctype = withBlock.ctype
-    this.withBlock = withBlock
-    this.withSub = withSub
-  }
-
-  Bool isCtorWithBlock()
-  {
-    return withBlock.isCtorWithBlock
-  }
-
-  override Str toStr()
-  {
-    return "with"
-  }
-
-  override Void walkChildren(Visitor v)
-  {
-    // this node never has children, but whenever the
-    // tree is walked update its ctype from the withBlock
-    ctype = withBlock.ctype
-  }
-
-  WithBlockExpr withBlock
-  WithSubExpr? withSub
-}
-
-**************************************************************************
 ** CurryExpr
 **************************************************************************
 
@@ -1596,9 +1462,6 @@ enum ExprId
   unknownVar,       // UnknownVarExpr
   storage,
   ternary,          // TernaryExpr
-  withBlock,        // WithBlockExpr
-  withSub,          // WithSubExpr
-  withBase,         // WithBaseExpr
   curry,            // CurryExpr
   closure           // ClosureExpr
 }

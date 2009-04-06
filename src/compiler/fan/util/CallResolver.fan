@@ -173,15 +173,6 @@ class CallResolver : CompilerSupport
       }
     }
 
-    // if slot not found and this call is on a with-block
-    // base, then ignore for now - we will recheck in
-    // ResolveExpr.resolveWithBlock
-    if (found == null && target != null && target.id == ExprId.withBase)
-    {
-      withBlockAdd
-      if (result != null) return
-    }
-
     // if still not found, then error
     if (found == null)
     {
@@ -462,48 +453,6 @@ class CallResolver : CompilerSupport
   {
     if (expr.isSafe)
       result.ctype = result.ctype.toNullable
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// With Block Add
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** If we failed to resolve 'with.expr' and the with target
-  ** supports an 'add' method, then attempt to resolve as a standalone
-  ** 'expr' (no with base).  If that works we assume this is
-  ** syntax sugar for 'with.add(expr)' - the CallExpr is created
-  ** in ResolveExpr after the entire sub-expr has been processed.
-  **
-  Void withBlockAdd()
-  {
-    // check if with-block base supports an add method
-    CMethod? add := null
-    try { add = base.method("add") } catch {}
-    if (add == null) return
-
-    try
-    {
-      // re-resolve without the withBase
-      withBase := (WithBaseExpr)expr.target
-      expr.target = null
-
-      // re-resolve without reporting errors, since
-      // if this fails we will fall thru and report
-      // the original error this call resolver detected
-      retryResolver := make(compiler, curType, curMethod, expr)
-      retryResolver.suppressErr = true
-      retry := retryResolver.resolve
-
-      // we successfully resolved as stand alone expr, mark
-      // withSub that this is to be treated as a with.add()
-      if (retry.ctype !== ns.error)
-      {
-        this.result = retry
-        withBase.withSub.add = add
-      }
-    }
-    catch (SuppressedErr e) {}
   }
 
 //////////////////////////////////////////////////////////////////////////
