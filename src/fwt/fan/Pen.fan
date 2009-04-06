@@ -93,7 +93,7 @@ const class Pen
         }
       }
 
-      return Pen { width = w; cap = c; join = j; dash = d }
+      return Pen { it.width = w; it.cap = c; it.join = j; it.dash = d }
     }
     catch {}
     if (checked) throw ParseErr("Invalid Pen: $str")

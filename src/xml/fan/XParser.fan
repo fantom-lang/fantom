@@ -267,7 +267,7 @@ class XParser
   XText? text()
   {
     if (nodeType !== XNodeType.text) return null
-    return XText(buf.toStr) { cdata = this.cdata }
+    return XText(buf.toStr) { it.cdata = this.cdata }
   }
 
   **

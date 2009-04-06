@@ -49,7 +49,7 @@ internal class ErrView : View
     if (cause != null)
     {
       trace := Label { text=cause.traceToStr; font=Font("Courier", 10) }
-      content.add(InsetPane { insets=Insets{left=20}; content=trace })
+      content.add(InsetPane { it.insets=Insets{left=20}; it.content=trace })
     }
 
     this.content = content

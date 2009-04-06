@@ -162,7 +162,7 @@ class ListNode
       if (docNode == null) continue
       if (docNode.level > level) { curr = last; level++ }
       while (docNode.level < level) { curr = curr.parent; level-- }
-      last = ListNode { heading=docNode; parent=curr }
+      last = ListNode { it.heading=docNode; it.parent=curr }
       curr.kids.add(last)
     }
     return root

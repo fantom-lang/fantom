@@ -111,7 +111,7 @@ abstract class Resource
   **
   virtual Menu? viewsMenu(Frame? frame, Event? event)
   {
-    menu := Menu { text = type.loc("views.name") }
+    menu := Menu { text = this.type.loc("views.name") }
     views.each |Type v, Int i|
     {
       viewUri := i == 0 ? uri : uri.plusQuery(["view":v.qname])

@@ -56,7 +56,7 @@ internal class Commands
   {
     return Menu
     {
-      text = type.loc("file.name")
+      text = this.type.loc("file.name")
       addCommand(newTab)
       addCommand(openLocation)
       addCommand(closeTab)
@@ -72,7 +72,7 @@ internal class Commands
   {
     return Menu
     {
-      text = type.loc("edit.name")
+      text = this.type.loc("edit.name")
       onOpen.add(&onEditMenuOpen)
       addCommand(undo)
       addCommand(redo)
@@ -102,7 +102,7 @@ internal class Commands
   {
     menu := Menu
     {
-      text = type.loc("view.name")
+      text = this.type.loc("view.name")
       onOpen.add(&onViewMenuOpen)
       addCommand(reload)
       addSep
@@ -124,7 +124,7 @@ internal class Commands
   {
     menu := Menu
     {
-      text = type.loc("history.name")
+      text = this.type.loc("history.name")
       onOpen.add(&onHistoryMenuOpen)
       addCommand(back)
       addCommand(forward)
@@ -141,7 +141,7 @@ internal class Commands
   {
     menu := Menu
     {
-      text = type.loc("tools.name")
+      text = this.type.loc("tools.name")
       addCommand(options)
       addCommand(refreshTools)
       addSep
@@ -156,7 +156,7 @@ internal class Commands
   {
     return Menu
     {
-      text = type.loc("help.name")
+      text = this.type.loc("help.name")
       addCommand(about)
     }
   }
@@ -426,11 +426,11 @@ internal class ExitCommand : FluxCommand
     dirty := frame.views.findAll |View v->Bool| { return v.dirty }
     if (dirty.size > 0)
     {
-      grid := GridPane { Label { text=type.pod.loc("saveChanges"); font=Font.sys.toBold }}
+      grid := GridPane { Label { text=this.type.pod.loc("saveChanges"); font=Font.sys.toBold }}
       dirty.each |View v|
       {
         grid.add(InsetPane(0,0,0,8) {
-         Button { mode=ButtonMode.check; text=v.resource.uri.toStr; selected=true }
+         Button { it.mode=ButtonMode.check; it.text=v.resource.uri.toStr; it.selected=true }
         })
       }
       saveSel  := ExitSaveCommand(type.pod, "saveSelected")
@@ -666,9 +666,9 @@ internal class RecentCommand : FluxCommand
     model := RecentTableModel()
     table := Table
     {
-      headerVisible = false
-      model = model
-      onAction.add |Event e|
+      it.headerVisible = false
+      it.model = model
+      it.onAction.add |Event e|
       {
         frame.load(model.items[e.index].uri, LoadMode(e))
         dlg.close
@@ -809,7 +809,7 @@ internal class AboutCommand : FluxCommand
       {
         halignCells = Halign.center
         vgap = 0
-        Label { text = "Version $type.pod.version"; font = small }
+        Label { text = "Version $this.type.pod.version"; font = small }
         Label { text = "Fan Home ${Sys.homeDir}"; font = small }
       }
       Label { font = small; text =

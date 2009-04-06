@@ -19,17 +19,17 @@ internal class ImageView : View
     image = Image.makeFile(resource->file)
     details := BorderPane
     {
-      content = InsetPane(6)
+      it.content = InsetPane(6)
       {
         GridPane
         {
           numCols = 2
           Label { text="Size"; font=Font.sys.toBold }
-          Label { text="${image.size.w}px x ${image.size.h}px" }
+          Label { text="${this.image.size.w}px x ${this.image.size.h}px" }
         }
       }
-      insets  = Insets(0,0,2,0)
-      onBorder = |Graphics g, Size size|
+      it.insets  = Insets(0,0,2,0)
+      it.onBorder = |Graphics g, Size size|
       {
         g.brush = Color.sysNormShadow
         g.drawLine(0, size.h-2, size.w, size.h-2)

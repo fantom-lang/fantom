@@ -18,13 +18,13 @@ internal class HtmlView : View
   {
     browser := WebBrowser()
     {
-      onHyperlink.add(&onHyperlink)
+      it.onHyperlink.add(&this.onHyperlink)
     }
     content = BorderPane
     {
-      content  = browser
-      insets   = Insets(0,0,0,1)
-      onBorder = |Graphics g, Size s|
+      it.content  = browser
+      it.insets   = Insets(0,0,0,1)
+      it.onBorder = |Graphics g, Size s|
       {
         g.brush = Color.sysNormShadow
         g.drawLine(0, 0, 0, s.h)

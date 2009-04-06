@@ -129,7 +129,7 @@ class ObjTest : ObixTest
 
   Void verifyVal(Str elemName, Obj? val)
   {
-    obj := ObixObj { val = val }
+    obj := ObixObj { it.val = val }
     verifyEq(obj.elemName, elemName)
     verifySame(obj.val, val)
   }

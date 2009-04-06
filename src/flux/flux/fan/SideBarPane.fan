@@ -19,17 +19,17 @@ internal class SideBarPane : ContentPane
     this.frame  = frame
     this.content = SashPane
     {
-      orientation = Orientation.horizontal
-      weights = [200, 600, 200]
-      add(left)
+      it.orientation = Orientation.horizontal
+      it.weights = [200, 600, 200]
+      it.add(left)
       SashPane
       {
-        orientation = Orientation.vertical
-        weights = [600, 200]
-        add(tabPane)
-        add(bottom)
+        it.orientation = Orientation.vertical
+        it.weights = [600, 200]
+        it.add(tabPane)
+        it.add(bottom)
       }
-      add(right)
+      it.add(right)
     }
   }
 
@@ -128,9 +128,8 @@ internal class SideBarPane : ContentPane
 
   readonly Frame frame
   SideBar[] sideBars := SideBar[,]
-  SashPane left  := SashPane { visible=false; orientation = Orientation.vertical }
-  SashPane right := SashPane { visible=false; orientation = Orientation.vertical }
-  ContentPane bottom := ContentPane { visible=false }
+  SashPane left  := SashPane { it.visible=false; it.orientation = Orientation.vertical }
+  SashPane right := SashPane { it.visible=false; it.orientation = Orientation.vertical }
+  ContentPane bottom := ContentPane { it.visible=false }
 
 }
-

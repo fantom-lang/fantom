@@ -44,7 +44,7 @@ class Menu : MenuItem
   **
   MenuItem addCommand(Command c)
   {
-    item := MenuItem.makeCommand(c) { image = null }
+    item := MenuItem.makeCommand(c) { it.image = null }
     add(item)
     return item
   }
@@ -54,7 +54,7 @@ class Menu : MenuItem
   **
   Void addSep()
   {
-    item := MenuItem { mode = MenuItemMode.sep }
+    item := MenuItem { it.mode = MenuItemMode.sep }
     add(item)
   }
 
