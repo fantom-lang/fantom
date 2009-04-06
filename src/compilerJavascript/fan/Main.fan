@@ -81,7 +81,7 @@ class Main
     input.outDir      = script.libFanDir
     input.output      = CompilerOutputMode.podFile
     script.log.indent
-    CompilerJavascript.make(input) { outDir=outDir; force=force }.compile
+    CompilerJavascript.make(input) { it.outDir=outDir; it.force=force }.compile
   }
 
 //////////////////////////////////////////////////////////////////////////

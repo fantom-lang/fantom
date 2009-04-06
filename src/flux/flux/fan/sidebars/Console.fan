@@ -28,11 +28,11 @@ class Console : SideBar
     model.clear
     richText = RichText
     {
-      model = model
-      editable = false
-      border = false
-      font = Font.sysMonospace
-      onMouseUp.add(&onRichTextMouseDown)
+      it.model = this.model
+      it.editable = false
+      it.border = false
+      it.font = Font.sysMonospace
+      it.onMouseUp.add(&onRichTextMouseDown)
     }
     content = EdgePane
     {
@@ -65,9 +65,9 @@ class Console : SideBar
       }
       center = BorderPane
       {
-        content = richText
-        insets  = Insets(1,0,0,1)
-        onBorder = |Graphics g, Size size|
+        it.content = richText
+        it.insets  = Insets(1,0,0,1)
+        it.onBorder = |Graphics g, Size size|
         {
           g.brush = Color.sysNormShadow
           g.drawLine(0, 0, size.w, 0)
@@ -134,9 +134,9 @@ class Console : SideBar
     busy = true
     params := ExecParams
     {
-      frameId = frame.id
-      command = command
-      dir = dir
+      it.frameId = frame.id
+      it.command = command
+      it.dir = dir
     }
     Actor(ActorGroup(), &execRun(params)).send(null)
     return this
@@ -297,7 +297,7 @@ internal class ConsoleModel : RichTextModel
   override Int lineAtOffset(Int offset)
   {
     // binary search by offset, returns '-insertationPoint-1'
-    key := ConsoleLine { offset = offset }
+    key := ConsoleLine { it.offset = offset }
     line := lines.binarySearch(key) |ConsoleLine a, ConsoleLine b->Int| { return a.offset <=> b.offset }
     if (line < 0) line = -(line + 2)
     if (line >= lines.size) line = lines.size-1
@@ -315,7 +315,7 @@ internal class ConsoleModel : RichTextModel
   This clear()
   {
     size = 0
-    lines = [ConsoleLine { offset=0; text=""; fullText="" }]
+    lines = [ConsoleLine { it.offset=0; it.text=""; it.fullText="" }]
     curMark = null
     return this
   }
@@ -356,12 +356,12 @@ internal class ConsoleModel : RichTextModel
     // fire modification event
     tc := TextChange
     {
-      startOffset    = startOffset
-      startLine      = startLineIndex
-      oldText        = ""
-      newText        = s
-      oldNumNewlines = 0
-      newNumNewlines = numNewLines
+      it.startOffset    = startOffset
+      it.startLine      = startLineIndex
+      it.oldText        = ""
+      it.newText        = s
+      it.oldNumNewlines = 0
+      it.newNumNewlines = numNewLines
     }
     onModify.fire(Event { id =EventId.modified; data = tc })
 
@@ -413,7 +413,7 @@ internal class ConsoleModel : RichTextModel
         s = [0, norm, start, link, start+name.size, norm]
     }
 
-    return ConsoleLine { text = t; fullText = full; mark = m; styling = s }
+    return ConsoleLine { it.text = t; it.fullText = full; it.mark = m; it.styling = s }
   }
 
   override Obj[]? lineStyling(Int lineIndex)

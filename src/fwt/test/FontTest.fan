@@ -43,11 +43,11 @@ class FontTest : Test
     verifyEq(f.italic, italic)
     verifyEq(f.toStr, str)
 
-    verifyEq(f, Font { name = name; size = size; bold = bold; italic = italic })
-    verifyNotEq(f, Font { name = name+"x"; size = size; bold = bold; italic = italic })
-    verifyNotEq(f, Font { name = name; size = size+1; bold = bold; italic = italic })
-    verifyNotEq(f, Font { name = name; size = size; bold = !bold; italic = italic })
-    verifyNotEq(f, Font { name = name; size = size; bold = bold; italic = !italic })
+    verifyEq(f, Font { it.name = name; it.size = size; it.bold = bold; it.italic = italic })
+    verifyNotEq(f, Font { it.name = name+"x"; it.size = size; it.bold = bold; it.italic = italic })
+    verifyNotEq(f, Font { it.name = name; it.size = size+1; it.bold = bold; it.italic = italic })
+    verifyNotEq(f, Font { it.name = name; it.size = size; it.bold = !bold; it.italic = italic })
+    verifyNotEq(f, Font { it.name = name; it.size = size; it.bold = bold; it.italic = !italic })
 
     verifyEq(f, Font.fromStr(f.toStr))
     verifyEq(f, Buf().writeObj(f).flip.readObj)

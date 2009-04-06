@@ -173,7 +173,7 @@ internal class MarkParser
     Int? num := null
     for (i:=e+1; i<e+8 && i<text.size; ++i)
       if (text[i].isDigit) { num=i; break }
-    if (num == null) return Mark { uri = uri }
+    if (num == null) return Mark { it.uri = uri }
 
     // parse out line number
     line := text[num] - '0'
@@ -184,14 +184,14 @@ internal class MarkParser
     e = num; num = null;
     for (i:=e; i<e+8 && i<text.size; ++i)
       if (text[i].isDigit) { num=i; break }
-    if (num == null) return Mark { uri = uri; line = line }
+    if (num == null) return Mark { it.uri = uri; it.line = line }
 
     // parse out line number
     col := text[num] - '0'
     while (++num < text.size && text[num].isDigit)
       col = col*10 + (text[num] - '0')
 
-    return Mark { uri = uri; line = line; col = col }
+    return Mark { it.uri = uri; it.line = line; it.col = col }
   }
 
   **

@@ -84,20 +84,20 @@ internal class Parser
 
       parseStyling(styling)
 
-      if (!needFatLine) return Line { text = text; styling = styling }
+      if (!needFatLine) return Line { it.text = text; it.styling = styling }
       return FatLine
       {
-        text = text
-        styling = styling
-        commentNesting = commentNesting
-        opens = opens
-        closeBlocks = closes
+        it.text = text
+        it.styling = styling
+        it.commentNesting = this.commentNesting
+        it.opens = this.opens
+        it.closeBlocks = this.closes
       }
     }
     catch (Err e)
     {
       e.trace
-      return Line { text = text; styling = [0, syntax.text] }
+      return Line { it.text = text; it.styling = [0, syntax.text] }
     }
   }
 

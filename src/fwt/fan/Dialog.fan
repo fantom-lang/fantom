@@ -141,11 +141,11 @@ class Dialog : Window
 
     dialog := Dialog(parent)
     {
-      title    = title
-      image    = image
-      body     = body
-      details  = details
-      commands = commands
+      it.title    = title
+      it.image    = image
+      it.body     = body
+      it.details  = details
+      it.commands = commands
     }
     return dialog.open
   }
@@ -158,14 +158,14 @@ class Dialog : Window
   **
   static Str? openPromptStr(Window? parent, Str msg, Str def := "", Int prefCols := 20)
   {
-    field := Text { text = def; prefCols = prefCols }
+    field := Text { it.text = def; it.prefCols = prefCols }
     pane := GridPane
     {
       numCols = 2
       expandCol = 1
       halignCells=Halign.fill
       Label { text=msg }
-      add(field)
+      it.add(field)
     }
     ok := Dialog.ok
     cancel := Dialog.cancel
@@ -220,8 +220,8 @@ class Dialog : Window
         numCols = 2
         expandCol = 1
         halignCells=Halign.fill
-        Label { image = image }
-        add(body)
+        Label { it.image = this.image }
+        it.add(body)
       }
     }
 
@@ -273,10 +273,10 @@ class Dialog : Window
         ConstraintPane
         {
           minw = (details == null) ? 200 : 350
-          add(bodyAndImage)
+          it.add(bodyAndImage)
         }
       }
-      InsetPane { insets = Insets(0, 10, 10, 10); add(buttons) }
+      InsetPane { insets = Insets(0, 10, 10, 10); it.add(buttons) }
     }
 
     return this

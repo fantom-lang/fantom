@@ -602,7 +602,8 @@ class TokenizerTest : Test
   TokenVal[] tokenize(Str src)
   {
     // strip trailing eof
-    c := Compiler(CompilerInput()) { log.level=LogLevel.silent }
+    c := Compiler(CompilerInput())
+    c.log.level = LogLevel.silent
     return Tokenizer.make(c, Location.make("test"), src, true).tokenize[0..-2]
   }
 

@@ -55,7 +55,7 @@ class XText : XNode
   **
   This copy()
   {
-    return XText(val) { cdata = this.cdata }
+    return XText(val) { it.cdata = this.cdata }
   }
 
   **

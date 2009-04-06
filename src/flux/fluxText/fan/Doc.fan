@@ -21,7 +21,7 @@ class Doc : RichTextModel
 
   new make(TextEditorOptions options, SyntaxOptions syntax, SyntaxRules rules)
   {
-    lines.add(Line { offset=0; text="" })
+    lines.add(Line { it.offset=0; it.text="" })
     this.options   = options
     this.syntax    = syntax
     this.rules     = rules
@@ -50,7 +50,7 @@ class Doc : RichTextModel
   override Int lineAtOffset(Int offset)
   {
     // binary search by offset, returns '-insertationPoint-1'
-    key := Line { offset = offset }
+    key := Line { it.offset = offset }
     line := lines.binarySearch(key) |Line a, Line b->Int| { return a.offset <=> b.offset }
     if (line < 0) line = -(line + 2)
     if (line >= lines.size) line = lines.size-1
@@ -96,13 +96,13 @@ class Doc : RichTextModel
     // fire modification event
     tc := TextChange
     {
-      startOffset    = startOffset
-      startLine      = startLineIndex
-      oldText        = oldText
-      newText        = newText
-      oldNumNewlines = oldText.numNewlines
-      newNumNewlines = newLines.size - 1
-      repaintLen     = repaintToEnd ? size-startOffset : null
+      it.startOffset    = startOffset
+      it.startLine      = startLineIndex
+      it.oldText        = oldText
+      it.newText        = newText
+      it.oldNumNewlines = oldText.numNewlines
+      it.newNumNewlines = newLines.size - 1
+      it.repaintLen     = repaintToEnd ? size-startOffset : null
     }
     onModify.fire(Event { id =EventId.modified; data = tc })
   }

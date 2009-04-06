@@ -19,11 +19,11 @@ internal class DirView : View
     model = DirViewModel { files=((FileResource)resource).children }
     content = Table
     {
-      multi = true
-      onAction.add(&onAction)
-      onPopup.add(&onPopup)
-      border = false
-      model = this.model
+      it.multi = true
+      it.onAction.add(&this.onAction)
+      it.onPopup.add(&this.onPopup)
+      it.border = false
+      it.model = this.model
     }
   }
 

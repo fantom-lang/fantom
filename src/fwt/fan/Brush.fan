@@ -41,7 +41,7 @@ const class Gradient : Brush
   **
   static Gradient makeLinear(Point p1, Color c1, Point p2, Color c2)
   {
-    return make { p1 = p1; c1 = c1; p2 = p2; c2 = c2 }
+    return make { it.p1 = p1; it.c1 = c1; it.p2 = p2; it.c2 = c2 }
   }
 
   **
@@ -72,5 +72,4 @@ const class Gradient : Brush
     return "[$p1:$c1; $p2:$c2]"
   }
 }
-
 

@@ -22,9 +22,9 @@ internal class StartView : View
       top = InsetPane(4) { Label { text = "Recently Viewed"; font = Font.sys.toBold }}
       center = Table
       {
-        model = model
-        border = false
-        onAction.add |Event e| { frame.load(model.items[e.index].uri, LoadMode(e)) }
+        it.model = model
+        it.border = false
+        it.onAction.add |Event e| { frame.load(model.items[e.index].uri, LoadMode(e)) }
       }
     }
   }

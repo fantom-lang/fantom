@@ -377,8 +377,8 @@ final class CommandStack
   {
     return CommandStack
     {
-      undoStack = this.undoStack.dup
-      redoStack = this.redoStack.dup
+      it.undoStack = this.undoStack.dup
+      it.redoStack = this.redoStack.dup
     }
   }
 

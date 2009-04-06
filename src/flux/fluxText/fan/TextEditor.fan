@@ -48,11 +48,11 @@ class TextEditor : View
     controller.updateCaretStatus()
     return GridPane
     {
-      numCols = 2
-      hgap = 10
-      halignPane = Halign.right
-      add(caretField)
-      add(charsetField)
+      it.numCols = 2
+      it.hgap = 10
+      it.halignPane = Halign.right
+      it.add(caretField)
+      it.add(charsetField)
     }
   }
 
@@ -128,9 +128,9 @@ class TextEditor : View
     find = FindBar(this)
     content = BorderPane
     {
-      content  = richText
-      insets   = Insets(1,0,1,1)
-      onBorder = |Graphics g, Size size|
+      it.content  = richText
+      it.insets   = Insets(1,0,1,1)
+      it.onBorder = |Graphics g, Size size|
       {
         g.brush = Color.sysNormShadow
         g.drawLine(0, 0, size.w, 0)
@@ -166,7 +166,7 @@ class TextEditor : View
 
   private Str[]? readAllLines()
   {
-    in := file.in { charset = charset }
+    in := file.in { it.charset = this.charset }
     try
       return in.readAllLines
     catch
@@ -181,7 +181,7 @@ class TextEditor : View
 
   override Void onSave()
   {
-    out := file.out { charset = charset }
+    out := file.out { it.charset = this.charset }
     try
       doc.save(out)
     finally

@@ -23,12 +23,12 @@ internal class NavBar : SideBar
   {
     content = EdgePane
     {
-      top = InsetPane(5,4,5,4) { combo }
+      top = InsetPane(5,4,5,4) { it.add(combo) }
       center = BorderPane
       {
-        content  = treePane
-        insets   = Insets(1,1,0,0)
-        onBorder = |Graphics g, Size size|
+        it.content  = treePane
+        it.insets   = Insets(1,1,0,0)
+        it.onBorder = |Graphics g, Size size|
         {
           g.brush = Color.sysNormShadow
           g.drawLine(0, 0, size.w, 0)
@@ -79,10 +79,10 @@ internal class NavBar : SideBar
     // create new tree for r
     tree := Tree
     {
-      model = NavTreeModel.make(r == null ? Resource.roots : [r])
-      border = false
-      onAction.add(&onAction)
-      onPopup.add(&onPopup)
+      it.model = NavTreeModel.make(r == null ? Resource.roots : [r])
+      it.border = false
+      it.onAction.add(&this.onAction)
+      it.onPopup.add(&this.onPopup)
     }
 
     // add tree
@@ -157,14 +157,14 @@ internal class NavBar : SideBar
       if (r is FileResource && r->file->isDir)
       {
         menu.add(MenuItem { mode = MenuItemMode.sep })
-        menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.refresh", &onRefresh(n)) })
-        menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.goInto", &onGoInto(n)) })
+        menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.refresh", &onRefresh(n)) })
+        menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.goInto", &onGoInto(n)) })
       }
     }
     else
     {
       menu = Menu()
-      menu.add(MenuItem { command = Command.makeLocale(type.pod, "navBar.sync", &onSync) })
+      menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.sync", &onSync) })
     }
     event.popup = menu
   }
@@ -228,7 +228,7 @@ internal class NavBar : SideBar
     list := EditList(combo.items[0...-1])
     dlg  := Dialog(frame)
     {
-      title    = type.loc("navBar.edit")
+      title    = this.type.loc("navBar.edit")
       body     = list
       commands = [Dialog.ok, Dialog.cancel]
     }
@@ -273,7 +273,7 @@ internal class NavBar : SideBar
   Tree active
   Tree[] trees := Tree[,]
   Bool ignore  := true
-  Combo combo  := Combo() { onModify.add(&onModify) }
+  Combo combo  := Combo() { it.onModify.add(&this.onModify) }
   NavTreePane treePane := NavTreePane()
 }
 

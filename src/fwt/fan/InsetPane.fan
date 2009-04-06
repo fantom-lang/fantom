@@ -53,8 +53,8 @@ class InsetPane : ContentPane
     {
       x = insets.left
       y = insets.top
-      w = size.w - insets.left - insets.right
-      h = size.h - insets.top - insets.bottom
+      w = this.size.w - insets.left - insets.right
+      h = this.size.h - insets.top - insets.bottom
     }
   }
 }

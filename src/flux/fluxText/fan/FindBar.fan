@@ -47,14 +47,14 @@ internal class FindBar : ContentPane, TextEditorSupport
         {
           numCols = 5
           ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("find.name") }}
-          ConstraintPane { minw=200; maxw=200; add(findText) }
-          InsetPane(0,0,0,8) { matchCase }
+          ConstraintPane { minw=200; maxw=200; it.add(findText) }
+          InsetPane(0,0,0,8) { it.add(matchCase) }
           ToolBar
           {
             addCommand(cmdNext)
             addCommand(cmdPrev)
           }
-          msg
+          it.add(msg)
         }
         right = ToolBar { addCommand(cmdHide) }
       }
@@ -77,7 +77,7 @@ internal class FindBar : ContentPane, TextEditorSupport
       {
         numCols = 3
         ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("replace.name") } }
-        ConstraintPane { minw=200; maxw=200; add(replaceText) }
+        ConstraintPane { minw=200; maxw=200; it.add(replaceText) }
         InsetPane(0,0,0,8)
         {
           GridPane
@@ -92,13 +92,13 @@ internal class FindBar : ContentPane, TextEditorSupport
 
     content = BorderPane
     {
-      content = EdgePane
+      it.content = EdgePane
       {
-        top    = findPane
-        bottom = replacePane
+        it.top    = findPane
+        it.bottom = replacePane
       }
-      insets = Insets(2,0,0,0)
-      onBorder = |Graphics g, Size size|
+      it.insets = Insets(2,0,0,0)
+      it.onBorder = |Graphics g, Size size|
       {
         g.brush = Color.sysNormShadow
         g.drawLine(0, 0, size.w, 0)

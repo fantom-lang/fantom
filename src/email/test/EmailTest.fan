@@ -113,10 +113,10 @@ class EmailTest : Test
     // 7-bit plain text
     mailer.send(Email
     {
-      to = to
-      from = from
-      subject = "plain text (us-ascii)"
-      body = TextPart
+      it.to = to
+      it.from = from
+      it.subject = "plain text (us-ascii)"
+      it.body = TextPart
       {
         headers["Content-Type"] = "text/plain; charset=us-ascii";
         headers["Content-Transfer-Encoding"] = "7bit"
@@ -127,19 +127,19 @@ class EmailTest : Test
     // plain unicode text
     mailer.send(Email
     {
-      to = to
-      from = from
-      subject = "\u00A1Hola Se\u00F1or! unicode plain text"
-      body = TextPart { text = "[E=\u0114 B=\u03B2 m=\u1000]\n\u00A1Hola Se\u00F1or!" }
+      it.to = to
+      it.from = from
+      it.subject = "\u00A1Hola Se\u00F1or! unicode plain text"
+      it.body = TextPart { text = "[E=\u0114 B=\u03B2 m=\u1000]\n\u00A1Hola Se\u00F1or!" }
     })
 
     // html/plain alternative
     mailer.send(Email
     {
-      to = to
-      from = from
-      subject = "html/plain alternative"
-      body = MultiPart
+      it.to = to
+      it.from = from
+      it.subject = "html/plain alternative"
+      it.body = MultiPart
       {
         headers["Content-Type"] = "multipart/alternative"
         parts =
@@ -160,10 +160,10 @@ class EmailTest : Test
     // image attachment
     mailer.send(Email
     {
-      to = to
-      from = from
-      subject = "attachment"
-      body = MultiPart
+      it.to = to
+      it.from = from
+      it.subject = "attachment"
+      it.body = MultiPart
       {
         parts = [
           TextPart { text = "\u00A1Hola Se\u00F1or! This is the body!" },
