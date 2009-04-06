@@ -349,6 +349,8 @@ class CallResolver : CompilerSupport
     lastParam := call.method.params.last?.paramType?.deref?.toNonNullable
     if (lastParam is FuncType)
     {
+      if (call.target != null)
+        lastParam = ((FuncType)lastParam).parameterizeThis(call.target.ctype)
       c.setInferredSignature(lastParam)
       return call
     }
