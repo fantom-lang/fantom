@@ -1566,7 +1566,8 @@ if (withBlockOn && curt == Token.lbrace)
     if (curt == Token.lbrace)
     {
       ctor := CallExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
-      ctor.args.add(itBlock)
+      itBlock := tryItBlock
+      if (itBlock != null) ctor.args.add(itBlock)
       return ctor
     }
 
@@ -1950,7 +1951,7 @@ if (curt == Token.lbrace) return withBlock(target)
     // if curly brace, then this is it-block closure
 if (!withBlockOn)
 {
-    if (curt === Token.lbrace) return itBlock
+    if (curt === Token.lbrace) return tryItBlock
 }
 
     // if not pipe then not closure
@@ -1971,21 +1972,21 @@ if (!withBlockOn)
   **
   ** Parse it-block closure.
   **
-  private ClosureExpr itBlock()
+  private ClosureExpr? tryItBlock()
   {
-    // field initializers look like a with block, but
+    // field initializers look like an it-block, but
     // we can safely peek to see if the next token is "get",
-    // "set", or a keyword like "private"
-/* TODO-IT
+    // "set", or a field getter/setter keyword like "private"
     if (inFieldInit)
     {
-      if (peek.kind.keyword) return null  // TODO
+      if (peek.kind.isProtectionKeyword) return null
+      if (peek.kind === Token.staticKeyword) return null
+      if (peek.kind === Token.readonlyKeyword) return null
       if (peekt == Token.identifier)
       {
         if (peek.val == "get" || peek.val == "set") return null
       }
     }
-*/
 
     ib := closure(cur, ns.itBlockType)
     ib.inferredSignature = true

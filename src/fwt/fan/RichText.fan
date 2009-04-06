@@ -83,12 +83,12 @@ class RichText : TextWidget
   **
   ** Horizontal scroll bar.
   **
-  ScrollBar hbar := ScrollBar()  // TODO-IT { private set }
+  ScrollBar hbar := ScrollBar() { private set }
 
   **
   ** Vertical scroll bar.
   **
-  ScrollBar vbar := ScrollBar() // TODO-IT { private set }
+  ScrollBar vbar := ScrollBar() { private set }
 
   **
   ** Backing data model of text document.

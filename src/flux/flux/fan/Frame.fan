@@ -185,14 +185,13 @@ class Frame : Window
   **
   Mark[] marks := Mark[,].ro
   {
-// TODO-IT
-//    set
-//    {
-//      @marks = val.ro
-//      curMark = null
-//      sideBarPane.onMarks(@marks)
-//      tabPane.tabs.each |ViewTab tab| { tab.onMarks(@marks) }
-//    }
+    set
+    {
+      @marks = val.ro
+      curMark = null
+      sideBarPane.onMarks(@marks)
+      tabPane.tabs.each |ViewTab tab| { tab.onMarks(@marks) }
+    }
   }
 
   **
