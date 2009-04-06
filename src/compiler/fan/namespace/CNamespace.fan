@@ -82,6 +82,7 @@ abstract class CNamespace : CompilerSupport
 
     // methods
     objTrap            = sysMethod(objType,    "trap")
+    objWith            = sysMethod(objType,    "with")
     boolNot            = sysMethod(boolType,   "not")
     intIncrement       = sysMethod(intType,    "increment")
     intDecrement       = sysMethod(intType,    "decrement")
@@ -290,6 +291,7 @@ abstract class CNamespace : CompilerSupport
   readonly CType voidType
 
   readonly CMethod objTrap
+  readonly CMethod objWith
   readonly CMethod boolNot
   readonly CMethod intIncrement
   readonly CMethod intDecrement

@@ -950,15 +950,9 @@ class CodeAsm : CompilerSupport
 
   private Void closure(ClosureExpr c)
   {
-    // if not immediate, we replace the closure with its
-    // substitute expression - call to closure constructor
+    // we replace the closure with its substitute
+    // expression - call to closure constructor
     expr(c.substitute)
-    if (!c.isImmediate) return
-
-    // if this is an immediate it-block
-    expr(c.immediateTarget)
-    op(FOp.CallVirtual, fpod.addMethodRef(c.doCall))
-    if (!c.leave) opType(FOp.Pop, c.doCall.ret)
   }
 
 //////////////////////////////////////////////////////////////////////////

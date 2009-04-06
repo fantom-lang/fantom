@@ -159,16 +159,6 @@ abstract class Expr : Node
     return result
   }
 
-  **
-  ** Is this a closure expression?
-  **
-  virtual Bool isClosure() { false }
-
-  **
-  ** Is this expression an it-block closure?
-  **
-  virtual Bool isItBlock() { false}
-
 //////////////////////////////////////////////////////////////////////////
 // Doc
 //////////////////////////////////////////////////////////////////////////
@@ -1493,10 +1483,6 @@ class ClosureExpr : Expr
     return ClosureVars.makeOuterThisField(this)
   }
 
-  override Bool isClosure() { true }
-
-  override Bool isStmt() { isItBlock && isImmediate }
-
   override Str toStr()
   {
     return "$signature { ... }"
@@ -1504,7 +1490,6 @@ class ClosureExpr : Expr
 
   override Void print(AstWriter out)
   {
-    if (immediateTarget != null) immediateTarget.print(out)
     out.w(signature.toStr)
     if (substitute != null)
     {
@@ -1517,6 +1502,14 @@ class ClosureExpr : Expr
       out.nl
       code.print(out)
     }
+  }
+
+  Expr toWith(Expr target)
+  {
+    setInferredSignature(FuncType.makeItBlock(target.ctype))
+    x := CallExpr.makeWithMethod(location, target, enclosingType.ns.objWith, [this])
+    // TODO: this coercion should be added automatically later in the pipeline
+    return TypeCheckExpr.coerce(x, target.ctype)
   }
 
   Void setInferredSignature(FuncType t)
@@ -1545,7 +1538,7 @@ class ClosureExpr : Expr
   Bool inferredSignature        // does closure require type inference for its sig
   Block? code                   // moved into a MethodDef in InitClosures
   Str name                      // anonymous class name
-  override Bool isItBlock       // does closure have implicit it scope
+  Bool isItBlock                // does closure have implicit it scope
 
   // InitClosures
   CallExpr? substitute          // expression to substitute during assembly
@@ -1556,8 +1549,6 @@ class ClosureExpr : Expr
   [Str:MethodVar]? enclosingLocals // locals in scope
   Bool usesCvars                // does this guy use vars from outer scope
   CType? itType                 // type of implicit it
-  Expr? immediateTarget         // base target of immediate it-block
-  Bool isImmediate              // invoke it-block immediately
 }
 
 **************************************************************************

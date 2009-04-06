@@ -920,14 +920,16 @@ class CheckErrors : CompilerStep
       // check attempt to set field outside of owning class
       if (field.parent != inType)
       {
-        err("Cannot set const field '$field.qname'", lhs.location)
+// TODO-IT
+//        err("Cannot set const field '$field.qname'", lhs.location)
         return rhs
       }
 
       // check attempt to set instance field outside of ctor
       if (!field.isStatic && !(inMethod.isInstanceInit || inMethod.isCtor))
       {
-        err("Cannot set const field '$field.name' outside of constructor", lhs.location)
+// TODO-IT
+//        err("Cannot set const field '$field.name' outside of constructor", lhs.location)
         return rhs
       }
     }

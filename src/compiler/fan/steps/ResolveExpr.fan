@@ -454,13 +454,11 @@ class ResolveExpr : CompilerStep
   private Expr resolveCallOnLocalVar(CallExpr call, LocalVarExpr binding)
   {
     // if the call was generated as an it-block on local
-    if (call.noParens && call.args.size == 1 && call.args[0].isItBlock)
+    if (call.noParens && call.args.size == 1)
     {
-      ClosureExpr itBlock := call.args[0]
-      itBlock.setInferredSignature(FuncType.makeItBlock(binding.ctype))
-      itBlock.isImmediate = true
-      itBlock.immediateTarget = binding
-      return itBlock
+      closure:= call.args.last as ClosureExpr
+      if (closure != null && closure.isItBlock)
+        return closure.toWith(binding)
     }
 
     // if binding isn't a sys::Func then no can do
@@ -517,7 +515,10 @@ class ResolveExpr : CompilerStep
     call.method = base.method("make")
     if (call.method == null)
       err("Unknown construction method '${base.qname}.make'", call.location)
-    return call
+
+    // hook to infer closure type from call or to
+    // translateinto an implicit call to Obj.with
+    return CallResolver.inferClosureTypeFromCall(call)
   }
 
   **
@@ -662,7 +663,7 @@ class ResolveExpr : CompilerStep
     // conflict with the locals in scope
     expr.doCall.paramDefs.each |ParamDef p|
     {
-      if (expr.enclosingLocals.containsKey(p.name))
+      if (expr.enclosingLocals.containsKey(p.name) && p.name != "it")
         err("Closure parameter '$p.name' is already defined in current block", p.location)
     }
   }
