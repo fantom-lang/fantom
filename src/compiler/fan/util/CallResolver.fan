@@ -327,35 +327,40 @@ class CallResolver : CompilerSupport
   **
   private Void inferClosureType()
   {
+    if (result is CallExpr)
+      result = inferClosureTypeFromCall(result)
+  }
+
+  **
+  ** If the last argument to the resolved call is a closure,
+  ** then use the method to infer the function type.  If the
+  ** last arg is a closure, but the call doesn't take a closure,
+  ** then translate into an implicit call to Obj.with
+  **
+  static Expr inferClosureTypeFromCall(CallExpr call)
+  {
     // check if last argument is closure
-    c := args.last as ClosureExpr
-    if (c == null) return
+    c := call.args.last as ClosureExpr
+    if (c == null) return call
 
     // if the resolved slot is a method where the last param
     // is expected to be a function type, then use that to
     // infer the type signature of the closure
-    method := found as CMethod
-    if (method != null)
+    lastParam := call.method.params.last?.paramType?.deref?.toNonNullable
+    if (lastParam is FuncType)
     {
-      lastParam := method.params.last?.paramType?.deref?.toNonNullable
-      if (lastParam is FuncType)
-      {
-        c.setInferredSignature(lastParam)
-        return
-      }
+      c.setInferredSignature(lastParam)
+      return call
     }
 
     // otherwise if the closure is an it-block, we infer
     // its type to be the result of the target expression
-    if (c.isItBlock && c.inferredSignature)
+    if (c.isItBlock)
     {
-      result->args->removeAt(-1)
-      c.setInferredSignature(FuncType.makeItBlock(result.ctype))
-      c.isImmediate = true
-      c.immediateTarget = result
-      c.ctype = result.ctype
-      result = c
+      call.args.removeAt(-1)
+      return c.toWith(call)
     }
+    return call
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -16,8 +16,8 @@
 public class Parser : CompilerSupport
 {
 
-// TODO:
-Bool withBlockOn := true
+// TODO-IT
+Bool withBlockOn := false
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
@@ -720,7 +720,7 @@ Bool withBlockOn := true
     }
 
     // TODO: omit args if pass thru?
-    callArgs(call)
+    callArgs(call, false)
     return call
   }
 
@@ -1500,6 +1500,7 @@ Bool withBlockOn := true
       case Token.nullKeyword:     consume; return LiteralExpr.makeNullLiteral(loc, ns)
       case Token.superKeyword:    consume; return SuperExpr.make(loc)
       case Token.thisKeyword:     consume; return ThisExpr.make(loc)
+      case Token.itKeyword:       consume; return ItExpr.make(loc)
       case Token.trueKeyword:     consume; return LiteralExpr.make(loc, ExprId.trueLiteral, ns.boolType, true)
       case Token.pound:           consume; return SlotLiteralExpr.make(loc, curType, consumeId)
     }
@@ -1752,7 +1753,7 @@ if (curt == Token.lbrace) return withBlock(target)
   ** Parse args with known parens:
   **   <args>  := [<expr> ("," <expr>)*] [<closure>]
   **
-  private Void callArgs(CallExpr call)
+  private Void callArgs(CallExpr call, Bool closureOk := true)
   {
     consume(Token.lparen)
     if (curt != Token.rparen)
@@ -1766,8 +1767,11 @@ if (curt == Token.lbrace) return withBlock(target)
     }
     consume(Token.rparen)
 
-    closure := tryClosure
-    if (closure != null) call.args.add(closure);
+    if (closureOk)
+    {
+      closure := tryClosure
+      if (closure != null) call.args.add(closure)
+    }
   }
 
   **
@@ -1969,6 +1973,20 @@ if (!withBlockOn)
   **
   private ClosureExpr itBlock()
   {
+    // field initializers look like a with block, but
+    // we can safely peek to see if the next token is "get",
+    // "set", or a keyword like "private"
+/* TODO-IT
+    if (inFieldInit)
+    {
+      if (peek.kind.keyword) return null  // TODO
+      if (peekt == Token.identifier)
+      {
+        if (peek.val == "get" || peek.val == "set") return null
+      }
+    }
+*/
+
     ib := closure(cur, ns.itBlockType)
     ib.inferredSignature = true
     ib.isItBlock = true
