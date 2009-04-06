@@ -70,6 +70,7 @@ class FacetsTest : Test
     verifySame(t.facets, t.facets)
   }
 
+/* TODO-IT
   Void testTypeFacetsB()
   {
     t := FacetsB#
@@ -83,6 +84,7 @@ class FacetsTest : Test
     verifySame(t.facet("c"), t.facet("c"))
     verifyNotSame(t.facets, t.facets)
   }
+*/
 
   Void verifyTypeFacet(Type t, Str name, Obj expected)
   {
@@ -144,6 +146,7 @@ class FacetsTest : Test
 // Inherited Facets
 //////////////////////////////////////////////////////////////////////////
 
+/* TODO-IT
   Void testInherited()
   {
     t := FacetsB#
@@ -178,6 +181,7 @@ class FacetsTest : Test
     f = t.facets(false)
     verifyEq(f.size, 4)
   }
+*/
 
 }
 
@@ -225,8 +229,9 @@ class FacetsA
 ** FacetsB
 **************************************************************************
 
-@a=FacetsA { i=2; f=3f; s="gunslinger" }
-@b=[false, Version("8"), FacetsA { s="tull" }]
+// TODO-IT
+//@a=FacetsA { i=2; f=3f; s="gunslinger" }
+//@b=[false, Version("8"), FacetsA { s="tull" }]
 @c=["man", "in", "black"]
 @foo="foo"
 class FacetsB : FacetsA, FacetsM

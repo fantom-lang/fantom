@@ -1087,8 +1087,9 @@ class StrTest : Test
     verifyEq("abc\u0abc".toBuf.toHex,
       Buf().print("abc\u0abc").toHex)
 
+// TODO-IT: why do I need it.write?
     verifyEq("x\u0abc".toBuf(Charset.utf16BE).toHex,
-      Buf() { charset=Charset.utf16BE; write(0).write('x').write(0xa).write(0xbc) }.toHex)
+      Buf() { charset=Charset.utf16BE; it.write(0).write('x').write(0xa).write(0xbc) }.toHex)
 
     verifyEq("hi there".toBuf.readAllStr, "hi there")
   }

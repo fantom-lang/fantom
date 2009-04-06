@@ -54,12 +54,12 @@ class Table : Widget
   **
   ** Horizontal scroll bar.
   **
-  ScrollBar hbar := ScrollBar()  { private set }
+  ScrollBar hbar := ScrollBar()  // TODO-IT { private set }
 
   **
   ** Vertical scroll bar.
   **
-  ScrollBar vbar := ScrollBar() { private set }
+  ScrollBar vbar := ScrollBar() // TODO-IT { private set }
 
   **
   ** Draw a border around the widget.  Default is true.  This

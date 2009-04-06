@@ -185,13 +185,14 @@ class Frame : Window
   **
   Mark[] marks := Mark[,].ro
   {
-    set
-    {
-      @marks = val.ro
-      curMark = null
-      sideBarPane.onMarks(@marks)
-      tabPane.tabs.each |ViewTab tab| { tab.onMarks(@marks) }
-    }
+// TODO-IT
+//    set
+//    {
+//      @marks = val.ro
+//      curMark = null
+//      sideBarPane.onMarks(@marks)
+//      tabPane.tabs.each |ViewTab tab| { tab.onMarks(@marks) }
+//    }
   }
 
   **
@@ -237,7 +238,7 @@ class Frame : Window
       top = EdgePane
       {
         left = InsetPane(4,2) { commands.buildToolBar }
-        center = InsetPane(4,2) { add(locator) }
+        center = InsetPane(4,2) { it.add(locator) }
         bottom = Desktop.isMac ? null : ToolBarBorder()
       }
       center = sideBarPane
