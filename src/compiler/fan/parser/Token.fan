@@ -236,6 +236,15 @@ enum Token
     }
   }
 
+  **
+  ** Is one of: public, protected, internal, private
+  **
+  Bool isProtectionKeyword()
+  {
+    return this === publicKeyword || this === protectedKeyword ||
+           this === internalKeyword || this === privateKeyword
+  }
+
   override Str toStr() { return symbol }
 
 //////////////////////////////////////////////////////////////////////////
