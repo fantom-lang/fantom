@@ -110,6 +110,16 @@ public class FanObj
     return Sys.ObjType;
   }
 
+  public static Object with(Object self, Func f)
+  {
+    if (self instanceof FanObj)
+      return ((FanObj)self).with(f);
+    else
+      throw Err.make("Cannot call with on " + type(self)).val;
+  }
+
+  public Object with(Func f) { f.call1(this); return this; }
+
   public static Object trap(Object self, String name, List args)
   {
     if (self instanceof FanObj)

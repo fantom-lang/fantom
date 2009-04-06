@@ -72,6 +72,13 @@ abstract class Obj
   **
   virtual Obj? trap(Str name, Obj?[]? args)
 
+  **
+  ** This method called whenever an it-block is applied to
+  ** an object.  The default implementation calls the function
+  ** with 'this', and then returns 'this'.
+  **
+  virtual This with(|This| f)
+
 //////////////////////////////////////////////////////////////////////////
 // Type
 //////////////////////////////////////////////////////////////////////////
