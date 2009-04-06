@@ -691,7 +691,6 @@ class CheckErrors : CompilerStep
       case ExprId.asExpr:
       case ExprId.coerce:         checkTypeCheck((TypeCheckExpr)expr)
       case ExprId.ternary:        checkTernary((TernaryExpr)expr)
-      case ExprId.withBlock:      checkWithBlock((WithBlockExpr)expr)
     }
     return expr
   }
@@ -915,24 +914,24 @@ class CheckErrors : CompilerStep
 
     // we allow setting an instance ctor field in a ctor
     // based with block, otherwise it need further checking
+/* TODO-IT
     if (!(lhs.target is WithBaseExpr) || !lhs.target->isCtorWithBlock)
     {
       // check attempt to set field outside of owning class
       if (field.parent != inType)
       {
-// TODO-IT
-//        err("Cannot set const field '$field.qname'", lhs.location)
+        err("Cannot set const field '$field.qname'", lhs.location)
         return rhs
       }
 
       // check attempt to set instance field outside of ctor
       if (!field.isStatic && !(inMethod.isInstanceInit || inMethod.isCtor))
       {
-// TODO-IT
-//        err("Cannot set const field '$field.name' outside of constructor", lhs.location)
+        err("Cannot set const field '$field.name' outside of constructor", lhs.location)
         return rhs
       }
     }
+*/
 
     // any other errors should already be logged at this point (see isConstFieldType)
 
@@ -1222,15 +1221,6 @@ class CheckErrors : CompilerStep
     expr.falseExpr = coerce(expr.falseExpr, expr.ctype) |,|
     {
       err("Ternary falseexpr '$expr.falseExpr.toTypeStr' cannot be coerced to $expr.ctype", expr.falseExpr.location)
-    }
-  }
-
-  private Void checkWithBlock(WithBlockExpr expr)
-  {
-    expr.subs.each |Expr sub|
-    {
-      if (!sub.isStmt)
-        err("Not a statement", sub.location)
     }
   }
 

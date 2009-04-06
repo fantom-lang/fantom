@@ -16,9 +16,6 @@
 public class Parser : CompilerSupport
 {
 
-// TODO-IT
-Bool withBlockOn := false
-
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
@@ -1558,11 +1555,6 @@ Bool withBlockOn := false
     }
 
     // constructor it-block {...}
-if (withBlockOn && curt == Token.lbrace)
-{
-  base := UnknownVarExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
-  return withBlock(base) ?: base
-}
     if (curt == Token.lbrace)
     {
       ctor := CallExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
@@ -1611,72 +1603,14 @@ if (withBlockOn && curt == Token.lbrace)
     if (cur.isCallOpenParen) return callOp(target)
 
     // if target {...}
-if (withBlockOn && curt == Token.lbrace) return withBlock(target)
-if (curt == Token.lbrace) return withBlock(target)
-
-    // we treat a with base as a dot slot access
-    if (target.id === ExprId.withBase) return idExpr(target, false, false)
+    if (curt === Token.lbrace)
+    {
+      itBlock := tryItBlock
+      if (itBlock != null) return itBlock.toWith(target)
+    }
 
     // otherwise the expression should be finished
     return null
-  }
-
-  **
-  ** A with block is a series of sub-expressions
-  ** inside {} appended to the end of an expression.
-  **
-  private Expr? withBlock(Expr base)
-  {
-    // field initializers look like a with block, but
-    // we can safely peek to see if the next token is "get",
-    // "set", or a keyword like "private"
-    if (inFieldInit)
-    {
-      if (peek.kind.keyword) return null  // TODO
-      if (peekt == Token.identifier)
-      {
-        if (peek.val == "get" || peek.val == "set") return null
-      }
-    }
-
-    withBlock := WithBlockExpr.make(base)
-    consume(Token.lbrace)
-    while (curt !== Token.rbrace)
-    {
-      withBase := WithBaseExpr.make(withBlock)
-      sub := withSub(withBase)
-      withSub := WithSubExpr.make(withBlock, sub)
-      withBase.withSub = withSub
-      withBlock.subs.add(withSub)
-      endOfStmt
-    }
-    consume(Token.rbrace)
-    return withBlock
-  }
-
-  **
-  ** Parse a with-block sub-expression.  If we have a named
-  ** expression, then it is implied to be against the withBase.
-  ** Otherwise we assume syntax sugar for 'withBase.add(sub)'.
-  ** In case we get it wrong here, we try again in CallResolver.
-  **
-  private Expr withSub(WithBaseExpr withBase)
-  {
-    // if NameExpr, then apply implicit withBase
-    Expr sub := termExpr
-    if (sub is NameExpr)
-    {
-      x := sub
-      while (x is NameExpr && x->target != null) x = x->target
-      if (x is NameExpr)
-      {
-        x->target = withBase
-        return assignExpr(sub)
-      }
-    }
-
-    // assume syntax sugar for 'withBase.add(sub)'
-    return CallExpr.make(sub.location, withBase, "add") { args.add(sub) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1949,10 +1883,7 @@ if (curt == Token.lbrace) return withBlock(target)
     loc := cur
 
     // if curly brace, then this is it-block closure
-if (!withBlockOn)
-{
     if (curt === Token.lbrace) return tryItBlock
-}
 
     // if not pipe then not closure
     if (curt !== Token.pipe) return null

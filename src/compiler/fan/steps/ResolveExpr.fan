@@ -162,7 +162,6 @@ class ResolveExpr : CompilerStep
       case ExprId.storage:         return resolveStorage(expr)
       case ExprId.coerce:          expr.ctype = ((TypeCheckExpr)expr).check
       case ExprId.ternary:         resolveTernary(expr)
-      case ExprId.withSub:         resolveWithSub(expr)
       case ExprId.curry:           return resolveCurry(expr)
       case ExprId.closure:         resolveClosure(expr)
     }
@@ -399,22 +398,6 @@ class ResolveExpr : CompilerStep
     else
       expr.ctype = CType.common(ns, [expr.trueExpr.ctype, expr.falseExpr.ctype])
     return expr
-  }
-
-  **
-  ** Resolve with-sub expression
-  **
-  private Expr resolveWithSub(WithSubExpr sub)
-  {
-    // update if sub-expr was resolved as 'with.add(expr)'
-    if (sub.add != null)
-      sub.expr = CallExpr.makeWithMethod(sub.location, WithBaseExpr.make(sub.withBlock), sub.add, [sub.expr])
-
-    // we never leave sub-expr on the stack
-    sub.expr  = sub.expr.noLeave
-
-    sub.ctype = sub.expr.ctype
-    return sub
   }
 
   **
