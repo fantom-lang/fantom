@@ -72,18 +72,19 @@ public class Locale
     protected Object initialValue() { return defaultLocale; }
   };
 
-  public void with(Func func)
+  public Locale with(Func func)
   {
     Locale old = current();
     try
     {
       setCurrent(this);
-      func.call0();
+      func.call1(this);
     }
     finally
     {
       setCurrent(old);
     }
+    return this;
   }
 
 //////////////////////////////////////////////////////////////////////////

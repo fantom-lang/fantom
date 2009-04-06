@@ -809,7 +809,7 @@ class MiscTest : CompilerTest
           o = thru(Bool#)
         }
 
-        Foo with()
+        Foo withIt()
         {
           return make
           {
@@ -837,7 +837,7 @@ class MiscTest : CompilerTest
 
     obj := pod.types.first.make
     verifyImplicitToImmutable(obj)
-    verifyImplicitToImmutable(obj->with)
+    verifyImplicitToImmutable(obj->withIt)
  }
 
  Void verifyImplicitToImmutable(Obj obj)
