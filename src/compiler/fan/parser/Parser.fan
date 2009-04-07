@@ -728,7 +728,6 @@ public class Parser : CompilerSupport
   private [Str:FacetDef]? facets()
   {
     if (curt !== Token.at) return null
-
     facets := Str:FacetDef[:]
     while (curt === Token.at)
     {
@@ -743,10 +742,10 @@ public class Parser : CompilerSupport
       }
       else
       {
-        val = LiteralExpr.make(loc, ExprId.trueLiteral, ns.boolType, true)
+        val = LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)
       }
       if (facets[name] != null) err("Duplicate facet '$name'", loc)
-      facets[name] = FacetDef.make(loc, name, val)
+      facets[name] = FacetDef(loc, name, val)
     }
     return facets
   }
@@ -1581,6 +1580,10 @@ public class Parser : CompilerSupport
     // constructor it-block {...}
     if (curt == Token.lbrace)
     {
+      // if not inside a field/method we have complex literal for facet
+      if (curSlot == null) return complexLiteral(loc, ctype)
+
+      // shortcut for make with optional it-block
       ctor := CallExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
       itBlock := tryItBlock
       if (itBlock != null) ctor.args.add(itBlock)
@@ -1976,6 +1979,26 @@ public class Parser : CompilerSupport
     inVoid = oldInVoid
 
     return closure
+  }
+
+  **
+  ** This is used to parse an it-block outside of the scope of a
+  ** field or method definition.  It is used to parse complex literals
+  ** declared in a facet without mucking up the closure code path.
+  **
+  private Expr complexLiteral(Location loc, CType ctype)
+  {
+    complex := ComplexLiteral(loc, ctype)
+    consume(Token.lbrace)
+    while (curt !== Token.rbrace)
+    {
+      complex.names.add(consumeId)
+      consume(Token.assign)
+      complex.vals.add(expr)
+      endOfStmt
+    }
+    consume(Token.rbrace)
+    return complex
   }
 
 //////////////////////////////////////////////////////////////////////////
