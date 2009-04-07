@@ -235,7 +235,8 @@ public class ObjDecoder
       // if we didn't read a field, we assume a collection item
       if (!readField) readComplexAdd(t, obj, line);
 
-      endOfStmt(line);
+      if (curt == Token.COMMA) consume();
+      else endOfStmt(line);
     }
     consume(Token.RBRACE, "Expected '}'");
 

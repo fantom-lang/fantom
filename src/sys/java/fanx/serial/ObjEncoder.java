@@ -174,7 +174,7 @@ public class ObjEncoder
       if (first) { w('\n').wIndent().w('{').w('\n'); level++; first = false; }
       wIndent();
       writeObj(obj);
-      w('\n');
+      w(',').w('\n');
       return null;
     }
     boolean first;

@@ -74,7 +74,7 @@ namespace Fan.Sys
 
     [ThreadStatic] static Locale m_current;
 
-    public void with(Func func)
+    public override object with(Func func)
     {
       Locale old = current();
       try
@@ -86,6 +86,7 @@ namespace Fan.Sys
       {
         setCurrent(old);
       }
+      return this;
     }
 
   //////////////////////////////////////////////////////////////////////////

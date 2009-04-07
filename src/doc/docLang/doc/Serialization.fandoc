@@ -210,8 +210,8 @@ Collection [#syntaxCollection]
 ==============================
 Collections are serialized just like a complex - all the fields are serialized
 as name/value pairs.  After the fields are serialized, all the child items
-iterated by the 'each' method are serialized. During deserialization, the children
-are added back via the 'add' method.
+iterated by the 'each' method are serialized with a comma separator. During
+deserialization, the children are added back via the 'add' method.
 
 We can rewrite the 'Person' example above as a collection:
 
@@ -226,9 +226,9 @@ We can rewrite the 'Person' example above as a collection:
   acme::Person
   {
     name = "Homer Simson"
-    acme::Person { name = "Bart" }
-    acme::Person { name = "Lisa" }
-    acme::Person { name = "Maggie" }
+    acme::Person { name = "Bart" },
+    acme::Person { name = "Lisa" },
+    acme::Person { name = "Maggie" },
   }
 
 This syntax is also supported directly in source code via [with-blocks]`Expressions#withBlocks`.
@@ -247,7 +247,7 @@ The formal grammar of the Fan serialization format:
   literal   := bool | int | float | decimal | str | duration | uri | typeLiteral | list | map
   simple    := type "(" str ")"
   complex   := type ["{" [children] "}"]
-  children  := child [eos child]*
+  children  := child [(eos|",") child]*
   child     := field | item
   eos       := ";" | newline
   field     := id "=" obj
