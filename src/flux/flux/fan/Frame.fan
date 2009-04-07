@@ -236,8 +236,8 @@ class Frame : Window
     {
       top = EdgePane
       {
-        left = InsetPane(4,2) { commands.buildToolBar }
-        center = InsetPane(4,2) { it.add(locator) }
+        left = InsetPane(4,2) { commands.buildToolBar, }
+        center = InsetPane(4,2) { locator, }
         bottom = Desktop.isMac ? null : ToolBarBorder()
       }
       center = sideBarPane

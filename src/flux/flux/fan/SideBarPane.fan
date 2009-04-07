@@ -21,15 +21,15 @@ internal class SideBarPane : ContentPane
     {
       it.orientation = Orientation.horizontal
       it.weights = [200, 600, 200]
-      it.add(left)
+      left,
       SashPane
       {
         it.orientation = Orientation.vertical
         it.weights = [600, 200]
-        it.add(tabPane)
-        it.add(bottom)
-      }
-      it.add(right)
+        tabPane,
+        bottom,
+      },
+      right,
     }
   }
 

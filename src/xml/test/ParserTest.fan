@@ -116,8 +116,8 @@ class ParserTest : XmlTest
       {
         root = XElem("root")
         {
-          XElem("alpha") { XElem("beta") }
-          XElem("gamma")
+          XElem("alpha") { XElem("beta"), },
+          XElem("gamma"),
         }
       })
   }
@@ -160,14 +160,14 @@ class ParserTest : XmlTest
       "<r>hello</r>",
       XDoc
       {
-        root = XElem("r") { XText("hello") }
+        root = XElem("r") { XText("hello"), }
       })
 
     verifyParse(
       " <r>&amp;\n&#x1234;</r> ",
       XDoc
       {
-        root = XElem("r") { XText("&\n\u1234") }
+        root = XElem("r") { XText("&\n\u1234"), }
       })
 
     verifyParse(
@@ -176,9 +176,9 @@ class ParserTest : XmlTest
       {
         root = XElem("r")
         {
-          XText("this is ")
-          XElem("b") { XText("bold") }
-          XText(" for real!")
+          XText("this is "),
+          XElem("b") { XText("bold"), },
+          XText(" for real!"),
         }
       })
   }
@@ -195,7 +195,7 @@ class ParserTest : XmlTest
       {
         root = XElem("r")
         {
-          XText("") { cdata=true }
+          XText("") { cdata=true },
         }
       })
 
@@ -205,7 +205,7 @@ class ParserTest : XmlTest
       {
         root = XElem("r")
         {
-          XText("x") { cdata=true }
+          XText("x") { cdata=true },
         }
       })
 
@@ -215,7 +215,7 @@ class ParserTest : XmlTest
       {
         root = XElem("r")
         {
-          XText(" <&]> ") { cdata=true }
+          XText(" <&]> ") { cdata=true },
         }
       })
   }
@@ -234,8 +234,8 @@ class ParserTest : XmlTest
       {
         XElem("root")
         {
-          XPi("foo", "bar")
-        }
+          XPi("foo", "bar"),
+        },
       })
 
     verifyParse(
@@ -247,8 +247,8 @@ class ParserTest : XmlTest
       {
         XElem("root")
         {
-          XPi("x", "y")
-        }
+          XPi("x", "y"),
+        },
       })
 
     verifyParse(
@@ -259,11 +259,11 @@ class ParserTest : XmlTest
        </root>\n",
       XDoc
       {
-        XPi("xml-stylesheet", "type='text/xsl' href='simple.xsl'")
+        XPi("xml-stylesheet", "type='text/xsl' href='simple.xsl'"),
         XElem("root")
         {
-          XPi("synthetic", "")
-        }
+          XPi("synthetic", ""),
+        },
       })
 
 
@@ -280,14 +280,14 @@ class ParserTest : XmlTest
        </root> \n",
       XDoc
       {
-        XPi("alpha", "aaa aaa")
-        XPi("beta", "")
+        XPi("alpha", "aaa aaa"),
+        XPi("beta", ""),
         XElem("root")
         {
-          XPi("gamma", "ccc")
-          XElem("a") { XPi("delta", "d='ddd'") }
-          XPi("q:epsilon:x", "")
-        }
+          XPi("gamma", "ccc"),
+          XElem("a") { XPi("delta", "d='ddd'"), },
+          XPi("q:epsilon:x", ""),
+        },
       })
   }
 
@@ -306,7 +306,7 @@ class ParserTest : XmlTest
       "<q:foo xmlns:q='urn:foo'/>",
       XDoc
       {
-        root = XElem("foo", q) { XAttr.makeNs(q) }
+        root = XElem("foo", q) { XAttr.makeNs(q), }
       })
 
     // simple default
@@ -314,7 +314,7 @@ class ParserTest : XmlTest
       "<foo xmlns='urn:def'/>",
       XDoc
       {
-        root = XElem("foo", def) { XAttr.makeNs(def) }
+        root = XElem("foo", def) { XAttr.makeNs(def), }
       })
 
     // prefix and default
@@ -326,9 +326,9 @@ class ParserTest : XmlTest
       {
         root = XElem("root", def)
         {
-          XAttr.makeNs(def)
-          XAttr.makeNs(q)
-          XElem("a", def) { XElem("b", q) }
+          XAttr.makeNs(def),
+          XAttr.makeNs(q),
+          XElem("a", def) { XElem("b", q), },
         }
       })
 
@@ -344,12 +344,12 @@ class ParserTest : XmlTest
       {
         root = XElem("root", null)
         {
-          XAttr.makeNs(q)
-          XAttr.makeNs(rx)
-          XElem("a", null) { XElem("inner", null) }
-          XElem("b", def)  { XAttr.makeNs(def); XElem("inner", def) }
-          XElem("c", q)    { XElem("inner", null) }
-          XElem("d", rx)   { XElem("inner", null) }
+          XAttr.makeNs(q),
+          XAttr.makeNs(rx),
+          XElem("a", null) { XElem("inner", null), },
+          XElem("b", def)  { XAttr.makeNs(def), XElem("inner", def), },
+          XElem("c", q)    { XElem("inner", null), },
+          XElem("d", rx)   { XElem("inner", null), },
         }
       })
   }
@@ -378,26 +378,26 @@ class ParserTest : XmlTest
       {
         root = XElem("root", def1)
         {
-          XAttr.makeNs(def1)
-          XElem("a", def1)
+          XAttr.makeNs(def1),
+          XElem("a", def1),
           XElem("b", def2)
           {
-            XAttr.makeNs(def2)
-            XAttr.makeNs(xyz)
+            XAttr.makeNs(def2),
+            XAttr.makeNs(xyz),
             XElem("none", null)
             {
               addAttr("xmlns", "")
-              XElem("innerNone", null)
-              XElem("def2", def2) { XAttr.makeNs(def2); XElem("inner", def2) }
-              XElem("def3", def3) { XAttr.makeNs(def3); XElem("inner", xyz) }
+              XElem("innerNone", null),
+              XElem("def2", def2) { XAttr.makeNs(def2), XElem("inner", def2), },
+              XElem("def3", def3) { XAttr.makeNs(def3), XElem("inner", xyz), },
             }
-          }
+          },
           XElem("c", def3)
           {
-            XAttr.makeNs(def3)
-            XElem("inner", def3)
-          }
-          XElem("d", def1)
+            XAttr.makeNs(def3),
+            XElem("inner", def3),
+          },
+          XElem("d", def1),
         }
       })
   }
@@ -419,9 +419,9 @@ class ParserTest : XmlTest
         root = XElem("root", rx)
         {
           addAttr("pre", "PRE", rx)
-          XAttr.makeNs(def)
-          XAttr.makeNs(q)
-          XAttr.makeNs(rx)
+          XAttr.makeNs(def),
+          XAttr.makeNs(q),
+          XAttr.makeNs(rx);
           addAttr("a", "A", null)
           addAttr("b", "B", q)
           addAttr("c", "C", rx)
@@ -431,7 +431,7 @@ class ParserTest : XmlTest
             addAttr("a", "A", null)
             addAttr("b", "B", q)
             addAttr("c", "C", rx)
-          }
+          },
         }
       })
 

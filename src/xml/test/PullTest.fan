@@ -195,7 +195,7 @@ class PullTest : XmlTest
     def := XNs("", `fan:def`)
     q   := XNs("q", `fan:q`)
 
-    root := XElem("root", def) { XAttr.makeNs(def); XAttr.makeNs(q) }
+    root := XElem("root", def) { XAttr.makeNs(def), XAttr.makeNs(q), }
     a    := XElem("a", def) { addAttr("attr", "val"); addAttr("attr", "val", q) }
     b    := XElem("b", q)
 
@@ -270,13 +270,13 @@ class PullTest : XmlTest
     xmem2 := parser.parseElem
     verifyNext(start, 1, [root, a]); verifyEq(parser.line, 15)
     verifyNext(end,   1, [root, a])
-    verifyElem(xmem2, XElem("mem2") { XElem("kid") { XElem("grandkid") } })
+    verifyElem(xmem2, XElem("mem2") { XElem("kid") { XElem("grandkid"), }, })
 
     verifyNext(end,   0, [root])
     verifyNext(null, -1, empty)
 
     verifyElem(xmem1, mem1)
-    verifyElem(xmem2, XElem("mem2") { XElem("kid") { XElem("grandkid") } })
+    verifyElem(xmem2, XElem("mem2") { XElem("kid") { XElem("grandkid"), }, })
   }
 
 //////////////////////////////////////////////////////////////////////////

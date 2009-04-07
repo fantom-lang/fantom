@@ -58,9 +58,9 @@ class WriteTest : XmlTest
 
     mixed := XElem("mixed")
     {
-      XText("the ")
-      XElem("b") { XText("real") }
-      XText(" deal")
+      XText("the "),
+      XElem("b") { XText("real"), },
+      XText(" deal"),
     }
     verifyWrite(mixed, "<mixed>the <b>real</b> deal</mixed>")
 
@@ -118,8 +118,8 @@ class WriteTest : XmlTest
 
     doc = XDoc
     {
-      XPi("xml-stylesheet", "type='text/xsl' href='simple.xsl'")
-      XElem("foo")
+      XPi("xml-stylesheet", "type='text/xsl' href='simple.xsl'"),
+      XElem("foo"),
     }
     verifyWrite(doc,
       "<?xml version='1.0' encoding='UTF-8'?>
@@ -129,9 +129,9 @@ class WriteTest : XmlTest
     doc = XDoc
     {
       docType = XDocType { rootElem="foo"; systemId=`foo.dtd` }
-      XPi("alpha", "foo bar")
-      XPi("beta",  "foo=bar")
-      XElem("foo")
+      XPi("alpha", "foo bar"),
+      XPi("beta",  "foo=bar"),
+      XElem("foo"),
     }
     verifyWrite(doc,
       "<?xml version='1.0' encoding='UTF-8'?>
@@ -168,13 +168,13 @@ class WriteTest : XmlTest
     nsq   := XNs("q", `http://foo/q`)
     x := XElem("root", nsdef)
     {
-      XAttr.makeNs(nsdef)
-      XAttr.makeNs(nsq)
-      XElem("a", nsdef)
+      XAttr.makeNs(nsdef),
+      XAttr.makeNs(nsq),
+      XElem("a", nsdef),
       XElem("b", nsq)
       {
-        XAttr("x", "xv")
-        XAttr("y", "yv", nsq)
+        XAttr("x", "xv"),
+        XAttr("y", "yv", nsq),
       }
     }
     verifyWrite(x,

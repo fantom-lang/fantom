@@ -24,9 +24,9 @@ internal class ImageView : View
         GridPane
         {
           numCols = 2
-          Label { text="Size"; font=Font.sys.toBold }
-          Label { text="${this.image.size.w}px x ${this.image.size.h}px" }
-        }
+          Label { text="Size"; font=Font.sys.toBold },
+          Label { text="${this.image.size.w}px x ${this.image.size.h}px" },
+        },
       }
       it.insets  = Insets(0,0,2,0)
       it.onBorder = |Graphics g, Size size|

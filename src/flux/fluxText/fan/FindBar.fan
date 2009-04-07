@@ -46,18 +46,18 @@ internal class FindBar : ContentPane, TextEditorSupport
         center = GridPane
         {
           numCols = 5
-          ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("find.name") }}
-          ConstraintPane { minw=200; maxw=200; it.add(findText) }
-          InsetPane(0,0,0,8) { it.add(matchCase) }
+          ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("find.name") }, },
+          ConstraintPane { minw=200; maxw=200; findText, },
+          InsetPane(0,0,0,8) { matchCase, },
           ToolBar
           {
             addCommand(cmdNext)
             addCommand(cmdPrev)
-          }
-          it.add(msg)
+          },
+          msg,
         }
         right = ToolBar { addCommand(cmdHide) }
-      }
+      },
     }
 
     replaceText = Combo() { editable = true }
@@ -76,18 +76,18 @@ internal class FindBar : ContentPane, TextEditorSupport
       GridPane
       {
         numCols = 3
-        ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("replace.name") } }
-        ConstraintPane { minw=200; maxw=200; it.add(replaceText) }
+        ConstraintPane { minw=50; maxw=50; Label { text = Flux#.loc("replace.name") }, },
+        ConstraintPane { minw=200; maxw=200; it.add(replaceText) },
         InsetPane(0,0,0,8)
         {
           GridPane
           {
             numCols = 2
-            Button { command = cmdReplace;    image = null }
-            Button { command = cmdReplaceAll; image = null }
-          }
-        }
-      }
+            Button { command = cmdReplace;    image = null },
+            Button { command = cmdReplaceAll; image = null },
+          },
+        },
+      },
     }
 
     content = BorderPane

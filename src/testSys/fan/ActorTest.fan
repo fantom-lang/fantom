@@ -30,8 +30,8 @@ class ActorTest : Test
   Void testMake()
   {
     mutable := |Context cx, Obj? msg->Obj?| { fail; return null }
-    verifyErr(ArgErr#) |,| { Actor(group) }
-    verifyErr(NotImmutableErr#) |,| { Actor(group, mutable) }
+    verifyErr(ArgErr#) |,| { x := Actor(group) }
+    verifyErr(NotImmutableErr#) |,| { x := Actor(group, mutable) }
   }
 
 //////////////////////////////////////////////////////////////////////////

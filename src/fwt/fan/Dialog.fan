@@ -164,8 +164,8 @@ class Dialog : Window
       numCols = 2
       expandCol = 1
       halignCells=Halign.fill
-      Label { text=msg }
-      it.add(field)
+      Label { text=msg },
+      field,
     }
     ok := Dialog.ok
     cancel := Dialog.cancel
@@ -220,8 +220,8 @@ class Dialog : Window
         numCols = 2
         expandCol = 1
         halignCells=Halign.fill
-        Label { it.image = this.image }
-        it.add(body)
+        Label { it.image = this.image },
+        body,
       }
     }
 
@@ -257,7 +257,7 @@ class Dialog : Window
       buttons.add(ConstraintPane
       {
         minw = 70
-        Button.makeCommand(c) { insets=Insets(0, 10, 0, 10) }
+        Button.makeCommand(c) { insets=Insets(0, 10, 0, 10) },
       })
     }
 
@@ -273,10 +273,10 @@ class Dialog : Window
         ConstraintPane
         {
           minw = (details == null) ? 200 : 350
-          it.add(bodyAndImage)
-        }
-      }
-      InsetPane { insets = Insets(0, 10, 10, 10); it.add(buttons) }
+          bodyAndImage,
+        },
+      },
+      InsetPane { insets = Insets(0, 10, 10, 10); it.add(buttons) },
     }
 
     return this

@@ -52,8 +52,8 @@ class Console : SideBar
             {
               addCommand(hideCmd)
             }
-          }
-        }
+          },
+        },;
         insets  = Insets(2,0,0,0)
         onBorder = |Graphics g, Size size|
         {

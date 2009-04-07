@@ -34,19 +34,19 @@ internal class FindInFiles
       numCols = 2
       expandCol = 1
       halignCells = Halign.fill
-      Label { text="Find" }
-      ConstraintPane { minw=300; maxw=300; add(query) }
-      Label { text="In Folder" }
-      ConstraintPane { minw=300; maxw=300; add(uri) }
-      Label {} // spacer
+      Label { text="Find" },
+      ConstraintPane { minw=300; maxw=300; add(query) },
+      Label { text="In Folder" },
+      ConstraintPane { minw=300; maxw=300; add(uri) },
+      Label {}, // spacer
       GridPane
       {
         numCols = 2
         expandCol = 1
         halignCells = Halign.fill
-        add(match)
-        add(err)
-      }
+        match,
+        err,
+      },
     }
     dlg := Dialog(frame)
     {
