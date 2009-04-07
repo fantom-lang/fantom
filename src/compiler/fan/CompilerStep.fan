@@ -41,7 +41,7 @@ abstract class CompilerStep : CompilerSupport, Visitor
 
   Bool inStatic()
   {
-    return curMethod.isStatic
+    return curMethod == null || curMethod.isStatic
   }
 
   override Void enterTypeDef(TypeDef def)
