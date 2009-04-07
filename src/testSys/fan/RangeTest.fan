@@ -68,6 +68,16 @@ class RangeTest : Test
     verifyEq((-2...2).contains(2), false)
     verifyEq((-2..2).contains(3), false)
     verifyEq((-2...2).contains(3), false)
+
+    verifyEq((3..0).contains(4), false)
+    verifyEq((3..0).contains(3), true)
+    verifyEq((3..0).contains(1), true)
+    verifyEq((3..0).contains(0), true)
+    verifyEq((3..0).contains(-1), false)
+    verifyEq((3...0).contains(0), false)
+    verifyEq((3...0).contains(1), true)
+    verifyEq((3...0).contains(3), true)
+    verifyEq((3...0).contains(3), true)
   }
 
   Void testEach()
@@ -81,10 +91,21 @@ class RangeTest : Test
     list.clear;
     ('a'...'d').each |Int i| { list.add(i) }
     verifyEq(list, ['a', 'b', 'c'])
+
+    list.clear;
+    (5..-2).each |Int i| { list.add(i) }
+    verifyEq(list, [5, 4, 3, 2, 1, 0, -1, -2])
+
+    list.clear;
+    (6...3).each |Int i| { list.add(i) }
+    verifyEq(list, [6, 5, 4])
   }
 
   Void testRange()
   {
+    verifyEq((0..0).toList, [0])
+    verifyEq((0...0).toList, Int[,])
+    verifyEq((3...3).toList, Int[,])
     verifyEq((2..4).toList, [2,3,4])
     verifyEq((2...4).toList, [2,3])
     verifyEq((-2..2).toList, [-2,-1,0,1,2])

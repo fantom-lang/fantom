@@ -66,19 +66,36 @@ namespace Fan.Sys
 
     public bool contains(long i)
     {
-      if (m_exclusive)
-        return m_start <= i && i < m_end;
+      if (m_start < m_end)
+      {
+        if (m_exclusive)
+          return m_start <= i && i < m_end;
+        else
+          return m_start <= i && i <= m_end;
+      }
       else
-        return m_start <= i && i <= m_end;
+      {
+        if (m_exclusive)
+          return m_end < i && i <= m_start;
+        else
+          return m_end <= i && i <= m_start;
+      }
     }
 
     public void each(Func f)
     {
-      int start = (int)m_start;
-      int end = (int)m_end;
-      if (!m_exclusive) end++;
-      for (int i=start; i<end; ++i)
-        f.call1(i);
+      long start = m_start;
+      long end = m_end;
+      if (start < end)
+      {
+        if (m_exclusive) --end;
+        for (long i=start; i<=end; ++i) f.call1(i);
+      }
+      else
+      {
+        if (m_exclusive) ++end;
+        for (long i=start; i>=end; --i) f.call1(i);
+      }
     }
 
     public List toList()
@@ -89,14 +106,14 @@ namespace Fan.Sys
       if (start < end)
       {
         if (m_exclusive) --end;
-        acc.capacity(end-start);
+        acc.capacity(end-start+1);
         for (int i=start; i<=end; ++i)
           acc.add(Long.valueOf(i));
       }
       else
       {
         if (m_exclusive) ++end;
-        acc.capacity(start-end);
+        acc.capacity(start-end+1);
         for (int i=start; i>=end; --i)
           acc.add(Long.valueOf(i));
       }
