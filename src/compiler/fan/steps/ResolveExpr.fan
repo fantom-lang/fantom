@@ -718,7 +718,10 @@ class ResolveExpr : CompilerStep
         // any outer closures as needing cvars
         ((MethodDef)closure.enclosingSlot).needsCvars = true
         for (p := closure.enclosingClosure; p != null; p = p.enclosingClosure)
+        {
+          p.usesCvars = true
           p.doCall.needsCvars = true
+        }
 
         return binding
       }
