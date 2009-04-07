@@ -59,6 +59,15 @@ class JavaBridge : CBridge
   **
   override Expr resolveConstruction(CallExpr call)
   {
+    // if the last argument is an it-block, then we know
+    // right away that we will not be passing it thru to Java,
+    // so strip it off to be appended as call to Obj.with
+    itBlock := call.args.last as ClosureExpr
+    if (itBlock != null && itBlock->isItBlock) // IT-TODO
+      call.args.removeAt(-1)
+    else
+      itBlock = null
+
     // if this is an interop array like IntArray/int[] use make
     // factory otherwise look for Java constructor called <init>
     JavaType base := call.target.ctype
@@ -79,6 +88,9 @@ class JavaBridge : CBridge
       call.target = CallExpr.makeWithMethod(loc, null, base.newMethod) { synthetic=true }
     }
 
+    // if we stripped an it-block argument,
+    // add it as trailing call to Obj.with
+    if (itBlock != null) return itBlock->toWith(call) // IT-TODO
     return call
   }
 
