@@ -18,7 +18,7 @@ class TestWidget: Widget
     body.submit
     body.pEnd
     body.formEnd
-    body.p.w("Back up to").a(`/dir/index.html`).w("/dir/index.html").aEnd.w(".").pEnd
+    body.p.w("Back up to ").a(`/`).w("Home").aEnd.w(".").pEnd
   }
 
   Void onFoo()

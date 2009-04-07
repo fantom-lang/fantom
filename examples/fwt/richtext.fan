@@ -16,7 +16,7 @@ class RichTextDemo
 {
   Void main()
   {
-    doc := Doc()
+    Doc? doc := Doc()
     doc.text = scriptFile.readAllLines.join("\n")
 
     //doc.text = "hello // world\n//what the heck!\nalpha beta gamma."
@@ -36,8 +36,8 @@ class RichTextDemo
           //onVerify.add |Event e| { echo("verify: $e.data") }
           //onVerifyKey.add |Event e| { echo("verify: $e") }
           //onSelect.add |Event e| { echo(e) }
-        }
-      }
+        },
+      },;
       size = Size(600,600)
     }.open
   }
@@ -116,12 +116,12 @@ class Doc : RichTextModel
     // must fire modify event
     tc := TextChange
     {
-      startOffset    = start
-      startLine      = lineAtOffset(start)
-      oldText        = oldText
-      newText        = newText
-      oldNumNewlines = oldText.numNewlines
-      newNumNewlines = newText.numNewlines
+      it.startOffset    = start
+      it.startLine      = lineAtOffset(start)
+      it.oldText        = oldText
+      it.newText        = newText
+      it.oldNumNewlines = oldText.numNewlines
+      it.newNumNewlines = newText.numNewlines
     }
     onModify.fire(Event { id = EventId.modified; data = tc })
   }

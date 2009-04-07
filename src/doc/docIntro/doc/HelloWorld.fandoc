@@ -153,7 +153,7 @@ window (this script is available under "examples/fwt/hello.fan"):
   {
     Void main()
     {
-      Window { Label { text = "Hello world" } }.open
+      Window { Label { text = "Hello world" }, }.open
     }
   }
 
