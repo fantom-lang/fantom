@@ -1330,7 +1330,7 @@ class CurryExpr : Expr
 class ClosureExpr : Expr
 {
   new make(Location location, TypeDef enclosingType,
-           SlotDef enclosingSlot, ClosureExpr enclosingClosure,
+           SlotDef enclosingSlot, ClosureExpr? enclosingClosure,
            FuncType signature, Str name)
     : super(location, ExprId.closure)
   {

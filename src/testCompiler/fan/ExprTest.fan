@@ -558,10 +558,10 @@ class ExprTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Test With Blocks
+// Test It-Blocks
 //////////////////////////////////////////////////////////////////////////
 
-  Void testWithBlocks()
+  Void testItBlocks()
   {
     compile(
      "class Acme
@@ -632,24 +632,23 @@ class ExprTest : CompilerTest
      verifyEq(x->j, -5)
   }
 
-/* TODO-IT
-  Void testWithBlockAdd()
+  Void testItBlockAdd()
   {
     compile(
      "class Acme
       {
         Obj a() { return Foo { it.a=2 } }
-        Obj b() { return Foo { 5 } }
-        Obj c() { return Foo { 5; 7 } }
-        Obj d() { return Foo { it.a=33; 5; 7; it.b=44; 9 } }
+        Obj b() { return Foo { 5, } }
+        Obj c() { return Foo { 5, 7 } }
+        Obj d() { return Foo { it.a=33; 5, 7; it.b=44; 9,12, } }
         Obj e() { return Widget { foo.b = 99 } }
-        Obj f() { return Widget { Widget{name=\"a\"}; } }
-        Obj g() { return Widget { Widget.make {name=\"a\"} } }
-        Obj h() { return Widget { $podName::Widget{name=\"a\"} } }
-        Obj i() { return Widget { $podName::Widget.make {name=\"a\"} } }
-        Obj j() { return Widget { kid1 } }
-        Obj k() { return Widget { kid2 } }
-        Obj l() { return Widget { Foo.kid3 } }
+        Obj f() { return Widget { Widget{name=\"a\"}, } }
+        Obj g() { return Widget { Widget.make {name=\"a\"}, } }
+        Obj h() { return Widget { $podName::Widget{name=\"a\"}, } }
+        Obj i() { return Widget { $podName::Widget.make {name=\"a\"}, } }
+        Obj j() { return Widget { kid1, } }
+        Obj k() { return Widget { kid2, } }
+        Obj l() { return Widget { Foo.kid3, } }
         Obj m()
         {
           return Widget
@@ -657,14 +656,14 @@ class ExprTest : CompilerTest
             name = \"root\"
             Widget
             {
-              kid1 { name = \"a.1\" }
+              kid1 { name = \"a.1\" },;
               name = \"a\"
-              Widget.make { name = \"a.2\" }
-            }
+              Widget.make { name = \"a.2\" },
+            },
             $podName::Widget
             {
               name = \"b\"
-              Widget { name = \"b.1\" }
+              Widget { name = \"b.1\" },;
               foo.a = 999
             }
           }
@@ -676,7 +675,7 @@ class ExprTest : CompilerTest
 
       class Foo
       {
-        Void add(Int i) { list.add(i) }
+        This add(Int i) { list.add(i); return this }
         Int a := 'a'
         Int b := 'b'
         Int[] list := Int[,]
@@ -712,7 +711,7 @@ class ExprTest : CompilerTest
      x = obj->d
      verifyEq(x->a, 33)
      verifyEq(x->b, 44)
-     verifyEq(x->list, [5, 7, 9])
+     verifyEq(x->list, [5, 7, 9, 12])
 
      x = obj->e
      verifyEq(x->name, null)
@@ -736,9 +735,8 @@ class ExprTest : CompilerTest
      verifyEq(x->kids->get(1)->kids->get(0)->name, "b.1")
      verifyEq(x->kids->get(1)->foo->a, 999)
   }
-  */
 
-  Void testWithBlockErrors()
+  Void testItBlockErrors()
   {
     // errors
     verifyErrors(
@@ -746,7 +744,7 @@ class ExprTest : CompilerTest
       {
         static Obj a() { return A {} }
         static Obj b() { return B { x = 4 } }
-        // static Obj c() { return B { 6 } }
+        static Obj c() { return B { 6, } }
       }
 
       class A { new mk() {} }
@@ -754,8 +752,7 @@ class ExprTest : CompilerTest
       ",
       [ 3, 27, "Unknown method '$podName::A.make'",
         4, 31, "Unknown variable 'x'",
-// TODO-IT
-//        5, 31, "Unknown method '$podName::B.add'",
+        5, 31, "Unknown method '$podName::B.add'",
       ])
 
     // errors
@@ -763,19 +760,18 @@ class ExprTest : CompilerTest
      "class Foo
       {
         static Obj a() { return A { x } }
-        //static Obj b() { return B { 5 } }
-        static Obj c() { return B { A.make } } // ok
+        static Obj b() { return B { 5, } }
+        static Obj c() { return B { A.make, } } // ok
         static Obj d() { return B { A { x=3 } } } // ok
-        //static Obj e() { return B { A { x=3 }; 5 } }
+        static Obj e() { return B { A { x=3 }; 5, } }
       }
 
       class A { Int x; Int y}
       class B { Void add(A x) {} }
       ",
       [ 3, 31, "Not a statement",
-// TODO-IT
-        //4, 31, "Invalid args add($podName::A), not (sys::Int)",
-        //7, 42, "Invalid args add($podName::A), not (sys::Int)",
+        4, 31, "Invalid args add($podName::A), not (sys::Int)",
+        7, 42, "Invalid args add($podName::A), not (sys::Int)",
       ])
   }
 

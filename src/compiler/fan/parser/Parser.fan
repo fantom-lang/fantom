@@ -846,7 +846,14 @@ public class Parser : CompilerSupport
     Str? id := (curt === Token.identifier) ? (Str)cur.val : null
 
     // otherwise assume it's a stand alone expression statement
-    stmt := ExprStmt.make(expr)
+    e := expr()
+
+    // if expression statement ends with comma then this
+    // is syntax sugar for it.add(expr) ...
+    if (curt === Token.comma) e = itAdd(e)
+
+    // return expression as statement
+    stmt := ExprStmt(e)
     if (!isEndOfStmt) return stmt
     if (endOfStmt(null)) return stmt
 
@@ -855,6 +862,23 @@ public class Parser : CompilerSupport
       throw err("Unknown type '$id' for local declaration", loc)
     else
       throw err("Expected expression statement", loc)
+  }
+
+  **
+  ** Comma operator is sugar for it.add(target):
+  **   <itAdd>  :=  <expr> ("," <expr>)*
+  **
+  private Expr itAdd(Expr e)
+  {
+    e = CallExpr(e.location, ItExpr(cur), "add") { args.add(e) }
+    while (true)
+    {
+      consume(Token.comma)
+      if (curt === Token.rbrace || curt === Token.semicolon) break
+      e = CallExpr(cur, e, "add") { args.add(expr()) }
+      if (curt === Token.rbrace || curt === Token.semicolon) break
+    }
+    return e
   }
 
   **
@@ -2281,21 +2305,21 @@ public class Parser : CompilerSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private CompilationUnit unit   // compilation unit to generate
-  private TokenVal[] tokens      // tokens all read in
-  private Int numTokens          // number of tokens
-  private Int pos;               // offset Into tokens for cur
-  private TokenVal cur           // current token
-  private Token curt             // current token type
-  private TokenVal peek          // next token
-  private Token peekt            // next token type
-  private Bool isSys := false    // are we parsing the sys pod itself
-  private Bool inVoid            // are we currently in a void method
-  private Bool inFieldInit := false // are we currently in a field initializer
-  private TypeDef? curType       // current TypeDef scope
-  private SlotDef? curSlot       // current SlotDef scope
-  private ClosureExpr curClosure // current ClosureExpr if inside closure
-  private Int? closureCount      // number of closures parsed inside curSlot
-  private ClosureExpr[] closures // list of all closures parsed
+  private CompilationUnit unit    // compilation unit to generate
+  private TokenVal[] tokens       // tokens all read in
+  private Int numTokens           // number of tokens
+  private Int pos;                // offset Into tokens for cur
+  private TokenVal cur            // current token
+  private Token curt              // current token type
+  private TokenVal peek           // next token
+  private Token peekt             // next token type
+  private Bool isSys              // are we parsing the sys pod itself
+  private Bool inVoid             // are we currently in a void method
+  private Bool inFieldInit        // are we currently in a field initializer
+  private TypeDef? curType        // current TypeDef scope
+  private SlotDef? curSlot        // current SlotDef scope
+  private ClosureExpr? curClosure // current ClosureExpr if inside closure
+  private Int? closureCount       // number of closures parsed inside curSlot
+  private ClosureExpr[] closures  // list of all closures parsed
 
 }
