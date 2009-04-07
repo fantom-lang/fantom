@@ -112,6 +112,21 @@ namespace Fan.Sys
       return Sys.ObjType;
     }
 
+    public static object with(object self, Func f)
+    {
+      if (self is FanObj)
+      {
+        return ((FanObj)self).with(f);
+      }
+      else
+      {
+        f.call1(self);
+        return self;
+      }
+    }
+
+    public virtual object with(Func f) { f.call1(this); return this; }
+
     public static object trap(object self, string name, List args)
     {
       if (self is FanObj)

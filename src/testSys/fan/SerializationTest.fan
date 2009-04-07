@@ -420,9 +420,12 @@ class SerializationTest : Test
     x.list.add(5)
     verifySer("testSys::SerIntCollection {3; 4\n5}", x)
 
+    x.list.add(6)
+    verifySer("testSys::SerIntCollection {3, 4, 5, 6}", x)
+
     x.name = "hi"
-    verifySer("testSys::SerIntCollection {name=\"hi\"; 3; 4\n5}", x)
-    verifySer("testSys::SerIntCollection {3; 4\n5\nname=\"hi\"}", x)
+    verifySer("testSys::SerIntCollection {name=\"hi\"; 3; 4\n5,6}", x)
+    verifySer("testSys::SerIntCollection {3; 4\n5,6,name=\"hi\"}", x)
   }
 
   Void testFolderCollection()
@@ -448,6 +451,35 @@ class SerializationTest : Test
           testSys::SerFolder{name=\"a.2\"}
         }
       }", x)
+  }
+
+  Void testListMapFolder()
+  {
+    verifySer(
+     "[
+        testSys::SerFolder {name=\"a\"},
+        testSys::SerFolder {name=\"b\"},
+        testSys::SerFolder
+        {
+          name=\"c\",
+          testSys::SerFolder { name=\"c.1\" },
+        }
+      ]",
+      [
+        SerFolder{name="a"},
+        SerFolder {name="b"},
+        SerFolder {name="c"; SerFolder{name="c.1"},},
+      ])
+
+    verifySer(
+     "[
+        33: testSys::SerFolder {name=\"a\"},
+        44: testSys::SerFolder { name=\"b\", testSys::SerFolder { name=\"sub-b\" } }
+      ]",
+      [
+        33: SerFolder{name="a"},
+        44: SerFolder {name="b"; SerFolder{name="sub-b"},},
+      ])
   }
 
 //////////////////////////////////////////////////////////////////////////

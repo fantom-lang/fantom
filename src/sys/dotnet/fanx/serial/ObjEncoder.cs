@@ -186,7 +186,7 @@ namespace Fanx.Serial
         if (first) { encoder.w('\n').wIndent().w('{').w('\n'); encoder.level++; first = false; }
         encoder.wIndent();
         encoder.writeObj(obj);
-        encoder.w('\n');
+        encoder.w(',').w('\n');
         return null;
       }
       private ObjEncoder encoder;
