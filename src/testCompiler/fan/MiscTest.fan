@@ -762,9 +762,10 @@ class MiscTest : CompilerTest
     compile(
      "class Foo
       {
-        Void a(Bool b) { if (b) Foo { it.x = 7 } }
+        Void a(Bool b) { if (b) factory { it.x = 7 } }
         Void b(Bool b, Obj x) { if (b) (Str)x->toHex }
         const Int x
+        static Foo factory() { return make }
       }")
     //compiler.fpod.dump
 

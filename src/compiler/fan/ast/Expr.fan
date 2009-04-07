@@ -738,7 +738,18 @@ class CallExpr : NameExpr
     return toCallStr(true)
   }
 
-  override Bool isStmt() { return true }
+  override Bool isStmt()
+  {
+    // stand alone constructor is not a valid stmt
+    if (method.isCtor) return false
+
+    // with block applied to stand alone constructor is not valid stmt
+    if (method.name == "with" && target is CallExpr && ((CallExpr)target).method.isCtor)
+      return false
+
+    // consider any other call a stand alone stmt
+    return true
+  }
 
   virtual Bool isCompare() { return false }
 

@@ -952,8 +952,8 @@ return
         static Obj m03() { return 4 && true }
         static Obj m04() { return 0ns || [,] }
         static Void m05(Str x) { x = true }
-        Void m06() { this.make }
-        Void m07() { this.m00 }
+        Obj m06() { this.make }
+        Obj m07() { this.m00 }
         static Void m08(Str x) { m07; Foo.m07() }
         Void m09(Str x) { this.sf.size }
         static Void m10(Str x) { f.size; Foo.f.size }
@@ -993,8 +993,8 @@ return
         8, 29, "Cannot apply '||' operator to 'sys::Duration'",
         8, 36, "Cannot apply '||' operator to 'sys::Obj?[]'",
         9, 32, "'sys::Bool' is not assignable to 'sys::Str'",
-       10, 21, "Cannot call constructor 'make' on instance",
-       11, 21, "Cannot call static method 'm00' on instance",
+       10, 20, "Cannot call constructor 'make' on instance",
+       11, 20, "Cannot call static method 'm00' on instance",
        12, 28, "Cannot call instance method 'm07' in static context",
        12, 37, "Cannot call instance method 'm07' in static context",
        13, 26, "Cannot access static field 'sf' on instance",
@@ -1099,8 +1099,8 @@ return
     verifyErrors(
      "class Foo                                               // 1
       {                                                       // 2
-        Void m00a() { |,| { this.make }.call0 }               // 3
-        Void m00b() { |,| { |,| { this.make }.call0 }.call0 } // 4
+        Void m00a() { |,| { x := this.make }.call0 }          // 3
+        Void m00b() { |,| { |,| { x := this.make }.call0 }.call0 } // 4
         Void m01a() { |,| { this.m02a }.call0 }               // 5
         Void m01b() { |,| { |,| { this.m02a }.call0 }.call0 } // 6
         static Void m02a() { |,| { m00a; Foo.m00a() }.call0 } // 7
@@ -1114,8 +1114,8 @@ return
         const static Str sf
       }",
 
-       [3, 28, "Cannot call constructor 'make' on instance",
-        4, 34, "Cannot call constructor 'make' on instance",
+       [3, 33, "Cannot call constructor 'make' on instance",
+        4, 39, "Cannot call constructor 'make' on instance",
         5, 28, "Cannot call static method 'm02a' on instance",
         6, 34, "Cannot call static method 'm02a' on instance",
         7, 30, "Cannot call instance method 'm00a' in static context",
@@ -1209,18 +1209,21 @@ return
       {
         Void x(Int i, Str s, Obj o)
         {
-          true;
-          3;
-          i + 2;
-          f;
-          this.f;
-          (Int)o;
-          o is Int;
-          o as Int;
-          i == 4 ? 0ns : 1ns;
-          |,| {};
-          i == 2;
-          s === o;
+          true;               // 5
+          3;                  // 6
+          i + 2;              // 7
+          f;                  // 8
+          this.f;             // 9
+          (Int)o;             // 10
+          o is Int;           // 11
+          o as Int;           // 12
+          i == 4 ? 0ns : 1ns; // 13
+          |,| {};             // 14
+          i == 2;             // 15
+          s === o;            // 16
+          Foo()               // 17
+          Foo() {}            // 18
+          Foo {}              // 19
         }
 
         Str f
@@ -1239,6 +1242,9 @@ return
         14,  5, "Not a statement",
         15,  5, "Not a statement",
         16,  5, "Not a statement",
+        17,  5, "Not a statement",
+        18, 11, "Not a statement",
+        19,  9, "Not a statement",
        ])
   }
 

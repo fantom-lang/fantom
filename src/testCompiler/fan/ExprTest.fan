@@ -759,19 +759,25 @@ class ExprTest : CompilerTest
     verifyErrors(
      "class Foo
       {
-        static Obj a() { return A { x } }
-        static Obj b() { return B { 5, } }
-        static Obj c() { return B { A.make, } } // ok
-        static Obj d() { return B { A { x=3 } } } // ok
-        static Obj e() { return B { A { x=3 }; 5, } }
+        static Obj a() { return A { x } }          // missing comma
+        static Obj b() { return B { 5, } }         // can't add Int
+        static Obj c() { return B { A(), 5, } }    // can't add Int
+        static Obj d() { return B { A.make, } }    // ok
+        static Obj e() { return B { A { x=3 }, } } // ok
+        static Obj f() { return B { A() } }        // missing comma
+        static Obj g() { return B { A() {} } }     // missing comma
+        static Obj h() { return B { A {} } }       // missing comma
       }
 
       class A { Int x; Int y}
-      class B { Void add(A x) {} }
+      class B { B add(A x) { return this } }
       ",
       [ 3, 31, "Not a statement",
         4, 31, "Invalid args add($podName::A), not (sys::Int)",
-        7, 42, "Invalid args add($podName::A), not (sys::Int)",
+        5, 36, "Invalid args add($podName::A), not (sys::Int)",
+        8, 31, "Not a statement",
+        9, 35, "Not a statement",
+       10, 33, "Not a statement",
       ])
   }
 
