@@ -548,6 +548,8 @@ class IntTest : Test
     }
     verifyEq(acc.size, 10)
 
+    verifyErr(ArgErr#) |,| { Int.random(20...10) }
+    verifyErr(ArgErr#) |,| { Int.random(2..1) }
   }
 
 //////////////////////////////////////////////////////////////////////////

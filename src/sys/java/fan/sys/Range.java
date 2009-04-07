@@ -66,19 +66,36 @@ public final class Range
 
   public final boolean contains(long i)
   {
-    if (exclusive)
-      return start <= i && i < end;
+    if (start < end)
+    {
+      if (exclusive)
+        return start <= i && i < end;
+      else
+        return start <= i && i <= end;
+    }
     else
-      return start <= i && i <= end;
+    {
+      if (exclusive)
+        return end < i && i <= start;
+      else
+        return end <= i && i <= start;
+    }
   }
 
   public final void each(Func f)
   {
     long start = this.start;
     long end = this.end;
-    if (!exclusive) end++;
-    for (long i=start; i<end; ++i)
-      f.call1(Long.valueOf(i));
+    if (start < end)
+    {
+      if (exclusive) --end;
+      for (long i=start; i<=end; ++i) f.call1(Long.valueOf(i));
+    }
+    else
+    {
+      if (exclusive) ++end;
+      for (long i=start; i>=end; --i) f.call1(Long.valueOf(i));
+    }
   }
 
   public final List toList()
@@ -89,16 +106,14 @@ public final class Range
     if (start < end)
     {
       if (exclusive) --end;
-      acc.capacity(Long.valueOf(end-start));
-      for (long i=start; i<=end; ++i)
-        acc.add(Long.valueOf(i));
+      acc.capacity(Long.valueOf(end-start+1));
+      for (long i=start; i<=end; ++i) acc.add(Long.valueOf(i));
     }
     else
     {
       if (exclusive) ++end;
-      acc.capacity(Long.valueOf(start-end));
-      for (long i=start; i>=end; --i)
-        acc.add(Long.valueOf(i));
+      acc.capacity(Long.valueOf(start-end+1));
+      for (long i=start; i>=end; --i) acc.add(Long.valueOf(i));
     }
     return acc;
   }

@@ -53,6 +53,7 @@ namespace Fan.Sys
       long start = r.start();
       long end   = r.end();
       if (r.inclusive()) ++end;
+      if (end <= start) throw ArgErr.make("Range end < start: " + r).val;
       return start + (v % (end-start));
     }
 

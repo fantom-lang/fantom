@@ -46,6 +46,7 @@ public final class FanInt
     long start = r.start();
     long end   = r.end();
     if (r.inclusive()) ++end;
+    if (end <= start) throw ArgErr.make("Range end < start: " + r).val;
     return start + (v % (end-start));
   }
   static final java.util.Random random = new java.security.SecureRandom();
