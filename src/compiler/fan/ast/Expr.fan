@@ -1323,6 +1323,47 @@ class CurryExpr : Expr
 }
 
 **************************************************************************
+** ComplexLiteral
+**************************************************************************
+
+**
+** ComplexLiteral is used to model a serialized complex object
+** declared in facets.  It is only used in facets, in all other
+** code complex literals are parsed as it-block ClosureExprs.
+**
+class ComplexLiteral : Expr
+{
+  new make(Location location, CType ctype)
+    : super(location, ExprId.complexLiteral)
+  {
+    this.ctype = ctype
+    this.names = Str[,]
+    this.vals  = Expr[,]
+  }
+
+  override Void walkChildren(Visitor v)
+  {
+    vals = walkExprs(v, vals)
+  }
+
+  override Str toStr() { doToStr(&Expr.toStr) }
+
+  override Str serialize() { doToStr(&Expr.serialize) }
+
+  Str doToStr(|Expr->Str| f)
+  {
+    s := StrBuf()
+    s.add("$ctype {")
+    names.each |Str n, Int i| { s.add("$n = ${f(vals[i])};") }
+    s.add("}")
+    return s.toStr
+  }
+
+  Str[] names
+  Expr[] vals
+}
+
+**************************************************************************
 ** ClosureExpr
 **************************************************************************
 
@@ -1474,6 +1515,7 @@ enum ExprId
   storage,
   ternary,          // TernaryExpr
   curry,            // CurryExpr
+  complexLiteral,   // ComplexLiteral
   closure           // ClosureExpr
 }
 

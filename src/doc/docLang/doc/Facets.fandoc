@@ -27,7 +27,7 @@ Facets are defined as "@name=value" prefixed before a type or slot definition:
   @serializable
   @icon=`/icons/account.png`
   @version=Version("1.2")
-  @table=Table { name="Accounts" autoCreate=true }
+  @table=Table { name="Accounts"; autoCreate=true }
   @todo=["fix it", "really fix it"]
   class Account
   {
@@ -120,5 +120,4 @@ This facet is used on public types and slots to indicate they should
 not be documented with automated tools such as [Fandoc]`docLib::Fandoc`.
 As a developer you should avoid using these types and slots since they
 are explicitly marked as not part of the public API.
-
 
