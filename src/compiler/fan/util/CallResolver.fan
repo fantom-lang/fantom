@@ -411,6 +411,7 @@ class CallResolver : CompilerSupport
     // is always the base target type - if we aren't
     // calling against the original declaring type
     // then we also need an implicit cast operation
+    base := foundOnIt ? this.baseIt : this.base
     result.ctype = base
     if (method.inheritedReturnType != base)
       result = TypeCheckExpr.coerce(result, base) { from = method.inheritedReturnType }
