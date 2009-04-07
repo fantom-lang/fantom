@@ -113,9 +113,14 @@ public class FanObj
   public static Object with(Object self, Func f)
   {
     if (self instanceof FanObj)
+    {
       return ((FanObj)self).with(f);
+    }
     else
-      throw Err.make("Cannot call with on " + type(self)).val;
+    {
+      f.call1(self);
+      return self;
+    }
   }
 
   public Object with(Func f) { f.call1(this); return this; }

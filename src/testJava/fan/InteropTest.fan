@@ -590,4 +590,31 @@ class InteropTest : JavaTest
     verifyEq(obj->test8, "8")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// It-Blocks
+//////////////////////////////////////////////////////////////////////////
+
+  Void testItBlocks()
+  {
+    compile(
+     "using [java] fanx.test
+      class Foo
+      {
+        Obj a() { x := InteropTest() { num = 'a' }; return x.num }
+        Obj b() { x := InteropTest(); x { num = 'b' }; return x.num }
+        Obj c() { x := makeOne { num = 'c' }; return x.num }
+        Obj d() { x := InteropTest.makeOne { num = 'd' }; return x.num }
+        Obj e() { x := InteropTest().initArray { num = 'e' }; return x.num }
+        InteropTest makeOne() { InteropTest() }
+      }
+      ")
+
+    obj := pod.types.first.make
+    verifyEq(obj->a, 'a')
+    verifyEq(obj->b, 'b')
+    verifyEq(obj->c, 'c')
+    verifyEq(obj->d, 'd')
+    verifyEq(obj->e, 'e')
+  }
+
 }

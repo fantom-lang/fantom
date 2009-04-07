@@ -36,7 +36,7 @@ class SwingDemo
       setVisible(true)
     }
 
-    Thread.sleep(9999day) // Fan launcher exits if this thread exists
+    Actor.sleep(Duration.maxVal) // Fan launcher exits if this thread exists
   }
 
 }
