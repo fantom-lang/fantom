@@ -170,9 +170,9 @@ class DomTest : Test
     {
       XElem("a")
       {
-        XElem("b") { XText("text") }
-      }
-      XElem("c")
+        XElem("b") { XText("text"), },
+      },
+      XElem("c"),
     }
     verifySame(doc.doc, doc)
     verifySame(doc.root.doc, doc)

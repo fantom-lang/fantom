@@ -43,7 +43,7 @@ class LogTest : Test
   Void testMake()
   {
     log := log()
-    verifyErr(ArgErr#) |,| { TestLog.make(log.name) }
+    verifyErr(ArgErr#) |,| { x := TestLog.make(log.name) }
     verifyEq(log.name, "testSys.TestLog")
     verifyEq(log.level, LogLevel.info)
 // TODO
@@ -57,8 +57,8 @@ class LogTest : Test
     verifyErr(Err#) |,| { Log.find("testSys.foobar") }
     verifyErr(Err#) |,| { Log.find("testSys.foobar", true) }
     verifyErr(NameErr#) |,| { Log.get("@badName") }
-    verifyErr(NameErr#) |,| { Log.make("no good") }
-    verifyErr(NameErr#) |,| { TestLog.make("no good") }
+    verifyErr(NameErr#) |,| { x := Log.make("no good") }
+    verifyErr(NameErr#) |,| { x := TestLog.make("no good") }
   }
 
 //////////////////////////////////////////////////////////////////////////

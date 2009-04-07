@@ -34,7 +34,7 @@ internal class ErrView : View
         image  = Flux.icon(`/x16/err.png`)
         font   = Font("Dialog", 12, true)
         text   = "ERROR: $message"
-      }
+      },
       InsetPane
       {
         insets=Insets{left=20}
@@ -42,8 +42,8 @@ internal class ErrView : View
         {
           font = Font("Dialog", 10, true)
           text = resource.uri.toStr
-        }
-      }
+        },
+      },
     }
 
     if (cause != null)

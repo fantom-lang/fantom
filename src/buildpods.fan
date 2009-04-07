@@ -46,10 +46,9 @@ class Build : BuildGroup
       `fwt/build.fan`,
       `icons/build.fan`,
       `flux/build.fan`,
-// TODO-IT
-//      `xml/build.fan`,
+      `xml/build.fan`,
       `json/build.fan`,
-//      `obix/build.fan`,
+      `obix/build.fan`,
     ]
   }
 

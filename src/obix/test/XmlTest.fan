@@ -51,14 +51,14 @@ class XmlTest : ObixTest
          ObixObj
          {
            name = "a"
-           ObixObj { name = "ax" }
-         }
+           ObixObj { name = "ax" },
+         },
          ObixObj
          {
            name = "b"
-           ObixObj { name = "bx" }
-           ObixObj { name = "by"; ObixObj { name="byi"} }
-           ObixObj { name = "bz" }
+           ObixObj { name = "bx" },
+           ObixObj { name = "by"; ObixObj { name="byi"}, },
+           ObixObj { name = "bz" },
          }
        })
   }
@@ -77,9 +77,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="def"; val=false }
-         ObixObj { name="a"; val=true }
-         ObixObj { name="b"; val=false }
+         ObixObj { name="def"; val=false },
+         ObixObj { name="a"; val=true },
+         ObixObj { name="b"; val=false },
        })
    }
 
@@ -93,9 +93,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="def"; val=0 }
-         ObixObj { name="a"; val=3 }
-         ObixObj { name="b"; val=-1234}
+         ObixObj { name="def"; val=0 },
+         ObixObj { name="a"; val=3 },
+         ObixObj { name="b"; val=-1234},
        })
    }
 
@@ -113,13 +113,13 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="def"; val=0f }
-         ObixObj { name="a"; val=2f }
-         ObixObj { name="b"; val=-2.4f }
-         ObixObj { name="c"; val=4e10f }
-         ObixObj { name="nan"; val=Float.nan }
-         ObixObj { name="posInf"; val=Float.posInf }
-         ObixObj { name="negInf"; val=Float.negInf }
+         ObixObj { name="def"; val=0f },
+         ObixObj { name="a"; val=2f },
+         ObixObj { name="b"; val=-2.4f },
+         ObixObj { name="c"; val=4e10f },
+         ObixObj { name="nan"; val=Float.nan },
+         ObixObj { name="posInf"; val=Float.posInf },
+         ObixObj { name="negInf"; val=Float.negInf },
        })
 
      verifyEq(ObixObj { val = Float.nan }.valToStr, "NaN")
@@ -138,10 +138,10 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="def"; val="" }
-         ObixObj { name="a"; val="hi" }
-         ObixObj { name="b"; val="> ' & \" <" }
-         ObixObj { name="c"; val="32\u00B0\nline2" }
+         ObixObj { name="def"; val="" },
+         ObixObj { name="a"; val="hi" },
+         ObixObj { name="b"; val="> ' & \" <" },
+         ObixObj { name="c"; val="32\u00B0\nline2" },
        })
    }
 
@@ -155,9 +155,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="def"; val=`` }
-         ObixObj { name="a"; val=`http://foo/` }
-         ObixObj { name="b"; val=`http://foo/path name?foo=bar baz` }
+         ObixObj { name="def"; val=`` },
+         ObixObj { name="a"; val=`http://foo/` },
+         ObixObj { name="b"; val=`http://foo/path name?foo=bar baz` },
        })
    }
 
@@ -170,8 +170,8 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { elemName="enum"; name="def"; isNull=true }
-         ObixObj { elemName="enum"; name="a"; val="slow" }
+         ObixObj { elemName="enum"; name="def"; isNull=true },
+         ObixObj { elemName="enum"; name="a"; val="slow" },
        })
    }
 
@@ -187,11 +187,11 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="def"; elemName="abstime"; isNull=true }
-         ObixObj { name="a"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone.utc) }
-         ObixObj { name="b"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("Etc/GMT+5")) }
-         ObixObj { name="c"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("London")) }
-         ObixObj { name="d"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("New_York")); tz=TimeZone("New_York") }
+         ObixObj { name="def"; elemName="abstime"; isNull=true },
+         ObixObj { name="a"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone.utc) },
+         ObixObj { name="b"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("Etc/GMT+5")) },
+         ObixObj { name="c"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("London")) },
+         ObixObj { name="d"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("New_York")); tz=TimeZone("New_York") },
        })
   }
 
@@ -206,10 +206,10 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="def"; val=0sec }
-         ObixObj { name="a";   val=45sec }
-         ObixObj { name="b";   val=100ms }
-         ObixObj { name="c";   val=2day+20hr+15min }
+         ObixObj { name="def"; val=0sec },
+         ObixObj { name="a";   val=45sec },
+         ObixObj { name="b";   val=100ms },
+         ObixObj { name="c";   val=2day+20hr+15min },
        })
   }
 
@@ -223,9 +223,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { elemName="date"; name="def"; isNull=true }
-         ObixObj { name="a"; val=Date(2010, Month.jan, 30) }
-         ObixObj { name="b"; val=Date(1995, Month.dec, 05); tz=TimeZone("Chicago") }
+         ObixObj { elemName="date"; name="def"; isNull=true },
+         ObixObj { name="a"; val=Date(2010, Month.jan, 30) },
+         ObixObj { name="b"; val=Date(1995, Month.dec, 05); tz=TimeZone("Chicago") },
        })
    }
 
@@ -239,9 +239,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { elemName="time"; name="def"; isNull=true }
-         ObixObj { name="a"; val=Time(5, 30, 20) }
-         ObixObj { name="b"; val=Time(23, 0, 0, 456ms.ticks); tz=TimeZone("London") }
+         ObixObj { elemName="time"; name="def"; isNull=true },
+         ObixObj { name="a"; val=Time(5, 30, 20) },
+         ObixObj { name="b"; val=Time(23, 0, 0, 456ms.ticks); tz=TimeZone("London") },
        })
    }
 
@@ -267,11 +267,11 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; displayName="Alpha" }
-         ObixObj { name="b"; display="The Beta" }
-         ObixObj { name="c"; displayName="Gamma"; display="The Gamma"; val=5 }
-         ObixObj { name="d"; displayName="'\"<>" }
-         ObixObj { name="e"; display="'\"<>" }
+         ObixObj { name="a"; displayName="Alpha" },
+         ObixObj { name="b"; display="The Beta" },
+         ObixObj { name="c"; displayName="Gamma"; display="The Gamma"; val=5 },
+         ObixObj { name="d"; displayName="'\"<>" },
+         ObixObj { name="e"; display="'\"<>" },
        })
    }
 
@@ -284,8 +284,8 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; icon=`http://foo/icons/a.png` }
-         ObixObj { name="b"; icon=`http://foo/icon dir/?foo=bar bar` }
+         ObixObj { name="a"; icon=`http://foo/icons/a.png` },
+         ObixObj { name="b"; icon=`http://foo/icon dir/?foo=bar bar` },
        })
    }
 
@@ -305,19 +305,19 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; val=0; min=0 }
-         ObixObj { name="b"; val=0; max=100 }
-         ObixObj { name="c"; val=0f; min=1f; max=99f }
-         ObixObj { name="d"; val=0f; min=Float.negInf; max=Float.posInf }
-         ObixObj { name="e"; val=""; min=2; max=20 }
+         ObixObj { name="a"; val=0; min=0 },
+         ObixObj { name="b"; val=0; max=100 },
+         ObixObj { name="c"; val=0f; min=1f; max=99f },
+         ObixObj { name="d"; val=0f; min=Float.negInf; max=Float.posInf },
+         ObixObj { name="e"; val=""; min=2; max=20 },
          ObixObj { name="f"; elemName="abstime"; isNull=true;
                    min=DateTime(2000, Month.jan, 1, 0, 0, 0, 0, TimeZone.utc)
-                   max=DateTime(2000, Month.dec, 31, 23, 59, 59, 0, TimeZone.utc) }
-         ObixObj { name="g"; val=0sec; min=3sec; max=1min }
+                   max=DateTime(2000, Month.dec, 31, 23, 59, 59, 0, TimeZone.utc) },
+         ObixObj { name="g"; val=0sec; min=3sec; max=1min },
          ObixObj { name="h"; elemName="date"; isNull=true
-                   min=Date(2000, Month.jan, 1); max=Date(2000, Month.dec, 31) }
+                   min=Date(2000, Month.jan, 1); max=Date(2000, Month.dec, 31) },
          ObixObj { name="i"; elemName="time"; isNull=true
-                   min=Time(1, 0, 0); max=Time(12, 0, 0) }
+                   min=Time(1, 0, 0); max=Time(12, 0, 0) },
        })
    }
 
@@ -329,7 +329,7 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; val=75f; precision=2 }
+         ObixObj { name="a"; val=75f; precision=2 },
        })
    }
 
@@ -342,8 +342,8 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { elemName="enum"; name="a"; val="1"; range=`http://foo/range` }
-         ObixObj { elemName="enum"; name="b"; val="2"; range=`http://foo/range val/` }
+         ObixObj { elemName="enum"; name="a"; val="1"; range=`http://foo/range` },
+         ObixObj { elemName="enum"; name="b"; val="2"; range=`http://foo/range val/` },
        })
    }
 
@@ -363,15 +363,15 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; status=Status.ok }
-         ObixObj { name="b"; status=Status.disabled }
-         ObixObj { name="c"; status=Status.fault }
-         ObixObj { name="d"; status=Status.down }
-         ObixObj { name="e"; status=Status.unackedAlarm }
-         ObixObj { name="f"; status=Status.alarm }
-         ObixObj { name="g"; status=Status.unacked }
-         ObixObj { name="h"; status=Status.overridden }
-         ObixObj { name="i"; status=Status.ok }
+         ObixObj { name="a"; status=Status.ok },
+         ObixObj { name="b"; status=Status.disabled },
+         ObixObj { name="c"; status=Status.fault },
+         ObixObj { name="d"; status=Status.down },
+         ObixObj { name="e"; status=Status.unackedAlarm },
+         ObixObj { name="f"; status=Status.alarm },
+         ObixObj { name="g"; status=Status.unacked },
+         ObixObj { name="h"; status=Status.overridden },
+         ObixObj { name="i"; status=Status.ok },
        })
    }
 
@@ -385,9 +385,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; val=0; unit=Unit.find("meter") }
-         ObixObj { name="b"; val=0; unit=Unit.find("fahrenheit") }
-         ObixObj { name="c"; val=0 }
+         ObixObj { name="a"; val=0; unit=Unit.find("meter") },
+         ObixObj { name="b"; val=0; unit=Unit.find("fahrenheit") },
+         ObixObj { name="c"; val=0 },
        })
    }
 
@@ -401,9 +401,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; val=0; writable=false }
-         ObixObj { name="b"; val=0; writable=true }
-         ObixObj { name="c"; val=0; writable=false }
+         ObixObj { name="a"; val=0; writable=false },
+         ObixObj { name="b"; val=0; writable=true },
+         ObixObj { name="c"; val=0; writable=false },
        })
    }
 
@@ -421,9 +421,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; contract=Contract([`obix:Point`]) }
-         ObixObj { name="b"; contract=Contract([`obix:Point`, `obix:WritablePoint`]) }
-         ObixObj { name="c"; contract=Contract([`http://foo/a b`]) }
+         ObixObj { name="a"; contract=Contract([`obix:Point`]) },
+         ObixObj { name="b"; contract=Contract([`obix:Point`, `obix:WritablePoint`]) },
+         ObixObj { name="c"; contract=Contract([`http://foo/a b`]) },
        })
   }
 
@@ -442,8 +442,8 @@ class XmlTest : ObixTest
        {
          elemName = "list"
          of = Contract([`obix:Point`])
-         ObixObj { val=1f }
-         ObixObj { val=2f }
+         ObixObj { val=1f },
+         ObixObj { val=2f },
        })
   }
 
@@ -461,9 +461,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { elemName="op"; name="a"; in=Contract([`/in`]) }
-         ObixObj { elemName="op"; name="b"; out=Contract([`/out1`, `/out2`]) }
-         ObixObj { elemName="op"; name="c"; in=Contract([`/in`]); out=Contract([`/out`]) }
+         ObixObj { elemName="op"; name="a"; in=Contract([`/in`]) },
+         ObixObj { elemName="op"; name="b"; out=Contract([`/out1`, `/out2`]) },
+         ObixObj { elemName="op"; name="c"; in=Contract([`/in`]); out=Contract([`/out`]) },
        })
   }
 
@@ -481,9 +481,9 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { elemName="feed"; name="a"; of=Contract([`/in`]) }
-         ObixObj { elemName="feed"; name="b"; out=Contract([`/out1`, `/out2`]) }
-         ObixObj { elemName="feed"; name="c"; of=Contract([`/in`]); out=Contract([`/out`]) }
+         ObixObj { elemName="feed"; name="a"; of=Contract([`/in`]) },
+         ObixObj { elemName="feed"; name="b"; out=Contract([`/out1`, `/out2`]) },
+         ObixObj { elemName="feed"; name="c"; of=Contract([`/in`]); out=Contract([`/out`]) },
        })
   }
 
@@ -507,8 +507,8 @@ class XmlTest : ObixTest
        </obj>",
        ObixObj
        {
-         ObixObj { name="a"; val=100 }
-         ObixObj { name="b"; ObixObj { name="c"; val=0f } }
+         ObixObj { name="a"; val=100 },
+         ObixObj { name="b"; ObixObj { name="c"; val=0f }, },
        })
   }
 

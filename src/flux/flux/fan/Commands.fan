@@ -43,12 +43,12 @@ internal class Commands
   {
     return Menu
     {
-      buildFileMenu
-      buildEditMenu
-      buildViewMenu
-      buildHistoryMenu
-      buildToolsMenu
-      buildHelpMenu
+      buildFileMenu,
+      buildEditMenu,
+      buildViewMenu,
+      buildHistoryMenu,
+      buildToolsMenu,
+      buildHelpMenu,
     }
   }
 
@@ -426,11 +426,11 @@ internal class ExitCommand : FluxCommand
     dirty := frame.views.findAll |View v->Bool| { return v.dirty }
     if (dirty.size > 0)
     {
-      grid := GridPane { Label { text=this.type.pod.loc("saveChanges"); font=Font.sys.toBold }}
+      grid := GridPane { Label { text=this.type.pod.loc("saveChanges"); font=Font.sys.toBold },}
       dirty.each |View v|
       {
         grid.add(InsetPane(0,0,0,8) {
-         Button { it.mode=ButtonMode.check; it.text=v.resource.uri.toStr; it.selected=true }
+         Button { it.mode=ButtonMode.check; it.text=v.resource.uri.toStr; it.selected=true },
         })
       }
       saveSel  := ExitSaveCommand(type.pod, "saveSelected")
@@ -803,19 +803,19 @@ internal class AboutCommand : FluxCommand
     content := GridPane
     {
       halignCells = Halign.center
-      Label { image = Image.makeFile(icon) }
-      Label { text = "Flux"; font = big }
+      Label { image = Image.makeFile(icon) },
+      Label { text = "Flux"; font = big },
       GridPane
       {
         halignCells = Halign.center
         vgap = 0
-        Label { text = "Version $this.type.pod.version"; font = small }
-        Label { text = "Fan Home ${Sys.homeDir}"; font = small }
-      }
+        Label { text = "Version $this.type.pod.version"; font = small },
+        Label { text = "Fan Home ${Sys.homeDir}"; font = small },
+      },
       Label { font = small; text =
         "   Copyright (c) 2008, Brian Frank and Andy Frank
          Licensed under the Academic Free License version 3.0"
-      }
+      },
     }
     d := Dialog(frame) { title="About Flux"; body=content; commands=[Dialog.ok] }
     d.open

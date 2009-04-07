@@ -72,8 +72,8 @@ class ObjTest : ObixTest
      "abstime", "reltime", "date", "time",
      "list", "op", "feed", "ref", "err"]
 
-    names.each |Str s| { ObixObj { elemName=s } }
-    verifyErr(ArgErr#) |,| { ObixObj { elemName="foo" } }
+    names.each |Str s| { x := ObixObj { elemName=s } }
+    verifyErr(ArgErr#) |,| { x := ObixObj { elemName="foo" } }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -123,8 +123,8 @@ class ObjTest : ObixTest
     verifyVal("date", Date.today)
     verifyVal("time", Time.now)
 
-    verifyErr(ArgErr#) |,| { ObixObj { val = this } }
-    verifyErr(ArgErr#) |,| { ObixObj { val = Locale.current } }
+    verifyErr(ArgErr#) |,| { x := ObixObj { val = this } }
+    verifyErr(ArgErr#) |,| { x := ObixObj { val = Locale.current } }
   }
 
   Void verifyVal(Str elemName, Obj? val)
