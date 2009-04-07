@@ -19,7 +19,7 @@ class FwtHello
     Window
     {
       size = Size(300,200)
-      Label { text = "Hello world"; halign=Halign.center }
+      Label { text = "Hello world"; halign=Halign.center },
     }.open
   }
 }

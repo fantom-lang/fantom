@@ -28,7 +28,7 @@ class TestWeblet : Weblet
     res.out.printLine("session:   $req.session.id")
     req.session.map.each |Obj? v, Str k| { res.out.printLine("  $k: $v") }
     res.out.printLine("</pre>")
-    res.out.printLine("Back up to <a href='/dir/index.html'>/dir/index.html</a>.</p>")
+    res.out.printLine("Back up to <a href='/'>Home</a>.</p>")
 
     s["testcounter"] = (Int)s.map.get("testcounter", 0) + 1
 

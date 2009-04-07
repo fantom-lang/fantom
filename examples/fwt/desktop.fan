@@ -18,9 +18,9 @@ class DesktopDemo : Widget
   {
     Window
     {
-      title = "Desktop Demo"
-      DesktopDemo {}
-      size = Size(600,400)
+      it.title = "Desktop Demo"
+      it.size = Size(600,400)
+      DesktopDemo {},
     }.open
   }
 
@@ -28,7 +28,7 @@ class DesktopDemo : Widget
   {
     w := size.w
     h := size.h
-    f := Font { name=Font.sys.name; size=14 }
+    f := Font { it.name=Font.sys.name; it.size=14 }
 
     // paint background white
     g.font = f
@@ -67,4 +67,3 @@ class DesktopDemo : Widget
   }
 
 }
-

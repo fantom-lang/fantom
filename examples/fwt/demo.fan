@@ -30,18 +30,18 @@ class FwtDemo
         top = makeToolBar
         center = TabPane
         {
-          Tab { text = "Buttons";        InsetPane { makeButtons } }
-          Tab { text = "Labels";         InsetPane { makeLabels } }
-          Tab { text = "ProgessBar";     InsetPane { makeProgressBar } }
-          Tab { text = "WebBrowser";     InsetPane { makeWebBrowser } }
-          Tab { text = "Text";           InsetPane { makeText} }
-          Tab { text = "EdgePane";       InsetPane { makeEdgePane } }
-          Tab { text = "GridPane";       InsetPane { makeGridPane } }
-          Tab { text = "Tree and Table"; InsetPane { makeTreeAndTable } }
-          Tab { text = "Window";         InsetPane { makeWindow } }
-          Tab { text = "Serialization";  InsetPane { makeSerialization } }
-          Tab { text = "Eventing";       InsetPane { makeEventing } }
-          Tab { text = "Graphics";       InsetPane { makeGraphics } }
+          Tab { text = "Buttons";        InsetPane { makeButtons, }, },
+          Tab { text = "Labels";         InsetPane { makeLabels, }, },
+          Tab { text = "ProgessBar";     InsetPane { makeProgressBar, }, },
+          Tab { text = "WebBrowser";     InsetPane { makeWebBrowser, }, },
+          Tab { text = "Text";           InsetPane { makeText, }, },
+          Tab { text = "EdgePane";       InsetPane { makeEdgePane, }, },
+          Tab { text = "GridPane";       InsetPane { makeGridPane, }, },
+          Tab { text = "Tree and Table"; InsetPane { makeTreeAndTable, }, },
+          Tab { text = "Window";         InsetPane { makeWindow, }, },
+          Tab { text = "Serialization";  InsetPane { makeSerialization, }, },
+          Tab { text = "Eventing";       InsetPane { makeEventing, }, },
+          Tab { text = "Graphics";       InsetPane { makeGraphics, }, },
         }
       }
     }.open
@@ -57,12 +57,12 @@ class FwtDemo
       Menu
       {
         text = "File";
-        MenuItem { text = "Back";    image = backIcon;    onAction.add(&browser.back) }
-        MenuItem { text = "Next";    image = nextIcon;    onAction.add(&browser.forward) }
-        MenuItem { text = "Refresh"; image = refreshIcon; onAction.add(&browser.refresh) }
-        MenuItem { text = "Stop";    image = stopIcon;    onAction.add(&browser.stop) }
-        MenuItem { text = "Exit"; onAction.add |,| { Sys.exit } }
-      }
+        MenuItem { text = "Back";    image = backIcon;    onAction.add(&browser.back) },
+        MenuItem { text = "Next";    image = nextIcon;    onAction.add(&browser.forward) },
+        MenuItem { text = "Refresh"; image = refreshIcon; onAction.add(&browser.refresh) },
+        MenuItem { text = "Stop";    image = stopIcon;    onAction.add(&browser.stop) },
+        MenuItem { text = "Exit"; onAction.add |,| { Sys.exit } },
+      },
 
       Menu
       {
@@ -71,62 +71,62 @@ class FwtDemo
         {
           text = "Alpha"
           image = folderIcon
-          MenuItem { text = "Alpha.1"; onAction.add(&cb) }
+          MenuItem { text = "Alpha.1"; onAction.add(&cb) },
           Menu
           {
             text = "Alpha.2"
-            MenuItem { text = "Alpha.2.I"; onAction.add(&cb) }
+            MenuItem { text = "Alpha.2.I"; onAction.add(&cb) },
             Menu
             {
               text = "Alpha.2.II"
-              MenuItem { text = "Alpha.2.II.a"; onAction.add(&cb) }
-              MenuItem { text = "Alpha.2.II.b"; onAction.add(&cb) }
-            }
-            MenuItem { text = "Alpha.2.III"; onAction.add(&cb) }
-          }
-        }
+              MenuItem { text = "Alpha.2.II.a"; onAction.add(&cb) },
+              MenuItem { text = "Alpha.2.II.b"; onAction.add(&cb) },
+            },
+            MenuItem { text = "Alpha.2.III"; onAction.add(&cb) },
+          },
+        },
         Menu
         {
           text = "Beta"
-          MenuItem { text = "Beta.1"; onAction.add(&cb) }
-          MenuItem { text = "Beta.2"; onAction.add(&cb) }
-        }
-      }
+          MenuItem { text = "Beta.1"; onAction.add(&cb) },
+          MenuItem { text = "Beta.2"; onAction.add(&cb) },
+        },
+      },
 
       Menu
       {
         text = "Modes"
-        MenuItem { text = "Check 1"; accelerator=Key.f1; mode = MenuItemMode.check; onAction.add(&cb) }
-        MenuItem { text = "Check 2"; accelerator=Key.f2; mode = MenuItemMode.check; onAction.add(&cb) }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { text = "Radio 1"; accelerator=Key.num1+Key.alt; mode = MenuItemMode.radio; onAction.add(&cb) }
-        MenuItem { text = "Radio 2"; accelerator=Key.alt+Key.num2; mode = MenuItemMode.radio; onAction.add(&cb); selected = true  }
-      }
+        MenuItem { text = "Check 1"; accelerator=Key.f1; mode = MenuItemMode.check; onAction.add(&cb) },
+        MenuItem { text = "Check 2"; accelerator=Key.f2; mode = MenuItemMode.check; onAction.add(&cb) },
+        MenuItem { mode = MenuItemMode.sep },
+        MenuItem { text = "Radio 1"; accelerator=Key.num1+Key.alt; mode = MenuItemMode.radio; onAction.add(&cb) },
+        MenuItem { text = "Radio 2"; accelerator=Key.alt+Key.num2; mode = MenuItemMode.radio; onAction.add(&cb); selected = true  },
+      },
 
       Menu
       {
         text = "Dialogs"
-        MenuItem { text = "Info"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "Test information!")) } }
-        MenuItem { text = "Warn"; onAction.add |Event e| { echo(Dialog.openWarn(e.window, "Test warning!")) } }
-        MenuItem { text = "Err"; onAction.add |Event e| { echo(Dialog.openErr(e.window, "Test error!")) } }
-        MenuItem { text = "Question"; onAction.add |Event e| { echo(Dialog.openQuestion(e.window, "Test question?")) } }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { text = "Ok/Cancel"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "OK/Cancel", Dialog.okCancel)) } }
-        MenuItem { text = "Yes/No"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "Yes/No", Dialog.yesNo)) } }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { text = "Details Err"; onAction.add |Event e| { echo(Dialog.openErr(e.window, "Something bad", ArgErr())) } }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { text = "Prompt Str 1"; onAction.add |Event e| { echo("--> " + Dialog.openPromptStr(e.window, "Enter a string:")) } }
-        MenuItem { text = "Prompt Str 2"; onAction.add |Event e| { echo("--> " + Dialog.openPromptStr(e.window, "Enter a string:", "123", 4)) } }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { text = "Option A"; onAction.add |Event e| { echo((Dialog(e.window) {body="Str message"; commands=[Dialog.ok]}).open) } }
-        MenuItem { text = "Option B"; onAction.add |Event e| { echo((Dialog(e.window) {body=Button { text="BIG!" }; commands=Dialog.okCancel}).open) } }
-        MenuItem { mode = MenuItemMode.sep }
-        MenuItem { text = "File Open";  onAction.add |Event e| { echo(FileDialog {}.open(e.window)) } }
-        MenuItem { text = "Files Open"; onAction.add |Event e| { echo(FileDialog { dir=Sys.homeDir; mode=FileDialogMode.openFiles }.open(e.window)) } }
-        MenuItem { text = "File Save";  onAction.add |Event e| { echo(FileDialog { name="foo.txt";  mode=FileDialogMode.saveFile }.open(e.window)) } }
-        MenuItem { text = "Dir Open";   onAction.add |Event e| { echo(FileDialog { dir=Sys.homeDir; mode=FileDialogMode.openDir }.open(e.window)) } }
-      }
+        MenuItem { text = "Info"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "Test information!")) } },
+        MenuItem { text = "Warn"; onAction.add |Event e| { echo(Dialog.openWarn(e.window, "Test warning!")) } },
+        MenuItem { text = "Err"; onAction.add |Event e| { echo(Dialog.openErr(e.window, "Test error!")) } },
+        MenuItem { text = "Question"; onAction.add |Event e| { echo(Dialog.openQuestion(e.window, "Test question?")) } },
+        MenuItem { mode = MenuItemMode.sep },
+        MenuItem { text = "Ok/Cancel"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "OK/Cancel", Dialog.okCancel)) } },
+        MenuItem { text = "Yes/No"; onAction.add |Event e| { echo(Dialog.openInfo(e.window, "Yes/No", Dialog.yesNo)) } },
+        MenuItem { mode = MenuItemMode.sep },
+        MenuItem { text = "Details Err"; onAction.add |Event e| { echo(Dialog.openErr(e.window, "Something bad", ArgErr())) } },
+        MenuItem { mode = MenuItemMode.sep },
+        MenuItem { text = "Prompt Str 1"; onAction.add |Event e| { echo("--> " + Dialog.openPromptStr(e.window, "Enter a string:")) } },
+        MenuItem { text = "Prompt Str 2"; onAction.add |Event e| { echo("--> " + Dialog.openPromptStr(e.window, "Enter a string:", "123", 4)) } },
+        MenuItem { mode = MenuItemMode.sep },
+        MenuItem { text = "Option A"; onAction.add |Event e| { echo((Dialog(e.window) {body="Str message"; commands=[Dialog.ok]}).open) } },
+        MenuItem { text = "Option B"; onAction.add |Event e| { echo((Dialog(e.window) {body=Button { text="BIG!" }; commands=Dialog.okCancel}).open) } },
+        MenuItem { mode = MenuItemMode.sep },
+        MenuItem { text = "File Open";  onAction.add |Event e| { echo(FileDialog {}.open(e.window)) } },
+        MenuItem { text = "Files Open"; onAction.add |Event e| { echo(FileDialog { dir=Sys.homeDir; mode=FileDialogMode.openFiles }.open(e.window)) } },
+        MenuItem { text = "File Save";  onAction.add |Event e| { echo(FileDialog { name="foo.txt";  mode=FileDialogMode.saveFile }.open(e.window)) } },
+        MenuItem { text = "Dir Open";   onAction.add |Event e| { echo(FileDialog { dir=Sys.homeDir; mode=FileDialogMode.openDir }.open(e.window)) } },
+      },
 
     }
   }
@@ -138,17 +138,17 @@ class FwtDemo
   {
     return ToolBar
     {
-      Button { image = backIcon;    onAction.add(&browser.back) }
-      Button { image = nextIcon;    onAction.add(&browser.forward) }
-      Button { image = refreshIcon; onAction.add(&browser.refresh) }
-      Button { image = stopIcon;    onAction.add(&browser.stop) }
-      Button { mode  = ButtonMode.sep }
-      Button { image = sysIcon;   mode = ButtonMode.check; onAction.add(&cb) }
-      Button { image = prefsIcon; mode = ButtonMode.toggle; onAction.add(&cb) }
-      Button { mode  = ButtonMode.sep }
-      Button { image = audioIcon; mode = ButtonMode.radio; onAction.add(&cb); selected = true }
-      Button { image = imageIcon; mode = ButtonMode.radio; onAction.add(&cb); }
-      Button { image = videoIcon; mode = ButtonMode.radio; onAction.add(&cb); }
+      Button { image = backIcon;    onAction.add(&browser.back) },
+      Button { image = nextIcon;    onAction.add(&browser.forward) },
+      Button { image = refreshIcon; onAction.add(&browser.refresh) },
+      Button { image = stopIcon;    onAction.add(&browser.stop) },
+      Button { mode  = ButtonMode.sep },
+      Button { image = sysIcon;   mode = ButtonMode.check; onAction.add(&cb) },
+      Button { image = prefsIcon; mode = ButtonMode.toggle; onAction.add(&cb) },
+      Button { mode  = ButtonMode.sep },
+      Button { image = audioIcon; mode = ButtonMode.radio; onAction.add(&cb); selected = true },
+      Button { image = imageIcon; mode = ButtonMode.radio; onAction.add(&cb); },
+      Button { image = videoIcon; mode = ButtonMode.radio; onAction.add(&cb); },
     }
   }
 
@@ -177,14 +177,14 @@ class FwtDemo
       numCols = 2
       hgap = 20
       halignCells = Halign.fill
-      Label { text = "Text Only" }
-      Label { image = stopIcon }
-      Label { text = "Both"; image = folderIcon }
-      Label { text = "Monospace"; font = Font.sysMonospace }
-      Label { text = "Colors"; image = folderIcon; fg = Color.red; bg = Color.yellow }
-      Label { text = "Left"; halign = Halign.left }
-      Label { text = "Center"; halign = Halign.center }
-      Label { text = "Right"; halign = Halign.right }
+      Label { text = "Text Only" },
+      Label { image = stopIcon },
+      Label { text = "Both"; image = folderIcon },
+      Label { text = "Monospace"; font = Font.sysMonospace },
+      Label { text = "Colors"; image = folderIcon; fg = Color.red; bg = Color.yellow },
+      Label { text = "Left"; halign = Halign.left },
+      Label { text = "Center"; halign = Halign.center },
+      Label { text = "Right"; halign = Halign.right },
     }
   }
 
@@ -198,11 +198,11 @@ class FwtDemo
       numCols = 1
       hgap = 20
       halignCells = Halign.fill
-      ProgressBar { val=25; }
-      ProgressBar { min=0; max=100; val=75; }
-      ProgressBar { min=-100; max=100; val=80; }
-      ProgressBar { min=-100; max=100; val=25; }
-      ProgressBar { indeterminate = true }
+      ProgressBar { val=25; },
+      ProgressBar { min=0; max=100; val=75; },
+      ProgressBar { min=-100; max=100; val=80; },
+      ProgressBar { min=-100; max=100; val=25; },
+      ProgressBar { indeterminate = true },
     }
   }
 
@@ -215,16 +215,16 @@ class FwtDemo
     {
       numCols = 3
       hgap = 20
-      Button { text = "B1"; image = stopIcon; onAction.add(&cb) }
-      Button { text = "Monospace"; font = Font.sysMonospace; onAction.add(&cb) }
-      Button { mode = ButtonMode.toggle; text = "Button 3"; onAction.add(&cb) }
-      Button { mode = ButtonMode.check; text = "B4"; onAction.add(&cb) }
-      Button { mode = ButtonMode.radio; text = "Button 5"; onAction.add(&cb) }
-      Button { mode = ButtonMode.radio; text = "B6"; onAction.add(&cb) }
-      Button { text = "Popup 1"; onAction.add(&popup(true)) }
-      Button { text = "Popup 2"; onAction.add(&popup(false)) }
-      Button { text = "Disabled"; enabled=false }
-      Button { text = "Invisible"; visible=false }
+      Button { text = "B1"; image = stopIcon; onAction.add(&cb) },
+      Button { text = "Monospace"; font = Font.sysMonospace; onAction.add(&cb) },
+      Button { mode = ButtonMode.toggle; text = "Button 3"; onAction.add(&cb) },
+      Button { mode = ButtonMode.check; text = "B4"; onAction.add(&cb) },
+      Button { mode = ButtonMode.radio; text = "Button 5"; onAction.add(&cb) },
+      Button { mode = ButtonMode.radio; text = "B6"; onAction.add(&cb) },
+      Button { text = "Popup 1"; onAction.add(&popup(true)) },
+      Button { text = "Popup 2"; onAction.add(&popup(false)) },
+      Button { text = "Disabled"; enabled=false },
+      Button { text = "Invisible"; visible=false },
     }
   }
 
@@ -251,27 +251,27 @@ class FwtDemo
       {
         numCols = 2
 
-        Label { text="Single" }
-        Text { onAction.add(ecb); onModify.add(ccb) }
+        Label { text="Single" },
+        Text { onAction.add(ecb); onModify.add(ccb) },
 
-        Label { text="Monospace";  }
-        Text { font = Font.sysMonospace; onAction.add(ecb); onModify.add(ccb)  }
+        Label { text="Monospace";  },
+        Text { font = Font.sysMonospace; onAction.add(ecb); onModify.add(ccb)  },
 
-        Label { text="Password" }
-        Text { password = true; onAction.add(ecb); onModify.add(ccb) }
+        Label { text="Password" },
+        Text { password = true; onAction.add(ecb); onModify.add(ccb) },
 
-        Label { text="Combo" }
-        Combo { items=nums; onAction.add(ecb); onModify.add(ccb) }
+        Label { text="Combo" },
+        Combo { items=nums; onAction.add(ecb); onModify.add(ccb) },
 
-        Label { text="Combo editable=true" }
-        Combo { editable=true; items=nums; onAction.add(ecb); onModify.add(ccb) }
+        Label { text="Combo editable=true" },
+        Combo { editable=true; items=nums; onAction.add(ecb); onModify.add(ccb) },
 
-        Label { text="Combo dropDown=false" }
-        Combo { dropDown=false; items=nums; onAction.add(ecb); onModify.add(ccb) }
+        Label { text="Combo dropDown=false" },
+        Combo { dropDown=false; items=nums; onAction.add(ecb); onModify.add(ccb) },
 
-        Label { text="MultiLine" }
+        Label { text="MultiLine" },
 
-        Button { text="Serialize Demo"; onAction.add(&serializeTo(area)) }
+        Button { text="Serialize Demo"; onAction.add(&serializeTo(area)) },
       }
       center = InsetPane.make(5) { content=area }
     }
@@ -316,15 +316,15 @@ class FwtDemo
       numCols = 5
       hgap = 10
       vgap = 10
-      Box { color = Color.red }
-      Box { color = Color.green }
-      Box { color = Color.yellow }
-      Box { color = Color.blue }
-      Box { color = Color.orange }
-      Box { color = Color.darkGray }
-      Box { color = Color.purple }
-      Box { color = Color.gray }
-      Box { color = Color.white }
+      Box { color = Color.red },
+      Box { color = Color.green },
+      Box { color = Color.yellow },
+      Box { color = Color.blue },
+      Box { color = Color.orange },
+      Box { color = Color.darkGray },
+      Box { color = Color.purple },
+      Box { color = Color.gray },
+      Box { color = Color.white },
     }
     colors := [Color.red, Color.green, Color.yellow, Color.blue, Color.orange,
                Color.darkGray, Color.purple, Color.gray, Color.white]
@@ -335,17 +335,17 @@ class FwtDemo
     {
       numCols = 2
       halignCells = Halign.fill
-      Label { text="numCols" };      Text { text="5"; onModify.add(&setInt(grid, "numCols")) }
-      Label { text="hgap" };         Text { text="10"; onModify.add(&setInt(grid, "hgap")) }
-      Label { text="vgap" };         Text { text="10"; onModify.add(&setInt(grid, "vgap")) }
-      Label { text="halignCells" };  Combo { items=Halign.values; onModify.add(&setEnum(grid, "halignCells")) }
-      Label { text="valignCells" };  Combo { items=Valign.values; onModify.add(&setEnum(grid, "valignCells")) }
-      Label { text="halignPane" };   Combo { items=Halign.values; onModify.add(&setEnum(grid, "halignPane")) }
-      Label { text="valignPane" };   Combo { items=Valign.values; onModify.add(&setEnum(grid, "valignPane")) }
-      Label { text="expandRow" };    Text { text="null"; onModify.add(&setInt(grid, "expandRow")) }
-      Label { text="expandCol" };    Text { text="null"; onModify.add(&setInt(grid, "expandCol")) }
-      Label { text="uniformCols" };  Combo { items=[false,true]; onModify.add(&setBool(grid, "uniformCols")) }
-      Label { text="uniformRows" };  Combo { items=[false,true]; onModify.add(&setBool(grid, "uniformRows")) }
+      Label { text="numCols" },      Text { text="5"; onModify.add(&setInt(grid, "numCols")) },
+      Label { text="hgap" },         Text { text="10"; onModify.add(&setInt(grid, "hgap")) },
+      Label { text="vgap" },         Text { text="10"; onModify.add(&setInt(grid, "vgap")) },
+      Label { text="halignCells" },  Combo { items=Halign.values; onModify.add(&setEnum(grid, "halignCells")) },
+      Label { text="valignCells" },  Combo { items=Valign.values; onModify.add(&setEnum(grid, "valignCells")) },
+      Label { text="halignPane" },   Combo { items=Halign.values; onModify.add(&setEnum(grid, "halignPane")) },
+      Label { text="valignPane" },   Combo { items=Valign.values; onModify.add(&setEnum(grid, "valignPane")) },
+      Label { text="expandRow" },    Text { text="null"; onModify.add(&setInt(grid, "expandRow")) },
+      Label { text="expandCol" },    Text { text="null"; onModify.add(&setInt(grid, "expandCol")) },
+      Label { text="uniformCols" },  Combo { items=[false,true]; onModify.add(&setBool(grid, "uniformCols")) },
+      Label { text="uniformRows" },  Combo { items=[false,true]; onModify.add(&setBool(grid, "uniformRows")) },
     }
 
     return EdgePane { left=controls; center=InsetPane { content=grid } }
@@ -387,8 +387,8 @@ class FwtDemo
     return SashPane
     {
       weights = [1,3]
-      add(tree)
-      add(table)
+      tree,
+      table,
     }
   }
 
@@ -397,20 +397,20 @@ class FwtDemo
   **
   Widget makeWindow()
   {
-    mode := Combo  { items = WindowMode.values; editable=false }
-    alwaysOnTop := Button { mode = ButtonMode.check; text = "alwaysOnTop" }
-    resizable := Button { mode = ButtonMode.check; text = "resizable" }
+    mode := Combo { items = WindowMode.values; editable=false }
+    alwaysOnTop := Button { it.mode = ButtonMode.check; text = "alwaysOnTop" }
+    resizable := Button { it.mode = ButtonMode.check; text = "resizable" }
 
     open := |,|
     {
       close := Button { text="Close Me" }
       w := Window(mode.window)
       {
-        mode = mode.selected
-        alwaysOnTop = alwaysOnTop.selected
-        resizable = resizable.selected
-        GridPane { halignPane = Halign.center; valignPane = Valign.center; add(close) }
-        size = Size(200,200)
+        it.mode = mode.selected
+        it.alwaysOnTop = alwaysOnTop.selected
+        it.resizable = resizable.selected
+        it.size = Size(200,200)
+        GridPane { halignPane = Halign.center; valignPane = Valign.center; add(close) },
       }
       close.onAction.add(&w.close)
       w.open
@@ -418,10 +418,10 @@ class FwtDemo
 
     return GridPane
     {
-      add(mode)
-      add(alwaysOnTop)
-      add(resizable)
-      Button { text="Open"; onAction.add(open) }
+      mode,
+      alwaysOnTop,
+      resizable,
+      Button { text="Open"; onAction.add(open) },
     }
   }
 
@@ -445,7 +445,7 @@ class FwtDemo
 
     test := InsetPane
     {
-      Label { text="Press button to deserialize code on the left here" }
+      Label { text="Press button to deserialize code on the left here" },
     }
 
     return SashPane
@@ -455,15 +455,16 @@ class FwtDemo
         center = area
         right = InsetPane
         {
-          Button { text="=>"; onAction.add |,| { deserializeTo(area.text, test) } }
+          Button { text="=>"; onAction.add |,| { deserializeTo(area.text, test) } },
         }
-      }
-      add(test)
+      },
+      test,
     }
   }
 
   Void deserializeTo(Str text, InsetPane test)
   {
+/* TODO-IT
     try
     {
       test.content = InStream.makeForStr(text).readObj
@@ -473,6 +474,7 @@ class FwtDemo
       test.content = Text { multiLine = true; text = e.traceToStr }
     }
     test.relayout
+*/
   }
 
   **
@@ -482,9 +484,9 @@ class FwtDemo
   {
     return GridPane
     {
-      EventDemo { name = "A"; demo = this }
-      EventDemo { name = "B"; demo = this }
-      EventDemo { name = "C"; demo = this }
+      EventDemo { name = "A"; demo = this },
+      EventDemo { name = "B"; demo = this },
+      EventDemo { name = "C"; demo = this },
     }
   }
 
@@ -537,9 +539,9 @@ class FwtDemo
   {
     return Menu
     {
-      MenuItem { text = "Popup 1"; onAction.add(&cb) }
-      MenuItem { text = "Popup 2"; onAction.add(&cb) }
-      MenuItem { text = "Popup 3"; onAction.add(&cb) }
+      MenuItem { text = "Popup 1"; onAction.add(&cb) },
+      MenuItem { text = "Popup 2"; onAction.add(&cb) },
+      MenuItem { text = "Popup 3"; onAction.add(&cb) },
     }
   }
 
@@ -742,7 +744,7 @@ class GraphicsDemo : Widget
 
     img := demo.folderIcon
     g.drawImage(img, 220, 20)
-    g.copyImage(img, Rect { x=0; y=0; w=img.size.w; h=img.size.h }, Rect { x=250; y=30; w=64; h=64})
+    g.copyImage(img, Rect(0, 0, img.size.w, img.size.h), Rect(250, 30, 64, 64))
     g.drawImage(img.resize(Size(64, 64)), 320, 30)
     g.push
     try
