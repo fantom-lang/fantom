@@ -464,17 +464,15 @@ class FwtDemo
 
   Void deserializeTo(Str text, InsetPane test)
   {
-/* TODO-IT
     try
     {
       test.content = InStream.makeForStr(text).readObj
     }
     catch (Err e)
     {
-      test.content = Text { multiLine = true; text = e.traceToStr }
+      test.content = Text { it.multiLine = true; it.text = e.traceToStr }
     }
     test.relayout
-*/
   }
 
   **
