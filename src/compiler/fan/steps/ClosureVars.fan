@@ -158,7 +158,7 @@ class ClosureVars : CompilerStep
     // from the list which are to moved into the cvars class
     method.vars = method.vars.exclude |MethodVar v->Bool|
     {
-      return !v.isParam && v.usedInClosure
+      return !v.isParam && v.usedInClosure && !v.isCatchVar
     }
 
     // if in a closure, then the $cvars local variable was

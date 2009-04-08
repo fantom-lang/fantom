@@ -159,7 +159,7 @@ class Assembler : CompilerSupport, FConst
     block := def.code
     if (block == null) return null
 
-    asm := CodeAsm.make(compiler, def.location, fpod)
+    asm := CodeAsm.make(compiler, def.location, fpod, def)
     if (def.ctorChain != null) asm.expr(def.ctorChain)
     asm.block(block)
 
@@ -172,7 +172,7 @@ class Assembler : CompilerSupport, FConst
   private Buf? assembleExpr(Expr? expr)
   {
     if (expr == null) return null
-    asm := CodeAsm.make(compiler, expr.location, fpod)
+    asm := CodeAsm.make(compiler, expr.location, fpod, null)
     asm.expr(expr)
     return asm.finishCode
   }

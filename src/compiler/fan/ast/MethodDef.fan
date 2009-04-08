@@ -77,6 +77,16 @@ class MethodDef : SlotDef, CMethod
   Bool isOnce() { return flags & Parser.Once != 0 }
 
   **
+  ** Make and add a MethodVar for a local variable.
+  **
+  MethodVar addLocalVarForDef(LocalDefStmt def, Block? scope)
+  {
+    var := addLocalVar(def.ctype, def.name, scope)
+    var.isCatchVar = def.isCatchVar
+    return var
+  }
+
+  **
   ** Make and add a MethodVar for a local variable.  If name is
   ** null then we auto-generate a temporary variable name
   **
@@ -93,6 +103,16 @@ class MethodDef : SlotDef, CMethod
     var := MethodVar.make(reg, ctype, name, 0, scope)
     vars.add(var)
     return var
+  }
+
+  **
+  ** Get the cvars local variable or throw and exception if not defined
+  **
+  MethodVar cvarsVar()
+  {
+    var := vars.find |MethodVar v->Bool| { v.name == "\$cvars" }
+    if (var != null) return var
+    throw Err("Expected cvars local to be defined: $qname")
   }
 
 //////////////////////////////////////////////////////////////////////////

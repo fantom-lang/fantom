@@ -43,6 +43,7 @@ class MethodVar
   CType ctype         // variable type
   Str name            // variable name
   Int flags           // Param
+  Bool isCatchVar     // is this auto-generated var for "catch (Err x)"
   Block? scope        // block which scopes this variable
   ParamDef? paramDef  // if param
   Bool usedInClosure  // local used by closure within containing method

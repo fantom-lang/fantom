@@ -151,6 +151,8 @@ class LocalDefStmt : Stmt
     isCatchVar = true
   }
 
+  override Str toStr() { "$ctype $name ($var)" }
+
   override Void print(AstWriter out) { printOpt(out) }
 
   Void printOpt(AstWriter out, Bool nl := true)
@@ -165,7 +167,7 @@ class LocalDefStmt : Stmt
   Str name          // variable name
   Expr? init        // rhs of init; in ResolveExpr it becomes full assign expr
   Bool isCatchVar   // is this auto-generated var for "catch (Err x)"
-  MethodVar var     // variable binding
+  MethodVar? var    // variable binding
 }
 
 **************************************************************************
