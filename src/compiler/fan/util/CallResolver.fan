@@ -337,8 +337,9 @@ class CallResolver : CompilerSupport
     // if the resolved slot is a method where the last param
     // is expected to be a function type, then use that to
     // infer the type signature of the closure
-    lastParam := call.method.params.last?.paramType?.deref?.toNonNullable
-    if (lastParam is FuncType)
+    m := call.method
+    lastParam := m.params.last?.paramType?.deref?.toNonNullable
+    if (lastParam is FuncType && call.args.size == m.params.size)
     {
       if (call.target != null)
         lastParam = ((FuncType)lastParam).parameterizeThis(call.target.ctype)
