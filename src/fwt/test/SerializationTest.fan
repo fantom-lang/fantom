@@ -24,12 +24,12 @@ class SerializationTest : Test
         fwt::MenuItem
         {
           text=\"a\"
-        }
+        },
         fwt::MenuItem
         {
           mode=fwt::MenuItemMode(\"check\")
           text=\"b\"
-        }
+        },
       }")
 
     verifyEq(x.children.size, 2)
@@ -50,7 +50,7 @@ class SerializationTest : Test
        fwt::Label
        {
          text=\"hi\"
-       }
+       },
      }"
 
     full :=
@@ -87,12 +87,12 @@ class SerializationTest : Test
          fwt::MenuItem
          {
            text=\"File\"
-         }
+         },
        }
        fwt::Label
        {
          text=\"content\"
-       }
+       },
      }"
 
     full :=
@@ -107,7 +107,7 @@ class SerializationTest : Test
          fwt::MenuItem
          {
            text=\"File\"
-         }
+         },
        }
      }"
 
@@ -168,12 +168,12 @@ class SerializationTest : Test
         {
           text=\"a\"
           fg=fwt::Color(\"#aabbcc\")
-        }
+        },
         fwt::Label
         {
           text=\"b\"
           bg=fwt::Color(\"#a1b2c3d4\")
-        }
+        },
       }")
 
     verifyEq(x.hgap, 7)
@@ -192,7 +192,7 @@ class SerializationTest : Test
   {
     w := InStream.makeForStr(input).readObj
     x := Buf().writeObj(w, ["indent":2, "skipDefaults":true]).flip.readAllStr
-    //echo(x)
+    // echo(x)
     verifyEqTrim(expected, x)
     return w
   }
