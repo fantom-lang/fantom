@@ -73,7 +73,7 @@ class UriMapper : DocCompilerSupport
       if (pound == 0) return targetUri = Uri.fromStr(fandocUri)
 
       // split off fragment identifier
-      this.fandocUri = fandocUri[0...pound]
+      this.fandocUri = fandocUri[0..<pound]
       this.frag = fandocUri[pound+1..-1]
     }
 
@@ -111,7 +111,7 @@ class UriMapper : DocCompilerSupport
   {
     // lookup pod
     colons := fandocUri.index("::")
-    podName := fandocUri[0...colons]
+    podName := fandocUri[0..<colons]
     pod := Pod.find(podName, false)
     if (pod == null) throw err("Unknown pod '$podName'", loc)
 
@@ -133,7 +133,7 @@ class UriMapper : DocCompilerSupport
     dot := s.index(".")
     if (dot != null)
     {
-      typeName = s[0...dot]
+      typeName = s[0..<dot]
       rest = s[dot+1..-1]
     }
     else if (compiler.curType != null)
@@ -247,7 +247,7 @@ class UriMapper : DocCompilerSupport
           y := line.index("]", x)
           if (y != null)
           {
-            frag := line[x+2...y]
+            frag := line[x+2..<y]
             docFrags.frags[frag] = frag
           }
         }
