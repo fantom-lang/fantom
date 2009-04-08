@@ -306,7 +306,7 @@ class ItBlockTest : CompilerTest
           try
           {
             if (a == \"throw\") throw ArgErr()
-            else return a
+            else return Obj[,] { add(a) }
           }
           catch (Err e)
           {
@@ -318,7 +318,7 @@ class ItBlockTest : CompilerTest
       }")
 
     obj := pod.types.first.make
-    verifyEq(obj->m("foo"), "foo")
+    verifyEq(obj->m("foo"), Obj["foo"])
     verifyEq(obj->m("throw"), Obj["sys::ArgErr", "ArgErr"])
   }
 
