@@ -83,7 +83,7 @@ internal class JavaReflect
     }
 
     list := JField[,]
-    for (it := acc.values.iterator; it.hasNext; ) list.add(it.next)
+    for (iter := acc.values.iterator; iter.hasNext; ) list.add(iter.next)
     return list
   }
 
@@ -111,7 +111,7 @@ internal class JavaReflect
     }
 
     list := JMethod[,]
-    for (it := acc.values.iterator; it.hasNext; ) list.add(it.next)
+    for (iter := acc.values.iterator; iter.hasNext; ) list.add(iter.next)
     return list
   }
 
