@@ -260,6 +260,39 @@ class ItBlockTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Inference
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInference()
+  {
+    compile(
+     "class Acme
+      {
+        Obj a() { Foo().m1(null) { it.x = 'a' } }
+        Obj b() { Foo().m1(null) { x = 'b' } }
+        Obj c() { Foo().m2 { it.x = 'c' } }
+        Obj d() { Foo().m2 { x = 'd' } }
+        Obj e() { Foo().m2(5, null) { it.x = 'e' } }
+        Obj f() { Foo().m2(5, null) { x = 'f' } }
+      }
+
+      class Foo
+      {
+        Foo m1(|Str|? f := null) { return this }
+        Foo m2(Int a := 5, |Str|? f := null) { return this }
+        Int x
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->a->x, 'a')
+    verifyEq(obj->b->x, 'b')
+    verifyEq(obj->c->x, 'c')
+    verifyEq(obj->d->x, 'd')
+    verifyEq(obj->e->x, 'e')
+    verifyEq(obj->f->x, 'f')
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Errors
 //////////////////////////////////////////////////////////////////////////
 
