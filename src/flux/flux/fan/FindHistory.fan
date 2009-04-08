@@ -43,7 +43,7 @@ class FindHistory
     // remove first so it bubbles to top
     findList.remove(s)
     findList.insert(0, s)
-    findList = findList[0...max.min(findList.size)]
+    findList = findList[0..<max.min(findList.size)]
     return this
   }
 
@@ -58,7 +58,7 @@ class FindHistory
     // remove first so it bubbles to top
     dirList.remove(u)
     dirList.insert(0, u)
-    dirList = dirList[0...max.min(dirList.size)]
+    dirList = dirList[0..<max.min(dirList.size)]
     return this
   }
 

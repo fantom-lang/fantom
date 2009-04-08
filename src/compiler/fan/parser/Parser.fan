@@ -1303,11 +1303,11 @@ public class Parser : CompilerSupport
   private Expr rangeExpr()
   {
     expr := bitOrExpr
-    if (curt === Token.dotDot || curt === Token.dotDotDot)
+    if (curt === Token.dotDot || curt === Token.dotDotLt)
     {
       range := RangeLiteralExpr.make(expr.location, ns.rangeType)
       range.start     = expr
-      range.exclusive = consume.kind === Token.dotDotDot
+      range.exclusive = consume.kind === Token.dotDotLt
       range.end       = bitOrExpr
       return range
     }

@@ -53,7 +53,7 @@ class Text : TextWidget
   **
   override Void modify(Int start, Int replaceLen, Str newText)
   {
-    text = text[0...start] + newText + text[start+replaceLen..-1]
+    text = text[0..<start] + newText + text[start+replaceLen..-1]
   }
 
 }

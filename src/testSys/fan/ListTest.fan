@@ -420,20 +420,20 @@ class ListTest : Test
     verifyEq(list[0..2],  [0, 1, 2])
     verifyEq(list[0..1],  [0, 1])
     verifyEq(list[0..0],  [0])
-    verifyEq(list[0...0], Int[,])
-    verifyEq(list[0...1], [0])
-    verifyEq(list[0...2], [0, 1])
-    verifyEq(list[0...3], [0, 1, 2])
-    verifyEq(list[0...4], [0, 1, 2, 3])
+    verifyEq(list[0..<0], Int[,])
+    verifyEq(list[0..<1], [0])
+    verifyEq(list[0..<2], [0, 1])
+    verifyEq(list[0..<3], [0, 1, 2])
+    verifyEq(list[0..<4], [0, 1, 2, 3])
     verifyEq(list[1..3], [1, 2, 3])
     verifyEq(list[1..1], [1])
     verifyEq(list[1..-1], [1, 2, 3])
     verifyEq(list[1..-2], [1, 2])
     verifyEq(list[1..-3], [1])
     verifyEq(list[1..-4], Int[,])
-    verifyEq(list[1...-1], [1, 2])
-    verifyEq(list[1...-2], [1])
-    verifyEq(list[1...-3], Int[,])
+    verifyEq(list[1..<-1], [1, 2])
+    verifyEq(list[1..<-2], [1])
+    verifyEq(list[1..<-3], Int[,])
     verifyEq(list[-3..-1], [1, 2, 3])
     verifyEq(list[-3..-2], [1, 2])
     verifyEq(list[-3..-3], [1])
@@ -444,13 +444,13 @@ class ListTest : Test
     verifyEq(ex[0..2], [0, 1, 2])
     verifyEq(ex[3..3], [3])
     verifyEq(ex[-2..-1], [2, 3])
-    verifyEq(ex[0...2], [0, 1])
+    verifyEq(ex[0..<2], [0, 1])
     verifyEq(ex[1..-2], [1, 2])
 
     // errors
     verifyErr(IndexErr#) |,| { x:=list[0..4] }
-    verifyErr(IndexErr#) |,| { x:=list[0...5] }
-    verifyErr(IndexErr#) |,| { x:=list[2...1] }
+    verifyErr(IndexErr#) |,| { x:=list[0..<5] }
+    verifyErr(IndexErr#) |,| { x:=list[2..<1] }
     verifyErr(IndexErr#) |,| { x:=list[3..1] }
     verifyErr(IndexErr#) |,| { x:=list[-5..-1] }
     verifyErr(IndexErr#) |,| { x:=list[1..4] }
@@ -487,16 +487,16 @@ class ListTest : Test
     verifyEq(Int[1].removeRange(1..-1), [1])
     verifyEq(Int[1,2].removeRange(0..-1), Int[,])
     verifyEq(Int[1,2].removeRange(0..1), Int[,])
-    verifyEq(Int[1,2].removeRange(0...1), [2])
+    verifyEq(Int[1,2].removeRange(0..<1), [2])
     verifyEq(Int[1,2].removeRange(1..1), [1])
     verifyEq(Int[1,2].removeRange(1..-1), [1])
     verifyEq(Int[1,2,3].removeRange(0..-1), Int[,])
     verifyEq(Int[1,2,3].removeRange(1..1), [1,3])
-    verifyEq(Int[1,2,3].removeRange(1...2), [1,3])
+    verifyEq(Int[1,2,3].removeRange(1..<2), [1,3])
     verifyEq(Int[0,1,2,3,4,5].removeRange(0..2), [3,4,5])
     verifyEq(Int[0,1,2,3,4,5].removeRange(4..-1), [0,1,2,3])
     verifyEq(Int[0,1,2,3,4,5].removeRange(1..4), [0,5])
-    verifyEq(Int[0,1,2,3,4,5].removeRange(1...4), [0,4,5])
+    verifyEq(Int[0,1,2,3,4,5].removeRange(1..<4), [0,4,5])
     verifyEq(Int[0,1,2,3,4,5].removeRange(-3..-1), [0,1,2])
     verifyEq(Int[0,1,2,3,4,5].removeRange(-3..4), [0,1,2,5])
   }

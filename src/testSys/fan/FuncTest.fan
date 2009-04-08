@@ -105,7 +105,7 @@ class FuncTest : Test
 
     args.size.times |Int i|
     {
-      g := f.curry(args[0...i])
+      g := f.curry(args[0..<i])
       if (i == 0) verifySame(f, g)
 
       // call(List)

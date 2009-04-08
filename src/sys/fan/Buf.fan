@@ -150,7 +150,7 @@ class Buf
   **   buf[0..2]   => 0x[aabbcc]
   **   buf[3..3]   => 0x[dd]
   **   buf[-2..-1] => 0x[ccdd]
-  **   buf[0...2]  => 0x[aabb]
+  **   buf[0..<2]  => 0x[aabb]
   **   buf[1..-2]  => 0x[bbcc]
   **
   Buf slice(Range range)

@@ -93,7 +93,7 @@ internal class NavBar : SideBar
     ignore = true
     old   := combo.selectedIndex
     name  := r == null ? type.loc("navBar.root") : r.name
-    items := combo.items.size == 0 ? combo.items.dup : combo.items[0...-1]
+    items := combo.items.size == 0 ? combo.items.dup : combo.items[0..<-1]
     combo.items = items.add(name).add(type.loc("navBar.editList"))
     if (old >= 0) combo.selectedIndex = old
     ignore = false
@@ -225,7 +225,7 @@ internal class NavBar : SideBar
     ignore = false
 
     // now show dialog
-    list := EditList(combo.items[0...-1])
+    list := EditList(combo.items[0..<-1])
     dlg  := Dialog(frame)
     {
       title    = this.type.loc("navBar.edit")

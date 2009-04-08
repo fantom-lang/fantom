@@ -66,7 +66,7 @@ enum Token
   lbracket      ("["),
   rbracket      ("]"),
   dotDot        (".."),
-  dotDotDot     ("..."),
+  dotDotLt      ("..<"),
   defAssign     (":="),
   assign        ("="),
   assignPlus    ("+="),

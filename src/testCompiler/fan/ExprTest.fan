@@ -81,7 +81,7 @@ class ExprTest : CompilerTest
 
     // range
     verifyExpr("2..3",  2..3)
-    verifyExpr("2...3", 2...3)
+    verifyExpr("2..<3", 2..<3)
 
     // list
     verifyExpr("[,]", [,])
@@ -323,9 +323,9 @@ class ExprTest : CompilerTest
 
     // slice
     verifyExpr("a[b]", [1,2], [0, 1, 2, 3], 1..2)
-    verifyExpr("a[b]", [1], [0, 1, 2, 3], 1...2)
+    verifyExpr("a[b]", [1], [0, 1, 2, 3], 1..<2)
     verifyExpr("a[b]", [2, 3], [0, 1, 2, 3], -2..-1)
-    verifyExpr("a[b]", [2], [0, 1, 2, 3], -2...-1)
+    verifyExpr("a[b]", [2], [0, 1, 2, 3], -2..<-1)
   }
 
 //////////////////////////////////////////////////////////////////////////

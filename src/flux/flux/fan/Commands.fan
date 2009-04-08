@@ -246,7 +246,7 @@ internal class Commands
     // remove any old items on the history menu
     menu := event.widget
     children := menu.children
-    (historyMenuSize...children.size).each |Int i|
+    (historyMenuSize..<children.size).each |Int i|
     {
       menu.remove(children[i])
     }
@@ -275,7 +275,7 @@ internal class Commands
   {
     // remove any old items on the tools menu
     children := toolsMenu.children
-    (toolsMenuSize...children.size).each |Int i|
+    (toolsMenuSize..<children.size).each |Int i|
     {
       toolsMenu.remove(children[i])
     }

@@ -282,15 +282,15 @@ Range [#range]
 **************
 A `sys::Range` represents a contiguous range of integers from start to end.  Ranges
 may be represented as literals in Fan source code as 'start..end' for an inclusive
-end or 'start...end' for an exclusive range.  Inclusive and exclusive determines if
+end or 'start..<end' for an exclusive range.  Inclusive and exclusive determines if
 the end index is included in the range (start is always inclusive).  Example
 of 'Range' literals:
 
   0..5    // 0 to 5 (end is inclusive)
-  0...5   // 0 to 4 (end is exclusive)
-  x...y   // x to y-1 (end is exclusive)
+  0..<5   // 0 to 4 (end is exclusive)
+  x..<y   // x to y-1 (end is exclusive)
 
-Note that the '..' and '...' operators may be used with any arbitrary expression
+Note that the '..' and '..<' operators may be used with any arbitrary expression
 according to [operator precedence]`Expressions#precedence`.  These operators are
 just syntax sugar for constructing a range via `sys::Range.make`.
 

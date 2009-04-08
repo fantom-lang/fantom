@@ -220,8 +220,8 @@ class TextChange
 
   override Str toStr()
   {
-    o := oldText.size < 10 ? oldText : oldText[0...10] + "..."
-    n := newText.size < 10 ? newText : newText[0...10] + "..."
+    o := oldText.size < 10 ? oldText : oldText[0..<10] + "..<"
+    n := newText.size < 10 ? newText : newText[0..<10] + "..<"
     return "startOffset=$startOffset startLine=$startLine " +
            "newText=$n.toCode oldText=$o.toCode " +
            "oldNumNewlines=$oldNumNewlines newNumNewlines=$newNumNewlines"

@@ -75,8 +75,8 @@ const class Pen
       if (b != null)
       {
         d = Int[,]
-        str[b+1...str.index("]")].split(',').each |Str tok| { d.add(tok.toInt) }
-        str = str[0...b].trim
+        str[b+1..<str.index("]")].split(',').each |Str tok| { d.add(tok.toInt) }
+        str = str[0..<b].trim
       }
 
       str.split.each |Str s|

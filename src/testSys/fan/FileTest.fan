@@ -486,7 +486,7 @@ class FileTest : Test
     verifyEq(b[0..0].readAllStr, "a")
     b[1] = 'x'
     verifyEq(b[0..2].readAllStr, "axc")
-    verifyEq(b[0...2].readAllStr, "ax")
+    verifyEq(b[0..<2].readAllStr, "ax")
 
     // binary
     b.seek(0)

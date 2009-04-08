@@ -103,7 +103,7 @@ final class List
   **   list[0..2]   => [0, 1, 2]
   **   list[3..3]   => [3]
   **   list[-2..-1] => [2, 3]
-  **   list[0...2]  => [0, 1]
+  **   list[0..<2]  => [0, 1]
   **   list[1..-2]  => [1, 2]
   **
   L slice(Range range)

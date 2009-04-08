@@ -24,8 +24,8 @@ class RangeTest : Test
     verifySame(x.type, Range#)
     verify(x == Range.makeInclusive(0, 2))
     verify(x != Range.makeExclusive(0, 2))
-    verify(0...2 != Range.makeInclusive(0, 2))
-    verify(0...2 == Range.makeExclusive(0, 2))
+    verify(0..<2 != Range.makeInclusive(0, 2))
+    verify(0..<2 == Range.makeExclusive(0, 2))
     verify(x!= "wow")
     verify(0..1  == 0..1)
     verify(0..-1 == 0..-1)
@@ -38,7 +38,7 @@ class RangeTest : Test
   Void testToStr()
   {
     verifyEq((0..2).toStr, "0..2")
-    verifyEq((0...2).toStr, "0...2")
+    verifyEq((0..<2).toStr, "0..<2")
   }
 
   Void testStartEnd()
@@ -48,10 +48,10 @@ class RangeTest : Test
     verifyEq((0..2).inclusive, true)
     verifyEq((0..2).exclusive, false)
 
-    verifyEq((0...2).start, 0)
-    verifyEq((0...2).end, 2)
-    verifyEq((0...2).inclusive, false)
-    verifyEq((0...2).exclusive, true)
+    verifyEq((0..<2).start, 0)
+    verifyEq((0..<2).end, 2)
+    verifyEq((0..<2).inclusive, false)
+    verifyEq((0..<2).exclusive, true)
 
     verifyEq((-2..-1).start, -2)
     verifyEq((-2..-1).end, -1)
@@ -65,19 +65,19 @@ class RangeTest : Test
     verifyEq((-2..2).contains(-2), true)
     verifyEq((-2..2).contains(0), true)
     verifyEq((-2..2).contains(2), true)
-    verifyEq((-2...2).contains(2), false)
+    verifyEq((-2..<2).contains(2), false)
     verifyEq((-2..2).contains(3), false)
-    verifyEq((-2...2).contains(3), false)
+    verifyEq((-2..<2).contains(3), false)
 
     verifyEq((3..0).contains(4), false)
     verifyEq((3..0).contains(3), true)
     verifyEq((3..0).contains(1), true)
     verifyEq((3..0).contains(0), true)
     verifyEq((3..0).contains(-1), false)
-    verifyEq((3...0).contains(0), false)
-    verifyEq((3...0).contains(1), true)
-    verifyEq((3...0).contains(3), true)
-    verifyEq((3...0).contains(3), true)
+    verifyEq((3..<0).contains(0), false)
+    verifyEq((3..<0).contains(1), true)
+    verifyEq((3..<0).contains(3), true)
+    verifyEq((3..<0).contains(3), true)
   }
 
   Void testEach()
@@ -89,7 +89,7 @@ class RangeTest : Test
     verifyEq(list, [2, 3, 4])
 
     list.clear;
-    ('a'...'d').each |Int i| { list.add(i) }
+    ('a'..<'d').each |Int i| { list.add(i) }
     verifyEq(list, ['a', 'b', 'c'])
 
     list.clear;
@@ -97,20 +97,20 @@ class RangeTest : Test
     verifyEq(list, [5, 4, 3, 2, 1, 0, -1, -2])
 
     list.clear;
-    (6...3).each |Int i| { list.add(i) }
+    (6..<3).each |Int i| { list.add(i) }
     verifyEq(list, [6, 5, 4])
   }
 
   Void testRange()
   {
     verifyEq((0..0).toList, [0])
-    verifyEq((0...0).toList, Int[,])
-    verifyEq((3...3).toList, Int[,])
+    verifyEq((0..<0).toList, Int[,])
+    verifyEq((3..<3).toList, Int[,])
     verifyEq((2..4).toList, [2,3,4])
-    verifyEq((2...4).toList, [2,3])
+    verifyEq((2..<4).toList, [2,3])
     verifyEq((-2..2).toList, [-2,-1,0,1,2])
     verifyEq((10..8).toList, [10,9,8])
-    verifyEq((10...8).toList, [10,9])
+    verifyEq((10..<8).toList, [10,9])
     verifyEq((-4..-8).toList, [-4,-5,-6,-7,-8])
   }
 

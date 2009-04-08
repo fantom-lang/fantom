@@ -176,7 +176,7 @@ internal class Parser
       consume
       consume
       while (cur.isAlphaNum || cur == '_') consume
-      word := text[start...pos]
+      word := text[start..<pos]
       if (keywords[word]) return Token.keyword
       return Token.text
     }

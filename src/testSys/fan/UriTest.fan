@@ -562,26 +562,26 @@ class UriTest : Test
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..-4, `http://h:9/`)
     verifyErr(IndexErr#) |,| { x := `http://h:9/a/b/c?query#frag`[0..-5] }
 
-    verifySlice(`http://h:9/a/b/c?query#frag`, 0...-1, `http://h:9/a/b/`)
-    verifySlice(`http://h:9/a/b/c?query#frag`, 0...-2, `http://h:9/a/`)
-    verifySlice(`http://h:9/a/b/c?query#frag`, 0...-3, `http://h:9/`)
-    verifyErr(IndexErr#) |,| { x := `http://h:9/a/b/c?query#frag`[0...-4] }
+    verifySlice(`http://h:9/a/b/c?query#frag`, 0..<-1, `http://h:9/a/b/`)
+    verifySlice(`http://h:9/a/b/c?query#frag`, 0..<-2, `http://h:9/a/`)
+    verifySlice(`http://h:9/a/b/c?query#frag`, 0..<-3, `http://h:9/`)
+    verifyErr(IndexErr#) |,| { x := `http://h:9/a/b/c?query#frag`[0..<-4] }
 
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..2, `http://h:9/a/b/c?query#frag`)
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..1, `http://h:9/a/b/`)
     verifySlice(`http://h:9/a/b/c?query#frag`, 0..0, `http://h:9/a/`)
 
-    verifySlice(`http://h:9/a/b/c?query#frag`, 0...2, `http://h:9/a/b/`)
-    verifySlice(`http://h:9/a/b/c?query#frag`, 0...1, `http://h:9/a/`)
-    verifySlice(`http://h:9/a/b/c?query#frag`, 0...0, `http://h:9/`)
+    verifySlice(`http://h:9/a/b/c?query#frag`, 0..<2, `http://h:9/a/b/`)
+    verifySlice(`http://h:9/a/b/c?query#frag`, 0..<1, `http://h:9/a/`)
+    verifySlice(`http://h:9/a/b/c?query#frag`, 0..<0, `http://h:9/`)
 
     verifySlice(`http://h:9/a/b/c?query#frag`, 1..-1, `b/c?query#frag`)
     verifySlice(`http://h:9/a/b/c?query#frag`, 2..-1, `c?query#frag`)
     verifySlice(`http://h:9/a/b/c?query#frag`, 3..-1, `?query#frag`)
 
     verifySlice(`http://h:9/a/b/c?query#frag`, 1..2, `b/c?query#frag`)
-    verifySlice(`http://h:9/a/b/c?query#frag`, 2...3, `c?query#frag`)
-    verifySlice(`http://h:9/a/b/c?query#frag`, 3...3, `?query#frag`)
+    verifySlice(`http://h:9/a/b/c?query#frag`, 2..<3, `c?query#frag`)
+    verifySlice(`http://h:9/a/b/c?query#frag`, 3..<3, `?query#frag`)
 
     verifySlice(`aaa/bbb/ccc/`, 0..2, `aaa/bbb/ccc/`)
     verifySlice(`aaa/bbb/ccc/`, 0..1, `aaa/bbb/`)

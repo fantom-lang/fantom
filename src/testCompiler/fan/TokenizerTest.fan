@@ -477,7 +477,7 @@ class TokenizerTest : Test
     verifyToken("::",      makeToken(Token.doubleColon))
     verifyToken(":=",      makeToken(Token.defAssign))
     verifyToken("..",      makeToken(Token.dotDot))
-    verifyToken("...",     makeToken(Token.dotDotDot))
+    verifyToken("..<",     makeToken(Token.dotDotLt))
     verifyToken("<=>",     makeToken(Token.cmp))
     verifyInvalid("`")
   }

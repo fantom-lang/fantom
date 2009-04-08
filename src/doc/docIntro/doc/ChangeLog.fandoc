@@ -585,5 +585,6 @@
 *Build 1.0.41 (working)*
 - Duration: minVal, maxVal
 - Move jfan to sys/java; nfan to sys/dotnet
+- Change exclusive range from "..." to "..<"
 
 TODO: remove 2 dynamic calls in JavaBridge on bootstrap update

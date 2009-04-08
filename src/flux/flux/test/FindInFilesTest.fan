@@ -45,9 +45,9 @@ internal class FindInFilesTest : Test
     c := result.index(",", b)
     d := result.index(")", c)
 
-    testName := result[a+1...b]
-    testLine := result[b+1...c].toInt
-    testCol  := result[c+1...d].toInt
+    testName := result[a+1..<b]
+    testLine := result[b+1..<c].toInt
+    testCol  := result[c+1..<d].toInt
 
     verifyEq(testName, name)
     verifyEq(testLine, line)

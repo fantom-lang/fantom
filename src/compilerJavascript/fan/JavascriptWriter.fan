@@ -591,7 +591,7 @@ if (c != null)
     if (cvar)
     {
       if (name[0] == '$') name = name[1..-1]
-      else { i := name.index(r"$"); if (i != null) name = name[0...i] }
+      else { i := name.index(r"$"); if (i != null) name = name[0..<i] }
     }
     if (fe.target == null && fe.field.isStatic)
     {

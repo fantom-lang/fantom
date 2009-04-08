@@ -66,7 +66,7 @@ class FandocParser
       colon := cur.index(":")
       if (colon != null)
       {
-        key := cur[2...colon].trim
+        key := cur[2..<colon].trim
         val := cur[colon+1..-1].trim
         doc.meta[key] = val
       }
@@ -286,7 +286,7 @@ class FandocParser
       else
         err("Internal error: $e", startLineNum, e)
 
-      elem.children = elem.children[0...oldNumChildren]
+      elem.children = elem.children[0..<oldNumChildren]
       elem.addChild(DocText(buf.toStr.replace("\n", " ")))
     }
 
@@ -362,7 +362,7 @@ class FandocParser
     dot := line.index(". ", i)
     if (dot == null) return false
 
-    mark := line[i...dot]
+    mark := line[i..<dot]
     if (mark[0].isDigit)
     {
       return mark.all |Int ch->Bool| { return ch.isDigit }

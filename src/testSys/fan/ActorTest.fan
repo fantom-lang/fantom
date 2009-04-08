@@ -81,7 +81,7 @@ class ActorTest : Test
     200.times |,| { actors.add(Actor(group, &order)) }
 
     // randomly send increasing ints to the actors
-    100_000.times |Int i| { actors[Int.random(0...actors.size)].send(i) }
+    100_000.times |Int i| { actors[Int.random(0..<actors.size)].send(i) }
 
     // get the results
     futures := Future[,]
@@ -202,10 +202,10 @@ class ActorTest : Test
       actors.add(actor)
 
       // send some dummy messages
-      Int.random(100...1000).times |Int j| { actor.send(j) }
+      Int.random(100..<1000).times |Int j| { actor.send(j) }
 
       // send sleep duration 0 to 300ms
-      dur := 1ms * Int.random(0...300).toFloat
+      dur := 1ms * Int.random(0..<300).toFloat
       if (i == 0) dur = 300ms
       durs.add(dur)
       futures.add(actor.send(dur))
@@ -276,7 +276,7 @@ class ActorTest : Test
       // send 6x 0ms - 50ms, max 600ms
       6.times |Int i|
       {
-        dur := 1ms * Int.random(0...50).toFloat
+        dur := 1ms * Int.random(0..<50).toFloat
         futures.add(actor.send(dur))
         durs.add(dur)
       }
@@ -382,7 +382,7 @@ class ActorTest : Test
       10.times |,|
       {
         // schedule something randonly between 0ms and 1sec
-        Duration? dur := 1ms * Int.random(0...1000).toFloat
+        Duration? dur := 1ms * Int.random(0..<1000).toFloat
         f := a.sendLater(dur, dur)
 
         // cancel some anything over 500ms
@@ -640,7 +640,7 @@ class ActorTest : Test
     localesPool := [Locale("en-US"), Locale("en-UK"), Locale("fr"), Locale("ja")]
     300.times |Int i|
     {
-      locale := localesPool[Int.random(0...localesPool.size)]
+      locale := localesPool[Int.random(0..<localesPool.size)]
       actors.add(Actor(group, &locals(i, locale)))
       locales.add(locale)
       actors.last.send("bar")

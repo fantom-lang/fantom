@@ -18,7 +18,7 @@ Operators in order of precedence:
   - Shift: '<<   >>'
   - Bitwise And: '&'
   - Bitwise Or: '|   ^'
-  - Range: '..   ...'
+  - Range: '..   ..<'
   - Elvis: 'x ?: y'
   - Relational: '<   <=   >=   >   <=>   is   isnot   as'
   - Equality: '==   !=   ===   !=='
@@ -288,12 +288,12 @@ creates sub-strings:
   s := "abcd"
   s[0..2]  => "abc"
   s[3..3]  => "d"
-  s[0...2] => "ab"
+  s[0..<2] => "ab"
 
   start := 0; end := 2
-  s[start...end] => "ab"
+  s[start..<end] => "ab"
 
-We use '..' to specify an inclusive end index, and '...' to specify
+We use '..' to specify an inclusive end index, and '..<' to specify
 an exclusive start index.  Also note how we can use any arbitrary expression
 with the range operators to define compact slice expressions.
 

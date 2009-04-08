@@ -120,7 +120,7 @@ class DocTest : Test
       newText := randLines(1..5)
       start := Int.random(0..doc.size)
       len   := Int.random(0..doc.size).min(doc.size-start)
-      text = text[0...start] + newText + text[start+len..-1]
+      text = text[0..<start] + newText + text[start+len..-1]
       doc.modify(start, len, newText)
       verifyText(doc, text)
     }
@@ -265,7 +265,7 @@ class DocTest : Test
     text := ""
     Int.random(numLines).times |,|
     {
-      line := "abcdefghijklmnopqrstuvwxyz"[0...Int.random(0..25)] + "\n"
+      line := "abcdefghijklmnopqrstuvwxyz"[0..<Int.random(0..25)] + "\n"
       text += line
     }
     return text[0..-2]
@@ -291,7 +291,7 @@ class DocTest : Test
       // ranges
       (text.size-s).times |Int i|
       {
-        verifyEq(doc.textRange(s,i), text[s...s+i])
+        verifyEq(doc.textRange(s,i), text[s..<s+i])
       }
 
       // test line at offset
