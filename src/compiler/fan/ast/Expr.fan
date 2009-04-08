@@ -1439,7 +1439,14 @@ class ClosureExpr : Expr
 
     // update my signature and the doCall signature
     signature = t
-    if (doCall != null) doCall.paramDefs = signature.toParamDefs(location)
+    if (doCall != null)
+    {
+      doCall.paramDefs.each |ParamDef p, Int i|
+      {
+        if (i < signature.params.size)
+          p.paramType = signature.params[i]
+      }
+    }
 
     // if an itBlock, set type of it
     if (isItBlock) itType = t.params.first
