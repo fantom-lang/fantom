@@ -274,12 +274,17 @@ class ItBlockTest : CompilerTest
         Obj d() { Foo().m2 { x = 'd' } }
         Obj e() { Foo().m2(5, null) { it.x = 'e' } }
         Obj f() { Foo().m2(5, null) { x = 'f' } }
+        Obj g() { Foo().m3 { x = 'g' } }
+        Obj h() { Foo().m4 { fill(2, 2) } }
+        Obj i() { Foo().m4(9) { fill(3, 3) } }
       }
 
       class Foo
       {
         Foo m1(|Str|? f := null) { return this }
         Foo m2(Int a := 5, |Str|? f := null) { return this }
+        This m3() { return this }
+        Int[] m4(Int a := 5) { return Int[,] }
         Int x
       }")
 
@@ -290,6 +295,9 @@ class ItBlockTest : CompilerTest
     verifyEq(obj->d->x, 'd')
     verifyEq(obj->e->x, 'e')
     verifyEq(obj->f->x, 'f')
+    verifyEq(obj->g->x, 'g')
+    verifyEq(obj->h, [2,2])
+    verifyEq(obj->i, [3,3,3])
   }
 
 //////////////////////////////////////////////////////////////////////////

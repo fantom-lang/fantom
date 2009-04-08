@@ -319,7 +319,10 @@ class CallResolver : CompilerSupport
   private Void inferClosureType()
   {
     if (result is CallExpr)
-      result = inferClosureTypeFromCall(result)
+    {
+      base := foundOnIt ? this.baseIt : this.base
+      result = inferClosureTypeFromCall(result, base)
+    }
   }
 
   **
@@ -328,7 +331,7 @@ class CallResolver : CompilerSupport
   ** last arg is a closure, but the call doesn't take a closure,
   ** then translate into an implicit call to Obj.with
   **
-  static Expr inferClosureTypeFromCall(CallExpr call)
+  static Expr inferClosureTypeFromCall(CallExpr call, CType base)
   {
     // check if last argument is closure
     c := call.args.last as ClosureExpr
@@ -351,6 +354,7 @@ class CallResolver : CompilerSupport
     // its type to be the result of the target expression
     if (c.isItBlock)
     {
+      if (call.ctype.isThis) call.ctype = base
       call.args.removeAt(-1)
       return c.toWith(call)
     }
