@@ -187,7 +187,7 @@ const final class Str
   **   "abcd"[0..2]   => "abc"
   **   "abcd"[3..3]   => "d"
   **   "abcd"[-2..-1] => "cd"
-  **   "abcd"[0...2]  => "ab"
+  **   "abcd"[0..<2]  => "ab"
   **   "abcd"[1..-2]  => "bc"
   **   "abcd"[4..-1]  => ""
   **

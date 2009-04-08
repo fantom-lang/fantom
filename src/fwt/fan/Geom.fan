@@ -29,7 +29,7 @@ const class Point
     try
     {
       comma := s.index(",")
-      return make(s[0...comma].trim.toInt, s[comma+1..-1].trim.toInt)
+      return make(s[0..<comma].trim.toInt, s[comma+1..-1].trim.toInt)
     }
     catch {}
     if (checked) throw ParseErr("Invalid Point: $s")
@@ -83,7 +83,7 @@ const class Size
     try
     {
       comma := s.index(",")
-      return make(s[0...comma].trim.toInt, s[comma+1..-1].trim.toInt)
+      return make(s[0..<comma].trim.toInt, s[comma+1..-1].trim.toInt)
     }
     catch {}
     if (checked) throw ParseErr("Invalid Size: $s")
@@ -141,8 +141,8 @@ const class Rect
       c1 := s.index(",")
       c2 := s.index(",", c1+1)
       c3 := s.index(",", c2+1)
-      return make(s[0...c1].trim.toInt, s[c1+1...c2].trim.toInt,
-                  s[c2+1...c3].trim.toInt, s[c3+1..-1].trim.toInt)
+      return make(s[0..<c1].trim.toInt, s[c1+1..<c2].trim.toInt,
+                  s[c2+1..<c3].trim.toInt, s[c3+1..-1].trim.toInt)
     }
     catch {}
     if (checked) throw ParseErr("Invalid Rect: $s")
@@ -236,8 +236,8 @@ const class Insets
       if (c1 == null) { len := s.toInt; return make(len, len, len, len) }
       c2 := s.index(",", c1+1)
       c3 := s.index(",", c2+1)
-      return make(s[0...c1].trim.toInt, s[c1+1...c2].trim.toInt,
-                  s[c2+1...c3].trim.toInt, s[c3+1..-1].trim.toInt)
+      return make(s[0..<c1].trim.toInt, s[c1+1..<c2].trim.toInt,
+                  s[c2+1..<c3].trim.toInt, s[c3+1..-1].trim.toInt)
     }
     catch {}
     if (checked) throw ParseErr("Invalid Insets: $s")

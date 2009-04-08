@@ -35,7 +35,7 @@ Access [#access]
   list[-3]              // return item at size-3, returns "b"
   list.slice(0..2)      // return sub-list from 0 to 1 inclusive, returns ["a",b","c"]
   list[0..2]            // convenience for list.slice(0..2)
-  list[0...2]           // return sub-list from 0 to 2 exclusive, returns ["a","b"]
+  list[0..<2]           // return sub-list from 0 to 2 exclusive, returns ["a","b"]
   list[-3..-1]          // return sub-list from size-3 to size-1 inclusive, returns ["b","c","d"]
 
 Modify [#modify]

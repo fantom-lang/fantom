@@ -542,13 +542,13 @@ class IntTest : Test
     acc.clear
     1000.times |,|
     {
-      i := Int.random(10...20)
-      verify((10...20).contains(i))
+      i := Int.random(10..<20)
+      verify((10..<20).contains(i))
       acc.set(i, this)
     }
     verifyEq(acc.size, 10)
 
-    verifyErr(ArgErr#) |,| { Int.random(20...10) }
+    verifyErr(ArgErr#) |,| { Int.random(20..<10) }
     verifyErr(ArgErr#) |,| { Int.random(2..1) }
   }
 

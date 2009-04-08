@@ -9,7 +9,7 @@
 **
 ** Range represents a contiguous range of integers from start to
 ** end.  Ranges may be represented as literals in Fan source code as
-** "start..end" for an inclusive end or "start...end" for an exlusive
+** "start..end" for an inclusive end or "start..<end" for an exlusive
 ** range.
 **
 const final class Range
@@ -49,7 +49,7 @@ const final class Range
   override Int hash()
 
   **
-  ** If inclusive return "start..end", if exclusive return "start...end".
+  ** If inclusive return "start..end", if exclusive return "start..<end".
   **
   override Str toStr()
 
@@ -78,7 +78,7 @@ const final class Range
   **
   ** Example:
   **   (1..3).inclusive   =>  true
-  **   (1...3).inclusive  =>  false
+  **   (1..<3).inclusive  =>  false
   **
   Bool inclusive()
 
@@ -87,7 +87,7 @@ const final class Range
   **
   ** Example:
   **   (1..3).exclusive   =>  false
-  **   (1...3).exclusive  =>  true
+  **   (1..<3).exclusive  =>  true
   **
   Bool exclusive()
 
@@ -113,7 +113,7 @@ const final class Range
   **
   ** Example:
   **   (2..4).toList   =>  [2,3,4]
-  **   (2...4).toList  =>  [2,3]
+  **   (2..<4).toList  =>  [2,3]
   **   (10..8).toList  =>  [10,9,8]
   **
   Int[] toList()

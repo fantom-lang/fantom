@@ -118,7 +118,7 @@ internal class TextEditorController : TextEditorSupport
     pos := 0
     while (pos < lastNewLine.size && lastNewLine[pos].isSpace) pos++
     if (pos == 0) return
-    ws := lastNewLine[0...pos]
+    ws := lastNewLine[0..<pos]
 
     // insert leading whitespace into text to modify
     tc.newText += ws

@@ -771,7 +771,9 @@ class Tokenizer : CompilerSupport
         if (cur == '.')
         {
           consume
-          if (cur == '.') { consume; return TokenVal(Token.dotDotDot) }
+// TODO
+if (cur == '.') { consume; return TokenVal(Token.dotDotLt) }
+          if (cur == '<') { consume; return TokenVal(Token.dotDotLt) }
           return TokenVal(Token.dotDot)
         }
         return TokenVal(Token.dot)

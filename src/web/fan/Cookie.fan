@@ -24,7 +24,7 @@ const class Cookie
   {
     eq := s.index("=")
     if (eq == null) throw ParseErr(s)
-    name := s[0...eq].trim
+    name := s[0..<eq].trim
     val := s[eq+1..-1].trim
     if (val.size >= 2 && val[0] == '"' && val[-1] == '"')
       val = WebUtil.fromQuotedStr(val)

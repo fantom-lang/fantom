@@ -287,10 +287,10 @@ class BufTest : Test
      verifyEq(buf[3..3].toHex, "dd")
      verifyEq(buf[0..-1].toHex, "aabbccdd")
      verifyEq(buf[-3..-2].toHex, "bbcc")
-     verifyEq(buf[1...2].toHex, "bb")
-     verifyEq(buf[1...3].toHex, "bbcc")
+     verifyEq(buf[1..<2].toHex, "bb")
+     verifyEq(buf[1..<3].toHex, "bbcc")
      verifyEq(buf[-2..-1].toHex, "ccdd")
-     verifyEq(buf[0...2].toHex, "aabb")
+     verifyEq(buf[0..<2].toHex, "aabb")
      verifyEq(buf[1..-2].toHex, "bbcc")
      verifyEq(buf[4..-1].toHex, "")
 
@@ -299,9 +299,9 @@ class BufTest : Test
 
      verifyErr(IndexErr#) |->Buf| { return buf[0..4] }
      verifyErr(IndexErr#) |->Buf| { return buf[3..4] }
-     verifyErr(IndexErr#) |->Buf| { return buf[0...5] }
+     verifyErr(IndexErr#) |->Buf| { return buf[0..<5] }
      verifyErr(IndexErr#) |->Buf| { return buf[3..1] }
-     verifyErr(IndexErr#) |->Buf| { return buf[3...2] }
+     verifyErr(IndexErr#) |->Buf| { return buf[3..<2] }
   }
 
 //////////////////////////////////////////////////////////////////////////

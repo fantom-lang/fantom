@@ -138,7 +138,7 @@ public final class Range
   public String toStr()
   {
     if (exclusive)
-      return start + "..." + end;
+      return start + "..<" + end;
     else
       return start + ".." + end;
   }

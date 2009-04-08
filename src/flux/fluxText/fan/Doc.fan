@@ -73,7 +73,7 @@ class Doc : RichTextModel
     // compute the new text of the lines being replaced
     offsetInStart := startOffset - startLine.offset
     offsetInEnd   := endOffset - endLine.offset
-    newLinesText  := startLine.text[0...offsetInStart] + newText + endLine.text[offsetInEnd..-1]
+    newLinesText  := startLine.text[0..<offsetInStart] + newText + endLine.text[offsetInEnd..-1]
 
     // split new text into new lines
     newLines := Line[,] { capacity=32 }

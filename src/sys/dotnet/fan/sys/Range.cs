@@ -145,7 +145,7 @@ namespace Fan.Sys
     public override string toStr()
     {
       if (m_exclusive)
-        return m_start.ToString() + "..." + m_end.ToString();
+        return m_start.ToString() + "..<" + m_end.ToString();
       else
         return m_start.ToString() + ".." + m_end.ToString();
     }

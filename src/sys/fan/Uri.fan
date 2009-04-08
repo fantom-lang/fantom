@@ -460,7 +460,7 @@ const final class Uri
   **   `/a/b/c/`[0..1]               =>  `/a/b/`
   **   `/a/b/c/`[0..0]               =>  `/a/`
   **   `/a/b/c/`[1..2]               =>  `b/c/`
-  **   `/a/b/c/`[1...2]              =>  `b/`
+  **   `/a/b/c/`[1..<2]              =>  `b/`
   **   `/a`[0..-2]                   =>  `/`
   **
   Uri slice(Range r)
@@ -473,7 +473,7 @@ const final class Uri
   ** Examples:
   **   `/a/b/c/`.sliceToPathAbs(0..1)  =>  `/a/b/`
   **   `/a/b/c/`.sliceToPathAbs(1..2)  =>  `/b/c/`
-  **   `/a/b/c/`.sliceToPathAbs(1...2) =>  `/b/`
+  **   `/a/b/c/`.sliceToPathAbs(1..<2) =>  `/b/`
   **
   Uri sliceToPathAbs(Range r)
 

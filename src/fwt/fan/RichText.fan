@@ -243,7 +243,7 @@ abstract class RichTextModel
     // if this is a range within a single line, then use normal Str slice
     if (offsetInLine+len <= lineText.size)
     {
-      return lineText[offsetInLine...offsetInLine+len]
+      return lineText[offsetInLine..<offsetInLine+len]
     }
 
     // the range spans multiple lines
@@ -277,7 +277,7 @@ abstract class RichTextModel
       // partial line
       else
       {
-        buf.add(lineText[0...n])
+        buf.add(lineText[0..<n])
         break
       }
     }

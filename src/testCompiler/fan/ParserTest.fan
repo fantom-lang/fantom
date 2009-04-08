@@ -702,7 +702,7 @@ class ParserTest : CompilerTest
 
     // range literal
     expr = verifyExpr("x..y", ExprId.rangeLiteral);  verifyEq(expr->exclusive, false)
-    expr = verifyExpr("x...y", ExprId.rangeLiteral); verifyEq(expr->exclusive, true)
+    expr = verifyExpr("x..<y", ExprId.rangeLiteral); verifyEq(expr->exclusive, true)
 
     // terms
     expr = verifyExpr("this", ExprId.thisExpr)

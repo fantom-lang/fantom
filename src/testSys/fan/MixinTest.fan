@@ -190,7 +190,7 @@ class MixinTest : Test
     Slot[] a   := MxA#.slots
 
     // we inherit all of Objs slots except make
-    fromObj := a[0...obj.size-1]
+    fromObj := a[0..<obj.size-1]
     obj = obj.dup
     obj.remove(Obj#make)
     verifyEq(fromObj, obj)

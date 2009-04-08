@@ -896,7 +896,7 @@ class SerSimple
 {
   static SerSimple fromStr(Str s)
   {
-    return make(s[0...s.index(",")].toInt, s[s.index(",")+1..-1].toInt)
+    return make(s[0..<s.index(",")].toInt, s[s.index(",")+1..-1].toInt)
   }
   new make(Int a, Int b) { this.a = a; this.b = b }
   override Str toStr() { return "$a,$b" }

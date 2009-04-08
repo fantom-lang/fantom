@@ -406,7 +406,7 @@ internal class ConsoleModel : RichTextModel
     {
       start := mp.fileStart
       name  := m.uri.name
-      t = t[0...start] + name + t[mp.fileEnd+1..-1]
+      t = t[0..<start] + name + t[mp.fileEnd+1..-1]
       if (start == 0)
         s = [0, link, name.size, norm]
       else

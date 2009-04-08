@@ -119,7 +119,7 @@ Expr [#expr]
   <relationalExpr> :=  <elvisExpr> (("is" | "as" | "isnot" | "<" | "<=" | ">" |
                        ">=" | "<=>") <elvisExpr>)*
   <elvisExpr>      :=  <rangeExpr> "?:" <rangeExpr>
-  <rangeExpr>      :=  <bitOrExpr> ((".." | "...") <bitOrExpr>)*
+  <rangeExpr>      :=  <bitOrExpr> ((".." | "..<") <bitOrExpr>)*
   <bitOrExpr>      :=  <bitAndExpr> (("^" | "|") <bitAndExpr>)*
   <bitAndExpr>     :=  <shiftExpr> (("&" <shiftExpr>)*
   <shiftExpr>      :=  <addExpr> (("<<" | ">>") <addExpr>)*

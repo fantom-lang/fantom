@@ -376,7 +376,7 @@ internal class FindBar : ContentPane, TextEditorSupport
     items.insert(0, text)
 
     // update combo, limit items
-    c.items = items[0...20.min(items.size)]
+    c.items = items[0..<20.min(items.size)]
     c.text = text  // set items nukes text, so reset
     ignore = false
   }

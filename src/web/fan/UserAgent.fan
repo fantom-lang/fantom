@@ -44,7 +44,7 @@ class UserAgent
         isIE = true
         start := s.index("MSIE") + 5
         end   := s.index(";", start)
-        version = parseVer(s[start...end])
+        version = parseVer(s[start..<end])
         break
       }
 
