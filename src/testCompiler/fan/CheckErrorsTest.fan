@@ -595,8 +595,6 @@ class CheckErrorsTest : CompilerTest
        ])
 
     // CheckErrors step
-// TODO-IT
-return
     verifyErrors(
      "const class Foo : Bar
       {
@@ -607,7 +605,7 @@ return
         static Void goop() { b = 7; b += 3; b++ }
 
         //const static Int c { get { return 3 } }
-        //const static Int d { set {  } }
+        //const static Int d { set {  } }  // 10
         //const static Int e { get { return 3 } set { } }
 
         const Int f := 3
@@ -617,7 +615,7 @@ return
 
         //const Int g { get { return 3 } }
         //const Int h { set {  } }
-        //const Int i { get { return 3 } set { } }
+        //const Int i { get { return 3 } set { } } // 20
 
         private Str j
         private const StrBuf k
@@ -627,7 +625,7 @@ return
         const Num:Duration ok1    // ok
         const Num:Str[][] ok2     // ok
 
-        once Int p() { return 3 }
+        once Int p() { return 3 }  // 30
       }
 
       class Bar {}
@@ -637,23 +635,23 @@ return
       const class Outside : Foo
       {
         new make() { f = 99 }
-        static { b++ }
+        static { b++ }  // 40
       }
 
       class With
       {
         static Foo fooFactory() { return Foo.make }
         static With withFactory() { return make }
-        Obj a() { return Foo { f = 99 } }       // ok
-        Obj b() { return Foo.make { f = 99 } }  // ok
-        Obj c() { return With { xxx = [1,2] } }  // ok
-        Obj d() { return make { xxx = [1,2] } }  // ok
-        Obj e() { return fooFactory { f = 99 } }
-        Obj f() { return withFactory { xxx = [1,2] } }
-        Obj g() { return make { xxx = [1,2] } }
-        Obj h(With s) { return s { xxx = [1,2] } }
-        Obj i() { return this { xxx = [1,2] } }
-        Obj j() { return make { goop = 99 } }
+        Obj a() { return Foo { it.f = 99 } }              // ok
+        Obj b() { return Foo.make { it.f = 99 } }         // ok
+        Obj c() { return With { it.xxx = [1,2] } }        // ok
+        Obj d() { return make { it.xxx = [1,2] } }        // ok  line 50
+        Obj e() { return fooFactory { it.f = 99 } }       // ok it-block
+        Obj f() { return withFactory { it.xxx = [1,2] } } // ok it-block
+        Obj g() { return make { it.xxx = [1,2] } }        // ok it-block
+        Obj h(With s) { return s { it.xxx = [1,2] } }     // ok it-block
+        Obj i() { return this { it.xxx = [1,2] } }        // ok it-block
+        Obj j() { return make { it.goop = 99 } }
         static { Foo.b = 999 }
 
         const Int[] xxx
@@ -699,13 +697,15 @@ return
         39, 16, "Cannot set const field '$podName::Foo.f'",
         40, 12, "Cannot set const field '$podName::Foo.b'",
 
+        /* used to be prevented for with-block, before it-blocks
         51, 33, "Cannot set const field '$podName::Foo.f'",
         52, 34, "Cannot set const field 'xxx' outside of constructor",
         54, 30, "Cannot set const field 'xxx' outside of constructor",
         55, 27, "Cannot set const field 'xxx' outside of constructor",
-        56, 27, "Cannot access static field 'goop' on instance",
-        56, 27, "Cannot set const static field 'goop' outside of static initializer",
+        */
         57, 16, "Cannot set const field '$podName::Foo.b'",
+        56, 30, "Cannot access static field 'goop' on instance",
+        56, 30, "Cannot set const static field 'goop' outside of static initializer",
        ])
   }
 
