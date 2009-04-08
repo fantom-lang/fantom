@@ -293,6 +293,36 @@ class ItBlockTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Catch
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCatch()
+  {
+    compile(
+     "class Acme
+      {
+        Obj m(Str a)
+        {
+          try
+          {
+            if (a == \"throw\") throw ArgErr()
+            else return a
+          }
+          catch (Err e)
+          {
+            list := Obj[,] { add(e.toStr) }
+            list.add(e.type.name)
+            return list
+          }
+        }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->m("foo"), "foo")
+    verifyEq(obj->m("throw"), Obj["sys::ArgErr", "ArgErr"])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Errors
 //////////////////////////////////////////////////////////////////////////
 

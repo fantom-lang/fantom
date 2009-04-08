@@ -16,11 +16,12 @@ class CodeAsm : CompilerSupport
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Compiler compiler, Location location, FPod fpod)
+  new make(Compiler compiler, Location location, FPod fpod, MethodDef? curMethod)
     : super(compiler)
   {
     this.location  = location
     this.fpod      = fpod
+    this.curMethod = curMethod
     this.code      = Buf.make
     this.errTable  = Buf.make; errTable.writeI2(-1)
     this.errCount  = 0
@@ -151,8 +152,18 @@ class CodeAsm : CompilerSupport
   {
     if (stmt.isCatchVar)
     {
+      // "declaration" of a catch variable is used store the
+      // variable back to its local register; if it is used as
+      // a closure variable store it back to the cvars too
+      var := stmt.var
       op(FOp.CatchErrStart, fpod.addTypeRef(stmt.ctype))
-      op(FOp.StoreVar,      stmt.var.register)
+      op(FOp.StoreVar, var.register)
+      if (var.usedInClosure)
+      {
+        op(FOp.LoadVar, curMethod.cvarsVar.register)
+        op(FOp.LoadVar, var.register)
+        op(FOp.StoreInstance, fpod.addFieldRef(var.cvarsField))
+      }
     }
     else if (stmt.init != null)
     {
@@ -1618,6 +1629,7 @@ class CodeAsm : CompilerSupport
 
   Location location
   FPod fpod
+  MethodDef? curMethod
   Buf code
   Buf errTable
   Int errCount

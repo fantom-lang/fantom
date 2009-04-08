@@ -681,7 +681,7 @@ class ResolveExpr : CompilerStep
       err("Variable '$def.name' is already defined in current block", def.location)
 
     // create and add it
-    def.var = curMethod.addLocalVar(def.ctype, def.name, currentBlock)
+    def.var = curMethod.addLocalVarForDef(def, currentBlock)
   }
 
   **
