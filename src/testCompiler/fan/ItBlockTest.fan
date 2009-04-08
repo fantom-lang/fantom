@@ -341,16 +341,20 @@ class ItBlockTest : CompilerTest
      "class Foo
       {
         static Obj a() { return A {} }
-        static Obj b() { return B { x = 4 } }
-        static Obj c() { return B { 6, } }
+        static Obj b() { return it.toStr }
+        Obj c() { return it.toStr }
+        static Obj d() { return B { x = 4 } }
+        static Obj e() { return B { 6, } }
       }
 
       class A { new mk() {} }
       class B { }
       ",
       [ 3, 27, "Unknown method '$podName::A.make'",
-        4, 31, "Unknown variable 'x'",
-        5, 31, "Unknown method '$podName::B.add'",
+        4, 27, "Invalid use of 'it' outside of it-block",
+        5, 20, "Invalid use of 'it' outside of it-block",
+        6, 31, "Unknown variable 'x'",
+        7, 31, "Unknown method '$podName::B.add'",
       ])
 
     // errors
@@ -365,6 +369,7 @@ class ItBlockTest : CompilerTest
         static Obj f() { return B { A() } }        // missing comma
         static Obj g() { return B { A() {} } }     // missing comma
         static Obj h() { return B { A {} } }       // missing comma
+        static Obj i(Foo f) { f { it = f } }       // not assignable
       }
 
       class A { Int x; Int y}
@@ -376,6 +381,7 @@ class ItBlockTest : CompilerTest
         8, 31, "Not a statement",
         9, 35, "Not a statement",
        10, 33, "Not a statement",
+       11, 29, "Left hand side is not assignable",
       ])
   }
 
