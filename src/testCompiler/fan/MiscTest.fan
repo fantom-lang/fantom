@@ -852,16 +852,14 @@ class MiscTest : CompilerTest
     verifyEq(obj->e->isImmutable, true)
     verifyEq(obj->f, null)
     verifyEq(obj->g, [5,6])
-// TODO-IT
-//    verifyEq(obj->g->isImmutable, true)
+    verifyEq(obj->g->isImmutable, true)
 
     verifyEq(obj->h, null)
     verifyEq(obj->i, null)
     verifyEq(obj->j, [2:"2", 3:"3"])
     verifyEq(obj->j->isImmutable, true)
     verifyEq(obj->k, [5:"5", 6:"6"])
-// TODO-IT
-//    verifyEq(obj->k->isImmutable, true)
+    verifyEq(obj->k->isImmutable, true)
 
     verifyEq(obj->l, null)
     verifyEq(obj->m, Str#)
