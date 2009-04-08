@@ -1064,7 +1064,13 @@ class LocalVarExpr : Expr
 
   override Bool assignRequiresTempVar() { var.usedInClosure }
 
-  override Bool sameVarAs(Expr that) { that is LocalVarExpr && ((LocalVarExpr)that).register == register }
+  override Bool sameVarAs(Expr that)
+  {
+    x := that as LocalVarExpr
+    if (x == null) return false
+    if (var?.usedInClosure != x?.var?.usedInClosure) return false
+    return register == x.register
+  }
 
   virtual Int register() { return var.register }
 
