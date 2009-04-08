@@ -250,16 +250,12 @@ class FileResource : Resource
     mimeType := f.mimeType
     if (mimeType == null) return Flux.icon(`/x16/file.png`)
 
+    // look for explicit match based off ext
+    try { return Flux.icon("/x16/file${f.ext.capitalize}.png".toUri) }
+    catch {}
+
     if (mimeType.mediaType == "text")
     {
-      switch (f.ext)
-      {
-        case "as":   return Flux.icon(`/x16/fileAs.png`)
-        case "cs":   return Flux.icon(`/x16/fileCs.png`)
-        case "fan":  return Flux.icon(`/x16/fileFan.png`)
-        case "java": return Flux.icon(`/x16/fileJava.png`)
-        case "js":   return Flux.icon(`/x16/fileJs.png`)
-      }
       switch (mimeType.subType)
       {
         //case "html": return Flux.icon(`/x16/fileHtml.png`)
@@ -270,7 +266,7 @@ class FileResource : Resource
     switch (mimeType.mediaType)
     {
       //case "audio": return Flux.icon(`/x16/audio-x-generic.png`)
-      //case "image": return Flux.icon(`/x16/image-x-generic.png`)
+      case "image": return Flux.icon(`/x16/fileImage.png`)
       //case "video": return Flux.icon(`/x16/video-x-generic.png`)
       default:      return Flux.icon(`/x16/file.png`)
     }
