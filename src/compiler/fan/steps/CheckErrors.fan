@@ -912,10 +912,9 @@ class CheckErrors : CompilerStep
       return rhs
     }
 
-    // we allow setting an instance ctor field in a ctor
-    // based with block, otherwise it need further checking
-/* TODO-IT
-    if (!(lhs.target is WithBaseExpr) || !lhs.target->isCtorWithBlock)
+    // we allow setting an instance ctor field in an
+    // it-block, otherwise dive in for further checking
+    if (!(curType.isClosure && curType.closure.isItBlock))
     {
       // check attempt to set field outside of owning class
       if (field.parent != inType)
@@ -931,7 +930,6 @@ class CheckErrors : CompilerStep
         return rhs
       }
     }
-*/
 
     // any other errors should already be logged at this point (see isConstFieldType)
 
