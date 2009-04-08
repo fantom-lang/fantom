@@ -257,6 +257,8 @@ class FuncType : GenericType
   new makeItBlock(CType itType)
     : this.make([itType], ["it"], itType.ns.voidType)
   {
+    // sanity check
+    if (itType.isThis) throw Err("Invalid it-block func signature: $this")
   }
 
   override Int flags()
