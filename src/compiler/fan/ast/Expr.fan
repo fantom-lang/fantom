@@ -1476,6 +1476,7 @@ class ClosureExpr : Expr
   // ResolveExpr
   [Str:MethodVar]? enclosingLocals // locals in scope
   Bool usesCvars                // does this guy use vars from outer scope
+  Bool setsConst                // sets one or more const fields (CheckErrors)
   CType? itType                 // type of implicit it
 }
 

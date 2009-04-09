@@ -55,7 +55,7 @@ class ResolveExpr : CompilerStep
 
   override Void enterStmt(Stmt stmt) { stmtStack.push(stmt) }
 
-  override Void visitStmt(Stmt stmt)
+  override Stmt[]? visitStmt(Stmt stmt)
   {
     stmtStack.pop
     switch (stmt.id)
@@ -66,6 +66,7 @@ class ResolveExpr : CompilerStep
       case StmtId.continueStmt: resolveContinue((ContinueStmt)stmt)
       case StmtId.localDef:     resolveLocalVarDef((LocalDefStmt)stmt)
     }
+    return null
   }
 
   private Void resolveExprStmt(ExprStmt stmt)
