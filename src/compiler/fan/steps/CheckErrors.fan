@@ -21,6 +21,7 @@
 **   4) check for field storage requirements
 **   5) add implicit coersions: auto-casts, boxing, to non-nullable
 **   6) implicit call to toImmutable when assigning to const field
+**   7) mark ClosureExpr.setsConst
 **
 class CheckErrors : CompilerStep
 {
@@ -485,7 +486,7 @@ class CheckErrors : CompilerStep
     finallyDepth--
   }
 
-  override Void visitStmt(Stmt stmt)
+  override Stmt[]? visitStmt(Stmt stmt)
   {
     switch (stmt.id)
     {
@@ -501,6 +502,7 @@ class CheckErrors : CompilerStep
       case StmtId.tryStmt:       checkTry((TryStmt)stmt)
       case StmtId.switchStmt:    checkSwitch((SwitchStmt)stmt)
     }
+    return null
   }
 
   private Void checkExprStmt(ExprStmt stmt)
@@ -901,6 +903,7 @@ class CheckErrors : CompilerStep
     inMethod := curMethod
     if (inType.isClosure)
     {
+      curType.closure.setsConst = true
       inType = inType.closure.enclosingType
       inMethod = (curType.closure.enclosingSlot as MethodDef) ?: curMethod
     }

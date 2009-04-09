@@ -36,12 +36,13 @@ abstract class Stmt : Node
 // Tree
 //////////////////////////////////////////////////////////////////////////
 
-  Void walk(Visitor v, VisitDepth depth)
+  Stmt[]? walk(Visitor v, VisitDepth depth)
   {
     v.enterStmt(this)
     walkChildren(v, depth)
-    v.visitStmt(this)
+    r := v.visitStmt(this)
     v.exitStmt(this)
+    return r
   }
 
   virtual Void walkChildren(Visitor v, VisitDepth depth)
@@ -105,6 +106,8 @@ class ExprStmt : Stmt
   {
     expr = walkExpr(v, depth, expr)
   }
+
+  override Str toStr() { expr.toStr }
 
   override Void print(AstWriter out)
   {
@@ -231,6 +234,8 @@ class ReturnStmt : Stmt
   {
     expr = walkExpr(v, depth, expr)
   }
+
+  override Str toStr() { expr != null ? "return $expr" : "return" }
 
   override Void print(AstWriter out)
   {

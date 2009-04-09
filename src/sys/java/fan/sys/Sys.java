@@ -292,6 +292,7 @@ public final class Sys
   public static final Type ArgErrType            = builtin("ArgErr",            ErrType);
   public static final Type CancelledErrType      = builtin("CancelledErr",      ErrType);
   public static final Type CastErrType           = builtin("CastErr",           ErrType);
+  public static final Type ConstErrType          = builtin("ConstErr",          ErrType);
   public static final Type IOErrType             = builtin("IOErr",             ErrType);
   public static final Type IndexErrType          = builtin("IndexErr",          ErrType);
   public static final Type InterruptedErrType    = builtin("InterruptedErr",    ErrType);

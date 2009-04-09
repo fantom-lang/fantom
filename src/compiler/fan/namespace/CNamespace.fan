@@ -110,6 +110,12 @@ abstract class CNamespace : CompilerSupport
     typeMethod         = sysMethod(typeType,   "method")
     funcToImmutable    = sysMethod(funcType,   "toImmutable")
 
+    // mock methods
+    mockFlags := FConst.Public | FConst.Virtual
+    funcEnterCtor   = MockMethod(funcType, "enterCtor",   mockFlags, voidType, [objType])
+    funcExitCtor    = MockMethod(funcType, "exitCtor",    mockFlags, voidType, CType[,])
+    funcCheckInCtor = MockMethod(funcType, "checkInCtor", mockFlags, voidType, [objType])
+
     itBlockType = FuncType.makeItBlock(objType)
   }
 
@@ -318,5 +324,8 @@ abstract class CNamespace : CompilerSupport
   readonly CMethod typeField
   readonly CMethod typeMethod
   readonly CMethod funcToImmutable
+  readonly CMethod funcEnterCtor
+  readonly CMethod funcExitCtor
+  readonly CMethod funcCheckInCtor
 
 }
