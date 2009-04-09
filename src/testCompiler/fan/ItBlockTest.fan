@@ -331,6 +331,33 @@ class ItBlockTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// This Funcs
+//////////////////////////////////////////////////////////////////////////
+
+/* TODO-IT
+  Void testThisFuncs()
+  {
+    compile(
+     "class Acme
+      {
+      }")
+  }
+
+  Void testThisFuncsErrors()
+  {
+    // errors CheckErrors
+    verifyErrors(
+     "class Foo
+      {
+        static |Void| m03(Void x) { throw Err() }
+      }
+      ",
+      [ 3, 2, "????",
+      ])
+  }
+*/
+
+//////////////////////////////////////////////////////////////////////////
 // ConstErr
 //////////////////////////////////////////////////////////////////////////
 
@@ -361,16 +388,16 @@ class ItBlockTest : CompilerTest
         new make()         { }
         new make1()        { x = 1 }
         new make2(Int x)   { this.x = x }
-        new make3(|Foo| f) { f(this) }        // TODO-IT: change to |This|
-        new make4(|Foo| f) { f(this); x = 4 }
+        new make3(|This| f) { f(this) }
+        new make4(|This| f) { f(this); x = 4 }
 
-        static Foo factory5(|Foo| f) { return make5(f) }
-        static Foo factory5bad(|Foo| f) { x := make5(f); f(x); return x }
-        new make5(|Foo| f) { x += 30; f(this); x += 1000 }
+        static Foo factory5(|This| f) { return make5(f) }
+        static Foo factory5bad(|This| f) { x := make5(f); f(x); return x }
+        new make5(|This| f) { x += 30; f(this); x += 1000 }
 
-        static Foo factoryX(Bool b, |Foo| f) { return makeX(b, f) }
-        static Foo factoryXbad(Bool b, |Foo| f) { x := makeX(b, f); f(x); return x }
-        new makeX(Bool b, |Foo| f)
+        static Foo factoryX(Bool b, |This| f) { return makeX(b, f) }
+        static Foo factoryXbad(Bool b, |This| f) { x := makeX(b, f); f(x); return x }
+        new makeX(Bool b, |This| f)
         {
            if (b) { f(this); x += 10; return; }
            else { f(this); x += 20; return; }
@@ -404,7 +431,7 @@ class ItBlockTest : CompilerTest
 
   Void testErrors()
   {
-    // errors
+    // errors ResolveExpr
     verifyErrors(
      "class Foo
       {
@@ -425,7 +452,7 @@ class ItBlockTest : CompilerTest
         7, 31, "Unknown method '$podName::B.add'",
       ])
 
-    // errors
+    // errors CheckErrors
     verifyErrors(
      "class Foo
       {

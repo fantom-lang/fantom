@@ -1505,4 +1505,70 @@ class CheckErrorsTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Valid Types
+//////////////////////////////////////////////////////////////////////////
+
+  Void testValidTypes()
+  {
+    // Normalize (fields check before getter/setter generated)
+    verifyErrors(
+      "class Foo
+       {
+         Void f03
+         This f04
+         Void[] f05
+         This[]? f06
+         Void:Obj f07
+         [Obj:This]? f08
+         |This|? f09
+         |->This| f10
+         |Void| f11
+         |Obj,Void| f12
+         |->This[]?| f13
+       }",
+       [
+         3, 3, "Cannot use Void as field type",
+         4, 3, "Cannot use This as field type",
+         5, 3, "Invalid type 'sys::Void[]'",
+         6, 3, "Invalid type 'sys::This[]?'",
+         7, 3, "Invalid type '[sys::Void:sys::Obj]'",
+         8, 3, "Invalid type '[sys::Obj:sys::This]?'",
+         9, 3, "Invalid type '|sys::This->sys::Void|?'",
+         10, 3, "Invalid type '|->sys::This|'",
+         11, 3, "Invalid type '|sys::Void->sys::Void|'",
+         12, 3, "Invalid type '|sys::Obj,sys::Void->sys::Void|'",
+         13, 3, "Invalid type '|->sys::This[]?|'",
+       ])
+
+    // CheckErrors
+    verifyErrors(
+      "class Foo
+       {
+         Void[]? m03() { throw Err() }
+         |This| m04() { throw Err() }
+         Void m05(Void a) { }
+         Void m06(This a) { }
+         Void m07(Void? a) { }
+         Void m08(This? a) { }
+         Void m09(|->This|? a) {}
+         Str m10() { Void? x; return x.toStr }
+         Str m11() { This? x; return x.toStr }
+         Str m12() { Void[]? x; return x.toStr }
+         Str m13() { |This|? x; return x.toStr }
+       }",
+       [
+         3, 3,  "Invalid type 'sys::Void[]?'",
+         4, 3,  "Invalid type '|sys::This->sys::Void|'",
+         5, 12, "Cannot use Void as parameter type",
+         6, 12, "Cannot use This as parameter type",
+         7, 12, "Cannot use Void as parameter type",
+         8, 12, "Cannot use This as parameter type",
+         9, 12, "Invalid type '|->sys::This|?'",
+        10, 15, "Cannot use Void as local variable type",
+        11, 15, "Cannot use This as local variable type",
+        12, 15, "Invalid type 'sys::Void[]?'",
+        13, 15, "Invalid type '|sys::This->sys::Void|?'",
+       ])
+  }
 }

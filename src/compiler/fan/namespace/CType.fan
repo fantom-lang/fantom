@@ -312,66 +312,69 @@ mixin CType
   **
   ** Return if this Type is a class (as opposed to enum or mixin)
   **
-  Bool isClass() { return !isMixin && !isEnum }
+  Bool isClass() { !isMixin && !isEnum }
 
   **
   ** Return if this Type is a mixin type and cannot be instantiated.
   **
-  Bool isMixin() { return flags & FConst.Mixin != 0 }
+  Bool isMixin() { flags & FConst.Mixin != 0 }
 
   **
   ** Return if this Type is an sys::Enum
   **
-  Bool isEnum() { return flags & FConst.Enum != 0 }
+  Bool isEnum() { flags & FConst.Enum != 0 }
 
   **
   ** Return if this Type is abstract and cannot be instantiated.  This
   ** method will always return true if the type is a mixin.
   **
-  Bool isAbstract() { return flags & FConst.Abstract != 0 }
+  Bool isAbstract() { flags & FConst.Abstract != 0 }
 
   **
   ** Return if this Type is const and immutable.
   **
-  Bool isConst() { return flags & FConst.Const != 0 }
+  Bool isConst() { flags & FConst.Const != 0 }
 
   **
   ** Return if this Type is final and cannot be subclassed.
   **
-  Bool isFinal() { return flags & FConst.Final != 0 }
+  Bool isFinal() { flags & FConst.Final != 0 }
 
   **
   ** Is this a public scoped class
   **
-  Bool isPublic() { return flags & FConst.Public != 0 }
+  Bool isPublic() { flags & FConst.Public != 0 }
 
   **
   ** Is this an internally scoped class
   **
-  Bool isInternal() { return flags & FConst.Internal != 0 }
+  Bool isInternal() { flags & FConst.Internal != 0 }
 
   **
   ** Is this a compiler generated synthetic class
   **
-  Bool isSynthetic() { return flags & FConst.Synthetic != 0 }
+  Bool isSynthetic() { flags & FConst.Synthetic != 0 }
 
 //////////////////////////////////////////////////////////////////////////
 // Conveniences
 //////////////////////////////////////////////////////////////////////////
 
-  Bool isObj()     { return qname == "sys::Obj" }
-  Bool isBool()    { return qname == "sys::Bool" }
-  Bool isInt()     { return qname == "sys::Int" }
-  Bool isFloat()   { return qname == "sys::Float" }
-  Bool isDecimal() { return qname == "sys::Decimal" }
-  Bool isRange()   { return qname == "sys::Range" }
-  Bool isStr()     { return qname == "sys::Str" }
-  Bool isThis()    { return qname == "sys::This" }
-  Bool isType()    { return qname == "sys::Type" }
-  Bool isVoid()    { return qname == "sys::Void" }
-  Bool isList()    { return fits(ns.listType) }
-  Bool isMap()     { return fits(ns.mapType) }
-  Bool isFunc()    { return fits(ns.funcType) }
+  Bool isObj()     { qname == "sys::Obj" }
+  Bool isBool()    { qname == "sys::Bool" }
+  Bool isInt()     { qname == "sys::Int" }
+  Bool isFloat()   { qname == "sys::Float" }
+  Bool isDecimal() { qname == "sys::Decimal" }
+  Bool isRange()   { qname == "sys::Range" }
+  Bool isStr()     { qname == "sys::Str" }
+  Bool isThis()    { qname == "sys::This" }
+  Bool isType()    { qname == "sys::Type" }
+  Bool isVoid()    { qname == "sys::Void" }
+  Bool isList()    { fits(ns.listType) }
+  Bool isMap()     { fits(ns.mapType) }
+  Bool isFunc()    { fits(ns.funcType) }
+
+  ** Is this a valid type usable anywhere (such as local var)
+  virtual Bool isValid() { !isVoid && !isThis }
 
 //////////////////////////////////////////////////////////////////////////
 // Slots

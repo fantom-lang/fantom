@@ -258,12 +258,11 @@ class Normalize : CompilerStep
 
   private Void normalizeField(FieldDef f)
   {
-    // can't declare This fields
-    if (f.fieldType.isThis)
-    {
-      err("Cannot use This as field type", f.location)
-      return
-    }
+    // validate type of field
+    t := f.fieldType
+    if (t.isThis)   { err("Cannot use This as field type", f.location); return }
+    if (t.isVoid)   { err("Cannot use Void as field type", f.location); return }
+    if (!t.isValid) { err("Invalid type '$t'", f.location); return }
 
     // if this field overrides a concrete field, that means we already have
     // a concrete getter/setter for this field - if either of this field's
