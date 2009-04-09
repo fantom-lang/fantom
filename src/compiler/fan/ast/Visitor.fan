@@ -122,9 +122,11 @@ mixin Visitor
   virtual Void exitStmt(Stmt stmt) {}
 
   **
-  ** Callback when visiting a stmt.
+  ** Callback when visiting a stmt.  Return a list to replace
+  ** the statement with new statements, or return null to
+  ** keep existing statement.
   **
-  virtual Void visitStmt(Stmt stmt) {}
+  virtual Stmt[]? visitStmt(Stmt stmt) { null }
 
   **
   ** Callback when entering a finally block

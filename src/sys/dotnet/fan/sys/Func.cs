@@ -59,6 +59,11 @@ namespace Fan.Sys
       throw NotImmutableErr.make().val;
     }
 
+    // Hooks used by compiler to generate runtime const field checks for it-blocks
+    public virtual void enterCtor(object o) {}
+    public virtual void exitCtor() {}
+    public virtual void checkInCtor(object o) {}
+
   //////////////////////////////////////////////////////////////////////////
   // Indirect
   //////////////////////////////////////////////////////////////////////////
@@ -129,6 +134,19 @@ namespace Fan.Sys
       public override object call6(object a, object b, object c, object d, object e, object f) { return call1(a); }
       public override object call7(object a, object b, object c, object d, object e, object f, object g) { return call1(a); }
       public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call1(a); }
+
+      public override void enterCtor(object o) { this.m_inCtor = o; }
+      public override void exitCtor() { this.m_inCtor = null; }
+      public override void checkInCtor(object it)
+      {
+        /* TODO-IT
+        if (it == m_inCtor) return;
+        String msg = it == null ? "null" : FanObj.type(it).qname();
+        throw ConstErr.make(msg).val;
+        */
+      }
+
+      object m_inCtor;
     }
 
     public abstract class Indirect2 : Indirect

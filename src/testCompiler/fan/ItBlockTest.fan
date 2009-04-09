@@ -331,6 +331,74 @@ class ItBlockTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// ConstErr
+//////////////////////////////////////////////////////////////////////////
+
+  Void testConstErr()
+  {
+    compile(
+     "class Acme
+      {
+        Int test1()  { Foo.make1.x }
+        Int test2()  { Foo.make2(2).x }
+        Int test3()  { Foo.make3 { x = 3 }.x }
+        Int test4()  { Foo.make4 { x = -1 }.x }
+        Int test5()  { Foo.make5 { x += 200 }.x }
+        Int test6()  { return Foo.makeX(true) { x = 6 }.x }
+        Int test7()  { return Foo.makeX(false) { x = 7 }.x }
+        Int test8()  { Foo.factory5 { x += 200 }.x }  // line 10
+        Int test9()  { Foo.factoryX(true) { x = 9 }.x }
+        Int test10() { Foo.factoryX(false) { x = 10 }.x }
+
+        Int bad1()   { f := Foo(); f { x = 6 }; return f.x }
+        Foo bad2()   { Foo.factory5bad { x = 2 } }
+        Foo bad3()   { Foo.factoryXbad(true) { x = 3 } }
+        Foo bad4()   { Foo.factoryXbad(false) { x = 4 } }
+      }
+
+      class Foo
+      {
+        new make()         { }
+        new make1()        { x = 1 }
+        new make2(Int x)   { this.x = x }
+        new make3(|Foo| f) { f(this) }        // TODO-IT: change to |This|
+        new make4(|Foo| f) { f(this); x = 4 }
+
+        static Foo factory5(|Foo| f) { return make5(f) }
+        static Foo factory5bad(|Foo| f) { x := make5(f); f(x); return x }
+        new make5(|Foo| f) { x += 30; f(this); x += 1000 }
+
+        static Foo factoryX(Bool b, |Foo| f) { return makeX(b, f) }
+        static Foo factoryXbad(Bool b, |Foo| f) { x := makeX(b, f); f(x); return x }
+        new makeX(Bool b, |Foo| f)
+        {
+           if (b) { f(this); x += 10; return; }
+           else { f(this); x += 20; return; }
+        }
+
+        const Int x := 9
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test1, 1)
+    verifyEq(obj->test2, 2)
+    verifyEq(obj->test3, 3)
+    verifyEq(obj->test4, 4)
+    verifyEq(obj->test5, 1239)
+    verifyEq(obj->test6, 16)
+    verifyEq(obj->test7, 27)
+    verifyEq(obj->test8, 1239)
+    verifyEq(obj->test9, 19)
+    verifyEq(obj->test10, 30)
+    /* TODO-IT
+    verifyErr(ConstErr#) |,| { obj->bad1 }
+    verifyErr(ConstErr#) |,| { obj->bad2 }
+    verifyErr(ConstErr#) |,| { obj->bad3 }
+    verifyErr(ConstErr#) |,| { obj->bad4 }
+    */
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Errors
 //////////////////////////////////////////////////////////////////////////
 
