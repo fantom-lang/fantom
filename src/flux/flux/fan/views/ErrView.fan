@@ -32,15 +32,15 @@ internal class ErrView : View
       Label
       {
         image  = Flux.icon(`/x16/err.png`)
-        font   = Font("Dialog", 12, true)
+        font   = Font("bold 12pt Dialog")
         text   = "ERROR: $message"
       },
       InsetPane
       {
-        insets=Insets{left=20}
+        insets = Insets(0, 0, 0, 20)
         Label
         {
-          font = Font("Dialog", 10, true)
+          font = Font("bold 10pt Dialog")
           text = resource.uri.toStr
         },
       },
@@ -48,8 +48,8 @@ internal class ErrView : View
 
     if (cause != null)
     {
-      trace := Label { text=cause.traceToStr; font=Font("Courier", 10) }
-      content.add(InsetPane { it.insets=Insets{left=20}; it.content=trace })
+      trace := Label { text=cause.traceToStr; font=Font("10pt Courier") }
+      content.add(InsetPane { it.insets=Insets(0,0,0,20); it.content=trace })
     }
 
     this.content = content

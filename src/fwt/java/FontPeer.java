@@ -64,7 +64,7 @@ public class FontPeer
     if (sys == null)
     {
       FontData data = Env.get().display.getSystemFont().getFontData()[0];
-      sys = fan.fwt.Font.make(data.getName(), data.getHeight());
+      sys = fan.fwt.Font.makeFields(data.getName(), data.getHeight());
     }
     return sys;
   }
@@ -76,7 +76,7 @@ public class FontPeer
     {
       String name = "Courier New"; int size = 9;
       if (Env.isMac()) { name = "Monaco"; size = 12; }
-      sysMonospace = fan.fwt.Font.make(name, size);
+      sysMonospace = fan.fwt.Font.makeFields(name, size);
     }
     return sysMonospace;
   }

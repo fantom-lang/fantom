@@ -586,5 +586,7 @@
 - Duration: minVal, maxVal
 - Move jfan to sys/java; nfan to sys/dotnet
 - Change exclusive range from "..." to "..<"
+- Disallow it-block: Point, Size, Rect, Insets, Hints
+- Require it-block: Font
 
 TODO: remove 2 dynamic calls in JavaBridge on bootstrap update

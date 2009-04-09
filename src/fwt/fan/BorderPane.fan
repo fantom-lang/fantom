@@ -52,13 +52,11 @@ class BorderPane : Pane
   override Void onLayout()
   {
     if (content == null) return
-    content.bounds = Rect
-    {
-      x = insets.left
-      y = insets.top
-      w = this.size.w - insets.left - insets.right
-      h = this.size.h - insets.top - insets.bottom
-    }
+    content.bounds = Rect(
+      insets.left,
+      insets.top,
+      this.size.w - insets.left - insets.right,
+      this.size.h - insets.top - insets.bottom)
   }
 
   override Void onPaint(Graphics g)

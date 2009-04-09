@@ -18,12 +18,21 @@ const class Font
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Construct a Font with family name, size in points,
-  ** and optional bold/italic style.
+  ** Construct with it-block
   **
-  new make(Str? name := null, Int size := 12, Bool bold := false, Bool italic := false)
+  new make(|This| f)
   {
-    if (name != null) this.name = name
+    f(this)
+  }
+
+  **
+  ** Construct a Font with family name, size in points, and optional
+  ** bold/italic style.  This is internal for now, because eventually
+  ** we should be able to collapse this and it-block into single ctor.
+  **
+  internal new makeFields(Str name, Int size := 12, Bool bold := false, Bool italic := false)
+  {
+    this.name = name
     this.size   = size
     this.bold   = bold
     this.italic = italic
@@ -59,7 +68,7 @@ const class Font
         else size = tok[0..-3].toInt
       }
 
-      return make(name, size.toInt, bold, italic)
+      return makeFields(name, size.toInt, bold, italic)
     }
     catch {}
     if (checked) throw ParseErr("Invalid Font: $s")
@@ -87,12 +96,12 @@ const class Font
   **
   ** Name of font.
   **
-  const Str name
+  const Str name := "Serif"
 
   **
   ** Size of font in points.
   **
-  const Int size
+  const Int size := 11
 
   **
   ** Is this font bold.
@@ -165,7 +174,7 @@ const class Font
   Font toSize(Int size)
   {
     if (this.size == size) return this
-    return Font(name, size, bold, italic)
+    return Font.makeFields(name, size, bold, italic)
   }
 
   **
@@ -176,7 +185,7 @@ const class Font
   Font toPlain()
   {
     if (!bold && !italic) return this
-    return Font(name, size, false, false)
+    return Font.makeFields(name, size, false, false)
   }
 
   **
@@ -186,7 +195,7 @@ const class Font
   Font toBold()
   {
     if (bold) return this
-    return Font(name, size, true, italic)
+    return Font.makeFields(name, size, true, italic)
   }
 
   **
@@ -196,7 +205,7 @@ const class Font
   Font toItalic()
   {
     if (italic) return this
-    return Font(name, size, bold, true)
+    return Font.makeFields(name, size, bold, true)
   }
 
 //////////////////////////////////////////////////////////////////////////

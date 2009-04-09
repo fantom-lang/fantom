@@ -798,8 +798,8 @@ internal class AboutCommand : FluxCommand
   override Void invoke(Event? event)
   {
     icon  := Pod.find("icons").files[`/x48/flux.png`]
-    big   := Font(Font.sys.name, Font.sys.size+(Desktop.isMac ? 2 : 3), true)
-    small := Font(Font.sys.name, Font.sys.size-(Desktop.isMac ? 3 : 1), false)
+    big   := Font { it.name=Font.sys.name; it.size=Font.sys.size+(Desktop.isMac ? 2 : 3); it.bold=true }
+    small := Font { it.name=Font.sys.name; it.size=Font.sys.size-(Desktop.isMac ? 3 : 1) }
     content := GridPane
     {
       halignCells = Halign.center
