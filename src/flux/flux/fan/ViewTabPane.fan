@@ -109,7 +109,7 @@ internal class ViewTabPane : Pane
   **
   ** Use pref size
   **
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
     return Size(100, 100)
   }
@@ -152,7 +152,7 @@ internal class TabBar : Widget
     onMouseDown.add(&pressed)
   }
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
     ph := tabInsets.top + 16.max(fontActive.height) + tabInsets.bottom
     return Size(100, ph)

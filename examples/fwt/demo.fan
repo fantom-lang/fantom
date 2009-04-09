@@ -629,7 +629,7 @@ class Box : Widget
 {
   Color color := Color.green
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
     Size(Int.random(20..100), Int.random(20..80))
   }
@@ -665,7 +665,7 @@ class EventDemo : Widget
     onMouseWheel.add(&dump)
   }
 
-  override Size prefSize(Hints hints := Hints.def) { return Size.make(100, 100) }
+  override Size prefSize(Hints hints := Hints.defVal) { return Size.make(100, 100) }
 
   override Void onPaint(Graphics g)
   {
@@ -704,7 +704,7 @@ class GraphicsDemo : Widget
 {
   FwtDemo demo
 
-  override Size prefSize(Hints hints := Hints.def) { return Size.make(600,500) }
+  override Size prefSize(Hints hints := Hints.defVal) { return Size.make(600,500) }
 
   override Void onPaint(Graphics g)
   {
@@ -781,7 +781,7 @@ class GraphicsDemo : Widget
 
     // translate for font metric box
     g.translate(50, 250)
-    g.pen = Pen.def
+    g.pen = Pen.defVal
     g.brush = Color.yellow
     g.fillRect(0, 0, 200, 100)
 

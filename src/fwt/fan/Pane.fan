@@ -24,7 +24,7 @@ abstract class Pane : Widget
   ** null.  If no constraints are known for height, then 'hints.h'
   ** will be null.
   **
-  override abstract Size prefSize(Hints hints := Hints.def)
+  override abstract Size prefSize(Hints hints := Hints.defVal)
 
   // to force native peer
   private native Void dummyPane()

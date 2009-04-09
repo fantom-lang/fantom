@@ -129,7 +129,7 @@ abstract class TextWidget : Widget
   ** Return the preferred size based on `prefCols` and
   ** `prefRows`.
   **
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
     // this isn't very exact right now
     inset := 10

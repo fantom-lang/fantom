@@ -63,7 +63,7 @@ internal class LocatorBar : Widget
     uriText.selectAll
   }
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
     ph := uriText.prefSize.h.max(icon.size.h) + textInsets.top + textInsets.bottom
     return Size(100, ph)

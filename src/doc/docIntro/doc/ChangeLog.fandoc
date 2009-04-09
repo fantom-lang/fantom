@@ -588,5 +588,6 @@
 - Change exclusive range from "..." to "..<"
 - Disallow it-block: Point, Size, Rect, Insets, Hints
 - Require it-block: Font
+- Rename def => defVal: Point, Size, Rect, Insets, Hints, Pen
 
 TODO: remove 2 dynamic calls in JavaBridge on bootstrap update

@@ -275,7 +275,7 @@ internal class FrameState
 
 internal class ToolBarBorder : Widget
 {
-  override Size prefSize(Hints hints := Hints.def) { return Size(100,2) }
+  override Size prefSize(Hints hints := Hints.defVal) { return Size(100,2) }
   override Void onPaint(Graphics g)
   {
     g.brush = Color.sysNormShadow
@@ -291,7 +291,7 @@ internal class ToolBarBorder : Widget
 
 internal class StatusBarBorder : Widget
 {
-  override Size prefSize(Hints hints := Hints.def) { return Size(100,4) }
+  override Size prefSize(Hints hints := Hints.defVal) { return Size(100,4) }
   override Void onPaint(Graphics g)
   {
     g.brush = Gradient.makeLinear(Point(0,0), Color.sysNormShadow,

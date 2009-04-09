@@ -55,7 +55,7 @@ const class Pen
   **
   ** Default pen is width of 1 with capSquare and joinMiter.
   **
-  static const Pen def := makeDef  // TODO-IT
+  static const Pen defVal := makeDef  // TODO-IT
   private new makeDef() {}
 
   **

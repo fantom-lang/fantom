@@ -50,7 +50,7 @@ class EdgePane : Pane
 // Layout
 //////////////////////////////////////////////////////////////////////////
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
     top    := pref(this.top)
     bottom := pref(this.bottom)
@@ -65,7 +65,7 @@ class EdgePane : Pane
 
   private Size pref(Widget? w)
   {
-    return w == null || !w.visible ? Size.def : w.prefSize(Hints.def)
+    return w == null || !w.visible ? Size.defVal : w.prefSize(Hints.defVal)
   }
 
   override Void onLayout()

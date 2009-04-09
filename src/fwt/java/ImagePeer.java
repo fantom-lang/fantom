@@ -28,7 +28,7 @@ public class ImagePeer
   public Size size(fan.fwt.Image f)
   {
     Image x = Env.get().image(f);
-    if (x == null) return Size.def;
+    if (x == null) return Size.defVal;
     Rectangle r = x.getBounds();
     return Size.make(r.width, r.height);
   }

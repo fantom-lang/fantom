@@ -298,7 +298,7 @@ public class GraphicsPeer
 //////////////////////////////////////////////////////////////////////////
 
   GC gc;
-  Pen pen = Pen.def;
+  Pen pen = Pen.defVal;
   Brush brush = Color.black;
   Font font;
   int alpha = 255;

@@ -107,5 +107,5 @@ class PaneTest : Test
 internal class Fixed : Widget
 {
   Size ps := Size(10, 20)
-  override Size prefSize(Hints hint := Hints.def) { return ps }
+  override Size prefSize(Hints hint := Hints.defVal) { return ps }
 }

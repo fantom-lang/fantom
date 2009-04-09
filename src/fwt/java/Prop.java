@@ -187,7 +187,7 @@ public abstract class Prop
       }
     }
 
-    fan.fwt.Point val = fan.fwt.Point.def;
+    fan.fwt.Point val = fan.fwt.Point.defVal;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -222,7 +222,7 @@ public abstract class Prop
       }
     }
 
-    Size val = Size.def;
+    Size val = Size.defVal;
   }
 
 //////////////////////////////////////////////////////////////////////////

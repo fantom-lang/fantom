@@ -104,7 +104,7 @@ class Button : Widget
     }
   }
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
     pref := super.prefSize(hints)
     if (mode === ButtonMode.push || mode === ButtonMode.toggle)

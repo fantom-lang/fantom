@@ -37,17 +37,17 @@ class ContentPane : Pane
 // Layout
 //////////////////////////////////////////////////////////////////////////
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
-    if (content == null) return Size.def
-    if (!visible) return Size.def
+    if (content == null) return Size.defVal
+    if (!visible) return Size.defVal
     return content.prefSize(hints)
   }
 
   override Void onLayout()
   {
     if (content == null) return
-    content.pos = Point.def
+    content.pos = Point.defVal
     content.size = this.size
   }
 
