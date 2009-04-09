@@ -421,13 +421,11 @@ class CheckErrors : CompilerStep
 
   private Void checkParam(ParamDef p)
   {
-    // check not Void
-    if (p.paramType.isVoid)
-      err("Cannot use Void as parameter type", p.location)
-
-    // check not This
-    if (p.paramType.isThis)
-      err("Cannot use This as parameter type", p.location)
+    // check type
+    t := p.paramType
+    if (t.isVoid) { err("Cannot use Void as parameter type", p.location); return }
+    if (t.isThis)  { err("Cannot use This as parameter type", p.location); return }
+    if (t.signature != "|sys::This->sys::Void|") checkValidType(p.location, t)
 
     // check parameter default type
     if (p.def != null)
@@ -449,6 +447,9 @@ class CheckErrors : CompilerStep
       if (m.ret.isNullable)
         err("This type cannot be nullable", m.location)
     }
+
+    if (!m.ret.isThis && !m.ret.isVoid)
+      checkValidType(m.location, m.ret)
   }
 
   private Void checkCtor(MethodDef m)
@@ -514,12 +515,10 @@ class CheckErrors : CompilerStep
   private Void checkLocalDef(LocalDefStmt stmt)
   {
     // check not Void
-    if (stmt.ctype.isVoid)
-      err("Cannot use Void as local variable type", stmt.location)
-
-    // check not This
-    if (stmt.ctype.isThis)
-      err("Cannot use This as local variable type", stmt.location)
+    t := stmt.ctype
+    if (t.isVoid) { err("Cannot use Void as local variable type", stmt.location); return }
+    if (t.isThis) { err("Cannot use This as local variable type", stmt.location); return }
+    checkValidType(stmt.location, t)
   }
 
   private Void checkIf(IfStmt stmt)
@@ -1252,6 +1251,9 @@ class CheckErrors : CompilerStep
       }
       else
       {
+        // assume any use of 'This' in the function signature has already
+        // been checked to ensure that it parameterizes to current scope
+        sig = sig.parameterizeThis(curType)
         sig.params.each |CType p, Int i|
         {
           // check each argument and ensure boxed
@@ -1306,6 +1308,15 @@ class CheckErrors : CompilerStep
       msg += method.nameAndParamTypesToStr
     msg += ", not (" + args.join(", ", |Expr e->Str| { return "$e.toTypeStr" }) + ")"
     err(msg, call.location)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Type
+//////////////////////////////////////////////////////////////////////////
+
+  private Void checkValidType(Location loc, CType t)
+  {
+    if (!t.isValid) err("Invalid type '$t'", loc)
   }
 
 //////////////////////////////////////////////////////////////////////////

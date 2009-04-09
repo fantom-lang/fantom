@@ -164,6 +164,8 @@ class ListType : GenericType
     }
   }
 
+  override Bool isValid() { v.isValid }
+
   readonly CType v         // value type
   override readonly Str signature   // v[]
 
@@ -220,6 +222,8 @@ class MapType : GenericType
       default:  throw Err.make(ch.toChar)
     }
   }
+
+  override Bool isValid() { k.isValid && v.isValid }
 
   readonly CType k         // keytype
   readonly CType v         // value type
@@ -328,6 +332,11 @@ class FuncType : GenericType
   {
     f := |CType t->CType| { t.isThis ? thisType : t }
     return FuncType(params.map(CType[,], f), names, f(ret))
+  }
+
+  override Bool isValid()
+  {
+    (ret.isVoid || ret.isValid) && params.all |CType p->Bool| { p.isValid }
   }
 
   readonly CType[] params  // a, b, c ...
