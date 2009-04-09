@@ -13,6 +13,14 @@ class ToolBar : Widget
 {
 
   **
+  ** Default constructor.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
+  **
   ** Horizontal or veritical configuration.  Defaults
   ** to horizontal.  Must be set at construction time.
   **

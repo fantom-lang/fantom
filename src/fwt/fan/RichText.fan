@@ -14,6 +14,14 @@ class RichText : TextWidget
 {
 
   **
+  ** Default constructor.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
+  **
   ** Callback when the text is modified.  This event occurs
   ** after the modification.  See `onVerify` to trap changes
   ** before they occur.
@@ -318,6 +326,14 @@ abstract class RichTextModel
 @serializable
 const class RichTextStyle
 {
+  **
+  ** Default constructor.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
   ** Foreground color
   const Color? fg
 

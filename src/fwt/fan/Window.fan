@@ -114,7 +114,11 @@ class Window : ContentPane
   **
   ** Construct the window with an option parent window.
   **
-  new make(Window? parent := null) { if (parent != null) setParent(parent) }
+  new make(Window? parent := null, |This|? f := null)
+  {
+    if (parent != null) setParent(parent)
+    if (f != null) f(this)
+  }
 
   **
   ** Open the window.  If this is a dialog, then return result

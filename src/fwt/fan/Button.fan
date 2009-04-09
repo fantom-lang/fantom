@@ -13,16 +13,21 @@
 **
 class Button : Widget
 {
+
   **
   ** Default constructor.
   **
-  new make() {}
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
 
   **
   ** Make a button the specified command.
   **
-  new makeCommand(Command c)
+  new makeCommand(Command c, |This|? f := null)
   {
+    if (f != null) f(this)
     mode = c.mode.toButtonMode
     command = c
   }

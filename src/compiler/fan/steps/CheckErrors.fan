@@ -425,7 +425,7 @@ class CheckErrors : CompilerStep
     t := p.paramType
     if (t.isVoid) { err("Cannot use Void as parameter type", p.location); return }
     if (t.isThis)  { err("Cannot use This as parameter type", p.location); return }
-    if (t.signature != "|sys::This->sys::Void|") checkValidType(p.location, t)
+    if (t.toNonNullable.signature != "|sys::This->sys::Void|") checkValidType(p.location, t)
 
     // check parameter default type
     if (p.def != null)

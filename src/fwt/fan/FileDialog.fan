@@ -15,6 +15,14 @@ class FileDialog
 {
 
   **
+  ** Default constructor.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
+  **
   ** Mode is used to define whether we are opening or saving
   ** a single file, multiple files, or a directory.
   **

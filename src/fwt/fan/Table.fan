@@ -13,6 +13,14 @@ class Table : Widget
 {
 
   **
+  ** Default constructor.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
+  **
   ** Callback when row is double clicked or Return/Enter
   ** key is pressed.
   **
