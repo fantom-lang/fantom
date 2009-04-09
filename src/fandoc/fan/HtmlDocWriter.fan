@@ -76,10 +76,10 @@ class HtmlDocWriter : DocWriter
     {
       case DocNodeId.link:
         link := elem as Link
-        out.print(" href='$link.uri'")
+        out.print(" href='$link.uri.toXml'")
       case DocNodeId.image:
         img := elem as Image
-        out.print(" src='$img.uri' alt='")
+        out.print(" src='$img.uri.toXml' alt='")
         safeAttr(img.alt)
         out.print("'/>")
         return
@@ -155,5 +155,4 @@ class HtmlDocWriter : DocWriter
   OutStream out
 
 }
-
 
