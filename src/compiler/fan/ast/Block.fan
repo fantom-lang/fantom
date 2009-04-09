@@ -74,7 +74,14 @@ class Block : Node
   Void walk(Visitor v, VisitDepth depth)
   {
     v.enterBlock(this)
-    stmts.each |Stmt stmt| { stmt.walk(v, depth) }
+    copy := Stmt[,] { capacity = stmts.size }
+    stmts.each |Stmt stmt|
+    {
+      r := stmt.walk(v, depth)
+      if (r == null) copy.add(stmt)
+      else copy.addAll(r)
+    }
+    stmts = copy
     v.visitBlock(this)
     v.exitBlock(this)
   }

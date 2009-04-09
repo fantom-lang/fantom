@@ -73,6 +73,7 @@ class Compiler
     CheckErrors(this).run
     CheckParamDefs(this).run
     ClosureVars(this).run
+    ConstChecks(this).run
     Assemble(this).run
     GenerateOutput(this).run
 

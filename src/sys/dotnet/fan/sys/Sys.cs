@@ -256,6 +256,7 @@ namespace Fan.Sys
         ArgErrType            = builtin("ArgErr",            ErrType);
         CancelledErrType      = builtin("CancelledErr",      ErrType);
         CastErrType           = builtin("CastErr",           ErrType);
+        ConstErrType          = builtin("ConstErr",          ErrType);
         IndexErrType          = builtin("IndexErr",          ErrType);
         InterruptedErrType    = builtin("InterruptedErr",    ErrType);
         IOErrType             = builtin("IOErr",             ErrType);
@@ -520,6 +521,7 @@ namespace Fan.Sys
     public static readonly Type ArgErrType;
     public static readonly Type CancelledErrType;
     public static readonly Type CastErrType;
+    public static readonly Type ConstErrType;
     public static readonly Type IndexErrType;
     public static readonly Type InterruptedErrType;
     public static readonly Type IOErrType;

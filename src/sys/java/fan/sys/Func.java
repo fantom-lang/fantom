@@ -59,6 +59,11 @@ public abstract class Func
     throw NotImmutableErr.make().val;
   }
 
+  // Hooks used by compiler to generate runtime const field checks for it-blocks
+  public void enterCtor(Object o) {}
+  public void exitCtor() {}
+  public void checkInCtor(Object o) {}
+
 //////////////////////////////////////////////////////////////////////////
 // Indirect
 //////////////////////////////////////////////////////////////////////////
@@ -131,6 +136,19 @@ public abstract class Func
     public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return call1(a); }
     public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return call1(a); }
     public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call1(a); }
+
+    public void enterCtor(Object o) { this.inCtor = o; }
+    public void exitCtor() { this.inCtor = null; }
+    public void checkInCtor(Object it)
+    {
+      /* TODO-IT
+      if (it == inCtor) return;
+      String msg = it == null ? "null" : FanObj.type(it).qname();
+      throw ConstErr.make(msg).val;
+      */
+    }
+
+    Object inCtor;
   }
 
   public static abstract class Indirect2 extends Indirect
@@ -334,5 +352,4 @@ public abstract class Func
 
   final Type returns;
   final List params;
-
 }
