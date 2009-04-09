@@ -13,6 +13,14 @@ class Text : TextWidget
 {
 
   **
+  ** Default constructor.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
+  **
   ** Callback when Return/Enter key is pressed in a single
   ** line text editor (not invoked for multiLine)
   **

@@ -13,6 +13,14 @@ class Combo : Widget
 {
 
   **
+  ** Default constructor.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
+  **
   ** Callback when Return/Enter key is pressed.
   **
   ** Event id fired:

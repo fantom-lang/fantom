@@ -15,7 +15,10 @@ class MenuItem : Widget
   **
   ** Default constructor.
   **
-  new make() {}
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
 
   **
   ** Make a menu item for the specified command.

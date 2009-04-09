@@ -13,6 +13,14 @@ class ProgressBar : Widget
 {
 
   **
+  ** Default constructor.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
+  **
   ** The current value of the progess. Must be >= 0.
   ** Defaults to 0.
   **
