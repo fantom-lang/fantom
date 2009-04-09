@@ -344,7 +344,7 @@ internal class NavNode
 
 internal class NavTreePane : Pane
 {
-  override Size prefSize(Hints hints := Hints.def) { return Size(100,100) }
+  override Size prefSize(Hints hints := Hints.defVal) { return Size(100,100) }
   override Void onLayout()
   {
     if (active != null)
@@ -374,7 +374,7 @@ internal class EditList : Widget
     return items.findAll |Str s, Int i->Bool| { return keep[i] }
   }
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
     pw := 0
     ph := rowh * items.size

@@ -90,7 +90,7 @@ class GridPane : Pane
   **
   Bool uniformRows:= false
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
     return GridPaneSizes(this, children).prefPane
   }
@@ -174,7 +174,7 @@ internal class GridPaneSizes
     col := 0; row := 0
     kids.each |Widget kid|
     {
-      pref := kid.visible ? kid.prefSize : Size.def
+      pref := kid.visible ? kid.prefSize : Size.defVal
       prefs.add(pref)
 
       if (col >= colw.size) colw.add(pref.w)

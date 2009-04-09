@@ -331,7 +331,7 @@ abstract class Widget
   ** null.  If no constraints are known for height, then 'hints.h'
   ** will be null.
   **
-  virtual native Size prefSize(Hints hints := Hints.def)
+  virtual native Size prefSize(Hints hints := Hints.defVal)
 
   **
   ** Handle the layout event.  The method is only called Pane

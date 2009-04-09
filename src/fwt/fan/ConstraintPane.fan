@@ -25,10 +25,10 @@ class ConstraintPane : ContentPane
   ** Maximum width or null to use pref height of content.
   Int? maxh := null
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
-    if (content == null) return Size.def
-    if (!visible) return Size.def
+    if (content == null) return Size.defVal
+    if (!visible) return Size.defVal
 
     pref := content.prefSize(hints)
 

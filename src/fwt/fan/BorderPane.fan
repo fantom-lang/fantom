@@ -41,9 +41,9 @@ class BorderPane : Pane
   **
   Insets insets := Insets(0,0,0,0)
 
-  override Size prefSize(Hints hints := Hints.def)
+  override Size prefSize(Hints hints := Hints.defVal)
   {
-    if (content == null) return Size.def
+    if (content == null) return Size.defVal
     insetSize := insets.toSize
     pref := content.prefSize(hints - insetSize)
     return Size(pref.w + insetSize.w, pref.h + insetSize.h)

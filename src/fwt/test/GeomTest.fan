@@ -14,6 +14,9 @@ class GeomTest : Test
 
   Void testPoint()
   {
+    verifyEq(Point.defVal, Point(0, 0))
+    verifyEq(Point#.make, Point(0, 0))
+
     verifyEq(Point(3, 4), Point(3, 4))
     verifyNotEq(Point(3, 9), Point(3, 4))
     verifyNotEq(Point(9, 4), Point(3, 4))
@@ -30,6 +33,9 @@ class GeomTest : Test
 
   Void testSize()
   {
+    verifyEq(Size.defVal, Size(0, 0))
+    verifyEq(Size#.make, Size(0, 0))
+
     verifyEq(Size(3, 4), Size(3, 4))
     verifyNotEq(Size(3, 9), Size(3, 4))
     verifyNotEq(Size(9, 4), Size(3, 4))
@@ -46,6 +52,9 @@ class GeomTest : Test
 
   Void testRect()
   {
+    verifyEq(Rect.defVal, Rect(0, 0, 0, 0))
+    verifyEq(Rect#.make, Rect(0, 0, 0, 0))
+
     verifyEq(Rect(1, 2, 3, 4), Rect(1, 2, 3, 4))
     verifyNotEq(Rect(0, 2, 3, 4), Rect(1, 2, 3, 4))
     verifyNotEq(Rect(1, 0, 3, 4), Rect(1, 2, 3, 4))
@@ -102,7 +111,9 @@ class GeomTest : Test
 
   Void testHints()
   {
-    verifyEq(Hints.def, Hints(null, null))
+    verifyEq(Hints.defVal, Hints(null, null))
+    verifyEq(Hints#.make, Hints(null, null))
+
     verifyEq(Hints(3, null), Hints(3, null))
     verifyEq(Hints(null, 3), Hints(null, 3))
     verifyEq(Hints(4, 5), Hints(4, 5))

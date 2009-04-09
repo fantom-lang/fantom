@@ -122,7 +122,7 @@ public class WidgetPeer
 
   public Size prefSize(fan.fwt.Widget self, Hints hints)
   {
-    if (!(control instanceof Control)) return Size.def;
+    if (!(control instanceof Control)) return Size.defVal;
     int w = (hints.w == null) ? SWT.DEFAULT : hints.w.intValue();
     int h = (hints.h == null) ? SWT.DEFAULT : hints.h.intValue();
     Point s = ((Control)control).computeSize(w, h, true);

@@ -17,7 +17,7 @@
 const class Point
 {
   ** Default instance is 0, 0.
-  const static Point def := Point(0, 0)
+  const static Point defVal := Point(0, 0)
 
   ** Construct with x, y.
   new make(Int x, Int y) { this.x = x; this.y = y }
@@ -71,7 +71,7 @@ const class Point
 const class Size
 {
   ** Default instance is 0, 0.
-  const static Size def := Size(0, 0)
+  const static Size defVal := Size(0, 0)
 
   ** Construct with w, h.
   new make(Int w, Int h) { this.w = w; this.h = h }
@@ -122,7 +122,7 @@ const class Size
 const class Rect
 {
   ** Default instance is 0, 0, 0, 0.
-  const static Rect def := Rect(0, 0, 0, 0)
+  const static Rect defVal := Rect(0, 0, 0, 0)
 
   ** Construct with x, y, w, h.
   new make(Int x, Int y, Int w, Int h)
@@ -204,7 +204,7 @@ const class Rect
 const class Insets
 {
   ** Default instance 0, 0, 0, 0.
-  const static Insets def := Insets(0, 0, 0, 0)
+  const static Insets defVal := Insets(0, 0, 0, 0)
 
   **
   ** Construct with top, and optional right, bottom, left.  If one side
@@ -298,7 +298,7 @@ const class Hints
 {
 
   ** Default instance is null, null.
-  const static Hints def := Hints(null, null)
+  const static Hints defVal := Hints(null, null)
 
   ** Construct with w, h.
   new make(Int? w, Int? h) { this.w = w; this.h = h }
