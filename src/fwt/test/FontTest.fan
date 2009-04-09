@@ -20,16 +20,16 @@ class FontTest : Test
     verifyFont(Font { name = "Arial Special"; size = 10; bold = true},
       "Arial Special", 10, true, false, "bold 10pt Arial Special")
 
-    verifyFont(Font("Courier", 11, false, true),
+    verifyFont(Font.makeFields("Courier", 11, false, true),
       "Courier", 11, false, true, "italic 11pt Courier")
 
-    verifyFont(Font("Courier", 16, true, true),
+    verifyFont(Font.makeFields("Courier", 16, true, true),
       "Courier", 16, true, true, "bold italic 16pt Courier")
 
-    verifyEq(Font.fromStr("22pt Arial"), Font.make("Arial", 22))
-    verifyEq(Font.fromStr("bold 22pt Foo Bar"), Font.make("Foo Bar", 22, true))
-    verifyEq(Font.fromStr("italic 5pt Arial"), Font.make("Arial", 5, false, true))
-    verifyEq(Font.fromStr("bold italic 10pt Aa Bb"), Font.make("Aa Bb", 10, true, true))
+    verifyEq(Font.fromStr("22pt Arial"), Font.makeFields("Arial", 22))
+    verifyEq(Font.fromStr("bold 22pt Foo Bar"), Font.makeFields("Foo Bar", 22, true))
+    verifyEq(Font.fromStr("italic 5pt Arial"), Font.makeFields("Arial", 5, false, true))
+    verifyEq(Font.fromStr("bold italic 10pt Aa Bb"), Font.makeFields("Aa Bb", 10, true, true))
     verifyEq(Font.fromStr("Arial", false), null)
     verifyErr(ParseErr#) |,| { Font.fromStr("10 Arial") }
     verifyErr(ParseErr#) |,| { Font.fromStr("", true) }

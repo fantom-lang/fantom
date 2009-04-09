@@ -55,7 +55,13 @@ const class Pen
   **
   ** Default pen is width of 1 with capSquare and joinMiter.
   **
-  static const Pen def := make
+  static const Pen def := makeDef  // TODO-IT
+  private new makeDef() {}
+
+  **
+  ** Construct with it-block
+  **
+  new make(|This| f) { f(this) }
 
   **
   ** Parse a pen from string (see `toStr`).  If invalid

@@ -17,10 +17,10 @@
 const class Point
 {
   ** Default instance is 0, 0.
-  const static Point def := Point()
+  const static Point def := Point(0, 0)
 
-  ** Construct with optional x, y.
-  new make(Int x := 0, Int y := 0) { this.x = x; this.y = y }
+  ** Construct with x, y.
+  new make(Int x, Int y) { this.x = x; this.y = y }
 
   ** Parse from string.  If invalid and checked is
   ** true then throw ParseErr otherwise return null.
@@ -71,10 +71,10 @@ const class Point
 const class Size
 {
   ** Default instance is 0, 0.
-  const static Size def := Size()
+  const static Size def := Size(0, 0)
 
-  ** Construct with optional w, h.
-  new make(Int w := 0, Int h := 0) { this.w = w; this.h = h }
+  ** Construct with w, h.
+  new make(Int w, Int h) { this.w = w; this.h = h }
 
   ** Parse from string.  If invalid and checked is
   ** true then throw ParseErr otherwise return null.
@@ -122,10 +122,10 @@ const class Size
 const class Rect
 {
   ** Default instance is 0, 0, 0, 0.
-  const static Rect def := Rect()
+  const static Rect def := Rect(0, 0, 0, 0)
 
-  ** Construct with optional x, y, w, h.
-  new make(Int x := 0, Int y := 0, Int w := 0, Int h := 0)
+  ** Construct with x, y, w, h.
+  new make(Int x, Int y, Int w, Int h)
     { this.x = x; this.y = y; this.w = w; this.h = h }
 
   ** Construct from a Point and Size instance
@@ -204,15 +204,17 @@ const class Rect
 const class Insets
 {
   ** Default instance 0, 0, 0, 0.
-  const static Insets def := Insets()
+  const static Insets def := Insets(0, 0, 0, 0)
 
-  ** Construct with optional top, right, bottom, left.  If one side
+  **
+  ** Construct with top, and optional right, bottom, left.  If one side
   ** is not specified, it is reflected from the opposite side:
   **
-  **   Insets(5)     === Insets(5,5,5,5)
-  **   Insets(5,6)   === Insets(5,6,5,6)
-  **   Insets(5,6,7) === Insets(5,6,7,6)
-  new make(Int top := 0, Int? right := null, Int? bottom := null, Int? left := null)
+  **   Insets(5)     => Insets(5,5,5,5)
+  **   Insets(5,6)   => Insets(5,6,5,6)
+  **   Insets(5,6,7) => Insets(5,6,7,6)
+  **
+  new make(Int top, Int? right := null, Int? bottom := null, Int? left := null)
   {
     if (right == null) right = top
     if (bottom == null) bottom = top
@@ -298,8 +300,8 @@ const class Hints
   ** Default instance is null, null.
   const static Hints def := Hints(null, null)
 
-  ** Construct with optional w, h.
-  new make(Int? w := null, Int? h := null) { this.w = w; this.h = h }
+  ** Construct with w, h.
+  new make(Int? w, Int? h) { this.w = w; this.h = h }
 
   ** Return '"w,h"'
   override Str toStr() { return "$w,$h" }
