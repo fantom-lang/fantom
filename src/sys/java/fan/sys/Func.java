@@ -141,11 +141,9 @@ public abstract class Func
     public void exitCtor() { this.inCtor = null; }
     public void checkInCtor(Object it)
     {
-      /* TODO-IT
       if (it == inCtor) return;
       String msg = it == null ? "null" : FanObj.type(it).qname();
       throw ConstErr.make(msg).val;
-      */
     }
 
     Object inCtor;

@@ -417,12 +417,10 @@ class ItBlockTest : CompilerTest
     verifyEq(obj->test8, 1239)
     verifyEq(obj->test9, 19)
     verifyEq(obj->test10, 30)
-    /* TODO-IT
     verifyErr(ConstErr#) |,| { obj->bad1 }
     verifyErr(ConstErr#) |,| { obj->bad2 }
     verifyErr(ConstErr#) |,| { obj->bad3 }
     verifyErr(ConstErr#) |,| { obj->bad4 }
-    */
   }
 
 //////////////////////////////////////////////////////////////////////////

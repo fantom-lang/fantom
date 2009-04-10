@@ -764,7 +764,7 @@ class MiscTest : CompilerTest
       {
         Void a(Bool b) { if (b) factory { it.x = 7 } }
         Void b(Bool b, Obj x) { if (b) (Str)x->toHex }
-        const Int x
+        Int x
         static Foo factory() { return make }
       }")
     //compiler.fpod.dump
@@ -801,13 +801,14 @@ class MiscTest : CompilerTest
         const Type? n
         const Type o
 
-        new make()
+        new make(|Foo|? x := null)
         {
           f = wrap(null)
           g = wrap([5,6])
           k = map(g)
           n = thru(null)
           o = thru(Bool#)
+          if (x != null) x(this)
         }
 
         Foo withIt()
