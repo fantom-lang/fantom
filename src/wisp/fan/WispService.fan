@@ -20,6 +20,8 @@ const class WispService : WebService
   **
   const Int port := 80
 
+  new make(|This|? f := null) { if (f != null) f(this) }
+
   override Void onStart()
   {
     super.onStart

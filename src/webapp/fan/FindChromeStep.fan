@@ -22,6 +22,15 @@ using web
 **
 const class FindChromeStep : WebAppStep
 {
+
+  **
+  ** Constructor with it-block.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
   **
   ** Perform this step against the specified request and response.
   **

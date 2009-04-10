@@ -22,6 +22,11 @@ const class GeneralOptions
   }
 
   **
+  ** Default constructor with it-block
+  **
+  new make(|This|? f := null) { if (f != null) f(this) }
+
+  **
   ** Default uri to display on startup.
   **
   const Uri homePage := `flux:start`

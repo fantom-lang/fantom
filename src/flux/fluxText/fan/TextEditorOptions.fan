@@ -14,6 +14,8 @@ using flux
 @serializable
 const class TextEditorOptions
 {
+  ** Default constructor with it-block
+  new make(|This|? f := null) { if (f != null) f(this) }
 
   ** Default line end delimiter to use when saving text files.
   ** Note that loading text files will accept any combination
@@ -45,6 +47,4 @@ const class TextEditorOptions
     return Flux.loadOptions("text-editor", TextEditorOptions#)
   }
 }
-
-
 

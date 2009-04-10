@@ -458,6 +458,8 @@ internal class ConsoleModel : RichTextModel
 
 internal class ConsoleLine
 {
+  new make(|This| f) { f(this) }
+
   ** Return 'text'.
   override Str toStr() { return text }
 
@@ -512,6 +514,7 @@ internal class ConsoleOutStream : OutStream
 
 internal const class ExecParams
 {
+  new make(|This| f) { f(this) }
   const Str frameId
   const Str[] command
   const File? dir

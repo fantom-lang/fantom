@@ -34,14 +34,18 @@ const class Gradient : Brush
   internal const Point p2
   internal const Color c1
   internal const Color c2
-  private new make() {}
+  private new make(Point p1, Color c1, Point p2, Color c2)
+  {
+    this.p1 = p1; this.c1 = c1
+    this.p2 = p2; this.c2 = c2
+  }
 
   **
   ** Construct a two color linear gradient between the two points.
   **
   static Gradient makeLinear(Point p1, Color c1, Point p2, Color c2)
   {
-    return make { it.p1 = p1; it.c1 = c1; it.p2 = p2; it.c2 = c2 }
+    return make(p1, c1, p2, c2);
   }
 
   **
@@ -72,4 +76,3 @@ const class Gradient : Brush
     return "[$p1:$c1; $p2:$c2]"
   }
 }
-

@@ -21,10 +21,7 @@ const class FileLogger : ActorGroup
   **
   ** Constructor.
   **
-  new make(File? file := null)
-  {
-    this.file = file
-  }
+  new make(|This|? f := null) { if (f != null) f(this) }
 
   **
   ** File to append log records.  This value can be

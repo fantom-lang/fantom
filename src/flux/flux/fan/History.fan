@@ -104,6 +104,11 @@ class History
 const class HistoryItem
 {
   **
+  ** Default constructor with it-block
+  **
+  new make(|This|? f := null) { if (f != null) f(this) }
+
+  **
   ** Uri of resource.
   **
   const Uri uri

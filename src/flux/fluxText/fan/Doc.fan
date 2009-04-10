@@ -496,7 +496,7 @@ internal class Line
   Int offset { internal set; }
 
   ** Text of line (without delimiter)
-  const Str text
+  Str text
 
   ** Offset/RichTextStyle pairs
   Obj[]? styling
