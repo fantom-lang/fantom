@@ -290,6 +290,23 @@ class ClosureTest : Test
     verifyEq(x, str)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Builder Test
+//////////////////////////////////////////////////////////////////////////
+
+  Void testBuilderTest()
+  {
+    verifyEq(buildTest { x="x"; y="y"}, ["x", "y"])
+    verifyEq(buildTest { it.x="x" },    ["x", ""])
+  }
+
+  static Str[] buildTest(|TestBuilder| f)
+  {
+    b := TestBuilder()
+    f(b)
+    return [b.x, b.y]
+  }
+
 }
 
 **************************************************************************
@@ -304,4 +321,14 @@ class ClosureFieldA
 class ClosureFieldB
 {
   const |->Str| f := |->Str| { return toStr } // uses this
+}
+
+**************************************************************************
+** TestBuilder
+**************************************************************************
+
+class TestBuilder
+{
+  Str x := ""
+  Str y := ""
 }
