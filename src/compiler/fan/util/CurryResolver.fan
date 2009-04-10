@@ -191,7 +191,7 @@ class CurryResolver : CompilerSupport
     fm.code  = Block.make(loc)
     expr := CallExpr.makeWithMethod(loc, null, ns.slotFindMethod)
     expr.args.add(LiteralExpr.make(loc, ExprId.strLiteral, ns.strType, method.qname))
-    fm.code.add(ReturnStmt.make(loc, expr))
+    fm.code.add(ReturnStmt.makeSynthetic(loc, expr))
     curry.addSlot(fm)
   }
 
@@ -259,7 +259,7 @@ class CurryResolver : CompilerSupport
     }
 
     // finish ctor
-    ctor.code.stmts.add(ReturnStmt.make(loc))
+    ctor.code.stmts.add(ReturnStmt.makeSynthetic(loc))
 
     // Method.callX()
     InitClosures.genMethodCall(compiler, loc, curry, sig, doCall, thisIsParam)

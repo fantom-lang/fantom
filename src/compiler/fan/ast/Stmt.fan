@@ -228,6 +228,12 @@ class ReturnStmt : Stmt
     this.expr = expr
   }
 
+  new makeSynthetic(Location location, Expr? expr := null)
+    : this.make(location, expr)
+  {
+    this.isSynthetic = true
+  }
+
   override Bool isExit() { return true }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
@@ -247,6 +253,7 @@ class ReturnStmt : Stmt
 
   Expr? expr           // expr to return of null if void return
   MethodVar? leaveVar  // to stash result for leave from protected region
+  Bool isSynthetic     // was return inserted by compiler
 }
 
 **************************************************************************

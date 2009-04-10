@@ -99,7 +99,7 @@ class InitEnum : CompilerStep
       m.flags = FConst.Ctor | FConst.Private | FConst.Synthetic
       m.ret = TypeRef.make(curType.location, ns.voidType)
       m.code = Block.make(curType.location)
-      m.code.stmts.add(ReturnStmt.make(curType.location))
+      m.code.stmts.add(ReturnStmt.makeSynthetic(curType.location))
       curType.addSlot(m)
     }
 
@@ -143,7 +143,7 @@ class InitEnum : CompilerStep
     doFromStr.args.add(UnknownVarExpr.make(loc, null, "name"))
     doFromStr.args.add(UnknownVarExpr.make(loc, null, "checked"))
     cast := TypeCheckExpr(loc, ExprId.coerce, doFromStr, curType.toNullable)
-    m.code.stmts.add(ReturnStmt.make(loc, cast))
+    m.code.stmts.add(ReturnStmt.makeSynthetic(loc, cast))
   }
 
 //////////////////////////////////////////////////////////////////////////
