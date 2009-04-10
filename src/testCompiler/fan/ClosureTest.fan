@@ -531,4 +531,34 @@ class ClosureTest : CompilerTest
     verifyEq(obj->j, 7)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Closure Inference
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInference()
+  {
+    compile(
+     "class Foo
+      {
+        Obj m03(Obj x, Obj y) { s := \"\"; f := |a, b| { s = \"\$a \$b.toStr.size\" }; f(x,y); return s }
+        Obj m04(Obj x, Obj y) { f := |a, b->Str| { \"\$a \$b.hash\" }; return f(x, y) }
+        Obj m05(Str[] x) { x.sort |a, b->Int| { a.size <=> b.size } }
+        Obj m06(Str[] x) { x.sortr |a, b| { a.size <=> b.size } }
+        Obj m07(Str[] x) { r := Obj[,]; x.each |s,i| { r.add(s).add(i) }; return r }
+        Obj m08(Str[] x) { return x.map(Str[,]) |s,i| { i.toStr + s  } }
+        Obj m09(Str[] x) { return x.map(Str[,]) |s,i->Str| { q := i.toStr; return q + s  } }
+      }")
+
+    // compiler.fpod.dump
+    t  := pod.types[0]
+    obj := t.make
+    verifyEq(obj->m03("x", "boo"), "x 3")
+    verifyEq(obj->m04("a", "b"), "a " + "b".hash)
+    verifyEq(obj->m05(["hello", "x", "foo"]), ["x", "foo", "hello"])
+    verifyEq(obj->m06(["hello", "x", "foo"]), ["hello", "foo", "x"])
+    verifyEq(obj->m07(["a", "b"]), ["a", 0, "b", 1])
+    verifyEq(obj->m08(["a", "b"]), ["0a", "1b"])
+    verifyEq(obj->m09(["foo", "bar"]), ["0foo", "1bar"])
+  }
+
 }
