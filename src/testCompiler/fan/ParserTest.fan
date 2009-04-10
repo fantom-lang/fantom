@@ -653,12 +653,6 @@ class ParserTest : CompilerTest
 
   Void testBadStmts()
   {
-    verifyErrors("class Foo { Void f() { return 3 } }",
-    [1, 31, "Expected end of statement after return in Void method",])
-
-    verifyErrors("class Foo { Int f() { return } }",
-    [1, 30, "Expected expression, not '}'",])
-
     verifyErrors("class Foo { Void f() { switch (3) { default: return; default: return; } } }",
     [1, 54, "Duplicate default blocks",])
   }

@@ -547,7 +547,16 @@ class ClosureTest : CompilerTest
         Obj m07(Str[] x) { r := Obj[,]; x.each |s,i| { r.add(s).add(i) }; return r }
         Obj m08(Str[] x) { return x.map(Str[,]) |s,i| { i.toStr + s  } }
         Obj m09(Str[] x) { return x.map(Str[,]) |s,i->Str| { q := i.toStr; return q + s  } }
-      }")
+        Obj m10(Str[] x)
+        {
+          return x.sort |a,b|
+          {
+            if (a == \"first\") return -1
+            if (b == \"first\") return +1
+            return a <=> b
+          }
+        }
+       }")
 
     // compiler.fpod.dump
     t  := pod.types[0]
@@ -559,6 +568,7 @@ class ClosureTest : CompilerTest
     verifyEq(obj->m07(["a", "b"]), ["a", 0, "b", 1])
     verifyEq(obj->m08(["a", "b"]), ["0a", "1b"])
     verifyEq(obj->m09(["foo", "bar"]), ["0foo", "1bar"])
+    verifyEq(obj->m10(["bar", "c", "first", "alpha"]), ["first", "alpha", "bar", "c"])
   }
 
 }

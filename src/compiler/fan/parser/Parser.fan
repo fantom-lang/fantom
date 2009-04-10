@@ -366,7 +366,7 @@ public class Parser : CompilerSupport
       consume
       sInit := MethodDef.makeStaticInit(location, parent, null)
       curSlot = sInit
-      sInit.code = block(true)
+      sInit.code = block
       curSlot = null
       return sInit
     }
@@ -569,7 +569,7 @@ public class Parser : CompilerSupport
       // { ...block... }
       Block? block := null
       if (curt === Token.lbrace)
-        block = this.block(id != "get")
+        block = this.block
       else
         endOfStmt
 
@@ -654,7 +654,7 @@ public class Parser : CompilerSupport
       if (curt === Token.lbrace)
       {
         err("Abstract and native methods cannot have method body")
-        block(ret.isVoid)  // keep parsing
+        block  // keep parsing
       }
       else
       {
@@ -671,7 +671,7 @@ public class Parser : CompilerSupport
     if (curt != Token.lbrace)
       err("Expecting method body")
     else
-      method.code = block(ret.isVoid)
+      method.code = block
 
     // exit scope
     curSlot = null
@@ -757,9 +757,8 @@ public class Parser : CompilerSupport
   **
   ** Top level for blocks which must be surrounded by braces
   **
-  private Block block(Bool inVoid)
+  private Block block()
   {
-    this.inVoid = inVoid
     verify(Token.lbrace)
     return stmtOrBlock
   }
@@ -929,11 +928,7 @@ public class Parser : CompilerSupport
   {
     stmt := ReturnStmt.make(cur)
     consume(Token.returnKeyword)
-    if (inVoid)
-    {
-      endOfStmt("Expected end of statement after return in Void method")
-    }
-    else
+    if (!endOfStmt(null))
     {
       stmt.expr = expr
       endOfStmt
@@ -1969,13 +1964,11 @@ public class Parser : CompilerSupport
     closures.add(closure)
     curType.closures.add(closure)
 
-    // parse block; temporarily change our inVoid flag and curClosure
-    oldInVoid := inVoid
+    // parse block; temporarily change curClosure
     oldClosure := curClosure
     curClosure = closure
-    closure.code = block(funcType.ret.isVoid)
+    closure.code = block
     curClosure = oldClosure
-    inVoid = oldInVoid
 
     return closure
   }
@@ -2353,7 +2346,6 @@ public class Parser : CompilerSupport
   private TokenVal peek           // next token
   private Token peekt             // next token type
   private Bool isSys              // are we parsing the sys pod itself
-  private Bool inVoid             // are we currently in a void method
   private Bool inFieldInit        // are we currently in a field initializer
   private TypeDef? curType        // current TypeDef scope
   private SlotDef? curSlot        // current SlotDef scope
