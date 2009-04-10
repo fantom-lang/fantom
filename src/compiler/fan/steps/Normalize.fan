@@ -80,7 +80,7 @@ class Normalize : CompilerStep
     // add instance$init if needed
     if (!iInit.isEmpty)
     {
-      iInit.add(ReturnStmt.make(location))
+      iInit.add(ReturnStmt.makeSynthetic(location))
       ii := MethodDef.makeInstanceInit(iInit.location, t, iInit)
       t.addSlot(ii)
       callInstanceInit(t, ii)
@@ -89,7 +89,7 @@ class Normalize : CompilerStep
     // add static$init if needed
     if (!sInit.isEmpty)
     {
-      sInit.add(ReturnStmt.make(location))
+      sInit.add(ReturnStmt.makeSynthetic(location))
       t.normalizeStaticInits(MethodDef.makeStaticInit(sInit.location, t, sInit))
     }
   }
@@ -134,12 +134,12 @@ class Normalize : CompilerStep
     // we allow return keyword to be omitted if there is exactly one statement
     if (code.size == 1 && !m.returnType.isVoid && code.stmts[0].id == StmtId.expr)
     {
-      code.stmts[0] = ReturnStmt(code.stmts[0].location, code.stmts[0]->expr)
+      code.stmts[0] = ReturnStmt.makeSynthetic(code.stmts[0].location, code.stmts[0]->expr)
       return
     }
 
     // return is implied as simple method exit
-    code.add(ReturnStmt(loc))
+    code.add(ReturnStmt.makeSynthetic(loc))
   }
 
   private Void insertSuperCtor(MethodDef m)
@@ -231,7 +231,7 @@ class Normalize : CompilerStep
       ).toStmt)
 
     // return (RetType)name$Store
-    retStmt := ReturnStmt.make(loc)
+    retStmt := ReturnStmt.makeSynthetic(loc)
     retStmt.expr = TypeCheckExpr.coerce(
       f.makeAccessorExpr(loc, false),
       m.ret)
@@ -284,7 +284,7 @@ class Normalize : CompilerStep
   {
     loc := f.location
     f.get.code.stmts.clear
-    f.get.code.add(ReturnStmt.make(loc, FieldExpr.make(loc, SuperExpr.make(loc), f.concreteBase)))
+    f.get.code.add(ReturnStmt.makeSynthetic(loc, FieldExpr.make(loc, SuperExpr.make(loc), f.concreteBase)))
   }
 
   private Void genSyntheticOverrideSet(FieldDef f)
@@ -295,7 +295,7 @@ class Normalize : CompilerStep
     code := f.get.code
     f.set.code.stmts.clear
     f.set.code.add(BinaryExpr.makeAssign(lhs, rhs).toStmt)
-    f.set.code.add(ReturnStmt.make(loc))
+    f.set.code.add(ReturnStmt.makeSynthetic(loc))
   }
 
   private static ExprStmt fieldInitStmt(FieldDef f)

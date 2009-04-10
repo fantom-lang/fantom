@@ -491,6 +491,7 @@ class ItBlockTest : CompilerTest
         static Obj g() { return B { A() {} } }     // missing comma
         static Obj h() { return B { A {} } }       // missing comma
         static Obj i(Foo f) { f { it = f } }       // not assignable
+        static Obj j() { return A { return } }     // return not allowed
       }
 
       class A { Int x; Int y}
@@ -503,6 +504,7 @@ class ItBlockTest : CompilerTest
         9, 35, "Not a statement",
        10, 33, "Not a statement",
        11, 29, "Left hand side is not assignable",
+       12, 31, "Cannot use return inside it-block",
       ])
   }
 

@@ -51,7 +51,7 @@ class DefaultCtor : CompilerStep
     loc := parent.location
 
     block := Block.make(loc)
-    block.stmts.add(ReturnStmt.make(loc))
+    block.stmts.add(ReturnStmt.makeSynthetic(loc))
 
     m := MethodDef.make(loc, parent)
     m.flags = flags | FConst.Ctor | FConst.Synthetic

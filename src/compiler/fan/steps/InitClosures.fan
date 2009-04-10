@@ -91,7 +91,7 @@ class InitClosures : CompilerStep
   private Void genCtor()
   {
     code := Block.make(loc)
-    code.stmts.add(ReturnStmt.make(loc))
+    code.stmts.add(ReturnStmt.makeSynthetic(loc))
 
     ctor = MethodDef.make(loc, cls)
     ctor.flags = FConst.Internal | FConst.Ctor | FConst.Synthetic
@@ -118,7 +118,7 @@ class InitClosures : CompilerStep
        LiteralExpr.make(loc, ExprId.falseLiteral, compiler.ns.boolType, false)
 
     code := Block.make(loc)
-    code.stmts.add(ReturnStmt.make(loc, literal))
+    code.stmts.add(ReturnStmt.makeSynthetic(loc, literal))
 
     m := MethodDef.make(loc, parent)
     m.flags = FConst.Public | FConst.Synthetic | FConst.Override
@@ -226,11 +226,11 @@ class InitClosures : CompilerStep
     if (signature.ret.isVoid)
     {
       m.code.add(c.toStmt)
-      m.code.add(ReturnStmt.make(loc, LiteralExpr.makeNullLiteral(loc, ns)))
+      m.code.add(ReturnStmt.makeSynthetic(loc, LiteralExpr.makeNullLiteral(loc, ns)))
     }
     else
     {
-      m.code.add(ReturnStmt.make(loc, c))
+      m.code.add(ReturnStmt.makeSynthetic(loc, c))
     }
 
     // add to our synthetic parent class
