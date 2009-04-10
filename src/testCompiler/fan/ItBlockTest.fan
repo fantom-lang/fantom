@@ -354,31 +354,26 @@ class ItBlockTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
-// This Funcs
+// As Closures
 //////////////////////////////////////////////////////////////////////////
 
-/* TODO-IT
-  Void testThisFuncs()
+  Void testAsClosure()
   {
     compile(
      "class Acme
       {
+        Int[] m03() { x := Int[,]; \"abc\".each { x.add(it) }; return x }
+        Int[] m04() { x := Int[,]; \"abc\".each { u := upper; x.add(u) }; return x }
+        Int[] m05() { return ['d','e','f'].map(Int[,]) { upper} }
+        Int[] m06() { return ['G','H','I'].map(Str[,]) { it.upper.toChar } }
       }")
-  }
 
-  Void testThisFuncsErrors()
-  {
-    // errors CheckErrors
-    verifyErrors(
-     "class Foo
-      {
-        static |Void| m03(Void x) { throw Err() }
-      }
-      ",
-      [ 3, 2, "????",
-      ])
+    obj := pod.types.first.make
+    verifyEq(obj->m03, ['a', 'b', 'c'])
+    verifyEq(obj->m04, ['A', 'B', 'C'])
+    verifyEq(obj->m05, ['D', 'E', 'F'])
+    verifyEq(obj->m06, ["G", "H", "I"])
   }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // ConstErr
