@@ -139,11 +139,9 @@ namespace Fan.Sys
       public override void exitCtor() { this.m_inCtor = null; }
       public override void checkInCtor(object it)
       {
-        /* TODO-IT
         if (it == m_inCtor) return;
-        String msg = it == null ? "null" : FanObj.type(it).qname();
+        string msg = it == null ? "null" : FanObj.type(it).qname();
         throw ConstErr.make(msg).val;
-        */
       }
 
       object m_inCtor;
