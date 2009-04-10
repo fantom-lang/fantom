@@ -583,6 +583,8 @@
 - ProgressBar.value renamed val
 
 *Build 1.0.41 (working)*
+- It-Blocks
+- Closure type inference
 - Duration: minVal, maxVal
 - Move jfan to sys/java; nfan to sys/dotnet
 - Change exclusive range from "..." to "..<"
