@@ -336,7 +336,7 @@ class FuncType : GenericType
   **
   ** Replace any occurance of "sys::This" with thisType.
   **
-  FuncType parameterizeThis(CType thisType)
+  override FuncType parameterizeThis(CType thisType)
   {
     if (!usesThis) return this
     f := |CType t->CType| { t.isThis ? thisType : t }

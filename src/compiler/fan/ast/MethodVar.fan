@@ -23,8 +23,8 @@ class MethodVar
     this.usedInClosure = false
   }
 
-  new makeForParam(Int register, ParamDef p)
-    : this.make(register, p.paramType, p.name, FConst.Param, null)
+  new makeForParam(Int register, ParamDef p, CType paramType)
+    : this.make(register, paramType, p.name, FConst.Param, null)
   {
     this.paramDef = p
   }

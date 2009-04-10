@@ -666,7 +666,7 @@ class ResolveExpr : CompilerStep
 
     m.paramDefs.each |ParamDef p|
     {
-      var := MethodVar.makeForParam(reg++, p)
+      var := MethodVar.makeForParam(reg++, p, p.paramType.parameterizeThis(curType))
       m.vars.add(var)
     }
   }

@@ -401,7 +401,7 @@ class ItBlockTest : CompilerTest
         Foo bad2()   { Foo.factory5bad { x = 2 } }
         Foo bad3()   { Foo.factoryXbad(true) { x = 3 } }
         Foo bad4()   { Foo.factoryXbad(false) { x = 4 } }
-      }
+      }  // line 20
 
       class Foo
       {
@@ -411,7 +411,7 @@ class ItBlockTest : CompilerTest
         new make3(|This| f) { f(this) }
         new make4(|This| f) { f(this); x = 4 }
 
-        static Foo factory5(|This| f) { return make5(f) }
+        static Foo factory5(|This| f) { return make5(f) }  // line 30
         static Foo factory5bad(|This| f) { x := make5(f); f(x); return x }
         new make5(|This| f) { x += 30; f(this); x += 1000 }
 

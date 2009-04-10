@@ -1235,6 +1235,7 @@ class CheckErrors : CompilerStep
   private Void checkArgs(CallExpr call)
   {
     method := call.method
+    base := call.target == null ? method.parent : call.target.ctype
     name := call.name
     args := call.args
     newArgs := args.dup
@@ -1255,10 +1256,6 @@ class CheckErrors : CompilerStep
       }
       else
       {
-        // assume any use of 'This' in the function signature has already
-        // been checked to ensure that it parameterizes to current scope
-// TODO-IT: not sure this works right
-        sig = sig.parameterizeThis(curType)
         sig.params.each |CType p, Int i|
         {
           // check each argument and ensure boxed
@@ -1285,12 +1282,8 @@ class CheckErrors : CompilerStep
         }
         else
         {
-          // TODO-IT
-          pt := p.paramType
-          if (pt.toNonNullable is FuncType && ((FuncType)pt.toNonNullable).usesThis)
-            pt = ns.objType.toNullable
-
           // ensure arg fits parameter type (or auto-cast)
+          pt := p.paramType.parameterizeThis(base)
           newArgs[i] = coerce(args[i], pt) |,|
           {
             isErr = name != "compare" // TODO let anything slide for Obj.compare
@@ -1315,9 +1308,14 @@ class CheckErrors : CompilerStep
     if (sig != null)
       msg += "|" + sig.params.join(", ") + "|"
     else
-      msg += method.nameAndParamTypesToStr
+      msg += "$name(" + params.join(", ", &paramTypeStr(base)) + ")"
     msg += ", not (" + args.join(", ", |Expr e->Str| { return "$e.toTypeStr" }) + ")"
     err(msg, call.location)
+  }
+
+  internal static Str paramTypeStr(CType base, CParam param)
+  {
+    return param.paramType.parameterizeThis(base).inferredAs.signature
   }
 
 //////////////////////////////////////////////////////////////////////////

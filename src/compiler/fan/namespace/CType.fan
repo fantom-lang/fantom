@@ -202,6 +202,12 @@ mixin CType
     }
   }
 
+  **
+  ** If this is a parameterized type which uses 'This',
+  ** then replace 'This' with the specified type.
+  **
+  virtual CType parameterizeThis(CType thisType) { this }
+
 //////////////////////////////////////////////////////////////////////////
 // Inheritance
 //////////////////////////////////////////////////////////////////////////

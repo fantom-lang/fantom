@@ -54,6 +54,7 @@ class TypeRef : Node, CType
   override Bool isGeneric() { return t.isGeneric }
   override Bool isParameterized() { return t.isParameterized }
   override Bool isGenericParameter() { return t.isGenericParameter }
+  override CType parameterizeThis(CType thisType) { t.parameterizeThis(thisType) }
   override CType toListOf() { return t.toListOf }
 
   override CSlot? slot(Str name) { return t.slot(name) }
