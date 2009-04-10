@@ -1279,4 +1279,30 @@ class InheritTest : CompilerTest
 
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Const Subclass
+//////////////////////////////////////////////////////////////////////////
+
+  Void testConstSubclass()
+  {
+    compile(
+     "class X
+      {
+        const Int x := 1
+      }
+
+      class Y : X
+      {
+        const Int y := 2
+        new make() { x += 10 }
+      }")
+
+    x := pod.findType("X").make
+    y := pod.findType("Y").make
+    verifyEq(x->x, 1)
+    verifyEq(y->x, 11)
+    verifyEq(y->y, 2)
+  }
+
+
 }

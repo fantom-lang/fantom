@@ -634,7 +634,7 @@ class CheckErrorsTest : CompilerTest
 
       const class Outside : Foo
       {
-        new make() { f = 99 }
+        Void something() { f = 99 }
         static { b++ }  // 40
       }
 
@@ -694,7 +694,7 @@ class CheckErrorsTest : CompilerTest
         34,  1, "Non-const type 'Roo' cannot subclass const class 'Foo'",
         35, 19, "Const type 'Boo' cannot contain non-const field 'x'",
 
-        39, 16, "Cannot set const field '$podName::Foo.f'",
+        39, 22, "Cannot set const field '$podName::Foo.f'",
         40, 12, "Cannot set const field '$podName::Foo.b'",
 
         /* used to be prevented for with-block, before it-blocks

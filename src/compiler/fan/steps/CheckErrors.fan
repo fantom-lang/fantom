@@ -922,11 +922,14 @@ class CheckErrors : CompilerStep
     // it-block, otherwise dive in for further checking
     if (!(curType.isClosure && curType.closure.isItBlock))
     {
-      // check attempt to set field outside of owning class
-      if (field.parent != inType)
+      // check attempt to set field outside of owning class or subclass
+      if (inType != field.parent)
       {
-        err("Cannot set const field '$field.qname'", lhs.location)
-        return rhs
+        if (!inType.fits(field.parent) || !inMethod.isCtor)
+        {
+          err("Cannot set const field '$field.qname'", lhs.location)
+          return rhs
+        }
       }
 
       // check attempt to set instance field outside of ctor
