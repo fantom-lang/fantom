@@ -326,10 +326,19 @@ class FuncType : GenericType
   }
 
   **
+  ** Return if this function type has 'This' type in its signature.
+  **
+  Bool usesThis()
+  {
+    return ret.isThis || params.any |CType p->Bool| { p.isThis }
+  }
+
+  **
   ** Replace any occurance of "sys::This" with thisType.
   **
   FuncType parameterizeThis(CType thisType)
   {
+    if (!usesThis) return this
     f := |CType t->CType| { t.isThis ? thisType : t }
     return FuncType(params.map(CType[,], f), names, f(ret))
   }
@@ -344,6 +353,7 @@ class FuncType : GenericType
   readonly CType ret       // return type
   override readonly Str signature   // |a,b..n->r|
   override readonly Bool isGenericParameter
+  Bool inferredSignature   // were one or more parameters inferred
 }
 
 **************************************************************************

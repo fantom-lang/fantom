@@ -1257,6 +1257,7 @@ class CheckErrors : CompilerStep
       {
         // assume any use of 'This' in the function signature has already
         // been checked to ensure that it parameterizes to current scope
+// TODO-IT: not sure this works right
         sig = sig.parameterizeThis(curType)
         sig.params.each |CType p, Int i|
         {
@@ -1284,8 +1285,13 @@ class CheckErrors : CompilerStep
         }
         else
         {
+          // TODO-IT
+          pt := p.paramType
+          if (pt.toNonNullable is FuncType && ((FuncType)pt.toNonNullable).usesThis)
+            pt = ns.objType.toNullable
+
           // ensure arg fits parameter type (or auto-cast)
-          newArgs[i] = coerce(args[i], p.paramType) |,|
+          newArgs[i] = coerce(args[i], pt) |,|
           {
             isErr = name != "compare" // TODO let anything slide for Obj.compare
           }

@@ -117,6 +117,7 @@ abstract class CNamespace : CompilerSupport
     funcCheckInCtor = MockMethod(funcType, "checkInCtor", mockFlags, voidType, [objType])
 
     itBlockType = FuncType.makeItBlock(objType)
+    itBlockType.inferredSignature = true
   }
 
   private CType genericParam(Str name)

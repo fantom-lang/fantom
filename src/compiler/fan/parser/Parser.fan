@@ -1947,7 +1947,6 @@ public class Parser : CompilerSupport
     }
 
     ib := closure(cur, ns.itBlockType)
-    ib.inferredSignature = true
     ib.isItBlock = true
     ib.itType = ns.error
     return ib
@@ -2025,17 +2024,18 @@ public class Parser : CompilerSupport
     if (curt !== Token.identifier && curt !== Token.pipe && curt !== Token.lbracket)
       return null
 
+    oldSuppress := suppressErr
     suppressErr = true
     mark := pos
     CType? type := null
     try
     {
-      type = ctype
+      type = ctype()
     }
     catch (SuppressedErr e)
     {
     }
-    suppressErr = false
+    suppressErr = oldSuppress
     if (type == null) reset(mark)
     return type
   }
@@ -2152,9 +2152,12 @@ public class Parser : CompilerSupport
 
   **
   ** Method type signature:
-  **   <funcType>  :=  "|" <formals> ["->" <type> "|"
-  **   <formals>   :=  [<formal> ("," <formal>)*]
-  **   <formal>    :=  <type> <id>
+  **   <funcType>       :=  "|" <formals> ["->" <type> "|"
+  **   <formals>        :=  [<formal> ("," <formal>)*]
+  **   <formal>         :=  <formFull> | <formalInferred> | <formalTypeOnly>
+  **   <formalFull>     :=  <type> <id>
+  **   <formalInferred> :=  <id>
+  **   <formalTypeOnly> :=  <type>
   **
   private CType funcType()
   {
@@ -2174,22 +2177,12 @@ public class Parser : CompilerSupport
     }
 
     // params, must be one if no ->
-    if (curt !== Token.arrow)
-    {
-      params.add(ctype)
-      if (curt === Token.identifier)
-        names.add(consumeId)
-      else
-        names.add("_a")
-    }
+    inferred := false
+    if (curt !== Token.arrow) inferred = funcTypeFormal(params, names)
     while (curt === Token.comma)
     {
       consume
-      params.add(ctype)
-      if (curt === Token.identifier)
-        names.add(consumeId)
-      else
-        names.add("_" + ('a'+names.size).toChar)
+      inferred |= funcTypeFormal(params, names)
     }
 
     // optional arrow
@@ -2201,7 +2194,30 @@ public class Parser : CompilerSupport
 
     // closing pipe
     consume(Token.pipe)
-    return FuncType.make(params, names, ret)
+
+    ft := FuncType.make(params, names, ret)
+    ft.inferredSignature = inferred
+    return ft
+  }
+
+  private Bool funcTypeFormal(CType[] params, Str[] names)
+  {
+    t := tryType
+    if (t != null)
+    {
+      params.add(t)
+      if (curt === Token.identifier)
+        names.add(consumeId)
+      else
+        names.add("_" + ('a'+names.size).toChar)
+      return false
+    }
+    else
+    {
+      params.add(ns.objType.toNullable)
+      names.add(consumeId)
+      return true
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
