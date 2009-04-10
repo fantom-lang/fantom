@@ -401,7 +401,8 @@ class ItBlockTest : CompilerTest
         Foo bad2()   { Foo.factory5bad { x = 2 } }
         Foo bad3()   { Foo.factoryXbad(true) { x = 3 } }
         Foo bad4()   { Foo.factoryXbad(false) { x = 4 } }
-      }  // line 20
+        Foo bad5()   { Foo.makeBad { x = 5 } }
+      }
 
       class Foo
       {
@@ -411,7 +412,7 @@ class ItBlockTest : CompilerTest
         new make3(|This| f) { f(this) }
         new make4(|This| f) { f(this); x = 4 }
 
-        static Foo factory5(|This| f) { return make5(f) }  // line 30
+        static Foo factory5(|This| f) { return make5(f) }
         static Foo factory5bad(|This| f) { x := make5(f); f(x); return x }
         new make5(|This| f) { x += 30; f(this); x += 1000 }
 
@@ -423,6 +424,8 @@ class ItBlockTest : CompilerTest
            if (b) { f(this); x += 10; return; }
            else { f(this); x += 20; return; }
         }
+
+        new makeBad(|This| f) { f(make) }
 
         const Int x := 9
       }")
@@ -536,10 +539,13 @@ class ItBlockTest : CompilerTest
         static Obj h() { return B { A {} } }       // missing comma
         static Obj i(Foo f) { f { it = f } }       // not assignable
         static Obj j() { return A { return } }     // return not allowed
+        static Obj k() { return |C c| { c.x = 3 } }          // const outside it-block
+        static Obj l() { c := C(); return |,| { c.x = 3 } }  // const outside it-block
       }
 
       class A { Int x; Int y}
       class B { B add(A x) { return this } }
+      class C { const Int x }
       ",
       [ 3, 31, "Not a statement",
         4, 31, "Invalid args add($podName::A), not (sys::Int)",
@@ -549,6 +555,8 @@ class ItBlockTest : CompilerTest
        10, 33, "Not a statement",
        11, 29, "Left hand side is not assignable",
        12, 31, "Cannot use return inside it-block",
+       13, 37, "Cannot set const field '$podName::C.x'",
+       14, 45, "Cannot set const field '$podName::C.x'",
       ])
   }
 
