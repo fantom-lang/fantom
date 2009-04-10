@@ -1440,15 +1440,15 @@ class ClosureExpr : Expr
   Void setInferredSignature(FuncType t)
   {
     // bail if we didn't expect an inferred the signature
-    if (!inferredSignature) return
-    inferredSignature = false
+    if (!signature.inferredSignature) return
 
     // sanity check
-    if (t.params.any |CType p->Bool| { p.isThis })
+    if (t.usesThis)
       throw Err("Inferring signature with un-parameterized this type: $t")
 
     // update my signature and the doCall signature
     signature = t
+    ctype = t
     if (doCall != null)
     {
       // update parameter types
@@ -1488,7 +1488,6 @@ class ClosureExpr : Expr
   SlotDef enclosingSlot         // enclosing method or field initializer
   ClosureExpr? enclosingClosure // if nested closure
   FuncType signature            // function signature
-  Bool inferredSignature        // does closure require type inference for its sig
   Block? code                   // moved into a MethodDef in InitClosures
   Str name                      // anonymous class name
   Bool isItBlock                // does closure have implicit it scope
