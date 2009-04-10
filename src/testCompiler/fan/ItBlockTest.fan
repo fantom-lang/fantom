@@ -506,4 +506,44 @@ class ItBlockTest : CompilerTest
       ])
   }
 
+  Void testAmbiguous()
+  {
+    verifyErrors(
+     "class Foo
+      {
+        // instance methods
+        Obj m04() { Foo { x } }
+        Obj m05() { Bar { x } }
+        // instance fields
+        Obj m07() { Foo { y = 3 } }
+        Obj m08() { Bar { y = 3 } }
+        // static methods
+        Obj m10() { Foo { s } }  // ok
+        Obj m11() { Bar { s } }
+        // static fields
+        Obj m13() { Foo { it.y = t } }  // ok
+        Obj m14() { Bar { it.y = t } }
+
+        Void x() {}
+        Int y
+        static Void s() {}
+        static const Int t := 8
+      }
+
+      class Bar
+      {
+        Void x() {}
+        Int y
+        static Void s() {}
+        static const Int t := 8
+      }
+      ",
+      [ 4, 21, "Ambiguous slot 'x' on both 'this' ($podName::Foo) and 'it' ($podName::Foo)",
+        5, 21, "Ambiguous slot 'x' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
+        7, 21, "Ambiguous slot 'y' on both 'this' ($podName::Foo) and 'it' ($podName::Foo)",
+        8, 21, "Ambiguous slot 'y' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
+       11, 21, "Ambiguous slot 's' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
+       14, 28, "Ambiguous slot 't' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
+      ])
+  }
 }
