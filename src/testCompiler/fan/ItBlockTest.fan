@@ -376,6 +376,8 @@ class ItBlockTest : CompilerTest
         Int test8()  { Foo.factory5 { x += 200 }.x }  // line 10
         Int test9()  { Foo.factoryX(true) { x = 9 }.x }
         Int test10() { Foo.factoryX(false) { x = 10 }.x }
+        Int test11() { Foo().factoryI1(true, 11).x }
+        Int test12() { Foo().factoryI1(false, 12).x }
 
         Int bad1()   { f := Foo(); f { x = 6 }; return f.x }
         Foo bad2()   { Foo.factory5bad { x = 2 } }
@@ -396,6 +398,7 @@ class ItBlockTest : CompilerTest
         new make5(|This| f) { x += 30; f(this); x += 1000 }
 
         static Foo factoryX(Bool b, |This| f) { return makeX(b, f) }
+        Foo factoryI1(Bool b, Int i) { return makeX(b) { it.x = i } }
         static Foo factoryXbad(Bool b, |This| f) { x := makeX(b, f); f(x); return x }
         new makeX(Bool b, |This| f)
         {
@@ -417,6 +420,8 @@ class ItBlockTest : CompilerTest
     verifyEq(obj->test8, 1239)
     verifyEq(obj->test9, 19)
     verifyEq(obj->test10, 30)
+    verifyEq(obj->test11, 21)
+    verifyEq(obj->test12, 32)
     verifyErr(ConstErr#) |,| { obj->bad1 }
     verifyErr(ConstErr#) |,| { obj->bad2 }
     verifyErr(ConstErr#) |,| { obj->bad3 }

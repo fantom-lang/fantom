@@ -1443,6 +1443,10 @@ class ClosureExpr : Expr
     if (!inferredSignature) return
     inferredSignature = false
 
+    // sanity check
+    if (t.params.any |CType p->Bool| { p.isThis })
+      throw Err("Inferring signature with un-parameterized this type: $t")
+
     // update my signature and the doCall signature
     signature = t
     if (doCall != null)

@@ -341,11 +341,10 @@ class CallResolver : CompilerSupport
     // is expected to be a function type, then use that to
     // infer the type signature of the closure
     m := call.method
-    lastParam := m.params.last?.paramType?.deref?.toNonNullable
-    if (lastParam is FuncType && call.args.size == m.params.size)
+    lastParam := m.params.last?.paramType?.deref?.toNonNullable as FuncType
+    if (lastParam != null && call.args.size == m.params.size)
     {
-      if (call.target != null)
-        lastParam = ((FuncType)lastParam).parameterizeThis(call.target.ctype)
+      lastParam = lastParam.parameterizeThis(base)
       c.setInferredSignature(lastParam)
       return call
     }
