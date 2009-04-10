@@ -902,6 +902,10 @@ class CheckErrorsTest : CompilerTest
         static Void m26() { for (;;) { try { try { m03 } finally { break } } finally { continue } } }
 
         static Void m28() { try { } catch {} }
+
+        Void m30() { return 6 }
+        Obj m31() { return }
+        Obj m32(Bool b) { if (b) return; else return }
       }",
        [3, 26, "If condition must be Bool, not 'sys::Int'",
         4, 28, "Must throw Err, not 'sys::Int'",
@@ -932,6 +936,11 @@ class CheckErrorsTest : CompilerTest
         26, 82, "Cannot leave finally block",
 
         28, 23, "Try block cannot be empty",
+
+        30, 23, "Cannot return 'sys::Int' as 'sys::Void'",
+        31, 15, "Must return a value from non-Void method",
+        32, 28, "Must return a value from non-Void method",
+        32, 41, "Must return a value from non-Void method",
        ])
   }
 

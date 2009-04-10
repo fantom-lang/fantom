@@ -585,6 +585,7 @@
 *Build 1.0.41 (working)*
 - It-Blocks
 - Closure type inference
+- Require return expr to be on same line
 - Duration: minVal, maxVal
 - Move jfan to sys/java; nfan to sys/dotnet
 - Change exclusive range from "..." to "..<"
