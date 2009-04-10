@@ -162,7 +162,7 @@ class CallResolver : CompilerSupport
       foundIt := findOn(baseIt)
 
       // if we found a match on both base and it, that is an error
-      if (found != null && foundIt != null)
+      if (isAmbiguous(found, foundIt))
         throw err("Ambiguous slot '$name' on both 'this' ($base) and 'it' ($baseIt)", location)
 
       // resolved against implicit it
@@ -217,6 +217,17 @@ class CallResolver : CompilerSupport
       throw err("Expected method, not field '$errSig'", location)
 
     return found
+  }
+
+  private Bool isAmbiguous(CSlot? a, CSlot? b)
+  {
+    // unless we found on both base and baseIt, it is not ambiguous
+    if (a == null || b == null) return false
+
+    // if they are the same method and static, then it doesn't matter
+    if (a.qname == b.qname && a.isStatic) return false
+
+    return true
   }
 
   private Str errSig() { return "${base.qname}.${name}" }
