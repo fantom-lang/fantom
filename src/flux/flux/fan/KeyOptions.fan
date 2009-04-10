@@ -23,6 +23,11 @@ const class KeyOptions
   }
 
   **
+  ** Default constructor with it-block
+  **
+  new make(|This|? f := null) { if (f != null) f(this) }
+
+  **
   ** Binding of command ids to key accelerators.  The keys of this
   ** map are [FluxCommand.ids]`FluxCommand.id`.  See `CommandId` for
   ** the commonly used predefined commmands.  The values of the map

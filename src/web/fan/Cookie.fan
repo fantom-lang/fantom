@@ -50,20 +50,21 @@ const class Cookie
   **   // read from request
   **   val := Buf.fromBase64(req.cookies.get("baz", "")).readAllStr
   **
-  new make(Str name, Str val)
+  new make(Str name, Str val, |This|? f := null)
   {
+    if (f != null) f(this)
+    this.name = name
+    this.val = val
+
     // validate name
-    if (!WebUtil.isToken(name) || name[0] == '$')
+    if (!WebUtil.isToken(this.name) || this.name[0] == '$')
       throw ArgErr("Cookie name has illegal chars: $val")
 
     // validate value
-    if (!val.all |Int c->Bool| { return 0x20 <= c && c <= 0x7e && c != ';'})
+    if (!this.val.all |Int c->Bool| { return 0x20 <= c && c <= 0x7e && c != ';'})
       throw ArgErr("Cookie value has illegal chars: $val")
-    if (val.size + 32 >= WebUtil.maxTokenSize) // fudge room for quotes & escapes
+    if (this.val.size + 32 >= WebUtil.maxTokenSize) // fudge room for quotes & escapes
       throw ArgErr("Cookie value too big")
-
-    this.name = name
-    this.val = val
   }
 
   **

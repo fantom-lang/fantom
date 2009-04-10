@@ -16,6 +16,11 @@ const class Mark
 {
 
   **
+  ** Default constructor with it-block.
+  **
+  new make(|This| f) { f(this) }
+
+  **
   ** Attempt to parse an arbitrary line of text into a mark.
   ** We attempt to match anything that looks like a absolute
   ** file name.  If we match a filename, then we look for an
