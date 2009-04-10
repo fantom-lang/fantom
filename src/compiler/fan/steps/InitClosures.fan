@@ -235,6 +235,7 @@ class InitClosures : CompilerStep
 
     // add to our synthetic parent class
     parent.addSlot(m)
+    if (parent.isClosure) parent.closure.callX = m
     return m
   }
 

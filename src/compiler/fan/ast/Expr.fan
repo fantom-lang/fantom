@@ -1451,15 +1451,36 @@ class ClosureExpr : Expr
     signature = t
     if (doCall != null)
     {
+      // update parameter types
       doCall.paramDefs.each |ParamDef p, Int i|
       {
         if (i < signature.params.size)
           p.paramType = signature.params[i]
       }
+
+      // update return, we might have to translate an single
+      // expression statement into a return statement
+      if (doCall.ret.isVoid && !t.ret.isVoid)
+      {
+        doCall.ret = t.ret
+        collapseExprAndReturn(doCall)
+        collapseExprAndReturn(callX)
+      }
     }
 
     // if an itBlock, set type of it
     if (isItBlock) itType = t.params.first
+  }
+
+  Void collapseExprAndReturn(MethodDef m)
+  {
+    code := m.code.stmts
+    if (code.size != 2) return
+    if (code.first.id !== StmtId.expr) return
+    if (!((ReturnStmt)code.last).isSynthetic) return
+    expr := ((ExprStmt)code.first).expr
+    code.set(0, ReturnStmt.makeSynthetic(expr.location, expr))
+    code.removeAt(1)
   }
 
   // Parse
@@ -1475,6 +1496,7 @@ class ClosureExpr : Expr
   // InitClosures
   CallExpr? substitute          // expression to substitute during assembly
   TypeDef? cls                  // anonymous class which implements the closure
+  MethodDef callX               // anonymous class's callX() with code
   MethodDef? doCall             // anonymous class's doCall() with code
 
   // ResolveExpr
