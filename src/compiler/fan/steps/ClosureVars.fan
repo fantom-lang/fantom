@@ -323,7 +323,7 @@ class ClosureVars : CompilerStep
     // add parameter to closure implementation constructor
     ctor := closure.cls.methodDef("make")
     param := ParamDef.make(loc, cvars, "\$cvars")
-    paramVar := MethodVar.makeForParam(ctor.params.size+1, param)
+    paramVar := MethodVar.makeForParam(ctor.params.size+1, param, param.paramType)
     ctor.params.add(param)
     ctor.vars.add(paramVar)
 
@@ -387,7 +387,7 @@ class ClosureVars : CompilerStep
     // add parameter to constructor
     ctor  := implType.methodDef("make")
     param := ParamDef.make(loc, thisType, "\$this")
-    var   := MethodVar.makeForParam(ctor.params.size+1, param)
+    var   := MethodVar.makeForParam(ctor.params.size+1, param, param.paramType)
     ctor.params.add(param)
     ctor.vars.add(var)
 

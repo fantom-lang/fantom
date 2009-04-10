@@ -27,25 +27,26 @@ class NullableType : CType
 // CType
 //////////////////////////////////////////////////////////////////////////
 
-  override CNamespace ns() { return root.ns }
-  override CPod pod()      { return root.pod }
-  override Str name()      { return root.name }
-  override Str qname()     { return root.qname }
-  override Int flags()     { return root.flags }
+  override CNamespace ns() { root.ns }
+  override CPod pod()      { root.pod }
+  override Str name()      { root.name }
+  override Str qname()     { root.qname }
+  override Int flags()     { root.flags }
   override Str signature
 
-  override Bool isValue() { return root.isValue }
+  override Bool isValue() { root.isValue }
 
-  override Bool isNullable() { return true }
-  override CType toNullable() { return this }
-  override CType toNonNullable() { return root }
+  override Bool isNullable() { true }
+  override CType toNullable() { this }
+  override CType toNonNullable() { root }
 
-  override Bool isGeneric() { return root.isGeneric }
-  override Bool isParameterized() { return root.isParameterized }
-  override Bool isGenericParameter() { return root.isGenericParameter }
+  override Bool isGeneric() { root.isGeneric }
+  override Bool isParameterized() { root.isParameterized }
+  override Bool isGenericParameter() { root.isGenericParameter }
+  override CType parameterizeThis(CType thisType) { root.parameterizeThis(thisType).toNullable }
 
-  override Bool isForeign()   { return root.isForeign }
-  override Bool isSupported() { return root.isSupported }
+  override Bool isForeign()   { root.isForeign }
+  override Bool isSupported() { root.isSupported }
   override CType inferredAs()
   {
     x := root.inferredAs
@@ -53,11 +54,11 @@ class NullableType : CType
     return x.toNullable
   }
 
-  override once CType toListOf() { return ListType(this) }
+  override once CType toListOf() { ListType(this) }
 
-  override CType? base() { return root.base }
-  override CType[] mixins() { return root.mixins }
-  override Bool fits(CType t) { return root.fits(t) }
+  override CType? base() { root.base }
+  override CType[] mixins() { root.mixins }
+  override Bool fits(CType t) { root.fits(t) }
 
   override Str:CSlot slots() { return root.slots }
 
