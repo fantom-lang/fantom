@@ -51,7 +51,7 @@ const class Locale
   ** that upon return the thread current's locale remains
   ** unchanged.
   **
-  This with(|This| func)
+  override This with(|This| func)
 
 //////////////////////////////////////////////////////////////////////////
 // Identity

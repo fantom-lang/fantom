@@ -355,7 +355,10 @@ class CallResolver : CompilerSupport
     lastParam := m.params.last?.paramType?.deref?.toNonNullable as FuncType
     if (lastParam != null && call.args.size == m.params.size)
     {
-      lastParam = lastParam.parameterizeThis(base)
+      if (call.method.name == "with")
+        lastParam = FuncType.makeItBlock(base)
+      else
+        lastParam = lastParam.parameterizeThis(base)
       c.setInferredSignature(lastParam)
       return call
     }
