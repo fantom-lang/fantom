@@ -270,6 +270,15 @@ which exists on both 'this' and 'it', then it is a compile time error:
   ["a", "b", "c"].each { echo(it.toStr) }     // explicit call on it
   ["a", "b", "c"].each { echo(this.toStr) }   // explicit call on this
 
+This Functions [#thisFunc]
+**************************
+As a general rule the 'sys::This' type is reserved for use only as
+the [return type]`Methods#thisReturns` of instance methods.  There is
+one exception - you are allowed to declare a method parameter typed
+as '|This|' to indicate that an it-block function is expected:
+
+  new make(|This| f) { f(this) }
+
 With-Blocks [#withBlocks]
 *************************
 Fan allows you to append an it-block to any expression.  Whenever an
