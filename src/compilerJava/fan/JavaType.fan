@@ -222,8 +222,8 @@ class JavaType : CType
   {
     return JavaType(pod, "[" + name)
     {
-      arrayRank = this.arrayRank + 1
-      arrayOf = this
+      it.arrayRank = this.arrayRank + 1
+      it.arrayOf = this
     }
   }
 
@@ -267,11 +267,11 @@ class JavaType : CType
   {
     return JavaMethod
     {
-      parent = this
-      name = "<new>"
-      flags = FConst.Ctor | FConst.Public
-      returnType = this
-      params = JavaParam[,]
+      it.parent = this
+      it.name = "<new>"
+      it.flags = FConst.Ctor | FConst.Public
+      it.returnType = this
+      it.params = JavaParam[,]
     }
   }
 
@@ -284,11 +284,11 @@ class JavaType : CType
   {
     return JavaMethod
     {
-      parent = base
-      name = "<class>"
-      flags = FConst.Public | FConst.Static
-      returnType = bridge.classType
-      params = JavaParam[,]
+      it.parent = base
+      it.name = "<class>"
+      it.flags = FConst.Public | FConst.Static
+      it.returnType = bridge.classType
+      it.params = JavaParam[,]
     }
   }
 

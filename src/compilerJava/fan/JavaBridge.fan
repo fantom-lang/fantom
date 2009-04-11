@@ -177,7 +177,7 @@ class JavaBridge : CBridge
       }
     }
     if (isErr) return null
-    return CallMatch { method = m; args = newArgs }
+    return CallMatch { it.method = m; it.args = newArgs }
   }
 
   **
@@ -650,13 +650,13 @@ class JavaBridge : CBridge
   {
     return JavaMethod
     {
-      parent = ns.listType
+      parent = this.ns.listType
       name = "make"
       flags = FConst.Public | FConst.Static
-      returnType = ns.listType
+      returnType = this.ns.listType
       params =
       [
-        JavaParam("of", ns.typeType),
+        JavaParam("of", this.ns.typeType),
         JavaParam("array", objectArrayType)
       ]
     }
@@ -669,7 +669,7 @@ class JavaBridge : CBridge
   {
     return JavaMethod
     {
-      parent = ns.listType
+      parent = this.ns.listType
       name = "asArray"
       flags = FConst.Public
       returnType = objectArrayType
