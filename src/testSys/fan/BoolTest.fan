@@ -271,7 +271,7 @@ class BoolTest : Test
 
   Void testToLocale()
   {
-    Locale("en-US").with |,|
+    Locale("en-US").use
     {
       verifyEq(true.toLocale, "True")
       verifyEq(false.toLocale, "False")

@@ -72,7 +72,7 @@ public class Locale
     protected Object initialValue() { return defaultLocale; }
   };
 
-  public Locale with(Func func)
+  public Locale use(Func func)
   {
     Locale old = current();
     try

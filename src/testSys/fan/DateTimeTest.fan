@@ -856,7 +856,7 @@ class DateTimeTest : Test
     verifyEq(x.time.toLocale(null), "3:07AM")
 
     // non-US 24 hour time
-    Locale("en").with |,|
+    Locale("en").use
     {
       verifyEq(x.toLocale(),     "5-Feb-2008 Tue 03:07:20 EST")
       verifyEq(x.toLocale(null), "5-Feb-2008 Tue 03:07:20 EST")

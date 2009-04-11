@@ -74,7 +74,7 @@ namespace Fan.Sys
 
     [ThreadStatic] static Locale m_current;
 
-    public override object with(Func func)
+    public Locale use(Func func)
     {
       Locale old = current();
       try
