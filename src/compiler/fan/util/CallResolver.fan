@@ -353,8 +353,8 @@ class CallResolver : CompilerSupport
     // infer the type signature of the closure
     m := call.method
     lastParam := m.params.last?.paramType?.deref?.toNonNullable as FuncType
-    if (lastParam != null && call.args.size == m.params.size)
-    // && c.signature.params <= lastParam.params)
+    if (lastParam != null && call.args.size == m.params.size &&
+        c.signature.params.size <= lastParam.params.size)
     {
       if (call.method.name == "with")
         lastParam = FuncType.makeItBlock(base)

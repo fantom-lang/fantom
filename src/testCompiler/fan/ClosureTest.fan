@@ -571,4 +571,31 @@ class ClosureTest : CompilerTest
     verifyEq(obj->m10(["bar", "c", "first", "alpha"]), ["first", "alpha", "bar", "c"])
   }
 
+  Void testInferenceErrors()
+  {
+    // check that we don't infer if expected params < inferred params,
+    // the errors will indicate uninferred default Obj? params
+    verifyErrors(
+     "class Foo
+      {
+        Void m03() { f0 |,| {} }   // ok
+        Void m04() { f0 |a| {} }
+        Void m05() { f1 |a| {} }   // ok
+        Void m06() { f1 |a,b| {} }
+        Void m07() { f2 |a,b| {} } // ok
+        Void m08() { f2 |a,b,c| {} }
+        Void m09() { f2 |a,b,c,d| {} }
+
+        Void f0(|,| f) {}
+        Void f1(|Str| f) {}
+        Void f2(|Str,Str| f) {}
+      }
+      ",
+      [
+        4, 16, "Invalid args f0(|->sys::Void|), not (|sys::Obj?->sys::Void|)",
+        6, 16, "Invalid args f1(|sys::Str->sys::Void|), not (|sys::Obj?,sys::Obj?->sys::Void|)",
+        8, 16, "Invalid args f2(|sys::Str,sys::Str->sys::Void|), not (|sys::Obj?,sys::Obj?,sys::Obj?->sys::Void|)",
+        9, 16, "Invalid args f2(|sys::Str,sys::Str->sys::Void|), not (|sys::Obj?,sys::Obj?,sys::Obj?,sys::Obj?->sys::Void|)",
+      ])
+  }
 }
