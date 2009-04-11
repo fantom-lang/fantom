@@ -130,12 +130,23 @@ let them default to null), but you can't assign to them outside of the
 construction process.
 
 Fan also allows const instance fields to be set during the construction
-process via a [with-block]`Expressions#withBlocks` if the base expression
-of the with-block is a call to the constructor:
+process via an [it-block]`Closures#itBlocks`:
 
-  Thing { id = 77 }         // ok
-  Thing.make { id = 77 }    // ok
-  someThing { id = 77 }     // error
+  class Thing
+  {
+    new make(|This f|? f := null) { if (f != null) f(this) }
+    const Str name
+  }
+
+  t := Thing { name = "Brian" }   // ok
+  t { name = "Andy" }             // throws ConstErr
+
+Inside of it-blocks, the check for setting a const field is moved from
+compile-time to run-time.  The compiler will allow *any* it-block to set
+a const field on 'it'.  However, if if an attempt is made to call the
+it-block outside of the constructor then 'ConstErr' is thrown.  This
+gives you flexibility to build APIs which capture a snippet of code
+used to modify an immutable class.
 
 Const instance fields may also configured during deserialization via
 the `sys::InStream.readObj` method.

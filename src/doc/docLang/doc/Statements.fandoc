@@ -85,6 +85,17 @@ back to the code which called the method.  If the enclosing method
 is non-void, then the 'return' statement includes the expression
 used to return a result object to the caller.
 
+If returning an expression, then the expression must start on the same
+line as the 'return' keyword:
+
+  // this is ok
+  return call(x,
+    y, z)
+
+  // this is illegal
+  return
+    call(x, y, z)
+
 Fan allows you omit the 'return' keyword if your method or closure
 contains exactly one statement:
 
@@ -306,4 +317,3 @@ Exception Handling [#exceptions]
 Fan supports 'throw' and 'try' statements with a syntax very similar
 to Java and C#.  These statements are discussed separately in
 the [exception handling]`Exceptions` chapter.
-
