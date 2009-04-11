@@ -584,6 +584,7 @@
 
 *Build 1.0.41 (working)*
 - It-Blocks
+- Comma operator for it.add
 - Closure type inference
 - Require return expr to be on same line
 - Duration: minVal, maxVal

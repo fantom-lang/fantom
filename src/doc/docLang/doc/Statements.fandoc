@@ -68,7 +68,6 @@ The most common type of statement is a stand alone expression.
 The following expressions are considered valid statements:
   - Any assignment expression including the increment/decrement operators
   - Method calls (or chains of method calls)
-  - With-block
 
 Return Statement [#return]
 **************************

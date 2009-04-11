@@ -204,7 +204,7 @@ An example of a serializable class and an serialized instance:
     children = ["Bart", "Lisa", "Maggie"]
   }
 
-You may use this syntax directly in source code via [with-blocks]`Expressions#withBlocks`.
+You may use this syntax directly in source code via [it-blocks]`Expressions#itBlocks`.
 
 Collection [#syntaxCollection]
 ==============================
@@ -231,7 +231,7 @@ We can rewrite the 'Person' example above as a collection:
     acme::Person { name = "Maggie" },
   }
 
-This syntax is also supported directly in source code via [with-blocks]`Expressions#withBlocks`.
+This syntax is also supported directly in source code via [it-blocks]`Expressions#itBlocks`.
 
 Grammar [#syntaxGrammar]
 ========================

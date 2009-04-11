@@ -75,7 +75,7 @@ Statements [#stmts]
 *******************
   - Always omit '()' for method calls with no arguments
   - Prefer 'Foo(...)' style constructor with arguments
-  - Prefer 'Foo {...}' style constructor when using with-block
+  - Prefer 'Foo {...}' style constructor when using it-block
   - Prefer type inference for local variables
   - Prefer implicit casting to explicit casting
   - Prefer 'Obj[]' to 'List' and 'Obj:Obj' to 'Map'

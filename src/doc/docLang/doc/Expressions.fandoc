@@ -26,6 +26,7 @@ Operators in order of precedence:
   - Conditional Or: '||'
   - Ternary: 'x ? t : f'
   - Assignment: '=   *=   /=   %=   +=   -=   <<=   >>=   &=   ^=   |='
+  - Collection Add: ','
 
 Fan breaks with C convention in that the bitwise operators are
 a higher precedence than the relational operators.  This makes writing
@@ -41,30 +42,31 @@ all the operators are really just method calls.  We call these operators
 the *shortcut operators* because they are just syntax sugar for calling
 a specific method:
 
-   a + b    => a.plus(b)
-   a - b    => a.minus(b)
-   a * b    => a.mult(b)
-   a / b    => a.div(b)
-   a % b    => a.mod(b)
-   a[b]     => a.get(b)
-   a[b] = c => a.set(b, c)
-   a[b]     => a.slice(b) if b is Range
-   a << b   => a.lshift(b)
-   a >> b   => a.rshift(b)
-   a & b    => a.and(b)
-   a | b    => a.or(b)
-   a ^ b    => a.xor(b)
-   ~a       => a.inverse()
-   -a       => a.negate()
-   ++a, a++ => a = a.increment()
-   --a, a-- => a = a.decrement()
-   a == b   => a.equals(b)
-   a != b   => !a.equals(b)
-   a <=>    => a.compare(b)
-   a > b    => a.compare(b) > 0
-   a >= b   => a.compare(b) >= 0
-   a < b    => a.compare(b) < 0
-   a <= b   => a.compare(b) <= 0
+   a + b     =>  a.plus(b)
+   a - b     =>  a.minus(b)
+   a * b     =>  a.mult(b)
+   a / b     =>  a.div(b)
+   a % b     =>  a.mod(b)
+   a[b]      =>  a.get(b)
+   a[b] = c  =>  a.set(b, c)
+   a[b]      =>  a.slice(b) if b is Range
+   a << b    =>  a.lshift(b)
+   a >> b    =>  a.rshift(b)
+   a & b     =>  a.and(b)
+   a | b     =>  a.or(b)
+   a ^ b     =>  a.xor(b)
+   ~a        =>  a.inverse()
+   -a        =>  a.negate()
+   ++a, a++  =>  a = a.increment()
+   --a, a--  =>  a = a.decrement()
+   a == b    =>  a.equals(b)
+   a != b    =>  !a.equals(b)
+   a <=>     =>  a.compare(b)
+   a > b     =>  a.compare(b) > 0
+   a >= b    =>  a.compare(b) >= 0
+   a < b     =>  a.compare(b) < 0
+   a <= b    =>  a.compare(b) <= 0
+   a,b,c     =>  it.add(a).add(b).add(c)
 
 For example say we have two variables 'a' and 'b' both of type 'Int'.
 Then the expression 'a+b' is really just syntax sugar for calling
@@ -312,11 +314,12 @@ which take an index argument.
 
 Serialization Expressions [#serialization]
 ******************************************
-Fan supports two expression constructs which are designed to make the
+Fan supports three expression constructs which are designed to make the
 programming language a true superset of the [serialization]`Serialization`
 syntax:
   - Simples
-  - With-Blocks
+  - It-Blocks
+  - Collections
 
 Simples [#simples]
 ==================
@@ -339,13 +342,14 @@ implement the [simple]`Facets#simple` facet to use this expression (although it 
 if you want to serialize it).  Simple expressions are a subset of [construction
 calls]`Methods#constructionCalls`.
 
-With-Blocks [#withBlocks]
+It-Blocks [#itBlocks]
 =========================
-With-blocks enable you write compound expressions - they are typically used to initialize
-an instance.  This feature is a clean a superset of how [complex]`Serialization#syntaxComplex`
-types are serialized.  An example with-block expression:
+[It-blocks]`Closures#itBlocks` enable you write compound expressions - they are
+typically used to initialize an instance.  This feature is a clean a superset
+of how [complex]`Serialization#syntaxComplex` types are serialized.  An example
+it-block expression:
 
-  Address.make
+  Address
   {
     street = "123 Happy Lane"
     city   = "Houston"
@@ -353,63 +357,41 @@ types are serialized.  An example with-block expression:
   }
 
   // is syntax sugar for
-  temp := Address.make
-  temp.street = "123 Happy Lane"
-  temp.city   = "Houston"
-  temp.state  = "TX"
-
-A with-block may be appended to any expression using curly braces and may contain
-zero or more with sub-expressions which operate on the instance of the base expression.
-The example above shows how the assignments inside the with-block are implied against
-the value of the base expression (we don't actually use a temp variable, we just dup
-the stack in fcode).  The sub-expressions are limited to field assignment and instance
-method calls.  The sub-expressions in a with-block are terminated like normal statements:
-semicolon, newline, or by the end of block.
-
-You can omit the 'make' if you specify a type signature immediately followed by an
-opening curly brace:
-
-  Address { street = "123 Happy Lane"; city = "Houston"; state = "TX" }
-
-You are permitted to set [const fields]`Fields#const` using a constructor
-based with-block as part of the construction process.
+  Address.make.with |Address it|
+  {
+    it.street = "123 Happy Lane"
+    it.city   = "Houston"
+    it.state  = "TX"
+  }
 
 Collections [#collections]
 ==========================
-With-blocks may also be used to initialize a collection if the base expression
-of a with-block supports a method called "add".  Any expression inside the
-with-block which doesn't resolve to a field setter or method call on the base
-expression is assumed to be an argument to 'base.add()'.  An example:
+It-blocks may also be used to initialize a collection if 'it' supports a
+method called "add".  Any expression inside an it-block suffixed with a
+comma is assumed to be a call to 'it.add':
+
+  a,       =>  it.add(a)
+  a, b,    =>  it.add(a).add(b)
+  a, b, c  =>  it.add(a).add(b).add(c)
+
+Note the comma operator chains the calls to 'add', therefore the 'add'
+method must return a chainable type (typically 'This').
+
+Here is an FWT example:
 
   Menu
   {
-    Menu
-    {
-      text = "File"
-      MenuItem { text = "Open"; onSelect=&open }
-      MenuItem { text = "Save"; onSelect=&save }
-    }
-    Menu
-    {
-      text = "Help"
-      MenuItem { text = "About"; onSelect=&about }
-    }
+    text = "File"
+    MenuItem { text = "Open"; onSelect=&open },
+    MenuItem { text = "Save"; onSelect=&save },
   }
 
   // is syntax sugar for
-  Menu
+  Menu.make.with |Menu it|
   {
-    add(Menu
-    {
-      text = "File"
-      add(MenuItem { text = "Open"; onSelect=&open })
-      add(MenuItem { text = "Save"; onSelect=&save })
-    })
-    add(Menu
-    {
-      text = "Help"
-      add(MenuItem { text = "About"; onSelect=&about })
-    })
+    it.text = "File"
+    it.add(MenuItem { text = "Open"; onSelect=&open })
+      .add(MenuItem { text = "Save"; onSelect=&save })
   }
 
 Advanced Operators [#advances]

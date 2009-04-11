@@ -134,9 +134,8 @@ Expr [#expr]
   <termExpr>       :=  <termBase> <termChain>*
   <termBase>       :=  <literal> | <idExpr> | <closure>
   <termChain>      :=  <dotCall> | <dynCall> | <safeDotCall> | <safeDynCall> |
-                       <indexExpr> | <callOp> | <withBlock>
-  <withBlock>      :=  "{" <withSub>* "}"
-  <withSub>        :=  <expr> <eos>    // expr is restricted
+                       <indexExpr> | <callOp> | <itBlock>
+  <itBlock>        :=  "{" <stmts> "}"
   <dotCall>        :=  "." <idExpr>
   <dynCall>        :=  "->" <idExpr>
   <safeDotCall>    :=  "?." <idExpr>
@@ -149,9 +148,9 @@ Expr [#expr]
   <closure>        :=  <funcType> "{" <stmts> "}"
   <indexExpr>      :=  "[" <expr> "]"
   <callOp>         :=  "(" <args> ")" [<closure>]
-  <literal>        :=  "null" | "this" | "super" | <namedSuper> | <bool> | <int> |
-                       <float> | <decimal> | <str> | <duration> | <uri> | <list> |
-                       <map> | <simple>
+  <literal>        :=  "null" | "this" | "super" | "it" |
+                       <namedSuper> | <bool> | <int> | <float> | <decimal> |
+                       <str> | <duration> | <uri> | <list> | <map> | <simple>
   <namedSuper>     :=  <type> "." "super"
   <list>           :=  [<type>] "[" <listItems> "]"
   <listItems>      :=  "," | (<expr> ("," <expr>)*)
@@ -201,8 +200,6 @@ Keywords [#keywords]
   false         protected
   final         public
   finally       readonly
-
-
 
 
 
