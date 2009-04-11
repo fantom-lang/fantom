@@ -194,7 +194,7 @@ class StrTest : Test
     // Check the Turkish I: U+0130 dotted I and
     // U+0131 is the lowercase undotted i;  in Java
     // these expressions would not necessarily yield 1
-    Locale.fromStr("tr").with |,|
+    Locale.fromStr("tr").use
     {
       verifyEq("\u0130".compareIgnoreCase("I"), 1)
       verifyEq("\u0130".compareIgnoreCase("i"), 1)
@@ -642,7 +642,7 @@ class StrTest : Test
 
     // include some Unicode chars - U+0130 is the infamous
     // Turkish dotted I and U+0131 is the lowercase undotted i
-    Locale.fromStr("tr").with |,|
+    Locale.fromStr("tr").use
     {
       verifyEq("Ab\u03D0\u03F4\u0130\u0131".upper, "AB\u03D0\u03F4\u0130\u0131")
       verifyEq("aB\u03D0\u03F4\u0130\u0131".lower, "ab\u03D0\u03F4\u0130\u0131")
@@ -707,7 +707,7 @@ class StrTest : Test
   Void testLocale()
   {
     // english/latin
-    Locale.fromStr("en").with |,|
+    Locale.fromStr("en").use
     {
       verifyLocale("Ice", "ICE", "ice", "Ice", "ice")
       verifyLocale("ice", "ICE", "ice", "Ice", "ice")
@@ -718,7 +718,7 @@ class StrTest : Test
     }
 
     // turkish
-    Locale.fromStr("tr").with |,|
+    Locale.fromStr("tr").use
     {
       verifyLocale("Ice", "ICE", "\u0131ce", "Ice", "\u0131ce")
       verifyLocale("ice", "\u0130CE", "ice", "\u0130ce", "ice")

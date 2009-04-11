@@ -71,7 +71,7 @@ class LocaleTest : Test
     // check with closure which throws exception
     try
     {
-      fr.with |,|
+      fr.use
       {
         verifyEq(Locale.current.toStr, "fr-FR")
         throw Err.make

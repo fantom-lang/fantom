@@ -490,7 +490,7 @@ class FloatTest : Test
 
   Void testNumLocale()
   {
-    Locale("en-US").with |,|
+    Locale("en-US").use
     {
       verifyEq(Num.localeDecimal,  ".")
       verifyEq(Num.localeGrouping, ",")
@@ -500,7 +500,7 @@ class FloatTest : Test
       verify(Num.localeNegInf == "-\u221e" || Num.localeNegInf == "-Infinity")
       verify(Num.localeNaN == "\ufffd" || Num.localeNaN == "NaN") // not sure about replacement char
     }
-    Locale("fr-FR").with |,|
+    Locale("fr-FR").use
     {
       verifyEq(Num.localeDecimal,  ",")
       verifyEq(Num.localeGrouping, "\u00a0")
@@ -646,12 +646,12 @@ class FloatTest : Test
 
     // default, alternate locale
     verifyLocale(12345.4f, null, "12,345.4")
-    Locale("fr-FR").with |,| { verifyEq(12345.4f.toLocale("#,###.0"), "12\u00a0345,4") }
+    Locale("fr-FR").use { verifyEq(12345.4f.toLocale("#,###.0"), "12\u00a0345,4") }
   }
 
   Void verifyLocale(Float f, Str? pattern, Str expected, Bool javaWrong := false)
   {
-    Locale("en-US").with |,|
+    Locale("en-US").use
     {
       //echo("====> $f $pattern ?= $expected")
       actual := f.toLocale(pattern)

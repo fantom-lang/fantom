@@ -47,11 +47,11 @@ const class Locale
 
   **
   ** Run the specified function using this locale as the
-  ** the thread's current locale.  This method guarantees
-  ** that upon return the thread current's locale remains
+  ** the actor's current locale.  This method guarantees
+  ** that upon return the actor current's locale remains
   ** unchanged.
   **
-  override This with(|This| func)
+  This use(|This| func)
 
 //////////////////////////////////////////////////////////////////////////
 // Identity

@@ -349,7 +349,7 @@ class IntTest : Test
     verifyEq((-88).lower, -88)
 
     // ensure locale doesn't work for ASCII methods
-    Locale.fromStr("tr").with |,|
+    Locale.fromStr("tr").use
     {
       verifyEq('I'.lower, 'i')
       verifyEq('i'.upper, 'I')
@@ -438,7 +438,7 @@ class IntTest : Test
     verifyEq('a'.equalsIgnoreCase('A'), true)
     verifyEq('Z'.equalsIgnoreCase('z'), true)
     verifyEq('Z'.equalsIgnoreCase('!'), false)
-    Locale.fromStr("tr").with |,|
+    Locale.fromStr("tr").use
     {
       verifyEq('I'.equalsIgnoreCase('i'), true)
       verifyEq('i'.equalsIgnoreCase('I'), true)
@@ -477,7 +477,7 @@ class IntTest : Test
 
   Void verifyLocale(Str locale, Int c, Int lower, Int upper)
   {
-    Locale.fromStr(locale).with |,|
+    Locale.fromStr(locale).use
     {
       verifyEq(c.localeIsLower, c == lower)
       verifyEq(c.localeIsUpper, c == upper)
@@ -629,12 +629,12 @@ class IntTest : Test
 
     // default, alternate locale
     verifyToLocale(12345, null, "12,345")
-    Locale("fr-FR").with |,| { verifyEq(12345.toLocale("#,###"), "12\u00a0345") }
+    Locale("fr-FR").use { verifyEq(12345.toLocale("#,###"), "12\u00a0345") }
   }
 
   Void verifyToLocale(Int i, Str? pattern, Str expected)
   {
-    Locale("en-US").with |,|
+    Locale("en-US").use
     {
       // echo("====> $i $pattern ?= $expected")
       actual := i.toLocale(pattern)
