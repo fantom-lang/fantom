@@ -49,10 +49,10 @@ it-blocks:
   {
     XElem("root")
     {
-      XElem("a") { addAttr("flags", "0"); XText("blah") }
-      XElem("b") { XElem("c") }
-      XElem("m") { XText("I "); XElem("i") { XText("mean") }; XText(" it!") }
-    }
+      XElem("a") { addAttr("flags", "0"); XText("blah"), },
+      XElem("b") { XElem("c"), },
+      XElem("m") { XText("I "), XElem("i") { XText("mean"), }, XText(" it!"), },
+    },
   }
   doc.write(Sys.out)
 
@@ -89,10 +89,10 @@ attributes are declared:
   nsBar := XNs("b", `http://foo/bar`)
   root := XElem("root", nsBar)
   {
-    XAttr.makeNs(nsDef)
-    XAttr.makeNs(nsBar)
-    XElem("elem", nsDef)
-    XElem("elem", nsBar)
+    XAttr.makeNs(nsDef),
+    XAttr.makeNs(nsBar),
+    XElem("elem", nsDef),
+    XElem("elem", nsBar),
   }
   root.write(Sys.out)
 

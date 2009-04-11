@@ -12,6 +12,5 @@ The [fand]`fand::index` pod defines a set of classes used to write
 daemon server scripts.  Fand scripts are based upon:
 
   - Subclassing `fand::BootScript`
-  - Defining a set of *service* threads
-
+  - Defining a set of [Services]`sys::Service`
 
