@@ -332,7 +332,7 @@ class CallResolver : CompilerSupport
     if (result is CallExpr)
     {
       base := foundOnIt ? this.baseIt : this.base
-      result = inferClosureTypeFromCall(result, base)
+      result = inferClosureTypeFromCall(this, result, base)
     }
   }
 
@@ -342,7 +342,7 @@ class CallResolver : CompilerSupport
   ** last arg is a closure, but the call doesn't take a closure,
   ** then translate into an implicit call to Obj.with
   **
-  static Expr inferClosureTypeFromCall(CallExpr call, CType base)
+  static Expr inferClosureTypeFromCall(CompilerSupport support, CallExpr call, CType base)
   {
     // check if last argument is closure
     c := call.args.last as ClosureExpr
@@ -354,6 +354,7 @@ class CallResolver : CompilerSupport
     m := call.method
     lastParam := m.params.last?.paramType?.deref?.toNonNullable as FuncType
     if (lastParam != null && call.args.size == m.params.size)
+    // && c.signature.params <= lastParam.params)
     {
       if (call.method.name == "with")
         lastParam = FuncType.makeItBlock(base)
@@ -367,7 +368,18 @@ class CallResolver : CompilerSupport
     // its type to be the result of the target expression
     if (c.isItBlock)
     {
+      // if call is This, switch it to base (passes thru to toWith)
       if (call.ctype.isThis) call.ctype = base
+
+      // can't chain it-block if call returns Void
+      if (call.ctype.isVoid)
+      {
+        support.err("Cannot apply it-block to Void expr", call.location)
+        return call
+      }
+
+      // remove the function parameter and turn this into:
+      //  call(args).toWith(c)
       call.args.removeAt(-1)
       return c.toWith(call)
     }

@@ -511,8 +511,11 @@ class ItBlockTest : CompilerTest
         static Obj a() { return A {} }
         static Obj b() { return it.toStr }
         Obj c() { return it.toStr }
-        static Obj d() { return B { x = 4 } }
-        static Obj e() { return B { 6, } }
+        static Void d() { v { echo(9) } }
+        static Obj e() { return B { x = 4 } }
+        static Obj f() { return B { 6, } }
+
+        static Void v() {}
       }
 
       class A { new mk() {} }
@@ -521,8 +524,9 @@ class ItBlockTest : CompilerTest
       [ 3, 27, "Unknown method '$podName::A.make'",
         4, 27, "Invalid use of 'it' outside of it-block",
         5, 20, "Invalid use of 'it' outside of it-block",
-        6, 31, "Unknown variable 'x'",
-        7, 31, "Unknown method '$podName::B.add'",
+        6, 21, "Cannot apply it-block to Void expr",
+        7, 31, "Unknown variable 'x'",
+        8, 31, "Unknown method '$podName::B.add'",
       ])
 
     // errors CheckErrors

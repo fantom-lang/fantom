@@ -502,7 +502,7 @@ class ResolveExpr : CompilerStep
 
     // hook to infer closure type from call or to
     // translateinto an implicit call to Obj.with
-    return CallResolver.inferClosureTypeFromCall(call, base)
+    return CallResolver.inferClosureTypeFromCall(this, call, base)
   }
 
   **
