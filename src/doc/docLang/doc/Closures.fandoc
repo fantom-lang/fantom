@@ -214,9 +214,89 @@ Map iteration works the same way:
   map.each |Str val, Int key| { echo("$key=$val") }
   map.each |Str val| { echo(val) }
 
+Closure Type Inference [#typeInference]
+***************************************
+Closures which are passed as the last argument to a method support
+type inference:
 
+  // fully specified closure signatures
+  list := ["one", "two", "three"]
+  list.each |Str v, Int i| { echo("$i = $v") }
+  list.each |Str v| { echo(v) }
 
+  // inferred closure signatures
+  list.each |v, i| { echo("$i = $v") }
+  list.each |v| { echo(v) }
 
+If you leave the types off the closures parameters, then they are inferred
+based on the closure's context. In the example above a closure passed
+to 'Str[].list.each' is inferred to have a type of '|Str,Int|'.
 
+You can also use inference in conjunction with a return type or you
+can omit the return type entirely:
 
+  odds = [1, 2, 3, 4, 5].findAll |v->Bool| { v.isOdd }
+  odds = [1, 2, 3, 4, 5].findAll |v| { v.isOdd }
 
+Closures can only infer the type when they are being passed to a method
+which expects a function.  If a closure's parameters cannot be inferred
+then the defaults to 'Obj?':
+
+   // closure with inferred type of |Obj? v|
+   f := |v| { echo(v) }
+
+It-Blocks [#itBlocks]
+*********************
+It-blocks are a special form of closures with the following differences:
+  - They omit a function signature and are declared only with curly braces
+  - Use [type inference]`#typeInference` based on their context
+  - Define an implicit single parameter called 'it'
+  - Define an implicit scope for 'it'
+  - Return keyword is not allowed in an it-block
+  - It-blocks are given compile time permission to set const fields
+    on the 'it' parameter, although runtime checks will throw ConstErr
+    if an attempt is made to set a const field outside of 'its'
+    constructor (see [const fields]`Fields#const`)
+
+An it-block can be used whenever a single parameter function is expected:
+
+  ["a", "b", "c"].each |Str s| { echo(s.upper) }  // long hand
+  ["a", "b", "c"].each { echo(it.upper) }         // short hand
+
+In the example above, the it-block is a closure with an implicit 'Str'
+parameter called 'it'.
+
+The 'it' parameter works just like the implicit 'this' parameter in
+an instance method.  If a given identifier is not declared in the local
+scope, then we attempt to bind to 'it':
+
+  ["a", "b", "c"].each { echo(it.upper) }  // explicit it call
+  ["a", "b", "c"].each { echo(upper) }     // implicit it call
+
+Just like 'this', if a local variable shadows a slot on 'it', then the
+local variable is used.  If an attempt is made to implicitly access a slot
+which exists on both 'this' and 'it', then it is a compile time error:
+
+  ["a", "b", "c"].each { echo(toStr) }        // Ambiguous slot error
+  ["a", "b", "c"].each { echo(it.toStr) }     // explicit call on it
+  ["a", "b", "c"].each { echo(this.toStr) }   // explicit call on this
+
+With-Blocks [#withBlocks]
+*************************
+Fan allows you to append an it-block to any expression.  Whenever an
+it-block is used and a function is not expected, then the compiler
+generates a call to [Obj.with]`sys::Obj.with`:
+
+  list := Str[,].with { fill("x", 3) }   // explicit call to with
+  list := Str[,] { fill("x", 3) }        // implicit call to with
+
+The default implementation of 'Obj.with' just applies the function:
+
+  virtual This with(|This| f)
+  {
+    f(this)
+    return this
+  }
+
+Using it-blocks and 'Obj.with' allows you open a new lexical scope
+with any expression.  It is quite useful for declarative programming.
