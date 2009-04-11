@@ -512,10 +512,16 @@ class ItBlockTest : CompilerTest
         static Obj b() { return it.toStr }
         Obj c() { return it.toStr }
         static Void d() { v { echo(9) } }
-        static Obj e() { return B { x = 4 } }
-        static Obj f() { return B { 6, } }
+        static Void e() { f0 {} }
+        static Void f() { f1 {} }  // ok
+        static Void g() { f2 {} }  // ok
+        static Obj h() { return B { x = 4 } }
+        static Obj i() { return B { 6, } }
 
         static Void v() {}
+        static Void f0(|,| f) {}
+        static Void f1(|Obj?| f) {}
+        static Void f2(|Obj?,Obj?| f) {}
       }
 
       class A { new mk() {} }
@@ -525,8 +531,9 @@ class ItBlockTest : CompilerTest
         4, 27, "Invalid use of 'it' outside of it-block",
         5, 20, "Invalid use of 'it' outside of it-block",
         6, 21, "Cannot apply it-block to Void expr",
-        7, 31, "Unknown variable 'x'",
-        8, 31, "Unknown method '$podName::B.add'",
+        7, 21, "Cannot apply it-block to Void expr",  // it-block params < f0
+       10, 31, "Unknown variable 'x'",
+       11, 31, "Unknown method '$podName::B.add'",
       ])
 
     // errors CheckErrors
