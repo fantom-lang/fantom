@@ -58,7 +58,7 @@ See [docCookbook]`docCookbook::Email` for examples.
 Email [#email]
 **************
 The [Email]`email::Email` class is used to model a MIME message.  Typical
-use is to construct a Email instance using [with-blocks]`docLang::Expressions#withBlocks`:
+use is to construct a Email instance using [it-blocks]`docLang::Closures#itBlocks`:
 
   email := Email
   {
@@ -135,7 +135,6 @@ FileParts are transfered as base64 - you may not override the
 "Content-Transfer-Encoding" header.
 
 See [docCookbook]`docCookbook::Email#fileAttachments` for examples.
-
 
 
 

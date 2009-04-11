@@ -43,7 +43,7 @@ XML documents are modeled in memory using the following classes:
 XML documents are structured as a tree of nodes using the classes listed
 above.  Typically the tree is built by parsing a XML document from an input
 stream.  But you can construct a document in memory using the APIs and
-with-blocks:
+it-blocks:
 
   doc := XDoc
   {
