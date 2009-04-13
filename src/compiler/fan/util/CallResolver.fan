@@ -221,6 +221,14 @@ class CallResolver : CompilerSupport
 
   private Bool isAmbiguous(CSlot? a, CSlot? b)
   {
+    // if we're in a static context, we use 'it'
+    if (curType.isClosure)
+    {
+      closure := curType.closure
+      if (closure.enclosingSlot.isStatic)
+      return false
+    }
+
     // unless we found on both base and baseIt, it is not ambiguous
     if (a == null || b == null) return false
 
