@@ -594,3 +594,7 @@
 - Require it-block: Font
 - Rename def => defVal: Point, Size, Rect, Insets, Hints, Pen
 - Rename Locale.with => use
+
+*Build 1.0.42 (working)*
+- Tweaks to flux
+- Loosen restrictions on it/this ambiguity errors

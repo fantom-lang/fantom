@@ -300,6 +300,10 @@ class ItBlockTest : CompilerTest
         Obj g() { Foo().m3 { x = 'g' } }
         Obj h() { Foo().m4 { fill(2, 2) } }
         Obj i() { Foo().m4(9) { fill(3, 3) } }
+        static Obj j() { Foo { z =  'j' } }
+        static Obj k() { Acme { z =  'k' } }
+
+        Int z
       }
 
       class Foo
@@ -309,6 +313,7 @@ class ItBlockTest : CompilerTest
         This m3() { return this }
         Int[] m4(Int a := 5) { return Int[,] }
         Int x
+        Int z
       }")
 
     obj := pod.types.first.make
@@ -321,6 +326,8 @@ class ItBlockTest : CompilerTest
     verifyEq(obj->g->x, 'g')
     verifyEq(obj->h, [2,2])
     verifyEq(obj->i, [3,3,3])
+    verifyEq(obj->j->z, 'j')
+    verifyEq(obj->k->z, 'k')
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -373,26 +380,6 @@ class ItBlockTest : CompilerTest
     verifyEq(obj->m04, ['A', 'B', 'C'])
     verifyEq(obj->m05, ['D', 'E', 'F'])
     verifyEq(obj->m06, ["G", "H", "I"])
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Distinguishing 'it' vs 'this' in a closure in a static method
-//////////////////////////////////////////////////////////////////////////
-
-  Void testDistinguishInStatic()
-  {
-    compile(
-     "class Acme
-      {
-        Int i
-        static Void main()
-        {
-          test := Acme { i = 0 }
-        }
-      }")
-
-    obj := pod.types.first.make { it->i = 0 }
-    verifyEq(obj->i, 0)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -608,11 +595,17 @@ class ItBlockTest : CompilerTest
         // static fields
         Obj m13() { Foo { it.y = t } }  // ok
         Obj m14() { Bar { it.y = t } }
+        // instance in static context
+        static Obj m16() { Foo { echo(y) } }  // ok
+        static Obj m17() { Bar { echo(t) } }
+        static Obj m18() { Bar { echo(u) } }
+        Obj m19() { Bar { echo(u) } }
 
         Void x() {}
         Int y
         static Void s() {}
         static const Int t := 8
+        static const Int u := 9  // static here, instance Bar
       }
 
       class Bar
@@ -621,6 +614,7 @@ class ItBlockTest : CompilerTest
         Int y
         static Void s() {}
         static const Int t := 8
+        const Int u := 9        // static Foo, instance here
       }
       ",
       [ 4, 21, "Ambiguous slot 'x' on both 'this' ($podName::Foo) and 'it' ($podName::Foo)",
@@ -629,6 +623,9 @@ class ItBlockTest : CompilerTest
         8, 21, "Ambiguous slot 'y' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
        11, 21, "Ambiguous slot 's' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
        14, 28, "Ambiguous slot 't' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
+       17, 33, "Ambiguous slot 't' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
+       18, 33, "Ambiguous slot 'u' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
+       19, 26, "Ambiguous slot 'u' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
       ])
   }
 }

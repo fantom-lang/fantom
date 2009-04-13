@@ -219,21 +219,18 @@ class CallResolver : CompilerSupport
     return found
   }
 
-  private Bool isAmbiguous(CSlot? a, CSlot? b)
+  private Bool isAmbiguous(CSlot? onBase, CSlot? onIt)
   {
-    // if we're in a static context, we use 'it'
-    if (curType.isClosure)
-    {
-      closure := curType.closure
-      if (closure.enclosingSlot.isStatic)
-      return false
-    }
-
     // unless we found on both base and baseIt, it is not ambiguous
-    if (a == null || b == null) return false
+    if (onBase == null || onIt == null) return false
 
-    // if they are the same method and static, then it doesn't matter
-    if (a.qname == b.qname && a.isStatic) return false
+    // if they are both the same static method, it doesn't matter
+    if (onBase.qname == onIt.qname && onBase.isStatic) return false
+
+    // if we are calling an instance slot in a static context,
+    // then we can assume that we are binding to it
+    if (!onBase.isStatic && !onIt.isStatic && curType.closure.enclosingSlot.isStatic)
+      return false
 
     return true
   }
