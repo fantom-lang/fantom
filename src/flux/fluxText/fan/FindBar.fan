@@ -26,10 +26,17 @@ internal class FindBar : ContentPane, TextEditorSupport
 
     findText = Combo() { editable = true }
     findText.items = history.find
-    findText.onFocus.add |,| { caretPos = richText.selectStart }
-    findText.onBlur.add  |,| { updateHistory }
-    findText.onKeyDown.add |Event e| { if (e.key == Key.esc) hide }
+    findText.onFocus.add  |,| { caretPos = richText.selectStart }
+    findText.onBlur.add   |,| { updateHistory }
     findText.onModify.add |,| { find(null, true, true) }
+    findText.onKeyDown.add |e|
+    {
+      switch (e.key)
+      {
+        case Key.esc:   hide; editor.richText.focus
+        case Key.enter: next
+      }
+    }
 
     matchCase = Button
     {
