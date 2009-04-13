@@ -582,7 +582,7 @@
 - ScrollBar added
 - ProgressBar.value renamed val
 
-*Build 1.0.41 (working)*
+*Build 1.0.41 (11 Apr 09)*
 - It-Blocks
 - Comma operator for it.add
 - Closure type inference
@@ -594,5 +594,3 @@
 - Require it-block: Font
 - Rename def => defVal: Point, Size, Rect, Insets, Hints, Pen
 - Rename Locale.with => use
-
-TODO: remove 2 dynamic calls in JavaBridge on bootstrap update

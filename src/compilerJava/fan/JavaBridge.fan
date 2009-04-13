@@ -63,7 +63,7 @@ class JavaBridge : CBridge
     // right away that we will not be passing it thru to Java,
     // so strip it off to be appended as call to Obj.with
     itBlock := call.args.last as ClosureExpr
-    if (itBlock != null && itBlock->isItBlock) // IT-TODO
+    if (itBlock != null && itBlock.isItBlock)
       call.args.removeAt(-1)
     else
       itBlock = null
@@ -90,7 +90,7 @@ class JavaBridge : CBridge
 
     // if we stripped an it-block argument,
     // add it as trailing call to Obj.with
-    if (itBlock != null) return itBlock->toWith(call) // IT-TODO
+    if (itBlock != null) return itBlock.toWith(call)
     return call
   }
 
