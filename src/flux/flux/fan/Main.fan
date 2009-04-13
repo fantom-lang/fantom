@@ -20,9 +20,19 @@ internal class Main
     f.loadState
 
     // load first uri from configured homePage or command line
-    uri := GeneralOptions.load.homePage
-    if (!args.isEmpty) uri = `./`.toFile.normalize.uri + args.first.toUri
-    f.load(uri)
+    if (args.isEmpty)
+    {
+      f.load(GeneralOptions.load.homePage)
+    }
+    else
+    {
+      args.each |arg, i|
+      {
+        uri := `./`.toFile.normalize.uri + arg.toUri
+        if (i == 0) f.load(uri)
+        else f.load(uri, LoadMode { newTab = true })
+      }
+    }
 
     // open the frame and let's get this party started!
     f.open

@@ -33,6 +33,9 @@ internal class LocatorBar : Widget
 
   Void go(Type? view, Event? event)
   {
+    if (uriText.text.trim == "")
+      uriText.text = "flux:start"
+
     uri := uriText.text.toUri
     if (view != null) uri = uri.plusQuery(["view":view.qname])
     frame.load(uri)
