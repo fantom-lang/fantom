@@ -80,7 +80,7 @@ For example to create a SqlService for MySQL:
       db := SqlService("mysql",
                        "jdbc:mysql://localhost:3306/mysql",
                        "fantest",
-                       "fantest").start
+                       "fantest")
 
 4. Open the database for the current thread.
       db.open

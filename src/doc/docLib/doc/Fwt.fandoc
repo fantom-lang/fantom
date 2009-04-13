@@ -109,7 +109,7 @@ outline:
 
     Void main()
     {
-      Window { InsetPane { content = RedBox() } }.open
+      Window { InsetPane { content = RedBox() }, }.open
     }
   }
 
@@ -136,9 +136,9 @@ fandoc of each event to see how the Event fields are used.
 
 The following illustrates a simple text field with some event handlers:
 
-  class EventTest : Widget
+  class EventTest
   {
-    Void onModify(Event event) { echo(event) }
+    Void modifyCallback(Event event) { echo(event) }
 
     Void main()
     {
@@ -146,10 +146,10 @@ The following illustrates a simple text field with some event handlers:
       {
         onFocus.add |Event e| { echo(e) }
         onAction.add |,| { echo("onAction!") }
-        onModify.add(&onModify)
+        onModify.add(&modifyCallback)
       }
 
-      Window { GridPane { add(text) } }.open
+      Window { GridPane { text, }, }.open
     }
   }
 

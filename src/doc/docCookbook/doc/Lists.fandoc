@@ -68,6 +68,11 @@ Each (Iteration) [#each]
   list.each |Str s, Int i| { echo("value at $i is $s") }
   list.eachr |Str s| { echo(s) } // reverse iteration
 
+  // using type inference
+  list.each |s| { echo(s) }
+  list.each |s, i| { echo("value at $i is $s") }
+  list.eachr |s| { echo(s) } // reverse iteration
+
   // iterate until b, then return 99
   list.eachWhile |Str s->Int?| { return s == "b" ? 99 : null }
 

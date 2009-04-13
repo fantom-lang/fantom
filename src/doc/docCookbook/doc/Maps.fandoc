@@ -63,6 +63,10 @@ Each (Iteration) [#each]
   map.each |Str val| { echo(val) }
   map.each |Str val, Int key| { echo("$key: $val") }
 
+  // using type inference
+  map.each |val| { echo(val) }
+  map.each |val, key| { echo("$key: $val") }
+
 Map [#map]
 **********
   x := [4:"four", 5:"five", 6:"six"]
@@ -109,4 +113,3 @@ More Info [#moreInfo]
 - See [Map API]`sys::Map`: API reference for 'sys::Map'.
 - See [Literals]`docLang::Literals#map`: literals and type inference rules.
 - See [Signature]`docLang::TypeSystem#mapSignature`: for generic type signature.
-
