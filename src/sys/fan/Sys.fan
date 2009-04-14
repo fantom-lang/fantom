@@ -119,7 +119,7 @@ final class Sys
   static Void exit(Int status := 0)
 
   **
-  ** Standard output stream.
+  ** Standard input stream.
   **
   static InStream in()
 
