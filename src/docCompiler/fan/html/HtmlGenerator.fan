@@ -65,6 +65,7 @@ abstract class HtmlGenerator : HtmlDocWriter
     out.print("<li><a href='/'>Home</a></li>\n")
     out.print("<li class='active'><a href='${pathToRoot}index.html'>Docs</a></li>\n")
     out.print("<li><a href='/sidewalk/blog/'>Blog</a></li>\n")
+    out.print("<li><a href='/sidewalk/ticket/'>Tickets</a></li>\n")
     out.print("<li><a href='/sidewalk/topic/'>Discuss</a></li>\n")
     out.print("</ul>")
     out.print("</div>\n")
