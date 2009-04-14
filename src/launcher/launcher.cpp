@@ -102,7 +102,7 @@ int parseArgs(int argc, char** argv)
   if (debug) printf("-- parseArgs\n");
 
   fanArgc = 0;
-  fanArgv = new char*[argc-1];
+  fanArgv = new char*[argc];
 
 #ifdef FAN_MAIN
   fanArgv[fanArgc++] = FAN_MAIN;
