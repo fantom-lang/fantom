@@ -25,17 +25,7 @@ class FanScript : Task
   {
     try
     {
-      // TODO - this is a temp hack to compile a script
-      podName := file.uri.toStr.replace("/", "_").replace(":", "").replace(".", "_")
-      input := CompilerInput.make
-      input.podName    = podName
-      input.log.level  = LogLevel.error // TODO - use my own log
-      input.isScript   = true
-      input.mode       = CompilerInputMode.str
-      input.srcStr     = file.readAllStr
-      input.srcStrLocation = Location.makeFile(file)
-      input.output     = CompilerOutputMode.transientPod
-      return Compiler.make(input).compile.transientPod
+      return Sys.compile(file).pod
     }
     catch (CompilerErr err)
     {
