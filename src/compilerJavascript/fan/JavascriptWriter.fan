@@ -346,13 +346,13 @@ if (c != null)
       case ExprId.localVar:     out.w(var(ex.toStr))
       case ExprId.thisExpr:     out.w(inClosure ? "\$this" : "this")
       case ExprId.superExpr:    out.w("this._super")
+      case ExprId.itExpr:       out.w("it")
       case ExprId.staticTarget: out.w(qname(ex->ctype))
       //case ExprId.unknownVar
       //case ExprId.storage
       case ExprId.ternary:      expr(ex->condition); out.w(" ? "); expr(ex->trueExpr); out.w(" : "); expr(ex->falseExpr)
-      //case ExprId.withSub
-      //case ExprId.withBase
       //case ExprId.curry
+      //case ExprId.complexLiteral
       case ExprId.closure:      closureExpr(ex)
       default: err("Unknown ExprId: $ex.id", ex.location)
     }
