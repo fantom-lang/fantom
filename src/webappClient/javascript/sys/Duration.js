@@ -45,6 +45,32 @@ var sys_Duration = sys_Obj.extend(
     return sys_Type.find("sys::Duration");
   },
 
+  ticks: function() { return this.m_ticks; },
+
+//////////////////////////////////////////////////////////////////////////
+// Operators
+//////////////////////////////////////////////////////////////////////////
+
+  negate: function() { return sys_Duration.make(-this.m_ticks); },
+  plus: function(x)  { return sys_Duration.make(this.m_ticks + x.m_ticks); },
+  minus: function(x) { return sys_Duration.make(this.m_ticks - x.m_ticks); },
+  mult: function(x)  { return sys_Duration.make(this.m_ticks * x); },
+  div: function(x)   { return sys_Duration.make(this.m_ticks / x); },
+  floor: function(accuracy)
+  {
+    if (this.m_ticks % accuracy.m_ticks == 0) return this;
+    return sys_Duration.make(this.m_ticks - (this.m_ticks % accuracy.m_ticks));
+  },
+  abs: function()
+  {
+    if (this.m_ticks >= 0) return this;
+    return new sys_Duration(-this.m_ticks);
+  },
+
+//////////////////////////////////////////////////////////////////////////
+// Conversion
+//////////////////////////////////////////////////////////////////////////
+
   toStr: function()
   {
     if (this.m_ticks == 0) return "0ns";
@@ -64,20 +90,13 @@ var sys_Duration = sys_Obj.extend(
     return ns + "ns";
   },
 
-//////////////////////////////////////////////////////////////////////////
-// Operators
-//////////////////////////////////////////////////////////////////////////
+  toCode: function() { return this.toStr(); },
 
-  negate: function() { return sys_Duration.make(-this.m_ticks); },
-  plus: function(x)  { return sys_Duration.make(this.m_ticks + x.m_ticks); },
-  minus: function(x) { return sys_Duration.make(this.m_ticks - x.m_ticks); },
-  mult: function(x)  { return sys_Duration.make(this.m_ticks * x); },
-  div: function(x)   { return sys_Duration.make(this.m_ticks / x); },
-  floor: function(accuracy)
-  {
-    if (this.m_ticks % accuracy.m_ticks == 0) return this;
-    return sys_Duration.make(this.m_ticks - (this.m_ticks % accuracy.m_ticks));
-  },
+  toMillis: function() { return Math.floor(this.m_ticks / sys_Duration.nsPerMilli); },
+  toSec:    function() { return Math.floor(this.m_ticks / sys_Duration.nsPerSec); },
+  toMin:    function() { return Math.floor(this.m_ticks / sys_Duration.nsPerMin); },
+  toHour:   function() { return Math.floor(this.m_ticks / sys_Duration.nsPerHr); },
+  toDay:    function() { return Math.floor(this.m_ticks / sys_Duration.nsPerDay); },
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -170,3 +189,5 @@ sys_Duration.secPerHr   = 3600;
 sys_Duration.secPerMin  = 60;
 
 sys_Duration.defVal = new sys_Duration(0);
+sys_Duration.minVal = new sys_Duration(sys_Int.minVal);
+sys_Duration.maxVal = new sys_Duration(sys_Int.maxVal);
