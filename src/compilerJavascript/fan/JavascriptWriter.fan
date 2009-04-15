@@ -460,18 +460,22 @@ if (c != null)
       expr(ce.target)
       out.w(".")
     }
-    /*
-    else if (ce.method != null && (ce.method.isStatic || ce.method.isCtor))
-    {
-      out.w(qname(ce.method.parent)).w(".")
-    }
-    out.w(ce.method.isCtor ? "make" : ce.name)
-    */
     else if (ce.method.isStatic || ce.method.isCtor)
     {
       out.w(qname(ce.method.parent)).w(".")
     }
-    out.w(ce.method.isCtor || ce.name == "<ctor>" ? "make" : var(ce.name))
+    mname :=  var(ce.name)
+    if (ce.method.isCtor || ce.name == "<ctor>")
+    {
+      mname = "make"
+      first := ce.method.params.first
+      if (first?.paramType?.qname == "sys::Str")
+      {
+        fromStr := ce.method.parent.methods.find |m| { m.name == "fromStr" }
+        if (fromStr != null) mname = "fromStr"
+      }
+    }
+    out.w(mname)
     if (ce.isDynamic && ce.noParens)
     {
       if (ce.args.size == 0) return
