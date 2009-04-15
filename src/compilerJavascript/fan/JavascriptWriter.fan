@@ -106,6 +106,16 @@ class JavascriptWriter : CompilerSupport
   {
     out.w("function"); doMethodSig(m); out.nl
     out.w("{").nl
+    if (m.params.find |p| { p.hasDefault } != null)
+    {
+      m.params.each |p,i|
+      {
+        if (!p.hasDefault) return
+        out.w("  if (arguments.length < ${i+1}) $p.name = ")
+        expr(p->def)
+        out.w(";").nl
+      }
+    }
     if (m.isCtor)
     {
       out.w("  this._super")
