@@ -99,7 +99,7 @@ namespace Fan.Sys
       // check generic type (the .NET runtime will check non-generics)
       if (m_of.isGenericInstance() && value != null)
       {
-        if (!m_of.@is(type(value)))
+        if (!type(value).@is(m_of.toNonNullable()))
           throw ArgErr.make("Wrong type for field " + qname() + ": " + m_of + " != " + type(value)).val;
       }
 

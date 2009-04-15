@@ -59,6 +59,26 @@ class ReflectionTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Generics
+//////////////////////////////////////////////////////////////////////////
+
+  Void testGenerics()
+  {
+    x := ReflectMixinCls()
+    verifyEq(ReflectMixinCls#ints.get(x), null)
+    ReflectMixinCls#ints.set(x, Int[3,4])
+    verifyEq(ReflectMixinCls#ints.get(x), Int[3,4])
+    verifyErr(ArgErr#) |,| { ReflectMixinCls#ints.set(x, Num[6, 7f]) }
+
+    verifyEq(ReflectMixinCls#map.get(x), Str:Num[:])
+    ReflectMixinCls#map.set(x, Str:Num["i":8, "f":9f])
+    verifyEq(ReflectMixinCls#map.get(x), Str:Num["i":8, "f":9f])
+    ReflectMixinCls#map.set(x, Str:Int["i":6])
+    verifyEq(ReflectMixinCls#map.get(x), Str:Int["i":6])
+    verifyErr(ArgErr#) |,| { ReflectMixinCls#map.set(x, Str:Obj["5":4]) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Invokes
 //////////////////////////////////////////////////////////////////////////
 
@@ -449,5 +469,6 @@ class ReflectMixinCls : ReflectMixin
   override Int iy := 'Y'
   override Int iz := 'Z'
 
-  Int[] ints
+  Int[]? ints
+  Str:Num map := Str:Num[:]
 }

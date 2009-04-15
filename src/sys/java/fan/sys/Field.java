@@ -99,7 +99,7 @@ public class Field
     // check generic type (the Java runtime will check non-generics)
     if (of.isGenericInstance() && value != null)
     {
-      if (!of.is(type(value)))
+      if (!type(value).is(of.toNonNullable()))
         throw ArgErr.make("Wrong type for field " + qname() + ": " + of + " != " + type(value)).val;
     }
 
