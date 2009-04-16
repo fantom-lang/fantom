@@ -193,4 +193,13 @@ class Elem
   **
   Void onEvent(Str type, Bool useCapture, |Event e| handler) {}
 
+//////////////////////////////////////////////////////////////////////////
+// Effects
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return an Effects object for this element.
+  **
+  Effect effect() { return Effect(this) }
+
 }

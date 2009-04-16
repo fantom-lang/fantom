@@ -16,10 +16,10 @@ using testWeb
 
 class Boot : BootScript
 {
-  override Thread[] services :=
+  override Service[] services :=
   [
     // WebService
-    WispService("web")
+    WispService
     {
       port = 8080
       pipeline =
@@ -33,9 +33,10 @@ class Boot : BootScript
 
   override Void setup()
   {
-    Sys.ns.create(`/homePage`, Index#)
-    Sys.ns.create(`/webappClient`, WebappClientTest#)
-    Sys.ns.create(`/call`,         CallTest#)
+    Sys.ns.create(`/homePage`,       Index#)
+    Sys.ns.create(`/webappClient`,   WebappClientTest#)
+    Sys.ns.create(`/webappClientFx`, WebappClientFxTest#)
+    Sys.ns.create(`/call`,           CallTest#)
   }
 }
 
@@ -47,6 +48,7 @@ class Index : Widget
     body.h1.w("testWeb Tests").h1End
     body.ul
     body.li.a(`/webappClient`).w("webappClient unit tests").aEnd.liEnd
+    body.li.a(`/webappClientFx`).w("webappClientFx tests").aEnd.liEnd
     body.li.a(`/call`).w("Call tests").aEnd.liEnd
     body.ulEnd
   }
