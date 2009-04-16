@@ -175,6 +175,12 @@ sys_Duration.fromStr = function(s, checked)
   }
 }
 
+sys_Duration.now = function()
+{
+  var ms = new Date().getTime();
+  return new sys_Duration(ms * sys_Duration.nsPerMilli);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Static Fields
 //////////////////////////////////////////////////////////////////////////
