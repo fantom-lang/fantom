@@ -1,4 +1,3 @@
-#! /usr/bin/env fan
 //
 // Copyright (c) 2009, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0

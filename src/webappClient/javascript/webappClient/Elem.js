@@ -178,6 +178,11 @@ var webappClient_Elem = sys_Obj.extend(
     }, useCapture);
   },
 
+  effect: function()
+  {
+    return webappClient_Effect.make(this);
+  },
+
   toStr: function()
   {
     var name = this.elem.nodeName;
