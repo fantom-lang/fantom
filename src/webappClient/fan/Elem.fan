@@ -69,6 +69,11 @@ class Elem
   Obj style() { return "" }
 
   **
+  ** Get the computed style object for this element.
+  **
+  Obj computedStyle() { return "" }
+
+  **
   ** The HTML markup contained in this element.
   **
   Str html

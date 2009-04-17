@@ -29,23 +29,94 @@ var webappClient_Effect = sys_Obj.extend(
 
   show: function(dur, callback)
   {
+    // if already visible bail
+    if (this.dom.style.display == "block") return;
+
     var ms = arguments.length == 0 ? 0 : dur.toMillis();
-    if (ms == 0) this.dom.style.display = "block";
+    if (ms == 0)
+    {
+      // TODO - can we handle this directly in animate?
+      this.dom.style.display = "block";
+      if (callback) callback(this);
+    }
     else
     {
-      // TODO
+      // TODO - big hack - need to clean up
+
+      var oldOpacity = this.dom.style.opacity || 1;
+      var oldOverflow = this.dom.style.overflow;
+
+      // figure out target size
+      this.dom.style.opacity = "0";
       this.dom.style.display = "block";
+      var w = new webappClient_Tween(this, "width", 0).currentVal()+"px";
+      var h = new webappClient_Tween(this, "height", 0).currentVal()+"px";
+
+      // set to initial pos
+      this.dom.style.opacity = oldOpacity;
+      this.dom.style.overflow = "hidden";
+      this.dom.style.width  = "0px";
+      this.dom.style.height = "0px";
+
+      var map = new sys_Map();
+      map.set("width", w+"px");
+      map.set("height", h+"px");
+
+      var fx = this;
+      var f = function()
+      {
+        // reset overlow
+        fx.dom.style.overflow = oldOverflow;
+        if (callback) callback(fx);
+      }
+
+      this.animate(map, dur, f);
     }
   },
 
-  hide: function(dur)
+  hide: function(dur, callback)
   {
+    // if already hidden bail
+    if (this.dom.style.display == "none") return;
+
     var ms = arguments.length == 0 ? 0 : dur.toMillis();
-    if (ms == 0) this.dom.style.display = "none";
+    if (ms == 0)
+    {
+      // TODO - can we handle this directly in animate?
+      this.dom.style.display = "none";
+      if (callback) callback(this);
+    }
     else
     {
-      // TODO
-      this.dom.style.display = "none";
+      // TODO - big hack - need to clean up
+
+      var oldOverflow = this.dom.style.overflow;
+
+      // make sure style is set
+      var oldw = new webappClient_Tween(this, "width", 0).currentVal()+"px";
+      var oldh = new webappClient_Tween(this, "height", 0).currentVal()+"px";
+      this.dom.style.width  = oldw;
+      this.dom.style.height = oldh;
+      this.dom.style.overflow = "hidden";
+
+      //alert("w/h " + oldw + "/" + oldh);
+
+      var map = new sys_Map();
+      map.set("width", "0px");
+      map.set("height", "0px");
+
+      var fx = this;
+      var f = function()
+      {
+        // reset style
+        fx.dom.style.display = "none";
+        fx.dom.style.overflow = oldOverflow;
+        fx.dom.style.width  = oldw;
+        fx.dom.style.height = oldh;
+        if (callback) callback(fx);
+      }
+
+      this.animate(map, dur, f);
     }
   },
 
@@ -62,6 +133,7 @@ var webappClient_Effect = sys_Obj.extend(
       var val = map.get(key);
       var tween = new webappClient_Tween(this, key, val);
       tweens.push(tween);
+      //alert(tween);
     }
 
     // bail if no tweens
@@ -105,7 +177,8 @@ var webappClient_Effect = sys_Obj.extend(
 //////////////////////////////////////////////////////////////////////////
 
   fan: null,   // Fan Elem wrappaer
-  dom: null    // actual DOM element
+  dom: null,   // actual DOM element
+  old: {}      // stash to store old values
 
 });
 
@@ -139,9 +212,54 @@ function webappClient_Tween(fx, prop, stop)
 
 webappClient_Tween.prototype.currentVal = function()
 {
-  var val = this.elem.style[this.prop];
-  if (val) return parseFloat(val);
-  return webappClient_Tween.defVals[this.prop] || 0
+  switch (this.prop)
+  {
+    case "width":
+      var val = this.elem.offsetWidth;
+      val -= this.pixelVal("paddingLeft") + this.pixelVal("paddingRight");
+      // minus border
+      return val;
+
+    case "height":
+      val = this.elem.offsetHeight;
+      val -= this.pixelVal("paddingTop") + this.pixelVal("paddingBottom");
+      // minus border
+      return val;
+
+    default:
+      val = this.fx.old[this.prop]; if (val != undefined) return val;
+      val = this.elem.style[this.prop]; if (val) return this.fromCss(val);
+      return webappClient_Tween.defVals[this.prop] || 0;
+  }
+}
+
+webappClient_Tween.prototype.pixelVal = function(prop)
+{
+  var cs = this.fx.fan.computedStyle();
+  var val = cs[prop];
+
+  // IE does not return pixel values all the time for
+  // computed style, so we need to convert to pixels
+  //
+  // From Dean Edward:
+  // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
+
+  // if already a pixel just return
+  if (/^\d+(px)?$/i.test(val)) return parseInt(val);
+
+  // stash style
+  var olds  = this.elem.style.left;
+  var oldrs = this.elem.runtimeStyle.left;
+
+  // convert to pix
+  this.elem.runtimeStyle.left = this.elem.currentStyle.left;
+  this.elem.style.left = val || 0;
+  val = this.elem.style.pixelLeft;
+
+  // restore style
+  this.elem.style.left = olds;
+  this.elem.runtimeStyle.left = oldrs;
+  return val;
 }
 
 webappClient_Tween.prototype.applyVal = function(val)
@@ -156,10 +274,11 @@ webappClient_Tween.prototype.applyVal = function(val)
     case "opacity":
       this.elem.style.opacity = val;
       this.elem.style.filter = "alpha(opacity=" + parseInt(val*100) + ")";
+      this.fx.old.opacity = val;
       break;
 
     default:
-      this.elem.style[this.prop] = val + (this.unit || "");
+      if (!isNaN(val)) this.elem.style[this.prop] = val + (this.unit || "");
       break;
   }
 }
@@ -186,7 +305,5 @@ webappClient_Tween.prototype.toString = function()
 
 webappClient_Tween.defVals =
 {
-  opacity: 1,
-  width:   100,
-  height:  100,
+  opacity: 1
 }
