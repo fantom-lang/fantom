@@ -53,6 +53,12 @@ var webappClient_Elem = sys_Obj.extend(
   },
 
   style: function() { return this.elem.style; },
+  computedStyle: function()
+  {
+    return (this.elem.currentStyle)
+      ? this.elem.currentStyle
+      : document.defaultView.getComputedStyle(this.elem, null);
+  },
 
   html$get: function() { return this.elem.innerHTML },
   html$set: function(val) { this.elem.innerHTML = val; },

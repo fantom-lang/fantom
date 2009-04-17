@@ -40,9 +40,8 @@ class WebappClientFxTest : Widget
         body.tdEnd
       }
       f("0ms")
-      //f("1sec")
-      //f("500ms")
-      //f("250ms")
+      f("500ms")
+      f("250ms")
       body.trEnd
     body.tableEnd
   }
