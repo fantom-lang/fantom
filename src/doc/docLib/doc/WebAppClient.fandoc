@@ -1,0 +1,167 @@
+**************************************************************************
+** title:      WebAppClient
+** author:     Andy Frank
+** created:    17 Apr 09
+** copyright:  Copyright (c) 2009, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+**WARNING**: the webappClient framework is still an early prototype, so
+will be going through many changes during development
+
+The webappClient framework is composed of two parts.  One is a
+[compiler]`compilerJavascript::index` that compiles Fan source code to
+Javascript source code.  The other is a set of Fan [APIs]`webappClient::index`
+that model the client-side browser APIs (the DOM, XmlHttpRequest, etc).
+
+Compiling to Javascript [#compileToJavascript]
+**********************************************
+
+The build tools have built-in support for compiling Fan source to Javascript.
+In order to compile to Javascript, you'll need to mark each type you want
+compiled with the '@javascript' facet.  Then you'll need to specifiy in your
+build script that you want the Javascript compiled:
+
+  @javascript
+  class FooClient
+  {
+    Void onClick(Elem elem) { Window.alert(elem) }
+  }
+
+  class Build : BuildPod
+  {
+    override Void setup()
+    {
+      ...
+      hasJavascript = true
+    }
+  }
+
+By convention, code that is meant to run in the browser is suffixed
+with 'Client' (webappClient, FooClient, etc).
+
+Naturally, the full Fan API is not available in the browser.  The 'sys' API
+will be eventually be implemented as much as possible (though there is a ways
+to go here).  However the compiler is not designed to account for Javascript
+implementations.  So if a Fan API has not been implemented in Javascript, it
+will result in a runtime error.
+
+
+Client API [#clientAPI]
+***********************
+
+To maintain consistency across browsers, and keep consistentency with the
+rest of the Fan library, webappClient includes a set of
+[APIs]`webappClient::index` that wrap the native browser versions.  For the
+most part, these map one-to-one:
+
+  Browser           Fan
+  --------------    ---------------
+  Window            Window
+  Document          Doc
+  Element           Elem
+  Event             Event
+  XmlHttpRequest    HttpReq/HttpRes
+
+Window [#window]
+================
+
+  Window.alert("Hello!")  // display a modal dialog
+  Window.uri              // the URI for this page
+  Window.hyperlink(uri)   // hyperlink to new page
+
+Doc [#doc]
+==========
+
+  Doc.elem("someId")      // return the Elem with id='someId'
+  Doc.createElem("div")   // create a new <div> element
+
+Elem [#elem]
+============
+
+  // attributes
+  elem["alt"]               // get an attribute value
+  elem["alt"] = "Alt text"  // set an attribute value
+  elem.id                   // 'id' attribute
+  elem.name                 // 'name' attribute
+  elem.tagName              // tag name of this element
+
+  // CSS
+  elem.style                     // CSS style object for this element
+  elem.computedStyle             // computed style for this element
+  elem.className                 // return the current class name(s)
+  elem.hasClassName("alpha")     // does this element have the given class name?
+  elem.addClassName("beta")      // add a new class name to any current class names
+  elem.removeClassName("gamma")  // remove a class name, leaving any others remaining
+
+  // tree
+  elem.parent             // parent element
+  elem.next               // next sibling
+  elem.prev               // prev sibling
+  elem.children           // List of child elements
+  elem.add(child)         // add a new child element
+  elem.remove(child)      // remove a child element
+
+  // form conveniences
+  elem.value              // the 'value' attribute
+  elem.checked            // true/false for checkboxes
+
+  // position and size
+  elem.x                  // x position within parent
+  elem.y                  // y position within parent
+  elem.w                  // width of elment
+  elem.h                  // height of element
+
+  // event handlers
+  elem.onEvent("click", false) |event|
+  {
+    Window.alert("$event.target clicked!")
+  }
+
+XmlHttpRequest [#xhr]
+=====================
+
+The [HttpReq]`webappClient::HttpReq` object is used to make background HTTP
+requests from the browser.  For both sync and async requests, the response
+is passed to you in the callback closure:
+
+  HttpReq(uri).send("some content") |res|
+  {
+    Window.alert(res.content)
+  }
+
+If you are submitting form values, you can use
+[sendForm]`webappClient::HttpReq.sendForm` to automatically encode the
+values as a form submission, and set the Content-Type to
+'application/form-url-encoded':
+
+  HttpReq(uri).sendForm(["name":"Barney Stinson"]) |res|
+  {
+    Window.alert(res.content)
+  }
+
+Effects [#effects]
+==================
+
+Modeled after [jQuery]`http://jquery.com/`, the [Effect]`webappClient::Effect`
+object allows an element to be animated, such as sliding it down, fading in,
+or transitioning between colors.  Common effects can be applied directly using
+a built-in method:
+
+  // show/hide
+  elem.effect.show
+  elem.effect.show(100ms)
+  elem.effect.hide(200ms)
+
+  // fading
+  elem.effect.fadeIn(100ms)
+  elem.effect.fadeOut(100ms)
+  elem.effect.fadeTo(0.75, 200ms)
+
+Arbitrary animations can be applied using the
+[animate]`webappClient::Effect.animate` method:
+
+  // move elem diagonally down 100px
+  elem.effect.animate(["left":"100px", "top":"100px"], 250ms)
