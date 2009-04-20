@@ -83,8 +83,11 @@ var webappClient_Effect = sys_Obj.extend(
 // Show/Hide
 //////////////////////////////////////////////////////////////////////////
 
-  show: function(dur, callback)
+  show: function(dur, callback, doWidth)
   {
+    // animate width prop?
+    if (doWidth == undefined) doWidth = true
+
     // if already visible bail
     if (this.dom.style.display == "block") return;
 
@@ -111,11 +114,11 @@ var webappClient_Effect = sys_Obj.extend(
       // set to initial pos
       this.dom.style.opacity = oldOpacity;
       this.dom.style.overflow = "hidden";
-      this.dom.style.width  = "0px";
+      if (doWidth) this.dom.style.width  = "0px";
       this.dom.style.height = "0px";
 
       var map = new sys_Map();
-      map.set("width", w+"px");
+      if (doWidth) map.set("width", w+"px");
       map.set("height", h+"px");
 
       var fx = this;
@@ -130,8 +133,11 @@ var webappClient_Effect = sys_Obj.extend(
     }
   },
 
-  hide: function(dur, callback)
+  hide: function(dur, callback, doWidth)
   {
+    // animate width prop?
+    if (doWidth == undefined) doWidth = true
+
     // if already hidden bail
     if (this.dom.style.display == "none") return;
 
@@ -151,14 +157,12 @@ var webappClient_Effect = sys_Obj.extend(
       // make sure style is set
       var oldw = new webappClient_Tween(this, "width", 0).currentVal()+"px";
       var oldh = new webappClient_Tween(this, "height", 0).currentVal()+"px";
-      this.dom.style.width  = oldw;
+      if (doWidth) this.dom.style.width  = oldw;
       this.dom.style.height = oldh;
       this.dom.style.overflow = "hidden";
 
-      //alert("w/h " + oldw + "/" + oldh);
-
       var map = new sys_Map();
-      map.set("width", "0px");
+      if (doWidth) map.set("width", "0px");
       map.set("height", "0px");
 
       var fx = this;
@@ -175,6 +179,13 @@ var webappClient_Effect = sys_Obj.extend(
       this.animate(map, dur, f);
     }
   },
+
+//////////////////////////////////////////////////////////////////////////
+// Slide
+//////////////////////////////////////////////////////////////////////////
+
+  slideDown: function(dur, callback) { this.show(dur, callback, false); },
+  slideUp:   function(dur, callback) { this.hide(dur, callback, false); },
 
 //////////////////////////////////////////////////////////////////////////
 // Fading

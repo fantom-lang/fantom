@@ -74,6 +74,31 @@ class Effect
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Slide
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Make the element visible by animating its height. If 'dur' is
+  ** specificed, animate the slide within the given duration of
+  ** time.  If given, invoke the callback function after animation
+  ** has completed.
+  **
+  This slideDown(Duration dur := 0ms, |Effect|? callback := null)
+  {
+    return this
+  }
+
+  **
+  ** Hide the element by animating its height. If 'dur' is specificed,
+  ** animate the slide within the given duration of time.  If given,
+  ** invoke the callback function after animation has completed.
+  **
+  This slideUp(Duration dur := 0ms, |Effect|? callback := null)
+  {
+    return this
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fading
 //////////////////////////////////////////////////////////////////////////
 

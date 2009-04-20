@@ -23,6 +23,7 @@ class WebappClientFxTest : Widget
 
     showHide
     opacity
+    slide
   }
 
   Void showHide()
@@ -79,6 +80,28 @@ class WebappClientFxTest : Widget
       body.button("value='->0->1 (250ms)' onclick='testWeb_FxTestClient.animateOpacityChain(\"$id\", \"250ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
+    body.trEnd
+    body.tableEnd
+  }
+
+  Void slide()
+  {
+    body.h2.w("Slide").h2End
+    tdStyle  := "padding-right:1em;"
+    divStyle := "margin-top:5px; padding:1em; background:#efe;"
+    body.table
+    body.tr
+      f := |Str s|
+      {
+        body.td("valign='top' style='$tdStyle'")
+        id := unique
+        body.button("value='SlideDown ($s)' onclick='testWeb_FxTestClient.slideDown(\"$id\", \"$s\");'")
+        body.button("value='SlideUp ($s)' onclick='testWeb_FxTestClient.slideUp(\"$id\", \"$s\");'")
+        body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
+        body.tdEnd
+      }
+      f("500ms")
+      f("250ms")
     body.trEnd
     body.tableEnd
   }
@@ -157,4 +180,27 @@ class FxTestClient
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Slide
+//////////////////////////////////////////////////////////////////////////
+
+  static Void slideDown(Str id, Str dur)
+  {
+    start := Duration.now
+    Doc.elem(id).effect.slideDown(Duration(dur)) |fx|
+    {
+      end := Duration.now
+      fx.elem.html = "Hello! (${(end-start).toMillis}ms)"
+    }
+  }
+
+  static Void slideUp(Str id, Str dur)
+  {
+    start := Duration.now
+    Doc.elem(id).effect.slideUp(Duration(dur)) |fx|
+    {
+      end := Duration.now
+      fx.elem.html = "Hello! (${(end-start).toMillis}ms)"
+    }
+  }
 }
