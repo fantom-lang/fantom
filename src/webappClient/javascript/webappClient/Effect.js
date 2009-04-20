@@ -24,6 +24,62 @@ var webappClient_Effect = sys_Obj.extend(
   elem: function() { return this.fan; },
 
 //////////////////////////////////////////////////////////////////////////
+// Animate
+//////////////////////////////////////////////////////////////////////////
+
+  animate: function(map, dur, callback)
+  {
+    var ms = arguments.length == 0 ? 0 : dur.toMillis();
+    var tweens = [];
+
+    // collect tweens
+    var keys = map.keys();
+    for (var i=0; i<keys.length; i++)
+    {
+      var key = keys[i];
+      var val = map.get(key);
+      var tween = new webappClient_Tween(this, key, val);
+      tweens.push(tween);
+      //alert(tween);
+    }
+
+    // bail if no tweens
+    if (tweens.length == 0) return;
+
+    // animate
+    var start = new Date().getTime();
+    var intervalId = null;
+    var f = function()
+    {
+      var diff = new Date().getTime() - start;
+      if (diff > (ms-10))
+      {
+        // clear timer
+        clearInterval(intervalId);
+
+        // make sure we go to the stop exactly
+        for (var i=0; i<tweens.length; i++)
+          tweens[i].applyVal(tweens[i].stop);
+
+        // callback if specified
+        if (callback) callback(tweens[0].fx);
+
+        // don't run next frame
+        return
+      }
+
+      for (var i=0; i<tweens.length; i++)
+      {
+        var tween = tweens[i];
+        var ratio = diff / ms;
+        var val = ((tween.stop-tween.start) * ratio) + tween.start;
+        tween.applyVal(val);
+      }
+    }
+    intervalId = setInterval(f, 10);
+  },
+
+//////////////////////////////////////////////////////////////////////////
 // Show/Hide
 //////////////////////////////////////////////////////////////////////////
 
@@ -120,56 +176,17 @@ var webappClient_Effect = sys_Obj.extend(
     }
   },
 
-  animate: function(map, dur, callback)
+//////////////////////////////////////////////////////////////////////////
+// Fading
+//////////////////////////////////////////////////////////////////////////
+
+  fadeIn:  function(dur, callback) { this.fadeTo("1.0", dur, callback); },
+  fadeOut: function(dur, callback) { this.fadeTo("0.0", dur, callback); },
+  fadeTo:  function(opacity, dur, callback)
   {
-    var ms = arguments.length == 0 ? 0 : dur.toMillis();
-    var tweens = [];
-
-    // collect tweens
-    var keys = map.keys();
-    for (var i=0; i<keys.length; i++)
-    {
-      var key = keys[i];
-      var val = map.get(key);
-      var tween = new webappClient_Tween(this, key, val);
-      tweens.push(tween);
-      //alert(tween);
-    }
-
-    // bail if no tweens
-    if (tweens.length == 0) return;
-
-    // animate
-    var start = new Date().getTime();
-    var intervalId = null;
-    var f = function()
-    {
-      var diff = new Date().getTime() - start;
-      if (diff > (ms-10))
-      {
-        // clear timer
-        clearInterval(intervalId);
-
-        // make sure we go to the stop exactly
-        for (var i=0; i<tweens.length; i++)
-          tweens[i].applyVal(tweens[i].stop);
-
-        // callback if specified
-        if (callback) callback(tweens[0].fx);
-
-        // don't run next frame
-        return
-      }
-
-      for (var i=0; i<tweens.length; i++)
-      {
-        var tween = tweens[i];
-        var ratio = diff / ms;
-        var val = ((tween.stop-tween.start) * ratio) + tween.start;
-        tween.applyVal(val);
-      }
-    }
-    intervalId = setInterval(f, 10);
+    var map = new sys_Map();
+    map.set("opacity", opacity);
+    this.animate(map, dur, callback);
   },
 
 //////////////////////////////////////////////////////////////////////////
@@ -217,19 +234,20 @@ webappClient_Tween.prototype.currentVal = function()
     case "width":
       var val = this.elem.offsetWidth;
       val -= this.pixelVal("paddingLeft") + this.pixelVal("paddingRight");
-      // minus border
+      val -= this.pixelVal("borderLeftWidth") + this.pixelVal("borderRightWidth");
       return val;
 
     case "height":
       val = this.elem.offsetHeight;
       val -= this.pixelVal("paddingTop") + this.pixelVal("paddingBottom");
-      // minus border
+      val -= this.pixelVal("borderTopWidth") + this.pixelVal("borderBottomWidth");
       return val;
 
     default:
       val = this.fx.old[this.prop]; if (val != undefined) return val;
       val = this.elem.style[this.prop]; if (val) return this.fromCss(val);
-      return webappClient_Tween.defVals[this.prop] || 0;
+      if (this.prop == "opacity") return 1;
+      return 0;
   }
 }
 
@@ -252,9 +270,13 @@ webappClient_Tween.prototype.pixelVal = function(prop)
   var oldrs = this.elem.runtimeStyle.left;
 
   // convert to pix
+// TODO - this doesn't work with borderWidth (val=medium)
+try {
   this.elem.runtimeStyle.left = this.elem.currentStyle.left;
   this.elem.style.left = val || 0;
   val = this.elem.style.pixelLeft;
+}
+catch (err) { val = 0; /*alert(err);*/ }
 
   // restore style
   this.elem.style.left = olds;
@@ -301,9 +323,4 @@ webappClient_Tween.prototype.toString = function()
           "start:" + this.start + "," +
           "stop:" + this.stop + "," +
           "unit:" + this.unit + "]";
-}
-
-webappClient_Tween.defVals =
-{
-  opacity: 1
 }

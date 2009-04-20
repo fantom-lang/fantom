@@ -32,6 +32,24 @@ class Effect
   Elem elem() { return Elem("") }
 
 //////////////////////////////////////////////////////////////////////////
+// Animate
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Animate one or more CSS properties on the element.  If 'dur' is
+  ** specified, animate within the given duration of time.  If given,
+  ** invoke the callback function after the animation has completed.
+  **
+  **   elem.effect.animate(["opacity":"0.0"], 100ms) |fx| {
+  **     fx.animate(["opacity":"1.0"], 100ms)
+  **   }
+  **
+  This animate(Str:Str map, Duration dur := 0ms, |Effect|? callback := null)
+  {
+    return this
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Show/Hide
 //////////////////////////////////////////////////////////////////////////
 
@@ -56,13 +74,39 @@ class Effect
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Animate
+// Fading
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** TODO.
+  ** Fade in the element by animating its opacity.  If 'dur' is
+  ** specificed, animate the fade within the given duration of
+  ** time.  If given, invoke the callback function after animation
+  ** has completed.
   **
-  This animate(Str:Str map, Duration dur := 0ms, |Effect|? callback := null)
+  This fadeIn(Duration dur := 0ms, |Effect|? callback := null)
+  {
+    return this
+  }
+
+  **
+  ** Fade in the element by animating its opacity.  If 'dur' is
+  ** specificed, animate the fade within the given duration of
+  ** time.  If given, invoke the callback function after animation
+  ** has completed.
+  **
+  This fadeOut(Duration dur := 0ms, |Effect|? callback := null)
+  {
+    return this
+  }
+
+  **
+  ** Fade the opacity of the element to the target value, where
+  ** 0.0 is fully transparent, and 1.0 is fully opaque. If 'dur' is
+  ** specificed, animate the fade within the given duration of
+  ** time.  If given, invoke the callback function after animation
+  ** has completed.
+  **
+  This fadeTo(Decimal opacity, Duration dur := 0ms, |Effect|? callback := null)
   {
     return this
   }
