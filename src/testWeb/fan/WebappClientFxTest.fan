@@ -30,18 +30,19 @@ class WebappClientFxTest : Widget
     body.h2.w("Show/Hide").h2End
     body.table
     body.tr
-      f := |Str s|
+      f := |Str s, Str css|
       {
         id := unique
         body.td("valign='top' style='padding-right:1em;'")
         body.button("value='Show ($s)' onclick='testWeb_FxTestClient.show(\"$id\",\"$s\");'")
         body.button("value='Hide ($s)' onclick='testWeb_FxTestClient.hide(\"$id\",\"$s\");'")
-        body.div("id='$id' style='margin-top:5px; padding:1em; background:#ff8;'").w("Hello!").divEnd
+        body.div("id='$id' style='margin-top:5px; padding:1em; background:#ff8; $css'").w("Hello!").divEnd
         body.tdEnd
       }
-      f("0ms")
-      f("500ms")
-      f("250ms")
+      f("0ms",   "")
+      f("500ms", "")
+      f("250ms", "")
+      f("100ms", "border:2px solid #f00;")
       body.trEnd
     body.tableEnd
   }
@@ -57,8 +58,8 @@ class WebappClientFxTest : Widget
       {
         body.td("valign='top' style='$tdStyle'")
         id := unique
-        body.button("value='->${s[0]} (${s[2]})' onclick='testWeb_FxTestClient.opacity(\"$id\", \"${s[0]}\", \"${s[2]}\");'")
-        body.button("value='->${s[1]} (${s[2]})' onclick='testWeb_FxTestClient.opacity(\"$id\", \"${s[1]}\", \"${s[2]}\");'")
+        body.button("value='->${s[0]} (${s[2]})' onclick='testWeb_FxTestClient.fadeTo(\"$id\", ${s[0].toDecimal}, \"${s[2]}\");'")
+        body.button("value='->${s[1]} (${s[2]})' onclick='testWeb_FxTestClient.fadeTo(\"$id\", ${s[1].toDecimal}, \"${s[2]}\");'")
         body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
         body.tdEnd
       }
@@ -68,12 +69,17 @@ class WebappClientFxTest : Widget
       f(["0.2", "1.0", "0ms"])
       body.trEnd
     body.tr
-      body.td
+    body.td
       id := unique
-      body.button("value='->0->1 (250ms)' onclick='testWeb_FxTestClient.opacityChain(\"$id\", \"250ms\");'")
+      body.button("value='FadeOut/FadeIn (250ms)' onclick='testWeb_FxTestClient.fadeToChain(\"$id\", \"250ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
-      body.trEnd
+    body.td
+      id = unique
+      body.button("value='->0->1 (250ms)' onclick='testWeb_FxTestClient.animateOpacityChain(\"$id\", \"250ms\");'")
+      body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
+      body.tdEnd
+    body.trEnd
     body.tableEnd
   }
 }
@@ -107,13 +113,13 @@ class FxTestClient
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Opacity
+// Fading
 //////////////////////////////////////////////////////////////////////////
 
-  static Void opacity(Str id, Str stop, Str dur)
+  static Void fadeTo(Str id, Decimal opacity, Str dur)
   {
     start := Duration.now
-    Doc.elem(id).effect.animate(["opacity":stop], Duration(dur)) |fx|
+    Doc.elem(id).effect.fadeTo(opacity, Duration(dur)) |fx|
     {
       end := Duration.now
       op  := fx.elem.style->opacity
@@ -121,7 +127,22 @@ class FxTestClient
     }
   }
 
-  static Void opacityChain(Str id, Str dur)
+  static Void fadeToChain(Str id, Str dur)
+  {
+    d  := Duration(dur)
+    t1 := Duration.now
+    Doc.elem(id).effect.fadeOut(d) |fx|
+    {
+      t2 := Duration.now
+      fx.fadeIn(d) |fx2|
+      {
+        t3 := Duration.now
+        fx.elem.html = "Hello! (${(t2-t1).toMillis}ms, ${(t3-t2).toMillis}ms)"
+      }
+    }
+  }
+
+  static Void animateOpacityChain(Str id, Str dur)
   {
     d  := Duration(dur)
     t1 := Duration.now
