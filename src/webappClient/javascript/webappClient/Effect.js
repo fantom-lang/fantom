@@ -40,7 +40,6 @@ var webappClient_Effect = sys_Obj.extend(
       var val = map.get(key);
       var tween = new webappClient_Tween(this, key, val);
       tweens.push(tween);
-      //alert(tween);
     }
 
     // bail if no tweens
@@ -110,16 +109,34 @@ var webappClient_Effect = sys_Obj.extend(
       this.dom.style.display = "block";
       var w = new webappClient_Tween(this, "width", 0).currentVal()+"px";
       var h = new webappClient_Tween(this, "height", 0).currentVal()+"px";
-
-      // set to initial pos
-      this.dom.style.opacity = oldOpacity;
-      this.dom.style.overflow = "hidden";
-      if (doWidth) this.dom.style.width  = "0px";
-      this.dom.style.height = "0px";
+      var cs = this.fan.computedStyle();
 
       var map = new sys_Map();
-      if (doWidth) map.set("width", w+"px");
+      if (doWidth)
+      {
+        map.set("width", w+"px");
+        map.set("paddingLeft", cs.paddingLeft);
+        map.set("paddingRight", cs.paddingRight);
+      }
       map.set("height", h+"px");
+      map.set("paddingTop", cs.paddingTop);
+      map.set("paddingBottom", cs.paddingBottom);
+
+      // set to initial pos
+      with (this.dom.style)
+      {
+        opacity = oldOpacity;
+        overflow = "hidden";
+        if (doWidth)
+        {
+          width = "0px";
+          paddingLeft  = "0px";
+          paddingRight = "0px";
+        }
+        height = "0px";
+        paddingTop = "0px";
+        paddingBottom = "0px";
+      }
 
       var fx = this;
       var f = function()
@@ -150,29 +167,58 @@ var webappClient_Effect = sys_Obj.extend(
     }
     else
     {
-      // TODO - big hack - need to clean up
-
-      var oldOverflow = this.dom.style.overflow;
-
       // make sure style is set
-      var oldw = new webappClient_Tween(this, "width", 0).currentVal()+"px";
-      var oldh = new webappClient_Tween(this, "height", 0).currentVal()+"px";
-      if (doWidth) this.dom.style.width  = oldw;
-      this.dom.style.height = oldh;
-      this.dom.style.overflow = "hidden";
+      var cs = this.fan.computedStyle();
+      var old =
+      {
+        overflow: this.dom.style.overflow,
+        width:  new webappClient_Tween(this, "width", 0).currentVal()+"px",
+        height: new webappClient_Tween(this, "height", 0).currentVal()+"px",
+        paddingTop:    cs.paddingTop,
+        paddingBottom: cs.paddingBottom,
+        paddingLeft:   cs.paddingLeft,
+        paddingRight:  cs.paddingRight
+      };
+      with (this.dom.style)
+      {
+        if (doWidth)
+        {
+          width = old.width;
+          paddingLeft  = old.paddingLeft;
+          paddingRight = old.paddingRight;
+        }
+        height        = old.height;
+        paddingTop    = old.paddingTop;
+        paddingBottom = old.paddingBottom;
+        overflow      = "hidden";
+      }
 
       var map = new sys_Map();
-      if (doWidth) map.set("width", "0px");
+      if (doWidth)
+      {
+        map.set("width", "0px");
+        map.set("paddingLeft", "0px");
+        map.set("paddingRight", "0px");
+      }
       map.set("height", "0px");
+      map.set("paddingTop", "0px");
+      map.set("paddingBottom", "0px");
 
       var fx = this;
       var f = function()
       {
         // reset style
-        fx.dom.style.display = "none";
-        fx.dom.style.overflow = oldOverflow;
-        fx.dom.style.width  = oldw;
-        fx.dom.style.height = oldh;
+        with (fx.dom.style)
+        {
+          display  = "none";
+          overflow = old.overflow;
+          width    = old.width;
+          height   = old.height;
+          paddingTop    = old.paddingTop;
+          paddingBottom = old.paddingBottom;
+          paddingLeft   = old.paddingLeft;
+          paddingRight  = old.paddingRight;
+        }
         if (callback) callback(fx);
       }
 
@@ -253,6 +299,11 @@ webappClient_Tween.prototype.currentVal = function()
       val -= this.pixelVal("paddingTop") + this.pixelVal("paddingBottom");
       val -= this.pixelVal("borderTopWidth") + this.pixelVal("borderBottomWidth");
       return val;
+
+    case "paddingTop":    return this.pixelVal("paddingTop");
+    case "paddingBottom": return this.pixelVal("paddingBottom");
+    case "paddingLeft":   return this.pixelVal("paddingLeft");
+    case "paddingRight":  return this.pixelVal("paddingRight");
 
     default:
       val = this.fx.old[this.prop]; if (val != undefined) return val;
