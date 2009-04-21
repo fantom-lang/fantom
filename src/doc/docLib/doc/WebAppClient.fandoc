@@ -115,10 +115,11 @@ Elem [#elem]
   elem.h                  // height of element
 
   // event handlers
-  elem.onEvent("click", false) |event|
-  {
-    Window.alert("$event.target clicked!")
-  }
+  elem.onEvent("click", false) |e| { Window.alert("$e.target clicked!") }
+
+  // find
+  elem.find |e| { e.tagName == "img" }     // find first <img> descendant
+  elem.findAll |e| { e.tagName == "img" }  // find all <img> descendants
 
 XmlHttpRequest [#xhr]
 =====================
