@@ -306,8 +306,12 @@ webappClient_Tween.prototype.currentVal = function()
     case "paddingRight":  return this.pixelVal("paddingRight");
 
     default:
-      val = this.fx.old[this.prop]; if (val != undefined) return val;
-      val = this.elem.style[this.prop]; if (val) return this.fromCss(val);
+      val = this.fx.old[this.prop];
+      if (val != undefined) return val;
+
+      val = this.elem.style[this.prop];
+      if (val != undefined && val != "") return this.fromCss(val);
+
       if (this.prop == "opacity") return 1;
       return 0;
   }
@@ -375,7 +379,7 @@ webappClient_Tween.prototype.fromCss = function(css)
   if      (sys_Str.endsWith(css, "%"))  unit = "%";
   else if (sys_Str.endsWith(css, "px")) unit = "px";
   else if (sys_Str.endsWith(css, "em")) unit = "em";
-  return { val:val, unit:unit };
+  return { val:val, unit:unit, toString:function(){return val+unit} };
 }
 
 webappClient_Tween.prototype.toString = function()
