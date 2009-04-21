@@ -88,7 +88,7 @@ class WebappClientFxTest : Widget
   {
     body.h2.w("Slide").h2End
     tdStyle  := "padding-right:1em;"
-    divStyle := "margin-top:5px; padding:1em; background:#efe;"
+    divStyle := "margin-top:5px; padding:1em; background:#cfc;"
     body.table
     body.tr
       f := |Str s|
@@ -100,6 +100,7 @@ class WebappClientFxTest : Widget
         body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
         body.tdEnd
       }
+      f("750ms")
       f("500ms")
       f("250ms")
     body.trEnd
