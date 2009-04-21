@@ -598,3 +598,4 @@
 *Build 1.0.42 (working)*
 - Tweaks to flux
 - Loosen restrictions on it/this ambiguity errors
+- webappClient::Effect

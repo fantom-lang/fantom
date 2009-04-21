@@ -155,6 +155,10 @@ a built-in method:
   elem.effect.show(100ms)
   elem.effect.hide(200ms)
 
+  // sliding
+  elem.effect.slideDown(500ms)
+  elem.effect.slideUp(250ms)
+
   // fading
   elem.effect.fadeIn(100ms)
   elem.effect.fadeOut(100ms)
