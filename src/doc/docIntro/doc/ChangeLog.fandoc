@@ -599,3 +599,5 @@
 - Tweaks to flux
 - Loosen restrictions on it/this ambiguity errors
 - webappClient::Effect
+
+TODO: change over buildall to use pathPrefix

@@ -138,10 +138,13 @@ class Build : BuildGroup
   @target="create build zip file"
   Void zip()
   {
+    moniker := "fan-$globalVersion"
     zip := CreateZip(this)
     {
-      outFile = devHomeDir + ("fan-" + globalVersion + ".zip").toUri
+      outFile = devHomeDir + ("${moniker}.zip").toUri
       inDir = devHomeDir
+      // TODO
+      // pathPrefix = "$moniker/".toUri
       filter = |File f, Str path->Bool|
       {
         if (f.name == ".hg")       return false
