@@ -201,6 +201,17 @@ class WebOutStream : OutStream
     return tag("link rel='alternate' type='application/rss+xml' href='$href.encode.toXml'", attrs, true).nl
   }
 
+  **
+  ** Write a complete <link> tag for a favicon.  You must specifiy
+  ** the MIME type for your icon in the 'attrs' argument:
+  **
+  **   out.favIcon(`/fav.png`, "type='image/png'")
+  **
+  This favIcon(Uri href, Str? attrs := null)
+  {
+    return tag("link rel='icon' href='$href.encode.toXml'", attrs, true).nl
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // style
 //////////////////////////////////////////////////////////////////////////
