@@ -18,8 +18,20 @@ var webappClient_Event = sys_Obj.extend(
   },
 
   x: function() { return this.event.pageX; },
-  y: function() { return this.event.pageY; }
+  y: function() { return this.event.pageY; },
 
+  alt:   function() { return this.event.altKey; },
+  ctrl:  function() { return this.event.ctrlKey; },
+  shift: function() { return this.event.shiftKey; },
+
+  toStr: function()
+  {
+    return "Event[" +
+      "target:" + this.target() +
+      ", x:" + this.x() + ", y:" + this.y() +
+      ", alt:" + this.alt() + ", ctrl:" + this.ctrl() + ", shift:" + this.shift() +
+      "]";
+  }
 });
 
 webappClient_Event.make = function(event)

@@ -38,4 +38,19 @@ class Event
   **
   Int y() { return 0 }
 
+  **
+  ** Return true if the ALT key was pressed during the event.
+  **
+  Bool alt() { return false }
+
+  **
+  ** Return true if the CTRL key was pressed during the event.
+  **
+  Bool ctrl() { return false }
+
+  **
+  ** Return true if the SHIFT key was pressed during the event.
+  **
+  Bool shift() { return false }
+
 }
