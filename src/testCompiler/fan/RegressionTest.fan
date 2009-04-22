@@ -31,4 +31,24 @@ class RegressionTest : CompilerTest
         7, 25, "Nested closures not supported in field initializer",
       ])
   }
+
+  Void test543()
+  {
+     compile(
+       "class Foo
+        {
+          Int[] foo()
+          {
+            Obj x := Foo()
+            acc := Int[,]
+            x->things->each |t| { acc.add(t) }
+            return acc
+          }
+
+          Int[] things := [1, 2, 3]
+        }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->foo, [1, 2, 3])
+  }
 }
