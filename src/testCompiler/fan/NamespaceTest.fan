@@ -420,9 +420,11 @@ class NamespaceTest : CompilerTest
       class Foo
       {
         Int x() { return NsTest().bug545 }
+        Int y() { return testCompiler::NamespaceTest().bug545 }
       }")
      obj := pod.types.first.make
      verifyEq(obj->x, 545)
+     verifyEq(obj->y, 545)
 
     verifyErrors(
      "using testCompiler
