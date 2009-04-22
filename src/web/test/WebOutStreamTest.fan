@@ -118,6 +118,11 @@ class WebOutStreamTest : Test
     out.rss(`foo.xml`, "title='bar'")
     verifyOut(buf, "<link rel='alternate' type='application/rss+xml' href='foo.xml' title='bar' />")
 
+    out.favIcon(`fav.png`)
+    verifyOut(buf, "<link rel='icon' href='fav.png' />")
+    out.favIcon(`fav.png`, "type='image/png'")
+    verifyOut(buf, "<link rel='icon' href='fav.png' type='image/png' />")
+
     out.style
     verifyOut(buf, "<style type='text/css'>")
     out.style(null)
