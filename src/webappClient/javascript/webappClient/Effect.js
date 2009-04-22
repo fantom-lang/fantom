@@ -329,7 +329,7 @@ webappClient_Tween.prototype.pixelVal = function(prop)
   // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
 
   // if already a pixel just return
-  if (/^\d+(px)?$/i.test(val)) return parseInt(val);
+  if (/^\d+(.\d+)?(px)?$/i.test(val)) return parseFloat(val);
 
   // stash style
   var olds  = this.elem.style.left;
