@@ -337,7 +337,7 @@ class ResolveExpr : CompilerStep
     if (var.target == null)
     {
       // attempt to a name in the current scope
-      binding := resolveLocal(var.name)
+      binding := resolveLocal(var.name, var.location)
       if (binding != null)
         return LocalVarExpr.make(var.location, binding)
     }
@@ -423,7 +423,7 @@ class ResolveExpr : CompilerStep
     if (call.target == null)
     {
       // attempt to a name in the current scope
-      binding := resolveLocal(call.name)
+      binding := resolveLocal(call.name, call.location)
       if (binding != null)
         return resolveCallOnLocalVar(call, LocalVarExpr.make(call.location, binding))
     }
@@ -678,7 +678,7 @@ class ResolveExpr : CompilerStep
   private Void bindToMethodVar(LocalDefStmt def)
   {
     // make sure it doesn't exist in the current scope
-    if (resolveLocal(def.name) != null)
+    if (resolveLocal(def.name, def.location) != null)
       err("Variable '$def.name' is already defined in current block", def.location)
 
     // create and add it
@@ -689,7 +689,7 @@ class ResolveExpr : CompilerStep
   ** Resolve a local variable using current scope based on
   ** the block stack and possibly the scope of a closure.
   **
-  private MethodVar? resolveLocal(Str name)
+  private MethodVar? resolveLocal(Str name, Location loc)
   {
     // if not in method, then we can't have a local
     if (curMethod == null) return null
@@ -715,9 +715,18 @@ class ResolveExpr : CompilerStep
         // mark this closure as using cvars
         closure.usesCvars = true
 
+        // we don't currently handle nested closures
+        // with cvars in a field initializer
+        enclosingMethod := closure.enclosingSlot as MethodDef
+        if (enclosingMethod == null)
+        {
+          err("Nested closures not supported in field initializer", loc)
+          return binding
+        }
+
         // mark the enclosing method and recursively
         // any outer closures as needing cvars
-        ((MethodDef)closure.enclosingSlot).needsCvars = true
+        enclosingMethod.needsCvars = true
         for (p := closure.enclosingClosure; p != null; p = p.enclosingClosure)
         {
           p.usesCvars = true
