@@ -1670,10 +1670,11 @@ public class Parser : CompilerSupport
     if (closure != null)
     {
       call := CallExpr.make(loc)
-      call.target   = target
-      call.name     = name
-      call.isSafe   = safeCall
-      call.noParens = true
+      call.target    = target
+      call.name      = name
+      call.isDynamic = dynamicCall
+      call.isSafe    = safeCall
+      call.noParens  = true
       call.args.add(closure)
       return call
     }
