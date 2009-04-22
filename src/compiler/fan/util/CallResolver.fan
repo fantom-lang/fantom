@@ -91,7 +91,7 @@ class CallResolver : CompilerSupport
     if (target == null && isVar)
     {
       stypes := curType.unit.importedTypes[name]
-      if (stypes != null)
+      if (stypes != null && !stypes.isEmpty)
       {
         if (stypes.size > 1)
           throw err("Ambiguous type: " + stypes.join(", "), location)

@@ -407,4 +407,33 @@ class NamespaceTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Bug 545 Test
+//////////////////////////////////////////////////////////////////////////
+
+  Int bug545 := 545
+  Void testBug545()
+  {
+    compile(
+     "using testCompiler
+      using testCompiler::NamespaceTest as NsTest
+      class Foo
+      {
+        Int x() { return NsTest().bug545 }
+      }")
+     obj := pod.types.first.make
+     verifyEq(obj->x, 545)
+
+    verifyErrors(
+     "using testCompiler
+      using testCompiler::NamespaceTest as NsTest
+      class Foo
+      {
+        Int x() { return NamespaceTest().bug545 }
+      }",
+       [
+         5, 20, "Unknown method '$podName::Foo.NamespaceTest'",
+       ])
+  }
+
 }
