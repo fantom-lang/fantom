@@ -2125,7 +2125,7 @@ public class Parser : CompilerSupport
 
     // unqualified name, lookup in imported types
     types := unit.importedTypes[id]
-    if (types == null)
+    if (types == null || types.isEmpty)
     {
       // handle sys generic parameters
       if (isSys && id.size == 1)
