@@ -301,9 +301,10 @@ class ErrTest : Test
     verifyEq(errIO.s, "memorial day")
 
     // verify throws works correctly
-    verifyErr(TestOneErr#) |,| { throw TestOneErr.make }
-    verifyErr(TestTwoErr#) |,| { throw TestTwoErr.make }
-    verifyErr(TestIOErr#)  |,| { throw TestIOErr.make }
+    verifyErr(TestOneErr#) { throw TestOneErr.make }
+    verifyErr(TestTwoErr#) { throw TestTwoErr.make }
+    verifyErr(TestIOErr#)  { throw TestIOErr.make }
+    verifyErr(TestIOErr#)  { throw TestIOErr.make }
   }
 
 }

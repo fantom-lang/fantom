@@ -150,7 +150,7 @@ public class Test
   {
     try
     {
-      f.call0();
+      f.call1(this);
     }
     catch (Err.Val e)
     {
