@@ -105,9 +105,9 @@ abstract class Test
   ** exact same type as err (compare using === operator).
   **
   ** Examples:
-  **   verifyErr(ParseErr#) |,| { Int.fromStr("@#!") }
+  **   verifyErr(ParseErr#) { Int.fromStr("@#!") }
   **
-  Void verifyErr(Type errType, |->Void| c)
+  Void verifyErr(Type errType, |This| c)
 
   **
   ** Throw a test failure exception.  If msg is non-null, include
