@@ -14,8 +14,13 @@ var webappClient_Effect = sys_Obj.extend(
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function() {},
+  $ctor: function()
+  {
+    this.queue = new Array();
+    this.old = new Object();
+  },
   type: function() { return sys_Type.find("webappClient::Effect"); },
+  toStr: function() { return "effect[" + this.fan + "]"; },
 
 //////////////////////////////////////////////////////////////////////////
 // Attributes
@@ -79,8 +84,7 @@ var webappClient_Effect = sys_Obj.extend(
         // callback if specified
         if (callback) callback(tweens[0].fx);
 
-        // remove from queue and check if
-        // another animation is waiting
+        // remove from queue
         var fx = tweens[0].fx;
         fx.queue.splice(0, 1);
         if (fx.queue.length > 0) fx.dequeue();
@@ -247,11 +251,10 @@ var webappClient_Effect = sys_Obj.extend(
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  fan: null,   // Fan Elem wrappaer
-  dom: null,   // actual DOM element
-  queue: [],   // animation queue
-  old: {}      // stash to store old values
-
+  fan: null,    // Fan Elem wrappaer
+  dom: null,    // actual DOM element
+  queue: null,  // animation queue
+  old: null     // stash to store old values
 
 });
 

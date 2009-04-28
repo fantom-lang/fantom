@@ -125,6 +125,39 @@ class WebappClientFxTest : Widget
       body.button("value='SlideUp/SlideDown (400ms)' onclick='testWeb_FxTestClient.queue2(\"$id\", \"400ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
+    body.td("valign='top' style='$tdStyle'")
+      id = unique
+      body.button("value='Fade/Slide#1 (400ms)' onclick='testWeb_FxTestClient.queue3(\"$id\", \"400ms\");'")
+      body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
+      body.tdEnd
+    body.td("valign='top' style='$tdStyle'")
+      id = unique
+      body.button("value='Fade/Slide#2 (400ms)' onclick='testWeb_FxTestClient.queue4(\"$id\", \"400ms\");'")
+      body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
+      body.tdEnd
+    body.trEnd
+    body.tr
+    body.td("valign='top' style='$tdStyle'")
+      a := unique
+      b := unique
+      body.button("value='Complex#1 (400ms)' onclick='testWeb_FxTestClient.queue5(\"$a\",\"$b\",\"400ms\");'")
+      body.div("id='$a' style='$divStyle'").w("Hello!").divEnd
+      body.div("id='$b' style='$divStyle'").w("Hello!").divEnd
+      body.tdEnd
+    body.td("valign='top' style='$tdStyle'")
+      a = unique
+      b = unique
+      body.button("value='Complex#2 (400ms)' onclick='testWeb_FxTestClient.queue6(\"$a\",\"$b\",\"400ms\");'")
+      body.div("id='$a' style='$divStyle'").w("Hello!").divEnd
+      body.div("id='$b' style='$divStyle'").w("Hello!").divEnd
+      body.tdEnd
+    body.td("valign='top' style='$tdStyle'")
+      a = unique
+      b = unique
+      body.button("value='Complex#3 (400ms)' onclick='testWeb_FxTestClient.queue7(\"$a\",\"$b\",\"400ms\");'")
+      body.div("id='$a' style='$divStyle'").w("Hello!").divEnd
+      body.div("id='$b' style='$divStyle'").w("Hello!").divEnd
+      body.tdEnd
     body.trEnd
     body.tableEnd
   }
@@ -254,6 +287,95 @@ class FxTestClient
     {
       t3 := Duration.now
       fx.elem.html = "Hello! (${(t2-t1).toMillis}ms, ${(t3-t2).toMillis}ms)"
+    }
+  }
+
+  static Void queue3(Str id, Str dur)
+  {
+    fx := Doc.elem(id).effect
+    d  := Duration(dur)
+    t1 := Duration.now
+    fx.fadeOut(d)
+    fx.fadeIn(d)
+    fx.slideUp(d)
+    fx.slideDown(d) |fx2|
+    {
+      t2 := Duration.now
+      fx2.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
+    }
+  }
+
+  static Void queue4(Str id, Str dur)
+  {
+    d  := Duration(dur)
+    t1 := Duration.now
+    Doc.elem(id).effect.fadeOut(d) |fx1| {
+      fx1.fadeIn(d) |fx2| {
+        fx2.slideUp(d) |fx3| {
+          fx3.slideDown(d) |fx4| {
+            t2 := Duration.now
+            fx4.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
+          }
+        }
+      }
+    }
+  }
+
+  static Void queue5(Str a, Str b, Str dur)
+  {
+    d   := Duration(dur)
+    t1  := Duration.now
+    fxa := Doc.elem(a).effect
+    fxb := Doc.elem(b).effect
+    fxa.fadeOut(d)
+    fxa.fadeIn(d) |fx|
+    {
+      t2 := Duration.now
+      fx.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
+    }
+    fxb.fadeOut(d)
+    fxb.fadeIn(d) |fx|
+    {
+      t2 := Duration.now
+      fx.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
+    }
+  }
+
+  static Void queue6(Str a, Str b, Str dur)
+  {
+    d  := Duration(dur)
+    t1 := Duration.now
+    Doc.elem(a).effect.fadeOut(d)
+    Doc.elem(a).effect.fadeIn(d) |fx|
+    {
+      t2 := Duration.now
+      fx.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
+    }
+    Doc.elem(b).effect.fadeOut(d)
+    Doc.elem(b).effect.fadeIn(d) |fx|
+    {
+      t2 := Duration.now
+      fx.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
+    }
+  }
+
+  static Void queue7(Str a, Str b, Str dur)
+  {
+    d   := Duration(dur)
+    t1  := Duration.now
+    fxa := Doc.elem(a).effect
+    fxb := Doc.elem(b).effect
+    fxa.fadeOut(d)
+    fxa.fadeIn(d) |fx|
+    {
+      t2 := Duration.now
+      fx.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
+    }
+    fxb.slideUp(d)
+    fxb.slideDown(d) |fx|
+    {
+      t2 := Duration.now
+      fx.elem.html = "Hello! (${(t2-t1).toMillis}ms)"
     }
   }
 }

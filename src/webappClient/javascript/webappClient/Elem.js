@@ -186,8 +186,11 @@ var webappClient_Elem = sys_Obj.extend(
 
   effect: function()
   {
-    return webappClient_Effect.make(this);
+    if (this.fx == null)
+      this.fx = webappClient_Effect.make(this);
+    return this.fx;
   },
+  fx: null,
 
   toStr: function()
   {
