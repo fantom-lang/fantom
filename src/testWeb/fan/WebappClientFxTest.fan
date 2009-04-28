@@ -24,6 +24,7 @@ class WebappClientFxTest : Widget
     showHide
     opacity
     slide
+    queueing
   }
 
   Void showHide()
@@ -70,12 +71,12 @@ class WebappClientFxTest : Widget
       f(["0.2", "1.0", "0ms"])
       body.trEnd
     body.tr
-    body.td
+    body.td("valign='top' style='$tdStyle'")
       id := unique
       body.button("value='FadeOut/FadeIn (250ms)' onclick='testWeb_FxTestClient.fadeToChain(\"$id\", \"250ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
-    body.td
+    body.td("valign='top' style='$tdStyle'")
       id = unique
       body.button("value='->0->1 (250ms)' onclick='testWeb_FxTestClient.animateOpacityChain(\"$id\", \"250ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
@@ -103,6 +104,27 @@ class WebappClientFxTest : Widget
       f("750ms")
       f("500ms")
       f("250ms")
+    body.trEnd
+    body.tableEnd
+  }
+
+  Void queueing()
+  {
+    body.h2.w("Queueing").h2End
+    tdStyle  := "padding-right:1em;"
+    divStyle := "margin-top:5px; padding:1em; background:#eef;"
+    body.table
+    body.tr
+    body.td("valign='top' style='$tdStyle'")
+      id := unique
+      body.button("value='FadeOut/FadeIn (400ms)' onclick='testWeb_FxTestClient.queue1(\"$id\", \"400ms\");'")
+      body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
+      body.tdEnd
+    body.td("valign='top' style='$tdStyle'")
+      id = unique
+      body.button("value='SlideUp/SlideDown (400ms)' onclick='testWeb_FxTestClient.queue2(\"$id\", \"400ms\");'")
+      body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
+      body.tdEnd
     body.trEnd
     body.tableEnd
   }
@@ -202,6 +224,36 @@ class FxTestClient
     {
       end := Duration.now
       fx.elem.html = "Hello! (${(end-start).toMillis}ms)"
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Queueing
+//////////////////////////////////////////////////////////////////////////
+
+  static Void queue1(Str id, Str dur)
+  {
+    d  := Duration(dur)
+    t1 := Duration.now
+    t2 := 0ms
+    Doc.elem(id).effect.fadeOut(d) |fx| { t2 = Duration.now }
+    Doc.elem(id).effect.fadeIn(d)  |fx|
+    {
+      t3 := Duration.now
+      fx.elem.html = "Hello! (${(t2-t1).toMillis}ms, ${(t3-t2).toMillis}ms)"
+    }
+  }
+
+  static Void queue2(Str id, Str dur)
+  {
+    d  := Duration(dur)
+    t1 := Duration.now
+    t2 := 0ms
+    Doc.elem(id).effect.slideUp(d)   |fx| { t2 = Duration.now }
+    Doc.elem(id).effect.slideDown(d) |fx|
+    {
+      t3 := Duration.now
+      fx.elem.html = "Hello! (${(t2-t1).toMillis}ms, ${(t3-t2).toMillis}ms)"
     }
   }
 }
