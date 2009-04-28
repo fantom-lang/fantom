@@ -27,9 +27,25 @@ var webappClient_Effect = sys_Obj.extend(
 // Animate
 //////////////////////////////////////////////////////////////////////////
 
-  animate: function(map, dur, callback)
+  animate: function(map, dur, callback, init)
   {
-    var ms = arguments.length == 0 ? 0 : dur.toMillis();
+    dur = (dur   == undefined) ? 0 : dur.toMillis();
+    if (callback == undefined) callback = null;
+    if (init     == undefined) init = null;
+    this.queue.push({map:map, dur:dur, callback:callback, init:init})
+    if (this.queue.length == 1) this.dequeue();
+  },
+
+  dequeue: function()
+  {
+    if (this.queue.length == 0) return;
+    var a = this.queue[0];
+    this.doAnimate(a.map, a.dur, a.callback, a.init);
+  },
+
+  doAnimate: function(map, dur, callback, init)
+  {
+    if (init != null) callback = init(map, callback);
     var tweens = [];
 
     // collect tweens
@@ -51,7 +67,7 @@ var webappClient_Effect = sys_Obj.extend(
     var f = function()
     {
       var diff = new Date().getTime() - start;
-      if (diff > (ms-10))
+      if (diff > (dur-10))
       {
         // clear timer
         clearInterval(intervalId);
@@ -63,6 +79,12 @@ var webappClient_Effect = sys_Obj.extend(
         // callback if specified
         if (callback) callback(tweens[0].fx);
 
+        // remove from queue and check if
+        // another animation is waiting
+        var fx = tweens[0].fx;
+        fx.queue.splice(0, 1);
+        if (fx.queue.length > 0) fx.dequeue();
+
         // don't run next frame
         return
       }
@@ -70,7 +92,7 @@ var webappClient_Effect = sys_Obj.extend(
       for (var i=0; i<tweens.length; i++)
       {
         var tween = tweens[i];
-        var ratio = diff / ms;
+        var ratio = diff / dur;
         var val = ((tween.stop-tween.start) * ratio) + tween.start;
         tween.applyVal(val);
       }
@@ -87,31 +109,19 @@ var webappClient_Effect = sys_Obj.extend(
     // animate width prop?
     if (doWidth == undefined) doWidth = true
 
-    // if already visible bail
-    if (this.dom.style.display == "block") return;
-
-    var ms = arguments.length == 0 ? 0 : dur.toMillis();
-    if (ms == 0)
+    var fx = this;
+    var init = function(map, callback)
     {
-      // TODO - can we handle this directly in animate?
-      this.dom.style.display = "block";
-      if (callback) callback(this);
-    }
-    else
-    {
-      // TODO - big hack - need to clean up
-
-      var oldOpacity = this.dom.style.opacity || 1;
-      var oldOverflow = this.dom.style.overflow;
+      var oldOpacity = fx.dom.style.opacity || 1;
+      var oldOverflow = fx.dom.style.overflow;
 
       // figure out target size
-      this.dom.style.opacity = "0";
-      this.dom.style.display = "block";
-      var w = new webappClient_Tween(this, "width", 0).currentVal()+"px";
-      var h = new webappClient_Tween(this, "height", 0).currentVal()+"px";
-      var cs = this.fan.computedStyle();
+      fx.dom.style.opacity = "0";
+      fx.dom.style.display = "block";
+      var w = new webappClient_Tween(fx, "width", 0).currentVal()+"px";
+      var h = new webappClient_Tween(fx, "height", 0).currentVal()+"px";
+      var cs = fx.fan.computedStyle();
 
-      var map = new sys_Map();
       if (doWidth)
       {
         map.set("width", w+"px");
@@ -123,7 +133,7 @@ var webappClient_Effect = sys_Obj.extend(
       map.set("paddingBottom", cs.paddingBottom);
 
       // set to initial pos
-      with (this.dom.style)
+      with (fx.dom.style)
       {
         opacity = oldOpacity;
         overflow = "hidden";
@@ -138,16 +148,14 @@ var webappClient_Effect = sys_Obj.extend(
         paddingBottom = "0px";
       }
 
-      var fx = this;
-      var f = function()
+      return function()
       {
         // reset overlow
         fx.dom.style.overflow = oldOverflow;
         if (callback) callback(fx);
       }
-
-      this.animate(map, dur, f);
-    }
+    };
+    this.animate(new sys_Map(), dur, callback, init);
   },
 
   hide: function(dur, callback, doWidth)
@@ -155,31 +163,23 @@ var webappClient_Effect = sys_Obj.extend(
     // animate width prop?
     if (doWidth == undefined) doWidth = true
 
-    // if already hidden bail
-    if (this.dom.style.display == "none") return;
-
-    var ms = arguments.length == 0 ? 0 : dur.toMillis();
-    if (ms == 0)
-    {
-      // TODO - can we handle this directly in animate?
-      this.dom.style.display = "none";
-      if (callback) callback(this);
-    }
-    else
+    var fx = this;
+    var init = function(map, callback)
     {
       // make sure style is set
-      var cs = this.fan.computedStyle();
+      var cs = fx.fan.computedStyle();
       var old =
       {
-        overflow: this.dom.style.overflow,
-        width:  new webappClient_Tween(this, "width", 0).currentVal()+"px",
-        height: new webappClient_Tween(this, "height", 0).currentVal()+"px",
+        overflow: fx.dom.style.overflow,
+        width:  new webappClient_Tween(fx, "width", 0).currentVal()+"px",
+        height: new webappClient_Tween(fx, "height", 0).currentVal()+"px",
         paddingTop:    cs.paddingTop,
         paddingBottom: cs.paddingBottom,
         paddingLeft:   cs.paddingLeft,
         paddingRight:  cs.paddingRight
       };
-      with (this.dom.style)
+
+      with (fx.dom.style)
       {
         if (doWidth)
         {
@@ -193,7 +193,6 @@ var webappClient_Effect = sys_Obj.extend(
         overflow      = "hidden";
       }
 
-      var map = new sys_Map();
       if (doWidth)
       {
         map.set("width", "0px");
@@ -204,8 +203,7 @@ var webappClient_Effect = sys_Obj.extend(
       map.set("paddingTop", "0px");
       map.set("paddingBottom", "0px");
 
-      var fx = this;
-      var f = function()
+      return function()
       {
         // reset style
         with (fx.dom.style)
@@ -221,9 +219,8 @@ var webappClient_Effect = sys_Obj.extend(
         }
         if (callback) callback(fx);
       }
-
-      this.animate(map, dur, f);
-    }
+    };
+    this.animate(new sys_Map(), dur, callback, init);
   },
 
 //////////////////////////////////////////////////////////////////////////
@@ -252,7 +249,9 @@ var webappClient_Effect = sys_Obj.extend(
 
   fan: null,   // Fan Elem wrappaer
   dom: null,   // actual DOM element
+  queue: [],   // animation queue
   old: {}      // stash to store old values
+
 
 });
 
