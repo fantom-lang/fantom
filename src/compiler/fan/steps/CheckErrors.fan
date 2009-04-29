@@ -1211,8 +1211,16 @@ class CheckErrors : CompilerStep
     // used with value type expressions
     if (expr.id != ExprId.coerce)
     {
-      if (target.isValue) err("Cannot use '$expr.opStr' operator on value type '$target'", expr.location)
+      if (target.isValue)
+      {
+        err("Cannot use '$expr.opStr' operator on value type '$target'", expr.location)
+        return
+      }
     }
+
+    // don't allow as with nullable
+    if (expr.id === ExprId.asExpr && check.isNullable)
+      err("Cannot use 'as' operator with nullable type '$check'", expr.location)
   }
 
   private Void checkTernary(TernaryExpr expr)
