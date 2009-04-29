@@ -33,8 +33,11 @@ class CreateZip : Task
       throw fatal("Cannot set outFile under inDir: $outPath under $inPath")
 
     // ensure prefixPath is formatted correctly
-    if (pathPrefix.isPathAbs) throw fatal("Prefix path must not be absolute: $pathPrefix")
-    if (!pathPrefix.isDir) throw fatal("Prefix path must be dir: $pathPrefix")
+    if (pathPrefix != null)
+    {
+      if (pathPrefix.isPathAbs) throw fatal("Prefix path must not be absolute: $pathPrefix")
+      if (!pathPrefix.isDir) throw fatal("Prefix path must be dir: $pathPrefix")
+    }
 
     // zip it!
     log.info("CreateZip [$outFile]")
@@ -44,7 +47,9 @@ class CreateZip : Task
       inDir.list.each |File f|
       {
         if (f.name == outFile.name) return
-        zip(out, f, (pathPrefix + f.name.toUri).toStr)
+        uri := f.name.toUri
+        if (pathPrefix != null) uri = pathPrefix + uri
+        zip(out, f, uri.toStr)
       }
     }
     catch (Err err)
@@ -92,6 +97,8 @@ class CreateZip : Task
   ** Specifies the top level directory inside the zip file
   ** prefixed to all the files.  For example use 'acme/' to
   ** put everything inside the zip file inside a "acme" directory.
+  ** The URI used must end with a slash.  If null, then no path
+  ** prefix is used.
   **
-  Uri pathPrefix := ``
+  Uri? pathPrefix := null
 }
