@@ -476,7 +476,8 @@ class Tokenizer : CompilerSupport
       tok := next
       if (tok.kind !== Token.identifier &&
           tok.kind !== Token.thisKeyword &&
-          tok.kind !== Token.superKeyword)
+          tok.kind !== Token.superKeyword &&
+          tok.kind !== Token.itKeyword)
         throw err("Expected identifier after \$")
       tokens.add(tok)
       while (true)
