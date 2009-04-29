@@ -599,5 +599,6 @@
 - Tweaks to flux
 - Loosen restrictions on it/this ambiguity errors
 - webappClient::Effect
+- Disallow nullable types in 'as' expression
 
 TODO: change over buildall to use pathPrefix

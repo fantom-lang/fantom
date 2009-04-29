@@ -985,6 +985,8 @@ class CheckErrorsTest : CompilerTest
         static Obj m28() { return \"x=\$v\" }
         static Obj m29() { return 5 + v }
         static Obj m30() { return 5 + 8ns }
+        static Obj? m31(Obj x) { return x as Foo? }
+        static Obj? m32(Obj x) { return x as Str[]? }
 
         static Void v() {}
 
@@ -1029,7 +1031,9 @@ class CheckErrorsTest : CompilerTest
        31, 33, "Invalid args plus(sys::Obj?), not (sys::Void)",
        32, 29, "Invalid args plus(sys::Int), not (sys::Void)",
        33, 29, "Invalid args plus(sys::Int), not (sys::Duration)",
-       ])
+       34, 35, "Cannot use 'as' operator with nullable type '$podName::Foo?'",
+       35, 35, "Cannot use 'as' operator with nullable type 'sys::Str[]?'",
+    ])
   }
 
   Void testNotAssignable()
