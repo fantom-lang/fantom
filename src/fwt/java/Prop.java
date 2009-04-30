@@ -9,6 +9,7 @@ package fan.fwt;
 
 import fan.sys.*;
 import fan.sys.List;
+import fan.gfx.Size;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -167,7 +168,7 @@ public abstract class Prop
 
     void syncFromControl() { val = get(); }
 
-    fan.fwt.Point get()
+    fan.gfx.Point get()
     {
       if (peer.control instanceof Control)
       {
@@ -177,7 +178,7 @@ public abstract class Prop
       return val;
     }
 
-    void set(fan.fwt.Point v)
+    void set(fan.gfx.Point v)
     {
       val = v;
       if (peer.control instanceof Control)
@@ -187,7 +188,7 @@ public abstract class Prop
       }
     }
 
-    fan.fwt.Point val = fan.fwt.Point.defVal;
+    fan.gfx.Point val = fan.gfx.Point.defVal;
   }
 
 //////////////////////////////////////////////////////////////////////////

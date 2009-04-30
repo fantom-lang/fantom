@@ -104,7 +104,7 @@ public class TablePeer
     c.clearAll();
   }
 
-  public Long rowAt(fan.fwt.Table self, fan.fwt.Point pos)
+  public Long rowAt(fan.fwt.Table self, fan.gfx.Point pos)
   {
     Table c = (Table)this.control;
     if (c == null) return null;
@@ -118,7 +118,7 @@ public class TablePeer
     return Long.valueOf(index);
   }
 
-  public Long colAt(fan.fwt.Table self, fan.fwt.Point fanPos)
+  public Long colAt(fan.fwt.Table self, fan.gfx.Point fanPos)
   {
     Table c = (Table)this.control;
     if (c == null) return null;

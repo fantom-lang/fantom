@@ -6,6 +6,8 @@
 //   10 Sep 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Monitor represents a display device like an LCD screen.
 **

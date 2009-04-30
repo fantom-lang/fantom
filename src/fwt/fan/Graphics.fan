@@ -6,6 +6,8 @@
 //   25 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Graphics is used to draw to the screen or to an offscreen image.
 **

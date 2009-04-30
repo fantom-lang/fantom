@@ -10,6 +10,7 @@ package fan.fwt;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import fan.sys.*;
+import fan.gfx.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;
@@ -104,8 +105,8 @@ public class WidgetPeer
   };
 
   // Size size
-  public fan.fwt.Point pos(fan.fwt.Widget self) { return pos.get(); }
-  public void pos(fan.fwt.Widget self, fan.fwt.Point v) { pos.set(v); onPosChange(); }
+  public fan.gfx.Point pos(fan.fwt.Widget self) { return pos.get(); }
+  public void pos(fan.fwt.Widget self, fan.gfx.Point v) { pos.set(v); onPosChange(); }
   public final Prop.PosProp pos = new Prop.PosProp(this);
 
   // Size size
@@ -129,7 +130,7 @@ public class WidgetPeer
     return size(s);
   }
 
-  public fan.fwt.Point posOnDisplay(fan.fwt.Widget self)
+  public fan.gfx.Point posOnDisplay(fan.fwt.Widget self)
   {
     if (!(control instanceof Control)) return null;
     Point pt = Env.get().display.map((Control)control, null, 0, 0);
@@ -477,37 +478,37 @@ public class WidgetPeer
     return null;
   }
 
-  static fan.fwt.Point point(int x, int y)
+  static fan.gfx.Point point(int x, int y)
   {
-    return fan.fwt.Point.make(x, y);
+    return fan.gfx.Point.make(x, y);
   }
 
-  static fan.fwt.Point point(Point pt)
+  static fan.gfx.Point point(Point pt)
   {
-    return fan.fwt.Point.make(pt.x, pt.y);
+    return fan.gfx.Point.make(pt.x, pt.y);
   }
 
-  static Point point(fan.fwt.Point pt)
+  static Point point(fan.gfx.Point pt)
   {
     return new Point((int)pt.x, (int)pt.y);
   }
 
-  static fan.fwt.Size size(int w, int h)
+  static fan.gfx.Size size(int w, int h)
   {
-    return fan.fwt.Size.make(w, h);
+    return fan.gfx.Size.make(w, h);
   }
 
-  static fan.fwt.Size size(Point pt)
+  static fan.gfx.Size size(Point pt)
   {
-    return fan.fwt.Size.make(pt.x, pt.y);
+    return fan.gfx.Size.make(pt.x, pt.y);
   }
 
-  static fan.fwt.Rect rect(Rectangle r)
+  static fan.gfx.Rect rect(Rectangle r)
   {
-    return fan.fwt.Rect.make(r.x, r.y, r.width, r.height);
+    return fan.gfx.Rect.make(r.x, r.y, r.width, r.height);
   }
 
-  static Rectangle rect(fan.fwt.Rect r)
+  static Rectangle rect(fan.gfx.Rect r)
   {
     return new Rectangle((int)r.x, (int)r.y, (int)r.w, (int)r.h);
   }

@@ -6,6 +6,8 @@
 //   10 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Button displays a push, toggle, check, or radio button with
 ** text and/or an image.  Buttons can also be used as the

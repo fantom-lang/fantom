@@ -6,6 +6,8 @@
 //   19 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** ContentPane is the base class for panes which only
 ** contain one child widget called 'content'.

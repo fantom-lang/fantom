@@ -6,6 +6,8 @@
 //   20 Jul 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Tree displays a hierarchy of tree nodes which can be
 ** expanded and collapsed.

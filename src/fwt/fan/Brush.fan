@@ -6,6 +6,8 @@
 //   16 Jul 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Brush defines how a shape is filled
 **   - `Color` is a solid brush

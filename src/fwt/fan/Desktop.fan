@@ -6,6 +6,8 @@
 //   1 Sep 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Desktop is used to model the user's operating system,
 ** window manager, and display monitors.  See `Monitor`

@@ -6,6 +6,8 @@
 //   19 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Table displays grid of rows and columns.
 **

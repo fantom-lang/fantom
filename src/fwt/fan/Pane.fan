@@ -6,6 +6,8 @@
 //   19 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Pane is a container widget responsible for the layout
 ** of its children.  Custom panes should:

@@ -6,6 +6,8 @@
 //   16 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Event models a user input event for callbacks.
 **

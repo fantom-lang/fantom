@@ -6,6 +6,8 @@
 //   15 Sep 08  Andy Frank  Creation
 //
 
+using gfx
+
 **
 ** BorderPane provides a callback to use for drawing a custom
 ** border around a content widget.  You must specifiy non-zero

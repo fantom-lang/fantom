@@ -239,13 +239,20 @@ abstract class BuildPod : BuildScript
     Delete.make(this, jtemp).run
     CreateDir.make(this, jtemp).run
 
+    // if there are no javaDirs we only only stubbing
+    stubOnly := javaDirs.isEmpty
+
     // stub the pods fan classes into Java classfiles
     // by calling the JStub tool in the jsys runtime
+    stubDir := stubOnly ? libJavaDir : jtemp
     Exec.make(this, [javaExe.osPath,
                      "-cp", "${libJavaDir}sys.jar",
                      "fanx.tools.Jstub",
-                     "-d", jtemp.osPath,
+                     "-d", stubDir.osPath,
                      podName]).run
+
+    // if there are no javaDirs we only only stubbing
+    if (stubOnly) return
 
     // compile
     javac := CompileJava.make(this)

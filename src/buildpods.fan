@@ -43,6 +43,7 @@ class Build : BuildGroup
       `doc/build.fan`,
       `sql/build.fan`,
       `email/build.fan`,
+      `gfx/build.fan`,
       `fwt/build.fan`,
       `icons/build.fan`,
       `flux/build.fan`,

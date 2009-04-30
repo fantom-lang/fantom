@@ -6,6 +6,7 @@
 //   22 Jul 08  Brian Frank  Creation2
 //
 
+using gfx
 using fwt
 
 **

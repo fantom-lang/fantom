@@ -6,6 +6,8 @@
 //   11 Jul 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** InsetPane creates padding along the four edges of its content.
 **

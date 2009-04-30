@@ -6,6 +6,8 @@
 //   19 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** EdgePane is a container which lays out four children along
 ** the four edges and one child in the center.  The top and

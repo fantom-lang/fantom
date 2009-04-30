@@ -148,7 +148,6 @@ desktop applications.  The following script will launch a simple
 window (this script is available under "examples/fwt/hello.fan"):
 
   using fwt
-
   class FwtHello : Test
   {
     Void main()
