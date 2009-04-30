@@ -7,26 +7,27 @@
 //
 
 **
-** Controller for a group of actors which manages their execution.
+** Controller for a group of actors which manages their
+** execution using pooled thread resources.
 **
 ** See [docLang::Actors]`docLang::Actors`
 **
-const class ActorGroup
+const class ActorPool
 {
 
   **
-  ** Return true if this group has been stopped or killed.  Once a
-  ** a group is stopped, new messages may not be delivered to any of its
-  ** actors.  A stopped group is not necessarily done until all its
+  ** Return true if this pool has been stopped or killed.  Once a
+  ** a pool is stopped, new messages may not be delivered to any of its
+  ** actors.  A stopped pool is not necessarily done until all its
   ** actors have finished processing.  Also see `isDone` and `join`.
   **
   Bool isStopped()
 
   **
-  ** Return true if this group has been stopped or killed and all
-  ** its actors have completed processing.  If this group was stopped
+  ** Return true if this pool has been stopped or killed and all
+  ** its actors have completed processing.  If this pool was stopped
   ** then true indicates that all pending messages in the queues before
-  ** the stop have been fully processed.  If this group was killed,
+  ** the stop have been fully processed.  If this pool was killed,
   ** then this method returns true once all actors have exited their
   ** thread.  See `join` to block until done.
   **
@@ -34,12 +35,12 @@ const class ActorGroup
 
   **
   ** Perform an orderly shutdown.  Once stopped, no new messages may
-  ** be sent to this group's actors.  However, any pending messages
+  ** be sent to this pool's actors.  However, any pending messages
   ** will be processed.  Note that scheduled messages are *not*
   ** guaranteed to be processed, only those delivered with 'Actor.send'.
   **
   ** Use `join` to wait for all actors to complete their message queue.
-  ** To perform an immediate shutdown use `kill`.  If the group has
+  ** To perform an immediate shutdown use `kill`.  If the pool has
   ** already been stopped, then do nothing.  Return this.
   **
   This stop()
@@ -48,13 +49,13 @@ const class ActorGroup
   ** Perform an unorderly shutdown.  Any pending messages which have
   ** not started processing are cancelled.  Actors which are currently
   ** processing a message will be interrupted.  See `stop` to perform
-  ** an orderly shutdown.  If the group as already been killed,
+  ** an orderly shutdown.  If the pool as already been killed,
   ** then do nothing.
   **
   This kill()
 
   **
-  ** Wait for this group's actors to fully terminate or the until the
+  ** Wait for this pool's actors to fully terminate or the until the
   ** given timeout occurs.  A null timeout blocks forever.  If this
   ** method times out, then TimeoutErr is thrown.  Return this.
   **

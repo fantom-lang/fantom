@@ -11,9 +11,10 @@ import fanx.util.ThreadPool;
 import fanx.util.Scheduler;
 
 /**
- * Controller for a group of actors which manages their execution.
+ * Controller for a group of actors which manages their execution
+ * using pooled thread resources.
  */
-public class ActorGroup
+public class ActorPool
   extends FanObj
 {
 
@@ -21,18 +22,18 @@ public class ActorGroup
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static ActorGroup make()
+  public static ActorPool make()
   {
-    ActorGroup self = new ActorGroup();
+    ActorPool self = new ActorPool();
     make$(self);
     return self;
   }
 
-  public static void make$(ActorGroup self)
+  public static void make$(ActorPool self)
   {
   }
 
-  public ActorGroup()
+  public ActorPool()
   {
     threadPool = new ThreadPool(100);
     scheduler = new Scheduler();
@@ -42,10 +43,10 @@ public class ActorGroup
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.ActorGroupType; }
+  public Type type() { return Sys.ActorPoolType; }
 
 //////////////////////////////////////////////////////////////////////////
-// ActorGroup
+// ActorPool
 //////////////////////////////////////////////////////////////////////////
 
   public final boolean isStopped()
@@ -58,14 +59,14 @@ public class ActorGroup
     return threadPool.isDone();
   }
 
-  public final ActorGroup stop()
+  public final ActorPool stop()
   {
     scheduler.stop();
     threadPool.stop();
     return this;
   }
 
-  public final ActorGroup kill()
+  public final ActorPool kill()
   {
     killed = true;
     scheduler.stop();
@@ -73,8 +74,8 @@ public class ActorGroup
     return this;
   }
 
-  public final ActorGroup join() { return join(null); }
-  public final ActorGroup join(Duration timeout)
+  public final ActorPool join() { return join(null); }
+  public final ActorPool join(Duration timeout)
   {
     long ms = timeout == null ? Long.MAX_VALUE : timeout.millis();
     try
@@ -85,7 +86,7 @@ public class ActorGroup
     {
       throw InterruptedErr.make(e).val;
     }
-    throw TimeoutErr.make("ActorGroup.join timed out").val;
+    throw TimeoutErr.make("ActorPool.join timed out").val;
   }
 
   public Object trap(String name, List args)

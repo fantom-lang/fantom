@@ -23,20 +23,20 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static Actor make(ActorGroup group) { return make(group, null); }
-    public static Actor make(ActorGroup group, Func receive)
+    public static Actor make(ActorPool pool) { return make(pool, null); }
+    public static Actor make(ActorPool pool, Func receive)
     {
       Actor self = new Actor();
-      make_(self, group, receive);
+      make_(self, pool, receive);
       return self;
     }
 
-    public static void make_(Actor self, ActorGroup group) { make_(self, group, null); }
-    public static void make_(Actor self, ActorGroup group, Func receive)
+    public static void make_(Actor self, ActorPool pool) { make_(self, pool, null); }
+    public static void make_(Actor self, ActorPool pool, Func receive)
     {
-      // check group
-      if (group == null)
-        throw NullErr.make("group is null").val;
+      // check pool
+      if (pool == null)
+        throw NullErr.make("pool is null").val;
 
       // check receive method
       if (receive == null && self.type() == Sys.ActorType)
@@ -45,21 +45,21 @@ namespace Fan.Sys
         throw NotImmutableErr.make("Receive func not immutable: " + receive).val;
 
       // init
-      self.m_group = group;
+      self.m_pool = pool;
       self.m_receive = receive;
       self.m_queue = new Queue();
     }
 
-    public static Actor makeCoalescing(ActorGroup group, Func k, Func c) { return makeCoalescing(group, k, c, null); }
-    public static Actor makeCoalescing(ActorGroup group, Func k, Func c, Func r)
+    public static Actor makeCoalescing(ActorPool pool, Func k, Func c) { return makeCoalescing(pool, k, c, null); }
+    public static Actor makeCoalescing(ActorPool pool, Func k, Func c, Func r)
     {
       Actor self = new Actor();
-      makeCoalescing_(self, group, k, c, r);
+      makeCoalescing_(self, pool, k, c, r);
       return self;
     }
 
-    public static void makeCoalescing_(Actor self, ActorGroup group, Func k, Func c) { makeCoalescing_(self, group, k, c, null); }
-    public static void makeCoalescing_(Actor self, ActorGroup group, Func k, Func c, Func r)
+    public static void makeCoalescing_(Actor self, ActorPool pool, Func k, Func c) { makeCoalescing_(self, pool, k, c, null); }
+    public static void makeCoalescing_(Actor self, ActorPool pool, Func k, Func c, Func r)
     {
       if (k != null && !k.isImmutable())
         throw NotImmutableErr.make("Coalescing toKey func not immutable: " + k).val;
@@ -67,7 +67,7 @@ namespace Fan.Sys
       if (c != null && !c.isImmutable())
         throw NotImmutableErr.make("Coalescing coalesce func not immutable: " + c).val;
 
-      make_(self, group, r);
+      make_(self, pool, r);
       self.m_queue = new CoalescingQueue(k, c);
     }
 
@@ -86,7 +86,7 @@ namespace Fan.Sys
   // Actor
   //////////////////////////////////////////////////////////////////////////
 
-    public ActorGroup group() { return m_group; }
+    public ActorPool pool() { return m_pool; }
 
     public Future send(object msg) { return _send(msg, null, null); }
 
@@ -135,15 +135,15 @@ namespace Fan.Sys
       // ensure immutable or safe copy
       msg = Namespace.safe(msg);
 
-      // don't deliver new messages to a stopped group
-      if (m_group.isStopped()) throw Err.make("ActorGroup is stopped").val;
+      // don't deliver new messages to a stopped pool
+      if (m_pool.isStopped()) throw Err.make("ActorPool is stopped").val;
 
       // get the future instance to manage this message's lifecycle
       Future f = new Future(msg);
 
-      // either enqueue immediately or schedule with group
+      // either enqueue immediately or schedule with pool
       if (dur != null)
-        m_group.schedule(this, dur, f);
+        m_pool.schedule(this, dur, f);
       else if (whenDone != null)
         whenDone.sendWhenDone(this, f);
       else
@@ -170,7 +170,7 @@ namespace Fan.Sys
         if (!m_submitted)
         {
           m_submitted = true;
-          m_group.submit(this);
+          m_pool.submit(this);
         }
 
         return f;
@@ -209,7 +209,7 @@ namespace Fan.Sys
         else
         {
           m_submitted = true;
-          m_group.submit(this);
+          m_pool.submit(this);
         }
       }
     }
@@ -219,7 +219,7 @@ namespace Fan.Sys
       try
       {
         if (future.isCancelled()) return;
-        if (m_group.m_killed) { future.cancel(); return; }
+        if (m_pool.m_killed) { future.cancel(); return; }
         future.set(receive(future.m_msg, m_context));
       }
       catch (Err.Val e)
@@ -359,7 +359,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     internal readonly Context m_context;     // mutable world state of actor
-    private ActorGroup m_group;              // group controller
+    private ActorPool m_pool;                // pool controller
     private Func m_receive;                  // func to invoke on receive or null
     private object m_lock = new object();    // lock for message queue
     private Queue m_queue;                   // message queue linked list

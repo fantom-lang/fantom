@@ -80,7 +80,7 @@ class WebSession
 ** WebSessionMgr is a pod internal class which is a background
 ** thread used to manage WebSession storage and cleanup.
 **
-internal const class WebSessionMgr : ActorGroup
+internal const class WebSessionMgr : ActorPool
 {
   const Actor actor := Actor(this, &receive)
 

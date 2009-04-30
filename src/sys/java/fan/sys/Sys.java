@@ -262,7 +262,7 @@ public final class Sys
 
   // actos
   public static final Type ActorType        = builtin("Actor",        ObjType);
-  public static final Type ActorGroupType   = builtin("ActorGroup",   ObjType);
+  public static final Type ActorPoolType    = builtin("ActorPool",   ObjType);
   public static final Type ContextType      = builtin("Context",      ObjType);
   public static final Type FutureType       = builtin("Future",       ObjType);
 

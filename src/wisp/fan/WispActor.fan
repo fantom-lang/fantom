@@ -20,7 +20,7 @@ internal const class WispActor : Actor
 //////////////////////////////////////////////////////////////////////////
 
   new make(WispService service, TcpSocket socket)
-    : super(service.processorGroup)
+    : super(service.processorPool)
   {
     this.service = service
     this.socket  = socket

@@ -226,7 +226,7 @@ namespace Fan.Sys
 
         // actos
         ActorType        = builtin("Actor",        ObjType);
-        ActorGroupType   = builtin("ActorGroup",   ObjType);
+        ActorPoolType    = builtin("ActorPool",    ObjType);
         ContextType      = builtin("Context",      ObjType);
         FutureType       = builtin("Future",       ObjType);
 
@@ -491,7 +491,7 @@ namespace Fan.Sys
 
     // actos
     public static readonly Type ActorType;
-    public static readonly Type ActorGroupType;
+    public static readonly Type ActorPoolType;
     public static readonly Type ContextType;
     public static readonly Type FutureType;
 

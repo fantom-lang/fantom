@@ -19,14 +19,14 @@ const class Actor
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Create an actor whose execution is controlled by the given ActorGroup.
+  ** Create an actor whose execution is controlled by the given ActorPool.
   ** If receive is non-null, then it is used to process messages sent to
   ** this actor.  If receive is specified then it must be an immutable
   ** function (it cannot capture state from the calling thread), otherwise
   ** NotImmutableErr is thrown.  If receive is null, then you must subclass
   ** Actor and override the `receive` method.
   **
-  new make(ActorGroup group, |Obj?,Context-> Obj?|? receive := null)
+  new make(ActorPool pool, |Obj?,Context-> Obj?|? receive := null)
 
   **
   ** Create an actor with a coalescing message loop.  This constructor
@@ -51,7 +51,7 @@ const class Actor
   ** an internal lock on the queue.  So the functions must be efficient
   ** and never attempt to interact with other actors.
   **
-  new makeCoalescing(ActorGroup group,
+  new makeCoalescing(ActorPool pool,
                      |Obj? msg->Obj?|? toKey,
                      |Obj? orig, Obj? incoming->Obj?|? coalesce,
                      |Obj?,Context->Obj?|? receive := null)
@@ -61,14 +61,14 @@ const class Actor
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** The group used to control execution of this actor.
+  ** The pool used to control execution of this actor.
   **
-  ActorGroup group()
+  ActorPool pool()
 
   **
   ** Asynchronously send a message to this actor for processing.
   ** If msg is not immutable or serializable, then IOErr is thrown.
-  ** Throw Err if this actor's group has been stopped.  Return
+  ** Throw Err if this actor's pool has been stopped.  Return
   ** a future which may be used to obtain the result once it the
   ** actor has processed the message.  If the message is coalesced
   ** then this method returns the original message's future reference.
@@ -82,7 +82,7 @@ const class Actor
   ** appended to the end of this actor's queue.  Accuracy of scheduling
   ** is dependent on thread coordination and pending messages in the queue.
   ** Scheduled messages are not guaranteed to be processed if the
-  ** actor's grouped is stopped.  Scheduled messages are never coalesced.
+  ** actor's pool is stopped.  Scheduled messages are never coalesced.
   ** Also see `send` and `sendWhenDone`.
   **
   Future sendLater(Duration d, Obj? msg)

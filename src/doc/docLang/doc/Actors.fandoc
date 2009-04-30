@@ -12,12 +12,12 @@ Fan includes an [actor framework]`http://en.wikipedia.org/wiki/Actor_model`
 for concurrency.  [Actors]`sys::Actor` are light weight objects which
 asynchronously process work on a background thread.  Actors are given
 work by sending them asynchronous message.  Actor's then process those
-messages on background threads controlled by an [ActorGroup]`#groups`.
+messages on background threads controlled by an [ActorPool]`#pools`.
 
 Actors [#actors]
 ****************
 The [Actor]`sys::Actor` class is used to define new actors.  All actors
-are constructed within an [ActorGroup]`#groups` which defines how the
+are constructed within an [ActorPool]`#pools` which defines how the
 actor is executed.
 
 Actors may define their receive behavior in one of two ways:
@@ -28,12 +28,12 @@ Here are two simple examples of an actor which receives an Int
 message and returns the increment:
 
   // pass receive to constructor as a closure function
-  a := Actor(group) |Int msg->Int| { msg + 1 }
+  a := Actor(pool) |Int msg->Int| { msg + 1 }
 
   // subclass and override receive
   const class IncrActor : Actor
   {
-    new make(ActorGroup g) : super(g) {}
+    new make(ActorPool p) : super(p) {}
     override Obj? receive(Obj? msg, Context cx) { msg->increment }
   }
 
@@ -57,8 +57,8 @@ of name/value pairs which is passed to your receive method.
 For example to build an actor which maintains a counter every time
 it receives a message:
 
-  group := ActorGroup()
-  a := Actor(group) |Obj msg, Context cx->Obj|
+  pool := ActorPool()
+  a := Actor(pool) |Obj msg, Context cx->Obj|
   {
     count := 1 + cx.get("count", 0)
     cx["count"] = count
@@ -123,8 +123,8 @@ The [sendLater]`sys::Actor.sendLater` method can be used to setup
 a timer.  Timers post a message back to the actor's queue when they
 expire.  Example:
 
-  group := ActorGroup()
-  a := Actor(group) |Obj msg| { echo("$Time.now: $msg") }
+  pool := ActorPool()
+  a := Actor(pool) |Obj msg| { echo("$Time.now: $msg") }
   a.send("start")
   a.sendLater(1sec, "1sec")
   a.sendLater(3sec, "3sec")
@@ -207,40 +207,40 @@ enqueue themselves with the reader when they are ready to process a line.
 This would create a natural feedback loop and allow the reader to throttle
 its IO based on how fast the processors could work.
 
-Actor Groups [#groups]
+Actor Pools [#pools]
 **********************
-All actor's are created within an [ActorGroup]`sys::ActorGroup`.
-ActorGroups manage the execution of actors with a thread pool.
+All actor's are created within an [ActorPool]`sys::ActorPool`.
+ActorPools manage the execution of actors using a shared thread pool.
 
 As messages are sent to actors, they are allocated a thread to perform
-their work.  In the current implementation, an ActorGroup will
+their work.  In the current implementation, an ActorPool will
 create up to 100 threads, after which actor's must wait for a thread
 to free up.  Once a thread frees up, then it is used to process the
 next actor.  If no actor's have pending work, then the thread lingers
 for a few seconds before being released back to the operating system.  In
-this model an ActorGroup utilizes between zero and a peak of 100 threads
+this model an ActorPool utilizes between zero and a peak of 100 threads
 depending on how many actor's currently have work.
 
-An ActorGroup is immediately considered *running* as soon as it is
+An ActorPool is immediately considered *running* as soon as it is
 constructed.  However, it doesn't actually spawn its first thread
-until one of its actors is sent a message.  If all of a group's
+until one of its actors is sent a message.  If all of a pool's
 actors finish processing their messages, then after a linger period
-all of that group's threads be freed.
+all of that pool's threads be freed.
 
-An ActorGroup can be manually shutdown using the [stop]`sys::ActorGroup.stop`
-method.  Once 'stop' is called, the group enters the *stopped* state and
-actors within the group may not receive any more messages.  However all
+An ActorPool can be manually shutdown using the [stop]`sys::ActorPool.stop`
+method.  Once 'stop' is called, the pool enters the *stopped* state and
+actors within the pool may not receive any more messages.  However all
 pending messages are allowed to continue processing.  Once all pending
-messages have been processed, the group enters the *done* state.  Use the
-[join]`sys::ActorGroup.join` method to block until an ActorGroup has
+messages have been processed, the pool enters the *done* state.  Use the
+[join]`sys::ActorPool.join` method to block until an ActorPool has
 fully shutdown.
 
-The [kill]`sys::ActorGroup.kill` method can be used to perform an unorderly
+The [kill]`sys::ActorPool.kill` method can be used to perform an unorderly
 shutdown.  Unlike 'stop', kill doesn't give actors a chance to finish
 processing their pending message queues - all pending messages are cancelled.
 Actors which are currently  executing a message are interrupted (which may
 or may not immediately terminate that thread).  Once all actors have
-relinquished their threads, the ActorGroup enters the *done* state.
+relinquished their threads, the ActorPool enters the *done* state.
 
 Actor Locals [#locals]
 ***********************
