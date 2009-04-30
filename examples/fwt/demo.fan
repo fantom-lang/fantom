@@ -181,7 +181,7 @@ class FwtDemo
       Label { text = "Text Only" },
       Label { image = stopIcon },
       Label { text = "Both"; image = folderIcon },
-      Label { text = "Monospace"; font = Font.sysMonospace },
+      Label { text = "Monospace"; font = Desktop.sysFontMonospace },
       Label { text = "Colors"; image = folderIcon; fg = Color.red; bg = Color.yellow },
       Label { text = "Left"; halign = Halign.left },
       Label { text = "Center"; halign = Halign.center },
@@ -217,7 +217,7 @@ class FwtDemo
       numCols = 3
       hgap = 20
       Button { text = "B1"; image = stopIcon; onAction.add(&cb) },
-      Button { text = "Monospace"; font = Font.sysMonospace; onAction.add(&cb) },
+      Button { text = "Monospace"; font = Desktop.sysFontMonospace; onAction.add(&cb) },
       Button { mode = ButtonMode.toggle; text = "Button 3"; onAction.add(&cb) },
       Button { mode = ButtonMode.check; text = "B4"; onAction.add(&cb) },
       Button { mode = ButtonMode.radio; text = "Button 5"; onAction.add(&cb) },
@@ -237,7 +237,7 @@ class FwtDemo
     area := Text
     {
       multiLine = true
-      font = Font.sysMonospace
+      font = Desktop.sysFontMonospace
       text ="Press button above to serialize this entire demo here"
     }
 
@@ -256,7 +256,7 @@ class FwtDemo
         Text { onAction.add(ecb); onModify.add(ccb) },
 
         Label { text="Monospace";  },
-        Text { font = Font.sysMonospace; onAction.add(ecb); onModify.add(ccb)  },
+        Text { font = Desktop.sysFontMonospace; onAction.add(ecb); onModify.add(ccb)  },
 
         Label { text="Password" },
         Text { password = true; onAction.add(ecb); onModify.add(ccb) },
@@ -434,7 +434,7 @@ class FwtDemo
     area := Text
     {
       multiLine = true
-      font = Font.sysMonospace
+      font = Desktop.sysFontMonospace
       text =
         "fwt::EdgePane\n" +
         "{\n" +
@@ -601,7 +601,7 @@ class DirTableModel : TableModel
   override Int numRows() { return dir.size }
   override Str header(Int col) { return headers[col] }
   override Halign halign(Int col) { return col == 1 ? Halign.right : Halign.left }
-  override Font? font(Int col, Int row) { return col == 2 ? Font {name=Font.sys.name; size=Font.sys.size-1} : null }
+  override Font? font(Int col, Int row) { return col == 2 ? Font {name=Desktop.sysFont.name; size=Desktop.sysFont.size-1} : null }
   override Color? fg(Int col, Int row)  { return col == 2 ? Color("#666") : null }
   override Color? bg(Int col, Int row)  { return col == 2 ? Color("#eee") : null }
   override Str text(Int col, Int row)
@@ -739,7 +739,7 @@ class GraphicsDemo : Widget
     g.brush = Color.blue; g.drawArc(120, 120, 120, 90, 45, 90)
 
     g.brush = Color.purple; g.drawText("Hello World!", 70, 50)
-    g.font = Font.sysMonospace.toSize(16).toBold; g.drawText("Hello World!", 70, 70)
+    g.font = Desktop.sysFontMonospace.toSize(16).toBold; g.drawText("Hello World!", 70, 70)
 
     img := demo.folderIcon
     g.drawImage(img, 220, 20)
@@ -755,9 +755,9 @@ class GraphicsDemo : Widget
 
     // system font/colors
     y := 20
-    g.font = Font.sys
+    g.font = Desktop.sysFont
     g.brush = Color.black
-    g.drawText(Font.sys.toStr, 480, y)
+    g.drawText("sysFont: $Desktop.sysFont.toStr", 480, y)
     y += 20
     g.font = Font("9pt Arial")
     y = sysColor(g, y, Desktop.sysDarkShadow, "sysDarkShadow")

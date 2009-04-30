@@ -442,7 +442,7 @@ internal class EditList : Widget
 
   private Str[] items
   private Bool[] keep
-  private Font font    := Font.sys
+  private Font font    := Desktop.sysFont
   private Image folder := Flux.icon(`/x16/folder.png`)
   private Image delete := Flux.icon(`/x16/circleDelete.png`)
   private Image up     := Flux.icon(`/x16/circleArrowUp.png`)

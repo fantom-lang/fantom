@@ -12,6 +12,8 @@ import fan.sys.List;
 import fan.gfx.Rect;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
@@ -94,6 +96,38 @@ public class DesktopPeer
   {
     Env.get().dispose(f);
   }
+
+  public static void dispose(fan.gfx.Font f)
+  {
+    Env.get().dispose(f);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// System Fonts
+//////////////////////////////////////////////////////////////////////////
+
+  public static fan.gfx.Font sysFont()
+  {
+    if (sysFont == null)
+    {
+      FontData data = Env.get().display.getSystemFont().getFontData()[0];
+      sysFont = fan.gfx.Font.makeFields(data.getName(), data.getHeight());
+    }
+    return sysFont;
+  }
+  private static fan.gfx.Font sysFont;
+
+  public static fan.gfx.Font sysFontMonospace()
+  {
+    if (sysFontMonospace == null)
+    {
+      String name = "Courier New"; int size = 9;
+      if (Env.isMac()) { name = "Monaco"; size = 12; }
+      sysFontMonospace = fan.gfx.Font.makeFields(name, size);
+    }
+    return sysFontMonospace;
+  }
+  private static fan.gfx.Font sysFontMonospace;
 
 //////////////////////////////////////////////////////////////////////////
 // System Colors

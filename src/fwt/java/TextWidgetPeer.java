@@ -41,8 +41,8 @@ public abstract class TextWidgetPeer extends WidgetPeer
   abstract Prop.IntProp caretOffset();
 
   // Font font := null
-  public fan.fwt.Font font(TextWidget self) { return font().get(); }
-  public void font(TextWidget self, fan.fwt.Font v) { font().set(v); }
+  public fan.gfx.Font font(TextWidget self) { return font().get(); }
+  public void font(TextWidget self, fan.gfx.Font v) { font().set(v); }
   abstract Prop.FontProp font();
 
 //////////////////////////////////////////////////////////////////////////

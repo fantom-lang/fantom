@@ -370,9 +370,9 @@ public abstract class Prop
 
     void syncFromControl() {}
 
-    fan.fwt.Font get() { return val; }
+    fan.gfx.Font get() { return val; }
 
-    void set(fan.fwt.Font v)
+    void set(fan.gfx.Font v)
     {
       val = v;
       Widget w = peer.control;
@@ -382,7 +382,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, Font v);
 
-    fan.fwt.Font val;
+    fan.gfx.Font val;
   }
 
 //////////////////////////////////////////////////////////////////////////

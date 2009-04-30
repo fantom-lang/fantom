@@ -25,7 +25,7 @@ internal class ImageView : View
         GridPane
         {
           numCols = 2
-          Label { text="Size"; font=Font.sys.toBold },
+          Label { text="Size"; font=Desktop.sysFont.toBold },
           Label { text="${this.image.size.w}px x ${this.image.size.h}px" },
         },
       }

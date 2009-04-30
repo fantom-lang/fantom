@@ -137,7 +137,7 @@ abstract class TextWidget : Widget
     inset := 10
     scroll := 20
     superPref := super.prefSize(hints)
-    font = this.font ?: Font.sys
+    font = this.font ?: Desktop.sysFont
     if (multiLine)
       return Size(inset + font.width("m")*prefCols + scroll,
                   inset + font.height*prefRows + scroll)

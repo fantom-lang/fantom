@@ -20,7 +20,7 @@ internal class StartView : View
     model := StartRecentTableModel()
     content = EdgePane
     {
-      top = InsetPane(4) { Label { text = "Recently Viewed"; font = Font.sys.toBold }, }
+      top = InsetPane(4) { Label { text = "Recently Viewed"; font = Desktop.sysFont.toBold }, }
       center = Table
       {
         it.model = model

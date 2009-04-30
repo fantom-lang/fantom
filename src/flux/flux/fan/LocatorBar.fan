@@ -46,7 +46,7 @@ internal class LocatorBar : Widget
 
   Void onViewPopup(Event event)
   {
-    vw := Font.sys.width(view) + viewInsets.left + viewInsets.right
+    vw := Desktop.sysFont.width(view) + viewInsets.left + viewInsets.right
     vx := size.w - vw
     if (event.pos.x > vx && event.pos.x < vx+vw)
     {
@@ -75,9 +75,9 @@ internal class LocatorBar : Widget
 
   override Void onPaint(Graphics g)
   {
-    vw := Font.sys.width(view) + viewInsets.left + viewInsets.right
+    vw := Desktop.sysFont.width(view) + viewInsets.left + viewInsets.right
     vx := size.w - vw
-    vy := (size.h - Font.sys.height) / 2
+    vy := (size.h - Desktop.sysFont.height) / 2
 
     g.brush = Desktop.sysListBg
     g.fillRect(0, 0, size.w, size.h)

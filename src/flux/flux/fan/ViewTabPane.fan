@@ -251,6 +251,6 @@ internal class TabBar : Widget
 
   const Int iconGap       := 3
   const Insets tabInsets  := Insets(5,5,5,5)
-  const Font fontActive   := Font.sys.toBold
-  const Font fontInactive := Font.sys
+  const Font fontActive   := Desktop.sysFont.toBold
+  const Font fontInactive := Desktop.sysFont
 }
