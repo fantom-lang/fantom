@@ -85,8 +85,8 @@ public class ButtonPeer
   };
 
   // Font font := null
-  public fan.fwt.Font font(fan.fwt.Button self) { return font.get(); }
-  public void font(fan.fwt.Button self, fan.fwt.Font v) { font.set(v); }
+  public fan.gfx.Font font(fan.fwt.Button self) { return font.get(); }
+  public void font(fan.fwt.Button self, fan.gfx.Font v) { font.set(v); }
   public final Prop.FontProp font = new Prop.FontProp(this)
   {
     public void set(Widget w, Font v) { if (w instanceof Button) ((Button)w).setFont(v); }

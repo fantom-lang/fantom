@@ -6,6 +6,8 @@
 //   19 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Combo is a combination of a text field and a list drop down.
 **

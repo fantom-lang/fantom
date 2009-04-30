@@ -54,6 +54,7 @@ public class Env
     protected Object initialValue()
     {
       Env env = new Env();
+      Actor.locals().add("gfx.env", FwtEnv.make());
       if (mainEnv == null) mainEnv = env;
       return env;
     }
@@ -142,7 +143,7 @@ public class Env
   /**
    * Map a Fan Font to an SWT Font.
    */
-  public Font font(fan.fwt.Font f)
+  public Font font(fan.gfx.Font f)
   {
     if (f == null) return null;
     Font x = (Font)fonts.get(f);
@@ -160,7 +161,7 @@ public class Env
   /**
    * Dispose the SWT font for the Fan Font.
    */
-  public void dispose(fan.fwt.Font f)
+  public void dispose(fan.gfx.Font f)
   {
     if (f == null) return;
     Font x = (Font)fonts.get(f);

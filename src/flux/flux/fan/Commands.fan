@@ -427,7 +427,7 @@ internal class ExitCommand : FluxCommand
     dirty := frame.views.findAll |View v->Bool| { return v.dirty }
     if (dirty.size > 0)
     {
-      grid := GridPane { Label { text=this.type.pod.loc("saveChanges"); font=Font.sys.toBold },}
+      grid := GridPane { Label { text=this.type.pod.loc("saveChanges"); font=Desktop.sysFont.toBold },}
       dirty.each |View v|
       {
         grid.add(InsetPane(0,0,0,8) {
@@ -735,7 +735,7 @@ internal class RecentTableModel : TableModel
   HistoryItem[] items
   Image[] icons
   Image def := Flux.icon(`/x16/file.png`)
-  Font accFont := Font.sys.toSize(Font.sys.size-1)
+  Font accFont := Desktop.sysFont.toSize(Desktop.sysFont.size-1)
   Color accColor := Color("#666")
 }
 
@@ -799,8 +799,8 @@ internal class AboutCommand : FluxCommand
   override Void invoke(Event? event)
   {
     icon  := Pod.find("icons").files[`/x48/flux.png`]
-    big   := Font { it.name=Font.sys.name; it.size=Font.sys.size+(Desktop.isMac ? 2 : 3); it.bold=true }
-    small := Font { it.name=Font.sys.name; it.size=Font.sys.size-(Desktop.isMac ? 3 : 1) }
+    big   := Font { it.name=Desktop.sysFont.name; it.size=Desktop.sysFont.size+(Desktop.isMac ? 2 : 3); it.bold=true }
+    small := Font { it.name=Desktop.sysFont.name; it.size=Desktop.sysFont.size-(Desktop.isMac ? 3 : 1) }
     content := GridPane
     {
       halignCells = Halign.center

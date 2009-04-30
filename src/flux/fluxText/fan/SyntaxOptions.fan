@@ -43,7 +43,7 @@ const class SyntaxOptions
 // Styling
 //////////////////////////////////////////////////////////////////////////
 
-  const Font font                   := Font.sysMonospace
+  const Font font                   := Desktop.sysFontMonospace
   const Color highlightCurLine      := Color(0xf0_f0_f0)
   const RichTextStyle text          := RichTextStyle { fg = Color(0x00_00_00) }
   const RichTextStyle bracket       := RichTextStyle { fg = Color(0xff_00_00) }

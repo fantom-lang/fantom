@@ -83,8 +83,8 @@ public class LabelPeer extends WidgetPeer
   };
 
   // Font font := null
-  public fan.fwt.Font font(fan.fwt.Label self) { return font.get(); }
-  public void font(fan.fwt.Label self, fan.fwt.Font v) { font.set(v); }
+  public fan.gfx.Font font(fan.fwt.Label self) { return font.get(); }
+  public void font(fan.fwt.Label self, fan.gfx.Font v) { font.set(v); }
   public final Prop.FontProp font = new Prop.FontProp(this)
   {
     public void set(Widget w, Font v) { ((CLabel)w).setFont(v); }

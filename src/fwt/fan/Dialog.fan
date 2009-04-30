@@ -221,7 +221,7 @@ class Dialog : Window
       {
         numCols = 2
         expandCol = 1
-        halignCells=Halign.fill
+        halignCells = Halign.fill
         Label { it.image = this.image },
         body,
       }
@@ -233,11 +233,11 @@ class Dialog : Window
       if (details is Err) details = ((Err)details).traceToStr
       if (details is Str) details = Text
       {
-        multiLine=true
-        editable=false
-        prefRows=20
-        font=Font.sysMonospace
-        text=details.toStr
+        multiLine  =true
+        editable = false
+        prefRows = 20
+        font = Desktop.sysFontMonospace
+        text = details.toStr
       }
       if (details isnot Widget) throw ArgErr("details not Err, Str, or Widget: " + details.type)
       commands = commands.dup.add(DialogCommand(DialogCommandId.details, details))

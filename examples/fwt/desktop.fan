@@ -29,7 +29,7 @@ class DesktopDemo : Widget
   {
     w := size.w
     h := size.h
-    f := Font { it.name=Font.sys.name; it.size=14 }
+    f := Font { it.name=Desktop.sysFont.name; it.size=14 }
 
     // paint background white
     g.font = f

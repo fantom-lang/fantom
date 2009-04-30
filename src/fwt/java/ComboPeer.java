@@ -71,8 +71,8 @@ public class ComboPeer
   };
 
   // Font font := null
-  public fan.fwt.Font font(fan.fwt.Combo self) { return font.get(); }
-  public void font(fan.fwt.Combo self, fan.fwt.Font v) { font.set(v); }
+  public fan.gfx.Font font(fan.fwt.Combo self) { return font.get(); }
+  public void font(fan.fwt.Combo self, fan.gfx.Font v) { font.set(v); }
   public final Prop.FontProp font = new Prop.FontProp(this)
   {
     public void set(Widget w, Font v) { ((Combo)w).setFont(v); }

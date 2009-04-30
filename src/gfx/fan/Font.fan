@@ -30,7 +30,7 @@ const class Font
   ** bold/italic style.  This is internal for now, because eventually
   ** we should be able to collapse this and it-block into single ctor.
   **
-  internal new makeFields(Str name, Int size := 12, Bool bold := false, Bool italic := false)
+  @nodoc new makeFields(Str name, Int size := 12, Bool bold := false, Bool italic := false)
   {
     this.name = name
     this.size   = size
@@ -76,20 +76,6 @@ const class Font
   }
 
 //////////////////////////////////////////////////////////////////////////
-// System Fonts
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Get the default system font.
-  **
-  static native Font sys()
-
-  **
-  ** Get the default system mono-spaced font.
-  **
-  static native Font sysMonospace()
-
-//////////////////////////////////////////////////////////////////////////
 // Font
 //////////////////////////////////////////////////////////////////////////
 
@@ -112,11 +98,6 @@ const class Font
   ** Is this font in italic.
   **
   const Bool italic
-
-  **
-  ** Free any operating system resources used by this instance.
-  **
-  native Void dispose()
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
@@ -213,37 +194,37 @@ const class Font
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get height of this font on default display device.  The height
+  ** Get height of this font for `GfxEnv.current`.  The height
   ** is the pixels is the sum of ascent, descent, and leading.
   **
-  native Int height()
+  Int height() { GfxEnv.current.fontHeight(this) }
 
   **
-  ** Get ascent of this font on default display device.  The ascent
+  ** Get ascent of this font on `GfxEnv.current`.  The ascent
   ** is the distance in pixels from baseline to top of chars, not
   ** including any leading area.
   **
-  native Int ascent()
+  Int ascent() { GfxEnv.current.fontAscent(this) }
 
   **
-  ** Get descent of this font on default display device.  The descent
+  ** Get descent of this font on `GfxEnv.current`.  The descent
   ** is the distance in pixels from baseline to bottom of chars, not
   ** including any leading area.
   **
-  native Int descent()
+  Int descent() { GfxEnv.current.fontDescent(this) }
 
   **
-  ** Get leading of this font on default display device.  The leading
+  ** Get leading of this font on `GfxEnv.current`.  The leading
   ** area is the distance in pixels above the ascent which may include
   ** accents and other marks.
   **
-  native Int leading()
+  Int leading() { GfxEnv.current.fontLeading(this) }
 
   **
   ** Get the width of the string in pixels when painted
-  ** with this font on the default display device.
+  ** with this font on `GfxEnv.current`.
   **
-  native Int width(Str s)
+  Int width(Str s) { GfxEnv.current.fontWidth(this, s) }
 
 
 }

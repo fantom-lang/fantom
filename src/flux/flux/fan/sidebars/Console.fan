@@ -32,7 +32,7 @@ class Console : SideBar
       it.model = this.model
       it.editable = false
       it.border = false
-      it.font = Font.sysMonospace
+      it.font = Desktop.sysFontMonospace
       it.onMouseUp.add(&onRichTextMouseDown)
     }
     content = EdgePane
