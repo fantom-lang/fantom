@@ -71,7 +71,7 @@ internal class Parser
     try
     {
       if (options.convertTabsToSpaces)
-        text = text.replace("\t", Str.spaces(options.tabSpacing))
+        text = convertTabsToSpaces(text, options.tabSpacing)
 
       init(text)
 
@@ -99,6 +99,20 @@ internal class Parser
       e.trace
       return Line { it.text = text; it.styling = [0, syntax.text] }
     }
+  }
+
+  internal static Str convertTabsToSpaces(Str text, Int ts)
+  {
+    if (!text.contains("\t")) return text
+    s := StrBuf()
+    text.each |Int ch, Int i|
+    {
+      if (ch == '\t')
+        s.add(Str.spaces(ts - (s.size%ts)))
+      else
+        s.addChar(ch)
+    }
+    return s.toStr
   }
 
   private Void parseStyling(Obj[] styling)

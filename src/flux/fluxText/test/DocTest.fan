@@ -158,14 +158,34 @@ class DocTest : Test
    }
 
    doc := makeDoc("x\ty\t\tz\n\tabc", options)
-   verifyEq(doc.line(0), "x  y    z")
+                        //__|_|_|_|
+   verifyEq(doc.line(0), "x y   z")
    verifyEq(doc.line(1), "  abc")
 
    doc.modify(0, 0, "\t")
-   verifyEq(doc.line(0), "  x  y    z")
+   verifyEq(doc.line(0), "  x y   z")
 
    doc.modify(doc.offsetAtLine(1)+3, 0, "\t\t")
-   verifyEq(doc.line(1), "  a    bc")
+                        //__|_|_|_|
+   verifyEq(doc.line(1), "  a   bc")
+
+ }
+
+ Void testTabsConvertToSpaces()
+ {
+   verifySame(Parser.convertTabsToSpaces("a b c d", 2), "a b c d")
+   verifyEq(Parser.convertTabsToSpaces("\t{}", 2),     "  {}")
+   verifyEq(Parser.convertTabsToSpaces(" \t{}", 2),    "  {}")
+   verifyEq(Parser.convertTabsToSpaces("\t\t{}", 2),   "    {}")
+   verifyEq(Parser.convertTabsToSpaces("\t{}", 4),     "    {}")
+   verifyEq(Parser.convertTabsToSpaces(" \t{}", 4),    "    {}")
+   verifyEq(Parser.convertTabsToSpaces("  \t{}", 4),   "    {}")
+   verifyEq(Parser.convertTabsToSpaces("   \t{}", 4),  "    {}")
+   verifyEq(Parser.convertTabsToSpaces("    \t{}", 4), "        {}")
+   verifyEq(Parser.convertTabsToSpaces("\t\t{}", 4),   "        {}")
+   verifyEq(Parser.convertTabsToSpaces("\t \t{}", 4),  "        {}")
+   verifyEq(Parser.convertTabsToSpaces("\t  \t{}", 4), "        {}")
+   verifyEq(Parser.convertTabsToSpaces("\t   \t{}", 4),"        {}")
  }
 
 //////////////////////////////////////////////////////////////////////////
