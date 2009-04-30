@@ -1532,8 +1532,11 @@ class CheckErrors : CompilerStep
   {
     // check if both are function types
     if (!actualType.isFunc || !expectedType.isFunc) return false
-    actual   := (FuncType)actualType.toNonNullable
-    expected := (FuncType)expectedType.toNonNullable
+    actual   := actualType.toNonNullable as FuncType
+    expected := expectedType.toNonNullable as FuncType
+
+    // auto-cast to or from unparameterized 'sys::Func'
+    if (actual == null || expected == null) return true
 
     // if actual function requires more parameters than
     // we are expecting, then this cannot be a match
