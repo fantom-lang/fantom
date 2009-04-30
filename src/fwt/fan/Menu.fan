@@ -6,6 +6,8 @@
 //   16 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Menu contains MenuItems.  Menu is also itself a MenuItem
 ** when nested inside other Menus.

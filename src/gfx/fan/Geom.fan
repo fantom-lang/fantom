@@ -292,7 +292,8 @@ const class Insets
 **************************************************************************
 
 **
-** Hints are used to pass contraints into Widget.prefSize.
+** Hints are model heights/weight contraints.  Hint differs from Size
+** in that 'w' or 'h' can be null.
 **
 const class Hints
 {

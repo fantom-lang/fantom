@@ -8,6 +8,7 @@
 package fan.fwt;
 
 import fan.sys.*;
+import fan.gfx.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;

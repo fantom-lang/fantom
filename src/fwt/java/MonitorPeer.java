@@ -9,6 +9,7 @@ package fan.fwt;
 
 import fan.sys.*;
 import fan.sys.List;
+import fan.gfx.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Monitor;

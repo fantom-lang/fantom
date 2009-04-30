@@ -6,6 +6,8 @@
 //   27 Jul 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** TextWidget is the base class for `Text` and `RichText`.
 **

@@ -10,6 +10,7 @@ package fan.fwt;
 import java.util.Stack;
 import fan.sys.FanObj;
 import fan.sys.ArgErr;
+import fan.gfx.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Pattern;

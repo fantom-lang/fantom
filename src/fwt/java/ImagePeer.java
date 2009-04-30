@@ -8,6 +8,7 @@
 package fan.fwt;
 
 import fan.sys.*;
+import fan.gfx.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -33,7 +34,7 @@ public class ImagePeer
     return Size.make(r.width, r.height);
   }
 
-  public fan.fwt.Image resize(fan.fwt.Image f, fan.fwt.Size size)
+  public fan.fwt.Image resize(fan.fwt.Image f, fan.gfx.Size size)
   {
     int rw = (int)size.w;
     int rh = (int)size.h;

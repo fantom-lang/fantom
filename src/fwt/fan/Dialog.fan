@@ -6,6 +6,8 @@
 //   9 Sep 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Dialog is a transient window, typically used to notify or
 ** input information from the user.  Dialog also contains

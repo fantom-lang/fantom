@@ -82,7 +82,7 @@ public class MenuPeer
 // Lifecycle
 //////////////////////////////////////////////////////////////////////////
 
-  public fan.fwt.Menu open(fan.fwt.Menu self, fan.fwt.Widget parent, fan.fwt.Point pos)
+  public fan.fwt.Menu open(fan.fwt.Menu self, fan.fwt.Widget parent, fan.gfx.Point pos)
   {
     if (control != null)
       throw new IllegalStateException("Menu is already mounted");

@@ -6,6 +6,8 @@
 //   19 Sep 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** ConstraintPane is used to constrain the preferred width
 ** and height of its content widget.

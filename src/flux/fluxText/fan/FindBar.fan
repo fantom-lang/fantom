@@ -6,6 +6,7 @@
 //   16 Sep 08  Andy Frank  Creation
 //
 
+using gfx
 using fwt
 using flux
 

@@ -20,7 +20,7 @@ class Build : BuildPod
     podName     = "fwt"
     version     = globalVersion
     description = "Fan Widget Toolkit"
-    depends     = ["sys 1.0"]
+    depends     = ["sys 1.0", "gfx 1.0"]
     srcDirs     = [`fan/`, `test/`]
     javaDirs    = [`java/`]
     //dotnetDirs  = [`dotnet/`]

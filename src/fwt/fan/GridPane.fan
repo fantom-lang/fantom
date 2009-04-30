@@ -6,6 +6,8 @@
 //   16 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** GridPane is a container which lays out its children in a grid
 ** from left to right with a new row started based on 'numCols'.

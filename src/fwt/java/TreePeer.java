@@ -177,7 +177,7 @@ public class TreePeer
     item.clearAll(true);
   }
 
-  public Object nodeAt(fan.fwt.Tree self, fan.fwt.Point pos)
+  public Object nodeAt(fan.fwt.Tree self, fan.gfx.Point pos)
   {
     Tree c = (Tree)this.control;
     if (c == null) return null;

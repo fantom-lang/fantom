@@ -1,28 +1,28 @@
 #! /usr/bin/env fan
 //
-// Copyright (c) 2008, Brian Frank and Andy Frank
+// Copyright (c) 2009, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   23 Jul 08  Brian Frank  Creation
+//   30 Apr 09  Brian Frank  Creation
 //
 
 using build
 
 **
-** Build: fluxText
+** Build: gfx
 **
 class Build : BuildPod
 {
 
   override Void setup()
   {
-    podName     = "fluxText"
+    podName     = "gfx"
     version     = globalVersion
-    description = "Flux: Text Editor"
-    depends     = ["sys 1.0", "gfx 1.0", "fwt 1.0", "flux 1.0"]
+    description = "Graphics API"
+    depends     = ["sys 1.0"]
     srcDirs     = [`fan/`, `test/`]
-    resDirs     = [`locale/`]
+    javaDirs    = [,]
     includeSrc  = true
   }
 
