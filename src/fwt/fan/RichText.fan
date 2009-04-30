@@ -302,7 +302,10 @@ abstract class RichTextModel
   **
   ** Return the styled segments for the given zero based line index.
   ** The result is a list of Int/RichTextStyle pairs where the Int
-  ** specifies a zero based char offset of the line.
+  ** specifies a zero based char offset of the line using a pattern
+  ** such as:
+  **
+  **   [Int, RichTextStyle, Int, RichTextStyle, ...]
   **
   virtual Obj[]? lineStyling(Int lineIndex) { return null }
 
