@@ -6,8 +6,6 @@
 //   16 Jul 08  Brian Frank  Creation
 //
 
-using gfx
-
 **
 ** Brush defines how a shape is filled
 **   - `Color` is a solid brush
@@ -32,10 +30,10 @@ const class Gradient : Brush
   // probably expose something like GradientStop[]; but SWT doesn't
   // provide too much support
 
-  internal const Point p1
-  internal const Point p2
-  internal const Color c1
-  internal const Color c2
+  @nodoc const Point p1
+  @nodoc const Point p2
+  @nodoc const Color c1
+  @nodoc const Color c2
   private new make(Point p1, Color c1, Point p2, Color c2)
   {
     this.p1 = p1; this.c1 = c1

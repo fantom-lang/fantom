@@ -279,9 +279,9 @@ internal class ToolBarBorder : Widget
   override Size prefSize(Hints hints := Hints.defVal) { return Size(100,2) }
   override Void onPaint(Graphics g)
   {
-    g.brush = Color.sysNormShadow
+    g.brush = Desktop.sysNormShadow
     g.drawLine(0, 0, size.w, 0)
-    g.brush = Color.sysHighlightShadow
+    g.brush = Desktop.sysHighlightShadow
     g.drawLine(0, 1, size.w, 1)
   }
 }
@@ -295,8 +295,8 @@ internal class StatusBarBorder : Widget
   override Size prefSize(Hints hints := Hints.defVal) { return Size(100,4) }
   override Void onPaint(Graphics g)
   {
-    g.brush = Gradient.makeLinear(Point(0,0), Color.sysNormShadow,
-      Point(0,size.h), Color.sysBg);
+    g.brush = Gradient.makeLinear(Point(0,0), Desktop.sysNormShadow,
+      Point(0,size.h), Desktop.sysBg);
     g.fillRect(0, 0, size.w, size.h)
   }
 }

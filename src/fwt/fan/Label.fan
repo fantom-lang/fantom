@@ -6,6 +6,8 @@
 //   10 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Label displays text and/or an image.
 **

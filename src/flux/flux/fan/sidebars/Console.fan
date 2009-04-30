@@ -58,9 +58,9 @@ class Console : SideBar
         insets  = Insets(2,0,0,0)
         onBorder = |Graphics g, Size size|
         {
-          g.brush = Color.sysNormShadow
+          g.brush = Desktop.sysNormShadow
           g.drawLine(0, 0, size.w, 0)
-          g.brush = Color.sysHighlightShadow
+          g.brush = Desktop.sysHighlightShadow
           g.drawLine(0, 1, size.w, 1)
         }
       }
@@ -70,7 +70,7 @@ class Console : SideBar
         it.insets  = Insets(1,0,0,1)
         it.onBorder = |Graphics g, Size size|
         {
-          g.brush = Color.sysNormShadow
+          g.brush = Desktop.sysNormShadow
           g.drawLine(0, 0, size.w, 0)
           g.drawLine(0, 0, 0, size.h)
         }

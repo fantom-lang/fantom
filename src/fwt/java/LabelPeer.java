@@ -59,16 +59,16 @@ public class LabelPeer extends WidgetPeer
   };
 
   // Color fg := null
-  public fan.fwt.Color fg(fan.fwt.Label self) { return fg.get(); }
-  public void fg(fan.fwt.Label self, fan.fwt.Color v) { fg.set(v); }
+  public fan.gfx.Color fg(fan.fwt.Label self) { return fg.get(); }
+  public void fg(fan.fwt.Label self, fan.gfx.Color v) { fg.set(v); }
   public final Prop.ColorProp fg = new Prop.ColorProp(this)
   {
     public void set(Widget w, Color v) { ((CLabel)w).setForeground(v); }
   };
 
   // Color bg := null
-  public fan.fwt.Color bg(fan.fwt.Label self) { return bg.get(); }
-  public void bg(fan.fwt.Label self, fan.fwt.Color v) { bg.set(v); }
+  public fan.gfx.Color bg(fan.fwt.Label self) { return bg.get(); }
+  public void bg(fan.fwt.Label self, fan.gfx.Color v) { bg.set(v); }
   public final Prop.ColorProp bg = new Prop.ColorProp(this)
   {
     public void set(Widget w, Color v) { ((CLabel)w).setBackground(v); }

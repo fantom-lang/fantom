@@ -98,7 +98,7 @@ public class Env
   /**
    * Map a Fan Color to an SWT color.
    */
-  public Color color(fan.fwt.Color c)
+  public Color color(fan.gfx.Color c)
   {
     if (c == null) return null;
     Color x = (Color)colors.get(c.argb);
@@ -114,7 +114,7 @@ public class Env
   /**
    * Dispose the SWT color for the Fan Color.
    */
-  public void dispose(fan.fwt.Color c)
+  public void dispose(fan.gfx.Color c)
   {
     if (c == null) return;
     Color x = (Color)colors.get(c.argb);

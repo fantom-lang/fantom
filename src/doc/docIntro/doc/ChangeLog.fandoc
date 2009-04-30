@@ -602,5 +602,7 @@
 - Disallow nullable types in 'as' expression
 - Fix 'as' with generics to work like cast
 - Rename ActorGroup to ActorPool
+- Move Point, Size, Rect, Hints, Pen, Color, Brush to gfx
+- Color system color methods moved to Desktop
 
 TODO: change over buildall to use pathPrefix

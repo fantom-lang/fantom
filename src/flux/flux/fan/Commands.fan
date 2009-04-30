@@ -6,6 +6,7 @@
 //   21 Jul 08  Br ian Frank  Creation
 //
 
+using gfx
 using fwt
 using compiler
 

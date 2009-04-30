@@ -760,17 +760,17 @@ class GraphicsDemo : Widget
     g.drawText(Font.sys.toStr, 480, y)
     y += 20
     g.font = Font("9pt Arial")
-    y = sysColor(g, y, Color.sysDarkShadow, "sysDarkShadow")
-    y = sysColor(g, y, Color.sysNormShadow, "sysNormShadow")
-    y = sysColor(g, y, Color.sysLightShadow, "sysLightShadow")
-    y = sysColor(g, y, Color.sysHighlightShadow, "sysHighlightShadow")
-    y = sysColor(g, y, Color.sysFg, "sysFg")
-    y = sysColor(g, y, Color.sysBg, "sysBg")
-    y = sysColor(g, y, Color.sysBorder, "sysBorder")
-    y = sysColor(g, y, Color.sysListBg, "sysListBg")
-    y = sysColor(g, y, Color.sysListFg, "sysListFg")
-    y = sysColor(g, y, Color.sysListSelBg, "sysListSelBg")
-    y = sysColor(g, y, Color.sysListSelFg, "sysListSelFg")
+    y = sysColor(g, y, Desktop.sysDarkShadow, "sysDarkShadow")
+    y = sysColor(g, y, Desktop.sysNormShadow, "sysNormShadow")
+    y = sysColor(g, y, Desktop.sysLightShadow, "sysLightShadow")
+    y = sysColor(g, y, Desktop.sysHighlightShadow, "sysHighlightShadow")
+    y = sysColor(g, y, Desktop.sysFg, "sysFg")
+    y = sysColor(g, y, Desktop.sysBg, "sysBg")
+    y = sysColor(g, y, Desktop.sysBorder, "sysBorder")
+    y = sysColor(g, y, Desktop.sysListBg, "sysListBg")
+    y = sysColor(g, y, Desktop.sysListFg, "sysListFg")
+    y = sysColor(g, y, Desktop.sysListSelBg, "sysListSelBg")
+    y = sysColor(g, y, Desktop.sysListSelFg, "sysListSelFg")
 
     // rect/text with gradients
     g.brush = Gradient.makeLinear(

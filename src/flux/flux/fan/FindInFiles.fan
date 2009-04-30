@@ -6,6 +6,7 @@
 //   26 Sep 08  Andy Frank  Creation
 //
 
+using gfx
 using fwt
 
 **

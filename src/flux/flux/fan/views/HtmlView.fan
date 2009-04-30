@@ -27,7 +27,7 @@ internal class HtmlView : View
       it.insets   = Insets(0,0,0,1)
       it.onBorder = |Graphics g, Size s|
       {
-        g.brush = Color.sysNormShadow
+        g.brush = Desktop.sysNormShadow
         g.drawLine(0, 0, 0, s.h)
       }
     }
