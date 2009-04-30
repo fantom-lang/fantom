@@ -116,6 +116,15 @@ var webappClient_Elem = sys_Obj.extend(
     return list;
   },
 
+  first: function()
+  {
+    var kids = this.elem.childNodes;
+    for (var i=0; i<kids.length; i++)
+      if (kids[i].nodeType == 1)
+        return webappClient_Elem.make(kids[i]);
+    return null;
+  },
+
   prev: function()
   {
     var sib = this.elem.previousSibling;

@@ -143,6 +143,12 @@ class Elem
   Elem[] children() { return Elem[,] }
 
   **
+  ** Get the first child node of this element, or null
+  ** if this element has no children.
+  **
+  Elem? first() { return null }
+
+  **
   ** Get the previous sibling to this element, or null
   ** if this is the first element under its parent.
   **
