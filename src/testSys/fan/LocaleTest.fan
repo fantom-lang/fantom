@@ -84,7 +84,7 @@ class LocaleTest : Test
 
     // create actor that accepts
     // messages to change its own locale
-    actor := Actor(ActorGroup()) |Obj msg->Obj|
+    actor := Actor(ActorPool()) |Obj msg->Obj|
     {
       if (msg == ".")  return Locale.current
       loc := Locale.fromStr(msg)

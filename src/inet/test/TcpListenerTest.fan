@@ -81,7 +81,7 @@ class TcpListenerTest : Test
     t2 := Duration.now
     verify(80ms < t2-t1 && t2-t1 < 150ms)
 
-    actor := Actor(ActorGroup(), &runClient(listener.localPort))
+    actor := Actor(ActorPool(), &runClient(listener.localPort))
     future := actor.send(null)
 
     // accept

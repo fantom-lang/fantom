@@ -15,7 +15,7 @@
 **    Log.addHandler(&sysLogger.writeLogRecord)
 **
 **
-const class FileLogger : ActorGroup
+const class FileLogger : ActorPool
 {
 
   **

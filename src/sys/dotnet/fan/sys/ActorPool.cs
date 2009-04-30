@@ -14,25 +14,25 @@ namespace Fan.Sys
   /// <summary>
   /// Controller for a group of actors which manages their execution.
   /// </summary>
-  public class ActorGroup : FanObj
+  public class ActorPool : FanObj
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static ActorGroup make()
+    public static ActorPool make()
     {
-      ActorGroup self = new ActorGroup();
+      ActorPool self = new ActorPool();
       make_(self);
       return self;
     }
 
-    public static void make_(ActorGroup self)
+    public static void make_(ActorPool self)
     {
     }
 
-    public ActorGroup()
+    public ActorPool()
     {
       m_threadPool = new ThreadPool(100);
       m_scheduler = new Scheduler();
@@ -42,10 +42,10 @@ namespace Fan.Sys
   // Obj
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.ActorGroupType; }
+    public override Type type() { return Sys.ActorPoolType; }
 
   //////////////////////////////////////////////////////////////////////////
-  // ActorGroup
+  // ActorPool
   //////////////////////////////////////////////////////////////////////////
 
     public bool isStopped()
@@ -58,14 +58,14 @@ namespace Fan.Sys
       return m_threadPool.isDone();
     }
 
-    public ActorGroup stop()
+    public ActorPool stop()
     {
       m_scheduler.stop();
       m_threadPool.stop();
       return this;
     }
 
-    public ActorGroup kill()
+    public ActorPool kill()
     {
       m_killed = true;
       m_scheduler.stop();
@@ -73,8 +73,8 @@ namespace Fan.Sys
       return this;
     }
 
-    public ActorGroup join() { return join(null); }
-    public ActorGroup join(Duration timeout)
+    public ActorPool join() { return join(null); }
+    public ActorPool join(Duration timeout)
     {
       long ms = timeout == null ? System.Int32.MaxValue : timeout.millis();
       try
@@ -85,7 +85,7 @@ namespace Fan.Sys
       {
         throw InterruptedErr.make(e).val;
       }
-      throw TimeoutErr.make("ActorGroup.join timed out").val;
+      throw TimeoutErr.make("ActorPool.join timed out").val;
     }
 
     public override object trap(string name, List args)

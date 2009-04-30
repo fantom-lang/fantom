@@ -83,7 +83,7 @@ class UdpSocketTest : Test
   {
     // launch server
     s := UdpSocket.make.bind(null, null)
-    sactor := Actor(ActorGroup(), &runServer(s))
+    sactor := Actor(ActorPool(), &runServer(s))
     sfuture := sactor.send(null)
     Actor.sleep(50ms)
 

@@ -25,13 +25,13 @@ const class WispService : WebService
   override Void onStart()
   {
     super.onStart
-    Actor(listenerGroup, &listen).send(null)
+    Actor(listenerPool, &listen).send(null)
   }
 
   override Void onStop()
   {
-    listenerGroup.stop
-    processorGroup.stop
+    listenerPool.stop
+    processorPool.stop
   }
 
   internal Void listen()
@@ -43,7 +43,7 @@ const class WispService : WebService
     numReqs := 0
     Sys.ns.create(`/wisp/numReqs`, numReqs)
 
-    while (!listenerGroup.isStopped)
+    while (!listenerPool.isStopped)
     {
       socket := listener.accept
       WispActor(this, socket).send(null)
@@ -53,7 +53,7 @@ const class WispService : WebService
     }
   }
 
-  const ActorGroup listenerGroup := ActorGroup()
-  const ActorGroup processorGroup := ActorGroup()
+  const ActorPool listenerPool  := ActorPool()
+  const ActorPool processorPool := ActorPool()
 
 }

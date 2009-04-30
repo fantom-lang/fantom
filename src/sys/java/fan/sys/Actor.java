@@ -22,20 +22,20 @@ public class Actor
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Actor make(ActorGroup group) { return make(group, null); }
-  public static Actor make(ActorGroup group, Func receive)
+  public static Actor make(ActorPool pool) { return make(pool, null); }
+  public static Actor make(ActorPool pool, Func receive)
   {
     Actor self = new Actor();
-    make$(self, group, receive);
+    make$(self, pool, receive);
     return self;
   }
 
-  public static void make$(Actor self, ActorGroup group) { make$(self, group, null); }
-  public static void make$(Actor self, ActorGroup group, Func receive)
+  public static void make$(Actor self, ActorPool pool) { make$(self, pool, null); }
+  public static void make$(Actor self, ActorPool pool, Func receive)
   {
-    // check group
-    if (group == null)
-      throw NullErr.make("group is null").val;
+    // check pool
+    if (pool == null)
+      throw NullErr.make("pool is null").val;
 
     // check receive method
     if (receive == null && self.type() == Sys.ActorType)
@@ -44,21 +44,21 @@ public class Actor
       throw NotImmutableErr.make("Receive func not immutable: " + receive).val;
 
     // init
-    self.group = group;
+    self.pool = pool;
     self.receive = receive;
     self.queue = new Queue();
   }
 
-  public static Actor makeCoalescing(ActorGroup group, Func k, Func c) { return makeCoalescing(group, k, c, null); }
-  public static Actor makeCoalescing(ActorGroup group, Func k, Func c, Func r)
+  public static Actor makeCoalescing(ActorPool pool, Func k, Func c) { return makeCoalescing(pool, k, c, null); }
+  public static Actor makeCoalescing(ActorPool pool, Func k, Func c, Func r)
   {
     Actor self = new Actor();
-    makeCoalescing$(self, group, k, c, r);
+    makeCoalescing$(self, pool, k, c, r);
     return self;
   }
 
-  public static void makeCoalescing$(Actor self, ActorGroup group, Func k, Func c) { makeCoalescing$(self, group, k, c, null); }
-  public static void makeCoalescing$(Actor self, ActorGroup group, Func k, Func c, Func r)
+  public static void makeCoalescing$(Actor self, ActorPool pool, Func k, Func c) { makeCoalescing$(self, pool, k, c, null); }
+  public static void makeCoalescing$(Actor self, ActorPool pool, Func k, Func c, Func r)
   {
     if (k != null && !k.isImmutable())
       throw NotImmutableErr.make("Coalescing toKey func not immutable: " + k).val;
@@ -66,7 +66,7 @@ public class Actor
     if (c != null && !c.isImmutable())
       throw NotImmutableErr.make("Coalescing coalesce func not immutable: " + c).val;
 
-    make$(self, group, r);
+    make$(self, pool, r);
     self.queue = new CoalescingQueue(k, c);
   }
 
@@ -85,7 +85,7 @@ public class Actor
 // Actor
 //////////////////////////////////////////////////////////////////////////
 
-  public final ActorGroup group() { return group; }
+  public final ActorPool pool() { return pool; }
 
   public final Future send(Object msg) { return _send(msg, null, null); }
 
@@ -135,15 +135,15 @@ public class Actor
     // ensure immutable or safe copy
     msg = Namespace.safe(msg);
 
-    // don't deliver new messages to a stopped group
-    if (group.isStopped()) throw Err.make("ActorGroup is stopped").val;
+    // don't deliver new messages to a stopped pool
+    if (pool.isStopped()) throw Err.make("ActorPool is stopped").val;
 
     // get the future instance to manage this message's lifecycle
     Future f = new Future(msg);
 
-    // either enqueue immediately or schedule with group
+    // either enqueue immediately or schedule with pool
     if (dur != null)
-      group.schedule(this, dur, f);
+      pool.schedule(this, dur, f);
     else if (whenDone != null)
       whenDone.sendWhenDone(this, f);
     else
@@ -170,7 +170,7 @@ public class Actor
       if (!submitted)
       {
         submitted = true;
-        group.submit(this);
+        pool.submit(this);
       }
 
       return f;
@@ -209,7 +209,7 @@ public class Actor
       else
       {
         submitted = true;
-        group.submit(this);
+        pool.submit(this);
       }
     }
 
@@ -220,7 +220,7 @@ public class Actor
     try
     {
       if (future.isCancelled()) return;
-      if (group.killed) { future.cancel(); return; }
+      if (pool.killed) { future.cancel(); return; }
       future.set(receive(future.msg, context));
     }
     catch (Err.Val e)
@@ -360,7 +360,7 @@ public class Actor
 //////////////////////////////////////////////////////////////////////////
 
   final Context context;                 // mutable world state of actor
-  private ActorGroup group;              // group controller
+  private ActorPool pool;                // pooled controller
   private Func receive;                  // func to invoke on receive or null
   private Object lock = new Object();    // lock for message queue
   private Queue queue;                   // message queue linked list
