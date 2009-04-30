@@ -136,6 +136,28 @@ class StrBufTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// RemoveRange
+//////////////////////////////////////////////////////////////////////////
+
+  Void testRemoveRange()
+  {
+    s := StrBuf.make.add("abcdefghijklmnop")
+    verifyEq(s.removeRange(0..<2).toStr,  "cdefghijklmnop")
+    verifyEq(s.removeRange(1..3).toStr,   "cghijklmnop")
+    verifyEq(s.removeRange(-3..-2).toStr, "cghijklmp")
+    verifyEq(s.removeRange(-1..-1).toStr, "cghijklm")
+    verifyEq(s.removeRange(4..<-2).toStr, "cghilm")
+    verifyEq(s.removeRange(1..1).toStr,   "chilm")
+    verifyEq(s.removeRange(-3..-1).toStr, "ch")
+    verifyEq(s.removeRange(0..1).toStr,   "")
+
+    verifyErr(IndexErr#) { StrBuf().add("").removeRange(0..1) }
+    verifyErr(IndexErr#) { StrBuf().add("abc").removeRange(0..3) }
+    verifyErr(IndexErr#) { StrBuf().add("abc").removeRange(0..<4) }
+    verifyErr(IndexErr#) { StrBuf().add("abc").removeRange(-4..-1) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Clear
 //////////////////////////////////////////////////////////////////////////
 

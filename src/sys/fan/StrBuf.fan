@@ -85,6 +85,13 @@ final class StrBuf
   This remove(Int index)
 
   **
+  ** Remove a range of indices from this buffer.  Negative indexes
+  ** may be used to access from the end of the list.  Throw IndexErr
+  ** if range illegal.  Return this.
+  **
+  This removeRange(Range r)
+
+  **
   ** Ensure that this buffer has the specified capactity.  If
   ** this buffer is already beyond the given capacity, then
   ** do nothing.  Return this.

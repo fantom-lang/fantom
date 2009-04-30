@@ -126,6 +126,16 @@ namespace Fan.Sys
       return this;
     }
 
+    public StrBuf removeRange(Range r)
+    {
+      int s = r.start(sb.Length);
+      int e = r.end(sb.Length);
+      int n = e - s + 1;
+      if (n < 0) throw IndexErr.make(r).val;
+      sb.Remove(s, n);
+      return this;
+    }
+
     public StrBuf grow(long size)
     {
       sb.EnsureCapacity((int)size);
