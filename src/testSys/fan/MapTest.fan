@@ -135,8 +135,9 @@ class MapTest : Test
     s  := x as Str;       verifySame(s , null)
     m  := x as Map;       verifySame(m , x)
     ol := x as Obj:Obj;   verifySame(ol , x)
-    il := x as Int:Int;   verifySame(il , null)
-    sl := x as Int:Str;   verifySame(sl , null)
+    il := x as Int:Int;   verifySame(il , x) // no runtime check
+    sl := x as Int:Str;   verifySame(sl , x) // no runtime check
+    s2 := x as Int:Str?;  verifySame(s2 , x) // no runtime check
 
     x  = [0:"a", 1:"b"]
     o  = x as Obj;       verifySame(o , x)
@@ -144,8 +145,17 @@ class MapTest : Test
     s  = x as Str;       verifySame(s , null)
     m  = x as Map;       verifySame(m , x)
     ol = x as Obj:Obj;   verifySame(ol , x)
-    il = x as Int:Int;   verifySame(il , null)
-    sl = x as Int:Str;   verifySame(sl , x)
+    il = x as Int:Int;   verifySame(il , x) // no runtime check
+    sl = x as Int:Str;   verifySame(sl , x) // no runtime check
+    s2 = x as Int:Str?;  verifySame(s2 , x) // no runtime check
+
+    x  = 4f
+    o  = x as Obj;       verifySame(o , x)
+    n := x as Num;       verifySame(o , n)
+    f := x as Float;     verifySame(o , f)
+    m  = x as Map;       verifySame(m , null)
+    ol = x as Obj:Obj;   verifySame(ol, null)
+    il = x as Int:Int;   verifySame(il, null)
   }
 
 //////////////////////////////////////////////////////////////////////////

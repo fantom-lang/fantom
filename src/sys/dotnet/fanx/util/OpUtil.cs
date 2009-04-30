@@ -203,12 +203,6 @@ namespace Fanx.Util
       return FanObj.type(instance).fits(type);
     }
 
-    public static object @as(object instance, Type type)
-    {
-      if (instance == null) return null;
-      return FanObj.type(instance).@is(type) ? instance : null;
-    }
-
     public static object toImmutable(object obj)
     {
       if (obj == null) return null;

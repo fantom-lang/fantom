@@ -850,29 +850,15 @@ public class FCodeEmit
   {
     FTypeRef typeRef = pod.typeRef(u2());
     int cls = emit.cls(typeRef.jnameBoxed());
-
-    // if a generic instance, we have to use a method call
-    // because Fan types don't map to Java classes exactly;
-    // otherwise we can use straight bytecode
-    if (typeRef.isGenericInstance())
-    {
-      if (parent.AsViaType == 0) parent.AsViaType = emit.method("fanx/util/OpUtil.as(Ljava/lang/Object;Lfan/sys/Type;)Ljava/lang/Object;");
-      loadType(typeRef);
-      code.op2(INVOKESTATIC, parent.AsViaType);
-      code.op2(CHECKCAST, cls);
-    }
-    else
-    {
-      code.op(DUP);
-      code.op2(INSTANCEOF, cls);
-      int is = code.branch(IFNE);
-      code.op(POP);
-      code.op(ACONST_NULL);
-      int end = code.branch(GOTO);
-      code.mark(is);
-      code.op2(CHECKCAST, cls);
-      code.mark(end);
-    }
+    code.op(DUP);
+    code.op2(INSTANCEOF, cls);
+    int is = code.branch(IFNE);
+    code.op(POP);
+    code.op(ACONST_NULL);
+    int end = code.branch(GOTO);
+    code.mark(is);
+    code.op2(CHECKCAST, cls);
+    code.mark(end);
   }
 
 //////////////////////////////////////////////////////////////////////////

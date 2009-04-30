@@ -393,7 +393,6 @@ public abstract class FTypeEmit
   int IntBox, IntUnbox;
   int FloatBox, FloatUnbox;
   int IsViaType;
-  int AsViaType;
   int ErrMake;
   int ErrVal;
   int TypeToNullable;
