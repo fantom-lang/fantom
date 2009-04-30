@@ -790,23 +790,7 @@ namespace Fanx.Emit
     {
       FTypeRef typeRef = pod.typeRef(u2());
       PERWAPI.Type type = emitter.findType(typeRef.nnameBoxed());
-
-      // if a generic instance, we have to use a method call
-      // because Fan types don't map to Java classes exactly;
-      // otherwise we can use straight bytecode
-      if (typeRef.isGenericInstance())
-      {
-        if (parent.AsViaType == null)
-          parent.AsViaType = emitter.findMethod("Fanx.Util.OpUtil", "as",
-              new string[] { "System.Object", "Fan.Sys.Type" }, "System.Object");
-        loadType(typeRef);
-        code.MethInst(MethodOp.call, parent.AsViaType);
-        code.TypeInst(TypeOp.isinst, type);
-      }
-      else
-      {
-        code.TypeInst(TypeOp.isinst, type);
-      }
+      code.TypeInst(TypeOp.isinst, type);
     }
 
   //////////////////////////////////////////////////////////////////////////

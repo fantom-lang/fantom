@@ -600,5 +600,6 @@
 - Loosen restrictions on it/this ambiguity errors
 - webappClient::Effect
 - Disallow nullable types in 'as' expression
+- Fix 'as' with generics to work like cast
 
 TODO: change over buildall to use pathPrefix

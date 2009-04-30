@@ -137,8 +137,9 @@ class ListTest : Test
     s  := x as Str;    verifySame(s , null)
     l  := x as List;   verifySame(l , x)
     ol := x as Obj[];  verifySame(ol , x)
-    il := x as Int[];  verifySame(il , null)
-    sl := x as Str[];  verifySame(sl , null)
+    il := x as Int[];  verifySame(il , x)  // no runtime check
+    sl := x as Str[];  verifySame(sl , x)  // no runtime check
+    s2 := x as Str?[];  verifySame(s2 , x) // no runtime check
 
     x  = ["a", "b"]
     o  = x as Obj;    verifySame(o , x)
@@ -146,8 +147,37 @@ class ListTest : Test
     s  = x as Str;    verifySame(s , null)
     l  = x as List;   verifySame(l , x)
     ol = x as Obj[];  verifySame(ol , x)
-    il = x as Int[];  verifySame(il , null)
-    sl = x as Str[];  verifySame(sl , x)
+    il = x as Int[];  verifySame(il , x) // no runtime check
+    sl = x as Str[];  verifySame(sl , x) // no runtime check
+    s2 = x as Str?[]; verifySame(sl , x) // no runtime check
+
+    x = "s"
+    o  = x as Obj;    verifySame(o , x)
+    b  = x as Bool;   verifySame(b , null)
+    s  = x as Str;    verifySame(s , x)
+    l  = x as List;   verifySame(l , null)
+    ol = x as Obj[];  verifySame(ol , null)
+    il = x as Int[];  verifySame(il , null) // no runtime check
+    sl = x as Str[];  verifySame(sl , null) // no runtime check
+    s2 = x as Str?[]; verifySame(sl , null) // no runtime check
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Cast
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCast()
+  {
+    Obj x := [2, 4f, 6d]
+    verifyEq(((Num[])x)[1], 4f)
+    verifyEq(((Int[])x)[0], 2)
+
+    strs := (Str[])x  // no runtime check
+    verifyErr(CastErr#) { strs[2].size }
+
+    strs = x as Str[] // no runtime check
+    verifyNotNull(strs)
+    verifyErr(CastErr#) { strs[2].size }
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -549,7 +549,6 @@ namespace Fanx.Emit
     internal PERWAPI.Method CompareNull;
     internal PERWAPI.Method CompareNotNull;
     internal PERWAPI.Method IsViaType;
-    internal PERWAPI.Method AsViaType;
     internal PERWAPI.Method IntVal;
     internal PERWAPI.Method ErrMake;
     internal PERWAPI.Field ErrVal;

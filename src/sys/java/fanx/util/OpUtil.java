@@ -180,12 +180,6 @@ public class OpUtil
     return FanObj.type(instance).fits(type);
   }
 
-  public static Object as(Object instance, Type type)
-  {
-    if (instance == null) return null;
-    return FanObj.type(instance).is(type) ? instance : null;
-  }
-
   public static Object toImmutable(Object obj)
   {
     if (obj == null) return null;
