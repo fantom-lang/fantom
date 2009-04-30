@@ -136,3 +136,28 @@ sys_List.toImmutable = function(self)
   // TODO
   return self;
 }
+
+// Conversion
+sys_List.join = function(self, sep, func)
+{
+  if (sep == undefined) sep = ""
+  if (self.length == 0) return "";
+  if (self.length == 1)
+  {
+    var v = self[0];
+    if (func != undefined) return func(v, 0);
+    if (v == null) return "null";
+    return sys_Obj._toStr(v);
+  }
+
+  var s = ""
+  for (var i=0; i<self.length; ++i)
+  {
+    if (i > 0) s += sep;
+    if (func == undefined)
+      s += self[i];
+    else
+      s += func(self[i], i);
+  }
+  return s;
+}
