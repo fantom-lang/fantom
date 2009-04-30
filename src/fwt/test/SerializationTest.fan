@@ -6,6 +6,8 @@
 //   9 Jul 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** SerializationTest
 **
@@ -167,12 +169,12 @@ class SerializationTest : Test
         fwt::Label
         {
           text=\"a\"
-          fg=fwt::Color(\"#aabbcc\")
+          fg=gfx::Color(\"#aabbcc\")
         },
         fwt::Label
         {
           text=\"b\"
-          bg=fwt::Color(\"#a1b2c3d4\")
+          bg=gfx::Color(\"#a1b2c3d4\")
         },
       }")
 

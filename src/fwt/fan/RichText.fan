@@ -6,6 +6,8 @@
 //   28 Jul 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** RichText is used to view and edit text styled with
 ** different fonts and colors.

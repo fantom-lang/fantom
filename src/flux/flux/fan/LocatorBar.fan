@@ -79,15 +79,15 @@ internal class LocatorBar : Widget
     vx := size.w - vw
     vy := (size.h - Font.sys.height) / 2
 
-    g.brush = Color.sysListBg
+    g.brush = Desktop.sysListBg
     g.fillRect(0, 0, size.w, size.h)
 
-    g.brush = Color.sysNormShadow
+    g.brush = Desktop.sysNormShadow
     g.drawRect(0, 0, size.w-1, size.h-1)
 
     g.drawImage(icon, 4, 4)
 
-    g.brush = Color.sysFg
+    g.brush = Desktop.sysFg
     g.drawText(view, vx+viewInsets.left, vy)
 
     ax := size.w - viewInsets.right + 3

@@ -108,9 +108,9 @@ internal class FindBar : ContentPane, TextEditorSupport
       it.insets = Insets(2,0,0,0)
       it.onBorder = |Graphics g, Size size|
       {
-        g.brush = Color.sysNormShadow
+        g.brush = Desktop.sysNormShadow
         g.drawLine(0, 0, size.w, 0)
-        g.brush = Color.sysHighlightShadow
+        g.brush = Desktop.sysHighlightShadow
         g.drawLine(0, 1, size.w, 1)
       }
     }

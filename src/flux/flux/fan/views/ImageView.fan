@@ -32,9 +32,9 @@ internal class ImageView : View
       it.insets  = Insets(0,0,2,0)
       it.onBorder = |Graphics g, Size size|
       {
-        g.brush = Color.sysNormShadow
+        g.brush = Desktop.sysNormShadow
         g.drawLine(0, size.h-2, size.w, size.h-2)
-        g.brush = Color.sysHighlightShadow
+        g.brush = Desktop.sysHighlightShadow
         g.drawLine(0, size.h-1, size.w, size.h-1)
       }
     }

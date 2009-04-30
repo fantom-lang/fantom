@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import fan.sys.*;
 import fan.sys.List;
+import fan.gfx.*;
 import fanx.util.OpUtil;
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;

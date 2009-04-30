@@ -165,9 +165,9 @@ internal class TabBar : Widget
     h  := size.h
     tx := 0
 
-    outline := Color.sysNormShadow
-    bgActive := gradient(Color.sysLightShadow, Color.sysBg, h)
-    bgInactive := gradient(Color.sysBg, Color.sysNormShadow, h)
+    outline := Desktop.sysNormShadow
+    bgActive := gradient(Desktop.sysLightShadow, Desktop.sysBg, h)
+    bgInactive := gradient(Desktop.sysBg, Desktop.sysNormShadow, h)
 
     tabBounds.clear
 
@@ -202,7 +202,7 @@ internal class TabBar : Widget
       g.drawLine(tx+tw, ty, tx+tw, th)
 
       g.font = font
-      g.brush = Color.sysFg
+      g.brush = Desktop.sysFg
       g.drawImage(icon, ix, iy)
       g.drawText(text, lx, ly)
       g.drawImage(iconClose, cx, cy)

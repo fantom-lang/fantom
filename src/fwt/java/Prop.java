@@ -310,9 +310,9 @@ public abstract class Prop
 
     void syncFromControl() {}
 
-    fan.fwt.Color get() { return val; }
+    fan.gfx.Color get() { return val; }
 
-    void set(fan.fwt.Color v)
+    void set(fan.gfx.Color v)
     {
       val = v;
       Widget w = peer.control;
@@ -322,7 +322,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, Color v);
 
-    fan.fwt.Color val;
+    fan.gfx.Color val;
   }
 
 //////////////////////////////////////////////////////////////////////////
