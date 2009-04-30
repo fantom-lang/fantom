@@ -109,6 +109,16 @@ public class StrBuf
     return this;
   }
 
+  public StrBuf removeRange(Range r)
+  {
+    int s = r.start(sb.length());
+    int e = r.end(sb.length());
+    int n = e - s + 1;
+    if (n < 0) throw IndexErr.make(r).val;
+    sb.delete(s, e+1);
+    return this;
+  }
+
   public StrBuf grow(long size)
   {
     sb.ensureCapacity((int)size);
