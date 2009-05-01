@@ -64,6 +64,50 @@ class RegressionTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// #531 Allow curry of private methods
+//////////////////////////////////////////////////////////////////////////
+
+  Void test531()
+  {
+     compile(
+       "class Foo
+        {
+          Int a() { (&priv(7))() }
+          Int b() { (&prot(8))() }
+          Int c() { f := |Int i->Int| { (&priv(i))() }; return f(9) }
+          Int d() { f := |Int i->Int| { (&prot(i))() }; return f(10) }
+
+          private Int priv(Int i) { return i }
+          protected Int prot(Int i) { return i+i }
+        }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->a, 7)
+    verifyEq(obj->b, 16)
+    verifyEq(obj->c, 9)
+    verifyEq(obj->d, 20)
+
+    verifyErrors(
+     "class B : A
+      {
+        Int a() { (&priv(7))() }
+        Int b() { (&prot(8))() }
+        Int c() { f := |Int i->Int| { (&priv(i))() }; return f(9) }
+        Int d() { f := |Int i->Int| { (&prot(i))() }; return f(10) }
+      }
+
+      class A
+      {
+        private Int priv(Int i) { return i }
+        protected Int prot(Int i) { return i+i }
+      }",
+      [
+        3, 15, "Unknown method '$podName::B.priv'",
+        5, 35, "Unknown method '$podName::B.priv'",
+      ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // #542 Compiler - Internal class cast error
 //////////////////////////////////////////////////////////////////////////
 
