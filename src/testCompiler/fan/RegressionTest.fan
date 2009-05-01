@@ -15,6 +15,30 @@ class RegressionTest : CompilerTest
 {
 
 //////////////////////////////////////////////////////////////////////////
+// #528 Compiler bug - duplicate slot x$num
+//////////////////////////////////////////////////////////////////////////
+
+  Void test528()
+  {
+     compile(
+       "class Foo
+        {
+          Str test()
+          {
+            key := \"testCompiler.528\"
+            Actor.locals[key] = \"\"
+            2.times |Int i| { 1.times |Int j| { Actor.locals[key] = Actor.locals[key] + i.toStr + \",\" } }
+            3.times |Int i| { 2.times |Int j| { Actor.locals[key] = Actor.locals[key] + i.toStr + \",\"} }
+            return Actor.locals[key]
+          }
+        }
+        ")
+
+    obj := pod.types.first.make
+    verifyEq(obj->test, "0,1,0,0,1,1,2,2,")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // #542 Compiler - Internal class cast error
 //////////////////////////////////////////////////////////////////////////
 

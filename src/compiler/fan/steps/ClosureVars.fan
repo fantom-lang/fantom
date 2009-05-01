@@ -117,12 +117,12 @@ class ClosureVars : CompilerStep
     }
 
     // generate the fields used to store each local
-    method.vars.each |MethodVar var, Int index|
+    method.vars.each |MethodVar var|
     {
       if (var.usedInClosure)
       {
         f := FieldDef.make(location, cvars)
-        f.name      = "${var.name}\$$index"
+        f.name      = "${var.name}\$${cvars.slots.size}"
         f.fieldType = var.ctype
         f.flags     = syntheticFieldFlags
         cvars.addSlot(f)
