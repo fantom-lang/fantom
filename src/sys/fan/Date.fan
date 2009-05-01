@@ -182,6 +182,21 @@ const final class Date
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Return is this date equal to `today` - 1day.
+  **
+  Bool isYesterday()
+
+  **
+  ** Return is this date equal to `today`.
+  **
+  Bool isToday()
+
+  **
+  ** Return is this date equal to `today` + 1day.
+  **
+  Bool isTomorrow()
+
+  **
   ** Combine this Date with the given Time to return a DateTime.
   **
   DateTime toDateTime(Time t, TimeZone tz := TimeZone.current)
