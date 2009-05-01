@@ -108,7 +108,7 @@ const class Image
 
   **
   ** Resize this image into a new image using  `GfxEnv.current`.
-  ** Also see `fwt::Graphics.copyImage`.
+  ** Also see `Graphics.copyImage`.
   ** Note: this method doesn't support transparency correctly yet.
   **
   Image resize(Size size) { GfxEnv.current.imageResize(this, size) }

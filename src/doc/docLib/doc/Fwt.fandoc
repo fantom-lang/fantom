@@ -60,7 +60,7 @@ will typically define custom painting and eventing.
 Painting [#painting]
 ********************
 Widgets may override the [onPaint]`fwt::Widget.onPaint` method to
-provide custom painting.  Painting is done via the `fwt::Graphics`
+provide custom painting.  Painting is done via the `gfx::Graphics`
 API:
   - draw geometries
   - fill geometries
@@ -70,14 +70,14 @@ API:
   - clipping
 
 A Graphics instance maintains state for how it renders:
-  - `fwt::Pen` defines how geometries are drawn
-  - `fwt::Brush` defines how geometries and text are drawn and filled
-  - `fwt::Font` defines how text is rendered
-  - `fwt::Image` models an image - typically loaded from a png, gif, or jpeg file
+  - `gfx::Pen` defines how geometries are drawn
+  - `gfx::Brush` defines how geometries and text are drawn and filled
+  - `gfx::Font` defines how text is rendered
+  - `gfx::Image` models an image - typically loaded from a png, gif, or jpeg file
   - current clipping region
   - current transform to apply to the coordinate system
 
-You can use the [push]`fwt::Graphics.push` and [pop]`fwt::Graphics.pop` methods
+You can use the [push]`gfx::Graphics.push` and [pop]`gfx::Graphics.pop` methods
 to create a *stack* of Graphics instances and their associated state.  A typical
 pattern is:
 
@@ -117,7 +117,7 @@ Layout [#layout]
 ****************
 Every widget plays a role in how the UI is laid out.  Leaf widgets define
 a preferred size by overriding the [prefSize]`fwt::Widget.prefSize` method.
-The 'prefSize' method takes a `fwt::Hints` which contains an optional
+The 'prefSize' method takes a `gfx::Hints` which contains an optional
 width and height constraint.
 
 Panes which contain children implement a layout strategy by overriding
