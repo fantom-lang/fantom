@@ -6,6 +6,8 @@
 //   22 Jul 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** Command packages up the diplay name, icon, execution,
 ** and undo support for a user command.  You can create a

@@ -235,12 +235,12 @@ abstract class BuildPod : BuildScript
     javaLibs := resolveFiles(javaLibs)
     depends  := parseDepends
 
-    // start with a clean directory
-    Delete.make(this, jtemp).run
-    CreateDir.make(this, jtemp).run
-
     // if there are no javaDirs we only only stubbing
     stubOnly := javaDirs.isEmpty
+
+    // start with a clean directory
+    Delete.make(this, jtemp).run
+    if (!stubOnly) CreateDir.make(this, jtemp).run
 
     // stub the pods fan classes into Java classfiles
     // by calling the JStub tool in the jsys runtime

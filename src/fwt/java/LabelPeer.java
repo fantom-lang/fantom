@@ -51,8 +51,8 @@ public class LabelPeer extends WidgetPeer
   };
 
   // Image image := null
-  public fan.fwt.Image image(fan.fwt.Label self) { return image.get(); }
-  public void image(fan.fwt.Label self, fan.fwt.Image v) { image.set(v); }
+  public fan.gfx.Image image(fan.fwt.Label self) { return image.get(); }
+  public void image(fan.fwt.Label self, fan.gfx.Image v) { image.set(v); }
   public final Prop.ImageProp image = new Prop.ImageProp(this)
   {
     public void set(Widget w, Image v) { ((CLabel)w).setImage(v); }
