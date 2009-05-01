@@ -353,6 +353,10 @@ public final class Date
 // Misc
 //////////////////////////////////////////////////////////////////////////
 
+  public boolean isYesterday() { return equals(today().plus(Duration.negOneDay)); }
+  public boolean isToday()     { return equals(today()); }
+  public boolean isTomorrow()  { return equals(today().plus(Duration.oneDay)); }
+
   public DateTime toDateTime(Time t) { return DateTime.makeDT(this, t); }
   public DateTime toDateTime(Time t, TimeZone tz) { return DateTime.makeDT(this, t, tz); }
 

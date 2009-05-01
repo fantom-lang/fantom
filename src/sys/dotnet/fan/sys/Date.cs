@@ -353,6 +353,10 @@ namespace Fan.Sys
   // Misc
   //////////////////////////////////////////////////////////////////////////
 
+    public bool isYesterday() { return Equals(today().plus(Duration.m_negOneDay)); }
+    public bool isToday()     { return Equals(today()); }
+    public bool isTomorrow()  { return Equals(today().plus(Duration.m_oneDay)); }
+
     public DateTime toDateTime(Time t) { return DateTime.makeDT(this, t); }
     public DateTime toDateTime(Time t, TimeZone tz) { return DateTime.makeDT(this, t, tz); }
 

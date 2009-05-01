@@ -1149,4 +1149,36 @@ class DateTimeTest : Test
     verifyEq(a - b, -diff)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Today/Tomorrow/Yesterday
+//////////////////////////////////////////////////////////////////////////
+
+  Void testIsToday()
+  {
+    d := Date.today
+    verifyEq(d.isYesterday, false)
+    verifyEq(d.isToday,     true)
+    verifyEq(d.isTomorrow,  false)
+
+    d = Date.today + 1day
+    verifyEq(d.isYesterday, false)
+    verifyEq(d.isToday,     false)
+    verifyEq(d.isTomorrow,  true)
+
+    d = Date.today + -1day
+    verifyEq(d.isYesterday, true)
+    verifyEq(d.isToday,     false)
+    verifyEq(d.isTomorrow,  false)
+
+    d = Date.today + -2day
+    verifyEq(d.isYesterday, false)
+    verifyEq(d.isToday,     false)
+    verifyEq(d.isTomorrow,  false)
+
+    d = Date.today + 365day
+    verifyEq(d.isYesterday, false)
+    verifyEq(d.isToday,     false)
+    verifyEq(d.isTomorrow,  false)
+  }
+
 }

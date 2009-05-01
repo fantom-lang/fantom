@@ -496,9 +496,11 @@ public final class Duration
   public static final long secPerMin  = 60L;
   private static final Duration boot = now();
 
-  public static final Duration defVal = Zero;
-  public static final Duration minVal = make(FanInt.minVal);
-  public static final Duration maxVal = make(FanInt.maxVal);
+  public static final Duration defVal    = Zero;
+  public static final Duration minVal    = make(FanInt.minVal);
+  public static final Duration maxVal    = make(FanInt.maxVal);
+  public static final Duration oneDay    = make(nsPerDay);
+  public static final Duration negOneDay = make(-nsPerDay);
 
   public final long ticks;
   private String str;

@@ -508,9 +508,11 @@ namespace Fan.Sys
     public const long secPerMin  = 60L;
     static readonly Duration m_boot = now();
 
-    public static readonly Duration m_defVal = Zero;
-    public static readonly Duration m_minVal = make(FanInt.m_minVal);
-    public static readonly Duration m_maxVal = make(FanInt.m_maxVal);
+    public static readonly Duration m_defVal    = Zero;
+    public static readonly Duration m_minVal    = make(FanInt.m_minVal);
+    public static readonly Duration m_maxVal    = make(FanInt.m_maxVal);
+    public static readonly Duration m_oneDay    = make(nsPerDay);
+    public static readonly Duration m_negOneDay = make(-nsPerDay);
 
     public readonly long m_ticks;
 
