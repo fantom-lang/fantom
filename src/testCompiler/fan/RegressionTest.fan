@@ -39,6 +39,31 @@ class RegressionTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// #529 Private method in mixin bad classfile
+//////////////////////////////////////////////////////////////////////////
+
+  Void test529()
+  {
+     compile(
+       "mixin M
+        {
+          Str i() { return priI + \" \" + intI  }
+          static Str s() { return priS + \" \" + intS }
+          private Str priI() { return \"private instance\" }
+          private Str intI() { return \"internal instance\" }
+          private static Str priS() { return \"private static\" }
+          private static Str intS() { return \"internal static\" }
+        }
+
+        class Foo : M {}
+        ")
+
+    obj := pod.types[1].make
+    verifyEq(obj->i, "private instance internal instance")
+    verifyEq(obj->s, "private static internal static")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // #542 Compiler - Internal class cast error
 //////////////////////////////////////////////////////////////////////////
 
