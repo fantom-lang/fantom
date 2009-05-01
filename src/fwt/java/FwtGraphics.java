@@ -18,20 +18,19 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
 
-public class GraphicsPeer
+public class FwtGraphics implements Graphics
 {
-
-  public static GraphicsPeer make(Graphics self)
+  public FwtGraphics(GC gc)
   {
-    return new GraphicsPeer();
+    this.gc = gc;
   }
 
-  public Brush brush(Graphics self)
+  public Brush brush()
   {
     return brush;
   }
 
-  public void brush(Graphics self, Brush brush)
+  public void brush(Brush brush)
   {
     this.brush = brush;
     Env env = Env.get();
@@ -83,12 +82,12 @@ public class GraphicsPeer
         env.color(g.c2), a2);
   }
 
-  public Pen pen(Graphics self)
+  public Pen pen()
   {
     return pen;
   }
 
-  public void pen(Graphics self, Pen pen)
+  public void pen(Pen pen)
   {
     this.pen = pen;
     gc.setLineWidth((int)pen.width);
@@ -113,138 +112,138 @@ public class GraphicsPeer
     throw new IllegalStateException("Invalid pen.join " + join);
   }
 
-  public Font font(Graphics self)
+  public Font font()
   {
     return font;
   }
 
-  public void font(Graphics self, Font font)
+  public void font(Font font)
   {
     this.font = font;
     this.gc.setFont(Env.get().font(font));
   }
 
-  public boolean antialias(Graphics self)
+  public boolean antialias()
   {
     return gc.getAntialias() == SWT.ON;
   }
 
-  public void antialias(Graphics self, boolean on)
+  public void antialias(boolean on)
   {
     int val = on ? SWT.ON : SWT.OFF;
     gc.setAntialias(val);
     gc.setTextAntialias(val);
   }
 
-  public long alpha(Graphics self)
+  public long alpha()
   {
     return alpha;
   }
 
-  public void alpha(Graphics self, long alpha)
+  public void alpha(long alpha)
   {
     this.alpha = (int)alpha;
-    brush(self, this.brush);
+    brush(this.brush);
   }
 
-  public Graphics drawPoint(Graphics self, long x, long y)
+  public Graphics drawPoint(long x, long y)
   {
     gc.drawPoint((int)x, (int)y);
-    return self;
+    return this;
   }
 
-  public Graphics drawLine(Graphics self, long x1, long y1, long x2, long y2)
+  public Graphics drawLine(long x1, long y1, long x2, long y2)
   {
     gc.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
-    return self;
+    return this;
   }
 
-  public Graphics drawRect(Graphics self, long x, long y, long w, long h)
+  public Graphics drawRect(long x, long y, long w, long h)
   {
     gc.drawRectangle((int)x, (int)y, (int)w, (int)h);
-    return self;
+    return this;
   }
 
-  public Graphics fillRect(Graphics self, long x, long y, long w, long h)
+  public Graphics fillRect(long x, long y, long w, long h)
   {
     gc.fillRectangle((int)x, (int)y, (int)w, (int)h);
-    return self;
+    return this;
   }
 
-  public Graphics drawOval(Graphics self, long x, long y, long w, long h)
+  public Graphics drawOval(long x, long y, long w, long h)
   {
     gc.drawOval((int)x, (int)y, (int)w, (int)h);
-    return self;
+    return this;
   }
 
-  public Graphics fillOval(Graphics self, long x, long y, long w, long h)
+  public Graphics fillOval(long x, long y, long w, long h)
   {
     gc.fillOval((int)x, (int)y, (int)w, (int)h);
-    return self;
+    return this;
   }
 
-  public Graphics drawArc(Graphics self, long x, long y, long w, long h, long s, long a)
+  public Graphics drawArc(long x, long y, long w, long h, long s, long a)
   {
     gc.drawArc((int)x, (int)y, (int)w, (int)h, (int)s, (int)a);
-    return self;
+    return this;
   }
 
-  public Graphics fillArc(Graphics self, long x, long y, long w, long h, long s, long a)
+  public Graphics fillArc(long x, long y, long w, long h, long s, long a)
   {
     gc.fillArc((int)x, (int)y, (int)w, (int)h, (int)s, (int)a);
-    return self;
+    return this;
   }
 
-  public Graphics drawText(Graphics self, String text, long x, long y)
+  public Graphics drawText(String text, long x, long y)
   {
     int flags = SWT.DRAW_DELIMITER | SWT.DRAW_TAB | SWT.DRAW_TRANSPARENT;
     gc.drawText(text, (int)x, (int)y, flags);
-    return self;
+    return this;
   }
 
-  public Graphics drawImage(Graphics self, Image img, long x, long y)
+  public Graphics drawImage(Image img, long x, long y)
   {
     gc.drawImage(Env.get().image(img), (int)x, (int)y);
-    return self;
+    return this;
   }
 
-  public Graphics copyImage(Graphics self, Image img, Rect s, Rect d)
+  public Graphics copyImage(Image img, Rect s, Rect d)
   {
     gc.drawImage(Env.get().image(img),
       (int)s.x, (int)s.y, (int)s.w, (int)s.h,
       (int)d.x, (int)d.y, (int)d.w, (int)d.h);
-    return self;
+    return this;
   }
 
-  public Graphics translate(Graphics self, long x, long y)
+  public Graphics translate(long x, long y)
   {
     Transform t = new Transform(gc.getDevice());
     gc.getTransform(t);
     t.translate((int)x, (int)y);
     gc.setTransform(t);
     t.dispose();
-    return self;
+    return this;
   }
 
-  public Rect clipRect(Graphics self)
+  public Rect clipRect()
   {
     return WidgetPeer.rect(gc.getClipping());
   }
 
-  public void clipRect(Graphics self, Rect r)
+  public void clipRect(Rect r)
   {
     gc.setClipping(WidgetPeer.rect(r));
   }
 
-  public Graphics clip(Graphics self, Rect r)
+  public Graphics clip(Rect r)
   {
     Rectangle a = gc.getClipping();
     Rectangle b = WidgetPeer.rect(r);
     gc.setClipping(a.intersection(b));
-    return self;
+    return this;
   }
 
-  public void dispose(Graphics self)
+  public void dispose()
   {
     gc.dispose();
   }
@@ -253,7 +252,7 @@ public class GraphicsPeer
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  public void push(Graphics self)
+  public void push()
   {
     State s = new State();
     s.pen   = pen;
@@ -268,13 +267,13 @@ public class GraphicsPeer
     stack.push(s);
   }
 
-  public void pop(Graphics self)
+  public void pop()
   {
     State s = (State)stack.pop();
     alpha = s.alpha;
-    pen(self, s.pen);
-    brush(self, s.brush);
-    font(self, s.font);
+    pen(s.pen);
+    brush(s.brush);
+    font(s.font);
     gc.setAntialias(s.antialias);
     gc.setTextAntialias(s.textAntialias);
     gc.setTransform(s.transform);
