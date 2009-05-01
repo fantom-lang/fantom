@@ -787,6 +787,7 @@ class GraphicsDemo : Widget
     g.fillRect(0, 0, 200, 100)
 
     // font metric box with ascent, descent, baseline
+    g.font = Desktop.sysFont.toSize(20)
     tw := g.font.width("Font Metrics")
     tx := (200-tw)/2
     ty := 30

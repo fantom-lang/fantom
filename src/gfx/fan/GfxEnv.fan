@@ -19,7 +19,8 @@ abstract const class GfxEnv
   **
   ** Get the current thread's graphics environment.  If no
   ** environment is active then throw Err or return null based
-  ** on checked flag.
+  ** on checked flag.  The current environment is configured
+  ** with the "gfx.env" Actor local.
   **
   static GfxEnv? current(Bool checked := true)
   {

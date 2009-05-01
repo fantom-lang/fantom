@@ -11,9 +11,8 @@ using gfx
 **
 ** FwtEnv the gfx environment implementation for the Fan Widget Toolkit.
 **
-const class FwtEnv : GfxEnv
+internal const class FwtEnv : GfxEnv
 {
-
 
   override native Size imageSize(Image i)
   override native Image imageResize(Image i, Size s)
@@ -23,6 +22,5 @@ const class FwtEnv : GfxEnv
   override native Int fontDescent(Font f)
   override native Int fontLeading(Font f)
   override native Int fontWidth(Font f, Str s)
-
 
 }
