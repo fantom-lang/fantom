@@ -208,8 +208,8 @@ public class FMethodEmit
     // we only emit instance methods in the interface
     if (isStatic || isCtor) return;
 
-    // set abstract flag and clear code
-    this.jflags |= ABSTRACT;
+    // set abstract/public flags and clear code
+    this.jflags |= (ABSTRACT | PUBLIC);
     this.code = null;
 
     // emit main
@@ -237,8 +237,8 @@ public class FMethodEmit
     // instance methods have an implicit self
     if (!isStatic) this.self = true;
 
-    // bodies are always static
-    this.jflags |= STATIC;
+    // bodies are always public static
+    this.jflags |= (STATIC | PUBLIC);
 
     // emit main body
     MethodEmit main = doEmit();
@@ -254,7 +254,7 @@ public class FMethodEmit
   {
     String parent  = "fan/" + m.parent().pod().name() + "/" + m.parent().name();
     String name    = m.name();
-    int jflags     = emit.jflags(m.flags());
+    int jflags     = emit.jflags(m.flags()) | PUBLIC;
     List params    = m.params();
     int paramCount = params.sz();
 
