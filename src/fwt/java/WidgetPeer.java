@@ -458,8 +458,7 @@ public class WidgetPeer
 
   public void paintControl(PaintEvent e)
   {
-    Graphics g = new Graphics();
-    g.peer.gc = e.gc;
+    FwtGraphics g = new FwtGraphics(e.gc);
     self.onPaint(g);
   }
 
