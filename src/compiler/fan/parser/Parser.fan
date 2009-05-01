@@ -1428,7 +1428,7 @@ public class Parser : CompilerSupport
     if (tokt === Token.amp)
     {
       consume
-      return CurryExpr.make(loc, parenExpr)
+      return CurryExpr.make(loc, curType, parenExpr)
     }
 
     if (tokt === Token.plus)

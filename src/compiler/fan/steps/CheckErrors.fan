@@ -1416,8 +1416,8 @@ class CheckErrors : CompilerStep
 
     // allow closures same scope priviledges as enclosing class
     myType := curType
-    if (myType.isClosure)
-      myType = curType.closure.enclosingType
+    if (myType.isClosure) myType = curType.closure.enclosingType
+    if (myType.curry != null) myType = curType.curry.enclosingType
 
     // consider the slot internal if its parent is internal
     isInternal := slot.isInternal || (slot.parent.isInternal && !slot.parent.isParameterized)

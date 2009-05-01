@@ -173,6 +173,7 @@ class CurryResolver : CompilerSupport
     curry = TypeDef.make(ns, loc, curType.unit, "Curry\$${curryCount}")
     curry.flags = FConst.Internal | FConst.Synthetic
     curry.base  = sig
+    curry.curry = expr
     addTypeDef(curry)
 
     // define ctor

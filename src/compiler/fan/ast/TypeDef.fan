@@ -355,6 +355,7 @@ class TypeDef : DefNode, CType
   EnumDef[] enumDefs               // declared enumerated pairs (only if enum)
   ClosureExpr[] closures           // closures where I am enclosing type (Parse)
   ClosureExpr? closure             // if I am a closure anonymous class
+  CurryExpr? curry                 // if I am a curried function class
   private Str:CSlot slotMap        // all slots
   private Str:SlotDef slotDefMap   // declared slot definitions
   private SlotDef[] slotDefList    // declared slot definitions

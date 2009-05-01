@@ -1309,9 +1309,10 @@ class TernaryExpr : Expr
 **
 class CurryExpr : Expr
 {
-  new make(Location location, Expr operand)
+  new make(Location location, TypeDef enclosingType, Expr operand)
     : super(location, ExprId.curry)
   {
+    this.enclosingType = enclosingType
     this.operand = operand
   }
 
@@ -1325,6 +1326,7 @@ class CurryExpr : Expr
     return "&$operand"
   }
 
+  TypeDef enclosingType
   Expr operand
 }
 
