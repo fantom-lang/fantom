@@ -6,6 +6,8 @@
 //   16 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** MenuItem is an individual item on a Menu.
 **

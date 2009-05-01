@@ -6,6 +6,8 @@
 //   16 Jun 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** TabPane is a container used organize a set of [Tabs]`Tab`.
 ** Tabs are added and removed using normal `Widget.add` and

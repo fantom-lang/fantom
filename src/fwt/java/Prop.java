@@ -340,9 +340,9 @@ public abstract class Prop
 
     void syncFromControl() {}
 
-    fan.fwt.Image get() { return val; }
+    fan.gfx.Image get() { return val; }
 
-    void set(fan.fwt.Image v)
+    void set(fan.gfx.Image v)
     {
       val = v;
       Widget w = peer.control;
@@ -352,7 +352,7 @@ public abstract class Prop
 
     public abstract void set(Widget w, Image v);
 
-    fan.fwt.Image val;
+    fan.gfx.Image val;
   }
 
 //////////////////////////////////////////////////////////////////////////

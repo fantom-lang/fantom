@@ -189,20 +189,23 @@ public class Env
   /**
    * Map a Fan Image to an SWT Image.
    */
-  public Image image(fan.fwt.Image i)
+  public Image image(fan.gfx.Image i)
   {
     if (i == null) return null;
-    if (i.peer.swt != null) return i.peer.swt;
-    FileImage fi = (FileImage)i;
-    Image x = (Image)images.get(fi.file.uri());
+    Image x = (Image)images.get(i.uri);
     if (x == null)
     {
-      InputStream in = SysInStream.java(fi.file.in());
+      if (i.file == null)
+      {
+        System.out.println("ERROR: image has no file: " + i);
+        return null;
+      }
+
+      InputStream in = SysInStream.java(i.file.in());
       try
       {
         x = new Image(display, in);
-        i.peer.swt = x;
-        images.put(fi.file.uri(), x);
+        images.put(i.uri, x);
       }
       catch (Exception e)
       {
@@ -221,15 +224,14 @@ public class Env
   /**
    * Dispose the SWT image for the Fan Image.
    */
-  public void dispose(fan.fwt.Image i)
+  public void dispose(fan.gfx.Image i)
   {
     if (i == null) return;
-    FileImage fi = (FileImage)i;
-    Image x = (Image)images.get(fi.file.uri());
+    Image x = (Image)images.get(i.uri);
     if (x != null)
     {
       x.dispose();
-      images.remove(fi.file.uri());
+      images.remove(i.uri);
     }
   }
 

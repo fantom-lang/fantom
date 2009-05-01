@@ -47,7 +47,7 @@ internal class ImageView : View
 
   override Void onUnload()
   {
-    image?.dispose
+    if (image != null) Desktop.disposeImage(image)
   }
 
   Image? image

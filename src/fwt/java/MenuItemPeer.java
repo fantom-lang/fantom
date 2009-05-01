@@ -91,8 +91,8 @@ public class MenuItemPeer
   };
 
   // Image image := null
-  public fan.fwt.Image image(fan.fwt.MenuItem self) { return image.get(); }
-  public void image(fan.fwt.MenuItem self, fan.fwt.Image v) { image.set(v); }
+  public fan.gfx.Image image(fan.fwt.MenuItem self) { return image.get(); }
+  public void image(fan.fwt.MenuItem self, fan.gfx.Image v) { image.set(v); }
   public final Prop.ImageProp image = new Prop.ImageProp(this)
   {
     public void set(Widget w, Image v) { if (w instanceof MenuItem && !isTopMenu()) ((MenuItem)w).setImage(v); }

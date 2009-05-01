@@ -92,12 +92,17 @@ public class DesktopPeer
 // Dispose
 //////////////////////////////////////////////////////////////////////////
 
-  public static void dispose(fan.gfx.Color f)
+  public static void disposeColor(fan.gfx.Color f)
   {
     Env.get().dispose(f);
   }
 
-  public static void dispose(fan.gfx.Font f)
+  public static void disposeFont(fan.gfx.Font f)
+  {
+    Env.get().dispose(f);
+  }
+
+  public static void disposeImage(fan.gfx.Image f)
   {
     Env.get().dispose(f);
   }

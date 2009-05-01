@@ -57,8 +57,8 @@ public class WindowPeer
   };
 
   // Image icon := null
-  public fan.fwt.Image icon(Window self) { return icon.get(); }
-  public void icon(Window self, fan.fwt.Image v) { icon.set(v); }
+  public fan.gfx.Image icon(Window self) { return icon.get(); }
+  public void icon(Window self, fan.gfx.Image v) { icon.set(v); }
   public final Prop.ImageProp icon = new Prop.ImageProp(this)
   {
     public void set(Widget w, Image v) { ((Shell)w).setImage(v); }

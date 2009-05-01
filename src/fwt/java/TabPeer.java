@@ -48,8 +48,8 @@ public class TabPeer extends WidgetPeer
   };
 
   // Image image := null
-  public fan.fwt.Image image(Tab self) { return image.get(); }
-  public void image(Tab self, fan.fwt.Image v) { image.set(v); }
+  public fan.gfx.Image image(Tab self) { return image.get(); }
+  public void image(Tab self, fan.gfx.Image v) { image.set(v); }
   public final Prop.ImageProp image = new Prop.ImageProp(this)
   {
     public void set(Widget w, Image v) { ((TabItem)w).setImage(v); }
