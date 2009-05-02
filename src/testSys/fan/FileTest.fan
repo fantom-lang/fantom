@@ -360,6 +360,19 @@ class FileTest : Test
     verifyEq(f.readProps, props)
   }
 
+  Void testReadAllLinesNL()
+  {
+    f := tempDir + `testfile.txt`
+    f.out.print("a\nb").close
+    verifyEq(f.readAllLines, ["a", "b"])
+    f.out.print("a\nb\n").close
+    verifyEq(f.readAllLines, ["a", "b"])
+    f.out.print("a\nb\n\n").close
+    verifyEq(f.readAllLines, ["a", "b", ""])
+    f.out.print("a\nb\n\n\n").close
+    verifyEq(f.readAllLines, ["a", "b", "", ""])
+  }
+
   Void testModifyTime()
   {
     start := DateTime.now

@@ -289,7 +289,7 @@ class Doc : RichTextModel
       text := line.text
       if (stripws) text = text.trimEnd
       out.print(text)
-      if (i != lastLine) out.print(delimiter)
+      if (i != lastLine || text.isEmpty) out.print(delimiter)
     }
   }
 
