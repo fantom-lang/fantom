@@ -507,6 +507,18 @@ public class Method
 // Reflection
 //////////////////////////////////////////////////////////////////////////
 
+  public int minParams()
+  {
+    if (minParams < 0)
+    {
+      int min = 0;
+      for (; min<params.sz(); ++min)
+        if (((Param)params.get(min)).hasDefault()) break;
+      minParams = min;
+    }
+    return minParams;
+  }
+
   private boolean isInstance() { return (flags & (FConst.Static|FConst.Ctor)) == 0; }
 
   public Object invoke(Object instance, Object[] args)
@@ -571,5 +583,6 @@ public class Method
   int mask;
   Method generic;
   java.lang.reflect.Method[] reflect;
+  private int minParams = -1;
 
 }
