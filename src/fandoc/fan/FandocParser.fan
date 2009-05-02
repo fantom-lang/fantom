@@ -60,6 +60,7 @@ class FandocParser
 
   private Void header(Doc doc)
   {
+    if (!parseHeader) return
     skipBlankLines
     while (curt !== LineType.eof && cur.startsWith("**"))
     {
@@ -456,8 +457,15 @@ class FandocParser
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  ** If not silent, then errors are dumped to stdout
   Bool silent := false
+
+  ** List of errors detected
   FandocErr[] errors
+
+  ** If true, then leading lines starting with '**' are parsed as header
+  Bool parseHeader := true
+
   internal Str filename       // filename for reporting errors
   private Str[]? lines        // lines of document
   private Int numLines        // lines.size

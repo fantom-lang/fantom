@@ -18,6 +18,24 @@ is the format used for:
 You can use the [fandoc APIs]`#api` to parse fandoc plaintext
 into a document object model and generate HTML.
 
+Header [#header]
+****************
+The begining of a Fandoc document may be prefixed with a header block.  The
+header block includes a series of lines which begin with '**'.  If
+the line includes a colon, then it is added a key/value pair to
+[Doc.meta]`fandoc::Doc.meta`.  For example, we use the following
+header in the standard documentation:
+
+pre>
+  **************************************************************************
+  ** title:      Fandoc
+  ** author:     Brian Frank
+  ** created:    10 Apr 08
+  ** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+  ** license:    Licensed under the Academic Free License version 3.0
+  **************************************************************************
+<pre>
+
 Inline Formatting [#inline]
 ***************************
 pre>
@@ -268,10 +286,5 @@ formats via the [DocWriter]`fandoc::DocWriter` class.  You can use
   <body>
   <p>you want to do <em>what</em>!</p>
   </body>
-
-
-
-
-
 
 
