@@ -97,26 +97,48 @@ public class FMethodEmit
     MethodEmit body = doEmit();
 
     // emit body default parameter wrappers
-    emitWrappers(body);
+    MethodEmit[] wrappers = emitWrappers(body);
 
     // then emit the factory
     this.name = ctorName;
     this.self = false;
     this.ret  = emit.pod.typeRef(emit.type.self);
     this.code = null;
+    int init = emit.method(selfName+ ".<init>()V");
+    emitCtorFactory(init, body, method.paramCount);
+
+    // emit separate factory for each method with default
+    // parameters: note each factory allocs the object and
+    // passes it to the make$ wrapper; we rely on the make$
+    // wrappers to do default params because the factory's
+    // signature doesn't match up to what the Fan compiler
+    // generated (ctor assumes local_0 is this pointer)
+    for (int i=0; i<method.paramCount; ++i)
+      if (method.vars[i].def != null)
+        emitCtorFactory(init, wrappers[i], i);
+  }
+
+  /**
+   * Emit the factory part of the constructor:
+   *   fan:
+   *     new make(Int a, Obj? b := null) {...}
+   *   java:
+   *     static Foo make(long a) { return make$(new Foo(), a) }
+   *     static Foo make(long a, Object b) { return make$(new Foo(), a, b) }
+   */
+  private void emitCtorFactory(int init, MethodEmit body, int paramLen)
+  {
+    this.paramLen = paramLen;
     MethodEmit factory = doEmit();
     CodeEmit code = factory.emitCode();
     code.op2(NEW, emit.cls(selfName));
     code.op(DUP);
-    code.op2(INVOKESPECIAL, emit.method(selfName+ ".<init>()V"));
+    code.op2(INVOKESPECIAL, init);
     code.op(DUP);
-    code.maxLocals = pushArgs(code, false, method.paramCount);
+    code.maxLocals = pushArgs(code, false, paramLen);
     code.maxStack  = code.maxLocals + 2;
     code.op2(INVOKESTATIC, body.ref());
     code.op(ARETURN);
-
-    // emit factory default parameter wrappers
-    emitWrappers(factory);
   }
 
   /**
@@ -292,27 +314,32 @@ public class FMethodEmit
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Emit wrappers.
+   * Emit wrappers, return wrapper methods indexed by param length or null.
    */
-  private void emitWrappers(MethodEmit main)
+  private MethodEmit[] emitWrappers(MethodEmit main)
   {
     // change flags so that defaults aren't abstract
     int oldFlags = this.jflags;
     this.jflags = jflags & ~ABSTRACT;
 
     // handle generating default param wrappers
+    MethodEmit[] wrappers = null;
     for (int i=0; i<method.paramCount; ++i)
       if (method.vars[i].def != null)
-        emitWrapper(main, i);
+      {
+        if (wrappers == null) wrappers = new MethodEmit[method.paramCount];
+        wrappers[i] = emitWrapper(main, i);
+      }
     this.paramLen = method.paramCount;
 
     this.jflags = oldFlags;
+    return wrappers;
   }
 
   /**
    * Emit wrapper.
    */
-  private void emitWrapper(MethodEmit main, int paramLen)
+  private MethodEmit emitWrapper(MethodEmit main, int paramLen)
   {
     // use explicit param count, and clear code
     this.paramLen = paramLen;
@@ -325,7 +352,7 @@ public class FMethodEmit
     pushArgs(code, !(isStatic && !self), paramLen);
 
     // emit default arguments
-    FCodeEmit.Reg[] regs = FCodeEmit.initRegs(emit.pod, isStatic, method.vars);
+    FCodeEmit.Reg[] regs = FCodeEmit.initRegs(emit.pod, isStatic & !isCtor, method.vars);
     for (int i=paramLen; i<method.paramCount; ++i)
     {
       FCodeEmit e = new FCodeEmit(emit, method.vars[i].def, code, regs, emit.pod.typeRef(method.ret));
@@ -338,6 +365,8 @@ public class FMethodEmit
 
     // return
     code.op(FCodeEmit.returnOp(ret));
+
+    return me;
   }
 
 //////////////////////////////////////////////////////////////////////////
