@@ -318,10 +318,17 @@ public abstract class Func
 
     public Object call(List args)
     {
-      int origSize = orig.params.sz();
-      if (origSize == bound.sz()) return orig.call(bound);
+      int origReq  = orig.params.sz();
+      int haveSize = bound.sz() + args.sz();
+      Method m = orig.method();
+      if (m != null)
+      {
+        origReq = m.minParams();
+        if (haveSize > origReq) origReq = haveSize;
+      }
+      if (origReq <= bound.sz()) return orig.call(bound);
 
-      Object[] temp = new Object[origSize];
+      Object[] temp = new Object[haveSize];
       bound.copyInto(temp, 0, bound.sz());
       args.copyInto(temp, bound.sz(), temp.length-bound.sz());
       return orig.call(new List(Sys.ObjType, temp));

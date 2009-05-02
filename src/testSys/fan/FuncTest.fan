@@ -233,4 +233,67 @@ class FuncTest : Test
     verifySame((&10.plus).method, Int#plus)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Curry Def Params
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCurryDefParams()
+  {
+    o := CurryDef()
+    // instance methods
+    verifyEq(CurryDef#i.func.curry([o]).call0, [1, 2, 3])
+    verifyEq(CurryDef#i.func.curry([o]).call1(7), [7, 2, 3])
+    verifyEq(CurryDef#i.func.curry([o]).call([7,8]), [7, 8, 3])
+    verifyEq(CurryDef#i.func.curry([o]).call([7,8,9]), [7, 8, 9])
+    verifyEq(CurryDef#i.func.curry([o]).call3(7,8,9), [7, 8, 9])
+
+    verifyEq(CurryDef#i.func.curry([o, 7]).call0, [7, 2, 3])
+    verifyEq(CurryDef#i.func.curry([o, 7]).call1(8), [7, 8, 3])
+    verifyEq(CurryDef#i.func.curry([o, 7]).call([8,9]), [7, 8, 9])
+    verifyEq(CurryDef#i.func.curry([o, 7]).call2(8,9), [7, 8, 9])
+
+    verifyEq(CurryDef#i.func.curry([o, 7, 8]).call0, [7, 8, 3])
+    verifyEq(CurryDef#i.func.curry([o, 7, 8]).call1(9), [7, 8, 9])
+    verifyEq(CurryDef#i.func.curry([o, 7, 8]).call([9]), [7, 8, 9])
+
+    verifyEq(CurryDef#i.func.curry([o, 7, 8, 9]).call0, [7, 8, 9])
+    verifyEq(CurryDef#i.func.curry([o, 7, 8, 9]).call1(10), [7, 8, 9])
+
+    // static methods
+    verifyEq(CurryDef#s.func.curry([7]).call0, [7, 2, 3])
+    verifyEq(CurryDef#s.func.curry([7]).call1(8), [7, 8, 3])
+    verifyEq(CurryDef#s.func.curry([7]).call([8,9]), [7, 8, 9])
+    verifyEq(CurryDef#s.func.curry([7]).call2(8,9), [7, 8, 9])
+
+    verifyEq(CurryDef#s.func.curry([7, 8]).call0, [7, 8, 3])
+    verifyEq(CurryDef#s.func.curry([7, 8]).call1(9), [7, 8, 9])
+    verifyEq(CurryDef#s.func.curry([7, 8]).call([9]), [7, 8, 9])
+
+    verifyEq(CurryDef#s.func.curry([7, 8, 9]).call0, [7, 8, 9])
+    verifyEq(CurryDef#s.func.curry([7, 8, 9]).call1(10), [7, 8, 9])
+
+
+    // ctor methods
+    verifyEq(CurryDef#make.func.curry([7]).call0->list, [7, 2, 3])
+    verifyEq(CurryDef#make.func.curry([7]).call1(8)->list, [7, 8, 3])
+    verifyEq(CurryDef#make.func.curry([7]).call([8,9])->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.curry([7]).call2(8,9)->list, [7, 8, 9])
+
+    verifyEq(CurryDef#make.func.curry([7, 8]).call0->list, [7, 8, 3])
+    verifyEq(CurryDef#make.func.curry([7, 8]).call1(9)->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.curry([7, 8]).call([9])->list, [7, 8, 9])
+
+    verifyEq(CurryDef#make.func.curry([7, 8, 9]).call0->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.curry([7, 8, 9]).call([,])->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.curry([7, 8, 9]).call1(10)->list, [7, 8, 9])
+  }
+
+}
+
+internal class CurryDef
+{
+  Int[] list := Int[,]
+  new make(Int a := 1, Int b := 2, Int c := 3) { list = [a, b, c] }
+  Int[] i(Int a := 1, Int b := 2, Int c := 3) { [a, b, c] }
+  static Int[] s(Int a := 1, Int b := 2, Int c := 3) { [a, b, c] }
 }
