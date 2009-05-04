@@ -417,13 +417,14 @@ class ApiToHtmlGenerator : HtmlGenerator
           buf.add(makeTypeLink(p[k], map))
         }
         if (p["R"] != Void#) buf.add(" -> ").add(makeTypeLink(p["R"], map))
+        if (buf.size == 1) buf.add(",") // for |,|
         buf.addChar('|')
         if (t.isNullable) buf.add("?")
         return buf.toStr
       }
     }
 
-     // Skip FFI types for now
+    // Skip FFI types for now
     if (t.toStr[0] == '[') return t.toStr
 
     link := (t.pod.name == "sys" && t.name.size == 1) ?
