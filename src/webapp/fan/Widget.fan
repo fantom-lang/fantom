@@ -13,6 +13,7 @@ using web
 **
 ** See `docLib::WebWidget`
 **
+@serializable
 abstract class Widget : Weblet
 {
 
