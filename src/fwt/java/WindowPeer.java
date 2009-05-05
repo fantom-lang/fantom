@@ -124,6 +124,8 @@ public class WindowPeer
 
     if (self.resizable) style |= SWT.RESIZE;
 
+    if (!self.showTrim) style |= SWT.NO_TRIM;
+
     return style;
   }
 
