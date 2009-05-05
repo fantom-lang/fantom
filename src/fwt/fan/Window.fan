@@ -147,6 +147,11 @@ class Window : ContentPane
   **
   virtual native Void close(Obj? result := null)
 
+  **
+  ** Set this Window to be the active window for the application.
+  **
+  native Void activate()
+
   ** Back-door hook until we officially support drag and drop.
   ** See WindowPeer.java for details
   internal |Obj data| onDrop

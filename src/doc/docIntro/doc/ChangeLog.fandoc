@@ -605,5 +605,6 @@
 - Move Point, Size, Rect, Hints, Pen, Color, Brush to gfx
 - Color/Font system color/font methods moved to Desktop
 - Date: isYesterday, isToday, isTomorrow
+- Window: showTrim, activate
 
 TODO: change over buildall to use pathPrefix
