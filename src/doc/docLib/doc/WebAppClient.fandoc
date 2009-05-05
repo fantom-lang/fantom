@@ -101,6 +101,7 @@ Elem [#elem]
   elem.next               // next sibling
   elem.prev               // prev sibling
   elem.children           // List of child elements
+  elem.first              // first child, or null if no children
   elem.add(child)         // add a new child element
   elem.remove(child)      // remove a child element
 
