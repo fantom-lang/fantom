@@ -210,6 +210,13 @@ public class WindowPeer
     return result;
   }
 
+  public void activate(Window self)
+  {
+    if (control == null) return;
+    Shell shell = (Shell)control;
+    shell.setActive();
+  }
+
   public void close(Window self, Object result)
   {
     if (control == null) return;
