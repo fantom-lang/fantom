@@ -401,6 +401,7 @@ class FwtDemo
     mode := Combo { items = WindowMode.values; editable=false }
     alwaysOnTop := Button { it.mode = ButtonMode.check; text = "alwaysOnTop" }
     resizable := Button { it.mode = ButtonMode.check; text = "resizable" }
+    showTrim := Button { it.mode = ButtonMode.check; text = "showTrim"; selected = true }
 
     open := |,|
     {
@@ -410,6 +411,7 @@ class FwtDemo
         it.mode = mode.selected
         it.alwaysOnTop = alwaysOnTop.selected
         it.resizable = resizable.selected
+        it.showTrim = showTrim.selected
         it.size = Size(200,200)
         GridPane { halignPane = Halign.center; valignPane = Valign.center; add(close) },
       }
@@ -422,6 +424,7 @@ class FwtDemo
       mode,
       alwaysOnTop,
       resizable,
+      showTrim,
       Button { text="Open"; onAction.add(open) },
     }
   }

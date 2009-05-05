@@ -99,6 +99,14 @@ class Window : ContentPane
   const Bool resizable := true
 
   **
+  ** Show all normal window decorations, such as the titlebar, and
+  ** frame border.  If false, only the window content will be visible.
+  ** Defaults to true. This field cannot be changed once the window is
+  ** constructed.
+  **
+  const Bool showTrim := true
+
+  **
   ** Child menu bar widget if top level frame.
   **
   Menu? menuBar { set { remove(@menuBar); Widget.super.add(val); @menuBar= val } }
