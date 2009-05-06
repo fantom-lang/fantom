@@ -37,10 +37,22 @@ abstract class Obj
   virtual Bool equals(Obj? that)
 
   **
-  ** Return -1, 0, or 1 if this object is less than, equal to, or greater
-  ** than the specified object.  This method may also be accessed via
-  ** the < <= <=> >= and > shortcut operators.  If not overridden the
-  ** default implementation compares the toStr() representations.
+  ** Return a negative integer, zero, or a positive integer if this object
+  ** is less than, equal to, or greater than the specified object:
+  **    this < that   =>  <0
+  **    this == that  =>  0
+  **    this > that   =>  >0
+  **
+  ** This method may also be accessed via the '<' '<=' '<=>' '>=' and '>'
+  ** shortcut operators.  If not overridden the default implementation
+  ** compares the `toStr` representations.  Also see
+  ** [docLang]`docLang::Expressions#shortcuts`.
+  **
+  ** Examples:
+  **   3.compare(8)  =>  -1
+  **   8.compare(3)  =>  1
+  **   8.compare(8)  =>  0
+  **   3 <=> 8       =>  -1  // shortcut for 3.compare(8)
   **
   virtual Int compare(Obj that)
 
