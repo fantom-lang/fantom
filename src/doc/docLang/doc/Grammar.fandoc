@@ -109,7 +109,7 @@ Expr [#expr]
 ************
 
   <expr>           :=  <assignExpr>
-  <assignExpr>     :=  <condOrExpr> [<assignOp> <assignExpr>]
+  <assignExpr>     :=  <ternaryExpr> [<assignOp> <assignExpr>]
   <assignOp>       :=  "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>="  |
                        "&=" | "^=" | "|="
   <ternaryExpr>    :=  <condOrExpr> "?" <condOrExpr> ":" <condOrExpr>
@@ -121,7 +121,7 @@ Expr [#expr]
   <elvisExpr>      :=  <rangeExpr> "?:" <rangeExpr>
   <rangeExpr>      :=  <bitOrExpr> ((".." | "..<") <bitOrExpr>)*
   <bitOrExpr>      :=  <bitAndExpr> (("^" | "|") <bitAndExpr>)*
-  <bitAndExpr>     :=  <shiftExpr> (("&" <shiftExpr>)*
+  <bitAndExpr>     :=  <shiftExpr> ("&" <shiftExpr>)*
   <shiftExpr>      :=  <addExpr> (("<<" | ">>") <addExpr>)*
   <addExpr>        :=  <multExpr> (("+" | "-") <multExpr>)*
   <multExpr>       :=  <parenExpr> (("*" | "/" | "%") <parenExpr>)*
@@ -159,6 +159,8 @@ Expr [#expr]
   <mapPair>        :=  <expr> ":" <expr>
   <simple>         :=  <type> "(" <expr> ")"
 
+See `Literals` for grammar of the literal tokens.
+
 Type [#type]
 ************
 
@@ -167,9 +169,9 @@ Type [#type]
   <simpleType>     :=  <id> ["::" <id>]
   <listType>       :=  <type> "[]"
   <mapType>        :=  ["["] <type> ":" <type> ["]"]
-  <funcType>       :=  "|" <formals> ["->" <type> "|"
+  <funcType>       :=  "|" <formals> ["->" <type>] "|"
   <formals>        :=  [<formal> ("," <formal>)*]
-  <formal>         :=  <formalFull> | <formalInferred> | <formaTypeOnly>
+  <formal>         :=  <formalFull> | <formalInferred> | <formalTypeOnly>
   <formalFull>     :=  <type> <id>
   <formalInferred> :=  <id>
   <formalTypeOnly> :=  <type>
@@ -200,8 +202,6 @@ Keywords [#keywords]
   false         protected
   final         public
   finally       readonly
-
-
 
 
 
