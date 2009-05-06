@@ -33,8 +33,16 @@ final class List
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Two Lists are equal if they have the same number of items and all
-  ** the items at each index return true for equals().
+  ** Two Lists are equal if they have the same type, the same
+  ** number of items, and all the items at each index return
+  ** true for 'equals'.
+  **
+  ** Examples:
+  **   [2, 3] == [2, 3]     =>  true
+  **   [2, 3] == [3, 2]     =>  false
+  **   [2, 3] == Num[2, 3]  =>  false
+  **   Str[,] == [,]        =>  false
+  **   Str[,] == Str?[,]    =>  false
   **
   override Bool equals(Obj? that)
 
