@@ -118,6 +118,11 @@ public final class Range
     return acc;
   }
 
+  public final long random()
+  {
+    return FanInt.random(this);
+  }
+
   public final boolean equals(Object object)
   {
     if (object instanceof Range)

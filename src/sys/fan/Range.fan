@@ -118,4 +118,9 @@ const final class Range
   **
   Int[] toList()
 
+  **
+  ** Convenience for [Int.random(this)]`Int.random`.
+  **
+  Int random()
+
 }

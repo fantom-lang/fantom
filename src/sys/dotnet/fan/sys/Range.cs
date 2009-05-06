@@ -120,6 +120,11 @@ namespace Fan.Sys
       return acc;
     }
 
+    public long random()
+    {
+      return FanInt.random(this);
+    }
+
     public override bool Equals(object obj)
     {
       if (obj is Range)

@@ -803,6 +803,14 @@ namespace Fan.Sys
       }
     }
 
+    public object random()
+    {
+      if (m_size == 0) return null;
+      int i = (int)FanInt.random();
+      if (i < 0) i = -i;
+      return m_values[i % m_size];
+    }
+
   //////////////////////////////////////////////////////////////////////////
   // Conversion
   //////////////////////////////////////////////////////////////////////////

@@ -114,4 +114,16 @@ class RangeTest : Test
     verifyEq((-4..-8).toList, [-4,-5,-6,-7,-8])
   }
 
+  Void testRandom()
+  {
+    acc := Int:Bool[:]
+    1000.times { acc.set((0..20).random, true) }
+    21.times { verify(acc[it]) }
+
+    acc.clear
+    1000.times { acc.set((0..<20).random, true) }
+    20.times { verify(acc[it]) }
+    verifyNull(acc[20])
+  }
+
 }

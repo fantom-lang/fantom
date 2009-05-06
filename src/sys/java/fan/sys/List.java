@@ -879,6 +879,14 @@ public final class List
     }
   }
 
+  public final Object random()
+  {
+    if (size == 0) return null;
+    int i = FanInt.random.nextInt();
+    if (i < 0) i = -i;
+    return values[i % size];
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
