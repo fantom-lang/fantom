@@ -87,7 +87,7 @@ Stmt [#stmt]
                        <throw> | <while> | <try> | <exprStmt> | <localDef>
   <break>          :=  "break" <eos>
   <continue>       :=  "continue" <eos>
-  <for>            :=  "for" "(" [<forInit> ";" [<expr>] ";" [<expr>] ")" <block>
+  <for>            :=  "for" "(" [<forInit>] ";" [<expr>] ";" [<expr>] ")" <block>
   <forInit>        :=  <expr> | <localDef>
   <if>             :=  "if" "(" <expr> ")" <block> [ "else" <block> ]
   <return>         :=  "return" [<expr>] <eos>
@@ -200,7 +200,6 @@ Keywords [#keywords]
   false         protected
   final         public
   finally       readonly
-
 
 
 
