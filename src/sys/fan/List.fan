@@ -578,6 +578,12 @@ final class List
   **
   Obj?[] flatten()
 
+  **
+  ** Return a random item from the list.  If the list is empty
+  ** return null.  This method is idempotent.  See `Int.random`.
+  **
+  V? random()
+
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
