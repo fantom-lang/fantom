@@ -28,7 +28,15 @@ final class Map
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Two Maps are equal if they have the same number of equal key/value pairs.
+  ** Two Maps are equal if they have the same type and number
+  ** of equal key/value pairs.
+  **
+  ** Examples:
+  **   a := Int:Str[1:"one", 2:"two"]
+  **   b := Int:Str[2:"two", 1:"one"]
+  **   c := Int:Str?[2:"two", 1:"one"]
+  **   a == b  =>  true
+  **   a == c  =>  false
   **
   override Bool equals(Obj? that)
 
