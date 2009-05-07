@@ -111,7 +111,7 @@ class JavascriptWriter : CompilerSupport
       m.params.each |p,i|
       {
         if (!p.hasDefault) return
-        out.w("  if (arguments.length < ${i+1}) $p.name = ")
+        out.w("  if ($p.name == undefined) $p.name = ")
         expr(p->def)
         out.w(";").nl
       }
