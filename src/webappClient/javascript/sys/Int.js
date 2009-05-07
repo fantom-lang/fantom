@@ -35,10 +35,8 @@ var sys_Int = sys_Obj.extend(
 
 sys_Int.fromStr = function(s, radix, checked)
 {
-  // TODO - only supports radix=10 right now
-  if (radix != null && radix != 10)
-    throw Error("Only radix=10 supported!");
-
+  if (radix == undefined) radix = 10;
+  if (checked == undefined) checked = true;
   var num = 0;
   var pos = true;
 
@@ -49,20 +47,41 @@ sys_Int.fromStr = function(s, radix, checked)
   }
 
   // radix 10
-  var len = s.length-1;
-  for (var i=len; i>=0; i--)
+  if (radix == 10)
   {
-    ch = s.charCodeAt(i);
-    if (ch < 48 || ch > 57)
+    var len = s.length-1;
+    for (var i=len; i>=0; i--)
     {
-      if (checked != null && !checked) return null;
-      throw new sys_ParseErr("Int", s);
+      ch = s.charCodeAt(i);
+      if (ch < 48 || ch > 57)
+      {
+        if (!checked) return null;
+        throw new sys_ParseErr("Int", s);
+      }
+      val = ch-48;
+      if (len-i > 0) val *= Math.pow(10, (len-i));
+      num += val;
     }
-    val = ch-48;
-    if (len-i > 0) val *= Math.pow(10, (len-i));
-    num += val;
   }
-
+  // radix 16
+  else if (radix == 16)
+  {
+    var len = s.length-1;
+    for (var i=0; i<s.length; i++)
+    {
+      ch = s.charCodeAt(i);
+      if (ch >= 48 && ch <= 57) { val = ch-48; }
+      else if (ch >= 65 && ch <= 70) { val = ch-65+10; }
+      else if (ch >= 97 && ch <= 102) { val = ch-97+10; }
+      else
+      {
+        if (!checked) return null;
+        throw new sys_ParseErr("Int", s);
+      }
+      num |= (val << ((len-i)*4));
+    }
+  }
+  else throw new sys_ParseErr("Unsupported radix " + radix);
   return pos ? num : -num;
 }
 sys_Int.toStr = function(self)
