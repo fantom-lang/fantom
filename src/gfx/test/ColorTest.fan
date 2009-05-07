@@ -9,6 +9,7 @@
 **
 ** ColorTest
 **
+@javascript
 class ColorTest : Test
 {
 

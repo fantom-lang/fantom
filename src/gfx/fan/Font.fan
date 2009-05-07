@@ -10,6 +10,7 @@
 ** Font models the rendering of text.
 **
 @simple
+@javascript
 const class Font
 {
 

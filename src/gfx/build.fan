@@ -17,13 +17,14 @@ class Build : BuildPod
 
   override Void setup()
   {
-    podName     = "gfx"
-    version     = globalVersion
-    description = "Graphics API"
-    depends     = ["sys 1.0"]
-    srcDirs     = [`fan/`, `test/`]
-    javaDirs    = [,]
-    includeSrc  = true
+    podName       = "gfx"
+    version       = globalVersion
+    description   = "Graphics API"
+    depends       = ["sys 1.0"]
+    srcDirs       = [`fan/`, `test/`]
+    javaDirs      = [,]
+    hasJavascript = true
+    includeSrc    = true
   }
 
 }
