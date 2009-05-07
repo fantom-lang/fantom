@@ -155,10 +155,17 @@ sys_Int.times = function(self, func)
     func(i);
 }
 
+// Arithmetic
+sys_Int.div = function(a, b) { return Math.floor(a/b); }
+
+// Bitwise
+sys_Int.and = function(a, b) { var x = a & b; if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.or  = function(a, b) { var x = a | b; if (x<0) x += 0xffffffff+1; return x; }
+
 //////////////////////////////////////////////////////////////////////////
 // Static Fields
 //////////////////////////////////////////////////////////////////////////
 
-sys_Int.maxValue = { val: 9223372036854775807 };
-sys_Int.minValue = { val: -9223372036854775808 };
+sys_Int.maxVal = 9223372036854775807;
+sys_Int.minVal = -9223372036854775808;
 sys_Int.defVal = 0;

@@ -530,6 +530,26 @@ if (c != null)
         else { out.w("--"); expr(lhs) }
         return
       }
+      if (se.target.ctype?.qname == "sys::Int")
+      {
+        Str? op := null
+        switch (se.op)
+        {
+          case ShortcutOp.and: op = "and"
+          case ShortcutOp.div: op = "div"
+          case ShortcutOp.or:  op = "or"
+        }
+        if (op != null)
+        {
+          if (se.isAssign) { expr(lhs); out.w(" = ") }
+          out.w("sys_Int.$se.op(")
+          expr(lhs)
+          out.w(",")
+          expr(rhs)
+          out.w(")")
+          return
+        }
+      }
       if (se.op.degree == 1) { out.w(se.opToken); expr(lhs); return }
       if (se.op.degree == 2)
       {

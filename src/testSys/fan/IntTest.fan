@@ -241,6 +241,7 @@ class IntTest : Test
     verifyEq(0x0a << 4, 0xa0)
     verifyEq(0x80 >> 1, 0x40)
     verifyEq(0x80 >> 3, 0x10)
+    verifyEq(0xaabbcc | 0xff000000, 0xffaabbcc)
   }
 
 //////////////////////////////////////////////////////////////////////////
