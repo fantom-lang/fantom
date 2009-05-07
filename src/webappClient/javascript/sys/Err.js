@@ -47,7 +47,7 @@ sys_Err.make = function(cause)
   if (cause instanceof sys_Err) return cause;
   if (cause instanceof TypeError) return new sys_NullErr(cause.message);
   if ((typeof cause) == "string") return new sys_Err(cause);
-  return new sys_Err(cause.message);
+  return new sys_Err(cause == undefined ? cause : cause.message);
 }
 
 //////////////////////////////////////////////////////////////////////////
