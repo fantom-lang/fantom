@@ -116,7 +116,7 @@ class JavascriptWriter : CompilerSupport
         out.w(";").nl
       }
     }
-    if (m.isCtor)
+    if (m.isCtor && m.name == "<ctor>")
     {
       out.w("  this._super")
       doMethodSig(m)
@@ -484,9 +484,9 @@ if (c != null)
     Str? mname := var(ce.name)
     if (ce.method.isCtor || ce.name == "<ctor>")
     {
-      mname = "make"
+      mname = ce.name == "<ctor>" ? "make" : ce.name
       first := ce.method.params.first
-      if (first?.paramType?.qname == "sys::Str")
+      if (ce.method.params.size == 1 && first?.paramType?.qname == "sys::Str")
       {
         fromStr := ce.method.parent.methods.find |m| { m.name == "fromStr" }
         if (fromStr != null) mname = "fromStr"
