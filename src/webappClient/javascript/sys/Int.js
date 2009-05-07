@@ -37,52 +37,51 @@ sys_Int.fromStr = function(s, radix, checked)
 {
   if (radix == undefined) radix = 10;
   if (checked == undefined) checked = true;
-  var num = 0;
-  var pos = true;
+  try
+  {
+    if (s == "") throw new sys_Err();
+    var num = 0;
+    var pos = true;
 
-  if (s.charCodeAt(0) == 45)
-  {
-    s = s.substring(1);
-    pos = false;
-  }
+    if (s.charCodeAt(0) == 45)
+    {
+      s = s.substring(1);
+      pos = false;
+    }
 
-  // radix 10
-  if (radix == 10)
-  {
-    var len = s.length-1;
-    for (var i=len; i>=0; i--)
+    // radix 10
+    if (radix == 10)
     {
-      ch = s.charCodeAt(i);
-      if (ch < 48 || ch > 57)
+      var len = s.length-1;
+      for (var i=len; i>=0; i--)
       {
-        if (!checked) return null;
-        throw new sys_ParseErr("Int", s);
+        ch = s.charCodeAt(i);
+        if (ch < 48 || ch > 57) throw new sys_Err();
+        val = ch-48;
+        if (len-i > 0) val *= Math.pow(10, (len-i));
+        num += val;
       }
-      val = ch-48;
-      if (len-i > 0) val *= Math.pow(10, (len-i));
-      num += val;
     }
-  }
-  // radix 16
-  else if (radix == 16)
-  {
-    var len = s.length-1;
-    for (var i=0; i<s.length; i++)
+    // radix 16
+    else if (radix == 16)
     {
-      ch = s.charCodeAt(i);
-      if (ch >= 48 && ch <= 57) { val = ch-48; }
-      else if (ch >= 65 && ch <= 70) { val = ch-65+10; }
-      else if (ch >= 97 && ch <= 102) { val = ch-97+10; }
-      else
+      var len = s.length-1;
+      for (var i=0; i<s.length; i++)
       {
-        if (!checked) return null;
-        throw new sys_ParseErr("Int", s);
+        ch = s.charCodeAt(i);
+        if (ch >= 48 && ch <= 57) { val = ch-48; }
+        else if (ch >= 65 && ch <= 70) { val = ch-65+10; }
+        else if (ch >= 97 && ch <= 102) { val = ch-97+10; }
+        else throw new sys_Err();
+        num = sys_Int.or(num, (val << ((len-i)*4)));
       }
-      num = sys_Int.or(num, (val << ((len-i)*4)));
     }
+    else throw new sys_Err();
+    return pos ? num : -num;
   }
-  else throw new sys_ParseErr("Unsupported radix " + radix);
-  return pos ? num : -num;
+  catch (err) {}
+  if (checked) throw new sys_ParseErr("Int", s);
+  return null;
 }
 sys_Int.toStr = function(self)
 {
