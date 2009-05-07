@@ -67,6 +67,16 @@ namespace Fan.Sys
       return (System.DateTime.Now.Ticks - diffDotnet) * nsPerTick;
     }
 
+    public static long nowUnique()
+    {
+      lock (m_nowUniqueLock)
+      {
+        long now = (System.DateTime.Now.Ticks - diffDotnet) * nsPerTick;
+        if (now <= m_nowUniqueLast) now = m_nowUniqueLast+1;
+        return m_nowUniqueLast = now;
+      }
+    }
+
     public static DateTime boot()  { return m_boot; }
 
   //////////////////////////////////////////////////////////////////////////
@@ -933,6 +943,8 @@ namespace Fan.Sys
     static volatile DateTime cached = new DateTime(0, TimeZone.m_current);
     static volatile DateTime cachedUtc = new DateTime(0, TimeZone.m_utc);
     static readonly DateTime m_boot;
+    static readonly object m_nowUniqueLock = new object();
+    static long m_nowUniqueLast;
     static readonly string localeKey = "dateTime";
 
     public static readonly DateTime m_defVal = make(2000, Month.m_jan, 1, 0, 0, 0, 0, TimeZone.utc());

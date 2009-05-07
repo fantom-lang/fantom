@@ -10,6 +10,7 @@ package fan.sys;
 
 import java.text.*;
 import java.util.*;
+import java.util.concurrent.atomic.*;
 
 /**
  * DateTime represents an absolute instance in time.
@@ -63,6 +64,16 @@ public final class DateTime
   public static long nowTicks()
   {
     return (System.currentTimeMillis() - diffJava) * nsPerMilli;
+  }
+
+  public static long nowUnique()
+  {
+    synchronized (nowUniqueLock)
+    {
+      long now = (System.currentTimeMillis() - diffJava) * nsPerMilli;
+      if (now <= nowUniqueLast) now = nowUniqueLast+1;
+      return nowUniqueLast = now;
+    }
   }
 
   public static DateTime boot()  { return boot; }
@@ -918,6 +929,9 @@ public final class DateTime
   private static final Duration toleranceDefault = Duration.makeMillis(250);
   private static volatile DateTime cached = new DateTime(0, TimeZone.current);
   private static volatile DateTime cachedUtc = new DateTime(0, TimeZone.utc);
+  private static Object nowUniqueLock = new Object();
+  private static long nowUniqueLast;
+  private static AtomicLong nowTicksCounter = new AtomicLong();
   private static final String localeKey = "dateTime";
   private static final DateTime boot = now();
 
