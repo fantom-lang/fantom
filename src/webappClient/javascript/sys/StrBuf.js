@@ -18,7 +18,7 @@ var sys_StrBuf = sys_Obj.extend(
 
   $ctor: function()
   {
-    this.m_str
+    this.m_str = "";
   },
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,10 +30,21 @@ var sys_StrBuf = sys_Obj.extend(
     return sys_Type.find("sys::StrBuf");
   },
 
+  add: function(obj)
+  {
+    this.m_str += obj==null ? "null" : sys_Obj._toStr(obj);
+    return this;
+  },
+
   addChar: function(ch)
   {
     this.m_str += ch;
     return this;
+  },
+
+  isEmpty: function()
+  {
+    return this.m_str == 0;
   },
 
   toStr: function()
@@ -48,4 +59,3 @@ var sys_StrBuf = sys_Obj.extend(
 //////////////////////////////////////////////////////////////////////////
 
 sys_StrBuf.make = function() { return new sys_StrBuf(); }
-
