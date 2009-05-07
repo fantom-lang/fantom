@@ -311,7 +311,11 @@ if (c != null)
     ss.cases.each |Case c|
     {
       c.cases.each |Expr e| { out.w("case "); expr(e); out.w(":").nl }
-      if (c.block != null) block(c.block, false, true)
+      if (c.block != null)
+      {
+        block(c.block, false, true)
+        out.w("  break;").nl
+      }
     }
     if (ss.defaultBlock != null)
     {
