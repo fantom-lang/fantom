@@ -468,13 +468,12 @@ if (c != null)
         return
       }
       expr(ce.target)
-      out.w(".")
     }
     else if (ce.method.isStatic || ce.method.isCtor)
     {
-      out.w(qname(ce.method.parent)).w(".")
+      out.w(qname(ce.method.parent))
     }
-    mname :=  var(ce.name)
+    Str? mname := var(ce.name)
     if (ce.method.isCtor || ce.name == "<ctor>")
     {
       mname = "make"
@@ -485,7 +484,12 @@ if (c != null)
         if (fromStr != null) mname = "fromStr"
       }
     }
-    out.w(mname)
+    else if (ce.target != null)
+    {
+      if (ce.target.ctype.qname == "sys::Func" && Regex(r"call\d").matches(mname))
+        mname = null
+    }
+    if (mname != null) out.w(".").w(mname)
     if (ce.isDynamic && ce.noParens)
     {
       if (ce.args.size == 0) return
