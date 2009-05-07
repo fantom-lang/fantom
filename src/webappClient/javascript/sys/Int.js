@@ -78,7 +78,7 @@ sys_Int.fromStr = function(s, radix, checked)
         if (!checked) return null;
         throw new sys_ParseErr("Int", s);
       }
-      num |= (val << ((len-i)*4));
+      num = sys_Int.or(num, (val << ((len-i)*4)));
     }
   }
   else throw new sys_ParseErr("Unsupported radix " + radix);
