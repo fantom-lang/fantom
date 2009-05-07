@@ -165,7 +165,7 @@ class DateTimeTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Now
+// Now UTC
 //////////////////////////////////////////////////////////////////////////
 
   Void testNowUtc()
@@ -186,6 +186,46 @@ class DateTimeTest : Test
     c := DateTime.now(180ms)
     verify(b !== c)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Now Unique
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNowUnique()
+  {
+    // spawn off a bunch of actors to loop on DateTime.nowUnique
+    futures := Future[,]
+    10.times |,|
+    {
+      actor := Actor(ActorPool(), &nowUniqueLoop)
+      futures.add(actor.send(null))
+    }
+
+    // aggregate all the results
+    acc := Int[,]
+    futures.each |f| { acc.addAll(f.get) }
+
+    // sort, but check that acc was unsorted to
+    // verify actors were inter-leaved
+    sorted := acc.dup.sort
+    verifyNotEq(acc, sorted)
+
+    // verify that we have no duplicates
+    for (i:=1; i<sorted.size; ++i)
+      verify(sorted[i-1] < sorted[i], i.toStr)
+
+    // verify that counter gets reset
+    Actor.sleep(10ms)
+    verify(DateTime.nowUnique <= DateTime.nowTicks)
+  }
+
+  static Int[] nowUniqueLoop()
+  {
+    acc := Int[,]
+    10000.times { acc.add(DateTime.nowUnique) }
+    return acc.toImmutable
+  }
+
 
 //////////////////////////////////////////////////////////////////////////
 // Boot
