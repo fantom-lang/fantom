@@ -12,6 +12,7 @@
 ** a solid `Brush`.
 **
 @simple
+@javascript
 const class Color : Brush
 {
 
@@ -83,9 +84,9 @@ const class Color : Brush
     try
     {
       if (!s.startsWith("#")) throw Err()
-      s = s[1..-1]
-      hex := s.toInt(16)
-      switch (s.size)
+      sub := s[1..-1]
+      hex := sub.toInt(16)
+      switch (sub.size)
       {
         case 3:
           r := (hex >> 8) & 0xf; r = (r << 4) | r

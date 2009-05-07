@@ -9,6 +9,7 @@
 **
 ** GfxEnv models an implementation of the gfx graphics API.
 **
+@javascript
 abstract const class GfxEnv
 {
 

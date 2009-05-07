@@ -22,6 +22,7 @@ mixin Brush
 **
 ** Fills a shape using a two color linear gradient.
 **
+@javascript
 const class Gradient : Brush
 {
 

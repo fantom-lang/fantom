@@ -9,6 +9,7 @@
 **
 ** FontTest
 **
+@javascript
 class FontTest : Test
 {
 
