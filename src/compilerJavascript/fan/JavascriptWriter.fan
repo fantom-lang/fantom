@@ -151,9 +151,17 @@ class JavascriptWriter : CompilerSupport
   {
     if (f.isNative) return
     if (f.isStatic) { staticFields.add(f); return }
+    def := "null"
+    switch (f.fieldType.qname)
+    {
+      case "sys::Bool":    def = "false"
+      case "sys::Decimal": // fall
+      case "sys::Float":   // fall
+      case "sys::Int":     def = "0"
+    }
     out.w("${var(f.name)}\$get: function() { return this.${var(f.name)}; },").nl
     out.w("${var(f.name)}\$set: function(val) { this.${var(f.name)} = val; },").nl
-    out.w("${var(f.name)}: null")
+    out.w("${var(f.name)}: $def")
     if (trailingComma) out.w(",")
     out.nl
   }
