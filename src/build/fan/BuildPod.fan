@@ -101,6 +101,13 @@ abstract class BuildPod : BuildScript
   Bool hasJavascript
 
   **
+  ** List of Uris relative to `scriptDir` of directories containing
+  ** the Javascript source files to include for native Javascript
+  ** support.
+  **
+  Uri[]? javascriptDirs
+
+  **
   ** Include the full set of source code in the pod file.
   ** This is required to generate links in HTML doc to HTML
   ** formatted source.  Defaults to false.
@@ -164,7 +171,7 @@ abstract class BuildPod : BuildScript
   **
   override Target defaultTarget()
   {
-    if (javaDirs == null && dotnetDirs == null && !hasJavascript)
+    if (javaDirs == null && dotnetDirs == null && !hasJavascript && javascriptDirs == null)
       return target("compile")
     else
       return target("full")
@@ -339,7 +346,7 @@ abstract class BuildPod : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
-// CompileJavascript
+// Javascript
 //////////////////////////////////////////////////////////////////////////
 
   @target="compile Fan source to Javasript"
@@ -353,6 +360,113 @@ abstract class BuildPod : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
+// JavascriptNative
+//////////////////////////////////////////////////////////////////////////
+
+  @target="include native Javascript source files"
+  virtual Void javascriptNative()
+  {
+    if (javascriptDirs == null) return
+
+    // if run directly, we have to run the javascript target first
+    if (toRun.size == 1 && toRun.first.name == "javascriptNative")
+      javascript
+
+    log.info("javascriptNative [$podName]")
+    log.indent
+
+    // env
+    jstemp := scriptDir + `temp-javascript/`
+    jsDirs := resolveDirs(javascriptDirs)
+    target := jstemp + "$podName-native.js".toUri
+
+    // start with a clean directory
+    Delete.make(this, jstemp).run
+    CreateDir.make(this, jstemp).run
+
+    // get original javascript file
+    jdk    := JdkTask.make(this)
+    jarExe := jdk.jarExe
+    curPod := libFanDir + "${podName}.pod".toUri
+    Exec.make(this, [jarExe.osPath, "-fx", curPod.osPath, "${podName}.js"], jstemp).run
+    orig := jstemp + "${podName}.js".toUri
+    if (!orig.exists) orig.create
+
+    // merge
+    out := target.out
+    jsDirs.each |File f|
+    {
+      files := f.isDir ? f.listFiles : [f]
+      files.each |File js|
+      {
+        in := js.in
+        in.pipe(out)
+        in.close
+        out.printLine("")
+      }
+    }
+    out.close
+
+    // minify
+    min := jstemp + "$podName-min.js".toUri
+    in  := target.in
+    out = min.out
+    minify(in, out)
+    in.close
+    out.close
+
+    // append to orig
+    in  = min.in
+    out = orig.out(true)
+    out.printLine("")
+    in.pipe(out)
+    in.close
+    out.close
+
+    // add back into pod
+    Exec.make(this, [jarExe.osPath, "fu", curPod.osPath, "-C", jstemp.osPath, orig.name], jstemp).run
+
+    // cleanup temp
+    //Delete.make(this, jstemp).run
+
+    log.unindent
+  }
+
+  private Void minify(InStream in, OutStream out)
+  {
+    inBlock := false
+    in.readAllLines.each |line|
+    {
+      s := line
+      // line comments
+      i := s.index("//")
+      if (i != null) s = s[0...i]
+      // block comments
+      temp := s
+      a := temp.index("/*")
+      if (a != null)
+      {
+        s = temp[0...a]
+        inBlock = true
+      }
+      if (inBlock)
+      {
+        b := temp.index("*/")
+        if (b != null)
+        {
+          s = (a == null) ? temp[b+2..-1] : s + temp[b+2..-1]
+          inBlock = false
+        }
+      }
+      // trim and print
+      s = s.trim
+      if (inBlock) return
+      if (s.size == 0) return
+      out.printLine(s)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // CompileAll
 //////////////////////////////////////////////////////////////////////////
 
@@ -363,6 +477,7 @@ abstract class BuildPod : BuildScript
     javaNative
     dotnetNative
     javascript
+    javascriptNative
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -377,6 +492,7 @@ abstract class BuildPod : BuildScript
     javaNative
     dotnetNative
     javascript
+    javascriptNative
   }
 
 //////////////////////////////////////////////////////////////////////////
