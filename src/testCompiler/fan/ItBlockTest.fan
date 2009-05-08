@@ -628,4 +628,19 @@ class ItBlockTest : CompilerTest
        19, 26, "Ambiguous slot 'u' on both 'this' ($podName::Foo) and 'it' ($podName::Bar)",
       ])
   }
+
+  Void testAddReturnsVoid()
+  {
+    verifyErrors(
+     "class Foo
+      {
+        Obj foo() { make { 0, 1, 2 } }
+        Void add(Obj x) {}
+      }
+      ",
+      [
+       3, 25, "'$podName::Foo.add' must return This",
+      ])
+  }
+
 }

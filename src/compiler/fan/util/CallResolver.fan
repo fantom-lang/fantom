@@ -185,7 +185,11 @@ class CallResolver : CompilerSupport
       }
       else
       {
-        throw err("Unknown method '$errSig'", location)
+        ct := target as CallExpr
+        if (name == "add" && ct != null && ct.target?.id === ExprId.itExpr && ct.method != null)
+          throw err("'$ct.method.qname' must return This", location)
+        else
+          throw err("Unknown method '$errSig'", location)
       }
     }
   }
