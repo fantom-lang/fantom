@@ -529,6 +529,25 @@ public final class List
     }
   }
 
+  public final void eachRange(Range r, Func f)
+  {
+    int s = r.start(size);
+    int e = r.end(size);
+    int n = e - s + 1;
+    if (n < 0) throw IndexErr.make(r).val;
+
+    if (f.params.sz() == 1)
+    {
+      for (int i=s; i<=e; ++i)
+        f.call1(values[i]);
+    }
+    else
+    {
+      for (int i=s; i<=e; ++i)
+        f.call2(values[i], Long.valueOf(i));
+    }
+  }
+
   public final Object eachWhile(Func f)
   {
     if (f.params.sz() == 1)

@@ -777,6 +777,32 @@ class ListTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// EachRange
+//////////////////////////////////////////////////////////////////////////
+
+  Void testEachRange()
+  {
+    x := ["a", "b", "c", "d", "e"]
+    acc := Str[,]
+    acc.clear; x.eachRange(1..2, &acc.add); verifyEq(acc, ["b", "c"])
+    acc.clear; x.eachRange(3..-1, &acc.add); verifyEq(acc, ["d", "e"])
+    acc.clear; x.eachRange(-4..-2, &acc.add); verifyEq(acc, ["b", "c", "d"])
+    acc.clear; x.eachRange(-4..2, &acc.add); verifyEq(acc, ["b", "c"])
+    acc.clear; x.eachRange(-4..<3, &acc.add); verifyEq(acc, ["b", "c"])
+    acc.clear; x.eachRange(1..-1, &acc.add); verifyEq(acc, ["b", "c", "d", "e"])
+    acc.clear; x.eachRange(1..<-1, &acc.add); verifyEq(acc, ["b", "c", "d"])
+
+    acc.clear
+    indices := Int[,]
+    x.eachRange(2..<5) |v,i| { acc.add(v); indices.add(i) }
+    verifyEq(acc, ["c", "d", "e"])
+    verifyEq(indices, [2, 3, 4])
+
+    verifyErr(IndexErr#) { x.eachRange(0..5) {} }
+    verifyErr(IndexErr#) { x.eachRange(0..<6) {} }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // EachWhile
 //////////////////////////////////////////////////////////////////////////
 
