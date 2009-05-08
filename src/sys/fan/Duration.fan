@@ -25,6 +25,11 @@ const final class Duration
   static Duration now()
 
   **
+  ** Convenience for 'now.ticks'.
+  **
+  static Int nowTicks()
+
+  **
   ** Create a Duration which represents the specified number of nanosecond ticks.
   **
   static Duration make(Int ticks)
