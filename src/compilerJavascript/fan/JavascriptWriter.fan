@@ -69,7 +69,6 @@ class JavascriptWriter : CompilerSupport
 
   Void method(MethodDef m, Bool trailingComma)
   {
-    if (m.isNative) return
     if (m.isStatic) { staticMethods.add(m); return }
     if (m.isFieldAccessor) return // getter/setters are defined when field is emitted
     if (m.isCtor) { ctors.add(m); out.w("\$") }
@@ -88,13 +87,14 @@ class JavascriptWriter : CompilerSupport
     out.w("{").nl
     out.w("  var instance = new ${qname(m.parent)}();").nl
     out.w("  instance.\$$m.name"); doMethodSig(m); out.w(";").nl
+    hasNative := typeDef.slots.any |s| { s.isNative }
+    if (hasNative) out.w("  this.peer = new ${nativeQname(typeDef)}(this);").nl
     out.w("  return instance;").nl
     out.w("}").nl
   }
 
   Void staticMethod(MethodDef m)
   {
-    if (m.isNative) return
     if (!m.isStatic) err("Method must be static: $m.name", m.location)
     if (m.name == "static\$init") { staticInits.add(m.code); return }
     out.w("${qname(m.parent)}.${var(m.name)} = ")
@@ -122,7 +122,14 @@ class JavascriptWriter : CompilerSupport
       doMethodSig(m)
       out.w(";").nl
     }
-    if (m.code != null)
+    if (m.isNative)
+    {
+      ret := m.ret.qname == "sys::Void" ? "" : "return "
+      out.w("  ${ret}${nativeQname(typeDef)}.$m.name")
+      doMethodSig(m, true)
+      out.w(";").nl
+    }
+    else if (m.code != null)
     {
       if (ClosureFinder(m).exists)
         out.w("  var \$this = this;").nl
@@ -131,13 +138,15 @@ class JavascriptWriter : CompilerSupport
     out.w("}")
   }
 
-  private Void doMethodSig(MethodDef m)
+  private Void doMethodSig(MethodDef m, Bool passThis := false)
   {
+    i := 0
     out.w("(")
-    m.vars.each |MethodVar v, Int i|
+    if (passThis) { out.w("this"); i++ }
+    m.vars.each |MethodVar v|
     {
       if (!v.isParam) return
-      if (i > 0) out.w(", ")
+      if (i++ > 0) out.w(", ")
       out.w(var(v.name))
     }
     out.w(")")
@@ -692,6 +701,14 @@ if (c != null)
   Str qname(CType ctype)
   {
     return ctype.pod.name + "_" + ctype.name
+  }
+
+  **
+  ** Return the native peer qname for this TypeDef.
+  **
+  Str nativeQname(CType ctype)
+  {
+    return "${qname(ctype)}Peer"
   }
 
   Bool isPrimitive(Str qname) { return primitiveMap.get(qname, false) }
