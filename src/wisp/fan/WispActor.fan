@@ -82,7 +82,8 @@ internal const class WispActor : Actor
       // if the weblet didn't finishing reading the content
       // stream then don't attempt to reuse this connection,
       // safest thing is to just close the socket
-      if (req.webIn != null && req.webIn.read != null) success = false
+      try { if (req.webIn != null && req.webIn.read != null) success = false }
+      catch (IOErr e) { success = false }
     }
     catch (Err e)
     {
