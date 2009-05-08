@@ -96,6 +96,11 @@ public final class Duration
     return new Duration(System.nanoTime());
   }
 
+  public static long nowTicks()
+  {
+    return System.nanoTime();
+  }
+
   public static Duration boot()
   {
     return boot;

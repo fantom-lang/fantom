@@ -107,6 +107,11 @@ namespace Fan.Sys
       return new Duration(System.DateTime.Now.Ticks * 100);
     }
 
+    public static long nowTicks()
+    {
+      return System.DateTime.Now.Ticks * 100;
+    }
+
     public static Duration boot()
     {
       return m_boot;
