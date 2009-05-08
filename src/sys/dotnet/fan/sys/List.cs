@@ -499,14 +499,49 @@ namespace Fan.Sys
 
     public void each(Func f)
     {
-      for (int i=0; i<m_size; i++)
-        f.call2(m_values[i], i);
+      if (f.m_params.sz() == 1)
+      {
+        for (int i=0; i<m_size; i++)
+          f.call1(m_values[i]);
+      }
+      else
+      {
+        for (int i=0; i<m_size; i++)
+          f.call2(m_values[i], i);
+      }
     }
 
     public void eachr(Func f)
     {
-      for (int i=m_size-1; i>=0; i--)
-        f.call2(m_values[i], i);
+      if (f.m_params.sz() == 1)
+      {
+        for (int i=m_size-1; i>=0; i--)
+          f.call1(m_values[i]);
+      }
+      else
+      {
+        for (int i=m_size-1; i>=0; i--)
+          f.call2(m_values[i], i);
+      }
+    }
+
+    public void eachRange(Range r, Func f)
+    {
+      int s = r.start(m_size);
+      int e = r.end(m_size);
+      int n = e - s + 1;
+      if (n < 0) throw IndexErr.make(r).val;
+
+      if (f.m_params.sz() == 1)
+      {
+        for (int i=s; i<=e; ++i)
+          f.call1(m_values[i]);
+      }
+      else
+      {
+        for (int i=s; i<=e; ++i)
+          f.call2(m_values[i], i);
+      }
     }
 
     public object eachWhile(Func f)

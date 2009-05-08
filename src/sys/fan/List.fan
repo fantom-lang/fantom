@@ -326,6 +326,13 @@ final class List
   Void eachr(|V item, Int index| c)
 
   **
+  ** Iterate the list usnig the specified range.   Negative indexes
+  ** may be used to access from the end of the list.  This method is
+  ** idempotent.  Throw IndexErr if range is invalid.
+  **
+  Void eachRange(Range r, |V item, Int index| c)
+
+  **
   ** Iterate every item in the list starting with index 0 up to
   ** size-1 until the function returns non-null.  If function
   ** returns non-null, then break the iteration and return the

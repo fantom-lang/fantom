@@ -607,5 +607,6 @@
 - Date: isYesterday, isToday, isTomorrow
 - DateTime: nowUnique
 - Window: showTrim, activate
+- List: eachRange
 
 TODO: change over buildall to use pathPrefix
