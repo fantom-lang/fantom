@@ -608,5 +608,6 @@
 - DateTime: nowUnique
 - Window: showTrim, activate
 - List: eachRange
+- Duration: nowTicks
 
 TODO: change over buildall to use pathPrefix
