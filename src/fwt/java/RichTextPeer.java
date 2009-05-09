@@ -70,8 +70,8 @@ public class RichTextPeer
 
     ScrollBar hbar = t.getHorizontalBar();
     ScrollBar vbar = t.getVerticalBar();
-    if (hbar != null) self.hbar().peer.attachTo(hbar);
-    if (vbar != null) self.vbar().peer.attachTo(vbar);
+    if (hbar != null) ((ScrollBarPeer)self.hbar().peer).attachToScrollable(t, hbar);
+    if (vbar != null) ((ScrollBarPeer)self.vbar().peer).attachToScrollable(t, vbar);
 
     // this is a hack, but seems to be the only way to set
     // the margins hidden away as private fields in StyledText
