@@ -57,8 +57,8 @@ public class TreePeer
 
     ScrollBar hbar = t.getHorizontalBar();
     ScrollBar vbar = t.getVerticalBar();
-    if (hbar != null) self.hbar().peer.attachTo(hbar);
-    if (vbar != null) self.vbar().peer.attachTo(vbar);
+    if (hbar != null) ((ScrollBarPeer)self.hbar().peer).attachToScrollable(t, hbar);
+    if (vbar != null) ((ScrollBarPeer)self.vbar().peer).attachToScrollable(t, vbar);
 
     if (Env.isWindows())
     {

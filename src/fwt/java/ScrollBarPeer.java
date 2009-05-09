@@ -10,6 +10,7 @@ package fan.fwt;
 import fan.sys.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swt.events.*;
@@ -32,11 +33,18 @@ public class ScrollBarPeer
     return peer;
   }
 
+  void attachToScrollable(Scrollable scrollable, ScrollBar control)
+  {
+    this.scrollable = scrollable;
+    attachTo(control);
+  }
+
   void attachTo(Widget control)
   {
     super.attachTo(control);
     ScrollBar sb = (ScrollBar)control;
     sb.addSelectionListener(this);
+    checkModifyListeners((fan.fwt.ScrollBar)self);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -101,9 +109,82 @@ public class ScrollBarPeer
 
   public void widgetSelected(SelectionEvent se)
   {
+    fireModified();
+  }
+
+  public void fireModified()
+  {
     ScrollBar sb = (ScrollBar)control;
     fan.fwt.Event fe = event(EventId.modified);
-    fe.data = Long.valueOf(sb.getSelection());
+    this.lastValue = sb.getSelection();
+    fe.data = Long.valueOf(this.lastValue);
     ((fan.fwt.ScrollBar)self).onModify().fire(fe);
   }
+
+  public void checkModifyListeners(fan.fwt.ScrollBar self)
+  {
+    //
+    // What follows is a hackish work-around for the fact that SWT
+    // doesn't fire scrolling events if the parent scrollable (StyledText,
+    // Tree, or Table) uses a key event like PageUp/PageDn to scroll.
+    // What we do is register for key events on the scrollable and
+    // use that to check if the scroll position has changed.  Since
+    // this is potentially pretty expense, we only add ourselves as a
+    // key listener when someone registers with ScrollBar.onModify.
+    //
+    //   - http://fandev.org/sidewalk/topic/534
+    //   - http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg44740.html
+    //
+
+    // if we don't have any onModify listeners, then I
+    // shouldn't be actively registered as a key listener
+    // on my parent table/tree/richtext
+    if (control == null || scrollable == null) return;
+    boolean now = self.onModify().isEmpty();
+    if (now != activeModifyListener) return;
+
+    // create a key listener on the scrollable (StyledText, Table, or Tree);
+    // after it fires a key event, we check if the scroll bar has been
+    // modified to see if we need to fire an onModify event
+    final Env env = Env.get();
+    if (scrollableKeyListener == null) scrollableKeyListener = new Listener()
+    {
+      public void handleEvent(final Event event)
+      {
+        // asyncExec ensures that Scrollable handles key first
+        env.display.asyncExec(new Runnable()
+        {
+          public void run()
+          {
+            // we are listening for *all* key events on the
+            // scrollable, so we only want to fire an event if the
+            // scroll bar has actually changed position
+            if (control != null && ((ScrollBar)control).getSelection() != lastValue)
+              fireModified();
+          }
+        });
+      }
+    };
+
+    // add/remove listener
+    if (activeModifyListener)
+    {
+      scrollable.removeListener(SWT.KeyDown, scrollableKeyListener);
+      activeModifyListener  = false;
+    }
+    else
+    {
+      scrollable.addListener(SWT.KeyDown, scrollableKeyListener);
+      activeModifyListener = true;
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  boolean activeModifyListener;     // are we actively registered for events
+  Control scrollable;               // associated scrollable
+  Listener scrollableKeyListener;   // listener for key down on scrollable
+  int lastValue;                    // last selection we fired onModify
 }
