@@ -21,7 +21,7 @@ class Build : BuildPod
     version     = globalVersion
     description = "Standard icons library"
     depends     = ["sys 1.0"]
-    resDirs     = [`x16/`, `x32/`, `x48/`, `x256/`, `license/`]
+    resDirs     = [`x16/`, `x32/`, `x48/`, `x256/`]
     podFacets   = ["doc": false]
   }
 
