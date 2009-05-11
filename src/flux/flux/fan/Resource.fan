@@ -103,7 +103,7 @@ abstract class Resource
   **
   virtual Menu? popup(Frame? frame, Event? event)
   {
-    return Menu { viewsMenu(frame, event) }
+    return Menu { add(viewsMenu(frame, event)) }
   }
 
   **
