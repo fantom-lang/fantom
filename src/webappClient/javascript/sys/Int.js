@@ -17,21 +17,20 @@ var sys_Int = sys_Obj.extend(
 //////////////////////////////////////////////////////////////////////////
 
   $ctor: function() {},
-
-//////////////////////////////////////////////////////////////////////////
-// Methods
-//////////////////////////////////////////////////////////////////////////
-
-  type: function()
-  {
-    return sys_Type.find("sys::Int");
-  }
+  type: function() { return sys_Type.find("sys::Int"); }
 
 });
 
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
+
+sys_Int.make = function(val)
+{
+  var x = new Number(val);
+  x.$fanType = sys_Type.find("sys::Int");
+  return x;
+}
 
 sys_Int.fromStr = function(s, radix, checked)
 {
@@ -86,6 +85,14 @@ sys_Int.fromStr = function(s, radix, checked)
 sys_Int.toStr = function(self)
 {
   return ""+self;
+}
+
+sys_Int.equals = function(self, obj)
+{
+  if (self.$fanType == obj.$fanType)
+    return self.valueOf() == obj.valueOf();
+  else
+    return false;
 }
 
 sys_Int.abs = function(self) { return self < 0 ? -self : self; }

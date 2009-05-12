@@ -346,7 +346,7 @@ if (c != null)
       case ExprId.nullLiteral:  out.w("null")
       case ExprId.trueLiteral:  out.w("true")
       case ExprId.falseLiteral: out.w("false")
-      case ExprId.intLiteral:   out.w(ex)
+      case ExprId.intLiteral:   out.w("sys_Int.make($ex)")
       case ExprId.floatLiteral: out.w(ex)
       case ExprId.decimalLiteral: out.w(ex)
       case ExprId.strLiteral:   out.w("\"").w(ex->val.toStr.toCode('\"', true)[1..-2]).w("\"")
@@ -499,7 +499,7 @@ if (c != null)
     {
       mname = ce.name == "<ctor>" ? "make" : ce.name
       first := ce.method.params.first
-      if (ce.method.params.size == 1 && first?.paramType?.qname == "sys::Str")
+      if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
       {
         fromStr := ce.method.parent.methods.find |m| { m.name == "fromStr" }
         if (fromStr != null) mname = "fromStr"
@@ -556,6 +556,7 @@ if (c != null)
         Str? op := null
         switch (se.op)
         {
+          case ShortcutOp.eq:  op = "equals"
           case ShortcutOp.and: op = "and"
           case ShortcutOp.div: op = "div"
           case ShortcutOp.or:  op = "or"
@@ -563,7 +564,8 @@ if (c != null)
         if (op != null)
         {
           if (se.isAssign) { expr(lhs); out.w(" = ") }
-          out.w("sys_Int.$se.op(")
+          if (se.opToken == Token.notEq) out.w("!")
+          out.w("sys_Int.$op(")
           expr(lhs)
           out.w(",")
           expr(rhs)

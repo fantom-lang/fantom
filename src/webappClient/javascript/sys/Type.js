@@ -86,6 +86,7 @@ sys_Type.typeMap = Array();
  */
 sys_Type.toFanType = function(obj)
 {
+  if (obj.$fanType != undefined) return obj.$fanType;
   if ((typeof obj) == "boolean") return sys_Type.find("sys::Bool");
   //if ((typeof obj) == "number")  return sys_Type.find("sys::Int");
   if ((typeof obj) == "number")  return sys_Type.find("sys::Float");
