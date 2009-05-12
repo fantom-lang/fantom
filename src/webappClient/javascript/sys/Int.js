@@ -184,8 +184,11 @@ sys_Int.times = function(self, func)
 sys_Int.div = function(a, b) { return Math.floor(a/b); }
 
 // Bitwise
-sys_Int.and = function(a, b) { var x = a & b; if (x<0) x += 0xffffffff+1; return x; }
-sys_Int.or  = function(a, b) { var x = a | b; if (x<0) x += 0xffffffff+1; return x; }
+// TODO - these impls only work upto 32 bits!!!
+sys_Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.shiftl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.shiftr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
 
 //////////////////////////////////////////////////////////////////////////
 // Static Fields
