@@ -70,7 +70,12 @@ sys_Obj.equals = function(self, that)
   else if (self != null && self.constructor == Array)
     return sys_List.equals(self, that);
   else
-    return self == that;
+  {
+    if (self != null && self.$fanType != null)
+      return sys_Int.equals(self, that);
+    else
+      return self == that;
+   }
 }
 
 sys_Obj.compare = function(self, that)
@@ -123,6 +128,14 @@ sys_Obj.is = function(obj, type)
       if (type === sys_Str) return true;
       return false;
     }
+// TODO
+    if (obj.$fanType != null)
+    {
+      if (type === sys_Obj) return true;
+      if (type === sys_Num) return true;
+      if (type === sys_Int) return true;
+      return false;
+    }
     throw new sys_Err("Not a Fan type: " + obj);
   }
 }
@@ -141,6 +154,8 @@ sys_Obj.isImmutable = function(self)
   {
     if ((typeof self) == "boolean") return true;
     if ((typeof self) == "number") return true;
+// TODO
+    if (self != null && self.$fanType != null) return true;
     throw new sys_Err("Not a Fan type: " + self);
   }
 }
