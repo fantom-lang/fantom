@@ -43,7 +43,6 @@ public abstract class Func
 
   public abstract Object callList(List args);
   public abstract Object callOn(Object target, List args);
-/*
   public abstract Object call();
   public abstract Object call(Object a);
   public abstract Object call(Object a, Object b);
@@ -53,27 +52,6 @@ public abstract class Func
   public abstract Object call(Object a, Object b, Object c, Object d, Object e, Object f);
   public abstract Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g);
   public abstract Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h);
-*/
-
-public Object call() { return call0(); }
-public Object call(Object a) { return call1(a); }
-public Object call(Object a, Object b)  { return call2(a,b); }
-public Object call(Object a, Object b, Object c) { return call3(a,b,c); }
-public Object call(Object a, Object b, Object c, Object d)  { return call4(a,b,c,d); }
-public Object call(Object a, Object b, Object c, Object d, Object e)  { return call5(a,b,c,d,e); }
-public Object call(Object a, Object b, Object c, Object d, Object e, Object f) { return call6(a,b,c,d,e,f); }
-public Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g){ return call7(a,b,c,d,e,f,g); }
-public Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h){ return call8(a,b,c,d,e,f,g,h); }
-
-public Object call0() { throw new RuntimeException(); }
-public Object call1(Object a) { throw new RuntimeException(); }
-public Object call2(Object a, Object b) { throw new RuntimeException(); }
-public Object call3(Object a, Object b, Object c) { throw new RuntimeException(); }
-public Object call4(Object a, Object b, Object c, Object d) { throw new RuntimeException(); }
-public Object call5(Object a, Object b, Object c, Object d, Object e) { throw new RuntimeException(); }
-public Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { throw new RuntimeException(); }
-public Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { throw new RuntimeException(); }
-public Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { throw new RuntimeException(); }
 
   public final Func toImmutable()
   {
@@ -133,8 +111,7 @@ public Object call8(Object a, Object b, Object c, Object d, Object e, Object f, 
     protected Indirect0(FuncType type) { super(type); }
     protected Indirect0() { super(new FuncType(new Type[] {}, Sys.ObjType)); }
     public final Object callList(List args) { return call(); }
-//    public abstract Object call();
-public Object call() { return call0(); }
+    public abstract Object call();
     public final Object call(Object a) { return call(); }
     public final Object call(Object a, Object b) { return call(); }
     public final Object call(Object a, Object b, Object c) { return call(); }
@@ -151,8 +128,7 @@ public Object call() { return call0(); }
     protected Indirect1() { super(new FuncType(new Type[] { Sys.ObjType }, Sys.ObjType)); }
     public final Object callList(List args) { return call(args.get(0)); }
     public final Object call() { throw tooFewArgs(0); }
-//    public abstract Object call(Object a);
-public Object call(Object a) { return call1(a); }
+    public abstract Object call(Object a);
     public final Object call(Object a, Object b) { return call(a); }
     public final Object call(Object a, Object b, Object c) { return call(a); }
     public final Object call(Object a, Object b, Object c, Object d) { return call(a); }
@@ -180,8 +156,7 @@ public Object call(Object a) { return call1(a); }
     public final Object callList(List args) { return call(args.get(0), args.get(1)); }
     public final Object call() { throw tooFewArgs(0); }
     public final Object call(Object a) { throw tooFewArgs(1); }
-//    public abstract Object call(Object a, Object b);
-public Object call(Object a, Object b) { return call2(a,b); }
+    public abstract Object call(Object a, Object b);
     public final Object call(Object a, Object b, Object c) { return call(a, b); }
     public final Object call(Object a, Object b, Object c, Object d) { return call(a, b); }
     public final Object call(Object a, Object b, Object c, Object d, Object e) { return call(a, b); }

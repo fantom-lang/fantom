@@ -57,14 +57,4 @@ const class Method : Slot
   Obj? call(Obj? a := null, Obj? b := null, Obj? c := null, Obj? d := null,
             Obj? e := null, Obj? f := null, Obj? g := null, Obj? h := null)
 
-** TODO
-Obj? call0()
-Obj? call1(Obj? a)
-Obj? call2(Obj? a, Obj? b)
-Obj? call3(Obj? a, Obj? b, Obj? c)
-Obj? call4(Obj? a, Obj? b, Obj? c, Obj? d)
-Obj? call5(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e)
-Obj? call6(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f)
-Obj? call7(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f, Obj? g)
-
 }
