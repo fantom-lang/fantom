@@ -133,7 +133,7 @@ class CurryResolver : CompilerSupport
 
     // replace with Func.curry(args)
     result := CallExpr.makeWithMethod(loc, call.target, ns.funcCurry)
-    if (method.name == "call")
+    if (method.name == "callList")
       result.args = call.args
     else
       result.args = [ListLiteralExpr.makeFor(call.location, ns.objType.toListOf, call.args)]

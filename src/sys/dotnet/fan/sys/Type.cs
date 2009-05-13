@@ -250,12 +250,12 @@ namespace Fan.Sys
         List p = make.@params();
         if ((numArgs == p.sz()) ||
             (numArgs < p.sz() && ((Param)p.get(numArgs)).hasDefault()))
-          return make.m_func.call(args);
+          return make.m_func.callList(args);
       }
 
       Slot defVal = slot("defVal", false);
       if (defVal is Field) return ((Field)defVal).get(null);
-      if (defVal is Method) return ((Method)defVal).m_func.call(null);
+      if (defVal is Method) return ((Method)defVal).m_func.callList(null);
 
       throw Err.make("Type missing 'make' or 'defVal' slots: " + this).val;
    }

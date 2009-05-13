@@ -238,12 +238,12 @@ public abstract class Type
       List params = make.params();
       if ((numArgs == params.sz()) ||
           (numArgs < params.sz() && ((Param)params.get(numArgs)).hasDefault()))
-        return make.func.call(args);
+        return make.func.callList(args);
     }
 
     Slot defVal = slot("defVal", false);
     if (defVal instanceof Field) return ((Field)defVal).get(null);
-    if (defVal instanceof Method) return ((Method)defVal).func.call(null);
+    if (defVal instanceof Method) return ((Method)defVal).func.callList(null);
 
     throw Err.make("Type missing 'make' or 'defVal' slots: " + this).val;
   }

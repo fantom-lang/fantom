@@ -47,8 +47,8 @@ const class Method : Slot
 // Call Conveniences
 //////////////////////////////////////////////////////////////////////////
 
-  ** Convenience for 'func.call'
-  Obj? call(Obj[]? args)
+  ** Convenience for 'func.callList'
+  Obj? callList(Obj?[]? args)
 
   ** Convenience for 'func.callOn'
   Obj? callOn(Obj? target, Obj[]? args)

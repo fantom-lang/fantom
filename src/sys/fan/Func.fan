@@ -82,7 +82,7 @@ final class Func
   ** parameters - the additional arguments are ignored.  If no arguments are
   ** required, you may pass null for args.
   **
-  virtual R call(Obj?[]? args)
+  virtual R callList(Obj?[]? args)
 
   **
   ** Convenience for dynamically invoking an instance method with

@@ -45,7 +45,7 @@ class FanScript : Task
     t := compile.types.first
     main := t.method("main")
     if (main.isStatic)
-      main.call(args)
+      main.callList(args)
     else
       main.callOn(t.make, args)
   }

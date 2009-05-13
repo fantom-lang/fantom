@@ -145,7 +145,7 @@ namespace Fan.Sys
   // Call Conveniences
   //////////////////////////////////////////////////////////////////////////
 
-    public object call(List args) { return m_func.call(args); }
+    public object callList(List args) { return m_func.callList(args); }
     public object callOn(object target, List args) { return m_func.callOn(target, args); }
     public object call0() { return m_func.call0(); }
     public object call1(object a) { return m_func.call1(a); }
@@ -177,7 +177,7 @@ namespace Fan.Sys
         return m.isStatic() || m.m_parent.isConst();
       }
 
-      public override object call(List args)
+      public override object callList(List args)
       {
         int argsSize = args == null ? 0 : args.sz();
 

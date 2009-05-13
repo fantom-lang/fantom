@@ -1207,7 +1207,7 @@ class StmtTest : CompilerTest
 
      t := pod.types.first
      instance := t.method("make").call0
-     actual := t.method("func").call([instance, a, b, c])
+     actual := t.method("func").callList([instance, a, b, c])
      verifyEq(actual, result)
    }
 

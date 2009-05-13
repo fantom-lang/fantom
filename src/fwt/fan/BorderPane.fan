@@ -63,7 +63,7 @@ class BorderPane : Pane
 
   override Void onPaint(Graphics g)
   {
-    onBorder?.call([g, size, insets])
+    onBorder?.call3(g, size, insets)
   }
 
 }

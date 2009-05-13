@@ -149,8 +149,8 @@ namespace Fanx.Tools
 
       try
       {
-        setup.call(args);
-        method.call(args);
+        setup.callList(args);
+        method.callList(args);
         return test.verifyCount;
       }
       catch (System.Exception e)
@@ -168,7 +168,7 @@ namespace Fanx.Tools
       {
         try
         {
-          if (args != null) teardown.call(args);
+          if (args != null) teardown.callList(args);
         }
         catch (System.Exception e)
         {

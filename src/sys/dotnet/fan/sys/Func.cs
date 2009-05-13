@@ -41,7 +41,7 @@ namespace Fan.Sys
 
     public abstract Method method();
 
-    public abstract object call(List args);
+    public abstract object callList(List args);
     public abstract object callOn(object target, List args);
     public abstract object call0();
     public abstract object call1(object a);
@@ -83,7 +83,7 @@ namespace Fan.Sys
     /// Indirect is the base class for the IndirectX classes, which are
     /// used as the common base classes for closures and general purpose
     /// functions.  An Indirect method takes a funcType for it's type,
-    /// and also extends Func for the call() implementations.
+    /// and also extends Func for the callList() implementations.
     /// </summary>
     public abstract class Indirect : Func
     {
@@ -100,7 +100,7 @@ namespace Fan.Sys
       {
         List flat = args.dup();
         flat.insert(0, obj);
-        return call(flat);
+        return callList(flat);
       }
 
       FuncType m_type;
@@ -109,7 +109,7 @@ namespace Fan.Sys
     public abstract class Indirect0 : Indirect
     {
       protected Indirect0(FuncType type) : base(type) {}
-      public override object call(List args) { return call0(); }
+      public override object callList(List args) { return call0(); }
       public override abstract object call0();
       public override object call1(object a) { return call0(); }
       public override object call2(object a, object b) { return call0(); }
@@ -124,7 +124,7 @@ namespace Fan.Sys
     public abstract class Indirect1 : Indirect
     {
       protected Indirect1(FuncType type) : base(type) {}
-      public override object call(List args) { return call1(args.get(0)); }
+      public override object callList(List args) { return call1(args.get(0)); }
       public override object call0() { throw tooFewArgs(0); }
       public override abstract object call1(object a);
       public override object call2(object a, object b) { return call1(a); }
@@ -150,7 +150,7 @@ namespace Fan.Sys
     public abstract class Indirect2 : Indirect
     {
       protected Indirect2(FuncType type) : base(type) {}
-      public override object call(List args) { return call2(args.get(0), args.get(1)); }
+      public override object callList(List args) { return call2(args.get(0), args.get(1)); }
       public override object call0() { throw tooFewArgs(0); }
       public override object call1(object a) { throw tooFewArgs(1); }
       public override abstract object call2(object a, object b);
@@ -165,7 +165,7 @@ namespace Fan.Sys
     public abstract class Indirect3 : Indirect
     {
       protected Indirect3(FuncType type) : base(type) {}
-      public override object call(List args) { return call3(args.get(0), args.get(1), args.get(2)); }
+      public override object callList(List args) { return call3(args.get(0), args.get(1), args.get(2)); }
       public override object call0() { throw tooFewArgs(0); }
       public override object call1(object a) { throw tooFewArgs(1); }
       public override object call2(object a, object b)  { throw tooFewArgs(2); }
@@ -180,7 +180,7 @@ namespace Fan.Sys
     public abstract class Indirect4 : Indirect
     {
       protected Indirect4(FuncType type) : base(type) {}
-      public override object call(List args) { return call4(args.get(0), args.get(1), args.get(2), args.get(3)); }
+      public override object callList(List args) { return call4(args.get(0), args.get(1), args.get(2), args.get(3)); }
       public override object call0() { throw tooFewArgs(0); }
       public override object call1(object a) { throw tooFewArgs(1); }
       public override object call2(object a, object b)  { throw tooFewArgs(2); }
@@ -195,7 +195,7 @@ namespace Fan.Sys
     public abstract class Indirect5 : Indirect
     {
       protected Indirect5(FuncType type) : base(type) {}
-      public override object call(List args) { return call5(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)); }
+      public override object callList(List args) { return call5(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)); }
       public override object call0() { throw tooFewArgs(0); }
       public override object call1(object a) { throw tooFewArgs(1); }
       public override object call2(object a, object b)  { throw tooFewArgs(2); }
@@ -210,7 +210,7 @@ namespace Fan.Sys
     public abstract class Indirect6 : Indirect
     {
       protected Indirect6(FuncType type) : base(type) {}
-      public override object call(List args) { return call6(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5)); }
+      public override object callList(List args) { return call6(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5)); }
       public override object call0() { throw tooFewArgs(0); }
       public override object call1(object a) { throw tooFewArgs(1); }
       public override object call2(object a, object b)  { throw tooFewArgs(2); }
@@ -225,7 +225,7 @@ namespace Fan.Sys
     public abstract class Indirect7 : Indirect
     {
       protected Indirect7(FuncType type) : base(type) {}
-      public override object call(List args) { return call7(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6)); }
+      public override object callList(List args) { return call7(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6)); }
       public override object call0() { throw tooFewArgs(0); }
       public override object call1(object a) { throw tooFewArgs(1); }
       public override object call2(object a, object b)  { throw tooFewArgs(2); }
@@ -240,7 +240,7 @@ namespace Fan.Sys
     public abstract class Indirect8 : Indirect
     {
       protected Indirect8(FuncType type) : base(type) {}
-      public override object call(List args) { return call8(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6), args.get(7)); }
+      public override object callList(List args) { return call8(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6), args.get(7)); }
       public override object call0() { throw tooFewArgs(0); }
       public override object call1(object a) { throw tooFewArgs(1); }
       public override object call2(object a, object b)  { throw tooFewArgs(2); }
@@ -255,7 +255,7 @@ namespace Fan.Sys
     public abstract class IndirectX : Indirect
     {
       protected IndirectX(FuncType type) : base(type) {}
-      public override abstract object call(List args);
+      public override abstract object callList(List args);
       public override object call0() { throw tooFewArgs(0); }
       public override object call1(object a) { throw tooFewArgs(1); }
       public override object call2(object a, object b)  { throw tooFewArgs(2); }
@@ -301,25 +301,25 @@ namespace Fan.Sys
       public override Method method() { return null; }
 
       // this isn't a very optimized implementation
-      public override object call0() { return call(new List(Sys.ObjType, new object[] {})); }
-      public override object call1(object a) { return call(new List(Sys.ObjType, new object[] {a})); }
-      public override object call2(object a, object b) { return call(new List(Sys.ObjType, new object[] {a,b})); }
-      public override object call3(object a, object b, object c) { return call(new List(Sys.ObjType, new object[] {a,b,c})); }
-      public override object call4(object a, object b, object c, object d) { return call(new List(Sys.ObjType, new object[] {a,b,c,d})); }
-      public override object call5(object a, object b, object c, object d, object e) { return call(new List(Sys.ObjType, new object[] {a,b,c,d,e})); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { return call(new List(Sys.ObjType, new object[] {a,b,c,d,e,f})); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return call(new List(Sys.ObjType, new object[] {a,b,c,d,e,f,g})); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call(new List(Sys.ObjType, new object[] {a,b,c,d,e,f,g,h})); }
+      public override object call0() { return callList(new List(Sys.ObjType, new object[] {})); }
+      public override object call1(object a) { return callList(new List(Sys.ObjType, new object[] {a})); }
+      public override object call2(object a, object b) { return callList(new List(Sys.ObjType, new object[] {a,b})); }
+      public override object call3(object a, object b, object c) { return callList(new List(Sys.ObjType, new object[] {a,b,c})); }
+      public override object call4(object a, object b, object c, object d) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d})); }
+      public override object call5(object a, object b, object c, object d, object e) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e})); }
+      public override object call6(object a, object b, object c, object d, object e, object f) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e,f})); }
+      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e,f,g})); }
+      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e,f,g,h})); }
 
-      public override object call(List args)
+      public override object callList(List args)
       {
         int origSize = m_orig.m_params.sz();
-        if (origSize == m_bound.sz()) return m_orig.call(m_bound);
+        if (origSize == m_bound.sz()) return m_orig.callList(m_bound);
 
         object[] temp = new object[origSize];
         m_bound.copyInto(temp, 0, m_bound.sz());
         args.copyInto(temp, m_bound.sz(), temp.Length-m_bound.sz());
-        return m_orig.call(new List(Sys.ObjType, temp));
+        return m_orig.callList(new List(Sys.ObjType, temp));
       }
 
       public override object callOn(object obj, List args)
@@ -329,7 +329,7 @@ namespace Fan.Sys
         m_bound.copyInto(temp, 0, m_bound.sz());
         temp[m_bound.sz()] = obj;
         args.copyInto(temp, m_bound.sz()+1, temp.Length-m_bound.sz()-1);
-        return m_orig.call(new List(Sys.ObjType, temp));
+        return m_orig.callList(new List(Sys.ObjType, temp));
       }
 
       readonly FuncType m_type;

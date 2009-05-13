@@ -129,7 +129,7 @@ namespace Fanx.Tools
       try
       {
         if (m.isStatic())
-          return toResult(m.call(args));
+          return toResult(m.callList(args));
         else
           return toResult(m.callOn(t.make(), args));
       }
