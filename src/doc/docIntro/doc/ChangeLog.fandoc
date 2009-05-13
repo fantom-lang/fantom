@@ -595,7 +595,7 @@
 - Rename def => defVal: Point, Size, Rect, Insets, Hints, Pen
 - Rename Locale.with => use
 
-*Build 1.0.42 (working)*
+*Build 1.0.42 (13 May 09)*
 - Tweaks to flux
 - Loosen restrictions on it/this ambiguity errors
 - webappClient::Effect
@@ -615,5 +615,26 @@
 - Func/Method call  => callList
 - Func/Method callx => call
 - fanx.sys.Interop utility methods
-
-TODO: change over buildall to use pathPrefix
+- #518: Problem in check of reflective field set
+- #520: Flux Last Line
+- #527: Func.curry with optional parameters
+- #528: Compiler bug - duplicate slot x$num
+- #529: Private method in mixin bad classfile
+- #530: Ctor bug with default params
+- #531: Allow curry of private methods
+- #533: Fandoc bug
+- #534: RichText scrollbar bug
+- #542: Compiler - Internal class cast error
+- #543: Compiler - Chaining dynamic calls
+- #544: Move graphics API out of fwt
+- #545: Compiler bug: using ... as ...
+- #546: Packaging of Fan
+- #547: WebOutStream - FavIcon tag
+- #548: Flux bug - tabstops not quite right
+- #551: 'it' and Str interpolation
+- #554: docCompiler bug with |,| signatures
+- #559: API request: sys::StrBuf.remove(Range)
+- #561: Compiler: Internal error - auto-cast of Func
+- #574: Request: Range.random, List.random
+- #591: Flux: View menu in NavBar for .fan files doesn't show
+- #592: Proposal: Method/Func call
