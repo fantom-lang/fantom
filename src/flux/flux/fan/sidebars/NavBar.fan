@@ -287,7 +287,7 @@ internal class NavBarState
 {
   static NavBarState load() { return Flux.loadOptions("session/navBar", NavBarState#) }
   Void save() { Flux.saveOptions("session/navBar", this) }
-  Uri[] roots := [,]
+  Uri[] roots := Uri[,]
   Int? selected := null
 }
 
