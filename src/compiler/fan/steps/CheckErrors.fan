@@ -428,7 +428,7 @@ class CheckErrors : CompilerStep
     if (t.toNonNullable.signature != "|sys::This->sys::Void|") checkValidType(p.location, t)
 
     // check parameter default type
-    if (p.def != null)
+    if (p.def != null && !p.paramType.isGenericParameter)
     {
       p.def = coerce(p.def, p.paramType) |,|
       {
