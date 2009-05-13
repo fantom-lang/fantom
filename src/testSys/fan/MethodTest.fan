@@ -194,14 +194,13 @@ class MethodTest : Test
       // verify p0..pn params
       for (Int j:=0; j<params.size && j<i; ++j)
       {
-// TODO
-//        verifyEq(c.params[j].of, params[j])
+        verifyEq(c.params[j].of, params[j])
       }
 
-      // verify rest left at Obj?
+      // verify rest left at Obj
       for (Int k:=params.size; k<8 && k<i; ++k)
       {
-        verifyEq(c.params[k].of, Obj?#)
+        verifyEq(c.params[k].of, Obj#)
       }
     }
   }
