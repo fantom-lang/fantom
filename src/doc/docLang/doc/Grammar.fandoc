@@ -62,12 +62,14 @@ Slot Def [#slotDef]
 
   <fieldDef>       :=  <facets> <fieldFlags> [<type>] <id> [":=" <expr>]
                        [ "{" [<fieldGetter>] [<fieldSetter>] "}" ] <eos>
-  <fieldFlags>     :=  [<protection>] ["readonly"] ["static"]
+  <fieldFlags>     :=  [<protection>] ["abstract"] ["const"] ["final"] ["native"]
+                       ["override"] ["readonly"] ["static"] ["virtual"] // in any order
   <fieldGetter>    :=  "get" (<eos> | <block>)
   <fieldSetter>    :=  <protection> "set" (<eos> | <block>)
 
   <methodDef>      :=  <facets> <methodFlags> <type> <id> "(" <params> ")" <methodBody>
-  <methodFlags>    :=  [<protection>] ["virtual"] ["override"] ["abstract"] ["static"] ["once"]
+  <methodFlags>    :=  [<protection>] ["abstract"] ["native"] ["once"]
+                       ["override"] ["static"] ["virtual"] // in any order
   <params>         :=  [<param> ("," <param>)*]
   <param>          :=  <type> <id> [":=" <expr>]
   <methodBody>     :=  <eos> | ( "{" <stmts> "}" )
@@ -96,10 +98,10 @@ Stmt [#stmt]
   <exprStmt>       :=  <expr> <eos>
   <localDef>       :=  [<type>] <id> [":=" <expr>] <eos>
 
-  <try>            :=  "try" "{" <stmt>* "}" <catch>* [<finally>]
-  <catch>          :=  "catch" [<catchDef>] "{" <stmt>* "}"
+  <try>            :=  "try" <block> <catch>* [<finally>]
+  <catch>          :=  "catch" [<catchDef>] <block>
   <catchDef>       :=  "(" <type> <id> ")"
-  <finally>        :=  "finally" "{" <stmt>* "}"
+  <finally>        :=  "finally" <block>
 
   <switch>         :=  "switch" "(" <expr> ")" "{" <case>* [<default>] "}"
   <case>           :=  "case" <expr> ":" <stmts>
@@ -151,7 +153,7 @@ Expr [#expr]
   <literal>        :=  "null" | "this" | "super" | "it" |
                        <namedSuper> | <bool> | <int> | <float> | <decimal> |
                        <str> | <duration> | <uri> | <list> | <map> | <simple>
-  <namedSuper>     :=  <type> "." "super"
+  <namedSuper>     :=  <simpleType> "." "super"
   <list>           :=  [<type>] "[" <listItems> "]"
   <listItems>      :=  "," | (<expr> ("," <expr>)*)
   <map>            :=  [<mapType>] "[" <mapItems> "]"
@@ -202,7 +204,6 @@ Keywords [#keywords]
   false         protected
   final         public
   finally       readonly
-
 
 
 
