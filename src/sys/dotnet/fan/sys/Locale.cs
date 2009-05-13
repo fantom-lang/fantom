@@ -80,7 +80,7 @@ namespace Fan.Sys
       try
       {
         setCurrent(this);
-        func.call1(this);
+        func.call(this);
       }
       finally
       {

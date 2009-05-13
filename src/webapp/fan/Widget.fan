@@ -162,7 +162,7 @@ abstract class Widget : Weblet
   **
   virtual Void onCall(Method m)
   {
-    m.call1(this)
+    m.call(this)
   }
 
   **

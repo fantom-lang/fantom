@@ -212,7 +212,7 @@ namespace Fan.Inet
       {
         public Obj run()
         {
-          return run.call1(newSock);
+          return run.call(newSock);
         }
       };
 

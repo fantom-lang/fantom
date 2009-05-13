@@ -211,23 +211,23 @@ class TryTest : Test
   {
     try { throwCastErr } catch (CastErr e) { } catch { fail }
     verifyErr(CastErr#) |,| { throwCastErr }
-    verifyErr(CastErr#) |,| { TryTest#throwCastErr.call0 }
+    verifyErr(CastErr#) |,| { TryTest#throwCastErr.call }
 
     try { throwNullErr } catch (NullErr e) { } catch { fail }
     verifyErr(NullErr#) |,| { throwNullErr }
-    verifyErr(NullErr#) |,| { TryTest#throwNullErr.call0 }
+    verifyErr(NullErr#) |,| { TryTest#throwNullErr.call }
 
     try { throwIndexErr } catch (IndexErr e) { } catch { fail }
     verifyErr(IndexErr#) |,| { throwIndexErr }
-    verifyErr(IndexErr#) |,| { TryTest#throwIndexErr.call0 }
+    verifyErr(IndexErr#) |,| { TryTest#throwIndexErr.call }
 
     try { throwIOErr } catch (IOErr e) { } catch { fail }
     verifyErr(IOErr#) |,| { throwIOErr }
-    verifyErr(IOErr#) |,| { TryTest#throwIOErr.call0 }
+    verifyErr(IOErr#) |,| { TryTest#throwIOErr.call }
 
     try { throwInterruptedErr } catch (InterruptedErr e) { } catch { fail }
     verifyErr(InterruptedErr#) |,| { throwInterruptedErr }
-    verifyErr(InterruptedErr#) |,| { TryTest#throwInterruptedErr.call0 }
+    verifyErr(InterruptedErr#) |,| { TryTest#throwInterruptedErr.call }
   }
 
   static Str throwCastErr() { Obj four := 4; return (Str)four }

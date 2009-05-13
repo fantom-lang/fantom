@@ -465,9 +465,9 @@ class ResolveExpr : CompilerStep
     }
 
     // invoking the () operator on a sys::Func is syntactic
-    // sugar for invoking one of the Func.callX methods
-    callx := binding.ctype.method("call${call.args.size}")
-    return CallExpr.makeWithMethod(call.location, binding, callx, call.args)
+    // sugar for invoking one of the Func.call methods
+    callMethod := binding.ctype.method("call")
+    return CallExpr.makeWithMethod(call.location, binding, callMethod, call.args)
   }
 
   **

@@ -502,12 +502,12 @@ namespace Fan.Sys
       if (f.m_params.sz() == 1)
       {
         for (int i=0; i<m_size; i++)
-          f.call1(m_values[i]);
+          f.call(m_values[i]);
       }
       else
       {
         for (int i=0; i<m_size; i++)
-          f.call2(m_values[i], i);
+          f.call(m_values[i], i);
       }
     }
 
@@ -516,12 +516,12 @@ namespace Fan.Sys
       if (f.m_params.sz() == 1)
       {
         for (int i=m_size-1; i>=0; i--)
-          f.call1(m_values[i]);
+          f.call(m_values[i]);
       }
       else
       {
         for (int i=m_size-1; i>=0; i--)
-          f.call2(m_values[i], i);
+          f.call(m_values[i], i);
       }
     }
 
@@ -535,12 +535,12 @@ namespace Fan.Sys
       if (f.m_params.sz() == 1)
       {
         for (int i=s; i<=e; ++i)
-          f.call1(m_values[i]);
+          f.call(m_values[i]);
       }
       else
       {
         for (int i=s; i<=e; ++i)
-          f.call2(m_values[i], i);
+          f.call(m_values[i], i);
       }
     }
 
@@ -548,7 +548,7 @@ namespace Fan.Sys
     {
       for (int i=0; i<m_size; i++)
       {
-        object r = f.call2(m_values[i], i);
+        object r = f.call(m_values[i], i);
         if (r != null) return r;
       }
       return null;
@@ -557,7 +557,7 @@ namespace Fan.Sys
     public object find(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], i) == Boolean.True)
+        if (f.call(m_values[i], i) == Boolean.True)
           return m_values[i];
       return null;
     }
@@ -567,7 +567,7 @@ namespace Fan.Sys
       for (int i=0; i<m_size; ++i)
       {
         long pos = i;
-        if (f.call2(m_values[i], pos) == Boolean.True)
+        if (f.call(m_values[i], pos) == Boolean.True)
           return Long.valueOf(pos);
       }
       return null;
@@ -577,7 +577,7 @@ namespace Fan.Sys
     {
       List acc = new List(m_of, m_size);
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], i) == Boolean.True)
+        if (f.call(m_values[i], i) == Boolean.True)
           acc.add(m_values[i]);
       return acc;
     }
@@ -598,7 +598,7 @@ namespace Fan.Sys
     {
       List acc = new List(m_of, m_size);
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], i) == Boolean.False)
+        if (f.call(m_values[i], i) == Boolean.False)
           acc.add(m_values[i]);
       return acc;
     }
@@ -606,7 +606,7 @@ namespace Fan.Sys
     public bool any(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], i) == Boolean.True)
+        if (f.call(m_values[i], i) == Boolean.True)
           return true;
       return false;
     }
@@ -614,7 +614,7 @@ namespace Fan.Sys
     public bool all(Func f)
     {
       for (int i=0; i<m_size; i++)
-        if (f.call2(m_values[i], i) == Boolean.False)
+        if (f.call(m_values[i], i) == Boolean.False)
           return false;
       return true;
     }
@@ -622,7 +622,7 @@ namespace Fan.Sys
     public object reduce(object reduction, Func f)
     {
       for (int i=0; i<m_size; i++)
-        reduction = f.call3(reduction, m_values[i], i);
+        reduction = f.call(reduction, m_values[i], i);
       return reduction;
     }
 
@@ -630,7 +630,7 @@ namespace Fan.Sys
     {
       if (acc.m_size == 0) acc.capacity(size());
       for (int i=0; i<m_size; i++)
-        acc.add(f.call2(m_values[i], i));
+        acc.add(f.call(m_values[i], i));
       return acc;
     }
 
@@ -859,7 +859,7 @@ namespace Fan.Sys
       if (m_size == 1)
       {
         object v = m_values[0];
-        if (f != null) return (string)f.call2(v, 0);
+        if (f != null) return (string)f.call(v, 0);
         if (v == null) return "null";
         return toStr(v);
       }
@@ -875,7 +875,7 @@ namespace Fan.Sys
         }
         else
         {
-          s.Append(f.call2(m_values[i], i));
+          s.Append(f.call(m_values[i], i));
         }
       }
       return s.ToString();
@@ -1020,7 +1020,7 @@ namespace Fan.Sys
     sealed class Comparer : IComparer
     {
       public Comparer(Func f) { this.f = f; }
-      public int Compare(object a, object b) { return ((Long)f.call2(a, b)).intValue(); }
+      public int Compare(object a, object b) { return ((Long)f.call(a, b)).intValue(); }
       private Func f;
     }
     sealed class DefaultComparer : IComparer
@@ -1038,7 +1038,7 @@ namespace Fan.Sys
     sealed class ReverseComparer : IComparer
     {
       public ReverseComparer(Func f) { this.f = f; }
-      public int Compare(object a, object b) { return ((Long)f.call2(b, a)).intValue(); }
+      public int Compare(object a, object b) { return ((Long)f.call(b, a)).intValue(); }
       private Func f;
     }
     sealed class DefaultReverseComparer : IComparer

@@ -171,12 +171,12 @@ public final class Map
     else if (f.params.sz() == 1)
     {
       for (int i=0; i<list.sz(); ++i)
-        set(f.call1(list.get(i)), list.get(i));
+        set(f.call(list.get(i)), list.get(i));
     }
     else
     {
       for (int i=0; i<list.sz(); ++i)
-        set(f.call2(list.get(i), Long.valueOf(i)), list.get(i));
+        set(f.call(list.get(i), Long.valueOf(i)), list.get(i));
     }
     return this;
   }
@@ -193,12 +193,12 @@ public final class Map
     else if (f.params.sz() == 1)
     {
       for (int i=0; i<list.sz(); ++i)
-        add(f.call1(list.get(i)), list.get(i));
+        add(f.call(list.get(i)), list.get(i));
     }
     else
     {
       for (int i=0; i<list.sz(); ++i)
-        add(f.call2(list.get(i), Long.valueOf(i)), list.get(i));
+        add(f.call(list.get(i), Long.valueOf(i)), list.get(i));
     }
     return this;
   }
@@ -328,7 +328,7 @@ public final class Map
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      f.call2(e.getValue(), e.getKey());
+      f.call(e.getValue(), e.getKey());
     }
   }
 
@@ -338,7 +338,7 @@ public final class Map
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      Object r = f.call2(e.getValue(), e.getKey());
+      Object r = f.call(e.getValue(), e.getKey());
       if (r != null) return r;
     }
     return null;
@@ -352,7 +352,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call2(val, key) == Boolean.TRUE)
+      if (f.call(val, key) == Boolean.TRUE)
         return val;
     }
     return null;
@@ -367,7 +367,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call2(val, key) == Boolean.TRUE)
+      if (f.call(val, key) == Boolean.TRUE)
         acc.set(key, val);
     }
     return acc;
@@ -382,7 +382,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call2(val, key) == Boolean.FALSE)
+      if (f.call(val, key) == Boolean.FALSE)
         acc.set(key, val);
     }
     return acc;
@@ -397,7 +397,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call2(val, key) == Boolean.TRUE)
+      if (f.call(val, key) == Boolean.TRUE)
         return true;
     }
     return false;
@@ -412,7 +412,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      if (f.call2(val, key) == Boolean.FALSE)
+      if (f.call(val, key) == Boolean.FALSE)
         return false;
     }
     return true;
@@ -426,7 +426,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      reduction = f.call3(reduction, val, key);
+      reduction = f.call(reduction, val, key);
     }
     return reduction;
   }
@@ -439,7 +439,7 @@ public final class Map
       Entry e = (Entry)it.next();
       Object key = e.getKey();
       Object val = e.getValue();
-      acc.set(key, f.call2(val, key));
+      acc.set(key, f.call(val, key));
     }
     return acc;
   }
@@ -464,7 +464,7 @@ public final class Map
       if (f == null)
         s.append(key).append(": ").append(val);
       else
-        s.append(f.call2(val, key));
+        s.append(f.call(val, key));
     }
     return s.toString();
   }

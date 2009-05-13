@@ -89,12 +89,12 @@ namespace Fan.Sys
       if (start < end)
       {
         if (m_exclusive) --end;
-        for (long i=start; i<=end; ++i) f.call1(i);
+        for (long i=start; i<=end; ++i) f.call(i);
       }
       else
       {
         if (m_exclusive) ++end;
-        for (long i=start; i>=end; --i) f.call1(i);
+        for (long i=start; i>=end; --i) f.call(i);
       }
     }
 

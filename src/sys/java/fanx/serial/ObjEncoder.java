@@ -169,7 +169,7 @@ public class ObjEncoder
   class EachIterator extends Func.Indirect1
   {
     EachIterator (boolean first) { super(eachIteratorType); this.first = first; }
-    public Object call1(Object obj)
+    public Object call(Object obj)
     {
       if (first) { w('\n').wIndent().w('{').w('\n'); level++; first = false; }
       wIndent();

@@ -53,31 +53,18 @@ const class Method : Slot
   ** Convenience for 'func.callOn'
   Obj? callOn(Obj? target, Obj[]? args)
 
-  ** Convenience for 'func.call0'
-  Obj? call0()
+  ** Convenience for 'func.call'
+  Obj? call(Obj? a := null, Obj? b := null, Obj? c := null, Obj? d := null,
+            Obj? e := null, Obj? f := null, Obj? g := null, Obj? h := null)
 
-  ** Convenience for 'func.call1'
-  Obj? call1(Obj? a)
-
-  ** Convenience for 'func.call2'
-  Obj? call2(Obj? a, Obj? b)
-
-  ** Convenience for 'func.call3'
-  Obj? call3(Obj? a, Obj? b, Obj? c)
-
-  ** Convenience for 'func.call4'
-  Obj? call4(Obj? a, Obj? b, Obj? c, Obj? d)
-
-  ** Convenience for 'func.call5'
-  Obj? call5(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e)
-
-  ** Convenience for 'func.call6'
-  Obj? call6(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f)
-
-  ** Convenience for 'func.call7'
-  Obj? call7(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f, Obj? g)
-
-  ** Convenience for 'func.call8'
-  Obj? call8(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f, Obj? g, Obj? h)
+** TODO
+Obj? call0()
+Obj? call1(Obj? a)
+Obj? call2(Obj? a, Obj? b)
+Obj? call3(Obj? a, Obj? b, Obj? c)
+Obj? call4(Obj? a, Obj? b, Obj? c, Obj? d)
+Obj? call5(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e)
+Obj? call6(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f)
+Obj? call7(Obj? a, Obj? b, Obj? c, Obj? d, Obj? e, Obj? f, Obj? g)
 
 }

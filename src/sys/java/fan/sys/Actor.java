@@ -95,7 +95,7 @@ public class Actor
 
   protected Object receive(Object msg, Context cx)
   {
-    if (receive != null) return receive.call2(msg, cx);
+    if (receive != null) return receive.call(msg, cx);
     System.out.println("WARNING: " + type() + ".receive not overridden");
     return null;
   }
@@ -343,12 +343,12 @@ public class Actor
 
     private Object toKey(Object obj)
     {
-      return toKeyFunc == null ? obj : toKeyFunc.call1(obj);
+      return toKeyFunc == null ? obj : toKeyFunc.call(obj);
     }
 
     private Object coalesce(Object orig, Object incoming)
     {
-      return coalesceFunc == null ? incoming : coalesceFunc.call2(orig, incoming);
+      return coalesceFunc == null ? incoming : coalesceFunc.call(orig, incoming);
     }
 
     Func toKeyFunc, coalesceFunc;

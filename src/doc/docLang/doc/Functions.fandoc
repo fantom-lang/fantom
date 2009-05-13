@@ -43,29 +43,28 @@ Calling Functions [#calling]
 ****************************
 Functions are just objects like everything else in Fan.  All functions
 subclass the [Func]`sys::Func` class which provides methods for invoking
-the function.  The most basic method is [Func.call]`sys::Func.call`
+the function.  The most basic method is [Func.callList]`sys::Func.callList`
 which takes a list of arguments and returns the result (or null if
 the return if void):
 
   // func is a function which takes two Int args and returns an Int
   |Int a, Int b->Int| func
-  func.call([7, 8])
+  func.callList([7, 8])
 
-The 'Func' class also supports a set of methods for calling with
+The 'Func' class also supports the 'call' method for calling with
 different arity (zero through eight).  For example to call the
-function above with two arguments can also be done via the
-[Func.call2]`sys::Func.call2` method:
+function above with two arguments:
 
-  func.call2(7, 8)
+  func.call(7, 8)
 
-Using the 'callX' arity versions provides better performance in
+Using the 'call' arity versions provides better performance in
 most cases because it skips packaging up the arguments in a list.
 
 Fan also supports a bit of syntax sugar to call a function like
 a normal method call using the '()' operator.  For example we could
 call the function above using this syntax:
 
-  func(7, 8)    // syntax sugar for func.call2(7, 8)
+  func(7, 8)    // syntax sugar for func.call(7, 8)
 
 Type Compatibility [#typeCompatibility]
 ***************************************
@@ -190,7 +189,7 @@ call:
   type.method("add").func               // returns Func
   type.method("add").func()             // same as above
 
-  type.method("add").func().call2(7,2)  // invoke function
+  type.method("add").func().call(7,2)   // invoke function
   type.method("add").func()(7,2)        // same as above
 
 Instance methods map to a function where the first argument is

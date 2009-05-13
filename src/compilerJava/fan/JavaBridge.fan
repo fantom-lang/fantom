@@ -586,7 +586,7 @@ class JavaBridge : CBridge
     //   class FuncWrapperX : Foo
     //   {
     //     new make(Func f) { _func = f }
-    //     override Void bar(Str a) { _func.call1(a) }
+    //     override Void bar(Str a) { _func.call(a) }
     //     Func _func
     //   }
 
@@ -620,7 +620,7 @@ class JavaBridge : CBridge
     over.ret = method.returnType
     over.paramDefs = ParamDef[,]
     over.code = Block.make(loc)
-    callArity := "call" + funcType.params.size
+    callArity := "call"
     call := CallExpr.makeWithMethod(loc, FieldExpr(loc, ThisExpr(loc), field), funcType.method(callArity))
     method.params.each |CParam param, Int i|
     {

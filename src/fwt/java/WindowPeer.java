@@ -263,7 +263,7 @@ public class WindowPeer
         for (int i=0; i<paths.length; ++i)
           data.add(File.os(paths[i]));
 
-        window.onDrop().call1(data);
+        window.onDrop().call(data);
       }
     });
   }

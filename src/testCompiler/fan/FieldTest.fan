@@ -120,21 +120,21 @@ class FieldTest : CompilerTest
      // verify working code - Foo.a
      foo := pod.types[0]
      bar := pod.types[1]
-     verifyEq(bar.method("geta").call0, -1)
-     verifyEq(bar.method("seta").call0->a, 8)
-     verifyEq(bar.method("seta").call0->aset, 8)
+     verifyEq(bar.method("geta").call, -1)
+     verifyEq(bar.method("seta").call->a, 8)
+     verifyEq(bar.method("seta").call->aset, 8)
 
      // verify working code - Foo.b
-     verifyEq(bar.method("getb").call0, 6)
-     verifyEq(bar.method("setb").call0->b, 99)
+     verifyEq(bar.method("getb").call, 6)
+     verifyEq(bar.method("setb").call->b, 99)
 
      // verify working code - Bar.c
-     verifyEq(bar.method("getc").call0, 3)
-     verifyEq(bar.method("getca").call0, 5)
-     verifyEq(bar.method("setc").call0->c, 123)
-     verifyEq(bar.method("setc").call0->ctrap, 0)
-     verifyEq(bar.method("setca").call0->c, 321)
-     verifyEq(bar.method("setca").call0->ctrap, 321)
+     verifyEq(bar.method("getc").call, 3)
+     verifyEq(bar.method("getca").call, 5)
+     verifyEq(bar.method("setc").call->c, 123)
+     verifyEq(bar.method("setc").call->ctrap, 0)
+     verifyEq(bar.method("setca").call->c, 321)
+     verifyEq(bar.method("setca").call->ctrap, 321)
    }
 
 //////////////////////////////////////////////////////////////////////////
@@ -171,8 +171,8 @@ class FieldTest : CompilerTest
     verify(m.field("s").isConst)
     verify(m.field("s").isStatic)
     verifyEq(m.field("s").get, 5)
-    verifyEq(m.method("mgeta").call0, 5)
-    verifyEq(m.method("mgets").call0, 5)
+    verifyEq(m.method("mgeta").call, 5)
+    verifyEq(m.method("mgets").call, 5)
 
     obj := f.make
     verifyEq(obj.type.field("s").get, 5)

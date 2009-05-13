@@ -19,7 +19,7 @@ class ClosureTest : Test
   /*
   Void testPlay()
   {
-    { echo("hello") }.call0
+    { echo("hello") }.call
   }
   */
 
@@ -51,8 +51,8 @@ class ClosureTest : Test
 
   Void testFuncFields()
   {
-    verifyEq(ClosureFieldA().f.call0, 1972)
-    verifyErr(NotImmutableErr#) |,| { ClosureFieldB().f.call0 }
+    verifyEq(ClosureFieldA().f.call, 1972)
+    verifyErr(NotImmutableErr#) |,| { ClosureFieldB().f.call }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -102,13 +102,13 @@ class ClosureTest : Test
 
     Func m := |,| { x += y }
     verifyEq(x, 5)
-    m.call0
+    m.call
     verifyEq(x, 6)
     y = -6
-    m.call0
+    m.call
     verifyEq(x, 0)
     x = 0; y = 1
-    5.times( |Int i| { m.call0; } )
+    5.times( |Int i| { m.call } )
     verifyEq(x, 5)
 
     // this reproduces a bug found by Andy
@@ -131,24 +131,24 @@ class ClosureTest : Test
     loc := "local+"
 
     // static field, no locals
-    verifyEq(|->Str| { return sx }.call0, "dora")
+    verifyEq(|->Str| { return sx }.call, "dora")
 
     // static method, no locals
-    verifyEq(|->Str| { return sm }.call0, "wiggles")
-    verifyEq(|->Str| { return sm() }.call0, "wiggles")
-    verifyEq(|->Str| { return sm("!") }.call0, "wiggles!")
+    verifyEq(|->Str| { return sm }.call, "wiggles")
+    verifyEq(|->Str| { return sm() }.call, "wiggles")
+    verifyEq(|->Str| { return sm("!") }.call, "wiggles!")
 
     // static field, with locals
-    verifyEq(|->Str| { return loc+sx }.call0, "local+dora")
+    verifyEq(|->Str| { return loc+sx }.call, "local+dora")
 
     // static method, with locals
-    verifyEq(|->Str| { return loc+sm }.call0, "local+wiggles")
+    verifyEq(|->Str| { return loc+sm }.call, "local+wiggles")
 
     // change local
     m := |->Str| { return loc+sx }
-    verifyEq(m.call0, "local+dora")
+    verifyEq(m.call, "local+dora")
     loc = "new local+";
-    verifyEq(m.call0, "new local+dora")
+    verifyEq(m.call, "new local+dora")
   }
 
   const static Str sx := "dora";
@@ -163,26 +163,26 @@ class ClosureTest : Test
     loc := "local+"
 
     // instance field, no locals
-    verifyEq(|->Str| { return ix }.call0, "blue")
+    verifyEq(|->Str| { return ix }.call, "blue")
 
     // instance method, no locals
-    verifyEq(|->Str| { return im }.call0, "higgleytown 0")
-    verifyEq(|->Str| { return im() }.call0, "higgleytown 0")
-    verifyEq(|->Str| { return im(7) }.call0, "higgleytown 7")
+    verifyEq(|->Str| { return im }.call, "higgleytown 0")
+    verifyEq(|->Str| { return im() }.call, "higgleytown 0")
+    verifyEq(|->Str| { return im(7) }.call, "higgleytown 7")
 
     // instance field, with locals
-    verifyEq(|->Str| { return loc+ix }.call0, "local+blue")
+    verifyEq(|->Str| { return loc+ix }.call, "local+blue")
 
     // instance method, with locals
-    verifyEq(|->Str| { return loc+im }.call0, "local+higgleytown 0")
-    verifyEq(|->Str| { return loc+im() }.call0, "local+higgleytown 0")
-    verifyEq(|->Str| { return loc+im(6) }.call0, "local+higgleytown 6")
+    verifyEq(|->Str| { return loc+im }.call, "local+higgleytown 0")
+    verifyEq(|->Str| { return loc+im() }.call, "local+higgleytown 0")
+    verifyEq(|->Str| { return loc+im(6) }.call, "local+higgleytown 6")
 
     // change local
     m := |->Str| { return loc+ix }
-    verifyEq(m.call0, "local+blue")
+    verifyEq(m.call, "local+blue")
     loc = "new local+";
-    verifyEq(m.call0, "new local+blue")
+    verifyEq(m.call, "new local+blue")
   }
 
   Str ix := "blue";
@@ -196,13 +196,13 @@ class ClosureTest : Test
 
   Void testScope()
   {
-    verifyEq(|->Obj| { return name }.call0, "foobar")
-    verifyEq(|->Obj| { return name() }.call0, "foobar")
-    verifySame(|->Obj| { return this }.call0, this)
-    verifySame(|->Obj| { return this.name }.call0, "foobar")
-    verifySame(|->Obj| { return this.name() }.call0, "foobar")
-    verifySame(|->Obj| { return type }.call0, type)
-    verifySame(|->Obj| { return this.type }.call0, type)
+    verifyEq(|->Obj| { return name }.call, "foobar")
+    verifyEq(|->Obj| { return name() }.call, "foobar")
+    verifySame(|->Obj| { return this }.call, this)
+    verifySame(|->Obj| { return this.name }.call, "foobar")
+    verifySame(|->Obj| { return this.name() }.call, "foobar")
+    verifySame(|->Obj| { return type }.call, type)
+    verifySame(|->Obj| { return this.type }.call, type)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -231,7 +231,7 @@ class ClosureTest : Test
   Void testCalls()
   {
     f := |Int a, Int b, Int c->Int[]| { return [a, b, c] }
-    verifyEq(f.call3(1, 2, 3),        [1, 2, 3])
+    verifyEq(f.call(1, 2, 3),        [1, 2, 3])
     verifyEq(f.callList([1, 2, 3]),       [1, 2, 3])
     verifyEq(f.callList([1, 2, 3, 4]),    [1, 2, 3])
     verifyEq(f.callOn(1, [2, 3, 4]),  [1, 2, 3])

@@ -75,7 +75,7 @@ class ExprTest : CompilerTest
     verifyExpr("sys::Str#slice", Str#.method("slice"))
     verifyExpr("Str[]#add", Str[]#.method("add"))
     verifyExpr("Str:Int#caseInsensitive", Str:Int#.field("caseInsensitive"))
-    verifyExpr("|Str a->Bool|#call2.returns", Bool#)
+    verifyExpr("|Str a->Bool|#call.returns", Bool#)
     verifyExpr("#echo", Obj#.method("echo"))
     verifyExpr("#echo.returns", Void#)
 
@@ -400,7 +400,7 @@ class ExprTest : CompilerTest
         Int g() { return a += ++b }
         Void h() { 3.times |,| { a = (b++) } }
         Int i() { return a += b++ + (c++).toInt }
-        Void j() { x := 2; a = |->Int| { return x++ }.call0; b = x } // cvar field
+        Void j() { x := 2; a = |->Int| { return x++ }.call; b = x } // cvar field
 
         Int a := 2
         Int b := 3
@@ -768,7 +768,7 @@ class ExprTest : CompilerTest
      barg := b == xNull ? null : b
 
      t := pod.types.first
-     instance := t.method("make").call0
+     instance := t.method("make").call
      actual := t.method("func").callList([instance, aarg, barg])
      verifyEq(actual, result)
    }

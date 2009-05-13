@@ -39,13 +39,13 @@ class ClosureTest : CompilerTest
 
      verifyEq(a.name, "Foo\$x\$0")
      verifyEq(a.slotDef("make")->isCtor, true)
-     verifyEq(a.slotDef("call0")->code->size, 2)
-     verifyEq(a.slotDef("call0")->code->stmts->get(0)->expr->method->name, "doCall")
-     verifyEq(a.slotDef("call0")->code->stmts->get(1)->expr->id, ExprId.nullLiteral)
+     verifyEq(a.slotDef("call")->code->size, 2)
+     verifyEq(a.slotDef("call")->code->stmts->get(0)->expr->method->name, "doCall")
+     verifyEq(a.slotDef("call")->code->stmts->get(1)->expr->id, ExprId.nullLiteral)
 
      verifyEq(b.name, "Foo\$x\$1")
-     verifyEq(b.slotDef("call2")->code->size, 1)
-     call := b.slotDef("call2")->code->stmts->get(0)->expr as CallExpr
+     verifyEq(b.slotDef("call")->code->size, 1)
+     call := b.slotDef("call")->code->stmts->get(0)->expr as CallExpr
      verifyEq(call.method.name, "doCall")
      verifyEq(call.args[0].id, ExprId.coerce)
      verifyEq(call.args[0]->check->qname, "sys::Int")
@@ -73,16 +73,16 @@ class ClosureTest : CompilerTest
      "class Foo
       {
         Int x() { return 1972 }
-        Int xc1() { return |->Int| { return x }.call0 }
-        Int xc2() { return |->Int| { return this.x }.call0 }
+        Int xc1() { return |->Int| { return x }.call }
+        Int xc2() { return |->Int| { return this.x }.call }
 
         static Int y() { return 72 }
-        Int yc1() { return |->Int| { return y }.call0 }
-        Int yc2() { return |->Int| { return Foo.y }.call0 }
+        Int yc1() { return |->Int| { return y }.call }
+        Int yc2() { return |->Int| { return Foo.y }.call }
 
         Int f := 66
-        Int fc1() { return |->Int| { return f }.call0 }
-        Int fc2() { return |->Int| { return this.f }.call0 }
+        Int fc1() { return |->Int| { return f }.call }
+        Int fc2() { return |->Int| { return this.f }.call }
       }")
 
      t := pod.types[0]
@@ -106,10 +106,10 @@ class ClosureTest : CompilerTest
       class Foo : Base
       {
         override Int x() { return 4 }
-        static Int  a() { return |->Int| { return this.x }.call0 }
-        static Void b() { |,| { |,| { this.x } }.call0 }
-        Int  c() { return |->Int| { return super.x }.call0 }
-        Void d() { |,| { |,| { super.x } }.call0 }
+        static Int  a() { return |->Int| { return this.x }.call }
+        static Void b() { |,| { |,| { this.x } }.call }
+        Int  c() { return |->Int| { return super.x }.call }
+        Void d() { |,| { |,| { super.x } }.call }
       }
       ",
        [
@@ -134,7 +134,7 @@ class ClosureTest : CompilerTest
           Int x := 7
           Int echo := 10
           3.times |Int i| {}
-          return |->Int| { return x+echo }.call0
+          return |->Int| { return x+echo }.call
         }
       }")
 
@@ -171,7 +171,7 @@ class ClosureTest : CompilerTest
           {
             2.times |,| { x++ }
           }
-          f = |->Int| { return x }.call0
+          f = |->Int| { return x }.call
         }
 
         const static Str g
@@ -213,19 +213,19 @@ class ClosureTest : CompilerTest
     // compiler.fpod.dump
     t  := pod.types[0]
     obj := t.make
-    obj->c1->call0()
+    obj->c1->call()
     verifyEq(obj->s, "c1")
-    obj->c2->call1("c2")
+    obj->c2->call("c2")
     verifyEq(obj->s, "c2")
-    obj->c3->call1("c3")
+    obj->c3->call("c3")
     verifyEq(obj->s, "c3")
-    obj->c4->call1("c4")
+    obj->c4->call("c4")
     verifyEq(obj->s, "c4")
 
     verifyEq(Actor.locals["testCompiler.closure"], null)
-    ((Func)t.field("sc1").get).call0
+    ((Func)t.field("sc1").get).call
     verifyEq(Actor.locals["testCompiler.closure"], "sc1")
-    ((Func)t.field("sc2").get).call1("xxx")
+    ((Func)t.field("sc2").get).call("xxx")
     verifyEq(Actor.locals["testCompiler.closure"], "xxx")
   }
 
@@ -435,7 +435,7 @@ class ClosureTest : CompilerTest
       class Target
       {
         new make(Method m) { this.m = m }
-        Str run() { return (Str)m.call0 }
+        Str run() { return (Str)m.call }
         Method m
       }
       ")

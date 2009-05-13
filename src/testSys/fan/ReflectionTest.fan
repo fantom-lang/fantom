@@ -86,40 +86,40 @@ class ReflectionTest : Test
   {
     statics :=
     [
-      |Method m->Obj| { return m.call0() },
-      |Method m->Obj| { return m.call1('a') },
-      |Method m->Obj| { return m.call2('a', 'b') },
-      |Method m->Obj| { return m.call3('a', 'b', 'c') },
-      |Method m->Obj| { return m.call4('a', 'b', 'c', 'd') },
-      |Method m->Obj| { return m.call5('a', 'b', 'c', 'd', 'e') },
-      |Method m->Obj| { return m.call6('a', 'b', 'c', 'd', 'e', 'f') },
-      |Method m->Obj| { return m.call7('a', 'b', 'c', 'd', 'e', 'f', 'g') },
-      |Method m->Obj| { return m.call8('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h') }
+      |Method m->Obj| { return m.call() },
+      |Method m->Obj| { return m.call('a') },
+      |Method m->Obj| { return m.call('a', 'b') },
+      |Method m->Obj| { return m.call('a', 'b', 'c') },
+      |Method m->Obj| { return m.call('a', 'b', 'c', 'd') },
+      |Method m->Obj| { return m.call('a', 'b', 'c', 'd', 'e') },
+      |Method m->Obj| { return m.call('a', 'b', 'c', 'd', 'e', 'f') },
+      |Method m->Obj| { return m.call('a', 'b', 'c', 'd', 'e', 'f', 'g') },
+      |Method m->Obj| { return m.call('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h') }
     ]
 
     instances :=
     [
-      |Method m->Obj| { return m.call1(this) },
-      |Method m->Obj| { return m.call2(this, 'a') },
-      |Method m->Obj| { return m.call3(this, 'a', 'b') },
-      |Method m->Obj| { return m.call4(this, 'a', 'b', 'c') },
-      |Method m->Obj| { return m.call5(this, 'a', 'b', 'c', 'd') },
-      |Method m->Obj| { return m.call6(this, 'a', 'b', 'c', 'd', 'e') },
-      |Method m->Obj| { return m.call7(this, 'a', 'b', 'c', 'd', 'e', 'f') },
-      |Method m->Obj| { return m.call8(this, 'a', 'b', 'c', 'd', 'e', 'f', 'g') },
+      |Method m->Obj| { return m.call(this) },
+      |Method m->Obj| { return m.call(this, 'a') },
+      |Method m->Obj| { return m.call(this, 'a', 'b') },
+      |Method m->Obj| { return m.call(this, 'a', 'b', 'c') },
+      |Method m->Obj| { return m.call(this, 'a', 'b', 'c', 'd') },
+      |Method m->Obj| { return m.call(this, 'a', 'b', 'c', 'd', 'e') },
+      |Method m->Obj| { return m.call(this, 'a', 'b', 'c', 'd', 'e', 'f') },
+      |Method m->Obj| { return m.call(this, 'a', 'b', 'c', 'd', 'e', 'f', 'g') },
       |Method m->Obj| { return m.callOn(this, ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) },
     ]
 
     funcs :=
     [
-      |Method m->Obj| { return m.func.call1(this) },
-      |Method m->Obj| { return m.func.call2(this, 'a') },
-      |Method m->Obj| { return m.func.call3(this, 'a', 'b') },
-      |Method m->Obj| { return m.func.call4(this, 'a', 'b', 'c') },
-      |Method m->Obj| { return m.func.call5(this, 'a', 'b', 'c', 'd') },
-      |Method m->Obj| { return m.func.call6(this, 'a', 'b', 'c', 'd', 'e') },
-      |Method m->Obj| { return m.func.call7(this, 'a', 'b', 'c', 'd', 'e', 'f') },
-      |Method m->Obj| { return m.func.call8(this, 'a', 'b', 'c', 'd', 'e', 'f', 'g') },
+      |Method m->Obj| { return m.func.call(this) },
+      |Method m->Obj| { return m.func.call(this, 'a') },
+      |Method m->Obj| { return m.func.call(this, 'a', 'b') },
+      |Method m->Obj| { return m.func.call(this, 'a', 'b', 'c') },
+      |Method m->Obj| { return m.func.call(this, 'a', 'b', 'c', 'd') },
+      |Method m->Obj| { return m.func.call(this, 'a', 'b', 'c', 'd', 'e') },
+      |Method m->Obj| { return m.func.call(this, 'a', 'b', 'c', 'd', 'e', 'f') },
+      |Method m->Obj| { return m.func.call(this, 'a', 'b', 'c', 'd', 'e', 'f', 'g') },
       |Method m->Obj| { return m.func.callOn(this, ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) },
     ]
 
@@ -143,18 +143,18 @@ class ReflectionTest : Test
       // verify explicits less than i fail
       for (j:=0; j<i; ++j)
       {
-        verifyErr(ArgErr#) |,| { statics[j]->call1(ms) }
-        verifyErr(ArgErr#) |,| { instances[j]->call1(mi) }
-        verifyErr(ArgErr#) |,| { funcs[j]->call1(mi) }
+        verifyErr(ArgErr#) |,| { statics[j]->call(ms) }
+        verifyErr(ArgErr#) |,| { instances[j]->call(mi) }
+        verifyErr(ArgErr#) |,| { funcs[j]->call(mi) }
       }
 
       // verify explicits i and greater work (we
       // can always pass more arguments)
       for (j:=i; j<statics.size; ++j)
       {
-        verifyEq(statics[j]->call1(ms), expected)
-        verifyEq(instances[j]->call1(mi), expected)
-        verifyEq(funcs[j]->call1(mi), expected)
+        verifyEq(statics[j]->call(ms), expected)
+        verifyEq(instances[j]->call(mi), expected)
+        verifyEq(funcs[j]->call(mi), expected)
       }
 
       // call() static method
@@ -215,15 +215,15 @@ class ReflectionTest : Test
   {
     m := type.method("defaultsStatic")
 
-    verifyEq(m.call0(), "abc")
-    verifyEq(m.call1('x'), "xbc")
-    verifyEq(m.call2('x', 'y'), "xyc")
-    verifyEq(m.call3('x', 'y', 'z'), "xyz")
-    verifyEq(m.call4('x', 'y', 'z', '?'), "xyz")
-    verifyEq(m.call5('x', 'y', 'z', '?', '?'), "xyz")
-    verifyEq(m.call6('x', 'y', 'z', '?', '?', '?'), "xyz")
-    verifyEq(m.call7('x', 'y', 'z', '?', '?', '?', '?'), "xyz")
-    verifyEq(m.call8('x', 'y', 'z', '?', '?', '?', '?', '?'), "xyz")
+    verifyEq(m.call(), "abc")
+    verifyEq(m.call('x'), "xbc")
+    verifyEq(m.call('x', 'y'), "xyc")
+    verifyEq(m.call('x', 'y', 'z'), "xyz")
+    verifyEq(m.call('x', 'y', 'z', '?'), "xyz")
+    verifyEq(m.call('x', 'y', 'z', '?', '?'), "xyz")
+    verifyEq(m.call('x', 'y', 'z', '?', '?', '?'), "xyz")
+    verifyEq(m.call('x', 'y', 'z', '?', '?', '?', '?'), "xyz")
+    verifyEq(m.call('x', 'y', 'z', '?', '?', '?', '?', '?'), "xyz")
 
     verifyEq(m.callList(null), "abc")
     verifyEq(m.callList([,]), "abc")
@@ -255,15 +255,15 @@ class ReflectionTest : Test
   {
     m := type.method("defaultsInstance0")
 
-    verifyErr(ArgErr#) |,| { m.call0() }
-    verifyEq(m.call1(this), "abc")
-    verifyEq(m.call2(this, 'x'), "xbc")
-    verifyEq(m.call3(this, 'x', 'y'), "xyc")
-    verifyEq(m.call4(this, 'x', 'y', 'z'), "xyz")
-    verifyEq(m.call5(this, 'x', 'y', 'z', '?'), "xyz")
-    verifyEq(m.call6(this, 'x', 'y', 'z', '?', '?'), "xyz")
-    verifyEq(m.call7(this, 'x', 'y', 'z', '?', '?', '?'), "xyz")
-    verifyEq(m.call8(this, 'x', 'y', 'z', '?', '?', '?', '?'), "xyz")
+    verifyErr(ArgErr#) |,| { m.call() }
+    verifyEq(m.call(this), "abc")
+    verifyEq(m.call(this, 'x'), "xbc")
+    verifyEq(m.call(this, 'x', 'y'), "xyc")
+    verifyEq(m.call(this, 'x', 'y', 'z'), "xyz")
+    verifyEq(m.call(this, 'x', 'y', 'z', '?'), "xyz")
+    verifyEq(m.call(this, 'x', 'y', 'z', '?', '?'), "xyz")
+    verifyEq(m.call(this, 'x', 'y', 'z', '?', '?', '?'), "xyz")
+    verifyEq(m.call(this, 'x', 'y', 'z', '?', '?', '?', '?'), "xyz")
 
     verifyErr(ArgErr#) |,| { m.callList(null) }
     verifyErr(ArgErr#) |,| { m.callList([,]) }
@@ -296,15 +296,15 @@ class ReflectionTest : Test
   {
     m := type.method("defaultsInstance1")
 
-    verifyErr(ArgErr#) |,| { m.call0() }
-    verifyErr(ArgErr#) |,| { m.call1(this) }
-    verifyEq(m.call2(this, 'x'), "xbc")
-    verifyEq(m.call3(this, 'x', 'y'), "xyc")
-    verifyEq(m.call4(this, 'x', 'y', 'z'), "xyz")
-    verifyEq(m.call5(this, 'x', 'y', 'z', '?'), "xyz")
-    verifyEq(m.call6(this, 'x', 'y', 'z', '?', '?'), "xyz")
-    verifyEq(m.call7(this, 'x', 'y', 'z', '?', '?', '?'), "xyz")
-    verifyEq(m.call8(this, 'x', 'y', 'z', '?', '?', '?', '?'), "xyz")
+    verifyErr(ArgErr#) |,| { m.call() }
+    verifyErr(ArgErr#) |,| { m.call(this) }
+    verifyEq(m.call(this, 'x'), "xbc")
+    verifyEq(m.call(this, 'x', 'y'), "xyc")
+    verifyEq(m.call(this, 'x', 'y', 'z'), "xyz")
+    verifyEq(m.call(this, 'x', 'y', 'z', '?'), "xyz")
+    verifyEq(m.call(this, 'x', 'y', 'z', '?', '?'), "xyz")
+    verifyEq(m.call(this, 'x', 'y', 'z', '?', '?', '?'), "xyz")
+    verifyEq(m.call(this, 'x', 'y', 'z', '?', '?', '?', '?'), "xyz")
 
     verifyErr(ArgErr#) |,| { m.callList(null) }
     verifyErr(ArgErr#) |,| { m.callList([,]) }
@@ -337,9 +337,9 @@ class ReflectionTest : Test
   {
     // reflect static method
     t := ReflectMixin#
-    verifyEq(t.method("add").call2(3, 4), 7)
-    verifyEq(t.method("mult").call2(3, 4), 12)
-    verifyEq(t.method("mult").call1(3), 30)
+    verifyEq(t.method("add").call(3, 4), 7)
+    verifyEq(t.method("mult").call(3, 4), 12)
+    verifyEq(t.method("mult").call(3), 30)
     verifyEq(t.method("mult").callList([3]), 30)
 
     // reflect static field
@@ -357,9 +357,9 @@ class ReflectionTest : Test
     verifyEq(t.method("concat").callList([obj, 3, "."]), "3.")
     verifyEq(t.method("concat").callList([obj, 3]), "3;")
     verifyEq(t.method("concat").callList([obj]), "7;")
-    verifyEq(t.method("concat").call3(obj, 3, "."), "3.")
-    verifyEq(t.method("concat").call2(obj, 3), "3;")
-    verifyEq(t.method("concat").call1(obj), "7;")
+    verifyEq(t.method("concat").call(obj, 3, "."), "3.")
+    verifyEq(t.method("concat").call(obj, 3), "3;")
+    verifyEq(t.method("concat").call(obj), "7;")
 
     // instance methods with field override
     verifyEq(t.method("ix").callOn(obj, [,]), 'X')

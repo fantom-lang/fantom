@@ -86,7 +86,7 @@ namespace Fanx.Util
     {
       // use Fan reflection to run compiler::Main.compileScript(File)
       Method m = Slot.findMethod("compiler::Main.compileScript", true);
-      return (Pod)m.call3(podName, f, options);
+      return (Pod)m.call(podName, f, options);
     }
 
   //////////////////////////////////////////////////////////////////////////

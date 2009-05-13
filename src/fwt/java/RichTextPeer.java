@@ -281,7 +281,7 @@ public class RichTextPeer
 
     for (int i=0; i<cbs.sz(); ++i)
     {
-      ((Func)cbs.get(i)).call1(fe);
+      ((Func)cbs.get(i)).call(fe);
       if (tc.newText != origNewText && OpUtil.compareNE(tc.newText, origNewText))
       {
         if (tc.newText == null) se.doit = false;

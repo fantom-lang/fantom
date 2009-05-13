@@ -176,7 +176,7 @@ internal class ExprVisitor : Visitor
 
   override Expr visitExpr(Expr expr)
   {
-    return (Expr)func.call1(expr)
+    return (Expr)func.call(expr)
   }
 
   |Expr expr->Expr| func

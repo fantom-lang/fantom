@@ -30,7 +30,7 @@ class MiscTest : CompilerTest
      verifyEq(mk.isCtor, true)
      verifyEq(mk.isPublic, true)
      verifyEq(mk.params.isEmpty, true)
-     verifyEq(mk.call0->x, 7)
+     verifyEq(mk.call->x, 7)
 
     verifyErrors(
       "class A { Void make() {} }
@@ -235,7 +235,7 @@ class MiscTest : CompilerTest
      "class Foo : Test
       {
         static Str x(Int[] a, Int:Str b, |Int x| c) { return a.toStr }
-        Obj testIt() { return type.method(\"x\").call3([1, 2, 3], [4:4.toStr], |Int x| {}) }
+        Obj testIt() { return type.method(\"x\").call([1, 2, 3], [4:4.toStr], |Int x| {}) }
       }")
 
      t := pod.types.first
@@ -261,7 +261,7 @@ class MiscTest : CompilerTest
 
           $mod Func t04() { return &s2(99) }
           $mod Int[] t05() { return (&s2)(5, 6) }
-          $mod Int[] t06() { m := &s2(99); return m.call1(5) }
+          $mod Int[] t06() { m := &s2(99); return m.call(5) }
           $mod Int[] t07(Int a, Int b) { return (&s2(a, b)).callList([5, 6, 7]) }
 
           $mod Int[] t08(Int a, Int h) { return (&s8(a, 2, 3, 4, 5, 6, 7))(h) }
@@ -356,7 +356,7 @@ class MiscTest : CompilerTest
     compile(
      "class Foo
       {
-        Obj t01() { return m.call0 }
+        Obj t01() { return m.call }
 
         Str x := \"abc\"
         Func m := &x.upper
@@ -394,8 +394,8 @@ class MiscTest : CompilerTest
      t := pod.types.first
      obj := pod.types[1].make
 
-     verifyEq(t->method("t00")->call0, [1, 2])
-     verifyEq(t->method("t01")->call0, [7, 8])
+     verifyEq(t->method("t00")->call, [1, 2])
+     verifyEq(t->method("t01")->call, [7, 8])
 
      verifyEq(obj->t02, ['a', 'b'])
      verifyEq(obj->t03(7), ['A', 7])
@@ -504,11 +504,11 @@ class MiscTest : CompilerTest
 
     x := [2]
     verifyEq(x[0], 2)
-    t.method("baz").call1(x)
+    t.method("baz").call(x)
     verifyEq(x[0], 5)
-    verifyEq(t.method("wow").call1(x), 6)
+    verifyEq(t.method("wow").call(x), 6)
     verifyEq(x[0], 6)
-    verifyEq(t.method("wee").call1(x), 6)
+    verifyEq(t.method("wee").call(x), 6)
     verifyEq(x[0], 7)
 
     o := t.make

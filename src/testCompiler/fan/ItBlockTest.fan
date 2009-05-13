@@ -55,28 +55,28 @@ class ItBlockTest : CompilerTest
 
      t := pod.types.first
 
-     x := t.method("a").call0
+     x := t.method("a").call
      verifyEq(x->i, 77)
      verifyEq(x->j, 5)
 
-     x = t.method("b").call0
+     x = t.method("b").call
      verifyEq(x->i, 9)
      verifyEq(x->j, 11)
 
-     x = t.method("c").call0
+     x = t.method("c").call
      verifyEq(x->i, 3)
      verifyEq(x->j, 6)
 
-     x = t.method("d").call0
+     x = t.method("d").call
      verifyEq(x->i, 11)
      verifyEq(x->j, 12)
 
-     x = t.method("e").call0
+     x = t.method("e").call
      verifyEq(x->type, Str[]#)
      verifyEq(x->size, 33)
      verifyEq(x->capacity, 33)
 
-     x = t.method("f").call0
+     x = t.method("f").call
      verifyEq(x->i, 10)
      verifyEq(x->kid->i, 20)
      verifyEq(x->kid->kid->i, 30)
@@ -246,7 +246,7 @@ class ItBlockTest : CompilerTest
 
      ('f'..'l').each |Int i|
      {
-       x = obj.type.method(i.toChar).call1(obj)
+       x = obj.type.method(i.toChar).call(obj)
        verifyEq(x->kids->first->name, "a")
      }
 

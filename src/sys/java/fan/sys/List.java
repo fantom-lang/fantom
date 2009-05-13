@@ -506,12 +506,12 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        f.call1(values[i]);
+        f.call(values[i]);
     }
     else
     {
       for (int i=0; i<size; ++i)
-        f.call2(values[i], Long.valueOf(i));
+        f.call(values[i], Long.valueOf(i));
     }
   }
 
@@ -520,12 +520,12 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=size-1; i>=0; --i)
-        f.call1(values[i]);
+        f.call(values[i]);
     }
     else
     {
       for (int i=size-1; i>=0; --i)
-        f.call2(values[i], Long.valueOf(i));
+        f.call(values[i], Long.valueOf(i));
     }
   }
 
@@ -539,12 +539,12 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=s; i<=e; ++i)
-        f.call1(values[i]);
+        f.call(values[i]);
     }
     else
     {
       for (int i=s; i<=e; ++i)
-        f.call2(values[i], Long.valueOf(i));
+        f.call(values[i], Long.valueOf(i));
     }
   }
 
@@ -554,7 +554,7 @@ public final class List
     {
       for (int i=0; i<size; ++i)
       {
-        Object r = f.call1(values[i]);
+        Object r = f.call(values[i]);
         if (r != null) return r;
       }
     }
@@ -562,7 +562,7 @@ public final class List
     {
       for (int i=0; i<size; ++i)
       {
-        Object r = f.call2(values[i], Long.valueOf(i));
+        Object r = f.call(values[i], Long.valueOf(i));
         if (r != null) return r;
       }
     }
@@ -574,13 +574,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call1(values[i]) == Boolean.TRUE)
+        if (f.call(values[i]) == Boolean.TRUE)
           return values[i];
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
+        if (f.call(values[i], Long.valueOf(i)) == Boolean.TRUE)
           return values[i];
     }
     return null;
@@ -592,7 +592,7 @@ public final class List
     {
       for (int i=0; i<size; ++i)
       {
-        if (f.call1(values[i]) == Boolean.TRUE)
+        if (f.call(values[i]) == Boolean.TRUE)
           return Long.valueOf(i);
       }
     }
@@ -601,7 +601,7 @@ public final class List
       for (int i=0; i<size; ++i)
       {
         Long pos = Long.valueOf(i);
-        if (f.call2(values[i], pos) == Boolean.TRUE)
+        if (f.call(values[i], pos) == Boolean.TRUE)
           return pos;
       }
     }
@@ -614,13 +614,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call1(values[i]) == Boolean.TRUE)
+        if (f.call(values[i]) == Boolean.TRUE)
           acc.add(values[i]);
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
+        if (f.call(values[i], Long.valueOf(i)) == Boolean.TRUE)
           acc.add(values[i]);
     }
     return acc;
@@ -644,13 +644,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call1(values[i]) != Boolean.TRUE)
+        if (f.call(values[i]) != Boolean.TRUE)
           acc.add(values[i]);
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call2(values[i], Long.valueOf(i)) != Boolean.TRUE)
+        if (f.call(values[i], Long.valueOf(i)) != Boolean.TRUE)
           acc.add(values[i]);
     }
     return acc;
@@ -661,13 +661,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call1(values[i]) == Boolean.TRUE)
+        if (f.call(values[i]) == Boolean.TRUE)
           return true;
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call2(values[i], Long.valueOf(i)) == Boolean.TRUE)
+        if (f.call(values[i], Long.valueOf(i)) == Boolean.TRUE)
           return true;
     }
     return false;
@@ -678,13 +678,13 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        if (f.call1(values[i]) != Boolean.TRUE)
+        if (f.call(values[i]) != Boolean.TRUE)
           return false;
     }
     else
     {
       for (int i=0; i<size; ++i)
-        if (f.call2(values[i], Long.valueOf(i)) != Boolean.TRUE)
+        if (f.call(values[i], Long.valueOf(i)) != Boolean.TRUE)
           return false;
     }
     return true;
@@ -695,30 +695,39 @@ public final class List
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        reduction = f.call2(reduction, values[i]);
+        reduction = f.call(reduction, values[i]);
     }
     else
     {
       for (int i=0; i<size; ++i)
-        reduction = f.call3(reduction, values[i], Long.valueOf(i));
+        reduction = f.call(reduction, values[i], Long.valueOf(i));
     }
     return reduction;
   }
 
   public final List map(List acc, Func f)
   {
+try
+{
     if (acc.size == 0) acc.capacity(size());
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
-        acc.add(f.call1(values[i]));
+        acc.add(f.call(values[i]));
     }
     else
     {
       for (int i=0; i<size; ++i)
-        acc.add(f.call2(values[i], Long.valueOf(i)));
+        acc.add(f.call(values[i], Long.valueOf(i)));
     }
     return acc;
+}
+catch (Throwable e)
+{
+  System.out.println("::::: " + f.getClass().getName());
+  e.printStackTrace();
+  throw new RuntimeException();
+}
   }
 
   public final Object max() { return max(null); }
@@ -919,7 +928,7 @@ public final class List
     if (size == 1)
     {
       Object v = values[0];
-      if (f != null) return (String)f.call2(v, 0L);
+      if (f != null) return (String)f.call(v, 0L);
       if (v == null) return "null";
       return toStr(v);
     }
@@ -931,7 +940,7 @@ public final class List
       if (f == null)
         s.append(values[i]);
       else
-        s.append(f.call2(values[i], Long.valueOf(i)));
+        s.append(f.call(values[i], Long.valueOf(i)));
     }
     return s.toString();
   }
@@ -1084,7 +1093,7 @@ public final class List
     if (f == null) return defaultComparator;
     return new Comparator()
     {
-      public int compare(Object a, Object b) { return ((Long)f.call2(a, b)).intValue(); }
+      public int compare(Object a, Object b) { return ((Long)f.call(a, b)).intValue(); }
     };
   }
   static final Comparator defaultComparator = new Comparator()
@@ -1097,7 +1106,7 @@ public final class List
     if (f == null) return defaultReverseComparator;
     return new Comparator()
     {
-      public int compare(Object a, Object b) { return ((Long)f.call2(b, a)).intValue(); }
+      public int compare(Object a, Object b) { return ((Long)f.call(b, a)).intValue(); }
     };
   }
   static final Comparator defaultReverseComparator = new Comparator()

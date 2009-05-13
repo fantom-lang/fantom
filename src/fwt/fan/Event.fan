@@ -197,7 +197,7 @@ class EventListeners
   internal Void modified()
   {
     try
-      onModify?.call1(this)
+      onModify?.call(this)
     catch (Err e)
       e.trace
   }

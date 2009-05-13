@@ -120,12 +120,12 @@ namespace Fan.Sys
       }
       else
       {
-        f.call1(self);
+        f.call(self);
         return self;
       }
     }
 
-    public virtual object with(Func f) { f.call1(this); return this; }
+    public virtual object with(Func f) { f.call(this); return this; }
 
     public static object trap(object self, string name, List args)
     {

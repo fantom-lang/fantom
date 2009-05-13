@@ -283,20 +283,20 @@ public class FanStr
   {
     int len = self.length();
     for (int i=0; i<len ; ++i)
-      f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i));
+      f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i));
   }
 
   public static void eachr(String self, Func f)
   {
     for (int i=self.length()-1; i>=0; --i)
-      f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i));
+      f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i));
   }
 
   public static boolean any(String self, Func f)
   {
     int len = self.length();
     for (int i=0; i<len ; ++i)
-      if (f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.TRUE)
+      if (f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.TRUE)
         return true;
     return false;
   }
@@ -305,7 +305,7 @@ public class FanStr
   {
     int len = self.length();
     for (int i=0; i<len ; ++i)
-      if (f.call2(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.FALSE)
+      if (f.call(Long.valueOf(self.charAt(i)), Long.valueOf(i)) == Boolean.FALSE)
         return false;
     return true;
   }

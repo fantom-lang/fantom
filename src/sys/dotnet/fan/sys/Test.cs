@@ -154,7 +154,7 @@ namespace Fan.Sys
     {
       try
       {
-        f.call1(this);
+        f.call(this);
       }
       catch (Err.Val e)
       {

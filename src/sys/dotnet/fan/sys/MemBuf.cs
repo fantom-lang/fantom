@@ -313,7 +313,7 @@ namespace Fan.Sys
           int c = buf[i];
           if (c != '\n') continue;
           String str = new String(buf, s, i-s, charset);
-          f.call1(string.make(str));
+          f.call(string.make(str));
           s = i+1;
         }
       }

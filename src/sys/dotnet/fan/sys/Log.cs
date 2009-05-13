@@ -177,7 +177,7 @@ namespace Fan.Sys
       {
         try
         {
-          handlers[i].call1(rec);
+          handlers[i].call(rec);
         }
         catch (System.Exception e)
         {

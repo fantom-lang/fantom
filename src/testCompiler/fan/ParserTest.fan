@@ -1021,7 +1021,7 @@ class ParserTest : CompilerTest
       verifyEq(expr->args->first->target->ctype->toStr, "sys::Float")
 
     /*
-    verifyStmt("x := 0xab00 | y\n|->Void| { y = x }.call0", StmtId.localDef)
+    verifyStmt("x := 0xab00 | y\n|->Void| { y = x }.call", StmtId.localDef)
     m := (MethodDef)t.slots.first
     verifyEq(m.code.stmts[1].id, StmtId.expr)
     */

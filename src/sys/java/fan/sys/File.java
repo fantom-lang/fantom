@@ -155,7 +155,7 @@ public abstract class File
 
   public void walk(Func c)
   {
-    c.call1(this);
+    c.call(this);
     if (isDir())
     {
       List list = list();
@@ -239,7 +239,7 @@ public abstract class File
     }
     else if (exclude instanceof Func)
     {
-      if (((Func)exclude).call1(this) == Boolean.TRUE) return;
+      if (((Func)exclude).call(this) == Boolean.TRUE) return;
     }
 
     // check for overwrite
@@ -251,7 +251,7 @@ public abstract class File
       }
       else if (overwrite instanceof Func)
       {
-        if (((Func)overwrite).call1(this) == Boolean.FALSE) return;
+        if (((Func)overwrite).call(this) == Boolean.FALSE) return;
       }
       else
       {

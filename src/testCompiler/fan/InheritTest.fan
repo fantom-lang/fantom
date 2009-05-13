@@ -585,20 +585,20 @@ class InheritTest : CompilerTest
      // verify methods work
      //
      obj := bt.make
-     verifySame(bt.method("xA").call1(obj), obj)
-     verifySame(bt.method("xB").call1(obj), obj)
-     verifySame(bt.method("yM").call1(obj), obj)
-     verifySame(bt.method("yB").call1(obj), obj)
-     verifySame(bt.method("mQ").call1(obj), obj)
-     verifySame(bt.method("mB").call1(obj), obj)
-     verifySame(bt.method("nQ").call1(obj), obj)
-     verifySame(bt.method("nP").call1(obj), obj)
-     verifySame(bt.method("nB").call1(obj), obj)
-     verifyEq(bt.method("eQ").call1(obj), ["hello"])
-     verifyEq(bt.method("eB").call1(obj), ["hello"])
-     verifyEq(bt.method("fQ").call1(obj), [2, 3])
-     verifyEq(bt.method("fP").call1(obj), [2, 3])
-     verifyEq(bt.method("fB").call1(obj), [2, 3])
+     verifySame(bt.method("xA").call(obj), obj)
+     verifySame(bt.method("xB").call(obj), obj)
+     verifySame(bt.method("yM").call(obj), obj)
+     verifySame(bt.method("yB").call(obj), obj)
+     verifySame(bt.method("mQ").call(obj), obj)
+     verifySame(bt.method("mB").call(obj), obj)
+     verifySame(bt.method("nQ").call(obj), obj)
+     verifySame(bt.method("nP").call(obj), obj)
+     verifySame(bt.method("nB").call(obj), obj)
+     verifyEq(bt.method("eQ").call(obj), ["hello"])
+     verifyEq(bt.method("eB").call(obj), ["hello"])
+     verifyEq(bt.method("fQ").call(obj), [2, 3])
+     verifyEq(bt.method("fP").call(obj), [2, 3])
+     verifyEq(bt.method("fB").call(obj), [2, 3])
   }
 
   Void testCovarianceMore()
@@ -641,14 +641,14 @@ class InheritTest : CompilerTest
      Type bt := pod.types[3]
 
      obj := bt.make
-     verifySame(bt.method("xA").call1(obj), obj)
-     verifySame(bt.method("xM").call1(obj), obj)
-     verifySame(bt.method("xB").call1(obj), obj)
+     verifySame(bt.method("xA").call(obj), obj)
+     verifySame(bt.method("xM").call(obj), obj)
+     verifySame(bt.method("xB").call(obj), obj)
 
-     verifySame(bt.method("yAA").call1(obj), 8)
-     verifySame(bt.method("yA").call1(obj), 8)
-     verifySame(bt.method("yM").call1(obj), 8)
-     verifySame(bt.method("yB").call1(obj), 8)
+     verifySame(bt.method("yAA").call(obj), 8)
+     verifySame(bt.method("yA").call(obj), 8)
+     verifySame(bt.method("yM").call(obj), 8)
+     verifySame(bt.method("yB").call(obj), 8)
   }
 
   Void testCovarianceFields()
@@ -698,10 +698,10 @@ class InheritTest : CompilerTest
     verifyEq(a.method("x").callOn(o, [,]), 6d)
     verifyEq(b.field("x").get(o), 6d)
 
-    verifyEq(b.method("v1").call1(o), 6d)
-    verifyEq(b.method("v2").call1(o), 6d)
-    verifyEq(b.method("v3").call1(o), 7d)
-    verifyEq(b.method("v4").call1(o), 8d)
+    verifyEq(b.method("v1").call(o), 6d)
+    verifyEq(b.method("v2").call(o), 6d)
+    verifyEq(b.method("v3").call(o), 7d)
+    verifyEq(b.method("v4").call(o), 8d)
   }
 
   Void testCovarianceConflict()
@@ -977,34 +977,34 @@ class InheritTest : CompilerTest
      change2 := (Str:Int)orig.map(Str:Int[:]) |Int v->Int| { return 2000+v }
 
      obj := b.make
-     verifyEq(getCounts.call2(obj, 0), true)
-     verifyEq(getCounts.call2(obj, 0), true)
+     verifyEq(getCounts.call(obj, 0), true)
+     verifyEq(getCounts.call(obj, 0), true)
 
-     verifyEq(geta.call1(obj), orig)
-     verifyEq(getCounts.call2(obj, 1), true)
+     verifyEq(geta.call(obj), orig)
+     verifyEq(getCounts.call(obj, 1), true)
 
-     verifyEq(getb.call1(obj), orig)
-     verifyEq(getCounts.call2(obj, 1), true)
+     verifyEq(getb.call(obj), orig)
+     verifyEq(getCounts.call(obj, 1), true)
 
-     setb.call2(obj, change1)
-     verifyEq(setCounts.call2(obj, 0), true)
+     setb.call(obj, change1)
+     verifyEq(setCounts.call(obj, 0), true)
 
-     verifyEq(geta.call1(obj), change1)
-     verifyEq(getCounts.call2(obj, 2), true)
+     verifyEq(geta.call(obj), change1)
+     verifyEq(getCounts.call(obj, 2), true)
 
-     verifyEq(getb.call1(obj), change1)
-     verifyEq(getCounts.call2(obj, 2), true)
+     verifyEq(getb.call(obj), change1)
+     verifyEq(getCounts.call(obj, 2), true)
 
      if (doSeta)
      {
-       seta.call2(obj, change2)
-       verifyEq(setCounts.call2(obj, 1), true)
+       seta.call(obj, change2)
+       verifyEq(setCounts.call(obj, 1), true)
 
-       verifyEq(geta.call1(obj), change2)
-       verifyEq(getCounts.call2(obj, 3), true)
+       verifyEq(geta.call(obj), change2)
+       verifyEq(getCounts.call(obj, 3), true)
 
-       verifyEq(getb.call1(obj), change2)
-       verifyEq(getCounts.call2(obj, 3), true)
+       verifyEq(getb.call(obj), change2)
+       verifyEq(getCounts.call(obj, 3), true)
      }
   }
 

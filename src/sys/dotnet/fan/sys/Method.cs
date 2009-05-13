@@ -147,15 +147,15 @@ namespace Fan.Sys
 
     public object callList(List args) { return m_func.callList(args); }
     public object callOn(object target, List args) { return m_func.callOn(target, args); }
-    public object call0() { return m_func.call0(); }
-    public object call1(object a) { return m_func.call1(a); }
-    public object call2(object a, object b) { return m_func.call2(a,b); }
-    public object call3(object a, object b, object c) { return m_func.call3(a,b,c); }
-    public object call4(object a, object b, object c, object d) { return m_func.call4(a,b,c,d); }
-    public object call5(object a, object b, object c, object d, object e) { return m_func.call5(a,b,c,d,e); }
-    public object call6(object a, object b, object c, object d, object e, object f) { return m_func.call6(a,b,c,d,e,f); }
-    public object call7(object a, object b, object c, object d, object e, object f, object g) { return m_func.call7(a,b,c,d,e,f,g); }
-    public object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return m_func.call8(a,b,c,d,e,f,g,h); }
+    public object call() { return m_func.call(); }
+    public object call(object a) { return m_func.call(a); }
+    public object call(object a, object b) { return m_func.call(a,b); }
+    public object call(object a, object b, object c) { return m_func.call(a,b,c); }
+    public object call(object a, object b, object c, object d) { return m_func.call(a,b,c,d); }
+    public object call(object a, object b, object c, object d, object e) { return m_func.call(a,b,c,d,e); }
+    public object call(object a, object b, object c, object d, object e, object f) { return m_func.call(a,b,c,d,e,f); }
+    public object call(object a, object b, object c, object d, object e, object f, object g) { return m_func.call(a,b,c,d,e,f,g); }
+    public object call(object a, object b, object c, object d, object e, object f, object g, object h) { return m_func.call(a,b,c,d,e,f,g,h); }
 
   //////////////////////////////////////////////////////////////////////////
   // MethodFunc
@@ -224,14 +224,14 @@ namespace Fan.Sys
         }
       }
 
-      public override object call0()
+      public override object call()
       {
         bool isStatic = _isStatic();
         checkArgs(0, isStatic, false);
         return m.invoke(null, noArgs);
       }
 
-      public override object call1(object a)
+      public override object call(object a)
       {
         bool isStatic = _isStatic();
         int p = checkArgs(1, isStatic, false);
@@ -249,7 +249,7 @@ namespace Fan.Sys
         }
       }
 
-      public override object call2(object a, object b)
+      public override object call(object a, object b)
       {
         bool isStatic = _isStatic();
         int p = checkArgs(2, isStatic, false);
@@ -269,7 +269,7 @@ namespace Fan.Sys
         }
       }
 
-      public override object call3(object a, object b, object c)
+      public override object call(object a, object b, object c)
       {
         bool isStatic = _isStatic();
         int p = checkArgs(3, isStatic, false);
@@ -291,7 +291,7 @@ namespace Fan.Sys
         }
       }
 
-      public override object call4(object a, object b, object c, object d)
+      public override object call(object a, object b, object c, object d)
       {
         bool isStatic = _isStatic();
         int p = checkArgs(4, isStatic, false);
@@ -315,7 +315,7 @@ namespace Fan.Sys
         }
       }
 
-      public override object call5(object a, object b, object c, object d, object e)
+      public override object call(object a, object b, object c, object d, object e)
       {
         bool isStatic = _isStatic();
         int p = checkArgs(5, isStatic, false);
@@ -343,7 +343,7 @@ namespace Fan.Sys
         }
       }
 
-      public override object call6(object a, object b, object c, object d, object e, object f)
+      public override object call(object a, object b, object c, object d, object e, object f)
       {
         bool isStatic = _isStatic();
         int p = checkArgs(6, isStatic, false);
@@ -371,7 +371,7 @@ namespace Fan.Sys
         }
       }
 
-      public override object call7(object a, object b, object c, object d, object e, object f, object g)
+      public override object call(object a, object b, object c, object d, object e, object f, object g)
       {
         bool isStatic = _isStatic();
         int p = checkArgs(7, isStatic, false);
@@ -401,7 +401,7 @@ namespace Fan.Sys
         }
       }
 
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h)
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h)
       {
         bool isStatic = _isStatic();
         int p = checkArgs(8, isStatic, false);

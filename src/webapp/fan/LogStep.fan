@@ -95,7 +95,7 @@ const class LogStep : WebAppStep
         m := formatters[field]
         if (m != null)
         {
-          s.add(m.call2(req, res))
+          s.add(m.call(req, res))
           return;
         }
 

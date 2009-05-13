@@ -20,7 +20,7 @@ class ParserTotureTest : Test
     y := 0;
     x := 0xab00
     | 0x00cd
-    |->Void| { y = x }.call0
+    |->Void| { y = x }.call
     verifyEq(y, 0xabcd)
     */
 
@@ -29,7 +29,7 @@ class ParserTotureTest : Test
     Bool c;
     b := true
     || false
-    | | { c = b }.call0
+    | | { c = b }.call
     verify(c)
     */
 
@@ -42,13 +42,13 @@ class ParserTotureTest : Test
     // test closure with closure arg
     /*
     x = 99
-    | | | c| { c.call0 }.call1( | | { y = x; } )
+    | | | c| { c.call }.call( | | { y = x; } )
     verifyEq(y, 99)
     */
 
     // test closure with 2 closure args
-    obj := | |->Int| a, |->Int| b->Int| { return (Int)a.call0 + (Int)b.call0 }
-          .call2(|->Int| { return 6 }, |->Int| { return 3 })
+    obj := | |->Int| a, |->Int| b->Int| { return (Int)a.call + (Int)b.call }
+          .call(|->Int| { return 6 }, |->Int| { return 3 })
     verifyEq(obj, 9)
 
     /* TODO

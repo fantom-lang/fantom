@@ -115,7 +115,7 @@ class ProcessTest : Test
     if (args.size > 0)
     {
       m := ProcessTest#.method(args.first, false)
-      if (m != null) return m.call1(args[1..-1])
+      if (m != null) return m.call(args[1..-1])
     }
     Sys.out.printLine("     ProcessTest.out " + args.join(" ")).flush
     Sys.err.printLine("     ProcessTest.err " + args.join(" ")).flush

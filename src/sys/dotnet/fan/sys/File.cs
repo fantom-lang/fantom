@@ -154,7 +154,7 @@ namespace Fan.Sys
 
     public virtual void walk(Func c)
     {
-      c.call1(this);
+      c.call(this);
       if (isDir())
       {
         List x = list();
@@ -247,7 +247,7 @@ namespace Fan.Sys
       }
       else if (exclude is Func)
       {
-        if (((Func)exclude).call1(this) == Boolean.True) return;
+        if (((Func)exclude).call(this) == Boolean.True) return;
       }
 
       // check for overwrite
@@ -259,7 +259,7 @@ namespace Fan.Sys
         }
         else if (overwrite is Func)
         {
-          if (((Func)overwrite).call1(this) == Boolean.False) return;
+          if (((Func)overwrite).call(this) == Boolean.False) return;
         }
         else
         {

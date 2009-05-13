@@ -414,7 +414,7 @@ namespace Fan.Sys
     {
       long val = self;
       for (long i=0; i<val; i++)
-        f.call1(i);
+        f.call(i);
     }
 
   //////////////////////////////////////////////////////////////////////////
