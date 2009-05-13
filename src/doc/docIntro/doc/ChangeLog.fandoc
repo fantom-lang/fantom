@@ -614,5 +614,6 @@
 - OutStream.makeForStrBuf => StrBuf.out
 - Func/Method call  => callList
 - Func/Method callx => call
+- fanx.sys.Interop utility methods
 
 TODO: change over buildall to use pathPrefix

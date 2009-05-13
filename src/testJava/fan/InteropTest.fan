@@ -617,4 +617,82 @@ class InteropTest : JavaTest
     verifyEq(obj->e, 'e')
   }
 
+//////////////////////////////////////////////////////////////////////////
+// IO
+//////////////////////////////////////////////////////////////////////////
+
+  Void testIO()
+  {
+    compile(
+     "using [java] java.io
+      using [java] fanx.interop
+      class Foo
+      {
+        Obj m00()
+        {
+          buf := Buf().print(\"abcd\")
+          InputStream in := Interop.toJava(buf.flip.in)
+          return BufferedReader(InputStreamReader(in)).readLine
+        }
+
+        Obj m01()
+        {
+          buf := Buf()
+          OutputStream out := Interop.toJava(buf.out)
+          out.write('x'); out.write('y')
+          return buf.seek(0).readAllStr
+        }
+
+        Obj m02()
+        {
+          bout := ByteArrayOutputStream()
+          fout := Interop.toFan(bout)
+          fout.write('b').write('s').write('f').flush
+          bin := ByteArrayInputStream(bout.toByteArray)
+          fin := Interop.toFan(bin)
+          return fin.readAllStr
+        }
+      }
+      ")
+
+    obj := pod.types.first.make
+    verifyEq(obj->m00, "abcd")
+    verifyEq(obj->m01, "xy")
+    verifyEq(obj->m02, "bsf")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Collections
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCollections()
+  {
+    compile(
+     "using [java] java.util
+      using [java] fanx.interop
+      class Foo
+      {
+        // Iterator => List
+        Obj m00() { a := ArrayList(); a.add(3); a.add(4); return Interop.toFan(a.iterator()) }
+        Obj m01() { a := ArrayList(); a.add(3); a.add(4); return Interop.toFan(a.iterator(), Int#) }
+
+        // Enumeration => List
+        Obj m02() { a := Vector(); a.add(3); a.add(4); return Interop.toFan(a.elements()) }
+        Obj m03() { a := Vector(); a.add(3); a.add(4); return Interop.toFan(a.elements(), Int#) }
+
+        // HashMap => Map
+        Obj m04() { a := HashMap(); a.put(3, \"x\"); return Interop.toFan(a) }
+        Obj m05() { a := HashMap(); a.put(3, \"x\"); return Interop.toFan(a, Int:Str#) }
+      }
+      ")
+
+    obj := pod.types.first.make
+    verifyEq(obj->m00, Obj?[3, 4])
+    verifyEq(obj->m01, Int[3, 4])
+    verifyEq(obj->m02, Obj?[3, 4])
+    verifyEq(obj->m03, Int[3, 4])
+    verifyEq(obj->m04, Obj:Obj?[3:"x"])
+    verifyEq(obj->m05, Int:Str[3:"x"])
+  }
+
 }

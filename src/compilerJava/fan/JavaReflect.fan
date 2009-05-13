@@ -262,9 +262,13 @@ internal class JavaReflect
       if (direct != null) return direct.toNullable
     }
 
-    // Java FFI
+    // anything in fan.sys package is really a sys pod type
+    package := cls.getPackage.getName
     name := cls.getName[cls.getName.indexr(".")+1..-1]
-    sig := "[java]${cls.getPackage.getName}::${name}?"
+    if (package == "fan.sys") return ns.resolveType("sys::$name?")
+
+    // Java FFI
+    sig := "[java]${package}::${name}?"
     return ns.resolveType(sig)
   }
 
