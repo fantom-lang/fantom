@@ -21,11 +21,6 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static InStream makeForStr(string s)
-    {
-      return new StrInStream(s);
-    }
-
     public static InStream make(InStream input)
     {
       InStream self = new InStream();

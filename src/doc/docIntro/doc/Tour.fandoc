@@ -266,14 +266,21 @@ always done using closures:
   // print 0 to 9
   10.times |Int i| { echo(i) }
 
+The signature of a closure function can be
+[inferred]`docLang::Closures#typeInference` from its context:
+
+  10.times |i| { echo(i) }
+
+[It-blocks]`docLang::Closures#itBlocks` are a special form of closure
+with an implied parameter of 'it':
+
+  10.times { echo(it) }
+
 Closures are also used to pass chunks of code into standard
 methods:
 
   // sort a list of files by timestamp
-  files = files.sort |File a, File b->Int|
-  {
-    return a.modified <=> b.modified
-  }
+  files = files.sort |a, b| { a.modified <=> b.modified }
 
 Closures are really just an expression that creates a [Func]`sys::Func`
 instance:

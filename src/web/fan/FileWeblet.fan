@@ -74,6 +74,7 @@ class FileWeblet : Weblet
 try
     res.headers["Last-Modified"] = modified.toHttpStr
 catch (Err e)
+{
     echo("##
           ##
           ## ERROR: FileWeblet.onGet
@@ -81,6 +82,8 @@ catch (Err e)
           ##   modified:      $modified
           ##   $e
           ##")
+    e.trace
+}
 
     // check if we can return a 304 not modified
     if (checkNotModified) return

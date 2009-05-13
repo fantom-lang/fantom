@@ -64,7 +64,7 @@ class PodIndexGenerator : HtmlGenerator
         try
         {
           doc = firstSentence(doc)
-          fandoc := FandocParser.make.parse("API for $t", InStream.makeForStr(doc))
+          fandoc := FandocParser.make.parse("API for $t", doc.in)
           para := fandoc.children.first as Para
           para.children.each |DocNode child| { child.write(this) }
         }

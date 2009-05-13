@@ -809,7 +809,7 @@ class StreamTest : Test
        "foo":"http://foo/",
       ]
 
-    props := InStream.makeForStr(str).readProps
+    props := str.in.readProps
     verifyEq(props.isRW(), true)
     verifyEq(props, expected)
 
@@ -828,11 +828,11 @@ class StreamTest : Test
     verifyEq(buf.in.readProps, expected)
     verifySame(buf.charset, Charset.utf16BE)
 
-    verifyErr(ArgErr#) |,| { InStream.makeForStr("dupKey=1\ndupKey=2").readProps }
-    verifyErr(IOErr#) |,| { InStream.makeForStr("a=\\u56G0\n").readProps }
-    verifyErr(IOErr#) |,| { InStream.makeForStr("a=1\\x").readProps }
-    verifyErr(IOErr#) |,| { InStream.makeForStr("novalue").readProps }
-    verifyErr(IOErr#) |,| { InStream.makeForStr("novalue\na=b").readProps }
+    verifyErr(ArgErr#) |,| { "dupKey=1\ndupKey=2".in.readProps }
+    verifyErr(IOErr#) |,| { "a=\\u56G0\n".in.readProps }
+    verifyErr(IOErr#) |,| { "a=1\\x".in.readProps }
+    verifyErr(IOErr#) |,| { "novalue".in.readProps }
+    verifyErr(IOErr#) |,| { "novalue\na=b".in.readProps }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -899,7 +899,7 @@ class StreamTest : Test
   {
     buf := Buf.make
 
-    in := InStream.makeForStr("a_\u007f_\u00ff_\uabcd!xyz")
+    in := "a_\u007f_\u00ff_\uabcd!xyz".in
     verifyEq(in.readChar, 'a')
     verifyEq(in.readChar, '_')
     in.unreadChar('z')
@@ -929,7 +929,7 @@ class StreamTest : Test
   Void testMakeForStrBuf()
   {
     buf := StrBuf.make
-    out := OutStream.makeForStrBuf(buf)
+    out := buf.out
     verifyErr(UnsupportedErr#) |,| { out.write(6) }
     verifyErr(UnsupportedErr#) |,| { out.writeBuf(Buf.make) }
     verifyErr(UnsupportedErr#) |,| { out.writeI4(7) }

@@ -254,7 +254,7 @@ class SerializationTest : Test
     verifyErr(IOErr#) |,| { verifySer("testSys::SerA {b=true i=5}", null) }
     verifyErr(IOErr#) |,| { verifySer("testSys::SerA {xxx=3}", null) }
 
-    verifyErr(IOErr#) |,| { OutStream.makeForStrBuf(StrBuf.make).writeObj(this) }
+    verifyErr(IOErr#) |,| { StrBuf().out.writeObj(this) }
   }
 
   Void testComplexInferred()
@@ -358,15 +358,15 @@ class SerializationTest : Test
 
   Void testComplexOptions()
   {
-    SerA x := InStream.makeForStr("testSys::SerA {}").readObj
+    SerA x := "testSys::SerA {}".in.readObj
     verifyEq(x.s, null)
     verifyEq(x.d, null)
 
-    x = InStream.makeForStr("testSys::SerA {}").readObj(["makeArgs":["foo"]])
+    x = "testSys::SerA {}".in.readObj(["makeArgs":["foo"]])
     verifyEq(x.s, "foo")
     verifyEq(x.d, null)
 
-    x = InStream.makeForStr("testSys::SerA { s = \"!\" }").readObj(["makeArgs":["foo", 5min]])
+    x = "testSys::SerA { s = \"!\" }".in.readObj(["makeArgs":["foo", 5min]])
     verifyEq(x.s, "!")
     verifyEq(x.d, 5min)
   }
@@ -686,7 +686,7 @@ class SerializationTest : Test
 //echo(actual)
     verifyEq(expected, actual)
 
-    x := InStream.makeForStr(actual).readObj
+    x := actual.in.readObj
     verifyEq(x, obj)
 
   }
@@ -711,7 +711,7 @@ class SerializationTest : Test
     actual := Buf.make.writeObj(obj, opts).flip.readAllStr
     verifyEq(expectedStr, actual)
 
-    x := InStream.makeForStr(actual).readObj
+    x := actual.in.readObj
     verifyEq(x, expected)
   }
 
@@ -724,7 +724,7 @@ class SerializationTest : Test
 //echo("===================")
 //echo(data)
     // verify InStream
-    x := InStream.makeForStr(data).readObj
+    x := data.in.readObj
 //if (x != null) dump(x, expected)
     verifyEq(x, expected)
 

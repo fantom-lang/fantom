@@ -51,7 +51,7 @@ class FandocParser
   **
   Doc parseStr(Str plaintext)
   {
-    return parse("str", InStream.makeForStr(plaintext), true)
+    return parse("str", plaintext.in, true)
   }
 
 //////////////////////////////////////////////////////////////////////////

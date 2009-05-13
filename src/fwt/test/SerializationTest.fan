@@ -192,7 +192,7 @@ class SerializationTest : Test
 
   Obj verifySer(Str input, Str expected := input)
   {
-    w := InStream.makeForStr(input).readObj
+    w := input.in.readObj
     x := Buf().writeObj(w, ["indent":2, "skipDefaults":true]).flip.readAllStr
     // echo(x)
     verifyEqTrim(expected, x)
@@ -201,8 +201,8 @@ class SerializationTest : Test
 
   Void verifyEqTrim(Str sa, Str sb)
   {
-    a := InStream.makeForStr(sa).readAllLines
-    b := InStream.makeForStr(sb).readAllLines
+    a := sa.in.readAllLines
+    b := sb.in.readAllLines
     if (a.size != b.size)
     {
       echo("--- $sa.size\n$sa")
