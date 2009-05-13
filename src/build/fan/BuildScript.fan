@@ -502,7 +502,7 @@ abstract class BuildScript
   readonly Target[] targets
 
   ** Targets specified to run by command line
-  Target[] toRun
+  Target[]? toRun
 
   ** Are we running on a Window's box
   internal Bool isWindows

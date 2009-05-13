@@ -369,9 +369,7 @@ abstract class BuildPod : BuildScript
     if (javascriptDirs == null) return
 
     // if run directly, we have to run the javascript target first
-    // TODO - temp fix
-    //if (toRun.size == 1 && toRun.first?.name == "javascriptNative")
-    if ((Target[]?)toRun != null && toRun.size == 1 && toRun.first?.name == "javascriptNative")
+    if (toRun != null && toRun.size == 1 && toRun.first?.name == "javascriptNative")
       javascript
 
     log.info("javascriptNative [$podName]")
