@@ -54,13 +54,7 @@ sys_Err.make = function(cause)
 // Err subclasses
 //////////////////////////////////////////////////////////////////////////
 
-sys_Type.addType("sys::Err");
-sys_Type.addType("sys::ArgErr");
-sys_Type.addType("sys::IOErr");
-sys_Type.addType("sys::IndexErr");
-sys_Type.addType("sys::NullErr");
-sys_Type.addType("sys::ParseErr");
-
+// ArgErr
 var sys_ArgErr = sys_Err.extend(
 {
   $ctor: function(msg) { this._super(msg); },
@@ -68,6 +62,7 @@ var sys_ArgErr = sys_Err.extend(
 });
 sys_ArgErr.make = function (msg) { return new sys_ArgErr(msg); }
 
+// NullErr
 var sys_NullErr  = sys_Err.extend(
 {
   $ctor: function(msg) { this._super(msg); },
@@ -75,6 +70,7 @@ var sys_NullErr  = sys_Err.extend(
 });
 sys_NullErr.make = function (msg) { return new sys_NullErr(msg); }
 
+// IOErr
 var sys_IOErr  = sys_Err.extend(
 {
   $ctor: function(msg) { this._super(msg); },
@@ -82,6 +78,7 @@ var sys_IOErr  = sys_Err.extend(
 });
 sys_IOErr.make = function (msg) { return new sys_IOErr(msg); }
 
+// IndexErr
 var sys_IndexErr = sys_Err.extend(
 {
   $ctor: function(msg) { this._super(msg); },
@@ -89,6 +86,7 @@ var sys_IndexErr = sys_Err.extend(
 });
 sys_IndexErr.make = function (msg) { return new sys_IndexErr(msg); }
 
+// ParseErr
 var sys_ParseErr = sys_Err.extend(
 {
   $ctor: function(type, val, more)
@@ -104,3 +102,19 @@ var sys_ParseErr = sys_Err.extend(
   type: function() { return sys_Type.find("sys::ParseErr"); }
 });
 sys_ParseErr.make = function(type, val, more) { return new sys_ParseErr(type,val,more); }
+
+// UnknownPodErr
+var sys_UnknownPodErr = sys_Err.extend(
+{
+  $ctor: function(msg) { this._super(msg); },
+  type: function() { return sys_Type.find("sys::UnknownPodErr"); }
+});
+sys_UnknownPodErr.make = function (msg) { return new sys_UnknownPodErr(msg); }
+
+// UnknownTypeErr
+var sys_UnknownTypeErr = sys_Err.extend(
+{
+  $ctor: function(msg) { this._super(msg); },
+  type: function() { return sys_Type.find("sys::UnknownTypeErr"); }
+});
+sys_UnknownTypeErr.make = function (msg) { return new sys_UnknownTypeErr(msg); }

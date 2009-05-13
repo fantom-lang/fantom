@@ -3,48 +3,55 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   24 Mar 09  Andy Frank  Creation
+//   11 May 09  Andy Frank  Creation
 //
 
 /**
- * Uri
+ * InStream
  */
-var sys_Uri = sys_Obj.extend(
+var sys_InStream = sys_Obj.extend(
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function(uri)
-  {
-    this.m_uri = uri;
-  },
+  $ctor: function() {},
+  type: function()  {  return sys_Type.find("sys::InStream"); },
 
 //////////////////////////////////////////////////////////////////////////
-// Identity
+// InStream
 //////////////////////////////////////////////////////////////////////////
 
-  type: function()
+  // read: function()
+  // readBuf: function(buf, n)
+  // unread: function(n)
+
+  skip: function(n)
   {
-    return sys_Type.find("sys::Uri");
+    if ($in != null) return $in.skip(n);
+
+    for (var i=0; i<n; ++i)
+      if (this.read() == 0) return i;
+    return n;
   },
 
-  equals: function(that)
-  {
-    return this.m_uri == that.m_uri;
-  },
+  // readAllBuf: function()
+  // readBufFully: function(buf, n)
 
-  toStr: function()
+  // ...
+
+  readObj: function(options)
   {
-    return this.m_uri;
+    if (options == undefined) options = null;
+    return new fanx_ObjDecoder(this, options).readObj();
   },
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  m_uri: ""
+  $in: null
 
 });
 
@@ -52,12 +59,7 @@ var sys_Uri = sys_Obj.extend(
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Uri.make = function(uri)
+sys_InStream.makeForStr = function(s)
 {
-  return new sys_Uri(uri);
-}
-
-sys_Uri.fromStr = function(s)
-{
-  return new sys_Uri(s);
+  return new sys_StrInStream(s);
 }

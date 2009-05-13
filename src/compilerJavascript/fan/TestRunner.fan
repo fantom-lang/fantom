@@ -150,11 +150,12 @@ class TestRunner
           try
           {
             var test = ${js}.make();
-            test.$m.name();
+            test.${m.name}();
             return test.verifyCount;
           }
           catch (err)
           {
+            if (err == undefined) err = 'Undefined error';
             var file = err.fileName;   if (file == null) file = 'Unknown';
             var line = err.lineNumber; if (line == null) line = 'Unknown';
             println(err + ' (' + file + ':' + line + ')');

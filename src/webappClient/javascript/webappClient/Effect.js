@@ -6,7 +6,6 @@
 //   15 Apr 09  Andy Frank  Creation
 //
 
-sys_Type.addType("webappClient::Effect");
 var webappClient_Effect = sys_Obj.extend(
 {
 

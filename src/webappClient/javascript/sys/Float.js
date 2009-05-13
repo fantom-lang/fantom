@@ -110,8 +110,8 @@ sys_Float.toStr = function(self)
 // Static Fields
 //////////////////////////////////////////////////////////////////////////
 
-sys_Float.posInf = { val: Number.POSITIVE_INFINITY };
-sys_Float.negInf = { val: Number.NEGATIVE_INFINITY };
-sys_Float.nan    = { val: Number.NaN };
-sys_Float.e      = { val: Math.E };
-sys_Float.pi     = { val: Math.PI };
+sys_Float.posInf = Number.POSITIVE_INFINITY;
+sys_Float.negInf = Number.NEGATIVE_INFINITY;
+sys_Float.nan    = Number.NaN;
+sys_Float.e      = Math.E;
+sys_Float.pi     = Math.PI;

@@ -71,11 +71,25 @@ class CompilerJavascript : Compiler
     log.debug("GenerateOutput")
     file := outDir.createFile("${pod.name}.js")
     out  := file.out
-    types.each |TypeDef def|
-    {
-      if (force || def.facets?.get("javascript")?->toStr == "@javascript=true")
-        JavascriptWriter(this, def, out).write
+
+    // find types to compile
+    filter := types.findAll |def| {
+      force || def.facets?.get("javascript")?->toStr == "@javascript=true"
     }
+
+    // pod
+    out.printLine("with(sys_Pod.\$add(\"$pod.name\"))")
+    out.printLine("{")
+    filter.each |def|
+    {
+      base := def.base ?: "sys::Obj"
+      out.printLine("\$addType(\"$def.name\", \"$base\");")
+    }
+    out.printLine("};")
+
+    // types
+    filter.each |def| { JavascriptWriter(this, def, out).write }
+
     out.close
     // bombIfErr...
     if (!errors.isEmpty) throw errors.first

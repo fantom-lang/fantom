@@ -6,7 +6,6 @@
 //   24 Feb 09  Andy Frank  Creation
 //
 
-sys_Type.addType("webappClient::Event");
 var webappClient_Event = sys_Obj.extend(
 {
   $ctor: function() {},
