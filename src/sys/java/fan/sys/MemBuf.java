@@ -342,7 +342,7 @@ public final class MemBuf
         int c = buf[i];
         if (c != '\n') continue;
         String str = new String(buf, s, i-s, charset);
-        f.call1(str);
+        f.call(str);
         s = i+1;
       }
     }

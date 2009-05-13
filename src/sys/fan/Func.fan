@@ -99,15 +99,6 @@ final class Func
   virtual R call(A a := null, B b := null, C c := null, D d := null,
                  E e := null, F f := null, G g := null, H h := null)
 
-** TODO
-virtual R call0()
-virtual R call1(A a)
-virtual R call2(A a, B b)
-virtual R call3(A a, B b, C c)
-virtual R call4(A a, B b, C c, D d)
-virtual R call5(A a, B b, C c, D d, E e)
-virtual R call6(A a, B b, C c, D d, E e, F f)
-
   **
   ** Perform a functional curry by binding the specified
   ** arguments to this function's parameters.  Return a new
