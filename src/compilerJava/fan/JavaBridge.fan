@@ -713,7 +713,7 @@ internal class CallMatch
   {
     call.args   = args
     call.method = method
-    call.ctype  = method.returnType
+    call.ctype  = method.isCtor ? method.parent : method.returnType
     return call
   }
 

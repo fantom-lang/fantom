@@ -31,4 +31,25 @@ class MiscTest : JavaTest
     verifyEq(obj->size, 0)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Ctor With Java Arg
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCtorWithJavaArg()
+  {
+    // test for bug report on IRC 13-May-09
+    compile(
+     "using [java] java.util
+      class Foo
+      {
+        new make(ArrayList? x) { }
+        static Foo foo() { make(null) }
+        static Foo bar() { Foo(null) }
+      }")
+
+    obj := pod.types.first.make([null])
+    verifyEq(obj->foo.type.name, "Foo")
+    verifyEq(obj->bar.type.name, "Foo")
+  }
+
 }
