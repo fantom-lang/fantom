@@ -67,19 +67,17 @@ var sys_Type = sys_Obj.extend(
 /**
  * Find the Fan type for this qname.
  */
-sys_Type.find = function(qname)
+sys_Type.find = function(qname, checked)
 {
-  return sys_Type.typeMap[qname];
+  if (checked == undefined) checked = true;
+  var s = qname.split("::");
+  var podName  = s[0];
+  var typeName = s[1];
+  var t = sys_Pod.find(podName).findType(typeName);
+  if (t == null && checked)
+    throw sys_UnknownTypeErr(qname);
+  return t;
 }
-
-/**
- * Add a Fan type for this qname.
- */
-sys_Type.addType = function(qname, base)
-{
-  sys_Type.typeMap[qname] = new sys_Type(qname, base);
-}
-sys_Type.typeMap = Array();
 
 /**
  * Get the Fan type
@@ -87,43 +85,8 @@ sys_Type.typeMap = Array();
 sys_Type.toFanType = function(obj)
 {
   if (obj.$fanType != undefined) return obj.$fanType;
-  if ((typeof obj) == "boolean") return sys_Type.find("sys::Bool");
-  //if ((typeof obj) == "number")  return sys_Type.find("sys::Int");
-  if ((typeof obj) == "number")  return sys_Type.find("sys::Float");
-  if ((typeof obj) == "string")  return sys_Type.find("sys::Str");
-  throw new sys_Err("Not a Fan type: " + obj);
+  if ((typeof obj) == "boolean" || obj instanceof Boolean) return sys_Type.find("sys::Bool");
+  if ((typeof obj) == "number"  || obj instanceof Number)  return sys_Type.find("sys::Float");
+  if ((typeof obj) == "string"  || obj instanceof String)  return sys_Type.find("sys::Str");
+  throw new sys_Err("sys::Type.toFanType: Not a Fan type: " + obj);
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Built-in Types
-//////////////////////////////////////////////////////////////////////////
-
-sys_Type.addType("sys::Bool");
-sys_Type.addType("sys::Buf");
-sys_Type.addType("sys::Charset");
-sys_Type.addType("sys::Date");
-sys_Type.addType("sys::DateTime");
-sys_Type.addType("sys::Duration");
-sys_Type.addType("sys::Enum");
-sys_Type.addType("sys::Err");
-sys_Type.addType("sys::Field", "sys::Slot");
-sys_Type.addType("sys::Float", "sys::Num");
-sys_Type.addType("sys::Func");
-sys_Type.addType("sys::Int", "sys::Num");
-sys_Type.addType("sys::List");
-sys_Type.addType("sys::Log");
-sys_Type.addType("sys::Map");
-sys_Type.addType("sys::Method");
-sys_Type.addType("sys::Month", "sys::Enum");
-sys_Type.addType("sys::Namespace");
-sys_Type.addType("sys::Num");
-sys_Type.addType("sys::Obj");
-sys_Type.addType("sys::Range");
-sys_Type.addType("sys::Slot");
-sys_Type.addType("sys::Str");
-sys_Type.addType("sys::StrBuf");
-sys_Type.addType("sys::Test");
-sys_Type.addType("sys::Thread");
-sys_Type.addType("sys::Type");
-sys_Type.addType("sys::Uri");
-sys_Type.addType("sys::Weekday");

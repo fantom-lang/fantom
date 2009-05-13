@@ -136,7 +136,7 @@ sys_Obj.is = function(obj, type)
       if (type === sys_Int) return true;
       return false;
     }
-    throw new sys_Err("Not a Fan type: " + obj);
+    throw new sys_Err("sys::Obj.is: Not a Fan type: " + obj);
   }
 }
 
@@ -156,7 +156,7 @@ sys_Obj.isImmutable = function(self)
     if ((typeof self) == "number") return true;
 // TODO
     if (self != null && self.$fanType != null) return true;
-    throw new sys_Err("Not a Fan type: " + self);
+    throw new sys_Err("sys::Obj.isImmutable: Not a Fan type: " + self);
   }
 }
 

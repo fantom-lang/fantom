@@ -48,7 +48,7 @@ class JavascriptWriter : CompilerSupport
     jbase := qname(typeDef.base)
     out.w("var $jname = ${jbase}.extend(").nl
     out.w("{").nl
-    out.w("  \$ctor: function() { sys_Type.addType(\"$fname\", \"$bname\"); },").nl
+    out.w("  \$ctor: function() {},").nl
     out.w("  type: function() { return sys_Type.find(\"$fname\"); },").nl
     out.indent
     cs := 0

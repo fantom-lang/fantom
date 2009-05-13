@@ -297,3 +297,8 @@ sys_Str.upper = function(self)
 {
   return self.toUpperCase();
 }
+
+sys_Str.$in = function(self)
+{
+  return sys_InStream.makeForStr(self);
+}
