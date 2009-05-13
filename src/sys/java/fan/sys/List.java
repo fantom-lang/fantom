@@ -707,8 +707,6 @@ public final class List
 
   public final List map(List acc, Func f)
   {
-try
-{
     if (acc.size == 0) acc.capacity(size());
     if (f.params.sz() == 1)
     {
@@ -721,13 +719,6 @@ try
         acc.add(f.call(values[i], Long.valueOf(i)));
     }
     return acc;
-}
-catch (Throwable e)
-{
-  System.out.println("::::: " + f.getClass().getName());
-  e.printStackTrace();
-  throw new RuntimeException();
-}
   }
 
   public final Object max() { return max(null); }
