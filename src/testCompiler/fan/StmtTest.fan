@@ -202,10 +202,10 @@ class StmtTest : CompilerTest
 
     // compiler.fpod.dump
     t := pod.types[0]
-    verifyEq(t.method("a").call0, 4)
-    verifyEq(t.method("b").call0, 6)
-    verifyEq(t.method("c").call0, 10)
-    verifyEq(t.method("d").call0, 76)
+    verifyEq(t.method("a").call, 4)
+    verifyEq(t.method("b").call, 6)
+    verifyEq(t.method("c").call, 10)
+    verifyEq(t.method("d").call, 76)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -422,9 +422,9 @@ class StmtTest : CompilerTest
 
     foo := pod.types[0]
     bar := pod.types[1]
-    verifyEq(bar.method("f").call1(foo.field("a").get), 10)
-    verifyEq(bar.method("f").call1(foo.field("b").get), 99)
-    verifyEq(bar.method("f").call1(foo.field("c").get), 12)
+    verifyEq(bar.method("f").call(foo.field("a").get), 10)
+    verifyEq(bar.method("f").call(foo.field("b").get), 99)
+    verifyEq(bar.method("f").call(foo.field("c").get), 12)
     verifyEq(compiler.types[1].methodDef("f").code.stmts[0]->isTableswitch, true)
   }
 
@@ -445,8 +445,8 @@ class StmtTest : CompilerTest
 
     f := pod.types[0].method("f")
     verifyEq(compiler.types[0].methodDef("f").code.stmts[0]->isTableswitch, false)
-    verifyEq(f.call1("a"), '?')
-    verifyEq(f.call1(null), '?')
+    verifyEq(f.call("a"), '?')
+    verifyEq(f.call(null), '?')
 
     // return exit, no default
     compile(
@@ -465,10 +465,10 @@ class StmtTest : CompilerTest
 
     f = pod.types[0].method("f")
     verifyEq(compiler.types[0].methodDef("f").code.stmts[0]->isTableswitch, false)
-    verifyEq(f.call1("a"), 'a')
-    verifyEq(f.call1("b"), 'b')
-    verifyEq(f.call1("c"), '?')
-    verifyEq(f.call1(null), '?')
+    verifyEq(f.call("a"), 'a')
+    verifyEq(f.call("b"), 'b')
+    verifyEq(f.call("c"), '?')
+    verifyEq(f.call(null), '?')
 
     // return exit, with default, multiple cases
     compile(
@@ -491,13 +491,13 @@ class StmtTest : CompilerTest
 
     f = pod.types[0].method("f")
     verifyEq(compiler.types[0].methodDef("f").code.stmts[0]->isTableswitch, false)
-    verifyEq(f.call1("a"), 'a')
-    verifyEq(f.call1("A"), 'a')
-    verifyEq(f.call1("b"), 'b')
-    verifyEq(f.call1("B"), 'b')
-    verifyEq(f.call1("c"), '?')
-    verifyEq(f.call1("C"), '?')
-    verifyEq(f.call1(null), '?')
+    verifyEq(f.call("a"), 'a')
+    verifyEq(f.call("A"), 'a')
+    verifyEq(f.call("b"), 'b')
+    verifyEq(f.call("B"), 'b')
+    verifyEq(f.call("c"), '?')
+    verifyEq(f.call("C"), '?')
+    verifyEq(f.call(null), '?')
 
     // no exit, no default
     compile(
@@ -517,10 +517,10 @@ class StmtTest : CompilerTest
 
     f = pod.types[0].method("f")
     verifyEq(compiler.types[0].methodDef("f").code.stmts[1]->isTableswitch, false)
-    verifyEq(f.call1("a"), 'a')
-    verifyEq(f.call1("b"), 'b')
-    verifyEq(f.call1("c"), '?')
-    //verifyEq(f.call1(null), '?')
+    verifyEq(f.call("a"), 'a')
+    verifyEq(f.call("b"), 'b')
+    verifyEq(f.call("c"), '?')
+    //verifyEq(f.call(null), '?')
 
     // no exit, with default
     compile(
@@ -541,10 +541,10 @@ class StmtTest : CompilerTest
 
     f = pod.types[0].method("f")
     verifyEq(compiler.types[0].methodDef("f").code.stmts[1]->isTableswitch, false)
-    verifyEq(f.call1("a"), 'a')
-    verifyEq(f.call1("b"), 'b')
-    verifyEq(f.call1("c"), '?')
-    verifyEq(f.call1(null), '?')
+    verifyEq(f.call("a"), 'a')
+    verifyEq(f.call("b"), 'b')
+    verifyEq(f.call("c"), '?')
+    verifyEq(f.call(null), '?')
 
     // int no-table
     compile(
@@ -566,9 +566,9 @@ class StmtTest : CompilerTest
 
     f = pod.types[0].method("f")
     verifyEq(compiler.types[0].methodDef("f").code.stmts[0]->isTableswitch, false)
-    verifyEq(f.call1(0), 100)
-    verifyEq(f.call1(1), 101)
-    verifyEq(f.call1(2), -1)
+    verifyEq(f.call(0), 100)
+    verifyEq(f.call(1), 101)
+    verifyEq(f.call(2), -1)
 
     // int? no-table
     compile(
@@ -590,10 +590,10 @@ class StmtTest : CompilerTest
 
     f = pod.types[0].method("f")
     verifyEq(compiler.types[0].methodDef("f").code.stmts[0]->isTableswitch, false)
-    verifyEq(f.call1(0), 100)
-    verifyEq(f.call1(1), 101)
-    verifyEq(f.call1(2), -1)
-    verifyEq(f.call1(null), -1)
+    verifyEq(f.call(0), 100)
+    verifyEq(f.call(1), 101)
+    verifyEq(f.call(2), -1)
+    verifyEq(f.call(null), -1)
 
     // torture test
     compile(
@@ -620,12 +620,12 @@ class StmtTest : CompilerTest
 
     f = pod.types[0].method("f")
     verifyEq(compiler.types[0].methodDef("f").code.stmts[1]->isTableswitch, false)
-    verifyEq(f.call1("a"), 'a')
-    verifyEq(f.call1("A"), 'a')
-    verifyEq(f.call1(Str#), "Str type!")
-    verifyEq(f.call1(Int#), null)
-    verifyEq(f.call1(0), 0)
-    verifyEq(f.call1(null), null)
+    verifyEq(f.call("a"), 'a')
+    verifyEq(f.call("A"), 'a')
+    verifyEq(f.call(Str#), "Str type!")
+    verifyEq(f.call(Int#), null)
+    verifyEq(f.call(0), 0)
+    verifyEq(f.call(null), null)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -691,11 +691,11 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifySame(t.method("f").call2(r, 2), r)
+    verifySame(t.method("f").call(r, 2), r)
     verifyEq(r, [0, 3, 99])
 
     r = Int[,]
-    verifyErr(NullErr#) |,| { t.method("f").call2(r, null) }
+    verifyErr(NullErr#) |,| { t.method("f").call(r, null) }
     verifyEq(r, [0, 99])
   }
 
@@ -724,11 +724,11 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifySame(t.method("f").call2(r, false), r)
+    verifySame(t.method("f").call(r, false), r)
     verifyEq(r, [0, 1, 2, 3, 4])
 
     r = Int[,]
-    verifyErr(ArgErr#) |,| { t.method("f").call2(r, true) }
+    verifyErr(ArgErr#) |,| { t.method("f").call(r, true) }
     verifyEq(r, [0, 1, 3])
   }
 
@@ -754,7 +754,7 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifySame(t.method("f").call1(r), r)
+    verifySame(t.method("f").call(r), r)
     verifyEq(r, [0, 1, 2])
   }
 
@@ -793,7 +793,7 @@ class StmtTest : CompilerTest
     verifyEq(compiler.types.first.methodDef("f").vars[1].name, "\$return")
 
     r := Int[,]
-    verifySame(t.method("f").call1(r), r)
+    verifySame(t.method("f").call(r), r)
     verifyEq(r, [0, 1, 2, 3, 5])
   }
 
@@ -833,7 +833,7 @@ class StmtTest : CompilerTest
     verifyEq(compiler.types.first.methodDef("f").vars.size, 1)
 
     r := Int[,]
-    verifySame(t.method("f").call1(r), null)
+    verifySame(t.method("f").call(r), null)
     verifyEq(r, [0, 1, 2, 3, 5])
   }
 
@@ -863,7 +863,7 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifyErr(ArgErr#) |,| { t.method("f").call1(r) }
+    verifyErr(ArgErr#) |,| { t.method("f").call(r) }
     verifyEq(r, [0, 11, 101, 12, 102, 103])
   }
 
@@ -894,7 +894,7 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifySame(t.method("f").call1(r), r)
+    verifySame(t.method("f").call(r), r)
     verifyEq(r, [0, 1, 101, 102, 3, 103, 104, 105, 99])
   }
 
@@ -946,7 +946,7 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifySame(t.method("f").call1(r), null)
+    verifySame(t.method("f").call(r), null)
     verifyEq(r, [0, 1, 101, 99, 102, 99, 3, 103, 99, 104, 99, 105, 99, 999, 9999, 99999])
   }
 
@@ -983,11 +983,11 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifyEq(t.method("f").call2(r, false), 2)
+    verifyEq(t.method("f").call(r, false), 2)
     verifyEq(r, [0, 1, 2, 4])
 
     r = Int[,]
-    verifyEq(t.method("f").call2(r, true), 3)
+    verifyEq(t.method("f").call(r, true), 3)
     verifyEq(r, [0, 1, 3, 4])
   }
 
@@ -1018,11 +1018,11 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    verifySame(t.method("f").call2(r, false), null)
+    verifySame(t.method("f").call(r, false), null)
     verifyEq(r, [0, 1, 2, 4])
 
     r = Int[,]
-    verifySame(t.method("f").call2(r, true), null)
+    verifySame(t.method("f").call(r, true), null)
     verifyEq(r, [0, 1, 3, 4])
   }
 
@@ -1055,15 +1055,15 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    t.method("f").call2(r, null)
+    t.method("f").call(r, null)
     verifyEq(r, [0, 1, 2, 99])
 
     r = Int[,]
-    verifyErr(IndexErr#) |,| { t.method("f").call2(r, IndexErr.make) }
+    verifyErr(IndexErr#) |,| { t.method("f").call(r, IndexErr.make) }
     verifyEq(r, [0, 1, 3, 99])
 
     r = Int[,]
-    verifyErr(IOErr#) |,| { t.method("f").call2(r, IOErr.make) }
+    verifyErr(IOErr#) |,| { t.method("f").call(r, IOErr.make) }
     verifyEq(r, [0, 1, 3, 99])
   }
 
@@ -1102,15 +1102,15 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    t.method("f").call2(r, null)
+    t.method("f").call(r, null)
     verifyEq(r, [0, 1, 2, 99])
 
     r = Int[,]
-    verifyErr(IOErr#) |,| { t.method("f").call2(r, IOErr.make) }
+    verifyErr(IOErr#) |,| { t.method("f").call(r, IOErr.make) }
     verifyEq(r, [0, 1, 3, 99])
 
     r = Int[,]
-    verifyErr(IndexErr#) |,| { t.method("f").call2(r, IndexErr.make) }
+    verifyErr(IndexErr#) |,| { t.method("f").call(r, IndexErr.make) }
     verifyEq(r, [0, 1, 5, 99])
   }
 
@@ -1179,7 +1179,7 @@ class StmtTest : CompilerTest
     t := pod.types.first
 
     r := Int[,]
-    t.method("f").call1(r)
+    t.method("f").call(r)
     verifyEq(r, [0, 10, 20, 30, 300, 50, 11, 21, 31, 301, 51, 12, 32, 902, 922, 932, 99, 999])
   }
 
@@ -1206,7 +1206,7 @@ class StmtTest : CompilerTest
       }")
 
      t := pod.types.first
-     instance := t.method("make").call0
+     instance := t.method("make").call
      actual := t.method("func").callList([instance, a, b, c])
      verifyEq(actual, result)
    }

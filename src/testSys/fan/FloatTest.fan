@@ -462,11 +462,11 @@ class FloatTest : Test
   Void testReflect()
   {
     verifyEq(Float#fromStr.callList(["3.0"]), 3.0f)
-    verifyEq(Float#fromStr.call1("3.0"), 3.0f)
-    verifyEq(Float#fromStr.call2("xxx", false), null)
+    verifyEq(Float#fromStr.call("3.0"), 3.0f)
+    verifyEq(Float#fromStr.call("xxx", false), null)
 
     verifyEq(Float#minus.callList([5f, 3f]), 2f)
-    verifyEq(Float#minus.call2(5f, 3f), 2f)
+    verifyEq(Float#minus.call(5f, 3f), 2f)
     verifyEq(Float#minus.callOn(5f, [3f]), 2f)
     verifyEq(Float#negate.callOn(5f, null), -5f)
   }

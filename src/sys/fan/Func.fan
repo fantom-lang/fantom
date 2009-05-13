@@ -88,55 +88,25 @@ final class Func
   ** Convenience for dynamically invoking an instance method with
   ** specified target and arguments.  If this method maps to an
   ** instance method, then it is semantically equivalent to
-  ** 'call([target, args[0], args[1] ...])'.  Throw UnsupportedErr
+  ** 'callList([target, args[0], args[1] ...])'.  Throw UnsupportedErr
   ** if called on a function which is not an instance method.
   **
   virtual R callOn(Obj? target, Obj?[]? args)
 
   **
-  ** Optimized convenience for call([,]).
+  ** Optimized convenience for `callList` for zero to eight parameters.
   **
-  virtual R call0()
+  virtual R call(A? a := null, B? b := null, C? c := null, D? d := null,
+                 E? e := null, F? f := null, G? g := null, H? h := null)
 
-  **
-  ** Optimized convenience for call([a]).
-  **
-  virtual R call1(A a)
-
-  **
-  ** Optimized convenience for call([a, b]).
-  **
-  virtual R call2(A a, B b)
-
-  **
-  ** Optimized convenience for call([a, b, c]).
-  **
-  virtual R call3(A a, B b, C c)
-
-  **
-  ** Optimized convenience for call([a, b, c, d]).
-  **
-  virtual R call4(A a, B b, C c, D d)
-
-  **
-  ** Optimized convenience for call([a, b, c, d, e]).
-  **
-  virtual R call5(A a, B b, C c, D d, E e)
-
-  **
-  ** Optimized convenience for call([a, b, c, d, e, f]).
-  **
-  virtual R call6(A a, B b, C c, D d, E e, F f)
-
-  **
-  ** Optimized convenience for call([a, b, c, d, e, f, g]).
-  **
-  virtual R call7(A a, B b, C c, D d, E e, F f, G g)
-
-  **
-  ** Optimized convenience for call([a, b, c, d, e, f, g, h]).
-  **
-  virtual R call8(A a, B b, C c, D d, E e, F f, G g, H h)
+** TODO
+virtual R call0()
+virtual R call1(A a)
+virtual R call2(A a, B b)
+virtual R call3(A a, B b, C c)
+virtual R call4(A a, B b, C c, D d)
+virtual R call5(A a, B b, C c, D d, E e)
+virtual R call6(A a, B b, C c, D d, E e, F f)
 
   **
   ** Perform a functional curry by binding the specified

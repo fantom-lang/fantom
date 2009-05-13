@@ -210,7 +210,7 @@ class ReflectTest : JavaTest
     now := DateTime.now
     date := Type.find("[java]java.util::Date").make
     verifyEq(date.type.method("getYear").callOn(date, [,]), now.year-1900)
-    verifyEq(date.type.method("getYear").call1(date), now.year-1900)
+    verifyEq(date.type.method("getYear").call(date), now.year-1900)
     verifyEq(date.type.method("getYear").callList([date]), now.year-1900)
     verifyEq(date->getYear, now.year-1900)
     verifyEq(date->toString, date.toStr)
@@ -260,11 +260,11 @@ class ReflectTest : JavaTest
     verifyEq(si.callList(["55", 6]), 61) // static
 
     // numi 4x overloaded - callX
-    verifyEq(numi.call2(x, 8877), null)
-    verifyEq(numi.call1(x), 8877)
-    verifyEq(numi.call3(x, 6, 4), 10)
-    verifyEq(numi.call2(x, "55"), 55)
-    verifyEq(si.call2("55", 6), 61) // static
+    verifyEq(numi.call(x, 8877), null)
+    verifyEq(numi.call(x), 8877)
+    verifyEq(numi.call(x, 6, 4), 10)
+    verifyEq(numi.call(x, "55"), 55)
+    verifyEq(si.call("55", 6), 61) // static
 
     // numi 4x overloaded - callOn
     verifyEq(numi.callOn(x, [8877]), null)

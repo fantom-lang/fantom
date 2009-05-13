@@ -146,15 +146,15 @@ public class Method
 
   public final Object callList(List args) { return func.callList(args); }
   public final Object callOn(Object target, List args) { return func.callOn(target, args); }
-  public final Object call0() { return func.call0(); }
-  public final Object call1(Object a) { return func.call1(a); }
-  public final Object call2(Object a, Object b) { return func.call2(a,b); }
-  public final Object call3(Object a, Object b, Object c) { return func.call3(a,b,c); }
-  public final Object call4(Object a, Object b, Object c, Object d) { return func.call4(a,b,c,d); }
-  public final Object call5(Object a, Object b, Object c, Object d, Object e) { return func.call5(a,b,c,d,e); }
-  public final Object call6(Object a, Object b, Object c, Object d, Object e, Object f) { return func.call6(a,b,c,d,e,f); }
-  public final Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return func.call7(a,b,c,d,e,f,g); }
-  public final Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return func.call8(a,b,c,d,e,f,g,h); }
+  public final Object call() { return func.call(); }
+  public final Object call(Object a) { return func.call(a); }
+  public final Object call(Object a, Object b) { return func.call(a,b); }
+  public final Object call(Object a, Object b, Object c) { return func.call(a,b,c); }
+  public final Object call(Object a, Object b, Object c, Object d) { return func.call(a,b,c,d); }
+  public final Object call(Object a, Object b, Object c, Object d, Object e) { return func.call(a,b,c,d,e); }
+  public final Object call(Object a, Object b, Object c, Object d, Object e, Object f) { return func.call(a,b,c,d,e,f); }
+  public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return func.call(a,b,c,d,e,f,g); }
+  public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return func.call(a,b,c,d,e,f,g,h); }
 
 //////////////////////////////////////////////////////////////////////////
 // MethodFunc
@@ -218,14 +218,14 @@ public class Method
       }
     }
 
-    public Object call0()
+    public Object call()
     {
       boolean isStatic = isStatic();
       checkArgs(0, isStatic, false);
       return invoke(null, noArgs);
     }
 
-    public Object call1(Object a)
+    public Object call(Object a)
     {
       boolean isStatic = isStatic();
       int p = checkArgs(1, isStatic, false);
@@ -244,7 +244,7 @@ public class Method
       }
     }
 
-    public Object call2(Object a, Object b)
+    public Object call(Object a, Object b)
     {
       boolean isStatic = isStatic();
       int p = checkArgs(2, isStatic, false);
@@ -268,7 +268,7 @@ public class Method
       }
     }
 
-    public Object call3(Object a, Object b, Object c)
+    public Object call(Object a, Object b, Object c)
     {
       boolean isStatic = isStatic();
       int p = checkArgs(3, isStatic, false);
@@ -294,7 +294,7 @@ public class Method
       }
     }
 
-    public Object call4(Object a, Object b, Object c, Object d)
+    public Object call(Object a, Object b, Object c, Object d)
     {
       boolean isStatic = isStatic();
       int p = checkArgs(4, isStatic, false);
@@ -322,7 +322,7 @@ public class Method
       }
     }
 
-    public Object call5(Object a, Object b, Object c, Object d, Object e)
+    public Object call(Object a, Object b, Object c, Object d, Object e)
     {
       boolean isStatic = isStatic();
       int p = checkArgs(5, isStatic, false);
@@ -352,7 +352,7 @@ public class Method
       }
     }
 
-    public Object call6(Object a, Object b, Object c, Object d, Object e, Object f)
+    public Object call(Object a, Object b, Object c, Object d, Object e, Object f)
     {
       boolean isStatic = isStatic();
       int p = checkArgs(6, isStatic, false);
@@ -384,7 +384,7 @@ public class Method
       }
     }
 
-    public Object call7(Object a, Object b, Object c, Object d, Object e, Object f, Object g)
+    public Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g)
     {
       boolean isStatic = isStatic();
       int p = checkArgs(7, isStatic, false);
@@ -418,7 +418,7 @@ public class Method
       }
     }
 
-    public Object call8(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h)
+    public Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h)
     {
       boolean isStatic = isStatic();
       int p = checkArgs(8, isStatic, false);

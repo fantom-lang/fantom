@@ -181,7 +181,7 @@ namespace Fanx.Serial
         this.encoder = encoder;
         this.first = first;
       }
-      public override object call1(object obj)
+      public override object call(object obj)
       {
         if (first) { encoder.w('\n').wIndent().w('{').w('\n'); encoder.level++; first = false; }
         encoder.wIndent();

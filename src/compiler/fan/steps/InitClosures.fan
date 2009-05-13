@@ -183,7 +183,7 @@ class InitClosures : CompilerStep
     }
     else
     {
-      m.name = "call${paramCount}"
+      m.name = "call"
       paramCount.times |Int i|
       {
         p := ParamDef.make(loc, ns.objType.toNullable, "p$i")

@@ -64,7 +64,7 @@ class CreateZip : Task
 
   private Void zip(Zip out, File f, Str path)
   {
-    if (!filter.call2(f, path)) return
+    if (!filter.call(f, path)) return
     if (f.isDir)
     {
       f.list.each |File sub|

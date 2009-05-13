@@ -1742,7 +1742,7 @@ public class Parser : CompilerSupport
     call := CallExpr.make(loc)
     call.target = target
     callArgs(call)
-    call.name = "call${call.args.size}"
+    call.name = "call"
     return call
   }
 

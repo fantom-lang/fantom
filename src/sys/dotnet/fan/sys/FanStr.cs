@@ -319,20 +319,20 @@ namespace Fan.Sys
     {
       int len = self.Length;
       for (int i=0; i<len ; i++)
-        f.call2(self[i], i);
+        f.call(self[i], i);
     }
 
     public static void eachr(string self, Func f)
     {
       for (int i=self.Length-1; i>=0; --i)
-        f.call2(self[i], i);
+        f.call(self[i], i);
     }
 
     public static bool any(string self, Func f)
     {
       int len = self.Length;
       for (int i=0; i<len ; i++)
-        if (f.call2(self[i], i) == Boolean.True)
+        if (f.call(self[i], i) == Boolean.True)
           return true;
       return false;
     }
@@ -341,7 +341,7 @@ namespace Fan.Sys
     {
       int len = self.Length;
       for (int i=0; i<len ; i++)
-        if (f.call2(self[i], i) == Boolean.False)
+        if (f.call(self[i], i) == Boolean.False)
           return false;
       return true;
     }

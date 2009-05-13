@@ -207,7 +207,7 @@ class RegressionTest : CompilerTest
           Func f() { return |Int i->Str| { i.toStr } }
           Func g() { return |Int i->Str| { i.toStr } }
 
-          Str a(Func f) { return f.call1(36) }
+          Str a(Func f) { return f.call(36) }
           Str b(|Int i->Str| f) { return f(36) }
 
           Obj test0() { a(f) }

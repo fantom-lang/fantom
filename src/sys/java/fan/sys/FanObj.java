@@ -118,12 +118,12 @@ public class FanObj
     }
     else
     {
-      f.call1(self);
+      f.call(self);
       return self;
     }
   }
 
-  public Object with(Func f) { f.call1(this); return this; }
+  public Object with(Func f) { f.call(this); return this; }
 
   public static Object trap(Object self, String name, List args)
   {

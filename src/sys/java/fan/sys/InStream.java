@@ -407,7 +407,7 @@ public class InStream
       if (f == null)
         terminate = FanInt.isSpace(c);
       else
-        terminate = (Boolean)f.call1(Long.valueOf(c));
+        terminate = (Boolean)f.call(Long.valueOf(c));
       if (terminate)
       {
         unreadChar(c);
@@ -447,7 +447,7 @@ public class InStream
     {
       String line;
       while ((line = readLine()) != null)
-        f.call1(line);
+        f.call(line);
     }
     finally
     {

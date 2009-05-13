@@ -96,7 +96,7 @@ namespace Fan.Sys
 
     protected object receive(object msg, Context cx)
     {
-      if (m_receive != null) return m_receive.call2(msg, cx);
+      if (m_receive != null) return m_receive.call(msg, cx);
       System.Console.WriteLine("WARNING: " + type() + ".receive not overridden");
       return null;
     }
@@ -342,12 +342,12 @@ namespace Fan.Sys
 
       private object toKey(object obj)
       {
-        return toKeyFunc == null ? obj : toKeyFunc.call1(obj);
+        return toKeyFunc == null ? obj : toKeyFunc.call(obj);
       }
 
       private object coalesce(object orig, object incoming)
       {
-        return coalesceFunc == null ? incoming : coalesceFunc.call2(orig, incoming);
+        return coalesceFunc == null ? incoming : coalesceFunc.call(orig, incoming);
       }
 
       Func toKeyFunc, coalesceFunc;

@@ -1254,12 +1254,12 @@ class CheckErrors : CompilerStep
     params := method.params
     genericParams := method.isParameterized ? method.generic.params : null
 
-    // if we are calling callx(A, B...) on a FuncType, then
+    // if we are calling call(A, B...) on a FuncType, then
     // use the first class Func signature rather than the
-    // version of callx which got picked because we might have
-    // picked the wrong callx version
+    // version of call which got picked because we might have
+    // picked the wrong call version
     sig := method.parent as FuncType
-    if (sig != null && name.startsWith("call") && name.size == 5)
+    if (sig != null && name == "call")
     {
       if (sig.params.size != args.size)
       {

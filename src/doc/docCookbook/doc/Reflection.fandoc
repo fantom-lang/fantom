@@ -68,8 +68,8 @@ Methods [#methods]
   Slot.findMethod(qname, false)  // returns null if method not found
   m.returns                      // return type of method
   m.params                       // list of parameters
-  m.call([arg0, arg1])           // invoke static method using reflection
-  m.call2(arg0, arg1)            // same as above
+  m.callList([arg0, arg1])       // invoke static method using reflection
+  m.call(arg0, arg1)              // same as above
   m.callOn(self, [arg0, arg1])   // invoke instance method using reflection
   m.call([self, arg0, arg1])     // same as above
   m.func                         // the function which implements the method
@@ -85,7 +85,6 @@ Fields [#fields]
   f.get                          // get static field
   f.get(self)                    // get instance field
   f.set(self, val)               // set instance field
-
 
 
 

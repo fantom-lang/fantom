@@ -176,7 +176,7 @@ public class Log
     {
       try
       {
-        handlers[i].call1(rec);
+        handlers[i].call(rec);
       }
       catch (Throwable e)
       {

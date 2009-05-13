@@ -255,8 +255,8 @@ class NamespaceTest : CompilerTest
     verifyEq(ns.resolveType(|Str a, Str b->Int|#.signature).fits(pfunc), false)
 
     // parameterized method: Map.set
-    call  := (CMethod)func.slot("call2")
-    pcall := (CMethod)pfunc.slot("call2")
+    call  := (CMethod)func.slot("call")
+    pcall := (CMethod)pfunc.slot("call")
     verifyEq(call.isGeneric, true)
     verifyEq(call.isParameterized, false)
     verifyEq(call.returnType.qname, "sys::R")
@@ -295,9 +295,9 @@ class NamespaceTest : CompilerTest
     verifyEq(m.qname, "sys::Func")
     verifyEq(m.signature, "|sys::Int,sys::Num->sys::Str|")
     verifyEq(m.isParameterized, true)
-    verifyEq(m.slot("call2")->returnType, str)
-    verifyEq(m.slot("call2")->params->get(0)->paramType, int)
-    verifyEq(m.slot("call2")->params->get(1)->paramType, num)
+    verifyEq(m.slot("call")->returnType, str)
+    verifyEq(m.slot("call")->params->get(0)->paramType, int)
+    verifyEq(m.slot("call")->params->get(1)->paramType, num)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -310,14 +310,14 @@ class NamespaceTest : CompilerTest
      "class Foo
       {
         static Int doX(Int a) { return a }
-        static Obj x() { return Foo#.method(\"doX\").call1(4) }
+        static Obj x() { return Foo#.method(\"doX\").call(4) }
 
         static Obj doY(List list) { return list[0] }
         static Obj y() { return doY([5, 6]) }
       }")
      t := pod.types.first
-     verifyEq(t.method("x").call0, 4)
-     verifyEq(t.method("y").call0, 5)
+     verifyEq(t.method("x").call, 4)
+     verifyEq(t.method("y").call, 5)
   }
 
 //////////////////////////////////////////////////////////////////////////

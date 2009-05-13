@@ -103,8 +103,7 @@ class, you can create new instances reflectively:
 
   t.make                   // use default make constructor
   t.make(args)             // use make constructor with arguments
-  t.method("makeX").call0  // lookup and use a named constructor
-
+  t.method("makeX").call   // lookup and use a named constructor
 
 
 

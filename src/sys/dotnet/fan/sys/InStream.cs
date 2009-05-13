@@ -417,7 +417,7 @@ namespace Fan.Sys
         if (f == null)
           terminate = FanInt.isSpace(c);
         else
-          terminate = ((Boolean)f.call1(c)).booleanValue();
+          terminate = ((Boolean)f.call(c)).booleanValue();
         if (terminate)
         {
           unreadChar(c);
@@ -457,7 +457,7 @@ namespace Fan.Sys
       {
         string line;
         while ((line = readLine()) != null)
-          f.call1(line);
+          f.call(line);
       }
       finally
       {

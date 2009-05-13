@@ -130,7 +130,7 @@ class FTable
   {
     table = [,]
     if (in == null) return this
-    in.readU2.times |,| { table.add(reader.call1(in)) }
+    in.readU2.times |,| { table.add(reader.call(in)) }
     in.close
     return this
   }
@@ -141,7 +141,7 @@ class FTable
   Void write(OutStream out)
   {
     out.writeI2(table.size)
-    table.each |Obj obj| { writer.call2(out, obj) }
+    table.each |Obj obj| { writer.call(out, obj) }
     out.close
   }
 

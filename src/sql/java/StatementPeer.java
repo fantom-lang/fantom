@@ -83,7 +83,7 @@ public class StatementPeer
         row = makeRow(rs, cols, converters);
       else
         updateRow(rs, row, converters);
-      eachFunc.call1(row);
+      eachFunc.call(row);
     }
   }
 

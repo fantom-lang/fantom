@@ -455,7 +455,7 @@ public final class FanInt
   public static void times(long self, Func f)
   {
     for (long i=0; i<self; ++i)
-      f.call1(Long.valueOf(i));
+      f.call(Long.valueOf(i));
   }
 
 //////////////////////////////////////////////////////////////////////////

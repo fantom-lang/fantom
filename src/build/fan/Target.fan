@@ -75,7 +75,7 @@ class Target
   {
     try
     {
-      func.call0()
+      func.call
     }
     catch (FatalBuildErr err)
     {

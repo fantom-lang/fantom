@@ -43,15 +43,15 @@ namespace Fan.Sys
 
     public abstract object callList(List args);
     public abstract object callOn(object target, List args);
-    public abstract object call0();
-    public abstract object call1(object a);
-    public abstract object call2(object a, object b);
-    public abstract object call3(object a, object b, object c);
-    public abstract object call4(object a, object b, object c, object d);
-    public abstract object call5(object a, object b, object c, object d, object e);
-    public abstract object call6(object a, object b, object c, object d, object e, object f);
-    public abstract object call7(object a, object b, object c, object d, object e, object f, object g);
-    public abstract object call8(object a, object b, object c, object d, object e, object f, object g, object h);
+    public abstract object call();
+    public abstract object call(object a);
+    public abstract object call(object a, object b);
+    public abstract object call(object a, object b, object c);
+    public abstract object call(object a, object b, object c, object d);
+    public abstract object call(object a, object b, object c, object d, object e);
+    public abstract object call(object a, object b, object c, object d, object e, object f);
+    public abstract object call(object a, object b, object c, object d, object e, object f, object g);
+    public abstract object call(object a, object b, object c, object d, object e, object f, object g, object h);
 
     public Func toImmutable()
     {
@@ -109,31 +109,31 @@ namespace Fan.Sys
     public abstract class Indirect0 : Indirect
     {
       protected Indirect0(FuncType type) : base(type) {}
-      public override object callList(List args) { return call0(); }
-      public override abstract object call0();
-      public override object call1(object a) { return call0(); }
-      public override object call2(object a, object b) { return call0(); }
-      public override object call3(object a, object b, object c) { return call0(); }
-      public override object call4(object a, object b, object c, object d) { return call0(); }
-      public override object call5(object a, object b, object c, object d, object e) { return call0(); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { return call0(); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return call0(); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call0(); }
+      public override object callList(List args) { return call(); }
+      public override abstract object call();
+      public override object call(object a) { return call(); }
+      public override object call(object a, object b) { return call(); }
+      public override object call(object a, object b, object c) { return call(); }
+      public override object call(object a, object b, object c, object d) { return call(); }
+      public override object call(object a, object b, object c, object d, object e) { return call(); }
+      public override object call(object a, object b, object c, object d, object e, object f) { return call(); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { return call(); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return call(); }
     }
 
     public abstract class Indirect1 : Indirect
     {
       protected Indirect1(FuncType type) : base(type) {}
-      public override object callList(List args) { return call1(args.get(0)); }
-      public override object call0() { throw tooFewArgs(0); }
-      public override abstract object call1(object a);
-      public override object call2(object a, object b) { return call1(a); }
-      public override object call3(object a, object b, object c) { return call1(a); }
-      public override object call4(object a, object b, object c, object d) { return call1(a); }
-      public override object call5(object a, object b, object c, object d, object e) { return call1(a); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { return call1(a); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return call1(a); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call1(a); }
+      public override object callList(List args) { return call(args.get(0)); }
+      public override object call() { throw tooFewArgs(0); }
+      public override abstract object call(object a);
+      public override object call(object a, object b) { return call(a); }
+      public override object call(object a, object b, object c) { return call(a); }
+      public override object call(object a, object b, object c, object d) { return call(a); }
+      public override object call(object a, object b, object c, object d, object e) { return call(a); }
+      public override object call(object a, object b, object c, object d, object e, object f) { return call(a); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { return call(a); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return call(a); }
 
       public override void enterCtor(object o) { this.m_inCtor = o; }
       public override void exitCtor() { this.m_inCtor = null; }
@@ -150,121 +150,121 @@ namespace Fan.Sys
     public abstract class Indirect2 : Indirect
     {
       protected Indirect2(FuncType type) : base(type) {}
-      public override object callList(List args) { return call2(args.get(0), args.get(1)); }
-      public override object call0() { throw tooFewArgs(0); }
-      public override object call1(object a) { throw tooFewArgs(1); }
-      public override abstract object call2(object a, object b);
-      public override object call3(object a, object b, object c) { return call2(a, b); }
-      public override object call4(object a, object b, object c, object d) { return call2(a, b); }
-      public override object call5(object a, object b, object c, object d, object e) { return call2(a, b); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { return call2(a, b); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return call2(a, b); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call2(a, b); }
+      public override object callList(List args) { return call(args.get(0), args.get(1)); }
+      public override object call() { throw tooFewArgs(0); }
+      public override object call(object a) { throw tooFewArgs(1); }
+      public override abstract object call(object a, object b);
+      public override object call(object a, object b, object c) { return call(a, b); }
+      public override object call(object a, object b, object c, object d) { return call(a, b); }
+      public override object call(object a, object b, object c, object d, object e) { return call(a, b); }
+      public override object call(object a, object b, object c, object d, object e, object f) { return call(a, b); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { return call(a, b); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return call(a, b); }
     }
 
     public abstract class Indirect3 : Indirect
     {
       protected Indirect3(FuncType type) : base(type) {}
-      public override object callList(List args) { return call3(args.get(0), args.get(1), args.get(2)); }
-      public override object call0() { throw tooFewArgs(0); }
-      public override object call1(object a) { throw tooFewArgs(1); }
-      public override object call2(object a, object b)  { throw tooFewArgs(2); }
-      public override abstract object call3(object a, object b, object c);
-      public override object call4(object a, object b, object c, object d) { return call3(a, b, c); }
-      public override object call5(object a, object b, object c, object d, object e) { return call3(a, b, c); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { return call3(a, b, c); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return call3(a, b, c); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call3(a, b, c); }
+      public override object callList(List args) { return call(args.get(0), args.get(1), args.get(2)); }
+      public override object call() { throw tooFewArgs(0); }
+      public override object call(object a) { throw tooFewArgs(1); }
+      public override object call(object a, object b)  { throw tooFewArgs(2); }
+      public override abstract object call(object a, object b, object c);
+      public override object call(object a, object b, object c, object d) { return call(a, b, c); }
+      public override object call(object a, object b, object c, object d, object e) { return call(a, b, c); }
+      public override object call(object a, object b, object c, object d, object e, object f) { return call(a, b, c); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { return call(a, b, c); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return call(a, b, c); }
     }
 
     public abstract class Indirect4 : Indirect
     {
       protected Indirect4(FuncType type) : base(type) {}
-      public override object callList(List args) { return call4(args.get(0), args.get(1), args.get(2), args.get(3)); }
-      public override object call0() { throw tooFewArgs(0); }
-      public override object call1(object a) { throw tooFewArgs(1); }
-      public override object call2(object a, object b)  { throw tooFewArgs(2); }
-      public override object call3(object a, object b, object c) { throw tooFewArgs(3); }
-      public override abstract object call4(object a, object b, object c, object d);
-      public override object call5(object a, object b, object c, object d, object e) { return call4(a, b, c, d); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { return call4(a, b, c, d); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return call4(a, b, c, d); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call4(a, b, c, d); }
+      public override object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3)); }
+      public override object call() { throw tooFewArgs(0); }
+      public override object call(object a) { throw tooFewArgs(1); }
+      public override object call(object a, object b)  { throw tooFewArgs(2); }
+      public override object call(object a, object b, object c) { throw tooFewArgs(3); }
+      public override abstract object call(object a, object b, object c, object d);
+      public override object call(object a, object b, object c, object d, object e) { return call(a, b, c, d); }
+      public override object call(object a, object b, object c, object d, object e, object f) { return call(a, b, c, d); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { return call(a, b, c, d); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return call(a, b, c, d); }
     }
 
     public abstract class Indirect5 : Indirect
     {
       protected Indirect5(FuncType type) : base(type) {}
-      public override object callList(List args) { return call5(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)); }
-      public override object call0() { throw tooFewArgs(0); }
-      public override object call1(object a) { throw tooFewArgs(1); }
-      public override object call2(object a, object b)  { throw tooFewArgs(2); }
-      public override object call3(object a, object b, object c) { throw tooFewArgs(3); }
-      public override object call4(object a, object b, object c, object d) { throw tooFewArgs(4); }
-      public override abstract object call5(object a, object b, object c, object d, object e);
-      public override object call6(object a, object b, object c, object d, object e, object f) { return call5(a, b, c, d, e); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return call5(a, b, c, d, e); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call5(a, b, c, d, e); }
+      public override object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)); }
+      public override object call() { throw tooFewArgs(0); }
+      public override object call(object a) { throw tooFewArgs(1); }
+      public override object call(object a, object b)  { throw tooFewArgs(2); }
+      public override object call(object a, object b, object c) { throw tooFewArgs(3); }
+      public override object call(object a, object b, object c, object d) { throw tooFewArgs(4); }
+      public override abstract object call(object a, object b, object c, object d, object e);
+      public override object call(object a, object b, object c, object d, object e, object f) { return call(a, b, c, d, e); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { return call(a, b, c, d, e); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return call(a, b, c, d, e); }
     }
 
     public abstract class Indirect6 : Indirect
     {
       protected Indirect6(FuncType type) : base(type) {}
-      public override object callList(List args) { return call6(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5)); }
-      public override object call0() { throw tooFewArgs(0); }
-      public override object call1(object a) { throw tooFewArgs(1); }
-      public override object call2(object a, object b)  { throw tooFewArgs(2); }
-      public override object call3(object a, object b, object c) { throw tooFewArgs(3); }
-      public override object call4(object a, object b, object c, object d) { throw tooFewArgs(4); }
-      public override object call5(object a, object b, object c, object d, object e) { throw tooFewArgs(5); }
-      public override abstract object call6(object a, object b, object c, object d, object e, object f);
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return call6(a, b, c, d, e, f); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call6(a, b, c, d, e, f); }
+      public override object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5)); }
+      public override object call() { throw tooFewArgs(0); }
+      public override object call(object a) { throw tooFewArgs(1); }
+      public override object call(object a, object b)  { throw tooFewArgs(2); }
+      public override object call(object a, object b, object c) { throw tooFewArgs(3); }
+      public override object call(object a, object b, object c, object d) { throw tooFewArgs(4); }
+      public override object call(object a, object b, object c, object d, object e) { throw tooFewArgs(5); }
+      public override abstract object call(object a, object b, object c, object d, object e, object f);
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { return call(a, b, c, d, e, f); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return call(a, b, c, d, e, f); }
     }
 
     public abstract class Indirect7 : Indirect
     {
       protected Indirect7(FuncType type) : base(type) {}
-      public override object callList(List args) { return call7(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6)); }
-      public override object call0() { throw tooFewArgs(0); }
-      public override object call1(object a) { throw tooFewArgs(1); }
-      public override object call2(object a, object b)  { throw tooFewArgs(2); }
-      public override object call3(object a, object b, object c) { throw tooFewArgs(3); }
-      public override object call4(object a, object b, object c, object d) { throw tooFewArgs(4); }
-      public override object call5(object a, object b, object c, object d, object e) { throw tooFewArgs(5); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { throw tooFewArgs(6); }
-      public override abstract object call7(object a, object b, object c, object d, object e, object f, object g);
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return call7(a, b, c, d, e, f, g); }
+      public override object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6)); }
+      public override object call() { throw tooFewArgs(0); }
+      public override object call(object a) { throw tooFewArgs(1); }
+      public override object call(object a, object b)  { throw tooFewArgs(2); }
+      public override object call(object a, object b, object c) { throw tooFewArgs(3); }
+      public override object call(object a, object b, object c, object d) { throw tooFewArgs(4); }
+      public override object call(object a, object b, object c, object d, object e) { throw tooFewArgs(5); }
+      public override object call(object a, object b, object c, object d, object e, object f) { throw tooFewArgs(6); }
+      public override abstract object call(object a, object b, object c, object d, object e, object f, object g);
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return call(a, b, c, d, e, f, g); }
     }
 
     public abstract class Indirect8 : Indirect
     {
       protected Indirect8(FuncType type) : base(type) {}
-      public override object callList(List args) { return call8(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6), args.get(7)); }
-      public override object call0() { throw tooFewArgs(0); }
-      public override object call1(object a) { throw tooFewArgs(1); }
-      public override object call2(object a, object b)  { throw tooFewArgs(2); }
-      public override object call3(object a, object b, object c) { throw tooFewArgs(3); }
-      public override object call4(object a, object b, object c, object d) { throw tooFewArgs(4); }
-      public override object call5(object a, object b, object c, object d, object e) { throw tooFewArgs(5); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { throw tooFewArgs(6); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { throw tooFewArgs(7); }
-      public override abstract object call8(object a, object b, object c, object d, object e, object f, object g, object h);
+      public override object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6), args.get(7)); }
+      public override object call() { throw tooFewArgs(0); }
+      public override object call(object a) { throw tooFewArgs(1); }
+      public override object call(object a, object b)  { throw tooFewArgs(2); }
+      public override object call(object a, object b, object c) { throw tooFewArgs(3); }
+      public override object call(object a, object b, object c, object d) { throw tooFewArgs(4); }
+      public override object call(object a, object b, object c, object d, object e) { throw tooFewArgs(5); }
+      public override object call(object a, object b, object c, object d, object e, object f) { throw tooFewArgs(6); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { throw tooFewArgs(7); }
+      public override abstract object call(object a, object b, object c, object d, object e, object f, object g, object h);
     }
 
     public abstract class IndirectX : Indirect
     {
       protected IndirectX(FuncType type) : base(type) {}
       public override abstract object callList(List args);
-      public override object call0() { throw tooFewArgs(0); }
-      public override object call1(object a) { throw tooFewArgs(1); }
-      public override object call2(object a, object b)  { throw tooFewArgs(2); }
-      public override object call3(object a, object b, object c) { throw tooFewArgs(3); }
-      public override object call4(object a, object b, object c, object d) { throw tooFewArgs(4); }
-      public override object call5(object a, object b, object c, object d, object e) { throw tooFewArgs(5); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { throw tooFewArgs(6); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { throw tooFewArgs(7); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { throw tooFewArgs(8); }
+      public override object call() { throw tooFewArgs(0); }
+      public override object call(object a) { throw tooFewArgs(1); }
+      public override object call(object a, object b)  { throw tooFewArgs(2); }
+      public override object call(object a, object b, object c) { throw tooFewArgs(3); }
+      public override object call(object a, object b, object c, object d) { throw tooFewArgs(4); }
+      public override object call(object a, object b, object c, object d, object e) { throw tooFewArgs(5); }
+      public override object call(object a, object b, object c, object d, object e, object f) { throw tooFewArgs(6); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { throw tooFewArgs(7); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { throw tooFewArgs(8); }
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -301,15 +301,15 @@ namespace Fan.Sys
       public override Method method() { return null; }
 
       // this isn't a very optimized implementation
-      public override object call0() { return callList(new List(Sys.ObjType, new object[] {})); }
-      public override object call1(object a) { return callList(new List(Sys.ObjType, new object[] {a})); }
-      public override object call2(object a, object b) { return callList(new List(Sys.ObjType, new object[] {a,b})); }
-      public override object call3(object a, object b, object c) { return callList(new List(Sys.ObjType, new object[] {a,b,c})); }
-      public override object call4(object a, object b, object c, object d) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d})); }
-      public override object call5(object a, object b, object c, object d, object e) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e})); }
-      public override object call6(object a, object b, object c, object d, object e, object f) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e,f})); }
-      public override object call7(object a, object b, object c, object d, object e, object f, object g) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e,f,g})); }
-      public override object call8(object a, object b, object c, object d, object e, object f, object g, object h) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e,f,g,h})); }
+      public override object call() { return callList(new List(Sys.ObjType, new object[] {})); }
+      public override object call(object a) { return callList(new List(Sys.ObjType, new object[] {a})); }
+      public override object call(object a, object b) { return callList(new List(Sys.ObjType, new object[] {a,b})); }
+      public override object call(object a, object b, object c) { return callList(new List(Sys.ObjType, new object[] {a,b,c})); }
+      public override object call(object a, object b, object c, object d) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d})); }
+      public override object call(object a, object b, object c, object d, object e) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e})); }
+      public override object call(object a, object b, object c, object d, object e, object f) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e,f})); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e,f,g})); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return callList(new List(Sys.ObjType, new object[] {a,b,c,d,e,f,g,h})); }
 
       public override object callList(List args)
       {

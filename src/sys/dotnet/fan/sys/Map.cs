@@ -165,12 +165,12 @@ namespace Fan.Sys
       else if (f.@params().sz() == 1)
       {
         for (int i=0; i<list.sz(); ++i)
-          set(f.call1(list.get(i)), list.get(i));
+          set(f.call(list.get(i)), list.get(i));
       }
       else
       {
         for (int i=0; i<list.sz(); ++i)
-          set(f.call2(list.get(i), i), list.get(i));
+          set(f.call(list.get(i), i), list.get(i));
       }
       return this;
     }
@@ -187,12 +187,12 @@ namespace Fan.Sys
       else if (f.@params().sz() == 1)
       {
         for (int i=0; i<list.sz(); ++i)
-          add(f.call1(list.get(i)), list.get(i));
+          add(f.call(list.get(i)), list.get(i));
       }
       else
       {
         for (int i=0; i<list.sz(); ++i)
-          add(f.call2(list.get(i), i), list.get(i));
+          add(f.call(list.get(i), i), list.get(i));
       }
       return this;
     }
@@ -344,7 +344,7 @@ namespace Fan.Sys
       {
         object key = en.Key;
         object val = en.Value;
-        f.call2(val, key);
+        f.call(val, key);
       }
     }
 
@@ -355,7 +355,7 @@ namespace Fan.Sys
       {
         object key = en.Key;
         object val = en.Value;
-        object r = f.call2(val, key);
+        object r = f.call(val, key);
         if (r != null) return r;
       }
       return null;
@@ -368,7 +368,7 @@ namespace Fan.Sys
       {
         object key = en.Key;
         object val = en.Value;
-        if (f.call2(val, key) == Boolean.True)
+        if (f.call(val, key) == Boolean.True)
           return val;
       }
       return null;
@@ -382,7 +382,7 @@ namespace Fan.Sys
       {
         object key = en.Key;
         object val = en.Value;
-        if (f.call2(val, key) == Boolean.True)
+        if (f.call(val, key) == Boolean.True)
           acc.set(key, val);
       }
       return acc;
@@ -396,7 +396,7 @@ namespace Fan.Sys
       {
         object key = en.Key;
         object val = en.Value;
-        if (f.call2(val, key) == Boolean.False)
+        if (f.call(val, key) == Boolean.False)
           acc.set(key, val);
       }
       return acc;
@@ -410,7 +410,7 @@ namespace Fan.Sys
       {
         object key = en.Key;
         object val = en.Value;
-        if (f.call2(val, key) == Boolean.True)
+        if (f.call(val, key) == Boolean.True)
           return true;
       }
       return false;
@@ -424,7 +424,7 @@ namespace Fan.Sys
       {
         object key = en.Key;
         object val = en.Value;
-        if (f.call2(val, key) == Boolean.False)
+        if (f.call(val, key) == Boolean.False)
           return false;
       }
       return true;
@@ -437,7 +437,7 @@ namespace Fan.Sys
       {
         object key = en.Key;
         object val = en.Value;
-        reduction = f.call3(reduction, val, key);
+        reduction = f.call(reduction, val, key);
       }
       return reduction;
     }
@@ -449,7 +449,7 @@ namespace Fan.Sys
       {
         object key = en.Key;
         object val = en.Value;
-        acc.set(key, f.call2(val, key));
+        acc.set(key, f.call(val, key));
       }
       return acc;
     }
@@ -473,7 +473,7 @@ namespace Fan.Sys
         if (f == null)
           s.Append(key).Append(": ").Append(val);
         else
-          s.Append(f.call2(val, key));
+          s.Append(f.call(val, key));
       }
       return s.ToString();
     }

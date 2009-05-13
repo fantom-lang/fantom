@@ -78,7 +78,7 @@ public class Locale
     try
     {
       setCurrent(this);
-      func.call1(this);
+      func.call(this);
     }
     finally
     {

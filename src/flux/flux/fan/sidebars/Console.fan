@@ -209,7 +209,7 @@ class Console : SideBar
   {
     try
     {
-      results := (Str[])method.call1(params)
+      results := (Str[])method.call(params)
       results.each |Str s| { Desktop.callAsync(&execWrite(params.frameId, s)) }
     }
     finally

@@ -78,7 +78,7 @@ public class DesktopPeer
       {
         try
         {
-          func.call0();
+          func.call();
         }
         catch (Throwable e)
         {

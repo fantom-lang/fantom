@@ -471,8 +471,8 @@ internal enum Token
 internal class Matcher
 {
   new make(Int sz, |->Bool| m, |,| c) { size = sz; matchFunc = m; consumeFunc = c }
-  Bool isMatch() { return matchFunc.call0 }
-  Void consume() { consumeFunc.call0 }
+  Bool isMatch() { return matchFunc.call }
+  Void consume() { consumeFunc.call }
   |->Bool| matchFunc
   |,| consumeFunc
   const Int size

@@ -89,12 +89,12 @@ public final class Range
     if (start < end)
     {
       if (exclusive) --end;
-      for (long i=start; i<=end; ++i) f.call1(Long.valueOf(i));
+      for (long i=start; i<=end; ++i) f.call(Long.valueOf(i));
     }
     else
     {
       if (exclusive) ++end;
-      for (long i=start; i>=end; --i) f.call1(Long.valueOf(i));
+      for (long i=start; i>=end; --i) f.call(Long.valueOf(i));
     }
   }
 
