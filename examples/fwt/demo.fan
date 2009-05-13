@@ -470,7 +470,7 @@ class FwtDemo
   {
     try
     {
-      test.content = InStream.makeForStr(text).readObj
+      test.content = text.in.readObj
     }
     catch (Err e)
     {

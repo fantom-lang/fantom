@@ -143,8 +143,7 @@ class Build : BuildGroup
     {
       outFile = devHomeDir + ("${moniker}.zip").toUri
       inDir = devHomeDir
-      // TODO
-      // pathPrefix = "$moniker/".toUri
+      pathPrefix = "$moniker/".toUri
       filter = |File f, Str path->Bool|
       {
         if (f.name == ".hg")       return false
