@@ -157,8 +157,11 @@ namespace Fanx.Util
             if (head == null || head.deadline > now)
             {
               long toSleep = head != null ? head.deadline - now : System.Int64.MaxValue;
-              Monitor.Wait(this, new System.TimeSpan(toSleep/100));
-
+              System.TimeSpan ts = new System.TimeSpan(toSleep/100);
+              if (ts.TotalMilliseconds > System.Int32.MaxValue)
+                Monitor.Wait(this, System.Int32.MaxValue);
+              else
+                Monitor.Wait(this, ts);
               continue;
             }
 
