@@ -66,7 +66,8 @@ namespace Fanx.Serial
         if (numUsings  >= usings.Length)
         {
           Using[] temp = new Using[usings.Length*2];
-          System.Array.Copy(usings, 0, temp, 0, numUsings );
+          System.Array.Copy(usings, 0, temp, 0, numUsings);
+          usings = temp;
         }
         usings[numUsings++] = u;
       }

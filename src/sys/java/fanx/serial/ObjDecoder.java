@@ -66,6 +66,7 @@ public class ObjDecoder
       {
         Using[] temp = new Using[usings.length*2];
         System.arraycopy(usings, 0, temp, 0, numUsings );
+        usings = temp;
       }
       usings[numUsings++] = u;
     }
