@@ -609,5 +609,8 @@
 - Window: showTrim, activate
 - List: eachRange
 - Duration: nowTicks
+- StrBuf.grow => capacity
+- InStream.makeForStr => Str.in
+- OutStream.makeForStrBuf => StrBuf.out
 
 TODO: change over buildall to use pathPrefix

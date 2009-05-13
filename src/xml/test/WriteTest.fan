@@ -197,8 +197,8 @@ class WriteTest : XmlTest
     // verify roundtrip using parser if doc or elem
     if (!testRoundtrip) return
     if (xml is XDoc)
-      verifyDoc(XParser(InStream.makeForStr(expected)).parseDoc, xml)
+      verifyDoc(XParser(expected.in).parseDoc, xml)
     else if (xml is XElem)
-      verifyElem(XParser(InStream.makeForStr(expected)).parseDoc.root, xml)
+      verifyElem(XParser(expected.in).parseDoc.root, xml)
   }
 }

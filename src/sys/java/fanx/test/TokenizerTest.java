@@ -303,7 +303,7 @@ public class TokenizerTest
 
   public Tok[] tokenize(String src)
   {
-    InStream in = InStream.makeForStr(src);
+    InStream in = FanStr.in(src);
     Tokenizer tokenizer = new Tokenizer(in);
 
     ArrayList acc = new ArrayList();

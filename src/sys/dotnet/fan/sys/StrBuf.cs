@@ -56,6 +56,16 @@ namespace Fan.Sys
       return sb.Length;
     }
 
+    public long capacity()
+    {
+      return sb.Capacity;
+    }
+
+    public void capacity(long size)
+    {
+      sb.EnsureCapacity((int)size);
+    }
+
     public long get(long index)
     {
       try
@@ -136,16 +146,15 @@ namespace Fan.Sys
       return this;
     }
 
-    public StrBuf grow(long size)
-    {
-      sb.EnsureCapacity((int)size);
-      return this;
-    }
-
     public StrBuf clear()
     {
       sb.Length = 0;
       return this;
+    }
+
+    public OutStream @out()
+    {
+      return new StrBufOutStream(this);
     }
 
     public override string toStr()

@@ -470,7 +470,7 @@ class ParserTest : XmlTest
   XDoc verifyParse(Str xml, XDoc expected)
   {
     // parse
-    actual := XParser(InStream.makeForStr(xml)).parseDoc
+    actual := XParser(xml.in).parseDoc
 
     // verify actual is expected
     verifyDoc(actual, expected)
@@ -478,7 +478,7 @@ class ParserTest : XmlTest
     // verify round trip
     buf := Buf()
     actual.write(buf.out)
-    roundtrip := XParser(InStream.makeForStr(buf.flip.readAllStr)).parseDoc
+    roundtrip := XParser(buf.flip.readAllStr.in).parseDoc
     verifyDoc(roundtrip, expected)
 
     return actual

@@ -79,7 +79,7 @@ class TextPart : EmailPart
 
     // write text lines
     out.charset = charset
-    in := InStream.makeForStr(text)
+    in := text.in
     in.eachLine |Str line|
     {
       if (line == ".") line = ". "

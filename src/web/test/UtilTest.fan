@@ -53,8 +53,8 @@ class UtilTest : Test
 
   Void testParseHeaders()
   {
-    in := InStream.makeForStr(
-      "Host: foobar\r\n" +
+    in :=
+      ("Host: foobar\r\n" +
       "Extra1:  space\r\n" +
       "Extra2: space  \r\n" +
       "Cont: one two \r\n" +
@@ -63,7 +63,7 @@ class UtilTest : Test
       "Coalesce: a,b\r\n" +
       "Coalesce: c\r\n" +
       "Coalesce:  d\r\n" +
-      "\r\n")
+      "\r\n").in
 
      headers := WebUtil.parseHeaders(in)
      verifyEq(headers.caseInsensitive, true)
@@ -82,11 +82,11 @@ class UtilTest : Test
     str := "3\r\nxyz\r\nB\r\nhello there\r\n0\r\n\r\n"
 
     // readAllStr
-    in := WebUtil.makeChunkedInStream(InStream.makeForStr(str))
+    in := WebUtil.makeChunkedInStream(str.in)
     verifyEq(in.readAllStr, "xyzhello there")
 
     // readBuf chunks
-    in = WebUtil.makeChunkedInStream(InStream.makeForStr(str))
+    in = WebUtil.makeChunkedInStream(str.in)
     buf := Buf()
     verifyEq(in.readBuf(buf.clear, 20), 3)
     verifyEq(buf.flip.readAllStr, "xyz")
@@ -95,13 +95,13 @@ class UtilTest : Test
     verifyEq(in.readBuf(buf.clear, 20), null)
 
     // readBufFully
-    in = WebUtil.makeChunkedInStream(InStream.makeForStr(str))
+    in = WebUtil.makeChunkedInStream(str.in)
     in.readBufFully(buf.clear, 14)
     verifyEq(buf.readAllStr, "xyzhello there")
     verifyEq(in.read, null)
 
     // unread
-    in = WebUtil.makeChunkedInStream(InStream.makeForStr(str))
+    in = WebUtil.makeChunkedInStream(str.in)
     verifyEq(in.read, 'x')
     verifyEq(in.read, 'y')
     in.unread('?')
@@ -111,7 +111,7 @@ class UtilTest : Test
     verifyEq(buf.readAllStr, "12zhello there")
 
     // fixed chunked stream
-    in = WebUtil.makeFixedInStream(InStream.makeForStr("abcdefgh"), 3)
+    in = WebUtil.makeFixedInStream("abcdefgh".in, 3)
     verifyEq(in.readAllStr, "abc")
   }
 

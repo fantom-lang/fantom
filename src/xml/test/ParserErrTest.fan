@@ -117,7 +117,7 @@ class ParserErrTest : XmlTest
   {
     try
     {
-      XParser(InStream.makeForStr(xml)).parseDoc
+      XParser(xml.in).parseDoc
       fail
     }
     catch (XErr e)
@@ -132,7 +132,7 @@ class ParserErrTest : XmlTest
   {
     try
     {
-      XParser(InStream.makeForStr(xml)).parseDoc
+      XParser(xml.in).parseDoc
       fail
     }
     catch (XIncompleteErr e)
