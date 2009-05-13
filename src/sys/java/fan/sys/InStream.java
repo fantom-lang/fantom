@@ -21,11 +21,6 @@ public class InStream
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static InStream makeForStr(String s)
-  {
-    return new StrInStream(s);
-  }
-
   public static InStream make(InStream in)
   {
     InStream self = new InStream();

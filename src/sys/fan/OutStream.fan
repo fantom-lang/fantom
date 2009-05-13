@@ -18,13 +18,6 @@ class OutStream
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Make an output stream designed to write characters into the specified
-  ** StrBuf.  The output stream is designed to write character data, attempts
-  ** to do binary writes will throw UnsupportedErr.
-  **
-  static OutStream makeForStrBuf(StrBuf strBuf)
-
-  **
   ** Constructor for an OutStream which wraps another stream.
   ** All writes to this stream will be routed to the specified
   ** inner stream.

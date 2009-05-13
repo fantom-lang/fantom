@@ -53,6 +53,16 @@ public class StrBuf
     return sb.length();
   }
 
+  public long capacity()
+  {
+    return sb.capacity();
+  }
+
+  public void capacity(long size)
+  {
+    sb.ensureCapacity((int)size);
+  }
+
   public long get(long index)
   {
     int i = (int)index;
@@ -119,12 +129,6 @@ public class StrBuf
     return this;
   }
 
-  public StrBuf grow(long size)
-  {
-    sb.ensureCapacity((int)size);
-    return this;
-  }
-
   public StrBuf clear()
   {
     sb.setLength(0);
@@ -139,6 +143,11 @@ public class StrBuf
   public Type type()
   {
     return Sys.StrBufType;
+  }
+
+  public OutStream out()
+  {
+    return new StrBufOutStream(this);
   }
 
 //////////////////////////////////////////////////////////////////////////

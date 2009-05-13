@@ -21,11 +21,6 @@ public class OutStream
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static OutStream makeForStrBuf(StrBuf buf)
-  {
-    return new StrBufOutStream(buf);
-  }
-
   public static OutStream make(OutStream out)
   {
     OutStream self = new OutStream();

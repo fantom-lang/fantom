@@ -869,7 +869,7 @@ public class FanStr
 
   public static InStream in(String self)
   {
-    return InStream.makeForStr(self);
+    return new StrInStream(self);
   }
 
   public static Buf toBuf(String self) { return toBuf(self, Charset.utf8); }

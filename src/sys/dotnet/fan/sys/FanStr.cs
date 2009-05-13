@@ -724,7 +724,7 @@ namespace Fan.Sys
 
     public static InStream @in(string self)
     {
-      return InStream.makeForStr(self);
+      return new StrInStream(self);
     }
 
     public static Buf toBuf(string self) { return toBuf(self, Charset.m_utf8); }

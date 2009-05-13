@@ -308,7 +308,7 @@ class PullTest : XmlTest
 
   Void init(Str src)
   {
-    parser = XParser(InStream.makeForStr(src))
+    parser = XParser(src.in)
   }
 
 //////////////////////////////////////////////////////////////////////////

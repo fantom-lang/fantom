@@ -27,6 +27,10 @@ class StrBufTest : Test
     verifyEq(s.size, 3)
     verifyEq(s.isEmpty, false)
     verifyEq(s.toStr, "foo")
+
+    verify(s.capacity >= 3)
+    s.capacity = 100
+    verifyEq(s.capacity, 100)
   }
 
 //////////////////////////////////////////////////////////////////////////

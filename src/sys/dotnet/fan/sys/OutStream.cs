@@ -20,11 +20,6 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static OutStream makeForStrBuf(StrBuf buf)
-    {
-      return new StrBufOutStream(buf);
-    }
-
     public static OutStream make(OutStream output)
     {
       OutStream self = new OutStream();

@@ -23,7 +23,7 @@ public class ObjDecoder
 
   public static Object decode(String s)
   {
-    return new ObjDecoder(InStream.makeForStr(s), null).readObj();
+    return new ObjDecoder(FanStr.in(s), null).readObj();
   }
 
 //////////////////////////////////////////////////////////////////////////
