@@ -96,8 +96,8 @@ final class Func
   **
   ** Optimized convenience for `callList` for zero to eight parameters.
   **
-  virtual R call(A? a := null, B? b := null, C? c := null, D? d := null,
-                 E? e := null, F? f := null, G? g := null, H? h := null)
+  virtual R call(A a := null, B b := null, C c := null, D d := null,
+                 E e := null, F f := null, G g := null, H h := null)
 
 ** TODO
 virtual R call0()
