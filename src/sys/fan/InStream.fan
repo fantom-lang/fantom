@@ -17,13 +17,6 @@ class InStream
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Make an input stream designed to read characters from the specified
-  ** string.  If binary reads are made from the string, then each character
-  ** is read as a one byte ASCII char.  Also see `Str.in`.
-  **
-  static InStream makeForStr(Str str)
-
-  **
   ** Constructor for an InStream which wraps another stream.
   ** All reads from this stream will be routed to the specified
   ** inner stream.

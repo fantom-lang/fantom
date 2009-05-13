@@ -36,6 +36,12 @@ final class StrBuf
   Int size()
 
   **
+  ** The number of characters this buffer can hold without
+  ** allocating more memory.
+  **
+  Int capacity
+
+  **
   ** Get the character at the zero based index as a Unicode code point.
   ** Negative indexes may be used to access from the end of the string buffer.
   ** This method is accessed via the [] operator.
@@ -92,19 +98,10 @@ final class StrBuf
   This removeRange(Range r)
 
   **
-  ** Ensure that this buffer has the specified capactity.  If
-  ** this buffer is already beyond the given capacity, then
-  ** do nothing.  Return this.
-  **
-  This grow(Int size)
-
-  **
   ** Clear the contents of the string buffer so that is
   ** has a size of zero.  Return this.
   **
   This clear()
-
-// TODO: capacity, get, slice, etc
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion
@@ -114,5 +111,12 @@ final class StrBuf
   ** Return the current buffer contents as a Str.
   **
   override Str toStr()
+
+  **
+  ** Create an output stream to append characters to this string
+  ** buffer.  The output stream is designed to write character data,
+  ** attempts to do binary writes will throw UnsupportedErr.
+  **
+  OutStream out()
 
 }

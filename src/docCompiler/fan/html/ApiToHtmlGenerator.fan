@@ -444,7 +444,7 @@ class ApiToHtmlGenerator : HtmlGenerator
     if (text == null || !text.startsWith("@"))
       return meta
 
-    InStream.makeForStr(text).eachLine |Str line|
+    text.in.eachLine |Str line|
     {
       if (!line.startsWith("@")) return
       i := line.index("=")
@@ -482,7 +482,7 @@ class ApiToHtmlGenerator : HtmlGenerator
       // TODO - we could save some cycles here by reusing
       // the stream we used for parseDefs
 
-      in := InStream.makeForStr(text)
+      in := text.in
       while (in.peek == '@')
       {
         echo("WARNING: should be using docBody!")

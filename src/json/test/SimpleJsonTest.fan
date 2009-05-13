@@ -31,7 +31,7 @@ class SimpleJsonTest : Test
   Void testRawUtfJson()
   {
     buf := StrBuf.make
-    out := OutStream.makeForStrBuf(buf)
+    out := buf.out
     out.charset = Charset.utf16BE
     out.writeChars(makeRawJson)
     out.close
@@ -54,7 +54,7 @@ class SimpleJsonTest : Test
   private Str:Obj doTest(Str:Obj map)
   {
     buf := StrBuf.make
-    stream := OutStream.makeForStrBuf(buf)
+    stream := buf.out
     Json.write(stream, map)
     stream.close
     //echo(buf.toStr)

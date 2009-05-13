@@ -24,7 +24,7 @@ namespace Fanx.Serial
 
     public static object decode(string s)
     {
-      return new ObjDecoder(InStream.makeForStr(s), null).readObj();
+      return new ObjDecoder(FanStr.@in(s), null).readObj();
     }
 
   //////////////////////////////////////////////////////////////////////////

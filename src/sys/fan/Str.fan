@@ -600,7 +600,9 @@ const final class Str
   Uri toUri()
 
   **
-  ** Get this string as an InStream - see `InStream.makeForStr`.
+  ** Create an input stream to read characters from the this string.
+  ** If binary reads are made from the string, then each character
+  ** is read as a one byte ASCII char.
   **
   InStream in()
 

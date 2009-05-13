@@ -459,7 +459,7 @@ class FandocTest : Test
   Void verifyErrors(Str str, Obj[] expected, Obj[] errors)
   {
     parser := FandocParser { silent = true }
-    doc := parser.parse("Test", InStream.makeForStr(str))
+    doc := parser.parse("Test", str.in)
     verifyDocNode(doc, expected)
     //echo("======")
     //parser.errors.each |Err e| { echo(e) }
@@ -480,7 +480,7 @@ class FandocTest : Test
   Doc verifyDoc(Str str, Obj[] expected)
   {
     parser := FandocParser { silent = true }
-    doc := parser.parse("Test", InStream.makeForStr(str))
+    doc := parser.parse("Test", str.in)
     //doc.dump
     verifyDocNode(doc, expected)
     return doc
