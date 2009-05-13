@@ -393,9 +393,9 @@ class InheritTest : CompilerTest
 
      typeB := pod.types[1]
      objB := typeB.make
-     verifyEq(typeB.method("sb").call([,]), "sa")
-     verifyEq(typeB.method("ib").call([objB]), "ia")
-     verifyEq(typeB.method("vx").call([objB]), "B.vx")
+     verifyEq(typeB.method("sb").callList([,]), "sa")
+     verifyEq(typeB.method("ib").callList([objB]), "ia")
+     verifyEq(typeB.method("vx").callList([objB]), "B.vx")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -439,10 +439,10 @@ class InheritTest : CompilerTest
      typeD := pod.types[3]
      objD := typeD.make
      verifyEq(typeD.name, "D")
-     verifyEq(typeD.method("a").call([objD]), "B.a")
+     verifyEq(typeD.method("a").callList([objD]), "B.a")
      verifyEq(typeD.field("b").get(objD), "B.b")
-     verifyEq(typeD.method("hash").call([objD]), 77)
-     verifyEq(typeD.method("toStr").call([objD]), "C.toStr")
+     verifyEq(typeD.method("hash").callList([objD]), 77)
+     verifyEq(typeD.method("toStr").callList([objD]), "C.toStr")
   }
 
 //////////////////////////////////////////////////////////////////////////

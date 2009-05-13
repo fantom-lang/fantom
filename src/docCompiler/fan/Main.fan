@@ -32,7 +32,7 @@ class Main
     // process each directory specified
     try
     {
-      pipeline.call([compiler])
+      pipeline.callList([compiler])
     }
     catch (CompilerErr err)
     {

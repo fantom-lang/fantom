@@ -232,8 +232,8 @@ class ClosureTest : Test
   {
     f := |Int a, Int b, Int c->Int[]| { return [a, b, c] }
     verifyEq(f.call3(1, 2, 3),        [1, 2, 3])
-    verifyEq(f.call([1, 2, 3]),       [1, 2, 3])
-    verifyEq(f.call([1, 2, 3, 4]),    [1, 2, 3])
+    verifyEq(f.callList([1, 2, 3]),       [1, 2, 3])
+    verifyEq(f.callList([1, 2, 3, 4]),    [1, 2, 3])
     verifyEq(f.callOn(1, [2, 3, 4]),  [1, 2, 3])
   }
 

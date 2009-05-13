@@ -144,7 +144,7 @@ public class Method
 // Call Conveniences
 //////////////////////////////////////////////////////////////////////////
 
-  public final Object call(List args) { return func.call(args); }
+  public final Object callList(List args) { return func.callList(args); }
   public final Object callOn(Object target, List args) { return func.callOn(target, args); }
   public final Object call0() { return func.call0(); }
   public final Object call1(Object a) { return func.call1(a); }
@@ -171,7 +171,7 @@ public class Method
       return Method.this.isStatic() || parent.isConst();
     }
 
-    public Object call(List args)
+    public Object callList(List args)
     {
       int argsSize = args == null ? 0 : args.sz();
 

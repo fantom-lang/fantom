@@ -612,5 +612,6 @@
 - StrBuf.grow => capacity
 - InStream.makeForStr => Str.in
 - OutStream.makeForStrBuf => StrBuf.out
+- Func/Method call => callList
 
 TODO: change over buildall to use pathPrefix

@@ -167,8 +167,8 @@ public class Fant
 
     try
     {
-      setup.call(args);
-      method.call(args);
+      setup.callList(args);
+      method.callList(args);
       return test.verifyCount;
     }
     catch (Throwable e)
@@ -185,7 +185,7 @@ public class Fant
     {
       try
       {
-        if (args != null) teardown.call(args);
+        if (args != null) teardown.callList(args);
       }
       catch (Throwable e)
       {

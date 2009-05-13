@@ -53,8 +53,8 @@ class ClosureTest : CompilerTest
      verifyEq(call.args[1]->check->qname, "sys::Str")
 
      verifyEq(c.name, "Foo\$x\$2")
-     verifyEq(c.slotDef("call")->params->get(0)->paramType->qname, "sys::List")
-     call = c.slotDef("call")->code->stmts->get(0)->expr as CallExpr
+     verifyEq(c.slotDef("callList")->params->get(0)->paramType->qname, "sys::List")
+     call = c.slotDef("callList")->code->stmts->get(0)->expr as CallExpr
      verifyEq(call.args[0].id, ExprId.coerce)
      verifyEq(call.args[0]->check->qname, "sys::Int")
      verifyEq(call.args[0]->target->method->qname, "sys::List.get")
@@ -87,12 +87,12 @@ class ClosureTest : CompilerTest
 
      t := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("xc1").call([obj]), 1972)
-     verifyEq(obj.type.method("xc2").call([obj]), 1972)
-     verifyEq(obj.type.method("yc1").call([obj]), 72)
-     verifyEq(obj.type.method("yc2").call([obj]), 72)
-     verifyEq(obj.type.method("fc1").call([obj]), 66)
-     verifyEq(obj.type.method("fc2").call([obj]), 66)
+     verifyEq(obj.type.method("xc1").callList([obj]), 1972)
+     verifyEq(obj.type.method("xc2").callList([obj]), 1972)
+     verifyEq(obj.type.method("yc1").callList([obj]), 72)
+     verifyEq(obj.type.method("yc2").callList([obj]), 72)
+     verifyEq(obj.type.method("fc1").callList([obj]), 66)
+     verifyEq(obj.type.method("fc2").callList([obj]), 66)
   }
 
   Void testOuterThisErrors()
@@ -141,7 +141,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").call([obj]), 17)
+     verifyEq(obj.type.method("f").callList([obj]), 17)
 
      // verify first closure doesn't have cvars overhead
      c0 := compiler.types[1]
@@ -300,7 +300,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").call([obj, 0, 1]), "(0: 0 1 2 3)(1: 1 1 2 4)(2: 2 1 2 5)")
+     verifyEq(obj.type.method("f").callList([obj, 0, 1]), "(0: 0 1 2 3)(1: 1 1 2 4)(2: 2 1 2 5)")
    }
 
 //////////////////////////////////////////////////////////////////////////
@@ -333,7 +333,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").call([1]),
+     verifyEq(obj.type.method("f").callList([1]),
        "[1 2 0 10 0][2 4 0 10 1][3 8 1 11 0][4 16 1 11 1]")
    }
 
@@ -373,7 +373,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").call([1]),
+     verifyEq(obj.type.method("f").callList([1]),
        "i=0 [2 2 0 0 0][2 2 0 0 1][2 4 0 1 0][2 4 0 1 1]\n" +
        "i=1 [3 8 1 0 0][3 8 1 0 1][3 16 1 1 0][3 16 1 1 1]\n | 3 32 3 4")
    }
@@ -405,7 +405,7 @@ class ClosureTest : CompilerTest
      // verify code works correctly
      t  := pod.types[0]
      obj := t.make
-     verifyEq(obj.type.method("f").call([obj]), null)
+     verifyEq(obj.type.method("f").callList([obj]), null)
      verifyEq(obj->counter, 4)
    }
 
@@ -493,8 +493,8 @@ class ClosureTest : CompilerTest
           3.times |Int a| { return };
           2.times |,| { |Int x, Int b| {} };
 
-          |,| { a := true }.call;
-          |,| { |,| { b := 4 } }.call;
+          |,| { a := true }.callList;
+          |,| { |,| { b := 4 } }.callList;
         }
       }
       ",

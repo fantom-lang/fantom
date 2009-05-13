@@ -158,7 +158,7 @@ class ReflectionTest : Test
       }
 
       // call() static method
-      verifyEq(ms.call(args), expected)
+      verifyEq(ms.callList(args), expected)
 
       // callOn()
       verifyEq(ms.callOn(null, args), expected)
@@ -166,16 +166,16 @@ class ReflectionTest : Test
 
       // insert this, then call() instance
       args.insert(0, this)
-      verifyEq(mi.call(args), expected)
+      verifyEq(mi.callList(args), expected)
 
       // add some extra args to the end, and verify
       // things still work
       args.add('x')
-      verifyEq(mi.call(args), expected)
+      verifyEq(mi.callList(args), expected)
       args.add('y')
-      verifyEq(mi.call(args), expected)
+      verifyEq(mi.callList(args), expected)
       args.removeAt(0)
-      verifyEq(ms.call(args), expected)
+      verifyEq(ms.callList(args), expected)
 
       // callOn() with extra arguments
       verifyEq(ms.callOn(null, args), expected)
@@ -225,13 +225,13 @@ class ReflectionTest : Test
     verifyEq(m.call7('x', 'y', 'z', '?', '?', '?', '?'), "xyz")
     verifyEq(m.call8('x', 'y', 'z', '?', '?', '?', '?', '?'), "xyz")
 
-    verifyEq(m.call(null), "abc")
-    verifyEq(m.call([,]), "abc")
-    verifyEq(m.call(['x']), "xbc")
-    verifyEq(m.call(['x', 'y']), "xyc")
-    verifyEq(m.call(['x', 'y', 'z']), "xyz")
-    verifyEq(m.call(['x', 'y', 'z', '?']), "xyz")
-    verifyEq(m.call(['x', 'y', 'z', '?', '?']), "xyz")
+    verifyEq(m.callList(null), "abc")
+    verifyEq(m.callList([,]), "abc")
+    verifyEq(m.callList(['x']), "xbc")
+    verifyEq(m.callList(['x', 'y']), "xyc")
+    verifyEq(m.callList(['x', 'y', 'z']), "xyz")
+    verifyEq(m.callList(['x', 'y', 'z', '?']), "xyz")
+    verifyEq(m.callList(['x', 'y', 'z', '?', '?']), "xyz")
 
     verifyEq(m.callOn(null, null), "abc")
     verifyEq(m.callOn(null, [,]), "abc")
@@ -265,14 +265,14 @@ class ReflectionTest : Test
     verifyEq(m.call7(this, 'x', 'y', 'z', '?', '?', '?'), "xyz")
     verifyEq(m.call8(this, 'x', 'y', 'z', '?', '?', '?', '?'), "xyz")
 
-    verifyErr(ArgErr#) |,| { m.call(null) }
-    verifyErr(ArgErr#) |,| { m.call([,]) }
-    verifyEq(m.call([this]), "abc")
-    verifyEq(m.call([this, 'x']), "xbc")
-    verifyEq(m.call([this, 'x', 'y']), "xyc")
-    verifyEq(m.call([this, 'x', 'y', 'z']), "xyz")
-    verifyEq(m.call([this, 'x', 'y', 'z', '?']), "xyz")
-    verifyEq(m.call([this, 'x', 'y', 'z', '?', '?']), "xyz")
+    verifyErr(ArgErr#) |,| { m.callList(null) }
+    verifyErr(ArgErr#) |,| { m.callList([,]) }
+    verifyEq(m.callList([this]), "abc")
+    verifyEq(m.callList([this, 'x']), "xbc")
+    verifyEq(m.callList([this, 'x', 'y']), "xyc")
+    verifyEq(m.callList([this, 'x', 'y', 'z']), "xyz")
+    verifyEq(m.callList([this, 'x', 'y', 'z', '?']), "xyz")
+    verifyEq(m.callList([this, 'x', 'y', 'z', '?', '?']), "xyz")
 
     verifyEq(m.callOn(this, null), "abc")
     verifyEq(m.callOn(this, [,]), "abc")
@@ -306,14 +306,14 @@ class ReflectionTest : Test
     verifyEq(m.call7(this, 'x', 'y', 'z', '?', '?', '?'), "xyz")
     verifyEq(m.call8(this, 'x', 'y', 'z', '?', '?', '?', '?'), "xyz")
 
-    verifyErr(ArgErr#) |,| { m.call(null) }
-    verifyErr(ArgErr#) |,| { m.call([,]) }
-    verifyErr(ArgErr#) |,| { m.call([this]) }
-    verifyEq(m.call([this, 'x']), "xbc")
-    verifyEq(m.call([this, 'x', 'y']), "xyc")
-    verifyEq(m.call([this, 'x', 'y', 'z']), "xyz")
-    verifyEq(m.call([this, 'x', 'y', 'z', '?']), "xyz")
-    verifyEq(m.call([this, 'x', 'y', 'z', '?', '?']), "xyz")
+    verifyErr(ArgErr#) |,| { m.callList(null) }
+    verifyErr(ArgErr#) |,| { m.callList([,]) }
+    verifyErr(ArgErr#) |,| { m.callList([this]) }
+    verifyEq(m.callList([this, 'x']), "xbc")
+    verifyEq(m.callList([this, 'x', 'y']), "xyc")
+    verifyEq(m.callList([this, 'x', 'y', 'z']), "xyz")
+    verifyEq(m.callList([this, 'x', 'y', 'z', '?']), "xyz")
+    verifyEq(m.callList([this, 'x', 'y', 'z', '?', '?']), "xyz")
 
     verifyErr(ArgErr#) |,| { m.callOn(this, null) }
     verifyErr(ArgErr#) |,| { m.callOn(this, [,]) }
@@ -340,7 +340,7 @@ class ReflectionTest : Test
     verifyEq(t.method("add").call2(3, 4), 7)
     verifyEq(t.method("mult").call2(3, 4), 12)
     verifyEq(t.method("mult").call1(3), 30)
-    verifyEq(t.method("mult").call([3]), 30)
+    verifyEq(t.method("mult").callList([3]), 30)
 
     // reflect static field
     verifyEq(t.field("sx").get, 99)
@@ -354,9 +354,9 @@ class ReflectionTest : Test
     verifyEq(t.method("concat").callOn(obj, [,]), "7;")
     verifyEq(t.method("concat").callOn(obj, [2]), "2;")
     verifyEq(t.method("concat").callOn(obj, [3, "."]), "3.")
-    verifyEq(t.method("concat").call([obj, 3, "."]), "3.")
-    verifyEq(t.method("concat").call([obj, 3]), "3;")
-    verifyEq(t.method("concat").call([obj]), "7;")
+    verifyEq(t.method("concat").callList([obj, 3, "."]), "3.")
+    verifyEq(t.method("concat").callList([obj, 3]), "3;")
+    verifyEq(t.method("concat").callList([obj]), "7;")
     verifyEq(t.method("concat").call3(obj, 3, "."), "3.")
     verifyEq(t.method("concat").call2(obj, 3), "3;")
     verifyEq(t.method("concat").call1(obj), "7;")

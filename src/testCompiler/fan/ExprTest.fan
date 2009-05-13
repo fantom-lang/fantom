@@ -769,7 +769,7 @@ class ExprTest : CompilerTest
 
      t := pod.types.first
      instance := t.method("make").call0
-     actual := t.method("func").call([instance, aarg, barg])
+     actual := t.method("func").callList([instance, aarg, barg])
      verifyEq(actual, result)
    }
 

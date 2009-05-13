@@ -1001,13 +1001,13 @@ class ParserTest : CompilerTest
       verifyEq(expr->args->last->id, ExprId.closure)
       verifyEq(expr->args->last->signature->signature, "|->sys::Bool|")
 
-    expr = verifyExpr("|,| {}.call(null)", ExprId.call)
-      verifyEq(expr->name, "call")
+    expr = verifyExpr("|,| {}.callList(null)", ExprId.call)
+      verifyEq(expr->name, "callList")
       verifyEq(expr->target->id, ExprId.closure)
       verifyEq(expr->target->signature->signature, "|->sys::Void|")
 
-    expr = verifyExpr("|Str s->Bool| {}.call(null)", ExprId.call)
-      verifyEq(expr->name, "call")
+    expr = verifyExpr("|Str s->Bool| {}.callList(null)", ExprId.call)
+      verifyEq(expr->name, "callList")
       verifyEq(expr->target->id, ExprId.closure)
       verifyEq(expr->target->signature->signature, "|sys::Str->sys::Bool|")
 

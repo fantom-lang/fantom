@@ -166,24 +166,24 @@ class InitClosures : CompilerStep
 
     // method def
     m := MethodDef.make(loc, parent)
-    m.name  = "call"
     m.flags = FConst.Override | FConst.Synthetic
     m.ret   = ns.objType.toNullable
     m.code  = Block.make(loc)
 
     // signature:
-    //   call(List)                 // if > MaxIndirectParams
+    //   callList(List)             // if > MaxIndirectParams
     //   call(Obj p0, Obj p1, ...)  // if <= MaxIndirectParams
     paramCount := signature.params.size
     useListArgs := paramCount > 8
     if (useListArgs)
     {
+      m.name  = "callList"
       p := ParamDef.make(loc, ns.objType.toListOf, "list")
       m.params.add(p)
     }
     else
     {
-      m.name += paramCount.toStr
+      m.name = "call${paramCount}"
       paramCount.times |Int i|
       {
         p := ParamDef.make(loc, ns.objType.toNullable, "p$i")

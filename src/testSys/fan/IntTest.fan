@@ -559,16 +559,16 @@ class IntTest : Test
 
   Void testReflect()
   {
-    verifyEq(Int#fromStr.call(["3"]), 3)
+    verifyEq(Int#fromStr.callList(["3"]), 3)
     verifyEq(Int#fromStr.call1("3"), 3)
     verifyEq(Int#fromStr.call3("xxx", 10, false), null)
 
-    verifyEq(Int#toHex.call([0xab]), "ab")
+    verifyEq(Int#toHex.callList([0xab]), "ab")
     verifyEq(Int#toHex.call2(0xab, 4), "00ab")
     verifyEq(Int#toHex.callOn(0xab, null), "ab")
     verifyEq(Int#toHex.callOn(0xab, [3]), "0ab")
 
-    verifyEq(Obj#hash.call([66]), 66)
+    verifyEq(Obj#hash.callList([66]), 66)
     verifyEq(Obj#toStr.callOn(66, null), "66")
 
     Obj x := 10

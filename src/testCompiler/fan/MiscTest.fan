@@ -262,13 +262,13 @@ class MiscTest : CompilerTest
           $mod Func t04() { return &s2(99) }
           $mod Int[] t05() { return (&s2)(5, 6) }
           $mod Int[] t06() { m := &s2(99); return m.call1(5) }
-          $mod Int[] t07(Int a, Int b) { return (&s2(a, b)).call([5, 6, 7]) }
+          $mod Int[] t07(Int a, Int b) { return (&s2(a, b)).callList([5, 6, 7]) }
 
           $mod Int[] t08(Int a, Int h) { return (&s8(a, 2, 3, 4, 5, 6, 7))(h) }
           $mod Int[] t09(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h) { return (&s8)(a, b, c, d, e, f, g, h) }
 
           $mod Int[] t10(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i, Int j) { return (&s10(a, b, c, d))(e, f, g, h, i, j) }
-          $mod Int[] t11(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i, Int j) { return (&s10(99)).call([b, c, d, e, f, g, h, i, j]) }
+          $mod Int[] t11(Int a, Int b, Int c, Int d, Int e, Int f, Int g, Int h, Int i, Int j) { return (&s10(99)).callList([b, c, d, e, f, g, h, i, j]) }
 
           $mod Int[] s0() { return Int[,] }
           $mod Int[] s1(Int a) { return [a] }
