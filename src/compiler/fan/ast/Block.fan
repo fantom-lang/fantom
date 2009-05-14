@@ -47,6 +47,14 @@ class Block : Node
   }
 
   **
+  ** Return if any of the statements perform definite assignment.
+  **
+  Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    return stmts.any |Stmt s->Bool| { s.isDefiniteAssign(f) }
+  }
+
+  **
   ** Append a statement
   **
   Void add(Stmt stmt)

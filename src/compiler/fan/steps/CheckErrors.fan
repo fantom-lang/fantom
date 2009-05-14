@@ -207,7 +207,7 @@ class CheckErrors : CompilerStep
 
     // check that public field isn't using internal type
     if (curType.isPublic && (f.isPublic || f.isProtected) && !f.fieldType.isPublic)
-      err("Public field '${curType.name}.${f.name}' cannot use internal type '$f.fieldType'", f.location);
+      err("Public field '${curType.name}.${f.name}' cannot use internal type '$f.fieldType'", f.location)
   }
 
   private Void checkFieldFlags(FieldDef f)
@@ -461,6 +461,32 @@ class CheckErrors : CompilerStep
     // ensure super/this constructor is called
     if (m.ctorChain == null && !compiler.isSys && !curType.base.isObj && !curType.isSynthetic)
       err("Must call super class constructor in '$m.name'", m.location)
+
+    // if this constructor doesn't call a this
+    // constructor, then check for definite assignment
+    if (m.ctorChain?.target?.id !== ExprId.thisExpr)
+      checkCtorDefiniteAssign(m)
+  }
+
+  private Void checkCtorDefiniteAssign(MethodDef m)
+  {
+    // get the non-nullable instance fields
+    fields := curType.fieldDefs.findAll |FieldDef f->Bool| { !f.isStatic && !f.fieldType.isNullable }
+    if (fields.isEmpty) return
+
+    // check that each one is definitely assigned
+    fields.each |FieldDef f|
+    {
+      definite := m.code.isDefiniteAssign |Expr lhs->Bool|
+      {
+        if (lhs.id !== ExprId.field) return false
+        fe := (FieldExpr)lhs
+        if (fe.target?.id !== ExprId.thisExpr) return false
+        return fe.field.qname == f.qname
+      }
+      if (!definite)
+        err("Non-nullable field '$f.name' must be assigned in constructor '$m.name'", m.location)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

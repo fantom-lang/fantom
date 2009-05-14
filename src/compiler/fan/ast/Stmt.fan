@@ -32,6 +32,12 @@ abstract class Stmt : Node
   **
   abstract Bool isExit()
 
+  **
+  ** Check for definite assignment where the given function
+  ** returns true for the LHS of an assignment in all code paths.
+  **
+  abstract Bool isDefiniteAssign(|Expr lhs->Bool| f)
+
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////
@@ -76,7 +82,9 @@ class NopStmt : Stmt
 {
   new make(Location location) : super(location, StmtId.nop) {}
 
-  override Bool isExit() { return false }
+  override Bool isExit() { false }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { false }
 
   override Void print(AstWriter out)
   {
@@ -100,7 +108,9 @@ class ExprStmt : Stmt
     this.expr = expr
   }
 
-  override Bool isExit() { return false }
+  override Bool isExit() { false }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { expr.isDefiniteAssign(f) }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
   {
@@ -140,6 +150,8 @@ class LocalDefStmt : Stmt
   }
 
   override Bool isExit() { return false }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { false }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
   {
@@ -190,6 +202,12 @@ class IfStmt : Stmt
     return trueBlock.isExit && falseBlock.isExit
   }
 
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    if (falseBlock == null) return false
+    return trueBlock.isDefiniteAssign(f) && falseBlock.isDefiniteAssign(f)
+  }
+
   override Void walkChildren(Visitor v, VisitDepth depth)
   {
     condition = walkExpr(v, depth, condition)
@@ -236,6 +254,12 @@ class ReturnStmt : Stmt
 
   override Bool isExit() { return true }
 
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    if (expr == null) return false
+    return expr.isDefiniteAssign(f)
+  }
+
   override Void walkChildren(Visitor v, VisitDepth depth)
   {
     expr = walkExpr(v, depth, expr)
@@ -267,7 +291,9 @@ class ThrowStmt : Stmt
 {
   new make(Location location) : super(location, StmtId.throwStmt) {}
 
-  override Bool isExit() { return true }
+  override Bool isExit() { true }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { false }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
   {
@@ -294,8 +320,12 @@ class ForStmt : Stmt
 {
   new make(Location location) : super(location, StmtId.forStmt) {}
 
-  override Bool isExit()
+  override Bool isExit() { false }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
   {
+    if (condition.isDefiniteAssign(f)) return true
+    if (init != null && init.isDefiniteAssign(f)) return true
     return false
   }
 
@@ -337,9 +367,11 @@ class WhileStmt : Stmt
 {
   new make(Location location) : super(location, StmtId.whileStmt) {}
 
-  override Bool isExit()
+  override Bool isExit() { false }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
   {
-    return false
+    condition.isDefiniteAssign(f)
   }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
@@ -369,7 +401,9 @@ class BreakStmt : Stmt
 {
   new make(Location location) : super(location, StmtId.breakStmt) {}
 
-  override Bool isExit() { return false }
+  override Bool isExit() { false }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { false }
 
   override Void print(AstWriter out)
   {
@@ -390,7 +424,9 @@ class ContinueStmt : Stmt
 {
   new make(Location location) : super(location, StmtId.continueStmt) {}
 
-  override Bool isExit() { return false }
+  override Bool isExit() { false }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f) { false }
 
   override Void print(AstWriter out)
   {
@@ -419,6 +455,13 @@ class TryStmt : Stmt
   {
     if (!block.isExit) return false
     return catches.all |Catch c->Bool| { return c.block.isExit }
+  }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    if (finallyBlock != null && finallyBlock.isDefiniteAssign(f)) return true
+    if (!block.isDefiniteAssign(f)) return false
+    return catches.all |Catch c->Bool| { return c.block.isDefiniteAssign(f) }
   }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
@@ -486,6 +529,13 @@ class SwitchStmt : Stmt
     : super(location, StmtId.switchStmt)
   {
     cases = Case[,]
+  }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    if (defaultBlock == null) return false
+    if (defaultBlock.isDefiniteAssign(f)) return false
+    return cases.all |Case c->Bool| { return c.block.isDefiniteAssign(f) }
   }
 
   override Bool isExit()
