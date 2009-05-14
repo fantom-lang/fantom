@@ -66,7 +66,7 @@ public class FieldDef : SlotDef, CField
   {
     v.enterFieldDef(this)
     walkFacets(v, depth)
-    if (depth >= VisitDepth.expr && init != null)
+    if (depth >= VisitDepth.expr && init != null && walkInit)
       init = init.walk(v)
     v.visitFieldDef(this)
     v.exitFieldDef(this)
@@ -78,8 +78,8 @@ public class FieldDef : SlotDef, CField
 
   override [Str:Str]? docMeta()
   {
-    if (initDoc == null) return null
-    return ["def": initDoc.toDocStr]
+    if (init == null) return null
+    return ["def": init.toDocStr]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ public class FieldDef : SlotDef, CField
   override CType fieldType  // field type
   Field? field              // resolved finalized field
   Expr? init                // init expression or null
-  Expr? initDoc             // original init expression for documentation only
+  Bool walkInit := true     // tree walk init expression
   MethodDef? get            // getter MethodDef
   MethodDef? set            // setter MethodDef
   CField? concreteBase      // if I override a concrete virtual field
