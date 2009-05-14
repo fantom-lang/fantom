@@ -532,6 +532,7 @@ var fanx_Tokenizer = Class.extend(
     // stream; normalize \r\n newlines
     var c = this.input.readChar();
     if (c == 10/*'\n'*/ && this.peek == 13/*'\r'*/) c = this.input.readChar();
+    if (c == null) c = -1;
 
     // roll cur to peek, and peek to new char
     this.cur   = this.peek;

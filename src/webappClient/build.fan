@@ -112,6 +112,6 @@ class Build : BuildPod
   }
 
   Str[] ordered := ["Sys.js", "Obj.js", "Type.js", "Slot.js", "Num.js", "List.js",
-                    "Map.js", "Enum.js"]
+                    "Map.js", "Enum.js", "InStream.js"]
 
 }

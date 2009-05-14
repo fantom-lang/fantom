@@ -63,10 +63,8 @@ var fanx_ObjDecoder = Class.extend(
     this.consume();
 
     var podName = this.consumeId("Expecting pod name");
-var pod = null;
-// TODO
-//    Pod pod = Pod.find(podName, false);
-//    if (pod == null) throw err("Unknown pod: " + podName);
+    var pod = Pod.find(podName, false);
+    if (pod == null) throw err("Unknown pod: " + podName);
     if (this.curt != fanx_Token.DOUBLE_COLON)
     {
       this.endOfStmt(line);
@@ -75,10 +73,8 @@ var pod = null;
 
     this.consume();
     var typeName = this.consumeId("Expecting type name");
-var t = null;
-// TODO
-//    var t = pod.findType(typeName, false);
-//    if (t == null) throw err("Unknown type: " + podName + "::" + typeName);
+    var t = pod.findType(typeName, false);
+    if (t == null) throw err("Unknown type: " + podName + "::" + typeName);
 
     if (this.curt == fanx_Token.AS)
     {
@@ -284,12 +280,10 @@ return eval(script);
   /**
    * collection := list | map
    */
-// TODO
-/*
   readCollection: function(curField, t)
   {
     // opening [
-    consume(fanx_Token.LBRACKET, "Expecting '['");
+    this.consume(fanx_Token.LBRACKET, "Expecting '['");
 
     // if this could be a map type signature:
     //    [qname:qname]
@@ -297,82 +291,73 @@ return eval(script);
     //    [qname:qname][][] ...
     // or it could just be the type signature of
     // of a embedded simple, complex, or list
-    Type peekType = null;
-    if (curt == fanx_Token.ID && t == null)
+    var peekType = null;
+    if (this.curt == fanx_Token.ID && t == null)
     {
       // peek at the type
-      peekType = readType();
-
+      peekType = this.readType();
+/*
+// TODO
       // if we have [mapType] then this is non-inferred type signature
-      if (curt == fanx_Token.RBRACKET && peekType instanceof MapType)
+      if (this.curt == fanx_Token.RBRACKET && peekType instanceof MapType)
       {
         t = peekType; peekType = null;
-        consume();
-        while (curt == fanx_Token.LRBRACKET) { consume(); t = t.toListOf(); }
-        consume(fanx_Token.LBRACKET, "Expecting '['");
+        this.consume();
+        while (this.curt == fanx_Token.LRBRACKET) { this.consume(); t = t.toListOf(); }
+        this.consume(fanx_Token.LBRACKET, "Expecting '['");
       }
+*/
     }
 
     // handle special case of [,]
-    if (curt == fanx_Token.COMMA && peekType == null)
+    if (this.curt == fanx_Token.COMMA && peekType == null)
     {
-      consume();
-      consume(fanx_Token.RBRACKET, "Expecting ']'");
-      return new List(toListOfType(t, curField, false));
+      this.consume();
+      this.consume(fanx_Token.RBRACKET, "Expecting ']'");
+      return sys_List.make(this.toListOfType(t, curField, false), []);
     }
 
     // handle special case of [:]
-    if (curt == fanx_Token.COLON && peekType == null)
+    if (this.curt == fanx_Token.COLON && peekType == null)
     {
-      consume();
-      consume(fanx_Token.RBRACKET, "Expecting ']'");
-      return new Map(toMapType(t, curField, false));
+      this.consume();
+      this.consume(fanx_Token.RBRACKET, "Expecting ']'");
+      return new Map(this.toMapType(t, curField, false));
     }
 
     // read first list item or first map key
-    Object first = readObj(null, peekType, false);
+    var first = this.readObj(null, peekType, false);
 
     // now we can distinguish b/w list and map
-    if (curt == fanx_Token.COLON)
-      return readMap(toMapType(t, curField, true), first);
+    if (this.curt == fanx_Token.COLON)
+      return this.readMap(this.toMapType(t, curField, true), first);
     else
-      return readList(toListOfType(t, curField, true), first);
+      return this.readList(this.toListOfType(t, curField, true), first);
   },
-*/
 
   /**
    * list := "[" obj ("," obj)* "]"
    */
-// TODO
-/*
   readList: function(of, first)
   {
     // setup accumulator
-    Object[] acc = new Object[8];
-    int n = 0;
-    acc[n++] = first;
+    var acc = [];
+    acc.push(first)
 
     // parse list items
-    while (curt != fanx_Token.RBRACKET)
+    while (this.curt != fanx_Token.RBRACKET)
     {
-      consume(fanx_Token.COMMA, "Expected ','");
-      if (curt == fanx_Token.RBRACKET) break;
-      if (n >= acc.length)
-      {
-        Object[] temp = new Object[n*2];
-        System.arraycopy(acc, 0, temp, 0, n);
-        acc = temp;
-      }
-      acc[n++] = readObj(null, null, false);
+      this.consume(fanx_Token.COMMA, "Expected ','");
+      if (this.curt == fanx_Token.RBRACKET) break;
+      acc.push(this.readObj(null, null, false));
     }
-    consume(fanx_Token.RBRACKET, "Expected ']'");
+    this.consume(fanx_Token.RBRACKET, "Expected ']'");
 
     // infer type if needed
-    if (of == null) of = Type.common(acc, n);
+    if (of == null) of = sys_Type.common(acc);
 
-    return new List(of, acc, n);
+    return sys_List.make(of, acc);
   },
-*/
 
   /**
    * map     := "[" mapPair ("," mapPair)* "]"
@@ -421,20 +406,19 @@ return eval(script);
    *   3) if inferred is false, then drop back to list of Obj
    *   4) If inferred is true then return null and we'll infer the common type
    */
-// TODO
-/*
   toListOfType: function(t, curField, infer)
   {
     if (t != null) return t;
     if (curField != null)
     {
-      Type ft = curField.of().toNonNullable();
-      if (ft instanceof ListType) return ((ListType)ft).v;
+      var ft = curField.of().toNonNullable();
+      //if (ft instanceof ListType) return ((ListType)ft).v;
+// TODO
+return null;
     }
     if (infer) return null;
-    return Sys.ObjType.toNullable();
+    return sys_Type.find("sys::Obj").toNullable(); //Sys.ObjType.toNullable();
   },
-*/
 
   /**
    * Figure out the map type:
@@ -582,8 +566,9 @@ return eval(script);
    */
   consume: function(type, expected)
   {
-    this.verify(type, expected);
-    this.consume();
+    if (type != undefined)
+      this.verify(type, expected);
+    this.curt = this.tokenizer.next();
   },
 
   /**
@@ -593,15 +578,7 @@ return eval(script);
   verify: function(type, expected)
   {
     if (this.curt != type)
-      throw this.err(expected + ", not '" + fanx_Token.toString(curt) + "'");
-  },
-
-  /**
-   * Consume the current fanx_Token.
-   */
-  consume: function()
-  {
-    this.curt = this.tokenizer.next();
+      throw this.err(expected + ", not '" + fanx_Token.toString(this.curt) + "'");
   },
 
   /**
