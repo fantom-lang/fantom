@@ -594,7 +594,8 @@ class BinaryExpr : Expr
 
   override Bool isDefiniteAssign(|Expr lhs->Bool| f)
   {
-    id === ExprId.assign ? f(lhs) : false
+    if (id === ExprId.assign && f(lhs)) return true
+    return rhs.isDefiniteAssign(f)
   }
 
   override Void walkChildren(Visitor v)

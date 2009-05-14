@@ -163,6 +163,14 @@ class TypeDef : DefNode, CType
   }
 
   **
+  ** Get static initializer if one is defined.
+  **
+  MethodDef? staticInit()
+  {
+    return slotDefMap["static\$init"]
+  }
+
+  **
   ** If during parse we added any static initializer methods,
   ** now is the time to remove them all and replace them with a
   ** single collapsed MethodDef (processed in Normalize step)
