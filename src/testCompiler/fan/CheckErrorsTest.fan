@@ -663,9 +663,9 @@ class CheckErrorsTest : CompilerTest
         abstract Int a
         native Str b
         Int c { get { return 3 } set {} }
-        static const Obj d
-        static const Obj[] e
-        static const Obj:Obj f
+        static const Obj? d
+        static const Obj[]? e
+        static const [Obj:Obj]? f
       }
       ",
        [
@@ -1584,6 +1584,129 @@ class CheckErrorsTest : CompilerTest
         11, 15, "Cannot use This as local variable type",
         12, 15, "Invalid type 'sys::Void[]?'",
         13, 15, "Invalid type '|sys::This->sys::Void|?'",
+       ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Non-Null Definite Assignment
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDefiniteAssign()
+  {
+    verifyErrors(
+      "abstract class Foo : Bar
+       {
+         new make()
+         {
+           ok02 = s
+         }
+
+         new make2()
+         {
+           ok02 = bad01 = s
+         }
+
+         new make3() : this.make() {}
+
+         Str bad01
+         virtual Str bad02
+
+         Str ok00 := s        // init
+         Int ok01             // value type
+         Str ok02             // in ctor
+         abstract Str ok03    // abstract
+         override Str ok04    // override
+         Str ok05 { get { s } set { } } // calculated
+         Str? ok06            // nullable
+
+         const static Str s := \"x\"
+         const static Bool b
+         const static Str sBad01
+         const static Str sBad02; static { if (b) sBad02 = s }
+         const static Str sOk00 := s
+         const static Str sOk01; static { if (b) sOk01 = s; else sOk01 = s }
+       }
+
+       class Bar
+       {
+         virtual Str ok04 := \"ok\"
+       }",
+       [
+         3, 3, "Non-nullable field 'bad01' must be assigned in constructor 'make'",
+         3, 3, "Non-nullable field 'bad02' must be assigned in constructor 'make'",
+         8, 3, "Non-nullable field 'bad02' must be assigned in constructor 'make2'",
+        28, 3, "Non-nullable field 'sBad01' must be assigned in static initializer",
+        29, 3, "Non-nullable field 'sBad02' must be assigned in static initializer",
+       ])
+  }
+
+  Void testDefiniteAssignStmts()
+  {
+    verifyErrors(
+      "abstract class Foo
+       {
+         new m01() // ok
+         {
+           try { x = s } catch (IOErr e) { x = s } catch (CastErr e) { x = s }
+         }
+
+         new m02() // not ok
+         {
+           try { x = s } catch (IOErr e) { foo } catch (CastErr e) { x = s }
+         }
+
+         new m03() // not ok
+         {
+           try { foo }  catch (IOErr e) { foo }
+         }
+
+         new m04() { if (foo) x = s; else x = s } // ok
+
+         new m05() { if (foo) x = s; else foo } // not ok
+
+         new m06() { foo(x = s) } // ok
+
+         new m07() { while (foo) x = s } // not-ok
+
+         new m08() { while ((x = s).isEmpty) foo } // ok
+
+         new m09(Int i)  // ok
+         {
+           switch(i) { case 0: x = s; default: x = s; }
+         }
+
+         new m10(Int i)  // not-ok
+         {
+           switch(i) { case 0: x = s; case 1: x = s; }
+         }
+
+         new m11(Int i)  // not-ok
+         {
+           switch(i) { case 0: x = s; default: foo; }
+         }
+
+         new m12(Int i)  // not-ok
+         {
+           switch(i) { case 0: x = s; case 1: foo; default: x = s; }
+         }
+
+         static Bool foo(Str y := s) { false }
+         const static Str s := \"x\"
+         Str x
+       }
+
+       class Bar
+       {
+         virtual Str ok04 := \"ok\"
+       }",
+       [
+         8, 3, "Non-nullable field 'x' must be assigned in constructor 'm02'",
+         13, 3, "Non-nullable field 'x' must be assigned in constructor 'm03'",
+         20, 3, "Non-nullable field 'x' must be assigned in constructor 'm05'",
+         24, 3, "Non-nullable field 'x' must be assigned in constructor 'm07'",
+         33, 3, "Non-nullable field 'x' must be assigned in constructor 'm10'",
+         38, 3, "Non-nullable field 'x' must be assigned in constructor 'm11'",
+         43, 3, "Non-nullable field 'x' must be assigned in constructor 'm12'",
        ])
   }
 }

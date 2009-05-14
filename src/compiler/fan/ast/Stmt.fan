@@ -204,8 +204,10 @@ class IfStmt : Stmt
 
   override Bool isDefiniteAssign(|Expr lhs->Bool| f)
   {
+    if (!trueBlock.isDefiniteAssign(f)) return false
+    if (condition.id === ExprId.trueLiteral) return true
     if (falseBlock == null) return false
-    return trueBlock.isDefiniteAssign(f) && falseBlock.isDefiniteAssign(f)
+    return falseBlock.isDefiniteAssign(f)
   }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
@@ -534,7 +536,7 @@ class SwitchStmt : Stmt
   override Bool isDefiniteAssign(|Expr lhs->Bool| f)
   {
     if (defaultBlock == null) return false
-    if (defaultBlock.isDefiniteAssign(f)) return false
+    if (!defaultBlock.isDefiniteAssign(f)) return false
     return cases.all |Case c->Bool| { return c.block.isDefiniteAssign(f) }
   }
 

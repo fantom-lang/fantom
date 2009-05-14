@@ -73,6 +73,9 @@ class CheckErrors : CompilerStep
     // check inheritance
     if (t.base != null) checkBase(t, t.base)
     t.mixins.each |CType m| { checkMixin(t, m) }
+
+    // check definite assignment of static fields
+    checkDefiniteAssign(t.staticInit)
   }
 
   private Void checkTypeFlags(TypeDef t)
@@ -325,7 +328,7 @@ class CheckErrors : CompilerStep
     checkMethodReturn(m)
 
     // check ctors call super (or another this) ctor
-    if (m.isCtor()) checkCtor(m)
+    if (m.isCtor) checkCtor(m)
 
     // check types used in signature
     if (!m.isAccessor)
@@ -465,20 +468,22 @@ class CheckErrors : CompilerStep
     // if this constructor doesn't call a this
     // constructor, then check for definite assignment
     if (m.ctorChain?.target?.id !== ExprId.thisExpr)
-      checkCtorDefiniteAssign(m)
+      checkDefiniteAssign(m)
   }
 
-  private Void checkCtorDefiniteAssign(MethodDef m)
+  private Void checkDefiniteAssign(MethodDef? m)
   {
     // get fields which:
-    //   - instance fields
+    //   - instance or static fields based on ctor or static {}
     //   - aren't abstract, override, or native
     //   - not a calculated field (has storage)
     //   - have a non-nullable, non-value type
     //   - don't have have an init expression
+    isStaticInit  := m == null || m.isStatic
     fields := curType.fieldDefs.findAll |FieldDef f->Bool|
     {
-      !f.isStatic && !f.isAbstract && !f.isOverride && !f.isNative && f.isStorage &&
+      f.isStatic == isStaticInit &&
+      !f.isAbstract && !f.isOverride && !f.isNative && f.isStorage &&
       !f.fieldType.isNullable && !f.fieldType.isValue && f.init == null
     }
     if (fields.isEmpty) return
@@ -486,14 +491,18 @@ class CheckErrors : CompilerStep
     // check that each one is definitely assigned
     fields.each |FieldDef f|
     {
-      definite := m.code.isDefiniteAssign |Expr lhs->Bool|
+      definite := m != null && m.code.isDefiniteAssign |Expr lhs->Bool|
       {
         if (lhs.id !== ExprId.field) return false
         fe := (FieldExpr)lhs
-        if (fe.target?.id !== ExprId.thisExpr) return false
+        if (!isStaticInit && fe.target?.id !== ExprId.thisExpr) return false
         return fe.field.qname == f.qname
       }
-      if (!definite) err("Non-nullable field '$f.name' must be assigned in constructor '$m.name'", m.location)
+      if (definite) return
+      if (isStaticInit)
+        err("Non-nullable field '$f.name' must be assigned in static initializer", f.location)
+      else
+        err("Non-nullable field '$f.name' must be assigned in constructor '$m.name'", m.location)
     }
   }
 
