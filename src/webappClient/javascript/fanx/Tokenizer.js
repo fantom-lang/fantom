@@ -39,7 +39,7 @@ var fanx_Tokenizer = Class.extend(
    */
   next: function()
   {
-    if (this.undo != null) { this.undo.reset(this); this.undo = null; return this.type; }
+    if (this.$undo != null) { this.$undo.reset(this); this.$undo = null; return this.type; }
     this.val = null;
     return type = this.doNext();
   },
@@ -550,8 +550,8 @@ var fanx_Tokenizer = Class.extend(
    */
   undo: function(type, val, line)
   {
-    if (undo != null) throw new IllegalStateException("only one pushback supported");
-    this.undo = new Undo(type, val, line);
+    if (this.$undo != null) throw new sys_Err.make("only one pushback supported");
+    this.$undo = new fanx_Undo(type, val, line);
   },
 
   /**
@@ -573,7 +573,7 @@ var fanx_Tokenizer = Class.extend(
   type: null,   // current Token type constant
   val: null,    // String for id, Obj for literal
   line: 1,      // current line number
-  undo: null,   // if we've pushed back a token
+  $undo: null,  // if we've pushed back a token
   cur: 0,       // current char
   curt: 0,      // current charMap type
   peek: 0,      // next char

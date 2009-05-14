@@ -162,6 +162,7 @@ sys_Obj.isImmutable = function(self)
 
 sys_Obj.type = function(self)
 {
+  if (self == null) throw sys_Err.make("sys_Obj.type: self is null");
   if (self instanceof sys_Obj)
     return self.type();
   else

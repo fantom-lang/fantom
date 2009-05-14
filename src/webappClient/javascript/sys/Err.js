@@ -103,6 +103,14 @@ var sys_ParseErr = sys_Err.extend(
 });
 sys_ParseErr.make = function(type, val, more) { return new sys_ParseErr(type,val,more); }
 
+// ReadonlyErr
+var sys_ReadonlyErr = sys_Err.extend(
+{
+  $ctor: function(msg) { this._super(msg); },
+  type: function() { return sys_Type.find("sys::ReadonlyErr"); }
+});
+sys_ReadonlyErr.make = function (msg) { return new sys_ReadonlyErr(msg); }
+
 // UnknownPodErr
 var sys_UnknownPodErr = sys_Err.extend(
 {
