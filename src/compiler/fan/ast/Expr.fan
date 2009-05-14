@@ -753,6 +753,12 @@ class CallExpr : NameExpr
     return toCallStr(true)
   }
 
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    if (target != null && target.isDefiniteAssign(f)) return true
+    return args.any |Expr arg->Bool| { arg.isDefiniteAssign(f) }
+  }
+
   override Bool isStmt()
   {
     // stand alone constructor is not a valid stmt

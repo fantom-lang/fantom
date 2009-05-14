@@ -470,8 +470,17 @@ class CheckErrors : CompilerStep
 
   private Void checkCtorDefiniteAssign(MethodDef m)
   {
-    // get the non-nullable instance fields
-    fields := curType.fieldDefs.findAll |FieldDef f->Bool| { !f.isStatic && !f.fieldType.isNullable }
+    // get fields which:
+    //   - instance fields
+    //   - aren't abstract, override, or native
+    //   - not a calculated field (has storage)
+    //   - have a non-nullable, non-value type
+    //   - don't have have an init expression
+    fields := curType.fieldDefs.findAll |FieldDef f->Bool|
+    {
+      !f.isStatic && !f.isAbstract && !f.isOverride && !f.isNative && f.isStorage &&
+      !f.fieldType.isNullable && !f.fieldType.isValue && f.init == null
+    }
     if (fields.isEmpty) return
 
     // check that each one is definitely assigned
@@ -484,8 +493,7 @@ class CheckErrors : CompilerStep
         if (fe.target?.id !== ExprId.thisExpr) return false
         return fe.field.qname == f.qname
       }
-      if (!definite)
-        err("Non-nullable field '$f.name' must be assigned in constructor '$m.name'", m.location)
+      if (!definite) err("Non-nullable field '$f.name' must be assigned in constructor '$m.name'", m.location)
     }
   }
 

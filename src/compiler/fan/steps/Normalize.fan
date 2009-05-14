@@ -63,7 +63,7 @@ class Normalize : CompilerStep
             sInit.add(fieldInitStmt(f))
           else
             iInit.add(fieldInitStmt(f))
-          f.init = null // don't walk the init expr anymore
+          f.walkInit = false
         }
       }
       else
