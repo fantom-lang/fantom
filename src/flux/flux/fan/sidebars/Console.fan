@@ -267,8 +267,8 @@ class Console : SideBar
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  internal ConsoleModel model
-  internal RichText richText
+  internal ConsoleModel? model
+  internal RichText? richText
 
   private Command copyCmd := Command.makeLocale(Flux#.pod, "copy", &onCopy)
   private Command hideCmd := Command.makeLocale(Flux#.pod, "navBar.close", &onClose)
@@ -446,7 +446,7 @@ internal class ConsoleModel : RichTextModel
   }
 
   Int size
-  ConsoleLine[] lines
+  ConsoleLine[] lines := ConsoleLine[,]
   Str delimiter := "\n"
   RichTextStyle norm := RichTextStyle {}
   RichTextStyle link := RichTextStyle { fg=Color.blue; underline = RichTextUnderline.single; }
@@ -472,10 +472,10 @@ internal class ConsoleLine
   Int offset { internal set; }
 
   ** Text we show (short uri filename)
-  const Str text
+  const Str text := ""
 
   ** Full text we show (long uri)
-  const Str fullText
+  const Str fullText := ""
 
   ** If we matched a file location from text
   Mark? mark
@@ -516,7 +516,7 @@ internal class ConsoleOutStream : OutStream
 internal const class ExecParams
 {
   new make(|This| f) { f(this) }
-  const Str frameId
-  const Str[] command
+  const Str frameId := ""
+  const Str[] command := Str#.emptyList
   const File? dir
 }

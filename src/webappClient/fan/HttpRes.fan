@@ -26,6 +26,6 @@ class HttpRes
   **
   ** The content of the response.
   **
-  Str content
+  Str content := ""
 
 }

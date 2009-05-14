@@ -29,7 +29,7 @@ class WebSession
   **
   ** Get the unique id used to identify this session.
   **
-  const Str id
+  const Str id := ""
 
   **
   ** Return `id`.
@@ -68,7 +68,7 @@ class WebSession
   }
 
   internal Bool isDeleted := false
-  internal Duration lastAccess
+  internal Duration lastAccess := Duration.defVal
 
 }
 

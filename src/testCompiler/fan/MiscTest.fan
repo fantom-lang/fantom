@@ -783,7 +783,7 @@ class MiscTest : CompilerTest
     compile(
      "class Foo
       {
-        const Int[] a
+        const Int[]? a
         const Int[]? b := null
         const Int[] c := [2,3]
         const Int[]? d := wrap(null)

@@ -168,7 +168,7 @@ class ListNode
     return root
   }
 
-  Heading heading
-  ListNode parent
+  Heading? heading
+  ListNode? parent
   ListNode[] kids := ListNode[,]
 }

@@ -13,7 +13,7 @@
 @testSysByType=SerA#
 class FacetsTest : Test
 {
-  Str aField;
+  Str? aField
   Void aMethod() {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@ class FacetsA
 
   @x @y=4 @z="I" Int i
   Float f
-  Str s
+  Str? s
 }
 
 **************************************************************************

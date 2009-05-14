@@ -350,7 +350,7 @@ internal class Commands
   readonly ViewManagedCommand[] viewManaged
   readonly Str:FluxCommand byId
   readonly Int historyMenuSize
-  readonly Menu toolsMenu
+  readonly Menu? toolsMenu
   readonly Int toolsMenuSize
   readonly File toolsDir := Flux.homeDir+`tools/`
 }

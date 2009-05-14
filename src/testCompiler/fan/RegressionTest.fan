@@ -89,7 +89,7 @@ class RegressionTest : CompilerTest
           static Str s(Str a, Int b := a.size, Str c := b.toHex) { [a, b, c].join(\",\") }
 
           new make() {}
-          Str z
+          Str? z
         }
         ")
 

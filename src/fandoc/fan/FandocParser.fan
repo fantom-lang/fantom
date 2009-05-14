@@ -461,19 +461,19 @@ class FandocParser
   Bool silent := false
 
   ** List of errors detected
-  FandocErr[] errors
+  FandocErr[] errors := FandocErr[,]
 
   ** If true, then leading lines starting with '**' are parsed as header
   Bool parseHeader := true
 
-  internal Str filename       // filename for reporting errors
+  internal Str filename := "" // filename for reporting errors
   private Str[]? lines        // lines of document
   private Int numLines        // lines.size
   private Int lineIndex       // current index in lines
   private Str? cur            // current line
   private Str? peek           // next line
-  private LineType curt       // current line type
-  private LineType peekt      // peek line type
+  private LineType? curt      // current line type
+  private LineType? peekt     // peek line type
   private Int curLine         // one based line number of cur
   private Int curIndent       // how many spaces is cur indented
   private Int peekIndent      // how many spaces is peek indented

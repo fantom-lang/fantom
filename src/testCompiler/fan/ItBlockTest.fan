@@ -49,7 +49,7 @@ class ItBlockTest : CompilerTest
         Foo inc() { i++; j++; return this }
         Int i := 2
         Int j := 5
-        Foo kid
+        Foo? kid
       }
       ")
 
@@ -209,7 +209,7 @@ class ItBlockTest : CompilerTest
       class Widget
       {
         This add(Widget w) { kids.add(w); return this }
-        Str name
+        Str? name
         Widget[] kids := Widget[,]
         Foo foo := Foo { a = 11; b = 22 }
       }

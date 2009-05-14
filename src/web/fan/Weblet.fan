@@ -34,14 +34,16 @@ abstract class Weblet
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** The WebReq instance for this request.
+  ** The WebReq instance for this request, or null if current
+  ** actor is not servicing a request.
   **
-  @transient readonly WebReq req
+  @transient readonly WebReq? req
 
   **
-  ** The WebRes instance for this request.
+  ** The WebRes instance for this request, or null if current
+  ** actor is not servicing a request.
   **
-  @transient readonly WebRes res
+  @transient readonly WebRes? res
 
 //////////////////////////////////////////////////////////////////////////
 // Service Methods

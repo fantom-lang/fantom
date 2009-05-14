@@ -436,7 +436,7 @@ internal class Parser
   private BlockOpen commentOpen    // open handle for block comments
   private StrMatch[] strs          // matchers for str literals
 
-  private Str text                 // line being parsed
+  private Str text := ""           // line being parsed
   private Int pos                  // index into text for cur
   private Int cur                  // current char
   private Int peek                 // next char
@@ -486,11 +486,11 @@ internal class Matcher
 ** delimiter and managing multi-line string blocks
 internal class StrMatch
 {
-  Matcher start
-  Matcher end
+  Matcher? start
+  Matcher? end
   Int escape
   Bool multiLine
-  BlockOpen blockOpen
+  BlockOpen? blockOpen
 }
 
 **************************************************************************

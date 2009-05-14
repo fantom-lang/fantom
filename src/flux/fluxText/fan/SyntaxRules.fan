@@ -93,7 +93,7 @@ const class SyntaxStr
   ** Token which delimits the start and end of the string.
   ** If the end delimiter is different, then also set the
   ** `delimiterEnd` field.
-  const Str delimiter
+  const Str delimiter := "\""
 
   ** Token which delimits the end of the string, or if
   ** null, then `delimiter` is assumed to be both the

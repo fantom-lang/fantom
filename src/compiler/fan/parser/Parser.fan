@@ -446,7 +446,7 @@ public class Parser : CompilerSupport
       consume
       curSlot = field
       inFieldInit = true
-      field.init = field.initDoc = expr
+      field.init = expr
       inFieldInit = false
       curSlot = null
     }

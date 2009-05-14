@@ -329,7 +329,7 @@ class CheckErrorsTest : CompilerTest
     compile(
      "internal class Foo
       {
-        static const Str f
+        static const Int f
         static Void m() {}
       }
       ")
@@ -358,8 +358,8 @@ class CheckErrorsTest : CompilerTest
         Void m13(Foo:Str p) {}
         Void m14(|->Foo[]| p) {}
 
-        Foo f00
-        Foo?[] f01
+        Foo? f00
+        Foo?[]? f01
       }
       ",
     [
@@ -398,12 +398,12 @@ class CheckErrorsTest : CompilerTest
       {
         Foo? a() { return null }
         protected Void b(Str:Foo x) {}
-        Foo f
-        protected Foo[] g
-        |Foo| h
-        |Str->Foo| i
+        Foo? f
+        protected Foo[]? g
+        |Foo|? h
+        |Str->Foo|? i
         internal Foo? ai(Foo x) { return null } // ok
-        internal Foo fi // ok
+        internal Foo? fi // ok
       }
 
       internal class Foo {}
@@ -411,10 +411,10 @@ class CheckErrorsTest : CompilerTest
        [
          3, 3, "Public method 'Bar.a' cannot use internal type '$podName::Foo?'",
          4, 3, "Public method 'Bar.b' cannot use internal type '[sys::Str:$podName::Foo]'",
-         5, 3, "Public field 'Bar.f' cannot use internal type '$podName::Foo'",
-         6, 3, "Public field 'Bar.g' cannot use internal type '$podName::Foo[]'",
-         7, 3, "Public field 'Bar.h' cannot use internal type '|$podName::Foo->sys::Void|'",
-         8, 3, "Public field 'Bar.i' cannot use internal type '|sys::Str->$podName::Foo|'",
+         5, 3, "Public field 'Bar.f' cannot use internal type '$podName::Foo?'",
+         6, 3, "Public field 'Bar.g' cannot use internal type '$podName::Foo[]?'",
+         7, 3, "Public field 'Bar.h' cannot use internal type '|$podName::Foo->sys::Void|?'",
+         8, 3, "Public field 'Bar.i' cannot use internal type '|sys::Str->$podName::Foo|?'",
          1, 1, "Public type 'Bar' cannot extend from internal class 'Foo'",
          1, 1, "Public type 'Bar' cannot implement internal mixin 'Goo'",
        ])
@@ -431,10 +431,10 @@ class CheckErrorsTest : CompilerTest
     verifyErrors(
      "abstract class Foo
       {
-        readonly readonly Str f01
-        Str f02 { override get { return f02 } }
-        Str f03 { internal override get { return f03 } }
-        Str f04 { override set {} }
+        readonly readonly Int f01
+        Int f02 { override get { return f02 } }
+        Int f03 { internal override get { return f03 } }
+        Int f04 { override set {} }
       }
       ",
        [
@@ -449,46 +449,46 @@ class CheckErrorsTest : CompilerTest
      "abstract class Foo : Bar
       {
         // new Str f00 - parser actually catches this
-        final Str f01
-        native Str f02 // ok
-        once Str f03
+        final Int f01
+        native Int f02 // ok
+        once Int f03
 
-        public protected Str f04
-        public private Str f05
-        public internal Str f06
-        protected private Str f07
-        protected internal Str f08
-        internal private Str f09
+        public protected Int f04
+        public private Int f05
+        public internal Int f06
+        protected private Int f07
+        protected internal Int f08
+        internal private Int f09
 
-        Str f10 { public protected set {} }
-        Str f11 { public private  set {} }
-        Str f12 { public internal  set {} }
-        Str f13 { protected private  set {} }
-        Str f14 { protected internal  set {} }
-        Str f15 { internal private  set {} }
+        Int f10 { public protected set {} }
+        Int f11 { public private  set {} }
+        Int f12 { public internal  set {} }
+        Int f13 { protected private  set {} }
+        Int f14 { protected internal  set {} }
+        Int f15 { internal private  set {} }
 
-        private Str f20 { public set {} }
-        private Str f21 { protected set {} }
-        private Str f22 { internal set {} }
-        internal Str f23 { public set {} }
-        internal Str f24 { protected set {} }
-        protected Str f25 { public set {} }
-        protected Str f26 { internal set {} } // ok
+        private Int f20 { public set {} }
+        private Int f21 { protected set {} }
+        private Int f22 { internal set {} }
+        internal Int f23 { public set {} }
+        internal Int f24 { protected set {} }
+        protected Int f25 { public set {} }
+        protected Int f26 { internal set {} } // ok
 
-        const abstract Str f30
-        //const override Str f31 TODO
-        const virtual  Str f32
+        const abstract Int f30
+        //
+        const virtual  Int f32
 
-        virtual private Str f33
+        virtual private Int f33
 
-        native abstract Str f35
-        const native Str f36
-        native static Str f37
+        native abstract Int f35
+        const native Int f36
+        native static Int f37
       }
 
       class Bar
       {
-        virtual Str f31
+        virtual Int f31
       }
       ",
        [
@@ -617,13 +617,13 @@ class CheckErrorsTest : CompilerTest
         //const Int h { set {  } }
         //const Int i { get { return 3 } set { } } // 20
 
-        private Str j
-        private const StrBuf k
-        const Buf[] l             // ok
-        const Str:Buf m           // ok
-        const Buf:Int n           // ok
-        const Num:Duration ok1    // ok
-        const Num:Str[][] ok2     // ok
+        private Str? j
+        private const StrBuf? k
+        const Buf[]? l              // ok
+        const [Str:Buf]? m          // ok
+        const [Buf:Int]? n          // ok
+        const [Num:Duration]? ok1   // ok
+        const [Num:Str[][]]? ok2    // ok
 
         once Int p() { return 3 }  // 30
       }
@@ -654,7 +654,7 @@ class CheckErrorsTest : CompilerTest
         Obj j() { return make { it.goop = 99 } }
         static { Foo.b = 999 }
 
-        const Int[] xxx
+        const Int[] xxx := Int[,]
         static const Int goop := 9
       }
 
@@ -680,7 +680,7 @@ class CheckErrorsTest : CompilerTest
         16, 30, "Cannot set const field 'f' outside of constructor",
         16, 39, "Cannot set const field 'f' outside of constructor",
 
-        23,  3, "Const field 'k' has non-const type 'sys::StrBuf'",
+        23,  3, "Const field 'k' has non-const type 'sys::StrBuf?'",
         /*
         24,  3, "Const field 'l' has non-const type 'sys::Buf[]'",
         25,  3, "Const field 'm' has non-const type '[sys::Str:sys::Buf]'",
@@ -990,8 +990,8 @@ class CheckErrorsTest : CompilerTest
 
         static Void v() {}
 
-        Str f
-        const static Str sf
+        Str? f
+        const static Str? sf
       }
 
       abstract class Bar
@@ -1123,8 +1123,8 @@ class CheckErrorsTest : CompilerTest
         static Void m04a(Str x) { |,| { f.size; Foo.f.size }.call }
         static Void m04b(Str x) { |,| { |,| { f.size; Foo.f.size }.call }.call }
 
-        Str f
-        const static Str sf
+        Str? f
+        const static Str? sf
       }",
 
        [3, 33, "Cannot call constructor 'make' on instance",
@@ -1239,7 +1239,7 @@ class CheckErrorsTest : CompilerTest
           Foo {}              // 19
         }
 
-        Str f
+        Int f
       }",
 
        [
@@ -1281,11 +1281,13 @@ class CheckErrorsTest : CompilerTest
           int1 := 5; int2 := int1 ?: 7
         }
 
+        static Foo someFoo() { throw Err() }
+
         Foo? y() { return this }
         Foo? get(Int x) { return null }
         Void set(Int x, Int y) {}
         Foo? x
-        Foo nn
+        Foo nn := someFoo()
         Int i
       }",
 
@@ -1502,7 +1504,7 @@ class CheckErrorsTest : CompilerTest
          Obj ok11(Int f) { Foo { f = this.f } }
 
          Int f
-         Foo foo
+         Foo? foo
        }",
        [
          3, 24, "Self assignment",

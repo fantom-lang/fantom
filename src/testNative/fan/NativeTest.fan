@@ -95,7 +95,7 @@ class NativeTest : Test
 abstract class NativeBase : Test
 {
   abstract Int? fA
-  virtual Str fV
+  virtual Str? fV
   abstract Int fA2
 }
 
@@ -119,7 +119,7 @@ class Native : NativeBase
 
   native Int fX
   native override Int? fA
-  native override Str fV
+  native override Str? fV
   override Int fA2 := 0xab
 
   native Int getCtorY()

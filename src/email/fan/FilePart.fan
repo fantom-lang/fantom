@@ -18,7 +18,7 @@ class FilePart : EmailPart
   **
   ** File content
   **
-  File file
+  File? file
 
   **
   ** Construct with default type of "text/plain".

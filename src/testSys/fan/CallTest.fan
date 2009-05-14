@@ -113,7 +113,7 @@ class CallA
   Void callSecret(Str s) { secret(s); }
   private Int? secret(Str s) { val = s; return null }
 
-  Str val;
+  Str? val;
 }
 
 class CallB : CallA
@@ -141,6 +141,6 @@ class CallDynamic
   Str f := "f"
   const static Str sf := "sf"
 
-  Str name
-  Obj[] args
+  Str? name
+  Obj[]? args
 }

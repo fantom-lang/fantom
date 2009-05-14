@@ -48,7 +48,7 @@ class DateTimeTest : Test
 
   const Bool std := false
   const Bool dst := true
-  Locale origLocale
+  Locale? origLocale
 
 //////////////////////////////////////////////////////////////////////////
 // Test Setup

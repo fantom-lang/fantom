@@ -73,8 +73,8 @@ abstract class CompilerTest : Test
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Compiler compiler      // compile()
-  Pod pod                // compiled pod
+  Compiler? compiler      // compile()
+  Pod? pod                // compiled pod
   Int podNameSuffix := 0
   Bool dumpErrors := false
 
