@@ -138,8 +138,9 @@ variables like Java or C#.  In practice though most locals will be
 declared using type inference.
 
 If a local variable is not explicitly assigned an initial value, then
-it implicitly defaults to 'null' (just like fields).  This is also a
-little different than Java or C# which require definite assignment.
+it implicitly defaults to 'null', 'false', '0', or '0.0f' following
+same rules for field defaults.  This is a little different than Java
+or C# which require definite assignment.
 
 If Statements [#if]
 *******************

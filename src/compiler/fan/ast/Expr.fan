@@ -300,8 +300,8 @@ class LiteralExpr : Expr
     }
   }
 
-  new make(Location location, ExprId id, CType ctype, Obj? val)
-    : super(location, id)
+  new make(Location loc, ExprId id, CType ctype, Obj? val)
+    : super(loc, id)
   {
     this.ctype = ctype
     this.val   = val
@@ -309,9 +309,20 @@ class LiteralExpr : Expr
       throw Err("null literal must typed as nullable!")
   }
 
-  new makeNullLiteral(Location location, CNamespace ns)
-    : this.make(location, ExprId.nullLiteral, ns.objType.toNullable, null)
+  new makeNullLiteral(Location loc, CNamespace ns)
+    : this.make(loc, ExprId.nullLiteral, ns.objType.toNullable, null)
   {
+  }
+
+  static LiteralExpr makeDefaultLiteral(Location loc, CNamespace ns, CType ctype)
+  {
+    if (!ctype.isNullable())
+    {
+      if (ctype.isBool())  return make(loc, ExprId.falseLiteral, ctype, false)
+      if (ctype.isInt())   return make(loc, ExprId.intLiteral, ctype, 0)
+      if (ctype.isFloat()) return make(loc, ExprId.floatLiteral, ctype, 0f)
+    }
+    return makeNullLiteral(loc, ns)
   }
 
   override Int? asTableSwitchCase()
