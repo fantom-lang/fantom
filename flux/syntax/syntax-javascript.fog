@@ -63,6 +63,7 @@ SyntaxRules
     "long",
     "native",
     "new",
+    "null",
     "package",
     "private",
     "protected",
