@@ -40,6 +40,11 @@ var sys_Type = sys_Obj.extend(
   toString: function()  { return this.m_qname; },
   type: function()      { return sys_Type.find("sys::Type"); },
 
+  // TODO
+  toListOf: function()  { return this; },
+  toNullable: function() { return this; },
+  toNonNullable: function() { return this; },
+
   make: function()
   {
     var jst = this.m_qname.replace("::", "_");
@@ -89,4 +94,27 @@ sys_Type.toFanType = function(obj)
   if ((typeof obj) == "number"  || obj instanceof Number)  return sys_Type.find("sys::Float");
   if ((typeof obj) == "string"  || obj instanceof String)  return sys_Type.find("sys::Str");
   throw new sys_Err("sys::Type.toFanType: Not a Fan type: " + obj);
+}
+
+sys_Type.common = function(objs)
+{
+  if (objs.length == 0) return sys_Type.find("sys::Obj").toNullable();
+  var nullable = false;
+  var best = null;
+/*
+  for (var i=0; i<objs.length; i++)
+  {
+    var obj = objs[i];
+    if (obj == null) { nullable = true; continue; }
+    var t = type(obj);
+    if (best == null) { best = t; continue; }
+    while (!t.is(best))
+    {
+      best = best.base();
+      if (best == null) return nullable ? Sys.ObjType.toNullable() : Sys.ObjType;
+    }
+  }
+*/
+  if (best == null) best = sys_Type.find("sys::Obj");
+  return nullable ? best.toNullable() : best;
 }

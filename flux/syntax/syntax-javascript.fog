@@ -80,6 +80,7 @@ SyntaxRules
     "true",
     "try",
     "typeof",
+    "undefined",
     "var",
     "void",
     "volatile",
@@ -87,6 +88,5 @@ SyntaxRules
     "with",
   ]
 }
-
 
 
