@@ -11,6 +11,48 @@
  */
 var sys_Slot = sys_Obj.extend(
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
   $ctor: function() {},
-  type: function() { return sys_Type.find("sys::Slot"); }
+  type: function() { return sys_Type.find("sys::Slot"); },
+  toStr: function() { return this.m_qname; },
+
+//////////////////////////////////////////////////////////////////////////
+// Methods
+//////////////////////////////////////////////////////////////////////////
+
+  parent: function() { return this.m_parent; },
+  qname: function() { return this.m_qname; },
+  name: function() { return this.m_name; },
+
+//////////////////////////////////////////////////////////////////////////
+// Flags
+//////////////////////////////////////////////////////////////////////////
+
+  isAbstract: function()  { return (this.m_flags & sys_FConst.Abstract)  != 0; },
+  isConst: function()     { return (this.m_flags & sys_FConst.Const)     != 0; },
+  isCtor: function()      { return (this.m_flags & sys_FConst.Ctor)      != 0; },
+  isInternal: function()  { return (this.m_flags & sys_FConst.Internal)  != 0; },
+  isNative: function()    { return (this.m_flags & sys_FConst.Native)    != 0; },
+  isOverride: function()  { return (this.m_flags & sys_FConst.Override)  != 0; },
+  isPrivate: function()   { return (this.m_flags & sys_FConst.Private)   != 0; },
+  isProtected: function() { return (this.m_flags & sys_FConst.Protected) != 0; },
+  isPublic: function()    { return (this.m_flags & sys_FConst.Public)    != 0; },
+  isStatic: function()    { return (this.m_flags & sys_FConst.Static)    != 0; },
+  isSynthetic: function() { return (this.m_flags & sys_FConst.Synthetic) != 0; },
+  isVirtual: function()   { return (this.m_flags & sys_FConst.Virtual)   != 0; },
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  m_parent: null,
+  m_qname: null,
+  m_name: null,
+  m_flags: null
+
 });
+

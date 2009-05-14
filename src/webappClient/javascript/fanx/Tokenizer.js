@@ -316,7 +316,7 @@ var fanx_Tokenizer = Class.extend(
       this.consume();
     }
 
-    this.val = val;
+    this.val = sys_Int.make(val);
     return type;
   },
 

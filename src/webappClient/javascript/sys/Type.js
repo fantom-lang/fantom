@@ -22,8 +22,9 @@ var sys_Type = sys_Obj.extend(
   $ctor: function(qname, base)
   {
     this.m_qname = qname;
-    this.n_name = qname.split("::")[1];
-    if (base != null) this.m_base = base;
+    this.n_name  = qname.split("::")[1];
+    this.m_base  = base;
+    this.m_slots = [];
   },
 
 //////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,10 @@ var sys_Type = sys_Obj.extend(
   toNullable: function() { return this; },
   toNonNullable: function() { return this; },
 
+//////////////////////////////////////////////////////////////////////////
+// Make
+//////////////////////////////////////////////////////////////////////////
+
   make: function()
   {
     var jst = this.m_qname.replace("::", "_");
@@ -52,16 +57,61 @@ var sys_Type = sys_Obj.extend(
     return eval(str);
   },
 
-  // TODO
-  slot: function(name, checked) { throw new Error("Type.slot not yet implemented"); },
+//////////////////////////////////////////////////////////////////////////
+// Slots
+//////////////////////////////////////////////////////////////////////////
+
+  slots: function()
+  {
+    var acc = [];
+    for (var i in this.m_slots)
+      acc.push(this.m_slots[i]);
+    return acc;
+  },
+
+  fields: function()
+  {
+    var acc = [];
+    for (var i in this.m_slots)
+      if (this.m_slots[i] instanceof sys_Field)
+        acc.push(this.m_slots[i]);
+    return acc;
+  },
+
+  slot: function(name, checked)
+  {
+    if (checked == undefined) checked = true;
+    var s = this.m_slots[name];
+    if (s == null && checked)
+      throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
+    return s;
+  },
+
+  field: function(name, checked)
+  {
+    if (checked == undefined) checked = true;
+    var f = this.m_slots[name];
+    if ((f == null || !(f instanceof sys_Field)) && checked)
+      throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
+    return f;
+  },
+
+  // addField
+  $af: function(name, flags, of)
+  {
+    var f = new sys_Field(this, name, flags, sys_Type.find(of));
+    this.m_slots[name] = f;
+    return this;
+  },
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  m_base: "sys::Obj",
-  m_qname: "",
-  m_name: ""
+  m_base:  null,
+  m_qname: null,
+  m_name:  null,
+  m_slots: null
 
 });
 

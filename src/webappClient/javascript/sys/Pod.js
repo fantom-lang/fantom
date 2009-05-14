@@ -35,7 +35,10 @@ var sys_Pod = sys_Obj.extend(
     return t;
   },
 
-  $addType: function(name, baseQname)
+  toStr: function() { return this.m_name; },
+
+  // addType
+  $at: function(name, baseQname)
   {
     var qname = this.m_name + "::" + name;
     if (this.m_types[name] != null)
@@ -44,8 +47,6 @@ var sys_Pod = sys_Obj.extend(
     this.m_types[name] = t;
     return t;
   },
-
-  toStr: function() { return this.m_name; },
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
