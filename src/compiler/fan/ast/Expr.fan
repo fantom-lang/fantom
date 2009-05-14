@@ -80,6 +80,16 @@ abstract class Expr : Node
   }
 
   **
+  ** If this an assignment expression, then return the
+  ** result of calling the given function with the LHS.
+  ** Otherwise return false.
+  **
+  virtual Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    return false
+  }
+
+  **
   ** Assignments to instance fields require a temporary local variable.
   **
   virtual Bool assignRequiresTempVar()
@@ -582,6 +592,11 @@ class BinaryExpr : Expr
 
   override Bool isStmt() { return id === ExprId.assign }
 
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    id === ExprId.assign ? f(lhs) : false
+  }
+
   override Void walkChildren(Visitor v)
   {
     lhs = lhs.walk(v)
@@ -736,6 +751,12 @@ class CallExpr : NameExpr
   override Str toStr()
   {
     return toCallStr(true)
+  }
+
+  override Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    if (target != null && target.isDefiniteAssign(f)) return true
+    return args.any |Expr arg->Bool| { arg.isDefiniteAssign(f) }
   }
 
   override Bool isStmt()

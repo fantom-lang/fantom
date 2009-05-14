@@ -31,17 +31,17 @@ class Elem
   **
   ** The id for this element.
   **
-  Str id
+  Str id := ""
 
   **
   ** The name attribute for this element.
   **
-  Str name
+  Str name := ""
 
   **
   ** The CSS class name(s) for this element.
   **
-  Str className
+  Str className := ""
 
   **
   ** Return true if this element has the given CSS class name,
@@ -76,7 +76,7 @@ class Elem
   **
   ** The HTML markup contained in this element.
   **
-  Str html
+  Str html := ""
 
   **
   ** The value attribute for this element, or null if one

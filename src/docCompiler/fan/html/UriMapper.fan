@@ -265,9 +265,9 @@ class UriMapper : DocCompilerSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Str fandocUri
+  Str? fandocUri
   Str? frag
-  Location loc
+  Location? loc
   Uri? targetUri
   Bool targetIsCode
   Bool targetIsSlot

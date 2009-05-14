@@ -37,7 +37,7 @@ const class Mark
   **
   ** Uri of the resource
   **
-  const Uri uri
+  const Uri uri := ``
 
   **
   ** One based line number or null if unknown.

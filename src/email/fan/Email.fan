@@ -26,7 +26,7 @@ class Email
   **
   ** From email address.
   **
-  Str from
+  Str? from
 
   **
   ** List of "to" email addresses.
@@ -53,7 +53,7 @@ class Email
   ** Body of the email - typically an instance of `TextPart`
   ** or `MultiPart`.
   **
-  EmailPart body
+  EmailPart? body
 
   **
   ** Return the aggregation of `to`, `cc`, and `bcc`.

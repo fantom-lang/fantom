@@ -222,8 +222,8 @@ class IntTest : Test
 
   Int fx
   Int? fy
-  Int[] lx
-  Int?[] ly
+  Int[] lx := Int[,]
+  Int?[] ly := Int?[,]
 
 //////////////////////////////////////////////////////////////////////////
 // Bitwise

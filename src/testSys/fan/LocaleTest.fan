@@ -11,7 +11,7 @@
 **
 class LocaleTest : Test
 {
-  Locale orig
+  Locale? orig
 
   override Void setup()
   {

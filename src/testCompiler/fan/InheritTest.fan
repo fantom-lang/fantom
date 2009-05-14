@@ -1238,22 +1238,22 @@ class InheritTest : CompilerTest
     verifyErrors(
      "class Foo : A, X
       {
-        override const Int a
-        override Str b // shouldn't work with non-const either
-        override const Str c
-        override const Str d
+        override const Float a
+        override Int b // shouldn't work with non-const either
+        override const Int c
+        override const Int d
       }
 
       class A
       {
-        virtual Int a
+        virtual Float a
       }
 
       mixin X
       {
-        virtual Str b(Str x) { return x}
-        virtual Str c(Str x) { return x}
-        abstract Str d
+        virtual Int b(Int x) { return x}
+        virtual Int c(Int x) { return x}
+        abstract Int d
       }
 
       ",
@@ -1268,8 +1268,8 @@ class InheritTest : CompilerTest
     verifyErrors(
      "abstract class Foo
       {
-        abstract const Str a
-        virtual const Str b
+        abstract const Str? a
+        virtual const Str? b
       }
       ",
       [

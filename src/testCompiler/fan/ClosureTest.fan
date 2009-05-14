@@ -251,7 +251,7 @@ class ClosureTest : CompilerTest
           }
         }
 
-        Str s
+        Str? s
       }")
 
      // compiler.fpod.dump
