@@ -122,7 +122,7 @@ class FieldTest : Test
     verifyEq(i2, null)
     verifyEq(f1, 0f)
     verifyEq(f2, null)
-    verifyEq(s1, null)
+    verifyEq(s1InCtor, null)
     verifyEq(s2, null)
   }
 
@@ -130,6 +130,9 @@ class FieldTest : Test
   Int i1;   Int? i2
   Float f1; Float? f2
   Str s1;   Str? s2
+  Str? s1InCtor;
+
+  new make() { s1InCtor = s1; s1 = "" }
 
 //////////////////////////////////////////////////////////////////////////
 // Reflect Signatures

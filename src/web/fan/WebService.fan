@@ -25,7 +25,7 @@ abstract const class WebService : Service
   **
   ** See [docLib::Web]`docLib::Web#pipeline`
   **
-  const WebStep[] pipeline
+  const WebStep[] pipeline := WebStep[,]
 
   **
   ** Service the specified web request with the configured

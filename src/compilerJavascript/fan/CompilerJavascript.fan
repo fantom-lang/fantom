@@ -98,7 +98,7 @@ class CompilerJavascript : Compiler
   **
   ** Directory to write compiled Javascript source files to
   **
-  File outDir
+  File outDir := `.`.toFile
 
   **
   ** Force all types and slots to be compiled even if they do

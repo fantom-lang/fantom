@@ -418,14 +418,15 @@ class SqlServiceTest : Test
 internal class Farmer
 {
   Int farmer_id
-  Str name
+  Str? name
   Bool married
-  Str pet
-  Str ss
+  Str? pet
+  Str? ss
   Int age
-  Num pigs
-  Num cows
-  Num ducks
+  Num? pigs
+  Num? cows
+  Num? ducks
   Float height
   Float weight
 }
+

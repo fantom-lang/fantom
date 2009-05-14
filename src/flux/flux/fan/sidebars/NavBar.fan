@@ -271,7 +271,7 @@ internal class NavBar : SideBar
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Tree active
+  Tree? active
   Tree[] trees := Tree[,]
   Bool ignore  := true
   Combo combo  := Combo() { it.onModify.add(&this.onModify) }

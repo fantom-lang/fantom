@@ -154,6 +154,6 @@ class Window : ContentPane
 
   ** Back-door hook until we officially support drag and drop.
   ** See WindowPeer.java for details
-  internal |Obj data| onDrop
+  internal |Obj data|? onDrop
 
 }

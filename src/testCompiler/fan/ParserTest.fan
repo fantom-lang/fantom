@@ -1424,9 +1424,9 @@ class ParserTest : CompilerTest
 // Field
 //////////////////////////////////////////////////////////////////////////
 
-  CompilationUnit unit    // compiler.unit.first
-  TypeDef[] types         // compiler.types
-  TypeDef   t             // compiler.types.first
-  ClosureExpr[] closures  // compiler.closures
+  CompilationUnit? unit    // compiler.unit.first
+  TypeDef[]? types         // compiler.types
+  TypeDef?   t             // compiler.types.first
+  ClosureExpr[]? closures  // compiler.closures
 
 }

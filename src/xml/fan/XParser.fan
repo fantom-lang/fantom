@@ -1014,7 +1014,7 @@ class XParser
   private StrBuf buf := StrBuf()         // working string buffer
   private StrBuf entityBuf := StrBuf()   // working string buffer
   private Bool cdata      // is current buf CDATA section
-  private Str name        // result of parseQName()
+  private Str? name       // result of parseQName()
   private Str? prefix     // result of parseQName()
   private Bool popStack   // used for next event
   private Bool emptyElem  // used for next event

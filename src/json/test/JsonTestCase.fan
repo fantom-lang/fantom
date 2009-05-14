@@ -11,8 +11,8 @@
 **
 internal class JsonTestCase
 {
-  Str:Obj? map
-  Str description
+  [Str:Obj?]? map
+  Str? description
 
   Void javascript(Str resultVar, OutStream out)
   {
@@ -88,7 +88,7 @@ internal class JsonTestCase
     fail("Array values did not match", out)
     out.printLine("else")
     pass("Array values matched", out)
-    
+
     out.printLine("}")
     out.printLine("}")
   }

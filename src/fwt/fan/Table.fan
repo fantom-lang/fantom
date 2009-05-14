@@ -87,7 +87,7 @@ class Table : Widget
   **
   ** Backing data model of table.
   **
-  TableModel model
+  TableModel? model
 
   **
   ** Is the header visible.. Defaults to true.
