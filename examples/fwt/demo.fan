@@ -580,7 +580,7 @@ class FwtDemo
 
 class DirTreeModel : TreeModel
 {
-  FwtDemo demo
+  FwtDemo? demo
 
   override Obj[] roots() { return Sys.homeDir.listDirs }
 
@@ -597,8 +597,8 @@ class DirTreeModel : TreeModel
 
 class DirTableModel : TableModel
 {
-  FwtDemo demo
-  File[] dir
+  FwtDemo? demo
+  File[]? dir
   Str[] headers := ["Name", "Size", "Modified"]
   override Int numCols() { return 3 }
   override Int numRows() { return dir.size }
@@ -696,8 +696,8 @@ class EventDemo : Widget
     echo("$name> $event")
   }
 
-  Str name
-  FwtDemo demo
+  Str? name
+  FwtDemo? demo
 }
 
 **************************************************************************
@@ -706,7 +706,7 @@ class EventDemo : Widget
 
 class GraphicsDemo : Widget
 {
-  FwtDemo demo
+  FwtDemo? demo
 
   override Size prefSize(Hints hints := Hints.defVal) { return Size.make(600,500) }
 
