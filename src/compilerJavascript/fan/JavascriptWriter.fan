@@ -401,13 +401,14 @@ if (c != null)
 
   Void listLiteralExpr(ListLiteralExpr le)
   {
-    out.w("[")
+    t := le.explicitType != null ? le.explicitType.v.qname : Obj#.qname
+    out.w("sys_List.make(sys_Type.find(\"$t\"), [")
     le.vals.each |Expr ex, Int i|
     {
       if (i > 0) out.w(",")
       expr(ex)
     }
-    out.w("]")
+    out.w("])")
   }
 
   Void mapLiteralExpr(MapLiteralExpr me)
