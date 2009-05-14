@@ -118,3 +118,12 @@ var sys_UnknownTypeErr = sys_Err.extend(
   type: function() { return sys_Type.find("sys::UnknownTypeErr"); }
 });
 sys_UnknownTypeErr.make = function (msg) { return new sys_UnknownTypeErr(msg); }
+
+// UnknownSlotErr
+var sys_UnknownSlotErr = sys_Err.extend(
+{
+  $ctor: function(msg) { this._super(msg); },
+  type: function() { return sys_Type.find("sys::UnknownSlotErr"); }
+});
+sys_UnknownSlotErr.make = function (msg) { return new sys_UnknownSlotErr(msg); }
+

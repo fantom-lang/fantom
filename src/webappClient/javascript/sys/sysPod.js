@@ -8,61 +8,61 @@
 
 with (sys_Pod.$add("sys"))
 {
-  $addType("Obj",       null);
+  $at("Obj",       null);
 
   // basic primitives
-  $addType("Num",       "sys::Obj");
-  $addType("Enum",      "sys::Obj");
-  $addType("Bool",      "sys::Obj");
-  $addType("Duration",  "sys::Obj");
-  $addType("Func",      "sys::Obj");
-  $addType("Int",       "sys::Num");
+  $at("Num",       "sys::Obj");
+  $at("Enum",      "sys::Obj");
+  $at("Bool",      "sys::Obj");
+  $at("Duration",  "sys::Obj");
+  $at("Func",      "sys::Obj");
+  $at("Int",       "sys::Num");
   // TODO: decimal
-  $addType("Float",     "sys::Obj");
-  $addType("List",      "sys::Obj");
-  $addType("Map",       "sys::Obj");
-  $addType("Month",     "sys::Enum");
-  $addType("Pod",       "sys::Obj");
-  $addType("Range",     "sys::Obj");
-  $addType("Str",       "sys::Obj");
-  $addType("StrBuf",    "sys::Obj");
+  $at("Float",     "sys::Obj");
+  $at("List",      "sys::Obj");
+  $at("Map",       "sys::Obj");
+  $at("Month",     "sys::Enum");
+  $at("Pod",       "sys::Obj");
+  $at("Range",     "sys::Obj");
+  $at("Str",       "sys::Obj");
+  $at("StrBuf",    "sys::Obj");
   // TODO: sys
-  $addType("Test",      "sys::Obj");
-  $addType("DateTime",  "sys::Obj");
-  $addType("Date",      "sys::Obj");
+  $at("Test",      "sys::Obj");
+  $at("DateTime",  "sys::Obj");
+  $at("Date",      "sys::Obj");
   // TODO: time
   // TODO: timezone
-  $addType("Type",      "sys::Obj");
-  $addType("Weekday",   "sys::Obj");
+  $at("Type",      "sys::Obj");
+  $at("Weekday",   "sys::Obj");
   // TODO: this
   // TODO: void
 
   // reflection
-  $addType("Slot",      "sys::Obj");
-  $addType("Field",     "sys::Slot");
-  $addType("Method",    "sys::Obj");
+  $at("Slot",      "sys::Obj");
+  $at("Field",     "sys::Slot");
+  $at("Method",    "sys::Obj");
   // TODO: param
 
   // resources
-  $addType("Namespace", "sys::Obj");
+  $at("Namespace", "sys::Obj");
   // TODO: rootNamespace
   // TODO: sysNamespace
   // TODO: dirNamespace
 
   // IO
-  $addType("Charset",   "sys::Obj");
-  $addType("InStream",  "sys::Obj");
+  $at("Charset",   "sys::Obj");
+  $at("InStream",  "sys::Obj");
   // TODO: SysInStream
   // TODO: OutStream
   // TODO: SysOutStream
   // TODO: File
   // TODO: LocalFile
   // TODO: ZipEntryFile
-  $addType("Buf",       "sys::Obj");
+  $at("Buf",       "sys::Obj");
   // TODO: MemBuf
   // TODO: FileBuf
   // TODO: MmapBuf
-  $addType("Uri",       "sys::Obj");
+  $at("Uri",       "sys::Obj");
   // TODO: Zip
 
   // actors
@@ -73,7 +73,7 @@ with (sys_Pod.$add("sys"))
 
   // utils
   // TODO: Depend
-  $addType("Log",       "sys::Obj");
+  $at("Log",       "sys::Obj");
   // TODO: LogLevel
   // TODO: LogRecord
   // TODO: Locale
@@ -93,25 +93,25 @@ with (sys_Pod.$add("sys"))
   // TODO: FileScheme
 
   // exceptions
-  $addType("Err",       "sys::Obj");
-  $addType("ArgErr",    "sys::Err");
+  $at("Err",       "sys::Obj");
+  $at("ArgErr",    "sys::Err");
   // TODO: CancelledErr
   // TODO: CastErr
   // TODO: ConstErr
-  $addType("IOErr",     "sys::Err");
-  $addType("IndexErr",  "sys::Err");
+  $at("IOErr",     "sys::Err");
+  $at("IndexErr",  "sys::Err");
   // TODO: InterruptedErr
   // TODO: NameErr
   // TODO: NotImmutableErr
-  $addType("NullErr",   "sys::Err");
-  $addType("ParseErr",  "sys::Err");
+  $at("NullErr",   "sys::Err");
+  $at("ParseErr",  "sys::Err");
   // TODO: ReadonlyErr
   // TODO: TestErr
   // TODO: TimeoutErr
-  $addType("UnknownPodErr", "sys::Err")
+  $at("UnknownPodErr", "sys::Err")
   // TODO: UnknownServiceErr
   // TODO: UnknownSlotErr
-  $addType("UnknownTypeErr", "sys::Err")
+  $at("UnknownTypeErr", "sys::Err")
   // TODO: UnresolvedErr
   // TODO: UnsupportedErr
 };

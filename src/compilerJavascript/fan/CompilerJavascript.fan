@@ -83,7 +83,13 @@ class CompilerJavascript : Compiler
     filter.each |def|
     {
       base := def.base ?: "sys::Obj"
-      out.printLine("\$addType(\"$def.name\", \"$base\");")
+      out.print("\$at(\"$def.name\",\"$base\")")
+      def.slotDefs.each |slot|
+      {
+        if (slot is FieldDef)
+          out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->qname}\")")
+      }
+      out.printLine(";")
     }
     out.printLine("};")
 

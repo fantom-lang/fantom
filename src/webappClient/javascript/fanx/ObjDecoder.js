@@ -224,7 +224,7 @@ return eval(script);
       if (this.curt == fanx_Token.COMMA) this.consume();
       else this.endOfStmt(line);
     }
-    this.onsume(fanx_Token.RBRACE, "Expected '}'");
+    this.consume(fanx_Token.RBRACE, "Expected '}'");
 
     return obj;
   },
@@ -247,16 +247,14 @@ return eval(script);
   },
 */
 
-// TODO
-/*
   readComplexField: function(t, obj, line, name)
   {
     // resolve field
-    Field field = t.field(name, false);
-    if (field == null) throw err("Field not found: " + t.qname() + "." + name, line);
+    var field = t.field(name, false);
+    if (field == null) throw this.err("Field not found: " + t.qname() + "." + name, line);
 
     // parse value
-    Object val = readObj(field, null, false);
+    var val = this.readObj(field, null, false);
 
     // set field value (skip const check)
     try
@@ -266,12 +264,11 @@ return eval(script);
       else
         field.set(obj, val);
     }
-    catch (Throwable e)
+    catch (err)
     {
-      throw IOErr.make("Cannot set field " + t.qname() + "." + name + ": " + e + " [Line " + line + "]", e).val;
+      throw sys_IOErr.make("Cannot set field " + t.qname() + "." + name + ": " + err + " [Line " + line + "]", err);
     }
   },
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Collection
