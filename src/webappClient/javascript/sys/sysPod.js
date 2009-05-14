@@ -103,15 +103,15 @@ with (sys_Pod.$add("sys"))
   // TODO: InterruptedErr
   // TODO: NameErr
   // TODO: NotImmutableErr
-  $at("NullErr",   "sys::Err");
-  $at("ParseErr",  "sys::Err");
-  // TODO: ReadonlyErr
+  $at("NullErr",        "sys::Err");
+  $at("ParseErr",       "sys::Err");
+  $at("ReadonlyErr",    "sys::Err");
   // TODO: TestErr
   // TODO: TimeoutErr
-  $at("UnknownPodErr", "sys::Err")
+  $at("UnknownPodErr",  "sys::Err");
   // TODO: UnknownServiceErr
-  // TODO: UnknownSlotErr
-  $at("UnknownTypeErr", "sys::Err")
+  $at("UnknownSlotErr", "sys::Err");
+  $at("UnknownTypeErr", "sys::Err");
   // TODO: UnresolvedErr
   // TODO: UnsupportedErr
 };

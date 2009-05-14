@@ -229,23 +229,20 @@ return eval(script);
     return obj;
   },
 
-// TODO
-/*
   readComplexAdd: function(t, obj, line)
   {
     var val = this.readObj(null, null, false);
-    Method m = t.method("add", false);
-    if (m == null) throw err("Method not found: " + t.qname() + ".add", line);
+    var m = t.method("add", false);
+    if (m == null) throw this.err("Method not found: " + t.qname() + ".add", line);
     try
     {
-      m.invoke(obj, new Object[] { val });
+      m.invoke(obj, [val]);
     }
-    catch (Throwable e)
+    catch (err)
     {
-      throw IOErr.make("Cannot call " + t.qname() + ".add: " + e + " [Line " + line + "]", e).val;
+      throw sys_IOErr.make("Cannot call " + t.qname() + ".add: " + err + " [Line " + line + "]", err);
     }
   },
-*/
 
   readComplexField: function(t, obj, line, name)
   {

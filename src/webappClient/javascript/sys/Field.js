@@ -33,7 +33,47 @@ var sys_Field = sys_Slot.extend(
 
   of: function() { return m_of; },
   get: function(instance) { return instance[this.m_name]; },
-  set: function(instance, value) { instance[this.m_name] = value; },
+
+  set: function(instance, value, checkConst)
+  {
+    if (checkConst == undefined) checkConst = true;
+
+    // check const
+    if ((this.m_flags & sys_FConst.Const) != 0)
+    {
+      if (checkConst)
+        throw sys_ReadonlyErr.make("Cannot set const field " + this.m_qname);
+      else if (value != null && !isImmutable(value))
+        throw sys_ReadonlyErr.make("Cannot set const field " + this.m_qname + " with mutable value");
+    }
+
+    // TODO
+    // check static
+    //if ((flags & FConst.Static) != 0 && !parent.isJava())
+    //  throw ReadonlyErr.make("Cannot set static field " + qname()).val;
+
+    // TODO
+    // check type
+    //if (of.isGenericInstance() && value != null)
+    //{
+    //  if (!type(value).is(of.toNonNullable()))
+    //    throw ArgErr.make("Wrong type for field " + qname() + ": " + of + " != " + type(value)).val;
+    //}
+    if (value != null)
+    {
+      if (!this.m_of.equals(sys_Obj.type(value)))
+        throw sys_ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_of + " != " + sys_Obj.type(value));
+    }
+
+    // TODO
+    //if (setter != null)
+    //{
+    //  setter.invoke(instance, new Object[] { value });
+    //  return;
+    //}
+
+    instance[this.m_name] = value;
+  },
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
