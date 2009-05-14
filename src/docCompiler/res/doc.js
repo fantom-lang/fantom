@@ -48,7 +48,7 @@ Login.check = function()
   else if (ua.indexOf('msie 5') == -1) req = new ActiveXObject("Msxml2.XMLHTTP");
   else req = new ActiveXObject("Microsoft.XMLHTTP");
 
-  req.open("POST", "/sidewalk/user/?view=sidewalk::UtilView;invoke=/w0/onCheckLogin");
+  req.open("POST", "/sidewalk/user/?view=sidewalk::UtilView&webappWidgetCall=sidewalk::UtilView.onCheckLogin");
   req.onreadystatechange = function ()
   {
     if (req.readyState == 4)
