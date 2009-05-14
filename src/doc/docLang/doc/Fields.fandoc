@@ -305,6 +305,20 @@ have an initial value.  Overrides of abstract fields are given storage
 accessed via the '@' operator (this is different than overriding a
 normal virtual field).
 
+Definite Assignment [#definiteAssignment]
+*****************************************
+Non-nullable fields must be assigned in all code pathes.  Each constructor
+which doesn't chain to 'this' must set each non-nullable field which doesn't
+meet one of the following criteria:
+  - value type fields don't need to be set (Bool, Int, Float)
+  - fields with an initializer don't need to be set
+  - abstract or override fields don't need to be set
+  - native fields don't need to be set
+  - [calcualted]`#calculated` fields don't need to be set
+
+Matching rules apply to static fields which must be set by all code
+paths in the static initializer.
+
 Overriding a Method [#overrideMethod]
 *************************************
 A field's getter may be used to override a virtual method which has
