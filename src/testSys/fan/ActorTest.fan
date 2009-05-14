@@ -17,9 +17,7 @@ class ActorTest : Test
 // Setup/Teardown
 //////////////////////////////////////////////////////////////////////////
 
-  ActorPool pool
-
-  override Void setup() { pool = ActorPool() }
+  ActorPool pool := ActorPool()
 
   override Void teardown() { pool.kill }
 

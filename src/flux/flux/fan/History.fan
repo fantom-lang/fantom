@@ -106,17 +106,20 @@ const class HistoryItem
   **
   ** Default constructor with it-block
   **
-  new make(|This|? f := null) { if (f != null) f(this) }
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
 
   **
   ** Uri of resource.
   **
-  const Uri uri
+  const Uri uri := ``
 
   **
   ** Last time of access.
   **
-  const DateTime time
+  const DateTime time := DateTime.now
 
   **
   ** Uri for icon of resource or null.

@@ -463,7 +463,7 @@ class MxClsDefs : MxDefs
 {
   override Str r() { return _r }
   override Void result(Str r) { _r = r; }
-  Str _r;
+  Str _r := "";
 }
 
 mixin MxMisc

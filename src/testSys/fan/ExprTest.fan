@@ -222,5 +222,5 @@ class ExprTest : Test
 }
 
 class ExprX { This add(ExprX? k) { kids.add(k); return this } ExprX?[] kids := ExprX?[,]  }
-class ExprY : ExprX { ExprX a }
+class ExprY : ExprX { ExprX? a }
 class ExprZ : ExprX  {}

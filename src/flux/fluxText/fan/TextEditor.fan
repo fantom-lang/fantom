@@ -107,9 +107,6 @@ class TextEditor : View
   {
     // init
     file = resource->file
-    options  = TextEditorOptions.load
-    syntax   = SyntaxOptions.load
-    charset  = options.charset
 
     // load the document into memory
     loadDoc
@@ -194,15 +191,15 @@ class TextEditor : View
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  File file
-  Charset charset
-  TextEditorOptions options
-  SyntaxOptions syntax
-  SyntaxRules rules
-  RichText richText
-  Doc doc
-  internal TextEditorController controller
-  internal FindBar find
+  File? file
+  TextEditorOptions options := TextEditorOptions.load
+  SyntaxOptions syntax := SyntaxOptions.load
+  Charset charset := options.charset
+  SyntaxRules? rules
+  RichText? richText
+  Doc? doc
+  internal TextEditorController? controller
+  internal FindBar? find
   internal DateTime? fileTimeAtLoad
   internal Label caretField := Label()
   internal Label charsetField := Label()

@@ -154,7 +154,7 @@ internal class Var
   override Int compare(Obj obj) { return ((Var)obj).name <=> name }
 
   Type of := Obj#
-  Str name
+  Str? name
   Obj? val
 }
 

@@ -25,7 +25,7 @@ class SmtpClient
   **
   ** DNS hostname of server.
   **
-  Str host
+  Str? host
 
   **
   ** TCP port number of server, defaults to 25.
@@ -65,8 +65,7 @@ class SmtpClient
   Void open()
   {
     // do sanity checking before opening the socket
-    if ((Obj?)host == null) throw NullErr("host is null")
-    if ((Obj?)port == null) throw NullErr("port is null")
+    if (host == null) throw NullErr("host is null")
 
     // open the socket connection
     sock = TcpSocket().connect(IpAddress(host), port)

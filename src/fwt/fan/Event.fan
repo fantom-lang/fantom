@@ -17,7 +17,7 @@ class Event
   **
   ** Type identifier of the event.  This field is always available.
   **
-  EventId id
+  EventId id := EventId.unknown
 
   **
   ** Widget which generated the event.  This will be null for model events.
@@ -124,6 +124,7 @@ class Event
 **
 enum EventId
 {
+  unknown,
   focus,
   blur,
   keyDown,

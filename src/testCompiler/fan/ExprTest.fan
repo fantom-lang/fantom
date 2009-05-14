@@ -517,7 +517,7 @@ class ExprTest : CompilerTest
         static Foo make(Int n) { return m {it.name = \"make \$n\"} }
         static Foo fromStr(Str n) { return m {it.name = \"fromStr \$n\"} }
         new m() {}
-        Str name
+        Str? name
       }
       ")
 

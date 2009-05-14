@@ -497,7 +497,7 @@ internal class Line
   Int offset { internal set; }
 
   ** Text of line (without delimiter)
-  Str text
+  Str text := ""
 
   ** Offset/RichTextStyle pairs
   Obj[]? styling

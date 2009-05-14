@@ -21,23 +21,19 @@ const class SqlService : Service
   **   this is the connection string.
   ** - 'username' is the username for the database login.
   ** - 'password' is the password for the database login.
-  ** - 'dialect' is the database specific dialect implementation.  If null,
-  **   MySqlDialect is assumed.
+  ** - 'dialect' is the database specific dialect implementation.  If not
+  **   specified then MySqlDialect is assumed.
   **
   new make(Str connection  := "",
-           Str? username    := "",
-           Str? password    := "",
-           Dialect? dialect := null)
+           Str? username   := "",
+           Str? password   := "",
+           Dialect dialect := MySqlDialect())
   {
     this.connection = connection
     this.username   = username
     this.password   = password
     this.id         = "SqlService-" + Int.random.toHex
-
-    if (dialect == null)
-      dialect = MySqlDialect.make
-    else
-      this.dialect = dialect
+    this.dialect    = dialect
   }
 
   override Void onStart()

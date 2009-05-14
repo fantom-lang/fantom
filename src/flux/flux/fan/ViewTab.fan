@@ -372,8 +372,8 @@ internal class ViewTab : EdgePane
 
   internal const static Int historyLimit := 100
 
-  internal Str text
-  internal Image image
+  internal Str text := "???"
+  internal Image? image
 
   internal Frame frame
   internal Resource? resource

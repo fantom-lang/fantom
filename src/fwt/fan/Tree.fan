@@ -88,7 +88,7 @@ class Tree : Widget
   **
   ** Backing data model of tree.
   **
-  TreeModel model
+  TreeModel? model
 
   **
   ** Select the given item in the tree.

@@ -26,7 +26,7 @@ class FileWeblet : Weblet
   **
   ** The file being serviced by this FileWeblet (initialized in service).
   **
-  readonly File file
+  readonly File? file
 
   **
   ** Get the modified time of the file floored to 1 second

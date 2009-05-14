@@ -41,12 +41,12 @@ internal class DirView : View
     event.popup = r.popup(frame, event)
   }
 
-  DirViewModel model
+  DirViewModel? model
 }
 
 internal class DirViewModel : TableModel
 {
-  FileResource[] files
+  FileResource[]? files
   Str[] headers := ["Name", "Size", "Modified"]
 
   FileResource? file(Int? i) { return i == null ? null : files[i] }
