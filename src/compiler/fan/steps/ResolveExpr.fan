@@ -88,7 +88,7 @@ class ResolveExpr : CompilerStep
     // doesn't do true definite assignment checking since most local
     // variables use type inference anyhow)
     if (def.init == null && !def.isCatchVar)
-      def.init = LiteralExpr.makeNullLiteral(def.location, ns)
+      def.init = LiteralExpr.makeDefaultLiteral(def.location, ns, def.ctype)
 
     // turn init into full assignment
     if (def.init != null)

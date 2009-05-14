@@ -638,3 +638,7 @@
 - #574: Request: Range.random, List.random
 - #591: Flux: View menu in NavBar for .fan files doesn't show
 - #592: Proposal: Method/Func call
+
+*Build 1.0.43 (working)*
+- Change default for value type local variables
+
