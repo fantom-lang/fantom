@@ -85,13 +85,13 @@ class Build : BuildPod
       s := line
       // line comments
       i := s.index("//")
-      if (i != null) s = s[0...i]
+      if (i != null) s = s[0..<i]
       // block comments
       temp := s
       a := temp.index("/*")
       if (a != null)
       {
-        s = temp[0...a]
+        s = temp[0..<a]
         inBlock = true
       }
       if (inBlock)

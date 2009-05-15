@@ -1355,6 +1355,7 @@ class ParserTest : CompilerTest
 
  Void testMultiLineStrs()
  {
+    // NOTE: matching checks for Str <| |> in MiscTest.testStrDslErrors
     verifyErrors(
     //12345678901
      "class Foo {
@@ -1377,15 +1378,15 @@ class ParserTest : CompilerTest
       \t     x\"
         }
 
-       Str c := \"
-                bad\"
+       Str c := \"\"\"
+                  bad\"\"\"
       }",
        [
          3,  3, "Leading space in multi-line Str must be 11 spaces",
          7, 13, "Leading space in multi-line Str must be 13 spaces",
         11,  1, "Leading space in multi-line Str must be 2 tabs and 6 spaces",
         18,  2, "Leading space in multi-line Str must be 2 tabs and 1 spaces",
-        22, 11, "Leading space in multi-line Str must be 11 spaces",
+        22, 13, "Leading space in multi-line Str must be 13 spaces",
        ])
   }
 
