@@ -24,6 +24,7 @@ class CompilerJavascript : Compiler
   new make(CompilerInput input)
     : super(input)
   {
+    this.output = CompilerOutput()
   }
 
 //////////////////////////////////////////////////////////////////////////
