@@ -1483,7 +1483,7 @@ public class Parser : CompilerSupport
   **
   ** Atomic base of a termExpr
   **
-  **   <termBase>  :=  <literal> | <idExpr> | <closure>
+  **   <termBase>  :=  <literal> | <idExpr> | <closure> | <dsl>
   **   <literal>   :=  "null" | "this" | "super" | <bool> | <int> |
   **                   <float> | <str> | <duration> | <list> | <map> | <uri>
   **
@@ -1526,9 +1526,9 @@ public class Parser : CompilerSupport
     {
       consume
       if (curt === Token.identifier && !cur.newline)
-        return SlotLiteralExpr.make(loc, ctype, consumeId)
+        return SlotLiteralExpr(loc, ctype, consumeId)
       else
-        return LiteralExpr.make(loc, ExprId.typeLiteral, ns.typeType, ctype)
+        return LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, ctype)
     }
 
     // dot is named super or static call chain
@@ -1538,12 +1538,19 @@ public class Parser : CompilerSupport
       if (curt === Token.superKeyword)
       {
         consume
-        return SuperExpr.make(loc, ctype)
+        return SuperExpr(loc, ctype)
       }
       else
       {
-        return idExpr(StaticTargetExpr.make(loc, ctype), false, false)
+        return idExpr(StaticTargetExpr(loc, ctype), false, false)
       }
+    }
+
+    // dsl
+    if (curt == Token.dsl)
+    {
+      srcLoc := Location(cur.file, cur.line, cur.col+2)
+      return DslExpr(loc, ctype, srcLoc, consume.val)
     }
 
     // list/map literal with explicit type
@@ -1561,7 +1568,7 @@ public class Parser : CompilerSupport
     // simple literal type(arg)
     if (curt == Token.lparen)
     {
-      construction := CallExpr.make(loc, StaticTargetExpr.make(loc, ctype), "<ctor>", ExprId.construction)
+      construction := CallExpr(loc, StaticTargetExpr.make(loc, ctype), "<ctor>", ExprId.construction)
       callArgs(construction)
       return construction
     }

@@ -25,6 +25,7 @@ class Build : BuildPod
     srcDirs     = [`fan/`,
                    `fan/assembler/`,
                    `fan/ast/`,
+                   `fan/dsl/`,
                    `fan/fcode/`,
                    `fan/namespace/`,
                    `fan/parser/`,
@@ -33,7 +34,7 @@ class Build : BuildPod
     includeSrc  = true
     podFacets =
     [
-      "indexFacets": ["compilerBridge"]
+      "indexFacets": ["compilerBridge", "compilerDsl"]
     ]
   }
 

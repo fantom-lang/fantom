@@ -24,6 +24,7 @@ enum Token
   decimalLiteral  ("Decimal literal"),
   durationLiteral ("Duration literal"),
   uriLiteral      ("Uri literal"),
+  dsl             ("DSL"),
 
   // operators
   dot("."),

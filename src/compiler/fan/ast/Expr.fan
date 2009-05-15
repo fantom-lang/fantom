@@ -1544,6 +1544,39 @@ class ClosureExpr : Expr
 }
 
 **************************************************************************
+** ClosureExpr
+**************************************************************************
+
+**
+** DslExpr is an embedded Domain Specific Language which
+** is parsed by a DslPlugin.
+**
+class DslExpr : Expr
+{
+  new make(Location location, CType anchorType, Location srcLoc, Str src)
+    : super(location, ExprId.dsl)
+  {
+    this.anchorType = anchorType
+    this.src        = src
+    this.srcLoc     = srcLoc
+  }
+
+  override Str toStr()
+  {
+    return "$anchorType <|$src|>"
+  }
+
+  override Void print(AstWriter out)
+  {
+    out.w(toStr)
+  }
+
+  CType anchorType  // anchorType <|src|>
+  Str src           // anchorType <|src|>
+  Location srcLoc   // location of first char of src
+}
+
+**************************************************************************
 ** ExprId
 **************************************************************************
 
@@ -1593,7 +1626,8 @@ enum ExprId
   ternary,          // TernaryExpr
   curry,            // CurryExpr
   complexLiteral,   // ComplexLiteral
-  closure           // ClosureExpr
+  closure,          // ClosureExpr
+  dsl               // DslExpr
 }
 
 **************************************************************************

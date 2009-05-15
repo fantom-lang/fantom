@@ -9,8 +9,9 @@
 **
 ** CBridge is the base class for compiler FFI plugins to expose
 ** external type systems to the Fan compiler as CPods, CTypes, and
-** CSlots.  Subclasses are registered for with the "compilerBridge"
-** facet and must declare a constructor with a Compiler arg.
+** CSlots.  Subclasses are registered for a FFI name with the
+** "compilerBridge" facet and must declare a constructor with a
+** Compiler arg.
 **
 abstract class CBridge : CompilerSupport
 {
