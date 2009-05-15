@@ -1,0 +1,69 @@
+**************************************************************************
+** title:      DSLs
+** author:     Brian Frank
+** created:    15 May 09
+** copyright:  Copyright (c) 2009, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+DSLs or Domain Specific Languages allow you to embed other languages
+into your Fan source code.  The syntax for a DSL is:
+
+  AnchorType <|...|>
+
+Everything between the '<|' and '|>' tokens is considered source code
+of the DSL itself.  The anchor type defines how to the compile the DSL.
+DslPlugins are registered on the anchor type, and called by the Fan
+compiler to translate them into a Fan expression.
+
+Built-in DSLs [#builtIn]
+************************
+Fan currently ships with these DSLs:
+
+Str DSL [#str]
+==============
+You can use the Str DSL to write strings which contain any character
+other than the "|>" sequence.  They work similar to a XML CDATA section
+or here-documents in languages like Perl, Python, or Ruby:
+
+  echo(Str <|no \ or $ escapes need, and
+             multi-line works too|>)
+
+See the [Str Literals]`Literals#strDsl` for more details.
+
+Regex DSL [#regex]
+==================
+You can use the Regex DSL to construct a `sys::Regex` instance
+with a string pattern:
+
+  Regex <|foo|foo/(\d*)|>
+
+You don't need to worry about escaping special characters like
+the backslash.
+
+DslPlugins [#dslPlugins]
+************************
+You can write your own DSLs by subclassing `compiler::DslPlugin`.
+See the 'RegexDslPluging' class as a simple example to get
+started:
+
+  @compilerDsl="sys::Regex"
+  class RegexDslPlugin : DslPlugin
+  {
+    new make(Compiler c) : super(c) {}
+
+    override Expr compile(DslExpr dsl)
+    {
+      regexType := ns.resolveType("sys::Regex")
+      fromStr := regexType.method("fromStr")
+      args := [LiteralExpr.makeFor(dsl.location, ns, dsl.src)]
+      return CallExpr.makeWithMethod(dsl.location, null, fromStr, args)
+    }
+  }
+
+Note: writing plugins requires accessing the compiler APIs.
+This API has a very large surface area, so we cannot guarantee
+that these APIs won't change in the future.
+
