@@ -646,10 +646,14 @@ class Tokenizer : CompilerSupport
     consume // <
     consume // |
 
-    // store starting position
-    s := StrBuf()
+    // compute leading tabs/spaces
+    leadingTabs := 0
+    leadingSpaces := 0
+    for (i:=posOfLine; i<pos; ++i)
+      if (buf[i] == '\t') leadingTabs++; else leadingSpaces++
 
     // loop until we find end of DSL
+    s := StrBuf()
     while (true)
     {
       if (cur == '|' && peek == '>') break
@@ -661,7 +665,7 @@ class Tokenizer : CompilerSupport
     consume // |
     consume // >
 
-    return TokenVal(Token.dsl, s.toStr)
+    return TokenValDsl(Token.dsl, s.toStr, leadingTabs, leadingSpaces)
   }
 
 //////////////////////////////////////////////////////////////////////////

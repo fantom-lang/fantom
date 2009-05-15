@@ -294,16 +294,6 @@ class TokenizerTest : Test
 // String Literals
 //////////////////////////////////////////////////////////////////////////
 
-  Void testRawStringLiterals()
-  {
-    verifyStr("r\"\"", "")
-    verifyStr("r\"x\"", "x")
-    verifyStr("r\"xy\"", "xy")
-    verifyStr("r\"\\\"", "\\")
-    verifyStr("r\"\$\"", "\$")
-    verifyInvalid("r\"xxx")
-  }
-
   Void testStringLiterals()
   {
     verifyStr("\"\"",        "")
@@ -418,6 +408,26 @@ class TokenizerTest : Test
   Void verifyUri(Str src, Str val)
   {
     verifyToken(src, makeToken(Token.uriLiteral, val))
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// DSLs
+//////////////////////////////////////////////////////////////////////////
+
+  Void testDsl()
+  {
+    verifyDsl("<||>", "")
+    verifyDsl("<|x|>", "x")
+    verifyDsl("<|xy|>", "xy")
+    verifyDsl("<|\\|>", "\\")
+    verifyDsl("<|\$|>", "\$")
+    verifyDsl("<||||>", "||")
+    verifyInvalid("<||")
+  }
+
+  Void verifyDsl(Str src, Str val)
+  {
+    verifyToken(src, makeToken(Token.dsl, val))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -646,7 +656,7 @@ class TokenizerTest : Test
 
   TokenVal makeToken(Token kind, Obj? val := null)
   {
-    return TokenVal.make(kind, val)
+    return TokenVal(kind, val)
   }
 
   TokenVal makeId(Str id)           { return makeToken(Token.identifier, id); }

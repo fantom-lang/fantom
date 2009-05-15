@@ -1344,7 +1344,7 @@ class ParserTest : CompilerTest
    verifyErrors("class Foo { Str f := \"\${",   [1, 25, "Unexpected end of string, missing }"])
    verifyErrors("class Foo { Str f := \"\${x",  [1, 26, "Unexpected end of string, missing }"])
    verifyErrors("class Foo { Str f := \"\${x}", [1, 27, "Unexpected end of string"])
-   verifyErrors("class Foo { Str f := r\"",     [1, 24, "Unexpected end of string"])
+   verifyErrors("class Foo { Str f := Str<|",   [1, 27, "Unexpected end of DSL"])
    verifyErrors("class Foo { Uri f := `",       [1, 23, "Unexpected end of uri"])
    verifyErrors("class Foo { Int f := '",       [1, 24, "Expecting ' close of char literal"])
  }
@@ -1377,15 +1377,15 @@ class ParserTest : CompilerTest
       \t     x\"
         }
 
-       Str c := r\"
-                 bad\"
+       Str c := \"
+                bad\"
       }",
        [
          3,  3, "Leading space in multi-line Str must be 11 spaces",
          7, 13, "Leading space in multi-line Str must be 13 spaces",
         11,  1, "Leading space in multi-line Str must be 2 tabs and 6 spaces",
         18,  2, "Leading space in multi-line Str must be 2 tabs and 1 spaces",
-        22, 12, "Leading space in multi-line Str must be 12 spaces",
+        22, 11, "Leading space in multi-line Str must be 11 spaces",
        ])
   }
 
