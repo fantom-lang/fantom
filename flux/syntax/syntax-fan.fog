@@ -23,7 +23,8 @@ SyntaxRules
     SyntaxStr { delimiter = "\""; escape = '\\'; multiLine = true }, // Str
     SyntaxStr { delimiter = "r\""; delimiterEnd = "\""; multiLine = true }, // raw Str
     SyntaxStr { delimiter = "`"; escape = '\\'; multiLine = false }, // Uri
-    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false }  // Int
+    SyntaxStr { delimiter = "'"; escape = '\\'; multiLine = false },  // Int
+    SyntaxStr { delimiter = "<|"; delimiterEnd = "|>"; multiLine = true }  // DSL
   ]
 
   // keyword list
