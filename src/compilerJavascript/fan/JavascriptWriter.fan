@@ -40,7 +40,7 @@ class JavascriptWriter : CompilerSupport
     // we inline closures directly, so no need to generate
     // anonymous types like we do in Java and .NET
     if (typeDef.isClosure) return
-    if (typeDef.qname.contains(r"$Cvars")) return
+    if (typeDef.qname.contains("\$Cvars")) return
 
     fname := typeDef.qname
     bname := typeDef.base ?: "sys::Obj"
@@ -235,7 +235,7 @@ class JavascriptWriter : CompilerSupport
 
   Void exprStmt(Expr ex)
   {
-    if (!ex.toStr.startsWith(r"($cvars ="))
+    if (!ex.toStr.startsWith("(\$cvars ="))
     {
       expr(ex)
       out.w(";").nl
@@ -508,7 +508,7 @@ if (c != null)
     }
     else if (ce.target != null)
     {
-      if (ce.target.ctype.qname == "sys::Func" && Regex(r"call\d").matches(mname))
+      if (ce.target.ctype.qname == "sys::Func" && Regex("call\\d").matches(mname))
         mname = null
     }
     if (mname != null) out.w(".").w(mname)
@@ -642,18 +642,18 @@ if (c != null)
       out.w(".length")
       return
     }
-    cvar := fe.target?.toStr == r"$cvars"
+    cvar := fe.target?.toStr == "\$cvars"
     name := fe.name
     if (fe.target != null && !cvar)
     {
       expr(fe.target)
-      if (name == r"$this") return // skip $this ref for closures
+      if (name == "\$this") return // skip $this ref for closures
       out.w(".")
     }
     if (cvar)
     {
       if (name[0] == '$') name = name[1..-1]
-      else { i := name.index(r"$"); if (i != null) name = name[0..<i] }
+      else { i := name.index("\$"); if (i != null) name = name[0..<i] }
     }
     if (fe.target == null && fe.field.isStatic)
     {

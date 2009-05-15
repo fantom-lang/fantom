@@ -27,7 +27,8 @@ class RegexDslPlugin : DslPlugin
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Compile DSL source into its Fan equivalent expression.
+  ** Find a DSL plugin for the given anchor type.  If there
+  ** is a problem then log an error and return null.
   **
   override Expr compile(DslExpr dsl)
   {

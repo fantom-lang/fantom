@@ -111,9 +111,6 @@ class Tokenizer : CompilerSupport
     // skip whitespace
     if (cur.isSpace) { consume; whitespace = true; return null }
 
-    // raw string literal r"c:\dir\foo.txt"
-    if (cur == 'r' && peek == '"' && !inStrLiteral) return rawStr
-
     // alpha means keyword or identifier
     if (cur.isAlpha || cur == '_') return word
 
@@ -299,52 +296,17 @@ class Tokenizer : CompilerSupport
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Parse a raw string literal token.
-  **
-  private TokenVal rawStr()
-  {
-    // consume opening 'r' and quote
-    consume
-    consume
-
-    openLine := posOfLine
-    openPos  := pos
-    multiLineOk := true
-
-    // string contents
-    s := StrBuf()
-    while (cur !=  '"')
-    {
-      if (cur <= 0) throw err("Unexpected end of string")
-
-      if (cur == '\n')
-      {
-        s.addChar(cur)
-        consume
-        if (multiLineOk) multiLineOk = skipStrWs(openLine, openPos)
-        continue
-      }
-
-      s.addChar(cur)
-      consume
-    }
-
-    // close quote
-    consume
-
-    return TokenVal(Token.strLiteral, s.toStr)
-  }
-
-  **
   ** Parse a string literal token.
   **
   private TokenVal? str()
   {
     inStrLiteral = true
+    triple := false
     try
     {
       // consume opening quote
       consume
+      if (cur == '"' && peek == '"') { triple = true; consume; consume }
       openLine := posOfLine
       openPos  := pos
       multiLineOk := true
@@ -356,8 +318,9 @@ class Tokenizer : CompilerSupport
       interpolated := false
       while (true)
       {
-        if (cur == '"') { consume; break }
         if (cur == 0) throw err("Unexpected end of string")
+
+        if (endOfStr(triple)) break
 
         if (cur == '\n')
         {
@@ -379,7 +342,7 @@ class Tokenizer : CompilerSupport
 
           // process interpolated string, it returns null
           // if at end of string literal
-          if (!strInterpolation(s.toStr))
+          if (!strInterpolation(s.toStr, triple))
           {
             tokens.add(makeVirtualToken(Token.rparen))
             return null
@@ -451,7 +414,7 @@ class Tokenizer : CompilerSupport
   **   "a ${b} c" -> "a " + b + " c"
   ** Return true if more in the string literal.
   **
-  private Bool strInterpolation(Str s)
+  private Bool strInterpolation(Str s, Bool triple)
   {
     consume // $
     tokens.add(makeVirtualToken(Token.strLiteral, s))
@@ -464,7 +427,7 @@ class Tokenizer : CompilerSupport
       consume
       while (true)
       {
-        if (cur == '"' || cur == 0) throw err("Unexpected end of string, missing }")
+        if (endOfStr(triple) || cur == 0) throw err("Unexpected end of string, missing }")
         tok := next
         if (tok.kind == Token.rbrace) break
         tokens.add(tok)
@@ -494,14 +457,23 @@ class Tokenizer : CompilerSupport
     }
 
     // if at end of string, all done
-    if (cur == '\"')
-    {
-      consume
-      return false
-    }
+    if (endOfStr(triple)) return false
 
     // add plus and return true to keep chugging
     tokens.add(makeVirtualToken(Token.plus))
+    return true
+  }
+
+  **
+  ** If at end of string literal consume the
+  ** ending token(s) and return true.
+  **
+  private Bool endOfStr(Bool triple)
+  {
+    if (cur != '"') return false
+    if (!triple) { consume; return true }
+    if (peek != '"' || peekPeek != '"') return false
+    consume; consume; consume
     return true
   }
 
@@ -646,10 +618,14 @@ class Tokenizer : CompilerSupport
     consume // <
     consume // |
 
-    // store starting position
-    s := StrBuf()
+    // compute leading tabs/spaces
+    leadingTabs := 0
+    leadingSpaces := 0
+    for (i:=posOfLine; i<pos; ++i)
+      if (buf[i] == '\t') leadingTabs++; else leadingSpaces++
 
     // loop until we find end of DSL
+    s := StrBuf()
     while (true)
     {
       if (cur == '|' && peek == '>') break
@@ -661,7 +637,7 @@ class Tokenizer : CompilerSupport
     consume // |
     consume // >
 
-    return TokenVal(Token.dsl, s.toStr)
+    return TokenValDsl(Token.dsl, s.toStr, leadingTabs, leadingSpaces)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -805,8 +781,6 @@ class Tokenizer : CompilerSupport
         if (cur == '.')
         {
           consume
-// TODO
-if (cur == '.') { consume; return TokenVal(Token.dotDotLt) }
           if (cur == '<') { consume; return TokenVal(Token.dotDotLt) }
           return TokenVal(Token.dotDot)
         }
@@ -907,6 +881,14 @@ if (cur == '.') { consume; return TokenVal(Token.dotDotLt) }
 ////////////////////////////////////////////////////////////////
 // Consume
 ////////////////////////////////////////////////////////////////
+
+  **
+  ** Peek at the character after peek
+  **
+  private Int peekPeek()
+  {
+    pos+2 < buf.size ? buf[pos+2] : 0
+  }
 
   **
   ** Consume the cur char and advance to next char in buffer:
