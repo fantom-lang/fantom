@@ -165,6 +165,7 @@ must use a matching number of leading tabs followed by space characters:
   \t\tx := "line 1
   \t\t      line 2"
 
+
 Str Interpolation [#interpolation]
 ==================================
 Str literals support string interpolation which allow arbitrary Fan
@@ -187,19 +188,26 @@ String interpolation makes string formatting easier to read and write.
 Fan coding convention is to always use string interpolation rather than
 concatenation.
 
-Raw Strs [#rawStrs]
-===================
-If a string literal is prefixed with the "r" character is it a *raw* string
-literal.  A raw string literal doesn't interpret the "\" or "$" character
-specially.  A raw string cannot contain the " double quote character (since
-there is no way to escape it).  Raw string literals are useful for regular
-expressions and Window's file paths:
+Triple Quotes [#tripleQuotes]
+=============================
+Fan also supports '"""' triple quoted string literals.  These work exactly
+like normal string literals except that you don't need to escape the
+double quote '"' character.  Interpolation and multi-line work exactly
+the same:
 
-  r"c:\somedir\file.txt"
-  r"\W+"
+  echo("""Do you know "What lies beneath the shadow of the statue"?""")
 
-Raw strings may be multi-line following the leading whitespace rules for
-standard strings.
+Str DSL [#strDsl]
+=================
+You can also write a Str literal using the DSL syntax.  A Str DSL can
+contain any character except the sequence "|>".  Neither the "\"
+or "$" character are treated specially:
+
+  echo(Str <|no \ or $ escapes need, and
+             multi-line works too|>)
+
+Str DSL literals may be multi-line following the leading whitespace rules
+for standard strings.
 
 Duration [#duration]
 ********************
