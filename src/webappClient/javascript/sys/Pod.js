@@ -31,7 +31,7 @@ var sys_Pod = sys_Obj.extend(
     if (checked == undefined) checked = true;
     var t = this.m_types[qname];
     if (t == null && checked)
-      throw sys_UnknownTypeErr(qname);
+      throw sys_UnknownTypeErr.make(qname);
     return t;
   },
 

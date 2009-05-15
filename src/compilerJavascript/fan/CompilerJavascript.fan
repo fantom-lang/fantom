@@ -87,7 +87,7 @@ class CompilerJavascript : Compiler
       def.slotDefs.each |slot|
       {
         if (slot is FieldDef)
-          out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->qname}\")")
+          out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->signature}\")")
       }
       out.printLine(";")
     }
