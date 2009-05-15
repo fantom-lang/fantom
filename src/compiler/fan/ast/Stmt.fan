@@ -143,7 +143,7 @@ class ExprStmt : Stmt
 **
 class LocalDefStmt : Stmt
 {
-  new make(Location location, CType? ctype, Str name)
+  new make(Location location, CType? ctype := null, Str name := "")
     : super(location, StmtId.localDef)
   {
     this.ctype = ctype
