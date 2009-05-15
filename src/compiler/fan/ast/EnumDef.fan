@@ -19,10 +19,13 @@ class EnumDef : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location)
+  new make(Location location, Str[]? doc, Str name, Int ordinal)
     : super(location)
   {
-    ctorArgs = Expr[,]
+    this.doc      = doc
+    this.name     = name
+    this.ordinal  = ordinal
+    this.ctorArgs = Expr[,]
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -266,9 +266,7 @@ class JavaBridge : CBridge
       if (!isOverrideInferredType(bp.paramType, dp.paramType)) return
 
       // add local variable: Int bar := bar_$J
-      local := LocalDefStmt(def.location)
-      local.name  = dp.name
-      local.ctype = dp.paramType
+      local := LocalDefStmt(def.location, dp.paramType, dp.name)
       local.init  = UnknownVarExpr(def.location, null, dp.name + "_\$J")
       def.code.stmts.insert(0, local)
 
@@ -719,6 +717,6 @@ internal class CallMatch
 
   override Str toStr() { return method.signature }
 
-  CMethod method    // matched method
-  Expr[] args       // coerced arguments
+  CMethod? method    // matched method
+  Expr[]? args       // coerced arguments
 }

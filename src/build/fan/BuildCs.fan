@@ -20,24 +20,24 @@ abstract class BuildCs : BuildScript
   **
   ** Required output file created by the compiler.
   **
-  File output
+  File? output
 
   **
   ** Required output type. Possible values are 'exe',
   ** 'winexe', 'library' or 'module'.
   **
-  Str targetType
+  Str? targetType
 
   **
   ** Required list of directories to compile.  All C# source
   ** files in each directory will be compiled.
   **
-  File[] dirs
+  File[]? dirs
 
   **
   ** List of libraries to link to.
   **
-  File[] libs
+  File[] libs := File[,]
 
 //////////////////////////////////////////////////////////////////////////
 // Setup

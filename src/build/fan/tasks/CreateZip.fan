@@ -21,8 +21,8 @@ class CreateZip : Task
   override Void run()
   {
     // basic sanity checking
-    if ((Obj?)inDir == null) throw fatal("Not configured: CreateZip.inDir")
-    if ((Obj?)outFile == null) throw fatal("Not configured: CreateZip.outFile")
+    if (inDir == null) throw fatal("Not configured: CreateZip.inDir")
+    if (outFile == null) throw fatal("Not configured: CreateZip.outFile")
     if (!inDir.isDir) throw fatal("Not a directory: $inDir")
 
     // ensure outFile is not under inDir (although we do allow
@@ -80,12 +80,13 @@ class CreateZip : Task
     }
   }
 
-  ** Output zip file to create
-  File outFile
+  ** Required output zip file to create
+  File? outFile
 
-  ** Directory to zip up.  The contents of this dir are recursively
-  ** zipped up with zip paths relative to this root directory.
-  File inDir
+  ** Required directory to zip up.  The contents of this dir are
+  ** recursively zipped up with zip paths relative to this root
+  ** directory.
+  File? inDir
 
   ** This function is called on each file under 'inDir'; if true
   ** returned it is included in the zip, if false then it is excluded.

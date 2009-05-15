@@ -114,6 +114,6 @@ class Build : FluxCommand
   static const Str[] corePods := ["sys", "jfan", "nfan",
     "build", "compile", "fwt", "flux", "fluxText"]
 
-  File buildFile
-  File fanHome
+  File? buildFile
+  File? fanHome
 }

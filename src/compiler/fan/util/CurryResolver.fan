@@ -285,9 +285,9 @@ class CurryResolver : CompilerSupport
   private CurryExpr expr     // curry expr being resolved
   private CallExpr call      // call operand of curry
   private CMethod method     // target method
-  private FuncType sig       // signature of result
+  private FuncType? sig      // signature of result
   private Bool thisIsParam   // is the "this" target of method incomplete
-  private TypeDef curry      // curry implementation class
-  private MethodDef ctor     // curry implementation class ctor
+  private TypeDef? curry     // curry implementation class
+  private MethodDef? ctor    // curry implementation class ctor
 
 }

@@ -98,7 +98,7 @@ class FMethod : FSlot, CMethod
 
   Int ret              // type qname index
   Int inheritedRet     // type qname index
-  FMethodVar[] vars    // parameters and local variables
+  FMethodVar[]? vars   // parameters and local variables
   Int paramCount       // number of params in vars
   Int localCount       // number of locals in vars
   Buf? code            // method executable code

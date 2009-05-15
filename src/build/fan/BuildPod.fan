@@ -22,12 +22,12 @@ abstract class BuildPod : BuildScript
   **
   ** Programatic name of the pod.  Required.
   **
-  Str podName
+  Str? podName
 
   **
   ** Short one sentence description of the pod.  Required.
   **
-  Str description
+  Str? description
 
   **
   ** User defined pod level facets.  Optional.
@@ -38,13 +38,13 @@ abstract class BuildPod : BuildScript
   ** Version of the pod - typically set to
   ** `BuildScript.globalVersion`.  Required.
   **
-  Version version
+  Version? version
 
   **
   ** Dependencies of the pod formatted as a list
   ** of `sys::Depend` strings.  Required.
   **
-  Str[] depends
+  Str[]? depends
 
   **
   ** The directory to look in for the dependency pod file (and
@@ -54,13 +54,13 @@ abstract class BuildPod : BuildScript
   ** with this field - it is used by the 'build' and 'compiler'
   ** build scripts for bootstrap build.
   **
-  Uri dependsDir
+  Uri? dependsDir
 
   **
   ** List of Uris relative to `scriptDir` of directories containing
   ** the Fan source files to compile.  Required.
   **
-  Uri[] srcDirs
+  Uri[]? srcDirs
 
   **
   ** List of Uris relative to `scriptDir` of directories of resources
@@ -147,6 +147,7 @@ abstract class BuildPod : BuildScript
     ok &= validateReqField("podName")
     ok &= validateReqField("version")
     ok &= validateReqField("depends")
+    ok &= validateReqField("description")
     if (!ok) throw FatalBuildErr.make
 
     // boot strap checking - ensure that we aren't

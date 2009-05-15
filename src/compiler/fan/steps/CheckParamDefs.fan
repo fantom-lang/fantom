@@ -74,7 +74,7 @@ class CheckParamDefs : CompilerStep
     return expr
   }
 
-  Str name
+  Str? name
   Bool used
 
 }

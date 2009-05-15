@@ -20,17 +20,17 @@ class CompilerOutput
   ** Mode indicates the type of this output - either a
   ** transient pod or a pod file.
   **
-  CompilerOutputMode mode
+  CompilerOutputMode? mode
 
   **
   ** If transientPod mode, this is loaded pod.
   **
-  Pod transientPod
+  Pod? transientPod
 
   **
   ** If podFile mode, this is the pod zip file written to disk.
   **
-  File podFile
+  File? podFile
 }
 
 **************************************************************************

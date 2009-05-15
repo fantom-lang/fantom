@@ -22,6 +22,9 @@ class OrderByInheritance : CompilerStep
   new make(Compiler compiler)
     : super(compiler)
   {
+    ordered = TypeDef[,]
+    processing = Str:TypeDef[:]
+    todo = Str:TypeDef[:]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,13 +34,10 @@ class OrderByInheritance : CompilerStep
   override Void run()
   {
     log.debug("OrderByInheritance")
-    ordered = TypeDef[,]
     ordered.capacity = types.size
-    processing = Str:TypeDef[:]
 
     // create the todo map which is our working input,
     // check for duplicate type names in this loop
-    todo = Str:TypeDef[:]
     types.each |TypeDef t|
     {
       todo[t.qname] = t

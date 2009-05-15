@@ -29,7 +29,7 @@ class CompilerInput
   **
   ** Required name of output pod
   **
-  Str podName
+  Str? podName
 
   **
   ** Flag to indicate if we are are compiling a script.  Scripts
@@ -41,12 +41,12 @@ class CompilerInput
   **
   ** Version to include in ouput pod's manifest.
   **
-  Version version := Version.fromStr("0.0.0")
+  Version? version
 
   **
   ** Description to include in output pod's manifest.
   **
-  Str description := ""
+  Str? description
 
   **
   ** User defined pod level facets.
@@ -119,12 +119,12 @@ class CompilerInput
   ** Root directory of source tree - this directory is used to create
   ** the relative paths of the resource files in the pod zip.
   **
-  File homeDir
+  File? homeDir
 
   **
   ** List of directories containing fan source files (file mode only)
   **
-  File[] srcDirs
+  File[]? srcDirs
 
   **
   ** Optional list of directories containing resources files to
@@ -139,12 +139,12 @@ class CompilerInput
   **
   ** Fan source code to compile (str mode only)
   **
-  Str srcStr
+  Str? srcStr
 
   **
   ** Location to use for SourceFile facet (str mode only)
   **
-  Location srcStrLocation
+  Location? srcStrLocation
 
 //////////////////////////////////////////////////////////////////////////
 // Validation

@@ -235,7 +235,7 @@ class InitClosures : CompilerStep
 
     // add to our synthetic parent class
     parent.addSlot(m)
-    if (parent.isClosure) parent.closure.callX = m
+    if (parent.isClosure) parent.closure.call = m
     return m
   }
 
@@ -257,12 +257,12 @@ class InitClosures : CompilerStep
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  ClosureExpr closure        // current closure
-  Location loc               // closure.location
-  FuncType signature         // closure.sig
-  TypeDef enclosingType      // closure.enclosingType
-  TypeDef cls                // current anonymous class implementing closure
-  MethodDef ctor             // anonymous class make ctor
-  MethodDef doCall           // R doCall(A a, ...) { closure.code }
+  ClosureExpr? closure        // current closure
+  Location? loc               // closure.location
+  FuncType? signature         // closure.sig
+  TypeDef? enclosingType      // closure.enclosingType
+  TypeDef? cls                // current anonymous class implementing closure
+  MethodDef? ctor             // anonymous class make ctor
+  MethodDef? doCall           // R doCall(A a, ...) { closure.code }
 
 }

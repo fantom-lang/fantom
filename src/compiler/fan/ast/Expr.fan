@@ -390,7 +390,7 @@ class SlotLiteralExpr : Expr
 
   CType parent
   Str name
-  CSlot slot
+  CSlot? slot
 }
 
 **************************************************************************
@@ -402,10 +402,13 @@ class SlotLiteralExpr : Expr
 **
 class RangeLiteralExpr : Expr
 {
-  new make(Location location, CType ctype)
+  new make(Location location, CType ctype, Expr start, Expr end, Bool exclusive)
     : super(location, ExprId.rangeLiteral)
   {
     this.ctype = ctype
+    this.start = start
+    this.end   = end
+    this.exclusive = exclusive
   }
 
   override Void walkChildren(Visitor v)
@@ -631,7 +634,7 @@ class BinaryExpr : Expr
   Token opToken      // operator token type (Token.and, etc)
   Expr lhs           // left hand side
   Expr rhs           // right hand side
-  MethodVar tempVar  // temp local var to store field assignment leaves
+  MethodVar? tempVar // temp local var to store field assignment leaves
 
 }
 
@@ -959,7 +962,7 @@ class ShortcutExpr : CallExpr
   ShortcutOp op
   Token opToken
   Bool isPostfixLeave := false  // x++ or x-- (must have Expr.leave set too)
-  MethodVar tempVar    // temp local var to store += to field/indexed
+  MethodVar? tempVar    // temp local var to store += to field/indexed
 }
 
 **
@@ -981,9 +984,9 @@ class IndexedAssignExpr : ShortcutExpr
   {
   }
 
-  MethodVar scratchA
-  MethodVar scratchB
-  CMethod setMethod
+  MethodVar? scratchA
+  MethodVar? scratchB
+  CMethod? setMethod
 }
 
 **************************************************************************
@@ -1070,7 +1073,7 @@ class FieldExpr : NameExpr
     return s.toStr
   }
 
-  CField field        // resolved field
+  CField? field       // resolved field
   Bool useAccessor    // false if access using '@' storage operator
 }
 
@@ -1499,7 +1502,7 @@ class ClosureExpr : Expr
       {
         doCall.ret = t.ret
         collapseExprAndReturn(doCall)
-        collapseExprAndReturn(callX)
+        collapseExprAndReturn(call)
       }
     }
 
@@ -1530,7 +1533,7 @@ class ClosureExpr : Expr
   // InitClosures
   CallExpr? substitute          // expression to substitute during assembly
   TypeDef? cls                  // anonymous class which implements the closure
-  MethodDef callX               // anonymous class's callX() with code
+  MethodDef? call               // anonymous class's call() with code
   MethodDef? doCall             // anonymous class's doCall() with code
 
   // ResolveExpr

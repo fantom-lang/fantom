@@ -1671,7 +1671,7 @@ class ProtectedRegion
   }
 
   Bool hasFinally      // does this region have a finally
-  Int[] jumpFinallys  // list of JumpFinally positions to backpatch
+  Int[]? jumpFinallys  // list of JumpFinally positions to backpatch
 }
 
 **************************************************************************

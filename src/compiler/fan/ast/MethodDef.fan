@@ -42,6 +42,7 @@ class MethodDef : SlotDef, CMethod
   {
     this.name = name
     this.flags = flags
+    this.ret = parent.ns.error
     paramDefs = ParamDef[,]
     vars = MethodVar[,]
     needsCvars = false

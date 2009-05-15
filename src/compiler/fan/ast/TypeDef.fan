@@ -367,7 +367,6 @@ class TypeDef : DefNode, CType
   private Str:CSlot slotMap        // all slots
   private Str:SlotDef slotDefMap   // declared slot definitions
   private SlotDef[] slotDefList    // declared slot definitions
-  private ListType listOf          // lazily created list of
-  FacetDef[] indexedFacets         // used by WritePod
+  FacetDef[]? indexedFacets        // used by WritePod
 
 }
