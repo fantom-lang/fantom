@@ -37,7 +37,7 @@ abstract class BuildCs : BuildScript
   **
   ** List of libraries to link to.
   **
-  File[] libs := File[,]
+  File[]? libs
 
 //////////////////////////////////////////////////////////////////////////
 // Setup
