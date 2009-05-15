@@ -188,6 +188,8 @@ class Main
   {
     input := CompilerInput.make
     input.podName        = podName
+    input.version        = Version("0")
+    input.description    = ""
     input.log.level      = LogLevel.error
     input.isScript       = true
     input.srcStr         = file.readAllStr

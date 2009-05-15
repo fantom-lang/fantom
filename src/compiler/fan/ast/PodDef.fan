@@ -62,7 +62,7 @@ class PodDef : DefNode, CPod
 
   override readonly CNamespace ns   // compiler's namespace
   override readonly Str name        // simple pod name
-  CompilationUnit[] units           // Tokenize
-  Str:TypeDef typeDefs              // ScanForUsingsAndTypes
+  CompilationUnit[]? units          // Tokenize
+  [Str:TypeDef]? typeDefs           // ScanForUsingsAndTypes
 
 }

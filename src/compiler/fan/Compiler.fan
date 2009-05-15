@@ -88,14 +88,14 @@ class Compiler
   CompilerInput input       // ctor
   CompilerLog log           // ctor
   CompilerErr[] errors      // accumulated errors
-  CNamespace ns             // InitInput
-  PodDef pod                // InitInput
+  CNamespace? ns            // InitInput
+  PodDef? pod               // InitInput
   Bool isSys := false       // InitInput; are we compiling sys itself
-  File[] srcFiles           // FindSourceFiles
-  File[] resFiles           // FindSourceFiles
-  TypeDef[] types           // Parse
-  ClosureExpr[] closures    // Parse
-  FPod fpod                 // Assemble
-  CompilerOutput output     // GenerateOutput
+  File[]? srcFiles          // FindSourceFiles
+  File[]? resFiles          // FindSourceFiles
+  TypeDef[]? types          // Parse
+  ClosureExpr[]? closures   // Parse
+  FPod? fpod                // Assemble
+  CompilerOutput? output    // GenerateOutput
 
 }

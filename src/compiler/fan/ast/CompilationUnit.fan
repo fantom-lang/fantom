@@ -45,10 +45,10 @@ class CompilationUnit : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  CPod pod                    // ctor
-  TokenVal[] tokens           // Tokenize
-  Using[] usings              // ScanForUsingsAndTypes
-  TypeDef[] types             // ScanForUsingsAndTypes
-  Str:CType[] importedTypes   // ResolveImports (includes my pod)
+  CPod pod                      // ctor
+  TokenVal[]? tokens            // Tokenize
+  Using[] usings                // ScanForUsingsAndTypes
+  TypeDef[] types               // ScanForUsingsAndTypes
+  [Str:CType[]]? importedTypes  // ResolveImports (includes my pod)
 
 }

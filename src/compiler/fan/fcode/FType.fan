@@ -207,9 +207,9 @@ class FType : CType
   FPod fpod             // parent pod
   Int self              // self typeRef index
   Int fbase             // base typeRef index
-  Int[] fmixins         // mixin typeRef indexes
-  FField[] ffields      // fields
-  FMethod[] fmethods    // methods
-  FAttr[] fattrs        // type attributes
+  Int[]? fmixins        // mixin typeRef indexes
+  FField[]? ffields     // fields
+  FMethod[]? fmethods   // methods
+  FAttr[]? fattrs       // type attributes
 
 }

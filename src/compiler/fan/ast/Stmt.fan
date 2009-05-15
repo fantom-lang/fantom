@@ -143,10 +143,11 @@ class ExprStmt : Stmt
 **
 class LocalDefStmt : Stmt
 {
-  new make(Location location)
+  new make(Location location, CType? ctype, Str name)
     : super(location, StmtId.localDef)
   {
-    isCatchVar = false
+    this.ctype = ctype
+    this.name = name
   }
 
   override Bool isExit() { return false }
@@ -194,7 +195,12 @@ class LocalDefStmt : Stmt
 **
 class IfStmt : Stmt
 {
-  new make(Location location) : super(location, StmtId.ifStmt) {}
+  new make(Location location, Expr condition, Block trueBlock)
+    : super(location, StmtId.ifStmt)
+  {
+    this.condition = condition
+    this.trueBlock = trueBlock
+  }
 
   override Bool isExit()
   {
@@ -291,7 +297,11 @@ class ReturnStmt : Stmt
 **
 class ThrowStmt : Stmt
 {
-  new make(Location location) : super(location, StmtId.throwStmt) {}
+  new make(Location location, Expr exception)
+    : super(location, StmtId.throwStmt)
+  {
+    this.exception = exception
+  }
 
   override Bool isExit() { true }
 
@@ -354,7 +364,7 @@ class ForStmt : Stmt
   Stmt? init        // loop initialization
   Expr? condition   // loop condition
   Expr? update      // loop update
-  Block block       // code to run inside loop
+  Block? block      // code to run inside loop
 }
 
 **************************************************************************
@@ -367,7 +377,12 @@ class ForStmt : Stmt
 **
 class WhileStmt : Stmt
 {
-  new make(Location location) : super(location, StmtId.whileStmt) {}
+  new make(Location location, Expr condition, Block block)
+    : super(location, StmtId.whileStmt)
+  {
+    this.condition = condition
+    this.block = block
+  }
 
   override Bool isExit() { false }
 
@@ -490,8 +505,8 @@ class TryStmt : Stmt
     }
   }
 
-  Expr exception       // expression which leaves exception on stack
-  Block block          // body of try block
+  Expr? exception      // expression which leaves exception on stack
+  Block? block         // body of try block
   Catch[] catches      // list of catch clauses
   Block? finallyBlock  // body of finally block or null
 }
@@ -501,7 +516,10 @@ class TryStmt : Stmt
 **
 class Catch : Node
 {
-  new make(Location location) : super(location) {}
+  new make(Location location)
+    : super(location)
+  {
+  }
 
   Bool isDefiniteAssign(|Expr lhs->Bool| f)
   {
@@ -519,7 +537,7 @@ class Catch : Node
 
   TypeRef? errType     // Err type to catch or null for catch-all
   Str? errVariable     // name of err local variable
-  Block block          // body of catch block
+  Block? block         // body of catch block
   Int start            // start offset generated in CodeAsm
   Int end              // end offset generated in CodeAsm
 }
@@ -533,10 +551,11 @@ class Catch : Node
 **
 class SwitchStmt : Stmt
 {
-  new make(Location location)
+  new make(Location location, Expr condition)
     : super(location, StmtId.switchStmt)
   {
-    cases = Case[,]
+    this.condition = condition
+    this.cases = Case[,]
   }
 
   override Bool isDefiniteAssign(|Expr lhs->Bool| f)

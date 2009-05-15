@@ -325,10 +325,7 @@ public class Parser : CompilerSupport
   {
     doc := doc()
 
-    def := EnumDef.make(cur)
-    def.doc = doc
-    def.ordinal = ordinal
-    def.name = consumeId
+    def := EnumDef.make(cur, doc, consumeId, ordinal)
 
     // optional ctor args
     if (curt === Token.lparen)
@@ -885,9 +882,7 @@ public class Parser : CompilerSupport
   **
   private LocalDefStmt localDefStmt(Location loc, CType? localType, Bool isEndOfStmt)
   {
-    stmt := LocalDefStmt.make(loc)
-    stmt.ctype = localType
-    stmt.name  = consumeId
+    stmt := LocalDefStmt.make(loc, localType, consumeId)
 
     if (curt === Token.defAssign || curt === Token.assign)
     {
@@ -906,12 +901,13 @@ public class Parser : CompilerSupport
   **
   private IfStmt ifStmt()
   {
-    stmt := IfStmt.make(cur)
+    loc := cur
     consume(Token.ifKeyword)
     consume(Token.lparen)
-    stmt.condition = expr
+    cond := expr
     consume(Token.rparen)
-    stmt.trueBlock = stmtOrBlock
+    trueBlock := stmtOrBlock
+    stmt := IfStmt.make(loc, cond, trueBlock)
     if (curt === Token.elseKeyword)
     {
       consume(Token.elseKeyword)
@@ -942,9 +938,9 @@ public class Parser : CompilerSupport
   **
   private ThrowStmt throwStmt()
   {
-    stmt := ThrowStmt.make(cur)
+    loc := cur
     consume(Token.throwKeyword)
-    stmt.exception = expr
+    stmt := ThrowStmt.make(loc, expr)
     endOfStmt
     return stmt
   }
@@ -955,13 +951,12 @@ public class Parser : CompilerSupport
   **
   private WhileStmt whileStmt()
   {
-    stmt := WhileStmt.make(cur)
+    loc := cur
     consume(Token.whileKeyword)
     consume(Token.lparen)
-    stmt.condition = expr
+    cond := expr
     consume(Token.rparen)
-    stmt.block = stmtOrBlock
-    return stmt
+    return WhileStmt.make(loc, cond, stmtOrBlock)
   }
 
   **
@@ -1069,10 +1064,10 @@ public class Parser : CompilerSupport
   **
   private SwitchStmt switchStmt()
   {
-    stmt := SwitchStmt.make(cur)
+    loc := cur
     consume(Token.switchKeyword)
     consume(Token.lparen)
-    stmt.condition = expr
+    stmt := SwitchStmt.make(loc, expr)
     consume(Token.rparen)
     consume(Token.lbrace)
     while (curt != Token.rbrace)
@@ -1300,11 +1295,10 @@ public class Parser : CompilerSupport
     expr := bitOrExpr
     if (curt === Token.dotDot || curt === Token.dotDotLt)
     {
-      range := RangeLiteralExpr.make(expr.location, ns.rangeType)
-      range.start     = expr
-      range.exclusive = consume.kind === Token.dotDotLt
-      range.end       = bitOrExpr
-      return range
+      start := expr
+      exclusive := consume.kind === Token.dotDotLt
+      end := bitOrExpr
+      return RangeLiteralExpr.make(expr.location, ns.rangeType, start, end, exclusive)
     }
     return expr
   }
@@ -2342,10 +2336,10 @@ public class Parser : CompilerSupport
   private TokenVal[] tokens       // tokens all read in
   private Int numTokens           // number of tokens
   private Int pos;                // offset Into tokens for cur
-  private TokenVal cur            // current token
-  private Token curt              // current token type
-  private TokenVal peek           // next token
-  private Token peekt             // next token type
+  private TokenVal? cur           // current token
+  private Token? curt             // current token type
+  private TokenVal? peek          // next token
+  private Token? peekt            // next token type
   private Bool isSys              // are we parsing the sys pod itself
   private Bool inFieldInit        // are we currently in a field initializer
   private TypeDef? curType        // current TypeDef scope

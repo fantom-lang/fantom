@@ -111,7 +111,6 @@ abstract class GenericType : CType
 //////////////////////////////////////////////////////////////////////////
 
   override readonly CType? base
-  private ListType listOf
 }
 
 **************************************************************************
@@ -389,7 +388,6 @@ class GenericParameterType : CType
   override CType? base() { return ns.objType }
   override CType[] mixins() { return CType[,] }
   override Str:CSlot slots() { throw UnsupportedErr.make }
-  private ListType listOf
 }
 
 **************************************************************************

@@ -100,9 +100,8 @@ class Normalize : CompilerStep
     // initializer is given its own scope in the unified static initializer;
     // the "if (true)" gets optimized away in CoodeAsm
     loc := m.location
-    ifStmt := IfStmt.make(loc)
-    ifStmt.condition = LiteralExpr.make(loc, ExprId.trueLiteral, ns.boolType, true)
-    ifStmt.trueBlock = m.code
+    cond := LiteralExpr.make(loc, ExprId.trueLiteral, ns.boolType, true)
+    ifStmt := IfStmt.make(loc, cond, m.code)
     sInit.add(ifStmt)
     m.code = null
   }
@@ -215,20 +214,21 @@ class Normalize : CompilerStep
     m.code  = Block.make(loc)
 
     // if (name$Store == "_once_")
-    ifStmt := IfStmt.make(loc)
-    ifStmt.condition = BinaryExpr.make(
+    cond := BinaryExpr.make(
       f.makeAccessorExpr(loc, false),
       Token.same,
       LiteralExpr.makeFor(loc, ns, "_once_"))
-    m.code.add(ifStmt)
 
     // name$Store = name$Once()
-    ifStmt.trueBlock = Block.make(loc)
-    ifStmt.trueBlock.add(BinaryExpr.make(
+    trueBlock := Block.make(loc)
+    trueBlock.add(BinaryExpr.make(
         f.makeAccessorExpr(loc, false),
         Token.assign,
         CallExpr.makeWithMethod(loc, ThisExpr.make(loc), x)
       ).toStmt)
+
+    ifStmt := IfStmt.make(loc, cond, trueBlock)
+    m.code.add(ifStmt)
 
     // return (RetType)name$Store
     retStmt := ReturnStmt.makeSynthetic(loc)

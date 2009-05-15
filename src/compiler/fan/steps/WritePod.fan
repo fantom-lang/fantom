@@ -278,6 +278,6 @@ class WritePod : CompilerStep
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Location location
+  private Location? location
   private FacetDef[] noFacets := FacetDef[,].ro
 }

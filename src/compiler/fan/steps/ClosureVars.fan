@@ -428,8 +428,8 @@ class ClosureVars : CompilerStep
 
   private const static Int syntheticFieldFlags:= FConst.Internal | FConst.Storage | FConst.Synthetic
 
-  private MethodDef method          // current method being processed
-  private Location location         // method.location
+  private MethodDef? method         // current method being processed
+  private Location? location        // method.location
   private Bool inClosure            // is method itself a closure doCall body
   private TypeDef? cvars            // cvars class implementation
   private MethodDef? cvarsCtor      // constructor for cvars class

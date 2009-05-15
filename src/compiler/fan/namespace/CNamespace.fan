@@ -259,74 +259,74 @@ abstract class CNamespace : CompilerSupport
   **
   ** Map of dependencies keyed by pod name set in ResolveDepends.
   **
-  Str:Depend depends
+  [Str:Depend]? depends
 
 //////////////////////////////////////////////////////////////////////////
 // Predefined
 //////////////////////////////////////////////////////////////////////////
 
-  readonly CPod sysPod
+  readonly CPod? sysPod
 
   // generic parameters like sys::K, sys::V
-  readonly Str:CType genericParams
+  readonly [Str:CType]? genericParams
 
   // place holder type used for resolve errors
-  readonly CType error
+  readonly CType? error
 
   // generic type for it block until we can infer type
-  readonly FuncType itBlockType
+  readonly FuncType? itBlockType
 
-  readonly CType objType
-  readonly CType boolType
-  readonly CType enumType
-  readonly CType intType
-  readonly CType floatType
-  readonly CType decimalType
-  readonly CType strType
-  readonly CType strBufType
-  readonly CType durationType
-  readonly CType listType
-  readonly CType mapType
-  readonly CType funcType
-  readonly CType errType
-  readonly CType typeType
-  readonly CType slotType
-  readonly CType fieldType
-  readonly CType methodType
-  readonly CType rangeType
-  readonly CType uriType
-  readonly CType voidType
+  readonly CType? objType
+  readonly CType? boolType
+  readonly CType? enumType
+  readonly CType? intType
+  readonly CType? floatType
+  readonly CType? decimalType
+  readonly CType? strType
+  readonly CType? strBufType
+  readonly CType? durationType
+  readonly CType? listType
+  readonly CType? mapType
+  readonly CType? funcType
+  readonly CType? errType
+  readonly CType? typeType
+  readonly CType? slotType
+  readonly CType? fieldType
+  readonly CType? methodType
+  readonly CType? rangeType
+  readonly CType? uriType
+  readonly CType? voidType
 
-  readonly CMethod objTrap
-  readonly CMethod objWith
-  readonly CMethod boolNot
-  readonly CMethod intIncrement
-  readonly CMethod intDecrement
-  readonly CMethod intPlus
-  readonly CMethod floatPlus
-  readonly CMethod floatMinus
-  readonly CMethod strPlus
-  readonly CMethod strBufMake
-  readonly CMethod strBufAdd
-  readonly CMethod strBufToStr
-  readonly CMethod listMake
-  readonly CMethod listMakeObj
-  readonly CMethod listAdd
-  readonly CMethod listToImmutable
-  readonly CMethod mapMake
-  readonly CMethod mapSet
-  readonly CMethod mapToImmutable
-  readonly CMethod enumOrdinal
-  readonly CMethod funcCurry
-  readonly CMethod rangeMakeInclusive
-  readonly CMethod rangeMakeExclusive
-  readonly CMethod slotFindMethod
-  readonly CMethod slotFindFunc
-  readonly CMethod typeField
-  readonly CMethod typeMethod
-  readonly CMethod funcToImmutable
-  readonly CMethod funcEnterCtor
-  readonly CMethod funcExitCtor
-  readonly CMethod funcCheckInCtor
+  readonly CMethod? objTrap
+  readonly CMethod? objWith
+  readonly CMethod? boolNot
+  readonly CMethod? intIncrement
+  readonly CMethod? intDecrement
+  readonly CMethod? intPlus
+  readonly CMethod? floatPlus
+  readonly CMethod? floatMinus
+  readonly CMethod? strPlus
+  readonly CMethod? strBufMake
+  readonly CMethod? strBufAdd
+  readonly CMethod? strBufToStr
+  readonly CMethod? listMake
+  readonly CMethod? listMakeObj
+  readonly CMethod? listAdd
+  readonly CMethod? listToImmutable
+  readonly CMethod? mapMake
+  readonly CMethod? mapSet
+  readonly CMethod? mapToImmutable
+  readonly CMethod? enumOrdinal
+  readonly CMethod? funcCurry
+  readonly CMethod? rangeMakeInclusive
+  readonly CMethod? rangeMakeExclusive
+  readonly CMethod? slotFindMethod
+  readonly CMethod? slotFindFunc
+  readonly CMethod? typeField
+  readonly CMethod? typeMethod
+  readonly CMethod? funcToImmutable
+  readonly CMethod? funcEnterCtor
+  readonly CMethod? funcExitCtor
+  readonly CMethod? funcCheckInCtor
 
 }

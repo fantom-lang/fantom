@@ -47,56 +47,52 @@ abstract class BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   ** The source file of this script
-  File scriptFile
+  const File scriptFile := File.make(type->sourceFile.toStr.toUri)
 
   ** The directory containing the this script
-  File scriptDir
+  const File scriptDir := scriptFile.parent
 
   ** Home directory of development installation.  By default this
   ** value is initialized by Sys.env["fan.build.devHome"], otherwise
   ** Sys.homeDir is used.
-  File devHomeDir
+  const File devHomeDir := resolveDevHomeDir
 
   ** {devHomeDir}/bin/
-  File binDir
+  const File binDir := devHomeDir + `bin/`
 
   ** {devHomeDir}/lib/
-  File libDir
+  const File libDir := devHomeDir + `lib/`
 
   ** {devHomeDir}/lib/fan
-  File libFanDir
+  const File libFanDir := devHomeDir + `lib/fan/`
 
   ** {devHomeDir}/lib/java
-  File libJavaDir
+  const File libJavaDir := devHomeDir + `lib/java/`
 
   ** {devHomeDir}/lib/java/ext
-  File libJavaExtDir
+  const File libJavaExtDir := devHomeDir + `lib/java/ext/`
 
   ** {devHomeDir}/lib/java/ext/{os} or null if unknown.
   ** Currently we map to os:
   **   - Windows   => "win"
   **   - MAC OS X  => "mac"
   **   - Linux     => "linux"
-  File libJavaExtOsDir
+  File libJavaExtOsDir := libJavaExtDir
 
   ** {devHomeDir}/lib/dotnet
-  File libDotnetDir
+  const File libDotnetDir := devHomeDir + `lib/dotnet/`
 
   ** This is the global default version to use when building pods.  It
   ** is initialized by Sys.env["fan.build.globalVersion"], otherwise
   ** "0.0.0" is used as a default.
-  Version globalVersion
+  Version globalVersion := Version("0.0.0")
 
   ** Executable extension: ".exe" on Windows and "" on Unix.
-  Str exeExt
+  Str exeExt := ""
 
-  **
-  ** Initialize the environment
-  **
-  internal virtual Void initEnv()
+  ** Compute value for devHomeDir field
+  private File resolveDevHomeDir()
   {
-    // init devHomeDir
-    devHomeDir = Sys.homeDir
     devHomeProp := Sys.env["fan.build.devHome"]
     if (devHomeProp != null)
     {
@@ -104,16 +100,22 @@ abstract class BuildScript
       {
         f := File.make(devHomeProp.toUri)
         if (!f.exists || !f.isDir) throw Err.make
-        devHomeDir = f
+        return f
       }
       catch
       {
         log.error("Invalid URI for fan.build.devHome: $devHomeProp")
       }
     }
+    return Sys.homeDir
+  }
 
+  **
+  ** Initialize the environment
+  **
+  internal virtual Void initEnv()
+  {
     // global version
-    globalVersion = Version.fromStr("0.0.0")
     globalVersionProp := Sys.env["fan.build.globalVersion"]
     if (globalVersionProp != null)
     {
@@ -133,16 +135,6 @@ abstract class BuildScript
 
     // exeExt
     exeExt = isWindows ? ".exe" : ""
-
-    // directories
-    scriptFile    = File.make(type->sourceFile.toStr.toUri)
-    scriptDir     = scriptFile.parent
-    binDir        = devHomeDir + `bin/`
-    libDir        = devHomeDir + `lib/`
-    libFanDir     = devHomeDir + `lib/fan/`
-    libJavaDir    = devHomeDir + `lib/java/`
-    libJavaExtDir = devHomeDir + `lib/java/ext/`
-    libDotnetDir  = devHomeDir + `lib/dotnet/`
 
     // try and figure out which lib/ext/{os} to use - this
     // is really going to work long term because it doesn't
@@ -499,7 +491,7 @@ abstract class BuildScript
   BuildLog log
 
   ** Targets available on this script (see `makeTargets`)
-  readonly Target[] targets
+  readonly Target[] targets := Target#.emptyList
 
   ** Targets specified to run by command line
   Target[]? toRun

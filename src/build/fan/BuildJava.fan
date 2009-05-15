@@ -20,14 +20,14 @@ abstract class BuildJava : BuildScript
   **
   ** Required target jar file to build
   **
-  File jar
+  File? jar
 
   **
   ** Required list of dotted package names to compile.  Each of these
   ** packages must have a corresponding source directory relative to the
   ** script directory.
   **
-  Str[] packages
+  Str[] packages := Str[,]
 
   **
   ** Main class name to add to manifest if not null.

@@ -130,12 +130,14 @@ class Evaluator
     // setup compiler input
     ci := CompilerInput
     {
-      podName   = shell == null ? "shWarmup" : "sh${shell.evalCount++}"
-      isScript  = true
-      log.level = LogLevel.silent
-      output    = CompilerOutputMode.transientPod
-      mode      = CompilerInputMode.str
-      srcStr    = source
+      podName     = shell == null ? "shWarmup" : "sh${shell.evalCount++}"
+      isScript    = true
+      version     = Version.defVal
+      description = ""
+      log.level   = LogLevel.silent
+      output      = CompilerOutputMode.transientPod
+      mode        = CompilerInputMode.str
+      srcStr      = source
       srcStrLocation = Location("fansh")
     }
 

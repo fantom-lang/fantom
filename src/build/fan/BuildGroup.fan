@@ -23,7 +23,7 @@ abstract class BuildGroup : BuildScript
   ** Required list of Uris relative to this scriptDir of
   ** Fan build script files to group together.
   **
-  Uri[] childrenScripts
+  Uri[] childrenScripts := Uri[,]
 
 //////////////////////////////////////////////////////////////////////////
 // Setup
@@ -154,6 +154,6 @@ abstract class BuildGroup : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   ** Compiled children scripts
-  BuildScript[] children
+  BuildScript[]? children
 
 }

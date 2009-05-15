@@ -473,6 +473,8 @@ class CheckErrors : CompilerStep
 
   private Void checkDefiniteAssign(MethodDef? m)
   {
+    if (isSys) return
+
     // get fields which:
     //   - instance or static fields based on ctor or static {}
     //   - aren't abstract, override, or native

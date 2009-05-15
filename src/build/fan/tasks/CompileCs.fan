@@ -105,7 +105,7 @@ class CompileCs : Task
 
   ** Home directory for .NET installation
   ** configured via Sys.env["fan.build.dotnetHome"]
-  File dotnetHomeDir
+  File? dotnetHomeDir
 
   ** C# compiler executable: {dotnetHomeDir}/csc.exe
   File cscExe
