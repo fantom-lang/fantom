@@ -176,6 +176,8 @@ namespace Fan.Sys
   // Fields
   //////////////////////////////////////////////////////////////////////////
 
+    public static readonly Version m_defVal = fromStr("0");
+
     private readonly List m_segments;
     private string m_str;
 

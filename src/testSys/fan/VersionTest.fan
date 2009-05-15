@@ -100,6 +100,9 @@ class VersionTest : Test
 
     verifyEq(Version.fromStr("1.6").hash, "1.6".hash)
     verifyEq(Version.fromStr("1.006").hash, "1.6".hash)
+
+    verifyEq(Version.defVal, Version("0"))
+    verifyEq(Version.defVal.major, 0)
   }
 
 //////////////////////////////////////////////////////////////////////////

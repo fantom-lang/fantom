@@ -176,6 +176,8 @@ public final class Version
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  public static final Version defVal = fromStr("0");
+
   private final List segments;
   private String str;
 

@@ -33,6 +33,11 @@ const final class Version
   static Version make(Int[] segments)
 
   **
+  ** Default value is "0".
+  **
+  static const Version defVal
+
+  **
   ** Private constructor
   **
   private new privateMake()
