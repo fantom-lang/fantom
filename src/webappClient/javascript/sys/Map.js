@@ -11,8 +11,24 @@
  */
 var sys_Map = sys_Obj.extend(
 {
-  $ctor: function() { this.map = {}; },
-  type: function()  { return sys_Type.find("sys::Map"); },
+  $ctor: function(k, v)
+  {
+    var mt = null;
+    if (k != undefined && v == undefined)
+    {
+      mt = k;
+    }
+    else
+    {
+      if (k == undefined) k = sys_Type.find("sys::Obj")
+      if (v == undefined) v = sys_Type.find("sys::Obj")
+      mt = new sys_MapType(k, v);
+    }
+    this.map = {};
+    this.$fanType = mt;
+  },
+
+  type: function() { return sys_Type.find("sys::Map"); },
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
@@ -22,8 +38,7 @@ var sys_Map = sys_Obj.extend(
   {
     if (that != null)
     {
-      if (this.keyType != that.keyType) return false;
-      if (this.valType != that.valType) return false;
+      if (!this.$fanType.equals(that.$fanType)) return false;
       var selfNum = 0;
       for (var k in this.map)
       {
@@ -107,9 +122,6 @@ var sys_Map = sys_Obj.extend(
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  keyType: "sys::Obj",
-  valType: "sys::Obj",
-
   map: null
 
 });
@@ -118,11 +130,9 @@ var sys_Map = sys_Obj.extend(
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Map.fromLiteral = function(keys, vals, ktype, vtype)
+sys_Map.fromLiteral = function(keys, vals, k, v)
 {
-  var map = new sys_Map();
-  if (ktype != null) map.keyType = ktype;
-  if (vtype != null) map.valType = vtype;
+  var map = new sys_Map(k,v);
   for (var i=0; i<keys.length; i++)
     map.set(keys[i], vals[i]);
   return map;

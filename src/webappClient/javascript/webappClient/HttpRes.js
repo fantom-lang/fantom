@@ -8,7 +8,11 @@
 
 var webappClient_HttpRes = sys_Obj.extend(
 {
-  $ctor: function() {},
+  $ctor: function()
+  {
+    var strType = sys_Type.find("sys::Str");
+    this.headers = new sys_Map(strType, strType);
+  },
   type: function() { return sys_Type.find("webappClient::HttpRes"); },
 
   status$get: function() { return this.status },
@@ -16,7 +20,7 @@ var webappClient_HttpRes = sys_Obj.extend(
   status: null,
 
   headers$get: function() { return this.headers },
-  headers: new sys_Map(),
+  headers: null,
 
   content$get: function() { return this.content },
   content$set: function(val) { this.content = val; },

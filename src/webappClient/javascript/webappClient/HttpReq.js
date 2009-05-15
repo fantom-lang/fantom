@@ -8,7 +8,11 @@
 
 var webappClient_HttpReq = sys_Obj.extend(
 {
-  $ctor: function() {},
+  $ctor: function()
+  {
+    var strType = sys_Type.find("sys::Str");
+    this.headers = new sys_Map(strType, strType);
+  },
   type: function() { return sys_Type.find("webappClient::HttpReq"); },
 
   uri$get: function() { return this.uri },
@@ -20,7 +24,7 @@ var webappClient_HttpReq = sys_Obj.extend(
   method: "POST",
 
   headers$get: function() { return this.headers },
-  headers: new sys_Map(),
+  headers: null,
 
   async$get: function() { return this.async },
   async$set: function(val) { this.async = val; },
@@ -70,3 +74,4 @@ webappClient_HttpReq.make = function(uri)
   if (uri != null) req.uri = uri;
   return req;
 }
+

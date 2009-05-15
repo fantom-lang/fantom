@@ -60,7 +60,7 @@ var sys_ArgErr = sys_Err.extend(
   $ctor: function(msg) { this._super(msg); },
   type: function() { return sys_Type.find("sys::ArgErr"); }
 });
-sys_ArgErr.make = function (msg) { return new sys_ArgErr(msg); }
+sys_ArgErr.make = function(msg) { return new sys_ArgErr(msg); }
 
 // NullErr
 var sys_NullErr  = sys_Err.extend(
@@ -68,7 +68,7 @@ var sys_NullErr  = sys_Err.extend(
   $ctor: function(msg) { this._super(msg); },
   type: function() { return sys_Type.find("sys::NullErr"); }
 });
-sys_NullErr.make = function (msg) { return new sys_NullErr(msg); }
+sys_NullErr.make = function(msg) { return new sys_NullErr(msg); }
 
 // IOErr
 var sys_IOErr  = sys_Err.extend(
@@ -76,7 +76,7 @@ var sys_IOErr  = sys_Err.extend(
   $ctor: function(msg) { this._super(msg); },
   type: function() { return sys_Type.find("sys::IOErr"); }
 });
-sys_IOErr.make = function (msg) { return new sys_IOErr(msg); }
+sys_IOErr.make = function(msg) { return new sys_IOErr(msg); }
 
 // IndexErr
 var sys_IndexErr = sys_Err.extend(
@@ -84,7 +84,7 @@ var sys_IndexErr = sys_Err.extend(
   $ctor: function(msg) { this._super(msg); },
   type: function() { return sys_Type.find("sys::IndexErr"); }
 });
-sys_IndexErr.make = function (msg) { return new sys_IndexErr(msg); }
+sys_IndexErr.make = function(msg) { return new sys_IndexErr(msg); }
 
 // ParseErr
 var sys_ParseErr = sys_Err.extend(
@@ -109,7 +109,7 @@ var sys_ReadonlyErr = sys_Err.extend(
   $ctor: function(msg) { this._super(msg); },
   type: function() { return sys_Type.find("sys::ReadonlyErr"); }
 });
-sys_ReadonlyErr.make = function (msg) { return new sys_ReadonlyErr(msg); }
+sys_ReadonlyErr.make = function(msg) { return new sys_ReadonlyErr(msg); }
 
 // UnknownPodErr
 var sys_UnknownPodErr = sys_Err.extend(
@@ -117,7 +117,7 @@ var sys_UnknownPodErr = sys_Err.extend(
   $ctor: function(msg) { this._super(msg); },
   type: function() { return sys_Type.find("sys::UnknownPodErr"); }
 });
-sys_UnknownPodErr.make = function (msg) { return new sys_UnknownPodErr(msg); }
+sys_UnknownPodErr.make = function(msg) { return new sys_UnknownPodErr(msg); }
 
 // UnknownTypeErr
 var sys_UnknownTypeErr = sys_Err.extend(
@@ -125,7 +125,7 @@ var sys_UnknownTypeErr = sys_Err.extend(
   $ctor: function(msg) { this._super(msg); },
   type: function() { return sys_Type.find("sys::UnknownTypeErr"); }
 });
-sys_UnknownTypeErr.make = function (msg) { return new sys_UnknownTypeErr(msg); }
+sys_UnknownTypeErr.make = function(msg) { return new sys_UnknownTypeErr(msg); }
 
 // UnknownSlotErr
 var sys_UnknownSlotErr = sys_Err.extend(
@@ -133,5 +133,5 @@ var sys_UnknownSlotErr = sys_Err.extend(
   $ctor: function(msg) { this._super(msg); },
   type: function() { return sys_Type.find("sys::UnknownSlotErr"); }
 });
-sys_UnknownSlotErr.make = function (msg) { return new sys_UnknownSlotErr(msg); }
+sys_UnknownSlotErr.make = function(msg) { return new sys_UnknownSlotErr(msg); }
 

@@ -27,6 +27,9 @@ var fanx_ObjDecoder = Class.extend(
     this.usings = [];
     this.numUsings = 0;
     this.consume();
+
+    fanx_ObjDecoder.defaultMapType =
+      new sys_MapType(sys_Type.find("sys::Obj"), sys_Type.find("sys::Obj"));
   },
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,7 +42,7 @@ var fanx_ObjDecoder = Class.extend(
   readObj: function()
   {
     this.readHeader();
-    return this.readObj(null, null, true);
+    return this.$readObj(null, null, true);
   },
 
   /**
@@ -48,7 +51,7 @@ var fanx_ObjDecoder = Class.extend(
   readHeader: function()
   {
     while (this.curt == fanx_Token.USING)
-      usings[this.numUsings++] = this.readUsing();
+      this.usings[this.numUsings++] = this.readUsing();
   },
 
   /**
@@ -63,12 +66,12 @@ var fanx_ObjDecoder = Class.extend(
     this.consume();
 
     var podName = this.consumeId("Expecting pod name");
-    var pod = Pod.find(podName, false);
+    var pod = sys_Pod.find(podName, false);
     if (pod == null) throw err("Unknown pod: " + podName);
     if (this.curt != fanx_Token.DOUBLE_COLON)
     {
       this.endOfStmt(line);
-      return new UsingPod(pod);
+      return new fanx_UsingPod(pod);
     }
 
     this.consume();
@@ -89,7 +92,7 @@ var fanx_ObjDecoder = Class.extend(
   /**
    * obj := literal | simple | complex
    */
-  readObj: function(curField, peekType, root)
+  $readObj: function(curField, peekType, root)
   {
     // literals are stand alone
     if (fanx_Token.isLiteral(this.curt))
@@ -231,7 +234,7 @@ return eval(script);
 
   readComplexAdd: function(t, obj, line)
   {
-    var val = this.readObj(null, null, false);
+    var val = this.$readObj(null, null, false);
     var m = t.method("add", false);
     if (m == null) throw this.err("Method not found: " + t.qname() + ".add", line);
     try
@@ -251,7 +254,7 @@ return eval(script);
     if (field == null) throw this.err("Field not found: " + t.qname() + "." + name, line);
 
     // parse value
-    var val = this.readObj(field, null, false);
+    var val = this.$readObj(field, null, false);
 
     // set field value (skip const check)
     try
@@ -290,17 +293,15 @@ return eval(script);
     {
       // peek at the type
       peekType = this.readType();
-/*
-// TODO
+
       // if we have [mapType] then this is non-inferred type signature
-      if (this.curt == fanx_Token.RBRACKET && peekType instanceof MapType)
+      if (this.curt == fanx_Token.RBRACKET && peekType instanceof sys_MapType)
       {
         t = peekType; peekType = null;
         this.consume();
         while (this.curt == fanx_Token.LRBRACKET) { this.consume(); t = t.toListOf(); }
         this.consume(fanx_Token.LBRACKET, "Expecting '['");
       }
-*/
     }
 
     // handle special case of [,]
@@ -316,11 +317,11 @@ return eval(script);
     {
       this.consume();
       this.consume(fanx_Token.RBRACKET, "Expecting ']'");
-      return new Map(this.toMapType(t, curField, false));
+      return new sys_Map(this.toMapType(t, curField, false));
     }
 
     // read first list item or first map key
-    var first = this.readObj(null, peekType, false);
+    var first = this.$readObj(null, peekType, false);
 
     // now we can distinguish b/w list and map
     if (this.curt == fanx_Token.COLON)
@@ -343,7 +344,7 @@ return eval(script);
     {
       this.consume(fanx_Token.COMMA, "Expected ','");
       if (this.curt == fanx_Token.RBRACKET) break;
-      acc.push(this.readObj(null, null, false));
+      acc.push(this.$readObj(null, null, false));
     }
     this.consume(fanx_Token.RBRACKET, "Expected ']'");
 
@@ -366,16 +367,16 @@ return eval(script);
 
     // finish first pair
     consume(fanx_Token.COLON, "Expected ':'");
-    map.put(firstKey, readObj(null, null, false));
+    map.put(firstKey, this.$readObj(null, null, false));
 
     // parse map pairs
     while (curt != fanx_Token.RBRACKET)
     {
       consume(fanx_Token.COMMA, "Expected ','");
       if (curt == fanx_Token.RBRACKET) break;
-      Object key = readObj(null, null, false);
+      Object key = this.$readObj(null, null, false);
       consume(fanx_Token.COLON, "Expected ':'");
-      Object val = readObj(null, null, false);
+      Object val = this.$readObj(null, null, false);
       map.put(key, val);
     }
     consume(fanx_Token.RBRACKET, "Expected ']'");
@@ -386,10 +387,10 @@ return eval(script);
       int size = map.size();
       Type k = Type.common(map.keySet().toArray(new Object[size]), size);
       Type v = Type.common(map.values().toArray(new Object[size]), size);
-      mapType = new MapType(k, v);
+      mapType = new sys_MapType(k, v);
     }
 
-    return new Map((MapType)mapType, map);
+    return new sys_Map((sys_MapType)mapType, map);
   },
 */
 
@@ -419,26 +420,20 @@ return eval(script);
    *   3) if inferred is false, then drop back to Obj:Obj
    *   4) If inferred is true then return null and we'll infer the common key/val types
    */
-// TODO
-/*
   toMapType: function(t, curField, infer)
   {
-    if (t != null)
-    {
-      try { return (MapType)t; }
-      catch (ClassCastException e) { throw err("Invalid map type: " + t); }
-    }
+    if (t instanceof sys_MapType)
+      return t;
 
     if (curField != null)
     {
-      Type ft = curField.of().toNonNullable();
-      if (ft instanceof MapType) return (MapType)ft;
+      var ft = curField.of().toNonNullable();
+      if (ft instanceof sys_MapType) return ft;
     }
 
     if (infer) return null;
-    return defaultMapType;
+    return fanx_ObjDecoder.defaultMapType;
   },
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Type
@@ -465,7 +460,7 @@ return eval(script);
     if (this.curt == fanx_Token.COLON)
     {
       this.consume();
-      t = new MapType(t, this.readType());
+      t = new sys_MapType(t, this.readType());
     }
     while (this.curt == fanx_Token.LRBRACKET)
     {
@@ -610,9 +605,7 @@ fanx_ObjDecoder.err = function(msg, line)
   return sys_IOErr.make(msg + " [Line " + line + "]");
 }
 
-//fanx_ObjDecoder.defaultMapType = new MapType(Sys.ObjType, Sys.ObjType.toNullable());
-//fanx_ObjDecoder.defaultMapType = new MapType(sys_Type.find("sys::Obj"), sys_Type.find("sys::Obj?"));
-fanx_ObjDecoder.defaultMapType = null; //new MapType(sys_Type.find("sys::Obj"), sys_Type.find("sys::Obj"));
+fanx_ObjDecoder.defaultMapType = null;
 
 //////////////////////////////////////////////////////////////////////////
 // Using
@@ -621,11 +614,11 @@ fanx_ObjDecoder.defaultMapType = null; //new MapType(sys_Type.find("sys::Obj"), 
 var fanx_UsingPod = Class.extend(
 {
   $ctor: function(p) { this.pod = p; },
-  resolve: function(n) { return p.findType(n, false); }
+  resolve: function(n) { return this.pod.findType(n, false); }
 });
 
 var fanx_UsingType = Class.extend(
 {
-  $ctor: function(t,n) { this.type = t; name = n; },
-  resolve: function(n) { return name.equals(n) ? type : null; }
+  $ctor: function(t,n) { this.type = t; this.name = n; },
+  resolve: function(n) { return this.name.equals(n) ? this.type : null; }
 });
