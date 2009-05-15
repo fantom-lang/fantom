@@ -38,11 +38,11 @@ var sys_Type = sys_Obj.extend(
   name: function()      { return this.n_name; },
   qname: function()     { return this.m_qname; },
   signature: function() { return this.m_qname; },
-  toString: function()  { return this.m_qname; },
+  toStr: function()     { return this.signature(); },
   type: function()      { return sys_Type.find("sys::Type"); },
+  toListOf: function()  { return new sys_ListType(this); },
 
   // TODO
-  toListOf: function()  { return this; },
   toNullable: function() { return this; },
   toNonNullable: function() { return this; },
 
@@ -99,7 +99,8 @@ var sys_Type = sys_Obj.extend(
   // addField
   $af: function(name, flags, of)
   {
-    var f = new sys_Field(this, name, flags, sys_Type.find(of));
+    var t = fanx_TypeParser.load(of);
+    var f = new sys_Field(this, name, flags, t);
     this.m_slots[name] = f;
     return this;
   },
@@ -130,7 +131,7 @@ sys_Type.find = function(qname, checked)
   var typeName = s[1];
   var t = sys_Pod.find(podName).findType(typeName);
   if (t == null && checked)
-    throw sys_UnknownTypeErr(qname);
+    throw sys_UnknownTypeErr.make(qname);
   return t;
 }
 
@@ -169,3 +170,47 @@ sys_Type.common = function(objs)
   if (best == null) best = sys_Type.find("sys::Obj");
   return nullable ? best.toNullable() : best;
 }
+
+/*************************************************************************
+ * ListType
+ ************************************************************************/
+
+var sys_ListType = sys_Type.extend(
+{
+  $ctor: function(v) { this.v = v; },
+  signature: function() { return this.v.signature() + '[]'; },
+  equals: function(that)
+  {
+    if (that instanceof sys_ListType)
+      return this.v.equals(that.v);
+    else
+      return false;
+  }
+});
+
+/*************************************************************************
+ * MapType
+ ************************************************************************/
+
+var sys_MapType = sys_Type.extend(
+{
+  $ctor: function(k, v)
+  {
+    this.k = k;
+    this.v = v;
+  },
+
+  signature: function()
+  {
+    return "[" + this.k.signature() + ':' + this.v.signature() + ']';
+  },
+
+  equals: function(that)
+  {
+    if (that instanceof sys_MapType)
+      return this.k.equals(that.k) && this.v.equals(that.v);
+    else
+      return false;
+  }
+});
+

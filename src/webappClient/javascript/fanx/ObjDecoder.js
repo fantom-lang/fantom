@@ -406,9 +406,7 @@ return eval(script);
     if (curField != null)
     {
       var ft = curField.of().toNonNullable();
-      //if (ft instanceof ListType) return ((ListType)ft).v;
-// TODO
-return null;
+      if (ft instanceof sys_ListType) return ft.v;
     }
     if (infer) return null;
     return sys_Type.find("sys::Obj").toNullable(); //Sys.ObjType.toNullable();
