@@ -216,7 +216,7 @@ var webappClient_Elem = sys_Obj.extend(
 
 webappClient_Elem.make = function(elem)
 {
-  if (elem == null) throw new sys_ArgErr("elem is null")
+  if (elem == null) throw sys_ArgErr.make("elem is null")
 
   if (elem._webappClientElem != undefined)
     return elem._webappClientElem;
@@ -226,3 +226,4 @@ webappClient_Elem.make = function(elem)
   elem._webappClientElem = wrap;
   return wrap;
 }
+

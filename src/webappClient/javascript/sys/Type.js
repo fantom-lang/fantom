@@ -41,6 +41,7 @@ var sys_Type = sys_Obj.extend(
   toStr: function()     { return this.signature(); },
   type: function()      { return sys_Type.find("sys::Type"); },
   toListOf: function()  { return new sys_ListType(this); },
+  emptyList: function() { return new sys_ListType(this); },
 
   // TODO
   toNullable: function() { return this; },
@@ -123,16 +124,9 @@ var sys_Type = sys_Obj.extend(
 /**
  * Find the Fan type for this qname.
  */
-sys_Type.find = function(qname, checked)
+sys_Type.find = function(sig, checked)
 {
-  if (checked == undefined) checked = true;
-  var s = qname.split("::");
-  var podName  = s[0];
-  var typeName = s[1];
-  var t = sys_Pod.find(podName).findType(typeName);
-  if (t == null && checked)
-    throw sys_UnknownTypeErr.make(qname);
-  return t;
+  return fanx_TypeParser.load(sig, checked);
 }
 
 /**

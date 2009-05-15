@@ -44,14 +44,13 @@ class Build : BuildPod
     out := lib.out
 
     // collect source files
-    src := Str:File[:]
-    (scriptDir + `javascript/`).walk |File f|
-    {
-      if (f.ext == "js") src[f.name] = f
-    }
+    src := Str:File[:] { ordered = true }
+    (scriptDir + `javascript/sys/`).walk  |f| { if (f.ext == "js") src[f.name] = f }
+    (scriptDir + `javascript/fanx/`).walk |f| { if (f.ext == "js") src[f.name] = f }
+    (scriptDir + `javascript/webappClient/`).walk |f| { if (f.ext == "js") src[f.name] = f }
 
-    // output ordered files first
-    ordered.each |Str name|
+    // output first
+    first.each |Str name|
     {
       f := src[name]
       if (log.isDebug) log.printLine("  [$f]")
@@ -62,8 +61,18 @@ class Build : BuildPod
     // output everyone else
     src.each |File f|
     {
-      if (ordered.contains(f.name)) return
+      if (first.contains(f.name)) return
+      if (last.contains(f.name)) return
       if (log.isDebug) log.printLine("  [$f]")
+      append(f, out)
+    }
+
+    // output last
+    last.each |Str name|
+    {
+      f := src[name]
+      if (log.isDebug) log.printLine("  [$f]")
+      if (f == null) throw Err("Required file not found: $name")
       append(f, out)
     }
 
@@ -85,13 +94,13 @@ class Build : BuildPod
       s := line
       // line comments
       i := s.index("//")
-      if (i != null) s = s[0...i]
+      if (i != null) s = s[0..<i]
       // block comments
       temp := s
       a := temp.index("/*")
       if (a != null)
       {
-        s = temp[0...a]
+        s = temp[0..<a]
         inBlock = true
       }
       if (inBlock)
@@ -111,7 +120,11 @@ class Build : BuildPod
     }
   }
 
-  Str[] ordered := ["Sys.js", "Obj.js", "Type.js", "Slot.js", "Num.js", "List.js",
-                    "Map.js", "Enum.js", "InStream.js"]
+  // must be first
+  Str[] first := ["Sys.js", "Obj.js", "Pod.js", "Type.js", "Slot.js", "Err.js",
+                  "Num.js", "List.js", "Map.js", "Enum.js", "Int.js", "InStream.js"]
+
+  // must be last
+  Str[] last := ["sysPod.js", "webappClientPod.js"]
 
 }

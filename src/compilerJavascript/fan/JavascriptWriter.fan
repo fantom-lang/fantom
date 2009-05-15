@@ -420,8 +420,8 @@ if (c != null)
     out.w("]")
     if (me.explicitType != null)
     {
-      out.w(",\"").w(me.explicitType.k).w("\"")
-      out.w(",\"").w(me.explicitType.v).w("\"")
+      out.w(",sys_Type.find(\"").w(me.explicitType.k).w("\")")
+      out.w(",sys_Type.find(\"").w(me.explicitType.v).w("\")")
     }
     out.w(")")
   }
