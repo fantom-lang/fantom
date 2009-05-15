@@ -111,9 +111,6 @@ class Tokenizer : CompilerSupport
     // skip whitespace
     if (cur.isSpace) { consume; whitespace = true; return null }
 
-    // raw string literal r"c:\dir\foo.txt"
-    if (cur == 'r' && peek == '"' && !inStrLiteral) return rawStr
-
     // alpha means keyword or identifier
     if (cur.isAlpha || cur == '_') return word
 
@@ -299,52 +296,17 @@ class Tokenizer : CompilerSupport
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Parse a raw string literal token.
-  **
-  private TokenVal rawStr()
-  {
-    // consume opening 'r' and quote
-    consume
-    consume
-
-    openLine := posOfLine
-    openPos  := pos
-    multiLineOk := true
-
-    // string contents
-    s := StrBuf()
-    while (cur !=  '"')
-    {
-      if (cur <= 0) throw err("Unexpected end of string")
-
-      if (cur == '\n')
-      {
-        s.addChar(cur)
-        consume
-        if (multiLineOk) multiLineOk = skipStrWs(openLine, openPos)
-        continue
-      }
-
-      s.addChar(cur)
-      consume
-    }
-
-    // close quote
-    consume
-
-    return TokenVal(Token.strLiteral, s.toStr)
-  }
-
-  **
   ** Parse a string literal token.
   **
   private TokenVal? str()
   {
     inStrLiteral = true
+    triple := false
     try
     {
       // consume opening quote
       consume
+      if (cur == '"' && peek == '"') { triple = true; consume; consume }
       openLine := posOfLine
       openPos  := pos
       multiLineOk := true
@@ -356,8 +318,24 @@ class Tokenizer : CompilerSupport
       interpolated := false
       while (true)
       {
-        if (cur == '"') { consume; break }
         if (cur == 0) throw err("Unexpected end of string")
+
+        if (cur == '"')
+        {
+          consume
+          if (!triple) break
+          if (cur == '"' || peek == '"')
+          {
+            consume
+            consume
+            break
+          }
+          else
+          {
+            s.addChar('"')
+            continue
+          }
+        }
 
         if (cur == '\n')
         {

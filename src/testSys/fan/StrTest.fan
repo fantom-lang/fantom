@@ -34,10 +34,11 @@ class StrTest : Test
         baz", "foo\n bar\n  baz")
 
     verifyEq(
-     r"\foo
-        \bar
-         \baz
-       !", "\\foo\n \\bar\n  \\baz\n!")
+      Str<|\foo
+            \bar
+
+             \baz
+           !|>, "\\foo\n \\bar\n\n  \\baz\n!")
   }
 
 //////////////////////////////////////////////////////////////////////////
