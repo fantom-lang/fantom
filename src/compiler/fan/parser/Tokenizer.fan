@@ -131,6 +131,9 @@ class Tokenizer : CompilerSupport
     if (cur == '/' && peek == '/') return skipCommentSL
     if (cur == '/' && peek == '*') return skipCommentML
 
+    // DSL
+    if (cur == '<' && peek == '|') return dsl
+
     // symbols
     return symbol
   }
@@ -629,6 +632,36 @@ class Tokenizer : CompilerSupport
     }
 
     throw err("Invalid escape sequence")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// DSL
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Parse a domain specific language <| ... |>
+  **
+  private TokenVal dsl()
+  {
+    consume // <
+    consume // |
+
+    // store starting position
+    s := StrBuf()
+
+    // loop until we find end of DSL
+    while (true)
+    {
+      if (cur == '|' && peek == '>') break
+      if (cur == 0) throw err("Unexpected end of DSL")
+      s.addChar(cur)
+      consume
+    }
+
+    consume // |
+    consume // >
+
+    return TokenVal(Token.dsl, s.toStr)
   }
 
 //////////////////////////////////////////////////////////////////////////

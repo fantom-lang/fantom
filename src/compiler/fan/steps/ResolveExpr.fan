@@ -165,6 +165,7 @@ class ResolveExpr : CompilerStep
       case ExprId.ternary:         resolveTernary(expr)
       case ExprId.curry:           return resolveCurry(expr)
       case ExprId.closure:         resolveClosure(expr)
+      case ExprId.dsl:             return resolveDsl(expr)
     }
 
     return expr
@@ -650,6 +651,21 @@ class ResolveExpr : CompilerStep
       if (expr.enclosingLocals.containsKey(p.name) && p.name != "it")
         err("Closure parameter '$p.name' is already defined in current block", p.location)
     }
+  }
+
+  **
+  ** Resolve a DSL
+  **
+  private Expr resolveDsl(DslExpr expr)
+  {
+    plugin := DslPlugin.find(this, expr.location, expr.anchorType)
+    if (plugin == null)
+    {
+      expr.ctype = ns.error
+      return expr
+    }
+
+    return plugin.compile(expr)
   }
 
 //////////////////////////////////////////////////////////////////////////

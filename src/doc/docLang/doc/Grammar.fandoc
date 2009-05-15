@@ -134,7 +134,7 @@ Expr [#expr]
   <prefixExpr>     :=  ("!" | "+" | "-" | "~" | "&" | "++" | "--") <parenExpr>
   <postfixExpr>    :=  <termExpr> ("++" | "--")
   <termExpr>       :=  <termBase> <termChain>*
-  <termBase>       :=  <literal> | <idExpr> | <closure>
+  <termBase>       :=  <literal> | <idExpr> | <closure> | <dsl>
   <termChain>      :=  <dotCall> | <dynCall> | <safeDotCall> | <safeDynCall> |
                        <indexExpr> | <callOp> | <itBlock>
   <itBlock>        :=  "{" <stmts> "}"
@@ -143,6 +143,7 @@ Expr [#expr]
   <safeDotCall>    :=  "?." <idExpr>
   <safeDynCall>    :=  "?->" <idExpr>
   <idExpr>         :=  <local> | <field> | <call>
+  <dsl>            :=  <simpleType> "<|" <anyChar>* "|>"
   <local>          :=  <id>
   <field>          :=  ["@"] <id>
   <call>           :=  <id> ["(" <args> ")"] [<closure>]
