@@ -129,7 +129,7 @@ class UriTest : Test
 
     verifyQueryEncoding(
       "xyz=a%7E%21%40%23%24%25%5C%5E%26*%28+%29%3F%3B%3D%7C&flag",
-      ["xyz":r"a~!@#$%\^&*( )?;=|", "flag":"true"], false)
+      ["xyz":Str<|a~!@#$%\^&*( )?;=||>, "flag":"true"], false)
 
     verifyQueryEncoding(
       "a%3D%3B%26=foo_%5E%25%24%5Cdog",
@@ -989,19 +989,19 @@ class UriTest : Test
   Void testEsc()
   {
     // file path
-    verifyPath(`a\#1/b`, r"a\#1/b", [r"a\#1", "b"])
+    verifyPath(`a\#1/b`, Str<|a\#1/b|>, [Str<|a\#1|>, "b"])
 
     verifyEq(`filex \#2`.frag, null)
 
-    verifyPath(`filex \\#2`,  r"filex \\", [r"filex \\"])
+    verifyPath(`filex \\#2`,  Str<|filex \\|>, [Str<|filex \\|>])
     verifyEq(`filex \\#2`.frag, "2")
 
     verifyPath(`/x\/y/a\:b/what\?/`, "/x\\/y/a\\:b/what\\?/", ["x\\/y", "a\\:b", "what\\?"])
     verifyEq(`/x\/y/a\:b/what.\?/`.ext, "\\?")
 
-    verifyPath(`why\/b`, r"why\/b", [r"why\/b"])
+    verifyPath(`why\/b`, Str<|why\/b|>, [Str<|why\/b|>])
 
-    verifyPath(`a\\/b`, r"a\\/b", [r"a\\", "b"])
+    verifyPath(`a\\/b`, Str<|a\\/b|>, [Str<|a\\|>, "b"])
 
     verifyEq(`num\[2\] \@ foo`.name, "num\\[2\\] \\@ foo")
 
@@ -1023,9 +1023,9 @@ class UriTest : Test
     verifyQuery(`?a=b\&c\=d`, "a=b\\&c\\=d", ["a":"b&c=d"])
 
     verifyEq(`/foo?a=h2\=\=;b\\b=c&d\;e`.path, ["foo"])
-    verifyQuery(`/foo?a=h2\=\=;b\\b=c&d\;e`, r"a=h2\=\=;b\\b=c&d\;e", ["a":"h2==", "b\\b":"c", "d;e":"true"])
+    verifyQuery(`/foo?a=h2\=\=;b\\b=c&d\;e`, Str<|a=h2\=\=;b\\b=c&d\;e|>, ["a":"h2==", "b\\b":"c", "d;e":"true"])
 
-    verifyQuery(`?\\\;\&\#=\#\&\=\;\\#frag`, r"\\\;\&\#=\#\&\=\;\\", ["\\;&#":"#&=;\\"])
+    verifyQuery(`?\\\;\&\#=\#\&\=\;\\#frag`, Str<|\\\;\&\#=\#\&\=\;\\|>, ["\\;&#":"#&=;\\"])
     verifyEq(`?\\\;\&\#=\#\&\=\;\\#frag`.frag,  "frag")
 
     // frag can contain anything
@@ -1067,8 +1067,8 @@ class UriTest : Test
 
     verifyEsc(`#\\`, "#%5C", "", np, null, nq, "\\\\")
 
-    verifyEsc(`\\_.txt\\?x=\\`, "%5C_.txt%5C?x=%5C", r"\\_.txt\\", [r"\\_.txt\\"], "x=\\\\", ["x":"\\"], null)
-    verifyEsc(`\\_.txt\\?x=\\#f`, "%5C_.txt%5C?x=%5C#f", r"\\_.txt\\", [r"\\_.txt\\"], "x=\\\\", ["x":"\\"], "f")
+    verifyEsc(`\\_.txt\\?x=\\`, "%5C_.txt%5C?x=%5C", Str<|\\_.txt\\|>, [Str<|\\_.txt\\|>], "x=\\\\", ["x":"\\"], null)
+    verifyEsc(`\\_.txt\\?x=\\#f`, "%5C_.txt%5C?x=%5C#f", Str<|\\_.txt\\|>, [Str<|\\_.txt\\|>], "x=\\\\", ["x":"\\"], "f")
 
     verifyEsc(`\\?\\=\\#\\`, "%5C?%5C=%5C#%5C", "\\\\", ["\\\\"], "\\\\=\\\\", ["\\":"\\"], "\\\\")
 

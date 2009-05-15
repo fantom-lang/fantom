@@ -120,7 +120,7 @@ abstract class DslPlugin : CompilerSupport
         else
           throw err("Leading space in $dsl.anchorType.name DSL must be $dsl.leadingTabs tabs and $dsl.leadingSpaces spaces", loc)
       }
-      if (j < line.size) s.add(line[j..-1])
+      if (j < line.size) s.add(line[j+1..-1])
     }
     return s.toStr
   }
