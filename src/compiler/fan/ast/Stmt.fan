@@ -463,7 +463,7 @@ class TryStmt : Stmt
   {
     if (finallyBlock != null && finallyBlock.isDefiniteAssign(f)) return true
     if (!block.isDefiniteAssign(f)) return false
-    return catches.all |Catch c->Bool| { return c.block.isDefiniteAssign(f) }
+    return catches.all |Catch c->Bool| { c.isDefiniteAssign(f) }
   }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
@@ -502,6 +502,12 @@ class TryStmt : Stmt
 class Catch : Node
 {
   new make(Location location) : super(location) {}
+
+  Bool isDefiniteAssign(|Expr lhs->Bool| f)
+  {
+    if (block.stmts.last?.id === StmtId.throwStmt) return true
+    return block.isDefiniteAssign(f)
+  }
 
   override Void print(AstWriter out)
   {
