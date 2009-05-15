@@ -320,22 +320,7 @@ class Tokenizer : CompilerSupport
       {
         if (cur == 0) throw err("Unexpected end of string")
 
-        if (cur == '"')
-        {
-          consume
-          if (!triple) break
-          if (cur == '"' || peek == '"')
-          {
-            consume
-            consume
-            break
-          }
-          else
-          {
-            s.addChar('"')
-            continue
-          }
-        }
+        if (endOfStr(triple)) break
 
         if (cur == '\n')
         {
@@ -357,7 +342,7 @@ class Tokenizer : CompilerSupport
 
           // process interpolated string, it returns null
           // if at end of string literal
-          if (!strInterpolation(s.toStr))
+          if (!strInterpolation(s.toStr, triple))
           {
             tokens.add(makeVirtualToken(Token.rparen))
             return null
@@ -429,7 +414,7 @@ class Tokenizer : CompilerSupport
   **   "a ${b} c" -> "a " + b + " c"
   ** Return true if more in the string literal.
   **
-  private Bool strInterpolation(Str s)
+  private Bool strInterpolation(Str s, Bool triple)
   {
     consume // $
     tokens.add(makeVirtualToken(Token.strLiteral, s))
@@ -442,7 +427,7 @@ class Tokenizer : CompilerSupport
       consume
       while (true)
       {
-        if (cur == '"' || cur == 0) throw err("Unexpected end of string, missing }")
+        if (endOfStr(triple) || cur == 0) throw err("Unexpected end of string, missing }")
         tok := next
         if (tok.kind == Token.rbrace) break
         tokens.add(tok)
@@ -472,14 +457,23 @@ class Tokenizer : CompilerSupport
     }
 
     // if at end of string, all done
-    if (cur == '\"')
-    {
-      consume
-      return false
-    }
+    if (endOfStr(triple)) return false
 
     // add plus and return true to keep chugging
     tokens.add(makeVirtualToken(Token.plus))
+    return true
+  }
+
+  **
+  ** If at end of string literal consume the
+  ** ending token(s) and return true.
+  **
+  private Bool endOfStr(Bool triple)
+  {
+    if (cur != '"') return false
+    if (!triple) { consume; return true }
+    if (peek != '"' || peekPeek != '"') return false
+    consume; consume; consume
     return true
   }
 
@@ -787,8 +781,6 @@ class Tokenizer : CompilerSupport
         if (cur == '.')
         {
           consume
-// TODO
-if (cur == '.') { consume; return TokenVal(Token.dotDotLt) }
           if (cur == '<') { consume; return TokenVal(Token.dotDotLt) }
           return TokenVal(Token.dotDot)
         }
@@ -889,6 +881,14 @@ if (cur == '.') { consume; return TokenVal(Token.dotDotLt) }
 ////////////////////////////////////////////////////////////////
 // Consume
 ////////////////////////////////////////////////////////////////
+
+  **
+  ** Peek at the character after peek
+  **
+  private Int peekPeek()
+  {
+    pos+2 < buf.size ? buf[pos+2] : 0
+  }
 
   **
   ** Consume the cur char and advance to next char in buffer:

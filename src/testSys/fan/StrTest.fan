@@ -28,17 +28,31 @@ class StrTest : Test
 
   Void testLiterals()
   {
-    verifyEq(
-     "foo
-       bar
-        baz", "foo\n bar\n  baz")
+    x := "foo"
+    y := "bar"
 
     verifyEq(
-      Str<|\foo
+     "$x
+       $y.upper
+        baz", "foo\n BAR\n  baz")
+
+    verifyEq(
+      Str<|\$foo
             \bar
 
              \baz
-           !|>, "\\foo\n \\bar\n\n  \\baz\n!")
+           !|>, "\\\$foo\n \\bar\n\n  \\baz\n!")
+
+    verifyEq(
+      """foo
+          bar
+
+         "$y.upper"
+         !""", "foo\n bar\n\n\"BAR\"\n!")
+
+    verifyEq(""" ""foo"" """, Str<| ""foo"" |>)
+    verifyEq("""$x "$x\" $x""", Str<|foo "foo" foo|>)
+    verifyEq("""$x ""\$x"" $x""", Str<|foo ""$x"" foo|>)
   }
 
 //////////////////////////////////////////////////////////////////////////

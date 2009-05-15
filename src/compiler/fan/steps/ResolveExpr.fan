@@ -669,7 +669,9 @@ class ResolveExpr : CompilerStep
     expr.ctype = ns.error
     try
     {
-      return plugin.compile(expr)
+      result := plugin.compile(expr)
+      if (result === expr) return result
+      return visitExpr(result)
     }
     catch (CompilerErr e)
     {
