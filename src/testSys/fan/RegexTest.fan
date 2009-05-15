@@ -48,7 +48,7 @@ class RegexTest : Test
     verifyEq(re.split(s, -2),   ["b", "", ":and:f", "", ""])
 
     // spaces
-    re = Regex.fromStr(r"\W+")
+    re = Regex<|\W+|>
     s = "This is a test."
     verifyEq(re.split(s), ["This", "is", "a", "test"])
     verifyEq(re.split(s, 3), ["This", "is", "a test."])
@@ -100,18 +100,18 @@ class RegexTest : Test
   Void testGroups()
   {
     // single find
-    m := Regex("(a(b)c)d").matcher("abcd")
+    m := Regex<|(a(b)c)d|>.matcher("abcd")
     verifyGroups(m, [ ["abcd", 0, 4], ["abc",  0, 3], ["b",    1, 2] ])
     verify(!m.find)
 
     // double find
-    m = Regex("(a(b)c)d").matcher("abcdabcd")
+    m = Regex<|(a(b)c)d|>.matcher("abcdabcd")
     verifyGroups(m, [ ["abcd", 0, 4], ["abc",  0, 3], ["b",    1, 2] ])
     verifyGroups(m, [ ["abcd", 4, 8], ["abc",  4, 7], ["b",    5, 6] ])
     verify(!m.find)
 
     // find null
-    m = Regex("foo|foo"+r"/(\d*)").matcher("foo/33")
+    m = Regex <|foo|foo/(\d*)|>.matcher("foo/33")
     verifyGroups(m, [["foo", 0, 3], [null, -1, -1]])
   }
 
