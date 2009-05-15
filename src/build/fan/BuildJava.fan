@@ -27,7 +27,7 @@ abstract class BuildJava : BuildScript
   ** packages must have a corresponding source directory relative to the
   ** script directory.
   **
-  Str[] packages := Str[,]
+  Str[]? packages
 
   **
   ** Main class name to add to manifest if not null.
