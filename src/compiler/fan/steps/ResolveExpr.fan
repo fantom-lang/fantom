@@ -665,7 +665,23 @@ class ResolveExpr : CompilerStep
       return expr
     }
 
-    return plugin.compile(expr)
+    origNumError := compiler.errors.size
+    expr.ctype = ns.error
+    try
+    {
+      return plugin.compile(expr)
+    }
+    catch (CompilerErr e)
+    {
+      if (compiler.errors.size == origNumError) errReport(e)
+      return expr
+    }
+    catch (Err e)
+    {
+      errReport(CompilerErr("Internal error in DslPlugin '$plugin.type': $e", expr.location, e))
+      e.trace
+      return expr
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

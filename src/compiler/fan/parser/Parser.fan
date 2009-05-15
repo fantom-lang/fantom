@@ -1550,7 +1550,12 @@ public class Parser : CompilerSupport
     if (curt == Token.dsl)
     {
       srcLoc := Location(cur.file, cur.line, cur.col+2)
+      dslVal := cur as TokenValDsl
       return DslExpr(loc, ctype, srcLoc, consume.val)
+      {
+        leadingTabs = dslVal.leadingTabs
+        leadingSpaces = dslVal.leadingSpaces
+      }
     }
 
     // list/map literal with explicit type

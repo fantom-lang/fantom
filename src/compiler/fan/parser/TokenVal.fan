@@ -74,3 +74,19 @@ class TokenVal : Location
   Bool newline    // have we processed one or more newlines since the last token
   Bool whitespace // was this token preceeded by whitespace
 }
+
+**
+** Extra information for DSL tokens.
+**
+class TokenValDsl : TokenVal
+{
+  new make(Token kind, Str src, Int tabs, Int spaces)
+    : super.make(kind, src)
+  {
+    leadingTabs = tabs
+    leadingSpaces = spaces
+  }
+
+  Int leadingTabs     // see DslExpr
+  Int leadingSpaces   // see DslExpr
+}
