@@ -1690,6 +1690,11 @@ class CheckErrorsTest : CompilerTest
            switch(i) { case 0: x = s; case 1: foo; default: x = s; }
          }
 
+         new m13() // ok
+         {
+           try { x = s } catch (IOErr e) { throw e }
+         }
+
          static Bool foo(Str y := s) { false }
          const static Str s := \"x\"
          Str x
