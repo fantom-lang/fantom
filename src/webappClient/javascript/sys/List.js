@@ -21,7 +21,7 @@ var sys_List = sys_Obj.extend(
 
 sys_List.make = function(type, vals)
 {
-  vals.$fanType = type;
+  vals.$fanType = new sys_ListType(type);
   return vals;
 }
 
