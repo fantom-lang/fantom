@@ -41,6 +41,7 @@
   [`TypeDatabase`,  "indexing and querying installed types"],
   [`Logging`,       "logging APIs"],
   [`Localization`,  "localization APIs"],
+  [`DSLs`,          "domain specific language and compiler plugins"],
 "Appendix",
   [`Conventions`,   "coding conventions we use"],
   [`Grammar`,       "formal BNF syntax grammar"],

@@ -199,7 +199,7 @@ the same:
 
 Str DSL [#strDsl]
 =================
-You can also write a Str literal using the DSL syntax.  A Str DSL can
+You can also write a Str literal using the [DSL syntax]`DSLs`.  A Str DSL can
 contain any character except the sequence "|>".  Neither the "\"
 or "$" character are treated specially:
 
