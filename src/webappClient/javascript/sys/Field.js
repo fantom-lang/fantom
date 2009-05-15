@@ -31,7 +31,7 @@ var sys_Field = sys_Slot.extend(
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  of: function() { return m_of; },
+  of: function() { return this.m_of; },
   get: function(instance) { return instance[this.m_name]; },
 
   set: function(instance, value, checkConst)
