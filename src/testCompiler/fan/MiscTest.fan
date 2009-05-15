@@ -1052,4 +1052,39 @@ class MiscTest : CompilerTest
     verifyEq(obj->m07, null)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Str DSL
+//////////////////////////////////////////////////////////////////////////
+
+  Void testStrDslErrors()
+  {
+    // NOTE: matching checks for " and """ literals in ParserTest.testMultiLineStrs
+    verifyErrors(
+     //123456
+      "class Foo
+       {
+         Str m01() { return Str
+           <|
+            x
+           |>}
+
+         Str m02() { return
+       \t\t Str<|
+       \t         x|>}
+
+         Str m03() { return
+       \t\t Str<|
+       \t\t     x|>}
+
+         Str m04() { return  // ok
+       \t\t Str<|
+       \t\t      x|>}
+       }",
+       [
+          5, 6,  "Leading space in Str DSL must be 6 spaces",
+         10, 11, "Leading space in Str DSL must be 2 tabs and 6 spaces",
+         14, 8, "Leading space in Str DSL must be 2 tabs and 6 spaces",
+       ])
+  }
+
 }
