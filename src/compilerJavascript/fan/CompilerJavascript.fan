@@ -74,32 +74,49 @@ class CompilerJavascript : Compiler
     out  := file.out
 
     // find types to compile
-    filter := types.findAll |def| {
+    jsTypes := types.findAll |def| {
       force || def.facets?.get("javascript")?->toStr == "@javascript=true"
     }
 
-    // pod
-    out.printLine("with(sys_Pod.\$add(\"$pod.name\"))")
-    out.printLine("{")
-    filter.each |def|
-    {
-      base := def.base ?: "sys::Obj"
-      out.print("\$at(\"$def.name\",\"$base\")")
-      def.slotDefs.each |slot|
-      {
-        if (slot is FieldDef)
-          out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->signature}\")")
-      }
-      out.printLine(";")
-    }
-    out.printLine("};")
-
-    // types
-    filter.each |def| { JavascriptWriter(this, def, out).write }
+    // write pod
+    typeDefs(out, jsTypes)
+    jsTypes.each |def| { JavascriptWriter(this, def, out).write }
 
     out.close
     // bombIfErr...
     if (!errors.isEmpty) throw errors.first
+  }
+
+  **
+  ** Write the TypeDefs.
+  **
+  private Void typeDefs(OutStream out, TypeDef[] types)
+  {
+    out.printLine("with(sys_Pod.\$add(\"$pod.name\"))")
+    out.printLine("{")
+
+    // types
+    types.each |def,i|
+    {
+      base := def.base ?: "sys::Obj"
+      out.printLine("var \$$i=\$at(\"$def.name\",\"$base\")")
+    }
+
+    // slots
+    types.each |def,i|
+    {
+      if (def.fieldDefs.size > 0)
+      {
+        out.print("\$$i")
+        def.fieldDefs.each |slot|
+        {
+          out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->signature}\")")
+        }
+        out.printLine(";")
+      }
+    }
+
+    out.printLine("};")
   }
 
   **
