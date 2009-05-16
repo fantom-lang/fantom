@@ -33,9 +33,9 @@ with (sys_Pod.$add("sys"))
   // TODO: time
   // TODO: timezone
   $at("Type",      "sys::Obj");
-  $at("Weekday",   "sys::Obj");
+  $at("Weekday",   "sys::Enum");
   // TODO: this
-  $at("Void",      "Sys::Obj"); // TODO - STUB
+  $at("Void",      "sys::Obj"); // TODO - STUB
 
   // reflection
   $at("Slot",      "sys::Obj");
