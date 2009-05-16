@@ -23,7 +23,7 @@ var sys_Type = sys_Obj.extend(
   {
     this.m_qname = qname;
     this.n_name  = qname.split("::")[1];
-    this.m_base  = base;
+    this.m_base  = base == null ? null : sys_Type.find(base);
     this.m_slots = [];
   },
 
@@ -31,10 +31,10 @@ var sys_Type = sys_Obj.extend(
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  base: function()      { return sys_Type.find(this.m_base); },
-  isClass: function()   { return this.m_base != "sys::Enum" && this.m_base != "sys::Mixin"; },
-  isEnum: function()    { return this.m_base == "sys::Enum"; },
-  isMixin: function()   { return this.m_base == "sys::Mixin"; },
+  base: function()      { return this.m_base; },
+  isClass: function()   { return this.m_base == null || (this.m_base.m_qname != "sys::Enum" && this.m_base.m_qname != "sys::Mixin"); },
+  isEnum: function()    { return this.m_base != null && this.m_base.m_qname == "sys::Enum"; },
+  isMixin: function()   { return this.m_base != null && this.m_base.m_qname == "sys::Mixin"; },
   name: function()      { return this.n_name; },
   qname: function()     { return this.m_qname; },
   signature: function() { return this.m_qname; },
@@ -64,6 +64,7 @@ var sys_Type = sys_Obj.extend(
 
   slots: function()
   {
+    // TODO - include inheritance
     var acc = [];
     for (var i in this.m_slots)
       acc.push(this.m_slots[i]);
@@ -72,6 +73,7 @@ var sys_Type = sys_Obj.extend(
 
   fields: function()
   {
+    // TODO - include inheritance
     var acc = [];
     for (var i in this.m_slots)
       if (this.m_slots[i] instanceof sys_Field)
@@ -82,7 +84,7 @@ var sys_Type = sys_Obj.extend(
   slot: function(name, checked)
   {
     if (checked == undefined) checked = true;
-    var s = this.m_slots[name];
+    var s = this.$slot(name);
     if (s == null && checked)
       throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
     return s;
@@ -91,7 +93,7 @@ var sys_Type = sys_Obj.extend(
   field: function(name, checked)
   {
     if (checked == undefined) checked = true;
-    var f = this.m_slots[name];
+    var f = this.$slot(name);
     if ((f == null || !(f instanceof sys_Field)) && checked)
       throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
     return f;
@@ -104,6 +106,29 @@ var sys_Type = sys_Obj.extend(
     var f = new sys_Field(this, name, flags, t);
     this.m_slots[name] = f;
     return this;
+  },
+
+//////////////////////////////////////////////////////////////////////////
+// Util
+//////////////////////////////////////////////////////////////////////////
+
+  $slot: function(name)
+  {
+    // check self first
+    var slot = this.m_slots[name];
+    if (slot != null) return slot;
+
+    // walk inheritance
+    var base = this.m_base;
+    while (base != null)
+    {
+      slot = base.m_slots[name];
+      if (slot != null) return slot;
+      base = base.m_base;
+    }
+
+    // not found
+    return null;
   },
 
 //////////////////////////////////////////////////////////////////////////
