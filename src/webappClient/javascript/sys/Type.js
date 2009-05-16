@@ -43,6 +43,18 @@ var sys_Type = sys_Obj.extend(
   toListOf: function()  { return new sys_ListType(this); },
   emptyList: function() { return new sys_ListType(this); },
 
+  is: function(that)
+  {
+    if (this == that) return true;
+    var base = this.m_base;
+    while (base != null)
+    {
+      if (base == that) return true;
+      base = base.m_base;
+    }
+    return false;
+  },
+
   // TODO
   toNullable: function() { return this; },
   toNonNullable: function() { return this; },
