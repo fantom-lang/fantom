@@ -35,7 +35,7 @@ with (sys_Pod.$add("sys"))
   $at("Type",      "sys::Obj");
   $at("Weekday",   "sys::Obj");
   // TODO: this
-  // TODO: void
+  $at("Void",      "Sys::Obj"); // TODO - STUB
 
   // reflection
   $at("Slot",      "sys::Obj");
@@ -55,7 +55,7 @@ with (sys_Pod.$add("sys"))
   // TODO: SysInStream
   // TODO: OutStream
   // TODO: SysOutStream
-  // TODO: File
+  $at("File",      "sys::Obj");  // TODO - STUB
   // TODO: LocalFile
   // TODO: ZipEntryFile
   $at("Buf",       "sys::Obj");

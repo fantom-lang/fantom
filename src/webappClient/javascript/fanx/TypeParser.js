@@ -118,8 +118,7 @@ var fanx_TypeParser = Class.extend(
     var ret = this.load();
     this.consume('|');
 
-    //return new FuncType((Type[])params.toArray(new Type[params.size()]), ret);
-throw sys_Err.make("TODO - FuncType");
+    return new sys_FuncType(params, ret);
   },
 
   loadBasic: function()
@@ -237,7 +236,7 @@ fanx_TypeParser.load = function(sig, checked)
   }
   catch (err)
   {
-println(err);
+//println(err);
     throw sys_Err.make(err);
   }
 }
