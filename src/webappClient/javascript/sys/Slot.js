@@ -46,6 +46,24 @@ var sys_Slot = sys_Obj.extend(
   isVirtual: function()   { return (this.m_flags & sys_FConst.Virtual)   != 0; },
 
 //////////////////////////////////////////////////////////////////////////
+// Util
+//////////////////////////////////////////////////////////////////////////
+
+  $name: function(n)
+  {
+    // must keep in sync with compilerJavascript::JavascriptWriter
+    switch (n)
+    {
+      case "char":   return "$char";
+      case "delete": return "$delete";
+      case "in":     return "$in";
+      case "var":    return "$in";
+      case "with":   return "$with";
+    }
+    return n;
+  },
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 

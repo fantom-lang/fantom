@@ -208,3 +208,42 @@ var sys_MapType = sys_Type.extend(
   }
 });
 
+/*************************************************************************
+ * FuncType
+ ************************************************************************/
+
+var sys_FuncType = sys_Type.extend(
+{
+  $ctor: function(params, ret)
+  {
+    this.params = params;
+    this.ret = ret;
+  },
+
+  signature: function()
+  {
+    var s = '|'
+    for (var i=0; i<this.params.length; i++)
+    {
+      if (i > 0) s += ',';
+      s += this.params[i].signature();
+    }
+    s += '->';
+    s += this.ret.signature();
+    s += '|';
+    return s;
+  },
+
+  equals: function(that)
+  {
+    if (that instanceof FuncType)
+    {
+      if (this.params.length != that.params.length) return false;
+      for (var i=0; i<this.params.length; i++)
+        if (!this.params[i].equals(that.params[i])) return false;
+      return this.ret.equals(that.ret);
+    }
+    return false;
+  }
+});
+

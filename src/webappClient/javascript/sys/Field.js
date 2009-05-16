@@ -23,6 +23,8 @@ var sys_Field = sys_Slot.extend(
     this.m_qname  = parent.qname() + "." + name;
     this.m_flags  = flags;
     this.m_of     = of;
+    this.m_$name  = this.$name(name);
+    this.m_$qname = parent.qname().replace("::","_") + "." + this.m_$name;
   },
 
   type: function() { return sys_Type.find("sys::Field"); },
@@ -32,7 +34,14 @@ var sys_Field = sys_Slot.extend(
 //////////////////////////////////////////////////////////////////////////
 
   of: function() { return this.m_of; },
-  get: function(instance) { return instance[this.m_name]; },
+
+  get: function(instance)
+  {
+    if (this.isStatic())
+      return eval(this.m_$qname);
+    else
+      return instance[this.m_$name];
+  },
 
   set: function(instance, value, checkConst)
   {
@@ -72,7 +81,7 @@ var sys_Field = sys_Slot.extend(
     //  return;
     //}
 
-    instance[this.m_name] = value;
+    instance[this.m_$name] = value;
   },
 
 //////////////////////////////////////////////////////////////////////////
