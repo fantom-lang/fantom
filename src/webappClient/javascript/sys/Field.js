@@ -70,7 +70,7 @@ var sys_Field = sys_Slot.extend(
     //}
     if (value != null)
     {
-      if (!this.m_of.equals(sys_Obj.type(value)))
+      if (!sys_Obj.type(value).is(this.m_of))
         throw sys_ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_of + " != " + sys_Obj.type(value));
     }
 
