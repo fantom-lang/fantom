@@ -262,21 +262,24 @@ class ClosureVars : CompilerStep
   {
     // closures now contains all the ClosureExpr we found inside
     // the current method body, now we need to walk them; this is
-    // also where we change isConst() to return false because
+    // also where we change isImmutable() to return false because
     // capturing locals into a cvars is not thread safe
     closures.each |ClosureExpr c|
     {
-      remapVarInClosure(c)
-      markMutable(c)
+      if (remapVarInClosure(c))
+        markMutable(c)
     }
   }
 
-  private Void remapVarInClosure(ClosureExpr closure)
+  **
+  ** Remap local variables to cvars.  Return false if no
+  ** locals are captured in the given closure.
+  **
+  private Bool remapVarInClosure(ClosureExpr closure)
   {
     doCall := closure.cls.methodDef("doCall")
 
-
-    // walk closure implementation looking for cvarss
+    // walk closure implementation looking for cvars
     MethodVar? cvarsLocal := null
     doCall.code.walkExpr |Expr expr->Expr|
     {
@@ -310,7 +313,7 @@ class ClosureVars : CompilerStep
 
     // if no expressions within the closure use cvars,
     // then our work here is done
-    if (cvarsLocal == null) return
+    if (cvarsLocal == null) return false
 
     // add cvars field to closure implementation class
     loc := closure.location
@@ -343,6 +346,7 @@ class ClosureVars : CompilerStep
     doCall.vars.insert(doCall.params.size, cvarsLocal)
     doCall.vars.each |MethodVar v, Int i| { v.register = i+1 }
     doCall.code.stmts.insert(0, cvarsLoad.toStmt)
+    return true
   }
 
 //////////////////////////////////////////////////////////////////////////

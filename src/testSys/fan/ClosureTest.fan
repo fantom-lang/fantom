@@ -33,6 +33,22 @@ class ClosureTest : Test
   Void testImmutable4() { verifyMutable |,| { verify(true) } }
   Void testImmutable5() { verifyMutable |,| { echo(this) } }
 
+  Void testImmutableMulti()
+  {
+    x := 0
+    a := |,| { x++ }
+    b := |,| { echo(x) }
+    c := |,| { echo(true) }
+    d := |,| { a() }
+    e := |,| { f := |,| { x++ } }
+
+    verifyMutable(a)
+    verifyMutable(b)
+    verifyImmutable(c)
+    verifyMutable(d)
+    verifyMutable(e)
+  }
+
   Void verifyImmutable(Func f)
   {
     verifyEq(f.isImmutable, true)
