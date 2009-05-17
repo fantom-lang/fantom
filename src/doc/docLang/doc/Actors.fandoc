@@ -65,7 +65,7 @@ it receives a message:
     return count
   }
 
-  for (i:=0; i<100; ++i) a.send("ignored")
+  100.times { a.send("ignored") }
   echo("Count is now " + a.send("ignored").get)
 
 Note that in this example, the actor ignores the messages
