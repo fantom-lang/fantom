@@ -1098,6 +1098,27 @@ class UriTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Interpolation
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInterpolation()
+  {
+    x := "file.txt"
+    verifyUriEq(`$x`, `file.txt`)
+    verifyUriEq(`$x.upper`, `FILE.TXT`)
+    verifyUriEq(`dir/$x`, `dir/file.txt`)
+    verifyUriEq(`$x#frag`, `file.txt#frag`)
+    verifyUriEq(`/dir/$x#frag`, `/dir/file.txt#frag`)
+    verifyUriEq(`/dir/$x#$x.upper`, `/dir/file.txt#FILE.TXT`)
+
+    y := `foo/bar/`
+    z := "foo/bar/"
+    verifyUriEq(`http://base/$y`, `http://base/foo/bar/`)
+    verifyUriEq(`http://base/$z`, `http://base/foo/bar/`)
+    verifyUriEq(`http://base/$z$x`, `http://base/foo/bar/file.txt`)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Util
 //////////////////////////////////////////////////////////////////////////
 

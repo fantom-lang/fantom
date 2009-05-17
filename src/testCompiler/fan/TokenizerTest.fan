@@ -400,7 +400,6 @@ class TokenizerTest : Test
     verifyUri("`\\: \\/ \\? \\# \\[ \\]`", "\\: \\/ \\? \\# \\[ \\]");
     verifyUri("`\\\\foo`", "\\\\foo");
 
-    verifyInvalid("`foo\$bar`")  // save for interpolation
     verifyInvalid("`off end\n`")
     verifyInvalid("`off end")
   }

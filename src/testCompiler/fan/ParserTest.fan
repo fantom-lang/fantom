@@ -1339,13 +1339,16 @@ class ParserTest : CompilerTest
 
  Void testEofErrors()
  {
-   verifyErrors("class Foo { Str f := \"",      [1, 23, "Unexpected end of string"])
-   verifyErrors("class Foo { Str f := \"\$x",   [1, 25, "Unexpected end of string"])
-   verifyErrors("class Foo { Str f := \"\${",   [1, 25, "Unexpected end of string, missing }"])
-   verifyErrors("class Foo { Str f := \"\${x",  [1, 26, "Unexpected end of string, missing }"])
-   verifyErrors("class Foo { Str f := \"\${x}", [1, 27, "Unexpected end of string"])
+   verifyErrors("class Foo { Str f := \"",      [1, 23, "Unexpected end of Str literal"])
+   verifyErrors("class Foo { Str f := \"\$x",   [1, 25, "Unexpected end of Str literal"])
+   verifyErrors("class Foo { Str f := \"\${",   [1, 25, "Unexpected end of Str literal, missing }"])
+   verifyErrors("class Foo { Str f := \"\${x",  [1, 26, "Unexpected end of Str literal, missing }"])
+   verifyErrors("class Foo { Str f := \"\${x}", [1, 27, "Unexpected end of Str literal"])
    verifyErrors("class Foo { Str f := Str<|",   [1, 27, "Unexpected end of DSL"])
-   verifyErrors("class Foo { Uri f := `",       [1, 23, "Unexpected end of uri"])
+   verifyErrors("class Foo { Uri f := `",       [1, 23, "Unexpected end of Uri literal"])
+   verifyErrors("class Foo { Uri f := `\$x",    [1, 25, "Unexpected end of Uri literal"])
+   verifyErrors("class Foo { Uri f := `\${",    [1, 25, "Unexpected end of Uri literal, missing }"])
+   verifyErrors("class Foo { Uri f := `\${x",   [1, 26, "Unexpected end of Uri literal, missing }"])
    verifyErrors("class Foo { Int f := '",       [1, 24, "Expecting ' close of char literal"])
  }
 

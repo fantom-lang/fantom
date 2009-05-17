@@ -261,6 +261,11 @@ Like strings, you can embed the standard [escape sequences]`#int` into a Uri lit
 including Unicode code points.  Unicode chars are UTF-8 encoded into octects
 before the URI is percent encoded according to RFC 3986 (see `sys::Uri.encode`).
 
+Uris support interpolation following the same rules as [Str interpolation]`#interpolation`:
+
+  file := "file.txt"
+  `/dir/$file`  =>  ("/dir/" + file).toUri
+
 Type [#type]
 ************
 The `sys::Type` class is the foundation of the Fan reflection APIs.  Typically 'Type'

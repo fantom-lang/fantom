@@ -69,7 +69,7 @@ abstract class WebReq
   {
     host := headers["Host"]
     if (host == null) throw Err("Missing Host header")
-    return ("http://" + host + "/").toUri + uri
+    return ("http://$host" + host + "/").toUri + uri
   }
 
   **
