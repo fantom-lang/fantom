@@ -119,8 +119,9 @@ class Tokenizer : CompilerSupport
     if (cur == '.' && peek.isDigit) return number
 
     // str literal
-    if (cur == '"')  return str
-    if (cur == '`')  return uri
+    if (cur == '"' && peek == '"' && peekPeek == '"') return quoted(Quoted.triple)
+    if (cur == '"') return quoted(Quoted.normal)
+    if (cur == '`') return quoted(Quoted.uri)
     if (cur == '\'') return ch
 
     // comments
@@ -292,38 +293,39 @@ class Tokenizer : CompilerSupport
   }
 
 //////////////////////////////////////////////////////////////////////////
-// String
+// Quoted Literals
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Parse a string literal token.
+  ** Parse a quoted literal token: normal, triple, or uri
+  ** Opening quote must already be consumed.
   **
-  private TokenVal? str()
+  private TokenVal? quoted(Quoted q)
   {
     inStrLiteral = true
-    triple := false
     try
     {
-      // consume opening quote
+      // opening quote
       consume
-      if (cur == '"' && peek == '"') { triple = true; consume; consume }
+      if (q.isTriple) { consume; consume }
+
+      // init starting position
       openLine := posOfLine
       openPos  := pos
       multiLineOk := true
-
-      // store starting position
       s := StrBuf()
+      interpolated := false
 
       // loop until we find end of string
-      interpolated := false
       while (true)
       {
-        if (cur == 0) throw err("Unexpected end of string")
+        if (cur == 0) throw err("Unexpected end of $q")
 
-        if (endOfStr(triple)) break
+        if (endOfQuoted(q)) break
 
         if (cur == '\n')
         {
+          if (!q.multiLine) throw err("Unexpected end of $q")
           s.addChar(cur)
           consume
           if (multiLineOk) multiLineOk = skipStrWs(openLine, openPos)
@@ -342,9 +344,14 @@ class Tokenizer : CompilerSupport
 
           // process interpolated string, it returns null
           // if at end of string literal
-          if (!strInterpolation(s.toStr, triple))
+          if (!interpolation(s.toStr, q))
           {
             tokens.add(makeVirtualToken(Token.rparen))
+            if (q.isUri)
+            {
+              tokens.add(makeVirtualToken(Token.dot))
+              tokens.add(makeVirtualToken(Token.identifier, "toUri"))
+            }
             return null
           }
 
@@ -352,7 +359,24 @@ class Tokenizer : CompilerSupport
         }
         else if (cur == '\\')
         {
-          s.add(escape.toChar)
+          if (q.isUri)
+          {
+            switch (peek)
+            {
+              case ':': case '/': case '?': case '#':
+              case '[': case ']': case '@': case '\\':
+              case '&': case '=': case ';':
+                s.addChar(cur).addChar(peek)
+                consume
+                consume
+              default:
+                s.addChar(escape)
+            }
+          }
+          else
+          {
+            s.addChar(escape)
+          }
         }
         else
         {
@@ -361,16 +385,25 @@ class Tokenizer : CompilerSupport
         }
       }
 
-      // if interpolated then we add rparen to treat whole atomically
+      // if interpolated then we add rparen to treat whole atomically,
+      // and if URI, then add call to Uri
       if (interpolated)
       {
         tokens.add(makeVirtualToken(Token.strLiteral, s.toStr))
         tokens.add(makeVirtualToken(Token.rparen))
+        if (q.isUri)
+        {
+          tokens.add(makeVirtualToken(Token.dot))
+          tokens.add(makeVirtualToken(Token.identifier, "toUri"))
+        }
         return null
       }
       else
       {
-        return TokenVal(Token.strLiteral, s.toStr)
+        if (q.isUri)
+          return TokenVal(Token.uriLiteral, s.toStr)
+        else
+          return TokenVal(Token.strLiteral, s.toStr)
       }
     }
     finally
@@ -414,7 +447,7 @@ class Tokenizer : CompilerSupport
   **   "a ${b} c" -> "a " + b + " c"
   ** Return true if more in the string literal.
   **
-  private Bool strInterpolation(Str s, Bool triple)
+  private Bool interpolation(Str s, Quoted q)
   {
     consume // $
     tokens.add(makeVirtualToken(Token.strLiteral, s))
@@ -427,7 +460,7 @@ class Tokenizer : CompilerSupport
       consume
       while (true)
       {
-        if (endOfStr(triple) || cur == 0) throw err("Unexpected end of string, missing }")
+        if (endOfQuoted(q) || cur == 0) throw err("Unexpected end of $q, missing }")
         tok := next
         if (tok.kind == Token.rbrace) break
         tokens.add(tok)
@@ -457,7 +490,7 @@ class Tokenizer : CompilerSupport
     }
 
     // if at end of string, all done
-    if (endOfStr(triple)) return false
+    if (endOfQuoted(q)) return false
 
     // add plus and return true to keep chugging
     tokens.add(makeVirtualToken(Token.plus))
@@ -465,16 +498,28 @@ class Tokenizer : CompilerSupport
   }
 
   **
-  ** If at end of string literal consume the
+  ** If at end of quoted literal consume the
   ** ending token(s) and return true.
   **
-  private Bool endOfStr(Bool triple)
+  private Bool endOfQuoted(Quoted q)
   {
-    if (cur != '"') return false
-    if (!triple) { consume; return true }
-    if (peek != '"' || peekPeek != '"') return false
-    consume; consume; consume
-    return true
+    switch (q)
+    {
+      case Quoted.normal:
+        if (cur != '"') return false
+        consume; return true
+
+      case Quoted.triple:
+        if (cur != '"' || peek != '"' || peekPeek != '"') return false
+        consume; consume; consume; return true
+
+      case Quoted.uri:
+        if (cur != '`') return false
+        consume; return true
+
+      default:
+        throw Err(q.toStr)
+    }
   }
 
   **
@@ -487,53 +532,6 @@ class Tokenizer : CompilerSupport
     tok.line  = line
     tok.col   = col
     return tok
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Uri
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Parse a uri literal token.
-  **
-  private TokenVal uri()
-  {
-    // consume opening backtick
-    consume
-
-    // store starting position
-    s := StrBuf()
-
-    // loop until we find end of string
-    while (true)
-    {
-      ch := cur
-      if (ch == '`') { consume; break }
-      if (ch == 0 || ch == '\n') throw err("Unexpected end of uri")
-      if (ch == '$') throw err("Uri interpolation not supported yet")
-      if (ch == '\\')
-      {
-        switch (peek)
-        {
-          case ':': case '/': case '?': case '#':
-          case '[': case ']': case '@': case '\\':
-          case '&': case '=': case ';':
-            s.addChar(ch)
-            s.addChar(peek)
-            consume
-            consume
-          default:
-            s.addChar(escape)
-        }
-      }
-      else
-      {
-        consume
-        s.addChar(ch)
-      }
-    }
-
-    return TokenVal(Token.uriLiteral, s.toStr)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -959,6 +957,23 @@ class Tokenizer : CompilerSupport
   private TokenVal[] tokens // token accumulator
   private Bool inStrLiteral // return if inside a string literal token
   private Bool whitespace   // was there whitespace before current token
+}
 
+**************************************************************************
+** Quoted
+**************************************************************************
 
+internal enum Quoted
+{
+  normal("Str literal", true),
+  triple("Str literal", true),
+  uri("Uri literal", false)
+
+  Bool isUri() { return this === uri }
+  Bool isTriple() { return this === triple }
+
+  private new make(Str s, Bool ml) { toStr = s; multiLine = ml }
+
+  const override Str toStr
+  const Bool multiLine
 }
