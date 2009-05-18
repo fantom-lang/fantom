@@ -105,12 +105,15 @@ class CompilerJavascript : Compiler
     // slots
     types.each |def,i|
     {
-      if (def.fieldDefs.size > 0)
+      if (def.slotDefs.size > 0)
       {
         out.print("\$$i")
-        def.fieldDefs.each |slot|
+        def.slotDefs.each |slot|
         {
-          out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->signature}\")")
+          if (slot is FieldDef)
+            out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->signature}\")")
+          else if (slot is MethodDef && !slot->isFieldAccessor)
+            out.print(".\$am(\"$slot.name\")")
         }
         out.printLine(";")
       }
