@@ -39,6 +39,7 @@ var sys_Type = sys_Obj.extend(
   qname: function()     { return this.m_qname; },
   signature: function() { return this.m_qname; },
   toStr: function()     { return this.signature(); },
+  toLocale: function()  { return this.signature(); },
   type: function()      { return sys_Type.find("sys::Type"); },
   toListOf: function()  { return new sys_ListType(this); },
   emptyList: function() { return new sys_ListType(this); },

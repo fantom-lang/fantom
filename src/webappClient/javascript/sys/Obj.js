@@ -35,6 +35,11 @@ var sys_Obj = Class.extend(
     return 0;
   },
 
+  $with: function(func)
+  {
+    func(this);
+  },
+
   isImmutable: function()
   {
     return false;
