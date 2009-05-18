@@ -74,13 +74,29 @@ class CompilerJavascript : Compiler
     out  := file.out
 
     // find types to compile
-    jsTypes := types.findAll |def| {
-      force || def.facets?.get("javascript")?->toStr == "@javascript=true"
+    jsTypes := types.findAll |def|
+    {
+      if (force) return true
+      if (def.facets?.get("javascript")?->toStr == "@javascript=true") return true
+      return false
     }
 
     // write pod
     typeDefs(out, jsTypes)
-    jsTypes.each |def| { JavascriptWriter(this, def, out).write }
+    refs := Str:CType[:]
+    jsTypes.each |def|
+    {
+      w := JavascriptWriter(this, def, out)
+      w.write
+      refs.setAll(w.refs)
+    }
+
+    // write out refs
+    refs.each |def|
+    {
+      if (!def.name.startsWith("Curry\$")) return
+      JavascriptWriter(this, def, out).write
+    }
 
     out.close
     // bombIfErr...
@@ -105,12 +121,15 @@ class CompilerJavascript : Compiler
     // slots
     types.each |def,i|
     {
-      if (def.fieldDefs.size > 0)
+      if (def.slotDefs.size > 0)
       {
         out.print("\$$i")
-        def.fieldDefs.each |slot|
+        def.slotDefs.each |slot|
         {
-          out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->signature}\")")
+          if (slot is FieldDef)
+            out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->signature}\")")
+          else if (slot is MethodDef && !slot->isFieldAccessor)
+            out.print(".\$am(\"$slot.name\")")
         }
         out.printLine(";")
       }

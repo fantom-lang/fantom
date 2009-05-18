@@ -1,44 +1,45 @@
 //
-// Copyright (c) 2008, Brian Frank and Andy Frank
+// Copyright (c) 2009, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   26 Dec 08  Andy Frank  Creation
+//   18 May 09  Andy Frank  Creation
 //
 
 /**
- * Num
+ * Param.
  */
-var sys_Num = sys_Obj.extend(
+var sys_Param = sys_Obj.extend(
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function() {},
+  $ctor: function(name, of, hasDefault)
+  {
+    this.m_name = name;
+    this.m_of = sys_Type.find(of);
+    this.m_hasDefault = hasDefault;
+  },
+
+  type: function() { return sys_Type.find("sys::Param"); },
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  type: function()
-  {
-    return sys_Type.find("sys::Num");
-  }
+  name: function() { return this.m_name; },
+  of: function() { return this.m_of; },
+  hasDefault: function() { return this.m_hasDefault; },
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  m_name: null,
+  m_of: null,
+  m_hasDefault: null
 
 });
 
-//////////////////////////////////////////////////////////////////////////
-// Static Methods
-//////////////////////////////////////////////////////////////////////////
-
-sys_Num.toDecimal = function(val) { return val; }
-sys_Num.toFloat = function(val) { return val; }
-sys_Num.toInt = function(val)
-{
-  if (isNaN(val)) return 0;
-  if (val == Number.POSITIVE_INFINITY) return sys_Int.maxVal;
-  if (val == Number.NEGATIVE_INFINITY) return sys_Int.minVal;
-  return Math.floor(val);
-}
