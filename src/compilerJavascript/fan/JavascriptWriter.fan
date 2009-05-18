@@ -489,12 +489,15 @@ if (c != null)
     {
       if (isPrimitive(ce.target.ctype.toStr) ||
           ce.target.ctype.isList ||
+          ce.target.ctype.isFunc ||
           ce.target is TypeCheckExpr)
       {
         ctype := ce.target.ctype
         if (ce.target is TypeCheckExpr) ctype = ce.target->check
         if (ctype.isList)
           out.w("sys_List.${var(ce.name)}(")
+        else if (ctype.isFunc)
+          out.w("sys_Func.${var(ce.name)}(")
         else
           out.w("${qname(ctype)}.${var(ce.name)}(")
         if (!ce.method.isStatic)
@@ -683,11 +686,11 @@ if (c != null)
   Void closureExpr(ClosureExpr ce)
   {
     closureLevel++
-    out.w("function(")
+    out.w("sys_Func.make(function(")
     ce.doCall.vars.each |MethodVar v, Int i|
     {
       if (!v.isParam) return
-      if (i > 0) out.w(", ")
+      if (i > 0) out.w(",")
       out.w(var(v.name))
     }
     out.w(") {")
@@ -696,7 +699,13 @@ if (c != null)
       out.nl
       block(ce.doCall.code, false)
     }
-    out.w("}")
+    out.w("},[")
+    ce.doCall.params.each |p,i|
+    {
+      if(i > 0) out.w(",")
+      out.w("new sys_Param(\"$p.name\",\"$p.paramType.qname\",$p.hasDefault)")
+    }
+    out.w("],sys_Type.find(\"$ce.doCall.ret.qname\"))")
     closureLevel--
   }
 

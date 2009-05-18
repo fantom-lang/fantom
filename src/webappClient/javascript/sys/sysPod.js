@@ -40,8 +40,8 @@ with (sys_Pod.$add("sys"))
   // reflection
   $at("Slot",      "sys::Obj");
   $at("Field",     "sys::Slot");
-  $at("Method",    "sys::Obj");
-  // TODO: param
+  $at("Method",    "sys::Slot");
+  $at("Param",     "sys::Obj");
 
   // resources
   $at("Namespace", "sys::Obj");
