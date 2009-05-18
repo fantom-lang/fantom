@@ -38,7 +38,7 @@ sys_Num.toFloat = function(val) { return val; }
 sys_Num.toInt = function(val)
 {
   if (isNaN(val)) return 0;
-  if (val == Number.POSITIVE_INFINITY) return sys_Int.maxValue.val;
-  if (val == Number.NEGATIVE_INFINITY) return sys_Int.minValue.val;
+  if (val == Number.POSITIVE_INFINITY) return sys_Int.maxVal;
+  if (val == Number.NEGATIVE_INFINITY) return sys_Int.minVal;
   return Math.floor(val);
 }
