@@ -18,7 +18,7 @@ with (sys_Pod.$add("sys"))
   $at("Func",      "sys::Obj");
   $at("Int",       "sys::Num");
   // TODO: decimal
-  $at("Float",     "sys::Obj");
+  $at("Float",     "sys::Num");
   $at("List",      "sys::Obj");
   $at("Map",       "sys::Obj");
   $at("Month",     "sys::Enum");
