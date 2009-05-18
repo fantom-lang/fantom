@@ -50,6 +50,13 @@ sys_Err.make = function(cause)
   return new sys_Err(cause == undefined ? cause : cause.message);
 }
 
+sys_Err.trace = function(self)
+{
+  // TODO
+  //if (println) println(self);
+  //else alert(self);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Err subclasses
 //////////////////////////////////////////////////////////////////////////

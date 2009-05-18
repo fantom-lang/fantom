@@ -509,6 +509,13 @@ if (c != null)
         out.w(")")
         return
       }
+      else if (ce.target.ctype.qname == "sys::Err" && ce.method.name == "trace")
+      {
+        out.w("sys_Err.trace(")
+        expr(ce.target)
+        out.w(")")
+        return
+      }
       expr(ce.target)
     }
     else if (ce.method.isStatic || ce.method.isCtor)
@@ -528,6 +535,7 @@ if (c != null)
     }
     else if (ce.target != null)
     {
+      // TODO - not sure we need this, or if its right...
       if (ce.target.ctype.qname == "sys::Func" && Regex("call\\d").matches(mname))
         mname = null
     }
@@ -729,6 +737,7 @@ if (c != null)
   **
   Str qname(CType ctype)
   {
+    refs[ctype.qname] = ctype
     return ctype.pod.name + "_" + ctype.name
   }
 
@@ -790,6 +799,7 @@ if (c != null)
   MethodDef[] staticMethods := [,]  // static methods
   FieldDef[] staticFields := [,]    // static fields
   Block[] staticInits := [,]        // static init blocks
+  Str:CType refs := [:]             // types referenced
 }
 
 **************************************************************************
