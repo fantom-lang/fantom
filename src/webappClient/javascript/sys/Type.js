@@ -184,20 +184,18 @@ sys_Type.common = function(objs)
   if (objs.length == 0) return sys_Type.find("sys::Obj").toNullable();
   var nullable = false;
   var best = null;
-/*
   for (var i=0; i<objs.length; i++)
   {
     var obj = objs[i];
     if (obj == null) { nullable = true; continue; }
-    var t = type(obj);
+    var t = sys_Obj.type(obj);
     if (best == null) { best = t; continue; }
     while (!t.is(best))
     {
       best = best.base();
-      if (best == null) return nullable ? Sys.ObjType.toNullable() : Sys.ObjType;
+      if (best == null) return nullable ? sys_Type.find("sys::Obj").toNullable() : sys_Type.find("sys::Obj");
     }
   }
-*/
   if (best == null) best = sys_Type.find("sys::Obj");
   return nullable ? best.toNullable() : best;
 }
