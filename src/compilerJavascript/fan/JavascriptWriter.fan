@@ -449,7 +449,7 @@ if (c != null)
     method := te.id == ExprId.asExpr ? "as" : "is"
     out.w("sys_Obj.$method(")
     expr(te.target)
-    out.w(",").w(qname(te.check)).w(")")
+    out.w(",sys_Type.find(\"$te.check\"))")
   }
 
   Void callExpr(CallExpr ce)

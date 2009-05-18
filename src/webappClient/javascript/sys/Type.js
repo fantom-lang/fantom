@@ -45,11 +45,11 @@ var sys_Type = sys_Obj.extend(
 
   is: function(that)
   {
-    if (this == that) return true;
+    if (this.equals(that)) return true;
     var base = this.m_base;
     while (base != null)
     {
-      if (base == that) return true;
+      if (base.equals(that)) return true;
       base = base.m_base;
     }
     return false;
