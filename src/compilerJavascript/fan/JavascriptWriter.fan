@@ -116,9 +116,9 @@ class JavascriptWriter : CompilerSupport
         out.w(";").nl
       }
     }
-    if (m.isCtor && m.name == "<ctor>")
+    if (m.isCtor)
     {
-      out.w("  this._super")
+      out.w("  if (this._super) this._super")
       doMethodSig(m)
       out.w(";").nl
     }

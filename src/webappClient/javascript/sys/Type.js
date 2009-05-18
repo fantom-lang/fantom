@@ -83,6 +83,16 @@ var sys_Type = sys_Obj.extend(
     return acc;
   },
 
+  methods: function()
+  {
+    // TODO - include inheritance
+    var acc = [];
+    for (var i in this.m_slots)
+      if (this.m_slots[i] instanceof sys_Method)
+        acc.push(this.m_slots[i]);
+    return acc;
+  },
+
   fields: function()
   {
     // TODO - include inheritance
@@ -102,6 +112,15 @@ var sys_Type = sys_Obj.extend(
     return s;
   },
 
+  method: function(name, checked)
+  {
+    if (checked == undefined) checked = true;
+    var f = this.$slot(name);
+    if ((f == null || !(f instanceof sys_Method)) && checked)
+      throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
+    return f;
+  },
+
   field: function(name, checked)
   {
     if (checked == undefined) checked = true;
@@ -109,6 +128,14 @@ var sys_Type = sys_Obj.extend(
     if ((f == null || !(f instanceof sys_Field)) && checked)
       throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
     return f;
+  },
+
+  // addMethod
+  $am: function(name)
+  {
+    var m = new sys_Method(this, name);
+    this.m_slots[name] = m;
+    return this;
   },
 
   // addField
