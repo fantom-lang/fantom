@@ -384,7 +384,7 @@ var fanx_Tokenizer = Class.extend(
     if (this.cur != 39/*'\''*/) throw this.err("Expecting ' close of char literal");
     this.consume();
 
-    this.val = c;
+    this.val = sys_Int.make(c);
     return fanx_Token.INT_LITERAL;
   },
 

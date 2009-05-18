@@ -457,10 +457,27 @@ if (c != null)
     // check for special cases
     if (isObjMethod(ce.method.name))
     {
+      firstArg := true
       if (ce is ShortcutExpr && ce->opToken.toStr == "!=") out.w("!")
-      out.w("sys_Obj.$ce.method.name(")
-      expr(ce.target)
-      ce.args.each |Expr arg| { out.w(", "); expr(arg) }
+      if (ce.target is SuperExpr)
+      {
+// TODO - currently we can only call super for the exact
+// same method - not sure how to work around that yet
+        expr(ce.target)
+        //out.w(".$ce.method.name(")
+        out.w("(")
+        firstArg = false
+      }
+      else
+      {
+        out.w("sys_Obj.$ce.method.name(")
+        expr(ce.target)
+      }
+      ce.args.each |arg, i|
+      {
+        if (i>0 || firstArg) out.w(", ")
+        expr(arg)
+      }
       out.w(")")
       if (ce is ShortcutExpr && ce->op === ShortcutOp.cmp && ce->opToken.toStr != "<=>")
         out.w(" ${ce->opToken} 0")
