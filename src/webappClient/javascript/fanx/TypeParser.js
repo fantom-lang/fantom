@@ -40,7 +40,7 @@ var fanx_TypeParser = Class.extend(
   loadTop: function()
   {
     var type = this.load();
-    if (this.cur != 0) throw this.err();
+    if (this.cur != null) throw this.err();
     return type;
   },
 
@@ -146,26 +146,27 @@ throw sys_Err.make("TODO - generic paramaters");
   consumeId: function()
   {
     var start = this.pos;
-    while (this.isIdChar(this.cur)) this.consume();
+    while (this.isIdChar(this.cur)) this.$consume();
     return this.sig.substring(start, this.pos);
   },
 
   isIdChar: function(ch)
   {
+    if (ch == null) return false;
     return sys_Int.isAlphaNum(ch.charCodeAt(0)) || ch == '_';
   },
 
   consume: function(expected)
   {
     if (this.cur != expected) throw this.err();
-    this.consume();
+    this.$consume();
   },
 
-  consume: function()
+  $consume: function()
   {
     this.cur = this.peek;
     this.pos++;
-    this.peek = this.pos+1 < this.len ? this.sig.charAt(this.pos+1) : 0;
+    this.peek = this.pos+1 < this.len ? this.sig.charAt(this.pos+1) : null;
   },
 
   err: function(sig)
@@ -181,8 +182,8 @@ throw sys_Err.make("TODO - generic paramaters");
   sig: null,       // signature being parsed
   len: 0,          // length of sig
   pos: 0,          // index of cur in sig
-  cur: 0,          // cur character; sig[pos]
-  peek: 0,         // next character; sig[pos+1]
+  cur: null,       // cur character; sig[pos]
+  peek: null,      // next character; sig[pos+1]
   checked: true    // pass thru checked flag
 
 });

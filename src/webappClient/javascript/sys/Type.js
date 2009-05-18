@@ -39,17 +39,19 @@ var sys_Type = sys_Obj.extend(
   qname: function()     { return this.m_qname; },
   signature: function() { return this.m_qname; },
   toStr: function()     { return this.signature(); },
+  toLocale: function()  { return this.signature(); },
   type: function()      { return sys_Type.find("sys::Type"); },
   toListOf: function()  { return new sys_ListType(this); },
   emptyList: function() { return new sys_ListType(this); },
 
+  fits: function(that) { return this.is(that); },
   is: function(that)
   {
-    if (this == that) return true;
+    if (this.equals(that)) return true;
     var base = this.m_base;
     while (base != null)
     {
-      if (base == that) return true;
+      if (base.equals(that)) return true;
       base = base.m_base;
     }
     return false;
@@ -83,6 +85,16 @@ var sys_Type = sys_Obj.extend(
     return acc;
   },
 
+  methods: function()
+  {
+    // TODO - include inheritance
+    var acc = [];
+    for (var i in this.m_slots)
+      if (this.m_slots[i] instanceof sys_Method)
+        acc.push(this.m_slots[i]);
+    return acc;
+  },
+
   fields: function()
   {
     // TODO - include inheritance
@@ -102,6 +114,15 @@ var sys_Type = sys_Obj.extend(
     return s;
   },
 
+  method: function(name, checked)
+  {
+    if (checked == undefined) checked = true;
+    var f = this.$slot(name);
+    if ((f == null || !(f instanceof sys_Method)) && checked)
+      throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
+    return f;
+  },
+
   field: function(name, checked)
   {
     if (checked == undefined) checked = true;
@@ -109,6 +130,14 @@ var sys_Type = sys_Obj.extend(
     if ((f == null || !(f instanceof sys_Field)) && checked)
       throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
     return f;
+  },
+
+  // addMethod
+  $am: function(name)
+  {
+    var m = new sys_Method(this, name);
+    this.m_slots[name] = m;
+    return this;
   },
 
   // addField
@@ -184,20 +213,18 @@ sys_Type.common = function(objs)
   if (objs.length == 0) return sys_Type.find("sys::Obj").toNullable();
   var nullable = false;
   var best = null;
-/*
   for (var i=0; i<objs.length; i++)
   {
     var obj = objs[i];
     if (obj == null) { nullable = true; continue; }
-    var t = type(obj);
+    var t = sys_Obj.type(obj);
     if (best == null) { best = t; continue; }
     while (!t.is(best))
     {
       best = best.base();
-      if (best == null) return nullable ? Sys.ObjType.toNullable() : Sys.ObjType;
+      if (best == null) return nullable ? sys_Type.find("sys::Obj").toNullable() : sys_Type.find("sys::Obj");
     }
   }
-*/
   if (best == null) best = sys_Type.find("sys::Obj");
   return nullable ? best.toNullable() : best;
 }
@@ -273,7 +300,7 @@ var sys_FuncType = sys_Type.extend(
 
   equals: function(that)
   {
-    if (that instanceof FuncType)
+    if (that instanceof sys_FuncType)
     {
       if (this.params.length != that.params.length) return false;
       for (var i=0; i<this.params.length; i++)
@@ -281,6 +308,27 @@ var sys_FuncType = sys_Type.extend(
       return this.ret.equals(that.ret);
     }
     return false;
+  },
+
+  is: function(that)
+  {
+    if (this == that) return true;
+    if (that instanceof sys_FuncType)
+    {
+      // match return type (if void is needed, anything matches)
+      if (that.ret.m_qname != "sys::Void" && !this.ret.is(that.ret)) return false;
+
+      // match params - it is ok for me to have less than
+      // the type params (if I want to ignore them), but I
+      // must have no more
+      if (this.params.length > that.params.length) return false;
+      for (var i=0; i<this.params.length; ++i)
+        if (!that.params[i].is(this.params[i])) return false;
+
+      // this method works for the specified method type
+      return true;
+    }
+    return base().is(that);
   }
 });
 

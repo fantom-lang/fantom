@@ -35,6 +35,11 @@ var sys_Obj = Class.extend(
     return 0;
   },
 
+  $with: function(func)
+  {
+    func(this);
+  },
+
   isImmutable: function()
   {
     return false;
@@ -105,44 +110,12 @@ sys_Obj.compare = function(self, that)
 
 sys_Obj.is = function(obj, type)
 {
-  if (obj instanceof sys_Obj)
-    return obj instanceof type;
-  else
-  {
-    if ((typeof obj) == "boolean")
-    {
-      if (type === sys_Obj) return true;
-      if (type === sys_Bool) return true;
-      return false;
-    }
-    if ((typeof obj) == "number")
-    {
-      if (type === sys_Obj) return true;
-      if (type === sys_Num) return true;
-      //if (type === sys_Int) return true;
-      if (type === sys_Float) return true;
-      return false;
-    }
-    if ((typeof obj) == "string")
-    {
-      if (type === sys_Str) return true;
-      return false;
-    }
-// TODO
-    if (obj.$fanType != null)
-    {
-      if (type === sys_Obj) return true;
-      if (type === sys_Num) return true;
-      if (type === sys_Int) return true;
-      return false;
-    }
-    throw new sys_Err("sys::Obj.is: Not a Fan type: " + obj);
-  }
+  return sys_Obj.type(obj).is(type);
 }
 
 sys_Obj.as = function(obj, type)
 {
-  if (sys_Obj.is(obj, type)) return obj;
+  if (sys_Obj.type(obj).is(type)) return obj;
   return null;
 }
 

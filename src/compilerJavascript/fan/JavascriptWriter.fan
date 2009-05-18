@@ -116,9 +116,9 @@ class JavascriptWriter : CompilerSupport
         out.w(";").nl
       }
     }
-    if (m.isCtor && m.name == "<ctor>")
+    if (m.isCtor)
     {
-      out.w("  this._super")
+      out.w("  if (this._super) this._super")
       doMethodSig(m)
       out.w(";").nl
     }
@@ -449,7 +449,7 @@ if (c != null)
     method := te.id == ExprId.asExpr ? "as" : "is"
     out.w("sys_Obj.$method(")
     expr(te.target)
-    out.w(",").w(qname(te.check)).w(")")
+    out.w(",sys_Type.find(\"$te.check\"))")
   }
 
   Void callExpr(CallExpr ce)
@@ -457,10 +457,27 @@ if (c != null)
     // check for special cases
     if (isObjMethod(ce.method.name))
     {
+      firstArg := true
       if (ce is ShortcutExpr && ce->opToken.toStr == "!=") out.w("!")
-      out.w("sys_Obj.$ce.method.name(")
-      expr(ce.target)
-      ce.args.each |Expr arg| { out.w(", "); expr(arg) }
+      if (ce.target is SuperExpr)
+      {
+// TODO - currently we can only call super for the exact
+// same method - not sure how to work around that yet
+        expr(ce.target)
+        //out.w(".$ce.method.name(")
+        out.w("(")
+        firstArg = false
+      }
+      else
+      {
+        out.w("sys_Obj.$ce.method.name(")
+        expr(ce.target)
+      }
+      ce.args.each |arg, i|
+      {
+        if (i>0 || firstArg) out.w(", ")
+        expr(arg)
+      }
       out.w(")")
       if (ce is ShortcutExpr && ce->op === ShortcutOp.cmp && ce->opToken.toStr != "<=>")
         out.w(" ${ce->opToken} 0")
@@ -472,12 +489,15 @@ if (c != null)
     {
       if (isPrimitive(ce.target.ctype.toStr) ||
           ce.target.ctype.isList ||
+          ce.target.ctype.isFunc ||
           ce.target is TypeCheckExpr)
       {
         ctype := ce.target.ctype
         if (ce.target is TypeCheckExpr) ctype = ce.target->check
         if (ctype.isList)
           out.w("sys_List.${var(ce.name)}(")
+        else if (ctype.isFunc)
+          out.w("sys_Func.${var(ce.name)}(")
         else
           out.w("${qname(ctype)}.${var(ce.name)}(")
         if (!ce.method.isStatic)
@@ -486,6 +506,13 @@ if (c != null)
           if (ce.args.size > 0) out.w(",")
         }
         ce.args.each |Expr arg, Int i| { if (i > 0) out.w(","); expr(arg) }
+        out.w(")")
+        return
+      }
+      else if (ce.target.ctype.qname == "sys::Err" && ce.method.name == "trace")
+      {
+        out.w("sys_Err.trace(")
+        expr(ce.target)
         out.w(")")
         return
       }
@@ -508,6 +535,7 @@ if (c != null)
     }
     else if (ce.target != null)
     {
+      // TODO - not sure we need this, or if its right...
       if (ce.target.ctype.qname == "sys::Func" && Regex("call\\d").matches(mname))
         mname = null
     }
@@ -666,11 +694,11 @@ if (c != null)
   Void closureExpr(ClosureExpr ce)
   {
     closureLevel++
-    out.w("function(")
+    out.w("sys_Func.make(function(")
     ce.doCall.vars.each |MethodVar v, Int i|
     {
       if (!v.isParam) return
-      if (i > 0) out.w(", ")
+      if (i > 0) out.w(",")
       out.w(var(v.name))
     }
     out.w(") {")
@@ -679,7 +707,13 @@ if (c != null)
       out.nl
       block(ce.doCall.code, false)
     }
-    out.w("}")
+    out.w("},[")
+    ce.doCall.params.each |p,i|
+    {
+      if(i > 0) out.w(",")
+      out.w("new sys_Param(\"$p.name\",\"$p.paramType.qname\",$p.hasDefault)")
+    }
+    out.w("],sys_Type.find(\"$ce.doCall.ret.qname\"))")
     closureLevel--
   }
 
@@ -703,6 +737,7 @@ if (c != null)
   **
   Str qname(CType ctype)
   {
+    refs[ctype.qname] = ctype
     return ctype.pod.name + "_" + ctype.name
   }
 
@@ -764,6 +799,7 @@ if (c != null)
   MethodDef[] staticMethods := [,]  // static methods
   FieldDef[] staticFields := [,]    // static fields
   Block[] staticInits := [,]        // static init blocks
+  Str:CType refs := [:]             // types referenced
 }
 
 **************************************************************************
