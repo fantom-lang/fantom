@@ -44,6 +44,7 @@ var sys_Type = sys_Obj.extend(
   toListOf: function()  { return new sys_ListType(this); },
   emptyList: function() { return new sys_ListType(this); },
 
+  fits: function(that) { return this.is(that); },
   is: function(that)
   {
     if (this.equals(that)) return true;
@@ -299,7 +300,7 @@ var sys_FuncType = sys_Type.extend(
 
   equals: function(that)
   {
-    if (that instanceof FuncType)
+    if (that instanceof sys_FuncType)
     {
       if (this.params.length != that.params.length) return false;
       for (var i=0; i<this.params.length; i++)
@@ -307,6 +308,27 @@ var sys_FuncType = sys_Type.extend(
       return this.ret.equals(that.ret);
     }
     return false;
+  },
+
+  is: function(that)
+  {
+    if (this == that) return true;
+    if (that instanceof sys_FuncType)
+    {
+      // match return type (if void is needed, anything matches)
+      if (that.ret.m_qname != "sys::Void" && !this.ret.is(that.ret)) return false;
+
+      // match params - it is ok for me to have less than
+      // the type params (if I want to ignore them), but I
+      // must have no more
+      if (this.params.length > that.params.length) return false;
+      for (var i=0; i<this.params.length; ++i)
+        if (!that.params[i].is(this.params[i])) return false;
+
+      // this method works for the specified method type
+      return true;
+    }
+    return base().is(that);
   }
 });
 

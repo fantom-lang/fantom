@@ -122,7 +122,8 @@ class Build : BuildPod
 
   // must be first
   Str[] first := ["Sys.js", "Obj.js", "Pod.js", "Type.js", "Slot.js", "Err.js",
-                  "Num.js", "List.js", "Map.js", "Enum.js", "Int.js", "InStream.js"]
+                  "Func.js", "Num.js", "List.js", "Map.js", "Enum.js", "Int.js",
+                  "InStream.js"]
 
   // must be last
   Str[] last := ["sysPod.js", "webappClientPod.js"]

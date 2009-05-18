@@ -1,0 +1,45 @@
+//
+// Copyright (c) 2009, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   18 May 09  Andy Frank  Creation
+//
+
+/**
+ * Param.
+ */
+var sys_Param = sys_Obj.extend(
+{
+
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+  $ctor: function(name, of, hasDefault)
+  {
+    this.m_name = name;
+    this.m_of = sys_Type.find(of);
+    this.m_hasDefault = hasDefault;
+  },
+
+  type: function() { return sys_Type.find("sys::Param"); },
+
+//////////////////////////////////////////////////////////////////////////
+// Methods
+//////////////////////////////////////////////////////////////////////////
+
+  name: function() { return this.m_name; },
+  of: function() { return this.m_of; },
+  hasDefault: function() { return this.m_hasDefault; },
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  m_name: null,
+  m_of: null,
+  m_hasDefault: null
+
+});
+
