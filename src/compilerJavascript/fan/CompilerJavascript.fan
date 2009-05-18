@@ -74,13 +74,29 @@ class CompilerJavascript : Compiler
     out  := file.out
 
     // find types to compile
-    jsTypes := types.findAll |def| {
-      force || def.facets?.get("javascript")?->toStr == "@javascript=true"
+    jsTypes := types.findAll |def|
+    {
+      if (force) return true
+      if (def.facets?.get("javascript")?->toStr == "@javascript=true") return true
+      return false
     }
 
     // write pod
     typeDefs(out, jsTypes)
-    jsTypes.each |def| { JavascriptWriter(this, def, out).write }
+    refs := Str:CType[:]
+    jsTypes.each |def|
+    {
+      w := JavascriptWriter(this, def, out)
+      w.write
+      refs.setAll(w.refs)
+    }
+
+    // write out refs
+    refs.each |def|
+    {
+      if (!def.name.startsWith("Curry\$")) return
+      JavascriptWriter(this, def, out).write
+    }
 
     out.close
     // bombIfErr...
