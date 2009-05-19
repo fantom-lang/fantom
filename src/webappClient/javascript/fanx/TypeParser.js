@@ -197,11 +197,19 @@ throw sys_Err.make("TODO - generic paramaters");
  */
 fanx_TypeParser.load = function(sig, checked)
 {
+  // lookup in cache first
+  var type = fanx_TypeParser.cache[sig];
+  if (type != null) return type;
+
   // if last character is ?, then parse a nullable
   var len = sig.length;
   var last = len > 1 ? sig.charAt(len-1) : 0;
   if (last == '?')
-    return fanx_TypeParser.load(sig.substring(0, len-1), checked).toNullable();
+  {
+    type = fanx_TypeParser.load(sig.substring(0, len-1), checked).toNullable();
+    fanx_TypeParser.cache[sig] = type;
+    return type;
+  }
 
   // if the last character isn't ] or |, then this a non-generic
   // type and we don't even need to allocate a parser
@@ -227,13 +235,17 @@ fanx_TypeParser.load = function(sig, checked)
       throw sys_ArgErr.make("Java types not allowed '" + sig + "'");
 
     // do a straight lookup
-    return fanx_TypeParser.find(podName, typeName, checked);
+    type = fanx_TypeParser.find(podName, typeName, checked);
+    fanx_TypeParser.cache[sig] = type;
+    return type;
   }
 
   // we got our work cut out for us - create parser
   try
   {
-    return new fanx_TypeParser(sig, checked).loadTop();
+    type = new fanx_TypeParser(sig, checked).loadTop();
+    fanx_TypeParser.cache[sig] = type;
+    return type;
   }
   catch (err)
   {
@@ -249,3 +261,4 @@ fanx_TypeParser.find = function(podName, typeName, checked)
   return pod.findType(typeName, checked);
 }
 
+fanx_TypeParser.cache = [];
