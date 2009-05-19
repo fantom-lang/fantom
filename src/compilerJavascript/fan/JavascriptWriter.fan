@@ -88,7 +88,7 @@ class JavascriptWriter : CompilerSupport
     out.w("  var instance = new ${qname(m.parent)}();").nl
     out.w("  instance.\$$m.name"); doMethodSig(m); out.w(";").nl
     hasNative := typeDef.slots.any |s| { s.isNative }
-    if (hasNative) out.w("  this.peer = new ${nativeQname(typeDef)}(this);").nl
+    if (hasNative) out.w("  instance.peer = new ${nativeQname(typeDef)}(instance);").nl
     out.w("  return instance;").nl
     out.w("}").nl
   }
@@ -125,7 +125,10 @@ class JavascriptWriter : CompilerSupport
     if (m.isNative)
     {
       ret := m.ret.qname == "sys::Void" ? "" : "return "
-      out.w("  ${ret}${nativeQname(typeDef)}.$m.name")
+      if (m.isStatic)
+        out.w("  ${ret}${nativeQname(typeDef)}.$m.name")
+      else
+        out.w("  ${ret}this.peer.${m.name}")
       doMethodSig(m, true)
       out.w(";").nl
     }
