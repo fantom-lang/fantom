@@ -21,10 +21,13 @@ var sys_Type = sys_Obj.extend(
 
   $ctor: function(qname, base)
   {
-    this.m_qname = qname;
-    this.n_name  = qname.split("::")[1];
-    this.m_base  = base == null ? null : sys_Type.find(base);
-    this.m_slots = [];
+    var s = qname.split("::");
+    this.m_qname  = qname;
+    this.m_pod    = sys_Pod.find(s[0]);
+    this.m_name   = s[1];
+    this.m_base   = base == null ? null : sys_Type.find(base);
+    this.m_slots  = [];
+    this.m_$qname = qname.replace("::", "_");
   },
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,9 +70,8 @@ var sys_Type = sys_Obj.extend(
 
   make: function()
   {
-    var jst = this.m_qname.replace("::", "_");
-    var str = "(" + jst+ ".defVal != null) ? " + jst + ".defVal : " + jst + ".make();";
-    return eval(str);
+    if(this.m_$obj == null) this.m_$obj = eval(this.m_$qname);
+    return (this.m_$obj.defVal != null) ? this.m_$obj.defVal : this.m_$obj.make();
   },
 
 //////////////////////////////////////////////////////////////////////////
@@ -176,11 +178,12 @@ var sys_Type = sys_Obj.extend(
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  m_base:  null,
-  m_qname: null,
-  m_name:  null,
-  m_slots: null
-
+  m_base:   null,   // base Type
+  m_qname:  null,   // qname
+  m_pod:    null,   // pod
+  m_name:   null,   // type name
+  m_slots:  null,   // slot array
+  m_$qname: null    // javascript qname
 });
 
 //////////////////////////////////////////////////////////////////////////
