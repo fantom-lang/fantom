@@ -61,6 +61,11 @@ var sys_Pod = sys_Obj.extend(
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
+sys_Pod.list = function()
+{
+  return sys_Pod.$pods;
+}
+
 sys_Pod.find = function(name, checked)
 {
   if (checked == undefined) checked = true;
