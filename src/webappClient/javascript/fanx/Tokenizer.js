@@ -41,7 +41,7 @@ var fanx_Tokenizer = Class.extend(
   {
     if (this.$undo != null) { this.$undo.reset(this); this.$undo = null; return this.type; }
     this.val = null;
-    return type = this.doNext();
+    return this.type = this.doNext();
   },
 
   /**
