@@ -4,110 +4,105 @@
 //
 // History:
 //   26 Feb 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Duration
  */
-var sys_Duration = sys_Obj.extend(
-{
+var sys_Duration = sys_Obj.$extend(sys_Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function(ticks)
-  {
-    this.m_ticks = ticks;
-  },
+sys_Duration.prototype.$ctor = function(ticks)
+{
+  this.m_ticks = ticks;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  equals: function(that)
-  {
-    if (that instanceof sys_Duration)
-      return this.m_ticks == that.m_ticks;
-    else
-      return false;
-  },
+sys_Duration.prototype.equals = function(that)
+{
+  if (that instanceof sys_Duration)
+    return this.m_ticks == that.m_ticks;
+  else
+    return false;
+}
 
-  compare: function(that)
-  {
-    if (this.m_ticks < that.m_ticks) return -1;
-    if (this.m_ticks == that.m_ticks) return 0;
-    return +1;
-  },
+sys_Duration.prototype.compare = function(that)
+{
+  if (this.m_ticks < that.m_ticks) return -1;
+  if (this.m_ticks == that.m_ticks) return 0;
+  return +1;
+}
 
-  type: function()
-  {
-    return sys_Type.find("sys::Duration");
-  },
+sys_Duration.prototype.type = function()
+{
+  return sys_Type.find("sys::Duration");
+}
 
-  ticks: function() { return this.m_ticks; },
+sys_Duration.prototype.ticks = function()
+{
+  return this.m_ticks;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Operators
 //////////////////////////////////////////////////////////////////////////
 
-  negate: function() { return sys_Duration.make(-this.m_ticks); },
-  plus: function(x)  { return sys_Duration.make(this.m_ticks + x.m_ticks); },
-  minus: function(x) { return sys_Duration.make(this.m_ticks - x.m_ticks); },
-  mult: function(x)  { return sys_Duration.make(this.m_ticks * x); },
-  div: function(x)   { return sys_Duration.make(this.m_ticks / x); },
-  floor: function(accuracy)
-  {
-    if (this.m_ticks % accuracy.m_ticks == 0) return this;
-    return sys_Duration.make(this.m_ticks - (this.m_ticks % accuracy.m_ticks));
-  },
-  abs: function()
-  {
-    if (this.m_ticks >= 0) return this;
-    return new sys_Duration(-this.m_ticks);
-  },
+sys_Duration.prototype.negate = function() { return sys_Duration.make(-this.m_ticks); }
+sys_Duration.prototype.plus = function(x)  { return sys_Duration.make(this.m_ticks + x.m_ticks); }
+sys_Duration.prototype.minus = function(x) { return sys_Duration.make(this.m_ticks - x.m_ticks); }
+sys_Duration.prototype.mult = function(x)  { return sys_Duration.make(this.m_ticks * x); }
+sys_Duration.prototype.div = function(x)   { return sys_Duration.make(this.m_ticks / x); }
+sys_Duration.prototype.floor = function(accuracy)
+{
+  if (this.m_ticks % accuracy.m_ticks == 0) return this;
+  return sys_Duration.make(this.m_ticks - (this.m_ticks % accuracy.m_ticks));
+}
+sys_Duration.prototype.abs = function()
+{
+  if (this.m_ticks >= 0) return this;
+  return new sys_Duration(-this.m_ticks);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  toStr: function()
+sys_Duration.prototype.toStr = function()
+{
+  if (this.m_ticks == 0) return "0ns";
+
+  // if clean millisecond boundary
+  var ns = this.m_ticks;
+  if (ns % sys_Duration.nsPerMilli == 0)
   {
-    if (this.m_ticks == 0) return "0ns";
+    if (ns % sys_Duration.nsPerDay == 0) return ns/sys_Duration.nsPerDay + "day";
+    if (ns % sys_Duration.nsPerHr  == 0) return ns/sys_Duration.nsPerHr  + "hr";
+    if (ns % sys_Duration.nsPerMin == 0) return ns/sys_Duration.nsPerMin + "min";
+    if (ns % sys_Duration.nsPerSec == 0) return ns/sys_Duration.nsPerSec + "sec";
+    return ns/sys_Duration.nsPerMilli + "ms";
+  }
 
-    // if clean millisecond boundary
-    var ns = this.m_ticks;
-    if (ns % sys_Duration.nsPerMilli == 0)
-    {
-      if (ns % sys_Duration.nsPerDay == 0) return ns/sys_Duration.nsPerDay + "day";
-      if (ns % sys_Duration.nsPerHr  == 0) return ns/sys_Duration.nsPerHr  + "hr";
-      if (ns % sys_Duration.nsPerMin == 0) return ns/sys_Duration.nsPerMin + "min";
-      if (ns % sys_Duration.nsPerSec == 0) return ns/sys_Duration.nsPerSec + "sec";
-      return ns/sys_Duration.nsPerMilli + "ms";
-    }
+  // return in nanoseconds
+  return ns + "ns";
+}
 
-    // return in nanoseconds
-    return ns + "ns";
-  },
+sys_Duration.prototype.toCode = function() { return this.toStr(); }
 
-  toCode: function() { return this.toStr(); },
-
-  toMillis: function() { return Math.floor(this.m_ticks / sys_Duration.nsPerMilli); },
-  toSec:    function() { return Math.floor(this.m_ticks / sys_Duration.nsPerSec); },
-  toMin:    function() { return Math.floor(this.m_ticks / sys_Duration.nsPerMin); },
-  toHour:   function() { return Math.floor(this.m_ticks / sys_Duration.nsPerHr); },
-  toDay:    function() { return Math.floor(this.m_ticks / sys_Duration.nsPerDay); },
+sys_Duration.prototype.toMillis = function() { return Math.floor(this.m_ticks / sys_Duration.nsPerMilli); }
+sys_Duration.prototype.toSec    = function() { return Math.floor(this.m_ticks / sys_Duration.nsPerSec); }
+sys_Duration.prototype.toMin    = function() { return Math.floor(this.m_ticks / sys_Duration.nsPerMin); }
+sys_Duration.prototype.toHour   = function() { return Math.floor(this.m_ticks / sys_Duration.nsPerHr); }
+sys_Duration.prototype.toDay    = function() { return Math.floor(this.m_ticks / sys_Duration.nsPerDay); }
 
 //////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  m_ticks: 0
-
-});
-
-//////////////////////////////////////////////////////////////////////////
-// Static Methods
+// Static
 //////////////////////////////////////////////////////////////////////////
 
 sys_Duration.make = function(ticks)

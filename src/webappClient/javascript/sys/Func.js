@@ -4,19 +4,19 @@
 //
 // History:
 //   24 Mar 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Func.
  */
-var sys_Func = sys_Obj.extend(
-{
-  $ctor: function() {},
-  type: function() { return sys_Type.find("sys::Func"); }
-});
+var sys_Func = sys_Obj.$extend(sys_Obj);
+
+sys_Func.prototype.$ctor = function() {}
+sys_Func.prototype.type = function() { return sys_Type.find("sys::Func"); }
 
 //////////////////////////////////////////////////////////////////////////
-// Static Methods
+// Static
 //////////////////////////////////////////////////////////////////////////
 
 sys_Func.make = function(f, params, ret)

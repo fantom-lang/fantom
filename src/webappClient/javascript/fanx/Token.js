@@ -10,10 +10,7 @@
  * Token defines the token type constants and provides
  * associated utility methods.
  */
-var fanx_Token = Class.extend(
-{
-  $ctor: function() {}
-});
+function fanx_Token() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Token Type Ids

@@ -4,13 +4,11 @@
 //
 // History:
 //   24 Mar 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 
-var sys_FConst = Class.extend(
-{
-  $ctor: function() {}
-});
+function sys_FConst() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Flags

@@ -4,16 +4,16 @@
 //
 // History:
 //   12 Jan 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * List
  */
-var sys_List = sys_Obj.extend(
-{
-  $ctor: function() {},
-  type: function()  { return sys_Type.find("sys::List"); }
-});
+var sys_List = sys_Obj.$extend(sys_Obj);
+
+sys_List.prototype.$ctor = function() {}
+sys_List.prototype.type = function()  { return sys_Type.find("sys::List"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Constructors

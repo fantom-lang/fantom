@@ -3,29 +3,33 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   8 Jan 09  Andy Frank  Creation
+//   8 Jan 09   Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
-var webappClient_HttpRes = sys_Obj.extend(
+var webappClient_HttpRes = sys_Obj.$extend(sys_Obj);
+
+webappClient_HttpRes.prototype.$ctor = function()
 {
-  $ctor: function()
-  {
-    var strType = sys_Type.find("sys::Str");
-    this.headers = new sys_Map(strType, strType);
-  },
-  type: function() { return sys_Type.find("webappClient::HttpRes"); },
+  var strType = sys_Type.find("sys::Str");
+  this.headers = new sys_Map(strType, strType);
+},
 
-  status$get: function() { return this.status },
-  status$set: function(val) { this.status = val; },
-  status: null,
+webappClient_HttpRes.prototype.type = function()
+{
+  return sys_Type.find("webappClient::HttpRes");
+}
 
-  headers$get: function() { return this.headers },
-  headers: null,
+webappClient_HttpRes.prototype.status$get = function() { return this.status }
+webappClient_HttpRes.prototype.status$set = function(val) { this.status = val; }
+webappClient_HttpRes.prototype.status = null;
 
-  content$get: function() { return this.content },
-  content$set: function(val) { this.content = val; },
-  content: null
-});
+webappClient_HttpRes.prototype.headers$get = function() { return this.headers }
+webappClient_HttpRes.prototype.headers = null;
+
+webappClient_HttpRes.prototype.content$get = function() { return this.content }
+webappClient_HttpRes.prototype.content$set = function(val) { this.content = val; }
+webappClient_HttpRes.prototype.content = null;
 
 webappClient_HttpRes.make = function(req)
 {

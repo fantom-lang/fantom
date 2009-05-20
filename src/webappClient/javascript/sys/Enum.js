@@ -4,73 +4,64 @@
 //
 // History:
 //   27 Feb 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Enum
  */
-var sys_Enum = sys_Obj.extend(
-{
+var sys_Enum = sys_Obj.$extend(sys_Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function() {},
-  $make: function(ordinal, name)
-  {
-    if (name == null) throw new sys_NullErr();
-    this.m_ordinal = ordinal;
-    this.m_name = name;
-  },
+sys_Enum.prototype.$ctor = function() {}
+sys_Enum.prototype.$make = function(ordinal, name)
+{
+  if (name == null) throw new sys_NullErr();
+  this.m_ordinal = ordinal;
+  this.m_name = name;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  equals: function(that)
-  {
-    return this == that;
-  },
+sys_Enum.prototype.equals = function(that)
+{
+  return this == that;
+}
 
-  compare: function(that)
-  {
-    if (this.m_ordinal < that.m_ordinal) return -1;
-    if (this.m_ordinal == that.m_ordinal) return 0;
-    return +1;
-  },
+sys_Enum.prototype.compare = function(that)
+{
+  if (this.m_ordinal < that.m_ordinal) return -1;
+  if (this.m_ordinal == that.m_ordinal) return 0;
+  return +1;
+}
 
-  type: function()
-  {
-    return sys_Type.find("sys::Enum");
-  },
+sys_Enum.prototype.type = function()
+{
+  return sys_Type.find("sys::Enum");
+}
 
-  toStr: function()
-  {
-    return this.m_name;
-  },
+sys_Enum.prototype.toStr = function()
+{
+  return this.m_name;
+}
 
-  ordinal: function()
-  {
-    return this.m_ordinal;
-  },
+sys_Enum.prototype.ordinal = function()
+{
+  return this.m_ordinal;
+}
 
-  name: function()
-  {
-    return this.m_name;
-  },
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  m_ordinal: 0,
-  m_name: ""
-
-});
+sys_Enum.prototype.name = function()
+{
+  return this.m_name;
+}
 
 //////////////////////////////////////////////////////////////////////////
-// Static Methods
+// Static
 //////////////////////////////////////////////////////////////////////////
 
 sys_Enum.make = function(ordinal, name)

@@ -3,14 +3,13 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   8 Jan 09  Andy Frank  Creation
+//   8 Jan 09   Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
-var webappClient_Doc = sys_Obj.extend(
-{
-  $ctor: function() {},
-  type: function() { return sys_Type.find("webappClient::Doc"); }
-});
+var webappClient_Doc = sys_Obj.$extend(sys_Obj);
+webappClient_Doc.prototype.$ctor = function() {}
+webappClient_Doc.prototype.type = function() { return sys_Type.find("webappClient::Doc"); }
 
 webappClient_Doc.body = function()
 {

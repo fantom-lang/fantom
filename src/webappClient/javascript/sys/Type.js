@@ -4,6 +4,7 @@
 //
 // History:
 //   11 Dec 08  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
@@ -12,179 +13,169 @@
  *   - GenericType (ListType, MapType, FuncType)
  *   - NullableType
  */
-var sys_Type = sys_Obj.extend(
-{
+var sys_Type = sys_Obj.$extend(sys_Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function(qname, base)
-  {
-    var s = qname.split("::");
-    this.m_qname  = qname;
-    this.m_pod    = sys_Pod.find(s[0]);
-    this.m_name   = s[1];
-    this.m_base   = base == null ? null : sys_Type.find(base);
-    this.m_slots  = [];
-    this.m_$qname = qname.replace("::", "_");
-  },
+sys_Type.prototype.$ctor = function(qname, base)
+{
+  // workaround for inhertiance
+  if (qname == undefined) return;
+
+  var s = qname.split("::");
+  this.m_qname  = qname;
+  this.m_pod    = sys_Pod.find(s[0]);
+  this.m_name   = s[1];
+  this.m_base   = base == null ? null : sys_Type.find(base);
+  this.m_slots  = [];
+  this.m_$qname = qname.replace("::", "_");
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  base: function()      { return this.m_base; },
-  isClass: function()   { return this.m_base == null || (this.m_base.m_qname != "sys::Enum" && this.m_base.m_qname != "sys::Mixin"); },
-  isEnum: function()    { return this.m_base != null && this.m_base.m_qname == "sys::Enum"; },
-  isMixin: function()   { return this.m_base != null && this.m_base.m_qname == "sys::Mixin"; },
-  name: function()      { return this.n_name; },
-  qname: function()     { return this.m_qname; },
-  signature: function() { return this.m_qname; },
-  toStr: function()     { return this.signature(); },
-  toLocale: function()  { return this.signature(); },
-  type: function()      { return sys_Type.find("sys::Type"); },
-  toListOf: function()  { return new sys_ListType(this); },
-  emptyList: function() { return new sys_ListType(this); },
+sys_Type.prototype.base = function()      { return this.m_base; }
+sys_Type.prototype.isClass = function()   { return this.m_base == null || (this.m_base.m_qname != "sys::Enum" && this.m_base.m_qname != "sys::Mixin"); }
+sys_Type.prototype.isEnum = function()    { return this.m_base != null && this.m_base.m_qname == "sys::Enum"; }
+sys_Type.prototype.isMixin = function()   { return this.m_base != null && this.m_base.m_qname == "sys::Mixin"; }
+sys_Type.prototype.name = function()      { return this.n_name; }
+sys_Type.prototype.qname = function()     { return this.m_qname; }
+sys_Type.prototype.signature = function() { return this.m_qname; }
+sys_Type.prototype.toStr = function()     { return this.signature(); }
+sys_Type.prototype.toLocale = function()  { return this.signature(); }
+sys_Type.prototype.type = function()      { return sys_Type.find("sys::Type"); }
+sys_Type.prototype.toListOf = function()  { return new sys_ListType(this); }
+sys_Type.prototype.emptyList = function() { return new sys_ListType(this); }
 
-  fits: function(that) { return this.is(that); },
-  is: function(that)
+sys_Type.prototype.fits = function(that) { return this.is(that); }
+sys_Type.prototype.is = function(that)
+{
+  if (this.equals(that)) return true;
+  var base = this.m_base;
+  while (base != null)
   {
-    if (this.equals(that)) return true;
-    var base = this.m_base;
-    while (base != null)
-    {
-      if (base.equals(that)) return true;
-      base = base.m_base;
-    }
-    return false;
-  },
+    if (base.equals(that)) return true;
+    base = base.m_base;
+  }
+  return false;
+}
 
-  // TODO
-  toNullable: function() { return this; },
-  toNonNullable: function() { return this; },
+// TODO
+sys_Type.prototype.toNullable = function() { return this; }
+sys_Type.prototype.toNonNullable = function() { return this; }
 
 //////////////////////////////////////////////////////////////////////////
 // Make
 //////////////////////////////////////////////////////////////////////////
 
-  make: function()
-  {
-    if(this.m_$obj == null) this.m_$obj = eval(this.m_$qname);
-    return (this.m_$obj.defVal != null) ? this.m_$obj.defVal : this.m_$obj.make();
-  },
+sys_Type.prototype.make = function()
+{
+  if(this.m_$obj == null) this.m_$obj = eval(this.m_$qname);
+  return (this.m_$obj.defVal != null) ? this.m_$obj.defVal : this.m_$obj.make();
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Slots
 //////////////////////////////////////////////////////////////////////////
 
-  slots: function()
-  {
-    // TODO - include inheritance
-    var acc = [];
-    for (var i in this.m_slots)
+sys_Type.prototype.slots = function()
+{
+  // TODO - include inheritance
+  var acc = [];
+  for (var i in this.m_slots)
+    acc.push(this.m_slots[i]);
+  return acc;
+}
+
+sys_Type.prototype.methods = function()
+{
+  // TODO - include inheritance
+  var acc = [];
+  for (var i in this.m_slots)
+    if (this.m_slots[i] instanceof sys_Method)
       acc.push(this.m_slots[i]);
-    return acc;
-  },
+  return acc;
+}
 
-  methods: function()
-  {
-    // TODO - include inheritance
-    var acc = [];
-    for (var i in this.m_slots)
-      if (this.m_slots[i] instanceof sys_Method)
-        acc.push(this.m_slots[i]);
-    return acc;
-  },
+sys_Type.prototype.fields = function()
+{
+  // TODO - include inheritance
+  var acc = [];
+  for (var i in this.m_slots)
+    if (this.m_slots[i] instanceof sys_Field)
+      acc.push(this.m_slots[i]);
+  return acc;
+}
 
-  fields: function()
-  {
-    // TODO - include inheritance
-    var acc = [];
-    for (var i in this.m_slots)
-      if (this.m_slots[i] instanceof sys_Field)
-        acc.push(this.m_slots[i]);
-    return acc;
-  },
+sys_Type.prototype.slot = function(name, checked)
+{
+  if (checked == undefined) checked = true;
+  var s = this.$slot(name);
+  if (s == null && checked)
+    throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
+  return s;
+}
 
-  slot: function(name, checked)
-  {
-    if (checked == undefined) checked = true;
-    var s = this.$slot(name);
-    if (s == null && checked)
-      throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
-    return s;
-  },
+sys_Type.prototype.method = function(name, checked)
+{
+  if (checked == undefined) checked = true;
+  var f = this.$slot(name);
+  if ((f == null || !(f instanceof sys_Method)) && checked)
+    throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
+  return f;
+}
 
-  method: function(name, checked)
-  {
-    if (checked == undefined) checked = true;
-    var f = this.$slot(name);
-    if ((f == null || !(f instanceof sys_Method)) && checked)
-      throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
-    return f;
-  },
+sys_Type.prototype.field = function(name, checked)
+{
+  if (checked == undefined) checked = true;
+  var f = this.$slot(name);
+  if ((f == null || !(f instanceof sys_Field)) && checked)
+    throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
+  return f;
+}
 
-  field: function(name, checked)
-  {
-    if (checked == undefined) checked = true;
-    var f = this.$slot(name);
-    if ((f == null || !(f instanceof sys_Field)) && checked)
-      throw sys_UnknownSlotErr.make(this.m_qname + "." + name);
-    return f;
-  },
+// addMethod
+sys_Type.prototype.$am = function(name)
+{
+  var m = new sys_Method(this, name);
+  this.m_slots[name] = m;
+  return this;
+}
 
-  // addMethod
-  $am: function(name)
-  {
-    var m = new sys_Method(this, name);
-    this.m_slots[name] = m;
-    return this;
-  },
-
-  // addField
-  $af: function(name, flags, of)
-  {
-    var t = fanx_TypeParser.load(of);
-    var f = new sys_Field(this, name, flags, t);
-    this.m_slots[name] = f;
-    return this;
-  },
+// addField
+sys_Type.prototype.$af = function(name, flags, of)
+{
+  var t = fanx_TypeParser.load(of);
+  var f = new sys_Field(this, name, flags, t);
+  this.m_slots[name] = f;
+  return this;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Util
 //////////////////////////////////////////////////////////////////////////
 
-  $slot: function(name)
+sys_Type.prototype.$slot = function(name)
+{
+  // check self first
+  var slot = this.m_slots[name];
+  if (slot != null) return slot;
+
+  // walk inheritance
+  var base = this.m_base;
+  while (base != null)
   {
-    // check self first
-    var slot = this.m_slots[name];
+    slot = base.m_slots[name];
     if (slot != null) return slot;
+    base = base.m_base;
+  }
 
-    // walk inheritance
-    var base = this.m_base;
-    while (base != null)
-    {
-      slot = base.m_slots[name];
-      if (slot != null) return slot;
-      base = base.m_base;
-    }
-
-    // not found
-    return null;
-  },
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  m_base:   null,   // base Type
-  m_qname:  null,   // qname
-  m_pod:    null,   // pod
-  m_name:   null,   // type name
-  m_slots:  null,   // slot array
-  m_$qname: null    // javascript qname
-});
+  // not found
+  return null;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
@@ -236,102 +227,98 @@ sys_Type.common = function(objs)
  * ListType
  ************************************************************************/
 
-var sys_ListType = sys_Type.extend(
+var sys_ListType = sys_Obj.$extend(sys_Type)
+sys_ListType.prototype.$ctor = function(v) { this.v = v; }
+sys_ListType.prototype.signature = function() { return this.v.signature() + '[]'; }
+sys_ListType.prototype.equals = function(that)
 {
-  $ctor: function(v) { this.v = v; },
-  signature: function() { return this.v.signature() + '[]'; },
-  equals: function(that)
-  {
-    if (that instanceof sys_ListType)
-      return this.v.equals(that.v);
-    else
-      return false;
-  }
-});
+  if (that instanceof sys_ListType)
+    return this.v.equals(that.v);
+  else
+    return false;
+}
 
 /*************************************************************************
  * MapType
  ************************************************************************/
 
-var sys_MapType = sys_Type.extend(
+var sys_MapType = sys_Obj.$extend(sys_Type);
+
+sys_MapType.prototype.$ctor = function(k, v)
 {
-  $ctor: function(k, v)
-  {
-    this.k = k;
-    this.v = v;
-  },
+  this.k = k;
+  this.v = v;
+}
 
-  signature: function()
-  {
-    return "[" + this.k.signature() + ':' + this.v.signature() + ']';
-  },
+sys_MapType.prototype.signature = function()
+{
+  return "[" + this.k.signature() + ':' + this.v.signature() + ']';
+}
 
-  equals: function(that)
-  {
-    if (that instanceof sys_MapType)
-      return this.k.equals(that.k) && this.v.equals(that.v);
-    else
-      return false;
-  }
-});
+sys_MapType.prototype.equals = function(that)
+{
+  if (that instanceof sys_MapType)
+    return this.k.equals(that.k) && this.v.equals(that.v);
+  else
+    return false;
+}
 
 /*************************************************************************
  * FuncType
  ************************************************************************/
 
-var sys_FuncType = sys_Type.extend(
+var sys_FuncType = sys_Obj.$extend(sys_Type);
+
+sys_FuncType.prototype.$ctor = function(params, ret)
 {
-  $ctor: function(params, ret)
+  this.params = params;
+  this.ret = ret;
+}
+
+sys_FuncType.prototype.signature = function()
+{
+  var s = '|'
+  for (var i=0; i<this.params.length; i++)
   {
-    this.params = params;
-    this.ret = ret;
-  },
-
-  signature: function()
-  {
-    var s = '|'
-    for (var i=0; i<this.params.length; i++)
-    {
-      if (i > 0) s += ',';
-      s += this.params[i].signature();
-    }
-    s += '->';
-    s += this.ret.signature();
-    s += '|';
-    return s;
-  },
-
-  equals: function(that)
-  {
-    if (that instanceof sys_FuncType)
-    {
-      if (this.params.length != that.params.length) return false;
-      for (var i=0; i<this.params.length; i++)
-        if (!this.params[i].equals(that.params[i])) return false;
-      return this.ret.equals(that.ret);
-    }
-    return false;
-  },
-
-  is: function(that)
-  {
-    if (this == that) return true;
-    if (that instanceof sys_FuncType)
-    {
-      // match return type (if void is needed, anything matches)
-      if (that.ret.m_qname != "sys::Void" && !this.ret.is(that.ret)) return false;
-
-      // match params - it is ok for me to have less than
-      // the type params (if I want to ignore them), but I
-      // must have no more
-      if (this.params.length > that.params.length) return false;
-      for (var i=0; i<this.params.length; ++i)
-        if (!that.params[i].is(this.params[i])) return false;
-
-      // this method works for the specified method type
-      return true;
-    }
-    return base().is(that);
+    if (i > 0) s += ',';
+    s += this.params[i].signature();
   }
-});
+  s += '->';
+  s += this.ret.signature();
+  s += '|';
+  return s;
+}
+
+sys_FuncType.prototype.equals = function(that)
+{
+  if (that instanceof sys_FuncType)
+  {
+    if (this.params.length != that.params.length) return false;
+    for (var i=0; i<this.params.length; i++)
+      if (!this.params[i].equals(that.params[i])) return false;
+    return this.ret.equals(that.ret);
+  }
+  return false;
+}
+
+sys_FuncType.prototype.is = function(that)
+{
+  if (this == that) return true;
+  if (that instanceof sys_FuncType)
+  {
+    // match return type (if void is needed, anything matches)
+    if (that.ret.m_qname != "sys::Void" && !this.ret.is(that.ret)) return false;
+
+    // match params - it is ok for me to have less than
+    // the type params (if I want to ignore them), but I
+    // must have no more
+    if (this.params.length > that.params.length) return false;
+    for (var i=0; i<this.params.length; ++i)
+      if (!that.params[i].is(this.params[i])) return false;
+
+    // this method works for the specified method type
+    return true;
+  }
+  return this.base().is(that);
+}
 

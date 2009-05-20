@@ -4,62 +4,56 @@
 //
 // History:
 //   27 Feb 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Month
  */
-var sys_Month = sys_Enum.extend(
-{
+var sys_Month = sys_Obj.$extend(sys_Enum);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function(ordinal, name)
-  {
-    this.$make(ordinal, name);
-  },
+sys_Month.prototype.$ctor = function(ordinal, name)
+{
+  this.$make(ordinal, name);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  increment: function()
-  {
-    var arr = sys_Month.values;
-    return arr[(this.m_ordinal+1) % arr.length];
-  },
+sys_Month.prototype.increment = function()
+{
+  var arr = sys_Month.values;
+  return arr[(this.m_ordinal+1) % arr.length];
+}
 
-  decrement: function()
-  {
-    var arr = sys_Month.values;
-    return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
-  },
+sys_Month.prototype.decrement = function()
+{
+  var arr = sys_Month.values;
+  return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
+}
 
-  /*
-  public long numDays(long year)
-  {
-    if (DateTime.isLeapYear((int)year))
-      return DateTime.daysInMonLeap[ord];
-    else
-      return DateTime.daysInMon[ord];
-  }
-  */
+/*
+public long numDays(long year)
+{
+  if (DateTime.isLeapYear((int)year))
+    return DateTime.daysInMonLeap[ord];
+  else
+    return DateTime.daysInMon[ord];
+}
+*/
 
-  type: function()
-  {
-    return sys_Type.find("sys::Month");
-  }
-
-});
+sys_Month.prototype.type = function()
+{
+  return sys_Type.find("sys::Month");
+}
 
 //////////////////////////////////////////////////////////////////////////
-// Static Methods
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-// Static Fields
+// Static
 //////////////////////////////////////////////////////////////////////////
 
 sys_Month.jan = new sys_Month(0,  "jan");

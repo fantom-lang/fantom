@@ -4,66 +4,77 @@
 //
 // History:
 //   11 Dec 08  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Obj is the base class for all Fan types.
  */
-var sys_Obj = Class.extend(
+function sys_Obj() {}
+
+//////////////////////////////////////////////////////////////////////////
+// OO
+//////////////////////////////////////////////////////////////////////////
+
+/**
+ * Handles the boilerplate code for implementing OO-style
+ * inhertiance in Javascript.
+ */
+sys_Obj.$extend = function(base)
 {
-
-//////////////////////////////////////////////////////////////////////////
-// Constructor
-//////////////////////////////////////////////////////////////////////////
-
-  $ctor: function() {},
-  $make: function() {},
+  function f() { this.$ctor.apply(this, arguments); }
+  f.prototype = new base;
+  f.prototype.constructor = f;
+  f.prototype.$super = base.prototype;
+  return f;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  equals: function(that)
-  {
-    return this == that;
-  },
+sys_Obj.prototype.$ctor = function() {}
+sys_Obj.prototype.$make = function() {}
 
-  compare: function(that)
-  {
-    if (this < that) return -1;
-    if (this > that) return 1;
-    return 0;
-  },
+sys_Obj.prototype.equals = function(that)
+{
+  return this == that;
+}
 
-  $with: function(func)
-  {
-    func(this);
-  },
+sys_Obj.prototype.compare = function(that)
+{
+  if (this < that) return -1;
+  if (this > that) return 1;
+  return 0;
+}
 
-  isImmutable: function()
-  {
-    return false;
-  },
+sys_Obj.prototype.$with = function(func)
+{
+  func(this);
+}
 
-  type: function()
-  {
-    return sys_Type.find("sys::Obj")
-  },
+sys_Obj.prototype.isImmutable = function()
+{
+  return false;
+}
 
-  toStr: function()
-  {
-    return "" + this.type();
-  },
+sys_Obj.prototype.type = function()
+{
+  return sys_Type.find("sys::Obj")
+}
 
-  toString: function()
-  {
-    return "" + this.toStr();
-  }
+sys_Obj.prototype.toStr = function()
+{
+  return "" + this.type();
+}
 
-});
+sys_Obj.prototype.toString = function()
+{
+  return "" + this.toStr();
+}
 
 //////////////////////////////////////////////////////////////////////////
-// Static Methods
+// Static
 //////////////////////////////////////////////////////////////////////////
 
 sys_Obj.equals = function(self, that)
@@ -152,5 +163,7 @@ sys_Obj._toStr = function(obj)
 
 sys_Obj.echo = function(str)
 {
+  // TODO - check for console.log, alert
   println(sys_Obj._toStr(str));
 }
+

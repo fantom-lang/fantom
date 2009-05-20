@@ -4,52 +4,46 @@
 //
 // History:
 //   6 Mar 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Weekday
  */
-var sys_Weekday = sys_Enum.extend(
-{
+var sys_Weekday = sys_Obj.$extend(sys_Enum);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function(ordinal, name)
-  {
-    this.$make(ordinal, name);
-  },
+sys_Weekday.prototype.$ctor = function(ordinal, name)
+{
+  this.$make(ordinal, name);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  increment: function()
-  {
-    var arr = sys_Weekday.values;
-    return arr[(this.m_ordinal+1) % arr.length];
-  },
+sys_Weekday.prototype.increment = function()
+{
+  var arr = sys_Weekday.values;
+  return arr[(this.m_ordinal+1) % arr.length];
+}
 
-  decrement: function()
-  {
-    var arr = sys_Weekday.values;
-    return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
-  },
+sys_Weekday.prototype.decrement = function()
+{
+  var arr = sys_Weekday.values;
+  return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
+}
 
-  type: function()
-  {
-    return sys_Type.find("sys::Weekday");
-  }
-
-});
+sys_Weekday.prototype.type = function()
+{
+  return sys_Type.find("sys::Weekday");
+}
 
 //////////////////////////////////////////////////////////////////////////
-// Static Methods
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-// Static Fields
+// Static
 //////////////////////////////////////////////////////////////////////////
 
 sys_Weekday.sun = new sys_Weekday(0,  "sun");
