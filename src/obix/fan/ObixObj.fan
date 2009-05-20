@@ -201,12 +201,26 @@ class ObixObj
   }
 
   **
-  ** Get a child by name or return null if not found.
+  ** Get a child by name.  If not found and checked is true
+  ** then throw NameErr, otherwise null.
   **
-  ObixObj? get(Str name)
+  ObixObj? get(Str name, Bool checked := true)
   {
-    if (kidsByName == null) return null
-    return kidsByName[name]
+    child := kidsByName?.get(name)
+    if (child != null) return child
+    if (checked) throw NameErr("Missing obix child '$name'")
+    return null
+  }
+
+  **
+  ** If the name maps to a child object, then return that
+  ** child's value.  Otherwise route to 'Obj.trap'.
+  **
+  override Obj? trap(Str name, Obj?[]? args)
+  {
+    child := kidsByName?.get(name)
+    if (child != null) return child.val
+    return super.trap(name, args)
   }
 
   **
@@ -440,11 +454,11 @@ class ObixObj
   internal static const ObixObj[] noChildren := ObixObj[,]
   internal static const Int xmlEsc := OutStream.xmlEscNewlines | OutStream.xmlEscQuotes
 
-  private [Str:Obj]? kidsByName   // map of children by name
-  private ObixObj? kidsHead       // children linked list
-  private ObixObj? kidsTail       // children linked list
-  private Int kidsCount           // children linked list
-  private ObixObj? prev           // sibling in parents linked list
-  private ObixObj? next           // sibling in parents linked list
+  private [Str:ObixObj]? kidsByName // map of children by name
+  private ObixObj? kidsHead         // children linked list
+  private ObixObj? kidsTail         // children linked list
+  private Int kidsCount             // children linked list
+  private ObixObj? prev             // sibling in parents linked list
+  private ObixObj? next             // sibling in parents linked list
 
 }

@@ -75,7 +75,9 @@ abstract class ObixTest : Test
       verifySame(kid.parent, p)
       if (kid.name != null) verifySame(p[kid.name], kid)
     }
-    verifyEq(p["badone"], null)
+    verifyEq(p.get("badone", false), null)
+    verifyErr(NameErr#) { p.get("badone") }
+    verifyErr(NameErr#) { p.get("badone", true) }
   }
 
 }

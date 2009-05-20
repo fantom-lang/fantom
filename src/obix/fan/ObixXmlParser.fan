@@ -132,7 +132,7 @@ internal class ObixXmlParser
         case "out":  obj.out = Contract(attr.val)
 
         // value
-        case "val":  obj.val = parseVal(attr.val, elem)
+        case "val":  parseVal(obj, attr.val, elem)
         case "null": obj.isNull = attr.val.toBool
 
         // facets
@@ -153,12 +153,21 @@ internal class ObixXmlParser
     catch (Err e) throw err("Cannot parse attribute '$attr.name'", e)
   }
 
-  private Obj parseVal(Str valStr, XElem elem)
+  private Void parseVal(ObixObj obj, Str valStr, XElem elem)
   {
     func := ObixUtil.elemNameToFromStrFunc[elem.name]
-    if (func == null) throw err("Element <$elem.name> cannot have val attribute")
+
+    // older versions of Niagara use '<obj>' with a value, so
+    // be lenient and turn those into '<str>' objects
+    if (func == null && obj.elemName == "obj")
+    {
+      obj.elemName = "str"
+      obj.val = valStr
+      return
+    }
+
     try
-      return func(valStr, elem)
+      obj.val = func(valStr, elem)
     catch (Err e)
       throw err("Cannot parse <$elem.name> value: $valStr.toCode", e)
   }
