@@ -171,8 +171,15 @@ class JavascriptWriter : CompilerSupport
       case "sys::Float":   def = "0"
       case "sys::Int":     def = "sys_Int.make(0)"
     }
-    out.w("${var(f.name)}\$get: function() { return this.${var(f.name)}; },").nl
-    out.w("${var(f.name)}\$set: function(val) { this.${var(f.name)} = val; },").nl
+    // getter
+    out.w("${var(f.name)}\$get: function() ")
+    if (f.hasGet) block(f.get.code)
+    else out.w("{ return this.${var(f.name)}; },").nl
+    // setter
+    out.w("${var(f.name)}\$set: function(val) ")
+    if (f.hasSet) block(f.set.code)
+    else out.w("{ this.${var(f.name)} = val; },").nl
+    // storage
     out.w("${var(f.name)}: $def")
     if (trailingComma) out.w(",")
     out.nl
