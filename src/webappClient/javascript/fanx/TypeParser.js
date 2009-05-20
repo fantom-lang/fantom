@@ -16,177 +16,157 @@
  *   x::V[x::K]
  *   |x::A, ... -> x::R|
  */
-var fanx_TypeParser = Class.extend(
+function fanx_TypeParser(sig, checked)
 {
-
-//////////////////////////////////////////////////////////////////////////
-// Constructor
-//////////////////////////////////////////////////////////////////////////
-
-  $ctor: function(sig, checked)
-  {
-    this.sig        = sig;
-    this.len        = sig.length;
-    this.pos        = 0;
-    this.cur        = sig.charAt(this.pos);
-    this.peek       = sig.charAt(this.pos+1);
-    this.checked    = checked;
-  },
+  this.sig     = sig;                      // signature being parsed
+  this.len     = sig.length;               // length of sig
+  this.pos     = 0;                        // index of cur in sig
+  this.cur     = sig.charAt(this.pos);     // cur character; sig[pos]
+  this.peek    = sig.charAt(this.pos+1);   // next character; sig[pos+1]
+  this.checked = checked;                  // pass thru checked flag
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Parse
 //////////////////////////////////////////////////////////////////////////
 
-  loadTop: function()
+fanx_TypeParser.prototype.loadTop = function()
+{
+  var type = this.load();
+  if (this.cur != null) throw this.err();
+  return type;
+}
+
+fanx_TypeParser.prototype.load = function()
+{
+  var type;
+
+  // |...| is func
+  if (this.cur == '|')
+    type = this.loadFunc();
+
+  // [java] is java FFI
+  else if (this.cur == '[' && this.sig.indexOf("[java]") != -1) //sig.regionMatches(pos, "[java]", 0, 6))
+    //type = loadFFI();
+    throw sys_ArgErr.make("Java types not allowed '" + this.sig + "'");
+
+  // [...] is map
+  else if (this.cur == '[')
+    type = this.loadMap();
+
+  // otherwise must be basic[]
+  else
+    type = this.loadBasic();
+
+  // nullable
+  if (this.cur == '?')
   {
-    var type = this.load();
-    if (this.cur != null) throw this.err();
-    return type;
-  },
+    this.consume('?');
+    type = type.toNullable();
+  }
 
-  load: function()
-  {
-    var type;
-
-    // |...| is func
-    if (this.cur == '|')
-      type = this.loadFunc();
-
-    // [java] is java FFI
-    else if (this.cur == '[' && this.sig.indexOf("[java]") != -1) //sig.regionMatches(pos, "[java]", 0, 6))
-      //type = loadFFI();
-      throw sys_ArgErr.make("Java types not allowed '" + this.sig + "'");
-
-    // [...] is map
-    else if (this.cur == '[')
-      type = this.loadMap();
-
-    // otherwise must be basic[]
-    else
-      type = this.loadBasic();
-
-    // nullable
-    if (this.cur == '?')
-    {
-      this.consume('?');
-      type = type.toNullable();
-    }
-
-    // anything left must be []
-    while (this.cur == '[')
-    {
-      this.consume('[');
-      this.consume(']');
-      type = type.toListOf();
-    }
-
-    // nullable
-    if (this.cur == '?')
-    {
-      this.consume('?');
-      type = type.toNullable();
-    }
-
-    return type;
-  },
-
-  loadMap: function()
+  // anything left must be []
+  while (this.cur == '[')
   {
     this.consume('[');
-    var key = this.load();
-    this.consume(':');
-    var val = this.load();
     this.consume(']');
-    return new sys_MapType(key, val);
-  },
+    type = type.toListOf();
+  }
 
-  loadFunc: function()
+  // nullable
+  if (this.cur == '?')
   {
-    this.consume('|');
-    var params = [];
-    if (this.cur != '-')
+    this.consume('?');
+    type = type.toNullable();
+  }
+
+  return type;
+}
+
+fanx_TypeParser.prototype.loadMap = function()
+{
+  this.consume('[');
+  var key = this.load();
+  this.consume(':');
+  var val = this.load();
+  this.consume(']');
+  return new sys_MapType(key, val);
+}
+
+fanx_TypeParser.prototype.loadFunc = function()
+{
+  this.consume('|');
+  var params = [];
+  if (this.cur != '-')
+  {
+    while (true)
     {
-      while (true)
-      {
-        params.push(this.load());
-        if (this.cur == '-') break;
-        this.consume(',');
-      }
+      params.push(this.load());
+      if (this.cur == '-') break;
+      this.consume(',');
     }
-    this.consume('-');
-    this.consume('>');
-    var ret = this.load();
-    this.consume('|');
+  }
+  this.consume('-');
+  this.consume('>');
+  var ret = this.load();
+  this.consume('|');
 
-    return new sys_FuncType(params, ret);
-  },
+  return new sys_FuncType(params, ret);
+}
 
-  loadBasic: function()
+fanx_TypeParser.prototype.loadBasic = function()
+{
+  var podName = this.consumeId();
+  this.consume(':');
+  this.consume(':');
+  var typeName = this.consumeId();
+
+  // check for generic parameter like sys::V
+  if (typeName.length == 1 && podName == "sys")
   {
-    var podName = this.consumeId();
-    this.consume(':');
-    this.consume(':');
-    var typeName = this.consumeId();
-
-    // check for generic parameter like sys::V
-    if (typeName.length == 1 && podName == "sys")
-    {
-      //var type = Sys.genericParameterType(typeName);
-      //if (type != null) return type;
+    //var type = Sys.genericParameterType(typeName);
+    //if (type != null) return type;
 throw sys_Err.make("TODO - generic paramaters");
-    }
+  }
 
-    return fanx_TypeParser.find(podName, typeName, this.checked);
-  },
+  return fanx_TypeParser.find(podName, typeName, this.checked);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  consumeId: function()
-  {
-    var start = this.pos;
-    while (this.isIdChar(this.cur)) this.$consume();
-    return this.sig.substring(start, this.pos);
-  },
+fanx_TypeParser.prototype.consumeId = function()
+{
+  var start = this.pos;
+  while (this.isIdChar(this.cur)) this.$consume();
+  return this.sig.substring(start, this.pos);
+}
 
-  isIdChar: function(ch)
-  {
-    if (ch == null) return false;
-    return sys_Int.isAlphaNum(ch.charCodeAt(0)) || ch == '_';
-  },
+fanx_TypeParser.prototype.isIdChar = function(ch)
+{
+  if (ch == null) return false;
+  return sys_Int.isAlphaNum(ch.charCodeAt(0)) || ch == '_';
+}
 
-  consume: function(expected)
-  {
-    if (this.cur != expected) throw this.err();
-    this.$consume();
-  },
+fanx_TypeParser.prototype.consume = function(expected)
+{
+  if (this.cur != expected) throw this.err();
+  this.$consume();
+}
 
-  $consume: function()
-  {
-    this.cur = this.peek;
-    this.pos++;
-    this.peek = this.pos+1 < this.len ? this.sig.charAt(this.pos+1) : null;
-  },
+fanx_TypeParser.prototype.$consume = function()
+{
+  this.cur = this.peek;
+  this.pos++;
+  this.peek = this.pos+1 < this.len ? this.sig.charAt(this.pos+1) : null;
+}
 
-  err: function(sig)
-  {
-    if (sig == undefined) sig = this.sig;
-    return sys_ArgErr.make("Invalid type signature '" + sig + "'");
-  },
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  sig: null,       // signature being parsed
-  len: 0,          // length of sig
-  pos: 0,          // index of cur in sig
-  cur: null,       // cur character; sig[pos]
-  peek: null,      // next character; sig[pos+1]
-  checked: true    // pass thru checked flag
-
-});
+fanx_TypeParser.prototype.err = function(sig)
+{
+  if (sig == undefined) sig = this.sig;
+  return sys_ArgErr.make("Invalid type signature '" + sig + "'");
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Factory

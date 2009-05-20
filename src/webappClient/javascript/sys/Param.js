@@ -4,42 +4,35 @@
 //
 // History:
 //   18 May 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Param.
  */
-var sys_Param = sys_Obj.extend(
-{
+var sys_Param = sys_Obj.$extend(sys_Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function(name, of, hasDefault)
-  {
-    this.m_name = name;
-    this.m_of = sys_Type.find(of);
-    this.m_hasDefault = hasDefault;
-  },
-
-  type: function() { return sys_Type.find("sys::Param"); },
+sys_Param.prototype.$ctor = function(name, of, hasDefault)
+{
+  this.m_name = name;
+  this.m_of = sys_Type.find(of);
+  this.m_hasDefault = hasDefault;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  name: function() { return this.m_name; },
-  of: function() { return this.m_of; },
-  hasDefault: function() { return this.m_hasDefault; },
+sys_Param.prototype.name = function() { return this.m_name; }
+sys_Param.prototype.of = function() { return this.m_of; }
+sys_Param.prototype.hasDefault = function() { return this.m_hasDefault; }
 
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  m_name: null,
-  m_of: null,
-  m_hasDefault: null
-
-});
+sys_Param.prototype.type = function()
+{
+  return sys_Type.find("sys::Param");
+}
 

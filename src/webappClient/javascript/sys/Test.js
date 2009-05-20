@@ -4,129 +4,128 @@
 //
 // History:
 //   10 Dec 08  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Test is the base class of unit tests.
  */
-var sys_Test = sys_Obj.extend(
-{
+var sys_Test = sys_Obj.$extend(sys_Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function() {},
+sys_Test.prototype.$ctor = function()
+{
+  this.verifyCount = 0;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  verify: function(cond, msg)
-  {
-    if (!cond) this.fail(msg);
-    this.verifyCount++;
-  },
+sys_Test.prototype.verify = function(cond, msg)
+{
+  if (!cond) this.fail(msg);
+  this.verifyCount++;
+}
 
-  verifyFalse: function(cond, msg)
-  {
-    if (cond) this.fail(msg);
-    this.verifyCount++;
-  },
+sys_Test.prototype.verifyFalse = function(cond, msg)
+{
+  if (cond) this.fail(msg);
+  this.verifyCount++;
+}
 
-  verifyEq: function(expected, actual, msg)
+sys_Test.prototype.verifyEq = function(expected, actual, msg)
+{
+  if (!sys_Obj.equals(expected, actual))
   {
-    if (!sys_Obj.equals(expected, actual))
+    if (msg == null) msg = sys_Obj._toStr(expected) + " != " + sys_Obj._toStr(actual);
+    this.fail(msg);
+  }
+  /*
+  if (expected != null && actual != null)
+  {
+    if (hash(expected) != hash(actual))
     {
-      if (msg == null) msg = sys_Obj._toStr(expected) + " != " + sys_Obj._toStr(actual);
-      this.fail(msg);
+      fail("Equal but different hash codes: " +
+        expected + " (0x" + FanInt.toHex(hash(expected)) + ") ?= " +
+        actual   + " (0x" + FanInt.toHex(hash(actual)) + ")");
     }
-    /*
-    if (expected != null && actual != null)
-    {
-      if (hash(expected) != hash(actual))
-      {
-        fail("Equal but different hash codes: " +
-          expected + " (0x" + FanInt.toHex(hash(expected)) + ") ?= " +
-          actual   + " (0x" + FanInt.toHex(hash(actual)) + ")");
-      }
-    }
-    */
-    this.verifyCount++;
-  },
+  }
+  */
+  this.verifyCount++;
+}
 
-  verifyNotEq: function(expected, actual, msg)
+sys_Test.prototype.verifyNotEq = function(expected, actual, msg)
+{
+  if (sys_Obj.equals(expected, actual))
   {
-    if (sys_Obj.equals(expected, actual))
-    {
-      if (msg == null) msg = sys_Obj._toStr(expected) + " == " + sys_Obj._toStr(actual);
-      this.fail(msg);
-    }
-    this.verifyCount++;
-  },
+    if (msg == null) msg = sys_Obj._toStr(expected) + " == " + sys_Obj._toStr(actual);
+    this.fail(msg);
+  }
+  this.verifyCount++;
+}
 
-  verifySame: function(expected, actual, msg)
+sys_Test.prototype.verifySame = function(expected, actual, msg)
+{
+  if (!sys_Obj.equals(expected, actual))
   {
-    if (!sys_Obj.equals(expected, actual))
-    {
-      if (msg == null) msg = sys_Obj._toStr(expected) + " !== " + sys_Obj._toStr(actual);
-      this.fail(msg);
-    }
-    this.verifyCount++;
-  },
+    if (msg == null) msg = sys_Obj._toStr(expected) + " !== " + sys_Obj._toStr(actual);
+    this.fail(msg);
+  }
+  this.verifyCount++;
+}
 
-  verifyNotSame: function(expected, actual, msg)
+sys_Test.prototype.verifyNotSame = function(expected, actual, msg)
+{
+  if (sys_Obj.equals(expected == actual))
   {
-    if (sys_Obj.equals(expected == actual))
-    {
-      if (msg == null) msg = sys_Obj._toStr(expected) + " === " + sys_Obj._toStr(actual);
-      this.fail(msg);
-    }
-    this.verifyCount++;
-  },
+    if (msg == null) msg = sys_Obj._toStr(expected) + " === " + sys_Obj._toStr(actual);
+    this.fail(msg);
+  }
+  this.verifyCount++;
+}
 
-  verifyErr: function(errType, f)
+sys_Test.prototype.verifyErr = function(errType, f)
+{
+  try
   {
-    try
-    {
-      f();
-    }
-    catch (err)
-    {
-      var e = sys_Err.make(err);
-      if (e.type() == errType) { this.verifyCount++; return; }
-      //if (verbose) System.out.println("  verifyErr: " + e);
-      println("  verifyErr: " + e);
-      this.fail(e.type() + " thrown, expected " + errType);
-    }
-    this.fail("No err thrown, expected " + errType);
-  },
+    f();
+  }
+  catch (err)
+  {
+    var e = sys_Err.make(err);
+    if (e.type() == errType) { this.verifyCount++; return; }
+    //if (verbose) System.out.println("  verifyErr: " + e);
+    println("  verifyErr: " + e);
+    this.fail(e.type() + " thrown, expected " + errType);
+  }
+  this.fail("No err thrown, expected " + errType);
+}
 
-  fail: function(msg)
-  {
-    throw this.err(msg);
-  },
+sys_Test.prototype.fail = function(msg)
+{
+  throw this.err(msg);
+}
 
-  err: function(msg)
-  {
-    if (msg == null)
-      return new sys_Err("Test failed");
-    else
-      return new sys_Err("Test failed: " + msg);
-  },
+sys_Test.prototype.err = function(msg)
+{
+  if (msg == null)
+    return new sys_Err("Test failed");
+  else
+    return new sys_Err("Test failed: " + msg);
+}
 
-  type: function()
-  {
-    return sys_Type.find("sys::Test")
-  },
+sys_Test.prototype.type = function()
+{
+  return sys_Type.find("sys::Test")
+}
 
 //////////////////////////////////////////////////////////////////////////
-// Fields
+// TestException
 //////////////////////////////////////////////////////////////////////////
-
-  verifyCount: 0
-
-});
 
 function TestException(msg)
 {

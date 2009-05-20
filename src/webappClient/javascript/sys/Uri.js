@@ -4,49 +4,41 @@
 //
 // History:
 //   24 Mar 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Uri
  */
-var sys_Uri = sys_Obj.extend(
-{
+var sys_Uri = sys_Obj.$extend(sys_Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function(uri)
-  {
-    this.m_uri = uri;
-  },
+sys_Uri.prototype.$ctor = function(uri)
+{
+  this.m_uri = uri;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  type: function()
-  {
-    return sys_Type.find("sys::Uri");
-  },
+sys_Uri.prototype.type = function()
+{
+  return sys_Type.find("sys::Uri");
+}
 
-  equals: function(that)
-  {
-    return this.m_uri == that.m_uri;
-  },
+sys_Uri.prototype.equals = function(that)
+{
+  return this.m_uri == that.m_uri;
+}
 
-  toStr: function()
-  {
-    return this.m_uri;
-  },
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  m_uri: ""
-
-});
+sys_Uri.prototype.toStr = function()
+{
+  return this.m_uri;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Static Methods

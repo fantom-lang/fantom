@@ -4,25 +4,23 @@
 //
 // History:
 //   15 Dec 08  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Int
  */
-var sys_Int = sys_Obj.extend(
-{
+var sys_Int = sys_Obj.$extend(sys_Num);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function() {},
-  type: function() { return sys_Type.find("sys::Int"); }
-
-});
+sys_Int.prototype.$ctor = function() {}
+sys_Int.prototype.type = function() { return sys_Type.find("sys::Int"); }
 
 //////////////////////////////////////////////////////////////////////////
-// Static Methods
+// Static
 //////////////////////////////////////////////////////////////////////////
 
 sys_Int.make = function(val)

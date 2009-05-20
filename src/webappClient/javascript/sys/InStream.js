@@ -4,62 +4,66 @@
 //
 // History:
 //   11 May 09  Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * InStream
  */
-var sys_InStream = sys_Obj.extend(
-{
+var sys_InStream = sys_Obj.$extend(sys_Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function() {},
-  type: function()  {  return sys_Type.find("sys::InStream"); },
+sys_InStream.prototype.$ctor = function()
+{
+  this.$in = null;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-  // read: function()
-  // readBuf: function(buf, n)
-  // unread: function(n)
+// read = function()
+// readBuf = function(buf, n)
+// unread = function(n)
 
-  skip: function(n)
-  {
-    if ($in != null) return $in.skip(n);
+sys_InStream.prototype.skip = function(n)
+{
+  if (this.$in != null) return this.$in.skip(n);
 
-    for (var i=0; i<n; ++i)
-      if (this.read() == 0) return i;
-    return n;
-  },
+  for (var i=0; i<n; ++i)
+    if (this.read() == 0) return i;
+  return n;
+}
 
-  // readAllBuf: function()
-  // readBufFully: function(buf, n)
+// readAllBuf = function()
+// readBufFully = function(buf, n)
 
-  // ...
+// ...
 
-  readObj: function(options)
-  {
-    if (options == undefined) options = null;
-    return new fanx_ObjDecoder(this, options).readObj();
-  },
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  $in: null
-
-});
+sys_InStream.prototype.readObj = function(options)
+{
+  if (options == undefined) options = null;
+  return new fanx_ObjDecoder(this, options).readObj();
+}
 
 //////////////////////////////////////////////////////////////////////////
-// Static Methods
+// Obj
+//////////////////////////////////////////////////////////////////////////
+
+sys_InStream.prototype.type = function()
+{
+  return sys_Type.find("sys::InStream");
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Static
 //////////////////////////////////////////////////////////////////////////
 
 sys_InStream.makeForStr = function(s)
 {
   return new sys_StrInStream(s);
 }
+

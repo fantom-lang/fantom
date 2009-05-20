@@ -3,125 +3,120 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   1 Apr 09  Andy Frank  Creation
+//   1 Apr 09   Andy Frank  Creation
+//   20 May 09  Andy Frank  Refactor to new OO model
 //
 
 /**
  * Buf.
  */
-var sys_Buf = sys_Obj.extend(
-{
+var sys_Buf = sys_Obj.$extend(sys_Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  $ctor: function()
-  {
-    this.m_buf = new Array();
-  },
+sys_Buf.prototype.$ctor = function()
+{
+  this.m_buf = new Array();
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  print: function(str)
+sys_Buf.prototype.print = function(str)
+{
+  for (var i=0; i<str.length; i++)
   {
-    for (var i=0; i<str.length; i++)
+    var c = str.charCodeAt(i);
+    if (c < 128)
     {
-      var c = str.charCodeAt(i);
-      if (c < 128)
-      {
-        this.m_buf.push(c);
-      }
-      else if((c > 127) && (c < 2048))
-      {
-        this.m_buf.push((c >> 6) | 192);
-        this.m_buf.push((c & 63) | 128);
-      }
-      else
-      {
-        this.m_buf.push((c >> 12) | 224);
-        this.m_buf.push(((c >> 6) & 63) | 128);
-        this.m_buf.push((c & 63) | 128);
-      }
+      this.m_buf.push(c);
     }
-    return this;
-  },
+    else if((c > 127) && (c < 2048))
+    {
+      this.m_buf.push((c >> 6) | 192);
+      this.m_buf.push((c & 63) | 128);
+    }
+    else
+    {
+      this.m_buf.push((c >> 12) | 224);
+      this.m_buf.push(((c >> 6) & 63) | 128);
+      this.m_buf.push((c & 63) | 128);
+    }
+  }
+  return this;
+}
 
-  toBase64: function()
+sys_Buf.prototype.toBase64 = function()
+{
+  var buf = this.m_buf;
+  var size = this.m_buf.length;
+  var s = "";
+  var base64chars = sys_Buf.base64chars;
+  var i = 0;
+
+  // append full 24-bit chunks
+  var end = size-2;
+  for (; i<end; i+=3)
   {
-    var buf = this.m_buf;
-    var size = this.m_buf.length;
-    var s = "";
-    var base64chars = sys_Buf.base64chars;
-    var i = 0;
+    var n = ((buf[i] & 0xff) << 16) + ((buf[i+1] & 0xff) << 8) + (buf[i+2] & 0xff);
+    s += String.fromCharCode(base64chars[(n >>> 18) & 0x3f]);
+    s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
+    s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
+    s += String.fromCharCode(base64chars[n & 0x3f]);
+  }
 
-    // append full 24-bit chunks
-    var end = size-2;
-    for (; i<end; i+=3)
-    {
-      var n = ((buf[i] & 0xff) << 16) + ((buf[i+1] & 0xff) << 8) + (buf[i+2] & 0xff);
-      s += String.fromCharCode(base64chars[(n >>> 18) & 0x3f]);
-      s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
-      s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
-      s += String.fromCharCode(base64chars[n & 0x3f]);
-    }
-
-    // pad and encode remaining bits
-    var rem = size - i;
-    if (rem > 0)
-    {
-      var n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
-      s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
-      s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
-      s += String.fromCharCode(rem == 2 ? base64chars[n & 0x3f] : 61);
-      s += ('=');
-    }
-
-    return s;
-  },
-
-  toDigest: function(algorithm)
+  // pad and encode remaining bits
+  var rem = size - i;
+  if (rem > 0)
   {
-    var digest = null;
-    switch (algorithm)
-    {
-      case "MD5":   digest = sys_Buf_Md5(this.m_buf);  break;
-      case "SHA-1": digest = sys_Buf_Sha1(this.m_buf); break;
-      default: throw sys_Err.make("Unknown digest algorithm " + algorithm);
-    }
-    var buf = sys_Buf.make();
-    buf.m_buf = digest;
-    return buf;
-  },
+    var n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
+    s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
+    s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
+    s += String.fromCharCode(rem == 2 ? base64chars[n & 0x3f] : 61);
+    s += ('=');
+  }
 
-  toHex: function()
+  return s;
+}
+
+sys_Buf.prototype.toDigest = function(algorithm)
+{
+  var digest = null;
+  switch (algorithm)
   {
-    var buf = this.m_buf;
-    var size = buf.length;
-    var hexChars = sys_Buf.hexChars;
-    var s = "";
-    for (var i=0; i<size; ++i)
-    {
-      var b = buf[i] & 0xff;
-      s += String.fromCharCode(hexChars[b>>4]) + String.fromCharCode(hexChars[b&0xf]);
-    }
-    return s;
-  },
+    case "MD5":   digest = sys_Buf_Md5(this.m_buf);  break;
+    case "SHA-1": digest = sys_Buf_Sha1(this.m_buf); break;
+    default: throw sys_Err.make("Unknown digest algorithm " + algorithm);
+  }
+  var buf = sys_Buf.make();
+  buf.m_buf = digest;
+  return buf;
+}
 
-  type: function() { return sys_Type.find("sys::Buf"); },
+sys_Buf.prototype.toHex = function()
+{
+  var buf = this.m_buf;
+  var size = buf.length;
+  var hexChars = sys_Buf.hexChars;
+  var s = "";
+  for (var i=0; i<size; ++i)
+  {
+    var b = buf[i] & 0xff;
+    s += String.fromCharCode(hexChars[b>>4]) + String.fromCharCode(hexChars[b&0xf]);
+  }
+  return s;
+}
+
+sys_Buf.prototype.type = function()
+{
+  return sys_Type.find("sys::Buf");
+}
 
 //////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  m_buf: null // byte array init in ctor
-
-});
-
-//////////////////////////////////////////////////////////////////////////
-// Static Methods
+// Static
 //////////////////////////////////////////////////////////////////////////
 
 sys_Buf.make = function(capacity) { return new sys_Buf(); }
