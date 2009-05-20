@@ -13,6 +13,7 @@ using gfx
 ** contain one child widget called 'content'.
 **
 @collection=false
+@javascript
 class ContentPane : Pane
 {
 

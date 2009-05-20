@@ -13,6 +13,7 @@ using gfx
 ** input information from the user.  Dialog also contains
 ** convenience routines for opening message boxes.
 **
+@javascript
 class Dialog : Window
 {
 

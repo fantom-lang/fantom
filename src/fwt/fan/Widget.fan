@@ -27,6 +27,7 @@ using gfx
 ** See [docLib]`docLib::Fwt` for details.
 **
 @serializable @collection
+@javascript
 abstract class Widget
 {
 

@@ -25,6 +25,7 @@ using gfx
 **
 ** See [docLib]`docLib::Fwt` for details.
 **
+@javascript
 class Command
 {
 

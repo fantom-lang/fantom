@@ -12,6 +12,7 @@ using gfx
 ** Menu contains MenuItems.  Menu is also itself a MenuItem
 ** when nested inside other Menus.
 **
+@javascript
 class Menu : MenuItem
 {
 
