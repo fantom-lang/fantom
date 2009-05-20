@@ -67,7 +67,7 @@ var fanx_ObjDecoder = Class.extend(
 
     var podName = this.consumeId("Expecting pod name");
     var pod = sys_Pod.find(podName, false);
-    if (pod == null) throw err("Unknown pod: " + podName);
+    if (pod == null) throw this.err("Unknown pod: " + podName);
     if (this.curt != fanx_Token.DOUBLE_COLON)
     {
       this.endOfStmt(line);
@@ -77,7 +77,7 @@ var fanx_ObjDecoder = Class.extend(
     this.consume();
     var typeName = this.consumeId("Expecting type name");
     var t = pod.findType(typeName, false);
-    if (t == null) throw err("Unknown type: " + podName + "::" + typeName);
+    if (t == null) throw this.err("Unknown type: " + podName + "::" + typeName);
 
     if (this.curt == fanx_Token.AS)
     {
