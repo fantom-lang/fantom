@@ -73,7 +73,7 @@ sys_Str.equalsIgnoreCase = function(self, that)
 sys_Str.get = function(self, index)
 {
   if (index < 0) index += self.length;
-  return self.charCodeAt(index);
+  return sys_Int.make(self.charCodeAt(index));
 }
 
 sys_Str.index = function(self, s, off)
@@ -175,7 +175,7 @@ sys_Str.reverse = function(self)
 
 sys_Str.size = function(self)
 {
-  return self.length;
+  return sys_Int.make(self.length);
 }
 
 sys_Str.slice = function(self, range)
