@@ -16,6 +16,7 @@ using gfx
 **
 ** See [docLib]`docLib::Fwt` for details.
 **
+@javascript
 abstract class Pane : Widget
 {
 

@@ -15,6 +15,7 @@ using gfx
 ** TODO: this API going to change, most likely there will be a
 **   switch to per col/per row configuration
 **
+@javascript
 class GridPane : Pane
 {
 

@@ -11,6 +11,7 @@ using gfx
 **
 ** Event models a user input event for callbacks.
 **
+@javascript
 class Event
 {
 
@@ -122,6 +123,7 @@ class Event
 **
 ** EventId identifies the type of widget `Event`.
 **
+@javascript
 enum EventId
 {
   unknown,
@@ -159,6 +161,7 @@ enum EventId
 **
 ** EventListeners manages a list of event callback functions.
 **
+@javascript
 class EventListeners
 {
   ** Get the list of registered callback functions.
