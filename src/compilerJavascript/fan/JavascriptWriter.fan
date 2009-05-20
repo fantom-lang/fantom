@@ -46,17 +46,11 @@ class JavascriptWriter : CompilerSupport
     bname := typeDef.base ?: "sys::Obj"
     jname := qname(typeDef)
     jbase := qname(typeDef.base)
-    out.w("var $jname = ${jbase}.extend(").nl
-    out.w("{").nl
-    out.w("  \$ctor: function() {},").nl
-    out.w("  type: function() { return sys_Type.find(\"$fname\"); },").nl
-    out.indent
-    cs := 0
-    mx := typeDef.methodDefs.size + typeDef.fieldDefs.size - 1
-    typeDef.methodDefs.each |MethodDef m| { method(m, cs++ != mx) }
-    typeDef.fieldDefs.each |FieldDef f| { field(f, cs++ != mx) }
-    out.unindent
-    out.w("});").nl
+    out.w("var $jname = sys_Obj.\$extend($jbase);").nl
+    out.w("${jname}.prototype.\$ctor = function() {}").nl
+    out.w("${jname}.prototype.type = function() { return sys_Type.find(\"$fname\"); }").nl
+    typeDef.methodDefs.each |m| { method(m) } //, cs++ != mx) }
+    typeDef.fieldDefs.each  |f| { field(f) } //, cs++ != mx) }
     ctors.each |MethodDef m| { ctor(m) }
     staticMethods.each |MethodDef m| { staticMethod(m) }
     staticFields.each |FieldDef f| { staticField(f) }
@@ -67,14 +61,14 @@ class JavascriptWriter : CompilerSupport
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  Void method(MethodDef m, Bool trailingComma)
+  Void method(MethodDef m)
   {
     if (m.isStatic) { staticMethods.add(m); return }
     if (m.isFieldAccessor) return // getter/setters are defined when field is emitted
-    if (m.isCtor) { ctors.add(m); out.w("\$") }
-    out.w("${var(m.name)}: ")
+    mname := var(m.name)
+    if (m.isCtor) { ctors.add(m); mname = "\$$mname" }
+    out.w("${qname(m.parent)}.prototype.${mname} = ")
     doMethod(m)
-    if (trailingComma) out.w(",")
     out.nl
   }
 
@@ -118,7 +112,7 @@ class JavascriptWriter : CompilerSupport
     }
     if (m.isCtor)
     {
-      out.w("  if (this._super) this._super")
+      out.w("  this.\$super.\$${var(m.name)}")
       doMethodSig(m)
       out.w(";").nl
     }
@@ -159,11 +153,25 @@ class JavascriptWriter : CompilerSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Void field(FieldDef f, Bool trailingComma)
+  Void field(FieldDef f)
   {
     if (f.isNative) return
     if (f.isStatic) { staticFields.add(f); return }
-    def := "null"
+    doField(f)
+  }
+
+  Void staticField(FieldDef f)
+  {
+    if (f.isNative) return
+    if (!f.isStatic) err("Field must be static: $f.name", f.location)
+    doField(f)
+  }
+
+  Void doField(FieldDef f)
+  {
+    qname  := qname(f.parent)
+    prefix := f.isStatic ? qname : "${qname}.prototype"
+    def    := "null"
     switch (f.fieldType.qname)
     {
       case "sys::Bool":    def = "false"
@@ -171,28 +179,19 @@ class JavascriptWriter : CompilerSupport
       case "sys::Float":   def = "0"
       case "sys::Int":     def = "sys_Int.make(0)"
     }
-    // getter
-    out.w("${var(f.name)}\$get: function() ")
-    if (f.hasGet) block(f.get.code)
-    else out.w("{ return this.${var(f.name)}; },").nl
-    // setter
-    out.w("${var(f.name)}\$set: function(val) ")
-    if (f.hasSet) block(f.set.code)
-    else out.w("{ this.${var(f.name)} = val; },").nl
-    // storage
-    out.w("${var(f.name)}: $def")
-    if (trailingComma) out.w(",")
-    out.nl
-  }
 
-  Void staticField(FieldDef f)
-  {
-    if (f.isNative) return
-    if (!f.isStatic) err("Field must be static: $f.name", f.location)
-    qname := qname(f.parent)
-    out.w("${qname}.${var(f.name)}\$get = function() { return ${qname}.${var(f.name)}; };").nl
-    out.w("${qname}.${var(f.name)}\$set = function(val) { ${qname}.${var(f.name)} = val; };").nl
-    out.w("${qname}.${var(f.name)} = null;").nl
+    // getter
+    out.w("${prefix}.${var(f.name)}\$get = function() ")
+    if (f.hasGet) block(f.get.code)
+    else out.w("{ return this.${var(f.name)}; }").nl
+
+    // setter
+    out.w("${prefix}.${var(f.name)}\$set = function(val) ")
+    if (f.hasSet) block(f.set.code)
+    else out.w("{ this.${var(f.name)} = val; }").nl
+
+    // storage
+    out.w("${prefix}.${var(f.name)} = $def;").nl
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -386,7 +385,7 @@ if (c != null)
       case ExprId.field:        fieldExpr(ex)
       case ExprId.localVar:     out.w(var(ex.toStr))
       case ExprId.thisExpr:     out.w(inClosure ? "\$this" : "this")
-      case ExprId.superExpr:    out.w("this._super")
+      case ExprId.superExpr:    out.w("this.\$super")
       case ExprId.itExpr:       out.w("it")
       case ExprId.staticTarget: out.w(qname(ex->ctype))
       //case ExprId.unknownVar
@@ -471,11 +470,8 @@ if (c != null)
       if (ce is ShortcutExpr && ce->opToken.toStr == "!=") out.w("!")
       if (ce.target is SuperExpr)
       {
-// TODO - currently we can only call super for the exact
-// same method - not sure how to work around that yet
         expr(ce.target)
-        //out.w(".$ce.method.name(")
-        out.w("(")
+        out.w(".$ce.method.name(")
         firstArg = false
       }
       else
