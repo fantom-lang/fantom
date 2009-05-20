@@ -38,12 +38,12 @@ class ObjTest : ObixTest
     verifySame(p.remove(b), p)
     verifyChildren(p, [a, c, d])
     verifyEq(b.parent, null)
-    verifyEq(p["b"], null)
+    verifyEq(p.get("b", false), null)
 
     // remove a
     verifySame(p.remove(a), p)
     verifyChildren(p, [c, d])
-    verifyEq(p["d"], d)
+    verifyEq(p.get("d", false), d)
 
     // clear
     verifySame(p.clear, p)
@@ -129,9 +129,12 @@ class ObjTest : ObixTest
 
   Void verifyVal(Str elemName, Obj? val)
   {
-    obj := ObixObj { it.val = val }
+    obj := ObixObj { it.name = "foo"; it.val = val }
     verifyEq(obj.elemName, elemName)
     verifySame(obj.val, val)
+
+    parent := ObixObj { obj, }
+    verifyEq(parent->foo, val)
   }
 
 //////////////////////////////////////////////////////////////////////////

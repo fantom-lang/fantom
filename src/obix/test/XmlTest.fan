@@ -247,9 +247,11 @@ class XmlTest : ObixTest
 
   Void testValErrors()
   {
-    verifyParseErr("<obj val='bad'/>")
+    // turn obj's with val into str
+    verifyParse("<obj val='foo'/>", ObixObj { elemName="str"; val="foo" })
+
     verifyParseErr("<obj><op val='bad'/></obj>")
-   }
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Facets
