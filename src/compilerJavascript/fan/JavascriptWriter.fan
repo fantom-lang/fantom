@@ -47,10 +47,18 @@ class JavascriptWriter : CompilerSupport
     jname := qname(typeDef)
     jbase := qname(typeDef.base)
     out.w("var $jname = sys_Obj.\$extend($jbase);").nl
+// TODO - this is ok for now - it fails because of
+// how we trap curried types, which should be rare
+// to have type called on them - but we need to fix
+// none-the-less
+if (!typeDef.name.startsWith("Curry\$"))
+{
+  out.w("${jname}.\$type = sys_Type.find(\"$fname\");").nl
+}
     out.w("${jname}.prototype.\$ctor = function() {}").nl
-    out.w("${jname}.prototype.type = function() { return sys_Type.find(\"$fname\"); }").nl
-    typeDef.methodDefs.each |m| { method(m) } //, cs++ != mx) }
-    typeDef.fieldDefs.each  |f| { field(f) } //, cs++ != mx) }
+    out.w("${jname}.prototype.type = function() { return ${jname}.\$type; }").nl
+    typeDef.methodDefs.each |m| { method(m) }
+    typeDef.fieldDefs.each  |f| { field(f) }
     ctors.each |MethodDef m| { ctor(m) }
     staticMethods.each |MethodDef m| { staticMethod(m) }
     staticFields.each |FieldDef f| { staticField(f) }
@@ -81,8 +89,9 @@ class JavascriptWriter : CompilerSupport
     out.w("{").nl
     out.w("  var instance = new ${qname(m.parent)}();").nl
     out.w("  instance.\$$m.name"); doMethodSig(m); out.w(";").nl
-    hasNative := typeDef.slots.any |s| { s.isNative }
-    if (hasNative) out.w("  instance.peer = new ${nativeQname(typeDef)}(instance);").nl
+    nslot := typeDef.slots.find |s| { s.isNative }
+    if (nslot != null)
+      out.w("  instance.peer = new ${nativeQname(nslot.parent)}(instance);").nl
     out.w("  return instance;").nl
     out.w("}").nl
   }
@@ -110,10 +119,10 @@ class JavascriptWriter : CompilerSupport
         out.w(";").nl
       }
     }
-    if (m.isCtor)
+    if (m.ctorChain != null)
     {
-      out.w("  this.\$super.\$${var(m.name)}")
-      doMethodSig(m)
+      out.w("  ")
+      callExpr(m.ctorChain)
       out.w(";").nl
     }
     if (m.isNative)
@@ -471,7 +480,7 @@ if (c != null)
       if (ce.target is SuperExpr)
       {
         expr(ce.target)
-        out.w(".$ce.method.name(")
+        out.w(".${ce.method.name}.call(this,")
         firstArg = false
       }
       else
@@ -532,6 +541,7 @@ if (c != null)
     if (ce.method.isCtor || ce.name == "<ctor>")
     {
       mname = ce.name == "<ctor>" ? "make" : ce.name
+      if (ce.target is SuperExpr) mname = "\$$mname"
       first := ce.method.params.first
       if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
       {
