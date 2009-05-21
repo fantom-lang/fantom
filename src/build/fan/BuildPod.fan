@@ -354,117 +354,14 @@ abstract class BuildPod : BuildScript
   virtual Void javascript()
   {
     if (!hasJavascript) return
+
+    // natives
+    jsDirs := resolveDirs(javascriptDirs)
+
     // use compilerJavascript reflectively
     compilerJavascript := Type.find("compilerJavascript::Main").make
-    Int r := compilerJavascript->run(scriptFile.uri)
+    Int r := compilerJavascript->run(scriptFile.uri, jsDirs)
     if (r != 0) fatal("Cannot compile javascript '$podName'")
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// JavascriptNative
-//////////////////////////////////////////////////////////////////////////
-
-  @target="include native Javascript source files"
-  virtual Void javascriptNative()
-  {
-    if (javascriptDirs == null) return
-
-    // if run directly, we have to run the javascript target first
-    if (toRun != null && toRun.size == 1 && toRun.first?.name == "javascriptNative")
-      javascript
-
-    log.info("javascriptNative [$podName]")
-    log.indent
-
-    // env
-    jstemp := scriptDir + `temp-javascript/`
-    jsDirs := resolveDirs(javascriptDirs)
-    target := jstemp + "$podName-native.js".toUri
-
-    // start with a clean directory
-    Delete.make(this, jstemp).run
-    CreateDir.make(this, jstemp).run
-
-    // get original javascript file
-    jdk    := JdkTask.make(this)
-    jarExe := jdk.jarExe
-    curPod := libFanDir + "${podName}.pod".toUri
-    Exec.make(this, [jarExe.osPath, "-fx", curPod.osPath, "${podName}.js"], jstemp).run
-    orig := jstemp + "${podName}.js".toUri
-    if (!orig.exists) orig.create
-
-    // merge
-    out := target.out
-    jsDirs.each |File f|
-    {
-      files := f.isDir ? f.listFiles : [f]
-      files.each |File js|
-      {
-        in := js.in
-        in.pipe(out)
-        in.close
-        out.printLine("")
-      }
-    }
-    out.close
-
-    // minify
-    min := jstemp + "$podName-min.js".toUri
-    in  := target.in
-    out = min.out
-    minify(in, out)
-    in.close
-    out.close
-
-    // append to orig
-    in  = min.in
-    out = orig.out(true)
-    out.printLine("")
-    in.pipe(out)
-    in.close
-    out.close
-
-    // add back into pod
-    Exec.make(this, [jarExe.osPath, "fu", curPod.osPath, "-C", jstemp.osPath, orig.name], jstemp).run
-
-    // cleanup temp
-    //Delete.make(this, jstemp).run
-
-    log.unindent
-  }
-
-  private Void minify(InStream in, OutStream out)
-  {
-    inBlock := false
-    in.readAllLines.each |line|
-    {
-      s := line
-      // line comments
-      i := s.index("//")
-      if (i != null) s = s[0...i]
-      // block comments
-      temp := s
-      a := temp.index("/*")
-      if (a != null)
-      {
-        s = temp[0...a]
-        inBlock = true
-      }
-      if (inBlock)
-      {
-        b := temp.index("*/")
-        if (b != null)
-        {
-          s = (a == null) ? temp[b+2..-1] : s + temp[b+2..-1]
-          inBlock = false
-        }
-      }
-      // trim and print
-      s = s.trim
-      if (inBlock) return
-      if (s.size == 0) return
-      out.printLine(s)
-    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -478,7 +375,6 @@ abstract class BuildPod : BuildScript
     javaNative
     dotnetNative
     javascript
-    javascriptNative
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -493,7 +389,6 @@ abstract class BuildPod : BuildScript
     javaNative
     dotnetNative
     javascript
-    javascriptNative
   }
 
 //////////////////////////////////////////////////////////////////////////

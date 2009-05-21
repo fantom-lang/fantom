@@ -55,7 +55,11 @@ if (!typeDef.name.startsWith("Curry\$"))
 {
   out.w("${jname}.\$type = sys_Type.find(\"$fname\");").nl
 }
-    out.w("${jname}.prototype.\$ctor = function() {}").nl
+    out.w("${jname}.prototype.\$ctor = function() {")
+    // look for natives
+    hasNative := typeDef.slots.any |s| { s.isNative && s.parent.qname == typeDef.qname }
+    if (hasNative) out.w(" this.peer = new ${nativeQname(typeDef)}(this); ")
+    out.w("}").nl
     out.w("${jname}.prototype.type = function() { return ${jname}.\$type; }").nl
     typeDef.methodDefs.each |m| { method(m) }
     typeDef.fieldDefs.each  |f| { field(f) }
@@ -89,9 +93,6 @@ if (!typeDef.name.startsWith("Curry\$"))
     out.w("{").nl
     out.w("  var instance = new ${qname(m.parent)}();").nl
     out.w("  instance.\$$m.name"); doMethodSig(m); out.w(";").nl
-    nslot := typeDef.slots.find |s| { s.isNative }
-    if (nslot != null)
-      out.w("  instance.peer = new ${nativeQname(nslot.parent)}(instance);").nl
     out.w("  return instance;").nl
     out.w("}").nl
   }

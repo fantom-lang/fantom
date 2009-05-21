@@ -25,6 +25,7 @@ class CompilerJavascript : Compiler
     : super(input)
   {
     this.output = CompilerOutput()
+    this.nativeDirs = File[,]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,8 +71,14 @@ class CompilerJavascript : Compiler
   Void generateOutput()
   {
     log.debug("GenerateOutput")
-    file := outDir.createFile("${pod.name}.js")
-    out  := file.out
+    file  := outDir.createFile("${pod.name}.js")
+    peers := Str:File[:]
+    out   := file.out
+
+    // resolve nativeDirs to file map
+    nativeDirs.each |dir| {
+      dir.listFiles.each |f| { peers[f.basename] = f }
+    }
 
     // find types to compile
     jsTypes := types.findAll |def|
@@ -86,6 +93,18 @@ class CompilerJavascript : Compiler
     refs := Str:CType[:]
     jsTypes.each |def|
     {
+      // check for native first
+      key := "${def.name}Peer"
+      peer := peers[key]
+      if (peer != null)
+      {
+        in := peer.in
+        minify(in, out)
+        in.close
+        peers.remove(key)
+      }
+
+      // compile type
       w := JavascriptWriter(this, def, out)
       w.write
       refs.setAll(w.refs)
@@ -96,6 +115,14 @@ class CompilerJavascript : Compiler
     {
       if (!def.name.startsWith("Curry\$")) return
       JavascriptWriter(this, def, out).write
+    }
+
+    // write any left over natives
+    peers.each |f|
+    {
+      in := f.in
+      minify(in, out)
+      in.close
     }
 
     out.close
@@ -139,9 +166,52 @@ class CompilerJavascript : Compiler
   }
 
   **
+  ** Minify JavaScript source code from the InStream and write
+  ** the results to the OutStream.
+  **
+  private Void minify(InStream in, OutStream out)
+  {
+    inBlock := false
+    in.readAllLines.each |line|
+    {
+      s := line
+      // line comments
+      i := s.index("//")
+      if (i != null) s = s[0..<i]
+      // block comments
+      temp := s
+      a := temp.index("/*")
+      if (a != null)
+      {
+        s = temp[0..<a]
+        inBlock = true
+      }
+      if (inBlock)
+      {
+        b := temp.index("*/")
+        if (b != null)
+        {
+          s = (a == null) ? temp[b+2..-1] : s + temp[b+2..-1]
+          inBlock = false
+        }
+      }
+      // trim and print
+      s = s.trim
+      if (inBlock) return
+      if (s.size == 0) return
+      out.printLine(s)
+    }
+  }
+
+  **
   ** Directory to write compiled Javascript source files to
   **
   File? outDir
+
+  **
+  ** Directories of native javascript files to include in output.
+  **
+  File[] nativeDirs
 
   **
   ** Force all types and slots to be compiled even if they do

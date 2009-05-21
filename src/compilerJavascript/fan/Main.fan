@@ -26,10 +26,10 @@ class Main
       help
       Sys.exit(-1)
     }
-    run(Sys.args.first.toUri)
+    run(Sys.args.first.toUri, File[,])
   }
 
-  Int run(Uri scriptUri, Bool force := false)
+  Int run(Uri scriptUri, File[] nativeDirs, Bool force := false)
   {
     try
     {
@@ -40,7 +40,7 @@ class Main
 
       script := Sys.compile(scriptFile).make
       echo("javascript [${script->podName}]")
-      compile(script, tempDir, force)
+      compile(script, tempDir, nativeDirs, force)
       assemble(script, tempDir)
 
       tempDir.delete
@@ -64,7 +64,7 @@ class Main
 // Compile
 //////////////////////////////////////////////////////////////////////////
 
-  Void compile(BuildPod script, File outDir, Bool force := false)
+  Void compile(BuildPod script, File outDir, File[] nativeDirs, Bool force := false)
   {
     input := CompilerInput.make
     input.inputLoc    = Location.makeFile(script.scriptFile)
@@ -81,7 +81,12 @@ class Main
     input.outDir      = script.libFanDir
     input.output      = CompilerOutputMode.podFile
     script.log.indent
-    CompilerJavascript.make(input) { it.outDir=outDir; it.force=force }.compile
+    CompilerJavascript.make(input)
+    {
+      it.outDir     = outDir
+      it.nativeDirs = nativeDirs
+      it.force      = force
+    }.compile
   }
 
 //////////////////////////////////////////////////////////////////////////
