@@ -44,39 +44,68 @@ class ObixClient
   **
   const Str username
 
+  **
+  ** About object relative URI - either set manually or via `readLobby`.
+  **
+  Uri? aboutUri
+
+  **
+  ** Batch operation relative URI - either set manually or via `readLobby`.
+  **
+  Uri? batchUri
+
 //////////////////////////////////////////////////////////////////////////
-// Lifecycle
+// Conveniences
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return true if this client does not have an open session.
+  ** Read the lobby object.  This method will set the
+  ** `aboutUri` and `batchUri` fields.
   **
-  readonly Bool isClosed := true
-
-  **
-  ** Open a session to the oBIX server.
-  **
-  Void open()
+  ObixObj readLobby()
   {
-    if (!isClosed) return
-    isClosed = false
     lobby := read(lobbyUri)
-    aboutUri = lobby.get("about").normalizedHref
-    batchUri = lobby.get("batch").normalizedHref
-    watchMakeUri = read(lobby.get("watchService").normalizedHref).get("make").normalizedHref
+    aboutUri = lobby.get("about").href
+    batchUri = lobby.get("batch").href
+    return lobby
   }
 
   **
-  ** Close the session to the oBIX server.
-  ** Do nothing if session not open closed.
+  ** Read about object.  The `aboutUri` must be either set
+  ** manually or via `readLobby`.
   **
-  Void close()
+  ObixObj readAbout()
   {
-    if (isClosed) return
-    isClosed = true
-    aboutUri = null
-    batchUri = null
-    watchMakeUri = null
+    if (aboutUri == null) throw Err("aboutUri not set")
+    return read(aboutUri)
+  }
+
+  **
+  ** Perform a batch read for all the given URIs.  The
+  ** `batchUri` must be either set manually or via `readLobby`.
+  **
+  ObixObj[] batchRead(Uri[] uris)
+  {
+    // sanity checks
+    if (batchUri == null) throw Err("batchUri not set")
+    if (uris.isEmpty) return ObixObj[,]
+
+    // if only one
+    if (uris.size == 1) return [ read(uris[0]) ]
+
+    // build batch-in argument
+    in := ObixObj { elemName = "list"; contract = Contract.batchIn }
+    baseUri := lobbyUri.pathOnly
+    uris.each |uri|
+    {
+      in.add(ObixObj{elemName = "uri"; contract = Contract.read; val = baseUri + uri })
+    }
+
+    // invoke the request
+    out := invoke(batchUri, in)
+
+    // return the list of children
+    return out.list
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -88,7 +117,6 @@ class ObixClient
   **
   ObixObj read(Uri uri)
   {
-    checkOpen
     c := makeReq(uri, "GET")
     c.writeReq.readRes
     if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode")
@@ -96,38 +124,15 @@ class ObixClient
   }
 
   **
-  ** Read about object.
-  **
-  ObixObj readAbout()
-  {
-    checkOpen
-    if (aboutUri == null) throw Err("Missing URI for about")
-    return read(aboutUri)
-  }
-
-  **
   ** Write an obix document to the specified href and
   ** return the server's result.
   **
-  ObixObj write(ObixObj obj)
-  {
-    checkOpen
-    throw UnsupportedErr("not done yet")
-  }
+  ObixObj write(ObixObj obj) { post(obj.href, "PUT", obj) }
 
   **
   ** Invoke the operation identified by the specified href.
   **
-  ObixObj invoke(Uri uri, ObixObj in)
-  {
-    checkOpen
-    throw UnsupportedErr("not done yet")
-  }
-
-  private Void checkOpen()
-  {
-    if (isClosed) throw Err("ObixClient is closed: $lobbyUri")
-  }
+  ObixObj invoke(Uri uri, ObixObj in) { post(uri, "POST", in) }
 
   private WebClient makeReq(Uri uri, Str method)
   {
@@ -139,6 +144,18 @@ class ObixClient
     return c
   }
 
+  private ObixObj post(Uri uri, Str method, ObixObj in)
+  {
+    c := makeReq(uri, method)
+    c.writeReq
+    in.writeXml(c.reqOut)
+    c.reqOut.close
+    c.readRes
+    if (c.resCode == 100) c.readRes
+    if (c.resCode != 200) throw IOErr("Bad HTTP response: $c.resCode")
+    return ObixObj.readXml(c.resIn)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Test
 //////////////////////////////////////////////////////////////////////////
@@ -146,7 +163,7 @@ class ObixClient
   static Void main(Str[] args)
   {
     c := ObixClient(args[0].toUri, "", "")
-    c.open
+    c.readLobby
     about := c.readAbout
     about.writeXml(Sys.out)
     echo(about->serverName)
@@ -160,11 +177,7 @@ class ObixClient
 //////////////////////////////////////////////////////////////////////////
 
   ** Log for tracing
-  Log log := Log.get("obix")
+  //Log log := Log.get("obix")
 
   private Str authHeader
-  private Uri? aboutUri
-  private Uri? batchUri
-  private Uri? watchMakeUri
-
 }
