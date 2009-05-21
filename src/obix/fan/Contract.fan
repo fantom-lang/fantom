@@ -76,4 +76,8 @@ const class Contract
   **
   static const Contract empty := Contract(Uri[,])
 
+  internal static const Contract batchIn := Contract([`obix:BatchIn`])
+  internal static const Contract read    := Contract([`obix:Read`])
+  internal static const Contract write   := Contract([`obix:Write`])
+  internal static const Contract invoke  := Contract([`obix:Invoke`])
 }
