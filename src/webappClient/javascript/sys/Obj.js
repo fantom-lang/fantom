@@ -163,7 +163,12 @@ sys_Obj._toStr = function(obj)
 
 sys_Obj.echo = function(str)
 {
-  // TODO - check for console.log, alert
-  println(sys_Obj._toStr(str));
+  var s = sys_Obj._toStr(str);
+  try { console.log(s); }
+  catch (e1)
+  {
+    try { println(s); }
+    catch (e2) { alert(s); }
+  }
 }
 
