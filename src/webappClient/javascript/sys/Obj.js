@@ -25,7 +25,6 @@ sys_Obj.$extend = function(base)
   function f() { this.$ctor.apply(this, arguments); }
   f.prototype = new base;
   f.prototype.constructor = f;
-  f.prototype.$super = base.prototype;
   return f;
 }
 
