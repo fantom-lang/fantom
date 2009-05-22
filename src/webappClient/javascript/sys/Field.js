@@ -41,7 +41,7 @@ sys_Field.prototype.get = function(instance)
   }
   else
   {
-    var getter = instnace[this.m_$name + "$get"];
+    var getter = instance[this.m_$name + "$get"];
     return getter.call(instance);
   }
 }
