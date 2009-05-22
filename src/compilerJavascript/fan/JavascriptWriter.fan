@@ -480,8 +480,8 @@ if (c != null)
       if (ce is ShortcutExpr && ce->opToken.toStr == "!=") out.w("!")
       if (ce.target is SuperExpr)
       {
-        out.w(qname(ce.target.ctype))
-        out.w(".prototype.${ce.method.name}.call(this,")
+        base := ce.target->explicitType ?: ce.target.ctype
+        out.w(qname(base)).w(".prototype.${ce.method.name}.call(this,")
         firstArg = false
       }
       else
@@ -534,7 +534,8 @@ if (c != null)
       }
       if (ce.target is SuperExpr)
       {
-        out.w(qname(ce.target.ctype)).w(".prototype")
+        base := ce.target->explicitType ?: ce.target.ctype
+        out.w(qname(base)).w(".prototype")
       }
       else
       {
