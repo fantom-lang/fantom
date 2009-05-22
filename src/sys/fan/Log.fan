@@ -21,31 +21,32 @@ const class Log
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return a list of all the active logs which have
-  ** been created since system startup.
+  ** Return a list of all the active logs which
+  ** have been registered since system startup.
   **
   static Log[] list()
 
   **
-  ** Find a log by name.  If the log doesn't exist and
+  ** Find a registered log by name.  If the log doesn't exist and
   ** checked is false then return null, otherwise throw Err.
   **
   static Log? find(Str name, Bool checked := true)
 
   **
-  ** Find an existing log by name or if not found then
-  ** create a new Log instance with the given name.  Name
-  ** must be valid according to `Uri.isName` otherwise
+  ** Find an existing registered log by name or if not found then
+  ** create a new registered Log instance with the given name.
+  ** Name must be valid according to `Uri.isName` otherwise
   ** NameErr is thrown.
   **
   static Log get(Str name)
 
   **
-  ** Create a new log by name.  If a log has already been created
-  ** for the specified name then throw ArgErr.  Name must be valid
-  ** according to `Uri.isName` otherwise NameErr is thrown.
+  ** Create a new log by name.  The log is added to the VM log registry
+  ** only if 'register' is true.  If register is true and a log has already
+  ** been created for the specified name then throw ArgErr.  Name must
+  ** be valid according to `Uri.isName` otherwise NameErr is thrown.
   **
-  new make(Str name)
+  new make(Str name, Bool register)
 
 //////////////////////////////////////////////////////////////////////////
 // Methods

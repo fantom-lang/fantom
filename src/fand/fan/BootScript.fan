@@ -40,7 +40,7 @@ abstract class BootScript
 //////////////////////////////////////////////////////////////////////////
 
   ** Boot script log
-  Log log := Log("fand")
+  Log log := Log.get("fand")
 
   ** The source file of this script
   File scriptFile := File(type->sourceFile->toUri)
