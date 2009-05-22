@@ -480,8 +480,8 @@ if (c != null)
       if (ce is ShortcutExpr && ce->opToken.toStr == "!=") out.w("!")
       if (ce.target is SuperExpr)
       {
-        expr(ce.target)
-        out.w(".${ce.method.name}.call(this,")
+        out.w(qname(ce.target.ctype))
+        out.w(".prototype.${ce.method.name}.call(this,")
         firstArg = false
       }
       else
@@ -532,7 +532,14 @@ if (c != null)
         out.w(")")
         return
       }
-      expr(ce.target)
+      if (ce.target is SuperExpr)
+      {
+        out.w(qname(ce.target.ctype)).w(".prototype")
+      }
+      else
+      {
+        expr(ce.target)
+      }
     }
     else if (ce.method.isStatic || ce.method.isCtor)
     {
@@ -542,7 +549,13 @@ if (c != null)
     if (ce.method.isCtor || ce.name == "<ctor>")
     {
       mname = ce.name == "<ctor>" ? "make" : ce.name
-      if (ce.target is SuperExpr) mname = "\$$mname"
+      if (ce.target is SuperExpr)
+      {
+        out.w(".\$${mname}.call(this")
+        ce.args.each |arg| { out.w(","); expr(arg) }
+        out.w(")")
+        return
+      }
       first := ce.method.params.first
       if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
       {
