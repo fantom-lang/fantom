@@ -96,7 +96,7 @@ internal class ObixUtil
     "int":     |Str s->Obj| { return Int.fromStr(s, 10, true) },
     "real":    |Str s->Obj| { return Float.fromStr(s, true) },
     "str":     |Str s->Obj| { return s },
-    "uri":     |Str s->Obj| { return Uri.decode(s) },
+    "uri":     |Str s->Obj| { return parseUri(s) },
     "enum":    |Str s->Obj| { return s },
     "abstime": |Str s, XElem elem->Obj| { return parseAbstime(s, elem) },
     "reltime": |Str s->Obj| { return Duration.fromIso(s, true) },
@@ -115,6 +115,12 @@ internal class ObixUtil
     "date":    |Str s->Obj| { return Date.fromIso(s, true) },
     "time":    |Str s->Obj| { return Time.fromIso(s, true) }
   ]
+
+  internal static Uri parseUri(Str s)
+  {
+    try { return Uri.decode(s) } catch (Err e) {}
+    return Uri(s)
+  }
 
   internal static DateTime parseAbstime(Str s, XElem elem)
   {

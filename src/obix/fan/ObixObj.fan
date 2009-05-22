@@ -253,7 +253,7 @@ class ObixObj
     // sanity checks
     if (kid.parent != null || kid.prev != null || kid.next != null)
       throw ArgErr("Child is already parented")
-    if (kid.name != null && kidsByName != null && kidsByName.containsKey(kid.name))
+    if (kid.name != null && kidsByName != null && kidsByName.containsKey(kid.name) && elemName != "list")
       throw ArgErr("Duplicate child name '$kid.name'")
 
     // if named, add to name map
