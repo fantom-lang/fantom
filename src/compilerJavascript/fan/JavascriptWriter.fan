@@ -550,13 +550,7 @@ if (c != null)
     if (ce.method.isCtor || ce.name == "<ctor>")
     {
       mname = ce.name == "<ctor>" ? "make" : ce.name
-      if (ce.target is SuperExpr)
-      {
-        out.w(".\$${mname}.call(this")
-        ce.args.each |arg| { out.w(","); expr(arg) }
-        out.w(")")
-        return
-      }
+      if (ce.target is SuperExpr) mname = "\$$mname"
       first := ce.method.params.first
       if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
       {
@@ -582,10 +576,16 @@ if (c != null)
       }
       throw ArgErr("Parens required for multiple args")
     }
-    out.w("(")
-    ce.args.each |Expr arg, Int i|
+    i := 0
+    if (ce.target is SuperExpr)
     {
-      if (i > 0) out.w(", ")
+      out.w(".call(this")
+      i++
+    }
+    else out.w("(")
+    ce.args.each |arg|
+    {
+      if (i++ > 0) out.w(", ")
       expr(arg)
     }
     out.w(")")
