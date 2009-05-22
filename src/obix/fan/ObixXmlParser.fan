@@ -125,7 +125,7 @@ internal class ObixXmlParser
       {
         // identity
         case "name": obj.name = attr.val
-        case "href": obj.href = Uri.decode(attr.val)
+        case "href": obj.href = ObixUtil.parseUri(attr.val)
         case "is":   obj.contract = Contract(attr.val)
         case "of":   obj.of = Contract(attr.val)
         case "in":   obj.in = Contract(attr.val)
@@ -138,10 +138,10 @@ internal class ObixXmlParser
         // facets
         case "displayName": obj.displayName = attr.val
         case "display":     obj.display = attr.val
-        case "icon":        obj.icon = Uri.decode(attr.val)
+        case "icon":        obj.icon = ObixUtil.parseUri(attr.val)
         case "min":         obj.min = parseMinMax(attr.val, elem)
         case "max":         obj.max = parseMinMax(attr.val, elem)
-        case "range":       obj.range = Uri.decode(attr.val)
+        case "range":       obj.range = ObixUtil.parseUri(attr.val)
         case "precision":   obj.precision = attr.val.toInt
         case "status":      obj.status = Status(attr.val)
         case "tz":          if (obj.tz == null) obj.tz = TimeZone(attr.val)
