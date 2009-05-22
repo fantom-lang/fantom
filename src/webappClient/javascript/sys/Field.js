@@ -36,9 +36,14 @@ sys_Field.prototype.of = function() { return this.m_of; }
 sys_Field.prototype.get = function(instance)
 {
   if (this.isStatic())
+  {
     return eval(this.m_$qname);
+  }
   else
-    return instance[this.m_$name];
+  {
+    var getter = instnace[this.m_$name + "$get"];
+    return getter.call(instance);
+  }
 }
 
 sys_Field.prototype.set = function(instance, value, checkConst)
@@ -79,7 +84,8 @@ sys_Field.prototype.set = function(instance, value, checkConst)
   //  return;
   //}
 
-  instance[this.m_$name] = value;
+  var setter = instance[this.m_$name + "$set"];
+  return setter.call(instance, value);
 }
 
 sys_Field.prototype.type = function() { return sys_Type.find("sys::Field"); }

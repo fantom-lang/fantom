@@ -50,9 +50,7 @@ sys_Err.make = function(cause)
 
 sys_Err.trace = function(self)
 {
-  // TODO
-  //if (println) println(self);
-  //else alert(self);
+  sys_Obj.echo(self)
 }
 
 //////////////////////////////////////////////////////////////////////////
