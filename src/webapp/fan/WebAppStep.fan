@@ -67,6 +67,6 @@ abstract const class WebAppStep : WebStep
   }
 
   ** Web app logging
-  const static Log log := Log("webapp")
+  const static Log log := Log.get("webapp")
 
 }

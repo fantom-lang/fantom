@@ -642,5 +642,6 @@
 *Build 1.0.43 (working)*
 - Change default for value type local variables
 - Remove support for "..." range literals (replaced with "..<")
+- Add register parameter to sys::Log.make
 - ObixClient
 

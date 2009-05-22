@@ -48,38 +48,41 @@ namespace Fan.Sys
       {
         Log log = (Log)byName[name];
         if (log != null) return log;
-        return make(name);
+        return make(name, true);
       }
     }
 
-    public static Log make(string name)
+    public static Log make(string name, bool register)
     {
       Log self = new Log();
-      make_(self, name);
+      make_(self, name, register);
       return self;
     }
 
-    public static void make_(Log self, string name)
+    public static void make_(Log self, string name, bool register)
     {
-      lock (lockObj)
+      // verify valid name
+      Uri.checkName(name);
+      self.m_name = name;
+
+      if (register)
       {
-        // verify valid name
-        Uri.checkName(name);
-
-        // verify unique
-        if (byName[name] != null)
-          throw ArgErr.make("Duplicate log name: " + name).val;
-
-        // init and put into map
-        self.m_name = name;
-        byName[name] = self;
-
-        // check for initial level
-        if (logProps != null)
+        lock (lockObj)
         {
-          string val = (string)logProps.get(name);
-          if (val != null)
-            self.m_level = LogLevel.fromStr(val);
+          // verify unique
+          if (byName[name] != null)
+            throw ArgErr.make("Duplicate log name: " + name).val;
+
+          // init and put into map
+          byName[name] = self;
+
+          // check for initial level
+          if (logProps != null)
+          {
+            string val = (string)logProps.get(name);
+            if (val != null)
+              self.m_level = LogLevel.fromStr(val);
+          }
         }
       }
     }

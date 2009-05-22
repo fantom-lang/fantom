@@ -43,7 +43,7 @@ class LogTest : Test
   Void testMake()
   {
     log := log()
-    verifyErr(ArgErr#) |,| { x := TestLog.make(log.name) }
+    verifyErr(ArgErr#) |,| { x := TestLog.make(log.name, true) }
     verifyEq(log.name, "testSys.TestLog")
     verifyEq(log.level, LogLevel.info)
 // TODO
@@ -57,8 +57,21 @@ class LogTest : Test
     verifyErr(Err#) |,| { Log.find("testSys.foobar") }
     verifyErr(Err#) |,| { Log.find("testSys.foobar", true) }
     verifyErr(NameErr#) |,| { Log.get("@badName") }
-    verifyErr(NameErr#) |,| { x := Log.make("no good") }
-    verifyErr(NameErr#) |,| { x := TestLog.make("no good") }
+    verifyErr(NameErr#) |,| { x := Log.make("no good", true) }
+    verifyErr(NameErr#) |,| { x := TestLog.make("no good", false) }
+
+    // unregistered
+    unreg := Log("testSysUnreg", false)
+    verifyEq(unreg.name, "testSysUnreg")
+    verifyEq(Log.list.contains(unreg), false)
+    verifyEq(Log.find(unreg.name, false), null)
+
+    // unregistered dups allowed
+    unreg2 := TestLog("testSysUnreg", false)
+    verifyNotSame(unreg, unreg2)
+    verifyEq(unreg2.name, "testSysUnreg")
+    verifyEq(Log.list.contains(unreg2), false)
+    verifyEq(Log.find(unreg2.name, false), null)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -262,7 +275,7 @@ class LogTest : Test
   static TestLog log()
   {
     log := Log.find("testSys.TestLog", false)
-    if (log == null) log = TestLog.make("testSys.TestLog")
+    if (log == null) log = TestLog("testSys.TestLog", true)
     return (TestLog)log
   }
 
@@ -275,7 +288,7 @@ class LogTest : Test
 
 const class TestLog : Log
 {
-  new make(Str name) : super(name) {}
+  new make(Str name, Bool reg) : super(name, reg) {}
 
   override Void log(LogRecord rec)
   {

@@ -47,38 +47,42 @@ public class Log
     {
       Log log = (Log)byName.get(name);
       if (log != null) return log;
-      return make(name);
+      return make(name, true);
     }
   }
 
-  public static Log make(String name)
+  public static Log make(String name, boolean register)
   {
     Log self = new Log();
-    make$(self, name);
+    make$(self, name, register);
     return self;
   }
 
-  public static void make$(Log self, String name)
+  public static void make$(Log self, String name, boolean register)
   {
-    synchronized (lock)
+    // verify valid name
+    Uri.checkName(name);
+    self.name = name;
+
+    // if register
+    if (register)
     {
-      // verify valid name
-      Uri.checkName(name);
-
-      // verify unique
-      if (byName.get(name) != null)
-        throw ArgErr.make("Duplicate log name: " + name).val;
-
-      // init and put into map
-      self.name = name;
-      byName.put(name, self);
-
-      // check for initial level
-      if (logProps != null)
+      synchronized (lock)
       {
-        String val = (String)logProps.get(name);
-        if (val != null)
-          self.level = LogLevel.fromStr(val);
+        // verify unique
+        if (byName.get(name) != null)
+          throw ArgErr.make("Duplicate log name: " + name).val;
+
+        // init and put into map
+        byName.put(name, self);
+
+        // check for initial level
+        if (logProps != null)
+        {
+          String val = (String)logProps.get(name);
+          if (val != null)
+            self.level = LogLevel.fromStr(val);
+        }
       }
     }
   }
