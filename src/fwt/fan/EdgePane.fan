@@ -16,6 +16,7 @@ using gfx
 ** width.  Any remaining space is given to the center component.
 **
 @collection=false
+@javascript
 class EdgePane : Pane
 {
 
