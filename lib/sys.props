@@ -6,7 +6,7 @@
 // Fan
 //////////////////////////////////////////////////////////////////////////
 
-// runtime - either "java" or "net"
+// runtime - either "java" or "dotnet"
 fan.runtime=java
 
 // Default timezone to use for VM - can be either the simple name
