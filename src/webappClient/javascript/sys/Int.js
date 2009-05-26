@@ -185,8 +185,8 @@ sys_Int.div = function(a, b) { return Math.floor(a/b); }
 // TODO - these impls only work upto 32 bits!!!
 sys_Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
 sys_Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
-sys_Int.shiftl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
-sys_Int.shiftr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.lshift = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.rshift = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
 
 //////////////////////////////////////////////////////////////////////////
 // Static Fields
