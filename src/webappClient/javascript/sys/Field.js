@@ -41,8 +41,11 @@ sys_Field.prototype.get = function(instance)
   }
   else
   {
-    var getter = instance[this.m_$name + "$get"];
-    return getter.call(instance);
+    var target = instance;
+    if ((this.m_flags & sys_FConst.Native) != 0)
+      target = instance.peer;
+    var getter = target[this.m_$name + "$get"];
+    return getter.call(target);
   }
 }
 
@@ -84,8 +87,11 @@ sys_Field.prototype.set = function(instance, value, checkConst)
   //  return;
   //}
 
-  var setter = instance[this.m_$name + "$set"];
-  return setter.call(instance, value);
+  var target = instance;
+  if ((this.m_flags & sys_FConst.Native) != 0)
+    target = instance.peer;
+  var setter = target[this.m_$name + "$set"];
+  return setter.call(target, value);
 }
 
 sys_Field.prototype.type = function() { return sys_Type.find("sys::Field"); }
