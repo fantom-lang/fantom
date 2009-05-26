@@ -104,7 +104,6 @@ fwt_WidgetPeer.prototype.create = function(self)
     top      = "0";
     left     = "0";
   }
-  div.innerHTML = self.toString();
   return div;
 }
 
