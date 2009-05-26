@@ -50,6 +50,7 @@ sys_Obj.prototype.compare = function(that)
 sys_Obj.prototype.$with = function(func)
 {
   func(this);
+  return this;
 }
 
 sys_Obj.prototype.isImmutable = function()
