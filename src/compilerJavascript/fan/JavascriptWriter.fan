@@ -620,10 +620,12 @@ if (c != null)
         Str? op := null
         switch (se.op)
         {
-          case ShortcutOp.eq:  op = "equals"
-          case ShortcutOp.and: op = "and"
-          case ShortcutOp.div: op = "div"
-          case ShortcutOp.or:  op = "or"
+          case ShortcutOp.eq:     op = "equals"
+          case ShortcutOp.and:    op = "and"
+          case ShortcutOp.div:    op = "div"
+          case ShortcutOp.or:     op = "or"
+          case ShortcutOp.lshift: op = "lshift"
+          case ShortcutOp.rshift: op = "rshift"
         }
         if (op != null)
         {

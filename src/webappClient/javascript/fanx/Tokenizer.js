@@ -312,7 +312,7 @@ fanx_Tokenizer.prototype.hex = function()
     }
     nibCount++;
     if (nibCount > 16) throw this.err("Hex literal too big");
-    val = sys_Int.shiftl(val, 4) + nib;
+    val = sys_Int.lshift(val, 4) + nib;
     this.consume();
   }
 
