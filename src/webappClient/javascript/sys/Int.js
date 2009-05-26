@@ -87,7 +87,7 @@ sys_Int.toStr = function(self)
 
 sys_Int.equals = function(self, obj)
 {
-  if (self.$fanType == obj.$fanType)
+  if (obj != null && self.$fanType == obj.$fanType)
     return self.valueOf() == obj.valueOf();
   else
     return false;
