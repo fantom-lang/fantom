@@ -31,7 +31,11 @@ sys_Func.make = function(f, params, ret)
 
 sys_Func.params   = function(f) { return f.$fanParams; }
 sys_Func.ret      = function(f) { return f.$fanType.ret; }
-sys_Func.call     = function(f) { return f.apply(null, arguments); }
+sys_Func.call     = function(f)
+{
+  var args = Array.prototype.slice.call(arguments).slice(1);
+  return f.apply(null, args);
+}
 sys_Func.callList = function(f, args) { return f.apply(null, args); }
 sys_Func.callOn   = function(f, obj, args)
 {
