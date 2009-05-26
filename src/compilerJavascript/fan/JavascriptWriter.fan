@@ -480,8 +480,8 @@ if (c != null)
       if (ce is ShortcutExpr && ce->opToken.toStr == "!=") out.w("!")
       if (ce.target is SuperExpr)
       {
-        expr(ce.target)
-        out.w(".${ce.method.name}.call(this,")
+        base := ce.target->explicitType ?: ce.target.ctype
+        out.w(qname(base)).w(".prototype.${ce.method.name}.call(this,")
         firstArg = false
       }
       else
@@ -532,7 +532,15 @@ if (c != null)
         out.w(")")
         return
       }
-      expr(ce.target)
+      if (ce.target is SuperExpr)
+      {
+        base := ce.target->explicitType ?: ce.target.ctype
+        out.w(qname(base)).w(".prototype")
+      }
+      else
+      {
+        expr(ce.target)
+      }
     }
     else if (ce.method.isStatic || ce.method.isCtor)
     {
@@ -568,10 +576,16 @@ if (c != null)
       }
       throw ArgErr("Parens required for multiple args")
     }
-    out.w("(")
-    ce.args.each |Expr arg, Int i|
+    i := 0
+    if (ce.target is SuperExpr)
     {
-      if (i > 0) out.w(", ")
+      out.w(".call(this")
+      i++
+    }
+    else out.w("(")
+    ce.args.each |arg|
+    {
+      if (i++ > 0) out.w(", ")
       expr(arg)
     }
     out.w(")")
@@ -704,6 +718,7 @@ if (c != null)
     {
       out.w(qname(fe.field.parent)).w(".")
     }
+    if (fe.field.isNative) out.w("peer.")
     out.w(var(name))
     if (!cvar && fe.useAccessor) out.w(get ? "\$get()" : "\$set")
   }

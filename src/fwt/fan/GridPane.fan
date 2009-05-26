@@ -169,6 +169,7 @@ class GridPane : Pane
   }
 }
 
+@javascript
 internal class GridPaneSizes
 {
   new make(GridPane grid, Widget[] kids)

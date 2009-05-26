@@ -50,9 +50,7 @@ sys_Err.make = function(cause)
 
 sys_Err.trace = function(self)
 {
-  // TODO
-  //if (println) println(self);
-  //else alert(self);
+  sys_Obj.echo(self)
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,25 +59,25 @@ sys_Err.trace = function(self)
 
 // ArgErr
 var sys_ArgErr = sys_Obj.$extend(sys_Err);
-sys_ArgErr.prototype.$ctor = function(msg) { this.$super.$ctor(msg); }
+sys_ArgErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
 sys_ArgErr.prototype.type = function() { return sys_Type.find("sys::ArgErr"); }
 sys_ArgErr.make = function(msg) { return new sys_ArgErr(msg); }
 
 // NullErr
 var sys_NullErr = sys_Obj.$extend(sys_Err);
-sys_NullErr.prototype.$ctor = function(msg) { this.$super.$ctor(msg); }
+sys_NullErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
 sys_NullErr.prototype.type = function() { return sys_Type.find("sys::NullErr"); }
 sys_NullErr.make = function(msg) { return new sys_NullErr(msg); }
 
 // IOErr
 var sys_IOErr = sys_Obj.$extend(sys_Err);
-sys_IOErr.prototype.$ctor = function(msg) { this.$super.$ctor(msg); }
+sys_IOErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
 sys_IOErr.prototype.type = function() { return sys_Type.find("sys::IOErr"); }
 sys_IOErr.make = function(msg) { return new sys_IOErr(msg); }
 
 // IndexErr
 var sys_IndexErr = sys_Obj.$extend(sys_Err);
-sys_IndexErr.prototype.$ctor = function(msg) { this.$super.$ctor(msg); }
+sys_IndexErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
 sys_IndexErr.prototype.type = function() { return sys_Type.find("sys::IndexErr"); }
 sys_IndexErr.make = function(msg) { return new sys_IndexErr(msg); }
 
@@ -93,32 +91,32 @@ sys_ParseErr.prototype.$ctor = function(type, val, more)
     msg = "Invalid " + type + ": '" + val + "'";
     if (more != undefined) msg += ": " + more;
   }
-  this.$super.$ctor(msg)
+  sys_Err.prototype.$ctor.call(this, msg)
 }
 sys_ParseErr.prototype.type = function() { return sys_Type.find("sys::ParseErr"); }
 sys_ParseErr.make = function(type, val, more) { return new sys_ParseErr(type,val,more); }
 
 // ReadonlyErr
 var sys_ReadonlyErr = sys_Obj.$extend(sys_Err);
-sys_ReadonlyErr.prototype.$ctor = function(msg) { this.$super.$ctor(msg); }
+sys_ReadonlyErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
 sys_ReadonlyErr.prototype.type = function() { return sys_Type.find("sys::ReadonlyErr"); }
 sys_ReadonlyErr.make = function(msg) { return new sys_ReadonlyErr(msg); }
 
 // UnknownPodErr
 var sys_UnknownPodErr = sys_Obj.$extend(sys_Err);
-sys_UnknownPodErr.prototype.$ctor = function(msg) { this.$super.$ctor(msg); }
+sys_UnknownPodErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
 sys_UnknownPodErr.prototype.type = function() { return sys_Type.find("sys::UnknownPodErr"); }
 sys_UnknownPodErr.make = function(msg) { return new sys_UnknownPodErr(msg); }
 
 // UnknownTypeErr
 var sys_UnknownTypeErr = sys_Obj.$extend(sys_Err);
-sys_UnknownTypeErr.prototype.$ctor = function(msg) { this.$super.$ctor(msg); }
+sys_UnknownTypeErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
 sys_UnknownTypeErr.prototype.type = function() { return sys_Type.find("sys::UnknownTypeErr"); }
 sys_UnknownTypeErr.make = function(msg) { return new sys_UnknownTypeErr(msg); }
 
 // UnknownSlotErr
 var sys_UnknownSlotErr = sys_Obj.$extend(sys_Err);
-sys_UnknownSlotErr.prototype.$ctor = function(msg) { this.$super.$ctor(msg); }
+sys_UnknownSlotErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
 sys_UnknownSlotErr.prototype.type = function() { return sys_Type.find("sys::UnknownSlotErr"); }
 sys_UnknownSlotErr.make = function(msg) { return new sys_UnknownSlotErr(msg); }
 

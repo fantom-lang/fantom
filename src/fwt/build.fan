@@ -17,15 +17,17 @@ class Build : BuildPod
 
   override Void setup()
   {
-    podName     = "fwt"
-    version     = globalVersion
-    description = "Fan Widget Toolkit"
-    depends     = ["sys 1.0", "gfx 1.0"]
-    srcDirs     = [`fan/`, `test/`]
-    javaDirs    = [`java/`]
-    //dotnetDirs  = [`dotnet/`]
-    resDirs     = [`locale/`]
-    includeSrc  = true
+    podName        = "fwt"
+    version        = globalVersion
+    description    = "Fan Widget Toolkit"
+    depends        = ["sys 1.0", "gfx 1.0"]
+    srcDirs        = [`fan/`, `test/`]
+    javaDirs       = [`java/`]
+    //dotnetDirs   = [`dotnet/`]
+    hasJavascript  = true
+    javascriptDirs = [`javascript/`]
+    resDirs        = [`locale/`]
+    includeSrc     = true
   }
 
 }
