@@ -718,6 +718,7 @@ if (c != null)
     {
       out.w(qname(fe.field.parent)).w(".")
     }
+    if (fe.field.isNative) out.w("peer.")
     out.w(var(name))
     if (!cvar && fe.useAccessor) out.w(get ? "\$get()" : "\$set")
   }
