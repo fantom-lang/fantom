@@ -509,19 +509,23 @@ if (c != null)
           ce.target is TypeCheckExpr)
       {
         ctype := ce.target.ctype
+        route := false
         if (ce.target is TypeCheckExpr) ctype = ce.target->check
-        if (ctype.isList)
-          out.w("sys_List.${var(ce.name)}(")
-        else if (ctype.isFunc)
-          out.w("sys_Func.${var(ce.name)}(")
-        else
-          out.w("${qname(ctype)}.${var(ce.name)}(")
-        if (!ce.method.isStatic)
+        if (ctype.isList)      { out.w("sys_List.${var(ce.name)}("); route=true }
+        else if (ctype.isFunc) { out.w("sys_Func.${var(ce.name)}("); route=true }
+        else if (isPrimitive(ctype.toStr)) { out.w("${qname(ctype)}.${var(ce.name)}("); route=true }
+        i := 0
+        if (!route)
         {
           expr(ce.target)
-          if (ce.args.size > 0) out.w(",")
+          out.w(".${var(ce.name)}(")
         }
-        ce.args.each |Expr arg, Int i| { if (i > 0) out.w(","); expr(arg) }
+        else if (!ce.method.isStatic)
+        {
+          expr(ce.target)
+          if (ce.args.size > 0) i++
+        }
+        ce.args.each |arg| { if (i++ > 0) out.w(","); expr(arg) }
         out.w(")")
         return
       }
@@ -792,6 +796,8 @@ if (c != null)
     "sys::Float?":   true,
     "sys::Int":      true,
     "sys::Int?":     true,
+    "sys::Num":      true,
+    "sys::Num?":     true,
     "sys::Str":      true,
     "sys::Str?":     true,
   ]
