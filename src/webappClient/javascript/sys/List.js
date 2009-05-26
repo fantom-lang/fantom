@@ -141,11 +141,11 @@ sys_List.map = function(self, acc, func)
   }
   return acc;
 }
-sys_List.toImmutable = function(self)
-{
-  // TODO
-  return self;
-}
+
+// TODO
+sys_List.rw = function(self) { return self.slice(); }
+sys_List.ro = function(self) { return self.slice(); }
+sys_List.toImmutable = function(self) { return self.slice(); }
 
 // Conversion
 sys_List.join = function(self, sep, func)
