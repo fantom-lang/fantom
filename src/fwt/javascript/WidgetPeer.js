@@ -23,17 +23,8 @@ fwt_WidgetPeer.prototype.$ctor = function(self)
 
 fwt_WidgetPeer.prototype.relayout = function(self)
 {
+  this.sync(self);
   self.onLayout();
-
-  var peer = self.peer;
-  with (peer.elem.style)
-  {
-    left    = peer.pos.x  + "px";
-    top     = peer.pos.y  + "px";
-    width   = peer.size.w + "px";
-    height  = peer.size.h + "px";
-    display = peer.visible ? "block" : "none";
-  }
 
   var kids = self.kids;
   for (var i=0; i<kids.length; i++)
@@ -41,20 +32,25 @@ fwt_WidgetPeer.prototype.relayout = function(self)
     var kid = kids[i];
     kid.peer.relayout(kid);
   }
+
   return self;
 }
 
 fwt_WidgetPeer.prototype.prefSize = function(self, hints)
 {
-  var elem = self.peer.elem;
-  var oldw = elem.style.width;
-  var oldh = elem.style.height;
-  elem.style.width = null;
-  elem.style.height = null;
-  var pw = elem.offsetWidth;
-  var ph = elem.offsetHeight;
-  elem.style.width = oldw;
-  elem.style.height = oldh;
+  // cache size
+  var oldw = this.elem.style.width;
+  var oldh = this.elem.style.height;
+
+  // sync and measure pref
+  this.elem.style.width  = "auto";
+  this.elem.style.height = "auto";
+  var pw = this.elem.offsetWidth;
+  var ph = this.elem.offsetHeight;
+
+  // restore old size
+  this.elem.style.width  = oldw;
+  this.elem.style.height = oldh;
   return gfx_Size.make(pw, ph);
 }
 
@@ -80,37 +76,71 @@ fwt_WidgetPeer.prototype.attached = function(self)
 
 fwt_WidgetPeer.prototype.attach = function(self)
 {
+  // short circuit if I'm already attached
+  if (this.elem != null) return;
+
+  // short circuit if my parent isn't attached
+  var parent = self.parent;
+  if (parent == null || parent.peer.elem == null) return;
+
+  // create control and initialize
+  var elem = this.create(parent.peer.elem);
+  this.attachTo(self, elem);
+
+  // callback on parent
+  //parent.peer.childAdded(self);
 }
 
-fwt_WidgetPeer.prototype.attachTo = function(self, parent)
+fwt_WidgetPeer.prototype.attachTo = function(self, elem)
 {
-  //var elem = this.create(self);
-  var elem = self.peer.create(self);
-  self.peer.elem = elem;
+  // sync to elem
+  this.elem = elem;
+  this.sync(self);
 
   // recursively attach my children
   var kids = self.kids;
   for (var i=0; i<kids.length; i++)
   {
     var kid = kids[i];
-    kid.peer.attachTo(kid, elem);
+    kid.peer.attach(kid);
   }
-
-  parent.appendChild(elem);
 }
 
-fwt_WidgetPeer.prototype.create = function(self)
+fwt_WidgetPeer.prototype.create = function(parentElem)
+{
+  var div = this.emptyDiv();
+  parentElem.appendChild(div);
+  return div;
+}
+
+fwt_WidgetPeer.prototype.emptyDiv = function()
 {
   var div = document.createElement("div");
   with (div.style)
   {
     position = "absolute";
     overflow = "hidden";
-    top      = "0";
-    left     = "0";
+    top  = "0";
+    left = "0";
   }
   return div;
 }
 
 fwt_WidgetPeer.prototype.detach = function(self) {}
+
+//////////////////////////////////////////////////////////////////////////
+// Widget/Element synchronization
+//////////////////////////////////////////////////////////////////////////
+
+fwt_WidgetPeer.prototype.sync = function(self)
+{
+  with (this.elem.style)
+  {
+    display = this.visible ? "block" : "none";
+    left    = this.pos.x  + "px";
+    top     = this.pos.y  + "px";
+    width   = this.size.w + "px";
+    height  = this.size.h + "px";
+  }
+}
 

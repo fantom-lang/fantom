@@ -17,20 +17,20 @@ fwt_ButtonPeer.prototype.$ctor = function(self)
 }
 
 fwt_ButtonPeer.prototype.text$get = function() { return this.text; }
-fwt_ButtonPeer.prototype.text$set = function(val)
-{
-  this.text = val;
-  if (this.elem) this.elem.innerHTML = val;
-}
+fwt_ButtonPeer.prototype.text$set = function(val) { this.text = val; }
 fwt_ButtonPeer.prototype.text = "";
 
-fwt_ButtonPeer.prototype.create = function(self)
+fwt_ButtonPeer.prototype.create = function(self, parent)
 {
   var button = document.createElement("input");
   button.type = "button";
-  button.value = self.peer.text;
-
-  var div = fwt_WidgetPeer.prototype.create.call(this, self);
+  var div = this.emptyDiv();
   div.appendChild(button);
   return div;
+}
+
+fwt_ButtonPeer.prototype.sync = function(self)
+{
+  this.elem.firstChild.value = this.text;
+  fwt_WidgetPeer.prototype.sync.call(this, self);
 }
