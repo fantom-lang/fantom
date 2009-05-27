@@ -333,25 +333,26 @@ if (c != null)
 
   Void switchStmt(SwitchStmt ss)
   {
-    out.w("switch ("); expr(ss.condition); out.w(")").nl
-    out.w("{").nl
-    out.indent
-    ss.cases.each |Case c|
+    var := unique
+    out.w("var $var = "); expr(ss.condition); out.w(";").nl
+    ss.cases.each |c,ia|
     {
-      c.cases.each |Expr e| { out.w("case "); expr(e); out.w(":").nl }
-      if (c.block != null)
+      if (ia > 0) out.w("else ")
+      out.w("if (")
+      c.cases.each |e,ib|
       {
-        block(c.block, false, true)
-        out.w("  break;").nl
+        if (ib > 0) out.w(" || ")
+        out.w("sys_Obj.equals($var,"); expr(e); out.w(")")
       }
+      out.w(")").nl
+      if (c.block != null) block(c.block)
+      else out.w("{").nl.w("}").nl  // TODO - is this right??
     }
     if (ss.defaultBlock != null)
     {
-      out.w("default:").nl
-      block(ss.defaultBlock, false, true)
+      out.w("else").nl
+      block(ss.defaultBlock)
     }
-    out.unindent
-    out.w("}").nl
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -827,6 +828,9 @@ if (c != null)
     "with":   true
   ]
 
+  Str unique() { return "\$_u${lastId++}" }
+  Int lastId := 0
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -840,6 +844,7 @@ if (c != null)
   FieldDef[] staticFields := [,]    // static fields
   Block[] staticInits := [,]        // static init blocks
   Str:CType refs := [:]             // types referenced
+
 }
 
 **************************************************************************
