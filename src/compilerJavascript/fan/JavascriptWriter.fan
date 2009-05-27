@@ -57,8 +57,8 @@ if (!typeDef.name.startsWith("Curry\$"))
 }
     out.w("${jname}.prototype.\$ctor = function() {")
     // look for natives
-    hasNative := typeDef.slots.any |s| { s.isNative && s.parent.qname == typeDef.qname }
-    if (hasNative) out.w(" this.peer = new ${nativeQname(typeDef)}(this); ")
+    ntype := nativeType(typeDef)
+    if (ntype != null) out.w(" this.peer = new ${nativeQname(ntype)}(this); ")
     out.w("}").nl
     out.w("${jname}.prototype.type = function() { return ${jname}.\$type; }").nl
     typeDef.methodDefs.each |m| { method(m) }
@@ -67,6 +67,18 @@ if (!typeDef.name.startsWith("Curry\$"))
     staticMethods.each |MethodDef m| { staticMethod(m) }
     staticFields.each |FieldDef f| { staticField(f) }
     staticInits.each |Block b| { staticInit(b) }
+  }
+
+  CType? nativeType(CType def)
+  {
+    CType? t := def
+    while (t != null)
+    {
+      slot := t.slots.find |s| { s.isNative && s.parent.qname == t.qname }
+      if (slot != null) return slot.parent
+      t = t.base
+    }
+    return null
   }
 
 //////////////////////////////////////////////////////////////////////////
