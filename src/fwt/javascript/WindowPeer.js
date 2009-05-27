@@ -16,6 +16,12 @@ fwt_WindowPeer.prototype.$ctor = function(self)
   fwt_PanePeer.prototype.$ctor.call(this, self);
 }
 
+fwt_WindowPeer.prototype.relayout = function(self)
+{
+  self.peer.size$set(gfx_Size.make(this.shell.offsetWidth, this.shell.offsetHeight));
+  fwt_PanePeer.prototype.relayout.call(this, self);
+}
+
 fwt_WindowPeer.prototype.open = function(self)
 {
   // mount shell we use to attach widgets to
@@ -32,8 +38,8 @@ fwt_WindowPeer.prototype.open = function(self)
   document.body.appendChild(shell);
 
   // mount window
+  self.peer.shell = shell;
   this.attachTo(self, shell);
-  self.peer.size$set(gfx_Size.make(shell.offsetWidth, shell.offsetHeight));
   self.relayout();
 }
 
