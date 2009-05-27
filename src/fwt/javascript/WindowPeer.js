@@ -27,7 +27,7 @@ fwt_WindowPeer.prototype.open = function(self)
     left       = "0";
     width      = "100%";
     height     = "100%";
-    background = "#f00";
+    background = "#fff";
   }
   document.body.appendChild(shell);
 

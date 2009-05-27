@@ -48,7 +48,6 @@ fwt_WidgetPeer.prototype.visible = true;
 fwt_WidgetPeer.prototype.pos$get = function() { return this.pos; }
 fwt_WidgetPeer.prototype.pos$set = function(val)
 {
-console.log("[elem: " + this.elem.innerHTML.substr(0,12) + ", point: " + val + "]");
   this.pos = val;
   this.elem.style.left = val.x + "px";
   this.elem.style.top  = val.y + "px";
@@ -58,7 +57,6 @@ fwt_WidgetPeer.prototype.pos = gfx_Point.make(0,0);
 fwt_WidgetPeer.prototype.size$get = function() { return this.size; }
 fwt_WidgetPeer.prototype.size$set = function(val)
 {
-console.log("[elem: " + this.elem.innerHTML.substr(0,12) + ", size: " + val + "]");
   this.size = val;
   this.elem.style.width  = val.w + "px";
   this.elem.style.height = val.h + "px";
@@ -81,7 +79,6 @@ fwt_WidgetPeer.prototype.attachTo = function(self, elem)
 {
   var child = this.create(self);
   self.peer.elem = child;
-  child.style.background = "#fff";
 
   // recursively attach my children
   var kids = self.kids;

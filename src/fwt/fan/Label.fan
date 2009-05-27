@@ -11,6 +11,7 @@ using gfx
 **
 ** Label displays text and/or an image.
 **
+@javascript
 class Label : Widget
 {
 
