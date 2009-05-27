@@ -38,10 +38,13 @@ and .NET APIs.  We actually consider this one of Fan's primary benefits,
 because it gives us a chance to develop a suite of system APIs that are
 elegant and easy to use compared to the Java and .NET counter parts.
 
-But portability means much more than just Java or .NET.  For us it means
-the flexibility to port Fan code to new platforms easily.  For example
-could we make Fan run on another VM such as [Tamarin]`http://www.mozilla.org/projects/tamarin/`
-or [Parrot]`http://www.parrotcode.org/`?
+But portability means much more than just Java or .NET.  We also support
+compiling Fan to JavaScript for use in browsers, including support for
+many of the standard libraries.
+
+Because Fan is designed from the ground up to be portable, targeting
+new platforms is reasonably easy.  Future targets might include Objective-C
+for the iPhone, the [LLVM]`http://llvm.org/`, or [Parrot]`http://www.parrotcode.org/`.
 
 Elegant APIs [#elegantApis]
 ***************************
