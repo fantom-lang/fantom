@@ -56,6 +56,7 @@ fwt_LabelPeer.prototype.sync = function(self)
       case fwt_Halign.right:  textAlign = "right"; break;
       default:                textAlign = "left"; break;
     }
+    whiteSpace = "nowrap";
   }
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
