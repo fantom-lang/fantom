@@ -651,4 +651,6 @@
 - #578: Uri Interpolation
 - #595: Definite assignment of non-nullable fields
 
+*Build 1.0.44 (working)*
+- Fix bug in WebReq.absUri
 
