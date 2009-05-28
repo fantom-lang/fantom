@@ -46,7 +46,7 @@ the backslash.
 DslPlugins [#dslPlugins]
 ************************
 You can write your own DSLs by subclassing `compiler::DslPlugin`.
-See the 'RegexDslPluging' class as a simple example to get
+See the 'RegexDslPlugin' class as a simple example to get
 started:
 
   @compilerDsl="sys::Regex"
