@@ -132,15 +132,18 @@ fwt_WidgetPeer.prototype.detach = function(self) {}
 // Widget/Element synchronization
 //////////////////////////////////////////////////////////////////////////
 
-fwt_WidgetPeer.prototype.sync = function(self)
+fwt_WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 {
   with (this.elem.style)
   {
+    if (w == undefined) w = this.size.w;
+    if (h == undefined) h = this.size.h;
+
     display = this.visible ? "block" : "none";
     left    = this.pos.x  + "px";
     top     = this.pos.y  + "px";
-    width   = this.size.w + "px";
-    height  = this.size.h + "px";
+    width   = w + "px";
+    height  = h + "px";
   }
 }
 
