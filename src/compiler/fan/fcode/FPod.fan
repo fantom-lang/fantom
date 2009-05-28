@@ -131,7 +131,7 @@ final class FPod : CPod, FConst
     r := addTypeRef(method.inheritedReturnType.raw)  // CLR can't deal with covariance
     params := (Int[])method.params.map(Int[,]) |CParam x->Obj| { return addTypeRef(x.paramType.raw) }
     if (argCount != null && argCount < params.size)
-      params = params[0...argCount]
+      params = params[0..<argCount]
     return methodRefs.add(FMethodRef.make(p, n, r, params))
   }
 

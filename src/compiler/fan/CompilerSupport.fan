@@ -125,6 +125,22 @@ class CompilerSupport
       throw compiler.errors.first
   }
 
+  **
+  ** Convenience for `sys::Type.findByFacet` which disables
+  ** all the warnings which might spew out while rebuilding
+  ** the type database in the middle of a compile.
+  **
+  static Type[] findByFacet(Str facetName, Obj facetVal, Obj? options := null)
+  {
+    log := Log.get("typedb")
+    oldLevel := log.level
+    log.level = LogLevel.error
+    try
+      return Type.findByFacet(facetName, facetVal, options)
+    finally
+      log.level = oldLevel
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
