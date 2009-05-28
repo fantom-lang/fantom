@@ -153,7 +153,7 @@ class Tokenizer : CompilerSupport
     while (cur.isAlphaNum || cur == '_') consume
 
     // create Str (gc note this string might now reference buf)
-    word := buf[start...pos]
+    word := buf[start..<pos]
 
     // check keywords
     keyword := Token.keywords[word]
@@ -204,7 +204,7 @@ class Tokenizer : CompilerSupport
     }
 
     // string value of literal
-    str := buf[start...pos].replace("_", "")
+    str := buf[start..<pos].replace("_", "")
 
     // check for suffixes
     floatSuffix   := false

@@ -156,7 +156,7 @@ abstract class CNamespace : CompilerSupport
     if (bridge != null) return bridge
 
     // resolve the name by compilerBridge facet
-    t := Type.findByFacet("compilerBridge", name)
+    t := findByFacet("compilerBridge", name)
     if (t.size > 1)
       throw CompilerErr("Multiple FFI bridges available for '$name': $t", loc)
     if (t.size == 0)
@@ -188,7 +188,7 @@ abstract class CNamespace : CompilerSupport
     {
       // we have a FFI, route to bridge
       sep := podName.index("]")
-      ffi := podName[1...sep]
+      ffi := podName[1..<sep]
       package := podName[sep+1..-1]
       pod = resolveBridge(ffi, loc).resolvePod(package, loc)
     }
@@ -237,7 +237,7 @@ abstract class CNamespace : CompilerSupport
   CSlot resolveSlot(Str qname)
   {
     dot := qname.indexr(".")
-    slot := resolveType(qname[0...dot]).slot(qname[dot+1..-1])
+    slot := resolveType(qname[0..<dot]).slot(qname[dot+1..-1])
     if (slot == null) throw Err("Cannot resolve slot: $qname")
     return slot
   }

@@ -39,7 +39,7 @@ class TypeParser
     if (last != ']' && last != '|')
     {
       colon    := sig.index("::")
-      podName  := sig[0...colon]
+      podName  := sig[0..<colon]
       typeName := sig[colon+2..-1]
       return ns.resolvePod(podName, null).resolveType(typeName, true)
     }
@@ -154,7 +154,7 @@ class TypeParser
     consume(':')
     consume(':')
     while (cur.isAlphaNum || cur == '_') consume
-    qname := sig[start...pos]
+    qname := sig[start..<pos]
     return ns.resolveType(qname)
   }
 

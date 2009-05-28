@@ -26,7 +26,7 @@ abstract class DslPlugin : CompilerSupport
   static DslPlugin? find(CompilerSupport c, Location loc, CType anchorType)
   {
     qname := anchorType.qname
-    t := Type.findByFacet("compilerDsl", qname)
+    t := findByFacet("compilerDsl", qname)
 
     if (t.size > 1)
     {
