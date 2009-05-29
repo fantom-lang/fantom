@@ -46,21 +46,33 @@ class JavascriptWriter : CompilerSupport
     bname := typeDef.base ?: "sys::Obj"
     jname := qname(typeDef)
     jbase := qname(typeDef.base)
+
+    // inheritance
     out.w("var $jname = sys_Obj.\$extend($jbase);").nl
-// TODO - this is ok for now - it fails because of
-// how we trap curried types, which should be rare
-// to have type called on them - but we need to fix
-// none-the-less
-if (!typeDef.name.startsWith("Curry\$"))
-{
-  out.w("${jname}.\$type = sys_Type.find(\"$fname\");").nl
-}
+    typeDef.mixins.each |m| { out.w("sys_Obj.\$mixin($jname, ${qname(m)});").nl }
+
+    // typeinfo
+    if (typeDef.isClass)
+    {
+      // TODO - this is ok for now - it fails because of
+      // how we trap curried types, which should be rare
+      // to have type called on them - but we need to fix
+      // none-the-less
+      if (!typeDef.name.startsWith("Curry\$"))
+      {
+        out.w("${jname}.\$type = sys_Type.find(\"$fname\");").nl
+        out.w("${jname}.prototype.type = function() { return ${jname}.\$type; }").nl
+      }
+    }
+
+    // ctor
     out.w("${jname}.prototype.\$ctor = function() {")
     // look for natives
     ntype := nativeType(typeDef)
     if (ntype != null) out.w(" this.peer = new ${nativeQname(ntype)}(this); ")
     out.w("}").nl
-    out.w("${jname}.prototype.type = function() { return ${jname}.\$type; }").nl
+
+    // slots
     typeDef.methodDefs.each |m| { method(m) }
     typeDef.fieldDefs.each  |f| { field(f) }
     ctors.each |MethodDef m| { ctor(m) }

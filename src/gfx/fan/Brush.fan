@@ -11,6 +11,7 @@
 **   - `Color` is a solid brush
 **   - `Gradient` used to paint a color gradient
 **
+@javascript
 mixin Brush
 {
 }
