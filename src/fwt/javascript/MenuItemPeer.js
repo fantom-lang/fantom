@@ -10,9 +10,5 @@
  * MenuItemPeer.
  */
 var fwt_MenuItemPeer = sys_Obj.$extend(fwt_WidgetPeer);
-
-fwt_MenuItemPeer.prototype.$ctor = function(self)
-{
-  fwt_WidgetPeer.prototype.$ctor.call(this, self);
-}
+fwt_MenuItemPeer.prototype.$ctor = function(self) {}
 

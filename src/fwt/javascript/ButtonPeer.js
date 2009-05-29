@@ -10,14 +10,10 @@
  * ButtonPeer.
  */
 var fwt_ButtonPeer = sys_Obj.$extend(fwt_WidgetPeer);
+fwt_ButtonPeer.prototype.$ctor = function(self) {}
 
-fwt_ButtonPeer.prototype.$ctor = function(self)
-{
-  fwt_WidgetPeer.prototype.$ctor.call(this, self);
-}
-
-fwt_ButtonPeer.prototype.text$get = function() { return this.text; }
-fwt_ButtonPeer.prototype.text$set = function(val) { this.text = val; }
+fwt_ButtonPeer.prototype.text$get = function(self) { return this.text; }
+fwt_ButtonPeer.prototype.text$set = function(self, val) { this.text = val; }
 fwt_ButtonPeer.prototype.text = "";
 
 fwt_ButtonPeer.prototype.create = function(self, parent)

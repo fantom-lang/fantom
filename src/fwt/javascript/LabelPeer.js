@@ -10,39 +10,63 @@
  * LabelPeer.
  */
 var fwt_LabelPeer = sys_Obj.$extend(fwt_WidgetPeer);
+fwt_LabelPeer.prototype.$ctor = function(self) {}
 
-fwt_LabelPeer.prototype.$ctor = function(self)
-{
-  fwt_WidgetPeer.prototype.$ctor.call(this, self);
-}
-
-fwt_LabelPeer.prototype.text$get = function() { return this.text; }
-fwt_LabelPeer.prototype.text$set = function(val) { this.text = val; }
+fwt_LabelPeer.prototype.text$get = function(self) { return this.text; }
+fwt_LabelPeer.prototype.text$set = function(self, val) { this.text = val; }
 fwt_LabelPeer.prototype.text = "";
 
-fwt_LabelPeer.prototype.bg$get = function() { return this.bg; }
-fwt_LabelPeer.prototype.bg$set = function(val) { this.bg = val; }
+fwt_LabelPeer.prototype.bg$get = function(self) { return this.bg; }
+fwt_LabelPeer.prototype.bg$set = function(self, val) { this.bg = val; }
 fwt_LabelPeer.prototype.bg = null;
 
-fwt_LabelPeer.prototype.fg$get = function() { return this.fg; }
-fwt_LabelPeer.prototype.fg$set = function(val) { this.fg = val; }
+fwt_LabelPeer.prototype.fg$get = function(self) { return this.fg; }
+fwt_LabelPeer.prototype.fg$set = function(self, val) { this.fg = val; }
 fwt_LabelPeer.prototype.fg = null;
 
-fwt_LabelPeer.prototype.font$get = function() { return this.font; }
-fwt_LabelPeer.prototype.font$set = function(val) { this.font = val; }
+fwt_LabelPeer.prototype.font$get = function(self) { return this.font; }
+fwt_LabelPeer.prototype.font$set = function(self, val) { this.font = val; }
 fwt_LabelPeer.prototype.font = null;
 
 fwt_LabelPeer.prototype.halign = null;
-fwt_LabelPeer.prototype.halign$get = function() { return this.halign; }
-fwt_LabelPeer.prototype.halign$set = function(val) { this.halign = val; }
+fwt_LabelPeer.prototype.halign$get = function(self) { return this.halign; }
+fwt_LabelPeer.prototype.halign$set = function(self, val) { this.halign = val; }
 
-//fwt_LabelPeer.prototype.image$get = function() { return this.image; }
-//fwt_LabelPeer.prototype.image$set = function(val) { this.image = val; }
-//fwt_LabelPeer.prototype.image = null;
+fwt_LabelPeer.prototype.image$get = function(self) { return this.image; }
+fwt_LabelPeer.prototype.image$set = function(self, val)
+{
+  this.image = val;
+
+  // async load image
+  if (fwt_LabelPeer.imgCache[val.uri] == null)
+  {
+    var img = document.createElement("img");
+    if (img.addEventListener)
+      img.onload = self.window.relayout;
+    else
+      img.attachEvent('onload', function() { self.window.relayout(); });
+    img.src = val.uri;
+    fwt_LabelPeer.imgCache[val.uri] = true;
+  }
+}
+fwt_LabelPeer.prototype.image = null;
+fwt_LabelPeer.imgCache = [];
 
 fwt_LabelPeer.prototype.sync = function(self)
 {
-  this.elem.innerHTML = this.text;
+  while (this.elem.firstChild != null)
+    this.elem.removeChild(this.elem.firstChild);
+
+  if (this.image != null)
+  {
+    var img = document.createElement("img");
+    img.src = this.image.uri;
+    this.elem.appendChild(img);
+  }
+
+  var text = document.createTextNode(this.text);
+  this.elem.appendChild(text);
+
   with (this.elem.style)
   {
     if (this.fg   != null) color = this.fg.toStr();

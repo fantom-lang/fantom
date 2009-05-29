@@ -10,9 +10,5 @@
  *PanePeer.
  */
 var fwt_PanePeer = sys_Obj.$extend(fwt_WidgetPeer);
-
-fwt_PanePeer.prototype.$ctor = function(self)
-{
-  fwt_WidgetPeer.prototype.$ctor.call(this, self);
-}
+fwt_PanePeer.prototype.$ctor = function(self) {}
 

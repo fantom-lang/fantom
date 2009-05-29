@@ -10,11 +10,7 @@
  * WindowPeer.
  */
 var fwt_WindowPeer = sys_Obj.$extend(fwt_PanePeer);
-
-fwt_WindowPeer.prototype.$ctor = function(self)
-{
-  fwt_PanePeer.prototype.$ctor.call(this, self);
-}
+fwt_WindowPeer.prototype.$ctor = function(self) {}
 
 fwt_WindowPeer.prototype.open = function(self)
 {
@@ -41,7 +37,7 @@ fwt_WindowPeer.prototype.open = function(self)
 fwt_WindowPeer.prototype.sync = function(self)
 {
   var shell = this.elem.parentNode;
-  this.size$set(gfx_Size.make(shell.offsetWidth, shell.offsetHeight));
+  this.size$set(this, gfx_Size.make(shell.offsetWidth, shell.offsetHeight));
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
 
