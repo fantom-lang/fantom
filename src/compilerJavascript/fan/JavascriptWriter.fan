@@ -177,23 +177,23 @@ if (!typeDef.name.startsWith("Curry\$"))
 
   Void field(FieldDef f)
   {
-    if (f.isNative) return
     if (f.isStatic) { staticFields.add(f); return }
     doField(f)
   }
 
   Void staticField(FieldDef f)
   {
-    if (f.isNative) return
     if (!f.isStatic) err("Field must be static: $f.name", f.location)
     doField(f)
   }
 
   Void doField(FieldDef f)
   {
-    qname  := qname(f.parent)
-    prefix := f.isStatic ? qname : "${qname}.prototype"
+    parent := qname(f.parent)
+    name   := var(f.name)
+    qname  := (f.isStatic ? parent : "${parent}.prototype") + ".$name"
     def    := "null"
+
     switch (f.fieldType.qname)
     {
       case "sys::Bool":    def = "false"
@@ -202,18 +202,27 @@ if (!typeDef.name.startsWith("Curry\$"))
       case "sys::Int":     def = "sys_Int.make(0)"
     }
 
-    // getter
-    out.w("${prefix}.${var(f.name)}\$get = function() ")
-    if (f.hasGet) block(f.get.code)
-    else out.w("{ return this.${var(f.name)}; }").nl
+    if (f.isNative)
+    {
+      // route to peer
+      out.w("$qname\$get = function() { return this.peer.$name\$get(this); }").nl
+      out.w("$qname\$set = function(val) { return this.peer.$name\$set(this,val); }").nl
+    }
+    else
+    {
+      // getter
+      out.w("$qname\$get = function() ")
+      if (f.hasGet) block(f.get.code)
+      else out.w("{ return this.$name; }").nl
 
-    // setter
-    out.w("${prefix}.${var(f.name)}\$set = function(val) ")
-    if (f.hasSet) block(f.set.code)
-    else out.w("{ this.${var(f.name)} = val; }").nl
+      // setter
+      out.w("$qname\$set = function(val) ")
+      if (f.hasSet) block(f.set.code)
+      else out.w("{ this.$name = val; }").nl
 
-    // storage
-    out.w("${prefix}.${var(f.name)} = $def;").nl
+      // storage
+      out.w("$qname = $def;").nl
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -737,7 +746,6 @@ if (c != null)
     {
       out.w(qname(fe.field.parent)).w(".")
     }
-    if (fe.field.isNative) out.w("peer.")
     out.w(var(name))
     if (!cvar && fe.useAccessor) out.w(get ? "\$get()" : "\$set")
   }

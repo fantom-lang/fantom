@@ -10,12 +10,7 @@
  * WidgetPeer.
  */
 var fwt_WidgetPeer = sys_Obj.$extend(sys_Obj);
-
-fwt_WidgetPeer.prototype.$ctor = function(self)
-{
-  //this.self = self;
-  this.elem = null;
-}
+fwt_WidgetPeer.prototype.$ctor = function(self) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Layout
@@ -54,16 +49,20 @@ fwt_WidgetPeer.prototype.prefSize = function(self, hints)
   return gfx_Size.make(pw, ph);
 }
 
-fwt_WidgetPeer.prototype.visible$get = function() { return this.visible; }
-fwt_WidgetPeer.prototype.visible$set = function(val) { this.visible = val; }
+fwt_WidgetPeer.prototype.enabled$get = function(self) { return this.enabled; }
+fwt_WidgetPeer.prototype.enabled$set = function(self, val) { this.enabled = val; }
+fwt_WidgetPeer.prototype.enabled = true;
+
+fwt_WidgetPeer.prototype.visible$get = function(self) { return this.visible; }
+fwt_WidgetPeer.prototype.visible$set = function(self, val) { this.visible = val; }
 fwt_WidgetPeer.prototype.visible = true;
 
-fwt_WidgetPeer.prototype.pos$get = function() { return this.pos; }
-fwt_WidgetPeer.prototype.pos$set = function(val) { this.pos = val; }
+fwt_WidgetPeer.prototype.pos$get = function(self) { return this.pos; }
+fwt_WidgetPeer.prototype.pos$set = function(self, val) { this.pos = val; }
 fwt_WidgetPeer.prototype.pos = gfx_Point.make(0,0);
 
-fwt_WidgetPeer.prototype.size$get = function() { return this.size; }
-fwt_WidgetPeer.prototype.size$set = function(val) { this.size = val; }
+fwt_WidgetPeer.prototype.size$get = function(self) { return this.size; }
+fwt_WidgetPeer.prototype.size$set = function(self, val) { this.size = val; }
 fwt_WidgetPeer.prototype.size = gfx_Size.make(0,0);
 
 //////////////////////////////////////////////////////////////////////////
