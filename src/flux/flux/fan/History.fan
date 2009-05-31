@@ -6,6 +6,9 @@
 //   12 Sep 08  Brian Frank  Creation
 //
 
+using gfx
+using fwt
+
 **
 ** History maintains the most recent navigation history
 ** of the entire application.
@@ -131,3 +134,77 @@ const class HistoryItem
   **
   override Str toStr() { return uri.toStr }
 }
+
+**************************************************************************
+** HistoryPicker
+**************************************************************************
+
+class HistoryPicker : EdgePane
+{
+  new make(HistoryItem[] items, Bool fullPath, |HistoryItem, Event| onAction)
+  {
+    model := HistoryPickerModel(items, fullPath)
+    center = Table
+    {
+      it.headerVisible = false
+      it.model = model
+      it.onAction.add |Event e|
+      {
+        onAction(model.items[e.index], e)
+      }
+      it.onKeyDown.add |Event e|
+      {
+        code := e.keyChar
+        if (code >= 97 && code <= 122) code -= 32
+        code -= 65
+        if (code >= 0 && code < 26 && code < model.numRows)
+          onAction(model.items[code], e)
+      }
+    }
+  }
+}
+
+internal class HistoryPickerModel : TableModel
+{
+  new make(HistoryItem[] items, Bool fullPath)
+  {
+    this.items = items
+    this.fullPath = fullPath
+    icons = Image[,]
+    items.map(icons) |HistoryItem item->Obj|
+    {
+      return Image(item.iconUri, false) ?: def
+    }
+  }
+
+  override Int numCols() { return 2 }
+  override Int numRows() { return items.size }
+  override Int? prefWidth(Int col)
+  {
+    switch (col)
+    {
+      case 0: return fullPath ? 450 : 250
+      case 1: return 20
+      default: return null
+    }
+  }
+  override Image? image(Int col, Int row) { return col==0 ? icons[row] : null }
+  override Font? font(Int col, Int row) { return col==1 ? accFont : null }
+  override Color? fg(Int col, Int row)  { return col==1 ? accColor : null }
+  override Str text(Int col, Int row)
+  {
+    switch (col)
+    {
+      case 0:  uri := items[row].uri; return fullPath ? uri.toStr : uri.name
+      case 1:  return (row < 26) ? (row+65).toChar : ""
+      default: return ""
+    }
+  }
+  HistoryItem[] items
+  Image[] icons
+  Image def := Flux.icon(`/x16/file.png`)
+  Font accFont := Desktop.sysFont.toSize(Desktop.sysFont.size-1)
+  Color accColor := Color("#666")
+  Bool fullPath
+}
+

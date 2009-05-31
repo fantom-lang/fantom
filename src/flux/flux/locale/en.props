@@ -95,6 +95,9 @@ replaceInFiles.accelerator=Ctrl+F6
 goto.name=Goto
 goto.accelerator=Ctrl+G
 
+gotoFile.name=Goto File
+gotoFile.accelerator=Ctrl+Shift+G
+
 jumpNext.name=Jump Next
 jumpNext.accelerator=F8
 jumpNext.icon=fan:/sys/pod/icons/x16/arrowRight.png

@@ -50,7 +50,7 @@ internal class NavBar : SideBar
   override Void onLoad()
   {
     state := NavBarState.load
-    state.roots.each |Uri uri| { addTree(FileResource.makeFile(uri.toFile)) }
+    state.roots.each |uri| { addTree(FileResource.makeFile(uri.toFile)) }
     if (state.selected != null) select(state.selected)
   }
 
@@ -98,6 +98,9 @@ internal class NavBar : SideBar
     combo.items = items.add(name).add(type.loc("navBar.editList"))
     if (old >= 0) combo.selectedIndex = old
     ignore = false
+
+    // add to indexing
+    if (r != null) FileIndex.instance.index(r.uri)
   }
 
   **

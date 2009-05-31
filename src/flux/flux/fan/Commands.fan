@@ -91,6 +91,7 @@ internal class Commands
       addCommand(replaceInFiles)
       addSep
       addCommand(goto)
+      addCommand(gotoFile)
       addSep
       addCommand(jumpNext)
       addCommand(jumpPrev)
@@ -325,6 +326,7 @@ internal class Commands
   readonly FluxCommand replace := ViewManagedCommand(CommandId.replace)
   readonly FluxCommand replaceInFiles := ReplaceInFilesCommand()
   readonly FluxCommand goto := ViewManagedCommand(CommandId.goto)
+  readonly FluxCommand gotoFile := GotoFileCommand()
   readonly FluxCommand jumpNext := JumpNextCommand()
   readonly FluxCommand jumpPrev := JumpPrevCommand()
   readonly FluxCommand selectAll := SelectAllCommand()
@@ -542,6 +544,49 @@ internal class ReplaceInFilesCommand : FluxCommand
   override Void invoke(Event? event) { Dialog.openInfo(frame, "TODO: Replace in Files") }
 }
 
+** Goto file
+internal class GotoFileCommand : FluxCommand
+{
+  new make() : super(CommandId.gotoFile) {}
+  override Void invoke(Event? event)
+  {
+    Str last := Actor.locals.get("fluxText.gotoFileLast", "")
+    r := Dialog.openPromptStr(frame, "Goto File:", last, 6)
+    if (r == null) return
+    Actor.locals.set("fluxText.gotoFileLast", r)
+
+    files := FileIndex.instance.find(r)
+    if (files.size == 0)
+    {
+      Dialog.openErr(frame, "File not found: $r")
+      return
+    }
+
+    if (files.size == 1)
+    {
+      frame.load(files[0])
+      return
+    }
+
+    items := HistoryItem[,]
+    files.each |uri|
+    {
+      items.add(HistoryItem { it.uri = uri; it.iconUri = FileResource.fileToIcon(uri.toFile).uri })
+    }
+
+    Dialog? dlg
+    picker := HistoryPicker(items, true) |HistoryItem item, Event e|
+    {
+      frame.load(item.uri, LoadMode(e))
+      dlg.close
+    }
+
+    pane := ConstraintPane { minw = 500; maxh = 300; add(picker) }
+    dlg = Dialog(frame) { title="Goto File"; body=pane; commands=[Dialog.ok, Dialog.cancel] }
+    dlg.open
+  }
+}
+
 ** Jump to next error/search position
 internal class JumpNextCommand : FluxCommand
 {
@@ -664,79 +709,15 @@ internal class RecentCommand : FluxCommand
   override Void invoke(Event? event)
   {
     Dialog? dlg
-    model := RecentTableModel()
-    table := Table
+    picker := HistoryPicker(History.load.items, false) |HistoryItem item, Event e|
     {
-      it.headerVisible = false
-      it.model = model
-      it.onAction.add |Event e|
-      {
-        frame.load(model.items[e.index].uri, LoadMode(e))
-        dlg.close
-      }
-      onKeyDown.add |Event e|
-      {
-        code := e.keyChar
-        if (code >= 97 && code <= 122) code -= 32
-        code -= 65
-        if (code >= 0 && code < 26 && code < model.numRows)
-        {
-          frame.load(model.items[code].uri, LoadMode(e))
-          dlg.close
-        }
-      }
+      frame.load(item.uri, LoadMode(e))
+      dlg.close
     }
-    pane := ConstraintPane
-    {
-      minw = 300
-      maxh = 300
-      add(table)
-    }
+    pane := ConstraintPane { minw = 300; maxh = 300; add(picker) }
     dlg = Dialog(frame) { title="Recent"; body=pane; commands=[Dialog.ok, Dialog.cancel] }
     dlg.open
   }
-}
-
-internal class RecentTableModel : TableModel
-{
-  new make()
-  {
-    items = History.load.items
-    icons = Image[,]
-    items.map(icons) |HistoryItem item->Obj|
-    {
-      return Image(item.iconUri, false) ?: def
-    }
-  }
-
-  override Int numCols() { return 2 }
-  override Int numRows() { return items.size }
-  override Int? prefWidth(Int col)
-  {
-    switch (col)
-    {
-      case 0: return 250
-      case 1: return 20
-      default: return null
-    }
-  }
-  override Image? image(Int col, Int row) { return col==0 ? icons[row] : null }
-  override Font? font(Int col, Int row) { return col==1 ? accFont : null }
-  override Color? fg(Int col, Int row)  { return col==1 ? accColor : null }
-  override Str text(Int col, Int row)
-  {
-    switch (col)
-    {
-      case 0:  return items[row].uri.name
-      case 1:  return (row < 26) ? (row+65).toChar : ""
-      default: return ""
-    }
-  }
-  HistoryItem[] items
-  Image[] icons
-  Image def := Flux.icon(`/x16/file.png`)
-  Font accFont := Desktop.sysFont.toSize(Desktop.sysFont.size-1)
-  Color accColor := Color("#666")
 }
 
 //////////////////////////////////////////////////////////////////////////

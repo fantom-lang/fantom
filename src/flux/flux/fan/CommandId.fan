@@ -33,6 +33,7 @@ class CommandId
   static const Str replace        := "replace"          // view managed
   static const Str replaceInFiles := "replaceInFiles"
   static const Str goto           := "goto"             // view managed
+  static const Str gotoFile       := "gotoFile"
   static const Str jumpNext       := "jumpNext"
   static const Str jumpPrev       := "jumpPrev"
   static const Str selectAll      := "selectAll"
