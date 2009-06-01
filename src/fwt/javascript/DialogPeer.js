@@ -14,7 +14,19 @@ fwt_DialogPeer.prototype.$ctor = function(self) {}
 
 fwt_DialogPeer.prototype.open = function(self)
 {
-  /*
+  // mount mask that functions as input blocker for modality
+  var mask = document.createElement("div")
+  with (mask.style)
+  {
+    position   = "fixed";
+    top        = "0";
+    left       = "0";
+    width      = "100%";
+    height     = "100%";
+    background = "#fff";
+    opacity    = "0.1";
+  }
+
   // mount shell we use to attach widgets to
   var shell = document.createElement("div")
   with (shell.style)
@@ -24,24 +36,49 @@ fwt_DialogPeer.prototype.open = function(self)
     left       = "0";
     width      = "100%";
     height     = "100%";
-    background = "#fff";
   }
 
   // mount window
   var elem = this.emptyDiv();
+  with (elem.style)
+  {
+    background = "#eee";
+    border     = "1px solid #555";
+    MozBoxShadow               = "0 5px 12px #555";
+    MozBorderRadiusTopleft     = "5px";
+    MozBorderRadiusTopright    = "5px";
+    webkitBoxShadow            = "0 5px 12px #555";
+    webkitBorderTopLeftRadius  = "5px";
+    webkitBorderTopRightRadius = "5px";
+  }
   shell.appendChild(elem);
   this.attachTo(self, elem);
+  document.body.appendChild(mask);
   document.body.appendChild(shell);
   self.relayout();
-  */
 
-  alert("Dialog.open");
+  // cache elements so we can remove when we close
+  this.$mask = mask;
+  this.$shell = shell;
+}
+
+fwt_DialogPeer.prototype.close = function(self, result)
+{
+  if (this.$shell) this.$shell.parentNode.removeChild(this.$shell);
+  if (this.$mask) this.$mask.parentNode.removeChild(this.$mask);
 }
 
 fwt_DialogPeer.prototype.sync = function(self)
 {
-  //var shell = this.elem.parentNode;
+  var shell = this.elem.parentNode;
+  var w = 350;
+  var h = 250;
+  var x = Math.floor((shell.offsetWidth - w) / 2);
+  var y = Math.floor((shell.offsetHeight - h) / 2);
+
   //this.size$set(this, gfx_Size.make(shell.offsetWidth, shell.offsetHeight));
+  this.pos$set(this, gfx_Point.make(x, y));
+  this.size$set(this, gfx_Size.make(w, h));
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
 
