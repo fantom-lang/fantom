@@ -20,7 +20,7 @@ namespace Fan.Sys
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static LogRecord make(DateTime time, LogLevel level, string logName, string msg) { return make(time, level, logName, msg); }
+    public static LogRecord make(DateTime time, LogLevel level, string logName, string msg) { return make(time, level, logName, msg, null); }
     public static LogRecord make(DateTime time, LogLevel level, string logName, string msg, Err err)
     {
       LogRecord self = new LogRecord();

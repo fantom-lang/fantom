@@ -18,7 +18,7 @@ public class LogRecord
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static LogRecord make(DateTime time, LogLevel level, String logName, String msg) { return make(time, level, logName, msg); }
+  public static LogRecord make(DateTime time, LogLevel level, String logName, String msg) { return make(time, level, logName, msg, null); }
   public static LogRecord make(DateTime time, LogLevel level, String logName, String msg, Err err)
   {
     LogRecord self = new LogRecord();
