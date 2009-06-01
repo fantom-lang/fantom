@@ -11,6 +11,7 @@ using gfx
 **
 ** Combo is a combination of a text field and a list drop down.
 **
+@javascript
 class Combo : Widget
 {
 
