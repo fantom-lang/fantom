@@ -133,11 +133,13 @@ sys_Obj.compare = function(self, that)
 
 sys_Obj.is = function(obj, type)
 {
+  if (obj == null) return false;
   return sys_Obj.type(obj).is(type);
 }
 
 sys_Obj.as = function(obj, type)
 {
+  if (obj == null) return false;
   if (sys_Obj.type(obj).is(type)) return obj;
   return null;
 }
@@ -180,7 +182,7 @@ sys_Obj.echo = function(str)
   catch (e1)
   {
     try { println(s); }
-    catch (e2) { alert(s); }
+    catch (e2) {} //alert(s); }
   }
 }
 
