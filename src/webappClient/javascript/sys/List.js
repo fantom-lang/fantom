@@ -150,9 +150,9 @@ sys_List.max = function(self, f)
   for (var i=1; i<self.length; ++i)
   {
     if (f == null)
-      max = (self[i] > max) ? values[i] : max;
+      max = (self[i] > max) ? self[i] : max;
     else
-      max = (f(self[i], max) > 0) ? values[i] : max;
+      max = (f(self[i], max) > 0) ? self[i] : max;
   }
   return max;
 }
@@ -165,9 +165,9 @@ sys_List.min = function(self, f)
   for (var i=1; i<self.length; ++i)
   {
     if (f == null)
-      min = (self[i] < min) ? values[i] : min;
+      min = (self[i] < min) ? self[i] : min;
     else
-      min = (f(self[i], min) < 0) ? values[i] : min;
+      min = (f(self[i], min) < 0) ? self[i] : min;
   }
   return max;
 }
