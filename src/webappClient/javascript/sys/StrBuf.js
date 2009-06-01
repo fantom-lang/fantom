@@ -32,7 +32,7 @@ sys_StrBuf.prototype.type = function()
 
 sys_StrBuf.prototype.add = function(obj)
 {
-  this.m_str += obj==null ? "null" : sys_Obj._toStr(obj);
+  this.m_str += obj==null ? "null" : sys_Obj.toStr(obj);
   return this;
 }
 

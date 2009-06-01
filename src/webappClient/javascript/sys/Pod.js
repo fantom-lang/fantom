@@ -35,6 +35,13 @@ sys_Pod.prototype.findType = function(qname, checked)
   return t;
 }
 
+sys_Pod.prototype.loc = function(key, def)
+{
+  // TODO
+  if (def == undefined) def = key;
+  return def;
+}
+
 sys_Pod.prototype.toStr = function() { return this.m_name; }
 
 // addType

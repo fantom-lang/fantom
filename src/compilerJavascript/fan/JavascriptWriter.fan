@@ -505,8 +505,18 @@ if (c != null)
     out.w(",sys_Type.find(\"$te.check\"))")
   }
 
-  Void callExpr(CallExpr ce)
+  Void callExpr(CallExpr ce, Bool doSafe := true)
   {
+    if (ce.isSafe && doSafe)
+    {
+      out.w("((")
+      expr(ce.target)
+      out.w(" == null) ? null : (")
+      callExpr(ce, false)
+      out.w("))")
+      return
+    }
+
     // check for special cases
     if (isObjMethod(ce.method.name))
     {
@@ -843,6 +853,7 @@ if (c != null)
     "equals":      true,
     "compare":     true,
     "isImmutable": true,
+    "toStr":       true,
     "type":        true,
   ]
 

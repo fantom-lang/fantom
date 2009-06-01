@@ -133,11 +133,13 @@ sys_Obj.compare = function(self, that)
 
 sys_Obj.is = function(obj, type)
 {
+  if (obj == null) return false;
   return sys_Obj.type(obj).is(type);
 }
 
 sys_Obj.as = function(obj, type)
 {
+  if (obj == null) return false;
   if (sys_Obj.type(obj).is(type)) return obj;
   return null;
 }
@@ -165,7 +167,7 @@ sys_Obj.type = function(self)
     return sys_Type.toFanType(self);
 }
 
-sys_Obj._toStr = function(obj)
+sys_Obj.toStr = function(obj)
 {
   if (obj == null) return "null";
   if (typeof obj == "string") return obj;
@@ -175,12 +177,12 @@ sys_Obj._toStr = function(obj)
 
 sys_Obj.echo = function(str)
 {
-  var s = sys_Obj._toStr(str);
+  var s = sys_Obj.toStr(str);
   try { console.log(s); }
   catch (e1)
   {
     try { println(s); }
-    catch (e2) { alert(s); }
+    catch (e2) {} //alert(s); }
   }
 }
 

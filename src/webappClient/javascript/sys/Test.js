@@ -41,7 +41,7 @@ sys_Test.prototype.verifyEq = function(expected, actual, msg)
 {
   if (!sys_Obj.equals(expected, actual))
   {
-    if (msg == null) msg = sys_Obj._toStr(expected) + " != " + sys_Obj._toStr(actual);
+    if (msg == null) msg = sys_Obj.toStr(expected) + " != " + sys_Obj.toStr(actual);
     this.fail(msg);
   }
   /*
@@ -62,7 +62,7 @@ sys_Test.prototype.verifyNotEq = function(expected, actual, msg)
 {
   if (sys_Obj.equals(expected, actual))
   {
-    if (msg == null) msg = sys_Obj._toStr(expected) + " == " + sys_Obj._toStr(actual);
+    if (msg == null) msg = sys_Obj.toStr(expected) + " == " + sys_Obj.toStr(actual);
     this.fail(msg);
   }
   this.verifyCount++;
@@ -72,7 +72,7 @@ sys_Test.prototype.verifySame = function(expected, actual, msg)
 {
   if (!sys_Obj.equals(expected, actual))
   {
-    if (msg == null) msg = sys_Obj._toStr(expected) + " !== " + sys_Obj._toStr(actual);
+    if (msg == null) msg = sys_Obj.toStr(expected) + " !== " + sys_Obj.toStr(actual);
     this.fail(msg);
   }
   this.verifyCount++;
@@ -82,7 +82,7 @@ sys_Test.prototype.verifyNotSame = function(expected, actual, msg)
 {
   if (sys_Obj.equals(expected == actual))
   {
-    if (msg == null) msg = sys_Obj._toStr(expected) + " === " + sys_Obj._toStr(actual);
+    if (msg == null) msg = sys_Obj.toStr(expected) + " === " + sys_Obj.toStr(actual);
     this.fail(msg);
   }
   this.verifyCount++;

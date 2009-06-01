@@ -41,8 +41,10 @@ sys_Type.prototype.base = function()      { return this.m_base; }
 sys_Type.prototype.isClass = function()   { return this.m_base == null || (this.m_base.m_qname != "sys::Enum" && this.m_base.m_qname != "sys::Mixin"); }
 sys_Type.prototype.isEnum = function()    { return this.m_base != null && this.m_base.m_qname == "sys::Enum"; }
 sys_Type.prototype.isMixin = function()   { return this.m_base != null && this.m_base.m_qname == "sys::Mixin"; }
+sys_Type.prototype.log = function()       { return sys_Log.get(this.m_pod.m_name); }
 sys_Type.prototype.name = function()      { return this.n_name; }
 sys_Type.prototype.qname = function()     { return this.m_qname; }
+sys_Type.prototype.pod = function()       { return this.m_pod; }
 sys_Type.prototype.signature = function() { return this.m_qname; }
 sys_Type.prototype.toStr = function()     { return this.signature(); }
 sys_Type.prototype.toLocale = function()  { return this.signature(); }
