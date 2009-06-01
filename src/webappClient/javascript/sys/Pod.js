@@ -38,7 +38,7 @@ sys_Pod.prototype.findType = function(qname, checked)
 sys_Pod.prototype.loc = function(key, def)
 {
   // TODO
-  if (def == undefined) def = key;
+  //if (def == undefined) def = key;
 
   if (key == "ok.name") return "OK";
   if (key == "cancel.name") return "Cancel";
