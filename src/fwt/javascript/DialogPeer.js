@@ -70,15 +70,19 @@ fwt_DialogPeer.prototype.close = function(self, result)
 
 fwt_DialogPeer.prototype.sync = function(self)
 {
+  var content = self.content$get();
+  if (content == null || content.peer.elem == null) return;
+
   var shell = this.elem.parentNode;
-  var w = 350;
-  var h = 250;
+  var pref  = content.prefSize();
+  var w = pref.w;
+  var h = pref.h;
   var x = Math.floor((shell.offsetWidth - w) / 2);
   var y = Math.floor((shell.offsetHeight - h) / 2);
 
-  //this.size$set(this, gfx_Size.make(shell.offsetWidth, shell.offsetHeight));
   this.pos$set(this, gfx_Point.make(x, y));
   this.size$set(this, gfx_Size.make(w, h));
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
+
 
