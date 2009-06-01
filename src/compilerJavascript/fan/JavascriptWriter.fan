@@ -843,6 +843,7 @@ if (c != null)
     "equals":      true,
     "compare":     true,
     "isImmutable": true,
+    "toStr":       true,
     "type":        true,
   ]
 
