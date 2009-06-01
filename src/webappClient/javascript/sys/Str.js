@@ -291,12 +291,6 @@ sys_Str.splitws = function(val)
   return toks;
 }
 
-sys_Str.upper = function(self)
-{
-  return self.toUpperCase();
-}
-
-sys_Str.$in = function(self)
-{
-  return sys_InStream.makeForStr(self);
-}
+sys_Str.upper = function(self) { return self.toUpperCase(); }
+sys_Str.$in = function(self) { return sys_InStream.makeForStr(self); }
+sys_Str.toUri = function(self) { return sys_Uri.make(self); }
