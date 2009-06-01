@@ -142,6 +142,36 @@ sys_List.map = function(self, acc, func)
   return acc;
 }
 
+sys_List.max = function(self, f)
+{
+  if (f == undefined) f = null;
+  if (self.length == 0) return null;
+  var max = self[0];
+  for (var i=1; i<self.length; ++i)
+  {
+    if (f == null)
+      max = (self[i] > max) ? values[i] : max;
+    else
+      max = (f(self[i], max) > 0) ? values[i] : max;
+  }
+  return max;
+}
+
+sys_List.min = function(self, f)
+{
+  if (f == undefined) f = null;
+  if (self.length == 0) return null;
+  var min = self[0];
+  for (var i=1; i<self.length; ++i)
+  {
+    if (f == null)
+      min = (self[i] < min) ? values[i] : min;
+    else
+      min = (f(self[i], min) < 0) ? values[i] : min;
+  }
+  return max;
+}
+
 // TODO
 sys_List.rw = function(self) { return self.slice(); }
 sys_List.ro = function(self) { return self.slice(); }
