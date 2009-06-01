@@ -141,7 +141,6 @@ class Dialog : Window
 
     // swizzle details if passed commands
     if (details is Command[]) { commands = details; details = null }
-
     dialog := Dialog(parent)
     {
       it.title    = title
@@ -297,6 +296,7 @@ class Dialog : Window
 **
 ** Internal class used for predefined Dialog commands.
 **
+@javascript
 internal class DialogCommand : Command
 {
   new make(DialogCommandId id, Obj? arg := null)
@@ -347,6 +347,7 @@ internal class DialogCommand : Command
 **
 ** Ids for internal predefined Dialog commands.
 **
+@javascript
 internal enum DialogCommandId
 {
   ok,

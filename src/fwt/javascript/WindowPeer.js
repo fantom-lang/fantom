@@ -41,3 +41,10 @@ fwt_WindowPeer.prototype.sync = function(self)
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
 
+fwt_WindowPeer.prototype.icon$get = function(self) { return this.icon; }
+fwt_WindowPeer.prototype.icon$set = function(self, val) { this.icon = val; }
+fwt_WindowPeer.prototype.icon = null;
+
+fwt_WindowPeer.prototype.title$get = function(self) { return this.title; }
+fwt_WindowPeer.prototype.title$set = function(self, val) { this.title = val; }
+fwt_WindowPeer.prototype.title = "";

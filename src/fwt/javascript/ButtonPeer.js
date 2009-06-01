@@ -12,6 +12,18 @@
 var fwt_ButtonPeer = sys_Obj.$extend(fwt_WidgetPeer);
 fwt_ButtonPeer.prototype.$ctor = function(self) {}
 
+fwt_ButtonPeer.prototype.font$get = function(self) { return this.font; }
+fwt_ButtonPeer.prototype.font$set = function(self, val) { this.font = val; }
+fwt_ButtonPeer.prototype.font = null;
+
+fwt_ButtonPeer.prototype.image$get = function(self) { return this.image; }
+fwt_ButtonPeer.prototype.image$set = function(self, val) { this.image = val; }
+fwt_ButtonPeer.prototype.image = null;
+
+fwt_ButtonPeer.prototype.selected$get = function(self) { return this.selected; }
+fwt_ButtonPeer.prototype.selected$set = function(self, val) { this.selected = val; }
+fwt_ButtonPeer.prototype.selected = false;
+
 fwt_ButtonPeer.prototype.text$get = function(self) { return this.text; }
 fwt_ButtonPeer.prototype.text$set = function(self, val) { this.text = val; }
 fwt_ButtonPeer.prototype.text = "";
