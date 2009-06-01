@@ -28,17 +28,24 @@ fwt_ButtonPeer.prototype.text$get = function(self) { return this.text; }
 fwt_ButtonPeer.prototype.text$set = function(self, val) { this.text = val; }
 fwt_ButtonPeer.prototype.text = "";
 
-fwt_ButtonPeer.prototype.create = function(self, parent)
+fwt_ButtonPeer.prototype.create = function(parentElem)
 {
   var button = document.createElement("input");
   button.type = "button";
   var div = this.emptyDiv();
   div.appendChild(button);
+  parentElem.appendChild(div);
   return div;
 }
 
 fwt_ButtonPeer.prototype.sync = function(self)
 {
-  this.elem.firstChild.value = this.text;
+  var b = this.elem.firstChild;
+  b.value = this.text;
+  b.onclick = function(event)
+  {
+    var list = self.onAction.list();
+    for (var i=0; i<list.length; i++) list[i](event);
+  }
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }

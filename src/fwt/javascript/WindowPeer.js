@@ -34,6 +34,10 @@ fwt_WindowPeer.prototype.open = function(self)
   self.relayout();
 }
 
+fwt_WindowPeer.prototype.close = function(self, result)
+{
+}
+
 fwt_WindowPeer.prototype.sync = function(self)
 {
   var shell = this.elem.parentNode;
