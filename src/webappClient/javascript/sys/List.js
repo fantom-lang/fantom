@@ -157,7 +157,7 @@ sys_List.join = function(self, sep, func)
     var v = self[0];
     if (func != undefined) return func(v, 0);
     if (v == null) return "null";
-    return sys_Obj._toStr(v);
+    return sys_Obj.toStr(v);
   }
 
   var s = ""

@@ -13,6 +13,7 @@ using gfx
 ** window manager, and display monitors.  See `Monitor`
 ** to query the desktop monitors.
 **
+@javascript
 class Desktop
 {
 
