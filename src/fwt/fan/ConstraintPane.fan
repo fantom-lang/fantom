@@ -12,6 +12,7 @@ using gfx
 ** ConstraintPane is used to constrain the preferred width
 ** and height of its content widget.
 **
+@javascript
 class ConstraintPane : ContentPane
 {
 

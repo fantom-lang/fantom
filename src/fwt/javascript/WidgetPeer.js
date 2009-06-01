@@ -95,6 +95,8 @@ fwt_WidgetPeer.prototype.attachTo = function(self, elem)
   // sync to elem
   this.elem = elem;
   this.sync(self);
+  this.attachEvents(elem, "mousedown", self.onMouseDown.list());
+  // rest of events...
 
   // recursively attach my children
   var kids = self.kids;
@@ -102,6 +104,17 @@ fwt_WidgetPeer.prototype.attachTo = function(self, elem)
   {
     var kid = kids[i];
     kid.peer.attach(kid);
+  }
+}
+
+fwt_WidgetPeer.prototype.attachEvents = function(elem, event, list)
+{
+  for (var i=0; i<list.length; i++)
+  {
+    if (elem.addEventListener)
+      elem.addEventListener(event, list[i], false);
+    else
+      elem.attachEvent("on"+event, list[i]);
   }
 }
 
