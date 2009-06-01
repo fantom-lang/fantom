@@ -39,6 +39,25 @@ sys_Pod.prototype.loc = function(key, def)
 {
   // TODO
   if (def == undefined) def = key;
+
+  if (key == "ok.name") return "OK";
+  if (key == "cancel.name") return "Cancel";
+  if (key == "yes.name") return "Yes";
+  if (key == "no.name") return "No";
+  if (key == "details.name") return "Details";
+
+  if (key == "err.name") return "Error";
+  if (key == "err.image") return "/sys/pod/icons/x32/err.png";
+
+  if (key == "warn.name") return "Warning";
+  if (key == "warn.image") return "/sys/pod/icons/x32/warn.png";
+
+  if (key == "info.name") return "Info";
+  if (key == "info.image") return "/sys/pod/icons/x32/question.png";
+
+  if (key == "question.name") return "Question";
+  if (key == "question.image") return "/sys/pod/icons/x32/question.png";
+
   return def;
 }
 
