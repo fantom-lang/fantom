@@ -224,12 +224,26 @@ class JavascriptWriter : CompilerSupport
     {
       // getter
       out.w("$qname\$get = function() ")
-      if (f.hasGet) block(f.get.code)
+      if (f.hasGet)
+      {
+        out.w("{").nl
+        if (ClosureFinder(f.get).exists)
+          out.w("  var \$this = this;").nl
+        block(f.get.code, false)
+        out.w("}").nl
+      }
       else out.w("{ return this.$name; }").nl
 
       // setter
       out.w("$qname\$set = function(val) ")
-      if (f.hasSet) block(f.set.code)
+      if (f.hasSet)
+      {
+        out.w("{").nl
+        if (ClosureFinder(f.set).exists)
+          out.w("  var \$this = this;").nl
+        block(f.set.code, false)
+        out.w("}").nl
+      }
       else out.w("{ this.$name = val; }").nl
 
       // storage
