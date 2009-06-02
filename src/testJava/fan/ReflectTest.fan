@@ -289,5 +289,9 @@ class ReflectTest : JavaTest
     array[2] = x->a
     x->array1(array)
     verifySame(array[2], x->a)
+
+    // overloaded by parameter
+    verifyEq(x->overload1(this), "(Object)")
+    verifyEq(x->overload1("foo"), "(String)")
   }
 }
