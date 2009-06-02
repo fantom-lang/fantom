@@ -11,6 +11,7 @@ using gfx
 **
 ** FwtEnv the gfx environment implementation for the Fan Widget Toolkit.
 **
+@javascript
 internal const class FwtEnv : GfxEnv
 {
 
