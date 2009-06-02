@@ -31,5 +31,6 @@ fwt_TextPeer.prototype.sync = function(self)
   var text = this.elem.firstChild;
   text.value = this.text;
   text.size  = self.prefCols;
+  text.onkeyup = function(event) { self.text$set(event.target.value); }
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
