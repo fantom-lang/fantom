@@ -151,6 +151,10 @@ fwt_WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
     if (w == undefined) w = this.size.w;
     if (h == undefined) h = this.size.h;
 
+    // TEMP fix for IE
+    if (w < 0) w = 0;
+    if (h < 0) h = 0;
+
     display = this.visible ? "block" : "none";
     left    = this.pos.x  + "px";
     top     = this.pos.y  + "px";

@@ -43,8 +43,8 @@ fwt_LabelPeer.prototype.image$set = function(self, val)
     var img = document.createElement("img");
     if (img.addEventListener)
       img.onload = self.window.relayout;
-    else
-      img.attachEvent('onload', function() { self.window.relayout(); });
+    //else
+    //  img.attachEvent('onload', function() { self.window.relayout(); });
     img.src = val.uri;
     fwt_LabelPeer.imgCache[val.uri] = true;
   }

@@ -25,6 +25,7 @@ fwt_DialogPeer.prototype.open = function(self)
     height     = "100%";
     background = "#fff";
     opacity    = "0.1";
+    filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=10);"
   }
 
   // mount shell we use to attach widgets to
