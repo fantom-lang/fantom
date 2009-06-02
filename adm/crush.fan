@@ -46,7 +46,7 @@ class Crush
     }
   }
 
-  File root
+  File? root
   Int count
   Int bytes
 
