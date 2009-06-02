@@ -149,10 +149,11 @@ sys_List.max = function(self, f)
   var max = self[0];
   for (var i=1; i<self.length; ++i)
   {
+    var s = self[i];
     if (f == null)
-      max = (self[i] > max) ? self[i] : max;
+      max = (s != null && s > max) ? s : max;
     else
-      max = (f(self[i], max) > 0) ? self[i] : max;
+      max = (s != null && f(s, max) > 0) ? s : max;
   }
   return max;
 }
@@ -164,12 +165,13 @@ sys_List.min = function(self, f)
   var min = self[0];
   for (var i=1; i<self.length; ++i)
   {
+    var s = self[i];
     if (f == null)
-      min = (self[i] < min) ? self[i] : min;
+      min = (s == null || s < min) ? s : min;
     else
-      min = (f(self[i], min) < 0) ? self[i] : min;
+      min = (s == null || f(s, min) < 0) ? s : min;
   }
-  return max;
+  return min;
 }
 
 // TODO
