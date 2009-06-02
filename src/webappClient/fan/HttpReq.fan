@@ -16,7 +16,7 @@ class HttpReq
   **
   ** Create a new HttpReq instance with for the given Uri.
   **
-  new make(Str uri)
+  new make(Uri uri)
   {
     this.uri = uri
   }
@@ -24,7 +24,7 @@ class HttpReq
   **
   ** The Uri to send the request.
   **
-  Str uri
+  Uri uri
 
   **
   ** The HTTP method to use.  Defaults to 'POST'.
