@@ -19,10 +19,10 @@ webappClient_Window.alert = function(obj)
 
 webappClient_Window.uri = function()
 {
-  return window.location.toString();
+  return sys_Uri.make(window.location.toString());
 }
 
 webappClient_Window.hyperlink = function(uri)
 {
-  window.location = uri;
+  window.location = uri.m_uri;
 }

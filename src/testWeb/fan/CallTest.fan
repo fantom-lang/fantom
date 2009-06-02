@@ -51,7 +51,7 @@ class CallTest : Widget
     if (method == "GET")
       body.a(uri)
     else
-      body.a(`#`, "onclick='testWeb_CallTestClient.testPost(\"$uri\"); return false;'")
+      body.a(`#`, "onclick='testWeb_CallTestClient.testPost(sys_Uri.make(\"$uri\")); return false;'")
     body.w(name).aEnd.w(" - $uri.encode.toXml").liEnd
   }
 
@@ -63,7 +63,7 @@ class CallTest : Widget
 @javascript
 class CallTestClient
 {
-  static Void testPost(Str uri)
+  static Void testPost(Uri uri)
   {
     HttpReq(uri).send("") |HttpRes res|
     {

@@ -19,7 +19,7 @@ webappClient_HttpReq.prototype.type = function() { return sys_Type.find("webappC
 
 webappClient_HttpReq.prototype.uri$get = function() { return this.uri }
 webappClient_HttpReq.prototype.uri$set = function(val) { this.uri = val; }
-webappClient_HttpReq.prototype.uri = "";
+webappClient_HttpReq.prototype.uri = sys_Uri.make("");
 
 webappClient_HttpReq.prototype.method$get = function() { return this.method }
 webappClient_HttpReq.prototype.method$set = function(val) { this.method = val; }
@@ -35,7 +35,7 @@ webappClient_HttpReq.prototype.async = true;
 webappClient_HttpReq.prototype.send = function(content, func)
 {
   var req = new XMLHttpRequest();
-  req.open(this.method, this.uri, this.async);
+  req.open(this.method, this.uri.m_uri, this.async);
   if (this.async)
   {
     req.onreadystatechange = function () {
