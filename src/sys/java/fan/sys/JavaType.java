@@ -431,6 +431,8 @@ public class JavaType
       Class[] params = x.getParameterTypes();
       if (!argsMatchParams(args, params)) continue;
       if (best == null) { best = x; continue; }
+      if (isMoreSpecific(best, x)) continue;
+      if (isMoreSpecific(x, best)) { best = x; continue; }
       throw ArgErr.make("Ambiguous method call '" + m.name + "'").val;
     }
     if (best != null) return best;
@@ -480,6 +482,21 @@ public class JavaType
 
     // no coersion to match
     return false;
+  }
+
+  /**
+   * Given a two of overloaed methods find the most specific method
+   * according to Java Language Specification 15.11.2.2.  The "informal
+   * intuition" rule is that a method is more specific than another
+   * if the first could be could be passed onto the second one.
+   */
+  static boolean isMoreSpecific(java.lang.reflect.Method a, java.lang.reflect.Method b)
+  {
+    Class[] ap = a.getParameterTypes();
+    Class[] bp = b.getParameterTypes();
+    for (int i=0; i<ap.length; ++i)
+      if (!bp[i].isAssignableFrom(ap[i])) return false;
+    return true;
   }
 
   /**
