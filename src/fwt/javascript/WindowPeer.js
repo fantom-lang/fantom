@@ -36,6 +36,12 @@ fwt_WindowPeer.prototype.open = function(self)
 
 fwt_WindowPeer.prototype.close = function(self, result)
 {
+  var event  = fwt_Event.make();
+  event.id   = fwt_EventId.close;
+  event.data = result;
+
+  var list = self.onClose.list();
+  for (var i=0; i<list.length; i++) list[i](event);
 }
 
 fwt_WindowPeer.prototype.sync = function(self)
