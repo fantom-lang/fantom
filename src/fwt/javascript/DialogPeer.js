@@ -66,6 +66,7 @@ fwt_DialogPeer.prototype.close = function(self, result)
 {
   if (this.$shell) this.$shell.parentNode.removeChild(this.$shell);
   if (this.$mask) this.$mask.parentNode.removeChild(this.$mask);
+  fwt_WindowPeer.prototype.close.call(this, self, result);
 }
 
 fwt_DialogPeer.prototype.sync = function(self)
