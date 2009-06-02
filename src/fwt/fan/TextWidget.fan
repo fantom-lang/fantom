@@ -11,6 +11,7 @@ using gfx
 **
 ** TextWidget is the base class for `Text` and `RichText`.
 **
+@javascript
 abstract class TextWidget : Widget
 {
 
@@ -176,6 +177,7 @@ abstract class TextWidget : Widget
 **
 ** Wraps up information regarding a text modification.
 **
+@javascript
 class TextChange
 {
   ** Zero based offset of modification

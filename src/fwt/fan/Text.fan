@@ -9,6 +9,7 @@
 **
 ** Text is used to enter and modify text.
 **
+@javascript
 class Text : TextWidget
 {
 
