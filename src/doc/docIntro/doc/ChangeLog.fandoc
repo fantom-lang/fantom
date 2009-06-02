@@ -653,4 +653,4 @@
 
 *Build 1.0.44 (working)*
 - Fix bug in WebReq.absUri
-
+- Fix webappClient to use Uri instead of Str
