@@ -161,6 +161,7 @@ public class Fan
     println("Licensed under the Academic Free License version 3.0");
     println("");
     println("Java Runtime:");
+    println("  java.version:    " + System.getProperty("java.version"));
     println("  java.vm.name:    " + System.getProperty("java.vm.name"));
     println("  java.vm.vendor:  " + System.getProperty("java.vm.vendor"));
     println("  java.vm.version: " + System.getProperty("java.vm.version"));
