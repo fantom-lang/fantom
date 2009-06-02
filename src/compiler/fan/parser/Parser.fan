@@ -1106,13 +1106,10 @@ public class Parser : CompilerSupport
 
   private Block switchBlock()
   {
-    Block? block := null
+    block := Block(cur)
     while (curt !== Token.caseKeyword && curt != Token.defaultKeyword && curt !== Token.rbrace)
-    {
-      if (block == null) block = Block.make(cur)
       block.stmts.add(stmt)
-    }
-    return block;
+    return block
   }
 
 //////////////////////////////////////////////////////////////////////////
