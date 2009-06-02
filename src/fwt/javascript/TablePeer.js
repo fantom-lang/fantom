@@ -27,10 +27,9 @@ fwt_TablePeer.prototype.create = function(parentElem)
   var table = document.createElement("table");
   with (table.style)
   {
-    overflow       = "auto";
-    borderCollapse = "collapse"
-    borderSpacing  = "0";
-    width          = "100%";
+    overflow = "auto";
+    width  = "100%";
+    borderSpacing = "0";
   }
 
   var div = this.emptyDiv();
@@ -59,20 +58,30 @@ fwt_TablePeer.prototype.sync = function(self)
     var tr = document.createElement("tr");
     for (var c=0; c<cols; c++)
     {
+      // we have to embed a div inside our th to make
+      // the borders overlap correctly
+      var fix = document.createElement("div");
+      with (fix.style)
+      {
+        padding      = "4px 6px";
+        textAlign    = "left";
+        whiteSpace   = "nowrap";
+        borderBottom = "1px solid #555";
+        backgroundColor = "#dbdbdb";
+        backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#dbdbdb), to(#bbb))";
+        //cursor: default;
+        if (c < cols-1) borderRight = "1px solid #a5a5a5";
+      }
+      fix.appendChild(document.createTextNode(model.header(c)));
       var th = document.createElement("th");
       with (th.style)
       {
-        padding     = "4px 6px";
-        textAlign   = "left";
-        whiteSpace  = "nowrap";
-        background  = "#dbdbdb"; // url(../img/thBg.png) repeat-x bottom;
-        //cursor: default;
-        if (c < cols-1)
-          borderRight = "1px solid #a5a5a5";
-        else
-          width = "100%";
+        margin  = "0px";
+        padding = "0px";
+        border  = "none"; //Bottom = "1px solid #555";
+        if (c == cols-1) width = "100%";
       }
-      th.appendChild(document.createTextNode(model.header(c)));
+      th.appendChild(fix);
       tr.appendChild(th);
     }
     tbody.appendChild(tr);
