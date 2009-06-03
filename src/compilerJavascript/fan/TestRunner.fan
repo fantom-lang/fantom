@@ -221,3 +221,4 @@ class TestRunner
   Str[] failureNames   := [,]
 
 }
+

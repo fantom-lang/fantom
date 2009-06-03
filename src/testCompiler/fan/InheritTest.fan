@@ -973,8 +973,8 @@ class InheritTest : CompilerTest
      setCounts := b.method("setCounts")
 
      orig := ["p0":101, "p1":102, "p2":103, "p3":104]
-     change1 := (Str:Int)orig.map(Str:Int[:]) |Int v->Int| { return 1000+v }
-     change2 := (Str:Int)orig.map(Str:Int[:]) |Int v->Int| { return 2000+v }
+     Str:Int change1 := orig.map |Int v->Int| { 1000+v }
+     Str:Int change2 := orig.map |Int v->Int| { 2000+v }
 
      obj := b.make
      verifyEq(getCounts.call(obj, 0), true)

@@ -705,9 +705,11 @@ public final class List
     return reduction;
   }
 
-  public final List map(List acc, Func f)
+  public final List map(Func f)
   {
-    if (acc.size == 0) acc.capacity(size());
+    Type r = f.returns();
+    if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
+    List acc = new List(r, (int)size());
     if (f.params.sz() == 1)
     {
       for (int i=0; i<size; ++i)
@@ -720,6 +722,23 @@ public final class List
     }
     return acc;
   }
+
+// TODO: nuke
+public final List map(List acc, Func f)
+{
+  if (acc.size == 0) acc.capacity(size());
+  if (f.params.sz() == 1)
+  {
+    for (int i=0; i<size; ++i)
+      acc.add(f.call(values[i]));
+  }
+  else
+  {
+    for (int i=0; i<size; ++i)
+      acc.add(f.call(values[i], Long.valueOf(i)));
+  }
+  return acc;
+}
 
   public final Object max() { return max(null); }
   public final Object max(Func f)

@@ -259,8 +259,7 @@ const class Key
   **
   Key[] list()
   {
-    toks := toStr.split('+')
-    return toks.map(Key[,]) |Str tok->Key| { return fromStr(tok) }
+    toStr.split('+').map |Str tok->Key| { fromStr(tok) }
   }
 
   **

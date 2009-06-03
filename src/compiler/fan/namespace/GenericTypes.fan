@@ -50,9 +50,7 @@ abstract class GenericType : CType
 
   private Str:CSlot parameterizeSlots()
   {
-    s := Str:CSlot[:]
-    base.slots.map(s) |CSlot slot->Obj| { return parameterizeSlot(slot) }
-    return s
+    base.slots.map |CSlot slot->CSlot| { parameterizeSlot(slot) }
   }
 
   private CSlot parameterizeSlot(CSlot slot)
@@ -99,7 +97,7 @@ abstract class GenericType : CType
 
   private CType parameterizeFuncType(FuncType t)
   {
-    params := (CType[])t.params.map(CType[,]) |CType p->CType| { return parameterize(p) }
+    CType[] params := t.params.map |CType p->CType| { parameterize(p) }
     ret := parameterize(t.ret)
     return FuncType.make(params, t.names, ret)
   }
@@ -339,7 +337,7 @@ class FuncType : GenericType
   {
     if (!usesThis) return this
     f := |CType t->CType| { t.isThis ? thisType : t }
-    return FuncType(params.map(CType[,], f), names, f(ret))
+    return FuncType(params.map(f), names, f(ret))
   }
 
   override Bool isValid()
@@ -436,7 +434,7 @@ class ParameterizedMethod : CMethod
     this.generic = generic
 
     this.returnType = parent.parameterize(generic.returnType)
-    generic.params.map(this.params = CParam[,]) |CParam p->Obj|
+    this.params = generic.params.map |CParam p->CParam|
     {
       if (!p.paramType.isGenericParameter)
         return p

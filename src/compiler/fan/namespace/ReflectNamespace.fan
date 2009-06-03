@@ -69,7 +69,7 @@ class ReflectNamespace : CNamespace
   **
   CType[] importTypes(Type[] t)
   {
-    return (CType[])t.map(CType[,]) |Type x->Obj| { return importType(x) }
+    return t.map |Type x->CType| { importType(x) }
   }
 
   **

@@ -73,7 +73,7 @@ abstract class BuildGroup : BuildScript
     children.each |BuildScript child|
     {
       // get all the target names in this subscript
-      n := (Str[])child.targets.map(Str[,]) |Target t->Str| { return t.name }
+      Str[] n := child.targets.map |Target t->Str| { t.name }
 
       // get union of names
       if (names == null)
@@ -87,9 +87,7 @@ abstract class BuildGroup : BuildScript
     myTargets.each |Target t| { if (!names.contains(t.name)) names.add(t.name) }
 
     // now create a Target for each name
-    targets := Target[,]
-    names.map(targets) |Str name->Target| { return toTarget(name, myTargets) }
-    return targets
+    return names.map |Str name->Target| { toTarget(name, myTargets) }
   }
 
   **

@@ -25,7 +25,7 @@ abstract class Resource
   **
   static Resource[] roots()
   {
-    return File.osRoots.map(Resource[,]) |File f->Obj| { return FileResource.makeFile(f) }
+    File.osRoots.map |File f->Resource| { FileResource.makeFile(f) }
   }
 
   **

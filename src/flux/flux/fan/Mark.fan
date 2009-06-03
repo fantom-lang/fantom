@@ -158,10 +158,9 @@ internal class MarkParser
 
     // try and find the longest matching file name in that directory
     rest := text[e+1..-1]
-    names := Str[,]
-    f.list.map(names) |File x->Str| { return Desktop.isWindows ? x.name.lower : x.name }
-    names.sortr |Str a, Str b->Int| { return a.size <=> b.size }
-    Str? n := names.eachWhile |Str n->Str?| { return rest.startsWith(n) ? n : null }
+    Str[] names := f.list.map |File x->Str| { Desktop.isWindows ? x.name.lower : x.name }
+    names.sortr |Str a, Str b->Int| { a.size <=> b.size }
+    Str? n := names.eachWhile |Str n->Str?| { rest.startsWith(n) ? n : null }
     if (n != null)
     {
       f = File.make(f.uri + n.toUri, false)

@@ -120,7 +120,7 @@ class EnumTest : CompilerTest
         static
         {
           // verify values are initialized first
-          caps = (Str[])(values.map(Str[,]) |Foo x->Str| { return x.name.upper })
+          caps = values.map |Foo x->Str| { x.name.upper }
         }
       }")
 

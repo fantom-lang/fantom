@@ -48,7 +48,7 @@ internal class ViewTabPane : Pane
   **
   View[] views()
   {
-    return tabs.map(View[,]) |ViewTab t->View| { return t.view }
+    tabs.map |ViewTab t->View| { t.view }
   }
 
   **

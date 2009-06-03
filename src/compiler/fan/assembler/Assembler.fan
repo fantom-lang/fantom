@@ -68,13 +68,13 @@ class Assembler : CompilerSupport, FConst
   {
     t := FType.make(fpod)
 
-    t.hollow = false
-    t.flags  = def.flags
-    t.self   = typeRef(def)
-    t.fbase  = (def.base == null) ? -1 : typeRef(def.base)
-    def.mixins.map(t.fmixins = Int[,]) |CType m->Obj| { return typeRef(m) }
-    def.fieldDefs.map(t.ffields = FField[,]) |FieldDef f->Obj| { return assembleField(t, f) }
-    def.methodDefs.map(t.fmethods = FMethod[,]) |MethodDef m->Obj| { return assembleMethod(t, m) }
+    t.hollow   = false
+    t.flags    = def.flags
+    t.self     = typeRef(def)
+    t.fbase    = (def.base == null) ? -1 : typeRef(def.base)
+    t.fmixins  = def.mixins.map |CType m->Int| { typeRef(m) }
+    t.ffields  = def.fieldDefs.map |FieldDef f->FField| { assembleField(t, f) }
+    t.fmethods = def.methodDefs.map |MethodDef m->FMethod| { assembleMethod(t, m) }
 
     attrs := AttrAsm.make(compiler, fpod)
     if (compiler.input.mode == CompilerInputMode.str)
@@ -116,8 +116,7 @@ class Assembler : CompilerSupport, FConst
     m.paramCount   = def.params.size
     m.localCount   = def.vars.size - def.params.size
 
-    m.vars = FMethodVar[,]
-    def.vars.map(m.vars) |MethodVar v->Obj|
+    m.vars = def.vars.map |MethodVar v->FMethodVar|
     {
       f := FMethodVar.make(m)
       f.nameIndex = name(v.name)

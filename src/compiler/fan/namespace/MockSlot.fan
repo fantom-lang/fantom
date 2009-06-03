@@ -55,7 +55,7 @@ class MockMethod : MockSlot, CMethod
   {
     this.parent = parent
     this.returnType = ret
-    params.map(this.params = CParam[,]) |CType p, Int i->Obj| { MockParam("p$i", p) }
+    this.params = params.map |CType p, Int i->CParam| { MockParam("p$i", p) }
   }
 
   override CType returnType

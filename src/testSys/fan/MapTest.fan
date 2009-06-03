@@ -565,7 +565,7 @@ class MapTest : Test
     verifyEq(((Str[])m.reduce(Str[,])
       |Obj r, Int v, Str k->Obj| { return ((Str[])r).add(k) }).sort,
       ["B", "Charlie", "a"])
-    verifyEq(m.map(Str:Str[:]) |Int v, Str k->Obj| { return k }, ["a":"a", "B":"B", "Charlie":"Charlie"])
+    verifyEq(m.map |Int v, Str k->Str| { k }, ["a":"a", "B":"B", "Charlie":"Charlie"])
 
     // dup
     d := m.dup
@@ -967,14 +967,8 @@ class MapTest : Test
   Void testMap()
   {
     map := [0:"zero", 1:"one", 2:"two"]
-
-    c := Int:Str[:]
-    map.map(c) |Str v->Obj| { return "($v)" }
+    c := map.map |Str v->Str| { "($v)" }
     verifyEq(c, [0:"(zero)", 1:"(one)", 2:"(two)"])
-
-    c2 := Int:Int[:]
-    map.map(c2) |Str v, Int k->Obj| { return k*2 }
-    verifyEq(c2, [0:0, 1:2, 2:4])
   }
 
 //////////////////////////////////////////////////////////////////////////

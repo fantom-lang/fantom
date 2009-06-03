@@ -111,7 +111,7 @@ abstract class Expr : Node
   **
   static CType[] ctypes(Expr[] exprs)
   {
-    return (CType[])exprs.map(CType[,]) |Expr e->Obj| { return e.ctype }
+    return exprs.map |Expr e->CType| { e.ctype }
   }
 
   **

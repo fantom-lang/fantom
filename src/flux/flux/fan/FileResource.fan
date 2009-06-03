@@ -72,7 +72,7 @@ class FileResource : Resource
     if (kids != null) return kids
 
     files := sortFiles(file.list)
-    kids = files.map(FileResource[,]) |File f->Obj| { return makeFile(f.normalize) }
+    kids = files.map |File f->FileResource| { makeFile(f.normalize) }
     return kids
   }
   private FileResource[]? kids

@@ -170,10 +170,9 @@ internal class HistoryPickerModel : TableModel
   {
     this.items = items
     this.fullPath = fullPath
-    icons = Image[,]
-    items.map(icons) |HistoryItem item->Obj|
+    icons = items.map |HistoryItem item->Image|
     {
-      return Image(item.iconUri, false) ?: def
+      Image(item.iconUri, false) ?: def
     }
   }
 

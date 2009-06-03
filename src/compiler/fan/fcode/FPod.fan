@@ -66,10 +66,7 @@ final class FPod : CPod, FConst
 
   CType[] resolveTypes(Int[] indexes)
   {
-    ctypes := CType[,]
-    ctypes.capacity = indexes.size
-    indexes.map(ctypes) |Int index->Obj| { return toType(index) }
-    return ctypes
+    return indexes.map |Int index->CType| { toType(index) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -129,7 +126,7 @@ final class FPod : CPod, FConst
     p := addTypeRef(method.parent)
     n := addName(method.name)
     r := addTypeRef(method.inheritedReturnType.raw)  // CLR can't deal with covariance
-    params := (Int[])method.params.map(Int[,]) |CParam x->Obj| { return addTypeRef(x.paramType.raw) }
+    Int[] params := method.params.map |CParam x->Int| { addTypeRef(x.paramType.raw) }
     if (argCount != null && argCount < params.size)
       params = params[0..<argCount]
     return methodRefs.add(FMethodRef.make(p, n, r, params))

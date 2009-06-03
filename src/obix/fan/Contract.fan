@@ -26,7 +26,7 @@ const class Contract
   {
     try
     {
-      return make(s.split.map(Uri[,]) |Str x->Uri| { return Uri.decode(x) })
+      return make(s.split.map |Str x->Uri| { Uri.decode(x) })
     }
     catch
     {

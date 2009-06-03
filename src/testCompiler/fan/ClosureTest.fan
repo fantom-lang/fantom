@@ -545,8 +545,8 @@ class ClosureTest : CompilerTest
         Obj m05(Str[] x) { x.sort |a, b->Int| { a.size <=> b.size } }
         Obj m06(Str[] x) { x.sortr |a, b| { a.size <=> b.size } }
         Obj m07(Str[] x) { r := Obj[,]; x.each |s,i| { r.add(s).add(i) }; return r }
-        Obj m08(Str[] x) { return x.map(Str[,]) |s,i| { i.toStr + s  } }
-        Obj m09(Str[] x) { return x.map(Str[,]) |s,i->Str| { q := i.toStr; return q + s  } }
+        Obj m08(Str[] x) { return x.map |s,i| { i.toStr + s  } }
+        Obj m09(Str[] x) { return x.map |s,i->Str| { q := i.toStr; return q + s  } }
         Obj m10(Str[] x)
         {
           return x.sort |a,b|
@@ -566,8 +566,8 @@ class ClosureTest : CompilerTest
     verifyEq(obj->m05(["hello", "x", "foo"]), ["x", "foo", "hello"])
     verifyEq(obj->m06(["hello", "x", "foo"]), ["hello", "foo", "x"])
     verifyEq(obj->m07(["a", "b"]), ["a", 0, "b", 1])
-    verifyEq(obj->m08(["a", "b"]), ["0a", "1b"])
-    verifyEq(obj->m09(["foo", "bar"]), ["0foo", "1bar"])
+    verifyEq(obj->m08(["a", "b"]), Obj?["0a", "1b"])
+    verifyEq(obj->m09(["foo", "bar"]), Str["0foo", "1bar"])
     verifyEq(obj->m10(["bar", "c", "first", "alpha"]), ["first", "alpha", "bar", "c"])
   }
 

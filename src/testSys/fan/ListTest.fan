@@ -891,13 +891,10 @@ class ListTest : Test
   Void testMap()
   {
     list := [3, 4, 5]
-    verifyEq(list.map(Int[,]) |Int v->Obj| { return v*2 },  [6, 8, 10])
-    verifyEq(list.map([,]) |Int v->Obj?| { return null }, [null, null, null])
-    verifyEq(list.map(Bool[,]) |Int v, Int i->Obj| { return i%2==0 },  [true, false, true])
-
-    acc := [0, 1, 2]
-    list.map(acc) |Int v->Obj| { return v }
-    verifyEq(acc, [0, 1, 2, 3, 4, 5])
+    verifyEq(list.map |Int v->Obj| { v*2 },  Obj[6, 8, 10])
+    verifyEq(list.map |Int v->Int| { v*2 },  Int[6, 8, 10])
+    verifyEq(list.map |Int v->Obj?| { return null }, [null, null, null])
+    verifyEq(list.map |Int v, Int i->Bool| { return i%2==0 },  [true, false, true])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1319,13 +1316,13 @@ class ListTest : Test
     verifyEq(r.dup, ["a", "b", "c"])
     r.each |Str s, Int i| { verifyEq(r[i], s) }
     r.eachr |Str s, Int i| { verifyEq(r[i], s) }
-    verifyEq(r.find |Str s->Bool| { return s == "b" }, "b")
-    verifyEq(r.findAll |Str s->Bool| { return true }, ["a", "b", "c"])
-    verifyEq(r.exclude |Str s->Bool| { return s == "c" }, ["a", "b"])
-    verifyEq(r.any |Str s->Bool| { return true }, true)
-    verifyEq(r.all |Str s->Bool| { return true }, true)
-    verifyEq(r.reduce(0) |Obj result, Str ignore->Obj| { return result }, 0)
-    verifyEq(r.map(Int[,]) |Str s->Obj| { return s.size}, [1, 1, 1])
+    verifyEq(r.find |Str s->Bool| { s == "b" }, "b")
+    verifyEq(r.findAll |Str s->Bool| { true }, ["a", "b", "c"])
+    verifyEq(r.exclude |Str s->Bool| { s == "c" }, ["a", "b"])
+    verifyEq(r.any |Str s->Bool| { true }, true)
+    verifyEq(r.all |Str s->Bool| { true }, true)
+    verifyEq(r.reduce(0) |Obj result, Str ignore->Obj| { result }, 0)
+    verifyEq(r.map |Str s->Int| { s.size}, [1, 1, 1])
     verifyEq(r.min, "a")
     verifyEq(r.max, "c")
     verifyEq(r.unique, ["a", "b", "c"])

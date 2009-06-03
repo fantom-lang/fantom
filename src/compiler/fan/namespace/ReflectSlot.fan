@@ -72,7 +72,7 @@ class ReflectMethod : ReflectSlot, CMethod
     this.parent = parent
     this.m = m
     this.returnType = ns.importType(m.returns)
-    m.params.map(this.params = CParam[,]) |Param p->Obj| { return ReflectParam.make(ns, p) }
+    this.params = m.params.map |Param p->CParam| { ReflectParam.make(ns, p) }
     this.isGeneric = calcGeneric(this)
   }
 

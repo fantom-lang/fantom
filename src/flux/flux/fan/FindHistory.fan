@@ -87,7 +87,7 @@ class FindHistory
   **
   Str[] dirAsStr()
   {
-    return dirList.map(Str[,]) |Uri u->Str| { return u.toStr }
+    dirList.map |Uri u->Str| { u.toStr }
   }
 
   **

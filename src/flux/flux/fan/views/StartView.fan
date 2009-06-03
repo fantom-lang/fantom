@@ -36,10 +36,9 @@ internal class StartRecentTableModel : TableModel
   new make()
   {
     items = History.load.items
-    icons = Image[,]
-    items.map(icons) |HistoryItem item->Obj|
+    icons = items.map |HistoryItem item->Image|
     {
-      return Image(item.iconUri, false) ?: def
+      Image(item.iconUri, false) ?: def
     }
   }
 
