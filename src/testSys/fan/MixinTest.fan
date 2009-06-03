@@ -196,8 +196,7 @@ class MixinTest : Test
     verifyEq(fromObj, obj)
 
     // verify the rest of MxA's slots (by name)
-    fromMxA := Str[,]
-    a[obj.size..-1].map(fromMxA) |Slot m->Obj| { return m.name }
+    Str[] fromMxA := a[obj.size..-1].map |Slot m->Str| { m.name }
     verifyEq(fromMxA, ["sa", "ia", "wrapToStr1", "wrapToStr2",
       "staticWrapType", "va", "aa", "coa", "cob", "coc", "thisa", "thisb"])
   }

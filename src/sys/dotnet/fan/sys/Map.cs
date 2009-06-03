@@ -442,8 +442,11 @@ namespace Fan.Sys
       return reduction;
     }
 
-    public Map map(Map acc, Func f)
+    public Map map(Func f)
     {
+      Type r = f.returns();
+      if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
+      Map acc = new Map(m_type.m_k, r);
       IDictionaryEnumerator en = m_map.GetEnumerator();
       while (en.MoveNext())
       {

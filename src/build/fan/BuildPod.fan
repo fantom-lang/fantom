@@ -196,7 +196,7 @@ abstract class BuildPod : BuildScript
 
   internal Depend[] parseDepends()
   {
-    return (Depend[])depends.map(Depend[,]) |Str s->Depend| { return Depend.fromStr(s) }
+    depends.map |Str s->Depend| { Depend.fromStr(s) }
   }
 
 //////////////////////////////////////////////////////////////////////////

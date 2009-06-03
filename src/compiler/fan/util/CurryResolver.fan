@@ -82,10 +82,10 @@ class CurryResolver : CompilerSupport
     incompletes := method.params[call.args.size..-1]
 
     // map incomplete CParams to CTypes
-    params := (CType[])incompletes.map(CType[,]) |CParam p->CType| { return p.paramType }
+    CType[] params := incompletes.map |CParam p->CType| { p.paramType }
 
     // map incomplete CParams to names
-    names := (Str[])incompletes.map(Str[,]) |CParam p->Str| { return p.name }
+    Str[] names := incompletes.map |CParam p->Str| { p.name }
 
     // check if we have an instance method with no target, in that
     // case then this must be passed as first argument to curried function

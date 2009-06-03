@@ -431,8 +431,11 @@ public final class Map
     return reduction;
   }
 
-  public final Map map(Map acc, Func f)
+  public final Map map(Func f)
   {
+    Type r = f.returns();
+    if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
+    Map acc = new Map(type.k, r);
     Iterator it = pairsIterator();
     while (it.hasNext())
     {
@@ -443,6 +446,20 @@ public final class Map
     }
     return acc;
   }
+
+// TODO: nuke
+public final Map map(Map acc, Func f)
+{
+  Iterator it = pairsIterator();
+  while (it.hasNext())
+  {
+    Entry e = (Entry)it.next();
+    Object key = e.getKey();
+    Object val = e.getValue();
+    acc.set(key, f.call(val, key));
+  }
+  return acc;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion

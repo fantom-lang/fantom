@@ -371,15 +371,15 @@ class ItBlockTest : CompilerTest
       {
         Int[] m03() { x := Int[,]; \"abc\".each { x.add(it) }; return x }
         Int[] m04() { x := Int[,]; \"abc\".each { u := upper; x.add(u) }; return x }
-        Int[] m05() { return ['d','e','f'].map(Int[,]) { upper} }
-        Int[] m06() { return ['G','H','I'].map(Str[,]) { it.upper.toChar } }
+        Int[] m05() { return ['d','e','f'].map { upper} }
+        Int[] m06() { return ['G','H','I'].map { it.upper.toChar } }
       }")
 
     obj := pod.types.first.make
     verifyEq(obj->m03, ['a', 'b', 'c'])
     verifyEq(obj->m04, ['A', 'B', 'C'])
-    verifyEq(obj->m05, ['D', 'E', 'F'])
-    verifyEq(obj->m06, ["G", "H", "I"])
+    verifyEq(obj->m05, Obj?['D', 'E', 'F'])
+    verifyEq(obj->m06, Obj?["G", "H", "I"])
   }
 
 //////////////////////////////////////////////////////////////////////////

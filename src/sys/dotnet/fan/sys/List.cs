@@ -626,9 +626,11 @@ namespace Fan.Sys
       return reduction;
     }
 
-    public List map(List acc, Func f)
+    public List map(Func f)
     {
-      if (acc.m_size == 0) acc.capacity(size());
+      Type r = f.returns();
+      if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
+      List acc = new List(r, (int)size());
       for (int i=0; i<m_size; i++)
         acc.add(f.call(m_values[i], i));
       return acc;

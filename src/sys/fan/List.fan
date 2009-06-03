@@ -427,14 +427,15 @@ final class List
   Bool all(|V item, Int index->Bool| c)
 
   **
-  ** Append to acc the result of calling c for every item in
-  ** this list.  Return acc.  This method is idempotent.
+  ** Create a new list which is the result of calling c for
+  ** every item in this list.  The new list is typed based on
+  ** the return type of c.  Return acc.  This method is idempotent.
   **
   ** Example:
   **   list := [3, 4, 5]
-  **   list.map(Int[,]) |Int v->Obj| { return v*2 } => [6, 8, 10]
+  **   list.map |Int v->Int| { return v*2 } => [6, 8, 10]
   **
-  List map(List acc, |V item, Int index->Obj| c)
+  List map(|V item, Int index->Obj| c)
 
   **
   ** Reduce is used to iterate through every item in the list

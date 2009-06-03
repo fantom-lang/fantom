@@ -318,7 +318,7 @@ internal class NavNode
 {
   static NavNode[] map(Resource[] r)
   {
-    return r.map(NavNode[,]) |Resource x->Obj| { return NavNode(x) }
+    return r.map |Resource x->NavNode| { NavNode(x) }
   }
   new make(Resource r) { resource = r }
   Resource resource
@@ -368,8 +368,8 @@ internal class EditList : Widget
 {
   new make(Obj[] items)
   {
-    this.items = items.map(Str[,])  |Obj obj->Str|  { return obj.toStr }
-    this.keep  = items.map(Bool[,]) |Obj obj->Bool| { return true }
+    this.items = items.map |Obj obj->Str|  { obj.toStr }
+    this.keep  = items.map |Obj obj->Bool| { true }
     onMouseDown.add(&onPressed)
   }
 

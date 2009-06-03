@@ -45,8 +45,8 @@ class NamingTest : Test
     uri := Sys.homeDir.normalize.uri
     verifyEq(uri.scheme, "file")
     File home := uri.get
-    verifyEq(home.list.map(Str[,]) |File f->Str| { return f.name },
-      Sys.homeDir.list.map(Str[,]) |File f->Str| { return f.name })
+    verifyEq(home.list.map |File f->Str| { f.name },
+      Sys.homeDir.list.map |File f->Str| { f.name })
 
     // verify we can resolve without trailing slash
     uri = uri.toStr[0..-2].toUri
@@ -55,8 +55,8 @@ class NamingTest : Test
     verifyEq(home.isDir, true)
     verifyEq(home.uri.isDir, true)
     verifyEq(home.uri.toStr.endsWith("/"), true)
-    verifyEq(home.list.map(Str[,]) |File f->Str| { return f.name },
-      Sys.homeDir.list.map(Str[,]) |File f->Str| { return f.name })
+    verifyEq(home.list.map |File f->Str| { f.name },
+      Sys.homeDir.list.map |File f->Str| { f.name })
   }
 
 //////////////////////////////////////////////////////////////////////////
