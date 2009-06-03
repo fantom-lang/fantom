@@ -655,5 +655,7 @@
 - Fix bug in WebReq.absUri
 - Fix webappClient to use Uri instead of Str
 - Remove old webServlet code
+- Regex.glob
+- Flux Goto File command
 
 TODO: remove TODOs in List.java, ClassType.java

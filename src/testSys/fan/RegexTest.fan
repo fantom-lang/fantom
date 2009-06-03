@@ -27,6 +27,35 @@ class RegexTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Glob
+//////////////////////////////////////////////////////////////////////////
+
+  Void testGlob()
+  {
+    re := Regex.glob("foo*bar")
+    verifyEq(re.toStr, "foo.*bar")
+    verifyEq(re.matches("foobar"), true)
+    verifyEq(re.matches("fooxbar"), true)
+    verifyEq(re.matches("foo*._bar"), true)
+    verifyEq(re.matches("fobar"), false)
+
+    re = Regex.glob("a?b?c")
+    verifyEq(re.toStr, "a.b.c")
+    verifyEq(re.matches("a_b_c"), true)
+    verifyEq(re.matches("abc"), false)
+
+    re = Regex.glob("file*.txt")
+    verifyEq(re.toStr, "file.*\\.txt")
+    verifyEq(re.matches("file.txt"), true)
+    verifyEq(re.matches("file22.txt"), true)
+    verifyEq(re.matches("file-txt"), false)
+
+    re = Regex.glob("+()")
+    verifyEq(re.toStr, Str<|\+\(\)|>)
+    verifyEq(re.matches("+()"), true)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Split
 //////////////////////////////////////////////////////////////////////////
 

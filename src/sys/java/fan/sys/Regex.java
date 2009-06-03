@@ -20,9 +20,23 @@ public final class Regex
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static final Regex fromStr(String pattern)
+  public static Regex fromStr(String pattern)
   {
     return new Regex(pattern);
+  }
+
+  public static Regex glob(String pattern)
+  {
+    StringBuilder s = new StringBuilder();
+    for (int i=0; i<pattern.length(); ++i)
+    {
+      int c = pattern.charAt(i);
+      if (FanInt.isAlphaNum(c)) s.append((char)c);
+      else if (c == '?') s.append('.');
+      else if (c == '*') s.append('.').append('*');
+      else s.append('\\').append((char)c);
+    }
+    return new Regex(s.toString());
   }
 
   Regex(String source)

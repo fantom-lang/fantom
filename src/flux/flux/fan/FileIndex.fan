@@ -76,7 +76,7 @@ internal const class FileIndex : Actor
   Uri[] doFind(Uri:FileItem map, Str target)
   {
     // map glob to regex
-    regex := Regex(target.replace("*", ".*").replace("?", "."))
+    regex := Regex.glob(target)
 
     // find all matches
     matches := Uri[,]
