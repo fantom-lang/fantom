@@ -157,7 +157,10 @@ webappClient_Elem.prototype.remove = function(child)
 
 webappClient_Elem.prototype.focus = function()
 {
-  this.elem.focus();
+  // IE throws err if element is not visible, so we need
+  // to wrap in a try block
+  try { this.elem.focus(); }
+  catch (err) {} // ignore
 }
 
 webappClient_Elem.prototype.find = function(func)
@@ -188,9 +191,18 @@ webappClient_Elem.prototype.findAll = function(func, acc)
 
 webappClient_Elem.prototype.onEvent = function(type, useCapture, handler)
 {
-  this.elem.addEventListener(type, function(e) {
-    handler(webappClient_Event.make(e));
-  }, useCapture);
+  if (this.elem.addEventListener)
+  {
+    this.elem.addEventListener(type, function(e) {
+      handler(webappClient_Event.make(e));
+    }, useCapture);
+  }
+  else
+  {
+    this.elem.attachEvent('on'+type, function(e) {
+      handler(webappClient_Event.make(e));
+    });
+  }
 }
 
 webappClient_Elem.prototype.effect = function()
