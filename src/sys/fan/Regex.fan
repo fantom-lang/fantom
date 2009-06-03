@@ -19,7 +19,15 @@ const final class Regex
   **
   ** Compile a regular expression pattern string.
   **
-  new fromStr(Str pattern)
+  static Regex fromStr(Str pattern)
+
+  **
+  ** Make a Regex which will match a glob pattern:
+  **   - "?": match one unknown char (maps to "." in regex)
+  **   - "*": match zero or more unknown char (maps to ".*" in regex)
+  **   - any other character is matched exactly
+  **
+  static Regex glob(Str pattern)
 
   **
   ** Private constructor.

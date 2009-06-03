@@ -6,6 +6,7 @@
 //   27 Dec 07  Andy Frank  Creation
 //
 
+using System.Text;
 using System.Text.RegularExpressions;
 using NRegex = System.Text.RegularExpressions.Regex;
 
@@ -24,6 +25,20 @@ namespace Fan.Sys
     public static Regex fromStr(string pattern)
     {
       return new Regex(pattern);
+    }
+
+    public static Regex glob(string pattern)
+    {
+      StringBuilder s = new StringBuilder();
+      for (int i=0; i<pattern.Length; ++i)
+      {
+        int c = pattern[i];
+        if (FanInt.isAlphaNum(c)) s.Append((char)c);
+        else if (c == '?') s.Append('.');
+        else if (c == '*') s.Append('.').Append('*');
+        else s.Append('\\').Append((char)c);
+      }
+      return new Regex(s.ToString());
     }
 
     Regex(string source)
