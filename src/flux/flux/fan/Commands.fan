@@ -551,7 +551,7 @@ internal class GotoFileCommand : FluxCommand
   override Void invoke(Event? event)
   {
     Str last := Actor.locals.get("fluxText.gotoFileLast", "")
-    r := Dialog.openPromptStr(frame, "Goto File:", last, 6)
+    r := Dialog.openPromptStr(frame, "Goto File:", last, 20)
     if (r == null) return
     Actor.locals.set("fluxText.gotoFileLast", r)
 
