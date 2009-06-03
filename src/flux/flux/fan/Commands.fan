@@ -550,40 +550,65 @@ internal class GotoFileCommand : FluxCommand
   new make() : super(CommandId.gotoFile) {}
   override Void invoke(Event? event)
   {
+    // build dialog
     Str last := Actor.locals.get("fluxText.gotoFileLast", "")
-    r := Dialog.openPromptStr(frame, "Goto File:", last, 20)
-    if (r == null) return
-    Actor.locals.set("fluxText.gotoFileLast", r)
+    field := Text { it.text = last; it.prefCols = 20}
+    pane := GridPane
+    {
+      numCols = 3
+      expandCol = 1
+      halignCells=Halign.fill
+      Label { text="Goto File:" },
+      field,
+      Button { image=Flux.icon(`/x16/question.png`); onAction.add(&showHelp) }
+    }
+    field.onAction.add |e| { e.widget.window.close(Dialog.ok) }
 
-    files := FileIndex.instance.find(r)
+    // prompt user
+    r := Dialog(frame) { title="Goto File"; body=pane; commands=[Dialog.ok, Dialog.cancel] }.open
+    if (r != Dialog.ok) return
+    target := field.text
+    Actor.locals.set("fluxText.gotoFileLast", target)
+
+    // lookup target in our index
+    files := FileIndex.instance.find(target)
     if (files.size == 0)
     {
-      Dialog.openErr(frame, "File not found: $r")
+      Dialog.openErr(frame, "File not found: $target")
       return
     }
 
+    // if exactly one match, go straight there
     if (files.size == 1)
     {
       frame.load(files[0])
       return
     }
 
+    // prompt user with list of files (use same dialog as Recent Files)
     items := HistoryItem[,]
-    files.each |uri|
-    {
-      items.add(HistoryItem { it.uri = uri; it.iconUri = FileResource.fileToIcon(uri.toFile).uri })
-    }
-
+    files.each |uri| { items.add(HistoryItem { it.uri = uri; it.iconUri = FileResource.fileToIcon(uri.toFile).uri }) }
     Dialog? dlg
     picker := HistoryPicker(items, true) |HistoryItem item, Event e|
     {
       frame.load(item.uri, LoadMode(e))
       dlg.close
     }
-
-    pane := ConstraintPane { minw = 500; maxh = 300; add(picker) }
-    dlg = Dialog(frame) { title="Goto File"; body=pane; commands=[Dialog.ok, Dialog.cancel] }
+    pickerPane := ConstraintPane { minw = 500; maxh = 300; add(picker) }
+    dlg = Dialog(frame) { title="Goto File"; body=pickerPane ; commands=[Dialog.ok, Dialog.cancel] }
     dlg.open
+  }
+
+  Void showHelp()
+  {
+    msg :=
+    """Goto File Cheat Sheet:\n
+       - Glob any file name such as "SideBar.fan" or "SideBar*.fan"\n
+       - Glob any file base name (without extension) such as "SideBar" or "SideBar*"\n
+       - Match camel case abbreviation such as "SB" for "SideBar"\n
+       Indexing is based on NavBar's go into lists (very primitive right
+       now). See Regex.glob for definition of glob syntax"""
+    Dialog.openInfo(frame, msg)
   }
 }
 
