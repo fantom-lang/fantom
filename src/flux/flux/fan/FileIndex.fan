@@ -28,6 +28,17 @@ internal const class FileIndex : Actor
   const Log log := Log.get("fluxFileIndex")
 
   **
+  ** Check if done indexing and ready to search.
+  **
+  Bool ready()
+  {
+    try
+      return send(`ready`).get(300ms)
+    catch (TimeoutErr e)
+      return false
+  }
+
+  **
   ** Find where target is a glob like "Str*" of either the
   ** file name or base name (without ext).  Or the target can
   ** be camel case abbr such as "FBB" for "FooBarBaz".
@@ -54,6 +65,9 @@ internal const class FileIndex : Actor
 
   override Obj? receive(Obj? msg, Context cx)
   {
+    // handle ready message
+    if (msg === `ready`) return true
+
     // init list if not created yet
     map := cx["map"] as Uri:FileItem
     if (map == null) cx["map"] = map = Uri:FileItem[:]

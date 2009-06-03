@@ -550,6 +550,12 @@ internal class GotoFileCommand : FluxCommand
   new make() : super(CommandId.gotoFile) {}
   override Void invoke(Event? event)
   {
+    if (!FileIndex.instance.ready)
+    {
+      Dialog.openInfo(frame, "Still indexing file system...")
+      return
+    }
+
     // build dialog
     Str last := Actor.locals.get("fluxText.gotoFileLast", "")
     field := Text { it.text = last; it.prefCols = 20}
