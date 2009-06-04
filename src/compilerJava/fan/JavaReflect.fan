@@ -198,7 +198,7 @@ internal class JavaReflect
   **
   static CType[] toFanTypes(JavaBridge bridge, Class[] cls)
   {
-    return cls.map(CType[,]) |Class c->CType| { return toFanType(bridge, c) }
+    return cls.map |Class c->CType| { toFanType(bridge, c) }
   }
 
   **
