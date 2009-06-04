@@ -184,6 +184,8 @@ class XmlTest : ObixTest
         <abstime name='b' val='2009-01-15T13:54:00-05:00'/>
         <abstime name='c' val='2009-01-15T13:54:00Z' tz='London'/>
         <abstime name='d' val='2009-01-15T13:54:00-05:00' tz='America/New_York'/>
+        <abstime name='e' val='9999-12-31T23:59:59.999Z'/>
+        <abstime name='f' val='0000-01-01T00:00:00Z'/>
        </obj>",
        ObixObj
        {
@@ -192,6 +194,8 @@ class XmlTest : ObixTest
          ObixObj { name="b"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("Etc/GMT+5")) },
          ObixObj { name="c"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("London")) },
          ObixObj { name="d"; val=DateTime(2009, Month.jan, 15, 13, 54, 0, 0, TimeZone("New_York")); tz=TimeZone("New_York") },
+         ObixObj { name="e"; val=DateTime(2099, Month.dec, 31, 23, 59, 59, 999_000_000, TimeZone.utc) },
+         ObixObj { name="f"; val=DateTime(1901, Month.jan,  1,  0,  0,  0, 0, TimeZone.utc) },
        })
   }
 
@@ -220,12 +224,14 @@ class XmlTest : ObixTest
         <date name='def'/>
         <date name='a' val='2010-01-30'/>
         <date name='b' val='1995-12-05' tz='America/Chicago'/>
+        <date name='c' val='9999-12-31'/>
        </obj>",
        ObixObj
        {
          ObixObj { elemName="date"; name="def"; isNull=true },
          ObixObj { name="a"; val=Date(2010, Month.jan, 30) },
          ObixObj { name="b"; val=Date(1995, Month.dec, 05); tz=TimeZone("Chicago") },
+         ObixObj { name="c"; val=Date(9999, Month.dec, 31) },
        })
    }
 
