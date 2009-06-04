@@ -166,7 +166,7 @@ final class Map
   ** Remove all key/value pairs from the map.  Return this.
   ** Throw ReadonlyErr if readonly.
   **
-  Void clear()
+  M clear()
 
   **
   ** This field configures case sensitivity for maps with Str keys.  When

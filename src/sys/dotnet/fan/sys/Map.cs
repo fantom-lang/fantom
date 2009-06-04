@@ -212,10 +212,11 @@ namespace Fan.Sys
       return dup;
     }
 
-    public void clear()
+    public Map clear()
     {
       modify();
       m_map.Clear();
+      return this;
     }
 
     public bool caseInsensitive() { return m_caseInsensitive; }
