@@ -20,7 +20,7 @@ class JavaPod : CPod
     this.name = "[java]" + package
     this.packageName = package
     if (classes != null)
-      this.types = classes.map(JavaType[,]) |Str n->JavaType| { return JavaType(this, n) }
+      this.types = classes.map |Str n->JavaType| { JavaType(this, n) }
     isInterop = (package == "fanx.interop")
   }
 

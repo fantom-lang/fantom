@@ -63,7 +63,7 @@ class JavaMethod : JavaSlot, CMethod
 
   Void setParamTypes(CType[] types)
   {
-    params = types.map(JavaParam[,]) |CType t, Int i->CParam|
+    params = types.map |CType t, Int i->CParam|
     {
       return JavaParam("p$i", t)
     }
