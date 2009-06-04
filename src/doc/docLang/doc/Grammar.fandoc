@@ -86,7 +86,7 @@ Stmt [#stmt]
   <block>          :=  <stmt> | ( "{" <stmts> "}" )
   <stmts>          :=  <stmt>*
   <stmt>           :=  <break> | <continue> | <for> | <if> | <return> | <switch> |
-                       <throw> | <while> | <try> | <exprStmt> | <localDef>
+                       <throw> | <while> | <try> | <exprStmt> | <localDef> | <itAdd>
   <break>          :=  "break" <eos>
   <continue>       :=  "continue" <eos>
   <for>            :=  "for" "(" [<forInit>] ";" [<expr>] ";" [<expr>] ")" <block>
@@ -97,6 +97,7 @@ Stmt [#stmt]
   <while>          :=  "while" "(" <expr> ")" <block>
   <exprStmt>       :=  <expr> <eos>
   <localDef>       :=  [<type>] <id> [":=" <expr>] <eos>
+  <itAdd>          :=  <expr> ("," <expr>)*
 
   <try>            :=  "try" <block> <catch>* [<finally>]
   <catch>          :=  "catch" [<catchDef>] <block>
@@ -114,7 +115,7 @@ Expr [#expr]
   <assignExpr>     :=  <ternaryExpr> [<assignOp> <assignExpr>]
   <assignOp>       :=  "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>="  |
                        "&=" | "^=" | "|="
-  <ternaryExpr>    :=  <condOrExpr> "?" <condOrExpr> ":" <condOrExpr>
+  <ternaryExpr>    :=  <condOrExpr> ["?" <condOrExpr> ":" <condOrExpr>]
   <condOrExpr>     :=  <condAndExpr>  ("||" <condAndExpr>)*
   <condAndExpr>    :=  <equalityExpr> ("&&" <equalityExpr>)*
   <equalityExpr>   :=  <relationalExpr> (("==" | "!=" | "===" | "!==") <relationalExpr>)*
