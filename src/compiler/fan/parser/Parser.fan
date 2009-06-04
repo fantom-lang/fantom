@@ -790,7 +790,7 @@ public class Parser : CompilerSupport
   **
   ** Statement:
   **   <stmt>  :=  <break> | <continue> | <for> | <if> | <return> | <switch> |
-  **               <throw> | <while> | <try> | <exprStmt> | <localDef>
+  **               <throw> | <while> | <try> | <exprStmt> | <localDef> | <itAdd>
   **
   private Stmt stmt()
   {
@@ -816,6 +816,7 @@ public class Parser : CompilerSupport
   ** Expression or local variable declaration:
   **   <exprStmt>  :=  <expr> <eos>
   **   <localDef>  :=  [<type>] <id> [":=" <expr>] <eos>
+  **   <itAdd>     :=  <expr> ("," <expr>)*
   **
   private Stmt exprOrLocalDefStmt(Bool isEndOfStmt)
   {
@@ -1146,7 +1147,7 @@ public class Parser : CompilerSupport
 
   **
   ** Ternary expression:
-  **   <ternaryExpr> :=  <elvisExpr> "?" <elvisExpr> ":" <elvisExpr>
+  **   <ternaryExpr> :=  <condOrExpr> ["?" <condOrExpr> ":" <condOrExpr>]
   **
   private Expr ternary()
   {
