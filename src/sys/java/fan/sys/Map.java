@@ -216,10 +216,11 @@ public final class Map
     return dup;
   }
 
-  public final void clear()
+  public final Map clear()
   {
     modify();
     map.clear();
+    return this;
   }
 
   public final boolean caseInsensitive()
