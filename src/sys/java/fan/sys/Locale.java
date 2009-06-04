@@ -263,6 +263,8 @@ public class Locale
   // use predefined string to avoid unnecessary string concat
   static final String getNoDef = "_locale_nodef_";
 
+  public static final Locale en = Locale.fromStr("en");
+
   final String str;
   final String lang;
   final String country;

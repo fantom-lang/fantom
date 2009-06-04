@@ -657,5 +657,6 @@
 - Remove old webServlet code
 - Regex.glob
 - Flux Goto File command
+- DateTime.toHttpStr use toLocale to avoid race conditions
 
 TODO: remove TODOs in List.java, ClassType.java
