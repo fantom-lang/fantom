@@ -124,6 +124,15 @@ internal class ObixUtil
 
   internal static DateTime parseAbstime(Str s, XElem elem)
   {
+    try
+    {
+      // if year is out of Fan range, then just set to 1901/2099
+      year := s[0..3].toInt
+      if (year < 1901) s = "1901" + s[4..-1]
+      else if (year > 2099) s = "2099" + s[4..-1]
+    }
+    catch {}
+
     tz := elem.get("tz", false)
     if (tz != null)
       return DateTime.fromStr("$s $tz", true)
