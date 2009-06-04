@@ -433,11 +433,11 @@ public final class DateTime
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-  public String toLocale() { return toLocale((String)null); }
-  public String toLocale(String pattern)
+  public String toLocale() { return toLocale((String)null, null); }
+  public String toLocale(String pattern) { return toLocale(pattern, null); }
+  private String toLocale(String pattern, Locale locale)
   {
     // locale specific default
-    Locale locale = null;
     if (pattern == null)
     {
       if (locale == null) locale = Locale.current();
@@ -793,28 +793,31 @@ public final class DateTime
 // HTTP
 //////////////////////////////////////////////////////////////////////////
 
+  public String toHttpStr()
+  {
+    return toTimeZone(TimeZone.utc).toLocale("WWW, DD MMM YYYY hh:mm:ss", Locale.en) + " GMT";
+  }
+
   public static DateTime fromHttpStr(String s) { return fromHttpStr(s, true); }
   public static DateTime fromHttpStr(String s, boolean checked)
   {
-    for (int i=0; i<httpFormats.length; ++i)
+    synchronized (httpFormats)
     {
-      try
+      for (int i=0; i<httpFormats.length; ++i)
       {
-        java.util.Date date = httpFormats[i].parse(s);
-        return fromJava(date.getTime());
-      }
-      catch (Exception e)
-      {
+        try
+        {
+          java.util.Date date = httpFormats[i].parse(s);
+          return fromJava(date.getTime());
+        }
+        catch (Exception e)
+        {
+        }
       }
     }
 
     if (!checked) return null;
     throw ParseErr.make("Invalid HTTP DateTime: '" + s + "'").val;
-  }
-
-  public String toHttpStr()
-  {
-    return httpFormats[0].format(new java.util.Date(toJava()));
   }
 
   private static final SimpleDateFormat httpFormats[] =

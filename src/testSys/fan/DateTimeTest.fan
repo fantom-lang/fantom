@@ -1036,6 +1036,15 @@ class DateTimeTest : Test
     verifyEq(DateTime.fromHttpStr("Sun Nov  6 08:49:37 1994"), x)
     verifyEq(x.toHttpStr, "Sun, 06 Nov 1994 08:49:37 GMT")
 
+    x = DateTime("2009-06-04T07:52:00-04:00 New_York")
+    verifyEq(x.toHttpStr, "Thu, 04 Jun 2009 11:52:00 GMT")
+    verifyEq(DateTime.fromHttpStr("Thu, 04 Jun 2009 11:52:00 GMT"), x)
+    Locale("es").use
+    {
+      verifyEq(x.toHttpStr, "Thu, 04 Jun 2009 11:52:00 GMT")
+      verifyEq(DateTime.fromHttpStr("Thu, 04 Jun 2009 11:52:00 GMT"), x)
+    }
+
     verifyEq(DateTime.fromHttpStr("06 Nov 1994 08:49:37", false), null)
     verifyErr(ParseErr#) |,| { DateTime.fromHttpStr("Sun, 06 Nov 08:49:37 GMT") }
   }
