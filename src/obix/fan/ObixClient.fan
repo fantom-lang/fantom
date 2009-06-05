@@ -103,6 +103,7 @@ class ObixClient
 
     // invoke the request
     out := invoke(batchUri, in)
+    if (out.elemName == "err") throw Err(out.toStr)
 
     // return the list of children
     return out.list
