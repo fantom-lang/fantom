@@ -2150,7 +2150,8 @@ public class Parser : CompilerSupport
 
   **
   ** Method type signature:
-  **   <funcType>       :=  "|" <formals> ["->" <type> "|"
+  **   <funcType>       :=  "|" ("," | <funcTypeSig>) "|"
+  **   <funcTypeSig>    :=  <formals> ["->" <type>]
   **   <formals>        :=  [<formal> ("," <formal>)*]
   **   <formal>         :=  <formFull> | <formalInferred> | <formalTypeOnly>
   **   <formalFull>     :=  <type> <id>
