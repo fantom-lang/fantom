@@ -93,7 +93,7 @@ class Doc : RichTextModel
 
   override Int offsetAtLine(Int lineIndex)
   {
-    Int r := text.splitLines[0...lineIndex]
+    Int r := text.splitLines[0..<lineIndex]
       .reduce(0) |Obj o, Str line->Int| { return line.size+o+1 }
     log.debug("offsetAtLine($lineIndex) => $r")
     return r
@@ -101,7 +101,7 @@ class Doc : RichTextModel
 
   override Str textRange(Int start, Int len)
   {
-    r := text[start...start+len]
+    r := text[start..<start+len]
     log.debug("textRange($start, $len) => $r.toCode")
     return r
   }
@@ -112,7 +112,7 @@ class Doc : RichTextModel
 
     // update model
     oldText := textRange(start, len)
-    text = text[0...start] + newText + text[start+len..-1]
+    text = text[0..<start] + newText + text[start+len..-1]
 
     // must fire modify event
     tc := TextChange
