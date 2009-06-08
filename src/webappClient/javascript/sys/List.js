@@ -75,6 +75,11 @@ sys_List.clear = function(self)
   self.splice(0, self.length);
   return self;
 }
+sys_List.fill = function(self, val, times)
+{
+  for (var i=0; i<times; i++) self.push(val);
+  return self;
+}
 sys_List.slice = function(self, range)
 {
   var size = self.length;
