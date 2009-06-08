@@ -544,7 +544,7 @@ if (c != null)
       }
       else
       {
-        out.w("sys_Obj.$ce.method.name(")
+        out.w("sys_Obj.${var(ce.method.name)}(")
         expr(ce.target)
       }
       ce.args.each |arg, i|
@@ -564,7 +564,8 @@ if (c != null)
       if (isPrimitive(ce.target.ctype.toStr) ||
           ce.target.ctype.isList ||
           ce.target.ctype.isFunc ||
-          ce.target is TypeCheckExpr)
+          ce.target is TypeCheckExpr ||
+          ce.target is ItExpr)
       {
         ctype := ce.target.ctype
         route := false
@@ -759,10 +760,19 @@ if (c != null)
 
   Void fieldExpr(FieldExpr fe, Bool get := true)
   {
-    if (fe.target?.ctype?.isList == true && fe.name == "size")
+    if (fe.target?.ctype?.isList == true)
     {
-      expr(fe.target)
-      out.w(".length")
+      if (fe.name == "size" && get)
+      {
+        expr(fe.target)
+        out.w(".length")
+      }
+      else
+      {
+        out.w("sys_List.${var(fe.name)}(")
+        expr(fe.target)
+        out.w(get ? ")" : ",")
+      }
       return
     }
     cvar := fe.target?.toStr == "\$cvars"
@@ -869,6 +879,7 @@ if (c != null)
     "isImmutable": true,
     "toStr":       true,
     "type":        true,
+    "with":        true,
   ]
 
   Str var(Str name)

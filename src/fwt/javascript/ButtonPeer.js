@@ -30,22 +30,36 @@ fwt_ButtonPeer.prototype.text = "";
 
 fwt_ButtonPeer.prototype.create = function(parentElem)
 {
-  var button = document.createElement("input");
-  button.type = "button";
   var div = this.emptyDiv();
-  div.appendChild(button);
+  with (div.style)
+  {
+    font      = "bold 10pt Arial";
+    padding   = "2px 4px";
+    textAlign = "center";
+    border    = "1px solid #555";
+    cursor    = "default";
+    backgroundColor = "#eee";
+    // IE workaround
+    try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc))"; } catch (err) {} // ignore
+    MozBorderRadius    = "5px";
+    webkitBorderRadius = "5px";
+  }
   parentElem.appendChild(div);
   return div;
 }
 
 fwt_ButtonPeer.prototype.sync = function(self)
 {
-  var b = this.elem.firstChild;
-  b.value = this.text;
-  b.onclick = function(event)
+  var div = this.elem;
+  while (div.firstChild != null) div.removeChild(div.firstChild);
+  div.appendChild(document.createTextNode(this.text));
+  div.onclick = function(event)
   {
     var list = self.onAction.list();
     for (var i=0; i<list.length; i++) list[i](event);
   }
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  // account for padding/border
+  var w = this.size.w - 10;
+  var h = this.size.h - 6;
+  fwt_WidgetPeer.prototype.sync.call(this, self, w, h);
 }
