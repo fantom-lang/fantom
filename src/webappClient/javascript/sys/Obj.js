@@ -186,3 +186,9 @@ sys_Obj.echo = function(str)
   }
 }
 
+sys_Obj.$with = function(self, func)
+{
+  func(self);
+  return self;
+}
+
