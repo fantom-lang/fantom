@@ -572,7 +572,15 @@ if (c != null)
         if (ce.target is TypeCheckExpr) ctype = ce.target->check
         if (ctype.isList)      { out.w("sys_List.${var(ce.name)}("); route=true }
         else if (ctype.isFunc) { out.w("sys_Func.${var(ce.name)}("); route=true }
-        else if (isPrimitive(ctype.toStr)) { out.w("${qname(ctype)}.${var(ce.name)}("); route=true }
+        else if (isPrimitive(ctype.toStr))
+        {
+          mname := ce.name == "<ctor>" ? "make " : ce.name
+          first := ce.method.params.first
+          if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
+            mname = "fromStr"
+          out.w("${qname(ctype)}.${var(mname)}(")
+          route = true
+        }
         i := 0
         if (!route)
         {
