@@ -52,4 +52,22 @@ class MiscTest : JavaTest
     verifyEq(obj->bar.type.name, "Foo")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #629 NoClassDefFoundError when accessing public static final field with JavaFFI
+//////////////////////////////////////////////////////////////////////////
+
+  Void test629()
+  {
+    // test for bug report 423 31-Dec-08
+    compile(
+     "using [java] java.io
+      class Foo
+      {
+        static Int foo() { ObjectStreamConstants.PROTOCOL_VERSION_1 }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->foo, 1)
+  }
+
 }
