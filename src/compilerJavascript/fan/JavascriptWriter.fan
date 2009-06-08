@@ -574,10 +574,14 @@ if (c != null)
         else if (ctype.isFunc) { out.w("sys_Func.${var(ce.name)}("); route=true }
         else if (isPrimitive(ctype.toStr))
         {
-          mname := ce.name == "<ctor>" ? "make " : ce.name
-          first := ce.method.params.first
-          if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
-            mname = "fromStr"
+          mname := ce.name
+          if (ce.method.isCtor || mname == "<ctor>")
+          {
+            if (mname == "<ctor>") mname = "make"
+            first := ce.method.params.first
+            if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
+              mname = "fromStr"
+          }
           out.w("${qname(ctype)}.${var(mname)}(")
           route = true
         }
