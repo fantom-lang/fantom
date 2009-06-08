@@ -101,7 +101,7 @@ public class FFieldRef
     {
       StringBuilder s = new StringBuilder();
       s.append(parent.jimpl());
-      if (mixin) s.append('$');
+      if (mixin && !parent.isFFI()) s.append('$');
       s.append('.').append(name).append(':');
       type.jsig(s);
       jsig = s.toString();
