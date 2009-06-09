@@ -16,10 +16,8 @@ var sys_InStream = sys_Obj.$extend(sys_Obj);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_InStream.prototype.$ctor = function()
-{
-  this.$in = null;
-}
+sys_InStream.prototype.$ctor = function() { this.$in = null; }
+sys_InStream.prototype.$make = function($in) { this.$in = $in; }
 
 //////////////////////////////////////////////////////////////////////////
 // InStream
@@ -40,8 +38,60 @@ sys_InStream.prototype.skip = function(n)
 
 // readAllBuf = function()
 // readBufFully = function(buf, n)
+// peek = function()
+// readU1 = function()
+// readS1 = function()
+// readU2 = function()
+// readS2 = function()
+// readU4 = function()
+// readS4 = function()
+// readS8 = function()
+// readF4 = function()
+// readF8 = function()
+// readDecimal = function()
+// readBool = function()
+// readUtf = function()
+// charset = function(charset)
+// readChar = function()
+// unreadChar = function(c)
+// peekChar = function()
 
-// ...
+sys_InStream.prototype.readLine = function(max)
+{
+  if (max == undefined) max = sys_Int.Chunk;
+
+  // max limit
+  var maxChars = (max != null) ? max.valueOf() : sys_Int.maxVal;
+  if (maxChars <= 0) return "";
+
+  // read first char, if at end of file bail
+  var c = this.$in.readChar();
+  if (c == null) return null;
+
+  // loop reading chars until we hit newline
+  // combo or end of stream
+  var buf = "";
+  while (true)
+  {
+    // check for \n, \r\n, or \r
+    if (c == '\n') break;
+    if (c == '\r')
+    {
+      c = this.$in.readChar();
+      if (c >= 0 && c != 10) this.$in.unreadChar(c);
+      break;
+    }
+
+    // append to working buffer
+    buf += String.fromCharCode(c);
+    if (buf.length >= maxChars) break;
+
+    // read next char
+    c = this.$in.readChar();
+    if (c == null) break;
+  }
+  return buf;
+}
 
 sys_InStream.prototype.readObj = function(options)
 {

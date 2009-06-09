@@ -44,7 +44,7 @@ sys_StrBuf.prototype.addChar = function(ch)
 
 sys_StrBuf.prototype.isEmpty = function()
 {
-  return this.m_str == 0;
+  return this.m_str.length == 0;
 }
 
 sys_StrBuf.prototype.toStr = function()

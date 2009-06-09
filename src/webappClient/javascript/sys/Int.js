@@ -195,3 +195,4 @@ sys_Int.rshift = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; re
 sys_Int.maxVal = 9223372036854775807;
 sys_Int.minVal = -9223372036854775808;
 sys_Int.defVal = 0;
+sys_Int.Chunk  = 4096;
