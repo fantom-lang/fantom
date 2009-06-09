@@ -247,7 +247,7 @@ fanx_Tokenizer.prototype.number = function(neg)
     if (floatSuffix)
     {
       if (s == null)
-        this.val = whole;
+        this.val = sys_Float.make(whole);
       else
         this.val = sys_Float.fromStr(s);
       return fanx_Token.FLOAT_LITERAL;
@@ -264,7 +264,7 @@ fanx_Tokenizer.prototype.number = function(neg)
       }
       else
       {
-        this.val = num;
+        this.val = sys_Decimal.make(num);
         return fanx_Token.DECIMAL_LITERAL;
       }
     }
@@ -278,7 +278,7 @@ fanx_Tokenizer.prototype.number = function(neg)
     }
     else
     {
-      this.val = sys_Int.make(num);
+      this.val = num;
       return fanx_Token.INT_LITERAL;
     }
   }
@@ -316,7 +316,7 @@ fanx_Tokenizer.prototype.hex = function()
     this.consume();
   }
 
-  this.val = sys_Int.make(val);
+  this.val = val;
   return type;
 }
 
@@ -384,7 +384,7 @@ fanx_Tokenizer.prototype.ch = function()
   if (this.cur != 39/*'\''*/) throw this.err("Expecting ' close of char literal");
   this.consume();
 
-  this.val = sys_Int.make(c);
+  this.val = c;
   return fanx_Token.INT_LITERAL;
 }
 

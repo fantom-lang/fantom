@@ -209,9 +209,9 @@ class JavascriptWriter : CompilerSupport
     switch (f.fieldType.qname)
     {
       case "sys::Bool":    def = "false"
-      case "sys::Decimal": // fall
-      case "sys::Float":   def = "0"
-      case "sys::Int":     def = "sys_Int.make(0)"
+      case "sys::Decimal": def = "sys_Decimal.make(0)"
+      case "sys::Float":   def = "sys_Float.make(0)"
+      case "sys::Int":     def = "0"
     }
 
     if (f.isNative)
@@ -413,9 +413,9 @@ if (c != null)
       case ExprId.nullLiteral:  out.w("null")
       case ExprId.trueLiteral:  out.w("true")
       case ExprId.falseLiteral: out.w("false")
-      case ExprId.intLiteral:   out.w("sys_Int.make($ex)")
-      case ExprId.floatLiteral: out.w(ex)
-      case ExprId.decimalLiteral: out.w(ex)
+      case ExprId.intLiteral:   out.w(ex)
+      case ExprId.floatLiteral: out.w("sys_Float.make($ex)")
+      case ExprId.decimalLiteral: out.w("sys_Decimal.make($ex)")
       case ExprId.strLiteral:   out.w("\"").w(ex->val.toStr.toCode('\"', true)[1..-2]).w("\"")
       case ExprId.durationLiteral: out.w("sys_Duration.fromStr(\"").w(ex).w("\")")
       case ExprId.uriLiteral:   out.w("sys_Uri.fromStr(").w(ex->val.toStr.toCode('\"', true)).w(")")
@@ -691,7 +691,6 @@ if (c != null)
         Str? op := null
         switch (se.op)
         {
-          case ShortcutOp.eq:     op = "equals"
           case ShortcutOp.and:    op = "and"
           case ShortcutOp.div:    op = "div"
           case ShortcutOp.or:     op = "or"
@@ -703,6 +702,19 @@ if (c != null)
           if (se.isAssign) { expr(lhs); out.w(" = ") }
           if (se.opToken == Token.notEq) out.w("!")
           out.w("sys_Int.$op(")
+          expr(lhs)
+          out.w(",")
+          expr(rhs)
+          out.w(")")
+          return
+        }
+      }
+      if (se.target.ctype?.qname == "sys::Float")
+      {
+        if (se.op == ShortcutOp.eq)
+        {
+          if (se.opToken == Token.notEq) out.w("!")
+          out.w("sys_Float.equals(")
           expr(lhs)
           out.w(",")
           expr(rhs)

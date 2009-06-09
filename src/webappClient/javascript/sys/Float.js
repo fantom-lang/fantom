@@ -18,9 +18,12 @@ var sys_Float = sys_Obj.$extend(sys_Num);
 
 sys_Float.prototype.$ctor = function() {}
 
-//////////////////////////////////////////////////////////////////////////
-// Methods
-//////////////////////////////////////////////////////////////////////////
+sys_Float.make = function(val)
+{
+  var x = new Number(val);
+  x.$fanType = sys_Type.find("sys::Float");
+  return x;
+}
 
 sys_Float.prototype.type = function()
 {
@@ -28,34 +31,37 @@ sys_Float.prototype.type = function()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Static
+// Identity
 //////////////////////////////////////////////////////////////////////////
 
-// Identity
 sys_Float.equals = function(self, that)
 {
-  if ((typeof self) == "number")
+  if (that != null && self.$fanType == that.$fanType)
   {
-    if (isNaN(self)) return isNaN(that);
-    return self == that;
+    if (isNaN(self) || isNaN(that)) return false;
+    return self.valueOf() == that.valueOf();
   }
   return false;
 }
+
 sys_Float.compare = function(self, that)
 {
   if (self == null) return that == null ? 0 : -1;
   if (that == null) return 1;
   if (isNaN(self)) return isNaN(that) ? 0 : -1;
   if (isNaN(that)) return 1;
-  if (self < that) return -1; return self == that ? 0 : 1;
+  if (self < that) return -1; return self.valueOf() == that.valueOf() ? 0 : 1;
 }
 
+//////////////////////////////////////////////////////////////////////////
 // Math
+//////////////////////////////////////////////////////////////////////////
+
 sys_Float.abs = function(self) { return Math.abs(self); }
 sys_Float.approx = function(self, that, tolerance)
 {
   // need this to check +inf, -inf, and nan
-  if (sys_Obj.equals(self, that)) return true;
+  if (sys_Float.equals(self, that)) return true;
   var t = tolerance == null
     ? Math.min(Math.abs(self/1e6), Math.abs(that/1e6))
     : tolerance;
@@ -82,12 +88,15 @@ sys_Float.tan   = function(self) { return Math.tan(self); }
 sys_Float.toDegrees = function(self) { return self * 180 / Math.PI; }
 sys_Float.toRadians = function(self) { return self * Math.PI / 180; }
 
+//////////////////////////////////////////////////////////////////////////
 // Str
+//////////////////////////////////////////////////////////////////////////
+
 sys_Float.fromStr = function(s, checked)
 {
-  if (s == "NaN") return Number.NaN;
-  if (s == "INF") return Number.POSITIVE_INFINITY;
-  if (s == "-INF") return Number.NEGATIVE_INFINITY;
+  if (s == "NaN") return sys_Float.nan;
+  if (s == "INF") return sys_Float.posInf;
+  if (s == "-INF") return sys_Float.negInf;
   var num = parseFloat(s);
   if (isNaN(num))
   {
@@ -96,11 +105,12 @@ sys_Float.fromStr = function(s, checked)
   }
   return num;
 }
+
 sys_Float.toStr = function(self)
 {
   if (isNaN(self)) return "NaN";
-  if (self == Number.POSITIVE_INFINITY) return "INF";
-  if (self == Number.NEGATIVE_INFINITY) return "-INF";
+  if (self == sys_Float.posInf) return "INF";
+  if (self == sys_Float.negInf) return "-INF";
   return ""+self;
 }
 
@@ -108,8 +118,9 @@ sys_Float.toStr = function(self)
 // Static Fields
 //////////////////////////////////////////////////////////////////////////
 
-sys_Float.posInf = Number.POSITIVE_INFINITY;
-sys_Float.negInf = Number.NEGATIVE_INFINITY;
-sys_Float.nan    = Number.NaN;
-sys_Float.e      = Math.E;
-sys_Float.pi     = Math.PI;
+// TEMP - see sysPod.js
+//sys_Float.posInf = sys_Float.make(Number.POSITIVE_INFINITY);
+//sys_Float.negInf = sys_Float.make(Number.NEGATIVE_INFINITY);
+//sys_Float.nan    = sys_Float.make(Number.NaN);
+//sys_Float.e      = sys_Float.make(Math.E);
+//sys_Float.pi     = sys_Float.make(Math.PI);

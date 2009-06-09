@@ -136,6 +136,24 @@ sys_InStream.prototype.readLine = function(max)
   return buf;
 }
 
+sys_InStream.prototype.readAllLines = function()
+{
+  try
+  {
+    var list = sys_List.make(sys_Type.find("sys::Str"), []);
+    var line = "";
+    while ((line = this.readLine()) != null)
+      list.push(line);
+    return list;
+  }
+  catch (err) { sys_Obj.echo(err); }
+// TODO
+//  finally
+//  {
+//    try { this.close(); } catch (err) { echo(err); }
+//  }
+}
+
 sys_InStream.prototype.readObj = function(options)
 {
   if (options == undefined) options = null;
