@@ -47,6 +47,11 @@ sys_StrBuf.prototype.isEmpty = function()
   return this.m_str.length == 0;
 }
 
+sys_StrBuf.prototype.size = function()
+{
+  return this.m_str.length;
+}
+
 sys_StrBuf.prototype.toStr = function()
 {
   return this.m_str;
