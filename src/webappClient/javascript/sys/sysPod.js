@@ -30,7 +30,7 @@ with (sys_Pod.$add("sys"))
   $at("Test",      "sys::Obj");
   $at("DateTime",  "sys::Obj");
   $at("Date",      "sys::Obj");
-  // TODO: time
+  $at("Time",      "sys::Obj");
   // TODO: timezone
   $at("Type",      "sys::Obj");
   $at("Weekday",   "sys::Enum");
