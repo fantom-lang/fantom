@@ -23,13 +23,6 @@ sys_Int.prototype.type = function() { return sys_Type.find("sys::Int"); }
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Int.make = function(val)
-{
-  var x = new Number(val);
-  x.$fanType = sys_Type.find("sys::Int");
-  return x;
-}
-
 sys_Int.fromStr = function(s, radix, checked)
 {
   if (radix == undefined) radix = 10;
@@ -87,10 +80,7 @@ sys_Int.toStr = function(self)
 
 sys_Int.equals = function(self, obj)
 {
-  if (obj != null && self.$fanType == obj.$fanType)
-    return self.valueOf() == obj.valueOf();
-  else
-    return false;
+  return self == obj;
 }
 
 sys_Int.abs = function(self) { return self < 0 ? -self : self; }
@@ -183,10 +173,10 @@ sys_Int.div = function(a, b) { return Math.floor(a/b); }
 
 // Bitwise
 // TODO - these impls only work upto 32 bits!!!
-sys_Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return sys_Int.make(x); }
-sys_Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return sys_Int.make(x); }
-sys_Int.lshift = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return sys_Int.make(x); }
-sys_Int.rshift = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return sys_Int.make(x); }
+sys_Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.lshift = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.rshift = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
 
 //////////////////////////////////////////////////////////////////////////
 // Static Fields

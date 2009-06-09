@@ -199,7 +199,7 @@ sys_Type.toFanType = function(obj)
   if (obj== null) throw sys_Err.make("sys::Type.toFanType: obj is null");
   if (obj.$fanType != undefined) return obj.$fanType;
   if ((typeof obj) == "boolean" || obj instanceof Boolean) return sys_Type.find("sys::Bool");
-  if ((typeof obj) == "number"  || obj instanceof Number)  return sys_Type.find("sys::Float");
+  if ((typeof obj) == "number"  || obj instanceof Number)  return sys_Type.find("sys::Int");
   if ((typeof obj) == "string"  || obj instanceof String)  return sys_Type.find("sys::Str");
   throw sys_Err.make("sys::Type.toFanType: Not a Fan type: " + obj);
 }

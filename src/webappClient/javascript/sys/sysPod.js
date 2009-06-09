@@ -17,7 +17,7 @@ with (sys_Pod.$add("sys"))
   $at("Duration",  "sys::Obj");
   $at("Func",      "sys::Obj");
   $at("Int",       "sys::Num");
-  // TODO: decimal
+  $at("Decimal",   "sys::Num");
   $at("Float",     "sys::Num");
   $at("List",      "sys::Obj");
   $at("Map",       "sys::Obj");
@@ -115,4 +115,14 @@ with (sys_Pod.$add("sys"))
   // TODO: UnresolvedErr
   // TODO: UnsupportedErr
 };
+
+// TODO - we really need to emit the type info *before*, but not
+// sure quite how that should work yet.  So in the mean time, stick
+// and static code requiring TypeInfo here
+
+sys_Float.posInf = sys_Float.make(Number.POSITIVE_INFINITY);
+sys_Float.negInf = sys_Float.make(Number.NEGATIVE_INFINITY);
+sys_Float.nan    = sys_Float.make(Number.NaN);
+sys_Float.e      = sys_Float.make(Math.E);
+sys_Float.pi     = sys_Float.make(Math.PI);
 

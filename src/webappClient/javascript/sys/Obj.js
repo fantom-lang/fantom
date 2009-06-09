@@ -94,13 +94,13 @@ sys_Obj.equals = function(self, that)
   if (self instanceof sys_Obj)
     return self.equals(that);
   else if ((typeof self) == "number")
-    return sys_Float.equals(self, that);
+    return sys_Int.equals(self, that);
   else if (self != null && self.constructor == Array)
     return sys_List.equals(self, that);
   else
   {
     if (self != null && self.$fanType != null)
-      return sys_Int.equals(self, that);
+      return sys_Float.equals(self, that);
     else
       return self == that;
    }
@@ -113,10 +113,10 @@ sys_Obj.compare = function(self, that)
     if (that == null) return +1;
     return self.compare(that);
   }
-  else if ((typeof self) == "number")
-  {
-    return sys_Float.compare(self, that);
-  }
+//  else if ((typeof self) == "number")
+//  {
+//    return sys_Float.compare(self, that);
+//  }
   else
   {
     if (self == null)
@@ -172,6 +172,8 @@ sys_Obj.toStr = function(obj)
   if (obj == null) return "null";
   if (typeof obj == "string") return obj;
   if (obj.constructor == Array) return sys_List.toStr(obj);
+// TEMP
+if (obj.$fanType == sys_Type.find("sys::Float")) return sys_Float.toStr(obj);
   return obj.toString();
 }
 

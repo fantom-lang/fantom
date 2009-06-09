@@ -38,7 +38,7 @@ sys_StrBuf.prototype.add = function(obj)
 
 sys_StrBuf.prototype.addChar = function(ch)
 {
-  this.m_str += ch;
+  this.m_str += String.fromCharCode(ch);
   return this;
 }
 
