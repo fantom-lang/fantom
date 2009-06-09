@@ -68,10 +68,11 @@ webappClient_HttpReq.prototype.sendForm = function(form, func)
   this.send(content, func)
 }
 
-webappClient_HttpReq.make = function(uri)
+webappClient_HttpReq.make = function(uri, method)
 {
   var req = new webappClient_HttpReq();
   if (uri != null) req.uri = uri;
+  if (method != null) req.method = method;
   return req;
 }
 
