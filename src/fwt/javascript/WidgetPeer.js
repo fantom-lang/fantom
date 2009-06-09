@@ -138,7 +138,11 @@ fwt_WidgetPeer.prototype.emptyDiv = function()
   return div;
 }
 
-fwt_WidgetPeer.prototype.detach = function(self) {}
+fwt_WidgetPeer.prototype.detach = function(self)
+{
+  var elem = self.peer.elem;
+  elem.parentNode.removeChild(elem);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Widget/Element synchronization
