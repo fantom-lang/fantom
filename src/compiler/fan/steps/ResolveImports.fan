@@ -55,6 +55,16 @@ class ResolveImports : CompilerStep
       resolveImportedTypes(unit)
     }
     bombIfErr
+
+    // if this is a script, make our using imports the depends
+    if (compiler.input.isScript)
+    {
+      resolved.each |pod|
+      {
+        if (pod !== compiler.pod && pod.name != "sys")
+          compiler.input.depends.add(Depend("$pod.name $pod.version"))
+      }
+    }
   }
 
   **
