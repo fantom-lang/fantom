@@ -23,7 +23,21 @@ sys_InStream.prototype.$make = function($in) { this.$in = $in; }
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-// read = function()
+sys_InStream.prototype.read = function()
+{
+  try
+  {
+    return this.$in.read();
+  }
+  catch (err)
+  {
+    if (this.$in == null)
+      throw sys_UnsupportedErr.make(this.type().qname() + " wraps null InStream");
+    else
+      throw sys_Err.make(err);
+  }
+}
+
 // readBuf = function(buf, n)
 // unread = function(n)
 
@@ -52,8 +66,37 @@ sys_InStream.prototype.skip = function(n)
 // readBool = function()
 // readUtf = function()
 // charset = function(charset)
-// readChar = function()
-// unreadChar = function(c)
+
+sys_InStream.prototype.readChar = function()
+{
+  try
+  {
+    return this.$in.readChar();
+  }
+  catch (err)
+  {
+    if (this.$in == null)
+      throw sys_UnsupportedErr.make(this.type().qname() + " wraps null InStream");
+    else
+      throw sys_Err.make(err);
+  }
+}
+
+sys_InStream.prototype.unreadChar = function(c)
+{
+  try
+  {
+    return this.$in.unreadChar(c);
+  }
+  catch (err)
+  {
+    if (this.$in == null)
+      throw sys_UnsupportedErr.make(this.type().qname() + " wraps null InStream");
+    else
+      throw sys_Err.make(err);
+  }
+}
+
 // peekChar = function()
 
 sys_InStream.prototype.readLine = function(max)
@@ -65,7 +108,7 @@ sys_InStream.prototype.readLine = function(max)
   if (maxChars <= 0) return "";
 
   // read first char, if at end of file bail
-  var c = this.$in.readChar();
+  var c = this.readChar();
   if (c == null) return null;
 
   // loop reading chars until we hit newline
@@ -74,11 +117,11 @@ sys_InStream.prototype.readLine = function(max)
   while (true)
   {
     // check for \n, \r\n, or \r
-    if (c == '\n') break;
-    if (c == '\r')
+    if (c == 10) break;
+    if (c == 13)
     {
-      c = this.$in.readChar();
-      if (c >= 0 && c != 10) this.$in.unreadChar(c);
+      c = this.readChar();
+      if (c >= 0 && c != 10) this.unreadChar(c);
       break;
     }
 
@@ -87,7 +130,7 @@ sys_InStream.prototype.readLine = function(max)
     if (buf.length >= maxChars) break;
 
     // read next char
-    c = this.$in.readChar();
+    c = this.readChar();
     if (c == null) break;
   }
   return buf;
@@ -111,6 +154,13 @@ sys_InStream.prototype.type = function()
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
+
+sys_InStream.make = function($in)
+{
+  var s = new sys_InStream();
+  s.$make($in);
+  return s;
+}
 
 sys_InStream.makeForStr = function(s)
 {
