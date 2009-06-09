@@ -1483,9 +1483,12 @@ public class Parser : CompilerSupport
   **
   ** Atomic base of a termExpr
   **
-  **   <termBase>  :=  <literal> | <idExpr> | <closure> | <dsl>
-  **   <literal>   :=  "null" | "this" | "super" | <bool> | <int> |
-  **                   <float> | <str> | <duration> | <list> | <map> | <uri>
+  **   <termBase>    :=  <literal> | <idExpr> | <closure> | <dsl>
+  **   <literal>     :=  "null" | "this" | "super" | <bool> | <int> |
+  **                     <float> | <str> | <duration> | <list> | <map> | <uri> |
+  **                     <typeLiteral> | <slotLiteral>
+  **   <typeLiteral> :=  <type> "#"
+  **   <slotLiteral> :=  [<type>] "#" <id>
   **
   private Expr termBaseExpr()
   {

@@ -155,7 +155,8 @@ Expr [#expr]
   <callOp>         :=  "(" <args> ")" [<closure>]
   <literal>        :=  "null" | "this" | "super" | "it" |
                        <namedSuper> | <bool> | <int> | <float> | <decimal> |
-                       <str> | <duration> | <uri> | <list> | <map> | <simple>
+                       <str> | <duration> | <uri> | <list> | <map> | <simple> |
+                       <typeLiteral> | <slotLiteral>
   <namedSuper>     :=  <simpleType> "." "super"
   <list>           :=  [<type>] "[" <listItems> "]"
   <listItems>      :=  "," | (<expr> ("," <expr>)*)
@@ -163,6 +164,8 @@ Expr [#expr]
   <mapItems>       :=  ":" | (<mapPair> ("," <mapPair>)*)
   <mapPair>        :=  <expr> ":" <expr>
   <simple>         :=  <type> "(" <expr> ")"
+  <typeLiteral>    :=  <type> "#"
+  <slotLiteral>    :=  [<type>] "#" <id>
 
 See `Literals` for grammar of the literal tokens.
 
