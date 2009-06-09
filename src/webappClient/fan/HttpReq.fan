@@ -16,7 +16,7 @@ class HttpReq
   **
   ** Create a new HttpReq instance with for the given Uri.
   **
-  new make(Uri uri)
+  new make(Uri uri, Str? method := null)
   {
     this.uri = uri
   }
