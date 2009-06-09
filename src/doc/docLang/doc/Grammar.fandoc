@@ -119,8 +119,9 @@ Expr [#expr]
   <condOrExpr>     :=  <condAndExpr>  ("||" <condAndExpr>)*
   <condAndExpr>    :=  <equalityExpr> ("&&" <equalityExpr>)*
   <equalityExpr>   :=  <relationalExpr> (("==" | "!=" | "===" | "!==") <relationalExpr>)*
-  <relationalExpr> :=  <elvisExpr> (("is" | "as" | "isnot" | "<" | "<=" | ">" |
-                       ">=" | "<=>") <elvisExpr>)*
+  <relationalExpr> :=  <typeCheckExpr> | <compareExpr>
+  <typeCheckExpr>  :=  <elvisExpr> [("is" | "as" | "isnot") <type>]
+  <compareExpr>    :=  <elvisExpr> (("<" | "<=" | ">" | ">=" | "<=>") <elvisExpr>)*
   <elvisExpr>      :=  <rangeExpr> "?:" <rangeExpr>
   <rangeExpr>      :=  <bitOrExpr> ((".." | "..<") <bitOrExpr>)*
   <bitOrExpr>      :=  <bitAndExpr> (("^" | "|") <bitAndExpr>)*

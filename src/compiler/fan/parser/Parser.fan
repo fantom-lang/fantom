@@ -1238,7 +1238,9 @@ public class Parser : CompilerSupport
 
   **
   ** Relational expression:
-  **   <relationalExpr> :=  <rangeExpr> (("is" | "as" | "<" | "<=" | ">" | ">=" | "<=>") <rangeExpr>)*
+  **   <relationalExpr> :=  <typeCheckExpr> | <compareExpr>
+  **   <typeCheckExpr>  :=  <elvisExpr> [("is" | "as" | "isnot") <type>]
+  **   <compareExpr>    :=  <elvisExpr> (("<" | "<=" | ">" | ">=" | "<=>") <elvisExpr>)*
   **
   private Expr relationalExpr()
   {
