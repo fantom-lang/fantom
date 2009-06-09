@@ -31,20 +31,20 @@ sys_Date.prototype.equals = function(that)
 {
   if (that instanceof sys_Date)
   {
-    return this.m_year == that.m_year &&
-           this.m_month == that.m_month &&
-           this.m_day == that.m_day;
+    return this.m_year.valueOf() == that.m_year.valueOf() &&
+           this.m_month.valueOf() == that.m_month.valueOf() &&
+           this.m_day.valueOf() == that.m_day.valueOf();
   }
   return false;
 }
 
 sys_Date.prototype.compare = function(that)
 {
-  if (this.m_year == that.m_year)
+  if (this.m_year.valueOf() == that.m_year.valueOf())
   {
-    if (this.m_month == that.m_month)
+    if (this.m_month.valueOf() == that.m_month.valueOf())
     {
-      if (this.m_day == that.m_day) return 0;
+      if (this.m_day.valueOf() == that.m_day.valueOf()) return 0;
       return this.m_day < that.m_day ? -1 : +1;
     }
     return this.m_month < that.m_month ? -1 : +1;
