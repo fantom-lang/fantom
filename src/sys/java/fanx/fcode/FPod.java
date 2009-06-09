@@ -143,6 +143,7 @@ public final class FPod
 
     podName = in.utf();
     podVersion = in.utf();
+// TODO: fix this to be u2
     depends = new Depend[in.u1()];
     for (int i=0; i<depends.length; ++i)
       depends[i] = Depend.fromStr(in.utf());
