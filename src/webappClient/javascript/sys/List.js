@@ -26,10 +26,9 @@ sys_List.make = function(type, vals)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Static Methods
+// Indentity
 //////////////////////////////////////////////////////////////////////////
 
-// Identity
 sys_List.equals = function(self, that)
 {
   if (that != null && that.constructor == Array)
@@ -43,6 +42,7 @@ sys_List.equals = function(self, that)
   }
   return false;
 }
+
 sys_List.toStr = function(self)
 {
   if (self.length == 0) return "[,]";
@@ -55,31 +55,47 @@ sys_List.toStr = function(self)
   s += "]";
   return s;
 }
-// Items
+
+//////////////////////////////////////////////////////////////////////////
+// Access
+//////////////////////////////////////////////////////////////////////////
+
 sys_List.add = function(self, item)
 {
   self.push(item);
   return self;
 }
+
 sys_List.insert = function(self, index, item)
 {
   self.splice(index, 0, item);
   return self;
 }
+
+sys_List.removeSame = function(self, val)
+{
+  var index = sys_List.indexSame(self, val);
+  if (index == null) return null;
+  return sys_List.removeAt(self, index);
+}
+
 sys_List.removeAt = function(self, index)
 {
   return self.splice(index, 1);
 }
+
 sys_List.clear = function(self)
 {
   self.splice(0, self.length);
   return self;
 }
+
 sys_List.fill = function(self, val, times)
 {
   for (var i=0; i<times; i++) self.push(val);
   return self;
 }
+
 sys_List.slice = function(self, range)
 {
   var size = self.length;
@@ -88,6 +104,7 @@ sys_List.slice = function(self, range)
   if (e+1 < s) throw new sys_IndexErr(r);
   return self.slice(s, e+1);
 }
+
 sys_List.sort = function(self, func)
 {
   if (func != null)
@@ -95,17 +112,47 @@ sys_List.sort = function(self, func)
   else
     return self.sort();
 }
+
+sys_List.indexSame = function(self, val, off)
+{
+  if (off == undefined) off = 0;
+
+  if (self.length == 0) return null;
+  var start = off;
+  if (start < 0) start = self.length + start;
+  if (start >= self.length) throw sys_IndexErr.make(off);
+
+  try
+  {
+    for (var i=start; i<self.length; i++)
+      if (val == self[i])
+        return i;
+    return null;
+  }
+  // TODO
+  //catch (ArrayIndexOutOfBoundsException e)
+  catch (err)
+  {
+    throw sys_IndexErr.make(off);
+  }
+}
+
 sys_List.first = function(self)
 {
   if (self.length == 0) return null;
   return self[0];
 }
+
 sys_List.last = function(self)
 {
   if (self.length == 0) return null;
   return self[self.length-1];
 }
+
+//////////////////////////////////////////////////////////////////////////
 // Iterators
+//////////////////////////////////////////////////////////////////////////
+
 sys_List.each = function(self, func)
 {
   if (func.length == 1)
@@ -119,6 +166,7 @@ sys_List.each = function(self, func)
       func(self[i], i)
   }
 }
+
 sys_List.eachr = function(self, func)
 {
   if (func.length == 1)
@@ -132,6 +180,7 @@ sys_List.eachr = function(self, func)
       func(self[i], i)
   }
 }
+
 sys_List.map = function(self, acc, func)
 {
   if (func.length == 1)
