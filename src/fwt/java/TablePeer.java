@@ -162,6 +162,13 @@ public class TablePeer
     long row = event.index;
     for (int i=0; i<numCols; ++i)
     {
+      // Should we decide to allow embedding controls
+      //fan.fwt.Widget w = model.widget(col, row);
+      //this.self.add(w);
+      //TableEditor editor = new TableEditor((Table)this.control);
+      //editor.grabHorizontal = true;
+      //editor.setEditor((Control)w.peer.control, item, i);
+
       long col = i;
       item.setText(i, model.text(col, row));
       item.setImage(i, env.image(model.image(col, row)));

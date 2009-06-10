@@ -43,6 +43,7 @@ fwt_LabelPeer.prototype.image$set = function(self, val)
     var img = document.createElement("img");
     if (img.addEventListener)
       img.onload = self.window.relayout;
+    // TODO - fix IE
     //else
     //  img.attachEvent('onload', function() { self.window.relayout(); });
     img.src = val.uri;
@@ -57,15 +58,25 @@ fwt_LabelPeer.prototype.sync = function(self)
   while (this.elem.firstChild != null)
     this.elem.removeChild(this.elem.firstChild);
 
+  // hook for "HyperlinkLabel"
+  var parent = this.elem;
+  if (self.uri != null)
+  {
+    var a = document.createElement("a");
+    a.href = self.uri.toStr();
+    parent.appendChild(a);
+    parent = a;
+  }
+
   if (this.image != null)
   {
     var img = document.createElement("img");
     img.src = this.image.uri;
-    this.elem.appendChild(img);
+    parent.appendChild(img);
   }
 
   var text = document.createTextNode(this.text);
-  this.elem.appendChild(text);
+  parent.appendChild(text);
 
   with (this.elem.style)
   {

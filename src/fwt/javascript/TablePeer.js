@@ -102,7 +102,38 @@ fwt_TablePeer.prototype.sync = function(self)
         if (r % 2 == 0) background  = "#f1f5fa";
         if (c < cols-1) borderRight = "1px solid #d9d9d9";
       }
-      td.appendChild(document.createTextNode(model.text(c,r)));
+      var widget = null;
+      if (model.widget) widget = model.widget(c,r);
+      if (widget == null)
+      {
+        // normal text node
+        td.appendChild(document.createTextNode(model.text(c,r)));
+      }
+      else
+      {
+        // custom widget
+        if (widget.peer.elem != null)
+        {
+          // detach and reattach in case it moved
+          widget.peer.elem.parentNode.removeChild(widget.peer.elem);
+          td.appendChild(widget.peer.elem);
+        }
+        else
+        {
+          // attach new widget
+          var elem = widget.peer.create(td);
+          widget.peer.attachTo(widget, elem);
+          // nuke abs positiong
+          with (elem.style)
+          {
+            position = null;
+            left     = null;
+            top      = null;
+            width    = null;
+            height   = null;
+          }
+        }
+      }
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
