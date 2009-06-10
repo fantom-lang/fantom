@@ -35,6 +35,11 @@ sys_Uri.prototype.equals = function(that)
   return this.m_uri == that.m_uri;
 }
 
+sys_Uri.prototype.toCode = function()
+{
+  return '`' + this.m_str + '`';
+}
+
 sys_Uri.prototype.toStr = function()
 {
   return this.m_uri;
