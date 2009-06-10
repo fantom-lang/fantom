@@ -294,3 +294,56 @@ sys_Str.splitws = function(val)
 sys_Str.upper = function(self) { return self.toUpperCase(); }
 sys_Str.$in = function(self) { return sys_InStream.makeForStr(self); }
 sys_Str.toUri = function(self) { return sys_Uri.make(self); }
+
+sys_Str.toCode = function(self, quote, escu)
+{
+  if (quote == undefined) quote = 34;
+  if (escu == undefined) escu = false;
+
+  // opening quote
+  var s = "";
+  var q = 0;
+  if (quote != null)
+  {
+    q = String.fromCharCode(quote);
+    s += q;
+  }
+
+  // NOTE: these escape sequences are duplicated in ObjEncoder
+  var len = self.length;
+  for (var i=0; i<len; ++i)
+  {
+    var c = self.charAt(i);
+    switch (c)
+    {
+      case '\n': s += '\\' + 'n'; break;
+      case '\r': s += '\\' + 'r'; break;
+      case '\f': s += '\\' + 'f'; break;
+      case '\t': s += '\\' + 't'; break;
+      case '\\': s += '\\' + '\\'; break;
+      case '"':  if (q == '"')  s += '\\' + '"';  else s += c; break;
+      case '`':  if (q == '`')  s += '\\' + '`';  else s += c; break;
+      case '\'': if (q == '\'') s += '\\' + '\''; else s += c; break;
+      case '$':  s += '\\' + '$'; break;
+      default:
+        var hex  = function(x) { return "0123456789abcdef".charAt(x); }
+        var code = c.charCodeAt(0);
+        if (escu && code > 127)
+        {
+          s += '\\' + 'u'
+            + hex((code>>12)&0xf)
+            + hex((code>>8)&0xf)
+            + hex((code>>4)&0xf)
+            + hex(code & 0xf);
+        }
+        else
+        {
+          s += c;
+        }
+    }
+  }
+
+  // closing quote
+  if (q != 0) s += q;
+  return s;
+}

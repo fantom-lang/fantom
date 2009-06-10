@@ -53,7 +53,7 @@ with (sys_Pod.$add("sys"))
   $at("Charset",   "sys::Obj");
   $at("InStream",  "sys::Obj");
   // TODO: SysInStream
-  // TODO: OutStream
+  $at("OutStream", "sys::Obj");
   // TODO: SysOutStream
   $at("File",      "sys::Obj");  // TODO - STUB
   // TODO: LocalFile

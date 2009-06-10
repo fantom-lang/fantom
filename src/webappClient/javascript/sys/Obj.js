@@ -173,6 +173,7 @@ sys_Obj.toStr = function(obj)
   if (typeof obj == "string") return obj;
   if (obj.constructor == Array) return sys_List.toStr(obj);
 // TEMP
+if (obj instanceof Error) throw Error("Obj.toStr called on Error");
 if (obj.$fanType == sys_Type.find("sys::Float")) return sys_Float.toStr(obj);
   return obj.toString();
 }
