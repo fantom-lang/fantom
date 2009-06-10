@@ -375,7 +375,16 @@ if (c != null)
       out.w("catch ($errVar)").nl
       block(c.block)
     }
-    if (ts.catches.size == 0) out.w("catch (err) {}").nl
+    if (ts.catches.size == 0 && ts.finallyBlock == null)
+    {
+      // TODO - is this right?
+      out.w("catch (err) {}").nl
+    }
+    if (ts.finallyBlock != null)
+    {
+      out.w("finally").nl
+      block(ts.finallyBlock)
+    }
   }
 
   Void switchStmt(SwitchStmt ss)
