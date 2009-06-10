@@ -101,12 +101,12 @@ sys_Map.prototype.get = function(key, defVal)
 
 sys_Map.prototype.add = function(key, val)
 {
+  if (key == null)
+    throw sys_NullErr.make("key is null");
+  //if (!isImmutable(key))
+  //  throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
   if (this.map.hasOwnProperty(key))
-  {
-    var old = this.map[key];
-    if (old != null)
-      throw new sys_ArgErr("Key already mapped: " + key);
-  }
+    throw sys_ArgErr.make("Key already mapped: " + key);
   this.map[key] = val;
   return this;
 }
