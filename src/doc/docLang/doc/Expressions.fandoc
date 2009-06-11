@@ -61,7 +61,7 @@ a specific method:
    --a, a--  =>  a = a.decrement()
    a == b    =>  a.equals(b)
    a != b    =>  !a.equals(b)
-   a <=>     =>  a.compare(b)
+   a <=> b   =>  a.compare(b)
    a > b     =>  a.compare(b) > 0
    a >= b    =>  a.compare(b) >= 0
    a < b     =>  a.compare(b) < 0
