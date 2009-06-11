@@ -31,6 +31,28 @@ fwt_TextPeer.prototype.sync = function(self)
   var text = this.elem.firstChild;
   text.value = this.text;
   text.size  = self.prefCols;
-  text.onkeyup = function(event) { self.text$set(event.target.value); }
+  text.onkeyup = function(event)
+  {
+    // sync control value to widget
+    self.text$set(event.target.value);
+
+    // fire onAction
+    if (event.keyCode == 13 && self.onAction.size() > 0)
+    {
+      var ae = fwt_Event.make();
+      ae.id = fwt_EventId.action;
+      var list = self.onAction.list();
+      for (var i=0; i<list.length; i++) list[i].call(ae);
+    }
+
+    // fire onModify
+    if (self.onModify.size() > 0)
+    {
+      var me = fwt_Event.make();
+      me.id = fwt_EventId.action;
+      var list = self.onModify.list();
+      for (var i=0; i<list.length; i++) list[i].call(me);
+    }
+  }
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
