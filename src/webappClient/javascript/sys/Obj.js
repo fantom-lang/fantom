@@ -172,9 +172,15 @@ sys_Obj.toStr = function(obj)
   if (obj == null) return "null";
   if (typeof obj == "string") return obj;
   if (obj.constructor == Array) return sys_List.toStr(obj);
+
+  // TODO - can't for the life of me figure how the
+  // heck Error.toString would ever try to call Obj.toStr
+  // so trap it for now
+  if (obj instanceof Error) return Error.prototype.toString.call(obj);
+
 // TEMP
-if (obj instanceof Error) throw Error("Obj.toStr called on Error");
 if (obj.$fanType == sys_Type.find("sys::Float")) return sys_Float.toStr(obj);
+
   return obj.toString();
 }
 
