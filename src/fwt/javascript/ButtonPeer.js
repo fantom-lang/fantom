@@ -33,7 +33,7 @@ fwt_ButtonPeer.prototype.create = function(parentElem)
   var div = this.emptyDiv();
   with (div.style)
   {
-    font      = "bold 10pt Arial";
+    //font      = "bold 10pt Arial";
     padding   = "2px 4px";
     textAlign = "center";
     border    = "1px solid #555";
@@ -41,8 +41,8 @@ fwt_ButtonPeer.prototype.create = function(parentElem)
     backgroundColor = "#eee";
     // IE workaround
     try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc))"; } catch (err) {} // ignore
-    MozBorderRadius    = "5px";
-    webkitBorderRadius = "5px";
+    MozBorderRadius    = "10px";
+    webkitBorderRadius = "10px";
   }
   parentElem.appendChild(div);
   return div;

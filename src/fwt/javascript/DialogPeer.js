@@ -87,4 +87,8 @@ fwt_DialogPeer.prototype.sync = function(self)
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
 
+fwt_DialogPeer.prototype.title$get = function(self) { return this.title; }
+fwt_DialogPeer.prototype.title$set = function(self, val) { this.title = val; }
+fwt_DialogPeer.prototype.title = "";
+
 
