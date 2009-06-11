@@ -78,9 +78,10 @@ fwt_LabelPeer.prototype.sync = function(self)
   var text = document.createTextNode(this.text);
   parent.appendChild(text);
 
+  // apply fg to parent elem to make <a> color correctly
+  if (this.fg != null) parent.style.color = this.fg.toStr();
   with (this.elem.style)
   {
-    if (this.fg   != null) color = this.fg.toStr();
     if (this.bg   != null) background = this.bg.toStr();
     if (this.font != null) font = this.font.toStr();
     switch (this.halign)
