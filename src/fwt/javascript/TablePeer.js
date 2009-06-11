@@ -16,11 +16,14 @@ fwt_TablePeer.prototype.$ctor = function(self) {}
 //fwt_TablePeer.prototype.colAt = function(self, pos) {}
 //fwt_TablePeer.prototype.rowAt = function(self, pos) {}
 //fwt_TablePeer.prototype.refreshAll = function(self) {}
-//fwt_TablePeer.prototype.selected ...
 
 fwt_TablePeer.prototype.headerVisible$get = function(self) { return this.headerVisible; }
 fwt_TablePeer.prototype.headerVisible$set = function(self, val) { this.headerVisible = val; }
 fwt_TablePeer.prototype.headerVisible = true;
+
+fwt_TablePeer.prototype.selected$get = function(self) { return this.selected; }
+fwt_TablePeer.prototype.selected$set = function(self, val) {} // no-op right now
+fwt_TablePeer.prototype.selected = null;
 
 fwt_TablePeer.prototype.create = function(parentElem)
 {
@@ -52,6 +55,13 @@ fwt_TablePeer.prototype.refreshAll = function(self)
 
 fwt_TablePeer.prototype.sync = function(self)
 {
+  // init hook
+  if (this.selection == null)
+  {
+    this.selected = sys_List.make(sys_Type.find("sys::Int"), []);
+    this.selection = new fwt_TableSelection(this);
+  }
+
   // build new content
   var tbody = document.createElement("tbody");
   var model = self.model;
@@ -61,7 +71,7 @@ fwt_TablePeer.prototype.sync = function(self)
   if (this.headerVisible)
   {
     var tr = document.createElement("tr");
-    for (var c=0; c<cols; c++)
+    for (var c=-1; c<cols; c++)
     {
       // we have to embed a div inside our th to make
       // the borders overlap correctly
@@ -77,14 +87,15 @@ fwt_TablePeer.prototype.sync = function(self)
         try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#dbdbdb), to(#bbb))"; } catch (err) {} // ignore
         //cursor: default;
         if (c < cols-1) borderRight = "1px solid #a5a5a5";
+        if (c < 0) height = "100%";
       }
-      fix.appendChild(document.createTextNode(model.header(c)));
+      fix.appendChild(document.createTextNode(c<0? "/" : model.header(c)));
       var th = document.createElement("th");
       with (th.style)
       {
         margin  = "0px";
         padding = "0px";
-        border  = "none"; //Bottom = "1px solid #555";
+        border  = "none";
         if (c == cols-1) width = "100%";
       }
       th.appendChild(fix);
@@ -96,7 +107,9 @@ fwt_TablePeer.prototype.sync = function(self)
   for (var r=0; r<rows; r++)
   {
     var tr = document.createElement("tr");
-    for (var c=0; c<cols; c++)
+    if (r % 2 == 0) tr.style.background  = "#f1f5fa";
+
+    for (var c=-1; c<cols; c++)
     {
       var td = document.createElement("td");
       with (td.style)
@@ -104,38 +117,49 @@ fwt_TablePeer.prototype.sync = function(self)
         padding     = "4px 6px";
         textAlign   = "left";
         whiteSpace  = "nowrap";
-        if (r % 2 == 0) background  = "#f1f5fa";
         if (c < cols-1) borderRight = "1px solid #d9d9d9";
       }
-      var widget = null;
-      if (model.widget) widget = model.widget(c,r);
-      if (widget == null)
+      if (c < 0)
       {
-        // normal text node
-        td.appendChild(document.createTextNode(model.text(c,r)));
+        // selection checkbox
+        var cb = document.createElement("input");
+        cb.type = "checkbox";
+        var $this = this;
+        cb.onclick = function(event) { $this.selection.toggle(event) };
+        td.appendChild(cb);
       }
       else
       {
-        // custom widget
-        if (widget.peer.elem != null)
+        var widget = null;
+        if (model.widget) widget = model.widget(c,r);
+        if (widget == null)
         {
-          // detach and reattach in case it moved
-          widget.peer.elem.parentNode.removeChild(widget.peer.elem);
-          td.appendChild(widget.peer.elem);
+          // normal text node
+          td.appendChild(document.createTextNode(model.text(c,r)));
         }
         else
         {
-          // attach new widget
-          var elem = widget.peer.create(td);
-          widget.peer.attachTo(widget, elem);
-          // nuke abs positiong
-          with (elem.style)
+          // custom widget
+          if (widget.peer.elem != null)
           {
-            position = null;
-            left     = null;
-            top      = null;
-            width    = null;
-            height   = null;
+            // detach and reattach in case it moved
+            widget.peer.elem.parentNode.removeChild(widget.peer.elem);
+            td.appendChild(widget.peer.elem);
+          }
+          else
+          {
+            // attach new widget
+            var elem = widget.peer.create(td);
+            widget.peer.attachTo(widget, elem);
+            // nuke abs positiong
+            with (elem.style)
+            {
+              position = null;
+              left     = null;
+              top      = null;
+              width    = null;
+              height   = null;
+            }
           }
         }
       }
@@ -154,5 +178,43 @@ fwt_TablePeer.prototype.sync = function(self)
   var w = this.size.w - 2;
   var h = this.size.h - 2;
   fwt_WidgetPeer.prototype.sync.call(this, self, w, h);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Selection
+//////////////////////////////////////////////////////////////////////////
+
+var fwt_TableSelection = sys_Obj.$extend(fwt_WidgetPeer);
+fwt_TableSelection.prototype.$ctor = function(table) { this.table = table; }
+
+fwt_TableSelection.prototype.toggle = function(event)
+{
+  var on  = event.target.checked;
+  var tr  = event.target.parentNode.parentNode;
+  var row = tr.rowIndex-1; // account for th row
+
+  var bg = on ? "#3d80df" : (row%2==0 ? "#f1f5fa" : null)
+  var fg = on ? "#fff" : null;
+  var br = on ? "#346dbe" : "#d9d9d9";
+
+  tr.style.background = bg;
+  tr.style.color = fg;
+  for (var i=0; i<tr.childNodes.length-1; i++)
+    tr.childNodes[i].style.borderColor = br;
+
+  this.update();
+}
+
+fwt_TableSelection.prototype.update = function(event)
+{
+  var list = sys_List.make(sys_Type.find("sys::Int"), []);
+  var tbody = this.table.elem.firstChild.firstChild;
+  for (var i=1; i<tbody.childNodes.length; i++) // skip th row
+  {
+    var tr = tbody.childNodes[i];
+    var on = tr.firstChild.firstChild.checked;
+    if (on) list.push(i-1);
+  }
+  this.table.selected = list;
 }
 
