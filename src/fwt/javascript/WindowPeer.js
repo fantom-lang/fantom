@@ -55,6 +55,6 @@ fwt_WindowPeer.prototype.icon$get = function(self) { return this.icon; }
 fwt_WindowPeer.prototype.icon$set = function(self, val) { this.icon = val; }
 fwt_WindowPeer.prototype.icon = null;
 
-fwt_WindowPeer.prototype.title$get = function(self) { return this.title; }
-fwt_WindowPeer.prototype.title$set = function(self, val) { this.title = val; }
-fwt_WindowPeer.prototype.title = "";
+fwt_WindowPeer.prototype.title$get = function(self) { return document.title; }
+fwt_WindowPeer.prototype.title$set = function(self, val) { document.title = val; }
+
