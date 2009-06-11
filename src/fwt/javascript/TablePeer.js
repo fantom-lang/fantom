@@ -45,6 +45,11 @@ fwt_TablePeer.prototype.create = function(parentElem)
   return div;
 }
 
+fwt_TablePeer.prototype.refreshAll = function(self)
+{
+  this.sync(self);
+}
+
 fwt_TablePeer.prototype.sync = function(self)
 {
   // build new content
@@ -150,3 +155,4 @@ fwt_TablePeer.prototype.sync = function(self)
   var h = this.size.h - 2;
   fwt_WidgetPeer.prototype.sync.call(this, self, w, h);
 }
+
