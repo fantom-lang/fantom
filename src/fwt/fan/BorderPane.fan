@@ -13,7 +13,7 @@ using gfx
 ** border around a content widget.  You must specifiy non-zero
 ** insets to leave room to render your border.
 **
-** TODO: Design imcomplete, this API might change.
+** TODO: This API is definitely changing to use CSS styling.
 **
 class BorderPane : Pane
 {
@@ -35,6 +35,7 @@ class BorderPane : Pane
 
   **
   ** The callback to paint the custom border.
+  ** TODO: this will be replaced with a declarative CSS Border
   **
   |Graphics g, Size size, Insets insets|? onBorder := null
 
@@ -54,16 +55,21 @@ class BorderPane : Pane
   override Void onLayout()
   {
     if (content == null) return
+    size := this.size
     content.bounds = Rect(
       insets.left,
       insets.top,
-      this.size.w - insets.left - insets.right,
-      this.size.h - insets.top - insets.bottom)
+      size.w - insets.left - insets.right,
+      size.h - insets.top - insets.bottom)
   }
 
-  override Void onPaint(Graphics g)
+  internal Void onPaint(Graphics g)
   {
     onBorder?.call(g, size, insets)
   }
 
+  // to force native peer
+  private native Void dummyBorderPane()
+
 }
+

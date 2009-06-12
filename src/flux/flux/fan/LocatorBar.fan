@@ -12,7 +12,7 @@ using fwt
 **
 ** LocatorBar is used to display/edit the current Uri
 **
-internal class LocatorBar : Widget
+internal class LocatorBar : Canvas
 {
 
   new make(Frame frame)

@@ -364,7 +364,7 @@ internal class NavTreePane : Pane
 ** EditListWidget
 **************************************************************************
 
-internal class EditList : Widget
+internal class EditList : Canvas
 {
   new make(Obj[] items)
   {

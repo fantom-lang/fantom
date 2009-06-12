@@ -53,7 +53,7 @@ internal class ImageView : View
   Image? image
 }
 
-internal class ImageViewWidget : Widget
+internal class ImageViewWidget : Canvas
 {
   new make(Image image) { this.image = image }
   override Void onPaint(Graphics g)

@@ -13,7 +13,7 @@ using fwt
 **
 ** Paint the desktop monitor configuration.
 **
-class DesktopDemo : Widget
+class DesktopDemo : Canvas
 {
   Void main()
   {

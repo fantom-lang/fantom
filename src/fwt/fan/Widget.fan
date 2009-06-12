@@ -32,6 +32,15 @@ abstract class Widget
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Internal constructor: subclass `Canvas` or `Pane`.
+  **
+  internal new make() {}
+
+//////////////////////////////////////////////////////////////////////////
 // State
 //////////////////////////////////////////////////////////////////////////
 
@@ -336,13 +345,6 @@ abstract class Widget
   **
   virtual native Size prefSize(Hints hints := Hints.defVal)
 
-  **
-  ** Handle the layout event.  The method is only called Pane
-  ** containers.  Custom panes must override this method to
-  ** set the bounds on all their children.
-  **
-  virtual Void onLayout() {}
-
 //////////////////////////////////////////////////////////////////////////
 // Painting
 //////////////////////////////////////////////////////////////////////////
@@ -352,15 +354,6 @@ abstract class Widget
   ** then the whole widget is repainted.
   **
   native Void repaint(Rect? dirty := null)
-
-  **
-  ** This callback is invoked when the widget should be repainted.
-  ** The graphics context is initialized at the widget's origin
-  ** with the clip bounds set to the widget's size.
-  **
-  virtual Void onPaint(Graphics g)
-  {
-  }
 
 //////////////////////////////////////////////////////////////////////////
 // Peer

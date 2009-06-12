@@ -29,6 +29,12 @@ abstract class Pane : Widget
   **
   override abstract Size prefSize(Hints hints := Hints.defVal)
 
+  **
+  ** Handle the layout event by setting the bounds on all children.
+  **
+  abstract Void onLayout()
+
+
   // to force native peer
   private native Void dummyPane()
 
