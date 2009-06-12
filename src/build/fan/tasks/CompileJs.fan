@@ -39,7 +39,7 @@ class CompileJs : Task
 
     try
     {
-      c := Type.find("compilerJavascript::JsCompiler").make([input])
+      c := Type.find("compilerJs::JsCompiler").make([input])
       c->outDir     = outDir
       c->nativeDirs = nativeDirs
       c->force      = force

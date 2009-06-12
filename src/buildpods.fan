@@ -33,7 +33,7 @@ class Build : BuildGroup
       `fansh/build.fan`,
       `web/build.fan`,
       `webapp/build.fan`,
-      `compilerJavascript/build.fan`,
+      `compilerJs/build.fan`,
       `webappClient/build.fan`,
       `testWeb/build.fan`,
       `wisp/build.fan`,

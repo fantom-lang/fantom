@@ -12,7 +12,7 @@ Overview [#overview]
 will be going through many changes during development
 
 The webappClient framework is composed of two parts.  One is a
-[compiler]`compilerJavascript::index` that compiles Fan source code to
+[compiler]`compilerJs::index` that compiles Fan source code to
 Javascript source code.  The other is a set of Fan [APIs]`webappClient::index`
 that model the client-side browser APIs (the DOM, XmlHttpRequest, etc).
 

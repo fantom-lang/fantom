@@ -62,7 +62,7 @@ sys_Slot.prototype.isVirtual = function()   { return (this.m_flags & sys_FConst.
 
 sys_Slot.prototype.$name = function(n)
 {
-  // must keep in sync with compilerJavascript::JavascriptWriter
+  // must keep in sync with compilerJs::JsWriter
   switch (n)
   {
     case "char":   return "$char";
