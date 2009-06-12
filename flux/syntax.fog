@@ -45,6 +45,7 @@ SyntaxOptions
     "fan": "fan",
     "fog": "fan",
     "fansubstitute": "fan",
+    "fwt": "fan",
     "props": "fan",
 
     // java rules

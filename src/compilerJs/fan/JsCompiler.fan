@@ -29,6 +29,15 @@ class JsCompiler : Compiler
 
   override Void backend()
   {
+    // TODO: move into steps
+
+    // if compiling script, force
+    if (input.mode == CompilerInputMode.str)
+      force = true
+
+    output = CompilerOutput()
+    output.mode = input.output
+
     Buf? buf
     toStr := output.mode == CompilerOutputMode.str
     if (toStr) { buf = Buf(); out = buf.out }
