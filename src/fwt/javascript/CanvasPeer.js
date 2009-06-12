@@ -49,10 +49,72 @@ fwt_Graphics.prototype.brush$set = function(b)
 {
   this.brush = b
   this.cx.fillStyle = b.toCss()
+  this.cx.strokeStyle = b.toCss()
 }
 
 fwt_Graphics.prototype.fillRect = function(x, y, w, h)
 {
   this.cx.fillRect(x, y, w, h);
 }
+
+fwt_Graphics.prototype.drawRect = function(x, y, w, h)
+{
+  this.cx.strokeRect(x, y, w, h);
+}
+
+fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
+{
+  this.cx.beginPath();
+  this.cx.moveTo(x1, y1);
+  this.cx.lineTo(x2, y2);
+  this.cx.closePath();
+  this.cx.stroke();
+}
+
+fwt_Graphics.prototype.oval = function(x, y, w, h)
+{
+  var KAPPA = 4 * ((Math.sqrt(2) -1) / 3);
+  var rx = w/2;
+  var ry = h/2;
+  var cx = x+rx;
+  var cy = y+ry;
+
+  this.cx.beginPath();
+  this.cx.moveTo(cx, cy - ry);
+  this.cx.bezierCurveTo(cx + (KAPPA * rx), cy - ry,  cx + rx, cy - (KAPPA * ry), cx + rx, cy);
+  this.cx.bezierCurveTo(cx + rx, cy + (KAPPA * ry), cx + (KAPPA * rx), cy + ry, cx, cy + ry);
+  this.cx.bezierCurveTo(cx - (KAPPA * rx), cy + ry, cx - rx, cy + (KAPPA * ry), cx - rx, cy);
+  this.cx.bezierCurveTo(cx - rx, cy - (KAPPA * ry), cx - (KAPPA * rx), cy - ry, cx, cy - ry);
+  this.cx.closePath();
+}
+
+fwt_Graphics.prototype.fillOval = function(x, y, w, h)
+{
+  this.oval(x, y, w, h)
+  this.cx.fill();
+}
+
+fwt_Graphics.prototype.drawOval = function(x, y, w, h)
+{
+  this.oval(x, y, w, h)
+  this.cx.stroke();
+}
+
+fwt_Graphics.prototype.fillArc = function(x, y, w, h, startAngle, arcAngle)
+{
+  sys_Obj.echo("TODO: fillArc")
+}
+
+fwt_Graphics.prototype.drawArc = function(x, y, w, h, startAngle, arcAngle)
+{
+  sys_Obj.echo("TODO: drawArc")
+}
+
+fwt_Graphics.prototype.drawText = function (s, x, y)
+{
+  this.cx.strokeText(s, x, y)
+}
+
+
+
 
