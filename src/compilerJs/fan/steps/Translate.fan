@@ -29,80 +29,35 @@ class Translate : JsCompilerStep
 
   override Void run()
   {
-    log.debug("GenerateOutput")
+    log.debug("Translate")
 
-    // resolve nativeDirs to file map
-    peers := Str:File[:]
-    if (compiler.nativeDirs != null)
-      compiler.nativeDirs.each |dir| {
-        dir.listFiles.each |f| { peers[f.basename] = f }
-      }
-
-    // find types to compile
-    jsTypes := types.findAll |def|
-    {
-      if (compiler.force) return true
-      if (def.facets?.get("javascript")?->toStr == "@javascript=true") return true
-      return false
-    }
-
-    // write pod
-    typeDefs(compiler.out, jsTypes)
-    refs := Str:CType[:]
-    jsTypes.each |def|
-    {
-      // check for native first
-      key := "${def.name}Peer"
-      peer := peers[key]
-      if (peer != null)
-      {
-        in := peer.in
-        minify(in, compiler.out)
-        in.close
-        peers.remove(key)
-      }
-
-      // compile type
-      w := JsWriter(compiler, def, compiler.out)
-      w.write
-      refs.setAll(w.refs)
-    }
-
-    // write out refs
-    refs.each |def|
-    {
-      if (!def.name.startsWith("Curry\$")) return
-      JsWriter(compiler, def, compiler.out).write
-    }
-
-    // write any left over natives
-    peers.each |f|
-    {
-      in := f.in
-      minify(in, compiler.out)
-      in.close
-    }
+    natives = compiler.natives.dup
+    writeTypeInfo
+    writeTypes
+    writeNatives
 
     bombIfErr
   }
 
-  **
-  ** Write the TypeDefs.
-  **
-  private Void typeDefs(OutStream out, TypeDef[] types)
+//////////////////////////////////////////////////////////////////////////
+// TypeInfo
+//////////////////////////////////////////////////////////////////////////
+
+  Void writeTypeInfo()
   {
+    out := compiler.out
     out.printLine("with(sys_Pod.\$add(\"$pod.name\"))")
     out.printLine("{")
 
     // types
-    types.each |def,i|
+    compiler.toCompile.each |def,i|
     {
       base := def.base ?: "sys::Obj"
       out.printLine("var \$$i=\$at(\"$def.name\",\"$base\")")
     }
 
     // slots
-    types.each |def,i|
+    compiler.toCompile.each |def,i|
     {
       if (def.slotDefs.size > 0)
       {
@@ -121,11 +76,55 @@ class Translate : JsCompilerStep
     out.printLine("};")
   }
 
-  **
-  ** Minify JavaScript source code from the InStream and write
-  ** the results to the OutStream.
-  **
-  private Void minify(InStream in, OutStream out)
+//////////////////////////////////////////////////////////////////////////
+// Types
+//////////////////////////////////////////////////////////////////////////
+
+  Void writeTypes()
+  {
+    refs := Str:CType[:]
+
+    compiler.toCompile.each |def|
+    {
+      // always write peer first
+      key := "${def.name}Peer"
+      peer := natives[key]
+      if (peer != null)
+      {
+        in := peer.in
+        minify(in, compiler.out)
+        in.close
+        natives.remove(key)
+      }
+
+      // compile type
+      w := JsWriter(compiler, def, compiler.out)
+      w.write
+      refs.setAll(w.refs)
+    }
+
+    refs.each |def|
+    {
+      if (!def.name.startsWith("Curry\$")) return
+      JsWriter(compiler, def, compiler.out).write
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Natives
+//////////////////////////////////////////////////////////////////////////
+
+  Void writeNatives()
+  {
+    natives.each |f|
+    {
+      in := f.in
+      minify(in, compiler.out)
+      in.close
+    }
+  }
+
+  Void minify(InStream in, OutStream out)
   {
     inBlock := false
     in.readAllLines.each |line|
@@ -158,6 +157,12 @@ class Translate : JsCompilerStep
       out.printLine(s)
     }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  [Str:File]? natives
 
 }
 
