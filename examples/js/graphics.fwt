@@ -1,0 +1,52 @@
+//
+// Copyright (c) 2009, Brian Frank and Andy Frank
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   12 Jun 09  Brian Frank  Creation
+//
+
+using gfx
+using fwt
+
+class GraphicsDemo : Window
+{
+  new make() : super(null, null)
+  {
+    content = MyCanvas()
+  }
+}
+
+class MyCanvas : Canvas
+{
+  override Void onPaint(Graphics g)
+  {
+    g.brush = Color.red
+    g.fillRect(0, 0, 200, 200)
+    g.brush = Color.green
+    g.fillRect(50, 50, 200, 200)
+    g.brush = Color.yellow
+    g.fillRect(100, 100, 200, 200)
+    g.brush = Color(0xa0_ff_ff_ff, true)
+    g.fillRect(30, 30, 200, 200)
+
+    g.brush = Color.blue
+    g.drawRect(10, 10, size.w-20, size.h-20)
+    g.drawLine(15, 10, 15, size.h-12)
+    g.drawLine(10, size.h-15, size.w-10, size.h-15)
+    g.drawLine(10, 10, size.w-10, size.h-10)
+
+    g.brush = Color.orange
+    g.fillOval(150, 100, 130, 50)
+    g.brush = Color.black
+    g.drawOval(150, 100, 130, 50)
+    g.drawRect(150, 100, 130, 50)
+
+    g.brush = Color.black
+    g.drawLine(100, 200, 300, 200)
+    g.drawText("Hello World!", 100, 200)
+
+    //drawArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
+    //fillArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
+  }
+}
