@@ -355,13 +355,34 @@ abstract class BuildPod : BuildScript
   {
     if (!hasJavascript) return
 
-    // natives
-    jsDirs := resolveDirs(javascriptDirs)
+    log.info("javascript [$podName]")
+    log.indent
 
-    // use compilerJavascript reflectively
-    compilerJavascript := Type.find("compilerJavascript::Main").make
-    Int r := compilerJavascript->run(scriptFile.uri, jsDirs)
-    if (r != 0) fatal("Cannot compile javascript '$podName'")
+    // env
+    jsDirs := resolveDirs(javascriptDirs)
+    jsTemp := scriptDir + `temp-javascript/`
+
+    // start with a clean directory
+    Delete.make(this, jsTemp).run
+    CreateDir.make(this, jsTemp).run
+
+    // compile javascript
+    jsc := CompileJs(this)
+    jsc.outDir = jsTemp
+    jsc.nativeDirs = jsDirs
+    jsc.run
+
+    // append files to the pod zip (we use java's jar tool)
+    jdk    := JdkTask.make(this)
+    jarExe := jdk.jarExe
+    curPod := libFanDir + "${podName}.pod".toUri
+    Exec.make(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", jsTemp.osPath,
+      "${podName}.js"], jsTemp).run
+
+    // cleanup temp
+    Delete.make(this, jsTemp).run
+
+    log.unindent
   }
 
 //////////////////////////////////////////////////////////////////////////
