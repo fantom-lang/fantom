@@ -367,10 +367,12 @@ abstract class BuildPod : BuildScript
     CreateDir.make(this, jsTemp).run
 
     // compile javascript
+    out := jsTemp.createFile("${podName}.js").out
     jsc := CompileJs(this)
-    jsc.outDir = jsTemp
+    jsc.out = out
     jsc.nativeDirs = jsDirs
     jsc.run
+    out.close
 
     // append files to the pod zip (we use java's jar tool)
     jdk    := JdkTask.make(this)
