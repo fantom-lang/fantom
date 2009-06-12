@@ -171,4 +171,14 @@ const class Color : Brush
       return "#" + argb.toHex(8)
   }
 
+  **
+  ** To a valid CSS color string.
+  **
+  Str toCss()
+  {
+    if (alpha == 0xff) return "#" + rgb.toHex(6)
+    alphaVal := alpha * 100 / 255
+    return "rgba($r,$g,$b,0.${alphaVal})"
+  }
+
 }

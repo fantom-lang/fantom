@@ -69,4 +69,10 @@ class ColorTest : Test
     verifyEq(Color.orange.toStr, "#ffa500")
   }
 
+  Void testToCss()
+  {
+    verifyEq(Color(0xaabbcc).toCss, "#aabbcc")
+    verifyEq(Color(0x40aabbcc,true).toCss, "rgba(170,187,204,0.25)")
+  }
+
 }
