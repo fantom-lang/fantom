@@ -9,81 +9,40 @@
 using compiler
 
 **
-** Fan to Javascript Compiler.
+** Translate AST into JavaScript source code
 **
-class CompilerJavascript : Compiler
+class Translate : JsCompilerStep
 {
 
 //////////////////////////////////////////////////////////////////////////
-// Construction
+// Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Construct with reasonable defaults
-  **
-  new make(CompilerInput input)
-    : super(input)
+  new make(JsCompiler compiler)
+    : super(compiler)
   {
-    this.output = CompilerOutput()
-    this.nativeDirs = File[,]
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Compile
+// Run
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Compile fan source code from the configured CompilerInput
-  ** into a fan pod and return the resulting CompilerOutput.
-  **
-  override CompilerOutput compile()
-  {
-    log.info("Compile [${input.podName}]")
-    log.indent
-
-    InitInput(this).run
-    ResolveDepends(this).run
-    ScanForUsingsAndTypes(this).run
-    ResolveImports(this).run
-    Parse(this).run
-    OrderByInheritance(this).run
-    CheckInheritance(this).run
-    Inherit(this).run
-    DefaultCtor(this).run
-    InitEnum(this).run
-    InitClosures(this).run
-    Normalize(this).run
-    ResolveExpr(this).run
-    CheckErrors(this).run
-    CheckParamDefs(this).run
-    ClosureVars(this).run
-    //Assemble(this).run
-    //GenerateOutput(this).run
-    generateOutput
-
-    log.unindent
-    return output
-  }
-
-  **
-  ** Directory to write compiled Javascript source files to
-  **
-  Void generateOutput()
+  override Void run()
   {
     log.debug("GenerateOutput")
-    file  := outDir.createFile("${pod.name}.js")
+    file  := compiler.outDir.createFile("${pod.name}.js")
     peers := Str:File[:]
     out   := file.out
 
     // resolve nativeDirs to file map
-    nativeDirs.each |dir| {
+    compiler.nativeDirs.each |dir| {
       dir.listFiles.each |f| { peers[f.basename] = f }
     }
 
     // find types to compile
     jsTypes := types.findAll |def|
     {
-      if (force) return true
+      if (compiler.force) return true
       if (def.facets?.get("javascript")?->toStr == "@javascript=true") return true
       return false
     }
@@ -105,7 +64,7 @@ class CompilerJavascript : Compiler
       }
 
       // compile type
-      w := JavascriptWriter(this, def, out)
+      w := JsWriter(compiler, def, out)
       w.write
       refs.setAll(w.refs)
     }
@@ -114,7 +73,7 @@ class CompilerJavascript : Compiler
     refs.each |def|
     {
       if (!def.name.startsWith("Curry\$")) return
-      JavascriptWriter(this, def, out).write
+      JsWriter(compiler, def, out).write
     }
 
     // write any left over natives
@@ -126,8 +85,7 @@ class CompilerJavascript : Compiler
     }
 
     out.close
-    // bombIfErr...
-    if (!errors.isEmpty) throw errors.first
+    bombIfErr
   }
 
   **
@@ -203,20 +161,5 @@ class CompilerJavascript : Compiler
     }
   }
 
-  **
-  ** Directory to write compiled Javascript source files to
-  **
-  File? outDir
-
-  **
-  ** Directories of native javascript files to include in output.
-  **
-  File[] nativeDirs
-
-  **
-  ** Force all types and slots to be compiled even if they do
-  ** have the @javascript facet.
-  **
-  Bool force := false
-
 }
+

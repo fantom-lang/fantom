@@ -22,7 +22,7 @@ class CompilerSupport
   **
   new make(Compiler compiler)
   {
-    this.compiler = compiler
+    this.c = compiler
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,11 +30,16 @@ class CompilerSupport
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Get the compiler.
+  **
+  virtual Compiler compiler() { c }
+
+  **
   ** Convenience for compiler.ns
   **
   CNamespace ns()
   {
-    return compiler.ns
+    return c.ns
   }
 
   **
@@ -42,7 +47,7 @@ class CompilerSupport
   **
   PodDef pod()
   {
-    return compiler.pod
+    return c.pod
   }
 
   **
@@ -50,7 +55,7 @@ class CompilerSupport
   **
   CompilationUnit[] units()
   {
-    return compiler.pod.units
+    return c.pod.units
   }
 
   **
@@ -58,7 +63,7 @@ class CompilerSupport
   **
   TypeDef[] types()
   {
-    return compiler.types
+    return c.types
   }
 
   **
@@ -66,7 +71,7 @@ class CompilerSupport
   **
   CompilerLog log()
   {
-    return compiler.log
+    return c.log
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -80,7 +85,7 @@ class CompilerSupport
   {
     t.unit.types.add(t)
     pod.typeDefs[t.name] = t
-    compiler.types.add(t)
+    c.types.add(t)
   }
 
   **
@@ -90,7 +95,7 @@ class CompilerSupport
   {
     t.unit.types.removeSame(t)
     pod.typeDefs.remove(t.name)
-    compiler.types.removeSame(t)
+    c.types.removeSame(t)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -111,8 +116,8 @@ class CompilerSupport
   **
   CompilerErr errReport(CompilerErr e)
   {
-    compiler.log.compilerErr(e)
-    compiler.errors.add(e)
+    c.log.compilerErr(e)
+    c.errors.add(e)
     return e
   }
 
@@ -121,8 +126,8 @@ class CompilerSupport
   **
   Void bombIfErr()
   {
-    if (!compiler.errors.isEmpty)
-      throw compiler.errors.first
+    if (!c.errors.isEmpty)
+      throw c.errors.first
   }
 
   **
@@ -145,7 +150,7 @@ class CompilerSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Compiler compiler            // parent compiler instance
+  private Compiler c           // parent compiler instance
   Bool suppressErr := false    // throw SuppressedErr instead of CompilerErr
 
 }
