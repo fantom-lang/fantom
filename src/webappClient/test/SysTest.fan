@@ -13,6 +13,7 @@ internal class SysTest : Test
 {
   override Void setup()
   {
+    /*
     try
     {
       // recompile testSys and force javascript compilation
@@ -20,19 +21,21 @@ internal class SysTest : Test
       compiler := Type.find("compilerJavascript::Main").make
       Int r := compiler->run(script.uri, true)
       if (r != 0) throw Err("Cannot compile javascript for testSys")
+
     }
     catch (Err err)
     {
       fail("Failed to recompile testSys")
       err.trace
     }
+    */
   }
 
   //Void test() { doTest }
   internal Void doTest(Str tp := "*", Str mp := "*")
   {
     pod := Pod.find("testSys")
-    runner := Type.find("compilerJavascript::TestRunner").make
+    runner := Type.find("compilerJs::TestRunner").make
     runner->evalPod(Pod.find("webappClient"))
     runner->evalPod(pod)
     if (tp == "*")

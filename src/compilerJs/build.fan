@@ -10,14 +10,14 @@
 using build
 
 **
-** Build: compilerJavascript
+** Build: compilerJs
 **
 class Build : BuildPod
 {
 
   override Void setup()
   {
-    podName     = "compilerJavascript"
+    podName     = "compilerJs"
     version     = globalVersion
     description = "Fan to Javascript Compiler"
     depends     = ["sys 1.0", "compiler 1.0", "build 1.0"]
