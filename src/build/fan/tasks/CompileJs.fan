@@ -40,9 +40,9 @@ class CompileJs : Task
     try
     {
       c := Type.find("compilerJs::JsCompiler").make([input])
-      c->outDir     = outDir
+      c->output     = CompilerOutput()
+      c->out        = out
       c->nativeDirs = nativeDirs
-      c->force      = force
       c->compile
     }
     catch (CompilerErr err)
@@ -58,7 +58,6 @@ class CompileJs : Task
     }
   }
 
-  File? outDir
-  File[] nativeDirs := File[,]
-  Bool force := false
+  OutStream? out
+  File[]? nativeDirs
 }

@@ -21,7 +21,6 @@ class JsCompiler : Compiler
   new make(CompilerInput input)
     : super(input)
   {
-    this.output = CompilerOutput()
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,27 +29,21 @@ class JsCompiler : Compiler
 
   override Void backend()
   {
+    Buf? buf
+    toStr := output.mode == CompilerOutputMode.str
+    if (toStr) { buf = Buf(); out = buf.out }
+
     Translate(this).run
+
+    if (toStr) output.str = buf.flip.in.readAllStr
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  **
-  ** Directory to write compiled Javascript source files to
-  **
-  File? outDir
-
-  **
-  ** Directories of native javascript files to include in output.
-  **
-  File[] nativeDirs := File[,]
-
-  **
-  ** Force all types and slots to be compiled even if they do
-  ** have the @javascript facet.
-  **
-  Bool force := false
+  OutStream? out       // all js gets written to this stream
+  File[]? nativeDirs   // dirs of native js to include in output
+  Bool force := false  // ignore @javascript facet and compile all types
 
 }

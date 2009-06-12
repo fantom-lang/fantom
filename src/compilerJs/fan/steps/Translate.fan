@@ -30,14 +30,13 @@ class Translate : JsCompilerStep
   override Void run()
   {
     log.debug("GenerateOutput")
-    file  := compiler.outDir.createFile("${pod.name}.js")
-    peers := Str:File[:]
-    out   := file.out
 
     // resolve nativeDirs to file map
-    compiler.nativeDirs.each |dir| {
-      dir.listFiles.each |f| { peers[f.basename] = f }
-    }
+    peers := Str:File[:]
+    if (compiler.nativeDirs != null)
+      compiler.nativeDirs.each |dir| {
+        dir.listFiles.each |f| { peers[f.basename] = f }
+      }
 
     // find types to compile
     jsTypes := types.findAll |def|
@@ -48,7 +47,7 @@ class Translate : JsCompilerStep
     }
 
     // write pod
-    typeDefs(out, jsTypes)
+    typeDefs(compiler.out, jsTypes)
     refs := Str:CType[:]
     jsTypes.each |def|
     {
@@ -58,13 +57,13 @@ class Translate : JsCompilerStep
       if (peer != null)
       {
         in := peer.in
-        minify(in, out)
+        minify(in, compiler.out)
         in.close
         peers.remove(key)
       }
 
       // compile type
-      w := JsWriter(compiler, def, out)
+      w := JsWriter(compiler, def, compiler.out)
       w.write
       refs.setAll(w.refs)
     }
@@ -73,18 +72,17 @@ class Translate : JsCompilerStep
     refs.each |def|
     {
       if (!def.name.startsWith("Curry\$")) return
-      JsWriter(compiler, def, out).write
+      JsWriter(compiler, def, compiler.out).write
     }
 
     // write any left over natives
     peers.each |f|
     {
       in := f.in
-      minify(in, out)
+      minify(in, compiler.out)
       in.close
     }
 
-    out.close
     bombIfErr
   }
 
