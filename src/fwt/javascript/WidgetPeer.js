@@ -19,7 +19,7 @@ fwt_WidgetPeer.prototype.$ctor = function(self) {}
 fwt_WidgetPeer.prototype.relayout = function(self)
 {
   this.sync(self);
-  self.onLayout();
+  if(self.onLayout) self.onLayout();
 
   var kids = self.kids;
   for (var i=0; i<kids.length; i++)
