@@ -30,6 +30,7 @@ class JsCompiler : Compiler
   override Void backend()
   {
     Init(this).run
+    FindTypes(this).run
     Translate(this).run
     Cleanup(this).run
   }
@@ -38,9 +39,11 @@ class JsCompiler : Compiler
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  OutStream? out       // output of compiler
-  Buf? buf             // used if compiler.output is str
-  File[]? nativeDirs   // Translate; js natives
-  Bool force := false  // Translate; force compile all types
+  OutStream? out        // output of compiler
+  Buf? buf              // Init/Cleanup
+  Bool force := false   // FindTypes; force compile all types
+  TypeDef[]? toCompile  // FindTypes
+  File[]? nativeDirs    // FindTypes; dir to look for js natives
+  [Str:File]? natives   // FindTypes
 
 }
