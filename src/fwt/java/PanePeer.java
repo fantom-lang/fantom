@@ -14,9 +14,12 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.layout.*;
+import org.eclipse.swt.events.*;
 
-public class PanePeer extends WidgetPeer
+public class PanePeer
+  extends WidgetPeer
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,8 +37,7 @@ public class PanePeer extends WidgetPeer
 
   public Widget create(Widget parent)
   {
-    Canvas  c = new Canvas((Composite)parent, 0);
-    c.addPaintListener(this);
+    Composite c = new Composite((Composite)parent, 0);
     c.setLayout(new PaneLayout());
     return c;
   }

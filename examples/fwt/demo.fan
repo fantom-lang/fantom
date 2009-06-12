@@ -629,7 +629,7 @@ class DirTableModel : TableModel
 ** Box
 **************************************************************************
 
-class Box : Widget
+class Box : Canvas
 {
   Color color := Color.green
 
@@ -652,7 +652,7 @@ class Box : Widget
 ** EventDemo
 **************************************************************************
 
-class EventDemo : Widget
+class EventDemo : Canvas
 {
   new make()
   {
@@ -704,7 +704,7 @@ class EventDemo : Widget
 ** GraphicsDemo
 **************************************************************************
 
-class GraphicsDemo : Widget
+class GraphicsDemo : Canvas
 {
   FwtDemo? demo
 

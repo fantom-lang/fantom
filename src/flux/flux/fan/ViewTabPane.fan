@@ -145,7 +145,7 @@ internal class ViewTabPane : Pane
 **************************************************************************
 ** TabBar
 **************************************************************************
-internal class TabBar : Widget
+internal class TabBar : Canvas
 {
   new make(ViewTabPane pane)
   {

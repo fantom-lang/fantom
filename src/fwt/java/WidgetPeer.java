@@ -14,7 +14,6 @@ import fan.gfx.*;
 import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
@@ -29,7 +28,7 @@ import org.eclipse.swt.events.*;
  * Native methods for Widget
  */
 public class WidgetPeer
-  implements PaintListener, KeyListener, FocusListener,
+  implements KeyListener, FocusListener,
              MouseListener, MouseMoveListener, MouseTrackListener, MouseWheelListener,
              DisposeListener
 {
@@ -391,12 +390,7 @@ public class WidgetPeer
 
   public Widget create(Widget parent)
   {
-    Canvas c = new Canvas((Composite)parent, 0)
-    {
-      public void drawBackground(GC gc, int x, int y, int w, int h) {}
-    };
-    c.addPaintListener(this);
-    return c;
+    throw new IllegalStateException(getClass().getName());
   }
 
   public void detach(fan.fwt.Widget self)
@@ -450,16 +444,6 @@ public class WidgetPeer
     {
       e.printStackTrace();
     }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Callbacks
-//////////////////////////////////////////////////////////////////////////
-
-  public void paintControl(PaintEvent e)
-  {
-    FwtGraphics g = new FwtGraphics(e.gc);
-    self.onPaint(g);
   }
 
 //////////////////////////////////////////////////////////////////////////

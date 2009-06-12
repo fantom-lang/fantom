@@ -274,7 +274,7 @@ internal class FrameState
 ** ToolBarBorder
 **************************************************************************
 
-internal class ToolBarBorder : Widget
+internal class ToolBarBorder : Canvas
 {
   override Size prefSize(Hints hints := Hints.defVal) { return Size(100,2) }
   override Void onPaint(Graphics g)
@@ -290,7 +290,7 @@ internal class ToolBarBorder : Widget
 ** StatusBarBorder
 **************************************************************************
 
-internal class StatusBarBorder : Widget
+internal class StatusBarBorder : Canvas
 {
   override Size prefSize(Hints hints := Hints.defVal) { return Size(100,4) }
   override Void onPaint(Graphics g)
