@@ -14,21 +14,21 @@ fwt_CanvasPeer.prototype.$ctor = function(self) {}
 
 fwt_CanvasPeer.prototype.sync = function(self)
 {
+  // remove existing elements
   var div = this.elem;
   while (div.firstChild != null) div.removeChild(div.firstChild);
 
+  // create new canvas element in my div
   var c = document.createElement("canvas");
+  var size = this.size
+  c.width  = size.w;
+  c.height = size.h;
   div.appendChild(c);
 
-  var cx = c.getContext("2d")
-  cx.fillStyle = "rgb(100,100,100)";
-  cx.fillRect (0, 0, 500, 500);
-
-  /* this does not work
-  var g = fwt_Graphics()
+  // repaint canvas using Canvas.onPaint callback
+  var g = new fwt_Graphics()
   g.cx = c.getContext("2d");
   self.onPaint(g)
-  */
 
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
@@ -37,13 +37,22 @@ fwt_CanvasPeer.prototype.sync = function(self)
  * fwt_Graphics implements Graphics to use HTML canvas.
  */
 var fwt_Graphics = sys_Obj.$extend(sys_Obj);
-sys_Obj.$mixin(fwt_Graphics, gfx_Graphics);
+//sys_Obj.$mixin(fwt_Graphics, gfx_Graphics);
+
+fwt_Graphics.prototype.$ctor = function() {}
 
 fwt_Graphics.prototype.cx = null
+fwt_Graphics.prototype.brush = null
+
+fwt_Graphics.prototype.brush$get = function() { return this.brush }
+fwt_Graphics.prototype.brush$set = function(b)
+{
+  this.brush = b
+  this.cx.fillStyle = b.toCss()
+}
 
 fwt_Graphics.prototype.fillRect = function(x, y, w, h)
 {
-  cx.fillStyle = "rgb(200,0,0)";
-  cx.fillRect (x, y, w, h);
+  this.cx.fillRect(x, y, w, h);
 }
 
