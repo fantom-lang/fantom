@@ -57,6 +57,18 @@ class Compiler
     log.info("Compile [${input.podName}]")
     log.indent
 
+    frontend
+    backend
+
+    log.unindent
+    return output
+  }
+
+  **
+  ** Execute front-end compiler pipeline
+  **
+  virtual Void frontend()
+  {
     InitInput(this).run
     ResolveDepends(this).run
     ScanForUsingsAndTypes(this).run
@@ -74,11 +86,15 @@ class Compiler
     CheckParamDefs(this).run
     ClosureVars(this).run
     ConstChecks(this).run
+  }
+
+  **
+  ** Execute back-end compiler pipeline
+  **
+  virtual Void backend()
+  {
     Assemble(this).run
     GenerateOutput(this).run
-
-    log.unindent
-    return output
   }
 
 //////////////////////////////////////////////////////////////////////////

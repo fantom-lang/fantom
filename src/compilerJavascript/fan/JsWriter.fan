@@ -11,7 +11,7 @@ using compiler
 **
 ** Generates a Javascript source file from a TypeDef AST.
 **
-class JavascriptWriter : CompilerSupport
+class JsWriter : CompilerSupport
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -530,6 +530,9 @@ if (c != null)
 
   Void callExpr(CallExpr ce, Bool doSafe := true)
   {
+    // skip mock methods used to insert implicit runtime checks
+    if (ce.method is MockMethod) return
+
     if (ce.isSafe && doSafe)
     {
       out.w("((")

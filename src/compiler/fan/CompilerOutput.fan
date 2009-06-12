@@ -31,6 +31,12 @@ class CompilerOutput
   ** If podFile mode, this is the pod zip file written to disk.
   **
   File? podFile
+
+  **
+  ** If str mode, this is the output string (not used by Fan
+  ** compiler, but used by Javascript)
+  **
+  Str? str
 }
 
 **************************************************************************
@@ -43,6 +49,7 @@ class CompilerOutput
 enum CompilerOutputMode
 {
   transientPod,
-  podFile
+  podFile,
+  str
 }
 
