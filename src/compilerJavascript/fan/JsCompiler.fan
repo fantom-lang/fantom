@@ -22,7 +22,6 @@ class JsCompiler : Compiler
     : super(input)
   {
     this.output = CompilerOutput()
-    this.nativeDirs = File[,]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,7 +45,7 @@ class JsCompiler : Compiler
   **
   ** Directories of native javascript files to include in output.
   **
-  File[] nativeDirs
+  File[] nativeDirs := File[,]
 
   **
   ** Force all types and slots to be compiled even if they do
