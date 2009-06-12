@@ -24,7 +24,7 @@ fwt_DialogPeer.prototype.open = function(self)
     width      = "100%";
     height     = "100%";
     background = "#fff";
-    opacity    = "0.1";
+    opacity    = "0.3";
     filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=10);"
   }
 
