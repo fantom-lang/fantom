@@ -29,6 +29,7 @@ fwt_CanvasPeer.prototype.sync = function(self)
   var g = new fwt_Graphics()
   g.cx = c.getContext("2d");
   g.cx.lineWidth = 1
+  g.cx.lineCap = "square"
   g.cx.textBaseline = "top"
   self.onPaint(g)
 
@@ -39,7 +40,6 @@ fwt_CanvasPeer.prototype.sync = function(self)
  * fwt_Graphics implements Graphics to use HTML canvas.
  */
 var fwt_Graphics = sys_Obj.$extend(sys_Obj);
-//sys_Obj.$mixin(fwt_Graphics, gfx_Graphics);
 
 fwt_Graphics.prototype.$ctor = function() {}
 
@@ -60,7 +60,13 @@ fwt_Graphics.prototype.pen$get = function() { return this.pen }
 fwt_Graphics.prototype.pen$set = function(p)
 {
   this.pen = p
-  // TODO
+  this.cx.lineWidth = p.width
+  /* these don't appear to work in any browser and actually
+     fail in FireFox, so just keep them commented out for now
+  this.cx.lineCap = p.capToStr
+  this.cx.lineJoin = p.joinToStr
+  */
+  // dashes not supported
 }
 
 fwt_Graphics.prototype.font = null

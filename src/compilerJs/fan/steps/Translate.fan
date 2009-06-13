@@ -31,7 +31,7 @@ class Translate : JsCompilerStep
   {
     log.debug("Translate")
 
-    natives = compiler.natives.dup
+    natives = compiler.natives?.dup ?:  Str:File[:]
     writeTypeInfo
     writeTypes
     writeNatives

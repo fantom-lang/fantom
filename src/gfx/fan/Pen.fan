@@ -51,6 +51,8 @@ const class Pen
   ** Dash pattern as on/off again lengths.  If null
   ** then shapes are stroked solid.
   **
+  ** Note: dashes not supported in javascript
+  **
   const Int[]? dash
 
   **
@@ -127,6 +129,34 @@ const class Pen
            this.cap   == that.cap   &&
            this.join  == that.join  &&
            this.dash  == that.dash
+  }
+
+  **
+  ** Return "square", "butt", "round"
+  **
+  Str capToStr()
+  {
+    switch (cap)
+    {
+      case capSquare: return "square"
+      case capButt:   return "butt"
+      case capRound:  return "round"
+      default:        throw Err()
+    }
+  }
+
+  **
+  ** Return "miter", "round", "bevel"
+  **
+  Str joinToStr()
+  {
+    switch (join)
+    {
+      case joinMiter: return "miter"
+      case joinRound: return "round"
+      case joinBevel: return "bevel"
+      default:        throw Err()
+    }
   }
 
   **
