@@ -65,7 +65,6 @@ class MyCanvas : Canvas
     */
 
     // system font/colors
-    /*
     y := 20
     g.font = Desktop.sysFont
     g.brush = Color.black
@@ -83,7 +82,6 @@ class MyCanvas : Canvas
     y = sysColor(g, y, Desktop.sysListFg, "sysListFg")
     y = sysColor(g, y, Desktop.sysListSelBg, "sysListSelBg")
     y = sysColor(g, y, Desktop.sysListSelFg, "sysListSelFg")
-    */
 
     // rect/text with gradients
 /* TODO
@@ -152,6 +150,7 @@ g.brush = Color.blue
     g.brush = Color("#00f"); g.fillRect(90, 90, 30, 30);
     // gradients
     g.alpha = 255
+/*
     g.brush = Gradient.makeLinear(
       Point.make(0,0), Color.red, Point.make(0,120), Color.white)
       g.fillRect(120, 0, 20, 120)
@@ -171,5 +170,16 @@ g.brush = Color.blue
     g.brush = Gradient.makeLinear(
       Point.make(0,0), Color("#80ff0000"), Point.make(0,120), Color("#80ffffff"))
       g.fillRect(220, 0, 20, 120)
+*/
   }
+
+  Int sysColor(Graphics g, Int y, Color c, Str name)
+  {
+    g.brush = c
+    g.fillRect(480, y, 140, 20)
+    g.brush = Color.green
+    g.drawText(name, 490, y+3)
+    return y + 20
+  }
+
 }
