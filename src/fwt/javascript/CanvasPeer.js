@@ -49,10 +49,21 @@ fwt_Graphics.prototype.brush = null
 fwt_Graphics.prototype.brush$get = function() { return this.brush }
 fwt_Graphics.prototype.brush$set = function(b)
 {
-  var style = b.toCss()
   this.brush = b
-  this.cx.fillStyle = style
-  this.cx.strokeStyle = style
+  if (b instanceof gfx_Color)
+  {
+    var style = b.toCss()
+    this.cx.fillStyle = style
+    this.cx.strokeStyle = style
+  }
+  else
+  {
+    var style = this.cx.createLinearGradient(b.pt1.x, b.pt1.y, b.pt2.x, b.pt2.y);
+    style.addColorStop(0, b.c1.toCss)
+    style.addColorStop(1, b.c2.toCss)
+    this.cx.fillStyle = style
+    this.cx.strokeStyle = style
+  }
 }
 
 fwt_Graphics.prototype.pen = null

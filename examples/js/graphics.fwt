@@ -49,7 +49,24 @@ class MyCanvas : Canvas
     //drawArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
     //fillArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
 
-    g.translate(400, 10)
+// TODO
+    brush := Gradient.makeLinear(
+      Point.make(260,120), Color.blue,
+      Point.make(260+200,120+200), Color.green)
+echo("#### brush " + brush + "  " + brush.type)
+
+
+/*
+    g.brush = Gradient.makeLinear(
+      Point.make(260,120), Color.blue,
+      Point.make(260+200,120+200), Color.red)
+*/
+g.brush = Color.red
+    g.pen = Pen { width=20; join = Pen.joinRound }
+    g.drawRect(270, 230, 180, 180)
+    6.times |Int i| { g.drawText("Gradients!", 300, 250+i*20) }
+
+    g.translate(480, 10)
     g.brush = Color.blue
     g.pen = Pen("10 joinMiter")
     g.drawRect(0, 0, 400, 400)
