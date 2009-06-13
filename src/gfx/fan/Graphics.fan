@@ -109,7 +109,7 @@ mixin Graphics
 
   **
   ** Set the clipping area to the intersection of the
-  ** current `clipRect` and the specified rectangle.
+  ** current clipping region and the specified rectangle.
   **
   abstract This clip(Rect r)
 
