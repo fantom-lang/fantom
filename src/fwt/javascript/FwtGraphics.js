@@ -164,16 +164,20 @@ fwt_Graphics.prototype.drawText = function (s, x, y)
 // This drawImage(Image image, Int x, Int y)
 fwt_Graphics.prototype.drawImage = function (img, x, y)
 {
-  sys_Obj.echo("drawImage " + img)
-  sys_Obj.echo("  img.uri " + img.uri)
-  // TODO
+// TODO: this should pulled into centralized img management
+  var jsImg = Image();
+  jsImg.src = img.uri.toStr();
+  this.cx.drawImage(jsImg, x, y)
   return this;
 }
 
 // This copyImage(Image image, Rect src, Rect dest)
-fwt_Graphics.prototype.copyImage = function (img, src, dest)
+fwt_Graphics.prototype.copyImage = function (img, src, dst)
 {
-  // TODO
+// TODO: this should pulled into centralized img management
+  var jsImg = Image();
+  jsImg.src = img.uri.toStr();
+  this.cx.drawImage(jsImg, src.x, src.y, src.w, src.h, dst.x, dst.y, dst.w, dst.h)
   return this;
 }
 
