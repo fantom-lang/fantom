@@ -50,9 +50,9 @@ class MyCanvas : Canvas
     g.brush = Color.purple; g.drawText("Hello World!", 70, 50)
     g.font = Desktop.sysFontMonospace.toSize(16).toBold; g.drawText("Hello World!", 70, 70)
 
-    /*
-    img := demo.folderIcon
+    img := Image(`/sys/pod/icons/x16/folder.png`)
     g.drawImage(img, 220, 20)
+    /*
     g.copyImage(img, Rect(0, 0, img.size.w, img.size.h), Rect(250, 30, 64, 64))
     g.drawImage(img.resize(Size(64, 64)), 320, 30)
     g.push
