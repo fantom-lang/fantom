@@ -45,6 +45,7 @@ fwt_Graphics.prototype.$ctor = function() {}
 
 fwt_Graphics.prototype.cx = null
 
+// Brush brush
 fwt_Graphics.prototype.brush = null
 fwt_Graphics.prototype.brush$get = function() { return this.brush }
 fwt_Graphics.prototype.brush$set = function(b)
@@ -66,6 +67,7 @@ fwt_Graphics.prototype.brush$set = function(b)
   }
 }
 
+// Pen pen
 fwt_Graphics.prototype.pen = null
 fwt_Graphics.prototype.pen$get = function() { return this.pen }
 fwt_Graphics.prototype.pen$set = function(p)
@@ -80,14 +82,16 @@ fwt_Graphics.prototype.pen$set = function(p)
   // dashes not supported
 }
 
+// Font font
 fwt_Graphics.prototype.font = null
 fwt_Graphics.prototype.font$get = function() { return this.font }
 fwt_Graphics.prototype.font$set = function(f)
 {
-  this.font = t
-  // TODO
+  this.font = f
+  this.cx.font = f.toStr()
 }
 
+// Bool antialias
 fwt_Graphics.prototype.antialias = null
 fwt_Graphics.prototype.antialias$get = function() { return this.antialias }
 fwt_Graphics.prototype.antialias$set = function(aa)
@@ -96,6 +100,7 @@ fwt_Graphics.prototype.antialias$set = function(aa)
   // TODO
 }
 
+//  Int alpha
 fwt_Graphics.prototype.alpha = null
 fwt_Graphics.prototype.alpha$get = function() { return this.alpha}
 fwt_Graphics.prototype.alpha$set = function(a)
@@ -104,6 +109,7 @@ fwt_Graphics.prototype.alpha$set = function(a)
   // TODO
 }
 
+// This drawLine(Int x1, Int y1, Int x2, Int y2)
 fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
 {
   this.cx.beginPath();
@@ -111,18 +117,24 @@ fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
   this.cx.lineTo(x2, y2);
   this.cx.closePath();
   this.cx.stroke();
+  return this;
 }
 
+// This drawRect(Int x, Int y, Int w, Int h)
 fwt_Graphics.prototype.drawRect = function(x, y, w, h)
 {
   this.cx.strokeRect(x, y, w, h);
+  return this;
 }
 
+// This fillRect(Int x, Int y, Int w, Int h)
 fwt_Graphics.prototype.fillRect = function(x, y, w, h)
 {
   this.cx.fillRect(x, y, w, h);
+  return this;
 }
 
+// helper
 fwt_Graphics.prototype.oval = function(x, y, w, h)
 {
   // Public Domain by Christopher Clay - http://canvaspaint.org/blog/
@@ -141,48 +153,65 @@ fwt_Graphics.prototype.oval = function(x, y, w, h)
   this.cx.closePath();
 }
 
+// This drawOval(Int x, Int y, Int w, Int h)
 fwt_Graphics.prototype.drawOval = function(x, y, w, h)
 {
   this.oval(x, y, w, h)
   this.cx.stroke();
+  return this;
 }
 
+// This fillOval(Int x, Int y, Int w, Int h)
 fwt_Graphics.prototype.fillOval = function(x, y, w, h)
 {
   this.oval(x, y, w, h)
   this.cx.fill();
+  return this;
 }
 
+// This drawArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
 fwt_Graphics.prototype.drawArc = function(x, y, w, h, startAngle, arcAngle)
 {
   // TODO
+  return this;
 }
 
+// This fillArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
 fwt_Graphics.prototype.fillArc = function(x, y, w, h, startAngle, arcAngle)
 {
   // TODO
+  return this;
 }
 
+// This drawText(Str s, Int x, Int y)
 fwt_Graphics.prototype.drawText = function (s, x, y)
 {
   this.cx.fillText(s, x, y)
+  return this;
 }
 
+// This drawImage(Image image, Int x, Int y)
 fwt_Graphics.prototype.drawImage = function (img, x, y)
 {
   // TODO
+  return this;
 }
 
+// This copyImage(Image image, Rect src, Rect dest)
 fwt_Graphics.prototype.copyImage = function (img, src, dest)
 {
   // TODO
+  return this;
 }
 
+// This translate(Int x, Int y)
 fwt_Graphics.prototype.translate = function (x, y)
 {
   this.cx.translate(x, y)
+  return this;
 }
 
+// This clip(Rect r)
 fwt_Graphics.prototype.clip = function (rect)
 {
   this.cx.beginPath();
@@ -195,16 +224,19 @@ fwt_Graphics.prototype.clip = function (rect)
   return this
 }
 
+// Void push()
 fwt_Graphics.prototype.push = function ()
 {
   // TODO
 }
 
+// Void pop()
 fwt_Graphics.prototype.pop = function ()
 {
   // TODO
 }
 
+// Void dispose()
 fwt_Graphics.prototype.dispose = function ()
 {
   // no-op
