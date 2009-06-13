@@ -147,8 +147,8 @@ public class DesktopPeer
   public static fan.gfx.Color sysBorder() { return sysColor(sysBorder, SWT.COLOR_WIDGET_BORDER); }
   public static fan.gfx.Color sysListFg() { return sysColor(sysListFg, SWT.COLOR_LIST_FOREGROUND); }
   public static fan.gfx.Color sysListBg() { return sysColor(sysListBg, SWT.COLOR_LIST_BACKGROUND); }
-  public static fan.gfx.Color sysListSelFg() { return sysColor(sysListSelFg, SWT.COLOR_LIST_SELECTION); }
-  public static fan.gfx.Color sysListSelBg() { return sysColor(sysListSelBg, SWT.COLOR_LIST_SELECTION_TEXT); }
+  public static fan.gfx.Color sysListSelFg() { return sysColor(sysListSelFg, SWT.COLOR_LIST_SELECTION_TEXT); }
+  public static fan.gfx.Color sysListSelBg() { return sysColor(sysListSelBg, SWT.COLOR_LIST_SELECTION); }
 
   static final int sysDarkShadow      = 0;
   static final int sysNormShadow      = 1;
