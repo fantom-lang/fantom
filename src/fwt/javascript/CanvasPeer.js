@@ -44,24 +44,47 @@ var fwt_Graphics = sys_Obj.$extend(sys_Obj);
 fwt_Graphics.prototype.$ctor = function() {}
 
 fwt_Graphics.prototype.cx = null
-fwt_Graphics.prototype.brush = null
 
+fwt_Graphics.prototype.brush = null
 fwt_Graphics.prototype.brush$get = function() { return this.brush }
 fwt_Graphics.prototype.brush$set = function(b)
 {
+  var style = b.toCss()
   this.brush = b
-  this.cx.fillStyle = b.toCss()
-  this.cx.strokeStyle = b.toCss()
+  this.cx.fillStyle = style
+  this.cx.strokeStyle = style
 }
 
-fwt_Graphics.prototype.fillRect = function(x, y, w, h)
+fwt_Graphics.prototype.pen = null
+fwt_Graphics.prototype.pen$get = function() { return this.pen }
+fwt_Graphics.prototype.pen$set = function(p)
 {
-  this.cx.fillRect(x, y, w, h);
+  this.pen = p
+  // TODO
 }
 
-fwt_Graphics.prototype.drawRect = function(x, y, w, h)
+fwt_Graphics.prototype.font = null
+fwt_Graphics.prototype.font$get = function() { return this.font }
+fwt_Graphics.prototype.font$set = function(f)
 {
-  this.cx.strokeRect(x, y, w, h);
+  this.font = t
+  // TODO
+}
+
+fwt_Graphics.prototype.antialias = null
+fwt_Graphics.prototype.antialias$get = function() { return this.antialias }
+fwt_Graphics.prototype.antialias$set = function(aa)
+{
+  this.antialias = aa
+  // TODO
+}
+
+fwt_Graphics.prototype.alpha = null
+fwt_Graphics.prototype.alpha$get = function() { return this.alpha}
+fwt_Graphics.prototype.alpha$set = function(a)
+{
+  this.alpha = a
+  // TODO
 }
 
 fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
@@ -71,6 +94,16 @@ fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
   this.cx.lineTo(x2, y2);
   this.cx.closePath();
   this.cx.stroke();
+}
+
+fwt_Graphics.prototype.drawRect = function(x, y, w, h)
+{
+  this.cx.strokeRect(x, y, w, h);
+}
+
+fwt_Graphics.prototype.fillRect = function(x, y, w, h)
+{
+  this.cx.fillRect(x, y, w, h);
 }
 
 fwt_Graphics.prototype.oval = function(x, y, w, h)
@@ -91,32 +124,77 @@ fwt_Graphics.prototype.oval = function(x, y, w, h)
   this.cx.closePath();
 }
 
-fwt_Graphics.prototype.fillOval = function(x, y, w, h)
-{
-  this.oval(x, y, w, h)
-  this.cx.fill();
-}
-
 fwt_Graphics.prototype.drawOval = function(x, y, w, h)
 {
   this.oval(x, y, w, h)
   this.cx.stroke();
 }
 
-fwt_Graphics.prototype.fillArc = function(x, y, w, h, startAngle, arcAngle)
+fwt_Graphics.prototype.fillOval = function(x, y, w, h)
 {
-  sys_Obj.echo("TODO: fillArc")
+  this.oval(x, y, w, h)
+  this.cx.fill();
 }
 
 fwt_Graphics.prototype.drawArc = function(x, y, w, h, startAngle, arcAngle)
 {
-  sys_Obj.echo("TODO: drawArc")
+  // TODO
+}
+
+fwt_Graphics.prototype.fillArc = function(x, y, w, h, startAngle, arcAngle)
+{
+  // TODO
 }
 
 fwt_Graphics.prototype.drawText = function (s, x, y)
 {
   this.cx.fillText(s, x, y)
 }
+
+fwt_Graphics.prototype.drawImage = function (img, x, y)
+{
+  // TODO
+}
+
+fwt_Graphics.prototype.copyImage = function (img, src, dest)
+{
+  // TODO
+}
+
+fwt_Graphics.prototype.translate = function (x, y)
+{
+  // TODO
+}
+
+fwt_Graphics.prototype.clipRect = null
+fwt_Graphics.prototype.clipRect$get = function() { return this.clipRect}
+fwt_Graphics.prototype.clipRect$set = function(rect)
+{
+  this.clipRect = retc
+  // TODO
+}
+
+fwt_Graphics.prototype.clip = function (rect)
+{
+  // TODO
+  return this
+}
+
+fwt_Graphics.prototype.push = function ()
+{
+  // TODO
+}
+
+fwt_Graphics.prototype.pop = function ()
+{
+  // TODO
+}
+
+fwt_Graphics.prototype.dispose = function ()
+{
+  // no-op
+}
+
 
 
 
