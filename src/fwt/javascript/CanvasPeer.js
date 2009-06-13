@@ -96,17 +96,17 @@ fwt_Graphics.prototype.antialias = null
 fwt_Graphics.prototype.antialias$get = function() { return this.antialias }
 fwt_Graphics.prototype.antialias$set = function(aa)
 {
+  // Note: canvas has no control over anti-aliasing (Jun 09)
   this.antialias = aa
-  // TODO
 }
 
-//  Int alpha
+// Int alpha
 fwt_Graphics.prototype.alpha = null
 fwt_Graphics.prototype.alpha$get = function() { return this.alpha}
 fwt_Graphics.prototype.alpha$set = function(a)
 {
   this.alpha = a
-  // TODO
+  this.cx.globalAlpha = a / 255
 }
 
 // This drawLine(Int x1, Int y1, Int x2, Int y2)
