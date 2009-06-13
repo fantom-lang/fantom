@@ -108,11 +108,6 @@ mixin Graphics
   abstract This translate(Int x, Int y)
 
   **
-  ** Current clipping rectangle.  Also see `clip`.
-  **
-  abstract Rect clipRect
-
-  **
   ** Set the clipping area to the intersection of the
   ** current `clipRect` and the specified rectangle.
   **
