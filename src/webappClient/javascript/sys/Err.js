@@ -120,3 +120,10 @@ sys_UnknownSlotErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.cal
 sys_UnknownSlotErr.prototype.type = function() { return sys_Type.find("sys::UnknownSlotErr"); }
 sys_UnknownSlotErr.make = function(msg) { return new sys_UnknownSlotErr(msg); }
 
+// UnsupportedErr
+var sys_UnsupportedErr = sys_Obj.$extend(sys_Err);
+sys_UnsupportedErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
+sys_UnsupportedErr.prototype.type = function() { return sys_Type.find("sys::UnsupportedErr"); }
+sys_UnsupportedErr.make = function(msg) { return new sys_UnsupportedErr(msg); }
+
+

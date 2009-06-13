@@ -18,7 +18,7 @@ var sys_Buf = sys_Obj.$extend(sys_Obj);
 
 sys_Buf.prototype.$ctor = function()
 {
-  this.m_buf = new Array();
+  this.m_buf = [];
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -119,7 +119,9 @@ sys_Buf.prototype.type = function()
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Buf.make = function(capacity) { return new sys_Buf(); }
+// TODO
+//sys_Buf.make = function(capacity) { return new sys_Buf(); }
+sys_Buf.make = function(capacity) { return new sys_MemBuf(); }
 
 sys_Buf.base64chars = [
 //A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z

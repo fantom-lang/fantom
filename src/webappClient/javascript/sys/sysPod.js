@@ -59,7 +59,7 @@ with (sys_Pod.$add("sys"))
   // TODO: LocalFile
   // TODO: ZipEntryFile
   $at("Buf",       "sys::Obj");
-  // TODO: MemBuf
+  //$at("MemBuf",    "sys::Buf"); // TODO - when we fix Buf
   // TODO: FileBuf
   // TODO: MmapBuf
   $at("Uri",       "sys::Obj");
@@ -113,7 +113,7 @@ with (sys_Pod.$add("sys"))
   $at("UnknownSlotErr", "sys::Err");
   $at("UnknownTypeErr", "sys::Err");
   // TODO: UnresolvedErr
-  // TODO: UnsupportedErr
+  $at("UnsupportedErr", "sys::Err");
 };
 
 // TODO - we really need to emit the type info *before*, but not

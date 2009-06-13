@@ -147,17 +147,58 @@ sys_InStream.prototype.readAllLines = function()
     return list;
   }
   catch (err) { sys_Obj.echo(err); }
-// TODO
-//  finally
-//  {
-//    try { this.close(); } catch (err) { echo(err); }
-//  }
+  finally
+  {
+    try { this.close(); } catch (err) { sys_Obj.echo(err); }
+  }
+}
+
+sys_InStream.prototype.readAllStr = function(normalizeNewlines)
+{
+  if (normalizeNewlines == undefined) normalizeNewlines = true;
+  try
+  {
+    var s = "";
+    var normalize = normalizeNewlines;
+
+    // read characters
+    var last = -1;
+    while (true)
+    {
+      var c = this.rChar();
+      if (c < 0) break;
+
+      // normalize newlines and add to buffer
+      if (normalize)
+      {
+        if (c == 13) buf[n++] = 10;
+        else if (last == 13 && c == 10) {}
+        else s += String.fromCharCode(c);
+        last = c;
+      }
+      else
+      {
+        s += String.fromCharCode(c);
+      }
+    }
+    return s;
+  }
+  finally
+  {
+    try { this.close(); } catch (err) { sys_Obj.echo(err); }
+  }
 }
 
 sys_InStream.prototype.readObj = function(options)
 {
   if (options == undefined) options = null;
   return new fanx_ObjDecoder(this, options).readObj();
+}
+
+sys_InStream.prototype.close = function()
+{
+  if (this.$in != null) return this.$in.close();
+  return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
