@@ -48,5 +48,15 @@ class MyCanvas : Canvas
 
     //drawArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
     //fillArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
+
+    g.translate(400, 10)
+    g.brush = Color.blue
+    g.drawRect(0, 0, 400, 400)
+    g.drawRect(100, 100, 200, 200)
+    g.clip(Rect(50, 50, 300, 300))
+    g.brush = Color.red
+    g.drawLine(0, 0, 400, 400)
+    g.clip(Rect(100, 100, 200, 200))
+    g.drawLine(0, 400, 400, 0)
   }
 }

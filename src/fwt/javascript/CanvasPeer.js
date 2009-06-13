@@ -163,6 +163,7 @@ fwt_Graphics.prototype.copyImage = function (img, src, dest)
 
 fwt_Graphics.prototype.translate = function (x, y)
 {
+  this.cx.translate(x, y)
   // TODO
 }
 
@@ -176,7 +177,13 @@ fwt_Graphics.prototype.clipRect$set = function(rect)
 
 fwt_Graphics.prototype.clip = function (rect)
 {
-  // TODO
+  this.cx.beginPath();
+  this.cx.moveTo(rect.x, rect.y);
+  this.cx.lineTo(rect.x+rect.w, rect.y);
+  this.cx.lineTo(rect.x+rect.w, rect.y+rect.h);
+  this.cx.lineTo(rect.x, rect.y+rect.h);
+  this.cx.closePath();
+  this.cx.clip();
   return this
 }
 
@@ -194,8 +201,5 @@ fwt_Graphics.prototype.dispose = function ()
 {
   // no-op
 }
-
-
-
 
 
