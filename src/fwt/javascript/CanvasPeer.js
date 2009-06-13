@@ -28,6 +28,8 @@ fwt_CanvasPeer.prototype.sync = function(self)
   // repaint canvas using Canvas.onPaint callback
   var g = new fwt_Graphics()
   g.cx = c.getContext("2d");
+  g.cx.lineWidth = 1
+  g.cx.textBaseline = "top"
   self.onPaint(g)
 
   fwt_WidgetPeer.prototype.sync.call(this, self);
@@ -73,7 +75,8 @@ fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
 
 fwt_Graphics.prototype.oval = function(x, y, w, h)
 {
-  var KAPPA = 4 * ((Math.sqrt(2) -1) / 3);
+  // Public Domain by Christopher Clay - http://canvaspaint.org/blog/
+  var kappa = 4 * ((Math.sqrt(2) -1) / 3);
   var rx = w/2;
   var ry = h/2;
   var cx = x+rx;
@@ -81,10 +84,10 @@ fwt_Graphics.prototype.oval = function(x, y, w, h)
 
   this.cx.beginPath();
   this.cx.moveTo(cx, cy - ry);
-  this.cx.bezierCurveTo(cx + (KAPPA * rx), cy - ry,  cx + rx, cy - (KAPPA * ry), cx + rx, cy);
-  this.cx.bezierCurveTo(cx + rx, cy + (KAPPA * ry), cx + (KAPPA * rx), cy + ry, cx, cy + ry);
-  this.cx.bezierCurveTo(cx - (KAPPA * rx), cy + ry, cx - rx, cy + (KAPPA * ry), cx - rx, cy);
-  this.cx.bezierCurveTo(cx - rx, cy - (KAPPA * ry), cx - (KAPPA * rx), cy - ry, cx, cy - ry);
+  this.cx.bezierCurveTo(cx + (kappa * rx), cy - ry,  cx + rx, cy - (kappa * ry), cx + rx, cy);
+  this.cx.bezierCurveTo(cx + rx, cy + (kappa * ry), cx + (kappa * rx), cy + ry, cx, cy + ry);
+  this.cx.bezierCurveTo(cx - (kappa * rx), cy + ry, cx - rx, cy + (kappa * ry), cx - rx, cy);
+  this.cx.bezierCurveTo(cx - rx, cy - (kappa * ry), cx - (kappa * rx), cy - ry, cx, cy - ry);
   this.cx.closePath();
 }
 
@@ -112,7 +115,7 @@ fwt_Graphics.prototype.drawArc = function(x, y, w, h, startAngle, arcAngle)
 
 fwt_Graphics.prototype.drawText = function (s, x, y)
 {
-  this.cx.strokeText(s, x, y)
+  this.cx.fillText(s, x, y)
 }
 
 
