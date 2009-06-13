@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * Props are used to manage a field's value and how they
@@ -175,6 +176,11 @@ public abstract class Prop
         Control c = (Control)peer.control;
         val = WidgetPeer.point(c.getLocation());
       }
+      else if (peer.control instanceof ToolItem)
+      {
+        ToolItem ti = (ToolItem)peer.control;
+        val = WidgetPeer.point(ti.getBounds());
+      }
       return val;
     }
 
@@ -209,6 +215,11 @@ public abstract class Prop
       {
         Control c = (Control)peer.control;
         val = WidgetPeer.size(c.getSize());
+      }
+      else if (peer.control instanceof ToolItem)
+      {
+        ToolItem ti = (ToolItem)peer.control;
+        val = WidgetPeer.size(ti.getBounds());
       }
       return val;
     }

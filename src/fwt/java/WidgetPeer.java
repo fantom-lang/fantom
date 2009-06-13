@@ -471,6 +471,11 @@ public class WidgetPeer
     return fan.gfx.Point.make(pt.x, pt.y);
   }
 
+  static fan.gfx.Point point(Rectangle r)
+  {
+    return fan.gfx.Point.make(r.x, r.y);
+  }
+
   static Point point(fan.gfx.Point pt)
   {
     return new Point((int)pt.x, (int)pt.y);
@@ -484,6 +489,11 @@ public class WidgetPeer
   static fan.gfx.Size size(Point pt)
   {
     return fan.gfx.Size.make(pt.x, pt.y);
+  }
+
+  static fan.gfx.Size size(Rectangle r)
+  {
+    return fan.gfx.Size.make(r.width, r.height);
   }
 
   static fan.gfx.Rect rect(Rectangle r)
