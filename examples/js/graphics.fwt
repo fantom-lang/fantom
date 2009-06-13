@@ -51,6 +51,7 @@ class MyCanvas : Canvas
 
     g.translate(400, 10)
     g.brush = Color.blue
+    g.pen = Pen("10 joinMiter")
     g.drawRect(0, 0, 400, 400)
     g.drawRect(100, 100, 200, 200)
     g.clip(Rect(50, 50, 300, 300))
