@@ -37,6 +37,7 @@ fwt_LabelPeer.prototype.image$set = function(self, val)
 {
   this.image = val;
 
+// TODO: this should pulled into centralized img management
   // async load image
   if (fwt_LabelPeer.imgCache[val.uri] == null)
   {
