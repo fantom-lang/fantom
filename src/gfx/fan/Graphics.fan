@@ -43,11 +43,6 @@ mixin Graphics
   abstract Int alpha
 
   **
-  ** Draw a pixel with the current brush.
-  **
-  abstract This drawPoint(Int x, Int y)
-
-  **
   ** Draw a line with the current pen and brush.
   **
   abstract This drawLine(Int x1, Int y1, Int x2, Int y2)

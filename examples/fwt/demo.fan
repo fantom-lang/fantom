@@ -724,10 +724,6 @@ class GraphicsDemo : Canvas
 
     g.brush = Color.black; g.drawRect(0, 0, w-1, h-1)
 
-    g.brush = Color.black
-    w.times |Int i| { if (i.isOdd) g.drawPoint(i, 2) }
-    w.times |Int i| { if (i.isEven) g.drawPoint(i, 3) }
-
     g.brush = Color.orange; g.fillRect(10, 10, 50, 60)
     g.brush = Color.blue; g.drawRect(10, 10, 50, 60)
 
