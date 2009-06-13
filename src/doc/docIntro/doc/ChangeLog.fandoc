@@ -659,5 +659,6 @@
 - Flux Goto File command
 - DateTime.toHttpStr use toLocale to avoid race conditions
 - FWT Canvas widget (Widget.make is now internal)
+- Remove Graphics.drawPoint
 
 TODO: remove TODOs in List.java, ClassType.java
