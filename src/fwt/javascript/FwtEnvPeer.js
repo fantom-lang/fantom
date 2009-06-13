@@ -44,12 +44,20 @@ fwt_FwtEnvPeer.prototype.fontLeading = function(self, font)
 
 fwt_FwtEnvPeer.prototype.fontWidth = function(self, font, str)
 {
-  // use global var to store a context for computing string width
-  if (fwt_FwtEnvPeer.fontCx == null)
+  try
   {
-    fwt_FwtEnvPeer.fontCx = document.createElement("canvas").getContext("2d");
+    // use global var to store a context for computing string width
+    if (fwt_FwtEnvPeer.fontCx == null)
+    {
+      fwt_FwtEnvPeer.fontCx = document.createElement("canvas").getContext("2d");
+    }
+    fwt_FwtEnvPeer.fontCx.font = font.toStr()
+    return fwt_FwtEnvPeer.fontCx.measureText(str).width;
   }
-  fwt_FwtEnvPeer.fontCx.font = font.toStr()
-  return fwt_FwtEnvPeer.fontCx.measureText(str).width;
+  catch (err)
+  {
+    // fallback if canvas not supported
+    return str.length * 7;
+  }
 }
 
