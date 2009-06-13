@@ -99,6 +99,14 @@ sys_Map.prototype.get = function(key, defVal)
   return val;
 }
 
+sys_Map.prototype.containsKey = function(key)
+{
+  for (var k in this.map)
+    if (sys_Obj.equals(k, key))
+      return true;
+  return false;
+}
+
 sys_Map.prototype.add = function(key, val)
 {
   if (key == null)
@@ -123,6 +131,29 @@ sys_Map.prototype.size = function()
   var sz = 0;
   for (var k in this.map) sz++;
   return sz;
+}
+
+sys_Map.prototype.ordered$get = function() { return this.ordered; }
+sys_Map.prototype.ordered$set = function(val)
+{
+  if (this.size() != 0)
+    throw sys_UnsupportedErr.make("Map not empty");
+
+  this.ordered = val;
+}
+sys_Map.prototype.ordered = false;
+
+//////////////////////////////////////////////////////////////////////////
+// Iterators
+//////////////////////////////////////////////////////////////////////////
+
+sys_Map.prototype.each = function(func)
+{
+  for (var k in this.map)
+  {
+    var v = this.map[k];
+    func(v, k);
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////
