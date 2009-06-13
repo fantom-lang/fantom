@@ -164,15 +164,6 @@ fwt_Graphics.prototype.copyImage = function (img, src, dest)
 fwt_Graphics.prototype.translate = function (x, y)
 {
   this.cx.translate(x, y)
-  // TODO
-}
-
-fwt_Graphics.prototype.clipRect = null
-fwt_Graphics.prototype.clipRect$get = function() { return this.clipRect}
-fwt_Graphics.prototype.clipRect$set = function(rect)
-{
-  this.clipRect = retc
-  // TODO
 }
 
 fwt_Graphics.prototype.clip = function (rect)

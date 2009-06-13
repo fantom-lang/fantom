@@ -219,16 +219,6 @@ public class FwtGraphics implements Graphics
     return this;
   }
 
-  public Rect clipRect()
-  {
-    return WidgetPeer.rect(gc.getClipping());
-  }
-
-  public void clipRect(Rect r)
-  {
-    gc.setClipping(WidgetPeer.rect(r));
-  }
-
   public Graphics clip(Rect r)
   {
     Rectangle a = gc.getClipping();
