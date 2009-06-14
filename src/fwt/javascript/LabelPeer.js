@@ -36,23 +36,9 @@ fwt_LabelPeer.prototype.image$get = function(self) { return this.image; }
 fwt_LabelPeer.prototype.image$set = function(self, val)
 {
   this.image = val;
-
-// TODO: this should pulled into centralized img management
-  // async load image
-  if (fwt_LabelPeer.imgCache[val.uri] == null)
-  {
-    var img = document.createElement("img");
-    if (img.addEventListener)
-      img.onload = self.window.relayout;
-    // TODO - fix IE
-    //else
-    //  img.attachEvent('onload', function() { self.window.relayout(); });
-    img.src = val.uri;
-    fwt_LabelPeer.imgCache[val.uri] = true;
-  }
+  fwt_FwtEnv.loadImage(val)
 }
 fwt_LabelPeer.prototype.image = null;
-fwt_LabelPeer.imgCache = [];
 
 fwt_LabelPeer.prototype.sync = function(self)
 {

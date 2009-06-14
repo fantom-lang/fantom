@@ -52,7 +52,6 @@ class MyCanvas : Canvas
 
     img := Image(`/sys/pod/icons/x16/folder.png`)
     g.drawImage(img, 220, 20)
-    /*
     g.copyImage(img, Rect(0, 0, img.size.w, img.size.h), Rect(250, 30, 64, 64))
     g.drawImage(img.resize(Size(64, 64)), 320, 30)
     g.push
@@ -62,7 +61,6 @@ class MyCanvas : Canvas
       g.alpha=64;  g.drawImage(img, 220, 60)
     }
     finally g.pop
-    */
 
     // system font/colors
     y := 20

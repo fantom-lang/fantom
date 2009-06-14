@@ -162,21 +162,17 @@ fwt_Graphics.prototype.drawText = function (s, x, y)
 }
 
 // This drawImage(Image image, Int x, Int y)
-fwt_Graphics.prototype.drawImage = function (img, x, y)
+fwt_Graphics.prototype.drawImage = function (fanImg, x, y)
 {
-// TODO: this should pulled into centralized img management
-  var jsImg = Image();
-  jsImg.src = img.uri.toStr();
+  var jsImg = fwt_FwtEnvPeer.loadImage(fanImg);
   this.cx.drawImage(jsImg, x, y)
   return this;
 }
 
 // This copyImage(Image image, Rect src, Rect dest)
-fwt_Graphics.prototype.copyImage = function (img, src, dst)
+fwt_Graphics.prototype.copyImage = function (fanImg, src, dst)
 {
-// TODO: this should pulled into centralized img management
-  var jsImg = Image();
-  jsImg.src = img.uri.toStr();
+  var jsImg = fwt_FwtEnvPeer.loadImage(fanImg);
   this.cx.drawImage(jsImg, src.x, src.y, src.w, src.h, dst.x, dst.y, dst.w, dst.h)
   return this;
 }
@@ -205,11 +201,13 @@ fwt_Graphics.prototype.clip = function (rect)
 fwt_Graphics.prototype.push = function ()
 {
   // TODO
+  this.cx.save();
 }
 
 // Void pop()
 fwt_Graphics.prototype.pop = function ()
 {
+  this.cx.restore();
   // TODO
 }
 
