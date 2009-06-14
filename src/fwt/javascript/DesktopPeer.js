@@ -61,7 +61,7 @@ fwt_DesktopPeer.$sysBorder       = gfx_Color.fromStr("#333333");
 fwt_DesktopPeer.$sysListFg       = gfx_Color.fromStr("#000000");
 fwt_DesktopPeer.$sysListBg       = gfx_Color.fromStr("#ffffff");
 fwt_DesktopPeer.$sysListSelFg    = gfx_Color.fromStr("#ffffff");
-fwt_DesktopPeer.$sysListSelBg    = gfx_Color.fromStr("#0000cc");
+fwt_DesktopPeer.$sysListSelBg    = gfx_Color.fromStr("#316ac5");
 
 fwt_DesktopPeer.sysDarkShadow  = function() { return fwt_DesktopPeer.$sysDarkShadow; }
 fwt_DesktopPeer.sysNormShadow  = function() { return fwt_DesktopPeer.$sysNormShadow; }

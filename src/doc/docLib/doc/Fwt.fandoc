@@ -9,14 +9,14 @@
 Overview [#overview]
 ********************
 Fan Widget Toolkit or [FWT]`fwt::index` provides a toolkit for
-building desktop applications:
+building both desktop and HTML5 browser based applications:
 
   - Widgets are reusable UI components such as buttons, text fields, dialogs, etc
   - Graphics for 2D rendering
   - Eventing for user input: keyboard, mouse, and focus eventing
   - UI layout
 
-The fwt defines the basic low level infrastructure for desktop applications.
+The fwt defines the basic low level infrastructure for applications.
 `Flux` is built on top of the fwt to provide a more advanced application
 framework for desktop apps.
 
@@ -43,24 +43,24 @@ add a widget to multiple parents an exception is thrown.
 
 Panes [#panes]
 ==============
-Widgets come in two flavors.  [Panes]`fwt::Pane` are widgets which are
-designed to be containers for other widgets.  Panes are responsible for laying
-out their children.  Widgets which don't subclass from Pane are most
-often leaf widgets which provide some control such as a button or text
-field.
+Widgets come in two flavors: panes and controls.  [Panes]`fwt::Pane` are
+widgets which are designed to be containers for other widgets.  Panes are
+responsible for laying out their children.  Widgets which don't subclass
+from Pane are most often leaf widgets which provide some control such as a
+button or text field.
 
 Custom Widgets [#customWidgets]
 ===============================
 Most often you will use the predefined widgets in the toolkit.  However
 you can create your own widgets too.  Typically you will subclass `fwt::Pane`
-to create a new container widget or `fwt::Widget` for a new control.
+to create a new container widget or `fwt::Canvas` for a new control.
 Panes are responsible for deciding how to layout their children.  Controls
 will typically define custom painting and eventing.
 
 Painting [#painting]
 ********************
-Widgets may override the [onPaint]`fwt::Widget.onPaint` method to
-provide custom painting.  Painting is done via the `gfx::Graphics`
+[Canvas]`fwt::Canvas` widgets may override the [onPaint]`fwt::Canvas.onPaint`
+method to provide custom painting.  Painting is done via the `gfx::Graphics`
 API:
   - draw geometries
   - fill geometries
@@ -95,7 +95,9 @@ pattern is:
 The following is a simple widget which paints itself as a red box with a blue
 outline:
 
-  class RedBox : Widget
+  using gfx
+  using fwt
+  class RedBox : Canvas
   {
     override Void onPaint(Graphics g)
     {
@@ -121,7 +123,7 @@ The 'prefSize' method takes a `gfx::Hints` which contains an optional
 width and height constraint.
 
 Panes which contain children implement a layout strategy by overriding
-the [onLayout]`fwt::Widget.onLayout` method.  This callback is used to
+the [onLayout]`fwt::Pane.onLayout` method.  This callback is used to
 set the bounds of all the children widgets.  Often panes will also
 override 'prefSize' to compute the containers preferred size from
 the children.
