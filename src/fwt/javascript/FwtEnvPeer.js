@@ -12,8 +12,73 @@
 var fwt_FwtEnvPeer = sys_Obj.$extend(sys_Obj);
 fwt_FwtEnvPeer.prototype.$ctor = function(self) {}
 
-//FwtEnvPeer.prototype.imageSize(Image i)
-//FwtEnvPeer.prototype.imageResize(Image i, Size s)
+//////////////////////////////////////////////////////////////////////////
+// Images
+//////////////////////////////////////////////////////////////////////////
+
+fwt_FwtEnvPeer.imgCache = [];
+fwt_FwtEnvPeer.imgCacheNextMemId = 1;
+
+fwt_FwtEnvPeer.nextMemUriStr = function()
+{
+  return sys_Uri.fromStr("mem-" + (++fwt_FwtEnvPeer.imgCacheNextMemId));
+}
+
+fwt_FwtEnvPeer.loadImage = function(fanImg)
+{
+  var uri = fanImg.uri.toStr();
+  var jsImg = fwt_FwtEnvPeer.imgCache[uri]
+  if (!jsImg)
+  {
+    jsImg = document.createElement("img");
+    /* TODO:
+         - can we relayout whole document without requiring a specific width?
+         - IE
+    if (img.addEventListener)
+      img.onload = widget.window.relayout;
+    else
+      // TODO - fix IE
+      //  img.attachEvent('onload', function() { self.window.relayout(); });
+    */
+    jsImg.src = uri;
+    fwt_FwtEnvPeer.imgCache[uri] = jsImg;
+  }
+  return jsImg
+}
+
+// Size imageSize(Image img)
+fwt_FwtEnvPeer.prototype.imageSize = function(self, fanImg)
+{
+  var jsImg = fwt_FwtEnvPeer.loadImage(fanImg)
+  return gfx_Size.make(jsImg.width, jsImg.height)
+}
+
+// Image imageResize(Image img, Size size)
+fwt_FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
+{
+  // generate a unique uri as the key for the new image
+  var uri = fwt_FwtEnvPeer.nextMemUriStr();
+  uri = fwt_FwtEnvPeer.nextMemUriStr();
+
+  // get the original js image
+  var jsOrig = fwt_FwtEnvPeer.loadImage(fanImg)
+  if (jsOrig.width == size.w && jsOrig.height == size.h) return fanImg
+
+  // create new js image which is resized version of the old
+  // TODO: somehow use ImageData
+  var jsNew = jsOrig
+  //jsNew.src = uri;
+
+  // put new image into the image with our auto-gen uri key
+  fwt_FwtEnvPeer.imgCache[uri] = jsNew;
+
+  // create new Fan wrapper which references jsNew via uri
+  return gfx_Image.makeUri(sys_Uri.fromStr(uri));
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Font
+//////////////////////////////////////////////////////////////////////////
 
 // global variable to store a CanvasRenderingContext2D
 fwt_FwtEnvPeer.fontCx = null;
