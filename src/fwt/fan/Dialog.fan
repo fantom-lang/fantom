@@ -308,7 +308,7 @@ internal class DialogCommand : Command
       this.mode = CommandMode.toggle
   }
 
-  override Void invoke(Event? e)
+  override Void invoked(Event? e)
   {
     switch (id)
     {

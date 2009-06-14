@@ -365,7 +365,7 @@ internal class Commands
 internal class ViewManagedCommand : FluxCommand
 {
   new make(Str id) : super(id) { enabled=false }
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     frame.view.onCommand(id, event)
   }
@@ -379,7 +379,7 @@ internal class ViewManagedCommand : FluxCommand
 internal class NewTabCommand : FluxCommand
 {
   new make() : super(CommandId.newTab) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     frame.load(`flux:start`, LoadMode { newTab=true })
   }
@@ -389,14 +389,14 @@ internal class NewTabCommand : FluxCommand
 internal class OpenLocationCommand : FluxCommand
 {
   new make() : super(CommandId.openLocation) {}
-  override Void invoke(Event? event) { frame.locator.onLocation(event) }
+  override Void invoked(Event? event) { frame.locator.onLocation(event) }
 }
 
 ** Close current view tab.
 internal class CloseTabCommand : FluxCommand
 {
   new make() : super(CommandId.closeTab) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     if (frame.views.size > 1)
       frame.tabPane.close(frame.view.tab)
@@ -407,14 +407,14 @@ internal class CloseTabCommand : FluxCommand
 internal class SaveCommand : FluxCommand
 {
   new make() : super(CommandId.save) {}
-  override Void invoke(Event? event) { frame.view.tab.save }
+  override Void invoked(Event? event) { frame.view.tab.save }
 }
 
 ** Save every dirty view
 internal class SaveAllCommand : FluxCommand
 {
   new make() : super(CommandId.saveAll) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     frame.views.each |View view| { view.tab.save }
   }
@@ -424,7 +424,7 @@ internal class SaveAllCommand : FluxCommand
 internal class ExitCommand : FluxCommand
 {
   new make() : super(CommandId.exit) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     dirty := frame.views.findAll |View v->Bool| { return v.dirty }
     if (dirty.size > 0)
@@ -465,7 +465,7 @@ internal class ExitCommand : FluxCommand
 internal class ExitSaveCommand : Command
 {
   new make(Pod pod, Str keyBase) : super.makeLocale(pod, keyBase) {}
-  override Void invoke(Event? e) { window?.close(this) }
+  override Void invoked(Event? e) { window?.close(this) }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -476,21 +476,21 @@ internal class ExitSaveCommand : Command
 internal class UndoCommand : FluxCommand
 {
   new make() : super(CommandId.undo) {}
-  override Void invoke(Event? event) { frame.view.tab.undo }
+  override Void invoked(Event? event) { frame.view.tab.undo }
 }
 
 ** Redo last undone command
 internal class RedoCommand : FluxCommand
 {
   new make() : super(CommandId.redo) {}
-  override Void invoke(Event? event) { frame.view.tab.redo }
+  override Void invoked(Event? event) { frame.view.tab.redo }
 }
 
 ** Cut command routes to 'focus?.cut'
 internal class CutCommand : FluxCommand
 {
   new make() : super(CommandId.cut) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     try { Desktop.focus?->cut } catch (UnknownSlotErr e) {}
   }
@@ -500,7 +500,7 @@ internal class CutCommand : FluxCommand
 internal class CopyCommand : FluxCommand
 {
   new make() : super(CommandId.copy) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     try { Desktop.focus?->copy } catch (UnknownSlotErr e) {}
   }
@@ -510,7 +510,7 @@ internal class CopyCommand : FluxCommand
 internal class PasteCommand : FluxCommand
 {
   new make() : super(CommandId.paste) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     try { Desktop.focus?->paste } catch (UnknownSlotErr e) {}
   }
@@ -520,7 +520,7 @@ internal class PasteCommand : FluxCommand
 internal class SelectAllCommand : FluxCommand
 {
   new make() : super(CommandId.selectAll) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     try { Desktop.focus?->selectAll } catch (UnknownSlotErr e) {}
   }
@@ -534,21 +534,21 @@ internal class SelectAllCommand : FluxCommand
 internal class FindInFilesCommand : FluxCommand
 {
   new make() : super(CommandId.findInFiles) {}
-  override Void invoke(Event? event) { FindInFiles.dialog(frame) }
+  override Void invoked(Event? event) { FindInFiles.dialog(frame) }
 }
 
 ** Replace in files
 internal class ReplaceInFilesCommand : FluxCommand
 {
   new make() : super(CommandId.replaceInFiles) {}
-  override Void invoke(Event? event) { Dialog.openInfo(frame, "TODO: Replace in Files") }
+  override Void invoked(Event? event) { Dialog.openInfo(frame, "TODO: Replace in Files") }
 }
 
 ** Goto file
 internal class GotoFileCommand : FluxCommand
 {
   new make() : super(CommandId.gotoFile) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     if (!FileIndex.instance.ready)
     {
@@ -561,12 +561,13 @@ internal class GotoFileCommand : FluxCommand
     field := Text { it.text = last; it.prefCols = 20}
     pane := GridPane
     {
-      numCols = 3
+      numCols = 4
       expandCol = 1
       halignCells=Halign.fill
       Label { text="Goto File:" },
       field,
-      Button { image=Flux.icon(`/x16/question.png`); onAction.add(&showHelp) }
+      Button { image=Flux.icon(`/x16/refresh.png`); onAction.add(&rebuild(it)) },
+      Button { image=Flux.icon(`/x16/question.png`); onAction.add(&showHelp) },
     }
     field.onAction.add |e| { e.widget.window.close(Dialog.ok) }
 
@@ -605,6 +606,12 @@ internal class GotoFileCommand : FluxCommand
     dlg.open
   }
 
+  Void rebuild(Widget widget)
+  {
+    FileIndex.instance.rebuild
+    widget.window.close(Dialog.cancel)
+  }
+
   Void showHelp()
   {
     msg :=
@@ -612,8 +619,9 @@ internal class GotoFileCommand : FluxCommand
        - Glob any file name such as "SideBar.fan" or "SideBar*.fan"\n
        - Glob any file base name (without extension) such as "SideBar" or "SideBar*"\n
        - Match camel case abbreviation such as "SB" for "SideBar"\n
-       Indexing is based on NavBar's go into lists (very primitive right
-       now). See Regex.glob for definition of glob syntax"""
+       Indexing is configured with GeneralOption.indexDirs (very primitive right
+       now). Use refresh button to manually rebuild index.  See Regex.glob for
+       definition of glob syntax."""
     Dialog.openInfo(frame, msg)
   }
 }
@@ -622,7 +630,7 @@ internal class GotoFileCommand : FluxCommand
 internal class JumpNextCommand : FluxCommand
 {
   new make() : super(CommandId.jumpNext) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     if (frame.marks.isEmpty) return
 
@@ -645,7 +653,7 @@ internal class JumpNextCommand : FluxCommand
 internal class JumpPrevCommand : FluxCommand
 {
   new make() : super(CommandId.jumpPrev) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     if (frame.marks.isEmpty) return
 
@@ -672,7 +680,7 @@ internal class JumpPrevCommand : FluxCommand
 internal class ReloadCommand : FluxCommand
 {
   new make() : super(CommandId.reload) {}
-  override Void invoke(Event? event) { frame.view.tab.reload }
+  override Void invoked(Event? event) { frame.view.tab.reload }
 }
 
 ** Toggle sidebar shown/hidden
@@ -686,7 +694,7 @@ internal class SideBarCommand : FluxCommand
     this.name = sbType.name
   }
 
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     sb := frame.sideBar(sbType)
     if (sb.showing) sb.hide; else sb.show
@@ -709,35 +717,35 @@ internal class SideBarCommand : FluxCommand
 internal class BackCommand : FluxCommand
 {
   new make() : super(CommandId.back) {}
-  override Void invoke(Event? event) { frame.view.tab.back }
+  override Void invoked(Event? event) { frame.view.tab.back }
 }
 
 ** Hyperlink forward in history
 internal class ForwardCommand : FluxCommand
 {
   new make() : super(CommandId.forward) {}
-  override Void invoke(Event? event) { frame.view.tab.forward }
+  override Void invoked(Event? event) { frame.view.tab.forward }
 }
 
 ** Hyperlink up a level in the hierarchy
 internal class UpCommand : FluxCommand
 {
   new make() : super(CommandId.up) {}
-  override Void invoke(Event? event) { frame.view.tab.up }
+  override Void invoked(Event? event) { frame.view.tab.up }
 }
 
 ** Hyperlink to the home page
 internal class HomeCommand : FluxCommand
 {
   new make() : super(CommandId.home) {}
-  override Void invoke(Event? event) { frame.load(GeneralOptions.load.homePage) }
+  override Void invoked(Event? event) { frame.load(GeneralOptions.load.homePage) }
 }
 
 ** Open recent history dialog
 internal class RecentCommand : FluxCommand
 {
   new make() : super(CommandId.recent) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     Dialog? dlg
     picker := HistoryPicker(History.load.items, false) |HistoryItem item, Event e|
@@ -759,14 +767,14 @@ internal class RecentCommand : FluxCommand
 internal class OptionsCommand : FluxCommand
 {
   new make() : super(CommandId.options) {}
-  override Void invoke(Event? event) { frame.load(Flux.homeDir.uri) }
+  override Void invoked(Event? event) { frame.load(Flux.homeDir.uri) }
 }
 
 ** Refresh the tools menu
 internal class RefreshToolsCommand : FluxCommand
 {
   new make() : super("refreshTools") {}
-  override Void invoke(Event? event) { frame.commands.refreshToolsMenu }
+  override Void invoked(Event? event) { frame.commands.refreshToolsMenu }
 }
 
 ** Invoke a tool script
@@ -779,7 +787,7 @@ internal class ToolScriptCommand : FluxCommand
     this.name  = file.basename
   }
 
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     try
     {
@@ -808,7 +816,7 @@ internal class ToolScriptCommand : FluxCommand
 internal class AboutCommand : FluxCommand
 {
   new make() : super(CommandId.about) {}
-  override Void invoke(Event? event)
+  override Void invoked(Event? event)
   {
     icon  := Pod.find("icons").files[`/x48/flux.png`]
     big   := Font { it.name=Desktop.sysFont.name; it.size=Desktop.sysFont.size+(Desktop.isMac ? 2 : 3); it.bold=true }

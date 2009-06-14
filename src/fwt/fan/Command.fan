@@ -13,7 +13,7 @@ using gfx
 ** and undo support for a user command.  You can create a
 ** command two ways:
 **   1. use a closure (or any function) for `onInvoke`
-**   2. subclass Command and override `invoke`
+**   2. subclass Command and override `invoked`
 **
 ** If the command supports undo, then you must create a
 ** a subclass and override `undo`.
@@ -227,10 +227,31 @@ class Command
   ** Invoke the command.  If the user event is known
   ** then is passed, otherwise it might be null.
   **
-  virtual Void invoke(Event? event)
+  Void invoke(Event? event)
+  {
+    try
+      invoked(event)
+    catch (Err e)
+      onInvokeError(event, e)
+  }
+
+  **
+  ** Subclass hook to handle invoke event.
+  **
+  protected virtual Void invoked(Event? event)
   {
     if (onInvoke.isEmpty) throw UnsupportedErr("Must set onInvoke or override invoke: $name")
     onInvoke.fire(event)
+  }
+
+  **
+  ** Subclass hook to handle when an exception is raised
+  ** by invoke.  Default implementation raised an error dialog.
+  **
+  protected virtual Void onInvokeError(Event? event, Err err)
+  {
+    window := event?.window ?: registry.first?.window
+    Dialog.openErr(window, "$name: $err", err)
   }
 
 //////////////////////////////////////////////////////////////////////////
