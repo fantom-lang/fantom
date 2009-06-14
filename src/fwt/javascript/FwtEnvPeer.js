@@ -64,10 +64,16 @@ fwt_FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
   var jsOrig = fwt_FwtEnvPeer.loadImage(fanImg)
   if (jsOrig.width == size.w && jsOrig.height == size.h) return fanImg
 
-  // create new js image which is resized version of the old
-  // TODO: somehow use ImageData
-  var jsNew = jsOrig
-  //jsNew.src = uri;
+  // create new js image which is resized version of the old by painting
+  // to temp canvas, then converting into data URL used to create new image
+  var canvas = document.createElement("canvas");
+  canvas.width = size.w;
+  canvas.height = size.h;
+  var cx = canvas.getContext("2d");
+  cx.drawImage(jsOrig, 0, 0, jsOrig.width, jsOrig.height, 0, 0, size.w, size.h);
+  var dataUrl = canvas.toDataURL("image/png");
+  var jsNew = document.createElement("img");
+  jsNew.src = dataUrl;
 
   // put new image into the image with our auto-gen uri key
   fwt_FwtEnvPeer.imgCache[uri] = jsNew;
