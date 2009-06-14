@@ -28,10 +28,11 @@ fwt_CanvasPeer.prototype.sync = function(self)
   // repaint canvas using Canvas.onPaint callback
   var g = new fwt_Graphics()
   g.cx = c.getContext("2d");
-  g.cx.lineWidth = 1
-  g.cx.lineCap = "square"
-  g.cx.textBaseline = "top"
-  self.onPaint(g)
+  g.cx.lineWidth = 1;
+  g.cx.lineCap = "square";
+  g.cx.textBaseline = "top";
+  g.cx.font = fwt_DesktopPeer.$sysFont.toStr();
+  self.onPaint(g);
 
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
