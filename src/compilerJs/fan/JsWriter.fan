@@ -49,7 +49,11 @@ class JsWriter : CompilerSupport
 
     // inheritance
     out.w("var $jname = sys_Obj.\$extend($jbase);").nl
-    typeDef.mixins.each |m| { out.w("sys_Obj.\$mixin($jname, ${qname(m)});").nl }
+
+    // TODO: mixins are seriously hosed b/c they get merged into
+    // other class's prototypes; for now disable this on gfx
+    if (typeDef.pod.name != "gfx")
+      typeDef.mixins.each |m| { out.w("sys_Obj.\$mixin($jname, ${qname(m)});").nl }
 
     // typeinfo
     if (typeDef.isClass)

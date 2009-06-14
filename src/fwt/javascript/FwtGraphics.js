@@ -30,9 +30,9 @@ fwt_Graphics.prototype.brush$set = function(b)
   }
   else
   {
-    var style = this.cx.createLinearGradient(b.pt1.x, b.pt1.y, b.pt2.x, b.pt2.y);
-    style.addColorStop(0, b.c1.toCss);
-    style.addColorStop(1, b.c2.toCss);
+    var style = this.cx.createLinearGradient(b.p1.x, b.p1.y, b.p2.x, b.p2.y);
+    style.addColorStop(0, b.c1.toCss());
+    style.addColorStop(1, b.c2.toCss());
     this.cx.fillStyle = style;
     this.cx.strokeStyle = style;
   }
