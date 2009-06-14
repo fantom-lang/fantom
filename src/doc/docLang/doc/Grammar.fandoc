@@ -136,7 +136,17 @@ Expr [#expr]
   <prefixExpr>     :=  ("!" | "+" | "-" | "~" | "&" | "++" | "--") <parenExpr>
   <postfixExpr>    :=  <termExpr> ("++" | "--")
   <termExpr>       :=  <termBase> <termChain>*
-  <termBase>       :=  <literal> | <idExpr> | <closure> | <dsl>
+  <termBase>       :=  <literal> | <idExpr> | <typeBase>
+  <typeBase>       :=  <typeLiteral> | <slotLiteral> | <namedSuper> | <staticCall> |
+                       <dsl> | <closure> | <simple> | <ctorBlock>
+  <typeLiteral>    :=  <type> "#"
+  <slotLiteral>    :=  [<type>] "#" <id>
+  <namedSuper>     :=  <type> "." "super"
+  <staticCall>     :=  <type> "." <idExpr>
+  <dsl>            :=  <type> "<|" <anyChar>* "|>"
+  <closure>        :=  <funcType> "{" <stmts> "}"
+  <simple>         :=  <type> "(" <expr> ")"
+  <ctorBlock>      :=  <type> <itBlock>
   <termChain>      :=  <dotCall> | <dynCall> | <safeDotCall> | <safeDynCall> |
                        <indexExpr> | <callOp> | <itBlock>
   <itBlock>        :=  "{" <stmts> "}"
@@ -145,27 +155,20 @@ Expr [#expr]
   <safeDotCall>    :=  "?." <idExpr>
   <safeDynCall>    :=  "?->" <idExpr>
   <idExpr>         :=  <local> | <field> | <call>
-  <dsl>            :=  <simpleType> "<|" <anyChar>* "|>"
   <local>          :=  <id>
   <field>          :=  ["@"] <id>
   <call>           :=  <id> ["(" <args> ")"] [<closure>]
   <args>           :=  [<expr> ("," <expr>)*]
-  <closure>        :=  <funcType> "{" <stmts> "}"
   <indexExpr>      :=  "[" <expr> "]"
   <callOp>         :=  "(" <args> ")" [<closure>]
   <literal>        :=  "null" | "this" | "super" | "it" |
-                       <namedSuper> | <bool> | <int> | <float> | <decimal> |
-                       <str> | <duration> | <uri> | <list> | <map> | <simple> |
-                       <typeLiteral> | <slotLiteral>
-  <namedSuper>     :=  <simpleType> "." "super"
+                       <bool> | <int> | <float> | <decimal> | <str> |
+                       <duration> | <uri> | <list> | <map>
   <list>           :=  [<type>] "[" <listItems> "]"
   <listItems>      :=  "," | (<expr> ("," <expr>)*)
   <map>            :=  [<mapType>] "[" <mapItems> "]"
   <mapItems>       :=  ":" | (<mapPair> ("," <mapPair>)*)
   <mapPair>        :=  <expr> ":" <expr>
-  <simple>         :=  <type> "(" <expr> ")"
-  <typeLiteral>    :=  <type> "#"
-  <slotLiteral>    :=  [<type>] "#" <id>
 
 See `Literals` for grammar of the literal tokens.
 
