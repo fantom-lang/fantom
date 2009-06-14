@@ -21,20 +21,20 @@ fwt_Graphics.prototype.brush = null
 fwt_Graphics.prototype.brush$get = function() { return this.brush }
 fwt_Graphics.prototype.brush$set = function(b)
 {
-  this.brush = b
+  this.brush = b;
   if (b instanceof gfx_Color)
   {
-    var style = b.toCss()
-    this.cx.fillStyle = style
-    this.cx.strokeStyle = style
+    var style = b.toCss();
+    this.cx.fillStyle = style;
+    this.cx.strokeStyle = style;
   }
   else
   {
     var style = this.cx.createLinearGradient(b.pt1.x, b.pt1.y, b.pt2.x, b.pt2.y);
-    style.addColorStop(0, b.c1.toCss)
-    style.addColorStop(1, b.c2.toCss)
-    this.cx.fillStyle = style
-    this.cx.strokeStyle = style
+    style.addColorStop(0, b.c1.toCss);
+    style.addColorStop(1, b.c2.toCss);
+    this.cx.fillStyle = style;
+    this.cx.strokeStyle = style;
   }
 }
 
@@ -43,13 +43,10 @@ fwt_Graphics.prototype.pen = null
 fwt_Graphics.prototype.pen$get = function() { return this.pen }
 fwt_Graphics.prototype.pen$set = function(p)
 {
-  this.pen = p
-  this.cx.lineWidth = p.width
-  /* these don't appear to work in any browser and actually
-     fail in FireFox, so just keep them commented out for now
-  this.cx.lineCap = p.capToStr
-  this.cx.lineJoin = p.joinToStr
-  */
+  this.pen = p;
+  this.cx.lineWidth = p.width;
+  this.cx.lineCap   = p.capToStr();
+  this.cx.lineJoin  = p.joinToStr();
   // dashes not supported
 }
 
@@ -58,8 +55,8 @@ fwt_Graphics.prototype.font = null
 fwt_Graphics.prototype.font$get = function() { return this.font }
 fwt_Graphics.prototype.font$set = function(f)
 {
-  this.font = f
-  this.cx.font = f.toStr()
+  this.font = f;
+  this.cx.font = f.toStr();
 }
 
 // Bool antialias
@@ -68,7 +65,7 @@ fwt_Graphics.prototype.antialias$get = function() { return this.antialias }
 fwt_Graphics.prototype.antialias$set = function(aa)
 {
   // Note: canvas has no control over anti-aliasing (Jun 09)
-  this.antialias = aa
+  this.antialias = aa;
 }
 
 // Int alpha
@@ -76,8 +73,8 @@ fwt_Graphics.prototype.alpha = null
 fwt_Graphics.prototype.alpha$get = function() { return this.alpha}
 fwt_Graphics.prototype.alpha$set = function(a)
 {
-  this.alpha = a
-  this.cx.globalAlpha = a / 255
+  this.alpha = a;
+  this.cx.globalAlpha = a / 255;
 }
 
 // This drawLine(Int x1, Int y1, Int x2, Int y2)
