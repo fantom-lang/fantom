@@ -660,5 +660,6 @@
 - DateTime.toHttpStr use toLocale to avoid race conditions
 - FWT Canvas widget (Widget.make is now internal)
 - Graphics removed clipRect, drawPoint
+- fwt::Command.invoke final, override invoked now
 
 TODO: remove TODOs in List.java, ClassType.java

@@ -67,11 +67,11 @@ class CommandTest : Test
     verifyEq(s.hasUndo, true); verifyEq(s.hasRedo, true)
     verifyEq(s.listUndo, [a, b]); verifyEq(s.listRedo, [d, c])
 
-    verifySame(s.redo, c); verifyEq(c->invoked, 1)
+    verifySame(s.redo, c); verifyEq(c->invokedCount, 1)
     verifyEq(s.hasUndo, true); verifyEq(s.hasRedo, true)
     verifyEq(s.listUndo, [a, b, c]); verifyEq(s.listRedo, [d])
 
-    verifySame(s.redo, d); verifyEq(d->invoked, 1)
+    verifySame(s.redo, d); verifyEq(d->invokedCount, 1)
     verifyEq(s.hasUndo, true); verifyEq(s.hasRedo, false)
     verifyEq(s.listUndo, [a, b, c, d]); verifyEq(s.listRedo, Command[,])
 
@@ -87,9 +87,9 @@ internal class TestCommand : Command
 {
   new make(Str name) : super(name) {}
 
-  override Void invoke(Event? e) { invoked++ }
+  override Void invoked(Event? e) { invokedCount++ }
   override Void undo() { undone++ }
 
-  Int invoked := 0
+  Int invokedCount := 0
   Int undone := 0
 }
