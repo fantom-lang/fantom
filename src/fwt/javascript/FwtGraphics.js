@@ -200,15 +200,26 @@ fwt_Graphics.prototype.clip = function (rect)
 // Void push()
 fwt_Graphics.prototype.push = function ()
 {
-  // TODO
   this.cx.save();
+  var state = new Object();
+  state.brush     = this.brush;
+  state.pen       = this.pen;
+  state.font      = this.font;
+  state.antialias = this.antialias;
+  state.alpha     = this.alpha;
+  this.stack.push(state);
 }
 
 // Void pop()
 fwt_Graphics.prototype.pop = function ()
 {
   this.cx.restore();
-  // TODO
+  var state = this.stack.pop();
+  this.brush     = state.brush;
+  this.pen       = state.pen;
+  this.font      = state.font;
+  this.antialias = state.antialias;
+  this.alpha     = state.alpha;
 }
 
 // Void dispose()
@@ -217,4 +228,6 @@ fwt_Graphics.prototype.dispose = function ()
   // no-op
 }
 
+// state for fields in push/pop
+fwt_Graphics.prototype.stack = new Array();
 
