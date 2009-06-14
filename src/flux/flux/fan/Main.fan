@@ -15,6 +15,9 @@ internal class Main
 {
   static Void main(Str[] args)
   {
+    // touch classes to load
+    FileIndex.instance.rebuild
+
     // initialize frame
     f := Frame.make
     f.loadState

@@ -98,9 +98,6 @@ internal class NavBar : SideBar
     combo.items = items.add(name).add(type.loc("navBar.editList"))
     if (old >= 0) combo.selectedIndex = old
     ignore = false
-
-    // add to indexing
-    if (r != null) FileIndex.instance.index(r.uri)
   }
 
   **

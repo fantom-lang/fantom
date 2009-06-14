@@ -141,7 +141,6 @@ internal class ViewTab : EdgePane
     frame.locator.load(r)
     frame.commands.update
     activate
-    if (r is FileResource) FileIndex.instance.index(r.uri)
   }
 
   Widget? doBuildToolBar(View v)

@@ -28,6 +28,11 @@ internal const class FileIndex : Actor
   const Log log := Log.get("fluxFileIndex")
 
   **
+  ** Kick off index rebuild asynchronously.
+  **
+  Void rebuild() { send(`rebuild`) }
+
+  **
   ** Check if done indexing and ready to search.
   **
   Bool ready()
@@ -48,17 +53,6 @@ internal const class FileIndex : Actor
     return send(target).get(5sec)
   }
 
-  **
-  ** Ensure given URI is in our index.
-  **
-  Void index(Uri uri)
-  {
-    try
-      send(uri.toFile.normalize)
-    catch (Err e)
-      e.trace
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Actor
 //////////////////////////////////////////////////////////////////////////
@@ -67,20 +61,12 @@ internal const class FileIndex : Actor
   {
     // handle ready message
     if (msg === `ready`) return true
-
-    // init list if not created yet
-    map := cx["map"] as Uri:FileItem
-    if (map == null) cx["map"] = map = Uri:FileItem[:]
+    if (msg === `rebuild`) { doRebuild(cx); return null }
 
     // handle find message
-    if (msg is Str)  return doFind(map, msg)
-
-    // handle index message
-    t1 := Duration.now
-    doIndex(map, msg)
-    t2 := Duration.now
-    log.debug("Indexed $msg [${(t2-t1).toLocale}] (total items=$map.size)")
-    return null
+    map := cx["map"] as Uri:FileItem
+    if (map == null) throw Err("Must configure GeneralOptions.indexDirs")
+    return doFind(map, msg)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -104,6 +90,33 @@ internal const class FileIndex : Actor
 //////////////////////////////////////////////////////////////////////////
 // Indexing
 //////////////////////////////////////////////////////////////////////////
+
+  Void doRebuild(Context cx)
+  {
+    cx["map"] = null
+    dirs := GeneralOptions.load.indexDirs
+    if (dirs.isEmpty) return
+
+    map := Uri:FileItem[:]
+    cx["dir"] = dirs
+    cx["map"] = map
+
+    t1 := Duration.now
+    dirs.each |dir|
+    {
+      try
+      {
+        f := File.make(dir, false).normalize
+        if (!f.exists)
+          log.warn("indexDir does not exist: $dir")
+        else
+          doIndex(map, f)
+      }
+      catch (Err e) log.info("indexDir invalid: $dir", e)
+    }
+    t2 := Duration.now
+    log.info("Index rebuild ${(t2-t1).toLocale}")
+  }
 
   Void doIndex(Uri:FileItem map, File f)
   {

@@ -31,4 +31,9 @@ const class GeneralOptions
   **
   const Uri homePage := `flux:start`
 
+  **
+  ** Directories to index for Goto-File command.
+  **
+  const Uri[] indexDirs := Uri[,]
+
 }
