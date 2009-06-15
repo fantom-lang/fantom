@@ -112,13 +112,13 @@ with (sys_Pod.$add("sys"))
   // TODO: UnknownServiceErr
   $at("UnknownSlotErr", "sys::Err");
   $at("UnknownTypeErr", "sys::Err");
-  // TODO: UnresolvedErr
+  $at("UnresolvedErr",  "sys::Err");
   $at("UnsupportedErr", "sys::Err");
 };
 
 // TODO - we really need to emit the type info *before*, but not
 // sure quite how that should work yet.  So in the mean time, stick
-// and static code requiring TypeInfo here
+// any static code requiring TypeInfo here
 
 sys_Float.posInf = sys_Float.make(Number.POSITIVE_INFINITY);
 sys_Float.negInf = sys_Float.make(Number.NEGATIVE_INFINITY);

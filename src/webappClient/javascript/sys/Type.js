@@ -19,18 +19,25 @@ var sys_Type = sys_Obj.$extend(sys_Obj);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Type.prototype.$ctor = function(qname, base)
+sys_Type.prototype.$ctor = function(qname, base, mixins)
 {
   // workaround for inhertiance
   if (qname == undefined) return;
 
+  // mixins
+  if (mixins == undefined) mixins = [];
+  for (var i=0; i<mixins.length; i++)
+    mixins[i] = sys_Type.find(mixins[i]);
+
   var s = qname.split("::");
-  this.m_qname  = qname;
-  this.m_pod    = sys_Pod.find(s[0]);
-  this.m_name   = s[1];
-  this.m_base   = base == null ? null : sys_Type.find(base);
-  this.m_slots  = [];
-  this.m_$qname = qname.replace("::", "_");
+  this.m_qname   = qname;
+  this.m_pod     = sys_Pod.find(s[0]);
+  this.m_name    = s[1];
+  this.m_base    = base == null ? null : sys_Type.find(base);
+  this.m_mixins  = mixins;
+  this.m_slots   = [];
+  this.m_$qname  = qname.replace("::", "_");
+  this.m_isMixin = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,11 +45,12 @@ sys_Type.prototype.$ctor = function(qname, base)
 //////////////////////////////////////////////////////////////////////////
 
 sys_Type.prototype.base = function()      { return this.m_base; }
-sys_Type.prototype.isClass = function()   { return this.m_base == null || (this.m_base.m_qname != "sys::Enum" && this.m_base.m_qname != "sys::Mixin"); }
+sys_Type.prototype.mixins = function()    { return this.m_mixins; }
+sys_Type.prototype.isClass = function()   { return !this.m_isMixin && this.m_base.m_qname != "sys::Enum"; }
 sys_Type.prototype.isEnum = function()    { return this.m_base != null && this.m_base.m_qname == "sys::Enum"; }
-sys_Type.prototype.isMixin = function()   { return this.m_base != null && this.m_base.m_qname == "sys::Mixin"; }
+sys_Type.prototype.isMixin = function()   { return this.m_isMixin; }
 sys_Type.prototype.log = function()       { return sys_Log.get(this.m_pod.m_name); }
-sys_Type.prototype.name = function()      { return this.n_name; }
+sys_Type.prototype.name = function()      { return this.m_name; }
 sys_Type.prototype.qname = function()     { return this.m_qname; }
 sys_Type.prototype.pod = function()       { return this.m_pod; }
 sys_Type.prototype.signature = function() { return this.m_qname; }
@@ -56,12 +64,30 @@ sys_Type.prototype.fits = function(that) { return this.is(that); }
 sys_Type.prototype.is = function(that)
 {
   if (this.equals(that)) return true;
+
+  // check base class
   var base = this.m_base;
   while (base != null)
   {
     if (base.equals(that)) return true;
     base = base.m_base;
   }
+
+  // check mixins
+  var m = this.m_mixins;
+  for (var i=0; i<m.length; i++)
+    if (sys_Type.isMixin(m[i], that)) return true;
+
+  return false;
+}
+
+sys_Type.isMixin = function(mixin, that)
+{
+  if (mixin.equals(that)) return true;
+  var m = mixin.m_mixins;
+  for (var i=0; i<m.length; i++)
+    if (sys_Type.isMixin(m[i], that))
+      return true;
   return false;
 }
 
@@ -230,7 +256,11 @@ sys_Type.common = function(objs)
  ************************************************************************/
 
 var sys_ListType = sys_Obj.$extend(sys_Type)
-sys_ListType.prototype.$ctor = function(v) { this.v = v; }
+sys_ListType.prototype.$ctor = function(v)
+{
+  this.v = v;
+  this.m_mixins = [];
+}
 sys_ListType.prototype.signature = function() { return this.v.signature() + '[]'; }
 sys_ListType.prototype.equals = function(that)
 {
@@ -250,6 +280,7 @@ sys_MapType.prototype.$ctor = function(k, v)
 {
   this.k = k;
   this.v = v;
+  this.m_mixins = [];
 }
 
 sys_MapType.prototype.signature = function()
@@ -275,6 +306,7 @@ sys_FuncType.prototype.$ctor = function(params, ret)
 {
   this.params = params;
   this.ret = ret;
+  this.m_mixins = [];
 }
 
 sys_FuncType.prototype.signature = function()
