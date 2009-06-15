@@ -28,18 +28,6 @@ sys_Obj.$extend = function(base)
   return f;
 }
 
-/**
- * Mixin the slots from the base type to the target type.
- */
-sys_Obj.$mixin = function(target, base)
-{
-  for (var p in base.prototype)
-   target.prototype[p] = base.prototype[p];
-
-  for (var p in base)
-    target[p] = base[p];
-}
-
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////

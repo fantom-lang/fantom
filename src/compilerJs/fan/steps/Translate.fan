@@ -52,8 +52,10 @@ class Translate : JsCompilerStep
     // types
     compiler.toCompile.each |def,i|
     {
-      base := def.base ?: "sys::Obj"
-      out.printLine("var \$$i=\$at(\"$def.name\",\"$base\")")
+      adder  := def.isMixin ? "\$am" : "\$at"
+      base   := def.base ?: "sys::Obj"
+      mixins := def.mixins.join(",") |m| { "\"$m.qname\"" }
+      out.printLine("var \$$i=$adder(\"$def.name\",\"$base\",[$mixins])")
     }
 
     // slots

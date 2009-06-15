@@ -48,25 +48,33 @@ class JsWriter : CompilerSupport
     jbase := qname(typeDef.base)
 
     // inheritance
-    out.w("var $jname = sys_Obj.\$extend($jbase);").nl
+    if (typeDef.isMixin)
+      out.w("function $jname() {}").nl
+    else
+      out.w("var $jname = sys_Obj.\$extend($jbase);").nl
 
-    // TODO: mixins are seriously hosed b/c they get merged into
-    // other class's prototypes; for now disable this on gfx
-    if (typeDef.pod.name != "gfx")
-      typeDef.mixins.each |m| { out.w("sys_Obj.\$mixin($jname, ${qname(m)});").nl }
+    // mixins
+    typeDef.mixins.each |m|
+    {
+      m.slots.each |s|
+      {
+        if (s.parent != m) return
+        if (s.isStatic)
+          out.w("${jname}.$s.name = ${qname(m)}.$s.name;").nl
+        else
+          out.w("${jname}.prototype.$s.name = ${qname(m)}.prototype.$s.name;").nl
+      }
+    }
 
     // typeinfo
-    if (typeDef.isClass)
+    // TODO - this is ok for now - it fails because of
+    // how we trap curried types, which should be rare
+    // to have type called on them - but we need to fix
+    // none-the-less
+    if (!typeDef.name.startsWith("Curry\$"))
     {
-      // TODO - this is ok for now - it fails because of
-      // how we trap curried types, which should be rare
-      // to have type called on them - but we need to fix
-      // none-the-less
-      if (!typeDef.name.startsWith("Curry\$"))
-      {
-        out.w("${jname}.\$type = sys_Type.find(\"$fname\");").nl
-        out.w("${jname}.prototype.type = function() { return ${jname}.\$type; }").nl
-      }
+      out.w("${jname}.\$type = sys_Type.find(\"$fname\");").nl
+      out.w("${jname}.prototype.type = function() { return ${jname}.\$type; }").nl
     }
 
     // ctor

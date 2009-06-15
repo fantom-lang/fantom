@@ -126,4 +126,9 @@ sys_UnsupportedErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.cal
 sys_UnsupportedErr.prototype.type = function() { return sys_Type.find("sys::UnsupportedErr"); }
 sys_UnsupportedErr.make = function(msg) { return new sys_UnsupportedErr(msg); }
 
+// UnresolvedErr
+var sys_UnresolvedErr = sys_Obj.$extend(sys_Err);
+sys_UnresolvedErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
+sys_UnresolvedErr.prototype.type = function() { return sys_Type.find("sys::UnresolvedErr"); }
+sys_UnresolvedErr.make = function(msg) { return new sys_UnresolvedErr(msg); }
 

@@ -26,6 +26,11 @@ sys_Pod.prototype.$ctor = function(name)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
+sys_Pod.prototype.name = function()
+{
+  return this.m_name;
+}
+
 sys_Pod.prototype.findType = function(qname, checked)
 {
   if (checked == undefined) checked = true;
@@ -64,13 +69,21 @@ sys_Pod.prototype.loc = function(key, def)
 sys_Pod.prototype.toStr = function() { return this.m_name; }
 
 // addType
-sys_Pod.prototype.$at = function(name, baseQname)
+sys_Pod.prototype.$at = function(name, baseQname, mixins)
 {
   var qname = this.m_name + "::" + name;
   if (this.m_types[name] != null)
     throw sys_Err.make("Type already exists " + qname);
-  var t = new sys_Type(qname, baseQname);
+  var t = new sys_Type(qname, baseQname, mixins);
   this.m_types[name] = t;
+  return t;
+}
+
+// addMixin
+sys_Pod.prototype.$am = function(name, baseQname, mixins)
+{
+  var t = this.$at(name, baseQname, mixins);
+  t.m_isMixin = true;
   return t;
 }
 
