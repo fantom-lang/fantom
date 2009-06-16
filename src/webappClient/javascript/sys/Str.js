@@ -165,6 +165,38 @@ sys_Str.replace = function(self, oldstr, newstr)
   return self.replace(oldstr, newstr);
 }
 
+sys_Str.justl = function(self, width)
+{
+  return sys_Str.padr(self, width, 32);
+}
+
+sys_Str.justr = function(self, width)
+{
+  return sys_Str.padl(self, width, 32);
+}
+
+sys_Str.padl = function(self, w, ch)
+{
+  if (ch == undefined) ch = 32;
+  if (self.length >= w) return self;
+  var c = String.fromCharCode(ch);
+  var s = '';
+  for (var i=self.length; i<w; ++i) s += c;
+  s += self;
+  return s;
+}
+
+sys_Str.padr = function(self, w, ch)
+{
+  if (ch == undefined) ch = 32;
+  if (self.length >= w) return self;
+  var c = String.fromCharCode(ch);
+  var s = '';
+  s += self;
+  for (var i=self.length; i<w; ++i) s += c;
+  return s;
+}
+
 sys_Str.reverse = function(self)
 {
   var rev = "";
