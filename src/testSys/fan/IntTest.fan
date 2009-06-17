@@ -276,6 +276,15 @@ class IntTest : Test
     verifyEq((-99).max(-6666), -99)
     verifyEq('a'.max(' '), 'a')
 
+    verifyEq(5.pow(0), 1)
+    verifyEq(5.pow(1), 5)
+    verifyEq(5.pow(2), 25)
+    verifyEq(10.pow(5), 100_000)
+    verifyEq(8.pow(5), 32768)
+    verifyEq((-2).pow(2), 4)
+    verifyEq((-2).pow(3), -8)
+    verifyErr(ArgErr#) { 6.pow(-1) }
+
     verifyEq((-2).isEven,    true)
     verifyEq((-1).isEven,    false)
     verifyEq(0.isEven,       true)

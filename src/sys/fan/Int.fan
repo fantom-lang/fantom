@@ -172,6 +172,12 @@ const final class Int : Num
   Int max(Int that)
 
   **
+  ** Return this value raised to the specified power.
+  ** Throw ArgErr if pow is less than zero.
+  **
+  Int pow(Int pow)
+
+  **
   ** Return if this integer is evenly divisible by two.
   **
   Bool isEven()

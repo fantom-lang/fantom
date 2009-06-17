@@ -175,6 +175,14 @@ public final class FanInt
     return that;
   }
 
+  public static long pow(long self, long pow)
+  {
+    if (pow < 0) throw ArgErr.make("pow < 0").val;
+    long result = 1;
+    for (int i=0; i<pow; ++i) result *= self;
+    return result;
+  }
+
   public static boolean isEven(long self)
   {
     return (self % 2) == 0;
