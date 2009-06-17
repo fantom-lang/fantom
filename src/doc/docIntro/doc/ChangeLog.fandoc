@@ -661,5 +661,6 @@
 - FWT Canvas widget (Widget.make is now internal)
 - Graphics removed clipRect, drawPoint
 - fwt::Command.invoke final, override invoked now
+- Int.pow
 
 TODO: remove TODOs in List.java, ClassType.java
