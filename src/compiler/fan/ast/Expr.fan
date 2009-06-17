@@ -1469,7 +1469,7 @@ class ClosureExpr : Expr
   Expr toWith(Expr target)
   {
     if (target.ctype != null) setInferredSignature(FuncType.makeItBlock(target.ctype))
-    x := CallExpr.makeWithMethod(location, target, enclosingType.ns.objWith, [this])
+    x := CallExpr.makeWithMethod(location, target, enclosingType.ns.objWith, Expr[this])
     // TODO: this coercion should be added automatically later in the pipeline
     if (target.ctype == null) return x
     return TypeCheckExpr.coerce(x, target.ctype)

@@ -8,6 +8,8 @@
 package fan.sys;
 
 import java.lang.Thread;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -62,7 +64,7 @@ public final class List
   {
     if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
     this.of = of;
-    this.values = capacity == 0 ? empty : new Object[capacity];
+    this.values = capacity == 0 ? empty : newArray(capacity);
   }
 
   public List(Type of)
@@ -77,7 +79,7 @@ public final class List
     if (of == null) { Thread.dumpStack(); throw new NullErr().val; }
     this.of = of;
     this.size = collection.size();
-    this.values = collection.toArray(new Object[size]);
+    this.values = collection.toArray(newArray(size));
   }
 
   public List(String[] values)
@@ -121,14 +123,14 @@ public final class List
     int newSize = (int)s;
     if (newSize > size)
     {
-      Object[] temp = new Object[newSize];
+      Object[] temp = newArray(newSize);
       System.arraycopy(values, 0, temp, 0, size);
       values = temp;
       size = newSize;
     }
     else
     {
-      Object[] temp = new Object[newSize];
+      Object[] temp = newArray(newSize);
       System.arraycopy(values, 0, temp, 0, newSize);
       values = temp;
       size = newSize;
@@ -145,7 +147,7 @@ public final class List
     modify();
     int newCapacity = (int)c;
     if (newCapacity < size) throw ArgErr.make("capacity < size").val;
-    Object[] temp = new Object[newCapacity];
+    Object[] temp = newArray(newCapacity);
     System.arraycopy(values, 0, temp, 0, size);
     values = temp;
   }
@@ -279,7 +281,7 @@ public final class List
 
   public final List dup()
   {
-    Object[] dup = new Object[size];
+    Object[] dup = newArray(size);
     System.arraycopy(values, 0, dup, 0, size);
     return new List(of, dup);
   }
@@ -328,6 +330,10 @@ public final class List
     {
       throw IndexErr.make(index).val;
     }
+    catch (ArrayStoreException e)
+    {
+      throw CastErr.make("Setting '" + FanObj.type(value) + "' into '" + of + "[]'").val;
+    }
   }
 
   public final List add(Object value)
@@ -353,14 +359,21 @@ public final class List
 
   private List insert(int i, Object value)
   {
-    modify();
-    if (values.length <= size)
-      grow(size+1);
-    if (i < size)
-      System.arraycopy(values, i, values, i+1, size-i);
-    values[i] = value;
-    size++;
-    return this;
+    try
+    {
+      modify();
+      if (values.length <= size)
+        grow(size+1);
+      if (i < size)
+        System.arraycopy(values, i, values, i+1, size-i);
+      values[i] = value;
+      size++;
+      return this;
+    }
+    catch (ArrayStoreException e)
+    {
+      throw CastErr.make("Adding '" + FanObj.type(value) + "' into '" + of + "[]'").val;
+    }
   }
 
   public final List insertAll(long index, List list)
@@ -435,7 +448,7 @@ public final class List
     if (desired < 1) throw Err.make("desired " + desired + " < 1").val;
     int newSize = Math.max(desired, size*2);
     if (newSize < 10) newSize = 10;
-    Object[] temp = new Object[newSize];
+    Object[] temp = newArray(newSize);
     System.arraycopy(values, 0, temp, 0, size);
     values = temp;
   }
@@ -449,7 +462,7 @@ public final class List
     }
     else if (values.length != size)
     {
-      Object[] temp = new Object[size];
+      Object[] temp = newArray(size);
       System.arraycopy(values, 0, temp, 0, size);
       values = temp;
     }
@@ -1012,6 +1025,25 @@ public final List map(List acc, Func f)
     }
   }
 
+  private Object[] newArray(int capacity)
+  {
+    // use backing store of correct array type;
+    // handle Java types and bootstrap types directly
+    Type t = of.toNonNullable();
+    if (t == Sys.ObjType)     return new Object[capacity];
+    if (t == Sys.StrType)     return new String[capacity];
+    if (t == Sys.IntType)     return new Long[capacity];
+    if (t == Sys.BoolType)    return new Boolean[capacity];
+    if (t == Sys.FloatType)   return new Double[capacity];
+    if (t == Sys.DecimalType) return new BigDecimal[capacity];
+    if (t == Sys.NumType)     return new Number[capacity];
+    if (t == Sys.SlotType)    return new Slot[capacity];
+    if (t == Sys.FieldType)   return new Field[capacity];
+    if (t == Sys.MethodType)  return new Method[capacity];
+    if (t == Sys.ParamType)   return new Param[capacity];
+    return (Object[])Array.newInstance(of.toClass(), capacity);
+  }
+
   /**
    * Get this list as an array of the specified class.  The resulting
    * array could potentially be a direct reference to the backing array.
@@ -1023,7 +1055,7 @@ public final List map(List acc, Func f)
       return values;
 
     // make a safe copy of correct length and type
-    Object[] r = (Object[])java.lang.reflect.Array.newInstance(of, size);
+    Object[] r = (Object[]) Array.newInstance(of, size);
     System.arraycopy(values, 0, r, 0, size);
     return r;
   }
@@ -1031,7 +1063,7 @@ public final List map(List acc, Func f)
   public final Object[] toArray()
   {
     if (values.length == size) return values;
-    Object[] r = new Object[size];
+    Object[] r = newArray(size);
     System.arraycopy(values, 0, r, 0, size);
     return r;
   }
@@ -1142,7 +1174,7 @@ public final List map(List acc, Func f)
   {
     if (!readonly) return this;
 
-    Object[] temp = new Object[size];
+    Object[] temp = newArray(size);
     System.arraycopy(values, 0, temp, 0, size);
 
     List rw = new List(of);
@@ -1177,7 +1209,7 @@ public final List map(List acc, Func f)
     if (immutable) return this;
 
     // make safe copy
-    Object[] temp = new Object[size];
+    Object[] temp = newArray(size);
     for (int i=0; i<size; ++i)
     {
       Object item = values[i];
@@ -1210,7 +1242,7 @@ public final List map(List acc, Func f)
     // it so it remains immutable
     if (readonlyList != null)
     {
-      Object[] temp = new Object[size];
+      Object[] temp = newArray(size);
       System.arraycopy(values, 0, temp, 0, size);
       readonlyList.values = temp;
       readonlyList = null;
