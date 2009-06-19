@@ -19,6 +19,17 @@ var sys_Int = sys_Obj.$extend(sys_Num);
 sys_Int.prototype.$ctor = function() {}
 sys_Int.prototype.type = function() { return sys_Type.find("sys::Int"); }
 
+// TODO - need to look at how this code is used
+sys_Int.make = function(val)
+{
+  if (val instanceof Long) return val;
+  if (typeof(val) == "string") return new Long.fromStr(val);
+  if (val <= sys_Int.maxInt) val;
+  return Long.fromNumber(val);
+}
+
+sys_Int.maxInt = 9007199254740992;  // max exact int in js (2^53)
+
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
@@ -80,7 +91,15 @@ sys_Int.toStr = function(self)
 
 sys_Int.equals = function(self, obj)
 {
-  return self == obj;
+  var sis = self instanceof Long;
+  var ois = obj instanceof Long;
+  if (sis || ois)
+  {
+    if (!sis) self = Long.fromNumber(self);
+    if (!ois) obj = Long.fromNumber(obj);
+    return self.equals(obj);
+  }
+  else return self == obj;
 }
 
 sys_Int.abs = function(self) { return self < 0 ? -self : self; }
@@ -161,15 +180,60 @@ sys_Int.isAlpha    = function(self) { return sys_Int.isUpper(self) || sys_Int.is
 sys_Int.isAlphaNum = function(self) { return sys_Int.isAlpha(self) || sys_Int.isDigit(self); }
 sys_Int.equalsIgnoreCase = function(self, ch) { return (self|0x20) == (ch|0x20); }
 
+
+//////////////////////////////////////////////////////////////////////////
 // Iterators
+//////////////////////////////////////////////////////////////////////////
+
 sys_Int.times = function(self, func)
 {
   for (var i=0; i<self; i++)
     func(i);
 }
 
+//////////////////////////////////////////////////////////////////////////
 // Arithmetic
-sys_Int.div = function(a, b) { return Math.floor(a/b); }
+//////////////////////////////////////////////////////////////////////////
+
+sys_Int.plus = function(a, b)
+{
+  // always wrap with Long to make sure we retain precision
+  if (!(a instanceof Long)) a = Long.fromNumber(a);
+  if (!(b instanceof Long)) b = Long.fromNumber(b);
+  return Long.add(a, b);
+}
+
+sys_Int.minus = function(a, b)
+{
+  // always wrap with Long to make sure we retain precision
+  if (!(a instanceof Long)) a = Long.fromNumber(a);
+  if (!(b instanceof Long)) b = Long.fromNumber(b);
+  return Long.sub(a, b);
+}
+
+sys_Int.mult = function(a, b)
+{
+  // always wrap with Long to make sure we retain precision
+  if (!(a instanceof Long)) a = Long.fromNumber(a);
+  if (!(b instanceof Long)) b = Long.fromNumber(b);
+  return Long.mul(a, b);
+}
+
+sys_Int.div = function(a, b)
+{
+  // always wrap with Long to make sure we retain precision
+  if (!(a instanceof Long)) a = Long.fromNumber(a);
+  if (!(b instanceof Long)) b = Long.fromNumber(b);
+  return Long.div(a, b);
+}
+
+sys_Int.mod = function(a, b)
+{
+  // always wrap with Long to make sure we retain precision
+  if (!(a instanceof Long)) a = Long.fromNumber(a);
+  if (!(b instanceof Long)) b = Long.fromNumber(b);
+  return Long.mod(a, b);
+}
 
 // Bitwise
 // TODO - these impls only work upto 32 bits!!!
@@ -182,7 +246,4 @@ sys_Int.rshift = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; re
 // Static Fields
 //////////////////////////////////////////////////////////////////////////
 
-sys_Int.maxVal = 9223372036854775807;
-sys_Int.minVal = -9223372036854775808;
-sys_Int.defVal = 0;
-sys_Int.Chunk  = 4096;
+// see sysPod.js

@@ -79,12 +79,10 @@ sys_Obj.prototype.toString = function()
 
 sys_Obj.equals = function(self, that)
 {
-  if (self instanceof sys_Obj)
-    return self.equals(that);
-  else if ((typeof self) == "number")
-    return sys_Int.equals(self, that);
-  else if (self != null && self.constructor == Array)
-    return sys_List.equals(self, that);
+  if (self instanceof sys_Obj) return self.equals(that);
+  else if (self instanceof Long) return sys_Int.equals(self, that);
+  else if ((typeof self) == "number") return sys_Int.equals(self, that);
+  else if (self != null && self.constructor == Array) return sys_List.equals(self, that);
   else
   {
     if (self != null && self.$fanType != null)
