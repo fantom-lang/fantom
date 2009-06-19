@@ -66,7 +66,7 @@ with (sys_Pod.$add("sys"))
   // TODO: Zip
 
   // actors
-  // TODO: Actor
+  $at("Actor",     "sys::Obj");
   // TODO: ActorPool
   // TODO: Context
   // TODO: Future
@@ -125,4 +125,9 @@ sys_Float.negInf = sys_Float.make(Number.NEGATIVE_INFINITY);
 sys_Float.nan    = sys_Float.make(Number.NaN);
 sys_Float.e      = sys_Float.make(Math.E);
 sys_Float.pi     = sys_Float.make(Math.PI);
+
+sys_Int.maxVal = new Long(0x7fffffff, 0xffffffff);
+sys_Int.minVal = new Long(0x80000000, 0x00000000);
+sys_Int.defVal = 0;
+sys_Int.Chunk  = 4096;
 

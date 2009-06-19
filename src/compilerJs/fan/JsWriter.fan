@@ -434,7 +434,7 @@ if (c != null)
       case ExprId.nullLiteral:  out.w("null")
       case ExprId.trueLiteral:  out.w("true")
       case ExprId.falseLiteral: out.w("false")
-      case ExprId.intLiteral:   out.w(ex)
+      case ExprId.intLiteral:   intLiteralExpr(ex)
       case ExprId.floatLiteral: out.w("sys_Float.make($ex)")
       case ExprId.decimalLiteral: out.w("sys_Decimal.make($ex)")
       case ExprId.strLiteral:   out.w("\"").w(ex->val.toStr.toCode('\"', true)[1..-2]).w("\"")
@@ -475,6 +475,18 @@ if (c != null)
       case ExprId.closure:      closureExpr(ex)
       default: err("Unknown ExprId: $ex.id", ex.location)
     }
+  }
+
+  Void intLiteralExpr(LiteralExpr le)
+  {
+    val := le.val as Int
+    if (val.abs > maxInt || val == Int.minVal)
+    {
+      hi := (val >> 32) & 0xffff_ffff
+      lo := val & 0xffff_ffff
+      out.w("new Long(0x$hi.toHex,0x$lo.toHex)")
+    }
+    else out.w(val)
   }
 
   Void rangeLiteralExpr(RangeLiteralExpr re)
@@ -715,8 +727,12 @@ if (c != null)
         Str? op := null
         switch (se.op)
         {
-          case ShortcutOp.and:    op = "and"
+          case ShortcutOp.plus:   op = "plus"
+          case ShortcutOp.minus:  op = "minus"
+          case ShortcutOp.mult:   op = "mult"
           case ShortcutOp.div:    op = "div"
+          case ShortcutOp.mod:    op = "mod"
+          case ShortcutOp.and:    op = "and"
           case ShortcutOp.or:     op = "or"
           case ShortcutOp.lshift: op = "lshift"
           case ShortcutOp.rshift: op = "rshift"
@@ -961,6 +977,7 @@ if (c != null)
   Block[] staticInits := [,]        // static init blocks
   Str:CType refs := [:]             // types referenced
 
+  const Int maxInt := 9007199254740992  // max exact int in js (2^53)
 }
 
 **************************************************************************
