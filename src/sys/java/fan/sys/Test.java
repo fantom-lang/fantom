@@ -194,6 +194,12 @@ public class Test
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
+  public Object trap(String name, List args)
+  {
+    if (name.equals("verifyCount")) return Long.valueOf(verifyCount);
+    return super.trap(name, args);
+  }
+
   public File tempDir()
   {
     if (tempDir == null)
