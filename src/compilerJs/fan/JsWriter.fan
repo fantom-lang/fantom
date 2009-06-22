@@ -734,8 +734,8 @@ if (c != null)
           case ShortcutOp.mod:    op = "mod"
           case ShortcutOp.and:    op = "and"
           case ShortcutOp.or:     op = "or"
-          case ShortcutOp.lshift: op = "lshift"
-          case ShortcutOp.rshift: op = "rshift"
+          case ShortcutOp.lshift: op = "shl"
+          case ShortcutOp.rshift: op = "shr"
         }
         if (op != null)
         {

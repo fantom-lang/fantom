@@ -236,6 +236,52 @@ Long.mod = function(a, b)
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Bitwise operators
+//////////////////////////////////////////////////////////////////////////
+
+/*
+Long.and = function(a, b)
+{
+  var high = a.high & b.high; if (high < 0) high = 0xffffffff + 1;
+  var low  = a.low  & b.low;  if (low < 0)  low  = 0xffffffff + 1;
+  return new Long(high, low);
+}
+
+Long.or = function(a, b)
+{
+  var high = a.high | b.high; if (high < 0) high = 0xffffffff + 1;
+  var low  = a.low  | b.low;  if (low < 0)  low  = 0xffffffff + 1;
+  return new Long(high, low);
+}
+
+Long.shl = function(a, n)
+{
+  var a4 = (a.high >> 16) & 0xffff;
+  var a3 = (a.high & 0xffff);
+  var a2 = (a.low >> 16) & 0xffff;
+  var a1 = (a.low & 0xffff);
+
+  a4 = a4 << n;
+  a3 = a3 << n;
+  a2 = a2 << n;
+  a1 = a1 << n;
+
+  var hi = (a4 << 16) | a3 | ((a2 & 0xffff0000) >> 16);
+  var lo = (a2 << 16) | a1;  if (lo < 0) lo += 0xffffffff+1;
+
+  return new Long(hi, lo);
+}
+
+Long.shr = function(a, n)
+{
+  // TODO
+  var x = a.low >> n;
+  if (x < 0) x += 0xffffffff+1;
+  return new Long(0, x);
+}
+*/
+
+//////////////////////////////////////////////////////////////////////////
 // Str
 //////////////////////////////////////////////////////////////////////////
 
@@ -300,7 +346,8 @@ Long.fromStr16 = function(s)
 {
   if (s.length <= 8)
   {
-    return new Long(0, Long.parseHex(s));
+    var lo = Long.parseHex(s);
+    return new Long(0, lo);
   }
   else
   {
@@ -309,22 +356,20 @@ Long.fromStr16 = function(s)
     var lo = Long.parseHex(s.substring(i));
     return new Long(hi, lo);
   }
+
 }
 
 Long.parseHex = function(s)
 {
-  var num = 0;
-  var len = s.length-1;
   for (var i=0; i<s.length; i++)
   {
     ch = s.charCodeAt(i);
-    if (ch >= 48 && ch <= 57) { val = ch-48; }
-    else if (ch >= 65 && ch <= 70) { val = ch-65+10; }
-    else if (ch >= 97 && ch <= 102) { val = ch-97+10; }
-    else throw new Error();
-    num = sys_Int.or(num, (val << ((len-i)*4)));
+    if (ch >= 48 && ch <= 57) continue;
+    if (ch >= 65 && ch <= 70) continue;
+    if (ch >= 97 && ch <= 102) continue;
+    throw new Error("Illegal hex char " + s.charAt(i));
   }
-  return num;
+  return parseInt(s, 16);
 }
 
 //////////////////////////////////////////////////////////////////////////

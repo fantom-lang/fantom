@@ -198,12 +198,47 @@ sys_Int.mod = function(a, b)
   return Long.mod(a, b);
 }
 
-// Bitwise
+//////////////////////////////////////////////////////////////////////////
+// Bitwise operators
+//////////////////////////////////////////////////////////////////////////
+
 // TODO - these impls only work upto 32 bits!!!
 sys_Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
 sys_Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
-sys_Int.lshift = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
-sys_Int.rshift = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.shl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
+sys_Int.shr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
+
+/*
+sys_Int.and = function(a, b)
+{
+  // always wrap with Long to make sure we retain precision
+  if (!(a instanceof Long)) a = Long.fromNumber(a);
+  if (!(b instanceof Long)) b = Long.fromNumber(b);
+  return Long.and(a, b);
+}
+
+sys_Int.or = function(a, b)
+{
+  // always wrap with Long to make sure we retain precision
+  if (!(a instanceof Long)) a = Long.fromNumber(a);
+  if (!(b instanceof Long)) b = Long.fromNumber(b);
+  return Long.or(a, b);
+}
+
+sys_Int.shl = function(a, n)
+{
+  // always wrap with Long to make sure we retain precision
+  if (!(a instanceof Long)) a = Long.fromNumber(a);
+  return Long.shl(a, n);
+}
+
+sys_Int.shr = function(a, n)
+{
+  // always wrap with Long to make sure we retain precision
+  if (!(a instanceof Long)) a = Long.fromNumber(a);
+  return Long.shr(a, n);
+}
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Static Fields
