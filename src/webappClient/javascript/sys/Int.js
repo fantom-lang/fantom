@@ -120,7 +120,8 @@ sys_Int.toChar = function(self)
 
 sys_Int.toHex = function(self, width)
 {
-  var s = self.toString(16);
+  var x = (self instanceof Long) ? self : Long.fromNumber(self);
+  var s = Long.fromNumber(self).toString(16);
   if (width != null && s.length < width)
   {
     if (sys_Int.$zeros == null)
