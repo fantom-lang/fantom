@@ -300,6 +300,7 @@ fanx_Tokenizer.prototype.hex = function()
   var type = fanx_Token.INT_LITERAL;
   var val = this.$hex(this.cur);
   if (val < 0) throw this.err("Expecting hex number");
+var str = String.fromCharCode(this.cur);
   this.consume();
   var nibCount = 1;
   while (true)
@@ -310,13 +311,14 @@ fanx_Tokenizer.prototype.hex = function()
       if (this.cur == 95/*'_'*/) { this.consume(); continue; }
       break;
     }
+str += String.fromCharCode(this.cur);
     nibCount++;
     if (nibCount > 16) throw this.err("Hex literal too big");
-    val = sys_Int.shl(val, 4) + nib;
+//    val = sys_Int.shl(val, 4) + nib;
     this.consume();
   }
-
-  this.val = val;
+  //this.val = val;
+this.val = Long.fromStr(str, 16);
   return type;
 }
 
