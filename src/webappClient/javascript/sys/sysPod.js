@@ -77,7 +77,7 @@ with (sys_Pod.$add("sys"))
   // TODO: LogLevel
   // TODO: LogRecord
   // TODO: Locale
-  // TODO: MimeType
+  $at("MimeType",  "sys::Obj");
   // TODO: Process
   // TODO: Regex
   // TODO: RegexMatcher
