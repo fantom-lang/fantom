@@ -87,11 +87,17 @@ sys_Field.prototype.set = function(instance, value, checkConst)
   //  return;
   //}
 
-  var target = instance;
   if ((this.m_flags & sys_FConst.Native) != 0)
-    target = instance.peer;
-  var setter = target[this.m_$name + "$set"];
-  return setter.call(target, value);
+  {
+    var peer = instance.peer;
+    var setter = peer[this.m_$name + "$set"];
+    return setter.call(peer, instance, value);
+  }
+  else
+  {
+    var setter = instance[this.m_$name + "$set"];
+    return setter.call(instance, value);
+  }
 }
 
 sys_Field.prototype.type = function() { return sys_Type.find("sys::Field"); }
