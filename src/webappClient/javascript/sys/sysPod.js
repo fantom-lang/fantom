@@ -131,3 +131,11 @@ sys_Int.minVal = new Long(0x80000000, 0x00000000);
 sys_Int.defVal = 0;
 sys_Int.Chunk  = 4096;
 
+sys_MimeType.imagePng  = sys_MimeType.predefined("image", "png");
+sys_MimeType.imageGif  = sys_MimeType.predefined("image", "gif");
+sys_MimeType.imageJpeg = sys_MimeType.predefined("image", "jpeg");
+sys_MimeType.textPlain = sys_MimeType.predefined("text", "plain");
+sys_MimeType.textHtml  = sys_MimeType.predefined("text", "html");
+sys_MimeType.textXml   = sys_MimeType.predefined("text", "xml");
+sys_MimeType.dir       = sys_MimeType.predefined("x-directory", "normal");
+
