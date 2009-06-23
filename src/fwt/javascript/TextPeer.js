@@ -16,21 +16,33 @@ fwt_TextPeer.prototype.text$get = function(self) { return this.text; }
 fwt_TextPeer.prototype.text$set = function(self, val) { this.text = val; }
 fwt_TextPeer.prototype.text = "";
 
-fwt_TextPeer.prototype.create = function(parentElem)
-{
-  var input = document.createElement("input");
-  input.type = "text";
-  var div = this.emptyDiv();
-  div.appendChild(input);
-  parentElem.appendChild(div);
-  return div;
-}
-
 fwt_TextPeer.prototype.sync = function(self)
 {
   var text = this.elem.firstChild;
-  text.value = this.text;
-  text.size  = self.prefCols;
+
+  // do we need to create element?
+  if (text == null)
+  {
+    if (self.multiLine) { text = document.createElement("textarea"); }
+    else { text = document.createElement("input"); text.type = "text"; }
+    this.elem.appendChild(text);
+  }
+
+  // sync control
+  if (self.multiLine)
+  {
+    while (text.firstChild != null) text.removeChild(text.firstChild);
+    text.appendChild(document.createTextNode(this.text));
+    // TODO - this differs a pixel or two by browser - so we'll need
+    // to go back and fine tune
+    text.style.width  = (this.size.w-6)+'px';
+    text.style.height = (this.size.h-7)+'px';
+  }
+  else
+  {
+    text.value = this.text;
+    text.size  = self.prefCols;
+  }
   text.onkeyup = function(event)
   {
     // sync control value to widget
