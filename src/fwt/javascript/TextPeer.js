@@ -45,8 +45,12 @@ fwt_TextPeer.prototype.sync = function(self)
   }
   text.onkeyup = function(event)
   {
+    // IE-ness
+    var target = event ? event.target : window.event.srcElement;
+    var event  = event ? event : window.event;
+
     // sync control value to widget
-    self.text$set(event.target.value);
+    self.text$set(target.value);
 
     // fire onAction
     if (event.keyCode == 13 && self.onAction.size() > 0)
