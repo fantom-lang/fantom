@@ -154,7 +154,7 @@ fwt_TablePeer.prototype.sync = function(self)
             // nuke abs positiong
             with (elem.style)
             {
-              position = null;
+              position = "static";
               left     = null;
               top      = null;
               width    = null;
