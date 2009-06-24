@@ -84,9 +84,7 @@ internal class JsonParser
 
   private Obj? value()
   {
-    if (this.cur == JsonToken.quote && this.peek == JsonToken.grave)
-      return uri
-    else if (this.cur == JsonToken.quote) return string
+    if (this.cur == JsonToken.quote) return string
     else if (this.cur.isDigit || this.cur == '-') return digits
     else if (this.cur == JsonToken.objectStart) return parseObject
     else if (this.cur == JsonToken.arrayStart) return array
@@ -112,15 +110,15 @@ internal class JsonParser
   // parse number, duration(FIXIT, or range)
   private Obj digits()
   {
-    integral := StrBuf.make
-    fractional := StrBuf.make
-    exponent := StrBuf.make
+    integral := StrBuf()
+    fractional := StrBuf()
+    exponent := StrBuf()
     if (maybe('-'))
       integral.add("-")
 
     while (this.cur.isDigit)
     {
-      integral.add(this.cur.toChar)
+      integral.addChar(this.cur)
       consume
     }
 
@@ -130,114 +128,89 @@ internal class JsonParser
       consume
       while (this.cur.isDigit)
       {
-        fractional.add(this.cur.toChar)
+        fractional.addChar(this.cur)
         consume
       }
     }
 
     if (this.cur == 'e' || this.cur == 'E')
     {
-      exponent.add(this.cur.toChar)
+      exponent.addChar(this.cur)
       consume
       if (this.cur == '+') consume
       else if (this.cur == '-')
       {
-        exponent.add(this.cur.toChar)
+        exponent.addChar(this.cur)
         consume
       }
       while (this.cur.isDigit)
       {
-        exponent.add(this.cur.toChar)
+        exponent.addChar(this.cur)
         consume
       }
     }
 
     Num? num := null
     if (fractional.size > 0)
-      num = Decimal.fromStr(integral.toStr+"."+fractional.toStr+exponent.toStr)
+      num = Float.fromStr(integral.toStr+"."+fractional.toStr+exponent.toStr)
     else if (exponent.size > 0)
-      num = Decimal.fromStr(integral.toStr+exponent.toStr)
+      num = Float.fromStr(integral.toStr+exponent.toStr)
     else num = Int.fromStr(integral.toStr)
 
-    Int dur := maybeDuration
-    if (dur > 0)
-      return Duration.make(dur*num);
-    else
-      return num;
-  }
-
-  private Int maybeDuration()
-  {
-    Int dur := -1
-    if (cur == 'n' && peek == 's')
-    {
-      consume(); // n
-      consume(); // s
-      dur = 1;
-    }
-    if (cur == 'm' && peek == 's')
-    {
-      consume(); // m
-      consume(); // s
-      dur = 1000000;
-    }
-    if (cur == 's' && peek == 'e')
-    {
-      consume(); // s
-      consume(); // e
-      expect('c');
-      dur = 1000000000;
-    }
-    if (cur == 'm' && peek == 'i')
-    {
-      consume(); // m
-      consume(); // i
-      expect('n');
-      dur = 60000000000;
-    }
-    if (cur == 'h' && peek == 'r')
-    {
-      consume(); // h
-      consume(); // r
-      dur = 3600000000000;
-    }
-    if (cur == 'd' && peek == 'a')
-    {
-      consume(); // d
-      consume(); // a
-      expect('y');
-      dur = 86400000000000;
-    }
-    return dur
+    return num
   }
 
   private Str string()
   {
-    s := StrBuf.make
+    s := StrBuf()
     expect(JsonToken.quote)
-    while (this.cur != JsonToken.quote || this.prev == '\\')
+    while( cur != JsonToken.quote )
     {
-      s.add(this.cur.toChar)
-      consume
+      if (cur == '\\')
+      {
+        s.addChar(escape)
+      }
+      else
+      {
+        s.addChar(cur)
+        consume
+      }
     }
-
     expect(JsonToken.quote)
     return s.toStr
   }
 
-  private Uri uri()
+  private Int escape()
   {
-    expect(JsonToken.quote)
-    expect(JsonToken.grave)
-    s := StrBuf.make
-    while (this.cur != JsonToken.grave && this.prev != '\\')
+    // consume slash
+    expect('\\')
+
+    // check basics
+    switch (cur)
     {
-      s.add(this.cur.toChar)
-      consume
+      case 'b':   consume; return '\b'
+      case 'f':   consume; return '\f'
+      case 'n':   consume; return '\n'
+      case 'r':   consume; return '\r'
+      case 't':   consume; return '\t'
+      case '"':   consume; return '"'
+      case '\\':  consume; return '\\'
+      case '/':   consume; return '/'
     }
-    expect(JsonToken.grave)
-    expect(JsonToken.quote)
-    return Uri.fromStr(s.toStr)
+
+    // check for uxxxx
+    if (cur == 'u')
+    {
+      consume
+      n3 := cur.fromDigit(16); consume
+      n2 := cur.fromDigit(16); consume
+      n1 := cur.fromDigit(16); consume
+      n0 := cur.fromDigit(16); consume
+      if (n3 == null || n2 == null || n1 == null || n0 == null) throw err("Invalid hex value for \\uxxxx")
+      return ((n3 << 12) | (n2 << 8) | (n1 << 4) | n0)
+    }
+
+    throw err("Invalid escape sequence")
   }
 
   private List array()
@@ -267,8 +240,7 @@ internal class JsonParser
 
   private Void expect(Int tt)
   {
-    if (this.cur != tt) throw Err("Expected "+tt.toChar+", got "+
-                                   this.cur.toChar)
+    if (this.cur != tt) throw err("Expected ${tt.toChar}, got ${cur.toChar} at ${pos}")
     consume
   }
 
@@ -284,13 +256,17 @@ internal class JsonParser
     this.prev = this.cur
     this.cur = this.in.readChar ?: -1
     this.peek = this.in.peek ?: -1
+    pos++
   }
 
   private Void rewind()
   {
     this.peek = this.cur
     this.cur = this.prev
+    pos--
   }
+
+  private Err err(Str msg) { ParseErr(msg) }
 
   private InStream in
   private Int cur := '?'

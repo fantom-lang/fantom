@@ -663,5 +663,6 @@
 - fwt::Command.invoke final, override invoked now
 - Int.pow
 - List on JVM now uses backing store with typed array
+- Json fixes
 
 TODO: remove TODOs in List.java, ClassType.java
