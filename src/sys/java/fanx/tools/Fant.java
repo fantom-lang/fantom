@@ -189,7 +189,10 @@ public class Fant
       }
       catch (Throwable e)
       {
-        e.printStackTrace();
+        if (e instanceof Err.Val)
+          ((Err.Val)e).err().trace();
+        else
+          e.printStackTrace();
       }
     }
   }
