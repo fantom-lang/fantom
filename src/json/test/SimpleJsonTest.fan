@@ -106,6 +106,7 @@ class SimpleJsonTest : Test
            "bool"  : true,
            "float" : 2.4,
            "dollar": "$100 \u00f7",
+           "a\nb"  : "crazy key"
            }|>.in)
 
     f := |,|
@@ -117,6 +118,8 @@ class SimpleJsonTest : Test
       verifyEq(obj["bool"], true)
       verify(2.4f.approx(obj["float"]))
       verifyEq(obj["dollar"], "\$100 \u00f7")
+      verifyEq(obj["a\nb"], "crazy key")
+      verifyEq(obj.keys.join(","), "foo,bar,baz,num,bool,float,dollar,a\nb")
     }
 
     f()
