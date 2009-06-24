@@ -37,6 +37,10 @@ class ImageTest : Test
     verifyErr(UnresolvedErr#) { Image(bad, true) }
     verifyErr(UnresolvedErr#) { Image.makeFile(bad.toFile) }
     verifyErr(UnresolvedErr#) { Image.makeFile(bad.toFile, true) }
+
+    buf := Buf().writeObj(Image(file.uri))
+    Image x := buf.flip.readObj
+    verifyEq(x.uri, file.uri)
   }
 
 }
