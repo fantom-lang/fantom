@@ -36,7 +36,7 @@ fwt_LabelPeer.prototype.image$get = function(self) { return this.image; }
 fwt_LabelPeer.prototype.image$set = function(self, val)
 {
   this.image = val;
-  fwt_FwtEnv.loadImage(val)
+  fwt_FwtEnvPeer.loadImage(val)
 }
 fwt_LabelPeer.prototype.image = null;
 
