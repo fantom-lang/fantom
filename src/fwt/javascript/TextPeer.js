@@ -31,8 +31,7 @@ fwt_TextPeer.prototype.sync = function(self)
   // sync control
   if (self.multiLine)
   {
-    while (text.firstChild != null) text.removeChild(text.firstChild);
-    text.appendChild(document.createTextNode(this.text));
+    text.value = this.text;
     // TODO - this differs a pixel or two by browser - so we'll need
     // to go back and fine tune
     text.style.width  = (this.size.w-6)+'px';
@@ -40,6 +39,7 @@ fwt_TextPeer.prototype.sync = function(self)
   }
   else
   {
+    // TODO - can we use CSS here for size??
     text.value = this.text;
     text.size  = self.prefCols;
   }
