@@ -44,10 +44,10 @@ class SimpleJsonTest : Test
 
   Void testTopAsList()
   {
-    verifyEq(Json.read("[3, 4.0, null, \"hi\"]".in), [3, 4.0, null, "hi"])
+    verifyEq(Json.read("[3, 4.0, null, \"hi\"]".in), [3, 4.0f, null, "hi"])
 
     buf := Buf()
-    Json.write(buf.out, [3, 4.0, null, "hi"])
+    Json.write(buf.out, [3, 4.0f, null, "hi"])
     verifyEq(buf.flip.readAllStr, "[3,4.0,null,\"hi\"]")
   }
 
@@ -93,6 +93,35 @@ class SimpleJsonTest : Test
     verifyNotEq(list, null)
     verifyEq(list.size, 3)
     verifyEq(map["friends"], null)
+  }
+
+  public Void testEscapes()
+  {
+    Str:Obj obj := Json.read(
+      Str<|{
+           "foo"   : "bar\nbaz",
+           "bar"   : "_\r \t \u0abc \\ \/_",
+           "baz"   : "\"hi\"",
+           "num"   : 1234,
+           "bool"  : true,
+           "float" : 2.4
+           }|>.in)
+
+    f := |,|
+    {
+      verifyEq(obj["foo"], "bar\nbaz")
+      verifyEq(obj["bar"], "_\r \t \u0abc \\ /_")
+      verifyEq(obj["baz"], Str<|"hi"|>)
+      verifyEq(obj["num"], 1234)
+      verifyEq(obj["bool"], true)
+      verify(2.4f.approx(obj["float"]))
+    }
+
+    f()
+    buf := Buf()
+    Json.write(buf.out, obj)
+    obj = Json.read(buf.flip.in)
+    f()
   }
 
 }
