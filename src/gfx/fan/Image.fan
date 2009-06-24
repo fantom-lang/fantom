@@ -9,6 +9,7 @@
 **
 ** Image represents a graphical image.
 **
+@simple
 @javascript
 const class Image
 {
@@ -56,6 +57,14 @@ const class Image
       if (checked) throw e
       return null
     }
+  }
+
+  **
+  ** Convenience for 'make(uri.toUri, checked)'.
+  **
+  static Image? fromStr(Str uri, Bool checked := true)
+  {
+    make(uri.toUri, checked)
   }
 
   **
