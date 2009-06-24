@@ -41,8 +41,8 @@ fwt_ButtonPeer.prototype.create = function(parentElem)
     backgroundColor = "#eee";
     // IE workaround
     try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc))"; } catch (err) {} // ignore
-    MozBorderRadius    = "10px";
-    webkitBorderRadius = "10px";
+//    MozBorderRadius    = "10px";
+//    webkitBorderRadius = "10px";
   }
   parentElem.appendChild(div);
   return div;
