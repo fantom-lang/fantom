@@ -32,7 +32,7 @@ internal class JsonParser
 
   private Str:Obj? parseObject()
   {
-    pairs := Str:Obj?[:]
+    pairs := Str:Obj?[:] { ordered = true }
 
     skipWhitespace
 
@@ -46,8 +46,7 @@ internal class JsonParser
       // FIXIT would like pair to be a 2-tuple
       // OR a map with atom/symbol keys!
       // FIXIT what about empty object?
-      pair := parsePair
-      pairs.add(pair[keyAtom], pair[valueAtom])
+      parsePair(pairs)
       if (!maybe(JsonToken.comma)) break
     }
 
@@ -56,10 +55,8 @@ internal class JsonParser
     return pairs
   }
 
-  private Str:Obj? parsePair()
+  private Void parsePair(Str:Obj? obj)
   {
-    map := Str:Obj?[:]
-
     skipWhitespace
     key := key
 
@@ -71,10 +68,7 @@ internal class JsonParser
     val := value
     skipWhitespace
 
-    map.add(keyAtom, key)
-    map.add(valueAtom, val)
-
-    return map
+    obj[key] = val
   }
 
   private Str key()
@@ -273,6 +267,4 @@ internal class JsonParser
   private Int peek := '?'
   private Int prev := '?'
   private Int pos := 0
-  private static const Str keyAtom := "key_atom"
-  private static const Str valueAtom := "value_atom"
 }

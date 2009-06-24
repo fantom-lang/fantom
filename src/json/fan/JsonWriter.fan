@@ -76,7 +76,7 @@ internal class JsonWriter
     notFirst := false
     map.each |Obj? val, Str key|
     {
-      if (notFirst) this.out.writeChar(JsonToken.comma)
+      if (notFirst) this.out.writeChar(JsonToken.comma).writeChar('\n')
       writePair(key, val)
       notFirst = true
     }
@@ -116,9 +116,9 @@ internal class JsonWriter
 
   private Void writePair(Str key, Obj? val)
   {
-      writeKey(key)
-      this.out.writeChar(JsonToken.colon)
-      writeValue(val)
+    writeKey(key)
+    this.out.writeChar(JsonToken.colon)
+    writeValue(val)
   }
 
   private Void writeKey(Str key)
