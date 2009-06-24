@@ -128,7 +128,29 @@ internal class JsonWriter
 
   private Void writeString(Str str)
   {
-    this.out.writeObj(str)
+    this.out.writeChar(JsonToken.quote)
+    str.each |char|
+    {
+      if (char <= 0x7f)
+      {
+        switch (char)
+        {
+          case '\b': this.out.writeChar('\\').writeChar('b')
+          case '\f': this.out.writeChar('\\').writeChar('f')
+          case '\n': this.out.writeChar('\\').writeChar('n')
+          case '\r': this.out.writeChar('\\').writeChar('r')
+          case '\t': this.out.writeChar('\\').writeChar('t')
+          case '\\': this.out.writeChar('\\').writeChar('\\')
+          case '"':  this.out.writeChar('\\').writeChar('"')
+          default: this.out.writeChar(char)
+        }
+      }
+      else
+      {
+        this.out.writeChar('\\').writeChar('u').print(char.toHex(4))
+      }
+    }
+    this.out.writeChar(JsonToken.quote)
   }
 
   private Void writeUri(Uri uri)

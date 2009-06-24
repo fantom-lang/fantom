@@ -104,7 +104,8 @@ class SimpleJsonTest : Test
            "baz"   : "\"hi\"",
            "num"   : 1234,
            "bool"  : true,
-           "float" : 2.4
+           "float" : 2.4,
+           "dollar": "$100 \u00f7",
            }|>.in)
 
     f := |,|
@@ -115,6 +116,7 @@ class SimpleJsonTest : Test
       verifyEq(obj["num"], 1234)
       verifyEq(obj["bool"], true)
       verify(2.4f.approx(obj["float"]))
+      verifyEq(obj["dollar"], "\$100 \u00f7")
     }
 
     f()
