@@ -323,6 +323,25 @@ sys_Str.splitws = function(val)
   return toks;
 }
 
+sys_Str.splitLines = function(self)
+{
+  var lines = sys_List.make(sys_Type.find("sys::Str"), []);
+  var len = self.length;
+  var s = 0;
+  for (var i=0; i<len; ++i)
+  {
+    var c = self.charAt(i);
+    if (c == '\n' || c == '\r')
+    {
+      lines.push(self.substring(s, i));
+      s = i+1;
+      if (c == '\r' && s < len && self.charAt(s) == '\n') { i++; s++; }
+    }
+  }
+  lines.push(self.substring(s, len));
+  return lines;
+}
+
 sys_Str.upper = function(self) { return self.toUpperCase(); }
 sys_Str.$in = function(self) { return sys_InStream.makeForStr(self); }
 sys_Str.toUri = function(self) { return sys_Uri.make(self); }
