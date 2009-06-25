@@ -665,6 +665,8 @@
 - List on JVM now uses backing store with typed array
 - Json fixes
 - Fix Wisp HTTP pipeling bug when no request body
+- JavaScript compiler enhancements for script support
+- 64-bit integer emulation in JavaScript
 - #612: Change signature of List.map and Map.map
 - #617: Compiler bug - traceback in switch with missing case expression
 - #618: Ambiguous method call on java object

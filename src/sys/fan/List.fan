@@ -429,7 +429,7 @@ final class List
   **
   ** Create a new list which is the result of calling c for
   ** every item in this list.  The new list is typed based on
-  ** the return type of c.  Return acc.  This method is idempotent.
+  ** the return type of c.  This method is idempotent.
   **
   ** Example:
   **   list := [3, 4, 5]
