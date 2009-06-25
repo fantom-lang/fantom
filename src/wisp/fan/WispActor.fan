@@ -170,6 +170,12 @@ internal const class WispActor : Actor
     // init request - create content input stream wrapper
     req.webIn = WebUtil.makeContentInStream(req.headers, req.socket.in)
 
+    // if the WebUtil didn't wrap the stream, then that means no
+    // Content-Length or Transfer-Encoding - which in turn means we don't
+    // consider this a valid request for sending a body in the request
+    // according to 4.4 (since pipeling would be undefined)
+    if (req.webIn === req.socket.in) req.webIn = null
+
     // init response - set predefined headers
     res.headers["Server"] = "Wisp/" + type.pod.version
     res.headers["Date"] = DateTime.now.toHttpStr

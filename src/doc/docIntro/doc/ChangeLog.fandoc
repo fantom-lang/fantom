@@ -664,5 +664,6 @@
 - Int.pow
 - List on JVM now uses backing store with typed array
 - Json fixes
+- Fix Wisp HTTP pipeling bug when no request body
 
 TODO: remove TODOs in List.java, ClassType.java
