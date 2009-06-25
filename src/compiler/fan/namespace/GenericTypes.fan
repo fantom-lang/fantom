@@ -293,7 +293,28 @@ class FuncType : GenericType
     return true;
   }
 
-  Int arity() { return params.size }
+  Int arity() { params.size }
+
+  FuncType toArity(Int num)
+  {
+    if (num == params.size) return this
+    if (num > params.size) throw Err("Cannot increase arity $this")
+    return make(params[0..<num], names[0..<num], ret)
+  }
+
+  FuncType mostSpecific(FuncType b)
+  {
+    a := this
+    if (a.arity != b.arity) throw Err("Different arities: $a / $b")
+    params := a.params.map |p, i| { toMostSpecific(p, b.params[i]) }
+    ret := toMostSpecific(a.ret, b.ret)
+    return make(params, b.names, ret)
+  }
+
+  static CType toMostSpecific(CType a, CType b)
+  {
+    a.isObj || a.isVoid ? b : a
+  }
 
   ParamDef[] toParamDefs(Location loc)
   {

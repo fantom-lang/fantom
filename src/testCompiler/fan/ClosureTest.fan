@@ -556,6 +556,17 @@ class ClosureTest : CompilerTest
             return a <=> b
           }
         }
+
+        Type m11() { foo { 4 } }
+        Type m12() { foo |a| { 4 } }
+        Type m13() { foo |a,b| { 4 } }
+        Type m14() { foo |Int a,b| { 4 } }
+        Type m15() { foo |a,Int b| { 4 } }
+        Type m16() { foo |a,b->Int| { 4 } }
+        Type m17() { foo |Int a,b->Int| { 4 } }
+        Type m18() { foo |Int a, Float b->Int| { 4 } }
+
+        Type foo(|Num,Num->Num| f) { return f.type }
        }")
 
     // compiler.fpod.dump
@@ -569,6 +580,14 @@ class ClosureTest : CompilerTest
     verifyEq(obj->m08(["a", "b"]), Obj?["0a", "1b"])
     verifyEq(obj->m09(["foo", "bar"]), Str["0foo", "1bar"])
     verifyEq(obj->m10(["bar", "c", "first", "alpha"]), ["first", "alpha", "bar", "c"])
+    verifyEq(obj->m11, |Num->Num|#)
+    verifyEq(obj->m12, |Num->Num|#)
+    verifyEq(obj->m13, |Num,Num->Num|#)
+    verifyEq(obj->m14, |Int,Num->Num|#)
+    verifyEq(obj->m15, |Num,Int->Num|#)
+    verifyEq(obj->m16, |Num,Num->Int|#)
+    verifyEq(obj->m17, |Int,Num->Int|#)
+    verifyEq(obj->m18, |Int,Float->Int|#)
   }
 
   Void testInferenceErrors()
