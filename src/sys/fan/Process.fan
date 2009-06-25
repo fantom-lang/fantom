@@ -19,6 +19,8 @@ final class Process
   **
   ** Construct a Process instanced used to launch an external
   ** OS process with the specified command arguments.
+  ** The first item in the 'cmd' list is the executable
+  ** itself, then rest are the parameters.
   **
   new make(Str[] cmd := Str[,], File? dir := null)
 
@@ -28,6 +30,8 @@ final class Process
 
   **
   ** Command argument list used to launch process.
+  ** The first item is the executable itself, then rest
+  ** are the parameters.
   **
   Str[] command
 
