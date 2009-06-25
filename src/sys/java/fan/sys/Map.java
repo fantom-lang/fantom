@@ -448,20 +448,6 @@ public final class Map
     return acc;
   }
 
-// TODO: nuke
-public final Map map(Map acc, Func f)
-{
-  Iterator it = pairsIterator();
-  while (it.hasNext())
-  {
-    Entry e = (Entry)it.next();
-    Object key = e.getKey();
-    Object val = e.getValue();
-    acc.set(key, f.call(val, key));
-  }
-  return acc;
-}
-
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////

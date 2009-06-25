@@ -35,6 +35,9 @@ class Boot : BootScript
 
     Sys.mount(`/examples`, Namespace.makeDir(scriptDir + `examples/`))
     Sys.mount(`/dir`, Namespace.makeDir(scriptDir + `dir/`))
-    Sys.mount(`/doc`, Namespace.makeDir(Sys.homeDir + `doc/`))
+    try
+      Sys.mount(`/doc`, Namespace.makeDir(Sys.homeDir + `doc/`))
+    catch (Err e)
+      log.error("Cannot mount /doc: $e")
   }
 }
