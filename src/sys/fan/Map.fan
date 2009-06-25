@@ -305,8 +305,7 @@ final class Map
   **
   ** Create a new map with the same keys, but apply the specified
   ** closure to generate new values.  The new mapped is typed based
-  ** on the return type of c.  This method is idempotent.  Return
-  ** the acc parameter.
+  ** on the return type of c.  This method is idempotent.
   **
   ** Example:
   **   m := [2:2, 3:3, 4:4]
