@@ -13,7 +13,12 @@ var fwt_TextPeer = sys_Obj.$extend(fwt_TextWidgetPeer);
 fwt_TextPeer.prototype.$ctor = function(self) {}
 
 fwt_TextPeer.prototype.text$get = function(self) { return this.text; }
-fwt_TextPeer.prototype.text$set = function(self, val) { this.text = val; }
+fwt_TextPeer.prototype.text$set = function(self, val)
+{
+  this.text = val;
+  if (this.elem != null && this.elem.firstChild != null)
+    this.elem.firstChild.value = this.text;
+}
 fwt_TextPeer.prototype.text = "";
 
 fwt_TextPeer.prototype.sync = function(self)
@@ -29,9 +34,11 @@ fwt_TextPeer.prototype.sync = function(self)
   }
 
   // sync control
+  text.value = this.text;
+  text.readOnly = !self.editable;
   if (self.multiLine)
   {
-    text.value = this.text;
+
     // TODO - this differs a pixel or two by browser - so we'll need
     // to go back and fine tune
     text.style.width  = (this.size.w-6)+'px';
@@ -40,7 +47,6 @@ fwt_TextPeer.prototype.sync = function(self)
   else
   {
     // TODO - can we use CSS here for size??
-    text.value = this.text;
     text.size  = self.prefCols;
   }
   text.onkeyup = function(event)
