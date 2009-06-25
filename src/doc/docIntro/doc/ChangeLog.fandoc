@@ -651,7 +651,7 @@
 - #578: Uri Interpolation
 - #595: Definite assignment of non-nullable fields
 
-*Build 1.0.44 (working)*
+*Build 1.0.44 (25 Jun 09)*
 - Fix bug in WebReq.absUri
 - Fix webappClient to use Uri instead of Str
 - Remove old webServlet code
@@ -665,5 +665,7 @@
 - List on JVM now uses backing store with typed array
 - Json fixes
 - Fix Wisp HTTP pipeling bug when no request body
-
-TODO: remove TODOs in List.java, ClassType.java
+- #612: Change signature of List.map and Map.map
+- #617: Compiler bug - traceback in switch with missing case expression
+- #618: Ambiguous method call on java object
+- #629: NoClassDefFoundError when accessing public static final field with JavaFFI

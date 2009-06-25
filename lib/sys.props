@@ -62,7 +62,7 @@ fan.runtime.substitutes=                             \
   /C:/dev/fan/src/build/build.fan        = C:\\dev\\rel
 
 // used to change version for all pods at once
-fan.build.globalVersion=1.0.43
+fan.build.globalVersion=1.0.44
 
 // Must be configured boot build in substitute/release installation
 //fan.build.devHome=/C:/dev/fan/

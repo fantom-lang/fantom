@@ -736,23 +736,6 @@ public final class List
     return acc;
   }
 
-// TODO: nuke
-public final List map(List acc, Func f)
-{
-  if (acc.size == 0) acc.capacity(size());
-  if (f.params.sz() == 1)
-  {
-    for (int i=0; i<size; ++i)
-      acc.add(f.call(values[i]));
-  }
-  else
-  {
-    for (int i=0; i<size; ++i)
-      acc.add(f.call(values[i], Long.valueOf(i)));
-  }
-  return acc;
-}
-
   public final Object max() { return max(null); }
   public final Object max(Func f)
   {

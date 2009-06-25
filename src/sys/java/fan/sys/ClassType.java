@@ -625,10 +625,6 @@ catch (Exception e) { e.printStackTrace(); }
     if (slot.parent() != this) return;
     if (staticOnly && !slot.isStatic()) return;
     m.setAccessible(true);
-// TODO
-if (m.getDeclaringClass().getName().startsWith("fan.sys") &&
-    m.getName().equals("map") &&
-    m.getParameterTypes().length == 2) return;
 
     if (slot instanceof Method)
     {
