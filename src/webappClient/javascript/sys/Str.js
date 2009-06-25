@@ -53,7 +53,7 @@ sys_Str.containsChar = function(self, arg)
 sys_Str.each = function(self, func)
 {
   for (var i=0; i<self.length; i++)
-    func(self.charAt(i), i);
+    func(self.charCodeAt(i), i);
 }
 
 sys_Str.endsWith = function(self, test)
