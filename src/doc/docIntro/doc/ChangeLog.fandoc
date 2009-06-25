@@ -671,3 +671,6 @@
 - #617: Compiler bug - traceback in switch with missing case expression
 - #618: Ambiguous method call on java object
 - #629: NoClassDefFoundError when accessing public static final field with JavaFFI
+
+*Build 1.0.45 (working)*
+

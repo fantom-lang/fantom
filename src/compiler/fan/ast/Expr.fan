@@ -1480,6 +1480,11 @@ class ClosureExpr : Expr
     // bail if we didn't expect an inferred the signature
     if (!signature.inferredSignature) return
 
+    // between the explicit signature and the inferred
+    // signature, take the most specific types
+    t = t.toArity(((FuncType)cls.base).arity)
+    t = signature.mostSpecific(t)
+
     // sanity check
     if (t.usesThis)
       throw Err("Inferring signature with un-parameterized this type: $t")
@@ -1508,6 +1513,9 @@ class ClosureExpr : Expr
 
     // if an itBlock, set type of it
     if (isItBlock) itType = t.params.first
+
+    // update base type of Func subclass
+    cls.base = t
   }
 
   Void collapseExprAndReturn(MethodDef m)
