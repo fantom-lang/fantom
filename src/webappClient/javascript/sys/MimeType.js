@@ -41,28 +41,25 @@ sys_MimeType.fromStr = function(s, checked)
         break;
     }
 
-    /*
-    int slash = s.indexOf('/');
-    String media = s.substring(0, slash);
-    String sub = s.substring(slash+1, s.length());
-    Map params = emptyParams();
+    var slash = s.indexOf('/');
+    var media = s.substring(0, slash);
+    var sub = s.substring(slash+1, s.length);
+    var params = sys_MimeType.emptyParams();
 
-    int semi = sub.indexOf(';');
+    var semi = sub.indexOf(';');
     if (semi > 0)
     {
-      params = doParseParams(sub, semi+1);
-      sub = sub.substring(0, semi).trim();
+      //params = doParseParams(sub, semi+1);
+      //sub = sub.substring(0, semi).trim();
+      console.log("#### MIME TYPE - PARAMS NOT IMPLEMENTED!!! ####");
     }
 
-    MimeType r  = new MimeType();
-    r.str       = s;
-    r.mediaType = FanStr.lower(media);
-    r.subType   = FanStr.lower(sub);
+    var r = new sys_MimeType();
+    r.str = s;
+    r.mediaType = sys_Str.lower(media);
+    r.subType   = sys_Str.lower(sub);
     r.params    = params.ro();
     return r;
-    */
-    console.log("#### MIME TYPE FUCK ####");
-    throw new Error("Not finished!");
   }
   catch (err)
   {
