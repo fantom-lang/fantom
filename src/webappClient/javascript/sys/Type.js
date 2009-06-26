@@ -101,8 +101,13 @@ sys_Type.prototype.toNonNullable = function() { return this; }
 
 sys_Type.prototype.make = function()
 {
-  if(this.m_$obj == null) this.m_$obj = eval(this.m_$qname);
-  return (this.m_$obj.defVal != null) ? this.m_$obj.defVal : this.m_$obj.make();
+  // return defVal if cached
+  if (this.m_$defVal != null) return this.m_$defVal;
+
+  // look for defVal and cache if exists
+  var obj = eval(this.m_$qname);
+  if (obj.defVal != null) { this.$defVal = obj.defVal; return obj.defVal; }
+  return obj.make();
 }
 
 //////////////////////////////////////////////////////////////////////////
