@@ -40,22 +40,22 @@ fwt_TabPanePeer.prototype.sync = function(self)
     th = Math.max(th, pref.h);
   }
 
-  // add content-border
+  // content border
   if (this.contentBorder == null)
   {
     var cb = document.createElement("div");
-    with (cb.style)
-    {
-      background = "#eee";
-      border     = "1px solid #555";
-      position   = "absolute";
-      left   = 0;
-      top    = (th-1) + "px";
-      width  = (this.size.w-2) + "px";
-      height = (this.size.h-th-1) + "px";
-    }
     this.elem.insertBefore(cb, this.elem.firstChild);
     this.contentBorder = cb;
+  }
+  with (this.contentBorder.style)
+  {
+    background = "#eee";
+    border     = "1px solid #555";
+    position   = "absolute";
+    left   = 0;
+    top    = (th-1) + "px";
+    width  = (this.size.w-2) + "px";
+    height = (this.size.h-th-1) + "px";
   }
 
   // sync content
