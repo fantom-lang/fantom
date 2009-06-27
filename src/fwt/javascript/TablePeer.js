@@ -174,6 +174,12 @@ fwt_TablePeer.prototype.sync = function(self)
     table.removeChild(table.firstChild);
   table.appendChild(tbody);
 
+  // no border if content not visible
+  if (this.size.w == 0 || this.size.h == 0)
+    this.elem.style.borderWidth = "0px";
+  else
+    this.elem.style.borderWidth = "1px";
+
   // account for border
   var w = this.size.w - 2;
   var h = this.size.h - 2;
