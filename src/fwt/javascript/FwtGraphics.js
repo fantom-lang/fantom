@@ -81,8 +81,8 @@ fwt_Graphics.prototype.alpha$set = function(a)
 fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
 {
   this.cx.beginPath();
-  this.cx.moveTo(x1, y1);
-  this.cx.lineTo(x2, y2);
+  this.cx.moveTo(x1+0.5, y1+0.5);
+  this.cx.lineTo(x2+0.5, y2+0.5);
   this.cx.closePath();
   this.cx.stroke();
   return this;
