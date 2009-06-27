@@ -14,7 +14,7 @@ fwt_TabPanePeer.prototype.$ctor = function(self) {}
 
 fwt_TabPanePeer.prototype.selectedIndex$get = function(self) { return this.selectedIndex; }
 fwt_TabPanePeer.prototype.selectedIndex$set = function(self, val) { this.selectedIndex = val; }
-fwt_TabPanePeer.prototype.selectedIndex = null;
+fwt_TabPanePeer.prototype.selectedIndex = 0;
 
 fwt_TabPanePeer.prototype.sync = function(self)
 {
@@ -24,7 +24,7 @@ fwt_TabPanePeer.prototype.sync = function(self)
   if (kids.length == 0) return;
 
   // sync tabs
-  var tx = 0;  // tab x pos
+  var tx = 6;  // tab x pos
   var th = 0;  // tab height
   for (var i=0; i<kids.length; i++)
   {
@@ -34,8 +34,9 @@ fwt_TabPanePeer.prototype.sync = function(self)
     var pref = tab.prefSize();
     tab.pos$set(gfx_Point.make(tx, 0));
     tab.size$set(gfx_Size.make(pref.w, pref.h));
+    tab.peer.index = i;
 
-    tx += pref.w + 5;
+    tx += pref.w + 3;
     th = Math.max(th, pref.h);
   }
 
@@ -47,17 +48,15 @@ fwt_TabPanePeer.prototype.sync = function(self)
     var tab = kids[i];
     if (tab.kids.length > 0)
     {
-      var sel = this.selectedIndex;
-      if (sel == null) sel = 0;
-
+      var s = i == this.selectedIndex;
       var x = 0;
       var y = th;
-      var w = i == sel ? cw : 0;
-      var h = i == sel ? ch : 0;
+      var w = s ? cw : 0;
+      var h = s ? ch : 0;
 
       var c = tab.kids[0];
 
-      // check if we need to reroot content
+      // check if we need to re-root content
       var p = c.peer.elem.parentNode;
       if (p == tab.peer.elem)
       {

@@ -26,11 +26,36 @@ fwt_TabPeer.prototype.image = null;
 
 fwt_TabPeer.prototype.sync = function(self)
 {
-  while (this.elem.firstChild != null)
-    this.elem.removeChild(this.elem.firstChild);
+  var elem = this.elem;
+  var selected = this.index == self.parent.peer.selectedIndex;
 
+  while (elem.firstChild != null) elem.removeChild(elem.firstChild);
   var text = document.createTextNode(this.text);
-  this.elem.appendChild(text);
+  elem.appendChild(text);
 
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  var $self = self;
+  elem.onmousedown = function()
+  {
+    $self.parent.peer.selectedIndex = $self.peer.index;
+    $self.parent.relayout();
+  }
+
+  with (elem.style)
+  {
+    cursor  = "default";
+    padding = "3px 6px";
+    border  = "1px solid #555";
+    if (selected) borderBottom = "1px solid #eee";
+    backgroundColor = "#eee";
+    // IE workaround
+    try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc))"; } catch (err) {} // ignore
+  }
+
+  // account for border/padding
+  var w = this.size.w - 14;
+  var h = this.size.h - 7;
+  fwt_WidgetPeer.prototype.sync.call(this, self, w, h);
 }
+
+// index of tab in TabPane
+fwt_TabPeer.prototype.index = null;
