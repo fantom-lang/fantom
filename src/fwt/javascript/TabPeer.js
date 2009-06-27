@@ -43,17 +43,31 @@ fwt_TabPeer.prototype.sync = function(self)
   with (elem.style)
   {
     cursor  = "default";
-    padding = "3px 6px";
+    padding = "6px 12px";
     border  = "1px solid #555";
-    if (selected) borderBottom = "1px solid #eee";
-    backgroundColor = "#eee";
-    // IE workaround
-    try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc))"; } catch (err) {} // ignore
+
+    if (selected)
+    {
+      borderBottom = "1px solid #eee";
+      backgroundColor = "#eee";
+      // IE workaround
+      try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f8f8f8), to(#eee))"; } catch (err) {} // ignore
+    }
+    else
+    {
+      backgroundColor = "#ccc";
+      // IE workaround
+      try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc))"; } catch (err) {} // ignore
+    }
+
+    MozBorderRadius = "5px 5px 0 0";
+    webkitBorderTopLeftRadius  = "5px";
+    webkitBorderTopRightRadius = "5px";
   }
 
   // account for border/padding
-  var w = this.size.w - 14;
-  var h = this.size.h - 7;
+  var w = this.size.w - 26;
+  var h = this.size.h - 14;
   fwt_WidgetPeer.prototype.sync.call(this, self, w, h);
 }
 

@@ -24,8 +24,8 @@ fwt_TabPanePeer.prototype.sync = function(self)
   if (kids.length == 0) return;
 
   // sync tabs
-  var tx = 6;  // tab x pos
-  var th = 0;  // tab height
+  var tx = 12;  // tab x pos
+  var th = 0;   // tab height
   for (var i=0; i<kids.length; i++)
   {
     var tab = kids[i];
@@ -40,6 +40,24 @@ fwt_TabPanePeer.prototype.sync = function(self)
     th = Math.max(th, pref.h);
   }
 
+  // add content-border
+  if (this.contentBorder == null)
+  {
+    var cb = document.createElement("div");
+    with (cb.style)
+    {
+      background = "#eee";
+      border     = "1px solid #555";
+      position   = "absolute";
+      left   = 0;
+      top    = (th-1) + "px";
+      width  = (this.size.w-2) + "px";
+      height = (this.size.h-th-1) + "px";
+    }
+    this.elem.insertBefore(cb, this.elem.firstChild);
+    this.contentBorder = cb;
+  }
+
   // sync content
   var cw = this.size.w;       // content width
   var ch = this.size.h - th;  // content height
@@ -49,10 +67,10 @@ fwt_TabPanePeer.prototype.sync = function(self)
     if (tab.kids.length > 0)
     {
       var s = i == this.selectedIndex;
-      var x = 0;
-      var y = th;
-      var w = s ? cw : 0;
-      var h = s ? ch : 0;
+      var x = 12;
+      var y = 12 + th;
+      var w = s ? cw-24 : 0;
+      var h = s ? ch-24 : 0;
 
       var c = tab.kids[0];
 
