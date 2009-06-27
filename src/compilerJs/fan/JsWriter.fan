@@ -385,7 +385,10 @@ if (c != null)
     {
       errVar := c.errVariable ?: "err"
       out.w("catch ($errVar)").nl
-      block(c.block)
+      out.w("{").nl
+      out.w("  $errVar = sys_Err.make($errVar);").nl
+      block(c.block, false)
+      out.w("}").nl
     }
     if (ts.catches.size == 0 && ts.finallyBlock == null)
     {
