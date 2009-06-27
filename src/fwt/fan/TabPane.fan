@@ -13,6 +13,7 @@ using gfx
 ** Tabs are added and removed using normal `Widget.add` and
 ** `Widget.remove`.
 **
+@javascript
 class TabPane : Widget
 {
   **
@@ -73,6 +74,7 @@ class TabPane : Widget
 ** Tab is the child widget of a `TabPane`.  It is used to
 ** configure the tab's text, image, and content widget.
 **
+@javascript
 class Tab : Widget
 {
 
