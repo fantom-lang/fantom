@@ -25,3 +25,9 @@ sys_Decimal.make = function(val)
   return x;
 }
 
+sys_Decimal.toFloat = function(self)
+{
+  return sys_Float.make(self);
+}
+
+
