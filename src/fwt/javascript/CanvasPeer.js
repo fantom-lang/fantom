@@ -18,21 +18,29 @@ fwt_CanvasPeer.prototype.sync = function(self)
   var div = this.elem;
   while (div.firstChild != null) div.removeChild(div.firstChild);
 
-  // create new canvas element in my div
-  var c = document.createElement("canvas");
-  var size = this.size
-  c.width  = size.w;
-  c.height = size.h;
-  div.appendChild(c);
+  // check for IE
+  if (document.all)
+  {
+    div.innerHTML = "<div style='padding:1em;'>Canvas not supported in IE</div>"
+  }
+  else
+  {
+    // create new canvas element in my div
+    var c = document.createElement("canvas");
+    var size = this.size
+    c.width  = size.w;
+    c.height = size.h;
+    div.appendChild(c);
 
-  // repaint canvas using Canvas.onPaint callback
-  var g = new fwt_Graphics()
-  g.cx = c.getContext("2d");
-  g.cx.lineWidth = 1;
-  g.cx.lineCap = "square";
-  g.cx.textBaseline = "top";
-  g.cx.font = fwt_DesktopPeer.$sysFont.toStr();
-  self.onPaint(g);
+    // repaint canvas using Canvas.onPaint callback
+    var g = new fwt_Graphics()
+    g.cx = c.getContext("2d");
+    g.cx.lineWidth = 1;
+    g.cx.lineCap = "square";
+    g.cx.textBaseline = "top";
+    g.cx.font = fwt_DesktopPeer.$sysFont.toStr();
+    self.onPaint(g);
+  }
 
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
