@@ -125,7 +125,7 @@ fwt_TablePeer.prototype.sync = function(self)
         var cb = document.createElement("input");
         cb.type = "checkbox";
         var $this = this;
-        cb.onclick = function(event) { $this.selection.toggle(event) };
+        cb.onclick = function(event) { $this.selection.toggle(event ? event : window.event) };
         td.appendChild(cb);
       }
       else
@@ -195,12 +195,13 @@ fwt_TableSelection.prototype.$ctor = function(table) { this.table = table; }
 
 fwt_TableSelection.prototype.toggle = function(event)
 {
-  var on  = event.target.checked;
-  var tr  = event.target.parentNode.parentNode;
+  var target = event.target ? event.target : event.srcElement;
+  var on  = target.checked;
+  var tr  = target.parentNode.parentNode;
   var row = tr.rowIndex-1; // account for th row
 
-  var bg = on ? "#3d80df" : (row%2==0 ? "#f1f5fa" : null)
-  var fg = on ? "#fff" : null;
+  var bg = on ? "#3d80df" : (row%2==0 ? "#f1f5fa" : "")
+  var fg = on ? "#fff"    : "";
   var br = on ? "#346dbe" : "#d9d9d9";
 
   tr.style.background = bg;
