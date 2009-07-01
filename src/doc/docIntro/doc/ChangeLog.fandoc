@@ -673,4 +673,4 @@
 - #629: NoClassDefFoundError when accessing public static final field with JavaFFI
 
 *Build 1.0.45 (working)*
-
+- fwt::Canvas support in IE using JavaFX
