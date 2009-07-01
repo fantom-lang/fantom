@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="file:/C:/dev/fan/src/fwt/res/javafx/" href="Canvas_browser.jnlp">
+    <information>
+        <title>Canvas</title>
+        <vendor>Andy</vendor>
+        <homepage href=""/>
+        <description>Canvas</description>
+        <offline-allowed/>
+        <shortcut>
+            <desktop/>
+        </shortcut>
+    </information>
+    <resources>
+        <j2se version="1.5+"/>
+        <extension name="JavaFX Runtime" href="http://dl.javafx.com/1.2/javafx-rt.jnlp"/>
+        <jar href="Canvas.jar" main="true"/>
+    </resources>
+    <applet-desc name="Canvas" main-class="com.sun.javafx.runtime.adapter.Applet" width="200" height="200">
+        <param name="MainJavaFXScript" value="fan.fwt.Canvas">
+    </applet-desc>
+    <update check="background">
+</jnlp>

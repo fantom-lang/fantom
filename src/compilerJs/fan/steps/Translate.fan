@@ -133,8 +133,9 @@ class Translate : JsCompilerStep
     {
       s := line
       // line comments
-      i := s.index("//")
-      if (i != null) s = s[0..<i]
+// need to check if inside str
+//      i := s.index("//")
+//      if (i != null) s = s[0..<i]
       // block comments
       temp := s
       a := temp.index("/*")

@@ -139,3 +139,5 @@ sys_MimeType.textHtml  = sys_MimeType.predefined("text", "html");
 sys_MimeType.textXml   = sys_MimeType.predefined("text", "xml");
 sys_MimeType.dir       = sys_MimeType.predefined("x-directory", "normal");
 
+sys_UriPodBase = "/sys/pod/";
+
