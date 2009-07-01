@@ -14,7 +14,9 @@ fwt_TextWidgetPeer.prototype.$ctor = function(self) {}
 
 fwt_TextWidgetPeer.prototype.prefSize = function(self, hints)
 {
-  return fwt_WidgetPeer.prototype.prefSize.call(this, self, hints);
+  var p = fwt_WidgetPeer.prototype.prefSize.call(this, self, hints);
+  if (self.multiLine) return gfx_Size.make(p.w, 16*self.prefRows);
+  return p;
 }
 
 fwt_TextWidgetPeer.prototype.caretOffset$get = function(self) { return this.caretOffset; }
