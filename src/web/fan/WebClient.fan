@@ -166,7 +166,11 @@ class WebClient
   **
   ** Socket options for the TCP socket used for requests.
   **
-  SocketOptions socketOptions() { return options }
+  SocketOptions socketOptions()
+  {
+    if (options == null) options = TcpSocket().options
+    return options
+  }
 
   **
   ** When set to true a 3xx response with a Location header
@@ -261,7 +265,7 @@ class WebClient
     if (!isConnected)
     {
       socket = TcpSocket()
-      socket.options.copyFrom(this.options)
+      if (options != null) socket.options.copyFrom(this.options)
       socket.connect(IpAddress(reqUri.host), reqUri.port ?: 80)
     }
 
@@ -372,7 +376,7 @@ class WebClient
 
   private InStream? resInStream
   private OutStream? reqOutStream
-  private SocketOptions options := TcpSocket().options
+  private SocketOptions? options
   private TcpSocket? socket
 
 }
