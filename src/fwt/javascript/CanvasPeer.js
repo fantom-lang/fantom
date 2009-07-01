@@ -12,19 +12,21 @@
 var fwt_CanvasPeer = sys_Obj.$extend(fwt_WidgetPeer);
 fwt_CanvasPeer.prototype.$ctor = function(self) {}
 
+fwt_CanvasPeer.prototype.create = function(parentElem)
+{
+  // test for native canvas support
+  this.hasCanvas = document.createElement("canvas").getContext != null;
+  return fwt_WidgetPeer.prototype.create.call(this, parentElem);
+}
+
 fwt_CanvasPeer.prototype.sync = function(self)
 {
-  // remove existing elements
-  var div = this.elem;
-  while (div.firstChild != null) div.removeChild(div.firstChild);
+  if (this.hasCanvas)
+  {
+    // remove existing elements
+    var div = this.elem;
+    while (div.firstChild != null) div.removeChild(div.firstChild);
 
-  // check for IE
-  if (document.all)
-  {
-    div.innerHTML = "<div style='padding:1em;'>Canvas not supported in IE</div>"
-  }
-  else
-  {
     // create new canvas element in my div
     var c = document.createElement("canvas");
     var size = this.size
@@ -41,6 +43,40 @@ fwt_CanvasPeer.prototype.sync = function(self)
     g.cx.font = fwt_DesktopPeer.$sysFont.toStr();
     self.onPaint(g);
   }
+  else
+  {
+    if (this.fxLoaded == true)
+    {
+      // find applet tag
+      var app = document.getElementById("app");
+      if (app != null && this.size.w > 0 && this.size.h > 0)
+      {
+        app.width  = this.size.w;
+        app.height = this.size.h;
+
+        var g = new JfxGraphics(app.script);
+        app.script.init();
+        self.onPaint(g);
+        app.script.commit();
+      }
+    }
+    else
+    {
+      this.fxLoaded = true;
+      var s = javafxString({
+        codebase: sys_UriPodBase + "fwt/res/javafx/",
+        archive: "Canvas.jar",
+        draggable: true,
+        width:  200,
+        height: 200,
+        code: "fan.fwt.Canvas",
+        name: "Canvas",
+        id: "app"
+      });
+      this.elem.innerHTML = s;
+    }
+  }
 
   fwt_WidgetPeer.prototype.sync.call(this, self);
 }
+
