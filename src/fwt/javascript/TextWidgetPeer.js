@@ -14,9 +14,7 @@ fwt_TextWidgetPeer.prototype.$ctor = function(self) {}
 
 fwt_TextWidgetPeer.prototype.prefSize = function(self, hints)
 {
-  // TODO - temp till we fix the fan code
-  var pref = fwt_WidgetPeer.prototype.prefSize.call(this, self, hints);
-  return gfx_Size.make(0, pref.h);
+  return fwt_WidgetPeer.prototype.prefSize.call(this, self, hints);
 }
 
 fwt_TextWidgetPeer.prototype.caretOffset$get = function(self) { return this.caretOffset; }

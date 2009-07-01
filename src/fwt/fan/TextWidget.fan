@@ -132,20 +132,7 @@ abstract class TextWidget : Widget
   ** Return the preferred size based on `prefCols` and
   ** `prefRows`.
   **
-  override Size prefSize(Hints hints := Hints.defVal)
-  {
-    // this isn't very exact right now
-    inset := 10
-    scroll := 20
-    superPref := super.prefSize(hints)
-    font = this.font ?: Desktop.sysFont
-    if (multiLine)
-      return Size(inset + font.width("m")*prefCols + scroll,
-                  inset + font.height*prefRows + scroll)
-    else
-      return Size(inset + font.width("m")*prefCols ,
-                  superPref.h)
-  }
+  override native Size prefSize(Hints hints := Hints.defVal)
 
   **
   ** Replace the text with 'newText' starting at position 'start'
