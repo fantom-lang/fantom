@@ -249,6 +249,48 @@ sys_Str.capitalize = function(self)
   return self;
 }
 
+sys_Str.toDisplayName = function(self)
+{
+  if (self.length == 0) return "";
+  var s = '';
+
+  // capitalize first word
+  var c = self.charCodeAt(0);
+  if (97 <= c && c <= 122) c &= ~0x20;
+  s += String.fromCharCode(c);
+
+  // insert spaces before every capital
+  var last = c;
+  for (var i=1; i<self.length; ++i)
+  {
+    c = self.charCodeAt(i);
+    if (65 <= c && c <= 90 && last != 95)
+    {
+      var next = i+1 < self.length ? self.charCodeAt(i+1) : 81;
+      if (!(65 <= last && last <= 90) || !(65 <= next && next <= 90))
+        s += ' ';
+    }
+    else if (97 <= c && c <= 122)
+    {
+      if ((48 <= last && last <= 57)) { s += ' '; c &= ~0x20; }
+      else if (last == 95) c &= ~0x20;
+    }
+    else if (48 <= c && c <= 57)
+    {
+      if (!(48 <= last && last <= 57)) s += ' ';
+    }
+    else if (c == 95)
+    {
+      s += ' ';
+      last = c;
+      continue;
+    }
+    s += String.fromCharCode(c);
+    last = c;
+  }
+  return s;
+}
+
 sys_Str.startsWith = function(self, test)
 {
   if (self.length < test.length) return false;
