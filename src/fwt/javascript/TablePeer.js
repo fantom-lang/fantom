@@ -85,7 +85,7 @@ fwt_TablePeer.prototype.sync = function(self)
         backgroundColor = "#dbdbdb";
         // IE workaround
         try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#dbdbdb), to(#bbb))"; } catch (err) {} // ignore
-        //cursor: default;
+        cursor = "default";
         if (c < cols-1) borderRight = "1px solid #a5a5a5";
         if (c < 0) height = "100%";
       }
