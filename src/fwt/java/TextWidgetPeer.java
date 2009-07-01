@@ -46,6 +46,30 @@ public abstract class TextWidgetPeer extends WidgetPeer
   abstract Prop.FontProp font();
 
 //////////////////////////////////////////////////////////////////////////
+// Layout
+//////////////////////////////////////////////////////////////////////////
+
+  public fan.gfx.Size prefSize(TextWidget self) { return prefSize(self, fan.gfx.Hints.defVal); }
+  public fan.gfx.Size prefSize(TextWidget self, fan.gfx.Hints hints)
+  {
+    // this isn't very exact right now
+    int inset  = 10;
+    int scroll = 20;
+    fan.gfx.Size superPref = super.prefSize(self, hints);
+    fan.gfx.Font font = self.font();
+    if (font == null) font = Desktop.sysFont();
+
+    if (self.multiLine)
+      return fan.gfx.Size.make(
+        inset + font.width("m")*self.prefCols + scroll,
+        inset + font.height()*self.prefRows + scroll);
+    else
+      return fan.gfx.Size.make(
+        inset + font.width("m")*self.prefCols ,
+        superPref.h);
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Selection
 //////////////////////////////////////////////////////////////////////////
 
