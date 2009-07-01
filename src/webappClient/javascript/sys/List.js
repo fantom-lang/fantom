@@ -66,6 +66,11 @@ sys_List.add = function(self, item)
   return self;
 }
 
+sys_List.addAll = function(self, list)
+{
+  return sys_List.make(self.$fanType, self.concat(list));
+}
+
 sys_List.insert = function(self, index, item)
 {
   self.splice(index, 0, item);
