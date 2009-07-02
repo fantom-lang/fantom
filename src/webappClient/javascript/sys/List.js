@@ -186,6 +186,23 @@ sys_List.eachr = function(self, func)
   }
 }
 
+sys_List.find = function(self, f)
+{
+  if (f.length == 1)
+  {
+    for (var i=0; i<self.length; i++)
+      if (f(self[i]) == true)
+        return self[i];
+  }
+  else
+  {
+    for (var i=0; i<self.length; i++)
+      if (f(self[i], i) == true)
+        return self[i];
+  }
+  return null;
+}
+
 sys_List.map = function(self, acc, func)
 {
   if (func.length == 1)
