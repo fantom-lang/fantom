@@ -203,17 +203,20 @@ sys_List.find = function(self, f)
   return null;
 }
 
-sys_List.map = function(self, acc, func)
+sys_List.map = function(self, f)
 {
-  if (func.length == 1)
+  var r = f.$fanType.ret;
+  // if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
+  var acc = sys_List.make(r, []);
+  if (f.length == 1)
   {
     for (var i=0; i<self.length; ++i)
-      acc.push(func(self[i]));
+      acc.push(f(self[i]));
   }
   else
   {
     for (var i=0; i<self.length; ++i)
-      acc.push(func(self[i], i));
+      acc.push(f(self[i], i));
   }
   return acc;
 }
