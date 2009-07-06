@@ -17,13 +17,17 @@ fwt_TablePeer.prototype.$ctor = function(self) {}
 //fwt_TablePeer.prototype.rowAt = function(self, pos) {}
 //fwt_TablePeer.prototype.refreshAll = function(self) {}
 
+fwt_TablePeer.prototype.headerVisible = true;
 fwt_TablePeer.prototype.headerVisible$get = function(self) { return this.headerVisible; }
 fwt_TablePeer.prototype.headerVisible$set = function(self, val) { this.headerVisible = val; }
-fwt_TablePeer.prototype.headerVisible = true;
 
-fwt_TablePeer.prototype.selected$get = function(self) { return this.selected; }
-fwt_TablePeer.prototype.selected$set = function(self, val) {} // no-op right now
 fwt_TablePeer.prototype.selected = null;
+fwt_TablePeer.prototype.selected$get = function(self) { return this.selected; }
+fwt_TablePeer.prototype.selected$set = function(self, val)
+{
+  this.selected = val;
+  if (this.selection != null) this.selection.syncFromModel();
+}
 
 fwt_TablePeer.prototype.create = function(parentElem)
 {
@@ -58,7 +62,8 @@ fwt_TablePeer.prototype.sync = function(self)
   // init hook
   if (this.selection == null)
   {
-    this.selected = sys_List.make(sys_Type.find("sys::Int"), []);
+    if (this.selected == null)
+      this.selected = sys_List.make(sys_Type.find("sys::Int"), []);
     this.selection = new fwt_TableSelection(self);
   }
 
@@ -181,6 +186,9 @@ fwt_TablePeer.prototype.sync = function(self)
   else
     this.elem.style.borderWidth = "1px";
 
+  // sync selection
+  this.selection.syncFromModel();
+
   // account for border
   var w = this.size.w - 2;
   var h = this.size.h - 2;
@@ -211,10 +219,36 @@ fwt_TableSelection.prototype.toggle = function(event)
   for (var i=0; i<tr.childNodes.length-1; i++)
     tr.childNodes[i].style.borderColor = br;
 
-  this.update(row);
+  this.syncToModel(row);
 }
 
-fwt_TableSelection.prototype.update = function(primaryIndex)
+// TODO - should make CSS DRY
+fwt_TableSelection.prototype.syncFromModel = function()
+{
+  var list = this.table.peer.selected;
+  var tbody = this.table.peer.elem.firstChild.firstChild;
+  var start = this.headerVisible ? 1 : 0; // skip th row
+  for (var i=start; i<tbody.childNodes.length; i++)
+  {
+    var tr = tbody.childNodes[i];
+    var on = false;
+
+    for (var s=0; s<list.length; s++)
+      if (i == list[s]) { on=true; break; }
+
+    var bg = on ? "#3d80df" : ((i-start)%2==0 ? "#f1f5fa" : "")
+    var fg = on ? "#fff"    : "";
+    var br = on ? "#346dbe" : "#d9d9d9";
+
+    tr.firstChild.firstChild.checked = on;
+    tr.style.background = bg;
+    tr.style.color = fg;
+    for (var c=0; c<tr.childNodes.length-1; c++)
+      tr.childNodes[c].style.borderColor = br;
+  }
+}
+
+fwt_TableSelection.prototype.syncToModel = function(primaryIndex)
 {
   // sync selected list
   var list = sys_List.make(sys_Type.find("sys::Int"), []);
