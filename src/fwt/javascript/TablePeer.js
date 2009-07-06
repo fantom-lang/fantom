@@ -199,7 +199,8 @@ fwt_TableSelection.prototype.toggle = function(event)
   var target = event.target ? event.target : event.srcElement;
   var on  = target.checked;
   var tr  = target.parentNode.parentNode;
-  var row = tr.rowIndex-1; // account for th row
+  var row = tr.rowIndex;
+  if (this.headerVisible) row--; // account for th row
 
   var bg = on ? "#3d80df" : (row%2==0 ? "#f1f5fa" : "")
   var fg = on ? "#fff"    : "";
@@ -217,7 +218,8 @@ fwt_TableSelection.prototype.update = function(event)
 {
   var list = sys_List.make(sys_Type.find("sys::Int"), []);
   var tbody = this.table.elem.firstChild.firstChild;
-  for (var i=1; i<tbody.childNodes.length; i++) // skip th row
+  var start = this.headerVisible ? 1 : 0; // skip th row
+  for (var i=start; i<tbody.childNodes.length; i++)
   {
     var tr = tbody.childNodes[i];
     var on = tr.firstChild.firstChild.checked;
