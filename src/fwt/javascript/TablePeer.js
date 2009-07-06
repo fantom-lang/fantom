@@ -26,7 +26,7 @@ fwt_TablePeer.prototype.selected$get = function(self) { return this.selected; }
 fwt_TablePeer.prototype.selected$set = function(self, val)
 {
   this.selected = val;
-  if (this.selection != null) this.selection.syncFromModel();
+  if (this.selection != null) this.selection.select(val);
 }
 
 fwt_TablePeer.prototype.create = function(parentElem)
@@ -187,7 +187,7 @@ fwt_TablePeer.prototype.sync = function(self)
     this.elem.style.borderWidth = "1px";
 
   // sync selection
-  this.selection.syncFromModel();
+  this.selection.select(this.selected);
 
   // account for border
   var w = this.size.w - 2;
@@ -204,39 +204,44 @@ fwt_TableSelection.prototype.$ctor = function(table) { this.table = table; }
 
 fwt_TableSelection.prototype.toggle = function(event)
 {
-  var target = event.target ? event.target : event.srcElement;
-  var on  = target.checked;
-  var tr  = target.parentNode.parentNode;
-  var row = tr.rowIndex;
-  if (this.headerVisible) row--; // account for th row
-
-  var bg = on ? "#3d80df" : (row%2==0 ? "#f1f5fa" : "")
-  var fg = on ? "#fff"    : "";
-  var br = on ? "#346dbe" : "#d9d9d9";
-
-  tr.style.background = bg;
-  tr.style.color = fg;
-  for (var i=0; i<tr.childNodes.length-1; i++)
-    tr.childNodes[i].style.borderColor = br;
-
-  this.syncToModel(row);
+  // TODO - support multiple selection
+  //if (this.table.multi)
+  //{
+  //}
+  //else
+  //{
+    var target = event.target ? event.target : event.srcElement;
+    var on  = target.checked;
+    var tr  = target.parentNode.parentNode;
+    var row = tr.rowIndex;
+    if (this.table.peer.headerVisible) row--; // account for th row
+    this.table.peer.selected = this.select(on ? [row] : []);
+    this.notify(row);
+  //}
 }
 
-// TODO - should make CSS DRY
-fwt_TableSelection.prototype.syncFromModel = function()
+fwt_TableSelection.prototype.select = function(rows)
 {
-  var list = this.table.peer.selected;
+  var selected = [];
   var tbody = this.table.peer.elem.firstChild.firstChild;
-  var start = this.headerVisible ? 1 : 0; // skip th row
+  var start = this.table.peer.headerVisible ? 1 : 0; // skip th row
   for (var i=start; i<tbody.childNodes.length; i++)
   {
-    var tr = tbody.childNodes[i];
-    var on = false;
+    var row = i-start;
+    var tr  = tbody.childNodes[i];
+    var on  = false;
 
-    for (var s=0; s<list.length; s++)
-      if (i == list[s]) { on=true; break; }
+    var len = rows.length;
+    if (len > 1 && !this.table.multi) len = 1;
+    for (var s=0; s<len; s++)
+      if (row == rows[s])
+      {
+        on = true;
+        selected.push(row);
+        break;
+      }
 
-    var bg = on ? "#3d80df" : ((i-start)%2==0 ? "#f1f5fa" : "")
+    var bg = on ? "#3d80df" : (row%2==0 ? "#f1f5fa" : "")
     var fg = on ? "#fff"    : "";
     var br = on ? "#346dbe" : "#d9d9d9";
 
@@ -246,23 +251,11 @@ fwt_TableSelection.prototype.syncFromModel = function()
     for (var c=0; c<tr.childNodes.length-1; c++)
       tr.childNodes[c].style.borderColor = br;
   }
+  return selected;
 }
 
-fwt_TableSelection.prototype.syncToModel = function(primaryIndex)
+fwt_TableSelection.prototype.notify = function(primaryIndex)
 {
-  // sync selected list
-  var list = sys_List.make(sys_Type.find("sys::Int"), []);
-  var tbody = this.table.peer.elem.firstChild.firstChild;
-  var start = this.headerVisible ? 1 : 0; // skip th row
-  for (var i=start; i<tbody.childNodes.length; i++)
-  {
-    var tr = tbody.childNodes[i];
-    var on = tr.firstChild.firstChild.checked;
-    if (on) list.push(i-1);
-  }
-  this.table.peer.selected = list;
-
-  // notify listeners
   if (this.table.onSelect.size() > 0)
   {
     var se   = fwt_Event.make();
