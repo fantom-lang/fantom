@@ -24,22 +24,32 @@ fwt_FwtEnvPeer.nextMemUriStr = function()
   return sys_Uri.fromStr("mem-" + (++fwt_FwtEnvPeer.imgCacheNextMemId));
 }
 
-fwt_FwtEnvPeer.loadImage = function(fanImg)
+fwt_FwtEnvPeer.loadImage = function(fanImg, widget)
 {
   var uri = fanImg.uri.toStr();
   var jsImg = fwt_FwtEnvPeer.imgCache[uri]
   if (!jsImg)
   {
     jsImg = document.createElement("img");
-    /* TODO:
-         - can we relayout whole document without requiring a specific width?
-         - IE
-    if (img.addEventListener)
-      img.onload = widget.window.relayout;
-    else
-      // TODO - fix IE
-      //  img.attachEvent('onload', function() { self.window.relayout(); });
-    */
+    if (widget != null)
+    {
+      var onload = function()
+      {
+        // TODO - super inefficient - but only way I could reliabily
+        // force things to relayout correctly so far
+        var w = widget;
+        while (w != null)
+        {
+          w.relayout();
+          w = w.parent;
+        }
+      }
+      if (jsImg.addEventListener)
+        jsImg.onload = onload;
+      // TODO - not seeing this needed yet in IE8...
+      //else
+      //  jsImg.attachEvent('onload', onload);
+    }
     jsImg.src = uri;
     fwt_FwtEnvPeer.imgCache[uri] = jsImg;
   }

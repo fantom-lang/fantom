@@ -20,7 +20,7 @@ fwt_TabPeer.prototype.image$get = function(self) { return this.image; }
 fwt_TabPeer.prototype.image$set = function(self, val)
 {
   this.image = val;
-  fwt_FwtEnvPeer.loadImage(val)
+  fwt_FwtEnvPeer.loadImage(val, self)
 }
 fwt_TabPeer.prototype.image = null;
 
