@@ -59,7 +59,7 @@ fwt_TablePeer.prototype.sync = function(self)
   if (this.selection == null)
   {
     this.selected = sys_List.make(sys_Type.find("sys::Int"), []);
-    this.selection = new fwt_TableSelection(this);
+    this.selection = new fwt_TableSelection(self);
   }
 
   // build new content
@@ -211,13 +211,14 @@ fwt_TableSelection.prototype.toggle = function(event)
   for (var i=0; i<tr.childNodes.length-1; i++)
     tr.childNodes[i].style.borderColor = br;
 
-  this.update();
+  this.update(row);
 }
 
-fwt_TableSelection.prototype.update = function(event)
+fwt_TableSelection.prototype.update = function(primaryIndex)
 {
+  // sync selected list
   var list = sys_List.make(sys_Type.find("sys::Int"), []);
-  var tbody = this.table.elem.firstChild.firstChild;
+  var tbody = this.table.peer.elem.firstChild.firstChild;
   var start = this.headerVisible ? 1 : 0; // skip th row
   for (var i=start; i<tbody.childNodes.length; i++)
   {
@@ -225,6 +226,16 @@ fwt_TableSelection.prototype.update = function(event)
     var on = tr.firstChild.firstChild.checked;
     if (on) list.push(i-1);
   }
-  this.table.selected = list;
+  this.table.peer.selected = list;
+
+  // notify listeners
+  if (this.table.onSelect.size() > 0)
+  {
+    var se   = fwt_Event.make();
+    se.id    = fwt_EventId.select;
+    se.index = primaryIndex;
+    var listeners = this.table.onSelect.list();
+    for (var i=0; i<listeners.length; i++) sys_Func.call(listeners[i], se);
+  }
 }
 
