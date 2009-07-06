@@ -118,6 +118,7 @@ fwt_TablePeer.prototype.sync = function(self)
         textAlign   = "left";
         whiteSpace  = "nowrap";
         if (c < cols-1) borderRight = "1px solid #d9d9d9";
+        else width = "100%";
       }
       if (c < 0)
       {
