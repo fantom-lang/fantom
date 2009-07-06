@@ -91,7 +91,7 @@ fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
 // This drawRect(Int x, Int y, Int w, Int h)
 fwt_Graphics.prototype.drawRect = function(x, y, w, h)
 {
-  this.cx.strokeRect(x, y, w, h);
+  this.cx.strokeRect(x+0.5, y+0.5, w, h);
   return this;
 }
 
