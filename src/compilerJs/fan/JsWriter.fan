@@ -668,7 +668,8 @@ if (c != null)
       first := ce.method.params.first
       if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
       {
-        fromStr := ce.method.parent.methods.find |m| { m.name == "fromStr" }
+        parent  := ce.method.parent
+        fromStr := parent.methods.find |m| { m.parent.qname == parent.qname && m.name == "fromStr" }
         if (fromStr != null) mname = "fromStr"
       }
     }
