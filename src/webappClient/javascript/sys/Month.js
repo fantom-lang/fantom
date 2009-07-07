@@ -37,15 +37,13 @@ sys_Month.prototype.decrement = function()
   return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
 }
 
-/*
-public long numDays(long year)
+sys_Month.prototype.numDays = function(year)
 {
-  if (DateTime.isLeapYear((int)year))
-    return DateTime.daysInMonLeap[ord];
+  if (sys_DateTime.isLeapYear(year))
+    return sys_DateTime.daysInMonLeap[this.m_ordinal];
   else
-    return DateTime.daysInMon[ord];
+    return sys_DateTime.daysInMon[this.m_ordinal];
 }
-*/
 
 sys_Month.prototype.type = function()
 {
@@ -69,8 +67,5 @@ sys_Month.oct = new sys_Month(9,  "oct");
 sys_Month.nov = new sys_Month(10, "nov");
 sys_Month.dec = new sys_Month(11, "dec");
 
-sys_Month.values =
-[
-  sys_Month.jan, sys_Month.feb, sys_Month.mar, sys_Month.apr, sys_Month.may, sys_Month.jun,
-  sys_Month.jul, sys_Month.aug, sys_Month.sep, sys_Month.oct, sys_Month.nov, sys_Month.dec
-];
+// values defined in sysPod.js
+
