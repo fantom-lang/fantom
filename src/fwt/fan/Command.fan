@@ -174,7 +174,7 @@ class Command
   Window? window()
   {
     if (assocDialog != null) return assocDialog
-    return widgets.eachWhile |Widget w->Window| { return w.window }
+    return widgets.eachWhile |Widget w->Window| { w.window }
   }
   internal Dialog? assocDialog
 
@@ -196,7 +196,7 @@ class Command
   ** Get the associated widgets with this command.  Widgets are
   ** automatically associated with their command field is set.
   **
-  Widget[] widgets() { return registry.ro }
+  Widget[] widgets() { registry.ro }
 
   **
   ** Register a widget with this command.  This is done
@@ -215,7 +215,7 @@ class Command
   **
   ** Return name.
   **
-  override Str toStr() { return name }
+  override Str toStr() { name }
 
   private Widget[] registry := Widget[,]
 
@@ -246,7 +246,7 @@ class Command
 
   **
   ** Subclass hook to handle when an exception is raised
-  ** by invoke.  Default implementation raised an error dialog.
+  ** by invoke.  Default implementation raises an error dialog.
   **
   protected virtual Void onInvokeError(Event? event, Err err)
   {
@@ -260,11 +260,11 @@ class Command
 
   **
   ** Return if the command can be undone.  Default implementation
-  ** returns true is the `undo` method has been overridden.
+  ** returns true if the `undo` method has been overridden.
   **
   virtual Bool undoable()
   {
-    return type.method("undo").parent != Command#
+    type.method("undo").parent != Command#
   }
 
   **
