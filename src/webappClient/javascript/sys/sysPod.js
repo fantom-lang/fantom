@@ -141,3 +141,8 @@ sys_MimeType.dir       = sys_MimeType.predefined("x-directory", "normal");
 
 sys_UriPodBase = "/sys/pod/";
 
+sys_Month.values = sys_List.make(sys_Type.find("sys::Month"),
+[
+  sys_Month.jan, sys_Month.feb, sys_Month.mar, sys_Month.apr, sys_Month.may, sys_Month.jun,
+  sys_Month.jul, sys_Month.aug, sys_Month.sep, sys_Month.oct, sys_Month.nov, sys_Month.dec
+]);
