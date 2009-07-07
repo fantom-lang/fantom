@@ -154,6 +154,11 @@ sys_List.last = function(self)
   return self[self.length-1];
 }
 
+sys_List.dup = function(self)
+{
+  return sys_List.make(self.$fanType, self.slice());
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Iterators
 //////////////////////////////////////////////////////////////////////////
@@ -254,9 +259,9 @@ sys_List.min = function(self, f)
 }
 
 // TODO
-sys_List.rw = function(self) { return self.slice(); }
-sys_List.ro = function(self) { return self.slice(); }
-sys_List.toImmutable = function(self) { return self.slice(); }
+sys_List.rw = function(self) { return sys_List.make(self.$fanType, self.slice()); }
+sys_List.ro = function(self) { return sys_List.make(self.$fanType, self.slice()); }
+sys_List.toImmutable = function(self) { return sys_List.make(self.$fanType, self.slice()); }
 
 // Conversion
 sys_List.join = function(self, sep, func)
