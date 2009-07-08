@@ -28,13 +28,32 @@ public final class FanInt
   {
     try
     {
-      return Long.valueOf(s, (int)radix);
+      if (radix == 16)
+        return parseHex(s);
+      else
+        return Long.valueOf(s, (int)radix);
     }
     catch (NumberFormatException e)
     {
       if (!checked) return null;
       throw ParseErr.make("Int", s).val;
     }
+  }
+
+  private static Long parseHex(String s)
+  {
+    long r = 0;
+    for (int i=0; i<s.length(); ++i)
+    {
+      int ch = s.charAt(i);
+      int nib;
+      if ('0' <= ch && ch <= '9') nib = ch - '0';
+      else if ('a' <= ch && ch <= 'f') nib = 10 + ch - 'a';
+      else if ('A' <= ch && ch <= 'F') nib = 10 + ch - 'A';
+      else throw new NumberFormatException();
+      r = (r << 4) | nib;
+    }
+    return Long.valueOf(r);
   }
 
   public static long random() { return random(null); }
