@@ -126,7 +126,7 @@ class Build : BuildPod
                   "InStream.js", "OutStream.js"]
 
   // must be last
-  Str[] last := ["sysPod.js", "webappClientPod.js"]
+  Str[] last := ["sysPod.js", "timezones.js", "webappClientPod.js"]
 
 
 }
