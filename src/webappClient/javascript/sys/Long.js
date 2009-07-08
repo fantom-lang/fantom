@@ -338,6 +338,8 @@ Long.fromStr10 = function(s)
     ten += 1
   }
 
+  // TODO
+  if (neg) num *= -1;
   //if (neg) num = Long.mul(num, Long.NegOne);
   return num;
 }
