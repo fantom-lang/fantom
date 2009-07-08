@@ -4,6 +4,7 @@
 //
 // History:
 //   8 Jan 09  Andy Frank  Creation
+//   8 Jul 09  Andy Frank  Split webappClient into sys/dom
 //
 
 **
@@ -47,13 +48,13 @@ class HttpReq
   ** receiving the response, call the given closure with
   ** the resulting HttpRes.
   **
-  Void send(Str content, |HttpRes res| c) {}
+  native Void send(Str content, |HttpRes res| c)
 
   **
   ** Send the request with the specified name/value pairs
   ** as an HTML form submission, and call the given closure
   ** with the resulting HttpRes response.
   **
-  Void sendForm(Str:Str form, |HttpRes res| c) {}
+  native Void sendForm(Str:Str form, |HttpRes res| c)
 
 }

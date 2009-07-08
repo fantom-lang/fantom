@@ -4,6 +4,7 @@
 //
 // History:
 //   8 Jan 09  Andy Frank  Creation
+//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
 **
@@ -21,19 +22,19 @@ class Doc
   **
   ** Get the body element.
   **
-  static Elem body() { return Elem("") }
+  static native Elem body()
 
   **
   ** Get the element with this 'id', or 'null' if no
   ** element is found with this 'id'.
   **
-  static Elem? elem(Str id) { return null }
+  static native Elem? elem(Str id)
 
   **
   ** Create a new element with the given tag name.  If the
   ** attrib map is specified, set the new elements attributes
   ** to the given values.
   **
-  static Elem createElem(Str tagName, [Str:Str]? attrib := null) { return Elem("") }
+  static native Elem createElem(Str tagName, [Str:Str]? attrib := null)
 
 }

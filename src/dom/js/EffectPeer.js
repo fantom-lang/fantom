@@ -5,15 +5,16 @@
 // History:
 //   15 Apr 09  Andy Frank  Creation
 //   20 May 09  Andy Frank  Refactor to new OO model
+//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
-var webappClient_Effect = sys_Obj.$extend(sys_Obj);
+var dom_EffectPeer = sys_Obj.$extend(sys_Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-webappClient_Effect.prototype.$ctor = function()
+dom_EffectPeer.prototype.$ctor = function(self)
 {
   this.dom   = null;  // actual DOM element
   this.fan   = null;  // Fan Elem wrappaer
@@ -22,46 +23,33 @@ webappClient_Effect.prototype.$ctor = function()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Identity
-//////////////////////////////////////////////////////////////////////////
-
-webappClient_Effect.prototype.type = function()
-{
-  return sys_Type.find("webappClient::Effect");
-}
-
-webappClient_Effect.prototype.toStr = function()
-{
-  return "effect[" + this.fan + "]";
-}
-
-//////////////////////////////////////////////////////////////////////////
 // Attributes
 //////////////////////////////////////////////////////////////////////////
 
-webappClient_Effect.prototype.elem = function() { return this.fan; }
+dom_EffectPeer.prototype.elem = function(self) { return this.fan; }
 
 //////////////////////////////////////////////////////////////////////////
 // Animate
 //////////////////////////////////////////////////////////////////////////
 
-webappClient_Effect.prototype.animate = function(map, dur, callback, init)
+dom_EffectPeer.prototype.animate = function(self, map, dur, callback, init)
 {
   dur = (dur   == undefined) ? 0 : dur.toMillis();
   if (callback == undefined) callback = null;
   if (init     == undefined) init = null;
-  this.queue.push({map:map, dur:dur, callback:callback, init:init})
+  this.queue.push({self:self, map:map, dur:dur, callback:callback, init:init})
   if (this.queue.length == 1) this.dequeue();
+  return self;
 }
 
-webappClient_Effect.prototype.dequeue = function()
+dom_EffectPeer.prototype.dequeue = function()
 {
   if (this.queue.length == 0) return;
   var a = this.queue[0];
-  this.doAnimate(a.map, a.dur, a.callback, a.init);
+  this.doAnimate(a.self, a.map, a.dur, a.callback, a.init);
 }
 
-webappClient_Effect.prototype.doAnimate = function(map, dur, callback, init)
+dom_EffectPeer.prototype.doAnimate = function(self, map, dur, callback, init)
 {
   if (init != null) callback = init(map, callback);
   var tweens = [];
@@ -72,7 +60,7 @@ webappClient_Effect.prototype.doAnimate = function(map, dur, callback, init)
   {
     var key = keys[i];
     var val = map.get(key);
-    var tween = new webappClient_Tween(this, key, val);
+    var tween = new dom_Tween(self.peer, key, val);
     tweens.push(tween);
   }
 
@@ -121,23 +109,23 @@ webappClient_Effect.prototype.doAnimate = function(map, dur, callback, init)
 // Show/Hide
 //////////////////////////////////////////////////////////////////////////
 
-webappClient_Effect.prototype.show = function(dur, callback, doWidth)
+dom_EffectPeer.prototype.show = function(self, dur, callback, doWidth)
 {
   // animate width prop?
   if (doWidth == undefined) doWidth = true
 
-  var fx = this;
+  var fx = self;
   var init = function(map, callback)
   {
-    var oldOpacity = fx.dom.style.opacity || 1;
-    var oldOverflow = fx.dom.style.overflow;
+    var oldOpacity = fx.peer.dom.style.opacity || 1;
+    var oldOverflow = fx.peer.dom.style.overflow;
 
     // figure out target size
-    fx.dom.style.opacity = "0";
-    fx.dom.style.display = "block";
-    var w = new webappClient_Tween(fx, "width", 0).currentVal()+"px";
-    var h = new webappClient_Tween(fx, "height", 0).currentVal()+"px";
-    var cs = fx.fan.computedStyle();
+    fx.peer.dom.style.opacity = "0";
+    fx.peer.dom.style.display = "block";
+    var w = new dom_Tween(fx.peer, "width", 0).currentVal()+"px";
+    var h = new dom_Tween(fx.peer, "height", 0).currentVal()+"px";
+    var cs = fx.peer.fan.computedStyle();
 
     if (doWidth)
     {
@@ -150,7 +138,7 @@ webappClient_Effect.prototype.show = function(dur, callback, doWidth)
     map.set("paddingBottom", cs.paddingBottom);
 
     // set to initial pos
-    with (fx.dom.style)
+    with (fx.peer.dom.style)
     {
       opacity = oldOpacity;
       overflow = "hidden";
@@ -168,35 +156,35 @@ webappClient_Effect.prototype.show = function(dur, callback, doWidth)
     return function()
     {
       // reset overlow
-      fx.dom.style.overflow = oldOverflow;
+      fx.peer.dom.style.overflow = oldOverflow;
       if (callback) callback(fx);
     }
   };
-  this.animate(new sys_Map(), dur, callback, init);
+  return this.animate(self, new sys_Map(), dur, callback, init);
 }
 
-webappClient_Effect.prototype.hide = function(dur, callback, doWidth)
+dom_EffectPeer.prototype.hide = function(self, dur, callback, doWidth)
 {
   // animate width prop?
   if (doWidth == undefined) doWidth = true
 
-  var fx = this;
+  var fx = self;
   var init = function(map, callback)
   {
     // make sure style is set
-    var cs = fx.fan.computedStyle();
+    var cs = fx.peer.fan.computedStyle();
     var old =
     {
-      overflow: fx.dom.style.overflow,
-      width:  new webappClient_Tween(fx, "width", 0).currentVal()+"px",
-      height: new webappClient_Tween(fx, "height", 0).currentVal()+"px",
+      overflow: fx.peer.dom.style.overflow,
+      width:  new dom_Tween(fx.peer, "width", 0).currentVal()+"px",
+      height: new dom_Tween(fx.peer, "height", 0).currentVal()+"px",
       paddingTop:    cs.paddingTop,
       paddingBottom: cs.paddingBottom,
       paddingLeft:   cs.paddingLeft,
       paddingRight:  cs.paddingRight
     };
 
-    with (fx.dom.style)
+    with (fx.peer.dom.style)
     {
       if (doWidth)
       {
@@ -223,7 +211,7 @@ webappClient_Effect.prototype.hide = function(dur, callback, doWidth)
     return function()
     {
       // reset style
-      with (fx.dom.style)
+      with (fx.peer.dom.style)
       {
         display  = "none";
         overflow = old.overflow;
@@ -237,53 +225,51 @@ webappClient_Effect.prototype.hide = function(dur, callback, doWidth)
       if (callback) callback(fx);
     }
   };
-  this.animate(new sys_Map(), dur, callback, init);
+  return this.animate(self, new sys_Map(), dur, callback, init);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Slide
 //////////////////////////////////////////////////////////////////////////
 
-webappClient_Effect.prototype.slideDown = function(dur, callback)
+dom_EffectPeer.prototype.slideDown = function(self, dur, callback)
 {
-  this.show(dur, callback, false);
+  return this.show(self, dur, callback, false);
 }
 
-webappClient_Effect.prototype.slideUp = function(dur, callback)
+dom_EffectPeer.prototype.slideUp = function(self, dur, callback)
 {
-  this.hide(dur, callback, false);
+  return this.hide(self, dur, callback, false);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Fading
 //////////////////////////////////////////////////////////////////////////
 
-webappClient_Effect.prototype.fadeIn  = function(dur, callback) { this.fadeTo("1.0", dur, callback); }
-webappClient_Effect.prototype.fadeOut = function(dur, callback) { this.fadeTo("0.0", dur, callback); }
-webappClient_Effect.prototype.fadeTo  = function(opacity, dur, callback)
+dom_EffectPeer.prototype.fadeIn  = function(self, dur, callback) { return this.fadeTo(self, "1.0", dur, callback); }
+dom_EffectPeer.prototype.fadeOut = function(self, dur, callback) { return this.fadeTo(self, "0.0", dur, callback); }
+dom_EffectPeer.prototype.fadeTo  = function(self, opacity, dur, callback)
 {
   var map = new sys_Map();
   map.set("opacity", opacity);
-  this.animate(map, dur, callback);
+  return this.animate(self, map, dur, callback);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-webappClient_Effect.make = function(elem)
+dom_EffectPeer.prototype.sync = function(elem)
 {
-  var effect = new webappClient_Effect();
-  effect.fan = elem;
-  effect.dom = elem.elem;
-  return effect;
+  this.fan = elem;
+  this.dom = elem.peer.elem;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Tween
 //////////////////////////////////////////////////////////////////////////
 
-function webappClient_Tween(fx, prop, stop)
+function dom_Tween(fx, prop, stop)
 {
   this.fx   = fx;      // the Effect instance
   this.elem = fx.dom;  // the DOM element to tween
@@ -295,7 +281,7 @@ function webappClient_Tween(fx, prop, stop)
   this.unit  = css.unit;           // the CSS for the value
 }
 
-webappClient_Tween.prototype.currentVal = function()
+dom_Tween.prototype.currentVal = function()
 {
   switch (this.prop)
   {
@@ -328,7 +314,7 @@ webappClient_Tween.prototype.currentVal = function()
   }
 }
 
-webappClient_Tween.prototype.pixelVal = function(prop)
+dom_Tween.prototype.pixelVal = function(prop)
 {
   var cs = this.fx.fan.computedStyle();
   var val = cs[prop];
@@ -361,7 +347,7 @@ catch (err) { val = 0; /*alert(err);*/ }
   return val;
 }
 
-webappClient_Tween.prototype.applyVal = function(val)
+dom_Tween.prototype.applyVal = function(val)
 {
   // make sure we never go past stop
   if (this.start<this.stop) { if (val>this.stop) val=this.stop; }
@@ -382,7 +368,7 @@ webappClient_Tween.prototype.applyVal = function(val)
   }
 }
 
-webappClient_Tween.prototype.fromCss = function(css)
+dom_Tween.prototype.fromCss = function(css)
 {
   if (css == "") return { val:0, unit:null };
   var val  = parseFloat(css);
@@ -393,7 +379,7 @@ webappClient_Tween.prototype.fromCss = function(css)
   return { val:val, unit:unit, toString:function(){return val+unit} };
 }
 
-webappClient_Tween.prototype.toString = function()
+dom_Tween.prototype.toString = function()
 {
   return "[elem:" + this.elem.tagName + "," +
           "prop:" + this.prop + "," +

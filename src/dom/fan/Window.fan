@@ -4,6 +4,7 @@
 //
 // History:
 //   8 Jan 09  Andy Frank  Creation
+//   8 Jul 09  Andy Frank  Split webappClient into sys/dom
 //
 
 **
@@ -21,16 +22,16 @@ class Window
   **
   ** Display a modal message box with the given text.
   **
-  static Void alert(Obj obj) {}
+  static native Void alert(Obj obj)
 
   **
   ** Get the URI for this window.
   **
-  static Uri uri() { return `` }
+  static native Uri uri()
 
   **
   ** Hyperlink to the given URI in this window.
   **
-  static Void hyperlink(Uri uri) {}
+  static native Void hyperlink(Uri uri)
 
 }

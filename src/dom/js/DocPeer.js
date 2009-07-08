@@ -5,28 +5,28 @@
 // History:
 //   8 Jan 09   Andy Frank  Creation
 //   20 May 09  Andy Frank  Refactor to new OO model
+//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
-var webappClient_Doc = sys_Obj.$extend(sys_Obj);
-webappClient_Doc.prototype.$ctor = function() {}
-webappClient_Doc.prototype.type = function() { return sys_Type.find("webappClient::Doc"); }
+var dom_DocPeer = sys_Obj.$extend(sys_Obj);
+dom_DocPeer.prototype.$ctor = function(self) {}
 
-webappClient_Doc.body = function()
+dom_DocPeer.body = function(self)
 {
-  return webappClient_Elem.make(document.body);
+  return dom_ElemPeer.make(document.body);
 }
 
-webappClient_Doc.elem = function(id)
+dom_DocPeer.elem = function(self, id)
 {
   var elem = document.getElementById(id);
   if (elem == null) return null;
-  return webappClient_Elem.make(elem);
+  return dom_ElemPeer.make(elem);
 }
 
-webappClient_Doc.createElem = function(tagName, attribs)
+dom_DocPeer.createElem = function(self, tagName, attribs)
 {
   var elem = document.createElement(tagName);
-  var wrap = webappClient_Elem.make(elem);
+  var wrap = dom_ElemPeer.make(elem);
   if (attribs != null)
   {
     var k = attribs.keys();

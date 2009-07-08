@@ -6,16 +6,17 @@
 //   12 Jan 09  Andy Frank  Creation
 //
 
+using dom
 using web
 using webapp
-using webappClient
 
-class WebappClientFxTest : Widget
+class DomFxTest : Widget
 {
   override Void onGet()
   {
     head.title.w("WebappClientFx Test").titleEnd
-    head.includeJs(`/sys/pod/webappClient/webappClient.js`)
+    head.includeJs(`/sys/pod/sys/sys.js`)
+    head.includeJs(`/sys/pod/dom/dom.js`)
     head.includeJs(`/sys/pod/testWeb/testWeb.js`)
 
     body.h1.w("WebappClientFx Test").h1End
