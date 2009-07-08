@@ -4,6 +4,7 @@
 //
 // History:
 //   18 May 08  Brian Frank  Creation
+//    9 Jul 09  Brian Frank  Rename from SysNamespace
 //
 
 using System;
@@ -11,26 +12,26 @@ using System;
 namespace Fan.Sys
 {
   /// <summary>
-  /// SysNamespace manages the "/sys" URI namespace branch.
+  /// SysUriSpace manages the "/sys" URI namespace branch.
   /// </summary>
-  internal sealed class SysNamespace : Namespace
+  internal sealed class SysUriSpace : UriSpace
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Identity
   //////////////////////////////////////////////////////////////////////////
 
-    public override Type type() { return Sys.SysNamespaceType; }
+    public override Type type() { return Sys.SysUriSpaceType; }
 
   //////////////////////////////////////////////////////////////////////////
-  // Namespace
+  // UriSpace
   //////////////////////////////////////////////////////////////////////////
 
     public override object get(Uri uri, bool check)
     {
       // sanity check
       if (uri.m_path.get(0).ToString() != "sys")
-        throw new ArgumentException("SysNamespace cannot process: " + uri);
+        throw new ArgumentException("SysUriSpace cannot process: " + uri);
 
       // route on /sys/{key}/...
       if (uri.m_path.sz() >= 3)

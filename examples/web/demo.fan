@@ -33,10 +33,10 @@ class Boot : BootScript
     Sys.ns.create(`/homePage`, scriptDir + `index.fan`)
     Sys.ns.create(`/chrome`,   scriptDir + `chrome.fan`)
 
-    Sys.mount(`/examples`, Namespace.makeDir(scriptDir + `examples/`))
-    Sys.mount(`/dir`, Namespace.makeDir(scriptDir + `dir/`))
+    Sys.mount(`/examples`, UriSpace.makeDir(scriptDir + `examples/`))
+    Sys.mount(`/dir`, UriSpace.makeDir(scriptDir + `dir/`))
     try
-      Sys.mount(`/doc`, Namespace.makeDir(Sys.homeDir + `doc/`))
+      Sys.mount(`/doc`, UriSpace.makeDir(Sys.homeDir + `doc/`))
     catch (Err e)
       log.error("Cannot mount /doc: $e")
   }

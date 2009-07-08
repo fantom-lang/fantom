@@ -4,18 +4,19 @@
 //
 // History:
 //   04 Mar 08  Brian Frank  Creation
+//    9 Jul 09  Brian        Rename from Namespace
 //
 
 **
-** Namespace models a Uri to Obj map.  Namespaces provide a unified
+** UriSpace models a Uri to Obj map.  UriSpaces provide a unified
 ** CRUD (create/read/update/delete) interface for managing objects
-** keyed by a Uri.  The root namespace accessed via `Sys.ns` provides
-** a thread-safe memory database.  Custom namespaces can be mounted
+** keyed by a Uri.  The root space is accessed via `Sys.root` provides
+** a thread-safe memory database.  Custom spaces can be mounted
 ** into the system via the `Sys.mount` method.
 **
-** See `docLang::Namespaces` for details.
+** See `docLang::UriSpaces` for details.
 **
-abstract const class Namespace
+abstract const class UriSpace
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -23,7 +24,7 @@ abstract const class Namespace
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Create a Namespace which maps Uris to a directory tree.
+  ** Create a UriSpace which maps Uris to a directory tree.
   ** The resulting namespace may then be mounted via `Sys.mount`
   ** to alias namespace Uris to files within the directory.
   ** Throw ArgErr if dir does not map to an existing directory.
@@ -31,17 +32,17 @@ abstract const class Namespace
   ** a trailing slash.
   **
   ** Example:
-  **   Sys.mount(`/foo/`, Namespace.makeDir(`/pub/`.toFile))
+  **   Sys.mount(`/foo/`, UriSpace.makeDir(`/pub/`.toFile))
   **   Sys.ns[`/foo/file.html`]  =>  `/pub/file.html`
   **
-  static Namespace makeDir(File dir)
+  static UriSpace makeDir(File dir)
 
 //////////////////////////////////////////////////////////////////////////
 // Access
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the Uri that this Namespace is mounted
+  ** Get the Uri that this UriSpace is mounted
   ** under or null if not mounted.
   **
   Uri? uri()
@@ -98,28 +99,28 @@ abstract const class Namespace
 }
 
 **************************************************************************
-** RootNamespace
+** RootUriSpace
 **************************************************************************
 
-internal const class RootNamespace : Namespace
+internal const class RootUriSpace : UriSpace
 {
   override Obj? get(Uri uri, Bool checked := true)
 }
 
 **************************************************************************
-** SysNamespace
+** SysUriSpace
 **************************************************************************
 
-internal const class SysNamespace : Namespace
+internal const class SysUriSpace : UriSpace
 {
   override Obj? get(Uri uri, Bool checked := true)
 }
 
 **************************************************************************
-** DirNamespace
+** DirUriSpace
 **************************************************************************
 
-internal const class DirNamespace : Namespace
+internal const class DirUriSpace : UriSpace
 {
   override Obj? get(Uri uri, Bool checked := true)
 }

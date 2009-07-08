@@ -4,19 +4,18 @@
 //
 // History:
 //   04 Mar 08  Brian Frank  Creation
+//    9 Jul 09  Brian        Rename from Namespace
 //
 package fan.sys;
 
 import java.util.*;
 
 /**
- * Namespace models a Uri to Obj map.  Namespaces provide a unified
+ * UriSpace models a Uri to Obj map.  UriSpaces provide a unified
  * CRUD (create/read/update/delete) interface for managing objects
- * keyed by a Uri.  The root namespace accessed via `Sys.ns` provides
- * a thread-safe memory database.  Custom namespaces can be mounted
- * into the system via the `Sys.mount` method.
+ * keyed by a Uri.
  */
-public abstract class Namespace
+public abstract class UriSpace
   extends FanObj
 {
 
@@ -24,18 +23,18 @@ public abstract class Namespace
 // Factory
 //////////////////////////////////////////////////////////////////////////
 
-  public static Namespace makeDir(File dir)
+  public static UriSpace makeDir(File dir)
   {
-    return new DirNamespace(dir);
+    return new DirUriSpace(dir);
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static void make$(Namespace self) {}
+  public static void make$(UriSpace self) {}
 
-  public Namespace() {}
+  public UriSpace() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
@@ -43,10 +42,10 @@ public abstract class Namespace
 
   public String toStr() { return type().qname() + " uri=" + uri; }
 
-  public Type type() { return Sys.NamespaceType; }
+  public Type type() { return Sys.UriSpaceType; }
 
 //////////////////////////////////////////////////////////////////////////
-// Namespace
+// UriSpace
 //////////////////////////////////////////////////////////////////////////
 
   public final Uri uri() { return uri; }

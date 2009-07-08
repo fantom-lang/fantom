@@ -4,23 +4,24 @@
 //
 // History:
 //   04 Mar 08  Brian Frank  Creation
+//    9 Jul 09  Brian        Rename from DirNamespace
 //
 package fan.sys;
 
 import java.util.*;
 
 /**
- * DirNamespace aliases a directory tree
+ * DirUriSpace aliases a directory tree
  */
-final class DirNamespace
-  extends Namespace
+final class DirUriSpace
+  extends UriSpace
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  DirNamespace(File dir)
+  DirUriSpace(File dir)
   {
     if (!dir.isDir())  throw ArgErr.make("Not a dir: " + dir).val;
     if (!dir.exists()) throw ArgErr.make("Dir does not exist: " + dir).val;
@@ -31,12 +32,12 @@ final class DirNamespace
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public String toStr() { return "DirNamespace " + dir; }
+  public String toStr() { return "DirUriSpace " + dir; }
 
-  public Type type() { return Sys.DirNamespaceType; }
+  public Type type() { return Sys.DirUriSpaceType; }
 
 //////////////////////////////////////////////////////////////////////////
-// Namespace
+// UriSpace
 //////////////////////////////////////////////////////////////////////////
 
   public Object get(Uri uri, boolean checked)

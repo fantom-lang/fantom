@@ -28,13 +28,13 @@ namespace Fan.Sys
     private Sys() {}
 
   //////////////////////////////////////////////////////////////////////////
-  // Namespace
+  // UriSpace
   //////////////////////////////////////////////////////////////////////////
 
-    public static Namespace ns() { return m_ns; }
-    public static Namespace ns(Uri uri) { return m_ns.ns(uri); }
+    public static UriSpace ns() { return m_ns; }
+    public static UriSpace ns(Uri uri) { return m_ns.ns(uri); }
 
-    public static void mount(Uri uri, Namespace m) { m_ns.mount(uri, m); }
+    public static void mount(Uri uri, UriSpace m) { m_ns.mount(uri, m); }
 
     public static void unmount(Uri uri) { m_ns.unmount(uri); }
 
@@ -205,10 +205,10 @@ namespace Fan.Sys
         ParamType       = builtin("Param",  ObjType);
 
         // resources
-        NamespaceType     = builtin("Namespace",     ObjType);
-        RootNamespaceType = builtin("RootNamespace", NamespaceType);
-        SysNamespaceType  = builtin("SysNamespace",  NamespaceType);
-        DirNamespaceType  = builtin("DirNamespace",  NamespaceType);
+        UriSpaceType     = builtin("UriSpace",     ObjType);
+        RootUriSpaceType = builtin("RootUriSpace", UriSpaceType);
+        SysUriSpaceType  = builtin("SysUriSpace",  UriSpaceType);
+        DirUriSpaceType  = builtin("DirUriSpace",  UriSpaceType);
 
         // IO
         InStreamType     = builtin("InStream",     ObjType);
@@ -366,11 +366,11 @@ namespace Fan.Sys
         StdErr = new SysOutStream(Console.OpenStandardError());
 
         //
-        // Namespace
+        // UriSpace
         //
 
-        RootNamespace x = null;
-        try { x = new RootNamespace(); }
+        RootUriSpace x = null;
+        try { x = new RootUriSpace(); }
         catch (Exception e) { Err.dumpStack(e); }
         m_ns = x;
 
@@ -470,10 +470,10 @@ namespace Fan.Sys
     public static readonly Type ParamType;
 
     // resources
-    public static readonly Type NamespaceType;
-    public static readonly Type RootNamespaceType;
-    public static readonly Type SysNamespaceType;
-    public static readonly Type DirNamespaceType;
+    public static readonly Type UriSpaceType;
+    public static readonly Type RootUriSpaceType;
+    public static readonly Type SysUriSpaceType;
+    public static readonly Type DirUriSpaceType;
 
     // IO
     public static readonly Type InStreamType;
@@ -564,8 +564,8 @@ namespace Fan.Sys
     public static readonly string m_userName;
     private static Map m_env;
 
-    // Namespace
-    internal static readonly RootNamespace m_ns;
+    // UriSpace
+    internal static readonly RootUriSpace m_ns;
 
     // Compiler Utils
     public static Type compile(Fan.Sys.File file) { return ScriptUtil.compile(file, null); }

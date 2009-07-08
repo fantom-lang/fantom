@@ -133,7 +133,7 @@ public class Actor
   private Future _send(Object msg, Duration dur, Future whenDone)
   {
     // ensure immutable or safe copy
-    msg = Namespace.safe(msg);
+    msg = UriSpace.safe(msg);
 
     // don't deliver new messages to a stopped pool
     if (pool.isStopped()) throw Err.make("ActorPool is stopped").val;

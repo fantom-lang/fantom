@@ -28,13 +28,13 @@ public final class Sys
   private Sys() {}
 
 //////////////////////////////////////////////////////////////////////////
-// Namespace
+// UriSpace
 //////////////////////////////////////////////////////////////////////////
 
-  public static Namespace ns() { return ns; }
-  public static Namespace ns(Uri uri) { return ns.ns(uri); }
+  public static UriSpace ns() { return ns; }
+  public static UriSpace ns(Uri uri) { return ns.ns(uri); }
 
-  public static void mount(Uri uri, Namespace m) { ns.mount(uri, m); }
+  public static void mount(Uri uri, UriSpace m) { ns.mount(uri, m); }
 
   public static void unmount(Uri uri) { ns.unmount(uri); }
 
@@ -239,10 +239,10 @@ public final class Sys
   public static final Type ParamType     = builtin("Param",    ObjType);
 
   // resources
-  public static final Type NamespaceType     = builtin("Namespace",     ObjType);
-  public static final Type RootNamespaceType = builtin("RootNamespace", NamespaceType);
-  public static final Type SysNamespaceType  = builtin("SysNamespace",  NamespaceType);
-  public static final Type DirNamespaceType  = builtin("DirNamespace",  NamespaceType);
+  public static final Type UriSpaceType     = builtin("UriSpace",     ObjType);
+  public static final Type RootUriSpaceType = builtin("RootUriSpace", UriSpaceType);
+  public static final Type SysUriSpaceType  = builtin("SysUriSpace",  UriSpaceType);
+  public static final Type DirUriSpaceType  = builtin("DirUriSpace",  UriSpaceType);
 
   // IO
   public static final Type CharsetType      = builtin("Charset",      ObjType);
@@ -484,17 +484,17 @@ public final class Sys
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Namespace
+// UriSpace
 //////////////////////////////////////////////////////////////////////////
 
-  static final RootNamespace ns;
+  static final RootUriSpace ns;
 
   static
   {
-    RootNamespace x = null;
+    RootUriSpace x = null;
     try
     {
-      x = new RootNamespace();
+      x = new RootUriSpace();
     }
     catch (Throwable e)
     {

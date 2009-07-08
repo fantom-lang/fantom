@@ -4,33 +4,34 @@
 //
 // History:
 //   18 May 08  Brian Frank  Creation
+//    9 Jul 09  Brian        Rename from SysNamespace
 //
 package fan.sys;
 
 import java.util.*;
 
 /**
- * SysNamespace manages the "/sys" URI namespace branch.
+ * SysUriSpace manages the "/sys" uri space branch.
  */
-final class SysNamespace
-  extends Namespace
+final class SysUriSpace
+  extends UriSpace
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  public Type type() { return Sys.SysNamespaceType; }
+  public Type type() { return Sys.SysUriSpaceType; }
 
 //////////////////////////////////////////////////////////////////////////
-// Namespace
+// UriSpace
 //////////////////////////////////////////////////////////////////////////
 
   public Object get(Uri uri, boolean checked)
   {
     // sanity check
     if (!uri.path.get(0).toString().equals("sys"))
-      throw new IllegalStateException("SysNamespace cannot process: " + uri);
+      throw new IllegalStateException("SysUriSpace cannot process: " + uri);
 
     // route on /sys/{key}/...
     if (uri.path.sz() >= 3)
