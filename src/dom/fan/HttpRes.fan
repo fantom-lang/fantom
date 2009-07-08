@@ -4,6 +4,7 @@
 //
 // History:
 //   8 Jan 09  Andy Frank  Creation
+//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
 **
@@ -12,6 +13,11 @@
 @javascript
 class HttpRes
 {
+
+  **
+  ** Private ctor.
+  **
+  private new make() {}
 
   **
   ** The HTTP status code of the response.

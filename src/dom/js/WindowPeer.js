@@ -5,24 +5,24 @@
 // History:
 //   8 Jan 09   Andy Frank  Creation
 //   20 May 09  Andy Frank  Refactor to new OO model
+//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
-var webappClient_Window = sys_Obj.$extend(sys_Obj);
+var dom_WindowPeer = sys_Obj.$extend(sys_Obj);
 
-webappClient_Window.prototype.$ctor = function() {}
-webappClient_Window.prototype.type = function() { return sys_Type.find("webappClient::Window"); }
+dom_WindowPeer.prototype.$ctor = function(self) {}
 
-webappClient_Window.alert = function(obj)
+dom_WindowPeer.alert = function(self, obj)
 {
   alert(obj);
 }
 
-webappClient_Window.uri = function()
+dom_WindowPeer.uri = function(self)
 {
   return sys_Uri.make(window.location.toString());
 }
 
-webappClient_Window.hyperlink = function(uri)
+dom_WindowPeer.hyperlink = function(self, uri)
 {
   window.location = uri.m_uri;
 }

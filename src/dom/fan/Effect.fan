@@ -4,6 +4,7 @@
 //
 // History:
 //   15 Apr 09  Andy Frank  Creation
+//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
 **
@@ -29,7 +30,7 @@ class Effect
   **
   ** Return the DOM element effects are applied to.
   **
-  Elem elem() { return Elem("") }
+  native Elem elem()
 
 //////////////////////////////////////////////////////////////////////////
 // Animate
@@ -44,10 +45,7 @@ class Effect
   **     fx.animate(["opacity":"1.0"], 100ms)
   **   }
   **
-  This animate(Str:Str map, Duration dur := 0ms, |Effect|? callback := null)
-  {
-    return this
-  }
+  native This animate(Str:Str map, Duration dur := 0ms, |Effect|? callback := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Show/Hide
@@ -58,20 +56,14 @@ class Effect
   ** display within the given duration of time.  If given,
   ** invoke the callback function after animation has completed.
   **
-  This show(Duration dur := 0ms, |Effect|? callback := null)
-  {
-    return this
-  }
+  native This show(Duration dur := 0ms, |Effect|? callback := null)
 
   **
   ** Hide the element.  If 'dur' is specificed, animate the
   ** display within the given duration of time.  If given,
   ** invoke the callback function after animation has completed.
   **
-  This hide(Duration dur := 0ms, |Effect|? callback := null)
-  {
-    return this
-  }
+  native This hide(Duration dur := 0ms, |Effect|? callback := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Slide
@@ -83,20 +75,14 @@ class Effect
   ** time.  If given, invoke the callback function after animation
   ** has completed.
   **
-  This slideDown(Duration dur := 0ms, |Effect|? callback := null)
-  {
-    return this
-  }
+  native This slideDown(Duration dur := 0ms, |Effect|? callback := null)
 
   **
   ** Hide the element by animating its height. If 'dur' is specificed,
   ** animate the slide within the given duration of time.  If given,
   ** invoke the callback function after animation has completed.
   **
-  This slideUp(Duration dur := 0ms, |Effect|? callback := null)
-  {
-    return this
-  }
+  native This slideUp(Duration dur := 0ms, |Effect|? callback := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Fading
@@ -108,10 +94,7 @@ class Effect
   ** time.  If given, invoke the callback function after animation
   ** has completed.
   **
-  This fadeIn(Duration dur := 0ms, |Effect|? callback := null)
-  {
-    return this
-  }
+  native This fadeIn(Duration dur := 0ms, |Effect|? callback := null)
 
   **
   ** Fade in the element by animating its opacity.  If 'dur' is
@@ -119,10 +102,7 @@ class Effect
   ** time.  If given, invoke the callback function after animation
   ** has completed.
   **
-  This fadeOut(Duration dur := 0ms, |Effect|? callback := null)
-  {
-    return this
-  }
+  native This fadeOut(Duration dur := 0ms, |Effect|? callback := null)
 
   **
   ** Fade the opacity of the element to the target value, where
@@ -131,9 +111,6 @@ class Effect
   ** time.  If given, invoke the callback function after animation
   ** has completed.
   **
-  This fadeTo(Decimal opacity, Duration dur := 0ms, |Effect|? callback := null)
-  {
-    return this
-  }
+  native This fadeTo(Decimal opacity, Duration dur := 0ms, |Effect|? callback := null)
 
 }

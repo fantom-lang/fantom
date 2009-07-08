@@ -11,7 +11,6 @@ using fand
 using wisp
 using web
 using webapp
-using webappClient
 using testWeb
 
 class Boot : BootScript
@@ -33,10 +32,10 @@ class Boot : BootScript
 
   override Void setup()
   {
-    Sys.ns.create(`/homePage`,       Index#)
-    Sys.ns.create(`/webappClient`,   WebappClientTest#)
-    Sys.ns.create(`/webappClientFx`, WebappClientFxTest#)
-    Sys.ns.create(`/call`,           CallTest#)
+    Sys.ns.create(`/homePage`, Index#)
+    Sys.ns.create(`/dom`,      DomTest#)
+    Sys.ns.create(`/domFx`,    DomFxTest#)
+    Sys.ns.create(`/call`,     CallTest#)
   }
 }
 
@@ -47,8 +46,8 @@ class Index : Widget
     head.title.w("testWeb Tests").titleEnd
     body.h1.w("testWeb Tests").h1End
     body.ul
-    body.li.a(`/webappClient`).w("webappClient unit tests").aEnd.liEnd
-    body.li.a(`/webappClientFx`).w("webappClientFx tests").aEnd.liEnd
+    body.li.a(`/dom`).w("dom unit tests").aEnd.liEnd
+    body.li.a(`/domFx`).w("domFx tests").aEnd.liEnd
     body.li.a(`/call`).w("Call tests").aEnd.liEnd
     body.ulEnd
   }

@@ -7,16 +7,17 @@
 //   21 Jan 09  Andy Frank  Creation
 //
 
+using dom
 using web
 using webapp
-using webappClient
 
 class CallTest : Widget
 {
   override Void onGet()
   {
     head.title.w("Call Test").titleEnd
-    head.includeJs(`/sys/pod/webappClient/webappClient.js`)
+    head.includeJs(`/sys/pod/sys/sys.js`)
+    head.includeJs(`/sys/pod/dom/dom.js`)
     head.includeJs(`/sys/pod/testWeb/testWeb.js`)
 
     body.h1.w("Call Test").h1End
@@ -67,7 +68,11 @@ class CallTestClient
   {
     HttpReq(uri).send("") |HttpRes res|
     {
-      Window.alert(res.content)
+      Window.alert(
+        "$res.status
+         $res.headers
+
+         $res.content")
     }
   }
 }

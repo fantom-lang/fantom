@@ -6,16 +6,17 @@
 //   12 Jan 09  Andy Frank  Creation
 //
 
+using dom
 using web
 using webapp
-using webappClient
 
-class WebappClientTest : Widget
+class DomTest : Widget
 {
   override Void onGet()
   {
-    head.title.w("webappClient Test").titleEnd
-    head.includeJs(`/sys/pod/webappClient/webappClient.js`)
+    head.title.w("Dom Test").titleEnd
+    head.includeJs(`/sys/pod/sys/sys.js`)
+    head.includeJs(`/sys/pod/dom/dom.js`)
     head.includeJs(`/sys/pod/testWeb/testWeb.js`)
     head.w(
       "<style type='text/css'>
@@ -46,7 +47,7 @@ class WebappClientTest : Widget
          }
        </script>").nl
 
-    body.h1.w("webappClient Test").h1End
+    body.h1.w("Dom Test").h1End
     body.hr
 
     // testAttrs

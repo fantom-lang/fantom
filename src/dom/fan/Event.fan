@@ -4,6 +4,7 @@
 //
 // History:
 //   25 Feb 09  Andy Frank  Creation
+//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
 **
@@ -17,7 +18,7 @@ class Event
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Obj obj) {}
+  private new make() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
@@ -26,31 +27,31 @@ class Event
   **
   ** The target to which the event was dispatched.
   **
-  Elem target() { return Elem("") }
+  native Elem target()
 
   **
   ** The x position of the event.
   **
-  Int x() { return 0 }
+  native Int x()
 
   **
   ** The y position of the event.
   **
-  Int y() { return 0 }
+  native Int y()
 
   **
   ** Return true if the ALT key was pressed during the event.
   **
-  Bool alt() { return false }
+  native Bool alt()
 
   **
   ** Return true if the CTRL key was pressed during the event.
   **
-  Bool ctrl() { return false }
+  native Bool ctrl()
 
   **
   ** Return true if the SHIFT key was pressed during the event.
   **
-  Bool shift() { return false }
+  native Bool shift()
 
 }

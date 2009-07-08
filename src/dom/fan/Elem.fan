@@ -4,6 +4,7 @@
 //
 // History:
 //   8 Jan 09  Andy Frank  Creation
+//   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
 **
@@ -17,7 +18,7 @@ class Elem
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Obj obj) {}
+  private new make() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Attributes
@@ -26,82 +27,82 @@ class Elem
   **
   ** Get the tag name for this element.
   **
-  Str tagName() { return "" }
+  native Str tagName()
 
   **
   ** The id for this element.
   **
-  Str id := ""
+  native Str id
 
   **
   ** The name attribute for this element.
   **
-  Str name := ""
+  native Str name
 
   **
   ** The CSS class name(s) for this element.
   **
-  Str className := ""
+  native Str className
 
   **
   ** Return true if this element has the given CSS class name,
   ** or false if it does not.
   **
-  Bool hasClassName(Str className) { return false }
+  native Bool hasClassName(Str className)
 
   **
   ** Add the given CSS class name to this element.  If this
   ** element already contains the given class name, then this
   ** method does nothing. Returns this.
   **
-  This addClassName(Str className) { return this }
+  native This addClassName(Str className)
 
   **
   ** Remove the given CSS class name to this element. If this
   ** element does not have the given class name, this method
   ** does nothing. Returns this.
   **
-  This removeClassName(Str className) { return this }
+  native This removeClassName(Str className)
 
   **
   ** Get the style object for this element.
   **
-  Obj style() { return "" }
+  native Obj style()
 
   **
   ** Get the computed style object for this element.
   **
-  Obj computedStyle() { return "" }
+  native Obj computedStyle()
 
   **
   ** The HTML markup contained in this element.
   **
-  Str html := ""
+  native Str html
 
   **
   ** The value attribute for this element, or null if one
   ** does not exist.  This is typically only valid for form
   ** elements.
   **
-  Obj? value
+  native Obj? value
 
   **
   ** The checked attribute for this element, or null if one
   ** does not exist.  This is typically only valid for some
   ** form elements.
   **
-  Bool? checked
+  native Bool? checked
 
   **
   ** Get an attribute by name.  If not found return
   ** the specificed default value.
   **
-  Obj? get(Str name, Obj? def := null) { return null }
+  native Obj? get(Str name, Obj? def := null)
 
   **
   ** Set an attribute to the given value.
   **
-  Void set(Str name, Obj? val) {}
+  native Void set(Str name, Obj? val)
 
 //////////////////////////////////////////////////////////////////////////
 // Size
@@ -110,22 +111,22 @@ class Elem
   **
   ** The x position relative to the parent element in pixels.
   **
-  Int x() { return 0 }
+  native Int x()
 
   **
   ** The y position relative to the parent element in pixels.
   **
-  Int y() { return 0 }
+  native Int y()
 
   **
   ** The width of this element in pixels.
   **
-  Int w() { return 0 }
+  native Int w()
 
   **
   ** The height of this element in pixels.
   **
-  Int h() { return 0 }
+  native Int h()
 
 //////////////////////////////////////////////////////////////////////////
 // Tree
@@ -135,40 +136,40 @@ class Elem
   ** Get the parent Elem of this element, or null if
   ** this element has no parent.
   **
-  Elem? parent() { return null }
+  native Elem? parent()
 
   **
   ** Get the child nodes of this element.
   **
-  Elem[] children() { return Elem[,] }
+  native Elem[] children()
 
   **
   ** Get the first child node of this element, or null
   ** if this element has no children.
   **
-  Elem? first() { return null }
+  native Elem? first()
 
   **
   ** Get the previous sibling to this element, or null
   ** if this is the first element under its parent.
   **
-  Elem? prev() { return null }
+  native Elem? prev()
 
   **
   ** Get the next sibling to this element, or null if
   ** this is the last element under its parent.
   **
-  Elem? next() { return null }
+  native Elem? next()
 
   **
   ** Add a new element as a child to this element. Return this.
   **
-  This add(Elem child) { return this }
+  native This add(Elem child)
 
   **
   ** Remove a child element from this element. Return this.
   **
-  This remove(Elem child) { return this }
+  native This remove(Elem child)
 
 //////////////////////////////////////////////////////////////////////////
 // Focus
@@ -177,7 +178,7 @@ class Elem
   **
   ** Request keyboard focus on this elem.
   **
-  Void focus() {}
+  native Void focus()
 
 //////////////////////////////////////////////////////////////////////////
 // Find
@@ -187,13 +188,13 @@ class Elem
   ** Return the first descendant for which c returns true.
   ** Return null if no element returns true.
   **
-  Elem? find(|Elem e->Bool| c) { return null }
+  native Elem? find(|Elem e->Bool| c)
 
   **
   ** Return a list of all descendants for which c returns
   ** true.  Return an empty list if no element returns true.
   **
-  Elem[] findAll(|Elem e->Bool| c) { return Elem[,] }
+  native Elem[] findAll(|Elem e->Bool| c)
 
 //////////////////////////////////////////////////////////////////////////
 // Events
@@ -202,7 +203,7 @@ class Elem
   **
   ** Attach an event handler to the given event on this element.
   **
-  Void onEvent(Str type, Bool useCapture, |Event e| handler) {}
+  native Void onEvent(Str type, Bool useCapture, |Event e| handler)
 
 //////////////////////////////////////////////////////////////////////////
 // Effects
@@ -211,6 +212,6 @@ class Elem
   **
   ** Return an Effects object for this element.
   **
-  Effect effect() { return Effect(this) }
+  native Effect effect()
 
 }
