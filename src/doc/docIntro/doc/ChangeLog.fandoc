@@ -674,4 +674,5 @@
 
 *Build 1.0.45 (working)*
 - fwt::Canvas support in IE using JavaFX
-- DateTime,TimeZone support for JavaScript- Fix Int.fromStr to work for signed 64-bit integers with radix 16
+- DateTime,TimeZone support for JavaScript
+- Fix Int.fromStr to work for signed 64-bit integers with radix 16
