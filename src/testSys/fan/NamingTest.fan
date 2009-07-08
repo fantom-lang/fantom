@@ -84,7 +84,7 @@ class NamingTest : Test
     p := type.pod
     f := p.files[`/res/test.txt`]
     verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(null), f)
-    verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(Sys.ns), f)
+    verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(UriSpace.root), f)
     verifySame(`fan:/sys/pod/testSys/res/test.txt`.get(p), f)
     verifySame(`res/test.txt`.get(p), f)
 

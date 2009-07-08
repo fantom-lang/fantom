@@ -20,13 +20,45 @@ abstract const class UriSpace
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Mounting
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Get the root uri space.
+  **
+  static UriSpace root()
+
+  **
+  ** Get the uri space instance which manages the specified
+  ** uri or fallback to root uri space.
+  **
+  static UriSpace find(Uri uri)
+
+  **
+  ** Mount a uri space under the specified Uri.  All requests
+  ** to process uris contained by the specified uri are routed
+  ** to the uri space instance for processing.  Throw ArgErr if
+  ** the uri is already or mounted by another uri space.  Throw
+  ** ArgErr if the uri isn't path absolute, has a query, or has
+  ** fragment.
+  **
+  static Void mount(Uri uri, UriSpace ns)
+
+  **
+  ** Unmount a uri space which was previously mounted by the
+  ** `mount` method.  Throw UnresolvedErr is uri doesn't directly
+  ** map to a mounted uri space.
+  **
+  static Void unmount(Uri uri)
+
+//////////////////////////////////////////////////////////////////////////
 // Factory
 //////////////////////////////////////////////////////////////////////////
 
   **
   ** Create a UriSpace which maps Uris to a directory tree.
-  ** The resulting namespace may then be mounted via `Sys.mount`
-  ** to alias namespace Uris to files within the directory.
+  ** The resulting uri space may then be mounted via `Sys.mount`
+  ** to alias uri space Uris to files within the directory.
   ** Throw ArgErr if dir does not map to an existing directory.
   ** Note that uris will resolve successfully directories without
   ** a trailing slash.
@@ -56,13 +88,13 @@ abstract const class UriSpace
   abstract Obj? get(Uri uri, Bool checked := true)
 
   **
-  ** Create the specified uri/object pair in this namespace.
-  ** Pass null for uri if the namespace should generate a new
+  ** Create the specified uri/object pair in this uri space.
+  ** Pass null for uri if the uri space should generate a new
   ** uri automatically.  Return the newly created uri.  If
   ** the uri is already mapped, then throw ArgErr.  Throw
   ** ArgErr if uri returns false for [isPathOnly]`Uri.isPathOnly`.
   **
-  ** The root namespace stores the object in the memory
+  ** The root uri space stores the object in the memory
   ** database - the object must be immutable or serializable.
   **
   ** The default implementation for subclasses is to throw
@@ -75,7 +107,7 @@ abstract const class UriSpace
   ** the uri isn't mapped then throw UnresolvedErr. Throw
   ** ArgErr if uri returns false for [isPathOnly]`Uri.isPathOnly`.
   **
-  ** The root namespace stores the object back to the memory
+  ** The root uri space stores the object back to the memory
   ** database - the object must be immutable or serializable.
   **
   ** The default implementation for subclasses is to throw
@@ -88,7 +120,7 @@ abstract const class UriSpace
   ** the uri isn't mapped then throw UnresolvedErr. Throw
   ** ArgErr if uri returns false for [isPathOnly]`Uri.isPathOnly`.
   **
-  ** The root namespace removes the uri/object pair from
+  ** The root uri space removes the uri/object pair from
   ** the memory database.
   **
   ** The default implementation for subclasses is to throw

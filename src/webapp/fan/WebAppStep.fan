@@ -26,7 +26,7 @@ abstract const class WebAppStep : WebStep
     if (uri == null) return null
 
     // map uri to local namespace
-    obj := Sys.ns.get(uri, false)
+    obj := UriSpace.root.get(uri, false)
     if (obj == null) return null
 
     // if script file, then compile it to

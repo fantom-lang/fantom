@@ -28,7 +28,7 @@ public final class RootUriSpace
     this.lock   = new Object();
     this.mem    = new HashMap(4096);
     this.mounts = new HashMap(1024);
-    mount(Uri.fromStr("/sys"), new SysUriSpace());
+    doMount(Uri.fromStr("/sys"), new SysUriSpace());
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ public final class RootUriSpace
   {
     checkUri(uri);
 
-    UriSpace sub = ns(uri);
+    UriSpace sub = doFind(uri);
     if (sub != this) return sub.get(uri, checked);
 
     Object val = null;
@@ -70,7 +70,7 @@ public final class RootUriSpace
     if (uri != null)
     {
       checkUri(uri);
-      UriSpace sub = ns(uri);
+      UriSpace sub = doFind(uri);
       if (sub != this) return sub.create(uri, obj);
     }
 
@@ -96,7 +96,7 @@ public final class RootUriSpace
     checkUri(uri);
     if (obj == null) throw ArgErr.make("obj is null").val;
 
-    UriSpace sub = ns(uri);
+    UriSpace sub = doFind(uri);
     if (sub != this) { sub.put(uri, obj); return; }
 
     Object safe = safe(obj);
@@ -115,7 +115,7 @@ public final class RootUriSpace
   {
     checkUri(uri);
 
-    UriSpace sub = ns(uri);
+    UriSpace sub = doFind(uri);
     if (sub != this) { sub.delete(uri); return; }
 
     synchronized (lock)
@@ -138,7 +138,7 @@ public final class RootUriSpace
 // Mounts
 //////////////////////////////////////////////////////////////////////////
 
-  UriSpace ns(Uri uri)
+  UriSpace doFind(Uri uri)
   {
     if (uri == null) return this;
     if (uri.path == null) throw ArgErr.make("Invalid uri for mount: " + uri).val;
@@ -158,7 +158,7 @@ public final class RootUriSpace
     return this;
   }
 
-  void mount(Uri uri, UriSpace ns)
+  void doMount(Uri uri, UriSpace ns)
   {
     if (uri.auth() != null || uri.queryStr != null ||
         uri.frag != null   || uri.path == null ||
@@ -179,7 +179,7 @@ public final class RootUriSpace
     }
   }
 
-  void unmount(Uri uri)
+  void doUnmount(Uri uri)
   {
     MountKey key = new MountKey(uri).update(uri.path.sz());
     synchronized (lock)

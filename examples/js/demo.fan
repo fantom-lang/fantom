@@ -27,8 +27,8 @@ class Boot : BootScript
 
   override Void setup()
   {
-    Sys.ns.create(`/homePage`, Home#)
-    Sys.ns.create(`/show-script`, ShowScript#)
+    UriSpace.root.create(`/homePage`, Home#)
+    UriSpace.root.create(`/show-script`, ShowScript#)
   }
 }
 

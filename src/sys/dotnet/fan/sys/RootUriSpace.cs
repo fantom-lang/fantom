@@ -28,7 +28,7 @@ namespace Fan.Sys
       this.m_lock   = new object();
       this.m_mem    = new Hashtable(4096);
       this.m_mounts = new Hashtable(1024);
-      mount(Uri.fromStr("/sys"), new SysUriSpace());
+      doMount(Uri.fromStr("/sys"), new SysUriSpace());
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ namespace Fan.Sys
     {
       checkUri(uri);
 
-      UriSpace sub = ns(uri);
+      UriSpace sub = doFind(uri);
       if (sub != this) return sub.get(uri, check);
 
       object val = null;
@@ -70,7 +70,7 @@ namespace Fan.Sys
       if (uri != null)
       {
         checkUri(uri);
-        UriSpace sub = ns(uri);
+        UriSpace sub = doFind(uri);
         if (sub != this) return sub.create(uri, obj);
       }
 
@@ -95,7 +95,7 @@ namespace Fan.Sys
       checkUri(uri);
       if (obj == null) throw ArgErr.make("obj is null").val;
 
-      UriSpace sub = ns(uri);
+      UriSpace sub = doFind(uri);
       if (sub != this) { sub.put(uri, obj); return; }
 
       object safe = UriSpace.safe(obj);
@@ -114,7 +114,7 @@ namespace Fan.Sys
     {
       checkUri(uri);
 
-      UriSpace sub = ns(uri);
+      UriSpace sub = doFind(uri);
       if (sub != this) { sub.delete(uri); return; }
 
       lock (m_lock)
@@ -137,7 +137,7 @@ namespace Fan.Sys
   // Mounts
   //////////////////////////////////////////////////////////////////////////
 
-    internal UriSpace ns(Uri uri)
+    internal UriSpace doFind(Uri uri)
     {
       if (uri == null) return this;
       if (uri.m_path == null) throw ArgErr.make("Invalid uri for mount: " + uri).val;
@@ -157,7 +157,7 @@ namespace Fan.Sys
       return this;
     }
 
-    internal void mount(Uri uri, UriSpace ns)
+    internal void doMount(Uri uri, UriSpace ns)
     {
       if (uri.auth() != null || uri.m_queryStr != null ||
           uri.m_frag != null   || uri.m_path == null ||
@@ -178,7 +178,7 @@ namespace Fan.Sys
       }
     }
 
-    internal void unmount(Uri uri)
+    internal void doUnmount(Uri uri)
     {
       MountKey key = new MountKey(uri).update(uri.m_path.sz());
       lock (m_lock)

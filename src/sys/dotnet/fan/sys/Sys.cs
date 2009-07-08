@@ -28,17 +28,6 @@ namespace Fan.Sys
     private Sys() {}
 
   //////////////////////////////////////////////////////////////////////////
-  // UriSpace
-  //////////////////////////////////////////////////////////////////////////
-
-    public static UriSpace ns() { return m_ns; }
-    public static UriSpace ns(Uri uri) { return m_ns.ns(uri); }
-
-    public static void mount(Uri uri, UriSpace m) { m_ns.mount(uri, m); }
-
-    public static void unmount(Uri uri) { m_ns.unmount(uri); }
-
-  //////////////////////////////////////////////////////////////////////////
   // Environment
   //////////////////////////////////////////////////////////////////////////
 
@@ -366,15 +355,6 @@ namespace Fan.Sys
         StdErr = new SysOutStream(Console.OpenStandardError());
 
         //
-        // UriSpace
-        //
-
-        RootUriSpace x = null;
-        try { x = new RootUriSpace(); }
-        catch (Exception e) { Err.dumpStack(e); }
-        m_ns = x;
-
-        //
         // Touch
         //
         DateTime.boot();
@@ -563,9 +543,6 @@ namespace Fan.Sys
     public static readonly string m_hostName;
     public static readonly string m_userName;
     private static Map m_env;
-
-    // UriSpace
-    internal static readonly RootUriSpace m_ns;
 
     // Compiler Utils
     public static Type compile(Fan.Sys.File file) { return ScriptUtil.compile(file, null); }

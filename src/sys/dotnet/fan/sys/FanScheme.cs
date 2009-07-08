@@ -30,7 +30,7 @@ namespace Fan.Sys
 
     public override object get(Uri uri, object @base)
     {
-      return Sys.ns().get(uri.pathOnly(), true);
+      return UriSpace.m_root.get(uri.pathOnly(), true);
     }
 
   }

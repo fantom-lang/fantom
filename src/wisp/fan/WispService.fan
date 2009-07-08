@@ -40,16 +40,10 @@ const class WispService : WebService
     listener.bind(null, port)
     log.info("WispService started on port ${port}")
 
-    numReqs := 0
-    Sys.ns.create(`/wisp/numReqs`, numReqs)
-
     while (!listenerPool.isStopped)
     {
       socket := listener.accept
       WispActor(this, socket).send(null)
-
-      numReqs++
-      Sys.ns.put(`/wisp/numReqs`, numReqs)
     }
   }
 
