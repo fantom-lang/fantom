@@ -509,6 +509,7 @@ class IntTest : Test
     verifyEq(0x123456789abcdef.toHex, "123456789abcdef")
     verifyEq(0x123456789abcdef.toHex(18), "000123456789abcdef")
     verifyEq(0.toHex(10), "0000000000")
+    verifyEq(0xaabbccdd00112233.toHex, "aabbccdd00112233")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -526,8 +527,12 @@ class IntTest : Test
     verifyEq(Int.fromStr("AbCdEf", 16), 0xabcdef)
     verifyEq(Int.fromStr("77", 10, true), 77)
     verifyEq(Int.fromStr("x", 10, false), null)
+    verifyEq(Int.fromStr("aabbccdd00112233", 16), 0xaabbccdd00112233)
+    verifyEq(Int.fromStr("80BF3ecA63100DdE", 16), 0x80bf3eca63100dde)
+    verifyEq(Int.fromStr("badz", 16, false), null)
     verifyErr(ParseErr#) |,| { Int.fromStr("x") }
     verifyErr(ParseErr#) |,| { Int.fromStr("3", 2, true) }
+    verifyErr(ParseErr#) |,| { Int.fromStr("3g", 16, true) }
   }
 
 //////////////////////////////////////////////////////////////////////////
