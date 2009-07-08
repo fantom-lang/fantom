@@ -110,12 +110,53 @@ sys_List.slice = function(self, range)
   return self.slice(s, e+1);
 }
 
+sys_List.contains = function(self, val)
+{
+  return sys_List.index(self, val) != null;
+}
+
 sys_List.sort = function(self, func)
 {
   if (func != null)
     return self.sort(func);
   else
     return self.sort();
+}
+
+sys_List.index = function(self, val, off)
+{
+  if (off == undefined) off = 0;
+
+  if (self.length == 0) return null;
+  var start = off;
+  if (start < 0) start = self.length + start;
+  if (start >= self.length) throw sys_IndexErr.make(off);
+
+  try
+  {
+    if (val == null)
+    {
+      for (var i=start; i<sef.length; ++i)
+        if (self[i] == null)
+          return i;
+    }
+    else
+    {
+      for (var i=start; i<self.length; ++i)
+      {
+        var obj = self[i];
+        if (obj != null && sys_Obj.equals(obj, val))
+          return i;
+      }
+    }
+    return null;
+  }
+  // TODO
+  //catch (ArrayIndexOutOfBoundsException e)
+  catch (err)
+  {
+    throw sys_IndexErr.make(off);
+  }
 }
 
 sys_List.indexSame = function(self, val, off)
