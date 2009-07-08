@@ -20,6 +20,7 @@ class HttpReq
   new make(Uri uri, Str? method := null)
   {
     this.uri = uri
+    if (method != null) this.method = method
   }
 
   **
