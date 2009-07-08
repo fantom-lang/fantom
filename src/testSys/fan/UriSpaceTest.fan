@@ -7,20 +7,20 @@
 //
 
 **
-** NamespaceTest
+** UriSpaceTest
 **
-class NamespaceTest : Test
+class UriSpaceTest : Test
 {
 
   Void testRoot()
   {
-    verifyEq(Sys.ns.type.name, "RootNamespace")
-    verifyEq(Sys.ns is Namespace, true)
-    verifyEq(Sys.ns.type.base, Namespace#)
+    verifyEq(Sys.ns.type.name, "RootUriSpace")
+    verifyEq(Sys.ns is UriSpace, true)
+    verifyEq(Sys.ns.type.base, UriSpace#)
     verifyEq(Sys.ns.uri, `/`)
 
-    verifyEq(Sys.ns(`/sys`).type.qname, "sys::SysNamespace")
-    verifyErr(ArgErr#) |,| { Sys.mount(`/sys`, TestNamespace.make) }
+    verifyEq(Sys.ns(`/sys`).type.qname, "sys::SysUriSpace")
+    verifyErr(ArgErr#) |,| { Sys.mount(`/sys`, TestUriSpace.make) }
 
     verifyErr(ArgErr#) |,| { Sys.ns.get(`fan:/sys/foo`) }
     verifyErr(ArgErr#) |,| { Sys.ns.create(`fan:/sys/foo`, "x") }
@@ -108,10 +108,10 @@ class NamespaceTest : Test
   Void testMounts()
   {
     root := Sys.ns
-    a := TestNamespace.make
-    b := TestNamespace.make
-    c := TestNamespace.make
-    d := TestNamespace.make
+    a := TestUriSpace.make
+    b := TestUriSpace.make
+    c := TestUriSpace.make
+    d := TestUriSpace.make
 
     verifyEq(a.uri, null)
     verifyErr(ArgErr#) |,| { Sys.mount(`http://foo/`, a) }
@@ -159,7 +159,7 @@ class NamespaceTest : Test
 
   Void testMountCrud()
   {
-    Sys.mount(`/testns`, TestNamespace.make)
+    Sys.mount(`/testns`, TestUriSpace.make)
 
     verifyEq(Sys.ns.get(`/testns`, false), null)
     verifyErr(UnresolvedErr#) |,| { Sys.ns.get(`/testns`) }
@@ -194,7 +194,7 @@ class NamespaceTest : Test
     (tempDir+`file.txt`).out.print("hi!").close;
     (tempDir+`dir1/dir2/file.txt`).create.out.print("deep").close
 
-    Sys.mount(`/testdir`, Namespace.makeDir(tempDir))
+    Sys.mount(`/testdir`, UriSpace.makeDir(tempDir))
 
     File f := `fan:/testdir/file.txt`.get
     verifyEq(f.readAllStr, "hi!")
@@ -207,7 +207,7 @@ class NamespaceTest : Test
 
 }
 
-const class TestNamespace : Namespace
+const class TestUriSpace : UriSpace
 {
 
   override Obj? get(Uri uri, Bool checked := true)

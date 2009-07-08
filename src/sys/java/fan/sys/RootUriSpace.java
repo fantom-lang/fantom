@@ -4,30 +4,31 @@
 //
 // History:
 //   04 Mar 08  Brian Frank  Creation
+//    9 Jul 09  Brian        Rename from RootNamespace
 //
 package fan.sys;
 
 import java.util.*;
 
 /**
- * RootNamesapce is the sys internal subclass of Namespace
+ * RootUriSpace is the sys internal subclass of UriSpace
  * which manages the root memory database and mounts.
  */
-public final class RootNamespace
-  extends Namespace
+public final class RootUriSpace
+  extends UriSpace
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  RootNamespace()
+  RootUriSpace()
   {
     this.uri    = Uri.fromStr("/");
     this.lock   = new Object();
     this.mem    = new HashMap(4096);
     this.mounts = new HashMap(1024);
-    mount(Uri.fromStr("/sys"), new SysNamespace());
+    mount(Uri.fromStr("/sys"), new SysUriSpace());
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,17 +37,17 @@ public final class RootNamespace
 
   public String toStr() { return type().toStr(); }
 
-  public Type type() { return Sys.RootNamespaceType; }
+  public Type type() { return Sys.RootUriSpaceType; }
 
 //////////////////////////////////////////////////////////////////////////
-// Namespace
+// UriSpace
 //////////////////////////////////////////////////////////////////////////
 
   public Object get(Uri uri, boolean checked)
   {
     checkUri(uri);
 
-    Namespace sub = ns(uri);
+    UriSpace sub = ns(uri);
     if (sub != this) return sub.get(uri, checked);
 
     Object val = null;
@@ -69,7 +70,7 @@ public final class RootNamespace
     if (uri != null)
     {
       checkUri(uri);
-      Namespace sub = ns(uri);
+      UriSpace sub = ns(uri);
       if (sub != this) return sub.create(uri, obj);
     }
 
@@ -95,7 +96,7 @@ public final class RootNamespace
     checkUri(uri);
     if (obj == null) throw ArgErr.make("obj is null").val;
 
-    Namespace sub = ns(uri);
+    UriSpace sub = ns(uri);
     if (sub != this) { sub.put(uri, obj); return; }
 
     Object safe = safe(obj);
@@ -114,7 +115,7 @@ public final class RootNamespace
   {
     checkUri(uri);
 
-    Namespace sub = ns(uri);
+    UriSpace sub = ns(uri);
     if (sub != this) { sub.delete(uri); return; }
 
     synchronized (lock)
@@ -137,7 +138,7 @@ public final class RootNamespace
 // Mounts
 //////////////////////////////////////////////////////////////////////////
 
-  Namespace ns(Uri uri)
+  UriSpace ns(Uri uri)
   {
     if (uri == null) return this;
     if (uri.path == null) throw ArgErr.make("Invalid uri for mount: " + uri).val;
@@ -149,7 +150,7 @@ public final class RootNamespace
       for (int i=depth; i>0; --i)
       {
         key.update(i);
-        Namespace ns = (Namespace)mounts.get(key);
+        UriSpace ns = (UriSpace)mounts.get(key);
         if (ns != null) return ns;
       }
     }
@@ -157,7 +158,7 @@ public final class RootNamespace
     return this;
   }
 
-  void mount(Uri uri, Namespace ns)
+  void mount(Uri uri, UriSpace ns)
   {
     if (uri.auth() != null || uri.queryStr != null ||
         uri.frag != null   || uri.path == null ||
@@ -165,7 +166,7 @@ public final class RootNamespace
       throw ArgErr.make("Invalid Uri for mount: " + uri).val;
 
     if (ns.uri != null)
-      throw ArgErr.make("Namespace already mounted: " + ns.uri).val;
+      throw ArgErr.make("UriSpace already mounted: " + ns.uri).val;
 
     MountKey key = new MountKey(uri).update(uri.path.sz());
     synchronized (lock)
@@ -183,7 +184,7 @@ public final class RootNamespace
     MountKey key = new MountKey(uri).update(uri.path.sz());
     synchronized (lock)
     {
-      Namespace old = (Namespace)mounts.remove(key);
+      UriSpace old = (UriSpace)mounts.remove(key);
       if (old == null)
       {
         throw UnresolvedErr.make(uri).val;
@@ -240,7 +241,7 @@ public final class RootNamespace
 
   private Object lock;     // synchronized lock
   private HashMap mem;     // memory db: uri.str.val -> Obj
-  private HashMap mounts;  // mounts: uri.str.val -> Namespace
+  private HashMap mounts;  // mounts: uri.str.val -> UriSpace
   private int uriCounter;  // auto-generated uris
 
 }

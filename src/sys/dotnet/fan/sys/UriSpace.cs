@@ -3,37 +3,34 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   5 Mar 08  Andy Frank  Creation
+//   5 Mar 08  Andy Frank   Creation
+//   9 Jul 09  Brian Frank  Rename from Namespace
 //
 
 namespace Fan.Sys
 {
   /// <summary>
-  /// Namespace models a Uri to Obj map.  Namespaces provide a unified
-  /// CRUD (create/read/update/delete) interface for managing objects
-  /// keyed by a Uri.  The root namespace accessed via `Sys.ns` provides
-  /// a thread-safe memory database.  Custom namespaces can be mounted
-  /// into the system via the `Sys.mount` method.
+  /// UriSpace models a Uri to Obj map.
   /// </summary>
-  public abstract class Namespace : FanObj
+  public abstract class UriSpace : FanObj
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Factory
   //////////////////////////////////////////////////////////////////////////
 
-    public static Namespace makeDir(File dir)
+    public static UriSpace makeDir(File dir)
     {
-      return new DirNamespace(dir);
+      return new DirUriSpace(dir);
     }
 
   //////////////////////////////////////////////////////////////////////////
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    public static void make_(Namespace self) {}
+    public static void make_(UriSpace self) {}
 
-    public Namespace() {}
+    public UriSpace() {}
 
   //////////////////////////////////////////////////////////////////////////
   // Identity
@@ -41,10 +38,10 @@ namespace Fan.Sys
 
     public override string toStr() { return type().qname() + " uri=" + m_uri; }
 
-    public override Type type() { return Sys.NamespaceType; }
+    public override Type type() { return Sys.UriSpaceType; }
 
   //////////////////////////////////////////////////////////////////////////
-  // Namespace
+  // UriSpace
   //////////////////////////////////////////////////////////////////////////
 
     public Uri uri() { return m_uri; }

@@ -22,14 +22,14 @@ final class Sys
   private new make()
 
 //////////////////////////////////////////////////////////////////////////
-// Namespace
+// UriSpace
 //////////////////////////////////////////////////////////////////////////
 
   **
   ** Get the namespace instance which manages the specified
   ** uri, or if uri is omitted, then get the root namespace.
   **
-  static Namespace ns(Uri? uri := null)
+  static UriSpace ns(Uri? uri := null)
 
   **
   ** Mount a namespace under the specified Uri.  All requests
@@ -39,7 +39,7 @@ final class Sys
   ** ArgErr if the uri isn't path absolute, has a query, or has
   ** fragment.
   **
-  static Void mount(Uri uri, Namespace ns)
+  static Void mount(Uri uri, UriSpace ns)
 
   **
   ** Unmount a namespace which was previously mounted by the

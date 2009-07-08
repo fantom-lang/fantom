@@ -3,7 +3,8 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   5 Mar 08  Andy Frank  Creation
+//   5 Mar 08  Andy Frank   Creation
+//   9 Jul 09  Brian Frank  Rename from RootNamespace
 //
 
 using System.Collections;
@@ -11,23 +12,23 @@ using System.Collections;
 namespace Fan.Sys
 {
   /// <summary>
-  /// RootNamesapce is the sys internal subclass of Namespace
+  /// RootUriSpace is the sys internal subclass of UriSpace
   /// which manages the root memory database and mounts.
   /// </summary>
-  public sealed class RootNamespace : Namespace
+  public sealed class RootUriSpace : UriSpace
   {
 
   //////////////////////////////////////////////////////////////////////////
   // Construction
   //////////////////////////////////////////////////////////////////////////
 
-    internal RootNamespace()
+    internal RootUriSpace()
     {
       this.m_uri    = Uri.fromStr("/");
       this.m_lock   = new object();
       this.m_mem    = new Hashtable(4096);
       this.m_mounts = new Hashtable(1024);
-      mount(Uri.fromStr("/sys"), new SysNamespace());
+      mount(Uri.fromStr("/sys"), new SysUriSpace());
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -36,17 +37,17 @@ namespace Fan.Sys
 
     public override string toStr() { return type().toStr(); }
 
-    public override Type type() { return Sys.RootNamespaceType; }
+    public override Type type() { return Sys.RootUriSpaceType; }
 
   //////////////////////////////////////////////////////////////////////////
-  // Namespace
+  // UriSpace
   //////////////////////////////////////////////////////////////////////////
 
     public override object get(Uri uri, bool check)
     {
       checkUri(uri);
 
-      Namespace sub = ns(uri);
+      UriSpace sub = ns(uri);
       if (sub != this) return sub.get(uri, check);
 
       object val = null;
@@ -69,11 +70,11 @@ namespace Fan.Sys
       if (uri != null)
       {
         checkUri(uri);
-        Namespace sub = ns(uri);
+        UriSpace sub = ns(uri);
         if (sub != this) return sub.create(uri, obj);
       }
 
-      object safe = Namespace.safe(obj);
+      object safe = UriSpace.safe(obj);
       lock (m_lock)
       {
         if (uri == null)
@@ -94,10 +95,10 @@ namespace Fan.Sys
       checkUri(uri);
       if (obj == null) throw ArgErr.make("obj is null").val;
 
-      Namespace sub = ns(uri);
+      UriSpace sub = ns(uri);
       if (sub != this) { sub.put(uri, obj); return; }
 
-      object safe = Namespace.safe(obj);
+      object safe = UriSpace.safe(obj);
       lock (m_lock)
       {
         object old = m_mem[uri.m_str];
@@ -113,7 +114,7 @@ namespace Fan.Sys
     {
       checkUri(uri);
 
-      Namespace sub = ns(uri);
+      UriSpace sub = ns(uri);
       if (sub != this) { sub.delete(uri); return; }
 
       lock (m_lock)
@@ -136,7 +137,7 @@ namespace Fan.Sys
   // Mounts
   //////////////////////////////////////////////////////////////////////////
 
-    internal Namespace ns(Uri uri)
+    internal UriSpace ns(Uri uri)
     {
       if (uri == null) return this;
       if (uri.m_path == null) throw ArgErr.make("Invalid uri for mount: " + uri).val;
@@ -148,7 +149,7 @@ namespace Fan.Sys
         for (int i=depth; i>0; --i)
         {
           key.update(i);
-          Namespace ns = (Namespace)m_mounts[key];
+          UriSpace ns = (UriSpace)m_mounts[key];
           if (ns != null) return ns;
         }
       }
@@ -156,7 +157,7 @@ namespace Fan.Sys
       return this;
     }
 
-    internal void mount(Uri uri, Namespace ns)
+    internal void mount(Uri uri, UriSpace ns)
     {
       if (uri.auth() != null || uri.m_queryStr != null ||
           uri.m_frag != null   || uri.m_path == null ||
@@ -164,7 +165,7 @@ namespace Fan.Sys
         throw ArgErr.make("Invalid Uri for mount: " + uri).val;
 
       if (ns.m_uri != null)
-        throw ArgErr.make("Namespace already mounted: " + ns.m_uri).val;
+        throw ArgErr.make("UriSpace already mounted: " + ns.m_uri).val;
 
       MountKey key = new MountKey(uri).update(uri.m_path.sz());
       lock (m_lock)
@@ -182,7 +183,7 @@ namespace Fan.Sys
       MountKey key = new MountKey(uri).update(uri.m_path.sz());
       lock (m_lock)
       {
-        Namespace old = (Namespace)m_mounts[key];
+        UriSpace old = (UriSpace)m_mounts[key];
         if (old == null)
         {
           throw UnresolvedErr.make(uri).val;
@@ -240,7 +241,7 @@ namespace Fan.Sys
 
     private object m_lock;       // synchronized lock
     private Hashtable m_mem;     // memory db: uri.m_str.val -> object
-    private Hashtable m_mounts;  // mounts: uri.m_str.val -> Namespace
+    private Hashtable m_mounts;  // mounts: uri.m_str.val -> UriSpace
     private int m_uriCounter;    // auto-generated uris
 
   }

@@ -92,7 +92,7 @@ public final class Future
     }
 
     // ensure immutable or safe copy
-    return Namespace.safe(r);
+    return UriSpace.safe(r);
   }
 
   public final void cancel()
@@ -110,7 +110,7 @@ public final class Future
 
   final void set(Object r)
   {
-    r = Namespace.safe(r);
+    r = UriSpace.safe(r);
     ArrayList wd;
     synchronized (this)
     {
