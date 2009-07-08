@@ -5,6 +5,7 @@
 //
 // History:
 //   7 Jul 09  Andy Frank  Creation
+//   8 Jul 09  Andy Frank  Split webappClient into sys/dom
 //
 
 using build
@@ -16,7 +17,7 @@ class BuildTz
 {
   Void main()
   {
-    js  := Sys.homeDir + `src/webappClient/javascript/sys/timezones.js`
+    js  := Sys.homeDir + `src/sys/js/fan/timezones.js`
     out := js.out
     try
     {

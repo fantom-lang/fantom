@@ -34,7 +34,7 @@ class Build : BuildGroup
       `web/build.fan`,
       `webapp/build.fan`,
       `compilerJs/build.fan`,
-      `webappClient/build.fan`,
+      `dom/build.fan`,
       `testWeb/build.fan`,
       `wisp/build.fan`,
       `fandoc/build.fan`,
