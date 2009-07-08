@@ -72,12 +72,11 @@ class Runner
     // eval dependecies
     pod.depends.each |Depend d|
     {
-      pname := d.name == "sys" ? "webappClient" : d.name
-      script := Pod.find(pname).files["/${pname}.js".toUri]
+      script := Pod.find(d.name).files["/${d.name}.js".toUri]
       if (script != null)
       {
         try engine.eval(script.readAllStr)
-        catch (Err e) throw Err("Pod eval failed: $pname", e)
+        catch (Err e) throw Err("Pod eval failed: $d.name", e)
       }
     }
 

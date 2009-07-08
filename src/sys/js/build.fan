@@ -1,53 +1,38 @@
-#! /usr/bin/env fan
+#! /usr/bin/env fansubstitute
 //
 // Copyright (c) 2009, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
 //   8 Jan 09  Andy Frank  Creation
+//   8 Jul 09  Andy Frank  Split webappClient into sys/dom
 //
 
 using build
 
-**
-** Build: webappClient
-**
-class Build : BuildPod
+class Build : BuildScript
 {
 
-  override Void setup()
-  {
-    podName       = "webappClient"
-    version       = globalVersion
-    description   = "Client-side framework for building web applications"
-    depends       = ["sys 1.0", "web 1.0", "webapp 1.0"]
-    srcDirs       = [`fan/`, `test/`]
-    includeSrc    = true
-  }
+//////////////////////////////////////////////////////////////////////////
+// Compile
+//////////////////////////////////////////////////////////////////////////
 
-  @target="compile fan source into pod"
-  override Void compile(Bool full := false)
+  @target="compile javascript for sys pod"
+  Void compile()
   {
-    super.compile(full)
-    doJavascript
-  }
+    log.info("compile [js]")
 
-  private Void doJavascript()
-  {
-    log.info("javascript [$podName]")
-
-    tempDir := scriptFile.parent + `temp-javascript/`
+    tempDir := scriptFile.parent + `temp-js/`
     tempDir.delete
     tempDir.create
 
-    lib := tempDir.createFile("${podName}.js")
+    lib := tempDir.createFile("sys.js")
     out := lib.out
 
     // collect source files
     src := Str:File[:] { ordered = true }
-    (scriptDir + `javascript/sys/`).walk  |f| { if (f.ext == "js") src[f.name] = f }
-    (scriptDir + `javascript/fanx/`).walk |f| { if (f.ext == "js") src[f.name] = f }
-    (scriptDir + `javascript/webappClient/`).walk |f| { if (f.ext == "js") src[f.name] = f }
+    (scriptFile.parent + `fan/`).walk  |f| { if (f.ext == "js") src[f.name] = f }
+    (scriptFile.parent + `fanx/`).walk |f| { if (f.ext == "js") src[f.name] = f }
 
     // output first
     first.each |Str name|
@@ -80,13 +65,49 @@ class Build : BuildPod
 
     // add into pod file
     jar := JdkTask.make(this).jarExe
-    pod := Sys.homeDir + "lib/fan/${podName}.pod".toUri
+    pod := devHomeDir + `lib/fan/sys.pod`
     Exec.make(this, [jar.osPath, "fu", pod.osPath, "-C", tempDir.osPath, "."], tempDir).run
 
     tempDir.delete
   }
 
-  private Void append(File f, OutStream out)
+//////////////////////////////////////////////////////////////////////////
+// Clean
+//////////////////////////////////////////////////////////////////////////
+
+  @target="delete all intermediate and target files"
+  Void clean()
+  {
+    log.info("clean [js]")
+    Delete.make(this, scriptFile.parent + `temp-js/`).run
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// CompileAll
+//////////////////////////////////////////////////////////////////////////
+
+  @target="alias for compile"
+  Void compileAll()
+  {
+    compile
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Full
+//////////////////////////////////////////////////////////////////////////
+
+  @target="clean+compile"
+  Void full()
+  {
+    clean
+    compile
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Support
+//////////////////////////////////////////////////////////////////////////
+
+  Void append(File f, OutStream out)
   {
     inBlock := false
     f.readAllLines.each |Str line|
@@ -120,13 +141,16 @@ class Build : BuildPod
     }
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
   // must be first
   Str[] first := ["Obj.js", "Pod.js", "Type.js", "Slot.js", "Err.js", "Func.js",
                   "Num.js", "List.js", "Map.js", "Enum.js", "Long.js", "Int.js",
                   "InStream.js", "OutStream.js"]
 
   // must be last
-  Str[] last := ["sysPod.js", "timezones.js", "webappClientPod.js"]
-
+  Str[] last := ["sysPod.js", "timezones.js"]
 
 }

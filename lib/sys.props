@@ -56,6 +56,7 @@ fan.runtime.substitutes=                             \
   /C:/dev/fan/src/buildboot.fan          = C:\\dev\\rel  \
   /C:/dev/fan/src/sys/build.fan          = C:\\dev\\rel  \
   /C:/dev/fan/src/sys/java/build.fan     = C:\\dev\\rel  \
+  /C:/dev/fan/src/sys/js/build.fan       = C:\\dev\\rel  \
   /C:/dev/fan/src/sys/dotnet/build.fan   = C:\\dev\\rel  \
   /C:/dev/fan/src/compiler/build.fan     = C:\\dev\\rel  \
   /C:/dev/fan/src/compilerJava/build.fan = C:\\dev\\rel  \
