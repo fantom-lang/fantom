@@ -22,7 +22,7 @@ sys_DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 {
   if (sec == undefined) sec = 0;
   if (ns  == undefined) ns = 0;
-  //if (tz  == undefined) tz = TimeZone.current;
+  if (tz  == undefined) tz = sys_TimeZone.current();
 
   month = month.ordinal();
 
@@ -32,34 +32,32 @@ sys_DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
   if (hour < 0 || hour > 23)      throw sys_ArgErr.make("hour " + hour);
   if (min < 0 || min > 59)        throw sys_ArgErr.make("min " + min);
   if (sec < 0 || sec > 59)        throw sys_ArgErr.make("sec " + sec);
-  if (ns < 0 || ns > 999999999)  throw sys_ArgErr.make("ns " + ns);
+  if (ns < 0 || ns > 999999999)   throw sys_ArgErr.make("ns " + ns);
 
   // compute ticks for UTC
   var dayOfYear = sys_DateTime.dayOfYear(year, month, day);
   var timeInSec = hour*3600 + min*60 + sec;
   var ticks = sys_Int.plus(sys_DateTime.yearTicks[year-1900],
-              sys_Int.plus(dayOfYear * nsPerDay,
-              sys_Int.plus(timeInSec * nsPerSec, ns)));
+              sys_Int.plus(dayOfYear * sys_DateTime.nsPerDay,
+              sys_Int.plus(timeInSec * sys_DateTime.nsPerSec, ns)));
 
   // adjust for timezone and dst (we might know the UTC offset)
-  /*
-  TimeZone.Rule rule = tz.rule(year);
-  boolean dst;
-  if (sys_Int.equal(knownOffset, sys_Int.maxVal))
-  {
+  var rule = tz.rule(year);
+  var dst;
+  //if (sys_Int.equal(knownOffset, sys_Int.maxVal))
+  //{
     // don't know offset so compute from timezone rule
     ticks -= rule.offset * sys_DateTime.nsPerSec;
-    int dstOffset = TimeZone.dstOffset(rule, year, month, day, timeInSec);
-    if (dstOffset != 0) ticks -= (long)dstOffset * nsPerSec;
+    var dstOffset = sys_TimeZone.dstOffset(rule, year, month, day, timeInSec);
+    if (dstOffset != 0) ticks -= dstOffset * sys_DateTime.nsPerSec;
     dst = dstOffset != 0;
-  }
-  else
-  {
-    // we known offset, still need to use rule to compute if in dst
-    ticks -= (long)knownOffset * nsPerSec;
-    dst = knownOffset != rule.offset;
-  }
-  */
+  //}
+  //else
+  //{
+  //  // we known offset, still need to use rule to compute if in dst
+  //  ticks -= (long)knownOffset * sys_DateTime.nsPerSec;
+  //  dst = knownOffset != rule.offset;
+  //}
 
   // compute weekday
   var weekday = (sys_DateTime.firstWeekday(year, month) + day - 1) % 7;
@@ -72,13 +70,13 @@ sys_DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
   fields |= (hour & 0x1f) << 17;
   fields |= (min  & 0x3f) << 22;
   fields |= (weekday & 0x7) << 28;
-//  fields |= (dst ? 1 : 0) << 31;
+  fields |= (dst ? 1 : 0) << 31;
 
   // commit
   var instance = new sys_DateTime();
-  instance.ticks    = ticks;
-  instance.timeZone = tz;
-  instance.fields   = fields;
+  instance.m_ticks    = ticks;
+  instance.m_timeZone = tz;
+  instance.m_fields   = fields;
   return instance;
 }
 
@@ -88,7 +86,7 @@ sys_DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 
 sys_DateTime.makeTicks = function(ticks, tz)
 {
-  // if (tz == undefined) tz = TimeZone.current
+  if (tz == undefined) tz = sys_TimeZone.current();
 
   // check boundary conditions 1901 to 2099
   if (ticks < sys_DateTime.minTicks || ticks >= sys_DateTime.maxTicks)
@@ -96,23 +94,23 @@ sys_DateTime.makeTicks = function(ticks, tz)
 
   // save ticks, time zone
   var instance = new sys_DateTime();
-  instance.ticks = ticks;
-  instance.timeZone = tz;
+  instance.m_ticks = ticks;
+  instance.m_timeZone = tz;
 
   // compute the year
   var year = sys_DateTime.ticksToYear(ticks);
 
   // get the time zone rule for this year, and
   // offset the working ticks by UTC offset
-//  TimeZone.Rule rule = timeZone.rule(year);
-//  ticks += rule.offset * nsPerSec;
+  var rule = tz.rule(year);
+  ticks += rule.offset * sys_DateTime.nsPerSec;
 
   // compute the day and month; we may need to execute this
   // code block up to three times:
   //   1st: using standard time
   //   2nd: using daylight offset (if in dst)
   //   3rd: using standard time (if dst pushed us back into std)
-  var month, day, dstOffset = 0;
+  var month = 0, day = 0, dstOffset = 0;
   var rem;
   while (true)
   {
@@ -143,29 +141,27 @@ sys_DateTime.makeTicks = function(ticks, tz)
 
     // if dstOffset is non-zero we have run this
     // loop twice to recompute the date for dst
-    /*
     if (dstOffset != 0)
     {
       // if our dst rule is wall time based, then we need to
       // recompute to see if dst wall time pushed us back
       // into dst - if so then run through the loop a third
       // time to get us back to standard time
-      if (rule.isWallTime() && TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/nsPerSec)) == 0)
+      if (rule.isWallTime() && sys_TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/sys_DateTime.nsPerSec)) == 0)
       {
-        ticks -= dstOffset * nsPerSec;
-        dstOffset = Integer.MAX_VALUE;
+        ticks -= dstOffset * sysDateTime.nsPerSec;
+        dstOffset = sys_Int.maxVal;
         continue;
       }
       break;
     }
-    */
 
     // first time in loop; check for daylight saving time,
     // and if dst is in effect then re-run this loop with
     // modified working ticks
-//    dstOffset = TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/nsPerSec));
+    dstOffset = sys_TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/sys_DateTime.nsPerSec));
     if (dstOffset == 0) break;
-//    ticks += dstOffset * sys_DateTime.nsPerSec;
+    ticks += dstOffset * sys_DateTime.nsPerSec;
   }
 
   // compute time of day
@@ -184,7 +180,7 @@ sys_DateTime.makeTicks = function(ticks, tz)
   fields |= (min  & 0x3f) << 22;
   fields |= (weekday & 0x7) << 28;
   fields |= (dstOffset != 0 ? 1 : 0) << 31;
-  instance.fields = fields;
+  instance.m_fields = fields;
 
   return instance;
 }
@@ -252,17 +248,18 @@ sys_DateTime.fromStr = function(s, checked, iso)
     {
       if (i < s.length()) throw new Error();
       if (offset == 0)
-        tz = TimeZone.utc();
+        tz = sys_TimeZone.utc();
       else
-        tz = TimeZone.fromStr("GMT" + (offset < 0 ? "+" : "-") + Math.abs(offset)/3600);
+        tz = sys_TimeZone.fromStr("GMT" + (offset < 0 ? "+" : "-") + Math.abs(offset)/3600);
     }
     else
     {
       if (s.charAt(i++) != ' ') throw new Error();
-      tz = TimeZone.fromStr(s.substring(i), true);
+      tz = sys_TimeZone.fromStr(s.substring(i), true);
     }
 
-    return sys_DateTime.make(year, month, day, hour, min, sec, ns, offset, tz);
+    //return sys_DateTime.make(year, sys_Month.values[month], day, hour, min, sec, ns, offset, tz);
+    return sys_DateTime.make(year, sys_Month.values[month], day, hour, min, sec, ns, tz);
   }
   catch (err)
   {
@@ -279,30 +276,278 @@ sys_DateTime.prototype.equals = function(obj)
 {
   if (obj instanceof sys_DateTime)
   {
-    return this.ticks == obj.ticks;
+    return this.m_ticks == obj.m_ticks;
   }
   return false;
 }
 
 sys_DateTime.prototype.hash = function()
 {
-  return this.ticks;
+  return this.m_ticks;
 }
 
 sys_DateTime.prototype.compare = function(obj)
 {
-  var that = obj.ticks;
-  if (this.ticks < that) return -1; return this.ticks  == that ? 0 : +1;
+  var that = obj.m_ticks;
+  if (this.m_ticks < that) return -1; return this.m_ticks  == that ? 0 : +1;
 }
 
 sys_DateTime.prototype.type = function()
 {
   return sys_Type.find("sys::DateTime");
 }
+//////////////////////////////////////////////////////////////////////////
+// Access
+//////////////////////////////////////////////////////////////////////////
+
+sys_DateTime.prototype.ticks = function() { return this.m_ticks; }
+sys_DateTime.prototype.date = function() { return sys_Date.make(this.year(), this.month(), this.day()); }
+sys_DateTime.prototype.time = function() { return sys_Time.make(this.hour(), this.min(), this.sec(), this.nanoSec()); }
+sys_DateTime.prototype.year = function() { return (this.m_fields & 0xff) + 1900; }
+sys_DateTime.prototype.month = function() { return sys_Month.values[(this.m_fields >> 8) & 0xf]; }
+sys_DateTime.prototype.day = function() { return (this.m_fields >> 12) & 0x1f; }
+sys_DateTime.prototype.hour = function() { return (this.m_fields >> 17) & 0x1f; }
+sys_DateTime.prototype.min = function() { return (this.m_fields >> 22) & 0x3f; }
+sys_DateTime.prototype.sec = function()
+{
+  var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - sys_DateTime.yearTicks[0];
+  return Math.floor((rem % sys_DateTime.nsPerMin) / sys_DateTime.nsPerSec);
+}
+sys_DateTime.prototype.nanoSec = function()
+{
+  var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - sys_DateTime.yearTicks[0];
+  return rem % sys_DateTime.nsPerSec;
+}
+sys_DateTime.prototype.weekday = function() { return sys_Weekday.values[(this.m_fields >> 28) & 0x7]; }
+sys_DateTime.prototype.timeZone = function() { return this.m_timeZone; }
+sys_DateTime.prototype.dst = function() { return ((this.m_fields >> 31) & 0x1) != 0; }
+sys_DateTime.prototype.timeZoneAbbr = function() { return this.dst() ? this.m_timeZone.dstAbbr(this.year()) : this.m_timeZone.stdAbbr(this.year()); }
+sys_DateTime.prototype.dayOfYear = function() { return sys_DateTime.dayOfYear(this.year(), this.month().m_ordinal, this.day())+1; }
+
+/////////////////////////////////////////////////////////////////////////
+// Locale
+//////////////////////////////////////////////////////////////////////////
+
+sys_DateTime.prototype.toLocale = function(pattern, locale)
+{
+  if (pattern == undefined) pattern = null;
+  if (locale == undefined) locale = null;
+
+  // locale specific default
+  if (pattern == null)
+  {
+//    if (locale == null) locale = Locale.current();
+//    pattern = locale.get("sys", localeKey, "D-MMM-YYYY WWW hh:mm:ss zzz");
+pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
+  }
+
+  // process pattern
+  var s = '';
+  var len = pattern.length;
+  for (var i=0; i<len; ++i)
+  {
+    // character
+    var c = pattern.charAt(i);
+
+    // literals
+    if (c == '\'')
+    {
+      while (true)
+      {
+        ++i;
+        if (i >= len) throw sys_ArgErr.make("Invalid pattern: unterminated literal");
+        c = pattern.charAt(i);
+        if (c == '\'') break;
+        s += c;
+      }
+      continue;
+    }
+
+    // character count
+    var n = 1;
+    while (i+1<len && pattern.charAt(i+1) == c) { ++i; ++n; }
+
+    // switch
+    var invalidNum = false;
+    switch (c)
+    {
+      case 'Y':
+        var year = this.year();
+        switch (n)
+        {
+          case 2:  year %= 100; if (year < 10) s += '0';
+          case 4:  s += year; break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 'M':
+        var mon = this.month();
+        switch (n)
+        {
+          case 4:
+            if (locale == null) locale = Locale.current();
+            s += mon.full(locale);
+            break;
+          case 3:
+            if (locale == null) locale = Locale.current();
+            s += mon.abbr(locale);
+            break;
+          case 2:  if (mon.m_ordinal+1 < 10) s += '0';
+          case 1:  s += mon.m_ordinal+1; break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 'D':
+        var day = this.day();
+        switch (n)
+        {
+          case 2:  if (day < 10) s += '0';
+          case 1:  s += day; break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 'W':
+        var weekday = this.weekday();
+        switch (n)
+        {
+          case 4:
+            if (locale == null) locale = Locale.current();
+            s += weekday.full(locale);
+            break;
+          case 3:
+            if (locale == null) locale = Locale.current();
+            s += weekday.abbr(locale);
+            break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 'h':
+      case 'k':
+        var hour = this.hour();
+        if (c == 'k')
+        {
+          if (hour == 0) hour = 12;
+          else if (hour > 12) hour -= 12;
+        }
+        switch (n)
+        {
+          case 2:  if (hour < 10) s += '0';
+          case 1:  s += hour; break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 'm':
+        var min = this.min();
+        switch (n)
+        {
+          case 2:  if (min < 10) s += '0';
+          case 1:  s += min; break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 's':
+        var sec = this.sec();
+        switch (n)
+        {
+          case 2:  if (sec < 10) s += '0';
+          case 1:  s += sec; break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 'a':
+        switch (n)
+        {
+          case 1:  s += this.hour() < 12 ? "AM" : "PM"; break;
+          default: invalidNum = true;
+        }
+        break;
+
+      case 'f':
+      case 'F':
+        var req = 0, opt = 0; // required, optional
+        if (c == 'F') opt = n;
+        else
+        {
+          req = n;
+          while (i+1<len && pattern.charAt(i+1) == 'F') { ++i; ++opt; }
+        }
+        var frac = this.nanoSec();
+        for (var x=0, tenth=100000000; x<9; ++x)
+        {
+          if (req > 0) req--;
+          else
+          {
+            if (frac == 0 || opt <= 0) break;
+            opt--;
+          }
+          s += Math.floor(frac/tenth);
+          frac %= tenth;
+          tenth /= 10;
+        }
+        break;
+
+      case 'z':
+        var rule = this.m_timeZone.rule(this.year());
+        var dst = this.dst();
+        switch (n)
+        {
+          case 1:
+            var offset = rule.offset;
+            if (dst) offset += rule.dstOffset;
+            if (offset == 0) { s += 'Z'; break; }
+            if (offset < 0) { s += '-'; offset = -offset; }
+            else { s += '+'; }
+            var zh = offset / 3600;
+            var zm = (offset % 3600) / 60;
+            if (zh < 10) s += '0'; s += zh + ':';
+            if (zm < 10) s += '0'; s += zm;
+            break;
+          case 3:
+            s += dst ? rule.dstAbbr : rule.stdAbbr;
+            break;
+          case 4:
+            s += this.m_timeZone.name();
+            break;
+          default:
+            invalidNum = true;
+            break;
+        }
+        break;
+
+      default:
+        if (sys_Int.isAlpha(c.charCodeAt(0)))
+          throw ArgErr.make("Invalid pattern: unsupported char '" + c + "'").val;
+
+        // don't display symbol between ss.FFF if fractions is zero
+        if (i+1<len && pattern.charAt(i+1) == 'F' && this.nanoSec() == 0)
+          break;
+
+        s += c;
+    }
+
+    // if invalid number of characters
+    if (invalidNum)
+      throw sys_ArgErr.make("Invalid pattern: unsupported num of '" + c + "' (x" + n + ")");
+  }
+
+  return s;
+}
 
 //////////////////////////////////////////////////////////////////////////
-// Static Methods
+// Methods
 //////////////////////////////////////////////////////////////////////////
+
+sys_DateTime.prototype.toStr = function()
+{
+  return this.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
+}
 
 sys_DateTime.isLeapYear = function(year)
 {

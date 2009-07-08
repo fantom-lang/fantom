@@ -98,6 +98,12 @@ sys_Date.prototype.year  = function() { return this.m_year; }
 sys_Date.prototype.month = function() { return sys_Month.values[this.m_month]; }
 sys_Date.prototype.day   = function() { return this.m_day; }
 
+sys_Date.prototype.weekday = function()
+{
+  var weekday = (sys_DateTime.firstWeekday(this.m_year, this.m_month) + this.m_day - 1) % 7;
+  return sys_Weekday.values[weekday];
+}
+
 sys_Date.prototype.dayOfYear = function()
 {
   return sys_DateTime.dayOfYear(this.year(), this.m_month, this.day()+1);

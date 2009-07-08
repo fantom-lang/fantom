@@ -31,7 +31,7 @@ with (sys_Pod.$add("sys"))
   $at("DateTime",  "sys::Obj");
   $at("Date",      "sys::Obj");
   $at("Time",      "sys::Obj");
-  // TODO: timezone
+  $at("TimeZone",  "sys::Obj");
   $at("Type",      "sys::Obj");
   $at("Weekday",   "sys::Enum");
   // TODO: this
@@ -76,7 +76,7 @@ with (sys_Pod.$add("sys"))
   $at("Log",       "sys::Obj");
   // TODO: LogLevel
   // TODO: LogRecord
-  // TODO: Locale
+  $at("Locale",    "sys::Obj");
   $at("MimeType",  "sys::Obj");
   // TODO: Process
   // TODO: Regex
