@@ -30,13 +30,13 @@ class Boot : BootScript
     sysLogger := FileLogger { file = scriptDir + `logs/sys.log` }
     Log.addHandler(&sysLogger.writeLogRecord)
 
-    Sys.ns.create(`/homePage`, scriptDir + `index.fan`)
-    Sys.ns.create(`/chrome`,   scriptDir + `chrome.fan`)
+    UriSpace.root.create(`/homePage`, scriptDir + `index.fan`)
+    UriSpace.root.create(`/chrome`,   scriptDir + `chrome.fan`)
 
-    Sys.mount(`/examples`, UriSpace.makeDir(scriptDir + `examples/`))
-    Sys.mount(`/dir`, UriSpace.makeDir(scriptDir + `dir/`))
+    UriSpace.mount(`/examples`, UriSpace.makeDir(scriptDir + `examples/`))
+    UriSpace.mount(`/dir`, UriSpace.makeDir(scriptDir + `dir/`))
     try
-      Sys.mount(`/doc`, UriSpace.makeDir(Sys.homeDir + `doc/`))
+      UriSpace.mount(`/doc`, UriSpace.makeDir(Sys.homeDir + `doc/`))
     catch (Err e)
       log.error("Cannot mount /doc: $e")
   }

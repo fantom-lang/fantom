@@ -30,7 +30,7 @@ public class FanScheme
 
   public Object get(Uri uri, Object base)
   {
-    return Sys.ns().get(uri.pathOnly(), true);
+    return UriSpace.root.get(uri.pathOnly(), true);
   }
 
 }

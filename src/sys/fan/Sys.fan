@@ -22,33 +22,6 @@ final class Sys
   private new make()
 
 //////////////////////////////////////////////////////////////////////////
-// UriSpace
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Get the namespace instance which manages the specified
-  ** uri, or if uri is omitted, then get the root namespace.
-  **
-  static UriSpace ns(Uri? uri := null)
-
-  **
-  ** Mount a namespace under the specified Uri.  All requests
-  ** to process uris contained by the specified uri are routed
-  ** to the namespace instance for processing.  Throw ArgErr if
-  ** the uri is already or mounted by another namespace.  Throw
-  ** ArgErr if the uri isn't path absolute, has a query, or has
-  ** fragment.
-  **
-  static Void mount(Uri uri, UriSpace ns)
-
-  **
-  ** Unmount a namespace which was previously mounted by the
-  ** `mount` method.  Throw UnresolvedErr is uri doesn't directly
-  ** map to a mounted namespace.
-  **
-  static Void unmount(Uri uri)
-
-//////////////////////////////////////////////////////////////////////////
 // Environment
 //////////////////////////////////////////////////////////////////////////
 
