@@ -166,7 +166,7 @@ To create a very simple hello world web application:
   - Create a daemon boot script
   - Configure the web server with a simple pipeline
   - Write a simple weblet
-  - Mount the weblet into the namespace
+  - Mount the weblet into the uri space
 
 Let's look at some example code (this script is available under
 "examples/web/hello.fan"):
@@ -189,7 +189,7 @@ Let's look at some example code (this script is available under
 
     override Void setup()
     {
-      Sys.ns.create(`/homePage`, Hello#)
+      UriSpace.root.create(`/homePage`, Hello#)
     }
   }
 
@@ -212,7 +212,7 @@ some prebuilt steps provided by the [webapp]`docLib::WebApp` framework.
 The 'Hello' class subclasses [Weblet]`docLib::Web#weblet` which is Fan's
 "servlet" API for servicing web requests.  It doesn't do much - sets
 the content type and writes the response text.  Lastly we mount this
-weblet into our namespace as the home page.  [Namespaces]`docLang::Namespaces`
+weblet into our uri space as the home page.  [UriSpaces]`docLang::UriSpaces`
 define how we map URIs to resources.
 
 If you run this script:

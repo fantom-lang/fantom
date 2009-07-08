@@ -10,9 +10,9 @@
 **
 ** UriSpace models a Uri to Obj map.  UriSpaces provide a unified
 ** CRUD (create/read/update/delete) interface for managing objects
-** keyed by a Uri.  The root space is accessed via `Sys.root` provides
+** keyed by a Uri.  The root space is accessed via `UriSpace.root` provides
 ** a thread-safe memory database.  Custom spaces can be mounted
-** into the system via the `Sys.mount` method.
+** into the system via the `UriSpace.mount` method.
 **
 ** See `docLang::UriSpaces` for details.
 **
@@ -57,15 +57,15 @@ abstract const class UriSpace
 
   **
   ** Create a UriSpace which maps Uris to a directory tree.
-  ** The resulting uri space may then be mounted via `Sys.mount`
+  ** The resulting uri space may then be mounted via `UriSpace.mount`
   ** to alias uri space Uris to files within the directory.
   ** Throw ArgErr if dir does not map to an existing directory.
   ** Note that uris will resolve successfully directories without
   ** a trailing slash.
   **
   ** Example:
-  **   Sys.mount(`/foo/`, UriSpace.makeDir(`/pub/`.toFile))
-  **   Sys.ns[`/foo/file.html`]  =>  `/pub/file.html`
+  **   UriSpace.mount(`/foo/`, UriSpace.makeDir(`/pub/`.toFile))
+  **   UriSpace.root[`/foo/file.html`]  =>  `/pub/file.html`
   **
   static UriSpace makeDir(File dir)
 

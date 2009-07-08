@@ -1,5 +1,5 @@
 **************************************************************************
-** title:      Namespaces
+** title:      UriSpaces
 ** author:     Brian Frank
 ** created:    1 Apr 08
 ** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
@@ -8,13 +8,13 @@
 
 Overview [#overview]
 ********************
-**WARNING**: the namespace subsystem is still evolving and
+**WARNING**: the UriSpace subsystem is still evolving and
 will likely have design changes as it gets flushed out
 
 The basics of Uri naming are covered in the `Naming` chapter.  This
 chapter covers the APIs related to managing "fan:" uris.
 
-Fan defines a standard naming system influenced by the
+Fan defines a standard URI naming system influenced by the
 [REST]`http://en.wikipedia.org/wiki/Representational_State_Transfer`
 architecture of the World Wide Web:
   - Resources are represented as Fan objects
@@ -22,66 +22,66 @@ architecture of the World Wide Web:
   - Resources are managed using a small set of "verbs"
   - Resources are transfered between threads safely
 
-The `sys::Namespace` class defines a namespace of Uri to resource
+The `sys::UriSpace` class defines a namespace of Uri to resource
 mappings with a small set of [CRUD]`http://en.wikipedia.org/wiki/Create,_read,_update_and_delete`
 methods:
-  - [Namespace.get]`sys::Namespace.get`: lookup a resource by Uri
-  - [Namespace.create]`sys::Namespace.create`: create a Uri resource mapping
-  - [Namespace.put]`sys::Namespace.create`: update a Uri resource mapping
-  - [Namespace.delete]`sys::Namespace.delete`: delete a Uri resource mapping
+  - [UriSpace.get]`sys::UriSpace.get`: lookup a resource by Uri
+  - [UriSpace.create]`sys::UriSpace.create`: create a Uri resource mapping
+  - [UriSpace.put]`sys::UriSpace.create`: update a Uri resource mapping
+  - [UriSpace.delete]`sys::UriSpace.delete`: delete a Uri resource mapping
 
-Fan's namespace is managed much like a Unix file system.  The namespace
-is managed as a tree of Uri paths.  By default the *root namespace*
-manages everything under "/".  The root namespace implements its CRUD
-interface using a simple memory store.  Alternate namespace implementations
+Fan's uri space is managed much like a Unix file system.  The uri space
+is managed as a tree of Uri paths.  By default the *root uri space*
+manages everything under "/".  The root uri space implements its CRUD
+interface using a simple memory store.  Alternate uri space implementations
 can be mounted to handle branches in the Uri path tree using
-[Sys.mount]`sys::Sys.mount`.
+[UriSpace.mount]`sys::UriSpace.mount`.
 
-Root Namespace [#root]
+Root UriSpace [#root]
 **********************
-By default all Uris within the namespace are managed by the *root
-namespace*.  The root namespace provides a thread safe memory backing
+By default all Uris within the uri space are managed by the *root
+uri space*.  The root uri space provides a thread safe memory backing
 store for resources.  Example:
 
-  Sys.ns.create(`/hello`, "hi")
-  Sys.ns[`/hello`]               => "hi"
-  Sys.ns.put(`/hello`, "hola")
-  Sys.ns[`/hello`]               => "hola"
-  Sys.ns.delete(`/hello`)
-  Sys.ns[`/hello`]               => raises UnresolvedErr
-  Sys.ns.get(`/hello`, false)    => null
+  UriSpace.root.create(`/hello`, "hi")
+  UriSpace.root[`/hello`]               => "hi"
+  UriSpace.root.put(`/hello`, "hola")
+  UriSpace.root[`/hello`]               => "hola"
+  UriSpace.root.delete(`/hello`)
+  UriSpace.root[`/hello`]               => raises UnresolvedErr
+  UriSpace.root.get(`/hello`, false)    => null
 
-In this example the namespace is really just a fancy Uri to Obj map.
-But under the covers the namespace is doing special work to ensure that
+In this example the uri space is really just a fancy Uri to Obj map.
+But under the covers the uri space is doing special work to ensure that
 everything is thread safe.  This allows threads to share information
 safely - this design pattern is sometimes called a *whiteboard*.
 
 In order to ensure thread safety the resources managed by the root
-namespaces must be either [immutable]`Concurrency#immutability` or
+uri space must be either [immutable]`Concurrency#immutability` or
 [serializable]`Serialization`.  If the resource isn't immutable, then
 what you read out is a copy of the object - changes to it aren't
 seen by other threads until it is written back via 'put'.  Consider
 this example:
 
-  Sys.ns.create(`/var`, [0, 1, 2])
-  var := Sys.ns[`/var`]   =>  [0, 1, 2]     // local copy made
-  var.add(3)                                // local copy is changed
-  Sys.ns[`/var`]          =>  [0, 1, 2]     // ns copy is unchanged
-  Sys.ns.put(`/var`, var)                   // save local back to ns
-  Sys.ns[`/var`]          =>  [0, 1, 2, 3]  // ns copy is now changed
+  UriSpace.root.create(`/var`, [0, 1, 2])
+  var := UriSpace.root[`/var`]   =>  [0, 1, 2]     // local copy made
+  var.add(3)                                       // local copy is changed
+  UriSpace.root[`/var`]          =>  [0, 1, 2]     // ns copy is unchanged
+  UriSpace.root.put(`/var`, var)                   // save local back to ns
+  UriSpace.root[`/var`]          =>  [0, 1, 2, 3]  // ns copy is now changed
 
-Custom Namespaces [#custom]
-***************************
-You can create your own subclasses of 'sys::Namespace' to create
+Custom UriSpaces [#custom]
+**************************
+You can create your own subclasses of 'sys::UriSpace' to create
 custom handlers for mapping Uris to resources.  For example this
 is how you typically manage navigation of your data model in flux
 and web applications.
 
 The only method you are required to override is 'get'; most other
 methods will provide a default implementation which throws UnsupportedErr.
-For example to create a namespace which returns the current time:
+For example to create a uri space which returns the current time:
 
-  const class TimeNamespace : Namespace
+  const class TimeUriSpace : UriSpace
   {
     override Obj? get(Uri uri, Bool checked := true)
     {
@@ -91,45 +91,46 @@ For example to create a namespace which returns the current time:
     }
   }
 
-  Sys.mount(`/time`, TimeNamespace.make)
-  echo(Sys.ns[`/time`])        => 2008-04-07T21:47:21.078-04:00 New_York
-  echo(Sys.ns[`/time/year`])   => 2008
-  echo(Sys.ns[`/time/month`])  => apr
+  UriSpace.mount(`/time`, TimeUriSpace())
+  echo(UriSpace.root[`/time`])        => 2008-04-07T21:47:21.078-04:00 New_York
+  echo(UriSpace.root[`/time/year`])   => 2008
+  echo(UriSpace.root[`/time/month`])  => apr
 
 Note the first line of code calles [Uri.relTo]`sys::Uri.relTo`.  We
-mount the TimeNamespace under "/time" - which means it will handle
+mount the TimeUriSpace under "/time" - which means it will handle
 all Uris which begin with "/time".  The uri passed into 'get' is
-absolute - so to make it flexible where TimeNamespace is mounted,
-we always relativize to the [uri]`sys::Namespace.uri` of the namespace
+absolute - so to make it flexible where TimeUriSpace is mounted,
+we always relativize to the [uri]`sys::UriSpace.uri` of the space
 itself.
 
-Dir Namespaces [#dir]
-*********************
-The factory method [Namespace.makeDir]`sys::Namespace.makeDir` creates
-a custom namespace instance which allows you to mount a file system
-directory into the Fan namespace:
+Dir UriSpaces [#dir]
+********************
+The factory method [UriSpace.makeDir]`sys::UriSpace.makeDir` creates
+a custom uri space instance which allows you to mount a file system
+directory into the Fan uri space:
 
-  Sys.mount(`/fandocs`, Namespace.makeDir(Sys.homeDir+`doc/`))
-  Sys.ns[`/fandocs/`]            =>  sys::File for doc directory
-  Sys.ns[`/fandocs/index.html`]  =>  sys::File for doc/index.html
+  UriSpace.mount(`/fandocs`, UriSpace.makeDir(Sys.homeDir+`doc/`))
+  UriSpace.root[`/fandocs/`]            =>  sys::File for doc directory
+  UriSpace.root[`/fandocs/index.html`]  =>  sys::File for doc/index.html
 
 Mounting [#mounting]
 ********************
-When a custom namespace is mounted via [Sys.mount]`sys::Sys.mount`
+When a custom uri space is mounted via [UriSpace.mount]`sys::UriSpace.mount`
 it assumes responsibility for all the Uri paths under it.  If no
-custom namespaces are responsible for a given Uri, then responsbility
-always defaults to the [root namespace]`#root`.  You can query which
-Namespace instance is responsible for a given Uri using
-the [Sys.ns]`sys::Sys.ns` method:
+custom uri spaces are responsible for a given Uri, then responsbility
+always defaults to the [root uri space]`#root`.  You can query which
+UriSpace instance is responsible for a given Uri using the
+[UriSpace.find]`sys::UriSpace.find` method:
 
-  Sys.mount(`/apple`, x)
-  Sys.mount(`/a`,     y)
-  Sys.mount(`/a/b/c`, z)
+  UriSpace.mount(`/apple`, x)
+  UriSpace.mount(`/a`,     y)
+  UriSpace.mount(`/a/b/c`, z)
 
-  Sys.ns(`/app`)        => sys::RootNamespace
-  Sys.ns(`/apple`)      => x
-  Sys.ns(`/a`)          => y
-  Sys.ns(`/a/b`)        => y
-  Sys.ns(`/a/b/chump`)  => y
-  Sys.ns(`/a/b/c`)      => z
-  Sys.ns(`/a/b/c/d`)    => z
+  UriSpace.find(`/app`)        => sys::RootUriSpace
+  UriSpace.find(`/apple`)      => x
+  UriSpace.find(`/a`)          => y
+  UriSpace.find(`/a/b`)        => y
+  UriSpace.find(`/a/b/chump`)  => y
+  UriSpace.find(`/a/b/c`)      => z
+  UriSpace.find(`/a/b/c/d`)    => z
+

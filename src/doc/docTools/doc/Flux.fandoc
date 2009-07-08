@@ -34,7 +34,7 @@ navigation history just like a browser.
 
 Unlike a normal browser, we leverage Fan's built-in [naming]`docLang::Naming`
 framework.  This means we can use Flux to browser any Uri mapped into
-the Fan's namespace including the file system, "fan:" namespaces, or any
+the Fan's uri space including the file system, "fan:" namespaces, or any
 of the protocols plugged into Fan via 'UriScheme'.
 
 When a user navigates to a uri, the uri is resolved into a Fan object

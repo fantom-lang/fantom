@@ -30,8 +30,8 @@ The Fan model of concurrency is based upon the following principles:
  - **Message Passing**: the actor  API is built around the idea
    of [passing messages]`Actors` between asynchronous workers;
 
- - **REST**: Fan applications are built using a [namespace]`Namespaces`
-   of resources identified with URIs.  This namespace provides a
+ - **REST**: Fan applications are built using a [UriSpace]`UriSpaces`
+   of resources identified with URIs.  UriSpaces provides a
    *whiteboard* mechanism for multiple threads to share state.  You
    might think of Fan's REST model as coarsely grained transactional
    memory (although it is much more than that).
@@ -80,7 +80,7 @@ You can check if an object is immutable via the
 
 Shared Objects [#sharedObjects]
 *******************************
-Both message passing and namespace resources provide a mechanism to share
+Both message passing and UriSpace resources provide a mechanism to share
 objects between threads.  For example, specific APIs which will pass an
 object to another thread include:
 
@@ -88,8 +88,9 @@ object to another thread include:
   - [Actor.sendLater]`sys::Actor.sendLater`
   - [Actor.sendWhenDone]`sys::Actor.sendWhenDone`
   - [Future.get]`sys::Future.get`
-  - [Namespace.create]`sys::Namespace.create`
-  - [Namespace.put]`sys::Namespace.put`
+  - [UriSpace.get]`sys::UriSpace.get`
+  - [UriSpace.create]`sys::UriSpace.create`
+  - [UriSpace.put]`sys::UriSpace.put`
 
 All of these APIs use the same pattern to safely pass an object
 between threads.  If an object is immutable then we can safely pass
