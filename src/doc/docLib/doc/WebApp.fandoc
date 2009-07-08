@@ -15,7 +15,7 @@ The [webapp]`webapp::index` pod defines a framework for building web
 applications by assembling prebuilt [WebSteps]`web::WebStep`:
   - [FindResourceStep]`#findResourceStep`: maps the request URI
     to a Fan obj which represents a resource in the VM's
-    local [namespace]`docLang::Namespaces`
+    local [UriSpace]`docLang::UriSpaces`
   - [FindViewStep]`#findViewStep`: find a suitable Weblet which
     can service the request and provide a representation of
     the resource
@@ -31,7 +31,7 @@ mapping the web request URI to a Fan object which represents the
 the resource to service.  This object can be anything, but is typically
 a File or an object in the domain model (such as a row in the database).
 In most cases, the web request URI is mapped directly to the local
-[namespace]`docLang::Namespaces` via 'Sys.ns'.  But 'FindResourceStep'
+[UriSpace]`docLang::UriSpaces`.  But 'FindResourceStep'
 also provides the following features:
   - Defines the home page resource
   - Searches for file extensions
@@ -49,8 +49,8 @@ Let's take an example:
   }
 
   // setup
-  Sys.ns.create(`/homePage`, scriptDir + `home.html`)
-  Sys.mount(`/dir`, Namespace.makeDir(scriptDir + `dir/`))
+  UriSpace.root.create(`/homePage`, scriptDir + `home.html`)
+  UriSpace.mount(`/dir`, UriSpace.makeDir(scriptDir + `dir/`))
 
   // application directory
   boot.fan

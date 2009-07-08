@@ -37,7 +37,7 @@
   [`Concurrency`,   "model for sharing data between threads"],
   [`Actors`,        "message passing concurrency"],
   [`Naming`,        "URI naming system"],
-  [`Namespaces`,    "Using and creating custom namespaces"],
+  [`UriSpaces`,     "Using and creating custom URI namespaces"],
   [`TypeDatabase`,  "indexing and querying installed types"],
   [`Logging`,       "logging APIs"],
   [`Localization`,  "localization APIs"],

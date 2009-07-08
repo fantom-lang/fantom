@@ -48,7 +48,7 @@ Uri Schemes [#uriSchemes]
 The `sys::UriScheme` class is used to plug in handling for new
 Uri schemes.  The standard fan runtime provides support for the
 following schemes:
-  - **fan**: resolves to the 'Namespace' APIs (discussed below)
+  - **fan**: resolves to the 'UriSpace' APIs (discussed below)
   - **file**: resolves to 'File' instances on the local file system
   - **http**: not done yet, but coming soon...
   - **flux**: application specific uris for [flux]`docTools::Flux` (like
@@ -69,11 +69,11 @@ to implement uri to object resolution.
 Fan Scheme [#fanScheme]
 ***********************
 The Fan runtime includes support for the "fan:" scheme which resolves
-Uris via the [Namespace]`Namespaces` API.  The "fan:" scheme is designed
+Uris via the [UriSpace]`UriSpaces` API.  The "fan:" scheme is designed
 to name everything of interest inside the Fan VM.  You can use the
-'Namespace' API to plug in your own application specific name mappings:
+'UriSpace' API to plug in your own application specific name mappings:
 
-  Sys.ns.create(`/myapp/hello`, "Hi")
+  UriSpace.root.create(`/myapp/hello`, "Hi")
   `fan:/myapp/hello`.get => "Hi"
 
 Predefined Sys Names [#sysNames]

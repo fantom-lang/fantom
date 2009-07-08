@@ -24,16 +24,16 @@ We can't promise that we won't make breaking language or API changes.  We
 need the freedom to change things as we learn what does and does not work.
 However in practice, we've made very few breaking changes over the past
 year.  Be aware of APIs which are still evolving such as concurrency,
-namespaces, and webapp - these are the most likely to change.
+uri spaces, webapp and javascript support - these are the most likely to change.
 
 New Features [#newFeatures]
 ***************************
 The list of features on our radar for the next year or so (in no
 particular order):
 
-Namespaces [#namespaces]
+UriSpaces [#uriSpaces]
 ========================
-The namespace APIs are a work in progress.  These APIs and the
+The uri space APIs are a work in progress.  These APIs and the
 design will evolve as we plug new implementations into this framework
 such as HTTP-REST and cloud computing.
 
