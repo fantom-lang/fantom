@@ -10,7 +10,7 @@
 **
 ** Effect provides visual effects on a DOM element.
 **
-@javascript
+@js
 class Effect
 {
 

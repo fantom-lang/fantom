@@ -10,7 +10,7 @@
 **
 ** HttpReq models the request side of an XMLHttpRequest instance.
 **
-@javascript
+@js
 class HttpReq
 {
 

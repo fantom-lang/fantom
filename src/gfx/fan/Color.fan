@@ -11,8 +11,7 @@
 ** and blue component between 0 and 255.  Color is also
 ** a solid `Brush`.
 **
-@simple
-@javascript
+@js @simple
 const class Color : Brush
 {
 

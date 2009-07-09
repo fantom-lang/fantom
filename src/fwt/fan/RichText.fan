@@ -12,7 +12,7 @@ using gfx
 ** RichText is used to view and edit text styled with
 ** different fonts and colors.
 **
-@javascript
+@js
 class RichText : TextWidget
 {
 
@@ -186,7 +186,7 @@ class RichText : TextWidget
 **
 ** RichTextModel models the document and styling of a `RichText` document.
 **
-@javascript
+@js
 abstract class RichTextModel
 {
 
@@ -330,8 +330,7 @@ abstract class RichTextModel
 ** Defines the font and color styling of a text
 ** segment in a `RichTextModel`.
 **
-@serializable
-@javascript
+@js @serializable
 const class RichTextStyle
 {
   **
@@ -376,7 +375,7 @@ const class RichTextStyle
 **
 ** Defines how to paint the underline of a RichText segment.
 **
-@javascript
+@js
 enum RichTextUnderline
 {
   none,

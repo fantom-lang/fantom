@@ -25,7 +25,7 @@ class Build : BuildPod
     javaDirs       = [`java/`]
     //dotnetDirs   = [`dotnet/`]
     hasJavascript  = true
-    javascriptDirs = [`javascript/`]
+    javascriptDirs = [`js/`]
     resDirs        = [`locale/`, `res/javafx/`]
     includeSrc     = true
   }

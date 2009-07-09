@@ -11,7 +11,7 @@ using compiler
 **
 ** FindTypes finds the types to actually compile. If the 'force'
 ** flag is set, all types are forced to be compiled.  Otherwise
-** only types that have the '@javascript' facet set will be
+** only types that have the '@js' facet set will be
 ** compiled.
 **
 class FindTypes : JsCompilerStep
@@ -38,7 +38,7 @@ class FindTypes : JsCompilerStep
     compiler.toCompile = types.findAll |def|
     {
       if (compiler.force) return true
-      if (def.facets?.get("javascript")?->toStr == "@javascript=true") return true
+      if (def.facets?.get("js")?->toStr == "@js=true") return true
       return false
     }
 

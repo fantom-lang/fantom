@@ -9,8 +9,7 @@
 **
 ** Image represents a graphical image.
 **
-@simple
-@javascript
+@js @simple
 const class Image
 {
 

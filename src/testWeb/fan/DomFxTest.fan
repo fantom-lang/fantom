@@ -164,7 +164,7 @@ class DomFxTest : Widget
   }
 }
 
-@javascript
+@js
 class FxTestClient
 {
 

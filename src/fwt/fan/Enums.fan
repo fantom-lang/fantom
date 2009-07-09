@@ -13,7 +13,7 @@
 **
 ** Horizontal alignment: left, center, right, or fill.
 **
-@javascript
+@js
 enum Halign
 {
   left,
@@ -29,7 +29,7 @@ enum Halign
 **
 ** Vertical alignment: top, center, bottom, or fill.
 **
-@javascript
+@js
 enum Valign
 {
   top,
@@ -45,7 +45,7 @@ enum Valign
 **
 ** Horizontal or vertical.
 **
-@javascript
+@js
 enum Orientation
 {
   horizontal,
@@ -59,7 +59,7 @@ enum Orientation
 **
 ** Enum for `Command.mode`.
 **
-@javascript
+@js
 enum CommandMode
 {
   push,
@@ -83,7 +83,7 @@ enum CommandMode
 **
 ** Enum for `Button.mode`.
 **
-@javascript
+@js
 enum ButtonMode
 {
   check,
@@ -100,7 +100,7 @@ enum ButtonMode
 **
 ** Enum for `MenuItem.mode`.
 **
-@javascript
+@js
 enum MenuItemMode
 {
   check,
@@ -117,7 +117,7 @@ enum MenuItemMode
 **
 ** Enum for `Window.mode`.
 **
-@javascript
+@js
 enum WindowMode
 {
   modeless,
@@ -133,7 +133,7 @@ enum WindowMode
 **
 ** Enum for `FileDialog.mode`.
 **
-@javascript
+@js
 enum FileDialogMode
 {
   ** Display open dialog for single file

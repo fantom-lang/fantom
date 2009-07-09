@@ -61,7 +61,7 @@ class CallTest : Widget
   Void gamma() { body.w("CallTest#gamma") }
 }
 
-@javascript
+@js
 class CallTestClient
 {
   static Void testPost(Uri uri)

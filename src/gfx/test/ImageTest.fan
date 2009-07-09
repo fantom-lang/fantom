@@ -9,7 +9,7 @@
 **
 ** ImageTest
 **
-@javascript
+@js
 class ImageTest : Test
 {
 

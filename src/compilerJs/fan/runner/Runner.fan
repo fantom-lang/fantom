@@ -11,7 +11,7 @@ using [java] javax.script
 
 **
 ** Runner takes a Fan qname and attempts to run the
-** matching Javascript implemenation.
+** matching JavaScript implemenation.
 **
 class Runner
 {

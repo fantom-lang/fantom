@@ -10,7 +10,7 @@
 **
 ** Elem models a DOM element object.
 **
-@javascript
+@js
 class Elem
 {
 

@@ -10,7 +10,7 @@
 **
 ** HttpRes models the response side of an XMLHttpRequest instance.
 **
-@javascript
+@js
 class HttpRes
 {
 

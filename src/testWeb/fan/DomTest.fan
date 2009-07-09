@@ -73,7 +73,7 @@ class DomTest : Widget
   }
 }
 
-@javascript
+@js
 class TestClient
 {
   Void testAttrs()

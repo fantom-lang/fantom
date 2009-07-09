@@ -11,7 +11,7 @@ using gfx
 **
 ** MenuItem is an individual item on a Menu.
 **
-@javascript
+@js
 class MenuItem : Widget
 {
 
