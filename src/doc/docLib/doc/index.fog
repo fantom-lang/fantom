@@ -21,6 +21,6 @@
   [`Web`,       "web client and server APIs"],
   [`WebApp`,    "web application framework"],
   [`WebWidget`, "web application widgets"],
-  [`WebAppClient`, "client side application framework"],
+  [`Dom`,       "browser DOM APIs"],
   [`Wisp`,      "Fan's built-in web server"],
 ]

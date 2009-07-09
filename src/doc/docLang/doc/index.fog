@@ -30,6 +30,7 @@
   [`JavaFFI`,       "Java foreign function interface"],
   [`DotnetFFI`,     ".NET foreign function interface"],
   [`Natives`,       "implementing methods and fields in Java and C# code"],
+  [`JavaScript`,    "compiling to JavaScript"],
 "Advanced",
   [`Deployment`,    "how to deploy pods and applications"],
   [`Serialization`, "reading/writing objects"],
