@@ -95,17 +95,20 @@ abstract class BuildPod : BuildScript
   Uri[]? dotnetLibs
 
   **
-  ** If true compile any Types with the '@javascript' facet into
-  ** Javascript source.
+  ** If true compile any Types with the '@js' facet into JavaScript source.
   **
-  Bool hasJavascript
+// TODO FIXIT
+//  Bool jsCompile
+Bool hasJavascript
 
   **
   ** List of Uris relative to `scriptDir` of directories containing
-  ** the Javascript source files to include for native Javascript
+  ** the JavaScript source files to include for native JavaScript
   ** support.
   **
-  Uri[]? javascriptDirs
+// TODO FIXIT
+//  Uri[]? jsDirs
+Uri[]? javascriptDirs
 
   **
   ** Include the full set of source code in the pod file.
@@ -347,20 +350,20 @@ abstract class BuildPod : BuildScript
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Javascript
+// JavaScript
 //////////////////////////////////////////////////////////////////////////
 
-  @target="compile Fan source to Javasript"
-  virtual Void javascript()
+  @target="compile Fan source to JavaScript"
+  virtual Void js()
   {
     if (!hasJavascript) return
 
-    log.info("javascript [$podName]")
+    log.info("js [$podName]")
     log.indent
 
     // env
-    jsDirs := resolveDirs(javascriptDirs)
-    jsTemp := scriptDir + `temp-javascript/`
+    nativeDirs := resolveDirs(javascriptDirs)
+    jsTemp := scriptDir + `temp-js/`
 
     // start with a clean directory
     Delete.make(this, jsTemp).run
@@ -370,7 +373,7 @@ abstract class BuildPod : BuildScript
     out := jsTemp.createFile("${podName}.js").out
     jsc := CompileJs(this)
     jsc.out = out
-    jsc.nativeDirs = jsDirs
+    jsc.nativeDirs = nativeDirs
     jsc.run
     out.close
 
@@ -397,7 +400,7 @@ abstract class BuildPod : BuildScript
     compile(false)
     javaNative
     dotnetNative
-    javascript
+    js
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -411,7 +414,7 @@ abstract class BuildPod : BuildScript
     compile(true)
     javaNative
     dotnetNative
-    javascript
+    js
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -9,7 +9,7 @@
 using compiler
 
 **
-** Generates a Javascript source file from a TypeDef AST.
+** Generates a JavaScript source file from a TypeDef AST.
 **
 class JsWriter : CompilerSupport
 {
@@ -903,8 +903,8 @@ if (c != null)
   }
 
   **
-  ** Return the Javascript qname for this TypeDef.
-  ** The Javascript qname is <pod>_<type>:
+  ** Return the JavaScript qname for this TypeDef.
+  ** The JavaScript qname is <pod>_<type>:
   **
   **   foo::Bar  ->  foo_Bar
   **

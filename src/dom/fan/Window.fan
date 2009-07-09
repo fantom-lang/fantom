@@ -10,7 +10,7 @@
 **
 ** Window models the DOM window object.
 **
-@javascript
+@js
 class Window
 {
 

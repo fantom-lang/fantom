@@ -12,7 +12,7 @@ using gfx
 ** Window is the base class for widgets which represent
 ** top level windows.
 **
-@javascript
+@js
 class Window : ContentPane
 {
 

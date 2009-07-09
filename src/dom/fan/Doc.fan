@@ -10,7 +10,7 @@
 **
 ** Doc models the DOM document object.
 **
-@javascript
+@js
 class Doc
 {
 

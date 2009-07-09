@@ -11,7 +11,7 @@ using gfx
 **
 ** Table displays grid of rows and columns.
 **
-@javascript
+@js
 class Table : Widget
 {
 
@@ -126,7 +126,7 @@ class Table : Widget
 **
 ** TableModel models the data of a table widget.
 **
-@javascript
+@js
 mixin TableModel
 {
 

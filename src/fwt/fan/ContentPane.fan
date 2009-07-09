@@ -12,8 +12,7 @@ using gfx
 ** ContentPane is the base class for panes which only
 ** contain one child widget called 'content'.
 **
-@collection=false
-@javascript
+@js @collection=false
 class ContentPane : Pane
 {
 

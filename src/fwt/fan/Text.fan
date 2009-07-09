@@ -9,7 +9,7 @@
 **
 ** Text is used to enter and modify text.
 **
-@javascript
+@js
 class Text : TextWidget
 {
 

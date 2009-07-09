@@ -10,7 +10,7 @@
 **
 ** Event models the DOM event object.
 **
-@javascript
+@js
 class Event
 {
 

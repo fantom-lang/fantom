@@ -11,7 +11,7 @@ using [java] javax.script
 
 **
 ** TestRunner is the command line tool to run Fan unit tests
-** against their Javascript implementations.
+** against their JavaScript implementations.
 **
 class TestRunner
 {

@@ -9,7 +9,7 @@
 using compiler
 
 **
-** Fan source to Javascript source compiler.
+** Fan source to JavaScript source compiler.
 **
 abstract class JsCompilerStep : CompilerStep
 {

@@ -13,7 +13,7 @@ using gfx
 ** text and/or an image.  Buttons can also be used as the
 ** children of a `ToolBar`.
 **
-@javascript
+@js
 class Button : Widget
 {
 

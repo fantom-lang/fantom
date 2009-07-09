@@ -10,7 +10,7 @@
 ** SashPane lays out its children in a row or column with
 ** a sash control between each one to allow resizing.
 **
-@javascript
+@js
 class SashPane : Widget
 {
 

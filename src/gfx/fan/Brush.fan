@@ -11,7 +11,7 @@
 **   - `Color` is a solid brush
 **   - `Gradient` used to paint a color gradient
 **
-@javascript
+@js
 mixin Brush
 {
 }
@@ -23,7 +23,7 @@ mixin Brush
 **
 ** Fills a shape using a two color linear gradient.
 **
-@javascript
+@js
 const class Gradient : Brush
 {
 

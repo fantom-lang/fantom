@@ -15,7 +15,7 @@ using gfx
 ** TODO: this API going to change, most likely there will be a
 **   switch to per col/per row configuration
 **
-@javascript
+@js
 class GridPane : Pane
 {
 
@@ -169,7 +169,7 @@ class GridPane : Pane
   }
 }
 
-@javascript
+@js
 internal class GridPaneSizes
 {
   new make(GridPane grid, Widget[] kids)

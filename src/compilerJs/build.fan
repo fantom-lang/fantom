@@ -19,7 +19,7 @@ class Build : BuildPod
   {
     podName     = "compilerJs"
     version     = globalVersion
-    description = "Fan to Javascript Compiler"
+    description = "Fan to JavaScript Compiler"
     depends     = ["sys 1.0", "compiler 1.0", "build 1.0"]
     srcDirs     = [`fan/`, `fan/steps/`, `fan/runner/`]
     includeSrc  = true

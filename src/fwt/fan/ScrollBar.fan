@@ -12,7 +12,7 @@
 ** rather they are accessed widgets which support scrolling via
 ** 'hbar' and 'vbar'.
 **
-@javascript
+@js
 class ScrollBar : Widget
 {
 
