@@ -1,5 +1,5 @@
 **************************************************************************
-** title:      WebAppClient
+** title:      Dom
 ** author:     Andy Frank
 ** created:    17 Apr 09
 ** copyright:  Copyright (c) 2009, Brian Frank and Andy Frank
@@ -8,54 +8,12 @@
 
 Overview [#overview]
 ********************
-**WARNING**: the webappClient framework is still an early prototype, so
-will be going through many changes during development
+**WARNING**: the dom API is still an early prototype, so will be going
+through many changes during development
 
-The webappClient framework is composed of two parts.  One is a
-[compiler]`compilerJs::index` that compiles Fan source code to
-Javascript source code.  The other is a set of Fan [APIs]`webappClient::index`
-that model the client-side browser APIs (the DOM, XmlHttpRequest, etc).
-
-Compiling to Javascript [#compileToJavascript]
-**********************************************
-
-The build tools have built-in support for compiling Fan source to Javascript.
-In order to compile to Javascript, you'll need to mark each type you want
-compiled with the '@javascript' facet.  Then you'll need to specifiy in your
-build script that you want the Javascript compiled:
-
-  @javascript
-  class FooClient
-  {
-    Void onClick(Elem elem) { Window.alert(elem) }
-  }
-
-  class Build : BuildPod
-  {
-    override Void setup()
-    {
-      ...
-      hasJavascript = true
-    }
-  }
-
-By convention, code that is meant to run in the browser is suffixed
-with 'Client' (webappClient, FooClient, etc).
-
-Naturally, the full Fan API is not available in the browser.  The 'sys' API
-will be eventually be implemented as much as possible (though there is a ways
-to go here).  However the compiler is not designed to account for Javascript
-implementations.  So if a Fan API has not been implemented in Javascript, it
-will result in a runtime error.
-
-
-Client API [#clientAPI]
-***********************
-
-To maintain consistency across browsers, and keep consistentency with the
-rest of the Fan library, webappClient includes a set of
-[APIs]`webappClient::index` that wrap the native browser versions.  For the
-most part, these map one-to-one:
+The [dom]`dom::index` pod provides a framework for interoperating with
+the browser DOM and related browser APIs.  For the most part, these map
+one-to-one:
 
   Browser           Fan
   --------------    ---------------
@@ -125,7 +83,7 @@ Elem [#elem]
 XmlHttpRequest [#xhr]
 =====================
 
-The [HttpReq]`webappClient::HttpReq` object is used to make background HTTP
+The [HttpReq]`dom::HttpReq` object is used to make background HTTP
 requests from the browser.  For both sync and async requests, the response
 is passed to you in the callback closure:
 
@@ -135,7 +93,7 @@ is passed to you in the callback closure:
   }
 
 If you are submitting form values, you can use
-[sendForm]`webappClient::HttpReq.sendForm` to automatically encode the
+[sendForm]`dom::HttpReq.sendForm` to automatically encode the
 values as a form submission, and set the Content-Type to
 'application/form-url-encoded':
 
@@ -147,7 +105,7 @@ values as a form submission, and set the Content-Type to
 Effects [#effects]
 ==================
 
-Modeled after [jQuery]`http://jquery.com/`, the [Effect]`webappClient::Effect`
+Modeled after [jQuery]`http://jquery.com/`, the [Effect]`dom::Effect`
 object allows an element to be animated, such as sliding it down, fading in,
 or transitioning between colors.  Common effects can be applied directly using
 a built-in method:
@@ -167,7 +125,7 @@ a built-in method:
   elem.effect.fadeTo(0.75, 200ms)
 
 Arbitrary animations can be applied using the
-[animate]`webappClient::Effect.animate` method:
+[animate]`dom::Effect.animate` method:
 
   // move elem diagonally down 100px
   elem.effect.animate(["left":"100px", "top":"100px"], 250ms)
