@@ -36,7 +36,10 @@ class Evaluator
   {
     // generate source for class which maps
     // local variables to scope map
-    s := StrBuf.make.add("class FanshEval {\n")
+    s := StrBuf()
+    shell.usings.each |u| { s.add(u).add("\n") }
+
+    s.add("class FanshEval {\n")
     s.add("new make(Str:Obj s) { _scope = s }\n")
     s.add("Str:Obj? _scope\n")
     s.add("Obj? _eval() {\n")
