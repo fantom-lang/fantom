@@ -77,14 +77,20 @@ class Shell
         help
         return true
       case "clear":
-        scope.clear
+        clear
         return true
       case "scope":
         dumpScope
         return true
-      default:
-        return false
     }
+
+    if (line.startsWith("using "))
+    {
+      addUsing(line)
+      return true
+    }
+
+    return false
   }
 
   **
@@ -105,9 +111,19 @@ class Shell
     out.printLine("Commands:")
     out.printLine("  quit, exit, bye   exit shell")
     out.printLine("  ?, help, usage    help summary")
-    out.printLine("  clear             clear the local variables")
-    out.printLine("  scope             dump the local variables")
+    out.printLine("  clear             clear the using imports and local variables")
+    out.printLine("  scope             dump the using imports and local variables")
+    out.printLine("  using x           import pod x into namespace (any valid using stmt allowed)")
     out.printLine
+  }
+
+  **
+  ** Clear the environment
+  **
+  Void clear()
+  {
+    usings.clear
+    scope.clear
   }
 
   **
@@ -116,12 +132,28 @@ class Shell
   Void dumpScope()
   {
     out.printLine
-    out.printLine("Current Scope:")
-    scope.values.sort.each |Var v|
-    {
-      out.printLine("  $v.of $v.name = $v.val")
-    }
+    out.printLine("Current Usings:")
+    usings.each |u| { out.printLine("  $u") }
     out.printLine
+    out.printLine("Current Scope:")
+    scope.values.sort.each |v| { out.printLine("  $v.of $v.name = $v.val") }
+    out.printLine
+  }
+
+  **
+  ** Add using statement after we
+  **
+  Void addUsing(Str line)
+  {
+    try
+    {
+      s := line["using ".size..-1]
+      if (s.contains(" as ")) s= s[0..<s.index(" as")]
+      if (s.contains("::")) Type.find(s); else Pod.find(s)
+      echo("Add using: $line")
+      usings.add(line)
+    }
+    catch (Err e) echo("  Invalid using: $e")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -142,6 +174,7 @@ class Shell
   internal Bool isAlive := true
   internal Int evalCount := 0
   internal Str:Var scope := Str:Var[:]
+  internal Str[] usings := Str[,]
 
 }
 
