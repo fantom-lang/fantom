@@ -27,7 +27,6 @@ abstract class BuildScript
   **
   new make()
   {
-    log = BuildLog.make
     initEnv
     try
     {
@@ -45,6 +44,9 @@ abstract class BuildScript
 //////////////////////////////////////////////////////////////////////////
 // Env
 //////////////////////////////////////////////////////////////////////////
+
+  ** Log used for error reporting and tracing
+  BuildLog log := BuildLog()
 
   ** The source file of this script
   const File scriptFile := File.make(type->sourceFile.toStr.toUri)
@@ -486,9 +488,6 @@ abstract class BuildScript
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  ** Log used for error reporting and tracing
-  BuildLog log
 
   ** Targets available on this script (see `makeTargets`)
   readonly Target[] targets := Target#.emptyList
