@@ -105,8 +105,10 @@ internal const class WispActor : Actor
   **
   Bool isPersistent(WispReq req)
   {
-    return req.headers.get("Connection", "").lower != "close" &&
-           req.version.minor > 0
+    conn := req.headers.get("Connection", "")
+    if (conn.equalsIgnoreCase("Keep-Alive")) return true
+    if (conn.equalsIgnoreCase("Close")) return false
+    return req.version.minor > 0
   }
 
 //////////////////////////////////////////////////////////////////////////
