@@ -71,6 +71,46 @@ class FuncTest : Test
   Void invoke(|Int a, Int b| cb) { cb(3, 4) }
 
 //////////////////////////////////////////////////////////////////////////
+// Retype
+//////////////////////////////////////////////////////////////////////////
+
+  Void testRetype()
+  {
+    x := |x,y->Obj?| { "$x, $y" }
+    verifyEq(x.type.signature, "|sys::Obj?,sys::Obj?->sys::Obj?|")
+    verifyEq(x(3, 4), "3, 4")
+
+    x = x.retype(|Int,Int?->Str|#)
+    verifyEq(x.type.signature, "|sys::Int,sys::Int?->sys::Str|")
+    verifyEq(x(3, 4), "3, 4")
+
+    y := &Str.plus
+    verifyEq(y.type.signature, "|sys::Str,sys::Obj?->sys::Str|")
+    verifyEq(y.method, Str#plus)
+    y = y.retype(|Str,Int->Str|#)
+    verifyEq(y.type.signature, "|sys::Str,sys::Int->sys::Str|")
+    verifyEq(y.method, Str#plus)
+    verifyEq(y("x", 5), "x5")
+    verifyEq(y.callOn("x", [5]), "x5")
+    verifyEq(y.callList(["x", 5]), "x5")
+    verifyEq(y.call("x", 5), "x5")
+    verifyEq(((Func)y).call("x", 5, "foo"), "x5")
+
+    z := |a,b,c,d,e,f,g,h->Str| { "$a$b$c$d$e$f$g$h" }
+    verifyEq(z.isImmutable, true)
+    zSig := |Str a,Str b,Str c,Str d,Str e,Str f,Str g,Str h->Str|#
+    verifyNotEq(z.type, zSig)
+    z = z.retype(zSig)
+    verifyEq(z.isImmutable, true)
+    verifyEq(z.type, zSig)
+    verifyEq(z("a", "b", "c", "d", "e", "f", "g", "h"), "abcdefgh")
+    verifyEq(z.callOn("a", ["b", "c", "d", "e", "f", "g", "h"]), "abcdefgh")
+    verifyEq(z.callList(["a", "b", "c", "d", "e", "f", "g", "h"]), "abcdefgh")
+
+    verifyErr(ArgErr#) { z.retype(Str#) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Curry Calls
 //////////////////////////////////////////////////////////////////////////
 

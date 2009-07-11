@@ -98,9 +98,10 @@ public abstract class Func
 
     public final Object callOn(Object obj, List args)
     {
-      List flat = args.dup();
-      flat.insert(0L, obj);
-      return callList(flat);
+      Object[] array = new Object[args.sz()+1];
+      array[0] = obj;
+      args.copyInto(array, 1, args.sz());
+      return callList(new List(Sys.ObjType, array));
     }
 
     FuncType type;
@@ -270,6 +271,43 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f) { throw tooFewArgs(6); }
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { throw tooFewArgs(7); }
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { throw tooFewArgs(8); }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Retype
+//////////////////////////////////////////////////////////////////////////
+
+  public final Func retype(Type t)
+  {
+    try
+    {
+      return new Wrapper((FuncType)t, this);
+    }
+    catch (ClassCastException e)
+    {
+      throw ArgErr.make("Not a Func type: " + t).val;
+    }
+  }
+
+  static class Wrapper extends Func
+  {
+    Wrapper(FuncType t, Func orig) { super(t); this.type = t; this.orig = orig; }
+    public Type type()  { return type; }
+    public final boolean isImmutable() { return orig.isImmutable(); }
+    public final Method method() { return orig.method(); }
+    public final Object callOn(Object target, List args) { return orig.callOn(target, args); }
+    public final Object callList(List args) { return orig.callList(args); }
+    public final Object call() { return orig.call(); }
+    public final Object call(Object a) { return orig.call(a); }
+    public final Object call(Object a, Object b)  { return orig.call(a, b); }
+    public final Object call(Object a, Object b, Object c) { return orig.call(a, b, c); }
+    public final Object call(Object a, Object b, Object c, Object d) { return orig.call(a, b, c, d); }
+    public final Object call(Object a, Object b, Object c, Object d, Object e) { return orig.call(a, b, c, d, e); }
+    public final Object call(Object a, Object b, Object c, Object d, Object e, Object f) { return orig.call(a, b, c, d, e, f); }
+    public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g) { return orig.call(a, b, c, d, e, f, g); }
+    public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return orig.call(a, b, c, d, e, f, g, h); }
+    FuncType type;
+    Func orig;
   }
 
 //////////////////////////////////////////////////////////////////////////
