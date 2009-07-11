@@ -108,6 +108,14 @@ final class Func
   Func curry(Obj?[] args)
 
   **
+  ** Return a new function which wraps this function but with
+  ** a different reflective type signature.  No verification is
+  ** done that this function actually conforms to new signature.
+  ** Throw ArgErr if t isn't a parameterized function type.
+  **
+  Func retype(Type t)
+
+  **
   ** If this function is immutable then return this,
   ** otherwise throw NotImmutableErr.
   **

@@ -268,6 +268,43 @@ namespace Fan.Sys
     }
 
   //////////////////////////////////////////////////////////////////////////
+  // Retype
+  //////////////////////////////////////////////////////////////////////////
+
+    public Func retype(Type t)
+    {
+      try
+      {
+        return new Wrapper((FuncType)t, this);
+      }
+      catch (System.InvalidCastException)
+      {
+        throw ArgErr.make("Not a Func type: " + t).val;
+      }
+    }
+
+    internal class Wrapper : Func
+    {
+      internal Wrapper(FuncType t, Func orig) : base(t) { m_type = t; m_orig = orig; }
+      public override Type type()  { return m_type; }
+      public override bool isImmutable() { return m_orig.isImmutable(); }
+      public override Method method() { return m_orig.method(); }
+      public override object callOn(object target, List args) { return m_orig.callOn(target, args); }
+      public override object callList(List args) { return m_orig.callList(args); }
+      public override object call() { return m_orig.call(); }
+      public override object call(object a) { return m_orig.call(a); }
+      public override object call(object a, object b)  { return m_orig.call(a, b); }
+      public override object call(object a, object b, object c) { return m_orig.call(a, b, c); }
+      public override object call(object a, object b, object c, object d) { return m_orig.call(a, b, c, d); }
+      public override object call(object a, object b, object c, object d, object e) { return m_orig.call(a, b, c, d, e); }
+      public override object call(object a, object b, object c, object d, object e, object f) { return m_orig.call(a, b, c, d, e, f); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g) { return m_orig.call(a, b, c, d, e, f, g); }
+      public override object call(object a, object b, object c, object d, object e, object f, object g, object h) { return m_orig.call(a, b, c, d, e, f, g, h); }
+      FuncType m_type;
+      Func m_orig;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
   // Curry
   //////////////////////////////////////////////////////////////////////////
 
