@@ -36,7 +36,9 @@ class Hello : Weblet
 {
   override Void onGet()
   {
-    res.headers["Content-Type"] = "text/plain"
-    res.out.printLine("hello world #4")
+    text := "hello world #4"
+    res.headers["Content-Type"] = "text/plain; charset=utf-8"
+    res.headers["Content-Length"] = text.size.toStr
+    res.out.print(text)
   }
 }
