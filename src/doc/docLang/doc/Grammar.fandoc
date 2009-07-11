@@ -36,16 +36,16 @@ Type Def [#typeDef]
   <typeDef>        :=  <classDef> | <mixinDef> | <enumDef>
 
   <classDef>       :=  <classHeader> <classBody>
-  <classHeader>    :=  [<doc>] <facets> <classFlags> "class" [<inheritance>]
+  <classHeader>    :=  [<doc>] <facets> <classFlags> "class" <id> [<inheritance>]
   <classFlags>     :=  [<protection>] ["abstract"] ["final"] ["const"]
   <classBody>      :=  "{" <slotDefs> "}"
 
   <enumDef>        :=  <enumHeader> <enumBody>
-  <enumHeader>     :=  [<doc>] <facets> [<protection>] "enum" [<inheritance>]
+  <enumHeader>     :=  [<doc>] <facets> [<protection>] "enum" <id> [<inheritance>]
   <enumBody>       :=  "{" <enumValDefs> <slotDefs> "}"
 
   <mixinDef>       :=  <mixinHeader> <mixinBody>
-  <mixinHeader>    :=  [<doc>] <facets> [<protection>] "mixin" [<inheritance>]
+  <mixinHeader>    :=  [<doc>] <facets> [<protection>] "mixin" <id> [<inheritance>]
   <mixinBody>      :=  "{" <slotDefs> "}"
 
   <protection>     :=  "public" | "protected" | "private" | "internal"
@@ -175,7 +175,9 @@ See `Literals` for grammar of the literal tokens.
 Type [#type]
 ************
 
-  <type>           :=  <simpleType> | <listType> | <mapType> | <funcType>
+  <type>           :=  <nullType> | <nonNullType>
+  <nullType>       :=  <nonNullType> "?"
+  <nonNullType>    :=  <simpleType> | <listType> | <mapType> | <funcType>
   <typeList>       :=  <type> ("," <type>)*
   <simpleType>     :=  <id> ["::" <id>]
   <listType>       :=  <type> "[]"
