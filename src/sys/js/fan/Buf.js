@@ -16,98 +16,21 @@ fan.sys.Buf = fan.sys.Obj.$extend(fan.sys.Obj);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Buf.prototype.$ctor = function()
-{
-  this.m_buf = [];
-}
+fan.sys.Buf.prototype.$ctor = function() {}
+fan.sys.Buf.make = function(capacity) { return new fan.sys.MemBuf(); }
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Obj
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Buf.prototype.print = function(str)
+fan.sys.Buf.prototype.equals = function(that)
 {
-  for (var i=0; i<str.length; i++)
-  {
-    var c = str.charCodeAt(i);
-    if (c < 128)
-    {
-      this.m_buf.push(c);
-    }
-    else if((c > 127) && (c < 2048))
-    {
-      this.m_buf.push((c >> 6) | 192);
-      this.m_buf.push((c & 63) | 128);
-    }
-    else
-    {
-      this.m_buf.push((c >> 12) | 224);
-      this.m_buf.push(((c >> 6) & 63) | 128);
-      this.m_buf.push((c & 63) | 128);
-    }
-  }
-  return this;
+  return this == that;
 }
 
-fan.sys.Buf.prototype.toBase64 = function()
+fan.sys.Buf.prototype.toStr = function()
 {
-  var buf = this.m_buf;
-  var size = this.m_buf.length;
-  var s = "";
-  var base64chars = fan.sys.Buf.base64chars;
-  var i = 0;
-
-  // append full 24-bit chunks
-  var end = size-2;
-  for (; i<end; i+=3)
-  {
-    var n = ((buf[i] & 0xff) << 16) + ((buf[i+1] & 0xff) << 8) + (buf[i+2] & 0xff);
-    s += String.fromCharCode(base64chars[(n >>> 18) & 0x3f]);
-    s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
-    s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
-    s += String.fromCharCode(base64chars[n & 0x3f]);
-  }
-
-  // pad and encode remaining bits
-  var rem = size - i;
-  if (rem > 0)
-  {
-    var n = ((buf[i] & 0xff) << 10) | (rem == 2 ? ((buf[size-1] & 0xff) << 2) : 0);
-    s += String.fromCharCode(base64chars[(n >>> 12) & 0x3f]);
-    s += String.fromCharCode(base64chars[(n >>> 6) & 0x3f]);
-    s += String.fromCharCode(rem == 2 ? base64chars[n & 0x3f] : 61);
-    s += ('=');
-  }
-
-  return s;
-}
-
-fan.sys.Buf.prototype.toDigest = function(algorithm)
-{
-  var digest = null;
-  switch (algorithm)
-  {
-    case "MD5":   digest = fan.sys.Buf_Md5(this.m_buf);  break;
-    case "SHA-1": digest = fan.sys.Buf_Sha1(this.m_buf); break;
-    default: throw fan.sys.Err.make("Unknown digest algorithm " + algorithm);
-  }
-  var buf = fan.sys.Buf.make();
-  buf.m_buf = digest;
-  return buf;
-}
-
-fan.sys.Buf.prototype.toHex = function()
-{
-  var buf = this.m_buf;
-  var size = buf.length;
-  var hexChars = fan.sys.Buf.hexChars;
-  var s = "";
-  for (var i=0; i<size; ++i)
-  {
-    var b = buf[i] & 0xff;
-    s += String.fromCharCode(hexChars[b>>4]) + String.fromCharCode(hexChars[b&0xf]);
-  }
-  return s;
+  return this.type().name() + "(pos=" + this.pos() + " size=" + this.size() + ")";
 }
 
 fan.sys.Buf.prototype.type = function()
@@ -116,12 +39,251 @@ fan.sys.Buf.prototype.type = function()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Static
+// Access
 //////////////////////////////////////////////////////////////////////////
 
-// TODO
-//fan.sys.Buf.make = function(capacity) { return new fan.sys.Buf(); }
-fan.sys.Buf.make = function(capacity) { return new fan.sys.MemBuf(); }
+fan.sys.Buf.prototype.empty = function() { return this.size() == 0; }
+
+fan.sys.Buf.prototype.capacity = function() { return fan.sys.Int.maxVal; }
+//fan.sys.Buf.prototype.capacity$ = function(long c) {}
+
+fan.sys.Buf.prototype.remaining = function() { return this.size()-this.pos(); }
+
+fan.sys.Buf.prototype.more = function() { return this.size()-this.pos() > 0; }
+
+fan.sys.Buf.prototype.seek = function(pos)
+{
+  var size = this.size();
+  if (pos < 0) pos = size + pos;
+  if (pos < 0 || pos > size) throw fan.sys.IndexErr.make(pos);
+  pos(pos);
+  return this;
+}
+
+fan.sys.Buf.prototype.flip = function()
+{
+  this.size(this.pos());
+  this.pos(0);
+  return this;
+}
+
+fan.sys.Buf.prototype.get = function(pos)
+{
+  var size = this.size();
+  if (pos < 0) pos = size + pos;
+  if (pos < 0 || pos >= size) throw fan.sys.IndexErr.make(pos);
+  return this.getByte(pos);
+}
+
+fan.sys.Buf.prototype.slice = function(range)
+{
+  var size = this.size();
+  var s = range.start(size);
+  var e = range.end(size);
+  var n = (e - s + 1);
+  if (n < 0) throw fan.sys.IndexErr.make(range);
+
+  var slice = [];
+  this.getBytes(s, slice, 0, n);
+
+  var result = new fan.sys.MemBuf(slice, n);
+  //result.charset(charset());
+  return result;
+}
+
+fan.sys.Buf.prototype.dup = function()
+{
+  var size = this.size();
+  var copy = [];
+  this.getBytes(0, copy, 0, size);
+
+  var result = new MemBuf(copy, size);
+  //result.charset(charset());
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Modification
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Buf.prototype.set = function(pos, b)
+{
+  var size = this.size();
+  if (pos < 0) pos = size + pos;
+  if (pos < 0 || pos >= size) throw fan.sys.IndexErr.make(pos);
+  this.setByte(pos, b);
+  return this;
+}
+
+fan.sys.Buf.prototype.trim = function()
+{
+  return this;
+}
+
+fan.sys.Buf.prototype.clear = function()
+{
+  this.pos(0);
+  this.size(0);
+  return this;
+}
+
+fan.sys.Buf.prototype.flush = function()
+{
+  return this;
+}
+
+fan.sys.Buf.prototype.close = function()
+{
+  return true;
+}
+
+fan.sys.Buf.prototype.charset = function()
+{
+  return this.m_out.charset();
+}
+
+fan.sys.Buf.prototype.charset = function(charset)
+{
+  this.m_out.charset(charset);
+  this.m_in.charset(charset);
+}
+
+fan.sys.Buf.prototype.fill = function(b, times)
+{
+  if (this.capacity() < this.size()+times) this.capacity(this.size()+times);
+  for (var i=0; i<times; ++i) this.m_out.write(b);
+  return this;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// OutStream
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Buf.prototype.out = function() { return this.m_out; }
+
+fan.sys.Buf.prototype.write = function(b) { this.m_out.write(b); return this; }
+
+//fan.sys.Buf.prototype.writeBuf = function(other) { this.m_out.writeBuf(other); return this; }
+//fan.sys.Buf.prototype.writeBuf = function(other, n) { this.m_out.writeBuf(other, n); return this; }
+
+fan.sys.Buf.prototype.writeI2 = function(x) { this.m_out.writeI2(x); return this; }
+
+fan.sys.Buf.prototype.writeI4 = function(x) { this.m_out.writeI4(x); return this; }
+
+fan.sys.Buf.prototype.writeI8 = function(x) { this.m_out.writeI8(x); return this; }
+
+fan.sys.Buf.prototype.writeF4 = function(x) { this.m_out.writeF4(x); return this; }
+
+fan.sys.Buf.prototype.writeF8 = function(x) { this.m_out.writeF8(x); return this; }
+
+fan.sys.Buf.prototype.writeDecimal = function(x) { this.m_out.writeDecimal(x); return this; }
+
+fan.sys.Buf.prototype.writeBool = function(x) { this.m_out.writeBool(x); return this; }
+
+fan.sys.Buf.prototype.writeUtf = function(x) { this.m_out.writeUtf(x); return this; }
+
+fan.sys.Buf.prototype.writeChar = function(c) { this.m_out.writeChar(c); return this; }
+
+//fan.sys.Buf.prototype.writeChars = function(s) { this.m_out.writeChars(s); return this; }
+//fan.sys.Buf.prototype.writeChars = function(s, off) { this.m_out.writeChars(s, off); return this; }
+//fan.sys.Buf.prototype.writeChars = function(s, off, len) { this.m_out.writeChars(s, off, len); return this; }
+
+fan.sys.Buf.prototype.print = function(obj) { this.m_out.print(obj); return this; }
+
+//fan.sys.Buf.prototype.printLine = function() { this.m_out.printLine(); return this; }
+//fan.sys.Buf.prototype.printLine = function(obj) { this.m_out.printLine(obj); return this; }
+
+//fan.sys.Buf.prototype.writeObj = function(obj) { this.m_out.writeObj(obj); return this; }
+//fan.sys.Buf.prototype.writeObj = function(obj, opt) { this.m_out.writeObj(obj, opt); return this; }
+
+//fan.sys.Buf.prototype.writeXml = function(s) { this.m_out.writeXml(s, 0); return this; }
+//fan.sys.Buf.prototype.writeXml = function(s, flags) { this.m_out.writeXml(s, flags); return this; }
+
+//////////////////////////////////////////////////////////////////////////
+// InStream
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Buf.prototype.$in = function() { return this.m_in; }
+
+fan.sys.Buf.prototype.read = function() {  return this.m_in.read(); }
+
+fan.sys.Buf.prototype.readBuf = function(other, n) { return this.m_in.readBuf(other, n); }
+
+fan.sys.Buf.prototype.unread = function(n) { this.m_in.unread(n); return this; }
+
+fan.sys.Buf.prototype.readBufFully = function(buf, n) { return this.m_in.readBufFully(buf, n); }
+
+fan.sys.Buf.prototype.readAllBuf = function() { return this.m_in.readAllBuf(); }
+
+fan.sys.Buf.prototype.peek = function() { return this.m_in.peek(); }
+
+fan.sys.Buf.prototype.readU1 = function() { return this.m_in.readU1(); }
+
+fan.sys.Buf.prototype.readS1 = function() { return this.m_in.readS1(); }
+
+fan.sys.Buf.prototype.readU2 = function() { return this.m_in.readU2(); }
+
+fan.sys.Buf.prototype.readS2 = function() { return this.m_in.readS2(); }
+
+fan.sys.Buf.prototype.readU4 = function() { return this.m_in.readU4(); }
+
+fan.sys.Buf.prototype.readS4 = function() { return this.m_in.readS4(); }
+
+fan.sys.Buf.prototype.readS8 = function() { return this.m_in.readS8(); }
+
+fan.sys.Buf.prototype.readF4 = function() { return this.m_in.readF4(); }
+
+fan.sys.Buf.prototype.readF8 = function() { return this.m_in.readF8(); }
+
+fan.sys.Buf.prototype.readDecimal = function() { return this.m_in.readDecimal(); }
+
+fan.sys.Buf.prototype.readBool = function() { return this.m_in.readBool(); }
+
+fan.sys.Buf.prototype.readUtf = function() { return this.m_in.readUtf(); }
+
+fan.sys.Buf.prototype.readChar = function() { return this.m_in.readChar(); }
+
+fan.sys.Buf.prototype.unreadChar = function(c) { this.m_in.unreadChar(c); return this; }
+
+fan.sys.Buf.prototype.peekChar = function() { return this.m_in.peekChar(); }
+
+//fan.sys.Buf.prototype.readLine = function() { return this.m_in.readLine(); }
+//fan.sys.Buf.prototype.readLine = function(max) { return this.m_in.readLine(max); }
+
+//fan.sys.Buf.prototype.readStrToken = function() { return this.m_in.readStrToken(); }
+//fan.sys.Buf.prototype.readStrToken = function(Long max) { return this.m_in.readStrToken(max); }
+//fan.sys.Buf.prototype.readStrToken = function(Long max, Func f) { return this.m_in.readStrToken(FanInt.Chunk, f); }
+
+fan.sys.Buf.prototype.readAllLines = function() { return this.m_in.readAllLines(); }
+
+fan.sys.Buf.prototype.eachLine = function(f) { this.m_in.eachLine(f); }
+
+fan.sys.Buf.prototype.readAllStr = function(normalizeNewlines)
+{
+  if (normalizeNewlines == undefined) normalizeNewlines = true;
+  return this.m_in.readAllStr(normalizeNewlines);
+}
+
+//fan.sys.Buf.prototype.readObj = function() { return this.m_in.readObj(); }
+//fan.sys.Buf.prototype.readObj = function(opt) { return this.m_in.readObj(opt); }
+
+//////////////////////////////////////////////////////////////////////////
+// Hex
+//////////////////////////////////////////////////////////////////////////
+
+// toHex
+// fromHex
+
+fan.sys.Buf.hexChars = [
+//0  1  2  3  4  5  6  7  8  9  a  b  c  d   e   f
+  48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102];
+
+//////////////////////////////////////////////////////////////////////////
+// Base64
+//////////////////////////////////////////////////////////////////////////
+
+// toBase64
+// fromBase64
 
 fan.sys.Buf.base64chars = [
 //A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z
@@ -130,10 +292,6 @@ fan.sys.Buf.base64chars = [
   97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,
 //0  1  2  3  4  5  6  7  8  9  +  /
   48,49,50,51,52,53,54,55,56,57,43,47];
-
-fan.sys.Buf.hexChars = [
-//0  1  2  3  4  5  6  7  8  9  a  b  c  d   e   f
-  48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102];
 
 //////////////////////////////////////////////////////////////////////////
 // MD5
@@ -457,3 +615,4 @@ fan.sys.Buf_Sha1 = function(buf)
   }
   return db;
 }
+

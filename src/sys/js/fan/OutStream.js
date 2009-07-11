@@ -208,13 +208,13 @@ fan.sys.OutStream.prototype.writeChars = function(s, off, len)
   return this;
 }
 
-/*
-public OutStream print(Object obj)
+fan.sys.OutStream.prototype.print = function(obj)
 {
-  String s = obj == null ? "null" : toStr(obj);
-  return writeChars(s, 0, s.length());
+  var s = obj == null ? "null" : fan.sys.Obj.toStr(obj);
+  return this.writeChars(s, 0, s.length);
 }
 
+/*
 public OutStream printLine() { return printLine(""); }
 public OutStream printLine(Object obj)
 {
