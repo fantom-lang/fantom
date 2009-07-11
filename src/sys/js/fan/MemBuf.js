@@ -228,6 +228,21 @@ fan.sys.MemBuf.prototype.toBase64 = function()
   return s;
 }
 
+fan.sys.MemBuf.prototype.toDigest = function(algorithm)
+{
+  var digest = null;
+  switch (algorithm)
+  {
+    case "MD5":   digest = fan.sys.Buf_Md5(this.m_buf);  break;
+    case "SHA-1": digest = fan.sys.Buf_Sha1(this.m_buf); break;
+    default: throw fan.sys.Err.make("Unknown digest algorithm " + algorithm);
+  }
+  var buf = fan.sys.Buf.make();
+  buf.m_buf = digest;
+  buf.m_size = digest.length;
+  return buf;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // MemBufOutStream
 //////////////////////////////////////////////////////////////////////////
