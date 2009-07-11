@@ -170,7 +170,7 @@ Long.div = function(a, b)
   //
 
   if (a === 0) return acc;
-  if (b === 0) throw sys_Err.make("/ by zero");
+  if (b === 0) throw fan.sys.Err.make("/ by zero");
 
   // TODO - handle negative
 
@@ -185,8 +185,8 @@ Long.div = function(a, b)
     if (deltaRes.high === 0 && deltaRes.low === 0) deltaRes = Long.One;
     var deltaRem = Long.mul(deltaRes, b);
 
-    //if (deltaRes.compare(Long.One) < 0) throw sys_Err.make("assert failed: deltaRes < 1");
-    //if (deltaRem.compare(rem) > 0) throw sys_Err.make("assert failed: deltaRem > rem");
+    //if (deltaRes.compare(Long.One) < 0) throw fan.sys.Err.make("assert failed: deltaRes < 1");
+    //if (deltaRem.compare(rem) > 0) throw fan.sys.Err.make("assert failed: deltaRem > rem");
 
     res = Long.add(res, deltaRes);
     rem = Long.sub(rem, deltaRem);

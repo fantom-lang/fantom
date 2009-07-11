@@ -9,26 +9,26 @@
 /**
  * ButtonPeer.
  */
-var fwt_ButtonPeer = sys_Obj.$extend(fwt_WidgetPeer);
-fwt_ButtonPeer.prototype.$ctor = function(self) {}
+fan.fwt.ButtonPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
+fan.fwt.ButtonPeer.prototype.$ctor = function(self) {}
 
-fwt_ButtonPeer.prototype.font$get = function(self) { return this.font; }
-fwt_ButtonPeer.prototype.font$set = function(self, val) { this.font = val; }
-fwt_ButtonPeer.prototype.font = null;
+fan.fwt.ButtonPeer.prototype.font$get = function(self) { return this.font; }
+fan.fwt.ButtonPeer.prototype.font$set = function(self, val) { this.font = val; }
+fan.fwt.ButtonPeer.prototype.font = null;
 
-fwt_ButtonPeer.prototype.image$get = function(self) { return this.image; }
-fwt_ButtonPeer.prototype.image$set = function(self, val) { this.image = val; }
-fwt_ButtonPeer.prototype.image = null;
+fan.fwt.ButtonPeer.prototype.image$get = function(self) { return this.image; }
+fan.fwt.ButtonPeer.prototype.image$set = function(self, val) { this.image = val; }
+fan.fwt.ButtonPeer.prototype.image = null;
 
-fwt_ButtonPeer.prototype.selected$get = function(self) { return this.selected; }
-fwt_ButtonPeer.prototype.selected$set = function(self, val) { this.selected = val; }
-fwt_ButtonPeer.prototype.selected = false;
+fan.fwt.ButtonPeer.prototype.selected$get = function(self) { return this.selected; }
+fan.fwt.ButtonPeer.prototype.selected$set = function(self, val) { this.selected = val; }
+fan.fwt.ButtonPeer.prototype.selected = false;
 
-fwt_ButtonPeer.prototype.text$get = function(self) { return this.text; }
-fwt_ButtonPeer.prototype.text$set = function(self, val) { this.text = val; }
-fwt_ButtonPeer.prototype.text = "";
+fan.fwt.ButtonPeer.prototype.text$get = function(self) { return this.text; }
+fan.fwt.ButtonPeer.prototype.text$set = function(self, val) { this.text = val; }
+fan.fwt.ButtonPeer.prototype.text = "";
 
-fwt_ButtonPeer.prototype.create = function(parentElem)
+fan.fwt.ButtonPeer.prototype.create = function(parentElem)
 {
   var div = this.emptyDiv();
   with (div.style)
@@ -48,7 +48,7 @@ fwt_ButtonPeer.prototype.create = function(parentElem)
   return div;
 }
 
-fwt_ButtonPeer.prototype.sync = function(self)
+fan.fwt.ButtonPeer.prototype.sync = function(self)
 {
   var div = this.elem;
   while (div.firstChild != null) div.removeChild(div.firstChild);
@@ -61,5 +61,5 @@ fwt_ButtonPeer.prototype.sync = function(self)
   // account for padding/border
   var w = this.size.w - 10;
   var h = this.size.h - 6;
-  fwt_WidgetPeer.prototype.sync.call(this, self, w, h);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }

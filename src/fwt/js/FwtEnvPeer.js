@@ -9,25 +9,25 @@
 /**
  * FwtEnvPeer.
  */
-var fwt_FwtEnvPeer = sys_Obj.$extend(sys_Obj);
-fwt_FwtEnvPeer.prototype.$ctor = function(self) {}
+fan.fwt.FwtEnvPeer = fan.sys.Obj.$extend(fan.sys.Obj);
+fan.fwt.FwtEnvPeer.prototype.$ctor = function(self) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Images
 //////////////////////////////////////////////////////////////////////////
 
-fwt_FwtEnvPeer.imgCache = [];
-fwt_FwtEnvPeer.imgCacheNextMemId = 1;
+fan.fwt.FwtEnvPeer.imgCache = [];
+fan.fwt.FwtEnvPeer.imgCacheNextMemId = 1;
 
-fwt_FwtEnvPeer.nextMemUriStr = function()
+fan.fwt.FwtEnvPeer.nextMemUriStr = function()
 {
-  return sys_Uri.fromStr("mem-" + (++fwt_FwtEnvPeer.imgCacheNextMemId));
+  return fan.sys.Uri.fromStr("mem-" + (++fan.fwt.FwtEnvPeer.imgCacheNextMemId));
 }
 
-fwt_FwtEnvPeer.loadImage = function(fanImg, widget)
+fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
 {
   var uri = fanImg.uri.toStr();
-  var jsImg = fwt_FwtEnvPeer.imgCache[uri]
+  var jsImg = fan.fwt.FwtEnvPeer.imgCache[uri]
   if (!jsImg)
   {
     jsImg = document.createElement("img");
@@ -51,27 +51,27 @@ fwt_FwtEnvPeer.loadImage = function(fanImg, widget)
       //  jsImg.attachEvent('onload', onload);
     }
     jsImg.src = uri;
-    fwt_FwtEnvPeer.imgCache[uri] = jsImg;
+    fan.fwt.FwtEnvPeer.imgCache[uri] = jsImg;
   }
   return jsImg
 }
 
 // Size imageSize(Image img)
-fwt_FwtEnvPeer.prototype.imageSize = function(self, fanImg)
+fan.fwt.FwtEnvPeer.prototype.imageSize = function(self, fanImg)
 {
-  var jsImg = fwt_FwtEnvPeer.loadImage(fanImg)
-  return gfx_Size.make(jsImg.width, jsImg.height)
+  var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg)
+  return fan.gfx.Size.make(jsImg.width, jsImg.height)
 }
 
 // Image imageResize(Image img, Size size)
-fwt_FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
+fan.fwt.FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
 {
   // generate a unique uri as the key for the new image
-  var uri = fwt_FwtEnvPeer.nextMemUriStr();
-  uri = fwt_FwtEnvPeer.nextMemUriStr();
+  var uri = fan.fwt.FwtEnvPeer.nextMemUriStr();
+  uri = fan.fwt.FwtEnvPeer.nextMemUriStr();
 
   // get the original js image
-  var jsOrig = fwt_FwtEnvPeer.loadImage(fanImg)
+  var jsOrig = fan.fwt.FwtEnvPeer.loadImage(fanImg)
   if (jsOrig.width == size.w && jsOrig.height == size.h) return fanImg
 
   // create new js image which is resized version of the old by painting
@@ -86,10 +86,10 @@ fwt_FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
   jsNew.src = dataUrl;
 
   // put new image into the image with our auto-gen uri key
-  fwt_FwtEnvPeer.imgCache[uri] = jsNew;
+  fan.fwt.FwtEnvPeer.imgCache[uri] = jsNew;
 
   // create new Fan wrapper which references jsNew via uri
-  return gfx_Image.makeUri(sys_Uri.fromStr(uri));
+  return fan.gfx.Image.makeUri(fan.sys.Uri.fromStr(uri));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,43 +97,43 @@ fwt_FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
 //////////////////////////////////////////////////////////////////////////
 
 // global variable to store a CanvasRenderingContext2D
-fwt_FwtEnvPeer.fontCx = null;
+fan.fwt.FwtEnvPeer.fontCx = null;
 
-fwt_FwtEnvPeer.prototype.fontHeight = function(self, font)
+fan.fwt.FwtEnvPeer.prototype.fontHeight = function(self, font)
 {
   // fudge this as 150% of size
   return font.size * 1.5
 }
 
-fwt_FwtEnvPeer.prototype.fontAscent = function(self, font)
+fan.fwt.FwtEnvPeer.prototype.fontAscent = function(self, font)
 {
   // fudge this as 100% of size
   return font.size
 }
 
-fwt_FwtEnvPeer.prototype.fontDescent = function(self, font)
+fan.fwt.FwtEnvPeer.prototype.fontDescent = function(self, font)
 {
   // fudge this as 30% of size
   return font.size * 0.3
 }
 
-fwt_FwtEnvPeer.prototype.fontLeading = function(self, font)
+fan.fwt.FwtEnvPeer.prototype.fontLeading = function(self, font)
 {
   // fudge this as 16% of size
   return font.size * 0.16
 }
 
-fwt_FwtEnvPeer.prototype.fontWidth = function(self, font, str)
+fan.fwt.FwtEnvPeer.prototype.fontWidth = function(self, font, str)
 {
   try
   {
     // use global var to store a context for computing string width
-    if (fwt_FwtEnvPeer.fontCx == null)
+    if (fan.fwt.FwtEnvPeer.fontCx == null)
     {
-      fwt_FwtEnvPeer.fontCx = document.createElement("canvas").getContext("2d");
+      fan.fwt.FwtEnvPeer.fontCx = document.createElement("canvas").getContext("2d");
     }
-    fwt_FwtEnvPeer.fontCx.font = font.toStr()
-    return fwt_FwtEnvPeer.fontCx.measureText(str).width;
+    fan.fwt.FwtEnvPeer.fontCx.font = font.toStr()
+    return fan.fwt.FwtEnvPeer.fontCx.measureText(str).width;
   }
   catch (err)
   {

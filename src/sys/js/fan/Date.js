@@ -10,13 +10,13 @@
 /**
  * Date
  */
-var sys_Date = sys_Obj.$extend(sys_Obj);
+fan.sys.Date = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Date.prototype.$ctor = function(year, month, day)
+fan.sys.Date.prototype.$ctor = function(year, month, day)
 {
   this.m_year = year;
   this.m_month = month;
@@ -27,9 +27,9 @@ sys_Date.prototype.$ctor = function(year, month, day)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Date.prototype.equals = function(that)
+fan.sys.Date.prototype.equals = function(that)
 {
-  if (that instanceof sys_Date)
+  if (that instanceof fan.sys.Date)
   {
     return this.m_year.valueOf() == that.m_year.valueOf() &&
            this.m_month.valueOf() == that.m_month.valueOf() &&
@@ -38,7 +38,7 @@ sys_Date.prototype.equals = function(that)
   return false;
 }
 
-sys_Date.prototype.compare = function(that)
+fan.sys.Date.prototype.compare = function(that)
 {
   if (this.m_year.valueOf() == that.m_year.valueOf())
   {
@@ -52,17 +52,17 @@ sys_Date.prototype.compare = function(that)
   return this.m_year < that.m_year ? -1 : +1;
 }
 
-sys_Date.prototype.type = function()
+fan.sys.Date.prototype.type = function()
 {
-  return sys_Type.find("sys::Date");
+  return fan.sys.Type.find("sys::Date");
 }
 
-sys_Date.prototype.toIso = function()
+fan.sys.Date.prototype.toIso = function()
 {
   return this.toStr();
 }
 
-sys_Date.prototype.toLocale = function(pattern)
+fan.sys.Date.prototype.toLocale = function(pattern)
 {
   // TODO
   var s = "" + this.m_day + "-";
@@ -85,7 +85,7 @@ sys_Date.prototype.toLocale = function(pattern)
   return s;
 }
 
-sys_Date.prototype.toStr = function()
+fan.sys.Date.prototype.toStr = function()
 {
   // TODO
   var y = this.m_year;
@@ -94,34 +94,34 @@ sys_Date.prototype.toStr = function()
   return y + "-" + (m < 10 ? "0"+m : m) + "-" + (d < 10 ? "0"+d : d);
 }
 
-sys_Date.prototype.year  = function() { return this.m_year; }
-sys_Date.prototype.month = function() { return sys_Month.values[this.m_month]; }
-sys_Date.prototype.day   = function() { return this.m_day; }
+fan.sys.Date.prototype.year  = function() { return this.m_year; }
+fan.sys.Date.prototype.month = function() { return fan.sys.Month.values[this.m_month]; }
+fan.sys.Date.prototype.day   = function() { return this.m_day; }
 
-sys_Date.prototype.weekday = function()
+fan.sys.Date.prototype.weekday = function()
 {
-  var weekday = (sys_DateTime.firstWeekday(this.m_year, this.m_month) + this.m_day - 1) % 7;
-  return sys_Weekday.values[weekday];
+  var weekday = (fan.sys.DateTime.firstWeekday(this.m_year, this.m_month) + this.m_day - 1) % 7;
+  return fan.sys.Weekday.values[weekday];
 }
 
-sys_Date.prototype.dayOfYear = function()
+fan.sys.Date.prototype.dayOfYear = function()
 {
-  return sys_DateTime.dayOfYear(this.year(), this.m_month, this.day()+1);
+  return fan.sys.DateTime.dayOfYear(this.year(), this.m_month, this.day()+1);
 }
 
-sys_Date.prototype.plus = function(d)
+fan.sys.Date.prototype.plus = function(d)
 {
   var ticks = d.m_ticks;
 
   // check even number of days
-  if (ticks % sys_Duration.nsPerDay != 0)
-    throw new sys_ArgErr("Duration must be even num of days");
+  if (ticks % fan.sys.Duration.nsPerDay != 0)
+    throw new fan.sys.ArgErr("Duration must be even num of days");
 
   var year = this.m_year;
   var month = this.m_month;
   var day = this.m_day;
 
-  var numDays = Math.floor(ticks / sys_Duration.nsPerDay);
+  var numDays = Math.floor(ticks / fan.sys.Duration.nsPerDay);
   var dayIncr = numDays < 0 ? +1 : -1;
   while (numDays != 0)
   {
@@ -149,13 +149,13 @@ sys_Date.prototype.plus = function(d)
     }
   }
 
-  return new sys_Date(year, month, day);
+  return new fan.sys.Date(year, month, day);
 }
 
-sys_Date.prototype.minus = function(that)
+fan.sys.Date.prototype.minus = function(that)
 {
   // short circuit if equal
-  if (this.equals(that)) return sys_Duration.defVal;
+  if (this.equals(that)) return fan.sys.Duration.defVal;
 
   // compute so that a < b
   var a = this;
@@ -170,43 +170,43 @@ sys_Date.prototype.minus = function(that)
   }
   else
   {
-    days = (sys_DateTime.isLeapYear(a.m_year) ? 366 : 365) - a.dayOfYear();
+    days = (fan.sys.DateTime.isLeapYear(a.m_year) ? 366 : 365) - a.dayOfYear();
     days += b.dayOfYear();
     for (var i=a.m_year+1; i<b.m_year; ++i)
-      days += sys_DateTime.isLeapYear(i) ? 366 : 365;
+      days += fan.sys.DateTime.isLeapYear(i) ? 366 : 365;
   }
 
   // negate if necessary if a was this
   if (a == this) days = -days;
 
   // map days into ns ticks
-  return sys_Duration.make(days * sys_Duration.nsPerDay);
+  return fan.sys.Duration.make(days * fan.sys.Duration.nsPerDay);
 }
 
-sys_Date.prototype.numDays = function(year, mon)
+fan.sys.Date.prototype.numDays = function(year, mon)
 {
-  if (sys_DateTime.isLeapYear(year))
-    return sys_DateTime.daysInMonLeap[mon];
+  if (fan.sys.DateTime.isLeapYear(year))
+    return fan.sys.DateTime.daysInMonLeap[mon];
   else
-    return sys_DateTime.daysInMon[mon];
+    return fan.sys.DateTime.daysInMon[mon];
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Date.make = function(year, month, day)
+fan.sys.Date.make = function(year, month, day)
 {
-  return new sys_Date(year, month.m_ordinal, day);
+  return new fan.sys.Date(year, month.m_ordinal, day);
 }
 
-sys_Date.today = function()
+fan.sys.Date.today = function()
 {
   var d = new Date();
-  return new sys_Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return new fan.sys.Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
-sys_Date.fromStr = function(s, checked)
+fan.sys.Date.fromStr = function(s, checked)
 {
   try
   {
@@ -221,16 +221,16 @@ sys_Date.fromStr = function(s, checked)
     if (s.charAt(4) != '-' || s.charAt(7) != '-' || s.length != 10)
       throw new Error();
 
-    return new sys_Date(year, month, day);
+    return new fan.sys.Date(year, month, day);
   }
   catch (err)
   {
     if (checked != null && !checked) return null;
-    throw new sys_ParseErr("Date", s);
+    throw new fan.sys.ParseErr("Date", s);
   }
 }
 
-sys_Date.fromIso = function(s, checked)
+fan.sys.Date.fromIso = function(s, checked)
 {
-  return sys_Date.fromStr(s, checked);
+  return fan.sys.Date.fromStr(s, checked);
 }

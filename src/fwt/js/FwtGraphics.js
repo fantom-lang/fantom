@@ -10,19 +10,19 @@
  * FwtGraphics implements gfx::Graphics using HTML5 canvas.
  */
 
-var fwt_Graphics = sys_Obj.$extend(sys_Obj);
+fan.fwt.Graphics = fan.sys.Obj.$extend(fan.sys.Obj);
 
-fwt_Graphics.prototype.$ctor = function() {}
+fan.fwt.Graphics.prototype.$ctor = function() {}
 
-fwt_Graphics.prototype.cx = null
+fan.fwt.Graphics.prototype.cx = null
 
 // Brush brush
-fwt_Graphics.prototype.brush = null
-fwt_Graphics.prototype.brush$get = function() { return this.brush }
-fwt_Graphics.prototype.brush$set = function(b)
+fan.fwt.Graphics.prototype.brush = null
+fan.fwt.Graphics.prototype.brush$get = function() { return this.brush }
+fan.fwt.Graphics.prototype.brush$set = function(b)
 {
   this.brush = b;
-  if (b instanceof gfx_Color)
+  if (b instanceof fan.gfx.Color)
   {
     var style = b.toCss();
     this.cx.fillStyle = style;
@@ -39,9 +39,9 @@ fwt_Graphics.prototype.brush$set = function(b)
 }
 
 // Pen pen
-fwt_Graphics.prototype.pen = null
-fwt_Graphics.prototype.pen$get = function() { return this.pen }
-fwt_Graphics.prototype.pen$set = function(p)
+fan.fwt.Graphics.prototype.pen = null
+fan.fwt.Graphics.prototype.pen$get = function() { return this.pen }
+fan.fwt.Graphics.prototype.pen$set = function(p)
 {
   this.pen = p;
   this.cx.lineWidth = p.width;
@@ -51,34 +51,34 @@ fwt_Graphics.prototype.pen$set = function(p)
 }
 
 // Font font
-fwt_Graphics.prototype.font = null
-fwt_Graphics.prototype.font$get = function() { return this.font }
-fwt_Graphics.prototype.font$set = function(f)
+fan.fwt.Graphics.prototype.font = null
+fan.fwt.Graphics.prototype.font$get = function() { return this.font }
+fan.fwt.Graphics.prototype.font$set = function(f)
 {
   this.font = f;
   this.cx.font = f.toStr();
 }
 
 // Bool antialias
-fwt_Graphics.prototype.antialias = null
-fwt_Graphics.prototype.antialias$get = function() { return this.antialias }
-fwt_Graphics.prototype.antialias$set = function(aa)
+fan.fwt.Graphics.prototype.antialias = null
+fan.fwt.Graphics.prototype.antialias$get = function() { return this.antialias }
+fan.fwt.Graphics.prototype.antialias$set = function(aa)
 {
   // Note: canvas has no control over anti-aliasing (Jun 09)
   this.antialias = aa;
 }
 
 // Int alpha
-fwt_Graphics.prototype.alpha = null
-fwt_Graphics.prototype.alpha$get = function() { return this.alpha}
-fwt_Graphics.prototype.alpha$set = function(a)
+fan.fwt.Graphics.prototype.alpha = null
+fan.fwt.Graphics.prototype.alpha$get = function() { return this.alpha}
+fan.fwt.Graphics.prototype.alpha$set = function(a)
 {
   this.alpha = a;
   this.cx.globalAlpha = a / 255;
 }
 
 // This drawLine(Int x1, Int y1, Int x2, Int y2)
-fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
+fan.fwt.Graphics.prototype.drawLine = function(x1, y1, x2, y2)
 {
   this.cx.beginPath();
   this.cx.moveTo(x1+0.5, y1+0.5);
@@ -89,21 +89,21 @@ fwt_Graphics.prototype.drawLine = function(x1, y1, x2, y2)
 }
 
 // This drawRect(Int x, Int y, Int w, Int h)
-fwt_Graphics.prototype.drawRect = function(x, y, w, h)
+fan.fwt.Graphics.prototype.drawRect = function(x, y, w, h)
 {
   this.cx.strokeRect(x+0.5, y+0.5, w, h);
   return this;
 }
 
 // This fillRect(Int x, Int y, Int w, Int h)
-fwt_Graphics.prototype.fillRect = function(x, y, w, h)
+fan.fwt.Graphics.prototype.fillRect = function(x, y, w, h)
 {
   this.cx.fillRect(x, y, w, h);
   return this;
 }
 
 // helper
-fwt_Graphics.prototype.oval = function(x, y, w, h)
+fan.fwt.Graphics.prototype.oval = function(x, y, w, h)
 {
   // Public Domain by Christopher Clay - http://canvaspaint.org/blog/
   var kappa = 4 * ((Math.sqrt(2) -1) / 3);
@@ -122,7 +122,7 @@ fwt_Graphics.prototype.oval = function(x, y, w, h)
 }
 
 // This drawOval(Int x, Int y, Int w, Int h)
-fwt_Graphics.prototype.drawOval = function(x, y, w, h)
+fan.fwt.Graphics.prototype.drawOval = function(x, y, w, h)
 {
   this.oval(x, y, w, h)
   this.cx.stroke();
@@ -130,7 +130,7 @@ fwt_Graphics.prototype.drawOval = function(x, y, w, h)
 }
 
 // This fillOval(Int x, Int y, Int w, Int h)
-fwt_Graphics.prototype.fillOval = function(x, y, w, h)
+fan.fwt.Graphics.prototype.fillOval = function(x, y, w, h)
 {
   this.oval(x, y, w, h)
   this.cx.fill();
@@ -138,51 +138,51 @@ fwt_Graphics.prototype.fillOval = function(x, y, w, h)
 }
 
 // This drawArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
-fwt_Graphics.prototype.drawArc = function(x, y, w, h, startAngle, arcAngle)
+fan.fwt.Graphics.prototype.drawArc = function(x, y, w, h, startAngle, arcAngle)
 {
   // TODO
   return this;
 }
 
 // This fillArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
-fwt_Graphics.prototype.fillArc = function(x, y, w, h, startAngle, arcAngle)
+fan.fwt.Graphics.prototype.fillArc = function(x, y, w, h, startAngle, arcAngle)
 {
   // TODO
   return this;
 }
 
 // This drawText(Str s, Int x, Int y)
-fwt_Graphics.prototype.drawText = function (s, x, y)
+fan.fwt.Graphics.prototype.drawText = function (s, x, y)
 {
   this.cx.fillText(s, x, y)
   return this;
 }
 
 // This drawImage(Image image, Int x, Int y)
-fwt_Graphics.prototype.drawImage = function (fanImg, x, y)
+fan.fwt.Graphics.prototype.drawImage = function (fanImg, x, y)
 {
-  var jsImg = fwt_FwtEnvPeer.loadImage(fanImg);
+  var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg);
   this.cx.drawImage(jsImg, x, y)
   return this;
 }
 
 // This copyImage(Image image, Rect src, Rect dest)
-fwt_Graphics.prototype.copyImage = function (fanImg, src, dst)
+fan.fwt.Graphics.prototype.copyImage = function (fanImg, src, dst)
 {
-  var jsImg = fwt_FwtEnvPeer.loadImage(fanImg);
+  var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg);
   this.cx.drawImage(jsImg, src.x, src.y, src.w, src.h, dst.x, dst.y, dst.w, dst.h)
   return this;
 }
 
 // This translate(Int x, Int y)
-fwt_Graphics.prototype.translate = function (x, y)
+fan.fwt.Graphics.prototype.translate = function (x, y)
 {
   this.cx.translate(x, y)
   return this;
 }
 
 // This clip(Rect r)
-fwt_Graphics.prototype.clip = function (rect)
+fan.fwt.Graphics.prototype.clip = function (rect)
 {
   this.cx.beginPath();
   this.cx.moveTo(rect.x, rect.y);
@@ -195,7 +195,7 @@ fwt_Graphics.prototype.clip = function (rect)
 }
 
 // Void push()
-fwt_Graphics.prototype.push = function ()
+fan.fwt.Graphics.prototype.push = function ()
 {
   this.cx.save();
   var state = new Object();
@@ -208,7 +208,7 @@ fwt_Graphics.prototype.push = function ()
 }
 
 // Void pop()
-fwt_Graphics.prototype.pop = function ()
+fan.fwt.Graphics.prototype.pop = function ()
 {
   this.cx.restore();
   var state = this.stack.pop();
@@ -220,11 +220,11 @@ fwt_Graphics.prototype.pop = function ()
 }
 
 // Void dispose()
-fwt_Graphics.prototype.dispose = function ()
+fan.fwt.Graphics.prototype.dispose = function ()
 {
   // no-op
 }
 
 // state for fields in push/pop
-fwt_Graphics.prototype.stack = new Array();
+fan.fwt.Graphics.prototype.stack = new Array();
 

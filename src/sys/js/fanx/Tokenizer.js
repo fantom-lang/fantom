@@ -247,33 +247,33 @@ fanx_Tokenizer.prototype.number = function(neg)
     if (floatSuffix)
     {
       if (s == null)
-        this.val = sys_Float.make(whole);
+        this.val = fan.sys.Float.make(whole);
       else
-        this.val = sys_Float.fromStr(s);
+        this.val = fan.sys.Float.fromStr(s);
       return fanx_Token.FLOAT_LITERAL;
     }
 
     // decimal literal (or duration)
     if (decimalSuffix || floating)
     {
-      var num = (s == null) ? whole : sys_Float.fromStr(s);
+      var num = (s == null) ? whole : fan.sys.Float.fromStr(s);
       if (dur > 0)
       {
-        this.val = sys_Duration.make(num * dur);
+        this.val = fan.sys.Duration.make(num * dur);
         return fanx_Token.DURATION_LITERAL;
       }
       else
       {
-        this.val = sys_Decimal.make(num);
+        this.val = fan.sys.Decimal.make(num);
         return fanx_Token.DECIMAL_LITERAL;
       }
     }
 
     // int literal (or duration)
-    var num = (s == null) ? whole : Math.floor(sys_Float.fromStr(s, true));
+    var num = (s == null) ? whole : Math.floor(fan.sys.Float.fromStr(s, true));
     if (dur > 0)
     {
-      this.val = sys_Duration.make(num*dur);
+      this.val = fan.sys.Duration.make(num*dur);
       return fanx_Token.DURATION_LITERAL;
     }
     else
@@ -314,7 +314,7 @@ var str = String.fromCharCode(this.cur);
 str += String.fromCharCode(this.cur);
     nibCount++;
     if (nibCount > 16) throw this.err("Hex literal too big");
-//    val = sys_Int.shl(val, 4) + nib;
+//    val = fan.sys.Int.shl(val, 4) + nib;
     this.consume();
   }
   //this.val = val;
@@ -460,7 +460,7 @@ fanx_Tokenizer.prototype.uri = function()
     }
   }
 
-  this.val = sys_Uri.fromStr(s);
+  this.val = fan.sys.Uri.fromStr(s);
   return fanx_Token.URI_LITERAL;
 }
 
@@ -552,7 +552,7 @@ fanx_Tokenizer.prototype.consume = function()
  */
 fanx_Tokenizer.prototype.undo = function(type, val, line)
 {
-  if (this.$undo != null) throw new sys_Err.make("only one pushback supported");
+  if (this.$undo != null) throw new fan.sys.Err.make("only one pushback supported");
   this.$undo = new fanx_Undo(type, val, line);
 }
 

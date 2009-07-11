@@ -66,8 +66,8 @@ class ShowScript : Widget
     if (!f.exists) { res.sendError(404); return }
 
     compile(f)
-    qname := compiler.types[0].qname
-    entryPoint := qname.replace("::", "_")
+    t := compiler.types[0]
+    entryPoint := "fan.${t.pod}.${t.name}"
 
     res.headers["Content-Type"] = "text/html"
     out := res.out

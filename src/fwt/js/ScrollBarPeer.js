@@ -9,6 +9,6 @@
 /**
  * ScrollBarPeer.
  */
-var fwt_ScrollBarPeer = sys_Obj.$extend(fwt_WidgetPeer);
-fwt_ScrollBarPeer.prototype.$ctor = function(self) {}
+fan.fwt.ScrollBarPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
+fan.fwt.ScrollBarPeer.prototype.$ctor = function(self) {}
 

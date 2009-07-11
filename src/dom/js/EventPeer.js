@@ -8,23 +8,23 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
-var dom_EventPeer = sys_Obj.$extend(sys_Obj);
+fan.dom.EventPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
-dom_EventPeer.prototype.$ctor = function(self) {}
+fan.dom.EventPeer.prototype.$ctor = function(self) {}
 
-dom_EventPeer.prototype.target = function(self)
+fan.dom.EventPeer.prototype.target = function(self)
 {
-  return dom_ElemPeer.make(this.event.target);
+  return fan.dom.ElemPeer.make(this.event.target);
 }
 
-dom_EventPeer.prototype.x = function(self) { return this.event.pageX; }
-dom_EventPeer.prototype.y = function(self) { return this.event.pageY; }
+fan.dom.EventPeer.prototype.x = function(self) { return this.event.pageX; }
+fan.dom.EventPeer.prototype.y = function(self) { return this.event.pageY; }
 
-dom_EventPeer.prototype.alt   = function(self) { return this.event.altKey; }
-dom_EventPeer.prototype.ctrl  = function(self) { return this.event.ctrlKey; }
-dom_EventPeer.prototype.shift = function(self) { return this.event.shiftKey; }
+fan.dom.EventPeer.prototype.alt   = function(self) { return this.event.altKey; }
+fan.dom.EventPeer.prototype.ctrl  = function(self) { return this.event.ctrlKey; }
+fan.dom.EventPeer.prototype.shift = function(self) { return this.event.shiftKey; }
 
-dom_EventPeer.prototype.toStr = function(self)
+fan.dom.EventPeer.prototype.toStr = function(self)
 {
   return "Event[" +
     "target:" + this.target() +
@@ -33,9 +33,9 @@ dom_EventPeer.prototype.toStr = function(self)
     "]";
 }
 
-dom_EventPeer.make = function(self, event)
+fan.dom.EventPeer.make = function(self, event)
 {
-  var wrap = new dom_EventPeer();
+  var wrap = new fan.dom.EventPeer();
   if (event != null) wrap.event = event;
   return wrap;
 }

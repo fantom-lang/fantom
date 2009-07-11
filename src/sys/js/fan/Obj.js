@@ -7,10 +7,14 @@
 //   20 May 09  Andy Frank  Refactor to new OO model
 //
 
+// Define the "uber-pod" and sys pods
+var fan = {};
+fan.sys = {};
+
 /**
  * Obj is the base class for all Fan types.
  */
-function sys_Obj() {}
+fan.sys.Obj = function() {};
 
 //////////////////////////////////////////////////////////////////////////
 // OO
@@ -20,7 +24,7 @@ function sys_Obj() {}
  * Handles the boilerplate code for implementing OO-style
  * inhertiance in Javascript.
  */
-sys_Obj.$extend = function(base)
+fan.sys.Obj.$extend = function(base)
 {
   function f() { this.$ctor.apply(this, arguments); }
   f.prototype = new base;
@@ -32,43 +36,43 @@ sys_Obj.$extend = function(base)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Obj.prototype.$ctor = function() {}
-sys_Obj.prototype.$make = function() {}
+fan.sys.Obj.prototype.$ctor = function() {}
+fan.sys.Obj.prototype.make$ = function() {}
 
-sys_Obj.prototype.equals = function(that)
+fan.sys.Obj.prototype.equals = function(that)
 {
   return this == that;
 }
 
-sys_Obj.prototype.compare = function(that)
+fan.sys.Obj.prototype.compare = function(that)
 {
   if (this < that) return -1;
   if (this > that) return 1;
   return 0;
 }
 
-sys_Obj.prototype.$with = function(func)
+fan.sys.Obj.prototype.$with = function(func)
 {
   func(this);
   return this;
 }
 
-sys_Obj.prototype.isImmutable = function()
+fan.sys.Obj.prototype.isImmutable = function()
 {
   return false;
 }
 
-sys_Obj.prototype.type = function()
+fan.sys.Obj.prototype.type = function()
 {
-  return sys_Type.find("sys::Obj")
+  return fan.sys.Type.find("sys::Obj")
 }
 
-sys_Obj.prototype.toStr = function()
+fan.sys.Obj.prototype.toStr = function()
 {
   return "" + this.type();
 }
 
-sys_Obj.prototype.toString = function()
+fan.sys.Obj.prototype.toString = function()
 {
   return "" + this.toStr();
 }
@@ -77,31 +81,31 @@ sys_Obj.prototype.toString = function()
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Obj.equals = function(self, that)
+fan.sys.Obj.equals = function(self, that)
 {
-  if (self instanceof sys_Obj) return self.equals(that);
-  else if (self instanceof Long) return sys_Int.equals(self, that);
-  else if ((typeof self) == "number") return sys_Int.equals(self, that);
-  else if (self != null && self.constructor == Array) return sys_List.equals(self, that);
+  if (self instanceof fan.sys.Obj) return self.equals(that);
+  else if (self instanceof Long) return fan.sys.Int.equals(self, that);
+  else if ((typeof self) == "number") return fan.sys.Int.equals(self, that);
+  else if (self != null && self.constructor == Array) return fan.sys.List.equals(self, that);
   else
   {
     if (self != null && self.$fanType != null)
-      return sys_Float.equals(self, that);
+      return fan.sys.Float.equals(self, that);
     else
       return self == that;
    }
 }
 
-sys_Obj.compare = function(self, that)
+fan.sys.Obj.compare = function(self, that)
 {
-  if (self instanceof sys_Obj)
+  if (self instanceof fan.sys.Obj)
   {
     if (that == null) return +1;
     return self.compare(that);
   }
 //  else if ((typeof self) == "number")
 //  {
-//    return sys_Float.compare(self, that);
+//    return fan.sys.Float.compare(self, that);
 //  }
   else
   {
@@ -117,22 +121,22 @@ sys_Obj.compare = function(self, that)
   }
 }
 
-sys_Obj.is = function(obj, type)
+fan.sys.Obj.is = function(obj, type)
 {
   if (obj == null) return false;
-  return sys_Obj.type(obj).is(type);
+  return fan.sys.Obj.type(obj).is(type);
 }
 
-sys_Obj.as = function(obj, type)
+fan.sys.Obj.as = function(obj, type)
 {
   if (obj == null) return false;
-  if (sys_Obj.type(obj).is(type)) return obj;
+  if (fan.sys.Obj.type(obj).is(type)) return obj;
   return null;
 }
 
-sys_Obj.isImmutable = function(self)
+fan.sys.Obj.isImmutable = function(self)
 {
-  if (self instanceof sys_Obj)
+  if (self instanceof fan.sys.Obj)
     return self.isImmutable();
   else
   {
@@ -140,24 +144,24 @@ sys_Obj.isImmutable = function(self)
     if ((typeof self) == "number") return true;
 // TODO
     if (self != null && self.$fanType != null) return true;
-    throw new sys_Err("sys::Obj.isImmutable: Not a Fan type: " + self);
+    throw new fan.sys.Err("sys::Obj.isImmutable: Not a Fan type: " + self);
   }
 }
 
-sys_Obj.type = function(self)
+fan.sys.Obj.type = function(self)
 {
-  if (self == null) throw sys_Err.make("sys_Obj.type: self is null");
-  if (self instanceof sys_Obj)
+  if (self == null) throw fan.sys.Err.make("fan.sys.Obj.type: self is null");
+  if (self instanceof fan.sys.Obj)
     return self.type();
   else
-    return sys_Type.toFanType(self);
+    return fan.sys.Type.toFanType(self);
 }
 
-sys_Obj.toStr = function(obj)
+fan.sys.Obj.toStr = function(obj)
 {
   if (obj == null) return "null";
   if (typeof obj == "string") return obj;
-  if (obj.constructor == Array) return sys_List.toStr(obj);
+  if (obj.constructor == Array) return fan.sys.List.toStr(obj);
 
   // TODO - can't for the life of me figure how the
   // heck Error.toString would ever try to call Obj.toStr
@@ -165,14 +169,14 @@ sys_Obj.toStr = function(obj)
   if (obj instanceof Error) return Error.prototype.toString.call(obj);
 
 // TEMP
-if (obj.$fanType == sys_Type.find("sys::Float")) return sys_Float.toStr(obj);
+if (obj.$fanType == fan.sys.Type.find("sys::Float")) return fan.sys.Float.toStr(obj);
 
   return obj.toString();
 }
 
-sys_Obj.echo = function(str)
+fan.sys.Obj.echo = function(str)
 {
-  var s = sys_Obj.toStr(str);
+  var s = fan.sys.Obj.toStr(str);
   try { console.log(s); }
   catch (e1)
   {
@@ -181,7 +185,7 @@ sys_Obj.echo = function(str)
   }
 }
 
-sys_Obj.$with = function(self, func)
+fan.sys.Obj.$with = function(self, func)
 {
   func(self);
   return self;

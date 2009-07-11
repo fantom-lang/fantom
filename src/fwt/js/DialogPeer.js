@@ -9,10 +9,10 @@
 /**
  * DialogPeer.
  */
-var fwt_DialogPeer = sys_Obj.$extend(fwt_WindowPeer);
-fwt_DialogPeer.prototype.$ctor = function(self) {}
+fan.fwt.DialogPeer = fan.sys.Obj.$extend(fan.fwt.WindowPeer);
+fan.fwt.DialogPeer.prototype.$ctor = function(self) {}
 
-fwt_DialogPeer.prototype.open = function(self)
+fan.fwt.DialogPeer.prototype.open = function(self)
 {
   // mount mask that functions as input blocker for modality
   var mask = document.createElement("div")
@@ -83,14 +83,14 @@ fwt_DialogPeer.prototype.open = function(self)
   this.$shell = shell;
 }
 
-fwt_DialogPeer.prototype.close = function(self, result)
+fan.fwt.DialogPeer.prototype.close = function(self, result)
 {
   if (this.$shell) this.$shell.parentNode.removeChild(this.$shell);
   if (this.$mask) this.$mask.parentNode.removeChild(this.$mask);
-  fwt_WindowPeer.prototype.close.call(this, self, result);
+  fan.fwt.WindowPeer.prototype.close.call(this, self, result);
 }
 
-fwt_DialogPeer.prototype.sync = function(self)
+fan.fwt.DialogPeer.prototype.sync = function(self)
 {
   var content = self.content$get();
   if (content == null || content.peer.elem == null) return;
@@ -115,13 +115,13 @@ fwt_DialogPeer.prototype.sync = function(self)
     height = h + "px";
   }
 
-  this.pos$set(this, gfx_Point.make(0, th));
-  this.size$set(this, gfx_Size.make(pref.w, pref.h));
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  this.pos$set(this, fan.gfx.Point.make(0, th));
+  this.size$set(this, fan.gfx.Size.make(pref.w, pref.h));
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
-fwt_DialogPeer.prototype.title$get = function(self) { return this.title; }
-fwt_DialogPeer.prototype.title$set = function(self, val) { this.title = val; }
-fwt_DialogPeer.prototype.title = "";
+fan.fwt.DialogPeer.prototype.title$get = function(self) { return this.title; }
+fan.fwt.DialogPeer.prototype.title$set = function(self, val) { this.title = val; }
+fan.fwt.DialogPeer.prototype.title = "";
 
 

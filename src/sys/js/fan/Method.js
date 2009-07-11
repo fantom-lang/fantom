@@ -10,13 +10,13 @@
 /**
  * Method.
  */
-var sys_Method = sys_Obj.$extend(sys_Slot);
+fan.sys.Method = fan.sys.Obj.$extend(fan.sys.Slot);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Method.prototype.$ctor = function(parent, name)
+fan.sys.Method.prototype.$ctor = function(parent, name)
 {
   this.m_parent = parent;
   this.m_name   = name;
@@ -24,20 +24,20 @@ sys_Method.prototype.$ctor = function(parent, name)
   //this.m_flags  = flags;
   //this.m_of     = of;
   this.m_$name  = this.$name(name);
-  this.m_$qname = parent.qname().replace("::","_") + "." + this.m_$name;
+  this.m_$qname = 'fan.' + parent.pod() + '.' + parent.name() + '.' + this.m_$name;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Method.prototype.invoke = function(instance, args)
+fan.sys.Method.prototype.invoke = function(instance, args)
 {
   instance[this.m_$name].apply(instance, args)
 }
 
-sys_Method.prototype.type = function()
+fan.sys.Method.prototype.type = function()
 {
-  return sys_Type.find("sys::Method");
+  return fan.sys.Type.find("sys::Method");
 }
 

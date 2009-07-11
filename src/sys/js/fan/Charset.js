@@ -10,12 +10,12 @@
 /**
  * Charset.
  */
-var sys_Charset = sys_Obj.$extend(sys_Obj);
+fan.sys.Charset = fan.sys.Obj.$extend(fan.sys.Obj);
 
-sys_Charset.prototype.$ctor = function() {}
-sys_Charset.prototype.type = function() { return sys_Type.find("sys::Charset"); }
+fan.sys.Charset.prototype.$ctor = function() {}
+fan.sys.Charset.prototype.type = function() { return fan.sys.Type.find("sys::Charset"); }
 
 // TODO
-sys_Charset.utf16BE = function() { return null; }
-sys_Charset.utf16LE = function() { return null; }
-sys_Charset.utf8    = function() { return null; }
+fan.sys.Charset.utf16BE = function() { return null; }
+fan.sys.Charset.utf16LE = function() { return null; }
+fan.sys.Charset.utf8    = function() { return null; }

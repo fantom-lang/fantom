@@ -10,15 +10,15 @@
  * MimeType represents the parsed value of a Content-Type
  * header per RFC 2045 section 5.1.
  */
-var sys_MimeType = sys_Obj.$extend(sys_Obj);
-sys_MimeType.prototype.$ctor = function() {}
-sys_MimeType.prototype.type = function() { return sys_Type.find("sys::MimeType"); }
+fan.sys.MimeType = fan.sys.Obj.$extend(fan.sys.Obj);
+fan.sys.MimeType.prototype.$ctor = function() {}
+fan.sys.MimeType.prototype.type = function() { return fan.sys.Type.find("sys::MimeType"); }
 
 //////////////////////////////////////////////////////////////////////////
 // fromStr
 //////////////////////////////////////////////////////////////////////////
 
-sys_MimeType.fromStr = function(s, checked)
+fan.sys.MimeType.fromStr = function(s, checked)
 {
   if (checked == undefined) checked = true;
   try
@@ -27,24 +27,24 @@ sys_MimeType.fromStr = function(s, checked)
     switch (s.charAt(0))
     {
       case 'i':
-        if (s == "image/png")  return sys_MimeType.imagePng;
-        if (s == "image/jpeg") return sys_MimeType.imageJpeg;
-        if (s == "image/gif")  return sys_MimeType.imageGif;
+        if (s == "image/png")  return fan.sys.MimeType.imagePng;
+        if (s == "image/jpeg") return fan.sys.MimeType.imageJpeg;
+        if (s == "image/gif")  return fan.sys.MimeType.imageGif;
         break;
       case 't':
-        if (s == "text/plain") return sys_MimeType.textPlain;
-        if (s == "text/html")  return sys_MimeType.textHtml;
-        if (s == "text/xml")   return sys_MimeType.textXml;
+        if (s == "text/plain") return fan.sys.MimeType.textPlain;
+        if (s == "text/html")  return fan.sys.MimeType.textHtml;
+        if (s == "text/xml")   return fan.sys.MimeType.textXml;
         break;
       case 'x':
-        if (s == "x-directory/normal") return sys_MimeType.dir;
+        if (s == "x-directory/normal") return fan.sys.MimeType.dir;
         break;
     }
 
     var slash = s.indexOf('/');
     var media = s.substring(0, slash);
     var sub = s.substring(slash+1, s.length);
-    var params = sys_MimeType.emptyParams();
+    var params = fan.sys.MimeType.emptyParams();
 
     var semi = sub.indexOf(';');
     if (semi > 0)
@@ -54,17 +54,17 @@ sys_MimeType.fromStr = function(s, checked)
       console.log("#### MIME TYPE - PARAMS NOT IMPLEMENTED!!! ####");
     }
 
-    var r = new sys_MimeType();
+    var r = new fan.sys.MimeType();
     r.str = s;
-    r.mediaType = sys_Str.lower(media);
-    r.subType   = sys_Str.lower(sub);
+    r.mediaType = fan.sys.Str.lower(media);
+    r.subType   = fan.sys.Str.lower(sub);
     r.params    = params.ro();
     return r;
   }
   catch (err)
   {
     if (!checked) return null;
-    throw sys_ParseErr.make("MimeType",  s);
+    throw fan.sys.ParseErr.make("MimeType",  s);
   }
 }
 
@@ -72,7 +72,7 @@ sys_MimeType.fromStr = function(s, checked)
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-sys_MimeType.prototype.equals = function(obj)
+fan.sys.MimeType.prototype.equals = function(obj)
 {
   if (!(obj instanceof MimeType)) return false;
   return this.mediaType == obj.mediaType &&
@@ -81,7 +81,7 @@ sys_MimeType.prototype.equals = function(obj)
 }
 
 
-sys_MimeType.prototype.hash = function()
+fan.sys.MimeType.prototype.hash = function()
 {
   return 0;
   //return this.mediaType.hashCode() ^
@@ -89,20 +89,20 @@ sys_MimeType.prototype.hash = function()
   //       this.params.hashCode();
 }
 
-sys_MimeType.prototype.toStr = function() { return this.str; }
+fan.sys.MimeType.prototype.toStr = function() { return this.str; }
 
-sys_MimeType.prototype.type = function() { return sys_Type.find("sys::MimeType"); }
+fan.sys.MimeType.prototype.type = function() { return fan.sys.Type.find("sys::MimeType"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_MimeType.prototype.mediaType = function() { return this.mediaType; }
-sys_MimeType.prototype.subType = function() { return this.subType; }
-sys_MimeType.prototype.params = function() { return this.params; }
+fan.sys.MimeType.prototype.mediaType = function() { return this.mediaType; }
+fan.sys.MimeType.prototype.subType = function() { return this.subType; }
+fan.sys.MimeType.prototype.params = function() { return this.params; }
 
 /*
-sys_MimeType.prototype.charset = function()
+fan.sys.MimeType.prototype.charset = function()
 {
   String s = (String)params().get("charset");
   if (s == null) return Charset.utf8;
@@ -114,30 +114,30 @@ sys_MimeType.prototype.charset = function()
 // Lazy Load
 //////////////////////////////////////////////////////////////////////////
 
-sys_MimeType.emptyParams = function()
+fan.sys.MimeType.emptyParams = function()
 {
-  var q = sys_MimeType.emptyQuery;
+  var q = fan.sys.MimeType.emptyQuery;
   if (q == null)
   {
-    q = new sys_Map(sys_Type.find("sys::Str"), sys_Type.find("sys::Str"));
+    q = new fan.sys.Map(fan.sys.Type.find("sys::Str"), fan.sys.Type.find("sys::Str"));
     //q.caseInsensitive(true);
     //q = q.toImmutable();
-    sys_MimeType.emptyQuery = q;
+    fan.sys.MimeType.emptyQuery = q;
   }
   return q;
 }
-sys_MimeType.emptyQuery = null;
+fan.sys.MimeType.emptyQuery = null;
 
 //////////////////////////////////////////////////////////////////////////
 // Predefined
 //////////////////////////////////////////////////////////////////////////
 
-sys_MimeType.predefined = function(media, sub)
+fan.sys.MimeType.predefined = function(media, sub)
 {
-  var t = new sys_MimeType();
+  var t = new fan.sys.MimeType();
   t.mediaType = media;
   t.subType = sub;
-  t.params = sys_MimeType.emptyParams();
+  t.params = fan.sys.MimeType.emptyParams();
   t.str = media + "/" + sub;
   return t;
 }

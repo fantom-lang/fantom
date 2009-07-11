@@ -143,7 +143,7 @@ class TestRunner
     try
     {
       // TODO - setup/teardown
-      js  := m.parent.qname.replace("::", "_")
+      js  := "fan.${m.parent.pod}.${m.parent.name}"
       ret := engine.eval(
        "var testRunner = function()
         {

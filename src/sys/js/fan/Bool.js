@@ -10,35 +10,35 @@
 /**
  * Bool
  */
-var sys_Bool = sys_Obj.$extend(sys_Obj);
+fan.sys.Bool = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Bool.prototype.$ctor = function() {}
+fan.sys.Bool.prototype.$ctor = function() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Bool.prototype.type = function()
+fan.sys.Bool.prototype.type = function()
 {
-  return sys_Type.find("sys::Bool");
+  return fan.sys.Type.find("sys::Bool");
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Bool.fromStr = function(s, checked)
+fan.sys.Bool.fromStr = function(s, checked)
 {
   if (s == "true") return true;
   if (s == "false") return false;
   if (checked != null && !checked) return null;
-  throw new sys_ParseErr("Bool", s);
+  throw new fan.sys.ParseErr("Bool", s);
 }
 
-sys_Bool.toStr  = function(self) { return self ? "true" : "false"; }
-sys_Bool.toCode = function(self) { return self ? "true" : "false"; }
-sys_Bool.defVal = false;
+fan.sys.Bool.toStr  = function(self) { return self ? "true" : "false"; }
+fan.sys.Bool.toCode = function(self) { return self ? "true" : "false"; }
+fan.sys.Bool.defVal = false;

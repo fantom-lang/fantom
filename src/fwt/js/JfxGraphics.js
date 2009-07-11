@@ -13,8 +13,8 @@
 function JfxGraphics(script)
 {
   this.script = script;
-  this.brush  = gfx_Color.black;
-  this.pen    = gfx_Pen.defVal;
+  this.brush  = fan.gfx.Color.black;
+  this.pen    = fan.gfx.Pen.defVal;
 }
 
 // Brush brush
@@ -23,7 +23,7 @@ JfxGraphics.prototype.brush$get = function() { return this.brush }
 JfxGraphics.prototype.brush$set = function(b)
 {
   this.brush = b;
-  if (b instanceof gfx_Color)
+  if (b instanceof fan.gfx.Color)
   {
     this.script.setColor(b.toCss());
   }
@@ -150,7 +150,7 @@ JfxGraphics.prototype.drawText = function (s, x, y)
 // This drawImage(Image image, Int x, Int y)
 JfxGraphics.prototype.drawImage = function (fanImg, x, y)
 {
- // var jsImg = fwt_FwtEnvPeer.loadImage(fanImg);
+ // var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg);
  // this.cx.drawImage(jsImg, x, y)
   return this;
 }
@@ -158,7 +158,7 @@ JfxGraphics.prototype.drawImage = function (fanImg, x, y)
 // This copyImage(Image image, Rect src, Rect dest)
 JfxGraphics.prototype.copyImage = function (fanImg, src, dst)
 {
-//  var jsImg = fwt_FwtEnvPeer.loadImage(fanImg);
+//  var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg);
 //  this.cx.drawImage(jsImg, src.x, src.y, src.w, src.h, dst.x, dst.y, dst.w, dst.h)
   return this;
 }

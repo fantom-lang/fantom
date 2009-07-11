@@ -10,4 +10,4 @@
  * Static init
  */
 
-sys_Actor.locals().set("gfx.env", fwt_FwtEnv.make());
+fan.sys.Actor.locals().set("gfx.env", fan.fwt.FwtEnv.make());

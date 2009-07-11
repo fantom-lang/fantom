@@ -10,13 +10,13 @@
 /**
  * StrInStream
  */
-var sys_StrInStream = sys_Obj.$extend(sys_InStream);
+fan.sys.StrInStream = fan.sys.Obj.$extend(fan.sys.InStream);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_StrInStream.prototype.$ctor = function(str)
+fan.sys.StrInStream.prototype.$ctor = function(str)
 {
   this.str  = str;
   this.size = str.length;
@@ -28,13 +28,13 @@ sys_StrInStream.prototype.$ctor = function(str)
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-sys_StrInStream.prototype.read = function()
+fan.sys.StrInStream.prototype.read = function()
 {
   var b = this.readChar();
   return (b < 0) ? null : (b & 0xff);
 }
 
-sys_StrInStream.prototype.readBuf = function(buf, n)
+fan.sys.StrInStream.prototype.readBuf = function(buf, n)
 {
   var nval = n;
   for (var i=0; i<nval; ++i)
@@ -46,12 +46,12 @@ sys_StrInStream.prototype.readBuf = function(buf, n)
   return n;
 }
 
-sys_StrInStream.prototype.unread = function(c)
+fan.sys.StrInStream.prototype.unread = function(c)
 {
   return unreadChar(c);
 }
 
-sys_StrInStream.prototype.readChar = function()
+fan.sys.StrInStream.prototype.readChar = function()
 {
   if (this.pushback != null && this.pushback.length > 0)
     return this.pushback.pop();
@@ -59,14 +59,14 @@ sys_StrInStream.prototype.readChar = function()
   return this.str.charCodeAt(this.pos++);
 }
 
-sys_StrInStream.prototype.unreadChar = function(c)
+fan.sys.StrInStream.prototype.unreadChar = function(c)
 {
   if (this.pushback == null) this.pushback = [];
   this.pushback.push(c);
   return this;
 }
 
-sys_StrInStream.prototype.close = function()
+fan.sys.StrInStream.prototype.close = function()
 {
   return true;
 }

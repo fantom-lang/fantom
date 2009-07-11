@@ -37,8 +37,8 @@ class DomFxTest : Widget
       {
         id := unique
         body.td("valign='top' style='padding-right:1em;'")
-        body.button("value='Show ($s)' onclick='testWeb_FxTestClient.show(\"$id\",\"$s\");'")
-        body.button("value='Hide ($s)' onclick='testWeb_FxTestClient.hide(\"$id\",\"$s\");'")
+        body.button("value='Show ($s)' onclick='fan.testWeb.FxTestClient.show(\"$id\",\"$s\");'")
+        body.button("value='Hide ($s)' onclick='fan.testWeb.FxTestClient.hide(\"$id\",\"$s\");'")
         body.div("id='$id' style='margin-top:5px; padding:1em; background:#ff8; $css'").w("Hello!").divEnd
         body.tdEnd
       }
@@ -61,8 +61,8 @@ class DomFxTest : Widget
       {
         body.td("valign='top' style='$tdStyle'")
         id := unique
-        body.button("value='->${s[0]} (${s[2]})' onclick='testWeb_FxTestClient.fadeTo(\"$id\", ${s[0].toDecimal}, \"${s[2]}\");'")
-        body.button("value='->${s[1]} (${s[2]})' onclick='testWeb_FxTestClient.fadeTo(\"$id\", ${s[1].toDecimal}, \"${s[2]}\");'")
+        body.button("value='->${s[0]} (${s[2]})' onclick='fan.testWeb.FxTestClient.fadeTo(\"$id\", ${s[0].toDecimal}, \"${s[2]}\");'")
+        body.button("value='->${s[1]} (${s[2]})' onclick='fan.testWeb.FxTestClient.fadeTo(\"$id\", ${s[1].toDecimal}, \"${s[2]}\");'")
         body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
         body.tdEnd
       }
@@ -74,12 +74,12 @@ class DomFxTest : Widget
     body.tr
     body.td("valign='top' style='$tdStyle'")
       id := unique
-      body.button("value='FadeOut/FadeIn (250ms)' onclick='testWeb_FxTestClient.fadeToChain(\"$id\", \"250ms\");'")
+      body.button("value='FadeOut/FadeIn (250ms)' onclick='fan.testWeb.FxTestClient.fadeToChain(\"$id\", \"250ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
     body.td("valign='top' style='$tdStyle'")
       id = unique
-      body.button("value='->0->1 (250ms)' onclick='testWeb_FxTestClient.animateOpacityChain(\"$id\", \"250ms\");'")
+      body.button("value='->0->1 (250ms)' onclick='fan.testWeb.FxTestClient.animateOpacityChain(\"$id\", \"250ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
     body.trEnd
@@ -97,8 +97,8 @@ class DomFxTest : Widget
       {
         body.td("valign='top' style='$tdStyle'")
         id := unique
-        body.button("value='SlideDown ($s)' onclick='testWeb_FxTestClient.slideDown(\"$id\", \"$s\");'")
-        body.button("value='SlideUp ($s)' onclick='testWeb_FxTestClient.slideUp(\"$id\", \"$s\");'")
+        body.button("value='SlideDown ($s)' onclick='fan.testWeb.FxTestClient.slideDown(\"$id\", \"$s\");'")
+        body.button("value='SlideUp ($s)' onclick='fan.testWeb.FxTestClient.slideUp(\"$id\", \"$s\");'")
         body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
         body.tdEnd
       }
@@ -118,22 +118,22 @@ class DomFxTest : Widget
     body.tr
     body.td("valign='top' style='$tdStyle'")
       id := unique
-      body.button("value='FadeOut/FadeIn (400ms)' onclick='testWeb_FxTestClient.queue1(\"$id\", \"400ms\");'")
+      body.button("value='FadeOut/FadeIn (400ms)' onclick='fan.testWeb.FxTestClient.queue1(\"$id\", \"400ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
     body.td("valign='top' style='$tdStyle'")
       id = unique
-      body.button("value='SlideUp/SlideDown (400ms)' onclick='testWeb_FxTestClient.queue2(\"$id\", \"400ms\");'")
+      body.button("value='SlideUp/SlideDown (400ms)' onclick='fan.testWeb.FxTestClient.queue2(\"$id\", \"400ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
     body.td("valign='top' style='$tdStyle'")
       id = unique
-      body.button("value='Fade/Slide#1 (400ms)' onclick='testWeb_FxTestClient.queue3(\"$id\", \"400ms\");'")
+      body.button("value='Fade/Slide#1 (400ms)' onclick='fan.testWeb.FxTestClient.queue3(\"$id\", \"400ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
     body.td("valign='top' style='$tdStyle'")
       id = unique
-      body.button("value='Fade/Slide#2 (400ms)' onclick='testWeb_FxTestClient.queue4(\"$id\", \"400ms\");'")
+      body.button("value='Fade/Slide#2 (400ms)' onclick='fan.testWeb.FxTestClient.queue4(\"$id\", \"400ms\");'")
       body.div("id='$id' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
     body.trEnd
@@ -141,21 +141,21 @@ class DomFxTest : Widget
     body.td("valign='top' style='$tdStyle'")
       a := unique
       b := unique
-      body.button("value='Complex#1 (400ms)' onclick='testWeb_FxTestClient.queue5(\"$a\",\"$b\",\"400ms\");'")
+      body.button("value='Complex#1 (400ms)' onclick='fan.testWeb.FxTestClient.queue5(\"$a\",\"$b\",\"400ms\");'")
       body.div("id='$a' style='$divStyle'").w("Hello!").divEnd
       body.div("id='$b' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
     body.td("valign='top' style='$tdStyle'")
       a = unique
       b = unique
-      body.button("value='Complex#2 (400ms)' onclick='testWeb_FxTestClient.queue6(\"$a\",\"$b\",\"400ms\");'")
+      body.button("value='Complex#2 (400ms)' onclick='fan.testWeb.FxTestClient.queue6(\"$a\",\"$b\",\"400ms\");'")
       body.div("id='$a' style='$divStyle'").w("Hello!").divEnd
       body.div("id='$b' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd
     body.td("valign='top' style='$tdStyle'")
       a = unique
       b = unique
-      body.button("value='Complex#3 (400ms)' onclick='testWeb_FxTestClient.queue7(\"$a\",\"$b\",\"400ms\");'")
+      body.button("value='Complex#3 (400ms)' onclick='fan.testWeb.FxTestClient.queue7(\"$a\",\"$b\",\"400ms\");'")
       body.div("id='$a' style='$divStyle'").w("Hello!").divEnd
       body.div("id='$b' style='$divStyle'").w("Hello!").divEnd
       body.tdEnd

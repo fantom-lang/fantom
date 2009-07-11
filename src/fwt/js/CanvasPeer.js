@@ -9,17 +9,17 @@
 /**
  * CanvasPeer.
  */
-var fwt_CanvasPeer = sys_Obj.$extend(fwt_WidgetPeer);
-fwt_CanvasPeer.prototype.$ctor = function(self) {}
+fan.fwt.CanvasPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
+fan.fwt.CanvasPeer.prototype.$ctor = function(self) {}
 
-fwt_CanvasPeer.prototype.create = function(parentElem)
+fan.fwt.CanvasPeer.prototype.create = function(parentElem)
 {
   // test for native canvas support
   this.hasCanvas = document.createElement("canvas").getContext != null;
-  return fwt_WidgetPeer.prototype.create.call(this, parentElem);
+  return fan.fwt.WidgetPeer.prototype.create.call(this, parentElem);
 }
 
-fwt_CanvasPeer.prototype.sync = function(self)
+fan.fwt.CanvasPeer.prototype.sync = function(self)
 {
   if (this.hasCanvas)
   {
@@ -35,12 +35,12 @@ fwt_CanvasPeer.prototype.sync = function(self)
     div.appendChild(c);
 
     // repaint canvas using Canvas.onPaint callback
-    var g = new fwt_Graphics()
+    var g = new fan.fwt.Graphics()
     g.cx = c.getContext("2d");
     g.cx.lineWidth = 1;
     g.cx.lineCap = "square";
     g.cx.textBaseline = "top";
-    g.cx.font = fwt_DesktopPeer.$sysFont.toStr();
+    g.cx.font = fan.fwt.DesktopPeer.$sysFont.toStr();
     self.onPaint(g);
   }
   else
@@ -64,7 +64,7 @@ fwt_CanvasPeer.prototype.sync = function(self)
     {
       this.fxLoaded = true;
       var s = javafxString({
-        codebase: sys_UriPodBase + "fwt/res/javafx/",
+        codebase: fan.sys.UriPodBase + "fwt/res/javafx/",
         archive: "Canvas.jar",
         draggable: true,
         width:  200,
@@ -77,6 +77,6 @@ fwt_CanvasPeer.prototype.sync = function(self)
     }
   }
 
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 

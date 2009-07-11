@@ -48,7 +48,7 @@ fanx_TypeParser.prototype.load = function()
   // [java] is java FFI
   else if (this.cur == '[' && this.sig.indexOf("[java]") != -1) //sig.regionMatches(pos, "[java]", 0, 6))
     //type = loadFFI();
-    throw sys_ArgErr.make("Java types not allowed '" + this.sig + "'");
+    throw fan.sys.ArgErr.make("Java types not allowed '" + this.sig + "'");
 
   // [...] is map
   else if (this.cur == '[')
@@ -90,7 +90,7 @@ fanx_TypeParser.prototype.loadMap = function()
   this.consume(':');
   var val = this.load();
   this.consume(']');
-  return new sys_MapType(key, val);
+  return new fan.sys.MapType(key, val);
 }
 
 fanx_TypeParser.prototype.loadFunc = function()
@@ -111,7 +111,7 @@ fanx_TypeParser.prototype.loadFunc = function()
   var ret = this.load();
   this.consume('|');
 
-  return new sys_FuncType(params, ret);
+  return new fan.sys.FuncType(params, ret);
 }
 
 fanx_TypeParser.prototype.loadBasic = function()
@@ -126,7 +126,7 @@ fanx_TypeParser.prototype.loadBasic = function()
   {
     //var type = Sys.genericParameterType(typeName);
     //if (type != null) return type;
-throw sys_Err.make("TODO - generic paramaters");
+throw fan.sys.Err.make("TODO - generic paramaters");
   }
 
   return fanx_TypeParser.find(podName, typeName, this.checked);
@@ -146,7 +146,7 @@ fanx_TypeParser.prototype.consumeId = function()
 fanx_TypeParser.prototype.isIdChar = function(ch)
 {
   if (ch == null) return false;
-  return sys_Int.isAlphaNum(ch.charCodeAt(0)) || ch == '_';
+  return fan.sys.Int.isAlphaNum(ch.charCodeAt(0)) || ch == '_';
 }
 
 fanx_TypeParser.prototype.consume = function(expected)
@@ -165,7 +165,7 @@ fanx_TypeParser.prototype.$consume = function()
 fanx_TypeParser.prototype.err = function(sig)
 {
   if (sig == undefined) sig = this.sig;
-  return sys_ArgErr.make("Invalid type signature '" + sig + "'");
+  return fan.sys.ArgErr.make("Invalid type signature '" + sig + "'");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -203,16 +203,16 @@ fanx_TypeParser.load = function(sig, checked)
       if (sig.charAt(colon+1) != ':') throw new Exception();
       podName  = sig.substring(0, colon);
       typeName = sig.substring(colon+2);
-      if (podName.length == 0 || typeName.length == 0) throw sys_Err.make("");
+      if (podName.length == 0 || typeName.length == 0) throw fan.sys.Err.make("");
     }
     catch (err)
     {
-      throw sys_ArgErr.make("Invalid type signature '" + sig + "', use <pod>::<type>");
+      throw fan.sys.ArgErr.make("Invalid type signature '" + sig + "', use <pod>::<type>");
     }
 
     // if podName starts with [java] this is a direct Java type
     if (podName.charAt(0) == '[')
-      throw sys_ArgErr.make("Java types not allowed '" + sig + "'");
+      throw fan.sys.ArgErr.make("Java types not allowed '" + sig + "'");
 
     // do a straight lookup
     type = fanx_TypeParser.find(podName, typeName, checked);
@@ -230,13 +230,13 @@ fanx_TypeParser.load = function(sig, checked)
   catch (err)
   {
 //println(err);
-    throw sys_Err.make(err);
+    throw fan.sys.Err.make(err);
   }
 }
 
 fanx_TypeParser.find = function(podName, typeName, checked)
 {
-  var pod = sys_Pod.find(podName, checked);
+  var pod = fan.sys.Pod.find(podName, checked);
   if (pod == null) return null;
   return pod.findType(typeName, checked);
 }

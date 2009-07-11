@@ -9,23 +9,23 @@
 /**
  * Actor.
  */
-var sys_Actor = sys_Obj.$extend(sys_Obj);
-sys_Actor.prototype.$ctor = function() {}
-sys_Actor.prototype.type = function() { return sys_Type.find("sys::Actor"); }
+fan.sys.Actor = fan.sys.Obj.$extend(fan.sys.Obj);
+fan.sys.Actor.prototype.$ctor = function() {}
+fan.sys.Actor.prototype.type = function() { return fan.sys.Type.find("sys::Actor"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Actor.locals = function()
+fan.sys.Actor.locals = function()
 {
-  if (sys_Actor.$locals == null)
+  if (fan.sys.Actor.$locals == null)
   {
-    var k = sys_Type.find("sys::Str");
-    var v = sys_Type.find("sys::Obj?")
-    sys_Actor.$locals = new sys_Map(k, v);
+    var k = fan.sys.Type.find("sys::Str");
+    var v = fan.sys.Type.find("sys::Obj?")
+    fan.sys.Actor.$locals = new fan.sys.Map(k, v);
   }
-  return sys_Actor.$locals;
+  return fan.sys.Actor.$locals;
 }
-sys_Actor.$locals = null;
+fan.sys.Actor.$locals = null;
 

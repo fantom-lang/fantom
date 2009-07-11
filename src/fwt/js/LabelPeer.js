@@ -9,38 +9,38 @@
 /**
  * LabelPeer.
  */
-var fwt_LabelPeer = sys_Obj.$extend(fwt_WidgetPeer);
-fwt_LabelPeer.prototype.$ctor = function(self) {}
+fan.fwt.LabelPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
+fan.fwt.LabelPeer.prototype.$ctor = function(self) {}
 
-fwt_LabelPeer.prototype.text$get = function(self) { return this.text; }
-fwt_LabelPeer.prototype.text$set = function(self, val) { this.text = val; }
-fwt_LabelPeer.prototype.text = "";
+fan.fwt.LabelPeer.prototype.text$get = function(self) { return this.text; }
+fan.fwt.LabelPeer.prototype.text$set = function(self, val) { this.text = val; }
+fan.fwt.LabelPeer.prototype.text = "";
 
-fwt_LabelPeer.prototype.bg$get = function(self) { return this.bg; }
-fwt_LabelPeer.prototype.bg$set = function(self, val) { this.bg = val; }
-fwt_LabelPeer.prototype.bg = null;
+fan.fwt.LabelPeer.prototype.bg$get = function(self) { return this.bg; }
+fan.fwt.LabelPeer.prototype.bg$set = function(self, val) { this.bg = val; }
+fan.fwt.LabelPeer.prototype.bg = null;
 
-fwt_LabelPeer.prototype.fg$get = function(self) { return this.fg; }
-fwt_LabelPeer.prototype.fg$set = function(self, val) { this.fg = val; }
-fwt_LabelPeer.prototype.fg = null;
+fan.fwt.LabelPeer.prototype.fg$get = function(self) { return this.fg; }
+fan.fwt.LabelPeer.prototype.fg$set = function(self, val) { this.fg = val; }
+fan.fwt.LabelPeer.prototype.fg = null;
 
-fwt_LabelPeer.prototype.font$get = function(self) { return this.font; }
-fwt_LabelPeer.prototype.font$set = function(self, val) { this.font = val; }
-fwt_LabelPeer.prototype.font = null;
+fan.fwt.LabelPeer.prototype.font$get = function(self) { return this.font; }
+fan.fwt.LabelPeer.prototype.font$set = function(self, val) { this.font = val; }
+fan.fwt.LabelPeer.prototype.font = null;
 
-fwt_LabelPeer.prototype.halign = null;
-fwt_LabelPeer.prototype.halign$get = function(self) { return this.halign; }
-fwt_LabelPeer.prototype.halign$set = function(self, val) { this.halign = val; }
+fan.fwt.LabelPeer.prototype.halign = null;
+fan.fwt.LabelPeer.prototype.halign$get = function(self) { return this.halign; }
+fan.fwt.LabelPeer.prototype.halign$set = function(self, val) { this.halign = val; }
 
-fwt_LabelPeer.prototype.image$get = function(self) { return this.image; }
-fwt_LabelPeer.prototype.image$set = function(self, val)
+fan.fwt.LabelPeer.prototype.image$get = function(self) { return this.image; }
+fan.fwt.LabelPeer.prototype.image$set = function(self, val)
 {
   this.image = val;
-  fwt_FwtEnvPeer.loadImage(val, self)
+  fan.fwt.FwtEnvPeer.loadImage(val, self)
 }
-fwt_LabelPeer.prototype.image = null;
+fan.fwt.LabelPeer.prototype.image = null;
 
-fwt_LabelPeer.prototype.sync = function(self)
+fan.fwt.LabelPeer.prototype.sync = function(self)
 {
   while (this.elem.firstChild != null)
     this.elem.removeChild(this.elem.firstChild);
@@ -73,13 +73,13 @@ fwt_LabelPeer.prototype.sync = function(self)
     if (this.font != null) font = this.font.toStr();
     switch (this.halign)
     {
-      case fwt_Halign.left:   textAlign = "left"; break;
-      case fwt_Halign.fill:   textAlign = "left"; break;
-      case fwt_Halign.center: textAlign = "center"; break;
-      case fwt_Halign.right:  textAlign = "right"; break;
+      case fan.fwt.Halign.left:   textAlign = "left"; break;
+      case fan.fwt.Halign.fill:   textAlign = "left"; break;
+      case fan.fwt.Halign.center: textAlign = "center"; break;
+      case fan.fwt.Halign.right:  textAlign = "right"; break;
       default:                textAlign = "left"; break;
     }
     whiteSpace = "nowrap";
   }
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }

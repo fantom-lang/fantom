@@ -10,7 +10,7 @@
 /**
  * Namespace.
  */
-var sys_Namespace = sys_Obj.$extend(sys_Obj);
-sys_Namespace.prototype.$ctor = function() {}
-sys_Namespace.prototype.type = function() { return sys_Type.find("sys::Namespace"); }
+fan.sys.Namespace = fan.sys.Obj.$extend(fan.sys.Obj);
+fan.sys.Namespace.prototype.$ctor = function() {}
+fan.sys.Namespace.prototype.type = function() { return fan.sys.Type.find("sys::Namespace"); }
 

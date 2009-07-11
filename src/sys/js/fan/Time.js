@@ -9,18 +9,18 @@
 /**
  * Time
  */
-var sys_Time = sys_Obj.$extend(sys_Obj);
+fan.sys.Time = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Time.prototype.$ctor = function(hour, min, sec, ns)
+fan.sys.Time.prototype.$ctor = function(hour, min, sec, ns)
 {
-  if (hour < 0 || hour > 23)     throw sys_ArgErr.make("hour " + hour);
-  if (min < 0 || min > 59)       throw sys_ArgErr.make("min " + min);
-  if (sec < 0 || sec > 59)       throw sys_ArgErr.make("sec " + sec);
-  if (ns < 0 || ns > 999999999)  throw sys_ArgErr.make("ns " + ns);
+  if (hour < 0 || hour > 23)     throw fan.sys.ArgErr.make("hour " + hour);
+  if (min < 0 || min > 59)       throw fan.sys.ArgErr.make("min " + min);
+  if (sec < 0 || sec > 59)       throw fan.sys.ArgErr.make("sec " + sec);
+  if (ns < 0 || ns > 999999999)  throw fan.sys.ArgErr.make("ns " + ns);
 
   this.m_hour = hour;
   this.m_min  = min;
@@ -28,20 +28,20 @@ sys_Time.prototype.$ctor = function(hour, min, sec, ns)
   this.m_ns   = ns;
 }
 
-sys_Time.make = function(hour, min, sec, ns)
+fan.sys.Time.make = function(hour, min, sec, ns)
 {
   if (sec == undefined) sec = 0;
   if (ns == undefined)  ns = 0;
-  return new sys_Time(hour, min, sec, ns);
+  return new fan.sys.Time(hour, min, sec, ns);
 }
 
-sys_Time.now = function()
+fan.sys.Time.now = function()
 {
   var d = new Date();
-  return new sys_Time(d.getHours(), d.getMinutes(), d.getSeconds());
+  return new fan.sys.Time(d.getHours(), d.getMinutes(), d.getSeconds());
 }
 
-sys_Time.fromStr = function(s, checked)
+fan.sys.Time.fromStr = function(s, checked)
 {
   if (checked == undefined) checked = true;
   try
@@ -78,12 +78,12 @@ sys_Time.fromStr = function(s, checked)
     // verify everything has been parsed
     if (i < s.length) throw new Error();
 
-    return new sys_Time(hour, min, sec, ns);
+    return new fan.sys.Time(hour, min, sec, ns);
   }
   catch (err)
   {
     if (!checked) return null;
-    throw sys_ParseErr.make("Time", s).val;
+    throw fan.sys.ParseErr.make("Time", s).val;
   }
 }
 
@@ -91,9 +91,9 @@ sys_Time.fromStr = function(s, checked)
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-sys_Time.prototype.equals = function(that)
+fan.sys.Time.prototype.equals = function(that)
 {
-  if (that instanceof sys_Time)
+  if (that instanceof fan.sys.Time)
   {
     return this.m_hour.valueOf() == that.m_hour.valueOf() &&
            this.m_min.valueOf() == that.m_min.valueOf() &&
@@ -103,7 +103,7 @@ sys_Time.prototype.equals = function(that)
   return false;
 }
 
-sys_Time.prototype.compare = function(that)
+fan.sys.Time.prototype.compare = function(that)
 {
   if (this.m_hour.valueOf() == that.m_hour.valueOf())
   {
@@ -121,30 +121,30 @@ sys_Time.prototype.compare = function(that)
   return this.m_hour < that.m_hour ? -1 : +1;
 }
 
-sys_Time.prototype.toStr = function()
+fan.sys.Time.prototype.toStr = function()
 {
   return this.toLocale("hh:mm:ss.FFFFFFFFF");
 }
 
-sys_Time.prototype.type = function()
+fan.sys.Time.prototype.type = function()
 {
-  return sys_Type.find("sys::Time");
+  return fan.sys.Type.find("sys::Time");
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-sys_Time.prototype.hour = function() { return this.m_hour; }
-sys_Time.prototype.min = function() { return this.m_min; }
-sys_Time.prototype.sec = function() { return this.m_sec; }
-sys_Time.prototype.nanoSec = function() { return this.m_ns; }
+fan.sys.Time.prototype.hour = function() { return this.m_hour; }
+fan.sys.Time.prototype.min = function() { return this.m_min; }
+fan.sys.Time.prototype.sec = function() { return this.m_sec; }
+fan.sys.Time.prototype.nanoSec = function() { return this.m_ns; }
 
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-sys_Time.prototype.toLocale = function(pattern)
+fan.sys.Time.prototype.toLocale = function(pattern)
 {
   if (pattern == undefined) pattern = null;
 
@@ -171,7 +171,7 @@ pattern = "hh:mm:ss";
       while (true)
       {
         ++i;
-        if (i >= len) throw sys_ArgErr.make("Invalid pattern: unterminated literal");
+        if (i >= len) throw fan.sys.ArgErr.make("Invalid pattern: unterminated literal");
         c = pattern.charAt(i);
         if (c == '\'') break;
         s += c;
@@ -256,8 +256,8 @@ pattern = "hh:mm:ss";
         break;
 
       default:
-        if (sys_Int.isAlpha(c.charCodeAt(0)))
-          throw sys_ArgErr.make("Invalid pattern: unsupported char '" + c + "'");
+        if (fan.sys.Int.isAlpha(c.charCodeAt(0)))
+          throw fan.sys.ArgErr.make("Invalid pattern: unsupported char '" + c + "'");
 
         // don't display symbol between ss.FFF if fractions is zero
         if (i+1<len && pattern.charAt(i+1) == 'F' && this.nanoSec() == 0)
@@ -268,7 +268,7 @@ pattern = "hh:mm:ss";
 
     // if invalid number of characters
     if (invalidNum)
-      throw sys_ArgErr.make("Invalid pattern: unsupported num '" + c + "' (x" + n + ")");
+      throw fan.sys.ArgErr.make("Invalid pattern: unsupported num '" + c + "' (x" + n + ")");
   }
 
   return s;

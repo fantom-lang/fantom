@@ -8,25 +8,25 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
-var dom_DocPeer = sys_Obj.$extend(sys_Obj);
-dom_DocPeer.prototype.$ctor = function(self) {}
+fan.dom.DocPeer = fan.sys.Obj.$extend(fan.sys.Obj);
+fan.dom.DocPeer.prototype.$ctor = function(self) {}
 
-dom_DocPeer.body = function(self)
+fan.dom.DocPeer.body = function()
 {
-  return dom_ElemPeer.make(document.body);
+  return fan.dom.ElemPeer.make(document.body);
 }
 
-dom_DocPeer.elem = function(self, id)
+fan.dom.DocPeer.elem = function(id)
 {
   var elem = document.getElementById(id);
   if (elem == null) return null;
-  return dom_ElemPeer.make(elem);
+  return fan.dom.ElemPeer.make(elem);
 }
 
-dom_DocPeer.createElem = function(self, tagName, attribs)
+fan.dom.DocPeer.createElem = function(tagName, attribs)
 {
   var elem = document.createElement(tagName);
-  var wrap = dom_ElemPeer.make(elem);
+  var wrap = fan.dom.ElemPeer.make(elem);
   if (attribs != null)
   {
     var k = attribs.keys();

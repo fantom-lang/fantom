@@ -10,13 +10,13 @@
 /**
  * Slot.
  */
-var sys_Slot = sys_Obj.$extend(sys_Obj);
+fan.sys.Slot = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Slot.prototype.$ctor = function()
+fan.sys.Slot.prototype.$ctor = function()
 {
   this.m_parent = null;
   this.m_qname  = null;
@@ -28,39 +28,39 @@ sys_Slot.prototype.$ctor = function()
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-sys_Slot.prototype.type = function() { return sys_Type.find("sys::Slot"); }
-sys_Slot.prototype.toStr = function() { return this.m_qname; }
+fan.sys.Slot.prototype.type = function() { return fan.sys.Type.find("sys::Slot"); }
+fan.sys.Slot.prototype.toStr = function() { return this.m_qname; }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Slot.prototype.parent = function() { return this.m_parent; }
-sys_Slot.prototype.qname = function() { return this.m_qname; }
-sys_Slot.prototype.name = function() { return this.m_name; }
+fan.sys.Slot.prototype.parent = function() { return this.m_parent; }
+fan.sys.Slot.prototype.qname = function() { return this.m_qname; }
+fan.sys.Slot.prototype.name = function() { return this.m_name; }
 
 //////////////////////////////////////////////////////////////////////////
 // Flags
 //////////////////////////////////////////////////////////////////////////
 
-sys_Slot.prototype.isAbstract = function()  { return (this.m_flags & sys_FConst.Abstract)  != 0; }
-sys_Slot.prototype.isConst = function()     { return (this.m_flags & sys_FConst.Const)     != 0; }
-sys_Slot.prototype.isCtor = function()      { return (this.m_flags & sys_FConst.Ctor)      != 0; }
-sys_Slot.prototype.isInternal = function()  { return (this.m_flags & sys_FConst.Internal)  != 0; }
-sys_Slot.prototype.isNative = function()    { return (this.m_flags & sys_FConst.Native)    != 0; }
-sys_Slot.prototype.isOverride = function()  { return (this.m_flags & sys_FConst.Override)  != 0; }
-sys_Slot.prototype.isPrivate = function()   { return (this.m_flags & sys_FConst.Private)   != 0; }
-sys_Slot.prototype.isProtected = function() { return (this.m_flags & sys_FConst.Protected) != 0; }
-sys_Slot.prototype.isPublic = function()    { return (this.m_flags & sys_FConst.Public)    != 0; }
-sys_Slot.prototype.isStatic = function()    { return (this.m_flags & sys_FConst.Static)    != 0; }
-sys_Slot.prototype.isSynthetic = function() { return (this.m_flags & sys_FConst.Synthetic) != 0; }
-sys_Slot.prototype.isVirtual = function()   { return (this.m_flags & sys_FConst.Virtual)   != 0; }
+fan.sys.Slot.prototype.isAbstract = function()  { return (this.m_flags & fan.sys.FConst.Abstract)  != 0; }
+fan.sys.Slot.prototype.isConst = function()     { return (this.m_flags & fan.sys.FConst.Const)     != 0; }
+fan.sys.Slot.prototype.isCtor = function()      { return (this.m_flags & fan.sys.FConst.Ctor)      != 0; }
+fan.sys.Slot.prototype.isInternal = function()  { return (this.m_flags & fan.sys.FConst.Internal)  != 0; }
+fan.sys.Slot.prototype.isNative = function()    { return (this.m_flags & fan.sys.FConst.Native)    != 0; }
+fan.sys.Slot.prototype.isOverride = function()  { return (this.m_flags & fan.sys.FConst.Override)  != 0; }
+fan.sys.Slot.prototype.isPrivate = function()   { return (this.m_flags & fan.sys.FConst.Private)   != 0; }
+fan.sys.Slot.prototype.isProtected = function() { return (this.m_flags & fan.sys.FConst.Protected) != 0; }
+fan.sys.Slot.prototype.isPublic = function()    { return (this.m_flags & fan.sys.FConst.Public)    != 0; }
+fan.sys.Slot.prototype.isStatic = function()    { return (this.m_flags & fan.sys.FConst.Static)    != 0; }
+fan.sys.Slot.prototype.isSynthetic = function() { return (this.m_flags & fan.sys.FConst.Synthetic) != 0; }
+fan.sys.Slot.prototype.isVirtual = function()   { return (this.m_flags & fan.sys.FConst.Virtual)   != 0; }
 
 //////////////////////////////////////////////////////////////////////////
 // Util
 //////////////////////////////////////////////////////////////////////////
 
-sys_Slot.prototype.$name = function(n)
+fan.sys.Slot.prototype.$name = function(n)
 {
   // must keep in sync with compilerJs::JsWriter
   switch (n)

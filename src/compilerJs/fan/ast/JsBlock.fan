@@ -1,284 +1,36 @@
 //
-// Copyright (c) 2008, Brian Frank and Andy Frank
+// Copyright (c) 2009, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   10 Dec 08  Andy Frank  Creation
+//   9 Jul 09  Andy Frank  Creation
 //
 
 using compiler
 
 **
-** Generates a JavaScript source file from a TypeDef AST.
+** JsBlock
 **
-class JsWriter : CompilerSupport
+** TODO FIXIT - TEMP TILL WE REFACTOR THIS CODE!!!!
+**
+class JsBlock : JsNode
 {
-
-//////////////////////////////////////////////////////////////////////////
-// Construction
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Constructor takes the associated Compiler
-  **
-  new make(Compiler compiler, TypeDef typeDef, OutStream out)
-    : super(compiler)
+  new make(Node n)
   {
-    this.typeDef = typeDef
-    this.out = AstWriter(out)
+    this.x = n
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Write
-//////////////////////////////////////////////////////////////////////////
-
-  Void write()
+  override Void write(JsWriter out)
   {
-    //if (!typeDef.qname.contains(r"$"))
-    //  typeDef.print(AstWriter())
-
-    // we inline closures directly, so no need to generate
-    // anonymous types like we do in Java and .NET
-    if (typeDef.isClosure) return
-    if (typeDef.qname.contains("\$Cvars")) return
-
-    fname := typeDef.qname
-    bname := typeDef.base ?: "sys::Obj"
-    jname := qname(typeDef)
-    jbase := qname(typeDef.base)
-
-    // inheritance
-    if (typeDef.isMixin)
-      out.w("function $jname() {}").nl
-    else
-      out.w("var $jname = sys_Obj.\$extend($jbase);").nl
-
-    // mixins
-    typeDef.mixins.each |m|
-    {
-      m.slots.each |s|
-      {
-        if (s.parent != m) return
-        if (s.isStatic)
-          out.w("${jname}.$s.name = ${qname(m)}.$s.name;").nl
-        else
-          out.w("${jname}.prototype.$s.name = ${qname(m)}.prototype.$s.name;").nl
-      }
-    }
-
-    // typeinfo
-    // TODO - this is ok for now - it fails because of
-    // how we trap curried types, which should be rare
-    // to have type called on them - but we need to fix
-    // none-the-less
-    if (!typeDef.name.startsWith("Curry\$"))
-    {
-      out.w("${jname}.\$type = sys_Type.find(\"$fname\");").nl
-      out.w("${jname}.prototype.type = function() { return ${jname}.\$type; }").nl
-    }
-
-    // ctor
-    out.w("${jname}.prototype.\$ctor = function() {")
-    // look for natives
-    ntype := nativeType(typeDef)
-    if (ntype != null) out.w(" this.peer = new ${nativeQname(ntype)}(this); ")
-    out.w("}").nl
-
-    // slots
-    typeDef.methodDefs.each |m| { method(m) }
-    typeDef.fieldDefs.each  |f| { field(f) }
-    ctors.each |MethodDef m| { ctor(m) }
-    staticMethods.each |MethodDef m| { staticMethod(m) }
-    staticFields.each |FieldDef f| { staticField(f) }
-    staticInits.each |Block b| { staticInit(b) }
-  }
-
-  CType? nativeType(CType def)
-  {
-    CType? t := def
-    while (t != null)
-    {
-      slot := t.slots.find |s| { s.isNative && s.parent.qname == t.qname }
-      if (slot != null) return slot.parent
-      t = t.base
-    }
-    return null
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Methods
-//////////////////////////////////////////////////////////////////////////
-
-  Void method(MethodDef m)
-  {
-    if (m.isStatic) { staticMethods.add(m); return }
-    if (m.isFieldAccessor) return // getter/setters are defined when field is emitted
-    mname := var(m.name)
-    if (m.isCtor) { ctors.add(m); mname = "\$$mname" }
-    out.w("${qname(m.parent)}.prototype.${mname} = ")
-    doMethod(m)
-    out.nl
-  }
-
-  Void ctor(MethodDef m)
-  {
-    if (!m.isCtor) err("Method must be a ctor: $m.name", m.location)
-    out.w("${qname(m.parent)}.$m.name = function")
-    doMethodSig(m)
-    out.nl
-    out.w("{").nl
-    out.w("  var instance = new ${qname(m.parent)}();").nl
-    out.w("  instance.\$$m.name"); doMethodSig(m); out.w(";").nl
-    out.w("  return instance;").nl
-    out.w("}").nl
-  }
-
-  Void staticMethod(MethodDef m)
-  {
-    if (!m.isStatic) err("Method must be static: $m.name", m.location)
-    if (m.name == "static\$init") { staticInits.add(m.code); return }
-    out.w("${qname(m.parent)}.${var(m.name)} = ")
-    doMethod(m)
-    out.nl
-  }
-
-  private Void doMethod(MethodDef m)
-  {
-    out.w("function"); doMethodSig(m); out.nl
-    out.w("{").nl
-    if (m.params.find |p| { p.hasDefault } != null)
-    {
-      m.params.each |p,i|
-      {
-        if (!p.hasDefault) return
-        out.w("  if ($p.name == undefined) $p.name = ")
-        expr(p->def)
-        out.w(";").nl
-      }
-    }
-    if (m.ctorChain != null)
-    {
-      out.w("  ")
-      callExpr(m.ctorChain)
-      out.w(";").nl
-    }
-    if (m.isNative)
-    {
-      ret := m.ret.qname == "sys::Void" ? "" : "return "
-      if (m.isStatic)
-        out.w("  ${ret}${nativeQname(typeDef)}.$m.name")
-      else
-        out.w("  ${ret}this.peer.${m.name}")
-      doMethodSig(m, true)
-      out.w(";").nl
-    }
-    else if (m.code != null)
-    {
-      if (ClosureFinder(m).exists)
-        out.w("  var \$this = this;").nl
-      block(m.code, false)
-    }
-    out.w("}")
-  }
-
-  private Void doMethodSig(MethodDef m, Bool passThis := false)
-  {
-    i := 0
-    out.w("(")
-    if (passThis) { out.w("this"); i++ }
-    m.vars.each |MethodVar v|
-    {
-      if (!v.isParam) return
-      if (i++ > 0) out.w(", ")
-      out.w(var(v.name))
-    }
-    out.w(")")
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Fields
-//////////////////////////////////////////////////////////////////////////
-
-  Void field(FieldDef f)
-  {
-    if (f.isStatic) { staticFields.add(f); return }
-    doField(f)
-  }
-
-  Void staticField(FieldDef f)
-  {
-    if (!f.isStatic) err("Field must be static: $f.name", f.location)
-    doField(f)
-  }
-
-  Void doField(FieldDef f)
-  {
-    parent := qname(f.parent)
-    name   := var(f.name)
-    qname  := (f.isStatic ? parent : "${parent}.prototype") + ".$name"
-    def    := "null"
-
-    switch (f.fieldType.qname)
-    {
-      case "sys::Bool":    def = "false"
-      case "sys::Decimal": def = "sys_Decimal.make(0)"
-      case "sys::Float":   def = "sys_Float.make(0)"
-      case "sys::Int":     def = "0"
-    }
-
-    if (f.isNative)
-    {
-      // route to peer
-      out.w("$qname\$get = function() { return this.peer.$name\$get(this); }").nl
-      out.w("$qname\$set = function(val) { return this.peer.$name\$set(this,val); }").nl
-    }
-    else
-    {
-      // getter
-      out.w("$qname\$get = function() ")
-      if (f.hasGet)
-      {
-        out.w("{").nl
-        if (ClosureFinder(f.get).exists)
-          out.w("  var \$this = this;").nl
-        block(f.get.code, false)
-        out.w("}").nl
-      }
-      else out.w("{ return this.$name; }").nl
-
-      // setter
-      out.w("$qname\$set = function(val) ")
-      if (f.hasSet)
-      {
-        out.w("{").nl
-        if (ClosureFinder(f.set).exists)
-          out.w("  var \$this = this;").nl
-        block(f.set.code, false)
-        out.w("}").nl
-      }
-      else out.w("{ this.$name = val; }").nl
-
-      // storage
-      out.w("$qname = $def;").nl
-    }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Static Init
-//////////////////////////////////////////////////////////////////////////
-
-  Void staticInit(Block code)
-  {
-    inStaticInit = true
-    block(code, false, false)
-    inStaticInit = false
+    this.out = out
+    block(x)
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Block
 //////////////////////////////////////////////////////////////////////////
 
-  Void block(Block block, Bool braces := true, Bool indent := true)
+  Void block(Block block, Bool braces := false, Bool indent := true)
   {
     if (braces) out.w("{").nl
     if (indent) out.indent
@@ -307,7 +59,7 @@ class JsWriter : CompilerSupport
       case StmtId.continueStmt: out.w("continue;"); if (nl) out.nl
       case StmtId.tryStmt:      tryStmt(stmt)
       case StmtId.switchStmt:   switchStmt(stmt)
-      default: err("Unknown StmtId: $stmt.id", stmt.location)
+      default: throw CompilerErr("Unknown StmtId: $stmt.id", stmt.location)
     }
   }
 
@@ -330,7 +82,8 @@ class JsWriter : CompilerSupport
 
   Void returnStmt(ReturnStmt rs)
   {
-    if (inStaticInit) return
+// TODO
+//    if (inStaticInit) return
     out.w("return")
     if (rs.expr != null) { out.w(" "); expr(rs.expr) }
     out.w(";")
@@ -346,11 +99,11 @@ class JsWriter : CompilerSupport
   Void ifStmt(IfStmt fs)
   {
     out.w("if ("); expr(fs.condition); out.w(")").nl
-    block(fs.trueBlock)
+    block(fs.trueBlock, true)
     if (fs.falseBlock != null)
     {
       out.w("else").nl
-      block(fs.falseBlock)
+      block(fs.falseBlock, true)
     }
   }
 
@@ -363,7 +116,7 @@ class JsWriter : CompilerSupport
     out.w("; ")
     if (fs.update != null) expr(fs.update)
     out.w(")").nl
-    block(fs.block)
+    block(fs.block, true)
   }
 
   Void whileStmt(WhileStmt ws)
@@ -371,13 +124,13 @@ class JsWriter : CompilerSupport
     out.w("while (")
     expr(ws.condition)
     out.w(")").nl
-    block(ws.block)
+    block(ws.block, true)
   }
 
   Void tryStmt(TryStmt ts)
   {
     out.w("try").nl
-    block(ts.block)
+    block(ts.block, true)
     // TODO
     //ts.catches.each |Catch c|
 c := ts.catches.first
@@ -386,7 +139,7 @@ if (c != null)
       errVar := c.errVariable ?: "err"
       out.w("catch ($errVar)").nl
       out.w("{").nl
-      out.w("  $errVar = sys_Err.make($errVar);").nl
+      out.w("  $errVar = fan.sys.Err.make($errVar);").nl
       block(c.block, false)
       out.w("}").nl
     }
@@ -398,7 +151,7 @@ if (c != null)
     if (ts.finallyBlock != null)
     {
       out.w("finally").nl
-      block(ts.finallyBlock)
+      block(ts.finallyBlock, true)
     }
   }
 
@@ -413,16 +166,16 @@ if (c != null)
       c.cases.each |e,ib|
       {
         if (ib > 0) out.w(" || ")
-        out.w("sys_Obj.equals($var,"); expr(e); out.w(")")
+        out.w("fan.sys.Obj.equals($var,"); expr(e); out.w(")")
       }
       out.w(")").nl
-      if (c.block != null) block(c.block)
+      if (c.block != null) block(c.block, true)
       else out.w("{").nl.w("}").nl  // TODO - is this right??
     }
     if (ss.defaultBlock != null)
     {
       out.w("else").nl
-      block(ss.defaultBlock)
+      block(ss.defaultBlock, true)
     }
   }
 
@@ -438,13 +191,13 @@ if (c != null)
       case ExprId.trueLiteral:  out.w("true")
       case ExprId.falseLiteral: out.w("false")
       case ExprId.intLiteral:   intLiteralExpr(ex)
-      case ExprId.floatLiteral: out.w("sys_Float.make($ex)")
-      case ExprId.decimalLiteral: out.w("sys_Decimal.make($ex)")
+      case ExprId.floatLiteral: out.w("fan.sys.Float.make($ex)")
+      case ExprId.decimalLiteral: out.w("fan.sys.Decimal.make($ex)")
       case ExprId.strLiteral:   out.w("\"").w(ex->val.toStr.toCode('\"', true)[1..-2]).w("\"")
-      case ExprId.durationLiteral: out.w("sys_Duration.fromStr(\"").w(ex).w("\")")
-      case ExprId.uriLiteral:   out.w("sys_Uri.fromStr(").w(ex->val.toStr.toCode('\"', true)).w(")")
-      case ExprId.typeLiteral:  out.w("sys_Type.find(\"${ex->val->signature}\")")
-      case ExprId.slotLiteral:  out.w("sys_Type.find(\"${ex->parent->signature}\").slot(\"${ex->name}\")")
+      case ExprId.durationLiteral: out.w("fan.sys.Duration.fromStr(\"").w(ex).w("\")")
+      case ExprId.uriLiteral:   out.w("fan.sys.Uri.fromStr(").w(ex->val.toStr.toCode('\"', true)).w(")")
+      case ExprId.typeLiteral:  out.w("fan.sys.Type.find(\"${ex->val->signature}\")")
+      case ExprId.slotLiteral:  out.w("fan.sys.Type.find(\"${ex->parent->signature}\").slot(\"${ex->name}\")")
       case ExprId.rangeLiteral: rangeLiteralExpr(ex)
       case ExprId.listLiteral:  listLiteralExpr(ex)
       case ExprId.mapLiteral:   mapLiteralExpr(ex)
@@ -465,18 +218,18 @@ if (c != null)
       case ExprId.construction: callExpr(ex)
       case ExprId.shortcut:     shortcutExpr(ex)
       case ExprId.field:        fieldExpr(ex)
-      case ExprId.localVar:     out.w(var(ex.toStr))
+      case ExprId.localVar:     out.w(vnameToJs(ex.toStr))
       case ExprId.thisExpr:     out.w(inClosure ? "\$this" : "this")
       case ExprId.superExpr:    out.w("this.\$super")
       case ExprId.itExpr:       out.w("it")
-      case ExprId.staticTarget: out.w(qname(ex->ctype))
+      case ExprId.staticTarget: out.w(qnameToJs(ex->ctype))
       //case ExprId.unknownVar
       //case ExprId.storage
       case ExprId.ternary:      expr(ex->condition); out.w(" ? "); expr(ex->trueExpr); out.w(" : "); expr(ex->falseExpr)
       //case ExprId.curry
       //case ExprId.complexLiteral
       case ExprId.closure:      closureExpr(ex)
-      default: err("Unknown ExprId: $ex.id", ex.location)
+      default: throw CompilerErr("Unknown ExprId: $ex.id", ex.location)
     }
   }
 
@@ -494,7 +247,7 @@ if (c != null)
 
   Void rangeLiteralExpr(RangeLiteralExpr re)
   {
-    out.w("sys_Range.make(")
+    out.w("fan.sys.Range.make(")
     expr(re.start)
     out.w(",")
     expr(re.end)
@@ -505,7 +258,7 @@ if (c != null)
   Void listLiteralExpr(ListLiteralExpr le)
   {
     t := le.explicitType != null ? le.explicitType.v.qname : Obj#.qname
-    out.w("sys_List.make(sys_Type.find(\"$t\"), [")
+    out.w("fan.sys.List.make(fan.sys.Type.find(\"$t\"), [")
     le.vals.each |Expr ex, Int i|
     {
       if (i > 0) out.w(",")
@@ -516,15 +269,15 @@ if (c != null)
 
   Void mapLiteralExpr(MapLiteralExpr me)
   {
-    out.w("sys_Map.fromLiteral([")
+    out.w("fan.sys.Map.fromLiteral([")
     me.keys.each |Expr key, Int i| { if (i > 0) out.w(","); expr(key) }
     out.w("],[")
     me.vals.each |Expr val, Int i| { if (i > 0) out.w(","); expr(val) }
     out.w("]")
     if (me.explicitType != null)
     {
-      out.w(",sys_Type.find(\"").w(me.explicitType.k).w("\")")
-      out.w(",sys_Type.find(\"").w(me.explicitType.v).w("\")")
+      out.w(",fan.sys.Type.find(\"").w(me.explicitType.k).w("\")")
+      out.w(",fan.sys.Type.find(\"").w(me.explicitType.v).w("\")")
     }
     out.w(")")
   }
@@ -550,9 +303,9 @@ if (c != null)
   Void typeCheckExpr(TypeCheckExpr te)
   {
     method := te.id == ExprId.asExpr ? "as" : "is"
-    out.w("sys_Obj.$method(")
+    out.w("fan.sys.Obj.$method(")
     expr(te.target)
-    out.w(",sys_Type.find(\"$te.check\"))")
+    out.w(",fan.sys.Type.find(\"$te.check\"))")
   }
 
   Void callExpr(CallExpr ce, Bool doSafe := true)
@@ -578,12 +331,12 @@ if (c != null)
       if (ce.target is SuperExpr)
       {
         base := ce.target->explicitType ?: ce.target.ctype
-        out.w(qname(base)).w(".prototype.${ce.method.name}.call(this,")
+        out.w(qnameToJs(base)).w(".prototype.${ce.method.name}.call(this,")
         firstArg = false
       }
       else
       {
-        out.w("sys_Obj.${var(ce.method.name)}(")
+        out.w("fan.sys.Obj.${vnameToJs(ce.method.name)}(")
         expr(ce.target)
       }
       ce.args.each |arg, i|
@@ -609,8 +362,8 @@ if (c != null)
         ctype := ce.target.ctype
         route := false
         if (ce.target is TypeCheckExpr) ctype = ce.target->check
-        if (ctype.isList)      { out.w("sys_List.${var(ce.name)}("); route=true }
-        else if (ctype.isFunc) { out.w("sys_Func.${var(ce.name)}("); route=true }
+        if (ctype.isList)      { out.w("fan.sys.List.${vnameToJs(ce.name)}("); route=true }
+        else if (ctype.isFunc) { out.w("fan.sys.Func.${vnameToJs(ce.name)}("); route=true }
         else if (isPrimitive(ctype.toStr))
         {
           mname := ce.name
@@ -621,14 +374,14 @@ if (c != null)
             if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
               mname = "fromStr"
           }
-          out.w("${qname(ctype)}.${var(mname)}(")
+          out.w("${qnameToJs(ctype)}.${vnameToJs(mname)}(")
           route = true
         }
         i := 0
         if (!route)
         {
           expr(ce.target)
-          out.w(".${var(ce.name)}(")
+          out.w(".${vnameToJs(ce.name)}(")
         }
         else if (!ce.method.isStatic)
         {
@@ -641,7 +394,7 @@ if (c != null)
       }
       else if (ce.target.ctype.qname == "sys::Err" && ce.method.name == "trace")
       {
-        out.w("sys_Err.trace(")
+        out.w("fan.sys.Err.trace(")
         expr(ce.target)
         out.w(")")
         return
@@ -649,7 +402,7 @@ if (c != null)
       if (ce.target is SuperExpr)
       {
         base := ce.target->explicitType ?: ce.target.ctype
-        out.w(qname(base)).w(".prototype")
+        out.w(qnameToJs(base)).w(".prototype")
       }
       else
       {
@@ -658,13 +411,13 @@ if (c != null)
     }
     else if (ce.method.isStatic || ce.method.isCtor)
     {
-      out.w(qname(ce.method.parent))
+      out.w(qnameToJs(ce.method.parent))
     }
-    Str? mname := var(ce.name)
+    Str? mname := vnameToJs(ce.name)
     if (ce.method.isCtor || ce.name == "<ctor>")
     {
       mname = ce.name == "<ctor>" ? "make" : ce.name
-      if (ce.target is SuperExpr) mname = "\$$mname"
+      if (ce.target is SuperExpr) mname = "$mname\$"
       first := ce.method.params.first
       if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
       {
@@ -745,7 +498,7 @@ if (c != null)
         {
           if (se.isAssign) { expr(lhs); out.w(" = ") }
           if (se.opToken == Token.notEq) out.w("!")
-          out.w("sys_Int.$op(")
+          out.w("fan.sys.Int.$op(")
           expr(lhs)
           out.w(",")
           expr(rhs)
@@ -758,7 +511,7 @@ if (c != null)
         if (se.op == ShortcutOp.eq)
         {
           if (se.opToken == Token.notEq) out.w("!")
-          out.w("sys_Float.equals(")
+          out.w("fan.sys.Float.equals(")
           expr(lhs)
           out.w(",")
           expr(rhs)
@@ -837,7 +590,7 @@ if (c != null)
       }
       else
       {
-        out.w("sys_List.${var(fe.name)}(")
+        out.w("fan.sys.List.${vnameToJs(fe.name)}(")
         expr(fe.target)
         out.w(get ? ")" : ",")
       }
@@ -858,21 +611,21 @@ if (c != null)
     }
     if (fe.target == null && fe.field.isStatic)
     {
-      out.w(qname(fe.field.parent)).w(".")
+      out.w(qnameToJs(fe.field.parent)).w(".")
     }
-    out.w(var(name))
+    out.w(vnameToJs(name))
     if (!cvar && fe.useAccessor) out.w(get ? "\$get()" : "\$set")
   }
 
   Void closureExpr(ClosureExpr ce)
   {
     closureLevel++
-    out.w("sys_Func.make(function(")
+    out.w("fan.sys.Func.make(function(")
     ce.doCall.vars.each |MethodVar v, Int i|
     {
       if (!v.isParam) return
       if (i > 0) out.w(",")
-      out.w(var(v.name))
+      out.w(vnameToJs(v.name))
     }
     out.w(") {")
     if (ce.doCall?.code != null)
@@ -884,9 +637,9 @@ if (c != null)
     ce.doCall.params.each |p,i|
     {
       if(i > 0) out.w(",")
-      out.w("new sys_Param(\"$p.name\",\"$p.paramType.qname\",$p.hasDefault)")
+      out.w("new fan.sys.Param(\"$p.name\",\"$p.paramType.qname\",$p.hasDefault)")
     }
-    out.w("],sys_Type.find(\"$ce.doCall.ret.qname\"))")
+    out.w("],fan.sys.Type.find(\"$ce.doCall.ret.qname\"))")
     closureLevel--
   }
 
@@ -894,32 +647,16 @@ if (c != null)
 // Util
 //////////////////////////////////////////////////////////////////////////
 
+  const Int maxInt := 9007199254740992  // max exact int in js (2^53)
+
+  Int closureLevel := 0
+
   **
   ** Return true if we are inside a closure.
   **
   Bool inClosure()
   {
     return closureLevel > 0
-  }
-
-  **
-  ** Return the JavaScript qname for this TypeDef.
-  ** The JavaScript qname is <pod>_<type>:
-  **
-  **   foo::Bar  ->  foo_Bar
-  **
-  Str qname(CType ctype)
-  {
-    refs[ctype.qname] = ctype
-    return ctype.pod.name + "_" + ctype.name
-  }
-
-  **
-  ** Return the native peer qname for this TypeDef.
-  **
-  Str nativeQname(CType ctype)
-  {
-    return "${qname(ctype)}Peer"
   }
 
   Bool isPrimitive(Str qname) { return primitiveMap.get(qname, false) }
@@ -950,20 +687,6 @@ if (c != null)
     "with":        true,
   ]
 
-  Str var(Str name)
-  {
-    if (vars.get(name, false)) return "\$$name";
-    return name;
-  }
-  const Str:Bool vars :=
-  [
-    "char":   true,
-    "delete": true,
-    "in":     true,
-    "var":    true,
-    "with":   true
-  ]
-
   Str unique() { return "\$_u${lastId++}" }
   Int lastId := 0
 
@@ -971,36 +694,8 @@ if (c != null)
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  TypeDef typeDef
-  AstWriter out
-  Int closureLevel  := 0            // closure level, 0=no closure
-  Bool inStaticInit := false
-  MethodDef[] ctors := [,]          // ctors
-  MethodDef[] staticMethods := [,]  // static methods
-  FieldDef[] staticFields := [,]    // static fields
-  Block[] staticInits := [,]        // static init blocks
-  Str:CType refs := [:]             // types referenced
+  Node x
+  JsWriter? out
 
-  const Int maxInt := 9007199254740992  // max exact int in js (2^53)
 }
 
-**************************************************************************
-** ClosureFinder
-**************************************************************************
-
-internal class ClosureFinder : Visitor
-{
-  new make(Node node) { this.node = node }
-  Bool exists()
-  {
-    node->walk(this, VisitDepth.expr)
-    return found
-  }
-  override Expr visitExpr(Expr expr)
-  {
-    if (expr is ClosureExpr) found = true
-    return Visitor.super.visitExpr(expr)
-  }
-  Node node
-  Bool found := false
-}

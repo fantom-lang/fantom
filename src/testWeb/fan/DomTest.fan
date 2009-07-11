@@ -32,7 +32,7 @@ class DomTest : Widget
            var results = document.getElementById('results');
            try
            {
-             var test = testWeb_TestClient.make();
+             var test = fan.testWeb.TestClient.make();
              print('testAttrs');  test.testAttrs();
              print('testBasics'); test.testBasics();
              print('testCreate'); test.testCreate();
@@ -90,6 +90,7 @@ class TestClient
     a := elem.children[3]
     b := elem.children[4]
     c := elem.children[5]
+
     verifyEq(a.hasClassName("a"), true)
     verifyEq(a.hasClassName("b"), false)
     verifyEq(a.hasClassName("c"), false)

@@ -9,16 +9,16 @@
 /**
  * TabPanePeer.
  */
-var fwt_TabPanePeer = sys_Obj.$extend(fwt_PanePeer);
-fwt_TabPanePeer.prototype.$ctor = function(self) {}
+fan.fwt.TabPanePeer = fan.sys.Obj.$extend(fan.fwt.PanePeer);
+fan.fwt.TabPanePeer.prototype.$ctor = function(self) {}
 
-fwt_TabPanePeer.prototype.selectedIndex$get = function(self) { return this.selectedIndex; }
-fwt_TabPanePeer.prototype.selectedIndex$set = function(self, val) { this.selectedIndex = val; }
-fwt_TabPanePeer.prototype.selectedIndex = 0;
+fan.fwt.TabPanePeer.prototype.selectedIndex$get = function(self) { return this.selectedIndex; }
+fan.fwt.TabPanePeer.prototype.selectedIndex$set = function(self, val) { this.selectedIndex = val; }
+fan.fwt.TabPanePeer.prototype.selectedIndex = 0;
 
-fwt_TabPanePeer.prototype.sync = function(self)
+fan.fwt.TabPanePeer.prototype.sync = function(self)
 {
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 
   var kids = self.kids;
   if (kids.length == 0) return;
@@ -32,8 +32,8 @@ fwt_TabPanePeer.prototype.sync = function(self)
     if (tab.peer.elem == null) return; // not attached yet
 
     var pref = tab.prefSize();
-    tab.pos$set(gfx_Point.make(tx, 0));
-    tab.size$set(gfx_Size.make(pref.w, pref.h));
+    tab.pos$set(fan.gfx.Point.make(tx, 0));
+    tab.size$set(fan.gfx.Size.make(pref.w, pref.h));
     tab.peer.index = i;
 
     tx += pref.w + 3;
@@ -82,8 +82,8 @@ fwt_TabPanePeer.prototype.sync = function(self)
         this.elem.appendChild(c.peer.elem);
       }
 
-      c.pos$set(gfx_Point.make(x,y));
-      c.size$set(gfx_Size.make(w,h));
+      c.pos$set(fan.gfx.Point.make(x,y));
+      c.size$set(fan.gfx.Size.make(w,h));
     }
   }
 }

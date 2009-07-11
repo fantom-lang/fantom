@@ -9,10 +9,10 @@
 /**
  * WindowPeer.
  */
-var fwt_WindowPeer = sys_Obj.$extend(fwt_PanePeer);
-fwt_WindowPeer.prototype.$ctor = function(self) {}
+fan.fwt.WindowPeer = fan.sys.Obj.$extend(fan.fwt.PanePeer);
+fan.fwt.WindowPeer.prototype.$ctor = function(self) {}
 
-fwt_WindowPeer.prototype.open = function(self)
+fan.fwt.WindowPeer.prototype.open = function(self)
 {
   // mount shell we use to attach widgets to
   var shell = document.createElement("div")
@@ -34,27 +34,27 @@ fwt_WindowPeer.prototype.open = function(self)
   self.relayout();
 }
 
-fwt_WindowPeer.prototype.close = function(self, result)
+fan.fwt.WindowPeer.prototype.close = function(self, result)
 {
-  var event  = fwt_Event.make();
-  event.id   = fwt_EventId.close;
+  var event  = fan.fwt.Event.make();
+  event.id   = fan.fwt.EventId.close;
   event.data = result;
 
   var list = self.onClose.list();
   for (var i=0; i<list.length; i++) list[i](event);
 }
 
-fwt_WindowPeer.prototype.sync = function(self)
+fan.fwt.WindowPeer.prototype.sync = function(self)
 {
   var shell = this.elem.parentNode;
-  this.size$set(this, gfx_Size.make(shell.offsetWidth, shell.offsetHeight));
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  this.size$set(this, fan.gfx.Size.make(shell.offsetWidth, shell.offsetHeight));
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
-fwt_WindowPeer.prototype.icon$get = function(self) { return this.icon; }
-fwt_WindowPeer.prototype.icon$set = function(self, val) { this.icon = val; }
-fwt_WindowPeer.prototype.icon = null;
+fan.fwt.WindowPeer.prototype.icon$get = function(self) { return this.icon; }
+fan.fwt.WindowPeer.prototype.icon$set = function(self, val) { this.icon = val; }
+fan.fwt.WindowPeer.prototype.icon = null;
 
-fwt_WindowPeer.prototype.title$get = function(self) { return document.title; }
-fwt_WindowPeer.prototype.title$set = function(self, val) { document.title = val; }
+fan.fwt.WindowPeer.prototype.title$get = function(self) { return document.title; }
+fan.fwt.WindowPeer.prototype.title$set = function(self, val) { document.title = val; }
 

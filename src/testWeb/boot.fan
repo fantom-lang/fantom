@@ -32,10 +32,10 @@ class Boot : BootScript
 
   override Void setup()
   {
-    Sys.ns.create(`/homePage`, Index#)
-    Sys.ns.create(`/dom`,      DomTest#)
-    Sys.ns.create(`/domFx`,    DomFxTest#)
-    Sys.ns.create(`/call`,     CallTest#)
+    UriSpace.root.create(`/homePage`, Index#)
+    UriSpace.root.create(`/dom`,      DomTest#)
+    UriSpace.root.create(`/domFx`,    DomFxTest#)
+    UriSpace.root.create(`/call`,     CallTest#)
   }
 }
 

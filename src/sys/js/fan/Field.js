@@ -10,13 +10,13 @@
 /**
  * Field.
  */
-var sys_Field = sys_Obj.$extend(sys_Slot);
+fan.sys.Field = fan.sys.Obj.$extend(fan.sys.Slot);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Field.prototype.$ctor = function(parent, name, flags, of)
+fan.sys.Field.prototype.$ctor = function(parent, name, flags, of)
 {
   this.m_parent = parent;
   this.m_name   = name;
@@ -24,16 +24,16 @@ sys_Field.prototype.$ctor = function(parent, name, flags, of)
   this.m_flags  = flags;
   this.m_of     = of;
   this.m_$name  = this.$name(name);
-  this.m_$qname = parent.qname().replace("::","_") + "." + this.m_$name;
+  this.m_$qname = 'fan.' + parent.pod() + '.' + parent.name() + '.' + this.m_$name;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Field.prototype.of = function() { return this.m_of; }
+fan.sys.Field.prototype.of = function() { return this.m_of; }
 
-sys_Field.prototype.get = function(instance)
+fan.sys.Field.prototype.get = function(instance)
 {
   if (this.isStatic())
   {
@@ -42,24 +42,24 @@ sys_Field.prototype.get = function(instance)
   else
   {
     var target = instance;
-    if ((this.m_flags & sys_FConst.Native) != 0)
+    if ((this.m_flags & fan.sys.FConst.Native) != 0)
       target = instance.peer;
     var getter = target[this.m_$name + "$get"];
     return getter.call(target);
   }
 }
 
-sys_Field.prototype.set = function(instance, value, checkConst)
+fan.sys.Field.prototype.set = function(instance, value, checkConst)
 {
   if (checkConst == undefined) checkConst = true;
 
   // check const
-  if ((this.m_flags & sys_FConst.Const) != 0)
+  if ((this.m_flags & fan.sys.FConst.Const) != 0)
   {
     if (checkConst)
-      throw sys_ReadonlyErr.make("Cannot set const field " + this.m_qname);
+      throw fan.sys.ReadonlyErr.make("Cannot set const field " + this.m_qname);
     else if (value != null && !isImmutable(value))
-      throw sys_ReadonlyErr.make("Cannot set const field " + this.m_qname + " with mutable value");
+      throw fan.sys.ReadonlyErr.make("Cannot set const field " + this.m_qname + " with mutable value");
   }
 
   // TODO
@@ -76,8 +76,8 @@ sys_Field.prototype.set = function(instance, value, checkConst)
   //}
   if (value != null)
   {
-    if (!sys_Obj.type(value).is(this.m_of))
-      throw sys_ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_of + " != " + sys_Obj.type(value));
+    if (!fan.sys.Obj.type(value).is(this.m_of))
+      throw fan.sys.ArgErr.make("Wrong type for field " + this.m_qname + ": " + this.m_of + " != " + fan.sys.Obj.type(value));
   }
 
   // TODO
@@ -87,7 +87,7 @@ sys_Field.prototype.set = function(instance, value, checkConst)
   //  return;
   //}
 
-  if ((this.m_flags & sys_FConst.Native) != 0)
+  if ((this.m_flags & fan.sys.FConst.Native) != 0)
   {
     var peer = instance.peer;
     var setter = peer[this.m_$name + "$set"];
@@ -100,5 +100,5 @@ sys_Field.prototype.set = function(instance, value, checkConst)
   }
 }
 
-sys_Field.prototype.type = function() { return sys_Type.find("sys::Field"); }
+fan.sys.Field.prototype.type = function() { return fan.sys.Type.find("sys::Field"); }
 

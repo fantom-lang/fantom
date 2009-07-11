@@ -9,20 +9,20 @@
 /**
  * OutStream
  */
-var sys_OutStream = sys_Obj.$extend(sys_Obj);
+fan.sys.OutStream = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_OutStream.prototype.$ctor = function() { this.out = null; }
-sys_OutStream.prototype.$make = function(out) { this.out = out; }
+fan.sys.OutStream.prototype.$ctor = function() { this.out = null; }
+fan.sys.OutStream.prototype.make$ = function(out) { this.out = out; }
 
 //////////////////////////////////////////////////////////////////////////
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-sys_OutStream.prototype.type = function() { return sys_Type.find("sys::OutStream"); }
+fan.sys.OutStream.prototype.type = function() { return fan.sys.Type.find("sys::OutStream"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Java OutputStream
@@ -35,7 +35,7 @@ sys_OutStream.prototype.type = function() { return sys_Type.find("sys::OutStream
  * method, then route back to write(Int) for the
  * subclass to handle.
  */
-sys_OutStream.prototype.w = function(b) // int
+fan.sys.OutStream.prototype.w = function(b) // int
 {
   return this.write(b);
 }
@@ -44,7 +44,7 @@ sys_OutStream.prototype.w = function(b) // int
 // OutStream
 //////////////////////////////////////////////////////////////////////////
 
-sys_OutStream.prototype.write = function(x) // long
+fan.sys.OutStream.prototype.write = function(x) // long
 {
   try
   {
@@ -54,13 +54,13 @@ sys_OutStream.prototype.write = function(x) // long
   catch (err)
   {
     if (this.out == null)
-      throw sys_UnsupportedErr.make(this.type().qname() + " wraps null OutStream");
+      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null OutStream");
     else
       throw err;
   }
 }
 
-sys_OutStream.prototype.writeBuf = function(buf, n)
+fan.sys.OutStream.prototype.writeBuf = function(buf, n)
 {
   if (n == undefined) b = buf.remaining();
   try
@@ -71,21 +71,21 @@ sys_OutStream.prototype.writeBuf = function(buf, n)
   catch (err)
   {
     if (this.out == null)
-      throw sys_UnsupportedErr.make(this.type().qname() + " wraps null OutStream");
+      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null OutStream");
     else
       throw err;
   }
 }
 
 /*
-sys_OutStream.prototype.writeI2(long x)
+fan.sys.OutStream.prototype.writeI2(long x)
 {
   int v = (int)x;
   return this.w((v >>> 8) & 0xFF)
              .w((v >>> 0) & 0xFF);
 }
 
-sys_OutStream.prototype.writeI4(long x)
+fan.sys.OutStream.prototype.writeI4(long x)
 {
   int v = (int)x;
   return this.w((v >>> 24) & 0xFF)
@@ -94,7 +94,7 @@ sys_OutStream.prototype.writeI4(long x)
              .w((v >>> 0)  & 0xFF);
 }
 
-sys_OutStream.prototype.writeI8(long v)
+fan.sys.OutStream.prototype.writeI8(long v)
 {
   return this.w((int)(v >>> 56) & 0xFF)
              .w((int)(v >>> 48) & 0xFF)
@@ -106,27 +106,27 @@ sys_OutStream.prototype.writeI8(long v)
              .w((int)(v >>> 0)  & 0xFF);
 }
 
-sys_OutStream.prototype.writeF4(double x)
+fan.sys.OutStream.prototype.writeF4(double x)
 {
   return writeI4(Float.floatToIntBits((float)x));
 }
 
-sys_OutStream.prototype.writeF8(double x)
+fan.sys.OutStream.prototype.writeF8(double x)
 {
   return writeI8(Double.doubleToLongBits(x));
 }
 
-sys_OutStream.prototype.writeDecimal(BigDecimal x)
+fan.sys.OutStream.prototype.writeDecimal(BigDecimal x)
 {
   return writeUtf(x.toString());
 }
 
-sys_OutStream.prototype.writeBool(boolean x)
+fan.sys.OutStream.prototype.writeBool(boolean x)
 {
   return w(x ? 1 : 0);
 }
 
-sys_OutStream.prototype.writeUtf(String s)
+fan.sys.OutStream.prototype.writeUtf(String s)
 {
   int slen = s.length();
   int utflen = 0;
@@ -173,32 +173,32 @@ sys_OutStream.prototype.writeUtf(String s)
   return this;
 }
 
-sys_OutStream.prototype.charset()
+fan.sys.OutStream.prototype.charset()
 {
   return charset;
 }
 
-sys_OutStream.prototype.charset(Charset charset)
+fan.sys.OutStream.prototype.charset(Charset charset)
 {
   this.charsetEncoder = charset.newEncoder();
   this.charset = charset;
 }
 */
 
-sys_OutStream.prototype.writeChar = function(c)
+fan.sys.OutStream.prototype.writeChar = function(c)
 {
   return this.w(c);
 }
 
 /*
-sys_OutStream.prototype.writeChar(char c)
+fan.sys.OutStream.prototype.writeChar(char c)
 {
   charsetEncoder.encode(c, this);
   return this;
 }
 */
 
-sys_OutStream.prototype.writeChars = function(s, off, len)
+fan.sys.OutStream.prototype.writeChars = function(s, off, len)
 {
   if (off == undefined) off = 0;
   if (len == undefined) len = s.length-off;
@@ -442,7 +442,7 @@ public OutStream sync()
 }
 */
 
-sys_OutStream.prototype.close = function()
+fan.sys.OutStream.prototype.close = function()
 {
   if (this.out != null) return this.out.close();
   return true;
