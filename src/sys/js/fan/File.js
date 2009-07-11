@@ -9,14 +9,14 @@
 /**
  * File.
  */
-var sys_File = sys_Obj.$extend(sys_Obj);
+fan.sys.File = fan.sys.Obj.$extend(fan.sys.Obj);
 
-sys_File.prototype.$ctor = function() {}
-sys_File.prototype.type = function() { return sys_Type.find("sys::File"); }
+fan.sys.File.prototype.$ctor = function() {}
+fan.sys.File.prototype.type = function() { return fan.sys.Type.find("sys::File"); }
 
-sys_File.prototype.exists = function() { return true; }
+fan.sys.File.prototype.exists = function() { return true; }
 
-sys_File.make = function()
+fan.sys.File.make = function()
 {
-  return new sys_File();
+  return new fan.sys.File();
 }

@@ -10,57 +10,57 @@
 /**
  * DateTime
  */
-var sys_DateTime = sys_Obj.$extend(sys_Obj);
+fan.sys.DateTime = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor - Values
 //////////////////////////////////////////////////////////////////////////
 
-sys_DateTime.prototype.$ctor = function() {}
+fan.sys.DateTime.prototype.$ctor = function() {}
 
-sys_DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
+fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 {
   if (sec == undefined) sec = 0;
   if (ns  == undefined) ns = 0;
-  if (tz  == undefined) tz = sys_TimeZone.current();
+  if (tz  == undefined) tz = fan.sys.TimeZone.current();
 
   month = month.ordinal();
 
-  if (year < 1901 || year > 2099) throw sys_ArgErr.make("year " + year);
-  if (month < 0 || month > 11)    throw sys_ArgErr.make("month " + month);
-  if (day < 1 || day > sys_DateTime.numDaysInMonth(year, month)) throw sys_ArgErr.make("day " + day);
-  if (hour < 0 || hour > 23)      throw sys_ArgErr.make("hour " + hour);
-  if (min < 0 || min > 59)        throw sys_ArgErr.make("min " + min);
-  if (sec < 0 || sec > 59)        throw sys_ArgErr.make("sec " + sec);
-  if (ns < 0 || ns > 999999999)   throw sys_ArgErr.make("ns " + ns);
+  if (year < 1901 || year > 2099) throw fan.sys.ArgErr.make("year " + year);
+  if (month < 0 || month > 11)    throw fan.sys.ArgErr.make("month " + month);
+  if (day < 1 || day > fan.sys.DateTime.numDaysInMonth(year, month)) throw fan.sys.ArgErr.make("day " + day);
+  if (hour < 0 || hour > 23)      throw fan.sys.ArgErr.make("hour " + hour);
+  if (min < 0 || min > 59)        throw fan.sys.ArgErr.make("min " + min);
+  if (sec < 0 || sec > 59)        throw fan.sys.ArgErr.make("sec " + sec);
+  if (ns < 0 || ns > 999999999)   throw fan.sys.ArgErr.make("ns " + ns);
 
   // compute ticks for UTC
-  var dayOfYear = sys_DateTime.dayOfYear(year, month, day);
+  var dayOfYear = fan.sys.DateTime.dayOfYear(year, month, day);
   var timeInSec = hour*3600 + min*60 + sec;
-  var ticks = sys_Int.plus(sys_DateTime.yearTicks[year-1900],
-              sys_Int.plus(dayOfYear * sys_DateTime.nsPerDay,
-              sys_Int.plus(timeInSec * sys_DateTime.nsPerSec, ns)));
+  var ticks = fan.sys.Int.plus(fan.sys.DateTime.yearTicks[year-1900],
+              fan.sys.Int.plus(dayOfYear * fan.sys.DateTime.nsPerDay,
+              fan.sys.Int.plus(timeInSec * fan.sys.DateTime.nsPerSec, ns)));
 
   // adjust for timezone and dst (we might know the UTC offset)
   var rule = tz.rule(year);
   var dst;
-  //if (sys_Int.equal(knownOffset, sys_Int.maxVal))
+  //if (fan.sys.Int.equal(knownOffset, fan.sys.Int.maxVal))
   //{
     // don't know offset so compute from timezone rule
-    ticks -= rule.offset * sys_DateTime.nsPerSec;
-    var dstOffset = sys_TimeZone.dstOffset(rule, year, month, day, timeInSec);
-    if (dstOffset != 0) ticks -= dstOffset * sys_DateTime.nsPerSec;
+    ticks -= rule.offset * fan.sys.DateTime.nsPerSec;
+    var dstOffset = fan.sys.TimeZone.dstOffset(rule, year, month, day, timeInSec);
+    if (dstOffset != 0) ticks -= dstOffset * fan.sys.DateTime.nsPerSec;
     dst = dstOffset != 0;
   //}
   //else
   //{
   //  // we known offset, still need to use rule to compute if in dst
-  //  ticks -= (long)knownOffset * sys_DateTime.nsPerSec;
+  //  ticks -= (long)knownOffset * fan.sys.DateTime.nsPerSec;
   //  dst = knownOffset != rule.offset;
   //}
 
   // compute weekday
-  var weekday = (sys_DateTime.firstWeekday(year, month) + day - 1) % 7;
+  var weekday = (fan.sys.DateTime.firstWeekday(year, month) + day - 1) % 7;
 
   // fields
   var fields = 0;
@@ -73,7 +73,7 @@ sys_DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
   fields |= (dst ? 1 : 0) << 31;
 
   // commit
-  var instance = new sys_DateTime();
+  var instance = new fan.sys.DateTime();
   instance.m_ticks    = ticks;
   instance.m_timeZone = tz;
   instance.m_fields   = fields;
@@ -84,26 +84,26 @@ sys_DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 // Constructor - Ticks
 //////////////////////////////////////////////////////////////////////////
 
-sys_DateTime.makeTicks = function(ticks, tz)
+fan.sys.DateTime.makeTicks = function(ticks, tz)
 {
-  if (tz == undefined) tz = sys_TimeZone.current();
+  if (tz == undefined) tz = fan.sys.TimeZone.current();
 
   // check boundary conditions 1901 to 2099
-  if (ticks < sys_DateTime.minTicks || ticks >= sys_DateTime.maxTicks)
-    throw sys_ArgErr.make("Ticks out of range 1901 to 2099");
+  if (ticks < fan.sys.DateTime.minTicks || ticks >= fan.sys.DateTime.maxTicks)
+    throw fan.sys.ArgErr.make("Ticks out of range 1901 to 2099");
 
   // save ticks, time zone
-  var instance = new sys_DateTime();
+  var instance = new fan.sys.DateTime();
   instance.m_ticks = ticks;
   instance.m_timeZone = tz;
 
   // compute the year
-  var year = sys_DateTime.ticksToYear(ticks);
+  var year = fan.sys.DateTime.ticksToYear(ticks);
 
   // get the time zone rule for this year, and
   // offset the working ticks by UTC offset
   var rule = tz.rule(year);
-  ticks += rule.offset * sys_DateTime.nsPerSec;
+  ticks += rule.offset * fan.sys.DateTime.nsPerSec;
 
   // compute the day and month; we may need to execute this
   // code block up to three times:
@@ -115,29 +115,29 @@ sys_DateTime.makeTicks = function(ticks, tz)
   while (true)
   {
     // recompute year based on working ticks
-    year = sys_DateTime.ticksToYear(ticks);
-    rem = ticks - sys_DateTime.yearTicks[year-1900];
-    if (rem < 0) rem += sys_DateTime.nsPerYear;
+    year = fan.sys.DateTime.ticksToYear(ticks);
+    rem = ticks - fan.sys.DateTime.yearTicks[year-1900];
+    if (rem < 0) rem += fan.sys.DateTime.nsPerYear;
 
     // compute day of the year
-    var dayOfYear = Math.floor(rem/sys_DateTime.nsPerDay);
-    rem %= sys_DateTime.nsPerDay;
+    var dayOfYear = Math.floor(rem/fan.sys.DateTime.nsPerDay);
+    rem %= fan.sys.DateTime.nsPerDay;
 
     // use lookup tables map day of year to month and day
-    if (sys_DateTime.isLeapYear(year))
+    if (fan.sys.DateTime.isLeapYear(year))
     {
-      month = sys_DateTime.monForDayOfYearLeap[dayOfYear];
-      day   = sys_DateTime.dayForDayOfYearLeap[dayOfYear];
+      month = fan.sys.DateTime.monForDayOfYearLeap[dayOfYear];
+      day   = fan.sys.DateTime.dayForDayOfYearLeap[dayOfYear];
     }
     else
     {
-      month = sys_DateTime.monForDayOfYear[dayOfYear];
-      day   = sys_DateTime.dayForDayOfYear[dayOfYear];
+      month = fan.sys.DateTime.monForDayOfYear[dayOfYear];
+      day   = fan.sys.DateTime.dayForDayOfYear[dayOfYear];
     }
 
     // if dstOffset is set to max, then this is
     // the third time thru the loop: std->dst->std
-    if (sys_Int.equals(dstOffset, sys_Int.maxVal)) { dstOffset = 0; break; }
+    if (fan.sys.Int.equals(dstOffset, fan.sys.Int.maxVal)) { dstOffset = 0; break; }
 
     // if dstOffset is non-zero we have run this
     // loop twice to recompute the date for dst
@@ -147,10 +147,10 @@ sys_DateTime.makeTicks = function(ticks, tz)
       // recompute to see if dst wall time pushed us back
       // into dst - if so then run through the loop a third
       // time to get us back to standard time
-      if (rule.isWallTime() && sys_TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/sys_DateTime.nsPerSec)) == 0)
+      if (rule.isWallTime() && fan.sys.TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/fan.sys.DateTime.nsPerSec)) == 0)
       {
         ticks -= dstOffset * sysDateTime.nsPerSec;
-        dstOffset = sys_Int.maxVal;
+        dstOffset = fan.sys.Int.maxVal;
         continue;
       }
       break;
@@ -159,17 +159,17 @@ sys_DateTime.makeTicks = function(ticks, tz)
     // first time in loop; check for daylight saving time,
     // and if dst is in effect then re-run this loop with
     // modified working ticks
-    dstOffset = sys_TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/sys_DateTime.nsPerSec));
+    dstOffset = fan.sys.TimeZone.dstOffset(rule, year, month, day, Math.floor(rem/fan.sys.DateTime.nsPerSec));
     if (dstOffset == 0) break;
-    ticks += dstOffset * sys_DateTime.nsPerSec;
+    ticks += dstOffset * fan.sys.DateTime.nsPerSec;
   }
 
   // compute time of day
-  var hour = Math.floor(rem / sys_DateTime.nsPerHour);  rem %= sys_DateTime.nsPerHour;
-  var min  = Math.floor(rem / sys_DateTime.nsPerMin);   rem %= sys_DateTime.nsPerMin;
+  var hour = Math.floor(rem / fan.sys.DateTime.nsPerHour);  rem %= fan.sys.DateTime.nsPerHour;
+  var min  = Math.floor(rem / fan.sys.DateTime.nsPerMin);   rem %= fan.sys.DateTime.nsPerMin;
 
   // compute weekday
-  var weekday = (sys_DateTime.firstWeekday(year, month) + day - 1) % 7;
+  var weekday = (fan.sys.DateTime.firstWeekday(year, month) + day - 1) % 7;
 
   // fields
   var fields = 0;
@@ -189,7 +189,7 @@ sys_DateTime.makeTicks = function(ticks, tz)
 // Constructor - FromStr
 //////////////////////////////////////////////////////////////////////////
 
-sys_DateTime.fromStr = function(s, checked, iso)
+fan.sys.DateTime.fromStr = function(s, checked, iso)
 {
   if (checked == undefined) checked = true;
   if (iso == undefined) iso = false;
@@ -248,23 +248,23 @@ sys_DateTime.fromStr = function(s, checked, iso)
     {
       if (i < s.length()) throw new Error();
       if (offset == 0)
-        tz = sys_TimeZone.utc();
+        tz = fan.sys.TimeZone.utc();
       else
-        tz = sys_TimeZone.fromStr("GMT" + (offset < 0 ? "+" : "-") + Math.abs(offset)/3600);
+        tz = fan.sys.TimeZone.fromStr("GMT" + (offset < 0 ? "+" : "-") + Math.abs(offset)/3600);
     }
     else
     {
       if (s.charAt(i++) != ' ') throw new Error();
-      tz = sys_TimeZone.fromStr(s.substring(i), true);
+      tz = fan.sys.TimeZone.fromStr(s.substring(i), true);
     }
 
-    //return sys_DateTime.make(year, sys_Month.values[month], day, hour, min, sec, ns, offset, tz);
-    return sys_DateTime.make(year, sys_Month.values[month], day, hour, min, sec, ns, tz);
+    //return fan.sys.DateTime.make(year, fan.sys.Month.values[month], day, hour, min, sec, ns, offset, tz);
+    return fan.sys.DateTime.make(year, fan.sys.Month.values[month], day, hour, min, sec, ns, tz);
   }
   catch (err)
   {
     if (!checked) return null;
-    throw sys_ParseErr.make("DateTime", s);
+    throw fan.sys.ParseErr.make("DateTime", s);
   }
 }
 
@@ -272,63 +272,63 @@ sys_DateTime.fromStr = function(s, checked, iso)
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-sys_DateTime.prototype.equals = function(obj)
+fan.sys.DateTime.prototype.equals = function(obj)
 {
-  if (obj instanceof sys_DateTime)
+  if (obj instanceof fan.sys.DateTime)
   {
     return this.m_ticks == obj.m_ticks;
   }
   return false;
 }
 
-sys_DateTime.prototype.hash = function()
+fan.sys.DateTime.prototype.hash = function()
 {
   return this.m_ticks;
 }
 
-sys_DateTime.prototype.compare = function(obj)
+fan.sys.DateTime.prototype.compare = function(obj)
 {
   var that = obj.m_ticks;
   if (this.m_ticks < that) return -1; return this.m_ticks  == that ? 0 : +1;
 }
 
-sys_DateTime.prototype.type = function()
+fan.sys.DateTime.prototype.type = function()
 {
-  return sys_Type.find("sys::DateTime");
+  return fan.sys.Type.find("sys::DateTime");
 }
 //////////////////////////////////////////////////////////////////////////
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-sys_DateTime.prototype.ticks = function() { return this.m_ticks; }
-sys_DateTime.prototype.date = function() { return sys_Date.make(this.year(), this.month(), this.day()); }
-sys_DateTime.prototype.time = function() { return sys_Time.make(this.hour(), this.min(), this.sec(), this.nanoSec()); }
-sys_DateTime.prototype.year = function() { return (this.m_fields & 0xff) + 1900; }
-sys_DateTime.prototype.month = function() { return sys_Month.values[(this.m_fields >> 8) & 0xf]; }
-sys_DateTime.prototype.day = function() { return (this.m_fields >> 12) & 0x1f; }
-sys_DateTime.prototype.hour = function() { return (this.m_fields >> 17) & 0x1f; }
-sys_DateTime.prototype.min = function() { return (this.m_fields >> 22) & 0x3f; }
-sys_DateTime.prototype.sec = function()
+fan.sys.DateTime.prototype.ticks = function() { return this.m_ticks; }
+fan.sys.DateTime.prototype.date = function() { return fan.sys.Date.make(this.year(), this.month(), this.day()); }
+fan.sys.DateTime.prototype.time = function() { return fan.sys.Time.make(this.hour(), this.min(), this.sec(), this.nanoSec()); }
+fan.sys.DateTime.prototype.year = function() { return (this.m_fields & 0xff) + 1900; }
+fan.sys.DateTime.prototype.month = function() { return fan.sys.Month.values[(this.m_fields >> 8) & 0xf]; }
+fan.sys.DateTime.prototype.day = function() { return (this.m_fields >> 12) & 0x1f; }
+fan.sys.DateTime.prototype.hour = function() { return (this.m_fields >> 17) & 0x1f; }
+fan.sys.DateTime.prototype.min = function() { return (this.m_fields >> 22) & 0x3f; }
+fan.sys.DateTime.prototype.sec = function()
 {
-  var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - sys_DateTime.yearTicks[0];
-  return Math.floor((rem % sys_DateTime.nsPerMin) / sys_DateTime.nsPerSec);
+  var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - fan.sys.DateTime.yearTicks[0];
+  return Math.floor((rem % fan.sys.DateTime.nsPerMin) / fan.sys.DateTime.nsPerSec);
 }
-sys_DateTime.prototype.nanoSec = function()
+fan.sys.DateTime.prototype.nanoSec = function()
 {
-  var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - sys_DateTime.yearTicks[0];
-  return rem % sys_DateTime.nsPerSec;
+  var rem = this.m_ticks >= 0 ? this.m_ticks : this.m_ticks - fan.sys.DateTime.yearTicks[0];
+  return rem % fan.sys.DateTime.nsPerSec;
 }
-sys_DateTime.prototype.weekday = function() { return sys_Weekday.values[(this.m_fields >> 28) & 0x7]; }
-sys_DateTime.prototype.timeZone = function() { return this.m_timeZone; }
-sys_DateTime.prototype.dst = function() { return ((this.m_fields >> 31) & 0x1) != 0; }
-sys_DateTime.prototype.timeZoneAbbr = function() { return this.dst() ? this.m_timeZone.dstAbbr(this.year()) : this.m_timeZone.stdAbbr(this.year()); }
-sys_DateTime.prototype.dayOfYear = function() { return sys_DateTime.dayOfYear(this.year(), this.month().m_ordinal, this.day())+1; }
+fan.sys.DateTime.prototype.weekday = function() { return fan.sys.Weekday.values[(this.m_fields >> 28) & 0x7]; }
+fan.sys.DateTime.prototype.timeZone = function() { return this.m_timeZone; }
+fan.sys.DateTime.prototype.dst = function() { return ((this.m_fields >> 31) & 0x1) != 0; }
+fan.sys.DateTime.prototype.timeZoneAbbr = function() { return this.dst() ? this.m_timeZone.dstAbbr(this.year()) : this.m_timeZone.stdAbbr(this.year()); }
+fan.sys.DateTime.prototype.dayOfYear = function() { return fan.sys.DateTime.dayOfYear(this.year(), this.month().m_ordinal, this.day())+1; }
 
 /////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
 
-sys_DateTime.prototype.toLocale = function(pattern, locale)
+fan.sys.DateTime.prototype.toLocale = function(pattern, locale)
 {
   if (pattern == undefined) pattern = null;
   if (locale == undefined) locale = null;
@@ -355,7 +355,7 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
       while (true)
       {
         ++i;
-        if (i >= len) throw sys_ArgErr.make("Invalid pattern: unterminated literal");
+        if (i >= len) throw fan.sys.ArgErr.make("Invalid pattern: unterminated literal");
         c = pattern.charAt(i);
         if (c == '\'') break;
         s += c;
@@ -522,7 +522,7 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
         break;
 
       default:
-        if (sys_Int.isAlpha(c.charCodeAt(0)))
+        if (fan.sys.Int.isAlpha(c.charCodeAt(0)))
           throw ArgErr.make("Invalid pattern: unsupported char '" + c + "'").val;
 
         // don't display symbol between ss.FFF if fractions is zero
@@ -534,7 +534,7 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
 
     // if invalid number of characters
     if (invalidNum)
-      throw sys_ArgErr.make("Invalid pattern: unsupported num of '" + c + "' (x" + n + ")");
+      throw fan.sys.ArgErr.make("Invalid pattern: unsupported num of '" + c + "' (x" + n + ")");
   }
 
   return s;
@@ -544,38 +544,38 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_DateTime.prototype.toStr = function()
+fan.sys.DateTime.prototype.toStr = function()
 {
   return this.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFFFFFFFz zzzz");
 }
 
-sys_DateTime.isLeapYear = function(year)
+fan.sys.DateTime.isLeapYear = function(year)
 {
   if ((year & 3) != 0) return false;
   return (year % 100 != 0) || (year % 400 == 0);
 }
 
-sys_DateTime.weekdayInMonth = function(year, mon, weekday, pos)
+fan.sys.DateTime.weekdayInMonth = function(year, mon, weekday, pos)
 {
   mon = mon.m_ordinal;
   weekday = weekday.m_ordinal;
 
   // argument checking
-  sys_DateTime.checkYear(year);
-  if (pos == 0) throw sys_ArgErr.make("Pos is zero");
+  fan.sys.DateTime.checkYear(year);
+  if (pos == 0) throw fan.sys.ArgErr.make("Pos is zero");
 
   // compute the weekday of the 1st of this month (0-6)
-  var firstWeekday = sys_DateTime.firstWeekday(year, mon);
+  var firstWeekday = fan.sys.DateTime.firstWeekday(year, mon);
 
   // get number of days in this month
-  var numDays = sys_DateTime.numDaysInMonth(year, mon);
+  var numDays = fan.sys.DateTime.numDaysInMonth(year, mon);
 
   if (pos > 0)
   {
     var day = weekday - firstWeekday + 1;
     if (day <= 0) day = 8 - firstWeekday + weekday;
     day += (pos-1)*7;
-    if (day > numDays) throw sys_ArgErr.make("Pos out of range " + pos);
+    if (day > numDays) throw fan.sys.ArgErr.make("Pos out of range " + pos);
     return day;
   }
   else
@@ -585,108 +585,108 @@ sys_DateTime.weekdayInMonth = function(year, mon, weekday, pos)
     if (off < 0) off = 7 + off;
     off -= (pos+1)*7;
     var day = numDays - off;
-    if (day < 1) throw sys_ArgErr.make("Pos out of range " + pos);
+    if (day < 1) throw fan.sys.ArgErr.make("Pos out of range " + pos);
     return day;
   }
 }
 
-sys_DateTime.dayOfYear = function(year, mon, day)
+fan.sys.DateTime.dayOfYear = function(year, mon, day)
 {
-  return sys_DateTime.isLeapYear(year) ?
-    sys_DateTime.dayOfYearForFirstOfMonLeap[mon] + day - 1 :
-    sys_DateTime.dayOfYearForFirstOfMon[mon] + day - 1;
+  return fan.sys.DateTime.isLeapYear(year) ?
+    fan.sys.DateTime.dayOfYearForFirstOfMonLeap[mon] + day - 1 :
+    fan.sys.DateTime.dayOfYearForFirstOfMon[mon] + day - 1;
 }
 
-sys_DateTime.numDaysInMonth = function(year, month)
+fan.sys.DateTime.numDaysInMonth = function(year, month)
 {
-  if (month == 1 && sys_DateTime.isLeapYear(year))
+  if (month == 1 && fan.sys.DateTime.isLeapYear(year))
     return 29;
   else
-    return sys_DateTime.daysInMon[month];
+    return fan.sys.DateTime.daysInMon[month];
 }
 
-sys_DateTime.ticksToYear = function(ticks)
+fan.sys.DateTime.ticksToYear = function(ticks)
 {
   // estimate the year to get us in the ball park, then
   // match the exact year using the yearTicks lookup table
-  var year = Math.floor(ticks/sys_DateTime.nsPerYear) + 2000;
-  if (sys_DateTime.yearTicks[year-1900] > ticks) year--;
+  var year = Math.floor(ticks/fan.sys.DateTime.nsPerYear) + 2000;
+  if (fan.sys.DateTime.yearTicks[year-1900] > ticks) year--;
   return year;
 }
 
-sys_DateTime.firstWeekday = function(year, mon)
+fan.sys.DateTime.firstWeekday = function(year, mon)
 {
   // get the 1st day of this month as a day of year (0-365)
-  var firstDayOfYear = sys_DateTime.isLeapYear(year)
-    ? sys_DateTime.dayOfYearForFirstOfMonLeap[mon]
-    : sys_DateTime.dayOfYearForFirstOfMon[mon];
+  var firstDayOfYear = fan.sys.DateTime.isLeapYear(year)
+    ? fan.sys.DateTime.dayOfYearForFirstOfMonLeap[mon]
+    : fan.sys.DateTime.dayOfYearForFirstOfMon[mon];
 
   // compute the weekday of the 1st of this month (0-6)
-  return (sys_DateTime.firstWeekdayOfYear[year-1900] + firstDayOfYear) % 7;
+  return (fan.sys.DateTime.firstWeekdayOfYear[year-1900] + firstDayOfYear) % 7;
 }
 
-sys_DateTime.checkYear = function(year)
+fan.sys.DateTime.checkYear = function(year)
 {
   if (year < 1901 || year > 2099)
-    throw sys_ArgErr.make("Year out of range " + year);
+    throw fan.sys.ArgErr.make("Year out of range " + year);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Constants
 //////////////////////////////////////////////////////////////////////////
 
-// TODO - make sys_Ints
-sys_DateTime.nsPerYear  = 365*24*60*60*1000000000;
-sys_DateTime.nsPerDay   = 24*60*60*1000000000;
-sys_DateTime.nsPerHour  = 60*60*1000000000;
-sys_DateTime.nsPerMin   = 60*1000000000;
-sys_DateTime.nsPerSec   = 1000000000;
-sys_DateTime.nsPerMilli = 1000000;
-sys_DateTime.minTicks   = -3124137600000000000; // 1901
-sys_DateTime.maxTicks   = 3155760000000000000;  // 2100
+// TODO - make fan.sys.Ints
+fan.sys.DateTime.nsPerYear  = 365*24*60*60*1000000000;
+fan.sys.DateTime.nsPerDay   = 24*60*60*1000000000;
+fan.sys.DateTime.nsPerHour  = 60*60*1000000000;
+fan.sys.DateTime.nsPerMin   = 60*1000000000;
+fan.sys.DateTime.nsPerSec   = 1000000000;
+fan.sys.DateTime.nsPerMilli = 1000000;
+fan.sys.DateTime.minTicks   = -3124137600000000000; // 1901
+fan.sys.DateTime.maxTicks   = 3155760000000000000;  // 2100
 
 //////////////////////////////////////////////////////////////////////////
 // Static Fields
 //////////////////////////////////////////////////////////////////////////
 
 // ns ticks for jan 1 of year 1900-2100
-sys_DateTime.yearTicks = [];
+fan.sys.DateTime.yearTicks = [];
 
 // first weekday (0-6) of year indexed by year 1900-2100
-sys_DateTime.firstWeekdayOfYear = [];
+fan.sys.DateTime.firstWeekdayOfYear = [];
 
-sys_DateTime.yearTicks[0] = -3155673600000000000; // ns ticks for 1900
-sys_DateTime.firstWeekdayOfYear[0] = 1;
+fan.sys.DateTime.yearTicks[0] = -3155673600000000000; // ns ticks for 1900
+fan.sys.DateTime.firstWeekdayOfYear[0] = 1;
 for (var i=1; i<202; ++i)
 {
   var daysInYear = 365;
-  if (sys_DateTime.isLeapYear(i+1900-1)) daysInYear = 366;
-  sys_DateTime.yearTicks[i] = sys_DateTime.yearTicks[i-1] + daysInYear * sys_DateTime.nsPerDay;
-  sys_DateTime.firstWeekdayOfYear[i] = (sys_DateTime.firstWeekdayOfYear[i-1] + daysInYear) % 7;
+  if (fan.sys.DateTime.isLeapYear(i+1900-1)) daysInYear = 366;
+  fan.sys.DateTime.yearTicks[i] = fan.sys.DateTime.yearTicks[i-1] + daysInYear * fan.sys.DateTime.nsPerDay;
+  fan.sys.DateTime.firstWeekdayOfYear[i] = (fan.sys.DateTime.firstWeekdayOfYear[i-1] + daysInYear) % 7;
 }
 
 // number of days in each month indexed by month (0-11)
-sys_DateTime.daysInMon     = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
-sys_DateTime.daysInMonLeap = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+fan.sys.DateTime.daysInMon     = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+fan.sys.DateTime.daysInMonLeap = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
 
 // day of year (0-365) for 1st day of month (0-11)
-sys_DateTime.dayOfYearForFirstOfMon     = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-sys_DateTime.dayOfYearForFirstOfMonLeap = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+fan.sys.DateTime.dayOfYearForFirstOfMon     = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+fan.sys.DateTime.dayOfYearForFirstOfMonLeap = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 for (var i=1; i<12; ++i)
 {
-  sys_DateTime.dayOfYearForFirstOfMon[i] =
-    sys_DateTime.dayOfYearForFirstOfMon[i-1] + sys_DateTime.daysInMon[i-1];
+  fan.sys.DateTime.dayOfYearForFirstOfMon[i] =
+    fan.sys.DateTime.dayOfYearForFirstOfMon[i-1] + fan.sys.DateTime.daysInMon[i-1];
 
-  sys_DateTime.dayOfYearForFirstOfMonLeap[i] =
-    sys_DateTime.dayOfYearForFirstOfMonLeap[i-1] + sys_DateTime.daysInMonLeap[i-1];
+  fan.sys.DateTime.dayOfYearForFirstOfMonLeap[i] =
+    fan.sys.DateTime.dayOfYearForFirstOfMonLeap[i-1] + fan.sys.DateTime.daysInMonLeap[i-1];
 }
 
 // month and day of month indexed by day of the year (0-365)
-sys_DateTime.monForDayOfYear     = [];
-sys_DateTime.dayForDayOfYear     = [];
-sys_DateTime.monForDayOfYearLeap = [];
-sys_DateTime.dayForDayOfYearLeap = [];
-sys_DateTime.fillInDayOfYear = function(mon, days, daysInMon, len)
+fan.sys.DateTime.monForDayOfYear     = [];
+fan.sys.DateTime.dayForDayOfYear     = [];
+fan.sys.DateTime.monForDayOfYearLeap = [];
+fan.sys.DateTime.dayForDayOfYearLeap = [];
+fan.sys.DateTime.fillInDayOfYear = function(mon, days, daysInMon, len)
 {
   var m = 0, d = 1;
   for (var i=0; i<len; ++i)
@@ -695,6 +695,6 @@ sys_DateTime.fillInDayOfYear = function(mon, days, daysInMon, len)
     if (d > daysInMon[m]) { m++; d = 1; }
   }
 }
-sys_DateTime.fillInDayOfYear(sys_DateTime.monForDayOfYear, sys_DateTime.dayForDayOfYear, sys_DateTime.daysInMon, 365);
-sys_DateTime.fillInDayOfYear(sys_DateTime.monForDayOfYearLeap, sys_DateTime.dayForDayOfYearLeap, sys_DateTime.daysInMonLeap, 366);
+fan.sys.DateTime.fillInDayOfYear(fan.sys.DateTime.monForDayOfYear, fan.sys.DateTime.dayForDayOfYear, fan.sys.DateTime.daysInMon, 365);
+fan.sys.DateTime.fillInDayOfYear(fan.sys.DateTime.monForDayOfYearLeap, fan.sys.DateTime.dayForDayOfYearLeap, fan.sys.DateTime.daysInMonLeap, 366);
 

@@ -8,13 +8,13 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
-var dom_EffectPeer = sys_Obj.$extend(sys_Obj);
+fan.dom.EffectPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-dom_EffectPeer.prototype.$ctor = function(self)
+fan.dom.EffectPeer.prototype.$ctor = function(self)
 {
   this.dom   = null;  // actual DOM element
   this.fan   = null;  // Fan Elem wrappaer
@@ -26,13 +26,13 @@ dom_EffectPeer.prototype.$ctor = function(self)
 // Attributes
 //////////////////////////////////////////////////////////////////////////
 
-dom_EffectPeer.prototype.elem = function(self) { return this.fan; }
+fan.dom.EffectPeer.prototype.elem = function(self) { return this.fan; }
 
 //////////////////////////////////////////////////////////////////////////
 // Animate
 //////////////////////////////////////////////////////////////////////////
 
-dom_EffectPeer.prototype.animate = function(self, map, dur, callback, init)
+fan.dom.EffectPeer.prototype.animate = function(self, map, dur, callback, init)
 {
   dur = (dur   == undefined) ? 0 : dur.toMillis();
   if (callback == undefined) callback = null;
@@ -42,14 +42,14 @@ dom_EffectPeer.prototype.animate = function(self, map, dur, callback, init)
   return self;
 }
 
-dom_EffectPeer.prototype.dequeue = function()
+fan.dom.EffectPeer.prototype.dequeue = function()
 {
   if (this.queue.length == 0) return;
   var a = this.queue[0];
   this.doAnimate(a.self, a.map, a.dur, a.callback, a.init);
 }
 
-dom_EffectPeer.prototype.doAnimate = function(self, map, dur, callback, init)
+fan.dom.EffectPeer.prototype.doAnimate = function(self, map, dur, callback, init)
 {
   if (init != null) callback = init(map, callback);
   var tweens = [];
@@ -60,7 +60,7 @@ dom_EffectPeer.prototype.doAnimate = function(self, map, dur, callback, init)
   {
     var key = keys[i];
     var val = map.get(key);
-    var tween = new dom_Tween(self.peer, key, val);
+    var tween = new fan.dom.Tween(self.peer, key, val);
     tweens.push(tween);
   }
 
@@ -109,7 +109,7 @@ dom_EffectPeer.prototype.doAnimate = function(self, map, dur, callback, init)
 // Show/Hide
 //////////////////////////////////////////////////////////////////////////
 
-dom_EffectPeer.prototype.show = function(self, dur, callback, doWidth)
+fan.dom.EffectPeer.prototype.show = function(self, dur, callback, doWidth)
 {
   // animate width prop?
   if (doWidth == undefined) doWidth = true
@@ -123,8 +123,8 @@ dom_EffectPeer.prototype.show = function(self, dur, callback, doWidth)
     // figure out target size
     fx.peer.dom.style.opacity = "0";
     fx.peer.dom.style.display = "block";
-    var w = new dom_Tween(fx.peer, "width", 0).currentVal()+"px";
-    var h = new dom_Tween(fx.peer, "height", 0).currentVal()+"px";
+    var w = new fan.dom.Tween(fx.peer, "width", 0).currentVal()+"px";
+    var h = new fan.dom.Tween(fx.peer, "height", 0).currentVal()+"px";
     var cs = fx.peer.fan.computedStyle();
 
     if (doWidth)
@@ -160,10 +160,10 @@ dom_EffectPeer.prototype.show = function(self, dur, callback, doWidth)
       if (callback) callback(fx);
     }
   };
-  return this.animate(self, new sys_Map(), dur, callback, init);
+  return this.animate(self, new fan.sys.Map(), dur, callback, init);
 }
 
-dom_EffectPeer.prototype.hide = function(self, dur, callback, doWidth)
+fan.dom.EffectPeer.prototype.hide = function(self, dur, callback, doWidth)
 {
   // animate width prop?
   if (doWidth == undefined) doWidth = true
@@ -176,8 +176,8 @@ dom_EffectPeer.prototype.hide = function(self, dur, callback, doWidth)
     var old =
     {
       overflow: fx.peer.dom.style.overflow,
-      width:  new dom_Tween(fx.peer, "width", 0).currentVal()+"px",
-      height: new dom_Tween(fx.peer, "height", 0).currentVal()+"px",
+      width:  new fan.dom.Tween(fx.peer, "width", 0).currentVal()+"px",
+      height: new fan.dom.Tween(fx.peer, "height", 0).currentVal()+"px",
       paddingTop:    cs.paddingTop,
       paddingBottom: cs.paddingBottom,
       paddingLeft:   cs.paddingLeft,
@@ -225,19 +225,19 @@ dom_EffectPeer.prototype.hide = function(self, dur, callback, doWidth)
       if (callback) callback(fx);
     }
   };
-  return this.animate(self, new sys_Map(), dur, callback, init);
+  return this.animate(self, new fan.sys.Map(), dur, callback, init);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Slide
 //////////////////////////////////////////////////////////////////////////
 
-dom_EffectPeer.prototype.slideDown = function(self, dur, callback)
+fan.dom.EffectPeer.prototype.slideDown = function(self, dur, callback)
 {
   return this.show(self, dur, callback, false);
 }
 
-dom_EffectPeer.prototype.slideUp = function(self, dur, callback)
+fan.dom.EffectPeer.prototype.slideUp = function(self, dur, callback)
 {
   return this.hide(self, dur, callback, false);
 }
@@ -246,11 +246,11 @@ dom_EffectPeer.prototype.slideUp = function(self, dur, callback)
 // Fading
 //////////////////////////////////////////////////////////////////////////
 
-dom_EffectPeer.prototype.fadeIn  = function(self, dur, callback) { return this.fadeTo(self, "1.0", dur, callback); }
-dom_EffectPeer.prototype.fadeOut = function(self, dur, callback) { return this.fadeTo(self, "0.0", dur, callback); }
-dom_EffectPeer.prototype.fadeTo  = function(self, opacity, dur, callback)
+fan.dom.EffectPeer.prototype.fadeIn  = function(self, dur, callback) { return this.fadeTo(self, "1.0", dur, callback); }
+fan.dom.EffectPeer.prototype.fadeOut = function(self, dur, callback) { return this.fadeTo(self, "0.0", dur, callback); }
+fan.dom.EffectPeer.prototype.fadeTo  = function(self, opacity, dur, callback)
 {
-  var map = new sys_Map();
+  var map = new fan.sys.Map();
   map.set("opacity", opacity);
   return this.animate(self, map, dur, callback);
 }
@@ -259,7 +259,7 @@ dom_EffectPeer.prototype.fadeTo  = function(self, opacity, dur, callback)
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-dom_EffectPeer.prototype.sync = function(elem)
+fan.dom.EffectPeer.prototype.sync = function(elem)
 {
   this.fan = elem;
   this.dom = elem.peer.elem;
@@ -269,7 +269,7 @@ dom_EffectPeer.prototype.sync = function(elem)
 // Tween
 //////////////////////////////////////////////////////////////////////////
 
-function dom_Tween(fx, prop, stop)
+fan.dom.Tween = function(fx, prop, stop)
 {
   this.fx   = fx;      // the Effect instance
   this.elem = fx.dom;  // the DOM element to tween
@@ -281,7 +281,7 @@ function dom_Tween(fx, prop, stop)
   this.unit  = css.unit;           // the CSS for the value
 }
 
-dom_Tween.prototype.currentVal = function()
+fan.dom.Tween.prototype.currentVal = function()
 {
   switch (this.prop)
   {
@@ -314,7 +314,7 @@ dom_Tween.prototype.currentVal = function()
   }
 }
 
-dom_Tween.prototype.pixelVal = function(prop)
+fan.dom.Tween.prototype.pixelVal = function(prop)
 {
   var cs = this.fx.fan.computedStyle();
   var val = cs[prop];
@@ -347,7 +347,7 @@ catch (err) { val = 0; /*alert(err);*/ }
   return val;
 }
 
-dom_Tween.prototype.applyVal = function(val)
+fan.dom.Tween.prototype.applyVal = function(val)
 {
   // make sure we never go past stop
   if (this.start<this.stop) { if (val>this.stop) val=this.stop; }
@@ -368,18 +368,18 @@ dom_Tween.prototype.applyVal = function(val)
   }
 }
 
-dom_Tween.prototype.fromCss = function(css)
+fan.dom.Tween.prototype.fromCss = function(css)
 {
   if (css == "") return { val:0, unit:null };
   var val  = parseFloat(css);
   var unit = null;
-  if      (sys_Str.endsWith(css, "%"))  unit = "%";
-  else if (sys_Str.endsWith(css, "px")) unit = "px";
-  else if (sys_Str.endsWith(css, "em")) unit = "em";
+  if      (fan.sys.Str.endsWith(css, "%"))  unit = "%";
+  else if (fan.sys.Str.endsWith(css, "px")) unit = "px";
+  else if (fan.sys.Str.endsWith(css, "em")) unit = "em";
   return { val:val, unit:unit, toString:function(){return val+unit} };
 }
 
-dom_Tween.prototype.toString = function()
+fan.dom.Tween.prototype.toString = function()
 {
   return "[elem:" + this.elem.tagName + "," +
           "prop:" + this.prop + "," +

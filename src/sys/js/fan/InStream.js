@@ -10,20 +10,20 @@
 /**
  * InStream
  */
-var sys_InStream = sys_Obj.$extend(sys_Obj);
+fan.sys.InStream = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_InStream.prototype.$ctor = function() { this.$in = null; }
-sys_InStream.prototype.$make = function($in) { this.$in = $in; }
+fan.sys.InStream.prototype.$ctor = function() { this.$in = null; }
+fan.sys.InStream.prototype.make$ = function($in) { this.$in = $in; }
 
 //////////////////////////////////////////////////////////////////////////
 // InStream
 //////////////////////////////////////////////////////////////////////////
 
-sys_InStream.prototype.read = function()
+fan.sys.InStream.prototype.read = function()
 {
   try
   {
@@ -32,16 +32,16 @@ sys_InStream.prototype.read = function()
   catch (err)
   {
     if (this.$in == null)
-      throw sys_UnsupportedErr.make(this.type().qname() + " wraps null InStream");
+      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null InStream");
     else
-      throw sys_Err.make(err);
+      throw fan.sys.Err.make(err);
   }
 }
 
 // readBuf = function(buf, n)
 // unread = function(n)
 
-sys_InStream.prototype.skip = function(n)
+fan.sys.InStream.prototype.skip = function(n)
 {
   if (this.$in != null) return this.$in.skip(n);
 
@@ -67,7 +67,7 @@ sys_InStream.prototype.skip = function(n)
 // readUtf = function()
 // charset = function(charset)
 
-sys_InStream.prototype.readChar = function()
+fan.sys.InStream.prototype.readChar = function()
 {
   try
   {
@@ -76,13 +76,13 @@ sys_InStream.prototype.readChar = function()
   catch (err)
   {
     if (this.$in == null)
-      throw sys_UnsupportedErr.make(this.type().qname() + " wraps null InStream");
+      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null InStream");
     else
-      throw sys_Err.make(err);
+      throw fan.sys.Err.make(err);
   }
 }
 
-sys_InStream.prototype.unreadChar = function(c)
+fan.sys.InStream.prototype.unreadChar = function(c)
 {
   try
   {
@@ -91,20 +91,20 @@ sys_InStream.prototype.unreadChar = function(c)
   catch (err)
   {
     if (this.$in == null)
-      throw sys_UnsupportedErr.make(this.type().qname() + " wraps null InStream");
+      throw fan.sys.UnsupportedErr.make(this.type().qname() + " wraps null InStream");
     else
-      throw sys_Err.make(err);
+      throw fan.sys.Err.make(err);
   }
 }
 
 // peekChar = function()
 
-sys_InStream.prototype.readLine = function(max)
+fan.sys.InStream.prototype.readLine = function(max)
 {
-  if (max == undefined) max = sys_Int.Chunk;
+  if (max == undefined) max = fan.sys.Int.Chunk;
 
   // max limit
-  var maxChars = (max != null) ? max.valueOf() : sys_Int.maxVal;
+  var maxChars = (max != null) ? max.valueOf() : fan.sys.Int.maxVal;
   if (maxChars <= 0) return "";
 
   // read first char, if at end of file bail
@@ -136,24 +136,24 @@ sys_InStream.prototype.readLine = function(max)
   return buf;
 }
 
-sys_InStream.prototype.readAllLines = function()
+fan.sys.InStream.prototype.readAllLines = function()
 {
   try
   {
-    var list = sys_List.make(sys_Type.find("sys::Str"), []);
+    var list = fan.sys.List.make(fan.sys.Type.find("sys::Str"), []);
     var line = "";
     while ((line = this.readLine()) != null)
       list.push(line);
     return list;
   }
-  catch (err) { sys_Obj.echo(err); }
+  catch (err) { fan.sys.Obj.echo(err); }
   finally
   {
-    try { this.close(); } catch (err) { sys_Obj.echo(err); }
+    try { this.close(); } catch (err) { fan.sys.Obj.echo(err); }
   }
 }
 
-sys_InStream.prototype.readAllStr = function(normalizeNewlines)
+fan.sys.InStream.prototype.readAllStr = function(normalizeNewlines)
 {
   if (normalizeNewlines == undefined) normalizeNewlines = true;
   try
@@ -185,17 +185,17 @@ sys_InStream.prototype.readAllStr = function(normalizeNewlines)
   }
   finally
   {
-    try { this.close(); } catch (err) { sys_Obj.echo(err); }
+    try { this.close(); } catch (err) { fan.sys.Obj.echo(err); }
   }
 }
 
-sys_InStream.prototype.readObj = function(options)
+fan.sys.InStream.prototype.readObj = function(options)
 {
   if (options == undefined) options = null;
   return new fanx_ObjDecoder(this, options).readObj();
 }
 
-sys_InStream.prototype.close = function()
+fan.sys.InStream.prototype.close = function()
 {
   if (this.$in != null) return this.$in.close();
   return true;
@@ -205,24 +205,24 @@ sys_InStream.prototype.close = function()
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-sys_InStream.prototype.type = function()
+fan.sys.InStream.prototype.type = function()
 {
-  return sys_Type.find("sys::InStream");
+  return fan.sys.Type.find("sys::InStream");
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_InStream.make = function($in)
+fan.sys.InStream.make = function($in)
 {
-  var s = new sys_InStream();
-  s.$make($in);
+  var s = new fan.sys.InStream();
+  s.make$($in);
   return s;
 }
 
-sys_InStream.makeForStr = function(s)
+fan.sys.InStream.makeForStr = function(s)
 {
-  return new sys_StrInStream(s);
+  return new fan.sys.StrInStream(s);
 }
 

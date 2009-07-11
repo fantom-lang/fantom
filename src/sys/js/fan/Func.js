@@ -10,53 +10,53 @@
 /**
  * Func.
  */
-var sys_Func = sys_Obj.$extend(sys_Obj);
+fan.sys.Func = fan.sys.Obj.$extend(fan.sys.Obj);
 
-sys_Func.prototype.$ctor = function() {}
-sys_Func.prototype.type = function() { return sys_Type.find("sys::Func"); }
+fan.sys.Func.prototype.$ctor = function() {}
+fan.sys.Func.prototype.type = function() { return fan.sys.Type.find("sys::Func"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Func.make = function(f, params, ret)
+fan.sys.Func.make = function(f, params, ret)
 {
   var types = [];
   for (var i=0; i<params.length; i++)
     types.push(params[i].m_of);
   f.$fanParams = params;
-  f.$fanType = new sys_FuncType(types, ret);
+  f.$fanType = new fan.sys.FuncType(types, ret);
   return f;
 }
 
-sys_Func.params   = function(f) { return f.$fanParams; }
-sys_Func.ret      = function(f) { return f.$fanType.ret; }
-sys_Func.call     = function(f)
+fan.sys.Func.params   = function(f) { return f.$fanParams; }
+fan.sys.Func.ret      = function(f) { return f.$fanType.ret; }
+fan.sys.Func.call     = function(f)
 {
   var args = Array.prototype.slice.call(arguments).slice(1);
   return f.apply(null, args);
 }
-sys_Func.callList = function(f, args) { return f.apply(null, args); }
-sys_Func.callOn   = function(f, obj, args)
+fan.sys.Func.callList = function(f, args) { return f.apply(null, args); }
+fan.sys.Func.callOn   = function(f, obj, args)
 {
   var acc = args.slice();
   acc.unshift(obj);
   return f.apply(null, acc);
 }
 
-sys_Func.curry = function(f, args)
+fan.sys.Func.curry = function(f, args)
 {
   var t = f.$fanType;
   if (args.length == 0) return f;
   if (args.length > t.params.length)
-    throw sys_ArgErr.make("args.size > params.size");
+    throw fan.sys.ArgErr.make("args.size > params.size");
 
   var len = t.params.length - args.length;
   var newParams = [];
   for (var i=0; i<len; i++)
     newParams.push(t.params[args.length+i])
 
-  return sys_Func.make(function() {
+  return fan.sys.Func.make(function() {
     var curried = args.slice();
     for (var i=0; i<arguments.length; i++)
       curried.push(arguments[i]);

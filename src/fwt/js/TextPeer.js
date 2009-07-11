@@ -9,19 +9,19 @@
 /**
  * TextPeer.
  */
-var fwt_TextPeer = sys_Obj.$extend(fwt_TextWidgetPeer);
-fwt_TextPeer.prototype.$ctor = function(self) {}
+fan.fwt.TextPeer = fan.sys.Obj.$extend(fan.fwt.TextWidgetPeer);
+fan.fwt.TextPeer.prototype.$ctor = function(self) {}
 
-fwt_TextPeer.prototype.text$get = function(self) { return this.text; }
-fwt_TextPeer.prototype.text$set = function(self, val)
+fan.fwt.TextPeer.prototype.text$get = function(self) { return this.text; }
+fan.fwt.TextPeer.prototype.text$set = function(self, val)
 {
   this.text = val;
   if (this.elem != null && this.elem.firstChild != null)
     this.elem.firstChild.value = this.text;
 }
-fwt_TextPeer.prototype.text = "";
+fan.fwt.TextPeer.prototype.text = "";
 
-fwt_TextPeer.prototype.sync = function(self)
+fan.fwt.TextPeer.prototype.sync = function(self)
 {
   var text = this.elem.firstChild;
 
@@ -61,8 +61,8 @@ fwt_TextPeer.prototype.sync = function(self)
     // fire onAction
     if (event.keyCode == 13 && self.onAction.size() > 0)
     {
-      var ae = fwt_Event.make();
-      ae.id = fwt_EventId.action;
+      var ae = fan.fwt.Event.make();
+      ae.id = fan.fwt.EventId.action;
       var list = self.onAction.list();
       for (var i=0; i<list.length; i++) list[i].call(ae);
     }
@@ -70,11 +70,11 @@ fwt_TextPeer.prototype.sync = function(self)
     // fire onModify
     if (self.onModify.size() > 0)
     {
-      var me = fwt_Event.make();
-      me.id = fwt_EventId.action;
+      var me = fan.fwt.Event.make();
+      me.id = fan.fwt.EventId.action;
       var list = self.onModify.list();
       for (var i=0; i<list.length; i++) list[i].call(me);
     }
   }
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }

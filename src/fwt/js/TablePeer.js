@@ -9,27 +9,27 @@
 /**
  * TablePeer.
  */
-var fwt_TablePeer = sys_Obj.$extend(fwt_WidgetPeer);
-fwt_TablePeer.prototype.$ctor = function(self) {}
+fan.fwt.TablePeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
+fan.fwt.TablePeer.prototype.$ctor = function(self) {}
 
 // TODO
-//fwt_TablePeer.prototype.colAt = function(self, pos) {}
-//fwt_TablePeer.prototype.rowAt = function(self, pos) {}
-//fwt_TablePeer.prototype.refreshAll = function(self) {}
+//fan.fwt.TablePeer.prototype.colAt = function(self, pos) {}
+//fan.fwt.TablePeer.prototype.rowAt = function(self, pos) {}
+//fan.fwt.TablePeer.prototype.refreshAll = function(self) {}
 
-fwt_TablePeer.prototype.headerVisible = true;
-fwt_TablePeer.prototype.headerVisible$get = function(self) { return this.headerVisible; }
-fwt_TablePeer.prototype.headerVisible$set = function(self, val) { this.headerVisible = val; }
+fan.fwt.TablePeer.prototype.headerVisible = true;
+fan.fwt.TablePeer.prototype.headerVisible$get = function(self) { return this.headerVisible; }
+fan.fwt.TablePeer.prototype.headerVisible$set = function(self, val) { this.headerVisible = val; }
 
-fwt_TablePeer.prototype.selected = null;
-fwt_TablePeer.prototype.selected$get = function(self) { return this.selected; }
-fwt_TablePeer.prototype.selected$set = function(self, val)
+fan.fwt.TablePeer.prototype.selected = null;
+fan.fwt.TablePeer.prototype.selected$get = function(self) { return this.selected; }
+fan.fwt.TablePeer.prototype.selected$set = function(self, val)
 {
   this.selected = val;
   if (this.selection != null) this.selection.select(val);
 }
 
-fwt_TablePeer.prototype.create = function(parentElem)
+fan.fwt.TablePeer.prototype.create = function(parentElem)
 {
   var table = document.createElement("table");
   with (table.style)
@@ -52,19 +52,19 @@ fwt_TablePeer.prototype.create = function(parentElem)
   return div;
 }
 
-fwt_TablePeer.prototype.refreshAll = function(self)
+fan.fwt.TablePeer.prototype.refreshAll = function(self)
 {
   this.sync(self);
 }
 
-fwt_TablePeer.prototype.sync = function(self)
+fan.fwt.TablePeer.prototype.sync = function(self)
 {
   // init hook
   if (this.selection == null)
   {
     if (this.selected == null)
-      this.selected = sys_List.make(sys_Type.find("sys::Int"), []);
-    this.selection = new fwt_TableSelection(self);
+      this.selected = fan.sys.List.make(fan.sys.Type.find("sys::Int"), []);
+    this.selection = new fan.fwt.TableSelection(self);
   }
 
   // build new content
@@ -192,17 +192,17 @@ fwt_TablePeer.prototype.sync = function(self)
   // account for border
   var w = this.size.w - 2;
   var h = this.size.h - 2;
-  fwt_WidgetPeer.prototype.sync.call(this, self, w, h);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Selection
 //////////////////////////////////////////////////////////////////////////
 
-var fwt_TableSelection = sys_Obj.$extend(fwt_WidgetPeer);
-fwt_TableSelection.prototype.$ctor = function(table) { this.table = table; }
+fan.fwt.TableSelection = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
+fan.fwt.TableSelection.prototype.$ctor = function(table) { this.table = table; }
 
-fwt_TableSelection.prototype.toggle = function(event)
+fan.fwt.TableSelection.prototype.toggle = function(event)
 {
   // TODO - support multiple selection
   //if (this.table.multi)
@@ -220,7 +220,7 @@ fwt_TableSelection.prototype.toggle = function(event)
   //}
 }
 
-fwt_TableSelection.prototype.select = function(rows)
+fan.fwt.TableSelection.prototype.select = function(rows)
 {
   var selected = [];
   var tbody = this.table.peer.elem.firstChild.firstChild;
@@ -254,15 +254,15 @@ fwt_TableSelection.prototype.select = function(rows)
   return selected;
 }
 
-fwt_TableSelection.prototype.notify = function(primaryIndex)
+fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
 {
   if (this.table.onSelect.size() > 0)
   {
-    var se   = fwt_Event.make();
-    se.id    = fwt_EventId.select;
+    var se   = fan.fwt.Event.make();
+    se.id    = fan.fwt.EventId.select;
     se.index = primaryIndex;
     var listeners = this.table.onSelect.list();
-    for (var i=0; i<listeners.length; i++) sys_Func.call(listeners[i], se);
+    for (var i=0; i<listeners.length; i++) fan.sys.Func.call(listeners[i], se);
   }
 }
 

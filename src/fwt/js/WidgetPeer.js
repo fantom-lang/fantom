@@ -9,14 +9,14 @@
 /**
  * WidgetPeer.
  */
-var fwt_WidgetPeer = sys_Obj.$extend(sys_Obj);
-fwt_WidgetPeer.prototype.$ctor = function(self) {}
+fan.fwt.WidgetPeer = fan.sys.Obj.$extend(fan.sys.Obj);
+fan.fwt.WidgetPeer.prototype.$ctor = function(self) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Layout
 //////////////////////////////////////////////////////////////////////////
 
-fwt_WidgetPeer.prototype.relayout = function(self)
+fan.fwt.WidgetPeer.prototype.relayout = function(self)
 {
   this.sync(self);
   if (self.onLayout) self.onLayout();
@@ -31,7 +31,7 @@ fwt_WidgetPeer.prototype.relayout = function(self)
   return self;
 }
 
-fwt_WidgetPeer.prototype.prefSize = function(self, hints)
+fan.fwt.WidgetPeer.prototype.prefSize = function(self, hints)
 {
   // cache size
   var oldw = this.elem.style.width;
@@ -46,34 +46,34 @@ fwt_WidgetPeer.prototype.prefSize = function(self, hints)
   // restore old size
   this.elem.style.width  = oldw;
   this.elem.style.height = oldh;
-  return gfx_Size.make(pw, ph);
+  return fan.gfx.Size.make(pw, ph);
 }
 
-fwt_WidgetPeer.prototype.enabled$get = function(self) { return this.enabled; }
-fwt_WidgetPeer.prototype.enabled$set = function(self, val) { this.enabled = val; }
-fwt_WidgetPeer.prototype.enabled = true;
+fan.fwt.WidgetPeer.prototype.enabled$get = function(self) { return this.enabled; }
+fan.fwt.WidgetPeer.prototype.enabled$set = function(self, val) { this.enabled = val; }
+fan.fwt.WidgetPeer.prototype.enabled = true;
 
-fwt_WidgetPeer.prototype.visible$get = function(self) { return this.visible; }
-fwt_WidgetPeer.prototype.visible$set = function(self, val) { this.visible = val; }
-fwt_WidgetPeer.prototype.visible = true;
+fan.fwt.WidgetPeer.prototype.visible$get = function(self) { return this.visible; }
+fan.fwt.WidgetPeer.prototype.visible$set = function(self, val) { this.visible = val; }
+fan.fwt.WidgetPeer.prototype.visible = true;
 
-fwt_WidgetPeer.prototype.pos$get = function(self) { return this.pos; }
-fwt_WidgetPeer.prototype.pos$set = function(self, val) { this.pos = val; }
-fwt_WidgetPeer.prototype.pos = gfx_Point.make(0,0);
+fan.fwt.WidgetPeer.prototype.pos$get = function(self) { return this.pos; }
+fan.fwt.WidgetPeer.prototype.pos$set = function(self, val) { this.pos = val; }
+fan.fwt.WidgetPeer.prototype.pos = fan.gfx.Point.make(0,0);
 
-fwt_WidgetPeer.prototype.size$get = function(self) { return this.size; }
-fwt_WidgetPeer.prototype.size$set = function(self, val) { this.size = val; }
-fwt_WidgetPeer.prototype.size = gfx_Size.make(0,0);
+fan.fwt.WidgetPeer.prototype.size$get = function(self) { return this.size; }
+fan.fwt.WidgetPeer.prototype.size$set = function(self, val) { this.size = val; }
+fan.fwt.WidgetPeer.prototype.size = fan.gfx.Size.make(0,0);
 
 //////////////////////////////////////////////////////////////////////////
 // Attach
 //////////////////////////////////////////////////////////////////////////
 
-fwt_WidgetPeer.prototype.attached = function(self)
+fan.fwt.WidgetPeer.prototype.attached = function(self)
 {
 }
 
-fwt_WidgetPeer.prototype.attach = function(self)
+fan.fwt.WidgetPeer.prototype.attach = function(self)
 {
   // short circuit if I'm already attached
   if (this.elem != null) return;
@@ -90,7 +90,7 @@ fwt_WidgetPeer.prototype.attach = function(self)
   //parent.peer.childAdded(self);
 }
 
-fwt_WidgetPeer.prototype.attachTo = function(self, elem)
+fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
 {
   // sync to elem
   this.elem = elem;
@@ -107,7 +107,7 @@ fwt_WidgetPeer.prototype.attachTo = function(self, elem)
   }
 }
 
-fwt_WidgetPeer.prototype.attachEvents = function(elem, event, list)
+fan.fwt.WidgetPeer.prototype.attachEvents = function(elem, event, list)
 {
   for (var i=0; i<list.length; i++)
   {
@@ -118,14 +118,14 @@ fwt_WidgetPeer.prototype.attachEvents = function(elem, event, list)
   }
 }
 
-fwt_WidgetPeer.prototype.create = function(parentElem)
+fan.fwt.WidgetPeer.prototype.create = function(parentElem)
 {
   var div = this.emptyDiv();
   parentElem.appendChild(div);
   return div;
 }
 
-fwt_WidgetPeer.prototype.emptyDiv = function()
+fan.fwt.WidgetPeer.prototype.emptyDiv = function()
 {
   var div = document.createElement("div");
   with (div.style)
@@ -138,7 +138,7 @@ fwt_WidgetPeer.prototype.emptyDiv = function()
   return div;
 }
 
-fwt_WidgetPeer.prototype.detach = function(self)
+fan.fwt.WidgetPeer.prototype.detach = function(self)
 {
   var elem = self.peer.elem;
   elem.parentNode.removeChild(elem);
@@ -148,7 +148,7 @@ fwt_WidgetPeer.prototype.detach = function(self)
 // Widget/Element synchronization
 //////////////////////////////////////////////////////////////////////////
 
-fwt_WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
+fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 {
   with (this.elem.style)
   {

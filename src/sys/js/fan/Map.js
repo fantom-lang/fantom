@@ -10,9 +10,9 @@
 /**
  * Map - TODO
  */
-var sys_Map = sys_Obj.$extend(sys_Obj);
+fan.sys.Map = fan.sys.Obj.$extend(fan.sys.Obj);
 
-sys_Map.prototype.$ctor = function(k, v)
+fan.sys.Map.prototype.$ctor = function(k, v)
 {
   var mt = null;
   if (k != undefined && v == undefined)
@@ -21,9 +21,9 @@ sys_Map.prototype.$ctor = function(k, v)
   }
   else
   {
-    if (k == undefined) k = sys_Type.find("sys::Obj")
-    if (v == undefined) v = sys_Type.find("sys::Obj")
-    mt = new sys_MapType(k, v);
+    if (k == undefined) k = fan.sys.Type.find("sys::Obj")
+    if (v == undefined) v = fan.sys.Type.find("sys::Obj")
+    mt = new fan.sys.MapType(k, v);
   }
   this.map = {};
   this.$fanType = mt;
@@ -33,7 +33,7 @@ sys_Map.prototype.$ctor = function(k, v)
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-sys_Map.prototype.equals = function(that)
+fan.sys.Map.prototype.equals = function(that)
 {
   if (that != null)
   {
@@ -51,17 +51,17 @@ sys_Map.prototype.equals = function(that)
   return false;
 }
 
-sys_Map.prototype.hash = function()
+fan.sys.Map.prototype.hash = function()
 {
   return 0;
 }
 
-sys_Map.prototype.type = function()
+fan.sys.Map.prototype.type = function()
 {
-  return sys_Type.find("sys::Map");
+  return fan.sys.Type.find("sys::Map");
 }
 
-sys_Map.prototype.toStr = function()
+fan.sys.Map.prototype.toStr = function()
 {
   var s = "";
   for (var k in this.map)
@@ -77,21 +77,21 @@ sys_Map.prototype.toStr = function()
 // Items
 //////////////////////////////////////////////////////////////////////////
 
-sys_Map.prototype.keys = function()
+fan.sys.Map.prototype.keys = function()
 {
   var list = [];
   for (var k in this.map) list.push(k);
   return list;
 }
 
-sys_Map.prototype.values = function()
+fan.sys.Map.prototype.values = function()
 {
   var list = [];
   for (var k in this.map) list.push(this.map[k]);
   return list;
 }
 
-sys_Map.prototype.get = function(key, defVal)
+fan.sys.Map.prototype.get = function(key, defVal)
 {
   var val = this.map[key];
   if (val == null && defVal != null)
@@ -99,55 +99,55 @@ sys_Map.prototype.get = function(key, defVal)
   return val;
 }
 
-sys_Map.prototype.containsKey = function(key)
+fan.sys.Map.prototype.containsKey = function(key)
 {
   for (var k in this.map)
-    if (sys_Obj.equals(k, key))
+    if (fan.sys.Obj.equals(k, key))
       return true;
   return false;
 }
 
-sys_Map.prototype.add = function(key, val)
+fan.sys.Map.prototype.add = function(key, val)
 {
   if (key == null)
-    throw sys_NullErr.make("key is null");
+    throw fan.sys.NullErr.make("key is null");
   //if (!isImmutable(key))
   //  throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
   if (this.map.hasOwnProperty(key))
-    throw sys_ArgErr.make("Key already mapped: " + key);
+    throw fan.sys.ArgErr.make("Key already mapped: " + key);
   this.map[key] = val;
   return this;
 }
 
-sys_Map.prototype.set = function(key, val)
+fan.sys.Map.prototype.set = function(key, val)
 {
   this.map[key] = val;
   return this;
 }
 
-sys_Map.prototype.isEmpty = function() { return this.size() == 0; }
-sys_Map.prototype.size = function()
+fan.sys.Map.prototype.isEmpty = function() { return this.size() == 0; }
+fan.sys.Map.prototype.size = function()
 {
   var sz = 0;
   for (var k in this.map) sz++;
   return sz;
 }
 
-sys_Map.prototype.ordered$get = function() { return this.ordered; }
-sys_Map.prototype.ordered$set = function(val)
+fan.sys.Map.prototype.ordered$get = function() { return this.ordered; }
+fan.sys.Map.prototype.ordered$set = function(val)
 {
   if (this.size() != 0)
-    throw sys_UnsupportedErr.make("Map not empty");
+    throw fan.sys.UnsupportedErr.make("Map not empty");
 
   this.ordered = val;
 }
-sys_Map.prototype.ordered = false;
+fan.sys.Map.prototype.ordered = false;
 
 //////////////////////////////////////////////////////////////////////////
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
-sys_Map.prototype.each = function(func)
+fan.sys.Map.prototype.each = function(func)
 {
   for (var k in this.map)
   {
@@ -160,13 +160,13 @@ sys_Map.prototype.each = function(func)
 // Readonly
 //////////////////////////////////////////////////////////////////////////
 
-sys_Map.prototype.toImmutable = function()
+fan.sys.Map.prototype.toImmutable = function()
 {
   // TODO
   return this;
 }
 
-sys_Map.prototype.ro = function()
+fan.sys.Map.prototype.ro = function()
 {
   // TODO
   return this;
@@ -176,9 +176,9 @@ sys_Map.prototype.ro = function()
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Map.fromLiteral = function(keys, vals, k, v)
+fan.sys.Map.fromLiteral = function(keys, vals, k, v)
 {
-  var map = new sys_Map(k,v);
+  var map = new fan.sys.Map(k,v);
   for (var i=0; i<keys.length; i++)
     map.set(keys[i], vals[i]);
   return map;

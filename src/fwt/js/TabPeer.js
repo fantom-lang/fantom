@@ -9,22 +9,22 @@
 /**
  * TabPeer.
  */
-var fwt_TabPeer = sys_Obj.$extend(fwt_WidgetPeer);
-fwt_TabPeer.prototype.$ctor = function(self) {}
+fan.fwt.TabPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
+fan.fwt.TabPeer.prototype.$ctor = function(self) {}
 
-fwt_TabPeer.prototype.text$get = function(self) { return this.text; }
-fwt_TabPeer.prototype.text$set = function(self, val) { this.text = val; }
-fwt_TabPeer.prototype.text = "";
+fan.fwt.TabPeer.prototype.text$get = function(self) { return this.text; }
+fan.fwt.TabPeer.prototype.text$set = function(self, val) { this.text = val; }
+fan.fwt.TabPeer.prototype.text = "";
 
-fwt_TabPeer.prototype.image$get = function(self) { return this.image; }
-fwt_TabPeer.prototype.image$set = function(self, val)
+fan.fwt.TabPeer.prototype.image$get = function(self) { return this.image; }
+fan.fwt.TabPeer.prototype.image$set = function(self, val)
 {
   this.image = val;
-  fwt_FwtEnvPeer.loadImage(val, self)
+  fan.fwt.FwtEnvPeer.loadImage(val, self)
 }
-fwt_TabPeer.prototype.image = null;
+fan.fwt.TabPeer.prototype.image = null;
 
-fwt_TabPeer.prototype.sync = function(self)
+fan.fwt.TabPeer.prototype.sync = function(self)
 {
   var elem = this.elem;
   var selected = this.index == self.parent.peer.selectedIndex;
@@ -68,8 +68,8 @@ fwt_TabPeer.prototype.sync = function(self)
   // account for border/padding
   var w = this.size.w - 26;
   var h = this.size.h - 14;
-  fwt_WidgetPeer.prototype.sync.call(this, self, w, h);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
 
 // index of tab in TabPane
-fwt_TabPeer.prototype.index = null;
+fan.fwt.TabPeer.prototype.index = null;

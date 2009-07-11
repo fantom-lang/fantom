@@ -20,7 +20,7 @@ function fanx_ObjDecoder(input, options)
   this.consume();
 
   fanx_ObjDecoder.defaultMapType =
-    new sys_MapType(sys_Type.find("sys::Obj"), sys_Type.find("sys::Obj"));
+    new fan.sys.MapType(fan.sys.Type.find("sys::Obj"), fan.sys.Type.find("sys::Obj"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ fanx_ObjDecoder.prototype.readUsing = function()
   this.consume();
 
   var podName = this.consumeId("Expecting pod name");
-  var pod = sys_Pod.find(podName, false);
+  var pod = fan.sys.Pod.find(podName, false);
   if (pod == null) throw this.err("Unknown pod: " + podName);
   if (this.curt != fanx_Token.DOUBLE_COLON)
   {
@@ -137,8 +137,8 @@ fanx_ObjDecoder.prototype.readSimple = function(line, t)
   this.consume(fanx_Token.RPAREN, "Expected ) in simple");
 
 // TEMP
-var script = t.qname().replace("::","_") + ".fromStr('" + str + "')";
-//println(xxx);
+//var script = t.qname().replace("::","_") + ".fromStr('" + str + "')";
+var script = "fan." + t.pod().name() + "." + t.name() + ".fromStr('" + str + "')";
 return eval(script);
 
   // lookup the fromString method
@@ -181,7 +181,7 @@ fanx_ObjDecoder.prototype.readComplex = function(line, t, root)
   }
   catch (e)
   {
-    throw sys_IOErr.make("Cannot make " + t + ": " + e + " [Line " + line + "]", e);
+    throw fan.sys.IOErr.make("Cannot make " + t + ": " + e + " [Line " + line + "]", e);
   }
 
   // check for braces
@@ -234,7 +234,7 @@ fanx_ObjDecoder.prototype.readComplexAdd = function(t, obj, line)
   }
   catch (err)
   {
-    throw sys_IOErr.make("Cannot call " + t.qname() + ".add: " + err + " [Line " + line + "]", err);
+    throw fan.sys.IOErr.make("Cannot call " + t.qname() + ".add: " + err + " [Line " + line + "]", err);
   }
 }
 
@@ -257,7 +257,7 @@ fanx_ObjDecoder.prototype.readComplexField = function(t, obj, line, name)
   }
   catch (err)
   {
-    throw sys_IOErr.make("Cannot set field " + t.qname() + "." + name + ": " + err + " [Line " + line + "]", err);
+    throw fan.sys.IOErr.make("Cannot set field " + t.qname() + "." + name + ": " + err + " [Line " + line + "]", err);
   }
 }
 
@@ -286,7 +286,7 @@ fanx_ObjDecoder.prototype.readCollection = function(curField, t)
     peekType = this.readType();
 
     // if we have [mapType] then this is non-inferred type signature
-    if (this.curt == fanx_Token.RBRACKET && peekType instanceof sys_MapType)
+    if (this.curt == fanx_Token.RBRACKET && peekType instanceof fan.sys.MapType)
     {
       t = peekType; peekType = null;
       this.consume();
@@ -300,7 +300,7 @@ fanx_ObjDecoder.prototype.readCollection = function(curField, t)
   {
     this.consume();
     this.consume(fanx_Token.RBRACKET, "Expecting ']'");
-    return sys_List.make(this.toListOfType(t, curField, false), []);
+    return fan.sys.List.make(this.toListOfType(t, curField, false), []);
   }
 
   // handle special case of [:]
@@ -308,7 +308,7 @@ fanx_ObjDecoder.prototype.readCollection = function(curField, t)
   {
     this.consume();
     this.consume(fanx_Token.RBRACKET, "Expecting ']'");
-    return new sys_Map(this.toMapType(t, curField, false));
+    return new fan.sys.Map(this.toMapType(t, curField, false));
   }
 
   // read first list item or first map key
@@ -340,9 +340,9 @@ fanx_ObjDecoder.prototype.readList = function(of, first)
   this.consume(fanx_Token.RBRACKET, "Expected ']'");
 
   // infer type if needed
-  if (of == null) of = sys_Type.common(acc);
+  if (of == null) of = fan.sys.Type.common(acc);
 
-  return sys_List.make(of, acc);
+  return fan.sys.List.make(of, acc);
 }
 
 /**
@@ -378,10 +378,10 @@ readMap = function(mapType, firstKey)
     int size = map.size();
     Type k = Type.common(map.keySet().toArray(new Object[size]), size);
     Type v = Type.common(map.values().toArray(new Object[size]), size);
-    mapType = new sys_MapType(k, v);
+    mapType = new fan.sys.MapType(k, v);
   }
 
-  return new sys_Map((sys_MapType)mapType, map);
+  return new fan.sys.Map((fan.sys.MapType)mapType, map);
 },
 */
 
@@ -398,10 +398,10 @@ fanx_ObjDecoder.prototype.toListOfType = function(t, curField, infer)
   if (curField != null)
   {
     var ft = curField.of().toNonNullable();
-    if (ft instanceof sys_ListType) return ft.v;
+    if (ft instanceof fan.sys.ListType) return ft.v;
   }
   if (infer) return null;
-  return sys_Type.find("sys::Obj").toNullable(); //Sys.ObjType.toNullable();
+  return fan.sys.Type.find("sys::Obj").toNullable(); //Sys.ObjType.toNullable();
 }
 
 /**
@@ -413,13 +413,13 @@ fanx_ObjDecoder.prototype.toListOfType = function(t, curField, infer)
  */
 fanx_ObjDecoder.prototype.toMapType = function(t, curField, infer)
 {
-  if (t instanceof sys_MapType)
+  if (t instanceof fan.sys.MapType)
     return t;
 
   if (curField != null)
   {
     var ft = curField.of().toNonNullable();
-    if (ft instanceof sys_MapType) return ft;
+    if (ft instanceof fan.sys.MapType) return ft;
   }
 
   if (infer) return null;
@@ -451,7 +451,7 @@ fanx_ObjDecoder.prototype.readType = function(lbracket)
   if (this.curt == fanx_Token.COLON)
   {
     this.consume();
-    t = new sys_MapType(t, this.readType());
+    t = new fan.sys.MapType(t, this.readType());
   }
   while (this.curt == fanx_Token.LRBRACKET)
   {
@@ -491,7 +491,7 @@ fanx_ObjDecoder.prototype.readSimpleType = function()
   var typeName = this.consumeId("Expected type name");
 
   // resolve pod
-  var pod = sys_Pod.find(n, false);
+  var pod = fan.sys.Pod.find(n, false);
   if (pod == null) throw this.err("Pod not found: " + n, line);
 
   // resolve type
@@ -581,7 +581,7 @@ fanx_ObjDecoder.decode = function(s)
 
 fanx_ObjDecoder.err = function(msg, line)
 {
-  return sys_IOErr.make(msg + " [Line " + line + "]");
+  return fan.sys.IOErr.make(msg + " [Line " + line + "]");
 }
 
 fanx_ObjDecoder.defaultMapType = null;

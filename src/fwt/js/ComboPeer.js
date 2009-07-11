@@ -9,26 +9,26 @@
 /**
  * ComboPeer.
  */
-var fwt_ComboPeer = sys_Obj.$extend(fwt_WidgetPeer);
-fwt_ComboPeer.prototype.$ctor = function(self) {}
+fan.fwt.ComboPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
+fan.fwt.ComboPeer.prototype.$ctor = function(self) {}
 
-fwt_ComboPeer.prototype.font$get = function(self) { return this.font; }
-fwt_ComboPeer.prototype.font$set = function(self, val) { this.font = val; }
-fwt_ComboPeer.prototype.font = null;
+fan.fwt.ComboPeer.prototype.font$get = function(self) { return this.font; }
+fan.fwt.ComboPeer.prototype.font$set = function(self, val) { this.font = val; }
+fan.fwt.ComboPeer.prototype.font = null;
 
-fwt_ComboPeer.prototype.items$get = function(self) { return this.items; }
-fwt_ComboPeer.prototype.items$set = function(self, val) { this.items = val; }
-fwt_ComboPeer.prototype.items = null;
+fan.fwt.ComboPeer.prototype.items$get = function(self) { return this.items; }
+fan.fwt.ComboPeer.prototype.items$set = function(self, val) { this.items = val; }
+fan.fwt.ComboPeer.prototype.items = null;
 
-fwt_ComboPeer.prototype.selectedIndex$get = function(self) { return this.selectedIndex; }
-fwt_ComboPeer.prototype.selectedIndex$set = function(self, val) { this.selectedIndex = val; }
-fwt_ComboPeer.prototype.selectedIndex = null;
+fan.fwt.ComboPeer.prototype.selectedIndex$get = function(self) { return this.selectedIndex; }
+fan.fwt.ComboPeer.prototype.selectedIndex$set = function(self, val) { this.selectedIndex = val; }
+fan.fwt.ComboPeer.prototype.selectedIndex = null;
 
-fwt_ComboPeer.prototype.text$get = function(self) { return this.text; }
-fwt_ComboPeer.prototype.text$set = function(self, val) { this.text = val; }
-fwt_ComboPeer.prototype.text = "";
+fan.fwt.ComboPeer.prototype.text$get = function(self) { return this.text; }
+fan.fwt.ComboPeer.prototype.text$set = function(self, val) { this.text = val; }
+fan.fwt.ComboPeer.prototype.text = "";
 
-fwt_ComboPeer.prototype.create = function(parentElem)
+fan.fwt.ComboPeer.prototype.create = function(parentElem)
 {
   var select = document.createElement("select");
   var div = this.emptyDiv();
@@ -37,7 +37,7 @@ fwt_ComboPeer.prototype.create = function(parentElem)
   return div;
 }
 
-fwt_ComboPeer.prototype.sync = function(self)
+fan.fwt.ComboPeer.prototype.sync = function(self)
 {
   var select = this.elem.firstChild;
 
@@ -53,5 +53,5 @@ fwt_ComboPeer.prototype.sync = function(self)
     select.appendChild(option);
   }
 
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }

@@ -10,16 +10,16 @@
 /**
  * Log.
  */
-var sys_Log = sys_Obj.$extend(sys_Obj);
+fan.sys.Log = fan.sys.Obj.$extend(fan.sys.Obj);
 
-sys_Log.prototype.$ctor = function() {}
-sys_Log.prototype.type = function() { return sys_Type.find("sys::Log"); }
+fan.sys.Log.prototype.$ctor = function() {}
+fan.sys.Log.prototype.type = function() { return fan.sys.Type.find("sys::Log"); }
 
-sys_Log.prototype.error = function(msg, err) { this.log(msg, err); }
-sys_Log.prototype.info = function(msg, err) { this.log(msg, err); }
-sys_Log.prototype.warn = function(msg, err) { this.log(msg, err); }
+fan.sys.Log.prototype.error = function(msg, err) { this.log(msg, err); }
+fan.sys.Log.prototype.info = function(msg, err) { this.log(msg, err); }
+fan.sys.Log.prototype.warn = function(msg, err) { this.log(msg, err); }
 
-sys_Log.prototype.log = function(msg, err)
+fan.sys.Log.prototype.log = function(msg, err)
 {
   try
   {
@@ -28,83 +28,83 @@ sys_Log.prototype.log = function(msg, err)
   catch (err) {}  // no console support
 }
 
-sys_Log.make = function(name, register)
+fan.sys.Log.make = function(name, register)
 {
-  var log = new sys_Log();
+  var log = new fan.sys.Log();
   log.name = name;
   log.register = register;
   return log;
 }
 
-sys_Log.get = function(name)
+fan.sys.Log.get = function(name)
 {
-  var log = sys_Log.$cache[name];
+  var log = fan.sys.Log.$cache[name];
   if (log == null)
   {
-    log = sys_Log.make(name, true);
-    sys_Log.$cache[name] = log;
+    log = fan.sys.Log.make(name, true);
+    fan.sys.Log.$cache[name] = log;
   }
   return log;
 }
 
-sys_Log.$cache = [];
+fan.sys.Log.$cache = [];
 
 /*************************************************************************
  * LogLevel
  ************************************************************************/
 
-var sys_LogLevel = sys_Obj.$extend(sys_Enum);
+fan.sys.LogLevel = fan.sys.Obj.$extend(fan.sys.Enum);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_LogLevel.prototype.$ctor = function(ordinal, name)
+fan.sys.LogLevel.prototype.$ctor = function(ordinal, name)
 {
-  this.$make(ordinal, name);
+  this.make$(ordinal, name);
 }
 
-sys_LogLevel.prototype.type = function()
+fan.sys.LogLevel.prototype.type = function()
 {
-  return sys_Type.find("sys::LogLevel");
+  return fan.sys.Type.find("sys::LogLevel");
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Range
 //////////////////////////////////////////////////////////////////////////
 
-sys_LogLevel.debug  = new sys_LogLevel(0, "debug");
-sys_LogLevel.info   = new sys_LogLevel(1, "info");
-sys_LogLevel.warn   = new sys_LogLevel(2, "warn");
-sys_LogLevel.error  = new sys_LogLevel(3, "error");
-sys_LogLevel.silent = new sys_LogLevel(4, "silent");
+fan.sys.LogLevel.debug  = new fan.sys.LogLevel(0, "debug");
+fan.sys.LogLevel.info   = new fan.sys.LogLevel(1, "info");
+fan.sys.LogLevel.warn   = new fan.sys.LogLevel(2, "warn");
+fan.sys.LogLevel.error  = new fan.sys.LogLevel(3, "error");
+fan.sys.LogLevel.silent = new fan.sys.LogLevel(4, "silent");
 
-sys_LogLevel.values =
+fan.sys.LogLevel.values =
 [
-  sys_LogLevel.debug,
-  sys_LogLevel.info,
-  sys_LogLevel.warn,
-  sys_LogLevel.error,
-  sys_LogLevel.silent
+  fan.sys.LogLevel.debug,
+  fan.sys.LogLevel.info,
+  fan.sys.LogLevel.warn,
+  fan.sys.LogLevel.error,
+  fan.sys.LogLevel.silent
 ]
 
 /*************************************************************************
  * LogRecord
  ************************************************************************/
 
-var sys_LogRecord = sys_Obj.$extend(sys_Obj);
+fan.sys.LogRecord = fan.sys.Obj.$extend(fan.sys.Obj);
 
-sys_LogRecord.prototype.$ctor = function() {}
-sys_LogRecord.prototype.type = function() { return sys_Type.find("sys::LogRecord"); }
+fan.sys.LogRecord.prototype.$ctor = function() {}
+fan.sys.LogRecord.prototype.type = function() { return fan.sys.Type.find("sys::LogRecord"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-sys_LogRecord.make = function(time, level, logName, msg, err)
+fan.sys.LogRecord.make = function(time, level, logName, msg, err)
 {
   if (err == undefined) err = null;
-  var self = new sys_LogRecord();
+  var self = new fan.sys.LogRecord();
   self.m_time    = time;
   self.m_level   = level;
   self.m_logName = logName;
@@ -117,13 +117,13 @@ sys_LogRecord.make = function(time, level, logName, msg, err)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_LogRecord.prototype.toStr = function()
+fan.sys.LogRecord.prototype.toStr = function()
 {
   var ts = "todo"; //((DateTime)time).toLocale("hh:mm:ss DD-MMM-YY");
   return '[' + ts + '] [' + this.m_level + '] [' + this.m_logName + '] ' + this.m_message;
 }
 
-sys_LogRecord.prototype.print = function(out)
+fan.sys.LogRecord.prototype.print = function(out)
 {
   // TODO
   //if (out == undefined) out = ???

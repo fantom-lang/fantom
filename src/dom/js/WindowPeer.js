@@ -8,21 +8,21 @@
 //   8 Jul 09   Andy Frank  Split webappClient into sys/dom
 //
 
-var dom_WindowPeer = sys_Obj.$extend(sys_Obj);
+fan.dom.WindowPeer = fan.sys.Obj.$extend(fan.sys.Obj);
 
-dom_WindowPeer.prototype.$ctor = function(self) {}
+fan.dom.WindowPeer.prototype.$ctor = function(self) {}
 
-dom_WindowPeer.alert = function(self, obj)
+fan.dom.WindowPeer.alert = function(obj)
 {
   alert(obj);
 }
 
-dom_WindowPeer.uri = function(self)
+fan.dom.WindowPeer.uri = function()
 {
-  return sys_Uri.make(window.location.toString());
+  return fan.sys.Uri.make(window.location.toString());
 }
 
-dom_WindowPeer.hyperlink = function(self, uri)
+fan.dom.WindowPeer.hyperlink = function(uri)
 {
   window.location = uri.m_uri;
 }

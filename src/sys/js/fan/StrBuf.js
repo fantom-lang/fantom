@@ -10,13 +10,13 @@
 /**
  * StrBuf
  */
-var sys_StrBuf = sys_Obj.$extend(sys_Obj);
+fan.sys.StrBuf = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_StrBuf.prototype.$ctor = function()
+fan.sys.StrBuf.prototype.$ctor = function()
 {
   this.m_str = "";
 }
@@ -25,34 +25,34 @@ sys_StrBuf.prototype.$ctor = function()
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_StrBuf.prototype.type = function()
+fan.sys.StrBuf.prototype.type = function()
 {
-  return sys_Type.find("sys::StrBuf");
+  return fan.sys.Type.find("sys::StrBuf");
 }
 
-sys_StrBuf.prototype.add = function(obj)
+fan.sys.StrBuf.prototype.add = function(obj)
 {
-  this.m_str += obj==null ? "null" : sys_Obj.toStr(obj);
+  this.m_str += obj==null ? "null" : fan.sys.Obj.toStr(obj);
   return this;
 }
 
-sys_StrBuf.prototype.addChar = function(ch)
+fan.sys.StrBuf.prototype.addChar = function(ch)
 {
   this.m_str += String.fromCharCode(ch);
   return this;
 }
 
-sys_StrBuf.prototype.isEmpty = function()
+fan.sys.StrBuf.prototype.isEmpty = function()
 {
   return this.m_str.length == 0;
 }
 
-sys_StrBuf.prototype.size = function()
+fan.sys.StrBuf.prototype.size = function()
 {
   return this.m_str.length;
 }
 
-sys_StrBuf.prototype.toStr = function()
+fan.sys.StrBuf.prototype.toStr = function()
 {
   return this.m_str;
 }
@@ -61,5 +61,5 @@ sys_StrBuf.prototype.toStr = function()
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_StrBuf.make = function() { return new sys_StrBuf(); }
+fan.sys.StrBuf.make = function() { return new fan.sys.StrBuf(); }
 

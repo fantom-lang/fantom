@@ -10,13 +10,13 @@
 /**
  * Test is the base class of unit tests.
  */
-var sys_Test = sys_Obj.$extend(sys_Obj);
+fan.sys.Test = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Test.prototype.$ctor = function()
+fan.sys.Test.prototype.$ctor = function()
 {
   this.verifyCount = 0;
 }
@@ -25,23 +25,23 @@ sys_Test.prototype.$ctor = function()
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Test.prototype.verify = function(cond, msg)
+fan.sys.Test.prototype.verify = function(cond, msg)
 {
   if (!cond) this.fail(msg);
   this.verifyCount++;
 }
 
-sys_Test.prototype.verifyFalse = function(cond, msg)
+fan.sys.Test.prototype.verifyFalse = function(cond, msg)
 {
   if (cond) this.fail(msg);
   this.verifyCount++;
 }
 
-sys_Test.prototype.verifyEq = function(expected, actual, msg)
+fan.sys.Test.prototype.verifyEq = function(expected, actual, msg)
 {
-  if (!sys_Obj.equals(expected, actual))
+  if (!fan.sys.Obj.equals(expected, actual))
   {
-    if (msg == null) msg = sys_Obj.toStr(expected) + " != " + sys_Obj.toStr(actual);
+    if (msg == null) msg = fan.sys.Obj.toStr(expected) + " != " + fan.sys.Obj.toStr(actual);
     this.fail(msg);
   }
   /*
@@ -58,37 +58,37 @@ sys_Test.prototype.verifyEq = function(expected, actual, msg)
   this.verifyCount++;
 }
 
-sys_Test.prototype.verifyNotEq = function(expected, actual, msg)
+fan.sys.Test.prototype.verifyNotEq = function(expected, actual, msg)
 {
-  if (sys_Obj.equals(expected, actual))
+  if (fan.sys.Obj.equals(expected, actual))
   {
-    if (msg == null) msg = sys_Obj.toStr(expected) + " == " + sys_Obj.toStr(actual);
+    if (msg == null) msg = fan.sys.Obj.toStr(expected) + " == " + fan.sys.Obj.toStr(actual);
     this.fail(msg);
   }
   this.verifyCount++;
 }
 
-sys_Test.prototype.verifySame = function(expected, actual, msg)
+fan.sys.Test.prototype.verifySame = function(expected, actual, msg)
 {
-  if (!sys_Obj.equals(expected, actual))
+  if (!fan.sys.Obj.equals(expected, actual))
   {
-    if (msg == null) msg = sys_Obj.toStr(expected) + " !== " + sys_Obj.toStr(actual);
+    if (msg == null) msg = fan.sys.Obj.toStr(expected) + " !== " + fan.sys.Obj.toStr(actual);
     this.fail(msg);
   }
   this.verifyCount++;
 }
 
-sys_Test.prototype.verifyNotSame = function(expected, actual, msg)
+fan.sys.Test.prototype.verifyNotSame = function(expected, actual, msg)
 {
-  if (sys_Obj.equals(expected == actual))
+  if (fan.sys.Obj.equals(expected == actual))
   {
-    if (msg == null) msg = sys_Obj.toStr(expected) + " === " + sys_Obj.toStr(actual);
+    if (msg == null) msg = fan.sys.Obj.toStr(expected) + " === " + fan.sys.Obj.toStr(actual);
     this.fail(msg);
   }
   this.verifyCount++;
 }
 
-sys_Test.prototype.verifyErr = function(errType, f)
+fan.sys.Test.prototype.verifyErr = function(errType, f)
 {
   try
   {
@@ -96,7 +96,7 @@ sys_Test.prototype.verifyErr = function(errType, f)
   }
   catch (err)
   {
-    var e = sys_Err.make(err);
+    var e = fan.sys.Err.make(err);
     if (e.type() == errType) { this.verifyCount++; return; }
     //if (verbose) System.out.println("  verifyErr: " + e);
     println("  verifyErr: " + e);
@@ -105,22 +105,22 @@ sys_Test.prototype.verifyErr = function(errType, f)
   this.fail("No err thrown, expected " + errType);
 }
 
-sys_Test.prototype.fail = function(msg)
+fan.sys.Test.prototype.fail = function(msg)
 {
   throw this.err(msg);
 }
 
-sys_Test.prototype.err = function(msg)
+fan.sys.Test.prototype.err = function(msg)
 {
   if (msg == null)
-    return new sys_Err("Test failed");
+    return new fan.sys.Err("Test failed");
   else
-    return new sys_Err("Test failed: " + msg);
+    return new fan.sys.Err("Test failed: " + msg);
 }
 
-sys_Test.prototype.type = function()
+fan.sys.Test.prototype.type = function()
 {
-  return sys_Type.find("sys::Test")
+  return fan.sys.Type.find("sys::Test")
 }
 
 //////////////////////////////////////////////////////////////////////////

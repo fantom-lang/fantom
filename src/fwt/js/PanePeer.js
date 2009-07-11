@@ -9,6 +9,6 @@
 /**
  *PanePeer.
  */
-var fwt_PanePeer = sys_Obj.$extend(fwt_WidgetPeer);
-fwt_PanePeer.prototype.$ctor = function(self) {}
+fan.fwt.PanePeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
+fan.fwt.PanePeer.prototype.$ctor = function(self) {}
 

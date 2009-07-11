@@ -6,7 +6,7 @@
 //   12 May 09  Andy Frank  Creation
 //
 
-with (sys_Pod.$add("sys"))
+with (fan.sys.Pod.$add("sys"))
 {
   $at("Obj",       null);
 
@@ -120,29 +120,29 @@ with (sys_Pod.$add("sys"))
 // sure quite how that should work yet.  So in the mean time, stick
 // any static code requiring TypeInfo here
 
-sys_Float.posInf = sys_Float.make(Number.POSITIVE_INFINITY);
-sys_Float.negInf = sys_Float.make(Number.NEGATIVE_INFINITY);
-sys_Float.nan    = sys_Float.make(Number.NaN);
-sys_Float.e      = sys_Float.make(Math.E);
-sys_Float.pi     = sys_Float.make(Math.PI);
+fan.sys.Float.posInf = fan.sys.Float.make(Number.POSITIVE_INFINITY);
+fan.sys.Float.negInf = fan.sys.Float.make(Number.NEGATIVE_INFINITY);
+fan.sys.Float.nan    = fan.sys.Float.make(Number.NaN);
+fan.sys.Float.e      = fan.sys.Float.make(Math.E);
+fan.sys.Float.pi     = fan.sys.Float.make(Math.PI);
 
-sys_Int.maxVal = new Long(0x7fffffff, 0xffffffff);
-sys_Int.minVal = new Long(0x80000000, 0x00000000);
-sys_Int.defVal = 0;
-sys_Int.Chunk  = 4096;
+fan.sys.Int.maxVal = new Long(0x7fffffff, 0xffffffff);
+fan.sys.Int.minVal = new Long(0x80000000, 0x00000000);
+fan.sys.Int.defVal = 0;
+fan.sys.Int.Chunk  = 4096;
 
-sys_MimeType.imagePng  = sys_MimeType.predefined("image", "png");
-sys_MimeType.imageGif  = sys_MimeType.predefined("image", "gif");
-sys_MimeType.imageJpeg = sys_MimeType.predefined("image", "jpeg");
-sys_MimeType.textPlain = sys_MimeType.predefined("text", "plain");
-sys_MimeType.textHtml  = sys_MimeType.predefined("text", "html");
-sys_MimeType.textXml   = sys_MimeType.predefined("text", "xml");
-sys_MimeType.dir       = sys_MimeType.predefined("x-directory", "normal");
+fan.sys.MimeType.imagePng  = fan.sys.MimeType.predefined("image", "png");
+fan.sys.MimeType.imageGif  = fan.sys.MimeType.predefined("image", "gif");
+fan.sys.MimeType.imageJpeg = fan.sys.MimeType.predefined("image", "jpeg");
+fan.sys.MimeType.textPlain = fan.sys.MimeType.predefined("text", "plain");
+fan.sys.MimeType.textHtml  = fan.sys.MimeType.predefined("text", "html");
+fan.sys.MimeType.textXml   = fan.sys.MimeType.predefined("text", "xml");
+fan.sys.MimeType.dir       = fan.sys.MimeType.predefined("x-directory", "normal");
 
-sys_UriPodBase = "/sys/pod/";
+fan.sys.UriPodBase = "/sys/pod/";
 
-sys_Month.values = sys_List.make(sys_Type.find("sys::Month"),
+fan.sys.Month.values = fan.sys.List.make(fan.sys.Type.find("sys::Month"),
 [
-  sys_Month.jan, sys_Month.feb, sys_Month.mar, sys_Month.apr, sys_Month.may, sys_Month.jun,
-  sys_Month.jul, sys_Month.aug, sys_Month.sep, sys_Month.oct, sys_Month.nov, sys_Month.dec
+  fan.sys.Month.jan, fan.sys.Month.feb, fan.sys.Month.mar, fan.sys.Month.apr, fan.sys.Month.may, fan.sys.Month.jun,
+  fan.sys.Month.jul, fan.sys.Month.aug, fan.sys.Month.sep, fan.sys.Month.oct, fan.sys.Month.nov, fan.sys.Month.dec
 ]);

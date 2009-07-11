@@ -56,7 +56,7 @@ class Runner
     evalPodScript(engine, p)
 
     // invoke target method
-    jsname := t.qname.replace("::", "_")
+    jsname := "fan.${t.pod}.${t.name}"
     if (m.isStatic)
       engine.eval("${jsname}.$m.name();")
     else

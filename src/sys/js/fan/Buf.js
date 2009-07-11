@@ -10,13 +10,13 @@
 /**
  * Buf.
  */
-var sys_Buf = sys_Obj.$extend(sys_Obj);
+fan.sys.Buf = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Buf.prototype.$ctor = function()
+fan.sys.Buf.prototype.$ctor = function()
 {
   this.m_buf = [];
 }
@@ -25,7 +25,7 @@ sys_Buf.prototype.$ctor = function()
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Buf.prototype.print = function(str)
+fan.sys.Buf.prototype.print = function(str)
 {
   for (var i=0; i<str.length; i++)
   {
@@ -49,12 +49,12 @@ sys_Buf.prototype.print = function(str)
   return this;
 }
 
-sys_Buf.prototype.toBase64 = function()
+fan.sys.Buf.prototype.toBase64 = function()
 {
   var buf = this.m_buf;
   var size = this.m_buf.length;
   var s = "";
-  var base64chars = sys_Buf.base64chars;
+  var base64chars = fan.sys.Buf.base64chars;
   var i = 0;
 
   // append full 24-bit chunks
@@ -82,25 +82,25 @@ sys_Buf.prototype.toBase64 = function()
   return s;
 }
 
-sys_Buf.prototype.toDigest = function(algorithm)
+fan.sys.Buf.prototype.toDigest = function(algorithm)
 {
   var digest = null;
   switch (algorithm)
   {
-    case "MD5":   digest = sys_Buf_Md5(this.m_buf);  break;
-    case "SHA-1": digest = sys_Buf_Sha1(this.m_buf); break;
-    default: throw sys_Err.make("Unknown digest algorithm " + algorithm);
+    case "MD5":   digest = fan.sys.Buf_Md5(this.m_buf);  break;
+    case "SHA-1": digest = fan.sys.Buf_Sha1(this.m_buf); break;
+    default: throw fan.sys.Err.make("Unknown digest algorithm " + algorithm);
   }
-  var buf = sys_Buf.make();
+  var buf = fan.sys.Buf.make();
   buf.m_buf = digest;
   return buf;
 }
 
-sys_Buf.prototype.toHex = function()
+fan.sys.Buf.prototype.toHex = function()
 {
   var buf = this.m_buf;
   var size = buf.length;
-  var hexChars = sys_Buf.hexChars;
+  var hexChars = fan.sys.Buf.hexChars;
   var s = "";
   for (var i=0; i<size; ++i)
   {
@@ -110,9 +110,9 @@ sys_Buf.prototype.toHex = function()
   return s;
 }
 
-sys_Buf.prototype.type = function()
+fan.sys.Buf.prototype.type = function()
 {
-  return sys_Type.find("sys::Buf");
+  return fan.sys.Type.find("sys::Buf");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,10 +120,10 @@ sys_Buf.prototype.type = function()
 //////////////////////////////////////////////////////////////////////////
 
 // TODO
-//sys_Buf.make = function(capacity) { return new sys_Buf(); }
-sys_Buf.make = function(capacity) { return new sys_MemBuf(); }
+//fan.sys.Buf.make = function(capacity) { return new fan.sys.Buf(); }
+fan.sys.Buf.make = function(capacity) { return new fan.sys.MemBuf(); }
 
-sys_Buf.base64chars = [
+fan.sys.Buf.base64chars = [
 //A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z
   65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,
 //a  b  c  d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z
@@ -131,7 +131,7 @@ sys_Buf.base64chars = [
 //0  1  2  3  4  5  6  7  8  9  +  /
   48,49,50,51,52,53,54,55,56,57,43,47];
 
-sys_Buf.hexChars = [
+fan.sys.Buf.hexChars = [
 //0  1  2  3  4  5  6  7  8  9  a  b  c  d   e   f
   48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102];
 
@@ -139,7 +139,7 @@ sys_Buf.hexChars = [
 // MD5
 //////////////////////////////////////////////////////////////////////////
 
-function sys_Buf_Md5(buf)
+fan.sys.Buf_Md5 = function(buf)
 {
   /**
    * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
@@ -320,7 +320,7 @@ function sys_Buf_Md5(buf)
 // SHA-1
 //////////////////////////////////////////////////////////////////////////
 
-function sys_Buf_Sha1(buf)
+fan.sys.Buf_Sha1 = function(buf)
 {
   /*
    * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined

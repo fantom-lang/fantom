@@ -10,31 +10,31 @@
 /**
  * Float
  */
-var sys_Float = sys_Obj.$extend(sys_Num);
+fan.sys.Float = fan.sys.Obj.$extend(fan.sys.Num);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Float.prototype.$ctor = function() {}
+fan.sys.Float.prototype.$ctor = function() {}
 
-sys_Float.make = function(val)
+fan.sys.Float.make = function(val)
 {
   var x = new Number(val);
-  x.$fanType = sys_Type.find("sys::Float");
+  x.$fanType = fan.sys.Type.find("sys::Float");
   return x;
 }
 
-sys_Float.prototype.type = function()
+fan.sys.Float.prototype.type = function()
 {
-  return sys_Type.find("sys::Float");
+  return fan.sys.Type.find("sys::Float");
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-sys_Float.equals = function(self, that)
+fan.sys.Float.equals = function(self, that)
 {
   if (that != null && self.$fanType == that.$fanType)
   {
@@ -44,7 +44,7 @@ sys_Float.equals = function(self, that)
   return false;
 }
 
-sys_Float.compare = function(self, that)
+fan.sys.Float.compare = function(self, that)
 {
   if (self == null) return that == null ? 0 : -1;
   if (that == null) return 1;
@@ -57,60 +57,60 @@ sys_Float.compare = function(self, that)
 // Math
 //////////////////////////////////////////////////////////////////////////
 
-sys_Float.abs = function(self) { return Math.abs(self); }
-sys_Float.approx = function(self, that, tolerance)
+fan.sys.Float.abs = function(self) { return Math.abs(self); }
+fan.sys.Float.approx = function(self, that, tolerance)
 {
   // need this to check +inf, -inf, and nan
-  if (sys_Float.equals(self, that)) return true;
+  if (fan.sys.Float.equals(self, that)) return true;
   var t = tolerance == null
     ? Math.min(Math.abs(self/1e6), Math.abs(that/1e6))
     : tolerance;
   return Math.abs(self - that) <= t;
 }
-sys_Float.ceil  = function(self) { return Math.ceil(self); }
-sys_Float.exp   = function(self) { return Math.exp(self); }
-sys_Float.floor = function(self) { return Math.floor(self); }
-sys_Float.log   = function(self) { return Math.log(self); }
-sys_Float.min   = function(self, that) { return Math.min(self, that); }
-sys_Float.max   = function(self, that) { return Math.max(self, that); }
-sys_Float.pow   = function(self, exp) { return Math.pow(self, exp); }
-sys_Float.round = function(self) { return Math.round(self); }
-sys_Float.sqrt  = function(self) { return Math.sqrt(self); }
+fan.sys.Float.ceil  = function(self) { return Math.ceil(self); }
+fan.sys.Float.exp   = function(self) { return Math.exp(self); }
+fan.sys.Float.floor = function(self) { return Math.floor(self); }
+fan.sys.Float.log   = function(self) { return Math.log(self); }
+fan.sys.Float.min   = function(self, that) { return Math.min(self, that); }
+fan.sys.Float.max   = function(self, that) { return Math.max(self, that); }
+fan.sys.Float.pow   = function(self, exp) { return Math.pow(self, exp); }
+fan.sys.Float.round = function(self) { return Math.round(self); }
+fan.sys.Float.sqrt  = function(self) { return Math.sqrt(self); }
 
 // Trig
-sys_Float.acos  = function(self) { return Math.acos(self); }
-sys_Float.asin  = function(self) { return Math.asin(self); }
-sys_Float.atan  = function(self) { return Math.atan(self); }
-sys_Float.atan2 = function(y, x) { return Math.atan2(y, x); }
-sys_Float.cos   = function(self) { return Math.cos(self); }
-sys_Float.sin   = function(self) { return Math.sin(self); }
-sys_Float.tan   = function(self) { return Math.tan(self); }
-sys_Float.toDegrees = function(self) { return self * 180 / Math.PI; }
-sys_Float.toRadians = function(self) { return self * Math.PI / 180; }
+fan.sys.Float.acos  = function(self) { return Math.acos(self); }
+fan.sys.Float.asin  = function(self) { return Math.asin(self); }
+fan.sys.Float.atan  = function(self) { return Math.atan(self); }
+fan.sys.Float.atan2 = function(y, x) { return Math.atan2(y, x); }
+fan.sys.Float.cos   = function(self) { return Math.cos(self); }
+fan.sys.Float.sin   = function(self) { return Math.sin(self); }
+fan.sys.Float.tan   = function(self) { return Math.tan(self); }
+fan.sys.Float.toDegrees = function(self) { return self * 180 / Math.PI; }
+fan.sys.Float.toRadians = function(self) { return self * Math.PI / 180; }
 
 //////////////////////////////////////////////////////////////////////////
 // Str
 //////////////////////////////////////////////////////////////////////////
 
-sys_Float.fromStr = function(s, checked)
+fan.sys.Float.fromStr = function(s, checked)
 {
-  if (s == "NaN") return sys_Float.nan;
-  if (s == "INF") return sys_Float.posInf;
-  if (s == "-INF") return sys_Float.negInf;
+  if (s == "NaN") return fan.sys.Float.nan;
+  if (s == "INF") return fan.sys.Float.posInf;
+  if (s == "-INF") return fan.sys.Float.negInf;
   var num = parseFloat(s);
   if (isNaN(num))
   {
     if (checked != null && !checked) return null;
-    throw new sys_ParseErr("Float", s);
+    throw new fan.sys.ParseErr("Float", s);
   }
   return num;
 }
 
-sys_Float.toStr = function(self)
+fan.sys.Float.toStr = function(self)
 {
   if (isNaN(self)) return "NaN";
-  if (self == sys_Float.posInf) return "INF";
-  if (self == sys_Float.negInf) return "-INF";
+  if (self == fan.sys.Float.posInf) return "INF";
+  if (self == fan.sys.Float.negInf) return "-INF";
   return ""+self;
 }
 
@@ -119,8 +119,8 @@ sys_Float.toStr = function(self)
 //////////////////////////////////////////////////////////////////////////
 
 // TEMP - see sysPod.js
-//sys_Float.posInf = sys_Float.make(Number.POSITIVE_INFINITY);
-//sys_Float.negInf = sys_Float.make(Number.NEGATIVE_INFINITY);
-//sys_Float.nan    = sys_Float.make(Number.NaN);
-//sys_Float.e      = sys_Float.make(Math.E);
-//sys_Float.pi     = sys_Float.make(Math.PI);
+//fan.sys.Float.posInf = fan.sys.Float.make(Number.POSITIVE_INFINITY);
+//fan.sys.Float.negInf = fan.sys.Float.make(Number.NEGATIVE_INFINITY);
+//fan.sys.Float.nan    = fan.sys.Float.make(Number.NaN);
+//fan.sys.Float.e      = fan.sys.Float.make(Math.E);
+//fan.sys.Float.pi     = fan.sys.Float.make(Math.PI);

@@ -10,24 +10,24 @@
 /**
  * Decimal
  */
-var sys_Decimal = sys_Obj.$extend(sys_Num);
+fan.sys.Decimal = fan.sys.Obj.$extend(fan.sys.Num);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Decimal.prototype.$ctor = function() {}
+fan.sys.Decimal.prototype.$ctor = function() {}
 
-sys_Decimal.make = function(val)
+fan.sys.Decimal.make = function(val)
 {
   var x = new Number(val);
-  x.$fanType = sys_Type.find("sys::Decimal");
+  x.$fanType = fan.sys.Type.find("sys::Decimal");
   return x;
 }
 
-sys_Decimal.toFloat = function(self)
+fan.sys.Decimal.toFloat = function(self)
 {
-  return sys_Float.make(self);
+  return fan.sys.Float.make(self);
 }
 
 

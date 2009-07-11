@@ -31,51 +31,14 @@ class Translate : JsCompilerStep
   {
     log.debug("Translate")
 
-    natives = compiler.natives?.dup ?:  Str:File[:]
-    writeTypeInfo
+    this.out = JsWriter(compiler.out)
+    this.natives = compiler.natives?.dup ?: Str:File[:]
+
+    JsPod(compiler.pod, compiler.toCompile).write(out)
     writeTypes
     writeNatives
 
     bombIfErr
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// TypeInfo
-//////////////////////////////////////////////////////////////////////////
-
-  Void writeTypeInfo()
-  {
-    out := compiler.out
-    out.printLine("with(sys_Pod.\$add(\"$pod.name\"))")
-    out.printLine("{")
-
-    // types
-    compiler.toCompile.each |def,i|
-    {
-      adder  := def.isMixin ? "\$am" : "\$at"
-      base   := def.base ?: "sys::Obj"
-      mixins := def.mixins.join(",") |m| { "\"$m.qname\"" }
-      out.printLine("var \$$i=$adder(\"$def.name\",\"$base\",[$mixins])")
-    }
-
-    // slots
-    compiler.toCompile.each |def,i|
-    {
-      if (def.slotDefs.size > 0)
-      {
-        out.print("\$$i")
-        def.slotDefs.each |slot|
-        {
-          if (slot is FieldDef)
-            out.print(".\$af(\"$slot.name\",$slot.flags,\"${slot->fieldType->signature}\")")
-          else if (slot is MethodDef && !slot->isFieldAccessor)
-            out.print(".\$am(\"$slot.name\")")
-        }
-        out.printLine(";")
-      }
-    }
-
-    out.printLine("};")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -88,6 +51,11 @@ class Translate : JsCompilerStep
 
     compiler.toCompile.each |def|
     {
+      // we inline closures directly, so no need to generate
+      // anonymous types like we do in Java and .NET
+      if (def.isClosure) return
+      if (def.qname.contains("\$Cvars")) return
+
       // always write peer first
       key := "${def.name}Peer"
       peer := natives[key]
@@ -100,15 +68,15 @@ class Translate : JsCompilerStep
       }
 
       // compile type
-      w := JsWriter(compiler, def, compiler.out)
-      w.write
-      refs.setAll(w.refs)
+      JsType(def).write(out)
     }
 
-    refs.each |def|
+    // emit our currys
+    compiler.types.each |def|
     {
-      if (!def.name.startsWith("Curry\$")) return
-      JsWriter(compiler, def, compiler.out).write
+      if (compiler.toCompile.contains(def)) return  // skip if already compiled
+      if (!def.qname.contains("Curry\$")) return
+      JsType(def).write(out)
     }
   }
 
@@ -166,6 +134,7 @@ class Translate : JsCompilerStep
 //////////////////////////////////////////////////////////////////////////
 
   [Str:File]? natives
+  JsWriter? out
 
 }
 

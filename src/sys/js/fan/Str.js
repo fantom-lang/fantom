@@ -10,28 +10,28 @@
 /**
  * Str
  */
-var sys_Str = sys_Obj.$extend(sys_Obj);
+fan.sys.Str = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Str.prototype.$ctor = function() {}
+fan.sys.Str.prototype.$ctor = function() {}
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Str.prototype.type = function()
+fan.sys.Str.prototype.type = function()
 {
-  return sys_Type.find("sys::Str");
+  return fan.sys.Type.find("sys::Str");
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Str.compareIgnoreCase = function(self, that)
+fan.sys.Str.compareIgnoreCase = function(self, that)
 {
   var a = self.toLowerCase();
   var b = that.toLowerCase();
@@ -40,23 +40,23 @@ sys_Str.compareIgnoreCase = function(self, that)
   return 1;
 }
 
-sys_Str.contains = function(self, arg)
+fan.sys.Str.contains = function(self, arg)
 {
   return self.indexOf(arg) != -1
 }
 
-sys_Str.containsChar = function(self, arg)
+fan.sys.Str.containsChar = function(self, arg)
 {
-  return self.indexOf(sys_Int.toChar(arg)) != -1
+  return self.indexOf(fan.sys.Int.toChar(arg)) != -1
 }
 
-sys_Str.each = function(self, func)
+fan.sys.Str.each = function(self, func)
 {
   for (var i=0; i<self.length; i++)
     func(self.charCodeAt(i), i);
 }
 
-sys_Str.endsWith = function(self, test)
+fan.sys.Str.endsWith = function(self, test)
 {
   if (self.length < test.length) return false;
   for (var i=0; i<test.length; i++)
@@ -65,18 +65,18 @@ sys_Str.endsWith = function(self, test)
   return true;
 }
 
-sys_Str.equalsIgnoreCase = function(self, that)
+fan.sys.Str.equalsIgnoreCase = function(self, that)
 {
   return self.toLowerCase() == that.toLowerCase();
 }
 
-sys_Str.get = function(self, index)
+fan.sys.Str.get = function(self, index)
 {
   if (index < 0) index += self.length;
   return self.charCodeAt(index);
 }
 
-sys_Str.index = function(self, s, off)
+fan.sys.Str.index = function(self, s, off)
 {
   var i = 0;
   if (off != null) i = off;
@@ -86,7 +86,7 @@ sys_Str.index = function(self, s, off)
   return r;
 }
 
-sys_Str.indexr = function(self, s, off)
+fan.sys.Str.indexr = function(self, s, off)
 {
   var i = -1;
   if (off != null) i = off;
@@ -96,22 +96,22 @@ sys_Str.indexr = function(self, s, off)
   return r;
 }
 
-sys_Str.indexIgnoreCase = function(self, s, off)
+fan.sys.Str.indexIgnoreCase = function(self, s, off)
 {
-  return sys_Str.index(self.toLowerCase(), s.toLowerCase(), off);
+  return fan.sys.Str.index(self.toLowerCase(), s.toLowerCase(), off);
 }
 
-sys_Str.indexrIgnoreCase = function(self, s, off)
+fan.sys.Str.indexrIgnoreCase = function(self, s, off)
 {
-  return sys_Str.indexr(self.toLowerCase(), s.toLowerCase(), off);
+  return fan.sys.Str.indexr(self.toLowerCase(), s.toLowerCase(), off);
 }
 
-sys_Str.intern = function(self)
+fan.sys.Str.intern = function(self)
 {
   return self;
 }
 
-sys_Str.isAscii = function(self)
+fan.sys.Str.isAscii = function(self)
 {
   for (var i=0; i<self.length; i++)
     if (self.charCodeAt(i) > 127)
@@ -119,12 +119,12 @@ sys_Str.isAscii = function(self)
   return true;
 }
 
-sys_Str.isEmpty = function(self)
+fan.sys.Str.isEmpty = function(self)
 {
   return self.length == 0;
 }
 
-sys_Str.isLower = function(self)
+fan.sys.Str.isLower = function(self)
 {
   for (var i=0; i<self.length; i++)
   {
@@ -134,7 +134,7 @@ sys_Str.isLower = function(self)
   return true;
 }
 
-sys_Str.isSpace = function(self)
+fan.sys.Str.isSpace = function(self)
 {
   for (var i=0; i<self.length; i++)
   {
@@ -145,7 +145,7 @@ sys_Str.isSpace = function(self)
   return true;
 }
 
-sys_Str.isUpper = function(self)
+fan.sys.Str.isUpper = function(self)
 {
   for (var i=0; i<self.length; i++)
   {
@@ -155,27 +155,27 @@ sys_Str.isUpper = function(self)
   return true;
 }
 
-sys_Str.lower = function(self)
+fan.sys.Str.lower = function(self)
 {
   return self.toLowerCase();
 }
 
-sys_Str.replace = function(self, oldstr, newstr)
+fan.sys.Str.replace = function(self, oldstr, newstr)
 {
   return self.replace(oldstr, newstr);
 }
 
-sys_Str.justl = function(self, width)
+fan.sys.Str.justl = function(self, width)
 {
-  return sys_Str.padr(self, width, 32);
+  return fan.sys.Str.padr(self, width, 32);
 }
 
-sys_Str.justr = function(self, width)
+fan.sys.Str.justr = function(self, width)
 {
-  return sys_Str.padl(self, width, 32);
+  return fan.sys.Str.padl(self, width, 32);
 }
 
-sys_Str.padl = function(self, w, ch)
+fan.sys.Str.padl = function(self, w, ch)
 {
   if (ch == undefined) ch = 32;
   if (self.length >= w) return self;
@@ -186,7 +186,7 @@ sys_Str.padl = function(self, w, ch)
   return s;
 }
 
-sys_Str.padr = function(self, w, ch)
+fan.sys.Str.padr = function(self, w, ch)
 {
   if (ch == undefined) ch = 32;
   if (self.length >= w) return self;
@@ -197,7 +197,7 @@ sys_Str.padr = function(self, w, ch)
   return s;
 }
 
-sys_Str.reverse = function(self)
+fan.sys.Str.reverse = function(self)
 {
   var rev = "";
   for (var i=self.length-1; i>=0; i--)
@@ -205,40 +205,40 @@ sys_Str.reverse = function(self)
   return rev;
 }
 
-sys_Str.size = function(self)
+fan.sys.Str.size = function(self)
 {
   return self.length;
 }
 
-sys_Str.slice = function(self, range)
+fan.sys.Str.slice = function(self, range)
 {
   var size = self.length;
   var s = range.start(size);
   var e = range.end(size);
-  if (e+1 < s) throw new sys_IndexErr(range);
+  if (e+1 < s) throw new fan.sys.IndexErr(range);
   return self.substr(s, (e-s)+1);
 }
 
-sys_Str.spaces = function(n)
+fan.sys.Str.spaces = function(n)
 {
-  if (sys_Str.$spaces == null)
+  if (fan.sys.Str.$spaces == null)
   {
-    sys_Str.$spaces = new Array();
+    fan.sys.Str.$spaces = new Array();
     var s = "";
     for (var i=0; i<20; i++)
     {
-      sys_Str.$spaces[i] = s;
+      fan.sys.Str.$spaces[i] = s;
       s += " ";
     }
   }
-  if (n < 20) return sys_Str.$spaces[n];
+  if (n < 20) return fan.sys.Str.$spaces[n];
   var s = "";
   for (var i=0; i<n; i++) s += " ";
   return s;
 }
-sys_Str.$spaces = null;
+fan.sys.Str.$spaces = null;
 
-sys_Str.capitalize = function(self)
+fan.sys.Str.capitalize = function(self)
 {
   if (self.length > 0)
   {
@@ -249,7 +249,7 @@ sys_Str.capitalize = function(self)
   return self;
 }
 
-sys_Str.toDisplayName = function(self)
+fan.sys.Str.toDisplayName = function(self)
 {
   if (self.length == 0) return "";
   var s = '';
@@ -291,7 +291,7 @@ sys_Str.toDisplayName = function(self)
   return s;
 }
 
-sys_Str.startsWith = function(self, test)
+fan.sys.Str.startsWith = function(self, test)
 {
   if (self.length < test.length) return false;
   for (var i=0; i<test.length; i++)
@@ -300,11 +300,11 @@ sys_Str.startsWith = function(self, test)
   return true;
 }
 
-sys_Str.toBool = function(self, checked) { return sys_Bool.fromStr(self, checked); }
-sys_Str.toFloat = function(self, checked) { return sys_Float.fromStr(self, checked); }
-sys_Str.toInt = function(self, radix, checked) { return sys_Int.fromStr(self, radix, checked); }
+fan.sys.Str.toBool = function(self, checked) { return fan.sys.Bool.fromStr(self, checked); }
+fan.sys.Str.toFloat = function(self, checked) { return fan.sys.Float.fromStr(self, checked); }
+fan.sys.Str.toInt = function(self, radix, checked) { return fan.sys.Int.fromStr(self, radix, checked); }
 
-sys_Str.trim = function(self, trimStart, trimEnd)
+fan.sys.Str.trim = function(self, trimStart, trimEnd)
 {
   if (self.length == 0) return self;
   if (trimStart == null) trimStart = true;
@@ -315,12 +315,12 @@ sys_Str.trim = function(self, trimStart, trimEnd)
   while (trimEnd && e>=s && self.charCodeAt(e) <= 32) e--;
   return self.substr(s, (e-s)+1);
 }
-sys_Str.trimStart = function(self) { return sys_Str.trim(self, true, false); }
-sys_Str.trimEnd   = function(self) { return sys_Str.trim(self, false, true); }
+fan.sys.Str.trimStart = function(self) { return fan.sys.Str.trim(self, true, false); }
+fan.sys.Str.trimEnd   = function(self) { return fan.sys.Str.trim(self, false, true); }
 
-sys_Str.split = function(self, sep, trimmed)
+fan.sys.Str.split = function(self, sep, trimmed)
 {
-  if (sep == null) return sys_Str.splitws(self);
+  if (sep == null) return fan.sys.Str.splitws(self);
   var toks = new Array();
   var trim = (trimmed != null) ? trimmed : true;
   var len = self.length;
@@ -328,14 +328,14 @@ sys_Str.split = function(self, sep, trimmed)
   for (var i=0; i<len; ++i)
   {
     if (self.charCodeAt(i) != sep) continue;
-    if (x <= i) toks.push(sys_Str.splitStr(self, x, i, trim));
+    if (x <= i) toks.push(fan.sys.Str.splitStr(self, x, i, trim));
     x = i+1;
   }
-  if (x <= len) toks.push(sys_Str.splitStr(self, x, len, trim));
+  if (x <= len) toks.push(fan.sys.Str.splitStr(self, x, len, trim));
   return toks;
 }
 
-sys_Str.splitStr = function(val, s, e, trim)
+fan.sys.Str.splitStr = function(val, s, e, trim)
 {
   if (trim == true)
   {
@@ -345,7 +345,7 @@ sys_Str.splitStr = function(val, s, e, trim)
   return val.substring(s, e);
 }
 
-sys_Str.splitws = function(val)
+fan.sys.Str.splitws = function(val)
 {
   var toks = new Array();
   var len = val.length;
@@ -365,9 +365,9 @@ sys_Str.splitws = function(val)
   return toks;
 }
 
-sys_Str.splitLines = function(self)
+fan.sys.Str.splitLines = function(self)
 {
-  var lines = sys_List.make(sys_Type.find("sys::Str"), []);
+  var lines = fan.sys.List.make(fan.sys.Type.find("sys::Str"), []);
   var len = self.length;
   var s = 0;
   for (var i=0; i<len; ++i)
@@ -384,11 +384,11 @@ sys_Str.splitLines = function(self)
   return lines;
 }
 
-sys_Str.upper = function(self) { return self.toUpperCase(); }
-sys_Str.$in = function(self) { return sys_InStream.makeForStr(self); }
-sys_Str.toUri = function(self) { return sys_Uri.make(self); }
+fan.sys.Str.upper = function(self) { return self.toUpperCase(); }
+fan.sys.Str.$in = function(self) { return fan.sys.InStream.makeForStr(self); }
+fan.sys.Str.toUri = function(self) { return fan.sys.Uri.make(self); }
 
-sys_Str.toCode = function(self, quote, escu)
+fan.sys.Str.toCode = function(self, quote, escu)
 {
   if (quote == undefined) quote = 34;
   if (escu == undefined) escu = false;

@@ -10,57 +10,57 @@
 /**
  * Weekday
  */
-var sys_Weekday = sys_Obj.$extend(sys_Enum);
+fan.sys.Weekday = fan.sys.Obj.$extend(fan.sys.Enum);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Weekday.prototype.$ctor = function(ordinal, name)
+fan.sys.Weekday.prototype.$ctor = function(ordinal, name)
 {
-  this.$make(ordinal, name);
+  this.make$(ordinal, name);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Weekday.prototype.increment = function()
+fan.sys.Weekday.prototype.increment = function()
 {
-  var arr = sys_Weekday.values;
+  var arr = fan.sys.Weekday.values;
   return arr[(this.m_ordinal+1) % arr.length];
 }
 
-sys_Weekday.prototype.decrement = function()
+fan.sys.Weekday.prototype.decrement = function()
 {
-  var arr = sys_Weekday.values;
+  var arr = fan.sys.Weekday.values;
   return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
 }
 
-sys_Weekday.prototype.type = function()
+fan.sys.Weekday.prototype.type = function()
 {
-  return sys_Type.find("sys::Weekday");
+  return fan.sys.Type.find("sys::Weekday");
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Weekday.sun = new sys_Weekday(0,  "sun");
-sys_Weekday.mon = new sys_Weekday(1,  "mon");
-sys_Weekday.tue = new sys_Weekday(2,  "tue");
-sys_Weekday.wed = new sys_Weekday(3,  "wed");
-sys_Weekday.thu = new sys_Weekday(4,  "thu");
-sys_Weekday.fri = new sys_Weekday(5,  "fri");
-sys_Weekday.sat = new sys_Weekday(6,  "sat");
+fan.sys.Weekday.sun = new fan.sys.Weekday(0,  "sun");
+fan.sys.Weekday.mon = new fan.sys.Weekday(1,  "mon");
+fan.sys.Weekday.tue = new fan.sys.Weekday(2,  "tue");
+fan.sys.Weekday.wed = new fan.sys.Weekday(3,  "wed");
+fan.sys.Weekday.thu = new fan.sys.Weekday(4,  "thu");
+fan.sys.Weekday.fri = new fan.sys.Weekday(5,  "fri");
+fan.sys.Weekday.sat = new fan.sys.Weekday(6,  "sat");
 
-sys_Weekday.values =
+fan.sys.Weekday.values =
 [
-  sys_Weekday.sun,
-  sys_Weekday.mon,
-  sys_Weekday.tue,
-  sys_Weekday.wed,
-  sys_Weekday.thu,
-  sys_Weekday.fri,
-  sys_Weekday.sat
+  fan.sys.Weekday.sun,
+  fan.sys.Weekday.mon,
+  fan.sys.Weekday.tue,
+  fan.sys.Weekday.wed,
+  fan.sys.Weekday.thu,
+  fan.sys.Weekday.fri,
+  fan.sys.Weekday.sat
 ];

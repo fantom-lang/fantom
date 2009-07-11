@@ -10,13 +10,13 @@
 /**
  * Uri
  */
-var sys_Uri = sys_Obj.$extend(sys_Obj);
+fan.sys.Uri = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Uri.prototype.$ctor = function(uri)
+fan.sys.Uri.prototype.$ctor = function(uri)
 {
   this.m_uri = uri;
 }
@@ -25,42 +25,42 @@ sys_Uri.prototype.$ctor = function(uri)
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-sys_Uri.prototype.type = function()
+fan.sys.Uri.prototype.type = function()
 {
-  return sys_Type.find("sys::Uri");
+  return fan.sys.Type.find("sys::Uri");
 }
 
-sys_Uri.prototype.equals = function(that)
+fan.sys.Uri.prototype.equals = function(that)
 {
   return this.m_uri == that.m_uri;
 }
 
-sys_Uri.prototype.toCode = function()
+fan.sys.Uri.prototype.toCode = function()
 {
   return '`' + this.m_str + '`';
 }
 
-sys_Uri.prototype.toStr = function()
+fan.sys.Uri.prototype.toStr = function()
 {
   return this.m_uri;
 }
 
 // TODO - TEMP FIX FOR GFX::IMAGE
-sys_Uri.prototype.get = function()
+fan.sys.Uri.prototype.get = function()
 {
-  return sys_File.make();
+  return fan.sys.File.make();
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Uri.make = function(uri)
+fan.sys.Uri.make = function(uri)
 {
-  return new sys_Uri(uri);
+  return new fan.sys.Uri(uri);
 }
 
-sys_Uri.fromStr = function(s)
+fan.sys.Uri.fromStr = function(s)
 {
-  return new sys_Uri(s);
+  return new fan.sys.Uri(s);
 }

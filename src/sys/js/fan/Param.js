@@ -10,16 +10,16 @@
 /**
  * Param.
  */
-var sys_Param = sys_Obj.$extend(sys_Obj);
+fan.sys.Param = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Param.prototype.$ctor = function(name, of, hasDefault)
+fan.sys.Param.prototype.$ctor = function(name, of, hasDefault)
 {
   this.m_name = name;
-  this.m_of = sys_Type.find(of);
+  this.m_of = fan.sys.Type.find(of);
   this.m_hasDefault = hasDefault;
 }
 
@@ -27,12 +27,12 @@ sys_Param.prototype.$ctor = function(name, of, hasDefault)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Param.prototype.name = function() { return this.m_name; }
-sys_Param.prototype.of = function() { return this.m_of; }
-sys_Param.prototype.hasDefault = function() { return this.m_hasDefault; }
+fan.sys.Param.prototype.name = function() { return this.m_name; }
+fan.sys.Param.prototype.of = function() { return this.m_of; }
+fan.sys.Param.prototype.hasDefault = function() { return this.m_hasDefault; }
 
-sys_Param.prototype.type = function()
+fan.sys.Param.prototype.type = function()
 {
-  return sys_Type.find("sys::Param");
+  return fan.sys.Type.find("sys::Param");
 }
 

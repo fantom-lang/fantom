@@ -10,28 +10,28 @@
 /**
  * Num
  */
-var sys_Num = sys_Obj.$extend(sys_Obj);
+fan.sys.Num = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Num.prototype.$ctor = function() {}
-sys_Num.prototype.type = function()
+fan.sys.Num.prototype.$ctor = function() {}
+fan.sys.Num.prototype.type = function()
 {
-  return sys_Type.find("sys::Num");
+  return fan.sys.Type.find("sys::Num");
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Num.toDecimal = function(val) { return val; }
-sys_Num.toFloat = function(val) { return val; }
-sys_Num.toInt = function(val)
+fan.sys.Num.toDecimal = function(val) { return val; }
+fan.sys.Num.toFloat = function(val) { return val; }
+fan.sys.Num.toInt = function(val)
 {
   if (isNaN(val)) return 0;
-  if (val == Number.POSITIVE_INFINITY) return sys_Int.maxVal;
-  if (val == Number.NEGATIVE_INFINITY) return sys_Int.minVal;
+  if (val == Number.POSITIVE_INFINITY) return fan.sys.Int.maxVal;
+  if (val == Number.NEGATIVE_INFINITY) return fan.sys.Int.minVal;
   return Math.floor(val);
 }

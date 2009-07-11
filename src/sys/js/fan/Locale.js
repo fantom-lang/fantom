@@ -9,8 +9,8 @@
 /**
  * Locale.
  */
-var sys_Locale = sys_Obj.$extend(sys_Obj);
+fan.sys.Locale = fan.sys.Obj.$extend(fan.sys.Obj);
 
-sys_Locale.prototype.$ctor = function() {}
-sys_Locale.prototype.type = function() { return sys_Type.find("sys::Locale"); }
+fan.sys.Locale.prototype.$ctor = function() {}
+fan.sys.Locale.prototype.type = function() { return fan.sys.Type.find("sys::Locale"); }
 

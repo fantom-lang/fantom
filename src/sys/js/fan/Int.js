@@ -10,31 +10,31 @@
 /**
  * Int
  */
-var sys_Int = sys_Obj.$extend(sys_Num);
+fan.sys.Int = fan.sys.Obj.$extend(fan.sys.Num);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Int.prototype.$ctor = function() {}
-sys_Int.prototype.type = function() { return sys_Type.find("sys::Int"); }
+fan.sys.Int.prototype.$ctor = function() {}
+fan.sys.Int.prototype.type = function() { return fan.sys.Type.find("sys::Int"); }
 
 // TODO - need to look at how this code is used
-sys_Int.make = function(val)
+fan.sys.Int.make = function(val)
 {
   if (val instanceof Long) return val;
   if (typeof(val) == "string") return new Long.fromStr(val);
-  if (val <= sys_Int.maxInt) val;
+  if (val <= fan.sys.Int.maxInt) val;
   return Long.fromNumber(val);
 }
 
-sys_Int.maxInt = 9007199254740992;  // max exact int in js (2^53)
+fan.sys.Int.maxInt = 9007199254740992;  // max exact int in js (2^53)
 
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Int.fromStr = function(s, radix, checked)
+fan.sys.Int.fromStr = function(s, radix, checked)
 {
   if (radix == undefined) radix = 10;
   if (checked == undefined) checked = true;
@@ -44,15 +44,15 @@ sys_Int.fromStr = function(s, radix, checked)
     return num;
   }
   catch (err) {}
-  if (checked) throw new sys_ParseErr("Int", s);
+  if (checked) throw new fan.sys.ParseErr("Int", s);
   return null;
 }
-sys_Int.toStr = function(self)
+fan.sys.Int.toStr = function(self)
 {
   return ""+self;
 }
 
-sys_Int.equals = function(self, obj)
+fan.sys.Int.equals = function(self, obj)
 {
   var sis = self instanceof Long;
   var ois = obj instanceof Long;
@@ -65,15 +65,15 @@ sys_Int.equals = function(self, obj)
   else return self == obj;
 }
 
-sys_Int.abs = function(self) { return self < 0 ? -self : self; }
-sys_Int.min = function(self, val) { return self < val ? self : val; }
-sys_Int.max = function(self, val) { return self > val ? self : val; }
+fan.sys.Int.abs = function(self) { return self < 0 ? -self : self; }
+fan.sys.Int.min = function(self, val) { return self < val ? self : val; }
+fan.sys.Int.max = function(self, val) { return self > val ? self : val; }
 
-sys_Int.isEven  = function(self) { return self % 2 == 0; }
-sys_Int.isOdd   = function(self) { return self % 2 != 0; }
-sys_Int.isSpace = function(self) { return self == 32 || self == 9 || self == 10 || self == 13; }
+fan.sys.Int.isEven  = function(self) { return self % 2 == 0; }
+fan.sys.Int.isOdd   = function(self) { return self % 2 != 0; }
+fan.sys.Int.isSpace = function(self) { return self == 32 || self == 9 || self == 10 || self == 13; }
 
-sys_Int.isDigit = function(self, radix)
+fan.sys.Int.isDigit = function(self, radix)
 {
   if (radix == null || radix == 10) return self >= 48 && self <= 57;
   if (radix == 16)
@@ -90,7 +90,7 @@ sys_Int.isDigit = function(self, radix)
   return false;
 }
 
-sys_Int.toDigit = function(self, radix)
+fan.sys.Int.toDigit = function(self, radix)
 {
   if (radix == null || radix == 10) return 0 <= self && self <= 9 ? 48+self : null;
   if (self < 0 || self >= radix) return null;
@@ -98,7 +98,7 @@ sys_Int.toDigit = function(self, radix)
   return self-10+97;
 }
 
-sys_Int.fromDigit = function(self, radix)
+fan.sys.Int.fromDigit = function(self, radix)
 {
   if (self < 0 || self >= 128) return null;
   var ten = radix < 10 ? radix : 10;
@@ -112,44 +112,44 @@ sys_Int.fromDigit = function(self, radix)
   return null;
 }
 
-sys_Int.toChar = function(self)
+fan.sys.Int.toChar = function(self)
 {
   if (self < 0 || self > 0xFFFF) throw new Err("Invalid unicode char: " + self);
   return String.fromCharCode(self);
 }
 
-sys_Int.toHex = function(self, width)
+fan.sys.Int.toHex = function(self, width)
 {
   var x = (self instanceof Long) ? self : Long.fromNumber(self);
   var s = Long.fromNumber(self).toString(16);
   if (width != null && s.length < width)
   {
-    if (sys_Int.$zeros == null)
+    if (fan.sys.Int.$zeros == null)
     {
-      sys_Int.$zeros = [""];
+      fan.sys.Int.$zeros = [""];
       for (var i=1; i<16; i++)
-        sys_Int.$zeros[i] = sys_Int.$zeros[i-1] + "0";
+        fan.sys.Int.$zeros[i] = fan.sys.Int.$zeros[i-1] + "0";
     }
-    s = sys_Int.$zeros[width-s.length] + s;
+    s = fan.sys.Int.$zeros[width-s.length] + s;
   }
   return s;
 }
-sys_Int.$zeros = null;
+fan.sys.Int.$zeros = null;
 
-sys_Int.isUpper    = function(self) { return self >= 65 && self <= 90; }
-sys_Int.isLower    = function(self) { return self >= 97 && self <= 122; }
-sys_Int.upper      = function(self) { return sys_Int.isLower(self) ? self-32 : self; }
-sys_Int.lower      = function(self) { return sys_Int.isUpper(self) ? self+32 : self; }
-sys_Int.isAlpha    = function(self) { return sys_Int.isUpper(self) || sys_Int.isLower(self); }
-sys_Int.isAlphaNum = function(self) { return sys_Int.isAlpha(self) || sys_Int.isDigit(self); }
-sys_Int.equalsIgnoreCase = function(self, ch) { return (self|0x20) == (ch|0x20); }
+fan.sys.Int.isUpper    = function(self) { return self >= 65 && self <= 90; }
+fan.sys.Int.isLower    = function(self) { return self >= 97 && self <= 122; }
+fan.sys.Int.upper      = function(self) { return fan.sys.Int.isLower(self) ? self-32 : self; }
+fan.sys.Int.lower      = function(self) { return fan.sys.Int.isUpper(self) ? self+32 : self; }
+fan.sys.Int.isAlpha    = function(self) { return fan.sys.Int.isUpper(self) || fan.sys.Int.isLower(self); }
+fan.sys.Int.isAlphaNum = function(self) { return fan.sys.Int.isAlpha(self) || fan.sys.Int.isDigit(self); }
+fan.sys.Int.equalsIgnoreCase = function(self, ch) { return (self|0x20) == (ch|0x20); }
 
 
 //////////////////////////////////////////////////////////////////////////
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
-sys_Int.times = function(self, func)
+fan.sys.Int.times = function(self, func)
 {
   for (var i=0; i<self; i++)
     func(i);
@@ -159,7 +159,7 @@ sys_Int.times = function(self, func)
 // Arithmetic
 //////////////////////////////////////////////////////////////////////////
 
-sys_Int.plus = function(a, b)
+fan.sys.Int.plus = function(a, b)
 {
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
@@ -167,7 +167,7 @@ sys_Int.plus = function(a, b)
   return Long.add(a, b);
 }
 
-sys_Int.minus = function(a, b)
+fan.sys.Int.minus = function(a, b)
 {
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
@@ -175,7 +175,7 @@ sys_Int.minus = function(a, b)
   return Long.sub(a, b);
 }
 
-sys_Int.mult = function(a, b)
+fan.sys.Int.mult = function(a, b)
 {
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
@@ -183,7 +183,7 @@ sys_Int.mult = function(a, b)
   return Long.mul(a, b);
 }
 
-sys_Int.div = function(a, b)
+fan.sys.Int.div = function(a, b)
 {
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
@@ -191,7 +191,7 @@ sys_Int.div = function(a, b)
   return Long.div(a, b);
 }
 
-sys_Int.mod = function(a, b)
+fan.sys.Int.mod = function(a, b)
 {
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
@@ -204,13 +204,13 @@ sys_Int.mod = function(a, b)
 //////////////////////////////////////////////////////////////////////////
 
 // TODO - these impls only work upto 32 bits!!!
-sys_Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
-sys_Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
-sys_Int.shl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
-sys_Int.shr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.and    = function(a, b) { var x = a & b;  if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.or     = function(a, b) { var x = a | b;  if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.shl = function(a, b) { var x = a << b; if (x<0) x += 0xffffffff+1; return x; }
+fan.sys.Int.shr = function(a, b) { var x = a >> b; if (x<0) x += 0xffffffff+1; return x; }
 
 /*
-sys_Int.and = function(a, b)
+fan.sys.Int.and = function(a, b)
 {
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
@@ -218,7 +218,7 @@ sys_Int.and = function(a, b)
   return Long.and(a, b);
 }
 
-sys_Int.or = function(a, b)
+fan.sys.Int.or = function(a, b)
 {
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
@@ -226,14 +226,14 @@ sys_Int.or = function(a, b)
   return Long.or(a, b);
 }
 
-sys_Int.shl = function(a, n)
+fan.sys.Int.shl = function(a, n)
 {
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
   return Long.shl(a, n);
 }
 
-sys_Int.shr = function(a, n)
+fan.sys.Int.shr = function(a, n)
 {
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);

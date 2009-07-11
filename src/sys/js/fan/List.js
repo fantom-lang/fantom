@@ -10,18 +10,18 @@
 /**
  * List
  */
-var sys_List = sys_Obj.$extend(sys_Obj);
+fan.sys.List = fan.sys.Obj.$extend(fan.sys.Obj);
 
-sys_List.prototype.$ctor = function() {}
-sys_List.prototype.type = function()  { return sys_Type.find("sys::List"); }
+fan.sys.List.prototype.$ctor = function() {}
+fan.sys.List.prototype.type = function()  { return fan.sys.Type.find("sys::List"); }
 
 //////////////////////////////////////////////////////////////////////////
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-sys_List.make = function(type, vals)
+fan.sys.List.make = function(type, vals)
 {
-  vals.$fanType = new sys_ListType(type);
+  vals.$fanType = new fan.sys.ListType(type);
   return vals;
 }
 
@@ -29,21 +29,21 @@ sys_List.make = function(type, vals)
 // Indentity
 //////////////////////////////////////////////////////////////////////////
 
-sys_List.equals = function(self, that)
+fan.sys.List.equals = function(self, that)
 {
   if (that != null && that.constructor == Array)
   {
     // self.of ?= that.of
     if (self.length != that.length) return false;
     for (var i=0; i<self.length; i++)
-      if (!sys_Obj.equals(self[i], that[i]))
+      if (!fan.sys.Obj.equals(self[i], that[i]))
         return false;
     return true;
   }
   return false;
 }
 
-sys_List.toStr = function(self)
+fan.sys.List.toStr = function(self)
 {
   if (self.length == 0) return "[,]";
   var s = "[";
@@ -60,62 +60,62 @@ sys_List.toStr = function(self)
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-sys_List.add = function(self, item)
+fan.sys.List.add = function(self, item)
 {
   self.push(item);
   return self;
 }
 
-sys_List.addAll = function(self, list)
+fan.sys.List.addAll = function(self, list)
 {
-  return sys_List.make(self.$fanType, self.concat(list));
+  return fan.sys.List.make(self.$fanType, self.concat(list));
 }
 
-sys_List.insert = function(self, index, item)
+fan.sys.List.insert = function(self, index, item)
 {
   self.splice(index, 0, item);
   return self;
 }
 
-sys_List.removeSame = function(self, val)
+fan.sys.List.removeSame = function(self, val)
 {
-  var index = sys_List.indexSame(self, val);
+  var index = fan.sys.List.indexSame(self, val);
   if (index == null) return null;
-  return sys_List.removeAt(self, index);
+  return fan.sys.List.removeAt(self, index);
 }
 
-sys_List.removeAt = function(self, index)
+fan.sys.List.removeAt = function(self, index)
 {
   return self.splice(index, 1);
 }
 
-sys_List.clear = function(self)
+fan.sys.List.clear = function(self)
 {
   self.splice(0, self.length);
   return self;
 }
 
-sys_List.fill = function(self, val, times)
+fan.sys.List.fill = function(self, val, times)
 {
   for (var i=0; i<times; i++) self.push(val);
   return self;
 }
 
-sys_List.slice = function(self, range)
+fan.sys.List.slice = function(self, range)
 {
   var size = self.length;
   var s = range.start(size);
   var e = range.end(size);
-  if (e+1 < s) throw new sys_IndexErr(r);
+  if (e+1 < s) throw new fan.sys.IndexErr(r);
   return self.slice(s, e+1);
 }
 
-sys_List.contains = function(self, val)
+fan.sys.List.contains = function(self, val)
 {
-  return sys_List.index(self, val) != null;
+  return fan.sys.List.index(self, val) != null;
 }
 
-sys_List.sort = function(self, func)
+fan.sys.List.sort = function(self, func)
 {
   if (func != null)
     return self.sort(func);
@@ -123,14 +123,14 @@ sys_List.sort = function(self, func)
     return self.sort();
 }
 
-sys_List.index = function(self, val, off)
+fan.sys.List.index = function(self, val, off)
 {
   if (off == undefined) off = 0;
 
   if (self.length == 0) return null;
   var start = off;
   if (start < 0) start = self.length + start;
-  if (start >= self.length) throw sys_IndexErr.make(off);
+  if (start >= self.length) throw fan.sys.IndexErr.make(off);
 
   try
   {
@@ -145,7 +145,7 @@ sys_List.index = function(self, val, off)
       for (var i=start; i<self.length; ++i)
       {
         var obj = self[i];
-        if (obj != null && sys_Obj.equals(obj, val))
+        if (obj != null && fan.sys.Obj.equals(obj, val))
           return i;
       }
     }
@@ -155,18 +155,18 @@ sys_List.index = function(self, val, off)
   //catch (ArrayIndexOutOfBoundsException e)
   catch (err)
   {
-    throw sys_IndexErr.make(off);
+    throw fan.sys.IndexErr.make(off);
   }
 }
 
-sys_List.indexSame = function(self, val, off)
+fan.sys.List.indexSame = function(self, val, off)
 {
   if (off == undefined) off = 0;
 
   if (self.length == 0) return null;
   var start = off;
   if (start < 0) start = self.length + start;
-  if (start >= self.length) throw sys_IndexErr.make(off);
+  if (start >= self.length) throw fan.sys.IndexErr.make(off);
 
   try
   {
@@ -179,32 +179,32 @@ sys_List.indexSame = function(self, val, off)
   //catch (ArrayIndexOutOfBoundsException e)
   catch (err)
   {
-    throw sys_IndexErr.make(off);
+    throw fan.sys.IndexErr.make(off);
   }
 }
 
-sys_List.first = function(self)
+fan.sys.List.first = function(self)
 {
   if (self.length == 0) return null;
   return self[0];
 }
 
-sys_List.last = function(self)
+fan.sys.List.last = function(self)
 {
   if (self.length == 0) return null;
   return self[self.length-1];
 }
 
-sys_List.dup = function(self)
+fan.sys.List.dup = function(self)
 {
-  return sys_List.make(self.$fanType, self.slice());
+  return fan.sys.List.make(self.$fanType, self.slice());
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
-sys_List.each = function(self, func)
+fan.sys.List.each = function(self, func)
 {
   if (func.length == 1)
   {
@@ -218,7 +218,7 @@ sys_List.each = function(self, func)
   }
 }
 
-sys_List.eachr = function(self, func)
+fan.sys.List.eachr = function(self, func)
 {
   if (func.length == 1)
   {
@@ -232,7 +232,7 @@ sys_List.eachr = function(self, func)
   }
 }
 
-sys_List.find = function(self, f)
+fan.sys.List.find = function(self, f)
 {
   if (f.length == 1)
   {
@@ -249,11 +249,11 @@ sys_List.find = function(self, f)
   return null;
 }
 
-sys_List.map = function(self, f)
+fan.sys.List.map = function(self, f)
 {
   var r = f.$fanType.ret;
   // if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
-  var acc = sys_List.make(r, []);
+  var acc = fan.sys.List.make(r, []);
   if (f.length == 1)
   {
     for (var i=0; i<self.length; ++i)
@@ -267,7 +267,7 @@ sys_List.map = function(self, f)
   return acc;
 }
 
-sys_List.max = function(self, f)
+fan.sys.List.max = function(self, f)
 {
   if (f == undefined) f = null;
   if (self.length == 0) return null;
@@ -283,7 +283,7 @@ sys_List.max = function(self, f)
   return max;
 }
 
-sys_List.min = function(self, f)
+fan.sys.List.min = function(self, f)
 {
   if (f == undefined) f = null;
   if (self.length == 0) return null;
@@ -300,12 +300,12 @@ sys_List.min = function(self, f)
 }
 
 // TODO
-sys_List.rw = function(self) { return sys_List.make(self.$fanType, self.slice()); }
-sys_List.ro = function(self) { return sys_List.make(self.$fanType, self.slice()); }
-sys_List.toImmutable = function(self) { return sys_List.make(self.$fanType, self.slice()); }
+fan.sys.List.rw = function(self) { return fan.sys.List.make(self.$fanType, self.slice()); }
+fan.sys.List.ro = function(self) { return fan.sys.List.make(self.$fanType, self.slice()); }
+fan.sys.List.toImmutable = function(self) { return fan.sys.List.make(self.$fanType, self.slice()); }
 
 // Conversion
-sys_List.join = function(self, sep, func)
+fan.sys.List.join = function(self, sep, func)
 {
   if (sep == undefined) sep = ""
   if (self.length == 0) return "";
@@ -314,7 +314,7 @@ sys_List.join = function(self, sep, func)
     var v = self[0];
     if (func != undefined) return func(v, 0);
     if (v == null) return "null";
-    return sys_Obj.toStr(v);
+    return fan.sys.Obj.toStr(v);
   }
 
   var s = ""

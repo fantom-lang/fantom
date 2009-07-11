@@ -6,30 +6,30 @@
 //   26 May 09  Andy Frank  Creation
 //
 
-var fwt_SashPanePeer = sys_Obj.$extend(fwt_PanePeer);
+fan.fwt.SashPanePeer = fan.sys.Obj.$extend(fan.fwt.PanePeer);
 
-fwt_SashPanePeer.prototype.$ctor = function(self)
+fan.fwt.SashPanePeer.prototype.$ctor = function(self)
 {
-  fwt_PanePeer.prototype.$ctor.call(this, self);
+  fan.fwt.PanePeer.prototype.$ctor.call(this, self);
 }
 
-fwt_SashPanePeer.prototype.weights$get = function(self) { return this.weights; }
-fwt_SashPanePeer.prototype.weights$set = function(self, val) { this.weights = val; }
-fwt_SashPanePeer.prototype.weights = null;
+fan.fwt.SashPanePeer.prototype.weights$get = function(self) { return this.weights; }
+fan.fwt.SashPanePeer.prototype.weights$set = function(self, val) { this.weights = val; }
+fan.fwt.SashPanePeer.prototype.weights = null;
 
-fwt_SashPanePeer.prototype.sync = function(self)
+fan.fwt.SashPanePeer.prototype.sync = function(self)
 {
   if (this.weights != null && this.weights.length != self.kids.length)
-    throw new sys_ArgErr.make("weights.size != kids.length");
+    throw new fan.sys.ArgErr.make("weights.size != kids.length");
 
-  if (self.orientation == fwt_Orientation.horizontal)
+  if (self.orientation == fan.fwt.Orientation.horizontal)
     this.doHoriz(self);
   else
     this.doVert(self);
-  fwt_WidgetPeer.prototype.sync.call(this, self);
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
-fwt_SashPanePeer.prototype.doHoriz = function(self)
+fan.fwt.SashPanePeer.prototype.doHoriz = function(self)
 {
   var w = this.size.w;
   var h = this.size.h;
@@ -46,14 +46,14 @@ fwt_SashPanePeer.prototype.doHoriz = function(self)
     // if last widget, force to fill remaining space
     if (i == self.kids.length-1) ch = h-dy;
 
-    self.kids[i].pos$set(gfx_Point.make(0, dy));
-    self.kids[i].size$set(gfx_Size.make(cw, ch));
+    self.kids[i].pos$set(fan.gfx.Point.make(0, dy));
+    self.kids[i].size$set(fan.gfx.Size.make(cw, ch));
 
     dy += ch;
   }
 }
 
-fwt_SashPanePeer.prototype.doVert = function(self)
+fan.fwt.SashPanePeer.prototype.doVert = function(self)
 {
   var w = this.size.w;
   var h = this.size.h;
@@ -70,8 +70,8 @@ fwt_SashPanePeer.prototype.doVert = function(self)
     // if last widget, force to fill remaining space
     if (i == self.kids.length-1) cw = w-dx;
 
-    self.kids[i].pos$set(gfx_Point.make(dx, 0));
-    self.kids[i].size$set(gfx_Size.make(cw, ch));
+    self.kids[i].pos$set(fan.gfx.Point.make(dx, 0));
+    self.kids[i].size$set(fan.gfx.Size.make(cw, ch));
 
     dx += cw;
   }

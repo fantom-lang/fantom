@@ -10,13 +10,13 @@
 /**
  * Err
  */
-var sys_Err = sys_Obj.$extend(sys_Obj);
+fan.sys.Err = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-sys_Err.prototype.$ctor = function(msg)
+fan.sys.Err.prototype.$ctor = function(msg)
 {
   this.msg = msg;
 }
@@ -25,22 +25,22 @@ sys_Err.prototype.$ctor = function(msg)
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-sys_Err.prototype.type = function()
+fan.sys.Err.prototype.type = function()
 {
-  return sys_Type.find("sys::Err");
+  return fan.sys.Type.find("sys::Err");
 }
 
-sys_Err.prototype.toString = function()
+fan.sys.Err.prototype.toString = function()
 {
   return this.type() + ": " + this.msg;
 }
 
-sys_Err.prototype.message = function()
+fan.sys.Err.prototype.message = function()
 {
   return this.msg;
 }
 
-sys_Err.prototype.traceToStr = function()
+fan.sys.Err.prototype.traceToStr = function()
 {
   return this.toString();
 }
@@ -49,18 +49,18 @@ sys_Err.prototype.traceToStr = function()
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-sys_Err.make = function(cause)
+fan.sys.Err.make = function(cause)
 {
   // TODO - needs alot of work!
-  if (cause instanceof sys_Err) return cause;
-  if (cause instanceof TypeError) return new sys_NullErr(cause.message);
-  if ((typeof cause) == "string") return new sys_Err(cause);
-  return new sys_Err(''+cause);
+  if (cause instanceof fan.sys.Err) return cause;
+  if (cause instanceof TypeError) return new fan.sys.NullErr(cause.message);
+  if ((typeof cause) == "string") return new fan.sys.Err(cause);
+  return new fan.sys.Err(''+cause);
 }
 
-sys_Err.trace = function(self)
+fan.sys.Err.trace = function(self)
 {
-  sys_Obj.echo(self)
+  fan.sys.Obj.echo(self)
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,32 +68,32 @@ sys_Err.trace = function(self)
 //////////////////////////////////////////////////////////////////////////
 
 // ArgErr
-var sys_ArgErr = sys_Obj.$extend(sys_Err);
-sys_ArgErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_ArgErr.prototype.type = function() { return sys_Type.find("sys::ArgErr"); }
-sys_ArgErr.make = function(msg) { return new sys_ArgErr(msg); }
+fan.sys.ArgErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.ArgErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.ArgErr.prototype.type = function() { return fan.sys.Type.find("sys::ArgErr"); }
+fan.sys.ArgErr.make = function(msg) { return new fan.sys.ArgErr(msg); }
 
 // NullErr
-var sys_NullErr = sys_Obj.$extend(sys_Err);
-sys_NullErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_NullErr.prototype.type = function() { return sys_Type.find("sys::NullErr"); }
-sys_NullErr.make = function(msg) { return new sys_NullErr(msg); }
+fan.sys.NullErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.NullErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.NullErr.prototype.type = function() { return fan.sys.Type.find("sys::NullErr"); }
+fan.sys.NullErr.make = function(msg) { return new fan.sys.NullErr(msg); }
 
 // IOErr
-var sys_IOErr = sys_Obj.$extend(sys_Err);
-sys_IOErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_IOErr.prototype.type = function() { return sys_Type.find("sys::IOErr"); }
-sys_IOErr.make = function(msg) { return new sys_IOErr(msg); }
+fan.sys.IOErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.IOErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.IOErr.prototype.type = function() { return fan.sys.Type.find("sys::IOErr"); }
+fan.sys.IOErr.make = function(msg) { return new fan.sys.IOErr(msg); }
 
 // IndexErr
-var sys_IndexErr = sys_Obj.$extend(sys_Err);
-sys_IndexErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_IndexErr.prototype.type = function() { return sys_Type.find("sys::IndexErr"); }
-sys_IndexErr.make = function(msg) { return new sys_IndexErr(msg); }
+fan.sys.IndexErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.IndexErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.IndexErr.prototype.type = function() { return fan.sys.Type.find("sys::IndexErr"); }
+fan.sys.IndexErr.make = function(msg) { return new fan.sys.IndexErr(msg); }
 
 // ParseErr
-var sys_ParseErr = sys_Obj.$extend(sys_Err);
-sys_ParseErr.prototype.$ctor = function(type, val, more)
+fan.sys.ParseErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.ParseErr.prototype.$ctor = function(type, val, more)
 {
   var msg = type;
   if (val != undefined)
@@ -101,44 +101,44 @@ sys_ParseErr.prototype.$ctor = function(type, val, more)
     msg = "Invalid " + type + ": '" + val + "'";
     if (more != undefined) msg += ": " + more;
   }
-  sys_Err.prototype.$ctor.call(this, msg)
+  fan.sys.Err.prototype.$ctor.call(this, msg)
 }
-sys_ParseErr.prototype.type = function() { return sys_Type.find("sys::ParseErr"); }
-sys_ParseErr.make = function(type, val, more) { return new sys_ParseErr(type,val,more); }
+fan.sys.ParseErr.prototype.type = function() { return fan.sys.Type.find("sys::ParseErr"); }
+fan.sys.ParseErr.make = function(type, val, more) { return new fan.sys.ParseErr(type,val,more); }
 
 // ReadonlyErr
-var sys_ReadonlyErr = sys_Obj.$extend(sys_Err);
-sys_ReadonlyErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_ReadonlyErr.prototype.type = function() { return sys_Type.find("sys::ReadonlyErr"); }
-sys_ReadonlyErr.make = function(msg) { return new sys_ReadonlyErr(msg); }
+fan.sys.ReadonlyErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.ReadonlyErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.ReadonlyErr.prototype.type = function() { return fan.sys.Type.find("sys::ReadonlyErr"); }
+fan.sys.ReadonlyErr.make = function(msg) { return new fan.sys.ReadonlyErr(msg); }
 
 // UnknownPodErr
-var sys_UnknownPodErr = sys_Obj.$extend(sys_Err);
-sys_UnknownPodErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_UnknownPodErr.prototype.type = function() { return sys_Type.find("sys::UnknownPodErr"); }
-sys_UnknownPodErr.make = function(msg) { return new sys_UnknownPodErr(msg); }
+fan.sys.UnknownPodErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.UnknownPodErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.UnknownPodErr.prototype.type = function() { return fan.sys.Type.find("sys::UnknownPodErr"); }
+fan.sys.UnknownPodErr.make = function(msg) { return new fan.sys.UnknownPodErr(msg); }
 
 // UnknownTypeErr
-var sys_UnknownTypeErr = sys_Obj.$extend(sys_Err);
-sys_UnknownTypeErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_UnknownTypeErr.prototype.type = function() { return sys_Type.find("sys::UnknownTypeErr"); }
-sys_UnknownTypeErr.make = function(msg) { return new sys_UnknownTypeErr(msg); }
+fan.sys.UnknownTypeErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.UnknownTypeErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.UnknownTypeErr.prototype.type = function() { return fan.sys.Type.find("sys::UnknownTypeErr"); }
+fan.sys.UnknownTypeErr.make = function(msg) { return new fan.sys.UnknownTypeErr(msg); }
 
 // UnknownSlotErr
-var sys_UnknownSlotErr = sys_Obj.$extend(sys_Err);
-sys_UnknownSlotErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_UnknownSlotErr.prototype.type = function() { return sys_Type.find("sys::UnknownSlotErr"); }
-sys_UnknownSlotErr.make = function(msg) { return new sys_UnknownSlotErr(msg); }
+fan.sys.UnknownSlotErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.UnknownSlotErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.UnknownSlotErr.prototype.type = function() { return fan.sys.Type.find("sys::UnknownSlotErr"); }
+fan.sys.UnknownSlotErr.make = function(msg) { return new fan.sys.UnknownSlotErr(msg); }
 
 // UnsupportedErr
-var sys_UnsupportedErr = sys_Obj.$extend(sys_Err);
-sys_UnsupportedErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_UnsupportedErr.prototype.type = function() { return sys_Type.find("sys::UnsupportedErr"); }
-sys_UnsupportedErr.make = function(msg) { return new sys_UnsupportedErr(msg); }
+fan.sys.UnsupportedErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.UnsupportedErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.UnsupportedErr.prototype.type = function() { return fan.sys.Type.find("sys::UnsupportedErr"); }
+fan.sys.UnsupportedErr.make = function(msg) { return new fan.sys.UnsupportedErr(msg); }
 
 // UnresolvedErr
-var sys_UnresolvedErr = sys_Obj.$extend(sys_Err);
-sys_UnresolvedErr.prototype.$ctor = function(msg) { sys_Err.prototype.$ctor.call(this, msg); }
-sys_UnresolvedErr.prototype.type = function() { return sys_Type.find("sys::UnresolvedErr"); }
-sys_UnresolvedErr.make = function(msg) { return new sys_UnresolvedErr(msg); }
+fan.sys.UnresolvedErr = fan.sys.Obj.$extend(fan.sys.Err);
+fan.sys.UnresolvedErr.prototype.$ctor = function(msg) { fan.sys.Err.prototype.$ctor.call(this, msg); }
+fan.sys.UnresolvedErr.prototype.type = function() { return fan.sys.Type.find("sys::UnresolvedErr"); }
+fan.sys.UnresolvedErr.make = function(msg) { return new fan.sys.UnresolvedErr(msg); }
 
