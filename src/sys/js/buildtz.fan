@@ -94,7 +94,7 @@ class BuildTz
 
       out.printLine(
        "// $fullName
-        tz = new sys_TimeZone();
+        tz = new fan.sys.TimeZone();
         tz.m_name = \"$name\";
         tz.m_fullName = \"$fullName\";
         tz.m_rules = [];")
@@ -107,7 +107,7 @@ class BuildTz
         dstOffset := buf.readU4();
 
         out.printLine(
-         "rule = new sys_TimeZone\$Rule();
+         "rule = new fan.sys.TimeZone\$Rule();
            rule.startYear = $startYear;
            rule.offset = $offset;
            rule.stdAbbr = \"$stdAbbr\";
@@ -128,10 +128,10 @@ class BuildTz
         out.printLine(" tz.m_rules.push(rule);")
       }
 
-      out.printLine("sys_TimeZone.cache[\"$name\"] = tz;")
-      out.printLine("sys_TimeZone.cache[\"$fullName\"] = tz;")
-      out.printLine("sys_TimeZone.names.push(\"$name\");")
-      out.printLine("sys_TimeZone.fullNames.push(\"$fullName\");")
+      out.printLine("fan.sys.TimeZone.cache[\"$name\"] = tz;")
+      out.printLine("fan.sys.TimeZone.cache[\"$fullName\"] = tz;")
+      out.printLine("fan.sys.TimeZone.names.push(\"$name\");")
+      out.printLine("fan.sys.TimeZone.fullNames.push(\"$fullName\");")
       out.printLine("")
     }
     finally { buf.close() }
@@ -145,7 +145,7 @@ class BuildTz
     onDay     := buf.read();
     atTime    := buf.readU4();
     atMode    := buf.read();
-    return "new sys_TimeZone\$DstTime($mon, $onMode, $onWeekday, $onDay, $atTime, $atMode)"
+    return "new fan.sys.TimeZone\$DstTime($mon, $onMode, $onWeekday, $onDay, $atTime, $atMode)"
   }
 
   File? db
