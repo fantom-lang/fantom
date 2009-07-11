@@ -2189,6 +2189,14 @@ public class Parser : CompilerSupport
       inferred |= funcTypeFormal(params, names)
     }
 
+    // if we see ?-> in a function type, that means |X?->ret|
+    if (curt === Token.safeArrow && !params.isEmpty)
+    {
+      params[-1] = params[-1].toNullable
+      consume
+      ret = ctype
+    }
+
     // optional arrow
     if (curt === Token.arrow)
     {

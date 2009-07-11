@@ -223,4 +223,31 @@ class RegressionTest : CompilerTest
     verifyEq(obj->test3, "36")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// #664 Nullable params w/out name in func sig
+//////////////////////////////////////////////////////////////////////////
+
+  Void test664()
+  {
+     compile(
+       "class Foo
+        {
+          Void m00(|Int? x| f) {}
+          Void m01(|Int?| f) {}
+          Void m02(|Int? x->Void| f) {}
+          Void m03(|Int?->Void| f) {}
+          Void m04(|Int,Str? x->Pod?| f) {}
+          Void m05(|Int,Str?->Pod?| f) {}
+        }
+        ")
+
+    t := pod.types[0]
+    verifyEq(t.method("m00").params[0].of.signature, "|sys::Int?->sys::Void|")
+    verifyEq(t.method("m01").params[0].of.signature, "|sys::Int?->sys::Void|")
+    verifyEq(t.method("m02").params[0].of.signature, "|sys::Int?->sys::Void|")
+    verifyEq(t.method("m03").params[0].of.signature, "|sys::Int?->sys::Void|")
+    verifyEq(t.method("m04").params[0].of.signature, "|sys::Int,sys::Str?->sys::Pod?|")
+    verifyEq(t.method("m05").params[0].of.signature, "|sys::Int,sys::Str?->sys::Pod?|")
+  }
+
 }
