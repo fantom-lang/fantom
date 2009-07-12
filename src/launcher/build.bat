@@ -16,9 +16,10 @@ rem
 
 rem sdk is the Windows PlatformSDK dir (we assume installed under VC)
 set sdk=%VCINSTALLDIR%\PlatformSDK
+set ndk=%VCINSTALLDIR%\..\SDK\v2.0
 
 rem compiler setup
-set includes=/I"%sdk%\Include" /I"%java_home%\include" /I"%java_home%\include\win32"
+set includes=/I"%sdk%\Include" /I"%ndk%\include" /I"%java_home%\include" /I"%java_home%\include\win32"
 set libs="%sdk%\Lib\uuid.lib" "%sdk%\Lib\advapi32.lib"
 set defs=/D_CRT_SECURE_NO_DEPRECATE
 set compile=cl %defs% %includes% launcher.cpp props.cpp java.cpp dotnet.cpp utils.cpp %libs%
