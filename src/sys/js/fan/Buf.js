@@ -271,12 +271,41 @@ fan.sys.Buf.prototype.readAllStr = function(normalizeNewlines)
 // Hex
 //////////////////////////////////////////////////////////////////////////
 
-// toHex
-// fromHex
+fan.sys.Buf.fromHex = function(s)
+{
+  var slen = s.length;
+  var buf = [];
+  var hexInv = fan.sys.Buf.hexInv;
+  var size = 0;
+
+  for (var i=0; i<slen; ++i)
+  {
+    var c0 = s.charCodeAt(i);
+    var n0 = c0 < 128 ? hexInv[c0] : -1;
+    if (n0 < 0) continue;
+
+    var n1 = -1;
+    if (++i < slen)
+    {
+      var c1 = s.charCodeAt(i);
+      n1 = c1 < 128 ? hexInv[c1] : -1;
+    }
+    if (n1 < 0) throw fan.sys.IOErr.make("Invalid hex str");
+
+    buf[size++] = (n0 << 4) | n1;
+  }
+
+  return fan.sys.MemBuf.makeBytes(buf);
+}
 
 fan.sys.Buf.hexChars = [
 //0  1  2  3  4  5  6  7  8  9  a  b  c  d   e   f
   48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102];
+
+fan.sys.Buf.hexInv = [];
+for (var i=0; i<128; ++i) fan.sys.Buf.hexInv[i] = -1;
+for (var i=0; i<10; ++i)  fan.sys.Buf.hexInv[48+i] = i;
+for (var i=10; i<16; ++i) fan.sys.Buf.hexInv[97+i-10] = fan.sys.Buf.hexInv[65+i-10] = i;
 
 //////////////////////////////////////////////////////////////////////////
 // Base64

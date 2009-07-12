@@ -5,8 +5,11 @@
  * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
  * Distributed under the BSD License
  * See http://pajhome.org.uk/crypt/md5 for more info.
+ *
+ * Modifications:
+ *   10 July 2009  Andy Frank  Edited to run in Fan and for size/usage
  */
-fan.sys.Buf_Md5 = function(buf)
+fan.sys.Buf_Md5 = function(buf, key)
 {
 
   var chrsz = 8;  /* bits per input character. 8 - ASCII; 16 - Unicode */
@@ -118,6 +121,25 @@ fan.sys.Buf_Md5 = function(buf)
   function md5_ii(a, b, c, d, x, s, t) { return md5_cmn(c ^ (b | (~d)), a, b, x, s, t); }
 
   /*
+   * Calculate the HMAC-MD5, of a key and some data
+   */
+  function core_hmac_md5(key, data)
+  {
+    var bkey = bytesToWords(key);
+    if(bkey.length > 16) bkey = core_md5(bkey, key.length * chrsz);
+
+    var ipad = Array(16), opad = Array(16);
+    for(var i = 0; i < 16; i++)
+    {
+      ipad[i] = bkey[i] ^ 0x36363636;
+      opad[i] = bkey[i] ^ 0x5C5C5C5C;
+    }
+
+    var hash = core_md5(ipad.concat(bytesToWords(data)), 512 + data.length * chrsz);
+    return core_md5(opad.concat(hash), 512 + 128);
+  }
+
+  /*
    * Add integers, wrapping at 2^32. This uses 16-bit operations internally
    * to work around bugs in some JS interpreters.
    */
@@ -145,7 +167,7 @@ fan.sys.Buf_Md5 = function(buf)
     var size = bytes.length;
 
     // handle full 32-bit words
-    for (var i=0; size>3 && (i+4)<size; i+=4)
+    for (var i=0; size>3 && (i+4)<=size; i+=4)
     {
       words.push((bytes[i+3]<<24) | (bytes[i+2]<<16) | (bytes[i+1]<<8) | bytes[i]);
     }
@@ -162,8 +184,10 @@ fan.sys.Buf_Md5 = function(buf)
     return words;
   }
 
-  var words = bytesToWords(buf);
-  var dw = core_md5(words, buf.length * chrsz);
+  var dw = (key == undefined)
+    ? core_md5(bytesToWords(buf), buf.length * chrsz)
+    : core_hmac_md5(key, buf);
+
   var db = new Array();
   for (var i=0; i<dw.length; i++)
   {
