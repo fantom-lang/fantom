@@ -388,6 +388,14 @@ fan.sys.Str.upper = function(self) { return self.toUpperCase(); }
 fan.sys.Str.$in = function(self) { return fan.sys.InStream.makeForStr(self); }
 fan.sys.Str.toUri = function(self) { return fan.sys.Uri.make(self); }
 
+fan.sys.Str.toBuf = function(self)//, Charset charset := Charset.utf8)
+{
+  var buf = new fan.sys.MemBuf();
+  //buf.charset(charset);
+  buf.print(self);
+  return buf.flip();
+}
+
 fan.sys.Str.toCode = function(self, quote, escu)
 {
   if (quote == undefined) quote = 34;
