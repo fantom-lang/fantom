@@ -72,8 +72,8 @@ public class FAttrs
     for (int i=0; i<n; ++i)
     {
       String name = in.name();
-      String value = in.utf();
-      map.put(name, value);
+      Object val = Symbol.initVal(in.utf());
+      map.put(name, val);
     }
     facets = map;
   }
