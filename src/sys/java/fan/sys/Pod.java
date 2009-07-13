@@ -249,6 +249,24 @@ public class Pod
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Symbols
+//////////////////////////////////////////////////////////////////////////
+
+  public List symbols()
+  {
+    return new List(Sys.SymbolType, symbols.values());
+  }
+
+  public Symbol symbol(String name) { return symbol(name, true); }
+  public Symbol symbol(String name, boolean checked)
+  {
+    Symbol s = (Symbol)symbols.get(name);
+    if (s != null) return s;
+    if (checked) throw UnknownSymbolErr.make(this.name + "::" + name).val;
+    return null;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Files
 //////////////////////////////////////////////////////////////////////////
 
@@ -443,5 +461,7 @@ public class Pod
   Map files;
   HashMap locales = new HashMap(4);
   Log log;
+  HashMap symbols = new HashMap();
+
 
 }

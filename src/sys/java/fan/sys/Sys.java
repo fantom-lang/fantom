@@ -226,6 +226,7 @@ public final class Sys
   public static final Type FieldType     = builtin("Field",    SlotType);
   public static final Type MethodType    = builtin("Method",   SlotType);
   public static final Type ParamType     = builtin("Param",    ObjType);
+  public static final Type SymbolType    = builtin("Symbol",   ObjType);
 
   // resources
   public static final Type UriSpaceType     = builtin("UriSpace",     ObjType);
@@ -295,6 +296,7 @@ public final class Sys
   public static final Type UnknownPodErrType     = builtin("UnknownPodErr",     ErrType);
   public static final Type UnknownServiceErrType = builtin("UnknownServiceErr", ErrType);
   public static final Type UnknownSlotErrType    = builtin("UnknownSlotErr",    ErrType);
+  public static final Type UnknownSymbolErrType  = builtin("UnknownSymbolErr",  ErrType);
   public static final Type UnknownTypeErrType    = builtin("UnknownTypeErr",    ErrType);
   public static final Type UnresolvedErrType     = builtin("UnresolvedErr",     ErrType);
   public static final Type UnsupportedErrType    = builtin("UnsupportedErr",    ErrType);
