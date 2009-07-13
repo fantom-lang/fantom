@@ -108,7 +108,7 @@ class CompilerSupport
   virtual CompilerErr err(Str msg, Location? loc)
   {
     if (suppressErr) throw SuppressedErr.make
-    return errReport(CompilerErr.make(msg, loc))
+    return errReport(CompilerErr(msg, loc))
   }
 
   **

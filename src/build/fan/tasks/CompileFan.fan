@@ -42,7 +42,7 @@ class CompileFan : Task
 
     try
     {
-      Compiler.make(input).compile
+      Compiler(input).compile
     }
     catch (CompilerErr err)
      {

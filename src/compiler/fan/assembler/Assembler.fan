@@ -27,7 +27,7 @@ class Assembler : CompilerSupport, FConst
 
   FPod assemblePod()
   {
-    fpod = FPod.make(null, compiler.pod.name, null)
+    fpod = FPod(null, compiler.pod.name, null)
 
     fpod.name    = compiler.input.podName
     fpod.version = compiler.input.version
@@ -52,7 +52,7 @@ class Assembler : CompilerSupport, FConst
   private FAttr[] assemblePodAttrs(FPod fpod)
   {
     input := compiler.input
-    asm := AttrAsm.make(compiler, fpod)
+    asm := AttrAsm(compiler, fpod)
 
     buf := Buf.make
     buf.writeI2(4 + input.podFacets.size)
@@ -72,7 +72,7 @@ class Assembler : CompilerSupport, FConst
 
   private FType assembleType(TypeDef def)
   {
-    t := FType.make(fpod)
+    t := FType(fpod)
 
     t.hollow   = false
     t.flags    = def.flags
@@ -82,7 +82,7 @@ class Assembler : CompilerSupport, FConst
     t.ffields  = def.fieldDefs.map |FieldDef f->FField| { assembleField(t, f) }
     t.fmethods = def.methodDefs.map |MethodDef m->FMethod| { assembleMethod(t, m) }
 
-    attrs := AttrAsm.make(compiler, fpod)
+    attrs := AttrAsm(compiler, fpod)
     if (compiler.input.mode == CompilerInputMode.str)
       attrs.sourceFile(def.location.fileUri)
     else
@@ -96,12 +96,12 @@ class Assembler : CompilerSupport, FConst
 
   FField assembleField(FType fparent, FieldDef def)
   {
-    f := FField.make(fparent)
+    f := FField(fparent)
     f.nameIndex = name(def.name)
     f.flags     = def.flags
     f.typeRef   = typeRef(def.fieldType)
 
-    attrs := AttrAsm.make(compiler, fpod)
+    attrs := AttrAsm(compiler, fpod)
     attrs.lineNumber(def.location.line)
     attrs.facets(def.facets)
     f.fattrs = attrs.attrs
@@ -111,9 +111,9 @@ class Assembler : CompilerSupport, FConst
 
   FMethod assembleMethod(FType fparent, MethodDef def)
   {
-    attrs := AttrAsm.make(compiler, fpod)
+    attrs := AttrAsm(compiler, fpod)
 
-    m := FMethod.make(fparent)
+    m := FMethod(fparent)
 
     m.nameIndex    = name(def.name)
     m.flags        = def.flags
@@ -124,7 +124,7 @@ class Assembler : CompilerSupport, FConst
 
     m.vars = def.vars.map |MethodVar v->FMethodVar|
     {
-      f := FMethodVar.make(m)
+      f := FMethodVar(m)
       f.nameIndex = name(v.name)
       f.typeRef   = typeRef(v.ctype)
       f.flags     = v.flags
@@ -173,7 +173,7 @@ class Assembler : CompilerSupport, FConst
     block := def.code
     if (block == null) return null
 
-    asm := CodeAsm.make(compiler, def.location, fpod, def)
+    asm := CodeAsm(compiler, def.location, fpod, def)
     if (def.ctorChain != null) asm.expr(def.ctorChain)
     asm.block(block)
 
@@ -186,7 +186,7 @@ class Assembler : CompilerSupport, FConst
   private Buf? assembleExpr(Expr? expr)
   {
     if (expr == null) return null
-    asm := CodeAsm.make(compiler, expr.location, fpod, null)
+    asm := CodeAsm(compiler, expr.location, fpod, null)
     asm.expr(expr)
     return asm.finishCode
   }

@@ -35,11 +35,11 @@ public class FieldDef : SlotDef, CField
   {
     Expr? target
     if (isStatic)
-      target = StaticTargetExpr.make(loc, parent)
+      target = StaticTargetExpr(loc, parent)
     else
-      target = ThisExpr.make(loc)
+      target = ThisExpr(loc)
 
-    return FieldExpr.make(loc, target, this, useAccessor)
+    return FieldExpr(loc, target, this, useAccessor)
   }
 
 //////////////////////////////////////////////////////////////////////////

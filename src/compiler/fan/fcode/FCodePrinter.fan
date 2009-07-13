@@ -73,7 +73,7 @@ class FCodePrinter : FConst
         print(pod.typeRefStr(i1) + index(i1))
         if (op == FOp.Coerce) print(" => "); else print(" <=> ")
         print(pod.typeRefStr(i2) + index(i2))
-      default:       throw Err.make(op.arg.toStr)
+      default:       throw Err(op.arg.toStr)
     }
     printLine
   }

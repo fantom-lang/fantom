@@ -76,7 +76,7 @@ class Block : Node
 
   Void walkExpr(|Expr expr->Expr| closure)
   {
-    walk(ExprVisitor.make(closure), VisitDepth.expr)
+    walk(ExprVisitor(closure), VisitDepth.expr)
   }
 
   Void walk(Visitor v, VisitDepth depth)

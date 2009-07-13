@@ -85,7 +85,7 @@ class Target
     {
       script.log.error("Target '$name' failed [$script.toStr]")
       err.trace
-      throw FatalBuildErr.make(null, err)
+      throw FatalBuildErr(null, err)
     }
   }
 

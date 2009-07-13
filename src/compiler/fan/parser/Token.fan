@@ -153,7 +153,7 @@ enum Token
   {
     if (symbol == null)
     {
-      if (!name.endsWith("Keyword")) throw Err.make(name)
+      if (!name.endsWith("Keyword")) throw Err(name)
       this.symbol   = name[0..-8]
       this.keyword  = true
       this.isAssign = false
@@ -191,7 +191,7 @@ enum Token
       case elvis:        return ExprId.elvis
 
       // default
-      default: throw Err.make(toStr)
+      default: throw Err(toStr)
     }
   }
 
@@ -233,7 +233,7 @@ enum Token
       case assignCaret:    return ShortcutOp.xor       // a ^= b
       case assignLshift:   return ShortcutOp.lshift    // a <<= b
       case assignRshift:   return ShortcutOp.rshift    // a >>= b
-      default: throw Err.make(toStr)
+      default: throw Err(toStr)
     }
   }
 

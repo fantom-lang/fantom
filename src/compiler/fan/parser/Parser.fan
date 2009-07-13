@@ -364,7 +364,7 @@ if (of == null) of = ns.objType.toNullable
   {
     doc := doc()
 
-    def := EnumDef.make(cur, doc, consumeId, ordinal)
+    def := EnumDef(cur, doc, consumeId, ordinal)
 
     // optional ctor args
     if (curt === Token.lparen)
@@ -416,7 +416,7 @@ if (of == null) of = ns.objType.toNullable
     if (curt === Token.identifier && cur.val == parent.name && peekt == Token.lparen)
     {
       err("Invalid constructor syntax - use new keyword")
-      return methodDef(loc, parent, doc, facets, flags|FConst.Ctor, TypeRef.make(loc, ns.voidType), consumeId)
+      return methodDef(loc, parent, doc, facets, flags|FConst.Ctor, TypeRef(loc, ns.voidType), consumeId)
     }
 
     // check for inferred typed field
@@ -431,7 +431,7 @@ if (of == null) of = ns.objType.toNullable
     if (flags & FConst.Ctor != 0)
     {
       name := consumeId
-      return methodDef(loc, parent, doc, facets, flags, TypeRef.make(loc, ns.voidType), name)
+      return methodDef(loc, parent, doc, facets, flags, TypeRef(loc, ns.voidType), name)
     }
 
     // otherwise must be field or method
@@ -462,7 +462,7 @@ if (of == null) of = ns.objType.toNullable
   private FieldDef fieldDef(Location loc, TypeDef parent, Str[]? doc, [Str:FacetDef]? facets, Int flags, TypeRef? type, Str name)
   {
     // define field itself
-    field := FieldDef.make(loc, parent)
+    field := FieldDef(loc, parent)
     field.doc    = doc
     field.facets = facets
     field.flags  = flags & ~ParserFlagsMask
@@ -539,7 +539,7 @@ if (of == null) of = ns.objType.toNullable
   {
     // getter MethodDef
     loc := f.location
-    get := MethodDef.make(loc, f.parentDef)
+    get := MethodDef(loc, f.parentDef)
     get.accessorFor = f
     get.flags = f.flags | FConst.Getter
     get.name  = f.name
@@ -551,12 +551,12 @@ if (of == null) of = ns.objType.toNullable
   {
     // setter MethodDef
     loc := f.location
-    set := MethodDef.make(loc, f.parentDef)
+    set := MethodDef(loc, f.parentDef)
     set.accessorFor = f
     set.flags = f.flags | FConst.Setter
     set.name  = f.name
     set.ret   = ns.voidType
-    set.params.add(ParamDef.make(loc, f.fieldType, "val"))
+    set.params.add(ParamDef(loc, f.fieldType, "val"))
     f.set = set
   }
 
@@ -567,8 +567,8 @@ if (of == null) of = ns.objType.toNullable
     if (!f.isAbstract && !f.isNative)
     {
       f.flags |= FConst.Storage
-      f.get.code = Block.make(loc)
-      f.get.code.add(ReturnStmt.make(loc, f.makeAccessorExpr(loc, false)))
+      f.get.code = Block(loc)
+      f.get.code.add(ReturnStmt(loc, f.makeAccessorExpr(loc, false)))
     }
   }
 
@@ -580,10 +580,10 @@ if (of == null) of = ns.objType.toNullable
     {
       f.flags |= FConst.Storage
       lhs := f.makeAccessorExpr(loc, false)
-      rhs := UnknownVarExpr.make(loc, null, "val")
-      f.set.code = Block.make(loc)
+      rhs := UnknownVarExpr(loc, null, "val")
+      f.set.code = Block(loc)
       f.set.code.add(BinaryExpr.makeAssign(lhs, rhs).toStmt)
-      f.set.code.add(ReturnStmt.make(loc))
+      f.set.code.add(ReturnStmt(loc))
     }
   }
 
@@ -653,7 +653,7 @@ if (of == null) of = ns.objType.toNullable
   **
   private MethodDef methodDef(Location loc, TypeDef parent, Str[]? doc, [Str:FacetDef]? facets, Int flags, TypeRef ret, Str name)
   {
-    method := MethodDef.make(loc, parent)
+    method := MethodDef(loc, parent)
     method.doc    = doc
     method.facets = facets
     method.flags  = flags
@@ -717,7 +717,7 @@ if (of == null) of = ns.objType.toNullable
 
   private ParamDef paramDef()
   {
-    param := ParamDef.make(cur, typeRef, consumeId)
+    param := ParamDef(cur, typeRef, consumeId)
     if (curt === Token.defAssign || curt === Token.assign)
     {
       if (curt === Token.assign) err("Must use := for parameter default");
@@ -732,12 +732,12 @@ if (of == null) of = ns.objType.toNullable
     consume(Token.colon)
     loc := cur
 
-    call := CallExpr.make(loc)
+    call := CallExpr(loc)
     call.isCtorChain = true
     switch (curt)
     {
-      case Token.superKeyword: consume; call.target = SuperExpr.make(loc)
-      case Token.thisKeyword:  consume; call.target = ThisExpr.make(loc)
+      case Token.superKeyword: consume; call.target = SuperExpr(loc)
+      case Token.thisKeyword:  consume; call.target = ThisExpr(loc)
       default: throw err("Expecting this or super for constructor chaining", loc);
     }
 
@@ -805,7 +805,7 @@ if (of == null) of = ns.objType.toNullable
   **
   private Block stmtOrBlock()
   {
-    block := Block.make(cur)
+    block := Block(cur)
 
     if (curt !== Token.lbrace)
     {
@@ -922,7 +922,7 @@ if (of == null) of = ns.objType.toNullable
   **
   private LocalDefStmt localDefStmt(Location loc, CType? localType, Bool isEndOfStmt)
   {
-    stmt := LocalDefStmt.make(loc, localType, consumeId)
+    stmt := LocalDefStmt(loc, localType, consumeId)
 
     if (curt === Token.defAssign || curt === Token.assign)
     {
@@ -947,7 +947,7 @@ if (of == null) of = ns.objType.toNullable
     cond := expr
     consume(Token.rparen)
     trueBlock := stmtOrBlock
-    stmt := IfStmt.make(loc, cond, trueBlock)
+    stmt := IfStmt(loc, cond, trueBlock)
     if (curt === Token.elseKeyword)
     {
       consume(Token.elseKeyword)
@@ -962,7 +962,7 @@ if (of == null) of = ns.objType.toNullable
   **
   private ReturnStmt returnStmt()
   {
-    stmt := ReturnStmt.make(cur)
+    stmt := ReturnStmt(cur)
     consume(Token.returnKeyword)
     if (!endOfStmt(null))
     {
@@ -980,7 +980,7 @@ if (of == null) of = ns.objType.toNullable
   {
     loc := cur
     consume(Token.throwKeyword)
-    stmt := ThrowStmt.make(loc, expr)
+    stmt := ThrowStmt(loc, expr)
     endOfStmt
     return stmt
   }
@@ -996,7 +996,7 @@ if (of == null) of = ns.objType.toNullable
     consume(Token.lparen)
     cond := expr
     consume(Token.rparen)
-    return WhileStmt.make(loc, cond, stmtOrBlock)
+    return WhileStmt(loc, cond, stmtOrBlock)
   }
 
   **
@@ -1006,7 +1006,7 @@ if (of == null) of = ns.objType.toNullable
   **
   private ForStmt forStmt()
   {
-    stmt := ForStmt.make(cur)
+    stmt := ForStmt(cur)
     consume(Token.forKeyword)
     consume(Token.lparen)
 
@@ -1030,7 +1030,7 @@ if (of == null) of = ns.objType.toNullable
   **
   private BreakStmt breakStmt()
   {
-    stmt := BreakStmt.make(cur)
+    stmt := BreakStmt(cur)
     consume(Token.breakKeyword)
     endOfStmt
     return stmt
@@ -1042,7 +1042,7 @@ if (of == null) of = ns.objType.toNullable
   **
   private ContinueStmt continueStmt()
   {
-    stmt := ContinueStmt.make(cur)
+    stmt := ContinueStmt(cur)
     consume(Token.continueKeyword)
     endOfStmt
     return stmt
@@ -1057,7 +1057,7 @@ if (of == null) of = ns.objType.toNullable
   **
   private TryStmt tryStmt()
   {
-    stmt := TryStmt.make(cur)
+    stmt := TryStmt(cur)
     consume(Token.tryKeyword)
     stmt.block = stmtOrBlock
     if (curt !== Token.catchKeyword && curt !== Token.finallyKeyword)
@@ -1076,7 +1076,7 @@ if (of == null) of = ns.objType.toNullable
 
   private Catch tryCatch()
   {
-    c := Catch.make(cur)
+    c := Catch(cur)
     consume(Token.catchKeyword)
 
     if (curt === Token.lparen)
@@ -1107,14 +1107,14 @@ if (of == null) of = ns.objType.toNullable
     loc := cur
     consume(Token.switchKeyword)
     consume(Token.lparen)
-    stmt := SwitchStmt.make(loc, expr)
+    stmt := SwitchStmt(loc, expr)
     consume(Token.rparen)
     consume(Token.lbrace)
     while (curt != Token.rbrace)
     {
       if (curt === Token.caseKeyword)
       {
-        c := Case.make(cur)
+        c := Case(cur)
         while (curt === Token.caseKeyword)
         {
           consume
@@ -1177,7 +1177,7 @@ if (of == null) of = ns.objType.toNullable
     if (curt.isAssign)
     {
       if (curt === Token.assign)
-        return BinaryExpr.make(expr, consume.kind, assignExpr)
+        return BinaryExpr(expr, consume.kind, assignExpr)
       else
         return ShortcutExpr.makeBinary(expr, consume.kind, assignExpr)
     }
@@ -1198,7 +1198,7 @@ if (of == null) of = ns.objType.toNullable
       trueExpr := condOrExpr
       consume(Token.colon)
       falseExpr := condOrExpr
-      expr = TernaryExpr.make(condition, trueExpr, falseExpr)
+      expr = TernaryExpr(condition, trueExpr, falseExpr)
     }
     return expr
   }
@@ -1212,7 +1212,7 @@ if (of == null) of = ns.objType.toNullable
     expr := condAndExpr
     if (curt === Token.doublePipe)
     {
-      cond := CondExpr.make(expr, cur.kind)
+      cond := CondExpr(expr, cur.kind)
       while (curt === Token.doublePipe)
       {
         consume
@@ -1232,7 +1232,7 @@ if (of == null) of = ns.objType.toNullable
     expr := equalityExpr
     if (curt === Token.doubleAmp)
     {
-      cond := CondExpr.make(expr, cur.kind)
+      cond := CondExpr(expr, cur.kind)
       while (curt === Token.doubleAmp)
       {
         consume
@@ -1262,12 +1262,12 @@ if (of == null) of = ns.objType.toNullable
       {
         id := (tok === Token.eq || tok === Token.same) ? ExprId.cmpNull : ExprId.cmpNotNull
         operand := (lhs.id === ExprId.nullLiteral) ? rhs : lhs
-        expr = UnaryExpr.make(lhs.location, id, tok, operand)
+        expr = UnaryExpr(lhs.location, id, tok, operand)
       }
       else
       {
         if (tok === Token.same || tok === Token.notSame)
-          expr = BinaryExpr.make(lhs, tok, rhs)
+          expr = BinaryExpr(lhs, tok, rhs)
         else
           expr = ShortcutExpr.makeBinary(lhs, tok, rhs)
       }
@@ -1294,13 +1294,13 @@ if (of == null) of = ns.objType.toNullable
       {
         case Token.isKeyword:
           consume
-          expr = TypeCheckExpr.make(expr.location, ExprId.isExpr, expr, ctype)
+          expr = TypeCheckExpr(expr.location, ExprId.isExpr, expr, ctype)
         case Token.isnotKeyword:
           consume
-          expr = TypeCheckExpr.make(expr.location, ExprId.isnotExpr, expr, ctype)
+          expr = TypeCheckExpr(expr.location, ExprId.isnotExpr, expr, ctype)
         case Token.asKeyword:
           consume
-          expr = TypeCheckExpr.make(expr.location, ExprId.asExpr, expr, ctype)
+          expr = TypeCheckExpr(expr.location, ExprId.asExpr, expr, ctype)
         default:
           expr = ShortcutExpr.makeBinary(expr, consume.kind, elvisExpr)
       }
@@ -1320,7 +1320,7 @@ if (of == null) of = ns.objType.toNullable
       lhs := expr
       consume
       rhs := rangeExpr
-      expr = BinaryExpr.make(lhs, Token.elvis, rhs)
+      expr = BinaryExpr(lhs, Token.elvis, rhs)
     }
     return expr
   }
@@ -1337,7 +1337,7 @@ if (of == null) of = ns.objType.toNullable
       start := expr
       exclusive := consume.kind === Token.dotDotLt
       end := bitOrExpr
-      return RangeLiteralExpr.make(expr.location, ns.rangeType, start, end, exclusive)
+      return RangeLiteralExpr(expr.location, ns.rangeType, start, end, exclusive)
     }
     return expr
   }
@@ -1424,7 +1424,7 @@ if (of == null) of = ns.objType.toNullable
     if (curt === Token.rparen)
     {
       consume
-      return TypeCheckExpr.make(loc, ExprId.coerce, parenExpr, castType)
+      return TypeCheckExpr(loc, ExprId.coerce, parenExpr, castType)
     }
     reset(mark)
 
@@ -1455,13 +1455,13 @@ if (of == null) of = ns.objType.toNullable
     if (tokt === Token.bang)
     {
       consume
-      return UnaryExpr.make(loc, tokt.toExprId, tokt, parenExpr)
+      return UnaryExpr(loc, tokt.toExprId, tokt, parenExpr)
     }
 
     if (tokt === Token.amp)
     {
       consume
-      return CurryExpr.make(loc, curType, parenExpr)
+      return CurryExpr(loc, curType, parenExpr)
     }
 
     if (tokt === Token.plus)
@@ -1540,20 +1540,20 @@ if (of == null) of = ns.objType.toNullable
     {
       case Token.at:              return idExpr(null, false, false)
       case Token.identifier:      return idExpr(null, false, false)
-      case Token.intLiteral:      return LiteralExpr.make(loc, ExprId.intLiteral, ns.intType, consume.val)
-      case Token.floatLiteral:    return LiteralExpr.make(loc, ExprId.floatLiteral, ns.floatType, consume.val)
-      case Token.decimalLiteral:  return LiteralExpr.make(loc, ExprId.decimalLiteral, ns.decimalType, consume.val)
-      case Token.strLiteral:      return LiteralExpr.make(loc, ExprId.strLiteral, ns.strType, consume.val)
-      case Token.durationLiteral: return LiteralExpr.make(loc, ExprId.durationLiteral, ns.durationType, consume.val)
-      case Token.uriLiteral:      return LiteralExpr.make(loc, ExprId.uriLiteral, ns.uriType, consume.val)
+      case Token.intLiteral:      return LiteralExpr(loc, ExprId.intLiteral, ns.intType, consume.val)
+      case Token.floatLiteral:    return LiteralExpr(loc, ExprId.floatLiteral, ns.floatType, consume.val)
+      case Token.decimalLiteral:  return LiteralExpr(loc, ExprId.decimalLiteral, ns.decimalType, consume.val)
+      case Token.strLiteral:      return LiteralExpr(loc, ExprId.strLiteral, ns.strType, consume.val)
+      case Token.durationLiteral: return LiteralExpr(loc, ExprId.durationLiteral, ns.durationType, consume.val)
+      case Token.uriLiteral:      return LiteralExpr(loc, ExprId.uriLiteral, ns.uriType, consume.val)
       case Token.lbracket:        return collectionLiteralExpr(loc, null)
-      case Token.falseKeyword:    consume; return LiteralExpr.make(loc, ExprId.falseLiteral, ns.boolType, false)
+      case Token.falseKeyword:    consume; return LiteralExpr(loc, ExprId.falseLiteral, ns.boolType, false)
       case Token.nullKeyword:     consume; return LiteralExpr.makeNullLiteral(loc, ns)
-      case Token.superKeyword:    consume; return SuperExpr.make(loc)
-      case Token.thisKeyword:     consume; return ThisExpr.make(loc)
-      case Token.itKeyword:       consume; return ItExpr.make(loc)
-      case Token.trueKeyword:     consume; return LiteralExpr.make(loc, ExprId.trueLiteral, ns.boolType, true)
-      case Token.pound:           consume; return SlotLiteralExpr.make(loc, curType, consumeId)
+      case Token.superKeyword:    consume; return SuperExpr(loc)
+      case Token.thisKeyword:     consume; return ThisExpr(loc)
+      case Token.itKeyword:       consume; return ItExpr(loc)
+      case Token.trueKeyword:     consume; return LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)
+      case Token.pound:           consume; return SlotLiteralExpr(loc, curType, consumeId)
     }
     throw err("Expected expression, not '" + cur + "'")
   }
@@ -1615,7 +1615,7 @@ if (of == null) of = ns.objType.toNullable
     // simple literal type(arg)
     if (curt == Token.lparen)
     {
-      construction := CallExpr(loc, StaticTargetExpr.make(loc, ctype), "<ctor>", ExprId.construction)
+      construction := CallExpr(loc, StaticTargetExpr(loc, ctype), "<ctor>", ExprId.construction)
       callArgs(construction)
       return construction
     }
@@ -1627,7 +1627,7 @@ if (of == null) of = ns.objType.toNullable
       if (curSlot == null) return complexLiteral(loc, ctype)
 
       // shortcut for make with optional it-block
-      ctor := CallExpr.make(loc, StaticTargetExpr.make(loc, ctype), "make")
+      ctor := CallExpr(loc, StaticTargetExpr(loc, ctype), "make")
       itBlock := tryItBlock
       if (itBlock != null) ctor.args.add(itBlock)
       return ctor
@@ -1717,7 +1717,7 @@ if (of == null) of = ns.objType.toNullable
     closure := tryClosure
     if (closure != null)
     {
-      call := CallExpr.make(loc)
+      call := CallExpr(loc)
       call.target    = target
       call.name      = name
       call.isDynamic = dynamicCall
@@ -1730,7 +1730,7 @@ if (of == null) of = ns.objType.toNullable
     // if dynamic call then we know this is a call not a field
     if (dynamicCall)
     {
-      call := CallExpr.make(loc)
+      call := CallExpr(loc)
       call.target    = target
       call.name      = name
       call.isDynamic = true
@@ -1739,7 +1739,7 @@ if (of == null) of = ns.objType.toNullable
       return call
     }
 
-    return UnknownVarExpr.make(loc, target, name) { isSafe = safeCall }
+    return UnknownVarExpr(loc, target, name) { isSafe = safeCall }
   }
 
   **
@@ -1748,7 +1748,7 @@ if (of == null) of = ns.objType.toNullable
   **
   private CallExpr callExpr(Expr? target)
   {
-    call := CallExpr.make(cur)
+    call := CallExpr(cur)
     call.target  = target
     call.name    = consumeId
     callArgs(call)
@@ -1787,7 +1787,7 @@ if (of == null) of = ns.objType.toNullable
   private Expr callOp(Expr target)
   {
     loc := cur
-    call := CallExpr.make(loc)
+    call := CallExpr(loc)
     call.target = target
     callArgs(call)
     call.name = "call"
@@ -1839,7 +1839,7 @@ if (of == null) of = ns.objType.toNullable
     {
       err("Invalid list literal; use '[,]' for empty Obj[] list", loc)
       consume
-      return ListLiteralExpr.make(loc)
+      return ListLiteralExpr(loc)
     }
 
     // read first expression
@@ -1864,7 +1864,7 @@ if (of == null) of = ns.objType.toNullable
     if (explicitType != null)
       explicitType = explicitType.toListOf
 
-    list := ListLiteralExpr.make(loc, (ListType?)explicitType)
+    list := ListLiteralExpr(loc, (ListType?)explicitType)
 
     // if first is null, must be on lbracket
     if (first == null)
@@ -1908,7 +1908,7 @@ if (of == null) of = ns.objType.toNullable
       explicitType = null
     }
 
-    map := MapLiteralExpr.make(loc, (MapType?)explicitType)
+    map := MapLiteralExpr(loc, (MapType?)explicitType)
 
     // if first is null, must be on lbracket
     if (first == null)
@@ -2007,7 +2007,7 @@ if (of == null) of = ns.objType.toNullable
     name := "${curType.name}\$${curSlot.name}\$${closureCount++}"
 
     // create closure
-    closure := ClosureExpr.make(loc, curType, curSlot, curClosure, funcType, name)
+    closure := ClosureExpr(loc, curType, curSlot, curClosure, funcType, name)
 
     // save all closures in global list and list per type
     closures.add(closure)
@@ -2052,7 +2052,7 @@ if (of == null) of = ns.objType.toNullable
   private TypeRef typeRef()
   {
     Location loc := cur
-    return TypeRef.make(loc, ctype)
+    return TypeRef(loc, ctype)
   }
 
   **
@@ -2143,7 +2143,7 @@ if (of == null) of = ns.objType.toNullable
       consume(Token.colon)
       key := t
       val := ctype
-      t = MapType.make(key, val)
+      t = MapType(key, val)
     }
 
     // check for ? nullable
@@ -2216,7 +2216,7 @@ if (of == null) of = ns.objType.toNullable
     {
       consume
       consume(Token.pipe)
-      return FuncType.make(params, names, ret)
+      return FuncType(params, names, ret)
     }
 
     // params, must be one if no ->
@@ -2246,7 +2246,7 @@ if (of == null) of = ns.objType.toNullable
     // closing pipe
     consume(Token.pipe)
 
-    ft := FuncType.make(params, names, ret)
+    ft := FuncType(params, names, ret)
     ft.inferredSignature = inferred
     return ft
   }

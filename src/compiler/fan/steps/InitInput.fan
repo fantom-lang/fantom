@@ -61,7 +61,7 @@ class InitInput : CompilerStep
 
     // init pod
     podName := input.podName
-    compiler.pod = PodDef.make(ns, Location.make(podName), podName)
+    compiler.pod = PodDef(ns, Location(podName), podName)
     compiler.isSys = podName == "sys"
 
     // process intput into tokens

@@ -76,8 +76,8 @@ class Tokenize : CompilerStep
   **
   CompilationUnit tokenize(Location location, Str src)
   {
-    unit := CompilationUnit.make(location, compiler.pod)
-    tokenizer := Tokenizer.make(compiler, location, src, compiler.input.includeDoc)
+    unit := CompilationUnit(location, compiler.pod)
+    tokenizer := Tokenizer(compiler, location, src, compiler.input.includeDoc)
     unit.tokens = tokenizer.tokenize
     return unit
   }

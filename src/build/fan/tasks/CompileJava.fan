@@ -101,7 +101,7 @@ class CompileJava : JdkTask
         }
       }
       log.debug(cmd.join(" "))
-      r := Process.make(cmd).run.join
+      r := Process(cmd).run.join
       if (r != 0) throw Err.make
     }
     catch (Err err)

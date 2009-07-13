@@ -211,14 +211,14 @@ Uri[]? javascriptDirs
   {
     log.info("clean [$podName]")
     log.indent
-    Delete.make(this, libFanDir+"${podName}.pod".toUri).run
-    Delete.make(this, libJavaDir+"${podName}.jar".toUri).run
-    Delete.make(this, libDotnetDir+"${podName}.dll".toUri).run
-    Delete.make(this, libDotnetDir+"${podName}.pdb".toUri).run
-    Delete.make(this, libDir+"tmp/${podName}.dll".toUri).run
-    Delete.make(this, libDir+"tmp/${podName}.pdb".toUri).run
-    Delete.make(this, scriptDir+"temp-java/".toUri).run
-    Delete.make(this, scriptDir+"temp-dotnet/".toUri).run
+    Delete(this, libFanDir+"${podName}.pod".toUri).run
+    Delete(this, libJavaDir+"${podName}.jar".toUri).run
+    Delete(this, libDotnetDir+"${podName}.dll".toUri).run
+    Delete(this, libDotnetDir+"${podName}.pdb".toUri).run
+    Delete(this, libDir+"tmp/${podName}.dll".toUri).run
+    Delete(this, libDir+"tmp/${podName}.pdb".toUri).run
+    Delete(this, scriptDir+"temp-java/".toUri).run
+    Delete(this, scriptDir+"temp-dotnet/".toUri).run
     log.unindent
   }
 
@@ -237,7 +237,7 @@ Uri[]? javascriptDirs
     // env
     jtemp    := scriptDir + `temp-java/`
     jstub    := jtemp + "${podName}.jar".toUri
-    jdk      := JdkTask.make(this)
+    jdk      := JdkTask(this)
     javaExe  := jdk.javaExe
     jarExe   := jdk.jarExe
     curPod   := libFanDir + "${podName}.pod".toUri
@@ -250,13 +250,13 @@ Uri[]? javascriptDirs
     stubOnly := javaDirs.isEmpty
 
     // start with a clean directory
-    Delete.make(this, jtemp).run
-    if (!stubOnly) CreateDir.make(this, jtemp).run
+    Delete(this, jtemp).run
+    if (!stubOnly) CreateDir(this, jtemp).run
 
     // stub the pods fan classes into Java classfiles
     // by calling the JStub tool in the jsys runtime
     stubDir := stubOnly ? libJavaDir : jtemp
-    Exec.make(this, [javaExe.osPath,
+    Exec(this, [javaExe.osPath,
                      "-cp", "${libJavaDir}sys.jar",
                      "fanx.tools.Jstub",
                      "-d", stubDir.osPath,
@@ -266,7 +266,7 @@ Uri[]? javascriptDirs
     if (stubOnly) return
 
     // compile
-    javac := CompileJava.make(this)
+    javac := CompileJava(this)
     javac.outDir = jtemp
     javac.cp.add(jtemp+"${podName}.jar".toUri).addAll(javaLibs)
     javac.cpAddExtJars
@@ -275,20 +275,20 @@ Uri[]? javascriptDirs
     javac.run
 
     // extract stub jar into the temp directory
-    Exec.make(this, [jarExe.osPath, "-xf", jstub.osPath], jtemp).run
+    Exec(this, [jarExe.osPath, "-xf", jstub.osPath], jtemp).run
 
     // now we can nuke the stub jar (and manifest)
-    Delete.make(this, jstub).run
-    Delete.make(this, jtemp + `meta-inf/`).run
+    Delete(this, jstub).run
+    Delete(this, jtemp + `meta-inf/`).run
 
     // jar everything back up to lib/java/{pod}.jar
-    Exec.make(this, [jarExe.osPath, "cf", curJar.osPath, "-C", jtemp.osPath, "."], jtemp).run
+    Exec(this, [jarExe.osPath, "cf", curJar.osPath, "-C", jtemp.osPath, "."], jtemp).run
 
     // append files to the pod zip (we use java's jar tool)
-    Exec.make(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", jtemp.osPath, "."], jtemp).run
+    Exec(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", jtemp.osPath, "."], jtemp).run
 
     // cleanup temp
-    Delete.make(this, jtemp).run
+    Delete(this, jtemp).run
 
     log.unindent
   }
@@ -321,15 +321,15 @@ Uri[]? javascriptDirs
     nstubExe := binDir + `nstub`
 
     // start with a clean directory
-    Delete.make(this, ntemp).run
-    CreateDir.make(this, ntemp).run
+    Delete(this, ntemp).run
+    CreateDir(this, ntemp).run
 
     // stub the pods fan classes into Java classfiles
     // by calling the JStub tool in the jsys runtime
-    Exec.make(this, [nstubExe.osPath, "-d", ntemp.osPath, podName]).run
+    Exec(this, [nstubExe.osPath, "-d", ntemp.osPath, podName]).run
 
     // compile
-    csc := CompileCs.make(this)
+    csc := CompileCs(this)
     csc.output = nout
     csc.targetType = "library"
     csc.src  = resolveDirs(ndirs)
@@ -337,14 +337,14 @@ Uri[]? javascriptDirs
     csc.run
 
     // append files to the pod zip (we use java's jar tool)
-    jdk    := JdkTask.make(this)
+    jdk    := JdkTask(this)
     jarExe := jdk.jarExe
     curPod := libFanDir + "${podName}.pod".toUri
-    Exec.make(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", ntemp.osPath,
+    Exec(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", ntemp.osPath,
       "${podName}Native_.dll", "${podName}Native_.pdb"], ntemp).run
 
     // cleanup temp
-    Delete.make(this, ntemp).run
+    Delete(this, ntemp).run
 
     log.unindent
   }
@@ -366,8 +366,8 @@ Uri[]? javascriptDirs
     jsTemp := scriptDir + `temp-js/`
 
     // start with a clean directory
-    Delete.make(this, jsTemp).run
-    CreateDir.make(this, jsTemp).run
+    Delete(this, jsTemp).run
+    CreateDir(this, jsTemp).run
 
     // compile javascript
     out := jsTemp.createFile("${podName}.js").out
@@ -378,14 +378,14 @@ Uri[]? javascriptDirs
     out.close
 
     // append files to the pod zip (we use java's jar tool)
-    jdk    := JdkTask.make(this)
+    jdk    := JdkTask(this)
     jarExe := jdk.jarExe
     curPod := libFanDir + "${podName}.pod".toUri
-    Exec.make(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", jsTemp.osPath,
+    Exec(this, [jarExe.osPath, "-fu", curPod.osPath, "-C", jsTemp.osPath,
       "${podName}.js"], jsTemp).run
 
     // cleanup temp
-    Delete.make(this, jsTemp).run
+    Delete(this, jsTemp).run
 
     log.unindent
   }
@@ -441,7 +441,7 @@ Uri[]? javascriptDirs
     log.indent
 
     fant := binDir + "fant$exeExt".toUri
-    Exec.make(this, [fant.osPath, podName]).run
+    Exec(this, [fant.osPath, podName]).run
 
     log.unindent
   }

@@ -139,7 +139,7 @@ abstract class Expr : Node
   **
   ExprStmt toStmt()
   {
-    return ExprStmt.make(this)
+    return ExprStmt(this)
   }
 
   **
@@ -296,7 +296,7 @@ class LiteralExpr : Expr
       case Str#:
         return make(loc, ExprId.strLiteral, ns.strType, val)
       default:
-        throw Err.make("Unsupported literal type $val.type")
+        throw Err("Unsupported literal type $val.type")
     }
   }
 
@@ -1277,7 +1277,7 @@ class TypeCheckExpr : Expr
       case ExprId.isExpr:    return "is"
       case ExprId.isnotExpr: return "isnot"
       case ExprId.asExpr:    return "as"
-      default:               throw Err.make(id.toStr)
+      default:               throw Err(id.toStr)
     }
   }
 
@@ -1289,7 +1289,7 @@ class TypeCheckExpr : Expr
       case ExprId.isnotExpr: return "($target isnot $check)"
       case ExprId.asExpr:    return "($target as $check)"
       case ExprId.coerce:    return "(($check)$target)"
-      default:               throw Err.make(id.toStr)
+      default:               throw Err(id.toStr)
     }
   }
 
@@ -1441,7 +1441,7 @@ class ClosureExpr : Expr
 
   once CField outerThisField()
   {
-    if (enclosingSlot.isStatic) throw Err.make("Internal error: $location.toLocationStr")
+    if (enclosingSlot.isStatic) throw Err("Internal error: $location.toLocationStr")
     return ClosureVars.makeOuterThisField(this)
   }
 

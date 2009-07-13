@@ -79,7 +79,7 @@ class FMethod : FSlot, CMethod
     paramCount = in.readU1
     localCount = in.readU1
     vars = FMethodVar[,];
-    (paramCount+localCount).times |,| { vars.add(FMethodVar.make(this).read(in)) }
+    (paramCount+localCount).times |,| { vars.add(FMethodVar(this).read(in)) }
     code = FUtil.readBuf(in)
     fattrs = FUtil.readAttrs(in)
     return this
@@ -87,7 +87,7 @@ class FMethod : FSlot, CMethod
 
   Void dump()
   {
-    p := FPrinter.make(fparent.fpod)
+    p := FPrinter(fparent.fpod)
     p.showCode = true
     p.method(this)
   }

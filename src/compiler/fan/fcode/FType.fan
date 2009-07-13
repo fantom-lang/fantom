@@ -103,7 +103,7 @@ class FType : CType
         else if ((m.flags & FConst.Setter) != 0)
           f.setter = m
         else
-          throw Err.make("Conflicting slots: $f and $m")
+          throw Err("Conflicting slots: $f and $m")
       }
       else
       {
@@ -187,10 +187,10 @@ class FType : CType
     in := fpod.in(uri)
 
     ffields = FField[,]
-    in.readU2.times |,| { ffields.add(FField.make(this).read(in)) }
+    in.readU2.times |,| { ffields.add(FField(this).read(in)) }
 
     fmethods = FMethod[,]
-    in.readU2.times |,| { fmethods.add(FMethod.make(this).read(in)) }
+    in.readU2.times |,| { fmethods.add(FMethod(this).read(in)) }
 
     fattrs = FAttr[,]
     in.readU2.times |,| { fattrs.add(FAttr.make.read(in)) }

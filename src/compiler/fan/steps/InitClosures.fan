@@ -76,7 +76,7 @@ class InitClosures : CompilerStep
 
   private Void genClass()
   {
-    cls = TypeDef.make(ns, loc, closure.enclosingType.unit, closure.name)
+    cls = TypeDef(ns, loc, closure.enclosingType.unit, closure.name)
     cls.flags   = FConst.Internal | FConst.Final | FConst.Synthetic
     cls.base    = closure.signature
     cls.closure = closure
@@ -90,10 +90,10 @@ class InitClosures : CompilerStep
 
   private Void genCtor()
   {
-    code := Block.make(loc)
+    code := Block(loc)
     code.stmts.add(ReturnStmt.makeSynthetic(loc))
 
-    ctor = MethodDef.make(loc, cls)
+    ctor = MethodDef(loc, cls)
     ctor.flags = FConst.Internal | FConst.Ctor | FConst.Synthetic
     ctor.name = "make"
     ctor.ret  = ns.voidType
@@ -114,13 +114,13 @@ class InitClosures : CompilerStep
   static internal Void genIsImmutableMethod(Compiler compiler, Location loc, TypeDef parent, Bool literalVal)
   {
     Expr literal := literalVal ?
-       LiteralExpr.make(loc, ExprId.trueLiteral, compiler.ns.boolType, true) :
-       LiteralExpr.make(loc, ExprId.falseLiteral, compiler.ns.boolType, false)
+       LiteralExpr(loc, ExprId.trueLiteral, compiler.ns.boolType, true) :
+       LiteralExpr(loc, ExprId.falseLiteral, compiler.ns.boolType, false)
 
-    code := Block.make(loc)
+    code := Block(loc)
     code.stmts.add(ReturnStmt.makeSynthetic(loc, literal))
 
-    m := MethodDef.make(loc, parent)
+    m := MethodDef(loc, parent)
     m.flags = FConst.Public | FConst.Synthetic | FConst.Override
     m.name = "isImmutable"
     m.ret  = compiler.ns.boolType
@@ -134,7 +134,7 @@ class InitClosures : CompilerStep
 
   private Void genDoCall()
   {
-    doCall = MethodDef.make(loc, cls)
+    doCall = MethodDef(loc, cls)
     doCall.name  = "doCall"
     doCall.flags = FConst.Internal | FConst.Synthetic
     doCall.code  = closure.code
@@ -150,7 +150,7 @@ class InitClosures : CompilerStep
 
   private Void genCall()
   {
-    c := CallExpr.makeWithMethod(loc, ThisExpr.make(loc), doCall)
+    c := CallExpr.makeWithMethod(loc, ThisExpr(loc), doCall)
     genMethodCall(compiler, loc, cls, signature, c, false)
   }
 
@@ -165,10 +165,10 @@ class InitClosures : CompilerStep
     ns := compiler.ns
 
     // method def
-    m := MethodDef.make(loc, parent)
+    m := MethodDef(loc, parent)
     m.flags = FConst.Override | FConst.Synthetic
     m.ret   = ns.objType.toNullable
-    m.code  = Block.make(loc)
+    m.code  = Block(loc)
 
     // signature:
     //   callList(List)             // if > MaxIndirectParams
@@ -178,7 +178,7 @@ class InitClosures : CompilerStep
     if (useListArgs)
     {
       m.name  = "callList"
-      p := ParamDef.make(loc, ns.objType.toListOf, "list")
+      p := ParamDef(loc, ns.objType.toListOf, "list")
       m.params.add(p)
     }
     else
@@ -186,7 +186,7 @@ class InitClosures : CompilerStep
       m.name = "call"
       paramCount.times |Int i|
       {
-        p := ParamDef.make(loc, ns.objType.toNullable, "p$i")
+        p := ParamDef(loc, ns.objType.toNullable, "p$i")
         m.paramDefs.add(p)
       }
     }
@@ -199,15 +199,15 @@ class InitClosures : CompilerStep
       // list.get(<i>)
       if (useListArgs)
       {
-        listGet := CallExpr.makeWithMethod(loc, UnknownVarExpr.make(loc, null, "list"), ns.objType.toListOf.method("get"))
-        listGet.args.add(LiteralExpr.make(loc, ExprId.intLiteral, ns.intType, i))
+        listGet := CallExpr.makeWithMethod(loc, UnknownVarExpr(loc, null, "list"), ns.objType.toListOf.method("get"))
+        listGet.args.add(LiteralExpr(loc, ExprId.intLiteral, ns.intType, i))
         arg = listGet
       }
 
       // p<i>
       else
       {
-        arg = UnknownVarExpr.make(loc, null, "p$i")
+        arg = UnknownVarExpr(loc, null, "p$i")
       }
 
       // cast to closure param type

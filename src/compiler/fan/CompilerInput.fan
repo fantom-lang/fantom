@@ -24,7 +24,7 @@ class CompilerInput
   ** Location to use for reporting errors associated with the input
   ** itself - typically this is mapped to the build script.
   **
-  Location inputLoc := Location.make("CompilerInput")
+  Location inputLoc := Location("CompilerInput")
 
   **
   ** Required name of output pod

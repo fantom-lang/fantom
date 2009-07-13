@@ -38,7 +38,7 @@ abstract class CNamespace : CompilerSupport
     sysPod = resolvePod("sys", null)
 
     // error placeholder type
-    error = GenericParameterType.make(this, "Error")
+    error = GenericParameterType(this, "Error")
 
     // generic parameter types
     genericParams =
@@ -122,7 +122,7 @@ abstract class CNamespace : CompilerSupport
 
   private CType genericParam(Str name)
   {
-    t := GenericParameterType.make(this, name)
+    t := GenericParameterType(this, name)
     n := t.toNullable
     typeCache[t.signature] = t
     typeCache[n.signature] = n
@@ -137,7 +137,7 @@ abstract class CNamespace : CompilerSupport
   private CMethod sysMethod(CType t, Str name)
   {
     m := t.method(name)
-    if (m == null) throw Err.make("Cannot resolve '${t.qname}.$name' method in namespace")
+    if (m == null) throw Err("Cannot resolve '${t.qname}.$name' method in namespace")
     return m
   }
 
@@ -248,7 +248,7 @@ abstract class CNamespace : CompilerSupport
   CType genericParameter(Str id)
   {
     t := genericParams[id]
-    if (t == null) throw UnknownTypeErr.make("sys::$id")
+    if (t == null) throw UnknownTypeErr("sys::$id")
     return t
   }
 
