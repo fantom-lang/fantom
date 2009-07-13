@@ -60,14 +60,17 @@ fan.dom.ElemPeer.prototype.computedStyle = function(self)
     : document.defaultView.getComputedStyle(this.elem, null);
 }
 
-fan.dom.ElemPeer.prototype.html$get = function(self) { return this.elem.innerHTML }
+fan.dom.ElemPeer.prototype.html$get = function(self) { return this.elem.innerHTML; }
 fan.dom.ElemPeer.prototype.html$set = function(self, val) { this.elem.innerHTML = val; }
 
-fan.dom.ElemPeer.prototype.value$get = function(self) { return this.elem.value }
+fan.dom.ElemPeer.prototype.value$get = function(self) { return this.elem.value; }
 fan.dom.ElemPeer.prototype.value$set = function(self, val) { this.elem.value = val; }
 
-fan.dom.ElemPeer.prototype.checked$get = function(self) { return this.elem.checked }
+fan.dom.ElemPeer.prototype.checked$get = function(self) { return this.elem.checked; }
 fan.dom.ElemPeer.prototype.checked$set = function(self, val) { this.elem.checked = val; }
+
+fan.dom.ElemPeer.prototype.enabled$get = function(self) { return !this.elem.disabled; }
+fan.dom.ElemPeer.prototype.enabled$set = function(self, val) { this.elem.disabled = !val; }
 
 fan.dom.ElemPeer.prototype.get = function(self, name, def)
 {
