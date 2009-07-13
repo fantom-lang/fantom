@@ -40,6 +40,12 @@ class Assembler : CompilerSupport, FConst
       fpod.ftypes.add(assembleType(t))
     }
 
+    fpod.fsymbols = FSymbol[,]
+    compiler.pod.symbolDefs.each |SymbolDef s|
+    {
+      fpod.fsymbols.add(assembleSymbol(s))
+    }
+
     return fpod
   }
 
@@ -137,6 +143,15 @@ class Assembler : CompilerSupport, FConst
     m.fattrs = attrs.attrs
 
     return m;
+  }
+
+  private FSymbol assembleSymbol(SymbolDef def)
+  {
+    f := FSymbol(fpod)
+    f.ofIndex   = typeRef(def.of)
+    f.nameIndex = name(def.name)
+    f.val       = def.val.serialize
+    return f
   }
 
 //////////////////////////////////////////////////////////////////////////

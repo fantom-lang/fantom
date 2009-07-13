@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * FMethod is the read/write fcode representation of sys::Method.
+ * FMethod is the fcode representation of sys::Method.
  */
 public class FMethod
   extends FSlot

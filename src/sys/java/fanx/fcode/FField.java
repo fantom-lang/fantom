@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * FField is the read/write fcode representation of sys::Field.
+ * FField is the fcode representation of sys::Field.
  */
 public class FField
   extends FSlot

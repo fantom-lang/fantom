@@ -147,7 +147,7 @@ class FType : CType
     out.writeI4(flags & FConst.FlagsMask)
   }
 
-  FType readMeta(InStream in)
+  This readMeta(InStream in)
   {
     self    = in.readU2
     fbase   = in.readU2

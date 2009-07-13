@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * FSlot is the read/write fcode representation of sys::Slot.
+ * FSlot is the fcode representation of sys::Slot.
  */
 public class FSlot
   implements FConst

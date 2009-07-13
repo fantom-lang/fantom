@@ -127,6 +127,7 @@ public final class FPod
       else if (name.equals("strs.def")) literals.strs.read(in);
       else if (name.equals("durations.def")) literals.durations.read(in);
       else if (name.equals("uris.def")) literals.uris.read(in);
+      else if (name.equals("symbols.def")) readSymbols(in);
       else System.out.println("WARNING: unexpected file in pod: " + name);
     }
   }
@@ -179,6 +180,22 @@ public final class FPod
     throw new IOException("Unexpected fcode file: " + name);
   }
 
+  public void readSymbols() throws IOException
+  {
+    if (symbols != null) return;  // aready read
+    FStore.Input in = store.read("symbols.def");
+    if (in == null) return; // none defined
+    readSymbols(in);
+  }
+
+  private void readSymbols(FStore.Input in) throws IOException
+  {
+    symbols = new FSymbol[in.u2()];
+    for (int i=0; i<symbols.length; ++i)
+      symbols[i] = new FSymbol(this).read(in);
+    in.close();
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -190,6 +207,7 @@ public final class FPod
   public FStore store;       // store we using to read
   public int version;        // fcode format version
   public FType[] types;      // pod's declared types
+  public FSymbol[] symbols;  // pod's declared symbols
   public FTable names;       // identifier names: foo
   public FTable typeRefs;    // types refs:   [pod,type,variances*]
   public FTable fieldRefs;   // fields refs:  [parent,name,type]

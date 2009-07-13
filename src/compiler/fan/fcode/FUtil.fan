@@ -37,6 +37,33 @@ class FUtil : FConst
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Attrs
+//////////////////////////////////////////////////////////////////////////
+
+  static Void writeAttrs(OutStream out, FAttr[]? fattrs)
+  {
+    if (fattrs == null)
+    {
+      out.writeI2(0)
+    }
+    else
+    {
+      out.writeI2(fattrs.size)
+      fattrs.each |FAttr a| { a.write(out) }
+    }
+  }
+
+  static FAttr[] readAttrs(InStream in)
+  {
+    size := in.readU2
+    if (size == 0) return FAttr#.emptyList
+    fattrs := FAttr[,]
+    fattrs.capacity = size
+    size.times |,| { fattrs.add(FAttr.make.read(in)) }
+    return fattrs
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Doc
 //////////////////////////////////////////////////////////////////////////
 

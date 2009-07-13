@@ -20,6 +20,20 @@ class SymbolsTest : CompilerTest
     "Int foo := 3
      bar := 10sec"
     compile("class Foo {}")
+
+    x := pod.symbol("foo")
+    verifyEq(x.name, "foo")
+    verifyEq(x.qname, "${pod.name}::foo")
+    verifyEq(x.pod, pod)
+    verifyEq(x.of, Int#)
+    verifyEq(x.val, "3") // TODO
+
+    x = pod.symbol("bar")
+    verifyEq(x.name, "bar")
+    verifyEq(x.qname, "${pod.name}::bar")
+    verifyEq(x.pod, pod)
+    verifyEq(x.of, Obj?#)    // TODO
+    verifyEq(x.val, "10sec") // TODO
   }
 
 }

@@ -67,10 +67,10 @@ class FMethod : FSlot, CMethod
     out.write(localCount)
     vars.each |FMethodVar var| { var.write(out) }
     FUtil.writeBuf(out, code)
-    super.writeAttrs(out)
+    FUtil.writeAttrs(out, fattrs)
   }
 
-  FMethod read(InStream in)
+  This read(InStream in)
   {
     super.readCommon(in)
     ret = in.readU2
@@ -81,7 +81,7 @@ class FMethod : FSlot, CMethod
     vars = FMethodVar[,];
     (paramCount+localCount).times |,| { vars.add(FMethodVar.make(this).read(in)) }
     code = FUtil.readBuf(in)
-    super.readAttrs(in)
+    fattrs = FUtil.readAttrs(in)
     return this
   }
 

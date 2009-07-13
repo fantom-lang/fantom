@@ -254,16 +254,47 @@ public class Pod
 
   public List symbols()
   {
-    return new List(Sys.SymbolType, symbols.values());
+    return new List(Sys.SymbolType, loadSymbols().values());
   }
 
   public Symbol symbol(String name) { return symbol(name, true); }
   public Symbol symbol(String name, boolean checked)
   {
-    Symbol s = (Symbol)symbols.get(name);
+    Symbol s = (Symbol)loadSymbols().get(name);
     if (s != null) return s;
     if (checked) throw UnknownSymbolErr.make(this.name + "::" + name).val;
     return null;
+  }
+
+  private HashMap loadSymbols()
+  {
+    synchronized (symbolsLock)
+    {
+      if (symbols != null) return symbols;
+      symbols = new HashMap();
+
+      // read symbols from fcode format
+      try
+      {
+        fpod.readSymbols();
+        if (fpod.symbols == null) return symbols;
+      }
+      catch (java.io.IOException e)
+      {
+        throw IOErr.make("Error loading symbols.def", e).val;
+      }
+
+      // map to sys::Symbol instances
+      for (int i=0; i<fpod.symbols.length; ++i)
+      {
+        Symbol symbol = new Symbol(this, fpod.symbols[i]);
+        symbols.put(symbol.name, symbol);
+      }
+
+      // clear list from fpod, no longer needed
+      fpod.symbols = null;
+      return symbols;
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -461,7 +492,8 @@ public class Pod
   Map files;
   HashMap locales = new HashMap(4);
   Log log;
-  HashMap symbols = new HashMap();
+  Object symbolsLock = new Object();
+  HashMap symbols;
 
 
 }
