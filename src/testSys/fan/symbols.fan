@@ -29,6 +29,16 @@ Num? numB := null
 listA := ["a", "b", "c"]
 listB := [2, 3f, 4d]
 listC := [["a"], ["b"], ["c"]]
+listD := [SerA { i = 0 }, SerA { i = 1 }, SerA { i = 2 }]
+
+mapA := [0:"zero", 1:"one"]
+mapB := [2: SerA { i = 2 }, 3: SerA { i = 3 }]
+
+serialA := Version("2.3")
+serialB := [Version("1"), Version("2")]
+serialC := SerA { i = 12345; s = "symbols!" }
+
+
 
 
 
