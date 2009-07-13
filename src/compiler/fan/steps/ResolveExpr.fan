@@ -367,7 +367,7 @@ class ResolveExpr : CompilerStep
     resolved := resolveVar(var)
 
     // handle case where we have a local variable hiding a
-    // field since the @x is assumed to be @this.x
+    // field since the *x is assumed to be this.*x
     if (resolved.id === ExprId.localVar)
     {
       field := curType.field(var.name)
@@ -379,7 +379,7 @@ class ResolveExpr : CompilerStep
     if (resolved.id !== ExprId.field)
     {
       if (resolved.ctype !== ns.error)
-        err("Invalid use of field storage operator '@'", var.location)
+        err("Invalid use of field storage operator '*'", var.location)
       return resolved
     }
 

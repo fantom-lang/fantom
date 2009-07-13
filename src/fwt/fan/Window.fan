@@ -110,7 +110,7 @@ class Window : ContentPane
   **
   ** Child menu bar widget if top level frame.
   **
-  Menu? menuBar { set { remove(@menuBar); Widget.super.add(val); @menuBar= val } }
+  Menu? menuBar { set { remove(*menuBar); Widget.super.add(val); *menuBar= val } }
 
   **
   ** Icon if window is a frame.

@@ -1075,7 +1075,7 @@ class FieldExpr : NameExpr
   }
 
   CField? field       // resolved field
-  Bool useAccessor    // false if access using '@' storage operator
+  Bool useAccessor    // false if access using '*' storage operator
 }
 
 **************************************************************************

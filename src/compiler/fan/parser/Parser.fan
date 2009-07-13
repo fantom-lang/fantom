@@ -1535,7 +1535,7 @@ public class Parser : CompilerSupport
 
     switch (curt)
     {
-      case Token.at:              return idExpr(null, false, false)
+      case Token.star:            return idExpr(null, false, false)
       case Token.identifier:      return idExpr(null, false, false)
       case Token.intLiteral:      return LiteralExpr(loc, ExprId.intLiteral, ns.intType, consume.val)
       case Token.floatLiteral:    return LiteralExpr(loc, ExprId.floatLiteral, ns.floatType, consume.val)
@@ -1688,13 +1688,13 @@ public class Parser : CompilerSupport
   ** Identifier expression:
   **   <idExpr>  :=  <local> | <field> | <call>
   **   <local>   :=  <id>
-  **   <field>   :=  ["@"] <id>
+  **   <field>   :=  ["*"] <id>
   **
   private Expr idExpr(Expr? target, Bool dynamicCall, Bool safeCall)
   {
     loc := cur
 
-    if (curt == Token.at)
+    if (curt == Token.star)
     {
       consume
       return UnknownVarExpr.makeStorage(loc, target, consumeId)

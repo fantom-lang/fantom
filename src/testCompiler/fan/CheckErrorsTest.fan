@@ -536,18 +536,18 @@ class CheckErrorsTest : CompilerTest
       {
         Str a
         virtual Int b
-        abstract Int c { get { return @c } }
-        abstract Int d { set { @d = val } }
-        abstract Int e { get { return @e } set { @e = val } }
+        abstract Int c { get { return *c } }
+        abstract Int d { set { *d = val } }
+        abstract Int e { get { return *e } set { *e = val } }
         const Int f := 3
         abstract Int g := 5
       }
 
       abstract class Foo
       {
-        abstract Int c { get { return @c } }
-        abstract Int d { set { @d = val } }
-        abstract Int e { get { return @e } set { @e = val } }
+        abstract Int c { get { return *c } }
+        abstract Int d { set { *d = val } }
+        abstract Int e { get { return *e } set { *e = val } }
         abstract Int f := 3
       }
       ",
@@ -714,14 +714,14 @@ class CheckErrorsTest : CompilerTest
     verifyErrors(
      "class Foo : Root
       {
-        Int m00() { return @r00 }
-        Int m01() { return this.@r00 }
+        Int m00() { return *r00 }
+        Int m01() { return this.*r00 }
 
         Int f00 { get { return f00 } }
         Int f01 { set { f01 = val } }
         Int f02 { get { return f02 } set { f02 = val } }
 
-        override Int r01 { set { @r01 = val } }
+        override Int r01 { set { *r01 = val } }
       }
 
       class Root
@@ -734,10 +734,10 @@ class CheckErrorsTest : CompilerTest
          3, 22, "Field storage for '$podName::Root.r00' not accessible",
          4, 27, "Field storage for '$podName::Root.r00' not accessible",
 
-         6, 26, "Cannot use field accessor inside accessor itself - use '@' operator",
-         7, 19, "Cannot use field accessor inside accessor itself - use '@' operator",
-         8, 26, "Cannot use field accessor inside accessor itself - use '@' operator",
-         8, 38, "Cannot use field accessor inside accessor itself - use '@' operator",
+         6, 26, "Cannot use field accessor inside accessor itself - use '*' operator",
+         7, 19, "Cannot use field accessor inside accessor itself - use '*' operator",
+         8, 26, "Cannot use field accessor inside accessor itself - use '*' operator",
+         8, 38, "Cannot use field accessor inside accessor itself - use '*' operator",
 
         10, 28, "Field storage of inherited field '$podName::Root.r01' not accessible (might try super)",
        ])

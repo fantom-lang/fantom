@@ -328,8 +328,8 @@ internal class NavNode
   {
     get
     {
-      if (@children == null) @children = map(resource.children)
-      return @children
+      if (*children == null) *children = map(resource.children)
+      return *children
     }
   }
   Void refresh()

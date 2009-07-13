@@ -19,11 +19,11 @@ class FieldTest : Test
   Void testInsideInstanceAccessors()
   {
     // inside class - raw field get
-    verifyEq(@count, 0); verifyEq(getCounter, 0); verifyEq(setCounter, 0);
+    verifyEq(*count, 0); verifyEq(getCounter, 0); verifyEq(setCounter, 0);
 
     // inside class - raw field set
-    @count = 3
-    verifyEq(@count, 3); verifyEq(getCounter, 0); verifyEq(setCounter, 0);
+    *count = 3
+    verifyEq(*count, 3); verifyEq(getCounter, 0); verifyEq(setCounter, 0);
 
     // inside class - getter
     verifyEq(count, 3); verifyEq(getCounter, 1); verifyEq(setCounter, 0);
@@ -31,15 +31,15 @@ class FieldTest : Test
 
     // inside class - setter
     count = 5
-    verifyEq(@count, 5); verifyEq(getCounter, 2); verifyEq(setCounter, 1);
+    verifyEq(*count, 5); verifyEq(getCounter, 2); verifyEq(setCounter, 1);
     count = 7
-    verifyEq(@count, 7); verifyEq(getCounter, 2); verifyEq(setCounter, 2);
+    verifyEq(*count, 7); verifyEq(getCounter, 2); verifyEq(setCounter, 2);
   }
 
   Int count := 0
   {
-    get { getCounter++; return @count }
-    set { setCounter++; @count = val }
+    get { getCounter++; return *count }
+    set { setCounter++; *count = val }
   }
   Int getCounter := 0
   Int setCounter := 0
@@ -58,13 +58,13 @@ class FieldTest : Test
 
     // outside class - setter
     OutsideAccessor.setCount(this, 5)
-      verifyEq(@count, 5); verifyEq(getCounter, 2); verifyEq(setCounter, 1);
+      verifyEq(*count, 5); verifyEq(getCounter, 2); verifyEq(setCounter, 1);
     OutsideAccessor.setCount(this, 7)
-      verifyEq(@count, 7); verifyEq(getCounter, 2); verifyEq(setCounter, 2);
+      verifyEq(*count, 7); verifyEq(getCounter, 2); verifyEq(setCounter, 2);
 
     // outside class - setter with leave for return
     verifyEq(OutsideAccessor.setCountLeave(this, 9), 9)
-      verifyEq(@count, 9); verifyEq(getCounter, 2); verifyEq(setCounter, 3);
+      verifyEq(*count, 9); verifyEq(getCounter, 2); verifyEq(setCounter, 3);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -74,15 +74,15 @@ class FieldTest : Test
   Void testValField()
   {
     // verify auto-generated val setter works correctly
-    verifyEq(@val, "val")
-    verifyEq(val, "val")
+    verifyEq(*val, "val")
+    verifyEq(val, "val");
 
-    @val = "changed"
-    verifyEq(@val, "changed")
+    *val = "changed"
+    verifyEq(*val, "changed")
     verifyEq(val, "changed")
 
     val = "again"
-    verifyEq(@val, "again")
+    verifyEq(*val, "again")
     verifyEq(val, "again")
   }
 
@@ -103,9 +103,9 @@ class FieldTest : Test
   {
     get
     {
-      closureInsideAccessorCount = 0
-      @closureInsideAccessor.each |Int ch| { closureInsideAccessorCount++ }
-      return @closureInsideAccessor
+      closureInsideAccessorCount = 0;
+      *closureInsideAccessor.each |Int ch| { closureInsideAccessorCount++ }
+      return *closureInsideAccessor
     }
   }
   Int closureInsideAccessorCount
@@ -179,13 +179,13 @@ class FieldTest : Test
 
     // reflect - setter
     f[this] = 5
-      verifyEq(@count, 5); verifyEq(getCounter, 4); verifyEq(setCounter, 1);
+      verifyEq(*count, 5); verifyEq(getCounter, 4); verifyEq(setCounter, 1);
     f.set(this, 7)
-      verifyEq(@count, 7); verifyEq(getCounter, 4); verifyEq(setCounter, 2);
+      verifyEq(*count, 7); verifyEq(getCounter, 4); verifyEq(setCounter, 2);
     f->setter->call(this, 9)
-      verifyEq(@count, 9); verifyEq(getCounter, 4); verifyEq(setCounter, 3);
+      verifyEq(*count, 9); verifyEq(getCounter, 4); verifyEq(setCounter, 3);
     f->setter->callList([this, -1])
-      verifyEq(@count, -1); verifyEq(getCounter, 4); verifyEq(setCounter, 4);
+      verifyEq(*count, -1); verifyEq(getCounter, 4); verifyEq(setCounter, 4);
   }
 
 //////////////////////////////////////////////////////////////////////////
