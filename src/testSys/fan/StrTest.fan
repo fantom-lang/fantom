@@ -429,6 +429,8 @@ class StrTest : Test
     verifyIndex("abcd", "a", -1, null)
     verifyIndex("abcd", "a", -3, null)
     verifyIndex("abcd", "a", -4, 0)
+    verifyIndex("xx@`", "@`", 0, 2)
+    verifyIndex("````", "@`", 0, null)
 
     verifyIndex("billy bob", "b", null, 0)
     verifyIndex("billy bob", "b", 1, 6)
@@ -482,6 +484,7 @@ class StrTest : Test
     verifyIndexr("abcd", "a", -1, 0)
     verifyIndexr("abcd", "a", -3, 0)
     verifyIndexr("abcd", "a", -4, 0)
+    verifyIndexr("xx@`", "@", null, 2)
 
     verifyIndexr("bee hee", "ee", -1, 5)
     verifyIndexr("bee hee", "ee", -2, 5)

@@ -679,5 +679,6 @@
 - Fix Int.fromStr to work for signed 64-bit integers with radix 16
 - Split webappClient into sys and dom
 - Change all uses of 'javascript' => 'js'
+- Fix Str indexIgnoreCase/indexrIgnoreCase bug
 
 // TODO: change depends to use u2
