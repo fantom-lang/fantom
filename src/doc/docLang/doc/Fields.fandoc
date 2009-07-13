@@ -89,14 +89,14 @@ the other is automatically generated.
 Inside the setter, the special local variable 'val' contains the new value
 of the field.
 
-The '@' storage operator is used to access the raw storage of the
-field.  The '@' operator is used when you wish to access the storage
-location of the field without going through the accessor method.  You
-can use the '@' operator in any of your class's methods, but only the
-declaring class is permitted direct access using the '@' operator (it
-is like storage is always 'private' scoped).  Inside the accessor itself
-you are required to use the '@' operator (otherwise you would likely
-end up with infinite recursion).
+The '*' storage operator is used to access the raw storage of the
+field (think about like C dereference operator).  The '*' operator is used
+when you wish to access the storage location of the field without going
+through the accessor method.  You can use the '*' operator in any of your
+class's methods, but only the declaring class is permitted direct access
+using the '*' operator (it is like storage is always 'private' scoped).
+Inside the accessor itself you are required to use the '*' operator (otherwise
+you would likely end up with infinite recursion).
 
 Note that ':=' field initialization always sets storage directly without
 calling the setter method (see [below]`#virtual` for an exception to
@@ -108,7 +108,7 @@ In most cases, the compiler automatically declares storage memory for
 your field.  However if the compiler detects that a field's storage
 is never accessed then no memory is allocated.  We call these *calculated
 fields*.  Calculated fields must declare both an explicit getter and
-setter which does not use the '@' operator to access the field.  Note
+setter which does not use the '*' operator to access the field.  Note
 that assigning an initial value using ':=' implicitly uses the storage
 operator and will allocate storage.
 
@@ -302,7 +302,7 @@ A field may be declared abstract:
 An abstract field is basically just an abstract getter and setter that
 a subclass must override.  Abstract fields have no storage and cannot
 have an initial value.  Overrides of abstract fields are given storage
-accessed via the '@' operator (this is different than overriding a
+accessed via the '*' operator (this is different than overriding a
 normal virtual field).
 
 Definite Assignment [#definiteAssignment]

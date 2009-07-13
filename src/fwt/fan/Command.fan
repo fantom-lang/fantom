@@ -70,7 +70,7 @@ class Command
     set
     {
       if (mode != CommandMode.toggle) return
-      @selected = val
+      this.*selected = val
       widgets.each |Widget w|
       {
         try { w->selected = val } catch {}
@@ -186,8 +186,8 @@ class Command
   {
     set
     {
-      if (@enabled == val) return
-      @enabled = val
+      if (this.*enabled == val) return
+      this.*enabled = val
       registry.each |Widget w| { w.enabled = val }
     }
   }

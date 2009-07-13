@@ -188,10 +188,10 @@ class Frame : Window
   {
     set
     {
-      @marks = val.ro
+      *marks = val.ro
       curMark = null
-      sideBarPane.onMarks(@marks)
-      tabPane.tabs.each |ViewTab tab| { tab.onMarks(@marks) }
+      sideBarPane.onMarks(*marks)
+      tabPane.tabs.each |ViewTab tab| { tab.onMarks(*marks) }
     }
   }
 

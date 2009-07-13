@@ -64,7 +64,7 @@ class XDoc : XNode
     {
       if (val.parent != null) throw ArgErr("Node already parented: $val")
       val.parent = this
-      @root = val
+      this.*root = val
     }
   }
 

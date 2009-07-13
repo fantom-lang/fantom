@@ -81,8 +81,8 @@ class MenuItem : Widget
   {
     set
     {
-      @command?.unregister(this)
-      @command = val
+      this.*command?.unregister(this)
+      this.*command = val
       if (val != null)
       {
         enabled     = val.enabled

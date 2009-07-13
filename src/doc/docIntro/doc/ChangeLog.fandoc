@@ -673,10 +673,11 @@
 - #629: NoClassDefFoundError when accessing public static final field with JavaFFI
 
 *Build 1.0.45 (working)*
+- Change field storage operator from "@" => "*"
 - fwt::Canvas support in IE using JavaFX
 - DateTime,TimeZone support for JavaScript
 - Fix Int.fromStr to work for signed 64-bit integers with radix 16
 - Split webappClient into sys and dom
-- Change all uses of 'javascript' -> 'js'
+- Change all uses of 'javascript' => 'js'
 
 // TODO: change depends to use u2

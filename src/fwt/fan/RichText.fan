@@ -108,10 +108,10 @@ class RichText : TextWidget
   {
     set
     {
-      old := @model
+      old := this.*model
       if (old != null) old.onModify.remove(onModelModifyFunc)
       if (val != null) val.onModify.add(onModelModifyFunc)
-      @model = val
+      this.*model = val
     }
   }
 

@@ -409,5 +409,5 @@ Fan has a couple other operators which will be discussed later:
   - [Dynamic invoke]`Methods#dynamicInvoke` operator '->' is used to call
     a method without compile time type checking.
 
-  - [Field storage]`Fields#accessors` operator '@' is used to access a field's
+  - [Field storage]`Fields#accessors` operator '*' is used to access a field's
     raw storage without going through its getter/setter methods.

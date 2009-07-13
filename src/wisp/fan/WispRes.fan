@@ -45,8 +45,8 @@ class WispRes : WebRes
     set
     {
       checkUncommitted
-      if (statusMsg[val] == null) throw Err("Unknown status code: $val")
-      @statusCode = val
+      if (statusMsg[val] == null) throw Err("Unknown status code: $val");
+      *statusCode = val
     }
   }
 
@@ -57,7 +57,7 @@ class WispRes : WebRes
   **
   override Str:Str headers := Str:Str[:]
   {
-    get { checkUncommitted; return @headers }
+    get { checkUncommitted; return *headers }
   }
 
   **
@@ -67,7 +67,7 @@ class WispRes : WebRes
   **
   override Cookie[] cookies := Cookie[,]
   {
-    get { checkUncommitted; return @cookies }
+    get { checkUncommitted; return *cookies }
   }
 
   **
@@ -181,14 +181,14 @@ class WispRes : WebRes
     sout := socket.out
     if (content)
     {
-      cout := WebUtil.makeContentOutStream(@headers, sout)
+      cout := WebUtil.makeContentOutStream(*headers, sout)
       if (cout != null) webOut = WebOutStream(cout)
     }
 
     // write response line and headers
-    sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(statusMsg[statusCode]).print("\r\n")
-    @headers.each |Str v, Str k| { sout.print(k).print(": ").print(v).print("\r\n") }
-    @cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
+    sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(statusMsg[statusCode]).print("\r\n");
+    *headers.each |Str v, Str k| { sout.print(k).print(": ").print(v).print("\r\n") };
+    *cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
     sout.print("\r\n").flush
   }
 
