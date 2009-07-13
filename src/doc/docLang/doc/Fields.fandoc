@@ -76,8 +76,8 @@ The syntax for declaring a getter or setter is similar to C# properties:
   {
     Int id := 0
     {
-      get { echo("get id"); return @id }
-      set { echo("set id"); @id = val }
+      get { echo("get id"); return *id }
+      set { echo("set id"); *id = val }
     }
   }
 
@@ -199,7 +199,7 @@ You can narrow the scope of the setter as follows:
   class Thing
   {
     Int id { protected set }
-    Str name { internal set { @name = val } }
+    Str name { internal set { *name = val } }
   }
 
 In the example above the fields 'id' and 'name' are publicly
