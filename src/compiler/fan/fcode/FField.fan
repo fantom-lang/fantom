@@ -30,14 +30,14 @@ class FField : FSlot, CField
   {
     super.writeCommon(out)
     out.writeI2(typeRef)
-    super.writeAttrs(out)
+    FUtil.writeAttrs(out, fattrs)
   }
 
-  FField read(InStream in)
+  This read(InStream in)
   {
     super.readCommon(in)
     typeRef = in.readU2
-    super.readAttrs(in)
+    fattrs = FUtil.readAttrs(in)
     return this
   }
 

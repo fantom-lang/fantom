@@ -44,13 +44,13 @@ public final class Symbol
 // Java Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public Symbol(Pod pod, String name, Type of, Object defVal)
+  public Symbol(Pod pod, FSymbol fsymbol)
   {
-    this.pod = pod;
-    this.qname = pod.name() + "::" + name;
-    this.name = name;
-    this.of = of;
-    this.defVal = defVal;
+    this.pod    = pod;
+    this.name   = pod.fpod.name(fsymbol.name);
+    this.qname  = pod.name() + "::" + name;
+    this.of     = pod.findType(fsymbol.of);
+    this.defVal = fsymbol.val; // TODO
   }
 
 //////////////////////////////////////////////////////////////////////////

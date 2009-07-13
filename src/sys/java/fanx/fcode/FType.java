@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * FType is the read/write fcode representation of sys::Type.
+ * FType is the fcode representation of sys::Type.
  */
 public class FType
   implements FConst

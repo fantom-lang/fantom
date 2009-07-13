@@ -226,6 +226,15 @@ final class FPod : CPod, FConst
 
     // write type full fcode
     ftypes.each |FType t| { t.write }
+
+    // write symbols
+    if (!fsymbols.isEmpty)
+    {
+      out = this.out(`/symbols.def`)
+      out.writeI2(fsymbols.size)
+      fsymbols.each |FSymbol s| { s.write(out) }
+      out.close
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -289,6 +298,7 @@ final class FPod : CPod, FConst
   FAttr[]? fattrs           // pod attributes
   Zip? zip                  // zipped storage
   FType[]? ftypes           // pod's declared types
+  FSymbol[]? fsymbols       // pod's declared symbols
   FTable names              // identifier names: foo
   FTable typeRefs           // types refs:   [pod,type,sig]
   FTable fieldRefs          // fields refs:  [parent,name,type]

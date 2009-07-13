@@ -47,30 +47,6 @@ abstract class FSlot : CSlot, FConst
     flags     = in.readU4
   }
 
-  protected Void writeAttrs(OutStream out)
-  {
-    if (fattrs == null)
-    {
-      out.writeI2(0)
-    }
-    else
-    {
-      out.writeI2(fattrs.size)
-      fattrs.each |FAttr a| { a.write(out) }
-    }
-  }
-
-  protected Void readAttrs(InStream in)
-  {
-    fattrs = FAttr[,]
-    size := in.readU2
-    if (size != 0)
-    {
-      fattrs.capacity = size
-      size.times |,| { fattrs.add(FAttr.make.read(in)) }
-    }
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
