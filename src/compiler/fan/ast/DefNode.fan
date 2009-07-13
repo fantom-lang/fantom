@@ -61,7 +61,7 @@ abstract class DefNode : Node
 //////////////////////////////////////////////////////////////////////////
 
   Str[]? doc              // lines of fandoc comment or null
-  Int flags := 0          // type/slot flags
+  Int flags := 0          // type/slot/symbol flags
   [Str:FacetDef]? facets  // facet declarations (may be null)
 
 }

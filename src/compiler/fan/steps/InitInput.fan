@@ -68,10 +68,14 @@ class InitInput : CompilerStep
     switch (input.mode)
     {
       case CompilerInputMode.str:
-        Tokenize.make(compiler).runSource(input.srcStrLocation, input.srcStr)
+        Tokenize(compiler).runSource(input.srcStrLocation, input.srcStr)
+        if (input.symbolsStr != null)
+          Tokenize(compiler).runSource(Location("symbols.fan"), input.symbolsStr)
+
       case CompilerInputMode.file:
-        FindSourceFiles.make(compiler).run
-        Tokenize.make(compiler).run
+        FindSourceFiles(compiler).run
+        Tokenize(compiler).run
+
       default:
         throw err("Unknown input mode $input.mode", null)
     }

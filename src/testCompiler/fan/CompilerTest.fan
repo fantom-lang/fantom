@@ -23,16 +23,17 @@ abstract class CompilerTest : Test
   Void compile(Str src, LogLevel logLevel := LogLevel.error, Bool isScript := true, Depend[] depends := Depend[,])
   {
     input := CompilerInput.make
-    input.podName   = podName
-    input.version   = Version.defVal
+    input.podName     = podName
+    input.version     = Version.defVal
     input.description = ""
-    input.log.level = logLevel
-    input.isTest    = true
-    input.isScript  = isScript
-    input.depends   = depends
-    input.output    = CompilerOutputMode.transientPod
-    input.mode      = CompilerInputMode.str
-    input.srcStr    = src
+    input.log.level   = logLevel
+    input.isTest      = true
+    input.isScript    = isScript
+    input.depends     = depends
+    input.output      = CompilerOutputMode.transientPod
+    input.mode        = CompilerInputMode.str
+    input.srcStr      = src
+    input.symbolsStr  = symbolsStr
     input.srcStrLocation = Location.make("Script")
 
     compiler = Compiler.make(input)
@@ -54,6 +55,7 @@ abstract class CompilerTest : Test
       e.trace
       fail
     }
+    symbolsStr = null
     doVerifyErrors(errors)
   }
 
@@ -77,6 +79,7 @@ abstract class CompilerTest : Test
 
   Compiler? compiler      // compile()
   Pod? pod                // compiled pod
+  Str? symbolsStr         // "symbols.fan" to pass to compiler
   Int podNameSuffix := 0
   Bool dumpErrors := false
 

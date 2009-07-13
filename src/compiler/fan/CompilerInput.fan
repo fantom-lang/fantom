@@ -142,6 +142,11 @@ class CompilerInput
   Str? srcStr
 
   **
+  ** Fan source code for "symbols.fan" (str mode only)
+  **
+  Str? symbolsStr
+
+  **
   ** Location to use for SourceFile facet (str mode only)
   **
   Location? srcStrLocation

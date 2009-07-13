@@ -41,12 +41,48 @@ public class Parser : CompilerSupport
   **
   ** Top level parse a compilation unit:
   **
-  **   <compilationUnit>  :=  [<usings>] <typeDef>*
+  **   <compilationUnit> :=  [<usings>] <typeDef>*
   **
   Void parse()
   {
     usings
     while (curt !== Token.eof) typeDef
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Symbols
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Top level parse a symbols unit:
+  **
+  **    <symbolsUnit> := <using*> <symbolDef>*
+  **
+  Void parseSymbols()
+  {
+    usings
+    while (curt !== Token.eof) symbolDef
+  }
+
+  **
+  ** Symbol definition:
+  **
+  **   <symbolDef> := [<type>] <id> ":=" <expr> <eos>
+  **
+  Void symbolDef()
+  {
+    loc   := cur
+    of    := tryType
+    name  := consumeId
+    consume(Token.defAssign)
+    val   := expr
+    endOfStmt
+    symbol := SymbolDef(ns, loc, of, name, val)
+
+    if (compiler.pod.symbolDefs.containsKey(name))
+      err("Duplicate symbol name '$name'", loc)
+    else
+      compiler.pod.symbolDefs[name] = symbol
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2320,6 +2356,7 @@ public class Parser : CompilerSupport
     if (cur.newline) return true
     if (curt === Token.semicolon) { consume; return true }
     if (curt === Token.rbrace) return true
+    if (curt === Token.eof) return true
     if (errMsg == null) return false
     throw err(errMsg)
   }

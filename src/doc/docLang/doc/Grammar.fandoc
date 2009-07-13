@@ -30,6 +30,12 @@ Compilation Unit [#compilationUnit]
   <podSpec>        :=  [ffi] <id> ("." <id>)*
   <ffi>            :=  "[" <id> "]"
 
+Symbols Unit [#symbolsUnit]
+***************************
+
+  <symbolsUnit>    := <using*> <symbolDef>*
+  <symbolDef>      := [<type>] <id> ":=" <expr> <eos>
+
 Type Def [#typeDef]
 *******************
 
@@ -79,6 +85,12 @@ Slot Def [#slotDef]
   <ctorChain>      :=  <ctorChainThis> | <ctorChainSuper>
   <ctorChainThis>  :=  "this" "." <id> "(" <args> ")"
   <ctorChainSuper> :=  "super" ["." <id>] "(" <args> ")"
+
+Facets [#facets]
+****************
+
+  <facets>        := <facet>*
+  <facet>         := "@" <id> "=" <expr>
 
 Stmt [#stmt]
 ************

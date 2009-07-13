@@ -12,6 +12,8 @@
 ** and stored in the PodDef.units field:
 **   Compiler.srcFiles -> Compiler.pod.units
 **
+** During the standard pipeline this step is called by the InitInput step.
+**
 class Tokenize : CompilerStep
 {
 
@@ -38,14 +40,13 @@ class Tokenize : CompilerStep
   {
     log.debug("Tokenize")
 
-    units := CompilationUnit[,]
     compiler.srcFiles.each |File srcFile|
     {
       try
       {
         location := Location.makeFile(srcFile)
         src := srcFile.readAllStr
-        units.add(tokenize(location, src))
+        compiler.pod.units.add(tokenize(location, src))
       }
       catch (CompilerErr err)
       {
@@ -59,7 +60,6 @@ class Tokenize : CompilerStep
           throw err("Source file not found", Location.makeFile(srcFile))
       }
     }
-    compiler.pod.units = units
   }
 
   **
@@ -68,8 +68,7 @@ class Tokenize : CompilerStep
   Void runSource(Location location, Str src)
   {
     log.debug("Tokenize")
-    unit := tokenize(location, src)
-    compiler.pod.units = [unit]
+    compiler.pod.units.add(tokenize(location, src))
   }
 
   **
