@@ -11,7 +11,7 @@
 **
 class SymbolsTest : Test
 {
-  Void testImmutable()
+  Void testBasics()
   {
     verifyImmutable("boolT",    true)
     verifyImmutable("boolF",    false)
@@ -25,12 +25,33 @@ class SymbolsTest : Test
     verifyImmutable("uriA",     `http://fandev.org/`)
     verifyImmutable("numA",     45,   Num#)
     verifyImmutable("numB",     null, Num?#)
-    verifyImmutable("listA",    ["a", "b", "c"])
-    verifyImmutable("listB",    [2, 3f, 4d], Num[]#)
-    verifyImmutable("listC",    [["a"], ["b"], ["c"]])
+
+    verifyImmutable("listA",  ["a", "b", "c"])
+    verifyImmutable("listB",  [2, 3f, 4d], Num[]#)
+    verifyImmutable("listC",  [["a"], ["b"], ["c"]])
+    verifyMutable("listD",    [SerA { i = 0 }, SerA { i = 1 }, SerA { i = 2 }])
+
+    verifyImmutable("mapA", [0:"zero", 1:"one"])
+    verifyMutable("mapB",   [2: SerA { i = 2 }, 3: SerA { i = 3 }])
+
+    verifyImmutable("serialA", Version("2.3"))
+    verifyImmutable("serialB", [Version("1"), Version("2")])
+    verifyMutable("serialC",   SerA { i = 12345; s = "symbols!"})
   }
 
   Void verifyImmutable(Str name, Obj? val, Type of := val.type)
+  {
+    x := verifySymbol(name, val, of)
+    verifySame(x.defVal, x.defVal)
+  }
+
+  Void verifyMutable(Str name, Obj? val, Type of := val.type)
+  {
+    x := verifySymbol(name, val, of)
+    verifyNotSame(x.defVal, x.defVal)
+  }
+
+  Symbol verifySymbol(Str name, Obj? val, Type of := val.type)
   {
     x := type.pod.symbol(name)
     verifyEq(x, type.pod.symbol(name))
@@ -41,6 +62,8 @@ class SymbolsTest : Test
     verifyEq(x.of, of)
     verifyEq(x.val, val)
     verifyEq(x.defVal, val)
-    verifySame(x.defVal, x.defVal)
+    return x
   }
+
+
 }
