@@ -57,8 +57,9 @@ class Evaluator
 
     // if line has a local variable definition, then we
     // want to capture it as part of the continuing scope
+    ctrl := isCtrl(line)
     Var? local := null
-    if (line.contains(":="))
+    if (line.contains(":=") && !ctrl)
     {
       local = Var.make
       local.name = line[0..line.index(":=")-1].trim.split.last
@@ -69,7 +70,7 @@ class Evaluator
 
     // if line has a local variable assignment, then we
     // want to capture it as part of the continuing scope
-    else if (line.contains("="))
+    else if (line.contains("=") && !ctrl)
     {
       eq := line.index("=")
       name := line[0..eq-1].trim
@@ -156,6 +157,19 @@ class Evaluator
     {
       this.pod = null
     }
+  }
+
+  private Bool isCtrl(Str line)
+  {
+    try
+    {
+      return (line.startsWith("for")    && !line[4].isAlpha) ||
+             (line.startsWith("if")     && !line[3].isAlpha) ||
+             (line.startsWith("while")  && !line[5].isAlpha) ||
+             (line.startsWith("switch") && !line[6].isAlpha) ||
+             (line.startsWith("try")    && !line[4].isAlpha)
+    }
+    catch return false
   }
 
   private Type? localDefType()
