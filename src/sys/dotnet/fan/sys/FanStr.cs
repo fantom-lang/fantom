@@ -251,16 +251,16 @@ namespace Fan.Sys
       int i = (int)off;
       if (i < 0) i = vlen+i;
 
-      int first = s[0] | 0x20;
+      int first = s[0];
       for (; i<=vlen-slen; ++i)
       {
         // test first char
-        if (first != (self[i] | 0x20)) continue;
+        if (neic(first, self[i])) continue;
 
         // test remainder of chars
         r = i;
         for (int si=1, vi=i+1; si<slen; ++si, ++vi)
-          if ((s[si] | 0x20) != (self[vi] | 0x20))
+          if (neic(s[si], self[vi]))
             { r = -1; break; }
         if (r >= 0) break;
       }
@@ -279,22 +279,29 @@ namespace Fan.Sys
       if (i < 0) i = vlen+i;
       if (i+slen >= vlen) i = vlen-slen;
 
-      int first = s[0] | 0x20;
+      int first = s[0];
       for (; i>=0; --i)
       {
         // test first char
-        if (first != (self[i] | 0x20)) continue;
+        if (neic(first, self[i])) continue;
 
         // test remainder of chars
         r = i;
         for (int si=1, vi=i+1; si<slen; ++si, ++vi)
-          if ((s[si] | 0x20) != (self[vi] | 0x20))
+          if (neic(s[si], self[vi]))
             { r = -1; break; }
         if (r >= 0) break;
       }
 
       if (r < 0) return null;
       return Long.valueOf(r);
+    }
+
+    private static bool neic(int a, int b)
+    {
+      if (a == b) return false;
+      if ((a | 0x20) == (b | 0x20)) return FanInt.lower(a) != FanInt.lower(b);
+      return true;
     }
 
     private static bool nStartsWith(string s, string pre, int off)

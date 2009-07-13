@@ -229,16 +229,16 @@ public class FanStr
     int i = (int)off;
     if (i < 0) i = len+i;
 
-    int first = s.charAt(0) | 0x20;
+    int first = s.charAt(0);
     for (; i<=len-slen; ++i)
     {
       // test first char
-      if (first != (self.charAt(i) | 0x20)) continue;
+      if (neic(first, self.charAt(i))) continue;
 
       // test remainder of chars
       r = i;
       for (int si=1, vi=i+1; si<slen; ++si, ++vi)
-        if ((s.charAt(si) | 0x20) != (self.charAt(vi) | 0x20))
+        if (neic(s.charAt(si), self.charAt(vi)))
           { r = -1; break; }
       if (r >= 0) break;
     }
@@ -257,22 +257,29 @@ public class FanStr
     if (i < 0) i = len+i;
     if (i+slen >= len) i = len-slen;
 
-    int first = s.charAt(0) | 0x20;
+    int first = s.charAt(0);
     for (; i>=0; --i)
     {
       // test first char
-      if (first != (self.charAt(i) | 0x20)) continue;
+      if (neic(first, self.charAt(i))) continue;
 
       // test remainder of chars
       r = i;
       for (int si=1, vi=i+1; si<slen; ++si, ++vi)
-        if ((s.charAt(si) | 0x20) != (self.charAt(vi) | 0x20))
+        if (neic(s.charAt(si), self.charAt(vi)))
           { r = -1; break; }
       if (r >= 0) break;
     }
 
     if (r < 0) return null;
     return Long.valueOf(r);
+  }
+
+  private static boolean neic(int a, int b)
+  {
+    if (a == b) return false;
+    if ((a | 0x20) == (b | 0x20)) return FanInt.lower(a) != FanInt.lower(b);
+    return true;
   }
 
 //////////////////////////////////////////////////////////////////////////
