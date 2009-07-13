@@ -120,7 +120,7 @@ public final class Symbol
    * its Fan object value.  If the value is immutable then it
    * should be cached for future use.
    */
-  private static Object decodeVal(EncodedVal encodedVal)
+  public static Object decodeVal(EncodedVal encodedVal)
   {
     // decode into an object
     Object obj = ObjDecoder.decode(encodedVal.str);

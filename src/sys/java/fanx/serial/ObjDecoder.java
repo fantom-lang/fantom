@@ -451,9 +451,13 @@ public class ObjDecoder
     }
 
     if (infer) return null;
+
+    if (defaultMapType == null)
+      defaultMapType = new MapType(Sys.ObjType, Sys.ObjType.toNullable());
     return defaultMapType;
   }
-  private static final MapType defaultMapType = new MapType(Sys.ObjType, Sys.ObjType.toNullable());
+
+  private static MapType defaultMapType;
 
 //////////////////////////////////////////////////////////////////////////
 // Type

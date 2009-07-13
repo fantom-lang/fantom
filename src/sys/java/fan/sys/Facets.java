@@ -62,7 +62,7 @@ public final class Facets
       String key = (String)e.getKey();
       Object val = e.getValue();
       if (FanObj.isImmutable(val))
-        src.put(key, toValue(val));
+        src.put(key, val);
       else
         src.put(key, ObjEncoder.encode(val));
     }
@@ -89,39 +89,15 @@ public final class Facets
     if (val == null) return def;
 
     // if we've already decoded, go with it
-    if (!(val instanceof String)) return fromValue(val);
+    if (!(val instanceof Symbol.EncodedVal)) return val;
 
     // decode into an object
-    Object obj = ObjDecoder.decode((String)val);
+    Object obj = Symbol.decodeVal((Symbol.EncodedVal)val);
 
-    // if the object is immutable, then it
-    // safe to reuse for future gets
-    Object x = toImmutable(obj);
-    if (x == null) return obj;
-    src.put(name, toValue(x));
-    return x;
-  }
+    // if the object is immutable, then it safe to cache
+    if (FanObj.isImmutable(obj)) src.put(name, obj);
 
-  private static Object toImmutable(Object obj)
-  {
-    if (FanObj.isImmutable(obj)) return obj;
-
-    if (obj instanceof List)
-    {
-      List list = (List)obj;
-      if (list.of().isConst())
-        return list.toImmutable();
-    }
-
-    if (obj instanceof Map)
-    {
-      Map map = (Map)obj;
-      MapType mapType = (MapType)map.type();
-      if (mapType.k.isConst() && mapType.v.isConst())
-        return map.toImmutable();
-    }
-
-    return null;
+    return obj;
   }
 
   final synchronized Map map()
@@ -157,31 +133,6 @@ public final class Facets
   public String toString()
   {
     return map().toString();
-  }
-
-  private static Object toValue(Object obj)
-  {
-    // we can't store a String as a value in the map b/c that
-    // is how we store the values which are still encoded
-    if (obj instanceof String)
-      return new StrVal((String)obj);
-    else
-      return obj;
-  }
-
-  private static Object fromValue(Object obj)
-  {
-    if (obj instanceof StrVal)
-      return ((StrVal)obj).val;
-    else
-      return obj;
-  }
-
-  static class StrVal
-  {
-    StrVal(String val) { this.val = val; }
-    public String toString() { return val; }
-    String val;
   }
 
 //////////////////////////////////////////////////////////////////////////
