@@ -36,4 +36,18 @@ class SymbolsTest : CompilerTest
     verifyEq(x.val, 10sec)
   }
 
+  Void testConstFolding()
+  {
+    symbolsStr =
+    """a := -3
+       b := 30 * -7
+       c := "foo" + "bar"
+       """
+    compile("class Foo {}")
+
+    x := pod.symbol("a"); verifyEq(x.of, Int#); verifyEq(x.val, -3)
+    x = pod.symbol("b");  verifyEq(x.of, Int#); verifyEq(x.val, -210)
+    x = pod.symbol("c");  verifyEq(x.of, Str#); verifyEq(x.val, "foobar")
+  }
+
 }

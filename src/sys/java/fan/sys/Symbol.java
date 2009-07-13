@@ -126,17 +126,12 @@ public final class Symbol
     Object obj = ObjDecoder.decode(encodedVal.str);
 
     // if list or map try to make it immutable for caching
-    if (obj instanceof List)
+    try
     {
-      List list = (List)obj;
-      if (list.of().isConst()) return list.toImmutable();
+      if (obj instanceof List) obj = ((List)obj).toImmutable();
+      else if (obj instanceof Map) obj = ((Map)obj).toImmutable();
     }
-    if (obj instanceof Map)
-    {
-      Map map = (Map)obj;
-      MapType mapType = (MapType)map.type();
-      if (mapType.v.isConst()) return map.toImmutable();
-    }
+    catch (NotImmutableErr.Val e) {}
 
     // this object is not safe for caching
     return obj;

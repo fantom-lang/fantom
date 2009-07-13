@@ -11,27 +11,36 @@
 **
 class SymbolsTest : Test
 {
-  Void testBasics()
+  Void testImmutable()
   {
-    x := type.pod.symbol("boolT")
-    verifyEq(x.name, "boolT")
-    verifyEq(x.qname, "testSys::boolT")
+    verifyImmutable("boolT",    true)
+    verifyImmutable("boolF",    false)
+    verifyImmutable("intA",     0xabcd_0123_eeff_7788)
+    verifyImmutable("intB",     -4)
+    verifyImmutable("floatA",   -5f)
+    verifyImmutable("decimalA", 6.7d)
+    verifyImmutable("durA",     30ms)
+    verifyImmutable("strA",     "alpha")
+    verifyImmutable("strB",     "line1\nline2\nline3_\u02c3_")
+    verifyImmutable("uriA",     `http://fandev.org/`)
+    verifyImmutable("numA",     45,   Num#)
+    verifyImmutable("numB",     null, Num?#)
+    verifyImmutable("listA",    ["a", "b", "c"])
+    verifyImmutable("listB",    [2, 3f, 4d], Num[]#)
+    verifyImmutable("listC",    [["a"], ["b"], ["c"]])
+  }
+
+  Void verifyImmutable(Str name, Obj? val, Type of := val.type)
+  {
+    x := type.pod.symbol(name)
+    verifyEq(x, type.pod.symbol(name))
+    verifySame(x, type.pod.symbol(name))
+    verifyEq(x.name, name)
+    verifyEq(x.qname, "testSys::$name")
     verifySame(x.pod, type.pod)
-    verifyEq(x.of, Bool#)
-    verifyEq(x.val, true)
-    verifyEq(x.defVal, true)
-    verifyEq(x, type.pod.symbol("boolT"))
-    verifySame(x, type.pod.symbol("boolT"))
-
-    x = type.pod.symbol("boolF")
-    verifyEq(x.of, Bool#)
-    verifyEq(x.val, false)
-    verifyEq(x.defVal, false)
-
-    x = type.pod.symbol("intA")
-    verifyEq(x.of, Int#)
-    verifyEq(x.val, 0xabcd_0123_eeff_7788)
-    verifyEq(x.defVal, 0xabcd_0123_eeff_7788)
+    verifyEq(x.of, of)
+    verifyEq(x.val, val)
+    verifyEq(x.defVal, val)
     verifySame(x.defVal, x.defVal)
   }
 }
