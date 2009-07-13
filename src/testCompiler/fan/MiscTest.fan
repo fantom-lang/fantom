@@ -539,13 +539,13 @@ class MiscTest : CompilerTest
   {
     // we really test facets in testSys::FacetsTest, we just verify errors here
     verifyErrors(
-      "@x=null
+      "@x=Sys.homeDir
        class Foo
        {
        }
        ",
        [
-         1, 4, "Facet value is not serializable: 'x' ('nullLiteral' not serializable)",
+         1, 8, "Facet value is not serializable: 'x' ('call' not serializable)",
        ])
   }
 

@@ -88,6 +88,8 @@ public class FanObj
   {
     if (self instanceof FanObj)
       return ((FanObj)self).isImmutable();
+    else if (self == null)
+      return true;
     else
       return FanUtil.isJavaImmutable(self.getClass());
   }

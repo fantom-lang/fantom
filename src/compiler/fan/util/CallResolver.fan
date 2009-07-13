@@ -424,9 +424,14 @@ class CallResolver : CompilerSupport
   **
   private Void constantFolding()
   {
+    // only do const folding on method calls (which inculdes shortcut ops)
     call := result as CallExpr
-    if (call != null)
-      result = ConstantFolder(compiler).fold(call)
+    if (call == null) return
+
+    // skip constant folding for testSys unless this is symbols
+    if (curType != null && compiler.pod.name == "testSys") return
+
+    result = ConstantFolder(compiler).fold(call)
   }
 
 //////////////////////////////////////////////////////////////////////////

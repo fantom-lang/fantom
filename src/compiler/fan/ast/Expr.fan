@@ -334,6 +334,7 @@ class LiteralExpr : Expr
   {
     switch (id)
     {
+      case ExprId.nullLiteral:     return "null"
       case ExprId.falseLiteral:    return "false"
       case ExprId.trueLiteral:     return "true"
       case ExprId.intLiteral:      return val.toStr

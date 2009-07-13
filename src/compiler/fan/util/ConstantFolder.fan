@@ -74,9 +74,6 @@ class ConstantFolder : CompilerSupport
       return call
     }
 
-    // always skip constant folding on testSys
-    if (compiler.pod.name == "testSys") return call
-
     // try to map result to literal
     return constToExpr(call, result)
   }
