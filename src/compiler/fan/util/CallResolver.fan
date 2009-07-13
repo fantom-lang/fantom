@@ -21,7 +21,7 @@ class CallResolver : CompilerSupport
   **
   ** Construct with NameExpr (base class of CallExpr and UnknownVarExpr)
   **
-  new make(Compiler compiler, TypeDef curType, MethodDef? curMethod, NameExpr expr)
+  new make(Compiler compiler, TypeDef? curType, MethodDef? curMethod, NameExpr expr)
     : super(compiler)
   {
     this.curType   = curType
@@ -499,7 +499,7 @@ class CallResolver : CompilerSupport
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  TypeDef curType      // current type of scope
+  TypeDef? curType     // current type of scope
   MethodDef? curMethod // current method of scope
   NameExpr expr        // original expression being resolved
   Location location    // location of original expression

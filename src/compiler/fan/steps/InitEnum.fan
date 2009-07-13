@@ -31,7 +31,7 @@ class InitEnum : CompilerStep
   override Void run()
   {
     log.debug("InitEnum")
-    walk(types, VisitDepth.typeDef)
+    walk(compiler, VisitDepth.typeDef)
     bombIfErr
   }
 

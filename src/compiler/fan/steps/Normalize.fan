@@ -36,7 +36,7 @@ class Normalize : CompilerStep
   override Void run()
   {
     log.debug("Normalize")
-    walk(types, VisitDepth.typeDef)
+    walk(compiler, VisitDepth.typeDef)
     bombIfErr
   }
 

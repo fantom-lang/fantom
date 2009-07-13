@@ -47,7 +47,7 @@ class CompileFan : Task
     catch (CompilerErr err)
      {
       // all errors should already be logged by Compiler
-      throw FatalBuildErr.make
+      throw FatalBuildErr()
     }
     catch (Err err)
     {

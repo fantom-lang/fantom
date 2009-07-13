@@ -26,14 +26,14 @@ class SymbolsTest : CompilerTest
     verifyEq(x.qname, "${pod.name}::foo")
     verifyEq(x.pod, pod)
     verifyEq(x.of, Int#)
-    verifyEq(x.val, "3") // TODO
+    verifyEq(x.val, 3)
 
     x = pod.symbol("bar")
     verifyEq(x.name, "bar")
     verifyEq(x.qname, "${pod.name}::bar")
     verifyEq(x.pod, pod)
-    verifyEq(x.of, Obj?#)    // TODO
-    verifyEq(x.val, "10sec") // TODO
+    verifyEq(x.of, Duration#)
+    verifyEq(x.val, 10sec)
   }
 
 }

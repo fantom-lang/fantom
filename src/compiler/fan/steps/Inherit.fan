@@ -34,7 +34,7 @@ class Inherit : CompilerStep
 
     // at this point OrderByInheritance should have everything
     // ordered correctly to just do a simple walk
-    walk(types, VisitDepth.typeDef)
+    walk(compiler, VisitDepth.typeDef)
   }
 
   override Void visitTypeDef(TypeDef t)
