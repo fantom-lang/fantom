@@ -23,7 +23,7 @@ class CheckParamDefs : CompilerStep
 
   override Void run()
   {
-    walk(types, VisitDepth.slotDef)
+    walk(compiler, VisitDepth.slotDef)
   }
 
   override Void visitMethodDef(MethodDef m)

@@ -8,6 +8,7 @@
 package fan.sys;
 
 import fanx.fcode.*;
+import fanx.serial.*;
 
 /**
  * Symbol is a qualified name/value pair.
@@ -50,7 +51,7 @@ public final class Symbol
     this.name   = pod.fpod.name(fsymbol.name);
     this.qname  = pod.name() + "::" + name;
     this.of     = pod.findType(fsymbol.of);
-    this.defVal = fsymbol.val; // TODO
+    this.defVal = initVal(fsymbol.val);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,10 +66,6 @@ public final class Symbol
 
   public Type of() { return of; }
 
-  public Object val() { return defVal; }
-
-  public Object defVal() { return defVal; }
-
   public long hash()  { return qname.hashCode(); }
 
   public boolean equals(Object that)  { return this == that; }
@@ -78,6 +75,81 @@ public final class Symbol
   public Type type()  { return Sys.SymbolType;  }
 
 //////////////////////////////////////////////////////////////////////////
+// Value Management
+//////////////////////////////////////////////////////////////////////////
+
+  public Object val() { return defVal(); }
+
+  public Object defVal()
+  {
+    // if already decoded return it
+    if (!(defVal instanceof EncodedVal)) return defVal;
+
+    // decode value
+    Object result = decodeVal((EncodedVal)defVal);
+
+    // if immutable we can cache it
+    if (FanObj.isImmutable(result)) defVal = result;
+
+    return result;
+  }
+
+  /**
+   * Convert fcode utf string into a symbol or facet value.
+   * Objects which are easy to detect as immutable we immediately
+   * decode, others are stored via an EncodedVal wrapper.
+   */
+  public static Object initVal(String str)
+  {
+    try
+    {
+      int ch = str.charAt(0);
+      if (ch == '"' || ch == '`' || '0' <= ch && ch <= '9')
+        return ObjDecoder.decode(str);
+    }
+    catch (Exception e)
+    {
+      System.out.println("Symbol.initVal: " + str);
+      e.printStackTrace();
+    }
+    return new EncodedVal(str);
+  }
+
+  /**
+   * Given an immutable object or EncodedVal object return
+   * its Fan object value.  If the value is immutable then it
+   * should be cached for future use.
+   */
+  private static Object decodeVal(EncodedVal encodedVal)
+  {
+    // decode into an object
+    Object obj = ObjDecoder.decode(encodedVal.str);
+
+    // if list or map try to make it immutable for caching
+    if (obj instanceof List)
+    {
+      List list = (List)obj;
+      if (list.of().isConst()) return list.toImmutable();
+    }
+    if (obj instanceof Map)
+    {
+      Map map = (Map)obj;
+      MapType mapType = (MapType)map.type();
+      if (mapType.v.isConst()) return map.toImmutable();
+    }
+
+    // this object is not safe for caching
+    return obj;
+  }
+
+    static class EncodedVal
+  {
+    EncodedVal(String str) { this.str = str; }
+    public String toString() { return str; }
+    String str;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
@@ -85,6 +157,6 @@ public final class Symbol
   final String name;
   final String qname;
   final Type of;
-  final Object defVal;
+  Object defVal;  // immutable Object or EncodedVal
 
 }

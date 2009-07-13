@@ -37,6 +37,13 @@ class SymbolDef : DefNode
     return s.toStr
   }
 
+  Void walk(Visitor v, VisitDepth depth)
+  {
+    v.enterSymbolDef(this)
+    if (depth >= VisitDepth.expr) val = val.walk(v)
+    v.exitSymbolDef(this)
+  }
+
   override Void print(AstWriter out)
   {
     out.w(toStr).nl

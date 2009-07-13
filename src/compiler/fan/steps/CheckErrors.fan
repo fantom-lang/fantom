@@ -43,7 +43,7 @@ class CheckErrors : CompilerStep
   override Void run()
   {
     log.debug("CheckErrors")
-    walk(types, VisitDepth.expr)
+    walk(compiler, VisitDepth.expr)
     bombIfErr
   }
 
@@ -1461,8 +1461,11 @@ class CheckErrors : CompilerStep
 
     // allow closures same scope priviledges as enclosing class
     myType := curType
-    if (myType.isClosure) myType = curType.closure.enclosingType
-    if (myType.curry != null) myType = curType.curry.enclosingType
+    if (myType != null)
+    {
+      if (myType.isClosure) myType = curType.closure.enclosingType
+      if (myType.curry != null) myType = curType.curry.enclosingType
+    }
 
     // consider the slot internal if its parent is internal
     isInternal := slot.isInternal || (slot.parent.isInternal && !slot.parent.isParameterized)

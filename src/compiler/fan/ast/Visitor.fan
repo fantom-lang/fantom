@@ -26,10 +26,25 @@ mixin Visitor
   ** Peform a walk of the abstract syntax tree down
   ** to the specified depth.
   **
-  Void walk(TypeDef[] typeDefs, VisitDepth depth)
+  Void walk(Compiler c, VisitDepth depth)
   {
-    typeDefs.each |TypeDef def| { def.walk(this, depth) }
+    c.pod.symbolDefs.each |SymbolDef def| { def.walk(this, depth) }
+    c.types.each |TypeDef def| { def.walk(this, depth) }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// TypeDef Callbacks
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Callback when entering a symbol definition.
+  **
+  virtual Void enterSymbolDef(SymbolDef def) {}
+
+  **
+  ** Callback when exiting a symbol definition.
+  **
+  virtual Void exitSymbolDef(SymbolDef def) {}
 
 //////////////////////////////////////////////////////////////////////////
 // TypeDef Callbacks

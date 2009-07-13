@@ -34,8 +34,18 @@ class ResolveExpr : CompilerStep
   override Void run()
   {
     log.debug("ResolveExpr")
-    walk(types, VisitDepth.expr)
+    walk(compiler, VisitDepth.expr)
     bombIfErr
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Symbol
+//////////////////////////////////////////////////////////////////////////
+
+  override Void exitSymbolDef(SymbolDef s)
+  {
+    // symbol type inference
+    if (s.of == null) s.of = s.val.ctype
   }
 
 //////////////////////////////////////////////////////////////////////////

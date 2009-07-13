@@ -150,7 +150,12 @@ class Assembler : CompilerSupport, FConst
     f := FSymbol(fpod)
     f.ofIndex   = typeRef(def.of)
     f.nameIndex = name(def.name)
-    f.val       = def.val.serialize
+
+    try
+      f.val = def.val.serialize
+    catch (CompilerErr e)
+      err("Symbol value is not serializable: '$def.name' ($e.message)", def.val.location)
+
     return f
   }
 

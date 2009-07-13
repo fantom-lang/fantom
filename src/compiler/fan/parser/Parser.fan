@@ -77,10 +77,7 @@ public class Parser : CompilerSupport
     consume(Token.defAssign)
     val   := expr
     endOfStmt
-// TODO
-if (of == null) of = ns.objType.toNullable
     symbol := SymbolDef(ns, loc, of, name, val)
-
 
     if (compiler.pod.symbolDefs.containsKey(name))
       err("Duplicate symbol name '$name'", loc)

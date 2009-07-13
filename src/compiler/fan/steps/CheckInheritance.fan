@@ -29,7 +29,7 @@ class CheckInheritance : CompilerStep
   override Void run()
   {
     log.debug("CheckInheritance")
-    walk(types, VisitDepth.typeDef)
+    walk(compiler, VisitDepth.typeDef)
     bombIfErr
   }
 

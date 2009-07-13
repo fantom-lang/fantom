@@ -22,7 +22,7 @@ class DefaultCtor : CompilerStep
   override Void run()
   {
     log.debug("DefaultCtor")
-    walk(types, VisitDepth.typeDef)
+    walk(compiler, VisitDepth.typeDef)
   }
 
   override Void visitTypeDef(TypeDef t)
