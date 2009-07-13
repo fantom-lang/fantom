@@ -5,8 +5,11 @@
  * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
  * Distributed under the BSD License
  * See http://pajhome.org.uk/crypt/md5 for details.
+ *
+ * Modifications:
+ *   10 July 2009  Andy Frank  Edited to run in Fan and for size/usage
  */
-fan.sys.Buf_Sha1 = function(buf)
+fan.sys.Buf_Sha1 = function(buf, key)
 {
 
   var chrsz = 8;  /* bits per input character. 8 - ASCII; 16 - Unicode */
@@ -79,6 +82,25 @@ fan.sys.Buf_Sha1 = function(buf)
   }
 
   /*
+   * Calculate the HMAC-SHA1 of a key and some data
+   */
+  function core_hmac_sha1(key, data)
+  {
+    var bkey = bytesToWords(key);
+    if(bkey.length > 16) bkey = core_sha1(bkey, key.length * chrsz);
+
+    var ipad = Array(16), opad = Array(16);
+    for(var i = 0; i < 16; i++)
+    {
+      ipad[i] = bkey[i] ^ 0x36363636;
+      opad[i] = bkey[i] ^ 0x5C5C5C5C;
+    }
+
+    var hash = core_sha1(ipad.concat(bytesToWords(data)), 512 + data.length * chrsz);
+    return core_sha1(opad.concat(hash), 512 + 160);
+  }
+
+  /*
    * Add integers, wrapping at 2^32. This uses 16-bit operations internally
    * to work around bugs in some JS interpreters.
    */
@@ -106,7 +128,7 @@ fan.sys.Buf_Sha1 = function(buf)
     var size = bytes.length;
 
     // handle full 32-bit words
-    for (var i=0; size>3 && (i+4)<size; i+=4)
+    for (var i=0; size>3 && (i+4)<=size; i+=4)
     {
       words.push((bytes[i]<<24) | (bytes[i+1]<<16) | (bytes[i+2]<<8) | bytes[i+3]);
     }
@@ -123,8 +145,10 @@ fan.sys.Buf_Sha1 = function(buf)
     return words;
   }
 
-  var words = bytesToWords(buf);
-  var dw = core_sha1(words, buf.length * chrsz);
+  var dw = (key == undefined)
+    ? core_sha1(bytesToWords(buf), buf.length * chrsz)
+    : core_hmac_sha1(key, buf);
+
   var db = new Array();
   for (var i=0; i<dw.length; i++)
   {
