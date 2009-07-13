@@ -16,6 +16,8 @@
 **   Compiler.srcDir/*.fan -> Compiler.srcFiles
 **   Compiler.srcDir/res/* -> Compiler.resFiles
 **
+** During the standard pipeline this step is called by the InitInput step.
+**
 class FindSourceFiles : CompilerStep
 {
 

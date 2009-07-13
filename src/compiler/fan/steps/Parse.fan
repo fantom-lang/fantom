@@ -43,7 +43,11 @@ class Parse : CompilerStep
 
     units.each |CompilationUnit unit|
     {
-      Parser.make(compiler, unit, closures).parse
+      p := Parser(compiler, unit, closures)
+      if (unit.isSymbols)
+        p.parseSymbols
+      else
+        p.parse
       types.addAll(unit.types)
     }
 

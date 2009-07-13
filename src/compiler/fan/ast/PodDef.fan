@@ -21,6 +21,8 @@ class PodDef : DefNode, CPod
   {
     this.ns = ns
     this.name = name
+    this.units = CompilationUnit[,]
+    this.symbolDefs = Str:SymbolDef[:]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -62,7 +64,8 @@ class PodDef : DefNode, CPod
 
   override readonly CNamespace ns   // compiler's namespace
   override readonly Str name        // simple pod name
-  CompilationUnit[]? units          // Tokenize
+  CompilationUnit[] units           // Tokenize
   [Str:TypeDef]? typeDefs           // ScanForUsingsAndTypes
+  Str:SymbolDef symbolDefs          // Parse of "symbols.fan"
 
 }
