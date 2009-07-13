@@ -98,12 +98,12 @@ abstract class BuildJava : BuildScript
     log.indent
 
     temp     := scriptDir + `temp/`
-    jdk      := JdkTask.make(this)
+    jdk      := JdkTask(this)
     jarExe   := jdk.jarExe
     manifest := temp + `Manifest.mf`
 
     // make temp dir
-    CreateDir.make(this, temp).run
+    CreateDir(this, temp).run
 
     // find all the packages which have out of date files
     outOfDate := findOutOfDateDirs(temp)
@@ -115,7 +115,7 @@ abstract class BuildJava : BuildScript
     }
 
     // compile out of date packages
-    javac := CompileJava.make(this)
+    javac := CompileJava(this)
     javac.src = outOfDate
     javac.cp.add(temp)
     javac.outDir = temp
@@ -129,11 +129,11 @@ abstract class BuildJava : BuildScript
     out.close
 
     // ensure jar target directory exists
-    CreateDir.make(this, jar.parent).run
+    CreateDir(this, jar.parent).run
 
     // jar up temp directory
     log.info("Jar [${jar.osPath}]")
-    Exec.make(this, [jarExe.osPath, "cfm", jar.osPath, manifest.osPath, "-C", temp.osPath, "."], temp).run
+    Exec(this, [jarExe.osPath, "cfm", jar.osPath, manifest.osPath, "-C", temp.osPath, "."], temp).run
 
     log.unindent
   }
@@ -171,8 +171,8 @@ abstract class BuildJava : BuildScript
   {
     log.info("clean [${scriptDir.name}]")
     log.indent
-    Delete.make(this, scriptDir + `temp/`).run
-    Delete.make(this, jar).run
+    Delete(this, scriptDir + `temp/`).run
+    Delete(this, jar).run
     log.unindent
   }
 

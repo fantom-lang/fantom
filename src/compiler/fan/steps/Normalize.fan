@@ -47,8 +47,8 @@ class Normalize : CompilerStep
   override Void visitTypeDef(TypeDef t)
   {
     location := t.location
-    iInit := Block.make(location)  // instance init
-    sInit := Block.make(location)  // static init
+    iInit := Block(location)  // instance init
+    sInit := Block(location)  // static init
 
     // walk thru all the slots
     t.slotDefs.dup.each |SlotDef s|
@@ -100,8 +100,8 @@ class Normalize : CompilerStep
     // initializer is given its own scope in the unified static initializer;
     // the "if (true)" gets optimized away in CoodeAsm
     loc := m.location
-    cond := LiteralExpr.make(loc, ExprId.trueLiteral, ns.boolType, true)
-    ifStmt := IfStmt.make(loc, cond, m.code)
+    cond := LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)
+    ifStmt := IfStmt(loc, cond, m.code)
     sInit.add(ifStmt)
     m.code = null
   }
@@ -163,7 +163,7 @@ class Normalize : CompilerStep
     if (!superCtor.params.isEmpty) return
 
     // if we find a ctor to use, then create an implicit super call
-    m.ctorChain = CallExpr.makeWithMethod(m.location, SuperExpr.make(m.location), superCtor)
+    m.ctorChain = CallExpr.makeWithMethod(m.location, SuperExpr(m.location), superCtor)
     m.ctorChain.isCtorChain = true
   }
 
@@ -181,7 +181,7 @@ class Normalize : CompilerStep
     if (!m.params.isEmpty) err("Once method '$m.name' cannot have parameters", loc)
 
     // generate storage field
-    f := FieldDef.make(loc, curType)
+    f := FieldDef(loc, curType)
     f.flags     = FConst.Private | FConst.Storage | FConst.Synthetic
     f.name      = m.name + "\$Store"
     f.fieldType = ns.objType.toNullable
@@ -190,7 +190,7 @@ class Normalize : CompilerStep
      iInit.add(fieldInitStmt(f))
 
     // add name$Once with original code
-    x := MethodDef.make(loc, curType)
+    x := MethodDef(loc, curType)
     x.flags        = FConst.Private | FConst.Synthetic
     x.name         = m.name + "\$Once"
     x.ret          = ns.objType.toNullable
@@ -211,23 +211,23 @@ class Normalize : CompilerStep
     //   if (name$Store == "_once_")
     //     name$Store = name$Once()
     //   return (RetType)name$Store
-    m.code  = Block.make(loc)
+    m.code  = Block(loc)
 
     // if (name$Store == "_once_")
-    cond := BinaryExpr.make(
+    cond := BinaryExpr(
       f.makeAccessorExpr(loc, false),
       Token.same,
       LiteralExpr.makeFor(loc, ns, "_once_"))
 
     // name$Store = name$Once()
-    trueBlock := Block.make(loc)
-    trueBlock.add(BinaryExpr.make(
+    trueBlock := Block(loc)
+    trueBlock.add(BinaryExpr(
         f.makeAccessorExpr(loc, false),
         Token.assign,
-        CallExpr.makeWithMethod(loc, ThisExpr.make(loc), x)
+        CallExpr.makeWithMethod(loc, ThisExpr(loc), x)
       ).toStmt)
 
-    ifStmt := IfStmt.make(loc, cond, trueBlock)
+    ifStmt := IfStmt(loc, cond, trueBlock)
     m.code.add(ifStmt)
 
     // return (RetType)name$Store
@@ -247,7 +247,7 @@ class Normalize : CompilerStep
       if (!m.isCtor) return
       if (compiler.isSys) return
       if (m.ctorChain != null && m.ctorChain.target.id === ExprId.thisExpr) return
-      call := CallExpr.makeWithMethod(m.location, ThisExpr.make(m.location), ii)
+      call := CallExpr.makeWithMethod(m.location, ThisExpr(m.location), ii)
       m.code.stmts.insert(0, call.toStmt)
     }
   }
@@ -284,14 +284,14 @@ class Normalize : CompilerStep
   {
     loc := f.location
     f.get.code.stmts.clear
-    f.get.code.add(ReturnStmt.makeSynthetic(loc, FieldExpr.make(loc, SuperExpr.make(loc), f.concreteBase)))
+    f.get.code.add(ReturnStmt.makeSynthetic(loc, FieldExpr(loc, SuperExpr(loc), f.concreteBase)))
   }
 
   private Void genSyntheticOverrideSet(FieldDef f)
   {
     loc := f.location
-    lhs := FieldExpr.make(loc, SuperExpr.make(loc), f.concreteBase)
-    rhs := UnknownVarExpr.make(loc, null, "val")
+    lhs := FieldExpr(loc, SuperExpr(loc), f.concreteBase)
+    rhs := UnknownVarExpr(loc, null, "val")
     code := f.get.code
     f.set.code.stmts.clear
     f.set.code.add(BinaryExpr.makeAssign(lhs, rhs).toStmt)

@@ -25,7 +25,7 @@ const class CompilerErr : Err
 
   Location location()
   {
-    return Location.make(file, line, col)
+    return Location(file, line, col)
   }
 
   const Str? file

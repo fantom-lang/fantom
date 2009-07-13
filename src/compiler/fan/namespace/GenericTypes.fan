@@ -59,13 +59,13 @@ abstract class GenericType : CType
     {
       CMethod m := slot
       if (!m.isGeneric) return slot
-      return ParameterizedMethod.make(this, m)
+      return ParameterizedMethod(this, m)
     }
     else
     {
       f := (CField)slot
       if (!f.fieldType.isGenericParameter) return slot
-      return ParameterizedField.make(this, f)
+      return ParameterizedField(this, f)
     }
   }
 
@@ -99,7 +99,7 @@ abstract class GenericType : CType
   {
     CType[] params := t.params.map |CType p->CType| { parameterize(p) }
     ret := parameterize(t.ret)
-    return FuncType.make(params, t.names, ret)
+    return FuncType(params, t.names, ret)
   }
 
   abstract CType doParameterize(Int ch)
@@ -157,7 +157,7 @@ class ListType : GenericType
     {
       case 'V': return v
       case 'L': return this
-      default:  throw Err.make(ch.toChar)
+      default:  throw Err(ch.toChar)
     }
   }
 
@@ -216,7 +216,7 @@ class MapType : GenericType
       case 'K': return k
       case 'V': return v
       case 'M': return this
-      default:  throw Err.make(ch.toChar)
+      default:  throw Err(ch.toChar)
     }
   }
 
@@ -322,7 +322,7 @@ class FuncType : GenericType
     p.size = params.size
     for (i:=0; i<params.size; ++i)
     {
-      p[i] = ParamDef.make(loc, params[i], names[i])
+      p[i] = ParamDef(loc, params[i], names[i])
     }
     return p
   }
@@ -339,7 +339,7 @@ class FuncType : GenericType
     switch (ch)
     {
       case 'R': return ret
-      default:  throw Err.make(ch.toChar)
+      default:  throw Err(ch.toChar)
     }
   }
 
@@ -460,7 +460,7 @@ class ParameterizedMethod : CMethod
       if (!p.paramType.isGenericParameter)
         return p
       else
-        return ParameterizedMethodParam.make(parent, p)
+        return ParameterizedMethodParam(parent, p)
     }
 
     signature = "$returnType $name(" + params.join(", ") + ")"

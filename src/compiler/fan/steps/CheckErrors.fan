@@ -1526,7 +1526,7 @@ class CheckErrors : CompilerStep
   {
     // sanity check that expression has been typed
     CType actual := expr.ctype
-    if ((Obj?)actual == null) throw NullErr.make("null ctype: ${expr}")
+    if ((Obj?)actual == null) throw NullErr("null ctype: ${expr}")
 
     // if the same type this is easy
     if (actual == expected) return expr

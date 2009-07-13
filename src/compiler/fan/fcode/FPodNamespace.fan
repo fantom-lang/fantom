@@ -44,7 +44,7 @@ class FPodNamespace : CNamespace
     if (!file.exists) return null
 
     // load it
-    fpod := FPod.make(this, podName, Zip.open(file))
+    fpod := FPod(this, podName, Zip.open(file))
     fpod.read
     return fpod
   }

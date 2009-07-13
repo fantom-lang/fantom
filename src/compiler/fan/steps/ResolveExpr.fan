@@ -92,7 +92,7 @@ class ResolveExpr : CompilerStep
 
     // turn init into full assignment
     if (def.init != null)
-      def.init = BinaryExpr.makeAssign(LocalVarExpr.make(def.location, def.var), def.init)
+      def.init = BinaryExpr.makeAssign(LocalVarExpr(def.location, def.var), def.init)
   }
 
   private Void resolveFor(ForStmt stmt)
@@ -220,7 +220,7 @@ class ResolveExpr : CompilerStep
       // infer from key/val expressions
       k := Expr.commonType(ns, expr.keys).toNonNullable
       v := Expr.commonType(ns, expr.vals)
-      expr.ctype = MapType.make(k, v)
+      expr.ctype = MapType(k, v)
     }
     return expr
   }
@@ -244,7 +244,7 @@ class ResolveExpr : CompilerStep
       }
 
       // otherwise replace this with $this field access
-      return FieldExpr.make(loc, ThisExpr.make(loc), closure.outerThisField)
+      return FieldExpr(loc, ThisExpr(loc), closure.outerThisField)
     }
 
     expr.ctype = curType
@@ -340,12 +340,12 @@ class ResolveExpr : CompilerStep
       // attempt to a name in the current scope
       binding := resolveLocal(var.name, var.location)
       if (binding != null)
-        return LocalVarExpr.make(var.location, binding)
+        return LocalVarExpr(var.location, binding)
     }
 
     // at this point it can't be a local variable, so it must be
     // a slot on either myself or the variable's target
-    return CallResolver.make(compiler, curType, curMethod, var).resolve
+    return CallResolver(compiler, curType, curMethod, var).resolve
   }
 
   **
@@ -426,10 +426,10 @@ class ResolveExpr : CompilerStep
       // attempt to a name in the current scope
       binding := resolveLocal(call.name, call.location)
       if (binding != null)
-        return resolveCallOnLocalVar(call, LocalVarExpr.make(call.location, binding))
+        return resolveCallOnLocalVar(call, LocalVarExpr(call.location, binding))
     }
 
-    return CallResolver.make(compiler, curType, curMethod, call).resolve
+    return CallResolver(compiler, curType, curMethod, call).resolve
   }
 
   **
@@ -535,7 +535,7 @@ class ResolveExpr : CompilerStep
       {
         expr.ctype  = ns.strType
         expr.method = ns.strPlus
-        return ConstantFolder.make(compiler).fold(expr)
+        return ConstantFolder(compiler).fold(expr)
       }
     }
 
@@ -631,7 +631,7 @@ class ResolveExpr : CompilerStep
     }
 
     // use CurryResolver for all the heavy lifting
-    return CurryResolver.make(compiler, curType, curryCount++, expr).resolve
+    return CurryResolver(compiler, curType, curryCount++, expr).resolve
   }
 
   **

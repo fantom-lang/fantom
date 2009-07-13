@@ -36,7 +36,7 @@ class Assemble : CompilerStep
   override Void run()
   {
     log.debug("Assemble")
-    compiler.fpod = Assembler.make(compiler).assemblePod
+    compiler.fpod = Assembler(compiler).assemblePod
     bombIfErr
     if (compiler.input.fcodeDump) compiler.fpod.dump(log.out)
   }

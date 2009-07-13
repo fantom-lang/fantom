@@ -55,7 +55,7 @@ class CodeAsm : CompilerSupport
       case StmtId.continueStmt:  breakOrContinueStmt(stmt)
       case StmtId.switchStmt:    switchStmt((SwitchStmt)stmt)
       case StmtId.tryStmt:       tryStmt((TryStmt)stmt)
-      default:                   throw Err.make(stmt.id.toStr)
+      default:                   throw Err(stmt.id.toStr)
     }
   }
 
@@ -179,7 +179,7 @@ class CodeAsm : CompilerSupport
   {
     // push myself onto the loop stack so that breaks
     // and continues can register for backpatching
-    loop := Loop.make(stmt)
+    loop := Loop(stmt)
     loopStack.push(loop)
 
     // assemble the while loop code
@@ -207,7 +207,7 @@ class CodeAsm : CompilerSupport
 
     // push myself onto the loop stack so that breaks
     // and continues can register for backpatching
-    loop := Loop.make(stmt)
+    loop := Loop(stmt)
     loopStack.push(loop)
 
     // assemble init if available
@@ -501,7 +501,7 @@ class CodeAsm : CompilerSupport
     // jump or return out of this region directly - we have to
     // use a special "leave" jump of the protected region
     if (protectedRegions == null) protectedRegions = ProtectedRegion[,]
-    region := ProtectedRegion.make(stmt)
+    region := ProtectedRegion(stmt)
     protectedRegions.push(region)
     if (!loopStack.isEmpty) loopStack.peek.protectedRegions.push(region)
 
@@ -647,7 +647,7 @@ class CodeAsm : CompilerSupport
       case ExprId.closure:         closure(expr)
       case ExprId.ternary:         ternary(expr)
       case ExprId.staticTarget:    return
-      default:                     throw Err.make(expr.id.toStr)
+      default:                     throw Err(expr.id.toStr)
     }
   }
 
@@ -812,7 +812,7 @@ class CodeAsm : CompilerSupport
     {
       case ExprId.boolOr:  or(expr, cond)
       case ExprId.boolAnd: and(expr, cond)
-      default:             throw Err.make(expr.id.toStr)
+      default:             throw Err(expr.id.toStr)
     }
   }
 

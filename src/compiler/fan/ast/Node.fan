@@ -24,7 +24,7 @@ abstract class Node
   new make(Location location)
   {
     if ((Obj?)location == null)
-      throw NullErr.make("null location")
+      throw NullErr("null location")
     this.location = location
   }
 

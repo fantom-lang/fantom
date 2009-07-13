@@ -74,7 +74,7 @@ class WritePod : CompilerStep
     }
     catch (Err e)
     {
-      throw errReport(CompilerErr.make("Cannot write", location, e))
+      throw errReport(CompilerErr("Cannot write", location, e))
     }
 
     // close file
@@ -103,7 +103,7 @@ class WritePod : CompilerStep
     }
     catch (Err e)
     {
-      throw errReport(CompilerErr.make("Cannot write resource file '$path'", location, e))
+      throw errReport(CompilerErr("Cannot write resource file '$path'", location, e))
     }
   }
 
@@ -139,7 +139,7 @@ class WritePod : CompilerStep
     }
     catch (Err e)
     {
-      throw errReport(CompilerErr.make("Cannot write fandoc '$t.name'", t.location, e))
+      throw errReport(CompilerErr("Cannot write fandoc '$t.name'", t.location, e))
     }
   }
 

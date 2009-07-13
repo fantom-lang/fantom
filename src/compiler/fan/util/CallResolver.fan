@@ -96,7 +96,7 @@ class CallResolver : CompilerSupport
         if (stypes.size > 1)
           throw err("Ambiguous type: " + stypes.join(", "), location)
         else
-          result = StaticTargetExpr.make(location, stypes.first)
+          result = StaticTargetExpr(location, stypes.first)
         return true
       }
     }
@@ -257,17 +257,17 @@ class CallResolver : CompilerSupport
 
     if (foundOnIt)
     {
-      target = ItExpr.make(location, baseIt)
+      target = ItExpr(location, baseIt)
     }
     else if (curType.isClosure)
     {
       closure := curType.closure
       if (!closure.enclosingSlot.isStatic)
-        target = FieldExpr.make(location, ThisExpr.make(location, closure.enclosingType), closure.outerThisField)
+        target = FieldExpr(location, ThisExpr(location, closure.enclosingType), closure.outerThisField)
     }
     else
     {
-      target = ThisExpr.make(location, curType)
+      target = ThisExpr(location, curType)
     }
   }
 
@@ -297,7 +297,7 @@ class CallResolver : CompilerSupport
     call := expr as CallExpr
     if (call == null)
     {
-      call = CallExpr.make(location)
+      call = CallExpr(location)
       call.name   = name
       call.args   = args
     }
@@ -318,7 +318,7 @@ class CallResolver : CompilerSupport
   {
     f := (CField)found
 
-    field := FieldExpr.make(location)
+    field := FieldExpr(location)
     field.target = target
     field.name   = name
     field.field  = f
@@ -426,7 +426,7 @@ class CallResolver : CompilerSupport
   {
     call := result as CallExpr
     if (call != null)
-      result = ConstantFolder.make(compiler).fold(call)
+      result = ConstantFolder(compiler).fold(call)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -70,7 +70,7 @@ class FTable
   {
     return make(pod,
       |OutStream out, Obj obj| { out.writeI8(((Duration)obj).ticks) },
-      |InStream in->Obj| { return Duration.make(in.readS8) })
+      |InStream in->Obj| { return Duration(in.readS8) })
   }
 
 //////////////////////////////////////////////////////////////////////////

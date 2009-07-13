@@ -41,7 +41,7 @@ abstract class DefNode : Node
   Void addFacet(CompilerSupport support, Str name, Obj value)
   {
     if (facets == null) facets = Str:FacetDef[:]
-    f := FacetDef.make(location, name, LiteralExpr.makeFor(location, ns, value))
+    f := FacetDef(location, name, LiteralExpr.makeFor(location, ns, value))
 
     dup := facets[name]
     if (dup != null)

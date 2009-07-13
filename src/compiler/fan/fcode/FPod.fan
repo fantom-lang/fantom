@@ -44,7 +44,7 @@ final class FPod : CPod, FConst
   {
     t := ftypesByName[name]
     if (t != null) return t
-    if (checked) throw UnknownTypeErr.make("${this.name}::$name")
+    if (checked) throw UnknownTypeErr("${this.name}::$name")
     return null
   }
 
@@ -104,7 +104,7 @@ final class FPod : CPod, FConst
     sig := ""
     if (t.isParameterized) sig = t.signature
     else if (t.isNullable) sig = "?"
-    return typeRefs.add(FTypeRef.make(p, n, sig))
+    return typeRefs.add(FTypeRef(p, n, sig))
   }
 
   Int addFieldRef(CField field)
@@ -112,7 +112,7 @@ final class FPod : CPod, FConst
     p := addTypeRef(field.parent)
     n := addName(field.name)
     t := addTypeRef(field.fieldType)
-    return fieldRefs.add(FFieldRef.make(p, n, t))
+    return fieldRefs.add(FFieldRef(p, n, t))
   }
 
   Int addMethodRef(CMethod method, Int? argCount := null)
@@ -129,12 +129,12 @@ final class FPod : CPod, FConst
     Int[] params := method.params.map |CParam x->Int| { addTypeRef(x.paramType.raw) }
     if (argCount != null && argCount < params.size)
       params = params[0..<argCount]
-    return methodRefs.add(FMethodRef.make(p, n, r, params))
+    return methodRefs.add(FMethodRef(p, n, r, params))
   }
 
   Void dump(OutStream out := Sys.out)
   {
-    p := FPrinter.make(this, out)
+    p := FPrinter(this, out)
     p.showCode = true
     p.ftypes
   }
@@ -174,7 +174,7 @@ final class FPod : CPod, FConst
     ftypesByName = Str:FType[:]
     in.readU2.times |,|
     {
-      ftype := FType.make(this).readMeta(in)
+      ftype := FType(this).readMeta(in)
       ftypes.add(ftype)
       ftypesByName[ftype.name] = ftype
       ns.typeCache[ftype.qname] = ftype
@@ -244,9 +244,9 @@ final class FPod : CPod, FConst
   Void readPodMeta(InStream in)
   {
     if (in.readU4 != FCodeMagic)
-      throw IOErr.make("Invalid fcode magic number")
+      throw IOErr("Invalid fcode magic number")
     if (in.readU4 != FCodeVersion)
-      throw IOErr.make("Unsupported fcode version")
+      throw IOErr("Unsupported fcode version")
 
     name = in.readUtf
     version = Version.fromStr(in.readUtf)

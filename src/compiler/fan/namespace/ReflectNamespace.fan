@@ -40,7 +40,7 @@ class ReflectNamespace : CNamespace
     // try to load it
     pod := Pod.find(podName, false)
     if (pod == null) return null
-    return ReflectPod.make(this, pod)
+    return ReflectPod(this, pod)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@ class ReflectNamespace : CNamespace
   **
   CField importField(Field f)
   {
-    return ReflectField.make((ReflectType)importType(f.parent), f)
+    return ReflectField((ReflectType)importType(f.parent), f)
   }
 
   **
@@ -96,7 +96,7 @@ class ReflectNamespace : CNamespace
   **
   CMethod importMethod(Method m)
   {
-    return ReflectMethod.make((ReflectType)importType(m.parent), m)
+    return ReflectMethod((ReflectType)importType(m.parent), m)
   }
 
 //////////////////////////////////////////////////////////////////////////

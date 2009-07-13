@@ -35,7 +35,7 @@ class PodDef : DefNode, CPod
   {
     t := typeDefs[name]
     if (t != null) return t
-    if (checked) throw UnknownTypeErr.make("${this.name}::${name}")
+    if (checked) throw UnknownTypeErr("${this.name}::${name}")
     return null
   }
 

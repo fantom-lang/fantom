@@ -45,7 +45,7 @@ class TypeParser
     }
 
     // we got our work cut out for us - create parser
-    return TypeParser.make(ns, sig).loadTop
+    return TypeParser(ns, sig).loadTop
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ class TypeParser
     consume(':')
     val := loadAny
     consume(']')
-    return MapType.make(key, val)
+    return MapType(key, val)
   }
 
   private CType loadFunc()
@@ -144,7 +144,7 @@ class TypeParser
     ret := loadAny
     consume('|')
 
-    return FuncType.make(params, names, ret)
+    return FuncType(params, names, ret)
   }
 
   private CType loadBasic()
@@ -172,7 +172,7 @@ class TypeParser
 
   private ArgErr err()
   {
-    return ArgErr.make("Invalid type signature '" + sig + "'")
+    return ArgErr("Invalid type signature '" + sig + "'")
   }
 
 //////////////////////////////////////////////////////////////////////////

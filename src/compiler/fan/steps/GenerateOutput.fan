@@ -40,10 +40,10 @@ class GenerateOutput : CompilerStep
     switch (output.mode)
     {
       case CompilerOutputMode.transientPod:
-        output.transientPod = LoadPod.make(compiler).load
+        output.transientPod = LoadPod(compiler).load
 
       case CompilerOutputMode.podFile:
-        output.podFile = WritePod.make(compiler).write
+        output.podFile = WritePod(compiler).write
 
       default:
         throw err("Unknown output type: '$output.mode'", null)

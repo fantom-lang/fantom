@@ -106,7 +106,7 @@ abstract class BuildCs : BuildScript
     log.indent
 
     // compile source
-    csc := CompileCs.make(this)
+    csc := CompileCs(this)
     csc.output = output
     csc.targetType = targetType
     csc.src  = dirs
@@ -125,7 +125,7 @@ abstract class BuildCs : BuildScript
   {
     log.info("clean [${scriptDir.name}]")
     log.indent
-    Delete.make(this, output).run
+    Delete(this, output).run
     log.unindent
   }
 

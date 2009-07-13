@@ -94,25 +94,25 @@ class InitEnum : CompilerStep
     // add a synthetic one
     if (m == null)
     {
-      m = MethodDef.make(curType.location, curType)
+      m = MethodDef(curType.location, curType)
       m.name = "make"
       m.flags = FConst.Ctor | FConst.Private | FConst.Synthetic
-      m.ret = TypeRef.make(curType.location, ns.voidType)
-      m.code = Block.make(curType.location)
+      m.ret = TypeRef(curType.location, ns.voidType)
+      m.code = Block(curType.location)
       m.code.stmts.add(ReturnStmt.makeSynthetic(curType.location))
       curType.addSlot(m)
     }
 
     // Enum.make call
     loc := m.location
-    m.ctorChain = CallExpr.make(loc, SuperExpr.make(loc), "make")
+    m.ctorChain = CallExpr(loc, SuperExpr(loc), "make")
     m.ctorChain.isCtorChain = true
-    m.ctorChain.args.add(UnknownVarExpr.make(loc, null, "\$ordinal"))
-    m.ctorChain.args.add(UnknownVarExpr.make(loc, null, "\$name"))
+    m.ctorChain.args.add(UnknownVarExpr(loc, null, "\$ordinal"))
+    m.ctorChain.args.add(UnknownVarExpr(loc, null, "\$name"))
 
     // insert ordinal, name params
-    m.params.insert(0, ParamDef.make(loc, ns.intType, "\$ordinal"))
-    m.params.insert(1, ParamDef.make(loc, ns.strType, "\$name"))
+    m.params.insert(0, ParamDef(loc, ns.intType, "\$ordinal"))
+    m.params.insert(1, ParamDef(loc, ns.strType, "\$name"))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -126,22 +126,22 @@ class InitEnum : CompilerStep
   {
     // static CurType fromStr(Str name, Bool checked := true)
     loc := curType.location
-    m := MethodDef.make(loc, curType)
+    m := MethodDef(loc, curType)
     m.name = "fromStr"
     m.flags = FConst.Static | FConst.Public
-    m.params.add(ParamDef.make(loc, ns.strType, "name"))
-    m.params.add(ParamDef.make(loc, ns.boolType, "checked", LiteralExpr.make(loc, ExprId.trueLiteral, ns.boolType, true)))
-    m.ret = TypeRef.make(loc, curType.toNullable)
-    m.code = Block.make(loc)
+    m.params.add(ParamDef(loc, ns.strType, "name"))
+    m.params.add(ParamDef(loc, ns.boolType, "checked", LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)))
+    m.ret = TypeRef(loc, curType.toNullable)
+    m.code = Block(loc)
     m.doc  = ["Return the $curType.name instance for the specified name.  If not a",
               "valid name and checked is false return null, otherwise throw ParseErr."]
     curType.addSlot(m)
 
     // return (CurType)doParse(name, checked)
-    doFromStr := CallExpr.make(loc, null, "doFromStr")
-    doFromStr.args.add(LiteralExpr.make(loc, ExprId.typeLiteral, ns.typeType, curType))
-    doFromStr.args.add(UnknownVarExpr.make(loc, null, "name"))
-    doFromStr.args.add(UnknownVarExpr.make(loc, null, "checked"))
+    doFromStr := CallExpr(loc, null, "doFromStr")
+    doFromStr.args.add(LiteralExpr(loc, ExprId.typeLiteral, ns.typeType, curType))
+    doFromStr.args.add(UnknownVarExpr(loc, null, "name"))
+    doFromStr.args.add(UnknownVarExpr(loc, null, "checked"))
     cast := TypeCheckExpr(loc, ExprId.coerce, doFromStr, curType.toNullable)
     m.code.stmts.add(ReturnStmt.makeSynthetic(loc, cast))
   }
@@ -168,13 +168,13 @@ class InitEnum : CompilerStep
     loc := def.location
 
     // initializer
-    init := CallExpr.make(loc, null, "make")
-    init.args.add(LiteralExpr.make(loc, ExprId.intLiteral, ns.intType, def.ordinal))
-    init.args.add(LiteralExpr.make(loc, ExprId.strLiteral, ns.strType, def.name))
+    init := CallExpr(loc, null, "make")
+    init.args.add(LiteralExpr(loc, ExprId.intLiteral, ns.intType, def.ordinal))
+    init.args.add(LiteralExpr(loc, ExprId.strLiteral, ns.strType, def.name))
     init.args.addAll(def.ctorArgs)
 
     // static field
-    f := FieldDef.make(loc, curType)
+    f := FieldDef(loc, curType)
     f.doc       = def.doc
     f.flags     = FConst.Public | FConst.Static | FConst.Const | FConst.Storage | FConst.Enum
     f.name      = def.name
@@ -202,15 +202,15 @@ class InitEnum : CompilerStep
 
     // initializer
     listType := curType.toListOf
-    init := ListLiteralExpr.make(loc, listType)
+    init := ListLiteralExpr(loc, listType)
     curType.enumDefs.each |EnumDef e|
     {
-      target := StaticTargetExpr.make(loc, curType)
-      init.vals.add(UnknownVarExpr.make(loc, target, e.name))
+      target := StaticTargetExpr(loc, curType)
+      init.vals.add(UnknownVarExpr(loc, target, e.name))
     }
 
     // static field
-    f := FieldDef.make(loc, curType)
+    f := FieldDef(loc, curType)
     f.flags     = FConst.Public | FConst.Static | FConst.Const | FConst.Storage
     f.name      = "values"
     f.fieldType = listType

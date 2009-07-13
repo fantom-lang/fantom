@@ -49,7 +49,7 @@ abstract class BuildScript
   BuildLog log := BuildLog()
 
   ** The source file of this script
-  const File scriptFile := File.make(type->sourceFile.toStr.toUri)
+  const File scriptFile := File(type->sourceFile.toStr.toUri)
 
   ** The directory containing the this script
   const File scriptDir := scriptFile.parent
@@ -100,7 +100,7 @@ abstract class BuildScript
     {
       try
       {
-        f := File.make(devHomeProp.toUri)
+        f := File(devHomeProp.toUri)
         if (!f.exists || !f.isDir) throw Err.make
         return f
       }
@@ -201,10 +201,10 @@ abstract class BuildScript
   **
   Target? target(Str name, Bool checked := true)
   {
-    if ((Obj?)targets == null) throw Err.make("script not setup yet")
+    if ((Obj?)targets == null) throw Err("script not setup yet")
     t := targets.find |Target t->Bool| { return t.name == name }
     if (t != null) return t
-    if (checked) throw Err.make("Target not found '$name' in $scriptFile")
+    if (checked) throw Err("Target not found '$name' in $scriptFile")
     return null
   }
 
@@ -411,7 +411,7 @@ abstract class BuildScript
     {
       if (uri == null)
       {
-        if (!nullOk) throw FatalBuildErr.make("Unexpected null Uri")
+        if (!nullOk) throw FatalBuildErr("Unexpected null Uri")
         files.add(null)
         return
       }

@@ -107,7 +107,7 @@ class ClosureVars : CompilerStep
     {
       // define type def
       name := toCvarsTypeName(method.parentDef, method)
-      cvars = TypeDef.make(ns, location, method.parentDef.unit, name)
+      cvars = TypeDef(ns, location, method.parentDef.unit, name)
       cvars.flags = FConst.Internal | FConst.Synthetic
       cvars.base  = ns.objType
       addTypeDef(cvars)
@@ -121,7 +121,7 @@ class ClosureVars : CompilerStep
     {
       if (var.usedInClosure)
       {
-        f := FieldDef.make(location, cvars)
+        f := FieldDef(location, cvars)
         f.name      = "${var.name}\$${cvars.slots.size}"
         f.fieldType = var.ctype
         f.flags     = syntheticFieldFlags
@@ -175,7 +175,7 @@ class ClosureVars : CompilerStep
     // use optimized register access such as ILOAD_2 for Java)
     else
     {
-      cvarsLocal = MethodVar.make(-1, cvars, "\$cvars")
+      cvarsLocal = MethodVar(-1, cvars, "\$cvars")
       method.vars.insert(method.params.size, cvarsLocal)
     }
 
@@ -203,7 +203,7 @@ class ClosureVars : CompilerStep
     // while processing the enclosng method
     if (!inClosure)
     {
-      local := LocalVarExpr.make(location, cvarsLocal)
+      local := LocalVarExpr(location, cvarsLocal)
       local.ctype = cvars
 
       ctorCall := CallExpr.makeWithMethod(location, null, cvarsCtor)
@@ -218,9 +218,9 @@ class ClosureVars : CompilerStep
     {
       if (!var.isParam || var.cvarsField == null) return
 
-      lhs := fieldExpr(location, LocalVarExpr.make(location, cvarsLocal), var.cvarsField)
+      lhs := fieldExpr(location, LocalVarExpr(location, cvarsLocal), var.cvarsField)
 
-      rhs := LocalVarExpr.make(location, var)
+      rhs := LocalVarExpr(location, var)
       rhs.noRemapToCvars = true // don't want to replace this access with cvars field
 
       assign := BinaryExpr.makeAssign(lhs, rhs)
@@ -251,7 +251,7 @@ class ClosureVars : CompilerStep
     if (local.var.cvarsField == null) return local
     if (local.noRemapToCvars) return local
     loc := local.location
-    return fieldExpr(loc, LocalVarExpr.make(loc, cvarsLocal), local.var.cvarsField)
+    return fieldExpr(loc, LocalVarExpr(loc, cvarsLocal), local.var.cvarsField)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -291,7 +291,7 @@ class ClosureVars : CompilerStep
       {
         nested := (ClosureExpr)expr
         if (nested.usesCvars && cvarsLocal == null)
-          cvarsLocal = MethodVar.make(-1, cvars, "\$cvars")
+          cvarsLocal = MethodVar(-1, cvars, "\$cvars")
         return expr
       }
 
@@ -304,11 +304,11 @@ class ClosureVars : CompilerStep
       // if I haven't yet allocated my own local to access
       // the whole cvars instance, let's do that now
       if (cvarsLocal == null)
-        cvarsLocal = MethodVar.make(-1, cvars, "\$cvars")
+        cvarsLocal = MethodVar(-1, cvars, "\$cvars")
 
       // replace "x" with "$cvars.x"
       loc := local.location
-      return fieldExpr(loc, LocalVarExpr.make(loc, cvarsLocal), local.var.cvarsField)
+      return fieldExpr(loc, LocalVarExpr(loc, cvarsLocal), local.var.cvarsField)
     }
 
     // if no expressions within the closure use cvars,
@@ -317,32 +317,32 @@ class ClosureVars : CompilerStep
 
     // add cvars field to closure implementation class
     loc := closure.location
-    field := FieldDef.make(loc, closure.cls)
+    field := FieldDef(loc, closure.cls)
     field.name      = "\$cvars"
-    field.fieldType = TypeRef.make(loc, cvars)
+    field.fieldType = TypeRef(loc, cvars)
     field.flags     = syntheticFieldFlags
     closure.cls.addSlot(field)
 
     // add parameter to closure implementation constructor
     ctor := closure.cls.methodDef("make")
-    param := ParamDef.make(loc, cvars, "\$cvars")
+    param := ParamDef(loc, cvars, "\$cvars")
     paramVar := MethodVar.makeForParam(ctor.params.size+1, param, param.paramType)
     ctor.params.add(param)
     ctor.vars.add(paramVar)
 
     // set field in constructor
     assign := BinaryExpr.makeAssign(
-      fieldExpr(loc, ThisExpr.make(loc), field),
-      LocalVarExpr.make(loc, paramVar))
+      fieldExpr(loc, ThisExpr(loc), field),
+      LocalVarExpr(loc, paramVar))
     ctor.code.stmts.insert(0, assign.toStmt)
 
     // pass cvars instance to closure class constructor
-    closure.substitute.args.add(LocalVarExpr.make(loc, this.cvarsLocal))
+    closure.substitute.args.add(LocalVarExpr(loc, this.cvarsLocal))
 
     // add local variable $cvars into doCall
     cvarsLoad := BinaryExpr.makeAssign(
-      LocalVarExpr.make(loc, cvarsLocal),
-      fieldExpr(loc, ThisExpr.make(loc), field))
+      LocalVarExpr(loc, cvarsLocal),
+      fieldExpr(loc, ThisExpr(loc), field))
     doCall.vars.insert(doCall.params.size, cvarsLocal)
     doCall.vars.each |MethodVar v, Int i| { v.register = i+1 }
     doCall.code.stmts.insert(0, cvarsLoad.toStmt)
@@ -369,7 +369,7 @@ class ClosureVars : CompilerStep
     implType := closure.cls
 
     // define outer this as "$this"
-    field := FieldDef.make(loc, implType)
+    field := FieldDef(loc, implType)
     field.name  = "\$this"
     field.flags = syntheticFieldFlags
     field.fieldType = thisType
@@ -380,23 +380,23 @@ class ClosureVars : CompilerStep
     if (closure.enclosingClosure != null)
     {
       outerThis := closure.enclosingClosure.outerThisField
-      closure.substitute.args.add(fieldExpr(loc, ThisExpr.make(loc), outerThis))
+      closure.substitute.args.add(fieldExpr(loc, ThisExpr(loc), outerThis))
     }
     else
     {
       // outer most closure just uses this
-      closure.substitute.args.add(ThisExpr.make(loc))
+      closure.substitute.args.add(ThisExpr(loc))
     }
 
     // add parameter to constructor
     ctor  := implType.methodDef("make")
-    param := ParamDef.make(loc, thisType, "\$this")
+    param := ParamDef(loc, thisType, "\$this")
     var   := MethodVar.makeForParam(ctor.params.size+1, param, param.paramType)
     ctor.params.add(param)
     ctor.vars.add(var)
 
     // set field in constructor
-    assign := BinaryExpr.makeAssign(fieldExpr(loc, ThisExpr.make(loc), field), LocalVarExpr.make(loc, var))
+    assign := BinaryExpr.makeAssign(fieldExpr(loc, ThisExpr(loc), field), LocalVarExpr(loc, var))
     ctor.code.stmts.insert(0, assign.toStmt)
 
     // we can longer assume this closure is thread safe
@@ -414,14 +414,14 @@ class ClosureVars : CompilerStep
     // if the closure captures any state, then we change the is
     // isImmutable() method added in InitClosures to return false
     ns := c.cls.ns
-    falseLiteral := LiteralExpr.make(c.location, ExprId.falseLiteral, ns.boolType, false)
+    falseLiteral := LiteralExpr(c.location, ExprId.falseLiteral, ns.boolType, false)
     c.cls.methodDef("isImmutable").code.stmts.first->expr = falseLiteral
   }
 
   private static FieldExpr fieldExpr(Location loc, Expr target, CField field)
   {
     // need to make sure all the synthetic field access is direct
-    fexpr := FieldExpr.make(loc, target, field)
+    fexpr := FieldExpr(loc, target, field)
     fexpr.useAccessor = false
     return fexpr
   }

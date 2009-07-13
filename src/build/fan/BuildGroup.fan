@@ -44,7 +44,7 @@ abstract class BuildGroup : BuildScript
     resolveFiles(childrenScripts).each |File f|
     {
       log.debug("CompileScript [$f]")
-      s := (BuildScript)FanScript.make(this, f).compile.types.first.make
+      s := (BuildScript)FanScript(this, f).compile.types.first.make
       s.log = log
       children.add(s)
     }
@@ -101,7 +101,7 @@ abstract class BuildGroup : BuildScript
     if (myTarget != null) return myTarget
 
     // make a target which runs on the children scripts
-    return Target.make(this, name, "run '$name' on all children") |,| { runOnChildren(name) }
+    return Target(this, name, "run '$name' on all children") |,| { runOnChildren(name) }
   }
 
   **
@@ -131,7 +131,7 @@ abstract class BuildGroup : BuildScript
       target := child.target(targetName)
       if (target != null)
       {
-        Exec.make(this, [fanExe, child.scriptFile.osPath, targetName]).run
+        Exec(this, [fanExe, child.scriptFile.osPath, targetName]).run
       }
     }
   }

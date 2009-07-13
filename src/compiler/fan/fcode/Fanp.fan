@@ -54,7 +54,7 @@ class Fanp
 
   FPrinter printer(Pod pod)
   {
-    printer := FPrinter.make(fpod(pod.name))
+    printer := FPrinter(fpod(pod.name))
     printer.showCode  = showCode
     printer.showLines = showLines
     printer.showIndex = showIndex
@@ -77,7 +77,7 @@ class Fanp
       r := pod.typeRef(ft.self)
       return typeName == pod.n(r.typeName)
     }
-    if (ftype == null) throw UnknownTypeErr.make(pod.name + "::" + typeName)
+    if (ftype == null) throw UnknownTypeErr(pod.name + "::" + typeName)
     return ftype
   }
 
@@ -97,7 +97,7 @@ class Fanp
     }
     if (slot != null) return slot
 
-    throw UnknownSlotErr.make(slotName)
+    throw UnknownSlotErr(slotName)
   }
 
 //////////////////////////////////////////////////////////////////////////

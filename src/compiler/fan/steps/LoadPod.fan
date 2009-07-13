@@ -41,7 +41,7 @@ class LoadPod : CompilerStep
   Pod load()
   {
     // create memory buffer to store pod zip
-    buf := Buf.make(4096)
+    buf := Buf(4096)
 
     // write the fpod to memory buf
     fpod := compiler.fpod

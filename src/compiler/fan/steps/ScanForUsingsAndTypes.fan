@@ -43,7 +43,7 @@ class ScanForUsingsAndTypes : CompilerStep
 
     units.each |CompilationUnit unit|
     {
-      UsingAndTypeScanner.make(compiler, unit, allTypes).parse
+      UsingAndTypeScanner(compiler, unit, allTypes).parse
     }
     bombIfErr
 
@@ -72,7 +72,7 @@ class UsingAndTypeScanner : CompilerSupport
   {
     // sys is imported implicitly (unless this is sys itself)
     if (!isSys)
-      unit.usings.add(Using.make(unit.location) { podName="sys" })
+      unit.usings.add(Using(unit.location) { podName="sys" })
 
     // scan tokens quickly looking for keywords
     inClassHeader := false
@@ -100,7 +100,7 @@ class UsingAndTypeScanner : CompilerSupport
 
   private Void parseUsing(TokenVal tok)
   {
-    u := Using.make(tok)
+    u := Using(tok)
 
     // using [ffi]
     u.podName = ""
@@ -146,7 +146,7 @@ class UsingAndTypeScanner : CompilerSupport
   private Void parseType(TokenVal tok)
   {
     name := consumeId
-    typeDef := TypeDef.make(ns, tok, unit, name)
+    typeDef := TypeDef(ns, tok, unit, name)
     unit.types.add(typeDef)
 
     // set enum/mixin flag to use by Parser

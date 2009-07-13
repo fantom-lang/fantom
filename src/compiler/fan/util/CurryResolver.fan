@@ -97,7 +97,7 @@ class CurryResolver : CompilerSupport
     }
 
     // define the signature
-    sig = FuncType.make(params, names, method.returnType)
+    sig = FuncType(params, names, method.returnType)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ class CurryResolver : CompilerSupport
   {
     // replace curry with Slot.findMethod
     result := CallExpr.makeWithMethod(loc, null, ns.slotFindFunc)
-    result.args.add(LiteralExpr.make(loc, ExprId.strLiteral, ns.strType, method.qname))
+    result.args.add(LiteralExpr(loc, ExprId.strLiteral, ns.strType, method.qname))
     result.ctype = sig
     return result
   }
@@ -143,7 +143,7 @@ class CurryResolver : CompilerSupport
     if (targetType is FuncType)
     {
       orig := targetType as FuncType
-      result.ctype = FuncType.make(
+      result.ctype = FuncType(
         orig.params[arg.size..-1],
         orig.names[arg.size..-1],
         orig.ret)
@@ -170,28 +170,28 @@ class CurryResolver : CompilerSupport
   Void defineCurry()
   {
     // define curry class
-    curry = TypeDef.make(ns, loc, curType.unit, "Curry\$${curryCount}")
+    curry = TypeDef(ns, loc, curType.unit, "Curry\$${curryCount}")
     curry.flags = FConst.Internal | FConst.Synthetic
     curry.base  = sig
     curry.curry = expr
     addTypeDef(curry)
 
     // define ctor
-    ctor = MethodDef.make(loc, curry)
+    ctor = MethodDef(loc, curry)
     ctor.flags = FConst.Ctor | FConst.Internal | FConst.Synthetic
     ctor.name  = "make"
     ctor.ret   = ns.voidType
-    ctor.code  = Block.make(loc)
+    ctor.code  = Block(loc)
     curry.addSlot(ctor)
 
     // override Func.method
-    fm := MethodDef.make(loc, curry)
+    fm := MethodDef(loc, curry)
     fm.flags = FConst.Public | FConst.Override | FConst.Synthetic
     fm.name  = "method"
     fm.ret   = ns.methodType
-    fm.code  = Block.make(loc)
+    fm.code  = Block(loc)
     expr := CallExpr.makeWithMethod(loc, null, ns.slotFindMethod)
-    expr.args.add(LiteralExpr.make(loc, ExprId.strLiteral, ns.strType, method.qname))
+    expr.args.add(LiteralExpr(loc, ExprId.strLiteral, ns.strType, method.qname))
     fm.code.add(ReturnStmt.makeSynthetic(loc, expr))
     curry.addSlot(fm)
   }
@@ -236,23 +236,23 @@ class CurryResolver : CompilerSupport
         allArgsConst = false
 
       // add field to curry class
-      field := FieldDef.make(loc, curry)
+      field := FieldDef(loc, curry)
       field.name  = name
       field.flags = FConst.Internal | FConst.Storage | FConst.Synthetic
       field.fieldType = ctype
       curry.addSlot(field)
 
       // add parameter to ctor
-      ctor.params.add(ParamDef.make(loc, ctype, name))
+      ctor.params.add(ParamDef(loc, ctype, name))
 
       // add field set assignment statement in ctor
-      lhs := FieldExpr.make(loc, ThisExpr.make(loc), field, false)
-      rhs := UnknownVarExpr.make(loc, null, name)
+      lhs := FieldExpr(loc, ThisExpr(loc), field, false)
+      rhs := UnknownVarExpr(loc, null, name)
       assign := BinaryExpr.makeAssign(lhs, rhs)
       ctor.code.stmts.add(assign.toStmt)
 
       // add field get to doCall statement
-      loadField := FieldExpr.make(loc, ThisExpr.make(loc), field, false)
+      loadField := FieldExpr(loc, ThisExpr(loc), field, false)
       if (expr === self)
         doCall.target = loadField
       else

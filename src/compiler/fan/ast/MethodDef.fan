@@ -101,7 +101,7 @@ class MethodDef : SlotDef, CMethod
     if (name == null) name = "\$temp" + reg
 
     // create variable and add it variable list
-    var := MethodVar.make(reg, ctype, name, 0, scope)
+    var := MethodVar(reg, ctype, name, 0, scope)
     vars.add(var)
     return var
   }

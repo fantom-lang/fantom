@@ -41,7 +41,7 @@ class Main
     }
     catch (Err err)
     {
-      log.compilerErr(CompilerErr.make("Internal compiler error", null, err));
+      log.compilerErr(CompilerErr("Internal compiler error", null, err));
       err.trace
       success = false;
     }
@@ -91,7 +91,7 @@ class Main
           println("ERROR: must specified dir with -d option")
           return false
         }
-        outDir = File.make(args[++i].toUri).normalize
+        outDir = File(args[++i].toUri).normalize
       }
       else if (a == "-src")
       {
@@ -118,7 +118,7 @@ class Main
         if (podName == null)
           podName = a
         else
-          srcDirs.add(File.make(a.toUri))
+          srcDirs.add(File(a.toUri))
       }
     }
 
@@ -177,7 +177,7 @@ class Main
     input.output     = CompilerOutputMode.podFile
     if (outDir != null) input.outDir = outDir
 
-    Compiler.make(input).compile
+    Compiler(input).compile
   }
 
   **
@@ -212,7 +212,7 @@ class Main
       if (fcodeDump == true) input.fcodeDump = true
     }
 
-    return Compiler.make(input).compile.transientPod
+    return Compiler(input).compile.transientPod
   }
 
 //////////////////////////////////////////////////////////////////////////

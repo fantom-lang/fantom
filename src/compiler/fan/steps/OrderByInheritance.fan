@@ -49,7 +49,7 @@ class OrderByInheritance : CompilerStep
     bombIfErr
 
     // use ordered types for rest of pipeline
-    if (ordered.size != compiler.types.size) throw Err.make("Internal error")
+    if (ordered.size != compiler.types.size) throw Err("Internal error")
     compiler.types = ordered
   }
 

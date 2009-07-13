@@ -132,7 +132,7 @@ class FPrinter : FConst
   {
     if (!showCode) return;
     out.flush
-    codePrinter := FCodePrinter.make(pod, out)
+    codePrinter := FCodePrinter(pod, out)
     codePrinter.showIndex = showIndex
     codePrinter.code(code)
   }
