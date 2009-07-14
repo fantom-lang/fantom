@@ -68,11 +68,11 @@ public class ObjEncoder
     }
 
     Type type = FanObj.type(obj);
-    if (type.facet("simple", null, true) == Boolean.TRUE)
+    if (type.facet("sys::simple", null, true) == Boolean.TRUE)
     {
       writeSimple(type, obj);
     }
-    else if (type.facet("serializable", null, true) == Boolean.TRUE)
+    else if (type.facet("sys::serializable", null, true) == Boolean.TRUE)
     {
       writeComplex(type, obj);
     }
@@ -113,7 +113,7 @@ public class ObjEncoder
 
       // skip static, transient, and synthetic (once) fields
       if (f.isStatic() || f.isSynthetic() ||
-          f.facet("transient", false) == Boolean.TRUE)
+          f.facet("sys::transient", false) == Boolean.TRUE)
         continue;
 
       // get the value
@@ -141,7 +141,7 @@ public class ObjEncoder
     }
 
     // if collection
-    if (type.facet("collection", null, true) == Boolean.TRUE)
+    if (type.facet("sys::collection", null, true) == Boolean.TRUE)
       first = writeCollectionItems(type, obj, first);
 
     // if we output fields, then close braces

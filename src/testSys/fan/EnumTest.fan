@@ -189,12 +189,12 @@ class EnumTest : Test
 
   Void testFacets()
   {
-    verifyEq(EnumAbc#.facet("simple"), true)
-    verifyEq(EnumAbc#.facets, Str:Obj["simple":true])
+    verifyEq(EnumAbc#.facet("sys::simple"), true)
+    verifyEq(EnumAbc#.facets, Str:Obj["sys::simple":true])
 
-    verifyEq(Suits#.facet("simple"), true)
-    verifyEq(Suits#.facet("x"), "y")
-    verifyEq(Suits#.facets, Str:Obj["simple":true, "x":"y"])
+    verifyEq(Suits#.facet("sys::simple"), true)
+    verifyEq(Suits#.facet("testSys::strA"), "y")
+    verifyEq(Suits#.facets, Str:Obj["sys::simple":true, "testSys::strA":"y"])
   }
 
 }
@@ -208,7 +208,7 @@ internal enum EnumAbc
   static const EnumAbc first := A
 }
 
-@x="y"
+@strA="y"
 enum Suits
 {
   clubs("black"),

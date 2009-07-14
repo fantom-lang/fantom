@@ -240,7 +240,7 @@ class ResolveExpr : CompilerStep
   **
   ** Resolve symbol literal
   **
-  private Expr resolveSymbol(SymbolLiteralExpr expr)
+  private Expr resolveSymbol(SymbolExpr expr)
   {
     expr.ctype = ns.symbolType
     expr.symbol = ResolveImports.resolveSymbol(this, curUnit, expr.podName, expr.name, expr.location)

@@ -395,13 +395,13 @@ class SlotLiteralExpr : Expr
 }
 
 **************************************************************************
-** SymbolLiteralExpr
+** SymbolExpr
 **************************************************************************
 
 **
-** SymbolLiteralExpr
+** SymbolExpr
 **
-class SymbolLiteralExpr : Expr
+class SymbolExpr: Expr
 {
   new make(Location loc, Str? podName, Str name)
     : super(loc, ExprId.symbolLiteral)
@@ -410,7 +410,16 @@ class SymbolLiteralExpr : Expr
     this.name = name
   }
 
-  override Str toStr() { "@$podName::name" }
+  new makeFor(Location loc, CSymbol symbol)
+    : this.make(loc, symbol.pod.name, symbol.name)
+  {
+    this.ctype = symbol.ns.symbolType
+    this.symbol = symbol
+  }
+
+  override Str toStr() { podName == null ? "@$name" : "@$podName::$name" }
+
+  Str qname() { symbol.qname }
 
   Str? podName
   Str name
@@ -1630,7 +1639,7 @@ enum ExprId
   uriLiteral,
   typeLiteral,
   slotLiteral,      // SlotLiteralExpr
-  symbolLiteral,    // SymbolLiteralExpr
+  symbolLiteral,    // SymbolExpr
   rangeLiteral,     // RangeLiteralExpr
   listLiteral,      // ListLiteralExpr
   mapLiteral,       // MapLiteralExpr

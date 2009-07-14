@@ -83,19 +83,12 @@ public class FPodEmit
     literals.uris = null;
 
     // symbols
-    for (int i=0; i<literals.symbolRefs.size(); ++i)
+    for (int i=0; i<fpod.symbolRefs.size(); ++i)
     {
-      FSymbolRef ref = literals.symbolRef(i);
-      try
-      {
-        Pod pod = Pod.find(ref.podName, false);
-        Symbol s = (pod == null) ? null : pod.symbol(ref.symbolName, false);
-        if (s == null) System.out.println("ERROR: symbol link error: " + ref);
-        cls.getField("S"+i).set(null, s);
-      }
-      catch (Exception e) { e.printStackTrace(); }
+      FSymbolRef ref = fpod.symbolRef(i);
+      cls.getField("S"+i).set(null, ref.resolve());
     }
-    literals.symbolRefs = null;
+    // symbols: can't cleanup because they are used for lazy facet loading
 
     // we only generate type fields for [java] types
     for (int i=0; i<fpod.typeRefs.size(); ++i)
@@ -133,7 +126,7 @@ public class FPodEmit
       emitField("Dur" + i, "Lfan/sys/Duration;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.uris.size(); ++i)
       emitField("U" + i, "Lfan/sys/Uri;", EmitConst.PUBLIC | EmitConst.STATIC);
-    for (int i=0; i<literals.symbolRefs.size(); ++i)
+    for (int i=0; i<pod.symbolRefs.size(); ++i)
       emitField("S" + i, "Lfan/sys/Symbol;", EmitConst.PUBLIC | EmitConst.STATIC);
 
     // we only generate type fields for [java] types

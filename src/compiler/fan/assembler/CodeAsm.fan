@@ -715,7 +715,7 @@ class CodeAsm : CompilerSupport
       op(FOp.CallVirtual, fpod.addMethodRef(ns.typeMethod, 1))
   }
 
-  private Void symbolLiteral(SymbolLiteralExpr expr)
+  private Void symbolLiteral(SymbolExpr expr)
   {
     op(FOp.LoadSymbol, fpod.addSymbolRef(expr.symbol))
   }

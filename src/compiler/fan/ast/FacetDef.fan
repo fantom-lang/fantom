@@ -16,11 +16,11 @@ class FacetDef : Node
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, Str name, Expr value)
-    : super(location)
+  new make(SymbolExpr key, Expr val)
+    : super(key.location)
   {
-    this.name  = name
-    this.value = value
+    this.key = key
+    this.val = val
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -29,28 +29,23 @@ class FacetDef : Node
 
   Void walk(Visitor v)
   {
-    value = value.walk(v)
+    key = key.walk(v)
+    val = val.walk(v)
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Debug
 //////////////////////////////////////////////////////////////////////////
 
-  override Str toStr()
-  {
-    return "@$name=$value"
-  }
+  override Str toStr() { "$key=$val" }
 
-  override Void print(AstWriter out)
-  {
-    out.w("@").w(name).w("=").w(value).nl
-  }
+  override Void print(AstWriter out) { out.w(key).w("=").w(val).nl }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Str name
-  Expr value
+  SymbolExpr key
+  Expr val
 
 }

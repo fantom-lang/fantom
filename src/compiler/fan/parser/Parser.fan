@@ -460,7 +460,7 @@ public class Parser : CompilerSupport
   **   <fieldGetter>  :=  "get" (<eos> | <block>)
   **   <fieldSetter>  :=  <protection> "set" (<eos> | <block>)
   **
-  private FieldDef fieldDef(Location loc, TypeDef parent, Str[]? doc, [Str:FacetDef]? facets, Int flags, TypeRef? type, Str name)
+  private FieldDef fieldDef(Location loc, TypeDef parent, Str[]? doc, FacetDef[]? facets, Int flags, TypeRef? type, Str name)
   {
     // define field itself
     field := FieldDef(loc, parent)
@@ -652,7 +652,7 @@ public class Parser : CompilerSupport
   **   <param>          :=  <type> <id> [":=" <expr>]
   **   <methodBody>     :=  <eos> | ( "{" <stmts> "}" )
   **
-  private MethodDef methodDef(Location loc, TypeDef parent, Str[]? doc, [Str:FacetDef]? facets, Int flags, TypeRef ret, Str name)
+  private MethodDef methodDef(Location loc, TypeDef parent, Str[]? doc, FacetDef[]? facets, Int flags, TypeRef ret, Str name)
   {
     method := MethodDef(loc, parent)
     method.doc    = doc
@@ -762,15 +762,13 @@ public class Parser : CompilerSupport
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  private [Str:FacetDef]? facets()
+  private FacetDef[]? facets()
   {
     if (curt !== Token.at) return null
-    facets := Str:FacetDef[:]
+    facets := FacetDef[,]
     while (curt === Token.at)
     {
-      consume
-      loc := cur
-      name := consumeId
+      key := symbolLiteral
       Expr? val
       if (curt === Token.assign)
       {
@@ -779,10 +777,9 @@ public class Parser : CompilerSupport
       }
       else
       {
-        val = LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)
+        val = LiteralExpr(key.location, ExprId.trueLiteral, ns.boolType, true)
       }
-      if (facets[name] != null) err("Duplicate facet '$name'", loc)
-      facets[name] = FacetDef(loc, name, val)
+      facets.add(FacetDef(key, val))
     }
     return facets
   }
@@ -1563,7 +1560,8 @@ public class Parser : CompilerSupport
   private Expr symbolLiteral()
   {
     loc := cur
-    consume(Token.at)
+    if (curt !== Token.at) throw err("Expecting '@' for symbol literal")
+    consume
     Str? podName := null
     name := consumeId
     if (curt === Token.doubleColon)
@@ -1572,7 +1570,7 @@ public class Parser : CompilerSupport
       consume
       name = consumeId
     }
-    return SymbolLiteralExpr(loc, podName, name)
+    return SymbolExpr(loc, podName, name)
   }
 
   **

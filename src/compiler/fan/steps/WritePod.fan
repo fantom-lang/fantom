@@ -227,32 +227,22 @@ class WritePod : CompilerStep
     out.close
   }
 
-  private FacetDef[] computeIndexedFacets([Str:FacetDef]? all, Str[] list, Str:Int map)
+  private FacetDef[] computeIndexedFacets(FacetDef[]? all, Str[] list, Str:Int map)
   {
     // if no facets defined, this is easy
     if (all == null || all.size == 0)
       return noFacets
 
-    indexed := all.values
-
-    /* filter just specific values?
-    indexed := all.values.findAll |FacetDef f->Bool|
-    {
-      ft := f.value.ctype
-      if (ft.isStr) return true
-      if (ft is ListType && ((ListType)ft).v.isStr) return true
-      return false
-    }
-    */
+    indexed := all.dup
 
     // map facet names into interned list/map
     indexed.each |FacetDef f|
     {
-      name := f.name
-      if (map[name] == null)
+      qname := f.key.qname
+      if (map[qname] == null)
       {
-        map[name] = list.size
-        list.add(name)
+        map[qname] = list.size
+        list.add(qname)
       }
     }
 
@@ -269,8 +259,8 @@ class WritePod : CompilerStep
     out.writeI2(t.indexedFacets.size)
     t.indexedFacets.each |FacetDef f|
     {
-      out.writeI2(facetNames[f.name])
-      out.writeUtf(f.value.serialize)
+      out.writeI2(facetNames[f.key.qname])
+      out.writeUtf(f.val.serialize)
     }
   }
 
