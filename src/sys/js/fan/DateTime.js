@@ -13,6 +13,71 @@
 fan.sys.DateTime = fan.sys.Obj.$extend(fan.sys.Obj);
 
 //////////////////////////////////////////////////////////////////////////
+// Constants
+//////////////////////////////////////////////////////////////////////////
+
+// TODO - make fan.sys.Ints
+fan.sys.DateTime.diffJs     = 946684800000; // 2000-1970 in milliseconds
+fan.sys.DateTime.nsPerYear  = 365*24*60*60*1000000000;
+fan.sys.DateTime.nsPerDay   = 24*60*60*1000000000;
+fan.sys.DateTime.nsPerHour  = 60*60*1000000000;
+fan.sys.DateTime.nsPerMin   = 60*1000000000;
+fan.sys.DateTime.nsPerSec   = 1000000000;
+fan.sys.DateTime.nsPerMilli = 1000000;
+fan.sys.DateTime.minTicks   = -3124137600000000000; // 1901
+fan.sys.DateTime.maxTicks   = 3155760000000000000;  // 2100
+
+//////////////////////////////////////////////////////////////////////////
+// Construction
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.DateTime.now = function(tolerance)
+{
+  if (tolerance == undefined)
+  {
+    if (fan.sys.DateTime.toleranceDefault == null)
+      fan.sys.DateTime.toleranceDefault = fan.sys.Duration.makeMillis(250);
+
+    tolerance = fan.sys.DateTime.toleranceDefault;
+  }
+
+  var now = (new Date().getTime() - fan.sys.DateTime.diffJs) * fan.sys.DateTime.nsPerMilli;
+
+  if (fan.sys.DateTime.cached == null)
+    fan.sys.DateTime.cached = fan.sys.DateTime.makeTicks(0, fan.sys.TimeZone.current());
+
+  var c = fan.sys.DateTime.cached;
+  if (tolerance != null && now - c.m_ticks <= tolerance.m_ticks)
+      return c;
+
+  fan.sys.DateTime.cached = fan.sys.DateTime.makeTicks(now, fan.sys.TimeZone.current());
+  return fan.sys.DateTime.cached;
+}
+
+fan.sys.DateTime.nowUtc = function(tolerance)
+{
+  if (tolerance == undefined)
+  {
+    if (fan.sys.DateTime.toleranceDefault == null)
+      fan.sys.DateTime.toleranceDefault = fan.sys.Duration.makeMillis(250);
+
+    tolerance = fan.sys.DateTime.toleranceDefault;
+  }
+
+  var now = (new Date().getTime() - fan.sys.DateTime.diffJs) * fan.sys.DateTime.nsPerMilli;
+
+ if (fan.sys.DateTime.cachedUtc == null)
+    fan.sys.DateTime.cachedUtc = fan.sys.DateTime.makeTicks(0, fan.sys.TimeZone.utc());
+
+  var c = fan.sys.DateTime.cachedUtc;
+  if (tolerance != null && now - c.m_ticks <= tolerance.m_ticks)
+      return c;
+
+  fan.sys.DateTime.cachedUtc = fan.sys.DateTime.makeTicks(now, fan.sys.TimeZone.utc());
+  return fan.sys.DateTime.cachedUtc;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Constructor - Values
 //////////////////////////////////////////////////////////////////////////
 
@@ -235,7 +300,7 @@ fan.sys.DateTime.fromStr = function(s, checked, iso)
     if (c != 'Z')
     {
       var offHour = num(s, i++)*10 + num(s, i++);
-      if (s.charAt(i++) != ':') throw new Exception();
+      if (s.charAt(i++) != ':') throw new Error();
       var offMin  = num(s, i++)*10 + num(s, i++);
       offset = offHour*3600 + offMin*60;
       if (c == '-') offset = -offset;
@@ -246,7 +311,7 @@ fan.sys.DateTime.fromStr = function(s, checked, iso)
     var tz;
     if (iso)
     {
-      if (i < s.length()) throw new Error();
+      if (i < s.length) throw new Error();
       if (offset == 0)
         tz = fan.sys.TimeZone.utc();
       else
@@ -630,23 +695,23 @@ fan.sys.DateTime.checkYear = function(year)
   if (year < 1901 || year > 2099)
     throw fan.sys.ArgErr.make("Year out of range " + year);
 }
+//////////////////////////////////////////////////////////////////////////
+// ISO 8601
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.DateTime.prototype.toIso = function()
+{
+  return this.toLocale("YYYY-MM-DD'T'hh:mm:ss.FFFz");
+}
+
+fan.sys.DateTime.fromIso = function(s, checked)
+{
+  if (checked == undefined) checked = true;
+  return fan.sys.DateTime.fromStr(s, checked, true);
+}
 
 //////////////////////////////////////////////////////////////////////////
-// Constants
-//////////////////////////////////////////////////////////////////////////
-
-// TODO - make fan.sys.Ints
-fan.sys.DateTime.nsPerYear  = 365*24*60*60*1000000000;
-fan.sys.DateTime.nsPerDay   = 24*60*60*1000000000;
-fan.sys.DateTime.nsPerHour  = 60*60*1000000000;
-fan.sys.DateTime.nsPerMin   = 60*1000000000;
-fan.sys.DateTime.nsPerSec   = 1000000000;
-fan.sys.DateTime.nsPerMilli = 1000000;
-fan.sys.DateTime.minTicks   = -3124137600000000000; // 1901
-fan.sys.DateTime.maxTicks   = 3155760000000000000;  // 2100
-
-//////////////////////////////////////////////////////////////////////////
-// Static Fields
+// Lookup Tables
 //////////////////////////////////////////////////////////////////////////
 
 // ns ticks for jan 1 of year 1900-2100
