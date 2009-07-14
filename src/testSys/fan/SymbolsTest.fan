@@ -13,47 +13,46 @@ class SymbolsTest : Test
 {
   Void testBasics()
   {
-    verifyImmutable("boolT",    true)
-    verifyImmutable("boolF",    false)
-    verifyImmutable("intA",     0xabcd_0123_eeff_7788)
-    verifyImmutable("intB",     -4)
-    verifyImmutable("floatA",   -5f)
-    verifyImmutable("decimalA", 6.7d)
-    verifyImmutable("durA",     30ms)
-    verifyImmutable("strA",     "alpha")
-    verifyImmutable("strB",     "line1\nline2\nline3_\u02c3_")
-    verifyImmutable("uriA",     `http://fandev.org/`)
-    verifyImmutable("numA",     45,   Num#)
-    verifyImmutable("numB",     null, Num?#)
+    verifyImmutable(@testSys::boolT, "boolT",  true)
+    verifyImmutable(@boolF, "boolF",    false)
+    verifyImmutable(@intA, "intA",     0xabcd_0123_eeff_7788)
+    verifyImmutable(@intB, "intB",     -4)
+    verifyImmutable(@floatA, "floatA",   -5f)
+    verifyImmutable(@decimalA, "decimalA", 6.7d)
+    verifyImmutable(@durA, "durA",     30ms)
+    verifyImmutable(@strA, "strA",     "alpha")
+    verifyImmutable(@strB, "strB",     "line1\nline2\nline3_\u02c3_")
+    verifyImmutable(@uriA, "uriA",     `http://fandev.org/`)
+    verifyImmutable(@numA, "numA",     45,   Num#)
+    verifyImmutable(@numB, "numB",     null, Num?#)
 
-    verifyImmutable("listA",  ["a", "b", "c"])
-    verifyImmutable("listB",  [2, 3f, 4d], Num[]#)
-    verifyImmutable("listC",  [["a"], ["b"], ["c"]])
-    verifyMutable("listD",    [SerA { i = 0 }, SerA { i = 1 }, SerA { i = 2 }])
+    verifyImmutable(@listA, "listA",  ["a", "b", "c"])
+    verifyImmutable(@listB, "listB",  [2, 3f, 4d], Num[]#)
+    verifyImmutable(@listC, "listC",  [["a"], ["b"], ["c"]])
+    verifyMutable(@listD, "listD",    [SerA { i = 0 }, SerA { i = 1 }, SerA { i = 2 }])
 
-    verifyImmutable("mapA", [0:"zero", 1:"one"])
-    verifyMutable("mapB",   [2: SerA { i = 2 }, 3: SerA { i = 3 }])
+    verifyImmutable(@mapA, "mapA", [0:"zero", 1:"one"])
+    verifyMutable(@mapB, "mapB",   [2: SerA { i = 2 }, 3: SerA { i = 3 }])
 
-    verifyImmutable("serialA", Version("2.3"))
-    verifyImmutable("serialB", [Version("1"), Version("2")])
-    verifyMutable("serialC",   SerA { i = 12345; s = "symbols!"})
+    verifyImmutable(@serialA, "serialA", Version("2.3"))
+    verifyImmutable(@serialB, "serialB", [Version("1"), Version("2")])
+    verifyMutable(@serialC, "serialC", SerA { i = 12345; s = "symbols!"})
   }
 
-  Void verifyImmutable(Str name, Obj? val, Type of := val.type)
+  Void verifyImmutable(Symbol x, Str name, Obj? val, Type of := val.type)
   {
-    x := verifySymbol(name, val, of)
+    verifySymbol(x, name, val, of)
     verifySame(x.defVal, x.defVal)
   }
 
-  Void verifyMutable(Str name, Obj? val, Type of := val.type)
+  Void verifyMutable(Symbol x, Str name, Obj? val, Type of := val.type)
   {
-    x := verifySymbol(name, val, of)
+    verifySymbol(x, name, val, of)
     verifyNotSame(x.defVal, x.defVal)
   }
 
-  Symbol verifySymbol(Str name, Obj? val, Type of := val.type)
+  Void verifySymbol(Symbol x, Str name, Obj? val, Type of := val.type)
   {
-    x := type.pod.symbol(name)
     verifyEq(x, type.pod.symbol(name))
     verifySame(x, type.pod.symbol(name))
     verifyEq(x.name, name)
@@ -63,7 +62,6 @@ class SymbolsTest : Test
     verifyEq(x.of, of)
     verifyEq(x.val, val)
     verifyEq(x.defVal, val)
-    return x
   }
 
 
