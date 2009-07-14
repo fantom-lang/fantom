@@ -23,16 +23,16 @@ class Env
       @fan_lib_fan  = File.join(@fan_lib, "fan")
       @fan_lib_net  = File.join(@fan_lib, "net")
     @fan_src  = File.join(@fan_home, "src")
-      @src_jfan     = File.join(@fan_src, "jfan")
-      @src_nfan     = File.join(@fan_src, "nfan")      
+      @src_jfan     = File.join(@fan_src, "sys", "java")
+      @src_nfan     = File.join(@fan_src, "sys", "dotnet")
       @src_compiler = File.join(@fan_src, "compiler")
-    
+
     @java_home = ENV["java_home"]
       @javac     = File.join(@java_home, "bin", "javac.exe")
       @jar       = File.join(@java_home, "bin", "jar.exe")
   end
 
-  # dump all the instance variables  
+  # dump all the instance variables
   def dump()
     puts "fan_home     = #@fan_home"
     puts "fan_bin      = #@fan_bin"
@@ -47,13 +47,13 @@ class Env
     puts "java_home    = #@java_home"
     puts "javac        = #@javac"
   end
-  
+
   # recursively delete a directory (of file)
-  def nuke(x) 
+  def nuke(x)
     nukeLog(x, false)
   end
-  
-  def nukeLog(x, log) 
+
+  def nukeLog(x, log)
     return unless File.exists?(x)
     if File.directory?(x)
       Dir.entries(x).each do |f|
@@ -62,18 +62,18 @@ class Env
         nuke(f)
       end
       puts("  del [" + x + "]") if log
-      Dir.delete(x)    
+      Dir.delete(x)
     else
       puts("  del [" + x + "]") if log
       File.delete(x)
     end
   end
-  
+
   def syscall(cmd)
-    r = system(cmd)  
+    r = system(cmd)
     raise ("Failed: " + cmd) unless r
   end
-  
+
 
 end
 

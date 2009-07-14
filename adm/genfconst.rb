@@ -20,7 +20,7 @@ class GenFConst < Env
  @@stuff = [
 
   "FCodeMagic    = 0x0FC0DE05;",
-  "FCodeVersion  = 0x01000034;",
+  "FCodeVersion  = 0x01000045;",
 
   "TypeDbMagic   = 0x0FC0DEDB;",
   "TypeDbVersion = 0x01000018;",
@@ -150,7 +150,8 @@ class GenFConst < Env
    "CatchEnd            0  ()         // start catch block - leave typed Err on stack",
    "FinallyStart        0  ()         // starting instruction of a finally block",
    "FinallyEnd          0  ()         // ending instruction of a finally block",
- 
+
+   "LoadSymbol          2  (symbol)   // load Symbol const by index onto stack",
  ]
 
 #####################################################################
@@ -195,6 +196,7 @@ enum FOpArg
   Str,
   Duration,
   Uri,
+  Symbol,
   Register,
   TypeRef,
   FieldRef,
@@ -270,6 +272,7 @@ FAN_OP_FOOTER
                "str"=>"FOpArg.Str",
                "dur"=>"FOpArg.Duration",
                "uri"=>"FOpArg.Uri",
+               "symbol"=>"FOpArg.Symbol",
                "reg"=>"FOpArg.Register",
                "jmp"=>"FOpArg.Jump",
                "type"=>"FOpArg.TypeRef",

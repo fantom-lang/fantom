@@ -117,7 +117,7 @@
     u4  version 0x01_00_0015
     utf podName
     utf podVersion
-    u1  dependCount
+    u2  dependCount
     utf[dependCount] depends
     u2  attrCount
     attr[attrCount] attrs

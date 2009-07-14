@@ -262,7 +262,7 @@ final class FPod : CPod, FConst
     out.writeI4(FConst.FCodeVersion)
     out.writeUtf(name)
     out.writeUtf(version.toStr)
-    out.write(depends.size)
+    out.writeI2(depends.size)
     depends.each |Depend d| { out.writeUtf(d.toStr) }
     out.writeI2(fattrs.size)
     fattrs.each |FAttr a| { a.write(out) }
