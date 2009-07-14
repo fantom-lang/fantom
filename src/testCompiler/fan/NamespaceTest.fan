@@ -438,4 +438,36 @@ class NamespaceTest : CompilerTest
        ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Ambiguous
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAmbiguous()
+  {
+    x := podName
+    compile("class Foo {}\nclass Bar {}")
+    xp := pod
+
+    y := podName
+    compile("class Foo {}\nclass Bar {}\nclass Baz {}")
+    yp := pod
+
+    verifyErrors(
+    "using $x
+     using $y
+     class Test
+     {
+       Obj? m05() { return Foo# }
+       Obj? m06() { return Bar#.bar }
+       Obj? m07() { return (Baz)m06 }
+     }
+     class Foo {}
+     class Baz {}",
+     [
+       5, 23, "Ambiguous type: $podName::Foo, $x::Foo, $y::Foo",
+       6, 23, "Ambiguous type: $x::Bar, $y::Bar",
+       7, 24, "Ambiguous type: $podName::Baz, $y::Baz",
+     ])
+  }
+
 }

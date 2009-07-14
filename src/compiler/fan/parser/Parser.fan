@@ -2198,8 +2198,9 @@ public class Parser : CompilerSupport
       return ns.voidType
     }
 
-    // if more then one it is ambiguous
-    if (types.size > 1) err("Ambiguous type: " + types.join(", "))
+    // if more then one its ambiguous (use errReport to avoid suppression)
+    if (types.size > 1)
+      errReport(CompilerErr("Ambiguous type: " + types.join(", "), loc))
 
     // got it
     return types.first
