@@ -110,6 +110,11 @@ fan.sys.Duration.make = function(ticks)
   return new fan.sys.Duration(ticks);
 }
 
+fan.sys.Duration.makeMillis = function(ms)
+{
+  return fan.sys.Duration.make(ms*1000000);
+}
+
 fan.sys.Duration.fromStr = function(s, checked)
 {
   //   ns:   nanoseconds  (x 1)
