@@ -44,6 +44,23 @@ abstract class CompilerStep : CompilerSupport, Visitor
     return curMethod == null || curMethod.isStatic
   }
 
+  CompilationUnit? curUnit()
+  {
+    if (curType != null) return curType.unit
+    if (curSymbol != null) return curSymbol.unit
+    return null
+  }
+
+  override Void enterSymbolDef(SymbolDef def)
+  {
+    curSymbol = def
+  }
+
+  override Void exitSymbolDef(SymbolDef def)
+  {
+    curSymbol = null
+  }
+
   override Void enterTypeDef(TypeDef def)
   {
     curType = def
@@ -70,4 +87,5 @@ abstract class CompilerStep : CompilerSupport, Visitor
 
   TypeDef? curType
   MethodDef? curMethod
+  SymbolDef? curSymbol
 }

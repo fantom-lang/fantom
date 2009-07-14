@@ -46,6 +46,7 @@ class ResolveExpr : CompilerStep
   {
     // symbol type inference
     if (s.ctype == null) s.ctype = s.val.ctype
+    super.exitSymbolDef(s)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -242,7 +243,7 @@ class ResolveExpr : CompilerStep
   private Expr resolveSymbol(SymbolLiteralExpr expr)
   {
     expr.ctype = ns.symbolType
-    expr.symbol = ResolveImports.resolveSymbol(this, curType.unit, expr.podName, expr.name, expr.location)
+    expr.symbol = ResolveImports.resolveSymbol(this, curUnit, expr.podName, expr.name, expr.location)
     return expr
   }
 

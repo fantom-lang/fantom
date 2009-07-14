@@ -16,10 +16,10 @@ class SymbolDef : DefNode, CSymbol
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, PodDef pod, CType? of, Str name, Expr val)
+  new make(Location location, CompilationUnit unit, CType? of, Str name, Expr val)
     : super(location)
   {
-    this.pod   = pod
+    this.unit  = unit
     this.ctype = of
     this.name  = name
     this.val   = val
@@ -29,7 +29,9 @@ class SymbolDef : DefNode, CSymbol
 // CSymbol
 //////////////////////////////////////////////////////////////////////////
 
-  override readonly PodDef pod
+  override PodDef pod() { unit.pod }
+
+  readonly CompilationUnit unit
 
   override readonly Str name
 

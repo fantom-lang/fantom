@@ -152,4 +152,46 @@ class SymbolsTest : CompilerTest
      ])
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Errors
+//////////////////////////////////////////////////////////////////////////
+
+  Void testErrors()
+  {
+    // ParseErrors
+    symbolsStr =
+    "xx := 3
+     xx := 4
+     yy = 5"
+    verifyErrors("class Foo {}",
+     [
+       2, 1, "Duplicate symbol name 'xx'",
+       3, 4, "Expected ':=', not '='",
+     ])
+
+    // UnresolvedExpr
+    symbolsStr =
+    "using compiler
+     a := @foo
+     b := @bar::foo
+     c := @compiler::baz
+     d := 4.fooBar"
+    verifyErrors("class Foo {}",
+     [
+       2, 6, "Unresolved symbol 'foo'",
+       3, 6, "Pod not found 'bar'",
+       4, 6, "Unresolved symbol 'compiler::baz'",
+       5, 8, "Unknown slot 'sys::Int.fooBar'",
+     ])
+
+    // Assemble
+    symbolsStr =
+    "using compiler
+     a := 4
+     b := @a"
+    verifyErrors("class Foo {}",
+     [
+       3, 6, "Symbol value is not serializable: 'b' ('symbolLiteral' not serializable)",
+     ])
+  }
 }

@@ -22,7 +22,7 @@ class PodDef : DefNode, CPod
     this.ns = ns
     this.name = name
     this.units = CompilationUnit[,]
-    this.symbolDefs = Str:SymbolDef[:]
+    this.symbolDefs = Str:SymbolDef[:] { ordered = true }
   }
 
 //////////////////////////////////////////////////////////////////////////

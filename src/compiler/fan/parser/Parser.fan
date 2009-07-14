@@ -77,7 +77,7 @@ public class Parser : CompilerSupport
     consume(Token.defAssign)
     val   := expr
     endOfStmt
-    symbol := SymbolDef(loc, compiler.pod, of, name, val)
+    symbol := SymbolDef(loc, unit, of, name, val)
 
     if (compiler.pod.symbolDefs.containsKey(name))
       err("Duplicate symbol name '$name'", loc)
