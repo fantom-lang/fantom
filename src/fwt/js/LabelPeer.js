@@ -58,6 +58,11 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
   if (this.image != null)
   {
     var img = document.createElement("img");
+    if (this.text.length > 0)
+    {
+      img.style.verticalAlign = "middle";
+      img.style.paddingRight = "3px";
+    }
     img.src = this.image.uri;
     parent.appendChild(img);
   }
@@ -80,6 +85,7 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
       default:                textAlign = "left"; break;
     }
     whiteSpace = "nowrap";
+    cursor = "default";
   }
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
