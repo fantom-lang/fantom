@@ -50,7 +50,7 @@ fan.fwt.TabPanePeer.prototype.sync = function(self)
   with (this.contentBorder.style)
   {
     background = "#eee";
-    border     = "1px solid #555";
+    border     = "1px solid #404040";
     position   = "absolute";
     left   = 0;
     top    = (th-1) + "px";

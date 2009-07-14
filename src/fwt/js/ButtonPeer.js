@@ -36,7 +36,7 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem)
     //font      = "bold 10pt Arial";
     padding   = "2px 4px";
     textAlign = "center";
-    border    = "1px solid #555";
+    border    = "1px solid #404040";
     cursor    = "default";
     backgroundColor = "#eee";
     // IE workaround

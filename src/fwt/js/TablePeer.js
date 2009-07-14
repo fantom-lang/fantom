@@ -42,7 +42,7 @@ fan.fwt.TablePeer.prototype.create = function(parentElem)
   var div = this.emptyDiv();
   with (div.style)
   {
-    border     = "1px solid #555";
+    border     = "1px solid #404040";
     overflow   = "auto";
     background = "#fff";
   }
@@ -86,7 +86,7 @@ fan.fwt.TablePeer.prototype.sync = function(self)
         padding      = "4px 6px";
         textAlign    = "left";
         whiteSpace   = "nowrap";
-        borderBottom = "1px solid #555";
+        borderBottom = "1px solid #404040";
         backgroundColor = "#dbdbdb";
         // IE workaround
         try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#dbdbdb), to(#bbb))"; } catch (err) {} // ignore
