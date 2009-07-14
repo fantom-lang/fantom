@@ -60,6 +60,11 @@ fan.sys.List.toStr = function(self)
 // Access
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.List.isEmpty = function(self)
+{
+  return self.length == 0;
+}
+
 fan.sys.List.add = function(self, item)
 {
   self.push(item);
