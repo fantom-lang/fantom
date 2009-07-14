@@ -175,12 +175,13 @@ Expr [#expr]
   <callOp>         :=  "(" <args> ")" [<closure>]
   <literal>        :=  "null" | "this" | "super" | "it" |
                        <bool> | <int> | <float> | <decimal> | <str> |
-                       <duration> | <uri> | <list> | <map>
+                       <duration> | <uri> | <list> | <map> | <symbolLiteral>
   <list>           :=  [<type>] "[" <listItems> "]"
   <listItems>      :=  "," | (<expr> ("," <expr>)*)
   <map>            :=  [<mapType>] "[" <mapItems> "]"
   <mapItems>       :=  ":" | (<mapPair> ("," <mapPair>)*)
   <mapPair>        :=  <expr> ":" <expr>
+  <symbolLiteral>  :=  "@" [<id> "::"] <id>
 
 See `Literals` for grammar of the literal tokens.
 

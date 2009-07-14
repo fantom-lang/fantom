@@ -673,6 +673,8 @@
 - #629: NoClassDefFoundError when accessing public static final field with JavaFFI
 
 *Build 1.0.45 (working)*
+- Roll fcode version code 0x01_00_0034 => 0x01_00_0045
+- LoadSymbol opcode
 - Change field storage operator from "@" => "*"
 - fwt::Canvas support in IE using JavaFX
 - DateTime,TimeZone support for JavaScript
@@ -681,4 +683,4 @@
 - Change all uses of 'javascript' => 'js'
 - Fix Str indexIgnoreCase/indexrIgnoreCase bug
 
-// TODO: change depends to use u2
+// TODO: remove obsolete fcode version 34 checks

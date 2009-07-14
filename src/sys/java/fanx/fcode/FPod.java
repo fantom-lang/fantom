@@ -138,14 +138,17 @@ public final class FPod
       throw new IOException("Invalid magic");
 
     int version = in.u4();
-    if (version != FConst.FCodeVersion)
+    if (version != FConst.FCodeVersion &&
+// TODO
+version != 0x01000034)
       throw new IOException("Invalid version 0x" + Integer.toHexString(version));
     this.version = version;
 
     podName = in.utf();
     podVersion = in.utf();
-// TODO: fix this to be u2
-    depends = new Depend[in.u1()];
+// TODO
+int dependNum = version == 0x01000034 ? in.u1() : in.u2();
+    depends = new Depend[dependNum];
     for (int i=0; i<depends.length; ++i)
       depends[i] = Depend.fromStr(in.utf());
 
