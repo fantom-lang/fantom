@@ -9,33 +9,41 @@
 **
 ** SymbolDef
 **
-class SymbolDef : DefNode
+class SymbolDef : DefNode, CSymbol
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(CNamespace ns, Location location, CType? of, Str name, Expr val)
+  new make(Location location, PodDef pod, CType? of, Str name, Expr val)
     : super(location)
   {
-    this.ns   = ns
-    this.of   = of
-    this.name = name
-    this.val  = val
+    this.pod   = pod
+    this.ctype = of
+    this.name  = name
+    this.val   = val
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// CSymbol
+//////////////////////////////////////////////////////////////////////////
+
+  override readonly PodDef pod
+
+  override readonly Str name
+
+  override Str qname() { "${pod.name}::${name}" }
+
+  override CType of()
+  {
+    if (ctype == null) throw Err("symbol not typed yet $qname")
+    return ctype
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
-
-  override Str toStr()
-  {
-    s := StrBuf()
-    if (of != null) s.add(of).addChar(' ')
-    s.add(name).add(" := ").add(val)
-    return s.toStr
-  }
 
   Void walk(Visitor v, VisitDepth depth)
   {
@@ -53,9 +61,7 @@ class SymbolDef : DefNode
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  override readonly CNamespace ns  // compiler's namespace
-  CType? of
-  Str name
+  CType? ctype
   Expr val
 
 }

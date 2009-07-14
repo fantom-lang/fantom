@@ -77,7 +77,7 @@ public class Parser : CompilerSupport
     consume(Token.defAssign)
     val   := expr
     endOfStmt
-    symbol := SymbolDef(ns, loc, of, name, val)
+    symbol := SymbolDef(loc, compiler.pod, of, name, val)
 
     if (compiler.pod.symbolDefs.containsKey(name))
       err("Duplicate symbol name '$name'", loc)
@@ -1522,7 +1522,7 @@ public class Parser : CompilerSupport
   **   <termBase>    :=  <literal> | <idExpr> | <closure> | <dsl>
   **   <literal>     :=  "null" | "this" | "super" | <bool> | <int> |
   **                     <float> | <str> | <duration> | <list> | <map> | <uri> |
-  **                     <typeLiteral> | <slotLiteral>
+  **                     <typeLiteral> | <slotLiteral> | <symbolLiteral>
   **   <typeLiteral> :=  <type> "#"
   **   <slotLiteral> :=  [<type>] "#" <id>
   **
@@ -1551,8 +1551,24 @@ public class Parser : CompilerSupport
       case Token.itKeyword:       consume; return ItExpr(loc)
       case Token.trueKeyword:     consume; return LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)
       case Token.pound:           consume; return SlotLiteralExpr(loc, curType, consumeId)
+      case Token.at:              return symbolLiteral
     }
     throw err("Expected expression, not '" + cur + "'")
+  }
+
+  private Expr symbolLiteral()
+  {
+    loc := cur
+    consume(Token.at)
+    Str? podName := null
+    name := consumeId
+    if (curt === Token.doubleColon)
+    {
+      podName = name
+      consume
+      name = consumeId
+    }
+    return SymbolLiteralExpr(loc, podName, name)
   }
 
   **

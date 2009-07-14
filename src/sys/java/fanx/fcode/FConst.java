@@ -127,124 +127,124 @@ public interface FConst
 
   public static final String[] OpNames =
   {
-    "Nop",                //   0
-    "LoadNull",           //   1
-    "LoadFalse",          //   2
-    "LoadTrue",           //   3
-    "LoadInt",            //   4
-    "LoadFloat",          //   5
-    "LoadDecimal",        //   6
-    "LoadStr",            //   7
-    "LoadDuration",       //   8
-    "LoadType",           //   9
-    "LoadUri",            //  10
-    "LoadVar",            //  11
-    "StoreVar",           //  12
-    "LoadInstance",       //  13
-    "StoreInstance",      //  14
-    "LoadStatic",         //  15
-    "StoreStatic",        //  16
-    "LoadMixinStatic",    //  17
-    "StoreMixinStatic",   //  18
-    "CallNew",            //  19
-    "CallCtor",           //  20
-    "CallStatic",         //  21
-    "CallVirtual",        //  22
-    "CallNonVirtual",     //  23
-    "CallMixinStatic",    //  24
-    "CallMixinVirtual",   //  25
-    "CallMixinNonVirtual",  //  26
-    "Jump",               //  27
-    "JumpTrue",           //  28
-    "JumpFalse",          //  29
-    "CompareEQ",          //  30
-    "CompareNE",          //  31
-    "Compare",            //  32
-    "CompareLE",          //  33
-    "CompareLT",          //  34
-    "CompareGT",          //  35
-    "CompareGE",          //  36
-    "CompareSame",        //  37
-    "CompareNotSame",     //  38
-    "CompareNull",        //  39
-    "CompareNotNull",     //  40
-    "Return",             //  41
-    "Pop",                //  42
-    "Dup",                //  43
-    "Is",                 //  44
-    "As",                 //  45
-    "Coerce",             //  46
-    "Switch",             //  47
-    "Throw",              //  48
-    "Leave",              //  49
-    "JumpFinally",        //  50
-    "CatchAllStart",      //  51
-    "CatchErrStart",      //  52
-    "CatchEnd",           //  53
-    "FinallyStart",       //  54
-    "FinallyEnd",         //  55
-    "LoadSymbol",         //  56
+    "Nop",                //   0 
+    "LoadNull",           //   1 
+    "LoadFalse",          //   2 
+    "LoadTrue",           //   3 
+    "LoadInt",            //   4 
+    "LoadFloat",          //   5 
+    "LoadDecimal",        //   6 
+    "LoadStr",            //   7 
+    "LoadDuration",       //   8 
+    "LoadType",           //   9 
+    "LoadUri",            //  10 
+    "LoadVar",            //  11 
+    "StoreVar",           //  12 
+    "LoadInstance",       //  13 
+    "StoreInstance",      //  14 
+    "LoadStatic",         //  15 
+    "StoreStatic",        //  16 
+    "LoadMixinStatic",    //  17 
+    "StoreMixinStatic",   //  18 
+    "CallNew",            //  19 
+    "CallCtor",           //  20 
+    "CallStatic",         //  21 
+    "CallVirtual",        //  22 
+    "CallNonVirtual",     //  23 
+    "CallMixinStatic",    //  24 
+    "CallMixinVirtual",   //  25 
+    "CallMixinNonVirtual",  //  26 
+    "Jump",               //  27 
+    "JumpTrue",           //  28 
+    "JumpFalse",          //  29 
+    "CompareEQ",          //  30 
+    "CompareNE",          //  31 
+    "Compare",            //  32 
+    "CompareLE",          //  33 
+    "CompareLT",          //  34 
+    "CompareGT",          //  35 
+    "CompareGE",          //  36 
+    "CompareSame",        //  37 
+    "CompareNotSame",     //  38 
+    "CompareNull",        //  39 
+    "CompareNotNull",     //  40 
+    "Return",             //  41 
+    "Pop",                //  42 
+    "Dup",                //  43 
+    "Is",                 //  44 
+    "As",                 //  45 
+    "Coerce",             //  46 
+    "Switch",             //  47 
+    "Throw",              //  48 
+    "Leave",              //  49 
+    "JumpFinally",        //  50 
+    "CatchAllStart",      //  51 
+    "CatchErrStart",      //  52 
+    "CatchEnd",           //  53 
+    "FinallyStart",       //  54 
+    "FinallyEnd",         //  55 
+    "LoadSymbol",         //  56 
   };
 
   public static final int[] OpSkips =
   {
-    0,  //   0 Nop
-    0,  //   1 LoadNull
-    0,  //   2 LoadFalse
-    0,  //   3 LoadTrue
-    2,  //   4 LoadInt
-    2,  //   5 LoadFloat
-    2,  //   6 LoadDecimal
-    2,  //   7 LoadStr
-    2,  //   8 LoadDuration
-    2,  //   9 LoadType
-    2,  //  10 LoadUri
-    2,  //  11 LoadVar
-    2,  //  12 StoreVar
-    2,  //  13 LoadInstance
-    2,  //  14 StoreInstance
-    2,  //  15 LoadStatic
-    2,  //  16 StoreStatic
-    2,  //  17 LoadMixinStatic
-    2,  //  18 StoreMixinStatic
-    2,  //  19 CallNew
-    2,  //  20 CallCtor
-    2,  //  21 CallStatic
-    2,  //  22 CallVirtual
-    2,  //  23 CallNonVirtual
-    2,  //  24 CallMixinStatic
-    2,  //  25 CallMixinVirtual
-    2,  //  26 CallMixinNonVirtual
-    2,  //  27 Jump
-    2,  //  28 JumpTrue
-    2,  //  29 JumpFalse
-    0,  //  30 CompareEQ
-    0,  //  31 CompareNE
-    0,  //  32 Compare
-    0,  //  33 CompareLE
-    0,  //  34 CompareLT
-    0,  //  35 CompareGT
-    0,  //  36 CompareGE
-    0,  //  37 CompareSame
-    0,  //  38 CompareNotSame
-    0,  //  39 CompareNull
-    0,  //  40 CompareNotNull
-    0,  //  41 Return
-    0,  //  42 Pop
-    0,  //  43 Dup
-    2,  //  44 Is
-    2,  //  45 As
-    4,  //  46 Coerce
-    0,  //  47 Switch
-    0,  //  48 Throw
-    2,  //  49 Leave
-    2,  //  50 JumpFinally
-    0,  //  51 CatchAllStart
-    2,  //  52 CatchErrStart
-    0,  //  53 CatchEnd
-    0,  //  54 FinallyStart
-    0,  //  55 FinallyEnd
-    2,  //  56 LoadSymbol
+    0,  //   0 Nop 
+    0,  //   1 LoadNull 
+    0,  //   2 LoadFalse 
+    0,  //   3 LoadTrue 
+    2,  //   4 LoadInt 
+    2,  //   5 LoadFloat 
+    2,  //   6 LoadDecimal 
+    2,  //   7 LoadStr 
+    2,  //   8 LoadDuration 
+    2,  //   9 LoadType 
+    2,  //  10 LoadUri 
+    2,  //  11 LoadVar 
+    2,  //  12 StoreVar 
+    2,  //  13 LoadInstance 
+    2,  //  14 StoreInstance 
+    2,  //  15 LoadStatic 
+    2,  //  16 StoreStatic 
+    2,  //  17 LoadMixinStatic 
+    2,  //  18 StoreMixinStatic 
+    2,  //  19 CallNew 
+    2,  //  20 CallCtor 
+    2,  //  21 CallStatic 
+    2,  //  22 CallVirtual 
+    2,  //  23 CallNonVirtual 
+    2,  //  24 CallMixinStatic 
+    2,  //  25 CallMixinVirtual 
+    2,  //  26 CallMixinNonVirtual 
+    2,  //  27 Jump 
+    2,  //  28 JumpTrue 
+    2,  //  29 JumpFalse 
+    0,  //  30 CompareEQ 
+    0,  //  31 CompareNE 
+    0,  //  32 Compare 
+    0,  //  33 CompareLE 
+    0,  //  34 CompareLT 
+    0,  //  35 CompareGT 
+    0,  //  36 CompareGE 
+    0,  //  37 CompareSame 
+    0,  //  38 CompareNotSame 
+    0,  //  39 CompareNull 
+    0,  //  40 CompareNotNull 
+    0,  //  41 Return 
+    0,  //  42 Pop 
+    0,  //  43 Dup 
+    2,  //  44 Is 
+    2,  //  45 As 
+    4,  //  46 Coerce 
+    0,  //  47 Switch 
+    0,  //  48 Throw 
+    2,  //  49 Leave 
+    2,  //  50 JumpFinally 
+    0,  //  51 CatchAllStart 
+    2,  //  52 CatchErrStart 
+    0,  //  53 CatchEnd 
+    0,  //  54 FinallyStart 
+    0,  //  55 FinallyEnd 
+    2,  //  56 LoadSymbol 
   };
 
   public static final String[] OpSigs =

@@ -26,7 +26,6 @@ class FSymbol : CSymbol, FConst
 // CSymbol
 //////////////////////////////////////////////////////////////////////////
 
-  override CNamespace ns() { fpod.ns }
   override FPod pod()      { fpod }
   override Str name()      { fpod.n(nameIndex) }
   override Str qname()     { fpod.name + "." + name }

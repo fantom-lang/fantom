@@ -28,6 +28,7 @@ final class FPod : CPod, FConst
     this.typeRefs   = FTable.makeTypeRefs(this)
     this.fieldRefs  = FTable.makeFieldRefs(this)
     this.methodRefs = FTable.makeMethodRefs(this)
+    this.symbolRefs = FTable.makeSymbolRefs(this)
     this.ints       = FTable.makeInts(this)
     this.floats     = FTable.makeFloats(this)
     this.decimals   = FTable.makeDecimals(this)
@@ -69,24 +70,34 @@ final class FPod : CPod, FConst
     return indexes.map |Int index->CType| { toType(index) }
   }
 
+  override CSymbol? resolveSymbol(Str name, Bool checked)
+  {
+    s := fsymbols[name]
+    if (s != null) return s
+    if (checked) throw UnknownSymbolErr("${this.name}::$name")
+    return null
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Convenience
 //////////////////////////////////////////////////////////////////////////
 
-  Str n(Int index)                { return (Str)names[index] }
-  FTypeRef typeRef(Int index)     { return (FTypeRef)typeRefs[index] }
-  FFieldRef fieldRef(Int index)   { return (FFieldRef)fieldRefs[index] }
-  FMethodRef methodRef(Int index) { return (FMethodRef)methodRefs[index] }
-  Int integer(Int index)          { return (Int)ints[index] }
-  Float float(Int index)          { return (Float)floats[index] }
-  Decimal decimal(Int index)      { return (Decimal)decimals[index] }
-  Str str(Int index)              { return (Str)strs[index] }
-  Duration duration(Int index)    { return (Duration)durations[index] }
-  Str uri(Int index)              { return (Str)uris[index] }
+  Str n(Int index)                { names[index] }
+  FTypeRef typeRef(Int index)     { typeRefs[index] }
+  FFieldRef fieldRef(Int index)   { fieldRefs[index] }
+  FMethodRef methodRef(Int index) { methodRefs[index] }
+  FSymbolRef symbolRef(Int index) { symbolRefs[index] }
+  Int integer(Int index)          { ints[index] }
+  Float float(Int index)          { floats[index] }
+  Decimal decimal(Int index)      { decimals[index] }
+  Str str(Int index)              { strs[index] }
+  Duration duration(Int index)    { durations[index] }
+  Str uri(Int index)              { uris[index] }
 
   Str typeRefStr(Int index) { return typeRef(index).format(this) }
   Str fieldRefStr(Int index) { return fieldRef(index).format(this) }
   Str methodRefStr(Int index) { return methodRef(index).format(this) }
+  Str symbolRefStr(Int index) { return symbolRef(index).format(this) }
 
 //////////////////////////////////////////////////////////////////////////
 // Compile Utils
@@ -132,6 +143,13 @@ final class FPod : CPod, FConst
     return methodRefs.add(FMethodRef(p, n, r, params))
   }
 
+  Int addSymbolRef(CSymbol s)
+  {
+    p   := addName(s.pod.name)
+    n   := addName(s.name)
+    return symbolRefs.add(FSymbolRef(p, n))
+  }
+
   Void dump(OutStream out := Sys.out)
   {
     p := FPrinter(this, out)
@@ -156,6 +174,7 @@ final class FPod : CPod, FConst
     typeRefs.read(in(`/typeRefs.def`))
     fieldRefs.read(in(`/fieldRefs.def`))
     methodRefs.read(in(`/methodRefs.def`))
+    symbolRefs.read(in(`/symbolDefs.def`))
     ints.read(in(`/ints.def`))
     floats.read(in(`/floats.def`))
     decimals.read(in(`/decimals.def`))
@@ -206,6 +225,7 @@ final class FPod : CPod, FConst
     if (!typeRefs.isEmpty)   typeRefs.write(out(`/typeRefs.def`))
     if (!fieldRefs.isEmpty)  fieldRefs.write(out(`/fieldRefs.def`))
     if (!methodRefs.isEmpty) methodRefs.write(out(`/methodRefs.def`))
+    if (!symbolRefs.isEmpty) symbolRefs.write(out(`/symbolRefs.def`))
     if (!ints.isEmpty)       ints.write(out(`/ints.def`))
     if (!floats.isEmpty)     floats.write(out(`/floats.def`))
     if (!decimals.isEmpty)   decimals.write(out(`/decimals.def`))
@@ -298,11 +318,12 @@ final class FPod : CPod, FConst
   FAttr[]? fattrs           // pod attributes
   Zip? zip                  // zipped storage
   FType[]? ftypes           // pod's declared types
-  FSymbol[]? fsymbols       // pod's declared symbols
+  [Str:FSymbol]? fsymbols   // pod's declared symbols
   FTable names              // identifier names: foo
   FTable typeRefs           // types refs:   [pod,type,sig]
   FTable fieldRefs          // fields refs:  [parent,name,type]
   FTable methodRefs         // methods refs: [parent,name,ret,params]
+  FTable symbolRefs         // symbol refs:  [pod,symbol]
   FTable ints               // Int literals
   FTable floats             // Float literals
   FTable decimals           // Decimal literals

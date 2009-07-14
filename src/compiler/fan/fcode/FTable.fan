@@ -45,6 +45,13 @@ class FTable
       |InStream in->Obj| { return FMethodRef.read(in) })
   }
 
+  static FTable makeSymbolRefs(FPod pod)
+  {
+    return make(pod,
+      |OutStream out, Obj obj| { ((FSymbolRef)obj).write(out) },
+      |InStream in->Obj| { return FSymbolRef.read(in) })
+  }
+
   static FTable makeInts(FPod pod)
   {
     return make(pod,

@@ -45,7 +45,7 @@ class ResolveExpr : CompilerStep
   override Void exitSymbolDef(SymbolDef s)
   {
     // symbol type inference
-    if (s.of == null) s.of = s.val.ctype
+    if (s.ctype == null) s.ctype = s.val.ctype
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -151,6 +151,7 @@ class ResolveExpr : CompilerStep
       case ExprId.slotLiteral:     return resolveSlotLiteral(expr)
       case ExprId.listLiteral:     return resolveList(expr)
       case ExprId.mapLiteral:      return resolveMap(expr)
+      case ExprId.symbolLiteral:   return resolveSymbol(expr)
       case ExprId.boolNot:
       case ExprId.cmpNull:
       case ExprId.cmpNotNull:      expr.ctype = ns.boolType
@@ -232,6 +233,34 @@ class ResolveExpr : CompilerStep
       v := Expr.commonType(ns, expr.vals)
       expr.ctype = MapType(k, v)
     }
+    return expr
+  }
+
+  **
+  ** Resolve symbol literal
+  **
+  private Expr resolveSymbol(SymbolLiteralExpr expr)
+  {
+    expr.ctype = ns.symbolType
+
+    // if fully qualified
+    if (expr.podName != null)
+    {
+      // resolve pod
+      pod := ResolveImports.resolvePod(this, expr.podName, expr.location)
+      if (pod == null) return expr
+
+      // resolve symbol
+      expr.symbol = pod.resolveSymbol(expr.name, false)
+      if (expr.symbol == null)
+      {
+        err("Unknown symbol ${expr.podName}::${expr.name}", expr.location)
+        return expr
+      }
+      return expr
+    }
+
+    err("unqualified symbol $expr", expr.location)
     return expr
   }
 

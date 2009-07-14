@@ -196,11 +196,11 @@ enum FOpArg
   Str,
   Duration,
   Uri,
-  Symbol,
   Register,
   TypeRef,
   FieldRef,
   MethodRef,
+  SymbolRef,
   Jump,
   TypePair
 }
@@ -272,12 +272,12 @@ FAN_OP_FOOTER
                "str"=>"FOpArg.Str",
                "dur"=>"FOpArg.Duration",
                "uri"=>"FOpArg.Uri",
-               "symbol"=>"FOpArg.Symbol",
                "reg"=>"FOpArg.Register",
                "jmp"=>"FOpArg.Jump",
                "type"=>"FOpArg.TypeRef",
                "field"=>"FOpArg.FieldRef",
                "method"=>"FOpArg.MethodRef",
+               "symbol"=>"FOpArg.SymbolRef",
                "typePair"=>"FOpArg.TypePair"}[sig]
         arg = "(" + arg + ")"
         arg = arg + "," unless (i == @@opcodes.length-1)

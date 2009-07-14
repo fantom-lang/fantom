@@ -77,6 +77,7 @@ abstract class CNamespace : CompilerSupport
     fieldType    = sysType("Field")
     methodType   = sysType("Method")
     rangeType    = sysType("Range")
+    symbolType   = sysType("Symbol")
     uriType      = sysType("Uri")
     voidType     = sysType("Void")
 
@@ -294,6 +295,7 @@ abstract class CNamespace : CompilerSupport
   readonly CType? fieldType
   readonly CType? methodType
   readonly CType? rangeType
+  readonly CType? symbolType
   readonly CType? uriType
   readonly CType? voidType
 

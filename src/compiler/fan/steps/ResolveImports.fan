@@ -227,6 +227,27 @@ class ResolveImports : CompilerStep
       return t
     }
 
+    // resolve pod
+    pod := resolvePod(cs, podName, location)
+    if (pod == null) return null
+
+    // now try to lookup type
+    t := pod.resolveType(typeName, false)
+    if (t == null)
+    {
+      cs.err("Type '$typeName' not found in pod '$podName'", location);
+      return null
+    }
+
+    return t
+  }
+
+  **
+  ** Resolve a pod name into its CPod representation.  If pod
+  ** cannot be resolved then log an error and return null.
+  **
+  static CPod? resolvePod(CompilerSupport cs, Str podName, Location location)
+  {
     // otherwise we need to try to resolve pod
     CPod? pod := null
     try
@@ -242,21 +263,13 @@ class ResolveImports : CompilerStep
     // check that we have a dependency on the pod
     checkUsingPod(cs, podName, location)
 
-    // now try to lookup type
-    t := pod.resolveType(typeName, false)
-    if (t == null)
-    {
-      cs.err("Type '$typeName' not found in pod '$podName'", location);
-      return null
-    }
-
-    return t
+    return pod
   }
 
   **
   ** Check that a pod name is in the dependency list.
   **
-  static Void checkUsingPod(CompilerSupport cs, Str podName, Location loc)
+  private static Void checkUsingPod(CompilerSupport cs, Str podName, Location loc)
   {
     // scripts don't need dependencies
     if (cs.compiler.input.isScript) return

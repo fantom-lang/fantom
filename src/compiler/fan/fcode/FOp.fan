@@ -67,7 +67,7 @@ enum FOp
   CatchEnd           (),                  //  53  start catch block - leave typed Err on stack
   FinallyStart       (),                  //  54  starting instruction of a finally block
   FinallyEnd         (),                  //  55  ending instruction of a finally block
-  LoadSymbol         (FOpArg.Symbol)      //  56  load Symbol const by index onto stack
+  LoadSymbol         (FOpArg.SymbolRef)   //  56  load Symbol const by index onto stack
 
   private new make(FOpArg arg := FOpArg.None) { this.arg = arg }
 
@@ -87,11 +87,11 @@ enum FOpArg
   Str,
   Duration,
   Uri,
-  Symbol,
   Register,
   TypeRef,
   FieldRef,
   MethodRef,
+  SymbolRef,
   Jump,
   TypePair
 }

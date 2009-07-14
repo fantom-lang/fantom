@@ -171,3 +171,47 @@ const class FMethodRef
   const Int[] params  // typeRefs indices
   const Int hashcode
 }
+
+**************************************************************************
+** FSymbolRef
+**************************************************************************
+
+**
+** FSymbolRef stores a symbolRef structure pod name/symbol name.
+**
+const class FSymbolRef
+{
+
+  new make(Int podName, Int symbolName)
+  {
+    this.podName    = podName
+    this.symbolName = symbolName
+    this.hash       = (podName << 17) ^ (symbolName)
+  }
+
+  override const Int hash
+
+  override Bool equals(Obj? obj)
+  {
+    x := (FSymbolRef)obj
+    return podName == x.podName && symbolName == x.symbolName
+  }
+
+  Str format(FPod pod) { "@" + pod.n(podName) + "::" + pod.n(symbolName) }
+
+  Void write(OutStream out)
+  {
+    out.writeI2(podName)
+    out.writeI2(symbolName)
+  }
+
+  static FSymbolRef read(InStream in)
+  {
+    make(in.readU2, in.readU2)
+  }
+
+  const Int podName     // names index
+  const Int symbolName  // names index
+
+}
+

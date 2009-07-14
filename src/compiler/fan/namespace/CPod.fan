@@ -40,6 +40,13 @@ mixin CPod
   abstract CType? resolveType(Str name, Bool checked)
 
   **
+  ** Lookup a symbol by its simple name.  If the symbol doesn't
+  ** exist and checked is true then throw UnknownSymbolErr
+  ** otherwise return null.
+  **
+  abstract CSymbol? resolveSymbol(Str name, Bool checked)
+
+  **
   ** If this a foreign function interface pod.
   **
   virtual Bool isForeign() { return false }

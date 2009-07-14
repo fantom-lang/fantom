@@ -17,7 +17,7 @@ mixin CSymbol
   **
   ** Associated namespace
   **
-  abstract CNamespace ns()
+  CNamespace ns() { pod.ns }
 
   **
   ** Parent pod which defines this symbol.

@@ -40,10 +40,10 @@ class Assembler : CompilerSupport, FConst
       fpod.ftypes.add(assembleType(t))
     }
 
-    fpod.fsymbols = FSymbol[,]
+    fpod.fsymbols = Str:FSymbol[:]
     compiler.pod.symbolDefs.each |SymbolDef s|
     {
-      fpod.fsymbols.add(assembleSymbol(s))
+      fpod.fsymbols[s.name] = assembleSymbol(s)
     }
 
     return fpod
