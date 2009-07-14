@@ -49,6 +49,12 @@ class JavaPod : CPod
     return null
   }
 
+  override CSymbol? resolveSymbol(Str symbolName, Bool checked)
+  {
+    if (checked) throw UnknownSymbolErr(name + "::" + symbolName)
+    return null
+  }
+
   ** Is this the fanx.interop package?
   const Bool isInterop
 

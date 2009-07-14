@@ -14,8 +14,10 @@ intB := -4
 
 floatA := -5f
 
+** fandoc
 decimalA := 6d + 0.7d
 
+** fandoc
 durA := 30ms
 
 strA := "alpha"
