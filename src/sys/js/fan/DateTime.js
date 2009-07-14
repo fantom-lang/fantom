@@ -451,11 +451,11 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
         switch (n)
         {
           case 4:
-            if (locale == null) locale = Locale.current();
+            if (locale == null) locale = fan.sys.Locale.current();
             s += mon.full(locale);
             break;
           case 3:
-            if (locale == null) locale = Locale.current();
+            if (locale == null) locale = fan.sys.Locale.current();
             s += mon.abbr(locale);
             break;
           case 2:  if (mon.m_ordinal+1 < 10) s += '0';
@@ -479,11 +479,11 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
         switch (n)
         {
           case 4:
-            if (locale == null) locale = Locale.current();
+            if (locale == null) locale = fan.sys.Locale.current();
             s += weekday.full(locale);
             break;
           case 3:
-            if (locale == null) locale = Locale.current();
+            if (locale == null) locale = fan.sys.Locale.current();
             s += weekday.abbr(locale);
             break;
           default: invalidNum = true;
