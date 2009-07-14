@@ -44,7 +44,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
   with (tbar.style)
   {
     height     = "16px";
-    border     = "1px solid #555";
+    border     = "1px solid #404040";
     padding    = "3px 6px";
     fontWeight = "bold";
     textAlign  = "center";
@@ -60,14 +60,14 @@ fan.fwt.DialogPeer.prototype.open = function(self)
   with (content.style)
   {
     background = "#eee";
-    border     = "1px solid #555";
+    border     = "1px solid #404040";
     borderTop  = "none";
   }
   var dlg = this.emptyDiv();
   with (dlg.style)
   {
-    MozBoxShadow    = "0 5px 12px #555";
-    webkitBoxShadow = "0 5px 12px #555";
+    MozBoxShadow    = "0 5px 12px #404040";
+    webkitBoxShadow = "0 5px 12px #404040";
   }
   tbar.appendChild(document.createTextNode(this.title));
   dlg.appendChild(tbar);
