@@ -18,6 +18,9 @@ fan.fwt.WidgetPeer.prototype.$ctor = function(self) {}
 
 fan.fwt.WidgetPeer.prototype.relayout = function(self)
 {
+  // short-circuit if not mounted
+  if (this.elem == null) return;
+
   this.sync(self);
   if (self.onLayout) self.onLayout();
 
