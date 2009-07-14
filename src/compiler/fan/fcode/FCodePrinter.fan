@@ -66,6 +66,7 @@ class FCodePrinter : FConst
       case FOpArg.TypeRef:   i := buf.readU2; print(pod.typeRefStr(i) + index(i))
       case FOpArg.FieldRef:  i := buf.readU2; print(pod.fieldRefStr(i) + index(i))
       case FOpArg.MethodRef: i := buf.readU2; print(pod.methodRefStr(i) + index(i))
+      case FOpArg.SymbolRef: i := buf.readU2; print(pod.symbolRefStr(i) + index(i))
       case FOpArg.Jump:      i := buf.readU2; print(i)
       case FOpArg.TypePair:
         i1 := buf.readU2

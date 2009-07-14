@@ -39,6 +39,14 @@ class PodDef : DefNode, CPod
     return null
   }
 
+  override CSymbol? resolveSymbol(Str name, Bool checked)
+  {
+    s := symbolDefs[name]
+    if (s != null) return s
+    if (checked) throw UnknownSymbolErr("${this.name}::${name}")
+    return null
+  }
+
   override CType[] types()
   {
     return typeDefs.values

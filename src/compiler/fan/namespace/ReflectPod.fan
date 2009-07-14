@@ -55,8 +55,22 @@ class ReflectPod : CPod
     return rt
   }
 
+  override CSymbol? resolveSymbol(Str name, Bool checked)
+  {
+    rs := symbols[name]
+    if (rs != null) return rs
+
+    s := pod.symbol(name, checked)
+    if (s== null) return null
+
+    rs = ReflectSymbol(this, s)
+    symbols[name] = rs
+    return rs
+  }
+
   readonly Pod pod
   private Str:ReflectType typeMap := Str:ReflectType[:]
   private Bool loadedAllTypes := false
+  private Str:ReflectSymbol symbols := Str:ReflectSymbol[:]
 
 }

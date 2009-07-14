@@ -364,7 +364,7 @@ class LiteralExpr : Expr
 }
 
 **************************************************************************
-** LiteralExpr
+** SlotLiteralExpr
 **************************************************************************
 
 **
@@ -392,6 +392,29 @@ class SlotLiteralExpr : Expr
   CType parent
   Str name
   CSlot? slot
+}
+
+**************************************************************************
+** SymbolLiteralExpr
+**************************************************************************
+
+**
+** SymbolLiteralExpr
+**
+class SymbolLiteralExpr : Expr
+{
+  new make(Location loc, Str? podName, Str name)
+    : super(loc, ExprId.symbolLiteral)
+  {
+    this.podName = podName
+    this.name = name
+  }
+
+  override Str toStr() { "@$podName::name" }
+
+  Str? podName
+  Str name
+  CSymbol? symbol
 }
 
 **************************************************************************
@@ -1607,6 +1630,7 @@ enum ExprId
   uriLiteral,
   typeLiteral,
   slotLiteral,      // SlotLiteralExpr
+  symbolLiteral,    // SymbolLiteralExpr
   rangeLiteral,     // RangeLiteralExpr
   listLiteral,      // ListLiteralExpr
   mapLiteral,       // MapLiteralExpr
