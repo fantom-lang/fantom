@@ -71,6 +71,9 @@ public class Parser : CompilerSupport
   **
   Void symbolDef()
   {
+    doc := doc()
+    if (curt === Token.eof) return
+
     loc   := cur
     of    := tryType
     name  := consumeId
@@ -78,6 +81,7 @@ public class Parser : CompilerSupport
     val   := expr
     endOfStmt
     symbol := SymbolDef(loc, unit, of, name, val)
+    symbol.doc = doc
 
     if (compiler.pod.symbolDefs.containsKey(name))
       err("Duplicate symbol name '$name'", loc)

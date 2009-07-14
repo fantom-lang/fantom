@@ -199,6 +199,19 @@ final class FPod : CPod, FConst
       ns.typeCache[ftype.qname] = ftype
     }
     in.close
+
+    // read type symbols
+    in = this.in(`/symbols.def`)
+    fsymbols = Str:FSymbol[:]
+    if (in != null)
+    {
+      in.readU2.times |,|
+      {
+        s := FSymbol(this).read(in)
+        fsymbols[s.name] = s
+      }
+      in.close
+    }
   }
 
   **
@@ -271,7 +284,7 @@ final class FPod : CPod, FConst
     name = in.readUtf
     version = Version.fromStr(in.readUtf)
     depends = Depend[,]
-    in.readU1.times |,| { depends.add(Depend.fromStr(in.readUtf)) }
+    in.readU2.times |,| { depends.add(Depend.fromStr(in.readUtf)) }
     fattrs = FAttr[,]
     in.readU2.times |,| { fattrs.add(FAttr.make.read(in)) }
   }

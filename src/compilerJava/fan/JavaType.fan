@@ -40,9 +40,9 @@ class JavaType : CType
   override readonly Str qname
   override Str signature() { return qname }
 
-  override CType? base { get { load; return @base } internal set}
-  override CType[] mixins { get { load; return @mixins } internal set }
-  override Int flags { get { load; return @flags } internal set }
+  override CType? base { get { load; return *base } internal set}
+  override CType[] mixins { get { load; return *mixins } internal set }
+  override Int flags { get { load; return *flags } internal set }
 
   override Bool isForeign() { return true }
   override Bool isSupported() { return arrayRank <= 1 } // multi-dimensional arrays unsupported
@@ -58,7 +58,7 @@ class JavaType : CType
 
   override once CType toListOf() { return ListType(this) }
 
-  override readonly Str:CSlot slots { get { load; return @slots } }
+  override readonly Str:CSlot slots { get { load; return *slots } }
 
   override CSlot? slot(Str name) { return slots[name] }
 
