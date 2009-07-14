@@ -41,7 +41,7 @@ class AttrAsm : CompilerSupport
     u2(FConst.LineNumberAttr, line)
   }
 
-  Void facets([Str:FacetDef]? facets)
+  Void facets(FacetDef[]? facets)
   {
     if (facets == null || facets.isEmpty) return
 
@@ -49,14 +49,14 @@ class AttrAsm : CompilerSupport
     buf.writeI2(facets.size)
     facets.each |FacetDef f|
     {
-      buf.writeI2(fpod.addName(f.name))
+      buf.writeI2(fpod.addName(f.key.qname))
       try
       {
-        buf.writeUtf(f.value.serialize)
+        buf.writeUtf(f.val.serialize)
       }
       catch (CompilerErr e)
       {
-        err("Facet value is not serializable: '$f.name' ($e.message)", f.value.location)
+        err("Facet value is not serializable: '$f.key' ($e.message)", f.val.location)
       }
     }
     add(FConst.FacetsAttr, buf)

@@ -182,8 +182,21 @@ final class FPod : CPod, FConst
     durations.read(in(`/durations.def`))
     uris.read(in(`/uris.def`))
 
+    // read type symbols
+    in := in(`/symbols.def`)
+    fsymbols = Str:FSymbol[:]
+    if (in != null)
+    {
+      in.readU2.times |,|
+      {
+        s := FSymbol(this).read(in)
+        fsymbols[s.name] = s
+      }
+      in.close
+    }
+
     // read pod meta-data
-    in := in(`/pod.def`)
+    in = this.in(`/pod.def`)
     readPodMeta(in)
     in.close
 
@@ -200,18 +213,6 @@ final class FPod : CPod, FConst
     }
     in.close
 
-    // read type symbols
-    in = this.in(`/symbols.def`)
-    fsymbols = Str:FSymbol[:]
-    if (in != null)
-    {
-      in.readU2.times |,|
-      {
-        s := FSymbol(this).read(in)
-        fsymbols[s.name] = s
-      }
-      in.close
-    }
   }
 
   **

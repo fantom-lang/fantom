@@ -38,16 +38,18 @@ abstract class DefNode : Node
     }
   }
 
-  Void addFacet(CompilerSupport support, Str name, Obj value)
+  Bool hasMarkerFacet(Str qname)
   {
-    if (facets == null) facets = Str:FacetDef[:]
-    f := FacetDef(location, name, LiteralExpr.makeFor(location, ns, value))
+    if (facets == null) return false
+    return facets.any |f| { f.key.qname == qname && f.val.id === ExprId.trueLiteral }
+  }
 
-    dup := facets[name]
-    if (dup != null)
-      support.err("Facet '$name' conflicts with auto-generated facet", dup.location)
-    else
-      facets.add(name, f)
+  Void addFacet(CompilerSupport support, CSymbol symbol, Obj value)
+  {
+    if (facets == null) facets = FacetDef[,]
+    loc := location
+    f := FacetDef(SymbolExpr.makeFor(loc, symbol), LiteralExpr.makeFor(loc, ns, value))
+    facets.add(f)
   }
 
   Void printFacets(AstWriter out)
@@ -60,8 +62,8 @@ abstract class DefNode : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  Str[]? doc              // lines of fandoc comment or null
-  Int flags := 0          // type/slot/symbol flags
-  [Str:FacetDef]? facets  // facet declarations (may be null)
+  Str[]? doc          // lines of fandoc comment or null
+  Int flags := 0      // type/slot/symbol flags
+  FacetDef[]? facets  // facet declarations or null
 
 }

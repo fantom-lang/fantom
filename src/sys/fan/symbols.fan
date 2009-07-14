@@ -62,3 +62,14 @@ Bool collection := false
 **
 Bool nodoc := false
 
+**
+** Used on `UriScheme` subclasses to implement a URI scheme handler.
+** See [docLang]`docLang::Naming`.
+**
+Str uriScheme := ""
+
+**
+** Used to annoate types and slots which should be compiled into JavaScript.
+**
+Bool js := false
+

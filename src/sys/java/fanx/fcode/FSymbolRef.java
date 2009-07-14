@@ -8,6 +8,7 @@
 package fanx.fcode;
 
 import java.io.*;
+import fan.sys.*;
 import fanx.util.*;
 
 /**
@@ -29,6 +30,17 @@ public final class FSymbolRef
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
+
+  /** Attempt to resolve, if not print error and return null */
+  public Symbol resolve()
+  {
+    try
+    {
+      return Pod.find(podName).symbol(symbolName);
+    }
+    catch (Exception e) { e.printStackTrace(); }
+    return null;
+  }
 
   public String toString() { return "@" + podName + "::" + symbolName; }
 

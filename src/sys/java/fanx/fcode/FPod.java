@@ -34,6 +34,7 @@ public final class FPod
     this.typeRefs   = new FTable.TypeRefs(this);
     this.fieldRefs  = new FTable.FieldRefs(this);
     this.methodRefs = new FTable.MethodRefs(this);
+    this.symbolRefs = new FTable.SymbolRefs(this);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,6 +57,7 @@ public final class FPod
   public final FTypeRef typeRef(int index)     { return (FTypeRef)typeRefs.get(index);  }
   public final FFieldRef fieldRef(int index)   { return (FFieldRef)fieldRefs.get(index);  }
   public final FMethodRef methodRef(int index) { return (FMethodRef)methodRefs.get(index); }
+  public final FSymbolRef symbolRef(int index) { return (FSymbolRef)symbolRefs.get(index); }
 
 //////////////////////////////////////////////////////////////////////////
 // Read
@@ -70,6 +72,7 @@ public final class FPod
     typeRefs.read(store.read("typeRefs.def"));
     fieldRefs.read(store.read("fieldRefs.def"));
     methodRefs.read(store.read("methodRefs.def"));
+    symbolRefs.read(store.read("symbolRefs.def"));
 
     // pod meta
     readPodMeta(store.read("pod.def", true));
@@ -127,7 +130,7 @@ public final class FPod
       else if (name.equals("strs.def")) literals.strs.read(in);
       else if (name.equals("durations.def")) literals.durations.read(in);
       else if (name.equals("uris.def")) literals.uris.read(in);
-      else if (name.equals("symbolRefs.def")) literals.symbolRefs.read(in);
+      else if (name.equals("symbolRefs.def")) symbolRefs.read(in);
       else if (name.equals("symbols.def")) readSymbols(in);
       else System.out.println("WARNING: unexpected file in pod: " + name);
     }
@@ -216,6 +219,7 @@ int dependNum = version == 0x01000034 ? in.u1() : in.u2();
   public FTable typeRefs;    // types refs:   [pod,type,variances*]
   public FTable fieldRefs;   // fields refs:  [parent,name,type]
   public FTable methodRefs;  // methods refs: [parent,name,ret,params*]
+  public FTable symbolRefs;  // symbol refs:  [pod,name]
   public FLiterals literals; // literal constants (on read fully or lazy load)
 
 }

@@ -9,8 +9,9 @@
 **
 ** TypeTest
 **
-@testSysByStr=["alpha", "beta"]
-@testSysByType=[SerB#, MxB#]
+// TODO
+// @testSysByStr=["alpha", "beta"]
+// @testSysByType=[SerB#, MxB#]
 class TypeTest : Test
 {
 
@@ -69,6 +70,7 @@ class TypeTest : Test
 // TypeDb
 //////////////////////////////////////////////////////////////////////////
 
+/* TODO
   Void testFindByFacet()
   {
     verifyErr(Err#) |,| { Type.findByFacet("testSysKeyFoo", "") }
@@ -108,6 +110,7 @@ class TypeTest : Test
     verifyEq(Type.findByFacet("testSysByType", MxAB#, true), [TypeTest#])
     verifyEq(Type.findByFacet("testSysByType", MxClsAB#, true), [TypeTest#])
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Flags

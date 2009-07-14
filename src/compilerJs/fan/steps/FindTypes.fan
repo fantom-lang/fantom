@@ -44,7 +44,7 @@ class FindTypes : JsCompilerStep
 
       // check for forced or @js facet
       if (compiler.force) return true
-      if (def.facets?.get("js")?->toStr == "@js=true") return true
+      if (def.hasMarkerFacet("sys::js")) return true
       return false
     }
 
