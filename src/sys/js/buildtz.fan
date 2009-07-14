@@ -32,21 +32,24 @@ class BuildTz
         var tz,rule;
         ")
 
-      def := [
-        "Etc/UTC",
-        "America/New_York",
-        "America/Chicago",
-        "America/Denver",
-        "America/Los_Angeles"
-      ]
-
       loadIndex
       indexNames.each |name| {
-        if (def.contains(name))
+        if (include(name))
           loadTimeZone(name, out)
       }
     }
     finally { out.close }
+  }
+
+  Bool include(Str name)
+  {
+    if (name == "Etc/UTC") return true
+    if (name == "America/New_York") return true
+    if (name == "America/Chicago") return true
+    if (name == "America/Denver") return true
+    if (name == "America/Los_Angeles") return true
+    if (name.contains("GMT")) return true
+    return false
   }
 
   Void loadIndex()
