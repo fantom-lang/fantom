@@ -67,17 +67,35 @@ public class FPodEmit
 
     // NOTE: ints, floats, and strings use direct Java constants
 
+    // decimals
     for (int i=0; i<literals.decimals.size(); ++i)
       cls.getField("D"+i).set(null, literals.decimals.get(i));
     literals.decimals = null;
 
+    // durations
     for (int i=0; i<literals.durations.size(); ++i)
       cls.getField("Dur"+i).set(null, literals.durations.get(i));
     literals.durations = null;
 
+    // uris
     for (int i=0; i<literals.uris.size(); ++i)
       cls.getField("U"+i).set(null, literals.uris.get(i));
     literals.uris = null;
+
+    // symbols
+    for (int i=0; i<literals.symbolRefs.size(); ++i)
+    {
+      FSymbolRef ref = literals.symbolRef(i);
+      try
+      {
+        Pod pod = Pod.find(ref.podName, false);
+        Symbol s = (pod == null) ? null : pod.symbol(ref.symbolName, false);
+        if (s == null) System.out.println("ERROR: symbol link error: " + ref);
+        cls.getField("S"+i).set(null, s);
+      }
+      catch (Exception e) { e.printStackTrace(); }
+    }
+    literals.symbolRefs = null;
 
     // we only generate type fields for [java] types
     for (int i=0; i<fpod.typeRefs.size(); ++i)
@@ -115,6 +133,8 @@ public class FPodEmit
       emitField("Dur" + i, "Lfan/sys/Duration;", EmitConst.PUBLIC | EmitConst.STATIC);
     for (int i=0; i<literals.uris.size(); ++i)
       emitField("U" + i, "Lfan/sys/Uri;", EmitConst.PUBLIC | EmitConst.STATIC);
+    for (int i=0; i<literals.symbolRefs.size(); ++i)
+      emitField("S" + i, "Lfan/sys/Symbol;", EmitConst.PUBLIC | EmitConst.STATIC);
 
     // we only generate type fields for [java] types
     for (int i=0; i<pod.typeRefs.size(); ++i)

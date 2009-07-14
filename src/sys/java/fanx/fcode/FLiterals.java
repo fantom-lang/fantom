@@ -35,6 +35,7 @@ public final class FLiterals
     this.strs       = new FTable.Strs(fpod);
     this.durations  = new FTable.Durations(fpod);
     this.uris       = new FTable.Uris(fpod);
+    this.symbolRefs = new FTable.SymbolRefs(fpod);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,6 +50,7 @@ public final class FLiterals
     strs.read(fpod.store.read("strs.def"));
     durations.read(fpod.store.read("durations.def"));
     uris.read(fpod.store.read("uris.def"));
+    symbolRefs.read(fpod.store.read("symbolRefs.def"));
     return this;
   }
 
@@ -62,6 +64,7 @@ public final class FLiterals
   public final String str(int index)        { return (String)strs.get(index); }
   public final Duration duration(int index) { return (Duration)durations.get(index); }
   public final Uri uri(int index)           { return (Uri)uris.get(index); }
+  public final FSymbolRef symbolRef(int index) { return (FSymbolRef)symbolRefs.get(index); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -74,5 +77,6 @@ public final class FLiterals
   public FTable strs;       // String literals
   public FTable durations;  // Duration literals
   public FTable uris;       // Uri literals
+  public FTable symbolRefs; // Symbol literals
 
 }

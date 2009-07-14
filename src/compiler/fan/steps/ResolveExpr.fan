@@ -242,25 +242,7 @@ class ResolveExpr : CompilerStep
   private Expr resolveSymbol(SymbolLiteralExpr expr)
   {
     expr.ctype = ns.symbolType
-
-    // if fully qualified
-    if (expr.podName != null)
-    {
-      // resolve pod
-      pod := ResolveImports.resolvePod(this, expr.podName, expr.location)
-      if (pod == null) return expr
-
-      // resolve symbol
-      expr.symbol = pod.resolveSymbol(expr.name, false)
-      if (expr.symbol == null)
-      {
-        err("Unknown symbol ${expr.podName}::${expr.name}", expr.location)
-        return expr
-      }
-      return expr
-    }
-
-    err("unqualified symbol $expr", expr.location)
+    expr.symbol = ResolveImports.resolveSymbol(this, curType.unit, expr.podName, expr.name, expr.location)
     return expr
   }
 

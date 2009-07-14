@@ -70,7 +70,7 @@ public final class Symbol
 
   public boolean equals(Object that)  { return this == that; }
 
-  public String toStr()  { return qname;  }
+  public String toStr()  { return "@" + qname;  }
 
   public Type type()  { return Sys.SymbolType;  }
 

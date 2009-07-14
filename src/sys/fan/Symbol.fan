@@ -66,7 +66,7 @@ final const class Symbol
   override Bool equals(Obj? that)
 
   **
-  ** Return `qname`.
+  ** Return "@qname".
   **
   override Str toStr()
 
