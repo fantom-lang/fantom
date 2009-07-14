@@ -248,6 +248,9 @@ class ResolveImports : CompilerStep
   **
   static CPod? resolvePod(CompilerSupport cs, Str podName, Location location)
   {
+    // if this is the pod being compiled no further checks needed
+    if (cs.compiler.pod.name == podName) return cs.compiler.pod
+
     // otherwise we need to try to resolve pod
     CPod? pod := null
     try
@@ -285,6 +288,40 @@ class ResolveImports : CompilerStep
 
     // we got a problem
     cs.err("Using '$podName' which is not a declared dependency for '$cs.compiler.pod.name'", loc)
+  }
+
+  **
+  ** Resolve a unqualified symbol name using the given unit's imported
+  ** pod list.  If the symbol cannot be resolved log an error and return null.
+  **
+  static CSymbol? resolveSymbol(CompilerSupport cs, CompilationUnit unit, Str? podName, Str name, Location location)
+  {
+    // fully qualified
+    if (podName != null)
+    {
+      // resolve pod
+      pod := resolvePod(cs, podName, location)
+      if (pod == null) return null
+
+      // resolve symbol
+      symbol := pod.resolveSymbol(name, false)
+      if (symbol == null) cs.err("Unresolved symbol '${podName}::${name}'", location)
+      return symbol
+    }
+
+    // resolve unqualified against using imports
+    found := cs.compiler.pod.resolveSymbol(name, false)
+    unit.usings.each |u|
+    {
+      if (!u.isPod) return
+      s := u.resolvedPod.resolveSymbol(name, false)
+      if (s == null) return
+      if (found == null) { found = s; return }
+      cs.err("Ambiguous symbol '$found.qname' and '$s.qname'", location)
+    }
+    if (found != null) return found
+    cs.err("Unresolved symbol '$name'", location)
+    return null
   }
 
 //////////////////////////////////////////////////////////////////////////

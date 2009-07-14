@@ -58,6 +58,7 @@ class SymbolsTest : Test
     verifySame(x, type.pod.symbol(name))
     verifyEq(x.name, name)
     verifyEq(x.qname, "testSys::$name")
+    verifyEq(x.toStr, "@testSys::$name")
     verifySame(x.pod, type.pod)
     verifyEq(x.of, of)
     verifyEq(x.val, val)
