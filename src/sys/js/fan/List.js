@@ -237,6 +237,27 @@ fan.sys.List.eachr = function(self, func)
   }
 }
 
+fan.sys.List.eachWhile = function(self, f)
+{
+  if (f.length == 1)
+  {
+    for (var i=0; i<self.length; ++i)
+    {
+      var r = f(self[i]);
+      if (r != null) return r;
+    }
+  }
+  else
+  {
+    for (var i=0; i<self.length; ++i)
+    {
+      var r = f(self[i], i);
+      if (r != null) return r;
+    }
+  }
+  return null;
+}
+
 fan.sys.List.find = function(self, f)
 {
   if (f.length == 1)
