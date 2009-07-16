@@ -222,7 +222,7 @@ public class ClassType
         while (it.hasNext())
         {
           Entry e = (Entry)it.next();
-          String key = (String)e.getKey();
+          Symbol key = (Symbol)e.getKey();
           if (map.get(key) == null) map.add(key, e.getValue());
         }
       }

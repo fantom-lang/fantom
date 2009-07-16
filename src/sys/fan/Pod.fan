@@ -86,7 +86,7 @@ final const class Pod
   ** if no facets are defined.  See the [Facets Doc]`docLang::Facets`
   ** for details.
   **
-  Str:Obj facets()
+  Symbol:Obj? facets()
 
   **
   ** Get a facet by symbol key, or return the 'def' is the facet is not

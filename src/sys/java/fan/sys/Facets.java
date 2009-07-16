@@ -27,7 +27,7 @@ public final class Facets
   {
     MapType t = mapType;
     if (t != null) return t;
-    return mapType = new MapType(Sys.StrType, Sys.ObjType);
+    return mapType = new MapType(Sys.SymbolType, Sys.ObjType.toNullable());
   }
 
   public static Facets empty()
@@ -122,18 +122,22 @@ public final class Facets
     boolean allImmutable = true;
     while (it.hasNext())
     {
-      String name = (String)it.next();
-      Object val = get(name, null);
-      map.set(name, val);
+      String qname = (String)it.next();
+      Symbol key = Symbol.find(qname);
+      Object val = get(qname, null);
+      map.set(key, val);
       allImmutable &= FanObj.isImmutable(val);
     }
 
     // if all the values were immutable, then we
     // can create a reusable immutable map for
     // all future calls
+
+    /* TODO-SYM
     if (allImmutable)
       return this.immutable = map.toImmutable();
     else
+    */
       return map.ro();
   }
 

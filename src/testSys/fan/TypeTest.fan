@@ -9,9 +9,8 @@
 **
 ** TypeTest
 **
-// TODO
-// @testSysByStr=["alpha", "beta"]
-// @testSysByType=[SerB#, MxB#]
+@testSysByStr=["alpha", "beta"]
+@testSysByType=[SerB#, MxB#]
 class TypeTest : Test
 {
 
@@ -70,47 +69,45 @@ class TypeTest : Test
 // TypeDb
 //////////////////////////////////////////////////////////////////////////
 
-/* TODO
   Void testFindByFacet()
   {
-    verifyErr(Err#) |,| { Type.findByFacet("testSysKeyFoo", "") }
+    verifyErr(Err#) |,| { Type.findByFacet(@nodoc, "") }
 
-    x := Type.findByFacet("testSysByStr", "zeta")
+    x := Type.findByFacet(@testSysByStr, "zeta")
     verifyEq(x.size, 0)
     verifyEq(x.isRO, true)
 
-    x = Type.findByFacet("testSysByStr", "alpha")
+    x = Type.findByFacet(@testSysByStr, "alpha")
     verifyEq(x.size, 2)
     verifyEq(x.isRO, true)
     verify(x.contains(TypeTest#))
     verify(x.contains(FacetsTest#))
 
-    x = Type.findByFacet("testSysByStr", "beta")
+    x = Type.findByFacet(@testSysByStr, "beta")
     verifyEq(x, [TypeTest#])
 
-    x = Type.findByFacet("testSysByType", Str#)
+    x = Type.findByFacet(@testSysByType, Str#)
     verifyEq(x.size, 0)
     verifyEq(x.isRO, true)
 
-    x = Type.findByFacet("testSysByType", SerA#)
+    x = Type.findByFacet(@testSysByType, SerA#)
     verifyEq(x, [FacetsTest#])
 
-    x = Type.findByFacet("testSysByType", SerB#)
+    x = Type.findByFacet(@testSysByType, SerB#)
     verifyEq(x, [TypeTest#])
 
-    x = Type.findByFacet("testSysByType", SerB#, false)
+    x = Type.findByFacet(@testSysByType, SerB#, false)
     verifyEq(x, [TypeTest#])
 
-    x = Type.findByFacet("testSysByType", SerB#, true)
+    x = Type.findByFacet(@testSysByType, SerB#, true)
     verifyEq(x.isRO, true)
     verifyEq(x, [TypeTest#, FacetsTest#])
 
-    verifyEq(Type.findByFacet("testSysByType", MxB#), [TypeTest#])
-    verifyEq(Type.findByFacet("testSysByType", MxAB#), Type[,])
-    verifyEq(Type.findByFacet("testSysByType", MxAB#, true), [TypeTest#])
-    verifyEq(Type.findByFacet("testSysByType", MxClsAB#, true), [TypeTest#])
+    verifyEq(Type.findByFacet(@testSysByType, MxB#), [TypeTest#])
+    verifyEq(Type.findByFacet(@testSysByType, MxAB#), Type[,])
+    verifyEq(Type.findByFacet(@testSysByType, MxAB#, true), [TypeTest#])
+    verifyEq(Type.findByFacet(@testSysByType, MxClsAB#, true), [TypeTest#])
   }
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // Flags

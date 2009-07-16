@@ -6,9 +6,6 @@
 //   4 Jul 06 - Fireworks!  Brian Frank  Creation
 //
 
-// TODO
-/*
-
 **
 ** FacetsTests
 **
@@ -43,55 +40,54 @@ class FacetsTest : Test
   {
     t := FacetsA#
     verifyEq(t.facets.isRO, true)
-    verifyEq(t.facets.size, 17)
-    verifyEq(t.facet("foobarxyz"), null)
-    verifyEq(t.facet("foobarxyz", "!"), "!")
-    verifyErr(ReadonlyErr#) |,| { t.facets.set("c", "!") }
+    verifyEq(t.facets.type, [Symbol:Obj?]#)
+    verifyEq(t.facets.size, 16)
+    verifyEq(t.facet(@transient), null)
+    verifyEq(t.facet(@transient, "!"), "!")
+    verifyErr(ReadonlyErr#) |,| { t.facets.set(@transient, "!") }
 
-    verifyTypeFacet(t, "a", true)
-    verifyTypeFacet(t, "b", false)
-    verifyTypeFacet(t, "c", 'c')
-    verifyTypeFacet(t, "d", "a\tb\nc\u0abc!")
-    verifyTypeFacet(t, "e", 2.4f)
-    verifyTypeFacet(t, "f", 3min)
-    verifyTypeFacet(t, "g", `foo.txt`)
-    verifyTypeFacet(t, "h", Version.fromStr("2.3"))
-    verifyTypeFacet(t, "i", Str[,])
-    verifyTypeFacet(t, "j", [1, 2, 3])
-    verifyTypeFacet(t, "k", Int:Str[:])
-    verifyTypeFacet(t, "l", [2:"two", 3:"three"])
-    verifyTypeFacet(t, "m", Float.nan)
-    verifyTypeFacet(t, "n", Float.posInf)
-    verifyTypeFacet(t, "o", Float.negInf)
-    verifyTypeFacet(t, "p", Month.jun)
+    verifyTypeFacet(t, @boolA, true)
+    verifyTypeFacet(t, @boolB, false)
+    verifyTypeFacet(t, @intA, 'c')
+    verifyTypeFacet(t, @strA, "a\tb\nc\u0abc!")
+    verifyTypeFacet(t, @floatA, 2.4f)
+    verifyTypeFacet(t, @durA, 3min)
+    verifyTypeFacet(t, @uriA, `foo.txt`)
+    verifyTypeFacet(t, @verA, Version.fromStr("2.3"))
+    verifyTypeFacet(t, @listA, Str[,])
+    verifyTypeFacet(t, @listB, [1, 2, 3])
+    verifyTypeFacet(t, @mapA, [2:"two", 3:"three"])
+    verifyTypeFacet(t, @floatB, Float.nan)
+    verifyTypeFacet(t, @floatC, Float.posInf)
+    verifyTypeFacet(t, @floatD, Float.negInf)
+    verifyTypeFacet(t, @monA, Month.jun)
 
-    // since values are immutable we should reuse
-    for (x := 'a'; x <= 'o'; ++x)
-      verifySame(t.facet(x.toChar), t.facet(x.toChar))
+    t.facets.keys.each { verifySame(t.facet(it), t.facet(it)) }
 
     // since whole map is immutable we should reuse
-    verifySame(t.facets, t.facets)
+    // TODO-SYM
+    // verifySame(t.facets, t.facets)
   }
 
   Void testTypeFacetsB()
   {
     t := FacetsB#
 
-    verifyTypeFacet(t, "a", FacetsA {i=2; f=3f; s="gunslinger"})
-    verifyTypeFacet(t, "b", [false, Version("8"), FacetsA {s="tull"}])
-    verifyTypeFacet(t, "c", ["man", "in", "black"])
+    verifyTypeFacet(t, @serialC, FacetsA {i=2; f=3f; s="gunslinger"})
+    verifyTypeFacet(t, @listD, [false, Version("8"), FacetsA {s="tull"}])
+    verifyTypeFacet(t, @listA, ["man", "in", "black"])
 
-    verifyNotSame(t.facet("a"), t.facet("a"))
-    verifyNotSame(t.facet("b"), t.facet("b"))
-    verifySame(t.facet("c"), t.facet("c"))
+    verifyNotSame(t.facet(@serialC), t.facet(@serialC))
+    verifyNotSame(t.facet(@listD), t.facet(@listD))
+    verifySame(t.facet(@listA), t.facet(@listA))
     verifyNotSame(t.facets, t.facets)
   }
 
-  Void verifyTypeFacet(Type t, Str name, Obj expected)
+  Void verifyTypeFacet(Type t, Symbol key, Obj expected)
   {
-    verifyEq(t.facet(name), expected)
-    verifyEq(t.facet(name, "!@#"), expected)
-    verifyEq(t.facets[name], expected)
+    verifyEq(t.facet(key), expected)
+    verifyEq(t.facet(key, "!@#"), expected)
+    verifyEq(t.facets[key], expected)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,44 +99,47 @@ class FacetsTest : Test
     f := FacetsA#.field("i")
     verifyEq(f.facets.isRO, true)
     verifyEq(f.facets.size, 3)
-    verifyEq(f.facet("foobarxyz"), null)
-    verifyEq(f.facet("foobarxyz", "!"), "!")
-    verifyErr(ReadonlyErr#) |,| { f.facets.set("c", "!") }
+    verifyEq(f.facets.type, [Symbol:Obj?]#)
+    verifyEq(f.facet(@nodoc), null)
+    verifyEq(f.facet(@nodoc, "!"), "!")
+    verifyErr(ReadonlyErr#) |,| { f.facets.set(@nodoc, "!") }
 
-    verifySlotFacet(f, "x", true)
-    verifySlotFacet(f, "y", 4)
-    verifySlotFacet(f, "z", "I")
+    verifySlotFacet(f, @boolB, true)
+    verifySlotFacet(f, @intB, 4)
+    verifySlotFacet(f, @strA, "I")
 
     // since values are immutable we should reuse
-    for (x := 'x'; x <= 'z'; ++x)
-      verifySame(f.facet(x.toChar), f.facet(x.toChar))
+    f.facets.keys.each { verifySame(f.facet(it), f.facet(it)) }
 
     // since whole map is immutable we should reuse
-    verifySame(f.facets, f.facets)
+    // TODO-SYM
+    // verifySame(f.facets, f.facets)
   }
 
   Void testSlotFacets2()
   {
     m := FacetsA#equals
-    verifySlotFacet(m, "wow", true)
-    verifySame(m.facets, m.facets)
+    verifySlotFacet(m, @boolA, true)
+    // TODO-SYM
+    // verifySame(m.facets, m.facets)
   }
 
   Void testSlotFacetsEmpty()
   {
     m := FacetsA#hash
     verifyEq(m.facets.size, 0)
-    verifyEq(m.facet("x"), null)
-    verifyEq(m.facet("x", "!"), "!")
-    verifySame(m.facets, m.facets)
-    verifySame(m.facets, type.slot("testSlotFacetsEmpty").facets)
+    verifyEq(m.facet(@boolB), null)
+    verifyEq(m.facet(@boolB, "!"), "!")
+    // TODO-SYM
+    // verifySame(m.facets, m.facets)
+    // verifySame(m.facets, type.slot("testSlotFacetsEmpty").facets)
   }
 
-  Void verifySlotFacet(Slot s, Str name, Obj expected)
+  Void verifySlotFacet(Slot s, Symbol key, Obj expected)
   {
-    verifyEq(s.facet(name), expected)
-    verifyEq(s.facet(name, "!@#"), expected)
-    verifyEq(s.facets[name], expected)
+    verifyEq(s.facet(key), expected)
+    verifyEq(s.facet(key, "!@#"), expected)
+    verifyEq(s.facets[key], expected)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -150,33 +149,32 @@ class FacetsTest : Test
   Void testInherited()
   {
     t := FacetsB#
-    verifyEq(t.facet("a",   null, false), FacetsA { i=2; f=3f; s="gunslinger" })
-    verifyEq(t.facet("a",   null, true),  FacetsA { i=2; f=3f; s="gunslinger" })
-    verifyEq(t.facet("foo", null, false), "foo")
-    verifyEq(t.facet("foo", null, true),  "foo")
+    verifyEq(t.facet(@serialC,   null, false), FacetsA { i=2; f=3f; s="gunslinger" })
+    verifyEq(t.facet(@serialC,   null, true),  FacetsA { i=2; f=3f; s="gunslinger" })
+    verifyEq(t.facet(@strA, null, false), "foo")
+    verifyEq(t.facet(@strA, null, true),  "foo")
 
-    verifyEq(t.facet("m", null, false), null)
-    verifyEq(t.facet("m", null, true),  Float.nan)
-    verifyEq(t.facet("serializable", null, false), null)
-    verifyEq(t.facet("serializable", null, true),  true)
+    verifyEq(t.facet(@floatB, null, false), null)
+    verifyEq(t.facet(@floatB, null, true),  Float.nan)
+    verifyEq(t.facet(@serializable, null, false), null)
+    verifyEq(t.facet(@serializable, null, true),  true)
 
-    verifyEq(t.facet("ma", null, false), null)
-    verifyEq(t.facet("ma", null, true),  "ma")
-    verifyEq(t.facet("mb", "x", false),  "x")
-    verifyEq(t.facet("mb", null, true),  'b')
+    verifyEq(t.facet(@strB, null, false), null)
+    verifyEq(t.facet(@strB, null, true),  "ma")
+    verifyEq(t.facet(@intB, "x", false),  "x")
+    verifyEq(t.facet(@intB, null, true),  'b')
 
     f := t.facets(true)
     verifyEq(f.size, 20)
-    verifyEq(f["a"],   FacetsA { i=2; it.f=3f; s="gunslinger" })
-    verifyEq(f["b"],   [false, Version("8"), FacetsA { s="tull" }])
-    verifyEq(f["c"],   ["man", "in", "black"])
-    verifyEq(f["d"],   "a\tb\nc\u0abc!")
-    verifyEq(f["e"],   2.4f)
-    verifyEq(f["f"],   3min)
-    verifyEq(f["p"],   Month.jun)
-    verifyEq(f["foo"], "foo")
-    verifyEq(f["ma"],  "ma")
-    verifyEq(f["mb"],  'b')
+    verifyEq(f[@serialC], FacetsA { i=2; it.f=3f; s="gunslinger" })
+    verifyEq(f[@listD],   [false, Version("8"), FacetsA { s="tull" }])
+    verifyEq(f[@listA],   ["man", "in", "black"])
+    verifyEq(f[@strA],    "foo")
+    verifyEq(f[@floatA],  2.4f)
+    verifyEq(f[@durA],    3min)
+    verifyEq(f[@monA],    Month.jun)
+    verifyEq(f[@strB],    "ma")
+    verifyEq(f[@intB],    'b')
 
     f = t.facets(false)
     verifyEq(f.size, 4)
@@ -188,28 +186,27 @@ class FacetsTest : Test
 ** FacetsA
 **************************************************************************
 
-@a
-@b=false
-@c='c'
-@d="a\tb\nc\u0abc!"
-@e=2.4f
-@f=3min
-@g=`foo.txt`
-@h=Version("2.3")
-@i=Str[,]
-@j=[1,2,3]
-@k=Int:Str[:]
-@l=[2:"two", 3:"three"]
-@m=Float.nan
-@n=Float.posInf
-@o=Float.negInf
-@p=Month.jun
+@boolA
+@boolB=false
+@intA='c'
+@strA="a\tb\nc\u0abc!"
+@floatA=2.4f
+@durA=3min
+@uriA=`foo.txt`
+@verA=Version("2.3")
+@listA=Str[,]
+@listB=[1,2,3]
+@mapA=[2:"two", 3:"three"]
+@floatB=Float.nan
+@floatC=Float.posInf
+@floatD=Float.negInf
+@monA=Month.jun
 @serializable
 class FacetsA
 {
   override Int hash() { return "$i + $f + $s".hash }
 
-  @wow
+  @boolA
   override Bool equals(Obj? obj)
   {
     x := obj as FacetsA
@@ -219,7 +216,7 @@ class FacetsA
            s == x.s
   }
 
-  @x @y=4 @z="I" Int i
+  @boolB @intB=4 @strA="I" Int i
   Float f
   Str? s
 }
@@ -228,10 +225,10 @@ class FacetsA
 ** FacetsB
 **************************************************************************
 
-@a=FacetsA { i=2; f=3f; s="gunslinger" }
-@b=[false, Version("8"), FacetsA { s="tull" }]
-@c=["man", "in", "black"]
-@foo="foo"
+@serialC=FacetsA { i=2; f=3f; s="gunslinger" }
+@listD=[false, Version("8"), FacetsA { s="tull" }]
+@listA=["man", "in", "black"]
+@strA="foo"
 class FacetsB : FacetsA, FacetsM
 {
 }
@@ -240,6 +237,4 @@ class FacetsB : FacetsA, FacetsM
 ** FacetsM
 **************************************************************************
 
-@ma="ma" @mb='b' mixin FacetsM {}
-
-*/
+@strB="ma" @intB='b' mixin FacetsM {}

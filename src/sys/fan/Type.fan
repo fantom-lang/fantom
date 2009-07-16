@@ -373,7 +373,7 @@ const class Type
   ** provide better performance.  See the [Facets Doc]`docLang::Facets`
   ** for details.
   **
-  Str:Obj facets(Bool inherited := false)
+  Symbol:Obj? facets(Bool inherited := false)
 
   **
   ** Get a facet by symbol key, or return the 'def' is the facet is not
