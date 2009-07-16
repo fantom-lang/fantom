@@ -67,7 +67,9 @@ class TopIndexGenerator : HtmlGenerator
     pods.each |Pod p, Int i|
     {
       cls := i % 2 == 0 ? "even" : "odd"
-      doc := p.facets["description"]
+// TODO-SYM
+//      doc := p.facets["description"]
+doc := "TODO-SYM"
       out.print("<tr class='$cls'>\n")
       out.print("  <td><a href='$p.name/index.html'>$p.name</a></td>\n")
       out.print("  <td>$doc</td>\n")

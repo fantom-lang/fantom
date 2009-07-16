@@ -13,8 +13,8 @@ class SymbolsTest : Test
 {
   Void testBasics()
   {
-    verifyImmutable(@testSys::boolT, "boolT",  true)
-    verifyImmutable(@boolF, "boolF",    false)
+    verifyImmutable(@testSys::boolA, "boolA",  true)
+    verifyImmutable(@boolB, "boolB",    false)
     verifyImmutable(@intA, "intA",     0xabcd_0123_eeff_7788)
     verifyImmutable(@intB, "intB",     -4)
     verifyImmutable(@floatA, "floatA",   -5f)

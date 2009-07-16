@@ -162,7 +162,7 @@ abstract const class Slot
   ** use the `facet` method which will provide better performance.
   ** See the [Facets Doc]`docLang::Facets` for details.
   **
-  Str:Obj facets()
+  Symbol:Obj? facets()
 
   **
   ** Get a facet by symbol key, or return the 'def' is the facet is not
