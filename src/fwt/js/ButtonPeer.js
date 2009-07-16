@@ -36,11 +36,12 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem)
     //font      = "bold 10pt Arial";
     padding   = "2px 4px";
     textAlign = "center";
-    border    = "1px solid #404040";
+    border    = "1px solid #a4a4a4";
     cursor    = "default";
+    //textShadow = "0 1px 1px #fff";
     backgroundColor = "#eee";
     // IE workaround
-    try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc))"; } catch (err) {} // ignore
+    try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#dadada))"; } catch (err) {} // ignore
 //    MozBorderRadius    = "10px";
 //    webkitBorderRadius = "10px";
   }
