@@ -250,15 +250,13 @@ namespace Fanx.Fcode
       int version = input.u4();
       if (version != FConst.FCodeVersion &&
 // TODO
-version != 0x01000034)
+version != 0x01000044)
         throw new System.IO.IOException("Invalid version 0x" + version.ToString("X").ToLower());
       this.m_version = version;
 
       m_podName = input.utf();
       m_podVersion = input.utf();
-// TODO
-int dependNum = version == 0x01000034 ? input.u1() : input.u2();
-      m_depends = new Depend[dependNum];
+      m_depends = new Depend[input.u2()];
       for (int i=0; i<m_depends.Length; ++i)
         m_depends[i] = Depend.fromStr(input.utf());
 

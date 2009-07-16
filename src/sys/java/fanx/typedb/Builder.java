@@ -265,7 +265,15 @@ class Builder
     HashMap facetNames = new HashMap();
     for (int i=0; i<pods.length; ++i)
     {
-      List names = pods[i].facets.getStrList("indexFacets");
+// TODO-SYM
+List names = pods[i].facets.getStrList("indexFacets");
+for (int j=0; names != null && j<names.sz(); ++j)
+{
+  String n = (String)names.get(j);
+  if (facetNames.get(n) == null)
+    facetNames.put(n, new FacetIndex(n));
+}
+      names = pods[i].facets.getStrList("sys::indexFacets");
       if (names == null) continue;
       for (int j=0; j<names.sz(); ++j)
       {

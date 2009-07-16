@@ -55,14 +55,18 @@ class Assembler : CompilerSupport, FConst
     asm := AttrAsm(compiler, fpod)
 
     buf := Buf.make
-    buf.writeI2(4 + input.podFacets.size)
-    buf.writeI2(fpod.addName("description")); buf.writeUtf(input.description.toCode)
-    buf.writeI2(fpod.addName("buildHost"));   buf.writeUtf(Sys.hostName.toCode)
-    buf.writeI2(fpod.addName("buildUser"));   buf.writeUtf(Sys.userName.toCode)
-    buf.writeI2(fpod.addName("buildTime"));   buf.writeUtf(DateTime.now.toStr.toCode)
+    buf.writeI2(3 + input.podFacets.size)
+//    buf.writeI2(fpod.addSymbolRefx("sys", "description")); buf.writeUtf(input.description.toCode)
+    buf.writeI2(fpod.addSymbolRefx("build", "buildHost")); buf.writeUtf(Sys.hostName.toCode)
+    buf.writeI2(fpod.addSymbolRefx("build", "buildUser")); buf.writeUtf(Sys.userName.toCode)
+    buf.writeI2(fpod.addSymbolRefx("build", "buildTime")); buf.writeUtf(DateTime.now.toStr.toCode)
     input.podFacets.each |Obj val, Str key|
     {
-      buf.writeI2(fpod.addName(key));
+// TODO-SYM
+      if (!key.contains("::")) { echo("WARNING: invalid pod facet $key"); return }
+      podName := key[0..<key.index(":")]
+      symName := key[key.index(":")+2..-1]
+      buf.writeI2(fpod.addSymbolRefx(podName, symName));
       buf.writeUtf(Buf.make.writeObj(val).flip.readAllStr)
     }
     asm.add(FConst.FacetsAttr, buf)

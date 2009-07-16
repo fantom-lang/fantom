@@ -73,3 +73,8 @@ Str uriScheme := ""
 **
 Bool js := false
 
+**
+** List of facets to index
+** TODO-SYM
+**
+Str[] indexFacets := Str[,]

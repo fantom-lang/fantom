@@ -27,8 +27,8 @@ class Build : BuildPod
     includeFandoc = false
     podFacets =
     [
-      "nodoc": true,
-      "indexFacets": ["testSysByStr", "testSysByType"]
+      "sys::nodoc": true,
+      "sys::indexFacets": ["testSys::testSysByStr", "testSys::testSysByType"]
     ]
   }
 

@@ -33,7 +33,7 @@ public abstract class UriScheme
     try
     {
       // lookup scheme type
-      Type t = (Type)Type.findByFacet("uriScheme", scheme, true).first();
+      Type t = (Type)Type.findByFacet("sys::uriScheme", scheme, true).first();
       if (t == null) throw new Exception();
 
       // allocate instance

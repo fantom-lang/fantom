@@ -22,7 +22,7 @@ class Build : BuildPod
     description   = "Web test suite"
     depends       = ["sys 1.0", "inet 1.0", "web 1.0", "webapp 1.0", "dom 1.0"]
     srcDirs       = [`fan/`]
-    podFacets     = ["nodoc": true]
+    podFacets     = ["sys::nodoc": true]
     includeSrc    = false
     includeFandoc = false
     hasJavascript = true

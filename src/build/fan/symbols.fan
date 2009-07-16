@@ -16,3 +16,13 @@
 **
 Bool target := false
 
+** User account used to build target
+Str buildUser := ""
+
+** Host machine used to build target
+Str buildHost := ""
+
+** Time target was build
+** TODO-SYM
+Str buildTime := ""
+

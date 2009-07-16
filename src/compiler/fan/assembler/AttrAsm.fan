@@ -49,7 +49,7 @@ class AttrAsm : CompilerSupport
     buf.writeI2(facets.size)
     facets.each |FacetDef f|
     {
-      buf.writeI2(fpod.addName(f.key.qname))
+      buf.writeI2(fpod.addSymbolRef(f.key.symbol))
       try
       {
         buf.writeUtf(f.val.serialize)
