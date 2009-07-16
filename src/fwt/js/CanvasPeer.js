@@ -21,6 +21,9 @@ fan.fwt.CanvasPeer.prototype.create = function(parentElem)
 
 fan.fwt.CanvasPeer.prototype.sync = function(self)
 {
+  // short-circuit if not properly layed out
+  if (this.size.w == 0 || this.size.h == 0) return;
+
   if (this.hasCanvas)
   {
     // remove existing elements
