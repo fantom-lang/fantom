@@ -142,9 +142,7 @@ public final class FPod
       throw new IOException("Invalid magic");
 
     int version = in.u4();
-    if (version != FConst.FCodeVersion &&
-// TODO-SYM
-version != 0x01000044)
+    if (version != FConst.FCodeVersion)
       throw new IOException("Invalid version 0x" + Integer.toHexString(version));
     this.version = version;
 
