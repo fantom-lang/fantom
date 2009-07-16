@@ -12,6 +12,10 @@
 final const class Symbol
 {
 
+//////////////////////////////////////////////////////////////////////////
+// Lookup
+//////////////////////////////////////////////////////////////////////////
+
   **
   ** Find a Symbol by it's qualified name "pod::name".  If the symbol
   ** doesn't exist and checked is false then return null, otherwise
@@ -23,6 +27,10 @@ final const class Symbol
   ** Private constructor.
   **
   private new make()
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** Pod which declared this symbol.
@@ -69,5 +77,17 @@ final const class Symbol
   ** Return "@qname".
   **
   override Str toStr()
+
+//////////////////////////////////////////////////////////////////////////
+// Documentation
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Return the raw fandoc for this symbol or null if not available.
+  ** If there is additional documentation meta-data available it is
+  ** included an the start of the string as a series of "@name=value"
+  ** lines.
+  **
+  Str? doc()
 
 }

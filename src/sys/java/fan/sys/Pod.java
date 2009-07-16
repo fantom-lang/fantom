@@ -301,6 +301,25 @@ public Object facet(String name, Object def) { return toFacets().get(name, def);
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Documentation
+//////////////////////////////////////////////////////////////////////////
+
+  public String doc()
+  {
+    if (!docLoaded)
+    {
+      try
+      {
+        java.io.InputStream in = fpod.store.read("doc/pod.apidoc");
+        if (in != null) { try { FDoc.read(in, this); } finally { in.close(); } }
+      }
+      catch (Exception e) { e.printStackTrace(); }
+      docLoaded = true;
+    }
+    return doc;
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Files
 //////////////////////////////////////////////////////////////////////////
 
@@ -497,6 +516,8 @@ public Object facet(String name, Object def) { return toFacets().get(name, def);
   Log log;
   Object symbolsLock = new Object();
   HashMap symbols;
+  boolean docLoaded;
+  public String doc;
 
 
 }

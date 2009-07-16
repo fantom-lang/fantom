@@ -56,7 +56,7 @@ class Assembler : CompilerSupport, FConst
 
     buf := Buf.make
     buf.writeI2(3 + input.podFacets.size)
-//    buf.writeI2(fpod.addSymbolRefx("sys", "description")); buf.writeUtf(input.description.toCode)
+// TODO-SYM
     buf.writeI2(fpod.addSymbolRefx("build", "buildHost")); buf.writeUtf(Sys.hostName.toCode)
     buf.writeI2(fpod.addSymbolRefx("build", "buildUser")); buf.writeUtf(Sys.userName.toCode)
     buf.writeI2(fpod.addSymbolRefx("build", "buildTime")); buf.writeUtf(DateTime.now.toStr.toCode)

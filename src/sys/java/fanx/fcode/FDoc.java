@@ -21,8 +21,9 @@ public class FDoc
 
   /**
    * Read a fandoc file and store the doc strings.
+   * Top is ClassType or Pod.
    */
-  public static void read(InputStream in)
+  public static void read(InputStream in, Object top)
     throws IOException
   {
     BufferedReader r = new BufferedReader(new InputStreamReader(in, "UTF-8"));
@@ -34,10 +35,7 @@ public class FDoc
       if (line.startsWith("  ")) { s.append(line.substring(2)).append('\n'); continue; }
       if (line.length() == 0 && key != null)
       {
-        if (key.indexOf('.') < 0)
-          ((ClassType)Type.find(key, true)).doc = s.toString();
-        else
-          Slot.find(key, true).doc = s.toString();
+        setDoc(top, key, s.toString());
         s = new StringBuilder();
         key = null;
       }
@@ -47,5 +45,28 @@ public class FDoc
       }
     }
   }
+
+  private static void setDoc(Object top, String key, String doc)
+  {
+    if (top instanceof Pod)
+    {
+      int colon = key.lastIndexOf(':');
+      String name = colon < 0 ? null : key.substring(colon+1);
+      if (name == null)
+        ((Pod)top).doc = doc;
+      else
+        ((Pod)top).symbol(name, true).doc = doc;
+    }
+    else
+    {
+      int dot = key.lastIndexOf('.');
+      String name = dot < 0 ? null : key.substring(dot+1);
+      if (name == null)
+        ((ClassType)top).doc = doc;
+      else
+        ((Type)top).slot(name, true).doc = doc;
+    }
+  }
+
 
 }

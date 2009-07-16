@@ -63,7 +63,7 @@ class WritePod : CompilerStep
       compiler.resFiles.each |File f| { writeRes(zip, f) }
 
       // if including fandoc write it out too
-      if (compiler.input.includeDoc) writeTypeDocs(zip)
+      if (compiler.input.includeDoc) writeDocs(zip)
 
       // if including source write it out too
       if (compiler.input.includeSrc) writeSrc(zip)
@@ -111,11 +111,35 @@ class WritePod : CompilerStep
 // Doc
 //////////////////////////////////////////////////////////////////////////
 
-  private Void writeTypeDocs(Zip zip)
+  private Void writeDocs(Zip zip)
   {
+    writePodDoc(zip)
     compiler.types.each |TypeDef t|
     {
       if (!t.isSynthetic) writeTypeDoc(zip, t)
+    }
+  }
+
+  **
+  ** Pod fandoc follows same format as type apidocs except qname
+  ** is "{podName}::pod" and symbols are "{podName}::pod.{symbol}".
+  **
+  private Void writePodDoc(Zip zip)
+  {
+    try
+    {
+      pod := compiler.pod
+      out := zip.writeNext("doc/pod.apidoc".toUri)
+      writeDoc(out, pod.name, pod.doc, null)
+      pod.symbolDefs.each |SymbolDef s|
+      {
+        writeDoc(out, s.qname, s.doc, null)
+      }
+      out.close
+    }
+    catch (Err e)
+    {
+      throw errReport(CompilerErr("Cannot write pod fandoc", location, e))
     }
   }
 
