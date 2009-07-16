@@ -17,7 +17,7 @@ mixin FConst
 //////////////////////////////////////////////////////////////////////////
 
   const static Int FCodeMagic    := 0x0FC0DE05
-const static Int FCodeVersion  := 0x01000044
+  const static Int FCodeVersion  := 0x01000045
   const static Int TypeDbMagic   := 0x0FC0DEDB
   const static Int TypeDbVersion := 0x01000018
 

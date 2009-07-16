@@ -71,12 +71,7 @@ public class FAttrs
     HashMap map = new HashMap();
     for (int i=0; i<n; ++i)
     {
-// TODO-SYM
-String qname;
-if (in.fpod.version == 0x01000044)
-  qname = in.fpod.symbolRef(in.u2()).qname();
-else
-  qname = in.name();
+      String qname = in.fpod.symbolRef(in.u2()).qname();
       Object val = Symbol.initVal(in.utf());
       map.put(qname, val);
     }
