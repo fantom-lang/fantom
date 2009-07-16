@@ -261,7 +261,7 @@ namespace Fanx.Typedb
       Hashtable facetNames = new Hashtable();
       for (int i=0; i<pods.Length; ++i)
       {
-        List names = pods[i].facets.getStrList("indexFacets");
+        List names = pods[i].facets.getStrList("sys::indexFacets");
         if (names == null) continue;
         for (int j=0; j<names.sz(); ++j)
         {

@@ -26,7 +26,7 @@ class Build : BuildPod
     includeSrc  = true
     podFacets =
     [
-      "indexFacets":
+      "sys::indexFacets":
       [
         "fluxResource",
         "fluxSideBar",

@@ -143,16 +143,14 @@ public final class FPod
 
     int version = in.u4();
     if (version != FConst.FCodeVersion &&
-// TODO
-version != 0x01000034)
+// TODO-SYM
+version != 0x01000044)
       throw new IOException("Invalid version 0x" + Integer.toHexString(version));
     this.version = version;
 
     podName = in.utf();
     podVersion = in.utf();
-// TODO
-int dependNum = version == 0x01000034 ? in.u1() : in.u2();
-    depends = new Depend[dependNum];
+    depends = new Depend[in.u2()];
     for (int i=0; i<depends.length; ++i)
       depends[i] = Depend.fromStr(in.utf());
 

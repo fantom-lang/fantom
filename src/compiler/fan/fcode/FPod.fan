@@ -145,10 +145,18 @@ final class FPod : CPod, FConst
 
   Int addSymbolRef(CSymbol s)
   {
-    p   := addName(s.pod.name)
-    n   := addName(s.name)
+    p := addName(s.pod.name)
+    n := addName(s.name)
     return symbolRefs.add(FSymbolRef(p, n))
   }
+
+// TODO-SYM
+Int addSymbolRefx(Str pod, Str name)
+{
+  p := addName(pod)
+  n := addName(name)
+  return symbolRefs.add(FSymbolRef(p, n))
+}
 
   Void dump(OutStream out := Sys.out)
   {
