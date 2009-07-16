@@ -156,8 +156,14 @@ abstract class CNamespace : CompilerSupport
     bridge := bridgeCache[name]
     if (bridge != null) return bridge
 
+
     // resolve the name by compilerBridge facet
-    t := findByFacet("compilerBridge", name)
+    t := findByFacet(@compilerBridge, name)
+// TODO-SYM
+if (t.size == 0)
+{
+  if (name == "java") t = [Type.find("compilerJava::JavaBridge")]
+}
     if (t.size > 1)
       throw CompilerErr("Multiple FFI bridges available for '$name': $t", loc)
     if (t.size == 0)

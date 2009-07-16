@@ -26,7 +26,14 @@ abstract class DslPlugin : CompilerSupport
   static DslPlugin? find(CompilerSupport c, Location loc, CType anchorType)
   {
     qname := anchorType.qname
-    t := findByFacet("compilerDsl", qname)
+    t := findByFacet(@compilerDsl, qname)
+
+// TODO-SYM
+if (t.size == 0)
+{
+  if (qname == "sys::Str") return StrDslPlugin(c.compiler)
+  if (qname == "sys::Regex") return RegexDslPlugin(c.compiler)
+}
 
     if (t.size > 1)
     {

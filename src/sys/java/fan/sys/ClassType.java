@@ -230,6 +230,21 @@ public class ClassType
     return map;
   }
 
+  public final Object facet(Symbol key, Object def, boolean inherited)
+  {
+    Object val = reflect().facets.get(key, null);
+    if (val != null) return val;
+    if (!inherited) return def;
+    List inheritance = inheritance();
+    for (int i=0; i<inheritance.sz(); ++i)
+    {
+      val = ((Type)inheritance.get(i)).facet(key, null, false);
+      if (val != null) return val;
+    }
+    return def;
+  }
+
+// TODO-SYM
   public final Object facet(String name, Object def, boolean inherited)
   {
     Object val = reflect().facets.get(name, null);

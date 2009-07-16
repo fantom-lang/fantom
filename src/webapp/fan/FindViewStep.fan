@@ -69,7 +69,7 @@ const class FindViewStep : WebAppStep
       max := 0
       viewTypes.each |Type vt|
       {
-        Int priority := vt.facet("webViewPriority", 0)
+        Int priority := vt.facet(@webViewPriority, 0)
         if (priority > max)
         {
           max = priority
@@ -95,7 +95,7 @@ const class FindViewStep : WebAppStep
   **
   virtual Type[] findViews(WebReq req, WebRes res)
   {
-    return Type.findByFacet("webView", req.resource.type, true)
+    return Type.findByFacet(@webView, req.resource.type, true)
   }
 
 }

@@ -25,7 +25,7 @@ class Build : BuildPod
     includeFandoc = false
     podFacets   =
     [
-      "doc": false
+      "nodoc": true,
     ]
   }
 

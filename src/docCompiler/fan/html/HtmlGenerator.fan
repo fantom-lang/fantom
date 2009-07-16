@@ -197,14 +197,14 @@ abstract class HtmlGenerator : HtmlDocWriter
     if (t.isInternal) return false
     if (t.isSynthetic) return false
     if (t.fits(Test#) && t != Test#) return false
-    if (t.facet("nodoc") == true) return false
+    if (t.facet(@nodoc) == true) return false
     return true
   }
 
   static Bool showSlot(Type t, Slot s)
   {
     if (s.isSynthetic) return false
-    if (s.facet("nodoc") == true) return false
+    if (s.facet(@nodoc) == true) return false
     return t == s.parent
   }
 

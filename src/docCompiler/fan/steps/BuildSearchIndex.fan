@@ -28,7 +28,7 @@ class BuildSearchIndex : DocCompilerSupport
     first := true
     Pod.list.each |Pod p|
     {
-      if (p.facet("doc") == false) return
+      if (p.facet(@nodoc) == true) return
       p.types.each |Type t, Int i|
       {
         if (!HtmlGenerator.showType(t)) return
