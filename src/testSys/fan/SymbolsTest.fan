@@ -36,7 +36,7 @@ class SymbolsTest : Test
 
     verifyImmutable(@serialA, "serialA", Version("2.3"))
     verifyImmutable(@serialB, "serialB", [Version("1"), Version("2")])
-    verifyMutable(@serialC, "serialC", SerA { i = 12345; s = "symbols!"})
+    verifyMutable(@serialC, "serialC", SerA { i = 12345; s = "symbols!"}, Obj#)
   }
 
   Void verifyImmutable(Symbol x, Str name, Obj? val, Type of := val.type)
