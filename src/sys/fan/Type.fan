@@ -35,7 +35,7 @@ const class Type
   static Type? find(Str qname, Bool checked := true)
 
   **
-  ** Find all the types annotated with the specified facet name/value
+  ** Find all the types annotated with the specified facet symbol/value
   ** pair.  The facet name must be declared as an indexed facet
   ** by an installed pod, otherwise Err is thrown.  Return an empty
   ** list of no matches found.
@@ -45,7 +45,7 @@ const class Type
   **
   ** See [Facet Indexing]`docLang::TypeDatabase#facetIndexing` for details.
   **
-  static Type[] findByFacet(Str facetName, Obj facetVal, Obj? options := null)
+  static Type[] findByFacet(Symbol key, Obj facetVal, Obj? options := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Naming
@@ -376,11 +376,11 @@ const class Type
   Str:Obj facets(Bool inherited := false)
 
   **
-  ** Get a facet by name, or return the 'def' is the facet is not defined.
-  ** If 'inherited' is true, then this type's `inheritance` chain is
-  ** searched.  See the [Facets Doc]`docLang::Facets` for details.
+  ** Get a facet by symbol key, or return the 'def' is the facet is not
+  ** defined.  If 'inherited' is true, then this type's `inheritance`
+  ** chain is searched.  See the [Facets Doc]`docLang::Facets` for details.
   **
-  Obj? facet(Str name, Obj? def := null, Bool inherited := false)
+  Obj? facet(Symbol key, Obj? def := null, Bool inherited := false)
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

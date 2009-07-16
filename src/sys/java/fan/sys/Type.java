@@ -37,8 +37,11 @@ public abstract class Type
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
 
-  public static List findByFacet(String facetName, Object facetVal) { return findByFacet(facetName, facetVal, null); }
-  public static List findByFacet(String facetName, Object facetVal, Object options)
+  public static List findByFacet(Symbol key, Object facetVal) { return findByFacet(key.qname(), facetVal, null); }
+  public static List findByFacet(Symbol key, Object facetVal, Object options) { return findByFacet(key.qname(), facetVal, options); }
+// TODO-SYM
+public static List findByFacet(String facetName, Object facetVal) { return findByFacet(facetName, facetVal, null); }
+public static List findByFacet(String facetName, Object facetVal, Object options)
   {
     return TypeDb.get().findByFacet(facetName, facetVal, options);
   }
@@ -294,9 +297,13 @@ public abstract class Type
   public final Map facets() { return facets(false); }
   public abstract Map facets(boolean inherited);
 
-  public final Object facet(String name) { return facet(name, null, false); }
-  public final Object facet(String name, Object def) { return facet(name, def, false); }
-  public abstract Object facet(String name, Object def, boolean inherited);
+  public final Object facet(Symbol key) { return facet(key, null, false); }
+  public final Object facet(Symbol key, Object def) { return facet(key, def, false); }
+public Object facet(Symbol key, Object def, boolean inherited) { return def; }
+// TODO-SYM
+public final Object facet(String name) { return facet(name, null, false); }
+public final Object facet(String name, Object def) { return facet(name, def, false); }
+public Object facet(String name, Object def, boolean inherited) { return def; }
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

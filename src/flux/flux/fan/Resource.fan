@@ -46,7 +46,7 @@ abstract class Resource
     if (obj is Resource) return obj
 
     // 3. map via fluxResource facet
-    rtype := Type.findByFacet("fluxResource", obj.type, true).first
+    rtype := Type.findByFacet(@fluxResource, obj.type, true).first
     if (rtype == null) throw UnsupportedErr("No resource mapping for $obj.type")
     return rtype.make([uri, obj])
   }
@@ -92,7 +92,7 @@ abstract class Resource
   **
   virtual Type[] views()
   {
-    acc := Type.findByFacet("fluxView", type, true)
+    acc := Type.findByFacet(@fluxView, type, true)
     acc = acc.exclude |Type t->Bool| { return t.isAbstract }
     return acc
   }

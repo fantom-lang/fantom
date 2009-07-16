@@ -110,7 +110,7 @@ internal class Commands
       addSep
     }
 
-    types := Type.findByFacet("fluxSideBar", true)
+    types := Type.findByFacet(@fluxSideBar, true)
     types = types.dup.sort |Type a, Type b->Int| { return a.name <=> b.name }
     types.each |Type t|
     {

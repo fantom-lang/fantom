@@ -25,7 +25,7 @@ class Build : BuildPod
     includeSrc  = true
     podFacets =
     [
-      "indexFacets": ["webView"]
+      "indexFacets": ["web::webView"]
     ]
   }
 

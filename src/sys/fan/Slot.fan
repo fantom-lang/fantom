@@ -165,10 +165,10 @@ abstract const class Slot
   Str:Obj facets()
 
   **
-  ** Get a facet by name, or return the 'def' is the facet is not defined.
-  ** See the [Facets Doc]`docLang::Facets` for details.
+  ** Get a facet by symbol key, or return the 'def' is the facet is not
+  ** defined. See the [Facets Doc]`docLang::Facets` for details.
   **
-  Obj? facet(Str name, Obj? def := null)
+  Obj? facet(Symbol key, Obj? def := null)
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

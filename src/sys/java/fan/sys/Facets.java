@@ -83,6 +83,13 @@ public final class Facets
 // Access
 //////////////////////////////////////////////////////////////////////////
 
+  final synchronized Object get(Symbol key, Object def)
+  {
+    Object val = get(key.qname(), null);
+    if (val != null) return val;
+    return get(key.name(), def);
+  }
+
   final synchronized Object get(String name, Object def)
   {
     Object val = src.get(name);

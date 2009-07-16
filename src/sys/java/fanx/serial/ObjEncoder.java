@@ -68,11 +68,14 @@ public class ObjEncoder
     }
 
     Type type = FanObj.type(obj);
-    if (type.facet("sys::simple", null, true) == Boolean.TRUE)
+// TODO-SYM
+    if (type.facet("sys::simple", null, true) == Boolean.TRUE ||
+        type.facet("simple", null, true) == Boolean.TRUE)
     {
       writeSimple(type, obj);
     }
-    else if (type.facet("sys::serializable", null, true) == Boolean.TRUE)
+    else if (type.facet("sys::serializable", null, true) == Boolean.TRUE ||
+             type.facet("serializable", null, true) == Boolean.TRUE)
     {
       writeComplex(type, obj);
     }

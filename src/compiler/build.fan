@@ -34,7 +34,7 @@ class Build : BuildPod
     includeSrc  = true
     podFacets =
     [
-      "indexFacets": ["compilerBridge", "compilerDsl"]
+      "indexFacets": ["compiler::compilerBridge", "compiler::compilerDsl"]
     ]
   }
 

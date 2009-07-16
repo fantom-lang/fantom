@@ -90,10 +90,10 @@ class FileResource : Resource
 
     // first try exact mime type matching
     acc := Type[,]
-    acc.addAll(Type.findByFacet("fluxViewMimeType", mime.toStr, true))
+    acc.addAll(Type.findByFacet(@fluxViewMimeType, mime.toStr, true))
 
     // then match by just media type
-    acc.addAll(Type.findByFacet("fluxViewMimeType", mime.mediaType, true))
+    acc.addAll(Type.findByFacet(@fluxViewMimeType, mime.mediaType, true))
 
     // filter out abstract
     acc = acc.exclude |Type t->Bool| { return t.isAbstract }

@@ -221,7 +221,7 @@ abstract class BuildScript
     targets := Target[,]
     type.methods.each |Method m|
     {
-      description := m.facet("target")
+      description := m.facet(@target)
       if (description == null) return
 
       if (!(description is Str))

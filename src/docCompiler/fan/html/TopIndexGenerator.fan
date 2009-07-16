@@ -60,7 +60,7 @@ class TopIndexGenerator : HtmlGenerator
     pods.swap(0, pods.index(Pod.find("docIntro")))
     pods.swap(1, pods.index(Pod.find("docLang")))
 
-    pods = pods.exclude |p| { p.facet("doc") == false }
+    pods = pods.exclude |p| { p.facet(@nodoc) == true }
     pods = pods.findAll |p| { api == isAPI(p) }
     pods = pods.sort |a,b| { a.name.compareIgnoreCase(b.name) }
 

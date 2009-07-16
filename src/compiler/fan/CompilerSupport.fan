@@ -135,13 +135,13 @@ class CompilerSupport
   ** all the warnings which might spew out while rebuilding
   ** the type database in the middle of a compile.
   **
-  static Type[] findByFacet(Str facetName, Obj facetVal, Obj? options := null)
+  static Type[] findByFacet(Symbol key, Obj facetVal, Obj? options := null)
   {
     log := Log.get("typedb")
     oldLevel := log.level
     log.level = LogLevel.error
     try
-      return Type.findByFacet(facetName, facetVal, options)
+      return Type.findByFacet(key, facetVal, options)
     finally
       log.level = oldLevel
   }

@@ -48,7 +48,7 @@ internal class JsonWriter
 
     this.out.writeChar(JsonToken.objectStart)
     writePair("fanType", type.signature)
-    if (type.facet("simple", null, true))
+    if (type.facet(@simple, null, true))
     {
       this.out.print(",")
       writePair("fanValue", obj.toStr)

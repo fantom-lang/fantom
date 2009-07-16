@@ -189,11 +189,11 @@ class EnumTest : Test
 
   Void testFacets()
   {
-    verifyEq(EnumAbc#.facet("sys::simple"), true)
+    verifyEq(EnumAbc#.facet(@simple), true)
     verifyEq(EnumAbc#.facets, Str:Obj["sys::simple":true])
 
-    verifyEq(Suits#.facet("sys::simple"), true)
-    verifyEq(Suits#.facet("testSys::strA"), "y")
+    verifyEq(Suits#.facet(@simple), true)
+    verifyEq(Suits#.facet(@strA), "y")
     verifyEq(Suits#.facets, Str:Obj["sys::simple":true, "testSys::strA":"y"])
   }
 
