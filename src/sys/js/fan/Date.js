@@ -234,3 +234,36 @@ fan.sys.Date.fromIso = function(s, checked)
 {
   return fan.sys.Date.fromStr(s, checked);
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Misc
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Date.prototype.isYesterday = function() { return this.equals(fan.sys.Date.today().plus(fan.sys.Duration.negOneDay)); }
+fan.sys.Date.prototype.isToday     = function() { return this.equals(fan.sys.Date.today()); }
+fan.sys.Date.prototype.isTomorrow  = function() { return this.equals(fan.sys.Date.today().plus(fan.sys.Duration.oneDay)); }
+
+fan.sys.Date.prototype.toDateTime = function(t, tz)
+{
+  if (tz == undefined) tz = fan.sys.TimeZone.current();
+  return fan.sys.DateTime.makeDT(this, t, tz);
+}
+
+fan.sys.Date.prototype.midnight = function(tz)
+{
+  if (tz == undefined) tz = fan.sys.TimeZone.current();
+  return fan.sys.DateTime.makeDT(this, fan.sys.Time.defVal, tz);
+}
+
+fan.sys.Date.prototype.toCode = function()
+{
+  if (this.equals(fan.sys.Date.defVal)) return "Date.defVal";
+  return "Date(\"" + this.toString() + "\")";
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Date.defVal = new fan.sys.Date(2000, 0, 1);
+

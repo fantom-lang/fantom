@@ -60,6 +60,11 @@ fan.sys.List.toStr = function(self)
 // Access
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.List.isEmpty = function(self)
+{
+  return self.length == 0;
+}
+
 fan.sys.List.add = function(self, item)
 {
   self.push(item);
@@ -230,6 +235,27 @@ fan.sys.List.eachr = function(self, func)
     for (var i=self.length-1; i>=0; i--)
       func(self[i], i)
   }
+}
+
+fan.sys.List.eachWhile = function(self, f)
+{
+  if (f.length == 1)
+  {
+    for (var i=0; i<self.length; ++i)
+    {
+      var r = f(self[i]);
+      if (r != null) return r;
+    }
+  }
+  else
+  {
+    for (var i=0; i<self.length; ++i)
+    {
+      var r = f(self[i], i);
+      if (r != null) return r;
+    }
+  }
+  return null;
 }
 
 fan.sys.List.find = function(self, f)

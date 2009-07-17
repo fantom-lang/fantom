@@ -194,6 +194,9 @@ fan.sys.Duration.secPerDay  = 86400;
 fan.sys.Duration.secPerHr   = 3600;
 fan.sys.Duration.secPerMin  = 60;
 
-fan.sys.Duration.defVal = new fan.sys.Duration(0);
-fan.sys.Duration.minVal = new fan.sys.Duration(fan.sys.Int.minVal);
-fan.sys.Duration.maxVal = new fan.sys.Duration(fan.sys.Int.maxVal);
+fan.sys.Duration.defVal    = new fan.sys.Duration(0);
+fan.sys.Duration.minVal    = new fan.sys.Duration(fan.sys.Int.minVal);
+fan.sys.Duration.maxVal    = new fan.sys.Duration(fan.sys.Int.maxVal);
+fan.sys.Duration.oneDay    = new fan.sys.Duration(fan.sys.Duration.nsPerDay);
+fan.sys.Duration.negOneDay = new fan.sys.Duration(-fan.sys.Duration.nsPerDay);
+
