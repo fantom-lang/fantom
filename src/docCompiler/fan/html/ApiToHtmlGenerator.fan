@@ -220,6 +220,14 @@ class ApiToHtmlGenerator : HtmlGenerator
 
     // Slot spec
     out.print("<p><code>")
+    slot.facets.keys.each |s|
+    {
+      def := slot.facets[s]
+      uri := compiler.uriMapper.map("@$s.qname", loc)
+      out.print("@<a href='$uri'>$s.name</a>")
+      if (def != true) out.print(" = $def")
+      out.print("<br/>")
+    }
     if (slot.isField)
     {
       f := (Field)slot

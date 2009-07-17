@@ -80,7 +80,9 @@ class UriMapper : DocCompilerSupport
     // map
     try
     {
-      if (fandocUri.contains("::"))
+      if (fandocUri.startsWith("@"))
+        mapSymbol
+      else if (fandocUri.contains("::"))
         mapPod
       else
         mapTypeOrFile(compiler.pod, this.fandocUri)
@@ -106,6 +108,20 @@ class UriMapper : DocCompilerSupport
 //////////////////////////////////////////////////////////////////////////
 // Map
 //////////////////////////////////////////////////////////////////////////
+
+  private Void mapSymbol()
+  {
+    colons := fandocUri.index("::")
+    podName := fandocUri[1..<colons]
+    pod := Pod.find(podName, false)
+    if (pod == null) throw err("Unknown pod '$podName'", loc)
+
+    name := fandocUri[colons+2..-1]
+    sym := pod.symbol(name)
+    if (sym == null) throw err("Unknown symbol '$fandocUri'", loc)
+
+    targetUri = toUri(pod, "symbols.html", name)
+  }
 
   private Void mapPod()
   {
