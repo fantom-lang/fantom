@@ -24,16 +24,6 @@ class Build : BuildPod
     srcDirs     = [`fan/`, `fan/views/`, `fan/sidebars/`, `test/`]
     resDirs     = [`locale/`, `test/files/`, `test/files/sub/`]
     includeSrc  = true
-    podFacets =
-    [
-      "sys::indexFacets":
-      [
-        "flux::fluxResource",
-        "flux::fluxSideBar",
-        "flux::fluxView",
-        "flux::fluxViewMimeType"
-      ]
-    ]
   }
 
 }

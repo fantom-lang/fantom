@@ -54,8 +54,12 @@ class FindSourceFiles : CompilerStep
     compiler.srcFiles = srcFiles
 
     // TODO-SYM
-    podFan := compiler.input.homeDir + `pod.fan`
-    if (podFan.exists) compiler.srcFiles.insert(0, podFan)
+    podDef := compiler.input.homeDir + `pod.fan`
+    if (podDef.exists)
+    {
+      compiler.input.podDef = podDef
+      compiler.srcFiles.insert(0, podDef)
+    }
 
     if (log.isDebug)
     {

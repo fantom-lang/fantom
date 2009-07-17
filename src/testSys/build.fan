@@ -19,17 +19,12 @@ class Build : BuildPod
   {
     podName     = "testSys"
     version     = globalVersion
-    description = "Sys test suite"
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`]
     resDirs     = [`res/`, `locale/`]
     includeSrc  = false
     includeFandoc = false
-    podFacets =
-    [
-      "sys::nodoc": true,
-      "sys::indexFacets": ["testSys::testSysByStr", "testSys::testSysByType"]
-    ]
+    description = "TODO-SYM"
   }
 
 }

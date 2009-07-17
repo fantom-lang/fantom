@@ -25,7 +25,6 @@ abstract class CompilerTest : Test
     input := CompilerInput.make
     input.podName     = podName
     input.version     = Version.defVal
-    input.description = ""
     input.log.level   = logLevel
     input.isTest      = true
     input.isScript    = isScript

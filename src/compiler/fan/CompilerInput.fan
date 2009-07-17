@@ -44,16 +44,6 @@ class CompilerInput
   Version? version
 
   **
-  ** Description to include in output pod's manifest.
-  **
-  Str? description
-
-  **
-  ** User defined pod level facets.
-  **
-  Str:Obj podFacets := Str:Obj[:]
-
-  **
   ** List of this pod's dependencies used for both the
   ** compiler checking and output in the pod's manifest.
   **
@@ -122,6 +112,12 @@ class CompilerInput
   File? homeDir
 
   **
+  ** Location of "pod.fan" which defines the pod meta-data
+  ** needed to compile the pod from source.
+  **
+  File? podDef
+
+  **
   ** List of directories containing fan source files (file mode only)
   **
   File[]? srcDirs
@@ -163,7 +159,6 @@ class CompilerInput
   {
     validateReqField("podName")
     validateReqField("version")
-    validateReqField("description")
     validateReqField("depends")
     validateReqField("output")
     validateReqField("outDir")
