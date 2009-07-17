@@ -130,10 +130,10 @@ class WritePod : CompilerStep
     {
       pod := compiler.pod
       out := zip.writeNext("doc/pod.apidoc".toUri)
-      writeDoc(out, pod.name, pod.doc, null)
+      writeDoc(out, pod.name, pod)
       pod.symbolDefs.each |SymbolDef s|
       {
-        writeDoc(out, s.qname, s.doc, null)
+        writeDoc(out, s.qname, s)
       }
       out.close
     }
@@ -154,10 +154,10 @@ class WritePod : CompilerStep
     try
     {
       out := zip.writeNext("doc/${t.name}.apidoc".toUri)
-      writeDoc(out, t.qname, t.doc, t.docMeta)
+      writeDoc(out, t.qname, t)
       t.slotDefs.each |SlotDef s|
       {
-        writeDoc(out, s.qname, s.doc, s.docMeta)
+        writeDoc(out, s.qname, s)
       }
       out.close
     }
@@ -167,8 +167,10 @@ class WritePod : CompilerStep
     }
   }
 
-  private static Void writeDoc(OutStream out, Str key, Str[]? doc, [Str:Str]? meta)
+  private static Void writeDoc(OutStream out, Str key, DefNode node)
   {
+    doc := node.doc
+    meta := node.docMeta
     if (doc == null && (meta == null || meta.isEmpty)) return
     out.printLine(key)
     if (meta != null)
