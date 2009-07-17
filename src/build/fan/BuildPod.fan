@@ -6,6 +6,8 @@
 //   3 Nov 06  Brian Frank  Creation
 //
 
+using compiler
+
 **
 ** BuildPod is the base class for build scripts used to manage
 ** building a Fan source code and resources into a Fan pod.
@@ -153,6 +155,26 @@ Uri[]? javascriptDirs
         throw fatal("Must update $props.osPath 'fan.build.devHome' for bootstrap build")
       }
     }
+
+    // TODO-SYM read pod facets
+    podDef := scriptDir + `pod.fan`
+    if (!podDef.exists) throw fatal("Missing $podDef")
+    p := PodFacetsParser(Location.makeFile(podDef), podDef.readAllStr).parse
+
+    if (p.get("sys::podDepends")->map |d->Str| { d.toStr } != depends)
+      throw fatal("pod.fan != build.fan - depends [$scriptDir]")
+
+    if (p.get("sys::podSrcDirs", false) != srcDirs)
+      throw fatal("pod.fan != build.fan - srcDirs [$scriptDir]")
+
+    if (p.get("sys::podJavaDirs", false) != javaDirs)
+      throw fatal("pod.fan != build.fan - javaDirs [$scriptDir]")
+
+    if (p.get("sys::podDotnetDirs", false) != dotnetDirs)
+      throw fatal("pod.fan != build.fan - dotnetDirs [$scriptDir]")
+
+    if (p.get("sys::podJsDirs", false) != javascriptDirs)
+      throw fatal("pod.fan != build.fan - jsDirs [$scriptDir]")
   }
 
 //////////////////////////////////////////////////////////////////////////

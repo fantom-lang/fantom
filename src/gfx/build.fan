@@ -22,7 +22,7 @@ class Build : BuildPod
     description   = "Graphics API"
     depends       = ["sys 1.0"]
     srcDirs       = [`fan/`, `test/`]
-    javaDirs      = [,]
+    javaDirs      = Uri[,]
     hasJavascript = true
     includeSrc    = true
   }

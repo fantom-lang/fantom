@@ -11,10 +11,11 @@
 ** Fan Widget Toolkit
 **
 
-@podDepends = [Depend("sys 1.0"), Depend("gfx 1.0")]
-@podSrcDirs = [`fan/`, `test/`]
+@podDepends  = [Depend("sys 1.0"), Depend("gfx 1.0")]
+@podSrcDirs  = [`fan/`, `test/`]
 @podJavaDirs = [`java/`]
-@podResDirs = [`locale/`, `res/javafx/`]
+@podJsDirs   = [`js/`]
+@podResDirs  = [`locale/`, `res/javafx/`]
 
 pod fwt {}
 
