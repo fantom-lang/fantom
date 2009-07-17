@@ -7,7 +7,7 @@
 //
 
 **
-** "Fan compiler"
+** Fan compiler
 **
 
 @podDepends = [Depend("sys 1.0")]
