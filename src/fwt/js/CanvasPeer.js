@@ -26,16 +26,25 @@ fan.fwt.CanvasPeer.prototype.sync = function(self)
 
   if (this.hasCanvas)
   {
-    // remove existing elements
-    var div = this.elem;
-    while (div.firstChild != null) div.removeChild(div.firstChild);
-
-    // create new canvas element in my div
-    var c = document.createElement("canvas");
     var size = this.size
-    c.width  = size.w;
-    c.height = size.h;
-    div.appendChild(c);
+    var div = this.elem;
+    var c = div.firstChild;
+
+    // remove old canvas if size is different
+    if (c != null && (c.width != size.w || c.height != size.h))
+    {
+      div.removeChild(c);
+      c = null;
+    }
+
+    // create new canvas if null
+    if (c == null)
+    {
+      c = document.createElement("canvas");
+      c.width  = size.w;
+      c.height = size.h;
+      div.appendChild(c);
+    }
 
     // repaint canvas using Canvas.onPaint callback
     var g = new fan.fwt.Graphics()
