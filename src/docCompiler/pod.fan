@@ -14,7 +14,7 @@
 @podDepends = [Depend("sys 1.0"),
                Depend("compiler 1.0"),
                Depend("build 1.0"),
-               Depend("fandoc.10")]
+               Depend("fandoc 1.0")]
 @podSrcDirs = [`fan/`, `fan/steps/`, `fan/html/`, `test/`]
 @podResDirs = [`res/`]
 
