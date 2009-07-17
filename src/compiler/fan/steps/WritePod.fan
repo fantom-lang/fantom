@@ -74,6 +74,7 @@ class WritePod : CompilerStep
     }
     catch (Err e)
     {
+      e.trace
       throw errReport(CompilerErr("Cannot write", location, e))
     }
 
@@ -214,20 +215,19 @@ class WritePod : CompilerStep
     out.writeUtf(pod.name)
     out.writeUtf(compiler.fpod.version.toStr)
 
+    // get pod facets we care about for typedb.def
+    podFacets := pod.facets.exclude |f| { f.key.qname.startsWith("sys::podBuild") }
+
     // filter types
-    types := pod.typeDefs.findAll |TypeDef t->Bool|
-    {
-      return !t.isSynthetic
-    }
+    types := pod.typeDefs.findAll |TypeDef t->Bool| { !t.isSynthetic }
 
     // compute list of all indexed facets
     facetNameList := Str[,]
     facetNameMap  := Str:Int[:]
-    podFacets := compiler.input.podFacets
-    podFacets.each |Obj v, Str k|
+    podFacets.each |FacetDef f|
     {
-      facetNameMap[k] = facetNameList.size
-      facetNameList.add(k)
+      facetNameMap[f.key.qname] = facetNameList.size
+      facetNameList.add(f.key.qname)
     }
     types.each |TypeDef t|
     {
@@ -240,10 +240,10 @@ class WritePod : CompilerStep
 
     // write pod level facets
     out.writeI2(podFacets.size)
-    podFacets.each |Obj v, Str k|
+    podFacets.each |FacetDef f|
     {
-      out.writeI2(facetNameMap[k])
-      out.writeUtf(Buf.make.writeObj(v).flip.readAllStr)
+      out.writeI2(facetNameMap[f.key.qname])
+      out.writeUtf(f.val.serialize)
     }
 
     // write types
@@ -259,7 +259,21 @@ class WritePod : CompilerStep
     if (all == null || all.size == 0)
       return noFacets
 
-    indexed := all.dup
+    // strip out commonly used facets that we know aren't indexed
+    // could eventually do a much better job here probably
+    indexed := all.findAll |f|
+    {
+      qname := f.key.qname
+      if (qname.startsWith("sys::"))
+      {
+        if (qname == "sys::js") return false
+        if (qname == "sys::simple") return false
+        if (qname == "sys::serializable") return false
+        if (qname == "sys::collection") return false
+        if (qname == "sys::nodoc") return false
+      }
+      return true
+    }
 
     // map facet names into interned list/map
     indexed.each |FacetDef f|
