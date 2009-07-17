@@ -42,11 +42,18 @@ fan.fwt.LabelPeer.prototype.image = null;
 
 fan.fwt.LabelPeer.prototype.sync = function(self)
 {
-  while (this.elem.firstChild != null)
-    this.elem.removeChild(this.elem.firstChild);
+  var parent = this.elem;
+
+  // remove old subtree
+  while (parent.firstChild != null)
+  {
+    var child = parent.firstChild;
+    parent.removeChild(child);
+    child = null;
+    delete child;
+  }
 
   // hook for "HyperlinkLabel"
-  var parent = this.elem;
   if (self.uri != null)
   {
     var a = document.createElement("a");
@@ -87,5 +94,6 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
     whiteSpace = "nowrap";
     cursor = "default";
   }
+
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
