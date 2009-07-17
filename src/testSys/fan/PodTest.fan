@@ -81,10 +81,8 @@ class PodTest : Test
     verifyEq(pod.version.major, 1)
     verifyEq(pod.version.minor, 0)
     verify(pod.depends.isRO)
-// TODO-SYM
-//    verify(pod.facets["description"] != null)
     verifyEq(pod.facets.type, [Symbol:Obj?]#)
-    verifyEq(pod.facets.findAll |v,s| { s.qname == "build::buildTime" }.size, 1)
+    verifyEq(pod.facets.findAll |v,s| { s.qname == "sys::podBuildTime" }.size, 1)
   }
 
 //////////////////////////////////////////////////////////////////////////

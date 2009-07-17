@@ -53,8 +53,17 @@ class PodDef : DefNode, CPod
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Debug
+// Tree
 //////////////////////////////////////////////////////////////////////////
+
+  Void walk(Visitor v, VisitDepth depth)
+  {
+    if (unit == null) return
+    v.enterUnit(unit)
+    walkFacets(v, depth)
+    symbolDefs.each |SymbolDef def| { def.walk(v, depth) }
+    v.exitUnit(unit)
+  }
 
   override Void print(AstWriter out)
   {
@@ -72,6 +81,7 @@ class PodDef : DefNode, CPod
 
   override readonly CNamespace ns   // compiler's namespace
   override readonly Str name        // simple pod name
+  CompilationUnit? unit             // "pod.fan" unit
   CompilationUnit[] units           // Tokenize
   [Str:TypeDef]? typeDefs           // ScanForUsingsAndTypes
   Str:SymbolDef symbolDefs          // Parse of "symbols.fan"

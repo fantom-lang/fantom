@@ -65,11 +65,11 @@ Str uriScheme := ""
 **
 Bool js := false
 
-**
-** List of facets to index
-** TODO-SYM
-**
-Str[] indexFacets := Str[,]
+  **
+  ** List of facets to index
+  ** TODO-SYM
+  **
+  Str[] indexFacets := Str[,]
 
 //////////////////////////////////////////////////////////////////////////
 // Pod Build-time Facets
@@ -79,6 +79,13 @@ Str[] indexFacets := Str[,]
   ** Dependencies of the pod.
   **
   Depend[] podDepends := Depend[,]
+
+  **
+  ** List of facet symbols to index for the type database.
+  **
+  ** See [Facet Indexing]`docLang::TypeDatabase#facetIndexing` for details.
+  **
+  Symbol[] podIndexFacets := Symbol[,]
 
   **
   ** List of Uris relative to "pod.fan" of directories containing
@@ -109,6 +116,21 @@ Str[] indexFacets := Str[,]
   ** the JavaScript source files to compile for JavaScript native methods.
   **
   Uri[]? podJsDirs := null
+
+  **
+  ** User account used to build pod
+  **
+  Str podBuildUser := ""
+
+  **
+  ** Host machine used to build pod
+  **
+  Str podBuildHost := ""
+
+  **
+  ** Time target was pod was built formatted as `DateTime.toStr`
+  **
+  Str podBuildTime := ""
 
   **
   ** This facet is used on pod, public types, and slots to indicate they should

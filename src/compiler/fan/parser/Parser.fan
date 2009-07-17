@@ -63,8 +63,10 @@ public class Parser : CompilerSupport
   Void parsePodDef()
   {
     usings
-    compiler.pod.doc = doc
-    compiler.pod.facets = facets
+    pod := compiler.pod
+    pod.unit = unit
+    pod.doc = doc
+    pod.facets = facets
     loc := cur
     if (consumeId != "pod") throw err("Expecting 'pod' keyword", loc)
     podName := consumeId

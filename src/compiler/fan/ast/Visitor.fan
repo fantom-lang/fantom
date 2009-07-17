@@ -28,9 +28,23 @@ mixin Visitor
   **
   Void walk(Compiler c, VisitDepth depth)
   {
-    c.pod.symbolDefs.each |SymbolDef def| { def.walk(this, depth) }
+    c.pod.walk(this, depth)
     c.types.each |TypeDef def| { def.walk(this, depth) }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// CompilationUnit Callbacks
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Callback when entering a compilation unit.
+  **
+  virtual Void enterUnit(CompilationUnit unit) {}
+
+  **
+  ** Callback when existing a compilation unit.
+  **
+  virtual Void exitUnit(CompilationUnit unit) {}
 
 //////////////////////////////////////////////////////////////////////////
 // SymbolDef Callbacks

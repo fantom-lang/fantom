@@ -51,26 +51,19 @@ class Assembler : CompilerSupport, FConst
 
   private FAttr[] assemblePodAttrs(FPod fpod)
   {
-    input := compiler.input
-    asm := AttrAsm(compiler, fpod)
-
-    buf := Buf.make
-    buf.writeI2(3 + input.podFacets.size)
-// TODO-SYM
-    buf.writeI2(fpod.addSymbolRefx("build", "buildHost")); buf.writeUtf(Sys.hostName.toCode)
-    buf.writeI2(fpod.addSymbolRefx("build", "buildUser")); buf.writeUtf(Sys.userName.toCode)
-    buf.writeI2(fpod.addSymbolRefx("build", "buildTime")); buf.writeUtf(DateTime.now.toStr.toCode)
-    input.podFacets.each |Obj val, Str key|
+    // add build facets
+    podDef := compiler.pod
+    try
     {
-// TODO-SYM
-      if (!key.contains("::")) { echo("WARNING: invalid pod facet $key"); return }
-      podName := key[0..<key.index(":")]
-      symName := key[key.index(":")+2..-1]
-      buf.writeI2(fpod.addSymbolRefx(podName, symName));
-      buf.writeUtf(Buf.make.writeObj(val).flip.readAllStr)
+      sys := ns.sysPod
+      podDef.addFacet(this, sys.resolveSymbol("podBuildHost", true), Sys.hostName)
+      podDef.addFacet(this, sys.resolveSymbol("podBuildUser", true), Sys.userName)
+      podDef.addFacet(this, sys.resolveSymbol("podBuildTime", true), DateTime.now.toStr)
     }
-    asm.add(FConst.FacetsAttr, buf)
+    catch (Err e) e.trace
 
+    asm := AttrAsm(compiler, fpod)
+    asm.facets(compiler.pod.facets)
     return asm.attrs
   }
 

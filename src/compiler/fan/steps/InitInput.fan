@@ -70,8 +70,8 @@ class InitInput : CompilerStep
     {
       case CompilerInputMode.str:
         Tokenize(compiler).runSource(input.srcStrLocation, input.srcStr)
-        if (input.symbolsStr != null)
-          Tokenize(compiler).runSource(Location("symbols.fan"), input.symbolsStr)
+        if (input.podStr != null)
+          Tokenize(compiler).runSource(Location("pod.fan"), input.podStr)
 
       case CompilerInputMode.file:
         FindSourceFiles(compiler).run
