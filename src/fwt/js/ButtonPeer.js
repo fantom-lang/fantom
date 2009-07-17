@@ -55,8 +55,10 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem)
     borderTop    = "1px solid #fff";
     borderLeft   = "1px solid #fff";
     cursor       = "default";
+    whiteSpace   = "nowrap";
     //textShadow = "0 1px 1px #fff";
     backgroundColor = "#eee";
+
     // IE workaround
     try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#dadada))"; } catch (err) {} // ignore
   }
@@ -70,7 +72,17 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem)
 fan.fwt.ButtonPeer.prototype.sync = function(self)
 {
   var div = this.elem.firstChild.firstChild;
-  while (div.firstChild != null) div.removeChild(div.firstChild);
+
+  // remove old text node
+  while (div.firstChild != null)
+  {
+    var child = div.firstChild;
+    div.removeChild(child);
+    child = null;
+    delete child;
+  }
+
+  // add new text node
   div.appendChild(document.createTextNode(this.text));
   div.onclick = function(event)
   {
@@ -81,6 +93,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
     var list = self.onAction.list();
     for (var i=0; i<list.length; i++) list[i](evt);
   }
+
   // account for padding/border
   var w = this.size.w - 1;
   var h = this.size.h - 1;

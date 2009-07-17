@@ -55,6 +55,7 @@ fan.fwt.WidgetPeer.prototype.prefSize = function(self, hints)
   var oldh = this.elem.style.height;
 
   // sync and measure pref
+  this.sync(self);
   this.elem.style.width  = "auto";
   this.elem.style.height = "auto";
   var pw = this.elem.offsetWidth;
