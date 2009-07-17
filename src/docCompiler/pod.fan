@@ -18,6 +18,4 @@
 @podSrcDirs = [`fan/`, `fan/steps/`, `fan/html/`, `test/`]
 @podResDirs = [`res/`]
 
-pod docCompiler
-{
-}
+pod docCompiler {}
