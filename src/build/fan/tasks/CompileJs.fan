@@ -26,8 +26,6 @@ class CompileJs : Task
     input.inputLoc    = Location.makeFile(script.scriptFile)
     input.podName     = script.podName
     input.version     = script.version
-    input.description = script.description
-    input.podFacets   = script.podFacets
     input.depends     = script.parseDepends
     input.dependsDir  = script.resolveDir(script.dependsDir, true)
     input.log         = log

@@ -137,7 +137,6 @@ class Evaluator
       podName     = shell == null ? "shWarmup" : "sh${shell.evalCount++}"
       isScript    = true
       version     = Version.defVal
-      description = ""
       log.level   = LogLevel.silent
       output      = CompilerOutputMode.transientPod
       mode        = CompilerInputMode.str

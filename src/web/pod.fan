@@ -3,23 +3,20 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   14 Jul 09  Brian Frank  Creation
+//    3 Nov 06  Brian Frank  Original
+//   14 Jul 09  Brian Frank  Create from "build.fan"
 //
 
 **
 ** Standard weblet APIs for processing HTTP requests
 **
 
-// TODO-SYM (move to webapp?)
+@podDepends  = [Depend("sys 1.0"), Depend("inet 1.0")]
+@podSrcDirs  = [`fan/`, `test/`]
 @indexFacets = ["web::webView"]
 
 pod web
 {
-
-//////////////////////////////////////////////////////////////////////////
-// Facets
-//////////////////////////////////////////////////////////////////////////
-
   **
   ** Indicates a web based view on the given types.
   ** See `docLib::WebApp`.

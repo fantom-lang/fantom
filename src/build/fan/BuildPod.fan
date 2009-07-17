@@ -25,16 +25,6 @@ abstract class BuildPod : BuildScript
   Str? podName
 
   **
-  ** Short one sentence description of the pod.  Required.
-  **
-  Str? description
-
-  **
-  ** User defined pod level facets.  Optional.
-  **
-  [Str:Obj]? podFacets
-
-  **
   ** Version of the pod - typically set to
   ** `BuildScript.globalVersion`.  Required.
   **
@@ -124,6 +114,8 @@ Uri[]? javascriptDirs
   **
   Bool includeFandoc
 
+  ** TODO-SYM
+  Str? description
 
 //////////////////////////////////////////////////////////////////////////
 // Setup
@@ -144,13 +136,10 @@ Uri[]? javascriptDirs
   **
   internal override Void validate()
   {
-    if  (podFacets == null) podFacets = Str:Obj[:]
-
     ok := true
     ok &= validateReqField("podName")
     ok &= validateReqField("version")
     ok &= validateReqField("depends")
-    ok &= validateReqField("description")
     if (!ok) throw FatalBuildErr.make
 
     // boot strap checking - ensure that we aren't

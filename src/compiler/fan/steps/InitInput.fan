@@ -63,7 +63,6 @@ class InitInput : CompilerStep
     podName := input.podName
     compiler.pod = PodDef(ns, Location(podName), podName)
     compiler.isSys = podName == "sys"
-    if (input.description != null) compiler.pod.doc = Str[input.description]
 
     // process intput into tokens
     switch (input.mode)

@@ -3,9 +3,10 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   5 Nov 06  Brian Frank  Creation
-//  17 Jul 09  Brian Frank  Rename build.fan => pod.fan
+//    5 Nov 06  Brian Frank  Original
+//   14 Jul 09  Brian Frank  Create from "build.fan"
 //
+
 
 **
 ** Sys test suite.

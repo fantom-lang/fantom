@@ -19,17 +19,13 @@ class Build : BuildPod
   {
     podName     = "testNative"
     version     = globalVersion
-    description = "Sys natives test suite"
     depends     = ["sys 1.0"]
     srcDirs     = [`fan/`]
     javaDirs    = [`java/`]
     dotnetDirs  = [`dotnet/`]
     includeSrc  = false
     includeFandoc = false
-    podFacets   =
-    [
-      "sys::nodoc": true,
-    ]
+    description = "TODO-SYM"
   }
 
 }

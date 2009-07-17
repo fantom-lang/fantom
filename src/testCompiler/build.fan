@@ -18,15 +18,11 @@ class Build : BuildPod
   {
     podName     = "testCompiler"
     version     = globalVersion
-    description = "Test suite for compiler"
     depends     = ["sys 1.0", "compiler 1.0"]
     srcDirs     = [`fan/`]
     includeSrc  = false
     includeFandoc = false
-    podFacets   =
-    [
-      "sys::nodoc": true,
-    ]
+    description = "TODO-SYM"
   }
 
 }

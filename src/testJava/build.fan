@@ -18,15 +18,11 @@ class Build : BuildPod
   {
     podName     = "testJava"
     version     = globalVersion
-    description = "Test suite for Java FFI compiler plugin"
     depends     = ["sys 1.0", "compiler 1.0", "compilerJava 1.0", "testCompiler 1.0"]
     srcDirs     = [`fan/`]
     includeSrc  = false
     includeFandoc = false
-    podFacets   =
-    [
-      "sys::nodoc": true,
-    ]
+    description = "TODO-SYM"
   }
 
 }

@@ -3,20 +3,27 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   14 Jul 09  Brian Frank  Creation
+//   21 Jul 08  Brian Frank  Original
+//   14 Jul 09  Brian Frank  Create from "build.fan"
 //
 
 **
 ** Flux: Core Application
 **
 
-@indexFacets =
-[
-  "flux::fluxResource",
-  "flux::fluxSideBar",
-  "flux::fluxView",
-  "flux::fluxViewMimeType",
-]
+@podDepends = [Depend("sys 1.0"),
+               Depend("gfx 1.0"),
+               Depend("fwt 1.0"),
+               Depend("compiler 1.0")]
+
+@podSrcDirs = [`fan/`, `fan/views/`, `fan/sidebars/`, `test/`]
+
+@podResDirs = [`locale/`, `test/files/`, `test/files/sub/`]
+
+@indexFacets = ["flux::fluxResource",
+                "flux::fluxSideBar",
+                "flux::fluxView",
+                "flux::fluxViewMimeType"]
 
 pod flux
 {

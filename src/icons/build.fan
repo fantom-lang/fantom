@@ -22,7 +22,6 @@ class Build : BuildPod
     description = "Standard icons library"
     depends     = ["sys 1.0"]
     resDirs     = [`x16/`, `x32/`, `x48/`, `x256/`]
-    podFacets   = ["sys::nodoc": true]
   }
 
 }
