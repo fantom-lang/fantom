@@ -28,10 +28,10 @@ class Build : BuildPod
     [
       "sys::indexFacets":
       [
-        "fluxResource",
-        "fluxSideBar",
-        "fluxView",
-        "fluxViewMimeType"
+        "flux::fluxResource",
+        "flux::fluxSideBar",
+        "flux::fluxView",
+        "flux::fluxViewMimeType"
       ]
     ]
   }
