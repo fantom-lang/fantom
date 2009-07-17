@@ -44,7 +44,7 @@ fan.fwt.TabPeer.prototype.sync = function(self)
   {
     cursor  = "default";
     padding = "6px 12px";
-    border  = "1px solid #555";
+    border  = "1px solid #404040";
 
     if (selected)
     {

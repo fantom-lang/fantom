@@ -15,7 +15,6 @@ fan.fwt.TablePeer.prototype.$ctor = function(self) {}
 // TODO
 //fan.fwt.TablePeer.prototype.colAt = function(self, pos) {}
 //fan.fwt.TablePeer.prototype.rowAt = function(self, pos) {}
-//fan.fwt.TablePeer.prototype.refreshAll = function(self) {}
 
 fan.fwt.TablePeer.prototype.headerVisible = true;
 fan.fwt.TablePeer.prototype.headerVisible$get = function(self) { return this.headerVisible; }
@@ -42,7 +41,7 @@ fan.fwt.TablePeer.prototype.create = function(parentElem)
   var div = this.emptyDiv();
   with (div.style)
   {
-    border     = "1px solid #555";
+    border     = "1px solid #404040";
     overflow   = "auto";
     background = "#fff";
   }
@@ -54,10 +53,34 @@ fan.fwt.TablePeer.prototype.create = function(parentElem)
 
 fan.fwt.TablePeer.prototype.refreshAll = function(self)
 {
-  this.sync(self);
+  this.needRebuild = true;
+  self.relayout();
 }
 
+fan.fwt.TablePeer.prototype.needRebuild = true;
+
 fan.fwt.TablePeer.prototype.sync = function(self)
+{
+  // check if table needs to be rebuilt
+  if (this.needRebuild)
+  {
+    this.rebuild(self);
+    this.needRebuild = false;
+  }
+
+  // no border if content not visible
+  if (this.size.w == 0 || this.size.h == 0)
+    this.elem.style.borderWidth = "0px";
+  else
+    this.elem.style.borderWidth = "1px";
+
+  // account for border
+  var w = this.size.w - 2;
+  var h = this.size.h - 2;
+  fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
+}
+
+fan.fwt.TablePeer.prototype.rebuild = function(self)
 {
   // init hook
   if (this.selection == null)
@@ -86,7 +109,7 @@ fan.fwt.TablePeer.prototype.sync = function(self)
         padding      = "4px 6px";
         textAlign    = "left";
         whiteSpace   = "nowrap";
-        borderBottom = "1px solid #555";
+        borderBottom = "1px solid #404040";
         backgroundColor = "#dbdbdb";
         // IE workaround
         try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#dbdbdb), to(#bbb))"; } catch (err) {} // ignore
@@ -176,23 +199,17 @@ fan.fwt.TablePeer.prototype.sync = function(self)
 
   // replace tbody
   var table = this.elem.firstChild;
-  if (table.firstChild != null)
-    table.removeChild(table.firstChild);
+  var old = table.firstChild;
+  if (old != null)
+  {
+    table.removeChild(old);
+    old = null;
+    delete old;
+  }
   table.appendChild(tbody);
-
-  // no border if content not visible
-  if (this.size.w == 0 || this.size.h == 0)
-    this.elem.style.borderWidth = "0px";
-  else
-    this.elem.style.borderWidth = "1px";
 
   // sync selection
   this.selection.select(this.selected);
-
-  // account for border
-  var w = this.size.w - 2;
-  var h = this.size.h - 2;
-  fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
 
 //////////////////////////////////////////////////////////////////////////
