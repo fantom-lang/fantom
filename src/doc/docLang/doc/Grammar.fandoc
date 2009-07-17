@@ -21,20 +21,23 @@ Legend for Fan BNF Grammar:
 Compilation Unit [#compilationUnit]
 ***********************************
 
-  <compilationUnit> :=  <using>* <typeDef>*
+  <compilationUnit> :=  <podUnit> | <typeUnit>
+  <podUnit>         :=  <using*> <podDef>
+  <typeUnit>        :=  <using*> <typeDef>*
+  <using>           :=  <usingPod> | <usingType> | <usingAs>
+  <usingPod>        :=  "using" <podSpec> <eos>
+  <usingType>       :=  "using" <podSpec> "::" <id> <eos>
+  <usingAs>         :=  "using" <podSpec> "::" <id> "as" <id> <eos>
+  <podSpec>         :=  [ffi] <id> ("." <id>)*
+  <ffi>             :=  "[" <id> "]"
 
-  <using>          :=  <usingPod> | <usingType> | <usingAs>
-  <usingPod>       :=  "using" <podSpec> <eos>
-  <usingType>      :=  "using" <podSpec> "::" <id> <eos>
-  <usingAs>        :=  "using" <podSpec> "::" <id> "as" <id> <eos>
-  <podSpec>        :=  [ffi] <id> ("." <id>)*
-  <ffi>            :=  "[" <id> "]"
+Pod Def [#podDef]
+*****************
 
-Symbols Unit [#symbolsUnit]
-***************************
-
-  <symbolsUnit>    := <using*> <symbolDef>*
-  <symbolDef>      := [<type>] <id> ":=" <expr> <eos>
+  <podDef>         :=  <podHeader> "{" <symbolDefs> "}"
+  <podHeader>      :=  [<doc>] <facets> "pod" <id>
+  <symbolDefs>     :=  <symbolDef>*
+  <symbolDef>      :=  [<type>] <id> ":=" <expr> <eos>
 
 Type Def [#typeDef]
 *******************

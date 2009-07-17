@@ -39,26 +39,32 @@ class Tokenize : CompilerStep
   override Void run()
   {
     log.debug("Tokenize")
+    compiler.srcFiles.each |File srcFile| { runFile(srcFile) }
+  }
 
-    compiler.srcFiles.each |File srcFile|
+  **
+  ** Run the step on the specified source string
+  **
+  CompilationUnit runFile(File srcFile)
+  {
+    try
     {
-      try
-      {
-        location := Location.makeFile(srcFile)
-        src := srcFile.readAllStr
-        compiler.pod.units.add(tokenize(location, src))
-      }
-      catch (CompilerErr err)
-      {
-        throw err
-      }
-      catch (Err e)
-      {
-        if (srcFile.exists)
-          throw err("Cannot read source file: $e", Location.makeFile(srcFile))
-        else
-          throw err("Source file not found", Location.makeFile(srcFile))
-      }
+      location := Location.makeFile(srcFile)
+      src := srcFile.readAllStr
+      unit := tokenize(location, src)
+      compiler.pod.units.add(unit)
+      return unit
+    }
+    catch (CompilerErr err)
+    {
+      throw err
+    }
+    catch (Err e)
+    {
+      if (srcFile.exists)
+        throw err("Cannot read source file: $e", Location.makeFile(srcFile))
+      else
+        throw err("Source file not found", Location.makeFile(srcFile))
     }
   }
 

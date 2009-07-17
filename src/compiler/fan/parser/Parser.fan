@@ -50,14 +50,30 @@ public class Parser : CompilerSupport
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Symbols
+// PodDef
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Top level parse a symbols unit:
+  ** Parse pod definition:
   **
-  **    <symbolsUnit> := <using*> <symbolDef>*
+  **   <podDef>      :=  <podHeader> "{" <symbolDefs> "}"
+  **   <podHeader>   :=  [<doc>] <facets> "pod" <id>
+  **   <symbolDefs>  :=  <symbolDef>*
   **
+  Void parsePodDef()
+  {
+    usings
+    compiler.pod.doc = doc
+    compiler.pod.facets = facets
+    loc := cur
+    if (consumeId != "pod") throw err("Expecting 'pod' keyword", loc)
+    podName := consumeId
+    consume(Token.lbrace)
+    while (curt !== Token.rbrace && curt !== Token.eof) symbolDef
+    consume(Token.rbrace)
+  }
+
+  // TODO-SYM
   Void parseSymbols()
   {
     usings
@@ -69,7 +85,7 @@ public class Parser : CompilerSupport
   **
   **   <symbolDef> := [<type>] <id> ":=" <expr> <eos>
   **
-  Void symbolDef()
+  private Void symbolDef()
   {
     doc := doc()
     if (curt === Token.eof) return

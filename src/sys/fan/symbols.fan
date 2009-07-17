@@ -55,14 +55,6 @@ Bool simple := false
 Bool collection := false
 
 **
-** This facet is used on public types and slots to indicate they should
-** not be documented with automated tools such as [Fandoc]`docLib::Fandoc`.
-** As a developer you should avoid using these types and slots since they
-** are explicitly marked as not part of the public API.
-**
-Bool nodoc := false
-
-**
 ** Used on `UriScheme` subclasses to implement a URI scheme handler.
 ** See [docLang]`docLang::Naming`.
 **
@@ -78,3 +70,51 @@ Bool js := false
 ** TODO-SYM
 **
 Str[] indexFacets := Str[,]
+
+//////////////////////////////////////////////////////////////////////////
+// Pod Build-time Facets
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Dependencies of the pod.
+  **
+  Depend[] podDepends := Depend[,]
+
+  **
+  ** List of Uris relative to "pod.fan" of directories containing
+  ** the Fan source files to compile.
+  **
+  Uri[]? podSrcDirs := null
+
+  **
+  ** List of Uris relative to "pod.fan" of directories of resources
+  ** files to package into pod zip file.  Optional.
+  **
+  Uri[]? podResDirs := null
+
+  **
+  ** List of Uris relative to "pod.fan" of directories containing
+  ** the Java source files to compile for Java native methods.
+  **
+  Uri[]? podJavaDirs := null
+
+  **
+  ** List of Uris relative to "pod.fan" of directories containing
+  ** the C# source files to compile for .NET native methods.
+  **
+  Uri[]? podDotnetDirs := null
+
+  **
+  ** List of Uris relative to "pod.fan" of directories containing
+  ** the JavaScript source files to compile for JavaScript native methods.
+  **
+  Uri[]? podJsDirs := null
+
+  **
+  ** This facet is used on pod, public types, and slots to indicate they should
+  ** not be documented with automated tools such as [Fandoc]`docLib::Fandoc`.
+  ** As a developer you should avoid using these types and slots since they
+  ** are explicitly marked as not part of the public API.
+  **
+  Bool nodoc := false
+

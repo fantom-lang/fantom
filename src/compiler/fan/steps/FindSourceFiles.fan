@@ -53,6 +53,10 @@ class FindSourceFiles : CompilerStep
     compiler.input.srcDirs.each |File dir| { find(dir, srcFiles, "fan") }
     compiler.srcFiles = srcFiles
 
+    // TODO-SYM
+    podFan := compiler.input.homeDir + `pod.fan`
+    if (podFan.exists) compiler.srcFiles.insert(0, podFan)
+
     if (log.isDebug)
     {
       log.debug("FindSourceFiles [${srcFiles.size} files]")
