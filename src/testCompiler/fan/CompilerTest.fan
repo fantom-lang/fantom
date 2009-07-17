@@ -33,7 +33,7 @@ abstract class CompilerTest : Test
     input.output      = CompilerOutputMode.transientPod
     input.mode        = CompilerInputMode.str
     input.srcStr      = src
-    input.symbolsStr  = symbolsStr
+    input.podStr      = podStr
     input.srcStrLocation = Location.make("Script")
 
     compiler = Compiler.make(input)
@@ -55,7 +55,7 @@ abstract class CompilerTest : Test
       e.trace
       fail
     }
-    symbolsStr = null
+    podStr = null
     doVerifyErrors(errors)
   }
 
@@ -73,13 +73,19 @@ abstract class CompilerTest : Test
     }
   }
 
+  Str symbolsStr
+  {
+    get { throw UnsupportedErr() }
+    set { podStr = "pod x {\n" + val  + "\n}" }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   Compiler? compiler      // compile()
   Pod? pod                // compiled pod
-  Str? symbolsStr         // "symbols.fan" to pass to compiler
+  Str? podStr             // "pod.fan" to pass to compiler
   Int podNameSuffix := 0
   Bool dumpErrors := false
 

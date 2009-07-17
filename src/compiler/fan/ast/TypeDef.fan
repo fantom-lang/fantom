@@ -298,6 +298,7 @@ class TypeDef : DefNode, CType
 
   Void walk(Visitor v, VisitDepth depth)
   {
+    v.enterUnit(unit)
     v.enterTypeDef(this)
     walkFacets(v, depth)
     if (depth >= VisitDepth.slotDef)
@@ -306,6 +307,7 @@ class TypeDef : DefNode, CType
     }
     v.visitTypeDef(this)
     v.exitTypeDef(this)
+    v.exitUnit(unit)
   }
 
 //////////////////////////////////////////////////////////////////////////

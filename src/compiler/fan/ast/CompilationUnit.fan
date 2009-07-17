@@ -51,7 +51,7 @@ class CompilationUnit : Node
   CPod pod                      // ctor
   TokenVal[]? tokens            // Tokenize
   Using[] usings                // ScanForUsingsAndTypes
-  TypeDef[] types               // ScanForUsingsAndTypes
+  TypeDef[] types               // ScanForUsingsAndTypes + CompilerSupport.addTypeDef
   [Str:CType[]]? importedTypes  // ResolveImports (includes my pod)
 
 }

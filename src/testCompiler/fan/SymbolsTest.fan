@@ -159,23 +159,24 @@ class SymbolsTest : CompilerTest
   Void testErrors()
   {
     // ParseErrors
-    symbolsStr =
-    "xx := 3
+    podStr =
+    "pod x {
+     xx := 3
      xx := 4
-     yy = 5"
+     yy = 5 }"
     verifyErrors("class Foo {}",
      [
-       2, 1, "Duplicate symbol name 'xx'",
-       3, 4, "Expected ':=', not '='",
+       3, 1, "Duplicate symbol name 'xx'",
+       4, 4, "Expected ':=', not '='",
      ])
 
     // UnresolvedExpr
-    symbolsStr =
-    "using compiler
+    podStr =
+    "using compiler; pod x {
      a := @foo
      b := @bar::foo
      c := @compiler::baz
-     d := 4.fooBar"
+     d := 4.fooBar }"
     verifyErrors("class Foo {}",
      [
        2, 6, "Unresolved symbol 'foo'",
@@ -185,10 +186,10 @@ class SymbolsTest : CompilerTest
      ])
 
     // Assemble
-    symbolsStr =
-    "using compiler
+    podStr =
+    "using compiler; pod x {
      a := 4
-     b := @a"
+     b := @a }"
     verifyErrors("class Foo {}",
      [
        3, 6, "Symbol value is not serializable: 'b' ('symbolLiteral' not serializable)",
