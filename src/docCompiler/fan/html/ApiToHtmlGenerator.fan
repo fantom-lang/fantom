@@ -449,7 +449,9 @@ class ApiToHtmlGenerator : HtmlGenerator
       if (!line.startsWith("@")) return
       i := line.index("=")
       if (i == null) return
-      meta[line[1..<i]] = line[i+1..-1].trim
+      key := line[1..<i]
+      val := line[i+1..-1].trim.replace(".<ctor>", "")
+      meta[key] = val
     }
 
     return meta
