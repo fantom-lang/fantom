@@ -118,7 +118,7 @@ class ApiToHtmlGenerator : HtmlGenerator
     doc := docBody(t.doc)
     if (doc == null) return
     out.print("<div class='detail'>\n")
-    fandoc(t.qname, doc)
+    fandoc(this, t.qname, doc)
     if (t.isEnum)
     {
       out.print("<ul>\n")
@@ -296,7 +296,7 @@ class ApiToHtmlGenerator : HtmlGenerator
     if (doc != null)
     {
       // fandoc body
-      fandoc(slot.qname, doc)
+      fandoc(this, slot.qname, doc)
     }
 
     out.print("</dd>\n")
@@ -438,7 +438,7 @@ class ApiToHtmlGenerator : HtmlGenerator
   **
   ** Parse def parameters.
   **
-  Str:Str parseMeta(Str? text)
+  static Str:Str parseMeta(Str? text)
   {
     meta := Str:Str[:]
     if (text == null || !text.startsWith("@"))
@@ -458,7 +458,7 @@ class ApiToHtmlGenerator : HtmlGenerator
   **
   ** Get the doc body without the @headers or return null if empty
   **
-  Str? docBody(Str? doc)
+  static Str? docBody(Str? doc)
   {
     if (doc == null) return null
     if (!doc.startsWith("@")) return doc
@@ -475,7 +475,7 @@ class ApiToHtmlGenerator : HtmlGenerator
   ** Write out the fandoc for this text - if an exception
   ** is thrown, write the original text.
   **
-  Void fandoc(Str qname, Str text)
+  static Void fandoc(HtmlGenerator gen, Str qname, Str text)
   {
     try
     {
@@ -490,9 +490,9 @@ class ApiToHtmlGenerator : HtmlGenerator
       }
 
       doc := FandocParser().parse("API for $qname", in)
-      doc.children.each |DocNode child| { child.write(this) }
+      doc.children.each |DocNode child| { child.write(gen) }
     }
-    catch { out.print("<p>$text<p>\n") }
+    catch { gen.out.print("<p>$text<p>\n") }
   }
 
 //////////////////////////////////////////////////////////////////////////
