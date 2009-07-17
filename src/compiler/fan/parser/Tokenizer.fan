@@ -75,7 +75,7 @@ class Tokenizer : CompilerSupport
   **
   ** Return the next token in the buffer.
   **
-  private TokenVal? next()
+  TokenVal? next()
   {
     while (true)
     {
