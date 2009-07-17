@@ -32,10 +32,6 @@ class Build : BuildPod
                    `fan/steps/`,
                    `fan/util/`]
     includeSrc  = true
-    podFacets =
-    [
-      "sys::indexFacets": ["compiler::compilerBridge", "compiler::compilerDsl"]
-    ]
   }
 
 }
