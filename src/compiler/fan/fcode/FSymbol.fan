@@ -28,7 +28,7 @@ class FSymbol : CSymbol, FConst
 
   override FPod pod()      { fpod }
   override Str name()      { fpod.n(nameIndex) }
-  override Str qname()     { fpod.name + "." + name }
+  override Str qname()     { fpod.name + "::" + name }
   override CType of()      { fpod.toType(ofIndex) }
 
 //////////////////////////////////////////////////////////////////////////
