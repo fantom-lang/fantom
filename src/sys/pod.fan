@@ -13,7 +13,7 @@
 @podDepends = Depend[,]
 @podSrcDirs = [`fan/`]
 @podResDirs = [`locale/`]
-@indexFacets = ["sys::uriSchema"]
+@indexFacets = ["sys::uriScheme"]
 
 pod sys
 {
