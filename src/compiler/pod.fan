@@ -3,7 +3,8 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   16 Jul 09  Brian Frank  Creation
+//    4 Nov 06  Brian Frank  Original
+//   16 Jul 09  Brian Frank  Create from "build.fan"
 //
 
 **
@@ -34,4 +35,3 @@ pod compiler
   **
   Str compilerBridge := ""
 }
-

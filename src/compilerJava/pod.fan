@@ -3,26 +3,16 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//    4 Nov 06  Brian Frank  Original
+//   15 Nov 08  Brian Frank  Creation
 //   14 Jul 09  Brian Frank  Create from "build.fan"
 //
 
 **
-** Fan build utility
+** Compiler FFI Plugin for Java
 **
 
 @podDepends = [Depend("sys 1.0"), Depend("compiler 1.0")]
-@podSrcDirs = [`fan/`, `fan/tasks/`]
+@podSrcDirs = [`fan/`]
 
-pod build
-{
-
-  **
-  ** Target facet is applied to a `BuildScript` method to
-  ** indicate it is a build target or goal.
-  **
-  Bool target := false
-
-}
-
+pod compilerJava {}
 

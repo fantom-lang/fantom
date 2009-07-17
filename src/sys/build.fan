@@ -28,7 +28,6 @@ class Build : BuildPod
     srcDirs     = [`fan/`]
     resDirs     = [`locale/`]
     includeSrc  = true
-    podFacets   = ["sys::indexFacets":["sys::uriScheme"]]
   }
 
   @target="compile fan source into pod"
