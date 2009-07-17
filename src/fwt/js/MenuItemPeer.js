@@ -28,12 +28,9 @@ fan.fwt.MenuItemPeer.prototype.image$get = function(self) { return this.image; }
 fan.fwt.MenuItemPeer.prototype.image$set = function(self, val) { this.image = val; }
 fan.fwt.MenuItemPeer.prototype.image = null;
 
-fan.fwt.MenuItemPeer.prototype.sync = function(self)
+fan.fwt.MenuItemPeer.prototype.create = function(parentElem, self)
 {
-  var div = this.elem;
-  while (div.firstChild != null) div.removeChild(div.firstChild);
-  div.appendChild(document.createTextNode(this.text));
-
+  var div = this.emptyDiv();
   with (div.style)
   {
     div.style.cursor = "default";
@@ -52,6 +49,26 @@ fan.fwt.MenuItemPeer.prototype.sync = function(self)
     var list = self.onAction.list();
     for (var i=0; i<list.length; i++) list[i](evt);
   }
+
+  parentElem.appendChild(div);
+  return div;
+}
+
+fan.fwt.MenuItemPeer.prototype.sync = function(self)
+{
+  var div = this.elem;
+
+  // remove old text node
+  while (div.firstChild != null)
+  {
+    var child = div.firstChild;
+    div.removeChild(child);
+    child = null;
+    delete child;
+  }
+
+  // add new text node
+  div.appendChild(document.createTextNode(this.text));
 
   // account for padding/border
   var w = this.size.w - 8;
