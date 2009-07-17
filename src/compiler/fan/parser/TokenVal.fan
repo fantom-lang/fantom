@@ -38,6 +38,25 @@ class TokenVal : Location
   }
 
   **
+  ** Get this token as Fan source code.
+  **
+  Str toCode()
+  {
+    switch (kind)
+    {
+      case Token.identifier:      return val
+      case Token.strLiteral:      return ((Str)val).toCode
+      case Token.intLiteral:      return ((Int)val).toCode
+      case Token.floatLiteral:    return ((Float)val).toCode
+      case Token.decimalLiteral:  return ((Decimal)val).toCode
+      case Token.durationLiteral: return ((Duration)val).toCode
+      case Token.uriLiteral:      return Uri.fromStr(val).toCode
+      case Token.dsl:             return "<|$val|>"
+    }
+    return kind.symbol
+  }
+
+  **
   ** Return if this token is a left opening paren,
   ** but only if on the same line:
   **

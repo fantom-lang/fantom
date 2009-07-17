@@ -2338,8 +2338,8 @@ public class Parser : CompilerSupport
   private Str consumeId()
   {
     if (curt !== Token.identifier)
-      throw err("Expected identifier, not '$cur'");
-    return (Str)consume.val;
+      throw err("Expected identifier, not '$cur'")
+    return consume.val
   }
 
   **
