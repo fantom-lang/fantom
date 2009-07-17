@@ -34,6 +34,20 @@ fan.fwt.WidgetPeer.prototype.relayout = function(self)
   return self;
 }
 
+fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
+{
+  var x = this.pos.x;
+  var y = this.pos.y;
+  var p = self.parent$get();
+  while (p != null)
+  {
+    x += p.peer.pos.x;
+    y += p.peer.pos.y;
+    p = p.parent$get();
+  }
+  return fan.gfx.Point.make(x, y);
+}
+
 fan.fwt.WidgetPeer.prototype.prefSize = function(self, hints)
 {
   // cache size
