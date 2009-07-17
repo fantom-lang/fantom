@@ -28,7 +28,7 @@ fan.fwt.ButtonPeer.prototype.text$get = function(self) { return this.text; }
 fan.fwt.ButtonPeer.prototype.text$set = function(self, val) { this.text = val; }
 fan.fwt.ButtonPeer.prototype.text = "";
 
-fan.fwt.ButtonPeer.prototype.create = function(parentElem)
+fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
 {
   var outer = this.emptyDiv();
   with (outer.style)
@@ -63,6 +63,16 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem)
     try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#dadada))"; } catch (err) {} // ignore
   }
 
+  outer.onclick = function(event)
+  {
+    var evt = new fan.fwt.Event();
+    evt.id = fan.fwt.EventId.action;
+    evt.widget = self;
+
+    var list = self.onAction.list();
+    for (var i=0; i<list.length; i++) list[i](evt);
+  }
+
   middle.appendChild(inside);
   outer.appendChild(middle);
   parentElem.appendChild(outer);
@@ -84,15 +94,6 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
 
   // add new text node
   div.appendChild(document.createTextNode(this.text));
-  div.onclick = function(event)
-  {
-    var evt = new fan.fwt.Event();
-    evt.id = fan.fwt.EventId.action;
-    evt.widget = self;
-
-    var list = self.onAction.list();
-    for (var i=0; i<list.length; i++) list[i](evt);
-  }
 
   // account for padding/border
   var w = this.size.w - 1;

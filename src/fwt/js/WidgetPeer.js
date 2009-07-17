@@ -101,7 +101,7 @@ fan.fwt.WidgetPeer.prototype.attach = function(self)
   if (parent == null || parent.peer.elem == null) return;
 
   // create control and initialize
-  var elem = this.create(parent.peer.elem);
+  var elem = this.create(parent.peer.elem, self);
   this.attachTo(self, elem);
 
   // callback on parent
@@ -136,7 +136,7 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(elem, event, list)
   }
 }
 
-fan.fwt.WidgetPeer.prototype.create = function(parentElem)
+fan.fwt.WidgetPeer.prototype.create = function(parentElem, self)
 {
   var div = this.emptyDiv();
   parentElem.appendChild(div);
