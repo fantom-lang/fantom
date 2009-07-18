@@ -22,6 +22,13 @@ abstract class BuildPod : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   **
+  ** Location of "pod.fan" which defines the pod meta-data
+  ** needed to compile the pod from source.  By defaul this
+  ** is assumed to be a peer to the build script.
+  **
+  File? podDef
+
+  **
   ** Programatic name of the pod.  Required.
   **
   Str? podName
@@ -129,6 +136,7 @@ Uri[]? javascriptDirs
   internal override Void initEnv()
   {
     super.initEnv
+    podDef = scriptDir + `pod.fan`
     includeSrc = false
     includeFandoc = true
   }
@@ -157,9 +165,10 @@ Uri[]? javascriptDirs
     }
 
     // TODO-SYM read pod facets
-    podDef := scriptDir + `pod.fan`
-    if (!podDef.exists) throw fatal("Missing $podDef")
-    p := PodFacetsParser(Location.makeFile(podDef), podDef.readAllStr).parse
+    p := podFacets
+
+    if (p.podName != podName)
+      throw fatal("pod.fan != build.fan - podName [$scriptDir]")
 
     if (p.get("sys::podDepends")->map |d->Str| { d.toStr } != depends)
       throw fatal("pod.fan != build.fan - depends [$scriptDir]")
@@ -176,6 +185,23 @@ Uri[]? javascriptDirs
     if (p.get("sys::podJsDirs", false) != javascriptDirs)
       throw fatal("pod.fan != build.fan - jsDirs [$scriptDir]")
   }
+
+  **
+  ** Parse the facets from the "pod.fan" source file.
+  **
+  PodFacetsParser podFacets()
+  {
+    if (podFacetsParser == null)
+    {
+      if (!podDef.exists) throw fatal("podDef does not exist: $podDef")
+      try
+        podFacetsParser = PodFacetsParser(Location.makeFile(podDef), podDef.readAllStr).parse
+      catch (CompilerErr e)
+        throw fatal("$e.message [$e.location.toLocationStr]")
+    }
+    return podFacetsParser
+  }
+  private PodFacetsParser? podFacetsParser
 
 //////////////////////////////////////////////////////////////////////////
 // BuildScript
