@@ -99,7 +99,7 @@ class ClosureVars : CompilerStep
     {
       closure := method.parentDef.closure
       name := toCvarsTypeName(closure.enclosingType, closure.enclosingSlot)
-      cvars = (TypeDef)compiler.pod.resolveType(name, true)
+      cvars = (TypeDef)pod.resolveType(name, true)
     }
 
     // define the Cvars class and generate no arg constructor

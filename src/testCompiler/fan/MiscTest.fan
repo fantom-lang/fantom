@@ -538,14 +538,12 @@ class MiscTest : CompilerTest
   Void testFacets()
   {
     // we really test facets in testSys::FacetsTest, we just verify errors here
+    podStr = "pod $podName { Obj? x := null }"
     verifyErrors(
       "@x=Sys.homeDir
-       class Foo
-       {
-       }
-       ",
+       class Foo {}",
        [
-         1, 8, "Facet value is not serializable: 'x' ('call' not serializable)",
+         1, 8, "Facet value is not serializable: '@x' ('call' not serializable)",
        ])
   }
 

@@ -28,7 +28,7 @@ class ResolveImports : CompilerStep
   new make(Compiler compiler)
     : super(compiler)
   {
-    resolved[compiler.pod.name] = compiler.pod
+    resolved[pod.name] = pod
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@ class ResolveImports : CompilerStep
     // first check pod being compiled
     if (podName == cs.compiler.pod.name)
     {
-      t := cs.compiler.pod.resolveType(typeName, false)
+      t := cs.pod.resolveType(typeName, false)
       if (t == null)
       {
         cs.err("Type '$typeName' not found within pod being compiled", location)
@@ -249,7 +249,7 @@ class ResolveImports : CompilerStep
   static CPod? resolvePod(CompilerSupport cs, Str podName, Location location)
   {
     // if this is the pod being compiled no further checks needed
-    if (cs.compiler.pod.name == podName) return cs.compiler.pod
+    if (cs.pod.name == podName) return cs.pod
 
     // otherwise we need to try to resolve pod
     CPod? pod := null
@@ -281,13 +281,13 @@ class ResolveImports : CompilerStep
     if (cs.ns.depends.containsKey(podName)) return
 
     // if this is the pod being compiled that is obviously ok
-    if (cs.compiler.pod.name == podName) return
+    if (cs.pod.name == podName) return
 
     // we don't require explicit dependencies on FFI
     if (podName.startsWith("[")) return
 
     // we got a problem
-    cs.err("Using '$podName' which is not a declared dependency for '$cs.compiler.pod.name'", loc)
+    cs.err("Using '$podName' which is not a declared dependency for '$cs.pod.name'", loc)
   }
 
   **
@@ -310,7 +310,7 @@ class ResolveImports : CompilerStep
     }
 
     // resolve unqualified against using imports
-    found := cs.compiler.pod.resolveSymbol(name, false)
+    found := cs.pod.resolveSymbol(name, false)
     unit.usings.each |u|
     {
       if (!u.isPod) return

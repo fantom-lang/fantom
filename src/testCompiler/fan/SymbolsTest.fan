@@ -185,6 +185,18 @@ class SymbolsTest : CompilerTest
        5, 8, "Unknown slot 'sys::Int.fooBar'",
      ])
 
+    // CheckErrors
+  podStr = "@js @js @nodoc @sys::nodoc pod $podName { }"
+  verifyErrors(
+        "@sys::simple @simple class Foo
+         { @transient @sys::transient Int x }",
+     [
+       1, 1, "Duplicate facet 'sys::js'",
+       1, 9, "Duplicate facet 'sys::nodoc'",
+       2, 3, "Duplicate facet 'sys::transient'",
+       1, 1, "Duplicate facet 'sys::simple'",
+     ])
+
     // Assemble
     podStr =
     "using compiler; pod $podName {

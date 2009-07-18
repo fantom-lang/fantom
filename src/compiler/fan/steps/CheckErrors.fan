@@ -43,8 +43,19 @@ class CheckErrors : CompilerStep
   override Void run()
   {
     log.debug("CheckErrors")
+    checkPodDef(pod)
     walk(compiler, VisitDepth.expr)
     bombIfErr
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// PodDef
+//////////////////////////////////////////////////////////////////////////
+
+  Void checkPodDef(PodDef pod)
+  {
+    // facets
+    checkFacets(pod.facets)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,6 +66,9 @@ class CheckErrors : CompilerStep
   {
     // check type flags
     checkTypeFlags(t)
+
+    // facets
+    checkFacets(t.facets)
 
     // check for abstract slots in concrete class
     checkAbstractSlots(t)
@@ -193,6 +207,9 @@ class CheckErrors : CompilerStep
     // check for invalid flags
     checkFieldFlags(f)
 
+    // facets
+    checkFacets(f.facets)
+
     // mixins cannot have non-abstract fields
     if (curType.isMixin && !f.isAbstract && !f.isStatic)
       err("Mixin field '$f.name' must be abstract", f.location)
@@ -320,6 +337,9 @@ class CheckErrors : CompilerStep
   {
     // check invalid use of flags
     checkMethodFlags(m)
+
+    // facets
+    checkFacets(m.facets)
 
     // check parameters
     checkParams(m)
@@ -506,6 +526,21 @@ class CheckErrors : CompilerStep
       else
         err("Non-nullable field '$f.name' must be assigned in constructor '$m.name'", m.location)
     }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Facets
+//////////////////////////////////////////////////////////////////////////
+
+  Void checkFacets(FacetDef[]? facets)
+  {
+    if (facets == null) return
+
+    // check for dups
+    for (i := 0; i < facets.size; ++i)
+      for (j := i+1; j < facets.size; ++j)
+        if (facets[i].key.qname == facets[j].key.qname)
+          err("Duplicate facet '${facets[i].key.qname}'", facets[i].location)
   }
 
 //////////////////////////////////////////////////////////////////////////
