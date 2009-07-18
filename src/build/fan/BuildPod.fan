@@ -171,7 +171,7 @@ abstract class BuildPod : BuildScript
     log.info("compile [$podName]")
     log.indent
     fanc := CompileFan(this)
-    fanc.includeDoc = !podNodoc  // TODO-SYM
+    fanc.includeDoc = !podNodoc
     fanc.includeSrc = !podNodoc
     fanc.run
     log.unindent

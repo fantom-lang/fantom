@@ -39,7 +39,8 @@ public final class Facets
 
   /**
    * This is the constructor used during decoding the pod
-   * file. The values are all passed in as encoded Strings.
+   * file.  String qname keys and either decoded Objects
+   * or Symbol.EncodedVals.
    */
   public static Facets make(HashMap src)
   {
@@ -47,52 +48,21 @@ public final class Facets
     return new Facets(src);
   }
 
-  /**
-   * Create from map.
-   */
-  public static Facets make(Map map)
-  {
-    if (map == null || map.isEmpty()) return empty();
-
-    HashMap src = new HashMap();
-    Iterator it = map.pairsIterator();
-    while (it.hasNext())
-    {
-      Entry e = (Entry)it.next();
-      String key = (String)e.getKey();
-      Object val = e.getValue();
-      if (FanObj.isImmutable(val))
-        src.put(key, val);
-      else
-        src.put(key, ObjEncoder.encode(val));
-    }
-
-    return new Facets(src);
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Private Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  private Facets(HashMap src)
-  {
-    this.src = src;
-  }
+  private Facets(HashMap map) { this.map = map ; }
 
 //////////////////////////////////////////////////////////////////////////
 // Access
 //////////////////////////////////////////////////////////////////////////
 
-  final synchronized Object get(Symbol key, Object def)
-  {
-    Object val = get(key.qname(), null);
-    if (val != null) return val;
-    return get(key.name(), def);
-  }
+  final Object get(Symbol key, Object def) { return get(key.qname, def); }
 
-  final synchronized Object get(String name, Object def)
+  final synchronized Object get(String qname, Object def)
   {
-    Object val = src.get(name);
+    Object val = map.get(qname);
     if (val == null) return def;
 
     // if we've already decoded, go with it
@@ -102,49 +72,36 @@ public final class Facets
     Object obj = Symbol.decodeVal((Symbol.EncodedVal)val);
 
     // if the object is immutable, then it safe to cache
-    if (FanObj.isImmutable(obj)) src.put(name, obj);
+    if (FanObj.isImmutable(obj)) map.put(qname, obj);
 
     return obj;
   }
 
   final synchronized Map map()
   {
-    // if we've previously determined the whole
-    // map is immutable then go with it!
-    Map x = this.immutable;
-    if (x != null) return x;
+    // optimize empty case which is the common case
+    if (map.size() == 0)
+    {
+      if (emptyMap == null) emptyMap = new Map(mapType()).toImmutable();
+      return emptyMap;
+    }
 
     // map the names to Objs via the get() where
     // we will decode as necessary; keep track if
     // all the values are immutable
-    Map map = new Map(mapType());
-    Iterator it = src.keySet().iterator();
-    boolean allImmutable = true;
+    Map result = new Map(mapType());
+    Iterator it = map.keySet().iterator();
     while (it.hasNext())
     {
       String qname = (String)it.next();
       Symbol key = Symbol.find(qname);
       Object val = get(qname, null);
-      map.set(key, val);
-      allImmutable &= FanObj.isImmutable(val);
+      result.set(key, val);
     }
-
-    // if all the values were immutable, then we
-    // can create a reusable immutable map for
-    // all future calls
-
-    /* TODO-SYM
-    if (allImmutable)
-      return this.immutable = map.toImmutable();
-    else
-    */
-      return map.ro();
+    return result.ro();
   }
 
-  public String toString()
-  {
-    return map().toString();
-  }
+  public String toString() { return map().toString(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -152,8 +109,9 @@ public final class Facets
 
   private static MapType mapType;
   private static Facets empty;
+  private static Map emptyMap;
 
-  private HashMap src;     // String -> String or immutable Obj
-  private Map immutable;   // immutable Str:Object Fan map
+  /** String qname => immutable Obj or Symbol.EncodedVal */
+  private HashMap map;
 
 }
