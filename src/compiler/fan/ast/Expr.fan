@@ -152,6 +152,32 @@ abstract class Expr : Node
   }
 
   **
+  ** Make an Expr which will serialize the given literal.
+  **
+  static Expr makeForLiteral(Location loc, CNamespace ns, Obj val)
+  {
+    switch (val.type)
+    {
+      case Bool#:
+        return val == true ?
+          LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true) :
+          LiteralExpr(loc, ExprId.falseLiteral, ns.boolType, false)
+      case Str#:
+        return LiteralExpr(loc, ExprId.strLiteral, ns.strType, val)
+      case DateTime#:
+
+        return CallExpr(loc, null, "fromStr", ExprId.construction)
+        {
+          method = ns.resolveSlot("sys::DateTime.fromStr")
+          ctype  = method.parent
+          args   = [makeForLiteral(loc, ns, val.toStr)]
+        }
+      default:
+        throw Err("Unsupported literal type $val.type")
+    }
+  }
+
+  **
   ** Set this expression to not be left on the stack.
   **
   Expr noLeave()
@@ -285,21 +311,6 @@ abstract class Expr : Node
 **
 class LiteralExpr : Expr
 {
-  static LiteralExpr makeFor(Location loc, CNamespace ns, Obj val)
-  {
-    switch (val.type)
-    {
-      case Bool#:
-        return val == true ?
-          make(loc, ExprId.trueLiteral, ns.boolType, true) :
-          make(loc, ExprId.falseLiteral, ns.boolType, false)
-      case Str#:
-        return make(loc, ExprId.strLiteral, ns.strType, val)
-      default:
-        throw Err("Unsupported literal type $val.type")
-    }
-  }
-
   new make(Location loc, ExprId id, CType ctype, Obj? val)
     : super(loc, id)
   {
@@ -786,14 +797,8 @@ class CallExpr : NameExpr
     : this.make(location, target, method.name, ExprId.call)
   {
     this.method = method
-
-    if (args != null)
-      this.args = args
-
-    if (method.isCtor)
-      ctype = method.parent
-    else
-      ctype = method.returnType
+    this.ctype = method.isCtor ? method.parent : method.returnType
+    if (args != null) this.args = args
   }
 
   override Str toStr()
@@ -835,7 +840,7 @@ class CallExpr : NameExpr
       return super.serialize
 
     argSer := args.join(",") |Expr e->Str| { return e.serialize }
-    return "$target($argSer)"
+    return "$method.parent($argSer)"
   }
 
   override Void print(AstWriter out)

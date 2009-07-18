@@ -130,19 +130,22 @@ pod sys
   Uri[]? podJsDirs := null
 
   **
-  ** User account used to build pod
+  ** Pod facet for account used to build pod.
+  ** Facet is set automatically by compiler.
   **
   Str podBuildUser := ""
 
   **
-  ** Host machine used to build pod
+  ** Pod facet for host machine used to build pod
+  ** Facet is set automatically by compiler.
   **
   Str podBuildHost := ""
 
   **
-  ** Time target was pod was built formatted as `DateTime.toStr`
+  ** Pod facet for time target was pod was built local to build host.
+  ** Facet is set automatically by compiler.
   **
-  Str podBuildTime := ""
+  DateTime podBuildTime := ""
 
   **
   ** This facet is used on pod, public types, and slots to indicate they should
