@@ -14,17 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "inet"
-    version     = globalVersion
-    description = "IP networking"
-    depends     = ["sys 1.0"]
-    srcDirs     = [`fan/`, `test/`]
-    javaDirs    = [`java/`]
-    dotnetDirs  = [`dotnet/`]
-    includeSrc  = true
+    podName = "inet"
+    version = globalVersion
   }
-
 }

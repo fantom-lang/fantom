@@ -14,18 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "testNative"
-    version     = globalVersion
-    depends     = ["sys 1.0"]
-    srcDirs     = [`fan/`]
-    javaDirs    = [`java/`]
-    dotnetDirs  = [`dotnet/`]
-    includeSrc  = false
-    includeFandoc = false
-    description = "TODO-SYM"
+    podName = "testNative"
+    version = globalVersion
   }
-
 }

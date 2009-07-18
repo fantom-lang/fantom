@@ -16,13 +16,7 @@ class Build : BuildPod
 {
   override Void setup()
   {
-    podName     = "testCompiler"
-    version     = globalVersion
-    depends     = ["sys 1.0", "compiler 1.0"]
-    srcDirs     = [`fan/`]
-    includeSrc  = false
-    includeFandoc = false
-    description = "TODO-SYM"
+    podName = "testCompiler"
+    version = globalVersion
   }
-
 }

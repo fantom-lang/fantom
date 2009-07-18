@@ -16,12 +16,7 @@ class Build : BuildPod
 {
   override Void setup()
   {
-    podName     = "fand"
-    version     = globalVersion
-    description = "Fan daemon framework"
-    depends     = ["sys 1.0"]
-    srcDirs     = [`fan/`]
-    includeSrc  = true
+    podName = "fand"
+    version = globalVersion
   }
-
 }

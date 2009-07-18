@@ -14,15 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "fansh"
-    version     = globalVersion
-    description = "Interactive Fan Shell"
-    depends     = ["sys 1.0", "compiler 1.0"]
-    srcDirs     = [`fan/`]
-    includeSrc  = true
+    podName = "fansh"
+    version = globalVersion
   }
-
 }

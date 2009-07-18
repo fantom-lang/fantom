@@ -14,15 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "obix"
-    version     = globalVersion
-    description = "oBIX XML modeling and client and server REST"
-    depends     = ["sys 1.0", "inet 1.0", "web 1.0", "xml 1.0"]
-    srcDirs     = [`fan/`, `test/`]
-    includeSrc  = true
+    podName = "obix"
+    version = globalVersion
   }
-
 }

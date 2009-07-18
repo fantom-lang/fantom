@@ -18,5 +18,6 @@
              Depend("dom 1.0")]
 @podSrcDirs=[`fan/`]
 @nodoc
+@js
 
 pod testWeb {}

@@ -14,16 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "docCompiler"
-    version     = globalVersion
-    description = "Fan documentation compiler"
-    depends     = ["sys 1.0", "compiler 1.0", "build 1.0", "fandoc 1.0"]
-    srcDirs     = [`fan/`, `fan/steps/`, `fan/html/`, `test/`]
-    resDirs     = [`res/`]
-    includeSrc  = true
- }
-
+    podName = "docCompiler"
+    version = globalVersion
+  }
 }

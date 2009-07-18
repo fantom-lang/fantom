@@ -14,14 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "docTools"
-    version     = globalVersion
-    description = "Documentation for command line tools"
-    depends     = Str[,]
-    resDirs     = [`doc/`]
+    podName = "docTools"
+    version = globalVersion
   }
-
 }

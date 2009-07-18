@@ -15,6 +15,7 @@
 @podDepends = [Depend("sys 1.0")]
 @podSrcDirs = [`fan/`]
 @podJsDirs  = [`js/`]
+@js
 
 pod dom {}
 
