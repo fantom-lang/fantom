@@ -68,14 +68,11 @@ public class ObjEncoder
     }
 
     Type type = FanObj.type(obj);
-// TODO-SYM
-    if (type.facet("sys::simple", null, true) == Boolean.TRUE ||
-        type.facet("simple", null, true) == Boolean.TRUE)
+    if (type.facet(symSimple, null, true) == Boolean.TRUE)
     {
       writeSimple(type, obj);
     }
-    else if (type.facet("sys::serializable", null, true) == Boolean.TRUE ||
-             type.facet("serializable", null, true) == Boolean.TRUE)
+    else if (type.facet(symSerializable, null, true) == Boolean.TRUE)
     {
       writeComplex(type, obj);
     }
@@ -116,7 +113,7 @@ public class ObjEncoder
 
       // skip static, transient, and synthetic (once) fields
       if (f.isStatic() || f.isSynthetic() ||
-          f.facet("sys::transient", false) == Boolean.TRUE)
+          f.facet(symTransient, false) == Boolean.TRUE)
         continue;
 
       // get the value
@@ -144,7 +141,7 @@ public class ObjEncoder
     }
 
     // if collection
-    if (type.facet("sys::collection", null, true) == Boolean.TRUE)
+    if (type.facet(symCollection, null, true) == Boolean.TRUE)
       first = writeCollectionItems(type, obj, first);
 
     // if we output fields, then close braces
@@ -360,6 +357,11 @@ public class ObjEncoder
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
+
+  static final Symbol symSimple       = Sys.SysPod.symbol("simple");
+  static final Symbol symSerializable = Sys.SysPod.symbol("serializable");
+  static final Symbol symCollection   = Sys.SysPod.symbol("collection");
+  static final Symbol symTransient    = Sys.SysPod.symbol("transient");
 
   OutStream out;
   int level  = 0;

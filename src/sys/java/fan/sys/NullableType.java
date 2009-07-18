@@ -58,7 +58,7 @@ public class NullableType
   public Slot slot(String name, boolean checked) { return root.slot(name, checked); }
 
   public Map facets(boolean inherited) { return root.facets(inherited); }
-  public Object facet(String name, Object def, boolean inherited) { return root.facet(name, def, inherited); }
+  public Object facet(Symbol key, Object def, boolean inherited) { return root.facet(key, def, inherited); }
 
   public String doc() { return root.doc(); }
 

@@ -244,21 +244,6 @@ public class ClassType
     return def;
   }
 
-// TODO-SYM
-  public final Object facet(String name, Object def, boolean inherited)
-  {
-    Object val = reflect().facets.get(name, null);
-    if (val != null) return val;
-    if (!inherited) return def;
-    List inheritance = inheritance();
-    for (int i=0; i<inheritance.sz(); ++i)
-    {
-      val = ((Type)inheritance.get(i)).facet(name, null, false);
-      if (val != null) return val;
-    }
-    return def;
-  }
-
 //////////////////////////////////////////////////////////////////////////
 // Documentation
 //////////////////////////////////////////////////////////////////////////

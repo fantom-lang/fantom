@@ -113,9 +113,6 @@ public abstract class Slot
   public Map facets() { return facets.map(); }
   public Object facet(Symbol key) { return facets.get(key, null); }
   public Object facet(Symbol key, Object def) { return facets.get(key, def); }
-// TODO-SYM
-public Object facet(String name) { return facets.get(name, null); }
-public Object facet(String name, Object def) { return facets.get(name, def); }
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

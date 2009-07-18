@@ -39,11 +39,9 @@ public abstract class Type
 
   public static List findByFacet(Symbol key, Object facetVal) { return findByFacet(key.qname(), facetVal, null); }
   public static List findByFacet(Symbol key, Object facetVal, Object options) { return findByFacet(key.qname(), facetVal, options); }
-// TODO-SYM
-public static List findByFacet(String facetName, Object facetVal) { return findByFacet(facetName, facetVal, null); }
-public static List findByFacet(String facetName, Object facetVal, Object options)
+  public static List findByFacet(String qname, Object facetVal, Object options)
   {
-    return TypeDb.get().findByFacet(facetName, facetVal, options);
+    return TypeDb.get().findByFacet(qname, facetVal, options);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -299,11 +297,7 @@ public static List findByFacet(String facetName, Object facetVal, Object options
 
   public final Object facet(Symbol key) { return facet(key, null, false); }
   public final Object facet(Symbol key, Object def) { return facet(key, def, false); }
-public Object facet(Symbol key, Object def, boolean inherited) { return def; }
-// TODO-SYM
-public final Object facet(String name) { return facet(name, null, false); }
-public final Object facet(String name, Object def) { return facet(name, def, false); }
-public Object facet(String name, Object def, boolean inherited) { return def; }
+  public abstract Object facet(Symbol key, Object def, boolean inherited);
 
 //////////////////////////////////////////////////////////////////////////
 // Documentation

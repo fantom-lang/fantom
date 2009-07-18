@@ -149,7 +149,7 @@ public class JavaType
   }
 
   public Map facets(boolean inherited) { return Facets.empty().map(); }
-  public Object facet(String name, Object def, boolean inherited) { return Facets.empty().get(name, def); }
+  public Object facet(Symbol key, Object def, boolean inherited) { return def; }
 
   public String doc() { return null; }
 
