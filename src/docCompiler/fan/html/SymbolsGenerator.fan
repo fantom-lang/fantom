@@ -40,7 +40,7 @@ class SymbolsGenerator : HtmlGenerator
     out.print("<ul>\n")
     out.print("  <li><a href='../index.html'>$docHome</a></li>\n")
     out.print("  <li><a href='index.html'>$pod.name</a></li>\n")
-    out.print("  <li><a href='symbols.html'>Symbols</a></li>\n")
+    out.print("  <li><a href='symbols.html'>Facets/Symbols</a></li>\n")
     out.print("</ul>\n")
   }
 
@@ -52,7 +52,20 @@ class SymbolsGenerator : HtmlGenerator
     out.print("<h1>$pod.name</h1>\n")
     out.print("</div>\n")
     out.print("</div>\n")
+    writeFacets
+    writeSymbols
+  }
 
+  Void writeFacets()
+  {
+    if (pod.facets.isEmpty) return
+    out.print("<h2>Pod Facets</h2>\n")
+    facets(pod.facets)
+  }
+
+  Void writeSymbols()
+  {
+    if (symbols.isEmpty) return
     out.print("<div class='slots'>\n")
     out.print("<div class='detail'>\n")
     out.print("<h2>Symbols</h2>\n")
@@ -61,7 +74,7 @@ class SymbolsGenerator : HtmlGenerator
     {
       out.print("<dt id='$s.name' class='symbol'>$s.name</dt>")
       out.print("<dd>\n")
-      out.print("<p><code>")
+      out.print("<p><code class='sig'>")
       meta := ApiToHtmlGenerator.parseMeta(s.doc)
       map := |Type x->Uri| { return compiler.uriMapper.map(x.qname, loc) }
       out.print(ApiToHtmlGenerator.makeTypeLink(s.of, map))
@@ -84,6 +97,7 @@ class SymbolsGenerator : HtmlGenerator
 
   override Void sidebar()
   {
+    if (symbols.isEmpty) return
     out.print("<h2>Symbols</h2>\n")
     out.print("<ul class='clean'>\n")
     symbols.each |s|
