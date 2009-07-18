@@ -27,7 +27,7 @@ class Assembler : CompilerSupport, FConst
 
   FPod assemblePod()
   {
-    fpod = FPod(null, compiler.pod.name, null)
+    fpod = FPod(null, pod.name, null)
 
     fpod.name    = compiler.input.podName
     fpod.version = compiler.input.version
@@ -41,7 +41,7 @@ class Assembler : CompilerSupport, FConst
     }
 
     fpod.fsymbols = Str:FSymbol[:]
-    compiler.pod.symbolDefs.each |SymbolDef s|
+    pod.symbolDefs.each |SymbolDef s|
     {
       fpod.fsymbols[s.name] = assembleSymbol(s)
     }
@@ -52,18 +52,17 @@ class Assembler : CompilerSupport, FConst
   private FAttr[] assemblePodAttrs(FPod fpod)
   {
     // add build facets
-    podDef := compiler.pod
     try
     {
       sys := ns.sysPod
-      podDef.addFacet(this, sys.resolveSymbol("podBuildHost", true), Sys.hostName)
-      podDef.addFacet(this, sys.resolveSymbol("podBuildUser", true), Sys.userName)
-      podDef.addFacet(this, sys.resolveSymbol("podBuildTime", true), DateTime.now.toStr)
+      pod.addFacet(this, sys.resolveSymbol("podBuildHost", true), Sys.hostName)
+      pod.addFacet(this, sys.resolveSymbol("podBuildUser", true), Sys.userName)
+      pod.addFacet(this, sys.resolveSymbol("podBuildTime", true), DateTime.now.toStr)
     }
     catch (Err e) e.trace
 
     asm := AttrAsm(compiler, fpod)
-    asm.facets(compiler.pod.facets)
+    asm.facets(pod.facets)
     return asm.attrs
   }
 

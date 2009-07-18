@@ -94,10 +94,10 @@ public class Parser : CompilerSupport
     symbol := SymbolDef(loc, unit, of, name, val)
     symbol.doc = doc
 
-    if (compiler.pod.symbolDefs.containsKey(name))
+    if (pod.symbolDefs.containsKey(name))
       err("Duplicate symbol name '$name'", loc)
     else
-      compiler.pod.symbolDefs[name] = symbol
+      pod.symbolDefs[name] = symbol
   }
 
 //////////////////////////////////////////////////////////////////////////

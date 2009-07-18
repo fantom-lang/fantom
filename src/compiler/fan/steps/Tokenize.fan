@@ -36,8 +36,8 @@ class Tokenize : CompilerStep
 
   private Void runStrMode()
   {
-    tokenize(input.srcStrLocation, input.srcStr)
     if (input.podStr != null) tokenize(Location("pod.fan"), input.podStr)
+    tokenize(input.srcStrLocation, input.srcStr)
   }
 
   private Void runFileMode()
@@ -66,10 +66,10 @@ class Tokenize : CompilerStep
 
   CompilationUnit tokenize(Location location, Str src)
   {
-    unit := CompilationUnit(location, compiler.pod)
+    unit := CompilationUnit(location, pod)
     tokenizer := Tokenizer(compiler, location, src, input.includeDoc)
     unit.tokens = tokenizer.tokenize
-    compiler.pod.units.add(unit)
+    pod.units.add(unit)
     return unit
   }
 

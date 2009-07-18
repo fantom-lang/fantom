@@ -47,7 +47,7 @@ class ScanForUsingsAndTypes : CompilerStep
     }
     bombIfErr
 
-    compiler.pod.typeDefs = allTypes
+    pod.typeDefs = allTypes
   }
 
 }

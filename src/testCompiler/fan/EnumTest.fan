@@ -156,6 +156,7 @@ class EnumTest : CompilerTest
 
   Void testErrors()
   {
+    // InitEnum
     verifyErrors(
      "mixin X { static Int values() {} abstract Str foo(); }
       enum A { a; Void values() {} }
@@ -177,7 +178,14 @@ class EnumTest : CompilerTest
          7, 32, "Enum constructor must be named 'make'",
          8, 17, "Enum constructor must be private",
          9, 17, "Enum constructor cannot call super constructor",
-        10,  2, "Facet 'simple' conflicts with auto-generated facet",
+       ])
+
+    // CheckErrors
+    verifyErrors(
+     "@simple enum I { a, b }
+      ",
+       [
+        1, 1, "Duplicate facet 'sys::simple'",
        ])
   }
 }
