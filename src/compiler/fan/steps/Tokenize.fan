@@ -17,75 +17,61 @@
 class Tokenize : CompilerStep
 {
 
-//////////////////////////////////////////////////////////////////////////
-// Construction
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Constructor takes the associated Compiler
-  **
   new make(Compiler compiler)
     : super(compiler)
   {
+    input = compiler.input
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Run
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Run the step on the list of source files
-  **
   override Void run()
   {
     log.debug("Tokenize")
-    compiler.srcFiles.each |File srcFile| { runFile(srcFile) }
+    switch (input.mode)
+    {
+      case CompilerInputMode.str:  runStrMode
+      case CompilerInputMode.file: runFileMode
+      default: throw UnsupportedErr()
+    }
   }
 
-  **
-  ** Run the step on the specified source string
-  **
-  CompilationUnit runFile(File srcFile)
+  private Void runStrMode()
   {
-    try
-    {
-      location := Location.makeFile(srcFile)
-      src := srcFile.readAllStr
-      unit := tokenize(location, src)
-      compiler.pod.units.add(unit)
-      return unit
-    }
-    catch (CompilerErr err)
-    {
-      throw err
-    }
-    catch (Err e)
-    {
-      if (srcFile.exists)
-        throw err("Cannot read source file: $e", Location.makeFile(srcFile))
-      else
-        throw err("Source file not found", Location.makeFile(srcFile))
-    }
+    tokenize(input.srcStrLocation, input.srcStr)
+    if (input.podStr != null) tokenize(Location("pod.fan"), input.podStr)
   }
 
-  **
-  ** Run the step on the specified source string
-  **
-  Void runSource(Location location, Str src)
+  private Void runFileMode()
   {
-    log.debug("Tokenize")
-    compiler.pod.units.add(tokenize(location, src))
+    compiler.srcFiles.each |file|
+    {
+      location := Location.makeFile(file)
+      try
+      {
+        src := file.readAllStr
+        tokenize(location, src)
+      }
+      catch (CompilerErr err)
+      {
+        throw err
+      }
+      catch (Err e)
+      {
+        if (file.exists)
+          throw err("Cannot read source file: $e", location)
+        else
+          throw err("Source file not found", location)
+      }
+    }
   }
 
-  **
-  ** Tokenize the source into a CompilationUnit
-  **
   CompilationUnit tokenize(Location location, Str src)
   {
     unit := CompilationUnit(location, compiler.pod)
-    tokenizer := Tokenizer(compiler, location, src, compiler.input.includeDoc)
+    tokenizer := Tokenizer(compiler, location, src, input.includeDoc)
     unit.tokens = tokenizer.tokenize
+    compiler.pod.units.add(unit)
     return unit
   }
 
+  CompilerInput input
 }

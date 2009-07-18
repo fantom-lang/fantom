@@ -28,13 +28,6 @@ abstract class DslPlugin : CompilerSupport
     qname := anchorType.qname
     t := findByFacet(@compilerDsl, qname)
 
-// TODO-SYM
-if (t.size == 0)
-{
-  if (qname == "sys::Str") return StrDslPlugin(c.compiler)
-  if (qname == "sys::Regex") return RegexDslPlugin(c.compiler)
-}
-
     if (t.size > 1)
     {
       c.err("Multiple DSL plugins registered for '$qname': $t", loc)

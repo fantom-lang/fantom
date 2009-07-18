@@ -43,12 +43,9 @@ class Parse : CompilerStep
 
     units.each |CompilationUnit unit|
     {
-// TODO-SYM
       p := Parser(compiler, unit, closures)
-if (unit.location.filename == "pod.fan")
+      if (unit.location.filename == "pod.fan")
         p.parsePodDef
-else if (unit.isSymbols)
-        p.parseSymbols
       else
         p.parse
       types.addAll(unit.types)

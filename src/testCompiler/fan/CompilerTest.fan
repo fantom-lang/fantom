@@ -74,7 +74,7 @@ abstract class CompilerTest : Test
   Str symbolsStr
   {
     get { throw UnsupportedErr() }
-    set { podStr = "pod x {\n" + val  + "\n}" }
+    set { podStr = "pod $podName {\n" + val  + "\n}" }
   }
 
 //////////////////////////////////////////////////////////////////////////

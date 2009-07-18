@@ -20,10 +20,10 @@ class PodFacetsParser
   **
   ** Construct with location and source.
   **
-  new make(Location loc, Str source)
+  new make(Location location, Str source)
   {
-    this.loc = loc
-    this.tokenizer = Tokenizer(Compiler(CompilerInput()), loc, source, false)
+    this.location = location
+    this.tokenizer = Tokenizer(Compiler(CompilerInput()), location, source, false)
     this.facets = Str:Obj?[:]
     this.usings = "using sys\n"
     consume
@@ -79,7 +79,7 @@ class PodFacetsParser
     if (facet == null)
     {
       if (!checked) return null
-      throw CompilerErr("Pod facet not found '$qname'", loc)
+      throw CompilerErr("Pod facet not found '$qname'", location)
     }
 
     // parse value is still unparsed
@@ -269,7 +269,7 @@ class PodFacetsParser
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Location loc         // location of entire file
+  Location location            // location of entire file
   private Tokenizer tokenizer  // stream tokenizer
   private TokenVal? cur        // current token
   private Token? curt          // current token type
