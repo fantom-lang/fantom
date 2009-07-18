@@ -29,9 +29,6 @@ class CompilationUnit : Node
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-// TODO-SYM
-  Bool isSymbols() { location.filename == "pod.fan" || location.filename == "symbols.fan" }
-
   override Void print(AstWriter out)
   {
     out.nl

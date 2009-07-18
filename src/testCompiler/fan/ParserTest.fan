@@ -1411,12 +1411,12 @@ class ParserTest : CompilerTest
 
     // use custom pipeline only to parse phase
     loc := Location.make("Test")
-    compiler.pod = PodDef.make(compiler.ns, loc, podName)
-    ResolveDepends.make(compiler).run
-    Tokenize.make(compiler).runSource(loc, src)
-    ScanForUsingsAndTypes.make(compiler).run
-    ResolveImports.make(compiler).run
-    Parse.make(compiler).run
+    compiler.pod = PodDef(compiler.ns, loc, podName)
+    ResolveDepends(compiler).run
+    Tokenize(compiler).tokenize(loc, src)
+    ScanForUsingsAndTypes(compiler).run
+    ResolveImports(compiler).run
+    Parse(compiler).run
 
     unit     = compiler.pod.units.first
     types    = compiler.types

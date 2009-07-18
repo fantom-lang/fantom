@@ -142,8 +142,7 @@ class CompilerInput
     validateReqField("includeSrc")
     validateReqField("isTest")
     validateReqField("mode")
-    if (isScript || mode === CompilerInputMode.str)
-      validateReqField("podName")
+    validateReqField("podName")
     switch (mode)
     {
       case CompilerInputMode.file:

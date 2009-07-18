@@ -160,7 +160,7 @@ class SymbolsTest : CompilerTest
   {
     // ParseErrors
     podStr =
-    "pod x {
+    "pod $podName {
      xx := 3
      xx := 4
      yy = 5 }"
@@ -172,7 +172,7 @@ class SymbolsTest : CompilerTest
 
     // UnresolvedExpr
     podStr =
-    "using compiler; pod x {
+    "using compiler; pod $podName {
      a := @foo
      b := @bar::foo
      c := @compiler::baz
@@ -187,7 +187,7 @@ class SymbolsTest : CompilerTest
 
     // Assemble
     podStr =
-    "using compiler; pod x {
+    "using compiler; pod $podName {
      a := 4
      b := @a }"
     verifyErrors("class Foo {}",

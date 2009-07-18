@@ -28,10 +28,11 @@ class InitInput : CompilerStep
     : super(compiler)
   {
     loc = compiler.input.inputLoc
+    input = compiler.input
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Methods
+// Run
 //////////////////////////////////////////////////////////////////////////
 
   **
@@ -39,80 +40,105 @@ class InitInput : CompilerStep
   **
   override Void run()
   {
-    // validate input
-    input := compiler.input
-    try
-    {
-      input.validate
-    }
-    catch (CompilerErr err)
-    {
-      throw errReport(err)
-    }
-
-    // figure out where our depends are coming from
-    checkDependsDir(input)
-
-// TODO-SYM
-podDef := compiler.input.podDef
-if (podDef != null || compiler.input.podStr != null)
-{
-  if (podDef != null && !podDef.exists) throw err("podDef does not exist", loc)
-  loc := podDef == null ? Location.make("podStr") : Location.makeFile(podDef)
-  str := podDef == null ? compiler.input.podStr : podDef.readAllStr
-  try
-  {
-    podFacets := PodFacetsParser(loc, str).parse
-    compiler.depends = podFacets.get("sys::podDepends", false, Depend[]#) ?: Depend[,]
-    compiler.srcDirs = toFiles(podFacets.get("sys::podSrcDirs", false, Uri[]#))
-    compiler.resDirs = toFiles(podFacets.get("sys::podResDirs", false, Uri[]#))
-    if (podDef != null)
-      compiler.input.podName = podFacets.podName
+    validateInput
+    initPodFacets
+    initNamespace
+    initPod
+    initDepends
+    initFiles
   }
-  catch (CompilerErr e) throw errReport(e)
-  catch (Err e) { e.trace; throw errReport(CompilerErr("Cannot parse pod facets", loc, e)) }
-}
 
-    // create the appropiate namespace
+//////////////////////////////////////////////////////////////////////////
+// Validate Input
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Validate that all the required input fields are set.
+  **
+  private Void validateInput()
+  {
+    try
+      input.validate
+    catch (CompilerErr err)
+      throw errReport(err)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Pod Facets
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Init this step's podFacets field
+  **
+  private Void initPodFacets()
+  {
+    switch (input.mode)
+    {
+      case CompilerInputMode.str:  initPodFacetsStrMode
+      case CompilerInputMode.file: initPodFacetsFileMode
+      default: throw err("Unknown input mode $input.mode", null)
+    }
+  }
+
+  private Void initPodFacetsStrMode()
+  {
+    // if "pod.fan" as passed in then parse it
+    if (input.podStr != null)
+      parsePodFacets(Location("pod.fan"), input.podStr)
+  }
+
+  private Void initPodFacetsFileMode()
+  {
+    // verify podDef exists
+    podDef := input.podDef
+    if (!podDef.exists) throw err("Invalid podDef: $podDef", null)
+
+    // parse pod facets
+    loc := Location.makeFile(podDef)
+    parsePodFacets(loc, podDef.readAllStr)
+  }
+
+  private Void parsePodFacets(Location loc, Str src)
+  {
+    try
+      podFacets = PodFacetsParser(loc, src).parse
+    catch (CompilerErr e)
+      throw errReport(e)
+    catch (Err e)
+      throw errReport(CompilerErr("Cannot parse pod facets: $e", loc, e))
+  }
+
+  private Obj? podFacet(Str qname, Obj def)
+  {
+    if (podFacets == null) return def
+    try
+      return podFacets.get(qname, false, def.type) ?: def
+    catch (CompilerErr e)
+      throw errReport(e)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Init Namespace
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Init the compiler.ns with an appropriate CNamespace
+  **
+  private Void initNamespace()
+  {
+    checkDependsDir
     if (input.dependsDir == null)
       compiler.ns = ReflectNamespace(compiler)
     else
       compiler.ns = FPodNamespace(compiler, input.dependsDir)
-
-    // init pod
-    podName := input.podName
-    compiler.pod = PodDef(ns, Location(podName), podName)
-    compiler.isSys = podName == "sys"
-
-    // process intput into tokens
-    switch (input.mode)
-    {
-      case CompilerInputMode.str:
-        Tokenize(compiler).runSource(input.srcStrLocation, input.srcStr)
-        if (input.podStr != null)
-          Tokenize(compiler).runSource(Location("pod.fan"), input.podStr)
-
-      case CompilerInputMode.file:
-        FindSourceFiles(compiler).run
-        Tokenize(compiler).run
-
-      default:
-        throw err("Unknown input mode $input.mode", null)
-    }
   }
 
-// TODO-SYM
-private File[] toFiles(Uri[]? uris)
-{
-  if (uris == null || uris.isEmpty) return File[,]
-  homeDir := compiler.input.podDef.parent
-  return uris.map |uri->File| { homeDir + uri }
-}
-
   **
-  ** If depends home is not null, then check it out.
+  ** If dependsDir is not null, then check it out.
+  ** This is used for bootstrap to use fcode instead of
+  ** reflection for dependencies.
   **
-  private Void checkDependsDir(CompilerInput input)
+  private Void checkDependsDir()
   {
     // if null then we are using
     // compiler's own pods via reflection
@@ -120,7 +146,7 @@ private File[] toFiles(Uri[]? uris)
     if (dir == null) return
 
     // check that it isn't the same as Sys.homeDir, in
-    // which we're better off using reflection
+    // which case we're better off using reflection
     if (dir.normalize == (Sys.homeDir + `lib/fan/`).normalize)
     {
       input.dependsDir = null
@@ -128,7 +154,7 @@ private File[] toFiles(Uri[]? uris)
     }
 
     // check that fan pods directory exists
-    if (!dir.exists) throw err("Invalid dependsHomeDir: $dir", loc)
+    if (!dir.exists) throw err("Invalid dependsDir: $dir", loc)
 
     // save it away
     input.dependsDir = dir
@@ -136,8 +162,85 @@ private File[] toFiles(Uri[]? uris)
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Init Pod
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Init the compiler.pod with PodDef
+  **
+  private Void initPod()
+  {
+    // verify "pod.fan" matches podName passed in
+    podName := input.podName
+    if (podFacets != null && podName!= podFacets.podName)
+      throw err("CompilerInput.podName does not match 'pod.fan': $podName != $podFacets.podName", podFacets.location)
+
+    // init compiler fields
+    compiler.pod   = PodDef(ns, Location(podName), podName)
+    compiler.isSys = podName == "sys"
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Init Depends
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Init the compiler.depends with list of Depends
+  **
+  private Void initDepends()
+  {
+    // depends are specified with @podDepends facet
+    compiler.depends = podFacet("sys::podDepends", Depend[,])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Init Source and Resource Files
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Init the compiler's srcFiles and resFiles field (file mode only)
+  **
+  private Void initFiles()
+  {
+    if (input.mode !== CompilerInputMode.file) return
+
+    // map pod facets to src/res files
+    compiler.srcFiles = findFiles("sys::podSrcDirs", "fan")
+    compiler.resFiles = findFiles("sys::podResDirs", null)
+
+    // "pod.fan" is always implicit include in source
+    compiler.srcFiles.insert(0, input.podDef)
+
+    if (compiler.srcFiles.isEmpty && compiler.resFiles.isEmpty)
+      throw err("No fan source files found", null)
+
+    log.info("FindSourceFiles [${compiler.srcFiles.size} files]")
+  }
+
+  private File[] findFiles(Str qname, Str? ext)
+  {
+    base := input.podDef
+    acc := File[,]
+    uris := (Uri[])podFacet(qname, Uri[,])
+    uris.each |uri|
+    {
+      dir := base + uri
+      if (!dir.isDir) throw err("Invalid directory", Location.makeFile(dir))
+      dir.list.each |file|
+      {
+        if (file.isDir) return
+        if (ext == null || file.ext == ext) acc.add(file)
+      }
+    }
+    return acc
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Location loc
+  private Location loc                // ctor
+  private CompilerInput input         // ctor
+  private PodFacetsParser? podFacets  // parsePodFacets
+
 }

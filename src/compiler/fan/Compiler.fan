@@ -71,6 +71,7 @@ class Compiler
   virtual Void frontend()
   {
     InitInput(this).run
+    Tokenize(this).run
     ResolveDepends(this).run
     ScanForUsingsAndTypes(this).run
     ResolveImports(this).run
@@ -106,14 +107,11 @@ class Compiler
   CompilerLog log           // ctor
   CompilerErr[] errors      // accumulated errors
   Depend[] depends          // InitInput
-// TODO-SYM
-File[]? srcDirs
-File[]? resDirs
   CNamespace? ns            // InitInput
   PodDef? pod               // InitInput
   Bool isSys := false       // InitInput; are we compiling sys itself
-  File[]? srcFiles          // FindSourceFiles
-  File[]? resFiles          // FindSourceFiles
+  File[]? srcFiles          // InitInput
+  File[]? resFiles          // InitInput
   TypeDef[]? types          // Parse
   ClosureExpr[]? closures   // Parse
   FPod? fpod                // Assemble

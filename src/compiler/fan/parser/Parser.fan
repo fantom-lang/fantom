@@ -75,13 +75,6 @@ public class Parser : CompilerSupport
     consume(Token.rbrace)
   }
 
-  // TODO-SYM
-  Void parseSymbols()
-  {
-    usings
-    while (curt !== Token.eof) symbolDef
-  }
-
   **
   ** Symbol definition:
   **
