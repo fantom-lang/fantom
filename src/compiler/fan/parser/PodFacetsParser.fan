@@ -42,8 +42,14 @@ class PodFacetsParser
   {
     while (curt === Token.usingKeyword) parseUsing
     while (curt === Token.at) parseFacet
+    parseHeader
     return this
   }
+
+  **
+  ** Pod name
+  **
+  readonly Str podName := "?"
 
   **
   ** List the keys we parsed.
@@ -117,6 +123,13 @@ class PodFacetsParser
       }
     }
     usings += "$s\n"
+  }
+
+  private Void parseHeader()
+  {
+    loc := cur
+    if (consumeId != "pod") throw err("Expecting 'pod' keyword", loc)
+    podName = consumeId
   }
 
   private Void parseFacet()
@@ -230,7 +243,7 @@ class PodFacetsParser
     p := PodFacetsParser(Location.makeFile(f), f.readAllStr).parse
     t2 := Duration.now
     echo("")
-    echo("Parsed ${(t2-t1).toLocale}")
+    echo("Parsed $p.podName ${(t2-t1).toLocale}")
     echo("")
     p.keys.each |key| { print(p, key) }
   }

@@ -106,16 +106,16 @@ class CompilerInput
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Root directory of source tree - this directory is used to create
-  ** the relative paths of the resource files in the pod zip.
-  **
-  File? homeDir
-
-  **
   ** Location of "pod.fan" which defines the pod meta-data
   ** needed to compile the pod from source.
   **
   File? podDef
+
+  **
+  ** Root directory of source tree - this directory is used to create
+  ** the relative paths of the resource files in the pod zip.
+  **
+  File? homeDir
 
   **
   ** List of directories containing fan source files (file mode only)
