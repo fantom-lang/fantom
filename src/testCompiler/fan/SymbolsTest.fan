@@ -153,6 +153,31 @@ class SymbolsTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Restrictions
+//////////////////////////////////////////////////////////////////////////
+
+  Void testRestrictions()
+  {
+    podStr =
+    "pod $podName
+     {
+       Int Foo := 0
+       Int bar := 0
+       Int pod := 0
+     }"
+    verifyErrors(
+    "class Foo {}
+     class bar {}
+     class index {}",
+     [
+       3, 3, "Symbol name 'Foo' conflicts with type",
+       4, 3, "Symbol name 'bar' conflicts with type",
+       5, 3, "Symbol name 'pod' is restricted",
+       3, 1, "Type name 'index' is restricted",
+     ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Errors
 //////////////////////////////////////////////////////////////////////////
 
@@ -186,10 +211,10 @@ class SymbolsTest : CompilerTest
      ])
 
     // CheckErrors
-  podStr = "@js @js @nodoc @sys::nodoc pod $podName { }"
-  verifyErrors(
-        "@sys::simple @simple class Foo
-         { @transient @sys::transient Int x }",
+    podStr = "@js @js @nodoc @sys::nodoc pod $podName { }"
+    verifyErrors(
+     "@sys::simple @simple class Foo
+      { @transient @sys::transient Int x }",
      [
        1, 1, "Duplicate facet 'sys::js'",
        1, 9, "Duplicate facet 'sys::nodoc'",
