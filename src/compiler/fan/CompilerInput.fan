@@ -27,7 +27,8 @@ class CompilerInput
   Location inputLoc := Location("CompilerInput")
 
   **
-  ** Required name of output pod
+  ** Name of output pod - required for scripts and str mode.
+  ** For pods this is defined via podDef location of "pod.fan".
   **
   Str? podName
 
@@ -42,12 +43,6 @@ class CompilerInput
   ** Version to include in ouput pod's manifest.
   **
   Version? version
-
-  **
-  ** List of this pod's dependencies used for both the
-  ** compiler checking and output in the pod's manifest.
-  **
-  Depend[] depends := Depend[,]
 
   **
   ** The directory to look in for the dependency pod file (and
@@ -111,23 +106,6 @@ class CompilerInput
   **
   File? podDef
 
-  **
-  ** Root directory of source tree - this directory is used to create
-  ** the relative paths of the resource files in the pod zip.
-  **
-  File? homeDir
-
-  **
-  ** List of directories containing fan source files (file mode only)
-  **
-  File[]? srcDirs
-
-  **
-  ** Optional list of directories containing resources files to
-  ** include in the pod zip (file mode only)
-  **
-  File[] resDirs := File[,]
-
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.str
 //////////////////////////////////////////////////////////////////////////
@@ -157,21 +135,19 @@ class CompilerInput
   **
   internal Void validate()
   {
-    validateReqField("podName")
     validateReqField("version")
-    validateReqField("depends")
     validateReqField("output")
     validateReqField("outDir")
     validateReqField("includeDoc")
     validateReqField("includeSrc")
     validateReqField("isTest")
     validateReqField("mode")
+    if (isScript || mode === CompilerInputMode.str)
+      validateReqField("podName")
     switch (mode)
     {
       case CompilerInputMode.file:
-        validateReqField("homeDir")
-        validateReqField("srcDirs")
-        validateReqField("resDirs")
+        validateReqField("podDef")
       case CompilerInputMode.str:
         validateReqField("srcStr")
         validateReqField("srcStrLocation")

@@ -122,6 +122,7 @@ class PodFacetsParser
         s += " as " + consumeId
       }
     }
+    eos
     usings += "$s\n"
   }
 
@@ -145,6 +146,7 @@ class PodFacetsParser
     facet := PodFacet(loc, name)
     if (curt === Token.assign) { consume; expr(facet) }
     else facet.val = true
+    eos
     facets[name] = facet
   }
 
@@ -175,6 +177,11 @@ class PodFacetsParser
       s.add(consume.toCode)
     }
     facet.unparsed = s.toStr
+  }
+
+  private Void eos()
+  {
+    if (curt === Token.semicolon) consume
   }
 
 //////////////////////////////////////////////////////////////////////////

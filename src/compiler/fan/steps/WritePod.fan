@@ -93,7 +93,7 @@ class WritePod : CompilerStep
     if (path == null)
     {
       path = file.uri
-      path = path.relTo(input.homeDir.uri)
+      path = path.relTo(input.podDef.parent.uri)
     }
 
     try

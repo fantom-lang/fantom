@@ -328,13 +328,13 @@ class NamespaceTest : CompilerTest
   {
     try
     {
-      compile("class Foo {}", LogLevel.silent, false,
-        [
-          Depend.fromStr("sys 0+"),
-          Depend.fromStr("jarJarBinks 1.0"),
-          Depend.fromStr("testCompiler 99.0")
-        ]
-      )
+      podStr =
+      """@podDepends=[
+           Depend("sys 0+"),
+           Depend("jarJarBinks 1.0"),
+           Depend("testCompiler 99.0")]
+         pod $podName {}"""
+      compile("class Foo {}", LogLevel.silent, false)
     }
     catch (CompilerErr e)
     {
@@ -350,7 +350,10 @@ class NamespaceTest : CompilerTest
   {
     try
     {
-      compile("class Foo {}", LogLevel.silent, false, [Depend.fromStr("compiler 0+")])
+      podStr =
+      """@podDepends=[Depend("compiler 0+")]
+         pod $podName {}"""
+      compile("class Foo {}", LogLevel.silent, false)
     }
     catch (CompilerErr e)
     {

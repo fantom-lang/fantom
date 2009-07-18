@@ -53,6 +53,26 @@ class InitInput : CompilerStep
     // figure out where our depends are coming from
     checkDependsDir(input)
 
+// TODO-SYM
+podDef := compiler.input.podDef
+if (podDef != null || compiler.input.podStr != null)
+{
+  if (podDef != null && !podDef.exists) throw err("podDef does not exist", loc)
+  loc := podDef == null ? Location.make("podStr") : Location.makeFile(podDef)
+  str := podDef == null ? compiler.input.podStr : podDef.readAllStr
+  try
+  {
+    podFacets := PodFacetsParser(loc, str).parse
+    compiler.depends = podFacets.get("sys::podDepends", false, Depend[]#) ?: Depend[,]
+    compiler.srcDirs = toFiles(podFacets.get("sys::podSrcDirs", false, Uri[]#))
+    compiler.resDirs = toFiles(podFacets.get("sys::podResDirs", false, Uri[]#))
+    if (podDef != null)
+      compiler.input.podName = podFacets.podName
+  }
+  catch (CompilerErr e) throw errReport(e)
+  catch (Err e) { e.trace; throw errReport(CompilerErr("Cannot parse pod facets", loc, e)) }
+}
+
     // create the appropiate namespace
     if (input.dependsDir == null)
       compiler.ns = ReflectNamespace(compiler)
@@ -80,6 +100,14 @@ class InitInput : CompilerStep
         throw err("Unknown input mode $input.mode", null)
     }
   }
+
+// TODO-SYM
+private File[] toFiles(Uri[]? uris)
+{
+  if (uris == null || uris.isEmpty) return File[,]
+  homeDir := compiler.input.podDef.parent
+  return uris.map |uri->File| { homeDir + uri }
+}
 
   **
   ** If depends home is not null, then check it out.
