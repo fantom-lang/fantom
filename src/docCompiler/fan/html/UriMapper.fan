@@ -120,7 +120,7 @@ class UriMapper : DocCompilerSupport
     sym := pod.symbol(name)
     if (sym == null) throw err("Unknown symbol '$fandocUri'", loc)
 
-    targetUri = toUri(pod, "symbols.html", name)
+    targetUri = toUri(pod, "pod.html", name)
   }
 
   private Void mapPod()

@@ -40,7 +40,7 @@ class SymbolsGenerator : HtmlGenerator
     out.print("<ul>\n")
     out.print("  <li><a href='../index.html'>$docHome</a></li>\n")
     out.print("  <li><a href='index.html'>$pod.name</a></li>\n")
-    out.print("  <li><a href='symbols.html'>Facets/Symbols</a></li>\n")
+    out.print("  <li><a href='pod.html'>Facets/Symbols</a></li>\n")
     out.print("</ul>\n")
   }
 
