@@ -63,10 +63,6 @@ class FacetsTest : Test
     verifyTypeFacet(t, @monA, Month.jun)
 
     t.facets.keys.each { verifySame(t.facet(it), t.facet(it)) }
-
-    // since whole map is immutable we should reuse
-    // TODO-SYM
-    // verifySame(t.facets, t.facets)
   }
 
   Void testTypeFacetsB()
@@ -110,18 +106,12 @@ class FacetsTest : Test
 
     // since values are immutable we should reuse
     f.facets.keys.each { verifySame(f.facet(it), f.facet(it)) }
-
-    // since whole map is immutable we should reuse
-    // TODO-SYM
-    // verifySame(f.facets, f.facets)
   }
 
   Void testSlotFacets2()
   {
     m := FacetsA#equals
     verifySlotFacet(m, @boolA, true)
-    // TODO-SYM
-    // verifySame(m.facets, m.facets)
   }
 
   Void testSlotFacetsEmpty()
@@ -130,9 +120,9 @@ class FacetsTest : Test
     verifyEq(m.facets.size, 0)
     verifyEq(m.facet(@boolB), null)
     verifyEq(m.facet(@boolB, "!"), "!")
-    // TODO-SYM
-    // verifySame(m.facets, m.facets)
-    // verifySame(m.facets, type.slot("testSlotFacetsEmpty").facets)
+    verifyEq(m.facets.isImmutable, true)
+    verifySame(m.facets, m.facets)
+    verifySame(m.facets, type.slot("testSlotFacetsEmpty").facets)
   }
 
   Void verifySlotFacet(Slot s, Symbol key, Obj expected)

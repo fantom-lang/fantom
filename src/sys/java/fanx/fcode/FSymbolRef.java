@@ -31,7 +31,6 @@ public final class FSymbolRef
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  // TODO-SYM
   public String qname() { return podName + "::" + symbolName; }
 
   /** Attempt to resolve, if not print error and return null */
