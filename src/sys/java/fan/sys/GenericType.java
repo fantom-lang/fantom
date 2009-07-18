@@ -79,7 +79,7 @@ public abstract class GenericType
   abstract Map makeParams();
 
   public Map facets(boolean inherited) { return base.facets(inherited); }
-  public Object facet(String name, Object def, boolean inherited) { return base.facet(name, def, inherited); }
+  public Object facet(Symbol key, Object def, boolean inherited) { return base.facet(key, def, inherited); }
 
   public String doc() { return base.doc(); }
 

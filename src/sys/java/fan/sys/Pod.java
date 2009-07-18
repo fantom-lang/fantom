@@ -226,9 +226,6 @@ public class Pod
   public Map facets() { return toFacets().map(); }
   public Object facet(Symbol key) { return toFacets().get(key, null); }
   public Object facet(Symbol key, Object def) { return toFacets().get(key, def); }
-// TODO-SYM
-public Object facet(String name) { return toFacets().get(name, null); }
-public Object facet(String name, Object def) { return toFacets().get(name, def); }
 
   private Facets toFacets()
   {
