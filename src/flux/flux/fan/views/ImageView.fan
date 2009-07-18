@@ -12,7 +12,7 @@ using fwt
 **
 ** ImageView is a simple viewer for image files.
 **
-@fluxViewMimeType="image"
+@fluxViewMimeType=["image"]
 internal class ImageView : View
 {
   override Void onLoad()

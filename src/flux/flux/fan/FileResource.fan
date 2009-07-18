@@ -12,7 +12,7 @@ using fwt
 **
 ** FileResource models a `sys::File` as a Flux resource.
 **
-@fluxResource=File#
+@fluxResource=[File#]
 class FileResource : Resource
 {
 

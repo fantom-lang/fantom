@@ -29,7 +29,7 @@ class SymbolsTest : Test
     verifyImmutable(@listA, "listA",  ["a", "b", "c"])
     verifyImmutable(@listB, "listB",  [2, 3f, 4d], Num[]#)
     verifyImmutable(@listC, "listC",  [["a"], ["b"], ["c"]])
-    verifyMutable(@listD, "listD",    [SerA { i = 0 }, SerA { i = 1 }, SerA { i = 2 }])
+    verifyMutable(@listD, "listD",    [SerA { i = 0 }, SerA { i = 1 }, SerA { i = 2 }], Obj[]#)
 
     verifyImmutable(@mapA, "mapA", [0:"zero", 1:"one"])
     verifyMutable(@mapB, "mapB",   [2: SerA { i = 2 }, 3: SerA { i = 3 }])

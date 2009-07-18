@@ -560,11 +560,21 @@ class CheckErrors : CompilerStep
   {
     if (facets == null) return
 
-    // check for dups
+    // check each facet (and for dups)
     for (i := 0; i < facets.size; ++i)
+    {
+      f := facets[i]
+      checkFacet(f)
       for (j := i+1; j < facets.size; ++j)
-        if (facets[i].key.qname == facets[j].key.qname)
-          err("Duplicate facet '${facets[i].key.qname}'", facets[i].location)
+        if (f.key.qname == facets[j].key.qname)
+          err("Duplicate facet '$f.key.qname'", f.location)
+    }
+  }
+
+  Void checkFacet(FacetDef f)
+  {
+    if (!f.val.ctype.fits(f.key.symbol.of))
+      err("Wrong type for facet '@$f.key.qname': expected '$f.key.symbol.of' not '$f.val.ctype'", f.location)
   }
 
 //////////////////////////////////////////////////////////////////////////

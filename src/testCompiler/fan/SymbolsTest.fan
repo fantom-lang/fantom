@@ -153,6 +153,30 @@ class SymbolsTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Facet Errors
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFacetErrors()
+  {
+    podStr =
+    "pod $podName
+     {
+       Bool b := false
+       Int i := 66
+       Int?j := null
+     }"
+    verifyErrors(
+    "@b=88
+     @i=5f
+     @j=99 // ok
+     class Foo {}",
+     [
+       1, 1, "Wrong type for facet '@$podName::b': expected 'sys::Bool' not 'sys::Int'",
+       2, 1, "Wrong type for facet '@$podName::i': expected 'sys::Int' not 'sys::Float'",
+     ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Restrictions
 //////////////////////////////////////////////////////////////////////////
 

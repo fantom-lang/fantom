@@ -12,7 +12,7 @@ using fwt
 **
 ** HtmlView uses the web browser to view HTML.
 **
-@fluxViewMimeType="text/html"
+@fluxViewMimeType=["text/html"]
 internal class HtmlView : View
 {
   override Void onLoad()

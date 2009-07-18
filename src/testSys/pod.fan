@@ -46,7 +46,7 @@ pod testSys
   listA := ["a", "b", "c"]
   listB := [2, 3f, 4d]
   listC := [["a"], ["b"], ["c"]]
-  listD := [SerA { i = 0 }, SerA { i = 1 }, SerA { i = 2 }]
+  Obj[] listD := [SerA { i = 0 }, SerA { i = 1 }, SerA { i = 2 }]
   Obj[] listE := [,]
 
   mapA := [0:"zero", 1:"one"]

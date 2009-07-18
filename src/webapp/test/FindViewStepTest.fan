@@ -67,13 +67,13 @@ class FindViewStepTest : Test
 
 internal class TestResource {}
 
-@webView=FindViewStepTest#
+@webView=[FindViewStepTest#]
 @webViewPriority=5
 internal class TestViewA : Weblet {}
 
 @webView=[TestResource#, FindViewStepTest#]
 internal class TestViewB : Weblet {}
 
-@webView=FindViewStepTest#
+@webView=[FindViewStepTest#]
 @webViewPriority=10
 internal class TestViewC : Weblet {}

@@ -9,8 +9,8 @@
 **
 ** FacetsTests
 **
-@testSysByStr="alpha"
-@testSysByType=SerA#
+@testSysByStr=["alpha"]
+@testSysByType=[SerA#]
 class FacetsTest : Test
 {
   Str? aField
