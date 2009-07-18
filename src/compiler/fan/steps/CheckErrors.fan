@@ -59,6 +59,26 @@ class CheckErrors : CompilerStep
   }
 
 //////////////////////////////////////////////////////////////////////////
+// SymbolDef
+//////////////////////////////////////////////////////////////////////////
+
+  override Void enterSymbolDef(SymbolDef s)
+  {
+    // verify symbols don't conflict with types
+    if (pod.resolveType(s.name, false) != null)
+      err("Symbol name '$s.name' conflicts with type", s.location)
+
+    // verify we don't use a restricted name
+    if (isRestrictedName(s.name))
+      err("Symbol name '$s.name' is restricted", s.location)
+  }
+
+  static Bool isRestrictedName(Str name)
+  {
+    return name == "pod" || name == "index"
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // TypeDef
 //////////////////////////////////////////////////////////////////////////
 
@@ -75,6 +95,10 @@ class CheckErrors : CompilerStep
 
     // check for const slots in const class
     checkConstType(t)
+
+    // verify we don't use a restricted name
+    if (isRestrictedName(t.name))
+      err("Type name '$t.name' is restricted", t.location)
 
     // if type extends from any FFI types then give bridge a hook
     foreign := t.foreignInheritance

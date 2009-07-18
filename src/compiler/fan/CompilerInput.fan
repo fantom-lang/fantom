@@ -117,8 +117,9 @@ class CompilerInput
 
   **
   ** Fan source code for "pod.fan" (str mode only)
+  ** For testing only!!!
   **
-  Str? podStr
+  @nodoc Str? podStr
 
   **
   ** Location to use for SourceFile facet (str mode only)
