@@ -20,7 +20,7 @@ abstract class CompilerTest : Test
 
   Str podName() { return id.replace("::", "_") + "_" + podNameSuffix }
 
-  Void compile(Str src, LogLevel logLevel := LogLevel.error, Bool isScript := true, Depend[] depends := Depend[,])
+  Void compile(Str src, LogLevel logLevel := LogLevel.error, Bool isScript := true)
   {
     input := CompilerInput.make
     input.podName     = podName
@@ -28,7 +28,6 @@ abstract class CompilerTest : Test
     input.log.level   = logLevel
     input.isTest      = true
     input.isScript    = isScript
-    input.depends     = depends
     input.output      = CompilerOutputMode.transientPod
     input.mode        = CompilerInputMode.str
     input.srcStr      = src

@@ -43,15 +43,15 @@ class ResolveDepends : CompilerStep
     // assume a dependency on sys
     input := compiler.input
     isSys := input.podName == "sys"
-    if (input.depends.isEmpty && !isSys)
-      compiler.input.depends.add(Depend.fromStr("sys 0+"))
+    if (compiler.depends.isEmpty && !isSys)
+      compiler.depends.add(Depend.fromStr("sys 0+"))
 
     // we initialize the CNamespace.depends map
     // as we process each dependency
     ns.depends = Str:Depend[:]
 
     // process each dependency
-    input.depends.each |Depend depend|
+    compiler.depends.each |Depend depend|
     {
       ns.depends[depend.name] = depend
       resolveDepend(depend)

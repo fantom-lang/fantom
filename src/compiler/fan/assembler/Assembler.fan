@@ -31,7 +31,7 @@ class Assembler : CompilerSupport, FConst
 
     fpod.name    = compiler.input.podName
     fpod.version = compiler.input.version
-    fpod.depends = compiler.input.depends
+    fpod.depends = compiler.depends
     fpod.fattrs  = assemblePodAttrs(fpod)
 
     fpod.ftypes = FType[,]

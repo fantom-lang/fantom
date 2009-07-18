@@ -50,13 +50,9 @@ class FindSourceFiles : CompilerStep
   private Void findSrcFiles()
   {
     srcFiles := File[,]
-    compiler.input.srcDirs.each |File dir| { find(dir, srcFiles, "fan") }
+    compiler.srcDirs.each |File dir| { find(dir, srcFiles, "fan") }
     compiler.srcFiles = srcFiles
-
-    // TODO-SYM
-    podDef := compiler.input.homeDir + `pod.fan`
-    if (!podDef.exists) throw err("Missing $podDef", null)
-    compiler.srcFiles.add(podDef)
+    compiler.srcFiles.add(compiler.input.podDef)
 
     if (log.isDebug)
     {
@@ -78,7 +74,7 @@ class FindSourceFiles : CompilerStep
   private Void findResFiles()
   {
     resFiles := File[,]
-    compiler.input.resDirs.each |File dir| { find(dir, resFiles, null) }
+    compiler.resDirs.each |File dir| { find(dir, resFiles, null) }
     compiler.resFiles = resFiles
 
     if (log.isDebug)

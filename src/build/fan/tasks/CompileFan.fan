@@ -26,15 +26,12 @@ class CompileFan : Task
     input.inputLoc    = Location.makeFile(script.scriptFile)
     input.podName     = script.podName
     input.version     = script.version
-    input.depends     = script.parseDepends
     input.dependsDir  = script.resolveDir(script.dependsDir, true)
     input.log         = log
     input.includeDoc  = includeDoc
     input.includeSrc  = includeSrc
     input.mode        = CompilerInputMode.file
-    input.homeDir     = script.scriptDir
-    input.srcDirs     = script.resolveDirs(script.srcDirs)
-    input.resDirs     = script.resolveDirs(script.resDirs)
+    input.podDef      = script.podDef
     input.outDir      = script.libFanDir
     input.output      = CompilerOutputMode.podFile
 

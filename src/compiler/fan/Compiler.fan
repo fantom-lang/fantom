@@ -39,9 +39,10 @@ class Compiler
     if ((Obj?)input.log == null)
       throw ArgErr("CompilerInput.log is null")
 
-    this.input  = input
-    this.log    = input.log
-    this.errors = CompilerErr[,]
+    this.input   = input
+    this.log     = input.log
+    this.errors  = CompilerErr[,]
+    this.depends = Depend[,]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -54,7 +55,7 @@ class Compiler
   **
   virtual CompilerOutput compile()
   {
-    log.info("Compile [${input.podName}]")
+    log.info("Compile [${input.podName ?: input.podDef?.parent?.name}]")
     log.indent
 
     frontend
@@ -104,6 +105,10 @@ class Compiler
   CompilerInput input       // ctor
   CompilerLog log           // ctor
   CompilerErr[] errors      // accumulated errors
+  Depend[] depends          // InitInput
+// TODO-SYM
+File[]? srcDirs
+File[]? resDirs
   CNamespace? ns            // InitInput
   PodDef? pod               // InitInput
   Bool isSys := false       // InitInput; are we compiling sys itself
