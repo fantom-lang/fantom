@@ -83,6 +83,7 @@ class PodTest : Test
     verify(pod.depends.isRO)
     verifyEq(pod.facets.type, [Symbol:Obj?]#)
     verifyEq(pod.facets.findAll |v,s| { s.qname == "sys::podBuildTime" }.size, 1)
+    verifyEq(pod.facet(@podBuildTime).type, DateTime#)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -185,7 +185,7 @@ class Normalize : CompilerStep
     f.flags     = FConst.Private | FConst.Storage | FConst.Synthetic
     f.name      = m.name + "\$Store"
     f.fieldType = ns.objType.toNullable
-    f.init      = LiteralExpr.makeFor(loc, ns, "_once_")
+    f.init      = Expr.makeForLiteral(loc, ns, "_once_")
     curType.addSlot(f)
      iInit.add(fieldInitStmt(f))
 
@@ -217,7 +217,7 @@ class Normalize : CompilerStep
     cond := BinaryExpr(
       f.makeAccessorExpr(loc, false),
       Token.same,
-      LiteralExpr.makeFor(loc, ns, "_once_"))
+      Expr.makeForLiteral(loc, ns, "_once_"))
 
     // name$Store = name$Once()
     trueBlock := Block(loc)

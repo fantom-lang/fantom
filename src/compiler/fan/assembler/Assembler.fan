@@ -57,7 +57,7 @@ class Assembler : CompilerSupport, FConst
       sys := ns.sysPod
       pod.addFacet(this, sys.resolveSymbol("podBuildHost", true), Sys.hostName)
       pod.addFacet(this, sys.resolveSymbol("podBuildUser", true), Sys.userName)
-      pod.addFacet(this, sys.resolveSymbol("podBuildTime", true), DateTime.now.toStr)
+      pod.addFacet(this, sys.resolveSymbol("podBuildTime", true), DateTime.now)
     }
     catch (Err e) e.trace
 
