@@ -21,13 +21,8 @@ class Build : BuildPod
 
   override Void setup()
   {
-    podName     = "sys"
-    version     = globalVersion
-    description = "Fan system runtime"
-    depends     = Str[,]
-    srcDirs     = [`fan/`]
-    resDirs     = [`locale/`]
-    includeSrc  = true
+    podName = "sys"
+    version = globalVersion
   }
 
   @target="compile fan source into pod"

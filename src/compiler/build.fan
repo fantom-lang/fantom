@@ -19,19 +19,7 @@ class Build : BuildPod
   {
     podName     = "compiler"
     version     = globalVersion
-    description = "Fan compiler"
-    depends     = ["sys 1.0"]
     dependsDir  = libFanDir.uri
-    srcDirs     = [`fan/`,
-                   `fan/assembler/`,
-                   `fan/ast/`,
-                   `fan/dsl/`,
-                   `fan/fcode/`,
-                   `fan/namespace/`,
-                   `fan/parser/`,
-                   `fan/steps/`,
-                   `fan/util/`]
-    includeSrc  = true
   }
 
 }

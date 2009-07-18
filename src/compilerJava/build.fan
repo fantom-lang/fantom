@@ -17,12 +17,9 @@ class Build : BuildPod
 
   override Void setup()
   {
-    podName     = "compilerJava"
-    version     = globalVersion
-    description = "Compiler FFI Plugin for Java"
-    depends     = ["sys 1.0", "compiler 1.0"]
-    srcDirs     = [`fan/`]
-    includeSrc  = true
+    podName    = "compilerJava"
+    version    = globalVersion
+    dependsDir = libFanDir.uri
   }
 
 }
