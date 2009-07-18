@@ -12,7 +12,7 @@ using fwt
 **
 ** DirView displays a directory as a details table.
 **
-@fluxViewMimeType="x-directory"
+@fluxViewMimeType=["x-directory"]
 internal class DirView : View
 {
   override Void onLoad()

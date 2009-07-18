@@ -19,9 +19,10 @@ pod build
 
   **
   ** Target facet is applied to a `BuildScript` method to
-  ** indicate it is a build target or goal.
+  ** indicate it is a build target or goal.  The string value
+  ** should be a description of the target.
   **
-  Bool target := false
+  Str target := false
 
 }
 

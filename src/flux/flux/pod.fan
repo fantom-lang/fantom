@@ -46,9 +46,11 @@ pod flux
 
   **
   ** Indicates a flux based view on files with the given MIME types.
+  ** The strings are either full MIME types such as "text/html" or
+  ** just the media type such as "text".
   ** See `docLib::Flux`.
   **
-  MimeType[] fluxViewMimeType := MimeType[,]
+  Str[] fluxViewMimeType := Str[,]
 
   **
   ** Used to mark a widget as a flux side bar.
