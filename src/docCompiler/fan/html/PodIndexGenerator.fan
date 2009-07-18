@@ -60,6 +60,7 @@ class PodIndexGenerator : HtmlGenerator
     out.print("<div class='overview'>\n")
     out.print("<h2>pod</h2>\n")
     out.print("<h1>$pod.name</h1>\n")
+    /*
     depends := pod.depends
     if (!depends.isEmpty)
     {
@@ -67,6 +68,7 @@ class PodIndexGenerator : HtmlGenerator
       depends.each |d| { out.print("<a href='../$d.name/index.html'>$d</a>\n") }
       out.print("</pre>")
     }
+    */
     out.print("</div>\n")
   }
 
@@ -116,9 +118,9 @@ class PodIndexGenerator : HtmlGenerator
 
   override Void sidebar()
   {
-    out.print("<h2>Symbols</h2>\n")
+    out.print("<h2>Meta</h2>\n")
     out.print("<ul class='clean'>\n")
-    out.print("<li><a href='symbols.html'>Symbols</a></li>\n")
+    out.print("<li><a href='symbols.html'>Facets/Symbols</a></li>\n")
     out.print("</ul>\n")
 
     out.print("<h2>Types</h2>\n")

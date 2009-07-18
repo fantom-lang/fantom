@@ -50,6 +50,7 @@ class ApiToHtmlGenerator : HtmlGenerator
   {
     out.print("<div class='type'>\n")
     typeOverview
+    facets(t.facets)
     typeDetail
     out.print("</div>\n")
     slotsDetail
@@ -158,7 +159,7 @@ class ApiToHtmlGenerator : HtmlGenerator
       else out.print(", ")
       out.print("<a href='${compiler.uriMapper.map(t.qname, loc)}'>$t.qname</a>")
     }
-    out.print("</pre>")
+    out.print("</pre>\n")
   }
 
   **
@@ -219,15 +220,8 @@ class ApiToHtmlGenerator : HtmlGenerator
     out.print(">\n")
 
     // Slot spec
-    out.print("<p><code>")
-    slot.facets.keys.each |s|
-    {
-      def := slot.facets[s]
-      uri := compiler.uriMapper.map("@$s.qname", loc)
-      out.print("@<a href='$uri'>$s.name</a>")
-      if (def != true) out.print(" = $def")
-      out.print("<br/>")
-    }
+    out.print("<p><code class='sig'>")
+    facets(slot.facets, false)
     if (slot.isField)
     {
       f := (Field)slot

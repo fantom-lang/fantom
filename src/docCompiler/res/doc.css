@@ -158,6 +158,7 @@ div.content > div
 /**** Fandoc ****/
 div.fandoc { width: 630px; }
 div.fandoc code { color: #080; white-space: nowrap; }
+div.fandoc code.sig a { color: #080; }
 div.fandoc blockquote code { color: #808; }
 div.fandoc pre
 {
