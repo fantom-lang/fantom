@@ -224,9 +224,9 @@ abstract class HtmlGenerator : HtmlDocWriter
   {
     if (facets.size == 0) return
     if (wrap) out.print("<p><code class='sig'>")
-    facets.keys.each |s,i|
+    facets.keys.each |s|
     {
-      def := Buf().writeObj(facets[s]).flip.readAllStr
+      def := facetValToStr(facets[s])
       uri := compiler.uriMapper.map("@$s.qname", loc)
       out.print("@<a href='$uri'>$s.name</a>")
       if (def != "true") out.print(" = $def")
@@ -235,7 +235,26 @@ abstract class HtmlGenerator : HtmlDocWriter
     if (wrap) out.print("</code></p>\n")
   }
 
+  static Str facetValToStr(Obj? val)
+  {
+    // check if we can omit list type signature
+    // if every item has exact same type
+    list := val as Obj?[]
+    if (list != null && !list.isEmpty)
+    {
+      x := list.first
+      inferred := list.all { x?.type == it?.type }
+      if (inferred) return "[" + list.join(", ") { facetValToStr(it) } + "]"
+    }
 
+    // use serialization format
+    str := Buf().writeObj(val).flip.readAllStr
+
+    // strip sys:: of simple/list types
+    if (str.startsWith("sys::")) str = str[5..-1]
+
+    return str
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
