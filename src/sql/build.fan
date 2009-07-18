@@ -14,16 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "sql"
-    version     = globalVersion
-    description = "Relational database access"
-    depends     = ["sys 1.0"]
-    srcDirs     = [`fan/`, `fan/dialects/`, `test/`]
-    javaDirs    = [`java/`]
-    includeSrc  = true
+    podName = "sql"
+    version = globalVersion
   }
-
 }

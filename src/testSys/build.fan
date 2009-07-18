@@ -14,17 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "testSys"
-    version     = globalVersion
-    depends     = ["sys 1.0"]
-    srcDirs     = [`fan/`]
-    resDirs     = [`res/`, `locale/`]
-    includeSrc  = false
-    includeFandoc = false
-    description = "TODO-SYM"
+    podName = "testSys"
+    version = globalVersion
   }
-
 }

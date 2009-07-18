@@ -16,13 +16,7 @@ class Build : BuildPod
 {
   override Void setup()
   {
-    podName     = "testJava"
-    version     = globalVersion
-    depends     = ["sys 1.0", "compiler 1.0", "compilerJava 1.0", "testCompiler 1.0"]
-    srcDirs     = [`fan/`]
-    includeSrc  = false
-    includeFandoc = false
-    description = "TODO-SYM"
+    podName = "testJava"
+    version = globalVersion
   }
-
 }

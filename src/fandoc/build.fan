@@ -14,15 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "fandoc"
-    version     = globalVersion
-    description = "Fandoc parser and tools"
-    depends     = ["sys 1.0"]
-    srcDirs     = [`fan/`, `test/`]
-    includeSrc  = true
+    podName = "fandoc"
+    version = globalVersion
   }
-
 }

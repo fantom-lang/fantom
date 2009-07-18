@@ -15,17 +15,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName        = "dom"
-    version        = globalVersion
-    description    = "Web Browser DOM API"
-    depends        = ["sys 1.0"]
-    srcDirs        = [`fan/`]
-    javascriptDirs = [`js/`]
-    hasJavascript  = true
-    includeSrc     = true
+    podName = "dom"
+    version = globalVersion
   }
-
 }

@@ -14,15 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "email"
-    version     = globalVersion
-    description = "Email support"
-    depends     = ["sys 1.0", "inet 1.0"]
-    srcDirs     = [`fan/`, `test/`]
-    includeSrc  = true
+    podName = "email"
+    version = globalVersion
   }
-
 }

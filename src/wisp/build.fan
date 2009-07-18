@@ -14,15 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "wisp"
-    version     = globalVersion
-    description = "Wisp web Server"
-    depends     = ["sys 1.0", "inet 1.0", "web 1.0"]
-    srcDirs     = [`fan/`, `test/`]
-    includeSrc  = true
+    podName = "wisp"
+    version = globalVersion
   }
-
 }

@@ -14,15 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "xml"
-    version     = globalVersion
-    description = "XML Parser and Document Modeling"
-    depends     = ["sys 1.0"]
-    srcDirs     = [`fan/`, `test/`]
-    includeSrc  = true
+    podName = "xml"
+    version = globalVersion
   }
-
 }

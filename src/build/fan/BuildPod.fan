@@ -23,13 +23,13 @@ abstract class BuildPod : BuildScript
 
   **
   ** Location of "pod.fan" which defines the pod meta-data
-  ** needed to compile the pod from source.  By defaul this
+  ** needed to compile the pod from source.  By default this
   ** is assumed to be a peer to the build script.
   **
   File? podDef
 
   **
-  ** Programatic name of the pod.  Required.
+  ** Programatic name of the pod.  Required to match name in "pod.fan".
   **
   Str? podName
 
@@ -40,12 +40,6 @@ abstract class BuildPod : BuildScript
   Version? version
 
   **
-  ** Dependencies of the pod formatted as a list
-  ** of `sys::Depend` strings.  Required.
-  **
-  Str[]? depends
-
-  **
   ** The directory to look in for the dependency pod file (and
   ** potentially their recursive dependencies).  If null then we
   ** use the compiler's own pod definitions via reflection (which
@@ -54,77 +48,6 @@ abstract class BuildPod : BuildScript
   ** build scripts for bootstrap build.
   **
   Uri? dependsDir
-
-  **
-  ** List of Uris relative to `scriptDir` of directories containing
-  ** the Fan source files to compile.  Required.
-  **
-  Uri[]? srcDirs
-
-  **
-  ** List of Uris relative to `scriptDir` of directories of resources
-  ** files to package into pod zip file.  Optional.
-  **
-  Uri[]? resDirs
-
-  **
-  ** List of Uris relative to `scriptDir` of directories containing
-  ** the Java source files to compile for Java native jar.
-  **
-  Uri[]? javaDirs
-
-  **
-  ** List of Uris relative to `scriptDir` of Java jar files which
-  ** are automatically included in the classpath when compiling the
-  ** `javaDirs`.
-  **
-  Uri[]? javaLibs
-
-  **
-  ** List of Uris relative to `scriptDir` of directories containing
-  ** the C# source files to compile for .NET native dll.
-  **
-  Uri[]? dotnetDirs
-
-  **
-  ** List of Uris relative to `scriptDir` of .NET assemblies which
-  ** are automatically included in the library path when compiling
-  ** the `dotnetDirs`.
-  **
-  Uri[]? dotnetLibs
-
-  **
-  ** If true compile any Types with the '@js' facet into JavaScript source.
-  **
-// TODO FIXIT
-//  Bool jsCompile
-Bool hasJavascript
-
-  **
-  ** List of Uris relative to `scriptDir` of directories containing
-  ** the JavaScript source files to include for native JavaScript
-  ** support.
-  **
-// TODO FIXIT
-//  Uri[]? jsDirs
-Uri[]? javascriptDirs
-
-  **
-  ** Include the full set of source code in the pod file.
-  ** This is required to generate links in HTML doc to HTML
-  ** formatted source.  Defaults to false.
-  **
-  Bool includeSrc
-
-  **
-  ** Include the fandoc API in the pod file.  This is required to
-  ** access the doc at runtime and to run the fandoc compiler.
-  ** Default is true.
-  **
-  Bool includeFandoc
-
-  ** TODO-SYM
-  Str? description
 
 //////////////////////////////////////////////////////////////////////////
 // Setup
@@ -137,8 +60,6 @@ Uri[]? javascriptDirs
   {
     super.initEnv
     podDef = scriptDir + `pod.fan`
-    includeSrc = false
-    includeFandoc = true
   }
 
   **
@@ -149,7 +70,6 @@ Uri[]? javascriptDirs
     ok := true
     ok &= validateReqField("podName")
     ok &= validateReqField("version")
-    ok &= validateReqField("depends")
     if (!ok) throw FatalBuildErr.make
 
     // boot strap checking - ensure that we aren't
@@ -163,28 +83,11 @@ Uri[]? javascriptDirs
         throw fatal("Must update $props.osPath 'fan.build.devHome' for bootstrap build")
       }
     }
-
-    // TODO-SYM read pod facets
-    p := podFacets
-
-    if (p.podName != podName)
-      throw fatal("pod.fan != build.fan - podName [$scriptDir]")
-
-    if (p.get("sys::podDepends")->map |d->Str| { d.toStr } != depends)
-      throw fatal("pod.fan != build.fan - depends [$scriptDir]")
-
-    if (p.get("sys::podSrcDirs", false) != srcDirs)
-      throw fatal("pod.fan != build.fan - srcDirs [$scriptDir]")
-
-    if (p.get("sys::podJavaDirs", false) != javaDirs)
-      throw fatal("pod.fan != build.fan - javaDirs [$scriptDir]")
-
-    if (p.get("sys::podDotnetDirs", false) != dotnetDirs)
-      throw fatal("pod.fan != build.fan - dotnetDirs [$scriptDir]")
-
-    if (p.get("sys::podJsDirs", false) != javascriptDirs)
-      throw fatal("pod.fan != build.fan - jsDirs [$scriptDir]")
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Pod Facets
+//////////////////////////////////////////////////////////////////////////
 
   **
   ** Parse the facets from the "pod.fan" source file.
@@ -203,6 +106,46 @@ Uri[]? javascriptDirs
   }
   private PodFacetsParser? podFacetsParser
 
+  **
+  ** Pod facet `@sys::podDepends`
+  **
+  once Depend[] podDepends() { podFacets.get("sys::podDepends", false, Depend[]#) ?: Depend[,] }
+
+  **
+  ** Pod facet `@sys::podSrcDirs`
+  **
+  once Uri[]? podSrcDirs() { podFacets.get("sys::podSrcDirs", false, Uri[]#) }
+
+  **
+  ** Pod facet `@sys::podResDirs`
+  **
+  once Uri[]? podResDirs() { podFacets.get("sys::podResDirs", false, Uri[]#) }
+
+  **
+  ** Pod facet `@sys::podJavaDirs`
+  **
+  once Uri[]? podJavaDirs() { podFacets.get("sys::podJavaDirs", false, Uri[]#) }
+
+  **
+  ** Pod facet `@sys::podDotnetDirs`
+  **
+  once Uri[]? podDotnetDirs() { podFacets.get("sys::podDotnetDirs", false, Uri[]#) }
+
+  **
+  ** Pod facet `@sys::podJsDirs`
+  **
+  once Uri[]? podJsDirs() { podFacets.get("sys::podJsDirs", false, Uri[]#) }
+
+  **
+  ** Pod facet `@sys::js`
+  **
+  once Bool podJs() { podFacets.get("sys::js", false) == true }
+
+  **
+  ** Pod facet `@sys::nodoc`
+  **
+  once Bool podNodoc() { podFacets.get("sys::nodoc", false) == true }
+
 //////////////////////////////////////////////////////////////////////////
 // BuildScript
 //////////////////////////////////////////////////////////////////////////
@@ -212,7 +155,7 @@ Uri[]? javascriptDirs
   **
   override Target defaultTarget()
   {
-    if (javaDirs == null && dotnetDirs == null && !hasJavascript && javascriptDirs == null)
+    if (podJavaDirs == null && podDotnetDirs == null && !podJs && podJsDirs == null)
       return target("compile")
     else
       return target("full")
@@ -228,15 +171,10 @@ Uri[]? javascriptDirs
     log.info("compile [$podName]")
     log.indent
     fanc := CompileFan(this)
-    fanc.includeDoc = includeFandocAndSrc && includeFandoc
-    fanc.includeSrc = includeFandocAndSrc && includeSrc
+    fanc.includeDoc = !podNodoc  // TODO-SYM
+    fanc.includeSrc = !podNodoc
     fanc.run
     log.unindent
-  }
-
-  internal Depend[] parseDepends()
-  {
-    depends.map |Str s->Depend| { Depend.fromStr(s) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -266,7 +204,7 @@ Uri[]? javascriptDirs
   @target="build native Java jar file"
   virtual Void javaNative()
   {
-    if (javaDirs == null) return
+    if (podJavaDirs == null) return
 
     log.info("javaNative [$podName]")
     log.indent
@@ -279,9 +217,8 @@ Uri[]? javascriptDirs
     jarExe   := jdk.jarExe
     curPod   := libFanDir + "${podName}.pod".toUri
     curJar   := libJavaDir + "${podName}.jar".toUri
-    javaDirs := resolveDirs(javaDirs)
-    javaLibs := resolveFiles(javaLibs)
-    depends  := parseDepends
+    javaDirs := resolveDirs(podJavaDirs)
+    depends  := podDepends
 
     // if there are no javaDirs we only only stubbing
     stubOnly := javaDirs.isEmpty
@@ -305,7 +242,7 @@ Uri[]? javascriptDirs
     // compile
     javac := CompileJava(this)
     javac.outDir = jtemp
-    javac.cp.add(jtemp+"${podName}.jar".toUri).addAll(javaLibs)
+    javac.cp.add(jtemp+"${podName}.jar".toUri)
     javac.cpAddExtJars
     depends.each |Depend d| { javac.cp.add(libJavaDir+(d.name+".jar").toUri) }
     javac.src = javaDirs
@@ -337,7 +274,7 @@ Uri[]? javascriptDirs
   @target="build native .NET assembly"
   virtual Void dotnetNative()
   {
-    if (dotnetDirs == null) return
+    if (podDotnetDirs == null) return
 
     if (!isWindows)
     {
@@ -352,9 +289,8 @@ Uri[]? javascriptDirs
     ntemp := scriptDir + `temp-dotnet/`
     nstub := ntemp + "${podName}.dll".toUri
     nout  := ntemp + "${podName}Native_.dll".toUri
-    ndirs := dotnetDirs
+    ndirs := podDotnetDirs
     nlibs := ["${libDotnetDir}sys.dll".toUri, nstub.uri]
-    if (dotnetLibs != null) nlibs.addAll(nlibs)
     nstubExe := binDir + `nstub`
 
     // start with a clean directory
@@ -393,13 +329,13 @@ Uri[]? javascriptDirs
   @target="compile Fan source to JavaScript"
   virtual Void js()
   {
-    if (!hasJavascript) return
+    if (!podJs) return
 
     log.info("js [$podName]")
     log.indent
 
     // env
-    nativeDirs := resolveDirs(javascriptDirs)
+    nativeDirs := resolveDirs(podJsDirs)
     jsTemp := scriptDir + `temp-js/`
 
     // start with a clean directory

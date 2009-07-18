@@ -14,14 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "docCookbook"
-    version     = globalVersion
-    description = "Cookbook of code recipes"
-    depends     = Str[,]
-    resDirs     = [`doc/`]
+    podName = "docCookbook"
+    version = globalVersion
   }
-
 }

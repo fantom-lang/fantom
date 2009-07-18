@@ -14,17 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName       = "testWeb"
-    version       = globalVersion
-    depends       = ["sys 1.0", "inet 1.0", "web 1.0", "webapp 1.0", "dom 1.0"]
-    srcDirs       = [`fan/`]
-    includeSrc    = false
-    includeFandoc = false
-    hasJavascript = true
-    description = "TODO-SYM"
+    podName = "testWeb"
+    version = globalVersion
   }
-
 }

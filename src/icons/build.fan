@@ -14,14 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "icons"
-    version     = globalVersion
-    description = "Standard icons library"
-    depends     = ["sys 1.0"]
-    resDirs     = [`x16/`, `x32/`, `x48/`, `x256/`]
+    podName = "icons"
+    version = globalVersion
   }
-
 }

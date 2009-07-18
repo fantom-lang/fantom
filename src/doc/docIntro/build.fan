@@ -14,14 +14,9 @@ using build
 **
 class Build : BuildPod
 {
-
   override Void setup()
   {
-    podName     = "docIntro"
-    version     = globalVersion
-    description = "Overview and getting started with Fan"
-    depends     = Str[,]
-    resDirs     = [`doc/`]
+    podName = "docIntro"
+    version = globalVersion
   }
-
 }
