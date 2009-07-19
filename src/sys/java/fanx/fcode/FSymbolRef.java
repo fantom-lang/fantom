@@ -1,9 +1,9 @@
 //
-// Copyright (c) 2006, Brian Frank and Andy Frank
+// Copyright (c) 2009, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   30 Jan 06  Brian Frank  Creation
+//   13 Jul 09  Brian Frank  Creation
 //
 package fanx.fcode;
 

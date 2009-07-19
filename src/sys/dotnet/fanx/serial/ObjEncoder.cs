@@ -76,11 +76,11 @@ namespace Fanx.Serial
       }
 
       Type type = FanObj.type(obj);
-      if (type.facet("simple", null, true) == Boolean.True)
+      if (type.facet(symSimple, null, true) == Boolean.True)
       {
         writeSimple(type, obj);
       }
-      else if (type.facet("serializable", null, true) == Boolean.True)
+      else if (type.facet(symSerializable, null, true) == Boolean.True)
       {
         writeComplex(type, obj);
       }
@@ -120,7 +120,7 @@ namespace Fanx.Serial
         Field f = (Field)fields.get(i);
 
         // skip static, transient, and synthetic (once) fields
-        if (f.isStatic() || f.isSynthetic() || f.facet("transient", false) == Boolean.True)
+        if (f.isStatic() || f.isSynthetic() || f.facet(symTransient, false) == Boolean.True)
           continue;
 
         // get the value
@@ -148,7 +148,7 @@ namespace Fanx.Serial
       }
 
       // if collection
-      if (type.facet("collection", null, true) == Boolean.True)
+      if (type.facet(symCollection, null, true) == Boolean.True)
         first = writeCollectionItems(type, obj, first);
 
       // if we output fields, then close braces
@@ -369,6 +369,11 @@ namespace Fanx.Serial
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
+
+    static readonly Symbol symSimple       = Symbol.find("sys::simple");
+    static readonly Symbol symSerializable = Symbol.find("sys::serializable");
+    static readonly Symbol symCollection   = Symbol.find("sys::collection");
+    static readonly Symbol symTransient    = Symbol.find("sys::transient");
 
     OutStream @out;
     int level  = 0;

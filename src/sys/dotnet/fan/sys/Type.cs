@@ -48,10 +48,11 @@ namespace Fan.Sys
     public static Type find(string sig) { return TypeParser.load(sig, true, null); }
     public static Type find(string sig, bool check) { return TypeParser.load(sig, check, null); }
 
-    public static List findByFacet(string facetName, object facetVal) { return findByFacet(facetName, facetVal, null); }
-    public static List findByFacet(string facetName, object facetVal, object options)
+    public static List findByFacet(Symbol key, object facetVal) { return findByFacet(key.qname(), facetVal, null); }
+    public static List findByFacet(Symbol key, object facetVal, object options) { return findByFacet(key.qname(), facetVal, options); }
+    public static List findByFacet(string qname, object facetVal, object options)
     {
-      return TypeDb.get().findByFacet(facetName, facetVal, options);
+      return TypeDb.get().findByFacet(qname, facetVal, options);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -306,9 +307,9 @@ namespace Fan.Sys
     public Map facets() { return facets(false); }
     public abstract Map facets(bool inherited);
 
-    public object facet(string name) { return facet(name, null, false); }
-    public object facet(string name, object def) { return facet(name, def, false); }
-    public abstract object facet(string name, object def, bool inherited);
+    public object facet(Symbol key) { return facet(key, null, false); }
+    public object facet(Symbol key, object def) { return facet(key, def, false); }
+    public abstract object facet(Symbol key, object def, bool inherited);
 
   //////////////////////////////////////////////////////////////////////////
   // Documentation

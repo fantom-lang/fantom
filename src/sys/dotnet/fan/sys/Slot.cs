@@ -114,8 +114,8 @@ public virtual bool isConst() { return (m_flags & FConst.Const)     != 0; } // w
   //////////////////////////////////////////////////////////////////////////
 
     public Map facets() { return m_facets.map(); }
-    public object facet(string name) { return m_facets.get(name, null); }
-    public object facet(string name, object def) { return m_facets.get(name, def); }
+    public object facet(Symbol key) { return m_facets.get(key, null); }
+    public object facet(Symbol key, object def) { return m_facets.get(key, def); }
 
   //////////////////////////////////////////////////////////////////////////
   // Documentation

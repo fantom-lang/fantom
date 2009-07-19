@@ -192,6 +192,7 @@ namespace Fan.Sys
         FieldType       = builtin("Field",  SlotType);
         MethodType      = builtin("Method", SlotType);
         ParamType       = builtin("Param",  ObjType);
+        SymbolType      = builtin("Symbol",  ObjType);
 
         // resources
         UriSpaceType     = builtin("UriSpace",     ObjType);
@@ -260,6 +261,7 @@ namespace Fan.Sys
         UnknownSlotErrType    = builtin("UnknownSlotErr",    ErrType);
         UnknownTypeErrType    = builtin("UnknownTypeErr",    ErrType);
         UnknownServiceErrType = builtin("UnknownServiceErr", ErrType);
+        UnknownSymbolErrType  = builtin("UnknownSymbolErr",  ErrType);
         UnresolvedErrType     = builtin("UnresolvedErr",     ErrType);
         UnsupportedErrType    = builtin("UnsupportedErr",    ErrType);
 
@@ -448,6 +450,7 @@ namespace Fan.Sys
     public static readonly Type FieldType;
     public static readonly Type MethodType;
     public static readonly Type ParamType;
+    public static readonly Type SymbolType;
 
     // resources
     public static readonly Type UriSpaceType;
@@ -516,6 +519,7 @@ namespace Fan.Sys
     public static readonly Type UnknownSlotErrType;
     public static readonly Type UnknownTypeErrType;
     public static readonly Type UnknownServiceErrType;
+    public static readonly Type UnknownSymbolErrType;
     public static readonly Type UnresolvedErrType;
     public static readonly Type UnsupportedErrType;
 

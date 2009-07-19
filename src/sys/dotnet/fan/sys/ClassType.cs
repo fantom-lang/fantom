@@ -221,7 +221,7 @@ namespace Fan.Sys
           IDictionaryEnumerator en = x.pairsIterator();
           while (en.MoveNext())
           {
-            string key = (string)en.Key;
+            Symbol key = (Symbol)en.Key;
             if (map.get(key) == null) map.add(key, en.Value);
           }
         }
@@ -229,15 +229,15 @@ namespace Fan.Sys
       return map;
     }
 
-    public override sealed object facet(string name, object def, bool inherited)
+    public override sealed object facet(Symbol key, object def, bool inherited)
     {
-      object val = ((ClassType)reflect()).m_facets.get(name, null);
+      object val = ((ClassType)reflect()).m_facets.get(key, null);
       if (val != null) return val;
       if (!inherited) return def;
       List inherit = inheritance();
       for (int i=0; i<inherit.sz(); ++i)
       {
-        val = ((Type)inherit.get(i)).facet(name, null, false);
+        val = ((Type)inherit.get(i)).facet(key, null, false);
         if (val != null) return val;
       }
       return def;
@@ -256,7 +256,7 @@ namespace Fan.Sys
           BinaryReader input = m_pod.fpod.m_store.read("doc/" + m_name + ".apidoc");
           if (input != null)
           {
-            try { FDoc.read(input); } finally { input.Close(); }
+            try { FDoc.read(input, this); } finally { input.Close(); }
           }
         }
         catch (Exception e)

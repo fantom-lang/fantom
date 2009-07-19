@@ -33,7 +33,7 @@ namespace Fan.Sys
       try
       {
         // lookup scheme type
-        Type t = (Type)Type.findByFacet("uriScheme", scheme, true).first();
+        Type t = (Type)Type.findByFacet("sys::uriScheme", scheme, true).first();
         if (t == null) throw new System.Exception();
 
         // allocate instance
