@@ -60,7 +60,7 @@ namespace Fan.Sys
     public override Slot slot(string name, bool check) { return m_root.slot(name, check); }
 
     public override Map facets(bool inherited) { return m_root.facets(inherited); }
-    public override object facet(string name, object def, bool inherited) { return m_root.facet(name, def, inherited); }
+    public override object facet(Symbol key, object def, bool inherited) { return m_root.facet(key, def, inherited); }
 
     public override string doc() { return m_root.doc(); }
 

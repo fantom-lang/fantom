@@ -152,6 +152,8 @@ namespace Fanx.Emit
           case FConst.FinallyStart:        finallyStart(); break;
           case FConst.FinallyEnd:          finallyEnd(); break;
 
+          case FConst.LoadSymbol:          loadSymbol(); break;
+
           default: throw new Exception(opcode < FConst.OpNames.Length ? FConst.OpNames[opcode] : "bad opcode=" + opcode);
 
         }
@@ -333,6 +335,13 @@ namespace Fanx.Emit
       Method method = emitter.findMethod("Fan.Sys.Type", "find",
         new string[] { "System.String" }, "Fan.Sys.Type");
       code.MethInst(MethodOp.call, method);
+    }
+
+    private void loadSymbol()
+    {
+      int index = u2();
+      PERWAPI.Field field = emitter.findField(podClass, "Sym" + index, "Fan.Sys.Symbol");
+      code.FieldInst(FieldOp.ldsfld, field);
     }
 
   //////////////////////////////////////////////////////////////////////////

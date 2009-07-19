@@ -22,7 +22,7 @@ namespace Fanx.Fcode
     /// <summary>
     /// Read a fandoc file and store the doc strings.
     /// </summary>
-    public static void read(BinaryReader input)
+    public static void read(BinaryReader input, object top)
     {
       StreamReader r = new StreamReader(input.BaseStream, Encoding.UTF8);
       string line;
@@ -33,10 +33,7 @@ namespace Fanx.Fcode
         if (line.StartsWith("  ")) { s.Append(line.Substring(2)).Append('\n'); continue; }
         if (line.Length == 0 && key != null)
         {
-          if (key.IndexOf('.') < 0)
-            ((ClassType)Type.find(key, true)).m_doc = s.ToString();
-          else
-            Slot.find(key, true).m_doc = s.ToString();
+          setDoc(top, key, s.ToString());
           s = new StringBuilder();
           key = null;
         }
@@ -46,6 +43,28 @@ namespace Fanx.Fcode
         }
       }
     }
+
+  private static void setDoc(object top, string key, string doc)
+  {
+    if (top is Pod)
+    {
+      int colon = key.LastIndexOf(':');
+      string name = colon < 0 ? null : key.Substring(colon+1);
+      if (name == null)
+        ((Pod)top).m_doc = doc;
+      else
+        ((Pod)top).symbol(name, true).m_doc = doc;
+    }
+    else
+    {
+      int dot = key.LastIndexOf('.');
+      string name = dot < 0 ? null : key.Substring(dot+1);
+      if (name == null)
+        ((ClassType)top).m_doc = doc;
+      else
+        ((Type)top).slot(name, true).m_doc = doc;
+    }
+  }
 
   }
 }

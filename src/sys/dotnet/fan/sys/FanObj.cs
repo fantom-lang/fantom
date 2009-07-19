@@ -90,6 +90,8 @@ namespace Fan.Sys
     {
       if (self is FanObj)
         return ((FanObj)self).isImmutable();
+      else if (self == null)
+        return true;
       else
         return FanUtil.isDotnetImmutable(self.GetType());
     }

@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections;
+using System.IO;
 using DirectoryInfo = System.IO.DirectoryInfo;
 using FileInfo = System.IO.FileInfo;
 using Fanx.Emit;
@@ -205,8 +206,8 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public Map facets() { return toFacets().map(); }
-    public object facet(string name) { return toFacets().get(name, null); }
-    public object facet(string name, object def) { return toFacets().get(name, def); }
+    public object facet(Symbol key) { return toFacets().get(key, null); }
+    public object facet(Symbol key, object def) { return toFacets().get(key, def); }
 
     private Facets toFacets()
     {
@@ -228,6 +229,81 @@ namespace Fan.Sys
       if (check) throw UnknownTypeErr.make(this.m_name + "::" + name).val;
       return null;
     }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Symbols
+  //////////////////////////////////////////////////////////////////////////
+
+    public List symbols()
+    {
+      return new List(Sys.SymbolType, loadSymbols().Values);
+    }
+
+    public Symbol symbol(string name) { return symbol(name, true); }
+    public Symbol symbol(string name, bool check)
+    {
+      Symbol s = (Symbol)loadSymbols()[name];
+      if (s != null) return s;
+      if (check) throw UnknownSymbolErr.make(this.m_name + "::" + name).val;
+      return null;
+    }
+
+    private Hashtable loadSymbols()
+    {
+      lock (m_symbolsLock)
+      {
+        if (m_symbols != null) return m_symbols;
+        m_symbols = new Hashtable();
+
+        // read symbols from fcode format
+        try
+        {
+          fpod.readSymbols();
+          if (fpod.m_symbols == null) return m_symbols;
+        }
+        catch (IOException e)
+        {
+          throw IOErr.make("Error loading symbols.def", e).val;
+        }
+
+        // map to sys::Symbol instances
+        for (int i=0; i<fpod.m_symbols.Length; ++i)
+        {
+          Symbol symbol = new Symbol(this, fpod.m_symbols[i]);
+          m_symbols[symbol.name()] = symbol;
+        }
+
+        // clear list from fpod, no longer needed
+        fpod.m_symbols = null;
+
+        return m_symbols;
+      }
+    }
+
+//////////////////////////////////////////////////////////////////////////
+// Documentation
+//////////////////////////////////////////////////////////////////////////
+
+  public string doc()
+  {
+    if (!m_docLoaded)
+    {
+      try
+      {
+        BinaryReader input = fpod.m_store.read("doc/pod.apidoc");
+        if (input != null)
+        {
+          try { FDoc.read(input, this); } finally { input.Close(); }
+        }
+      }
+      catch (Exception e)
+      {
+        Err.dumpStack(e);
+      }
+      m_docLoaded = true;
+    }
+    return m_doc;
+  }
 
   //////////////////////////////////////////////////////////////////////////
   // Files
@@ -409,6 +485,9 @@ namespace Fan.Sys
     internal Map m_files;
     internal Hashtable locales = new Hashtable(4);
     internal Log m_log;
-
+    internal object m_symbolsLock = new object();
+    internal Hashtable m_symbols;
+    internal bool m_docLoaded;
+    public string m_doc;
   }
 }

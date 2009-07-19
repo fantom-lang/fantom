@@ -80,7 +80,7 @@ namespace Fan.Sys
     internal abstract Map makeParams();
 
     public override Map facets(bool inherited) { return m_base.facets(inherited); }
-    public override object facet(string name, object def, bool inherited) { return m_base.facet(name, def, inherited); }
+    public override object facet(Symbol key, object def, bool inherited) { return m_base.facet(key, def, inherited); }
 
     public override string doc() { return m_base.doc(); }
 

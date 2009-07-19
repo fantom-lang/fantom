@@ -72,8 +72,10 @@ namespace Fanx.Fcode
       Hashtable map = new Hashtable();
       for (int i=0; i<n; ++i)
       {
-        string name = input.name();
-        string val  = input.utf();
+        string name = input.fpod.symbolRef(input.u2()).qname();
+        // TODO - optimize this like we do in Java, but
+        // there is a bootstrap problem in ObjDecoder
+        object val  = new Symbol.EncodedVal(input.utf());
         map[name] = val;
       }
       m_facets = map;
