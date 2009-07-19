@@ -87,25 +87,27 @@ create a directory structure organized as follows:
 
   hello/
     build.fan
+    pod.fan
     fan/
       Main.fan
 
-The contents of "build.fan" is the build script.  It declares the
-meta-data for your pod and which directories contain Fan source files:
+The contents of "build.fan" is the build script:
 
-  using build
-
-  class Build : BuildPod
+  class Build : build::BuildPod
   {
     override Void setup()
     {
-      podName     = "hello"
-      version     = Version("1.0")
-      description = "hello world example"
-      depends     = ["sys 1.0"]
-      srcDirs     = [`fan/`]
+      podName = "hello"
+      version = Version("1.0")
     }
   }
+
+The contents of "pod.fan" declares the meta-data for your
+pod and which directories contain Fan source files:
+
+  @podDepends  = [Depend("sys 1.0")]
+  @podSrcDirs  = [`fan/`]
+  pod hello {}
 
 The "fan/Main.fan" file declares a single class called "Main":
 
