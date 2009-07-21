@@ -53,6 +53,7 @@ namespace Fan.Sys
       this.m_name   = pod.fpod.name(fsymbol.name);
       this.m_qname  = pod.name() + "::" + m_name;
       this.m_of     = pod.findType(fsymbol.of);
+      this.m_flags  = fsymbol.flags;
       this.m_defVal = initVal(fsymbol.val);
     }
 
@@ -67,6 +68,8 @@ namespace Fan.Sys
     public string name() { return m_name; }
 
     public Type of() { return m_of; }
+
+    public bool isVirtual() { return (m_flags & FConst.Virtual) != 0; }
 
     public override long hash()  { return m_qname.GetHashCode(); }
 
@@ -166,6 +169,7 @@ namespace Fan.Sys
     string m_name;
     string m_qname;
     Type m_of;
+    int m_flags;
     object m_defVal;  // immutable object or EncodedVal
     public string m_doc;
 

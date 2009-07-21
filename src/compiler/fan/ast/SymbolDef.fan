@@ -16,12 +16,13 @@ class SymbolDef : DefNode, CSymbol
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Location location, CompilationUnit unit, CType? of, Str name, Expr val)
+  new make(Location location, CompilationUnit unit, CType? of, Str name, Int flags, Expr val)
     : super(location)
   {
     this.unit  = unit
     this.ctype = of
     this.name  = name
+    this.flags = flags
     this.val   = val
   }
 

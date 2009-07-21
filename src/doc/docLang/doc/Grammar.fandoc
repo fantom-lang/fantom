@@ -37,7 +37,8 @@ Pod Def [#podDef]
   <podDef>         :=  <podHeader> "{" <symbolDefs> "}"
   <podHeader>      :=  [<doc>] <facets> "pod" <id>
   <symbolDefs>     :=  <symbolDef>*
-  <symbolDef>      :=  [<type>] <id> ":=" <expr> <eos>
+  <symbolDef>      :=  <symbolFlags> [<type>] <id> ":=" <expr> <eos>
+  <symbolFlags>    := ["virtual"]
 
 Type Def [#typeDef]
 *******************

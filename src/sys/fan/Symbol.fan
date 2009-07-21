@@ -53,6 +53,12 @@ final const class Symbol
   Type of()
 
   **
+  ** Return if symbol is virtual which means it may be overridden
+  ** in a fansym configuration file.
+  **
+  Bool isVirtual()
+
+  **
   ** Get the default value of the symbol as originally declared.
   ** Use `val` to get the current value.
   **
