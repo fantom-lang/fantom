@@ -20,8 +20,8 @@
 
 pod testSys
 {
-  Bool boolA := true
-  boolB := false
+  virtual Bool boolA := true
+  virtual boolB := false
 
   Int intA := 0xabcd_0123_eeff_7788
   intB := -4

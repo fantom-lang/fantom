@@ -146,6 +146,7 @@ class Assembler : CompilerSupport, FConst
     f := FSymbol(fpod)
     f.ofIndex   = typeRef(def.of)
     f.nameIndex = name(def.name)
+    f.flags     = def.flags
 
     try
       f.val = def.val.serialize

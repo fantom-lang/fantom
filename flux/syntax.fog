@@ -44,6 +44,7 @@ SyntaxOptions
     // fan rules
     "fan": "fan",
     "fog": "fan",
+    "fansym": "fan",
     "fansubstitute": "fan",
     "fwt": "fan",
     "props": "fan",

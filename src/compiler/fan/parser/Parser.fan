@@ -83,21 +83,28 @@ public class Parser : CompilerSupport
   private Void symbolDef()
   {
     doc := doc()
-    if (curt === Token.eof) return
+    if (curt === Token.eof || curt === Token.rbrace) return
 
     loc   := cur
+    flags := symbolFlags
     of    := tryType
     name  := consumeId
     consume(Token.defAssign)
     val   := expr
     endOfStmt
-    symbol := SymbolDef(loc, unit, of, name, val)
+    symbol := SymbolDef(loc, unit, of, name, flags, val)
     symbol.doc = doc
 
     if (pod.symbolDefs.containsKey(name))
       err("Duplicate symbol name '$name'", loc)
     else
       pod.symbolDefs[name] = symbol
+  }
+
+  private Int symbolFlags()
+  {
+    if (curt === Token.virtualKeyword) { consume; return FConst.Virtual }
+    return 0
   }
 
 //////////////////////////////////////////////////////////////////////////

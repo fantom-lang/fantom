@@ -51,6 +51,7 @@ public final class Symbol
     this.name   = pod.fpod.name(fsymbol.name);
     this.qname  = pod.name() + "::" + name;
     this.of     = pod.findType(fsymbol.of);
+    this.flags  = fsymbol.flags;
     this.defVal = initVal(fsymbol.val);
   }
 
@@ -65,6 +66,8 @@ public final class Symbol
   public String name() { return name; }
 
   public Type of() { return of; }
+
+  public boolean isVirtual() { return (flags & FConst.Virtual) != 0; }
 
   public long hash()  { return qname.hashCode(); }
 
@@ -162,6 +165,7 @@ public final class Symbol
   final String name;
   final String qname;
   final Type of;
+  final int flags;
   Object defVal;  // immutable Object or EncodedVal
   public String doc;
 
