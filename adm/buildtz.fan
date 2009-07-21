@@ -6,6 +6,7 @@
 // History:
 //   28 Sep 07  Brian Frank  Creation
 //   21 Jul 09  Brian Frank  Update to latest language changes
+//   21 Jul 09  Brian Frank  Upgrade to more compressed format
 //
 
 using build
@@ -348,10 +349,10 @@ class Build : BuildScript
   **
   Void writeDatabase()
   {
-    // magic "fantz 01"
+    // magic "fantz 02"
     buf := Buf()
     buf.write('f').write('a').write('n').write('t')
-       .write('z').write(' ').write('0').write('1')
+       .write('z').write(' ').write('0').write('2')
 
     buf.writeUtf("\n" +
       "buildTool:adm/buildtz.fan\n" +
@@ -360,32 +361,36 @@ class Build : BuildScript
       "buildHost:${Sys.hostName}\n"
     )
 
-    // create sorted index of all the names (both simple/full names)
-    nameMap := Str:Zone[:]
+    // create map of all the prefix/names
+    prefixes := Str:Int[:]
+    names := Str:Zone[:]
     zones.each |Zone z|
     {
-      nameMap[z.zoneInfoName] = z
-      if (z.fanName != z.zoneInfoName)
-      {
-        if (nameMap[z.fanName] != null)
-          echo("ERROR: Duplicate simple name $z.fanName")
-        else
-          nameMap[z.fanName] = z
-      }
-    }
-    names := nameMap.keys.sort
-
-    // write name index to file
-    buf.writeI4(names.size)
-    names.each |Str n|
-    {
-      buf.writeUtf(n)
-      z := nameMap[n]
-      buf.write(z.nameCode(n))
-      if (z.offsetPos1 == null)
-        z.offsetPos1 = buf.pos
+      prefixes[z.prefix] = 0
+      if (names[z.fanName] != null)
+        echo("ERROR: Duplicate simple name $z.fanName")
       else
-        z.offsetPos2 = buf.pos
+        names[z.fanName] = z
+    }
+
+    // sort, write, assign ids to prefixes
+    if (prefixes.size >= 0xff) throw Err()
+    buf.write(prefixes.size)
+    prefixes.keys.sort.each |Str p, Int i|
+    {
+      prefixes[p] = i
+      buf.writeUtf(p)
+    }
+
+    // sort names and write index items
+    if (prefixes.size >= 0xffff) throw Err()
+    buf.writeI2(names.size)
+    names.keys.sort.each |name|
+    {
+      z := names[name]
+      buf.write(prefixes[z.prefix])
+      buf.writeUtf(name)
+      z.offsetPos = buf.pos
       buf.writeI4(0)
     }
 
@@ -394,14 +399,10 @@ class Build : BuildScript
     {
       // back patch current offset into index
       cur := buf.pos
-      buf.seek(z.offsetPos1).writeI4(cur)
-      if (z.offsetPos2 != null)
-        buf.seek(z.offsetPos2).writeI4(cur)
+      buf.seek(z.offsetPos).writeI4(cur)
       buf.seek(cur)
 
       // write time zone
-      buf.writeUtf(z.fanName)
-      buf.writeUtf(z.zoneInfoName)
       buf.writeI2(z.rules.size)
       z.rules.each |NormRule r|
       {
@@ -431,7 +432,7 @@ class Build : BuildScript
     }
 
     // write to file
-    f := devHomeDir + `lib/timezones.ftz`
+    f := devHomeDir + `etc/sys/timezones.ftz`
     log.info("Write (" + buf.size/1024 + "kb) [$f]")
     f.out.writeBuf(buf.flip).close
   }
@@ -478,6 +479,13 @@ class Zone
 
   override Int compare(Obj obj) { return name <=> obj->name }
 
+  Str prefix()
+  {
+    i := name.indexr("/")
+    if (i == null) return ""
+    return name[0..<i]
+  }
+
   Str fanName()
   {
     i := name.indexr("/")
@@ -506,8 +514,7 @@ class Zone
   Str? name
   ZoneItem[] items := ZoneItem[,]
   NormRule[]? rules  // normalized rules
-  Int? offsetPos1    // to backpatch
-  Int? offsetPos2    // to backpatch
+  Int? offsetPos     // to backpatch
 }
 
 **************************************************************************

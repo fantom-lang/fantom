@@ -3,7 +3,8 @@
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   2 Oct 07  Andy Frank  Creation
+//   2 Oct 07  Andy Frank   Creation
+//  21 Jul 09  Brian Frank  Upgrade to more compressed format
 //
 
 using System;
@@ -25,19 +26,19 @@ namespace Fan.Sys
 
     public static List listNames()
     {
-      List list = new List(Sys.StrType);
-      for (int i=0; i<indexNames.Length; ++i)
-        if ((indexTypes[i] & 0x01) != 0)
-          list.add(indexNames[i]);
-      return list.ro();
+      return new List(Sys.StrType, indexNames).ro();
     }
 
     public static List listFullNames()
     {
       List list = new List(Sys.StrType);
       for (int i=0; i<indexNames.Length; ++i)
-        if ((indexTypes[i] & 0x02) != 0)
-          list.add(indexNames[i]);
+      {
+        string prefix = prefixes[indexPrefixes[i] & 0xff];
+        string name = indexNames[i];
+        if (prefix.Length != 0) name = prefix + "/" + name;
+        list.add(name);
+      }
       return list.ro();
     }
 
@@ -172,19 +173,19 @@ namespace Fan.Sys
     //
     // ftz
     // {
-    //   u8  magic ("fantz 01")
-    //   utf summary
-    //   u4  numIndexItems
-    //   indexItems[]
+    //   u8    magic ("fantz 02")
+    //   utf   summary
+    //   u1    numPrefixes
+    //   utf[] prefixes
+    //   u2    numIndexItems
+    //   indexItems[]   // sorted by name
     //   {
+    //     u1   prefix id
     //     utf  name
-    //     u1   0x01=simple name, 0x02=full name
     //     u4   fileOffset
     //   }
     //   timeZones[]
     //   {
-    //     utf  name
-    //     utf  fullName
     //     u2   numRules
     //     rules[]
     //     {
@@ -224,6 +225,103 @@ namespace Fan.Sys
       DataReader reader = new DataReader(new BufferedStream(dbFile.OpenRead()));
       try
       {
+        // check magic "fantz 02"
+        long magic = reader.ReadLong();
+        if (magic != 0x66616e747a203032L)
+          throw new IOException("Invalid magic 0x" + magic.ToString("X").ToLower());
+        reader.ReadUTF();
+
+        // load prefixes
+        int numPrefixes = reader.ReadByte();
+        prefixes = new string[numPrefixes];
+        for (int i=0; i<numPrefixes; ++i)
+          prefixes[i] = reader.ReadUTF();
+
+        // load the zones and verify in sort order
+        int num = reader.ReadUnsignedShort();
+        indexPrefixes = new byte[num];
+        indexNames    = new string[num];
+        indexOffsets  = new int[num];
+        for (int i=0; i<num; ++i)
+        {
+          indexPrefixes[i] = reader.ReadByte();
+          indexNames[i]    = reader.ReadUTF();
+          indexOffsets[i]  = reader.ReadInt();
+          if (i != 0 && String.Compare(indexNames[i-1], indexNames[i], StringComparison.Ordinal) >= 0)
+            throw new IOException("Index not sorted");
+        }
+      }
+      finally
+      {
+        reader.Close();
+      }
+    }
+
+    /// <summary>
+    /// Find the specified name in the index and load a time zone
+    /// definition.  If the name is not found then return null.
+    /// </summary>
+    static TimeZone loadTimeZone(string x)
+    {
+      string name = x;
+      int slash = x.LastIndexOf('/');
+      if (slash > 0) name = name.Substring(slash+1);
+
+      // find index, which maps the file offset
+      // TODO: why doesn't BinarySearch work?
+      // int ix = Array.BinarySearch(indexNames, name);
+      int ix = -1;
+      for (int i=0; i<indexNames.Length; ++i)
+        if (name == indexNames[i]) { ix = i; break; }
+      if (ix < 0) return null;
+
+      // map full name
+      string fullName = name;
+      string prefix = prefixes[indexPrefixes[ix] & 0xff];
+      if (prefix.Length != 0) fullName = prefix + "/" + name;
+      if (slash > 0 && x != fullName) return null;
+
+      // create time zone instance
+      TimeZone tz = new TimeZone();
+      tz.m_name      = name;
+      tz.m_fullName  = fullName;
+
+      // read time zone definition from database file
+      FileStream f = dbFile.OpenRead();
+      DataReader d = new DataReader(f);
+      try
+      {
+        f.Seek(indexOffsets[ix], SeekOrigin.Begin);
+        int numRules  = d.ReadUnsignedShort();
+        tz.rules = new Rule[numRules];
+        for (int i=0; i<numRules; ++i)
+        {
+          Rule r = tz.rules[i] = new Rule();
+          r.startYear = d.ReadUnsignedShort();
+          r.offset    = d.ReadInt();
+          r.stdAbbr   = d.ReadUTF();
+          r.dstOffset = d.ReadInt();
+          if (r.dstOffset == 0) continue;
+          r.dstAbbr   = d.ReadUTF();
+          r.dstStart  = loadDstTime(d);
+          r.dstEnd    = loadDstTime(d);
+          if (i != 0 && tz.rules[i-1].startYear <= r.startYear)
+            throw new IOException("TimeZone rules not sorted: " + name);
+        }
+      }
+      finally
+      {
+        f.Close();
+      }
+      return tz;
+    }
+
+    /*
+    static void loadIndex()
+    {
+      DataReader reader = new DataReader(new BufferedStream(dbFile.OpenRead()));
+      try
+      {
         // check magic "fantz 01"
         long magic = reader.ReadLong();
         if (magic != 0x66616e747a203031L)
@@ -250,10 +348,6 @@ namespace Fan.Sys
       }
     }
 
-    /// <summary>
-    /// Find the specified name in the index and load a time zone
-    /// definition.  If the name is not found then return null.
-    /// </summary>
     static TimeZone loadTimeZone(string name)
     {
       // find index, which maps the file offset
@@ -296,6 +390,7 @@ namespace Fan.Sys
       }
       return tz;
     }
+    */
 
     static DstTime loadDstTime(DataReader d)
     {
@@ -469,9 +564,10 @@ namespace Fan.Sys
   // Database Index
   //////////////////////////////////////////////////////////////////////////
 
-    static FileInfo dbFile = new FileInfo(Sys.HomeDir + "/lib/timezones.ftz");
+    static FileInfo dbFile = new FileInfo(Sys.HomeDir + "/etc/sys/timezones.ftz");
+    static string[] prefixes = new string[0];
+    static byte[] indexPrefixes = new byte[0];
     static string[] indexNames = new string[0];
-    static byte[] indexTypes   = new byte[0];
     static int[] indexOffsets  = new int[0];
 
     static Hashtable cache = new Hashtable(); // string -> TimeZone
