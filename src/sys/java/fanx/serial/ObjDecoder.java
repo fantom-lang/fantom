@@ -47,10 +47,10 @@ public class ObjDecoder
   /**
    * Read an set of name/object symbols from stream.
    */
-  public Map readSymbols()
+  public Map readSymbols(Map map)
   {
     if (symbolsMapType == null) symbolsMapType = new MapType(Sys.StrType, Sys.ObjType.toNullable());
-    Map map = new Map(symbolsMapType);
+    if (map == null) map = new Map(symbolsMapType);
     readHeader();
     while (curt != Token.EOF)
     {

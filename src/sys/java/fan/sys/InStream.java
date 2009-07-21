@@ -509,7 +509,7 @@ public class InStream
 
   public Map readSymbols()
   {
-    return new ObjDecoder(this, null).readSymbols();
+    return new ObjDecoder(this, null).readSymbols(null);
   }
 
   public Map readProps()
