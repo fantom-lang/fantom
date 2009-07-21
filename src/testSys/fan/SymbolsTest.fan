@@ -75,9 +75,8 @@ class SymbolsTest : Test
 
   Void testFlags()
   {
-    verifyEq(@boolA.isVirtual, true)
-    verifyEq(@boolB.isVirtual, true)
-    verifyEq(@intA.isVirtual,  false)
+    verifyEq(@intA.isVirtual, true)
+    verifyEq(@intB.isVirtual,  false)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -129,6 +128,40 @@ class SymbolsTest : Test
     verifyEq(actual.type, [Str:Obj?]#)
     verifyEq(actual, expected)
     verifyEq(Buf().writeSymbols(actual).flip.readSymbols, expected)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Overrides
+//////////////////////////////////////////////////////////////////////////
+
+  Void testOverrides()
+  {
+    // create temp etc/testSys
+    f := Repo.working.home + `etc/testSys/pod.fansym`
+    try
+    {
+      f.delete
+      Repo.readSymbolsCached(`etc/testSys/pod.fansym`, 0ns) // force refresh
+
+      // before override
+      verifyEq(@intA.val, 0xabcd_0123_eeff_7788)
+      verifyEq(@intA.defVal, 0xabcd_0123_eeff_7788)
+      verifyEq(@intB.val, -4)
+      verifyEq(@intB.defVal, -4)
+
+      // after override
+      f.writeSymbols(["intA":99, "intB": 88])
+      Actor.sleep(10ms)
+      Repo.readSymbolsCached(`etc/testSys/pod.fansym`, 0ns) // force refresh
+      verifyEq(@intA.val, 99)
+      verifyEq(@intA.defVal, 0xabcd_0123_eeff_7788)
+      verifyEq(@intB.val, -4) // not-virtual
+      verifyEq(@intB.defVal, -4)
+    }
+    finally
+    {
+      f.delete
+    }
   }
 
 }

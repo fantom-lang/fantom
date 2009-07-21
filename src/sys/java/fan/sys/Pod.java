@@ -521,6 +521,7 @@ public class Pod
   Object symbolsLock = new Object();
   HashMap symbols;
   boolean docLoaded;
+  Uri fansymUri;
   public String doc;
 
 

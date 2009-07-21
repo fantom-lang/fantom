@@ -81,8 +81,6 @@ public final class Symbol
 // Value Management
 //////////////////////////////////////////////////////////////////////////
 
-  public Object val() { return defVal(); }
-
   public Object defVal()
   {
     // if already decoded return it
@@ -96,6 +94,19 @@ public final class Symbol
 
     return result;
   }
+
+  public Object val()
+  {
+    if (isVirtual())
+    {
+      if (pod.fansymUri == null) pod.fansymUri = Uri.fromStr("etc/" + pod.name + "/pod.fansym");
+      Map overrides = Repo.readSymbolsCached(pod.fansymUri);
+      Object val = overrides.get(name, notDefined);
+      if (val != notDefined) return val;
+    }
+    return defVal();
+  }
+  private static final Object notDefined = "_not_defined_";
 
   /**
    * Convert fcode utf string into a symbol or facet value.

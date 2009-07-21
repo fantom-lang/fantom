@@ -20,10 +20,10 @@
 
 pod testSys
 {
-  virtual Bool boolA := true
-  virtual boolB := false
+  Bool boolA := true
+  boolB := false
 
-  Int intA := 0xabcd_0123_eeff_7788
+  virtual Int intA := 0xabcd_0123_eeff_7788
   intB := -4
 
   floatA := -5f
@@ -43,7 +43,7 @@ pod testSys
   Num numA := 45
   Num? numB := null
 
-  listA := ["a", "b", "c"]
+  virtual listA := ["a", "b", "c"]
   listB := [2, 3f, 4d]
   listC := [["a"], ["b"], ["c"]]
   Obj[] listD := [SerA { i = 0 }, SerA { i = 1 }, SerA { i = 2 }]
