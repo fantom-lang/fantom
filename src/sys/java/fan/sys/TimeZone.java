@@ -4,6 +4,7 @@
 //
 // History:
 //   28 Sep 07  Brian Frank  Creation
+//   21 Jul 09  Brian Frank  Upgrade to more compressed format
 //
 package fan.sys;
 
@@ -29,19 +30,19 @@ public final class TimeZone
 
   public static List listNames()
   {
-    List list = new List(Sys.StrType);
-    for (int i=0; i<indexNames.length; ++i)
-      if ((indexTypes[i] & 0x01) != 0)
-        list.add(indexNames[i]);
-    return list.ro();
+    return new List(Sys.StrType, indexNames).ro();
   }
 
   public static List listFullNames()
   {
     List list = new List(Sys.StrType);
     for (int i=0; i<indexNames.length; ++i)
-      if ((indexTypes[i] & 0x02) != 0)
-        list.add(indexNames[i]);
+    {
+      String prefix = prefixes[indexPrefixes[i] & 0xff];
+      String name = indexNames[i];
+      if (prefix.length() != 0) name = prefix + "/" + name;
+      list.add(name);
+    }
     return list.ro();
   }
 
@@ -176,19 +177,19 @@ public final class TimeZone
   //
   // ftz
   // {
-  //   u8  magic ("fantz 01")
-  //   utf summary
-  //   u4  numIndexItems
-  //   indexItems[]
+  //   u8    magic ("fantz 02")
+  //   utf   summary
+  //   u1    numPrefixes
+  //   utf[] prefixes
+  //   u2    numIndexItems
+  //   indexItems[]   // sorted by name
   //   {
+  //     u1   prefix id
   //     utf  name
-  //     u1   0x01=simple name, 0x02=full name
   //     u4   fileOffset
   //   }
   //   timeZones[]
   //   {
-  //     utf  name
-  //     utf  fullName
   //     u2   numRules
   //     rules[]
   //     {
@@ -229,22 +230,28 @@ public final class TimeZone
     DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(dbFile)));
     try
     {
-      // check magic "fantz 01"
+      // check magic "fantz 02"
       long magic = in.readLong();
-      if (magic != 0x66616e747a203031L)
+      if (magic != 0x66616e747a203032L)
         throw new java.io.IOException("Invalid magic 0x" + Long.toHexString(magic));
-      in.readUTF();
+      String summary = in.readUTF();
 
-      // load the name/offset pairs and verify in sort order
-      int num = in.readInt();
-      indexNames   = new String[num];
-      indexTypes   = new byte[num];
-      indexOffsets = new int[num];
+      // load prefixes
+      int numPrefixes = in.readUnsignedByte();
+      prefixes = new String[numPrefixes];
+      for (int i=0; i<numPrefixes; ++i)
+        prefixes[i] = in.readUTF();
+
+      // load the zones and verify in sort order
+      int num = in.readUnsignedShort();
+      indexPrefixes = new byte[num];
+      indexNames    = new String[num];
+      indexOffsets  = new int[num];
       for (int i=0; i<num; ++i)
       {
-        indexNames[i]   = in.readUTF();
-        indexTypes[i]   = (byte)in.read();
-        indexOffsets[i] = in.readInt();
+        indexPrefixes[i] = (byte)in.read();
+        indexNames[i]    = in.readUTF();
+        indexOffsets[i]  = in.readInt();
         if (i != 0 && indexNames[i-1].compareTo(indexNames[i]) >= 0)
           throw new java.io.IOException("Index not sorted");
       }
@@ -259,24 +266,33 @@ public final class TimeZone
    * Find the specified name in the index and load a time zone
    * definition.  If the name is not found then return null.
    */
-  static TimeZone loadTimeZone(String name)
+  static TimeZone loadTimeZone(String x)
     throws IOException
   {
+    String name = x;
+    int slash = x.lastIndexOf('/');
+    if (slash > 0) name = name.substring(slash+1);
+
     // find index, which maps the file offset
     int ix = Arrays.binarySearch(indexNames, name);
     if (ix < 0) return null;
-    int seekOffset = indexOffsets[ix];
+
+    // map full name
+    String fullName = name;
+    String prefix = prefixes[indexPrefixes[ix] & 0xff];
+    if (prefix.length() != 0) fullName = prefix + "/" + name;
+    if (slash > 0 && !x.equals(fullName)) return null;
 
     // create time zone instance
     TimeZone tz = new TimeZone();
+    tz.name      = name;
+    tz.fullName  = fullName;
 
     // read time zone definition from database file
     RandomAccessFile f = new RandomAccessFile(dbFile, "r");
     try
     {
-      f.seek(seekOffset);
-      tz.name      = f.readUTF();
-      tz.fullName  = f.readUTF();
+      f.seek(indexOffsets[ix]);
       int numRules = f.readUnsignedShort();
       tz.rules = new Rule[numRules];
       for (int i=0; i<numRules; ++i)
@@ -474,10 +490,11 @@ public final class TimeZone
 // Database Index
 //////////////////////////////////////////////////////////////////////////
 
-  static File dbFile = new File(Sys.HomeDir, "lib" + java.io.File.separator + "timezones.ftz");
-  static String[] indexNames = new String[0];
-  static byte[] indexTypes   = new byte[0];
-  static int[] indexOffsets  = new int[0];
+  static File dbFile = new File(Sys.HomeDir, "etc" + java.io.File.separator + "sys" + java.io.File.separator + "timezones.ftz");
+  static String[] prefixes    = new String[0];
+  static byte[] indexPrefixes = new byte[0];
+  static String[] indexNames  = new String[0];
+  static int[] indexOffsets   = new int[0];
 
   static HashMap cache = new HashMap(); // String -> TimeZone
   static TimeZone utc;

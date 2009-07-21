@@ -682,5 +682,6 @@
 - Split webappClient into sys and dom
 - Change all uses of 'javascript' => 'js'
 - Fix Str indexIgnoreCase/indexrIgnoreCase bug
+- Switch to new, more compressed timezone database format
 
 // TODO: remove obsolete fcode version 34 checks

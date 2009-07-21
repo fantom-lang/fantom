@@ -479,6 +479,19 @@ class DateTimeTest : Test
     verifyEq(x.dstAbbr(2007), null)
     verifyEq(x.offset(2007), 5.5hr)
     verifyEq(x.dstOffset(2007), null)
+
+    // no slashes
+    x = TimeZone.fromStr("EST")
+    verifyEq(x.name, "EST")
+    verifyEq(x.fullName, "EST")
+
+    // 2 slashes
+    x = TimeZone.fromStr("America/Kentucky/Louisville")
+    verifyEq(x.name, "Louisville")
+    verifyEq(x.fullName, "America/Kentucky/Louisville")
+    verifySame(TimeZone.fromStr("America/Kentucky/Louisville"), TimeZone.fromStr("Louisville"))
+
+    verifyEq(TimeZone.fromStr("Asia/New_York", false), null)
   }
 
   Void testToTimeZone()
