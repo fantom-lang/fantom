@@ -207,6 +207,7 @@ public final class Sys
   public static final Type MapType       = builtin("Map",      ObjType);
   public static final Type MonthType     = builtin("Month",    EnumType);
   public static final Type PodType       = builtin("Pod",      ObjType);
+  public static final Type RepoType      = builtin("Repo",     ObjType);
   public static final Type RangeType     = builtin("Range",    ObjType);
   public static final Type StrType       = builtin("Str",      ObjType);
   public static final Type StrBufType    = builtin("StrBuf",   ObjType);

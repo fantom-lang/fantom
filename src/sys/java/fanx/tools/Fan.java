@@ -166,8 +166,13 @@ public class Fan
     println("  java.vm.vendor:  " + System.getProperty("java.vm.vendor"));
     println("  java.vm.version: " + System.getProperty("java.vm.version"));
     println("  java.home:       " + System.getProperty("java.home"));
-    println("  fan.home:        " + Sys.HomeDir);
-    println("  sys.version:     " + Sys.SysPod.version());
+    println("  fan.version:     " + Sys.SysPod.version());
+    println("  fan.repos:       ");
+    for (int i=0; i<Repo.list().size(); ++i)
+    {
+      Repo repo = (Repo)Repo.list().get(i);
+      println("    " + FanStr.padr(repo.name()+": ", 15) + repo.dir());
+    }
   }
 
   static void pods(String progName)
