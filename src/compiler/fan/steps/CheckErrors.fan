@@ -71,6 +71,10 @@ class CheckErrors : CompilerStep
     // verify we don't use a restricted name
     if (isRestrictedName(s.name))
       err("Symbol name '$s.name' is restricted", s.location)
+
+    // verify symbol type is immutable
+    if (!isConstFieldType(s.of) || s.of.isFunc)
+      err("Symbol '$s.name' has non-const type '$s.of'", s.location)
   }
 
   static Bool isRestrictedName(Str name)

@@ -41,6 +41,27 @@ class SymbolsTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Implicit Cast
+//////////////////////////////////////////////////////////////////////////
+
+  Void testImplicitCast()
+  {
+    symbolsStr =
+    "Int foo := 3
+     bar := 10sec"
+    compile(
+      "class Foo
+       {
+         Int m00(Int x) { @foo.val + x }
+         Int m01() { @bar.defVal.ticks }
+       }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->m00(5), 8)
+    verifyEq(obj->m01, 10sec.ticks)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Const Folding
 //////////////////////////////////////////////////////////////////////////
 
@@ -153,6 +174,29 @@ class SymbolsTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Literal Errors
+//////////////////////////////////////////////////////////////////////////
+
+  Void testLiteralErrors()
+  {
+    podStr =
+    "pod $podName
+     {
+       Int i := 66
+     }"
+    verifyErrors(
+    "class Foo
+     {
+       Str m00() { return @i.val }
+       Bool m01() { return @i.defVal == false }
+     }",
+     [
+       3, 25, "Cannot return 'sys::Int' as 'sys::Str'",
+       4, 26, "Incomparable types 'sys::Int' and 'sys::Bool'",
+     ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Facet Errors
 //////////////////////////////////////////////////////////////////////////
 
@@ -235,13 +279,19 @@ class SymbolsTest : CompilerTest
      ])
 
     // CheckErrors
-    podStr = "@js @js @nodoc @sys::nodoc pod $podName { }"
+    podStr =
+     "@js @js @nodoc @sys::nodoc
+      pod $podName
+      {
+        InStream? bad := null
+      }"
     verifyErrors(
      "@sys::simple @simple class Foo
       { @transient @sys::transient Int x }",
      [
        1, 1, "Duplicate facet 'sys::js'",
        1, 9, "Duplicate facet 'sys::nodoc'",
+       4, 3, "Symbol 'bad' has non-const type 'sys::InStream?'",
        2, 3, "Duplicate facet 'sys::transient'",
        1, 1, "Duplicate facet 'sys::simple'",
      ])
