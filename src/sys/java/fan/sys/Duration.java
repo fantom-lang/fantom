@@ -505,6 +505,7 @@ public final class Duration
   public static final Duration minVal    = make(FanInt.minVal);
   public static final Duration maxVal    = make(FanInt.maxVal);
   public static final Duration oneDay    = make(nsPerDay);
+  public static final Duration oneSec    = make(nsPerSec);
   public static final Duration negOneDay = make(-nsPerDay);
 
   public final long ticks;

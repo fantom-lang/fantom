@@ -204,7 +204,7 @@ public class Test
   {
     if (tempDir == null)
     {
-      tempDir = Repo.working().dir().plus("test/");
+      tempDir = Repo.working().home().plus(Uri.fromStr("test/"), false);
       tempDir.delete();
       tempDir.create();
     }

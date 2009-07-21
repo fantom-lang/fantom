@@ -57,7 +57,7 @@ public final class Unit
     {
       // parse lib/units.fog as big serialized list which contains
       // lists for each quantity (first item being the name)
-      List all = (List)Repo.boot().dir().plus("lib/units.fog").readObj();
+      List all = (List)Repo.findFile("lib/units.fog").readObj();
 
       // map lists to quantity data structures
       List quantityNames = new List(Sys.StrType);

@@ -171,7 +171,7 @@ public class Fan
     for (int i=0; i<Repo.list().size(); ++i)
     {
       Repo repo = (Repo)Repo.list().get(i);
-      println("    " + FanStr.padr(repo.name()+": ", 15) + repo.dir());
+      println("    " + FanStr.padr(repo.name()+": ", 15) + repo.home());
     }
   }
 
