@@ -61,18 +61,8 @@ final class Sys
   **
   ** Get the fan installation home directory.
   **
+// TODO
   static File homeDir()
-
-  **
-  ** Get the application home directory.  The appDir is
-  ** automatically exposed into the namespace as part
-  ** of the root Resource:
-  **   - In 'fand' this is the app directory used to
-  **     boot the namespace (TODO - revisit this)
-  **   - In 'fant' this is the test directory.
-  **   - In other VMs it is the current working directory.
-  **
-  static File appDir()
 
   **
   ** Get the local host name of the machine running the

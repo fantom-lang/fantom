@@ -141,7 +141,7 @@ class FileTest : Test
     verifyEq(f.ext, null)
     verifyEq(f.uri.path.last, "file")
     verifyEq(f.path.last, "file")
-    verifyEq(f.pathStr, f.toStr)
+    verifyEq(f.uri.relToAuth.toStr, f.pathStr)
     verifyEq(tempDir.list, [f])
     verifyEq(tempDir.listDirs, File[,])
     verifyEq(tempDir.listFiles, [f])
@@ -157,7 +157,7 @@ class FileTest : Test
     verifyEq(e.mimeType, MimeType.fromStr("text/plain"))
     verifyEq(e.uri.path.last, "file.txt")
     verifyEq(e.path.last, "file.txt")
-    verifyEq(e.pathStr, e.toStr)
+    verifyEq(e.uri.relToAuth.toStr, e.pathStr)
     verifyEq(tempDir.list.sort, [f, e])
     verifyEq(tempDir.listDirs, File[,])
     verifyEq(tempDir.listFiles.sort, [f, e])
@@ -171,7 +171,8 @@ class FileTest : Test
     verifyEq(d.ext, null)
     verifyEq(d.uri.path.last, "dir")
     verifyEq(d.path.last, "dir")
-    verifyEq(d.pathStr, d.toStr)
+    verifyEq(d.pathStr.endsWith("/dir/"), true)
+    verifyEq(d.uri.relToAuth.toStr, d.pathStr)
     verifyEq(d.size, null)
     verifyEq(tempDir.list.sort, [d, f, e])
     verifyEq(tempDir.listDirs, [d])
@@ -392,7 +393,7 @@ class FileTest : Test
     // abs
     f := tempDir
     g := File.os(f.osPath)
-    verifyEq(f.uri, g.uri)
+    verifyEq(f.uri.relToAuth, g.uri)
     verifyEq(f.osPath, g.osPath)
 
     // relative

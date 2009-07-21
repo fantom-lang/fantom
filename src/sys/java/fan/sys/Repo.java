@@ -86,7 +86,8 @@ public final class Repo
     try
     {
       File f = File.os(env).normalize();
-      if (!f.exists()) f = File.make(Uri.fromStr(env), false).normalize();
+      if (!f.exists()) f = File.make(Uri.fromStr(env).plusSlash(), false).normalize();
+      if (!f.isDir()) throw new IllegalStateException("Repo must be dir: " + f);
       return f;
     }
     catch (Throwable e)
