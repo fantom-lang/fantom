@@ -43,6 +43,18 @@ namespace Fanx.Serial
   // Write
   //////////////////////////////////////////////////////////////////////////
 
+    public void writeSymbols(Map symbols)
+    {
+      indent = 2;
+      IDictionaryEnumerator en = symbols.pairsIterator();
+      while (en.MoveNext())
+      {
+        string key = (string)en.Key;
+        object val = en.Value;
+        w(key).w("=").writeObj(val); w("\n");
+      }
+    }
+
     public void writeObj(object obj)
     {
       if (obj == null)

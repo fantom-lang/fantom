@@ -46,6 +46,26 @@ namespace Fanx.Serial
   //////////////////////////////////////////////////////////////////////////
 
     /// <summary>
+    /// Read an set of name/object symbols from stream.
+    /// </summary>
+    public Map readSymbols()
+    {
+      if (symbolsMapType == null) symbolsMapType = new MapType(Sys.StrType, Sys.ObjType.toNullable());
+      Map map = new Map(symbolsMapType);
+      readHeader();
+      while (curt != Token.EOF)
+      {
+        string id = consumeId("Expecting symbol name");
+        consume(Token.EQ, "Expected '=' after symbol name");
+        int line = tokenizer.m_line;
+        object val = readObj();
+        endOfStmt(line);
+        map.set(id, val);
+      }
+      return map;
+    }
+
+    /// <summary>
     /// Read an object from the stream.
     /// </summary>
     public object readObj()
@@ -620,6 +640,7 @@ namespace Fanx.Serial
     /// </summary>
     private void endOfStmt(int lastLine)
     {
+      if (curt == Token.EOF) return;
       if (curt == Token.SEMICOLON) { consume(); return; }
       if (lastLine < tokenizer.m_line) return;
       if (curt == Token.RBRACE) return;
@@ -653,6 +674,8 @@ namespace Fanx.Serial
   //////////////////////////////////////////////////////////////////////////
   // Fields
   //////////////////////////////////////////////////////////////////////////
+
+    static MapType symbolsMapType;
 
     internal Tokenizer tokenizer;    // tokenizer
     internal int curt;               // current token type

@@ -507,6 +507,11 @@ public class InStream
     return new ObjDecoder(this, options).readObj();
   }
 
+  public Map readSymbols()
+  {
+    return new ObjDecoder(this, null).readSymbols();
+  }
+
   public Map readProps()
   {
     Charset origCharset = charset();

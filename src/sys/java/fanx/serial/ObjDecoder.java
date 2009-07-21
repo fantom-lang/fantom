@@ -45,6 +45,26 @@ public class ObjDecoder
 //////////////////////////////////////////////////////////////////////////
 
   /**
+   * Read an set of name/object symbols from stream.
+   */
+  public Map readSymbols()
+  {
+    if (symbolsMapType == null) symbolsMapType = new MapType(Sys.StrType, Sys.ObjType.toNullable());
+    Map map = new Map(symbolsMapType);
+    readHeader();
+    while (curt != Token.EOF)
+    {
+      String id = consumeId("Expecting symbol name");
+      consume(Token.EQ, "Expected '=' after symbol name");
+      int line = tokenizer.line;
+      Object val = readObj();
+      endOfStmt(line);
+      map.set(id, val);
+    }
+    return map;
+  }
+
+  /**
    * Read an object from the stream.
    */
   public final Object readObj()
@@ -612,6 +632,7 @@ public class ObjDecoder
    */
   private void endOfStmt(int lastLine)
   {
+    if (curt == Token.EOF) return;
     if (curt == Token.SEMICOLON) { consume(); return; }
     if (lastLine < tokenizer.line) return;
     if (curt == Token.RBRACE) return;
@@ -645,6 +666,8 @@ public class ObjDecoder
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
+
+  private static MapType symbolsMapType;
 
   Tokenizer tokenizer;    // tokenizer
   int curt;               // current token type

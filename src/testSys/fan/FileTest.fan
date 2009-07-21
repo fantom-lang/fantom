@@ -359,6 +359,10 @@ class FileTest : Test
     props := ["a":"alpha","b":"betal"]
     f.writeProps(props)
     verifyEq(f.readProps, props)
+
+    symbols := Str:Obj?["a":5, "b":"foo", "c":Version("3.4")]
+    f.writeSymbols(symbols)
+    verifyEq(f.readSymbols, symbols)
   }
 
   Void testReadAllLinesNL()

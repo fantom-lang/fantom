@@ -313,6 +313,14 @@ class InStream
   **
   Obj? readObj([Str:Obj]? options := null)
 
+  **
+  ** Read a fan symbols file which is a set of zero more
+  ** name/serialized object pairs separated by a Fan end of
+  ** statement (semicolon or newline).  Throw IOErr or ParseErr
+  ** on error.
+  **
+  Str:Obj? readSymbols()
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
