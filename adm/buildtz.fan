@@ -5,6 +5,7 @@
 //
 // History:
 //   28 Sep 07  Brian Frank  Creation
+//   21 Jul 09  Brian Frank  Update to latest language changes
 //
 
 using build
@@ -90,7 +91,7 @@ class Build : BuildScript
   {
     log.info("parse [$uri]")
     lineNum := 0
-    Zone lastZone := null
+    Zone? lastZone := null
     rules := Rule[,]
 
     f := srcDir.toFile + uri
@@ -105,10 +106,9 @@ class Build : BuildScript
         line = line.trim
         if (line.size == 0 || line[0] == '#') return
         pound := line.indexr("#")
-        if (pound != null) line = line[0...pound]
+        if (pound != null) line = line[0..<pound]
 
-        // don't really have regex yet...
-        toks := line.split("\\s+")
+        toks := line.split
         switch (toks.first)
         {
           case "Rule":
@@ -121,19 +121,19 @@ class Build : BuildScript
             if (leadingWs)
               parseZone(zones.last, toks)
             else
-              throw Err.make(line)
+              throw Err(line)
         }
       }
       catch (Err e)
       {
         echo("ERROR: parsing $f [Line $lineNum]")
         e.trace
-        throw FatalBuildErr.make
+        throw FatalBuildErr()
       }
     }
   }
 
-  Void parseZone(Zone zone, Str[] toks)
+  Void parseZone(Zone? zone, Str[] toks)
   {
     // if zone is non-null this is a continuation,
     // otherwise we need to create the zone
@@ -141,12 +141,12 @@ class Build : BuildScript
     if (zone == null)
     {
       n++
-      zone = Zone.make
+      zone = Zone()
       zone.name = toks[n++]
       zones.add(zone)
     }
 
-    item := ZoneItem.make
+    item := ZoneItem()
     item.offset = AtTime.parse(toks[n++])
     item.rule   = toks[n++]
     item.format = toks[n++]
@@ -167,7 +167,7 @@ class Build : BuildScript
   Void parseRule(Str[] toks)
   {
     n := 1
-    rule := Rule.make
+    rule := Rule()
     rule.name   = toks[n++]
     rule.from   = toRuleTo(null, toks[n++])
     rule.to     = toRuleTo(rule.from, toks[n++])
@@ -184,7 +184,7 @@ class Build : BuildScript
     rules.add(rule)
   }
 
-  Int toRuleTo(Int from, Str s)
+  Int? toRuleTo(Int? from, Str s)
   {
     if (s == "min")  return 1900
     if (s == "only") return from
@@ -195,7 +195,7 @@ class Build : BuildScript
   static Weekday toWeekday(Str s)
   {
     x := weekdays[s]
-    if (x == null) throw ParseErr.make(s)
+    if (x == null) throw ParseErr(s)
     return x
   }
   static const Str:Weekday weekdays :=
@@ -212,7 +212,7 @@ class Build : BuildScript
   static Month toMonth(Str s)
   {
     x := months[s]
-    if (x == null) throw ParseErr.make(s)
+    if (x == null) throw ParseErr(s)
     return x
   }
   static const Str:Month months :=
@@ -249,13 +249,13 @@ class Build : BuildScript
 
     // sanity check that we have at least one rule
     if (z.rules.isEmpty)
-      throw Err.make("Big problem in $z.name")
+      throw Err("Big problem in $z.name")
 
     // reverse sort by year
     z.rules.sortr |NormRule a, NormRule b->Int| { return a.startYear <=> b.startYear }
   }
 
-  NormRule[] normalizeZoneItem(Zone z, ZoneItem item, Int from)
+  NormRule[] normalizeZoneItem(Zone z, ZoneItem item, Int? from)
   {
     // map intersection of item and rules into normalized rules
     rules := this.rules.findAll |Rule r->Bool| { return r.name == item.rule }
@@ -267,7 +267,7 @@ class Build : BuildScript
     endYear   := item.until != null ? item.until-1 : maxYear
     for (yr:=startYear; yr<=endYear; ++yr)
     {
-      n := NormRule.make
+      n := NormRule()
       n.startYear = yr
       n.offset    = item.offset
       n.stdAbbr   = item.format.replace("%s", "S")
@@ -289,7 +289,7 @@ class Build : BuildScript
 
       // we should have one or two rules for this year
       if (yrRules.size != 2)
-        throw Err.make("Problem for year $yr $z.name: $yrRules")
+        throw Err("Problem for year $yr $z.name: $yrRules")
 
       // figure out which is start and which is end, note
       // in the southern hemisphere typically fall is start
@@ -298,13 +298,13 @@ class Build : BuildScript
       b := yrRules[1]
       if (a.save.isZero)
       {
-        if (b.save.isZero) throw Err.make("Both rules zero save $z.name")
+        if (b.save.isZero) throw Err("Both rules zero save $z.name")
         b = yrRules[0]
         a = yrRules[1]
       }
       else
       {
-        if (!b.save.isZero) throw Err.make("Neither rules zero save $z.name")
+        if (!b.save.isZero) throw Err("Neither rules zero save $z.name")
       }
 
       // start of dst
@@ -349,7 +349,7 @@ class Build : BuildScript
   Void writeDatabase()
   {
     // magic "fantz 01"
-    buf := Buf.make
+    buf := Buf()
     buf.write('f').write('a').write('n').write('t')
        .write('z').write(' ').write('0').write('1')
 
@@ -457,15 +457,15 @@ class Rule
       return from <= year && year <= to
   }
 
-  Str name
-  Int from
-  Int to
-  Str kind
-  Month in
-  OnDay on
-  AtTime at
-  AtTime save
-  Int letter
+  Str? name
+  Int? from
+  Int? to
+  Str? kind
+  Month? in
+  OnDay? on
+  AtTime? at
+  AtTime? save
+  Int? letter
 }
 
 **************************************************************************
@@ -503,11 +503,11 @@ class Zone
     rules.each |NormRule r| { echo("  $r") }
   }
 
-  Str name
+  Str? name
   ZoneItem[] items := ZoneItem[,]
-  NormRule[] rules  // normalized rules
-  Int offsetPos1    // to backpatch
-  Int offsetPos2    // to backpatch
+  NormRule[]? rules  // normalized rules
+  Int? offsetPos1    // to backpatch
+  Int? offsetPos2    // to backpatch
 }
 
 **************************************************************************
@@ -526,10 +526,10 @@ class ZoneItem
       return format.replace("%s", letter.toChar)
   }
 
-  AtTime offset
-  Str rule
-  Str format
-  Int until
+  AtTime? offset
+  Str? rule
+  Str? format
+  Int? until
 }
 
 **************************************************************************
@@ -563,21 +563,21 @@ class NormRule
            dstEndAt    == x.dstEndAt
   }
 
-  Int startYear
-  AtTime offset
-  Str stdAbbr
+  Int? startYear
+  AtTime? offset
+  Str? stdAbbr
 
-  Bool dst := false
-  AtTime dstOffset
-  Str dstAbbr
+  Bool? dst := false
+  AtTime? dstOffset
+  Str? dstAbbr
 
-  Month dstStartMon
-  OnDay dstStartOn
-  AtTime dstStartAt
+  Month? dstStartMon
+  OnDay? dstStartOn
+  AtTime? dstStartAt
 
-  Month dstEndMon
-  OnDay dstEndOn
-  AtTime dstEndAt
+  Month? dstEndMon
+  OnDay? dstEndOn
+  AtTime? dstEndAt
 }
 
 **************************************************************************
@@ -614,7 +614,7 @@ class OnDay
     if (gt != null)
     {
       x.mode = '>'
-      x.weekday = Build.toWeekday(s[0...gt])
+      x.weekday = Build.toWeekday(s[0..<gt])
       x.day = s[gt+2..-1].toInt
       return x
     }
@@ -624,7 +624,7 @@ class OnDay
     return x
   }
 
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := (OnDay)obj
     return mode    == x.mode    &&
@@ -634,7 +634,7 @@ class OnDay
 
   override Str toStr() { return str }
 
-  Str str
+  Str? str
   Int mode         // 'd', 'l', '>', '<'
   Weekday weekday := Weekday.sun
   Int day := 0
@@ -665,11 +665,11 @@ class AtTime
   static AtTime parse(Str s)
   {
     t := make
-    if (s.endsWith("w")) { s = s[0...-1]; }
-    if (s.endsWith("s")) { s = s[0...-1]; t.wall = 's' }
-    if (s.endsWith("u")) { s = s[0...-1]; t.wall = 'u' }
+    if (s.endsWith("w")) { s = s[0..<-1]; }
+    if (s.endsWith("s")) { s = s[0..<-1]; t.wall = 's' }
+    if (s.endsWith("u")) { s = s[0..<-1]; t.wall = 'u' }
 
-    toks := s.split(":")
+    toks := s.split(':')
     t.hr = toks[0].toInt
     if (toks.size > 1)
     {
@@ -678,7 +678,7 @@ class AtTime
       {
         t.sec = toks[2].toInt
         if (toks.size > 3)
-          throw ParseErr.make
+          throw ParseErr()
       }
     }
     return t
@@ -707,7 +707,7 @@ class AtTime
     return "$hr:$min:$sec"
   }
 
-  override Bool equals(Obj obj)
+  override Bool equals(Obj? obj)
   {
     x := (AtTime)obj
     return hr   == x.hr  &&
@@ -716,9 +716,9 @@ class AtTime
            wall == x.wall
   }
 
-  Int hr
-  Int min
-  Int sec
+  Int? hr
+  Int? min
+  Int? sec
   Int wall := 'w'  // 'w', 's', or 'u'
 }
 
