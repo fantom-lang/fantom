@@ -195,7 +195,8 @@ public class LocalFile
     try
     {
       java.io.File canonical = file.getCanonicalFile();
-      Uri uri = fileToUri(canonical, canonical.isDirectory(), "file");
+      boolean isDir = canonical.exists() ? canonical.isDirectory() : this.uri.isDir();
+      Uri uri = fileToUri(canonical, isDir, "file");
       return new LocalFile(uri, canonical);
     }
     catch (java.io.IOException e)

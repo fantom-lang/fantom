@@ -243,7 +243,7 @@ public class Log
   {
     try
     {
-      File f  = Sys.homeDir().plus("lib/log.props");
+      File f  = Repo.boot().dir().plus("lib/log.props");
       if (f.exists())
       {
         Map props = logProps = f.readProps();

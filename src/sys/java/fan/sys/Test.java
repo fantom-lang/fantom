@@ -204,7 +204,7 @@ public class Test
   {
     if (tempDir == null)
     {
-      tempDir = Sys.appDir();
+      tempDir = Repo.working().dir().plus("test/");
       tempDir.delete();
       tempDir.create();
     }

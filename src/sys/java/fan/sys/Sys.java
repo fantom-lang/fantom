@@ -35,9 +35,8 @@ public final class Sys
 
   public static Map env() { return env; }
 
-  public static fan.sys.File homeDir() { return homeDir; }
-
-  public static fan.sys.File appDir() { return appDir; }
+// TODO
+public static fan.sys.File homeDir() { return homeDir; }
 
   public static String hostName() { return hostName; }
 
@@ -96,7 +95,6 @@ public final class Sys
 //////////////////////////////////////////////////////////////////////////
 
   public static final File HomeDir;
-  public static final File AppDir;
   public static final File PodsDir;
   public static final Pod  SysPod;
   public static final InStream  StdIn  = new SysInStream(System.in);
@@ -117,8 +115,7 @@ public final class Sys
     try
     {
       // map key directories
-      HomeDir = sysPropToDir("fan.home",   "FAN_HOME", null);
-      AppDir  = sysPropToDir("fan.appDir", "FAN_APPDIR", new File(".").getCanonicalPath().toString());
+      HomeDir = sysPropToDir("fan.home", "FAN_HOME", null);
       PodsDir = new File(HomeDir, "lib" + File.separator + "fan");
 
       // check fan.usePrecompiledOnly
@@ -356,7 +353,6 @@ public final class Sys
 
   public static final List args = new List(StrType);
   public static final LocalFile homeDir = toLocalFile("homeDir", HomeDir);
-  public static final LocalFile appDir  = toLocalFile("appDir",  AppDir);
 
   private static LocalFile toLocalFile(String fieldName, File f)
   {
