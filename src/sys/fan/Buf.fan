@@ -315,6 +315,12 @@ class Buf
   This writeObj(Obj? obj, [Str:Obj]? options := null)
 
   **
+  ** Convenience for [out.writeSymbols]`OutStream.writeSymbols`
+  ** Return this.
+  **
+  This writeSymbols(Str:Obj? symbols)
+
+  **
   ** Convenience for [out.writeXml]`OutStream.writeXml`
   ** Return this.
   **
@@ -472,6 +478,11 @@ class Buf
   ** Convenience for [in.readObj]`InStream.readObj`
   **
   Obj? readObj([Str:Obj]? options := null)
+
+  **
+  ** Convenience for [in.readObj]`InStream.readSymbols`
+  **
+  Str:Obj? readSymbols()
 
 //////////////////////////////////////////////////////////////////////////
 // Conversions

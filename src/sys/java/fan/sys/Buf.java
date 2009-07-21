@@ -264,6 +264,8 @@ public abstract class Buf
   public final Buf writeObj(Object obj) { out.writeObj(obj); return this; }
   public final Buf writeObj(Object obj, Map opt) { out.writeObj(obj, opt); return this; }
 
+  public final Buf writeSymbols(Map symbols) { out.writeSymbols(symbols); return this; }
+
   public final Buf writeXml(String s) { out.writeXml(s, 0); return this; }
   public final Buf writeXml(String s, long flags) { out.writeXml(s, flags); return this; }
 
@@ -331,6 +333,8 @@ public abstract class Buf
 
   public final Object readObj() { return in.readObj(); }
   public final Object readObj(Map opt) { return in.readObj(opt); }
+
+  public final Map readSymbols() { return in.readSymbols(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Hex

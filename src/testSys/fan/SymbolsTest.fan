@@ -11,6 +11,11 @@
 **
 class SymbolsTest : Test
 {
+
+//////////////////////////////////////////////////////////////////////////
+// Basics
+//////////////////////////////////////////////////////////////////////////
+
   Void testBasics()
   {
     verifyImmutable(@testSys::boolA, "boolA",  true)
@@ -64,5 +69,55 @@ class SymbolsTest : Test
     verifyEq(x.defVal, val)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// IO
+//////////////////////////////////////////////////////////////////////////
+
+  Void testIO()
+  {
+    verifyIO("", Str:Obj?[:])
+    verifyIO("foo=5", Str:Obj?["foo":5])
+    verifyIO("a=\"hello\"", Str:Obj?["a":"hello"])
+    verifyIO(
+      """using sys
+         using testSys
+         n=null;   b=true;   i=123456789
+         f=12.4f;  d=3.33d;  dur=3min
+         uri=`http://fandev.org/`
+         str="foo\nbar\u2cd3"
+         ver=Version("1.2.3")
+         date=Date("2009-07-21")
+         listA=[1, 2, null, 4]
+         listB=[Depend("sys 1.0"),
+                Depend("inet 1.0")]
+         // comment
+         mapA=[0:"zero", 4:"four"]
+         serA=SerA { i = 1972 }
+         serList=[SerA { i = 1973; s="a"}, SerA { i = 1974; s="b" }]
+         """,
+      Str:Obj?[
+        "n":null,  "b":true,  "i":123456789,
+        "f":12.4f, "d":3.33d, "dur":3min,
+        "uri":`http://fandev.org/`,
+        "str":"foo\nbar\u2cd3",
+        "ver":Version("1.2.3"),
+        "date":Date("2009-07-21"),
+        "listA":[1, 2, null, 4],
+        "listB":[Depend("sys 1.0"), Depend("inet 1.0")],
+        "mapA": [0:"zero", 4:"four"],
+        "serA": SerA { i = 1972 },
+        "serList": [SerA { i = 1973; s="a" }, SerA { i = 1974; s="b" }],
+       ])
+
+    verifyErr(IOErr#) { "a=3 b=5".in.readSymbols }
+  }
+
+  Void verifyIO(Str s, Str:Obj? expected)
+  {
+    actual := s.in.readSymbols
+    verifyEq(actual.type, [Str:Obj?]#)
+    verifyEq(actual, expected)
+    verifyEq(Buf().writeSymbols(actual).flip.readSymbols, expected)
+  }
 
 }

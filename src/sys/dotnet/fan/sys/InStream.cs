@@ -517,6 +517,11 @@ namespace Fan.Sys
       return new ObjDecoder(this, options).readObj();
     }
 
+    public virtual Map readSymbols()
+    {
+      return new ObjDecoder(this, null).readSymbols();
+    }
+
     public virtual Map readProps()
     {
       Charset origCharset = charset();

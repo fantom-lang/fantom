@@ -242,6 +242,12 @@ public class OutStream
     return this;
   }
 
+  public OutStream writeSymbols(Map symbols)
+  {
+    new ObjEncoder(this, null).writeSymbols(symbols);
+    return this;
+  }
+
   public OutStream writeProps(Map props) { return writeProps(props, true); }
   public OutStream writeProps(Map props, boolean close)
   {
