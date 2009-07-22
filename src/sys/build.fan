@@ -22,6 +22,7 @@ class Build : BuildPod
   override Void setup()
   {
     podName = "sys"
+    outDir  = @buildDevHome.val + `lib/fan/`
   }
 
   @target="compile fan source into pod"

@@ -19,6 +19,7 @@ class Build : BuildPod
   {
     podName    = "compiler"
     dependsDir = libFanDir.uri
+    outDir     = @buildDevHome.val + `lib/fan/`
   }
 
 }
