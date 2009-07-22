@@ -98,7 +98,6 @@ The contents of "build.fan" is the build script:
     override Void setup()
     {
       podName = "hello"
-      version = Version("1.0")
     }
   }
 

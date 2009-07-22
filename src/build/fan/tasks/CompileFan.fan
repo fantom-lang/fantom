@@ -32,7 +32,9 @@ class CompileFan : Task
     input.includeSrc  = includeSrc
     input.mode        = CompilerInputMode.file
     input.podDef      = script.podDef
-    input.outDir      = script.libFanDir
+// TODO-REPO
+//    input.outDir      = script.libFanDir
+    input.outDir      = Repo.working.home + `lib/fan/`
     input.output      = CompilerOutputMode.podFile
 
     try
