@@ -30,7 +30,7 @@ fan.runtime=java
 fan.java.options=-Xmx128M
 
 //////////////////////////////////////////////////////////////////////////
-// Sql/Haven
+// Sql
 //////////////////////////////////////////////////////////////////////////
 
 // drivers
@@ -43,7 +43,7 @@ sql.test.password=fantest
 sql.test.dialect=sql::MySqlDialect
 
 //////////////////////////////////////////////////////////////////////////
-// Build
+// Bootstrap Build
 //////////////////////////////////////////////////////////////////////////
 
 // we substitute the runtime used for these build scripts
@@ -61,17 +61,3 @@ fan.runtime.substitutes=                             \
   /C:/dev/fan/src/compiler/build.fan     = C:\\dev\\rel  \
   /C:/dev/fan/src/compilerJava/build.fan = C:\\dev\\rel  \
   /C:/dev/fan/src/build/build.fan        = C:\\dev\\rel
-
-// used to change version for all pods at once
-fan.build.globalVersion=1.0.44
-
-// Must be configured boot build in substitute/release installation
-//fan.build.devHome=/C:/dev/fan/
-//fan.build.devHome=/home/dev/fan/rel/
-
-// Windows setup
-fan.build.jdkHome=/C:/dev/tools/java/
-fan.build.dotnetHome=/C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
-
-// Mac setup
-//fan.build.jdkHome=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/
