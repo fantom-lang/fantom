@@ -180,46 +180,19 @@ namespace Fan.Sys
     public static MimeType forExt(string s)
     {
       if (s == null) return null;
-      lock (m_extLock)
-      {
-        if (m_extMap == null) m_extMap = loadExtMap();
-        return (MimeType)m_extMap[FanStr.lower(s)];
-      }
-    }
-
-    internal static Hashtable loadExtMap()
-    {
       try
       {
-        LocalFile f = new LocalFile(new System.IO.FileInfo(Sys.HomeDir + File.m_sep + "lib" + File.m_sep + "ext2mime.props"));
-        Map props = f.readProps();
-        Hashtable map = new Hashtable((int)props.size() * 3);
-        IDictionaryEnumerator en = props.pairsIterator();
-        while (en.MoveNext())
-        {
-          string ext  = (string)en.Key;
-          string mime = (string)en.Value;
-          try
-          {
-            map[FanStr.lower(ext)] = fromStr(mime);
-          }
-          catch (System.Exception)
-          {
-            System.Console.WriteLine("WARNING: Invalid entry in lib/ext2mime.props: " + ext + ": " + mime);
-          }
-        }
-        return map;
+        return (MimeType)Repo.readSymbolsCached(etcUri, Duration.m_oneMin).get(FanStr.lower(s));
       }
       catch (System.Exception e)
       {
-        System.Console.WriteLine("WARNING: Cannot load lib/ext2mime.props");
-        System.Console.WriteLine("  " + e);
+        System.Console.WriteLine("MimeType.forExt: " + s);
+        Err.dumpStack(e);
+        return null;
       }
-      return new Hashtable();
     }
 
-    internal static object m_extLock = new object();
-    internal static Hashtable m_extMap;
+    static readonly Uri etcUri = Uri.fromStr("etc/sys/ext2mime.fansym");
 
   //////////////////////////////////////////////////////////////////////////
   // Identity

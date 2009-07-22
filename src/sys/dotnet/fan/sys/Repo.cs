@@ -188,8 +188,10 @@ namespace Fan.Sys
       {
         if (m_files.sz() != x.sz()) return true;
         for (int i=0; i<x.sz(); ++i)
+        {
           if (m_modified[i] != ((File)x.get(i)).modified().ticks())
             return true;
+        }
         return false;
       }
 
