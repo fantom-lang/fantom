@@ -77,12 +77,9 @@ public class Log
         byName.put(name, self);
 
         // check for initial level
-        if (logProps != null)
-        {
-          String val = (String)logProps.get(name);
-          if (val != null)
-            self.level = LogLevel.fromStr(val);
-        }
+        Map logLevels = Repo.readSymbolsCached(Uri.fromStr("etc/sys/log.fansym"));
+        String val = (String)logLevels.get(name);
+        if (val != null) self.level = LogLevel.fromStr(val);
       }
     }
   }
@@ -236,44 +233,11 @@ public class Log
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Static Init
-//////////////////////////////////////////////////////////////////////////
-
-  static
-  {
-    try
-    {
-      File f  = Repo.boot().home().plus("lib/log.props");
-      if (f.exists())
-      {
-        Map props = logProps = f.readProps();
-        List keys = props.keys();
-        for (int i=0; i<keys.sz(); ++i)
-        {
-          String key = (String)keys.get(i);
-          String val = (String)props.get(key);
-          if (LogLevel.fromStr(val, false) == null)
-          {
-            System.out.println("ERROR: Invalid level lib/log.props#" + key + " = " + val);
-            props.remove(key);
-          }
-        }
-      }
-    }
-    catch (Exception e)
-    {
-      System.out.println("ERROR: Cannot load lib/log.props");
-      e.printStackTrace();
-    }
-  }
-
-//////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
   private static Object lock = new Object();       // synchronization
   private static HashMap byName = new HashMap();   // String -> Log
-  private static Map logProps;
 
   private String name;
   private volatile LogLevel level = LogLevel.info;
