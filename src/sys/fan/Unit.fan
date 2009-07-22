@@ -10,7 +10,7 @@
 ** Unit models a unit of measurement.  Units are represented as:
 **
 **  - name: identifier for the unit within the VM.  Units are typically
-**    defined in the unit database "lib/units.fog" or can be defined
+**    defined in the unit database "etc/sys/units.fog" or can be defined
 **    by the 'fromStr' method
 **
 **  - symbol: the abbreviated symbol - for example "kilogram" has
@@ -71,19 +71,19 @@ const class Unit
   **
   ** Find a unit by its name if it has been defined in this VM.  If the
   ** unit isn't defined yet and checked is false then return null, otherwise
-  ** throw Err.  Any units declared in "lib/units.fog" are implicitly defined.
+  ** throw Err.  Any units declared in "etc/sys/units.fog" are implicitly defined.
   **
   static Unit? find(Str s, Bool checked := true)
 
   **
   ** List all the units currently defined in the VM.  Any units
-  ** declared in "lib/units.fog" are implicitly defined.
+  ** declared in "etc/sys/units.fog" are implicitly defined.
   **
   static Unit[] list()
 
   **
   ** List the quantity names used to organize the unit database in
-  ** "lib/units.fog".  Quantities are merely a convenient mechanism
+  ** "etc/sys/units.fog".  Quantities are merely a convenient mechanism
   ** to organize the unit database - there is no guarantee that they
   ** include all current VM definitions.
   **
@@ -91,7 +91,7 @@ const class Unit
 
   **
   ** Get the units organized under a specific quantity name in the
-  ** unit database "lib/units.fog".  Quantities are merely a convenient
+  ** unit database "etc/sys/units.fog".  Quantities are merely a convenient
   ** mechanism to organize the unit database - there is no guarantee that
   ** they include all current VM definitions.
   **
