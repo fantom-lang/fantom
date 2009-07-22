@@ -56,6 +56,14 @@ public class Token
     return BOOL_LITERAL <= type && type <= NULL_LITERAL;
   }
 
+  public static String keyword(int type)
+  {
+    if (AS <= type && type <= USING)
+      return toString(type);
+    else
+      return null;
+  }
+
   public static String toString(int type)
   {
     switch (type)

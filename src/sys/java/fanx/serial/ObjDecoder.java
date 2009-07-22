@@ -54,7 +54,9 @@ public class ObjDecoder
     readHeader();
     while (curt != Token.EOF)
     {
-      String id = consumeId("Expecting symbol name");
+      String id= Token.keyword(curt);
+      if (id != null) consume();
+      else id = consumeId("Expecting symbol name");
       consume(Token.EQ, "Expected '=' after symbol name");
       int line = tokenizer.line;
       Object val = readObj();

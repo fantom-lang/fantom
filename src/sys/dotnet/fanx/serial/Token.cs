@@ -56,6 +56,14 @@ namespace Fanx.Serial
       return BOOL_LITERAL <= type && type <= NULL_LITERAL;
     }
 
+    public static string keyword(int type)
+    {
+      if (AS <= type && type <= USING)
+        return toString(type);
+      else
+        return null;
+    }
+
     public static string toString(int type)
     {
       switch (type)
