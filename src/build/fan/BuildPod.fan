@@ -48,6 +48,12 @@ abstract class BuildPod : BuildScript
   **
   Uri? dependsDir
 
+  **
+  ** Directory to write pod file.  By default it goes into
+  ** "Repo.working + fan/lib"
+  **
+  Uri? outDir
+
 //////////////////////////////////////////////////////////////////////////
 // Setup
 //////////////////////////////////////////////////////////////////////////
@@ -67,9 +73,9 @@ abstract class BuildPod : BuildScript
   internal override Void validate()
   {
     if (version == null) version = @buildVersion.val
+    if (outDir == null)  outDir  = (Repo.working.home + `lib/fan/`).uri
     ok := true
     ok &= validateReqField("podName")
-    ok &= validateReqField("version")
     if (!ok) throw FatalBuildErr.make
 
     // boot strap checking - ensure that we aren't
