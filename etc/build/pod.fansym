@@ -1,5 +1,8 @@
 //
-// build symbols
+// Symbol configuration - build
+//
+// History:
+//   22 Jul 09  Brian Frank  Creation
 //
 
 using sys

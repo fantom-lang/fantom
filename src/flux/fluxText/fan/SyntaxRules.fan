@@ -56,12 +56,14 @@ const class SyntaxRules
 
   internal static SyntaxRules load(SyntaxOptions options, File? f, Str? firstLine)
   {
+    extToRules := @extToRules.val
+
     // try file extension first
     SyntaxRules? rules := null
-    extToRulesName := options.extToRules[f?.ext?.lower ?: "not.found"]
+    extToRulesName := extToRules[f?.ext?.lower ?: "not.found"]
     if (extToRulesName != null)
     {
-      rules = Flux.loadOptions("syntax/syntax-$extToRulesName", null)
+      rules = findRules(extToRulesName)
       if (rules != null) return rules
     }
 
@@ -73,13 +75,20 @@ const class SyntaxRules
       cmd := toks[0].split('/').last.lower
       if (cmd == "env" && toks.size > 1)
         cmd = toks[1].split('/').last.lower
-      cmdToRulesName := options.extToRules[cmd]
-      rules = Flux.loadOptions("syntax/syntax-$cmdToRulesName", null)
+      cmdToRulesName := extToRules[cmd]
+      rules = findRules(cmdToRulesName)
       if (rules != null) return rules
     }
 
     // return default rules
     return SyntaxRules()
+  }
+
+  private static SyntaxRules? findRules(Str name)
+  {
+    file := Repo.findFile(`etc/fluxText/syntax/syntax-${name}.fog`, false)
+    if (file == null) return null
+    return file.readObj
   }
 
 }

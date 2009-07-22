@@ -65,7 +65,7 @@ internal const class FileIndex : Actor
 
     // handle find message
     map := cx["map"] as Uri:FileItem
-    if (map == null) throw Err("Must configure GeneralOptions.indexDirs")
+    if (map == null) throw Err("Must configure @indexDirs")
     return doFind(map, msg)
   }
 
@@ -94,7 +94,7 @@ internal const class FileIndex : Actor
   Void doRebuild(Context cx)
   {
     cx["map"] = null
-    dirs := GeneralOptions.load.indexDirs
+    dirs := @indexDirs.val
     if (dirs.isEmpty) return
 
     map := Uri:FileItem[:]
