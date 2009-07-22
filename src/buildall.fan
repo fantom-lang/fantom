@@ -138,7 +138,7 @@ class Build : BuildGroup
   @target="create build zip file"
   Void zip()
   {
-    moniker := "fan-$globalVersion"
+    moniker := "fan-${@buildVersion}"
     zip := CreateZip(this)
     {
       outFile = devHomeDir + ("${moniker}.zip").toUri

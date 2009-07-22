@@ -17,9 +17,8 @@ class Build : BuildPod
 
   override Void setup()
   {
-    podName     = "compiler"
-    version     = globalVersion
-    dependsDir  = libFanDir.uri
+    podName    = "compiler"
+    dependsDir = libFanDir.uri
   }
 
 }
