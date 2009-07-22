@@ -88,6 +88,7 @@ class SymbolsTest : Test
     verifyIO("", Str:Obj?[:])
     verifyIO("foo=5", Str:Obj?["foo":5])
     verifyIO("a=\"hello\"", Str:Obj?["a":"hello"])
+    verifyIO("as=\"action-script\"", Str:Obj?["as":"action-script"]) // keyword as name
     verifyIO(
       """using sys
          using testSys

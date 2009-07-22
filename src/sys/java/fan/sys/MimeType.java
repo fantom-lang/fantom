@@ -182,47 +182,19 @@ public final class MimeType
   public static MimeType forExt(String s)
   {
     if (s == null) return null;
-    synchronized (extLock)
-    {
-      if (extMap == null) extMap = loadExtMap();
-      return (MimeType)extMap.get(FanStr.lower(s));
-    }
-  }
-
-  static HashMap loadExtMap()
-  {
     try
     {
-      LocalFile f = new LocalFile(new java.io.File(Sys.HomeDir, "lib" + File.sep + "ext2mime.props"));
-      Map props = f.readProps();
-      HashMap map = new HashMap((int)props.size() * 3);
-      Iterator it = props.pairsIterator();
-      while (it.hasNext())
-      {
-        Entry entry = (Entry)it.next();
-        String ext  = (String)entry.getKey();
-        String mime = (String)entry.getValue();
-        try
-        {
-          map.put(FanStr.lower(ext), fromStr(mime));
-        }
-        catch (Exception e)
-        {
-          System.out.println("WARNING: Invalid entry in lib/ext2mime.props: " + ext + ": " + mime);
-        }
-      }
-      return map;
+      return (MimeType)Repo.readSymbolsCached(etcUri, Duration.oneMin).get(FanStr.lower(s));
     }
     catch (Exception e)
     {
-      System.out.println("WARNING: Cannot load lib/ext2mime.props");
-      System.out.println("  " + e);
+      System.out.println("MimeType.forExt: " + s);
+      e.printStackTrace();
+      return null;
     }
-    return new HashMap();
   }
 
-  static Object extLock = new Object();
-  static HashMap extMap;
+  static final Uri etcUri = Uri.fromStr("etc/sys/ext2mime.fansym");
 
 //////////////////////////////////////////////////////////////////////////
 // Identity

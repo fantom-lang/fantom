@@ -55,7 +55,9 @@ namespace Fanx.Serial
       readHeader();
       while (curt != Token.EOF)
       {
-        string id = consumeId("Expecting symbol name");
+        string id = Token.keyword(curt);
+        if (id != null) consume();
+        else id = consumeId("Expecting symbol name");
         consume(Token.EQ, "Expected '=' after symbol name");
         int line = tokenizer.m_line;
         object val = readObj();
