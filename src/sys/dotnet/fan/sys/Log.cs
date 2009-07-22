@@ -77,12 +77,9 @@ namespace Fan.Sys
           byName[name] = self;
 
           // check for initial level
-          if (logProps != null)
-          {
-            string val = (string)logProps.get(name);
-            if (val != null)
-              self.m_level = LogLevel.fromStr(val);
-          }
+          Map logLevels = Repo.readSymbolsCached(Uri.fromStr("etc/sys/log.fansym"));
+          string val = (string)logLevels.get(name);
+          if (val != null) self.m_level = LogLevel.fromStr(val);
         }
       }
     }
@@ -238,31 +235,6 @@ namespace Fan.Sys
         m_handlers = new Func[0];
         Err.dumpStack(e);
       }
-
-      try
-      {
-        File f  = Sys.homeDir().plus("lib/log.props");
-        if (f.exists())
-        {
-          Map props = logProps = f.readProps();
-          List keys = props.keys();
-          for (int i=0; i<keys.sz(); ++i)
-          {
-            string key = (string)keys.get(i);
-            string val = (string)props.get(key);
-            if (LogLevel.fromStr(val, false) == null)
-            {
-              System.Console.WriteLine("ERROR: Invalid level lib/log.props#" + key + " = " + val);
-              props.remove(key);
-            }
-          }
-        }
-      }
-      catch (System.Exception e)
-      {
-        System.Console.WriteLine("ERROR: Cannot load lib/log.props");
-        Err.dumpStack(e);
-      }
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -271,7 +243,6 @@ namespace Fan.Sys
 
     private static object lockObj = new System.Object();  // synchronization
     private static Hashtable byName = new Hashtable();    // string -> Log
-    private static Map logProps;
 
     private string m_name;
     private volatile LogLevel m_level = LogLevel.m_info;
