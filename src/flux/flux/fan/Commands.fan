@@ -767,7 +767,7 @@ internal class RecentCommand : FluxCommand
 internal class OptionsCommand : FluxCommand
 {
   new make() : super(CommandId.options) {}
-  override Void invoked(Event? event) { frame.load(Flux.homeDir.uri) }
+  override Void invoked(Event? event) { frame.load((Repo.boot.home+`etc/flux/`).uri) }
 }
 
 ** Refresh the tools menu
