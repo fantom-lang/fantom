@@ -354,7 +354,7 @@ internal class Commands
   readonly Int historyMenuSize
   readonly Menu? toolsMenu
   readonly Int toolsMenuSize
-  readonly File toolsDir := Flux.homeDir+`tools/`
+  readonly File toolsDir := Repo.boot.home +`etc/flux/tools/`
 }
 
 //////////////////////////////////////////////////////////////////////////
