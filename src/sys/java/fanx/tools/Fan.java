@@ -192,7 +192,7 @@ public class Fan
     for (int i=0; i<pods.sz(); ++i)
     {
       Pod pod = (Pod)pods.get(i);
-      System.out.println("  " +
+      println("  " +
         FanStr.justl(pod.name(), 18L) + "  " +
         FanStr.justl(pod.version().toString(), 8) + "  " +
         pod.repo().name());

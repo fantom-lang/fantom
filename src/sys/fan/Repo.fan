@@ -110,6 +110,6 @@ final const class Repo
   ** been modified.  Throw NotImmutableErr is any of the symbol
   ** values are mutable.
   **
-  static Str:Obj? readSymbolsCached(Uri uri, Duration maxAge := 1sec)
+  static Str:Obj? readSymbolsCached(Uri uri, Duration maxAge := 1min)
 
 }

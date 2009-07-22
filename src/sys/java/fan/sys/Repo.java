@@ -146,7 +146,7 @@ public final class Repo
     return map;
   }
 
-  public static Map readSymbolsCached(Uri uri) { return readSymbolsCached(uri, Duration.oneSec); }
+  public static Map readSymbolsCached(Uri uri) { return readSymbolsCached(uri, Duration.oneMin); }
   public static Map readSymbolsCached(Uri uri, Duration maxAge)
   {
     synchronized (cachedSymbols)

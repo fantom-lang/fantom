@@ -27,7 +27,7 @@ namespace Fanx.Fcode
   // Constructor
   //////////////////////////////////////////////////////////////////////////
 
-    public FPod(string podName, ZipFile zipFile)
+    public FPod(string podName, ZipFile zipFile, object repo)
     {
       this.m_podName    = podName;
       this.m_store      = zipFile == null ? null : new FStore(this, zipFile);
@@ -36,6 +36,7 @@ namespace Fanx.Fcode
       this.m_fieldRefs  = new FTable.FieldRefs(this);
       this.m_methodRefs = new FTable.MethodRefs(this);
       this.m_symbolRefs = new FTable.SymbolRefs(this);
+      this.m_repo       = repo;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -330,5 +331,6 @@ namespace Fanx.Fcode
     public FLiterals m_literals;  // literal constants (on read fully or lazy load)
     private NMethod[] m_ncalls;   // cached fan methodRef -> .NET method signatures
     private NField[] m_nfields;   // cached fan fieldRef  -> .NET field signatures
+    public object m_repo;         // sys::Repo or null is sys boot repo
   }
 }
