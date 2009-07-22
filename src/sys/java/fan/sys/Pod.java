@@ -103,7 +103,7 @@ public class Pod
     FPod fpod = null;
     try
     {
-      fpod = new FPod(null, null);
+      fpod = new FPod(null, null, null);
       fpod.readFully(new ZipInputStream(SysInStream.java(in)));
     }
     catch (Exception e)
@@ -131,11 +131,18 @@ public class Pod
   {
     // handle sys specially for bootstrapping the VM
     // otherwise delegate to repo
-    File file;
+    File file = null;
+    Object repo = null;
     if (name.equals("sys"))
+    {
       file = new File(Sys.PodsDir, name + ".pod");
+      repo = null; // can't load this class yet
+    }
     else
-      file = Repo.findPodFile(name);
+    {
+      Repo.PodFile r = Repo.findPodFile(name);
+      if (r != null) { file = r.file; repo = r.repo; }
+    }
 
     // if null or doesn't exist then its a no go
     if (file == null || !file.exists()) throw UnknownPodErr.make(name).val;
@@ -146,7 +153,7 @@ public class Pod
     if (!actualName.equals(name)) throw UnknownPodErr.make("Mismatch case: " + name + " != " + actualName).val;
 
     // read in the FPod tables
-    FPod fpod = new FPod(name, new java.util.zip.ZipFile(file));
+    FPod fpod = new FPod(name, new java.util.zip.ZipFile(file), repo);
     fpod.read();
     return fpod;
   }
@@ -174,7 +181,7 @@ public class Pod
             e.printStackTrace();
           }
         }
-        allPodsList = pods.ro();
+        allPodsList = pods.sort().ro();
       }
       return allPodsList;
     }
@@ -187,6 +194,7 @@ public class Pod
   Pod(FPod fpod)
   {
     this.name = fpod.podName;
+    this.repo = fpod.repo;
     load(fpod);
   }
 
@@ -224,8 +232,11 @@ public class Pod
 // Repo
 //////////////////////////////////////////////////////////////////////////
 
-  // TODO-REPO
-  public Repo repo() { return Repo.boot(); }
+  public Repo repo()
+  {
+    if (repo == null && name.equals("sys")) repo = Repo.boot();
+    return (Repo)repo;
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Facets
@@ -524,6 +535,7 @@ public class Pod
   boolean docLoaded;
   Uri fansymUri;
   public String doc;
+  Object repo;
 
 
 }

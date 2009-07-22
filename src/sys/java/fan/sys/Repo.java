@@ -86,12 +86,24 @@ public final class Repo
 // Pods
 //////////////////////////////////////////////////////////////////////////
 
-  static java.io.File findPodFile(String name)
+  static PodFile findPodFile(String name)
   {
-    LocalFile f = (LocalFile)findFile("lib/fan/" + name + ".pod", false);
-    if (f == null) return null;
-    return f.file;
+    Uri uri = Uri.fromStr("lib/fan/" + name + ".pod");
+    for (int i=0; i<list.size(); ++i)
+    {
+      Repo repo = (Repo)list.get(i);
+      File file = repo.home.plus(uri, false);
+      if (file.exists())
+      {
+        PodFile r = new PodFile();
+        r.file = ((LocalFile)file).file;
+        r.repo = repo;
+        return r;
+      }
+    }
+    return null;
   }
+  static class PodFile { java.io.File file; Repo repo; }
 
   static String[] findAllPodNames()
   {

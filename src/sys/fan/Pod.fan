@@ -82,9 +82,11 @@ final const class Pod
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the repo which was used to load this pod.
+  ** Get the repo which was used to load this pod or null
+  ** if this pod was loaded outside the repository (such as
+  ** from a script).
   **
-  Repo repo()
+  Repo? repo()
 
 //////////////////////////////////////////////////////////////////////////
 // Facets
