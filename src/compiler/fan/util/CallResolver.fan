@@ -475,6 +475,8 @@ class CallResolver : CompilerSupport
   {
     //  only care about methods on symbol literals
     if (target == null || target.id !== ExprId.symbolLiteral) return
+    symbol := ((SymbolExpr)target).symbol
+    if (symbol == null) return
 
     // only care about method val/defVal calls on the symbol literal
     method := found as CMethod
@@ -486,7 +488,6 @@ class CallResolver : CompilerSupport
     // is always the base target type - if we aren't
     // calling against the original declaring type
     // then we also need an implicit cast operation
-    symbol := ((SymbolExpr)target).symbol
     from := result.ctype
     result = TypeCheckExpr.coerce(result, symbol.of) { it.from = from }
   }

@@ -18,6 +18,5 @@ class Build : BuildPod
   override Void setup()
   {
     podName = "dom"
-    version = globalVersion
   }
 }

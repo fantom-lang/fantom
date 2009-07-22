@@ -51,11 +51,8 @@ abstract class BuildJava : BuildScript
     // boot strap checking - ensure that we aren't overwriting sys.jar
     if (jar.name == "sys.jar")
     {
-      if (Sys.homeDir == devHomeDir)
-      {
-        props := Sys.homeDir + `lib/sys.props`
-        throw fatal("Must update $props.osPath 'fan.build.devHome' for bootstrap build")
-      }
+      if (Repo.boot.home == devHomeDir)
+        throw fatal("Must update @buildDevHome for bootstrap build")
     }
   }
 
