@@ -18,7 +18,6 @@ class Build : BuildPod
   override Void setup()
   {
     podName    = "compilerJava"
-    version    = globalVersion
     dependsDir = libFanDir.uri
   }
 
