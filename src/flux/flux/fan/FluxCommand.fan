@@ -38,7 +38,7 @@ class FluxCommand : Command
   **
   ** The default accelerator is defined by the localized property
   ** definition.  But we allow the user to redefine key bindings
-  ** via `KeyOptions`.  This constructor automatically checks for
+  ** via `@keyBindings`.  This constructor automatically checks for
   ** additional key bindings.
   **
   new make(Str id, Pod pod := Flux#.pod)
@@ -47,12 +47,12 @@ class FluxCommand : Command
     this.id = id
 
     // check for explicit binding
-    binding := KeyOptions.load.bindings[id]
+    binding := @keyBindings.val[id]
     try
     {
       if (binding != null) accelerator = Key(binding)
     }
-    catch type.log.error("FluxCommand: invalid syntax in keys.fog '$id:$binding'")
+    catch type.log.error("FluxCommand: invalid syntax in @keysBindings '$id:$binding'")
   }
 
   **

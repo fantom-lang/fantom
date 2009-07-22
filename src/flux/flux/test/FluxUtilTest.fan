@@ -9,37 +9,6 @@
 class FluxUtilTest : Test
 {
 
-  Void testOptions()
-  {
-    file := Flux.homeDir + `FluxUtilTest.fog`
-    file.delete
-    verifyFalse(file.exists)
-
-    // default
-    opt := Flux.loadOptions("FluxUtilTest", GeneralOptions#) as GeneralOptions
-    verifyEq(opt.homePage, `flux:start`)
-
-    // write file
-    file.out.print("flux::GeneralOptions { homePage=`/foo` }").close
-    file.modified = DateTime.now + -2min
-    opt = Flux.loadOptions("FluxUtilTest", GeneralOptions#)
-    verifyEq(opt.homePage, `/foo`)
-
-    // cached
-    opt = Flux.loadOptions("FluxUtilTest", GeneralOptions#)
-    verifyEq(opt.homePage, `/foo`)
-
-    // update file (we need to manually change timestamp)
-    file.out.print("flux::GeneralOptions { homePage=`/bar` }").close
-    opt = Flux.loadOptions("FluxUtilTest", GeneralOptions#)
-    verifyEq(opt.homePage, `/bar`)
-
-    // cleanup
-    file.delete
-    opt = Flux.loadOptions("FluxUtilTest", GeneralOptions#)
-    verifyEq(opt.homePage, `flux:start`)
-  }
-
   Void testMarkIdentity()
   {
     a := Mark { uri = `/a.txt`; line = 55 }

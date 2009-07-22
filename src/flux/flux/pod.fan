@@ -58,5 +58,29 @@ pod flux
   **
   Bool fluxSideBar := false
 
+//////////////////////////////////////////////////////////////////////////
+// Options
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Default uri to display on startup.
+  **
+  virtual Uri homePage := `flux:start`
+
+  **
+  ** Directories to index for Goto-File command.
+  **
+  virtual Uri[] indexDirs := Uri[,]
+
+  **
+  ** Binding of command ids to key accelerators.  The keys of this
+  ** map are [FluxCommand.ids]`FluxCommand.id`.  See `CommandId` for
+  ** the commonly used predefined commmands.  The values of the map
+  ** are string representations of `fwt::Key`.  If a command is not mapped
+  ** in this table, then it defaults to the accelerator defined by
+  ** the command's localized props.
+  **
+  virtual Str:Str keyBindings := Str:Str[:]
+
 }
 

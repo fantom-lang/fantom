@@ -291,11 +291,11 @@ class DocTest : Test
     return text[0..-2]
   }
 
-  Doc makeDoc(Str text, TextEditorOptions options := TextEditorOptions.load)
+  Doc makeDoc(Str text, TextEditorOptions options := TextEditorOptions())
   {
     doc := Doc(options,
-               SyntaxOptions.load,
-               SyntaxRules.load(SyntaxOptions.load, null, null))
+               SyntaxOptions(),
+               SyntaxRules.load(SyntaxOptions(), null, null))
     doc.text = text
     return doc
   }

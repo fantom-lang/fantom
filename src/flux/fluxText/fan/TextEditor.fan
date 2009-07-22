@@ -192,8 +192,8 @@ class TextEditor : View
 //////////////////////////////////////////////////////////////////////////
 
   File? file
-  TextEditorOptions options := TextEditorOptions.load
-  SyntaxOptions syntax := SyntaxOptions.load
+  TextEditorOptions options := TextEditorOptions()
+  SyntaxOptions syntax := SyntaxOptions()
   Charset charset := options.charset
   SyntaxRules? rules
   RichText? richText
