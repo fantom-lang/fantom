@@ -64,28 +64,35 @@ class RepoTest : Test
 
   Void testReadSymbols()
   {
-    uri := `test/foo.fansym`
+    uri := `tmp/test/foo.fansym`
     f := Repo.working.home + uri
-    symbols := Str:Obj?["a":4, "b":"hi", "c":[2,3,4]]
-    f.writeSymbols(symbols)
+    try
+    {
+      symbols := Str:Obj?["a":4, "b":"hi", "c":[2,3,4]]
+      f.writeSymbols(symbols)
 
-    verifyEq(Repo.readSymbols(`some-bad-file-foo-bar`), Str:Obj?[:])
-    verifyEq(Repo.readSymbols(uri), symbols)
-    verifyNotSame(Repo.readSymbols(uri), Repo.readSymbols(uri))
+      verifyEq(Repo.readSymbols(`some-bad-file-foo-bar`), Str:Obj?[:])
+      verifyEq(Repo.readSymbols(uri), symbols)
+      verifyNotSame(Repo.readSymbols(uri), Repo.readSymbols(uri))
 
-    cached := Repo.readSymbolsCached(uri)
-    verifySame(cached, Repo.readSymbolsCached(uri))
-    verifyEq(cached.isImmutable(), true)
-    Actor.sleep(10ms)
-    verifySame(cached, Repo.readSymbolsCached(uri, 1ns))
-    symbols["foo"] = "bar"
+      cached := Repo.readSymbolsCached(uri)
+      verifySame(cached, Repo.readSymbolsCached(uri))
+      verifyEq(cached.isImmutable(), true)
+      Actor.sleep(10ms)
+      verifySame(cached, Repo.readSymbolsCached(uri, 1ns))
+      symbols["foo"] = "bar"
 
-    f.writeSymbols(symbols);
-    Actor.sleep(10ms)
-    newCached := Repo.readSymbolsCached(uri, 1ns)
-    verifyNotSame(cached, newCached)
-    verifyEq(cached["foo"], null)
-    verifyEq(newCached["foo"], "bar")
+      f.writeSymbols(symbols);
+      Actor.sleep(10ms)
+      newCached := Repo.readSymbolsCached(uri, 1ns)
+      verifyNotSame(cached, newCached)
+      verifyEq(cached["foo"], null)
+      verifyEq(newCached["foo"], "bar")
+    }
+    finally
+    {
+      f.delete
+    }
   }
 
 }
