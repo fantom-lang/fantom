@@ -22,7 +22,7 @@ class History
   **
   static History load()
   {
-    return Flux.loadOptions("session/history", History#)
+    return Flux.loadSession("history", History#)
   }
 
   **
@@ -31,7 +31,7 @@ class History
   **
   This save()
   {
-    Flux.saveOptions("session/history", this)
+    Flux.saveSession("history", this)
     return this
   }
 

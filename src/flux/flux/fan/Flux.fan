@@ -16,22 +16,15 @@ class Flux
 {
 
   **
-  ** The flux home defaults to "{Repo.boot.home}/flux/".
-  **
-  static File homeDir() { return (Repo.boot.home + `flux/`).normalize }
-
-  **
   ** Standard log for flux pod.
   **
   static const Log log := Flux#.log
 
   **
-  ** Read an options file into memory.  An option file is a
-  ** serialized object stored at "{fluxHome}/{name}.fog".
-  ** By convention flux option classes end in "Options".
-  ** If the options file is not found, then return 't?.make'.
+  ** Read an session options file into memory.  An option file is a
+  ** serialized object stored at "etc/flux/session/{name}.fog".
   **
-  static Obj? loadOptions(Str name, Type? t)
+  internal static Obj? loadSession(Str name, Type? t)
   {
     [Str:CachedOptions]? options := Actor.locals["flux.options"]
     if (options == null) Actor.locals["flux.options"] = options = Str:CachedOptions[:]
@@ -42,7 +35,7 @@ class Flux
       return cached.value
 
     // not cached or modified since we loaded cache
-    file := Flux.homeDir + "${name}.fog".toUri
+    file := Repo.working.home + `etc/flux/session/${name}.fog`
     Obj? value := null
     try
     {
@@ -65,13 +58,13 @@ class Flux
   }
 
   **
-  ** Save options back to file. An option file is a
-  ** serialized object stored at "{fluxName}/{name}.fog".
+  ** Save sessions options back to file. An option file is a
+  ** serialized object stored at "etc/flux/session/{name}.fog".
   ** Return true on success, false on failure.
   **
-  static Bool saveOptions(Str name, Obj options)
+  internal static Bool saveSession(Str name, Obj options)
   {
-    file := Flux.homeDir + "${name}.fog".toUri
+    file := Repo.working.home + `etc/flux/session/${name}.fog`
     try
     {
       log.debug("Save options: $file")
