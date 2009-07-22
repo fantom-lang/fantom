@@ -129,9 +129,16 @@ public class Pod
   public static FPod readFPod(String name)
     throws Exception
   {
-    // check that pod file even exists
-    File file = new File(Sys.PodsDir, name + ".pod");
-    if (!file.exists()) throw UnknownPodErr.make(name).val;
+    // handle sys specially for bootstrapping the VM
+    // otherwise delegate to repo
+    File file;
+    if (name.equals("sys"))
+      file = new File(Sys.PodsDir, name + ".pod");
+    else
+      file = Repo.findPodFile(name);
+
+    // if null or doesn't exist then its a no go
+    if (file == null || !file.exists()) throw UnknownPodErr.make(name).val;
 
     // verify case since Windoze is case insensitive
     String actualName = file.getCanonicalFile().getName();
@@ -154,23 +161,17 @@ public class Pod
       if (allPodsList == null)
       {
         List pods = new List(Sys.PodType);
-        File[] list = Sys.PodsDir.listFiles();
-        for (int i=0; i<list.length; ++i)
+        String[] names = Repo.findAllPodNames();
+        for (int i=0; i<names.length; ++i)
         {
-          File f = list[i];
-          String n = f.getName();
-          if (!f.isDirectory() && n.endsWith(".pod"))
+          try
           {
-            n = n.substring(0, n.length()-".pod".length());
-            try
-            {
-              pods.add(doFind(n, true, null, null));
-            }
-            catch (Throwable e)
-            {
-              System.out.println("ERROR: Invalid pod file: " + f);
-              e.printStackTrace();
-            }
+            pods.add(doFind(names[i], true, null, null));
+          }
+          catch (Throwable e)
+          {
+            System.out.println("ERROR: Invalid pod file: " + names[i]);
+            e.printStackTrace();
           }
         }
         allPodsList = pods.ro();

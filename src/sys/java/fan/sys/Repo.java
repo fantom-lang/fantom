@@ -83,6 +83,35 @@ public final class Repo
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Pods
+//////////////////////////////////////////////////////////////////////////
+
+  static java.io.File findPodFile(String name)
+  {
+    LocalFile f = (LocalFile)findFile("lib/fan/" + name + ".pod", false);
+    if (f == null) return null;
+    return f.file;
+  }
+
+  static String[] findAllPodNames()
+  {
+    HashMap acc = new HashMap();
+    for (int i=0; i<list.sz(); ++i)
+    {
+      List files = ((Repo)list.get(i)).home.plus("lib/fan/").listFiles();
+      for (int j=0; j<files.sz(); ++j)
+      {
+        File f = (File)files.get(j);
+        String n = f.name();
+        if (!n.endsWith(".pod")) continue;
+        n = n.substring(0, n.length()-".pod".length());
+        if (acc.get(n) == null) acc.put(n, n);
+      }
+    }
+    return (String[])acc.values().toArray(new String[acc.size()]);
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Symbols
 //////////////////////////////////////////////////////////////////////////
 
@@ -175,9 +204,10 @@ public final class Repo
       // working repo
       File wd = resolveWorking();
       if (wd != null) w = new Repo("working", wd);
+      else w = b;
 
       // list of all repos
-      Repo[] array = (w == null) ? new Repo[] { b } : new Repo[] { w, b };
+      Repo[] array = (b == w) ? new Repo[] { b } : new Repo[] { w, b };
       a = new List(Sys.RepoType, array).toImmutable();
     }
     catch (Exception e) { e.printStackTrace(); }

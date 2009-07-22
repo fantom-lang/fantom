@@ -167,7 +167,8 @@ public class Fan
     println("  java.vm.version: " + System.getProperty("java.vm.version"));
     println("  java.home:       " + System.getProperty("java.home"));
     println("  fan.version:     " + Sys.SysPod.version());
-    println("  fan.repos:       ");
+    println("");
+    println("Fan Repos:");
     for (int i=0; i<Repo.list().size(); ++i)
     {
       Repo repo = (Repo)Repo.list().get(i);
@@ -186,10 +187,15 @@ public class Fan
     println("");
     println("Fan Pods [" + (t2-t1)/1000000L + "ms]:");
 
+    println("  Pod                 Version   Repo");
+    println("  ---                 -------   ----");
     for (int i=0; i<pods.sz(); ++i)
     {
       Pod pod = (Pod)pods.get(i);
-      System.out.println("  " + FanStr.justl(pod.name(), 18L) + "  " + pod.version());
+      System.out.println("  " +
+        FanStr.justl(pod.name(), 18L) + "  " +
+        FanStr.justl(pod.version().toString(), 8) + "  " +
+        pod.repo().name());
     }
   }
 
