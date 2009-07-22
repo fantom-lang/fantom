@@ -66,9 +66,9 @@ class CompilerInput
 
   **
   ** Output directory to write pod to, defaults to the
-  ** current runtime's lib directory
+  ** current working repo's lib directory
   **
-  File outDir := Sys.homeDir + `lib/fan/`
+  File outDir := Repo.working.home + `lib/fan/`
 
   **
   ** Include fandoc in output pod, default is false

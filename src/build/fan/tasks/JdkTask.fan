@@ -24,15 +24,14 @@ class JdkTask : Task
     : super(script)
   {
     // jdkHomeDir
-    jdkHomeProp := Sys.env["fan.build.jdkHome"]
     try
     {
-      jdkHomeDir = jdkHomeProp.toUri.toFile
+      jdkHomeDir = @buildJdkHome.val.toFile
       if (!jdkHomeDir.exists || !jdkHomeDir.isDir) throw Err.make
     }
     catch
     {
-      throw fatal("Missing or invalid URI for fan.build.jdkHome: $jdkHomeProp")
+      throw fatal("Missing or invalid URI for @buildJdkHome: ${@buildJdkHome.val}")
     }
 
     // derived files
@@ -60,7 +59,7 @@ class JdkTask : Task
 //////////////////////////////////////////////////////////////////////////
 
   ** Home directory for jdk installation
-  ** configured via Sys.env["fan.build.jdkHome"]
+  ** configured via `@buildJdkHome`
   File jdkHomeDir
 
   ** JDK bin for executables: {jdkHomeDir}/bin/

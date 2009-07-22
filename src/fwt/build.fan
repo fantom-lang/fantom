@@ -17,7 +17,6 @@ class Build : BuildPod
   override Void setup()
   {
     podName = "fwt"
-    version = globalVersion
   }
 
   @target="build native JavaFx files"

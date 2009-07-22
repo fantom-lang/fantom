@@ -55,8 +55,8 @@ abstract class BuildScript
   const File scriptDir := scriptFile.parent
 
   ** Home directory of development installation.  By default this
-  ** value is initialized by Sys.env["fan.build.devHome"], otherwise
-  ** Sys.homeDir is used.
+  ** value is initialized by `@buildDevEnv`, otherwise 'Repo.boot.home'`
+  ** is used.
   const File devHomeDir := resolveDevHomeDir
 
   ** {devHomeDir}/bin/
@@ -84,32 +84,23 @@ abstract class BuildScript
   ** {devHomeDir}/lib/dotnet
   const File libDotnetDir := devHomeDir + `lib/dotnet/`
 
-  ** This is the global default version to use when building pods.  It
-  ** is initialized by Sys.env["fan.build.globalVersion"], otherwise
-  ** "0.0.0" is used as a default.
-  Version globalVersion := Version("0.0.0")
-
   ** Executable extension: ".exe" on Windows and "" on Unix.
   Str exeExt := ""
 
   ** Compute value for devHomeDir field
   private File resolveDevHomeDir()
   {
-    devHomeProp := Sys.env["fan.build.devHome"]
-    if (devHomeProp != null)
+    try
     {
-      try
+      if (@buildDevHome.val != null)
       {
-        f := File(devHomeProp.toUri)
-        if (!f.exists || !f.isDir) throw Err.make
+        f := File(@buildDevHome.val)
+        if (!f.exists || !f.isDir) throw Err()
         return f
       }
-      catch
-      {
-        log.error("Invalid URI for fan.build.devHome: $devHomeProp")
-      }
     }
-    return Sys.homeDir
+    catch log.error("Invalid URI for @buildDevHome: ${@buildDevHome.val}")
+    return Repo.boot.home
   }
 
   **
@@ -117,20 +108,6 @@ abstract class BuildScript
   **
   internal virtual Void initEnv()
   {
-    // global version
-    globalVersionProp := Sys.env["fan.build.globalVersion"]
-    if (globalVersionProp != null)
-    {
-      try
-      {
-        globalVersion = Version.fromStr(globalVersionProp)
-      }
-      catch
-      {
-        log.error("Invalid Version for fan.build.globalVersion: $globalVersionProp")
-      }
-    }
-
     // are we running on a Window's box?
     osName := Sys.env.get("os.name", "?").lower
     isWindows = osName.contains("win")
@@ -152,15 +129,18 @@ abstract class BuildScript
     if (log.isDebug)
     {
       log.printLine("BuildScript Environment:")
-      log.printLine("  scriptFile:    $scriptFile")
-      log.printLine("  scriptDir:     $scriptDir")
-      log.printLine("  devHomeDir:    $devHomeDir")
-      log.printLine("  binDir:        $binDir")
-      log.printLine("  libDir:        $libDir")
-      log.printLine("  libFanDir:     $libFanDir")
-      log.printLine("  libJavaDir:    $libJavaDir")
-      log.printLine("  libDotnetDir:  $libDotnetDir")
-      log.printLine("  globalVersion: $globalVersion")
+      log.printLine("  @buildVersion:    ${@buildVersion.val}")
+      log.printLine("  @buildDevHome:    ${@buildDevHome.val}")
+      log.printLine("  @buildJdkHome:    ${@buildJdkHome.val}")
+      log.printLine("  @buildDotnetHome: ${@buildDotnetHome.val}")
+      log.printLine("  scriptFile:       $scriptFile")
+      log.printLine("  scriptDir:        $scriptDir")
+      log.printLine("  devHomeDir:       $devHomeDir")
+      log.printLine("  binDir:           $binDir")
+      log.printLine("  libDir:           $libDir")
+      log.printLine("  libFanDir:        $libFanDir")
+      log.printLine("  libJavaDir:       $libJavaDir")
+      log.printLine("  libDotnetDir:     $libDotnetDir")
     }
   }
 
@@ -251,9 +231,10 @@ abstract class BuildScript
   virtual Void dumpenv()
   {
     log.out.printLine("---------------")
-    log.out.printLine("  scriptFile:  $scriptFile [$type.base]")
-    log.out.printLine("  fanHome:     $Sys.homeDir")
-    log.out.printLine("  devHomeDir:  $devHomeDir")
+    log.out.printLine("  scriptFile:   $scriptFile [$type.base]")
+    log.out.printLine("  boot.home:    $Repo.boot.home")
+    log.out.printLine("  working.home: $Repo.working.home")
+    log.out.printLine("  devHomeDir:   $devHomeDir")
     log.level = LogLevel.warn // suppress success message
   }
 

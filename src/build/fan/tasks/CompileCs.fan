@@ -25,15 +25,14 @@ class CompileCs : Task
     : super(script)
   {
     // dotnetHomeDir
-    dotnetHomeProp := Sys.env["fan.build.dotnetHome"]
     try
     {
-      dotnetHomeDir = dotnetHomeProp.toUri.toFile
-      if (!dotnetHomeDir.exists || !dotnetHomeDir.isDir) throw Err.make
+      dotnetHomeDir = @buildDotnetHome.val.toFile
+      if (!dotnetHomeDir.exists || !dotnetHomeDir.isDir) throw Err()
     }
     catch
     {
-      throw fatal("Missing or invalid URI for fan.build.dotnetHome: $dotnetHomeProp")
+      throw fatal("Missing or invalid URI for @buildDotnetHome: ${@buildDotnetHome.val}")
     }
 
     // derived files
@@ -104,7 +103,7 @@ class CompileCs : Task
 //////////////////////////////////////////////////////////////////////////
 
   ** Home directory for .NET installation
-  ** configured via Sys.env["fan.build.dotnetHome"]
+  ** configured via `@buildDotnetHome`
   File? dotnetHomeDir
 
   ** C# compiler executable: {dotnetHomeDir}/csc.exe

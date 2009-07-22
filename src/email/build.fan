@@ -17,6 +17,5 @@ class Build : BuildPod
   override Void setup()
   {
     podName = "email"
-    version = globalVersion
   }
 }

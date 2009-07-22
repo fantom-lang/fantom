@@ -34,8 +34,7 @@ abstract class BuildPod : BuildScript
   Str? podName
 
   **
-  ** Version of the pod - typically set to
-  ** `BuildScript.globalVersion`.  Required.
+  ** Version of the pod - default is set to @buildVersion.  Required.
   **
   Version? version
 
@@ -67,6 +66,7 @@ abstract class BuildPod : BuildScript
   **
   internal override Void validate()
   {
+    if (version == null) version = @buildVersion.val
     ok := true
     ok &= validateReqField("podName")
     ok &= validateReqField("version")
@@ -77,11 +77,8 @@ abstract class BuildPod : BuildScript
     if (podName == "sys" || podName == "build" ||
         podName == "compiler" || podName == "compilerJava")
     {
-      if (Sys.homeDir == devHomeDir)
-      {
-        props := Sys.homeDir + `lib/sys.props`
-        throw fatal("Must update $props.osPath 'fan.build.devHome' for bootstrap build")
-      }
+      if (Repo.boot.home == devHomeDir)
+        throw fatal("Must update @buildDevHome for bootstrap build")
     }
   }
 
@@ -231,7 +228,7 @@ abstract class BuildPod : BuildScript
     // by calling the JStub tool in the jsys runtime
     stubDir := stubOnly ? libJavaDir : jtemp
     Exec(this, [javaExe.osPath,
-                     "-cp", "${libJavaDir}sys.jar",
+                     "-cp", (libJavaDir + `sys.jar`).osPath,
                      "fanx.tools.Jstub",
                      "-d", stubDir.osPath,
                      podName]).run
