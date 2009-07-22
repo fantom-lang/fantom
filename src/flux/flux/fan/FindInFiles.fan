@@ -27,7 +27,7 @@ internal class FindInFiles
     history := FindHistory.load
     query.items = history.find
     uri.items   = history.dirAsStr
-    if (uri.items.isEmpty) uri.items = [Sys.homeDir.toStr]
+    if (uri.items.isEmpty) uri.items = [Repo.working.home.toStr]
     match.selected = history.matchCase
 
     content := GridPane

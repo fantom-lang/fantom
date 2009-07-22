@@ -821,18 +821,24 @@ internal class AboutCommand : FluxCommand
     icon  := Pod.find("icons").files[`/x48/flux.png`]
     big   := Font { it.name=Desktop.sysFont.name; it.size=Desktop.sysFont.size+(Desktop.isMac ? 2 : 3); it.bold=true }
     small := Font { it.name=Desktop.sysFont.name; it.size=Desktop.sysFont.size-(Desktop.isMac ? 3 : 1) }
+
+    versionInfo := GridPane
+    {
+      halignCells = Halign.center
+      vgap = 0
+      Label { text = "Version $this.type.pod.version"; font = small },
+    }
+    Repo.list.each |repo|
+    {
+      versionInfo.add(Label { text = "Repo $repo.name: ${repo.home}"; font = small })
+    }
+
     content := GridPane
     {
       halignCells = Halign.center
       Label { image = Image.makeFile(icon) },
       Label { text = "Flux"; font = big },
-      GridPane
-      {
-        halignCells = Halign.center
-        vgap = 0
-        Label { text = "Version $this.type.pod.version"; font = small },
-        Label { text = "Fan Home ${Sys.homeDir}"; font = small },
-      },
+      versionInfo,
       Label { font = small; text =
         "   Copyright (c) 2008, Brian Frank and Andy Frank
          Licensed under the Academic Free License version 3.0"

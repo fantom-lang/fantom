@@ -24,7 +24,7 @@ class DocCompiler
   {
     log = CompilerLog()
     errors = CompilerErr[,]
-    outDir = Sys.homeDir + `doc/`
+    outDir = Repo.boot.home + `doc/`
     uriMapper = UriMapper(this)
   }
 

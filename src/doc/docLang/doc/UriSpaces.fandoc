@@ -109,7 +109,7 @@ The factory method [UriSpace.makeDir]`sys::UriSpace.makeDir` creates
 a custom uri space instance which allows you to mount a file system
 directory into the Fan uri space:
 
-  UriSpace.mount(`/fandocs`, UriSpace.makeDir(Sys.homeDir+`doc/`))
+  UriSpace.mount(`/fandocs`, UriSpace.makeDir(Repo.boot.home +`doc/`))
   UriSpace.root[`/fandocs/`]            =>  sys::File for doc directory
   UriSpace.root[`/fandocs/index.html`]  =>  sys::File for doc/index.html
 

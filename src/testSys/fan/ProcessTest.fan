@@ -100,7 +100,7 @@ class ProcessTest : Test
 
   Process makeProc(Str[] args := Str[,])
   {
-    cmd := (Sys.homeDir + (isWindows ? `bin/fan.exe` : `bin/fan`)).osPath
+    cmd := (Repo.boot.home + (isWindows ? `bin/fan.exe` : `bin/fan`)).osPath
     return Process([cmd, type.qname].addAll(args))
   }
 
