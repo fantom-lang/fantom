@@ -78,7 +78,7 @@ class Build : FluxCommand
       f = f.parent
     }
 
-    fanHome = Sys.homeDir
+    fanHome = Repo.boot.home
     return true
   }
 
@@ -90,7 +90,7 @@ class Build : FluxCommand
   Bool checkFanHome()
   {
     // if different installations then we're ok
-    if (fanHome.normalize != Sys.homeDir.normalize)
+    if (fanHome.normalize != Repo.boot.home.normalize)
       return true
 
     // check for one of the core pods
