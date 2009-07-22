@@ -519,7 +519,7 @@ namespace Fan.Sys
 
     public virtual Map readSymbols()
     {
-      return new ObjDecoder(this, null).readSymbols();
+      return new ObjDecoder(this, null).readSymbols(null);
     }
 
     public virtual Map readProps()

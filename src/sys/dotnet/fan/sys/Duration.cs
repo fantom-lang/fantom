@@ -516,6 +516,8 @@ namespace Fan.Sys
     public static readonly Duration m_defVal    = Zero;
     public static readonly Duration m_minVal    = make(FanInt.m_minVal);
     public static readonly Duration m_maxVal    = make(FanInt.m_maxVal);
+    public static readonly Duration m_oneSec    = make(nsPerSec);
+    public static readonly Duration m_oneMin    = make(nsPerMin);
     public static readonly Duration m_oneDay    = make(nsPerDay);
     public static readonly Duration m_negOneDay = make(-nsPerDay);
 

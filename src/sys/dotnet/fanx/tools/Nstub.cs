@@ -46,7 +46,7 @@ namespace Fanx.Tools
         writeLine("  -> " + target);
       }
 
-      FPod fpod = new FPod(podName, new ZipFile(podPath));
+      FPod fpod = new FPod(podName, new ZipFile(podPath), null);
       fpod.read();
       FTypeEmit.emitPod(fpod, false, target);
     }

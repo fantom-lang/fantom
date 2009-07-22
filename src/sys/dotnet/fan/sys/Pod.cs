@@ -86,7 +86,7 @@ namespace Fan.Sys
       FPod fpod = null;
       try
       {
-        fpod = new FPod(null, null);
+        fpod = new FPod(null, null, null);
         fpod.readFully(new ZipInputStream(SysInStream.dotnet(@in)));
       }
       catch (Exception e)
@@ -110,15 +110,29 @@ namespace Fan.Sys
 
     public static FPod readFPod(string name)
     {
+      // handle sys specially for bootstrapping the VM
+      // otherwise delegate to repo
+      string podPath = null;
+      Object repo = null;
+      if (name == "sys")
+      {
+        podPath = Sys.PodsDir + "/sys.pod";
+        repo = null; // can't load this class yet
+      }
+      else
+      {
+        Repo.PodFile r = Repo.findPodFile(name);
+        if (r != null) { podPath = r.m_file.FullName; repo = r.m_repo; }
+      }
+
       // check that pod file even exists
-      string podPath = Sys.PodsDir + "/" + name + ".pod";
-      if (!System.IO.File.Exists(podPath)) throw UnknownPodErr.make(name).val;
+      if (podPath == null || !System.IO.File.Exists(podPath)) throw UnknownPodErr.make(name).val;
 
       // verify case since Windoze is case insensitive
       // TODO - see Pod.java impl
 
       // read in the FPod tables
-      FPod fpod = new FPod(name, new ZipFile(podPath));
+      FPod fpod = new FPod(name, new ZipFile(podPath), repo);
       fpod.read();
       return fpod;
     }
@@ -162,6 +176,7 @@ namespace Fan.Sys
     internal Pod(FPod fpod)
     {
       this.m_name = fpod.m_podName;
+      this.m_repo = fpod.m_repo;
       load(fpod);
     }
 
@@ -200,6 +215,16 @@ namespace Fan.Sys
     }
 
     public override string toStr() { return m_name; }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Repo
+  //////////////////////////////////////////////////////////////////////////
+
+    public Repo repo()
+    {
+      if (m_repo == null && m_name == "sys") m_repo = Repo.boot();
+      return (Repo)m_repo;
+    }
 
   //////////////////////////////////////////////////////////////////////////
   // Facets
@@ -489,5 +514,6 @@ namespace Fan.Sys
     internal Hashtable m_symbols;
     internal bool m_docLoaded;
     public string m_doc;
+    internal object m_repo;
   }
 }

@@ -158,25 +158,36 @@ namespace Fanx.Tools
       writeLine("");
       writeLine(".NET Runtime:");
       writeLine("  clr.version: " + Environment.Version);
-      writeLine("  fan.home:    " + Sys.HomeDir);
       writeLine("  sys.version: " + Sys.SysPod.version());
+      writeLine("");
+      writeLine("Fan Repos:");
+      for (int i=0; i<Repo.list().size(); ++i)
+      {
+        Repo repo = (Repo)Repo.list().get(i);
+        writeLine("    " + FanStr.padr(repo.name()+": ", 15) + repo.home());
+      }
     }
 
-    internal static void pods(string progName)
+    static void pods(String progName)
     {
       version(progName);
 
-      long t1 = System.Environment.TickCount;
+      long t1 = Duration.nowTicks();
       List pods = Pod.list();
-      long t2 = System.Environment.TickCount;
+      long t2 = Duration.nowTicks();
 
       writeLine("");
-      writeLine("Fan Pods [" + (t2-t1) + "ms]:");
+      writeLine("Fan Pods [" + (t2-t1)/1000000L + "ms]:");
 
-      for (int i=0; i<pods.sz(); i++)
+      writeLine("  Pod                 Version   Repo");
+      writeLine("  ---                 -------   ----");
+      for (int i=0; i<pods.sz(); ++i)
       {
         Pod pod = (Pod)pods.get(i);
-        writeLine("  " + FanStr.justl(pod.name(), 14) + "  " + pod.version());
+        writeLine("  " +
+          FanStr.justl(pod.name(), 18L) + "  " +
+          FanStr.justl(pod.version().toStr(), 8) + "  " +
+          pod.repo().name());
       }
     }
 
