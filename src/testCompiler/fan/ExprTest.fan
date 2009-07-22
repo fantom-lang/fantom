@@ -175,10 +175,10 @@ class ExprTest : CompilerTest
     verifyExpr("sys::Str.spaces(2)", "  ")
 
     // import static no args
-    verifyExpr("Sys.homeDir()", Sys.homeDir)
-    verifyExpr("sys::Sys.homeDir()", Sys.homeDir)
-    verifyExpr("Sys.homeDir", Sys.homeDir)
-    verifyExpr("sys::Sys.homeDir", Sys.homeDir)
+    verifyExpr("Sys.args()", Sys.args)
+    verifyExpr("sys::Sys.args()", Sys.args)
+    verifyExpr("Sys.args", Sys.args)
+    verifyExpr("sys::Sys.args", Sys.args)
 
     // import instance target
     verifyExpr("3.increment()", 4)

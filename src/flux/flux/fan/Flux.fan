@@ -16,9 +16,9 @@ class Flux
 {
 
   **
-  ** The flux home defaults to "{Sys.homeDir}/flux/".
+  ** The flux home defaults to "{Repo.boot.home}/flux/".
   **
-  static File homeDir() { return (Sys.homeDir + `flux/`).normalize }
+  static File homeDir() { return (Repo.boot.home + `flux/`).normalize }
 
   **
   ** Standard log for flux pod.

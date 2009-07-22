@@ -59,12 +59,6 @@ final class Sys
   static Void gc()
 
   **
-  ** Get the fan installation home directory.
-  **
-// TODO
-  static File homeDir()
-
-  **
   ** Get the local host name of the machine running the
   ** virtual machine process.
   **

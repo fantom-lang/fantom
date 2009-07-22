@@ -145,9 +145,9 @@ class InitInput : CompilerStep
     dir := input.dependsDir
     if (dir == null) return
 
-    // check that it isn't the same as Sys.homeDir, in
+    // check that it isn't the same as boot repo, in
     // which case we're better off using reflection
-    if (dir.normalize == (Sys.homeDir + `lib/fan/`).normalize)
+    if (dir.normalize == (Repo.boot.home + `lib/fan/`).normalize)
     {
       input.dependsDir = null
       return

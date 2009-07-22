@@ -12,12 +12,6 @@
 class FileTest : Test
 {
 
-  Void testHomeDir()
-  {
-    verify(Sys.homeDir.exists)
-    verify(Sys.homeDir.isDir)
-  }
-
   Void testOsRoots()
   {
     verify(File.osRoots.size > 0)
@@ -39,12 +33,12 @@ class FileTest : Test
   Void testWalk()
   {
     acc := File[,]
-    single := Sys.homeDir + `lib/sys.props`
+    single := Repo.boot.home + `lib/sys.props`
     single.walk(&acc.add)
     verifyEq(single, single)
 
     acc.clear
-    lib := Sys.homeDir + `lib/`
+    lib := Repo.boot.home + `lib/`
     lib.walk(&acc.add)
     verify(acc.contains(lib))
     verify(acc.contains(lib + `sys.props`))
@@ -116,12 +110,12 @@ class FileTest : Test
     verify(file.name.startsWith("fantest"))
     verify(file.name.endsWith(".fantest"))
 
-    file = File.createTemp("fantest", ".fantest", Sys.homeDir).deleteOnExit
+    file = File.createTemp("fantest", ".fantest", Repo.working.home).deleteOnExit
     verifyEq(file.size, 0)
     verify(file.exists)
     verify(file.name.startsWith("fantest"))
     verify(file.name.endsWith(".fantest"))
-    verify(file.toStr.startsWith(Sys.homeDir.toStr))
+    verify(file.toStr.startsWith(Repo.working.home.uri.relToAuth.toStr))
 
     verifyErr(IOErr#) |,| { File.createTemp("xyz", ".tmp", file) }
     verifyErr(IOErr#) |,| { File.createTemp("xyz", ".tmp", FileTest#.pod.files[`/res/test.txt`]) }

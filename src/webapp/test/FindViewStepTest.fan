@@ -40,10 +40,10 @@ class FindViewStepTest : Test
     verifyError(`/foo`, 33, 404)
 
     // error: explicit view not found
-    verifyError(`/foo?view=sys::FooBar`, Sys.homeDir, 404)
+    verifyError(`/foo?view=sys::FooBar`, Repo.boot.home, 404)
 
     // error: explicit view not weblet
-    verifyError(`/foo?view=sys::Int`, Sys.homeDir, 404)
+    verifyError(`/foo?view=sys::Int`, Repo.boot.home, 404)
   }
 
   Void verifyView(Uri u, Obj r, Type t)
