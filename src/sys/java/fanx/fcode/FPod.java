@@ -26,7 +26,7 @@ public final class FPod
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public FPod(String podName, java.util.zip.ZipFile zipFile)
+  public FPod(String podName, java.util.zip.ZipFile zipFile, Object repo)
   {
     this.podName    = podName;
     this.store      = zipFile == null ? null : new FStore(this, zipFile);
@@ -35,6 +35,7 @@ public final class FPod
     this.fieldRefs  = new FTable.FieldRefs(this);
     this.methodRefs = new FTable.MethodRefs(this);
     this.symbolRefs = new FTable.SymbolRefs(this);
+    this.repo       = repo;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -217,5 +218,6 @@ public final class FPod
   public FTable methodRefs;  // methods refs: [parent,name,ret,params*]
   public FTable symbolRefs;  // symbol refs:  [pod,name]
   public FLiterals literals; // literal constants (on read fully or lazy load)
+  public Object repo;        // sys::Repo or null is sys boot repo
 
 }
