@@ -244,7 +244,8 @@ The formal grammar of the Fan serialization format:
   usingType := "using" id "::" id eos
   usingAs   := "using" id "::" id "as" id eos
   obj       := literal | simple | complex
-  literal   := bool | int | float | decimal | str | duration | uri | typeLiteral | list | map
+  literal   := bool | int | float | decimal | str | duration | uri |
+               typeLiteral | symbolLiteral | list | map
   simple    := type "(" str ")"
   complex   := type ["{" [children] "}"]
   children  := child [(eos|",") child]*
