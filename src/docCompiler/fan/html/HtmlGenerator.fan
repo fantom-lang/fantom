@@ -220,7 +220,7 @@ abstract class HtmlGenerator : HtmlDocWriter
 // Support
 //////////////////////////////////////////////////////////////////////////
 
-  Void facets(Symbol:Obj? facets, Bool wrap := true)
+  Void facets(Symbol:Obj? facets, Bool wrap := true, Bool br := true)
   {
     if (facets.size == 0) return
     if (wrap) out.print("<p><code class='sig'>")
@@ -230,7 +230,8 @@ abstract class HtmlGenerator : HtmlDocWriter
       uri := compiler.uriMapper.map("@$s.qname", loc)
       out.print("@<a href='$uri'>$s.name</a>")
       if (def != "true") out.print(" = $def")
-      out.print("<br/>\n")
+      if (br) out.print("<br/>")
+      out.print("\n")
     }
     if (wrap) out.print("</code></p>\n")
   }
