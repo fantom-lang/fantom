@@ -84,6 +84,7 @@ namespace Fanx.Serial
           case '}':   consume(); return Token.RBRACE;
           case '#':   consume(); return Token.POUND;
           case '?':   consume(); return Token.QUESTION;
+          case '@':   consume(); return Token.AT;
           case '.':
             if (peekt == DIGIT) return number(false);
             consume();

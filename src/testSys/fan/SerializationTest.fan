@@ -34,9 +34,9 @@ class SerializationTest : Test
     verifySer("-987", -987)
     verifySer("'A'", 'A')
     verifySer("'\u0c45'", 0xc45)
-    verifyErr(IOErr#) |,| { verifySer("0x", 0) }
-    verifyErr(IOErr#) |,| { verifySer("9223372036854775808", 0) }
-    verifyErr(IOErr#) |,| { verifySer("-9223372036854775809", 0) }
+    verifyErr(IOErr#) { verifySer("0x", 0) }
+    verifyErr(IOErr#) { verifySer("9223372036854775808", 0) }
+    verifyErr(IOErr#) { verifySer("-9223372036854775809", 0) }
 
     // Float literals
     verifySer("3f", 3f)
@@ -52,8 +52,8 @@ class SerializationTest : Test
     verifySer("sys::Float(\"NaN\")", Float.nan)
     verifySer("sys::Float(\"INF\")", Float.posInf)
     verifySer("sys::Float(\"-INF\")", Float.negInf)
-    verifyErr(IOErr#) |,| { verifySer("3e", null) }
-    verifyErr(IOErr#) |,| { verifySer("3eX", null) }
+    verifyErr(IOErr#) { verifySer("3e", null) }
+    verifyErr(IOErr#) { verifySer("3eX", null) }
 
     // Decimal literals
     verifySer("7d", 7d)
@@ -99,6 +99,16 @@ class SerializationTest : Test
     // Type literals
     verifySer("sys::Num#", Num#)
     verifySer("testSys::SerializationTest#", type)
+    verifySer("using testSys\n SerializationTest#", type)
+    verifyErr(IOErr#) { "crazyFooBad::Bar#".in.readObj }
+    verifyErr(IOErr#) { "sys::Foo#".in.readObj }
+
+    // Symbol literals
+    verifySer("@sys::simple", @simple)
+    verifySer("@testSys::intA", @intA)
+    verifySer("using testSys\n @intB", @intB)
+    verifyErr(IOErr#) { "@crazyFooBad::bar".in.readObj }
+    verifyErr(IOErr#) { "@sys::foo".in.readObj }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,9 +130,9 @@ class SerializationTest : Test
     verifySer("testSys::EnumAbc(\"C\")", EnumAbc.C)
     verifySer("testSys::Suits(\"spades\")", Suits.spades)
 
-    verifyErr(IOErr#) |,| { verifySer("sys::Version(x)", null) }
-    verifyErr(IOErr#) |,| { verifySer("sys::Version(\"x\"", null) }
-    verifyErr(ParseErr#) |,| { verifySer("sys::Version(\"x\")", null) }
+    verifyErr(IOErr#) { verifySer("sys::Version(x)", null) }
+    verifyErr(IOErr#)  { verifySer("sys::Version(\"x\"", null) }
+    verifyErr(ParseErr#) { verifySer("sys::Version(\"x\")", null) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -157,10 +167,10 @@ class SerializationTest : Test
     verifySer("sys::Str[][][[[\"x\"]]]", [[["x"]]])
 
     // errors
-    verifyErr(IOErr#) |,| { verifySer("[", null) }
-    verifyErr(IOErr#) |,| { verifySer("[,", null) }
-    verifyErr(IOErr#) |,| { verifySer("[]", null) }
-    verifyErr(IOErr#) |,| { verifySer("[3,", null) }
+    verifyErr(IOErr#) { verifySer("[", null) }
+    verifyErr(IOErr#) { verifySer("[,", null) }
+    verifyErr(IOErr#) { verifySer("[]", null) }
+    verifyErr(IOErr#) { verifySer("[3,", null) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -206,14 +216,14 @@ class SerializationTest : Test
     verifySer("sys::Version:sys::Int[[sys::Version(\"1.2\"):1]]", [sys::Version:sys::Int][Version:Int[Version.fromStr("1.2"):1]])
 
     // errors
-    verifyErr(IOErr#) |,| { verifySer("[:", null) }
-    verifyErr(IOErr#) |,| { verifySer("[:3", null) }
-    verifyErr(IOErr#) |,| { verifySer("[3:", null) }
-    verifyErr(IOErr#) |,| { verifySer("[3:2", null) }
-    verifyErr(IOErr#) |,| { verifySer("[3:2,", null) }
-    verifyErr(IOErr#) |,| { verifySer("[3:2,4", null) }
-    verifyErr(IOErr#) |,| { verifySer("[3:2,4:", null) }
-    verifyErr(IOErr#) |,| { verifySer("[3:2,4]", null) }
+    verifyErr(IOErr#) { verifySer("[:", null) }
+    verifyErr(IOErr#) { verifySer("[:3", null) }
+    verifyErr(IOErr#) { verifySer("[3:", null) }
+    verifyErr(IOErr#) { verifySer("[3:2", null) }
+    verifyErr(IOErr#) { verifySer("[3:2,", null) }
+    verifyErr(IOErr#) { verifySer("[3:2,4", null) }
+    verifyErr(IOErr#) { verifySer("[3:2,4:", null) }
+    verifyErr(IOErr#) { verifySer("[3:2,4]", null) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -244,17 +254,17 @@ class SerializationTest : Test
        d = 6min;
        u=`foo.txt`}", x)
 
-    verifyErr(IOErr#) |,| { verifySer("testSys::SerA {", null) }
-    verifyErr(IOErr#) |,| { verifySer("testSys::SerA {b", null) }
-    verifyErr(IOErr#) |,| { verifySer("testSys::SerA {b}", null) }
-    verifyErr(IOErr#) |,| { verifySer("testSys::SerA {b=", null) }
-    verifyErr(IOErr#) |,| { verifySer("testSys::SerA {b=}", null) }
-    verifyErr(IOErr#) |,| { verifySer("testSys::SerA {b=true", null) }
-    verifyErr(IOErr#) |,| { verifySer("testSys::SerA {b=3}", null) }
-    verifyErr(IOErr#) |,| { verifySer("testSys::SerA {b=true i=5}", null) }
-    verifyErr(IOErr#) |,| { verifySer("testSys::SerA {xxx=3}", null) }
+    verifyErr(IOErr#) { verifySer("testSys::SerA {", null) }
+    verifyErr(IOErr#) { verifySer("testSys::SerA {b", null) }
+    verifyErr(IOErr#) { verifySer("testSys::SerA {b}", null) }
+    verifyErr(IOErr#) { verifySer("testSys::SerA {b=", null) }
+    verifyErr(IOErr#) { verifySer("testSys::SerA {b=}", null) }
+    verifyErr(IOErr#) { verifySer("testSys::SerA {b=true", null) }
+    verifyErr(IOErr#) { verifySer("testSys::SerA {b=3}", null) }
+    verifyErr(IOErr#) { verifySer("testSys::SerA {b=true i=5}", null) }
+    verifyErr(IOErr#) { verifySer("testSys::SerA {xxx=3}", null) }
 
-    verifyErr(IOErr#) |,| { StrBuf().out.writeObj(this) }
+    verifyErr(IOErr#) { StrBuf().out.writeObj(this) }
   }
 
   Void testComplexInferred()
@@ -380,10 +390,10 @@ class SerializationTest : Test
     verifyComplexConst("testSys::SerConst { b=null; c=null }", SerConst.make)
     verifyComplexConst("testSys::SerConst { c=[[4],[5,6]] }", SerConst.make(0, null, [[4],[5,6]]))
     verifyComplexConst("testSys::SerConst { c=[sys::Int[,]] }", SerConst.make(0, null, [Int[,]]))
-    verifyErr(IOErr#) |,| { verifyComplexConst("testSys::SerConst { c=5 }", SerConst.make) }
+    verifyErr(IOErr#) { verifyComplexConst("testSys::SerConst { c=5 }", SerConst.make) }
 
     // TODO
-    //verifyErr(IOErr#) |,| { verifyComplexConst("testSys::SerConst { c=[5] }", SerConst.make) }
+    //verifyErr(IOErr#) { verifyComplexConst("testSys::SerConst { c=[5] }", SerConst.make) }
   }
 
   Void verifyComplexConst(Str s, SerConst x)
@@ -515,10 +525,10 @@ class SerializationTest : Test
        ]",
       [Str[,], Int:SerFolder[:], DateTime#])
 
-    verifyErr(IOErr#) |,| { verifySer("using sys using testSys; SerFolder {}", null) }
-    verifyErr(IOErr#) |,| { verifySer("using sys::Int using testSys; SerFolder {}", null) }
-    verifyErr(IOErr#) |,| { verifySer("using sys::Int as Integer testSys::SerFolder {}", null) }
-    verifyErr(IOErr#) |,| { verifySer("SerFolder {}", null) }
+    verifyErr(IOErr#) { verifySer("using sys using testSys; SerFolder {}", null) }
+    verifyErr(IOErr#) { verifySer("using sys::Int using testSys; SerFolder {}", null) }
+    verifyErr(IOErr#) { verifySer("using sys::Int as Integer testSys::SerFolder {}", null) }
+    verifyErr(IOErr#) { verifySer("SerFolder {}", null) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -705,7 +715,7 @@ class SerializationTest : Test
 
   Void verifySkipErrors(Obj obj, Str expectedStr, Obj expected)
   {
-    verifyErr(IOErr#) |,| { Buf.make.writeObj(obj) }
+    verifyErr(IOErr#) { Buf.make.writeObj(obj) }
 
     opts := ["skipDefaults":true, "skipErrors":true]
     actual := Buf.make.writeObj(obj, opts).flip.readAllStr

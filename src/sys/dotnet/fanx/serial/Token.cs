@@ -44,8 +44,9 @@ namespace Fanx.Serial
     public const int EQ               = 21;  //  =
     public const int POUND            = 22;  //  #
     public const int QUESTION         = 23;  //  ?
-    public const int AS               = 24;  //  as
-    public const int USING            = 25;  //  using
+    public const int AT               = 24;  //  @
+    public const int AS               = 25;  //  as
+    public const int USING            = 26;  //  using
 
   //////////////////////////////////////////////////////////////////////////
   // Utils
@@ -93,6 +94,7 @@ namespace Fanx.Serial
         case EQ:               return "=";
         case POUND:            return "#";
         case QUESTION:         return "?";
+        case AT:               return "@";
         case AS:               return "as";
         case USING:            return "using";
         default:               return "Token[" + type + "]";

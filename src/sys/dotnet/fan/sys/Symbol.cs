@@ -16,7 +16,7 @@ namespace Fan.Sys
   /// <summary>
   /// Symbol is a qualified name/value pair.
   /// </summary>
-  public sealed class Symbol : FanObj
+  public sealed class Symbol : FanObj, Literal
   {
 
   //////////////////////////////////////////////////////////////////////////
@@ -159,6 +159,15 @@ namespace Fan.Sys
     {
       m_pod.doc();  // ensure parent pod has loaded documentation
       return m_doc;
+    }
+
+  //////////////////////////////////////////////////////////////////////////
+  // Literal
+  //////////////////////////////////////////////////////////////////////////
+
+    public void encode(ObjEncoder @out)
+    {
+      @out.w("@").w(m_qname);
     }
 
   //////////////////////////////////////////////////////////////////////////
