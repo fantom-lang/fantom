@@ -454,11 +454,10 @@ namespace Fan.Sys
     {
       try
       {
-        // TODO - needed this in java, not sure we need it yet...
-        //java.io.File parent = file.getParentFile();
-        //if (!parent.exists()) parent.mkdirs();
+        FileInfo f = (FileInfo)m_file;
+        System.IO.Directory.CreateDirectory(f.DirectoryName);
 
-        System.IO.Stream fout = (m_file as FileInfo).Open(
+        System.IO.Stream fout = f.Open(
           append ? System.IO.FileMode.Append : System.IO.FileMode.Create,
           System.IO.FileAccess.Write);
         System.IO.Stream bout = SysOutStream.toBuffered(fout, bufSize);

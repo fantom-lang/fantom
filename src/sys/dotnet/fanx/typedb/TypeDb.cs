@@ -210,13 +210,11 @@ namespace Fanx.Typedb
 
     bool checkUpToDate()
     {
-      FileInfo[] files = podsDir.GetFiles();
-      for (int i=0; i<files.Length; ++i)
+      IDictionaryEnumerator en = Repo.findAllPods().GetEnumerator();
+      while (en.MoveNext())
       {
-        FileInfo f = files[i];
-        string n = f.Name;
-        if (!n.EndsWith(".pod")) continue;
-        n = n.Substring(0, n.Length-4);
+        string n = (string)en.Key;
+        FileInfo f = (FileInfo)en.Value;
 
         // check that pod wasn't added
         PodInfo p = (PodInfo)podsByName[n];
@@ -463,9 +461,11 @@ namespace Fanx.Typedb
 
     internal const int MAGIC   = 0x54795065;
     internal const int VERSION = 0x01000019;
-    internal static readonly DirectoryInfo libDir  = new DirectoryInfo(Sys.HomeDir + Path.DirectorySeparatorChar + "lib");
-    internal static readonly DirectoryInfo podsDir = new DirectoryInfo(libDir.FullName + Path.DirectorySeparatorChar + "fan");
-    internal static readonly FileInfo dbFile = new FileInfo(libDir.FullName + Path.DirectorySeparatorChar + "types.db");
+    internal static readonly FileInfo dbFile =
+      new FileInfo(Repo.working().homeDotnet().FullName +
+                   Path.DirectorySeparatorChar + "etc" +
+                   Path.DirectorySeparatorChar + "sys" +
+                   Path.DirectorySeparatorChar + "types.db");
 
     internal static object lockObj = new object();
     internal static Log log = Log.get("typedb");

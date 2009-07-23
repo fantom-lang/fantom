@@ -121,7 +121,7 @@ namespace Fan.Sys
       }
       else
       {
-        Repo.PodFile r = Repo.findPodFile(name);
+        Repo.PodFile r = Repo.findPod(name);
         if (r != null) { podPath = r.m_file.FullName; repo = r.m_repo; }
       }
 
@@ -146,20 +146,19 @@ namespace Fan.Sys
         //  every pod into memory
         if (m_allPodsList == null)
         {
-          List pods = new List(Sys.PodType);
-          FileInfo[] list = new DirectoryInfo(Sys.PodsDir).GetFiles("*.pod");
-          for (int i=0; i<list.Length; i++)
+          Hashtable map = Repo.findAllPods();
+          List pods = new List(Sys.PodType, map.Count);
+          IDictionaryEnumerator en = map.GetEnumerator();
+          while (en.MoveNext())
           {
-            FileInfo f = list[i];
-            string n = f.Name;
-            n = n.Substring(0, n.Length-".pod".Length);
+            string name = (string)en.Key;
             try
             {
-              pods.add(doFind(n, true, null));
+              pods.add(doFind(name, true, null));
             }
             catch (Exception e)
             {
-              System.Console.WriteLine("ERROR: Invalid pod file: " + f);
+              System.Console.WriteLine("ERROR: Invalid pod file: " + name);
               Err.dumpStack(e);
             }
           }

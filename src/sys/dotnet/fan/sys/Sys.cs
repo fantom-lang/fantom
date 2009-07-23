@@ -37,13 +37,6 @@ namespace Fan.Sys
 
     public static Fan.Sys.File homeDir() { return m_homeDir; }
 
-    public static Fan.Sys.File appDir()
-    {
-      if (m_appDir == null)
-        m_appDir = new LocalFile(new DirectoryInfo(AppDir));
-      return m_appDir;
-    }
-
     public static string hostName() { return m_hostName; }
 
     public static string userName() { return m_userName; }
@@ -87,23 +80,10 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     private static string m_HomeDir;
-    private static string m_AppDir;
     private static string m_PodsDir;
 
     public static string HomeDir { get { return m_HomeDir; } }
     public static string PodsDir { get { return m_PodsDir; } }
-
-    // TODO - this is sort of a big hack, need to really
-    // go back and clean all this code up
-    public static string AppDir
-    {
-      get
-      {
-        if (m_AppDir == null)
-          m_AppDir = sysPropToDir("fan.appDir", "fan_appDir", Directory.GetCurrentDirectory());
-        return m_AppDir;
-      }
-    }
 
     public static readonly Pod SysPod;
     public static readonly InStream  StdIn;
@@ -136,8 +116,6 @@ namespace Fan.Sys
 
         // map key directories
         m_HomeDir = sysPropToDir("fan.home", "fan_home", null);
-// set in prop getter
-//m_AppDir  = sysPropToDir("fan.appDir", "fan_appDir", Directory.GetCurrentDirectory());
         m_PodsDir = FileUtil.combine(HomeDir, "lib", "fan");
 
         // load sys pod
@@ -292,8 +270,6 @@ namespace Fan.Sys
 
         m_args = new List(StrType);
         m_homeDir = new LocalFile(new DirectoryInfo(HomeDir));
-// set is accesor method
-//m_appDir  = new LocalFile(new DirectoryInfo(AppDir));
         m_hostName = Environment.MachineName;
         m_userName = Environment.UserName;
 
@@ -545,7 +521,6 @@ namespace Fan.Sys
 
     public static readonly List m_args;
     public static readonly LocalFile m_homeDir;
-    public static LocalFile m_appDir;
     public static readonly string m_hostName;
     public static readonly string m_userName;
     private static Map m_env;
