@@ -9,10 +9,12 @@ package fanx.typedb;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.zip.*;
 import fan.sys.FanObj;
 import fan.sys.List;
 import fan.sys.Log;
+import fan.sys.Repo;
 import fan.sys.Symbol;
 import fan.sys.Sys;
 import fan.sys.Version;
@@ -60,21 +62,20 @@ class Builder
    */
   void loadPods()
   {
-    File[] files = TypeDb.podsDir.listFiles();
-    ArrayList acc = new ArrayList(files.length);
-    for (int i=0; i<files.length; ++i)
+    ArrayList acc = new ArrayList();
+    Iterator it = Repo.findAllPods().entrySet().iterator();
+    while (it.hasNext())
     {
-      File f = files[i];
-      if (f.getName().endsWith(".pod"))
+      Entry entry = (Entry)it.next();
+      String n = (String)entry.getKey();
+      File f = (File)entry.getValue();
+      try
       {
-        try
-        {
-          acc.add(loadPod(f));
-        }
-        catch (Throwable e)
-        {
-          log.error("Cannot load " + f, e);
-        }
+        acc.add(loadPod(n, f));
+      }
+      catch (Throwable e)
+      {
+        log.error("Cannot load " + f, e);
       }
     }
     pods = (Pod[])acc.toArray(new Pod[acc.size()]);
@@ -83,12 +84,12 @@ class Builder
   /**
    * Load 'typedb.def' from the specified pod file.
    */
-  Pod loadPod(File f)
+  Pod loadPod(String n, File f)
     throws Exception
   {
     // file info
     Pod p = new Pod();
-    p.name = f.getName().substring(0, f.getName().length()-4);
+    p.name = n;
     p.modified = f.lastModified();
     p.size = (int)f.length();
 
@@ -410,6 +411,7 @@ class Builder
   void persist()
     throws Exception
   {
+    TypeDb.dbFile.getParentFile().mkdirs();
     OutputStream out = new FileOutputStream(TypeDb.dbFile);
     out.write(buf.buf, 0, buf.len);
     out.close();

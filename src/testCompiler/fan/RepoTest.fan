@@ -45,7 +45,11 @@ class RepoTest : Test
     podFile.out.print(
     """@podDepends=[Depend("sys 1.0")]
        @podSrcDirs=[`fan/`]
-       pod $podA {}""").close
+       @podIndexFacets=[@foo]
+       pod $podA
+       {
+         foo := ""
+       }""").close
 
     // build.fan
     buildFile := dir+`build.fan`
@@ -58,7 +62,8 @@ class RepoTest : Test
     // src.fan
     srcFile := dir+`fan/src.fan`
     srcFile.out.print(
-    """class A
+    """@foo="alpha"
+       class A
        {
          static Str a() { return "a" }
        }""").close
@@ -119,8 +124,15 @@ class RepoTest : Test
            verify(pods.containsSame(Pod.find("sys")))
          }
 
-         // test dependency on podA
-         Void t101() { verifyEq(A.a, "a") }
+         // test facets
+         Void testFacets()
+         {
+           verifyEq(A#.facet(@foo), "alpha")
+           verifyEq(B#.facet(@foo), "beta")
+           verifyEq(Type.findByFacet(@foo, "alpha"),[A#])
+           verifyEq(Type.findByFacet(@foo, "beta"), [B#])
+           verifyEq(Type.findByFacet(@foo, "????"), Type[,])
+         }
 
          static Void main()
          {
@@ -143,7 +155,11 @@ class RepoTest : Test
            }
            out.close
          }
-       }""").close
+       }
+
+       @foo="beta"
+       class B {}
+       """).close
 
     compile(podB, buildFile)
   }
