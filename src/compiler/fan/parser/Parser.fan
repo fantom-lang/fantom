@@ -2433,7 +2433,7 @@ public class Parser : CompilerSupport
   private CompilationUnit unit    // compilation unit to generate
   private TokenVal[] tokens       // tokens all read in
   private Int numTokens           // number of tokens
-  private Int pos;                // offset Into tokens for cur
+  private Int pos                 // offset into tokens for cur
   private TokenVal? cur           // current token
   private Token? curt             // current token type
   private TokenVal? peek          // next token

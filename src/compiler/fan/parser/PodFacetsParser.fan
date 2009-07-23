@@ -23,11 +23,10 @@ class PodFacetsParser
   new make(Location location, Str source)
   {
     this.location = location
-    this.tokenizer = Tokenizer(Compiler(CompilerInput()), location, source, false)
-    this.facets = Str:Obj?[:]
-    this.usings = "using sys\n"
-    consume
-    consume
+    this.source   = source
+    this.tokens   = TokenVal[,]
+    this.facets   = Str:Obj?[:]
+    this.usings   = "using sys\n"
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -40,9 +39,9 @@ class PodFacetsParser
   **
   This parse()
   {
+    tokenize
     while (curt === Token.usingKeyword) parseUsing
     while (curt === Token.at) parseFacet
-    parseHeader
     return this
   }
 
@@ -107,6 +106,27 @@ class PodFacetsParser
 // Private
 //////////////////////////////////////////////////////////////////////////
 
+  private Void tokenize()
+  {
+    // read everything up to pod <id>
+    tokenizer := Tokenizer(Compiler(CompilerInput()), location, source, false)
+    lastIsPod := false
+    while (true)
+    {
+      token := tokenizer.next
+      if (token.kind === Token.eof) throw err("Unexpected end of file")
+      if (token.kind === Token.identifier)
+      {
+        if (lastIsPod) { podName = token.val; break }
+        lastIsPod = token.val == "pod"
+      }
+      tokens.add(token)
+    }
+    tokens.removeAt(-1)
+    cur  = tokens[0]
+    curt = cur.kind
+  }
+
   private Void parseUsing()
   {
     s := "using "
@@ -168,12 +188,13 @@ class PodFacetsParser
 
   private Void complexExpr(PodFacet facet)
   {
-    // just consume everything up until next @id or pod id
+    // just consume everything up until next @id= or end
     s := StrBuf()
-    while (curt !== Token.eof)
+    while (pos < tokens.size)
     {
-      if (curt === Token.at && peekt === Token.identifier) break
-      if (curt === Token.identifier && cur.val == "pod" && peekt === Token.identifier) break
+      if (curt === Token.at && pos+2 < tokens.size &&
+          tokens[pos+1].kind == Token.identifier &&
+          tokens[pos+2].kind == Token.assign) break
       s.add(consume.toCode)
     }
     facet.unparsed = s.toStr
@@ -230,10 +251,11 @@ class PodFacetsParser
     result := cur
 
     // advance
-    this.cur   = peek
-    this.curt  = peekt
-    this.peek  = tokenizer.next
-    this.peekt = peek?.kind
+    try
+      this.cur = tokens[++pos]
+    catch
+      this.cur = TokenVal(Token.eof)
+    this.curt = cur.kind
 
     return result
   }
@@ -250,7 +272,7 @@ class PodFacetsParser
     p := PodFacetsParser(Location.makeFile(f), f.readAllStr).parse
     t2 := Duration.now
     echo("")
-    echo("Parsed $p.podName ${(t2-t1).toLocale}")
+    echo("Parsed '$p.podName' ${(t2-t1).toLocale}")
     echo("")
     p.keys.each |key| { print(p, key) }
   }
@@ -260,7 +282,7 @@ class PodFacetsParser
     try
       echo("@$key = " + p.get(key, true, expected))
     catch (CompilerErr e)
-      echo("@$key = $e [$e.location.toLocationStr]")
+      echo("@$key = " + p.facets[key].unparsed  + " (cannot parse)")
     catch (Err e)
       echo("@$key = $e")
   }
@@ -270,11 +292,11 @@ class PodFacetsParser
 //////////////////////////////////////////////////////////////////////////
 
   Location location            // location of entire file
-  private Tokenizer tokenizer  // stream tokenizer
+  private Str source           // source file to parse
+  private TokenVal[] tokens    // tokenize
+  private Int pos              // offset into tokens for cur
   private TokenVal? cur        // current token
   private Token? curt          // current token type
-  private TokenVal? peek       // next token
-  private Token? peekt         // next token type
   private Str:PodFacet facets  // facets map
   private Str usings           // using imports
 }
