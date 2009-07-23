@@ -129,10 +129,23 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(elem, event, list)
 {
   for (var i=0; i<list.length; i++)
   {
+    var meth = list[i];
+    var func = function(e)
+    {
+      // TODO - need to fix for IE
+      // TODO - only valid for mouseDown - so need to clean up this code
+      var evt = new fan.fwt.Event();
+      evt.id = fan.fwt.EventId.mouseDown;
+      evt.pos = fan.gfx.Point.make(e.clientX, e.clientY);
+      //evt.count =
+      //evt.key =
+      meth(evt);
+    }
+
     if (elem.addEventListener)
-      elem.addEventListener(event, list[i], false);
+      elem.addEventListener(event, func, false);
     else
-      elem.attachEvent("on"+event, list[i]);
+      elem.attachEvent("on"+event, func);
   }
 }
 

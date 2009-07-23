@@ -15,6 +15,7 @@ fan.fwt.MenuPeer.prototype.$ctor = function(self) {}
 fan.fwt.MenuPeer.prototype.open = function(self, parent, point)
 {
   this.$parent = parent;
+  this.$point = point;
 
   // mount mask that functions as input blocker for modality
   var mask = document.createElement("div")
@@ -104,8 +105,18 @@ fan.fwt.MenuPeer.prototype.relayout = function(self)
 
   var pp = this.$parent.posOnDisplay();
   var ps = this.$parent.size$get();
-  var x = pp.x + 1;
-  var y = pp.y + ps.h + 1;
+  var x = pp.x;
+  var y = pp.y;
+  if (this.$point == null)
+  {
+    x += 1;
+    y += ps.h + 1;
+  }
+  else
+  {
+    x += this.$point.x;
+    y += this.$point.y;
+  }
   var w = pw;
   var h = ph;
 
