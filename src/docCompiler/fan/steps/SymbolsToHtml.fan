@@ -9,7 +9,7 @@
 using compiler
 
 **
-** SymbolsToHtml generates the pod.html file for a pod.
+** SymbolsToHtml generates the pod-meta.html file for a pod.
 **
 class SymbolsToHtml : DocCompilerSupport
 {
@@ -22,8 +22,8 @@ class SymbolsToHtml : DocCompilerSupport
   Void run()
   {
     log.debug("  Symbols [$compiler.pod]")
-    file := compiler.podDir + "pod.html".toUri
-    loc  := Location("pod.html")
+    file := compiler.podDir + "pod-meta.html".toUri
+    loc  := Location("pod-meta.html")
     SymbolsGenerator(compiler, loc, file.out).generate
   }
 

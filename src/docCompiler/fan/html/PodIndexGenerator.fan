@@ -120,7 +120,7 @@ class PodIndexGenerator : HtmlGenerator
   {
     out.print("<h2>Meta</h2>\n")
     out.print("<ul class='clean'>\n")
-    out.print("<li><a href='pod.html'>Facets/Symbols</a></li>\n")
+    out.print("<li><a href='pod-meta.html'>Facets/Symbols</a></li>\n")
     out.print("</ul>\n")
 
     out.print("<h2>Types</h2>\n")

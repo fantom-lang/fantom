@@ -111,16 +111,29 @@ class UriMapper : DocCompilerSupport
 
   private Void mapSymbol()
   {
+    Symbol? symbol
+
+    // full qname
     colons := fandocUri.index("::")
-    podName := fandocUri[1..<colons]
-    pod := Pod.find(podName, false)
-    if (pod == null) throw err("Unknown pod '$podName'", loc)
+    if (colons != null)
+    {
+      podName := fandocUri[1..<colons]
+      pod := Pod.find(podName, false)
+      if (pod == null) throw err("Unknown pod '$podName'", loc)
 
-    name := fandocUri[colons+2..-1]
-    sym := pod.symbol(name)
-    if (sym == null) throw err("Unknown symbol '$fandocUri'", loc)
+      name := fandocUri[colons+2..-1]
+      symbol = pod.symbol(name)
+    }
+    else
+    {
+      // look up in current pod
+      name := fandocUri[1..-1]
+      symbol = compiler.pod.symbol(name, false)
+    }
 
-    targetUri = toUri(pod, "pod.html", name)
+    if (symbol == null) throw err("Unknown symbol '$fandocUri'", loc)
+    targetIsCode = true
+    targetUri = toUri(symbol.pod, "pod-meta.html", symbol.name)
   }
 
   private Void mapPod()
