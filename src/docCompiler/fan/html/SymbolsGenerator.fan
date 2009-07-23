@@ -32,7 +32,7 @@ class SymbolsGenerator : HtmlGenerator
 
   override Str title()
   {
-    return pod.name
+    return "$pod.name Meta"
   }
 
   override Void header()
@@ -40,7 +40,7 @@ class SymbolsGenerator : HtmlGenerator
     out.print("<ul>\n")
     out.print("  <li><a href='../index.html'>$docHome</a></li>\n")
     out.print("  <li><a href='index.html'>$pod.name</a></li>\n")
-    out.print("  <li><a href='pod-meta.html'>Facets/Symbols</a></li>\n")
+    out.print("  <li><a href='pod-meta.html'>Meta</a></li>\n")
     out.print("</ul>\n")
   }
 
@@ -59,8 +59,10 @@ class SymbolsGenerator : HtmlGenerator
   Void writeFacets()
   {
     if (pod.facets.isEmpty) return
-    out.print("<h2>Pod Facets</h2>\n")
-    facets(pod.facets)
+    out.print("<h2 id='facets'>Pod Facets</h2>\n")
+    out.print("<pre class='podFacets'>")
+    facets(pod.facets, false, false)
+    out.print("</pre>\n")
   }
 
   Void writeSymbols()
@@ -68,7 +70,7 @@ class SymbolsGenerator : HtmlGenerator
     if (symbols.isEmpty) return
     out.print("<div class='slots'>\n")
     out.print("<div class='detail'>\n")
-    out.print("<h2>Symbols</h2>\n")
+    out.print("<h2 id='symbols'>Symbols</h2>\n")
     out.print("<dl>\n")
     symbols.each |s|
     {

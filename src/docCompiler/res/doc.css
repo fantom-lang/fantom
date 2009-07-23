@@ -167,6 +167,8 @@ div.fandoc pre
   border: 1px dashed #aaa;
   padding: 10px;
 }
+div.fandoc pre.podFacets { line-height:1.5em; }
+div.fandoc pre.podFacets a { color:#555; }
 div.prevNext { position: relative; height: 30px; }
 div.prevNext img { border: 0; vertical-align: middle; }
 div.prevNext div.prev { position: absolute; top: 5px; left: 5px; }
