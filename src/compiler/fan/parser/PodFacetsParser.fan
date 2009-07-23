@@ -39,7 +39,7 @@ class PodFacetsParser
   **
   This parse()
   {
-    tokenize
+    if (!tokenize) return this
     while (curt === Token.usingKeyword) parseUsing
     while (curt === Token.at) parseFacet
     return this
@@ -106,7 +106,7 @@ class PodFacetsParser
 // Private
 //////////////////////////////////////////////////////////////////////////
 
-  private Void tokenize()
+  private Bool tokenize()
   {
     // read everything up to pod <id>
     tokenizer := Tokenizer(Compiler(CompilerInput()), location, source, false)
@@ -123,8 +123,10 @@ class PodFacetsParser
       tokens.add(token)
     }
     tokens.removeAt(-1)
+    if (tokens.isEmpty) return false
     cur  = tokens[0]
     curt = cur.kind
+    return true
   }
 
   private Void parseUsing()

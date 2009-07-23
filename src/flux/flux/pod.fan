@@ -20,10 +20,7 @@
 
 @podResDirs = [`locale/`, `test/files/`, `test/files/sub/`]
 
-@indexFacets = ["flux::fluxResource",
-                "flux::fluxSideBar",
-                "flux::fluxView",
-                "flux::fluxViewMimeType"]
+@podIndexFacets = [@fluxResource, @fluxSideBar, @fluxView, @fluxViewMimeType]
 
 pod flux
 {
