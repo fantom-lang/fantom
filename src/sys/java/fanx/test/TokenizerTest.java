@@ -246,7 +246,7 @@ public class TokenizerTest
     verify("]",       new Tok(Token.RBRACKET));
     verify(":",       new Tok(Token.COLON));
     verify("[]",      new Tok(Token.LRBRACKET));
-    verifyInvalid("@");
+    verifyInvalid("*");
 
     // double tokens
     verify("a b",       id("a"),  id("b"));

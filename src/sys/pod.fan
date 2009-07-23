@@ -13,7 +13,7 @@
 @podDepends = Depend[,]
 @podSrcDirs = [`fan/`]
 @podResDirs = [`locale/`]
-@indexFacets = ["sys::uriScheme"]
+@podIndexFacets = [@uriScheme]
 
 pod sys
 {
@@ -76,12 +76,6 @@ pod sys
   ** Used to annoate types and slots which should be compiled into JavaScript.
   **
   Bool js := false
-
-  **
-  ** List of facets to index
-  ** TODO-SYM: replace with podIndexFacets
-  **
-  Str[] indexFacets := Str[,]
 
 //////////////////////////////////////////////////////////////////////////
 // Pod Build-time Facets

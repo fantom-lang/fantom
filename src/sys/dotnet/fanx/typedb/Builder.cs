@@ -14,6 +14,7 @@ using FanObj = Fan.Sys.FanObj;
 using List = Fan.Sys.List;
 using Log = Fan.Sys.Log;
 using Sys = Fan.Sys.Sys;
+using Symbol = Fan.Sys.Symbol;
 using Version = Fan.Sys.Version;
 using ICSharpCode.SharpZipLib.Zip;
 using Fanx.Fcode;
@@ -261,11 +262,11 @@ namespace Fanx.Typedb
       Hashtable facetNames = new Hashtable();
       for (int i=0; i<pods.Length; ++i)
       {
-        List names = pods[i].facets.getStrList("sys::indexFacets");
-        if (names == null) continue;
-        for (int j=0; j<names.sz(); ++j)
+        List symbols = pods[i].facets.getSymbolList("sys::podIndexFacets");
+        if (symbols == null) continue;
+        for (int j=0; j<symbols.sz(); ++j)
         {
-          string n = ((string)names.get(j));
+          string n = ((Symbol)symbols.get(j)).qname();
           if (facetNames[n] == null)
             facetNames[n] = new FacetIndex(n);
         }
@@ -567,12 +568,12 @@ namespace Fanx.Typedb
         return null;
       }
 
-      public List getStrList(string name)
+      public List getSymbolList(string name)
       {
         object v = getObj(name);
         if (v == null) return null;
-        if (v is List && ((List)v).of() == Sys.StrType) return (List)v;
-        log.warn("Expecting '" + loc + "@" + name + "' to be string[], not " + FanObj.type(v));
+        if (v is List && ((List)v).of() == Sys.SymbolType) return (List)v;
+        log.warn("Expecting '" + loc + "@" + name + "' to be Symbol[], not " + FanObj.type(v));
         return null;
       }
 

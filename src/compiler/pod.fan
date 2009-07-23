@@ -21,7 +21,7 @@
                `fan/parser/`,
                `fan/steps/`,
                `fan/util/`]
-@indexFacets = ["compiler::compilerBridge", "compiler::compilerDsl"]
+@podIndexFacets = [@compilerBridge, @compilerDsl]
 
 pod compiler
 {
