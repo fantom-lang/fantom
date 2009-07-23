@@ -55,7 +55,7 @@ abstract class BuildScript
   const File scriptDir := scriptFile.parent
 
   ** Home directory of development installation.  By default this
-  ** value is initialized by `@buildDevEnv`, otherwise 'Repo.boot.home'`
+  ** value is initialized by `@buildDevHome`, otherwise 'Repo.boot.home'`
   ** is used.
   const File devHomeDir := resolveDevHomeDir
 

@@ -15,6 +15,7 @@ using List = Fan.Sys.List;
 using Log = Fan.Sys.Log;
 using Sys = Fan.Sys.Sys;
 using Symbol = Fan.Sys.Symbol;
+using Repo = Fan.Sys.Repo;
 using Version = Fan.Sys.Version;
 using ICSharpCode.SharpZipLib.Zip;
 using Fanx.Fcode;
@@ -61,21 +62,20 @@ namespace Fanx.Typedb
     /// </summary>
     void loadPods()
     {
-      FileInfo[] files = TypeDb.podsDir.GetFiles();
-      ArrayList acc = new ArrayList(files.Length);
-      for (int i=0; i<files.Length; ++i)
+      Hashtable podFiles = Repo.findAllPods();
+      ArrayList acc = new ArrayList(podFiles.Count);
+      IDictionaryEnumerator en = podFiles.GetEnumerator();
+      while (en.MoveNext())
       {
-        FileInfo f = files[i];
-        if (f.Name.EndsWith(".pod"))
+        string n = (string)en.Key;
+        FileInfo f = (FileInfo)en.Value;
+        try
         {
-          try
-          {
-            acc.Add(loadPod(f));
-          }
-          catch (Exception e)
-          {
-            log.error("Cannot load " + f, e);
-          }
+          acc.Add(loadPod(n, f));
+        }
+        catch (Exception e)
+        {
+          log.error("Cannot load " + f, e);
         }
       }
       pods = (Pod[])acc.ToArray(typeof(Pod));
@@ -84,11 +84,11 @@ namespace Fanx.Typedb
     /// <summary>
     /// Load 'typedb.def' from the specified pod file.
     /// </summary>
-    Pod loadPod(FileInfo f)
+    Pod loadPod(string n, FileInfo f)
     {
       // file info
       Pod p = new Pod();
-      p.name = f.Name.Substring(0, f.Name.Length-4);
+      p.name = n;
       p.modified = f.LastWriteTime.Ticks;
       p.size = (int)f.Length;
 

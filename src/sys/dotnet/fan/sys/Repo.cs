@@ -57,6 +57,7 @@ namespace Fan.Sys
   //////////////////////////////////////////////////////////////////////////
 
     public File home() { return m_home; }
+    public FileSystemInfo homeDotnet() { return ((LocalFile)m_home).m_file; }
 
     public static File findFile(string uri) { return findFile(Uri.fromStr(uri), true); }
     public static File findFile(string uri, bool check) { return findFile(Uri.fromStr(uri), check); }
@@ -91,7 +92,10 @@ namespace Fan.Sys
   // Pods
   //////////////////////////////////////////////////////////////////////////
 
-    internal static PodFile findPodFile(string name)
+    /**
+     * Find a pod by name in repo or return null
+     */
+    internal static PodFile findPod(string name)
     {
       Uri uri = Uri.fromStr("lib/fan/" + name + ".pod");
       for (int i=0; i<m_list.size(); ++i)
@@ -110,7 +114,10 @@ namespace Fan.Sys
     }
     internal class PodFile { public FileSystemInfo m_file; public Repo m_repo; }
 
-    internal static ICollection findAllPodNames()
+    /**
+     * Get all pods as map of 'name:Local'
+     */
+    internal static Hashtable findAllPods()
     {
       Hashtable acc = new Hashtable();
       for (int i=0; i<m_list.sz(); ++i)
@@ -118,14 +125,14 @@ namespace Fan.Sys
         List files = ((Repo)m_list.get(i)).m_home.plus("lib/fan/").listFiles();
         for (int j=0; j<files.sz(); ++j)
         {
-          File f = (File)files.get(j);
+          LocalFile f = (LocalFile)files.get(j);
           string n = f.name();
           if (!n.EndsWith(".pod")) continue;
           n = n.Substring(0, n.Length-".pod".Length);
-          if (acc[n] == null) acc[n] = n;
+          if (acc[n] == null) acc[n] = f.m_file;
         }
       }
-      return acc.Values;
+      return acc;
     }
 
   //////////////////////////////////////////////////////////////////////////
