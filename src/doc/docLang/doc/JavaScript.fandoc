@@ -29,32 +29,19 @@ mark a type using the '@js' facet.
 Compiling [#compiling]
 **********************************************
 
-To compile the types you've marked for JavaScript, set the
-[hasJavascript]`build::BuildPod.hasJavascript` to 'true' in your build
-script.
+To compile the types you've marked for JavaScript, add the [@js]`@sys::js`
+facet to your pod definition [Obj]`sys::Obj` file.
 
-  class Build : BuildPod
-  {
-    override Void setup()
-    {
-      ...
-      hasJavascript = true
-    }
-  }
+  // pod.fan
+  @js
 
 Natives [#natives]
 **********************************************
 
 To compile JavaScript natives, add the source directories to your build
-script using [javascriptDirs]`build::BuildPod.javascriptDirs`.
+script using the [@podJsDirs]`@sys::podJsDirs` facet.
 
-  class Build : BuildPod
-  {
-    override Void setup()
-    {
-      ...
-      javascriptDirs = [`js/`]
-    }
-  }
+  // pod.fan
+  @podJsDirs =  [`js/`]
 
 TODO: document how JavaScript peers operate

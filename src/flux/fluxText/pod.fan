@@ -51,7 +51,7 @@ pod fluxText
   virtual Int tabSpacing := 2
 
   ** If true, then all tabs to converted to space characters
-  ** based on the configured `tabSpacing`.  The default is true.
+  ** based on the configured `@tabSpacing`.  The default is true.
   virtual Bool convertTabsToSpaces := true
 
   ** Default char encoding to use when load/saving

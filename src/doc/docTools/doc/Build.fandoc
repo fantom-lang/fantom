@@ -94,7 +94,7 @@ find handy:
     of the script itself
   - [scriptDir]`build::BuildScript.scriptDir`: the directory
     containing the script
-  - [globalVersion]`build::BuildScript.globalVersion`: a version
+  - [@buildVersion]`@build::buildVersion`: a version
     configured in "sys.props" often used to version all your pods
     consistently when you perform full builds
   - [binDir]`build::BuildScript.binDir`: bin directory of your
