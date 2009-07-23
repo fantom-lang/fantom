@@ -72,7 +72,7 @@ Key Bindings [#keyOptions]
 All the commands in flux have a globally unique string id.  Common
 predefined commands have an id like "cut" or "save".  By default commands are
 configured as [localized props]`fwt::Command.makeLocale`.  But you
-can custom the key binding for any command via [KeyOptions]`flux::KeyOptions`.
+can custom the key binding for any command via [@keyBindings]`@flux::keyBindings`.
 
 Text Editor [#textEditorOptions]
 ================================
