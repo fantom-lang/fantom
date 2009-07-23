@@ -52,6 +52,7 @@ public final class Repo
 //////////////////////////////////////////////////////////////////////////
 
   public File home() { return home; }
+  public java.io.File homeJava() { return ((LocalFile)home).file; }
 
   public static File findFile(String uri) { return findFile(Uri.fromStr(uri), true); }
   public static File findFile(String uri, boolean checked) { return findFile(Uri.fromStr(uri), checked); }
@@ -86,7 +87,10 @@ public final class Repo
 // Pods
 //////////////////////////////////////////////////////////////////////////
 
-  static PodFile findPodFile(String name)
+  /**
+   * Find a pod by name in repo or return null
+   */
+  public static PodFile findPod(String name)
   {
     Uri uri = Uri.fromStr("lib/fan/" + name + ".pod");
     for (int i=0; i<list.size(); ++i)
@@ -105,7 +109,10 @@ public final class Repo
   }
   static class PodFile { java.io.File file; Repo repo; }
 
-  static String[] findAllPodNames()
+  /**
+   * Get all pods as map of 'name:java.io.File'
+   */
+  public static HashMap findAllPods()
   {
     HashMap acc = new HashMap();
     for (int i=0; i<list.sz(); ++i)
@@ -113,14 +120,14 @@ public final class Repo
       List files = ((Repo)list.get(i)).home.plus("lib/fan/").listFiles();
       for (int j=0; j<files.sz(); ++j)
       {
-        File f = (File)files.get(j);
+        LocalFile f = (LocalFile)files.get(j);
         String n = f.name();
         if (!n.endsWith(".pod")) continue;
         n = n.substring(0, n.length()-".pod".length());
-        if (acc.get(n) == null) acc.put(n, n);
+        if (acc.get(n) == null) acc.put(n, f.file);
       }
     }
-    return (String[])acc.values().toArray(new String[acc.size()]);
+    return acc;
   }
 
 //////////////////////////////////////////////////////////////////////////

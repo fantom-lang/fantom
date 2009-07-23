@@ -10,6 +10,7 @@ package fanx.typedb;
 import java.io.*;
 import java.io.File;
 import java.util.*;
+import java.util.Map.Entry;
 import fan.sys.*;
 import fan.sys.List;
 import fanx.serial.*;
@@ -207,13 +208,12 @@ public class TypeDb
 
   boolean checkUpToDate()
   {
-    File[] files = podsDir.listFiles();
-    for (int i=0; i<files.length; ++i)
+    Iterator it = Repo.findAllPods().entrySet().iterator();
+    while (it.hasNext())
     {
-      File f = files[i];
-      String n = f.getName();
-      if (!n.endsWith(".pod")) continue;
-      n = n.substring(0, n.length()-4);
+      Entry entry = (Entry)it.next();
+      String n = (String)entry.getKey();
+      File f = (File)entry.getValue();
 
       // check that pod wasn't added
       PodInfo p = (PodInfo)podsByName.get(n);
@@ -459,9 +459,12 @@ public class TypeDb
 
   static final int MAGIC   = 0x54795065;
   static final int VERSION = 0x01000019;
-  static final File libDir  = new File(Sys.HomeDir, "lib");
-  static final File podsDir = new File(libDir, "fan");
-  static final File dbFile  = new File(libDir, "types.db");
+  static final File dbFile;
+  static
+  {
+    String sep = File.separator;
+    dbFile = new File(Repo.working().homeJava(), "etc"+sep+"sys"+sep+"types.db");
+  }
 
   static Object lock = new Object();
   static Log log = Log.get("typedb");

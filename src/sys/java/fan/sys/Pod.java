@@ -140,7 +140,7 @@ public class Pod
     }
     else
     {
-      Repo.PodFile r = Repo.findPodFile(name);
+      Repo.PodFile r = Repo.findPod(name);
       if (r != null) { file = r.file; repo = r.repo; }
     }
 
@@ -167,17 +167,19 @@ public class Pod
       //  every pod into memory
       if (allPodsList == null)
       {
-        List pods = new List(Sys.PodType);
-        String[] names = Repo.findAllPodNames();
-        for (int i=0; i<names.length; ++i)
+        HashMap map = Repo.findAllPods();
+        List pods = new List(Sys.PodType, map.size());
+        Iterator it = map.keySet().iterator();
+        while (it.hasNext())
         {
+          String name = (String)it.next();
           try
           {
-            pods.add(doFind(names[i], true, null, null));
+            pods.add(doFind(name, true, null, null));
           }
           catch (Throwable e)
           {
-            System.out.println("ERROR: Invalid pod file: " + names[i]);
+            System.out.println("ERROR: Invalid pod file: " + name);
             e.printStackTrace();
           }
         }
