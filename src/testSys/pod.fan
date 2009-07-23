@@ -16,7 +16,7 @@
 @podSrcDirs = [`fan/`]
 @podResDirs = [`res/`, `locale/`]
 @nodoc
-@indexFacets = ["testSys::testSysByStr", "testSys::testSysByType"]
+@podIndexFacets = [@testSysByStr, @testSys::testSysByType]
 
 pod testSys
 {

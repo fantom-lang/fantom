@@ -13,6 +13,7 @@ import java.util.zip.*;
 import fan.sys.FanObj;
 import fan.sys.List;
 import fan.sys.Log;
+import fan.sys.Symbol;
 import fan.sys.Sys;
 import fan.sys.Version;
 import fanx.fcode.*;
@@ -265,7 +266,15 @@ class Builder
     HashMap facetNames = new HashMap();
     for (int i=0; i<pods.length; ++i)
     {
+// TODO
       List names = pods[i].facets.getStrList("sys::indexFacets");
+if (names == null)
+{
+  List symbols = pods[i].facets.getSymbolList("sys::podIndexFacets");
+  if (symbols == null) continue;
+  names = new List(Sys.StrType);
+  for (int j=0; j<symbols.sz(); ++j) names.add(((Symbol)symbols.get(j)).qname());
+}
       if (names == null) continue;
       for (int j=0; j<names.sz(); ++j)
       {
@@ -577,6 +586,15 @@ class Builder
       if (v == null) return null;
       if (v instanceof List && ((List)v).of() == Sys.StrType) return (List)v;
       log.warn("Expecting '" + loc + "@" + name + "' to be Str[], not " + FanObj.type(v));
+      return null;
+    }
+
+    List getSymbolList(String name)
+    {
+      Object v = getObj(name);
+      if (v == null) return null;
+      if (v instanceof List && ((List)v).of() == Sys.SymbolType) return (List)v;
+      log.warn("Expecting '" + loc + "@" + name + "' to be Symbol[], not " + FanObj.type(v));
       return null;
     }
 

@@ -390,15 +390,9 @@ class SlotLiteralExpr : Expr
     this.name = name
   }
 
-  override Str serialize()
-  {
-    return "$parent.signature#name"
-  }
+  override Str serialize() { "$parent.signature#name" }
 
-  override Str toStr()
-  {
-    return "$parent.signature#name"
-  }
+  override Str toStr() { "$parent.signature#name" }
 
   CType parent
   Str name
@@ -427,6 +421,8 @@ class SymbolExpr: Expr
     this.ctype = symbol.ns.symbolType
     this.symbol = symbol
   }
+
+  override Str serialize() { "@$symbol.qname" }
 
   override Str toStr() { podName == null ? "@$name" : "@$podName::$name" }
 

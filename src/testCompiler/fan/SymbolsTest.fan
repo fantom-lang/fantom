@@ -300,10 +300,10 @@ class SymbolsTest : CompilerTest
     podStr =
     "using compiler; pod $podName {
      a := 4
-     b := @a }"
+     b := Sys.hostName }"
     verifyErrors("class Foo {}",
      [
-       3, 6, "Symbol value is not serializable: 'b' ('symbolLiteral' not serializable)",
+       3, 10, "Symbol value is not serializable: 'b' ('call' not serializable)",
      ])
   }
 }
