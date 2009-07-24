@@ -8,14 +8,21 @@
 
 Overview [#overview]
 ********************
-Fan software is structured into three levels of modularity:
+Fan software is structured using four primary abstractions:
 
-  - [Pod]`#pod`: module of deployment and versioning
-  - [Type]`#type`: basic unit of object oriented type system
-  - [Slot]`#slot`: fields and methods
+  - [Pods]`#pods`: modules of deployment and versioning
+  - [Types]`#types`: basic units of object oriented type system
+  - [Slots]`#slots`: fields and methods
+  - [Symbols]`#symbols`: statically typed, namespace aware name/value pairs
 
-Pod [#pod]
-**********
+These abstractions are organized into a three level namespace which
+uses the following syntax for qualified names:
+  - 'pod::Type'
+  - 'pod::Type.slot'
+  - 'pod::symbol'
+
+Pods [#pods]
+***********
 Pods are the top of Fan's namespace as well as the unit of deployment.  A pod's
 name is globally unique and is used to organize the top level of Fan's namespace.
 Pod names are similar to Java packages or C# namespaces.  To guarantee uniqueness,
@@ -23,10 +30,9 @@ try use a naming convention which won't produce conflicts (see
 [conventions]`Conventions#naming`).
 
 Pods are also the fundamental unit of deployment, versioning, and dependency
-management.  In this role pods are like Java JAR files or .NET DLLs (although
-as of 1.6 Java's module management via JARs is pretty weak).  A pod is a standard
-zip file which bundles the Fan code for the pod's types, meta-data, plus any
-associated file resources.
+management.  In this role pods are like Java JAR files or .NET DLLs.  A pod
+is a standard zip file which bundles the Fan code for the pod's types,
+meta-data, plus any associated file resources.
 
 The `sys::Pod` type is the reflection API for working with pods installed in a
 given Fan installation.  Code examples for common pod operations:
@@ -36,8 +42,10 @@ given Fan installation.  Code examples for common pod operations:
   Pod.find("acmeFoo", false)    // find a pod (returns null if not found)
   myPod.files[`/img/icon.png`]  // lookup a resource file in myPod
 
-Type [#type]
-************
+See `Pods` chapter for more details.
+
+Types [#types]
+**************
 A Type is an object oriented class which encapsulates state and behavior.  Types
 are contained within pods and identified by a name unique within that pod.  The
 '::' double colon is used to combine the pod name with the type name to create
@@ -59,8 +67,8 @@ Code snippets for common type operations:
   Int#                      // type literal for sys::Int
   someType.fits(Num#)       // reflective version of is/instanceof operator
 
-Slot [#slot]
-************
+Slots [#slots]
+**************
 Types encapsulate state and behavior as a collection of slots.  Slots are
 named uniquely within a given type.  The '.' dot is used to combine the parent
 type's qname to create the slot's qname.  For example 'sys::DateTime.now' is the
@@ -68,8 +76,8 @@ globally unique qualified name which identifies the 'now' method within the
 'DateTime' type within the 'sys' pod.
 
 There are two types of slots:
-  - [Methods]`#method`: model behavior
-  - [Fields]`#field`: model state
+  - [Methods]`#methods`: model behavior
+  - [Fields]`#fields`: model state
 
 The `sys::Slot` type is the reflection API for working with slots at runtime.
 Code examples for commonly used slot operations:
@@ -78,7 +86,9 @@ Code examples for commonly used slot operations:
   Slot.find("myPod::Foo.xyz")  // looukp a slot by its qualified name
   method.call([arg0, arg1])    // invoke method using reflection
   method.func                  // the function which implements the method
-  field.get                    // get a field using reflection
+  field.get(instance)          // get a field using reflection
+  SomeType#xyx                 // slot literal for slot on SomeType
+  #xyx                         // slot literal current type
 
 All slots are keyed by a unique name.  This means Fan does not support
 methods overridden by parameter type like Java or C#.  Although you may
@@ -90,11 +100,11 @@ the API bloat required to support all the primitives in an API like
 'java.io.PrintWriter'.  Lastly, constructors in Fan are named which eliminates
 another common requirement for parameter based overloading.  The benefit of
 this restriction is the really cool ability to lookup methods simply by name
-or qname - this makes reflective programming and dynamic invocation a zillion
+or qname making reflective programming and dynamic invocation a zillion
 times simpler.
 
-Method [#method]
-================
+Methods [#methods]
+==================
 Methods are the basic unit for encapsulating behavior in Fan.  Methods are
 really just slot wrappers for a [function]`Functions`.  Every method
 has a return type and zero or more typed parameters.  Methods which
@@ -104,8 +114,8 @@ The `sys::Method` API is used to work with methods reflectively at runtime.
 
 Methods are discussed in depth in the `Methods` chapter.
 
-Field [#field]
-==============
+Fields [#fields]
+===============
 Fields are used to model state in a given type.  Fields in Fan are composed
 of three concepts:
 
@@ -121,3 +131,20 @@ which have a getter and setter, but no storage.
 The `sys::Field` API is used to work with fields reflectively at runtime.
 
 We'll take a deep dive into fields later in the `Fields` chapter.
+
+Symbols [#symbols]
+******************
+Symbols are well known name/value pairs declared within a pod.  Symbols
+are used as keys for [facets]`Facets` and also for statically typed
+configuration variables.  Symbols are always scoped within a pod and
+use the same convention as types for qualified naming: 'pod::symbol'.
+
+The `sys::Symbol` type is the reflection API for working with symbols
+at runtime.  Code examples for commonly used slot operations:
+
+  somePod.symbol(foo")         // lookup the symbol called foo in somePod
+  Symbol.find("myPod::foo")    // looukp a slot by its qualified name
+  @foo                         // symbol literal
+
+We'll examine symbols at length in the `Symbols` chapter.
+

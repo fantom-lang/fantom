@@ -1,0 +1,105 @@
+**************************************************************************
+** title:      Symbols
+** author:     Brian Frank
+** created:    24 Jul 09
+** copyright:  Copyright (c) 2009, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Symbols are used to model name/value pairs.  Symbols may be used namespace
+aware keys (where you might use a String in another language).  In this regard
+they are similar to the ':symbol' construct in Ruby.  But symbols also
+have a statically typed value, which you might think about like a "pod
+level field".  In some cases this value may be overridden at deployment time
+with configuration files.  In this regard symbols work similiar to how you
+might use an XML or properties file for configuration in Java or C#.
+
+Symbols have the following features:
+  - Declared in the "pod.fan" declaration
+  - Always scoped within a pod using a unique name (as peers to types
+    in the namespace)
+  - A given pod may never have a symbol and type with the same name, by
+    convention symbols are lower case and types are upper case
+  - Symbols are typed like a field
+  - Symbols have a const value like a field
+  - There is exactly one 'Symbol' instance per symbol in a VM
+
+Declaring Symbols [#declaring]
+******************************
+Symbols are always declared in the "pod.fan" source file within
+the pod definition itself.  Symbols use a syntax just like fields:
+
+  pod acme
+  {
+    ** Facet symbol
+    Bool someFacet := false
+
+    ** Timeout for protocol
+    virtual Duration timeout := 10sec
+
+    ** List of servers for configuration
+    virtual hosts := Str[,]
+  }
+
+Symbols can have fandoc which may used to generate documentation.
+Unlike fields, symbols may use type inference as shown by the 'hosts'
+symbol above which is inferred as 'Str[]'.  The values of symbols
+must be [serializable]`Serialization`.
+
+Symbol Literals [#literals]
+********************
+The '@' operator is used to create a symbol literal:
+
+  @sys::serializable  // qualified
+  @serializable       // unqualified
+
+Unqualified symbols are resolved according to the source file's
+[using]`CompilationUnits#using` statements.  Only pod level using
+statements import symbols into the namespace.
+
+Symbol literals evaluate to the `sys::Symbol` instance itself:
+
+  @transient.type    =>  sys::Symbol
+  @transient.pod     =>  sys
+  @transient.name    =>  transient
+  @transient.qname   =>  sys::transient
+  @transient.of      =>  sys::Bool
+  @transient.defVal  =>  false
+
+Virtual Symbols [#virtual]
+**************************
+Virtual symbols are declared with the 'virtual' keyword.  Virtual symbols
+can be *overridden* at deployment time via configuration files.  Let's
+take our example above:
+
+  pod acme
+  {
+    virtual timeout := 10sec
+    virtual hosts := Str[,]
+  }
+
+In this example, we can write code which uses these symbols:
+
+  @hosts.val.each |host| { checkHost(host) }
+
+Then the symbol values can be configured using a fansym file named:
+  etc/{podName}/pod.fansym
+
+For example:
+
+  // etc/acme/pod.fansym
+  timeout=30sec
+  hosts=["hostA", "hostB"]
+
+The file itself is formatted as a list of name/serialized object pairs.
+See [Serialization]`Serialization#syntaxGrammar` for the formal definition
+of the file format.
+
+Symbol configuration files are backed by the `sys::Repo.readSymbolsCached`
+method.  This means that symbols can be configured across multiple repos
+and merged together.  It also means that you can change a symbol config
+file at runtime and it will be automatically updated in a running VM.
+
+
