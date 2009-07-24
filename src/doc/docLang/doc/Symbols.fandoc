@@ -98,8 +98,9 @@ See [Serialization]`Serialization#syntaxGrammar` for the formal definition
 of the file format.
 
 Symbol configuration files are backed by the `sys::Repo.readSymbolsCached`
-method.  This means that symbols can be configured across multiple repos
-and merged together.  It also means that you can change a symbol config
-file at runtime and it will be automatically updated in a running VM.
+method.  This means that symbols can be configured across [multiple
+repos]`Repos#symbols` and merged together.  It also means that you can
+change a symbol config file at runtime and it will be automatically updated
+in a running VM.
 
 

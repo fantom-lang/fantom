@@ -153,7 +153,7 @@ namespace Fanx.Tools
     internal static void version(string progName)
     {
       writeLine(progName);
-      writeLine("Copyright (c) 2006-2008, Brian Frank and Andy Frank");
+      writeLine("Copyright (c) 2006-2009, Brian Frank and Andy Frank");
       writeLine("Licensed under the Academic Free License version 3.0");
       writeLine("");
       writeLine(".NET Runtime:");
