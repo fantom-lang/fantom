@@ -17,6 +17,30 @@ fan.fwt.SashPanePeer.prototype.weights$get = function(self) { return this.weight
 fan.fwt.SashPanePeer.prototype.weights$set = function(self, val) { this.weights = val; }
 fan.fwt.SashPanePeer.prototype.weights = null;
 
+fan.fwt.SashPanePeer.prototype.prefSize = function(self, hints)
+{
+  if (self.orientation == fan.fwt.Orientation.horizontal)
+  {
+    var max = 0;
+    for (var i=0; i<self.kids.length; i++)
+    {
+      var pref = self.kids[i].prefSize();
+      max = Math.max(max, pref.w);
+    }
+    return fan.gfx.Size.make(max, 10);
+  }
+  else
+  {
+    var max = 0;
+    for (var i=0; i<self.kids.length; i++)
+    {
+      var pref = self.kids[i].prefSize();
+      max = Math.max(max, pref.h);
+    }
+    return fan.gfx.Size.make(10, max);
+  }
+}
+
 fan.fwt.SashPanePeer.prototype.sync = function(self)
 {
   if (this.weights != null && this.weights.length != self.kids.length)
@@ -57,7 +81,7 @@ fan.fwt.SashPanePeer.prototype.doVert = function(self)
 {
   var w = this.size.w;
   var h = this.size.h;
-  var wt = this.weights
+  var wt = this.weights;
 
   var dx = 0;
   var dw = Math.floor(w / self.kids.length);
