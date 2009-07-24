@@ -51,13 +51,13 @@ classes and mixins.
 
 Using [#using]
 **************
-Every compilation unit can specify zero or more 'using' statements to
-import types into the unit's namespace.  Importing types into the namespace
-lets you use simple type names in your [type signatures]`TypeSystem#signatures`
+Every compilation unit can specify zero or more 'using' statements to import
+types and symbols into the unit's namespace.  Importing types into the
+namespace lets you use simple type names in your [type signatures]`TypeSystem#signatures`
 instead of qualified names.
 
 The simplest form of the 'using' statement is to import *all* the types
-of a pod into your namespace:
+and symbols of a pod into your namespace:
 
   using inet
 

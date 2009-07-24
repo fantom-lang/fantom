@@ -19,6 +19,7 @@ The following types have a literal syntax:
   - [sys::Uri]`#uri`
   - [sys::Type]`#type`
   - [sys::Slot]`#slot`
+  - [sys::Symbol]`#symbol`
   - [sys::Range]`#range`
   - [sys::List]`#list`
   - [sys::Map]`#map`
@@ -290,6 +291,15 @@ If the type name is omitted, then the slot literal is resolved against the
 enclosing class.  A slot literal resolves to a `sys::Field` or `sys::Method`.
 Slot literals have the same semantics as reflection via 'Type.slot' except
 they can be statically checked by the compiler.
+
+Symbol [#symbol]
+************
+You can create a symbol literal using the syntax:
+
+  @symbol
+  @somePod::symbol
+
+See [Symbols]`Symbols#literals` chapter for details.
 
 Range [#range]
 **************

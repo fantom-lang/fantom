@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-Types are composed of uniquely named [slots]`Structure#slot`.
+Types are composed of uniquely named [slots]`Structure#slots`.
 Slots define the state and behavior of the object oriented type.
 There are two types of slots:
   - `Fields` define state

@@ -79,6 +79,12 @@ code]`#syntaxCollection`.
 
 Streams [#streams]
 ******************
+The following methods are available for serialization:
+  - [InStream.readObj]`sys::InStream.readObj`: read single object
+  - [InStream.readSymbols]`sys::InStream.readSymbols`: read map of name/obj pairs
+  - [OutStream.writeObj]`sys::OutStream.writeObj`: write single object
+  - [OutStream.writeSymbols]`sys::OutStream.writeSymbols`: write map of name/obj pairs
+
 Serializing objects to and from streams is a piece of cake:
 
   // write an object to an output stream
@@ -235,9 +241,15 @@ This syntax is also supported directly in source code via [it-blocks]`Expression
 
 Grammar [#syntaxGrammar]
 ========================
-The formal grammar of the Fan serialization format:
+The formal grammar of the Fan serialization formats:
 
-  doc       := header obj
+  // .fansym file format for list of name/obj pairs
+  fansymDoc := header (fansym*)
+  fansym    := id "=" obj eof
+
+  // .fog file format for single object
+  objDoc    := header obj
+
   header    := [using]*
   using     := usingPod | usingType | usingAs
   usingPod  := "using" id eos

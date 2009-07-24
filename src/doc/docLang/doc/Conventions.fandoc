@@ -27,8 +27,7 @@ Naming [#naming]
   - Slot names are lower camel case such as "fooBar" (this includes all
     fields and methods, even const fields)
   - Never use screaming caps such as "FOO_BAR"
-  - Facet names are lower camel case with prefix which matches the
-    declaring pod such as "fluxView"
+  - Symbol names are lower camel case
   - Pod names are lower camel case and globally unique.  You should prefix
     your pod names with something to avoid naming conflicts.  For example
     a SourceForge or Google Code project name is a safe naming convention.

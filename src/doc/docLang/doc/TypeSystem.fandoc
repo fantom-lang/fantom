@@ -14,7 +14,7 @@ The Fan type system serves two primary purposes:
 
 Encapsulation [#encapsulation]
 ==============================
-Types encapsulate a set of uniquely named [slots]`Structure#slot`.
+Types encapsulate a set of uniquely named [slots]`Structure#slots`.
 There are two types of slots: *fields* store state and *methods* model
 behavior.  Grouping a set of slots together enables us to create
 packaged units of software which match our domain model.
@@ -212,7 +212,7 @@ Type Signatures [#signatures]
 We call the syntax used to express a type declaration a *type signature*.
 Type signatures are used extensively in your source code, in the fcode
 formats, and in the reflection APIs.  The formal signature for a type is
-its qualified name or [qname]`Structure#type`.  Although in source code,
+its qualified name or [qname]`Structure#types`.  Although in source code,
 we typically use the simple name in combination with the
 [using]`CompilationUnits#using` statement.  There is also a special syntax
 for expressing signatures of [generic types]`#generics`.
