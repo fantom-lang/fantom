@@ -26,8 +26,8 @@ Symbols have the following features:
   - Symbols have a const value like a field
   - There is exactly one 'Symbol' instance per symbol in a VM
 
-Declaring Symbols [#declaring]
-******************************
+Declaration [#declaration]
+**************************
 Symbols are always declared in the "pod.fan" source file within
 the pod definition itself.  Symbols use a syntax just like fields:
 
