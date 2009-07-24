@@ -81,7 +81,7 @@ scripts executable without calling the launcher explicitly.
 Fan Pod [#pod]
 **************
 For production systems, you typically organize your code into precompiled
-modules called [pods]`docLang::Structure#pod`.  Pods are built using
+modules called [pods]`docLang::Structure#pods`.  Pods are built using
 Fan's [build toolkit]`docTools::Build`.  To build a new pod called "hello"
 create a directory structure organized as follows:
 

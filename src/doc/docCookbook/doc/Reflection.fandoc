@@ -14,8 +14,8 @@ Pods [#pods]
   p.name                         // pod name
   p.version                      // pod version
   p.facets                       // map of all pod facets
-  p.facet("description")         // lookup a pod facet
-  p.facet("description", "-")    // lookup a pod facet with default
+  p.facet(@podBuildTime")        // lookup a pod facet
+  p.facet(@podBuildHost, "-")    // lookup a pod facet with default
   p.files[`/img/icon.png`]       // lookup a resource file in myPod
 
 Types [#types]
@@ -39,9 +39,9 @@ Types [#types]
   t.make([arg0, arg1])           // make an obj of type t with arguments
   t.facets                       // map of all declared facets
   t.facets(true)                 // map of all inherited facets
-  t.facet("facet")               // lookup facet
-  t.facet("facet", "x")          // lookup facet with default
-  t.facet("facet", null, true)   // lookup inherited facet
+  t.facet(@serializable)         // lookup facet
+  t.facet(@facet, "x")           // lookup facet with default
+  t.facet(@facet, null, true)    // lookup inherited facet
 
 Slots [#slots]
 **************
@@ -56,8 +56,8 @@ Slots [#slots]
   s.parent                       // declaring type
   s.signature                    // full signature of field or method
   s.facets                       // map of all facets
-  s.facet("facet")               // lookup facet
-  s.facet("facet", "x")          // lookup facet with default
+  s.facet(@facet)                // lookup facet
+  s.facet(@facet, "x")           // lookup facet with default
 
 Methods [#methods]
 ******************
@@ -85,6 +85,16 @@ Fields [#fields]
   f.get                          // get static field
   f.get(self)                    // get instance field
   f.set(self, val)               // set instance field
+
+Symbols [#symbols]
+****************
+  somePod.symbol("x")            // lookup the symbol called x on somePod
+  somePod.symbols                // list all the symbols on somePod
+  Symbol.find("somePod::x")      // looukp a symbol by its qualified name
+  @somePod::x                    // qualified symbol literal
+  @x                             // unqualified symbol literal
+  s.of                           // type of symbol
+  s.val                          // value of symbol
 
 
 
