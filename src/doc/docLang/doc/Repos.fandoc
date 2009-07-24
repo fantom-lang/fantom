@@ -174,11 +174,11 @@ The symbols for podB would be merged between both boot and working
 since both have a "etc/lib/podB/pod.fansym" file.  However, the working
 version would trump a given name/value pair:
 
-  // boot/etc/podB/pod.fan
+  // boot/etc/podB/pod.fansym
   a="boot.a"
   b="boot.b"
 
-  // working/etc/podB/pod.fan
+  // working/etc/podB/pod.fansym
   b="working.b"
   c="working.c"
 
