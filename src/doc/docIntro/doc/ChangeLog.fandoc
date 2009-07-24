@@ -672,7 +672,7 @@
 - #618: Ambiguous method call on java object
 - #629: NoClassDefFoundError when accessing public static final field with JavaFFI
 
-*Build 1.0.45 (working)*
+*Build 1.0.45 (24 Jul 09)*
 - Roll fcode version code 0x01_00_0034 => 0x01_00_0045
 - LoadSymbol opcode
 - Change field storage operator from "@" => "*"
@@ -683,5 +683,14 @@
 - Change all uses of 'javascript' => 'js'
 - Fix Str indexIgnoreCase/indexrIgnoreCase bug
 - Switch to new, more compressed timezone database format
+- #425: Separate pod install location
+- #558: DocCompiler - Facet Documentation
+- #564: Symbols
+- #606: Partial closure type inference?
+- #620: Dynamically controlled function types
+- #651: Type description of inferred function types
+- #657: Bug in docs with default arguments
+- #659: Rename sys::Namespace to sys::UriSpace
+- #663: wisp sluggish via apachebench
+- #664: Nullable params w/out name in func sig
 
-// TODO: remove obsolete fcode version 34 checks

@@ -8,7 +8,7 @@
 using sys
 
 // default version used by build scripts
-buildVersion=Version("1.0.44")
+buildVersion=Version("1.0.45")
 
 // Must be configured boot build in substitute/release installation
 //buildDevHome=`/C:/dev/fan/`
