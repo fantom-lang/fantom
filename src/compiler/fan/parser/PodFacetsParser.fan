@@ -192,14 +192,33 @@ class PodFacetsParser
   {
     // just consume everything up until next @id= or end
     s := StrBuf()
+    s.add(consume.toCode)
     while (pos < tokens.size)
     {
-      if (curt === Token.at && pos+2 < tokens.size &&
-          tokens[pos+1].kind == Token.identifier &&
-          tokens[pos+2].kind == Token.assign) break
+      if (endOfComplex(pos)) break
       s.add(consume.toCode)
     }
     facet.unparsed = s.toStr
+  }
+
+  private Bool endOfComplex(Int pos)
+  {
+    // TODO: this simple scheme has a lot of ambiguitity
+
+    // must have @id
+    if (curt !== Token.at || pos+1 >= tokens.size || tokens[pos+1].kind !== Token.identifier) return false
+
+    // if we have only @id (eof pod <id>)
+    if (pos+2 == tokens.size) return true
+
+    // if we have @id=
+    if (tokens[pos+2].kind === Token.assign) return true
+
+    // if we have @id @id
+    if (pos+3 < tokens.size && tokens[pos+2].kind === Token.at && tokens[pos+3].kind === Token.identifier)
+      return true
+
+    return false
   }
 
   private Void eos()
@@ -306,6 +325,7 @@ class PodFacetsParser
 internal class PodFacet
 {
   new make(Location l, Str n) { loc = l; name = n }
+  override Str toStr() { "$name val=$val unparsed=$unparsed" }
   Location loc
   Str name
   Obj? val
