@@ -12,7 +12,7 @@ Fan's expression syntax is very similar to C, Java, C# and company.
 Operators in order of precedence:
 
   - Primary: '(x)   x.y   x.y()   x->y()   x?.y   x?.y()   x?->y()   x[y]'
-  - Unary: '++x   --x   x++   x--   ~x   !x   +x   -x   (T)x   &x()   @x'
+  - Unary: '++x   --x   x++   x--   ~x   !x   +x   -x   (T)x   &x()  *x'
   - Multiplicative: '*   /   %'
   - Additive: '+   -'
   - Shift: '<<   >>'
@@ -338,7 +338,7 @@ expression:
 To use this expression, the type must have a static method called 'fromStr' which
 takes a 'Str' parameter and returns an instance of itself.  The method may contain
 additional parameters if they have default values.  The type does not have to
-implement the [simple]`Facets#simple` facet to use this expression (although it does
+implement the `@sys::simple` facet to use this expression (although it does
 if you want to serialize it).  Simple expressions are a subset of [construction
 calls]`Methods#constructionCalls`.
 

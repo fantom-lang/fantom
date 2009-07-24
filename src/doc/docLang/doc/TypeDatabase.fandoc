@@ -10,9 +10,9 @@ Overview
 ********
 The *type database* is a feature of the Fan runtime which automatically
 maintains a database of all the installed pods and types.  The type
-database itself is stored in a binary file called "lib/types.db".  It
-is automatically rebuilt as needed if the runtime detects that the
-installed pods have been modified.
+database itself is stored in a binary file called "etc/sys/types.db" of
+the [working repo]`Repos`.  It is automatically rebuilt as needed if the
+runtime detects that the installed pods have been modified.
 
 Facet Indexing [#facetIndexing]
 *******************************
@@ -23,19 +23,19 @@ gets dropped into the runtime, and any plugins are automatically
 registered.
 
 For example, let's say we want to map file extensions to a fictional
-parser type.  First we need to pick a facet name - in this case
-we will call it "parserForExt".  Facets are only indexed if a pod
-declares them indexed via pod level facets.  Typically this is done
-in pod's build file:
+parser type.  First we need to declare the facet symbol - in this case
+we will call it "parserForExt".  Then we declare that the symbol should
+be indexed via the pod's `@sys::podIndexFacets` facet:
 
-  podFacets  = ["indexFacets":["parserForExt"]]
-
-The value of "indexFacets" should be a 'Str[]' containing the list
-of facet names to index.
+  @podIndexFacets = [@parserForExt]
+  pod acme
+  {
+    Str[] parserForExt := Str[,]
+  }
 
 Now we annotate our types with the facet:
 
-  @parserForExt="xml"
+  @parserForExt=["xml"]
   class XmlParser {}
 
   @parserForExt=["csv", "txt"]
