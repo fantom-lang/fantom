@@ -18,12 +18,11 @@ is a subset of the source grammar).
 
 Data Model [#model]
 *******************
-Serialization in languages such as Java or C# are graph based - they
-will handle an arbitrary number of references to a particular object.  Fan
-serialization is strictly tree based, it will not attempt to keep track of
-object references - it is up to you design your data models as a tree.
-If you need to cross reference objects in your tree, then you should use
-a Uri or some other identifier.
+Serialization in Java is *graph* based - it will handle an arbitrary number
+of references to a particular object.  Fan serialization is strictly *tree*
+based, it will not attempt to keep track of object references - it is up
+to you design your data models as a tree. If you need to cross reference
+objects in your tree, then you should use a Uri or some other identifier.
 
 Each object in the tree is classified as a *literal*, *simple*, or *complex*.
 Most of the standard Fan literals such as 'Bool', 'Int', 'Str' are supported
@@ -35,9 +34,9 @@ or other complexes).  You can also mark any complex type as a
 
 Serializable [#serializable]
 ****************************
-The [serializable]`Facets#serializable` facet is used to mark types which are
-serialized as a complex.  By default a serializable object will serialize all of
-its non-static fields.  You can use the [transient]`Facets#transient` facet to
+The `@sys::serializable` facet is used to mark types which are serialized
+as a complex.  By default a serializable object will serialize all of
+its non-static fields.  You can use the `@sys::transient` facet to
 annotate a field which should not be serialized.  A contrived example:
 
   @serializable
@@ -50,7 +49,7 @@ annotate a field which should not be serialized.  A contrived example:
 
 Simple [#simple]
 ****************
-The [simple]`Facets#simple` facet is used to mark types which are serialized atomically
+The `@sys::simple` facet is used to mark types which are serialized atomically
 to and from a string representation.  The `sys::Obj.toStr` method must return a
 suitable string representation of the object.  Each simple type must also declare
 a static method called 'fromStr' which takes one or more parameters where the first
@@ -68,7 +67,7 @@ parameter is a 'Str' and returns an instance of the object.  An example:
 
 Collection [#collection]
 ************************
-The [collection]`Facets#collection` facet is used to mark a type as a container of
+The `@sys::collection` facet is used to mark a type as a container of
 child objects.  It must always be used with the '@serializable' facet on complex
 types (never with the '@simple' facet).  Collections provide a concise syntax
 for nesting zero or more children items in the same scope as any serialized fields.
