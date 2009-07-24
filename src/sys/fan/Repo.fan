@@ -9,6 +9,7 @@
 **
 ** Repo models a Fan repository which is a directory in the
 ** file system used to store library and configuration files.
+** See `docLang::Repos` for details.
 **
 final const class Repo
 {

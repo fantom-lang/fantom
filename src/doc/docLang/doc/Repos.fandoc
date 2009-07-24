@@ -8,7 +8,203 @@
 
 Overview [#overview]
 ********************
-TODO
+Repos are Fan repositories used to organize code for deployment.
+Repos may be chained together to define the overall Fan environment.
+
+Directory Structure [#dirs]
+***************************
+A repo is organized as a directory using a set of standard conventions:
+
+  lib/
+    fan/
+      podA.pod
+      podB.pod
+      .. other pods
+    java/
+      .. jar files
+    dotnet/
+      .. .NET DLLs
+  etc/
+    sys/
+      pod.fansym
+      ... other sys config/runtime files
+    build/
+      pod.fansym
+      ... other build config/runtime files
+    podA/
+      pod.fansym
+      ... other config/runtime files
+    podB/
+      pod.fansym
+      ... other config/runtime files
+
+The top level "lib" directory is used to store library files which
+contain code.  The directories under "lib" are organized by
+platform: fan, java, dotnet.  The ".pod" files themselves are stored
+under "lib/fan/".
+
+The top level "etc" directory is used to store system wide configuration
+files and other files that a pod might need at runtime.  The directories
+under "etc" are organized by pod - each subdirectory under "etc" should
+match a pod name.
+
+Boot Repo [#boot]
+*****************
+Every Fan installation contains a full repo which is called the *boot repo*.
+The boot repo is always relative to the location used to launch Fan (fan.exe
+or fan bash script).  Core libraries like 'sys' must be loaded out of the
+boot repo.
+
+You can use 'fan -version' to see what repos are configured.  By default
+the boot repo is the only repo used by Fan:
+
+  C:\dev\fan>fan -version
+
+  Java Runtime:
+    java.version:    1.6.0_13
+    java.vm.name:    Java HotSpot(TM) Client VM
+    java.vm.vendor:  Sun Microsystems Inc.
+    java.vm.version: 11.3-b02
+    java.home:       C:\Program Files\Java\jre6
+    fan.version:     1.0.44
+
+  Fan Repos:
+      boot:          file:/C:/dev/fan/
+
+Working Repo [#working]
+***********************
+Every Fan installation has a *working repo* which is used as the first
+place to look for pods and configuration files.  Runtime files such as 'types.db'
+are generated under the working repo directory.
+
+By default the working repo is always the same as the boot repo.
+You can override the working repo with the 'FAN_REPO' environment variable.
+The the value OF 'FAN_REPO' should be a file directory formatted as a Uri:
+
+  C:\dev\fan\src>set FAN_REPO=/dev/fanworking/
+
+  C:\dev\fan\src>fan -version
+
+  Java Runtime:
+    java.version:    1.6.0_13
+    java.vm.name:    Java HotSpot(TM) Client VM
+    java.vm.vendor:  Sun Microsystems Inc.
+    java.vm.version: 11.3-b02
+    java.home:       C:\Program Files\Java\jre6
+    fan.version:     1.0.44
+
+  Fan Repos:
+      working:       file:/C:/dev/fanworking/
+      boot:          file:/C:/dev/fan/
+
+Note: The repo architecture is designed to support an arbitrary list of
+chained repos.  But currently only two repos are allowed (working
+and boot).
+
+Priority Order [#priorityOrder]
+*******************************
+The list of repos is organized into *priority order*.  The working repo
+is always first in priority order and the boot repo is always last in priority
+order.  Priority order is used to resolve pods and configuration files.
+Typically you will use this mechanism to keep a pristine boot repo, and
+do pod development and configuration overrides in a separate working repo.
+
+Pod Resolution [#pods]
+======================
+For example let's consider this directory structure:
+
+  boot/
+    lib/
+      fan/
+        podA.pod
+        podB.pod
+  working/
+    lib/
+      fan/
+        podB.pod
+        podC.pod
+
+In this configuration, things would be resolved as follows:
+  podA  =>  boot/lib/fan/podA.pod
+  podB  =>  working/lib/fan/podB.pod
+  podC  =>  working/lib/fan/podC.pod
+
+Note how working trumps boot for resolution of podB even though it exists
+in both repos.
+
+You can use 'fan -pods' to see where your pods are being loaded:
+
+  C:\dev\fan>fan -pods
+
+  Java Runtime:
+    java.version:    1.6.0_13
+    java.vm.name:    Java HotSpot(TM) Client VM
+    java.vm.vendor:  Sun Microsystems Inc.
+    java.vm.version: 11.3-b02
+    java.home:       C:\Program Files\Java\jre6
+    fan.version:     1.0.44
+
+  Fan Repos:
+      working:       file:/C:/dev/fanworking/
+      boot:          file:/C:/dev/fan/
+
+  Fan Pods [1717ms]:
+    Pod              Version   Repo
+    ---              -------   ----
+    build            1.0.44    boot
+    compiler         1.0.44    boot
+    hello            1.0.44    working
+    sys              1.0.44    boot
+
+Symbol Resolution [#symbols]
+============================
+You can configure your [virtual symbols]`Symbols#virtual` across repos using
+priority order.  For example let's consider this directory structure:
+
+  boot/
+    etc/
+      podB/
+         pod.fansym
+  working/
+    etc/
+      podB/
+         pod.fansym
+
+The symbols for podB would be merged between both boot and working
+since both have a "etc/lib/podB/pod.fansym" file.  However, the working
+version would trump a given name/value pair:
+
+  // boot/etc/podB/pod.fan
+  a="boot.a"
+  b="boot.b"
+
+  // working/etc/podB/pod.fan
+  b="working.b"
+  c="working.c"
+
+  // merge for Repo.readSymbols
+  a="boot.a"
+  b="working.b"
+  c="working.c"
+
+Reflection [#reflection]
+************************
+The `sys::Repo` class is used to reflectively access the runtime's repos:
+
+  - [Repo.boot]`sys::Repo.list`: list of all repos in priority
+    order - working is always first and boot is always last
+  - [Repo.boot]`sys::Repo.boot`: the boot repo
+  - [Repo.boot]`sys::Repo.working`: the working repo (may be same as boot)
+  - [Repo.home]`sys::Repo.home`: top level directory of the repo
+  - [Pod.repo]`sys::Pod.repo`: get the repo the pod is loaded out of
+
+Convenice methods exist for finding files and reading symbols in
+priority order:
+
+  - [Repo.findFile]`sys::Repo.findFile`
+  - [Repo.findfindAllFiles]`sys::Repo.findAllFiles`
+  - [Repo.readSymbols]`sys::Repo.readSymbols`
+  - [Repo.readSymbolsCached]`sys::Repo.readSymbolsCached`
 
 
 
