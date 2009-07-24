@@ -30,10 +30,12 @@ Compiling [#compiling]
 **********************************************
 
 To compile the types you've marked for JavaScript, add the [@js]`@sys::js`
-facet to your pod definition [Obj]`sys::Obj` file.
+facet to your pod definition.
 
   // pod.fan
+  @podDepends=[...]
   @js
+  pod myPod {...}
 
 Natives [#natives]
 **********************************************
