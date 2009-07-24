@@ -70,6 +70,7 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
       img.style.verticalAlign = "middle";
       img.style.paddingRight = "3px";
     }
+    img.border = "0";
     img.src = this.image.uri;
     parent.appendChild(img);
   }
