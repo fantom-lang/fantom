@@ -8,7 +8,7 @@
 
 Overview [#overview]
 ********************
-Symbols are used to model name/value pairs.  Symbols may be used namespace
+Symbols are used to model name/value pairs.  Symbols may be used as namespace
 aware keys (where you might use a String in another language).  In this regard
 they are similar to the ':symbol' construct in Ruby.  But symbols also
 have a statically typed value, which you might think about like a "pod
