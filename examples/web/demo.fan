@@ -36,7 +36,7 @@ class Boot : BootScript
     UriSpace.mount(`/examples`, UriSpace.makeDir(scriptDir + `examples/`))
     UriSpace.mount(`/dir`, UriSpace.makeDir(scriptDir + `dir/`))
     try
-      UriSpace.mount(`/doc`, UriSpace.makeDir(Sys.homeDir + `doc/`))
+      UriSpace.mount(`/doc`, UriSpace.makeDir(Repo.boot.home + `doc/`))
     catch (Err e)
       log.error("Cannot mount /doc: $e")
   }

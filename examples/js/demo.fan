@@ -119,7 +119,6 @@ class ShowScript : Widget
     input := CompilerInput.make
     input.podName        = file.basename
     input.version        = Version("0")
-    input.description    = ""
     input.log.level      = LogLevel.error
     input.isScript       = true
     input.srcStr         = file.readAllStr
