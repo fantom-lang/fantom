@@ -103,12 +103,12 @@ final const class Repo
   static Str:Obj? readSymbols(Uri uri)
 
   **
-  ** Read a set of merge fansym files via `readSymbols`.  This
+  ** Read a set of merged fansym files via `readSymbols`.  This
   ** version caches the resulting map so that subsequent calls for
   ** the same uri doesn't require accessing the file system again.  The
-  ** maxAge parameter specifies the tolerance accepted before a cache
+  ** 'maxAge' parameter specifies the tolerance accepted before a cache
   ** refresh is performed to check if any of the fansym files have
-  ** been modified.  Throw NotImmutableErr is any of the symbol
+  ** been modified.  Throw NotImmutableErr if any of the symbol
   ** values are mutable.
   **
   static Str:Obj? readSymbolsCached(Uri uri, Duration maxAge := 1min)
