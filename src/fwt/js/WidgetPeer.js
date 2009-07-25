@@ -192,8 +192,8 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
     if (h < 0) h = 0;
 
     display = this.m_visible ? "block" : "none";
-    left    = this.m_pos.x  + "px";
-    top     = this.m_pos.y  + "px";
+    left    = this.m_pos.m_x  + "px";
+    top     = this.m_pos.m_y  + "px";
     width   = w + "px";
     height  = h + "px";
   }
