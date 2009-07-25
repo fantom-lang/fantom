@@ -94,39 +94,39 @@ fan.fwt.MenuPeer.prototype.relayout = function(self)
   {
     var kid  = kids[i];
     var pref = kid.prefSize();
-    var mh = pref.h + 2;  // account for padding
+    var mh = pref.m_h + 2;  // account for padding
 
-    kid.pos$set(fan.gfx.Point.make(dx, dy));
-    kid.size$set(fan.gfx.Size.make(pw, mh));
+    kid.pos$(fan.gfx.Point.make(dx, dy));
+    kid.size$(fan.gfx.Size.make(pw, mh));
     kid.peer.sync(kid);
     dy += mh;
     ph += mh;
   }
 
   var pp = this.$parent.posOnDisplay();
-  var ps = this.$parent.size$get();
-  var x = pp.x;
-  var y = pp.y;
+  var ps = this.$parent.size();
+  var x = pp.m_x;
+  var y = pp.m_y;
   if (this.$point == null)
   {
     x += 1;
-    y += ps.h + 1;
+    y += ps.m_h + 1;
   }
   else
   {
-    x += this.$point.x;
-    y += this.$point.y;
+    x += this.$point.m_x;
+    y += this.$point.m_y;
   }
   var w = pw;
   var h = ph;
 
   // check if we need to swap dir
   var shell = this.elem.parentNode;
-  if (x+w >= shell.offsetWidth-4)  x = pp.x + ps.w - w -1;
+  if (x+w >= shell.offsetWidth-4)  x = pp.m_x + ps.m_w - w -1;
   if (y+h >= shell.offsetHeight-4) y = pp.y - h;
 
-  this.pos$set(self, fan.gfx.Point.make(x, y));
-  this.size$set(self, fan.gfx.Size.make(w, h));
+  this.pos$(self, fan.gfx.Point.make(x, y));
+  this.size$(self, fan.gfx.Size.make(w, h));
   this.sync(self);
 }
 

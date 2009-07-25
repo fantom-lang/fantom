@@ -17,11 +17,11 @@ fan.fwt.Graphics.prototype.$ctor = function() {}
 fan.fwt.Graphics.prototype.cx = null
 
 // Brush brush
-fan.fwt.Graphics.prototype.brush = null
-fan.fwt.Graphics.prototype.brush$get = function() { return this.brush }
-fan.fwt.Graphics.prototype.brush$set = function(b)
+fan.fwt.Graphics.prototype.m_brush = null
+fan.fwt.Graphics.prototype.brush   = function() { return this.m_brush }
+fan.fwt.Graphics.prototype.brush$  = function(b)
 {
-  this.brush = b;
+  this.m_brush = b;
   if (b instanceof fan.gfx.Color)
   {
     var style = b.toCss();
@@ -30,50 +30,50 @@ fan.fwt.Graphics.prototype.brush$set = function(b)
   }
   else
   {
-    var style = this.cx.createLinearGradient(b.p1.x, b.p1.y, b.p2.x, b.p2.y);
-    style.addColorStop(0, b.c1.toCss());
-    style.addColorStop(1, b.c2.toCss());
+    var style = this.cx.createLinearGradient(b.m_p1.m_x, b.m_p1.m_y, b.m_p2.m_x, b.m_p2.m_y);
+    style.addColorStop(0, b.m_c1.toCss());
+    style.addColorStop(1, b.m_c2.toCss());
     this.cx.fillStyle = style;
     this.cx.strokeStyle = style;
   }
 }
 
 // Pen pen
-fan.fwt.Graphics.prototype.pen = null
-fan.fwt.Graphics.prototype.pen$get = function() { return this.pen }
-fan.fwt.Graphics.prototype.pen$set = function(p)
+fan.fwt.Graphics.prototype.m_pen = null
+fan.fwt.Graphics.prototype.pen   = function() { return this.m_pen }
+fan.fwt.Graphics.prototype.pen$  = function(p)
 {
-  this.pen = p;
-  this.cx.lineWidth = p.width;
+  this.m_pen = p;
+  this.cx.lineWidth = p.m_width;
   this.cx.lineCap   = p.capToStr();
   this.cx.lineJoin  = p.joinToStr();
   // dashes not supported
 }
 
 // Font font
-fan.fwt.Graphics.prototype.font = null
-fan.fwt.Graphics.prototype.font$get = function() { return this.font }
-fan.fwt.Graphics.prototype.font$set = function(f)
+fan.fwt.Graphics.prototype.m_font = null
+fan.fwt.Graphics.prototype.font   = function() { return this.m_font }
+fan.fwt.Graphics.prototype.font$  = function(f)
 {
-  this.font = f;
+  this.m_font = f;
   this.cx.font = f.toStr();
 }
 
 // Bool antialias
-fan.fwt.Graphics.prototype.antialias = null
-fan.fwt.Graphics.prototype.antialias$get = function() { return this.antialias }
-fan.fwt.Graphics.prototype.antialias$set = function(aa)
+fan.fwt.Graphics.prototype.m_antialias = null
+fan.fwt.Graphics.prototype.antialias   = function() { return this.m_antialias }
+fan.fwt.Graphics.prototype.antialias$  = function(aa)
 {
   // Note: canvas has no control over anti-aliasing (Jun 09)
-  this.antialias = aa;
+  this.m_antialias = aa;
 }
 
 // Int alpha
-fan.fwt.Graphics.prototype.alpha = null
-fan.fwt.Graphics.prototype.alpha$get = function() { return this.alpha}
-fan.fwt.Graphics.prototype.alpha$set = function(a)
+fan.fwt.Graphics.prototype.m_alpha = null
+fan.fwt.Graphics.prototype.alpha   = function() { return this.m_alpha}
+fan.fwt.Graphics.prototype.alpha$  = function(a)
 {
-  this.alpha = a;
+  this.m_alpha = a;
   this.cx.globalAlpha = a / 255;
 }
 
@@ -170,7 +170,7 @@ fan.fwt.Graphics.prototype.drawImage = function (fanImg, x, y)
 fan.fwt.Graphics.prototype.copyImage = function (fanImg, src, dst)
 {
   var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg);
-  this.cx.drawImage(jsImg, src.x, src.y, src.w, src.h, dst.x, dst.y, dst.w, dst.h)
+  this.cx.drawImage(jsImg, src.m_x, src.m_y, src.m_w, src.m_h, dst.m_x, dst.m_y, dst.m_w, dst.m_h)
   return this;
 }
 
@@ -185,10 +185,10 @@ fan.fwt.Graphics.prototype.translate = function (x, y)
 fan.fwt.Graphics.prototype.clip = function (rect)
 {
   this.cx.beginPath();
-  this.cx.moveTo(rect.x, rect.y);
-  this.cx.lineTo(rect.x+rect.w, rect.y);
-  this.cx.lineTo(rect.x+rect.w, rect.y+rect.h);
-  this.cx.lineTo(rect.x, rect.y+rect.h);
+  this.cx.moveTo(rect.m_x, rect.m_y);
+  this.cx.lineTo(rect.m_x+rect.m_w, rect.m_y);
+  this.cx.lineTo(rect.m_x+rect.m_w, rect.m_y+rect.m_h);
+  this.cx.lineTo(rect.m_x, rect.m_y+rect.m_h);
   this.cx.closePath();
   this.cx.clip();
   return this

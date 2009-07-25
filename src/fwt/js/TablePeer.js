@@ -16,15 +16,15 @@ fan.fwt.TablePeer.prototype.$ctor = function(self) {}
 //fan.fwt.TablePeer.prototype.colAt = function(self, pos) {}
 //fan.fwt.TablePeer.prototype.rowAt = function(self, pos) {}
 
-fan.fwt.TablePeer.prototype.headerVisible = true;
-fan.fwt.TablePeer.prototype.headerVisible$get = function(self) { return this.headerVisible; }
-fan.fwt.TablePeer.prototype.headerVisible$set = function(self, val) { this.headerVisible = val; }
+fan.fwt.TablePeer.prototype.m_headerVisible = true;
+fan.fwt.TablePeer.prototype.headerVisible   = function(self) { return this.m_headerVisible; }
+fan.fwt.TablePeer.prototype.headerVisible$  = function(self, val) { this.m_headerVisible = val; }
 
-fan.fwt.TablePeer.prototype.selected = null;
-fan.fwt.TablePeer.prototype.selected$get = function(self) { return this.selected; }
-fan.fwt.TablePeer.prototype.selected$set = function(self, val)
+fan.fwt.TablePeer.prototype.m_selected = null;
+fan.fwt.TablePeer.prototype.selected   = function(self) { return this.m_selected; }
+fan.fwt.TablePeer.prototype.selected$  = function(self, val)
 {
-  this.selected = val;
+  this.m_selected = val;
   if (this.selection != null) this.selection.select(val);
 }
 
@@ -69,14 +69,14 @@ fan.fwt.TablePeer.prototype.sync = function(self)
   }
 
   // no border if content not visible
-  if (this.size.w == 0 || this.size.h == 0)
+  if (this.m_size.m_w == 0 || this.m_size.m_h == 0)
     this.elem.style.borderWidth = "0px";
   else
     this.elem.style.borderWidth = "1px";
 
   // account for border
-  var w = this.size.w - 2;
-  var h = this.size.h - 2;
+  var w = this.m_size.m_w - 2;
+  var h = this.m_size.m_h - 2;
   fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
 
@@ -85,8 +85,8 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   // init hook
   if (this.selection == null)
   {
-    if (this.selected == null)
-      this.selected = fan.sys.List.make(fan.sys.Type.find("sys::Int"), []);
+    if (this.m_selected == null)
+      this.m_selected = fan.sys.List.make(fan.sys.Type.find("sys::Int"), []);
     this.selection = new fan.fwt.TableSelection(self);
   }
 
@@ -96,7 +96,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   var rows  = model.numRows();
   var cols  = model.numCols();
 
-  if (this.headerVisible)
+  if (this.m_headerVisible)
   {
     var tr = document.createElement("tr");
     for (var c=-1; c<cols; c++)
@@ -209,7 +209,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
   table.appendChild(tbody);
 
   // sync selection
-  this.selection.select(this.selected);
+  this.selection.select(this.m_selected);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -232,7 +232,7 @@ fan.fwt.TableSelection.prototype.toggle = function(event)
     var tr  = target.parentNode.parentNode;
     var row = tr.rowIndex;
     if (this.table.peer.headerVisible) row--; // account for th row
-    this.table.peer.selected = this.select(on ? [row] : []);
+    this.table.peer.m_selected = this.select(on ? [row] : []);
     this.notify(row);
   //}
 }
@@ -273,12 +273,12 @@ fan.fwt.TableSelection.prototype.select = function(rows)
 
 fan.fwt.TableSelection.prototype.notify = function(primaryIndex)
 {
-  if (this.table.onSelect.size() > 0)
+  if (this.table.m_onSelect.size() > 0)
   {
     var se   = fan.fwt.Event.make();
     se.id    = fan.fwt.EventId.select;
     se.index = primaryIndex;
-    var listeners = this.table.onSelect.list();
+    var listeners = this.table.m_onSelect.list();
     for (var i=0; i<listeners.length; i++) fan.sys.Func.call(listeners[i], se);
   }
 }

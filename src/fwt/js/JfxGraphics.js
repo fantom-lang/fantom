@@ -18,11 +18,11 @@ function JfxGraphics(script)
 }
 
 // Brush brush
-JfxGraphics.prototype.brush = null
-JfxGraphics.prototype.brush$get = function() { return this.brush }
-JfxGraphics.prototype.brush$set = function(b)
+JfxGraphics.prototype.m_brush = null
+JfxGraphics.prototype.brush   = function() { return this.m_brush }
+JfxGraphics.prototype.brush$  = function(b)
 {
-  this.brush = b;
+  this.m_brush = b;
   if (b instanceof fan.gfx.Color)
   {
     this.script.setColor(b.toCss());
@@ -31,11 +31,11 @@ JfxGraphics.prototype.brush$set = function(b)
 }
 
 // Pen pen
-JfxGraphics.prototype.pen = null
-JfxGraphics.prototype.pen$get = function() { return this.pen }
-JfxGraphics.prototype.pen$set = function(p)
+JfxGraphics.prototype.m_pen = null
+JfxGraphics.prototype.pen   = function() { return this.m_pen }
+JfxGraphics.prototype.pen$  = function(p)
 {
-  this.pen = p;
+  this.m_pen = p;
   this.script.setPen(p.width.valueOf());
   // lineCap
   // lineJoin
@@ -43,25 +43,25 @@ JfxGraphics.prototype.pen$set = function(p)
 }
 
 // Font font
-JfxGraphics.prototype.font = null
-JfxGraphics.prototype.font$get = function() { return this.font }
-JfxGraphics.prototype.font$set = function(f)
+JfxGraphics.prototype.m_font = null
+JfxGraphics.prototype.font   = function() { return this.m_font }
+JfxGraphics.prototype.font$  = function(f)
 {
   // TODO
 }
 
 // Bool antialias
-JfxGraphics.prototype.antialias = null
-JfxGraphics.prototype.antialias$get = function() { return this.antialias }
-JfxGraphics.prototype.antialias$set = function(aa)
+JfxGraphics.prototype.m_antialias = null
+JfxGraphics.prototype.antialias   = function() { return this.m_antialias }
+JfxGraphics.prototype.antialias$  = function(aa)
 {
   // TODO
 }
 
 // Int alpha
-JfxGraphics.prototype.alpha = null
-JfxGraphics.prototype.alpha$get = function() { return this.alpha}
-JfxGraphics.prototype.alpha$set = function(a)
+JfxGraphics.prototype.m_alpha = null
+JfxGraphics.prototype.alpha   = function() { return this.m_alpha}
+JfxGraphics.prototype.alpha$  = function(a)
 {
   // TODO
 }
@@ -159,7 +159,7 @@ JfxGraphics.prototype.drawImage = function (fanImg, x, y)
 JfxGraphics.prototype.copyImage = function (fanImg, src, dst)
 {
 //  var jsImg = fan.fwt.FwtEnvPeer.loadImage(fanImg);
-//  this.cx.drawImage(jsImg, src.x, src.y, src.w, src.h, dst.x, dst.y, dst.w, dst.h)
+//  this.cx.drawImage(jsImg, src.m_x, src.m_y, src.m_w, src.m_h, dst.m_x, dst.m_y, dst.m_w, dst.m_h)
   return this;
 }
 
@@ -175,10 +175,10 @@ JfxGraphics.prototype.clip = function (rect)
 {
   /*
   this.cx.beginPath();
-  this.cx.moveTo(rect.x, rect.y);
-  this.cx.lineTo(rect.x+rect.w, rect.y);
-  this.cx.lineTo(rect.x+rect.w, rect.y+rect.h);
-  this.cx.lineTo(rect.x, rect.y+rect.h);
+  this.cx.moveTo(rect.m_x, rect.m_y);
+  this.cx.lineTo(rect.m_x+rect.m_w, rect.m_y);
+  this.cx.lineTo(rect.m_x+rect.m_w, rect.m_y+rect.m_h);
+  this.cx.lineTo(rect.m_x, rect.y+rect.m_h);
   this.cx.closePath();
   this.cx.clip();
   */

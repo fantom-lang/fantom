@@ -12,21 +12,21 @@
 fan.fwt.ComboPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.ComboPeer.prototype.$ctor = function(self) {}
 
-fan.fwt.ComboPeer.prototype.font$get = function(self) { return this.font; }
-fan.fwt.ComboPeer.prototype.font$set = function(self, val) { this.font = val; }
-fan.fwt.ComboPeer.prototype.font = null;
+fan.fwt.ComboPeer.prototype.font   = function(self) { return this.m_font; }
+fan.fwt.ComboPeer.prototype.font$  = function(self, val) { this.m_font = val; }
+fan.fwt.ComboPeer.prototype.m_font = null;
 
-fan.fwt.ComboPeer.prototype.items$get = function(self) { return this.items; }
-fan.fwt.ComboPeer.prototype.items$set = function(self, val) { this.items = val; }
-fan.fwt.ComboPeer.prototype.items = null;
+fan.fwt.ComboPeer.prototype.items   = function(self) { return this.m_items; }
+fan.fwt.ComboPeer.prototype.items$  = function(self, val) { this.m_items = val; }
+fan.fwt.ComboPeer.prototype.m_items = null;
 
-fan.fwt.ComboPeer.prototype.selectedIndex$get = function(self) { return this.selectedIndex; }
-fan.fwt.ComboPeer.prototype.selectedIndex$set = function(self, val) { this.selectedIndex = val; }
-fan.fwt.ComboPeer.prototype.selectedIndex = null;
+fan.fwt.ComboPeer.prototype.selectedIndex   = function(self) { return this.m_selectedIndex; }
+fan.fwt.ComboPeer.prototype.selectedIndex$  = function(self, val) { this.m_selectedIndex = val; }
+fan.fwt.ComboPeer.prototype.m_selectedIndex = null;
 
-fan.fwt.ComboPeer.prototype.text$get = function(self) { return this.text; }
-fan.fwt.ComboPeer.prototype.text$set = function(self, val) { this.text = val; }
-fan.fwt.ComboPeer.prototype.text = "";
+fan.fwt.ComboPeer.prototype.text   = function(self) { return this.m_text; }
+fan.fwt.ComboPeer.prototype.text$  = function(self, val) { this.m_text = val; }
+fan.fwt.ComboPeer.prototype.m_text = "";
 
 fan.fwt.ComboPeer.prototype.create = function(parentElem)
 {
@@ -49,7 +49,7 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
   for (var i=0; i<this.items.length; i++)
   {
     var option = document.createElement("option");
-    option.appendChild(document.createTextNode(this.items[i]));
+    option.appendChild(document.createTextNode(this.m_items[i]));
     select.appendChild(option);
   }
 

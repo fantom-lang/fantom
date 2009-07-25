@@ -12,15 +12,15 @@
 fan.fwt.TabPanePeer = fan.sys.Obj.$extend(fan.fwt.PanePeer);
 fan.fwt.TabPanePeer.prototype.$ctor = function(self) {}
 
-fan.fwt.TabPanePeer.prototype.selectedIndex$get = function(self) { return this.selectedIndex; }
-fan.fwt.TabPanePeer.prototype.selectedIndex$set = function(self, val) { this.selectedIndex = val; }
-fan.fwt.TabPanePeer.prototype.selectedIndex = 0;
+fan.fwt.TabPanePeer.prototype.selectedIndex = function(self) { return this.m_selectedIndex; }
+fan.fwt.TabPanePeer.prototype.selectedIndex$ = function(self, val) { this.m_selectedIndex = val; }
+fan.fwt.TabPanePeer.prototype.m_selectedIndex = 0;
 
 fan.fwt.TabPanePeer.prototype.sync = function(self)
 {
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 
-  var kids = self.kids;
+  var kids = self.m_kids;
   if (kids.length == 0) return;
 
   // sync tabs
@@ -32,12 +32,12 @@ fan.fwt.TabPanePeer.prototype.sync = function(self)
     if (tab.peer.elem == null) return; // not attached yet
 
     var pref = tab.prefSize();
-    tab.pos$set(fan.gfx.Point.make(tx, 0));
-    tab.size$set(fan.gfx.Size.make(pref.w, pref.h));
+    tab.pos$(fan.gfx.Point.make(tx, 0));
+    tab.size$(fan.gfx.Size.make(pref.m_w, pref.m_h));
     tab.peer.index = i;
 
-    tx += pref.w + 3;
-    th = Math.max(th, pref.h);
+    tx += pref.m_w + 3;
+    th = Math.max(th, pref.m_h);
   }
 
   // content border
@@ -54,19 +54,19 @@ fan.fwt.TabPanePeer.prototype.sync = function(self)
     position   = "absolute";
     left   = 0;
     top    = (th-1) + "px";
-    width  = (this.size.w-2) + "px";
-    height = (this.size.h-th-1) + "px";
+    width  = (this.m_size.m_w-2) + "px";
+    height = (this.m_size.m_h-th-1) + "px";
   }
 
   // sync content
-  var cw = this.size.w;       // content width
-  var ch = this.size.h - th;  // content height
+  var cw = this.m_size.m_w;       // content width
+  var ch = this.m_size.m_h - th;  // content height
   for (var i=0; i<kids.length; i++)
   {
     var tab = kids[i];
     if (tab.kids.length > 0)
     {
-      var s = i == this.selectedIndex;
+      var s = i == this.m_selectedIndex;
       var x = 12;
       var y = 12 + th;
       var w = s ? cw-24 : 0;
@@ -82,8 +82,8 @@ fan.fwt.TabPanePeer.prototype.sync = function(self)
         this.elem.appendChild(c.peer.elem);
       }
 
-      c.pos$set(fan.gfx.Point.make(x,y));
-      c.size$set(fan.gfx.Size.make(w,h));
+      c.pos$(fan.gfx.Point.make(x,y));
+      c.size$(fan.gfx.Size.make(w,h));
     }
   }
 }

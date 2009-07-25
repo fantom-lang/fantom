@@ -12,15 +12,15 @@
 fan.fwt.TextPeer = fan.sys.Obj.$extend(fan.fwt.TextWidgetPeer);
 fan.fwt.TextPeer.prototype.$ctor = function(self) {}
 
-fan.fwt.TextPeer.prototype.text$get = function(self) { return this.text; }
-fan.fwt.TextPeer.prototype.text$set = function(self, val)
+fan.fwt.TextPeer.prototype.text = function(self) { return this.text; }
+fan.fwt.TextPeer.prototype.text$ = function(self, val)
 {
   this.old = this.text;
   this.text = val;
   if (this.elem != null && this.elem.firstChild != null && this.old != this.text)
     this.elem.firstChild.value = this.text;
 }
-fan.fwt.TextPeer.prototype.text = "";
+fan.fwt.TextPeer.prototype.m_text = "";
 
 fan.fwt.TextPeer.prototype.sync = function(self)
 {
@@ -35,14 +35,14 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   }
 
   // sync control
-  text.value = this.text;
+  text.value = this.m_text;
   text.readOnly = !self.editable;
   if (self.multiLine)
   {
     // TODO - this differs a pixel or two by browser - so we'll need
     // to go back and fine tune
-    text.style.width  = (this.size.w-6)+'px';
-    text.style.height = (this.size.h-7)+'px';
+    text.style.width  = (this.m_size.m_w-6)+'px';
+    text.style.height = (this.m_size.m_h-7)+'px';
   }
   else
   {
@@ -56,23 +56,23 @@ fan.fwt.TextPeer.prototype.sync = function(self)
     var event  = event ? event : window.event;
 
     // sync control value to widget
-    self.text$set(target.value);
+    self.text$(target.value);
 
     // fire onAction
-    if (event.keyCode == 13 && self.onAction.size() > 0)
+    if (event.keyCode == 13 && self.m_onAction.size() > 0)
     {
       var ae = fan.fwt.Event.make();
       ae.id = fan.fwt.EventId.action;
-      var list = self.onAction.list();
+      var list = self.m_onAction.list();
       for (var i=0; i<list.length; i++) list[i].call(ae);
     }
 
     // fire onModify
-    if (self.onModify.size() > 0)
+    if (self.m_onModify.size() > 0)
     {
       var me = fan.fwt.Event.make();
       me.id = fan.fwt.EventId.action;
-      var list = self.onModify.list();
+      var list = self.m_onModify.list();
       for (var i=0; i<list.length; i++) list[i].call(me);
     }
   }

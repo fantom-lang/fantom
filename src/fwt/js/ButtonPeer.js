@@ -12,21 +12,21 @@
 fan.fwt.ButtonPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.ButtonPeer.prototype.$ctor = function(self) {}
 
-fan.fwt.ButtonPeer.prototype.font$get = function(self) { return this.font; }
-fan.fwt.ButtonPeer.prototype.font$set = function(self, val) { this.font = val; }
-fan.fwt.ButtonPeer.prototype.font = null;
+fan.fwt.ButtonPeer.prototype.font = function(self) { return this.m_font; }
+fan.fwt.ButtonPeer.prototype.font$ = function(self, val) { this.m_font = val; }
+fan.fwt.ButtonPeer.prototype.m_font = null;
 
-fan.fwt.ButtonPeer.prototype.image$get = function(self) { return this.image; }
-fan.fwt.ButtonPeer.prototype.image$set = function(self, val) { this.image = val; }
-fan.fwt.ButtonPeer.prototype.image = null;
+fan.fwt.ButtonPeer.prototype.image = function(self) { return this.m_image; }
+fan.fwt.ButtonPeer.prototype.image$ = function(self, val) { this.m_image = val; }
+fan.fwt.ButtonPeer.prototype.m_image = null;
 
-fan.fwt.ButtonPeer.prototype.selected$get = function(self) { return this.selected; }
-fan.fwt.ButtonPeer.prototype.selected$set = function(self, val) { this.selected = val; }
-fan.fwt.ButtonPeer.prototype.selected = false;
+fan.fwt.ButtonPeer.prototype.selected = function(self) { return this.m_selected; }
+fan.fwt.ButtonPeer.prototype.selected$ = function(self, val) { this.m_selected = val; }
+fan.fwt.ButtonPeer.prototype.m_selected = false;
 
-fan.fwt.ButtonPeer.prototype.text$get = function(self) { return this.text; }
-fan.fwt.ButtonPeer.prototype.text$set = function(self, val) { this.text = val; }
-fan.fwt.ButtonPeer.prototype.text = "";
+fan.fwt.ButtonPeer.prototype.text = function(self) { return this.m_text; }
+fan.fwt.ButtonPeer.prototype.text$ = function(self, val) { this.m_text = val; }
+fan.fwt.ButtonPeer.prototype.m_text = "";
 
 fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
 {
@@ -69,7 +69,7 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
     evt.id = fan.fwt.EventId.action;
     evt.widget = self;
 
-    var list = self.onAction.list();
+    var list = self.m_onAction.list();
     for (var i=0; i<list.length; i++) list[i](evt);
   }
 
@@ -93,10 +93,10 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
   }
 
   // add new text node
-  div.appendChild(document.createTextNode(this.text));
+  div.appendChild(document.createTextNode(this.m_text));
 
   // account for padding/border
-  var w = this.size.w - 1;
-  var h = this.size.h - 1;
+  var w = this.m_size.m_w - 1;
+  var h = this.m_size.m_h - 1;
   fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }

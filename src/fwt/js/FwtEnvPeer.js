@@ -26,7 +26,7 @@ fan.fwt.FwtEnvPeer.nextMemUriStr = function()
 
 fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
 {
-  var uri = fanImg.uri.toStr();
+  var uri = fanImg.m_uri.toStr();
   var jsImg = fan.fwt.FwtEnvPeer.imgCache[uri]
   if (!jsImg)
   {
@@ -68,15 +68,15 @@ fan.fwt.FwtEnvPeer.prototype.imageResize = function(self, fanImg, size)
 
   // get the original js image
   var jsOrig = fan.fwt.FwtEnvPeer.loadImage(fanImg)
-  if (jsOrig.width == size.w && jsOrig.height == size.h) return fanImg
+  if (jsOrig.width == size.m_w && jsOrig.height == size.m_h) return fanImg
 
   // create new js image which is resized version of the old by painting
   // to temp canvas, then converting into data URL used to create new image
   var canvas = document.createElement("canvas");
-  canvas.width = size.w;
-  canvas.height = size.h;
+  canvas.width = size.m_w;
+  canvas.height = size.m_h;
   var cx = canvas.getContext("2d");
-  cx.drawImage(jsOrig, 0, 0, jsOrig.width, jsOrig.height, 0, 0, size.w, size.h);
+  cx.drawImage(jsOrig, 0, 0, jsOrig.width, jsOrig.height, 0, 0, size.m_w, size.m_h);
   var dataUrl = canvas.toDataURL("image/png");
   var jsNew = document.createElement("img");
   jsNew.src = dataUrl;
