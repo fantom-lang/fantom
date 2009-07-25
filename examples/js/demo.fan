@@ -42,7 +42,8 @@ class Home : Widget
     out.docType
     out.html
     out.head
-      out.head.title.w("FWT Demo").titleEnd
+      out.title.w("FWT Demo").titleEnd
+    out.headEnd
     out.body
       out.h1.w("FWT Demo").h1End
       out.ul
