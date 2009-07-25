@@ -14,14 +14,14 @@ fan.dom.ElemPeer.prototype.$ctor = function(self) {}
 
 fan.dom.ElemPeer.prototype.tagName = function(self) { return fan.sys.Str.lower(this.elem.nodeName); }
 
-fan.dom.ElemPeer.prototype.id$get = function(self) { return this.elem.id; }
-fan.dom.ElemPeer.prototype.id$set = function(self, val) { return this.elem.id = val; }
+fan.dom.ElemPeer.prototype.id  = function(self) { return this.elem.id; }
+fan.dom.ElemPeer.prototype.id$ = function(self, val) { return this.elem.id = val; }
 
-fan.dom.ElemPeer.prototype.name$get = function(self) { return this.elem.name; }
-fan.dom.ElemPeer.prototype.name$set = function(self, val) { return this.elem.name = val; }
+fan.dom.ElemPeer.prototype.name  = function(self) { return this.elem.name; }
+fan.dom.ElemPeer.prototype.name$ = function(self, val) { return this.elem.name = val; }
 
-fan.dom.ElemPeer.prototype.className$get = function(self) { return this.elem.className; }
-fan.dom.ElemPeer.prototype.className$set = function(self, val) { return this.elem.className = val; }
+fan.dom.ElemPeer.prototype.className  = function(self) { return this.elem.className; }
+fan.dom.ElemPeer.prototype.className$ = function(self, val) { return this.elem.className = val; }
 
 fan.dom.ElemPeer.prototype.hasClassName = function(self, className)
 {
@@ -60,26 +60,26 @@ fan.dom.ElemPeer.prototype.computedStyle = function(self)
     : document.defaultView.getComputedStyle(this.elem, null);
 }
 
-fan.dom.ElemPeer.prototype.html$get = function(self) { return this.elem.innerHTML; }
-fan.dom.ElemPeer.prototype.html$set = function(self, val) { this.elem.innerHTML = val; }
+fan.dom.ElemPeer.prototype.html  = function(self) { return this.elem.innerHTML; }
+fan.dom.ElemPeer.prototype.html$ = function(self, val) { this.elem.innerHTML = val; }
 
-fan.dom.ElemPeer.prototype.value$get = function(self) { return this.elem.value; }
-fan.dom.ElemPeer.prototype.value$set = function(self, val) { this.elem.value = val; }
+fan.dom.ElemPeer.prototype.value  = function(self) { return this.elem.value; }
+fan.dom.ElemPeer.prototype.value$ = function(self, val) { this.elem.value = val; }
 
-fan.dom.ElemPeer.prototype.checked$get = function(self) { return this.elem.checked; }
-fan.dom.ElemPeer.prototype.checked$set = function(self, val) { this.elem.checked = val; }
+fan.dom.ElemPeer.prototype.checked  = function(self) { return this.elem.checked; }
+fan.dom.ElemPeer.prototype.checked$ = function(self, val) { this.elem.checked = val; }
 
-fan.dom.ElemPeer.prototype.enabled$get = function(self) { return !this.elem.disabled; }
-fan.dom.ElemPeer.prototype.enabled$set = function(self, val) { this.elem.disabled = !val; }
+fan.dom.ElemPeer.prototype.enabled  = function(self) { return !this.elem.disabled; }
+fan.dom.ElemPeer.prototype.enabled$ = function(self, val) { this.elem.disabled = !val; }
 
 fan.dom.ElemPeer.prototype.get = function(self, name, def)
 {
-  if (name == "id")      return this.id$get(self);
-  if (name == "name")    return this.name$get(self);
-  if (name == "class")   return this.className$get(self);
+  if (name == "id")      return this.id(self);
+  if (name == "name")    return this.name(self);
+  if (name == "class")   return this.className(self);
   if (name == "style")   return this.style(self);
-  if (name == "value")   return this.value$get(self);
-  if (name == "checked") return this.checked$get(self);
+  if (name == "value")   return this.value(self);
+  if (name == "checked") return this.checked(self);
 
   var val = this.elem[name];
   if (val != null) return val;
@@ -89,11 +89,11 @@ fan.dom.ElemPeer.prototype.get = function(self, name, def)
 
 fan.dom.ElemPeer.prototype.set = function(self, name, val)
 {
-  if (name == "id")           this.id$set(self, val);
-  else if (name == "name")    this.name$set(self, val);
-  else if (name == "class")   this.className$set(self, val);
-  else if (name == "value")   this.value$set(self, val);
-  else if (name == "checked") this.checked$set(self, val);
+  if (name == "id")           this.id$(self, val);
+  else if (name == "name")    this.name$(self, val);
+  else if (name == "class")   this.className$(self, val);
+  else if (name == "value")   this.value$(self, val);
+  else if (name == "checked") this.checked$(self, val);
   else this.elem.setAttribute(name, val);
 }
 
