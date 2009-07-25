@@ -694,3 +694,5 @@
 - #663: wisp sluggish via apachebench
 - #664: Nullable params w/out name in func sig
 
+*Build 1.0.46 (working)*
+- Change JavaScript field naming model

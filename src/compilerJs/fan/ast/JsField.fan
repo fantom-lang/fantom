@@ -33,7 +33,7 @@ class JsField : JsSlot
 
       out.w(parent)
       if (!isStatic) out.w(".prototype")
-      out.w(".$name = $defVal;").nl
+      out.w(".m_$name = $defVal;").nl
     }
   }
 

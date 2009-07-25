@@ -39,8 +39,8 @@ class JsMethod : JsSlot
       name   = "$name\$"
       isCtor = false
     }
-    else if (isGetter) name = "$name\$get"
-    else if (isSetter) name = "$name\$set"
+    else if (isGetter) name = "$name"
+    else if (isSetter) name = "$name\$"
     writeMethod(out)
   }
 

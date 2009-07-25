@@ -77,6 +77,27 @@ fan.sys.Obj.prototype.toString = function()
   return "" + this.toStr();
 }
 
+fan.sys.Obj.prototype.trap = function(name, args)
+{
+  var slot = this.type().slot(name, true);
+  if (slot instanceof fan.sys.Method)
+  {
+    return slot.invoke(this, args);
+  }
+  else
+  {
+    var argSize = (args == null) ? 0 : args.length;
+    if (argSize == 0) return slot.get(this);
+    if (argSize == 1) // one arg -> setter
+    {
+      var val = args[0];
+      slot.set(this, val);
+      return val;
+    }
+    throw fan.sys.ArgErr.make("Invalid number of args to get or set field '" + name + "'");
+  }
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Static
 //////////////////////////////////////////////////////////////////////////

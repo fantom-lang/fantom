@@ -33,7 +33,7 @@ fan.sys.Method.prototype.$ctor = function(parent, name)
 
 fan.sys.Method.prototype.invoke = function(instance, args)
 {
-  instance[this.m_$name].apply(instance, args)
+  return instance[this.m_$name].apply(instance, args)
 }
 
 fan.sys.Method.prototype.type = function()

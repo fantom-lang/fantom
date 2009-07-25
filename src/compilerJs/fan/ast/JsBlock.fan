@@ -432,18 +432,18 @@ if (c != null)
       if (ce.target.ctype.qname == "sys::Func" && Regex("call\\d").matches(mname))
         mname = null
     }
-    if (mname != null) out.w(".").w(mname)
-    if (ce.isDynamic && ce.noParens)
+    if (ce.isDynamic)
     {
-      if (ce.args.size == 0) return
-      if (ce.args.size == 1)
+      out.w(".trap('$mname',fan.sys.List.make(fan.sys.Type.find('sys::Obj'),[")
+      ce.args.each |arg,i|
       {
-        out.w(" = ")
-        expr(ce.args.first)
-        return
+        if (i > 0) out.w(",")
+        expr(arg)
       }
-      throw ArgErr("Parens required for multiple args")
+      out.w("]))")
+      return
     }
+    if (mname != null) out.w(".").w(mname)
     i := 0
     if (ce.target is SuperExpr)
     {
@@ -613,8 +613,9 @@ if (c != null)
     {
       out.w(qnameToJs(fe.field.parent)).w(".")
     }
+    if (!cvar && !fe.useAccessor) out.w("m_")
     out.w(vnameToJs(name))
-    if (!cvar && fe.useAccessor) out.w(get ? "\$get()" : "\$set")
+    if (!cvar && fe.useAccessor) out.w(get ? "()" : "\$")
   }
 
   Void closureExpr(ClosureExpr ce)
