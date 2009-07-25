@@ -24,7 +24,7 @@ fan.sys.Field.prototype.$ctor = function(parent, name, flags, of)
   this.m_flags  = flags;
   this.m_of     = of;
   this.m_$name  = this.$name(name);
-  this.m_$qname = 'fan.' + parent.pod() + '.' + parent.name() + '.' + this.m_$name;
+  this.m_$qname = this.m_parent.m_$qname + '.m_' + this.m_$name;
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -36,7 +36,6 @@ fan.sys.Type.prototype.$ctor = function(qname, base, mixins)
   this.m_base    = base == null ? null : fan.sys.Type.find(base);
   this.m_mixins  = mixins;
   this.m_slots   = [];
-  this.m_$qname  = qname.replace("::", "_");
   this.m_$qname  = 'fan.' + this.m_pod + '.' + this.m_name;
   this.m_isMixin = false;
 }
