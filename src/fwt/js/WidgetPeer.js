@@ -24,7 +24,7 @@ fan.fwt.WidgetPeer.prototype.relayout = function(self)
   this.sync(self);
   if (self.onLayout) self.onLayout();
 
-  var kids = self.kids;
+  var kids = self.m_kids;
   for (var i=0; i<kids.length; i++)
   {
     var kid = kids[i];
@@ -36,14 +36,14 @@ fan.fwt.WidgetPeer.prototype.relayout = function(self)
 
 fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
 {
-  var x = this.pos.x;
-  var y = this.pos.y;
-  var p = self.parent$get();
+  var x = this.m_pos.m_x;
+  var y = this.m_pos.m_y;
+  var p = self.parent();
   while (p != null)
   {
-    x += p.peer.pos.x;
-    y += p.peer.pos.y;
-    p = p.parent$get();
+    x += p.peer.m_pos.m_x;
+    y += p.peer.m_pos.m_y;
+    p = p.parent();
   }
   return fan.gfx.Point.make(x, y);
 }
@@ -67,21 +67,21 @@ fan.fwt.WidgetPeer.prototype.prefSize = function(self, hints)
   return fan.gfx.Size.make(pw, ph);
 }
 
-fan.fwt.WidgetPeer.prototype.enabled$get = function(self) { return this.enabled; }
-fan.fwt.WidgetPeer.prototype.enabled$set = function(self, val) { this.enabled = val; }
-fan.fwt.WidgetPeer.prototype.enabled = true;
+fan.fwt.WidgetPeer.prototype.enabled = function(self) { return this.m_enabled; }
+fan.fwt.WidgetPeer.prototype.enabled$ = function(self, val) { this.m_enabled = val; }
+fan.fwt.WidgetPeer.prototype.m_enabled = true;
 
-fan.fwt.WidgetPeer.prototype.visible$get = function(self) { return this.visible; }
-fan.fwt.WidgetPeer.prototype.visible$set = function(self, val) { this.visible = val; }
-fan.fwt.WidgetPeer.prototype.visible = true;
+fan.fwt.WidgetPeer.prototype.visible = function(self) { return this.m_visible; }
+fan.fwt.WidgetPeer.prototype.visible$ = function(self, val) { this.m_visible = val; }
+fan.fwt.WidgetPeer.prototype.m_visible = true;
 
-fan.fwt.WidgetPeer.prototype.pos$get = function(self) { return this.pos; }
-fan.fwt.WidgetPeer.prototype.pos$set = function(self, val) { this.pos = val; }
-fan.fwt.WidgetPeer.prototype.pos = fan.gfx.Point.make(0,0);
+fan.fwt.WidgetPeer.prototype.pos = function(self) { return this.m_pos; }
+fan.fwt.WidgetPeer.prototype.pos$ = function(self, val) { this.m_pos = val; }
+fan.fwt.WidgetPeer.prototype.m_pos = fan.gfx.Point.make(0,0);
 
-fan.fwt.WidgetPeer.prototype.size$get = function(self) { return this.size; }
-fan.fwt.WidgetPeer.prototype.size$set = function(self, val) { this.size = val; }
-fan.fwt.WidgetPeer.prototype.size = fan.gfx.Size.make(0,0);
+fan.fwt.WidgetPeer.prototype.size = function(self) { return this.m_size; }
+fan.fwt.WidgetPeer.prototype.size$ = function(self, val) { this.m_size = val; }
+fan.fwt.WidgetPeer.prototype.m_size = fan.gfx.Size.make(0,0);
 
 //////////////////////////////////////////////////////////////////////////
 // Attach
@@ -97,7 +97,7 @@ fan.fwt.WidgetPeer.prototype.attach = function(self)
   if (this.elem != null) return;
 
   // short circuit if my parent isn't attached
-  var parent = self.parent;
+  var parent = self.m_parent;
   if (parent == null || parent.peer.elem == null) return;
 
   // create control and initialize
@@ -113,11 +113,11 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
   // sync to elem
   this.elem = elem;
   this.sync(self);
-  this.attachEvents(elem, "mousedown", self.onMouseDown.list());
+  this.attachEvents(elem, "mousedown", self.m_onMouseDown.list());
   // rest of events...
 
   // recursively attach my children
-  var kids = self.kids;
+  var kids = self.m_kids;
   for (var i=0; i<kids.length; i++)
   {
     var kid = kids[i];
@@ -135,8 +135,8 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(elem, event, list)
       // TODO - need to fix for IE
       // TODO - only valid for mouseDown - so need to clean up this code
       var evt = new fan.fwt.Event();
-      evt.id = fan.fwt.EventId.mouseDown;
-      evt.pos = fan.gfx.Point.make(e.clientX, e.clientY);
+      evt.m_id = fan.fwt.EventId.mouseDown;
+      evt.m_pos = fan.gfx.Point.make(e.clientX, e.clientY);
       //evt.count =
       //evt.key =
       meth(evt);
@@ -184,16 +184,16 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 {
   with (this.elem.style)
   {
-    if (w == undefined) w = this.size.w;
-    if (h == undefined) h = this.size.h;
+    if (w == undefined) w = this.m_size.m_w;
+    if (h == undefined) h = this.m_size.m_h;
 
     // TEMP fix for IE
     if (w < 0) w = 0;
     if (h < 0) h = 0;
 
-    display = this.visible ? "block" : "none";
-    left    = this.pos.x  + "px";
-    top     = this.pos.y  + "px";
+    display = this.m_visible ? "block" : "none";
+    left    = this.m_pos.x  + "px";
+    top     = this.m_pos.y  + "px";
     width   = w + "px";
     height  = h + "px";
   }

@@ -40,21 +40,21 @@ fan.fwt.WindowPeer.prototype.close = function(self, result)
   event.id   = fan.fwt.EventId.close;
   event.data = result;
 
-  var list = self.onClose.list();
+  var list = self.m_onClose.list();
   for (var i=0; i<list.length; i++) list[i](event);
 }
 
 fan.fwt.WindowPeer.prototype.sync = function(self)
 {
   var shell = this.elem.parentNode;
-  this.size$set(this, fan.gfx.Size.make(shell.offsetWidth, shell.offsetHeight));
+  this.size$(this, fan.gfx.Size.make(shell.offsetWidth, shell.offsetHeight));
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
-fan.fwt.WindowPeer.prototype.icon$get = function(self) { return this.icon; }
-fan.fwt.WindowPeer.prototype.icon$set = function(self, val) { this.icon = val; }
-fan.fwt.WindowPeer.prototype.icon = null;
+fan.fwt.WindowPeer.prototype.icon = function(self) { return this.m_icon; }
+fan.fwt.WindowPeer.prototype.icon$ = function(self, val) { this.m_icon = val; }
+fan.fwt.WindowPeer.prototype.m_icon = null;
 
-fan.fwt.WindowPeer.prototype.title$get = function(self) { return document.title; }
-fan.fwt.WindowPeer.prototype.title$set = function(self, val) { document.title = val; }
+fan.fwt.WindowPeer.prototype.title = function(self) { return document.title; }
+fan.fwt.WindowPeer.prototype.title$ = function(self, val) { document.title = val; }
 

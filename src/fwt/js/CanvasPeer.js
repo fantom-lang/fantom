@@ -22,16 +22,16 @@ fan.fwt.CanvasPeer.prototype.create = function(parentElem)
 fan.fwt.CanvasPeer.prototype.sync = function(self)
 {
   // short-circuit if not properly layed out
-  if (this.size.w == 0 || this.size.h == 0) return;
+  var size = this.m_size
+  if (size.m_w == 0 || size.m_h == 0) return;
 
   if (this.hasCanvas)
   {
-    var size = this.size
     var div = this.elem;
     var c = div.firstChild;
 
     // remove old canvas if size is different
-    if (c != null && (c.width != size.w || c.height != size.h))
+    if (c != null && (c.width != size.m_w || c.height != size.m_h))
     {
       div.removeChild(c);
       c = null;
@@ -41,8 +41,8 @@ fan.fwt.CanvasPeer.prototype.sync = function(self)
     if (c == null)
     {
       c = document.createElement("canvas");
-      c.width  = size.w;
-      c.height = size.h;
+      c.width  = size.m_w;
+      c.height = size.m_h;
       div.appendChild(c);
     }
 
@@ -61,10 +61,10 @@ fan.fwt.CanvasPeer.prototype.sync = function(self)
     {
       // find applet tag
       var app = document.getElementById("app");
-      if (app != null && this.size.w > 0 && this.size.h > 0)
+      if (app != null && size.m_w > 0 && size.m_h > 0)
       {
-        app.width  = this.size.w;
-        app.height = this.size.h;
+        app.width  = size.m_w;
+        app.height = size.m_h;
 
         var g = new JfxGraphics(app.script);
         app.script.init();

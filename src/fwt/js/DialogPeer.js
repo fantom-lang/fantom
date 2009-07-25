@@ -92,7 +92,7 @@ fan.fwt.DialogPeer.prototype.close = function(self, result)
 
 fan.fwt.DialogPeer.prototype.sync = function(self)
 {
-  var content = self.content$get();
+  var content = self.content();
   if (content == null || content.peer.elem == null) return;
 
   var shell = this.elem.parentNode.parentNode;
@@ -101,8 +101,8 @@ fan.fwt.DialogPeer.prototype.sync = function(self)
   var pref  = content.prefSize();
 
   var th = 24;
-  var w  = pref.w + 2;       // +2 for border
-  var h  = pref.h + th + 1;  // +1 for border
+  var w  = pref.m_w + 2;       // +2 for border
+  var h  = pref.m_h + th + 1;  // +1 for border
   var x  = Math.floor((shell.offsetWidth - w) / 2);
   var y  = Math.floor((shell.offsetHeight - h) / 2);
 
@@ -115,13 +115,13 @@ fan.fwt.DialogPeer.prototype.sync = function(self)
     height = h + "px";
   }
 
-  this.pos$set(this, fan.gfx.Point.make(0, th));
-  this.size$set(this, fan.gfx.Size.make(pref.w, pref.h));
+  this.pos$(this, fan.gfx.Point.make(0, th));
+  this.size$(this, fan.gfx.Size.make(pref.m_w, pref.m_h));
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
 
-fan.fwt.DialogPeer.prototype.title$get = function(self) { return this.title; }
-fan.fwt.DialogPeer.prototype.title$set = function(self, val) { this.title = val; }
-fan.fwt.DialogPeer.prototype.title = "";
+fan.fwt.DialogPeer.prototype.title   = function(self) { return this.m_title; }
+fan.fwt.DialogPeer.prototype.title$  = function(self, val) { this.m_title = val; }
+fan.fwt.DialogPeer.prototype.m_title = "";
 
 

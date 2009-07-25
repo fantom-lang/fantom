@@ -12,21 +12,21 @@
 fan.fwt.MenuItemPeer = fan.sys.Obj.$extend(fan.fwt.WidgetPeer);
 fan.fwt.MenuItemPeer.prototype.$ctor = function(self) {}
 
-fan.fwt.MenuItemPeer.prototype.selected$get = function(self) { return this.selected; }
-fan.fwt.MenuItemPeer.prototype.selected$set = function(self, val) { this.selected = val; }
-fan.fwt.MenuItemPeer.prototype.selected = false;
+fan.fwt.MenuItemPeer.prototype.selected   = function(self) { return this.m_selected; }
+fan.fwt.MenuItemPeer.prototype.selected$  = function(self, val) { this.m_selected = val; }
+fan.fwt.MenuItemPeer.prototype.m_selected = false;
 
-fan.fwt.MenuItemPeer.prototype.text$get = function(self) { return this.text; }
-fan.fwt.MenuItemPeer.prototype.text$set = function(self, val) { this.text = val; }
-fan.fwt.MenuItemPeer.prototype.text = "";
+fan.fwt.MenuItemPeer.prototype.text   = function(self) { return this.m_text; }
+fan.fwt.MenuItemPeer.prototype.text$  = function(self, val) { this.m_text = val; }
+fan.fwt.MenuItemPeer.prototype.m_text = "";
 
-fan.fwt.MenuItemPeer.prototype.accelerator$get = function(self) { return this.accelerator; }
-fan.fwt.MenuItemPeer.prototype.accelerator$set = function(self, val) { this.accelerator = val; }
-fan.fwt.MenuItemPeer.prototype.accelerator = null;
+fan.fwt.MenuItemPeer.prototype.accelerator   = function(self) { return this.m_accelerator; }
+fan.fwt.MenuItemPeer.prototype.accelerator$  = function(self, val) { this.m_accelerator = val; }
+fan.fwt.MenuItemPeer.prototype.m_accelerator = null;
 
-fan.fwt.MenuItemPeer.prototype.image$get = function(self) { return this.image; }
-fan.fwt.MenuItemPeer.prototype.image$set = function(self, val) { this.image = val; }
-fan.fwt.MenuItemPeer.prototype.image = null;
+fan.fwt.MenuItemPeer.prototype.image   = function(self) { return this.m_image; }
+fan.fwt.MenuItemPeer.prototype.image$  = function(self, val) { this.m_image = val; }
+fan.fwt.MenuItemPeer.prototype.m_image = null;
 
 fan.fwt.MenuItemPeer.prototype.create = function(parentElem, self)
 {
@@ -46,7 +46,7 @@ fan.fwt.MenuItemPeer.prototype.create = function(parentElem, self)
     evt.id = fan.fwt.EventId.action;
     evt.widget = self;
 
-    var list = self.onAction.list();
+    var list = self.m_onAction.list();
     for (var i=0; i<list.length; i++) list[i](evt);
   }
 
@@ -68,11 +68,11 @@ fan.fwt.MenuItemPeer.prototype.sync = function(self)
   }
 
   // add new text node
-  div.appendChild(document.createTextNode(this.text));
+  div.appendChild(document.createTextNode(this.m_text));
 
   // account for padding/border
-  var w = this.size.w - 8;
-  var h = this.size.h - 4;
+  var w = this.m_size.m_w - 8;
+  var h = this.m_size.m_h - 4;
   fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
 
