@@ -15,8 +15,9 @@ fan.fwt.TextPeer.prototype.$ctor = function(self) {}
 fan.fwt.TextPeer.prototype.text$get = function(self) { return this.text; }
 fan.fwt.TextPeer.prototype.text$set = function(self, val)
 {
+  this.old = this.text;
   this.text = val;
-  if (this.elem != null && this.elem.firstChild != null)
+  if (this.elem != null && this.elem.firstChild != null && this.old != this.text)
     this.elem.firstChild.value = this.text;
 }
 fan.fwt.TextPeer.prototype.text = "";
@@ -38,7 +39,6 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   text.readOnly = !self.editable;
   if (self.multiLine)
   {
-
     // TODO - this differs a pixel or two by browser - so we'll need
     // to go back and fine tune
     text.style.width  = (this.size.w-6)+'px';
