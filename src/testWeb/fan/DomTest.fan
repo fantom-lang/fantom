@@ -37,7 +37,7 @@ class DomTest : Widget
              print('testBasics'); test.testBasics();
              print('testCreate'); test.testCreate();
              results.style.color = 'green';
-             results.innerHTML = 'All tests passed! [' + test.verifies + ' verifies]';
+             results.innerHTML = 'All tests passed! [' + test.m_verifies + ' verifies]';
            }
            catch (err)
            {
