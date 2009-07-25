@@ -45,7 +45,10 @@ fan.sys.Field.prototype.get = function(instance)
     if ((this.m_flags & fan.sys.FConst.Native) != 0)
       target = instance.peer;
     var getter = target[this.m_$name];
-    return getter.call(target);
+    if (getter != null)
+      return getter.call(target);
+    else
+      return target["m_"+this.m_$name]
   }
 }
 
@@ -91,12 +94,15 @@ fan.sys.Field.prototype.set = function(instance, value, checkConst)
   {
     var peer = instance.peer;
     var setter = peer[this.m_$name + "$"];
-    return setter.call(peer, instance, value);
+    setter.call(peer, instance, value);
   }
   else
   {
     var setter = instance[this.m_$name + "$"];
-    return setter.call(instance, value);
+    if (setter != null)
+      setter.call(instance, value);
+    else
+      instance["m"+this.m_$name] = value;
   }
 }
 
