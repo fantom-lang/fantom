@@ -15,7 +15,7 @@ using compiler
 **
 class JsExpr : JsBlock
 {
-  new make(Node n) : super(n) {}
+  new make(CompilerSupport s, Node n) : super(s,n) {}
   override Void write(JsWriter out)
   {
     this.out = out

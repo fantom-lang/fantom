@@ -39,11 +39,13 @@ class JsCompiler : Compiler
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  OutStream? out        // output of compiler
-  Buf? buf              // Init/Cleanup
-  Bool force := false   // FindTypes; force compile all types
-  TypeDef[]? toCompile  // FindTypes
-  File[]? nativeDirs    // FindTypes; dir to look for js natives
-  [Str:File]? natives   // FindTypes
+  OutStream? out                 // output of compiler
+  Buf? buf                       // Init/Cleanup
+  Bool force := false            // FindTypes; force compile all types
+  TypeDef[]? toCompile           // FindTypes
+  TypeDef[] synth := TypeDef[,]  // FindTypes
+  File[]? nativeDirs             // FindTypes; dir to look for js natives
+  [Str:File]? natives            // FindTypes
+
 
 }

@@ -16,6 +16,15 @@ abstract class JsNode
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+  new make(CompilerSupport support)
+  {
+    this.support = support
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Write
 //////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +42,26 @@ abstract class JsNode
   **
   Str qnameToJs(CType ctype)
   {
+    // use this method as a hook to look for synthentic types
+    // used in compiled types that we need to emit
+    if (ctype.isSynthetic)
+    {
+      if (ctype.qname.contains("Curry\$"))
+      {
+        list := (support.compiler as JsCompiler).synth
+        if (!list.contains(ctype)) list.add(ctype)
+      }
+    }
+    /*
+    else
+    {
+      // also use this method to verify referenced types
+      // have been configured to be compiled to js as well
+      if (!Type.find(ctype.qname).facet(@js, false))
+        support.err("Type not available in JavaScript: $ctype.qname")
+    }
+    */
+
     return "fan.${ctype.pod.name}.$ctype.name"
   }
 
@@ -54,5 +83,7 @@ abstract class JsNode
     "var":    true,
     "with":   true
   ].toImmutable
+
+  CompilerSupport support
 
 }

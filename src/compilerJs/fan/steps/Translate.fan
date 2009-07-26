@@ -21,6 +21,7 @@ class Translate : JsCompilerStep
   new make(JsCompiler compiler)
     : super(compiler)
   {
+    this.support = CompilerSupport(compiler)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,7 +35,7 @@ class Translate : JsCompilerStep
     this.out = JsWriter(compiler.out)
     this.natives = compiler.natives?.dup ?: Str:File[:]
 
-    JsPod(compiler.pod, compiler.toCompile).write(out)
+    JsPod(support, compiler.pod, compiler.toCompile).write(out)
     writeTypes
     writeNatives
 
@@ -47,7 +48,6 @@ class Translate : JsCompilerStep
 
   Void writeTypes()
   {
-    refs := Str:CType[:]
 
     compiler.toCompile.each |def|
     {
@@ -68,15 +68,13 @@ class Translate : JsCompilerStep
       }
 
       // compile type
-      JsType(def).write(out)
+      JsType(support, def).write(out)
     }
 
-    // emit our currys
-    compiler.types.each |def|
+    // emit referenced synthentic types
+    compiler.synth.each |def|
     {
-      if (compiler.toCompile.contains(def)) return  // skip if already compiled
-      if (!def.qname.contains("Curry\$")) return
-      JsType(def).write(out)
+      JsType(support, def).write(out)
     }
   }
 
@@ -133,6 +131,7 @@ class Translate : JsCompilerStep
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  CompilerSupport support
   [Str:File]? natives
   JsWriter? out
 

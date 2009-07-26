@@ -13,10 +13,10 @@ using compiler
 **
 class JsPod : JsNode
 {
-  new make(PodDef pod, TypeDef[] types)
+  new make(CompilerSupport s, PodDef pod, TypeDef[] types) : super(s)
   {
     this.name  = pod.name
-    this.types = types.map |TypeDef t->JsType| { JsType(t) }
+    this.types = types.map |TypeDef t->JsType| { JsType(s, t) }
   }
 
   override Void write(JsWriter out)

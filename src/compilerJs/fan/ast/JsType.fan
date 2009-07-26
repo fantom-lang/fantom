@@ -13,28 +13,28 @@ using compiler
 **
 class JsType : JsNode
 {
-  new make(TypeDef def)
+  new make(CompilerSupport s, TypeDef def) : super(s)
   {
-    this.base        = JsTypeRef(def.base)
+    this.base        = JsTypeRef(s, def.base)
     this.qname       = qnameToJs(def)
     this.pod         = def.pod.name
     this.name        = def.name
-    this.peer        = findPeer(def)
+    this.peer        = findPeer(s, def)
     this.isMixin     = def.isMixin
     this.isSynthetic = def.isSynthetic
-    this.mixins      = def.mixins.map |TypeRef r->JsTypeRef| { JsTypeRef(r) }
-    this.methods     = def.methodDefs.map |MethodDef m->JsMethod| { JsMethod(m) }
-    this.fields      = def.fieldDefs.map |FieldDef f->JsField| { JsField(f) }
+    this.mixins      = def.mixins.map |TypeRef r->JsTypeRef| { JsTypeRef(s, r) }
+    this.methods     = def.methodDefs.map |MethodDef m->JsMethod| { JsMethod(s, m) }
+    this.fields      = def.fieldDefs.map |FieldDef f->JsField| { JsField(s, f) }
     if (def.staticInit != null) this.staticInit = def.staticInit.name
   }
 
-  static JsTypeRef? findPeer(CType def)
+  static JsTypeRef? findPeer(CompilerSupport cs, CType def)
   {
     CType? t := def
     while (t != null)
     {
       slot := t.slots.find |s| { s.isNative && s.parent.qname == t.qname }
-      if (slot != null) return JsTypeRef(slot.parent)
+      if (slot != null) return JsTypeRef(cs, slot.parent)
       t = t.base
     }
     return null
@@ -100,13 +100,13 @@ class JsType : JsNode
 **
 class JsTypeRef : JsNode
 {
-  new make(CType ref)
+  new make(CompilerSupport cs, CType ref) : super(cs)
   {
     this.qname = qnameToJs(ref)
     this.pod   = ref.pod.name
     this.name  = ref.name
     this.sig   = ref.signature
-    this.slots = ref.slots.values.map |CSlot s->JsSlotRef| { JsSlotRef(s) }
+    this.slots = ref.slots.values.map |CSlot s->JsSlotRef| { JsSlotRef(cs, s) }
     this.isSynthetic = ref.isSynthetic
   }
 
