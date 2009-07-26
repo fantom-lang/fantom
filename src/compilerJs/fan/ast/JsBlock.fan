@@ -15,7 +15,7 @@ using compiler
 **
 class JsBlock : JsNode
 {
-  new make(Node n)
+  new make(CompilerSupport support, Node n) : super(support)
   {
     this.x = n
   }
@@ -59,7 +59,7 @@ class JsBlock : JsNode
       case StmtId.continueStmt: out.w("continue;"); if (nl) out.nl
       case StmtId.tryStmt:      tryStmt(stmt)
       case StmtId.switchStmt:   switchStmt(stmt)
-      default: throw CompilerErr("Unknown StmtId: $stmt.id", stmt.location)
+      default: support.err("Unknown StmtId: $stmt.id", stmt.location)
     }
   }
 
@@ -198,6 +198,7 @@ if (c != null)
       case ExprId.uriLiteral:   out.w("fan.sys.Uri.fromStr(").w(ex->val.toStr.toCode('\"', true)).w(")")
       case ExprId.typeLiteral:  out.w("fan.sys.Type.find(\"${ex->val->signature}\")")
       case ExprId.slotLiteral:  out.w("fan.sys.Type.find(\"${ex->parent->signature}\").slot(\"${ex->name}\")")
+      case ExprId.symbolLiteral: out.w("fan.sys.Symbol.find(\"${ex->symbol->qname}\")")
       case ExprId.rangeLiteral: rangeLiteralExpr(ex)
       case ExprId.listLiteral:  listLiteralExpr(ex)
       case ExprId.mapLiteral:   mapLiteralExpr(ex)
@@ -229,7 +230,7 @@ if (c != null)
       //case ExprId.curry
       //case ExprId.complexLiteral
       case ExprId.closure:      closureExpr(ex)
-      default: throw CompilerErr("Unknown ExprId: $ex.id", ex.location)
+      default: support.err("Unknown ExprId: $ex.id", ex.location)
     }
   }
 

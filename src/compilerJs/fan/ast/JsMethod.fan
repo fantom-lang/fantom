@@ -13,16 +13,16 @@ using compiler
 **
 class JsMethod : JsSlot
 {
-  new make(MethodDef m) : super(m)
+  new make(CompilerSupport s, MethodDef m) : super(s, m)
   {
-    this.parentPeer = JsType.findPeer(m.parent)
+    this.parentPeer = JsType.findPeer(s, m.parent)
     this.isCtor     = m.isCtor
     this.isGetter   = m.isGetter
     this.isSetter   = m.isSetter
-    this.params     = m.params.map |CParam p->JsMethodParam| { JsMethodParam(p) }
+    this.params     = m.params.map |CParam p->JsMethodParam| { JsMethodParam(s, p) }
     this.hasClosure = ClosureFinder(m).exists
-    if (m.ctorChain != null) this.ctorChain = JsExpr(m.ctorChain)
-    if (m.code != null) this.code = JsBlock(m.code)
+    if (m.ctorChain != null) this.ctorChain = JsExpr(s, m.ctorChain)
+    if (m.code != null) this.code = JsBlock(s, m.code)
   }
 
   Bool isFieldAccessor() { isGetter || isSetter }
@@ -75,7 +75,7 @@ class JsMethod : JsSlot
       }
       else
       {
-        pars := isStatic ? params : [JsMethodParam.makeThis].addAll(params)
+        pars := isStatic ? params : [JsMethodParam.makeThis(support)].addAll(params)
         out.w("  return this.peer.$name${sig(pars)};").nl
       }
     }
@@ -127,14 +127,14 @@ class JsMethod : JsSlot
 **
 class JsMethodParam : JsNode
 {
-  new make(CParam p)
+  new make(CompilerSupport s, CParam p) : super(s)
   {
     this.name = vnameToJs(p.name)
     this.hasDef = p.hasDefault
-    if (hasDef) this.defVal = JsExpr(p->def)
+    if (hasDef) this.defVal = JsExpr(s, p->def)
   }
 
-  new makeThis()
+  new makeThis(CompilerSupport s) : super.make(s)
   {
     this.name = "this"
   }
