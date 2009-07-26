@@ -27,13 +27,13 @@ fan.sys.Weekday.prototype.$ctor = function(ordinal, name)
 
 fan.sys.Weekday.prototype.increment = function()
 {
-  var arr = fan.sys.Weekday.values;
+  var arr = fan.sys.Weekday.m_values;
   return arr[(this.m_ordinal+1) % arr.length];
 }
 
 fan.sys.Weekday.prototype.decrement = function()
 {
-  var arr = fan.sys.Weekday.values;
+  var arr = fan.sys.Weekday.m_values;
   return this.m_ordinal == 0 ? arr[arr.length-1] : arr[this.m_ordinal-1];
 }
 
@@ -76,21 +76,21 @@ fan.sys.Weekday.prototype.full = function(locale)
 // Static
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Weekday.sun = new fan.sys.Weekday(0,  "sun");
-fan.sys.Weekday.mon = new fan.sys.Weekday(1,  "mon");
-fan.sys.Weekday.tue = new fan.sys.Weekday(2,  "tue");
-fan.sys.Weekday.wed = new fan.sys.Weekday(3,  "wed");
-fan.sys.Weekday.thu = new fan.sys.Weekday(4,  "thu");
-fan.sys.Weekday.fri = new fan.sys.Weekday(5,  "fri");
-fan.sys.Weekday.sat = new fan.sys.Weekday(6,  "sat");
+fan.sys.Weekday.m_sun = new fan.sys.Weekday(0,  "sun");
+fan.sys.Weekday.m_mon = new fan.sys.Weekday(1,  "mon");
+fan.sys.Weekday.m_tue = new fan.sys.Weekday(2,  "tue");
+fan.sys.Weekday.m_wed = new fan.sys.Weekday(3,  "wed");
+fan.sys.Weekday.m_thu = new fan.sys.Weekday(4,  "thu");
+fan.sys.Weekday.m_fri = new fan.sys.Weekday(5,  "fri");
+fan.sys.Weekday.m_sat = new fan.sys.Weekday(6,  "sat");
 
-fan.sys.Weekday.values =
+fan.sys.Weekday.m_values =
 [
-  fan.sys.Weekday.sun,
-  fan.sys.Weekday.mon,
-  fan.sys.Weekday.tue,
-  fan.sys.Weekday.wed,
-  fan.sys.Weekday.thu,
-  fan.sys.Weekday.fri,
-  fan.sys.Weekday.sat
+  fan.sys.Weekday.m_sun,
+  fan.sys.Weekday.m_mon,
+  fan.sys.Weekday.m_tue,
+  fan.sys.Weekday.m_wed,
+  fan.sys.Weekday.m_thu,
+  fan.sys.Weekday.m_fri,
+  fan.sys.Weekday.m_sat
 ];

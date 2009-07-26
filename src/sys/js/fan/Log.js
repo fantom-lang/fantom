@@ -73,19 +73,19 @@ fan.sys.LogLevel.prototype.type = function()
 // Range
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.LogLevel.debug  = new fan.sys.LogLevel(0, "debug");
-fan.sys.LogLevel.info   = new fan.sys.LogLevel(1, "info");
-fan.sys.LogLevel.warn   = new fan.sys.LogLevel(2, "warn");
-fan.sys.LogLevel.error  = new fan.sys.LogLevel(3, "error");
-fan.sys.LogLevel.silent = new fan.sys.LogLevel(4, "silent");
+fan.sys.LogLevel.m_debug  = new fan.sys.LogLevel(0, "debug");
+fan.sys.LogLevel.m_info   = new fan.sys.LogLevel(1, "info");
+fan.sys.LogLevel.m_warn   = new fan.sys.LogLevel(2, "warn");
+fan.sys.LogLevel.m_error  = new fan.sys.LogLevel(3, "error");
+fan.sys.LogLevel.m_silent = new fan.sys.LogLevel(4, "silent");
 
-fan.sys.LogLevel.values =
+fan.sys.LogLevel.m_values =
 [
-  fan.sys.LogLevel.debug,
-  fan.sys.LogLevel.info,
-  fan.sys.LogLevel.warn,
-  fan.sys.LogLevel.error,
-  fan.sys.LogLevel.silent
+  fan.sys.LogLevel.m_debug,
+  fan.sys.LogLevel.m_info,
+  fan.sys.LogLevel.m_warn,
+  fan.sys.LogLevel.m_error,
+  fan.sys.LogLevel.m_silent
 ]
 
 /*************************************************************************
