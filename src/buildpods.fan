@@ -24,6 +24,7 @@ class Build : BuildGroup
   {
     childrenScripts =
     [
+      `compilerJs/build.fan`,
       `testSys/build.fan`,
       `testNative/build.fan`,
       `testCompiler/build.fan`,
@@ -33,7 +34,6 @@ class Build : BuildGroup
       `fansh/build.fan`,
       `web/build.fan`,
       `webapp/build.fan`,
-      `compilerJs/build.fan`,
       `dom/build.fan`,
       `testWeb/build.fan`,
       `wisp/build.fan`,
