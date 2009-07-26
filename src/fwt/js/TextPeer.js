@@ -62,7 +62,7 @@ fan.fwt.TextPeer.prototype.sync = function(self)
     if (event.keyCode == 13 && self.m_onAction.size() > 0)
     {
       var ae = fan.fwt.Event.make();
-      ae.id = fan.fwt.EventId.action;
+      ae.id = fan.fwt.EventId.m_action;
       var list = self.m_onAction.list();
       for (var i=0; i<list.length; i++) list[i].call(ae);
     }
@@ -71,7 +71,7 @@ fan.fwt.TextPeer.prototype.sync = function(self)
     if (self.m_onModify.size() > 0)
     {
       var me = fan.fwt.Event.make();
-      me.id = fan.fwt.EventId.action;
+      me.id = fan.fwt.EventId.m_action;
       var list = self.m_onModify.list();
       for (var i=0; i<list.length; i++) list[i].call(me);
     }

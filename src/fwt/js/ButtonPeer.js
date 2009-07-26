@@ -66,7 +66,7 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
   outer.onclick = function(event)
   {
     var evt = new fan.fwt.Event();
-    evt.id = fan.fwt.EventId.action;
+    evt.id = fan.fwt.EventId.m_action;
     evt.widget = self;
 
     var list = self.m_onAction.list();

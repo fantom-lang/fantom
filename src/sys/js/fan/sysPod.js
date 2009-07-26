@@ -120,29 +120,39 @@ with (fan.sys.Pod.$add("sys"))
 // sure quite how that should work yet.  So in the mean time, stick
 // any static code requiring TypeInfo here
 
-fan.sys.Float.posInf = fan.sys.Float.make(Number.POSITIVE_INFINITY);
-fan.sys.Float.negInf = fan.sys.Float.make(Number.NEGATIVE_INFINITY);
-fan.sys.Float.nan    = fan.sys.Float.make(Number.NaN);
-fan.sys.Float.e      = fan.sys.Float.make(Math.E);
-fan.sys.Float.pi     = fan.sys.Float.make(Math.PI);
+fan.sys.Float.m_posInf = fan.sys.Float.make(Number.POSITIVE_INFINITY);
+fan.sys.Float.m_negInf = fan.sys.Float.make(Number.NEGATIVE_INFINITY);
+fan.sys.Float.m_nan    = fan.sys.Float.make(Number.NaN);
+fan.sys.Float.m_e      = fan.sys.Float.make(Math.E);
+fan.sys.Float.m_pi     = fan.sys.Float.make(Math.PI);
 
-fan.sys.Int.maxVal = new Long(0x7fffffff, 0xffffffff);
-fan.sys.Int.minVal = new Long(0x80000000, 0x00000000);
-fan.sys.Int.defVal = 0;
+fan.sys.Int.m_maxVal = new Long(0x7fffffff, 0xffffffff);
+fan.sys.Int.m_minVal = new Long(0x80000000, 0x00000000);
+fan.sys.Int.m_defVal = 0;
 fan.sys.Int.Chunk  = 4096;
 
-fan.sys.MimeType.imagePng  = fan.sys.MimeType.predefined("image", "png");
-fan.sys.MimeType.imageGif  = fan.sys.MimeType.predefined("image", "gif");
-fan.sys.MimeType.imageJpeg = fan.sys.MimeType.predefined("image", "jpeg");
-fan.sys.MimeType.textPlain = fan.sys.MimeType.predefined("text", "plain");
-fan.sys.MimeType.textHtml  = fan.sys.MimeType.predefined("text", "html");
-fan.sys.MimeType.textXml   = fan.sys.MimeType.predefined("text", "xml");
-fan.sys.MimeType.dir       = fan.sys.MimeType.predefined("x-directory", "normal");
+fan.sys.MimeType.m_imagePng  = fan.sys.MimeType.predefined("image", "png");
+fan.sys.MimeType.m_imageGif  = fan.sys.MimeType.predefined("image", "gif");
+fan.sys.MimeType.m_imageJpeg = fan.sys.MimeType.predefined("image", "jpeg");
+fan.sys.MimeType.m_textPlain = fan.sys.MimeType.predefined("text", "plain");
+fan.sys.MimeType.m_textHtml  = fan.sys.MimeType.predefined("text", "html");
+fan.sys.MimeType.m_textXml   = fan.sys.MimeType.predefined("text", "xml");
+fan.sys.MimeType.m_dir       = fan.sys.MimeType.predefined("x-directory", "normal");
 
 fan.sys.UriPodBase = "/sys/pod/";
 
-fan.sys.Month.values = fan.sys.List.make(fan.sys.Type.find("sys::Month"),
+fan.sys.Month.m_values = fan.sys.List.make(fan.sys.Type.find("sys::Month"),
 [
-  fan.sys.Month.jan, fan.sys.Month.feb, fan.sys.Month.mar, fan.sys.Month.apr, fan.sys.Month.may, fan.sys.Month.jun,
-  fan.sys.Month.jul, fan.sys.Month.aug, fan.sys.Month.sep, fan.sys.Month.oct, fan.sys.Month.nov, fan.sys.Month.dec
+  fan.sys.Month.m_jan,
+  fan.sys.Month.m_feb,
+  fan.sys.Month.m_mar,
+  fan.sys.Month.m_apr,
+  fan.sys.Month.m_may,
+  fan.sys.Month.m_jun,
+  fan.sys.Month.m_jul,
+  fan.sys.Month.m_aug,
+  fan.sys.Month.m_sep,
+  fan.sys.Month.m_oct,
+  fan.sys.Month.m_nov,
+  fan.sys.Month.m_dec
 ]);

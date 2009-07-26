@@ -41,4 +41,4 @@ fan.sys.Bool.fromStr = function(s, checked)
 
 fan.sys.Bool.toStr  = function(self) { return self ? "true" : "false"; }
 fan.sys.Bool.toCode = function(self) { return self ? "true" : "false"; }
-fan.sys.Bool.defVal = false;
+fan.sys.Bool.m_defVal = false;
