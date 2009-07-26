@@ -27,17 +27,17 @@ fan.fwt.TabPeer.prototype.m_image = null;
 fan.fwt.TabPeer.prototype.sync = function(self)
 {
   var elem = this.elem;
-  var selected = this.index == self.parent.peer.selectedIndex;
+  var selected = this.index == self.m_parent.peer.selectedIndex;
 
   while (elem.firstChild != null) elem.removeChild(elem.firstChild);
-  var text = document.createTextNode(this.text);
+  var text = document.createTextNode(this.m_text);
   elem.appendChild(text);
 
   var $self = self;
   elem.onmousedown = function()
   {
-    $self.parent.peer.selectedIndex = $self.peer.index;
-    $self.parent.relayout();
+    $self.m_parent.peer.selectedIndex = $self.peer.index;
+    $self.m_parent.relayout();
   }
 
   with (elem.style)

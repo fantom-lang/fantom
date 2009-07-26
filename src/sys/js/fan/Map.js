@@ -133,15 +133,15 @@ fan.sys.Map.prototype.size = function()
   return sz;
 }
 
-fan.sys.Map.prototype.ordered$get = function() { return this.ordered; }
-fan.sys.Map.prototype.ordered$set = function(val)
+fan.sys.Map.prototype.ordered = function() { return this.m_ordered; }
+fan.sys.Map.prototype.ordered$ = function(val)
 {
   if (this.size() != 0)
     throw fan.sys.UnsupportedErr.make("Map not empty");
 
   this.ordered = val;
 }
-fan.sys.Map.prototype.ordered = false;
+fan.sys.Map.prototype.m_ordered = false;
 
 //////////////////////////////////////////////////////////////////////////
 // Iterators

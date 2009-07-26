@@ -19,7 +19,7 @@ fan.fwt.SashPanePeer.prototype.m_weights = null;
 
 fan.fwt.SashPanePeer.prototype.prefSize = function(self, hints)
 {
-  if (self.orientation == fan.fwt.Orientation.horizontal)
+  if (self.m_orientation == fan.fwt.Orientation.m_horizontal)
   {
     var max = 0;
     for (var i=0; i<self.m_kids.length; i++)
@@ -43,10 +43,10 @@ fan.fwt.SashPanePeer.prototype.prefSize = function(self, hints)
 
 fan.fwt.SashPanePeer.prototype.sync = function(self)
 {
-  if (this.weights != null && this.weights.length != self.m_kids.length)
+  if (this.m_weights != null && this.m_weights.length != self.m_kids.length)
     throw new fan.sys.ArgErr.make("weights.size != kids.length");
 
-  if (self.orientation == fan.fwt.Orientation.horizontal)
+  if (self.m_orientation == fan.fwt.Orientation.m_horizontal)
     this.doHoriz(self);
   else
     this.doVert(self);

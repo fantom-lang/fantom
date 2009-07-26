@@ -12,13 +12,13 @@
 fan.fwt.TextPeer = fan.sys.Obj.$extend(fan.fwt.TextWidgetPeer);
 fan.fwt.TextPeer.prototype.$ctor = function(self) {}
 
-fan.fwt.TextPeer.prototype.text = function(self) { return this.text; }
+fan.fwt.TextPeer.prototype.text = function(self) { return this.m_text; }
 fan.fwt.TextPeer.prototype.text$ = function(self, val)
 {
-  this.old = this.text;
-  this.text = val;
-  if (this.elem != null && this.elem.firstChild != null && this.old != this.text)
-    this.elem.firstChild.value = this.text;
+  var old = this.text;
+  this.m_text = val;
+  if (this.elem != null && this.elem.firstChild != null && old != this.m_text)
+    this.elem.firstChild.value = this.m_text;
 }
 fan.fwt.TextPeer.prototype.m_text = "";
 
@@ -29,15 +29,15 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   // do we need to create element?
   if (text == null)
   {
-    if (self.multiLine) { text = document.createElement("textarea"); }
+    if (self.m_multiLine) { text = document.createElement("textarea"); }
     else { text = document.createElement("input"); text.type = "text"; }
     this.elem.appendChild(text);
   }
 
   // sync control
   text.value = this.m_text;
-  text.readOnly = !self.editable;
-  if (self.multiLine)
+  text.readOnly = !self.m_editable;
+  if (self.m_multiLine)
   {
     // TODO - this differs a pixel or two by browser - so we'll need
     // to go back and fine tune
@@ -47,7 +47,7 @@ fan.fwt.TextPeer.prototype.sync = function(self)
   else
   {
     // TODO - can we use CSS here for size??
-    text.size  = self.prefCols;
+    text.size  = self.m_prefCols;
   }
   text.onkeyup = function(event)
   {

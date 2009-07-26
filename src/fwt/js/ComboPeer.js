@@ -46,7 +46,7 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
     select.removeChild(select.firstChild);
 
   // add new items
-  for (var i=0; i<this.items.length; i++)
+  for (var i=0; i<this.m_items.length; i++)
   {
     var option = document.createElement("option");
     option.appendChild(document.createTextNode(this.m_items[i]));

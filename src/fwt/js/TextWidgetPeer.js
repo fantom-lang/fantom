@@ -15,7 +15,7 @@ fan.fwt.TextWidgetPeer.prototype.$ctor = function(self) {}
 fan.fwt.TextWidgetPeer.prototype.prefSize = function(self, hints)
 {
   var p = fan.fwt.WidgetPeer.prototype.prefSize.call(this, self, hints);
-  if (self.multiLine) return fan.gfx.Size.make(p.m_w, 16*self.prefRows);
+  if (self.m_multiLine) return fan.gfx.Size.make(p.m_w, 16*self.m_prefRows);
   return p;
 }
 
