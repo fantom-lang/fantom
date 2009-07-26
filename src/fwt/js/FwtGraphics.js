@@ -199,11 +199,11 @@ fan.fwt.Graphics.prototype.push = function ()
 {
   this.cx.save();
   var state = new Object();
-  state.brush     = this.brush;
-  state.pen       = this.pen;
-  state.font      = this.font;
-  state.antialias = this.antialias;
-  state.alpha     = this.alpha;
+  state.brush     = this.m_brush;
+  state.pen       = this.m_pen;
+  state.font      = this.m_font;
+  state.antialias = this.m_antialias;
+  state.alpha     = this.m_alpha;
   this.stack.push(state);
 }
 
@@ -212,11 +212,11 @@ fan.fwt.Graphics.prototype.pop = function ()
 {
   this.cx.restore();
   var state = this.stack.pop();
-  this.brush     = state.brush;
-  this.pen       = state.pen;
-  this.font      = state.font;
-  this.antialias = state.antialias;
-  this.alpha     = state.alpha;
+  this.m_brush     = state.brush;
+  this.m_pen       = state.pen;
+  this.m_font      = state.font;
+  this.m_antialias = state.antialias;
+  this.m_alpha     = state.alpha;
 }
 
 // Void dispose()

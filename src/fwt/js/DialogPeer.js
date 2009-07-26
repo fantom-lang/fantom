@@ -69,7 +69,7 @@ fan.fwt.DialogPeer.prototype.open = function(self)
     MozBoxShadow    = "0 5px 12px #404040";
     webkitBoxShadow = "0 5px 12px #404040";
   }
-  tbar.appendChild(document.createTextNode(this.title));
+  tbar.appendChild(document.createTextNode(this.m_title));
   dlg.appendChild(tbar);
   dlg.appendChild(content);
   shell.appendChild(dlg);

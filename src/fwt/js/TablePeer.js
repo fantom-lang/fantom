@@ -92,7 +92,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
 
   // build new content
   var tbody = document.createElement("tbody");
-  var model = self.model;
+  var model = self.m_model;
   var rows  = model.numRows();
   var cols  = model.numCols();
 
