@@ -177,26 +177,45 @@ fan.sys.Int.minus = function(a, b)
 
 fan.sys.Int.mult = function(a, b)
 {
+return a.valueOf() * b.valueOf();
+/*
+TODO - FIXIT
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
   if (!(b instanceof Long)) b = Long.fromNumber(b);
   return Long.mul(a, b);
+*/
 }
 
 fan.sys.Int.div = function(a, b)
 {
+return Math.floor(a / b);
+/*
+TODO - FIXIT
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
   if (!(b instanceof Long)) b = Long.fromNumber(b);
   return Long.div(a, b);
+*/
 }
 
 fan.sys.Int.mod = function(a, b)
 {
+return a % b;
+/*
+TODO - FIXIT
   // always wrap with Long to make sure we retain precision
   if (!(a instanceof Long)) a = Long.fromNumber(a);
   if (!(b instanceof Long)) b = Long.fromNumber(b);
   return Long.mod(a, b);
+*/
+}
+
+fan.sys.Int.pow = function(a, b)
+{
+if (b < 0) throw fan.sys.ArgErr.make("pow < 0");
+return Math.pow(a, b);
+// TODO - FIXIT
 }
 
 //////////////////////////////////////////////////////////////////////////
