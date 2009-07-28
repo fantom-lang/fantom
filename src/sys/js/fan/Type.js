@@ -171,9 +171,9 @@ fan.sys.Type.prototype.field = function(name, checked)
 }
 
 // addMethod
-fan.sys.Type.prototype.$am = function(name)
+fan.sys.Type.prototype.$am = function(name, flags)
 {
-  var m = new fan.sys.Method(this, name);
+  var m = new fan.sys.Method(this, name, flags);
   this.m_slots[name] = m;
   return this;
 }

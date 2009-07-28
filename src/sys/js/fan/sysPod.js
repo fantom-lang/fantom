@@ -116,6 +116,10 @@ with (fan.sys.Pod.$add("sys"))
   $at("UnsupportedErr", "sys::Err");
 };
 
+// TODO - temp
+fan.sys.Type.find("sys::Int").$am("fromStr", 20482);
+fan.sys.Type.find("sys::Float").$am("fromStr", 20482);
+
 // TODO - we really need to emit the type info *before*, but not
 // sure quite how that should work yet.  So in the mean time, stick
 // any static code requiring TypeInfo here
