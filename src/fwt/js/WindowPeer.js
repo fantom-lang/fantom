@@ -36,9 +36,9 @@ fan.fwt.WindowPeer.prototype.open = function(self)
 
 fan.fwt.WindowPeer.prototype.close = function(self, result)
 {
-  var event  = fan.fwt.Event.make();
-  event.id   = fan.fwt.EventId.m_close;
-  event.data = result;
+  var event    = fan.fwt.Event.make();
+  event.m_id   = fan.fwt.EventId.m_close;
+  event.m_data = result;
 
   var list = self.m_onClose.list();
   for (var i=0; i<list.length; i++) list[i](event);
