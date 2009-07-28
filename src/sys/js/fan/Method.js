@@ -16,15 +16,15 @@ fan.sys.Method = fan.sys.Obj.$extend(fan.sys.Slot);
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Method.prototype.$ctor = function(parent, name)
+fan.sys.Method.prototype.$ctor = function(parent, name, flags)
 {
   this.m_parent = parent;
   this.m_name   = name;
   this.m_qname  = parent.qname() + "." + name;
-  //this.m_flags  = flags;
+  this.m_flags  = flags;
   //this.m_of     = of;
   this.m_$name  = this.$name(name);
-  this.m_$qname = 'fan.' + parent.pod() + '.' + parent.name() + '.' + this.m_$name;
+  this.m_$qname = this.m_parent.m_$qname + '.' + this.m_$name;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -33,11 +33,30 @@ fan.sys.Method.prototype.$ctor = function(parent, name)
 
 fan.sys.Method.prototype.invoke = function(instance, args)
 {
-  return instance[this.m_$name].apply(instance, args)
+  var func = this.isStatic() ? eval(this.m_$qname) : instance[this.m_$name];
+  return func.apply(instance, args)
 }
 
 fan.sys.Method.prototype.type = function()
 {
   return fan.sys.Type.find("sys::Method");
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Call Conveniences
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Method.prototype.call = function()
+{
+  var instance = null;
+  var args = arguments;
+
+  if (!this.isStatic())
+  {
+    instance = args[0];
+    args = Array.prototype.slice.call(args).slice(1);
+  }
+
+  return this.invoke(instance, args);
 }
 

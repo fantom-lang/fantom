@@ -49,7 +49,7 @@ class JsPod : JsNode
       if (t.fields.isEmpty && t.methods.isEmpty) return
       out.w("  \$$i")
       t.fields.each |f| { out.w(".\$af('$f.name',$f.flags,'$f.ftype.sig')") }
-      t.methods.each |m| { if (!m.isFieldAccessor) out.w(".\$am('$m.name')") }
+      t.methods.each |m| { if (!m.isFieldAccessor) out.w(".\$am('$m.name',$m.flags)") }
       out.w(";").nl
     }
 
