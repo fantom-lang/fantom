@@ -13,11 +13,12 @@ fan.fwt.TextPeer = fan.sys.Obj.$extend(fan.fwt.TextWidgetPeer);
 fan.fwt.TextPeer.prototype.$ctor = function(self) {}
 
 fan.fwt.TextPeer.prototype.text = function(self) { return this.m_text; }
-fan.fwt.TextPeer.prototype.text$ = function(self, val)
+fan.fwt.TextPeer.prototype.text$ = function(self, val, sync)
 {
-  var old = this.text;
   this.m_text = val;
-  if (this.elem != null && this.elem.firstChild != null && old != this.m_text)
+
+  if (sync == undefined) sync = true;
+  if (sync && this.elem != null && this.elem.firstChild != null)
     this.elem.firstChild.value = this.m_text;
 }
 fan.fwt.TextPeer.prototype.m_text = "";
@@ -56,7 +57,7 @@ fan.fwt.TextPeer.prototype.sync = function(self)
     var event  = event ? event : window.event;
 
     // sync control value to widget
-    self.text$(target.value);
+    self.peer.text$(self, target.value, false);
 
     // fire onAction
     if (event.keyCode == 13 && self.m_onAction.size() > 0)
