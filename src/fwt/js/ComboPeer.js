@@ -21,7 +21,12 @@ fan.fwt.ComboPeer.prototype.items$  = function(self, val) { this.m_items = val; 
 fan.fwt.ComboPeer.prototype.m_items = null;
 
 fan.fwt.ComboPeer.prototype.selectedIndex   = function(self) { return this.m_selectedIndex; }
-fan.fwt.ComboPeer.prototype.selectedIndex$  = function(self, val) { this.m_selectedIndex = val; }
+fan.fwt.ComboPeer.prototype.selectedIndex$  = function(self, val)
+{
+  this.m_selectedIndex = val;
+  if (this.elem != null && this.elem.firstChild != null)
+    this.elem.firstChild.selectedIndex = val;
+}
 fan.fwt.ComboPeer.prototype.m_selectedIndex = null;
 
 fan.fwt.ComboPeer.prototype.text   = function(self) { return this.m_text; }
@@ -52,6 +57,9 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
     option.appendChild(document.createTextNode(this.m_items[i]));
     select.appendChild(option);
   }
+
+  // set selectedIndex to self to sync
+  this.selectedIndex$(self, this.m_selectedIndex);
 
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
