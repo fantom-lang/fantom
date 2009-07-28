@@ -61,5 +61,8 @@ fan.fwt.ComboPeer.prototype.sync = function(self)
   // set selectedIndex to self to sync
   this.selectedIndex$(self, this.m_selectedIndex);
 
+  // sync changes back to widget
+  select.onchange = function() { self.selectedIndex$(select.selectedIndex); }
+
   fan.fwt.WidgetPeer.prototype.sync.call(this, self);
 }
