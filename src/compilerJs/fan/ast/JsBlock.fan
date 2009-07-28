@@ -226,7 +226,10 @@ if (c != null)
       case ExprId.staticTarget: out.w(qnameToJs(ex->ctype))
       //case ExprId.unknownVar
       //case ExprId.storage
-      case ExprId.ternary:      expr(ex->condition); out.w(" ? "); expr(ex->trueExpr); out.w(" : "); expr(ex->falseExpr)
+      case ExprId.ternary:
+        out.w("(("); expr(ex->condition); out.w(") ? ")
+        out.w("("); expr(ex->trueExpr);  out.w(") : ")
+        out.w("("); expr(ex->falseExpr); out.w("))")
       //case ExprId.curry
       //case ExprId.complexLiteral
       case ExprId.closure:      closureExpr(ex)
