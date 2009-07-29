@@ -33,27 +33,19 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
   var outer = this.emptyDiv();
   with (outer.style)
   {
-    borderRight  = "1px solid #f6f6f6";
-    borderBottom = "1px solid #f6f6f6";
+    border = "1px solid #555";
   }
 
-  var middle = document.createElement("div");
-  with (middle.style)
-  {
-    borderTop    = "1px solid #838383";
-    borderBottom = "1px solid #838383";
-    borderLeft   = "1px solid #a4a4a4";
-    borderRight  = "1px solid #a4a4a4";
-  }
-
-  var inside = document.createElement("div");
-  with (inside.style)
+  var inner = document.createElement("div");
+  with (inner.style)
   {
     //font      = "bold 10pt Arial";
     padding      = "2px 4px";
     textAlign    = "center";
     borderTop    = "1px solid #fff";
     borderLeft   = "1px solid #fff";
+    borderRight  = "1px solid #cacaca";
+    borderBottom = "1px solid #cacaca";
     cursor       = "default";
     whiteSpace   = "nowrap";
     //textShadow = "0 1px 1px #fff";
@@ -73,15 +65,14 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
     for (var i=0; i<list.length; i++) list[i](evt);
   }
 
-  middle.appendChild(inside);
-  outer.appendChild(middle);
+  outer.appendChild(inner)
   parentElem.appendChild(outer);
   return outer;
 }
 
 fan.fwt.ButtonPeer.prototype.sync = function(self)
 {
-  var div = this.elem.firstChild.firstChild;
+  var div = this.elem.firstChild;
 
   // remove old text node
   while (div.firstChild != null)
@@ -96,7 +87,7 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
   div.appendChild(document.createTextNode(this.m_text));
 
   // account for padding/border
-  var w = this.m_size.m_w - 1;
-  var h = this.m_size.m_h - 1;
+  var w = this.m_size.m_w - 2;
+  var h = this.m_size.m_h - 2;
   fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
