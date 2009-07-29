@@ -117,6 +117,7 @@ with (fan.sys.Pod.$add("sys"))
 };
 
 // TODO - temp
+fan.sys.Type.find("sys::Bool").$am("fromStr", 20482);
 fan.sys.Type.find("sys::Duration").$am("fromStr", 20482);
 fan.sys.Type.find("sys::Int").$am("fromStr", 20482);
 fan.sys.Type.find("sys::Float").$am("fromStr", 20482);
