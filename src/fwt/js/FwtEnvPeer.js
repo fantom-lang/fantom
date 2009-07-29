@@ -38,7 +38,13 @@ fan.fwt.FwtEnvPeer.loadImage = function(fanImg, widget)
         // TODO - easiest and most reliable is to relayout
         // whole window - but might be better to queue relayouts
         // depending on how native browser optimizes reflows
-        widget.window().relayout();
+
+        // 29 Jul 09 - still had bugs, introducing a small delay
+        // seems to work more reliably.  But we need to rework all
+        // the relayout code to use a coalescing queue I think, so
+        // this is probably just temporary.
+        var f = function() { widget.window().relayout(); }
+        setTimeout(f, 50);
       }
       if (jsImg.addEventListener)
         jsImg.onload = onload;
