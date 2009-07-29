@@ -275,6 +275,25 @@ fan.sys.List.find = function(self, f)
   return null;
 }
 
+fan.sys.List.findAll = function(self, f)
+{
+  var v = self.$fanType.v;
+  var acc = fan.sys.List.make(v, []);
+  if (f.length == 1)
+  {
+    for (var i=0; i<self.length; i++)
+      if (f(self[i]) == true)
+        acc.push(self[i]);
+  }
+  else
+  {
+    for (var i=0; i<self.length; i++)
+      if (f(self[i], i) == true)
+        acc.push(self[i]);
+  }
+  return acc;
+}
+
 fan.sys.List.map = function(self, f)
 {
   var r = f.$fanType.ret;
