@@ -62,7 +62,9 @@ fan.sys.TimeZone.utc = function()
 fan.sys.TimeZone.current = function()
 {
   // TODO
-  return fan.sys.TimeZone.utc();
+  if (fan.sys.TimeZone.m_current == null)
+    fan.sys.TimeZone.m_current = fan.sys.TimeZone.fromStr("New_York");
+  return fan.sys.TimeZone.m_current;
 }
 
 //////////////////////////////////////////////////////////////////////////
