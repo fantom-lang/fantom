@@ -267,11 +267,18 @@ public class TreePeer
     Env env = Env.get();
     item.setText(model.text(node));
     item.setImage(env.image(model.image(node)));
+    item.setFont(env.font(model.font(node)));
+    item.setForeground(env.color(model.fg(node)));
+    item.setBackground(env.color(model.bg(node)));
     item.setData(data);
 
     // assume we only have one child to prevent the SWT from loading
     // the children until the node is expanded; see lazyLoadChildren
     item.setItemCount(model.hasChildren(node) ? 1 : 0);
+
+    // post a repaint request for the full tree
+    Tree tree = (Tree)this.control;
+    tree.redraw();
   }
 
   public void widgetDefaultSelected(SelectionEvent se)

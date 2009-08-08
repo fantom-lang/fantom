@@ -131,7 +131,7 @@ final class Depend
 
   **
   ** Return if the specified version is a match against
-  ** this dependencies constraints.  See class header for
+  ** this dependency's constraints.  See class header for
   ** matching rules.
   **
   Bool match(Version version)

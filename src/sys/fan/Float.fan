@@ -91,7 +91,7 @@ const final class Float : Num
   ** Return if this Float is approximately equal to the given Float by the
   ** specified tolerance.  If tolerance is null, then it is computed
   ** using the magnitude of the two Floats.  It is useful for comparing
-  ** Floats since often they loose a bit of precision during manipulation.
+  ** Floats since often they lose a bit of precision during manipulation.
   ** This method is equivalent to:
   **   if (tolerance == null) tolerance = min(abs(this/1e6), abs(r/1e6))
   **   (this - r).abs < tolerance

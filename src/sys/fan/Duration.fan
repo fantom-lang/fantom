@@ -158,7 +158,7 @@ const final class Duration
   ** Return a new Duration with this duration's nanosecond
   ** ticks truncated according to the specified accuracy.
   ** For example 'floor(1min)' will truncate this duration
-  ** such that it's seconds are 0.0.
+  ** such that its seconds are 0.0.
   **
   Duration floor(Duration accuracy)
 
