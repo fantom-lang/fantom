@@ -157,6 +157,21 @@ mixin TreeModel
   virtual Image? image(Obj node) { return null }
 
   **
+  ** Get the font for specified node or null for default.
+  **
+  virtual Font? font(Obj node) { return null }
+
+  **
+  ** Get the foreground color for specified node or null for default.
+  **
+  virtual Color? fg(Obj node) { return null }
+
+  **
+  ** Get the background color for specified node or null for default.
+  **
+  virtual Color? bg(Obj node) { return null }
+
+  **
   ** Return if this has or might have children.  This
   ** is an optimization to display an expansion control
   ** without actually loading all the children.  The

@@ -49,13 +49,13 @@ const class ActorPool
   ** Perform an unorderly shutdown.  Any pending messages which have
   ** not started processing are cancelled.  Actors which are currently
   ** processing a message will be interrupted.  See `stop` to perform
-  ** an orderly shutdown.  If the pool as already been killed,
+  ** an orderly shutdown.  If the pool has already been killed,
   ** then do nothing.
   **
   This kill()
 
   **
-  ** Wait for this pool's actors to fully terminate or the until the
+  ** Wait for this pool's actors to fully terminate or until the
   ** given timeout occurs.  A null timeout blocks forever.  If this
   ** method times out, then TimeoutErr is thrown.  Return this.
   **
