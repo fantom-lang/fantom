@@ -75,6 +75,12 @@ class CheckErrors : CompilerStep
     // verify symbol type is immutable
     if (!isConstFieldType(s.of) || s.of.isFunc)
       err("Symbol '$s.name' has non-const type '$s.of'", s.location)
+
+    // verify symbol has correct type
+    coerce(s.val, s.of) |,|
+    {
+      err("'$s.val.toTypeStr' is not assignable to '$s.of'", s.val.location)
+    }
   }
 
   static Bool isRestrictedName(Str name)
