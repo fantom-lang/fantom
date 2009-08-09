@@ -284,16 +284,18 @@ class SymbolsTest : CompilerTest
       pod $podName
       {
         InStream? bad := null
+        Str wrongType := false
       }"
     verifyErrors(
      "@sys::simple @simple class Foo
       { @transient @sys::transient Int x }",
      [
-       1, 1, "Duplicate facet 'sys::js'",
-       1, 9, "Duplicate facet 'sys::nodoc'",
-       4, 3, "Symbol 'bad' has non-const type 'sys::InStream?'",
-       2, 3, "Duplicate facet 'sys::transient'",
-       1, 1, "Duplicate facet 'sys::simple'",
+       1,  1, "Duplicate facet 'sys::js'",
+       1,  9, "Duplicate facet 'sys::nodoc'",
+       4,  3, "Symbol 'bad' has non-const type 'sys::InStream?'",
+       5, 20, "'sys::Bool' is not assignable to 'sys::Str'",
+       2,  3, "Duplicate facet 'sys::transient'",
+       1,  1, "Duplicate facet 'sys::simple'",
      ])
 
     // Assemble
