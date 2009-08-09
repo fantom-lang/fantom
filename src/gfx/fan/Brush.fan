@@ -10,6 +10,7 @@
 ** Brush defines how a shape is filled
 **   - `Color` is a solid brush
 **   - `Gradient` used to paint a color gradient
+**   - `Image` used to paint a tiled image
 **
 @js
 mixin Brush

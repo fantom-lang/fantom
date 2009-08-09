@@ -572,6 +572,7 @@ class FwtDemo
   Image prefsIcon   := Image(`fan:/sys/pod/icons/x16/file.png`)
   Image refreshIcon := Image(`fan:/sys/pod/icons/x16/refresh.png`)
   Image stopIcon    := Image(`fan:/sys/pod/icons/x16/err.png`)
+  Image cloudIcon   := Image(`fan:/sys/pod/icons/x16/cloud.png`)
 }
 
 **************************************************************************
@@ -751,6 +752,13 @@ class GraphicsDemo : Canvas
       g.alpha=64;  g.drawImage(img, 220, 60)
     }
     finally g.pop
+
+    // image brush
+    g.brush = demo.cloudIcon
+    g.fillOval(390, 20, 80, 80)
+    g.brush = Color.black
+    g.pen = Pen { width = 1 }
+    g.drawOval(390, 20, 80, 80)
 
     // system font/colors
     y := 20

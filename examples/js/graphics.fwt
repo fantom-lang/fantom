@@ -62,6 +62,13 @@ class MyCanvas : Canvas
     }
     finally g.pop
 
+    // image brush
+    g.brush = Image(`/sys/pod/icons/x16/cloud.png`)
+    g.fillOval(390, 20, 80, 80)
+    g.brush = Color.black
+    g.pen = Pen { width = 1 }
+    g.drawOval(390, 20, 80, 80)
+
     // system font/colors
     y := 20
     g.font = Desktop.sysFont
