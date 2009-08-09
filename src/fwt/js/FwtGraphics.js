@@ -28,13 +28,24 @@ fan.fwt.Graphics.prototype.brush$  = function(b)
     this.cx.fillStyle = style;
     this.cx.strokeStyle = style;
   }
-  else
+  else if (b instanceof fan.gfx.Gradient)
   {
     var style = this.cx.createLinearGradient(b.m_p1.m_x, b.m_p1.m_y, b.m_p2.m_x, b.m_p2.m_y);
     style.addColorStop(0, b.m_c1.toCss());
     style.addColorStop(1, b.m_c2.toCss());
     this.cx.fillStyle = style;
     this.cx.strokeStyle = style;
+  }
+  else if (b instanceof fan.gfx.Image)
+  {
+    var jsImg = fan.fwt.FwtEnvPeer.loadImage(b);
+    var style = this.cx.createPattern(jsImg, 'repeat');
+    this.cx.fillStyle = style;
+    this.cx.strokeStyle = style;
+  }
+  else
+  {
+    fan.sys.Obj.echo("ERROR: unknown brush type: " + b);
   }
 }
 

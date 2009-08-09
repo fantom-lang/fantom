@@ -7,10 +7,11 @@
 //
 
 **
-** Image represents a graphical image.
+** Image represents a graphical image.  Images may used
+** as a `Brush` for tiling a shape.
 **
 @js @simple
-const class Image
+const class Image : Brush
 {
 
   **

@@ -696,3 +696,4 @@
 
 *Build 1.0.46 (working)*
 - Change JavaScript field naming model
+- Image implements Brush

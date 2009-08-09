@@ -50,7 +50,13 @@ public class FwtGraphics implements Graphics
       }
       else if (brush instanceof Gradient)
       {
-        Pattern p = gradient(env, (Gradient)brush);
+        Pattern p = pattern(env, (Gradient)brush);
+        gc.setForegroundPattern(p);
+        gc.setBackgroundPattern(p);
+      }
+      else if (brush instanceof Image)
+      {
+        Pattern p = pattern(env, (Image)brush);
         gc.setForegroundPattern(p);
         gc.setBackgroundPattern(p);
       }
@@ -66,7 +72,7 @@ public class FwtGraphics implements Graphics
     }
   }
 
-  private Pattern gradient(Env env, Gradient g)
+  private Pattern pattern(Env env, Gradient g)
   {
     int a1 = (int)g.c1.alpha();
     int a2 = (int)g.c2.alpha();
@@ -80,6 +86,11 @@ public class FwtGraphics implements Graphics
         (float)g.p2.x, (float)g.p2.y,
         env.color(g.c1), a1,
         env.color(g.c2), a2);
+  }
+
+  private Pattern pattern(Env env, Image i)
+  {
+    return new Pattern(env.display, env.image(i));
   }
 
   public Pen pen()
