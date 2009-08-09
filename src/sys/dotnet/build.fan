@@ -19,6 +19,9 @@ class Build : BuildCs
 
   override Void setup()
   {
+    if (@buildDevHome.val == null)
+      throw fatal("Must update etc/build/pod.fansym buildDevHome for bootstrap")
+
     output = libDotnetDir + `sys.dll`
     targetType = "library"
 

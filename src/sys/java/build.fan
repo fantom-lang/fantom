@@ -19,6 +19,9 @@ class Build : BuildJava
 
   override Void setup()
   {
+    if (@buildDevHome.val == null)
+      throw fatal("Must update etc/build/pod.fansym buildDevHome for bootstrap")
+
     jar = libJavaDir + `sys.jar`
     mainClass = "fanx.tools.Fan"
     packages = ["fan.sys",

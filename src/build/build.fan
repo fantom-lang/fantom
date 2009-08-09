@@ -17,6 +17,9 @@ class Build : BuildPod
 
   override Void setup()
   {
+    if (@buildDevHome.val == null)
+      throw fatal("Must update etc/build/pod.fansym buildDevHome for bootstrap")
+
     podName    = "build"
     dependsDir = libFanDir.uri
     outDir     = @buildDevHome.val + `lib/fan/`
