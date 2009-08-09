@@ -16,8 +16,8 @@ two ways:
 
 The 'fan' executable also has a couple options useful to get
 version information.  The "-version" option will print the current
-version of the runtime being used.  You can use the "-pods"
-option to list all the installed pods.
+version of the runtime being used and the configured repos.  You
+can use the "-pods" option to list all the installed pods.
 
 Running Scripts [#scripts]
 **************************

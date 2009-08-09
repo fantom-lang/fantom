@@ -41,21 +41,22 @@ of Fan installation.  For example if you rebuild jfan, then the output
 goes into "devHome/lib/java/sys.jar".  In the case of the *rel*
 installation we don't want this default because we will overwrite
 ourselves (which leads to some nasty problems).  So you need to set
-the *devHome* property in "lib/sys.props" of your *rel* installation
+the *devHome* symbol in "etc/build/pod.fansym" of your *rel* installation
 to reference the *dev* directory using a URI (not OS path):
 
-  fan.build.devHome=/C:/dev/fan/
+  // Must be configured boot build in substitute/release installation
+  buildDevHome=`/C:/dev/fan/`
 
 If you forget to do this, then you will get a build error which
 looks something like this:
 
-  C:\dev\fan\src>jfan\build
-
-    Error: Must update /lib/sys.props devHome for bootstrap build
-    Error: Error initializing script [C:\dev\fan\src\jfan\build.fan]
-    build::FatalBuildErr
-      build::BuildScript.fatal (BuildScript.fan:429)
-      ...
+  C:\dev\fan\src>sys\build
+  Error: Must update etc/build/pod.fan devHome for bootstrap
+  Error: Error initializing script [C:\dev\fan\src\sys\build.fan]
+  build::FatalBuildErr: Must update etc/build/pod.fan devHome for bootstrap
+    build::BuildScript.fatal (BuildScript.fan:425)
+    build::BuildScript.fatal (BuildScript.fan)
+    ...
 
 Substitutes [#substitutes]
 **************************
@@ -140,8 +141,9 @@ in turn launches two sub-scripts.  The "buildboot.fan" script manages
 rebuilding the core runtime modules:
 
   sys/build.fan
-  jfan/build.fan
-  nfan/build.fan
+  sys/java/build.fan
+  sys/dotnet/build.fan
+  sys/js/build.fan
   compiler/build.fan
   compilerJava/build.fan
   build/build.fan
@@ -238,3 +240,4 @@ In summary, you want to make sure of a couple key things:
      b. on Windows make sure your *dev* lib/sys.props substitutes are configured
   5. only put *dev* bin your path and always run your scripts from
      the *dev* installation
+  6. never use a working repo for bootstrap (use only the boot repo)

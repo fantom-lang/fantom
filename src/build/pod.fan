@@ -26,7 +26,7 @@ pod build
   ** indicate it is a build target or goal.  The string value
   ** should be a description of the target.
   **
-  Str target := false
+  Str target := ""
 
 //////////////////////////////////////////////////////////////////////////
 // Configuration
