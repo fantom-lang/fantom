@@ -49,8 +49,8 @@ Let's create a build script called "buildtest.fan":
   }
 
 The script above defines two targets: compile and clean.  The
-targets are annotated with the "target" facet - the value is a
-string description.  To print the usage of this script use "-?":
+targets are annotated with the [@target]`@build::target` facet - the
+value is a string description.  To print the usage of this script use "-?":
 
   C:\dev\fan\src>buildtest -?
   usage:
@@ -94,9 +94,6 @@ find handy:
     of the script itself
   - [scriptDir]`build::BuildScript.scriptDir`: the directory
     containing the script
-  - [@buildVersion]`@build::buildVersion`: a version
-    configured in "sys.props" often used to version all your pods
-    consistently when you perform full builds
   - [binDir]`build::BuildScript.binDir`: bin directory of your
     development environment for the current operating system
 
@@ -112,7 +109,7 @@ A build script lifecycle is composed of these steps:
   3. The [makeTargets]`build::BuildScript.makeTargets` callback
      is invoked to get the list of targets - most often you will
      let the default implementation build this list by searching
-     for methods which implement the "target" facet.  Once
+     for methods which implement the '@target' facet.  Once
      initialized the list of targets is available via the
      [targets]`build::BuildScript.targets` field.
   4. Command line parsed to find all the specified
@@ -142,6 +139,7 @@ targets ready to use:
     Java native code
   - [dotnetNative]`build::BuildPod.dotnetNative`: recompiles the
     C# .NET native code
+  - [js]`build::BuildPod.js`: compiles Fan source to JavaScript
   - [clean]`build::BuildPod.clean`: deletes all the intermediate
     and derived target files
   - [doc]`build::BuildPod.doc`: compile fandoc to HTML
@@ -152,49 +150,61 @@ By convention pod source directories are organized as follows:
 
   foo/
     build.fan
+    pod.fan
     fan/
       ClassAlpha.fan
       ClassBeta.fan
     java/
       ClassAlphaPeer.java
+    js/
+      ClassAlphaPeer.js
     dotnet/
       ClassAlphaPeer.cs
     test/
       TestClassAlpha.fan
       TestClassBeta.fan
+    res/
+      icon.png
+      resource-file.txt
 
 If you don't have tests or native code, then those directories
-aren't included.  The build file for our directory structure above
-would look like:
+aren't included.  The build script and pod file for our directory
+structure above would look like:
 
+  // build.fan
   using build
-
   class Build : BuildPod
   {
     override Void setup()
     {
-      podName     = "foo"
-      version     = globalVersion
-      description = "Foo is good"
-      depends     = ["sys 1.0+", "bar 1.1-1.3"]
-      srcDirs     = [`fan/`, `test/`]
-      javaDirs    = [`java/`]
-      dotnetDirs  = [`dotnet/`]
+      podName = "foo"
     }
   }
 
-Note that the code above is mostly declarative, designed to
-concisely express only the information needed to identify
-and compile our pod.  But remember that this a script which
-can run any Fan code needed to setup these values.
+  // pod.fan
+  **
+  ** Description of foo pod.  Foo is good.
+  **
+  @podDepends    = [Depend("sys 1.0+"), Depend("bar 1.1+")]
+  @podSrcDirs    = [`fan/`, `test/`]
+  @podJavaDirs   = [`java/`]
+  @podJsDirs     = [`js/`]
+  @podDotnetDirs = [`dotnet/`]
+  @podResDirs    = [`res/`]
+  @js
+  pod foo {}
 
-We typically set 'version' to 'globalVersion' so that we update
-the build number in one place - although you can initialize that
-field with a 'Version' literal or any other expression.
-
-Also note that all the directories are specified as Uris relative
+Note that all the directories are specified as Uris relative
 to the script directory.  If you don't have native code, you can
-omit the 'javaDirs' and 'dotnetDirs' initialization.
+omit the 'podJavaDirs', 'podDotnetDirs', and 'podJsDirs' facets.
+If you don't have resource files you can omit 'podResDirs'.  See
+[HelloWorld]`docIntro::HelloWorld#pod` for a simpler example.
+
+Typically the pod's version is set by the build script's
+[version]`build::BuildPod.version` field.  By default this is
+set to the global symbol '@build::buildVersion' configured in
+"etc/build/pod.fansym".
+
 
 
 

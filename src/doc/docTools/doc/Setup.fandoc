@@ -66,16 +66,19 @@ can test which runtime is being used via "fan -version":
 
   C:\dev\fan>fan -version
   Fan Launcher
-  Copyright (c) 2006-2008, Brian Frank and Andy Frank
+  Copyright (c) 2006-2009, Brian Frank and Andy Frank
   Licensed under the Academic Free License version 3.0
 
   Java Runtime:
+    java.version:    1.6.0_13
     java.vm.name:    Java HotSpot(TM) Client VM
     java.vm.vendor:  Sun Microsystems Inc.
-    java.vm.version: 1.6.0_03-b05
-    java.home:       C:\Program Files\Java\jre1.6.0_03
-    fan.home:        c:\dev\fan
-    sys.version:     1.0.19
+    java.vm.version: 11.3-b02
+    java.home:       C:\Program Files\Java\jre6
+    fan.version:     1.0.45
+
+  Fan Repos:
+      boot:          file:/C:/dev/fan/
 
 Use "lib/sys.props" to configure which runtime is used by default.
 The value must be "java" or "dotnet":
@@ -107,7 +110,8 @@ settings.
   fan.java.jvm=c:\\dev\\tools\\java\\jre\\bin\\client\\jvm.dll
   fan.java.options=-Xmx128M
 
-Fan currently requires Java version 1.5 or greater.
+Fan currently requires Java version 1.5 or greater to run.
+Java 1.6 or greater is required to compile from source.
 
 You can also run Fan directly without the launcher by adding "sys.jar"
 to your classpath and ensuring either the "fan_home" environment variable
@@ -138,7 +142,7 @@ specific script files to use an alternate Fan runtime.  This technique
 is used to manage the [bootstrap build]`Bootstrap#substitutes` process.
 
 Launcher Debugger [#debugging]
-===-==========================
+==============================
 You can set the "fan_launcher_debug" to "true" to debug the launcher
 code.  This can be helpful if you are having problems getting your Java
 or .NET environment working:
@@ -154,3 +158,11 @@ or .NET environment working:
   --   sys.props:
   --     fan.runtime=java
   ...
+
+Repos [#repos]
+**************
+The default behavior of Fan is to manage all its files under the
+installation directory.  This is called the *boot repo*.  But you can
+also organize your own working files under a different directory
+called the *working repo*.  See `docLang::Repos` for details.
+

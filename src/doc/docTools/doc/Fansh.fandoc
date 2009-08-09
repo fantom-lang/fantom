@@ -52,6 +52,19 @@ You can use a fully qualified type name to import a pod:
   fansh> inet::IpAddress("www.google.com").numeric
   64.233.161.147
 
+Or you can import a pod via the [using]`docLang::CompilationUnits#using` a statement:
+
+  fansh> using inet
+  Add using: using inet
+  fansh> IpAddress("www.google.com").numeric
+  64.233.161.104
+  fansh> scope
+
+  Current Usings:
+    using inet
+
+  Current Scope:
+
 Limitations [#limitations]
 **************************
 Currently the Fan shell is quite limited compared to the shells of many
