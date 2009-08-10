@@ -6,6 +6,8 @@
 //   29 Mar 09  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** ScrollBar is used to position a widget too wide or tall to be
 ** visible at one time.  ScrollBars cannot be created directly,

@@ -8,6 +8,7 @@
 package fan.fwt;
 
 import fan.sys.*;
+import fan.gfx.Orientation;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
