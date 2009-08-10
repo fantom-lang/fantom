@@ -217,6 +217,12 @@ const class Border
     }
     return s.add(f(t)).addChar(',').add(f(r)).addChar(',').add(f(b)).addChar(',').add(f(l))
   }
+
+  **
+  ** Return widthRight+widthLeft, widthTop+widthBottom
+  **
+  Size toSize() { Size(widthRight+widthLeft, widthTop+widthBottom) }
+
 }
 
 **************************************************************************

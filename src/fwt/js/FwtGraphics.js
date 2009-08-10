@@ -36,9 +36,9 @@ fan.fwt.Graphics.prototype.brush$  = function(b)
     this.cx.fillStyle = style;
     this.cx.strokeStyle = style;
   }
-  else if (b instanceof fan.gfx.Image)
+  else if (b instanceof fan.gfx.Pattern)
   {
-    var jsImg = fan.fwt.FwtEnvPeer.loadImage(b);
+    var jsImg = fan.fwt.FwtEnvPeer.loadImage(b.m_image);
     var style = this.cx.createPattern(jsImg, 'repeat');
     this.cx.fillStyle = style;
     this.cx.strokeStyle = style;

@@ -100,13 +100,16 @@ const class Pattern : Brush
   **
   ** Background color to use underneath image filling,
   ** or null for no background color.
-  ** This feature is not supported in SWT.
+  **
+  ** This feature is not supported in SWT when used with
+  ** Graphics (it is supported in BorderPane).
   **
   const Color? bg
 
   **
   ** Vertical alignment, default is repeat.
   ** Fill it not supported.
+  **
   ** Only repeat is supported in SWT.
   **
   const Valign valign := Valign.repeat
@@ -114,6 +117,7 @@ const class Pattern : Brush
   **
   ** Horizontal alignment, default is repeat.
   ** Fill it not supported.
+  **
   ** Only repeat is supported in SWT.
   **
   const Halign halign := Halign.repeat
