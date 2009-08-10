@@ -21,6 +21,30 @@ public class Interop
 {
 
 //////////////////////////////////////////////////////////////////////////
+// Exceptions
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Given a Java exception instance translate to a Fan exception.
+   * If the exception maps to a built-in Fan exception then the
+   * native Fan type is used - for example NullPointerException will
+   * return a NullErr.  Otherwise the Java exception is wrapped
+   * as a generic Err instance.
+   */
+  public static Err toFan(Throwable ex)
+  {
+    return Err.make(ex);
+  }
+
+  /**
+   * Given a Fan exception instance, get the underlying Java exception.
+   */
+  public static Throwable toJava(Err err)
+  {
+    return err.toJava();
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
 

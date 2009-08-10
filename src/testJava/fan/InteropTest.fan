@@ -618,6 +618,37 @@ class InteropTest : JavaTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Exceptions
+//////////////////////////////////////////////////////////////////////////
+
+  Void testErrs()
+  {
+    compile(
+     "using [java] java.lang
+      using [java] fanx.interop
+      class Foo
+      {
+        Obj m00()
+        {
+          try
+            return Class.forName(\"badname\")
+          catch (Err e)
+            return Interop.toJava(e)
+        }
+
+        Obj m01()
+        {
+          throw Interop.toFan(NullPointerException())
+        }
+      }
+      ")
+
+    obj := pod.types.first.make
+    verifyEq(obj->m00.type.toStr, "[java]java.lang::ClassNotFoundException")
+    verifyErr(NullErr#) { obj->m01 }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // IO
 //////////////////////////////////////////////////////////////////////////
 
