@@ -754,7 +754,7 @@ class GraphicsDemo : Canvas
     finally g.pop
 
     // image brush
-    g.brush = demo.cloudIcon
+    g.brush = Pattern(demo.cloudIcon)
     g.fillOval(390, 20, 80, 80)
     g.brush = Color.black
     g.pen = Pen { width = 1 }

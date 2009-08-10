@@ -4,13 +4,14 @@
 //
 // History:
 //   16 Jul 08  Brian Frank  Creation
+//   10 Aug 09  Brian Frank  Add Pattern
 //
 
 **
 ** Brush defines how a shape is filled
 **   - `Color` is a solid brush
 **   - `Gradient` used to paint a color gradient
-**   - `Image` used to paint a tiled image
+**   - `Pattern` used to paint with an image
 **
 @js
 mixin Brush
@@ -78,4 +79,87 @@ const class Gradient : Brush
   {
     return "[$p1:$c1; $p2:$c2]"
   }
+}
+
+**************************************************************************
+** Pattern
+**************************************************************************
+
+**
+** Pattern is an brush for filling shapes with an image.
+**
+@js @serializable
+const class Pattern : Brush
+{
+
+  **
+  ** Image to use for filling.
+  **
+  const Image image
+
+  **
+  ** Background color to use underneath image filling,
+  ** or null for no background color.
+  ** This feature is not supported in SWT.
+  **
+  const Color? bg
+
+  **
+  ** Vertical alignment, default is repeat.
+  ** Fill it not supported.
+  ** Only repeat is supported in SWT.
+  **
+  const Valign valign := Valign.repeat
+
+  **
+  ** Horizontal alignment, default is repeat.
+  ** Fill it not supported.
+  ** Only repeat is supported in SWT.
+  **
+  const Halign halign := Halign.repeat
+
+  **
+  ** Construct required image and optional with it-block
+  **
+  new make(Image image, |This|? f := null)
+  {
+    this.image = image
+    if (f != null) f(this)
+    if (halign === Halign.fill || valign === Valign.fill) throw ArgErr()
+  }
+
+  **
+  ** Hash is based on fields.
+  **
+  override Int hash()
+  {
+    return (image.hash) ^ (bg == null ? 97 : bg.hash) ^
+           (halign.hash << 11) ^ (valign.hash << 7)
+  }
+
+  **
+  ** Equality is based on fields.
+  **
+  override Bool equals(Obj? obj)
+  {
+    that := obj as Pattern
+    if (that == null) return false
+    return image   == that.image   &&
+           bg      == that.bg      &&
+           valign  == that.valign  &&
+           halign  == that.halign
+  }
+
+
+  **
+  ** Return string representation (no guarantee of format)
+  **
+  override Str toStr()
+  {
+    s := StrBuf().add(image)
+    if (bg != null) s.add(" bg=").add(bg)
+    s.add(" valign=").add(valign).add(" halign=").add(halign)
+    return s.toStr
+  }
+
 }

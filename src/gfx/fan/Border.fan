@@ -40,13 +40,13 @@ const class Border
   static const Int styleOutset := 2
 
   ** Color of top side, default is black.
-  const Color colorTop := Color.black
+  const Color colorTop := black
   ** Color of right side, default is black.
-  const Color colorRight := Color.black
+  const Color colorRight := black
   ** Color of bottom side, default is black.
-  const Color colorBottom := Color.black
+  const Color colorBottom := black
   ** Color of left side, default is black.
-  const Color colorLeft := Color.black
+  const Color colorLeft := black
 
   ** Radius in pixels of top-left corner, default is 0.
   const Int radiusTopLeft := 0
@@ -56,6 +56,9 @@ const class Border
   const Int radiusBottomRight := 0
   ** Radius in pixels of bottom-left corner, default is 0.
   const Int radiusBottomLeft := 0
+
+  // to avoid Color javascript initializer dependency
+  private static const Color black := Color(0)
 
   **
   ** Default is 1 pixel solid black border with no radius.
@@ -124,7 +127,7 @@ const class Border
     this.styleBottom = p.bottom
     this.styleLeft   = p.left
 
-    p.parseGroup(Color.black) |s| { Color.fromStr(s, false) }
+    p.parseGroup(black) |s| { Color.fromStr(s, false) }
     this.colorTop    = p.top
     this.colorRight  = p.right
     this.colorBottom = p.bottom

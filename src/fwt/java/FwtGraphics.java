@@ -54,9 +54,9 @@ public class FwtGraphics implements Graphics
         gc.setForegroundPattern(p);
         gc.setBackgroundPattern(p);
       }
-      else if (brush instanceof Image)
+      else if (brush instanceof fan.gfx.Pattern)
       {
-        Pattern p = pattern(env, (Image)brush);
+        Pattern p = pattern(env, (fan.gfx.Pattern)brush);
         gc.setForegroundPattern(p);
         gc.setBackgroundPattern(p);
       }
@@ -88,9 +88,9 @@ public class FwtGraphics implements Graphics
         env.color(g.c2), a2);
   }
 
-  private Pattern pattern(Env env, Image i)
+  private Pattern pattern(Env env, fan.gfx.Pattern p)
   {
-    return new Pattern(env.display, env.image(i));
+    return new Pattern(env.display, env.image(p.image));
   }
 
   public Pen pen()
