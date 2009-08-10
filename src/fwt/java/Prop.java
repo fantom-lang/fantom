@@ -10,6 +10,8 @@ package fan.fwt;
 import fan.sys.*;
 import fan.sys.List;
 import fan.gfx.Size;
+import fan.gfx.Halign;
+import fan.gfx.Valign;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
