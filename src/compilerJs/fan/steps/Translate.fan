@@ -48,7 +48,9 @@ class Translate : JsCompilerStep
 
   Void writeTypes()
   {
+    jsTypes := JsType[,]
 
+    // compile types
     compiler.toCompile.each |def|
     {
       // we inline closures directly, so no need to generate
@@ -68,7 +70,16 @@ class Translate : JsCompilerStep
       }
 
       // compile type
-      JsType(support, def).write(out)
+      t := JsType(support, def)
+      t.write(out)
+      jsTypes.add(t)
+    }
+
+    // emit static inits
+    jsTypes.each |t|
+    {
+      if (t.staticInit != null)
+        out.w("${t.qname}.$t.staticInit();").nl
     }
 
     // emit referenced synthentic types
