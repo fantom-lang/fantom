@@ -696,5 +696,8 @@
 
 *Build 1.0.46 (working)*
 - Change JavaScript field naming model
-- Image implements Brush
+- gfx::Border
+- gfx::Pattern
 - Move Halign, Valign, Orientation from fwt to gfx
+
+
