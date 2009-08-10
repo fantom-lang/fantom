@@ -64,7 +64,9 @@ class JsType : JsNode
     fields.each |f| { f.write(out) }
 
     // static init
-    if (staticInit != null) out.w("${qname}.$staticInit();").nl
+    // static init's are written out after all
+    // types have been defined - see Translate.fan
+    //if (staticInit != null) out.w("${qname}.$staticInit();").nl
   }
 
   Void copyMixin(JsTypeRef ref, JsWriter out)
