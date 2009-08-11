@@ -64,7 +64,7 @@ fan.fwt.TabPanePeer.prototype.sync = function(self)
   for (var i=0; i<kids.length; i++)
   {
     var tab = kids[i];
-    if (tab.kids.length > 0)
+    if (tab.m_kids.length > 0)
     {
       var s = i == this.m_selectedIndex;
       var x = 12;
@@ -72,15 +72,11 @@ fan.fwt.TabPanePeer.prototype.sync = function(self)
       var w = s ? cw-24 : 0;
       var h = s ? ch-24 : 0;
 
-      var c = tab.kids[0];
+      var c = tab.m_kids[0];
 
       // check if we need to re-root content
-      var p = c.peer.elem.parentNode;
-      if (p == tab.peer.elem)
-      {
-        p.removeChild(c.peer.elem);
+      if (c.peer.elem.parentNode == null)
         this.elem.appendChild(c.peer.elem);
-      }
 
       c.pos$(fan.gfx.Point.make(x,y));
       c.size$(fan.gfx.Size.make(w,h));
