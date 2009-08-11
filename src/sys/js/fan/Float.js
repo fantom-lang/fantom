@@ -71,6 +71,7 @@ fan.sys.Float.ceil  = function(self) { return Math.ceil(self); }
 fan.sys.Float.exp   = function(self) { return Math.exp(self); }
 fan.sys.Float.floor = function(self) { return Math.floor(self); }
 fan.sys.Float.log   = function(self) { return Math.log(self); }
+fan.sys.Float.log10 = function(self) { return Math.log(self) / Math.LN10; }
 fan.sys.Float.min   = function(self, that) { return Math.min(self, that); }
 fan.sys.Float.max   = function(self, that) { return Math.max(self, that); }
 fan.sys.Float.pow   = function(self, exp) { return Math.pow(self, exp); }
