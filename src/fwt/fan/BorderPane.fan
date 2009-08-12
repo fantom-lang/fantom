@@ -77,6 +77,7 @@ class BorderPane : Pane
 if (onBorder != null) { onBorder?.call(g, size, insets); return }
     w := size.w
     h := size.h
+    shade := 0.3f
 
     // background (doesn't support radius well yet)
     if (bg != null)
@@ -88,8 +89,13 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
     // left side
     if (border.widthLeft > 0)
     {
-      g.pen   = Pen { width = border.widthLeft }
-      g.brush = border.colorLeft
+      g.pen = Pen { width = border.widthLeft }
+      switch (border.styleLeft)
+      {
+        case Border.styleInset:  g.brush = border.colorLeft.darker(shade)
+        case Border.styleOutset: g.brush = border.colorLeft.lighter(shade)
+        default:                 g.brush = border.colorLeft
+      }
 
       off := border.widthLeft / 2
       if (off <= 0) off = 1
@@ -101,8 +107,13 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
     // right side
     if (border.widthRight > 0)
     {
-      g.pen   = Pen { width = border.widthRight }
-      g.brush = border.colorRight
+      g.pen = Pen { width = border.widthRight }
+      switch (border.styleRight)
+      {
+        case Border.styleInset:  g.brush = border.colorRight.lighter(shade)
+        case Border.styleOutset: g.brush = border.colorRight.darker(shade)
+        default:                 g.brush = border.colorRight
+      }
 
       off := border.widthRight / 2
       if (off <= 0) off = 1
@@ -114,12 +125,18 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
     // top side
     if (border.widthTop > 0)
     {
-      g.pen   = Pen { width = border.widthTop }
-      g.brush = border.colorTop
+      g.pen = Pen { width = border.widthTop }
+      switch (border.styleTop)
+      {
+        case Border.styleInset:  g.brush = border.colorTop.darker(shade)
+        case Border.styleOutset: g.brush = border.colorTop.lighter(shade)
+        default:                 g.brush = border.colorTop
+      }
 
       off := border.widthTop / 2
       if (off <= 0) off = 1
       y := off
+
       g.drawLine(border.radiusTopLeft+off, y, w-border.radiusTopRight-off, y)
 
       // top-left corner
@@ -134,12 +151,18 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
     // bottom side
     if (border.widthBottom > 0)
     {
+      g.pen = Pen { width = border.widthBottom }
+      switch (border.styleBottom)
+      {
+        case Border.styleInset:  g.brush = border.colorBottom.lighter(shade)
+        case Border.styleOutset: g.brush = border.colorBottom.darker(shade)
+        default:                 g.brush = border.colorBottom
+      }
+
       off := border.widthBottom / 2
       if (off <= 0) off = 1
       y := h - off
 
-      g.pen   = Pen { width = border.widthBottom }
-      g.brush = border.colorBottom
       g.drawLine(border.radiusBottomLeft+off, y, w-border.radiusBottomRight-off, y)
 
       // bottom-left corner
