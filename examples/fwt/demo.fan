@@ -36,6 +36,7 @@ class FwtDemo
           Tab { text = "ProgessBar";     InsetPane { makeProgressBar, }, },
           Tab { text = "WebBrowser";     InsetPane { makeWebBrowser, }, },
           Tab { text = "Text";           InsetPane { makeText, }, },
+          Tab { text = "BorderPane";     InsetPane { makeBorderPane, }, },
           Tab { text = "EdgePane";       InsetPane { makeEdgePane, }, },
           Tab { text = "GridPane";       InsetPane { makeGridPane, }, },
           Tab { text = "Tree and Table"; InsetPane { makeTreeAndTable, }, },
@@ -289,6 +290,51 @@ class FwtDemo
     catch (Err e)
     {
       area.text = e.traceToStr
+    }
+  }
+
+  **
+  ** Build a demo border pane
+  **
+  Widget makeBorderPane()
+  {
+    b := BorderPane
+    {
+      border = Border.defVal
+      insets = Insets(10)
+      content = Box { color = Color.blue }
+    }
+
+    borderText := Text { text = b.border.toStr }
+    insetsText := Text { text = b.insets.toStr }
+    bgText     := Text { text = "" }
+
+    update := |,|
+    {
+      b.border = Border(borderText.text)
+      b.insets = Insets(insetsText.text)
+      b.bg     = bgText.text.isEmpty ? null : Color(bgText.text)
+      b.relayout
+      b.repaint
+    }
+
+    borderText.onAction.add(update)
+    insetsText.onAction.add(update)
+    bgText.onAction.add(update)
+
+    controlPane := GridPane
+    {
+      numCols = 2
+      Label { text="border" }, borderText,
+      Label { text="insets" }, insetsText,
+      Label { text="bg" }, bgText,
+      Button { text = "Update"; onAction.add(update) }
+    }
+
+    return EdgePane
+    {
+      left   = controlPane
+      center = BorderPane { bg = Color.white; insets = Insets(10); content = b }
     }
   }
 
