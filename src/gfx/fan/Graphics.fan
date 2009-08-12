@@ -71,15 +71,17 @@ mixin Graphics
 
   **
   ** Draw an arc with the current pen and brush.  The angles
-  ** are measured in degrees with 0 degrees is 3 o'clock.
-  ** The origin of the arc is centered within x, y, w, h.
+  ** are measured in degrees with 0 degrees is 3 o'clock with
+  ** a counter-clockwise arcAngle.  The origin of the arc is
+  ** centered within x, y, w, h.
   **
   abstract This drawArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
 
   **
   ** Fill an arc with the current brush.  The angles are
-  ** measured in degrees with 0 degrees is 3 o'clock.
-  ** The origin of the arc is centered within x, y, w, h.
+  ** measured in degrees with 0 degrees is 3 o'clock with
+  ** a counter-clockwise arcAngle.  The origin of the arc is
+  ** centered within x, y, w, h.
   **
   abstract This fillArc(Int x, Int y, Int w, Int h, Int startAngle, Int arcAngle)
 

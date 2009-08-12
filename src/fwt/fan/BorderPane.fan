@@ -78,44 +78,77 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
     w := size.w
     h := size.h
 
+    // background (doesn't support radius well yet)
     if (bg != null)
     {
       g.brush = bg
       g.fillRect(0, 0, w, h)
     }
 
+    // left side
     if (border.widthLeft > 0)
     {
       g.pen   = Pen { width = border.widthLeft }
       g.brush = border.colorLeft
-      x := border.widthLeft / 2
-      g.drawLine(x, 0, x, h)
+
+      off := border.widthLeft / 2
+      if (off <= 0) off = 1
+      x := off
+
+      g.drawLine(x, border.radiusTopLeft+off, x, h-border.radiusBottomLeft-off)
     }
 
+    // right side
     if (border.widthRight > 0)
     {
       g.pen   = Pen { width = border.widthRight }
       g.brush = border.colorRight
-      x := w - border.widthRight / 2
-      if (x >= w) --x
-      g.drawLine(x, 0, x, h)
+
+      off := border.widthRight / 2
+      if (off <= 0) off = 1
+      x := w - off
+
+      g.drawLine(x, border.radiusTopRight+off, x, h-border.radiusBottomRight-off)
     }
 
+    // top side
     if (border.widthTop > 0)
     {
       g.pen   = Pen { width = border.widthTop }
       g.brush = border.colorTop
-      y := border.widthTop / 2
-      g.drawLine(0, y, w, y)
+
+      off := border.widthTop / 2
+      if (off <= 0) off = 1
+      y := off
+      g.drawLine(border.radiusTopLeft+off, y, w-border.radiusTopRight-off, y)
+
+      // top-left corner
+      if (border.radiusTopLeft > 0)
+        g.drawArc(off, off, border.radiusTopLeft*2, border.radiusTopLeft*2, 90, 90)
+
+      // top-right corner
+      if (border.radiusTopRight > 0)
+        g.drawArc(w-border.radiusTopRight*2-off, off, border.radiusTopRight*2, border.radiusTopRight*2, 0, 90)
     }
 
+    // bottom side
     if (border.widthBottom > 0)
     {
+      off := border.widthBottom / 2
+      if (off <= 0) off = 1
+      y := h - off
+
       g.pen   = Pen { width = border.widthBottom }
       g.brush = border.colorBottom
-      y := h - border.widthBottom / 2
-      if (y >= h) --y
-      g.drawLine(0, y, w, y)
+      g.drawLine(border.radiusBottomLeft+off, y, w-border.radiusBottomRight-off, y)
+
+      // bottom-left corner
+      if (border.radiusBottomLeft > 0)
+        g.drawArc(off, h-border.radiusBottomLeft*2-off, border.radiusBottomLeft*2, border.radiusBottomLeft*2, 180, 90)
+
+      // bottom-right corner
+      if (border.radiusBottomRight > 0)
+        g.drawArc(w-border.radiusBottomRight*2-off, h-border.radiusBottomRight*2-off, border.radiusBottomRight*2, border.radiusBottomRight*2, 270, 90)
     }
   }
 
