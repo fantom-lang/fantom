@@ -98,20 +98,16 @@ internal class FindBar : ContentPane, TextEditorSupport
       },
     }
 
-    content = BorderPane
+    content = EdgePane
     {
-      it.content = EdgePane
+      it.top = BorderPane
+      {
+        it.border = Border("1,0,1 $Desktop.sysNormShadow,#000,$Desktop.sysHighlightShadow")
+      }
+      it.center = EdgePane
       {
         it.top    = findPane
         it.bottom = replacePane
-      }
-      it.insets = Insets(2,0,0,0)
-      it.onBorder = |Graphics g, Size size|
-      {
-        g.brush = Desktop.sysNormShadow
-        g.drawLine(0, 0, size.w, 0)
-        g.brush = Desktop.sysHighlightShadow
-        g.drawLine(0, 1, size.w, 1)
       }
     }
 

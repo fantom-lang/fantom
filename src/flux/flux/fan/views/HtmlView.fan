@@ -23,13 +23,8 @@ internal class HtmlView : View
     }
     content = BorderPane
     {
-      it.content  = browser
-      it.insets   = Insets(0,0,0,1)
-      it.onBorder = |Graphics g, Size s|
-      {
-        g.brush = Desktop.sysNormShadow
-        g.drawLine(0, 0, 0, s.h)
-      }
+      it.content = browser
+      it.border  = Border("0,0,0,1 $Desktop.sysNormShadow")
     }
     browser.load(resource.uri)
   }

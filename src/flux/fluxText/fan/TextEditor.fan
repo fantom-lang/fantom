@@ -127,14 +127,7 @@ class TextEditor : View
     content = BorderPane
     {
       it.content  = richText
-      it.insets   = Insets(1,0,1,1)
-      it.onBorder = |Graphics g, Size size|
-      {
-        g.brush = Desktop.sysNormShadow
-        g.drawLine(0, 0, size.w, 0)
-        g.drawLine(0, 0, 0, size.h-1)
-        g.drawLine(0, size.h-1, size.w, size.h-1)
-      }
+      it.border   = Border("1,0,1,1 $Desktop.sysNormShadow")
     }
   }
 

@@ -18,9 +18,9 @@ internal class ImageView : View
   override Void onLoad()
   {
     image = Image.makeFile(resource->file)
-    details := BorderPane
+    details := EdgePane
     {
-      it.content = InsetPane(6)
+      it.top = InsetPane(6)
       {
         GridPane
         {
@@ -29,13 +29,9 @@ internal class ImageView : View
           Label { text="${this.image.size.w}px x ${this.image.size.h}px" },
         },
       }
-      it.insets  = Insets(0,0,2,0)
-      it.onBorder = |Graphics g, Size size|
+      it.bottom = BorderPane
       {
-        g.brush = Desktop.sysNormShadow
-        g.drawLine(0, size.h-2, size.w, size.h-2)
-        g.brush = Desktop.sysHighlightShadow
-        g.drawLine(0, size.h-1, size.w, size.h-1)
+        it.border = Border("1,0,1,0 $Desktop.sysNormShadow,#000,$Desktop.sysHighlightShadow")
       }
     }
     content = EdgePane

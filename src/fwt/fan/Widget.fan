@@ -12,7 +12,6 @@ using gfx
 // TODO:
 // Widgets:
 //   - ScrollPane
-//   - BorderPane
 // Eventing
 //   - focus management
 // Graphics:
