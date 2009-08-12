@@ -248,20 +248,25 @@ const class Color : Brush
 
   **
   ** Get a color which is a lighter shade of this color.
+  ** This increases the brightness by the given percentage
+  ** which is a float between 0.0 and 1.0.
   **
-  Color lighter()
+  Color lighter(Float percentage := 0.2f)
   {
-    // TODO
-    return this
+    // adjust brighness
+    hsb := this.hsb
+    hsb[2] = (hsb[2] + percentage).max(0f).min(1f)
+    return makeHsb(hsb)
   }
 
   **
   ** Get a color which is a dark shade of this color.
+  ** This decreases the brightness by the given percentage
+  ** which is a float between 0.0 and 1.0.
   **
-  Color darker()
+  Color darker(Float percentage := 0.2f)
   {
-    // TODO
-    return this
+    return lighter(-percentage)
   }
 
 }
