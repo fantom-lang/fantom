@@ -66,6 +66,41 @@ const class Color : Brush
   }
 
   **
+  ** Construct a color using HSB model (hue, saturation, brightness).
+  ** These values are sometimes also known as HSV.  These values
+  ** are passed as a list of three floats:
+  **   hbs[0]: hue as 0.0 to 360.0
+  **   hbs[1]: saturation as 0.0 to 1.0
+  **   hbs[2]: brightness (or value) as 0.0 to 1.0
+  ** Also see `hsb`.
+  **
+  static Color makeHsb(Float[] hsb)
+  {
+    h := hsb[0]; s := hsb[1]; v := hsb[2]
+    r := v; g := v; b := v
+    if (s != 0f)
+    {
+      if (h == 360f) h = 0f
+      h /= 60f
+      i := h.floor
+      f := h - i
+      p := v * (1f - s)
+      q := v * (1f - s * f)
+      t := v * (1f - (s*(1f-f)))
+      switch (i.toInt)
+      {
+        case 0: r=v; g=t; b=p
+        case 1: r=q; g=v; b=p
+        case 2: r=p; g=v; b=t
+        case 3: r=p; g=q; b=v
+        case 4: r=t; g=p; b=v
+        case 5: r=v; g=p; b=q
+      }
+    }
+    return make((r * 255f).toInt << 16 | (g * 255f).toInt << 8 | (b * 255f).toInt, false)
+  }
+
+  **
   ** Parse color from string (see `toStr`).  If invalid
   ** and checked is true then throw ParseErr otherwise
   ** return null.  The following formats are supported:
@@ -140,6 +175,37 @@ const class Color : Brush
   **
   Int b() { return argb & 0xff }
 
+  **
+  ** Return HSB (hue, saturation, brightness) of this color.
+  ** These values are sometimes also known as HSV.  These values
+  ** are returned as three floats:
+  **   hbs[0]: hue as 0.0 to 360.0
+  **   hbs[1]: saturation as 0.0 to 1.0
+  **   hbs[2]: brightness (or value) as 0.0 to 1.0
+  ** Also see `makeHsb`.
+  **
+  Float[] hsb()
+  {
+    r := this.r.toFloat
+    b := this.b.toFloat
+    g := this.g.toFloat
+    min := r.min(b.min(g))
+    max := r.max(b.max(g))
+    delta := max - min
+    s := max == 0f ? 0f : delta / max
+    h := 0f
+    if (s != 0f)
+    {
+      if (r == max) h = (g - b) / delta
+      else if (g == max) h = 2f + (b - r) / delta
+      else if (b == max) h = 4f + (r - g) / delta
+      h *= 60f
+      if (h < 0f) h += 360f
+    }
+    v := max / 255f
+    return [h, s, v]
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Identity
 //////////////////////////////////////////////////////////////////////////
@@ -178,6 +244,24 @@ const class Color : Brush
     if (alpha == 0xff) return "#" + rgb.toHex(6)
     alphaVal := alpha * 100 / 255
     return "rgba($r,$g,$b,0.${alphaVal})"
+  }
+
+  **
+  ** Get a color which is a lighter shade of this color.
+  **
+  Color lighter()
+  {
+    // TODO
+    return this
+  }
+
+  **
+  ** Get a color which is a dark shade of this color.
+  **
+  Color darker()
+  {
+    // TODO
+    return this
   }
 
 }

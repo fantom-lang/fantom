@@ -75,4 +75,26 @@ class ColorTest : Test
     verifyEq(Color(0x40aabbcc,true).toCss, "rgba(170,187,204,0.25)")
   }
 
+  Void testHsb()
+  {
+    verifyHsb(0x000000, [0f,   0f, 0f])
+    verifyHsb(0xffffff, [0f,   0f, 1f])
+    verifyHsb(0xff0000, [0f,   1f, 1f])
+    verifyHsb(0x00ff00, [120f, 1f, 1f])
+    verifyHsb(0x0000ff, [240f, 1f, 1f])
+    verifyHsb(0xffff00, [60f,  1f, 1f])
+    verifyHsb(0x00ffff, [180f, 1f, 1f])
+    verifyHsb(0xff00ff, [300f, 1f, 1f])
+    verifyHsb(0x6496c8, [210f, 0.5f,  0.78f])
+    verifyHsb(0x32c850, [132f, 0.75f, 0.78f])
+  }
+
+  Void verifyHsb(Int rgb, Float[] expected)
+  {
+    c := Color(rgb, false)
+    actual := c.hsb
+    3.times |i| { verify(actual[i].approx(expected[i], 0.01f), c.toStr) }
+    verifyEq(c, Color.makeHsb(actual))
+  }
+
 }

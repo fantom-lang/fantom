@@ -78,6 +78,12 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
     w := size.w
     h := size.h
 
+    if (bg != null)
+    {
+      g.brush = bg
+      g.fillRect(0, 0, w, h)
+    }
+
     if (border.widthLeft > 0)
     {
       g.pen   = Pen { width = border.widthLeft }
@@ -132,6 +138,7 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
         {
           insets = i
           border = b
+          bg = Color.yellow
           content = Button { text = "hello world" }
         }
       }
