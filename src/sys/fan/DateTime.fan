@@ -304,11 +304,14 @@ const final class DateTime
 
   **
   ** Add (or subtract if duration is negative) a duration
-  ** to compute a new time.
+  ** to compute a new time.  This method works off absolute
+  ** time, so adding 1days means to add 24 hours to the ticks.
+  ** This might be a different time of day if on a DST boundry.
+  ** Use `Date.plus` for daily increments and decrements.
   **
   ** Example:
-  **   tomorrow  := DateTime.now + 1day
-  **   yesterday := DateTime.now + -1day
+  **   nextHour := DateTime.now + 1hr
+  **   prevHour := DateTime.now + -1hr
   **
   DateTime plus(Duration duration)
 

@@ -26,7 +26,7 @@ syntax: regexp
 ^doc/
 
 # flux
-^flux/session/
+^etc/flux/session/
 
 # src/
 ^src/sys/java/temp/
