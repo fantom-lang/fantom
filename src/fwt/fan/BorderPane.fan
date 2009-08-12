@@ -14,9 +14,6 @@ using gfx
 **
 class BorderPane : Pane
 {
-// TODO: this will be replaced with a declarative CSS Border
-|Graphics g, Size size, Insets insets|? onBorder := null
-
   **
   ** Border to paint around the edge of the content.
   ** Default is zero pixels.
@@ -53,10 +50,10 @@ class BorderPane : Pane
 
   override Size prefSize(Hints hints := Hints.defVal)
   {
-    if (content == null) return Size.defVal
     edgew := border.widthLeft + insets.left + insets.right  + border.widthRight
     edgeh := border.widthTop  + insets.top  + insets.bottom + border.widthBottom
     edge  := Size(edgew, edgeh)
+    if (content == null) return edge
     pref  := content.prefSize(hints - edge)
     return Size(pref.w + edgew, pref.h + edgeh)
   }
@@ -74,7 +71,6 @@ class BorderPane : Pane
 
   internal Void onPaint(Graphics g)
   {
-if (onBorder != null) { onBorder?.call(g, size, insets); return }
     w := size.w
     h := size.h
     shade := 0.3f
@@ -175,29 +171,6 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
 
   // to force native peer
   private native Void dummyBorderPane()
-
-
-  static Void main(Str[] args)
-  {
-    i := Insets(args[0])
-    b := Border(args[1])
-    echo("Insets: $i")
-    echo("Border: $b")
-    Window
-    {
-      size = Size(300,200)
-      content = InsetPane
-      {
-        content = BorderPane
-        {
-          insets = i
-          border = b
-          bg = Color.yellow
-          content = Button { text = "hello world" }
-        }
-      }
-    }.open
-  }
 
 }
 

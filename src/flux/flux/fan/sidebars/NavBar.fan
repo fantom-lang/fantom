@@ -27,14 +27,8 @@ internal class NavBar : SideBar
       top = InsetPane(5,4,5,4) { it.add(combo) }
       center = BorderPane
       {
-        it.content  = treePane
-        it.insets   = Insets(1,1,0,0)
-        it.onBorder = |Graphics g, Size size|
-        {
-          g.brush = Desktop.sysNormShadow
-          g.drawLine(0, 0, size.w, 0)
-          g.drawLine(size.w-1, 0, size.w-1, size.h-1)
-        }
+        it.content = treePane
+        it.border  = Border("1,1,0,0 $Desktop.sysNormShadow")
       }
     }
 

@@ -37,9 +37,13 @@ class Console : SideBar
     }
     content = EdgePane
     {
-      top = BorderPane
+      top = EdgePane
       {
-        InsetPane(4,4,4,4)
+        top = BorderPane
+        {
+          border = Border("1,0,1,0 $Desktop.sysNormShadow,#000,$Desktop.sysHighlightShadow")
+        }
+        bottom = InsetPane(4,4,4,4)
         {
           EdgePane
           {
@@ -54,26 +58,12 @@ class Console : SideBar
               addCommand(hideCmd)
             }
           },
-        },;
-        insets  = Insets(2,0,0,0)
-        onBorder = |Graphics g, Size size|
-        {
-          g.brush = Desktop.sysNormShadow
-          g.drawLine(0, 0, size.w, 0)
-          g.brush = Desktop.sysHighlightShadow
-          g.drawLine(0, 1, size.w, 1)
         }
       }
       center = BorderPane
       {
         it.content = richText
-        it.insets  = Insets(1,0,0,1)
-        it.onBorder = |Graphics g, Size size|
-        {
-          g.brush = Desktop.sysNormShadow
-          g.drawLine(0, 0, size.w, 0)
-          g.drawLine(0, 0, 0, size.h)
-        }
+        it.border = Border("1,0,0,1 $Desktop.sysNormShadow")
       }
     }
   }

@@ -148,20 +148,6 @@ internal class ViewTab : EdgePane
     try
     {
       return v.buildToolBar
-      /*
-      tb := v.buildToolBar
-      if (tb == null) return tb
-      return BorderPane
-      {
-        content  = tb
-        insets   = Insets(4,4,5,4)
-        onBorder = |Graphics g, Insets insets, Size size|
-        {
-          g.brush = Color.sysNormShadow
-          g.drawLine(0, size.h-1, size.w, size.h-1)
-        }
-      }
-      */
     }
     catch (Err e)
     {
