@@ -98,7 +98,6 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
       }
 
       off := border.widthLeft / 2
-      if (off <= 0) off = 1
       x := off
 
       g.drawLine(x, border.radiusTopLeft+off, x, h-border.radiusBottomLeft-off)
@@ -116,7 +115,7 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
       }
 
       off := border.widthRight / 2
-      if (off <= 0) off = 1
+      if (border.widthRight.isOdd) ++off
       x := w - off
 
       g.drawLine(x, border.radiusTopRight+off, x, h-border.radiusBottomRight-off)
@@ -134,7 +133,6 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
       }
 
       off := border.widthTop / 2
-      if (off <= 0) off = 1
       y := off
 
       g.drawLine(border.radiusTopLeft+off, y, w-border.radiusTopRight-off, y)
@@ -145,7 +143,7 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
 
       // top-right corner
       if (border.radiusTopRight > 0)
-        g.drawArc(w-border.radiusTopRight*2-off, off, border.radiusTopRight*2, border.radiusTopRight*2, 0, 90)
+        g.drawArc(w-border.radiusTopRight*2-off-1, off, border.radiusTopRight*2, border.radiusTopRight*2, 0, 90)
     }
 
     // bottom side
@@ -160,7 +158,7 @@ if (onBorder != null) { onBorder?.call(g, size, insets); return }
       }
 
       off := border.widthBottom / 2
-      if (off <= 0) off = 1
+      if (border.widthBottom.isOdd) ++off
       y := h - off
 
       g.drawLine(border.radiusBottomLeft+off, y, w-border.radiusBottomRight-off, y)
