@@ -84,6 +84,7 @@ abstract class CNamespace : CompilerSupport
     // methods
     objTrap            = sysMethod(objType,    "trap")
     objWith            = sysMethod(objType,    "with")
+    objToImmutable     = sysMethod(objType,    "toImmutable")
     boolNot            = sysMethod(boolType,   "not")
     intIncrement       = sysMethod(intType,    "increment")
     intDecrement       = sysMethod(intType,    "decrement")
@@ -97,10 +98,8 @@ abstract class CNamespace : CompilerSupport
     listMake           = sysMethod(listType,   "make")
     listMakeObj        = sysMethod(listType,   "makeObj")
     listAdd            = sysMethod(listType,   "add")
-    listToImmutable    = sysMethod(listType,   "toImmutable")
     mapMake            = sysMethod(mapType,    "make")
     mapSet             = sysMethod(mapType,    "set")
-    mapToImmutable     = sysMethod(mapType,    "toImmutable")
     enumOrdinal        = sysMethod(enumType,   "ordinal")
     funcCurry          = sysMethod(funcType,   "curry")
     rangeMakeInclusive = sysMethod(rangeType,  "makeInclusive")
@@ -109,7 +108,6 @@ abstract class CNamespace : CompilerSupport
     slotFindFunc       = sysMethod(slotType,   "findFunc")
     typeField          = sysMethod(typeType,   "field")
     typeMethod         = sysMethod(typeType,   "method")
-    funcToImmutable    = sysMethod(funcType,   "toImmutable")
 
     // mock methods
     mockFlags := FConst.Public | FConst.Virtual
@@ -302,6 +300,7 @@ abstract class CNamespace : CompilerSupport
 
   readonly CMethod? objTrap
   readonly CMethod? objWith
+  readonly CMethod? objToImmutable
   readonly CMethod? boolNot
   readonly CMethod? intIncrement
   readonly CMethod? intDecrement
@@ -315,10 +314,8 @@ abstract class CNamespace : CompilerSupport
   readonly CMethod? listMake
   readonly CMethod? listMakeObj
   readonly CMethod? listAdd
-  readonly CMethod? listToImmutable
   readonly CMethod? mapMake
   readonly CMethod? mapSet
-  readonly CMethod? mapToImmutable
   readonly CMethod? enumOrdinal
   readonly CMethod? funcCurry
   readonly CMethod? rangeMakeInclusive
@@ -327,7 +324,6 @@ abstract class CNamespace : CompilerSupport
   readonly CMethod? slotFindFunc
   readonly CMethod? typeField
   readonly CMethod? typeMethod
-  readonly CMethod? funcToImmutable
   readonly CMethod? funcEnterCtor
   readonly CMethod? funcExitCtor
   readonly CMethod? funcCheckInCtor

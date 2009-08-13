@@ -121,10 +121,7 @@ final class Func
   **
   Func retype(Type t)
 
-  **
-  ** If this function is immutable then return this,
-  ** otherwise throw NotImmutableErr.
-  **
-  Func toImmutable()
+// TODO
+Func toImmutable()
 
 }

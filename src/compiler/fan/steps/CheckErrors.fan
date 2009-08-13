@@ -336,30 +336,13 @@ class CheckErrors : CompilerStep
   private Bool isConstFieldType(CType t)
   {
     if (t.isConst) return true
-    if (t.isObj) return true
+
+    // these are checked at runtime
     t = t.deref.toNonNullable
-
-    if (t is ListType)
-    {
-      // allow list types since they are checked to toImmutable at runtime
-      //list := t as ListType
-      //return isConstFieldType(f, list.v)
+    if (t.isObj || t is ListType || t is MapType || t is FuncType)
       return true
-    }
 
-    if (t is MapType)
-    {
-      // allow list types since they are checked to toImmutable at runtime
-      //map := t as MapType
-      //return isConstFieldType(f, map.k) && isConstFieldType(fmap.v)
-      return true
-    }
-
-    if (t.isFunc)
-    {
-      return true
-    }
-
+    // definitely no way it can be immutable
     return false
   }
 
@@ -1066,24 +1049,24 @@ class CheckErrors : CompilerStep
 
     // any other errors should already be logged at this point (see isConstFieldType)
 
-    // if List/Map make an implicit call toImmutable
+    // if non-const make an implicit call toImmutable
     ftype := field.fieldType
-    if (ftype.isList) return implicitToImmutable(ftype, rhs, ns.listToImmutable)
-    if (ftype.isMap)  return implicitToImmutable(ftype, rhs, ns.mapToImmutable)
-    if (ftype.isFunc) return implicitToImmutable(ftype, rhs, ns.funcToImmutable)
-    return rhs
+    if (ftype.isConst)
+      return rhs
+    else
+      return implicitToImmutable(ftype, rhs)
   }
 
-  private Expr implicitToImmutable(CType fieldType, Expr rhs, CMethod toImmutable)
+  private Expr implicitToImmutable(CType fieldType, Expr rhs)
   {
     // leave null literal as is
     if (rhs.id == ExprId.nullLiteral) return rhs
 
-    // leave type literal as is
-    if (fieldType == ns.typeType && rhs.id == ExprId.typeLiteral) return rhs
-
     // wrap existing assigned with call toImmutable
-    return CallExpr.makeWithMethod(rhs.location, rhs, toImmutable) { isSafe = true }
+    call := CallExpr.makeWithMethod(rhs.location, rhs, ns.objToImmutable) { isSafe = true }
+    if (fieldType.toNonNullable.isObj) return call
+    return TypeCheckExpr.coerce(call, fieldType)
+
   }
 
   private Void checkConstruction(CallExpr call)

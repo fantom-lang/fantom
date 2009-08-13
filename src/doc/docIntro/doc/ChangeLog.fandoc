@@ -699,6 +699,8 @@
 - gfx::Border
 - gfx::Pattern
 - Move Halign, Valign, Orientation from fwt to gfx
-- Color: alpha => a, makeHsv, h, s, v, lighter, darker,
+- Color: alpha => a, makeHsv, h, s, v, lighter, darker
+- Obj.toImmutable
 
+TODO: remove old List, Map, Func toImmutable methods
 

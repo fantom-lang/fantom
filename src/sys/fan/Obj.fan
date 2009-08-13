@@ -107,6 +107,22 @@ abstract class Obj
   Bool isImmutable()
 
   **
+  ** Get an immutable representation of this instance or throw
+  ** NotImmutableErr if this object cannot be represented as an
+  ** immutable:
+  **   - if type is const, return this
+  **   - if already an immutable List, Map, or Func return this
+  **   - if a List, then attempt to perform a deep clone by
+  **     calling toImmutable on all items
+  **   - if a Map, then attempt to perform a deep clone by
+  **     calling toImmutable on all values (keys are already immutable)
+  **   - if a Func, then attempt to call toImmutable on any bound
+  **     variables (assuming closure)
+  **   - any other object throws NotImmutableErr
+  **
+  This toImmutable()
+
+  **
   ** Get the Type instance used to represent this object's type.
   ** This method is never overridden directly.
   **
