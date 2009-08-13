@@ -7,9 +7,8 @@
 //
 
 **
-** Color models an ARGB color with an alpha, red, green,
-** and blue component between 0 and 255.  Color is also
-** a solid `Brush`.
+** Models an ARGB color (alpha, red, green, blue).
+** Color is also a solid `Brush`.
 **
 @js @simple
 const class Color : Brush
@@ -66,17 +65,15 @@ const class Color : Brush
   }
 
   **
-  ** Construct a color using HSB model (hue, saturation, brightness).
-  ** These values are sometimes also known as HSV.  These values
-  ** are passed as a list of three floats:
-  **   hbs[0]: hue as 0.0 to 360.0
-  **   hbs[1]: saturation as 0.0 to 1.0
-  **   hbs[2]: brightness (or value) as 0.0 to 1.0
-  ** Also see `hsb`.
+  ** Construct a color using HSV model (hue, saturation, value),
+  ** also known as HSB (hue, saturation, brightness):
+  **   - hue as 0.0 to 360.0
+  **   - saturation as 0.0 to 1.0
+  **   - value (or brightness) as 0.0 to 1.0
+  ** Also see `h`, `s`, `v`.
   **
-  static Color makeHsb(Float[] hsb)
+  static Color makeHsv(Float h, Float s, Float v)
   {
-    h := hsb[0]; s := hsb[1]; v := hsb[2]
     r := v; g := v; b := v
     if (s != 0f)
     {
@@ -152,39 +149,35 @@ const class Color : Brush
   **
   ** Get the RGB bitmask without the alpha bits.
   **
-  Int rgb() { return argb & 0x00ff_ffff }
+  Int rgb() { argb & 0x00ff_ffff }
 
   **
   ** The alpha component from 0 to 255, where 255 is opaque
   ** and 0 is transparent.
   **
-  Int alpha() { return (argb >> 24) & 0xff }
+  Int a() { (argb >> 24) & 0xff }
 
   **
   ** The red component from 0 to 255.
   **
-  Int r() { return (argb >> 16) & 0xff }
+  Int r() { (argb >> 16) & 0xff }
 
   **
   ** The green component from 0 to 255.
   **
-  Int g() { return (argb >> 8) & 0xff }
+  Int g() { (argb >> 8) & 0xff }
 
   **
   ** The blue component from 0 to 255.
   **
-  Int b() { return argb & 0xff }
+  Int b() { argb & 0xff }
 
   **
-  ** Return HSB (hue, saturation, brightness) of this color.
-  ** These values are sometimes also known as HSV.  These values
-  ** are returned as three floats:
-  **   hbs[0]: hue as 0.0 to 360.0
-  **   hbs[1]: saturation as 0.0 to 1.0
-  **   hbs[2]: brightness (or value) as 0.0 to 1.0
-  ** Also see `makeHsb`.
+  ** Hue as a float between 0.0 and 360.0 of the HSV model (hue,
+  ** saturation, value), also known as HSB (hue, saturation, brightness).
+  ** Also see `makeHsv`, `s`, `v`.
   **
-  Float[] hsb()
+  Float h()
   {
     r := this.r.toFloat
     b := this.b.toFloat
@@ -202,8 +195,29 @@ const class Color : Brush
       h *= 60f
       if (h < 0f) h += 360f
     }
-    v := max / 255f
-    return [h, s, v]
+    return h
+  }
+
+  **
+  ** Saturation as a float between 0.0 and 1.0 of the HSV model (hue,
+  ** saturation, value), also known as HSB (hue, saturation, brightness).
+  ** Also see `makeHsv`, `h`, `v`.
+  **
+  Float s()
+  {
+    min := r.min(b.min(g)).toFloat
+    max := r.max(b.max(g)).toFloat
+    return max == 0f ? 0f : (max-min) / max
+  }
+
+  **
+  ** Value or brightness as a float between 0.0 and 1.0 of the HSV
+  ** model (hue, saturation, value), also known as HSB (hue, saturation,
+  ** brightness).  Also see `makeHsv`, `h`, `s`.
+  **
+  Float v()
+  {
+    return r.max(b.max(g)).toFloat / 255f
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -230,7 +244,7 @@ const class Color : Brush
   **
   override Str toStr()
   {
-    if (alpha == 0xff)
+    if (a == 0xff)
       return "#" + rgb.toHex(6)
     else
       return "#" + argb.toHex(8)
@@ -241,8 +255,8 @@ const class Color : Brush
   **
   Str toCss()
   {
-    if (alpha == 0xff) return "#" + rgb.toHex(6)
-    alphaVal := alpha * 100 / 255
+    if (a == 0xff) return "#" + rgb.toHex(6)
+    alphaVal := a * 100 / 255
     return "rgba($r,$g,$b,0.${alphaVal})"
   }
 
@@ -253,10 +267,9 @@ const class Color : Brush
   **
   Color lighter(Float percentage := 0.2f)
   {
-    // adjust brighness
-    hsb := this.hsb
-    hsb[2] = (hsb[2] + percentage).max(0f).min(1f)
-    return makeHsb(hsb)
+    // adjust value (brighness)
+    v := (this.v + percentage).max(0f).min(1f)
+    return makeHsv(h, s, v)
   }
 
   **

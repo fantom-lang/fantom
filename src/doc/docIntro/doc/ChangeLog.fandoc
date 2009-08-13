@@ -699,6 +699,6 @@
 - gfx::Border
 - gfx::Pattern
 - Move Halign, Valign, Orientation from fwt to gfx
-- Color enhancments for hsb, makeHsb, lighter, darker
+- Color: alpha => a, makeHsv, h, s, v, lighter, darker,
 
 
