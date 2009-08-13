@@ -99,6 +99,21 @@ public class FanObj
     return type().isConst();
   }
 
+  public static Object toImmutable(Object self)
+  {
+    if (self instanceof FanObj)
+      return ((FanObj)self).toImmutable();
+    else if (FanUtil.isJavaImmutable(self.getClass()))
+      return self;
+    throw NotImmutableErr.make(self.getClass().getName()).val;
+  }
+
+  public Object toImmutable()
+  {
+    if (type().isConst()) return this;
+    throw NotImmutableErr.make(type().toString()).val;
+  }
+
   public static Type type(Object self)
   {
     if (self instanceof FanObj)

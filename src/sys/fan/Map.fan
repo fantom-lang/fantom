@@ -352,15 +352,7 @@ final class Map
   **
   M rw()
 
-  **
-  ** Return an immutable Map which returns true for Obj.isImmtable.
-  ** If this Map is already immutable, then return this.  This method
-  ** is effectively a "deep ro()" which guarantees that if any values
-  ** are Lists or Maps, then they are made immutable by recursively calling
-  ** toImmutable.  All other values must return true for Obj.isImmutable,
-  ** otherwise NotImmutableErr is thrown.  This method must be used
-  ** whenever setting a const Map field.  This method is idempotent.
-  **
+// TODO
   M toImmutable()
 
 }

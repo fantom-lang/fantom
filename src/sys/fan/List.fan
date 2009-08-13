@@ -658,15 +658,7 @@ final class List
   **
   L rw()
 
-  **
-  ** Return an immutable List which returns true for Obj.isImmtable.
-  ** If this List is already immutable, then return this.  This method
-  ** is effectively a "deep ro()" which guarantees that if any items
-  ** are Lists or Maps, then they are made immutable by recursively calling
-  ** toImmutable.  All other items must return true for Obj.isImmutable,
-  ** otherwise NotImmutableErr is thrown.  This method must be used
-  ** whenever setting a const List field.  This method is idempotent.
-  **
-  L toImmutable()
+// TODO
+L toImmutable()
 
 }
