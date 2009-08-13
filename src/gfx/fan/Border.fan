@@ -7,8 +7,7 @@
 //
 
 **
-** Border defines the width, style, color, and radius
-** of a rectangular border.
+** Modes width, style, color, and radius of a rectangular border.
 **
 @js @simple
 const class Border

@@ -40,7 +40,7 @@ public class FwtGraphics implements Graphics
     {
       if (brush instanceof Color)
       {
-        int ca = (int)((Color)brush).alpha();
+        int ca = (int)((Color)brush).a();
         gc.setAlpha((alpha == 255) ? ca : (int)((alpha * ca) / 255));
         org.eclipse.swt.graphics.Color c = env.color((Color)brush);
         gc.setForeground(c);
@@ -74,8 +74,8 @@ public class FwtGraphics implements Graphics
 
   private Pattern pattern(Env env, Gradient g)
   {
-    int a1 = (int)g.c1.alpha();
-    int a2 = (int)g.c2.alpha();
+    int a1 = (int)g.c1.a();
+    int a2 = (int)g.c2.a();
     if (alpha != 255)
     {
       a1 = (int)((alpha * a1) / 255);
