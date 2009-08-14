@@ -212,11 +212,14 @@ public class TablePeer
     // menu to hook into SWT's painful popup eventing;
     // if the event provided a fwt::Menu then open it async
     final fan.fwt.Menu popup = fe.popup();
+    final fan.gfx.Point pos = fan.gfx.Point.make(
+      event.x-self.posOnDisplay().x,
+      event.y-self.posOnDisplay().y);
     if (popup != null)
     {
       Env.get().display.asyncExec(new Runnable()
       {
-        public void run() { popup.open(self); }
+        public void run() { popup.open(self, pos); }
       });
     }
   }

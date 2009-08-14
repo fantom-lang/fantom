@@ -96,10 +96,19 @@ public class ButtonPeer
 // Eventing
 //////////////////////////////////////////////////////////////////////////
 
+  public void mouseDown(MouseEvent se)
+  {
+    lastMousePos = fan.gfx.Point.make(se.x, se.y);
+    super.mouseDown(se);
+  }
+
   public void widgetSelected(SelectionEvent event)
   {
+    fan.fwt.Event fe = event(EventId.action);
+    fe.pos = lastMousePos;
+
     fan.fwt.Button self = (fan.fwt.Button)this.self;
-    self.onAction().fire(event(EventId.action));
+    self.onAction().fire(fe);
   }
 
   public void widgetDefaultSelected(SelectionEvent event)
@@ -120,5 +129,11 @@ public class ButtonPeer
     if (mode == ButtonMode.sep)    return SWT.SEPARATOR;
     throw new IllegalStateException(""+mode);
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Fields
+//////////////////////////////////////////////////////////////////////////
+
+  fan.gfx.Point lastMousePos = fan.gfx.Point.defVal;
 
 }

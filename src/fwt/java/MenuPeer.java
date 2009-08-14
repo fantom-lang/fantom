@@ -89,11 +89,8 @@ public class MenuPeer
 
     menu = new Menu((Control)parent.peer.control);
     attachTo(menu);
-    if (pos != null)
-    {
-      pos = pos.translate(parent.posOnDisplay());
-      menu.setLocation(new Point((int)pos.x, (int)pos.y));
-    }
+    pos = pos.translate(parent.posOnDisplay());
+    menu.setLocation(new Point((int)pos.x, (int)pos.y));
     menu.setVisible(true);
 
     Display display = Env.get().display;
