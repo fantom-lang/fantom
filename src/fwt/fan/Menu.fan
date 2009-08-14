@@ -35,11 +35,10 @@ class Menu : MenuItem
 
   **
   ** Open this menu as a popup at the coordinates relative to
-  ** the parent widget.  If the pos is null, then open at the
-  ** location of the mouse click.  This method blocks until the
-  ** menu is closed.
+  ** the parent widget.  This method blocks until the menu is
+  ** closed.
   **
-  native This open(Widget parent, Point? pos := null)
+  native This open(Widget parent, Point pos)
 
   **
   ** Add a menu item for the specified command.  Default

@@ -580,7 +580,7 @@ class FwtDemo
 
   static Void popup(Bool withPos, Event event)
   {
-    makePopup.open(event.widget, withPos ? Point.make(0, event.widget.size.h) : null)
+    makePopup.open(event.widget, withPos ? Point.make(0, event.widget.size.h) : event.pos)
   }
 
   static Menu makePopup()
