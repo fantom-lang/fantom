@@ -117,7 +117,10 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
         if (c < cols-1) borderRight = "1px solid #a5a5a5";
         if (c < 0) height = "100%";
       }
-      fix.appendChild(document.createTextNode(c<0? "/" : model.header(c)));
+      if (c < 0)
+        fix.innerHTML = "&nbsp;";
+      else
+        fix.appendChild(document.createTextNode(model.header(c)));
       var th = document.createElement("th");
       with (th.style)
       {
