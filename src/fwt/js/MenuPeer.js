@@ -105,18 +105,8 @@ fan.fwt.MenuPeer.prototype.relayout = function(self)
 
   var pp = this.$parent.posOnDisplay();
   var ps = this.$parent.size();
-  var x = pp.m_x;
-  var y = pp.m_y;
-  if (this.$point == null)
-  {
-    x += 1;
-    y += ps.m_h + 1;
-  }
-  else
-  {
-    x += this.$point.m_x;
-    y += this.$point.m_y;
-  }
+  var x = pp.m_x + this.$point.m_x;
+  var y = pp.m_y + this.$point.m_y;
   var w = pw;
   var h = ph;
 

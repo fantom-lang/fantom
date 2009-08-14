@@ -113,7 +113,7 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
   // sync to elem
   this.elem = elem;
   this.sync(self);
-  this.attachEvents(elem, "mousedown", self.m_onMouseDown.list());
+  this.attachEvents(self, elem, "mousedown", self.m_onMouseDown.list());
   // rest of events...
 
   // recursively attach my children
@@ -125,7 +125,7 @@ fan.fwt.WidgetPeer.prototype.attachTo = function(self, elem)
   }
 }
 
-fan.fwt.WidgetPeer.prototype.attachEvents = function(elem, event, list)
+fan.fwt.WidgetPeer.prototype.attachEvents = function(self, elem, event, list)
 {
   for (var i=0; i<list.length; i++)
   {
@@ -137,6 +137,7 @@ fan.fwt.WidgetPeer.prototype.attachEvents = function(elem, event, list)
       var evt = new fan.fwt.Event();
       evt.m_id = fan.fwt.EventId.m_mouseDown;
       evt.m_pos = fan.gfx.Point.make(e.clientX, e.clientY);
+      evt.m_widget = self;
       //evt.count =
       //evt.key =
       meth(evt);
