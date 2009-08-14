@@ -86,11 +86,11 @@ fan.fwt.LabelPeer.prototype.sync = function(self)
     if (this.m_font != null) font = this.m_font.toStr();
     switch (this.m_halign)
     {
-      case fan.gfx.Halign.left:   textAlign = "left"; break;
-      case fan.gfx.Halign.fill:   textAlign = "left"; break;
-      case fan.gfx.Halign.center: textAlign = "center"; break;
-      case fan.gfx.Halign.right:  textAlign = "right"; break;
-      default:                    textAlign = "left"; break;
+      case fan.gfx.Halign.m_left:   textAlign = "left"; break;
+      case fan.gfx.Halign.m_fill:   textAlign = "left"; break;
+      case fan.gfx.Halign.m_center: textAlign = "center"; break;
+      case fan.gfx.Halign.m_right:  textAlign = "right"; break;
+      default:                      textAlign = "left"; break;
     }
     whiteSpace = "nowrap";
     cursor = "default";
