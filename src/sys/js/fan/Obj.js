@@ -62,6 +62,11 @@ fan.sys.Obj.prototype.isImmutable = function()
   return false;
 }
 
+fan.sys.Obj.prototype.toImmutable = function()
+{
+  return this;
+}
+
 fan.sys.Obj.prototype.type = function()
 {
   return fan.sys.Type.find("sys::Obj")
@@ -167,6 +172,11 @@ fan.sys.Obj.isImmutable = function(self)
     if (self != null && self.$fanType != null) return true;
     throw new fan.sys.Err("sys::Obj.isImmutable: Not a Fan type: " + self);
   }
+}
+
+fan.sys.Obj.toImmutable = function(self)
+{
+  return self
 }
 
 fan.sys.Obj.type = function(self)
