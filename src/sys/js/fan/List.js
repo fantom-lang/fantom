@@ -275,6 +275,23 @@ fan.sys.List.find = function(self, f)
   return null;
 }
 
+fan.sys.List.findIndex = function(self, f)
+{
+  if (f.length == 1)
+  {
+    for (var i=0; i<self.length; i++)
+      if (f(self[i]) == true)
+        return i;
+  }
+  else
+  {
+    for (var i=0; i<self.length; i++)
+      if (f(self[i], i) == true)
+        return i;
+  }
+  return null;
+}
+
 fan.sys.List.findAll = function(self, f)
 {
   var v = self.$fanType.v;
