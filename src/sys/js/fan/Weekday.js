@@ -43,6 +43,7 @@ fan.sys.Weekday.prototype.type = function()
 }
 
 // TODO FIXIT
+fan.sys.Weekday.prototype.localeAbbr = function() { return this.abbr(null); }
 fan.sys.Weekday.prototype.abbr = function(locale)
 {
   switch (this.m_ordinal)
@@ -58,6 +59,7 @@ fan.sys.Weekday.prototype.abbr = function(locale)
 }
 
 // TODO FIXIT
+fan.sys.Weekday.prototype.localeFull = function() { return this.full(null); }
 fan.sys.Weekday.prototype.full = function(locale)
 {
   switch (this.m_ordinal)
