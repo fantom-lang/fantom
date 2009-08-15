@@ -687,6 +687,7 @@ if (c != null)
     "equals":      true,
     "compare":     true,
     "isImmutable": true,
+    "toImmutable": true,
     "toStr":       true,
     "type":        true,
     "with":        true,
