@@ -31,6 +31,11 @@ fan.sys.Str.prototype.type = function()
 // Static
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Str.localeCompare = function(self, that)
+{
+  return fan.sys.Str.compareIgnoreCase(self, that);
+}
+
 fan.sys.Str.compareIgnoreCase = function(self, that)
 {
   var a = self.toLowerCase();
