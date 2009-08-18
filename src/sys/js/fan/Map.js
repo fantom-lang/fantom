@@ -25,6 +25,7 @@ fan.sys.Map.prototype.$ctor = function(k, v)
     if (v == undefined) v = fan.sys.Type.find("sys::Obj")
     mt = new fan.sys.MapType(k, v);
   }
+  this.keyMap = {};
   this.map = {};
   this.$fanType = mt;
 }
@@ -80,8 +81,8 @@ fan.sys.Map.prototype.toStr = function()
 fan.sys.Map.prototype.keys = function()
 {
   var list = [];
-  for (var k in this.map) list.push(k);
-  return list;
+  for (var k in this.keyMap) list.push(this.keyMap[k]);
+  return fan.sys.List.make(this.$fanType.k, list);
 }
 
 fan.sys.Map.prototype.values = function()
@@ -115,12 +116,13 @@ fan.sys.Map.prototype.add = function(key, val)
   //  throw NotImmutableErr.make("key is not immutable: " + type(key)).val;
   if (this.map.hasOwnProperty(key))
     throw fan.sys.ArgErr.make("Key already mapped: " + key);
-  this.map[key] = val;
+  this.set(key, val);
   return this;
 }
 
 fan.sys.Map.prototype.set = function(key, val)
 {
+  this.keyMap[key] = key;
   this.map[key] = val;
   return this;
 }
