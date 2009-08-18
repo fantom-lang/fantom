@@ -174,8 +174,12 @@ if (c != null)
     }
     if (ss.defaultBlock != null)
     {
-      out.w("else").nl
-      block(ss.defaultBlock, true)
+      if (ss.cases.size > 0)
+      {
+        out.w("else").nl
+        block(ss.defaultBlock, true)
+      }
+      else block(ss.defaultBlock, false, false)
     }
   }
 
