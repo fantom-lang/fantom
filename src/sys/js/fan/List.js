@@ -73,7 +73,9 @@ fan.sys.List.add = function(self, item)
 
 fan.sys.List.addAll = function(self, list)
 {
-  return fan.sys.List.make(self.$fanType, self.concat(list));
+  for (var i=0; i<list.length; i++)
+    self.push(list[i]);
+  return self;
 }
 
 fan.sys.List.insert = function(self, index, item)
