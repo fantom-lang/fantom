@@ -68,6 +68,36 @@ class ErrTest : Test
     }
   }
 
+  Void testTraceMaxDepth()
+  {
+    Err? err
+    try { doThrow(30) } catch (Err e) { err = e }
+
+    // default is 20
+    buf := Buf()
+    err.trace(buf.out)
+    lines := buf.flip.readAllLines
+    verifyEq(lines.size, 20+2) // toStr + More...
+    verify(lines.last.contains("More"))
+
+    // with maxDepth
+    err.trace(buf.clear.out, ["maxDepth":4])
+    lines = buf.flip.readAllLines
+    verifyEq(lines.size, 4+2)
+    verify(lines.last.contains("More"))
+
+    // with maxDepth
+    err.trace(buf.clear.out, ["maxDepth":Int.maxVal])
+    lines = buf.flip.readAllLines
+    verify(lines.size > 30)
+  }
+
+  Void doThrow(Int depth)
+  {
+    if (depth == 0) throw Err()
+    doThrow(depth-1)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Consturctors
 //////////////////////////////////////////////////////////////////////////

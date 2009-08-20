@@ -137,16 +137,17 @@ namespace Fan.Sys
       return m_cause;
     }
 
-    public Err trace() { return trace(Sys.StdOut, 0, true); }
-    public Err trace(OutStream @out) { return trace(@out, 0, true); }
-    public Err trace(OutStream @out, int indent, bool useActual)
+    public Err trace() { return trace(Sys.StdOut, null, 0, true); }
+    public Err trace(OutStream @out) { return trace(@out, null, 0, true); }
+    public Err trace(OutStream @out, Map opt) { return trace(@out, opt, 0, true); }
+    public Err trace(OutStream @out, Map opt, int indent, bool useActual)
     {
       Exception ex = m_actual != null && useActual ? m_actual : val;
       dumpStack(toStr(), ex, @out, indent);
       if (m_cause != null)
       {
         @out.printLine("Cause:");
-        m_cause.trace(@out, indent+2, useActual);
+        m_cause.trace(@out, opt, indent+2, useActual);
       }
       return this;
     }
