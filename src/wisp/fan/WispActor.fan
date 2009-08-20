@@ -195,6 +195,15 @@ internal const class WispActor : Actor
   {
     try
     {
+      // if the error is that the socket has been disconnected
+      // by the remote side, then this isn't *my* error so we don't
+      // want to log spurious socket errors; we can detect
+      // this by attempting to flush the socket
+      if (err is IOErr)
+      {
+        try { socket.out.flush } catch { return }
+      }
+
       // log internal error
       WispService.log.error("Internal error processing: $req.uri", err)
 
