@@ -142,7 +142,7 @@ class DateTimeTest : Test
 
     a := DateTime.now
     verify(a === DateTime.now)
-    verifySame(a.timeZone, TimeZone.current)
+    verifySame(a.tz, TimeZone.current)
 
     b := DateTime.now(null)
     verify(a !== b)
@@ -174,7 +174,7 @@ class DateTimeTest : Test
 
     a := DateTime.nowUtc
     verify(a === DateTime.nowUtc)
-    verifySame(a.timeZone, TimeZone.utc)
+    verifySame(a.tz, TimeZone.utc)
 
     b := DateTime.nowUtc(null)
     verify(a !== b)
@@ -234,7 +234,7 @@ class DateTimeTest : Test
   Void testBoot()
   {
     verifySame(DateTime.boot, DateTime.boot)
-    verifySame(DateTime.boot.timeZone, TimeZone.current)
+    verifySame(DateTime.boot.tz, TimeZone.current)
     verify(DateTime.boot < DateTime.now(null))
   }
 
@@ -740,7 +740,7 @@ class DateTimeTest : Test
   {
     func := |DateTime dt|
     {
-      verifySame(dt.timeZone, tz)
+      verifySame(dt.tz, tz)
       verifyEq(dt.ticks,   ticks)
       verifyEq(dt.year,    year)
       verifyEq(dt.month,   month)
@@ -751,7 +751,7 @@ class DateTimeTest : Test
       verifyEq(dt.nanoSec, nanoSec)
       verifyEq(dt.weekday, weekday)
       verifyEq(dt.dst,     isDST)
-      verifyEq(dt.timeZoneAbbr, isDST ? tz.dstAbbr(year) : tz.stdAbbr(year))
+      verifyEq(dt.tzAbbr,  isDST ? tz.dstAbbr(year) : tz.stdAbbr(year))
       if (doy != null) verifyEq(dt.dayOfYear, doy)
 
       verifyEq(dt.date.year,    year)
@@ -997,7 +997,7 @@ class DateTimeTest : Test
   Void testJava()
   {
     x := DateTime.fromJava(1227185341155, ny)
-    verifyEq(x.timeZone, ny)
+    verifyEq(x.tz, ny)
     verifyEq(x.year, 2008)
     verifyEq(x.month, Month.nov)
     verifyEq(x.day, 20)
@@ -1032,8 +1032,8 @@ class DateTimeTest : Test
     verifyEq(d.min, min)
     verifyEq(d.sec, sec)
     verifyEq(d.nanoSec, ns)
-    verifyEq(d.timeZone, tz)
-    verifyEq(d.timeZone.offset(y), offset)
+    verifyEq(d.tz, tz)
+    verifyEq(d.tz.offset(y), offset)
     verifyEq(d.ticks, DateTime(y, mon, day, h, min, sec, ns, tz).ticks)
   }
 
@@ -1132,7 +1132,7 @@ class DateTimeTest : Test
     f := |DateTime dt|
     {
       verifyEq(dt, DateTime(2009, Month.dec, 31, 12, 30, 47, 123_456))
-      verifyEq(dt.timeZone, TimeZone.current)
+      verifyEq(dt.tz, TimeZone.current)
       verifyEq(dt.year, 2009)
       verifyEq(dt.month, Month.dec)
       verifyEq(dt.day, 31)
@@ -1147,7 +1147,7 @@ class DateTimeTest : Test
     f = |DateTime dt|
     {
       verifyEq(dt, DateTime(2008, Month.feb, 28, 23, 0, 0, 0, la))
-      verifyEq(dt.timeZone, la)
+      verifyEq(dt.tz, la)
     }
     f(Date(2008, Month.feb, 28).toDateTime(Time(23, 0), la))
     f(Time(23, 0).toDateTime(Date(2008, Month.feb, 28), la))

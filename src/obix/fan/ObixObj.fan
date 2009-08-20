@@ -144,7 +144,7 @@ class ObixObj
         this.*elemName = elem
         if (val is DateTime && tz == null)
         {
-          tz := ((DateTime)val).timeZone
+          tz := ((DateTime)val).tz
           if (!tz.fullName.startsWith("Etc/")) this.tz = tz
         }
       }

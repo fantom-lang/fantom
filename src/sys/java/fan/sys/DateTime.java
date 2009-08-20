@@ -142,8 +142,8 @@ public final class DateTime
     fields |= (dst ? 1 : 0) << 31;
 
     // commit
-    this.ticks    = ticks;
-    this.timeZone = tz;
+    this.ticks = ticks;
+    this.tz    = tz;
     this.fields   = fields;
   }
 
@@ -175,14 +175,14 @@ public final class DateTime
 
     // save ticks, time zone
     this.ticks = ticks;
-    this.timeZone = tz;
+    this.tz    = tz;
 
     // compute the year
     int year = ticksToYear(ticks);
 
     // get the time zone rule for this year, and
     // offset the working ticks by UTC offset
-    TimeZone.Rule rule = timeZone.rule(year);
+    TimeZone.Rule rule = tz.rule(year);
     ticks += rule.offset * nsPerSec;
 
     // compute the day and month; we may need to execute this
@@ -421,11 +421,11 @@ public final class DateTime
 
   public final Weekday weekday() { return Weekday.array[(fields >> 28) & 0x7]; }
 
-  public final TimeZone timeZone() { return timeZone; }
+  public final TimeZone tz() { return tz; }
 
   public final boolean dst() { return ((fields >> 31) & 0x1) != 0; }
 
-  public final String timeZoneAbbr() { return dst() ? timeZone.dstAbbr(year()) : timeZone.stdAbbr(year()); }
+  public final String tzAbbr() { return dst() ? tz.dstAbbr(year()) : tz.stdAbbr(year()); }
 
   public final long dayOfYear() { return dayOfYear(getYear(), month().ord, getDay())+1; }
 
@@ -597,7 +597,7 @@ public final class DateTime
           break;
 
         case 'z':
-          TimeZone.Rule rule = timeZone.rule(getYear());
+          TimeZone.Rule rule = tz.rule(getYear());
           boolean dst = dst();
           switch (n)
           {
@@ -616,7 +616,7 @@ public final class DateTime
               s.append(dst ? rule.dstAbbr : rule.stdAbbr);
               break;
             case 4:
-              s.append(timeZone.name());
+              s.append(tz.name());
               break;
             default:
               invalidNum = true;
@@ -656,7 +656,7 @@ public final class DateTime
   {
     long d = duration.ticks;
     if (d == 0) return this;
-    return makeTicks(ticks+d, timeZone);
+    return makeTicks(ticks+d, tz);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -665,25 +665,25 @@ public final class DateTime
 
   public final DateTime toTimeZone(TimeZone tz)
   {
-    if (timeZone == tz) return this;
+    if (this.tz == tz) return this;
     return makeTicks(ticks, tz);
   }
 
   public final DateTime toUtc()
   {
-    if (timeZone == TimeZone.utc) return this;
+    if (this.tz == TimeZone.utc) return this;
     return makeTicks(ticks, TimeZone.utc);
   }
 
   public final DateTime floor(Duration accuracy)
   {
     if (ticks % accuracy.ticks == 0) return this;
-    return makeTicks(ticks - (ticks % accuracy.ticks), timeZone);
+    return makeTicks(ticks - (ticks % accuracy.ticks), tz);
   }
 
   public final DateTime midnight()
   {
-    return make(year(), month(), day(), 0, 0, 0, 0, timeZone);
+    return make(year(), month(), day(), 0, 0, 0, 0, tz);
   }
 
   public final String toStr()
@@ -952,8 +952,8 @@ public final class DateTime
   //   weekday     3 bits   0x7    28
   //   dst         1 bit    0x1    31
 
-  private final long ticks;          // ns ticks from 1-Jan-2000 UTC
-  private final int fields;          // bitmask of year, month, day, etc
-  private final TimeZone timeZone;   // time used to resolve fields
+  private final long ticks;      // ns ticks from 1-Jan-2000 UTC
+  private final int fields;      // bitmask of year, month, day, etc
+  private final TimeZone tz;     // time used to resolve fields
 
 }

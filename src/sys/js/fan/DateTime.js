@@ -139,8 +139,8 @@ fan.sys.DateTime.make = function(year, month, day, hour, min, sec, ns, tz)
 
   // commit
   var instance = new fan.sys.DateTime();
-  instance.m_ticks    = ticks;
-  instance.m_timeZone = tz;
+  instance.m_ticks = ticks;
+  instance.m_tz    = tz;
   instance.m_fields   = fields;
   return instance;
 }
@@ -172,7 +172,7 @@ fan.sys.DateTime.makeTicks = function(ticks, tz)
   // save ticks, time zone
   var instance = new fan.sys.DateTime();
   instance.m_ticks = ticks;
-  instance.m_timeZone = tz;
+  instance.m_tz    = tz;
 
   // compute the year
   var year = fan.sys.DateTime.ticksToYear(ticks);
@@ -396,9 +396,9 @@ fan.sys.DateTime.prototype.nanoSec = function()
   return rem % fan.sys.DateTime.nsPerSec;
 }
 fan.sys.DateTime.prototype.weekday = function() { return fan.sys.Weekday.m_values[(this.m_fields >> 28) & 0x7]; }
-fan.sys.DateTime.prototype.timeZone = function() { return this.m_timeZone; }
+fan.sys.DateTime.prototype.tz = function() { return this.m_tz; }
 fan.sys.DateTime.prototype.dst = function() { return ((this.m_fields >> 31) & 0x1) != 0; }
-fan.sys.DateTime.prototype.timeZoneAbbr = function() { return this.dst() ? this.m_timeZone.dstAbbr(this.year()) : this.m_timeZone.stdAbbr(this.year()); }
+fan.sys.DateTime.prototype.tzAbbr = function() { return this.dst() ? this.m_tz.dstAbbr(this.year()) : this.m_tz.stdAbbr(this.year()); }
 fan.sys.DateTime.prototype.dayOfYear = function() { return fan.sys.DateTime.dayOfYear(this.year(), this.month().m_ordinal, this.day())+1; }
 
 /////////////////////////////////////////////////////////////////////////
@@ -571,7 +571,7 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
         break;
 
       case 'z':
-        var rule = this.m_timeZone.rule(this.year());
+        var rule = this.m_tz.rule(this.year());
         var dst = this.dst();
         switch (n)
         {
@@ -590,7 +590,7 @@ pattern = "D-MMM-YYYY WWW hh:mm:ss zzz";
             s += dst ? rule.dstAbbr : rule.stdAbbr;
             break;
           case 4:
-            s += this.m_timeZone.name();
+            s += this.m_tz.name();
             break;
           default:
             invalidNum = true;
@@ -630,7 +630,7 @@ fan.sys.DateTime.prototype.plus = function(duration)
 {
   var d = duration.m_ticks;
   if (d == 0) return this;
-  return fan.sys.DateTime.makeTicks(this.m_ticks+d, this.m_timeZone);
+  return fan.sys.DateTime.makeTicks(this.m_ticks+d, this.m_tz);
 }
 
 //////////////////////////////////////////////////////////////////////////

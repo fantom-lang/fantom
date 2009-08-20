@@ -143,9 +143,9 @@ namespace Fan.Sys
       fields |= (dst ? 1 : 0) << 31;
 
       // commit
-      this.m_ticks    = ticks;
-      this.m_timeZone = tz;
-      this.m_fields   = fields;
+      this.m_ticks  = ticks;
+      this.m_tz     = tz;
+      this.m_fields = fields;
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -176,14 +176,14 @@ namespace Fan.Sys
 
       // save ticks, time zone
       this.m_ticks = ticks;
-      this.m_timeZone = tz;
+      this.m_tz = tz;
 
       // compute the year
       int year = ticksToYear(ticks);
 
       // get the time zone rule for this year, and
       // offset the working ticks by UTC offset
-      TimeZone.Rule rule = m_timeZone.rule(year);
+      TimeZone.Rule rule = m_tz.rule(year);
       ticks += rule.offset * nsPerSec;
 
       // compute the day and month; we may need to execute this
@@ -425,12 +425,12 @@ namespace Fan.Sys
 
     public Weekday weekday() { return Weekday.array[(m_fields >> 28) & 0x7]; }
 
-    public TimeZone timeZone() { return m_timeZone; }
+    public TimeZone tz() { return m_tz; }
 
     public bool dst() { return ((m_fields >> 31) & 0x1) != 0; }
     public bool getDST()  { return ((m_fields >> 31) & 0x1) != 0; }
 
-    public string timeZoneAbbr() { return getDST() ? m_timeZone.dstAbbr(year()) : m_timeZone.stdAbbr(year()); }
+    public string tzAbbr() { return getDST() ? m_tz.dstAbbr(year()) : m_tz.stdAbbr(year()); }
 
     public long dayOfYear() { return dayOfYear(getYear(), month().ord, getDay())+1; }
 
@@ -602,7 +602,7 @@ namespace Fan.Sys
             break;
 
           case 'z':
-            TimeZone.Rule rule = m_timeZone.rule(getYear());
+            TimeZone.Rule rule = m_tz.rule(getYear());
             bool dst = getDST();
             switch (n)
             {
@@ -621,7 +621,7 @@ namespace Fan.Sys
                 s.Append(dst ? rule.dstAbbr : rule.stdAbbr);
                 break;
               case 4:
-                s.Append(m_timeZone.name());
+                s.Append(m_tz.name());
                 break;
               default:
                 invalidNum = true;
@@ -663,7 +663,7 @@ namespace Fan.Sys
     {
       long d = duration.m_ticks;
       if (d == 0) return this;
-      return makeTicks(m_ticks+d, m_timeZone);
+      return makeTicks(m_ticks+d, m_tz);
     }
 
   //////////////////////////////////////////////////////////////////////////
@@ -672,25 +672,25 @@ namespace Fan.Sys
 
     public DateTime toTimeZone(TimeZone tz)
     {
-      if (m_timeZone == tz) return this;
+      if (m_tz == tz) return this;
       return makeTicks(m_ticks, tz);
     }
 
     public DateTime toUtc()
     {
-      if (m_timeZone == TimeZone.m_utc) return this;
+      if (m_tz == TimeZone.m_utc) return this;
       return makeTicks(m_ticks, TimeZone.m_utc);
     }
 
     public DateTime floor(Duration accuracy)
     {
       if (m_ticks % accuracy.m_ticks == 0) return this;
-      return makeTicks(m_ticks - (m_ticks % accuracy.m_ticks), m_timeZone);
+      return makeTicks(m_ticks - (m_ticks % accuracy.m_ticks), m_tz);
     }
 
     public DateTime midnight()
     {
-      return make(year(), month(), day(), 0, 0, 0, 0, m_timeZone);
+      return make(year(), month(), day(), 0, 0, 0, 0, m_tz);
     }
 
     public override string toStr()
@@ -962,7 +962,7 @@ namespace Fan.Sys
 
     readonly long m_ticks;          // ns ticks from 1-Jan-2000 UTC
     readonly int m_fields;          // bitmask of year, month, day, etc
-    readonly TimeZone m_timeZone;   // time used to resolve fields
+    readonly TimeZone m_tz;         // time used to resolve fields
 
   }
 }
