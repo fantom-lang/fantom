@@ -432,7 +432,7 @@ internal class ChunkOutStream : OutStream
   new make(OutStream out) : super(null)
   {
     this.out = out
-    this.buffer = Buf(1024)
+    this.buffer = Buf(chunkSize + 256)
   }
 
   override This write(Int b)
@@ -451,6 +451,7 @@ internal class ChunkOutStream : OutStream
 
   override This flush()
   {
+    if (closed) throw IOErr("ChunkOutStream is closed")
     if (buffer.size > 0)
     {
       out.print(buffer.size.toHex).print("\r\n")
@@ -463,9 +464,13 @@ internal class ChunkOutStream : OutStream
 
   override Bool close()
   {
+    // never write end of chunk more than once
+    if (closed) return true
+
     try
     {
       this.flush
+      closed = true
       out.print("0\r\n\r\n").flush
       return true
     }
@@ -474,10 +479,12 @@ internal class ChunkOutStream : OutStream
 
   private Void checkChunk()
   {
-    if (buffer.size >= 10) flush
+    if (buffer.size >= chunkSize) flush
   }
+
+  const static Int chunkSize := 1024
 
   OutStream out    // underlying output stream
   Buf? buffer      // buffer for bytes
-
+  Bool closed      // have we written final close chunk?
 }
