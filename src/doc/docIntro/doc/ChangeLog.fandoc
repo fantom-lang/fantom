@@ -703,6 +703,7 @@
 - Obj.toImmutable
 - Err.trace now takes options
 - Fix chunked transfer encoding bug in wisp
+- DateTime.timeZone => tz
 
 TODO: remove old List, Map, Func toImmutable methods
 

@@ -206,7 +206,7 @@ const final class DateTime
   **
   ** Get the time zone associated with this date time.
   **
-  TimeZone timeZone()
+  TimeZone tz()
 
   **
   ** Return if this time is within daylight savings time
@@ -218,7 +218,7 @@ const final class DateTime
   ** Get the time zone's abbreviation for this time.
   ** See `TimeZone.stdAbbr` and `TimeZone.dstAbbr`.
   **
-  Str timeZoneAbbr()
+  Str tzAbbr()
 
   **
   ** Return the day of the year as a number between
