@@ -194,7 +194,7 @@ is quite useful to skip checking a bunch of values for null
 during a call chain:
 
   // hard way
-  Str email := null
+  Str? email := null
   if (userList != null)
   {
     user := userList.findUser("bob")
