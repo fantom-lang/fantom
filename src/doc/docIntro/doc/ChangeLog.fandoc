@@ -701,6 +701,8 @@
 - Move Halign, Valign, Orientation from fwt to gfx
 - Color: alpha => a, makeHsv, h, s, v, lighter, darker
 - Obj.toImmutable
+- Err.trace now takes options
+- Fix chunked transfer encoding bug in wisp
 
 TODO: remove old List, Map, Func toImmutable methods
 

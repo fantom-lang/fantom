@@ -145,13 +145,22 @@ public class Err
 // Trace
 //////////////////////////////////////////////////////////////////////////
 
-  public Err trace() { return trace(Sys.StdOut, 0, true); }
-  public Err trace(OutStream out) { return trace(out, 0, true); }
-  public Err trace(OutStream out, int indent, boolean useActual)
+  public Err trace() { return trace(Sys.StdOut, null, 0, true); }
+  public Err trace(OutStream out) { return trace(out, null, 0, true); }
+  public Err trace(OutStream out, Map opt) { return trace(out, opt, 0, true); }
+  public Err trace(OutStream out, Map opt, int indent, boolean useActual)
   {
     // map exception to stack trace
     Throwable ex = actual != null && useActual ? actual : val;
     StackTraceElement[] elems = ex.getStackTrace();
+
+    // extract options
+    int maxDepth = 20;
+    if (opt != null)
+    {
+      Long m = (Long)opt.get("maxDepth");
+      if (m != null) { maxDepth = m.longValue() > Integer.MAX_VALUE ? Integer.MAX_VALUE : m.intValue(); }
+    }
 
     // skip calls to make the Err itself
     int start = 0;
@@ -171,19 +180,24 @@ public class Err
     for (int i=start; i<elems.length; ++i)
     {
       trace(elems[i], out, indent+2);
-      if (i-start >= 20) {out.indent(indent+2).writeChars("More...\n"); break; }
+      if (i-start+1 >= maxDepth)
+      {
+        int more = elems.length - i - start;
+        out.indent(indent+2).writeChars(more + " More...\n");
+        break;
+      }
     }
     out.flush();
 
     // if this was a rebase, then dump original stack trace
     if (useActual && actual instanceof RebaseException)
-      trace(out, indent+2, false);
+      trace(out, opt, indent+2, false);
 
     // if there is a cause, then recurse
     if (cause != null)
     {
       out.indent(indent).writeChars("Cause:\n");
-      cause.trace(out, indent+2, true);
+      cause.trace(out, opt, indent+2, true);
     }
 
     return this;

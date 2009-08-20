@@ -61,7 +61,7 @@ namespace Fan.Sys
       lock (@out)
       {
         @out.printLine(toStr());
-        if (m_err != null) m_err.trace(@out, 2, true);
+        if (m_err != null) m_err.trace(@out, null, 2, true);
       }
     }
 
