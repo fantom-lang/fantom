@@ -236,10 +236,31 @@ class WebClient
   This postForm(Str:Str form)
   {
     body := Uri.encodeQuery(form)
+    reqMethod = "POST"
     reqHeaders["Content-Type"] = "application/x-www-form-urlencoded"
     reqHeaders["Content-Length"] = body.size.toStr // encoded form is ASCII
     writeReq
     reqOut.print(body).close
+    readRes
+    return this
+  }
+
+  **
+  ** Make a post request to the URI using UTF-8 encoding of given
+  ** string.  If Content-Type is not already set, then set it
+  ** to "text/plain; charset=utf-8".  Upon completion the response
+  ** is ready to be read.
+  **
+  This postStr(Str content)
+  {
+    body := Buf().print(content).flip
+    reqMethod = "POST"
+    ct := reqHeaders["Content-Type"]
+    if (ct == null)
+      reqHeaders["Content-Type"] = "text/plain; charset=utf-8"
+    reqHeaders["Content-Length"] = body.size.toStr
+    writeReq
+    reqOut.writeBuf(body).close
     readRes
     return this
   }
