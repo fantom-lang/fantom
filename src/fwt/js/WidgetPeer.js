@@ -43,6 +43,12 @@ fan.fwt.WidgetPeer.prototype.posOnDisplay = function(self)
   {
     x += p.peer.m_pos.m_x;
     y += p.peer.m_pos.m_y;
+    if (p instanceof fan.fwt.Dialog)
+    {
+      var dlg = p.peer.elem.parentNode;
+      x += dlg.offsetLeft;
+      y += dlg.offsetTop;
+    }
     p = p.parent();
   }
   return fan.gfx.Point.make(x, y);
