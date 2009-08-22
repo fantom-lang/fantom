@@ -1512,7 +1512,8 @@ class ClosureExpr : Expr
   Void setInferredSignature(FuncType t)
   {
     // bail if we didn't expect an inferred the signature
-    if (!signature.inferredSignature) return
+    // or haven't gotten to InitClosures yet
+    if (!signature.inferredSignature || cls == null) return
 
     // between the explicit signature and the inferred
     // signature, take the most specific types
