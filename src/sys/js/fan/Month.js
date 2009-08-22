@@ -51,6 +51,7 @@ fan.sys.Month.prototype.type = function()
 }
 
 // TODO FIXIT
+fan.sys.Month.prototype.localeAbbr = function() { return this.abbr(null); }
 fan.sys.Month.prototype.abbr = function(locale)
 {
   switch (this.m_ordinal)
@@ -71,6 +72,7 @@ fan.sys.Month.prototype.abbr = function(locale)
 }
 
 // TODO FIXIT
+fan.sys.Month.prototype.localeFull = function() { return this.abbr(null); }
 fan.sys.Month.prototype.full = function(locale)
 {
   switch (this.m_ordinal)
