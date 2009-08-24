@@ -2218,6 +2218,9 @@ public class Parser : CompilerSupport
       return ns.voidType
     }
 
+    // if more then one, first try to exclude those internal to other pods
+    if (types.size > 1) types = types.exclude |t| { t.isInternal && t.pod.name != compiler.pod.name }
+
     // if more then one its ambiguous (use errReport to avoid suppression)
     if (types.size > 1)
       errReport(CompilerErr("Ambiguous type: " + types.join(", "), loc))

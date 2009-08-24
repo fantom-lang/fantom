@@ -92,6 +92,11 @@ class CallResolver : CompilerSupport
     if (target == null && isVar)
     {
       stypes := curType.unit.importedTypes[name]
+
+      // if more then, one first try to exclude those internal to other pods
+      if (stypes != null && stypes.size > 1)
+        stypes.exclude |t| { t.isInternal && t.pod.name != compiler.pod.name }
+
       if (stypes != null && !stypes.isEmpty)
       {
         if (stypes.size > 1)
