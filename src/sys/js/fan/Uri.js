@@ -57,7 +57,7 @@ fan.sys.Uri.makeSections = function(x)
   uri.m_queryStr = x.queryStr;
   uri.m_query    = x.query.ro();
   uri.m_frag     = x.frag;
-  uri.m_str      = x.str != null ? x.str : new Encoder(this, false).encode();
+  uri.m_str      = x.str != null ? x.str : new fan.sys.UriEncoder(uri, false).encode();
   return uri;
 }
 
@@ -765,6 +765,98 @@ fan.sys.Uri.prototype.mimeType = function()
 fan.sys.Uri.prototype.query = function() { return this.m_query; }
 fan.sys.Uri.prototype.queryStr = function() { return this.m_queryStr; }
 fan.sys.Uri.prototype.frag = function() { return this.m_frag; }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Uri.prototype.parent = function()
+{
+  // if no path bail
+  if (this.m_path.length == 0) return null;
+
+  // if just a simple filename, then no parent
+  if (this.m_path.length == 1 && !this.isPathAbs() && !this.isDir()) return null;
+
+  // use slice
+  return this.slice(parentRange);
+}
+
+fan.sys.Uri.prototype.pathOnly = function()
+{
+  if (this.m_pathStr == null)
+    throw fan.sys.Err.make("Uri has no path: " + this);
+
+  if (this.m_scheme == null && this.m_userInfo == null && this.m_host == null &&
+      this.m_port == null && this.m_queryStr == null && this.m_frag == null)
+    return this;
+
+  var t = new fan.sys.UriSections();
+  t.path     = this.m_path;
+  t.pathStr  = this.m_pathStr;
+  t.query    = fan.sys.Uri.emptyQuery();
+  t.str      = this.m_pathStr;
+  return new Uri(t);
+}
+
+fan.sys.Uri.prototype.sliceToPathAbs = function(range) { return this.slice(range, true); }
+
+fan.sys.Uri.prototype.slice = function(range, forcePathAbs)
+{
+  if (forcePathAbs == undefined) forcePathAbs = false;
+
+  if (this.m_pathStr == null)
+    throw fan.sys.Err.make("Uri has no path: " + this);
+
+  var size = this.m_path.length;
+  var s = range.start(size);
+  var e = range.end(size);
+  var n = e - s + 1;
+  if (n < 0) throw fan.sys.IndexErr.make(range);
+
+  var head = (s == 0);
+  var tail = (e == size-1);
+  if (head && tail && (!forcePathAbs || this.isPathAbs())) return this;
+
+  var t = new fan.sys.UriSections();
+  t.path = fan.sys.List.slice(this.m_path, range);
+
+  var sb = "";
+  if ((head && this.isPathAbs()) || forcePathAbs) sb += '/';
+  for (var i=0; i<t.path.length; ++i)
+  {
+    if (i > 0) sb += '/';
+    sb += t.path[i];
+  }
+  if (t.path.length > 0 && (!tail || this.isDir())) sb += '/';
+  t.pathStr = sb;
+
+  if (head)
+  {
+    t.scheme   = this.m_scheme;
+    t.userInfo = this.m_userInfo;
+    t.host     = this.m_host;
+    t.port     = this.m_port;
+  }
+
+  if (tail)
+  {
+    t.queryStr = this.m_queryStr;
+    t.query    = this.m_query;
+    t.frag     = this.m_frag;
+  }
+  else
+  {
+    t.query    = fan.sys.Uri.emptyQuery();
+  }
+
+  if (!head && !tail)
+  {
+    t.str = t.pathStr;
+  }
+
+  return new fan.sys.Uri.makeSections(t);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
