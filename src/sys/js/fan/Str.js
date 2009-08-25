@@ -391,7 +391,7 @@ fan.sys.Str.splitLines = function(self)
 
 fan.sys.Str.upper = function(self) { return self.toUpperCase(); }
 fan.sys.Str.$in = function(self) { return fan.sys.InStream.makeForStr(self); }
-fan.sys.Str.toUri = function(self) { return fan.sys.Uri.make(self); }
+fan.sys.Str.toUri = function(self) { return fan.sys.Uri.fromStr(self); }
 
 fan.sys.Str.toBuf = function(self)//, Charset charset := Charset.utf8)
 {
