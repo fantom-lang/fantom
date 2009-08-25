@@ -208,6 +208,29 @@ fan.sys.List.dup = function(self)
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Stack
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.List.peek = function(self)
+{
+  if (self.length == 0) return null;
+  return self[self.length-1];
+}
+
+fan.sys.List.pop = function(self)
+{
+  // modify in removeAt()
+  if (self.length == 0) return null;
+  return fan.sys.List.removeAt(self, -1);
+}
+
+fan.sys.List.push = function(self, obj)
+{
+  // modify in add()
+  return sys.fan.List.add(self, obj);
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
