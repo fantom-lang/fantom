@@ -916,7 +916,7 @@ fan.sys.Uri.prototype.relTo = function(base)
   return fan.sys.Uri.makeSections(t);
 }
 
-fan.sys.Uri.relToAuth = function()
+fan.sys.Uri.prototype.relToAuth = function()
 {
   if (this.m_scheme == null && this.m_userInfo == null &&
       this.m_host == null && this.m_port == null)
@@ -1028,88 +1028,87 @@ fan.sys.Uri.toPathStr = function(isAbs, path, isDir)
   return buf;
 }
 
+fan.sys.Uri.prototype.plusName = function(name, asDir)
+{
+  var size    = this.m_path.length;
+  var isDir   = this.isDir();
+  var newSize = isDir ? size + 1 : size;
+  var temp    = fan.sys.List.dup(this.m_path);
+  temp[newSize-1]  = name;
+
+  var t = new fan.sys.UriSections();
+  t.scheme   = this.m_scheme;
+  t.userInfo = this.m_userInfo;
+  t.host     = this.m_host;
+  t.port     = this.m_port;
+  t.query    = fan.sys.Uri.emptyQuery();
+  t.queryStr = null;
+  t.frag     = null;
+  t.path     = fan.sys.List.make(fan.sys.Type.find("sys::Str"), temp);
+  t.pathStr  = fan.sys.Uri.toPathStr(this.isPathAbs(), t.path, asDir);
+  return fan.sys.Uri.makeSections(t);
+}
+
+fan.sys.Uri.prototype.plusSlash = function()
+{
+  if (this.isDir()) return this;
+  var t = new fan.sys.UriSections();
+  t.scheme   = this.m_scheme;
+  t.userInfo = this.m_userInfo;
+  t.host     = this.m_host;
+  t.port     = this.m_port;
+  t.query    = this.m_query;
+  t.queryStr = this.m_queryStr;
+  t.frag     = this.m_frag;
+  t.path     = this.m_path;
+  t.pathStr  = this.m_pathStr + "/";
+  return fan.sys.Uri.makeSections(t);
+}
+
 /*
-  public Uri plusName(String name) { return plusName(name, false); }
-  public Uri plusName(String name, boolean asDir)
-  {
-    int size         = path.sz();
-    boolean isDir    = isDir();
-    int newSize      = isDir ? size + 1 : size;
-    String[] temp    = (String[])path.toArray(new String[newSize]);
-    temp[newSize-1]  = name;
+public Uri plusQuery(Map q)
+{
+  if (q == null || q.isEmpty()) return this;
 
-    Sections t = new Sections();
-    t.scheme   = this.scheme;
-    t.userInfo = this.userInfo;
-    t.host     = this.host;
-    t.port     = this.port;
-    t.query    = emptyQuery();
-    t.queryStr = null;
-    t.frag     = null;
-    t.path     = new List(Sys.StrType, temp);
-    t.pathStr  = toPathStr(isPathAbs(), t.path, asDir);
-    return new Uri(t);
+  Map merge = this.query.dup().setAll(q);
+
+  StringBuilder s = new StringBuilder(256);
+  java.util.Iterator it = merge.pairsIterator();
+  while (it.hasNext())
+  {
+    if (s.length() > 0) s.append('&');
+    java.util.Map.Entry e = (java.util.Map.Entry)it.next();
+    String key = (String)e.getKey();
+    String val = (String)e.getValue();
+    appendQueryStr(s, key);
+    s.append('=');
+    appendQueryStr(s, val);
   }
 
-  public Uri plusSlash()
+  Sections t = new Sections();
+  t.scheme   = this.scheme;
+  t.userInfo = this.userInfo;
+  t.host     = this.host;
+  t.port     = this.port;
+  t.frag     = this.frag;
+  t.pathStr  = this.pathStr;
+  t.path     = this.path;
+  t.query    = merge.ro();
+  t.queryStr = s.toString();
+  return new Uri(t);
+}
+
+static void appendQueryStr(StringBuilder buf, String str)
+{
+  for (int i=0; i<str.length(); ++i)
   {
-    if (isDir()) return this;
-    Sections t = new Sections();
-    t.scheme   = this.scheme;
-    t.userInfo = this.userInfo;
-    t.host     = this.host;
-    t.port     = this.port;
-    t.query    = this.query;
-    t.queryStr = this.queryStr;
-    t.frag     = this.frag;
-    t.path     = this.path;
-    t.pathStr  = this.pathStr + "/";
-    return new Uri(t);
+    int c = str.charAt(i);
+    if (c < delimEscMap.length && (delimEscMap[c] & QUERY) != 0)
+      buf.append('\\');
+    buf.append((char)c);
   }
-
-  public Uri plusQuery(Map q)
-  {
-    if (q == null || q.isEmpty()) return this;
-
-    Map merge = this.query.dup().setAll(q);
-
-    StringBuilder s = new StringBuilder(256);
-    java.util.Iterator it = merge.pairsIterator();
-    while (it.hasNext())
-    {
-      if (s.length() > 0) s.append('&');
-      java.util.Map.Entry e = (java.util.Map.Entry)it.next();
-      String key = (String)e.getKey();
-      String val = (String)e.getValue();
-      appendQueryStr(s, key);
-      s.append('=');
-      appendQueryStr(s, val);
-    }
-
-    Sections t = new Sections();
-    t.scheme   = this.scheme;
-    t.userInfo = this.userInfo;
-    t.host     = this.host;
-    t.port     = this.port;
-    t.frag     = this.frag;
-    t.pathStr  = this.pathStr;
-    t.path     = this.path;
-    t.query    = merge.ro();
-    t.queryStr = s.toString();
-    return new Uri(t);
-  }
-
-  static void appendQueryStr(StringBuilder buf, String str)
-  {
-    for (int i=0; i<str.length(); ++i)
-    {
-      int c = str.charAt(i);
-      if (c < delimEscMap.length && (delimEscMap[c] & QUERY) != 0)
-        buf.append('\\');
-      buf.append((char)c);
-    }
-  }
-  */
+}
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
