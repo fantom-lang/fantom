@@ -65,6 +65,16 @@ fan.sys.Range.prototype.toString = function()
 // Static Methods
 //////////////////////////////////////////////////////////////////////////
 
+fan.sys.Range.makeInclusive = function(start, end)
+{
+  return new fan.sys.Range(start, end, false);
+}
+
+fan.sys.Range.makeExclusive = function(start, end)
+{
+  return new fan.sys.Range(start, end, true);
+}
+
 fan.sys.Range.make = function(start, end, exclusive)
 {
   return new fan.sys.Range(start, end, exclusive);
