@@ -52,7 +52,7 @@ class CallTest : Widget
     if (method == "GET")
       body.a(uri)
     else
-      body.a(`#`, "onclick='fan.testWeb.CallTestClient.testPost(fan.sys.Uri.make(\"$uri\")); return false;'")
+      body.a(`#`, "onclick='fan.testWeb.CallTestClient.testPost(fan.sys.Uri.fromStr(\"$uri\")); return false;'")
     body.w(name).aEnd.w(" - $uri.encode.toXml").liEnd
   }
 
