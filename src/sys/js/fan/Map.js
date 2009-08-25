@@ -135,6 +135,13 @@ fan.sys.Map.prototype.size = function()
   return sz;
 }
 
+fan.sys.Map.prototype.clear = function()
+{
+  this.keyMap = {};
+  this.map = {};
+  return this;
+}
+
 fan.sys.Map.prototype.ordered = function() { return this.m_ordered; }
 fan.sys.Map.prototype.ordered$ = function(val)
 {
