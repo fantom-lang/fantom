@@ -204,7 +204,7 @@ fan.sys.List.last = function(self)
 
 fan.sys.List.dup = function(self)
 {
-  return fan.sys.List.make(self.$fanType, self.slice());
+  return fan.sys.List.make(self.$fanType, self.slice(0));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -364,9 +364,9 @@ fan.sys.List.min = function(self, f)
 }
 
 // TODO
-fan.sys.List.rw = function(self) { return fan.sys.List.make(self.$fanType, self.slice()); }
-fan.sys.List.ro = function(self) { return fan.sys.List.make(self.$fanType, self.slice()); }
-fan.sys.List.toImmutable = function(self) { return fan.sys.List.make(self.$fanType, self.slice()); }
+fan.sys.List.rw = function(self) { return fan.sys.List.make(self.$fanType, self.slice(0)); }
+fan.sys.List.ro = function(self) { return fan.sys.List.make(self.$fanType, self.slice(0)); }
+fan.sys.List.toImmutable = function(self) { return fan.sys.List.make(self.$fanType, self.slice(0)); }
 
 // Conversion
 fan.sys.List.join = function(self, sep, func)

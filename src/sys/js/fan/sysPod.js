@@ -137,6 +137,8 @@ fan.sys.Int.m_minVal = new Long(0x80000000, 0x00000000);
 fan.sys.Int.m_defVal = 0;
 fan.sys.Int.Chunk  = 4096;
 
+fan.sys.Uri.m_defVal = fan.sys.Uri.fromStr("");
+
 fan.sys.MimeType.m_imagePng  = fan.sys.MimeType.predefined("image", "png");
 fan.sys.MimeType.m_imageGif  = fan.sys.MimeType.predefined("image", "gif");
 fan.sys.MimeType.m_imageJpeg = fan.sys.MimeType.predefined("image", "jpeg");
