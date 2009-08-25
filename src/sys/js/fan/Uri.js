@@ -88,10 +88,10 @@ fan.sys.Uri.prototype.m_encoded = null;
 fan.sys.UriSections = fan.sys.Obj.$extend(fan.sys.Obj);
 fan.sys.UriSections.prototype.$ctor = function() {}
 
-fan.sys.UriSections.prototype.setAuth = function(x)  { this.userInfo = x.userInfo; this.host = x.host; this.port = x.port; }
-fan.sys.UriSections.prototype.setPath = function(x)  { this.pathStr = x.pathStr; this.path = x.path; }
-fan.sys.UriSections.prototype.setQuery = function(x) { this.queryStr = x.queryStr; this.query = x.query; }
-fan.sys.UriSections.prototype.setFrag = function(x)  { this.frag = x.frag; }
+fan.sys.UriSections.prototype.setAuth = function(x)  { this.userInfo = x.m_userInfo; this.host = x.m_host; this.port = x.m_port; }
+fan.sys.UriSections.prototype.setPath = function(x)  { this.pathStr = x.m_pathStr; this.path = x.m_path; }
+fan.sys.UriSections.prototype.setQuery = function(x) { this.queryStr = x.m_queryStr; this.query = x.m_query; }
+fan.sys.UriSections.prototype.setFrag = function(x)  { this.frag = x.m_frag; }
 
 fan.sys.UriSections.prototype.normalize = function()
 {
@@ -857,6 +857,259 @@ fan.sys.Uri.prototype.slice = function(range, forcePathAbs)
 
   return new fan.sys.Uri.makeSections(t);
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Relativize
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Uri.prototype.relTo = function(base)
+{
+  if ((this.m_scheme != base.m_scheme) ||
+      (this.m_userInfo != base.m_userInfo) ||
+      (this.m_host != base.m_host) ||
+      (this.m_port != base.m_port))
+    return this;
+
+  // at this point we know we have the same scheme and auth, and
+  // we're going to create a new URI which is a subset of this one
+  var t = new fan.sys.UriSections();
+  t.query    = this.m_query;
+  t.queryStr = this.m_queryStr;
+  t.frag     = this.m_frag;
+
+  // find divergence
+  var d=0;
+  var len = Math.min(this.m_path.length, base.m_path.length);
+  for (; d<len; ++d)
+    if (this.m_path[d] != base.m_path[d])
+      break;
+
+  // if diverenge is at root, then no commonality
+  if (d == 0)
+  {
+    t.path = this.m_path;
+    t.pathStr = this.m_pathStr;
+  }
+
+  // if paths are exactly the same
+  else if (d == this.m_path.length && d == base.m_path.length)
+  {
+    t.path = fan.sys.Uri.emptyPath();
+    t.pathStr = "";
+  }
+
+  // create sub-path at divergence point
+  else
+  {
+    // slice my path
+    t.path = fan.sys.List.slice(this.m_path, fan.sys.Range.makeInclusive(d, -1));
+
+    // insert .. backup if needed
+    var backup = base.m_path.length - d;
+    if (!base.isDir()) backup--;
+    while (backup-- > 0) fan.sys.List.insert(t.path, 0, "..");
+
+    // format the new path string
+    t.pathStr = fan.sys.Uri.toPathStr(false, t.path, this.isDir());
+  }
+
+  return fan.sys.Uri.makeSections(t);
+}
+
+fan.sys.Uri.relToAuth = function()
+{
+  if (this.m_scheme == null && this.m_userInfo == null &&
+      this.m_host == null && this.m_port == null)
+    return this;
+
+  var t = new fan.sys.UriSections();
+  t.path     = this.m_path;
+  t.pathStr  = this.m_pathStr;
+  t.query    = this.m_query;
+  t.queryStr = this.m_queryStr;
+  t.frag     = this.m_frag;
+  return fan.sys.Uri.makeSections(t);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Plus
+//////////////////////////////////////////////////////////////////////////
+
+fan.sys.Uri.prototype.plus = function(r)
+{
+  // if r is more or equal as absolute as base, return r
+  if (r.m_scheme != null) return r;
+  if (r.m_host != null && this.m_scheme == null) return r;
+  if (r.isPathAbs() && this.m_host == null) return r;
+
+  // this algorthm is lifted straight from
+  // RFC 3986 (5.2.2) Transform References;
+  var base = this;
+  var t = new fan.sys.UriSections();
+  if (r.m_host != null)
+  {
+    t.setAuth(r);
+    t.setPath(r);
+    t.setQuery(r);
+  }
+  else
+  {
+    if (r.m_pathStr == null || r.m_pathStr == "")
+    {
+      t.setPath(base);
+      if (r.m_queryStr != null)
+        t.setQuery(r);
+      else
+        t.setQuery(base);
+    }
+    else
+    {
+      if (fan.sys.Str.startsWith(r.m_pathStr, "/"))
+        t.setPath(r);
+      else
+        fan.sys.Uri.merge(t, base, r);
+      t.setQuery(r);
+    }
+    t.setAuth(base);
+  }
+  t.scheme = base.m_scheme;
+  t.frag   = r.m_frag;
+  t.normalize();
+  return fan.sys.Uri.makeSections(t);
+}
+
+fan.sys.Uri.merge = function(t, base, r)
+{
+  var baseIsAbs = base.isPathAbs();
+  var baseIsDir = base.isDir();
+  var rIsDir    = r.isDir();
+  var rPath     = r.m_path;
+  var dotLast   = false;
+
+  // compute the target path taking into account whether
+  // the base is a dir and any dot segments in relative ref
+  var tPath;
+  if (base.m_path.length == 0)
+  {
+    tPath = r.m_path;
+  }
+  else
+  {
+    tPath = fan.sys.List.rw(base.m_path);
+    if (!baseIsDir) fan.sys.List.pop(tPath);
+    for (var i=0; i<rPath.length; ++i)
+    {
+      var rSeg = rPath[i];
+      if (rSeg == ".") { dotLast = true; continue; }
+      if (rSeg == "..")
+      {
+        if (tPath.length > 0) { fan.sys.List.pop(tPath); dotLast = true; continue; }
+        if (baseIsAbs) continue;
+      }
+      tPath.push(rSeg); dotLast = false;
+    }
+  }
+
+  t.path = tPath;
+  t.pathStr = fan.sys.Uri.toPathStr(baseIsAbs, tPath, rIsDir || dotLast);
+}
+
+fan.sys.Uri.toPathStr = function(isAbs, path, isDir)
+{
+  var buf = '';
+  if (isAbs) buf += '/';
+  for (var i=0; i<path.length; ++i)
+  {
+    if (i > 0) buf += '/';
+    buf += path[i];
+  }
+  if (isDir && !(buf.length > 0 && buf.charAt(buf.length-1) == '/'))
+    buf += '/';
+  return buf;
+}
+
+/*
+  public Uri plusName(String name) { return plusName(name, false); }
+  public Uri plusName(String name, boolean asDir)
+  {
+    int size         = path.sz();
+    boolean isDir    = isDir();
+    int newSize      = isDir ? size + 1 : size;
+    String[] temp    = (String[])path.toArray(new String[newSize]);
+    temp[newSize-1]  = name;
+
+    Sections t = new Sections();
+    t.scheme   = this.scheme;
+    t.userInfo = this.userInfo;
+    t.host     = this.host;
+    t.port     = this.port;
+    t.query    = emptyQuery();
+    t.queryStr = null;
+    t.frag     = null;
+    t.path     = new List(Sys.StrType, temp);
+    t.pathStr  = toPathStr(isPathAbs(), t.path, asDir);
+    return new Uri(t);
+  }
+
+  public Uri plusSlash()
+  {
+    if (isDir()) return this;
+    Sections t = new Sections();
+    t.scheme   = this.scheme;
+    t.userInfo = this.userInfo;
+    t.host     = this.host;
+    t.port     = this.port;
+    t.query    = this.query;
+    t.queryStr = this.queryStr;
+    t.frag     = this.frag;
+    t.path     = this.path;
+    t.pathStr  = this.pathStr + "/";
+    return new Uri(t);
+  }
+
+  public Uri plusQuery(Map q)
+  {
+    if (q == null || q.isEmpty()) return this;
+
+    Map merge = this.query.dup().setAll(q);
+
+    StringBuilder s = new StringBuilder(256);
+    java.util.Iterator it = merge.pairsIterator();
+    while (it.hasNext())
+    {
+      if (s.length() > 0) s.append('&');
+      java.util.Map.Entry e = (java.util.Map.Entry)it.next();
+      String key = (String)e.getKey();
+      String val = (String)e.getValue();
+      appendQueryStr(s, key);
+      s.append('=');
+      appendQueryStr(s, val);
+    }
+
+    Sections t = new Sections();
+    t.scheme   = this.scheme;
+    t.userInfo = this.userInfo;
+    t.host     = this.host;
+    t.port     = this.port;
+    t.frag     = this.frag;
+    t.pathStr  = this.pathStr;
+    t.path     = this.path;
+    t.query    = merge.ro();
+    t.queryStr = s.toString();
+    return new Uri(t);
+  }
+
+  static void appendQueryStr(StringBuilder buf, String str)
+  {
+    for (int i=0; i<str.length(); ++i)
+    {
+      int c = str.charAt(i);
+      if (c < delimEscMap.length && (delimEscMap[c] & QUERY) != 0)
+        buf.append('\\');
+      buf.append((char)c);
+    }
+  }
+  */
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
