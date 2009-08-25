@@ -19,10 +19,10 @@ fan.dom.WindowPeer.alert = function(obj)
 
 fan.dom.WindowPeer.uri = function()
 {
-  return fan.sys.Uri.make(window.location.toString());
+  return fan.sys.Uri.fromStr(window.location.toString());
 }
 
 fan.dom.WindowPeer.hyperlink = function(uri)
 {
-  window.location = uri.m_uri;
+  window.location = uri.m_str;
 }

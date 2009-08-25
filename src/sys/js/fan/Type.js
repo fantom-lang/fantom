@@ -106,7 +106,7 @@ fan.sys.Type.prototype.make = function()
 
   // look for defVal and cache if exists
   var obj = eval(this.m_$qname);
-  if (obj.defVal != null) { this.$defVal = obj.defVal; return obj.defVal; }
+  if (obj.m_defVal != null) { this.m_$defVal = obj.m_defVal; return obj.m_defVal; }
   return obj.make();
 }
 

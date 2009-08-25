@@ -15,7 +15,7 @@ fan.dom.HttpReqPeer.prototype.$ctor = function(self) {}
 fan.dom.HttpReqPeer.prototype.send = function(self, content, func)
 {
   var req = new XMLHttpRequest();
-  req.open(self.m_method, self.m_uri.m_uri, self.m_async);
+  req.open(self.m_method, self.m_uri.m_str, self.m_async);
   if (self.m_async)
   {
     req.onreadystatechange = function () {
