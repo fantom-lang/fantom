@@ -73,6 +73,14 @@ fan.fwt.WidgetPeer.prototype.prefSize = function(self, hints)
   return fan.gfx.Size.make(pw, ph);
 }
 
+fan.fwt.WidgetPeer.prototype.pack = function(self)
+{
+  var pref = self.prefSize();
+  self.size$(fan.gfx.Size.make(pref.m_w, pref.m_h));
+  self.relayout();
+  return self;
+}
+
 fan.fwt.WidgetPeer.prototype.enabled = function(self) { return this.m_enabled; }
 fan.fwt.WidgetPeer.prototype.enabled$ = function(self, val) { this.m_enabled = val; }
 fan.fwt.WidgetPeer.prototype.m_enabled = true;
