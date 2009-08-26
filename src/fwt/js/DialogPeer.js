@@ -44,28 +44,33 @@ fan.fwt.DialogPeer.prototype.open = function(self)
   with (tbar.style)
   {
     height     = "16px";
-    border     = "1px solid #404040";
     padding    = "3px 6px";
+    color      = "#fff";
     fontWeight = "bold";
     textAlign  = "center";
-    MozBorderRadiusTopleft     = "5px";
-    MozBorderRadiusTopright    = "5px";
-    webkitBorderTopLeftRadius  = "5px";
-    webkitBorderTopRightRadius = "5px";
-    backgroundColor = "#c2c2c2";
+    borderTop    = "1px solid #8d8d8d";
+    borderBottom = "1px solid #222";
+    MozBorderRadiusTopleft     = "4px";
+    MozBorderRadiusTopright    = "4px";
+    webkitBorderTopLeftRadius  = "4px";
+    webkitBorderTopRightRadius = "4px";
+    backgroundColor = "#6f6f6f";
     // IE workaround
-    try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c2c2c2), to(#989898))"; } catch (err) {} // ignore
+    try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#6f6f6f), to(#535353))"; } catch (err) {} // ignore
   }
   var content = this.emptyDiv();
   with (content.style)
   {
     background = "#eee";
-    border     = "1px solid #404040";
-    borderTop  = "none";
   }
   var dlg = this.emptyDiv();
   with (dlg.style)
   {
+    border     = "1px solid #404040";
+    MozBorderRadiusTopleft     = "5px";
+    MozBorderRadiusTopright    = "5px";
+    webkitBorderTopLeftRadius  = "5px";
+    webkitBorderTopRightRadius = "5px";
     MozBoxShadow    = "0 5px 12px #404040";
     webkitBoxShadow = "0 5px 12px #404040";
   }
@@ -101,12 +106,12 @@ fan.fwt.DialogPeer.prototype.sync = function(self)
   var pref  = content.prefSize();
 
   var th = 24;
-  var w  = pref.m_w + 2;       // +2 for border
-  var h  = pref.m_h + th + 1;  // +1 for border
+  var w  = pref.m_w;
+  var h  = pref.m_h + th;
   var x  = Math.floor((shell.offsetWidth - w) / 2);
   var y  = Math.floor((shell.offsetHeight - h) / 2);
 
-  tbar.style.width = (w-14) + "px";  // -padding/border
+  tbar.style.width = (w-12) + "px";  // -padding/border
   with (dlg.style)
   {
     left   = x + "px";
