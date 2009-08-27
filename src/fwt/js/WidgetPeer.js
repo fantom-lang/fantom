@@ -218,10 +218,24 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-fan.fwt.WidgetPeer.brushToCss = function(b)
+fan.fwt.WidgetPeer.setBg = function(elem, brush)
 {
-  if (b == null) return "none";
-  if (b instanceof fan.gfx.Color) return b.toCss();
-  return "none";
+  with (elem.style)
+  {
+    if (brush == null) { background = "none"; return; }
+    if (brush instanceof fan.gfx.Color) { background = brush.toCss(); return; }
+    if (brush instanceof fan.gfx.Gradient)
+    {
+      var c1 = brush.m_c1.toCss();
+      var c2 = brush.m_c2.toCss();
+
+      // set background to first stop for fallback if gradeints not supported
+      background = c1;
+
+      // need to try block for IE
+      var css = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(" + c1 + "), to(" + c2 + "))";
+      try { backgroundImage = css; } catch (err) {} // ignore
+    }
+  }
 }
 

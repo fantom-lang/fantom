@@ -39,9 +39,9 @@ fan.fwt.BorderPanePeer.prototype.relayout = function(self)
 fan.fwt.BorderPanePeer.prototype.sync = function(self)
 {
   var b = self.m_border;
+  fan.fwt.WidgetPeer.setBg(this.elem, self.m_bg);
   with (this.elem.style)
   {
-    background  = fan.fwt.WidgetPeer.brushToCss(self.m_bg);
     borderStyle = "solid";
 
     borderTopWidth    = b.m_widthTop    + "px";
