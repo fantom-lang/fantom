@@ -228,6 +228,7 @@ const class Border
 ** BorderParser
 **************************************************************************
 
+@js
 internal class BorderParser
 {
   new make(Str str) { this.str = str; next }
