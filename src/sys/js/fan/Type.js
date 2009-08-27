@@ -358,6 +358,8 @@ fan.sys.FuncType.prototype.is = function(that)
     // this method works for the specified method type
     return true;
   }
+  // TODO FIXIT - need to add as FuncType in Type.$af
+  if (that.toString() == "sys::Func") return true;
   return this.base().is(that);
 }
 
