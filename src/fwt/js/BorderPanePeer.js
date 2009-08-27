@@ -15,6 +15,27 @@ fan.fwt.BorderPanePeer.prototype.$ctor = function(self)
   fan.fwt.PanePeer.prototype.$ctor.call(this, self);
 }
 
+fan.fwt.BorderPanePeer.prototype.relayout = function(self)
+{
+  // short-circuit if not mounted
+  if (this.elem == null) return;
+
+  this.sync(self);
+  if (self.onLayout) self.onLayout();
+
+  var b = self.m_border;
+  var c = self.m_content;
+  if (c != null)
+  {
+    var cx = c.peer.m_pos.m_x - b.m_widthLeft;
+    var cy = c.peer.m_pos.m_y - b.m_widthTop;
+    c.pos$(fan.gfx.Point.make(cx, cy));
+    c.peer.relayout(c);
+  }
+
+  return self;
+}
+
 fan.fwt.BorderPanePeer.prototype.sync = function(self)
 {
   var b = self.m_border;
