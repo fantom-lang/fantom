@@ -379,7 +379,7 @@ if (c != null)
           {
             if (mname == "<ctor>") mname = "make"
             first := ce.method.params.first
-            if (ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
+            if (ce.name == "<ctor>" && ce.args.size == 1 && first?.paramType?.qname == "sys::Str")
               mname = "fromStr"
           }
           out.w("${qnameToJs(ctype)}.${vnameToJs(mname)}(")
@@ -431,7 +431,7 @@ if (c != null)
       {
         parent  := ce.method.parent
         fromStr := parent.methods.find |m| { m.parent.qname == parent.qname && m.name == "fromStr" }
-        if (fromStr != null) mname = "fromStr"
+        if (ce.name == "<ctor>" && fromStr != null) mname = "fromStr"
       }
     }
     else if (ce.target != null)
