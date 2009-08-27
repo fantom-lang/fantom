@@ -214,3 +214,14 @@ fan.fwt.WidgetPeer.prototype.sync = function(self, w, h)  // w,h override
   }
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+fan.fwt.WidgetPeer.brushToCss = function(b)
+{
+  if (b == null) return "none";
+  if (b instanceof fan.gfx.Color) return b.toCss();
+  return "none";
+}
+
