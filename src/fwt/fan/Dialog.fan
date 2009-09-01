@@ -270,7 +270,7 @@ class Dialog : Window
       expandRow = 0
       valignCells = Valign.fill
       halignCells = Halign.fill
-      InsetPane
+      InsetPane(16)
       {
         ConstraintPane
         {
@@ -278,7 +278,7 @@ class Dialog : Window
           bodyAndImage,
         },
       },
-      InsetPane { insets = Insets(0, 10, 10, 10); it.add(buttons) },
+      InsetPane { insets = Insets(0, 16, 16, 16); it.add(buttons) },
     }
 
     return this
