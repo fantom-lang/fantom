@@ -84,7 +84,7 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
     }
   }
 
-  outer.onmouseup = function(event)
+  var up = function(event)
   {
     if (!self.enabled()) return;
     with (inner.style)
@@ -100,6 +100,8 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
       try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#dadada))"; } catch (err) {} // ignore
     }
   }
+  outer.onmouseout = function(event) { up(event); }
+  outer.onmouseup = function(event) { up(event); }
 
   outer.appendChild(inner)
   parentElem.appendChild(outer);
