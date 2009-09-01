@@ -69,6 +69,7 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
 
   outer.onmousedown = function(event)
   {
+    if (!self.enabled()) return;
     with (inner.style)
     {
       padding = "3px 3px 1px 5px";
@@ -85,6 +86,7 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
 
   outer.onmouseup = function(event)
   {
+    if (!self.enabled()) return;
     with (inner.style)
     {
       padding = "2px 4px";
