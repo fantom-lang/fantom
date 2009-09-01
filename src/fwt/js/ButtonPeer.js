@@ -57,6 +57,8 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
 
   outer.onclick = function(event)
   {
+    if (!self.enabled()) return;
+
     var evt = new fan.fwt.Event();
     evt.m_id = fan.fwt.EventId.m_action;
     evt.m_widget = self;
@@ -85,6 +87,8 @@ fan.fwt.ButtonPeer.prototype.sync = function(self)
 
   // add new text node
   div.appendChild(document.createTextNode(this.m_text));
+  div.style.color = this.m_enabled ? "#000" : "#999";
+  this.elem.style.borderColor =  this.m_enabled ? "#555" : "#999";
 
   // account for padding/border
   var w = this.m_size.m_w - 2;
