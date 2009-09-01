@@ -170,6 +170,29 @@ fan.sys.Str.replace = function(self, oldstr, newstr)
   return self.replace(oldstr, newstr);
 }
 
+
+fan.sys.Str.fromDisplayName = function(self)
+{
+  if (self.length == 0) return "";
+  var s = "";
+  var c = self.charCodeAt(0);
+  var c2 = self.length == 1 ? 0 : self.charCodeAt(1);
+  if (65 <= c && c <= 90 && !(65 <= c2 && c2 <= 90)) c |= 0x20;
+  s += String.fromCharCode(c);
+  var last = c;
+  for (var i=1; i<self.length; ++i)
+  {
+    c = self.charCodeAt(i);
+    if (c != 32)
+    {
+      if (last == 32 && 97 <= c && c <= 122) c &= ~0x20;
+      s += String.fromCharCode(c);
+    }
+    last = c;
+  }
+  return s;
+}
+
 fan.sys.Str.justl = function(self, width)
 {
   return fan.sys.Str.padr(self, width, 32);
