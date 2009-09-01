@@ -67,6 +67,38 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
     for (var i=0; i<list.length; i++) list[i](evt);
   }
 
+  outer.onmousedown = function(event)
+  {
+    with (inner.style)
+    {
+      padding = "3px 3px 1px 5px";
+      borderTop    = "1px solid #a8a8a8";
+      borderLeft   = "1px solid #a8a8a8";
+      borderRight  = "none";
+      borderBottom = "none";
+      backgroundColor = "#c0c0c0";
+
+      // IE workaround
+      try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c0c0c0), to(#dadada))"; } catch (err) {} // ignore
+    }
+  }
+
+  outer.onmouseup = function(event)
+  {
+    with (inner.style)
+    {
+      padding = "2px 4px";
+      borderTop    = "1px solid #fff";
+      borderLeft   = "1px solid #fff";
+      borderRight  = "1px solid #cacaca";
+      borderBottom = "1px solid #cacaca";
+      backgroundColor = "#eee";
+
+      // IE workaround
+      try { backgroundImage = "-webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#dadada))"; } catch (err) {} // ignore
+    }
+  }
+
   outer.appendChild(inner)
   parentElem.appendChild(outer);
   return outer;
