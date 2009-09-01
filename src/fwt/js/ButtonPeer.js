@@ -30,6 +30,12 @@ fan.fwt.ButtonPeer.prototype.m_text = "";
 
 fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
 {
+  if (self.m_mode == fan.fwt.ButtonMode.m_push) return this.makePush(parentElem, self);
+  if (self.m_mode == fan.fwt.ButtonMode.m_check) return this.makeCheck(parentElem, self);
+}
+
+fan.fwt.ButtonPeer.prototype.makePush = function(parentElem, self)
+{
   var outer = this.emptyDiv();
   with (outer.style)
   {
@@ -108,26 +114,73 @@ fan.fwt.ButtonPeer.prototype.create = function(parentElem, self)
   return outer;
 }
 
-fan.fwt.ButtonPeer.prototype.sync = function(self)
+fan.fwt.ButtonPeer.prototype.makeCheck = function(parentElem, self)
 {
-  var div = this.elem.firstChild;
+  var check = document.createElement("input");
+  check.type = "checkbox";
+  check.style.marginRight = "6px";
 
-  // remove old text node
-  while (div.firstChild != null)
+  var div = this.emptyDiv();
+  div.style.whiteSpace = "nowrap";
+  div.appendChild(check);
+  div.onclick = function(event)
   {
-    var child = div.firstChild;
-    div.removeChild(child);
-    child = null;
-    delete child;
+    if (!self.enabled()) return;
+
+    // bind selected to widget
+    self.selected$(check.checked);
+
+    var evt = new fan.fwt.Event();
+    evt.m_id = fan.fwt.EventId.m_action;
+    evt.m_widget = self;
+
+    var list = self.m_onAction.list();
+    for (var i=0; i<list.length; i++) list[i](evt);
   }
 
-  // add new text node
-  div.appendChild(document.createTextNode(this.m_text));
-  div.style.color = this.m_enabled ? "#000" : "#999";
-  this.elem.style.borderColor =  this.m_enabled ? "#555" : "#999";
+  parentElem.appendChild(div);
+  return div;
+}
 
-  // account for padding/border
-  var w = this.m_size.m_w - 2;
-  var h = this.m_size.m_h - 2;
+fan.fwt.ButtonPeer.prototype.sync = function(self)
+{
+  var w = this.m_size.m_w;
+  var h = this.m_size.m_h;
+
+  if (self.m_mode == fan.fwt.ButtonMode.m_push)
+  {
+    var div = this.elem.firstChild;
+
+    // remove old text node
+    while (div.firstChild != null)
+    {
+      var child = div.firstChild;
+      div.removeChild(child);
+      child = null;
+      delete child;
+    }
+
+    // add new text node
+    div.appendChild(document.createTextNode(this.m_text));
+    div.style.color = this.m_enabled ? "#000" : "#999";
+    this.elem.style.borderColor =  this.m_enabled ? "#555" : "#999";
+
+    // account for padding/border
+    w -= 2;
+    h -= 2;
+  }
+  else if (self.m_mode == fan.fwt.ButtonMode.m_check)
+  {
+    var div = this.elem;
+
+    // set state
+    var check = this.elem.firstChild;
+    check.checked = self.m_selected;
+
+    // set text
+    while (div.childNodes.length > 1) div.removeChild(div.lastChild);
+    div.appendChild(document.createTextNode(this.m_text));
+  }
+
   fan.fwt.WidgetPeer.prototype.sync.call(this, self, w, h);
 }
