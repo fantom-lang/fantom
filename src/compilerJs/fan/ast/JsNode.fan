@@ -79,6 +79,7 @@ abstract class JsNode
   [
     "char":   true,
     "delete": true,
+    "import": true,
     "in":     true,
     "var":    true,
     "with":   true

@@ -62,11 +62,12 @@ fan.sys.Slot.prototype.isVirtual = function()   { return (this.m_flags & fan.sys
 
 fan.sys.Slot.prototype.$name = function(n)
 {
-  // must keep in sync with compilerJs::JsWriter
+  // must keep in sync with compilerJs::JsNode
   switch (n)
   {
     case "char":   return "$char";
     case "delete": return "$delete";
+    case "import": return "$import";
     case "in":     return "$in";
     case "var":    return "$var";
     case "with":   return "$with";
