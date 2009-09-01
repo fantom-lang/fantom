@@ -85,7 +85,7 @@ fan.fwt.WidgetPeer.prototype.enabled = function(self) { return this.m_enabled; }
 fan.fwt.WidgetPeer.prototype.enabled$ = function(self, val)
 {
   this.m_enabled = val;
-  if (this.elem != null) this.sync();
+  if (this.elem != null) this.sync(self);
 }
 fan.fwt.WidgetPeer.prototype.m_enabled = true;
 
