@@ -17,11 +17,11 @@ class InsetPane : ContentPane
 
   **
   ** Insets to leave around the edge of the content.
-  ** The default is 10 pixels on all sides.
+  ** The default is 12 pixels on all sides.
   **
   Insets insets := defInsets
 
-  private const static Insets defInsets := Insets(10)
+  private const static Insets defInsets := Insets(12)
 
   **
   ** Construct with optional top, right, bottom, left insets.  If
@@ -32,7 +32,7 @@ class InsetPane : ContentPane
   **   InsetPane(5,6)   === InsetPane(5,6,5,6)
   **   InsetPane(5,6,7) === InsetPane(5,6,7,6)
   **
-  new make(Int top := 10, Int? right := null, Int? bottom := null, Int? left := null)
+  new make(Int top := 12, Int? right := null, Int? bottom := null, Int? left := null)
   {
     if (right == null) right = top
     if (bottom == null) bottom = top
