@@ -105,6 +105,7 @@ fan.fwt.TablePeer.prototype.rebuild = function(self)
       var fix = document.createElement("div");
       with (fix.style)
       {
+        font         = "bold 8pt Arial";
         padding      = "4px 6px";
         textAlign    = "left";
         whiteSpace   = "nowrap";
