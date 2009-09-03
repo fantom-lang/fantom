@@ -37,6 +37,12 @@ class BuildTz
         if (include(name))
           loadTimeZone(name, out)
       }
+
+      // DateTime.defVal
+      out.printLine(
+       "// DateTime.defVal
+        fan.sys.DateTime.m_defVal = fan.sys.DateTime.make(2000, fan.sys.Month.m_jan, 1, 0, 0, 0, 0, fan.sys.TimeZone.utc());
+        ")
     }
     finally { out.close }
   }
@@ -54,7 +60,7 @@ class BuildTz
 
   Void loadIndex()
   {
-    db = Repo.boot.home + `lib/timezones.ftz`
+    db = Repo.boot.home + `etc/sys/timezones.ftz`
     if (!db.exists) throw Err("tz databse not found: $db")
     in := db.in
 

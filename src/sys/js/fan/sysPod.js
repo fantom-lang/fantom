@@ -13,24 +13,24 @@ with (fan.sys.Pod.$add("sys"))
   // basic primitives
   $at("Num",       "sys::Obj");
   $at("Enum",      "sys::Obj");
-  $at("Bool",      "sys::Obj");
-  $at("Duration",  "sys::Obj");
+  $at("Bool",      "sys::Obj").$af("defVal", 53250, "sys::Bool");
+  $at("Duration",  "sys::Obj").$af("defVal", 53250, "sys::Duration");
   $at("Func",      "sys::Obj");
-  $at("Int",       "sys::Num");
+  $at("Int",       "sys::Num").$af("defVal", 53250, "sys::Int");
   $at("Decimal",   "sys::Num");
-  $at("Float",     "sys::Num");
+  $at("Float",     "sys::Num").$af("defVal", 53250, "sys::Float");
   $at("List",      "sys::Obj");
   $at("Map",       "sys::Obj");
   $at("Month",     "sys::Enum");
   $at("Pod",       "sys::Obj");
   $at("Range",     "sys::Obj");
-  $at("Str",       "sys::Obj");
+  $at("Str",       "sys::Obj").$af("defVal", 53250, "sys::Str");
   $at("StrBuf",    "sys::Obj");
   // TODO: sys
   $at("Test",      "sys::Obj");
-  $at("DateTime",  "sys::Obj");
-  $at("Date",      "sys::Obj");
-  $at("Time",      "sys::Obj");
+  $at("DateTime",  "sys::Obj").$af("defVal", 53250, "sys::DateTime");
+  $at("Date",      "sys::Obj").$af("defVal", 53250, "sys::Date");
+  $at("Time",      "sys::Obj").$af("defVal", 53250, "sys::Time");
   $at("TimeZone",  "sys::Obj");
   $at("Type",      "sys::Obj");
   $at("Weekday",   "sys::Enum");
@@ -62,7 +62,7 @@ with (fan.sys.Pod.$add("sys"))
   //$at("MemBuf",    "sys::Buf"); // TODO - when we fix Buf
   // TODO: FileBuf
   // TODO: MmapBuf
-  $at("Uri",       "sys::Obj");
+  $at("Uri",       "sys::Obj").$af("defVal", 53250, "sys::Uri");
   // TODO: Zip
 
   // actors
@@ -164,3 +164,4 @@ fan.sys.Month.m_values = fan.sys.List.make(fan.sys.Type.find("sys::Month"),
   fan.sys.Month.m_nov,
   fan.sys.Month.m_dec
 ]);
+

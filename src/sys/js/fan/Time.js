@@ -278,5 +278,5 @@ pattern = "hh:mm:ss";
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Time.defVal = new fan.sys.Time(0, 0, 0, 0);
+fan.sys.Time.m_defVal = new fan.sys.Time(0, 0, 0, 0);
 
