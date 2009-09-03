@@ -476,3 +476,5 @@ fan.sys.Str.toCode = function(self, quote, escu)
   if (q != 0) s += q;
   return s;
 }
+
+fan.sys.Str.m_defVal = "";

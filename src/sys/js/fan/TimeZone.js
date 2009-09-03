@@ -47,7 +47,7 @@ fan.sys.TimeZone.fromStr = function(name, checked)
   return null;
 }
 
-fan.sys.TimeZone.defVal = function()
+fan.sys.TimeZone.m_defVal = function()
 {
   return fan.sys.TimeZone.utc();
 }

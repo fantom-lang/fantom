@@ -155,7 +155,7 @@ fan.sys.Date.prototype.plus = function(d)
 fan.sys.Date.prototype.minus = function(that)
 {
   // short circuit if equal
-  if (this.equals(that)) return fan.sys.Duration.defVal;
+  if (this.equals(that)) return fan.sys.Duration.m_defVal;
 
   // compute so that a < b
   var a = this;
@@ -252,12 +252,12 @@ fan.sys.Date.prototype.toDateTime = function(t, tz)
 fan.sys.Date.prototype.midnight = function(tz)
 {
   if (tz == undefined) tz = fan.sys.TimeZone.current();
-  return fan.sys.DateTime.makeDT(this, fan.sys.Time.defVal, tz);
+  return fan.sys.DateTime.makeDT(this, fan.sys.Time.m_defVal, tz);
 }
 
 fan.sys.Date.prototype.toCode = function()
 {
-  if (this.equals(fan.sys.Date.defVal)) return "Date.defVal";
+  if (this.equals(fan.sys.Date.m_defVal)) return "Date.defVal";
   return "Date(\"" + this.toString() + "\")";
 }
 
@@ -265,5 +265,5 @@ fan.sys.Date.prototype.toCode = function()
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-fan.sys.Date.defVal = new fan.sys.Date(2000, 0, 1);
+fan.sys.Date.m_defVal = new fan.sys.Date(2000, 0, 1);
 
