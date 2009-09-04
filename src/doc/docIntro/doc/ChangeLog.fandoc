@@ -705,6 +705,7 @@
 - Fix chunked transfer encoding bug in wisp
 - DateTime.timeZone => tz
 - WebClient.postStr
+- Fix fwt::ScrollPane to actually work
 
 TODO: remove old List, Map, Func toImmutable methods
 

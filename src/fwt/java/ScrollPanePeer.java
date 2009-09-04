@@ -12,6 +12,7 @@ import fan.sys.List;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.custom.ScrolledComposite;
 
 public class ScrollPanePeer extends PanePeer
@@ -30,11 +31,31 @@ public class ScrollPanePeer extends PanePeer
   public Widget create(Widget parent)
   {
     ScrollPane self = (ScrollPane)this.self;
-    ScrolledComposite c = new ScrolledComposite((Composite)parent, SWT.H_SCROLL|SWT.V_SCROLL);
+
+    int style = SWT.H_SCROLL | SWT.V_SCROLL;
+    if (self.border)  style |= SWT.BORDER;
+
+    ScrolledComposite c = new ScrolledComposite((Composite)parent, style);
     c.setExpandHorizontal(true);
     c.setExpandVertical(true);
-    c.setMinSize(400,400);  // TODO, see ScrollPane.fan
+    c.setMinSize(100,100);
+
+    ScrollBar hbar = c.getHorizontalBar();
+    ScrollBar vbar = c.getVerticalBar();
+    if (hbar != null) ((ScrollBarPeer)self.hbar().peer).attachToScrollable(c, hbar);
+    if (vbar != null) ((ScrollBarPeer)self.vbar().peer).attachToScrollable(c, vbar);
+
     this.control = c;
     return c;
   }
+
+  void onSizeChange() { ((ScrollPane)self).onLayout(); }
+
+  public void setMinSize(fan.fwt.ScrollPane self, fan.gfx.Size size)
+  {
+    ScrolledComposite sc = (ScrolledComposite)this.control;
+    if (sc == null) return;
+    sc.setMinSize((int)size.w, (int)size.h);
+  }
+
 }

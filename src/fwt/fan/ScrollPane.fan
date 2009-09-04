@@ -6,19 +6,48 @@
 //   17 Jul 08  Brian Frank  Creation
 //
 
+using gfx
+
 **
 ** ScrollPane displays a scrollbars to scroll its content child.
+** If the ScrollPane is smaller than the preferred size of the
+** content child, then scrollbars are shown.  If the ScrollPane is
+** bigger than the preferred area, the content child will fill the
+** available space.
 **
 class ScrollPane : ContentPane
 {
-  // TODO: I haven't quite figured out how the ScrollComposite
-  // pane works, but I don't think it works like how I want FWT
-  // to work.  The way it should work is that the scrollpane
-  // sets its scrolling based on prefSize of content.  The way
-  // SWT works is that I have to explictly set the size (which
-  // seems weird)
 
-  // to force native peer
-  private native Void dummyScrollPane()
+  **
+  ** Default constructor.
+  **
+  new make(|This|? f := null)
+  {
+    if (f != null) f(this)
+  }
+
+  **
+  ** Horizontal scroll bar.
+  **
+  ScrollBar hbar := ScrollBar() { private set }
+
+  **
+  ** Vertical scroll bar.
+  **
+  ScrollBar vbar := ScrollBar() { private set }
+
+  **
+  ** Draw a border around the widget.  Default is true.  This
+  ** field cannot be changed once the widget is constructed.
+  **
+  const Bool border := true
+
+  override Void onLayout()
+  {
+    if (content == null) return
+    setMinSize(content.prefSize)
+  }
+
+  private native Void setMinSize(Size s)
 
 }

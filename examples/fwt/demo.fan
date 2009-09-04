@@ -755,7 +755,7 @@ class GraphicsDemo : Canvas
 {
   FwtDemo? demo
 
-  override Size prefSize(Hints hints := Hints.defVal) { return Size.make(600,500) }
+  override Size prefSize(Hints hints := Hints.defVal) { return Size.make(750, 450) }
 
   override Void onPaint(Graphics g)
   {
