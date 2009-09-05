@@ -146,7 +146,8 @@ class ResolveExpr : CompilerStep
     // variable, then note the reassignment so that we know it
     // is not a final variable (final being like Java semanatics)
     assignTarget := expr.assignTarget as LocalVarExpr
-    if (assignTarget != null) assignTarget.var.reassigned = true
+    if (assignTarget != null && assignTarget.var != null)
+      assignTarget.var.reassigned = true
 
     return expr
   }
