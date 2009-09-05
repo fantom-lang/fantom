@@ -29,15 +29,9 @@ class MethodVar
     this.paramDef = p
   }
 
-  Bool isParam()
-  {
-    return (flags & FConst.Param) != 0
-  }
+  Bool isParam() { (flags & FConst.Param) != 0 }
 
-  override Str toStr()
-  {
-    return "$register  $name: $ctype"
-  }
+  override Str toStr() { "$register  $name: $ctype" }
 
   Int register        // register number
   CType ctype         // variable type
@@ -48,5 +42,6 @@ class MethodVar
   ParamDef? paramDef  // if param
   Bool usedInClosure  // local used by closure within containing method
   CField? cvarsField  // if mapped into a field of closure variable class
+  Bool reassigned     // keeps track of reassigment assignment (we don't count initial local assign)
 
 }

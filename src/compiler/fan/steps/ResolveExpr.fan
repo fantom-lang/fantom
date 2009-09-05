@@ -142,6 +142,12 @@ class ResolveExpr : CompilerStep
     if (expr.ctype.isGenericParameter)
       expr.ctype = expr.ctype.raw
 
+    // if this expression performs assignment against a local
+    // variable, then note the reassignment so that we know it
+    // is not a final variable (final being like Java semanatics)
+    assignTarget := expr.assignTarget as LocalVarExpr
+    if (assignTarget != null) assignTarget.var.reassigned = true
+
     return expr
   }
 
