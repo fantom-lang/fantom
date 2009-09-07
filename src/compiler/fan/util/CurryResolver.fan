@@ -132,7 +132,7 @@ class CurryResolver : CompilerSupport
     arg := call.args
 
     // replace with Func.curry(args)
-    result := CallExpr.makeWithMethod(loc, call.target, ns.funcCurry)
+    result := CallExpr.makeWithMethod(loc, call.target, ns.funcBind)
     if (method.name == "callList")
       result.args = call.args
     else

@@ -311,10 +311,12 @@ public abstract class Func
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Curry
+// Bind
 //////////////////////////////////////////////////////////////////////////
 
-  public final Func curry(List args)
+// TODO
+public final Func curry(List args) { return bind(args); }
+  public final Func bind(List args)
   {
     if (args.sz() == 0) return this;
     if (args.sz() > params.sz()) throw ArgErr.make("args.size > params.size").val;
@@ -324,12 +326,12 @@ public abstract class Func
       newParams[i] = ((Param)params.get(args.sz()+i)).of;
 
     FuncType newType = new FuncType(newParams, this.returns);
-    return new CurryFunc(newType, this, args);
+    return new BindFunc(newType, this, args);
   }
 
-  static class CurryFunc extends Func
+  static class BindFunc extends Func
   {
-    CurryFunc(FuncType type, Func orig, List bound)
+    BindFunc(FuncType type, Func orig, List bound)
     {
       super(type);
       this.type  = type;

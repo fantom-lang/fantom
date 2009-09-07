@@ -305,10 +305,10 @@ namespace Fan.Sys
     }
 
   //////////////////////////////////////////////////////////////////////////
-  // Curry
+  // Bind
   //////////////////////////////////////////////////////////////////////////
 
-    public Func curry(List args)
+    public Func bind(List args)
     {
       if (args.sz() == 0) return this;
       if (args.sz() > m_params.sz()) throw ArgErr.make("args.size > params.size").val;
@@ -318,12 +318,12 @@ namespace Fan.Sys
         newParams[i] = ((Param)m_params.get(args.sz()+i)).m_of;
 
       FuncType newType = new FuncType(newParams, this.m_returns);
-      return new CurryFunc(newType, this, args);
+      return new BindFunc(newType, this, args);
     }
 
-    internal class CurryFunc : Func
+    internal class BindFunc : Func
     {
-      internal CurryFunc(FuncType type, Func orig, List bound)
+      internal BindFunc (FuncType type, Func orig, List bound)
         : base(type)
       {
         this.m_type  = type;

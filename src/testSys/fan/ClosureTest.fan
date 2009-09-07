@@ -365,7 +365,7 @@ class ClosureTest : Test
     v := 'v'
     f := |->Int[]|
     {
-      w := 77
+      Int? w := null
       g := |->Int[]|
       {
         w = 'w'
@@ -389,7 +389,7 @@ class ClosureTest : Test
       }
       return g()
     }
-    verifyEq(f(), ['v', 'w', 'x', 'y', 'z'])
+    verifyEq(f(), Int?['v', 'w', 'x', 'y', 'z'])
   }
 
 }

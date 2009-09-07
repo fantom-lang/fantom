@@ -166,10 +166,7 @@ public class Method
 
     public Method method() { return Method.this; }
 
-    public boolean isImmutable()
-    {
-      return Method.this.isStatic() || parent.isConst();
-    }
+    public boolean isImmutable() { return true; }
 
     public Object callList(List args)
     {

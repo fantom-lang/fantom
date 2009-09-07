@@ -111,26 +111,26 @@ class FuncTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Curry Calls
+// Bind Calls
 //////////////////////////////////////////////////////////////////////////
 
-  Void testCurryCalls()
+  Void testBindCalls()
   {
     // verify binding/calling
-    verifyCurry |->Str| { return "" }
-    verifyCurry |Str a->Str| { return a }
-    verifyCurry |Str a, Str b->Str| { return a + b  }
-    verifyCurry |Str a, Str b, Str c->Str| { return a + b + c }
-    verifyCurry |Str a, Str b, Str c, Str d->Str| { return a + b + c + d }
-    verifyCurry |Str a, Str b, Str c, Str d, Str e->Str| { return a + b + c + d + e }
-    verifyCurry |Str a, Str b, Str c, Str d, Str e, Str f->Str| { return a + b + c + d + e + f }
-    verifyCurry |Str a, Str b, Str c, Str d, Str e, Str f, Str g->Str| { return a + b + c + d + e + f + g }
-    verifyCurry |Str a, Str b, Str c, Str d, Str e, Str f, Str g, Str h->Str| { return a + b + c + d + e + f + g + h }
-    verifyCurry |Str a, Str b, Str c, Str d, Str e, Str f, Str g, Str h, Str i->Str| { return a + b + c + d + e + f + g + h + i }
-    verifyCurry |Str a, Str b, Str c, Str d, Str e, Str f, Str g, Str h, Str i, Str j->Str| { return a + b + c + d + e + f + g + h + i + j }
+    verifyBind |->Str| { return "" }
+    verifyBind |Str a->Str| { return a }
+    verifyBind |Str a, Str b->Str| { return a + b  }
+    verifyBind |Str a, Str b, Str c->Str| { return a + b + c }
+    verifyBind |Str a, Str b, Str c, Str d->Str| { return a + b + c + d }
+    verifyBind |Str a, Str b, Str c, Str d, Str e->Str| { return a + b + c + d + e }
+    verifyBind |Str a, Str b, Str c, Str d, Str e, Str f->Str| { return a + b + c + d + e + f }
+    verifyBind |Str a, Str b, Str c, Str d, Str e, Str f, Str g->Str| { return a + b + c + d + e + f + g }
+    verifyBind |Str a, Str b, Str c, Str d, Str e, Str f, Str g, Str h->Str| { return a + b + c + d + e + f + g + h }
+    verifyBind |Str a, Str b, Str c, Str d, Str e, Str f, Str g, Str h, Str i->Str| { return a + b + c + d + e + f + g + h + i }
+    verifyBind |Str a, Str b, Str c, Str d, Str e, Str f, Str g, Str h, Str i, Str j->Str| { return a + b + c + d + e + f + g + h + i + j }
   }
 
-  Void verifyCurry(Func f)
+  Void verifyBind(Func f)
   {
     args := Str[,]
     expected := ""
@@ -145,7 +145,7 @@ class FuncTest : Test
 
     args.size.times |Int i|
     {
-      g := f.curry(args[0..<i])
+      g := f.bind(args[0..<i])
       if (i == 0) verifySame(f, g)
 
       // call(List)
@@ -187,7 +187,7 @@ class FuncTest : Test
 
     }
 
-    x := f.curry(args)
+    x := f.bind(args)
     verifyEq(x.callList([,]), expected)
     verifyEq(x.callList(["x", "y"]), expected)
     verifyEq(x.call, expected)
@@ -209,19 +209,19 @@ class FuncTest : Test
     verifyEq(f.params[3].of, Str#)
     verifyEq(f.returns, Str#)
 
-    g := f.curry([true])
+    g := f.bind([true])
     verifyEq(g.type.signature, "|sys::Int,sys::Float,sys::Str->sys::Str|")
     verifyEq(g.params[0].of, Int#)
     verifyEq(g.params[1].of, Float#)
     verifyEq(g.params[2].of, Str#)
     verifyEq(g.returns, Str#)
 
-    h := f.curry([true, 9, 4f])
+    h := f.bind([true, 9, 4f])
     verifyEq(h.type.signature, "|sys::Str->sys::Str|")
     verifyEq(h.params[0].of, Str#)
     verifyEq(h.returns, Str#)
 
-    i := g.curry([7])
+    i := g.bind([7])
     verifyEq(i.type.signature, "|sys::Float,sys::Str->sys::Str|")
     verifyEq(i.params[0].of, Float#)
     verifyEq(i.params[1].of, Str#)
@@ -231,11 +231,11 @@ class FuncTest : Test
     verifyEq(g.call(33, 6f, "y"), "true 33 6.0 y")
     verifyEq(i.callList([2f, "q"]), "true 7 2.0 q")
     verifyEq(i.call(2f, "q"), "true 7 2.0 q")
-    verifyEq(i.curry([2f, "q"]).call, "true 7 2.0 q")
-    verifyEq(i.curry([2f, "q"]).call('x'), "true 7 2.0 q")
+    verifyEq(i.bind([2f, "q"]).call, "true 7 2.0 q")
+    verifyEq(i.bind([2f, "q"]).call('x'), "true 7 2.0 q")
 
-    verifyErr(ArgErr#) |,| { f.curry([true, 8, 8f, "x", "y"]) }
-    verifyErr(ArgErr#) |,| { i.curry([8f, "x", null]) }
+    verifyErr(ArgErr#) |,| { f.bind([true, 8, 8f, "x", "y"]) }
+    verifyErr(ArgErr#) |,| { i.bind([8f, "x", null]) }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -281,51 +281,51 @@ class FuncTest : Test
   {
     o := CurryDef()
     // instance methods
-    verifyEq(CurryDef#i.func.curry([o]).call, [1, 2, 3])
-    verifyEq(CurryDef#i.func.curry([o]).call(7), [7, 2, 3])
-    verifyEq(CurryDef#i.func.curry([o]).callList([7,8]), [7, 8, 3])
-    verifyEq(CurryDef#i.func.curry([o]).callList([7,8,9]), [7, 8, 9])
-    verifyEq(CurryDef#i.func.curry([o]).call(7,8,9), [7, 8, 9])
+    verifyEq(CurryDef#i.func.bind([o]).call, [1, 2, 3])
+    verifyEq(CurryDef#i.func.bind([o]).call(7), [7, 2, 3])
+    verifyEq(CurryDef#i.func.bind([o]).callList([7,8]), [7, 8, 3])
+    verifyEq(CurryDef#i.func.bind([o]).callList([7,8,9]), [7, 8, 9])
+    verifyEq(CurryDef#i.func.bind([o]).call(7,8,9), [7, 8, 9])
 
-    verifyEq(CurryDef#i.func.curry([o, 7]).call, [7, 2, 3])
-    verifyEq(CurryDef#i.func.curry([o, 7]).call(8), [7, 8, 3])
-    verifyEq(CurryDef#i.func.curry([o, 7]).callList([8,9]), [7, 8, 9])
-    verifyEq(CurryDef#i.func.curry([o, 7]).call(8,9), [7, 8, 9])
+    verifyEq(CurryDef#i.func.bind([o, 7]).call, [7, 2, 3])
+    verifyEq(CurryDef#i.func.bind([o, 7]).call(8), [7, 8, 3])
+    verifyEq(CurryDef#i.func.bind([o, 7]).callList([8,9]), [7, 8, 9])
+    verifyEq(CurryDef#i.func.bind([o, 7]).call(8,9), [7, 8, 9])
 
-    verifyEq(CurryDef#i.func.curry([o, 7, 8]).call, [7, 8, 3])
-    verifyEq(CurryDef#i.func.curry([o, 7, 8]).call(9), [7, 8, 9])
-    verifyEq(CurryDef#i.func.curry([o, 7, 8]).callList([9]), [7, 8, 9])
+    verifyEq(CurryDef#i.func.bind([o, 7, 8]).call, [7, 8, 3])
+    verifyEq(CurryDef#i.func.bind([o, 7, 8]).call(9), [7, 8, 9])
+    verifyEq(CurryDef#i.func.bind([o, 7, 8]).callList([9]), [7, 8, 9])
 
-    verifyEq(CurryDef#i.func.curry([o, 7, 8, 9]).call, [7, 8, 9])
-    verifyEq(CurryDef#i.func.curry([o, 7, 8, 9]).call(10), [7, 8, 9])
+    verifyEq(CurryDef#i.func.bind([o, 7, 8, 9]).call, [7, 8, 9])
+    verifyEq(CurryDef#i.func.bind([o, 7, 8, 9]).call(10), [7, 8, 9])
 
     // static methods
-    verifyEq(CurryDef#s.func.curry([7]).call, [7, 2, 3])
-    verifyEq(CurryDef#s.func.curry([7]).call(8), [7, 8, 3])
-    verifyEq(CurryDef#s.func.curry([7]).callList([8,9]), [7, 8, 9])
-    verifyEq(CurryDef#s.func.curry([7]).call(8,9), [7, 8, 9])
+    verifyEq(CurryDef#s.func.bind([7]).call, [7, 2, 3])
+    verifyEq(CurryDef#s.func.bind([7]).call(8), [7, 8, 3])
+    verifyEq(CurryDef#s.func.bind([7]).callList([8,9]), [7, 8, 9])
+    verifyEq(CurryDef#s.func.bind([7]).call(8,9), [7, 8, 9])
 
-    verifyEq(CurryDef#s.func.curry([7, 8]).call, [7, 8, 3])
-    verifyEq(CurryDef#s.func.curry([7, 8]).call(9), [7, 8, 9])
-    verifyEq(CurryDef#s.func.curry([7, 8]).callList([9]), [7, 8, 9])
+    verifyEq(CurryDef#s.func.bind([7, 8]).call, [7, 8, 3])
+    verifyEq(CurryDef#s.func.bind([7, 8]).call(9), [7, 8, 9])
+    verifyEq(CurryDef#s.func.bind([7, 8]).callList([9]), [7, 8, 9])
 
-    verifyEq(CurryDef#s.func.curry([7, 8, 9]).call, [7, 8, 9])
-    verifyEq(CurryDef#s.func.curry([7, 8, 9]).call(10), [7, 8, 9])
+    verifyEq(CurryDef#s.func.bind([7, 8, 9]).call, [7, 8, 9])
+    verifyEq(CurryDef#s.func.bind([7, 8, 9]).call(10), [7, 8, 9])
 
 
     // ctor methods
-    verifyEq(CurryDef#make.func.curry([7]).call->list, [7, 2, 3])
-    verifyEq(CurryDef#make.func.curry([7]).call(8)->list, [7, 8, 3])
-    verifyEq(CurryDef#make.func.curry([7]).callList([8,9])->list, [7, 8, 9])
-    verifyEq(CurryDef#make.func.curry([7]).call(8,9)->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.bind([7]).call->list, [7, 2, 3])
+    verifyEq(CurryDef#make.func.bind([7]).call(8)->list, [7, 8, 3])
+    verifyEq(CurryDef#make.func.bind([7]).callList([8,9])->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.bind([7]).call(8,9)->list, [7, 8, 9])
 
-    verifyEq(CurryDef#make.func.curry([7, 8]).call->list, [7, 8, 3])
-    verifyEq(CurryDef#make.func.curry([7, 8]).call(9)->list, [7, 8, 9])
-    verifyEq(CurryDef#make.func.curry([7, 8]).callList([9])->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.bind([7, 8]).call->list, [7, 8, 3])
+    verifyEq(CurryDef#make.func.bind([7, 8]).call(9)->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.bind([7, 8]).callList([9])->list, [7, 8, 9])
 
-    verifyEq(CurryDef#make.func.curry([7, 8, 9]).call->list, [7, 8, 9])
-    verifyEq(CurryDef#make.func.curry([7, 8, 9]).callList([,])->list, [7, 8, 9])
-    verifyEq(CurryDef#make.func.curry([7, 8, 9]).call(10)->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.bind([7, 8, 9]).call->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.bind([7, 8, 9]).callList([,])->list, [7, 8, 9])
+    verifyEq(CurryDef#make.func.bind([7, 8, 9]).call(10)->list, [7, 8, 9])
   }
 
 }
