@@ -39,6 +39,12 @@ public abstract class Func
 
   public abstract boolean isImmutable();
 
+  public Func toImmutable()
+  {
+    if (isImmutable()) return this;
+    throw NotImmutableErr.make("Func").val;
+  }
+
   public abstract Method method();
 
   public abstract Object callList(List args);
@@ -52,12 +58,6 @@ public abstract class Func
   public abstract Object call(Object a, Object b, Object c, Object d, Object e, Object f);
   public abstract Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g);
   public abstract Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h);
-
-  public final Func toImmutable()
-  {
-    if (isImmutable()) return this;
-    throw NotImmutableErr.make().val;
-  }
 
   // Hooks used by compiler to generate runtime const field checks for it-blocks
   public void enterCtor(Object o) {}

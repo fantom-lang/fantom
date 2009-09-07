@@ -73,7 +73,7 @@ class CheckErrors : CompilerStep
       err("Symbol name '$s.name' is restricted", s.location)
 
     // verify symbol type is immutable
-    if (!isConstFieldType(s.of) || s.of.isFunc)
+    if (!s.of.isConstFieldType || s.of.isFunc)
       err("Symbol '$s.name' has non-const type '$s.of'", s.location)
 
     // verify symbol has correct type
@@ -293,7 +293,7 @@ class CheckErrors : CompilerStep
       else if (flags & FConst.Virtual != 0 && flags & FConst.Override == 0) err("Invalid combination of 'const' and 'virtual' modifiers", loc)
 
       // invalid type
-      if (!isConstFieldType(f.fieldType))
+      if (!f.fieldType.isConstFieldType)
         err("Const field '$f.name' has non-const type '$f.fieldType'", loc)
     }
     else
@@ -331,19 +331,6 @@ class CheckErrors : CompilerStep
         }
       }
     }
-  }
-
-  private Bool isConstFieldType(CType t)
-  {
-    if (t.isConst) return true
-
-    // these are checked at runtime
-    t = t.deref.toNonNullable
-    if (t.isObj || t is ListType || t is MapType || t is FuncType)
-      return true
-
-    // definitely no way it can be immutable
-    return false
   }
 
 //////////////////////////////////////////////////////////////////////////

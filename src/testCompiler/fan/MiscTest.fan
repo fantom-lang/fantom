@@ -426,21 +426,9 @@ class MiscTest : CompilerTest
         Func c01() { return |->Int| { a := 3; return a; } }
         Func c02() { return |->Obj| { return m01(null) } }
         static Func c03() { a := 3; return |->Obj| { return a } }
-        static Func c04() { a := 3; m := |->Func| { return |->Obj| { return a } }; return m() }
+        static Func c04() { a := 3; m := |->Func| { return |->Obj| { return ++a } }; return m() }
         Func c05() { a := 3; m := |->Func| { return |->Obj| { return this } }; return m() }
         Func c06() { list := [0,1]; return |->Obj| { return m01(list) } }
-
-        // curries
-        static Func r00() { return &m02 }
-        static Func r01() { return &m02(99) }
-        Func r02() { return &m02(this) }
-        Func r03() { return &m02(9ns) }
-        Func r04() { return &m02([,]) }
-        Func r05() { return &m00 }
-        Func r06() { return &m01([,]) }
-        Func r07() { return &Int.plus }
-        Func r08(Int x) { return &(x.plus) }
-        Func r09(Int x) { return &(8.plus(x)) }
       }")
 
      // compiler.fpod.dump
@@ -462,22 +450,10 @@ class MiscTest : CompilerTest
      verifyEq(obj->c00()->isImmutable, true)
      verifyEq(obj->c01()->isImmutable, true)
      verifyEq(obj->c02()->isImmutable, false)
-     verifyEq(obj->c03()->isImmutable, false)
+     verifyEq(obj->c03()->isImmutable, true)
      verifyEq(obj->c04()->isImmutable, false)
      verifyEq(obj->c05()->isImmutable, false)
      verifyEq(obj->c06()->isImmutable, false)
-
-     // curried methods
-     verifyEq(obj->r00()->isImmutable, true)
-     verifyEq(obj->r01()->isImmutable, true)
-     verifyEq(obj->r02()->isImmutable, false)
-     verifyEq(obj->r03()->isImmutable, true)
-     verifyEq(obj->r04()->isImmutable, false)
-     verifyEq(obj->r05()->isImmutable, false)
-     verifyEq(obj->r06()->isImmutable, false)
-     verifyEq(obj->r07()->isImmutable, true)
-     verifyEq(obj->r08(7)->isImmutable, true)
-     verifyEq(obj->r09(7)->isImmutable, true)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -200,7 +200,7 @@ class ClosureVars : CompilerStep
     // get the initial value to pass to wrapper constructor
     Expr? init
     if (stmt.init == null)
-      init = LiteralExpr.makeNullLiteral(stmt.location, ns)
+      init = LiteralExpr.makeNull(stmt.location, ns)
     else
       init = ((BinaryExpr)stmt.init).rhs
 
@@ -400,9 +400,6 @@ class ClosureVars : CompilerStep
     assign := BinaryExpr.makeAssign(fieldExpr(loc, ThisExpr(loc), field), LocalVarExpr(loc, var))
     ctor.code.stmts.insert(0, assign.toStmt)
 
-    // we can longer assume this closure is thread safe
-    markMutable(closure)
-
     return field
   }
 
@@ -474,15 +471,6 @@ class ClosureVars : CompilerStep
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
-
-  private static Void markMutable(ClosureExpr c)
-  {
-    // if the closure captures any state, then we change the is
-    // isImmutable() method added in InitClosures to return false
-    ns := c.cls.ns
-    falseLiteral := LiteralExpr(c.location, ExprId.falseLiteral, ns.boolType, false)
-    c.cls.methodDef("isImmutable").code.stmts.first->expr = falseLiteral
-  }
 
   private static FieldExpr fieldExpr(Location loc, Expr target, CField field)
   {
