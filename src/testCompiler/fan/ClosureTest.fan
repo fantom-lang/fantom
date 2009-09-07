@@ -147,13 +147,13 @@ class ClosureTest : CompilerTest
      c0 := compiler.types[1]
      verifyEq(c0.name, "Foo\$f\$0")
      verifyEq(c0.method("make").params.size, 0)
-     verifyEq(c0.field("\$cvars"), null)
+     verifyNull(c0.field("x\$0"))
 
      // verify second closure has cvars overhead
      c1 := compiler.types[2]
      verifyEq(c1.name, "Foo\$f\$1")
-     verifyEq(c1.method("make").params.size, 1)
-     verifyEq(c1.field("\$cvars").fieldType.name, "Foo\$f\$Cvars")
+     verifyEq(c1.method("make").params.size, 2)
+     verifyNotNull(c1.field("x\$0"))
    }
 
   Void testCvarsStaticInit()

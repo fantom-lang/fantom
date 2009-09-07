@@ -153,17 +153,20 @@ class CodeAsm : CompilerSupport
     if (stmt.isCatchVar)
     {
       // "declaration" of a catch variable is used store the
-      // variable back to its local register; if it is used as
-      // a closure variable store it back to the cvars too
+      // variable back to its local register
       var := stmt.var
       op(FOp.CatchErrStart, fpod.addTypeRef(stmt.ctype))
-      op(FOp.StoreVar, var.register)
-      if (var.usedInClosure)
+
+      // if the catch variable has been hoisted onto the heap
+      // with a wrapper, call the wrapper constructor
+      if (var.isWrapped)
       {
-        op(FOp.LoadVar, curMethod.cvarsVar.register)
-        op(FOp.LoadVar, var.register)
-        op(FOp.StoreInstance, fpod.addFieldRef(var.cvarsField))
+        wrapCtor := fpod.addMethodRef(var.wrapField.parent.method("make"), 1)
+        op(FOp.CallNew, wrapCtor)
       }
+
+      // store back to local register
+      op(FOp.StoreVar, var.register)
     }
     else if (stmt.init != null)
     {

@@ -1119,6 +1119,14 @@ class LocalVarExpr : Expr
     }
   }
 
+  new makeNoUnwrap(Location location, MethodVar var)
+    : super.make(location, ExprId.localVar)
+  {
+    this.var    = var
+    this.ctype  = var.ctype
+    this.unwrap = false
+  }
+
   override Bool isAssignable() { true }
 
   override Bool assignRequiresTempVar() { var.usedInClosure }
@@ -1139,11 +1147,8 @@ class LocalVarExpr : Expr
     return var.name
   }
 
-  MethodVar? var   // bound variable
-
-  // used to mark a local var access that should not be
-  // pulled out into cvars, even if var.usedInClosure is true
-  Bool noRemapToCvars := false
+  MethodVar? var        // bound variable
+  Bool unwrap := true   // if hoisted onto heap with wrapper
 }
 
 **************************************************************************
@@ -1459,7 +1464,6 @@ class ClosureExpr : Expr
     this.enclosingClosure = enclosingClosure
     this.signature        = signature
     this.name             = name
-    this.usesCvars        = false
   }
 
   once CField outerThisField()
@@ -1569,10 +1573,9 @@ class ClosureExpr : Expr
   MethodDef? doCall             // anonymous class's doCall() with code
 
   // ResolveExpr
-  [Str:MethodVar]? enclosingLocals // locals in scope
-  Bool usesCvars                // does this guy use vars from outer scope
-  Bool setsConst                // sets one or more const fields (CheckErrors)
-  CType? itType                 // type of implicit it
+  [Str:MethodVar]? enclosingVars // my parent methods vars in scope
+  Bool setsConst                 // sets one or more const fields (CheckErrors)
+  CType? itType                  // type of implicit it
 }
 
 **************************************************************************

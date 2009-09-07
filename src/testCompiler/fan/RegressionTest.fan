@@ -155,20 +155,22 @@ class RegressionTest : CompilerTest
 
   Void test542()
   {
-    verifyErrors(
+     compile(
      "class Test
       {
         Str:Obj bindings := [
-          \"printLine\": |Obj[] args|
+          \"print\": |Obj[] args|
           {
-            str := \"\"
-            args.each |arg| { str += arg }
+            args.each |arg| { result += arg + \",\" }
           }
         ]
-      }",
-      [
-        7, 25, "Nested closures not supported in field initializer",
-      ])
+        Str result := \"\"
+      }")
+
+    obj := pod.types.first.make
+    Func f := obj->bindings->get("print")
+    f.call(["a", "b", "c"])
+    verifyEq(obj->result, "a,b,c,")
   }
 
 //////////////////////////////////////////////////////////////////////////

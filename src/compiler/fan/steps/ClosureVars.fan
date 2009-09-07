@@ -5,29 +5,63 @@
 // History:
 //   5 Mar 06  Brian Frank  Creation
 //   4 Oct 06  Brian Frank  Port from Java to Fan
+//   4 Sep 09  Brian Frank  Redesign with individual wrappers
 //
 
 **
-** ClosureVars (cvars) is used to pull local variables used by closures
-** into an auto-generated anonymous class so that they can be
-** used outside and inside the closure as well as have a lifetime
-** once the method returns:
-**   1) scan for methods with have locals used by their closures
-**   3) define the cvars class
-**   4) remove method vars which are stored in cvars
-**   5) walk the method body
-**      a) remap local var access to cvars field access
-**      b) accumulate all the ClosureExprs
-**   6) walk accumlated ClosureExprs in method body
-**      a) add $cvars field to closure implementation class
-**      b) add $cvars parameter to implementation class constructor
-**      c) pass $cvars arg from method body to implementation constructor
-**      d) walk implementation class code and remap local var access
-**   7) decide if closure is thread-safe or not and mark isConst
+** ClosureVars is used to process closure variables which have
+** been enclosed from their parent scope:
 **
-** Note: this same process is used to process nested closure doCall methods
-**   too; but they do things a bit differently since they always share the
-**   outmost method's cvars.
+**  ResolveExpr
+**  -----------
+**  ResolveExpr we detected variables used from parent scope
+**  and created shadow variables in the closure's scope with
+**  a reference via 'MethodVar.shadows'.  Also during this step
+**  we note any variables which are reassigned making them
+**  non-final (according to Java final variable semantics).
+**
+**  Process Method
+**  --------------
+**  First we walk all types looking for methods which use
+**  closure variables:
+**
+**   1. For each one walk thru its variables to see if any variables
+**      enclosed are non-final (reassigned at some point).  These
+**      variables as hoisted onto the heap with wrappers:
+**         class Wrapper$T { new make(T v) { val=v }  T val }
+**
+**   2. If no wrapped variables, then we can leave a cvars method
+**      alone - everything stays the same.  If however we do have
+**      wrapped variables, then we need to walk the expr tree of
+**      the method replacing all access of the variable with its
+**      wrapper access:
+**         x := 3     =>   x := Wrapper$Int(3)
+**         x = x + 1  =>   x.val = x.val + 1
+**
+**   3. If any params were wrapped, we generated a new local variable
+**      in 'wrapNonFinalVars'.  During the expr tree walk we replaced all
+**      references to the param to its new wrapped local.   To finish
+**      processing the method we insert a bit of code in the beginning
+**      of the method to initialize the local.
+**
+**  Process Closure
+**  ---------------
+**  After we have walked all methods using closure variables (which
+**  might include closure doCall methods themselves), then we walk
+**  all the closures.
+**
+**   1. For each shadowed variables we need:
+**        a. Define field on the closure to store variable
+**        b. Pass variable to closure constructor at substitution site
+**        c. Add variable to as closure constructor param
+**        d. Assign param to field in constructor
+**      If the variable has been wrapped we are doing this for the
+**      wrapped variable (we don't unwrap it).
+**
+**   2. If any of the closures shadowed variables are wrapped, then
+**      we do a expr tree walk of doCall - the exact same thing as
+**      step 2 of the processMethod stage.
+**
 **
 class ClosureVars : CompilerStep
 {
@@ -36,11 +70,7 @@ class ClosureVars : CompilerStep
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Compiler compiler)
-    : super(compiler)
-  {
-    closures = ClosureExpr[,]
-  }
+  new make(Compiler compiler) : super(compiler) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Run
@@ -48,305 +78,276 @@ class ClosureVars : CompilerStep
 
   override Void run()
   {
+    // process all the methods which use closures
     types.each |TypeDef t| { scanType(t) }
+
+    // process all the closures themselves
+    compiler.closures.each |c| { processClosure(c) }
   }
 
   private Void scanType(TypeDef t)
   {
-    t.methodDefs.each |MethodDef m|
-    {
-      if (m.needsCvars) process(m)
-    }
+    // only process methods which use closure variables
+    t.methodDefs.each |m| { if (m.usesCvars) processMethod(m) }
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Process
+// Process Method
 //////////////////////////////////////////////////////////////////////////
 
-  private Void process(MethodDef method)
+  private Void processMethod(MethodDef method)
   {
-    this.method     = method
-    this.location   = method.location
-    this.inClosure  = method.parentDef.isClosure && method.parentDef.closure.doCall === method
-    this.cvars      = null
-    this.cvarsCtor  = null
-    this.cvarsLocal = null
-    this.closures.clear
-
-    defineCvarsClass
-    reorderVars
-    insertCvarsInit
-    remapVarsInMethod
-    remapVarsInClosures
+    if (!wrapNonFinalVars(method)) return
+    walkMethod(method)
+    fixWrappedParams(method)
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Define Cvars Class
+// Wrap Non-Final Vars
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Walk the current method and create the cvars class, a default
-  ** constructor, and a field for every local variable used inside
-  ** closures.  If this is a closure itself, then we just reuse
-  ** the cvar class of the outer most method.
+  ** Wrap each non-final variable which is reassigned and used
+  ** inside a closure.  By wrapping it we hoist it into the heap
+  ** so that it may be shared b/w method and closure(s).  Return
+  ** true if we wrapped any vars.
   **
-  private Void defineCvarsClass()
+  private Bool wrapNonFinalVars(MethodDef m)
   {
-    // if in a closure body, then reuse the enclosing
-    // method's cvar class (which should have already
-    // been defined)
-    if (inClosure)
+    wrapped := false
+    m.vars.each |var, i|
     {
-      closure := method.parentDef.closure
-      name := toCvarsTypeName(closure.enclosingType, closure.enclosingSlot)
-      cvars = (TypeDef)pod.resolveType(name, true)
-    }
+      // we only care about variables used in closures
+      if (!var.usedInClosure) return
 
-    // define the Cvars class and generate no arg constructor
-    else
-    {
-      // define type def
-      name := toCvarsTypeName(method.parentDef, method)
-      cvars = TypeDef(ns, location, method.parentDef.unit, name)
-      cvars.flags = FConst.Internal | FConst.Synthetic
-      cvars.base  = ns.objType
-      addTypeDef(cvars)
+      // if the variable is never reassigned, then we
+      // can use it directly since it is final
+      if (!var.isReassigned) return
 
-      // generate no arg constructor
-      cvarsCtor = DefaultCtor.addDefaultCtor(cvars, FConst.Internal | FConst.Synthetic)
-    }
+      // generate or reuse Wrapper class for this type
+      wrapField := genWrapper(this, var.ctype)
 
-    // generate the fields used to store each local
-    method.vars.each |MethodVar var|
-    {
-      if (var.usedInClosure)
+      if (var.isParam)
       {
-        f := FieldDef(location, cvars)
-        f.name      = "${var.name}\$${cvars.slots.size}"
-        f.fieldType = var.ctype
-        f.flags     = syntheticFieldFlags
-        cvars.addSlot(f)
-        var.cvarsField = f
+        // we can't change signature of parameters since they
+        // are passed in externally, so we have to create a new
+        // local to use for the wrapper version of the param
+        w := m.addLocalVar(wrapField.parent, var.name + "\$Wrapper", m.code)
+        w.wrapField = wrapField
+        var.paramWrapper = w
       }
-    }
-  }
-
-  private static Str toCvarsTypeName(TypeDef t, SlotDef s)
-  {
-    m := s as MethodDef
-    if (m != null)
-    {
-      if (m.isGetter) return "${t.name}\$${s.name}\$GetCvars"
-      if (m.isSetter) return "${t.name}\$${s.name}\$SetCvars"
-    }
-    return "${t.name}\$${s.name}\$Cvars"
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Reorder Vars
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Once all the variables of a method body have been processed
-  ** into cvars fields, this method strips out any non-parameter
-  ** locals and optimally reorders them.  We return the local
-  ** variable to use for the cvar reference itself.
-  **
-  private Void reorderVars()
-  {
-    // remove any non-parameter, locally defined variables
-    // from the list which are to moved into the cvars class
-    method.vars = method.vars.exclude |MethodVar v->Bool|
-    {
-      return !v.isParam && v.usedInClosure && !v.isCatchVar
-    }
-
-    // if in a closure, then the $cvars local variable was
-    // created previously by remapVarInClosure() while processing
-    // the enclosing method, so just look it up
-    if (inClosure)
-    {
-      cvarsLocal = method.vars[method.params.size]
-      if (cvarsLocal.name != "\$cvars")
-        throw err("Internal error", method.location)
-    }
-
-    // now insert the cvars (right after params so that we can
-    // use optimized register access such as ILOAD_2 for Java)
-    else
-    {
-      cvarsLocal = MethodVar(-1, cvars, "\$cvars")
-      method.vars.insert(method.params.size, cvarsLocal)
-    }
-
-    // re-index the registers
-    reg := method.isStatic ? 0 : 1
-    method.vars.each |MethodVar v| { v.register = reg++ }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Insert Cvars Initialization
-//////////////////////////////////////////////////////////////////////////
-
-  private Void insertCvarsInit()
-  {
-    //  method(Foo x)
-    //  {
-    //    $cvars := $Cvars.make()
-    //    $cvars.x = x // for all params
-    //    ...
-    //  }
-
-    // if not in closure then generate "$cvars = $Cvars.make()"
-    // constructor call; if in closure, then we've already
-    // generated "$cvars = this.$cvars" in remapVarInClosure()
-    // while processing the enclosng method
-    if (!inClosure)
-    {
-      local := LocalVarExpr(location, cvarsLocal)
-      local.ctype = cvars
-
-      ctorCall := CallExpr.makeWithMethod(location, null, cvarsCtor)
-
-      assign := BinaryExpr.makeAssign(local, ctorCall)
-
-      method.code.stmts.insert(0, assign.toStmt)
-    }
-
-    // init any params we are going to remap to cvars
-    method.vars.each |MethodVar var|
-    {
-      if (!var.isParam || var.cvarsField == null) return
-
-      lhs := fieldExpr(location, LocalVarExpr(location, cvarsLocal), var.cvarsField)
-
-      rhs := LocalVarExpr(location, var)
-      rhs.noRemapToCvars = true // don't want to replace this access with cvars field
-
-      assign := BinaryExpr.makeAssign(lhs, rhs)
-      method.code.stmts.insert(1, assign.toStmt)
-    }
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Remap Vars in Method
-//////////////////////////////////////////////////////////////////////////
-
-  private Void remapVarsInMethod()
-  {
-    method.code.walkExpr |Expr expr->Expr|
-    {
-      switch (expr.id)
+      else
       {
-        case ExprId.localVar: return remapLocalVar((LocalVarExpr)expr)
-        case ExprId.closure:  closures.add((ClosureExpr)expr)
+        // generate wrapper type and update variable type
+        if (var.wrapField != null) throw Err()
+        var.wrapField = wrapField
+        var.ctype = wrapField.parent
       }
-      return expr
+
+      // keep track that we've wrapped something
+      wrapped = true
     }
+    return wrapped
   }
 
-  Expr remapLocalVar(LocalVarExpr local)
+//////////////////////////////////////////////////////////////////////////
+// Walk Method
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Walk the method body:
+  **   1.  Create wrapper for each local var definition which requries it
+  **   2.  Add unwrap val access for each use of a wrapped local variable
+  **   3.  If using a wrapped param, then replace with wrapped local
+  **
+  private Void walkMethod(MethodDef method)
   {
-    // x -> $cvars.x
-    if (local.var.cvarsField == null) return local
-    if (local.noRemapToCvars) return local
+    method.code.walk(this, VisitDepth.expr)
+  }
+
+  override Stmt[]? visitStmt(Stmt stmt)
+  {
+    if (stmt.id === StmtId.localDef && ((LocalDefStmt)stmt).var.isWrapped)
+      return fixLocalDef(stmt)
+    return null
+  }
+
+  override Expr visitExpr(Expr expr)
+  {
+    switch (expr.id)
+    {
+      case ExprId.localVar: return fixWrappedVar(expr)
+    }
+    return expr
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fix Local Init
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** If a local variable has been hoisted onto the heap with
+  ** a wrapper, then generate wrapper initialization:
+  **
+  **   // original code
+  **   local := 3
+  **
+  **   // becomes
+  **   local := Wrap$Int(3)
+  **
+  private Stmt[]? fixLocalDef(LocalDefStmt stmt)
+  {
+    // get the initial value to pass to wrapper constructor
+    Expr? init
+    if (stmt.init == null)
+      init = LiteralExpr.makeNullLiteral(stmt.location, ns)
+    else
+      init = ((BinaryExpr)stmt.init).rhs
+
+    // replace original initialization with wrapper construction
+    stmt.init = initWrapper(stmt.location, stmt.var, init)
+    return null
+  }
+
+  **
+  ** Generate the expression: var := Wrapper(init)
+  **
+  private Expr initWrapper(Location loc, MethodVar var, Expr init)
+  {
+    wrapCtor := var.wrapField.parent.method("make")
+    lhs := LocalVarExpr.makeNoUnwrap(loc, var)
+    rhs := CallExpr.makeWithMethod(loc, null, wrapCtor, [init])
+    return BinaryExpr.makeAssign(lhs, rhs)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fix Wrapped Var
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** If we are accessing a wrapped variable, then add
+  ** indirection to access it from Wrapper.val field.
+  **
+  private Expr fixWrappedVar(LocalVarExpr local)
+  {
+    // if this variable access is a wrapped parameter, then
+    // we never use the parameter itself, but rather the wrapper
+    // local variable
+    var := local.var
+    if (var.paramWrapper != null)
+    {
+      // use param wrapper variable
+      var = var.paramWrapper
+
+      // if not unwrapping, we still need to use different variable
+      if (!local.unwrap) return LocalVarExpr(local.location, var)
+    }
+
+    // if not a wrapped variable or we have explictly marked
+    // it to stay wrapped, then don't do anything
+    if (!var.isWrapped || !local.unwrap) return local
+
+    // unwrap from the Wrapper.val field
     loc := local.location
-    return fieldExpr(loc, LocalVarExpr(loc, cvarsLocal), local.var.cvarsField)
+    return fieldExpr(loc, LocalVarExpr.makeNoUnwrap(loc, var), var.wrapField)
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Remap Vars in Closures
+// Fix Wrapped Params
 //////////////////////////////////////////////////////////////////////////
 
-  private Void remapVarsInClosures()
+  **
+  ** After we have walked the expr tree, we go back and initialize
+  ** the wrapper for any wrapped params used inside closures:
+  **
+  **   Void foo(Int x)
+  **   {
+  **     x$wrapper := Wrap$Int(x)
+  **     ...
+  **
+  private Void fixWrappedParams(MethodDef method)
   {
-    // closures now contains all the ClosureExpr we found inside
-    // the current method body, now we need to walk them; this is
-    // also where we change isImmutable() to return false because
-    // capturing locals into a cvars is not thread safe
-    closures.each |ClosureExpr c|
+    method.vars.each |var|
     {
-      if (remapVarInClosure(c))
-        markMutable(c)
+      if (var.paramWrapper == null) return
+      loc := method.location
+      initWrap := initWrapper(loc, var.paramWrapper, LocalVarExpr(loc, var))
+      method.code.stmts.insert(0, initWrap.toStmt)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Process Closure
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Walk each closure:
+  **   1.  Find all the shadowed variables
+  **   2.  Call addVarToClosure for each shadowed variable
+  **   3.  If needed do expr tree walk
+  **
+  private Void processClosure(ClosureExpr closure)
+  {
+    // get the variables shadowed from enclosing scope
+    shadowed := closure.doCall.vars.findAll |var| { var.shadows != null }
+
+    // process each shadowed variable
+    shadowed.each |var, i| { addVarToClosure(closure, var, var.name+"\$"+i) }
+
+    // if any of the shadowed variables are wrapped we need
+    // to walk the expression tree
+    walkExprTree := shadowed.any |var| { var.isWrapped }
+    if (walkExprTree) closure.doCall.code.walkExpr |expr|
+    {
+      expr.id === ExprId.localVar ? fixWrappedVar(expr) : expr
     }
   }
 
   **
-  ** Remap local variables to cvars.  Return false if no
-  ** locals are captured in the given closure.
+  ** For each variable enclosed by the closure:
+  **  1. Define field on the closure to store variable
+  **  2. Pass variable to closure constructor at substitution site
+  **  3. Add variable to as closure constructor param
+  **  4. Assign param to field in constructor
   **
-  private Bool remapVarInClosure(ClosureExpr closure)
+  Void addVarToClosure(ClosureExpr closure, MethodVar var, Str fieldName)
   {
-    doCall := closure.cls.methodDef("doCall")
+    loc      := closure.location
+    thisType := closure.enclosingType
+    implType := closure.cls
 
-    // walk closure implementation looking for cvars
-    MethodVar? cvarsLocal := null
-    doCall.code.walkExpr |Expr expr->Expr|
+    // check if what we are shadowing is a wrapped param
+    if (var.shadows.paramWrapper != null)
+      var.shadows = var.shadows.paramWrapper
+
+    // check if shadowed var has been wrapped
+    if (var.shadows.isWrapped)
     {
-      // if we've encountered a nested closure which uses cvars,
-      // then this closure must pass the cvars thru - we will
-      // process this closure fully in process() eventually because
-      // it should have been marked needsCvars in ResolveExpr
-      if (expr is ClosureExpr)
-      {
-        nested := (ClosureExpr)expr
-        if (nested.usesCvars && cvarsLocal == null)
-          cvarsLocal = MethodVar(-1, cvars, "\$cvars")
-        return expr
-      }
-
-      // check if it a local from my outer scope
-      local := expr as LocalVarExpr
-      if (local == null ||
-          local.var == null ||
-          local.var.cvarsField == null) return expr
-
-      // if I haven't yet allocated my own local to access
-      // the whole cvars instance, let's do that now
-      if (cvarsLocal == null)
-        cvarsLocal = MethodVar(-1, cvars, "\$cvars")
-
-      // replace "x" with "$cvars.x"
-      loc := local.location
-      return fieldExpr(loc, LocalVarExpr(loc, cvarsLocal), local.var.cvarsField)
+      var.ctype = var.shadows.ctype
+      var.wrapField = var.shadows.wrapField
     }
 
-    // if no expressions within the closure use cvars,
-    // then our work here is done
-    if (cvarsLocal == null) return false
+    // define storage field on closure class
+    field := FieldDef(loc, implType)
+    field.name  = fieldName
+    field.flags = syntheticFieldFlags
+    field.fieldType = var.ctype
+    implType.addSlot(field)
 
-    // add cvars field to closure implementation class
-    loc := closure.location
-    field := FieldDef(loc, closure.cls)
-    field.name      = "\$cvars"
-    field.fieldType = TypeRef(loc, cvars)
-    field.flags     = syntheticFieldFlags
-    closure.cls.addSlot(field)
+    // pass variable to subtitute closure constructor in outer scope
+    closure.substitute.args.add(LocalVarExpr.makeNoUnwrap(loc, var.shadows))
 
-    // add parameter to closure implementation constructor
-    ctor := closure.cls.methodDef("make")
-    param := ParamDef(loc, cvars, "\$cvars")
-    paramVar := MethodVar.makeForParam(ctor.params.size+1, param, param.paramType)
-    ctor.params.add(param)
-    ctor.vars.add(paramVar)
+    // add parameter to constructor
+    ctor := implType.methodDef("make")
+    pvar := ctor.addParamVar(var.ctype, fieldName)
 
     // set field in constructor
-    assign := BinaryExpr.makeAssign(
-      fieldExpr(loc, ThisExpr(loc), field),
-      LocalVarExpr(loc, paramVar))
+    assign := BinaryExpr.makeAssign(fieldExpr(loc, ThisExpr(loc), field), LocalVarExpr.makeNoUnwrap(loc, pvar))
     ctor.code.stmts.insert(0, assign.toStmt)
 
-    // pass cvars instance to closure class constructor
-    closure.substitute.args.add(LocalVarExpr(loc, this.cvarsLocal))
-
-    // add local variable $cvars into doCall
-    cvarsLoad := BinaryExpr.makeAssign(
-      LocalVarExpr(loc, cvarsLocal),
-      fieldExpr(loc, ThisExpr(loc), field))
-    doCall.vars.insert(doCall.params.size, cvarsLocal)
-    doCall.vars.each |MethodVar v, Int i| { v.register = i+1 }
-    doCall.code.stmts.insert(0, cvarsLoad.toStmt)
-    return true
+    // load from field to local in beginning of doCall
+    loadLocal := BinaryExpr.makeAssign(LocalVarExpr.makeNoUnwrap(loc, var), fieldExpr(loc, ThisExpr(loc), field))
+    closure.doCall.code.stmts.insert(0, loadLocal.toStmt)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -391,7 +392,7 @@ class ClosureVars : CompilerStep
     // add parameter to constructor
     ctor  := implType.methodDef("make")
     param := ParamDef(loc, thisType, "\$this")
-    var   := MethodVar.makeForParam(ctor.params.size+1, param, param.paramType)
+    var   := MethodVar.makeForParam(ctor, ctor.params.size+1, param, param.paramType)
     ctor.params.add(param)
     ctor.vars.add(var)
 
@@ -403,6 +404,71 @@ class ClosureVars : CompilerStep
     markMutable(closure)
 
     return field
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Generate Wrapper
+//////////////////////////////////////////////////////////////////////////
+
+  **
+  ** Given a variable type, generate a wrapper class of the format:
+  **
+  **   class Wrap$ctype[$n] { CType val }
+  **
+  ** Wrappers are used to manage variables on the heap so that they
+  ** can be shared between methods and closures.  We generate one
+  ** wrapper class per variable type per pod with potentially a
+  ** non-nullable and nullable variant ($n suffix).
+  **
+  ** Eventually we'd probably like to share wrappers for common types
+  ** like Int, Str, Obj, etc.
+  **
+  ** Return the val field of the wrapper.
+  **
+  static CField genWrapper(CompilerSupport cs, CType ctype)
+  {
+    // build class name key
+    suffix := ctype.isNullable ? "\$n" : ""
+    podName := ctype.pod.name != "sys" ? "\$" + ctype.pod.name : ""
+    name := "Wrap" + podName + "\$" + ctype.name + suffix
+
+    // reuse existing wrapper
+    existing := cs.compiler.wrappers[name]
+    if (existing != null) return existing
+
+    // define new wrapper
+    loc := Location("synthetic")
+    w := TypeDef(cs.ns, loc, cs.syntheticsUnit, name)
+    w.flags = FConst.Internal | FConst.Synthetic
+    w.base  = cs.ns.objType
+    cs.addTypeDef(w)
+
+    // generate val field
+    f := FieldDef(loc, w)
+    f.name = "val"
+    f.fieldType = ctype
+    f.flags = syntheticFieldFlags
+    w.addSlot(f)
+
+    // generate constructor:  make(T v) { this.val = v }
+    ctor := MethodDef(loc, w)
+    ctor.flags  = FConst.Ctor | FConst.Internal | FConst.Synthetic
+    ctor.name   = "make"
+    ctor.ret    = cs.ns.voidType
+    param := ParamDef(loc, ctype, "v")
+    pvar  := MethodVar.makeForParam(ctor, 1, param, param.paramType)
+    ctor.params.add(param)
+    ctor.vars.add(pvar)
+    ctor.code   = Block(loc)
+    lhs := fieldExpr(loc, ThisExpr(loc, w), f)
+    rhs := LocalVarExpr(loc, pvar)
+    ctor.code.add(BinaryExpr.makeAssign(lhs, rhs).toStmt)
+    ctor.code.add(ReturnStmt.makeSynthetic(loc))
+    w.addSlot(ctor)
+
+    // cache for reuse
+    cs.compiler.wrappers[name] = f
+    return f
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -432,12 +498,5 @@ class ClosureVars : CompilerStep
 
   private const static Int syntheticFieldFlags:= FConst.Internal | FConst.Storage | FConst.Synthetic
 
-  private MethodDef? method         // current method being processed
-  private Location? location        // method.location
-  private Bool inClosure            // is method itself a closure doCall body
-  private TypeDef? cvars            // cvars class implementation
-  private MethodDef? cvarsCtor      // constructor for cvars class
-  private MethodVar? cvarsLocal     // local var referencing cvars in method body
-  private ClosureExpr[] closures    // acc for closures found in method body
-
 }
+

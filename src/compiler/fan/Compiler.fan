@@ -39,10 +39,11 @@ class Compiler
     if ((Obj?)input.log == null)
       throw ArgErr("CompilerInput.log is null")
 
-    this.input   = input
-    this.log     = input.log
-    this.errors  = CompilerErr[,]
-    this.depends = Depend[,]
+    this.input    = input
+    this.log      = input.log
+    this.errors   = CompilerErr[,]
+    this.depends  = Depend[,]
+    this.wrappers = Str:CField[:]
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -114,6 +115,7 @@ class Compiler
   File[]? resFiles          // InitInput
   TypeDef[]? types          // Parse
   ClosureExpr[]? closures   // Parse
+  Str:CField wrappers       // ClosureVars
   FPod? fpod                // Assemble
   CompilerOutput? output    // GenerateOutput
 

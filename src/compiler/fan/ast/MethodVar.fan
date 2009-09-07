@@ -13,26 +13,35 @@
 class MethodVar
 {
 
-  new make(Int register, CType ctype, Str name, Int flags := 0, Block? scope := null)
+  new make(MethodDef method, Int register, CType ctype, Str name, Int flags := 0, Block? scope := null)
   {
+    this.method   = method
     this.register = register
     this.ctype    = ctype
     this.name     = name
     this.flags    = flags
     this.scope    = scope
-    this.usedInClosure = false
   }
 
-  new makeForParam(Int register, ParamDef p, CType paramType)
-    : this.make(register, paramType, p.name, FConst.Param, null)
+  new makeForParam(MethodDef method, Int register, ParamDef p, CType paramType)
+    : this.make(method, register, paramType, p.name, FConst.Param, null)
   {
     this.paramDef = p
   }
 
   Bool isParam() { (flags & FConst.Param) != 0 }
 
+  Bool isWrapped() { wrapField != null }
+
   override Str toStr() { "$register  $name: $ctype" }
 
+  Void reassigned()
+  {
+    isReassigned = true
+    if (shadows != null) shadows.reassigned
+  }
+
+  MethodDef method    // declared method (doCall if declared in closure)
   Int register        // register number
   CType ctype         // variable type
   Str name            // variable name
@@ -41,7 +50,9 @@ class MethodVar
   Block? scope        // block which scopes this variable
   ParamDef? paramDef  // if param
   Bool usedInClosure  // local used by closure within containing method
-  CField? cvarsField  // if mapped into a field of closure variable class
-  Bool reassigned     // keeps track of reassigment assignment (we don't count initial local assign)
+  MethodVar? shadows  // if closure var, this is the variable in parent scope we shadow
+  CField? wrapField   // if wrapped onto heap this is 'Wrapper.val' field
+  readonly Bool isReassigned // keeps track of reassigment assignment (we don't count initial local assign)
+  MethodVar? paramWrapper  // wrapper local var if param has to be wrapped
 
 }

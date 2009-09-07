@@ -37,42 +37,33 @@ class CompilerSupport
   **
   ** Convenience for compiler.ns
   **
-  CNamespace ns()
-  {
-    return c.ns
-  }
+  CNamespace ns() { c.ns }
 
   **
   ** Convenience for compiler.pod
   **
-  PodDef pod()
-  {
-    return c.pod
-  }
+  PodDef pod() { c.pod }
 
   **
   ** Convenience for compiler.pod.units
   **
-  CompilationUnit[] units()
-  {
-    return c.pod.units
-  }
+  CompilationUnit[] units() { c.pod.units }
+
+  **
+  ** Get default compilation unit to use for synthetic definitions
+  ** such as wrapper types.
+  **
+  CompilationUnit syntheticsUnit() { c.pod.unit ?: c.pod.units.first }
 
   **
   ** Convenience for compiler.types
   **
-  TypeDef[] types()
-  {
-    return c.types
-  }
+  TypeDef[] types() { c.types }
 
   **
   ** Convenience for compiler.log
   **
-  CompilerLog log()
-  {
-    return c.log
-  }
+  CompilerLog log() { c.log }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

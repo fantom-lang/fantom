@@ -197,7 +197,7 @@ class Normalize : CompilerStep
     x.inheritedRet = null
     x.paramDefs    = m.paramDefs
     x.vars         = m.vars
-    x.needsCvars   = m.needsCvars
+    x.usesCvars    = m.usesCvars
     x.code         = m.code
     curType.addSlot(x)
 
