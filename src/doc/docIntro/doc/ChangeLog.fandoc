@@ -708,6 +708,7 @@
 - Func.curry => bind
 - WebClient.postStr
 - Fix fwt::ScrollPane to actually work
+- Compiler warning for curry '&' operator
 
 TODO: remove old List, Map, Func toImmutable curry methods
 
