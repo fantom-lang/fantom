@@ -27,38 +27,71 @@ class ClosureTest : Test
 // Immutable
 //////////////////////////////////////////////////////////////////////////
 
-  Void testImmutable1() { verifyImmutable |,| { echo("xxx") } }
-  Void testImmutable2() { verifyImmutable |Str x| { echo(x) } }
-  Void testImmutable3() { x := 0; verifyMutable |,| { x++ } }
-  Void testImmutable4() { verifyMutable |,| { verify(true) } }
-  Void testImmutable5() { verifyMutable |,| { echo(this) } }
-
-  Void testImmutableMulti()
+  Void testImmutable()
   {
-    x := 0
-    a := |,| { x++ }
-    b := |,| { echo(x) }
-    c := |,| { echo(true) }
-    d := |,| { a() }
-    e := |,| { f := |,| { x++ } }
+    x := 2
+    y := 3
+    InStream in := "foo".in
+    c := ClosureInConst()
+    Obj? xObj := x
+    Obj? inObj := in
+    Obj cObj := c
+    Int? m := 3
 
-    verifyMutable(a)
-    verifyMutable(b)
-    verifyImmutable(c)
-    verifyMutable(d)
-    verifyMutable(e)
+    verifyAlwaysImmutable |,| { echo("foo") }
+    verifyAlwaysImmutable |,| { echo(x) }
+    verifyAlwaysImmutable |,| { echo("$x, $y") }
+    verifyAlwaysImmutable(c.f)
+
+    verifyNeverImmutable |,| { echo(this) }
+    verifyNeverImmutable |,| { echo(in) }
+    verifyNeverImmutable |,| { echo("$this, $in") }
+    verifyNeverImmutable |,| { m += 1 }
+    verifyNeverImmutable |,| { echo(m) } // b/c of above
+
+    verifyMaybeImmutable(true)  |,| { echo(xObj) }
+    verifyMaybeImmutable(true)  |,| { echo(cObj) }
+    verifyMaybeImmutable(false) |,| { echo(inObj) }
   }
 
-  Void verifyImmutable(Func f)
+  Void testImmutableList()
+  {
+    list := [0, 1, 2]
+    f := |->Obj| { list }
+    g := f.toImmutable
+    verifyEq(f.isImmutable, false); verifyEq(f(), [0, 1, 2])
+    verifyEq(g.isImmutable, true);  verifyEq(g(), [0, 1, 2])
+    list.add(3)
+    verifyEq(f(), [0, 1, 2, 3])
+    verifyEq(g(), [0, 1, 2])
+    verifyEq(g()->isImmutable, true)
+  }
+
+  Void verifyAlwaysImmutable(Func f)
   {
     verifyEq(f.isImmutable, true)
     verifySame(f.toImmutable, f)
   }
 
-  Void verifyMutable(Func f)
+  Void verifyNeverImmutable(Func f)
   {
     verifyEq(f.isImmutable, false)
-    verifyErr(NotImmutableErr#) |,| { f.toImmutable }
+    verifyErr(NotImmutableErr#) { f.toImmutable }
+  }
+
+  Void verifyMaybeImmutable(Bool ok, Func f)
+  {
+    verifyEq(f.isImmutable, false)
+    if (ok)
+    {
+      g := f.toImmutable
+      verifyNotSame(f, g)
+      verifyEq(g.isImmutable, true)
+    }
+    else
+    {
+      verifyErr(NotImmutableErr#) { f.toImmutable }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -323,6 +356,42 @@ class ClosureTest : Test
     return [b.x, b.y]
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Nested Test
+//////////////////////////////////////////////////////////////////////////
+
+  Void testNested()
+  {
+    v := 'v'
+    f := |->Int[]|
+    {
+      w := 77
+      g := |->Int[]|
+      {
+        w = 'w'
+        x := 'x'
+        h := |->Int[]|
+        {
+          y := 99
+          i := |->Int[]|
+          {
+            j := |->Int[]|
+            {
+              y = 'y'
+              z := 'z'
+              return [v, w, x, y, z]
+            }
+            return j()
+          }
+          return i()
+        }
+        return h()
+      }
+      return g()
+    }
+    verifyEq(f(), ['v', 'w', 'x', 'y', 'z'])
+  }
+
 }
 
 **************************************************************************
@@ -337,6 +406,11 @@ class ClosureFieldA
 class ClosureFieldB
 {
   const |->Str| f := |->Str| { return toStr } // uses this
+}
+
+const class ClosureInConst
+{
+  Func f() { |,| { echo(this) } }
 }
 
 **************************************************************************
