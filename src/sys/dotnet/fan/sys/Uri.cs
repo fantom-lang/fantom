@@ -1417,7 +1417,7 @@ namespace Fan.Sys
     static List emptyPath()
     {
       List p = m_emptyPath;
-      if (p == null) p = m_emptyPath = new List(Sys.StrType).toImmutable();
+      if (p == null) p = m_emptyPath = (List)new List(Sys.StrType).toImmutable();
       return p;
     }
     static List m_emptyPath;
@@ -1425,7 +1425,7 @@ namespace Fan.Sys
     static Map emptyQuery()
     {
       Map q = m_emptyQuery;
-      if (q == null) q = m_emptyQuery = new Map(Sys.StrType, Sys.StrType).toImmutable();
+      if (q == null) q = m_emptyQuery = (Map)new Map(Sys.StrType, Sys.StrType).toImmutable();
       return q;
     }
     static Map m_emptyQuery;

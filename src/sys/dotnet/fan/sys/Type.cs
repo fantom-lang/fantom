@@ -220,7 +220,7 @@ namespace Fan.Sys
 
     public List emptyList()
     {
-      if (m_emptyList == null) m_emptyList = new List(this, 0).toImmutable();
+      if (m_emptyList == null) m_emptyList = (List)new List(this, 0).toImmutable();
       return m_emptyList;
     }
 

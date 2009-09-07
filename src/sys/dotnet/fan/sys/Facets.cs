@@ -88,7 +88,7 @@ namespace Fan.Sys
       // optimize empty case which is the common case
       if (m_map.Count == 0)
       {
-        if (m_emptyMap == null) m_emptyMap = new Map(mapType()).toImmutable();
+        if (m_emptyMap == null) m_emptyMap = (Map)new Map(mapType()).toImmutable();
         return m_emptyMap;
       }
 

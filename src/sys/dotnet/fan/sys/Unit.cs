@@ -70,19 +70,19 @@ namespace Fan.Sys
           List q = (List)all.get(i);
           string name = (string)q.get(0);
           q.removeAt(0);
-          q = q.toImmutable();
+          q = (List)q.toImmutable();
           quantityNames.add(name);
           m_quantities[name] = q;
         }
 
         // return quantity names
-        return quantityNames.toImmutable();
+        return (List)quantityNames.toImmutable();
       }
       catch (Exception e)
       {
         System.Console.WriteLine("WARNING: Cannot load lib/units.fog");
         Err.dumpStack(e);
-        return new List(Sys.StrType).toImmutable();
+        return (List)new List(Sys.StrType).toImmutable();
       }
     }
 

@@ -267,7 +267,7 @@ namespace Fan.Sys
       {
         q = new Map(Sys.StrType, Sys.StrType);
         q.caseInsensitive(true);
-        q = q.toImmutable();
+        q = (Map)q.toImmutable();
         m_emptyQuery = q;
       }
       return q;
