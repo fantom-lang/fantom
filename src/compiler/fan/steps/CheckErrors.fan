@@ -1413,7 +1413,7 @@ class CheckErrors : CompilerStep
     if (sig != null)
       msg += "|" + sig.params.join(", ") + "|"
     else
-      msg += "$name(" + params.join(", ", &paramTypeStr(base)) + ")"
+      msg += "$name(" + params.join(", ", |p| { paramTypeStr(base, p) }) + ")"
     msg += ", not (" + args.join(", ", |Expr e->Str| { return "$e.toTypeStr" }) + ")"
     err(msg, call.location)
   }

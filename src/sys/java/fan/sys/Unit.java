@@ -66,19 +66,19 @@ public final class Unit
         List q = (List)all.get(i);
         String name = (String)q.get(0);
         q.removeAt(0);
-        q = q.toImmutable();
+        q = (List)q.toImmutable();
         quantityNames.add(name);
         quantities.put(name, q);
       }
 
       // return quantity names
-      return quantityNames.toImmutable();
+      return (List)quantityNames.toImmutable();
     }
     catch (Throwable e)
     {
       System.out.println("WARNING: Cannot load etc/sys/units.fog");
       e.printStackTrace();
-      return new List(Sys.StrType).toImmutable();
+      return (List)new List(Sys.StrType).toImmutable();
     }
   }
 

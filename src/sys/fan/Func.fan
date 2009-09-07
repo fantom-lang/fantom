@@ -123,8 +123,4 @@ final class Func
   **
   Func retype(Type t)
 
-// TODO
-Func curry(Obj?[] args)
-Func toImmutable()
-
 }

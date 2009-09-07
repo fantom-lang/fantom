@@ -1411,7 +1411,7 @@ public final class Uri
   static List emptyPath()
   {
     List p = emptyPath;
-    if (p == null) p = emptyPath = new List(Sys.StrType).toImmutable();
+    if (p == null) p = emptyPath = (List)new List(Sys.StrType).toImmutable();
     return p;
   }
   static List emptyPath;
@@ -1419,7 +1419,7 @@ public final class Uri
   static Map emptyQuery()
   {
     Map q = emptyQuery;
-    if (q == null) q = emptyQuery = new Map(Sys.StrType, Sys.StrType).toImmutable();
+    if (q == null) q = emptyQuery = (Map)new Map(Sys.StrType, Sys.StrType).toImmutable();
     return q;
   }
   static Map emptyQuery;

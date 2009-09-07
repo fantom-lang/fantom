@@ -40,8 +40,7 @@ public class Actor
     // check receive method
     if (receive == null && self.type() == Sys.ActorType)
       throw ArgErr.make("must supply receive func or subclass Actor").val;
-    if (receive != null && !receive.isImmutable())
-      throw NotImmutableErr.make("Receive func not immutable: " + receive).val;
+    if (receive != null) receive = (Func)receive.toImmutable();
 
     // init
     self.pool = pool;
@@ -60,11 +59,8 @@ public class Actor
   public static void makeCoalescing$(Actor self, ActorPool pool, Func k, Func c) { makeCoalescing$(self, pool, k, c, null); }
   public static void makeCoalescing$(Actor self, ActorPool pool, Func k, Func c, Func r)
   {
-    if (k != null && !k.isImmutable())
-      throw NotImmutableErr.make("Coalescing toKey func not immutable: " + k).val;
-
-    if (c != null && !c.isImmutable())
-      throw NotImmutableErr.make("Coalescing coalesce func not immutable: " + c).val;
+    if (k != null) k = (Func)k.toImmutable();
+    if (c != null) c = (Func)c.toImmutable();
 
     make$(self, pool, r);
     self.queue = new CoalescingQueue(k, c);

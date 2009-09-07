@@ -61,24 +61,22 @@ public class DesktopPeer
     return WidgetPeer.toFanWidget(Env.get().display.getFocusControl());
   }
 
-  public static void callAsync(final Func func)
+  public static void callAsync(Func func)
   {
     // check if running on UI thread
     Env env = Env.main();
     if (java.lang.Thread.currentThread() != env.display.getThread())
-    {
-      if (!func.isImmutable())
-        throw NotImmutableErr.make("callAsync func must be immutable if not on UI thread").val;
-    }
+      func = (Func)func.toImmutable();
 
     // enqueue on main UI thread's display
+    final Func finalFunc = func;
     env.display.asyncExec(new Runnable()
     {
       public void run()
       {
         try
         {
-          func.call();
+          finalFunc.call();
         }
         catch (Throwable e)
         {

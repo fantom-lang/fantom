@@ -542,7 +542,7 @@ public final class Map
     return immutable;
   }
 
-  public final Map toImmutable()
+  public final Object toImmutable()
   {
     if (immutable) return this;
 

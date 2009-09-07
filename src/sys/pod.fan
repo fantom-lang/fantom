@@ -139,7 +139,7 @@ pod sys
   ** Pod facet for time target was pod was built local to build host.
   ** Facet is set automatically by compiler.
   **
-  DateTime podBuildTime := ""
+  DateTime? podBuildTime := null
 
   **
   ** This facet is used on pod, public types, and slots to indicate they should

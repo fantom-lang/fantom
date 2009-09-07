@@ -208,7 +208,7 @@ public abstract class Type
 
   public final List emptyList()
   {
-    if (emptyList == null) emptyList = new List(this, 0).toImmutable();
+    if (emptyList == null) emptyList = (List)new List(this, 0).toImmutable();
     return emptyList;
   }
 

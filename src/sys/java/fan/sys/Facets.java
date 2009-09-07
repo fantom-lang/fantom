@@ -82,7 +82,7 @@ public final class Facets
     // optimize empty case which is the common case
     if (map.size() == 0)
     {
-      if (emptyMap == null) emptyMap = new Map(mapType()).toImmutable();
+      if (emptyMap == null) emptyMap = (Map)new Map(mapType()).toImmutable();
       return emptyMap;
     }
 

@@ -1422,9 +1422,9 @@ class ComplexLiteral : Expr
     vals = walkExprs(v, vals)
   }
 
-  override Str toStr() { doToStr(&Expr.toStr) }
+  override Str toStr() { doToStr |expr| { expr.toStr } }
 
-  override Str serialize() { doToStr(&Expr.serialize) }
+  override Str serialize() { doToStr |expr| { expr.serialize } }
 
   Str doToStr(|Expr->Str| f)
   {
