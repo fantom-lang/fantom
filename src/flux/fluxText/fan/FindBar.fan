@@ -401,9 +401,9 @@ internal class FindBar : ContentPane, TextEditorSupport
   private Label msg := Label()
   private Bool ignore := false
 
-  private Command cmdNext := Command.makeLocale(Flux#.pod, "findPrev", &prev)
-  private Command cmdPrev := Command.makeLocale(Flux#.pod, "findNext", &next)
-  private Command cmdHide := Command.makeLocale(Flux#.pod, "findHide", &hide)
-  private Command cmdReplace    := Command.makeLocale(Flux#.pod, "replace",    &replace)
-  private Command cmdReplaceAll := Command.makeLocale(Flux#.pod, "replaceAll", &replaceAll)
+  private Command cmdNext := Command.makeLocale(Flux#.pod, "findPrev") { prev }
+  private Command cmdPrev := Command.makeLocale(Flux#.pod, "findNext") { next }
+  private Command cmdHide := Command.makeLocale(Flux#.pod, "findHide") { hide }
+  private Command cmdReplace    := Command.makeLocale(Flux#.pod, "replace")    { replace }
+  private Command cmdReplaceAll := Command.makeLocale(Flux#.pod, "replaceAll") { replaceAll }
 }

@@ -27,11 +27,11 @@ internal class TextEditorController : TextEditorSupport
 
   Void register()
   {
-    richText.onVerifyKey.add(&onVerifyKey)
-    richText.onVerify.add(&onVerify)
-    richText.onModify.add(&onModified)
-    richText.onCaret.add(&onCaret)
-    richText.onFocus.add(&onFocus)
+    richText.onVerifyKey.add { onVerifyKey(it) }
+    richText.onVerify.add { onVerify(it) }
+    richText.onModify.add { onModified(it) }
+    richText.onCaret.add { onCaret(it) }
+    richText.onFocus.add {onFocus(it) }
   }
 
   Void onVerifyKey(Event event)

@@ -308,19 +308,19 @@ internal class Parser
     switch (tok.size)
     {
       case 0:
-        return Matcher(0, &noMatch, |,| {})
+        return Matcher(0, |->Bool| { noMatch }, |,| {})
       case 1:
         if (esc > 0)
-          return Matcher(1, &match1Esc(tok[0], esc), |,| { consume })
+          return Matcher(1, |->Bool| { match1Esc(tok[0], esc) }, |,| { consume })
         else
-          return Matcher(1, &match1(tok[0]), |,| { consume })
+          return Matcher(1, |->Bool| { match1(tok[0]) }, |,| { consume })
       case 2:
         if (esc > 0)
-          return Matcher(2, &match2Esc(tok[0], tok[1], esc), |,| { consume; consume })
+          return Matcher(2, |->Bool| { match2Esc(tok[0], tok[1], esc) }, |,| { consume; consume })
         else
-          return Matcher(2, &match2(tok[0], tok[1]), |,| { consume; consume })
+          return Matcher(2, |->Bool| { match2(tok[0], tok[1]) }, |,| { consume; consume })
       default:
-        return Matcher(tok.size, &matchN(tok), &consumeN(tok.size))
+        return Matcher(tok.size, |->Bool| { matchN(tok) }, |,| { consumeN(tok.size) })
     }
   }
 

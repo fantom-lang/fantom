@@ -116,7 +116,7 @@ abstract class Resource
     views.each |Type v, Int i|
     {
       viewUri := i == 0 ? uri : uri.plusQuery(["view":v.qname])
-      c := Command(v.name, null, &frame.load(viewUri, LoadMode(event)))
+      c := Command(v.name, null) { frame.load(viewUri, LoadMode(event)) }
       menu.add(MenuItem { command = c })
     }
     return menu

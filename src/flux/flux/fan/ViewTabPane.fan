@@ -150,7 +150,7 @@ internal class TabBar : Canvas
   new make(ViewTabPane pane)
   {
     this.pane = pane
-    onMouseDown.add(&pressed)
+    onMouseDown.add { pressed(it) }
   }
 
   override Size prefSize(Hints hints := Hints.defVal)
