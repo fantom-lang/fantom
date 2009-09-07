@@ -572,7 +572,7 @@ class InteropTest : JavaTest
         Str[] test4(Str[] a) { return funcC(a) |Str[] x->Str[]| { return x.swap(0, 1) } }
         Str test5() { return funcA(\"foo\") |->Str| { return \"fixed\" } }
         Int test6() { n := 3; run |->Int| { return n++ }; return n }
-        Str? test7() { return funcA(\"seven\", &wrap) }
+        Str? test7() { return funcA(\"seven\", |Str s->Str| { wrap(s) }) }
         Str? test8() { f := |->Str| { return 8.toStr }; return funcA(\"bad\", f) }
 
         static Str wrap(Str s) { return \"[\$s]\" }
