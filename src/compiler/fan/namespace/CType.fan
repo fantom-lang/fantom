@@ -382,6 +382,24 @@ mixin CType
   ** Is this a valid type usable anywhere (such as local var)
   virtual Bool isValid() { !isVoid && !isThis }
 
+  **
+  ** Is this type ok to use as a const field?  Any const
+  ** type fine, plus we allow Obj, List, Map, and Func since
+  ** they will implicitly have toImmutable called on them.
+  **
+  Bool isConstFieldType()
+  {
+    if (isConst) return true
+
+    // these are checked at runtime
+    t := deref.toNonNullable
+    if (t.isObj || t is ListType || t is MapType || t is FuncType)
+      return true
+
+    // definitely no way it can be immutable
+    return false
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Slots
 //////////////////////////////////////////////////////////////////////////

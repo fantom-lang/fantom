@@ -49,11 +49,10 @@ class InitClosures : CompilerStep
     //    R doCall(A a, B b, ...) { closure.code }
     // }
 
-    setup(c)       // setup our fields to process this closure
-    genClass       // generate anonymous implementation class
-    genCtor        // generate $make()
-    genIsImmutable // generate isImmutable()
-    genDoCall      // generate doCall(...)
+    setup(c)      // setup our fields to process this closure
+    genClass      // generate anonymous implementation class
+    genCtor       // generate make()
+    genDoCall     // generate doCall(...)
     genCall       // generate call(...) { doCall(...) }
     substitute    // substitute closure code with anonymous class ctor
   }
@@ -99,33 +98,6 @@ class InitClosures : CompilerStep
     ctor.ret  = ns.voidType
     ctor.code = code
     cls.addSlot(ctor)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Generate IsConst Override
-//////////////////////////////////////////////////////////////////////////
-
-  private Void genIsImmutable()
-  {
-    // we assume immutable until proved otherwise in ClosureVars step
-    genIsImmutableMethod(compiler, loc, cls, true)
-  }
-
-  static internal Void genIsImmutableMethod(Compiler compiler, Location loc, TypeDef parent, Bool literalVal)
-  {
-    Expr literal := literalVal ?
-       LiteralExpr(loc, ExprId.trueLiteral, compiler.ns.boolType, true) :
-       LiteralExpr(loc, ExprId.falseLiteral, compiler.ns.boolType, false)
-
-    code := Block(loc)
-    code.stmts.add(ReturnStmt.makeSynthetic(loc, literal))
-
-    m := MethodDef(loc, parent)
-    m.flags = FConst.Public | FConst.Synthetic | FConst.Override
-    m.name = "isImmutable"
-    m.ret  = compiler.ns.boolType
-    m.code = code
-    parent.addSlot(m)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -226,7 +198,7 @@ class InitClosures : CompilerStep
     if (signature.ret.isVoid)
     {
       m.code.add(c.toStmt)
-      m.code.add(ReturnStmt.makeSynthetic(loc, LiteralExpr.makeNullLiteral(loc, ns)))
+      m.code.add(ReturnStmt.makeSynthetic(loc, LiteralExpr.makeNull(loc, ns)))
     }
     else
     {

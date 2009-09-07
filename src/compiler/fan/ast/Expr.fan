@@ -305,10 +305,14 @@ class LiteralExpr : Expr
       throw Err("null literal must typed as nullable!")
   }
 
-  new makeNullLiteral(Location loc, CNamespace ns)
-    : this.make(loc, ExprId.nullLiteral, ns.objType.toNullable, null)
-  {
-  }
+  new makeNull(Location loc, CNamespace ns)
+    : this.make(loc, ExprId.nullLiteral, ns.objType.toNullable, null) {}
+
+  new makeTrue(Location loc, CNamespace ns)
+    : this.make(loc, ExprId.trueLiteral, ns.boolType, true) {}
+
+  new makeFalse(Location loc, CNamespace ns)
+    : this.make(loc, ExprId.falseLiteral, ns.boolType, false) {}
 
   static LiteralExpr makeDefaultLiteral(Location loc, CNamespace ns, CType ctype)
   {
@@ -318,7 +322,7 @@ class LiteralExpr : Expr
       if (ctype.isInt())   return make(loc, ExprId.intLiteral, ctype, 0)
       if (ctype.isFloat()) return make(loc, ExprId.floatLiteral, ctype, 0f)
     }
-    return makeNullLiteral(loc, ns)
+    return makeNull(loc, ns)
   }
 
   override Int? asTableSwitchCase()

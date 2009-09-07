@@ -88,6 +88,7 @@ class Compiler
     CheckErrors(this).run
     CheckParamDefs(this).run
     ClosureVars(this).run
+    ClosureToImmutable(this).run
     ConstChecks(this).run
   }
 

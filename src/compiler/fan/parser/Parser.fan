@@ -1563,12 +1563,12 @@ public class Parser : CompilerSupport
       case Token.durationLiteral: return LiteralExpr(loc, ExprId.durationLiteral, ns.durationType, consume.val)
       case Token.uriLiteral:      return LiteralExpr(loc, ExprId.uriLiteral, ns.uriType, consume.val)
       case Token.lbracket:        return collectionLiteralExpr(loc, null)
-      case Token.falseKeyword:    consume; return LiteralExpr(loc, ExprId.falseLiteral, ns.boolType, false)
-      case Token.nullKeyword:     consume; return LiteralExpr.makeNullLiteral(loc, ns)
+      case Token.falseKeyword:    consume; return LiteralExpr.makeFalse(loc, ns)
+      case Token.nullKeyword:     consume; return LiteralExpr.makeNull(loc, ns)
       case Token.superKeyword:    consume; return SuperExpr(loc)
       case Token.thisKeyword:     consume; return ThisExpr(loc)
       case Token.itKeyword:       consume; return ItExpr(loc)
-      case Token.trueKeyword:     consume; return LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)
+      case Token.trueKeyword:     consume; return LiteralExpr.makeTrue(loc, ns)
       case Token.pound:           consume; return SlotLiteralExpr(loc, curType, consumeId)
       case Token.at:              return symbolLiteral
     }

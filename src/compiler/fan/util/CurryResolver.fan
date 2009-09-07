@@ -266,13 +266,30 @@ class CurryResolver : CompilerSupport
     InitClosures.genMethodCall(compiler, loc, curry, sig, doCall, thisIsParam)
 
     // generate isImmutable method
-    InitClosures.genIsImmutableMethod(compiler, loc, curry, allArgsConst)
+    genIsImmutableMethod(compiler, loc, curry, allArgsConst)
 
     // replace curry with call to CurryXX.make
     result := CallExpr.makeWithMethod(loc, null, ctor)
     result.args = args
     result.ctype = sig
     return result
+  }
+
+  static internal Void genIsImmutableMethod(Compiler compiler, Location loc, TypeDef parent, Bool literalVal)
+  {
+    Expr literal := literalVal ?
+       LiteralExpr(loc, ExprId.trueLiteral, compiler.ns.boolType, true) :
+       LiteralExpr(loc, ExprId.falseLiteral, compiler.ns.boolType, false)
+
+    code := Block(loc)
+    code.stmts.add(ReturnStmt.makeSynthetic(loc, literal))
+
+    m := MethodDef(loc, parent)
+    m.flags = FConst.Public | FConst.Synthetic | FConst.Override
+    m.name = "isImmutable"
+    m.ret  = compiler.ns.boolType
+    m.code = code
+    parent.addSlot(m)
   }
 
 //////////////////////////////////////////////////////////////////////////
