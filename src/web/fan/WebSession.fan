@@ -82,7 +82,7 @@ class WebSession
 **
 internal const class WebSessionMgr : ActorPool
 {
-  const Actor actor := Actor(this, &receive)
+  const Actor actor := Actor(this) |msg,cx| { receive(msg, cx) }
 
   const Duration houseKeepingPeriod := 1min
 

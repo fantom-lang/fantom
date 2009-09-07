@@ -68,7 +68,7 @@ const class Contract
   **
   override Str toStr()
   {
-    return uris.join(" ", &Uri.encode)
+    return uris.join(" ") {it.encode}
   }
 
   **
