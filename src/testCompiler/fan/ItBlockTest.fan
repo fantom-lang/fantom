@@ -334,7 +334,8 @@ class ItBlockTest : CompilerTest
 // Catch
 //////////////////////////////////////////////////////////////////////////
 
-  Void testCatch()
+  // try with final (never reassigned) catch variable
+  Void testCatchFinal()
   {
     compile(
      "class Acme
@@ -358,6 +359,35 @@ class ItBlockTest : CompilerTest
     obj := pod.types.first.make
     verifyEq(obj->m("foo"), Obj["foo"])
     verifyEq(obj->m("throw"), Obj["sys::ArgErr", "ArgErr"])
+  }
+
+  // try with non-final (reassigned) catch variable
+  Void testCatchNonFinal()
+  {
+    compile(
+     "class Acme
+      {
+        Obj m(Str a)
+        {
+          try
+          {
+            if (a == \"throw\") throw ArgErr()
+            else return Obj[,] { add(a) }
+          }
+          catch (Err e)
+          {
+            list := Obj[,] { add(e.type.name) }
+            f := |,| { e = CastErr() }
+            f()
+            list.add(e.type.name)
+            return list
+          }
+        }
+      }")
+
+    obj := pod.types.first.make
+    verifyEq(obj->m("foo"), Obj["foo"])
+    verifyEq(obj->m("throw"), Obj["ArgErr", "CastErr"])
   }
 
 //////////////////////////////////////////////////////////////////////////

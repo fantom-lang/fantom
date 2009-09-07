@@ -45,7 +45,6 @@ class MethodDef : SlotDef, CMethod
     this.ret = parent.ns.error
     paramDefs = ParamDef[,]
     vars = MethodVar[,]
-    needsCvars = false
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,14 +54,14 @@ class MethodDef : SlotDef, CMethod
   **
   ** Return if this a static initializer block.
   **
-  Bool isStaticInit() { return name == "static\$init" }
-  static Bool isNameStaticInit(Str name) { return name == "static\$init" }
+  Bool isStaticInit() { name == "static\$init" }
+  static Bool isNameStaticInit(Str name) { name == "static\$init" }
 
   **
   ** Return if this a instance initializer block.
   **
-  Bool isInstanceInit() { return name.startsWith("instance\$init\$") }
-  static Bool isNameInstanceInit(Str name) { return name.startsWith("instance\$init\$") }
+  Bool isInstanceInit() { name.startsWith("instance\$init\$") }
+  static Bool isNameInstanceInit(Str name) { name.startsWith("instance\$init\$") }
 
   **
   ** Return if getter/setter for FieldDef
@@ -75,7 +74,7 @@ class MethodDef : SlotDef, CMethod
   **
   ** Return if this is a once method
   **
-  Bool isOnce() { return flags & Parser.Once != 0 }
+  Bool isOnce() { flags & Parser.Once != 0 }
 
   **
   ** Make and add a MethodVar for a local variable.
@@ -101,34 +100,33 @@ class MethodDef : SlotDef, CMethod
     if (name == null) name = "\$temp" + reg
 
     // create variable and add it variable list
-    var := MethodVar(reg, ctype, name, 0, scope)
+    var := MethodVar(this, reg, ctype, name, 0, scope)
     vars.add(var)
     return var
   }
 
   **
-  ** Get the cvars local variable or throw and exception if not defined
+  ** Add a parameter to the end of the method signature and
+  ** initialize the param MethodVar.
+  ** Note: currently this only works if no locals are defined.
   **
-  MethodVar cvarsVar()
+  MethodVar addParamVar(CType ctype, Str name)
   {
-    var := vars.find |MethodVar v->Bool| { v.name == "\$cvars" }
-    if (var != null) return var
-    throw Err("Expected cvars local to be defined: $qname")
+    if (vars.size > 0 && !vars[-1].isParam) throw Err("Add param with locals $qname")
+    param := ParamDef(location, ctype, name)
+    params.add(param)
+    var := MethodVar.makeForParam(this, params.size, param, ctype)
+    vars.add(var)
+    return var
   }
 
 //////////////////////////////////////////////////////////////////////////
 // CMethod
 //////////////////////////////////////////////////////////////////////////
 
-  override Str signature()
-  {
-    return qname + "(" + params.join(",") + ")"
-  }
+  override Str signature() { qname + "(" + params.join(",") + ")" }
 
-  override CType returnType()
-  {
-    return ret
-  }
+  override CType returnType() { ret }
 
   override CType inheritedReturnType()
   {
@@ -138,10 +136,7 @@ class MethodDef : SlotDef, CMethod
       return ret
   }
 
-  override CParam[] params()
-  {
-    return paramDefs
-  }
+  override CParam[] params() { paramDefs }
 
 //////////////////////////////////////////////////////////////////////////
 // Tree
@@ -213,6 +208,5 @@ class MethodDef : SlotDef, CMethod
   CallExpr? ctorChain    // constructor chain for this/super ctor
   MethodVar[] vars       // all param/local variables in method
   FieldDef? accessorFor  // if accessor method for field
-  Bool needsCvars        // does this method have locals used inside closures
-
+  Bool usesCvars         // does this method have locals enclosed by closure
 }

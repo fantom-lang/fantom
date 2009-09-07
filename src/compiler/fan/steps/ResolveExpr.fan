@@ -147,7 +147,7 @@ class ResolveExpr : CompilerStep
     // is not a final variable (final being like Java semanatics)
     assignTarget := expr.assignTarget as LocalVarExpr
     if (assignTarget != null && assignTarget.var != null)
-      assignTarget.var.reassigned = true
+      assignTarget.var.reassigned
 
     return expr
   }
@@ -671,13 +671,13 @@ class ResolveExpr : CompilerStep
   private Void resolveClosure(ClosureExpr expr)
   {
     // save away current locals in scope
-    expr.enclosingLocals = localsInScope
+    expr.enclosingVars = localsInScope
 
     // make sure none of the closure's parameters
     // conflict with the locals in scope
     expr.doCall.paramDefs.each |ParamDef p|
     {
-      if (expr.enclosingLocals.containsKey(p.name) && p.name != "it")
+      if (expr.enclosingVars.containsKey(p.name) && p.name != "it")
         err("Closure parameter '$p.name' is already defined in current block", p.location)
     }
   }
@@ -729,7 +729,7 @@ class ResolveExpr : CompilerStep
 
     m.paramDefs.each |ParamDef p|
     {
-      var := MethodVar.makeForParam(reg++, p, p.paramType.parameterizeThis(curType))
+      var := MethodVar.makeForParam(m, reg++, p, p.paramType.parameterizeThis(curType))
       m.vars.add(var)
     }
   }
@@ -768,35 +768,36 @@ class ResolveExpr : CompilerStep
     if (inClosure)
     {
       closure := curType.closure
-      binding = closure.enclosingLocals[name]
+      binding = closure.enclosingVars[name]
       if (binding != null)
       {
-        // mark the local var as being used in a closure so that
-        // we know to generate a cvar field for it in ClosureVars
+        // mark the enclosing method and var as being used in a closure
+        binding.method.usesCvars = true
         binding.usedInClosure = true
 
-        // mark this closure as using cvars
-        closure.usesCvars = true
+        // create new "shadow" local var in closure body which
+        // shadows the enclosed variable from parent scope,
+        // we'll do further processing in ClosureVars
+        shadow := curMethod.addLocalVar(binding.ctype, binding.name, currentBlock)
+        shadow.usedInClosure = true
+        shadow.shadows = binding
 
-        // we don't currently handle nested closures
-        // with cvars in a field initializer
-        enclosingMethod := closure.enclosingSlot as MethodDef
-        if (enclosingMethod == null)
-        {
-          err("Nested closures not supported in field initializer", loc)
-          return binding
-        }
-
-        // mark the enclosing method and recursively
-        // any outer closures as needing cvars
-        enclosingMethod.needsCvars = true
+        // if there are intervening closure scopes between
+        // the original scope and current scope, then we need to
+        // add a pass-thru variable in each scope
+        last := shadow
         for (p := closure.enclosingClosure; p != null; p = p.enclosingClosure)
         {
-          p.usesCvars = true
-          p.doCall.needsCvars = true
+          if (binding.method === p.doCall) break
+          passThru := p.doCall.addLocalVar(binding.ctype, binding.name, p.doCall.code)
+          passThru.usedInClosure = true
+          passThru.shadows = binding
+          passThru.usedInClosure = true
+          last.shadows = passThru
+          last = passThru
         }
 
-        return binding
+        return shadow
       }
     }
 
@@ -811,7 +812,7 @@ class ResolveExpr : CompilerStep
   private Str:MethodVar localsInScope()
   {
     Str:MethodVar acc := inClosure ?
-      curType.closure.enclosingLocals.dup :
+      curType.closure.enclosingVars.dup :
       Str:MethodVar[:]
 
     curMethod.vars.each |MethodVar var|
