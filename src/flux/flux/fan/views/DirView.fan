@@ -21,8 +21,8 @@ internal class DirView : View
     content = Table
     {
       it.multi = true
-      it.onAction.add(&this.onAction)
-      it.onPopup.add(&this.onPopup)
+      it.onAction.add |e| { this.onAction(e) }
+      it.onPopup.add  |e| { this.onPopup(e) }
       it.border = false
       it.model = this.model
     }

@@ -19,7 +19,7 @@ internal class HtmlView : View
   {
     browser := WebBrowser()
     {
-      it.onHyperlink.add(&this.onHyperlink)
+      it.onHyperlink.add |e| { this.onHyperlink(e) }
     }
     content = BorderPane
     {

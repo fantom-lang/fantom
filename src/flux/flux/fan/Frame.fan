@@ -232,7 +232,7 @@ class Frame : Window
     icon  = Flux.icon(Desktop.isMac ? `/x256/flux.png` : `/x16/flux.png`)
     menuBar = commands.buildMenuBar
     onClose.add |Event e| { e.consume; commands.exit.invoke(e) }
-    this->onDrop = &handleDrop  // use back-door hook for file drop
+    this->onDrop = |data| { handleDrop(data) }  // use back-door hook for file drop
     content = EdgePane
     {
       top = EdgePane

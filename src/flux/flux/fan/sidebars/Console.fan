@@ -33,7 +33,7 @@ class Console : SideBar
       it.editable = false
       it.border = false
       it.font = Desktop.sysFontMonospace
-      it.onMouseUp.add(&onRichTextMouseDown)
+      it.onMouseUp.add |e| { onRichTextMouseDown(e) }
     }
     content = EdgePane
     {
@@ -129,7 +129,7 @@ class Console : SideBar
       it.command = command
       it.dir = dir
     }
-    Actor(ActorPool(), &execRun(params)).send(null)
+    Actor(ActorPool(), |,| { execRun(params) }).send(null)
     return this
   }
 
@@ -147,7 +147,7 @@ class Console : SideBar
     }
     finally
     {
-      Desktop.callAsync(&execDone(params.frameId))
+      Desktop.callAsync |,| { execDone(params.frameId) }
     }
   }
 
@@ -191,7 +191,7 @@ class Console : SideBar
       frameId = frame.id
       command = params
     }
-    Actor(ActorPool(), &doRun(method, execParams)).send(null)
+    Actor(ActorPool(), |,| { doRun(method, execParams) }).send(null)
     return this
   }
 
@@ -200,11 +200,11 @@ class Console : SideBar
     try
     {
       results := (Str[])method.call(params)
-      results.each |Str s| { Desktop.callAsync(&execWrite(params.frameId, s)) }
+      results.each |Str s| { Desktop.callAsync |,| { execWrite(params.frameId, s) } }
     }
     finally
     {
-      Desktop.callAsync(&execDone(params.frameId))
+      Desktop.callAsync |,| { execDone(params.frameId) }
     }
   }
 
@@ -260,8 +260,8 @@ class Console : SideBar
   internal ConsoleModel? model
   internal RichText? richText
 
-  private Command copyCmd := Command.makeLocale(Flux#.pod, "copy", &onCopy)
-  private Command hideCmd := Command.makeLocale(Flux#.pod, "navBar.close", &onClose)
+  private Command copyCmd := Command.makeLocale(Flux#.pod, "copy") { onCopy }
+  private Command hideCmd := Command.makeLocale(Flux#.pod, "navBar.close") { onClose }
 
 }
 
@@ -485,14 +485,14 @@ internal class ConsoleOutStream : OutStream
   override This write(Int b)
   {
     str := Buf().write(b).flip.readAllStr
-    Desktop.callAsync(&Console.execWrite(frameId, str))
+    Desktop.callAsync |,| { Console.execWrite(frameId, str) }
     return this
   }
 
   override This writeBuf(Buf b, Int n := b.remaining)
   {
     str := Buf().writeBuf(b, n).flip.readAllStr
-    Desktop.callAsync(&Console.execWrite(frameId, str))
+    Desktop.callAsync |,| { Console.execWrite(frameId, str) }
     return this
   }
 

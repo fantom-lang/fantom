@@ -19,7 +19,7 @@ internal class LocatorBar : Canvas
   {
     this.frame = frame
     add(uriText)
-    onMouseUp.add(&onViewPopup)
+    onMouseUp.add { onViewPopup(it) }
   }
 
   readonly Frame frame
@@ -55,7 +55,7 @@ internal class LocatorBar : Canvas
       menu := Menu {}
       views.each |Type t|
       {
-        menu.add(MenuItem { text=t.name; onAction.add(&go(t)) })
+        menu.add(MenuItem { text=t.name; onAction.add { go(t, it) } })
       }
       menu.open(this, Point(vx, size.h-1))
     }
@@ -107,7 +107,7 @@ internal class LocatorBar : Canvas
   const Insets textInsets := Insets(4,4,4,22)
   const Insets viewInsets := Insets(4,13,4,4)
   Image? icon
-  Text uriText := Text { onAction.add(&goDefaultView); border = false }
+  Text uriText := Text { onAction.add { goDefaultView(it) }; border = false }
   Str view := "Views"
 
 }

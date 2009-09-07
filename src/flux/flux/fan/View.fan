@@ -41,7 +41,7 @@ abstract class View : ContentPane
   **
   CommandStack commandStack
   {
-    set { *commandStack = val; val.onModify.add(&commandStackModified) }
+    set { *commandStack = val; val.onModify.add {commandStackModified } }
   }
   internal Void commandStackModified() { frame?.commands?.updateEdit }
 

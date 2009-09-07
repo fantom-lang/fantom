@@ -76,8 +76,8 @@ internal class NavBar : SideBar
     {
       it.model = NavTreeModel.make(r == null ? Resource.roots : [r])
       it.border = false
-      it.onAction.add(&this.onAction)
-      it.onPopup.add(&this.onPopup)
+      it.onAction.add |e| { this.onAction(e) }
+      it.onPopup.add  |e| { this.onPopup(e) }
     }
 
     // add tree
@@ -152,14 +152,14 @@ internal class NavBar : SideBar
       if (r is FileResource && r->file->isDir)
       {
         menu.add(MenuItem { mode = MenuItemMode.sep })
-        menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.refresh", &onRefresh(n)) })
-        menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.goInto", &onGoInto(n)) })
+        menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.refresh") {onRefresh(n)} })
+        menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.goInto") {onGoInto(n)} })
       }
     }
     else
     {
       menu = Menu()
-      menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.sync", &onSync) })
+      menu.add(MenuItem { command = Command.makeLocale(this.type.pod, "navBar.sync") {onSync} })
     }
     event.popup = menu
   }
@@ -268,7 +268,7 @@ internal class NavBar : SideBar
   Tree? active
   Tree[] trees := Tree[,]
   Bool ignore  := true
-  Combo combo  := Combo() { it.onModify.add(&this.onModify) }
+  Combo combo  := Combo() { it.onModify.add |e| { this.onModify(e) } }
   NavTreePane treePane := NavTreePane()
 }
 
@@ -361,7 +361,7 @@ internal class EditList : Canvas
   {
     this.items = items.map |Obj obj->Str|  { obj.toStr }
     this.keep  = items.map |Obj obj->Bool| { true }
-    onMouseDown.add(&onPressed)
+    onMouseDown.add { onPressed(it) }
   }
 
   Str[] getItems()

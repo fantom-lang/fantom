@@ -74,7 +74,7 @@ internal class Commands
     return Menu
     {
       text = this.type.loc("edit.name")
-      onOpen.add(&onEditMenuOpen)
+      onOpen.add { onEditMenuOpen(it) }
       addCommand(undo)
       addCommand(redo)
       addSep
@@ -105,7 +105,7 @@ internal class Commands
     menu := Menu
     {
       text = this.type.loc("view.name")
-      onOpen.add(&onViewMenuOpen)
+      onOpen.add { onViewMenuOpen(it) }
       addCommand(reload)
       addSep
     }
@@ -127,7 +127,7 @@ internal class Commands
     menu := Menu
     {
       text = this.type.loc("history.name")
-      onOpen.add(&onHistoryMenuOpen)
+      onOpen.add { onHistoryMenuOpen(it) }
       addCommand(back)
       addCommand(forward)
       addCommand(up)
@@ -566,8 +566,8 @@ internal class GotoFileCommand : FluxCommand
       halignCells=Halign.fill
       Label { text="Goto File:" },
       field,
-      Button { image=Flux.icon(`/x16/refresh.png`); onAction.add(&rebuild(it)) },
-      Button { image=Flux.icon(`/x16/question.png`); onAction.add(&showHelp) },
+      Button { image=Flux.icon(`/x16/refresh.png`); onAction.add { rebuild(it.widget) } },
+      Button { image=Flux.icon(`/x16/question.png`); onAction.add { showHelp } },
     }
     field.onAction.add |e| { e.widget.window.close(Dialog.ok) }
 
