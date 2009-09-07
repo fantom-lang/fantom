@@ -28,7 +28,7 @@ class Boot : BootScript
   override Void setup()
   {
     sysLogger := FileLogger { file = scriptDir + `logs/sys.log` }
-    Log.addHandler(&sysLogger.writeLogRecord)
+    Log.addHandler |rec| { sysLogger.writeLogRecord(rec) }
 
     UriSpace.root.create(`/homePage`, scriptDir + `index.fan`)
     UriSpace.root.create(`/chrome`,   scriptDir + `chrome.fan`)

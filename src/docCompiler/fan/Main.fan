@@ -104,7 +104,7 @@ class Main
       }
       else if (a == "-topindex")
       {
-        pipeline = &DocCompiler.compileTopIndexToHtml
+        pipeline = |DocCompiler c| { c.compileTopIndexToHtml }
         enoughArgs = true
       }
       else if (a[0] == '-')
@@ -184,6 +184,6 @@ class Main
 //////////////////////////////////////////////////////////////////////////
 
   DocCompiler compiler := DocCompiler();
-  |DocCompiler c| pipeline := &DocCompiler.compilePodToHtml
+  |DocCompiler c| pipeline := |DocCompiler c| { c.compilePodToHtml }
 
 }

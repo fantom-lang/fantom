@@ -40,7 +40,7 @@ const class Clock : Actor
     // update method, below)
     if (msg == updateMsg)
     {
-      Desktop.callAsync(&update)
+      Desktop.callAsync |,| { update }
 
       // send the next clock-tick
       sendLater(1sec, updateMsg)

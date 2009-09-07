@@ -69,7 +69,7 @@ abstract class Widget
   **   - `Event.key`: key code including the modifiers
   **
   @transient readonly EventListeners onKeyDown := EventListeners()
-    { onModify = &checkKeyListeners }
+    { onModify = |,| { checkKeyListeners } }
   internal native Void checkKeyListeners()
 
   **
@@ -84,7 +84,7 @@ abstract class Widget
   **   - `Event.key`: key code including the modifiers
   **
   @transient readonly EventListeners onKeyUp := EventListeners()
-    { onModify = &checkKeyListeners }
+    { onModify = |,| { checkKeyListeners } }
 
   **
   ** Callback for mouse button pressed event on this widget.
@@ -178,7 +178,7 @@ abstract class Widget
   **   - none
   **
   @transient readonly EventListeners onFocus := EventListeners()
-    { onModify = &checkFocusListeners }
+    { onModify = |,| { checkFocusListeners } }
   internal native Void checkFocusListeners()
 
   **
@@ -191,7 +191,7 @@ abstract class Widget
   **   - none
   **
   @transient readonly EventListeners onBlur := EventListeners()
-    { onModify = &checkFocusListeners }
+    { onModify = |,| { checkFocusListeners } }
 
 //////////////////////////////////////////////////////////////////////////
 // Focus
