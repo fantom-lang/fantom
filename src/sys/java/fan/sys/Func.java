@@ -39,7 +39,7 @@ public abstract class Func
 
   public abstract boolean isImmutable();
 
-  public Func toImmutable()
+  public Object toImmutable()
   {
     if (isImmutable()) return this;
     throw NotImmutableErr.make("Func").val;

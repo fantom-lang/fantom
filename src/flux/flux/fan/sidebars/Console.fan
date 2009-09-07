@@ -484,6 +484,7 @@ internal class ConsoleOutStream : OutStream
 
   override This write(Int b)
   {
+    frameId := this.frameId
     str := Buf().write(b).flip.readAllStr
     Desktop.callAsync |,| { Console.execWrite(frameId, str) }
     return this
@@ -491,6 +492,7 @@ internal class ConsoleOutStream : OutStream
 
   override This writeBuf(Buf b, Int n := b.remaining)
   {
+    frameId := this.frameId
     str := Buf().writeBuf(b, n).flip.readAllStr
     Desktop.callAsync |,| { Console.execWrite(frameId, str) }
     return this

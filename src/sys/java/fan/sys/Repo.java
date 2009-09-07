@@ -140,7 +140,7 @@ public final class Repo
     if (files.isEmpty())
     {
       if (emptySymbols == null)
-        emptySymbols = new Map(new MapType(Sys.StrType, Sys.ObjType.toNullable())).toImmutable();
+        emptySymbols = (Map)new Map(new MapType(Sys.StrType, Sys.ObjType.toNullable())).toImmutable();
       return emptySymbols;
     }
     Map map = null;
@@ -182,7 +182,7 @@ public final class Repo
       this.modified = new long[files.sz()];
       for (int i=0; i<files.sz(); ++i)
         this.modified[i] = ((File)files.get(i)).modified().ticks();
-      this.symbols = readSymbols(files).toImmutable();
+      this.symbols = (Map)readSymbols(files).toImmutable();
       this.read = Duration.nowTicks();
     }
 
@@ -227,7 +227,7 @@ public final class Repo
 
       // list of all repos
       Repo[] array = (b == w) ? new Repo[] { b } : new Repo[] { w, b };
-      a = new List(Sys.RepoType, array).toImmutable();
+      a = (List)new List(Sys.RepoType, array).toImmutable();
     }
     catch (Exception e) { e.printStackTrace(); }
 

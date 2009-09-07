@@ -352,7 +352,4 @@ final class Map
   **
   M rw()
 
-// TODO
-  M toImmutable()
-
 }

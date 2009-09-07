@@ -143,7 +143,7 @@ class ClosureToImmutable : CompilerStep
     m := MethodDef(loc, cls)
     m.flags = FConst.Public | FConst.Synthetic | FConst.Override
     m.name = "toImmutable"
-    m.ret  = ns.funcType // TODO
+    m.ret  = ns.objType
     m.code = Block(loc)
     cls.addSlot(m)
 

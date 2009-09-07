@@ -268,7 +268,7 @@ public final class MimeType
     {
       q = new Map(Sys.StrType, Sys.StrType);
       q.caseInsensitive(true);
-      q = q.toImmutable();
+      q = (Map)q.toImmutable();
       emptyQuery = q;
     }
     return q;

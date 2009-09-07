@@ -658,7 +658,4 @@ final class List
   **
   L rw()
 
-// TODO
-L toImmutable()
-
 }

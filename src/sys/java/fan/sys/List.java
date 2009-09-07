@@ -1187,7 +1187,7 @@ public final class List
     return immutable;
   }
 
-  public final List toImmutable()
+  public final Object toImmutable()
   {
     if (immutable) return this;
 
