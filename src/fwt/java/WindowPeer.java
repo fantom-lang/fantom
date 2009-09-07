@@ -69,7 +69,7 @@ public class WindowPeer
 //////////////////////////////////////////////////////////////////////////
 
   void onPosChange()  { explicitPos = true;  }
-  void onSizeChange() { explicitSize = true; layout(); }
+  void onSizeChange() { explicitSize = true; }
 
   void layout()
   {
