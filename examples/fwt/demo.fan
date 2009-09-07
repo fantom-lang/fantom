@@ -59,10 +59,10 @@ class FwtDemo
       Menu
       {
         text = "File";
-        MenuItem { text = "Back";    image = backIcon;    onAction.add(&browser.back) },
-        MenuItem { text = "Next";    image = nextIcon;    onAction.add(&browser.forward) },
-        MenuItem { text = "Refresh"; image = refreshIcon; onAction.add(&browser.refresh) },
-        MenuItem { text = "Stop";    image = stopIcon;    onAction.add(&browser.stop) },
+        MenuItem { text = "Back";    image = backIcon;    onAction.add {browser.back} },
+        MenuItem { text = "Next";    image = nextIcon;    onAction.add {browser.forward} },
+        MenuItem { text = "Refresh"; image = refreshIcon; onAction.add {browser.refresh} },
+        MenuItem { text = "Stop";    image = stopIcon;    onAction.add {browser.stop} },
         MenuItem { text = "Exit"; onAction.add |,| { Sys.exit } },
       },
 
@@ -73,36 +73,36 @@ class FwtDemo
         {
           text = "Alpha"
           image = folderIcon
-          MenuItem { text = "Alpha.1"; onAction.add(&cb) },
+          MenuItem { text = "Alpha.1"; onAction.add(cb) },
           Menu
           {
             text = "Alpha.2"
-            MenuItem { text = "Alpha.2.I"; onAction.add(&cb) },
+            MenuItem { text = "Alpha.2.I"; onAction.add(cb) },
             Menu
             {
               text = "Alpha.2.II"
-              MenuItem { text = "Alpha.2.II.a"; onAction.add(&cb) },
-              MenuItem { text = "Alpha.2.II.b"; onAction.add(&cb) },
+              MenuItem { text = "Alpha.2.II.a"; onAction.add(cb) },
+              MenuItem { text = "Alpha.2.II.b"; onAction.add(cb) },
             },
-            MenuItem { text = "Alpha.2.III"; onAction.add(&cb) },
+            MenuItem { text = "Alpha.2.III"; onAction.add(cb) },
           },
         },
         Menu
         {
           text = "Beta"
-          MenuItem { text = "Beta.1"; onAction.add(&cb) },
-          MenuItem { text = "Beta.2"; onAction.add(&cb) },
+          MenuItem { text = "Beta.1"; onAction.add(cb) },
+          MenuItem { text = "Beta.2"; onAction.add(cb) },
         },
       },
 
       Menu
       {
         text = "Modes"
-        MenuItem { text = "Check 1"; accelerator=Key.f1; mode = MenuItemMode.check; onAction.add(&cb) },
-        MenuItem { text = "Check 2"; accelerator=Key.f2; mode = MenuItemMode.check; onAction.add(&cb) },
+        MenuItem { text = "Check 1"; accelerator=Key.f1; mode = MenuItemMode.check; onAction.add(cb) },
+        MenuItem { text = "Check 2"; accelerator=Key.f2; mode = MenuItemMode.check; onAction.add(cb) },
         MenuItem { mode = MenuItemMode.sep },
-        MenuItem { text = "Radio 1"; accelerator=Key.num1+Key.alt; mode = MenuItemMode.radio; onAction.add(&cb) },
-        MenuItem { text = "Radio 2"; accelerator=Key.alt+Key.num2; mode = MenuItemMode.radio; onAction.add(&cb); selected = true  },
+        MenuItem { text = "Radio 1"; accelerator=Key.num1+Key.alt; mode = MenuItemMode.radio; onAction.add(cb) },
+        MenuItem { text = "Radio 2"; accelerator=Key.alt+Key.num2; mode = MenuItemMode.radio; onAction.add(cb); selected = true  },
       },
 
       Menu
@@ -140,17 +140,17 @@ class FwtDemo
   {
     return ToolBar
     {
-      Button { image = backIcon;    onAction.add(&browser.back) },
-      Button { image = nextIcon;    onAction.add(&browser.forward) },
-      Button { image = refreshIcon; onAction.add(&browser.refresh) },
-      Button { image = stopIcon;    onAction.add(&browser.stop) },
+      Button { image = backIcon;    onAction.add {browser.back} },
+      Button { image = nextIcon;    onAction.add {browser.forward} },
+      Button { image = refreshIcon; onAction.add {browser.refresh} },
+      Button { image = stopIcon;    onAction.add {browser.stop} },
       Button { mode  = ButtonMode.sep },
-      Button { image = sysIcon;   mode = ButtonMode.check; onAction.add(&cb) },
-      Button { image = prefsIcon; mode = ButtonMode.toggle; onAction.add(&cb) },
+      Button { image = sysIcon;   mode = ButtonMode.check; onAction.add(cb) },
+      Button { image = prefsIcon; mode = ButtonMode.toggle; onAction.add(cb) },
       Button { mode  = ButtonMode.sep },
-      Button { image = audioIcon; mode = ButtonMode.radio; onAction.add(&cb); selected = true },
-      Button { image = imageIcon; mode = ButtonMode.radio; onAction.add(&cb); },
-      Button { image = videoIcon; mode = ButtonMode.radio; onAction.add(&cb); },
+      Button { image = audioIcon; mode = ButtonMode.radio; onAction.add(cb); selected = true },
+      Button { image = imageIcon; mode = ButtonMode.radio; onAction.add(cb); },
+      Button { image = videoIcon; mode = ButtonMode.radio; onAction.add(cb); },
     }
   }
 
@@ -217,14 +217,14 @@ class FwtDemo
     {
       numCols = 3
       hgap = 20
-      Button { text = "B1"; image = stopIcon; onAction.add(&cb) },
-      Button { text = "Monospace"; font = Desktop.sysFontMonospace; onAction.add(&cb) },
-      Button { mode = ButtonMode.toggle; text = "Button 3"; onAction.add(&cb) },
-      Button { mode = ButtonMode.check; text = "B4"; onAction.add(&cb) },
-      Button { mode = ButtonMode.radio; text = "Button 5"; onAction.add(&cb) },
-      Button { mode = ButtonMode.radio; text = "B6"; onAction.add(&cb) },
-      Button { text = "Popup 1"; onAction.add(&popup(true)) },
-      Button { text = "Popup 2"; onAction.add(&popup(false)) },
+      Button { text = "B1"; image = stopIcon; onAction.add(cb) },
+      Button { text = "Monospace"; font = Desktop.sysFontMonospace; onAction.add(cb) },
+      Button { mode = ButtonMode.toggle; text = "Button 3"; onAction.add(cb) },
+      Button { mode = ButtonMode.check; text = "B4"; onAction.add(cb) },
+      Button { mode = ButtonMode.radio; text = "Button 5"; onAction.add(cb) },
+      Button { mode = ButtonMode.radio; text = "B6"; onAction.add(cb) },
+      Button { text = "Popup 1"; onAction.add {FwtDemo.popup(true, it)} },
+      Button { text = "Popup 2"; onAction.add {FwtDemo.popup(false, it)} },
       Button { text = "Disabled"; enabled=false },
       Button { text = "Invisible"; visible=false },
     }
@@ -273,7 +273,7 @@ class FwtDemo
 
         Label { text="MultiLine" },
 
-        Button { text="Serialize Demo"; onAction.add(&serializeTo(area)) },
+        Button { text="Serialize Demo"; onAction.add {serializeTo(area)} },
       }
       center = InsetPane.make(5) { content=area }
     }
@@ -382,17 +382,17 @@ class FwtDemo
     {
       numCols = 2
       halignCells = Halign.fill
-      Label { text="numCols" },      Text { text="5"; onModify.add(&setInt(grid, "numCols")) },
-      Label { text="hgap" },         Text { text="10"; onModify.add(&setInt(grid, "hgap")) },
-      Label { text="vgap" },         Text { text="10"; onModify.add(&setInt(grid, "vgap")) },
-      Label { text="halignCells" },  Combo { items=Halign.values; onModify.add(&setEnum(grid, "halignCells")) },
-      Label { text="valignCells" },  Combo { items=Valign.values; onModify.add(&setEnum(grid, "valignCells")) },
-      Label { text="halignPane" },   Combo { items=Halign.values; onModify.add(&setEnum(grid, "halignPane")) },
-      Label { text="valignPane" },   Combo { items=Valign.values; onModify.add(&setEnum(grid, "valignPane")) },
-      Label { text="expandRow" },    Text { text="null"; onModify.add(&setInt(grid, "expandRow")) },
-      Label { text="expandCol" },    Text { text="null"; onModify.add(&setInt(grid, "expandCol")) },
-      Label { text="uniformCols" },  Combo { items=[false,true]; onModify.add(&setBool(grid, "uniformCols")) },
-      Label { text="uniformRows" },  Combo { items=[false,true]; onModify.add(&setBool(grid, "uniformRows")) },
+      Label { text="numCols" },      Text { text="5"; onModify.add {setInt(grid, "numCols", it)} },
+      Label { text="hgap" },         Text { text="10"; onModify.add {setInt(grid, "hgap", it)} },
+      Label { text="vgap" },         Text { text="10"; onModify.add {setInt(grid, "vgap", it)} },
+      Label { text="halignCells" },  Combo { items=Halign.values; onModify.add {setEnum(grid, "halignCells", it)} },
+      Label { text="valignCells" },  Combo { items=Valign.values; onModify.add {setEnum(grid, "valignCells", it)} },
+      Label { text="halignPane" },   Combo { items=Halign.values; onModify.add {setEnum(grid, "halignPane", it)} },
+      Label { text="valignPane" },   Combo { items=Valign.values; onModify.add {setEnum(grid, "valignPane", it)} },
+      Label { text="expandRow" },    Text { text="null"; onModify.add {setInt(grid, "expandRow", it)} },
+      Label { text="expandCol" },    Text { text="null"; onModify.add {setInt(grid, "expandCol", it)} },
+      Label { text="uniformCols" },  Combo { items=[false,true]; onModify.add {setBool(grid, "uniformCols", it)} },
+      Label { text="uniformRows" },  Combo { items=[false,true]; onModify.add {setBool(grid, "uniformRows", it)} },
     }
 
     return EdgePane { left=controls; center=InsetPane { content=grid } }
@@ -461,7 +461,7 @@ class FwtDemo
         it.size = Size(200,200)
         GridPane { halignPane = Halign.center; valignPane = Valign.center; add(close) },
       }
-      close.onAction.add(&w.close)
+      close.onAction.add { w.close }
       w.open
     }
 
@@ -572,10 +572,13 @@ class FwtDemo
     obj.relayout
   }
 
-  static Void cb(Event event)
+  static |Event e| cb()
   {
-    w := event.widget
-    echo("${w->text} selected=${w->selected}")
+    return |Event e|
+    {
+      w := e.widget
+      echo("${w->text} selected=${w->selected}")
+    }
   }
 
   static Void popup(Bool withPos, Event event)
@@ -587,9 +590,9 @@ class FwtDemo
   {
     return Menu
     {
-      MenuItem { text = "Popup 1"; onAction.add(&cb) },
-      MenuItem { text = "Popup 2"; onAction.add(&cb) },
-      MenuItem { text = "Popup 3"; onAction.add(&cb) },
+      MenuItem { text = "Popup 1"; onAction.add(cb) },
+      MenuItem { text = "Popup 2"; onAction.add(cb) },
+      MenuItem { text = "Popup 3"; onAction.add(cb) },
     }
   }
 
@@ -703,17 +706,18 @@ class EventDemo : Canvas
 {
   new make()
   {
-    onFocus.add(&dump)
-    onBlur.add(&dump)
-    onKeyUp.add(&dump)
-    onKeyDown.add(&dump)
-    onMouseUp.add(&dump)
-    onMouseDown.add(&dump)
-    onMouseEnter.add(&dump)
-    onMouseExit.add(&dump)
-    onMouseMove.add(&dump)
-    onMouseHover.add(&dump)
-    onMouseWheel.add(&dump)
+    d := |e| { dump(e) }
+    onFocus.add(d)
+    onBlur.add(d)
+    onKeyUp.add(d)
+    onKeyDown.add(d)
+    onMouseUp.add(d)
+    onMouseDown.add(d)
+    onMouseEnter.add(d)
+    onMouseExit.add(d)
+    onMouseMove.add(d)
+    onMouseHover.add(d)
+    onMouseWheel.add(d)
   }
 
   override Size prefSize(Hints hints := Hints.defVal) { return Size.make(100, 100) }

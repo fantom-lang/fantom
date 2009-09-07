@@ -34,7 +34,7 @@ class ScrollPaneDemo
     // open in window
     Window
     {
-      content = scrollPane
+      content = InsetPane { content=scrollPane }
       size = Size(400, 400)
     }.open
   }

@@ -115,7 +115,7 @@ class RichText : TextWidget
     }
   }
 
-  private |Event| onModelModifyFunc := &onModelModify
+  private |Event| onModelModifyFunc := |e| { onModelModify(e) }
   internal native Void onModelModify(Event event)
 
   **
