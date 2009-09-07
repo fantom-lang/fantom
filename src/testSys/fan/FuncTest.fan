@@ -84,8 +84,7 @@ class FuncTest : Test
     verifyEq(x.type.signature, "|sys::Int,sys::Int?->sys::Str|")
     verifyEq(x(3, 4), "3, 4")
 
-    y := &Str.plus
-    verifyEq(y.type.signature, "|sys::Str,sys::Obj?->sys::Str|")
+    y := Str#plus.func
     verifyEq(y.method, Str#plus)
     y = y.retype(|Str,Int->Str|#)
     verifyEq(y.type.signature, "|sys::Str,sys::Int->sys::Str|")
@@ -168,23 +167,6 @@ class FuncTest : Test
 
       // callOn
       if (a.size >= 1) verifyEq(g.callOn(a[0], a[1..-1]), expected)
-
-      // curry operator
-      Func? c := null
-      switch (i)
-      {
-        case 0: c = f
-        case 1: c = &f(args[0])
-        case 2: c = &f(args[0], args[1])
-        case 3: c = &f(args[0], args[1], args[2])
-        case 4: c = &f(args[0], args[1], args[2], args[3])
-        case 5: c = &f(args[0], args[1], args[2], args[3], args[4])
-        case 6: c = &f(args[0], args[1], args[2], args[3], args[4], args[5])
-        case 7: c = &f(args[0], args[1], args[2], args[3], args[4], args[5], args[6])
-        case 8: c = &f(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7])
-      }
-      if (c != null) verifyEq(c.callList(a), expected)
-
     }
 
     x := f.bind(args)
@@ -239,98 +221,63 @@ class FuncTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Curry Operator
+// Bind Def Params
 //////////////////////////////////////////////////////////////////////////
 
-  Void testCurryOp()
+  Void testBindDefParams()
   {
-    f := |Int a, Str b, Float c->Str| { return "$a $b $c" }
-    verifyEq(f(1, "x", 2.0f), "1 x 2.0")
-
-    g := &f(1)
-    verifyEq(g("x", 2.0f), "1 x 2.0")
-
-    h := &g("y")
-    verifyEq(h(3.0f), "1 y 3.0")
-
-    i := &h(4.0f)
-    verifyEq(i(), "1 y 4.0")
-
-    j := Int#minus.func
-    verifyEq(j(3, 4), -1)
-
-    k := &j(10)
-    verifyEq(k(4), 6)
-
-    l := &j(10, 8)
-    verifyEq(l.call, 2)
-
-    m := &Str#spaces.func()(3)
-    verifyEq(m(), "   ")
-
-    verifySame(j.method, Int#minus)
-    verifySame((&Str.spaces).method, Str#spaces)
-    verifySame((&10.plus).method, Int#plus)
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Curry Def Params
-//////////////////////////////////////////////////////////////////////////
-
-  Void testCurryDefParams()
-  {
-    o := CurryDef()
+    o := BindDef()
     // instance methods
-    verifyEq(CurryDef#i.func.bind([o]).call, [1, 2, 3])
-    verifyEq(CurryDef#i.func.bind([o]).call(7), [7, 2, 3])
-    verifyEq(CurryDef#i.func.bind([o]).callList([7,8]), [7, 8, 3])
-    verifyEq(CurryDef#i.func.bind([o]).callList([7,8,9]), [7, 8, 9])
-    verifyEq(CurryDef#i.func.bind([o]).call(7,8,9), [7, 8, 9])
+    verifyEq(BindDef#i.func.bind([o]).call, [1, 2, 3])
+    verifyEq(BindDef#i.func.bind([o]).call(7), [7, 2, 3])
+    verifyEq(BindDef#i.func.bind([o]).callList([7,8]), [7, 8, 3])
+    verifyEq(BindDef#i.func.bind([o]).callList([7,8,9]), [7, 8, 9])
+    verifyEq(BindDef#i.func.bind([o]).call(7,8,9), [7, 8, 9])
 
-    verifyEq(CurryDef#i.func.bind([o, 7]).call, [7, 2, 3])
-    verifyEq(CurryDef#i.func.bind([o, 7]).call(8), [7, 8, 3])
-    verifyEq(CurryDef#i.func.bind([o, 7]).callList([8,9]), [7, 8, 9])
-    verifyEq(CurryDef#i.func.bind([o, 7]).call(8,9), [7, 8, 9])
+    verifyEq(BindDef#i.func.bind([o, 7]).call, [7, 2, 3])
+    verifyEq(BindDef#i.func.bind([o, 7]).call(8), [7, 8, 3])
+    verifyEq(BindDef#i.func.bind([o, 7]).callList([8,9]), [7, 8, 9])
+    verifyEq(BindDef#i.func.bind([o, 7]).call(8,9), [7, 8, 9])
 
-    verifyEq(CurryDef#i.func.bind([o, 7, 8]).call, [7, 8, 3])
-    verifyEq(CurryDef#i.func.bind([o, 7, 8]).call(9), [7, 8, 9])
-    verifyEq(CurryDef#i.func.bind([o, 7, 8]).callList([9]), [7, 8, 9])
+    verifyEq(BindDef#i.func.bind([o, 7, 8]).call, [7, 8, 3])
+    verifyEq(BindDef#i.func.bind([o, 7, 8]).call(9), [7, 8, 9])
+    verifyEq(BindDef#i.func.bind([o, 7, 8]).callList([9]), [7, 8, 9])
 
-    verifyEq(CurryDef#i.func.bind([o, 7, 8, 9]).call, [7, 8, 9])
-    verifyEq(CurryDef#i.func.bind([o, 7, 8, 9]).call(10), [7, 8, 9])
+    verifyEq(BindDef#i.func.bind([o, 7, 8, 9]).call, [7, 8, 9])
+    verifyEq(BindDef#i.func.bind([o, 7, 8, 9]).call(10), [7, 8, 9])
 
     // static methods
-    verifyEq(CurryDef#s.func.bind([7]).call, [7, 2, 3])
-    verifyEq(CurryDef#s.func.bind([7]).call(8), [7, 8, 3])
-    verifyEq(CurryDef#s.func.bind([7]).callList([8,9]), [7, 8, 9])
-    verifyEq(CurryDef#s.func.bind([7]).call(8,9), [7, 8, 9])
+    verifyEq(BindDef#s.func.bind([7]).call, [7, 2, 3])
+    verifyEq(BindDef#s.func.bind([7]).call(8), [7, 8, 3])
+    verifyEq(BindDef#s.func.bind([7]).callList([8,9]), [7, 8, 9])
+    verifyEq(BindDef#s.func.bind([7]).call(8,9), [7, 8, 9])
 
-    verifyEq(CurryDef#s.func.bind([7, 8]).call, [7, 8, 3])
-    verifyEq(CurryDef#s.func.bind([7, 8]).call(9), [7, 8, 9])
-    verifyEq(CurryDef#s.func.bind([7, 8]).callList([9]), [7, 8, 9])
+    verifyEq(BindDef#s.func.bind([7, 8]).call, [7, 8, 3])
+    verifyEq(BindDef#s.func.bind([7, 8]).call(9), [7, 8, 9])
+    verifyEq(BindDef#s.func.bind([7, 8]).callList([9]), [7, 8, 9])
 
-    verifyEq(CurryDef#s.func.bind([7, 8, 9]).call, [7, 8, 9])
-    verifyEq(CurryDef#s.func.bind([7, 8, 9]).call(10), [7, 8, 9])
+    verifyEq(BindDef#s.func.bind([7, 8, 9]).call, [7, 8, 9])
+    verifyEq(BindDef#s.func.bind([7, 8, 9]).call(10), [7, 8, 9])
 
 
     // ctor methods
-    verifyEq(CurryDef#make.func.bind([7]).call->list, [7, 2, 3])
-    verifyEq(CurryDef#make.func.bind([7]).call(8)->list, [7, 8, 3])
-    verifyEq(CurryDef#make.func.bind([7]).callList([8,9])->list, [7, 8, 9])
-    verifyEq(CurryDef#make.func.bind([7]).call(8,9)->list, [7, 8, 9])
+    verifyEq(BindDef#make.func.bind([7]).call->list, [7, 2, 3])
+    verifyEq(BindDef#make.func.bind([7]).call(8)->list, [7, 8, 3])
+    verifyEq(BindDef#make.func.bind([7]).callList([8,9])->list, [7, 8, 9])
+    verifyEq(BindDef#make.func.bind([7]).call(8,9)->list, [7, 8, 9])
 
-    verifyEq(CurryDef#make.func.bind([7, 8]).call->list, [7, 8, 3])
-    verifyEq(CurryDef#make.func.bind([7, 8]).call(9)->list, [7, 8, 9])
-    verifyEq(CurryDef#make.func.bind([7, 8]).callList([9])->list, [7, 8, 9])
+    verifyEq(BindDef#make.func.bind([7, 8]).call->list, [7, 8, 3])
+    verifyEq(BindDef#make.func.bind([7, 8]).call(9)->list, [7, 8, 9])
+    verifyEq(BindDef#make.func.bind([7, 8]).callList([9])->list, [7, 8, 9])
 
-    verifyEq(CurryDef#make.func.bind([7, 8, 9]).call->list, [7, 8, 9])
-    verifyEq(CurryDef#make.func.bind([7, 8, 9]).callList([,])->list, [7, 8, 9])
-    verifyEq(CurryDef#make.func.bind([7, 8, 9]).call(10)->list, [7, 8, 9])
+    verifyEq(BindDef#make.func.bind([7, 8, 9]).call->list, [7, 8, 9])
+    verifyEq(BindDef#make.func.bind([7, 8, 9]).callList([,])->list, [7, 8, 9])
+    verifyEq(BindDef#make.func.bind([7, 8, 9]).call(10)->list, [7, 8, 9])
   }
 
 }
 
-internal class CurryDef
+internal class BindDef
 {
   Int[] list := Int[,]
   new make(Int a := 1, Int b := 2, Int c := 3) { list = [a, b, c] }

@@ -41,6 +41,8 @@ class CurryResolver : CompilerSupport
   {
     try
     {
+      echo("$loc.toLocationStr: WARNING using obsolete curry operator")
+
       // curry on Func instance uses reflection Func.curry
       if (call.target != null && method.qname.startsWith("sys::Func.call"))
         return reflection

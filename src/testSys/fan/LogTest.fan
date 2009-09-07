@@ -224,7 +224,7 @@ class LogTest : Test
 
       Log.addHandler(h)
       verify(Log.handlers.contains(h))
-      verifyErr(NotImmutableErr#) |,| { Log.addHandler(&mutableHandler) }
+      verifyErr(NotImmutableErr#) |,| { Log.addHandler { mutableHandler(it) } }
 
       reset
       Log.get("testSys.LogTestToo").info("what")

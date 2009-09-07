@@ -39,8 +39,8 @@ class ActorTest : Test
   Void testBasics()
   {
     // create actor which increments an Int
-    g := ActorPool();
-    a := Actor(pool, &incr)
+    g := ActorPool()
+    a := Actor(pool, #incr.func)
 
     // verify basic identity
     verifyEq(g.type, ActorPool#)
@@ -76,7 +76,7 @@ class ActorTest : Test
   {
     // build a bunch actors
     actors := Actor[,]
-    200.times |,| { actors.add(Actor(pool, &order)) }
+    200.times |,| { actors.add(Actor(pool, #order.func)) }
 
     // randomly send increasing ints to the actors
     100_000.times |Int i| { actors[Int.random(0..<actors.size)].send(i) }
@@ -107,7 +107,7 @@ class ActorTest : Test
 
   Void testMessaging()
   {
-    a := Actor(pool, &messaging)
+    a := Actor(pool, #messaging.func)
 
     // const
     f := a.send("const")
@@ -151,7 +151,7 @@ class ActorTest : Test
 
   Void testTimeoutCancel()
   {
-    a := Actor(pool, &sleep)
+    a := Actor(pool, #sleep.func)
     f := a.send(1sec)
 
     // get with timeout
@@ -161,7 +161,7 @@ class ActorTest : Test
     verify(t2-t1 < 70ms, (t2-t1).toLocale)
 
     // launch an actor to cancel the future
-    Actor(pool, &cancel).send(f)
+    Actor(pool, |msg| {cancel(msg)}).send(f)
 
     // block on future until canceled
     verifyErr(CancelledErr#) |,| { f.get }
@@ -196,7 +196,7 @@ class ActorTest : Test
     scheduled := Future[,]
     20.times |Int i|
     {
-      actor := Actor(pool, &sleep)
+      actor := Actor(pool, #sleep.func)
       actors.add(actor)
 
       // send some dummy messages
@@ -269,7 +269,7 @@ class ActorTest : Test
     scheduled := Future[,]
     200.times |,|
     {
-      actor := Actor(pool, &sleep)
+      actor := Actor(pool, #sleep.func)
 
       // send 6x 0ms - 50ms, max 600ms
       6.times |Int i|
@@ -292,7 +292,7 @@ class ActorTest : Test
     verifyEq(pool.isStopped, true)
 
     // verify can't send anymore
-    verifyErr(Err#) |,| { Actor(pool, &sleep).send(10sec) }
+    verifyErr(Err#) |,| { Actor(pool, #sleep.func).send(10sec) }
 
     // join
     pool.join
@@ -333,14 +333,15 @@ class ActorTest : Test
   Void testLater()
   {
     // warm up a threads with dummy requests
-    5.times |,| { Actor(pool, &returnNow).sendLater(10ms, "dummy") }
+    receive := |Obj? msg->Obj?| { returnNow(msg) }
+    5.times |,| { Actor(pool, receive).sendLater(10ms, "dummy") }
 
     start := Duration.now
-    x100 := Actor(pool, &returnNow).sendLater(100ms, null)
-    x150 := Actor(pool, &returnNow).sendLater(150ms, null)
-    x200 := Actor(pool, &returnNow).sendLater(200ms, null)
-    x250 := Actor(pool, &returnNow).sendLater(250ms, null)
-    x300 := Actor(pool, &returnNow).sendLater(300ms, null)
+    x100 := Actor(pool, receive).sendLater(100ms, null)
+    x150 := Actor(pool, receive).sendLater(150ms, null)
+    x200 := Actor(pool, receive).sendLater(200ms, null)
+    x250 := Actor(pool, receive).sendLater(250ms, null)
+    x300 := Actor(pool, receive).sendLater(300ms, null)
     verifyLater(start, x100, 100ms)
     verifyLater(start, x150, 150ms)
     verifyLater(start, x200, 200ms)
@@ -348,15 +349,15 @@ class ActorTest : Test
     verifyLater(start, x300, 300ms)
 
     start = Duration.now
-    x100 = Actor(pool, &returnNow).sendLater(100ms, null)
+    x100 = Actor(pool, |msg| {returnNow(msg)}).sendLater(100ms, null)
     verifyLater(start, x100, 100ms)
 
     start = Duration.now
-    x300 = Actor(pool, &returnNow).sendLater(300ms, null)
-    x200 = Actor(pool, &returnNow).sendLater(200ms, null)
-    x100 = Actor(pool, &returnNow).sendLater(100ms, null)
-    x150 = Actor(pool, &returnNow).sendLater(150ms, null)
-    x250 = Actor(pool, &returnNow).sendLater(250ms, null)
+    x300 = Actor(pool, receive).sendLater(300ms, null)
+    x200 = Actor(pool, receive).sendLater(200ms, null)
+    x100 = Actor(pool, receive).sendLater(100ms, null)
+    x150 = Actor(pool, receive).sendLater(150ms, null)
+    x250 = Actor(pool, receive).sendLater(250ms, null)
     verifyLater(start, x100, 100ms)
     verifyLater(start, x150, 150ms)
     verifyLater(start, x200, 200ms)
@@ -367,7 +368,7 @@ class ActorTest : Test
   Void testLaterRand()
   {
     // warm up a threads with dummy requests
-    5.times |,| { Actor(pool, &returnNow).sendLater(10ms, "dummy") }
+    5.times |,| { Actor(pool, #returnNow.func).sendLater(10ms, "dummy") }
 
     // schedule a bunch of actors and messages with random times
     start := Duration.now
@@ -376,7 +377,7 @@ class ActorTest : Test
     durs := Duration?[,]
     5.times |,|
     {
-      a := Actor(pool, &returnNow)
+      a := Actor(pool, #returnNow.func)
       10.times |,|
       {
         // schedule something randonly between 0ms and 1sec
@@ -420,9 +421,9 @@ class ActorTest : Test
 
   Void testWhenDone()
   {
-    a := Actor(pool, &whenDoneA)
-    b := Actor(pool, &whenDoneB)
-    c := Actor(pool, &whenDoneB)
+    a := Actor(pool, #whenDoneA.func)
+    b := Actor(pool, #whenDoneB.func)
+    c := Actor(pool, #whenDoneB.func)
 
     // send/complete normal,error,cancel on a
     a.send(50ms)
@@ -500,7 +501,7 @@ class ActorTest : Test
 
   Void testCoalescing()
   {
-    a := Actor.makeCoalescing(pool, null, null, &coalesce)
+    a := Actor.makeCoalescing(pool, null, null, #coalesce.func)
     fstart  := a.send(100ms)
 
     f1s := Future[,]
@@ -568,7 +569,10 @@ class ActorTest : Test
 
   Void testCoalescingFunc()
   {
-    a := Actor.makeCoalescing(pool, &coalesceKey, &coalesceCoalesce, &coalesceReceive)
+    a := Actor.makeCoalescing(pool,
+      #coalesceKey.func,
+      #coalesceCoalesce.func,
+      #coalesceReceive.func)
 
     fstart  := a.send(100ms)
 
@@ -639,7 +643,7 @@ class ActorTest : Test
     300.times |Int i|
     {
       locale := localesPool[Int.random(0..<localesPool.size)]
-      actors.add(Actor(pool, &locals(i, locale)))
+      actors.add(Actor(pool, |msg| { locals(i, locale, msg) }))
       locales.add(locale)
       actors.last.send("bar")
     }

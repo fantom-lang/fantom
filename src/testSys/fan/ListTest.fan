@@ -784,13 +784,14 @@ class ListTest : Test
   {
     x := ["a", "b", "c", "d", "e"]
     acc := Str[,]
-    acc.clear; x.eachRange(1..2, &acc.add); verifyEq(acc, ["b", "c"])
-    acc.clear; x.eachRange(3..-1, &acc.add); verifyEq(acc, ["d", "e"])
-    acc.clear; x.eachRange(-4..-2, &acc.add); verifyEq(acc, ["b", "c", "d"])
-    acc.clear; x.eachRange(-4..2, &acc.add); verifyEq(acc, ["b", "c"])
-    acc.clear; x.eachRange(-4..<3, &acc.add); verifyEq(acc, ["b", "c"])
-    acc.clear; x.eachRange(1..-1, &acc.add); verifyEq(acc, ["b", "c", "d", "e"])
-    acc.clear; x.eachRange(1..<-1, &acc.add); verifyEq(acc, ["b", "c", "d"])
+    f := |str| { acc.add(str) }
+    acc.clear; x.eachRange(1..2,   f); verifyEq(acc, ["b", "c"])
+    acc.clear; x.eachRange(3..-1,  f); verifyEq(acc, ["d", "e"])
+    acc.clear; x.eachRange(-4..-2, f); verifyEq(acc, ["b", "c", "d"])
+    acc.clear; x.eachRange(-4..2,  f); verifyEq(acc, ["b", "c"])
+    acc.clear; x.eachRange(-4..<3, f); verifyEq(acc, ["b", "c"])
+    acc.clear; x.eachRange(1..-1,  f); verifyEq(acc, ["b", "c", "d", "e"])
+    acc.clear; x.eachRange(1..<-1, f); verifyEq(acc, ["b", "c", "d"])
 
     acc.clear
     indices := Int[,]

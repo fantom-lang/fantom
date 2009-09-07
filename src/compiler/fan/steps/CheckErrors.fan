@@ -765,31 +765,31 @@ class CheckErrors : CompilerStep
   {
     switch (expr.id)
     {
-      case ExprId.typeLiteral:    checkTypeLiteral((LiteralExpr)expr)
-      case ExprId.slotLiteral:    checkSlotLiteral((SlotLiteralExpr)expr)
-      case ExprId.listLiteral:    checkListLiteral((ListLiteralExpr)expr)
-      case ExprId.mapLiteral:     checkMapLiteral((MapLiteralExpr)expr)
-      case ExprId.rangeLiteral:   checkRangeLiteral((RangeLiteralExpr)expr)
-      case ExprId.boolNot:        checkBool((UnaryExpr)expr)
+      case ExprId.typeLiteral:    checkTypeLiteral(expr)
+      case ExprId.slotLiteral:    checkSlotLiteral(expr)
+      case ExprId.listLiteral:    checkListLiteral(expr)
+      case ExprId.mapLiteral:     checkMapLiteral(expr)
+      case ExprId.rangeLiteral:   checkRangeLiteral(expr)
+      case ExprId.boolNot:        checkBool(expr)
       case ExprId.cmpNull:
-      case ExprId.cmpNotNull:     checkCompareNull((UnaryExpr)expr)
-      case ExprId.assign:         checkAssign((BinaryExpr)expr)
-      case ExprId.elvis:          checkElvis((BinaryExpr)expr)
+      case ExprId.cmpNotNull:     checkCompareNull(expr)
+      case ExprId.assign:         checkAssign(expr)
+      case ExprId.elvis:          checkElvis(expr)
       case ExprId.boolOr:
-      case ExprId.boolAnd:        checkBools((CondExpr)expr)
+      case ExprId.boolAnd:        checkBools(expr)
       case ExprId.same:
-      case ExprId.notSame:        checkSame((BinaryExpr)expr)
-      case ExprId.shortcut:       checkShortcut((ShortcutExpr)expr)
-      case ExprId.call:           checkCall((CallExpr)expr)
-      case ExprId.construction:   checkConstruction((CallExpr)expr)
-      case ExprId.field:          checkField((FieldExpr)expr)
-      case ExprId.thisExpr:       checkThis((ThisExpr)expr)
-      case ExprId.superExpr:      checkSuper((SuperExpr)expr)
+      case ExprId.notSame:        checkSame(expr)
+      case ExprId.shortcut:       checkShortcut(expr)
+      case ExprId.call:           checkCall(expr)
+      case ExprId.construction:   checkConstruction(expr)
+      case ExprId.field:          checkField(expr)
+      case ExprId.thisExpr:       checkThis(expr)
+      case ExprId.superExpr:      checkSuper(expr)
       case ExprId.isExpr:
       case ExprId.isnotExpr:
       case ExprId.asExpr:
-      case ExprId.coerce:         checkTypeCheck((TypeCheckExpr)expr)
-      case ExprId.ternary:        checkTernary((TernaryExpr)expr)
+      case ExprId.coerce:         checkTypeCheck(expr)
+      case ExprId.ternary:        checkTernary(expr)
     }
     return expr
   }
