@@ -68,7 +68,7 @@ abstract class ObixTest : Test
     verifyEq(p.list, kids)
     verifyEq(p.list.isRO, true)
     acc := ObixObj[,]
-    p.each(&acc.add)
+    p.each { acc.add(it) }
     verifyEq(acc, kids)
     kids.each |ObixObj kid|
     {

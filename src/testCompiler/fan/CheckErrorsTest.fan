@@ -1086,9 +1086,6 @@ class CheckErrorsTest : CompilerTest
         static Obj m07() { return \"abcb\".index(\"b\", true) }
         static Void m08() { m := |Int a| {}; m(3ns) }
         static Void m09() { m := |Str a| {}; m() }
-        static Void m10() { m := &Int.plus;  m() }
-        static Void m11() { (&2.plus)(true) }
-        static Void m12() { (&2.plus)(3, 5) }
       }",
        [3, 31, "Invalid args increment(), not (sys::Bool)",
         4, 31, "Invalid args plus(sys::Int), not ()",
@@ -1100,9 +1097,6 @@ class CheckErrorsTest : CompilerTest
        10, 36, "Invalid args index(sys::Str, sys::Int), not (sys::Str, sys::Bool)",
        11, 40, "Invalid args |sys::Int|, not (sys::Duration)",
        12, 40, "Invalid args |sys::Str|, not ()",
-       13, 40, "Invalid args |sys::Int, sys::Int|, not ()",
-       14, 32, "Invalid args |sys::Int|, not (sys::Bool)",
-       15, 32, "Invalid args |sys::Int|, not (sys::Int, sys::Int)",
        ])
   }
 

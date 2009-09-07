@@ -124,16 +124,16 @@ const class LogStep : WebAppStep
 
   internal static const Str:Method formatters :=
   [
-    "date":         (&formatDate).method,
-    "time":         (&formatTime).method,
-    "c-ip":         (&formatCIp).method,
-    "c-port":       (&formatCPort).method,
-    "cs-method":    (&formatCsMethod).method,
-    "cs-uri":       (&formatCsUri).method,
-    "cs-uri-stem":  (&formatCsUriStem).method,
-    "cs-uri-query": (&formatCsUriQuery).method,
-    "sc-status":    (&formatScStatus).method,
-    "time-taken":   (&formatTimeTaken).method,
+    "date":         #formatDate,
+    "time":         #formatTime,
+    "c-ip":         #formatCIp,
+    "c-port":       #formatCPort,
+    "cs-method":    #formatCsMethod,
+    "cs-uri":       #formatCsUri,
+    "cs-uri-stem":  #formatCsUriStem,
+    "cs-uri-query": #formatCsUriQuery,
+    "sc-status":    #formatScStatus,
+    "time-taken":   #formatTimeTaken,
   ]
 
   internal static Str formatDate(WebReq req, WebRes res)

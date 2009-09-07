@@ -10,7 +10,11 @@
 ** TcpListener is a server socket that listens to a local well
 ** known port for incoming TcpSockets.
 **
-class TcpListener
+** Note: TcpListener is marked as a const class to give protocol developers
+** the flexibility.  However TcpListener is inherently thread unsafe - therefore
+** it is the developers responsibility to use this API in a thread safe manner.
+**
+const class TcpListener
 {
 
 //////////////////////////////////////////////////////////////////////////
