@@ -34,12 +34,12 @@ class FileTest : Test
   {
     acc := File[,]
     single := Repo.boot.home + `lib/sys.props`
-    single.walk(&acc.add)
+    single.walk { acc.add(it) }
     verifyEq(single, single)
 
     acc.clear
     lib := Repo.boot.home + `lib/`
-    lib.walk(&acc.add)
+    lib.walk { acc.add(it) }
     verify(acc.contains(lib))
     verify(acc.contains(lib + `sys.props`))
     verify(acc.contains(lib + `fan/`))

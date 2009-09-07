@@ -197,7 +197,7 @@ class DateTimeTest : Test
     futures := Future[,]
     10.times |,|
     {
-      actor := Actor(ActorPool(), &nowUniqueLoop)
+      actor := Actor(ActorPool(), #nowUniqueLoop.func)
       futures.add(actor.send(null))
     }
 
